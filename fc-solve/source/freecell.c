@@ -1991,13 +1991,23 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
     fcs_card_t card, temp_card;
     fcs_move_t temp_move;
     int check;
-    int a;
+    int empty_stack_idx;
 
     tests_define_accessors();
 
     if (num_freestacks == 0)
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
+    }
+
+    state_stacks_num = instance->stacks_num;
+
+    for(empty_stack_idx=0;empty_stack_idx<state_stacks_num;empty_stack_idx++)
+    {
+        if (fcs_stack_len(state, empty_stack_idx) == 0)
+        {
+            break;
+        }
     }
 
     empty_stacks_filled_by = instance->empty_stacks_fill;
@@ -2007,7 +2017,7 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
-    state_stacks_num = instance->stacks_num;
+    
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -2028,21 +2038,14 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
 
                 fcs_pop_stack_card(new_state, stack, temp_card);
                 
-                for(a=0;a<state_stacks_num;a++)
-                {
-                    if (fcs_stack_len(state, a) == 0)
-                    {
-                        break;
-                    }
-                }
 
-                my_copy_stack(a);
+                my_copy_stack(empty_stack_idx);
 
-                fcs_push_card_into_stack(new_state, a, card);
+                fcs_push_card_into_stack(new_state, empty_stack_idx, card);
 
                 fcs_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);
                 fcs_move_set_src_stack(temp_move, stack);
-                fcs_move_set_dest_stack(temp_move, a);
+                fcs_move_set_dest_stack(temp_move, empty_stack_idx);
                 fcs_move_set_num_cards_in_seq(temp_move, 1);
 
                 fcs_move_stack_push(moves, temp_move);

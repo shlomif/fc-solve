@@ -638,6 +638,31 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
         int total_tests = 0;
         foreach_soft_thread(instance, accumulate_tests_order, &total_tests);
         foreach_soft_thread(instance, determine_scan_completeness, &total_tests);
+        if (instance->opt_tests_order_set == 0)
+        {
+            /*
+             *
+             * What this code does is convert the bit map of total_tests
+             * to a valid tests order.
+             * 
+             * */
+            int bit_idx, num_tests = 0;
+            int * tests = malloc(sizeof(total_tests)*8*sizeof(tests[0]));
+                        
+            for(bit_idx=0; total_tests != 0; bit_idx++, total_tests >>= 1)
+            {
+                if ((total_tests & 0x1) != 0)
+                {
+                    tests[num_tests++] = bit_idx;
+                }
+            }
+            tests = realloc(tests, num_tests*sizeof(tests[0]));
+            instance->opt_tests_order.tests = tests;
+            instance->opt_tests_order.num =
+                instance->opt_tests_order.max_num =
+                num_tests;
+            instance->opt_tests_order_set = 1;
+        }
     }
 
 
@@ -776,6 +801,16 @@ static void trace_solution(
 }
 
 
+static fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
+{
+    fcs_tests_order_t ret;
+
+    ret.max_num = ret.num = orig->num;
+    ret.tests = malloc(sizeof(ret.tests[0]) * ret.num);
+    memcpy(ret.tests, orig->tests, sizeof(ret.tests[0]) * ret.num);
+    
+    return ret;
+}
 
 /*
     This function optimizes the solution path using a BFS scan on the
@@ -785,25 +820,40 @@ static int freecell_solver_optimize_solution(
     freecell_solver_instance_t * instance
     )
 {
-    instance->optimization_thread = alloc_hard_thread(instance);
-    instance->optimization_thread->soft_threads[0]->method = FCS_METHOD_OPTIMIZE;
+    freecell_solver_hard_thread_t * optimization_thread;
+    
+    optimization_thread = alloc_hard_thread(instance);
+    instance->optimization_thread = optimization_thread;
+
+    if (instance->opt_tests_order_set)
+    {
+        if (optimization_thread->soft_threads[0]->tests_order.tests != NULL)
+        {
+            free(optimization_thread->soft_threads[0]->tests_order.tests);
+        }
+        
+        optimization_thread->soft_threads[0]->tests_order = 
+            tests_order_dup(&(instance->opt_tests_order));
+    }
+    
+    optimization_thread->soft_threads[0]->method = FCS_METHOD_OPTIMIZE;
     /*
      * We do not need to initialize its test order because it inherits the
      * master test order of the instance
      * */
 
     /* Initialize the optimization hard-thread and soft-thread */
-    instance->optimization_thread->num_times_left_for_soft_thread = 1000000;
-    freecell_solver_state_ia_init(instance->optimization_thread);
+    optimization_thread->num_times_left_for_soft_thread = 1000000;
+    freecell_solver_state_ia_init(optimization_thread);
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
-    instance->optimization_thread->max_num_times = -1;
-    instance->optimization_thread->ht_max_num_times = -1;
+    optimization_thread->max_num_times = -1;
+    optimization_thread->ht_max_num_times = -1;
 
     return 
         freecell_solver_a_star_or_bfs_do_solve_or_resume(
-            instance->optimization_thread->soft_threads[0],
+            optimization_thread->soft_threads[0],
             instance->state_copy_ptr,
             0
             );

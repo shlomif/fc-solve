@@ -209,14 +209,56 @@ sub preset_to_string
     return "    {\n" . join("\n", @lines_with_spaces) . "\n" . "    },\n";
 }
 
-foreach my $preset_name (sort {$a cmp $b } keys(%presets))
+sub preset_to_docbook_string
 {
-    my $preset_compiled = compile_preset($preset_name);
-    push @strings, preset_to_string($preset_name, $preset_compiled);
+    my $preset_name = shift;
+    my $pc = shift;
+    my @lines;
+
+    push @lines, join(" ", (map { ucfirst($_) } split(/_/, $preset_name)));
+    
+    push @lines, ($pc->{'stacks'}, $pc->{'freecells'}, $pc->{'decks'});
+
+    my $sbb = $pc->{'seqs_build_by'};
+    push @lines, 
+        (($sbb eq "ac") ? "Alternate Colour" : 
+            ($sbb eq "suit") ? "Suit" : 
+            "Rank");    
+
+    my $arg = $pc->{'empty_stacks_fill'};
+    push @lines, (($arg eq "none") ? "None" : ($arg eq "any_card") ? "Any Card" : "Kings Only");
+
+    push @lines, ($pc->{'sequence_move'} ? "Limited" : "Unlimited");
+
+    return join("", map { "    <entry>$_</entry>\n" } @lines);
 }
 
-print "static const fcs_preset_t fcs_presets[" . scalar(@strings) . "] = \n";
-print "{\n";
-print join("", @strings);
-print "};\n";
+my $docbook = 0;
 
+if ($ARGV[0] = "--docbook")
+{
+    $docbook = 1;
+}
+
+foreach my $preset_name (sort {$a cmp $b } keys(%presets))
+{
+    if ($docbook && ($preset_name eq "simple_simon"))
+    {
+        next;
+    }
+        
+    my $preset_compiled = compile_preset($preset_name);
+    push @strings, ($docbook ? \&preset_to_docbook_string : \&preset_to_string)->($preset_name, $preset_compiled);
+}
+
+if ($docbook)
+{
+    print join("", map { "<row>\n$_</row>\n" } @strings);
+}
+else
+{
+    print "static const fcs_preset_t fcs_presets[" . scalar(@strings) . "] = \n";
+    print "{\n";
+    print join("", @strings);
+    print "};\n";
+}

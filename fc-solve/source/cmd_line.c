@@ -523,6 +523,38 @@ int freecell_solver_user_cmd_line_parse_args(
             }
             freecell_solver_user_set_hard_thread_prelude(instance, argv[arg]);
         }
+        else if ((!strcmp(argv[arg], "-opt-to")) || (!strcmp(argv[arg], "--optimization-tests-order")))
+        {
+            char * fcs_user_errstr;
+            arg++;
+            if (arg == argc)
+            {
+                *last_arg = arg;
+                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
+            }
+            
+            ret = freecell_solver_user_set_optimization_scan_tests_order(
+                    instance, 
+                    argv[arg],
+                    &fcs_user_errstr
+                    );
+            
+            if (ret != 0)
+            {
+                char * errstr = malloc(strlen(fcs_user_errstr)+500);
+                sprintf(
+                    errstr,
+                    "Error in the optimization scan's tests' order!\n%s\n",
+                    fcs_user_errstr
+                    );
+                free(fcs_user_errstr);
+
+                *error_string = errstr;
+
+                *last_arg = arg;
+                return FCS_CMD_LINE_ERROR_IN_ARG;                
+            }
+        }
         else
         {
             *last_arg = arg;
