@@ -5,10 +5,6 @@
 * After everything: reorganize the --help behaviour according to the Freshmeat
 editorial
 
-* Make sure that if it reads from standard output it prints a message
-to stderr that it does that. (so people won't get paniced if it
-gets stuck)
-
 --- Non-pressing ---
 
 * Integrate the patsolve's prioritization and mixed BFS/DFS scan.
