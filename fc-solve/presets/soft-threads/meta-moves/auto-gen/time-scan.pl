@@ -26,7 +26,7 @@ close(I);
 
 my $scan = join(" ", @ARGV);
 
-if (my @results = (grep { $_->{'cmd_line'} eq $scan } @ARGV))
+if (my @results = (grep { $_->{'cmd_line'} eq $scan } @prev_scans))
 {
     die "The scan already exists with the ID " . $results[0]->{'id'} . "\n";    
 }
@@ -36,7 +36,7 @@ print O "$id\t$scan\n";
 close(O);
 
 system(qw(freecell-solver-range-parallel-solve 1 32000 20),
-    qw(--total-iterations 100000 --binary-output-to), 
+    qw(--total-iterations-limit 100000 --binary-output-to), 
     "data/$id.data.bin",
     @ARGV
 );

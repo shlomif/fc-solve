@@ -1,0 +1,2 @@
+1	--method soft-dfs -to 0123456789
+2	--method soft-dfs -to 0123467
