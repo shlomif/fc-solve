@@ -537,7 +537,7 @@ int main(int argc, char * argv[])
     signal(SIGUSR2, select_signal_handler);
 #endif
 
-#if 0
+#if 1
     {
         int limit = 500;
         freecell_solver_user_limit_iterations(instance, limit);

@@ -146,6 +146,8 @@ int freecell_solver_user_solve_board(
     )
 {
     fcs_user_t * user;
+    int ret;
+    int init_num_times;
 
     user = (fcs_user_t*)user_instance;
 
@@ -231,8 +233,13 @@ int freecell_solver_user_solve_board(
 
 
     calc_max_iters();
+
+    init_num_times = user->instance->num_times;
     
-    user->ret = freecell_solver_solve_instance(user->instance, &user->state);
+    ret = user->ret = freecell_solver_solve_instance(user->instance, &user->state);
+
+    user->iterations_board_started_at += user->instance->num_times - init_num_times;
+    
 
     if (user->ret == FCS_STATE_WAS_SOLVED)
     {
@@ -244,8 +251,17 @@ int freecell_solver_user_solve_board(
             user->instance->decks_num
             );
     }
+    else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
+    {
+        if ((local_limit() >= 0) &&
+            (user->instance->num_times >= local_limit())
+           )
+        {
+            ret = FCS_STATE_IS_NOT_SOLVEABLE;
+        }
+    }
 
-    return user->ret;
+    return ret;
 }
 
 int freecell_solver_user_resume_solution(
@@ -253,12 +269,18 @@ int freecell_solver_user_resume_solution(
     )
 {
     fcs_user_t * user;
+    int init_num_times;
+    int ret;
 
     user = (fcs_user_t *)user_instance;
 
     calc_max_iters();
 
-    user->ret = freecell_solver_resume_instance(user->instance);
+    init_num_times = user->instance->num_times;
+
+    ret = user->ret = freecell_solver_resume_instance(user->instance);
+    
+    user->iterations_board_started_at += user->instance->num_times - init_num_times;    
     if (user->ret == FCS_STATE_WAS_SOLVED)
     {
         freecell_solver_move_stack_normalize(
@@ -269,8 +291,17 @@ int freecell_solver_user_resume_solution(
             user->instance->decks_num
             );
     }
+    else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
+    {
+        if ((local_limit() >= 0) &&
+            (user->instance->num_times >= local_limit())
+           )
+        {
+            ret = FCS_STATE_IS_NOT_SOLVEABLE;
+        }
+    }
 
-    return user->ret;
+    return ret;
 }
 
 int freecell_solver_user_get_next_move(

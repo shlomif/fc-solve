@@ -244,6 +244,12 @@ extern void freecell_solver_user_set_scans_synergy(
     int synergy
     );
 
+extern void freecell_solver_user_limit_current_instance_iterations(
+    void * user_instance,
+    int max_iters
+    );
+
+
 #ifdef __cplusplus
 }
 #endif

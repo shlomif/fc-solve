@@ -75,7 +75,7 @@ int freecell_solver_user_cmd_line_parse_args(
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
 
-            freecell_solver_user_limit_iterations(instance, atoi(argv[arg]));
+            freecell_solver_user_limit_current_instance_iterations(instance, atoi(argv[arg]));
         }
         else if ((!strcmp(argv[arg], "-to")) || (!strcmp(argv[arg], "--tests-order")))
         {
