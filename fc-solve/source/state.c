@@ -53,9 +53,15 @@ void freecell_solver_clean_state(
 #endif
 #ifdef INDIRECT_STACK_STATES
 
+/*
+ * buffer is a buffer of size 128 * MAX_NUM_STACKS that is used
+ * to allocate the stacks in.
+ *
+ * */
 void freecell_solver_duplicate_state_proto(
     fcs_state_with_locations_t * dest,
-    fcs_state_with_locations_t * src
+    fcs_state_with_locations_t * src,
+    char * buffer
     )
 {
     int a;
@@ -68,11 +74,10 @@ void freecell_solver_duplicate_state_proto(
         {
             stack_len = src->s.stacks[a][0];
 #if 0
-            dest->s.stacks[a] = malloc(stack_len+14);
+            dest->s.stacks[a] = &buffer[a<<7]
             memset(dest->s.stacks[a], '\0', stack_len+14);
 #else
-            dest->s.stacks[a] = malloc(stack_len+53);
-            memset(dest->s.stacks[a], '\0', stack_len+53);
+            dest->s.stacks[a] = &buffer[a<<7];
 #endif
             memcpy(dest->s.stacks[a], src->s.stacks[a], stack_len+1);
         }

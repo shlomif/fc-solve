@@ -56,7 +56,7 @@ extern "C" {
 
 #define sfs_check_state_begin()                                                \
     sfs_check_state_init();                                                    \
-    fcs_duplicate_state(new_state_with_locations, state_with_locations);       \
+    fcs_duplicate_state(new_state_with_locations, state_with_locations, hard_thread->indirect_stacks_buffer);       \
     /* Some A* and BFS parameters that need to be initialized in               \
      * the derived state.                                                      \
      * */                                                                      \

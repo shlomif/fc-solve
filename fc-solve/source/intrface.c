@@ -264,6 +264,8 @@ static freecell_solver_hard_thread_t * alloc_hard_thread(
 
     hard_thread->ht_max_num_times = hard_thread->num_times_step;
 
+    hard_thread->max_num_times = -1;
+
     hard_thread->num_soft_threads_finished = 0;
 
 #ifdef INDIRECT_STACK_STATES
@@ -680,7 +682,7 @@ int freecell_solver_solve_instance(
     /* Allocate the first state and initialize it to init_state */
     fcs_state_ia_alloc_into_var(state_copy_ptr, instance->hard_threads[0]);
 
-    fcs_duplicate_state(*state_copy_ptr, *init_state);
+    fcs_duplicate_state(*state_copy_ptr, *init_state, instance->hard_threads[0]->indirect_stacks_buffer);
 
     /* Initialize the state to be a base state for the game tree */
     state_copy_ptr->depth = 0;
@@ -789,6 +791,7 @@ int freecell_solver_solve_instance(
             &no_use,
             0
             );
+
     }
 
     instance->ht_idx = 0;

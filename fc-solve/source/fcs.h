@@ -443,6 +443,14 @@ struct freecell_solver_hard_thread_struct
      * tests functions of this hard thread 
      * */
     fcs_move_stack_t * reusable_move_stack;
+
+#ifdef INDIRECT_STACK_STATES
+    /*
+     * This is a buffer used to temporarily store the stacks of the duplicated
+     * state.
+     * */
+    char indirect_stacks_buffer[MAX_NUM_STACKS << 7];
+#endif
 };
 
 struct fcs_soft_dfs_stack_item_struct

@@ -31,6 +31,10 @@ struct fcs_user_struct
     void * iter_handler_context;
 
     freecell_solver_soft_thread_t * soft_thread;
+
+#ifdef INDIRECT_STACK_STATES
+    char indirect_stacks_buffer[MAX_NUM_STACKS << 7];
+#endif
 };
 
 typedef struct fcs_user_struct fcs_user_t;
@@ -136,7 +140,7 @@ int freecell_solver_user_solve_board(
     /* running_state is a normalized state. So I'm duplicating
      * state to it before state is canonized
      * */
-    fcs_duplicate_state(user->running_state, user->state);
+    fcs_duplicate_state(user->running_state, user->state, user->indirect_stacks_buffer);
 
     fcs_canonize_state(
         &user->state,
