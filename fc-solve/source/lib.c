@@ -411,6 +411,12 @@ void freecell_solver_user_free(
 
     free(user->instances_list);
 
+    if (user->state_string_copy != NULL)
+    {
+        free(user->state_string_copy);
+        user->state_string_copy = NULL;
+    }
+
     free(user);
 }
 
@@ -967,6 +973,11 @@ void freecell_solver_user_recycle(
     }
     user->current_iterations_limit = -1;
     user->iterations_board_started_at = 0;
+    if (user->state_string_copy != NULL)
+    {
+        free(user->state_string_copy);
+        user->state_string_copy = NULL;
+    }
 }
 
 int freecell_solver_user_set_optimization_scan_tests_order(
