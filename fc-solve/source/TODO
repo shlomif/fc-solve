@@ -1,7 +1,5 @@
 --- Pressing ---
 
-* command line presets
-
 * Convert some of the documentation to Perl-POD or DocBook.
 
 * Add support for Adrian's extensions to the standard notation.
