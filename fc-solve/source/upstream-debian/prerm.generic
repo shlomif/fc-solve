@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+if [ \( "$1" = "upgrade" -o "$1" = "remove" \) -a -L /usr/doc/__PKG__ ]; then
+  rm -f /usr/doc/__PKG__
+fi
+
+exit 0
