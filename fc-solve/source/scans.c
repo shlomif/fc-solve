@@ -107,7 +107,7 @@ static void freecell_solver_bfs_enqueue_state(
                         }   \
                     }
 
-#define state (ptr_state_with_locations->s)
+#define the_state (ptr_state_with_locations->s)
 
 int freecell_solver_hard_dfs_solve_for_state(
     freecell_solver_soft_thread_t * soft_thread,
@@ -170,7 +170,7 @@ int freecell_solver_hard_dfs_solve_for_state(
     num_freecells = 0;
     for(a=0;a<instance->freecells_num;a++)
     {
-        if (fcs_freecell_card_num(state, a) == 0)
+        if (fcs_freecell_card_num(the_state, a) == 0)
         {
             num_freecells++;
         }
@@ -181,7 +181,7 @@ int freecell_solver_hard_dfs_solve_for_state(
     num_freestacks = 0;
     for(a=0;a<instance->stacks_num;a++)
     {
-        if (fcs_stack_len(state, a) == 0)
+        if (fcs_stack_len(the_state, a) == 0)
         {
             num_freestacks++;
         }
@@ -222,10 +222,10 @@ int freecell_solver_hard_dfs_solve_for_state(
             {
                 soft_thread->num_solution_states = depth+1;
 
-                soft_thread->solution_states = malloc(sizeof(fcs_state_with_locations_t*) * soft_thread->num_solution_states);
+                soft_thread->soft_dfs_info = malloc(sizeof(soft_thread->soft_dfs_info[0]) * soft_thread->num_solution_states);
             }
 
-            soft_thread->solution_states[depth] = ptr_state_with_locations;
+            soft_thread->soft_dfs_info[depth].state = ptr_state_with_locations;
 
             ret_value = FCS_STATE_SUSPEND_PROCESS;
 
@@ -256,7 +256,7 @@ int freecell_solver_hard_dfs_solve_for_state(
                     (check == FCS_STATE_BEGIN_SUSPEND_PROCESS))
                 {
 
-                    soft_thread->solution_states[depth] = ptr_state_with_locations;
+                    soft_thread->soft_dfs_info[depth].state = ptr_state_with_locations;
 
                     ret_value =  FCS_STATE_SUSPEND_PROCESS;
 
@@ -299,7 +299,7 @@ int freecell_solver_hard_dfs_resume_solution(
     fcs_state_with_locations_t * ptr_state_with_locations;
     int check;
 
-    ptr_state_with_locations = soft_thread->solution_states[depth];
+    ptr_state_with_locations = soft_thread->soft_dfs_info[depth].state;
 
     if (depth < soft_thread->num_solution_states-1)
     {
@@ -310,8 +310,8 @@ int freecell_solver_hard_dfs_resume_solution(
     }
     else
     {
-        free(soft_thread->solution_states);
-        soft_thread->solution_states = NULL;
+        free(soft_thread->soft_dfs_info);
+        soft_thread->soft_dfs_info = NULL;
         check = FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
@@ -333,7 +333,7 @@ int freecell_solver_hard_dfs_resume_solution(
         if ((check == FCS_STATE_SUSPEND_PROCESS) || (check == FCS_STATE_WAS_SOLVED))
         {
 
-            soft_thread->solution_states[depth] = ptr_state_with_locations;
+            soft_thread->soft_dfs_info[depth].state = ptr_state_with_locations;
         }
     }
 
@@ -359,23 +359,12 @@ static void freecell_solver_increase_dfs_max_depth(
         sizeof(soft_thread->what[0])*new_dfs_max_depth \
         ); \
 
-    MYREALLOC(solution_states);
-#if 0
-    MYREALLOC(soft_dfs_derived_states_lists);
-    MYREALLOC(soft_dfs_current_state_indexes);
-    MYREALLOC(soft_dfs_test_indexes);
-    MYREALLOC(soft_dfs_num_freestacks);
-    MYREALLOC(soft_dfs_num_freecells);
-    MYREALLOC(soft_dfs_derived_states_random_indexes);
-    MYREALLOC(soft_dfs_derived_states_random_indexes_max_size);
-#else
     MYREALLOC(soft_dfs_info);
-#endif
 #undef MYREALLOC
 
     for(d=soft_thread->dfs_max_depth ; d<new_dfs_max_depth; d++)
     {
-        soft_thread->solution_states[d] = NULL;
+        soft_thread->soft_dfs_info[d].state = NULL;
         soft_thread->soft_dfs_info[d].derived_states_list.max_num_states = 0;
         soft_thread->soft_dfs_info[d].test_index = 0;
         soft_thread->soft_dfs_info[d].current_state_index = 0;
@@ -394,7 +383,7 @@ static void freecell_solver_increase_dfs_max_depth(
     without procedural recursion
     by using some dedicated stacks for the traversal.
   */
-#define state (ptr_state_with_locations->s)
+#define the_state (ptr_state_with_locations->s)
 
 static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     freecell_solver_soft_thread_t * soft_thread,
@@ -427,7 +416,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         ptr_state_with_locations_orig->moves_to_parent = NULL;
         ptr_state_with_locations_orig->depth = 0;
 
-        soft_thread->solution_states[0] = ptr_state_with_locations_orig;
+        soft_thread->soft_dfs_info[0].state = ptr_state_with_locations_orig;
     }
     else
     {
@@ -460,7 +449,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
                 if (soft_thread->is_a_complete_scan)
                 {
-                    mark_as_dead_end(soft_thread->solution_states[depth]);
+                    mark_as_dead_end(soft_thread->soft_dfs_info[depth].state);
                 }
 
                 depth--;
@@ -469,7 +458,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
             soft_thread->soft_dfs_info[depth].derived_states_list.num_states = 0;
 
-            ptr_state_with_locations = soft_thread->solution_states[depth];
+            ptr_state_with_locations = soft_thread->soft_dfs_info[depth].state;
 
 
             /* If this is the first test, then count the number of unoccupied
@@ -488,7 +477,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         ptr_state_with_locations,
                         ((depth == 0) ?
                             0 :
-                            soft_thread->solution_states[depth-1]->visited_iter
+                            soft_thread->soft_dfs_info[depth-1].state->visited_iter
                         )
                         );
                 }
@@ -497,7 +486,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 num_freecells = 0;
                 for(a=0;a<instance->freecells_num;a++)
                 {
-                    if (fcs_freecell_card_num(state, a) == 0)
+                    if (fcs_freecell_card_num(the_state, a) == 0)
                     {
                         num_freecells++;
                     }
@@ -508,7 +497,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 num_freestacks = 0;
                 for(a=0;a<instance->stacks_num;a++)
                 {
-                    if (fcs_stack_len(state, a) == 0)
+                    if (fcs_stack_len(the_state, a) == 0)
                     {
                         num_freestacks++;
                     }
@@ -665,7 +654,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 ptr_recurse_into_state_with_locations->parent = ptr_state_with_locations;
 #endif
 
-                soft_thread->solution_states[depth+1] = ptr_recurse_into_state_with_locations;
+                soft_thread->soft_dfs_info[depth+1].state = ptr_recurse_into_state_with_locations;
                 /*
                     I'm using current_state_indexes[depth]-1 because we already
                     increased it by one, so now it refers to the next state.

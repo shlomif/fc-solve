@@ -447,6 +447,7 @@ struct freecell_solver_hard_thread_struct
 
 struct fcs_soft_dfs_stack_item_struct
 {
+    fcs_state_with_locations_t * state;
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
     int test_index;
@@ -569,12 +570,14 @@ struct freecell_solver_soft_thread_struct
 #else
     fcs_soft_dfs_stack_item_t * soft_dfs_info;
 #endif
+#if 0
     /*
      * A vector of the states leading to the solution. It is actively
      * being modified by a Soft-DFS scan. Its usage for output has been
      * deprecated because solution_moves was introduced.
      * */
     fcs_state_with_locations_t * * solution_states;
+#endif
 
     /* The depth of the DFS stacks */
     int num_solution_states;

@@ -141,7 +141,6 @@ static void soft_thread_clean_soft_dfs(
         }
         
         free(soft_thread->soft_dfs_info);
-        free(soft_thread->solution_states);
 
     }
 }
@@ -181,7 +180,6 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
     
 
     /* Initialize all the Soft-DFS stacks to NULL */
-    soft_thread->solution_states = NULL;
     soft_thread->soft_dfs_info = NULL;
 
     /* The default solving method */
