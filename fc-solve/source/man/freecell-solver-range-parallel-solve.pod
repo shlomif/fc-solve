@@ -1,0 +1,45 @@
+=head1 NAME
+
+freecell-solver-range-parallel-solve - The Freecell Solver utility for 
+solving a range of Microsoft Freecell/Freecell Pro Boards
+
+=head1 SYNOPSIS
+
+freecell-solver-range-parallel-solve I<start> I<end> I<print_step>
+B<[--binary-output-to filename]> B<[--total-iterations-limit limit]>
+[fc-solve Arguments...]
+
+=head1 DESCRIPTION
+
+B<freecell-solver-range-parallel-solve> is a command line application
+that solves a range of Freecell deals of Microsoft Freecell and Freecell Pro.
+
+I<start> is the first board to solve; I<end> is the last (inclusive) and 
+I<print_step> is the division of board numbers in which to print a status
+message.
+
+B<--total-iterations-limit> sets the maximal number of iterations with
+which to try to solve each deal. After that, the program will give up
+and report that the board was intractable.
+
+B<--binary-output-to> sets the filename into which to output the number
+of iterations it took to solve each board. This file can later be used with
+statistical preset optimizers such as those found in the Freecell Solver
+CVS repository.
+
+=head1 OPTIONS
+
+
+See USAGE, README and the output of "fc-solve B<--help>".
+
+=head1 SEE ALSO
+
+The B<--help> display of the program.
+
+The files under /usr/share/doc/freecell-solver-FCS_VERSION.
+
+=head1 AUTHOR
+
+Shlomi Fish E<lt>shlomif@vipe.technion.ac.ilE<gt>.
+
+=cut
