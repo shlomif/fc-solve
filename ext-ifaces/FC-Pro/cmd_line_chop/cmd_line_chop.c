@@ -123,6 +123,13 @@ NEXT_ARG:
             }
             else if ((next_char == '\n') || (next_char == '\r'))
             {
+                if(next_char == '\r')
+                {
+                    if (*s == '\n')
+                    {
+                        s++;
+                    }
+                }
                 goto AFTER_WS;
             }
             else
@@ -196,9 +203,9 @@ int main(int argc, char * * argv)
     {
         FILE * f;
         
-        f = fopen("input.txt","rb");
+        f = fopen(argv[1],"rb");
         string = calloc(4096,1);
-        fread(string, 4096, 1, f);
+        fread(string, 4095, 1, f);
         fclose(f);
     }
         
