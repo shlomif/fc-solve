@@ -36,11 +36,15 @@ ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
 INCLUDES_PROTO = std/logo.wml
 INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
-SUBDIRS = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
+SUBDIRS_WITH_INDEXES = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
+
+SUBDIRS = $(SUBDIRS_WITH_INDEXES)
+
+INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
 IMAGES += $(addprefix $(D)/win32_build/,bootstrap/curl.exe bootstrap/build.bat static/zip.exe static/unzip.exe dynamic/fcs.zip)
 
-all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS)
+all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES)
 
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \
@@ -70,3 +74,9 @@ $(IMAGES) :: $(D)/% : src/%
 $(RAW_SUBDIRS) :: $(D)/% : src/%
 	rm -fr $@
 	cp -r $< $@
+
+# Build index.html pages for the appropriate sub-directories.
+$(INDEXES) :: $(D)/%/index.html : %
+	MYPATH=`pwd` (cd $< && perl "$$MYPATH"/gen_index.pl $@)
+
+
