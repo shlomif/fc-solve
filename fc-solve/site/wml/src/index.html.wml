@@ -32,6 +32,14 @@ in the <a href="features.html"><b>Features List</b></a>.
 
 <h2>News</h2>
 
+<h3>4-Oct-2003</h3>
+
+<p>
+There is now <a href="./pysol/">PySol Integration with Freecell Solver</a>
+available here. This enables receiving hints from Freecell Solver and seeing
+demos of it while within PySol.
+</p>
+
 <h3>28-Sep-2002</h3>
 <p>
 Freecell Solver 2.8.0 has been released. This version features a better
