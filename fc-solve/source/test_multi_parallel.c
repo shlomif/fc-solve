@@ -384,7 +384,7 @@ void print_int(binary_output_t * bin, int val)
 
 static void print_help(void)
 {
-    printf("%s", 
+    printf("\n%s", 
 "freecell-solver-range-parallel-solve start end print_step\n"
 "   [--binary-output-to filename] [--total-iterations-limit limit]\n"
 "   [fc-solve Arguments...]\n"

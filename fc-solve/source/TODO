@@ -9,8 +9,6 @@
 
 * Make the range solver more user-friendly and documented.
 
-* Add support for resuming a range scan.
-
 * After everything: reorganize the --help behaviour according to the Freshmeat
 editorial
 
