@@ -743,13 +743,13 @@ static gint freecell_solver_glib_hash_stack_compare (
 {
     return !(fcs_stack_compare_for_comparison(a,b));
 }
-#endif // (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
+#endif /* (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH) */
 
 
 
 
 
-#endif // defined(INDIRECT_STACK_STATES)
+#endif /* defined(INDIRECT_STACK_STATES) */
 
 
 

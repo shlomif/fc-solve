@@ -869,11 +869,9 @@ char * freecell_solver_state_as_string(
     int a, card_num_is_null, b;
     int max_num_cards, s, card_num, len;
 
-    //char string[8000];
     char str2[128], str3[128], * str2_ptr, * str3_ptr;
 
     freecell_solver_append_string_t * app_str;
-    //char * str;
 
     int stack_locs[MAX_NUM_STACKS];
     int freecell_locs[MAX_NUM_FREECELLS];
@@ -916,7 +914,6 @@ char * freecell_solver_state_as_string(
             decks[a][0] = '0';
     }
 
-    //str = string;
     app_str = freecell_solver_append_string_alloc(512);
 
     if(!parseable_output)
