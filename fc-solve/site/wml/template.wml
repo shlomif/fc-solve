@@ -12,7 +12,7 @@
 <link rel="StyleSheet" href="$(ROOT)/style.css" type="text/css" />
 </head>
 <body>
-<define-tag rellink>
+<define-tag rellink whitespace="delete">
 <if <match "%0" "^http://" action="report" /> "%0" "$(ROOT)/%0" />
 </define-tag>
 
@@ -51,7 +51,7 @@
     </li>
 </ul>
 </li>
-<li><navbarlink "docs/" "Documents" /></li>
+<li><navbarlink "docs/" "Documents" />
 <ul class="navbarnested">
     <li>
     <navbarlink "<arch:doc:url />" "Arch Doc" />
@@ -60,6 +60,7 @@
     <navbarlink "<doxygen:url />" "Doxygen" />
     </li>
 </ul>
+</li>
 <li><navbarlink "links.html" "Links" />
 
 <ul class="navbarnested">
@@ -72,6 +73,7 @@
 </ul>
 </li>
 <li><navbarlink "features.html" "Features" /></li>
+<li><navbarlink "to-do.html" "To Do List" /></li>
 <li><br /></li>
 <li><navbarlink "book.html" "The Book" /></li>
 <li><navbarlink "old-news.html" "Old News Items" /></li>

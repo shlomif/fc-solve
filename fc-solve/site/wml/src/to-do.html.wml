@@ -231,3 +231,92 @@ Note that this is a relatively speculative feature, which I only want to
 implement to see how well it run.
 </p>
 
+<h2>A Client/Server Multi-tasking Architecture</h2>
+
+<p>
+Yet another speculative feature that was inspired by a talk I had with 
+Dave Goehrig in which he claimed multi-processing in Linux was more efficient
+than multi-threading. (a claim I saw elsewhere). I believe the Game AI model
+gives way to multi-threading better because all scans operating on the 
+same states collection need access to all the states present in it. However,
+it is posssible that a multi-processed model will still work better.
+</p>
+
+<p>
+What would be done is that the parent process (the server) will hold the 
+entire state collection and will spawn children process which each will 
+take the responsibility of running a hard thread. The hard threads will
+query the parent process (through some Inter-Process Communication mechanism, 
+probably an anonymous pipe) about the presence of states there. The server
+process will answer the queries one by one and will add relevant states to the
+client processes. Once one of them queries the empty state, it will terminate 
+all the children processes, and reconstruct the graph from there.
+</p>
+
+<p>
+This is much easier done on UNIXes or UNIX-like systems where multi-processing 
+is much stronger than on Win32. (&lt;rant /&gt;) It also may be worthwhile for
+each client process to hold a local cache of states, so it won't query the
+server excessively.
+</p>
+
+<p>
+Again, this is something I'm planning to do, after I implement multi-threading, if I do it at all.
+</p>
+
+<h2>Generalizing Freecell Solver to non-card Games</h2>
+
+<p>
+This is a <b>very</b> pipe-dream goal. As some of you may be aware I already
+wrote <a href="http://vipe.technion.ac.il/~shlomif/lm-solve/">LM-Solve</a> as
+a solver for several types of Logic Mazes, which are another type of 
+single-player games (which are much easier to solve using a computer). It is
+written in Perl, but still runs quite quickly, but still largely incomplete.
+It is also still a standalone program without a usable API.
+</p>
+
+<p>
+Now, I also thought about writing a solver for the old DOS game StoneAge, and
+generally there are other single-player card games for which Game AI heuristics 
+are required to solve. Most of the logic of Freecell Solver is quite generic,
+and I suppose may prove useful to other games. So, instead of having separate 
+solver (in C, LISP, Perl, Python or whatever) for each one of these games, we
+can have a unified solver with several game plug-ins. This would be cool, 
+because it would mean hackers of single-player game AIs will not have to 
+re-invent the wheel time and again; instead, they can only implement suitable
+test functions, and prioritization functions for their own games, and still
+enjoy the power that the Freecell Solver framework gives them.
+</p>
+
+<p>
+Notice that my attempt at solving several talon-based games Solitaire Card
+games like Klondike or Gypsy was not successful. That does not mean it can't be
+done. Michael Mann was more successful with <a href="http://fc-solve.berlios.de/michael_mann/">his 
+    port of Freecell Solver</a>, and Stephan Kulow has an interesting heuristic 
+for single-card-deal Klondike in kpat that can solve on average 50% of the 
+games. (I don't think it is a back-tracking heuristic, though).
+</p>
+
+<h2>Finale</h2>
+
+<p>
+If all or most of these changes take effect, Freecell Solver will become much
+more "bloated" with features and enhancements than it already is today. Freecell
+Solver has already turned, from a proof-of-concept solver I used to test if 
+my initial idea on how to solve Freecell would work, to an architecture 
+dedicated to solving Freecell and similar Solitaires. I think it satisfies the
+needs of most users quite adequately. However, I think that enhancing it 
+further is still a good idea, because it will make the code more modular and 
+more maintainable, and would allow it to become a reference implementation or 
+a base for similar projects with the needed subset of functionality.
+</p>
+
+<p>
+Note that Freecell Solver was not the first computerized solver for Freecell to
+be written. (one of the first was <a href="http://localhost/fc-solve/don_woods.html">the one by Don Woods'</a>, and Woods is very famous for many of his 
+other endeavours) It will also not the last that will be written (there is in 
+fact an AI course in the University of Massachustes, given each year, in which 
+the students are assigned to write a Freecell solver as one of their work 
+assignments). Nevertheless, Eric Raymond recommends in 
+</p>
+
