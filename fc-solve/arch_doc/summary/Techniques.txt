@@ -128,7 +128,7 @@ There are two modules whose code is used to achieve this end:
 1. fcs_isa.c/fcs_isa.h - Short for Indirect State Allocation, this module
 allocated vectors of states, each one is of constant size.
 
-2. alloc.c/alloc.h - allocates block of arbitrary size in a compact manner.
+2. alloc.c/alloc.h - allocates blocks of arbitrary size in a compact manner.
 
 Both of these modules support releasing the last allocated block and the last 
 one alone.

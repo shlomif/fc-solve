@@ -621,8 +621,6 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
 
             {
-                int j;
-                int swap_save;
                 int * rand_array, * ra_ptr;
                 num_states = derived_states_list->num_states;
 
@@ -650,6 +648,16 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                  * */
                 if (to_randomize && (tests_order_tests[ test_index-1 ].test & FCS_TEST_ORDER_FLAG_RANDOM))
                 {
+                    tests_order_tests[test_index - 1].states_order_instance->order->order_states(
+                        tests_order_tests[test_index - 1].states_order_instance,
+                        ptr_state_with_locations,
+                        derived_states_list,
+                        rand_array
+                        );
+                }
+#if 0
+                if (to_randomize && (tests_order_tests[ test_index-1 ].test & FCS_TEST_ORDER_FLAG_RANDOM))
+                {
                     a = num_states-1;
                     while (a > 0)
                     {
@@ -667,6 +675,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         a--;
                     }
                 }
+#endif
             }
 
             /* We just performed a test, so the index of the first state that

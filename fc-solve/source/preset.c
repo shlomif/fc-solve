@@ -534,7 +534,7 @@ int freecell_solver_apply_tests_order(
     int is_group, is_start_group;
     test_ret_t test_read;
     int num_chars_read;
-    
+
     if (tests_order->tests)
     {
         free(tests_order->tests);
@@ -608,7 +608,10 @@ int freecell_solver_apply_tests_order(
                                         
                     for(i=0;i<(int)(sizeof(freecell_solver_states_orders_names)/sizeof(freecell_solver_states_orders_names[0]));i++)
                     {
-                        if (!strcmp(s,freecell_solver_states_orders_names[i].name))
+                        int len_name;
+                        
+                        len_name = strlen(freecell_solver_states_orders_names[i].name);
+                        if (!strncmp(s,freecell_solver_states_orders_names[i].name, len_name))
                         {
 
                             found = 1;
@@ -618,14 +621,13 @@ int freecell_solver_apply_tests_order(
                             if (order->init_instance(
                                 order,
                                 order_instance,
-                                s,
+                                s+len_name,
                                 &end_of_spec
                                 ))
                             {
                                 *error_string = strdup("Failed in initializing a states order");
                                 return 6;
                             }
-    
 
                             /*
                              * Advance the string pointer
