@@ -10,6 +10,7 @@ to work.
 * Convert switching a soft-thread into a macro.
 
 * Code a recycle_instance function.
+    - DONE: check with INDIRECT_STACK_STATES.
 
 * Documnt the new features.
 
