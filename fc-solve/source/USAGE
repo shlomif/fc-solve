@@ -66,7 +66,7 @@ program with some effort on the programmer's part.
 -sn     --standard-notation
 
 This option will display the moves in standard notation in which every
-move consists of two bytes and they are ten moves in a line. Naturally,
+move consists of two characters and there are ten moves in a line. Naturally,
 this option will only become apparent if the display moves is specified.
 (it does not implicitly specify it, though).
 
@@ -75,6 +75,12 @@ web-page:
 
 http://home.earthlink.net/~fomalhaut/freecell.html
 
+-snx    --standard-notation-extended
+
+This option is similar to the previous one, only that when a sequence
+move is made to an empty stack with more than one card in the sequence,
+the move will be followed with "v" and the number of cards moved in 
+hexadecimal.
 
 -sam      --display-states-and-moves
 
