@@ -364,9 +364,13 @@ typedef struct freecell_solver_instance
 /***************************************************/
 
 
+struct fcs_prelude_item_struct
+{
+    int scan_idx;
+    int quota;
+};
 
-
-
+typedef struct fcs_prelude_item_struct fcs_prelude_item_t;
 
 
 struct freecell_solver_hard_thread_struct
@@ -470,6 +474,13 @@ struct freecell_solver_hard_thread_struct
 #else
     char indirect_stacks_buffer[1];
 #endif
+
+    char * prelude_as_string;
+
+    int prelude_num_items;
+    int prelude_idx;
+    fcs_prelude_item_t * prelude;
+    
 };
 
 

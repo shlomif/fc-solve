@@ -279,6 +279,11 @@ static freecell_solver_hard_thread_t * alloc_hard_thread(
 
     fcs_move_stack_alloc_into_var(hard_thread->reusable_move_stack);
 
+    hard-thread->prelude_as_string = NULL;
+    hard_thread->prelude = NULL;
+    hard_thread->prelude_num_items = 0;
+    hard_thread->prelude_idx = 0;
+
     return hard_thread;
 }
 
@@ -387,6 +392,20 @@ static void free_instance_soft_thread_callback(freecell_solver_soft_thread_t * s
     free(soft_thread);
 }
 
+static void free_instance_hard_thread_callback(freecell_solver_hard_thread_t * hard_thread)
+{
+    if (hard_thread->prelude_as_string)
+    {
+        free (hard_thread->prelude_as_string);
+    }
+    if (hard_thread->prelude)
+    {
+        free (hard_thread->prelude);
+    }
+                
+    free(hard_thread->soft_threads);
+    free(hard_thread);    
+}
 
 /*
     This function is the last function that should be called in the
@@ -401,8 +420,7 @@ void freecell_solver_free_instance(freecell_solver_instance_t * instance)
 
     for(ht_idx=0; ht_idx < instance->num_hard_threads; ht_idx++)
     {
-        free(instance->hard_threads[ht_idx]->soft_threads);
-        free(instance->hard_threads[ht_idx]);
+        free_instance_hard_thread_callback(instance->hard_threads[ht_idx]);
     }
     free(instance->hard_threads);
     if (instance->optimization_thread)
@@ -470,10 +488,23 @@ static void determine_scan_completeness(
     soft_thread->is_a_complete_scan = (tests_order == global_tests_order);
 }
 
+static void compile_prelude(
+    freecell_solver_hard_thread_t * hard_thread
+    )
+{
+    char * p;
+    char * string;
+
+    string = hard_thread->prelude_as_string;
+    
+#error FILL IN 
+}
+
 
 void freecell_solver_init_instance(freecell_solver_instance_t * instance)
 {
     int ht_idx;
+    freecell_solver_hard_thread_t * hard_thread;
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     instance->num_prev_states_margin = 0;
 
@@ -485,9 +516,14 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
     /* Initialize the state packs */
     for(ht_idx=0;ht_idx<instance->num_hard_threads;ht_idx++)
     {
-        instance->hard_threads[ht_idx]->num_times_left_for_soft_thread =
-            instance->hard_threads[ht_idx]->soft_threads[0]->num_times_step;
-        freecell_solver_state_ia_init(instance->hard_threads[ht_idx]);
+        hard_thread = instance->hard_threads[ht_idx];
+        if (hard_thread->prelude_as_string)
+        {
+            compile_prelude(hard_thread);
+        }
+        hard_thread->num_times_left_for_soft_thread =
+            hard_thread->soft_threads[0]->num_times_step;
+        freecell_solver_state_ia_init(hard_thread);
     }
 
     /* Normalize the A* Weights, so the sum of all of them would be 1. */
