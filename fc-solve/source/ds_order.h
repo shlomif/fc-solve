@@ -15,6 +15,11 @@ struct fcs_derived_states_order_instance_struct;
 
 typedef struct fcs_derived_states_order_instance_struct fcs_derived_states_order_instance_t;
 
+struct freecell_solver_soft_thread_struct;
+
+typedef struct freecell_solver_soft_thread_struct freecell_solver_soft_thread_t;
+
+
 
 struct fcs_derived_states_order_struct
 {
