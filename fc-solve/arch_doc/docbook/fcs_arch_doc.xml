@@ -8,6 +8,7 @@
 <!ENTITY section:code:overview SYSTEM "code_overview.xml">
 <!ENTITY section:techniques SYSTEM "techniques.xml">
 <!ENTITY section:scm SYSTEM "scm.xml">
+<!ENTITY section:terms SYSTEM "terms.xml">
 ]>
 
 <book id="index">
@@ -66,6 +67,7 @@
     &section:code:overview;
     &section:techniques;
     &section:scm;
+    &section:terms;
 </book>
 <!-- Keep this comment at the end of the file
 Local variables:

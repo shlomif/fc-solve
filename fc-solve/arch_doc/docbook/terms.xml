@@ -1,0 +1,142 @@
+<?xml version='1.0' ?>
+
+<!-- <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oa
+sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
+<!-- This comment is meant to settle gvim -->
+
+<chapter id="terms">
+    <title>Terminology</title>
+    <section id="terms_terms">
+        <title>Terms used throughout the Code</title>
+        <variablelist>
+            <title>Terms used throughout the Code</title>
+            <varlistentry>
+                <term>Canonization</term>
+                <listitem>
+                    <para>
+                        An extended state is canonized by its stacks being
+                        uniquely sorted according to their contents, and an
+                        array of indexes describing their original locations
+                        sorted accordingly. This is done to make sure no two
+                        states with the same permutation of states exist.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Depth</term>
+                <listitem>
+                    <orderedlist>
+                        <listitem>
+                            <para>
+                                The number of successive state &rarr;
+                                state.parent operatioons it take to reach the
+                                initial state which is the base of the states graph.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                In Depth-First-Search (DFS): the position of
+                                the state in the recursion stack.
+                            </para>
+                        </listitem>
+                    </orderedlist>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>f_s_</term>
+                <listitem>
+                    <para>
+                        Short for freecell_solver_
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>freecell_solver_user</term>
+                <listitem>
+                    <para>
+                        a generic name ot the API used by the programmer
+                        who wishes to utilize the &fcs; library in his
+                        application. Named after the prefix of the functions
+                        of this library.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Graph</term>
+                <listitem>
+                    <para>
+                        The states in the state collection form a directed
+                        graph. Each link is a state &rarr; derived state 
+                        relationship.
+                    </para>
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Hard DFS</term>
+                <listitem>
+                    <para>
+                        A Depth-First Search scan that uses procedural 
+                        recursion. Since suspending a scan and resuming it are
+                        O(d) operations (where d is the depth) instead
+                        of O(1) for Soft-DFS its use is deprecated. It was
+                        the original scan supported by &fcs; 0.2.0 and
+                        still exists in the code.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Hard Thread</term>
+                <listitem>
+                    <para>
+                        a collection of soft threads, that should generally be 
+                        placed in one system thread. Hard thread contains 
+                        resources that soft threads from different hard 
+                        threads would interfere with each other in allocating. 
+                        Hard threads contain a collection of state packs, and 
+                        various counters and other variables.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Instance</term>
+                <listitem>
+                    <para>
+                        an initial board, a collection of states and all the
+                        scans associated with it. An instance is initialized
+                        whenever one wishes to solve new board. By using
+                        command line parameters it is possible to configure it
+                        to solve the board in many ways. Instance logic is
+                        implemented in <filename>intrface.c</filename>, and 
+                        the user API is implemented in 
+                        <filename>lib.c</filename>. Users are advised to make 
+                        use of the command line interface in 
+                        <filename>cmd_line.c</filename>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            
+
+        </variablelist>
+    </section>
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:4
+sgml-indent-data:t
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+sgml-parent-document: "fcs_arch_doc.xml"
+End:
+-->
+
