@@ -35,12 +35,9 @@
 void freecell_solver_PQueueInitialise(
     PQUEUE *pq,
     int32 MaxElements,
-    pq_rating_t MaxRating,
-    int bIsAscending
+    pq_rating_t MaxRating
     )
 {
-    pq->IsAscendingHeap = bIsAscending;
-
     pq->MaxSize = MaxElements;
 
     pq->CurrentSize = 0;
@@ -64,8 +61,11 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
 {
     uint32 i;
     pq_element_t * Elements = pq->Elements;
+    pq_rating_t MaxRating = pq->MaxRating;
 
-    if (pq->CurrentSize == pq->MaxSize )
+    int32 CurrentSize = pq->CurrentSize;
+
+    if (CurrentSize == pq->MaxSize )
     {
         int new_size;
         new_size = pq->MaxSize + 256;
@@ -76,7 +76,7 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
     {
         /* set i to the first unused element and increment CurrentSize */
 
-        i = (pq->CurrentSize += 1);
+        i = (CurrentSize += 1);
 
         /* while the parent of the space we're putting the new node into is worse than
            our new node, swap the space with the worse node. We keep doing that until we
@@ -85,13 +85,12 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
            note that we also can sort so that the minimum elements bubble up so we need to loops
            with the comparison operator flipped... */
 
-        if( pq->IsAscendingHeap == TRUE )
         {
 
             while( ( i==PQ_FIRST_ENTRY ?
-                     (pq->MaxRating) /* return biggest possible rating if first element */
+                     (MaxRating) /* return biggest possible rating if first element */
                      :
-                     (Elements[ PQ_PARENT_INDEX(i) ].rating )
+                     (PGetRating(Elements[ PQ_PARENT_INDEX(i) ]) )
                    )
                    < r
                  )
@@ -101,46 +100,19 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
                 i = PQ_PARENT_INDEX(i);
             }
         }
-        else
-        {
-            while( ( i==PQ_FIRST_ENTRY ?
-                     (pq->MaxRating) /* return biggest possible rating if first element */
-                     :
-                     (Elements[ PQ_PARENT_INDEX(i) ].rating )
-                   )
-                   > r
-                 )
-            {
-                Elements[ i ] = Elements[ PQ_PARENT_INDEX(i) ];
-
-                i = PQ_PARENT_INDEX(i);
-            }
-        }
-
 
         /* then add the element at the space we created. */
         Elements[i].item = item;
         Elements[i].rating = r;
     }
 
+    pq->CurrentSize = CurrentSize;
+
     return TRUE;
 
 }
 
-
-int freecell_solver_PQueueIsEmpty( PQUEUE *pq )
-{
-
-    /* todo assert if size > maxsize */
-
-    if( pq->CurrentSize == 0 )
-    {
-        return TRUE;
-    }
-
-    return FALSE;
-
-}
+#define PQueueIsEmpty(pq) ((pq)->CurrentSize == 0)
 
 /* free up memory for pqueue */
 void freecell_solver_PQueueFree( PQUEUE *pq )
@@ -155,11 +127,12 @@ void *freecell_solver_PQueuePop( PQUEUE *pq)
     int32 i;
     int32 child;
     pq_element_t * Elements = pq->Elements;
+    int32 CurrentSize = pq->CurrentSize;
 
     pq_element_t pMaxElement;
     pq_element_t pLastElement;
 
-    if( freecell_solver_PQueueIsEmpty( pq ) )
+    if( PQueueIsEmpty( pq ) )
     {
         return NULL;
     }
@@ -167,22 +140,21 @@ void *freecell_solver_PQueuePop( PQUEUE *pq)
     pMaxElement = Elements[PQ_FIRST_ENTRY];
 
     /* get pointer to last element in tree */
-    pLastElement = Elements[ pq->CurrentSize-- ];
+    pLastElement = Elements[ CurrentSize-- ];
 
-    if( pq->IsAscendingHeap == TRUE )
     {
 
         /* code to pop an element from an ascending (top to bottom) pqueue */
 
         /*  UNTESTED */
 
-        for( i=PQ_FIRST_ENTRY; PQ_LEFT_CHILD_INDEX(i) <= pq->CurrentSize; i=child )
+        for( i=PQ_FIRST_ENTRY; PQ_LEFT_CHILD_INDEX(i) <= CurrentSize; i=child )
         {
             /* set child to the smaller of the two children... */
 
             child = PQ_LEFT_CHILD_INDEX(i);
 
-            if( (child != pq->CurrentSize) &&
+            if( (child != CurrentSize) &&
                 (PGetRating(Elements[child + 1]) > PGetRating(Elements[child])) )
             {
                 child ++;
@@ -198,34 +170,9 @@ void *freecell_solver_PQueuePop( PQUEUE *pq)
             }
         }
     }
-    else
-    {
-        /* code to pop an element from a descending (top to bottom) pqueue */
-
-        for( i=PQ_FIRST_ENTRY; PQ_LEFT_CHILD_INDEX(i) <= pq->CurrentSize; i=child )
-        {
-            /* set child to the larger of the two children... */
-
-            child = PQ_LEFT_CHILD_INDEX(i);
-
-            if( (child != pq->CurrentSize) &&
-                (PGetRating(Elements[child + 1]) < PGetRating(Elements[child])) )
-            {
-                child ++;
-            }
-
-            if( PGetRating( pLastElement ) > PGetRating( Elements[ child ] ) )
-            {
-                Elements[ i ] = Elements[ child ];
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
 
     Elements[i] = pLastElement;
+    pq->CurrentSize = CurrentSize;
 
     return pMaxElement.item;
 }

@@ -34,7 +34,6 @@ typedef struct _PQUEUE
     int32 CurrentSize;
     pq_element_t * Elements; /* pointer to void pointers */
     pq_rating_t MaxRating; /* biggest element possible */
-    int IsAscendingHeap; /* true if the heap should be sorted with the maximum scoring elements first */
 } PQUEUE;
 
 /* given an index to any element in a binary tree stored in a linear array with the root at 1 and
@@ -46,20 +45,17 @@ typedef struct _PQUEUE
 
 /* left and right children are index * 2 and (index * 2) +1 respectively */
 #define PQ_LEFT_CHILD_INDEX(i) ((i)<<1)
-#define PQ_RIGHT_CHILD_INDEX(i) (((i)<<)+1)
+#define PQ_RIGHT_CHILD_INDEX(i) (((i)<<1)+1)
 
 void freecell_solver_PQueueInitialise(
     PQUEUE *pq,
     int32 MaxElements,
-    pq_rating_t MaxRating,
-    int bIsAscending
+    pq_rating_t MaxRating
     );
 
 void freecell_solver_PQueueFree( PQUEUE *pq );
 
 int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t);
-
-int freecell_solver_PQueueIsEmpty( PQUEUE *pq );
 
 void *freecell_solver_PQueuePop( PQUEUE *pq);
 
