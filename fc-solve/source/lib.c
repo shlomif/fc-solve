@@ -173,7 +173,7 @@ int freecell_solver_user_resume_solution(
     user = (fcs_user_t*)user_instance;
     
     /* 
-     * I expect user->current_instance to be initialized at some value
+     * I expect user->current_instance to be initialized at some value.
      * */
     for( ; 
         run_for_first_iteration || ((user->current_instance < user->num_instances) && (ret == FCS_STATE_IS_NOT_SOLVEABLE)) ;
@@ -268,10 +268,11 @@ int freecell_solver_user_resume_solution(
 
 
             calc_max_iters();
-        
+
             init_num_times = user->instance->num_times;
-            
-            ret = user->ret = user->instances_list[user->current_instance].ret = 
+
+            ret = user->ret = 
+                user->instances_list[user->current_instance].ret = 
                 freecell_solver_solve_instance(user->instance, &user->state);
         }
         else
@@ -300,16 +301,25 @@ int freecell_solver_user_resume_solution(
         }
         else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
         {
+            /* 
+             * First - check if we exceeded our limit. If so - we must terminate
+             * and return now.
+             * */
+            if ((user->current_iterations_limit >= 0) &&
+                (user->iterations_board_started_at >= user->current_iterations_limit))
+            {
+                break;
+            }
+            
+            /* 
+             * Determine if we exceeded the instance-specific quota and if
+             * so, designate it as unsolvable.
+             * */
             if ((local_limit() >= 0) &&
                 (user->instance->num_times >= local_limit())
                )
             {
                 ret = FCS_STATE_IS_NOT_SOLVEABLE;
-            }
-            else if ((user->current_iterations_limit >= 0) &&
-                (user->iterations_board_started_at >= user->current_iterations_limit))
-            {
-                break;
             }
         }
     }
