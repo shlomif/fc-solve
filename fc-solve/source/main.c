@@ -657,10 +657,14 @@ int main(int argc, char * argv[])
     if ((arg == argc) || (!strcmp(argv[arg], "-")))
     {
         file = stdin;
-        fprintf(stderr, "%s", 
-                "Reading the board from the standard input.\n"
-                "Type \"fc-solve --help\" for more usage information.\n"
-               );
+        if (!getenv("FREECELL_SOLVER_QUIET"))
+        {
+            fprintf(stderr, "%s", 
+                    "Reading the board from the standard input.\n"
+                    "Type \"fc-solve --help\" for more usage information.\n"
+                    "To cancel this message set the FREECELL_SOLVER_QUIET environment variable.\n"
+                   );
+        }
     }
     else if (argv[arg][0] == '-')
     {
