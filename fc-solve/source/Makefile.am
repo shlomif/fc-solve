@@ -35,8 +35,8 @@ Makefile.win32: gen_makefile.pl
 EXTRA_DIST += alloc.h app_str.h caas.h card.h config.h
 EXTRA_DIST += fcs_cl.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h
 EXTRA_DIST += fcs_isa.h fcs_move.h fcs_user.h inline.h jhjtypes.h
-EXTRA_DIST += move.h ms_ca.h pqueue.h preset.h rand.h
-EXTRA_DIST += state.h test_arr.h tests.h
+EXTRA_DIST += lookup2.h move.h ms_ca.h pqueue.h preset.h
+EXTRA_DIST += rand.h state.h test_arr.h tests.h
 #>>>HEADERS.END
 
 EXTRA_DIST += USAGE CREDITS README.win32.txt
