@@ -658,13 +658,13 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 ptr_recurse_into_state_with_locations->parent = ptr_state_with_locations;
 #endif
 
-                soft_thread->soft_dfs_info[depth+1].state = ptr_recurse_into_state_with_locations;
                 /*
                     I'm using current_state_indexes[depth]-1 because we already
                     increased it by one, so now it refers to the next state.
                 */
                 depth++;
                 the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
+                the_soft_dfs_info->state = ptr_recurse_into_state_with_locations;
                 the_soft_dfs_info->test_index = 0;
                 the_soft_dfs_info->current_state_index = 0;
                 the_soft_dfs_info->derived_states_list.num_states = 0;
