@@ -1191,7 +1191,8 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
             case FCS_METHOD_BFS:
             case FCS_METHOD_A_STAR:
             case FCS_METHOD_OPTIMIZE:
-                        if (! soft_thread->initialized)
+            
+            if (! soft_thread->initialized)
             {
                 if (soft_thread->method == FCS_METHOD_A_STAR)
                 {

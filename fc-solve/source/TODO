@@ -3,6 +3,11 @@
 * Implement the move stacks over-riding in the derived states list, so
 move stacks won't be allocated excessively.
 
+* Implement the derived states ordering.
+
+* Implement the perl script that displays the moves in a human viewable
+fashion.
+
 --- Non-pressing ---
 
 * Convert some of the documentation to Perl-POD or DocBook.
