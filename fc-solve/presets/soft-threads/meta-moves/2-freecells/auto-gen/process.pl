@@ -56,7 +56,7 @@ my $scans_data = MyInput::get_scans_data($start_board, $num_boards, \@selected_s
 
 my $orig_scans_data = $scans_data->copy();
 
-my @quotas = ((350) x 5000);
+my @quotas = ((350) x 500);
 my @chosen_scans = ();
 
 my $total = 0;
