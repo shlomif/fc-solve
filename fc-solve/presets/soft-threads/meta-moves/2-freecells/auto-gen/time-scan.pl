@@ -39,7 +39,7 @@ close(O);
 
 my @cmd_line = (qw(freecell-solver-range-parallel-solve 1 32000 20),
         qw(--total-iterations-limit 100000 --binary-output-to), 
-        "data/$id.data.bin",
+        "data/$id.data.bin", qw(--freecells-num 2),
         @ARGV);
 
 if ($opt eq "--gen-bat")
