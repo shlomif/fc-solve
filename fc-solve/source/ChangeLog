@@ -1,3 +1,10 @@
+From 2.4.2 to 2.5.5:
+--------------------
+
+* Made the tests order an interface and one that is dynamically allocated.
+
+* Converted the soft_dfs stacks to one stack.
+
 From 2.4.1 to 2.4.2:
 --------------------
 
