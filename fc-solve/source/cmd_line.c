@@ -853,7 +853,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 freecell_solver_args_man_free(args_man);
             }
         }
-        else if (!strcmp(argv[arg], "-l"))
+        else if ((!strcmp(argv[arg], "-l")) || (!strcmp(argv[arg], "--load-config")))
         {
             arg++;
             if (arg == argc)
@@ -871,7 +871,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 {
                     char * err_str;
                     err_str = malloc(strlen(argv[arg]) + 100);
-                    sprintf(err_str, "Unable to load the \"%s\" preset!\n", argv[arg]);
+                    sprintf(err_str, "Unable to load the \"%s\" configuration!\n", argv[arg]);
                     *error_string = err_str;
 
                     *last_arg = arg;

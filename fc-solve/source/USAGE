@@ -412,6 +412,7 @@ the same memory resources. "dead-end-marks" means they try to mark states
 that they have withdrawn from, and states whose all their derived states are 
 such, as "dead ends". This may or may not improve the speed of the solution.
 
+
 -ni
 --next-instance
 
@@ -421,7 +422,58 @@ one would run and so on. One use of it is to run an atomic moves scan
 after a meta-moves scan, so we will always get an accurate verdict and
 still enjoy some of the speed of the meta-moves scan.
 
-7. Run-time Display Options
+
+7. Meta-Options
+---------------
+
+
+--reset
+
+This option resets the program to its initial state, losing all the
+logic that was inputted to it up to that state. Afterwards, it can
+be set to a different configuration, again.
+
+
+--read-from-file [{num_skip},]filename
+
+This option will read the configuration options from a file. The format
+of the file is similar to that used by the UNIX Bourne Shell. (i.e:
+spaces denote separate arguments, double-quotes encompass arguments,
+backslash escapes characters).
+
+The filename can be preceeded by an optional number of the arguments to
+skip followed by a comma. (the default is 0)
+
+
+-l [preset]
+--load-config [preset]
+
+Reads the configuration specified by [preset] and configures the solver
+accordingly. A preset is a set of command line arguments to be analyzed
+in the place of this option. They are read from a set of presetrc files
+: one installed system-wide, the other at $HOME/.freecell-solver/presetrc 
+and the third at the path specified by the FREECELL_SOLVER_PRESETRC 
+environment variable. You can add more presets at any of these places.
+(refer to http://groups.yahoo.com/group/fc-solve-discuss/message/403
+for information about their format)
+
+
+Presets that are shipped with Freecell Solver:
+
+	abra-kadabra      - a meta-moves preset
+    cool-jives        - a meta-moves preset
+    crooked-nose      - an atomic-moves preset (guarantees an accurate verdict)
+    fools-gold        - an atomic-moves preset
+    good-intentions   - runs cool-jives and then fools-gold
+    hello-world       - a meta-moves preset
+    john-galt-line    - a meta-moves preset
+    rin-tin-tin       - a meta-moves preset
+    yellow-brick-road - a meta-moves preset
+
+They can be abbreviated into their lowercase acronym (i.e: "ak" or "rtt").
+
+
+8. Run-time Display Options
 ---------------------------
 
 
@@ -433,6 +485,7 @@ recursion depth of every state which is checked, to the standard
 output. It's a good way to keep track of how it's doing, but the output
 slows it down a bit.
 
+
 -s
 --state-output
 
@@ -443,7 +496,7 @@ Freecell Solver, but you usually cannot make what is going on because
 it is so fast.
 
 
-8. Signal Combinations
+9. Signal Combinations
 ----------------------
 
 If you are working on a UNIX or a similar system then you can set some
@@ -463,5 +516,4 @@ option -i/--iter-output.
 If you send it two USR2 signals and then USR1, then "fc-solve"
 will also print the board of every state. Again, this will only be done
 assuming the iteration output is turned on.
-
 
