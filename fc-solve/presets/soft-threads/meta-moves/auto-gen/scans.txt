@@ -7,3 +7,4 @@
 8	--method a-star -to 0123467
 9	--method random-dfs -seed 4 -to 0[0123467]
 10	--method random-dfs -to [01][23456789] -seed 8
+11	--method a-star -asw 0.2,0.8,0,0

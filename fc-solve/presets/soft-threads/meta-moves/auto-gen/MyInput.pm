@@ -6,7 +6,7 @@ use PDL::IO::FastRaw;
 sub get_scans_data
 {
     my $num_boards = shift;
-    my @selected_scans = @{shift};
+    my @selected_scans = @{shift()};
     my $scans_data = zeroes($num_boards, scalar(@selected_scans));
         
     my $scan_idx = 0;
