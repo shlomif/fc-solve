@@ -1,8 +1,5 @@
 --- Pressing ---
 
-* Abstract the checking for maximal number of iterations in scans.c 
-(possibly remove it from check_and_add_state).
-
 * Clean up the scans interface. (less function calling)
 
 * Get 

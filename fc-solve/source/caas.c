@@ -27,6 +27,8 @@
 #include "caas.h"
 #include "ms_ca.h"
 
+#include "test_arr.h"
+
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
@@ -497,27 +499,7 @@ GCC_INLINE int freecell_solver_check_and_add_state(
 
     int check;
 
-    if ((instance->max_num_times >= 0) &&
-        (instance->num_times >= instance->max_num_times))
-    {
-        return FCS_STATE_BEGIN_SUSPEND_PROCESS;
-    }
-
-    if ((hard_thread->ht_max_num_times >= 0) &&
-        (hard_thread->num_times >= hard_thread->ht_max_num_times))
-    {
-        return FCS_STATE_BEGIN_SUSPEND_PROCESS;
-    }
-
-    if ((hard_thread->max_num_times >= 0) &&
-        (hard_thread->num_times >= hard_thread->max_num_times))
-    {
-        return FCS_STATE_BEGIN_SUSPEND_PROCESS;
-    }
-
-
-    if ((instance->max_num_states_in_collection >= 0) &&
-        (instance->num_states_in_collection >= instance->max_num_states_in_collection))
+    if (check_if_limits_exceeded())
     {
         return FCS_STATE_BEGIN_SUSPEND_PROCESS;
     }

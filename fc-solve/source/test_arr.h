@@ -76,6 +76,22 @@ extern freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TEST
                         }   \
                     }
 
+#define check_if_limits_exceeded()                                    \
+    (                                                                 \
+        ((instance->max_num_times >= 0) &&                            \
+        (instance->num_times >= instance->max_num_times))             \
+            ||                                                        \
+        ((hard_thread->ht_max_num_times >= 0) &&                      \
+        (hard_thread->num_times >= hard_thread->ht_max_num_times))    \
+            ||                                                        \
+        ((hard_thread->max_num_times >= 0) &&                         \
+        (hard_thread->num_times >= hard_thread->max_num_times))       \
+            ||                                                        \
+        ((instance->max_num_states_in_collection >= 0) &&             \
+        (instance->num_states_in_collection >=                        \
+            instance->max_num_states_in_collection)                   \
+        )                                                             \
+    )
         
 
 #ifdef __cplusplus
