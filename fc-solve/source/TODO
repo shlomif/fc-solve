@@ -1,5 +1,7 @@
 --- Pressing ---
 
+* Make sure the scan resources are freed before moving to the next scan.
+
 * a --reset flag.
 
 * --read-from-file to read configuration from there.
