@@ -20,7 +20,7 @@ while (my $line = <I>)
 {
     chomp($line);
     my ($id, $cmd_line) = split(/\t/, $line);
-    push @prev_scans, { 'id' => $id, 'cmd_line' => $line };
+    push @prev_scans, { 'id' => $id, 'cmd_line' => $cmd_line };
 }
 close(I);
 
