@@ -56,7 +56,7 @@ foreach my $scan (@selected_scans)
 }
 
 
-my @quotas = ((100) x 5000);
+my @quotas = ((50) x 10000);
 my @chosen_scans = ();
 
 my $total;
@@ -72,6 +72,19 @@ foreach my $q_more (@quotas)
     {
         next;
     }
+    if (0)
+    {
+        my $orig_max = $max;
+        while ($max == $orig_max)
+        {
+            $q--;
+            $num_solved = sumover(($scans_data <= $q) & ($scans_data > 0));
+            ($min, $max, $min_ind, $max_ind) = minmaximum($num_solved);
+        }
+        $q++;
+        $num_solved = sumover(($scans_data <= $q) & ($scans_data > 0));
+        ($min, $max, $min_ind, $max_ind) = minmaximum($num_solved);
+    }   
     push @chosen_scans, { 'q' => $q, 'ind' => $max_ind };
     $total += $max;
     print "$q \@ $max_ind ($total solved)\n";
