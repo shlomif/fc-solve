@@ -98,7 +98,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
     {                                                                     \
         /* This state is not going to be used, so                         \
          * let's clean it. */                                             \
-        fcs_clean_state(ptr_new_state_with_locations);                    \
         fcs_state_ia_release(hard_thread);                                \
         return check;                                                     \
     }                                                                     \

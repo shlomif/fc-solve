@@ -329,14 +329,10 @@ typedef struct freecell_solver_instance
      * */
     int ht_idx;
 
-#if 0
     /*
      * This is the master tests order. It is used to initialize all
      * the new Soft-Threads.
      * */
-    int instance_tests_order_num;
-    int instance_tests_order[FCS_TESTS_NUM];
-#endif
     fcs_tests_order_t instance_tests_order;
 
     /*
@@ -356,6 +352,14 @@ typedef struct freecell_solver_instance
      * the depth of a state that was reached.
      * */
     int calc_real_depth;
+
+    /*
+     * The tests order for the optimization scan as specified by the user.
+     * */
+    int opt_tests_order_set;
+    
+    fcs_tests_order_t opt_tests_order;
+
 } freecell_solver_instance_t;
 
 

@@ -48,6 +48,7 @@ void freecell_solver_clean_state(
         if (*s_ptr != NULL)
         {
             free(*s_ptr);
+            *s_ptr = NULL;
         }
     }
 }
@@ -404,7 +405,13 @@ void freecell_solver_canonize_state(
 
 #endif
 
-static void fcs_state_init(fcs_state_with_locations_t * state, int stacks_num)
+static void fcs_state_init(
+    fcs_state_with_locations_t * state, 
+    int stacks_num
+#ifdef INDIRECT_STACK_STATES
+    ,char * indirect_stacks_buffer
+#endif
+    )
 {
     int a;
     memset((void*)&(state->s), 0, sizeof(fcs_state_t));
@@ -415,7 +422,7 @@ static void fcs_state_init(fcs_state_with_locations_t * state, int stacks_num)
 #ifdef INDIRECT_STACK_STATES
     for(a=0;a<stacks_num;a++)
     {
-        state->s.stacks[a] = malloc(MAX_NUM_DECKS*52+1);
+        state->s.stacks[a] = &indirect_stacks_buffer[a << 7];
         memset(state->s.stacks[a], '\0', MAX_NUM_DECKS*52+1);
     }
     for(;a<MAX_NUM_STACKS;a++)
@@ -479,6 +486,9 @@ fcs_state_with_locations_t freecell_solver_initial_user_state_to_c(
 #ifdef FCS_WITH_TALONS
     ,int talon_type
 #endif
+#ifdef INDIRECT_STACK_STATES
+    , char * indirect_stacks_buffer
+#endif
     )
 {
     fcs_state_with_locations_t ret_with_locations;
@@ -493,7 +503,13 @@ fcs_state_with_locations_t freecell_solver_initial_user_state_to_c(
     int i;
     int decks_index[4];
 
-    fcs_state_init(&ret_with_locations, stacks_num);
+    fcs_state_init(
+        &ret_with_locations, 
+        stacks_num
+#ifdef INDIRECT_STACK_STATES        
+        , indirect_stacks_buffer  
+#endif
+        );
     str = string;
 
     first_line = 1;

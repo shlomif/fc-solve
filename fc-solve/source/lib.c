@@ -119,6 +119,9 @@ int freecell_solver_user_solve_board(
 #ifdef FCS_WITH_TALONS
         ,user->instance->talon_type
 #endif
+#ifdef INDIRECT_STACK_STATES
+        ,user->indirect_stacks_buffer
+#endif
         );
 
     user->state_validity_ret = freecell_solver_check_state_validity(
@@ -834,3 +837,38 @@ void freecell_solver_user_recycle(
 
     user->ret = FCS_STATE_NOT_BEGAN_YET;
 }
+
+int freecell_solver_user_set_optimization_scan_tests_order(
+    void * user_instance,
+    const char * tests_order,
+    char * * error_string
+    )
+{
+    fcs_user_t * user;
+    int ret;
+
+    user = (fcs_user_t*)user_instance;
+
+    if (user->instance->opt_tests_order.tests)
+    {
+        free(user->instance->opt_tests_order.tests);
+        user->instance->opt_tests_order.tests = NULL;
+    }
+
+    user->instance->opt_tests_order_set = 0;
+
+    ret = 
+        freecell_solver_apply_tests_order(
+            &(user->instance->opt_tests_order),
+            tests_order,
+            error_string
+            );    
+
+    if (!ret)
+    {
+        user->instance->opt_tests_order_set = 1;
+    }
+
+    return ret;
+}
+

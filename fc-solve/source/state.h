@@ -481,7 +481,7 @@ typedef struct fcs_struct_state_t fcs_state_t;
 #endif
 
 
-#define fcs_clean_state(state) 
+#define fcs_clean_state(state)  
 
 typedef char fcs_locs_t;
 
@@ -618,6 +618,9 @@ extern fcs_state_with_locations_t freecell_solver_initial_user_state_to_c(
     int decks_num
 #ifdef FCS_WITH_TALONS
     ,int talon_type
+#endif
+#ifdef INDIRECT_STACK_STATES
+    , char * indirect_stacks_buffer
 #endif
     );
 

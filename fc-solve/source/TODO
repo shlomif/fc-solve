@@ -7,9 +7,10 @@ to work.
 
 * Document the new features.
 
-* Make more specialized atomic moves.
-
 * Update the library version.
+
+* See why the range solver for --method soft-dfs -to 01ABCDE fails 
+towards the end.
 
 --- Non-pressing ---
 

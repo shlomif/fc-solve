@@ -374,6 +374,10 @@ freecell_solver_instance_t * freecell_solver_alloc_instance(void)
 
     instance->calc_real_depth = 0;
 
+    instance->opt_tests_order_set = 0;
+
+    instance->opt_tests_order.tests = NULL;
+
     return instance;
 }
 
@@ -1654,6 +1658,8 @@ void freecell_solver_recycle_instance(
     freecell_solver_finish_instance(instance);
 
     instance->num_times = 0;
+
+    instance->num_hard_threads_finished = 0;
 
     for(ht_idx = 0;  ht_idx < instance->num_hard_threads; ht_idx++)
     {
