@@ -3,8 +3,6 @@
     Arch Doc:
     ---------
     
-    * Add the terms "false imposssible", "intractable".
-
     * Hyperlink to the terms from someplaces in the main document
 
 * Implement the move stacks over-riding in the derived states list, so
