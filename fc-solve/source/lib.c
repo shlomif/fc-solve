@@ -258,6 +258,7 @@ void freecell_solver_user_free(
     if (user->ret == FCS_STATE_WAS_SOLVED)
     {
         fcs_move_stack_destroy(user->instance->solution_moves);
+        user->instance->solution_moves = NULL;
     }
     else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
     {
@@ -663,7 +664,7 @@ void freecell_solver_user_set_random_seed(
 
     user = (fcs_user_t *)user_instance;
 
-    freecell_solver_rand_srand(user->soft_thread->rand_gen, seed);
+    freecell_solver_rand_srand(user->soft_thread->rand_gen, (user->soft_thread->rand_seed = seed));
 }
 
 int freecell_solver_user_get_num_states_in_collection(void * user_instance)
@@ -800,4 +801,36 @@ int freecell_solver_user_set_hard_thread_prelude(
     hard_thread->prelude_as_string = strdup(prelude);
 
     return 0;
+}
+
+void freecell_solver_user_recycle(
+    void * user_instance
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+
+    if (user->ret == FCS_STATE_WAS_SOLVED)
+    {
+        fcs_move_stack_destroy(user->instance->solution_moves);
+        user->instance->solution_moves = NULL;
+    }
+    else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
+    {
+        freecell_solver_unresume_instance(user->instance);
+    }
+
+    if (user->ret != FCS_STATE_NOT_BEGAN_YET)
+    {
+        fcs_clean_state(&(user->state));
+        if (user->ret != FCS_STATE_INVALID_STATE)
+        {
+            fcs_clean_state(&(user->running_state));
+        }
+
+        freecell_solver_recycle_instance(user->instance);
+    }
+
+    user->ret = FCS_STATE_NOT_BEGAN_YET;
 }

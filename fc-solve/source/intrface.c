@@ -143,6 +143,10 @@ static void soft_thread_clean_soft_dfs(
         
         free(soft_thread->soft_dfs_info);
 
+        soft_thread->soft_dfs_info = NULL;
+
+        soft_thread->dfs_max_depth = 0;
+
     }
 }
 
@@ -205,7 +209,7 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
         soft_thread->a_star_weights[a] = freecell_solver_a_star_default_weights[a];
     }
 
-    soft_thread->rand_gen = freecell_solver_rand_alloc(24);
+    soft_thread->rand_gen = freecell_solver_rand_alloc(soft_thread->rand_seed = 24);
 
     soft_thread->initialized = 0;
 
@@ -403,8 +407,14 @@ static void free_instance_hard_thread_callback(freecell_solver_hard_thread_t * h
     {
         free (hard_thread->prelude);
     }
+    fcs_move_stack_destroy(hard_thread->reusable_move_stack);
                 
     free(hard_thread->soft_threads);
+
+    if (hard_thread->move_stacks_allocator)
+    {
+        freecell_solver_compact_allocator_finish(hard_thread->move_stacks_allocator);
+    }
     free(hard_thread);    
 }
 
@@ -429,6 +439,8 @@ void freecell_solver_free_instance(freecell_solver_instance_t * instance)
         free(instance->optimization_thread->soft_threads);
         free(instance->optimization_thread);
     }
+
+    free(instance->instance_tests_order.tests);
 
     free(instance);
 }
@@ -707,6 +719,7 @@ static void trace_solution(
     if (instance->solution_moves != NULL)
     {
         fcs_move_stack_destroy(instance->solution_moves);
+        instance->solution_moves = NULL;
     }
 
     fcs_move_stack_alloc_into_var(solution_moves);
@@ -1423,6 +1436,7 @@ void freecell_solver_finish_instance(
     )
 {
     int ht_idx;
+    freecell_solver_hard_thread_t * hard_thread;
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     free(instance->indirect_prev_states);
@@ -1431,14 +1445,15 @@ void freecell_solver_finish_instance(
     /* De-allocate the state packs */
     for(ht_idx=0;ht_idx<instance->num_hard_threads;ht_idx++)
     {
-        freecell_solver_state_ia_finish(instance->hard_threads[ht_idx]);
+        hard_thread = instance->hard_threads[ht_idx];
+        freecell_solver_state_ia_finish(hard_thread);
 
 #ifdef INDIRECT_STACK_STATES
         freecell_solver_compact_allocator_finish(instance->hard_threads[ht_idx]->stacks_allocator);
 #endif
-        freecell_solver_compact_allocator_finish(instance->hard_threads[ht_idx]->move_stacks_allocator);
-
-        fcs_move_stack_destroy(instance->hard_threads[ht_idx]->reusable_move_stack);
+        freecell_solver_compact_allocator_finish(hard_thread->move_stacks_allocator);
+        hard_thread->move_stacks_allocator = NULL;
+        
     }
 
     if (instance->optimization_thread)
@@ -1522,10 +1537,7 @@ void freecell_solver_finish_instance(
 #endif
 
 
-    clean_soft_dfs(instance);
-
-
-    free(instance->instance_tests_order.tests);
+    clean_soft_dfs(instance);    
 }
 
 freecell_solver_soft_thread_t * freecell_solver_instance_get_soft_thread(
@@ -1601,4 +1613,34 @@ freecell_solver_soft_thread_t * freecell_solver_new_hard_thread(
     instance->num_hard_threads++;
 
     return ret->soft_threads[0];
+}
+
+void freecell_solver_recycle_instance(
+    freecell_solver_instance_t * instance
+        )
+{
+    int ht_idx, st_idx;
+    freecell_solver_hard_thread_t * hard_thread;
+    freecell_solver_soft_thread_t * soft_thread;
+    
+    freecell_solver_finish_instance(instance);
+
+    for(ht_idx = 0;  ht_idx < instance->num_hard_threads; ht_idx++)
+    {
+        hard_thread = instance->hard_threads[ht_idx];
+        hard_thread->num_times = 0;
+        hard_thread->ht_max_num_times = hard_thread->num_times_step;
+        hard_thread->max_num_times = -1;
+        hard_thread->num_soft_threads_finished = 0;
+        hard_thread->move_stacks_allocator =
+            freecell_solver_compact_allocator_new();
+        for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
+        {
+            soft_thread = hard_thread->soft_threads[st_idx];
+            soft_thread->is_finished = 0;
+            soft_thread->initialized = 0;
+            freecell_solver_rand_srand(soft_thread->rand_gen, soft_thread->rand_seed);
+            
+        }
+    }
 }

@@ -452,6 +452,33 @@ int main(int argc, char * argv[])
         fflush(binary_output);
     }
 
+    user.instance = freecell_solver_user_alloc();
+
+    arg = start_from_arg;
+    
+    parser_ret =
+        freecell_solver_user_cmd_line_parse_args(
+            user.instance,
+            argc,
+            argv,
+            arg,
+            known_parameters,
+            cmd_line_callback,
+            &user,
+            &error_string,
+            &arg
+            );
+
+    if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
+    {
+        fprintf(stderr, "Unknown option: %s", argv[arg]);
+        exit(-1);
+    }
+
+    ret = 0;
+    
+    
+
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
         buffer = get_board(board_num);
@@ -459,30 +486,6 @@ int main(int argc, char * argv[])
         board_num_iters = 0;
 
         pack_num_iters = 0;
-
-        arg = start_from_arg;
-        user.instance = freecell_solver_user_alloc();
-        
-        parser_ret =
-            freecell_solver_user_cmd_line_parse_args(
-                user.instance,
-                argc,
-                argv,
-                arg,
-                known_parameters,
-                cmd_line_callback,
-                &user,
-                &error_string,
-                &arg
-                );
-
-        if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
-        {
-            fprintf(stderr, "Unknown option: %s", argv[arg]);
-            exit(-1);
-        }
-
-        ret = 0;
 
         freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
 
@@ -577,8 +580,10 @@ int main(int argc, char * argv[])
         }
         
 
-        freecell_solver_user_free(user.instance);
+        freecell_solver_user_recycle(user.instance);
     }
+
+    freecell_solver_user_free(user.instance);
 
     if (binary_output_filename)
     {

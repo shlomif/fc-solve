@@ -224,6 +224,10 @@ extern int freecell_solver_user_set_hard_thread_prelude(
     char * prelude
     );
 
+extern void freecell_solver_user_recycle(
+    void * user_instance
+    );
+
 #ifdef __cplusplus
 }
 #endif

@@ -617,6 +617,12 @@ struct freecell_solver_soft_thread_struct
     fcs_rand_t * rand_gen;
 
     /*
+     * The initial seed of this random number generator
+     * */
+    int rand_seed;
+    
+
+    /*
      * A flag that indicates if this soft thread have already been
      * initialized.
      * */
@@ -758,6 +764,10 @@ extern int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     int resume,
     int to_randomize
     );
+
+extern void freecell_solver_recycle_instance(
+    freecell_solver_instance_t * instance
+        );
 
 #ifdef __cplusplus
 }

@@ -63,6 +63,7 @@ void freecell_solver_state_ia_finish(freecell_solver_hard_thread_t * hard_thread
         free(hard_thread->state_packs[a]);
     }
     free(hard_thread->state_packs);
+    hard_thread->state_packs = NULL;
 }
 
 void freecell_solver_state_ia_foreach(freecell_solver_hard_thread_t * hard_thread, void (*ptr_function)(fcs_state_with_locations_t *, void *), void * context)
