@@ -236,11 +236,12 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
 #else
     soft_thread->tests_order.num = soft_thread->hard_thread->instance->instance_tests_order.num;
     soft_thread->tests_order.tests = 
-        malloc(sizeof(soft_thread->tests_order.num));
+        malloc(sizeof(soft_thread->tests_order.tests[0]) * soft_thread->tests_order.num);
     memcpy(soft_thread->tests_order.tests, 
         soft_thread->hard_thread->instance->instance_tests_order.tests, 
-        soft_thread->tests_order.num
+        sizeof(soft_thread->tests_order.tests[0]) * soft_thread->tests_order.num
         );
+    soft_thread->tests_order.max_num = soft_thread->tests_order.num;
 #endif
 
     soft_thread->is_finished = 0;
