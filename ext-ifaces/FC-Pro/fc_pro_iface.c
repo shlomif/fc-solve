@@ -375,8 +375,48 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         else
                         {
                             moves_processed_add_new_move(ret, move);
+                            pos.hold[src] = 0;
                         }
                         virtual_freecell_len[src] = 0;
+                    }
+                    break;
+
+                case FCS_MOVE_TYPE_FREECELL_TO_STACK:
+                    {
+                        src = fcs_move_get_src_freecell(move);
+                        dest = fcs_move_get_dest_stack(move);
+                        assert(virtual_freecell_len[src] == 1);
+                        if (pos.hold[src] == 0)
+                        {
+                            /* Do nothing */
+                        }
+                        else
+                        {
+                            moves_processed_add_new_move(ret, move);
+                            pos.tableau[dest].cards[pos.tableau[dest].count++] = pos.hold[src];
+                            pos.hold[src] = 0;
+                        }                        
+                        virtual_freecell_len[src] = 0;
+                        virtual_stack_len[dest]++;
+                    }
+                    break;
+
+               case FCS_MOVE_TYPE_STACK_TO_FREECELL:
+                    {
+                        src = fcs_move_get_src_stack(move);
+                        dest = fcs_move_get_dest_freecell(move);
+                        assert(virtual_stack_len[src] > 0);
+                        assert(pos.tableau[src].count <= virtual_stack_len[src]);
+                        if (pos.tableau[src].count < virtual_stack_len[src])
+                        {
+                            /* Do nothing */
+                        }
+                        else
+                        {
+                            moves_processed_add_new_move(ret, move);
+                            pos.hold[dest] = pos.tableau[src].cards[--pos.tableau[src].count];
+                        }
+                        virtual_stack_len[src]--;
                     }
                     break;
                 
