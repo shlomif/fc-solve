@@ -597,8 +597,29 @@ int main(int argc, char * argv[])
     if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
     {
         fprintf(stderr, "Unknown option: %s", argv[arg]);
-        exit(-1);
+        return (-1);
     }
+    else if (
+        (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
+            )
+    {
+        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+                " and was not supplied with one.\n", argv[arg]);
+        return (-1);
+    }
+    else if (        
+        (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
+        )
+    {
+        if (error_string != NULL)
+        {
+            fprintf(stderr, "%s", error_string);
+            free(error_string);
+        }
+        return (-1);
+    }
+
+    
 
     ret = 0;
     
