@@ -595,10 +595,10 @@ int freecell_solver_apply_tests_order(
             /* Check for an =dsorder(...) specification */
             {
                 const char * s;
-                fcs_derived_states_order_t * order;
-                fcs_derived_states_order_instance_t * order_instance;
+                fcs_derived_states_order_t * order = NULL;
+                fcs_derived_states_order_instance_t * order_instance = NULL;
                 const char * end_of_spec;
-                int found;
+                int found = 0;
 
                 s = string+read_char_idx+num_chars_read;
                 if (*s == '=')

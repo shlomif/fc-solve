@@ -1,12 +1,12 @@
 CC = gcc
 
 
-DEBUG = 1
+DEBUG = 0
 
 ifneq ($(DEBUG),0)
 	OFLAGS := -Wall -g
 else
-	OFLAGS := -Wall -O3
+	OFLAGS := -Wall -O2
 endif
 
 OLFLAGS := -Wall

@@ -706,14 +706,14 @@ int main(int argc, char * argv[])
     signal(SIGUSR2, select_signal_handler);
 #endif
 
-#if 0
+#if 1
     {
-        int limit = 500;
+        int limit = 20;
         freecell_solver_user_limit_iterations(instance, limit);
         ret = freecell_solver_user_solve_board(instance, user_state);
         while (ret == FCS_STATE_SUSPEND_PROCESS)
         {
-            limit += 500;
+            limit += 20;
             freecell_solver_user_limit_iterations(instance, limit);
             ret = freecell_solver_user_resume_solution(instance);
         }
