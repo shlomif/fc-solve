@@ -372,6 +372,7 @@ int freecell_solver_user_resume_solution(
         }
         
         user->iterations_board_started_at += user->instance->num_times - init_num_times;
+        user->init_num_times = user->instance->num_times;
 
         if (user->ret == FCS_STATE_WAS_SOLVED)
         {
