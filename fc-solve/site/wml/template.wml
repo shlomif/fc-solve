@@ -53,6 +53,9 @@
     <li>
     <navbarlink "don_woods.html" "Don Woods' Solver" />
     </li>
+    <li>
+    <navbarlink "pysol/" "PySol Integration" />
+    </li>
 </ul>
 </li>
 <li><navbarlink "docs/" "Documents" />

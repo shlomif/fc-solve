@@ -26,12 +26,12 @@ else
 endif
 #D = /home/httpd/html/ip-noise
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css *.png))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css *.png pysol/*.tar.gz pysol/*.diff))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
 
-HTMLS = $(D)/index.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/arch_doc/index.html $(D)/to-do.html
+HTMLS = $(D)/index.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html
 
 ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
 
@@ -40,7 +40,7 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
 SUBDIRS_WITH_INDEXES = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
 
-SUBDIRS = $(SUBDIRS_WITH_INDEXES) $(D)/docs $(D)/arch_doc
+SUBDIRS = $(SUBDIRS_WITH_INDEXES) $(D)/docs $(D)/arch_doc $(D)/pysol
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
