@@ -26,12 +26,17 @@ fc-solve.6: fc-solve.pod ver.txt
 	cat $< | sed 's/FCS_VERSION/@VERSION@/g' | pod2man --section=6 --center="Freecell Solver" --date="2001/06/09" --release="Freecell Solver @VERSION@" > $@
 
 
+noinst_SCRIPTS = Makefile.win32
+
+Makefile.win32: gen_makefile.pl
+	perl $< --arch=win32 | add_cr.pl - > $@
+
 EXTRA_DIST += alloc.h app_str.h caas.h card.h fcs_dm.h fcs.h fcs_hash.h
 EXTRA_DIST += fcs_isa.h jhjtypes.h inline.h lookup2.h ms_ca.h move.h
 EXTRA_DIST += pqueue.h preset.h rand.h state.h test_arr.h tests.h
 
 EXTRA_DIST += USAGE CREDITS
-EXTRA_DIST += gen_makefile.pl Makefile.win32 Makefile.lite Makefile.gnu
+EXTRA_DIST += gen_makefile.pl Makefile.lite Makefile.gnu
 EXTRA_DIST += config.h.orig config.h.dkds config.h.freecell
 EXTRA_DIST += devel_docs/ devel_docs/Architecture.summary.txt devel_docs/Architecture.txt devel_docs/strategies.txt devel_docs/variants.txt
 EXTRA_DIST += gen_presets.pl gen_def.sh
