@@ -2,8 +2,10 @@
 
     - Introduction
     - Coding Conventions
+    - Overview of the Program
     - Overview of the Modules
     - Interesting Techniques Used.
+    - Software Configuration Management - maintaining the code
 
 Coding Conventions:
 -------------------
@@ -43,4 +45,54 @@ Coding Conventions:
     main.c/test_multi_parallel.c - two command line programs to use the
     library (others can be written)
 
+Overview of the Program:
+------------------------
+
+Freecell Solver solves boards by using Depth-First Search or Best-First-Search
+scans starting from the initial board. It has a collection of the states,
+and constructs a tree of the states descending from each state to its "parent".
+A parent state means the state in which from which it was discovered.
+
+Freecell Solver can run several "tests" on each state. Each test generates
+a list of derived states. Some of the test are Freecell meta-move ones, some
+are Freecell atomic move ones, and the others are Simple Simon meta-move ones.
+The order of the tests can be specified at the command line, and tests
+can be grouped, and the order of checking of the tests within a group
+will be determined by a special callback.
+
+
+
+
+Overview of the modules:
+------------------------
+
+(bottom up)
+
+    card.c
+    ======
+
+    Elementary functions to convert cards to and from their string 
+    representations.
+
+    The u and the p stand for user and perl respectively, and mean user 
+    representation and internal C representation. (The first version of 
+    Freecell Solver was written in Perl).
+
+    state.h
+    =======
+
+    Definition of the fcs_state_t (which represents a complete layout of the 
+    Freecell board) and of fcs_state_with_locations_t. Contains many macros
+    for manipulating states and strings all of them should behave like function
+    calls.
+
+    The state_with_locations_t contains the real positions of the stacks and
+    freecells (refer to SECT<Canonization and Normalization>) and other things
+    that the system uses but don't uniquely identify the state in the state 
+    collection.
+
+
+
+
+    - 
 
