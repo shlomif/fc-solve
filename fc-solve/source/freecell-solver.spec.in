@@ -80,6 +80,8 @@ cd man6
 
 %files libs
 /usr/lib/libfreecell-solver.so.%{LIBVER}
+/usr/share/freecell-solver/presetrc
+/usr/share/freecell-solver/presets/*
 
 %files
 %defattr(-,root,root)
@@ -91,8 +93,6 @@ cd man6
 /usr/bin/make_pysol_freecell_board.py
 /usr/bin/freecell-solver-range-parallel-solve
 %{_mandir}/*/*
-/usr/share/freecell-solver/presetrc
-/usr/share/freecell-solver/presets/*
 
 %files devel
 %defattr(-,root,root)
