@@ -591,6 +591,9 @@ int main(int argc, char * argv[])
     if ((arg == argc) || (!strcmp(argv[arg], "-")))
     {
         file = stdin;
+        fprintf(stderr, "%s", 
+                "Reading the board from the standard input.\n"
+               );
     }
     else if (argv[arg][0] == '-')
     {
