@@ -267,6 +267,108 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 between two intermediate states.
             </para>
         </section>
+        
+        <section id="preset.c">
+            <title>preset.c</title>
+            <para>
+                This file manages the presets: configurations of stacks
+                number, freecells number, decks number, and the other 
+                parameters that define how a game is played. A preset is a 
+                variant of Solitaire such as Freecell, Baker's Game, Simple 
+                Simon, Good Measure, etc. Many of them are categorized in 
+                PySol under different categories than the Freecell category. 
+                Moreover, some "Freecell-like" games such as Penguin are not
+                supported by Freecell Solver yet.
+            </para>
+            <para>
+                The routines in the file enable applying a preset to an 
+                instance (by its name), applying a preset to an instance
+                by a pointer to it, etc. It is also directly used by lib.c
+                to maintain consistensy across a sequence of consecutive 
+                instances.
+            </para>
+        </section>
+
+        <section id="freecell.c">
+            <title>freecell.c</title>
+            <para>
+                This module contains "test functions" for Freecell tests. A 
+                test receives an origin state and try to deduce if moves of 
+                a certain sort is possible. It fills in a derived states list.
+            </para>
+            <para>
+                This code uses some macros defined in tests.h. It contains
+                both meta-move tests and atomic moves ones.
+            </para>
+        </section>
+
+        <section id="simpsim.c">
+            <title>simpsim.c</title>
+            <para>
+                This file is similar in spirit to 
+                <filename>freecell.c</filename> only that it contains
+                Simple Simon tests.
+            </para>
+        </section>
+
+        <section id="caas.c">
+            <title>caas.c</title>
+            <para>
+                This file contains the <function>check_and_add_state</function> 
+                function - a function that is used to determine if a reached 
+                state is found in the states collection and if so, to insert 
+                it there. (an operation that can be considered atomic). 
+            </para>
+            <para>
+                It has several macros used to do it for the various types of 
+                states collections supported at compile time. It also has a 
+                function to collect the new stacks that were present in a 
+                similar fashion.
+            </para>
+            <para>
+                It is being used by the tests functions to put a state in 
+                the state collection.
+            </para>
+        </section>
+
+        <section id="scans.c">
+            <title>scans.c</title>
+            <para>
+                This module contains the functions of the various scans and 
+                their auxiliary functions. The scan functions run tests and 
+                traverse the graph according to some inherent logic. Currently 
+                present are random-dfs/soft-dfs (soft-dfs is random-dfs 
+                without randomizing groups), Hard-DFS, 
+                Best-First-Search (named A* in the code) and
+                Breadth-First-Search (named BFS in the code) functions.
+            </para>
+        </section>
+
+       
+        <section id="intrface.c">
+            <title>intrface.c</title>
+            <para>
+                This module contains the logic that manages a solver instance,
+                configures it and runs it. It used the scans module to 
+                perform the scan and other modules to configure it. Note that
+                the interface presented here is very raw, and not meant
+                to be used as an API.
+            </para>
+        </section>
+
+
+        <section id="lib.c">
+            <title>lib.c</title>
+            <para>
+                This module contains the user API. It manages a sequence of 
+                instances that can be used to solve a board, and then recycled 
+                to solve another. It uses intrface.c to perform its 
+                operations, and do the actual configuring and solving. It 
+                supplies the API header file <filename>fcs_user.h<filename> 
+                which contains one function for doing any given operation, and 
+                these functions are implemented in lib.c.
+            </para>
+        </section>
 
     </section>
        
