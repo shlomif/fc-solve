@@ -46,28 +46,8 @@ if (scalar(@ARGV))
     }
 }
 
-
-my @scans;
-
-open I, "<scans.txt";
-while (my $line = <I>)
-{
-    chomp($line);
-    my ($id, $cmd_line) = split(/\t/, $line);
-    push @scans, { 'id' => $id, 'cmd_line' => $cmd_line };
-}
-close(I);
-
-my @selected_scans = 
-    grep 
-    { 
-        my @stat = stat("./data/".$_->{'id'}.".data.bin");
-        scalar(@stat) && ($stat[7] >= 12+$num_boards*4);
-    }
-    @scans;
-
-my %black_list = (map { $_ => 0 } (7,8));
-@selected_scans = (grep { !exists($black_list{$_->{'id'}}) } @selected_scans);
+my $sel_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
+my @selected_scans = @$sel_scans;
     
 #my $scans_data = [];
 #my $scans_data = zeroes($num_boards, scalar(@selected_scans));

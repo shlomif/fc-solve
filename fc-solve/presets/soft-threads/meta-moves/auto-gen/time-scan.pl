@@ -2,6 +2,8 @@
 
 use strict;
 
+my $opt = (($ARGV[0] eq "--gen-bat") ? shift : "");
+
 my (%scans);
 
 my $id;
@@ -35,9 +37,19 @@ open O, ">>scans.txt";
 print O "$id\t$scan\n";
 close(O);
 
-system(qw(freecell-solver-range-parallel-solve 1 32000 20),
-    qw(--total-iterations-limit 100000 --binary-output-to), 
-    "data/$id.data.bin",
-    @ARGV
-);
+my @cmd_line = (qw(freecell-solver-range-parallel-solve 1 32000 20),
+        qw(--total-iterations-limit 100000 --binary-output-to), 
+        "data/$id.data.bin",
+        @ARGV);
+
+if ($opt eq "--gen-bat")
+{
+    open O, ">run_scan_$id.bat";
+    print O join(" ", @cmd_line), "\n\r";
+    close(O);
+}
+else
+{
+    system(@cmd_line);
+}
 print "\a" x 10;
