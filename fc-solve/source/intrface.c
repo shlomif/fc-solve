@@ -96,11 +96,17 @@ static void foreach_soft_thread(
 
 {
     int ht_idx, st_idx;
+    freecell_solver_hard_thread_t * hard_thread;
+    int num_soft_threads;
+    freecell_solver_soft_thread_t * * ht_soft_threads;
     for(ht_idx = 0 ; ht_idx<instance->num_hard_threads; ht_idx++)
     {
-        for(st_idx = 0 ; st_idx < instance->hard_threads[ht_idx]->num_soft_threads; st_idx++)
+        hard_thread = instance->hard_threads[ht_idx];
+        num_soft_threads = hard_thread->num_soft_threads;
+        ht_soft_threads = hard_thread->soft_threads;
+        for(st_idx = 0 ; st_idx < num_soft_threads; st_idx++)
         {
-            soft_thread_callback(instance->hard_threads[ht_idx]->soft_threads[st_idx], context);
+            soft_thread_callback(ht_soft_threads[st_idx], context);
         }
     }
 

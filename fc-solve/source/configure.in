@@ -261,19 +261,17 @@ if test "x$states_type" = "xindirect" ; then
 fi
 
 if test "x$requires_libavl" = "xyes" ; then
-    AC_CHECK_LIB(avl, avl_create)
-    if test "x$ac_cv_lib_avl_avl_create" = "xno" ; then
+    AC_CHECK_LIB(avl, avl_create, [], [
         echo "Error! You need to have libavl around."
         exit -1
-    fi
+        ])
 fi
 
 if test "x$requires_libredblack" = "xyes" ; then
-    AC_CHECK_LIB(redblack, rbsearch)
-    if test "x$ac_cv_lib_redblack_rbsearch" = "xno" ; then
+    AC_CHECK_LIB(redblack, rbsearch, [], [
         echo "Error! You need to have libredblack around."
         exit -1
-    fi
+        ])
 fi
 
 if test "x$requires_glib" = "xyes" ; then
@@ -333,8 +331,9 @@ AC_DEFINE_UNQUOTED(MAX_NUM_STACK,$max_num_stacks)
 AC_DEFINE_UNQUOTED(MAX_NUM_INITIAL_CARDS_IN_A_STACK,$max_num_initial_cards_per_stack)
 AC_DEFINE_UNQUOTED(MAX_NUM_DECKS,$max_num_decks)
 
+AC_CONFIG_SUBDIRS([board_gen])
+
 AC_OUTPUT([Makefile freecell-solver-config freecell-solver.spec], [chmod +x freecell-solver-config])
 
-# Run configure in the board_gen directory
-(cd board_gen && ./configure --prefix="$prefix")
+
 
