@@ -7,7 +7,8 @@ f_s_ - short for freecell_solver_
 freecell_solver_user - a generic name to the API used by the programmer
 who wishes to utilize the Freecell Solver library in his application.
 
-Graph - 
+Graph - The states in the state collection form a directed graph. Each link
+is a state -> derived state relationship.
 
 Hard Thread - a collection of soft threads, that should generally be placed
 in one system thread. Hard thread contains resources that soft threads from
