@@ -44,7 +44,6 @@
 int freecell_solver_sfs_simple_simon_move_sequence_to_founds(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -138,7 +137,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_founds(
 int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -267,7 +265,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent(
 int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -381,7 +378,6 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
 int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -663,7 +659,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_some_card
 int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -906,7 +901,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
 int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1229,7 +1223,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
 int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1477,7 +1470,6 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_w
 int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,

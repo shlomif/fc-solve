@@ -793,8 +793,7 @@ int freecell_solver_solve_instance(
         freecell_solver_check_and_add_state(
             instance->hard_threads[0]->soft_threads[0],
             state_copy_ptr,
-            &no_use,
-            0
+            &no_use
             );
 
     }

@@ -10,7 +10,6 @@ typedef int (*freecell_solver_solve_for_state_test_t)(
         fcs_state_with_locations_t *,
         int,
         int,
-        int,
         fcs_derived_states_list_t *,
         int
         );
@@ -33,6 +32,29 @@ extern freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TEST
             ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1))   \
         ))                \
     )
+
+#define calculate_real_depth(ptr_state_orig)                       \
+{                                                                  \
+    if (1)                                                         \
+    {                                                              \
+        int this_real_depth = 0;                                   \
+        fcs_state_with_locations_t * ptr_state = (ptr_state_orig); \
+        while(ptr_state != NULL)                                   \
+        {                                                          \
+            ptr_state = ptr_state->parent;                         \
+            this_real_depth++;                                     \
+        }                                                          \
+        this_real_depth--;                                         \
+        ptr_state = (ptr_state_orig);                              \
+        while (ptr_state->depth != this_real_depth)                \
+        {                                                          \
+            ptr_state->depth = this_real_depth;                    \
+            this_real_depth--;                                     \
+            ptr_state = ptr_state->parent;                         \
+        }                                                          \
+    }                                                              \
+}                                                                  \
+        
 
 #ifdef __cplusplus
 }

@@ -75,6 +75,8 @@ extern "C" {
         );                                                                     \
     fcs_move_stack_reset(moves);                                               \
 
+    
+    
 
 #define sfs_check_state_end()                                             \
 /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE         \
@@ -89,8 +91,8 @@ fcs_move_stack_push(moves, temp_move);                                    \
     check = freecell_solver_check_and_add_state(                          \
         soft_thread,                                                      \
         ptr_new_state_with_locations,                                     \
-        &existing_state,                                                  \
-        depth);                                                           \
+        &existing_state                                                   \
+        );                                                                \
     if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||                     \
         (check == FCS_STATE_SUSPEND_PROCESS))                             \
     {                                                                     \
@@ -103,26 +105,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
     else if (check == FCS_STATE_ALREADY_EXISTS)                           \
     {                                                                     \
         fcs_state_ia_release(hard_thread);                                \
-        { \
-            if (1)     \
-            {     \
-                int this_real_depth = 0;        \
-                fcs_state_with_locations_t * ptr_state = existing_state;   \
-                while(ptr_state != NULL)     \
-                {       \
-                    ptr_state = ptr_state->parent;   \
-                    this_real_depth++;     \
-                }       \
-                this_real_depth--;      \
-                ptr_state = existing_state;      \
-                while (ptr_state->depth != this_real_depth)      \
-                {          \
-                    ptr_state->depth = this_real_depth;  \
-                    this_real_depth--;    \
-                    ptr_state = ptr_state->parent;     \
-                }     \
-            }     \
-        }      \
+        calculate_real_depth(existing_state);                             \
         /* Re-parent the existing state to this one.                      \
          *                                                                \
          * What it means is that if the depth of the state if it          \
@@ -213,7 +196,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
 extern int freecell_solver_sfs_simple_simon_move_sequence_to_founds(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -222,7 +204,6 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_to_founds(
 extern int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -232,7 +213,6 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent(
 extern int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -242,7 +222,6 @@ extern int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_p
 extern int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -252,7 +231,6 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_so
 extern int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -262,7 +240,6 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_
 extern int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -272,7 +249,6 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to
 extern int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -282,7 +258,6 @@ extern int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_p
 extern int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         freecell_solver_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
-        int depth,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,

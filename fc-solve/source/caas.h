@@ -33,8 +33,8 @@ extern "C" {
 extern int freecell_solver_check_and_add_state(
     freecell_solver_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * new_state,
-    fcs_state_with_locations_t * * existing_state,
-    int depth);
+    fcs_state_with_locations_t * * existing_state
+    );
 #endif /* #ifdef FCS_USE_INLINE */
 
 #ifdef __cplusplus

@@ -482,8 +482,8 @@ guint freecell_solver_hash_function(gconstpointer key)
 GCC_INLINE int freecell_solver_check_and_add_state(
     freecell_solver_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * new_state,
-    fcs_state_with_locations_t * * existing_state,
-    int depth)
+    fcs_state_with_locations_t * * existing_state
+    )
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     SFO_hash_value_t hash_value_int;
@@ -522,12 +522,6 @@ GCC_INLINE int freecell_solver_check_and_add_state(
         return FCS_STATE_BEGIN_SUSPEND_PROCESS;
     }
 
-    if ((instance->max_depth >= 0) &&
-        (instance->max_depth <= depth))
-    {
-        return FCS_STATE_EXCEEDS_MAX_DEPTH;
-    }
-
     freecell_solver_cache_stacks(hard_thread, new_state);
 
     fcs_canonize_state(new_state, instance->freecells_num, instance->stacks_num);
@@ -542,30 +536,6 @@ GCC_INLINE int freecell_solver_check_and_add_state(
         }
         instance->num_states_in_collection++;
 
-#if 0
-        {
-            char * ptr;
-            fcs_move_stack_t * old_move_stack_to_parent, * new_move_stack_to_parent;
-            fcs_move_t * new_moves_to_parent;
-
-            old_move_stack_to_parent = new_state->moves_to_parent;
-            
-            fcs_compact_alloc_typed_ptr_into_var(
-                ptr, 
-                char, 
-                hard_thread->move_stacks_allocator, 
-                (sizeof(fcs_move_stack_t) + sizeof(fcs_move_t)*old_move_stack_to_parent->num_moves)
-                );
-            new_move_stack_to_parent = (fcs_move_stack_t *)ptr;
-            new_moves_to_parent = (fcs_move_t *)(ptr+sizeof(fcs_move_stack_t));
-            new_move_stack_to_parent->moves = new_moves_to_parent;
-            new_move_stack_to_parent->num_moves = 
-                new_move_stack_to_parent->max_num_moves = 
-                old_move_stack_to_parent->num_moves;
-            memcpy(new_moves_to_parent, old_move_stack_to_parent->moves, sizeof(fcs_move_t)*old_move_stack_to_parent->num_moves);
-            new_state->moves_to_parent = new_move_stack_to_parent;
-        }
-#endif
         if (new_state->moves_to_parent != NULL)
         {
             new_state->moves_to_parent = 

@@ -204,6 +204,7 @@ int freecell_solver_hard_dfs_solve_for_state(
         goto free_derived;
     }
 
+    calculate_real_depth(ptr_state_with_locations);
 
     for(a=0 ;
         a < soft_thread->tests_order.num;
@@ -215,7 +216,6 @@ int freecell_solver_hard_dfs_solve_for_state(
             freecell_solver_sfs_tests[soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
                 soft_thread,
                 ptr_state_with_locations,
-                depth,
                 num_freestacks,
                 num_freecells,
                 &derived,
@@ -439,6 +439,10 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
     the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
 
+#ifdef REPARENT
+    calculate_real_depth(the_soft_dfs_info->state);
+#endif
+
     /*
         The main loop.
     */
@@ -565,7 +569,6 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                     ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                         soft_thread,
                         ptr_state_with_locations,
-                        depth,
                         the_soft_dfs_info->num_freestacks,
                         the_soft_dfs_info->num_freecells,
                         &(the_soft_dfs_info->derived_states_list),
@@ -689,24 +692,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 the_soft_dfs_info->derived_states_list.num_states = 0;
 
 #ifdef REPARENT
-                {
-                    int this_real_depth = 0;
-                    fcs_state_with_locations_t * ptr_state = ptr_recurse_into_state_with_locations;
-                    while(ptr_state != NULL)
-                    {
-                        ptr_state = ptr_state->parent;
-                        this_real_depth++;
-                    }
-                    /* It will be equal to 1 plus its actual depth */
-                    this_real_depth--; 
-                    ptr_state = ptr_recurse_into_state_with_locations;
-                    while (ptr_state->depth != this_real_depth)
-                    {
-                        ptr_state->depth = this_real_depth;
-                        this_real_depth--;
-                        ptr_state = ptr_state->parent;
-                    }
-                }
+                calculate_real_depth(ptr_recurse_into_state_with_locations);
 #endif
 
                 break;
@@ -1069,6 +1055,8 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             hard_thread->num_times++;
         }
 
+        calculate_real_depth(ptr_state_with_locations);
+
         /* Do all the tests at one go, because that the way it should be
            done for BFS and A*
         */
@@ -1080,7 +1068,6 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             check = freecell_solver_sfs_tests[tests_order_tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                     soft_thread,
                     ptr_state_with_locations,
-                    ptr_state_with_locations->depth,
                     num_freestacks,
                     num_freecells,
                     &derived,
