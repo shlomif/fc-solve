@@ -58,6 +58,78 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             implemented internally in &fcs;.
         </para>
     </section>
+    <section id="cc_namespace_purity">
+        <title>Namespace Purity</title>
+        <para>
+            All the global symbols of the &fcs; modules are prefixed with
+            <symbol>freecell_solver_</symbol> prefix. Some macros supplied 
+            to the user are prefixed with the <symbol>fcs_</symbol> prefix for convenience.
+        </para>
+        <para>
+            As a general rule the naming convention is 
+            <symbol>freecell_solver_[class name]_[method name]</symbol>. The identifers
+            also tend to be very verbose.
+        </para>
+    </section>
+    <section id="cc_order_of_tradeoffs">
+        <title>Order of Tradeoffs in the Design of the Code</title>
+        <para>
+            &fcs; has the following tradeoffs in the design of the code:
+        </para>
+        <para>
+            <orderedlist>
+                <listitem>
+                    <para>
+                        Modularity - the code should be as generic as possible
+                        and allow for maximal flexibility. The user should
+                        be able to configure the library as he pleases.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Speed - the code should be optimized for speed. Many 
+                        times in the code, it was made a bit less 
+                        comprehensible to gain speed, and many times extra
+                        techniques are implemented to ensure this goal.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Memory Consumption - should be reduced as much as
+                        possible. A reduced memory consumption usually leads
+                        to better speed, because there are less cache misses
+                        this way.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Smart Algorithms - generally, algorithms with a low
+                        complexity and such that give advantage to the code
+                        are implemented.
+                    </para>
+                </listitem>                
+            </orderedlist>
+        </para>
+
+        <para>
+            Note that these trade-offs are subject to the programmer's whims,
+            and many times, one was a bit sacrificied to satisfy the other.
+        </para>
+    </section>
+    <section id="cc_no_global_symbols">
+        <title>No Global or Static Variables</title>
+        <para>
+            &fcs; does not use global variables (except for constants) or such 
+            that are statically defined within a function. All the non-temporary
+            variables are present within structs, so they can easily be
+            instantiated.
+        </para>
+        <para>
+            One should note that several distinct instances of the solving 
+            algorithm can be instantiatied and made to run side by side or 
+            alternately.
+        </para>
+    </section>
 </chapter>
 
 
