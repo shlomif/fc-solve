@@ -65,7 +65,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </para>
                     <para>
                         This is now the default configuration, and in the 
-                        2.5.x development tree, many enhancments were done to 
+                        2.5.x development tree, many enhancements were done to 
                         optimize it. It was benchmarked to be slightly faster 
                         than Compact States, even for games like freecell.
                     </para>
@@ -135,7 +135,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             An extended state has a num_active_children counter that 
             specifies how many of those states that consider it their parent 
             were still not marked as dead ends. If this counter reaches 0, 
-            this state also becomed inactive.
+            this state also becomes inactive.
         </para>
 
         <para>
@@ -176,7 +176,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             <filename>lib.c</filename>.
         </para>
         <para>
-            After an instance is allocated, it should be paramterized to
+            After an instance is allocated, it should be parametrized to
             specify how it will solve the board. Afterwards, 
             <function>freecell_solver_init_instance()</function> should
             be called. After that, 
