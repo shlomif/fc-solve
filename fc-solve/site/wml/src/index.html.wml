@@ -6,35 +6,27 @@
 
 <h3><a href="links.html#other_solvers">Other Solvers</a></h3>
 
-<h3><a href="don_woods.html">Don Woods' solver</a></h3>
-
-<br />
+<p>
 This is Freecell Solver - a program that automatically solves games of 
 Freecell and similar Solitaire variants such as Eight Off, Forecell and
 Seahaven Towers, as well as Simple Simon boards. Freecell Solver is free 
 software distributed under the public domain. It is written in ANSI C 
 and requires a C compiler to be built.  Nevertheless, binaries for 
-Windows 32-bit are available.<br />
+Windows 32-bit are available.
+</p>
 
-<br />
-
+<p>
 Included with the archive is source code for programs that can automatically 
-feed it with the boards of <a href="http://www.gnome.org/">GNOME</a> Freecell 
-, GNOME AisleRiot's Freecell board, 
-<a href="http://pysol.tsx.org/">PySol</a>'s boards,
-<a href="http://www.microsoft.com/">Microsoft Freecell</a>, or
-<a href="http://home.earthlink.net/~fomalhaut/fcpro.html">Freecell Pro</a>.<br />
+feed it with the boards of several popular Solitaire Implementations.
+</p>
 
-<br />
-
+<p>
 Freecell Solver can also be built as a library for use within your own
 Solitaire implementations. A more detailed list of features can be found
-in the <a href="features.html"><b>Features List</b></a>.<br />
-<br />
+in the <a href="features.html"><b>Features List</b></a>.
+</p>
 
-<a href="README">README</a><br />
-<br />
-<a href="ChangeLog">Changes Log</a><br />
+
 <br />
 <br />
 
