@@ -116,10 +116,7 @@ This is a patch for xpat2 that dumps its games to a file.
 <a href="patience-1.9.patch">patience-1.9.patch</a>
 </td>
 <td>
-Patch for the "Patience" Tcl implementation, which is available here: 
-<a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html">
-http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html
-</a>.
+Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html">"Patience" Tcl implementation</a>.
 </td>
 </tr>
 
