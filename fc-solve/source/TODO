@@ -1,7 +1,5 @@
 --- Pressing ---
 
-* a --reset flag.
-
 * --read-from-file to read configuration from there.
 
 * command line presets
