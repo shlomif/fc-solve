@@ -289,6 +289,26 @@ static int tom_holroyd_order_states(
     return 0;
 }
 
+static fcs_derived_states_order_instance_t * tom_holroyd_duplicate_instance(
+    fcs_derived_states_order_instance_t * order_instance
+    )
+{
+    fcs_derived_states_order_instance_t * ret;
+    ret = malloc(sizeof(*ret));
+    memcpy(ret, order_instance, sizeof(*ret));
+    if (order_instance->context)
+    {
+        ret->context = malloc(sizeof(tom_holroyd_context_t));
+        memcpy(
+            ret->context, 
+            order_instance->context, 
+            sizeof(tom_holroyd_context_t)
+            );
+    }
+    return ret;
+}
+
+
 fcs_derived_states_order_t freecell_solver_tom_holroyd_states_order =
 {
     /* Name */
@@ -300,6 +320,8 @@ fcs_derived_states_order_t freecell_solver_tom_holroyd_states_order =
     /* free_instance */
     tom_holroyd_free_instance,
     /* order_states */
-    tom_holroyd_order_states   
+    tom_holroyd_order_states,
+    /* duplicate_instance */
+    tom_holroyd_duplicate_instance,
 };
 

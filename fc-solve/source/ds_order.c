@@ -84,6 +84,16 @@ static int random_order_states(
     return 0;
 }
 
+static fcs_derived_states_order_instance_t * random_duplicate_instance(
+    fcs_derived_states_order_instance_t * order_instance
+    )
+{
+    fcs_derived_states_order_instance_t * ret;
+    ret = malloc(sizeof(*ret));
+    memcpy(ret, order_instance, sizeof(*ret));
+    return ret;
+}
+
 
 fcs_derived_states_order_t freecell_solver_random_states_order = 
 {
@@ -96,7 +106,9 @@ fcs_derived_states_order_t freecell_solver_random_states_order =
     /* free_instance */
     random_free_instance,
     /* order_states */
-    random_order_states   
+    random_order_states,
+    /* duplicate_instance */
+    random_duplicate_instance,
 };
 
 /***********************************/
@@ -250,6 +262,24 @@ static int shlomif_order_states(
     return 0;
 }
 
+static fcs_derived_states_order_instance_t * shlomif_duplicate_instance(
+    fcs_derived_states_order_instance_t * order_instance
+    )
+{
+    fcs_derived_states_order_instance_t * ret;
+    ret = malloc(sizeof(*ret));
+    memcpy(ret, order_instance, sizeof(*ret));
+    if (order_instance->context)
+    {
+        ret->context = malloc(sizeof(shlomif_context_t));
+        memcpy(
+            ret->context, 
+            order_instance->context, 
+            sizeof(shlomif_context_t)
+            );
+    }
+    return ret;
+}
 
 static fcs_derived_states_order_t shlomif_states_order = 
 {
@@ -262,7 +292,9 @@ static fcs_derived_states_order_t shlomif_states_order =
     /* free_instance */
     shlomif_free_instance,
     /* order_states */
-    shlomif_order_states
+    shlomif_order_states,
+    /* duplicate_instance */
+    shlomif_duplicate_instance
 };
 
 extern fcs_derived_states_order_t freecell_solver_tom_holroyd_states_order;

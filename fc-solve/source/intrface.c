@@ -174,6 +174,30 @@ static void clean_soft_dfs(
     foreach_soft_thread(instance, soft_thread_clean_soft_dfs, NULL);
 }
 
+
+static fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
+{
+    fcs_tests_order_t ret;
+    int i;
+
+    ret.max_num = ret.num = orig->num;
+    ret.tests = malloc(sizeof(ret.tests[0]) * ret.num);
+    memcpy(ret.tests, orig->tests, sizeof(ret.tests[0]) * ret.num);
+    
+    for(i=0;i<ret.num;i++)
+    {
+        if (ret.tests[i].states_order_instance)
+        {
+            ret.tests[i].states_order_instance = 
+                ret.tests[i].states_order_type->duplicate_instance(
+                    ret.tests[i].states_order_instance 
+                    );
+        }
+    }
+    
+    return ret;
+}
+
 static freecell_solver_soft_thread_t * alloc_soft_thread(
         freecell_solver_hard_thread_t * hard_thread
         )
@@ -236,6 +260,8 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
         freecell_solver_apply_tests_order(soft_thread, "[01][23456789]", &no_use);
     }
 #else
+    soft_thread->tests_order = tests_order_dup(&(soft_thread->hard_thread->instance->instance_tests_order));
+#if 0
     soft_thread->tests_order.num = soft_thread->hard_thread->instance->instance_tests_order.num;
     soft_thread->tests_order.tests = 
         malloc(sizeof(soft_thread->tests_order.tests[0]) * soft_thread->tests_order.num);
@@ -244,6 +270,7 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
         sizeof(soft_thread->tests_order.tests[0]) * soft_thread->tests_order.num
         );
     soft_thread->tests_order.max_num = soft_thread->tests_order.num;
+#endif
 #endif
 
     soft_thread->is_finished = 0;
@@ -407,7 +434,7 @@ static void free_bfs_queue(freecell_solver_soft_thread_t * soft_thread)
     }
 }
 
-static void free_tests_order(fcs_tests_order_t * tests_order)
+void freecell_solver_free_tests_order(fcs_tests_order_t * tests_order)
 {
     /* 
      * Free the tests order states_order instances
@@ -426,7 +453,7 @@ static void free_tests_order(fcs_tests_order_t * tests_order)
                 tests[i].states_order_type->free_instance(
                     tests[i].states_order_instance
                     );
-                tests[i].states_order_instance = NULL;                    
+                tests[i].states_order_instance = NULL;
             }
         }
         /* Free the tests array itself */
@@ -442,7 +469,7 @@ static void free_instance_soft_thread_callback(freecell_solver_soft_thread_t * s
     freecell_solver_PQueueFree(soft_thread->a_star_pqueue);
     free(soft_thread->a_star_pqueue);
 
-    free_tests_order(&(soft_thread->tests_order));
+    freecell_solver_free_tests_order(&(soft_thread->tests_order));
 
     if (soft_thread->name != NULL)
     {
@@ -500,11 +527,11 @@ void freecell_solver_free_instance(freecell_solver_instance_t * instance)
         free_instance_hard_thread_callback(instance->optimization_thread);
     }
 
-    free_tests_order(&(instance->instance_tests_order));
+    freecell_solver_free_tests_order(&(instance->instance_tests_order));
 
     if (instance->opt_tests_order_set)
     {
-        free_tests_order(&(instance->opt_tests_order));
+        freecell_solver_free_tests_order(&(instance->opt_tests_order));
     }
 
     free(instance);
@@ -727,7 +754,11 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
                 if ((total_tests & 0x1) != 0)
                 {
                     tests[num_tests].test = bit_idx;
+                    /* 
+                     * Set the states' ordering to NULL to disable it.
+                     * */
                     tests[num_tests].states_order_type = NULL;
+                    tests[num_tests].states_order_instance = NULL;
                     /* Move to the next test. */
                     num_tests++;
                 }
@@ -872,18 +903,6 @@ static void trace_solution(
     s1->visited |= FCS_VISITED_IN_SOLUTION_PATH;
 }
 
-
-static fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
-{
-    fcs_tests_order_t ret;
-
-    ret.max_num = ret.num = orig->num;
-    ret.tests = malloc(sizeof(ret.tests[0]) * ret.num);
-    memcpy(ret.tests, orig->tests, sizeof(ret.tests[0]) * ret.num);
-    
-    return ret;
-}
-
 /*
     This function optimizes the solution path using a BFS scan on the
     states in the solution path.
@@ -904,7 +923,7 @@ static int freecell_solver_optimize_solution(
     {
         if (soft_thread->tests_order.tests != NULL)
         {
-            free(soft_thread->tests_order.tests);
+            freecell_solver_free_tests_order(&(soft_thread->tests_order));
         }
         
         soft_thread->tests_order = 

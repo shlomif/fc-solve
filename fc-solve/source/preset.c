@@ -537,7 +537,7 @@ int freecell_solver_apply_tests_order(
 
     if (tests_order->tests)
     {
-        free(tests_order->tests);
+        freecell_solver_free_tests_order(tests_order);
         tests_order->max_num = 10;
         tests_order->num = 0;
         tests_order->tests = malloc(sizeof(tests_order->tests[0])*tests_order->max_num );

@@ -38,6 +38,10 @@ struct fcs_derived_states_order_struct
         fcs_derived_states_list_t * derived_states,
         int * out_indexes
         );
+    fcs_derived_states_order_instance_t * (*duplicate_instance)(
+        fcs_derived_states_order_instance_t * order_instance
+        );
+    
 };
 
 struct fcs_derived_states_order_instance_struct
