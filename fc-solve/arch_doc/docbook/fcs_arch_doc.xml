@@ -4,6 +4,7 @@
 "/usr/share/sgml/docbook/xml-dtd-4.1.2/docbookx.dtd"[
 
 <!ENTITY fcs "Freecell Solver">
+<!ENTITY section:coding:conventions SYSTEM "coding_conventions.xml">
 ]>
 
 <book id="index">
@@ -58,6 +59,7 @@
             be updated to future versions.
         </para>
     </chapter>
+    &section:coding:conventions;
 </book>
 <!-- Keep this comment at the end of the file
 Local variables:

@@ -3,7 +3,7 @@ DOC=fcs_arch_doc
 DB2STH_SCRIPTS_FLAGS = -c /etc/sgml/catalog
 
 MAIN_SOURCE = $(DOC).xml
-SOURCES = $(MAIN_SOURCE)
+SOURCES = $(MAIN_SOURCE) coding_conventions.xml
 
 all: html
 	

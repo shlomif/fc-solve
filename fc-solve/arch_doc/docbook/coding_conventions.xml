@@ -1,0 +1,81 @@
+<?xml version='1.0' ?>
+
+<!-- <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oa
+sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
+<!-- This comment is meant to settle gvim -->
+
+<chapter id="coding_conventions">
+    <title>Coding Conventions</title>
+    <section id="bottom_up_design_and_evolution">
+        <title>Bottom-Up Design and Evolution</title>
+        <para>
+            &fcs; was designed bottom-up: first by writing functions to input
+            cards and then to handle states and finally the algorithm itself. I
+            find that bottom-up design (as evangelized by Paul Graham and 
+            others)- start by writing small utility functions and classes 
+            and then integrate into a grander scheme, has been a guiding 
+            principle when working on &fcs;.
+        </para>
+        <para>
+            &fcs; has many utility classes, and has also been coded 
+            incrementally. I also find bottom-up design more natural.
+        </para>
+    </section>
+    <section id="strict_adherence_to_the_ansi_c_lang">
+        <title>Strict Adherence to the ANSI C Language</title>
+        <para>
+            &fcs; is written in pure ANSI C and uses no gcc extensions, no 
+            C99 or C++ extensions. I did allow myself to make use of
+            <emphasis>inline</emphasis> in someplaces, but they are isolated
+            to be compiled with gcc alone.
+        </para>
+        <para>
+            &fcs; is actively compiled with gcc and with the Visual C++
+            ANSI C compiler. I expect that it should be compilable with
+            other proprietary compilers on various systems. As such varying
+            of compilers only support the bare ANSI C standard, I have 
+            to stick to it. This is despite the fact that such extensions may
+            have made the code more optimized and my life as a programmer much 
+            easier.            
+        </para>
+    </section>
+    <section id="strict_adherence_to_the_ansi_c_standard_lib">
+        <title>Strict Adherence to the ANSI C Standard Library</title>
+        <para>
+            &fcs; is dependant on the ANSI C Standard Library as defined
+            by the standard and on that library alone. The core FCS code is
+            not dependant on glib, apr or any other abstraction or 
+            encapsulation libraries of this kind.
+        </para>
+        <para>
+            &fcs; can optionally be compiled to make use of some binary trees
+            and hash implementations found in external libraries. This 
+            serves as a drop-in replacement for its internal hash 
+            implementation, which was shown to usually give better results.
+        </para>
+        <para>
+            Note that a lot of the logic provided by such libraries is 
+            implemented internally in &fcs;.
+        </para>
+    </section>
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:4
+sgml-indent-data:t
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+sgml-parent-document: "fcs_arch_doc.xml"
+End:
+-->
+
