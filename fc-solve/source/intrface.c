@@ -520,7 +520,7 @@ static void accumulate_tests_order(
     int a;
     for(a=0;a<soft_thread->tests_order.num;a++)
     {
-        *tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
+        *tests_order |= (1 << (soft_thread->tests_order.tests[a].test & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
 }
 
@@ -534,7 +534,7 @@ static void determine_scan_completeness(
     int a;
     for(a=0;a<soft_thread->tests_order.num;a++)
     {
-        tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
+        tests_order |= (1 << (soft_thread->tests_order.tests[a].test & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
     soft_thread->is_a_complete_scan = (tests_order == global_tests_order);
 }

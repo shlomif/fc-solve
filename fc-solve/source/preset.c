@@ -469,7 +469,7 @@ int freecell_solver_apply_tests_order(
             tests_order->max_num += 10;
             tests_order->tests = realloc(tests_order->tests, sizeof(tests_order->tests[0]) * tests_order->max_num);
         }
-        tests_order->tests[test_index] = (freecell_solver_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+        tests_order->tests[test_index].test = (freecell_solver_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
 
         test_index++;
         is_start_group = 0;
@@ -537,7 +537,7 @@ int freecell_solver_apply_preset_by_ptr(
                     for(s = preset.allowed_tests;*s != '\0';s++)
                     {
                         /* Check if this test corresponds to this character */
-                        if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((freecell_solver_char_to_test_num(*s)%FCS_TESTS_NUM)))
+                        if ((soft_thread->tests_order.tests[num_valid_tests].test & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((freecell_solver_char_to_test_num(*s)%FCS_TESTS_NUM)))
                         {
                             break;
                         }

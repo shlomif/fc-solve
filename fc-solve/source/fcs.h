@@ -116,12 +116,19 @@ struct freecell_solver_soft_thread_struct;
 
 typedef struct freecell_solver_hard_thread_struct freecell_solver_hard_thread_t;
 
+struct fcs_test_struct
+{
+    int test;
+    fcs_derived_states_order_t * states_order_type;
+    fcs_derived_states_order_instance_t * * states_order_instance;
+};
+
+typedef struct fcs_test_struct fcs_test_t;
+
 struct fcs_tests_order_struct
 {
     int num;
-    int * tests;
-    fcs_derived_states_order_t * * tests_orders_pre;
-    fcs_derived_states_order_instance_t * * tests_orders;
+    fcs_test_t * tests;
     int max_num;
 };
 

@@ -173,7 +173,7 @@ int freecell_solver_hard_dfs_solve_for_state(
         derived.num_states = 0;
 
         check =
-            freecell_solver_sfs_tests[soft_thread->tests_order.tests[test_idx] & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
+            freecell_solver_sfs_tests[soft_thread->tests_order.tests[test_idx].test & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
                 soft_thread,
                 ptr_state_with_locations,
                 num_freestacks,
@@ -394,7 +394,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     int dfs_max_depth;
 
     int tests_order_num = soft_thread->tests_order.num;
-    int * tests_order_tests = soft_thread->tests_order.tests;
+    fcs_test_t * tests_order_tests = soft_thread->tests_order.tests;
     int calc_real_depth = instance->calc_real_depth;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
@@ -584,9 +584,9 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                             /* This is a randomized scan. Else - quit after the first iteration */
                             to_randomize &&
                             /* We are still on a random group */
-                            (tests_order_tests[ test_index ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
+                            (tests_order_tests[ test_index ].test & FCS_TEST_ORDER_FLAG_RANDOM) &&
                             /* A new random group did not start */
-                            (! (tests_order_tests[ test_index ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
+                            (! (tests_order_tests[ test_index ].test & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
                          )
                     )
                  )
@@ -595,7 +595,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
                 check = freecell_solver_sfs_tests[tests_order_tests[
                         test_index
-                    ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
+                    ].test & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                         soft_thread,
                         ptr_state_with_locations,
                         the_soft_dfs_info->num_freestacks,
@@ -648,7 +648,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                  *
                  * Also, do not randomize if this is a pure soft-DFS scan.
                  * */
-                if (to_randomize && tests_order_tests[ test_index-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
+                if (to_randomize && (tests_order_tests[ test_index-1 ].test & FCS_TEST_ORDER_FLAG_RANDOM))
                 {
                     a = num_states-1;
                     while (a > 0)
@@ -955,7 +955,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
     int method;
     int freecells_num, stacks_num;
     int tests_order_num;
-    int * tests_order_tests;
+    fcs_test_t * tests_order_tests;
     int calc_real_depth = instance->calc_real_depth;
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
@@ -1074,7 +1074,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             a < tests_order_num;
             a++)
         {
-            check = freecell_solver_sfs_tests[tests_order_tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
+            check = freecell_solver_sfs_tests[tests_order_tests[a].test & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                     soft_thread,
                     ptr_state_with_locations,
                     num_freestacks,
