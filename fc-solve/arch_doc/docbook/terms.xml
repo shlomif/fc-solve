@@ -29,7 +29,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                         <listitem>
                             <para>
                                 The number of successive state &rarr;
-                                state.parent operatioons it take to reach the
+                                state.parent operations it take to reach the
                                 initial state which is the base of the states graph.
                             </para>
                         </listitem>
@@ -71,7 +71,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <term>freecell_solver_user</term>
                 <listitem>
                     <para>
-                        a generic name ot the API used by the programmer
+                        a generic name of the API used by the programmer
                         who wishes to utilize the &fcs; library in his
                         application. Named after the prefix of the functions
                         of this library.
@@ -262,8 +262,8 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </para>
                     <para>
                         Freecell Solver uses a 32-bit primary hash value. As
-                        such it is suspectible to the birthday paradox starting
-                        at about 2<superscript>16</superscript>. A seocondary
+                        such it is susceptible to the birthday paradox starting
+                        at about 2<superscript>16</superscript>. A secondary
                         hash value with extra 32-bits ensures a collision of both
                         hash values will only happen at around 2<superscript>32</superscript> states, 
                         which is much more states than most 32-bit systems can 
@@ -293,7 +293,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <term>Soft Thread</term>
                 <listitem>
                     <para>
-                        a singular continuus scan operating on a states 
+                        a singular continuous scan operating on a states 
                         collection. It can be Soft-DFS, Hard-DFS or Best 
                         First Search. There could be any number of soft 
                         threads in a hard thread.
