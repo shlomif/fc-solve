@@ -725,56 +725,6 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
 #undef state
 
-int freecell_solver_soft_dfs_solve(
-    freecell_solver_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations_orig
-    )
-{
-    return freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
-        soft_thread,
-        ptr_state_with_locations_orig,
-        0,
-        0
-        );
-}
-
-int freecell_solver_soft_dfs_resume_solution(
-    freecell_solver_soft_thread_t * soft_thread
-    )
-{
-    return freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
-        soft_thread,
-        NULL,
-        1,
-        0
-        );
-}
-
-int freecell_solver_random_dfs_solve(
-    freecell_solver_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations_orig
-    )
-{
-    return freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
-        soft_thread,
-        ptr_state_with_locations_orig,
-        0,
-        1
-        );
-}
-
-int freecell_solver_random_dfs_resume_solution(
-    freecell_solver_soft_thread_t * soft_thread
-    )
-{
-    return freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
-        soft_thread,
-        NULL,
-        1,
-        1
-        );
-}
-
 #define FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
 #define FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
 
@@ -1218,6 +1168,7 @@ int freecell_solver_a_star_or_bfs_solve(
     fcs_state_with_locations_t * ptr_state_with_locations_orig
     )
 {
+#error put in intrface.c
     return
         freecell_solver_a_star_or_bfs_do_solve_or_resume(
             soft_thread,

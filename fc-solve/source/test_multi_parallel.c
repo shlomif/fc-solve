@@ -570,11 +570,12 @@ int main(int argc, char * argv[])
 #endif
             fflush(stdout);
 
+            if (binary_output_filename)
+            {
+                fflush(binary_output);
+            }
         }
-        if (binary_output_filename)
-        {
-            fflush(binary_output);
-        }
+        
 
         freecell_solver_user_free(user.instance);
     }

@@ -1034,35 +1034,49 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
         {
             if (! soft_thread->initialized)
             {
-                ret = freecell_solver_soft_dfs_solve(
-                    soft_thread,
-                    instance->state_copy_ptr
-                    );
+                ret = 
+                    freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
+                        soft_thread,
+                        instance->state_copy_ptr,
+                        0,
+                        0
+                        );
                 soft_thread->initialized = 1;
             }
             else
             {
-                ret = freecell_solver_soft_dfs_resume_solution(
-                    soft_thread
-                    );
+                ret = 
+                    freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
+                        soft_thread,
+                        NULL,
+                        1,
+                        0
+                        )
             }
         }
         else if (soft_thread->method == FCS_METHOD_RANDOM_DFS)
         {
             if (! soft_thread->initialized)
             {
-                ret = freecell_solver_random_dfs_solve(
-                    soft_thread,
-                    instance->state_copy_ptr
-                    );
+                ret = 
+                    freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
+                        soft_thread,
+                        ptr_state_with_locations_orig,
+                        0,
+                        1
+                        );
 
                 soft_thread->initialized = 1;
             }
             else
             {
-                ret = freecell_solver_random_dfs_resume_solution(
-                    soft_thread
-                    );
+                ret = 
+                    freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
+                        soft_thread,
+                        NULL,
+                        1,
+                        1
+                        );
             }
         }
         else if ((soft_thread->method == FCS_METHOD_BFS) || (soft_thread->method == FCS_METHOD_A_STAR) || (soft_thread->method == FCS_METHOD_OPTIMIZE))
