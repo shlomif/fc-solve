@@ -1,10 +1,21 @@
 
+f_s_ - see freecell_solver_
+
+freecell_solver_user - a generic name to the API used by the programmer
+who wishes to utilize the Freecell Solver library in his application.
 
 Hard Thread - a collection of soft threads, that should generally be placed
 in one system thread. Hard thread contains resources that soft threads from
 different hard threads would interfere with each other in allocating. Hard
 Threads contain a collection of state packs, and various counters and other
 variables.
+
+Instance - an initial board, a collection of states and all the scans
+associated with it. An instance is initialized whenever one wishes to
+solve new board. By using command line parameters it is possible to configure
+it to solve the board in many ways. Instance logic is implemented in
+intrface.c, and the user API is implemented in lib.c. Users are advised to
+make use of the command line interface in cmd_line.c.
 
 Moves - A one-time displacements of cards from stacks to stacks, from stacks
 to freecells, or from freecells to stacks. Also contain some special moves 
