@@ -80,6 +80,7 @@ void * freecell_solver_user_alloc(void)
             );
 
     ret->state_string_copy = NULL;
+    ret->iterations_board_started_at = 0;
 
     return (void*)ret;
 }
@@ -941,25 +942,31 @@ void freecell_solver_user_recycle(
     )
 {
     fcs_user_t * user;
+    int i;
 
     user = (fcs_user_t *)user_instance;
 
-    if (user->ret == FCS_STATE_WAS_SOLVED)
+    for(i=0;i<user->num_instances;i++)
     {
-        fcs_move_stack_destroy(user->instance->solution_moves);
-        user->instance->solution_moves = NULL;
-    }
-    else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
-    {
-        freecell_solver_unresume_instance(user->instance);
-    }
+        if (user->instances_list[i].ret == FCS_STATE_WAS_SOLVED)
+        {
+            fcs_move_stack_destroy(user->instance->solution_moves);
+            user->instance->solution_moves = NULL;
+        }
+        else if (user->instances_list[i].ret == FCS_STATE_SUSPEND_PROCESS)
+        {
+            freecell_solver_unresume_instance(user->instances_list[i].instance);
+        }
 
-    if (user->ret != FCS_STATE_NOT_BEGAN_YET)
-    {
-        freecell_solver_recycle_instance(user->instance);
-    }
+        if (user->instances_list[i].ret != FCS_STATE_NOT_BEGAN_YET)
+        {
+            freecell_solver_recycle_instance(user->instances_list[i].instance);
+        }
 
-    user->ret = FCS_STATE_NOT_BEGAN_YET;
+        user->instances_list[i].ret = FCS_STATE_NOT_BEGAN_YET;
+    }
+    user->current_iterations_limit = -1;
+    user->iterations_board_started_at = 0;
 }
 
 int freecell_solver_user_set_optimization_scan_tests_order(
