@@ -802,7 +802,7 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
 					continue;
 				}
 
-                if (calc_max_sequence_move(0, after_junk_num_freestacks) <= num_true_seqs)
+                if (calc_max_sequence_move(0, after_junk_num_freestacks) < num_true_seqs)
                 {
 					continue;
 				}
