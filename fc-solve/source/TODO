@@ -4,6 +4,8 @@
 
 * Update the library version.
 
+* Abstract the modules and headers list across all makefiles.
+
 --- Non-pressing ---
 
 * Write an architecture document.

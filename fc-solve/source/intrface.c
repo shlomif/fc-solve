@@ -339,6 +339,8 @@ freecell_solver_instance_t * freecell_solver_alloc_instance(void)
     instance->instance_tests_order.tests = NULL;
     instance->instance_tests_order.max_num = 0;
 
+    instance->opt_tests_order_set = 0;
+
     instance->opt_tests_order.num = 0;
     instance->opt_tests_order.tests = NULL;
     instance->opt_tests_order.max_num = 0;
@@ -379,9 +381,9 @@ freecell_solver_instance_t * freecell_solver_alloc_instance(void)
 
     instance->calc_real_depth = 0;
 
-    instance->opt_tests_order_set = 0;
+    instance->to_reparent_states = 0;
 
-    instance->opt_tests_order.tests = NULL;
+    instance->scans_synergy = 0;
 
     return instance;
 }

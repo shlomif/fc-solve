@@ -228,10 +228,20 @@ extern void freecell_solver_user_recycle(
     void * user_instance
     );
 
-int freecell_solver_user_set_optimization_scan_tests_order(
+extern int freecell_solver_user_set_optimization_scan_tests_order(
     void * user_instance,
     const char * tests_order,
     char * * error_string
+    );
+
+extern void freecell_solver_user_set_reparent_states(
+    void * user_instance,
+    int to_reparent_states
+    );
+
+extern void freecell_solver_user_set_scans_synergy(
+    void * user_instance,
+    int synergy
     );
 
 #ifdef __cplusplus

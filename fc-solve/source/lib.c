@@ -872,3 +872,26 @@ int freecell_solver_user_set_optimization_scan_tests_order(
     return ret;
 }
 
+void freecell_solver_user_set_reparent_states(
+    void * user_instance,
+    int to_reparent_states
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+
+    user->instance->to_reparent_states = to_reparent_states;
+}
+
+void freecell_solver_user_set_scans_synergy(
+    void * user_instance,
+    int synergy
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+
+    user->instance->scans_synergy = synergy;
+}

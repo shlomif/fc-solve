@@ -360,6 +360,23 @@ typedef struct freecell_solver_instance
     
     fcs_tests_order_t opt_tests_order;
 
+    /*
+     * This flag indicates whether scans should or should not reparent the
+     * states their encounter to a lower depth in the depth tree
+     * */
+    int to_reparent_states;
+
+    /* 
+     * This variable determines how the scans cooperate with each other.
+     * 
+     * A value of 0 indicates that they don't and only share the same 
+     * states collection.
+     * 
+     * A value of 1 indicates that they mark states as dead-end,
+     * which may help or hinder other scans.
+     * */
+    int scans_synergy;
+
 } freecell_solver_instance_t;
 
 

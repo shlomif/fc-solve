@@ -209,14 +209,16 @@ fcs_move_stack_push(moves, temp_move);                                    \
     fcs_state_with_locations_t * ptr_new_state_with_locations; \
     fcs_move_stack_t * moves;                                  \
     char * indirect_stacks_buffer;                             \
-    int calc_real_depth
+    int calc_real_depth;                                       \
+    int scans_synergy
 
 #define tests_define_accessors()                                  \
     hard_thread = soft_thread->hard_thread;                       \
     instance = hard_thread->instance;                             \
     moves = hard_thread->reusable_move_stack;                     \
     indirect_stacks_buffer = hard_thread->indirect_stacks_buffer; \
-    calc_real_depth = instance->calc_real_depth;
+    calc_real_depth = instance->calc_real_depth;                  \
+    scans_synergy = instance->scans_synergy;
 
 
 

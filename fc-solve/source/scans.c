@@ -33,8 +33,6 @@
 
 #define DEBUG
 
-//#define REPARENT
-
 static pq_rating_t freecell_solver_a_star_rate_state(
     freecell_solver_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations);
@@ -120,7 +118,7 @@ int freecell_solver_hard_dfs_solve_for_state(
 
     int freecells_num, stacks_num;
 
-    int calc_real_depth;
+    int calc_real_depth, scans_synergy;
 
     freecells_num = instance->freecells_num;
     stacks_num = instance->stacks_num;
@@ -129,6 +127,7 @@ int freecell_solver_hard_dfs_solve_for_state(
     derived.states = NULL;
 
     calc_real_depth = instance->calc_real_depth;
+    scans_synergy = instance->scans_synergy;
 
     /*
      * If this state has not been visited before - increase the number of
@@ -420,9 +419,12 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     int soft_thread_id = soft_thread->id;
     int test_index, current_state_index;
     fcs_derived_states_list_t * derived_states_list;
+    int to_reparent_states, scans_synergy;
 
     freecells_num = instance->freecells_num;
     stacks_num = instance->stacks_num;
+    to_reparent_states = instance->to_reparent_states;
+    scans_synergy = instance->scans_synergy;
 
     if (!resume)
     {
@@ -457,9 +459,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     ptr_state_with_locations = the_soft_dfs_info->state;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
-#ifdef REPARENT
     calculate_real_depth(ptr_state_with_locations);
-#endif
     
     /*
         The main loop.
@@ -608,11 +608,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         the_soft_dfs_info->num_freestacks,
                         the_soft_dfs_info->num_freecells,
                         derived_states_list,
-#ifdef REPARENT
-                        1
-#else
-                        0
-#endif
+                        to_reparent_states
                     );
 
                 if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
@@ -740,9 +736,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     derived_states_list->num_states = 0;
 
-#ifdef REPARENT
                     calculate_real_depth(ptr_recurse_into_state_with_locations);
-#endif
 
                     break;
                 }
@@ -951,6 +945,11 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
     int calc_real_depth = instance->calc_real_depth;
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
+    int to_reparent_states = 
+        (instance->to_reparent_states || 
+         (soft_thread->method == FCS_METHOD_OPTIMIZE)
+        );
+    int scans_synergy = instance->scans_synergy;
 
     derived.num_states = 0;
     derived.max_num_states = 0;
@@ -1072,11 +1071,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
                      * We want to reparent the new states, only if this
                      * is an optimization scan.
                      * */
-#ifdef REPARENT
-                    1
-#else
-                    (method == FCS_METHOD_OPTIMIZE)
-#endif
+                    to_reparent_states
                     );
             if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
                 (check == FCS_STATE_EXCEEDS_MAX_NUM_TIMES) ||

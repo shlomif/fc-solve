@@ -497,6 +497,13 @@ int freecell_solver_user_cmd_line_parse_args(
                 atoi(argv[arg])
             );
         }
+        else if ((!strcmp(argv[arg], "--reparent-states")))
+        {
+            freecell_solver_user_set_reparent_states(
+                instance,
+                1
+                );
+        }
         else if ((!strcmp(argv[arg], "--calc-real-depth")))
         {
             freecell_solver_user_set_calc_real_depth(
@@ -554,6 +561,41 @@ int freecell_solver_user_cmd_line_parse_args(
                 *last_arg = arg;
                 return FCS_CMD_LINE_ERROR_IN_ARG;                
             }
+        }
+        else if ((!strcmp(argv[arg], "--scans-synergy")))
+        {
+            int value;
+            
+            arg++;
+            if (arg == argc)
+            {
+                *last_arg = arg;
+                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
+            }
+            if (!strcmp(argv[arg], "none"))
+            {
+                value = 0;
+            }
+            else if (!strcmp(argv[arg], "dead-end-marks"))
+            {
+                value = 1;
+            }
+            else
+            {
+                char * errstr;
+                
+                errstr = malloc(strlen(argv[arg])+500);
+
+                sprintf(errstr, "Unknown scans' synergy type \"%s\"!\n", argv[arg]);
+                *last_arg = arg;
+                *error_string = errstr;
+                return FCS_CMD_LINE_ERROR_IN_ARG;
+            }
+
+            freecell_solver_user_set_scans_synergy(
+                instance,
+                value
+                );
         }
         else
         {
