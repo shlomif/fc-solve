@@ -92,6 +92,13 @@ version that was shipped with KDE 2.1.
 Direct-X Freecell Implementation for Windows. Shareware.
 </p>
 
+<p>
+<a href="http://www.rrhistorical.com/rrdata/Fcpro65/">Freecell Pro</a> - a
+free Freecell implementation for Windows with many professional features. 
+Integrated Tom Holroyd's Patsolve, and the original Don Woods' solver
+as well as my own.
+</p>
+
 <h2>People</h2>
 
 <ul>
@@ -120,6 +127,13 @@ to Freecell Solver. He is the author of
 <a href="http://wildsau.idv.uni-linz.ac.at/mfx/pysol/">PySol</a>,
 a very nice Solitaire suite which is written in Python. I used its 
 code to write a script that automatically generates its initial boards.
+</p>
+
+<p>
+<a href="http://members.tripod.com/professor_tom/">Dr. Tom Holroyd</a> -
+author of Patsolve and someone whom I discussed Freecell solving with 
+for many E-mail transactions. He inspired or encouraged many features
+in Freecell Solver.
 </p>
 
 <a name="other_solvers"></a>

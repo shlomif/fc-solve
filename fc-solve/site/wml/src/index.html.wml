@@ -2,35 +2,35 @@
 
 <subject "Freecell Solver">
 
-<h3><a href="download.html">Download Freecell Solver!</a><br></h3>
+<h3><a href="download.html">Download Freecell Solver!</a></h3>
 
 <h3><a href="links.html#other_solvers">Other Solvers</a></h3>
 
 <h3><a href="don_woods.html">Don Woods' solver</a></h3>
 
-<br>
+<br />
 This is Freecell Solver - a program that automatically solves games of 
 Freecell and similar Solitaire variants such as Eight Off, Forecell and
 Seahaven Towers, as well as Simple Simon boards. Freecell Solver is free 
 software distributed under the public domain. It is written in ANSI C 
 and requires a C compiler to be built.  Nevertheless, binaries for 
-Windows 32-bit are available.<br>
+Windows 32-bit are available.<br />
 
-<br>
+<br />
 
 Included with the archive is source code for programs that can automatically 
 feed it with the boards of <a href="http://www.gnome.org/">GNOME</a> Freecell 
 , GNOME AisleRiot's Freecell board, 
 <a href="http://pysol.tsx.org/">PySol</a>'s boards,
 <a href="http://www.microsoft.com/">Microsoft Freecell</a>, or
-<a href="http://home.earthlink.net/~fomalhaut/fcpro.html">Freecell Pro</a>.<br>
+<a href="http://home.earthlink.net/~fomalhaut/fcpro.html">Freecell Pro</a>.<br />
 
-<br>
+<br />
 
 Freecell Solver can also be built as a library for use within your own
 Solitaire implementations. A more detailed list of features can be found
-in the <a href="features.html"><b>Features List</b></a>.<br>
-<br>
+in the <a href="features.html"><b>Features List</b></a>.<br />
+<br />
 
 I hope you'll enjoy using it.
 
@@ -204,40 +204,41 @@ developers who are interested to look under its hood.
 <!--%end_mirror -->
 
 <a href="http://www.freecell.org/">Freecell.org</a> - a web-site dedicated
-to the game.<br>
+to the game.<br />
 
 <a href="http://home.earthlink.net/~fomalhaut/freecell.html">Michael Keller's Freecell site</a> -
-contains the Freecell FAQ and other stuff.<br>
+contains the Freecell FAQ and other stuff.<br />
 
-<a href="http://home.earthlink.net/~fomalhaut/fcpro.html">FC-Pro</a> - a Freecell
-implementation for Windows with its own solver.<br>
+<a href="http://www.rrhistorical.com/rrdata/Fcpro65/">FC-Pro</a> - a Freecell
+implementation for Windows which gives a choice of several solvers, including
+Freecell Solver.<br />
 
 <a href="http://www.cs.ruu.nl/~hansb/d.freecell/freecellhtml.html">
 An unsolvable instance of Freecell</a> - why not all possible initial Freecell 
-boards can be solved.<br>
+boards can be solved.<br />
 
 <a href="http://www.geocities.com/jheyesjones/astar.html">Justin-Heyes
-Jones' A* page</a> - a page about the A* scan.<br>
+Jones' A* page</a> - a page about the A* scan.<br /> 
 
 <a href="http://members.tripod.com/professor_tom/archives/index.html">
 patsolve</a> - a program by Dr. Tom Holroyd that solves Freecell and
 Seahaven Towers games. There are some fundamental differences between its
 architecture and that of Freecell Solver, so it might be worth to take a
-look.<br>
+look.<br />
 
 
-<br><br>
+<br/ ><br />
 
 <a href="http://freshmeat.net/projects/freecellsolver/">Freecell Solver's
-Freshmeat App-Index Record</a><br>
+Freshmeat App-Index Record</a><br />
 
 <a href="http://groups.yahoo.com/group/fc-solve-discuss/">Freecell Solver's
 Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
-<br>
+<br />
 
 <a href="http://vipe.technion.ac.il/~shlomif/lecture/Freecell-Solver/">
 Lecture about Freecell Solver</a> - a lecture I'm going to give.<br>
-<br>
+<br />
 
 <h3><a href="links.html">More Links</a></h3>
 
