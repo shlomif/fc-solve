@@ -1,0 +1,85 @@
+##
+##  wml::std::logo - Logo Insertion
+##  Copyright (c) 1997 Ralf S. Engelschall, All Rights Reserved. 
+##
+
+#  The <preserve>/<restore> tags with multiple arguments require WML 2.0.3
+#use wml::mod::version
+<require 2.0.3 />
+
+#use wml::std::tags
+
+#
+#  Insert a Logo image
+#
+<define-tag logo>
+<preserve name base file format target notag />
+<set-var notag=* />
+<set-var %attributes />
+<defvar name wml />
+<defvar base <or <get-var LOGO_BASE /> <get-var IMAGE_BASE /> /> />
+<defvar format <or <get-var IMAGE_FORMAT /> png /> />
+<perl>
+    my $name   = '<get-var name />';
+    my $ext    = '<get-var format />';
+    my $base   = '<get-var base />';
+    my $file   = '<get-var file />';
+    my $target = '<get-var target />';
+    my $notag  = (qq|<get-var notag />| eq '' ? 1 : 0);
+
+    my $imgfile  = "$(WML_LOC_LIBDIR)/aux/logos/logo-$name.$ext";
+    my $infofile = "$(WML_LOC_LIBDIR)/aux/logos/logo-$name.info";
+
+    #   make sure the logo exists
+    if (! -f $imgfile or ! -f $infofile) {
+        print STDERR "Error: No such logo named '$name'.\n";
+        exit(1);
+    }
+
+    #   create the output filename
+    if ($file eq '') {
+        if ($base ne '' && $base !~ m|/$|) {
+            if (-d $base) {
+                $base .= '/';
+            }
+            else {
+                $base .= '.';
+            }
+        }
+        $file = sprintf("%slogo-%s.%s", $base, $name, $ext);
+    }
+
+    open(FH_LOGO, "<$infofile");
+    my $alt  = <*FH_LOGO>; $alt  =~ s|^\s+||; $alt  =~ s|\n$||; $alt  =~ s|\s+$||;
+    my $hint = <*FH_LOGO>; $hint =~ s|^\s+||; $hint =~ s|\n$||; $hint =~ s|\s+$||;
+    my $url  = <*FH_LOGO>; $url  =~ s|^\s+||; $url  =~ s|\n$||; $url  =~ s|\s+$||;
+    close(FH_LOGO);
+
+    #   create the logo image copy
+    my $error = `cp $imgfile $file`;
+    if ($? >> 8) {
+        print STDERR "** wml::std::logo:\n$error";
+        exit(1);
+    }
+
+    #   insert the markup code
+    if (not $notag) {
+        <perl:print>\
+           <*a href="$url" \
+              onmouseover="self.status='$hint';return true" \
+              onmouseout="self.status='';return true" \
+              onfocus="self.status='$hint';return true" \
+              onblur="self.status='';return true"\
+        </perl:print>
+        if ($target ne '') {
+          <perl:print> target="$target"</perl:print>
+        }
+        <perl:print>\
+           ><img src="$file" alt="$alt" style="border:0" /><*/a>\
+        </perl:print>
+    }
+</perl>
+<restore  name base file format target notag />
+</define-tag>
+
+##EOF##

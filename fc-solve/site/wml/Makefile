@@ -33,6 +33,9 @@ HTMLS = $(D)/index.html $(D)/download.html $(D)/links.html $(D)/don_woods.html $
 
 ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
 
+INCLUDES_PROTO = std/logo.wml
+INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
+
 all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS)
 
 $(SUBDIRS) :: % : 
@@ -45,7 +48,7 @@ RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 $(ARC_DOCS) :: $(D)/% : src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
 	tar -xOzf $< freecell-solver-$(RECENT_STABLE_VERSION)/$(notdir $@) > $@
 
-$(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml Makefile
+$(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml Makefile $(INCLUDES)
 	cd src && wml $(WML_FLAGS) -DFILENAME="$(notdir $@)" $(notdir $<) > $@
 
 $(IMAGES) :: $(D)/% : src/%
