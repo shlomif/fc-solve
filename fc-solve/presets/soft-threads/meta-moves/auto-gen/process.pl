@@ -63,12 +63,14 @@ foreach my $q_more (@quotas)
         next;
     }
     push @chosen_scans, $max_ind;
-    print "$q \@ $max_ind ($total solved)\n";
     $total += $max;
+    print "$q \@ $max_ind ($total solved)\n";
     my $this_scan_result = ($scans_data->slice(":,$max_ind"));
     my $indexes = which(($this_scan_result > $q) | ($this_scan_result < 0));
     $scans_data = $scans_data->dice($indexes, "X");
-    $scans_data->slice(":,$max_ind") -= $q;
+    $this_scan_result = $scans_data->slice(":,$max_ind");
+    $this_scan_result = (($this_scan_result - $q) * ($this_scan_result > 0)) +
+        ($this_scan_result * ($this_scan_result < 0));
 
     if ($total == $num_boards)
     {
