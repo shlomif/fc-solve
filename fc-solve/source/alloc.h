@@ -48,7 +48,7 @@ extern char *
 #define fcs_compact_alloc_typed_ptr_into_var(result, type_t, allocator_orig, how_much) \
 { \
     register fcs_compact_allocator_t * allocator = (allocator_orig); \
-    if (allocator->max_ptr - allocator->ptr < sizeof(what_t))  \
+    if (allocator->max_ptr - allocator->ptr < how_much)  \
     {      \
         freecell_solver_compact_allocator_extend(allocator);      \
     }         \

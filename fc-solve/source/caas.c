@@ -280,8 +280,11 @@ static void GCC_INLINE freecell_solver_cache_stacks(
 #endif
     void * cached_stack;
     char * new_ptr;
+    freecell_solver_instance_t * instance = hard_thread->instance;
+    int stacks_num = instance->stacks_num;
+    
 
-    for(a=0 ; a<instance->stacks_num ; a++)
+    for(a=0 ; a<stacks_num ; a++)
     {
         //new_state->s.stacks[a] = realloc(new_state->s.stacks[a], fcs_stack_len(new_state->s, a)+1);
         fcs_compact_alloc_typed_ptr_into_var(new_ptr, char, hard_thread->stacks_allocator, (fcs_stack_len(new_state->s, a)+1));
@@ -320,7 +323,7 @@ static void GCC_INLINE freecell_solver_cache_stacks(
 #define replace_with_cached(condition_expr) \
         if (cached_stack != NULL)     \
         {      \
-            fcs_compact_alloc_release(hard_thread->allocator);    \
+            fcs_compact_alloc_release(hard_thread->stacks_allocator);    \
             new_state->s.stacks[a] = cached_stack;       \
         }
 
@@ -514,7 +517,7 @@ GCC_INLINE int freecell_solver_check_and_add_state(
 
     fcs_canonize_state(new_state, instance->freecells_num, instance->stacks_num);
 
-    freecell_solver_cache_stacks(instance, new_state);
+    freecell_solver_cache_stacks(hard_thread, new_state);
 
     fcs_caas_check_and_insert();
     if (check)

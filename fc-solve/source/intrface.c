@@ -295,7 +295,7 @@ static freecell_solver_hard_thread_t * alloc_hard_thread(
     hard_thread->num_soft_threads_finished = 0;
 
 #ifdef INDIRECT_STACK_STATES
-    instance->stacks_allocator = 
+    hard_thread->stacks_allocator = 
         freecell_solver_compact_allocator_new();
 #endif
 
@@ -1260,10 +1260,12 @@ static void freecell_solver_tree_do_nothing(void * data, void * context)
 */
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
+#if 0
 static void freecell_solver_stack_free(void * key, void * context)
 {
     free(key);
 }
+#endif
 
 #elif FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE
 static void freecell_solver_libredblack_walk_destroy_stack_action
@@ -1382,32 +1384,49 @@ void freecell_solver_finish_instance(
     in the process */
 #ifdef INDIRECT_STACK_STATES
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
+#if 0
     freecell_solver_hash_free_with_callback(instance->stacks_hash, freecell_solver_stack_free);
+#else
+    freecell_solver_hash_free(instance->stacks_hash);
+#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
+#if 0
     avl_destroy(instance->stacks_tree, freecell_solver_stack_free);
+#else
+    avl_destroy(instance->stacks_tree, NULL);
+#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
+#if 0
     rb_destroy(instance->stacks_tree, freecell_solver_stack_free);
+#else
+    rb_destroy(instance->stacks_tree, NULL);
+#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
+#if 0
     rbwalk(instance->stacks_tree,
         freecell_solver_libredblack_walk_destroy_stack_action,
         NULL
         );
+#endif
     rbdestroy(instance->stacks_tree);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
+#if 0
     g_tree_traverse(
         instance->stacks_tree,
         freecell_solver_glib_tree_walk_destroy_stack_action,
         G_IN_ORDER,
         NULL
         );
-
+#endif
     g_tree_destroy(instance->stacks_tree);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
+#if 0
     g_hash_table_foreach(
         instance->stacks_hash,
         freecell_solver_glib_hash_foreach_destroy_stack_action,
         NULL
         );
+#endif
     g_hash_table_destroy(instance->stacks_hash);
 #endif
 #endif
