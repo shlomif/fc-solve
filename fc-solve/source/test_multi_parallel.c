@@ -348,7 +348,7 @@ static char * known_parameters[] = {
     NULL
     };
 
-#define BINARY_OUTPUT_NUM_INTS 128
+#define BINARY_OUTPUT_NUM_INTS 16
 
 struct binary_output_struct
 {
@@ -471,7 +471,7 @@ int main(int argc, char * argv[])
                 print_help();
                 exit(-1);
             }
-            binary_output_filename = argv[arg++];
+            binary_output_filename = argv[arg];
         }
         else if (!strcmp(argv[arg], "--total-iterations-limit"))
         {
@@ -484,7 +484,10 @@ int main(int argc, char * argv[])
             }
             total_iterations_limit_per_board = atoi(argv[arg]);
         }
-            
+        else
+        {
+            break;
+        }
     }
 
     start_from_arg = arg;
