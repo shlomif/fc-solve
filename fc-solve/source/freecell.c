@@ -75,9 +75,11 @@ int freecell_solver_sfs_move_top_stack_cards_to_founds(
     int state_stacks_num;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     state_stacks_num = instance->stacks_num;
 
@@ -97,6 +99,7 @@ int freecell_solver_sfs_move_top_stack_cards_to_founds(
                     sfs_check_state_begin();
 
 
+                    my_copy_stack(stack);
                     fcs_pop_stack_card(new_state, stack, temp_card);
 
                     fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
@@ -219,8 +222,10 @@ int freecell_solver_sfs_move_freecell_cards_on_top_of_stacks(
     int freecells_to_fill, freestacks_to_fill;
     int a,b;
     int state_freecells_num, state_stacks_num, sequences_are_built_by;
+    char * indirect_stacks_buffer;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
@@ -296,6 +301,8 @@ int freecell_solver_sfs_move_freecell_cards_on_top_of_stacks(
 
                                 /* Fill the freecells with the top cards */
 
+                                my_copy_stack(ds);
+
                                 for(a=0 ; a<freecells_to_fill ; a++)
                                 {
                                     /* Find a vacant freecell */
@@ -327,6 +334,7 @@ int freecell_solver_sfs_move_freecell_cards_on_top_of_stacks(
                                             break;
                                         }
                                     }
+                                    my_copy_stack(b);
 
                                     fcs_pop_stack_card(new_state, ds, temp_card);
                                     fcs_push_card_into_stack(new_state, b, temp_card);
@@ -338,6 +346,7 @@ int freecell_solver_sfs_move_freecell_cards_on_top_of_stacks(
                                 }
 
                                 /* Now put the freecell card on top of the stack */
+                                
                                 fcs_push_card_into_stack(new_state, ds, src_card);
                                 fcs_empty_freecell(new_state, fc);
                                 fcs_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_STACK);
@@ -384,12 +393,14 @@ int freecell_solver_sfs_move_non_top_stack_cards_to_founds(
     int state_stacks_num;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
 
     /* Now let's check if a card that is under some other cards can be placed
@@ -423,6 +434,8 @@ int freecell_solver_sfs_move_non_top_stack_cards_to_founds(
                         /* We can move it */
 
                         sfs_check_state_begin()
+
+                        my_copy_stack(stack);
 
 
                         /* Fill the freecells with the top cards */
@@ -460,6 +473,8 @@ int freecell_solver_sfs_move_non_top_stack_cards_to_founds(
                                     break;
                                 }
                             }
+
+                            my_copy_stack(b);
 
                             fcs_pop_stack_card(new_state, stack, temp_card);
                             fcs_push_card_into_stack(new_state, b, temp_card);
@@ -526,6 +541,7 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
     int sequences_are_built_by;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     state_freecells_num = instance->freecells_num;
@@ -533,6 +549,7 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
 
     /*
@@ -614,6 +631,8 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 
                                     i_card_pos = fcs_stack_len(new_state,stack)-1;
                                     a = 0;
+
+                                    my_copy_stack(ds);
                                     while(i_card_pos>c)
                                     {
                                         if (a < freecells_to_fill)
@@ -646,6 +665,8 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
                                                     break;
                                                 }
                                             }
+
+                                            my_copy_stack(b);
 
                                             fcs_pop_stack_card(new_state, ds, temp_card);
                                             fcs_push_card_into_stack(new_state, b, temp_card);
@@ -690,6 +711,8 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
                                                 break;
                                             }
                                         }
+
+                                        my_copy_stack(b);
                                         fcs_push_card_into_stack(new_state, b, moved_card);
 
                                         fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
@@ -737,6 +760,7 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
                                             }
 
                                             fcs_pop_stack_card(new_state, ds, temp_card);
+                                            my_copy_stack(b);
                                             fcs_push_card_into_stack(new_state, b, temp_card);
 
                                             fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
@@ -764,6 +788,7 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
                                     }
                                     else
                                     {
+                                        my_copy_stack(source_index);
                                         fcs_pop_stack_card(new_state, source_index, moved_card);
 
                                         fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
@@ -818,6 +843,7 @@ int freecell_solver_sfs_move_stack_cards_to_different_stacks(
     int sequences_are_built_by;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     state_freecells_num = instance->freecells_num;
@@ -825,6 +851,7 @@ int freecell_solver_sfs_move_stack_cards_to_different_stacks(
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
 
     /* Now let's try to move a card from one stack to the other     *
@@ -914,6 +941,9 @@ int freecell_solver_sfs_move_stack_cards_to_different_stacks(
 
                                         /* Fill the freecells with the top cards */
 
+                                        my_copy_stack(stack);
+                                        my_copy_stack(ds);
+
                                         for(a=0 ; a<freecells_to_fill ; a++)
                                         {
                                             /* Find a vacant freecell */
@@ -933,6 +963,8 @@ int freecell_solver_sfs_move_stack_cards_to_different_stacks(
                                             {
                                                 from_which_stack = ds;
                                             }
+                                            my_copy_stack(from_which_stack);
+                                            
                                             fcs_pop_stack_card(new_state, from_which_stack, temp_card);
 
                                             fcs_put_card_in_freecell(new_state, b, temp_card);
@@ -965,8 +997,8 @@ int freecell_solver_sfs_move_stack_cards_to_different_stacks(
                                             {
                                                 from_which_stack = ds;
                                             }
-
-
+                                            
+                                            my_copy_stack(b);
                                             fcs_pop_stack_card(new_state, from_which_stack, temp_card);
                                             fcs_push_card_into_stack(new_state, b, temp_card);
                                             fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
@@ -1036,6 +1068,7 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
     int sequences_are_built_by;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_NONE)
@@ -1048,6 +1081,7 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     max_sequence_len = calc_max_sequence_move(num_freecells, num_freestacks-1);
 
@@ -1105,10 +1139,14 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
                                 break;
                         }
 
+                        my_copy_stack(ds);
+
                         for(a=c ; a <= cards_num-1 ; a++)
                         {
                             fcs_push_stack_card_into_stack(new_state, ds, stack, a);
                         }
+
+                        my_copy_stack(stack);
 
                         for(a=0;a<cards_num-c;a++)
                         {
@@ -1171,6 +1209,8 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
 
                             /* Fill the freecells with the top cards */
 
+                            my_copy_stack(stack);
+
                             for(a=0; a<freecells_to_fill ; a++)
                             {
                                 /* Find a vacant freecell */
@@ -1190,6 +1230,8 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
                                 fcs_move_stack_push(moves, temp_move);
                             }
 
+                            my_copy_stack(stack);
+
                             /* Fill the free stacks with the cards below them */
                             for(a=0; a < freestacks_to_fill ; a++)
                             {
@@ -1201,6 +1243,8 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
                                         break;
                                     }
                                 }
+
+                                my_copy_stack(b);
                                 fcs_pop_stack_card(new_state, stack, temp_card);
                                 fcs_push_card_into_stack(new_state, b, temp_card);
                                 fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
@@ -1218,6 +1262,8 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
                                     break;
                                 }
                             }
+
+                            my_copy_stack(b);
 
                             for(a=seq_start ; a <= seq_end ; a++)
                             {
@@ -1266,6 +1312,7 @@ int freecell_solver_sfs_move_freecell_cards_to_empty_stack(
     fcs_card_t card;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int state_freecells_num;
@@ -1282,6 +1329,7 @@ int freecell_solver_sfs_move_freecell_cards_to_empty_stack(
     state_stacks_num = instance->stacks_num;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     for(fc=0;fc<state_freecells_num;fc++)
     {
@@ -1305,6 +1353,7 @@ int freecell_solver_sfs_move_freecell_cards_to_empty_stack(
 
                 sfs_check_state_begin();
 
+                my_copy_stack(stack);
 
                 fcs_push_card_into_stack(new_state, stack, card);
                 fcs_empty_freecell(new_state, fc);
@@ -1347,6 +1396,7 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
     int freecells_to_fill, freestacks_to_fill;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int state_freecells_num;
@@ -1358,6 +1408,7 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
 
     /* This time try to move cards that are already on top of a parent to a different parent */
@@ -1466,6 +1517,8 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
 
 
                                             /* Fill the freecells with the top cards */
+
+                                            my_copy_stack(ds);
                                             for(a=0 ; a<freecells_to_fill ; a++)
                                             {
                                                 /* Find a vacant freecell */
@@ -1476,7 +1529,7 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
                                                         break;
                                                     }
                                                 }
-
+                                                
                                                 fcs_pop_stack_card(new_state, ds, temp_card);
 
                                                 fcs_put_card_in_freecell(new_state, b, temp_card);
@@ -1499,6 +1552,8 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
                                                     }
                                                 }
 
+                                                my_copy_stack(b);
+
                                                 fcs_pop_stack_card(new_state, ds, temp_card);
                                                 fcs_push_card_into_stack(new_state, b, temp_card);
 
@@ -1508,6 +1563,8 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
                                                 fcs_move_set_num_cards_in_seq(temp_move,1);
                                                 fcs_move_stack_push(moves, temp_move);
                                             }
+
+                                            my_copy_stack(stack);
 
                                             for(a=c ; a <= cards_num-1 ; a++)
                                             {
@@ -1565,6 +1622,7 @@ int freecell_solver_sfs_empty_stack_into_freecells(
     int state_freecells_num;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_NONE)
@@ -1576,6 +1634,7 @@ int freecell_solver_sfs_empty_stack_into_freecells(
     state_freecells_num = instance->freecells_num;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
 
 
@@ -1592,7 +1651,8 @@ int freecell_solver_sfs_empty_stack_into_freecells(
                 /* We can empty it */
 
                 sfs_check_state_begin()
-
+                
+                my_copy_stack(stack);
 
                 for(c=0;c<cards_num;c++)
                 {
@@ -1661,12 +1721,14 @@ int freecell_solver_sfs_yukon_move_card_to_parent(
     int sequences_are_built_by;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     state_stacks_num = instance->stacks_num;
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     for( ds=0 ; ds < state_stacks_num ; ds++ )
     {
@@ -1698,6 +1760,8 @@ int freecell_solver_sfs_yukon_move_card_to_parent(
                             /* Let's move it */
                             sfs_check_state_begin();
 
+                            my_copy_stack(stack);
+                            my_copy_stack(ds);
 
                             fcs_move_sequence(ds, stack, c, cards_num-1, a);
 
@@ -1737,6 +1801,7 @@ int freecell_solver_sfs_yukon_move_kings_to_empty_stack(
     int state_stacks_num;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     if (num_freestacks == 0)
@@ -1747,6 +1812,7 @@ int freecell_solver_sfs_yukon_move_kings_to_empty_stack(
     state_stacks_num = instance->stacks_num;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
 
     for( stack=0 ; stack < state_stacks_num ; stack++)
@@ -1772,6 +1838,8 @@ int freecell_solver_sfs_yukon_move_kings_to_empty_stack(
                         break;
                     }
                 }
+                my_copy_stack(stack);
+                my_copy_stack(ds);
                 fcs_move_sequence(ds, stack, c, cards_num-1, a);
 
 
@@ -1812,6 +1880,7 @@ int freecell_solver_sfs_deal_gypsy_talon(
     int a;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     if (instance->talon_type != FCS_TALON_GYPSY)
@@ -1820,6 +1889,7 @@ int freecell_solver_sfs_deal_gypsy_talon(
     }
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     if (fcs_talon_pos(state) < fcs_talon_len(state))
     {
@@ -1858,6 +1928,7 @@ int freecell_solver_sfs_get_card_from_klondike_talon(
     fcs_state_with_locations_t * talon_temp;
 
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int check;
@@ -1874,6 +1945,7 @@ int freecell_solver_sfs_get_card_from_klondike_talon(
     }
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     /* Duplicate the talon and its parameters into talon_temp */
     talon_temp = malloc(sizeof(fcs_state_with_locations_t));
@@ -2002,6 +2074,7 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
     freecell_solver_instance_t * instance = hard_thread->instance;
     fcs_state_with_locations_t * ptr_new_state_with_locations;
     fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
     int empty_stacks_filled_by, state_stacks_num;
     int stack, cards_num;
     fcs_card_t card, temp_card;
@@ -2010,6 +2083,7 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
     int a;
 
     moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     if (num_freestacks == 0)
     {
@@ -2049,6 +2123,10 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
                         break;
                     }
                 }
+
+                my_copy_stack(stack);
+                my_copy_stack(a);
+
                 fcs_push_card_into_stack(new_state, a, card);
 
                 fcs_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);

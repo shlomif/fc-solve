@@ -140,7 +140,7 @@ int freecell_solver_user_solve_board(
     /* running_state is a normalized state. So I'm duplicating
      * state to it before state is canonized
      * */
-    fcs_duplicate_state(user->running_state, user->state, user->indirect_stacks_buffer);
+    fcs_duplicate_state(user->running_state, user->state);
 
     fcs_canonize_state(
         &user->state,

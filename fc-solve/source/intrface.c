@@ -682,7 +682,15 @@ int freecell_solver_solve_instance(
     /* Allocate the first state and initialize it to init_state */
     fcs_state_ia_alloc_into_var(state_copy_ptr, instance->hard_threads[0]);
 
-    fcs_duplicate_state(*state_copy_ptr, *init_state, instance->hard_threads[0]->indirect_stacks_buffer);
+    fcs_duplicate_state(*state_copy_ptr, *init_state);
+
+    {
+        int a;
+        for(a=0;a<instance->stacks_num;a++)
+        {
+            fcs_copy_stack(*state_copy_ptr, a, instance->hard_threads[0]->indirect_stacks_buffer);
+        }
+    }
 
     /* Initialize the state to be a base state for the game tree */
     state_copy_ptr->depth = 0;

@@ -287,6 +287,14 @@ static void GCC_INLINE freecell_solver_cache_stacks(
 
     for(a=0 ; a<stacks_num ; a++)
     {
+        /* 
+         * If the stack is not a copy - it is already cached so skip
+         * to the next stack
+         * */
+        if (! (new_state->stacks_copy_on_write_flags & (1 << a)))
+        {
+            continue;
+        }
         //new_state->s.stacks[a] = realloc(new_state->s.stacks[a], fcs_stack_len(new_state->s, a)+1);
         fcs_compact_alloc_typed_ptr_into_var(new_ptr, char, hard_thread->stacks_allocator, (fcs_stack_len(new_state->s, a)+1));
         memcpy(new_ptr, new_state->s.stacks[a], (fcs_stack_len(new_state->s, a)+1));
@@ -540,9 +548,9 @@ GCC_INLINE int freecell_solver_check_and_add_state(
         return FCS_STATE_EXCEEDS_MAX_DEPTH;
     }
 
-    fcs_canonize_state(new_state, instance->freecells_num, instance->stacks_num);
-
     freecell_solver_cache_stacks(hard_thread, new_state);
+
+    fcs_canonize_state(new_state, instance->freecells_num, instance->stacks_num);
 
     fcs_caas_check_and_insert();
     if (check)

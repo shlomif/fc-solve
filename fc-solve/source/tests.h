@@ -56,7 +56,7 @@ extern "C" {
 
 #define sfs_check_state_begin()                                                \
     sfs_check_state_init();                                                    \
-    fcs_duplicate_state(new_state_with_locations, state_with_locations, hard_thread->indirect_stacks_buffer);       \
+    fcs_duplicate_state(new_state_with_locations, state_with_locations);       \
     /* Some A* and BFS parameters that need to be initialized in               \
      * the derived state.                                                      \
      * */                                                                      \
@@ -273,5 +273,6 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_
 }
 #endif
 
+#define my_copy_stack(idx) fcs_copy_stack(new_state_with_locations, idx, indirect_stacks_buffer);
 
 #endif /* __TESTS_H */

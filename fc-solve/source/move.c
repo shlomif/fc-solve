@@ -272,11 +272,19 @@ void freecell_solver_move_stack_normalize(
     fcs_state_with_locations_t dynamic_state;
 #ifdef INDIRECT_STACK_STATES
     char buffer[MAX_NUM_STACKS << 7];
+    int a;
 #endif
+    
 
     fcs_move_stack_alloc_into_var(temp_moves);
 
-    fcs_duplicate_state(dynamic_state, *init_state, buffer);
+    fcs_duplicate_state(dynamic_state, *init_state);
+#ifdef INDIRECT_STACK_STATES
+    for(a=0;a<stacks_num;a++)
+    {
+        fcs_copy_stack(dynamic_state, a, buffer);
+    }
+#endif
 
     while (
         fcs_move_stack_pop(
