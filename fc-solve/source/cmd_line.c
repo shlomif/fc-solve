@@ -4,6 +4,7 @@
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
+#include "cl_chop.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -565,13 +566,14 @@ int freecell_solver_user_cmd_line_parse_args(
         else if ((!strcmp(argv[arg], "--scans-synergy")))
         {
             int value;
-            
+
             arg++;
             if (arg == argc)
             {
                 *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
+            
             if (!strcmp(argv[arg], "none"))
             {
                 value = 0;
@@ -605,6 +607,101 @@ int freecell_solver_user_cmd_line_parse_args(
         else if (!strcmp(argv[arg], "--reset"))
         {
             freecell_solver_user_reset(instance);
+        }
+        else if (!strcmp(argv[arg], "--read-from-file"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                *last_arg = arg-1;
+                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
+            }
+
+            {
+                int num_to_skip = 0;
+                char * s, * buffer;
+                FILE * f;
+                long file_len;
+                int ret;
+                size_t num_read;
+                args_man_t * args_man;
+                
+                s = argv[arg];
+                while(isdigit(*s))
+                {
+                    s++;
+                }
+                if (*s == ",")
+                {
+                    num_to_skip = atoi(argv[arg]);
+                    s++;
+                }
+                f = fopen(s, "rt");
+                if (f == NULL)
+                {
+                    char * err_str;
+
+                    err_str = malloc(strlen(s)+100);
+                    sprintf(err_str, 
+                            "Could not open file \"%s\"!\nQuitting.\n", 
+                            s);
+                            
+                    *error_string = err_str;
+
+                    return FCS_CMD_LINE_ERROR_IN_ARG;
+                }
+                fseek(f, 0, SEEK_END);
+                file_len = ftell(f);
+                buffer=malloc(file_len+1);
+                if (buffer == NULL)
+                {
+                    *error_string = strdup("Could not allocate enough memory to parse the file. Quitting.\n");
+                    fclose(f);
+
+                    return FCS_CMD_LINE_ERROR_IN_ARG;
+                }
+                fseek(f,0,SEEK_SET);
+                num_read = fread(buffer, 1, file_len, f);
+                fclose(f);
+                buffer[num_read] = '\0';
+                
+                args_man = freecell_solver_args_man_alloc();
+                ret = freecell_solver_args_man_chop(args_man, buffer);
+                free(buffer);
+                if (ret != 0)
+                {
+                    *error_string = 
+                        strdup("Could not parse the file. Quitting\n");
+                    args_man_free(args_man);
+                    
+                    return FCS_CMD_LINE_ERROR_IN_ARG;
+                }
+
+                if (num_to_skip >= args_man->argc)
+                {
+                    /* Do nothing */
+                }
+                else
+                {
+                    ret = freecell_solver_user_cmd_line_parse_args(
+                        instance,
+                        args_man->argc - num_to_skip,
+                        args_man->argv + num_to_skip,
+                        0,
+                        known_parameters,
+                        callback,
+                        callback_context,
+                        error_string,
+                        last_arg
+                        );
+
+                    if (ret != FCS_CMD_LINE_OK)
+                    {
+                        return ret;
+                    }
+                }
+                args_man_free(args_man);
+            }
         }
         else
         {
