@@ -121,8 +121,8 @@ foreach my $q_more (@quotas)
     
     $scans_data = $scans_data->dice($indexes, "X")->copy();
     $this_scan_result = $scans_data->slice(":,$max_ind")->copy();
-    $scans_data->slice(":,$max_ind") *= 0;
-    $scans_data->slice(":,$max_ind") += (($this_scan_result - $q) * ($this_scan_result > 0)) +
+    #$scans_data->slice(":,$max_ind") *= 0;
+    $scans_data->slice(":,$max_ind") .= (($this_scan_result - $q) * ($this_scan_result > 0)) +
         ($this_scan_result * ($this_scan_result < 0));
 
     $q = 0;

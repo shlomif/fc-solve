@@ -6,30 +6,22 @@ use PDL;
 
 use MyInput;
 
+my $start_board = 1;
+
 my $num_boards = 32000;
 
 my $above_how_much = shift || 2000;
 
-my @scans;
+my $sel_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
 
-open I, "<scans.txt";
-while (my $line = <I>)
-{
-    chomp($line);
-    my ($id, $cmd_line) = split(/\t/, $line);
-    push @scans, { 'id' => $id, 'cmd_line' => $cmd_line };
-}
-close(I);
+my @selected_scans = @$sel_scans;
 
-my @selected_scans = 
-    grep 
-    { 
-        my @stat = stat("./data/".$_->{'id'}.".data.bin");
-        scalar(@stat) && ($stat[7] == 12+$num_boards*4);
-    }
-    @scans;
-
-my $scans_data = MyInput::get_scans_data($num_boards, \@selected_scans);
+my $scans_data = 
+    MyInput::get_scans_data(
+        $start_board, 
+        $num_boards, 
+        \@selected_scans
+    );
 
 my $which_boards = which((($scans_data > $above_how_much) | ($scans_data < 0))->xchg(0,1)->sumover() == scalar(@selected_scans))+1;
 

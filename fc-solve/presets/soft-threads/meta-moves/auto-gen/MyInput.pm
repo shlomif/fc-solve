@@ -49,4 +49,40 @@ sub get_scans_data
 
 }
 
+sub get_selected_scan_list
+{
+    my $start_board = shift;
+    my $num_boards = shift;
+
+    local(*I);
+    my @scans;
+
+    open I, "<scans.txt";
+    while (my $line = <I>)
+    {
+        chomp($line);
+        my ($id, $cmd_line) = split(/\t/, $line);
+        push @scans, { 'id' => $id, 'cmd_line' => $cmd_line };
+    }
+    close(I);
+
+    my @selected_scans = 
+        grep 
+        { 
+            my @stat = stat("./data/".$_->{'id'}.".data.bin");
+            scalar(@stat) && ($stat[7] >= 12+($num_boards+$start_board-1)*4);
+        }
+        @scans;
+
+    my %black_list = (map { $_ => 0 } (7,8));
+    @selected_scans = 
+        (grep 
+            { 
+                !exists($black_list{$_->{'id'}}) 
+            } 
+            @selected_scans
+        );
+    return \@selected_scans;
+}
+
 1;
