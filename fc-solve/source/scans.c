@@ -917,6 +917,9 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
     fcs_derived_states_list_t derived;
     int derived_index;
 
+    int method;
+    int freecells_num, stacks_num;
+
     derived.num_states = 0;
     derived.max_num_states = 0;
     derived.states = NULL;
@@ -931,6 +934,10 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
 
     ptr_state_with_locations = ptr_state_with_locations_orig;
 
+    method = soft_thread->method;
+    freecells_num = instance->freecells_num;
+    stacks_num = instance->stacks_num;
+
     /* Continue as long as there are states in the queue or
        priority queue. */
     while ( ptr_state_with_locations != NULL)
@@ -939,7 +946,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
          * If this is an optimization scan and the state being checked is not
          * in the original solution path - move on to the next state
          * */
-        if ((soft_thread->method == FCS_METHOD_OPTIMIZE) && (!(ptr_state_with_locations->visited & FCS_VISITED_IN_SOLUTION_PATH)))
+        if ((method == FCS_METHOD_OPTIMIZE) && (!(ptr_state_with_locations->visited & FCS_VISITED_IN_SOLUTION_PATH)))
         {
             goto label_next_state;
         }
@@ -948,7 +955,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
          * It the state has already been visited - move on to the next
          * state.
          * */
-        if ((soft_thread->method == FCS_METHOD_OPTIMIZE) ?
+        if ((method == FCS_METHOD_OPTIMIZE) ?
                 (ptr_state_with_locations->visited & FCS_VISITED_IN_OPTIMIZED_PATH) :
                 ((ptr_state_with_locations->visited & FCS_VISITED_DEAD_END) ||
                  (is_scan_visited(ptr_state_with_locations, soft_thread->id)))
@@ -959,7 +966,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
 
         /* Count the free-cells */
         num_freecells = 0;
-        for(a=0;a<instance->freecells_num;a++)
+        for(a=0;a<freecells_num;a++)
         {
             if (fcs_freecell_card_num(state, a) == 0)
             {
@@ -970,7 +977,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
         /* Count the number of unoccupied stacks */
 
         num_freestacks = 0;
-        for(a=0;a<instance->stacks_num;a++)
+        for(a=0;a<stacks_num;a++)
         {
             if (fcs_stack_len(state, a) == 0)
             {
@@ -994,7 +1001,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
         }
 
 
-        if ((num_freestacks == instance->stacks_num) && (num_freecells == instance->freecells_num))
+        if ((num_freestacks == stacks_num) && (num_freecells == freecells_num))
         {
             instance->final_state = ptr_state_with_locations;
 
@@ -1036,7 +1043,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
                      * We want to reparent the new states, only if this
                      * is an optimization scan.
                      * */
-                    (soft_thread->method == FCS_METHOD_OPTIMIZE)
+                    (method == FCS_METHOD_OPTIMIZE)
                     );
             if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
                 (check == FCS_STATE_EXCEEDS_MAX_NUM_TIMES) ||
@@ -1059,7 +1066,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
 
         for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
         {
-            if (soft_thread->method == FCS_METHOD_A_STAR)
+            if (method == FCS_METHOD_A_STAR)
             {
                 freecell_solver_a_star_enqueue_state(
                     soft_thread,
@@ -1075,7 +1082,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             }
         }
 
-        if (soft_thread->method == FCS_METHOD_OPTIMIZE)
+        if (method == FCS_METHOD_OPTIMIZE)
         {
             ptr_state_with_locations->visited |= FCS_VISITED_IN_OPTIMIZED_PATH;
         }
@@ -1099,7 +1106,7 @@ label_next_state:
         /*
             Extract the next item in the queue/priority queue.
         */
-        if ((soft_thread->method == FCS_METHOD_BFS) || (soft_thread->method == FCS_METHOD_OPTIMIZE))
+        if ((method == FCS_METHOD_BFS) || (method == FCS_METHOD_OPTIMIZE))
         {
             if (soft_thread->bfs_queue->next != soft_thread->bfs_queue_last_item)
             {
