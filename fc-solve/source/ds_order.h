@@ -56,7 +56,7 @@ struct fcs_derived_states_order_name_match_struct
 
 typedef struct fcs_derived_states_order_name_match_struct fcs_derived_states_order_name_match_t;
 
-#define FREECELL_SOLVER_NUM_STATES_ORDERS_NAMES 2
+#define FREECELL_SOLVER_NUM_STATES_ORDERS_NAMES 3
 
 extern fcs_derived_states_order_name_match_t freecell_solver_states_orders_names[FREECELL_SOLVER_NUM_STATES_ORDERS_NAMES];
 
