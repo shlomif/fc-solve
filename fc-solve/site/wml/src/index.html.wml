@@ -194,8 +194,13 @@ developers who are interested to look under its hood.
 <h2>Links</h2>
 
 <!--%start_mirror -->
-<a href="http://fc-solve.berlios.de/">Freecell Solver's BerliOS
-mirror</a><br>
+<ifeq "$(BERLIOS)" "BERLIOS"  
+"<a href="http://vipe.technion.ac.il/~shlomif/freecell-solver/">The Freecell Solver Homepage</a>" 
+"<a href="http://fc-solve.berlios.de/">Freecell Solver's BerliOS mirror</a>"
+>
+
+<br />
+
 <!--%end_mirror -->
 
 <a href="http://www.freecell.org/">Freecell.org</a> - a web-site dedicated

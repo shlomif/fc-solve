@@ -5,12 +5,12 @@ D = /var/www/html/fc-solve
 IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
-#WML_FLAGS = -DBERLIOS
+# WML_FLAGS = -DBERLIOS=BERLIOS
 WML_FLAGS = 
 
 SUBDIRS = $(D)/download $(D)/docs $(D)/docs/roadmaps $(D)/docs/Users_Guide $(D)/mailing-list
 
-HTMLS = $(D)/index.html $(D)/download.html $(D)/links.html $(D)/don_woods.html $(D)/features.html
+HTMLS = $(D)/index.html $(D)/download.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html
 
 all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS)
 
@@ -20,7 +20,7 @@ $(SUBDIRS) :: % :
 	fi
 	
 
-$(HTMLS) :: $(D)/% : src/%.wml .wmlrc template.wml
+$(HTMLS) :: $(D)/% : src/%.wml .wmlrc template.wml Makefile
 	wml $(WML_FLAGS) $< > $@
 
 $(IMAGES) :: $(D)/% : src/%

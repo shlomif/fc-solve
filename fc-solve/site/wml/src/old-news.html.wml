@@ -1,0 +1,75 @@
+#include 'template.wml'
+
+<subject "Freecell Solver's Previous News Items">
+
+<h3>19-Nov-2000</h3>
+
+<p>Freecell Solver version 1.0.0 was released. This version can solve more
+game types, and can be compiled so it will be less memory intensive which is
+especially good for such games as Die Schlange or Der Katzenschwantz.</p>
+
+<p>Now there is also a library interface for use with games, which supports
+suspending a solution process and resuming it from its last position. And
+naturally, there is a bug fix or two, so you should upgrade. :-)</p>
+
+<p>But the most important news is that it is no longer version 0.x.y but
+rather version 1.x.y. Hoorah for the new initial digit!</p>
+
+
+
+<h3>9-Oct-2000</h3>
+
+<p>
+Freecell Solver version 0.10.0 was released. This version features support 
+for several Solitaire variants besides Freecell, such as Forecell, Seahaven
+Towers and Eight Off. Aside from that, it offers a more verbose solution, as
+well as several bug-fixes.
+</p>
+
+
+<h3>28-Aug-2000</h3>
+
+Freecell Solver version 0.8.0 was released. New features in this version
+include:<br>
+<ol>
+<li>Some bug-fixes. (users of previous versions should upgrade)
+
+<li>Support for a variable number of freecells, stacks, and cards per stack.
+
+<li>Board generators for Microsoft Freecell, Freecell Pro and PySol.
+
+<li>An option to use the balanced binary tree implementations of 
+<a href="http://www.msu.edu/user/pfaffben/avl/">libavl</a>
+,
+<a href="http://www.gtk.org/">glib</a>
+, 
+or 
+<a href="http://libredblack.sourceforge.net/">libredblack</a>
+. Using them makes Freecell Solver about 33% faster.
+
+<li>Support for using "T" instead of "10" in board input/output.
+
+<li>Improved Documentation.
+
+</ol>
+
+<h3>28-Jul-2000</h3>
+
+Freecell Solver version 0.6 was released. This version features a more 
+modular code as well as the following usability features:<br>
+<ol>
+<li>An extra movement that allows Freecell Solver to solve some boards which it 
+could not solve previously.
+<li>The order of the stacks and freecells is preserved throughout the solutions.
+<li>Limit to a certain number of iterations (so it will stop before it consumes 
+too much memory)
+<li>Specify the order of the movements that will be tested. Usually, a test 
+order can be found that will solve a given board really fast.
+</ol>
+
+<h3>6-Jun-2000</h3>
+
+Freecell Solver version 0.4 was released. This version contains three major
+code optimizations, so it now runs much faster. It can now also start
+solving from a non-initial board.<br>
+
