@@ -34,4 +34,15 @@ EXPORTS
     freecell_solver_user_set_random_seed @32
     freecell_solver_user_get_num_states_in_collection @33
     freecell_solver_user_limit_num_states_in_collection @34
-    freecell_solver_user_cmd_line_parse_args @35
+    freecell_solver_user_next_soft_thread @35
+    freecell_solver_user_set_soft_thread_step @36
+    freecell_solver_user_next_hard_thread @37
+    freecell_solver_user_get_num_soft_threads_in_instance @38
+    freecell_solver_user_set_calc_real_depth @39
+    freecell_solver_user_set_soft_thread_name @40
+    freecell_solver_user_set_hard_thread_prelude @41
+    freecell_solver_user_recycle @42
+    freecell_solver_user_set_optimization_scan_tests_order @43
+    freecell_solver_user_set_reparent_states @44
+    freecell_solver_user_set_scans_synergy @45
+    freecell_solver_user_cmd_line_parse_args @46
