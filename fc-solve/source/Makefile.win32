@@ -7,7 +7,7 @@ CC=cl
 LIB32=link.exe
 
 
-OBJECTS = alloc.obj app_str.obj caas.obj card.obj cl_chop.obj cmd_line.obj fcs_dm.obj fcs_hash.obj fcs_isa.obj freecell.obj intrface.obj lib.obj lookup2.obj move.obj pqueue.obj preset.obj rand.obj scans.obj simpsim.obj state.obj tests.obj
+OBJECTS = alloc.obj app_str.obj caas.obj card.obj cl_chop.obj cmd_line.obj ds_order.obj fcs_dm.obj fcs_hash.obj fcs_isa.obj freecell.obj intrface.obj lib.obj lookup2.obj move.obj pqueue.obj preset.obj rand.obj scans.obj simpsim.obj state.obj tests.obj
 
 
 alloc.obj: alloc.c $(INCLUDES)
@@ -27,6 +27,9 @@ cl_chop.obj: cl_chop.c $(INCLUDES)
 
 cmd_line.obj: cmd_line.c $(INCLUDES)
 	$(CC) /c /Focmd_line.obj $(OFLAGS) cmd_line.c
+
+ds_order.obj: ds_order.c $(INCLUDES)
+	$(CC) /c /Fods_order.obj $(OFLAGS) ds_order.c
 
 fcs_dm.obj: fcs_dm.c $(INCLUDES)
 	$(CC) /c /Fofcs_dm.obj $(OFLAGS) fcs_dm.c

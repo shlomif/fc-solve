@@ -59,6 +59,7 @@ OBJECTS =                     \
           card.o              \
           cl_chop.o           \
           cmd_line.o          \
+          ds_order.o          \
           fcs_dm.o            \
           fcs_hash.o          \
           fcs_isa.o           \

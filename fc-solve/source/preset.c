@@ -422,6 +422,7 @@ enum TEST_TYPE
     TEST_TYPE_TEST,
     TEST_TYPE_START_GROUP,
     TEST_TYPE_END_GROUP,
+    TEST_TYPE_SET_ORDER,
     TEST_TYPE_ERROR
 };
 
@@ -474,6 +475,10 @@ static test_ret_t read_token(const char * s, int * num_chars_read)
         else if (*s == ']')
         {
             ret.type = TEST_TYPE_END_GROUP;
+        }
+        else if (*s == '=')
+        {
+            ret.type = TEST_TYPE_SET_ORDER;
         }
         else
         {

@@ -37,6 +37,9 @@ cl_chop.o: cl_chop.c $(INCLUDES)
 cmd_line.o: cmd_line.c $(INCLUDES)
 	$(CC) -c $(OFLAGS) -o $@ $<
 
+ds_order.o: ds_order.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
 fcs_dm.o: fcs_dm.c $(INCLUDES)
 	$(CC) -c $(OFLAGS) -o $@ $<
 
@@ -85,7 +88,7 @@ tests.o: tests.c $(INCLUDES)
 main.o: main.c $(INCLUDES)
 	$(CC) -c $(OFLAGS) -o $@ $<
 
-OBJECTS = alloc.o app_str.o caas.o card.o cl_chop.o cmd_line.o fcs_dm.o fcs_hash.o fcs_isa.o freecell.o intrface.o lib.o lookup2.o move.o pqueue.o preset.o rand.o scans.o simpsim.o state.o tests.o main.o
+OBJECTS = alloc.o app_str.o caas.o card.o cl_chop.o cmd_line.o ds_order.o fcs_dm.o fcs_hash.o fcs_isa.o freecell.o intrface.o lib.o lookup2.o move.o pqueue.o preset.o rand.o scans.o simpsim.o state.o tests.o main.o
 #>>>OBJECTS.END
 
 fc-solve: $(OBJECTS)

@@ -17,10 +17,10 @@ typedef struct fcs_derived_states_order_instance_struct fcs_derived_states_order
 
 struct fcs_derived_states_order_struct
 {
-    char * name;
+    const char * name;
     int (*init_instance)(
         fcs_derived_states_order_t * order,
-        fcs_derived_states_order_instance_t * order_instance,        
+        fcs_derived_states_order_instance_t * order_instance,
         freecell_solver_soft_thread_t * soft_thread,
         char * spec_string,
         char * * end_of_spec
@@ -36,7 +36,7 @@ struct fcs_derived_states_order_struct
         fcs_derived_states_order_instance_t * order_instance,
         fcs_state_with_locations_t * src_state,
         fcs_derived_states_list_t * derived_states,
-        int * * out_indexes
+        int * out_indexes
         );
 };
 
@@ -48,4 +48,19 @@ struct fcs_derived_states_order_instance_struct
     void * context;
 };
 
+struct fcs_derived_states_order_name_match_struct
+{
+    const char * name;
+    fcs_derived_states_order_t * order;
+};
+
+typedef struct fcs_derived_states_order_name_match_struct fcs_derived_states_order_name_match_t;
+
+#define FREECELL_SOLVER_NUM_STATES_ORDERS_NAMES 1
+extern fcs_derived_states_order_name_match_t freecell_solver_states_orders_names[FREECELL_SOLVER_NUM_STATES_ORDERS_NAMES];
+
+extern fcs_dervied_states_order_t freecell_solver_random_states_order;
+
 #endif /* #ifndef __DS_ORDER_H */
+
+

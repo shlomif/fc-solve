@@ -18,7 +18,7 @@ man_MANS = fc-solve.6
 
 lib_LTLIBRARIES = libfreecell-solver.la
 libfreecell_solverincludedir=$(includedir)/freecell-solver
-libfreecell_solver_la_SOURCES = alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_dm.c fcs_hash.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c tests.c
+libfreecell_solver_la_SOURCES = alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c ds_order.c fcs_dm.c fcs_hash.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c tests.c
 libfreecell_solver_la_LDFLAGS = -version-info 5:0:5
 libfreecell_solverinclude_HEADERS = fcs_user.h fcs_enums.h fcs_move.h fcs_cl.h
 
