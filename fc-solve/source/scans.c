@@ -88,26 +88,6 @@ static void freecell_solver_bfs_enqueue_state(
 }
 #endif
 
-#define mark_as_dead_end(ptr_state_input) \
-                    {      \
-                        fcs_state_with_locations_t * ptr_state = (ptr_state_input); \
-                        ptr_state->visited |= FCS_VISITED_DEAD_END; \
-                        ptr_state = ptr_state->parent;          \
-                        if (ptr_state != NULL)                    \
-                        {           \
-                            ptr_state->num_active_children--;   \
-                            while(ptr_state->num_active_children == 0)   \
-                            {          \
-                                ptr_state->visited |= FCS_VISITED_DEAD_END;  \
-                                ptr_state = ptr_state->parent;    \
-                                if (ptr_state == NULL)         \
-                                {                \
-                                    break;             \
-                                }      \
-                                ptr_state->num_active_children--;     \
-                            }       \
-                        }   \
-                    }
 
 #define the_state (ptr_state_with_locations->s)
 

@@ -752,4 +752,15 @@ int freecell_solver_user_get_num_soft_threads_in_instance(
     return user->instance->next_soft_thread_id;
 }
 
+void freecell_solver_user_set_calc_real_depth(
+    void * user_instance,
+    int calc_real_depth
+)
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+
+    user->instance->calc_real_depth = calc_real_depth;
+}
 

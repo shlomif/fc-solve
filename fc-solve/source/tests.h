@@ -116,7 +116,20 @@ fcs_move_stack_push(moves, temp_move);                                    \
            (existing_state->depth > ptr_state_with_locations->depth+1))   \
         {                                                                 \
             /* Make a copy of "moves" because "moves" will be destroyed */\
-            existing_state->moves_to_parent = freecell_solver_move_stack_compact_allocate(hard_thread, moves);                 \
+            existing_state->moves_to_parent =                             \
+                freecell_solver_move_stack_compact_allocate(              \
+                    hard_thread, moves                                    \
+                    );                                                    \
+            if (!(existing_state->visited & FCS_VISITED_DEAD_END))        \
+            {                                                             \
+                if ((--existing_state->parent->num_active_children) == 0) \
+                {                                                         \
+                    mark_as_dead_end(                                     \
+                        existing_state->parent                            \
+                        );                                                \
+                }                                                         \
+                ptr_state_with_locations->num_active_children++;          \
+            }                                                             \
             existing_state->parent = ptr_state_with_locations;            \
             existing_state->depth = ptr_state_with_locations->depth + 1;  \
         }                                                                 \

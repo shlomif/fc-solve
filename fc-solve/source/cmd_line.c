@@ -497,6 +497,12 @@ int freecell_solver_user_cmd_line_parse_args(
                 atoi(argv[arg])
             );
         }
+        else if ((!strcmp(argv[arg], "--calc-real-depth")))
+        {
+            freecell_solver_user_set_calc_real_depth(
+                instance,
+                1);
+        }
         else
         {
             *last_arg = arg;
