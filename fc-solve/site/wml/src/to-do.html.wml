@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver Links" />
+<subject "Freecell Solver's Future Directions" />
 
 <p>
 While Freecell Solver is a fairly usable package that satisfies the needs of 
@@ -147,4 +147,40 @@ interested in integrating it, the choice is yours whether to patch
 PySol 4.81 or wait for a beta of PySol 5.x to be released.
 </p>
 
+<h2>RCS-like State Storage</h2>
+
+<p>
+<a href="http://dmoz.org/Computers/Software/Configuration_Management/Tools/Revision_Control_System/">RCS</a> 
+is short for Revision Control System, and is an early version control system
+for UNIX computers, that is still in use today. (either directly or 
+indirectly). RCS works by storing the original file, and then storing the 
+differences from the original to its subsequent versions, and from each 
+subsequent versions to its subsequent versions etc. To extract a file of 
+version X, it starts from the original version and applies patches 
+0-&gt;1, 1-&gt;2 until X-1 -&gt; X.
+</p>
+
+<p>
+<a href="http://nadav.harel.org.il/">Nadav Har'El</a> suggested that instead
+of storing the entire state in memory, Freecell Solver will only store the moves
+leading to this state from its predecessor. That way, a lot of memory will
+be conserved, and FCS may even run faster. Freecell Solver already stores the
+moves to the parent states, because they are required to output the solution
+as a sequence of individual moves. However, it still requires the bulk board 
+layout to distinguish between similar states.
+</p>
+
+<p>
+Your mission, should you chose to accept it, is to tweak the code, so it would
+be possible to remove the board layouts themselves and get by with the moves
+alone. Note that the code at the moment, is completely unsuitable for this,
+and would have to be re-vamped. Also note that I believe one would still need 
+to have a cache of the recently encountered states, to make sure the solver
+does not spend too much time constructing states from scratch.
+</p>
+
+<p>
+Note that this is a relatively speculative feature, which I only want to 
+implement to see how well it run.
+</p>
 
