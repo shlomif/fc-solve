@@ -182,8 +182,6 @@ END_DLFLAGS = $(END_OLFLAGS)
 
 DLFLAGS = $(OLFLAGS)
 
-INCLUDES = alloc.h app_str.h caas.h card.h config.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h jhjtypes.h move.h pqueue.h preset.h rand.h state.h tests.h test_arr.h
-
 TARGETS = fc-solve mptest
 
 ifeq ($(EXIT),1)
@@ -208,11 +206,13 @@ OBJECTS = alloc.o           \
           app_str.o         \
           caas.o            \
           card.o            \
+		  cmd_line.o        \
           fcs_dm.o          \
           fcs_hash.o        \
           fcs_isa.o         \
           freecell.o        \
           intrface.o        \
+		  lib.o             \
 		  lookup2.o         \
           move.o            \
           pqueue.o          \
@@ -222,48 +222,24 @@ OBJECTS = alloc.o           \
           simpsim.o         \
           state.o
 
-$(OBJECTS) i_main.o:: %.o : %.c $(INCLUDES)
-	$(CC) -c $(OFLAGS) -o $@ $< $(END_OFLAGS)
 
-lib.o: lib.c $(INCLUDES) fcs_user.h
-	$(CC) -c $(OFLAGS) -o $@ $< $(END_OFLAGS)
+# MYOBJ.o ==> .deps/MYOBJ.P
+DEP_FILES = $(addprefix .deps/,$(addsuffix .P,$(basename $(OBJECTS))))
 
-cmd_line.o: cmd_line.c fcs_user.h fcs_cl.h
-	$(CC) -c $(OFLAGS) -o $@ $< $(END_OFLAGS)
+-include $(DEP_FILES)
 
-main.o: main.c fcs_user.h fcs_cl.h
-	$(CC) -c $(OFLAGS) -o $@ $< $(END_OFLAGS)
+%.o: %.c
+	$(CC) -Wp,-MD,.deps/$(*F).pp -c $(OFLAGS) -o $@ $< $(END_OFLAGS)
 
-cl-fc-solve: $(OBJECTS) cl_main.o lib.o cmd_line.o
-	$(CC) $(OLFLAGS) -o $@ $(OBJECTS) cl_main.o lib.o cmd_line.o $(END_OLFLAGS)
-
-#fc-solve-debug: freecell-debug.o state-debug.o card-debug.o fcs_dm-debug.o fcs_isa-debug.o main-debug.o fcs_hash-debug.o md5c-debug.o move-debug.o caas-debug.o preset-debug.o pqueue-debug.o intrface-debug.o scans-debug.o
-#	$(CC) $(DLFLAGS) -o $@ freecell-debug.o state-debug.o card-debug.o fcs_dm-debug.o fcs_isa-debug.o main-debug.o fcs_hash-debug.o md5c-debug.o move-debug.o caas-debug.o preset-debug.o pqueue-debug.o intrface-debug.o scans-debug.o $(END_DLFLAGS)
-
-fc-solve: $(OBJECTS) main.o lib.o cmd_line.o
-	$(CC) $(OLFLAGS) -o $@ $(OBJECTS) main.o lib.o cmd_line.o $(END_OLFLAGS)
-
-libfcs.a: $(OBJECTS) lib.o cmd_line.o fcs_user.h fcs_cl.h
-	ar r $@ $(OBJECTS) lib.o cmd_line.o
+libfcs.a: $(OBJECTS)
+	ar r $@ $(OBJECTS)
 	ranlib $@
 
-test-lib: test_lib.c libfcs.a fcs_user.h fcs_cl.h
-	gcc -Wall -g -o $@ -L. test_lib.c -lfcs -lm $(END_OLFLAGS)
+fc-solve: main.o libfcs.a
+	$(CC) $(OLFLAGS) -o $@ -L. $< -lfcs $(END_OLFLAGS)
 
-mtest: test_multi.o libfcs.a
-	gcc -Wall -o $@ -L. test_multi.o -lfcs $(END_OLFLAGS)
-
-test_multi.o: test_multi.c fcs_user.h fcs_cl.h
-	$(CC) -c $(OFLAGS) -o $@ $< $(END_OFLAGS)
-
-test_multi_parallel.o: test_multi_parallel.c fcs_user.h fcs_cl.h
-	$(CC) -c $(OFLAGS) -o $@ $< $(END_OFLAGS)
-
-mptest: test_multi_parallel.o libfcs.a fcs_user.h fcs_cl.h
+mptest: test_multi_parallel.o libfcs.a
 	gcc -Wall -o $@ -L. $< -lfcs $(END_OLFLAGS)
-
-i-fc-solve: i_main.o libfcs.a
-	gcc -Wall -g -o $@ -L. i_main.o -lfcs $(END_OLFLAGS)
 
 clean:
 	rm -f *.o $(TARGETS) libfcs.a test-lib mtest mptest
