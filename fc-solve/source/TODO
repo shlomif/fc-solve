@@ -47,3 +47,5 @@ number of states that are stored anywhere, etc.
 
 * Code a generic tests grouping.
 
+* Interactive mode? Continue a scan that reached its limit.
+

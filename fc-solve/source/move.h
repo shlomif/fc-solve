@@ -82,6 +82,8 @@ void freecell_solver_move_stack_normalize(
 
 extern char * freecell_solver_move_to_string(fcs_move_t move, int standard_notation);
 
+extern char * freecell_solver_move_to_string_w_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num, int decks_num, fcs_move_t move, int standard_notation);
+
 struct fcs_derived_states_list_struct
 {
     int num_states;

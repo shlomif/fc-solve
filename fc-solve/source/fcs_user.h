@@ -100,6 +100,12 @@ extern char * freecell_solver_user_move_to_string(
     int standard_notation
     );
 
+extern char * freecell_solver_user_move_to_string_w_state(
+    void * user_instance,
+    fcs_move_t move,
+    int standard_notation
+    );
+
 extern void freecell_solver_user_limit_depth(
     void * user_instance,
     int max_depth

@@ -702,6 +702,27 @@ char * freecell_solver_user_move_to_string(
     return freecell_solver_move_to_string(move, standard_notation);
 }
 
+char * freecell_solver_user_move_to_string_w_state(
+    void * user_instance,
+    fcs_move_t move,
+    int standard_notation
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+    
+    return 
+        freecell_solver_move_to_string_w_state(
+            &(user->running_state), 
+            user->instance->freecells_num, 
+            user->instance->stacks_num, 
+            user->instance->decks_num, 
+            move, 
+            standard_notation
+            );
+}
+
 void freecell_solver_user_limit_depth(
     void * user_instance,
     int max_depth

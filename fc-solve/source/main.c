@@ -364,6 +364,11 @@ static int cmd_line_callback(
     else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
     {
         dc->standard_notation = 1;
+    
+    }
+    else if ((!strcmp(argv[arg], "-snx")) || (!strcmp(argv[arg], "--standard-notation-extended")))
+    {
+        dc->standard_notation = 2;   
     }
     else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
     {
@@ -456,6 +461,7 @@ static char * known_parameters[] = {
     "-t", "--display-10-as-t",
     "-m", "--display-moves",
     "-sn", "--standard-notation",
+    "-snx", "--standard-notation-extended",
     "-sam", "--display-states-and-moves",
     "-pi", "--display-parent-iter",
     "--reset",
@@ -562,7 +568,7 @@ int main(int argc, char * argv[])
     signal(SIGUSR2, select_signal_handler);
 #endif
 
-#if 1
+#if 0
     {
         int limit = 500;
         freecell_solver_user_limit_iterations(instance, limit);
@@ -630,7 +636,8 @@ int main(int argc, char * argv[])
                     if (debug_context.display_moves)
                     {
                         as_string =
-                            freecell_solver_user_move_to_string(
+                            freecell_solver_user_move_to_string_w_state(
+                                instance,
                                 move,
                                 debug_context.standard_notation
                                 );
