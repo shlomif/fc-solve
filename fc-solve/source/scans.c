@@ -915,6 +915,8 @@ pq_rating_t freecell_solver_a_star_rate_state(
     {
         ret += ((20000 - ptr_state_with_locations->depth)/20000.0) * a_star_weights[FCS_A_STAR_WEIGHT_DEPTH];
     }
+    printf("ptr_state=0x%p\n", ptr_state_with_locations);
+    printf("ret=%f\n", ret);
 
     return (int)(ret*INT_MAX);
 }

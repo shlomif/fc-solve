@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "fcs.h"
 #include "rand.h"
@@ -241,6 +242,7 @@ static int shlomif_order_states(
     for(i=0;i<num_states;i++)
     {
         out_indexes[i] = (int)freecell_solver_PQueuePop(&pqueue);
+        printf("out_indexes[%i] = %i\n", i, out_indexes[i]);
     }
 
     freecell_solver_PQueueFree(&pqueue);

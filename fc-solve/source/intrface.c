@@ -1142,6 +1142,18 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
         hard_thread->max_num_times = hard_thread->num_times + hard_thread->num_times_left_for_soft_thread;
 
 
+        /* Initalize the a_star rater.
+         * This applies to random DFS as well, for the shlomif states
+         * order.
+         * * */
+        if (! soft_thread->initialized)
+        {
+            freecell_solver_a_star_initialize_rater(
+                soft_thread,
+                instance->state_copy_ptr
+                );
+        }
+
 
         /* 
          * Call the resume or solving function that is specific 
@@ -1204,14 +1216,6 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
             
             if (! soft_thread->initialized)
             {
-                if (soft_thread->method == FCS_METHOD_A_STAR)
-                {
-                    freecell_solver_a_star_initialize_rater(
-                        soft_thread,
-                        instance->state_copy_ptr
-                        );
-                }
-
                 ret = freecell_solver_a_star_or_bfs_do_solve_or_resume(
                     soft_thread,
                     instance->state_copy_ptr,
