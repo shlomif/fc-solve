@@ -12,6 +12,8 @@ to work.
 * Make a prelude in which soft threads would have a static play before they
 repeat themselves.
 
+* Code support for a secondary hash value.
+
 --- Non-pressing ---
 
 * Write an architecture document.
