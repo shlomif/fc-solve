@@ -50,7 +50,7 @@ I hope you'll enjoy using it.
 
 <p>
 Freecell Solver 2.6.0 has been spotted in the wild. This version features 
-atomic moves, which are slower than the traditional ones, but guaranteee 
+atomic moves, which are slower than the traditional ones, but guarantee 
 a true verdict. It also has a <tt>--prelude</tt> switch that allows running
 a static order of quotas at start for the participating soft threads, and
 makes constructing faster solving presets easier.
