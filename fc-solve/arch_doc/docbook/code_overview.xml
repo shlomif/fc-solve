@@ -364,14 +364,25 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 instances that can be used to solve a board, and then recycled 
                 to solve another. It uses intrface.c to perform its 
                 operations, and do the actual configuring and solving. It 
-                supplies the API header file <filename>fcs_user.h<filename> 
+                supplies the API header file <filename>fcs_user.h</filename> 
                 which contains one function for doing any given operation, and 
                 these functions are implemented in lib.c.
             </para>
         </section>
 
+        <section id="cmd_line.c">
+            <title>cmd_line.c</title>
+            <para>
+                This module can be used to analyze an array of strings 
+                (similar to that given to the <function>main()</function> 
+                function) and configure a user instance accordingly. It also 
+                implements reading such arguments from files and a presets 
+                mechanism that can be used to assign names to common 
+                configuration and load them.
+            </para>
+        </section>
+
     </section>
-       
 </chapter>
 
 
