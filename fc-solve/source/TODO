@@ -13,6 +13,8 @@ looking for non-up-to-date information.
 
 * command line presets
 
+* Implied flags: -sn implies -m, etc.
+
 * After everything: reorganize the --help behaviour according to the Freshmeat
 editorial
 
