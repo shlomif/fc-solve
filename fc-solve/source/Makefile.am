@@ -31,9 +31,11 @@ noinst_SCRIPTS = Makefile.win32
 Makefile.win32: gen_makefile.pl
 	perl $< --arch=win32 | add_cr.pl - > $@
 
+#<<<HEADERS.START
 EXTRA_DIST += alloc.h app_str.h caas.h card.h fcs_dm.h fcs.h fcs_hash.h
 EXTRA_DIST += fcs_isa.h jhjtypes.h inline.h lookup2.h ms_ca.h move.h
 EXTRA_DIST += pqueue.h preset.h rand.h state.h test_arr.h tests.h
+#>>>HEADERS.END
 
 EXTRA_DIST += USAGE CREDITS README.win32.txt
 EXTRA_DIST += gen_makefile.pl Makefile.lite Makefile.gnu Makefile.win32
