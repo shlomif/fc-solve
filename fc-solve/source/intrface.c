@@ -1137,6 +1137,7 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
             }
             break;
 
+            case FCS_METHOD_RANDOM_DFS:
             case FCS_METHOD_SOFT_DFS:
 
             if (! soft_thread->initialized)
@@ -1146,32 +1147,7 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                         soft_thread,
                         instance->state_copy_ptr,
                         0,
-                        0
-                        );
-                soft_thread->initialized = 1;
-            }
-            else
-            {
-                ret = 
-                    freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
-                        soft_thread,
-                        NULL,
-                        1,
-                        0
-                        );
-            }
-            break;
-
-            case FCS_METHOD_RANDOM_DFS:
-
-            if (! soft_thread->initialized)
-            {
-                ret = 
-                    freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
-                        soft_thread,
-                        instance->state_copy_ptr,
-                        0,
-                        1
+                        (soft_thread->method == FCS_METHOD_RANDOM_DFS)
                         );
 
                 soft_thread->initialized = 1;
@@ -1183,7 +1159,7 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                         soft_thread,
                         NULL,
                         1,
-                        1
+                        (soft_thread->method == FCS_METHOD_RANDOM_DFS)
                         );
             }
             break;
