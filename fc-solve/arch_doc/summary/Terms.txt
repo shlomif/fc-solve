@@ -1,0 +1,28 @@
+
+
+Hard Thread - a collection of soft threads, that should generally be placed
+in one system thread. Hard thread contains resources that soft threads from
+different hard threads would interfere with each other in allocating. Hard
+Threads contain a collection of state packs, and various counters and other
+variables.
+
+Moves - A one-time displacements of cards from stacks to stacks, from stacks
+to freecells, or from freecells to stacks. Also contain 
+Soft Thread - a singular continuus scan operating on a states collection.
+It can be Soft-DFS, DFS or Best First Search. There could be any number of
+soft threads in a hard thread.
+
+Packs - see State Packs
+
+State Packs - An allocation of states. Each one is a buffer in memory, that
+contain an array of packs. Each buffer remains at a constant memory location,
+but more buffers are allocated as necessary. The implementation of State packs 
+reside in the files fcs_isa.c and fcs_isa.h.
+
+Stacks -
+    1. Move Stacks (refer to them)
+    2. Columns of the freecell games.
+    3. The stacks used for maintaining the Soft-DFS recursion.
+    4. The environment recursion stack.
+
+
