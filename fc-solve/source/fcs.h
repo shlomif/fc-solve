@@ -440,11 +440,12 @@ struct freecell_solver_hard_thread_struct
      * */
     int num_soft_threads_finished;
 
-    
+#ifdef INDIRECT_STACK_STATES
     /*
      * This is the mechanism used to allocate memory for the stacks.
      * */
-    fcs_compact_allocator_t * stacks_allocator;    
+    fcs_compact_allocator_t * stacks_allocator;
+#endif
 };
 
 struct fcs_soft_dfs_stack_item_struct

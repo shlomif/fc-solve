@@ -1348,7 +1348,9 @@ void freecell_solver_finish_instance(
 
         freecell_solver_state_ia_finish(instance->hard_threads[ht_idx]);
 
+#ifdef INDIRECT_STACK_STATES
         freecell_solver_compact_allocator_finish(instance->hard_threads[ht_idx]->stacks_allocator);
+#endif
     }
 
     if (instance->optimization_thread)
