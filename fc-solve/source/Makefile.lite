@@ -7,7 +7,7 @@ DLFLAGS =
 END_OLFLAGS = 
 END_DLFLAGS = 
 
-INCLUDES = alloc.h app_str.h caas.h card.h cl_chop.h config.h fcs_cl.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h fcs_user.h inline.h jhjtypes.h lookup2.h move.h ms_ca.h prefix.h pqueue.h preset.h rand.h state.h test_arr.h tests.h
+INCLUDES = alloc.h app_str.h caas.h card.h cl_chop.h config.h ds_order.h fcs_cl.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h fcs_user.h inline.h jhjtypes.h lookup2.h move.h ms_ca.h prefix.h pqueue.h preset.h rand.h state.h test_arr.h tests.h
 
 TARGETS = fc-solve
 
