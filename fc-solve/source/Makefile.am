@@ -55,7 +55,7 @@ EXTRA_DIST += gen_makefile.pl Makefile.lite Makefile.gnu Makefile.win32
 EXTRA_DIST += config.h.orig config.h.dkds config.h.freecell config.h.win32
 EXTRA_DIST += prefix.h.freecell
 EXTRA_DIST += devel_docs/ devel_docs/Architecture.summary.txt devel_docs/Architecture.txt devel_docs/strategies.txt devel_docs/variants.txt
-EXTRA_DIST += gen_presets.pl gen_def.sh
+EXTRA_DIST += gen_presets.pl gen_def.sh gen_tests_lists.pl
 EXTRA_DIST += freecell-solver.def
 
 EXTRA_DIST += ver.txt change_ver.sh
