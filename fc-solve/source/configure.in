@@ -97,9 +97,9 @@ AC_ARG_ENABLE(stack-storage,
 
 AC_ARG_ENABLE(states-type,
  [  --enable-states-type[=state type] Specify the states type:
-                      compact [default]: Compact States
+                      compact: Compact States
                       debug: Debug States (very slow)
-                      indirect: Indirect Stack States],
+                      indirect [default]: Indirect Stack States],
  [ if   test "x$enableval" = "xcompact" ; then
       states_type=compact
    elif test "x$enableval" = "xdebug" ; then
