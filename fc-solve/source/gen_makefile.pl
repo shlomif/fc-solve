@@ -3,7 +3,7 @@
 use strict;
 
 my @objects=(
-    qw(app_str caas card cmd_line fcs_dm fcs_hash fcs_isa freecell), 
+    qw(alloc app_str caas card cmd_line fcs_dm fcs_hash fcs_isa freecell), 
     qw(intrface lib move pqueue preset rand scans simpsim state)
     );
 
@@ -16,17 +16,13 @@ my @targets = (
         'exe' => "freecell-solver-range-parallel-solve",
         'objs' => [ qw(test_multi_parallel) ],
     },
-    {
-        'exe' => "mtest",
-        'objs' => [ qw(test_multi) ],
-    },
 );
 
 my @headers=
     (
-        qw(app_str caas card config fcs_cl fcs fcs_dm fcs_enums),
+        qw(alloc app_str caas card config fcs_cl fcs fcs_dm fcs_enums),
         qw(fcs_hash fcs_isa fcs_move fcs_user jhjtypes), 
-        qw(move pqueue preset rand state tests)
+        qw(move ms_ca pqueue preset rand state test_arr tests)
     );
 
 my @defines=(qw(FCS_STATE_STORAGE=FCS_STATE_STORAGE_INTERNAL_HASH WIN32));

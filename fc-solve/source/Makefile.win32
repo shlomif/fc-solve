@@ -2,13 +2,16 @@ all: fc-solve.exe
 
 OFLAGS=/Og2 /DFCS_STATE_STORAGE=FCS_STATE_STORAGE_INTERNAL_HASH /DWIN32
 DFLAGS=$(OFLAGS) /DDEBUG
-INCLUDES=app_str.h caas.h card.h config.h fcs_cl.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h fcs_user.h jhjtypes.h move.h pqueue.h preset.h rand.h state.h tests.h
+INCLUDES=alloc.h app_str.h caas.h card.h config.h fcs_cl.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h fcs_user.h jhjtypes.h move.h ms_ca.h pqueue.h preset.h rand.h state.h test_arr.h tests.h
 CC=cl
 LIB32=link.exe
 
 
-OBJECTS = app_str.obj caas.obj card.obj cmd_line.obj fcs_dm.obj fcs_hash.obj fcs_isa.obj freecell.obj intrface.obj lib.obj move.obj pqueue.obj preset.obj rand.obj scans.obj simpsim.obj state.obj
+OBJECTS = alloc.obj app_str.obj caas.obj card.obj cmd_line.obj fcs_dm.obj fcs_hash.obj fcs_isa.obj freecell.obj intrface.obj lib.obj move.obj pqueue.obj preset.obj rand.obj scans.obj simpsim.obj state.obj
 
+
+alloc.obj: alloc.c $(INCLUDES)
+	$(CC) /c /Foalloc.obj $(OFLAGS) alloc.c
 
 app_str.obj: app_str.c $(INCLUDES)
 	$(CC) /c /Foapp_str.obj $(OFLAGS) app_str.c
@@ -67,9 +70,6 @@ main.obj: main.c $(INCLUDES)
 test_multi_parallel.obj: test_multi_parallel.c $(INCLUDES)
 	$(CC) /c /Fotest_multi_parallel.obj $(OFLAGS) test_multi_parallel.c
 
-test_multi.obj: test_multi.c $(INCLUDES)
-	$(CC) /c /Fotest_multi.obj $(OFLAGS) test_multi.c
-
 
 
 ###
@@ -80,11 +80,8 @@ test_multi.obj: test_multi.c $(INCLUDES)
 fc-solve.exe: freecell-solver-static.lib main.obj
 	$(CC) /Fefc-solve.exe /F0x2000000 freecell-solver-static.lib main.obj
 
-mptest.exe: freecell-solver-static.lib test_multi_parallel.obj
-	$(CC) /Femptest.exe /F0x2000000 freecell-solver-static.lib test_multi_parallel.obj
-
-mtest.exe: freecell-solver-static.lib test_multi.obj
-	$(CC) /Femtest.exe /F0x2000000 freecell-solver-static.lib test_multi.obj
+freecell-solver-range-parallel-solve.exe: freecell-solver-static.lib test_multi_parallel.obj
+	$(CC) /Fefreecell-solver-range-parallel-solve.exe /F0x2000000 freecell-solver-static.lib test_multi_parallel.obj
 
 freecell-solver-static.lib: $(OBJECTS)
 	$(LIB32) -lib $(OBJECTS) /out:freecell-solver-static.lib
