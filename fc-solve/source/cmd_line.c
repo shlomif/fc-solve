@@ -597,6 +597,11 @@ int freecell_solver_user_cmd_line_parse_args(
                 value
                 );
         }
+        else if ((!strcmp(argv[arg], "-ni")) ||
+                 (!strcmp(argv[arg], "--next-instance")))
+        {
+            freecell_solver_user_next_instance(instance);
+        }
         else
         {
             *last_arg = arg;

@@ -367,28 +367,36 @@ void freecell_solver_user_free(
     )
 {
     fcs_user_t * user;
+    int i;
 
     user = (fcs_user_t *)user_instance;
 
-    if (user->ret == FCS_STATE_WAS_SOLVED)
+    for(i=0;i<user->num_instances;i++)
     {
-        fcs_move_stack_destroy(user->instance->solution_moves);
-        user->instance->solution_moves = NULL;
-    }
-    else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
-    {
-        freecell_solver_unresume_instance(user->instance);
-    }
-
-    if (user->ret != FCS_STATE_NOT_BEGAN_YET)
-    {
-        if (user->ret != FCS_STATE_INVALID_STATE)
+        int ret_code = user->instances_list[i].ret;
+        
+        if (ret_code == FCS_STATE_WAS_SOLVED)
         {
-            freecell_solver_finish_instance(user->instance);
+            fcs_move_stack_destroy(user->instance->solution_moves);
+            user->instance->solution_moves = NULL;
         }
+        else if (ret_code == FCS_STATE_SUSPEND_PROCESS)
+        {
+            freecell_solver_unresume_instance(user->instances_list[i].instance);
+        }
+
+        if (ret_code != FCS_STATE_NOT_BEGAN_YET)
+        {
+            if (ret_code != FCS_STATE_INVALID_STATE)
+            {
+                freecell_solver_finish_instance(user->instances_list[i].instance);
+            }
+        }
+
+        freecell_solver_free_instance(user->instances_list[i].instance);
     }
 
-    freecell_solver_free_instance(user->instance);
+    free(user->instances_list);
 
     free(user);
 }
@@ -999,3 +1007,31 @@ void freecell_solver_user_set_scans_synergy(
 
     user->instance->scans_synergy = synergy;
 }
+
+int freecell_solver_user_next_instance(
+    void * user_instance
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+    
+    user->num_instances++;
+    if (user->num_instances == user->max_num_instances)
+    {
+        user->max_num_instances += 10;
+        user->instances_list = 
+            realloc(
+                user->instances_list, 
+                sizeof(user->instances_list[0])*user->max_num_instances
+                );
+    }
+    user->current_instance = user->num_instances-1;
+    user->instance = freecell_solver_alloc_instance();
+    user->instances_list[user->current_instance].instance = user->instance;
+    user->instances_list[user->current_instance].ret = user->ret = FCS_STATE_NOT_BEGAN_YET;
+    user->instances_list[user->current_instance].limit = -1;
+    
+    return 0;
+}
+

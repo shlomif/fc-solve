@@ -249,6 +249,9 @@ extern void freecell_solver_user_limit_current_instance_iterations(
     int max_iters
     );
 
+extern int freecell_solver_user_next_instance(
+    void * user_instance
+    );
 
 #ifdef __cplusplus
 }
