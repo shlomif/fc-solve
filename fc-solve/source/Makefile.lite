@@ -1,0 +1,86 @@
+
+CC = gcc
+OFLAGS = -Wall -O3 -DFCS_STATE_STORAGE=FCS_STATE_STORAGE_INTERNAL_HASH -DFCS_STACK_STORAGE=FCS_STACK_STORAGE_INTERNAL_HASH
+OLFLAGS = -Wall
+DLFLAGS = 
+
+END_OLFLAGS = 
+END_DLFLAGS = 
+
+INCLUDES = app_str.h card.h config.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h fcs_user.h jhjtypes.h md5.h move.h pqueue.h preset.h state.h tests.h
+
+TARGETS = fc-solve
+
+all: $(TARGETS)
+
+board_gen: dummy
+	make -C board_gen/
+
+dummy:
+
+app_str.o: app_str.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+caas.o: caas.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+card.o: card.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+cmd_line.o: cmd_line.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+fcs_dm.o: fcs_dm.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+fcs_hash.o: fcs_hash.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+fcs_isa.o: fcs_isa.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+freecell.o: freecell.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+intrface.o: intrface.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+lib.o: lib.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+main.o: main.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+md5c.o: md5c.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+move.o: move.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+pqueue.o: pqueue.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+preset.o: preset.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+rand.o: rand.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+scans.o: scans.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+simpsim.o: simpsim.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+state.o: state.c $(INCLUDES)
+	$(CC) -c $(OFLAGS) -o $@ $<
+
+OBJECTS = app_str.o caas.o card.o cmd_line.o fcs_dm.o fcs_hash.o fcs_isa.o freecell.o intrface.o lib.o main.o move.o pqueue.o preset.o rand.o simpsim.o state.o scans.o
+
+fc-solve: $(OBJECTS)
+	$(CC) $(OLFLAGS) -o $@ $(OBJECTS) -lm
+
+clean:
+	rm -f *.o $(TARGETS) $(DTARGETS)
+
+

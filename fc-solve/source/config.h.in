@@ -1,0 +1,95 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+
+/* Define to empty if the keyword does not work.  */
+#undef const
+
+/* Define as the return type of signal handlers (int or void).  */
+#undef RETSIGTYPE
+
+/* Define to `unsigned' if <sys/types.h> doesn't define.  */
+#undef size_t
+
+/* Define if you have the ANSI C header files.  */
+#undef STDC_HEADERS
+
+#undef DEBUG_STATES
+#undef COMPACT_STATES
+#undef INDIRECT_STACK_STATES
+
+#undef CARD_DEBUG_PRES
+
+/*
+    The sort margin size for the previous states array.
+*/
+#define PREV_STATES_SORT_MARGIN 32
+/*
+    The amount prev_states grow by each time it each resized.
+    Should be greater than 0 and in order for the program to be
+    efficient, should be much bigger than
+    PREV_STATES_SORT_MARGIN.
+*/
+#define PREV_STATES_GROW_BY 128
+
+/*
+    The amount the pack pointers array grows by. Shouldn't be too high
+    because it doesn't happen too often.
+*/
+#define IA_STATE_PACKS_GROW_BY 32
+
+#define MAX_NUM_FREECELLS 4
+
+#define MAX_NUM_STACKS 10
+/*
+ * The maximal number of initial cards that can be found in a stack. The rule
+ * of the thumb is that it plus 13 should be a multiple of 4.
+ * */
+#define MAX_NUM_INITIAL_CARDS_IN_A_STACK 8
+
+#define MAX_NUM_DECKS 2
+
+#define FCS_STATE_STORAGE_INDIRECT 0
+#define FCS_STATE_STORAGE_INTERNAL_HASH 1
+#define FCS_STATE_STORAGE_LIBAVL_AVL_TREE 2
+#define FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE 3
+#define FCS_STATE_STORAGE_LIBREDBLACK_TREE 4
+#define FCS_STATE_STORAGE_GLIB_TREE 5
+#define FCS_STATE_STORAGE_GLIB_HASH 6
+#define FCS_STATE_STORAGE_DB_FILE 7
+
+#define FCS_STACK_STORAGE_INTERNAL_HASH 0
+#define FCS_STACK_STORAGE_LIBAVL_AVL_TREE 1
+#define FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE 2
+#define FCS_STACK_STORAGE_LIBREDBLACK_TREE 3
+#define FCS_STACK_STORAGE_GLIB_TREE 4
+#define FCS_STACK_STORAGE_GLIB_HASH 5
+
+#undef FCS_STATE_STORAGE
+#undef FCS_STACK_STORAGE
+
+/* Define if you have the strdup function.  */
+#undef HAVE_STRDUP
+
+/* Define if you have the <dlfcn.h> header file.  */
+#undef HAVE_DLFCN_H
+
+/* Define if you have the <limits.h> header file.  */
+#undef HAVE_LIMITS_H
+
+/* Define if you have the avl library (-lavl).  */
+#undef HAVE_LIBAVL
+
+/* Define if you have the glib library (-lglib).  */
+#undef HAVE_LIBGLIB
+
+/* Define if you have the m library (-lm).  */
+#undef HAVE_LIBM
+
+/* Define if you have the redblack library (-lredblack).  */
+#undef HAVE_LIBREDBLACK
+
+/* Name of package */
+#undef PACKAGE
+
+/* Version number of package */
+#undef VERSION
+

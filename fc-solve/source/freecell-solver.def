@@ -1,0 +1,37 @@
+LIBRARY freecell-solver
+EXPORTS
+    freecell_solver_user_alloc @1
+    freecell_solver_user_apply_preset @2
+    freecell_solver_user_limit_iterations @3
+    freecell_solver_user_set_tests_order @4
+    freecell_solver_user_solve_board @5
+    freecell_solver_user_resume_solution @6
+    freecell_solver_user_get_next_move @7
+    freecell_solver_user_current_state_as_string @8
+    freecell_solver_user_free @9
+    freecell_solver_user_get_current_depth @10
+    freecell_solver_user_set_solving_method @11
+    freecell_solver_user_get_num_times @12
+    freecell_solver_user_get_limit_iterations @13
+    freecell_solver_user_get_moves_left @14
+    freecell_solver_user_set_game @15
+    freecell_solver_user_set_solution_optimization @16
+    freecell_solver_user_move_to_string @17
+    freecell_solver_user_limit_depth @18
+    freecell_solver_user_set_num_freecells @19
+    freecell_solver_user_get_max_num_freecells @20
+    freecell_solver_user_set_num_stacks @21
+    freecell_solver_user_get_max_num_stacks @22
+    freecell_solver_user_set_num_decks @23
+    freecell_solver_user_get_max_num_decks @24
+    freecell_solver_user_get_invalid_state_error_string @25
+    freecell_solver_user_set_sequences_are_built_by_type @26
+    freecell_solver_user_set_empty_stacks_filled_by @27
+    freecell_solver_user_set_sequence_move @28
+    freecell_solver_user_set_a_star_weight @29
+    freecell_solver_user_set_iter_handler @30
+    freecell_solver_user_iter_state_as_string @31
+    freecell_solver_user_set_random_seed @32
+    freecell_solver_user_get_num_states_in_collection @33
+    freecell_solver_user_limit_num_states_in_collection @34
+    freecell_solver_user_cmd_line_parse_args @35

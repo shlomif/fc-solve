@@ -1,0 +1,166 @@
+Name: freecell-solver
+Version: @VERSION@
+Release: 1 
+Copyright: Public Domain
+Group: Amusement/Games
+Source: http://vipe.technion.ac.il/~shlomif/freecell-solver/freecell-solver-%{version}.tar.gz
+Buildroot: %{_tmppath}/freecell-solver-root
+URL: http://vipe.technion.ac.il/~shlomif/freecell-solver/
+%define LIBVER 0.3.0
+Serial: 7
+Requires: freecell-solver-libs = %{PACKAGE_VERSION}
+Summary: The Freecell Solver Executable
+
+%description
+The Freecell Solver package contains the fc-solve executable which is
+a command-line program that can be used to solve games of Freecell and
+similar card solitaire variants.
+
+This package also contains command line executables to generate the initial
+boards of several popular Freecell implementations.
+
+%package libs
+Summary: The Freecell Solver dynamic libraries for solving Freecell games
+Group: Amusement/Games
+Serial: 4
+
+%description libs
+Contains the Freecell Solver libraries that are used by some programs to solve
+games of Freecell and similar variants of card solitaire.
+
+This package is mandatory for the Freecell Solver executable too.
+
+%package devel
+Summary: The Freecell Solver development tools for solving Freecell games
+Group: Amusement/Games
+Requires: freecell-solver-libs = %{PACKAGE_VERSION}
+Serial: 4
+
+%description devel
+Freecell Solver is a library for automatically solving boards of Freecell and
+similar variants of card Solitaire. This package contains the header files and 
+static libraries necessary for developing programs using Freecell Solver.
+
+You should install it if you are a game developer who would like to use 
+Freecell Solver from within your programs.
+
+%prep
+%setup
+# This is a hack that is meant to make sure the README of the board
+# generation programs resides inside the board_gen sub-dir of the 
+# documentation directory.
+cd board_gen
+mkdir doc
+cd doc
+mkdir board_gen
+cd board_gen
+cp ../../README .
+
+
+%build
+
+./configure --prefix=/usr --enable-states-type=indirect --enable-max-num-freecells=8 --enable-max-num-stacks=12 --enable-max-num-initial-cards-per-stack=104 --enable-max-num-decks=2 --mandir=%{_mandir}
+make RPM_OPT_FLAGS="$RPM_OPT_FLAGS" 
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install prefix=$RPM_BUILD_ROOT/usr mandir=$RPM_BUILD_ROOT/%{_mandir}
+strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/lib/libfreecell-solver.so.%{LIBVER}
+strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/bin/fc-solve
+strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/lib/libfreecell-solver.a
+
+cd $RPM_BUILD_ROOT/%{_mandir}
+cd man6
+
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files libs
+/usr/lib/libfreecell-solver.so.%{LIBVER}
+
+%files
+%defattr(-,root,root)
+%doc README TODO ChangeLog USAGE board_gen/doc/board_gen
+/usr/bin/fc-solve
+/usr/bin/make-aisleriot-freecell-board
+/usr/bin/make-gnome-freecell-board
+/usr/bin/pi-make-microsoft-freecell-board
+/usr/bin/make_pysol_freecell_board.py
+/usr/bin/freecell-solver-range-parallel-solve
+%{_mandir}/*/*
+
+%files devel
+%defattr(-,root,root)
+/usr/lib/libfreecell-solver.a
+/usr/include/freecell-solver/fcs_cl.h
+/usr/include/freecell-solver/fcs_user.h
+/usr/include/freecell-solver/fcs_enums.h
+/usr/include/freecell-solver/fcs_move.h
+/usr/bin/freecell-solver-config
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%changelog
+* Sat Feb 16 2002 Shlomi Fish <shlomif@vipe.technion.ac.il> 2.1.10-1
+- updated to version 2.1.10
+- removed the man pages symlinks (they were superceded by the ".so" links).
+
+* Fri Jan 04 2002 Shlomi Fish <shlomif@vipe.technion.ac.il> 2.0.1-1
+- updated to version 2.0.1
+- added freecell-solver-range-parallel-solve to the /usr/bin programs
+
+* Tue Dec 18 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 2.0.0-1
+- updated to version 2.0.0
+
+* Fri Nov 23 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.10.3-1
+- updated to version 1.10.3
+
+* Thu Nov 22 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.10.2-1
+- updated to version 1.10.2
+
+* Tue Oct 02 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.10.0-1
+- updated to version 1.10.0
+
+* Sat Sep 22 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.8.2-1
+- updated to version 1.8.2
+
+* Sat Sep 01 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.8.0-1
+- Changed the version to 1.8.0
+- Removed the -autconf suffix from the archive.
+
+* Sat Jul 07 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.6.7-2
+- Fixed the man pages.
+- Included a paragraph about the board_gen programs in the description of
+  the executable package.
+
+* Sat Jun 09 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.6.7-1
+- Changed the version to 1.6.7.
+- Added support for the man pages.
+- Added the symlinked man pages.
+- Added the board_gen sub-dir in the documentation directory. (using a rather
+crude hack)
+- Known Bugs:
+    1 - The man pages need a little rework, there are some typos and they
+        don't look very standard.
+
+
+* Thu May 24 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.6.4-3
+- Added the board generation programs into the RPM.
+- Changed the package to my name and E-mail. Done through the home-dir conf
+file, not by editting the SPEC, but what the heck.
+
+* Sat May 19 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.6.4-2
+- Changed the descriptions and summaries to something more meaningful
+- Removed the dependency on "Serial" in "Requires".
+
+* Fri May 18 2001 Shlomi Fish <shlomif@vipe.technion.ac.il> 1.6.4-1
+- First working version with libs and executable support.
+- Known Bugs:
+      1 - No "devel" package.
+      2 - No options passed to "configure".
+- Added calls to strip.
+- "configure" is now OK with all the options set.
+- Added Headers and a working freecell-solver-devel

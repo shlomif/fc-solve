@@ -1,0 +1,105 @@
+1. Introduction
+---------------
+
+This sub-directory contains programs that can generate the Freecell board of
+several popular Freecell implementations, in the format understood by 
+Freecell Solver.
+
+They include:
+
+make-gnome-freecell-board:
+    Generate the boards of the standalone Freecell program that comes with the
+    GNOME desktop.
+
+make-aisleriot-freecell-board
+    Generate the Freecell boards of GNOME's AisleRiot.
+
+make_pysol_freecell_board.py
+    A Python script that generates the boards of the various games of PySol.
+
+pi-make-microsoft-freecell-board
+    A program that generates the boards of Microsoft Freecell and 
+    Freecell Pro.
+
+make-microsoft-freecell-board
+    A program that generates the Freecell board according to the 
+    MS-Freecell/Freecell Pro shuffling algorithm but not according to its
+    randomization method. One should probably use 
+    "pi-make-microsoft-freecell-board" instead.
+
+2. Building
+-----------
+
+Typing "make" in the main directory of this distribution will build those
+programs, and "make install" will install them for you.
+
+The PySol board generation program is written in Python so it 
+doesn't need to be built.
+
+3. Invocation
+-------------
+
+The programs accept the board number as their single command-line argument,
+and output the board to the standard output. 
+
+"fc-solve" and "fc-solve-debug" read the board from the standard input in case
+the board file is "-" or unspecified. Therefore, you can solve a given board
+like that:
+
+# [Board Generation Program Name] [Board Number] | fc-solve
+
+For example, to solve GNOME's Freecell board No. 15789:
+
+# make-gnome-freecell-board 15789 | fc-solve
+
+make_pysol_freecell_board.py also accepts another optional argument which
+specifies the game. Available games are:
+
+     bakers_game       - Baker's Game
+     bakers_dozen      - Baker's Dozen (Broken)
+     der_katz          - Der Katzenschwantz
+     die_schlange      - Die Schlange
+     eight_off         - Eight Off
+     forecell          - Forecell
+     freecell          - Freecell
+     ko_bakers_game    - Kings' Only Baker's Game
+     relaxed_freecell  - Relaxed Freecell
+     relaxed_seahaven  - Relaxed Seahaven Towers
+     seahaven          - Seahaven Towers
+     simple_simon      - Simple Simon
+
+For example, to generate "Eight Off" board No. 168, type:
+# make_pysol_freecell_board.py 168 eight_off
+
+You can then use the "--game" option of Freecell Solver to solve this
+particular game:
+
+# make_pysol_freecell_board.py 168 eight_off | fc-solve --game eight_off
+
+make-aisleriot-freecell-board accepts a subset of those game types as its
+third parameters. The complete list so far is : "bakers_game", "eight_off", 
+"freecell" and "seahaven".
+
+If you wish the programs to print the 10 cards with "T"'s instead of
+"10", then append a "-t" flag immidiately after the board generation 
+program's name. For example:
+
+# make_pysol_freecell_board.py -t 24
+# pi-make-microsoft-freecell-board -t 11982
+# make-aisleriot-freecell-board -t 890 seahaven 
+
+4. Notes
+--------
+
+"make-gnome-freecell-board", "make-aisleriot-freecell-board" and 
+"make-microsoft-freecell-board" all use the randomization routines of the
+system's Standard C library (libc). Therefore, they will generate different
+results on different systems. It is recommended that you run them on the same
+type of system the game program is running on.
+
+"make_pysol_freecell_board.py" and "pi-make-microsoft-freecell-board" on the
+other hand use their own randomization functions, so they will run the same
+on any platform.
+
+"make_pysol_freecell_board.py" and "pi-make-microsoft-freecell-board" generate
+the same boards for board numbers up to 32000.

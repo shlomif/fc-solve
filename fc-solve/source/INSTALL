@@ -1,0 +1,73 @@
+INSTALL file for Freecell Solver
+================================
+
+Quick and Dirty Compilation
+---------------------------
+
+Usually typing "./configure" followed by "make" and "make install" will 
+build and install "fc-solve" which is the Freecell Solver executable for you.
+
+It will also build and install the board generation program, more 
+information about which can be found in the "board_gen" sub-direcotry of
+this distribution.
+
+Changing the Maximal number of Freecells or Stacks or Cards per Stack
+---------------------------------------------------------------------
+
+The following parameters to the "configure" script which accept an argument
+control the hard-coded parameters of the Freecell Solver executables:
+
+"--enable-max-num-freecells=$NUM" - The maximal number of freecells
+
+"--enable-max-num-stacks=$NUM"  - The maximal number of stacks
+
+"--enable-max-num-initial-cards-per-stack=$NUM" - The maximal number of initial
+cards per stack.
+
+Notice that it's very important to set the maximal number of initial cards
+per stack, or else it's possible that a stack will eventually overflow.
+
+If you wish to be able to effectively solve games of "Die Schlange" and
+"Der Katzenschwanz", you should also enable the indirect stack states
+feature. See the "Indirect Stack States" section below for more information
+on how to do that.
+
+Indirect Stack States
+---------------------
+
+The indirect stack states caches the stacks, and only stores pointers to 
+them inside the boards. Thus there is one copy of a particular stack present
+in memory, which enables FCS to conserve more memory. If you are low on
+memory you will probably want to enable this feature, but otherwise it will
+result in a slower performance.
+
+Indirect stack states are especially useful for solving boards of 
+"Der Katzenschwanz" and "Die Schlange" where the stacks can be very long.
+
+To enable this feature run "./configure" with the command line argument 
+"--enable-states-type=indirect".
+
+Installing under Win32
+----------------------
+
+Freecell Solver is distributed with a makefile suitable for use with 
+Microsoft Visual C++. Therefore, you can just type "nmake /f Makefile.win32"
+to compile Freecell Solver.
+
+If you have an IDE of some sort you can take the following steps to compile
+Freecell Solver:
+
+1. Open a project for Freecell Solver.
+
+2. Add all the C files except "lib.c", "test_lib.c" and "test_multi.c"
+to the project.
+
+3. Define the macro FCS_STATE_STORAGE as
+FCS_STATE_STORAGE_INTERNAL_HASH, either in config.h or in the
+parameters for the C compiler.
+
+4. Build.
+
+If you are using gcc or some other command-line compiler, you should 
+write the makefile based on the files "Makefile" or "Makefile.lite", 
+and then compile according to it.

@@ -1,0 +1,43 @@
+=head1 NAME
+
+fc-solve - The Freecell Solver command-line program for solving Freecell Games
+
+=head1 SYNOPSIS
+
+Detailed by invoking "fc-solve B<--help>".
+
+For the impatient, just type "fc-solve I<my-board>" 
+at the command line, where I<my-board> is a file that contains 
+a valid board for input.
+
+=head1 DESCRIPTION
+
+B<fc-solve> is a command-line application that can be used to solve games
+of Freecell and similar Solitaire variants. Details how to use it are described
+in:
+
+1. Its help screen, which can be printed by typing "fc-solve B<--help>".
+
+2. The README and USAGE text files in the Freecell Solver documentation 
+directory. (usually: /usr/share/doc/freecell-solver-FCS_VERSION/* ).
+
+This man page is only a symbolic one, so sorry if you were looking for more
+detailed information. It is possible that it will someday be more encompassing
+, as I'm thinking of converting the documentation to perl POD.
+
+=head1 OPTIONS
+
+
+See USAGE, README and the output of "fc-solve B<--help>".
+
+=head1 SEE ALSO
+
+The B<--help> display of the program.
+
+The files under /usr/share/doc/freecell-solver-FCS_VERSION.
+
+=head1 AUTHOR
+
+Shlomi Fish E<lt>shlomif@vipe.technion.ac.ilE<gt>.
+
+=cut

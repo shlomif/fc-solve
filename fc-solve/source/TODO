@@ -1,0 +1,49 @@
+--- Pressing ---
+
+--- Non-pressing ---
+
+* Write a Perl Script to parse, analyze and do a sanity check for a solution.
+(-p -t -sam)
+
+* Put the internal_tests_order_t inside instance and soft_thread, and have
+one function for everything.
+
+* More general state_ia_alloc() mechanism
+
+* Add more fcs_ and FCS_ prefixes to the macros and globals.
+
+* Write a multi-threaded version and see if it runs ok.
+
+* Create the ability for multiple threads to operate on the same prev_states
+collection.
+
+* Port to Java (?)
+
+* Integrate into GNOME Freecell and/or GNOME AisleRiot and/or KDE Patience
+and/or PySol.
+
+* Code algorithms for similiar solitaire games. (maybe a perl program that 
+generates C code). - DONE partialy
+
+* Comment the code.
+
+* Add a switch to ask the user if he wants to continue and enter a bigger 
+iterations limit.
+
+* Add a more verbose preset error handling. 
+(explain why it could not be applied).
+
+* Load and save instances to the disk.
+
+* Implement BFS and A* (and Minimax, and others?). Which technique can be 
+specified in the command line (including DFS and Soft-DFS).
+
+* Check for unmalloced data and if so gracefully exit.
+
+* Code test functions for atomic moves.
+
+* Get rid of the indirect state allocation mechanism. (?) 
+
+* Add a limit to stacks number (in the case of Indirect Stack States),
+number of states that are stored anywhere, etc.
+
