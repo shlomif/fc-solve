@@ -462,7 +462,7 @@ for information about their format)
 
 Presets that are shipped with Freecell Solver:
 
-	abra-kadabra      - a meta-moves preset
+    abra-kadabra      - a meta-moves preset
     cool-jives        - a meta-moves preset
     crooked-nose      - an atomic-moves preset (guarantees an accurate verdict)
     fools-gold        - an atomic-moves preset
