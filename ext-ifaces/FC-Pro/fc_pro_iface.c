@@ -153,7 +153,7 @@ static char * render_move(fcs_extended_move_t move, char * string)
     switch(fcs_move_get_type(move.move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
-                if (move.to_empty_stack)
+                if (move.to_empty_stack && (fcs_move_get_num_cards_in_seq(move.move) > 1))
                 {
                     sprintf(string, "%i%iv%x", 
                         1+fcs_move_get_src_stack(move.move),
@@ -469,7 +469,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         assert(virtual_stack_len[src] >= pos.tableau[src].count);
                         if (virtual_stack_len[src] > pos.tableau[src].count)
                         {
+#ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
+#endif
                             virt_num_cards = min((virtual_stack_len[src]-pos.tableau[src].count), num_cards);
 #undef min
                             virtual_stack_len[src] -= virt_num_cards;
@@ -490,7 +492,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             }
                             for(i=0;i<num_cards;i++)
                             {
-                                pos.tableau[dest].cards[pos.tableau[dest].count+i] = pos.tableau[src].cards[pos.tableau[src].count-num_cards+i-1];
+                                pos.tableau[dest].cards[pos.tableau[dest].count+i] = pos.tableau[src].cards[pos.tableau[src].count-num_cards+i];
                             }
                             pos.tableau[dest].count += num_cards;
                             pos.tableau[src].count -= num_cards;
@@ -697,7 +699,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     return ret;
 }
 
-#if 1
+#if 0
 
 static int my_signal_step(int step_limit)
 {

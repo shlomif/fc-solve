@@ -2,7 +2,9 @@
 * wilson callan, copyright 1997
 \******************************************************************************/
 
+#if 0
 #include <windows.h>
+#endif
 #include <stdio.h>
 
 #include "resource.h"
