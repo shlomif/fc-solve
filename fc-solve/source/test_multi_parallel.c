@@ -449,7 +449,7 @@ int main(int argc, char * argv[])
         );
 #else
     _ftime(&tb);
-    printf("Started at %li.%.6li\n",
+    printf("Started at %li.%.6i\n",
         tb.time,
         tb.millitm*1000
         );
@@ -535,7 +535,7 @@ int main(int argc, char * argv[])
                 );
 #else
             _ftime(&tb);
-            printf("Intractable Board No. %i at %li.%.6li\n",
+            printf("Intractable Board No. %i at %li.%.6i\n",
                 board_num,
                 tb.time,
                 tb.millitm*1000
@@ -555,7 +555,7 @@ int main(int argc, char * argv[])
                 );
 #else
             _ftime(&tb);
-            printf("Unsolved Board No. %i at %li.%.6li\n",
+            printf("Unsolved Board No. %i at %li.%.6i\n",
                 board_num,
                 tb.time,
                 tb.millitm*1000
@@ -590,7 +590,12 @@ int main(int argc, char * argv[])
                 );
 #else
             _ftime(&tb);
-            printf("Reached Board No. %i at %li.%.6li (total_num_iters=%I64i)\n",
+            printf(
+#ifdef __GNUC__
+                    "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
+#else
+                    "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
+#endif
                 board_num,
                 tb.time,
                 tb.millitm*1000,

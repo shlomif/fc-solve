@@ -16,13 +16,16 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#if FCS_STATE_STORAGE==FCS_STATE_STORAGE_LIBREDBLACK_TREE
-#include <search.h>
-#endif
 
 #define NUM_TIMES_STEP 50
 
 #include "config.h"
+
+/* So the FCS_STATE_STORAGE macros would be defined */
+#if FCS_STATE_STORAGE==FCS_STATE_STORAGE_LIBREDBLACK_TREE
+#include <search.h>
+#endif
+
 #include "state.h"
 #include "card.h"
 #include "fcs_dm.h"

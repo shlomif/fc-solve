@@ -12,11 +12,14 @@
 #include <limits.h>
 #include <stdio.h>
 #include <math.h>
+
+#include "config.h"
+
+/* So FCS_STATE_STORAGE and friends would be defined */
 #if FCS_STATE_STORAGE==FCS_STATE_STORAGE_LIBREDBLACK_TREE
 #include <search.h>
 #endif
 
-#include "config.h"
 #include "state.h"
 #include "card.h"
 #include "fcs_dm.h"

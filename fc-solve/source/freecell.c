@@ -10,13 +10,15 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-#if FCS_STATE_STORAGE==FCS_STATE_STORAGE_LIBREDBLACK_TREE
-#include <search.h>
-#endif
 #include <limits.h>
 
 
 #include "config.h"
+
+#if FCS_STATE_STORAGE==FCS_STATE_STORAGE_LIBREDBLACK_TREE
+#include <search.h>
+#endif
+
 #include "state.h"
 #include "card.h"
 #include "fcs_dm.h"
