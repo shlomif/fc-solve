@@ -513,6 +513,16 @@ int freecell_solver_user_cmd_line_parse_args(
             }
             freecell_solver_user_set_soft_thread_name(instance, argv[arg]);
         }
+        else if ((!strcmp(argv[arg], "--prelude")))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                *last_arg = arg;
+                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
+            }
+            freecell_solver_user_set_hard_thread_prelude(instance, argv[arg]);
+        }
         else
         {
             *last_arg = arg;

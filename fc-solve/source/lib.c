@@ -779,3 +779,25 @@ void freecell_solver_user_set_soft_thread_name(
     }
     user->soft_thread->name = strdup(name);    
 }
+
+int freecell_solver_user_set_hard_thread_prelude(
+    void * user_instance,
+    char * prelude
+    )
+{
+    fcs_user_t * user;
+    freecell_solver_hard_thread_t * hard_thread;
+
+    user = (fcs_user_t *)user_instance;
+
+    hard_thread = user->soft_thread->hard_thread;
+
+    if (hard_thread->prelude_as_string != NULL)
+    {
+        free(hard_thread->prelude_as_string);
+        hard_thread->prelude_as_string = NULL;
+    }
+    hard_thread->prelude_as_string = strdup(prelude);
+
+    return 0;
+}

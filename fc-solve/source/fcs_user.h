@@ -219,6 +219,11 @@ extern void freecell_solver_user_set_soft_thread_name(
     char * name
     );
 
+extern int freecell_solver_user_set_hard_thread_prelude(
+    void * user_instance,
+    char * prelude
+    );
+
 #ifdef __cplusplus
 }
 #endif

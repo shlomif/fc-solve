@@ -11,6 +11,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <math.h>
+#include <ctype.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -279,7 +280,7 @@ static freecell_solver_hard_thread_t * alloc_hard_thread(
 
     fcs_move_stack_alloc_into_var(hard_thread->reusable_move_stack);
 
-    hard-thread->prelude_as_string = NULL;
+    hard_thread->prelude_as_string = NULL;
     hard_thread->prelude = NULL;
     hard_thread->prelude_num_items = 0;
     hard_thread->prelude_idx = 0;
@@ -488,16 +489,83 @@ static void determine_scan_completeness(
     soft_thread->is_a_complete_scan = (tests_order == global_tests_order);
 }
 
-static void compile_prelude(
+enum FCS_COMPILE_PRELUDE_ERRORS_T
+{
+    FCS_COMPILE_PRELUDE_OK,
+    FCS_COMPILE_PRELUDE_NO_AT_SIGN,
+    FCS_COMPILE_PRELUDE_UNKNOWN_SCAN_ID
+};
+
+static int compile_prelude(
     freecell_solver_hard_thread_t * hard_thread
     )
 {
-    char * p;
+    char * p_quota, * p_scan, * p;
     char * string;
+    int last_one = 0;
+    int num_items = 0;
+    int max_num_items = 16;
+    fcs_prelude_item_t * prelude;
+    int st_idx;
 
+    prelude = malloc(sizeof(prelude[0]) * max_num_items);
     string = hard_thread->prelude_as_string;
+
+    p = string;
     
-#error FILL IN 
+    while (! last_one)
+    {
+        p_quota = p;
+        while((*p) && isdigit(*p))
+        {
+            p++;
+        }
+        if (*p != '@')
+        {
+            free(prelude);
+            return FCS_COMPILE_PRELUDE_NO_AT_SIGN;
+        }
+        *p = '\0';
+        p++;
+        p_scan = p;
+        while((*p) && ((*p) != ','))
+        {
+            p++;
+        }
+        if ((*p) == '\0')
+        {
+            last_one = 1;
+        }
+        *p = '\0';
+        p++;
+        
+        for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
+        {
+            if (!strcmp(hard_thread->soft_threads[st_idx]->name, p_scan))
+            {
+                break;
+            }
+        }
+        if (st_idx == hard_thread->num_soft_threads)
+        {
+            free(prelude);
+            return FCS_COMPILE_PRELUDE_UNKNOWN_SCAN_ID;
+        }
+        prelude[num_items].scan_idx = st_idx;
+        prelude[num_items].quota = atoi(p_quota);
+        num_items++;
+        if (num_items == max_num_items)
+        {
+            max_num_items += 16;
+            prelude = realloc(prelude, sizeof(prelude[0]) * max_num_items);
+        }
+    }
+
+    hard_thread->prelude = prelude;
+    hard_thread->prelude_num_items = num_items;
+    hard_thread->prelude_idx = 0;
+
+    return FCS_COMPILE_PRELUDE_OK;    
 }
 
 
