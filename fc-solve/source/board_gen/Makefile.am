@@ -1,5 +1,5 @@
 bin_PROGRAMS = make-gnome-freecell-board make-aisleriot-freecell-board \
-          make-microsoft-freecell-board pi-make-microsoft-freecell-board
+          pi-make-microsoft-freecell-board
           
 bin_SCRIPTS = make_pysol_freecell_board.py
 
@@ -11,7 +11,6 @@ man_MANS = fc-solve-board_gen.6 \
 
 make_gnome_freecell_board_SOURCES = make_gnome_freecell_board.c
 make_aisleriot_freecell_board_SOURCES = make_aisleriot_freecell_board.c
-make_microsoft_freecell_board_SOURCES = make_microsoft_freecell_board.c
 pi_make_microsoft_freecell_board_SOURCES = pi_make_microsoft_freecell_board.c
 
 EXTRA_DIST += make_pysol_freecell_board.py
