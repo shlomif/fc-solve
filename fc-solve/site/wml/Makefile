@@ -22,7 +22,7 @@ else
 endif
 #D = /home/httpd/html/ip-noise
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS

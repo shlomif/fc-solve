@@ -45,16 +45,31 @@
 
 
 # The Definition of the page itself
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
 <head>
 <title>{#SUBJECT_LOC#}</title>
-<link rel="StyleSheet" href="$(ROOT)/style.css" type="text/css">
+<link rel="StyleSheet" href="$(ROOT)/style.css" type="text/css" />
 </head>
 <body>
 
+<table summary="Layout Table: The first cell contains a navigation bar, the second the main page" border="0" width="99%">
+<tr>
+<td valign="top" class="navbar" width="20%">
+<a href="$(D)/">Main</a><br />
+<a href="$(D)/download.html">Downloads</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="$(D)/don_woods.html">Don Woods' Solver</a><br />
+<a href="$(D)/links.html">Links</a><br />
+<a href="$(D)/features.html">List of Features</a><br />
+<br />
+<a href="$(D)/old-news.html">Old News Items</a><br />
+</td>
+<td valign="top" class="main">
 <h1>{#SUBJECT_LOC#}</h1>
 {#BODY#}
 
+</td>
+</tr>
+</table>
 <a href="http://t2.technion.ac.il/~shlomif/"><img src="$(BERLIOS:*.)./images/bk2hp.gif" alt="Back to my Homepage" border=0></a>
 
 </body>
