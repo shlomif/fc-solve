@@ -25,6 +25,8 @@ fashion.
     * Time the patsolve's scans into the atomic moves scans database,
     and create an optimized meta-scan.
 
+* Make sure fc-solve -opt works.
+
 --- Non-pressing ---
 
 * Convert some of the documentation to Perl-POD or DocBook.
