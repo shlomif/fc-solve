@@ -21,7 +21,7 @@ my @targets = (
 my @headers=
     (
         qw(alloc app_str caas card config fcs_cl fcs fcs_dm fcs_enums),
-        qw(fcs_hash fcs_isa fcs_move fcs_user jhjtypes), 
+        qw(fcs_hash fcs_isa fcs_move fcs_user inline jhjtypes), 
         qw(move ms_ca pqueue preset rand state test_arr tests)
     );
 
