@@ -65,8 +65,6 @@ void args_man_free(args_man_t * manager)
 int args_man_chop(args_man_t * manager, char * string)
 {
     char * s = string;
-    char * start;
-    char * end;
     char * new_arg;
     char * last_arg, * last_arg_ptr, * last_arg_end, * new_last_arg;
     char next_char;
@@ -115,7 +113,7 @@ NEXT_ARG:
             }
             else if ((next_char == '\n') || (next_char == '\r'))
             {
-                goto NEXT_ARG;
+                goto AFTER_WS;
             }
             else
             {
@@ -173,7 +171,19 @@ int main(int argc, char * * argv)
     args_man_t * args_man;
     char * string;
 
+#if 0
     string = argv[1];
+#else
+    {
+        FILE * f;
+        
+        f = fopen("input.txt","rb");
+        string = calloc(4096,1);
+        fread(string, 4096, 1, f);
+        fclose(f);
+    }
+        
+#endif
     
     /* Initialize an arg man */
     args_man = args_man_alloc();
@@ -190,6 +200,8 @@ int main(int argc, char * * argv)
     }
     /* Free the allocated memory */
     args_man_free(args_man);
+
+    free(string);
 
     return 0;
 }
