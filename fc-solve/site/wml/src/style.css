@@ -1,19 +1,9 @@
 a:hover { color : red }
-td.navbar { background-color: #C5CAE2;  width : 20% }
+.navbar { background-color: #C5CAE2;  width : 20%; 
+    padding-left : 0.5em; padding-right : 0.5em; }
+.main { padding-left : 1em; }
 p.desc { margin-left : 3em }
 h2 { background-color: #FFEE00  }
-ul.navbarmain 
-{ 
-    list-style-type: none ; 
-    margin-left : 0em ; 
-    padding-left : 0em ;
-}
-ul.navbarnested 
-{ 
-    list-style-type : none ; 
-    /* padding-left : 2em  */
-    padding-left : 0em ;
-    margin-left : 2em ;
-}
+ul.navbarmain { padding-left : 1em ; margin-left : 1em }
+ul.navbarnested { padding-left : 0em ; margin-left : 2em }
 div.indent { margin-left : 3em }
-

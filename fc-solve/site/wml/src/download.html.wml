@@ -10,7 +10,7 @@
 <table border="1" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
 <tr>
 <td>
-<linktofile "freecell-solver-2.8.6.tar.gz" />
+<linktofile "freecell-solver-2.8.7.tar.gz" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpm -tb" on it.

@@ -10,18 +10,10 @@ ifeq ($(HOSTNAME),vipe.technion.ac.il)
 endif
 
 ifdef BERLIOS
-	ifdef VIPE
-		D = $(HOME)/progs/fcs/berlios-site
-	else
-		D = /var/www/html/fc-solve-berlios
-	endif
+    D = ./dest-berlios
 	WML_FLAGS = -DBERLIOS=BERLIOS
 else
-	ifdef VIPE
-		D = $(HOME)/public_html/freecell-solver/
-	else
-		D = /var/www/html/fc-solve
-	endif
+	D = ./dest
 	WML_FLAGS = 
 endif
 #D = /home/httpd/html/ip-noise
@@ -62,7 +54,7 @@ $(DEVEL_ARC) :
 	./put-recent-devel-version.sh $(DEVEL_ARC)
 
 $(D)/download.html :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES) $(DEVEL_ARC)
-	cd src && wml $(WML_FLAGS) -DFILENAME="$(notdir $@)" $(notdir $<) > $@
+	(cd src && wml $(WML_FLAGS) -DFILENAME="$(notdir $@)" $(notdir $<)) > $@
 	
 else
 	RECENT_DEVEL_VERSION = ""
@@ -92,7 +84,7 @@ src/win32_build/dynamic/fcs.zip: src/freecell-solver-$(RECENT_STABLE_VERSION).ta
 	rm -fr t
 
 $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
-	cd src && wml $(WML_FLAGS) -DFILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<) > $@
+	(cd src && wml $(WML_FLAGS) -DFILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<)) > $@
 
 $(IMAGES) :: $(D)/% : src/%
 	cp -f $< $@

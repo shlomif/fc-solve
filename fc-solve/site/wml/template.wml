@@ -81,11 +81,11 @@
 </li>
 <li><navbarlink "features.html" "Features" /></li>
 <li><navbarlink "to-do.html" "To Do List" /></li>
-<li><br /></li>
+</ul>
+
+<ul class="navbarmain">
 <li><navbarlink "book.html" "The Book" /></li>
 <li><navbarlink "old-news.html" "Old News Items" /></li>
-<li><br /></li>
-
 </ul>
 
 <define-tag validhtml>
