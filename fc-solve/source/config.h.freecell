@@ -1,80 +1,23 @@
-/*
-    config.h - Configuration file for Freecell Solver
+/* config.h.  Generated automatically by configure.  */
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
 
-    Written by Shlomi Fish, 2000
+/* Define to empty if the keyword does not work.  */
+/* #undef const */
 
-    This file is distributed under the public domain.
-    (It is not copyrighted).
-*/
+/* Define as the return type of signal handlers (int or void).  */
+#define RETSIGTYPE void
 
-#ifndef __CONFIG_H
-#define __CONFIG_H
+/* Define to `unsigned' if <sys/types.h> doesn't define.  */
+/* #undef size_t */
 
-#ifdef _cplusplus
-extern "C" {
-#endif
+/* Define if you have the ANSI C header files.  */
+#define STDC_HEADERS 1
 
-/* #define DEBUG_STATES */
-/* #define COMPACT_STATES */
-#define INDIRECT_STACK_STATES
+/* #undef DEBUG_STATES */
+/* #undef COMPACT_STATES */
+#define INDIRECT_STACK_STATES 1
 
-/* #define DIRECT_STATE_STORAGE */
-/* #define INDIRECT_STATE_STORAGE */
-/* #define TREE_STATE_STORAGE */ 
-
-
-
-/* These macros are only applicable if TREE_STATE_STORAGE is defined */
-
-/* #define LIBREDBLACK_TREE_IMPLEMENTATION */
-/* #define AVL_AVL_TREE_IMPLEMENTATION */
-/* #define AVL_REDBLACK_TREE_IMPLEMENTATION */ 
-/* #define GLIB_TREE_IMPLEMENTATION */
-
-
-
-/* #define DEBUG */
-
-/* #define CARD_DEBUG_PRES */
-
-/* Make sure one and only one of DEBUG_STATES and COMPACT_STATES is defined. 
- * The preferred is COMPACT_STATES because it occupies less memory and is 
- * faster.
- */
-#if (!defined(DEBUG_STATES)) && (!defined(COMPACT_STATES)) && (!defined(INDIRECT_STACK_STATES))
-#define COMPACT_STATES
-#elif defined(COMPACT_STATES) && defined(DEBUG_STATES)
-#undef DEBUG_STATES
-#endif
-
-
-/* Make sure that one and only one of DIRECT_STATE_STORAGE and 
- * INDIRECT_STATE_STORAGE is defined. The default is INDIRECT_STATE_STORAGE
- * because it's faster.
- */
-/* Recent Note:
- *
- * Basically, this code is obsolete because they (or TREE_STATE_STORAGE or
- * HASH_STATE_STORAGE) are now defined in the Makefile or in the project's
- * options of the IDE */
-    
-#if (!defined(DIRECT_STATE_STORAGE)) && (!defined(INDIRECT_STATE_STORAGE)) && (!defined(TREE_STATE_STORAGE)) && (!defined(HASH_STATE_STORAGE)) && (!defined(DB_FILE_STATE_STORAGE))
-
-#define INDIRECT_STATE_STORAGE
-
-#elif defined(DIRECT_STATE_STORAGE) && defined(INDIRECT_STATE_STORAGE)
-
-#undef DIRECT_STATE_STORAGE
-
-#ifdef TREE_STATE_STORAGE
-#undef TREE_STATE_STORAGE
-#endif
-
-#elif defined(TREE_STATE_STORAGE)
-#ifdef DIRECT_STATE_STORAGE
-#undef DIRECT_STATE_STORAGE
-#endif
-#endif
+/* #undef CARD_DEBUG_PRES */
 
 /*
     The sort margin size for the previous states array.
@@ -83,7 +26,7 @@ extern "C" {
 /*
     The amount prev_states grow by each time it each resized.
     Should be greater than 0 and in order for the program to be
-    efficient, should be much bigger than 
+    efficient, should be much bigger than
     PREV_STATES_SORT_MARGIN.
 */
 #define PREV_STATES_GROW_BY 128
@@ -91,39 +34,28 @@ extern "C" {
 /*
     The amount the pack pointers array grows by. Shouldn't be too high
     because it doesn't happen too often.
-    
-    Doesn't apply for DIRECT_STATE_STORAGE.
 */
 #define IA_STATE_PACKS_GROW_BY 32
 
-/*
- * The maximal number of Freecells. For efficiency's sake it should be a
- * multiple of 4.
- * */
 #define MAX_NUM_FREECELLS 4
 
-/*
- * The maximal number of Stacks. For efficiency's sake it should be a 
- * multiple of 4.
- * */
-#define MAX_NUM_STACKS 12
-
-
+#define MAX_NUM_STACKS 10
 /*
  * The maximal number of initial cards that can be found in a stack. The rule
  * of the thumb is that it plus 13 should be a multiple of 4.
  * */
-#define MAX_NUM_INITIAL_CARDS_IN_A_STACK 7
+#define MAX_NUM_INITIAL_CARDS_IN_A_STACK 8
 
-#define MAX_NUM_DECKS 1
+#define MAX_NUM_DECKS 2
 
-/* #define FCS_NON_DFS */
-
-#define FCS_METHOD_HARD_DFS 0
-#define FCS_METHOD_SOFT_DFS 1
-
-#define FCS_METHOD FCS_METHOD_HARD_DFS
-/* #define FCS_METHOD FCS_METHOD_SOFT_DFS */
+#define FCS_STATE_STORAGE_INDIRECT 0
+#define FCS_STATE_STORAGE_INTERNAL_HASH 1
+#define FCS_STATE_STORAGE_LIBAVL_AVL_TREE 2
+#define FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE 3
+#define FCS_STATE_STORAGE_LIBREDBLACK_TREE 4
+#define FCS_STATE_STORAGE_GLIB_TREE 5
+#define FCS_STATE_STORAGE_GLIB_HASH 6
+#define FCS_STATE_STORAGE_DB_FILE 7
 
 #define FCS_STACK_STORAGE_INTERNAL_HASH 0
 #define FCS_STACK_STORAGE_LIBAVL_AVL_TREE 1
@@ -131,10 +63,34 @@ extern "C" {
 #define FCS_STACK_STORAGE_LIBREDBLACK_TREE 3
 #define FCS_STACK_STORAGE_GLIB_TREE 4
 #define FCS_STACK_STORAGE_GLIB_HASH 5
-/* #define FCS_STACK_STORAGE FCS_STACK_STORAGE_INTERNAL_HASH */ 
 
-#ifdef _cplusplus
-}
-#endif
-    
-#endif
+#define FCS_STATE_STORAGE FCS_STATE_STORAGE_INTERNAL_HASH
+#define FCS_STACK_STORAGE FCS_STACK_STORAGE_INTERNAL_HASH
+
+/* Define if you have the strdup function.  */
+#define HAVE_STRDUP 1
+
+/* Define if you have the <dlfcn.h> header file.  */
+#define HAVE_DLFCN_H 1
+
+/* Define if you have the <limits.h> header file.  */
+#define HAVE_LIMITS_H 1
+
+/* Define if you have the avl library (-lavl).  */
+/* #undef HAVE_LIBAVL */
+
+/* Define if you have the glib library (-lglib).  */
+/* #undef HAVE_LIBGLIB */
+
+/* Define if you have the m library (-lm).  */
+#define HAVE_LIBM 1
+
+/* Define if you have the redblack library (-lredblack).  */
+/* #undef HAVE_LIBREDBLACK */
+
+/* Name of package */
+#define PACKAGE "freecell-solver"
+
+/* Version number of package */
+#define VERSION "2.5.28"
+

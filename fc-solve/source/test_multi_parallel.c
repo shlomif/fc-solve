@@ -348,6 +348,8 @@ static char * known_parameters[] = {
     NULL
     };
 
+#define BINARY_OUTPUT_NUM_INTS 128
+
 struct binary_output_struct
 {
     FILE * file;
@@ -377,6 +379,8 @@ void print_int(binary_output_t * bin, int val)
     {
         fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->file);
         fflush(bin->file);
+        /* Reset ptr to the beginning */
+        bin->ptr = bin->buffer;
     }
 }
 
@@ -462,9 +466,9 @@ int main(int argc, char * argv[])
             fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
             exit(-1);
         }
-        binary_output.buffer = malloc(sizeof(int) * 100);
+        binary_output.buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
         binary_output.ptr = binary_output.buffer;
-        binary_output.buffer_end = binary_output.buffer + sizeof(int)*100;
+        binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
         
         print_int(&binary_output, start_board);
         print_int(&binary_output, end_board);
