@@ -5,4 +5,26 @@
     - Overview of the Modules
     - Interesting Techniques Used.
 
+Coding Conventions:
+-------------------
 
+1. Bottom Up Design and Evolution
+
+2. Strict adherence to the ANSI C language
+    - No gcc extensions
+    - No C++
+    - No C99
+
+3. Strict adherence to the ANSI C Standrad Library
+    - No dependency of glib, apr, and similar tools
+    - Can optionally be compiled to make use of some binary trees and
+        hash implementations
+    - a lot of logic of them was implemented from scratch
+
+4. Namespace purity
+    - All global symbols lie in the freecell_solver_ namespace
+    - Some macros are prefixed with fcs_
+    - Usually freecell_solver_[class name]_function
+    - Very verbose identifiers
+
+5. 
