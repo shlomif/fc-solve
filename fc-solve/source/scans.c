@@ -90,6 +90,23 @@ static void freecell_solver_bfs_enqueue_state(
 }
 #endif
 
+#define check_if_limits_exceeded()                                    \
+    (                                                                 \
+        ((instance->max_num_times >= 0) &&                            \
+        (instance->num_times >= instance->max_num_times))             \
+            ||                                                        \
+        ((hard_thread->ht_max_num_times >= 0) &&                      \
+        (hard_thread->num_times >= hard_thread->ht_max_num_times))    \
+            ||                                                        \
+        ((hard_thread->max_num_times >= 0) &&                         \
+        (hard_thread->num_times >= hard_thread->max_num_times))       \
+            ||                                                        \
+        ((instance->max_num_states_in_collection >= 0) &&             \
+        (instance->num_states_in_collection >=                        \
+            instance->max_num_states_in_collection)                   \
+        )                                                             \
+    )
+    
 
 #define the_state (ptr_state_with_locations->s)
 
@@ -264,6 +281,20 @@ int freecell_solver_hard_dfs_solve_for_state(
                 }
             }
         }
+    }
+
+    if (check_if_limits_exceeded())
+    {
+        soft_thread->num_solution_states = depth+1;
+
+        soft_thread->soft_dfs_info = malloc(sizeof(soft_thread->soft_dfs_info[0]) * soft_thread->num_solution_states);
+        
+
+        soft_thread->soft_dfs_info[depth].state = ptr_state_with_locations;
+
+        ret_value = FCS_STATE_SUSPEND_PROCESS;
+
+        goto free_derived;
     }
 
     ret_value = FCS_STATE_IS_NOT_SOLVEABLE;
@@ -464,19 +495,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
                 depth--;
 
-                if (
-                        ((instance->max_num_times >= 0) &&
-                        (instance->num_times >= instance->max_num_times)) 
-                            ||
-                        ((hard_thread->ht_max_num_times >= 0) &&
-                        (hard_thread->num_times >= hard_thread->ht_max_num_times))
-                            ||
-                        ((hard_thread->max_num_times >= 0) &&
-                        (hard_thread->num_times >= hard_thread->max_num_times))                             ||
-                        ((instance->max_num_states_in_collection >= 0) &&
-                        (instance->num_states_in_collection >= instance->max_num_states_in_collection))
-                   )
-                            
+                if (check_if_limits_exceeded())                            
                 {
                     soft_thread->num_solution_states = depth+1;
                     return FCS_STATE_SUSPEND_PROCESS;
@@ -1102,18 +1121,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             }
         }
 
-        if (
-                ((instance->max_num_times >= 0) &&
-                (instance->num_times >= instance->max_num_times)) 
-                    ||
-                ((hard_thread->ht_max_num_times >= 0) &&
-                (hard_thread->num_times >= hard_thread->ht_max_num_times))
-                    ||
-                ((hard_thread->max_num_times >= 0) &&
-                (hard_thread->num_times >= hard_thread->max_num_times))                             ||
-                ((instance->max_num_states_in_collection >= 0) &&
-                (instance->num_states_in_collection >= instance->max_num_states_in_collection))
-           )
+        if (check_if_limits_exceeded())
                     
         {
             soft_thread->first_state_to_check = ptr_state_with_locations;
