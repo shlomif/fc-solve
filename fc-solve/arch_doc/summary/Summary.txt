@@ -192,6 +192,30 @@ Overview of the core modules:
     normalization, canonization, state duplicating, state comparison,
     converting to and from string format, etc.
 
+    move.c and move.h:
+    ------------------
+
+    This module contains routines for handling individual moves
+    (freecell->stack, stack->freecell, stack->stack) and various special
+    moves as well as entire moves stacks, which abstract a sequence
+    of moves to be played between two intermediate states.
+
+    preset.c:
+    ---------
+
+    This file manages the presets, presets being a configuration of stacks
+    number, freecells number, decks number, and the other parameters that
+    define how a game is played. A preset is a variant of Solitaire such as
+    Freecell, Baker's Game, Simple Simon, Good Measure, etc. Many of them 
+    are categorized in PySol under different categories than the Freecell
+    category. Moreover, some "Freecell-like" games such as Penguin are not
+    supported by Freecell Solver yet.
+
+    The routines in the file enable applying a preset to an instance (by its
+    name), applying a preset to an instance by a pointer to it, etc.
+    It is also used by lib.c.
+    
+
     freecell.c:
     -----------
 
@@ -199,9 +223,13 @@ Overview of the core modules:
     an origin state and try to deduce if moves of a certain sort is possible.
     It fills in a derived states list.
 
-    This code uses some macros used in tests.h.
+    This code uses some macros defined in tests.h.
+
+    simpsim.c:
+    ----------
+
+    This file is similar in spirit to freecell.c only that it contains Simple
+    Simon tests.
 
 
-
-    - 
 
