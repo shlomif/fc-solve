@@ -103,5 +103,3 @@ implementations can be found in the "board_gen/" sub-directory. Read the
 "README" file there for details on how they can be compiled and used.
 
 In any case, they can save you the time of inputting the board yourself.
-
-
