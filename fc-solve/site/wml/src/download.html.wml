@@ -20,7 +20,7 @@ Source Code. Can be built as an RPM package by running "rpm -tb" on it.
 
 <tr>
 <td>
-<linktofile "freecell-solver-2.8.1.win32.bin.zip" />
+<linktofile "freecell-solver-2.8.6.win32.bin.zip" />
 </td>
 <td>
 Win32 Binaries
