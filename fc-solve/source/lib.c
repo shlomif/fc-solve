@@ -35,11 +35,22 @@ struct fcs_user_struct
      * the board 
      * */
     fcs_instance_item_t * instances_list;
-    int current_instance_idx;
     int num_instances;
     int max_num_instances;
+    
+    int current_instance_idx;
+    /* 
+     * The global (sequence-wide) limit of the iterations. Used
+     * by limit_iterations() and friends
+     * */
     int current_iterations_limit;
+    /*
+     * The number of iterations this board started at.
+     * */
     int iterations_board_started_at;
+    /*
+     * A pointer to the currently active instance out of the sequence
+     * */
     freecell_solver_instance_t * instance;
     fcs_state_with_locations_t state;
     fcs_state_with_locations_t running_state;
