@@ -15,6 +15,11 @@ who wishes to utilize the Freecell Solver library in his application.
 Graph - The states in the state collection form a directed graph. Each link
 is a state -> derived state relationship.
 
+Hard DFS - a Depth-First Search scan that uses procedural recursion. Since
+suspending a scan and then resuming it are O(d) operations (where d is the
+depth) instead of O(1) for Soft-DFS its use is deprecated. It was the original
+scan supported by Freecell Solver 0.2.0 and still exists in the code.
+
 Hard Thread - a collection of soft threads, that should generally be placed
 in one system thread. Hard thread contains resources that soft threads from
 different hard threads would interfere with each other in allocating. Hard

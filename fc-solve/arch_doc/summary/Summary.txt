@@ -243,11 +243,27 @@ Overview of the core modules:
     collections supported at compile time. It also has a functions to 
     collect the new stacks that were present in a similar fashion.
 
+    It is being used by the tests functions to put a state in the state
+    collection.
+
     scans.c:
     --------
 
     This module contains the functions of the various scans and their
-    auxiliary functions.
+    auxiliary functions. The scan functions run tests and traverse the
+    graph according to some inherent logic. Currently present are 
+    random-dfs/soft-dfs (soft-dfs is random-dfs without randomizing
+    groups), Hard-DFS and Best-First-Search (named A* in the code).
+
+    intrface.c:
+    -----------
+
+    This module contains the logic that manages a solver instance, configures
+    it and runs it. It uses the scans module to perform the scan and other
+    modules to configure it. Note that the interface presented here is 
+    very raw, and not meant to be used as an API.
+
+
 
 
 
