@@ -85,7 +85,8 @@ int args_man_chop(args_man_t * manager, char * string)
 AFTER_WS:
         while ((*s != ' ') && (*s != '\t') && (*s != '\n') && 
                (*s != '\r') &&
-               (*s != '\\') && (*s != '\"') && (*s != '\0') )
+               (*s != '\\') && (*s != '\"') && (*s != '\0') && 
+               (*s != '#'))
         {
             add_to_last_arg(*s);
             s++;
@@ -156,6 +157,19 @@ NEXT_ARG:
             }
             s++;
             goto AFTER_WS;
+        }
+        else if (*s == '#')
+        {
+            /* Skip to the next line */
+            while((*s != '\0') && (*s != '\n'))
+            {
+                s++;
+            }
+            /* It's a kludge but it works */
+            if (last_arg_ptr != last_arg)
+            {
+                goto NEXT_ARG;
+            }
         }
     }
 END_OF_LOOP:
