@@ -84,11 +84,19 @@ extern char * freecell_solver_move_to_string(fcs_move_t move, int standard_notat
 
 extern char * freecell_solver_move_to_string_w_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num, int decks_num, fcs_move_t move, int standard_notation);
 
+struct fcs_derived_state_struct
+{
+    fcs_state_with_locations_t * ptr_state;
+    fcs_move_stack_t * move_stack;
+};
+
+typedef struct fcs_derived_state_struct fcs_derived_state_t;
+
 struct fcs_derived_states_list_struct
 {
     int num_states;
     int max_num_states;
-    fcs_state_with_locations_t * * states;
+    fcs_derived_state_t * states;
 };
 
 typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
@@ -144,7 +152,7 @@ extern void fcs_derived_states_list_add_state(
             \
 }
 
-#define fcs_derived_states_list_add_state(list,state) \
+#define fcs_derived_states_list_add_state(list,state_ptr,move_stack_ptr) \
     \
 {       \
     if ((list)->num_states == (list)->max_num_states)  \
@@ -152,7 +160,8 @@ extern void fcs_derived_states_list_add_state(
         (list)->max_num_states += 16;     \
         (list)->states = realloc((list)->states, sizeof((list)->states[0]) * (list)->max_num_states); \
     }        \
-    (list)->states[(list)->num_states] = (state);    \
+    (list)->states[(list)->num_states].ptr_state = (state_ptr);    \
+    (list)->states[(list)->num_states].move_stack = (move_stack_ptr);    \
     (list)->num_states++;        \
 }
 

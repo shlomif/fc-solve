@@ -86,6 +86,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
                                                                           \
 {                                                                         \
     fcs_state_with_locations_t * existing_state;                          \
+    fcs_move_stack_t * moves_copy;                                        \
     check = freecell_solver_check_and_add_state(                          \
         soft_thread,                                                      \
         ptr_new_state_with_locations,                                     \
@@ -130,16 +131,20 @@ fcs_move_stack_push(moves, temp_move);                                    \
             existing_state->parent = ptr_state_with_locations;            \
             existing_state->depth = ptr_state_with_locations->depth + 1;  \
         }                                                                 \
+        fcs_move_stack_duplicate_into_var(moves_copy, moves);             \
         fcs_derived_states_list_add_state(                                \
             derived_states_list,                                          \
-            existing_state                                                \
+            existing_state,                                               \
+            moves_copy                                                    \
             );                                                            \
     }                                                                     \
     else                                                                  \
     {                                                                     \
+        fcs_move_stack_duplicate_into_var(moves_copy, moves);             \
         fcs_derived_states_list_add_state(                                \
             derived_states_list,                                          \
-            ptr_new_state_with_locations                                  \
+            ptr_new_state_with_locations,                                 \
+            moves_copy                                                    \
             );                                                            \
    }                                                                      \
 }

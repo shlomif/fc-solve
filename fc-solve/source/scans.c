@@ -195,11 +195,11 @@ int freecell_solver_hard_dfs_solve_for_state(
         for(derived_state_index=0;derived_state_index<derived.num_states;derived_state_index++)
         {
             if (
-                (! (derived.states[derived_state_index]->visited &
+                (! (derived.states[derived_state_index].ptr_state->visited &
                     FCS_VISITED_DEAD_END)
                 ) &&
                 (! is_scan_visited(
-                    derived.states[derived_state_index],
+                    derived.states[derived_state_index].ptr_state,
                     soft_thread->id)
                 )
                )
@@ -207,7 +207,7 @@ int freecell_solver_hard_dfs_solve_for_state(
                 check =
                     freecell_solver_hard_dfs_solve_for_state(
                         soft_thread,
-                        derived.states[derived_state_index],
+                        derived.states[derived_state_index].ptr_state,
                         depth+1,
                         ignore_osins
                         );
@@ -658,7 +658,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
         {
             int num_states = derived_states_list->num_states;
-            fcs_state_with_locations_t * * derived_states = derived_states_list->states;
+            fcs_derived_state_t * derived_states = derived_states_list->states;
             int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
 
             while (current_state_index <
@@ -669,7 +669,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         rand_array[
                             current_state_index
                         ]
-                    ]);
+                    ].ptr_state);
 
                 current_state_index++;
                 if (
@@ -1104,14 +1104,14 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             {
                 freecell_solver_a_star_enqueue_state(
                     soft_thread,
-                    derived.states[derived_index]
+                    derived.states[derived_index].ptr_state
                     );
             }
             else
             {
                 freecell_solver_bfs_enqueue_state(
                     soft_thread,
-                    derived.states[derived_index]
+                    derived.states[derived_index].ptr_state
                     );
             }
         }
