@@ -90,22 +90,6 @@ static void freecell_solver_bfs_enqueue_state(
 }
 #endif
 
-#define check_if_limits_exceeded()                                    \
-    (                                                                 \
-        ((instance->max_num_times >= 0) &&                            \
-        (instance->num_times >= instance->max_num_times))             \
-            ||                                                        \
-        ((hard_thread->ht_max_num_times >= 0) &&                      \
-        (hard_thread->num_times >= hard_thread->ht_max_num_times))    \
-            ||                                                        \
-        ((hard_thread->max_num_times >= 0) &&                         \
-        (hard_thread->num_times >= hard_thread->max_num_times))       \
-            ||                                                        \
-        ((instance->max_num_states_in_collection >= 0) &&             \
-        (instance->num_states_in_collection >=                        \
-            instance->max_num_states_in_collection)                   \
-        )                                                             \
-    )
     
 
 #define the_state (ptr_state_with_locations->s)
