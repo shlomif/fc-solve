@@ -408,13 +408,81 @@ static int string_to_test_num(const char * string)
     }
 }
 
-static int freecell_solver_char_to_test_num(char c)
+static int char_to_test_num(char c)
 {
     char string[2];
     string[0] = c;
     string[1] = '\0';
 
     return string_to_test_num(string);
+}
+
+enum TEST_TYPE
+{
+    TEST_TYPE_TEST,
+    TEST_TYPE_START_GROUP,
+    TEST_TYPE_END_GROUP,
+    TEST_TYPE_ERROR
+};
+
+enum TEST_ERRORS
+{
+    TEST_ERROR_NO_RIGHT_BRACE,
+};
+
+struct test_ret_struct
+{
+    int type;
+    int index;
+};
+
+typedef struct test_ret_struct test_ret_t;
+
+static test_ret_t read_token(const char * s, int * num_chars_read)
+{
+    test_ret_t ret;
+    
+    if ((*s) == '{')
+    {
+        char * end;
+
+        end = strchr(s, '}');
+        if (end == NULL)
+        {
+            ret.type = TEST_TYPE_ERROR;
+            ret.index = TEST_ERROR_NO_RIGHT_BRACE;
+        }
+        else
+        {
+            char * test_name;
+            test_name = malloc(end-s);
+            memcpy(test_name, s+1, end-s);
+            test_name[end-s-1] = '\0';
+            ret.type = TEST_TYPE_TEST;
+            ret.index = string_to_test_num(test_name);
+            free(test_name);
+            *num_chars_read = (end+1-s);
+        }
+    }
+    else
+    {
+        *num_chars_read = 1;
+        if ((*s == '['))
+        {
+            ret.type = TEST_TYPE_START_GROUP;
+        }
+        else if (*s == ']')
+        {
+            ret.type = TEST_TYPE_END_GROUP;
+        }
+        else
+        {
+            ret.type = TEST_TYPE_TEST;
+            ret.index = char_to_test_num(*s);
+        }
+    }
+
+    return ret;
 }
 
 #if 0
@@ -460,6 +528,9 @@ int freecell_solver_apply_tests_order(
     int len;
     int test_index;
     int is_group, is_start_group;
+    test_ret_t test_read;
+    int num_chars_read;
+    
     if (tests_order->tests)
     {
         free(tests_order->tests);
@@ -475,9 +546,22 @@ int freecell_solver_apply_tests_order(
     test_index = 0;
     is_group = 0;
     is_start_group = 0;
-    for(a=0;(a<len) ;a++)
+    for(a=0;(a<len) ;a+= num_chars_read)
     {
-        if ((string[a] == '(') || (string[a] == '['))
+        test_read = read_token(string+a, &num_chars_read);
+        
+        if (test_read.type == TEST_TYPE_ERROR)
+        {
+            *error_string = 
+                strdup(
+                    (test_read.index == TEST_ERROR_NO_RIGHT_BRACE) ? 
+                        "There's no matching right curly bracket (}) for an opening left brace ({)." :
+                        ""
+                      );
+            return 4;
+        }
+            
+        if (test_read.type == TEST_TYPE_START_GROUP)
         {
             if (is_group)
             {
@@ -489,7 +573,7 @@ int freecell_solver_apply_tests_order(
             continue;
         }
 
-        if ((string[a] == ')') || (string[a] == ']'))
+        if (test_read.type == TEST_TYPE_END_GROUP)
         {
             if (is_start_group)
             {
@@ -498,22 +582,27 @@ int freecell_solver_apply_tests_order(
             }
             if (! is_group)
             {
-                *error_string = strdup("There's a renegade right parenthesis or bracket.");
+                *error_string = strdup("There's a renegade right bracket.");
                 return 3;
             }
             is_group = 0;
             is_start_group = 0;
             continue;
         }
-        if (test_index == tests_order->max_num)
+        if (test_read.type == TEST_TYPE_TEST)
         {
-            tests_order->max_num += 10;
-            tests_order->tests = realloc(tests_order->tests, sizeof(tests_order->tests[0]) * tests_order->max_num);
-        }
-        tests_order->tests[test_index].test = (freecell_solver_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+            if (test_index == tests_order->max_num)
+            {
+                tests_order->max_num += 10;
+                tests_order->tests = realloc(tests_order->tests, sizeof(tests_order->tests[0]) * tests_order->max_num);
+            }
 
-        test_index++;
-        is_start_group = 0;
+
+            tests_order->tests[test_index].test = ((test_read.index)%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+
+            test_index++;
+            is_start_group = 0;
+        }
     }
     if (a != len)
     {
@@ -578,7 +667,7 @@ int freecell_solver_apply_preset_by_ptr(
                     for(s = preset.allowed_tests;*s != '\0';s++)
                     {
                         /* Check if this test corresponds to this character */
-                        if ((soft_thread->tests_order.tests[num_valid_tests].test & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((freecell_solver_char_to_test_num(*s)%FCS_TESTS_NUM)))
+                        if ((soft_thread->tests_order.tests[num_valid_tests].test & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((char_to_test_num(*s)%FCS_TESTS_NUM)))
                         {
                             break;
                         }
