@@ -13,8 +13,114 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             supports three ways to represent a state:
         </para>
         <para>
+            <orderedlist>
+                <listitem>
+                    <para>
+                        <emphasis>Debug States</emphasis> - 
+                        in this configuration, stack counters, 
+                        and cards are represented as 32-bit quantities. 
+                        This configuration consumes a lot of memory, and is 
+                        the slowest of the three. It is however useful for 
+                        debugging, as the debugger will display the state 
+                        data-structure very nicely.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>Compact States</emphasis> - in this 
+                        configuration the data is one buffer of chars,
+                        where each card and each stack counter are 
+                        represented as one character, and each freecell and 
+                        foundation is one char too.
+                    </para>
+                    <para>
+                        Determining the locations of every card is done 
+                        using offset calculation.
+                    </para>
+                    <para>
+                        This configuration consumes much less memory than 
+                        Debug States, but it doesn't scale well to games 
+                        where the stacks can contain a lot of cards.
+                        The reason is that every stack be of a fixed size
+                        (so offset would be determined by means of 
+                        multiplication).
+                    </para>
+                    <para>
+                        This configuration used to be the fastest for 
+                        limited stack games such as Freecell. After 
+                        &fcs; 2.6.x, it seems that Indirect Stack States 
+                        has become slightly faster than it, too.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>Indirect Stack States</emphasis> - 
+                        in this configuration 
+                        each stack is a pointer to a stack in memory. 
+                        The stacks are also collected and there is one copy
+                        of each stack organization (say [KS QH 6H]) in 
+                        memory. Since a pointer to a stack uniquely 
+                        identifies a stack, the states can be compared by
+                        comparing their memory contents.
+                    </para>
+                    <para>
+                        This is now the default configuration, and in the 
+                        2.5.x development tree, many enhancments were done to 
+                        optimize it. It was benchmarked to be slightly faster 
+                        than Compact States, even for games like freecell.
+                    </para>
+                </listitem>
+            </orderedlist>
         </para>
     </section>
+
+    <section id="technique_indirect_stack_states_algorithms">
+        <title>Indirect Stack States Algorithms</title>
+        <para>
+            The stacks are kept in their own stack collection in the 
+            freecell_solver_instance struct. When a test wishes to 
+            create a derived states, it first copies the state, and then 
+            marks the flags of all the stacks as cleared. (check 
+            <symbol>(*Mark STACKS_COW_CLEAR *)</symbol> in the code).
+        </para>
+        <para>
+            Later on when a stack is changed, its flag is set, and a 
+            stack is copied to a hard-thread wide indirect stacks buffer 
+            and modified there. (check (*Mark STACKS_COW_COPY_STACK*) ).
+        </para>
+        <para>
+            The check_and_add_state function then, when checking a 
+            new state, ignores those stacks whose flag was not set, 
+            and collects the stacks whose flag was set.
+            ( <symbol>(*Mark STACKS_COW_CACHING*)</symbol> ). The 
+            memory for the collected stacks is allocated compactly in 
+            a segment, where one stack starts after the other
+            (check <filename>alloc.c</filename> and <filename>alloc.h</filename>). 
+            If the stack was found in the collection the memory that was 
+            allocated is freed for use by future stacks).
+        </para>
+    </section>
+
+    <section id="technique_extended_states">
+        <title>Extended States</title>
+        <para>
+            For each position in the game graph, Freecell Solver maintains a 
+            data structure that identifies it called 
+            <symbol>fcs_state_t</symbol>. This contains the cards in the 
+            stacks and the freecells, and the value of the foundations. The 
+            stacks and freecells are uniquely sorted to avoid states that 
+            are identical except for a different permutation of the stacks 
+            or the freecells.
+        </para>
+        <para>
+fcs_state_t is the first member of fcs_state_with_locations_t, that defines
+some other data. The real locations of the stacks and freecells are stored
+there for instance, as well as some graph information. See Canonization
+and Normalization in the terminology.
+ 
+        </para>
+    </section>
+
 </chapter>
 
 
