@@ -50,7 +50,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             <title>app_str.c</title>
             <para>
                 This file contains a utility class that appends sprintf'ed 
-                output to a dynmically allocated buffer while growing the 
+                output to a dynamically allocated buffer while growing the 
                 buffer if necessary.
             </para>
             <para>
@@ -86,7 +86,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 An optimized hash implementations. This has maps keys alone,
                 not key-value pairs. It stores the hash values next to the 
                 keys, so two keys can be first compared with their hash values,
-                before the costy full comparison is done. It also uses
+                before the costly full comparison is done. It also uses
                 a secondary hash to speed up the detection of two keys with
                 identical primary hash values.
             </para>
@@ -98,7 +98,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
         </section>
         
         <section id="fcs_dm.c">
-            <title>fcs_dm.c</title>
+            <title>fas_dm.c</title>
             <para>
                 This module implements two functions - an advanced binary
                 search one and a function to merge a small sorted array into
@@ -143,7 +143,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
         <section id="alloc.c">
             <title>alloc.c</title>
             <para>
-                This module is a more sophisicated version of fcs_isa.c. What 
+                This module is a more sophisticated version of fcs_isa.c. What 
                 it does is compactly allocate blocks of arbitrary length, 
                 usually used for dynamically allocated Freecell columns.
             </para>
@@ -167,7 +167,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </listitem>
                     <listitem>
                         <para>
-                            A newline or a whitepsace separates a word
+                            A newline or a whitespace separates a word
                         </para>
                     </listitem>
                     <listitem>
@@ -179,7 +179,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     <listitem>
                         <para>
                             Double quotes (") wrap an argument that may contain
-                            whitepace.
+                            whitespace.
                         </para>
                     </listitem>
                     <listitem>
@@ -191,7 +191,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 </orderedlist>
             </para>
             <para>
-                The code itself is very spaghettty-like but it is working.
+                The code itself is very spaghetti-like but it is working.
             </para>
         </section>
         <section id="pqueue.c">
@@ -201,7 +201,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 is derived from <ulink url="http://www.geocities.com/SiliconValley/Lakes/4929/">Justin Heyes-Jones</ulink> C++ code which he has kindly 
                 donated to &fcs; (while relicensing it under the public 
                 domain). Since then, the code has been converted to ANSI C
-                , modifed and optimized.
+                , modified and optimized.
             </para>
             <para>
                 This module is used by the Best-First-Search scan.
@@ -284,7 +284,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 The routines in the file enable applying a preset to an 
                 instance (by its name), applying a preset to an instance
                 by a pointer to it, etc. It is also directly used by lib.c
-                to maintain consistensy across a sequence of consecutive 
+                to maintain consistency across a sequence of consecutive 
                 instances.
             </para>
         </section>

@@ -43,6 +43,23 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 </listitem>
             </varlistentry>
             <varlistentry>
+                <term>False Impossible</term>
+                <listitem>
+                    <para>
+                        A false impossible is an initial board position for 
+                        which the solver reports as impossible to solve, yet
+                        can be solved in some way. A false impossible may be
+                        considered a bug depending on the context. 
+                    </para>
+                    <para>
+                        A meta-move scan can potentially have false 
+                        impossibles, while an atomic moves one (which does not
+                        prune in any way) cannot.
+                    </para>
+                </listitem>
+            </varlistentry>
+            
+            <varlistentry>
                 <term>f_s_</term>
                 <listitem>
                     <para>
@@ -114,6 +131,17 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>Intractable</term>
+                <listitem>
+                    <para>
+                        An initial layout of the board that cause the solver
+                        to terminate the scan prematurely (due to limitations
+                        on the iterations and the such) without determining
+                        whether the board was solvable or not.
+                    </para>
+                </listitem>
+            </varlistentry>            
             <varlistentry>
                 <term>Iterations</term>
                 <listitem>
@@ -364,7 +392,11 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </para>
                 </listitem>
             </varlistentry>
+            
             <!--
+            I keep the following code around to be used as a template for
+            new entries:
+
             <varlistentry>
                 <term></term>
                 <listitem>
