@@ -23,7 +23,7 @@ typedef struct fcs_compact_allocator_struct fcs_compact_allocator_t;
 fcs_compact_allocator_t * 
     freecell_solver_compact_allocator_new(void);
 
-#ifdef __cplysplys
+#ifdef __cplusplus
 };
 #endif
     
