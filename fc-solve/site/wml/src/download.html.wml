@@ -1,0 +1,230 @@
+<html>
+<head>
+<title>Freecell Solver Downloads</title>
+</head>
+<body bgcolor="white">
+
+<h1>Download Freecell Solver</h1>
+
+<h2>Latest Stable Versions</h2>
+<table border="1">
+<tr>
+<td>
+<a href="freecell-solver-2.4.2.tar.gz">freecell-solver-2.4.2.tar.gz</a>
+</td>
+<td>
+Source Code. Can be built as an RPM package by running "rpm -tb" on it.
+</td>
+</tr>
+
+
+<tr>
+<td>
+<a href="freecell-solver-2.4.1.win32.bin.zip">
+freecell-solver-2.4.1.win32.bin.zip</a>
+</td>
+<td>
+Win32 Binaries
+</td>
+</tr>
+
+<tr>
+<td>
+<a href="http://packages.debian.org/testing/devel/freecell-solver-bin.html">
+Debian Package
+</a>
+</td>
+<td>
+A link to an "apt"-able Debian Package.
+</td>
+</tr>
+
+</table>
+
+<h2>Development Versions</h2>
+
+<table border="1">
+
+<tr>
+<td>
+<a href="freecell-solver-2.5.20.tar.gz">
+freecell-solver-2.5.20.tar.gz
+</a>
+</td>
+<td>
+The Development version that will lead to Freecell Solver 2.6.0. 
+</td>
+</tr>
+
+<!--
+<tr>
+<td>
+<a href="freecell-solver.spec">
+freecell-solver.spec
+</a>
+</td>
+<td>
+SPEC file for building an RPM
+</td>
+</tr>
+-->
+
+
+
+<!--
+<tr>
+<td>
+<a href="http://dns.makif.omer.k12.il/Fendor/debian/freecell-solver/">
+Debian Package
+</a>
+</td>
+<td>
+A link to the Debian package of Freecell Solver.
+</td>
+</tr>
+-->
+
+</table>
+
+<p>
+<a href="don_woods.html">For Don Wood's solver access this link.</a>
+</p>
+
+</p>
+<h2>Utility Programs</h2>
+
+<table border="1">
+<tr>
+<td>
+<a href="palm_patience_getgame.tar.gz">palm_patience_getgame.tar.gz</a>
+</td>
+<td>
+Dumps games from Patience 2.5 on PalmOS. You need all the
+usual PalmOS tools to use this. The README tells you where
+you can find Patience 2.5. prc file included.
+</td>
+</tr>
+
+<tr>
+<td>
+<a href="xpat2-1.04.patch">xpat2-1.04.patch</a>
+</td>
+<td>
+This is a patch for xpat2 that dumps its games to a file.
+</td>
+</tr>
+
+<tr>
+<td>
+<a href="patience-1.9.patch">patience-1.9.patch</a>
+</td>
+<td>
+Patch for the "Patience" Tcl implementation, which is available here: 
+<a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html">
+http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html
+</a>.
+</td>
+</tr>
+
+</table>
+
+<h2>Older Versions</h2>
+
+<table border="1">
+<tr>
+<td>
+<a href="freecell-solver-2.2.6.tar.gz">Version 2.2.6</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-2.0.2.tar.gz">Version 2.0.2</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-1.10.4.tar.gz">Version 1.10.4</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-1.8.3.tar.gz">Version 1.8.3</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-1.6.4.tar.gz">Version 1.6.4</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-1.4.6.tar.gz">Version 1.4.6</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-1.2.0.tar.gz">Version 1.2.0</a>
+<tr>
+<td>
+<a href="freecell-solver-1.0.2.tar.gz">Version 1.0.2</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-0.10.0.tar.gz">Version 0.10.0</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-0.8.1.tar.gz">Version 0.8.1</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-0.6.2.tar.gz">Version 0.6.2</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-0.4.2.tar.gz">Version 0.4.2</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="freecell-solver-0.2.1.tar.gz">Version 0.2.1</a>
+</td>
+</tr>
+</table>
+
+<h2>Documents</h2>
+
+<table border="1">
+<tr>
+<td>
+<a href="README">README</a>
+</td>
+<td>
+Readme File
+</td>
+</tr>
+<tr>
+<td>
+<a href="CHANGES">CHANGES</a>
+</td>
+<td>
+Changes Log
+</td>
+</tr>
+</table>
+
+<h2><a href="ls.html">Listing of files in this directory</a></h2>
+
+<hr>
+<a href="./">Back to the Freecell Solver Home Page</a><br>
+<br>
+<!--%start_bk2hp-->
+<a href="http://t2.technion.ac.il/~shlomif/"><img src="../images/bk2hp.gif" alt="Back to my Homepage" border=0></a>
+<!--%end_bk2hp-->
+
+</body>
+</html>

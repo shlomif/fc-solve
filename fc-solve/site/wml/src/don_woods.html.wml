@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>Don Woods' Freecell Solver</title>
+</head>
+<body bgcolor="white">
+
+<h1>Don Woods' Freecell Solver</h1>
+
+<p>
+<a href="don_woods_solver.zip">don_woods_solver.zip</a>
+</p>
+
+<p>
+This is the source code for the famous Freecell solver by 
+<a href="http://www.icynic.com/~don/">Don Woods</a>. It is basically 
+4 different solvers for four different Freecell variants which are 
+using a very similar algorithm. Maybe it is possible to abstract 
+the game rules and integrate all of them into one solver.
+</p>
+
+<p>
+The copyright notice says:
+</p>
+
+<p>
+<i>
+(c) Copyright 1993, 1997, Donald R. Woods.  Shareware: Right is granted to 
+freely redistribute this source provided this notice is retained.
+</i>
+</p>
+
+<hr>
+<a href="./">Back to the Freecell Solver Home Page</a><br>
+<br>
+<!--%start_bk2hp-->
+<a href="http://t2.technion.ac.il/~shlomif/">
+<img src="../images/bk2hp.gif" alt="Back to my Homepage" border=0>
+</a>
+<!--%end_bk2hp-->
+
+
+</body>
+</html>

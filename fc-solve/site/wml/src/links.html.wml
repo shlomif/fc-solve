@@ -1,0 +1,248 @@
+<html>
+<head>
+<title>Freecell Solver Links</title>
+</head>
+<body bgcolor="white">
+
+<h1>Freecell Solver Links</h1>
+
+<h2>Resources</h2>
+
+<ul>
+Freecell Solver Resources on the Net.
+</ul>
+
+<p>
+<a href="http://fc-solve.berlios.de/">Freecell Solver's BerliOS mirror</a> - 
+a mirror of the files contained here at the 
+<a href="http://developer.berlios.de">BerliOS</a> software hub.
+</p>
+
+<p>
+<a href="http://groups.yahoo.com/group/fc-solve-discuss/">Freecell Solver's
+Mailing-List</a> - a mailing-list dedicated to discussing the usage 
+and development of Freecell Solver and general techniques for solving 
+card solitaire games. Hosted by 
+<a href="http://groups.yahoo.com/">YahooGroups</a>.
+</p>
+
+<p>
+<a href="http://freshmeat.net/projects/freecellsolver/">App-Index Record</a>
+- the record for Freecell Solver at Freshmeat. You can find there a version
+history, a Freshmeat internal hit count, and other useful information.
+</p>
+
+<h2>Technologies</h2>
+
+<ul>
+Technologies used by Freecell Solver.
+</ul>
+
+<p>
+<a href="http://www.msu.edu/user/pfaffben/avl/">libavl</a> - a very nice
+library which contains optimized C implementations of an AVL and Red-Black 
+binary trees. It's GPLed, which means it can only be used by
+certain types of Open-Source software.
+</p>
+
+<p>
+<a href="http://libredblack.sourceforge.net/">libredblack</a> - an
+ANSI C implementation of a Red-Black tree. Takes some modifications to
+compile on Win32. LGPL, so can be used by a code of any license.
+</p>
+
+<p>
+<a href="http://www.gtk.org/">glib</a> - a C library used by gtk+, which 
+can also be used separately (as is the case with Freecell Solver). Contains 
+implementations of a hash, and an unoptimized balanced binary tree. Both
+are slower than libavl/libredblack or the internal hash implmentation, and 
+it is less programmer-friendly.
+</p>
+
+<p>
+<a href="http://www.geocities.com/jheyesjones/astar.html">The A* scan</a> -
+a states graph scan that uses a priority queue for determining which state
+to go to next. This page contains some source code, but the explanation
+is also very good.
+</p>
+
+<p>
+<a href="http://dmalloc.com/">The dmalloc malloc debugging library</a> - 
+a library to trace memory leaks. Freecell Solver used to have some of those
+in various stages of its development, and this library helped to remove
+them. It has a rather awkward output, and I had to use a debugger
+interactively to complement it, but it is still quite helpful.
+</p>
+
+<p>
+<a href="http://sources.redhat.com/autoconf/">Autoconf, automake and
+libtool</a> - a trio of tools that help maintain a portable building for
+a software project across UNIX and similar platforms. Freecell Solver did
+not use for a large time, but I switched to it in order to have a portable
+way to build it as a dynamically-linked library.
+</p>
+
+<h2>Programs that use Freecell Solver</h2>
+
+<p>
+<a href="http://www.kde.org/kdegames/">kpat</a> - a Solitaire suite for
+the <a href="http://www.kde.org/">KDE</a> desktop for UNIXes. 
+Uses Freecell Solver to solve its Freecell boards, starting of the 
+version that was shipped with KDE 2.1.
+</p>
+
+<p>
+<a href="http://www.ambermango.com/f3d/">Freecell3D</a> - a 3-Dimensional
+Direct-X Freecell Implementation for Windows. Shareware.
+</p>
+
+<h2>People</h2>
+
+<ul>
+Links to the homepages of people who contributed in any way to Freecell
+Solver. Because of spamming issues, I don't put their E-mails here. In case
+you want their E-mail address, either go to their homepage or send me an E-mail.
+</ul>
+
+<p>
+<a href="http://www.informatik.mu-luebeck.de/~kulow/">Stephan Kulow</a> - 
+as the maintainer of kpat for a brief period, he contributed bug fixes,
+memory leaks reports, and general commentary to Freecell Solver. Stephan and
+I still hold discussions about FCS in the mailing-list or in private.
+</p>
+
+<p>
+<a href="http://www.geocities.com/SiliconValley/Lakes/4929/">
+Justin Heyes-Jones</a> - I learned about the A* scan through his webpage,
+and he allowed me to incorporate his binary heap code into Freecell Solver.
+</p>
+
+<p>
+<a href="http://wildsau.idv.uni-linz.ac.at/mfx/">
+Markus FXJ Oberhumer</a> - contributed some bug-fixes and bug-reports 
+to Freecell Solver. He is the author of 
+<a href="http://wildsau.idv.uni-linz.ac.at/mfx/pysol/">PySol</a>,
+a very nice Solitaire suite which is written in Python. I used its 
+code to write a script that automatically generates its initial boards.
+</p>
+
+<a name="other_solvers"></a>
+<h2>Other Solvers</h2>
+
+<ul>
+We have competition. But there's nothing wrong with competition. ;-)
+</ul>
+
+<p>
+<a href="http://members.tripod.com/professor_tom/archives/">patsolve</a> -
+an ANSI C program that automatically solves games of Freecell and Seahaven
+Towers. Source code is available under the GPL. Its author, Tom Holroyd,
+and I discussed Freecell solving for quite a few E-mail transactions, before
+I established the mailing-list.
+</p>
+
+<p>
+<a href="http://members.aol.com/wgreview/fcpro.html">Freecell Pro</a> -
+a Freecell implementation for Win32 that contains the solver by 
+<a href="http://www.icynic.com/~don/">Don Woods</a>.
+Very fast and relatively accurate solving. Source code is available 
+<a href="./don_woods.html">here</a>.
+</p>
+
+<p>
+<a href="http://www.ensicaen.ismra.fr/~delvare/devel/gfreecell/gfreecell.html">
+Gfreecell</a> - 
+an implementation of Freecell for Gtk+ with its own solver.
+Source code is available, but it's in French. <tt>%-)</tt>
+</p>
+
+<p>
+<a href="http://www.qwerks.com/download/3500/FreecellTool.zip">Freecell
+Tool</a> -
+a Win32 program that hijacks games out of Microsoft Freecell and displays
+their solution.
+</p>
+
+<p>
+<a href="http://www.wirehub.nl/~berto/brainjam.htm">Berto's Freecell and
+Brain Jam Solvers</a> - Two programs for Windows that solve Freecell and
+Baker's Game (which he refers to as Brain Jam). Source code is not
+available.
+</p>
+
+<p>
+<a href="http://www.winsite.com/bin/Info?500000006158">autofree</a> - 
+A freeware program by Lingyun Tuo that automatically solves Freecell.
+</p>
+
+<p>
+<a href="http://www.barthelet.org/freecell/freecell.html">A Solver for
+Mathematica</a> - a Mathematica application by Luc Barthlet that solves 
+Freecell games. Source code is available and is explained in detail.
+</p>
+
+<p>
+<a href="http://www.williamtp.com/cv.html">William Tunstall-Pedoe's
+Solver</a> - he mentions he wrote one in his C.V., which contains other
+interseting artificial intelligence musings. The source code or the binary 
+are not available for free download online and may or may not be available 
+upon request.
+</p>
+
+<p>
+<a href="http://seahaven.sourceforge.net/">X11 Seahaven</a> - contains
+C++ source code for a Seahaven Towers auto-solver. 
+</p>
+
+<p>
+<a href="http://www.ibiblio.org/kevina/freecell/">Common LISP Solver</a> -
+by Kevin Atkinson and Shari Holstege. Written in Common LISP and the source code 
+is available under the GPL. It was written as part of an AI course project 
+and contains a final report.
+</p>
+
+<h2>Reviews of Freecell Solver</h2>
+
+<p>
+<a href="http://home.earthlink.net/~fomalhaut/fcfaq.html">
+Review in the Freecell FAQ</a>
+</p>
+
+<p>
+<a href="http://sweetcode.org/archive/2001-11.html">Sweet Code's Review</a>
+</p>
+
+<p>
+<a href="http://seniorcitizen.blogspot.com/archives/2001_11_25_seniorcitizen_archive.html">
+Senior Citizen</a> - 
+quite amusing, IMO.
+</p>
+
+<p>
+<a href="http://lists.golum.org/pipermail/golum-nontech/2001-October/002914.html">
+A review by Mark Turnage of the "Group of Linux Users in Memphis"</a> - also
+quite amusing.
+</p>
+
+<p>
+<a href="http://suso.suso.org/thought.phtml?thought_id=27">SusoSight's
+Thought of the Moment Regarding Freecell Solver</a>
+</p>
+
+<h2>General Freecell Links</h2>
+
+<p>
+<a href="http://home.earthlink.net/~fomalhaut/fcfaq.html">The Freecell FAQ</a> -
+contains a lot of interesting questions and answers regarding Freecell.
+</p>
+
+
+<hr>
+<a href="./">Back to the Freecell Solver Home Page</a><br>
+<br>
+<!--%start_bk2hp-->
+<a href="http://t2.technion.ac.il/~shlomif/"><img src="../images/bk2hp.gif" alt="Back to my Homepage" border=0></a>
+<!--%end_bk2hp-->
+
+</body>
+</html>
