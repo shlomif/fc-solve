@@ -68,6 +68,7 @@
 <a href="$(ROOT)/book.html">The Book</a><br />
 <a href="$(ROOT)/old-news.html">Old News Items</a><br />
 
+<define-tag validhtml>
 <br /><br /><br /><br />
 <p>
 <a href="http://validator.w3.org/check/referer">
@@ -83,6 +84,10 @@
        alt="Valid CSS!" />
  </a>
 </p>
+</define-tag>
+
+<ifeq "$(FILENAME)" "index.html" "<validhtml />" "" />
+
 </td>
 <td valign="top" class="main">
 <h1>{#SUBJECT_LOC#}</h1>

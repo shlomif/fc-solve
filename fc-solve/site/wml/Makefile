@@ -46,7 +46,7 @@ $(ARC_DOCS) :: $(D)/% : src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
 	tar -xOzf $< freecell-solver-$(RECENT_STABLE_VERSION)/$(notdir $@) > $@
 
 $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml Makefile
-	cd src && wml $(WML_FLAGS) $(notdir $<) > $@
+	cd src && wml $(WML_FLAGS) -DFILENAME="$(notdir $@)" $(notdir $<) > $@
 
 $(IMAGES) :: $(D)/% : src/%
 	cp -f $< $@
