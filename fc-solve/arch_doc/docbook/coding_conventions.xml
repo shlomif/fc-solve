@@ -26,7 +26,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
         <para>
             &fcs; is written in pure ANSI C and uses no gcc extensions, no 
             C99 or C++ extensions. I did allow myself to make use of
-            <emphasis>inline</emphasis> in someplaces, but they are isolated
+            <emphasis>inline</emphasis> in some places, but they are isolated
             to be compiled with gcc alone.
         </para>
         <para>
@@ -67,14 +67,14 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
         </para>
         <para>
             As a general rule the naming convention is 
-            <symbol>freecell_solver_[class name]_[method name]</symbol>. The identifers
+            <symbol>freecell_solver_[class name]_[method name]</symbol>. The identifiers
             also tend to be very verbose.
         </para>
     </section>
     <section id="cc_order_of_tradeoffs">
-        <title>Order of Tradeoffs in the Design of the Code</title>
+        <title>Order of Trade-offs in the Design of the Code</title>
         <para>
-            &fcs; has the following tradeoffs in the design of the code:
+            &fcs; has the following trade offs in the design of the code:
         </para>
         <para>
             <orderedlist>
@@ -113,7 +113,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
 
         <para>
             Note that these trade-offs are subject to the programmer's whims,
-            and many times, one was a bit sacrificied to satisfy the other.
+            and many times, one was a bit sacrificed to satisfy the other.
         </para>
     </section>
     <section id="cc_no_global_symbols">
@@ -126,7 +126,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
         </para>
         <para>
             One should note that several distinct instances of the solving 
-            algorithm can be instantiatied and made to run side by side or 
+            algorithm can be instantiated and made to run side by side or 
             alternately.
         </para>
     </section>
