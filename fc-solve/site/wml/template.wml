@@ -44,8 +44,18 @@
     </li>
 </ul>
 </li>
-<li><navbarlink "links.html" "Links" /></li>
-<li><navbarlink "features.html" "List of Features" /></li>
+<li><navbarlink "links.html" "Links" />
+
+<ul class="navbar_nested">
+    <li>
+    <navbarlink "links.html#other_solvers" "Other Solvers" />
+    </li>
+    <li>
+    <navbarlink "links.html#front_ends" "Front Ends" />
+    </li>
+</ul>
+</li>
+<li><navbarlink "features.html" "Features" /></li>
 <br />
 <li><navbarlink "book.html" "The Book" /></li>
 <li><navbarlink "old-news.html" "Old News Items" /></li>

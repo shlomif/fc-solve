@@ -85,6 +85,14 @@ not use for a large time, but I switched to it in order to have a portable
 way to build it as a dynamically-linked library.
 </p>
 
+<p>
+<a href="http://developer.kde.org/~sewardj/">Valgrind</a> - a sophisticated 
+memory debugger for x86-linux. Helped trace a few hard-to-catch bugs in
+Freecell Solver.
+</p>
+
+
+<a name="front_ends"></a>
 <h2>Programs that use Freecell Solver</h2>
 
 <p>
