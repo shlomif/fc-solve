@@ -23,13 +23,39 @@ typedef struct fcs_compact_allocator_struct fcs_compact_allocator_t;
 extern fcs_compact_allocator_t * 
     freecell_solver_compact_allocator_new(void);
 
+extern void freecell_solver_compact_allocator_extend(
+    fcs_compact_allocator_t * allocator
+        );
+#if 0
 extern char * 
     freecell_solver_compact_allocator_alloc(
         fcs_compact_allocator_t * allocator,
         int how_much
             );
+#else
+#define fcs_compact_alloc_into_var(result, allocator_orig, what_t) \
+{ \
+   register fcs_compact_allocator_t * allocator = (allocator_orig); \
+   if (allocator->max_ptr - allocator->ptr < sizeof(what_t))  \
+    {      \
+        freecell_solver_compact_allocator_extend(allocator);      \
+    }         \
+    allocator->rollback_ptr = allocator->ptr;       \
+    allocator->ptr += ((sizeof(what_t))+(4-((sizeof(what_t))&0x3)));      \
+    result = (what_t *)allocator->rollback_ptr;       \
+}
 
+        
+#endif
+
+#if 0
 extern void freecell_solver_compact_allocator_release(fcs_compact_allocator_t * allocator);
+#else
+#define fcs_compact_alloc_release(allocator) \
+{    \
+    (allocator)->ptr = (allocator)->rollback_ptr; \
+} 
+#endif
 
 extern void freecell_solver_compact_allocator_finish(fcs_compact_allocator_t * allocator);
     
@@ -39,8 +65,6 @@ extern void freecell_solver_compact_allocator_foreach(
     void (*ptr_function)(void *, void *),
     void * context
         );
-
-#define fcs_compact_alloc(allocator, what_t) ((what_t *)freecell_solver_compact_allocator_alloc((allocator), sizeof(what_t)))
 
 #ifdef __cplusplus
 };

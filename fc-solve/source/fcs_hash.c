@@ -238,7 +238,8 @@ void * freecell_solver_hash_insert(
     if (list->first_item == NULL)
     {
         /* Allocate a first item with that key */
-        item = list->first_item = fcs_compact_alloc(hash->allocator, SFO_hash_symlink_item_t);
+        fcs_compact_alloc_into_var(item, hash->allocator, SFO_hash_symlink_item_t);
+        list->first_item = item;
         item->next = NULL;
         item->key = key;
         item->hash_value = hash_value;
@@ -287,7 +288,7 @@ void * freecell_solver_hash_insert(
     if (optimize_for_caching)
     {
         /* Put the new element at the beginning of the list */
-        item = fcs_compact_alloc(hash->allocator, SFO_hash_symlink_item_t);
+        fcs_compact_alloc_into_var(item, hash->allocator, SFO_hash_symlink_item_t);
         item->next = list->first_item;
         item->key = key;
         item->hash_value = hash_value;
@@ -296,7 +297,8 @@ void * freecell_solver_hash_insert(
     else
     {
         /* Put the new element at the end of the list */
-        item = last_item->next = fcs_compact_alloc(hash->allocator, SFO_hash_symlink_item_t);
+        fcs_compact_alloc_into_var(item, hash->allocator, SFO_hash_symlink_item_t);
+        last_item->next = item;
         item->next = NULL;
         item->key = key;
         item->hash_value = hash_value;

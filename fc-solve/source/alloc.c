@@ -40,6 +40,26 @@ fcs_compact_allocator_t *
     return allocator;
 }
 
+void freecell_solver_compact_allocator_extend(
+    fcs_compact_allocator_t * allocator
+        )
+{
+    /* Allocate a new pack */
+    if (allocator->num_packs == allocator->max_num_packs)
+    {
+        allocator->max_num_packs += IA_STATE_PACKS_GROW_BY;
+        allocator->packs = (char * *)realloc(allocator->packs, sizeof(allocator->packs[0]) * allocator->max_num_packs);
+    }
+    
+    allocator->max_ptr = 
+        (allocator->ptr = 
+        allocator->rollback_ptr = 
+        allocator->packs[allocator->num_packs++] = 
+        malloc(ALLOCED_SIZE))
+            + ALLOCED_SIZE;
+}
+
+#if 0
 char * 
     freecell_solver_compact_allocator_alloc(
         fcs_compact_allocator_t * allocator,
@@ -48,19 +68,7 @@ char *
 {
     if (allocator->max_ptr - allocator->ptr < how_much)
     {
-        /* Allocate a new pack */
-        if (allocator->num_packs == allocator->max_num_packs)
-        {
-            allocator->max_num_packs += IA_STATE_PACKS_GROW_BY;
-            allocator->packs = (char * *)realloc(allocator->packs, sizeof(allocator->packs[0]) * allocator->max_num_packs);
-        }
-        
-        allocator->max_ptr = 
-            (allocator->ptr = 
-            allocator->rollback_ptr = 
-            allocator->packs[allocator->num_packs++] = 
-            malloc(ALLOCED_SIZE))
-                + ALLOCED_SIZE;
+        freecell_solver_compact_allocator_extend(allocator);
     }
     allocator->rollback_ptr = allocator->ptr;
     allocator->ptr += (how_much+(4-(how_much&0x3)));
@@ -71,6 +79,7 @@ void freecell_solver_compact_allocator_release(fcs_compact_allocator_t * allocat
 {
     allocator->ptr = allocator->rollback_ptr;
 }
+#endif
 
 void freecell_solver_compact_allocator_finish(fcs_compact_allocator_t * allocator)
 {
