@@ -16,8 +16,7 @@ Source Code. Can be built as an RPM package by running "rpm -tb" on it.
 
 <tr>
 <td>
-<a href="freecell-solver-2.6.3.win32.bin.zip">
-freecell-solver-2.6.3.win32.bin.zip</a>
+<a href="freecell-solver-2.6.3.win32.bin.zip">freecell-solver-2.6.3.win32.bin.zip</a>
 </td>
 <td>
 Win32 Binaries
@@ -26,9 +25,7 @@ Win32 Binaries
 
 <tr>
 <td>
-<a href="http://packages.debian.org/testing/devel/freecell-solver-bin.html">
-Debian Package
-</a>
+<a href="http://packages.debian.org/testing/devel/freecell-solver-bin.html">Debian Package</a>
 </td>
 <td>
 A link to an "apt"-able Debian Package.
