@@ -255,6 +255,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
     ret->num_moves = 0;
     ret->max_num_moves = num_back_end_moves = freecell_solver_user_get_moves_left(instance);
     ret->moves = malloc(sizeof(ret->moves[0]) * ret->max_num_moves);
+    ret->next_move_idx = 0;
 
     for(i=0;i<8;i++)
     {
@@ -417,6 +418,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             pos.hold[dest] = pos.tableau[src].cards[--pos.tableau[src].count];
                         }
                         virtual_stack_len[src]--;
+                        virtual_freecell_len[dest] = 1;
                     }
                     break;
 
@@ -458,8 +460,27 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                 
             }
         }
-        
     }
+
+#if 0
+    /* 
+     * This is a debugging code. It seems that everything works well 
+     * */
+    {
+        int count=0;
+        for(i=0;i<8;i++)
+        {
+            count += (pos.tableau[i].count == 0);
+            count += (virtual_stack_len[i] == 0);
+        }
+        for(i=0;i<NoFcs;i++)
+        {
+            count += (pos.hold[i] == 0);
+            count += (virtual_freecell_len[i] == 0);
+        }
+        printf("count=%i\n", count);
+    }
+#endif
 
     return ret;
     
