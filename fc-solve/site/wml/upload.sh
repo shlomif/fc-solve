@@ -1,6 +1,6 @@
 #!/bin/sh
 
-RSYNC="rsync --progress --verbose --rsh=ssh"
+RSYNC="rsync --progress --verbose --rsh=ssh -r"
 
 make
 BERLIOS=BERLIOS make
