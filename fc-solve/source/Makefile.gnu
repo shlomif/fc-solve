@@ -203,7 +203,8 @@ dummy:
 
 
 
-OBJECTS = app_str.o         \
+OBJECTS = alloc.o           \
+          app_str.o         \
           caas.o            \
           card.o            \
           fcs_dm.o          \
