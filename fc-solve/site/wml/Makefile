@@ -31,13 +31,19 @@ WML_FLAGS += --passoption=2,-X
 
 HTMLS = $(D)/index.html $(D)/download.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html
 
-all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS)
+SPECIAL = $(D)/README
+
+all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(SPECIAL)
 
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \
 		mkdir $@ ; \
 	fi
-	
+
+RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
+
+$(D)/README : src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
+	tar -xOzf $< freecell-solver-$(RECENT_STABLE_VERSION)/README > $@
 
 $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml Makefile
 	cd src && wml $(WML_FLAGS) $(notdir $<) > $@
