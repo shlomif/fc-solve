@@ -1,3 +1,10 @@
+From 2.5.5 to 2.5.7:
+--------------------
+
+* Implemented a compact varible-length allocation.
+
+* The indirect stacks and the hash items are now implemented with it.
+
 From 2.4.2 to 2.5.5:
 --------------------
 
