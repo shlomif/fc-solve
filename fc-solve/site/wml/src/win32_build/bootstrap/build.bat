@@ -1,3 +1,11 @@
+REM         Let's clean the files of the previous run
+del /q zip.exe
+del /q unzip.exe
+del /q fcs.zip
+del /q freecell-solver-*.zip
+rmdir /s /q src
+rmdir /s /q freecell-solver-*
+
 
 REM Assign the base URL of the site
 SET SERVER_URL=http://132.68.52.118/fc-solve/
