@@ -7,6 +7,10 @@
 </p>
 
 <p>
+<a href="FC-Pro-Source-2003-05-17.zip">Current Source Code for Freecell Pro</a>
+</p>
+
+<p>
 This is the source code for the famous Freecell solver by 
 <a href="http://www.icynic.com/~don/">Don Woods</a>. It is basically 
 4 different solvers for four different Freecell variants which are 
@@ -29,7 +33,6 @@ freely redistribute this source provided this notice is retained.
 Note that a more optimized derivative of this solver (for Freecell alone), 
 which was modified by Wilson Callan and Adrian Ettlinger, is available as part 
 of <a href="http://www.rrhistorical.com/rrdata/Fcpro65/">Freecell Pro</a>. 
-FC-Pro is an open-source GPLed program, whose source code is available upon 
-inquiry.
+FC-Pro is an open-source GPLed program, whose <a href="FC-Pro-Source-2003-05-17.zip">source code</a> is available.
 </p>
 
