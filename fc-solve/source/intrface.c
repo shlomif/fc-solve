@@ -904,11 +904,6 @@ int freecell_solver_solve_instance(
 }
 
 
-enum RHT_RET
-{
-    RHT_COMPLETE_SCAN_TERMINATED,
-};
-
 int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
 {
     freecell_solver_soft_thread_t * soft_thread;
