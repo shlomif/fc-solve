@@ -2,6 +2,12 @@ This package contains the Windows 95/98/NT/2000/ME binaries of
 Freecell Solver 2.6.3. Read the file "README" for usage and other
 information.
 
+The vanilla Freecell Solver program (included here) is a text-mode
+program. If you want a nice graphical interface for it, then 
+download Freecell Pro:
+
+http://www.rrhistorical.com/rrdata/Fcpro65/
+
 This version of Freecell Solver supports up to 8 freecells, 12 
 stacks and 11 initial cards per stack. If you'd like to increase 
 those settings, you'll need to recompile it. It was compiled with a
@@ -32,9 +38,7 @@ with initial board No. 24 of Microsoft Freecell:
 > .\board_gen\make-microsoft-freecell-board 24 | .\fc-solve
 
 fc-solve accepts many options, and you may wish to consult the file
-USAGE to learn more about it. If you are looking for a nice graphical
-user-interface using the Freecell Solver engine for Windows, you should wait for 
-the upcoming version 6.5 of Freecell Pro.
+USAGE to learn more about it.
 
 I am aware of several other implementations of Freecell for Windows 
 using different Freecell solvers. Links to them can be
