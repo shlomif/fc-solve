@@ -60,8 +60,17 @@ The order of the tests can be specified at the command line, and tests
 can be grouped, and the order of checking of the tests within a group
 will be determined by a special callback.
 
+To perform the scans themselves Freecell Solver distinguishes between soft
+threads, hard threads and instances. An instance is a collection of states
+and an initial board to explore. Each instance may have several hard threads
+and each hard thread may have several soft threads. A hard thread is something
+that would likely be put in a system thread. It contains such resources,
+that a collision between them among several hard threads running in parallel
+is undesirable. Nevertheless, every hard thread can access the resources 
+allocated by other hard threads, should he encounter them in his scan.
 
-
+A soft thread is a singular scan. It performs a scan for a certain number of 
+iterations, at which point the hard thread switches to a different soft thread.
 
 Overview of the modules:
 ------------------------
