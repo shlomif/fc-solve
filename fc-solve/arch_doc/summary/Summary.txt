@@ -103,7 +103,59 @@ Overview of the utility modules:
 
     Not all the functions of the hash Abstract Data Type were implemented.
 
+    fcs_dm.c
+    =========
 
+    This module implements two functions - an advanced binary search one and
+    a function to merge a large and sort array. It was used until the newer
+    hash or balanced binary tree storage was used, and can still be used.
+
+    fcs_isa.c
+    =========
+
+    This module implements indirect stack allocation to states. It allocates
+    every states in memory pools (called packs) which have a fixed location 
+    in memory and allocates as many such pools as it can.
+
+    Each pool contains several states that are placed one after the other, 
+    that thus retain their pointer. That way, memory is conserved as an
+    individually malloced state may have a lot of overhead. (a malloced 
+    block+a fixed amount of data is rounded to the nearest power of 2)
+
+    fcs_isa allows releasing the last allocated state in case it will
+    not be used.
+    
+    alloc.c:
+    ========
+
+    This module is a more sophisicated version of fcs_isa.c. What it does is
+    compactly allocate blocks of arbitrary length, usually used for
+    dynamically allocated Freecell columns.
+
+    cl_chop.c:
+    ==========
+
+    This module contains a class that implements a chopping of a string into
+    arguments. This is done using a subset of the UNIX Bourne shell
+    functionality. Namely:
+
+    1. A backslash (\) makes the next character actual
+    2. A newline or a whitespace separates a word
+    3. A backslash at the end of the line continues the processing
+    4. Double Quotes enwrap an argument that may contain whitespace.
+    5. A pound sign (#) makes a comment that extends to the end of the line.
+
+    The code itself is very spaghetty like but it's working.
+    
+    pqueue.c:
+    =========
+
+    This module implements a priority queue as a binary heap. It is derived
+    from Justin Heyes Jones C++ code which has kindly donated it to Freecell
+    Solver, relicensing it under the public domain. Since then the code has
+    been converted to ANSI C and optimized.
+
+    It is used by the Best-First-Search scan.
 
 Overview of the core modules:
 ------------------------
@@ -133,14 +185,21 @@ Overview of the core modules:
     that the system uses but don't uniquely identify the state in the state 
     collection.
 
-    
-
     state.c:
     --------
 
     This file contains various functions for manipulating states. Stuff like
     normalization, canonization, state duplicating, state comparison,
     converting to and from string format, etc.
+
+    freecell.c:
+    -----------
+
+    This module contains "test functions" for Freecell Tests. A tests receives
+    an origin state and try to deduce if moves of a certain sort is possible.
+    It fills in a derived states list.
+
+    This code uses some macros used in tests.h.
 
 
 
