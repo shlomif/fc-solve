@@ -74,7 +74,7 @@ foreach my $scan (@selected_scans)
 }
 
 
-my @quotas = ((50) x 10000);
+my @quotas = ((200) x 5000);
 my @chosen_scans = ();
 
 my $total;
@@ -109,10 +109,11 @@ foreach my $q_more (@quotas)
     my $this_scan_result = ($scans_data->slice(":,$max_ind"));
     $total_iters += sum((($this_scan_result <= $q) & ($this_scan_result > 0)) * $this_scan_result);
     my $indexes = which(($this_scan_result > $q) | ($this_scan_result < 0));
-    $total_iters += $indexes->nelem();
+    $total_iters += ($indexes->nelem() * $q);
     $scans_data = $scans_data->dice($indexes, "X");
-    $this_scan_result = $scans_data->slice(":,$max_ind");
-    $this_scan_result = (($this_scan_result - $q) * ($this_scan_result > 0)) +
+    $this_scan_result = $scans_data->slice(":,$max_ind")->copy();
+    $scans_data->slice(":,$max_ind") *= 0;
+    $scans_data->slice(":,$max_ind") += (($this_scan_result - $q) * ($this_scan_result > 0)) +
         ($this_scan_result * ($this_scan_result < 0));
 
     if ($total == $num_boards)
@@ -137,7 +138,7 @@ else
 
 
 # Construct the command line
-my $cmd_line = "freecell-solver-range-parallel-solve 1 $num_boards 20 \\\n" .
+my $cmd_line = "freecell-solver-range-parallel-solve 1 $num_boards 1 \\\n" .
     join(" -nst \\\n", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } @selected_scans) . " \\\n" .
     "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $_->{'ind'} } @chosen_scans) ."\"";
     
