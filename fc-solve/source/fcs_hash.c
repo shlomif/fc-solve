@@ -362,26 +362,41 @@ static void SFO_hash_rehash(
 {
     int old_size, new_size;
     int i;
+#if 0
     SFO_hash_t * new_hash;
+#endif
     SFO_hash_symlink_item_t * item, * next_item;
     int place;
+    SFO_hash_symlink_t * new_entries;
 
     old_size = hash->size;
 
+#if 0
     /* Allocate a new hash with hash_init() */
-    new_hash = freecell_solver_hash_init(
+    new_hash = freecell_solver_hash_init_proto(
         old_size * 2,
         hash->compare_function,
         hash->context
         );
-
-    new_hash->num_elems = hash->num_elems;
+#endif    
 
     old_size = hash->size;
-    new_size = new_hash->size;
+    new_size = old_size * 2;
 
-    /* Copy the items to the new hash and deallocate the old ones in the
-     * same time */
+    /* Find a prime number that is greater than the initial wanted size */
+    for(i=0;i<NUM_PRIMES;i++)
+    {
+        if (primes_list[i] > new_size)
+        {
+            break;
+        }
+    }
+
+    new_size = primes_list[i];
+
+    new_entries = calloc(new_size, sizeof(SFO_hash_symlink_t));
+
+    /* Copy the items to the new hash while not allocating them again */
     for(i=0;i<old_size;i++)
     {
         item = hash->entries[i].first_item;
@@ -396,10 +411,10 @@ static void SFO_hash_rehash(
             next_item = item->next;
             /* It is placed in front of the first element in the chain,
                so it should link to it */
-            item->next = new_hash->entries[place].first_item;
+            item->next = new_entries[place].first_item;
 
             /* Make it the first item in its chain */
-            new_hash->entries[place].first_item = item;
+            new_entries[place].first_item = item;
 
             /* Move to the next item this one. */
             item = next_item;
@@ -410,12 +425,11 @@ static void SFO_hash_rehash(
     free(hash->entries);
 
     /* Copy the new hash to the old one */
+#if 0
     *hash = *new_hash;
-
-    /* De-allocate the space that was allocated by new_hash's struct
-       per-se.
-    */
-    free(new_hash);
+#endif
+    hash->entries = new_entries;
+    hash->size = new_size;
 }
 
 #else

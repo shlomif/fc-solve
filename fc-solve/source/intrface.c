@@ -1348,6 +1348,7 @@ void freecell_solver_finish_instance(
 
         freecell_solver_state_ia_finish(instance->hard_threads[ht_idx]);
 
+        printf("ht[%i].stacks_allocator = 0x%p\n", ht_idx, instance->hard_threads[ht_idx]->stacks_allocator);
         freecell_solver_compact_allocator_finish(instance->hard_threads[ht_idx]->stacks_allocator);
     }
 

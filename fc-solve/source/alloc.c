@@ -9,6 +9,7 @@
  */
 
 #include <malloc.h>
+#include <stdio.h>
 
 #include "config.h"
 
@@ -27,6 +28,7 @@ fcs_compact_allocator_t *
 
 
     allocator = (fcs_compact_allocator_t *)malloc(sizeof(*allocator));
+    printf("allocated 0x%p\n", allocator);
     allocator->max_num_packs = IA_STATE_PACKS_GROW_BY;
     allocator->packs = (char * *)malloc(sizeof(allocator->packs[0]) * allocator->max_num_packs);
     allocator->num_packs = 1;
