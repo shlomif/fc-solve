@@ -37,7 +37,7 @@ my @headers=
     (
         qw(alloc app_str caas card cl_chop config fcs_cl fcs fcs_dm fcs_enums),
         qw(fcs_hash fcs_isa fcs_move fcs_user inline jhjtypes lookup2), 
-        qw(move ms_ca pqueue preset rand state test_arr tests)
+        qw(move ms_ca prefix pqueue preset rand state test_arr tests)
     );
 
 my @defines=(qw(WIN32));

@@ -35,8 +35,9 @@ Makefile.win32: gen_makefile.pl
 EXTRA_DIST += alloc.h app_str.h caas.h card.h cl_chop.h
 EXTRA_DIST += config.h fcs_cl.h fcs.h fcs_dm.h fcs_enums.h
 EXTRA_DIST += fcs_hash.h fcs_isa.h fcs_move.h fcs_user.h inline.h
-EXTRA_DIST += jhjtypes.h lookup2.h move.h ms_ca.h pqueue.h
-EXTRA_DIST += preset.h rand.h state.h test_arr.h tests.h
+EXTRA_DIST += jhjtypes.h lookup2.h move.h ms_ca.h prefix.h
+EXTRA_DIST += pqueue.h preset.h rand.h state.h test_arr.h
+EXTRA_DIST += tests.h
 #>>>HEADERS.END
 
 EXTRA_DIST += USAGE CREDITS README.win32.txt
@@ -51,7 +52,7 @@ EXTRA_DIST += freecell-solver.spec freecell-solver.spec.in
 
 EXTRA_DIST += make-dist.sh
 
-EXTRA_DIST += freecell-solver-config.in config.h.in
+EXTRA_DIST += freecell-solver-config.in config.h.in prefix.h.in
 
 EXTRA_DIST += scripts/test.pl scripts/FreeCell/Object.pm 
 EXTRA_DIST += scripts/FreeCell/Card.pm scripts/FreeCell/State.pm
