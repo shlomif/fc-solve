@@ -28,17 +28,17 @@
     "<b>%1</b>"
     ;;; If not - makes a hyperlink
     "<a href="$(ROOT)/%0">%1</a>"
-/><br />
+/>
 </define-tag>
 
 
 <table summary="Layout Table: The first cell contains a navigation bar, the second the main page" border="0" width="99%">
 <tr>
 <td valign="top" class="navbar" style="width:20%">
-<ul class="navbar_main">
+<ul class="navbarmain">
 <li><navbarlink "" "Home" /></li>
 <li><navbarlink "download.html" "Downloads" />
-<ul class="navbar_nested">
+<ul class="navbarnested">
     <li>
     <navbarlink "don_woods.html" "Don Woods' Solver" />
     </li>
@@ -46,7 +46,7 @@
 </li>
 <li><navbarlink "links.html" "Links" />
 
-<ul class="navbar_nested">
+<ul class="navbarnested">
     <li>
     <navbarlink "links.html#other_solvers" "Other Solvers" />
     </li>
@@ -56,7 +56,7 @@
 </ul>
 </li>
 <li><navbarlink "features.html" "Features" /></li>
-<br />
+<li><br /></li>
 <li><navbarlink "book.html" "The Book" /></li>
 <li><navbarlink "old-news.html" "Old News Items" /></li>
 </ul>
