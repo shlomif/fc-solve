@@ -31,7 +31,12 @@
 #include "dmalloc.h"
 #endif
 
-#define REPARENT
+//#define REPARENT
+
+void mydebug(fcs_state_with_locations_t * state)
+{
+    printf("state=%p\n", state);
+}
 
 static pq_rating_t freecell_solver_a_star_rate_state(
     freecell_solver_soft_thread_t * soft_thread,
@@ -456,10 +461,30 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
                 if (soft_thread->is_a_complete_scan)
                 {
+                    the_soft_dfs_info->state->visited |= FCS_VISITED_ALL_TESTS_DONE;
                     mark_as_dead_end(the_soft_dfs_info->state);
                 }
 
                 depth--;
+
+                if (
+                        ((instance->max_num_times >= 0) &&
+                        (instance->num_times >= instance->max_num_times)) 
+                            ||
+                        ((hard_thread->ht_max_num_times >= 0) &&
+                        (hard_thread->num_times >= hard_thread->ht_max_num_times))
+                            ||
+                        ((hard_thread->max_num_times >= 0) &&
+                        (hard_thread->num_times >= hard_thread->max_num_times))                             ||
+                        ((instance->max_num_states_in_collection >= 0) &&
+                        (instance->num_states_in_collection >= instance->max_num_states_in_collection))
+                   )
+                            
+                {
+                    soft_thread->num_solution_states = depth+1;
+                    return FCS_STATE_SUSPEND_PROCESS;
+                }
+                
                 the_soft_dfs_info--;
                 continue; /* Just to make sure depth is not -1 now */
             }
@@ -1072,6 +1097,11 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
 
                 return FCS_STATE_SUSPEND_PROCESS;
             }
+        }
+
+        if (soft_thread->is_a_complete_scan)
+        {
+            ptr_state_with_locations->visited |= FCS_VISITED_ALL_TESTS_DONE;
         }
 
         /* Increase the number of iterations by one . 
