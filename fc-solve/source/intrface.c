@@ -817,6 +817,8 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
      * Again, making sure that not all of the soft_threads in this 
      * hard thread are finished.
      * */
+
+    ret = FCS_STATE_SUSPEND_PROCESS;
     while(hard_thread->num_soft_threads_finished < hard_thread->num_soft_threads)
     {
         soft_thread = hard_thread->soft_threads[hard_thread->st_idx];
@@ -1045,7 +1047,7 @@ int freecell_solver_resume_instance(
     freecell_solver_instance_t * instance
     )
 {
-    int ret;
+    int ret = FCS_STATE_SUSPEND_PROCESS;
     freecell_solver_hard_thread_t * hard_thread;
 
     /*

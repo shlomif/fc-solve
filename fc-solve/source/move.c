@@ -270,7 +270,9 @@ void freecell_solver_move_stack_normalize(
     fcs_move_stack_t * temp_moves;
     fcs_move_t in_move, out_move;
     fcs_state_with_locations_t dynamic_state;
+#ifdef INDIRECT_STACK_STATES
     char buffer[MAX_NUM_STACKS << 7];
+#endif
 
     fcs_move_stack_alloc_into_var(temp_moves);
 

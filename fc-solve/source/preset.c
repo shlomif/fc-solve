@@ -386,12 +386,10 @@ static int freecell_solver_char_to_test_num(char c)
     {
         return c-'a'+10;
     }
-#if 0
     else if ((c >= 'A') && (c <= 'Z'))
     {
         return c-'A'+18;
     }
-#endif
     else
     {
         return 0;
