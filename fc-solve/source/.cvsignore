@@ -1,1 +1,3 @@
 fc-solve mptest Makefile Makefile.in configure config.cache config.h
+freecell-solver.spec freecell-solver-config config.status config.log
+stamp-h
