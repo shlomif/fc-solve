@@ -1031,16 +1031,6 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             return FCS_STATE_WAS_SOLVED;
         }
 
-        /* Increase the number of iterations by one . The if (!resume)
-         * is meant to make sure we do not entered this state before which
-         * will lead to a false iterations count.
-         * */
-        if (!resume)
-        {
-            instance->num_times++;
-            hard_thread->num_times++;
-        }
-
         calculate_real_depth(ptr_state_with_locations);
 
         /* Do all the tests at one go, because that the way it should be
@@ -1082,6 +1072,13 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
 
                 return FCS_STATE_SUSPEND_PROCESS;
             }
+        }
+
+        /* Increase the number of iterations by one . 
+         * */
+        {
+            instance->num_times++;
+            hard_thread->num_times++;
         }
 
         /* Insert all the derived states into the PQ or Queue */

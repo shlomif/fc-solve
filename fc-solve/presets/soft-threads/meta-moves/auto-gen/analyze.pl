@@ -31,12 +31,12 @@ my @selected_scans =
 
 my $scans_data = MyInput::get_scans_data($num_boards, \@selected_scans);
 
-my $which_boards = which(($scans_data > $above_how_much)->xchg(0,1)->sumover() == scalar(@selected_scans))+1;
+my $which_boards = which((($scans_data > $above_how_much) | ($scans_data < 0))->xchg(0,1)->sumover() == scalar(@selected_scans))+1;
 
 print "The indexes of the tests above $above_how_much are:\n";
 foreach my $board (list($which_boards))
 {
-    print "$board: " . join(",", list($scans_data->slice(($board-1).",:"))) . "\n";
+    print "$board: " . join(",", sort { $a <=> $b } list($scans_data->slice(($board-1).",:"))) . "\n";
 }
 
 
