@@ -1,5 +1,9 @@
 --- Pressing ---
 
+* make sure duplicate_state_proto() does not use malloc.
+
+* Code test functions for atomic moves.
+
 --- Non-pressing ---
 
 * Write a Perl Script to parse, analyze and do a sanity check for a solution.
