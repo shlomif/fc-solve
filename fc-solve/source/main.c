@@ -115,8 +115,8 @@ static void my_iter_handler(
 
 struct help_screen_struct
 {
-    char * key;
-    char * screen;
+    const char * key;
+    const char * screen;
 };
 
 typedef struct help_screen_struct help_screen_t;
@@ -401,11 +401,10 @@ help_screen_t help_screens[] = {
 
 enum MY_FCS_CMD_LINE_RET_VALUES
 {
-    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER,
-
+    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
 };
 
-static void print_help_string(char * key)
+static void print_help_string(const char * key)
 {
     int i;
     for(i=0;help_screens[i].key != NULL ; i++)
@@ -434,7 +433,7 @@ static int cmd_line_callback(
 
     if ((!strcmp(argv[arg], "-h")) || (!strcmp(argv[arg], "--help")))
     {
-        char * help_key;
+        const char * help_key;
         
         help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");
         if (help_key == NULL)
@@ -577,7 +576,7 @@ static void command_signal_handler(int signal_num)
 }
 
 
-static char * known_parameters[] = {
+static const char * known_parameters[] = {
     "-h", "--help",
         "--help-configs", "--help-options", "--help-problems", 
         "--help-real-help", "--help-short-sol", "--help-summary",
@@ -618,11 +617,13 @@ int main(int argc, char * argv[])
     current_instance = instance;
 
 
+    error_string = NULL;
+    
     parser_ret =
         freecell_solver_user_cmd_line_parse_args(
             instance,
             argc,
-            argv,
+            (const char * *)argv,
             1,
             known_parameters,
             cmd_line_callback,
@@ -723,7 +724,6 @@ int main(int argc, char * argv[])
 
     if (ret == FCS_STATE_INVALID_STATE)
     {
-        char * error_string;
         error_string =
             freecell_solver_user_get_invalid_state_error_string(
                 instance,

@@ -155,7 +155,7 @@ extern int freecell_solver_user_set_sequence_move(
 
 extern int freecell_solver_user_set_a_star_weight(
     void * user_instance,
-    int index,
+    int weight_index,
     double weight
     );
 

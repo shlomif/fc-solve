@@ -343,7 +343,7 @@ static void GCC_INLINE freecell_solver_cache_stacks(
             instance->stacks_hash,
             new_state->s.stacks[a],
             freecell_solver_lookup2_hash_function(
-                new_state->s.stacks[a],
+                (ub1 *)new_state->s.stacks[a],
                 (fcs_stack_len(new_state->s, a)+1),
                 24
                 ),

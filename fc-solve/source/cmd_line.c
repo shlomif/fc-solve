@@ -13,18 +13,26 @@
 #include "dmalloc.h"
 #endif
 
-static int read_preset(char * preset_name, args_man_t * * args, char * * opened_files_dir_to_assign, char * user_preset_dir)
+static int read_preset(const char * preset_name, args_man_t * * args, char * * opened_files_dir_to_assign, const char * user_preset_dir)
 {
     int ret_code = 1;
-    char * home_dir_presetrc = NULL, * global_presetrc = NULL, * env_var_presetrc = NULL;
-    char * path;
-    char * * presetrc_pathes[5] = {&env_var_presetrc, &home_dir_presetrc, &global_presetrc, &user_preset_dir, NULL};
+    const char * global_presetrc = NULL, * env_var_presetrc = NULL;
+    char * home_dir_presetrc = NULL;
+    const char * path;
+    const char * * presetrc_pathes[5];
     int path_idx;
     char line[8192];
     FILE * f = NULL;
     char * fgets_ret;
     char * opened_files_dir = NULL;
     int read_next_preset = 0;
+    int i=0;
+
+    presetrc_pathes[i++] = &env_var_presetrc;
+    presetrc_pathes[i++] = (const char * *)&home_dir_presetrc;
+    presetrc_pathes[i++] = &global_presetrc;
+    presetrc_pathes[i++] = &user_preset_dir;
+    presetrc_pathes[i++] = NULL;
 
     {
         char * home_dir;
@@ -134,9 +142,9 @@ HAVE_PRESET:
 int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
     int argc,
-    char * argv[],
+    const char * argv[],
     int start_arg,
-    char * * known_parameters,
+    const char * * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
@@ -146,7 +154,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     )
 {
     int arg;
-    char * * known_param;
+    const char * * known_param;
     int num_to_skip;
     int callback_ret;
     int ret;
@@ -517,8 +525,8 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             {
                 int a;
-                char * start_num;
-                char * end_num;
+                const char * start_num;
+                const char * end_num;
                 char save;
                 start_num = argv[arg];
                 for(a=0;a<5;a++)
