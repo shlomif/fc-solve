@@ -2389,6 +2389,95 @@ int freecell_solver_sfs_atomic_move_freecell_card_to_parent(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
+int freecell_solver_sfs_atomic_move_freecell_card_to_empty_stack(
+        freecell_solver_soft_thread_t * soft_thread,
+        fcs_state_with_locations_t * ptr_state_with_locations,
+        int depth,
+        int num_freestacks,
+        int num_freecells,
+        fcs_derived_states_list_t * derived_states_list,
+        int reparent
+        )
+{
+    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
+    freecell_solver_instance_t * instance = hard_thread->instance;
+    fcs_state_with_locations_t * ptr_new_state_with_locations;
+    fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
+    int state_stacks_num, state_freecells_num;
+    int fc, ds;
+    fcs_card_t card;
+    fcs_move_t temp_move;
+    int check;
+    int sequences_are_built_by, empty_stacks_filled_by;
+
+    moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+
+    state_stacks_num = instance->stacks_num;
+    state_freecells_num = instance->freecells_num;
+
+    sequences_are_built_by = instance->sequences_are_built_by;
+
+    if (num_freestacks == 0)
+    {
+        return FCS_STATE_IS_NOT_SOLVEABLE;
+    }
+
+    empty_stacks_filled_by = instance->empty_stacks_fill;
+
+    if (empty_stacks_filled_by == FCS_ES_FILLED_BY_NONE)
+    {
+        return FCS_STATE_IS_NOT_SOLVEABLE;
+    }
+    
+    for(ds=0;ds<state_stacks_num;ds++)
+    {
+        if (fcs_stack_len(state, ds) == 0)
+        {
+            break;
+        }
+    }
+
+    for(fc=0;fc<state_freecells_num;fc++)
+    {
+        card = fcs_freecell_card(state, fc);
+        if (fcs_card_card_num(card) == 0)
+        {
+            continue;
+        }
+
+        if ((empty_stacks_filled_by == FCS_ES_FILLED_BY_KINGS_ONLY) &&
+            (fcs_card_card_num(card) != 13))
+        {
+            continue;
+        }        
+
+        {
+            sfs_check_state_begin();
+
+            my_copy_stack(ds);
+
+            fcs_empty_freecell(new_state, fc);
+            
+            fcs_push_card_into_stack(new_state, ds, card);
+
+            fcs_move_set_type(temp_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
+            fcs_move_set_src_freecell(temp_move, fc);
+            fcs_move_set_dest_stack(temp_move, ds);
+            fcs_move_set_num_cards_in_seq(temp_move, 1);
+
+            fcs_move_stack_push(moves, temp_move);
+
+            fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
+            fcs_move_stack_push(moves, temp_move);
+            
+            sfs_check_state_end()                
+        }
+    }
+
+    return FCS_STATE_IS_NOT_SOLVEABLE;
+}
 
 
 #undef state_with_locations
@@ -2421,13 +2510,14 @@ freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TESTS_NUM] 
     freecell_solver_sfs_atomic_move_card_to_parent,
     freecell_solver_sfs_atomic_move_card_to_freecell,
     freecell_solver_sfs_atomic_move_freecell_card_to_parent,
+    freecell_solver_sfs_atomic_move_freecell_card_to_empty_stack,
 #if 0
     freecell_solver_sfs_move_top_stack_cards_to_founds,
     freecell_solver_sfs_yukon_move_card_to_parent,
     freecell_solver_sfs_yukon_move_kings_to_empty_stack,
     freecell_solver_sfs_yukon_do_nothing,
-#endif
     freecell_solver_sfs_yukon_do_nothing,
+#endif
     freecell_solver_sfs_yukon_do_nothing,
     freecell_solver_sfs_yukon_do_nothing
 #ifdef FCS_WITH_TALONS
