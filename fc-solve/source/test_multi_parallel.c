@@ -348,11 +348,21 @@ static char * known_parameters[] = {
     NULL
     };
 
-void print_int(FILE * f, int val)
+struct binary_output_struct
 {
-    unsigned char buffer[4];
+    FILE * file;
+    char * buffer;
+    char * buffer_end;
+    char * ptr;    
+};
+
+typedef struct binary_output_struct binary_output_t;
+
+void print_int(binary_output_t * bin, int val)
+{
+    unsigned char * buffer = bin->ptr;
     int p;
-    if (f == NULL)
+    if (bin->file == NULL)
     {
         return;
     }
@@ -362,7 +372,12 @@ void print_int(FILE * f, int val)
         buffer[p] = (val & 0xFF);
         val >>= 8;
     }
-    fwrite(buffer, 1, 4, f);
+    bin->ptr += 4;
+    if (bin->ptr == bin->buffer_end)
+    {
+        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->file);
+        fflush(bin->file);
+    }
 }
 
 int main(int argc, char * argv[])
@@ -393,8 +408,9 @@ int main(int argc, char * argv[])
     int total_iterations_limit_per_board = 100000;
 
     char * binary_output_filename = NULL;
-    FILE * binary_output = NULL;
 
+    binary_output_t binary_output;
+    
 
     int arg = 1, start_from_arg;
     if (argc < 5)
@@ -440,16 +456,24 @@ int main(int argc, char * argv[])
 
     if (binary_output_filename)
     {
-        binary_output = fopen(binary_output_filename, "wb");
-        if (! binary_output)
+        binary_output.file = fopen(binary_output_filename, "wb");
+        if (! binary_output.file)
         {
             fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
             exit(-1);
         }
-        print_int(binary_output, start_board);
-        print_int(binary_output, end_board);
-        print_int(binary_output, total_iterations_limit_per_board);
-        fflush(binary_output);
+        binary_output.buffer = malloc(sizeof(int) * 100);
+        binary_output.ptr = binary_output.buffer;
+        binary_output.buffer_end = binary_output.buffer + sizeof(int)*100;
+        
+        print_int(&binary_output, start_board);
+        print_int(&binary_output, end_board);
+        print_int(&binary_output, total_iterations_limit_per_board);
+        
+    }
+    else
+    {
+        binary_output.file = NULL;
     }
 
     user.instance = freecell_solver_user_alloc();
@@ -516,7 +540,7 @@ int main(int argc, char * argv[])
             );
 #endif
             fflush(stdout);
-            print_int(binary_output, -1);
+            print_int(&binary_output, -1);
         }
         else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
@@ -535,11 +559,11 @@ int main(int argc, char * argv[])
                 tb.millitm*1000
             );
 #endif
-            print_int(binary_output, -2);
+            print_int(&binary_output, -2);
         }
         else
         {
-            print_int(binary_output, freecell_solver_user_get_num_times(user.instance));
+            print_int(&binary_output, freecell_solver_user_get_num_times(user.instance));
         }
 
         total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
@@ -573,10 +597,6 @@ int main(int argc, char * argv[])
 #endif
             fflush(stdout);
 
-            if (binary_output_filename)
-            {
-                fflush(binary_output);
-            }
         }
         
 
@@ -587,9 +607,10 @@ int main(int argc, char * argv[])
 
     if (binary_output_filename)
     {
-        fclose(binary_output);
+        fwrite(binary_output.buffer, 1, binary_output.ptr - binary_output.buffer, binary_output.file);
+        fflush(binary_output.file);
+        fclose(binary_output.file);
     }
-
 
     return 0;
 }
