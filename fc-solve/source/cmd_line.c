@@ -7,6 +7,8 @@
 #include "fcs_cl.h"
 #include "cl_chop.h"
 
+#include "prefix.h"
+
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
@@ -31,6 +33,8 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
         home_dir_presetrc = malloc(strlen(home_dir) + 50);
         sprintf(home_dir_presetrc, "%s/.freecell-solver/presetrc", home_dir);
     }
+
+    global_presetrc = strdup(FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
 
     for(path_idx=0;(presetrc_pathes[path_idx] != NULL) ; path_idx++)
     {

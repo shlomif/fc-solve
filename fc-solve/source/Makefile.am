@@ -53,7 +53,7 @@ EXTRA_DIST += freecell-solver.spec freecell-solver.spec.in
 
 EXTRA_DIST += make-dist.sh
 
-EXTRA_DIST += freecell-solver-config.in config.h.in prefix.h.in
+EXTRA_DIST += freecell-solver-config.in config.h.in prefix.h.proto.in
 
 EXTRA_DIST += scripts/test.pl scripts/FreeCell/Object.pm 
 EXTRA_DIST += scripts/FreeCell/Card.pm scripts/FreeCell/State.pm
