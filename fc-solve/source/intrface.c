@@ -117,7 +117,7 @@ static void soft_thread_clean_soft_dfs(
     )
 {
     /* Check if a Soft-DFS-type scan was called in the first place */
-    if (soft_thread->soft_dfs_derived_states_lists == NULL)
+    if (soft_thread->soft_dfs_info == NULL)
     {
         /* If not - do nothing */
         return;
@@ -128,18 +128,19 @@ static void soft_thread_clean_soft_dfs(
         int depth;
         for(depth=0;depth<soft_thread->num_solution_states-1;depth++)
         {
-            free(soft_thread->soft_dfs_derived_states_lists[depth].states);
-            free(soft_thread->soft_dfs_derived_states_random_indexes[depth]);
+            free(soft_thread->soft_dfs_info[depth].derived_states_list.states);
+            free(soft_thread->soft_dfs_info[depth].derived_states_random_indexes);
         }
         for(;depth<soft_thread->dfs_max_depth;depth++)
         {
-            if (soft_thread->soft_dfs_derived_states_lists[depth].max_num_states)
+            if (soft_thread->soft_dfs_info[depth].derived_states_list.max_num_states)
             {
-                free(soft_thread->soft_dfs_derived_states_lists[depth].states);
-                free(soft_thread->soft_dfs_derived_states_random_indexes[depth]);
+                free(soft_thread->soft_dfs_info[depth].derived_states_list.states);
+                free(soft_thread->soft_dfs_info[depth].derived_states_random_indexes);
             }
         }
-
+        
+#if 0
 #define MYFREE(what) { free(soft_thread->what); soft_thread->what = NULL; }
         MYFREE(solution_states)
         MYFREE(soft_dfs_derived_states_lists);
@@ -150,6 +151,10 @@ static void soft_thread_clean_soft_dfs(
         MYFREE(soft_dfs_derived_states_random_indexes);
         MYFREE(soft_dfs_derived_states_random_indexes_max_size);
 #undef MYFREE
+#else
+        free(soft_thread->soft_dfs_info);
+        free(soft_thread->solution_states);
+#endif
     }
 }
 
@@ -188,6 +193,7 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
     
 
     /* Initialize all the Soft-DFS stacks to NULL */
+#if 0
 #define SET_TO_NULL(what) soft_thread->what = NULL;
     SET_TO_NULL(solution_states);
     SET_TO_NULL(soft_dfs_derived_states_lists);
@@ -199,6 +205,10 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
     SET_TO_NULL(soft_dfs_derived_states_random_indexes);
     SET_TO_NULL(soft_dfs_derived_states_random_indexes_max_size);
 #undef SET_TO_NULL
+#else
+    soft_thread->solution_states = NULL;
+    soft_thread->soft_dfs_info = NULL;
+#endif
 
     /* The default solving method */
     soft_thread->method = FCS_METHOD_SOFT_DFS;

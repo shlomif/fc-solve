@@ -460,6 +460,19 @@ struct freecell_solver_hard_thread_struct
     int num_soft_threads_finished;
 };
 
+struct fcs_soft_dfs_stack_item_struct
+{
+    fcs_derived_states_list_t derived_states_list;
+    int current_state_index;
+    int test_index;
+    int num_freestacks;
+    int num_freecells;
+    int derived_states_random_indexes_max_size;
+    int * derived_states_random_indexes;  
+};
+
+typedef struct fcs_soft_dfs_stack_item_struct fcs_soft_dfs_stack_item_t;
+
 struct freecell_solver_soft_thread_struct
 {
     freecell_solver_hard_thread_t * hard_thread;
@@ -559,6 +572,8 @@ struct freecell_solver_soft_thread_struct
      * num_freecells[i] - ditto for the freecells.
      *
      * */
+    
+#if 0
     fcs_derived_states_list_t * soft_dfs_derived_states_lists;
     int * soft_dfs_current_state_indexes;
     int * soft_dfs_test_indexes;
@@ -566,7 +581,9 @@ struct freecell_solver_soft_thread_struct
     int * soft_dfs_num_freecells;
     int * soft_dfs_derived_states_random_indexes_max_size;
     int * * soft_dfs_derived_states_random_indexes;
-
+#else
+    fcs_soft_dfs_stack_item_t * soft_dfs_info;
+#endif
     /*
      * A vector of the states leading to the solution. It is actively
      * being modified by a Soft-DFS scan. Its usage for output has been
