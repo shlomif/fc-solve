@@ -4,6 +4,7 @@ use strict;
 #use File::stat;
 
 use PDL;
+use PDL::IO::FastRaw;
 
 my $num_boards = 32000;
 
@@ -38,19 +39,36 @@ my @selected_scans =
 my $scans_data = zeroes($num_boards, scalar(@selected_scans));
     
 my $scan_idx = 0;
+
+if (! -d "./.data-proc")
+{
+    mkdir ("./.data-proc");
+}
+
 foreach my $scan (@selected_scans)
 {
     print "scan_idx=$scan_idx\n";
-    open I, "<./data/" . $scan->{'id'} .  ".data.bin";
-    my $data_s = join("", <I>);
-    close(I);
-    my @array = unpack("l*", $data_s);
-    if (($array[0] != 1) || ($array[1] != $num_boards) || ($array[2] != 100000))
     {
-        die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
+        my @orig_stat = stat("./data/" . $scan->{'id'} .  ".data.bin");
+        my @proc_stat = stat("./.data-proc/" . $scan->{'id'});
+        if ((! scalar(@proc_stat)) || $orig_stat[9] > $proc_stat[9])
+        {
+            open I, "<./data/" . $scan->{'id'} .  ".data.bin";
+            my $data_s = join("", <I>);
+            close(I);
+            my @array = unpack("l*", $data_s);
+            if (($array[0] != 1) || ($array[1] != $num_boards) || ($array[2] != 100000))
+            {
+                die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
+            }
+            
+            my $c = pdl(\@array);
+            
+            writefraw($c, "./.data-proc/" . $scan->{'id'});
+        }
     }
-    my $b = $scans_data->slice(":,$scan_idx");    
-    my $c = pdl(\@array);
+    my $c = readfraw("./.data-proc/" . $scan->{'id'});
+    my $b = $scans_data->slice(":,$scan_idx");      
     $b += $c->slice("3:".($num_boards+2));
     $scan_idx++;
 }
@@ -124,6 +142,7 @@ my $cmd_line = "freecell-solver-range-parallel-solve 1 $num_boards 20 \\\n" .
     "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $_->{'ind'} } @chosen_scans) ."\"";
     
 print SCRIPT $cmd_line;
+print SCRIPT "\n\n\n";
 
 close(SCRIPT);
 
