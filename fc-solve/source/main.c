@@ -419,7 +419,7 @@ static void print_help_string(const char * key)
 static int cmd_line_callback(
     void * instance,
     int argc,
-    char * argv[],
+    const char * argv[],
     int arg,
     int * num_to_skip,
     int * ret,

@@ -143,10 +143,7 @@ extern void fcs_derived_states_list_add_state(
               \
     if (stack->num_moves == stack->max_num_moves) \
     {      \
-        int a, b;   \
-        a = (stack->max_num_moves >> 3);      \
-        b = FCS_MOVE_STACK_GROW_BY;    \
-        stack->max_num_moves += max(a,b);    \
+        stack->max_num_moves += FCS_MOVE_STACK_GROW_BY;    \
         stack->moves = realloc(     \
             stack->moves,     \
             stack->max_num_moves * sizeof(fcs_move_t)   \

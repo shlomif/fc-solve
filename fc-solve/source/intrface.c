@@ -219,7 +219,7 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
         );
 
     /* Set the default A* weigths */
-    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
+    for(a=0;a<(int)(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
     {
         soft_thread->a_star_weights[a] = freecell_solver_a_star_default_weights[a];
     }
@@ -493,7 +493,7 @@ static void normalize_a_star_weights(
     double sum;
     int a;
     sum = 0;
-    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
+    for(a=0;a<(int)(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
     {
         if (soft_thread->a_star_weights[a] < 0)
         {
@@ -505,7 +505,7 @@ static void normalize_a_star_weights(
     {
         sum = 1;
     }
-    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
+    for(a=0;a<(int)(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
     {
         soft_thread->a_star_weights[a] /= sum;
     }
@@ -1490,20 +1490,6 @@ static void freecell_solver_glib_hash_foreach_destroy_stack_action
 #endif
 
 /***********************************************************/
-
-
-
-
-void freecell_solver_destroy_move_stack_of_state(
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        void * context
-        )
-{
-    if (ptr_state_with_locations->moves_to_parent != NULL)
-    {
-        fcs_move_stack_destroy(ptr_state_with_locations->moves_to_parent);
-    }
-}
 
 /*
     This function should be called after the user has retrieved the

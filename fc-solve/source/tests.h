@@ -149,20 +149,20 @@ fcs_move_stack_push(moves, temp_move);                                    \
   */
 #define fcs_flip_top_card(stack)                                   \
 {                                                                  \
-    int cards_num;                                                 \
-    cards_num = fcs_stack_len(new_state,stack);                    \
+    int fcs_flip_top_card_cards_num;                                                 \
+    fcs_flip_top_card_cards_num = fcs_stack_len(new_state,stack);                    \
                                                                    \
-    if (cards_num > 0)                                             \
+    if (fcs_flip_top_card_cards_num > 0)                                             \
     {                                                              \
         if (fcs_card_get_flipped(                                  \
                 fcs_stack_card(                                    \
                     new_state,                                     \
                     stack,                                         \
-                    cards_num-1)                                   \
+                    fcs_flip_top_card_cards_num-1)                                   \
                 ) == 1                                             \
            )                                                       \
         {                                                          \
-            fcs_flip_stack_card(new_state,stack,cards_num-1);      \
+            fcs_flip_stack_card(new_state,stack,fcs_flip_top_card_cards_num-1);      \
             fcs_move_set_type(temp_move, FCS_MOVE_TYPE_FLIP_CARD); \
             fcs_move_set_src_stack(temp_move, stack);              \
                                                                    \
