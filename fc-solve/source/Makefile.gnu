@@ -206,14 +206,14 @@ OBJECTS = alloc.o           \
           app_str.o         \
           caas.o            \
           card.o            \
-		  cmd_line.o        \
+          cmd_line.o        \
           fcs_dm.o          \
           fcs_hash.o        \
           fcs_isa.o         \
           freecell.o        \
           intrface.o        \
-		  lib.o             \
-		  lookup2.o         \
+          lib.o             \
+          lookup2.o         \
           move.o            \
           pqueue.o          \
           preset.o          \
