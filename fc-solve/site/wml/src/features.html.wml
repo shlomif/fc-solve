@@ -1,0 +1,157 @@
+#include 'template.wml'
+<subject "Freecell Solver's Features List">
+
+<h2>Usability Options</h2>
+
+<ul>
+<li>
+The stacks and freecells retain their position throughout the 
+presented solution.
+</li>
+
+<li>
+Can present either the intermediate states (stepping at one move or sequence
+move) or the moves that are required for the solution.
+</li>
+
+<li>
+On UNIX: accepts some user signal combinations that turn some run-time 
+debugging information on and off.
+</li>
+
+<li>
+Some configurations are very fast: can solve the Microsoft 32,000 in 22 
+minutes on a Pentium III 667 MHz machine.
+</li>
+</ul>
+
+<h2>Development Features</h2>
+
+<ul>
+<li>
+Available as a library for use within third-party applications. The license
+is Public Domain, which means it can be used without any restrictions 
+everywhere.
+</li>
+
+<li>
+The core library and program is written entirely in a portable ANSI C code.
+</li>
+
+<li>
+Compile-Time option for using either states of flat stacks ("Compact States")
+and states in which the stacks are stored as pointers, while each stack
+formation is allocated only once. The former is faster, but the latter
+consumes less memory.
+</li>
+
+<li>
+Full compatiblity between dynamically-linked third-party applications to the 
+version of the library that is used.
+</ul>
+
+<h2>Scan Options</h2>
+
+<ul>
+
+<li>
+Supports the DFS (= Depth-First Search), Randomized DFS and A* scans. 
+Which one can be specified at run-time.
+</li>
+
+<li>
+The order of the tests to be conducted on a given state can be specified at
+the beginning of the scan. It is also possible to include only a subset of
+the available tests.
+</li>
+
+<li>
+With the A* scan, one can specify the weights of the different state 
+evalutaion parameters.
+</li>
+
+<li>
+One can limit the scan to a certain number of checked states.
+</li>
+
+<li>
+It is possible to resume a scan from a pre-empted position.
+</li>
+
+<li>
+After a solution path was found it can be optimized using a BFS 
+(= Breadth-First Search) scan on the intermediate states.
+</li>
+
+<li>
+The Randomized DFS scan accepts a user-defined seed.
+</li>
+
+<li>
+Several scans can be played on the same states' collection (while switching
+from scan to scan) giving on average a faster solving time.
+</li>
+
+</ul>
+
+<h2>Game Types</h2>
+<ul>
+<li>
+Can solve games whose sequences are built by suit, by alternate colour or
+by rank regardless of colour.
+</li>
+
+<li>
+Can solve games whose sequence move is limited by the number of Freecells,
+or unlimited.
+</li>
+
+<li>
+Can solve games whose vacant stacks can be filled by any card, by kings
+only, or by no card whatsoever.
+</li>
+
+<li>
+Run-time choice of the number of Freecells and Stacks. 
+(limited by a compile-time directive)
+</li>
+
+<li>
+Supports games of one and two decks.
+</li>
+
+<li>
+<p>
+List of <a href="http://wildsau.idv.uni-linz.ac.at/mfx/pysol/">PySol</a>
+ variants that can be solved:
+</p>
+<ul>
+<li>Baker's Dozen</li>
+<li>Baker's Game</li>
+<li>Beleaguered Castle</li>
+<li>Citadel</li>
+<li>Cruel</li>
+<li>Der Katzenschwanz</li>
+<li>Die Schlange</li>
+<li>Eight Off</li>
+<li>Forecell</li>
+<li>Freecell</li>
+<li>Good Measure</li>
+<li>Kings' Only Baker's Game</li>
+<li>Relaxed Freecell</li>
+<li>Relaxed Seahaven Towers</li>
+<li>Seahaven Towers</li>
+<li>Simple Simon</li>
+<li>Streets and Alleys</li>
+</ul>
+<p>
+More user-invented variants can be specified on the command-line using
+command-line options.
+</p>
+</li>
+</ul>
+
+<hr>
+<a href="./">Back to the Freecell Solver Home Page</a><br>
+<br>
+

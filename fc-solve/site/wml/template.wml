@@ -55,7 +55,7 @@
 <h1>{#SUBJECT_LOC#}</h1>
 {#BODY#}
 
-<a href="http://t2.technion.ac.il/~shlomif/"><img src="../images/bk2hp.gif" alt="Back to my Homepage" border=0></a>
+<a href="http://t2.technion.ac.il/~shlomif/"><img src="$(BERLIOS:*.)./images/bk2hp.gif" alt="Back to my Homepage" border=0></a>
 
 </body>
 </html>
