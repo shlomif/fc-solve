@@ -133,6 +133,21 @@ allocated vectors of states, each one is of constant size.
 Both of these modules support releasing the last allocated block and the last 
 one alone.
 
+Compact allocation is used for the following resources:
 
+1. States - using fcs_isa. A derived state is allocated using the hard
+thread's allocator, and it is modified with the appropriate moves. If it
+is found to have already existed, it is released. Else, it is kept and a
+pointer to it can be found in the states collection.
 
+2. Card stacks - if a card stack was modified, it is compactly allocated (see
+(*Mark COMPACT_ALLOC_CARD_STACKS*) ), before one checks to see if it is 
+present in the stacks collection. If it was found there, its memory is
+released. Else, it is kept there.
+
+3. Move stacks - the move stacks leading to the parent are compactly allocated
+(see (*Mark COMPACT_ALLOC_MOVE_STACKS*)).
+
+4. Hash Elements - The elements of the hash linked lists are compactly
+allocated with a specialized hash allocator.
 
