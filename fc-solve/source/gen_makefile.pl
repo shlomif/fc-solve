@@ -33,12 +33,16 @@ my @targets = (
     },
 );
 
-my @headers=
+my @headers_proto=
     (
-        qw(alloc app_str caas card cl_chop config fcs_cl fcs fcs_dm fcs_enums),
+        qw(alloc app_str caas card cl_chop), { 'name' => "config", 'gen' => 1}, 
+            qw(fcs_cl fcs fcs_dm fcs_enums),
         qw(fcs_hash fcs_isa fcs_move fcs_user inline jhjtypes lookup2), 
-        qw(move ms_ca prefix pqueue preset rand state test_arr tests)
+        qw(move ms_ca), {'name' => "prefix", 'gen' => 1}, 
+            qw(pqueue preset rand state test_arr tests)
     );
+
+my @headers = (map { ref($_) eq "HASH" ? $_->{'name'} : $_ } @headers_proto);
 
 my @defines=(qw(WIN32));
 
@@ -112,9 +116,10 @@ while (<I>)
             $_ = <I>;
         }
         print O "#<<<HEADERS.START\n";
-        for my $i (0 .. ((int(scalar(@headers)/5)+((scalar(@headers)%5) > 0))-1))
+        my @headers_no_gen = map { (ref($_) eq "HASH") ? $_->{'name'} : $_ } (grep { (ref($_) eq "HASH") ? (! $_->{'gen'}) : 1 } @headers_proto);
+        for my $i (0 .. ((int(scalar(@headers_no_gen)/5)+((scalar(@headers_no_gen)%5) > 0))-1))
         {
-            print O "EXTRA_DIST += " . join(" ", map { "$_.h" } @headers[($i*5) .. min($i*5+4, $#headers)]) . "\n";
+            print O "EXTRA_DIST += " . join(" ", map { "$_.h" } @headers_no_gen[($i*5) .. min($i*5+4, $#headers_no_gen)]) . "\n";
         }
         print O "#>>>HEADERS.END\n";
     }
