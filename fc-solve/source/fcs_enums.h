@@ -48,7 +48,7 @@ enum freecell_solver_state_solving_return_codes
     FCS_STATE_INVALID_STATE,
     FCS_STATE_NOT_BEGAN_YET,
     FCS_STATE_DOES_NOT_EXIST,
-    FCS_STATE_OPTIMIZED,
+    FCS_STATE_OPTIMIZED
 };
 
 enum fcs_presets_return_codes

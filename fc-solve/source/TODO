@@ -7,6 +7,10 @@
 
     * Document the mapping of aliases -> test functions.
 
+* Change char *'s to const char *'s in the API.
+
+* Compile with all the kdegames gcc flags and eliminate warnings.
+
 * Implement the move stacks over-riding in the derived states list, so
 move stacks won't be allocated excessively.
 
