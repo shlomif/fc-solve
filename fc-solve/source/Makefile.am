@@ -32,9 +32,11 @@ Makefile.win32: gen_makefile.pl
 	perl $< --arch=win32 | add_cr.pl - > $@
 
 #<<<HEADERS.START
-EXTRA_DIST += alloc.h app_str.h caas.h card.h fcs_dm.h fcs.h fcs_hash.h
-EXTRA_DIST += fcs_isa.h jhjtypes.h inline.h lookup2.h ms_ca.h move.h
-EXTRA_DIST += pqueue.h preset.h rand.h state.h test_arr.h tests.h
+EXTRA_DIST += alloc.h app_str.h caas.h card.h config.h
+EXTRA_DIST += fcs_cl.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h
+EXTRA_DIST += fcs_isa.h fcs_move.h fcs_user.h inline.h jhjtypes.h
+EXTRA_DIST += move.h ms_ca.h pqueue.h preset.h rand.h
+EXTRA_DIST += state.h test_arr.h tests.h
 #>>>HEADERS.END
 
 EXTRA_DIST += USAGE CREDITS README.win32.txt

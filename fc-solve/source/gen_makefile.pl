@@ -2,6 +2,20 @@
 
 use strict;
 
+sub min
+{
+    my $ret = shift;
+    foreach (@_)
+    {
+        if ($_ < $ret)
+        {
+            $ret = $_;
+        }
+    }
+
+    return $ret;
+}
+
 my @objects=(
     qw(alloc app_str caas card cmd_line fcs_dm fcs_hash fcs_isa freecell), 
     qw(intrface lib lookup2 move pqueue preset rand scans simpsim state)
@@ -81,4 +95,35 @@ print "\n";
 
 print "clean:\n";
 print "\tdel *.obj *.exe *.lib *.dll *.exp\n";
+
+open I, "<Makefile.am";
+open O, ">Makefile.am.new";
+while (<I>)
+{
+    if (/^libfreecell_solver_la_SOURCES *=/)
+    {
+        print O "libfreecell_solver_la_SOURCES = " . join(" ", (map { "$_.c" } @objects)) . "\n";
+    }
+    elsif (/^#<<<HEADERS\.START/)
+    {
+        while(! /^#>>>HEADERS\.END/)
+        {
+            $_ = <I>;
+        }
+        print O "#<<<HEADERS.START\n";
+        for my $i (0 .. ((int(scalar(@headers)/5)+((scalar(@headers)%5) > 0))-1))
+        {
+            print O "EXTRA_DIST += " . join(" ", map { "$_.h" } @headers[($i*5) .. min($i*5+4, $#headers)]) . "\n";
+        }
+        print O "#>>>HEADERS.END\n";
+    }
+    else
+    {
+        print O $_;
+    }
+}
+close(O);
+close(I);
+rename("Makefile.am.new", "Makefile.am");
+
 

@@ -49,7 +49,7 @@ dummy:
 
 
 
-
+#<<<OBJECTS.START
 OBJECTS = alloc.o           \
           app_str.o         \
           caas.o            \
@@ -69,7 +69,7 @@ OBJECTS = alloc.o           \
           scans.o           \
           simpsim.o         \
           state.o
-
+#>>>OBJECTS.END
 
 # MYOBJ.o ==> .deps/MYOBJ.P
 DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
