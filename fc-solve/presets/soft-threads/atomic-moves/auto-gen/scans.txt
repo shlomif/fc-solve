@@ -10,3 +10,4 @@
 9	--method random-dfs -to [01][ABCDE] -seed 192
 10	--method random-dfs -to [01ABCDE] -seed 1977
 11	--method random-dfs -to [01ABCDE] -seed 24
+12	--method soft-dfs -to 01ABDCE
