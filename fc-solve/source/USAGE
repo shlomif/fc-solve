@@ -315,6 +315,13 @@ This option instructs Freecell Solver to try and optimize the solution
 path so it will have a smaller number of moves.
 
 
+-opt-to [tests order]
+--optimization-tests-order [tests order]
+
+This argument specifies the test order for the optimization scan, in case
+it should be different than an order that contains all the tests that were
+used in all the normal scans.
+
 6. Running Several Scans in Parallel:
 -------------------------------------
 
@@ -352,10 +359,12 @@ This argument lets one initialize the next hard thread. If Freecell Solver was
 compiled with such support, then it is possible to run each hard thread in its
 own system thread. Each hard-thread contains one or more soft threads.
 
+
 --st-name [soft thread name]
 
 This argument sets the name used to identify the current soft thread. This name
 can later be used to construct the prelude (see below).
+
 
 --prelude [i1@st1{,i2@st2{,i3@st3...}}]
 
