@@ -1,0 +1,58 @@
+State Representation:
+---------------------
+
+As can be seen in state.h, Freecell Solver supports three ways to represent
+a state:
+
+1. Debug States - in this configuration, stack counters, and cards are
+represented as 32-bit quantities. This configuration consumes a lot of memory,
+and is the slowest of the three. It is however useful for debugging, as
+the debugger will display the state data-structure very nicely.
+
+2. Compact States - in this configuration the data is one buffer of chars,
+where each card and each stack counter are represented as one character,
+and each freecell and foundation is one char too.
+
+Determining the locations of every card is done using offset calculation.
+
+This configuration consumes much less memory than Debug States, but
+it doesn't scale well to games where the stacks can contain a lot of cards.
+The reason is that every stack be of a fixed size
+(so offset would be determined by means of multiplication).
+
+This configuration used to be the fastest for limited stack games such as 
+Freecell. After Freecell Solver 2.6.x, it seems that Indirect Stack States 
+has become slightly faster than it, too.
+
+3. Indirect Stack States - in this configuration each stack is a pointer
+to a stack in memory. The stacks are also collected and there is one copy
+of each stack organization (say [KS QH 6H]) in memory. Since a pointer
+to a stack uniquely identifies a stack, the states can be compared by
+comparing their memory contents.
+
+This is now the default configuration, and in the 2.5.x development tree,
+many enhancments were done to optimize it. It was not benchmarked to be
+slightly faster than Compact States, even for games like freecell.
+
+Indirect Stack States Algorithms:
+---------------------------------
+
+The stacks are kept in their own stack collection in the f_s_instance
+struct. When a test wishes to create a derived states, it first copies
+the state, and then marks the flags of all the stacks as cleared. (check
+(*Mark STACKS_COW_CLEAR *).
+
+Later on when a stack is changed, its flag is set, and a stack is copied to a
+hard-thread wide indirect stacks buffer and modified there. 
+(check (*Mark STACKS_COW_COPY_STACK*) ).
+
+The check_and_add_state function then, when checking a new state, ignores those
+stacks whose flag was not set, and collects the stacks whose flag was set.
+( (*Mark STACKS_COW_CACHING*) ). The memory for the collected stacks is
+allocated compactly in a segment, where one stack starts after the other
+(check alloc.c and alloc.h). If the stack was found in the collection
+the memory that was allocated is freed for use by future stacks).
+
+
+The collection is done in a compact manner
+
