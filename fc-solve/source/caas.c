@@ -579,11 +579,14 @@ GCC_INLINE int freecell_solver_check_and_add_state(
             new_state->moves_to_parent = new_move_stack_to_parent;
         }
 #endif
-        new_state->moves_to_parent = 
-            freecell_solver_move_stack_compact_allocate(
-                hard_thread, 
-                new_state->moves_to_parent
-                );
+        if (new_state->moves_to_parent != NULL)
+        {
+            new_state->moves_to_parent = 
+                freecell_solver_move_stack_compact_allocate(
+                    hard_thread, 
+                    new_state->moves_to_parent
+                    );
+        }
 
         return FCS_STATE_DOES_NOT_EXIST;
     }

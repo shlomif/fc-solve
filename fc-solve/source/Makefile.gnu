@@ -167,7 +167,7 @@ endif
 # OFLAGS += -DCARD_DEBUG_PRES -DFCS_WITH_MHASH -I /usr/local/include
 
 # END_OLFLAGS += -lmhash
-END_OLFLAGS += -lefence
+# END_OLFLAGS += -lefence
 
 # OFLAGS += -DDMALLOC
 # END_OLFLAGS += -ldmalloc
