@@ -1,13 +1,30 @@
 #!/bin/sh
 
-OPT="$1"
+RPM=false
+AUTOCONF=true
 
-automake
-autoconf
-(cd board_gen && automake && autoconf)
+for OPT do
+    if [ "$OPT" == "--rpm" ] ; then
+        RPM=true
+    elif [ "$OPT" == "--noac" ] ; then
+        AUTOCONF=false
+    else
+        echo "Unknown option \"$OPT\"!"
+        exit -1
+    fi
+done
+
+
+if $AUTOCONF ; then
+    automake
+    autoconf
+    (cd board_gen && automake && autoconf)
+fi
+
 ./configure && make dist
 
-if [ "$OPT" == "--rpm" ] ; then
+if $RPM ; then
     rpm -tb freecell-solver-`cat ver.txt`.tar.gz
 fi
-    
+
+
