@@ -1,4 +1,8 @@
 
+WITH_DEVEL_VERSION = 1
+
+DEVEL_VER_USE_CACHE = 1
+
 HOSTNAME = $(shell hostname)
 
 ifeq ($(HOSTNAME),vipe.technion.ac.il)
@@ -27,8 +31,6 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
 
-WML_FLAGS += --passoption=2,-X
-
 HTMLS = $(D)/index.html $(D)/download.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html
 
 ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
@@ -44,7 +46,28 @@ INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
 IMAGES += $(addprefix $(D)/win32_build/,bootstrap/curl.exe bootstrap/build.bat static/zip.exe static/unzip.exe dynamic/fcs.zip)
 
-all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES)
+all: dummy
+
+ifneq ($(WITH_DEVEL_VERSION),0)
+
+ifeq ($(DEVEL_VER_USE_CACHE),0)
+RECENT_DEVEL_VERSION = $(shell ./get-recent-devel-version.sh)
+else
+RECENT_DEVEL_VERSION = $(shell cat t/fc-solve/source/ver.txt)
+endif
+
+DEVEL_ARC = $(D)/freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz
+
+$(DEVEL_ARC) : 
+	./put-recent-devel-version.sh $(DEVEL_ARC)
+
+else
+	RECENT_DEVEL_VERSION = ""
+	DEVEL_ARC = 
+endif
+WML_FLAGS += --passoption=2,-X -DWITH_DEVEL_VERSION=$(WITH_DEVEL_VERSION) -DRECENT_DEVEL_VERSION=$(RECENT_DEVEL_VERSION)
+
+dummy : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC)
 
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \

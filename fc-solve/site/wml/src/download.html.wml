@@ -37,15 +37,15 @@ A link to an "apt"-able Debian Package.
 
 </table>
 
-<!--
+<define-tag develversion>
 <h2>Development Versions</h2>
 
 <table border="1" summary="The Development Version for Freecell Solver. Link for download is on the left; Description is on the right.">
 
 <tr>
 <td>
-<a href="freecell-solver-2.5.26.tar.gz">
-freecell-solver-2.5.26.tar.gz
+<a href="freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz">
+freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz
 </a>
 </td>
 <td>
@@ -54,8 +54,10 @@ The Development version that will lead to Freecell Solver 2.6.0.
 </tr>
 
 </table>
--->
+</define-tag>
 
+<ifneq "$(WITH_DEVEL_VERSION)" ""
+    "<develversion />" />
 
 
 
