@@ -382,7 +382,7 @@ help_screen_t help_screens[] = {
 "\n"
 "- If it takes too long to finish, type \"fc-solve --help-configs\"\n"
 "- If it erroneously reports a board as unsolvable, try adding the\n"
-"  \"-to 01ABCDE\" flag\n"
+"  \"-to 01ABCDE\" flag (or \"-to abcdefghi\" for Simple simon)\n"
 "- If the solution is too long type \"fc-solve --help-short-sol\"\n"
 "- To present the moves only try adding \"-m\" or \"-m -snx\"\n"
 "- For a description of all options type \"fc-solve --help-options\"\n"
