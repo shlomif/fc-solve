@@ -38,6 +38,9 @@ Makefile.gnu: gen_makefile.pl
 Makefile.win32: gen_makefile.pl
 	perl $< --arch=win32
 
+test_num.h: gen_tests_lists.pl
+	perl $<
+
 #<<<HEADERS.START
 EXTRA_DIST += alloc.h app_str.h caas.h card.h cl_chop.h
 EXTRA_DIST += ds_order.h fcs_cl.h fcs.h fcs_dm.h fcs_enums.h

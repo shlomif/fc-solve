@@ -80,6 +80,9 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 
 -include $(DEP_FILES)
 
+test_num.h: gen_tests_lists.pl
+	perl $<
+
 %.o: %.c
 	$(CC) -Wp,-MD,.deps/$(*F).pp -c $(OFLAGS) -o $@ $< $(END_OFLAGS)
 
