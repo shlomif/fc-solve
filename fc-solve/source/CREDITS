@@ -41,4 +41,15 @@ The perl 5.x Hackers - I copied its hash function.
 
 Gergeley Kontra - wrote a Vim script to align text which I used.
 
+Bob Jenkins - wrote the lookup2 hash function, which I now use as the
+primary hash.
+(check http://burtleburtle.net/bob/hash/)
+
+Tzafrir Cohen - His "RPM" lecture provided help in creating the RPM
+Spec.
+
+Yotam Rubin - Preparing an initial Debian Package.
+
+Risko Gergely - Maintaining the current Debian Package.
+
 
