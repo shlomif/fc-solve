@@ -138,7 +138,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
             ptr_new_state_with_locations                                  \
             );                                                            \
         /* See above. */                                                  \
-        fcs_move_stack_alloc_into_var(moves);                             \
+        /*fcs_move_stack_alloc_into_var(moves);    */                     \
    }                                                                      \
 }
 

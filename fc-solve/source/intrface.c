@@ -298,6 +298,8 @@ static freecell_solver_hard_thread_t * alloc_hard_thread(
     hard_thread->stacks_allocator = 
         freecell_solver_compact_allocator_new();
 #endif
+    hard_thread->move_stacks_allocator =
+        freecell_solver_compact_allocator_new();
 
     return hard_thread;
 }
@@ -1343,14 +1345,18 @@ void freecell_solver_finish_instance(
     /* De-allocate the state packs */
     for(ht_idx=0;ht_idx<instance->num_hard_threads;ht_idx++)
     {
+        /* No longer needed because the stacks are now compactly allocated */
+#if 0
         /* Destroy all the intermediate move stacks in the solution graph */
         freecell_solver_state_ia_foreach(instance->hard_threads[ht_idx], freecell_solver_destroy_move_stack_of_state, NULL);
+#endif
 
         freecell_solver_state_ia_finish(instance->hard_threads[ht_idx]);
 
 #ifdef INDIRECT_STACK_STATES
         freecell_solver_compact_allocator_finish(instance->hard_threads[ht_idx]->stacks_allocator);
 #endif
+        freecell_solver_compact_allocator_finish(instance->hard_threads[ht_idx]->move_stacks_allocator);
     }
 
     if (instance->optimization_thread)

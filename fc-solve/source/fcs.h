@@ -446,6 +446,8 @@ struct freecell_solver_hard_thread_struct
      * */
     fcs_compact_allocator_t * stacks_allocator;
 #endif
+
+    fcs_compact_allocator_t * move_stacks_allocator;
 };
 
 struct fcs_soft_dfs_stack_item_struct

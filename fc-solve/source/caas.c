@@ -531,6 +531,29 @@ GCC_INLINE int freecell_solver_check_and_add_state(
             new_state->parent->num_active_children++;
         }
         instance->num_states_in_collection++;
+
+        {
+            char * ptr;
+            fcs_move_stack_t * old_move_stack_to_parent, * new_move_stack_to_parent;
+            fcs_move_t * new_moves_to_parent;
+
+            old_move_stack_to_parent = new_state->moves_to_parent;
+            
+            fcs_compact_alloc_typed_ptr_into_var(
+                ptr, 
+                char, 
+                hard_thread->move_stacks_allocator, 
+                (sizeof(fcs_move_stack_t) + sizeof(fcs_move_t)*old_move_stack_to_parent->num_moves)
+                );
+            new_move_stack_to_parent = (fcs_move_stack_t *)ptr;
+            new_moves_to_parent = (fcs_move_t *)(ptr+sizeof(fcs_move_stack_t));
+            new_move_stack_to_parent->moves = new_moves_to_parent;
+            new_move_stack_to_parent->num_moves = 
+                new_move_stack_to_parent->max_num_moves = 
+                old_move_stack_to_parent->num_moves;
+            memcpy(new_moves_to_parent, old_move_stack_to_parent->moves, sizeof(fcs_move_t)*old_move_stack_to_parent->num_moves);
+            new_state->moves_to_parent = new_move_stack_to_parent;
+        }
         return FCS_STATE_DOES_NOT_EXIST;
     }
     else
