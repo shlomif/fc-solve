@@ -418,6 +418,7 @@ static void SFO_hash_rehash(
 
 #else
 
-static void freecell_solver_hash_c_dummy(); /* ANSI C doesn't allow empty compilation */
+/* ANSI C doesn't allow empty compilation */
+static void freecell_solver_hash_c_dummy(); 
 
 #endif /* (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || defined(INDIRECT_STACK_STATES) */
