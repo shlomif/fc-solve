@@ -560,24 +560,6 @@ static guint freecell_solver_glib_hash_stack_hash_function (
     }
     hash_value_int += (hash_value_int >> 5);
 
-#if 0
-    MD5_CTX md5_context;
-    fcs_card_t * stack;
-    char hash_value[16];
-
-    stack = (fcs_card_t * )key;
-
-    MD5Init(&md5_context);
-    MD5Update(
-        &md5_context,
-        key,
-        fcs_standalone_stack_len(stack)+1
-        );
-    MD5Final(hash_value, &md5_context);
-
-    return *(guint*)hash_value;
-#endif
-
 }
 
 
@@ -904,7 +886,7 @@ int freecell_solver_solve_instance(
 }
 
 
-int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
+static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
 {
     freecell_solver_soft_thread_t * soft_thread;
     int num_times_started_at;

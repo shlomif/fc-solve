@@ -18,7 +18,7 @@ man_MANS = fc-solve.6
 
 lib_LTLIBRARIES = libfreecell-solver.la
 libfreecell_solverincludedir=$(includedir)/freecell-solver
-libfreecell_solver_la_SOURCES = app_str.c caas.c card.c cmd_line.c fcs_dm.c fcs_hash.c fcs_isa.c freecell.c intrface.c lib.c md5c.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c
+libfreecell_solver_la_SOURCES = app_str.c caas.c card.c cmd_line.c fcs_dm.c fcs_hash.c fcs_isa.c freecell.c intrface.c lib.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c
 libfreecell_solver_la_LDFLAGS = -version-info 3:0:3
 libfreecell_solverinclude_HEADERS = fcs_user.h fcs_enums.h fcs_move.h fcs_cl.h
 
@@ -26,7 +26,7 @@ fc-solve.6: fc-solve.pod ver.txt
 	cat $< | sed 's/FCS_VERSION/@VERSION@/g' | pod2man --section=6 --center="Freecell Solver" --date="2001/06/09" --release="Freecell Solver @VERSION@" > $@
 
 EXTRA_DIST += app_str.h caas.h card.h fcs_dm.h fcs.h fcs_hash.h
-EXTRA_DIST += fcs_isa.h jhjtypes.h md5.h move.h pqueue.h preset.h rand.h
+EXTRA_DIST += fcs_isa.h jhjtypes.h move.h pqueue.h preset.h rand.h
 EXTRA_DIST += state.h test_arr.h tests.h
 
 EXTRA_DIST += USAGE CREDITS

@@ -53,22 +53,10 @@ extern "C" {
 
 #include "fcs_hash.h"
 
-#ifdef FCS_WITH_MHASH
-#include "mhash.h"
-#else
-#include "md5.h"
-#endif
-
 #endif
 
 #ifdef INDIRECT_STACK_STATES
 #include "fcs_hash.h"
-
-#ifdef FCS_WITH_MHASH
-#include "mhash.h"
-#else
-#include "md5.h"
-#endif
 
 #endif
 
@@ -437,15 +425,6 @@ struct freecell_solver_hard_thread_struct
      * access the instance.
      *
      * */
-#if (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-#ifdef FCS_WITH_MHASH
-    MHASH mhash_context;
-    hashid mhash_type;
-#else
-    MD5_CTX md5_context;
-    unsigned char hash_value[MD5_HASHBYTES];
-#endif
-#endif
 
     /*
      * The index for the soft-thread that is currently processed

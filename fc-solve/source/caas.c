@@ -18,13 +18,9 @@
 
 #include "fcs_isa.h"
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-#include "md5.h"
-#endif
 
 #ifdef INDIRECT_STACK_STATES
 #include "fcs_hash.h"
-#include "md5.h"
 #endif
 
 #include "caas.h"
@@ -46,7 +42,7 @@
 #ifdef FCS_WITH_MHASH
 #define fcs_caas_check_and_insert()            \
     /*                                            \
-        Calculate the MD5 checksum of the state.   \
+        Calculate the has function of the state.   \
     */                   \
     {        \
         char * temp_ptr;    \
@@ -76,16 +72,6 @@
 
 
 #else
-#if 0
-    /*
-        Calculate the MD5 checksum of the state.
-    */
-    MD5Init(&(instance->md5_context));
-    MD5Update(&(instance->md5_context), (unsigned char *)new_state, sizeof(fcs_state_t));
-    MD5Final(instance->hash_value, &(instance->md5_context));
-    /* Retrieve the first 32 bits and make them the hash value */
-    hash_value_int = *(SFO_hash_value_t*)instance->hash_value;
-#endif
 #define fcs_caas_check_and_insert()              \
     {        \
         const char * s_ptr = (char*)new_state;       \
@@ -298,13 +284,6 @@ void GCC_INLINE freecell_solver_cache_stacks(
     {
         new_state->s.stacks[a] = realloc(new_state->s.stacks[a], fcs_stack_len(new_state->s, a)+1);
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
-#if 0
-        /* Calculate the hash value for the stack */
-        MD5Init(&(instance->md5_context));
-        MD5Update(&(instance->md5_context), new_state->s.stacks[a], fcs_stack_len(new_state->s, a)+1);
-        MD5Final(instance->hash_value, &(instance->md5_context));
-        hash_value_int = *(SFO_hash_value_t*)instance->hash_value;
-#endif
         /* Calculate the hash value for the stack */
         /* This hash function was ripped from the Perl source code.
          * (It is not derived work however). */
@@ -425,9 +404,7 @@ void freecell_solver_cache_talon(
     int hash_value_int;
 
     new_state->s.talon = realloc(new_state->s.talon, fcs_klondike_talon_len(new_state->s)+1);
-    MD5Init(&(instance->md5_context));
-    MD5Update(&(instance->md5_context), new_state->s.talon, fcs_klondike_talon_len(new_state->s)+1);
-    MD5Final(instance->hash_value, &(instance->md5_context));
+#error Add Hash Code
     hash_value_int = *(SFO_hash_value_t*)instance->hash_value;
     if (hash_value_int < 0)
     {
@@ -457,16 +434,6 @@ void freecell_solver_cache_talon(
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 guint freecell_solver_hash_function(gconstpointer key)
 {
-#if 0
-    MD5_CTX md5_context;
-    unsigned char hash_value[MD5_HASHBYTES];
-
-    MD5Init(&md5_context);
-    MD5Update(&md5_context, (unsigned char *)key, sizeof(fcs_state_t));
-    MD5Final(hash_value, &md5_context);
-
-    return (*(guint *)hash_value);
-#endif
     guint hash_value;
     const char * s_ptr = (char*)key;
     const char * s_end = s_ptr+sizeof(fcs_state_t);
