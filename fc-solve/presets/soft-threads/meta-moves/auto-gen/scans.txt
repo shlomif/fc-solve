@@ -14,3 +14,4 @@
 17	--method random-dfs -to [01][23456789] -seed 5
 18	--method a-star -to 0123467 -asw 0.5,0,0.3,0,0
 19	--method soft-dfs -to 0126394875
+20	--method random-dfs -seed 105

@@ -5,7 +5,7 @@ max_num_solved=0
 while true ; do
     echo "seed is $seed"
     num_solved="`bash Analyze.sh --method random-dfs -seed $seed`"
-    if expr $num_solved \> $max_num_solved ; then
+    if expr $num_solved \> $max_num_solved > /dev/null ; then
         max_seed=$seed
         max_num_solved=$num_solved
     fi
