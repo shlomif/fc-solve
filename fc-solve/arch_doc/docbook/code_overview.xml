@@ -247,6 +247,27 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             </para>
         </section>
 
+        <section id="state.c">
+            <title>state.c</title>
+            <para>
+                This file contains various functions for manipulating states.
+                Among the many things implemented in it are state canonization,
+                state duplicating, state comparison and converting to and from
+                string format.
+            </para>
+        </section>
+
+        <section id="move.c">
+            <title>move.c and move.h</title>
+            <para>
+                This module contains routines for handling individual moves
+                (freecell &rarr; stack, stack &rarr; freecell, stack &rarr;
+                stack) and various special moves as well as entire move 
+                stacks, which contain a sequence of moves to be played 
+                between two intermediate states.
+            </para>
+        </section>
+
     </section>
        
 </chapter>
