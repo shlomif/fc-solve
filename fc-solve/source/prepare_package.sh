@@ -8,6 +8,6 @@ autoconf
 ./configure && make dist
 
 if [ "$OPT" == "--rpm" ] ; then
-    rpm -bb freecell-solver-`cat ver.txt`.tar.gz
+    rpm -tb freecell-solver-`cat ver.txt`.tar.gz
 fi
     
