@@ -457,7 +457,6 @@ environment variable. You can add more presets at any of these places.
 (refer to http://groups.yahoo.com/group/fc-solve-discuss/message/403
 for information about their format)
 
-
 Presets that are shipped with Freecell Solver:
 
 	abra-kadabra      - a meta-moves preset
