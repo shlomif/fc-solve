@@ -199,13 +199,13 @@ int freecell_solver_hard_dfs_solve_for_state(
 
 
     for(a=0 ;
-        a < soft_thread->tests_order_num;
+        a < soft_thread->tests_order.num;
         a++)
     {
         derived.num_states = 0;
 
         check =
-            freecell_solver_sfs_tests[soft_thread->tests_order[a] & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
+            freecell_solver_sfs_tests[soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
                 soft_thread,
                 ptr_state_with_locations,
                 depth,
@@ -460,7 +460,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         if (soft_thread->soft_dfs_current_state_indexes[depth] == soft_thread->soft_dfs_derived_states_lists[depth].num_states)
         {
 
-            if (soft_thread->soft_dfs_test_indexes[depth] >= soft_thread->tests_order_num)
+            if (soft_thread->soft_dfs_test_indexes[depth] >= soft_thread->tests_order.num)
             {
                 /* Backtrack to the previous depth. */
 
@@ -541,7 +541,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
             while (
                     /* Make sure we do not exceed the number of tests */
-                    (soft_thread->soft_dfs_test_indexes[depth] < soft_thread->tests_order_num) &&
+                    (soft_thread->soft_dfs_test_indexes[depth] < soft_thread->tests_order.num) &&
                     (
                         /* Always do the first test */
                         do_first_iteration ||
@@ -549,16 +549,16 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                             /* This is a randomized scan. Else - quit after the first iteration */
                             to_randomize &&
                             /* We are still on a random group */
-                            (soft_thread->tests_order[ soft_thread->soft_dfs_test_indexes[depth] ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
+                            (soft_thread->tests_order.tests[ soft_thread->soft_dfs_test_indexes[depth] ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
                             /* A new random group did not start */
-                            (! (soft_thread->tests_order[ soft_thread->soft_dfs_test_indexes[depth] ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
+                            (! (soft_thread->tests_order.tests[ soft_thread->soft_dfs_test_indexes[depth] ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
                          )
                     )
                  )
             {
                 do_first_iteration = 0;
 
-                check = freecell_solver_sfs_tests[soft_thread->tests_order[
+                check = freecell_solver_sfs_tests[soft_thread->tests_order.tests[
                         soft_thread->soft_dfs_test_indexes[depth]
                     ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                         soft_thread,
@@ -613,7 +613,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                  *
                  * Also, do not randomize if this is a pure soft-DFS scan.
                  * */
-                if (to_randomize && soft_thread->tests_order[ soft_thread->soft_dfs_test_indexes[depth]-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
+                if (to_randomize && soft_thread->tests_order.tests[ soft_thread->soft_dfs_test_indexes[depth]-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
                 {
                     a = soft_thread->soft_dfs_derived_states_lists[depth].num_states-1;
                     while (a > 0)
@@ -1034,10 +1034,10 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
         */
         derived.num_states = 0;
         for(a=0 ;
-            a < soft_thread->tests_order_num;
+            a < soft_thread->tests_order.num;
             a++)
         {
-            check = freecell_solver_sfs_tests[soft_thread->tests_order[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
+            check = freecell_solver_sfs_tests[soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                     soft_thread,
                     ptr_state_with_locations,
                     ptr_state_with_locations->depth,

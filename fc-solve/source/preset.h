@@ -21,7 +21,7 @@ extern int freecell_solver_apply_preset_by_name(
     );
 
 extern int freecell_solver_apply_tests_order(
-    freecell_solver_soft_thread_t * soft_thread,
+    fcs_tests_order_t * tests_order,
     const char * string,
     char * * error_string
     );

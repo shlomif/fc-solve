@@ -123,6 +123,17 @@ enum FCS_TESTS_ORDER_FLAGS
 struct freecell_solver_hard_thread_struct;
 struct freecell_solver_soft_thread_struct;
 
+typedef struct freecell_solver_hard_thread_struct freecell_solver_hard_thread_t;
+
+struct fcs_tests_order_struct
+{
+    int num;
+    int * tests;
+    int max_num;
+};
+
+typedef struct fcs_tests_order_struct fcs_tests_order_t;
+
 typedef struct freecell_solver_instance
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
@@ -343,12 +354,15 @@ typedef struct freecell_solver_instance
      * */
     int ht_idx;
 
+#if 0
     /*
      * This is the master tests order. It is used to initialize all
      * the new Soft-Threads.
      * */
     int instance_tests_order_num;
     int instance_tests_order[FCS_TESTS_NUM];
+#endif
+    fcs_tests_order_t instance_tests_order;
 
     /*
      * This is the hard-thread used for the optimization scan.
@@ -446,8 +460,6 @@ struct freecell_solver_hard_thread_struct
     int num_soft_threads_finished;
 };
 
-typedef struct freecell_solver_hard_thread_struct freecell_solver_hard_thread_t;
-
 struct freecell_solver_soft_thread_struct
 {
     freecell_solver_hard_thread_t * hard_thread;
@@ -466,8 +478,12 @@ struct freecell_solver_soft_thread_struct
      * that it can be lower than FCS_TESTS_NUM, thus enabling several tests
      * to be removed completely.
      * */
+#if 0
     int tests_order_num;
     int tests_order[FCS_TESTS_NUM];
+#else
+    fcs_tests_order_t tests_order;
+#endif
 
     /*
      * The (temporary) max depth of the Soft-DFS scans)

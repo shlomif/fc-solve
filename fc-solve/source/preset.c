@@ -9,6 +9,7 @@
 
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "fcs.h"
 #include "preset.h"
@@ -409,17 +410,24 @@ struct internal_tests_order_struct
 
 typedef struct internal_tests_order_struct internal_tests_order_t;
 
-static int get_internal_tests_order(
+int freecell_solver_apply_tests_order(
+    fcs_tests_order_t * tests_order,
     const char * string,
-    char * * error_string,
-    internal_tests_order_t * result
+    char * * error_string
     )
+
 {
     int a;
     int len;
     int test_index;
     int is_group, is_start_group;
-    int tests_order[FCS_TESTS_NUM];
+    if (tests_order->tests)
+    {
+        free(tests_order->tests);
+        tests_order->max_num = 10;
+        tests_order->num = 0;
+        tests_order->tests = malloc(sizeof(tests_order->tests[0])*tests_order->max_num );
+    }
 
 #if 0
     instance->tests_order_num = min(strlen(string), FCS_TESTS_NUM);
@@ -428,7 +436,7 @@ static int get_internal_tests_order(
     test_index = 0;
     is_group = 0;
     is_start_group = 0;
-    for(a=0;(a<len) && (test_index < FCS_TESTS_NUM);a++)
+    for(a=0;(a<len) ;a++)
     {
         if ((string[a] == '(') || (string[a] == '['))
         {
@@ -458,7 +466,12 @@ static int get_internal_tests_order(
             is_start_group = 0;
             continue;
         }
-        tests_order[test_index] = (freecell_solver_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+        if (test_index == tests_order->max_num)
+        {
+            tests_order->max_num += 10;
+            tests_order->tests = realloc(tests_order->tests, sizeof(tests_order->tests[0]) * tests_order->max_num);
+        }
+        tests_order->tests[test_index] = (freecell_solver_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
 
         test_index++;
         is_start_group = 0;
@@ -469,31 +482,8 @@ static int get_internal_tests_order(
         return 4;
     }
 
-    result->tests_order_num = test_index;
-    memcpy(result->tests_order, tests_order, sizeof(result->tests_order));
+    tests_order->num = test_index;
     *error_string = NULL;
-
-    return 0;
-}
-
-int freecell_solver_apply_tests_order(
-    freecell_solver_soft_thread_t * soft_thread,
-    const char * string,
-    char * * error_string
-    )
-{
-    internal_tests_order_t to_assign;
-    int ret;
-
-    ret = get_internal_tests_order(string, error_string, &to_assign);
-
-    if (ret != 0)
-    {
-        return ret;
-    }
-
-    soft_thread->tests_order_num = to_assign.tests_order_num;
-    memcpy(soft_thread->tests_order, to_assign.tests_order, sizeof(soft_thread->tests_order));
 
     return 0;
 }
@@ -553,12 +543,12 @@ static int fcs_apply_preset(
 
                         /* Check every test */
 
-                        for(num_valid_tests=0;num_valid_tests < soft_thread->tests_order_num; num_valid_tests++)
+                        for(num_valid_tests=0;num_valid_tests < soft_thread->tests_order.num; num_valid_tests++)
                         {
                             for(s = preset.allowed_tests;*s != '\0';s++)
                             {
                                 /* Check if this test corresponds to this character */
-                                if ((soft_thread->tests_order[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((freecell_solver_char_to_test_num(*s)%FCS_TESTS_NUM)))
+                                if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((freecell_solver_char_to_test_num(*s)%FCS_TESTS_NUM)))
                                 {
                                     break;
                                 }
@@ -570,10 +560,10 @@ static int fcs_apply_preset(
                                 break;
                             }
                         }
-                        if (num_valid_tests < soft_thread->tests_order_num)
+                        if (num_valid_tests < soft_thread->tests_order.num)
                         {
                             freecell_solver_apply_tests_order(
-                                    soft_thread,
+                                    &(soft_thread->tests_order),
                                     preset.tests_order,
                                     &no_use);
                         }
@@ -584,10 +574,10 @@ static int fcs_apply_preset(
             /* Assign the master tests order */
             
             {
-                internal_tests_order_t to_assign;
-                get_internal_tests_order(preset.tests_order, &no_use, &to_assign);
-                instance->instance_tests_order_num = to_assign.tests_order_num;
-                memcpy(instance->instance_tests_order, to_assign.tests_order, sizeof(instance->instance_tests_order));
+                freecell_solver_apply_tests_order(
+                    &(instance->instance_tests_order),
+                    preset.tests_order,
+                    &no_use);
             }
             return FCS_PRESET_CODE_OK;
         }

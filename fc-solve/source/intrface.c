@@ -182,6 +182,11 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
 
     soft_thread->dfs_max_depth = 0;
 
+    soft_thread->tests_order.num = 0;
+    soft_thread->tests_order.tests = NULL;
+    soft_thread->tests_order.max_num = 0;
+    
+
     /* Initialize all the Soft-DFS stacks to NULL */
 #define SET_TO_NULL(what) soft_thread->what = NULL;
     SET_TO_NULL(solution_states);
@@ -229,8 +234,13 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
         freecell_solver_apply_tests_order(soft_thread, "[01][23456789]", &no_use);
     }
 #else
-    soft_thread->tests_order_num = soft_thread->hard_thread->instance->instance_tests_order_num;
-    memcpy(soft_thread->tests_order, soft_thread->hard_thread->instance->instance_tests_order, sizeof(soft_thread->tests_order));
+    soft_thread->tests_order.num = soft_thread->hard_thread->instance->instance_tests_order.num;
+    soft_thread->tests_order.tests = 
+        malloc(sizeof(soft_thread->tests_order.num));
+    memcpy(soft_thread->tests_order.tests, 
+        soft_thread->hard_thread->instance->instance_tests_order.tests, 
+        soft_thread->tests_order.num
+        );
 #endif
 
     soft_thread->is_finished = 0;
@@ -303,6 +313,11 @@ freecell_solver_instance_t * freecell_solver_alloc_instance(void)
     instance->max_num_times = -1;
     instance->max_depth = -1;
     instance->max_num_states_in_collection = -1;
+
+    instance->instance_tests_order.num = 0;
+    instance->instance_tests_order.tests = NULL;
+    instance->instance_tests_order.max_num = 0;
+    
 
 #ifdef FCS_WITH_TALONS
     instance->talon_type = FCS_TALON_NONE;
@@ -433,9 +448,9 @@ static void accumulate_tests_order(
 {
     int * tests_order = (int *)context;
     int a;
-    for(a=0;a<soft_thread->tests_order_num;a++)
+    for(a=0;a<soft_thread->tests_order.num;a++)
     {
-        *tests_order |= (1 << (soft_thread->tests_order[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
+        *tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
 }
 
@@ -447,9 +462,9 @@ static void determine_scan_completeness(
     int global_tests_order = *(int *)context;
     int tests_order = 0;
     int a;
-    for(a=0;a<soft_thread->tests_order_num;a++)
+    for(a=0;a<soft_thread->tests_order.num;a++)
     {
-        tests_order |= (1 << (soft_thread->tests_order[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
+        tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
     soft_thread->is_a_complete_scan = (tests_order == global_tests_order);
 }

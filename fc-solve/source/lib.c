@@ -92,7 +92,7 @@ int freecell_solver_user_set_tests_order(
 
     return
         freecell_solver_apply_tests_order(
-            user->soft_thread,
+            &(user->soft_thread->tests_order),
             tests_order,
             error_string
             );
