@@ -50,10 +50,16 @@ cd ..\..\
 REM Put the version number inside the variable VERSION
 FOR /F " tokens=1 delims=, " %%i in (.\src\ver.txt) do set VERSION=%%i
 
+REM           Prepare a directory to contain the distribution files
+REM           and put them there.
+
 SET ARC_DIR=freecell-solver-%VERSION%-bin
 mkdir %ARC_DIR%
 FOR %%i in (ChangeLog fc-solve.exe freecell-solver-range-parallel-solve.exe README README.win32.txt TODO USAGE) do copy src\%%i %ARC_DIR%\
 mkdir %ARC_DIR%\board_gen
 FOR %%i in (COPYING make_pysol_freecell_board.py make-aisleriot-freecell-board.exe make-gnome-freecell-board.exe make-microsoft-freecell-board.exe README) do copy src\board_gen\%%i %ARC_DIR%\board_gen
+
+
+REM           Prepare a zip file
 
 zip -r freecell-solver-%VERSION%.win32.bin.zip %ARC_DIR%
