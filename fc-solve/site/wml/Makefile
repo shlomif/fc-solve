@@ -38,6 +38,8 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
 all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS)
 
+RAW_SUBDIRS = $(D)/win32_build
+
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \
 		mkdir $@ ; \
@@ -54,6 +56,6 @@ $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml Makefile $(INCLUDES)
 $(IMAGES) :: $(D)/% : src/%
 	cp -f $< $@
 
-$(RAW_SUBDIRS) :: $(D)/% : %
+$(RAW_SUBDIRS) :: $(D)/% : src/%
 	rm -fr $@
 	cp -r $< $@
