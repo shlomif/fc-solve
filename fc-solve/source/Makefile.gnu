@@ -1,7 +1,7 @@
 CC = gcc
 
 
-DEBUG = 0
+DEBUG = 1
 
 ifneq ($(DEBUG),0)
 	OFLAGS := -Wall -g

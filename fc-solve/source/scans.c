@@ -472,10 +472,17 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 }
 
                 the_soft_dfs_info--;
-                test_index = the_soft_dfs_info->test_index;
-                current_state_index = the_soft_dfs_info->current_state_index;
-                derived_states_list = &(the_soft_dfs_info->derived_states_list);
-                ptr_state_with_locations = the_soft_dfs_info->state;
+                /* 
+                 * depth (and evidently the_soft_dfs_info) might be invalid 
+                 * now, so we should check before we assign.
+                 * */
+                if (depth >= 0)
+                {
+                    test_index = the_soft_dfs_info->test_index;
+                    current_state_index = the_soft_dfs_info->current_state_index;
+                    derived_states_list = &(the_soft_dfs_info->derived_states_list);
+                    ptr_state_with_locations = the_soft_dfs_info->state;
+                }
                 continue; /* Just to make sure depth is not -1 now */
             }
 
