@@ -398,6 +398,8 @@ static void free_instance_soft_thread_callback(freecell_solver_soft_thread_t * s
 
     freecell_solver_PQueueFree(soft_thread->a_star_pqueue);
     free(soft_thread->a_star_pqueue);
+
+    free(soft_thread->tests_order.tests);
     /* The data-structure itself was allocated */
     free(soft_thread);
 }
@@ -1450,6 +1452,8 @@ void freecell_solver_finish_instance(
         free(instance->instance_solution_states);
         instance->instance_solution_states = NULL;
     }
+
+    free(instance->instance_tests_order.tests);
 }
 
 freecell_solver_soft_thread_t * freecell_solver_instance_get_soft_thread(
