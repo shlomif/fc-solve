@@ -412,6 +412,15 @@ the same memory resources. "dead-end-marks" means they try to mark states
 that they have withdrawn from, and states whose all their derived states are 
 such, as "dead ends". This may or may not improve the speed of the solution.
 
+-ni
+--next-instance
+
+This option allows to run two or more separate solvers one after the
+other. If the first one returned an unsolvable verdict, then the second
+one would run and so on. One use of it is to run an atomic moves scan
+after a meta-moves scan, so we will always get an accurate verdict and
+still enjoy some of the speed of the meta-moves scan.
+
 7. Run-time Display Options
 ---------------------------
 
