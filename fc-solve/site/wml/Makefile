@@ -31,7 +31,7 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
 
-HTMLS = $(D)/index.html $(D)/download.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html
+HTMLS = $(D)/index.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html
 
 ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
 
@@ -61,13 +61,16 @@ DEVEL_ARC = $(D)/freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz
 $(DEVEL_ARC) : 
 	./put-recent-devel-version.sh $(DEVEL_ARC)
 
+$(D)/download.html :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES) $(DEVEL_ARC)
+	cd src && wml $(WML_FLAGS) -DFILENAME="$(notdir $@)" $(notdir $<) > $@
+	
 else
 	RECENT_DEVEL_VERSION = ""
 	DEVEL_ARC = 
 endif
 WML_FLAGS += --passoption=2,-X -DWITH_DEVEL_VERSION=$(WITH_DEVEL_VERSION) -DRECENT_DEVEL_VERSION=$(RECENT_DEVEL_VERSION)
 
-dummy : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC)
+dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC)
 
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \

@@ -44,9 +44,7 @@ A link to an "apt"-able Debian Package.
 
 <tr>
 <td>
-<a href="freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz">
-freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz
-</a>
+<a href="freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz">freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz</a>
 </td>
 <td>
 The Development version that will lead to Freecell Solver 2.8.0. 
