@@ -224,7 +224,7 @@ OBJECTS = alloc.o           \
 
 
 # MYOBJ.o ==> .deps/MYOBJ.P
-DEP_FILES = $(addprefix .deps/,$(addsuffix .P,$(basename $(OBJECTS))))
+DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 
 -include $(DEP_FILES)
 

@@ -7,7 +7,7 @@
  * This file is in the public domain (it's uncopyrighted).
  * */
 
-#include "caas.h"
+#include "inline.h"
 
 static GCC_INLINE fcs_move_stack_t * freecell_solver_move_stack_compact_allocate(freecell_solver_hard_thread_t * hard_thread, fcs_move_stack_t * old_move_stack_to_parent)
 {

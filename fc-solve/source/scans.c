@@ -44,22 +44,6 @@ static pq_rating_t freecell_solver_a_star_rate_state(
             );       \
     }
 
-#if 0
-static void freecell_solver_a_star_enqueue_state(
-    freecell_solver_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations
-    )
-{
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
-
-    freecell_solver_PQueuePush(
-        soft_thread->a_star_pqueue,
-        ptr_state_with_locations,
-        freecell_solver_a_star_rate_state(soft_thread, ptr_state_with_locations)
-        );
-}
-#endif
 
 #define freecell_solver_bfs_enqueue_state(soft_thread, state) \
     {    \
@@ -69,24 +53,6 @@ static void freecell_solver_a_star_enqueue_state(
         last_item_next->next = NULL;     \
         bfs_queue_last_item = last_item_next; \
     }
-
-#if 0
-static void freecell_solver_bfs_enqueue_state(
-    freecell_solver_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * state
-    )
-{
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
-
-    soft_thread->bfs_queue_last_item->next = (fcs_states_linked_list_item_t*)malloc(sizeof(fcs_states_linked_list_item_t));
-    soft_thread->bfs_queue_last_item->s = state;
-    soft_thread->bfs_queue_last_item->next->next = NULL;
-    soft_thread->bfs_queue_last_item = soft_thread->bfs_queue_last_item->next;
-}
-#endif
-
-    
 
 #define the_state (ptr_state_with_locations->s)
 
@@ -628,7 +594,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
             {
                 int a, j;
                 int swap_save;
-                int * rand_array;
+                int * rand_array, * ra_ptr;
                 int num_states = derived_states_list->num_states;
 
                 if (num_states >
@@ -644,9 +610,9 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 }
                 rand_array = the_soft_dfs_info->derived_states_random_indexes;
 
-                for(a=0 ; a < num_states ; a++)
+                for(a=0, ra_ptr = rand_array; a < num_states ; a++)
                 {
-                    rand_array[a] = a;
+                    *(ra_ptr++) = a;
                 }
                 /* If we just conducted the tests for a random group -
                  * randomize. Else - keep those indexes as the unity vector.
@@ -661,10 +627,10 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         j =
                             (
                                 freecell_solver_rand_get_random_number(
-                                soft_thread->rand_gen
-                            )
-                            % (a+1)
-                        );
+                                    soft_thread->rand_gen
+                                )
+                                % (a+1)
+                            );
 
                         swap_save = rand_array[a];
                         rand_array[a] = rand_array[j];

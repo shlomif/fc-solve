@@ -7,12 +7,6 @@ extern "C" {
 #endif
 
 /* #define FCS_USE_INLINE */
-
-#if defined(__GNUC__) || defined(HAVE_C_INLINE)
-#define GCC_INLINE inline
-#else
-#define GCC_INLINE
-#endif
     
 /*
  * check_and_add_state is defined in caas.c.
