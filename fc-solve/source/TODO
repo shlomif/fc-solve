@@ -8,6 +8,8 @@ move stacks won't be allocated excessively.
 * Implement the perl script that displays the moves in a human viewable
 fashion.
 
+* Implement the mapping of names -> test functions.
+
 --- Non-pressing ---
 
 * Convert some of the documentation to Perl-POD or DocBook.
@@ -25,7 +27,13 @@ fashion.
 
 * Write a multi-process client/server program.
 
-* Port to Java (?)
+* Port to Java (?). Note: the only reason I want to do it is so it will be
+able to run inside an applet of a web-browser. Surf to some URL and have
+a Freecell implementation that can solve itself.
+
+Great thanks to Sun who made sure Java has a C/C++-like syntax but is so
+much incompatible. (and kudos to the Internet C++ project who aims to create
+a virtual machine with a proper gcc backend, so it will be compatible)
 
 * Integrate into GNOME Freecell and/or GNOME AisleRiot and/or PySol.
 
