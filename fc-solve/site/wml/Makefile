@@ -36,7 +36,9 @@ ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
 INCLUDES_PROTO = std/logo.wml
 INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
-RAW_SUBDIRS = $(D)/win32_build
+SUBDIRS = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build_static
+
+IMAGES += $(addprefix $(D)/win32_build/,bootstrap/curl.exe,bootstrap/build.bat,static/zip.exe,static/unzip.exe,dynamic/fcs.zip)
 
 all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS)
 

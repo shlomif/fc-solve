@@ -6,7 +6,7 @@
 <table border="1">
 <tr>
 <td>
-<a href="freecell-solver-2.6.2.tar.gz">freecell-solver-2.6.2.tar.gz</a>
+<a href="freecell-solver-2.6.3.tar.gz">freecell-solver-2.6.3.tar.gz</a>
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpm -tb" on it.
@@ -16,8 +16,8 @@ Source Code. Can be built as an RPM package by running "rpm -tb" on it.
 
 <tr>
 <td>
-<a href="freecell-solver-2.4.1.win32.bin.zip">
-freecell-solver-2.4.1.win32.bin.zip</a>
+<a href="freecell-solver-2.6.3.win32.bin.zip">
+freecell-solver-2.6.3.win32.bin.zip</a>
 </td>
 <td>
 Win32 Binaries
