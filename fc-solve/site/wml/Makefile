@@ -1,14 +1,19 @@
 
-D = /var/www/html/fc-solve
+
+ifdef BERLIOS
+	D = /var/www/html/fc-solve-berlios
+	WML_FLAGS = -DBERLIOS=BERLIOS
+else
+	D = /var/www/html/fc-solve
+	WML_FLAGS = 
+endif
 #D = /home/httpd/html/ip-noise
 
 IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
-WML_FLAGS = 
 
-SUBDIRS = $(D)/download $(D)/docs $(D)/docs/roadmaps $(D)/docs/Users_Guide $(D)/mailing-list
 
 HTMLS = $(D)/index.html $(D)/download.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html
 
