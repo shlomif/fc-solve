@@ -1,5 +1,5 @@
 
-f_s_ - see freecell_solver_
+f_s_ - short for freecell_solver_
 
 freecell_solver_user - a generic name to the API used by the programmer
 who wishes to utilize the Freecell Solver library in his application.
@@ -39,6 +39,11 @@ in preset.c.
 command line. Can be used to shorten command lines. For instance "-l cool-jives"
 or "-l john-galt-line" load the presets "cool-jives" and "john-galt-line" 
 respectively. Implemented mostly in cmd_line.c.
+
+Secondary Hash - a hash value that is calculated for every state that is not
+used to determine the location of the element in the hash table, but that is
+used for comparison. That is done in order to avoid needlessly comparing two
+different states with the same hash value.
 
 State Packs - An allocation of states. Each one is a buffer in memory, that
 contain an array of packs. Each buffer remains at a constant memory location,
