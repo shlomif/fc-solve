@@ -263,6 +263,28 @@ Overview of the core modules:
     modules to configure it. Note that the interface presented here is 
     very raw, and not meant to be used as an API.
 
+    lib.c:
+    ------
+
+    This module contains the user API. It manages a sequence of instances
+    that can be used to solve a board, and then recycled to solve another.
+    It uses intrface.c to perform its operations, and do the actual
+    configuring and solving. It supplies the file fcs_user.h which
+    contains one function for doing any given operation, and these functions
+    are implemented in lib.c.
+
+    cmd_line.c:
+    -----------
+    
+    This module can be used to analyze an array of strings (similar to that 
+    given to the main() function) and configure a user instance accordingly.
+    It also implements reading such arguments from files and a presets 
+    mechanism that can be used to assign names to common configuration and
+    load them.
+
+
+    
+
 
 
 
