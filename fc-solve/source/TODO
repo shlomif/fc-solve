@@ -1,7 +1,5 @@
 --- Pressing ---
 
-* Clean up the scans interface. (less function calling)
-
 * Get 
 ./board_gen/make_pysol_freecell_board.py 980662 | ./fc-solve -to 01ABCDE -opt
 
