@@ -2,6 +2,8 @@
 
 * Abstract the modules and headers list across all makefiles.
 
+* Add the new features to the feature list on the web-site.
+
 --- Non-pressing ---
 
 * Write an architecture document.
