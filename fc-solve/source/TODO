@@ -1,10 +1,5 @@
 --- Pressing ---
 
-* Update the Win32 build information and go over the documents in general
-looking for non-up-to-date information.
-
-* Enable to run one scan after the other has finished.
-
 * a --reset flag.
 
 * --read-from-file to read configuration from there.
