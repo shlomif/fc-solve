@@ -78,35 +78,35 @@
 
 
 #else
-#define fcs_caas_check_and_insert()              \
-    {        \
-        const char * s_ptr = (char*)new_state;       \
-        const char * s_end = s_ptr+sizeof(fcs_state_t);   \
-        hash_value_int = 0;        \
-        while (s_ptr < s_end)        \
-        {            \
+#define fcs_caas_check_and_insert()                                     \
+    {                                                                   \
+        const char * s_ptr = (char*)new_state;                          \
+        const char * s_end = s_ptr+sizeof(fcs_state_t);                 \
+        hash_value_int = 0;                                             \
+        while (s_ptr < s_end)                                           \
+        {                                                               \
             hash_value_int += (hash_value_int << 5) + *(s_ptr++);       \
-        }         \
-        hash_value_int += (hash_value_int>>5);       \
-    }           \
-    if (hash_value_int < 0)       \
-    {    \
-        /*             \
-         * This is a bit mask that nullifies the sign bit of the  \
-         * number so it will always be positive           \
-         * */            \
-        hash_value_int &= (~(1<<((sizeof(hash_value_int)<<3)-1)));     \
-    }    \
-    check = ((*existing_state = freecell_solver_hash_insert(          \
-        instance->hash,              \
-        new_state,                   \
-        hash_value_int,              \
-        freecell_solver_lookup2_hash_function(    \
-            (ub4 *)new_state,        \
-            sizeof(fcs_state_t)>>2,     \
-            24     \
-            ),          \
-        1                            \
+        }                                                               \
+        hash_value_int += (hash_value_int>>5);                          \
+    }                                                                   \
+    if (hash_value_int < 0)                                             \
+    {                                                                   \
+        /*                                                              \
+         * This is a bit mask that nullifies the sign bit of the        \
+         * number so it will always be positive                         \
+         * */                                                           \
+        hash_value_int &= (~(1<<((sizeof(hash_value_int)<<3)-1)));      \
+    }                                                                   \
+    check = ((*existing_state = freecell_solver_hash_insert(            \
+        instance->hash,                                                 \
+        new_state,                                                      \
+        hash_value_int,                                                 \
+        freecell_solver_lookup2_hash_function(                          \
+            (ub1 *)new_state,                                           \
+            sizeof(fcs_state_t),                                     \
+            24                                                          \
+            ),                                                          \
+        1                                                               \
         )) == NULL);
 
 #endif
@@ -125,7 +125,7 @@
             instance->indirect_prev_states_margin,                          \
             instance->num_prev_states_margin,                               \
             sizeof(fcs_state_with_locations_t *),                           \
-            freecell_solver_state_compare_indirect_with_context,                        \
+            freecell_solver_state_compare_indirect_with_context, \
             NULL,                  \
             &found);              \
                              \
@@ -138,7 +138,12 @@
         {                                     \
             /* Insert the state into its corresponding place in the sort         \
              * margin */                             \
-            memmove((void*)(pos_ptr+1), (void*)pos_ptr, sizeof(fcs_state_with_locations_t *)*(instance->num_prev_states_margin-(pos_ptr-instance->indirect_prev_states_margin)));          \
+            memmove((void*)(pos_ptr+1),       \
+                    (void*)pos_ptr,       \
+                    sizeof(fcs_state_with_locations_t *) * \
+                    (instance->num_prev_states_margin-  \
+                      (pos_ptr-instance->indirect_prev_states_margin)   \
+                    ));  \
             *pos_ptr = new_state;                \
                        \
             instance->num_prev_states_margin++;             \
@@ -338,6 +343,11 @@ static void GCC_INLINE freecell_solver_cache_stacks(
             instance->stacks_hash,
             new_state->s.stacks[a],
             hash_value_int,
+            freecell_solver_lookup2_hash_function(
+                new_state->s.stacks[a],
+                (fcs_stack_len(new_state->s, a)+1),
+                24
+                ),
             1
             );
 

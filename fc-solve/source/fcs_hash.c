@@ -16,6 +16,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DEBUG
+
+#ifdef DEBUG
+#include <stdio.h>
+#endif
+
 #include "fcs_hash.h"
 
 #include "alloc.h"
@@ -23,6 +29,7 @@
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
+
 
 
 #define NUM_PRIMES 136
