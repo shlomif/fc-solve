@@ -418,7 +418,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     int calc_real_depth = instance->calc_real_depth;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
-    int test_index;
+    int test_index, current_state_index;
 
     freecells_num = instance->freecells_num;
     stacks_num = instance->stacks_num;
@@ -455,6 +455,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
     dfs_max_depth = soft_thread->dfs_max_depth;
     test_index = the_soft_dfs_info->test_index;
+    current_state_index = the_soft_dfs_info->current_state_index;
     /*
         The main loop.
     */
@@ -475,7 +476,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         }
 
         /* All the resultant states in the last test conducted were covered */
-        if (the_soft_dfs_info->current_state_index == the_soft_dfs_info->derived_states_list.num_states)
+        if (current_state_index == the_soft_dfs_info->derived_states_list.num_states)
         {
 
             if (test_index >= tests_order_num)
@@ -494,10 +495,13 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 {
                     soft_thread->num_solution_states = depth+1;
                     the_soft_dfs_info->test_index = test_index;
+                    the_soft_dfs_info->current_state_index = current_state_index;
                     return FCS_STATE_SUSPEND_PROCESS;
                 }
 
                 the_soft_dfs_info--;
+                test_index = the_soft_dfs_info->test_index;
+                current_state_index = the_soft_dfs_info->current_state_index;
                 continue; /* Just to make sure depth is not -1 now */
             }
 
@@ -672,20 +676,20 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
             /* We just performed a test, so the index of the first state that
                ought to be checked in this depth is 0.
                */
-            the_soft_dfs_info->current_state_index = 0;
+            current_state_index = 0;
         }
 
-        while (the_soft_dfs_info->current_state_index <
+        while (current_state_index <
                the_soft_dfs_info->derived_states_list.num_states)
         {
             ptr_recurse_into_state_with_locations =
                 (the_soft_dfs_info->derived_states_list.states[
                     the_soft_dfs_info->derived_states_random_indexes[
-                        the_soft_dfs_info->current_state_index
+                        current_state_index
                     ]
                 ]);
 
-            the_soft_dfs_info->current_state_index++;
+            current_state_index++;
             if (
                 (! (ptr_recurse_into_state_with_locations->visited &
                     FCS_VISITED_DEAD_END)
@@ -700,6 +704,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 hard_thread->num_times++;
 
                 the_soft_dfs_info->test_index = test_index;
+                the_soft_dfs_info->current_state_index = current_state_index;
 
                 set_scan_visited(ptr_recurse_into_state_with_locations, soft_thread_id);
 
@@ -716,7 +721,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 the_soft_dfs_info++;
                 the_soft_dfs_info->state = ptr_recurse_into_state_with_locations;
                 test_index = 0;
-                the_soft_dfs_info->current_state_index = 0;
+                current_state_index = 0;
                 the_soft_dfs_info->derived_states_list.num_states = 0;
 
 #ifdef REPARENT
