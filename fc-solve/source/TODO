@@ -1,7 +1,5 @@
 --- Pressing ---
 
-* Abstract the modules and headers list across all makefiles.
-
 * Update the Win32 build information and go over the documents in general
 looking for non-up-to-date information.
 

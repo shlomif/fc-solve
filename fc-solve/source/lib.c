@@ -18,9 +18,28 @@
 #include "dmalloc.h"
 #endif
 
+struct fcs_instance_item_struct
+{
+    freecell_solver_instance_t * instance;
+    int ret;
+    int limit;
+};
+
+typedef struct fcs_instance_item_struct fcs_instance_item_t;
 
 struct fcs_user_struct
 {
+    /* 
+     * This is a list of several consecutive instances that are run
+     * one after the other in case the previous ones could not solve
+     * the board 
+     * */
+    fcs_instance_item_t * instances_list;
+    int current_instance;
+    int num_instances;
+    int max_num_instances;
+    int current_iterations_limit;
+    int iterations_board_started_at;
     freecell_solver_instance_t * instance;
     fcs_state_with_locations_t state;
     fcs_state_with_locations_t running_state;
@@ -44,8 +63,15 @@ void * freecell_solver_user_alloc(void)
     fcs_user_t * ret;
 
     ret = (fcs_user_t *)malloc(sizeof(fcs_user_t));
+    ret->max_num_instances = 10;
+    ret->instances_list = malloc(sizeof(ret->instances_list[0]) * ret->max_num_instances);
+    ret->num_instances = 1;
+    ret->current_instance = 0;
     ret->instance = freecell_solver_alloc_instance();
-    ret->ret = FCS_STATE_NOT_BEGAN_YET;
+    ret->instances_list[ret->current_instance].instance = ret->instance;
+    ret->instances_list[ret->current_instance].ret = ret->ret = FCS_STATE_NOT_BEGAN_YET;
+    ret->instances_list[ret->current_instance].limit = -1;
+    ret->current_iterations_limit = -1;
 
     ret->soft_thread =
         freecell_solver_instance_get_soft_thread(
@@ -77,7 +103,19 @@ void freecell_solver_user_limit_iterations(
 
     user = (fcs_user_t*)user_instance;
 
-    user->instance->max_num_times = max_iters;
+    user->current_iterations_limit = max_iters;
+}
+
+void freecell_solver_user_limit_current_instance_iterations(
+    void * user_instance,
+    int max_iters
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t*)user_instance;
+
+    user->instances_list[user->current_instance].limit = max_iters;
 }
 
 #ifndef min
@@ -110,6 +148,8 @@ int freecell_solver_user_solve_board(
     fcs_user_t * user;
 
     user = (fcs_user_t*)user_instance;
+
+    user->current_instance = 0;
 
     user->state = freecell_solver_initial_user_state_to_c(
         state_as_string,
@@ -153,6 +193,45 @@ int freecell_solver_user_solve_board(
 
     freecell_solver_init_instance(user->instance);
 
+#define global_limit() \
+    (user->instance->num_times + user->current_iterations_limit - user->iterations_board_started_at)
+#define local_limit()  \
+    (user->instances_list[user->current_instance].limit)
+#define min(a,b) (((a)<(b))?(a):(b))
+#define calc_max_iters() \
+    {          \
+        if (user->instances_list[user->current_instance].limit < 0)  \
+        {\
+            if (user->current_iterations_limit < 0)\
+            {\
+                user->instance->max_num_times = -1;\
+            }\
+            else\
+            {\
+                user->instance->max_num_times = global_limit();\
+            }\
+        }\
+        else\
+        {\
+            if (user->current_iterations_limit < 0)\
+            {\
+                user->instance->max_num_times = local_limit();\
+            }\
+            else\
+            {\
+                int a, b;\
+                \
+                a = global_limit();\
+                b = local_limit();\
+    \
+                user->instance->max_num_times = min(a,b);\
+            }\
+        }\
+    }
+
+
+    calc_max_iters();
+    
     user->ret = freecell_solver_solve_instance(user->instance, &user->state);
 
     if (user->ret == FCS_STATE_WAS_SOLVED)
@@ -176,6 +255,8 @@ int freecell_solver_user_resume_solution(
     fcs_user_t * user;
 
     user = (fcs_user_t *)user_instance;
+
+    calc_max_iters();
 
     user->ret = freecell_solver_resume_instance(user->instance);
     if (user->ret == FCS_STATE_WAS_SOLVED)
