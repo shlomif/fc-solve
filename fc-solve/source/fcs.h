@@ -122,7 +122,7 @@ struct fcs_test_struct
 {
     int test;
     fcs_derived_states_order_t * states_order_type;
-    fcs_derived_states_order_instance_t * * states_order_instance;
+    fcs_derived_states_order_instance_t * states_order_instance;
 };
 
 typedef struct fcs_test_struct fcs_test_t;

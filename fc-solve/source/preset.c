@@ -527,9 +527,8 @@ int freecell_solver_apply_tests_order(
     const char * string,
     char * * error_string
     )
-
 {
-    int a;
+    int read_char_idx;
     int len;
     int test_index;
     int is_group, is_start_group;
@@ -551,9 +550,9 @@ int freecell_solver_apply_tests_order(
     test_index = 0;
     is_group = 0;
     is_start_group = 0;
-    for(a=0;(a<len) ;a+= num_chars_read)
+    for(read_char_idx=0;(read_char_idx<len) ; read_char_idx+= num_chars_read)
     {
-        test_read = read_token(string+a, &num_chars_read);
+        test_read = read_token(string+read_char_idx, &num_chars_read);
         
         if (test_read.type == TEST_TYPE_ERROR)
         {
@@ -592,6 +591,80 @@ int freecell_solver_apply_tests_order(
             }
             is_group = 0;
             is_start_group = 0;
+
+            /* Check for an =dsorder(...) specification */
+            {
+                const char * s;
+                fcs_derived_states_order_t * order;
+                fcs_derived_states_order_instance_t * order_instance;
+                const char * end_of_spec;
+                int found;
+
+                s = string+read_char_idx+num_chars_read;
+                if (*s == '=')
+                {
+                    int i;
+                    s++;
+                                        
+                    for(i=0;i<(int)(sizeof(freecell_solver_states_orders_names)/sizeof(freecell_solver_states_orders_names[0]));i++)
+                    {
+                        if (!strcmp(s,freecell_solver_states_orders_names[i].name))
+                        {
+
+                            found = 1;
+                            order = freecell_solver_states_orders_names[i].order;
+
+                            order_instance = malloc(sizeof(*order_instance));
+                            if (order->init_instance(
+                                order,
+                                order_instance,
+                                s,
+                                &end_of_spec
+                                ))
+                            {
+                                *error_string = strdup("Failed in initializing a states order");
+                                return 6;
+                            }
+    
+
+                            /*
+                             * Advance the string pointer
+                             *
+                             * */
+                            num_chars_read = end_of_spec - (string+read_char_idx);
+
+                            break;
+                        }
+                    }
+                    if (! found)
+                    {
+                        *error_string = strdup("Unknown States Ordering!");
+                        return 5;
+                    }
+                }
+                else
+                {
+                    /* As a default - initialize a random order */
+                    found = 1;
+                    order = &freecell_solver_random_states_order;
+                    order_instance = malloc(sizeof(*order_instance));
+                    order->init_instance(
+                        order,
+                        order_instance,
+                        ")",
+                        &end_of_spec
+                        );
+                }
+                if (found)
+                {
+                    /* Assign the order and order instance in their
+                     * right place 
+                     * */
+                    tests_order->tests[test_index-1].states_order_type = order;
+                    tests_order->tests[test_index-1].states_order_instance = order_instance;
+                }
+
+            }
             continue;
         }
         if (test_read.type == TEST_TYPE_TEST)
@@ -604,12 +677,14 @@ int freecell_solver_apply_tests_order(
 
 
             tests_order->tests[test_index].test = ((test_read.index)%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+            tests_order->tests[test_index].states_order_type = NULL;
+            tests_order->tests[test_index].states_order_instance = NULL;
 
             test_index++;
             is_start_group = 0;
         }
     }
-    if (a != len)
+    if (read_char_idx != len)
     {
         *error_string = strdup("The Input string is too long.");
         return 4;

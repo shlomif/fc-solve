@@ -618,6 +618,37 @@ static int compile_prelude(
     return FCS_COMPILE_PRELUDE_OK;    
 }
 
+static void init_tests_order_with_soft_thread_and_initial_state(
+    freecell_solver_soft_thread_t * soft_thread,
+    void * context
+    )
+{
+    int test_idx;
+    fcs_test_t * tests;
+    int num_tests;
+    fcs_state_with_locations_t * state_copy_ptr;
+    fcs_derived_states_order_instance_t * order_instance;
+
+    state_copy_ptr = (fcs_state_with_locations_t * )context;
+    num_tests = soft_thread->tests_order.num;
+    tests = soft_thread->tests_order.tests;
+    
+    for(test_idx = 0 ; 
+        test_idx < num_tests;
+        test_idx++)
+    {
+        order_instance = tests[test_idx].states_order_instance;
+        if (order_instance)
+        {
+            order_instance->order->give_init_state(
+                order_instance,
+                soft_thread,
+                state_copy_ptr
+                );
+        }
+    }
+}
+
 
 void freecell_solver_init_instance(freecell_solver_instance_t * instance)
 {
@@ -678,8 +709,6 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
             instance->opt_tests_order_set = 1;
         }
     }
-
-
 }
 
 
@@ -1035,6 +1064,12 @@ int freecell_solver_solve_instance(
             }
         }
     }
+
+    foreach_soft_thread(
+        instance,
+        init_tests_order_with_soft_thread_and_initial_state,
+        (void *)state_copy_ptr
+        );
 
     return freecell_solver_resume_instance(instance);
 }
