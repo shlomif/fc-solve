@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver Links">
+<subject "Freecell Solver Links" />
 
 <h2>Resources</h2>
 
@@ -247,7 +247,7 @@ contains a lot of interesting questions and answers regarding Freecell.
 </p>
 
 
-<hr>
-<a href="./">Back to the Freecell Solver Home Page</a><br>
-<br>
+<hr />
+<a href="./">Back to the Freecell Solver Home Page</a><br />
+<br />
 

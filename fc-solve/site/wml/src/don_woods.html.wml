@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Don Woods' Freecell Solver">
+<subject "Don Woods' Freecell Solver" />
 
 <p>
 <a href="don_woods_solver.zip">don_woods_solver.zip</a>
@@ -25,6 +25,6 @@ freely redistribute this source provided this notice is retained.
 </i>
 </p>
 
-<hr>
-<a href="./">Back to the Freecell Solver Home Page</a><br>
-<br>
+<hr />
+<a href="./">Back to the Freecell Solver Home Page</a><br />
+<br />

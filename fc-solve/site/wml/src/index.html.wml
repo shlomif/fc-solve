@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver">
+<subject "Freecell Solver" />
 
 <h3><a href="download.html">Download Freecell Solver!</a></h3>
 
@@ -38,11 +38,11 @@ I hope you'll enjoy using it.
     Shlomi Fish
 </ul>
 
-<a href="README">README</a><br>
-<br>
-<a href="CHANGES">Changes Log</a><br>
-<br>
-<br>
+<a href="README">README</a><br />
+<br />
+<a href="CHANGES">Changes Log</a><br />
+<br />
+<br />
 
 <h2>News</h2>
 
@@ -164,14 +164,14 @@ you can still E-mail me (Shlomi Fish).
 <a href="old-news.html"><h3>Previous News Items</h3></a>
 
 
-<br><br>
+<br /><br />
 <h2>Links</h2>
 
 <!--%start_mirror -->
 <ifeq "$(BERLIOS)" "BERLIOS"  
-"<a href="http://vipe.technion.ac.il/~shlomif/freecell-solver/">The Freecell Solver Homepage</a>" 
-"<a href="http://fc-solve.berlios.de/">Freecell Solver's BerliOS mirror</a>"
->
+"<a href=""http://vipe.technion.ac.il/~shlomif/freecell-solver/"">The Freecell Solver Homepage</a>" 
+"<a href=""http://fc-solve.berlios.de/"">Freecell Solver's BerliOS mirror</a>"
+ />
 
 <br />
 
@@ -201,7 +201,7 @@ architecture and that of Freecell Solver, so it might be worth to take a
 look.<br />
 
 
-<br/ ><br />
+<br /><br />
 
 <a href="http://freshmeat.net/projects/freecellsolver/">Freecell Solver's
 Freshmeat App-Index Record</a><br />
@@ -211,7 +211,7 @@ Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
 <br />
 
 <a href="http://vipe.technion.ac.il/~shlomif/lecture/Freecell-Solver/">
-Lecture about Freecell Solver</a> - a lecture I'm going to give.<br>
+Lecture about Freecell Solver</a>
 <br />
 
 <h3><a href="links.html">More Links</a></h3>

@@ -1,5 +1,5 @@
 #include '../template.wml'
-<subject "Freecell Solver's Features List">
+<subject "Freecell Solver's Features List" />
 
 <h2>Usability Options</h2>
 
@@ -48,6 +48,7 @@ consumes less memory.
 <li>
 Full compatiblity between dynamically-linked third-party applications to the 
 version of the library that is used.
+</li>
 </ul>
 
 <h2>Scan Options</h2>
@@ -151,7 +152,7 @@ command-line options.
 </li>
 </ul>
 
-<hr>
-<a href="./">Back to the Freecell Solver Home Page</a><br>
-<br>
+<hr />
+<a href="./">Back to the Freecell Solver Home Page</a><br />
+<br />
 

@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver's Previous News Items">
+<subject "Freecell Solver's Previous News Items" />
 
 <h3>7-Feb-2001</h3>
 
@@ -72,13 +72,15 @@ well as several bug-fixes.
 <h3>28-Aug-2000</h3>
 
 Freecell Solver version 0.8.0 was released. New features in this version
-include:<br>
+include:<br />
 <ol>
-<li>Some bug-fixes. (users of previous versions should upgrade)
+<li>Some bug-fixes. (users of previous versions should upgrade)</li>
 
 <li>Support for a variable number of freecells, stacks, and cards per stack.
+</li>
 
 <li>Board generators for Microsoft Freecell, Freecell Pro and PySol.
+</li>
 
 <li>An option to use the balanced binary tree implementations of 
 <a href="http://www.msu.edu/user/pfaffben/avl/">libavl</a>
@@ -88,30 +90,36 @@ include:<br>
 or 
 <a href="http://libredblack.sourceforge.net/">libredblack</a>
 . Using them makes Freecell Solver about 33% faster.
+</li>
 
 <li>Support for using "T" instead of "10" in board input/output.
+</li>
 
 <li>Improved Documentation.
+</li>
 
 </ol>
 
 <h3>28-Jul-2000</h3>
 
 Freecell Solver version 0.6 was released. This version features a more 
-modular code as well as the following usability features:<br>
+modular code as well as the following usability features:<br />
 <ol>
-<li>An extra movement that allows Freecell Solver to solve some boards which it 
-could not solve previously.
-<li>The order of the stacks and freecells is preserved throughout the solutions.
+<li>An extra movement that allows Freecell Solver to solve 
+some boards which it could not solve previously.
+</li>
+<li>The order of the stacks and freecells is preserved 
+throughout the solutions.
+</li>
 <li>Limit to a certain number of iterations (so it will stop before it consumes 
-too much memory)
+too much memory)</li>
 <li>Specify the order of the movements that will be tested. Usually, a test 
-order can be found that will solve a given board really fast.
+order can be found that will solve a given board really fast.</li>
 </ol>
 
 <h3>6-Jun-2000</h3>
 
 Freecell Solver version 0.4 was released. This version contains three major
 code optimizations, so it now runs much faster. It can now also start
-solving from a non-initial board.<br>
+solving from a non-initial board.<br />
 

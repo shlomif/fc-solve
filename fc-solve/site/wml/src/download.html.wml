@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Download Freecell Solver">
+<subject "Download Freecell Solver" />
 
 <h2>Latest Stable Versions</h2>
 <table border="1">
@@ -142,6 +142,8 @@ http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html
 <tr>
 <td>
 <a href="freecell-solver-1.2.0.tar.gz">Version 1.2.0</a>
+</td>
+</tr>
 <tr>
 <td>
 <a href="freecell-solver-1.0.2.tar.gz">Version 1.0.2</a>
@@ -196,6 +198,7 @@ Changes Log
 </table>
 
 
-<hr>
-<a href="./">Back to the Freecell Solver Home Page</a><br>
-<br>
+<hr />
+<a href="./">Back to the Freecell Solver Home Page</a><br />
+<br />
+
