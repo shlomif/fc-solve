@@ -8,11 +8,16 @@ use PDL::IO::FastRaw;
 
 use MyInput;
 
+
+my $start_board = 1;
+
 my $num_boards = 32000;
 
 my $script_filename = "-";
 
 my $trace = 0;
+
+my $rle = 1;
 
 if (scalar(@ARGV))
 {
@@ -29,6 +34,14 @@ if (scalar(@ARGV))
         elsif ($arg eq "-t")
         {
             $trace = 1;
+        }
+        elsif ($arg eq "--norle")
+        {
+            $rle = 0;
+        }
+        elsif ($arg eq "-s")
+        {
+            $start_board = shift;
         }
     }
 }
@@ -52,11 +65,14 @@ my @selected_scans =
         scalar(@stat) && ($stat[7] >= 12+$num_boards*4);
     }
     @scans;
+
+my %black_list = (map { $_ => 0 } (7,8));
+@selected_scans = (grep { !exists($black_list{$_->{'id'}}) } @selected_scans);
     
 #my $scans_data = [];
 #my $scans_data = zeroes($num_boards, scalar(@selected_scans));
 
-my $scans_data = MyInput::get_scans_data($num_boards, \@selected_scans);
+my $scans_data = MyInput::get_scans_data($start_board, $num_boards, \@selected_scans);
 
 my $orig_scans_data = $scans_data->copy();
 
@@ -124,9 +140,29 @@ else
     open SCRIPT, ">$script_filename";    
 }
 
+if ($rle)
+{
+    my (@a);
+    my $scan = shift(@chosen_scans);
+
+    while (my $next_scan = shift(@chosen_scans))
+    {
+        if ($next_scan->{'ind'} == $scan->{'ind'})
+        {
+            $scan->{'q'} += $next_scan->{'q'};
+        }
+        else
+        {
+            push @a, $scan;
+            $scan = $next_scan;
+        }
+    }
+    push @a, $scan;
+    @chosen_scans = @a;
+}
 
 # Construct the command line
-my $cmd_line = "freecell-solver-range-parallel-solve 1 $num_boards 1 \\\n" .
+my $cmd_line = "freecell-solver-range-parallel-solve $start_board " . ($start_board + $num_boards - 1) . " 1 \\\n" .
     join(" -nst \\\n", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } @selected_scans) . " \\\n" .
     "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans[$_->{'ind'}]->{'id'} } @chosen_scans) ."\"";
     
@@ -160,6 +196,6 @@ if ($trace)
                 $total_iters += $s->{'q'};
             }
         }
-        print "$board: $total_iters\n";
+        print (($board+$start_board-1) . ": $total_iters\n");
     }
 }

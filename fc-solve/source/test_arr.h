@@ -55,13 +55,10 @@ extern freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TEST
     }                                                              \
 }                                                                  \
 
-extern void mydebug(fcs_state_with_locations_t * state);
-
 #define mark_as_dead_end(ptr_state_input) \
                     {      \
                         fcs_state_with_locations_t * ptr_state = (ptr_state_input); \
                         ptr_state->visited |= FCS_VISITED_DEAD_END; \
-                        mydebug(ptr_state);      \
                         ptr_state = ptr_state->parent;          \
                         if (ptr_state != NULL)                    \
                         {           \
@@ -69,7 +66,6 @@ extern void mydebug(fcs_state_with_locations_t * state);
                             while((ptr_state->num_active_children == 0) && (ptr_state->visited & FCS_VISITED_ALL_TESTS_DONE))  \
                             {          \
                                 ptr_state->visited |= FCS_VISITED_DEAD_END;  \
-                                mydebug(ptr_state);                \
                                 ptr_state = ptr_state->parent;    \
                                 if (ptr_state == NULL)         \
                                 {                \

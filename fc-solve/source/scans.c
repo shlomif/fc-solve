@@ -31,12 +31,9 @@
 #include "dmalloc.h"
 #endif
 
-//#define REPARENT
+#define DEBUG
 
-void mydebug(fcs_state_with_locations_t * state)
-{
-    printf("state=%p\n", state);
-}
+//#define REPARENT
 
 static pq_rating_t freecell_solver_a_star_rate_state(
     freecell_solver_soft_thread_t * soft_thread,
@@ -502,6 +499,9 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
                 if (instance->debug_iter_output)
                 {
+#ifdef DEBUG
+                    printf("ST Name: %s\n", soft_thread->name);
+#endif
                     instance->debug_iter_output_func(
                         (void*)instance->debug_iter_output_context,
                         instance->num_times,
@@ -1029,6 +1029,9 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
 
         if ((instance->debug_iter_output) && (!resume))
         {
+#ifdef DEBUG
+            printf("ST Name: %s\n", soft_thread->name);
+#endif
             instance->debug_iter_output_func(
                     (void*)instance->debug_iter_output_context,
                     instance->num_times,
@@ -1098,6 +1101,32 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
                 return FCS_STATE_SUSPEND_PROCESS;
             }
         }
+
+        if (
+                ((instance->max_num_times >= 0) &&
+                (instance->num_times >= instance->max_num_times)) 
+                    ||
+                ((hard_thread->ht_max_num_times >= 0) &&
+                (hard_thread->num_times >= hard_thread->ht_max_num_times))
+                    ||
+                ((hard_thread->max_num_times >= 0) &&
+                (hard_thread->num_times >= hard_thread->max_num_times))                             ||
+                ((instance->max_num_states_in_collection >= 0) &&
+                (instance->num_states_in_collection >= instance->max_num_states_in_collection))
+           )
+                    
+        {
+            soft_thread->first_state_to_check = ptr_state_with_locations;
+
+            /* Free the memory that was allocated by derived. */
+            if (derived.states != NULL)
+            {
+                free(derived.states);
+            }
+
+            return FCS_STATE_SUSPEND_PROCESS;
+        }
+        
 
         if (soft_thread->is_a_complete_scan)
         {

@@ -1,8 +1,9 @@
 --- Pressing ---
 
-* Fix the segfault for ./mptest 1 1 1 --method soft-dfs
+* Abstract the checking for maximal number of iterations in scans.c 
+(possible remove it from check_and_add_state).
 
-* Clean up the scans interface. (less function nesting)
+* Clean up the scans interface. (less function calling)
 
 * Get 
 ./board_gen/make_pysol_freecell_board.py 980662 | ./fc-solve -to 01ABCDE -opt

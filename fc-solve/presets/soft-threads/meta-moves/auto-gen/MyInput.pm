@@ -5,6 +5,7 @@ use PDL::IO::FastRaw;
 
 sub get_scans_data
 {
+    my $start_board = shift;
     my $num_boards = shift;
     my @selected_scans = @{shift()};
     my $scans_data = zeroes($num_boards, scalar(@selected_scans));
@@ -39,8 +40,8 @@ sub get_scans_data
             }
         }
         my $c = readfraw("./.data-proc/" . $scan->{'id'});
-        my $b = $scans_data->slice(":,$scan_idx");      
-        $b += $c->slice("3:".($num_boards+2));
+        my $b = $scans_data->slice(":,$scan_idx");
+        $b += $c->slice((2+$start_board).":".($num_boards+1+$start_board));
         $scan_idx++;
     }
 
