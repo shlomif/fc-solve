@@ -453,12 +453,14 @@ typedef struct fcs_struct_state_t fcs_state_t;
     (fcs_card_set_flipped(fcs_stack_card(state,s,c), ((fcs_card_t)0) ))
 
 
+/* (*Mark STACKS_COW_CLEAR *) */
 #define fcs_duplicate_state(dest,src)           \
     {                                           \
         (dest) = (src);                         \
         (dest).stacks_copy_on_write_flags = 0;    \
     }
 
+/* (*Mark STACKS_COW_COPY_STACK*) */
 #define fcs_copy_stack(state, idx, buffer) \
     {     \
         if (! ((state).stacks_copy_on_write_flags & (1 << idx)))        \
@@ -484,6 +486,7 @@ struct fcs_struct_state_with_locations_t
     fcs_state_t s;
     fcs_locs_t stack_locs[MAX_NUM_STACKS];
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
+    /* (*Mark STATE_PARENT*) */
     struct fcs_struct_state_with_locations_t * parent;
     fcs_move_stack_t * moves_to_parent;
     int depth;
