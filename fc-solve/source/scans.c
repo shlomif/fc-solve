@@ -812,11 +812,15 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     double seqs_over_renegade_cards;
     int sequences_are_built_by = instance->sequences_are_built_by;
     int freecells_num = instance->freecells_num;
+    int stacks_num = instance->stacks_num;
+    double * a_star_weights = soft_thread->a_star_weights;
+    int unlimited_sequence_move = instance->unlimited_sequence_move;
+    int decks_num = instance->decks_num;
 
     cards_under_sequences = 0;
     num_freestacks = 0;
     seqs_over_renegade_cards = 0;
-    for(a=0;a<instance->stacks_num;a++)
+    for(a=0;a<stacks_num;a++)
     {
         cards_num = fcs_stack_len(state, a);
         if (cards_num == 0)
@@ -845,7 +849,7 @@ static pq_rating_t freecell_solver_a_star_rate_state(
         if (c >= 0)
         {
             seqs_over_renegade_cards +=
-                ((instance->unlimited_sequence_move) ?
+                ((unlimited_sequence_move) ?
                     1 :
                     pow(cards_num-c-1, FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
                     );
@@ -853,19 +857,19 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     }
 
     ret += ((soft_thread->a_star_initial_cards_under_sequences - cards_under_sequences)
-            / soft_thread->a_star_initial_cards_under_sequences) * soft_thread->a_star_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
+            / soft_thread->a_star_initial_cards_under_sequences) * a_star_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
 
     ret += (seqs_over_renegade_cards /
-               pow(instance->decks_num*52, FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT) )
-           * soft_thread->a_star_weights[FCS_A_STAR_WEIGHT_SEQS_OVER_RENEGADE_CARDS];
+               pow(decks_num*52, FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT) )
+           * a_star_weights[FCS_A_STAR_WEIGHT_SEQS_OVER_RENEGADE_CARDS];
 
     num_cards_in_founds = 0;
-    for(a=0;a<instance->decks_num*4;a++)
+    for(a=0;a<(decks_num<<2);a++)
     {
         num_cards_in_founds += fcs_foundation_value(state, a);
     }
 
-    ret += ((double)num_cards_in_founds/(instance->decks_num*52)) * soft_thread->a_star_weights[FCS_A_STAR_WEIGHT_CARDS_OUT];
+    ret += ((double)num_cards_in_founds/(decks_num*52)) * a_star_weights[FCS_A_STAR_WEIGHT_CARDS_OUT];
 
     num_freecells = 0;
     for(a=0;a<freecells_num;a++)
@@ -878,7 +882,7 @@ static pq_rating_t freecell_solver_a_star_rate_state(
 
     if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
     {
-        if (instance->unlimited_sequence_move)
+        if (unlimited_sequence_move)
         {
             temp = (((double)num_freecells+num_freestacks)/(freecells_num+instance->stacks_num));
         }
@@ -889,7 +893,7 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     }
     else
     {
-        if (instance->unlimited_sequence_move)
+        if (unlimited_sequence_move)
         {
             temp = (((double)num_freecells)/freecells_num);
         }
@@ -899,16 +903,28 @@ static pq_rating_t freecell_solver_a_star_rate_state(
         }
     }
 
-    ret += (temp * soft_thread->a_star_weights[FCS_A_STAR_WEIGHT_MAX_SEQUENCE_MOVE]);
+    ret += (temp * a_star_weights[FCS_A_STAR_WEIGHT_MAX_SEQUENCE_MOVE]);
 
     if (ptr_state_with_locations->depth <= 20000)
     {
-        ret += ((20000 - ptr_state_with_locations->depth)/20000.0) * soft_thread->a_star_weights[FCS_A_STAR_WEIGHT_DEPTH];
+        ret += ((20000 - ptr_state_with_locations->depth)/20000.0) * a_star_weights[FCS_A_STAR_WEIGHT_DEPTH];
     }
 
     return (int)(ret*INT_MAX);
 }
 
+
+
+
+/*
+    freecell_solver_a_star_or_bfs_do_solve_or_resume() is the main event
+    loop of the A* And BFS scans. It is quite simple as all it does is
+    extract elements out of the queue or priority queue and run all the test
+    of them.
+
+    It goes on in this fashion until the final state was reached or
+    there are no more states in the queue.
+*/
 
 #define myreturn(ret_value)                                     \
     /* Free the memory that was allocated by the                \
@@ -923,15 +939,6 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     return (ret_value);
 
 
-/*
-    freecell_solver_a_star_or_bfs_do_solve_or_resume() is the main event
-    loop of the A* And BFS scans. It is quite simple as all it does is
-    extract elements out of the queue or priority queue and run all the test
-    of them.
-
-    It goes on in this fashion until the final state was reached or
-    there are no more states in the queue.
-*/
 int freecell_solver_a_star_or_bfs_do_solve_or_resume(
     freecell_solver_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig,
