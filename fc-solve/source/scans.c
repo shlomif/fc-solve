@@ -327,7 +327,6 @@ int freecell_solver_hard_dfs_resume_solution(
             ptr_state_with_locations,
             depth,
             1);
-
     }
     else if (check == FCS_STATE_WAS_SOLVED)
     {
@@ -389,6 +388,10 @@ static void freecell_solver_increase_dfs_max_depth(
     by using some dedicated stacks for the traversal.
   */
 #define the_state (ptr_state_with_locations->s)
+
+#define myreturn(ret_value) \
+    soft_thread->num_solution_states = depth+1;     \
+    return (ret_value);
 
 int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     freecell_solver_soft_thread_t * soft_thread,
@@ -497,10 +500,9 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
                 if (check_if_limits_exceeded())
                 {
-                    soft_thread->num_solution_states = depth+1;
                     the_soft_dfs_info->test_index = test_index;
                     the_soft_dfs_info->current_state_index = current_state_index;
-                    return FCS_STATE_SUSPEND_PROCESS;
+                    myreturn(FCS_STATE_SUSPEND_PROCESS);
                 }
 
                 the_soft_dfs_info--;
@@ -563,9 +565,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 {
                     instance->final_state = ptr_state_with_locations;
 
-                    soft_thread->num_solution_states = depth+1;
-
-                    return FCS_STATE_WAS_SOLVED;
+                    myreturn(FCS_STATE_WAS_SOLVED);
                 }
                 /*
                     Cache num_freecells and num_freestacks in their
@@ -617,8 +617,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                     derived_states_list->num_states = 0;
                     the_soft_dfs_info->current_state_index = 0;
                     the_soft_dfs_info->test_index = test_index;
-                    soft_thread->num_solution_states = depth+1;
-                    return FCS_STATE_SUSPEND_PROCESS;
+                    myreturn(FCS_STATE_SUSPEND_PROCESS);
                 }
 
                 /* Move the counter to the next test */
@@ -749,6 +748,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
 
 #undef state
+#undef myreturn
 
 #define FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
 #define FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
@@ -798,7 +798,8 @@ void freecell_solver_a_star_initialize_rater(
 
 static pq_rating_t freecell_solver_a_star_rate_state(
     freecell_solver_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations)
+    fcs_state_with_locations_t * ptr_state_with_locations
+    )
 {
     freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
     freecell_solver_instance_t * instance = hard_thread->instance;
@@ -908,6 +909,18 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     return (int)(ret*INT_MAX);
 }
 
+
+#define myreturn(ret_value)                                     \
+    /* Free the memory that was allocated by the                \
+     * derived states list */                                   \
+    if (derived.states != NULL)                                 \
+    {                                                           \
+        free(derived.states);                                   \
+    }                                                           \
+                                                                \
+    soft_thread->bfs_queue_last_item = bfs_queue_last_item;     \
+                                                                \
+    return (ret_value);
 
 
 /*
@@ -1043,15 +1056,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
         {
             instance->final_state = ptr_state_with_locations;
 
-            /* Free the memory that was allocated by derived. */
-            if (derived.states != NULL)
-            {
-                free(derived.states);
-            }
-
-            soft_thread->bfs_queue_last_item = bfs_queue_last_item;
-
-            return FCS_STATE_WAS_SOLVED;
+            myreturn(FCS_STATE_WAS_SOLVED);
         }
 
         calculate_real_depth(ptr_state_with_locations);
@@ -1083,15 +1088,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
                 /* Save the current position in the scan */
                 soft_thread->first_state_to_check = ptr_state_with_locations;
 
-                /* Free the memory that was allocated by derived. */
-                if (derived.states != NULL)
-                {
-                    free(derived.states);
-                }
-
-                soft_thread->bfs_queue_last_item = bfs_queue_last_item;
-
-                return FCS_STATE_SUSPEND_PROCESS;
+                myreturn(FCS_STATE_SUSPEND_PROCESS);
             }
         }
 
@@ -1100,15 +1097,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
         {
             soft_thread->first_state_to_check = ptr_state_with_locations;
 
-            /* Free the memory that was allocated by derived. */
-            if (derived.states != NULL)
-            {
-                free(derived.states);
-            }
-
-            soft_thread->bfs_queue_last_item = bfs_queue_last_item;
-
-            return FCS_STATE_SUSPEND_PROCESS;
+            myreturn(FCS_STATE_SUSPEND_PROCESS);
         }
         
 
@@ -1190,17 +1179,9 @@ label_next_state:
         resume = 0;
     }
 
-    /* Free the memory that was allocated by derived. */
-    if (derived.states != NULL)
-    {
-        free(derived.states);
-    }
-
-    soft_thread->bfs_queue_last_item = bfs_queue_last_item;
-
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    myreturn(FCS_STATE_IS_NOT_SOLVEABLE);
 }
 
-
+#undef myreturn
 
 #undef state
