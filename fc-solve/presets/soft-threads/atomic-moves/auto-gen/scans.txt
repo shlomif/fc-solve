@@ -11,3 +11,4 @@
 10	--method random-dfs -to [01ABCDE] -seed 1977
 11	--method random-dfs -to [01ABCDE] -seed 24
 12	--method soft-dfs -to 01ABDCE
+13	--method soft-dfs -to ABC01DE
