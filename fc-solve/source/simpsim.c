@@ -500,7 +500,7 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_some_card
                                     /*
                                      * clear_junk_dest_stack is the stack to move this particular junk sequence to.
                                      * */
-                                    int clear_junk_dest_stack = -1;
+                                    int clear_junk_dest_stack;
 
 
                                     /* Let's try to find a suitable parent on top one of the stacks */
@@ -757,7 +757,7 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
                             for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
                             {
                                 /* Find a suitable place to put it */
-                                int clear_junk_dest_stack = -1;
+                                int clear_junk_dest_stack;
 
 
                                 /* Let's try to find a suitable parent on top one of the stacks */
@@ -1051,7 +1051,7 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
                                 for(false_seq_index=0;false_seq_index<num_separate_false_seqs+1;false_seq_index++)
                                 {
                                     /* Find a suitable place to put it */
-                                    int clear_junk_dest_stack = -1;
+                                    int clear_junk_dest_stack;
 
                                     fcs_card_t the_card =
                                         (
@@ -1329,7 +1329,7 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_w
                                 for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
                                 {
                                     /* Find a suitable place to put it */
-                                    int clear_junk_dest_stack = -1;
+                                    int clear_junk_dest_stack;
 
                                     fcs_card_t the_card =
                                         (fcs_stack_card(state, ds, seq_points[false_seq_index]))
@@ -1595,7 +1595,7 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
                         for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
                         {
                             /* Find a suitable place to put it */
-                            int clear_junk_dest_stack = -1;
+                            int clear_junk_dest_stack;
 
 
                             /* Let's try to find a suitable parent on top one of the stacks */
