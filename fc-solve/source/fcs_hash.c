@@ -189,23 +189,20 @@ SFO_hash_t * freecell_solver_hash_init(
     void * context
     )
 {
-    int size,i;
+    int size;
     SFO_hash_t * hash;
 
     /* Find a prime number that is greater than the initial wanted size */
-    for(i=0;i<NUM_PRIMES;i++)
+    size = 256;
+    while (size < wanted_size)
     {
-        if (primes_list[i] > wanted_size)
-        {
-            break;
-        }
+        size <<= 1;
     }
-
-    size = primes_list[i];
 
     hash = (SFO_hash_t *)malloc(sizeof(SFO_hash_t));
 
     hash->size = size;
+    hash->size_bitmask = size-1;
 
     hash->num_elems = 0;
 
@@ -239,7 +236,7 @@ void * freecell_solver_hash_insert(
     SFO_hash_symlink_item_t * item, * last_item;
 
     /* Get the index of the appropriate chain in the hash table */
-    place = hash_value % (hash->size);
+    place = hash_value & (hash->size_bitmask);
 
     list = &(hash->entries[place]);
     /* If first_item is non-existent */
@@ -372,7 +369,7 @@ static void SFO_hash_rehash(
     SFO_hash_t * hash
     )
 {
-    int old_size, new_size;
+    int old_size, new_size, new_size_bitmask;
     int i;
 #if 0
     SFO_hash_t * new_hash;
@@ -393,18 +390,8 @@ static void SFO_hash_rehash(
 #endif    
 
     old_size = hash->size;
-    new_size = old_size * 2;
-
-    /* Find a prime number that is greater than the initial wanted size */
-    for(i=0;i<NUM_PRIMES;i++)
-    {
-        if (primes_list[i] > new_size)
-        {
-            break;
-        }
-    }
-
-    new_size = primes_list[i];
+    new_size = old_size << 1;
+    new_size_bitmask = new_size - 1;
 
     new_entries = calloc(new_size, sizeof(SFO_hash_symlink_t));
 
@@ -416,7 +403,7 @@ static void SFO_hash_rehash(
         while(item != NULL)
         {
             /* The place in the new hash table */
-            place = item->hash_value % new_size;
+            place = item->hash_value & new_size_bitmask;
 
             /* Store the next item in the linked list in a safe place,
                so we can retrieve it after the assignment */
@@ -442,6 +429,7 @@ static void SFO_hash_rehash(
 #endif
     hash->entries = new_entries;
     hash->size = new_size;
+    hash->size_bitmask = new_size_bitmask;
 }
 
 #else

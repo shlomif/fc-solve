@@ -52,6 +52,9 @@ struct SFO_hash_struct
     int (*compare_function)(const void * key1, const void * key2, void * context);
     /* The size of the hash table */
     int size;
+
+    /* A bit mask that extract the lowest bits out of the hash value */
+    int size_bitmask;
     /* The number of elements stored inside the hash */
     int num_elems;
     /* A context to pass to the comparison function */

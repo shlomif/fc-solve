@@ -100,12 +100,12 @@
     check = ((*existing_state = freecell_solver_hash_insert(            \
         instance->hash,                                                 \
         new_state,                                                      \
-        hash_value_int,                                                 \
         freecell_solver_lookup2_hash_function(                          \
             (ub1 *)new_state,                                           \
-            sizeof(fcs_state_t),                                     \
+            sizeof(fcs_state_t),                                        \
             24                                                          \
             ),                                                          \
+        hash_value_int,                                                 \
         1                                                               \
         )) == NULL);
 
@@ -342,12 +342,12 @@ static void GCC_INLINE freecell_solver_cache_stacks(
         cached_stack = (void *)freecell_solver_hash_insert(
             instance->stacks_hash,
             new_state->s.stacks[a],
-            hash_value_int,
             freecell_solver_lookup2_hash_function(
                 new_state->s.stacks[a],
                 (fcs_stack_len(new_state->s, a)+1),
                 24
                 ),
+            hash_value_int,
             1
             );
 
