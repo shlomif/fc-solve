@@ -8,7 +8,7 @@ Usually typing "./configure" followed by "make" and "make install" will
 build and install "fc-solve" which is the Freecell Solver executable for you.
 
 It will also build and install the board generation program, more 
-information about which can be found in the "board_gen" sub-direcotry of
+information about which can be found in the "board_gen" sub-directory of
 this distribution.
 
 Changing the Maximal number of Freecells or Stacks or Cards per Stack
