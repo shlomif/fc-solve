@@ -4,3 +4,9 @@
 3	--method random-dfs -to [01][ABCDE] -seed 3
 4	--method random-dfs -to 01[ABCDE] -seed 268
 5	--method a-star -to 01ABCDE
+6	--method a-star -to 01ABCDE -asw 0.2,0.3,0.5,0,0
+7	--method a-star -to 01ABCDE -asw 0.5,0,0.5,0,0
+8	--method random-dfs -to [01][ABD][CE] -seed 1900
+9	--method random-dfs -to [01][ABCDE] -seed 192
+10	--method random-dfs -to [01ABCDE] -seed 1977
+11	--method random-dfs -to [01ABCDE] -seed 24
