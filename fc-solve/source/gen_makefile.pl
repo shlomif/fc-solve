@@ -17,8 +17,9 @@ sub min
 }
 
 my @objects=(
-    qw(alloc app_str caas card cl_chop cmd_line ds_order fcs_dm fcs_hash),
-    qw(fcs_isa freecell intrface lib lookup2 move pqueue preset rand), 
+    qw(alloc app_str caas card cl_chop cmd_line ds_order ds_pats),
+    qw(fcs_dm fcs_hash fcs_isa),
+    qw(freecell intrface lib lookup2 move pqueue preset rand),
     qw(scans simpsim state tests)
     );
 

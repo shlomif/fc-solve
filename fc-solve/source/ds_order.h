@@ -62,6 +62,12 @@ extern fcs_derived_states_order_name_match_t freecell_solver_states_orders_names
 
 extern fcs_derived_states_order_t freecell_solver_random_states_order;
 
+extern int freecell_solver_random_give_init_state(
+    fcs_derived_states_order_instance_t * order_instance,
+    freecell_solver_soft_thread_t * soft_thread,
+    fcs_state_with_locations_t * init_state
+    );
+
 #endif /* #ifndef __DS_ORDER_H */
 
 

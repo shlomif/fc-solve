@@ -60,6 +60,7 @@ OBJECTS =                     \
           cl_chop.o           \
           cmd_line.o          \
           ds_order.o          \
+          ds_pats.o           \
           fcs_dm.o            \
           fcs_hash.o          \
           fcs_isa.o           \

@@ -28,7 +28,7 @@ static int random_init_instance(
     return 0;
 }
 
-static int random_give_init_state(
+int freecell_solver_random_give_init_state(
     fcs_derived_states_order_instance_t * order_instance,
     freecell_solver_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * init_state
@@ -92,7 +92,7 @@ fcs_derived_states_order_t freecell_solver_random_states_order =
     /* init_instance */
     random_init_instance,
     /* give_init_state */
-    random_give_init_state,
+    freecell_solver_random_give_init_state,
     /* free_instance */
     random_free_instance,
     /* order_states */
@@ -258,12 +258,14 @@ static fcs_derived_states_order_t shlomif_states_order =
     /* init_instance */
     shlomif_init_instance,
     /* give_init_state */
-    random_give_init_state,
+    freecell_solver_random_give_init_state,
     /* free_instance */
     shlomif_free_instance,
     /* order_states */
     shlomif_order_states
 };
+
+extern fcs_derived_states_order_t freecell_solver_tom_holroyd_states_order;
 
 fcs_derived_states_order_name_match_t freecell_solver_states_orders_names[FREECELL_SOLVER_NUM_STATES_ORDERS_NAMES] =
 {
@@ -274,8 +276,11 @@ fcs_derived_states_order_name_match_t freecell_solver_states_orders_names[FREECE
     {
         "shlomif(",
         &shlomif_states_order
-    }
-    
+    },
+    {
+        "tomholroyd(",
+        &freecell_solver_tom_holroyd_states_order
+    },
 };
 
 
