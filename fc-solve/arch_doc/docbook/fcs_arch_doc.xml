@@ -6,6 +6,7 @@
 <!ENTITY fcs "Freecell Solver">
 <!ENTITY section:coding:conventions SYSTEM "coding_conventions.xml">
 <!ENTITY section:code:overview SYSTEM "code_overview.xml">
+<!ENTITY section:techniques SYSTEM "techniques.xml">
 ]>
 
 <book id="index">
@@ -62,6 +63,7 @@
     </chapter>
     &section:coding:conventions;
     &section:code:overview;
+    &section:techniques;
 </book>
 <!-- Keep this comment at the end of the file
 Local variables:

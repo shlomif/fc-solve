@@ -3,7 +3,7 @@ DOC=fcs_arch_doc
 DB2STH_SCRIPTS_FLAGS = -c /etc/sgml/catalog
 
 MAIN_SOURCE = $(DOC).xml
-SOURCES = $(MAIN_SOURCE) coding_conventions.xml code_overview.xml
+SOURCES = $(MAIN_SOURCE) coding_conventions.xml code_overview.xml techniques.xml
 
 RSYNC = rsync --progress --verbose --rsh=ssh
 
