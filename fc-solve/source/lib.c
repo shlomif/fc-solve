@@ -54,6 +54,7 @@ struct fcs_user_struct
 #ifdef INDIRECT_STACK_STATES
     char indirect_stacks_buffer[MAX_NUM_STACKS << 7];
 #endif
+    char * state_string_copy;
 };
 
 typedef struct fcs_user_struct fcs_user_t;
@@ -77,6 +78,9 @@ void * freecell_solver_user_alloc(void)
         freecell_solver_instance_get_soft_thread(
             ret->instance, 0,0
             );
+
+    ret->state_string_copy = NULL;
+
     return (void*)ret;
 }
 
@@ -146,158 +150,166 @@ int freecell_solver_user_solve_board(
     )
 {
     fcs_user_t * user;
-    int ret;
-    int init_num_times;
 
     user = (fcs_user_t*)user_instance;
 
+    user->state_string_copy = strdup(state_as_string);
+
     user->current_instance = 0;
 
-    user->state = freecell_solver_initial_user_state_to_c(
-        state_as_string,
-        user->instance->freecells_num,
-        user->instance->stacks_num,
-        user->instance->decks_num
-#ifdef FCS_WITH_TALONS
-        ,user->instance->talon_type
-#endif
-#ifdef INDIRECT_STACK_STATES
-        ,user->indirect_stacks_buffer
-#endif
-        );
-
-    user->state_validity_ret = freecell_solver_check_state_validity(
-        &user->state,
-        user->instance->freecells_num,
-        user->instance->stacks_num,
-        user->instance->decks_num,
-#ifdef FCS_WITH_TALONS
-        FCS_TALON_NONE,
-#endif
-        &(user->state_validity_card));
-
-    if (user->state_validity_ret != 0)
-    {
-        user->ret = FCS_STATE_INVALID_STATE;
-        return user->ret;
-    }
-
-    /* running_state is a normalized state. So I'm duplicating
-     * state to it before state is canonized
-     * */
-    fcs_duplicate_state(user->running_state, user->state);
-
-    fcs_canonize_state(
-        &user->state,
-        user->instance->freecells_num,
-        user->instance->stacks_num
-        );
-
-    freecell_solver_init_instance(user->instance);
-
-#define global_limit() \
-    (user->instance->num_times + user->current_iterations_limit - user->iterations_board_started_at)
-#define local_limit()  \
-    (user->instances_list[user->current_instance].limit)
-#define min(a,b) (((a)<(b))?(a):(b))
-#define calc_max_iters() \
-    {          \
-        if (user->instances_list[user->current_instance].limit < 0)  \
-        {\
-            if (user->current_iterations_limit < 0)\
-            {\
-                user->instance->max_num_times = -1;\
-            }\
-            else\
-            {\
-                user->instance->max_num_times = global_limit();\
-            }\
-        }\
-        else\
-        {\
-            if (user->current_iterations_limit < 0)\
-            {\
-                user->instance->max_num_times = local_limit();\
-            }\
-            else\
-            {\
-                int a, b;\
-                \
-                a = global_limit();\
-                b = local_limit();\
-    \
-                user->instance->max_num_times = min(a,b);\
-            }\
-        }\
-    }
-
-
-    calc_max_iters();
-
-    init_num_times = user->instance->num_times;
-    
-    ret = user->ret = freecell_solver_solve_instance(user->instance, &user->state);
-
-    user->iterations_board_started_at += user->instance->num_times - init_num_times;
-    
-
-    if (user->ret == FCS_STATE_WAS_SOLVED)
-    {
-        freecell_solver_move_stack_normalize(
-            user->instance->solution_moves,
-            &(user->state),
-            user->instance->freecells_num,
-            user->instance->stacks_num,
-            user->instance->decks_num
-            );
-    }
-    else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
-    {
-        if ((local_limit() >= 0) &&
-            (user->instance->num_times >= local_limit())
-           )
-        {
-            ret = FCS_STATE_IS_NOT_SOLVEABLE;
-        }
-    }
-
-    return ret;
+    return freecell_solver_user_resume_solution(user_instance);
 }
 
 int freecell_solver_user_resume_solution(
     void * user_instance
     )
 {
-    fcs_user_t * user;
     int init_num_times;
+    int run_for_first_iteration = 1;
     int ret;
+    fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
-
-    calc_max_iters();
-
-    init_num_times = user->instance->num_times;
-
-    ret = user->ret = freecell_solver_resume_instance(user->instance);
+    user = (fcs_user_t*)user_instance;
     
-    user->iterations_board_started_at += user->instance->num_times - init_num_times;    
-    if (user->ret == FCS_STATE_WAS_SOLVED)
+    /* 
+     * I expect user->current_instance to be initialized at some value
+     * */
+    for( ; 
+        run_for_first_iteration || ((user->current_instance < user->num_instances) && (ret == FCS_STATE_IS_NOT_SOLVEABLE)) ;
+        user->current_instance++
+       )
     {
-        freecell_solver_move_stack_normalize(
-            user->instance->solution_moves,
-            &(user->state),
-            user->instance->freecells_num,
-            user->instance->stacks_num,
-            user->instance->decks_num
-            );
-    }
-    else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
-    {
-        if ((local_limit() >= 0) &&
-            (user->instance->num_times >= local_limit())
-           )
+        run_for_first_iteration = 0;
+        
+        user->instance = user->instances_list[user->current_instance].instance;
+
+        if (user->instances_list[user->current_instance].ret == FCS_STATE_NOT_BEGAN_YET)
         {
-            ret = FCS_STATE_IS_NOT_SOLVEABLE;
+
+            user->state = freecell_solver_initial_user_state_to_c(
+                user->state_string_copy,
+                user->instance->freecells_num,
+                user->instance->stacks_num,
+                user->instance->decks_num
+#ifdef FCS_WITH_TALONS
+                ,user->instance->talon_type
+#endif
+#ifdef INDIRECT_STACK_STATES
+                ,user->indirect_stacks_buffer
+#endif
+                );
+
+            user->state_validity_ret = freecell_solver_check_state_validity(
+                &user->state,
+                user->instance->freecells_num,
+                user->instance->stacks_num,
+                user->instance->decks_num,
+#ifdef FCS_WITH_TALONS
+                FCS_TALON_NONE,
+#endif
+                &(user->state_validity_card));
+
+            if (user->state_validity_ret != 0)
+            {
+                user->ret = FCS_STATE_INVALID_STATE;
+                return user->ret;
+            }
+
+        
+            /* running_state is a normalized state. So I'm duplicating
+             * state to it before state is canonized
+             * */
+            fcs_duplicate_state(user->running_state, user->state);
+
+            fcs_canonize_state(
+                &user->state,
+                user->instance->freecells_num,
+                user->instance->stacks_num
+                );
+
+            freecell_solver_init_instance(user->instance);
+
+#define global_limit() \
+        (user->instance->num_times + user->current_iterations_limit - user->iterations_board_started_at)
+#define local_limit()  \
+        (user->instances_list[user->current_instance].limit)
+#define min(a,b) (((a)<(b))?(a):(b))
+#define calc_max_iters() \
+        {          \
+            if (user->instances_list[user->current_instance].limit < 0)  \
+            {\
+                if (user->current_iterations_limit < 0)\
+                {\
+                    user->instance->max_num_times = -1;\
+                }\
+                else\
+                {\
+                    user->instance->max_num_times = global_limit();\
+                }\
+            }\
+            else\
+            {\
+                if (user->current_iterations_limit < 0)\
+                {\
+                    user->instance->max_num_times = local_limit();\
+                }\
+                else\
+                {\
+                    int a, b;\
+                    \
+                    a = global_limit();\
+                    b = local_limit();\
+        \
+                    user->instance->max_num_times = min(a,b);\
+                }\
+            }\
+        }
+
+
+            calc_max_iters();
+        
+            init_num_times = user->instance->num_times;
+            
+            ret = user->ret = user->instances_list[user->current_instance].ret = 
+                freecell_solver_solve_instance(user->instance, &user->state);
+        }
+        else
+        {
+
+            calc_max_iters();
+    
+            init_num_times = user->instance->num_times;
+            
+            ret = user->ret = 
+                user->instances_list[user->current_instance].ret =
+                freecell_solver_resume_instance(user->instance);
+        }
+        
+        user->iterations_board_started_at += user->instance->num_times - init_num_times;
+
+        if (user->ret == FCS_STATE_WAS_SOLVED)
+        {
+            freecell_solver_move_stack_normalize(
+                user->instance->solution_moves,
+                &(user->state),
+                user->instance->freecells_num,
+                user->instance->stacks_num,
+                user->instance->decks_num
+                );
+        }
+        else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
+        {
+            if ((local_limit() >= 0) &&
+                (user->instance->num_times >= local_limit())
+               )
+            {
+                ret = FCS_STATE_IS_NOT_SOLVEABLE;
+            }
+            else if ((user->current_iterations_limit >= 0) &&
+                (user->iterations_board_started_at >= user->current_iterations_limit))
+            {
+                break;
+            }
         }
     }
 
@@ -523,7 +535,7 @@ int freecell_solver_user_get_num_times(void * user_instance)
 
     user = (fcs_user_t *)user_instance;
 
-    return user->instance->num_times;
+    return user->iterations_board_started_at;
 }
 
 int freecell_solver_user_get_limit_iterations(void * user_instance)
