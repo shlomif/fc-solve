@@ -1390,7 +1390,12 @@ int freecell_solver_resume_instance(
     {
         if (instance->optimize_solution_path)
         {
-            ret = freecell_solver_optimize_solution(instance);
+            /* Call optimize_solution only once. Make sure that if
+             * it has already run - we retain the old ret. */
+            if (! instance->optimization_thread)
+            {
+                ret = freecell_solver_optimize_solution(instance);
+            }
             if (ret == FCS_STATE_WAS_SOLVED)
             {
                 /* Create the solution_moves in the first place */
