@@ -1,7 +1,7 @@
 
 WITH_DEVEL_VERSION = 1
 
-DEVEL_VER_USE_CACHE = 1
+DEVEL_VER_USE_CACHE = 0
 
 HOSTNAME = $(shell hostname)
 
