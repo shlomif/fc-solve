@@ -7,14 +7,10 @@
 
     * Document the mapping of aliases -> test functions.
 
-    kpat:
-    -----
-
-    * Convert to the instance recycling.
-
 * Change char *'s to const char *'s in the API.
+    - DONE partially
 
-* Compile with all the kdegames gcc flags and eliminate warnings.
+* Process the prefix.h.in etc files inside Makefile.am using sed.
 
 * Implement the move stacks over-riding in the derived states list, so
 move stacks won't be allocated excessively.
