@@ -121,7 +121,21 @@ struct help_screen_struct
 
 typedef struct help_screen_struct help_screen_t;
 
-help_screen_t help_screens[] = { 
+help_screen_t help_screens[] = {
+{
+    "configs",
+"These configurations are usually faster than the unmodified run:\n"
+"\n"
+"    fc-solve -l cool-jives\n"
+"    fc-solve -l john-galt-line\n"
+"\n"
+"Or if you want an accurate verdict:\n"
+"\n"
+"    fc-solve -l fools-gold\n"
+"\n"
+"If you want to try constructing your own configurations refer to the\n"
+"USAGE file in the Freecell Solver distribution\n"
+},
 {
     "options", 
 "fc-solve [options] board_file\n"
@@ -512,7 +526,7 @@ static void command_signal_handler(int signal_num)
 
 static char * known_parameters[] = {
     "-h", "--help",
-        "--help-summary", "--help-options",
+        "--help-configs", "--help-options", "--help-summary",
     "-i", "--iter-output",
     "-s", "--state-output",
     "-p", "--parseable-output",
