@@ -5,14 +5,9 @@
 
 to work.
 
-* Code support for a secondary hash value.
+* Document the new features.
 
-* Convert switching a soft-thread into a macro.
-
-* Code a recycle_instance function.
-    - DONE: check with INDIRECT_STACK_STATES.
-
-* Documnt the new features.
+* Convert the soft thread switching to a switch statement.
 
 --- Non-pressing ---
 
