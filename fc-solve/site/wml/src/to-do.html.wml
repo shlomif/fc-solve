@@ -317,6 +317,13 @@ be written. (one of the first was <a href="http://localhost/fc-solve/don_woods.h
 other endeavours) It will also not the last that will be written (there is in 
 fact an AI course in the University of Massachustes, given each year, in which 
 the students are assigned to write a Freecell solver as one of their work 
-assignments). Nevertheless, Eric Raymond recommends in 
+assignments). I recommend reading Eric Raymond's 
+<a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">The Cathedral and the Bazaar</a> to understand why adding more features can 
+still be a good idea. CatB discusses fetchmail which is still actively 
+developed, despite the fact it will give anything most users will need and 
+more. I don't see a reason to stop developing Freecell Solver just because it 
+has reached a similar state. So people, hack on! (on Freecell Solver or 
+something else)
 </p>
+
 
