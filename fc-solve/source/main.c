@@ -156,6 +156,7 @@ static char * help_string =
 "     der_katz           - Der Katzenschwanz\n"
 "     die_schlange       - Die Schlange\n"
 "     eight_off          - Eight Off\n"
+"     fan                - Fan\n"
 "     forecell           - Forecell\n"
 "     freecell           - Freecell\n"
 "     good_measure       - Good Measure\n"
