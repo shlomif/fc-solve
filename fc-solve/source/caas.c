@@ -19,6 +19,8 @@
 
 #include "fcs_isa.h"
 
+#include "lookup2.h"
+
 
 #ifdef INDIRECT_STACK_STATES
 #include "fcs_hash.h"
@@ -99,6 +101,11 @@
         instance->hash,              \
         new_state,                   \
         hash_value_int,              \
+        freecell_solver_lookup2_hash_function(    \
+            (ub4 *)new_state,        \
+            sizeof(fcs_state_t)>>2,     \
+            24     \
+            ),          \
         1                            \
         )) == NULL);
 

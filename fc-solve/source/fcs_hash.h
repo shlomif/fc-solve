@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 #include "alloc.h"
+#include "lookup2.h"
 
 typedef int SFO_hash_value_t;
 
@@ -24,6 +25,11 @@ struct SFO_hash_symlink_item_struct
     /* We also store the hash value corresponding to this key for faster
        comparisons */
     SFO_hash_value_t hash_value;
+    /*
+     * We also store a secondary hash value, which is not used for indexing,
+     * but is used to speed up comparison.
+     * */
+    SFO_hash_value_t secondary_hash_value;
     /* The next item in the list */
     struct SFO_hash_symlink_item_struct * next;
 };
@@ -67,6 +73,7 @@ void * freecell_solver_hash_insert(
     SFO_hash_t * hash,
     void * key,
     SFO_hash_value_t hash_value,
+    SFO_hash_value_t secondary_hash_value,
     int optimize_for_caching
     );
 

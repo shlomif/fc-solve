@@ -223,6 +223,7 @@ void * freecell_solver_hash_insert(
     SFO_hash_t * hash,
     void * key,
     SFO_hash_value_t hash_value,
+    SFO_hash_value_t secondary_hash_value,
     int optimize_for_caching
     )
 {
@@ -243,6 +244,7 @@ void * freecell_solver_hash_insert(
         item->next = NULL;
         item->key = key;
         item->hash_value = hash_value;
+        item->secondary_hash_value = secondary_hash_value;
 
         goto rehash_check;
     }
@@ -260,6 +262,7 @@ void * freecell_solver_hash_insert(
         */
         if (
             (item->hash_value == hash_value) &&
+            (item->secondary_hash_value == secondary_hash_value) &&
             (!(hash->compare_function(item->key, key, hash->context)))
            )
         {
@@ -293,6 +296,7 @@ void * freecell_solver_hash_insert(
         item->key = key;
         item->hash_value = hash_value;
         list->first_item = item;
+        item->secondary_hash_value = secondary_hash_value;
     }
     else
     {
@@ -302,6 +306,7 @@ void * freecell_solver_hash_insert(
         item->next = NULL;
         item->key = key;
         item->hash_value = hash_value;
+        item->secondary_hash_value = secondary_hash_value;
     }
 
 rehash_check:

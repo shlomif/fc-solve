@@ -212,6 +212,7 @@ OBJECTS = alloc.o           \
           fcs_isa.o         \
           freecell.o        \
           intrface.o        \
+		  lookup2.o         \
           move.o            \
           pqueue.o          \
           preset.o          \
