@@ -55,18 +55,24 @@ For example, to solve GNOME's Freecell board No. 15789:
 make_pysol_freecell_board.py also accepts another optional argument which
 specifies the game. Available games are:
 
-     bakers_game       - Baker's Game
-     bakers_dozen      - Baker's Dozen (Broken)
-     der_katz          - Der Katzenschwantz
-     die_schlange      - Die Schlange
-     eight_off         - Eight Off
-     forecell          - Forecell
-     freecell          - Freecell
-     ko_bakers_game    - Kings' Only Baker's Game
-     relaxed_freecell  - Relaxed Freecell
-     relaxed_seahaven  - Relaxed Seahaven Towers
-     seahaven          - Seahaven Towers
-     simple_simon      - Simple Simon
+     bakers_game          - Baker's Game
+     bakers_dozen         - Baker's Dozen (Broken)
+     beleauguered_castle  - Beleaguered Castle
+     citadel              - Citadel
+     cruel                - Cruel
+     der_katz             - Der Katzenschwantz
+     die_schlange         - Die Schlange
+     eight_off            - Eight Off
+     fan                  - Fan
+     forecell             - Forecell
+     freecell             - Freecell
+     good_measure         - Good Measure
+     ko_bakers_game       - Kings' Only Baker's Game
+     relaxed_freecell     - Relaxed Freecell
+     relaxed_seahaven     - Relaxed Seahaven Towers
+     seahaven             - Seahaven Towers
+     simple_simon         - Simple Simon
+     streets_and_alleys   - Streets and Alleys
 
 For example, to generate "Eight Off" board No. 168, type:
 # make_pysol_freecell_board.py 168 eight_off
@@ -77,8 +83,14 @@ particular game:
 # make_pysol_freecell_board.py 168 eight_off | fc-solve --game eight_off
 
 make-aisleriot-freecell-board accepts a subset of those game types as its
-third parameters. The complete list so far is : "bakers_game", "eight_off", 
-"freecell" and "seahaven".
+third parameters. The complete list so far is : 
+
+* bakers_game
+* beleaguered_castle
+* eight_off
+* freecell
+* seahaven
+* streets_and_alleys
 
 If you wish the programs to print the 10 cards with "T"'s instead of
 "10", then append a "-t" flag immidiately after the board generation 

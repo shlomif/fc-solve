@@ -69,15 +69,21 @@ beleaguered_castle - Beleaguered Castle (I<*>)
 
 citadel            - Citadel
 
+cruel              - Cruel
+
 der_katz           - Der Katzenschwantz
 
 die_schlange       - Die Schlange
 
 eight_off          - Eight Off (I<*>)
 
+fan                - Fan
+
 forecell           - Forecell
 
 freecell           - Freecell (the default)
+
+good_measure       - Good Measure
 
 ko_bakers_game     - Kings' Only Baker's Game
 
@@ -88,6 +94,8 @@ relaxed_seahaven   - Relaxed Seahaven Towers
 seahaven           - Seahaven Towers (I<*>)
 
 simple_simon       - Simple Simon (I<*>) 
+
+streets_and_alleys - Streets and Alleys
 
 make-aisleriot-freecell-board supports only the games marked with an 
 asterisk (I<*>).
