@@ -133,6 +133,11 @@ int freecell_solver_hard_dfs_solve_for_state(
 
     int ret_value;
 
+    int freecells_num, stacks_num;
+
+    freecells_num = instance->freecells_num;
+    stacks_num = instance->stacks_num;
+
     derived.num_states = derived.max_num_states = 0;
     derived.states = NULL;
 
@@ -168,7 +173,7 @@ int freecell_solver_hard_dfs_solve_for_state(
 
     /* Count the free-cells */
     num_freecells = 0;
-    for(a=0;a<instance->freecells_num;a++)
+    for(a=0;a<freecells_num;a++)
     {
         if (fcs_freecell_card_num(the_state, a) == 0)
         {
@@ -179,7 +184,7 @@ int freecell_solver_hard_dfs_solve_for_state(
     /* Count the number of unoccupied stacks */
 
     num_freestacks = 0;
-    for(a=0;a<instance->stacks_num;a++)
+    for(a=0;a<stacks_num;a++)
     {
         if (fcs_stack_len(the_state, a) == 0)
         {
@@ -189,7 +194,7 @@ int freecell_solver_hard_dfs_solve_for_state(
 
 
     /* Let's check if this state is finished, and if so return 0; */
-    if ((num_freestacks == instance->stacks_num) && (num_freecells == instance->freecells_num))
+    if ((num_freestacks == stacks_num) && (num_freecells == freecells_num))
     {
         instance->final_state = ptr_state_with_locations;
 
