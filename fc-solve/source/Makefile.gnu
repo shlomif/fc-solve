@@ -50,25 +50,27 @@ dummy:
 
 
 #<<<OBJECTS.START
-OBJECTS = alloc.o           \
-          app_str.o         \
-          caas.o            \
-          card.o            \
-          cmd_line.o        \
-          fcs_dm.o          \
-          fcs_hash.o        \
-          fcs_isa.o         \
-          freecell.o        \
-          intrface.o        \
-          lib.o             \
-          lookup2.o         \
-          move.o            \
-          pqueue.o          \
-          preset.o          \
-          rand.o            \
-          scans.o           \
-          simpsim.o         \
-          state.o
+OBJECTS =                     \
+          alloc.o             \
+          app_str.o           \
+          caas.o              \
+          card.o              \
+          cmd_line.o          \
+          fcs_dm.o            \
+          fcs_hash.o          \
+          fcs_isa.o           \
+          freecell.o          \
+          intrface.o          \
+          lib.o               \
+          lookup2.o           \
+          move.o              \
+          pqueue.o            \
+          preset.o            \
+          rand.o              \
+          scans.o             \
+          simpsim.o           \
+          state.o             \
+
 #>>>OBJECTS.END
 
 # MYOBJ.o ==> .deps/MYOBJ.P

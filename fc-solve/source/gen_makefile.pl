@@ -126,4 +126,57 @@ close(O);
 close(I);
 rename("Makefile.am.new", "Makefile.am");
 
+open I, "<Makefile.gnu";
+open O, ">Makefile.gnu.new";
+while(<I>)
+{
+    if (/^#<<<OBJECTS\.START/)
+    {
+        while(! /^#>>>OBJECTS\.END/)
+        {
+            $_ = <I>;
+        }
+        print O "#<<<OBJECTS.START\n";
+        print O "OBJECTS = " . (" " x 20) . "\\\n";
+        print O join("", (map { sprintf((" " x 10) . "%-20s\\\n", ($_.".o")) } @objects));
+        print O "\n";
+        print O "#>>>OBJECTS.END\n";
+    }
+    else
+    {
+        print O $_;
+    }
+}
+close(O);
+close(I);
+rename("Makefile.gnu.new", "Makefile.gnu");
+
+open I, "<Makefile.lite";
+open O, ">Makefile.lite.new";
+while(<I>)
+{
+    if (/^INCLUDES *=/)
+    {
+        print O "INCLUDES = " . join(" ", (map { "$_.h" } @headers)) . "\n";
+    }
+    elsif (/^#<<<OBJECTS\.START/)
+    {
+        while(! /^#>>>OBJECTS\.END/)
+        {
+            $_ = <I>;
+        }
+        my @ext_objects = (@objects, "main");
+        print O "#<<<OBJECTS.START\n";
+        print O join("\n\n", (map { "$_.o: $_.c \$(INCLUDES)\n\t\$(CC) -c \$(OFLAGS) -o \$@ \$<" } @ext_objects));
+        print O "\n\nOBJECTS = " . join(" ", (map { "$_.o" } @ext_objects)) . "\n";
+        print O "#>>>OBJECTS.END\n";
+    }
+    else
+    {
+        print O $_;    
+    }
+}
+close(O);
+close(I);
+rename("Makefile.lite.new", "Makefile.lite");
 
