@@ -145,10 +145,6 @@ typedef struct freecell_solver_instance
     /* The number of states that were checked by the solving algorithm.
      * Badly named, should be renamed to num_iters or num_checked_states */
     int num_times;
-    /*
-     * The number of states in solution_states.
-     * */
-    int instance_num_solution_states;
 
     /*
      * A move stack that contains the moves leading to the solution.

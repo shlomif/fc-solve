@@ -585,7 +585,6 @@ static void trace_solution(
     /*
         Trace the solution.
     */
-    int num_solution_states;
     fcs_state_with_locations_t * s1;
     int last_depth;
     fcs_move_stack_t * solution_moves;
@@ -602,9 +601,6 @@ static void trace_solution(
     instance->solution_moves = solution_moves;
 
     s1 = instance->final_state;
-
-    /* The depth of the last state reached is the number of them */
-    num_solution_states = instance->instance_num_solution_states = s1->depth+1;
 
     /* Retrace the step from the current state to its parents */
     while (s1->parent != NULL)
