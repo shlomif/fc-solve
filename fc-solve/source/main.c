@@ -593,6 +593,7 @@ static char * known_parameters[] = {
     NULL
     };
 
+#define USER_STATE_SIZE 1024
 
 int main(int argc, char * argv[])
 {
@@ -601,7 +602,7 @@ int main(int argc, char * argv[])
     char * error_string;
     int arg;
     FILE * file;
-    char user_state[1024];
+    char user_state[USER_STATE_SIZE];
     int ret;
 
     freecell_solver_display_information_context_t debug_context;
@@ -692,7 +693,8 @@ int main(int argc, char * argv[])
             return -1;
         }
     }
-    fread(user_state, sizeof(user_state[0]), sizeof(user_state)/sizeof(user_state[0]), file);
+    memset(user_state, '\0', sizeof(user_state));
+    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE-1, file);
     fclose(file);
 
     /* Win32 Does not have those signals */
