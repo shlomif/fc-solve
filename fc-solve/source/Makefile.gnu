@@ -1,6 +1,6 @@
 CC = gcc
 
-DEBUG = 1
+DEBUG = 0
 
 ifneq ($(DEBUG),0)
 	OFLAGS := -Wall -g
@@ -169,8 +169,8 @@ endif
 # END_OLFLAGS += -lmhash
 # END_OLFLAGS += -lefence
 
-OFLAGS += -DDMALLOC
-END_OLFLAGS += -ldmalloc
+# OFLAGS += -DDMALLOC
+# END_OLFLAGS += -ldmalloc
 
 # END_OFLAGS := -pg
 

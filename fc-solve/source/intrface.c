@@ -1632,6 +1632,8 @@ void freecell_solver_recycle_instance(
     
     freecell_solver_finish_instance(instance);
 
+    instance->num_times = 0;
+
     for(ht_idx = 0;  ht_idx < instance->num_hard_threads; ht_idx++)
     {
         hard_thread = instance->hard_threads[ht_idx];
