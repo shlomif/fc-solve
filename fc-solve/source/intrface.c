@@ -586,7 +586,6 @@ static void trace_solution(
         Trace the solution.
     */
     fcs_state_with_locations_t * s1;
-    int last_depth;
     fcs_move_stack_t * solution_moves;
     int move_idx;
     fcs_move_stack_t * stack;
@@ -617,8 +616,6 @@ static void trace_solution(
             }            
         }
         /* Duplicate the state to a freshly malloced memory */
-
-        last_depth = s1->depth;
 
         /* Move to the parent state */
         s1 = s1->parent;

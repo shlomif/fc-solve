@@ -469,7 +469,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 }
 
                 depth--;
-                the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
+                the_soft_dfs_info--;
                 continue; /* Just to make sure depth is not -1 now */
             }
 
@@ -676,7 +676,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                     increased it by one, so now it refers to the next state.
                 */
                 depth++;
-                the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
+                the_soft_dfs_info++;
                 the_soft_dfs_info->state = ptr_recurse_into_state_with_locations;
                 the_soft_dfs_info->test_index = 0;
                 the_soft_dfs_info->current_state_index = 0;
