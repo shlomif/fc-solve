@@ -40,8 +40,12 @@
 />
 </define-tag>
 
-<define-tag arch:doc:url>http://fc-solve.berlios.de/arch_doc/</define-tag>
-<define-tag doxygen:url>http://fc-solve.berlios.de/michael_mann/</define-tag>
+<define-tag berlios_url whitespace="delete">
+<if "$(BERLIOS)" "$(ROOT)/%0" "http://fc-solve.berlios.de/%0" />
+</define-tag>
+
+<define-tag arch:doc:url><berlios_url "arch_doc/" /></define-tag>
+<define-tag doxygen:url><berlios_url "michael_mann/" /></define-tag>
 
 <table summary="Layout Table: The first cell contains a navigation bar, the second the main page" border="0" width="99%">
 <tr>
@@ -118,7 +122,7 @@
 </tr>
 </table>
 <p>
-<a href="http://t2.technion.ac.il/~shlomif/"><img src="$(BERLIOS:*.)./images/bk2hp.gif" alt="Back to my Homepage" style="border:0" /></a>
+<a href="http://shlomif.il.eu.org/"><img src="$(BERLIOS:*.)./images/bk2hp.gif" alt="Back to my Homepage" style="border:0" /></a>
 </p>
 
 </body>
