@@ -44,18 +44,15 @@ extern "C" {
 #include "caas.h"
 
 /*
- *  Those are some macros to make it easier for the programmer.
+ *  These are some macros to make it easier for the programmer.
  * */
 #define state_with_locations (*ptr_state_with_locations)
 #define state (ptr_state_with_locations->s)
 #define new_state_with_locations (*ptr_new_state_with_locations)
 #define new_state (ptr_new_state_with_locations->s)
 
-#define sfs_check_state_init() \
-    fcs_state_ia_alloc_into_var(ptr_new_state_with_locations, hard_thread);
-
 #define sfs_check_state_begin()                                                \
-    sfs_check_state_init();                                                    \
+    fcs_state_ia_alloc_into_var(ptr_new_state_with_locations, hard_thread);    \
     fcs_duplicate_state(new_state_with_locations, state_with_locations);       \
     /* Some A* and BFS parameters that need to be initialized in               \
      * the derived state.                                                      \
@@ -203,6 +200,10 @@ fcs_move_stack_push(moves, temp_move);                                    \
     fcs_move_stack_push(moves, temp_move);                          \
 }
 
+/*
+ * This test declares a few access variables that are used in all
+ * the tests.
+ * */
 #define tests_declare_accessors()                              \
     freecell_solver_hard_thread_t * hard_thread;               \
     freecell_solver_instance_t * instance;                     \
@@ -212,6 +213,9 @@ fcs_move_stack_push(moves, temp_move);                                    \
     int calc_real_depth;                                       \
     int scans_synergy
 
+/*
+ * This macro defines these accessors to have some value.
+ * */
 #define tests_define_accessors()                                  \
     hard_thread = soft_thread->hard_thread;                       \
     instance = hard_thread->instance;                             \
