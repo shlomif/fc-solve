@@ -36,9 +36,9 @@ ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
 INCLUDES_PROTO = std/logo.wml
 INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
-SUBDIRS = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build_static
+SUBDIRS = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
 
-IMAGES += $(addprefix $(D)/win32_build/,bootstrap/curl.exe,bootstrap/build.bat,static/zip.exe,static/unzip.exe,dynamic/fcs.zip)
+IMAGES += $(addprefix $(D)/win32_build/,bootstrap/curl.exe bootstrap/build.bat static/zip.exe static/unzip.exe dynamic/fcs.zip)
 
 all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS)
 
@@ -52,7 +52,16 @@ RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 $(ARC_DOCS) :: $(D)/% : src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
 	tar -xOzf $< freecell-solver-$(RECENT_STABLE_VERSION)/$(notdir $@) > $@
 
-$(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml Makefile $(INCLUDES)
+src/win32_build/dynamic/fcs.zip: src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
+	mkdir t    
+	cd t && \
+	tar -xzvf ../$<; \
+	cd free* &&       \
+	zip -r ../../$@ * ; \
+	cd ../../ && \
+	rm -fr t        
+
+$(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
 	cd src && wml $(WML_FLAGS) -DFILENAME="$(notdir $@)" $(notdir $<) > $@
 
 $(IMAGES) :: $(D)/% : src/%
