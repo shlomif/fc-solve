@@ -181,7 +181,7 @@ END_DLFLAGS = $(END_OLFLAGS)
 
 DLFLAGS = $(OLFLAGS)
 
-INCLUDES = caas.h card.h config.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h jhjtypes.h move.h pqueue.h preset.h rand.h state.h tests.h test_arr.h
+INCLUDES = alloc.h app_str.h caas.h card.h config.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h jhjtypes.h move.h pqueue.h preset.h rand.h state.h tests.h test_arr.h
 
 TARGETS = fc-solve
 
