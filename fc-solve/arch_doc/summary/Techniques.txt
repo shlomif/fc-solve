@@ -54,5 +54,30 @@ allocated compactly in a segment, where one stack starts after the other
 the memory that was allocated is freed for use by future stacks).
 
 
-The collection is done in a compact manner
+The States Graph and its Use:
+-----------------------------
+
+When a brand new state is discovered its parent is assigned to be the state
+from which it is derived. (check (*Mark STATE_PARENT*)). Its depth
+is assigned to be the depth of the parent + 1. There is a command line option
+(--reparent-states) that specifies that if an existing state whose depth is
+higher than the depth of state it was derived from + 1 is reached, then
+its parent would be re-assigned.
+
+An extended state has a num_active_children counter that specifies how many
+of those states that consider it their parent were still not marked as dead 
+ends. If this counter reaches 0, this state also becomed inactive.
+
+The state has a vector of flags called scan_visited, that specifies if a given
+scan has visited it yet. If it is a complete scan it can also mark it as 
+dead end should it:
+
+1. Recurse out of it if it's a DFS scan.
+
+2. Find that it has no derived states if it is a Best-First Search scan.
+
+If it is marked as dead end, then its parent's counter would be incremented.
+If the latter is zero, the process may continue to the grand parent and so
+forth.
+
 

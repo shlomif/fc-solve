@@ -60,6 +60,10 @@ command line. Can be used to shorten command lines. For instance "-l cool-jives"
 or "-l john-galt-line" load the presets "cool-jives" and "john-galt-line" 
 respectively. Implemented mostly in cmd_line.c.
 
+Reparent - let's suppose state DEST has been derived from state SRC. If
+the SRC.depth+1 is less than DEST.depth than DEST's parent will be reassigned
+to SRC. (if reparenting is enabled)
+
 Secondary Hash - a hash value that is calculated for every state that is not
 used to determine the location of the element in the hash table, but that is
 used for comparison. That is done in order to avoid needlessly comparing two
