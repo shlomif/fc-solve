@@ -15,6 +15,8 @@ looking for non-up-to-date information.
 
 * Implied flags: -sn implies -m, etc.
 
+* Convert some of the documentation to Perl-POD or DocBook.
+
 * After everything: reorganize the --help behaviour according to the Freshmeat
 editorial
 
