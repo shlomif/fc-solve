@@ -26,6 +26,7 @@
                 </affiliation>
             </author>
         </authorgroup>
+        <releaseinfo>This is version 0.2.0</releaseinfo>
 
         <copyright>
             <year>2002</year>
@@ -41,6 +42,18 @@
                 greater.
             </para>
         </legalnotice>
+        <revhistory>
+            <revision>
+                <revnumber>1.6</revnumber>
+                <date>2 December 2002</date>
+                <authorinitials>shlomif</authorinitials>
+                <revremark>
+                    First "stable" version covering the &fcs; 2.8.x 
+                    architecture. Spell checked and revised during its
+                    CVS history.
+                </revremark>
+            </revision>
+        </revhistory>
     </bookinfo>
 
     <chapter id="introduction">

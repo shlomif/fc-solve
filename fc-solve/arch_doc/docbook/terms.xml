@@ -58,6 +58,15 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>False Negative</term>
+                <listitem>
+                    <para>
+                        See False Impossible.
+                    </para>
+                </listitem>
+            </varlistentry>
+            
             
             <varlistentry>
                 <term>f_s_</term>
@@ -154,6 +163,17 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>Meta-Move</term>
+                <listitem>
+                    <para>
+                        A move that consists of several individual moves
+                        done as one, to move from state to a derived state.
+                        Some of the Freecell test and all of the
+                        Simple Simon tests generate meta-moves.
+                    </para>
+                </listitem>
+            </varlistentry>            
             <varlistentry>
                 <term>Move</term>
                 <listitem>
