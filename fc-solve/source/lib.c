@@ -150,16 +150,6 @@ int freecell_solver_user_solve_board(
 
     if (user->ret == FCS_STATE_WAS_SOLVED)
     {
-        int a;
-
-        for(a=0;a<user->instance->instance_num_solution_states;a++)
-        {
-            fcs_clean_state(user->instance->instance_solution_states[a]);
-            free((void*)user->instance->instance_solution_states[a]);
-        }
-        free((void*)user->instance->instance_solution_states);
-        user->instance->instance_solution_states = NULL;
-
         freecell_solver_move_stack_normalize(
             user->instance->solution_moves,
             &(user->state),
@@ -183,16 +173,6 @@ int freecell_solver_user_resume_solution(
     user->ret = freecell_solver_resume_instance(user->instance);
     if (user->ret == FCS_STATE_WAS_SOLVED)
     {
-        int a;
-
-        for(a=0;a<user->instance->instance_num_solution_states;a++)
-        {
-            fcs_clean_state(user->instance->instance_solution_states[a]);
-            free((void*)user->instance->instance_solution_states[a]);
-        }
-        free((void*)user->instance->instance_solution_states);
-        user->instance->instance_solution_states = NULL;
-
         freecell_solver_move_stack_normalize(
             user->instance->solution_moves,
             &(user->state),

@@ -146,12 +146,6 @@ typedef struct freecell_solver_instance
      * Badly named, should be renamed to num_iters or num_checked_states */
     int num_times;
     /*
-     * A vector of the states leading to the solution. It is actively
-     * being modified by a Soft-DFS scan. Its usage for output has been
-     * deprecated because solution_moves was introduced.
-     * */
-    fcs_state_with_locations_t * * instance_solution_states;
-    /*
      * The number of states in solution_states.
      * */
     int instance_num_solution_states;

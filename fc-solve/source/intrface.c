@@ -140,21 +140,9 @@ static void soft_thread_clean_soft_dfs(
             }
         }
         
-#if 0
-#define MYFREE(what) { free(soft_thread->what); soft_thread->what = NULL; }
-        MYFREE(solution_states)
-        MYFREE(soft_dfs_derived_states_lists);
-        MYFREE(soft_dfs_test_indexes);
-        MYFREE(soft_dfs_current_state_indexes);
-        MYFREE(soft_dfs_num_freecells);
-        MYFREE(soft_dfs_num_freestacks);
-        MYFREE(soft_dfs_derived_states_random_indexes);
-        MYFREE(soft_dfs_derived_states_random_indexes_max_size);
-#undef MYFREE
-#else
         free(soft_thread->soft_dfs_info);
         free(soft_thread->solution_states);
-#endif
+
     }
 }
 
@@ -193,22 +181,8 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
     
 
     /* Initialize all the Soft-DFS stacks to NULL */
-#if 0
-#define SET_TO_NULL(what) soft_thread->what = NULL;
-    SET_TO_NULL(solution_states);
-    SET_TO_NULL(soft_dfs_derived_states_lists);
-    SET_TO_NULL(soft_dfs_current_state_indexes);
-    SET_TO_NULL(soft_dfs_test_indexes);
-    SET_TO_NULL(soft_dfs_current_state_indexes);
-    SET_TO_NULL(soft_dfs_num_freecells);
-    SET_TO_NULL(soft_dfs_num_freestacks);
-    SET_TO_NULL(soft_dfs_derived_states_random_indexes);
-    SET_TO_NULL(soft_dfs_derived_states_random_indexes_max_size);
-#undef SET_TO_NULL
-#else
     soft_thread->solution_states = NULL;
     soft_thread->soft_dfs_info = NULL;
-#endif
 
     /* The default solving method */
     soft_thread->method = FCS_METHOD_SOFT_DFS;
@@ -360,8 +334,6 @@ freecell_solver_instance_t * freecell_solver_alloc_instance(void)
     instance->hard_threads[0] = alloc_hard_thread(instance);
 
     instance->solution_moves = NULL;
-
-    instance->instance_solution_states = NULL;
 
     instance->optimize_solution_path = 0;
 
@@ -634,13 +606,6 @@ static void trace_solution(
     /* The depth of the last state reached is the number of them */
     num_solution_states = instance->instance_num_solution_states = s1->depth+1;
 
-    if (instance->instance_solution_states != NULL)
-    {
-        free(instance->instance_solution_states);
-    }
-
-    /* Allocate space for the solution stacks */
-    instance->instance_solution_states = malloc(sizeof(fcs_state_with_locations_t *)*num_solution_states);
     /* Retrace the step from the current state to its parents */
     while (s1->parent != NULL)
     {
@@ -656,8 +621,6 @@ static void trace_solution(
             }            
         }
         /* Duplicate the state to a freshly malloced memory */
-        instance->instance_solution_states[s1->depth] = (fcs_state_with_locations_t*)malloc(sizeof(fcs_state_with_locations_t));
-        fcs_duplicate_state(*(instance->instance_solution_states[s1->depth]), *s1);
 
         last_depth = s1->depth;
 
@@ -666,8 +629,6 @@ static void trace_solution(
     }
     /* There's one more state than there are move stacks */
     s1->visited |= FCS_VISITED_IN_SOLUTION_PATH;
-    instance->instance_solution_states[0] = (fcs_state_with_locations_t*)malloc(sizeof(fcs_state_with_locations_t));
-    fcs_duplicate_state(*(instance->instance_solution_states[0]), *s1);
 }
 
 
@@ -690,22 +651,6 @@ static int freecell_solver_optimize_solution(
     /* Initialize the optimization hard-thread and soft-thread */
     instance->optimization_thread->num_times_left_for_soft_thread = 1000000;
     freecell_solver_state_ia_init(instance->optimization_thread);
-
-    /* Clean the solution that the non-optimized scan brought us */
-    {
-        int d;
-        for(d=0;d<instance->instance_num_solution_states-1;d++)
-        {
-            fcs_clean_state(instance->instance_solution_states[d]);
-            free(instance->instance_solution_states[d]);
-        }
-        /* There's one more state than move stack */
-        fcs_clean_state(instance->instance_solution_states[d]);
-        free(instance->instance_solution_states[d]);
-
-        free(instance->instance_solution_states);
-        instance->instance_solution_states = NULL;
-    }
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
@@ -1434,12 +1379,6 @@ void freecell_solver_finish_instance(
 
     clean_soft_dfs(instance);
 
-
-    if (instance->instance_solution_states != NULL)
-    {
-        free(instance->instance_solution_states);
-        instance->instance_solution_states = NULL;
-    }
 
     free(instance->instance_tests_order.tests);
 }
