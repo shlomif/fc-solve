@@ -103,6 +103,26 @@ fcs_move_stack_push(moves, temp_move);                                    \
     else if (check == FCS_STATE_ALREADY_EXISTS)                           \
     {                                                                     \
         fcs_state_ia_release(hard_thread);                                \
+        { \
+            if (1)     \
+            {     \
+                int this_real_depth = 0;        \
+                fcs_state_with_locations_t * ptr_state = existing_state;   \
+                while(ptr_state != NULL)     \
+                {       \
+                    ptr_state = ptr_state->parent;   \
+                    this_real_depth++;     \
+                }       \
+                this_real_depth--;      \
+                ptr_state = existing_state;      \
+                while (ptr_state->depth != this_real_depth)      \
+                {          \
+                    ptr_state->depth = this_real_depth;  \
+                    this_real_depth--;    \
+                    ptr_state = ptr_state->parent;     \
+                }     \
+            }     \
+        }      \
         /* Re-parent the existing state to this one.                      \
          *                                                                \
          * What it means is that if the depth of the state if it          \
@@ -112,7 +132,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
         if (reparent &&                                                   \
            (existing_state->depth > ptr_state_with_locations->depth+1))   \
         {                                                                 \
-            /* Make a copy of "moves" because "moves will be destroyed */ \
+            /* Make a copy of "moves" because "moves" will be destroyed */\
             existing_state->moves_to_parent = freecell_solver_move_stack_compact_allocate(hard_thread, moves);                 \
             existing_state->parent = ptr_state_with_locations;            \
             existing_state->depth = ptr_state_with_locations->depth + 1;  \

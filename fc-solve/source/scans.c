@@ -31,6 +31,8 @@
 #include "dmalloc.h"
 #endif
 
+#define REPARENT
+
 static pq_rating_t freecell_solver_a_star_rate_state(
     freecell_solver_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations);
@@ -567,7 +569,11 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         the_soft_dfs_info->num_freestacks,
                         the_soft_dfs_info->num_freecells,
                         &(the_soft_dfs_info->derived_states_list),
+#ifdef REPARENT
+                        1
+#else
                         0
+#endif
                     );
 
                 if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
@@ -681,6 +687,27 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 the_soft_dfs_info->test_index = 0;
                 the_soft_dfs_info->current_state_index = 0;
                 the_soft_dfs_info->derived_states_list.num_states = 0;
+
+#ifdef REPARENT
+                {
+                    int this_real_depth = 0;
+                    fcs_state_with_locations_t * ptr_state = ptr_recurse_into_state_with_locations;
+                    while(ptr_state != NULL)
+                    {
+                        ptr_state = ptr_state->parent;
+                        this_real_depth++;
+                    }
+                    /* It will be equal to 1 plus its actual depth */
+                    this_real_depth--; 
+                    ptr_state = ptr_recurse_into_state_with_locations;
+                    while (ptr_state->depth != this_real_depth)
+                    {
+                        ptr_state->depth = this_real_depth;
+                        this_real_depth--;
+                        ptr_state = ptr_state->parent;
+                    }
+                }
+#endif
 
                 break;
             }
@@ -1061,7 +1088,11 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
                      * We want to reparent the new states, only if this
                      * is an optimization scan.
                      * */
+#ifdef REPARENT
+                    1
+#else
                     (method == FCS_METHOD_OPTIMIZE)
+#endif
                     );
             if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
                 (check == FCS_STATE_EXCEEDS_MAX_NUM_TIMES) ||
