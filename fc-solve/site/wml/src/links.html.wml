@@ -83,7 +83,7 @@ interactively to complement it, but it is still quite helpful.
 </p>
 
 <p>
-<a href="http://sources.redhat.com/autoconf/">Autoconf, automake and
+<a href="http://www.gnu.org/software/autoconf/">Autoconf, automake and
 libtool</a> - a trio of tools that help maintain a portable building for
 a software project across UNIX and similar platforms. Freecell Solver did
 not use for a large time, but I switched to it in order to have a portable
@@ -152,10 +152,10 @@ and he allowed me to incorporate his binary heap code into Freecell Solver.
 </p>
 
 <p>
-<a href="http://wildsau.idv.uni-linz.ac.at/mfx/">
-Markus FXJ Oberhumer</a> - contributed some bug-fixes and bug-reports 
+<a href="http://www.oberhumer.com/mfx/">Markus FXJ Oberhumer</a> - 
+contributed some bug-fixes and bug-reports 
 to Freecell Solver. He is the author of 
-<a href="http://wildsau.idv.uni-linz.ac.at/mfx/pysol/">PySol</a>,
+<a href="http://www.oberhumer.com/opensource/pysol/">PySol</a>,
 a very nice Solitaire suite which is written in Python. I used its 
 code to write a script that automatically generates its initial boards.
 </p>
@@ -183,7 +183,7 @@ I established the mailing-list.
 </p>
 
 <p>
-<a href="http://members.aol.com/wgreview/fcpro.html">Freecell Pro</a> -
+<a href="http://www.rrhistorical.com/rrdata/Fcpro65/">Freecell Pro</a> -
 a Freecell implementation for Win32 that contains the solver by 
 <a href="http://www.icynic.com/~don/">Don Woods</a>.
 Very fast and relatively accurate solving. Source code is available 
@@ -205,7 +205,7 @@ their solution.
 </p>
 
 <p>
-<a href="http://www.wirehub.nl/~berto/brainjam.htm">Berto's Freecell and
+<a href="http://www.xs4all.nl/~odemar/braincell/brainjam.htm">Berto's Freecell and
 Brain Jam Solvers</a> - Two programs for Windows that solve Freecell and
 Baker's Game (which he refers to as Brain Jam). Source code is not
 available.
@@ -225,7 +225,7 @@ Freecell games. Source code is available and is explained in detail.
 <p>
 <a href="http://www.williamtp.com/cv.html">William Tunstall-Pedoe's
 Solver</a> - he mentions he wrote one in his C.V., which contains other
-interseting artificial intelligence musings. The source code or the binary 
+interseting artificial intelligence musings. The source code and the binary 
 are not available for free download online and may or may not be available 
 upon request.
 </p>
@@ -279,7 +279,7 @@ quite amusing.
 </p>
 
 <p>
-<a href="http://suso.suso.org/thought.phtml?thought_id=27">SusoSight's
+<a href="http://suso.suso.org/thought.php?thought_id=27">SusoSight's
 Thought of the Moment Regarding Freecell Solver</a>
 </p>
 
