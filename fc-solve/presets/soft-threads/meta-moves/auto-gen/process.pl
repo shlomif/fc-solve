@@ -3,7 +3,7 @@
 use strict;
 #use File::stat;
 
-# use PDL;
+use PDL;
 
 my @scans;
 
@@ -25,7 +25,8 @@ my @selected_scans =
     }
     @scans;
     
-my $scans_data = [];
+#my $scans_data = [];
+my $scans_data = zeroes($num_boards, scalar(@selected_scans));
     
 my $scan_idx = 0;
 foreach my $scan (@selected_scans)
@@ -39,19 +40,42 @@ foreach my $scan (@selected_scans)
     {
         die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
     }
-    #my $b = $scans_data->slice("$scan_idx,:");
-    #my @b_dims = $b->dims();
-    #print "dims=" . join(",", @b_dims) . "\n";
-    #my $c = pdl(\@array);
-    #$b += $c->slice("3:".($num_boards+2));
-    #$scan_idx++;
-    push @$scans_data, [ @array[3 .. $#array] ];
+    my $b = $scans_data->slice(":,$scan_idx");    
+    my $c = pdl(\@array);
+    $b += $c->slice("3:".($num_boards+2));
     $scan_idx++;
 }
 
 
-my @quotas = ((500) x 1000);
+my @quotas = ((500) x 10000);
+my @chosen_scans = ();
 
-my $q = $quotas[0];
-print join(",", map { my $sd = $_; scalar(grep { ($_ >= 0) && ($_ < $q) } @{$sd}) } @$scans_data);
+my $total;
+my $q = 0;
 
+foreach my $q_more (@quotas)
+{
+    $q += $q_more;
+    my $num_solved = sumover(($scans_data <= $q) & ($scans_data > 0));
+    my ($min, $max, $min_ind, $max_ind) = minmaximum($num_solved);
+    if ($max == 0)
+    {
+        next;
+    }
+    push @chosen_scans, $max_ind;
+    print "$q \@ $max_ind ($total solved)\n";
+    $total += $max;
+    my $this_scan_result = ($scans_data->slice(":,$max_ind"));
+    my $indexes = which(($this_scan_result > $q) | ($this_scan_result < 0));
+    $scans_data = $scans_data->dice($indexes, "X");
+    $scans_data->slice(":,$max_ind") -= $q;
+
+    if ($total == $num_boards)
+    {
+        print "Solved all!\n";
+        last;
+    }
+    $q = 0;
+}
+
+print "scans_data = " , $scans_data, "\n";
