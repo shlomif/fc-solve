@@ -24,3 +24,12 @@ The copyright notice says:
 freely redistribute this source provided this notice is retained.
 </i>
 </p>
+
+<p>
+Note that a more optimized derivative of this solver (for Freecell alone), 
+which was modified by Wilson Callan and Adrian Ettlinger, is available as part 
+of <a href="http://www.rrhistorical.com/rrdata/Fcpro65/">Freecell Pro</a>. 
+FC-Pro is an open-source GPLed program, whose source code is available upon 
+inquiry.
+</p>
+

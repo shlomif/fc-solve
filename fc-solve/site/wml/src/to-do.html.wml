@@ -1,0 +1,33 @@
+#include '../template.wml'
+
+<subject "Freecell Solver Links" />
+
+<p>
+While Freecell Solver is a fairly usable package that satisfies the needs of 
+a large part of the users, it is by no means complete. This page hopes to
+address some of the long-term, primary issues in which I'd like to enhance it 
+in the future. It is based on the <a href="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/fc-solve/fc-solve/source/TODO">TODO</a> file, but is more elaborated and
+detailed.
+</p>
+
+<h2>Derived State Ordering and Integrating Patsolve's Logic</h2>
+
+<p>
+From any given position Freecell Solver reaches it uses some functions called
+tests to generate a list of subsequent positions that can be reached from it.
+Each test corresponds to one move type, and they output the derived states in
+the order they found them. FCS groups the lists into test groups, and then
+either try them one by one, or randomizes them.
+</p>
+
+<p>
+What can be done, is to order the derived states based on some paramters, other
+than simply randomizing them. Currently there is a code for a state 
+prioritization that is used in the best-first-search code. Aside for that, there
+is also the prioritization <a href="http://members.tripod.com/professor_tom/">Tom Holroyd</a> 
+implemented for Patsolve. What I would like to have for the next release, is a 
+generic way to order derived positions, implementing all of the random, mine, 
+and Tom's back-ends, and an ability to implement more in the future.
+</p>
+
+
