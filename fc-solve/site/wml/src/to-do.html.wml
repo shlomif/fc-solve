@@ -80,7 +80,7 @@ tests at all, and can easily be re-implemented should the need arise.
 <h2>Multi-Threading</h2>
 
 <p>
-Freecell Solver can run several scans on the same thread collection. However, 
+Freecell Solver can run several scans on the same states collection. However, 
 it can only run a certain scan for a given number of iterations, suspend it 
 with purely high-level mechanisms, and then run a different scan instead. Later
 on, the original scan can be resumed. However, it is still not possible to
@@ -109,10 +109,10 @@ it POSIX threads, the Win32 API, APR or whatever).
 </p>
 
 <p>
-Making Freecell Solver thread-safe is not high on my agenda, because few users
-have multi-processor machines that can somehow benefit from this scheme. Those
-with uni-processor machines are better off using several soft-threads within
-a single hard-thread that are arbitrated by the program.
+Making Freecell Solver thread-enabled is not high on my agenda, because few
+users have multi-processor machines that can somehow benefit from this scheme.
+Those with uni-processor machines are better off using several soft-threads
+within a single hard-thread that are arbitrated by the program.  
 </p>
 
 <h2>Porting to Java</h2>
