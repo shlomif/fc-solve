@@ -1,3 +1,13 @@
+/*
+ * alloc.c - a dynamic memory allocator. It allocates blocks of relatively 
+ * small size, in a contiguous, compact manner. The most recent block can
+ * be released, but otherwise the blocks are kept for prosperity.
+ *
+ * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2002
+ *
+ * This file is in the public domain (it's uncopyrighted).
+ */
+
 #include <malloc.h>
 
 #include "config.h"
