@@ -138,7 +138,7 @@ else
 
 # Construct the command line
 my $cmd_line = "freecell-solver-range-parallel-solve 1 $num_boards 20 \\\n" .
-    join("", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} . " \\\n" } @selected_scans) .
+    join(" -nst \\\n", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } @selected_scans) . " \\\n" .
     "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $_->{'ind'} } @chosen_scans) ."\"";
     
 print SCRIPT $cmd_line;
