@@ -165,7 +165,19 @@ extern void fcs_derived_states_list_add_state(
     (list)->num_states++;        \
 }
 
-
+#define fcs_derived_states_list_free_move_stacks(the_list)         \
+{                                                                 \
+    num_states = (the_list)->num_states;                 \
+    derived_states = (the_list)->states;                 \
+    for(a=0;a<num_states;a++)                                     \
+    {                                                             \
+        if (derived_states[a].move_stack)                         \
+        {                                                         \
+            fcs_move_stack_destroy(derived_states[a].move_stack); \
+        }                                                         \
+        derived_states[a].move_stack = NULL;                      \
+    }                                                             \
+}
 
 
 #ifdef __cplusplus

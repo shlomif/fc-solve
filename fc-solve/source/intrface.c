@@ -126,9 +126,12 @@ static void soft_thread_clean_soft_dfs(
     void * context
     )
 {
-    int num_solution_states;
+    int num_solution_states, num_states;
     int dfs_max_depth;
+    int a;
     fcs_soft_dfs_stack_item_t * soft_dfs_info, * info_ptr;
+    fcs_derived_state_t * derived_states;
+
     /* Check if a Soft-DFS-type scan was called in the first place */
     if (soft_thread->soft_dfs_info == NULL)
     {
@@ -143,16 +146,12 @@ static void soft_thread_clean_soft_dfs(
     {
         int depth;
         info_ptr = soft_dfs_info;
-        for(depth=0;depth<num_solution_states-1;depth++)
-        {
-            free(info_ptr->derived_states_list.states);
-            free(info_ptr->derived_states_random_indexes);
-            info_ptr++;
-        }
-        for(;depth<dfs_max_depth;depth++)
+        for(depth=0;depth<dfs_max_depth;depth++)
         {
             if (info_ptr->derived_states_list.max_num_states)
             {
+                fcs_derived_states_list_free_move_stacks(&(info_ptr->derived_states_list));
+
                 free(info_ptr->derived_states_list.states);
                 free(info_ptr->derived_states_random_indexes);
             }
