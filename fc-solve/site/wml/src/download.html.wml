@@ -128,7 +128,7 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 <define-tag ver>
 <tr>
 <td>
-<a href="freecell-solver-%0.%1.tar.gz">Version %0.%1</a>
+<a href="<berlios_url "freecell-solver-%0.%1.tar.gz" />">Version %0.%1</a>
 </td>
 </tr>
 </define-tag>
