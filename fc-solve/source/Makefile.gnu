@@ -55,6 +55,7 @@ OBJECTS =                     \
           app_str.o           \
           caas.o              \
           card.o              \
+          cl_chop.o           \
           cmd_line.o          \
           fcs_dm.o            \
           fcs_hash.o          \

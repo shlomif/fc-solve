@@ -17,8 +17,9 @@ sub min
 }
 
 my @objects=(
-    qw(alloc app_str caas card cmd_line fcs_dm fcs_hash fcs_isa freecell), 
-    qw(intrface lib lookup2 move pqueue preset rand scans simpsim state)
+    qw(alloc app_str caas card cl_chop cmd_line fcs_dm fcs_hash fcs_isa), 
+    qw(freecell intrface lib lookup2 move pqueue preset rand), 
+    qw(scans simpsim state)
     );
 
 my @targets = (
@@ -34,7 +35,7 @@ my @targets = (
 
 my @headers=
     (
-        qw(alloc app_str caas card config fcs_cl fcs fcs_dm fcs_enums),
+        qw(alloc app_str caas card cl_chop config fcs_cl fcs fcs_dm fcs_enums),
         qw(fcs_hash fcs_isa fcs_move fcs_user inline jhjtypes lookup2), 
         qw(move ms_ca pqueue preset rand state test_arr tests)
     );

@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
@@ -631,7 +632,7 @@ int freecell_solver_user_cmd_line_parse_args(
                 {
                     s++;
                 }
-                if (*s == ",")
+                if (*s == ',')
                 {
                     num_to_skip = atoi(argv[arg]);
                     s++;
@@ -672,7 +673,7 @@ int freecell_solver_user_cmd_line_parse_args(
                 {
                     *error_string = 
                         strdup("Could not parse the file. Quitting\n");
-                    args_man_free(args_man);
+                    freecell_solver_args_man_free(args_man);
                     
                     return FCS_CMD_LINE_ERROR_IN_ARG;
                 }
@@ -700,7 +701,7 @@ int freecell_solver_user_cmd_line_parse_args(
                         return ret;
                     }
                 }
-                args_man_free(args_man);
+                freecell_solver_args_man_free(args_man);
             }
         }
         else

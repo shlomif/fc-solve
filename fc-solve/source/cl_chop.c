@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "cmd_line_chop.h"
+#include "cl_chop.h"
 
 #ifdef DMALLOC
 #include <dmalloc.h>
@@ -199,7 +199,7 @@ END_OF_LOOP:
 
     free(last_arg);
     
-    eturn 0;
+    return 0;
 }
 
 #ifdef CMD_LINE_CHOP_WITH_MAIN
