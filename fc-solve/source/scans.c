@@ -38,7 +38,7 @@ static pq_rating_t freecell_solver_a_star_rate_state(
 #define freecell_solver_a_star_enqueue_state(soft_thread,ptr_state_with_locations) \
     {        \
         freecell_solver_PQueuePush(        \
-            soft_thread->a_star_pqueue,       \
+            a_star_pqueue,       \
             ptr_state_with_locations,            \
             freecell_solver_a_star_rate_state(soft_thread, ptr_state_with_locations)   \
             );       \
@@ -63,11 +63,11 @@ static void freecell_solver_a_star_enqueue_state(
 
 #define freecell_solver_bfs_enqueue_state(soft_thread, state) \
     {    \
-        fcs_states_linked_list_item_t * last_item = soft_thread->bfs_queue_last_item, * last_item_next;      \
-        last_item_next = last_item->next = (fcs_states_linked_list_item_t*)malloc(sizeof(fcs_states_linked_list_item_t));      \
-        last_item->s = state;     \
+        fcs_states_linked_list_item_t * last_item_next;      \
+        last_item_next = bfs_queue_last_item->next = (fcs_states_linked_list_item_t*)malloc(sizeof(fcs_states_linked_list_item_t));      \
+        bfs_queue_last_item->s = state;     \
         last_item_next->next = NULL;     \
-        soft_thread->bfs_queue_last_item = last_item_next; \
+        bfs_queue_last_item = last_item_next; \
     }
 
 #if 0
@@ -948,6 +948,9 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
          (soft_thread->method == FCS_METHOD_OPTIMIZE)
         );
     int scans_synergy = instance->scans_synergy;
+    fcs_states_linked_list_item_t * bfs_queue = soft_thread->bfs_queue;
+    PQUEUE * a_star_pqueue = soft_thread->a_star_pqueue;
+    fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->bfs_queue_last_item;
 
     derived.num_states = 0;
     derived.max_num_states = 0;
@@ -1046,6 +1049,8 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
                 free(derived.states);
             }
 
+            soft_thread->bfs_queue_last_item = bfs_queue_last_item;
+
             return FCS_STATE_WAS_SOLVED;
         }
 
@@ -1084,6 +1089,8 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
                     free(derived.states);
                 }
 
+                soft_thread->bfs_queue_last_item = bfs_queue_last_item;
+
                 return FCS_STATE_SUSPEND_PROCESS;
             }
         }
@@ -1098,6 +1105,8 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             {
                 free(derived.states);
             }
+
+            soft_thread->bfs_queue_last_item = bfs_queue_last_item;
 
             return FCS_STATE_SUSPEND_PROCESS;
         }
@@ -1161,11 +1170,11 @@ label_next_state:
         */
         if ((method == FCS_METHOD_BFS) || (method == FCS_METHOD_OPTIMIZE))
         {
-            if (soft_thread->bfs_queue->next != soft_thread->bfs_queue_last_item)
+            save_item = bfs_queue->next;
+            if (save_item != bfs_queue_last_item)
             {
-                save_item = soft_thread->bfs_queue->next;
                 ptr_state_with_locations = save_item->s;
-                soft_thread->bfs_queue->next = soft_thread->bfs_queue->next->next;
+                bfs_queue->next = save_item->next;
                 free(save_item);
             }
             else
@@ -1176,7 +1185,7 @@ label_next_state:
         else
         {
             /* It is an A* scan */
-            ptr_state_with_locations = freecell_solver_PQueuePop(soft_thread->a_star_pqueue);
+            ptr_state_with_locations = freecell_solver_PQueuePop(a_star_pqueue);
         }
         resume = 0;
     }
@@ -1186,6 +1195,8 @@ label_next_state:
     {
         free(derived.states);
     }
+
+    soft_thread->bfs_queue_last_item = bfs_queue_last_item;
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }

@@ -25,6 +25,7 @@ libfreecell_solverinclude_HEADERS = fcs_user.h fcs_enums.h fcs_move.h fcs_cl.h
 fc-solve.6: fc-solve.pod ver.txt
 	cat $< | sed 's/FCS_VERSION/@VERSION@/g' | pod2man --section=6 --center="Freecell Solver" --date="2001/06/09" --release="Freecell Solver @VERSION@" > $@
 
+
 EXTRA_DIST += alloc.h app_str.h caas.h card.h fcs_dm.h fcs.h fcs_hash.h
 EXTRA_DIST += fcs_isa.h jhjtypes.h lookup2.h ms_ca.h move.h pqueue.h preset.h rand.h
 EXTRA_DIST += state.h test_arr.h tests.h
