@@ -25,7 +25,7 @@ my @headers=
         qw(move ms_ca pqueue preset rand state test_arr tests)
     );
 
-my @defines=(qw(FCS_STATE_STORAGE=FCS_STATE_STORAGE_INTERNAL_HASH FCS_STACK_STORAGE=FCS_STACK_STORAGE_INTERNAL_HASH WIN32));
+my @defines=(qw(WIN32));
 
 my @debug_defines = (qw(DEBUG));
 
