@@ -36,7 +36,7 @@ my $which_boards = which((($scans_data > $above_how_much) | ($scans_data < 0))->
 print "The indexes of the tests above $above_how_much are:\n";
 foreach my $board (list($which_boards))
 {
-    print "$board: " . join(",", sort { $a <=> $b } list($scans_data->slice(($board-1).",:"))) . "\n";
+    print "$board: " . join(",", sort { (($b <=> 0) <=> ($a <=> 0)) || ($a <=> $b) } list($scans_data->slice(($board-1).",:"))) . "\n";
 }
 
 

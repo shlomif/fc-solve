@@ -12,6 +12,8 @@ my $num_boards = 32000;
 
 my $script_filename = "-";
 
+my $trace = 0;
+
 if (scalar(@ARGV))
 {
     while (my $arg = shift(@ARGV))
@@ -23,6 +25,10 @@ if (scalar(@ARGV))
         elsif ($arg eq "-n")
         {
             $num_boards = shift;
+        }
+        elsif ($arg eq "-t")
+        {
+            $trace = 1;
         }
     }
 }
@@ -51,6 +57,8 @@ my @selected_scans =
 #my $scans_data = zeroes($num_boards, scalar(@selected_scans));
 
 my $scans_data = MyInput::get_scans_data($num_boards, \@selected_scans);
+
+my $orig_scans_data = $scans_data->copy();
 
 my @quotas = ((200) x 5000);
 my @chosen_scans = ();
@@ -95,7 +103,7 @@ foreach my $q_more (@quotas)
         last;
     }    
     
-    $scans_data = $scans_data->dice($indexes, "X");
+    $scans_data = $scans_data->dice($indexes, "X")->copy();
     $this_scan_result = $scans_data->slice(":,$max_ind")->copy();
     $scans_data->slice(":,$max_ind") *= 0;
     $scans_data->slice(":,$max_ind") += (($this_scan_result - $q) * ($this_scan_result > 0)) +
@@ -127,5 +135,31 @@ print SCRIPT "\n\n\n";
 
 close(SCRIPT);
 
+# Analyze the results
 
-
+if ($trace)
+{
+    foreach my $board (1 .. $num_boards)
+    {
+        my $total_iters = 0;
+        my @info = list($orig_scans_data->slice(($board-1).",:"));
+        print ("\@info=". join(",", @info). "\n");
+        foreach my $s (@chosen_scans)
+        {
+            if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
+            {
+                $total_iters += $info[$s->{'ind'}];
+                last;
+            }
+            else
+            {
+                if ($info[$s->{'ind'}] > 0)
+                {
+                    $info[$s->{'ind'}] -= $s->{'q'};
+                }
+                $total_iters += $s->{'q'};
+            }
+        }
+        print "$board: $total_iters\n";
+    }
+}
