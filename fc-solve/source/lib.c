@@ -70,11 +70,10 @@ struct fcs_user_struct
 
 typedef struct fcs_user_struct fcs_user_t;
 
-void * freecell_solver_user_alloc(void)
+static void user_initialize(
+        fcs_user_t * ret
+        )
 {
-    fcs_user_t * ret;
-
-    ret = (fcs_user_t *)malloc(sizeof(fcs_user_t));
     ret->max_num_instances = 10;
     ret->instances_list = malloc(sizeof(ret->instances_list[0]) * ret->max_num_instances);
     ret->num_instances = 1;
@@ -91,7 +90,16 @@ void * freecell_solver_user_alloc(void)
             );
 
     ret->state_string_copy = NULL;
-    ret->iterations_board_started_at = 0;
+    ret->iterations_board_started_at = 0;    
+}
+
+void * freecell_solver_user_alloc(void)
+{
+    fcs_user_t * ret;
+
+    ret = (fcs_user_t *)malloc(sizeof(fcs_user_t));
+
+    user_initialize(ret);
 
     return (void*)ret;
 }
@@ -421,15 +429,12 @@ char * freecell_solver_user_current_state_as_string(
             );
 }
 
-void freecell_solver_user_free(
-    void * user_instance
+static void user_free_resources(
+    fcs_user_t * user
     )
 {
-    fcs_user_t * user;
     int i;
-
-    user = (fcs_user_t *)user_instance;
-
+    
     for(i=0;i<user->num_instances;i++)
     {
         int ret_code = user->instances_list[i].ret;
@@ -462,6 +467,17 @@ void freecell_solver_user_free(
         free(user->state_string_copy);
         user->state_string_copy = NULL;
     }
+}
+
+void freecell_solver_user_free(
+    void * user_instance
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+
+    user_free_resources(user);
 
     free(user);
 }
@@ -1093,6 +1109,19 @@ int freecell_solver_user_next_instance(
     user->instances_list[user->current_instance_idx].ret = user->ret = FCS_STATE_NOT_BEGAN_YET;
     user->instances_list[user->current_instance_idx].limit = -1;
     
+    return 0;
+}
+
+int freecell_solver_user_reset(void * user_instance)
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+
+    user_free_resources(user);
+
+    user_initialize(user);
+
     return 0;
 }
 

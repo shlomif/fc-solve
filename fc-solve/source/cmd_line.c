@@ -602,6 +602,10 @@ int freecell_solver_user_cmd_line_parse_args(
         {
             freecell_solver_user_next_instance(instance);
         }
+        else if (!strcmp(argv[arg], "--reset"))
+        {
+            freecell_solver_user_reset(instance);
+        }
         else
         {
             *last_arg = arg;

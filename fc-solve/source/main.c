@@ -23,6 +23,21 @@ struct freecell_solver_display_information_context_struct
 
 typedef struct freecell_solver_display_information_context_struct freecell_solver_display_information_context_t;
 
+static void init_debug_context(
+    freecell_solver_display_information_context_t * dc
+    )
+{
+    dc->parseable_output = 0;
+    dc->canonized_order_output = 0;
+    dc->display_10_as_t = 0;
+    dc->display_parent_iter_num = 0;
+    dc->display_moves = 0;
+    dc->display_states = 1;
+    dc->standard_notation = 0;
+}
+
+
+
 static void my_iter_handler(
     void * user_instance,
     int iter_num,
@@ -359,6 +374,17 @@ static int cmd_line_callback(
     {
         dc->display_parent_iter_num = 1;
     }
+    else if ((!strcmp(argv[arg], "--reset")))
+    {
+        init_debug_context(dc);
+        freecell_solver_user_set_iter_handler(
+            instance,
+            NULL,
+            NULL
+            );                
+        *num_to_skip = 0;
+        return FCS_CMD_LINE_OK;
+    }
     else
     {
         printf("Unimplemented option - \"%s\"!", argv[arg]);
@@ -432,8 +458,10 @@ static char * known_parameters[] = {
     "-sn", "--standard-notation",
     "-sam", "--display-states-and-moves",
     "-pi", "--display-parent-iter",
+    "--reset",
     NULL
     };
+
 
 int main(int argc, char * argv[])
 {
@@ -447,17 +475,9 @@ int main(int argc, char * argv[])
 
     freecell_solver_display_information_context_t debug_context;
 
-    debug_context.parseable_output = 0;
-    debug_context.canonized_order_output = 0;
-    debug_context.display_10_as_t = 0;
-    debug_context.display_parent_iter_num = 0;
-    debug_context.display_moves = 0;
-    debug_context.display_states =1;
-    debug_context.standard_notation = 0;
+    init_debug_context(&debug_context);
 
     dc = &debug_context;
-
-
 
     instance = freecell_solver_user_alloc();
 

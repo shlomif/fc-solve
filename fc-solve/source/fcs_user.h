@@ -253,6 +253,15 @@ extern int freecell_solver_user_next_instance(
     void * user_instance
     );
 
+/* 
+ * This function resets the user_instance, making it lose
+ * all the previous command line arguments it encountered
+ * */
+extern int freecell_solver_user_reset(
+    void * user_instance
+    );
+
+
 #ifdef __cplusplus
 }
 #endif
