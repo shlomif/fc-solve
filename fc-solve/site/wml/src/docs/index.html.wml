@@ -64,3 +64,20 @@ expected.
 But like I said, it's still vapourware. ;-)
 </p>
 
+<h3><a href="http://freshmeat.net/articles/view/519/">Freshmeat 
+Editorial: Time to Rethink your Help Flag?</a></h3>
+
+<p>
+A Freshmeat editorial I wrote about what I had planned to do with the 
+exteremely long help display that Freecell Solver used to have.
+</p>
+
+<h3><a href="Freecell-Solver-TAOUP.txt">Musings about Freecell Solver after Reading "The Art of UNIX Programming"</a></h3>
+
+<p>
+This is an E-mail message I sent to <a href="http://www.catb.org/~esr/">Eric
+S. Raymond</a> in regards to his <a href="http://www.catb.org/~esr/writings/taoup/">"The Art of UNIX Programming"</a> book. In it I mention some interesting
+Freecell Solver techniques similar (but not identical) to exmplaes that he 
+gave in the book.
+</p>
+
