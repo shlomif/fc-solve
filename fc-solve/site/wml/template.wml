@@ -35,14 +35,21 @@
 <table summary="Layout Table: The first cell contains a navigation bar, the second the main page" border="0" width="99%">
 <tr>
 <td valign="top" class="navbar" style="width:20%">
-<navbarlink "" "Home" />
-<navbarlink "download.html" "Downloads" />
-&nbsp;&nbsp;&nbsp;&nbsp;<navbarlink "don_woods.html" "Don Woods' Solver" />
-<navbarlink "links.html" "Links" />
-<navbarlink "features.html" "List of Features" />
+<ul class="navbar_main">
+<li><navbarlink "" "Home" /></li>
+<li><navbarlink "download.html" "Downloads" />
+<ul class="navbar_nested">
+    <li>
+    <navbarlink "don_woods.html" "Don Woods' Solver" />
+    </li>
+</ul>
+</li>
+<li><navbarlink "links.html" "Links" /></li>
+<li><navbarlink "features.html" "List of Features" /></li>
 <br />
-<navbarlink "book.html" "The Book" />
-<navbarlink "old-news.html" "Old News Items" />
+<li><navbarlink "book.html" "The Book" /></li>
+<li><navbarlink "old-news.html" "Old News Items" /></li>
+</ul>
 
 <define-tag validhtml>
 <br /><br /><br /><br />

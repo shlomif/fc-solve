@@ -2,4 +2,5 @@ a:hover { color : red }
 td.navbar { background-color: #C5CAE2;  width : 20% }
 p.desc { margin-left : 3em }
 h2 { background-color: #FFEE00  }
-
+ul.navbar_main { list-style-type: none ; padding-left : 0em }
+ul.navbar_nested { list-style-type : none }
