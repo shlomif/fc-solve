@@ -16,6 +16,8 @@
 #include "dmalloc.h"
 #endif
 
+#include "inline.h"
+
 #if 0
 /* This variable was used for debugging. */
 int msc_counter=0;
@@ -367,6 +369,14 @@ void freecell_solver_move_stack_normalize(
     freecell_solver_move_stack_swallow_stack(moves, temp_moves);
 }
 
+GCC_INLINE int convert_freecell_num(int fcn)
+{
+    if (fcn >= 7)
+        return (fcn+3);
+    else
+        return fcn;
+}
+
 char * freecell_solver_move_to_string(fcs_move_t move, int standard_notation)
 {
     char string[256];
@@ -394,7 +404,7 @@ char * freecell_solver_move_to_string(fcs_move_t move, int standard_notation)
             if (standard_notation)
             {
                 sprintf(string, "%c%i",
-                    ('a'+fcs_move_get_src_freecell(move)),
+                    ('a'+convert_freecell_num(fcs_move_get_src_freecell(move))),
                     1+fcs_move_get_dest_stack(move)
                     );
             }
@@ -412,8 +422,8 @@ char * freecell_solver_move_to_string(fcs_move_t move, int standard_notation)
             if (standard_notation)
             {
                 sprintf(string, "%c%c",
-                    ('a'+fcs_move_get_src_freecell(move)),
-                    ('a'+fcs_move_get_dest_freecell(move))
+                    ('a'+convert_freecell_num(fcs_move_get_src_freecell(move))),
+                    ('a'+convert_freecell_num(fcs_move_get_dest_freecell(move)))
                     );
             }
             else
@@ -431,7 +441,7 @@ char * freecell_solver_move_to_string(fcs_move_t move, int standard_notation)
             {
                 sprintf(string, "%i%c",
                     1+fcs_move_get_src_stack(move),
-                    ('a'+fcs_move_get_dest_freecell(move))
+                    ('a'+convert_freecell_num(fcs_move_get_dest_freecell(move)))
                     );
             }
             else
@@ -462,7 +472,7 @@ char * freecell_solver_move_to_string(fcs_move_t move, int standard_notation)
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
             if (standard_notation)
             {
-                sprintf(string, "%ch", ('a'+fcs_move_get_src_freecell(move)));
+                sprintf(string, "%ch", ('a'+convert_freecell_num(fcs_move_get_src_freecell(move))));
             }
             else
             {
