@@ -352,6 +352,17 @@ typedef struct freecell_solver_instance
     int num_hard_threads_finished;
 } freecell_solver_instance_t;
 
+
+
+
+/***************************************************/
+
+
+
+
+
+
+
 struct freecell_solver_hard_thread_struct
 {
     freecell_solver_instance_t * instance;
@@ -453,6 +464,19 @@ struct freecell_solver_hard_thread_struct
 #endif
 };
 
+
+
+
+
+/********************************************/
+
+
+
+
+
+
+
+
 struct fcs_soft_dfs_stack_item_struct
 {
     fcs_state_with_locations_t * state;
@@ -485,12 +509,8 @@ struct freecell_solver_soft_thread_struct
      * that it can be lower than FCS_TESTS_NUM, thus enabling several tests
      * to be removed completely.
      * */
-#if 0
-    int tests_order_num;
-    int tests_order[FCS_TESTS_NUM];
-#else
     fcs_tests_order_t tests_order;
-#endif
+
 
     /*
      * The (temporary) max depth of the Soft-DFS scans)
@@ -567,25 +587,7 @@ struct freecell_solver_soft_thread_struct
      *
      * */
     
-#if 0
-    fcs_derived_states_list_t * soft_dfs_derived_states_lists;
-    int * soft_dfs_current_state_indexes;
-    int * soft_dfs_test_indexes;
-    int * soft_dfs_num_freestacks;
-    int * soft_dfs_num_freecells;
-    int * soft_dfs_derived_states_random_indexes_max_size;
-    int * * soft_dfs_derived_states_random_indexes;
-#else
     fcs_soft_dfs_stack_item_t * soft_dfs_info;
-#endif
-#if 0
-    /*
-     * A vector of the states leading to the solution. It is actively
-     * being modified by a Soft-DFS scan. Its usage for output has been
-     * deprecated because solution_moves was introduced.
-     * */
-    fcs_state_with_locations_t * * solution_states;
-#endif
 
     /* The depth of the DFS stacks */
     int num_solution_states;

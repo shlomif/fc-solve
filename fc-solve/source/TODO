@@ -1,7 +1,5 @@
 --- Pressing ---
 
-* make sure duplicate_state_proto() does not use malloc.
-
 * Code test functions for atomic moves.
 
 --- Non-pressing ---
