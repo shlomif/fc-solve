@@ -101,10 +101,12 @@ enum FCS_TESTS_ORDER_FLAGS
     FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP = 0x2000000
 };
 
+#if 0
 #ifdef FCS_WITH_TALONS
 #define FCS_TESTS_NUM 28
 #else
 #define FCS_TESTS_NUM 26
+#endif
 #endif
 
 /*

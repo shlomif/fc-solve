@@ -14,6 +14,8 @@
 extern "C" {
 #endif
 
+#include "test_num.h"
+
 typedef int (*freecell_solver_solve_for_state_test_t)(
         freecell_solver_soft_thread_t *,
         fcs_state_with_locations_t *,
@@ -24,6 +26,17 @@ typedef int (*freecell_solver_solve_for_state_test_t)(
         );
 
 extern freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TESTS_NUM];
+
+struct fcs_test_aliases_mapping_struct
+{
+    const char * alias;
+    int test_num;
+};
+
+typedef struct fcs_test_aliases_mapping_struct fcs_test_aliases_mapping_t;
+
+extern fcs_test_aliases_mapping_t freecell_solver_sfs_tests_aliases[FCS_TESTS_ALIASES_NUM];
+
 
 /*
  * This macro determines if child can be placed above parent.

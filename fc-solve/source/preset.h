@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 #include "fcs.h"
+#include "test_num.h"
 
 struct fcs_preset_struct
 {

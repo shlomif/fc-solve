@@ -19,7 +19,7 @@ sub min
 my @objects=(
     qw(alloc app_str caas card cl_chop cmd_line fcs_dm fcs_hash fcs_isa), 
     qw(freecell intrface lib lookup2 move pqueue preset rand), 
-    qw(scans simpsim state)
+    qw(scans simpsim state tests)
     );
 
 my @targets = (
@@ -39,7 +39,7 @@ my @headers_proto=
             qw(ds_order fcs_cl fcs fcs_dm fcs_enums),
         qw(fcs_hash fcs_isa fcs_move fcs_user inline jhjtypes lookup2), 
         qw(move ms_ca), {'name' => "prefix", 'gen' => 1}, 
-            qw(pqueue preset rand state test_arr tests)
+            qw(pqueue preset rand state test_arr test_num tests)
     );
 
 my @headers = (map { ref($_) eq "HASH" ? $_->{'name'} : $_ } @headers_proto);

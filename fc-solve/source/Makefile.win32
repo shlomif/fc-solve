@@ -2,12 +2,12 @@ all: fc-solve.exe freecell-solver-range-parallel-solve.exe
 
 OFLAGS=/Og2 /DWIN32
 DFLAGS=$(OFLAGS) /DDEBUG
-INCLUDES=alloc.h app_str.h caas.h card.h cl_chop.h config.h ds_order.h fcs_cl.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h fcs_user.h inline.h jhjtypes.h lookup2.h move.h ms_ca.h prefix.h pqueue.h preset.h rand.h state.h test_arr.h tests.h
+INCLUDES=alloc.h app_str.h caas.h card.h cl_chop.h config.h ds_order.h fcs_cl.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h fcs_user.h inline.h jhjtypes.h lookup2.h move.h ms_ca.h prefix.h pqueue.h preset.h rand.h state.h test_arr.h test_num.h tests.h
 CC=cl
 LIB32=link.exe
 
 
-OBJECTS = alloc.obj app_str.obj caas.obj card.obj cl_chop.obj cmd_line.obj fcs_dm.obj fcs_hash.obj fcs_isa.obj freecell.obj intrface.obj lib.obj lookup2.obj move.obj pqueue.obj preset.obj rand.obj scans.obj simpsim.obj state.obj
+OBJECTS = alloc.obj app_str.obj caas.obj card.obj cl_chop.obj cmd_line.obj fcs_dm.obj fcs_hash.obj fcs_isa.obj freecell.obj intrface.obj lib.obj lookup2.obj move.obj pqueue.obj preset.obj rand.obj scans.obj simpsim.obj state.obj tests.obj
 
 
 alloc.obj: alloc.c $(INCLUDES)
@@ -69,6 +69,9 @@ simpsim.obj: simpsim.c $(INCLUDES)
 
 state.obj: state.c $(INCLUDES)
 	$(CC) /c /Fostate.obj $(OFLAGS) state.c
+
+tests.obj: tests.c $(INCLUDES)
+	$(CC) /c /Fotests.obj $(OFLAGS) tests.c
 
 main.obj: main.c $(INCLUDES)
 	$(CC) /c /Fomain.obj $(OFLAGS) main.c

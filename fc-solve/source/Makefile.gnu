@@ -71,6 +71,7 @@ OBJECTS =                     \
           scans.o             \
           simpsim.o           \
           state.o             \
+          tests.o             \
 
 #>>>OBJECTS.END
 
