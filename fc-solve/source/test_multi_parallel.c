@@ -364,10 +364,6 @@ void print_int(binary_output_t * bin, int val)
 {
     unsigned char * buffer = bin->ptr;
     int p;
-    if (bin->file == NULL)
-    {
-        return;
-    }
             
     for(p=0;p<4;p++)
     {
@@ -383,6 +379,8 @@ void print_int(binary_output_t * bin, int val)
         bin->ptr = bin->buffer;
     }
 }
+
+#define print_int_wrapper(i) { if (binary_output.file) { print_int(&binary_output, (i));  } }
 
 int main(int argc, char * argv[])
 {
@@ -409,7 +407,7 @@ int main(int argc, char * argv[])
     int parser_ret;
 
     int pack_num_iters;
-    int total_iterations_limit_per_board = 100000;
+    int total_iterations_limit_per_board = -1;
 
     char * binary_output_filename = NULL;
 
@@ -470,9 +468,9 @@ int main(int argc, char * argv[])
         binary_output.ptr = binary_output.buffer;
         binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
         
-        print_int(&binary_output, start_board);
-        print_int(&binary_output, end_board);
-        print_int(&binary_output, total_iterations_limit_per_board);
+        print_int_wrapper(start_board);
+        print_int_wrapper(end_board);
+        print_int_wrapper(total_iterations_limit_per_board);
         
     }
     else
@@ -544,7 +542,7 @@ int main(int argc, char * argv[])
             );
 #endif
             fflush(stdout);
-            print_int(&binary_output, -1);
+            print_int_wrapper(-1);
         }
         else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
@@ -563,11 +561,11 @@ int main(int argc, char * argv[])
                 tb.millitm*1000
             );
 #endif
-            print_int(&binary_output, -2);
+            print_int_wrapper(-2);
         }
         else
         {
-            print_int(&binary_output, freecell_solver_user_get_num_times(user.instance));
+            print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
         }
 
         total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);

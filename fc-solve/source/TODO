@@ -6,6 +6,8 @@
 
 --- Non-pressing ---
 
+* Make the code splint-clean.
+
 * Write an architecture document.
 
 * Write a Perl Script to parse, analyze and do a sanity check for a solution.
