@@ -419,6 +419,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
     int test_index, current_state_index;
+    fcs_derived_states_list_t * derived_states_list;
 
     freecells_num = instance->freecells_num;
     stacks_num = instance->stacks_num;
@@ -449,13 +450,17 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
     the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
 
-#ifdef REPARENT
-    calculate_real_depth(the_soft_dfs_info->state);
-#endif
 
     dfs_max_depth = soft_thread->dfs_max_depth;
     test_index = the_soft_dfs_info->test_index;
     current_state_index = the_soft_dfs_info->current_state_index;
+    ptr_state_with_locations = the_soft_dfs_info->state;
+    derived_states_list = &(the_soft_dfs_info->derived_states_list);
+
+#ifdef REPARENT
+    calculate_real_depth(ptr_state_with_locations);
+#endif
+    
     /*
         The main loop.
     */
@@ -473,20 +478,21 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
              * */
             the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
             dfs_max_depth = soft_thread->dfs_max_depth;
+            /* This too has to be re-synced */
+            derived_states_list = &(the_soft_dfs_info->derived_states_list);
         }
 
         /* All the resultant states in the last test conducted were covered */
-        if (current_state_index == the_soft_dfs_info->derived_states_list.num_states)
+        if (current_state_index == derived_states_list->num_states)
         {
-
             if (test_index >= tests_order_num)
             {
                 /* Backtrack to the previous depth. */
 
                 if (is_a_complete_scan)
                 {
-                    the_soft_dfs_info->state->visited |= FCS_VISITED_ALL_TESTS_DONE;
-                    mark_as_dead_end(the_soft_dfs_info->state);
+                    ptr_state_with_locations->visited |= FCS_VISITED_ALL_TESTS_DONE;
+                    mark_as_dead_end(ptr_state_with_locations);
                 }
 
                 depth--;
@@ -502,13 +508,12 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 the_soft_dfs_info--;
                 test_index = the_soft_dfs_info->test_index;
                 current_state_index = the_soft_dfs_info->current_state_index;
+                derived_states_list = &(the_soft_dfs_info->derived_states_list);
+                ptr_state_with_locations = the_soft_dfs_info->state;
                 continue; /* Just to make sure depth is not -1 now */
             }
 
-            the_soft_dfs_info->derived_states_list.num_states = 0;
-
-            ptr_state_with_locations = the_soft_dfs_info->state;
-
+            derived_states_list->num_states = 0;
 
             /* If this is the first test, then count the number of unoccupied
                freeceels and stacks and check if we are done. */
@@ -600,7 +605,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         ptr_state_with_locations,
                         the_soft_dfs_info->num_freestacks,
                         the_soft_dfs_info->num_freecells,
-                        &(the_soft_dfs_info->derived_states_list),
+                        derived_states_list,
 #ifdef REPARENT
                         1
 #else
@@ -613,7 +618,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                     (check == FCS_STATE_SUSPEND_PROCESS))
                 {
                     /* Have this test be re-performed */
-                    the_soft_dfs_info->derived_states_list.num_states = 0;
+                    derived_states_list->num_states = 0;
                     the_soft_dfs_info->current_state_index = 0;
                     the_soft_dfs_info->test_index = test_index;
                     soft_thread->num_solution_states = depth+1;
@@ -629,12 +634,13 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 int a, j;
                 int swap_save;
                 int * rand_array;
+                int num_states = derived_states_list->num_states;
 
-                if (the_soft_dfs_info->derived_states_list.num_states >
+                if (num_states >
                         the_soft_dfs_info->derived_states_random_indexes_max_size)
                 {
                     the_soft_dfs_info->derived_states_random_indexes_max_size =
-                        the_soft_dfs_info->derived_states_list.num_states;
+                        num_states;
                     the_soft_dfs_info->derived_states_random_indexes =
                         realloc(
                             the_soft_dfs_info->derived_states_random_indexes,
@@ -643,7 +649,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 }
                 rand_array = the_soft_dfs_info->derived_states_random_indexes;
 
-                for(a=0;a<the_soft_dfs_info->derived_states_list.num_states;a++)
+                for(a=0 ; a < num_states ; a++)
                 {
                     rand_array[a] = a;
                 }
@@ -654,7 +660,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                  * */
                 if (to_randomize && tests_order_tests[ test_index-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
                 {
-                    a = the_soft_dfs_info->derived_states_list.num_states-1;
+                    a = num_states-1;
                     while (a > 0)
                     {
                         j =
@@ -679,56 +685,65 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
             current_state_index = 0;
         }
 
-        while (current_state_index <
-               the_soft_dfs_info->derived_states_list.num_states)
         {
-            ptr_recurse_into_state_with_locations =
-                (the_soft_dfs_info->derived_states_list.states[
-                    the_soft_dfs_info->derived_states_random_indexes[
-                        current_state_index
-                    ]
-                ]);
+            int num_states = derived_states_list->num_states;
+            fcs_state_with_locations_t * * derived_states = derived_states_list->states;
+            int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
 
-            current_state_index++;
-            if (
-                (! (ptr_recurse_into_state_with_locations->visited &
-                    FCS_VISITED_DEAD_END)
-                ) &&
-                (! is_scan_visited(
-                    ptr_recurse_into_state_with_locations,
-                    soft_thread_id)
-                )
-               )
+            while (current_state_index <
+                   num_states)
             {
-                instance->num_times++;
-                hard_thread->num_times++;
+                ptr_recurse_into_state_with_locations =
+                    (derived_states[
+                        rand_array[
+                            current_state_index
+                        ]
+                    ]);
 
-                the_soft_dfs_info->test_index = test_index;
-                the_soft_dfs_info->current_state_index = current_state_index;
+                current_state_index++;
+                if (
+                    (! (ptr_recurse_into_state_with_locations->visited &
+                        FCS_VISITED_DEAD_END)
+                    ) &&
+                    (! is_scan_visited(
+                        ptr_recurse_into_state_with_locations,
+                        soft_thread_id)
+                    )
+                   )
+                {
+                    instance->num_times++;
+                    hard_thread->num_times++;
 
-                set_scan_visited(ptr_recurse_into_state_with_locations, soft_thread_id);
+                    the_soft_dfs_info->test_index = test_index;
+                    the_soft_dfs_info->current_state_index = current_state_index;
 
-                ptr_recurse_into_state_with_locations->visited_iter = instance->num_times;
+                    set_scan_visited(ptr_recurse_into_state_with_locations, soft_thread_id);
+
+                    ptr_recurse_into_state_with_locations->visited_iter = instance->num_times;
 #if 0
-                ptr_recurse_into_state_with_locations->parent = ptr_state_with_locations;
+                    ptr_recurse_into_state_with_locations->parent = ptr_state_with_locations;
 #endif
 
-                /*
-                    I'm using current_state_indexes[depth]-1 because we already
-                    increased it by one, so now it refers to the next state.
-                */
-                depth++;
-                the_soft_dfs_info++;
-                the_soft_dfs_info->state = ptr_recurse_into_state_with_locations;
-                test_index = 0;
-                current_state_index = 0;
-                the_soft_dfs_info->derived_states_list.num_states = 0;
+                    /*
+                        I'm using current_state_indexes[depth]-1 because we already
+                        increased it by one, so now it refers to the next state.
+                    */
+                    depth++;
+                    the_soft_dfs_info++;
+                    the_soft_dfs_info->state = 
+                        ptr_state_with_locations = 
+                        ptr_recurse_into_state_with_locations;
+                    test_index = 0;
+                    current_state_index = 0;
+                    derived_states_list = &(the_soft_dfs_info->derived_states_list);
+                    derived_states_list->num_states = 0;
 
 #ifdef REPARENT
-                calculate_real_depth(ptr_recurse_into_state_with_locations);
+                    calculate_real_depth(ptr_recurse_into_state_with_locations);
 #endif
 
-                break;
+                    break;
+                }
             }
         }
     }
@@ -933,6 +948,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
     int * tests_order_tests;
     int calc_real_depth = instance->calc_real_depth;
     int soft_thread_id = soft_thread->id;
+    int is_a_complete_scan = soft_thread->is_a_complete_scan;
 
     derived.num_states = 0;
     derived.max_num_states = 0;
@@ -1092,7 +1108,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
         }
         
 
-        if (soft_thread->is_a_complete_scan)
+        if (is_a_complete_scan)
         {
             ptr_state_with_locations->visited |= FCS_VISITED_ALL_TESTS_DONE;
         }
@@ -1134,7 +1150,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
 
             if (derived.num_states == 0)
             {
-                if (soft_thread->is_a_complete_scan)
+                if (is_a_complete_scan)
                 {
                     mark_as_dead_end(ptr_state_with_locations);
                 }
