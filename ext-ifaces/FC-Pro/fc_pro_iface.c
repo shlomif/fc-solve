@@ -606,7 +606,8 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         int num_moves;
         int a;
         fcs_move_t move;
-        char * str, * moves_string_proto, len;
+        char * str, * moves_string_proto;
+        int len;
         moves_processed_t * moves_processed;
 
         ret = num_iters;
@@ -627,7 +628,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         moves_string = malloc(len+1);
         for(a=0;a<len;a++)
         {
-            moves_string[a] = moves_string_proto[len-a];
+            moves_string[a] = moves_string_proto[len-1-a];
         }
         moves_string[a] = '\0';
         free(moves_string_proto);
