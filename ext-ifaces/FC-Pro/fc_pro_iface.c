@@ -343,7 +343,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         pos.foundations[suit]++;
                         pos.hold[j] = 0;
                         fcs_move_set_type(new_move.move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
-                        fcs_move_set_src_freecell(new_move.move, i);
+                        fcs_move_set_src_freecell(new_move.move, j);
                         fcs_move_set_foundation(new_move.move, (suit+1)&0x3);
                         moves_processed_add_new_move(ret, new_move);
 
@@ -658,16 +658,32 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         
         moves_processed = moves_processed_gen(orig, NoFcs, instance);
         num_moves = moves_processed_get_moves_left(moves_processed);
-        moves_string_proto = (char *)malloc(num_moves*4+1);
+#ifdef DEBUG
+        moves_string_proto = (char *)malloc(moves_processed->num_moves*8+1);
+#else
+        moves_string_proto = (char *)malloc(moves_processed->num_moves*4+1);
+#endif
         
         /* a = num_moves-1; */
         str = moves_string_proto;
+#ifdef DEBUG
+        len = 0;
+#endif
         while (! moves_processed_get_next_move(moves_processed, &move))
         {
+
             str = render_move(move, str);
+#ifdef DEBUG            
+            *(str++) = ' ';
+            if ((++len % 10) == 0)
+            {
+                *(str++) = '\n';
+            }
+            *(str) = '\0';
+#endif
         }
         moves_processed_free(moves_processed);
-        
+#ifndef DEBUG
         len = str-moves_string_proto;
         moves_string = malloc(len+1);
         for(a=0;a<len;a++)
@@ -676,6 +692,9 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         }
         moves_string[a] = '\0';
         free(moves_string_proto);
+#else
+        moves_string = moves_string_proto;
+#endif
         
 #if 0
         moves_string[num_moves*2] = '\0';
