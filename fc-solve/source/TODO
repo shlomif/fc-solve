@@ -1,4 +1,14 @@
 --- Pressing ---
+    
+    Arch Doc:
+    ---------
+    
+    * Add the terms "false imposssible", "intractable".
+
+    * Hyperlink to the terms from someplaces in the main document
+
+* Make sure all the Simple Simon outputs for the first 1000 PySol boards are 
+equivalent in FCS 2.8.x and in the version with Michael Mann's improvement.
 
 * Implement the move stacks over-riding in the derived states list, so
 move stacks won't be allocated excessively.
@@ -9,6 +19,13 @@ move stacks won't be allocated excessively.
 fashion.
 
 * Implement the mapping of names -> test functions.
+
+* Implement Patsolve's state ordering.
+
+    - Afterwards:
+
+    * Time the patsolve's scans into the atomic moves scans database,
+    and create an optimized meta-scan.
 
 --- Non-pressing ---
 
