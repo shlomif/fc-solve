@@ -1,10 +1,23 @@
 
+HOSTNAME = $(shell hostname)
+
+ifeq ($(HOSTNAME),"vipe.technion.ac.il")
+	VIPE = 1
+endif
 
 ifdef BERLIOS
-	D = /var/www/html/fc-solve-berlios
+	ifdef VIPE
+		D = $(HOME)/progs/fcs/berlios-site
+	else
+		D = /var/www/html/fc-solve-berlios
+	endif
 	WML_FLAGS = -DBERLIOS=BERLIOS
 else
-	D = /var/www/html/fc-solve
+	ifdef VIPE
+		D = $(HOME)/public_html/freecell-solver/
+	else
+		D = /var/www/html/fc-solve
+	endif
 	WML_FLAGS = 
 endif
 #D = /home/httpd/html/ip-noise
