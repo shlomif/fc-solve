@@ -415,6 +415,12 @@ static void free_instance_hard_thread_callback(freecell_solver_hard_thread_t * h
     {
         freecell_solver_compact_allocator_finish(hard_thread->move_stacks_allocator);
     }
+#ifdef INDIRECT_STACK_STATES
+    if (hard_thread->stacks_allocator)
+    {
+        freecell_solver_compact_allocator_finish(hard_thread->stacks_allocator);
+    }
+#endif
     free(hard_thread);    
 }
 
@@ -1449,7 +1455,8 @@ void freecell_solver_finish_instance(
         freecell_solver_state_ia_finish(hard_thread);
 
 #ifdef INDIRECT_STACK_STATES
-        freecell_solver_compact_allocator_finish(instance->hard_threads[ht_idx]->stacks_allocator);
+        freecell_solver_compact_allocator_finish(hard_thread->stacks_allocator);
+        hard_thread->stacks_allocator = NULL;
 #endif
         freecell_solver_compact_allocator_finish(hard_thread->move_stacks_allocator);
         hard_thread->move_stacks_allocator = NULL;
@@ -1634,6 +1641,10 @@ void freecell_solver_recycle_instance(
         hard_thread->num_soft_threads_finished = 0;
         hard_thread->move_stacks_allocator =
             freecell_solver_compact_allocator_new();
+#ifdef INDIRECT_STACK_STATES
+        hard_thread->stacks_allocator = 
+            freecell_solver_compact_allocator_new();
+#endif
         for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
         {
             soft_thread = hard_thread->soft_threads[st_idx];
