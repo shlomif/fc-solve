@@ -216,6 +216,15 @@ Freecell Tests:
 '8' - move cards to a different parent.
 '9' - empty an entire stack into the freecells.
 
+Atomic Freecell Tests:
+
+'A' - move a stack card to an empty stack.
+'B' - move a stack card to a parent on a different stack.
+'C' - move a stack card to a freecell.
+'D' - move a freecel card to a parent.
+'E' - move a freecel card to an empty stack.
+
+
 Simple Simon Tests:
 
 'a' - move a full sequence to the foundations.
