@@ -114,15 +114,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
            (existing_state->depth > ptr_state_with_locations->depth+1))   \
         {                                                                 \
             /* Make a copy of "moves" because "moves will be destoryed */ \
-            fcs_move_stack_t * moves_copy;                                \
-            fcs_move_stack_duplicate_into_var(                            \
-                moves_copy,                                               \
-                moves                                                     \
-                );                                                        \
-            /* Destroy the old moves stack of the state, as we are        \
-             * going to over-ride it.. */                                 \
-            fcs_move_stack_destroy(existing_state->moves_to_parent);      \
-            existing_state->moves_to_parent = moves_copy;                 \
+            existing_state->moves_to_parent = freecell_solver_move_stack_compact_allocate(hard_thread, moves);                 \
             existing_state->parent = ptr_state_with_locations;            \
             existing_state->depth = ptr_state_with_locations->depth + 1;  \
         }                                                                 \

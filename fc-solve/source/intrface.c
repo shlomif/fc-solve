@@ -1361,11 +1361,13 @@ void freecell_solver_finish_instance(
 
     if (instance->optimization_thread)
     {
+#if 0
         freecell_solver_state_ia_foreach(
             instance->optimization_thread,
             freecell_solver_destroy_move_stack_of_state,
             NULL
             );
+#endif
 
         freecell_solver_state_ia_finish(instance->optimization_thread);
     }
