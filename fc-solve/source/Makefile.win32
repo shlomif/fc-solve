@@ -1,13 +1,13 @@
 all: fc-solve.exe
 
-OFLAGS=/Og2 /DFCS_STATE_STORAGE=FCS_STATE_STORAGE_INTERNAL_HASH /DWIN32
+OFLAGS=/Og2 /DFCS_STATE_STORAGE=FCS_STATE_STORAGE_INTERNAL_HASH /DFCS_STACK_STORAGE=FCS_STACK_STORAGE_INTERNAL_HASH /DWIN32
 DFLAGS=$(OFLAGS) /DDEBUG
 INCLUDES=alloc.h app_str.h caas.h card.h config.h fcs_cl.h fcs.h fcs_dm.h fcs_enums.h fcs_hash.h fcs_isa.h fcs_move.h fcs_user.h jhjtypes.h move.h ms_ca.h pqueue.h preset.h rand.h state.h test_arr.h tests.h
 CC=cl
 LIB32=link.exe
 
 
-OBJECTS = alloc.obj app_str.obj caas.obj card.obj cmd_line.obj fcs_dm.obj fcs_hash.obj fcs_isa.obj freecell.obj intrface.obj lib.obj move.obj pqueue.obj preset.obj rand.obj scans.obj simpsim.obj state.obj
+OBJECTS = alloc.obj app_str.obj caas.obj card.obj cmd_line.obj fcs_dm.obj fcs_hash.obj fcs_isa.obj freecell.obj intrface.obj lib.obj lookup2.obj move.obj pqueue.obj preset.obj rand.obj scans.obj simpsim.obj state.obj
 
 
 alloc.obj: alloc.c $(INCLUDES)
@@ -42,6 +42,9 @@ intrface.obj: intrface.c $(INCLUDES)
 
 lib.obj: lib.c $(INCLUDES)
 	$(CC) /c /Folib.obj $(OFLAGS) lib.c
+
+lookup2.obj: lookup2.c $(INCLUDES)
+	$(CC) /c /Folookup2.obj $(OFLAGS) lookup2.c
 
 move.obj: move.c $(INCLUDES)
 	$(CC) /c /Fomove.obj $(OFLAGS) move.c
