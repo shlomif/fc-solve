@@ -57,8 +57,8 @@ makes constructing faster solving presets easier.
 </p>
 
 <p>
-The code of Freecell Solver has also been greatly optimized and cleaned up,
-which makes it much faster than it was before.
+Several other flags were added, and the code has also been greatly optimized 
+and cleaned up, which makes Freecell Solver much faster than it was before.
 </p>
 
 <h3>29-Mar-2002</h3>
