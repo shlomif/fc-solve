@@ -92,7 +92,7 @@ src/win32_build/dynamic/fcs.zip: src/freecell-solver-$(RECENT_STABLE_VERSION).ta
 	rm -fr t
 
 $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
-	cd src && wml $(WML_FLAGS) -DFILENAME="$(patsubst src/%,%,$<)" $(patsubst src/%,%,$<) > $@
+	cd src && wml $(WML_FLAGS) -DFILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<) > $@
 
 $(IMAGES) :: $(D)/% : src/%
 	cp -f $< $@
