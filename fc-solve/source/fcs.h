@@ -102,9 +102,9 @@ enum FCS_TESTS_ORDER_FLAGS
 };
 
 #ifdef FCS_WITH_TALONS
-#define FCS_TESTS_NUM 27
+#define FCS_TESTS_NUM 28
 #else
-#define FCS_TESTS_NUM 25
+#define FCS_TESTS_NUM 26
 #endif
 
 /*

@@ -2400,6 +2400,7 @@ freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TESTS_NUM] 
     freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above,
     freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above,
     freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack,
+    freecell_solver_sfs_simple_simon_move_sequence_to_false_parent,
     freecell_solver_sfs_atomic_move_card_to_empty_stack,
     freecell_solver_sfs_atomic_move_card_to_parent,
     freecell_solver_sfs_atomic_move_card_to_freecell,

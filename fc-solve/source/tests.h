@@ -303,6 +303,16 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_
         int reparent
         );
 
+extern int freecell_solver_sfs_simple_simon_move_sequence_to_false_parent(
+        freecell_solver_soft_thread_t * soft_thread,
+        fcs_state_with_locations_t * ptr_state_with_locations,
+        int num_freestacks,
+        int num_freecells,
+        fcs_derived_states_list_t * derived_states_list,
+        int reparent
+        );
+
+
 #ifdef __cplusplus
 }
 #endif

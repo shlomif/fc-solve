@@ -382,13 +382,13 @@ static int freecell_solver_char_to_test_num(char c)
     {
         return c-'0';
     }
-    else if ((c >= 'a') && (c <= 'h'))
+    else if ((c >= 'a') && (c <= 'i'))
     {
         return c-'a'+10;
     }
     else if ((c >= 'A') && (c <= 'Z'))
     {
-        return c-'A'+18;
+        return c-'A'+19;
     }
     else
     {
