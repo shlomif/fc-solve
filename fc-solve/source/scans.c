@@ -31,8 +31,6 @@
 #include "dmalloc.h"
 #endif
 
-#define DEBUG
-
 static pq_rating_t freecell_solver_a_star_rate_state(
     freecell_solver_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations);
