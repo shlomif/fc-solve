@@ -1,4 +1,4 @@
-all: fc-solve.exe
+all: fc-solve.exe freecell-solver-range-parallel-solve.exe
 
 OFLAGS=/Og2 /DWIN32
 DFLAGS=$(OFLAGS) /DDEBUG

@@ -29,7 +29,7 @@ my @defines=(qw(WIN32));
 
 my @debug_defines = (qw(DEBUG));
 
-print "all: fc-solve.exe\n\n";
+print "all: fc-solve.exe freecell-solver-range-parallel-solve.exe\n\n";
 
 print "OFLAGS=" . "/Og2 " . join(" ", (map { "/D".$_ } @defines)) . "\n";
 print "DFLAGS=\$(OFLAGS) " . join(" ", (map { "/D".$_ } @debug_defines)) . "\n";
