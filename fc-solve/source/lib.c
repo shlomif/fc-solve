@@ -49,6 +49,10 @@ struct fcs_user_struct
      * */
     int iterations_board_started_at;
     /*
+     * The number of iterations that the current instance started solving from.
+     * */
+    int init_num_times;
+    /*
      * A pointer to the currently active instance out of the sequence
      * */
     freecell_solver_instance_t * instance;
@@ -349,7 +353,7 @@ int freecell_solver_user_resume_solution(
 
             calc_max_iters();
 
-            init_num_times = user->instance->num_times;
+            user->init_num_times = init_num_times = user->instance->num_times;
 
             ret = user->ret = 
                 user->instances_list[user->current_instance_idx].ret = 
@@ -360,7 +364,7 @@ int freecell_solver_user_resume_solution(
 
             calc_max_iters();
     
-            init_num_times = user->instance->num_times;
+            user->init_num_times = init_num_times = user->instance->num_times;
             
             ret = user->ret = 
                 user->instances_list[user->current_instance_idx].ret =
@@ -659,7 +663,7 @@ int freecell_solver_user_get_num_times(void * user_instance)
 
     user = (fcs_user_t *)user_instance;
 
-    return user->iterations_board_started_at;
+    return user->iterations_board_started_at + user->instance->num_times - user->init_num_times;
 }
 
 int freecell_solver_user_get_limit_iterations(void * user_instance)
