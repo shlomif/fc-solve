@@ -63,12 +63,13 @@ void freecell_solver_PQueueInitialise(
 int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
 {
     uint32 i;
+    pq_element_t * Elements = pq->Elements;
 
     if (pq->CurrentSize == pq->MaxSize )
     {
         int new_size;
         new_size = pq->MaxSize + 256;
-        pq->Elements = (pq_element_t *)realloc( pq->Elements, sizeof(pq_element_t) * (new_size+1));
+        pq->Elements = Elements = (pq_element_t *)realloc( Elements, sizeof(pq_element_t) * (new_size+1));
         pq->MaxSize = new_size;
     }
 
@@ -90,12 +91,12 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
             while( ( i==PQ_FIRST_ENTRY ?
                      (pq->MaxRating) /* return biggest possible rating if first element */
                      :
-                     (pq->Elements[ PQ_PARENT_INDEX(i) ].rating )
+                     (Elements[ PQ_PARENT_INDEX(i) ].rating )
                    )
                    < r
                  )
             {
-                pq->Elements[ i ] = pq->Elements[ PQ_PARENT_INDEX(i) ];
+                Elements[ i ] = Elements[ PQ_PARENT_INDEX(i) ];
 
                 i = PQ_PARENT_INDEX(i);
             }
@@ -105,12 +106,12 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
             while( ( i==PQ_FIRST_ENTRY ?
                      (pq->MaxRating) /* return biggest possible rating if first element */
                      :
-                     (pq->Elements[ PQ_PARENT_INDEX(i) ].rating )
+                     (Elements[ PQ_PARENT_INDEX(i) ].rating )
                    )
                    > r
                  )
             {
-                pq->Elements[ i ] = pq->Elements[ PQ_PARENT_INDEX(i) ];
+                Elements[ i ] = Elements[ PQ_PARENT_INDEX(i) ];
 
                 i = PQ_PARENT_INDEX(i);
             }
@@ -118,8 +119,8 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
 
 
         /* then add the element at the space we created. */
-        pq->Elements[i].item = item;
-        pq->Elements[i].rating = r;
+        Elements[i].item = item;
+        Elements[i].rating = r;
     }
 
     return TRUE;
@@ -153,6 +154,7 @@ void *freecell_solver_PQueuePop( PQUEUE *pq)
 {
     int32 i;
     int32 child;
+    pq_element_t * Elements = pq->Elements;
 
     pq_element_t pMaxElement;
     pq_element_t pLastElement;
@@ -162,10 +164,10 @@ void *freecell_solver_PQueuePop( PQUEUE *pq)
         return NULL;
     }
 
-    pMaxElement = pq->Elements[PQ_FIRST_ENTRY];
+    pMaxElement = Elements[PQ_FIRST_ENTRY];
 
     /* get pointer to last element in tree */
-    pLastElement = pq->Elements[ pq->CurrentSize-- ];
+    pLastElement = Elements[ pq->CurrentSize-- ];
 
     if( pq->IsAscendingHeap == TRUE )
     {
@@ -181,14 +183,14 @@ void *freecell_solver_PQueuePop( PQUEUE *pq)
             child = PQ_LEFT_CHILD_INDEX(i);
 
             if( (child != pq->CurrentSize) &&
-                (PGetRating(pq->Elements[child + 1]) > PGetRating(pq->Elements[child])) )
+                (PGetRating(Elements[child + 1]) > PGetRating(Elements[child])) )
             {
                 child ++;
             }
 
-            if( PGetRating( pLastElement ) < PGetRating( pq->Elements[ child ] ) )
+            if( PGetRating( pLastElement ) < PGetRating( Elements[ child ] ) )
             {
-                pq->Elements[ i ] = pq->Elements[ child ];
+                Elements[ i ] = Elements[ child ];
             }
             else
             {
@@ -207,14 +209,14 @@ void *freecell_solver_PQueuePop( PQUEUE *pq)
             child = PQ_LEFT_CHILD_INDEX(i);
 
             if( (child != pq->CurrentSize) &&
-                (PGetRating(pq->Elements[child + 1]) < PGetRating(pq->Elements[child])) )
+                (PGetRating(Elements[child + 1]) < PGetRating(Elements[child])) )
             {
                 child ++;
             }
 
-            if( PGetRating( pLastElement ) > PGetRating( pq->Elements[ child ] ) )
+            if( PGetRating( pLastElement ) > PGetRating( Elements[ child ] ) )
             {
-                pq->Elements[ i ] = pq->Elements[ child ];
+                Elements[ i ] = Elements[ child ];
             }
             else
             {
@@ -223,7 +225,7 @@ void *freecell_solver_PQueuePop( PQUEUE *pq)
         }
     }
 
-    pq->Elements[i] = pLastElement;
+    Elements[i] = pLastElement;
 
     return pMaxElement.item;
 }
