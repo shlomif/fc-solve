@@ -1,3 +1,12 @@
+/*
+ * ms_ca.h - A header file for a (possibly inline) function that compactly
+ * allocates a move stack.
+ *
+ * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2002
+ *
+ * This file is in the public domain (it's uncopyrighted).
+ * */
+
 #include "caas.h"
 
 static GCC_INLINE fcs_move_stack_t * freecell_solver_move_stack_compact_allocate(freecell_solver_hard_thread_t * hard_thread, fcs_move_stack_t * old_move_stack_to_parent)

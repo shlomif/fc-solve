@@ -8,21 +8,12 @@ extern "C" {
 
 /* #define FCS_USE_INLINE */
 
-#ifdef FCS_USE_INLINE
-
-#ifndef GCC_INLINE
 #ifdef __GNUC__
-#define GCC_INLINE static inline
+#define GCC_INLINE inline
 #else
 #define GCC_INLINE
 #endif
-#endif
-
-#include "caas.c"
-
-#else   /* #ifdef FCS_USE_INLINE */
-
-#define GCC_INLINE
+    
 /*
  * check_and_add_state is defined in caas.c.
  *
@@ -35,7 +26,6 @@ extern int freecell_solver_check_and_add_state(
     fcs_state_with_locations_t * new_state,
     fcs_state_with_locations_t * * existing_state
     );
-#endif /* #ifdef FCS_USE_INLINE */
 
 #ifdef __cplusplus
 }
