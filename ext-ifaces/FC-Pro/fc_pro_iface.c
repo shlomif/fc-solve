@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 #if 1
 #include "Fcsolvex.h"
@@ -229,13 +230,13 @@ struct moves_processed_struct
 
 typedef struct moves_processed_struct moves_processed_t;
 
-moves_processed_add_new_move(moves_processed_t * moves, fcs_move_t new_move)
+void moves_processed_add_new_move(moves_processed_t * moves, fcs_move_t new_move)
 {
-    ret->moves[ret->num_moves++] = new_move;
-    if (ret->num_moves == ret->max_num_moves)
+    moves->moves[moves->num_moves++] = new_move;
+    if (moves->num_moves == moves->max_num_moves)
     {
-        ret->max_num_moves += 32;
-        ret->moves = realloc(ret->moves, sizeof(ret->moves[0]) * ret->max_num_moves);
+        moves->max_num_moves += 32;
+        moves->moves = realloc(moves->moves, sizeof(moves->moves[0]) * moves->max_num_moves);
     }
 }
 
@@ -294,8 +295,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         fcs_move_set_type(new_move, FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
                         fcs_move_set_src_stack(new_move, i);
                         /* (suit+1)&0x3 converts it to FCS order */
-                        fcs_move_set_dest_foundation(new_move, (suit+1)&0x3);
-                        moves_processed_add_move(new_move);
+                        fcs_move_set_foundation(new_move, (suit+1)&0x3);
+                        moves_processed_add_new_move(ret, new_move);
                         
                         break;
                     }
@@ -322,8 +323,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         pos.hold[j] = 0;
                         fcs_move_set_type(new_move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
                         fcs_move_set_src_freecell(new_move, i);
-                        fcs_move_set_dest_foundation(new_move, (suit+1)&0x3);
-                        moves_processed_add_move(new_move);
+                        fcs_move_set_foundation(new_move, (suit+1)&0x3);
+                        moves_processed_add_new_move(ret, new_move);
 
                         break;
                     }                        
@@ -342,7 +343,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
             Card card;
             switch(fcs_move_get_type(move))
             {
-                case FCS_MOVE_TYPE_STACKS_TO_FOUNDATIONS:
+                case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
                     {
                         src = fcs_move_get_src_stack(move);
                         assert(virtual_stack_len[src] >= pos.tableau[src].count);
@@ -354,7 +355,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             virtual_stack_len[src]--;
                             pos.tableau[src].count--;
                             
-                            moves_process_add_new_move(move);
+                            moves_processed_add_new_move(ret, move);
                         }
                         else
                         {
@@ -373,7 +374,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         }
                         else
                         {
-                            moves_process_add_new_move(move);
+                            moves_processed_add_new_move(ret, move);
                         }
                         virtual_freecell_len[src] = 0;
                     }
