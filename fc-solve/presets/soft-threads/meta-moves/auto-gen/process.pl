@@ -5,13 +5,22 @@ use strict;
 
 use PDL;
 
-my @scans;
-
 my $num_boards = 32000;
+
+my $arg = shift(@ARGV);
+my $script_filename = "-";
+if ($arg eq "-o")
+{
+    $script_filename = shift;
+}
+
+
+my @scans;
 
 open I, "<scans.txt";
 while (my $line = <I>)
 {
+    chomp($line);
     my ($id, $cmd_line) = split(/\t/, $line);
     push @scans, { 'id' => $id, 'cmd_line' => $cmd_line };
 }
@@ -47,7 +56,7 @@ foreach my $scan (@selected_scans)
 }
 
 
-my @quotas = ((100) x 10000);
+my @quotas = ((100) x 5000);
 my @chosen_scans = ();
 
 my $total;
@@ -63,7 +72,7 @@ foreach my $q_more (@quotas)
     {
         next;
     }
-    push @chosen_scans, $max_ind;
+    push @chosen_scans, { 'q' => $q, 'ind' => $max_ind };
     $total += $max;
     print "$q \@ $max_ind ($total solved)\n";
     my $this_scan_result = ($scans_data->slice(":,$max_ind"));
@@ -85,4 +94,25 @@ foreach my $q_more (@quotas)
 
 print "scans_data = " , $scans_data, "\n";
 print "total_iters = $total_iters\n";
+
+if ($script_filename eq "-")
+{
+    open SCRIPT, ">&STDOUT";
+}
+else
+{
+    open SCRIPT, ">$script_filename";    
+}
+
+
+# Construct the command line
+my $cmd_line = "freecell-solver-range-parallel-solve 1 $num_boards 20 \\\n" .
+    join("", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} . " \\\n" } @selected_scans) .
+    "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $_->{'ind'} } @chosen_scans) ."\"";
+    
+print SCRIPT $cmd_line;
+
+close(SCRIPT);
+
+
 
