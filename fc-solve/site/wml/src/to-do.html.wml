@@ -10,7 +10,7 @@ in the future. It is based on the <a href="http://cvs.berlios.de/cgi-bin/viewcvs
 detailed.
 </p>
 
-<h2>Derived State Ordering and Integrating Patsolve's Logic</h2>
+<h2>Derived State Ordering and Incorporating Patsolve's Logic</h2>
 
 <p>
 From any given position Freecell Solver reaches it uses some functions called
@@ -29,5 +29,73 @@ implemented for Patsolve. What I would like to have for the next release, is a
 generic way to order derived positions, implementing all of the random, mine, 
 and Tom's back-ends, and an ability to implement more in the future.
 </p>
+
+<h2>Multi-Threading</h2>
+
+<p>
+Freecell Solver can run several scans on the same thread collection. However, 
+it can only run a certain scan for a given number of iterations, suspend it 
+with purely high-level mechanisms, and then run a different scan instead. Later
+on, the original scan can be resumed. However, it is still not possible to
+run two scans on the same state collection in two different threads 
+simultaneously without risking the integrity of the data and the program 
+as a whole.
+</p>
+
+<p>
+The codebase foundation for thread-enabling is already in the code, based on 
+the distinction between soft-threads that encompass a single scan, and 
+hard-threads - a collection of soft-threads that share some resources. Every
+hard-thread can run only one of its soft-thread at the time, but several 
+hard-threads would be able to run simultaneously, assuming suitable locking 
+locking mechanisms are in place.
+</p>
+
+<p>
+A <a href="http://groups.yahoo.com/group/fc-solve-discuss/message/377">scheme
+for Mulit-threading Freecell Solver</a> was proposed by Shlomi Fish, but the
+actual implementation of the locking was not implemented yet. To do so, one
+should write an abstraction of threading and locking mechanisms 
+(<tt>freecell_solver_thread_*</tt>), which will either default to doing nothing,
+or to running the appropriate threading functions of any threading API (be
+it POSIX threads, the Win32 API, APR or whatever). 
+</p>
+
+<p>
+Making Freecell Solver thread-safe is not high on my agenda, because few users
+have multi-processor machines that can somehow benefit from this scheme. Those
+with uni-processor machines are better off using several soft-threads within
+a single hard-thread that are arbitrated by the program.
+</p>
+
+<h2>Porting to Java</h2>
+
+<p>
+Imagine being able to browse to a web-site which will present you with
+a Java applet implementing Freecell with a built-in solver. At the moment
+Freecell Solver is written in ANSI C, and requires compilation or downloading
+a binary or a program that integrates it. If it is converted to Java, however,
+it can be deployed on most modern Internet-connected systems without the
+need for pre-installation.
+</p>
+
+<p>
+Writing an equivalent Java version (perhaps without some of the specific ANSI
+C optimizations that Freecell Solver has), would be a very cool thing. I did 
+not get to do it yet, because I keep having new ideas for improving the C 
+versions. Note that as far as the graphical user-interface is concerned, there
+should not be too much problem, because there's already <a href="http://javaboutique.internet.com/JSolitaire/">an open-source 
+    Solitaire Suite written in Java</a>, with Freecell and many other games.
+</p>
+
+<p>
+Note that <a href="http://ivm.sourceforge.net/">Internet C++</a> assuming
+it becomes popular, may eventually eliminate the need for it, since the C 
+compiler gcc can compile code to it virtual machine . However, at the moment, 
+Java is the de-facto technology for making programs run inside a browser.
+</p>
+
+<h2>Safety from Failed Memory Allocations</h2>
+
 
 
