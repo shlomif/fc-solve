@@ -73,6 +73,8 @@ extern "C" {
     memset(ptr_new_state_with_locations->scan_visited, '\0',                   \
         sizeof(ptr_new_state_with_locations->scan_visited)                     \
         );                                                                     \
+    fcs_move_stack_reset(moves);                                               \
+
 
 #define sfs_check_state_end()                                             \
 /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE         \

@@ -78,7 +78,6 @@ int freecell_solver_sfs_move_top_stack_cards_to_founds(
     fcs_move_t temp_move;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
     state_stacks_num = instance->stacks_num;
 
@@ -97,7 +96,6 @@ int freecell_solver_sfs_move_top_stack_cards_to_founds(
 
                     sfs_check_state_begin();
 
-                    fcs_move_stack_reset(moves);
 
                     fcs_pop_stack_card(new_state, stack, temp_card);
 
@@ -158,7 +156,6 @@ int freecell_solver_sfs_move_freecell_cards_to_founds(
     int state_freecells_num;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
     state_freecells_num = instance->freecells_num;
 
@@ -179,7 +176,6 @@ int freecell_solver_sfs_move_freecell_cards_to_founds(
 
                     fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
 
-                    fcs_move_stack_reset(moves);
                     fcs_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
                     fcs_move_set_src_freecell(temp_move,fc);
                     fcs_move_set_foundation(temp_move,deck*4+fcs_card_suit(card));
@@ -225,7 +221,6 @@ int freecell_solver_sfs_move_freecell_cards_on_top_of_stacks(
     int state_freecells_num, state_stacks_num, sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
@@ -298,7 +293,6 @@ int freecell_solver_sfs_move_freecell_cards_on_top_of_stacks(
 
                                 sfs_check_state_begin()
 
-                                fcs_move_stack_reset(moves);
 
                                 /* Fill the freecells with the top cards */
 
@@ -396,7 +390,6 @@ int freecell_solver_sfs_move_non_top_stack_cards_to_founds(
     state_stacks_num = instance->stacks_num;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
 
     /* Now let's check if a card that is under some other cards can be placed
@@ -431,7 +424,6 @@ int freecell_solver_sfs_move_non_top_stack_cards_to_founds(
 
                         sfs_check_state_begin()
 
-                        fcs_move_stack_reset(moves);
 
                         /* Fill the freecells with the top cards */
                         for(a=0 ; a<min(num_freecells, cards_num-(c+1)) ; a++)
@@ -541,7 +533,6 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
 
     /*
@@ -615,7 +606,6 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 
                                 sfs_check_state_begin()
 
-                                fcs_move_stack_reset(moves);
 
                                 {
                                     int i_card_pos;
@@ -835,7 +825,6 @@ int freecell_solver_sfs_move_stack_cards_to_different_stacks(
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
 
     /* Now let's try to move a card from one stack to the other     *
@@ -922,7 +911,6 @@ int freecell_solver_sfs_move_stack_cards_to_different_stacks(
 
                                         sfs_check_state_begin()
 
-                                        fcs_move_stack_reset(moves);
 
                                         /* Fill the freecells with the top cards */
 
@@ -1060,7 +1048,6 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
     max_sequence_len = calc_max_sequence_move(num_freecells, num_freestacks-1);
 
@@ -1111,7 +1098,6 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
                     {
                         sfs_check_state_begin();
 
-                        fcs_move_stack_reset(moves);
 
                         for(ds=0;ds<state_stacks_num;ds++)
                         {
@@ -1182,7 +1168,6 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
                         {
                             sfs_check_state_begin();
 
-                            fcs_move_stack_reset(moves);
 
                             /* Fill the freecells with the top cards */
 
@@ -1297,7 +1282,6 @@ int freecell_solver_sfs_move_freecell_cards_to_empty_stack(
     state_stacks_num = instance->stacks_num;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
     for(fc=0;fc<state_freecells_num;fc++)
     {
@@ -1321,7 +1305,6 @@ int freecell_solver_sfs_move_freecell_cards_to_empty_stack(
 
                 sfs_check_state_begin();
 
-                fcs_move_stack_reset(moves);
 
                 fcs_push_card_into_stack(new_state, stack, card);
                 fcs_empty_freecell(new_state, fc);
@@ -1375,7 +1358,6 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
 
     /* This time try to move cards that are already on top of a parent to a different parent */
@@ -1482,7 +1464,6 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
 
                                             sfs_check_state_begin()
 
-                                            fcs_move_stack_reset(moves);
 
                                             /* Fill the freecells with the top cards */
                                             for(a=0 ; a<freecells_to_fill ; a++)
@@ -1595,7 +1576,6 @@ int freecell_solver_sfs_empty_stack_into_freecells(
     state_freecells_num = instance->freecells_num;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
 
 
@@ -1613,7 +1593,6 @@ int freecell_solver_sfs_empty_stack_into_freecells(
 
                 sfs_check_state_begin()
 
-                fcs_move_stack_reset(moves);
 
                 for(c=0;c<cards_num;c++)
                 {
@@ -1688,7 +1667,6 @@ int freecell_solver_sfs_yukon_move_card_to_parent(
     sequences_are_built_by = instance->sequences_are_built_by;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
     for( ds=0 ; ds < state_stacks_num ; ds++ )
     {
@@ -1720,7 +1698,6 @@ int freecell_solver_sfs_yukon_move_card_to_parent(
                             /* Let's move it */
                             sfs_check_state_begin();
 
-                            fcs_move_stack_reset(moves);
 
                             fcs_move_sequence(ds, stack, c, cards_num-1, a);
 
@@ -1770,7 +1747,6 @@ int freecell_solver_sfs_yukon_move_kings_to_empty_stack(
     state_stacks_num = instance->stacks_num;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
 
     for( stack=0 ; stack < state_stacks_num ; stack++)
@@ -1788,7 +1764,6 @@ int freecell_solver_sfs_yukon_move_kings_to_empty_stack(
                 /* It's a King - so let's move it */
                 sfs_check_state_begin();
 
-                fcs_move_stack_reset(moves);
 
                 for( ds=0 ; ds < state_stacks_num ; ds++)
                 {
@@ -1845,7 +1820,6 @@ int freecell_solver_sfs_deal_gypsy_talon(
     }
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
     if (fcs_talon_pos(state) < fcs_talon_len(state))
     {
@@ -1900,7 +1874,6 @@ int freecell_solver_sfs_get_card_from_klondike_talon(
     }
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
     /* Duplicate the talon and its parameters into talon_temp */
     talon_temp = malloc(sizeof(fcs_state_with_locations_t));
@@ -2037,7 +2010,6 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
     int a;
 
     moves = hard_thread->reusable_move_stack;
-    fcs_move_stack_reset(moves);
 
     if (num_freestacks == 0)
     {
@@ -2067,8 +2039,6 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
             /* Let's move it */
             {
                 sfs_check_state_begin();
-
-                fcs_move_stack_reset(moves);
 
                 fcs_pop_stack_card(new_state, stack, temp_card);
                 
