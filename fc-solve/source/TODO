@@ -1,16 +1,8 @@
 --- Pressing ---
 
-* Get 
-./board_gen/make_pysol_freecell_board.py 980662 | ./fc-solve -to 01ABCDE -opt
-
-to work.
-
 * Document the new features.
 
 * Update the library version.
-
-* See why the range solver for --method soft-dfs -to 01ABCDE fails 
-towards the end.
 
 --- Non-pressing ---
 
