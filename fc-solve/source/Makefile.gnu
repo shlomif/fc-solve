@@ -169,8 +169,8 @@ endif
 # END_OLFLAGS += -lmhash
 # END_OLFLAGS += -lefence
 
-OFLAGS += -DDMALLOC
-END_OLFLAGS += -ldmalloc
+# OFLAGS += -DDMALLOC
+# END_OLFLAGS += -ldmalloc
 
 # END_OFLAGS := -pg
 
