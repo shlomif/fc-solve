@@ -43,6 +43,7 @@ EXTRA_DIST += rand.h state.h test_arr.h tests.h
 EXTRA_DIST += USAGE CREDITS README.win32.txt
 EXTRA_DIST += gen_makefile.pl Makefile.lite Makefile.gnu Makefile.win32
 EXTRA_DIST += config.h.orig config.h.dkds config.h.freecell config.h.win32
+EXTRA_DIST += prefix.h.freecell
 EXTRA_DIST += devel_docs/ devel_docs/Architecture.summary.txt devel_docs/Architecture.txt devel_docs/strategies.txt devel_docs/variants.txt
 EXTRA_DIST += gen_presets.pl gen_def.sh
 EXTRA_DIST += freecell-solver.def
