@@ -46,6 +46,21 @@ I hope you'll enjoy using it.
 
 <h2>News</h2>
 
+<h3>12-Jul-2002</h3>
+
+<p>
+Freecell Solver 2.6.0 has been spotted in the wild. This version features 
+atomic moves, which are slower than the traditional ones, but guaranteee 
+a true verdict. It also has a <tt>--prelude</tt> switch that allows running
+a static order of quotas at start for the participating soft threads, and
+makes constructing faster solving presets easier.
+</p>
+
+<p>
+The code of Freecell Solver has also been greatly optimized and cleaned up,
+which makes it much faster than it was before.
+</p>
+
 <h3>29-Mar-2002</h3>
 
 <p>
@@ -144,47 +159,6 @@ If possible, send your questions or commentary there. If not
 you can still E-mail me (Shlomi Fish).
 </p>
 
-<h3>7-Feb-2001</h3>
-
-<p>
-The long-awaited Freecell Solver 1.4.0 is now available. Changes from the 
-previous version include some fixes for bugs and memory leaks (mostly
-library-related), as well as an improved Soft-DFS scan, plus A* and BFS
-scans. (which are experimental and do not always work properly).
-</p>
-
-<p>
-A choice between all of those scans is available at run-time.
-</p>
-
-
-<h3>26-Jan-2001</h3>
-
-<p>
-I have setup a <a href="http://fc-solve.berlios.de/">mirror</a> for Freecell
-Solver at <a href="http://developer.berlios.de/">BerliOS</a>. It will
-contain much of the same contents as this one, but will not be updated as
-frequently.
-</p>
-
-<p>
-The motivation for setting up the mirror was because I noticed that the
-connectivity at the Technion was not failsafe, and I want a backup site.
-</p>
-
-<h3>21-Dec-2000</h3>
-
-<p>
-Version 1.2.0 of Freecell Solver is now available for download. This version
-has several improved moves so it can solve more boards. It also sports a
-more robust command-line argument handling so you can expect much less 
-segfaults if you use it improperly.
-</p>
-
-<p>
-The code has also changed quite a bit, so it may be of interest to
-developers who are interested to look under its hood.
-</p>
 
 
 <a href="old-news.html"><h3>Previous News Items</h3></a>

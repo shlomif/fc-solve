@@ -6,7 +6,7 @@
 <table border="1">
 <tr>
 <td>
-<a href="freecell-solver-2.4.3.tar.gz">freecell-solver-2.4.3.tar.gz</a>
+<a href="freecell-solver-2.6.0.tar.gz">freecell-solver-2.6.0.tar.gz</a>
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpm -tb" on it.
@@ -37,6 +37,7 @@ A link to an "apt"-able Debian Package.
 
 </table>
 
+<!--
 <h2>Development Versions</h2>
 
 <table border="1">
@@ -51,34 +52,8 @@ freecell-solver-2.5.26.tar.gz
 The Development version that will lead to Freecell Solver 2.6.0. 
 </td>
 </tr>
-
-<!--
-<tr>
-<td>
-<a href="freecell-solver.spec">
-freecell-solver.spec
-</a>
-</td>
-<td>
-SPEC file for building an RPM
-</td>
-</tr>
 -->
 
-
-
-<!--
-<tr>
-<td>
-<a href="http://dns.makif.omer.k12.il/Fendor/debian/freecell-solver/">
-Debian Package
-</a>
-</td>
-<td>
-A link to the Debian package of Freecell Solver.
-</td>
-</tr>
--->
 
 </table>
 
