@@ -242,6 +242,13 @@ is available under the GPL. It was written as part of an AI course project
 and contains a final report.
 </p>
 
+<p>
+<a href="<doxygen:url />">C++ Port of Freecell Solver by Michael Mann</a> -
+Michael Mann ported FCS to C++ and used 
+<a href="http://www.doxygen.org/">doxygen</a> to cross-reference and 
+document the code. Covers version 2.2.x of the program.
+</p>
+
 <h2>Reviews of Freecell Solver</h2>
 
 <p>

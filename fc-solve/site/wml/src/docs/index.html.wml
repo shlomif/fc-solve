@@ -4,7 +4,7 @@
 
 <h2>Documents of the Code</h2>
 
-<h3><a href="http://fc-solve.berlios.de/arch_doc/">Architecture Document</a></h3>
+<h3><a href="<arch:doc:url />">Architecture Document</a></h3>
 
 <p>
 The Freecell Solver Architecture Document. Contains coding conventions, 
@@ -12,7 +12,7 @@ overview of the code and the modules, some terminology and some techniques
 that one is bound to encounter when dealing with the code.
 </p>
 
-<h3><a href="http://fc-solve.berlios.de/michael_mann/">Doxygen Browsing</a></h3>
+<h3><a href="<doxygen:url />">Doxygen Browsing</a></h3>
 
 <p>
 Michael Mann has ported Freecell Solver to C++ and used Doxygen to prepare a

@@ -36,6 +36,8 @@
 />
 </define-tag>
 
+<define-tag arch:doc:url>http://fc-solve.berlios.de/arch_doc/</define-tag>
+<define-tag doxygen:url>http://fc-solve.berlios.de/michael_mann/</define-tag>
 
 <table summary="Layout Table: The first cell contains a navigation bar, the second the main page" border="0" width="99%">
 <tr>
@@ -50,6 +52,14 @@
 </ul>
 </li>
 <li><navbarlink "docs/" "Documents" /></li>
+<ul class="navbarnested">
+    <li>
+    <navbarlink "<arch:doc:url />" "Arch Doc" />
+    </li>
+    <li>
+    <navbarlink "<doxygen:url />" "Doxygen" />
+    </li>
+</ul>
 <li><navbarlink "links.html" "Links" />
 
 <ul class="navbarnested">
