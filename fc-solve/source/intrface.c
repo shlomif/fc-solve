@@ -718,7 +718,9 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
              * 
              * */
             int bit_idx, num_tests = 0;
-            fcs_test_t * tests = malloc(sizeof(total_tests)*8*sizeof(tests[0]));
+            fcs_test_t * tests;
+            
+            tests = malloc(sizeof(total_tests)*8*sizeof(tests[0]));
                         
             for(bit_idx=0; total_tests != 0; bit_idx++, total_tests >>= 1)
             {
@@ -726,6 +728,8 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
                 {
                     tests[num_tests].test = bit_idx;
                     tests[num_tests].states_order_type = NULL;
+                    /* Move to the next test. */
+                    num_tests++;
                 }
             }
             tests = realloc(tests, num_tests*sizeof(tests[0]));
