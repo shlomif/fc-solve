@@ -1,3 +1,10 @@
+#!/bin/sh
+
+# "Crooked Nose"
+# This is the first atomic moves preset that was recorded.
+# It can solve the MS 32000 in 275,662,296 iterations.
+
+
 freecell-solver-range-parallel-solve 1 32000 1 \
 --method soft-dfs -to 01ABCDE -step 500 --st-name 0 -nst \
 --method random-dfs -to [01][ABCDE] -seed 1 -step 500 --st-name 1 -nst \
