@@ -365,8 +365,6 @@ void freecell_solver_move_stack_normalize(
     fcs_move_stack_reset(moves);
 
     freecell_solver_move_stack_swallow_stack(moves, temp_moves);
-
-    fcs_clean_state(&dynamic_state);
 }
 
 char * freecell_solver_move_to_string(fcs_move_t move, int standard_notation)

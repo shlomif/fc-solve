@@ -178,8 +178,6 @@ typedef int fcs_locs_t;
     ((state).talon[pos] = (card))
 #endif
 
-#define fcs_clean_state(state)
-
 #define fcs_copy_stack(state, idx, buffer) {} 
 
 #elif defined(COMPACT_STATES)    /* #ifdef DEBUG_STATES */
@@ -324,8 +322,6 @@ typedef char fcs_locs_t;
 #define fcs_card_get_flipped(card) \
     ( (card) >> 6 )
 
-
-#define fcs_clean_state(state)
 
 #ifdef FCS_WITH_TALONS
 #define fcs_talon_len(state) \
@@ -481,8 +477,6 @@ typedef struct fcs_struct_state_t fcs_state_t;
 #endif
 
 
-#define fcs_clean_state(state)  
-
 typedef char fcs_locs_t;
 
 #endif /* #ifdef DEBUG_STATES -
@@ -543,14 +537,6 @@ typedef struct fcs_struct_state_with_locations_t fcs_state_with_locations_t;
 extern fcs_card_t freecell_solver_empty_card;
 #define fcs_empty_card freecell_solver_empty_card
 
-#ifdef INDIRECT_STACK_STATES
-
-extern void freecell_solver_clean_state(
-    fcs_state_with_locations_t * state
-    );
-
-
-#endif
 
 #ifdef FCS_WITH_TALONS
 #define fcs_klondike_talon_len(state) \

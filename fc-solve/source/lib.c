@@ -270,10 +270,8 @@ void freecell_solver_user_free(
 
     if (user->ret != FCS_STATE_NOT_BEGAN_YET)
     {
-        fcs_clean_state(&(user->state));
         if (user->ret != FCS_STATE_INVALID_STATE)
         {
-            fcs_clean_state(&(user->running_state));
             freecell_solver_finish_instance(user->instance);
         }
     }
@@ -826,12 +824,6 @@ void freecell_solver_user_recycle(
 
     if (user->ret != FCS_STATE_NOT_BEGAN_YET)
     {
-        fcs_clean_state(&(user->state));
-        if (user->ret != FCS_STATE_INVALID_STATE)
-        {
-            fcs_clean_state(&(user->running_state));
-        }
-
         freecell_solver_recycle_instance(user->instance);
     }
 

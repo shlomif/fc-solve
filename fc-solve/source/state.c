@@ -36,61 +36,6 @@ fcs_card_t freecell_solver_empty_card = (fcs_card_t)0;
 
 #endif
 
-#ifdef INDIRECT_STACK_STATES
-void freecell_solver_clean_state(
-    fcs_state_with_locations_t * state
-    )
-{
-    fcs_card_t * * s_ptr = state->s.stacks;
-    fcs_card_t * * max_s_ptr = s_ptr+MAX_NUM_STACKS;
-    for(;s_ptr<max_s_ptr;s_ptr++)
-    {
-        if (*s_ptr != NULL)
-        {
-            free(*s_ptr);
-            *s_ptr = NULL;
-        }
-    }
-}
-#endif
-#ifdef INDIRECT_STACK_STATES
-
-#if 0
-/*
- * buffer is a buffer of size 128 * MAX_NUM_STACKS that is used
- * to allocate the stacks in.
- *
- * */
-void freecell_solver_duplicate_state_proto(
-    fcs_state_with_locations_t * dest,
-    fcs_state_with_locations_t * src,
-    char * buffer
-    )
-{
-    int a;
-    int stack_len;
-
-    *dest = *src;
-    for(a=0;a<MAX_NUM_STACKS;a++)
-    {
-        if (src->s.stacks[a] != NULL)
-        {
-            stack_len = src->s.stacks[a][0];
-#if 0
-            dest->s.stacks[a] = &buffer[a<<7]
-            memset(dest->s.stacks[a], '\0', stack_len+14);
-#else
-            dest->s.stacks[a] = &buffer[a<<7];
-#endif
-            memcpy(dest->s.stacks[a], src->s.stacks[a], stack_len+1);
-        }
-    }
-}
-#endif
-
-#endif
-
-
 static int fcs_card_compare(const void * card1, const void * card2)
 {
     const fcs_card_t * c1 = (const fcs_card_t *)card1;
