@@ -350,6 +350,12 @@ typedef struct freecell_solver_instance
      * the instance terminates.
      * */
     int num_hard_threads_finished;
+
+    /*
+     * A flag that indicates whether or not to explicitly calculate
+     * the depth of a state that was reached.
+     * */
+    int calc_real_depth;
 } freecell_solver_instance_t;
 
 

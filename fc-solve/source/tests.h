@@ -191,6 +191,21 @@ fcs_move_stack_push(moves, temp_move);                                    \
     fcs_move_stack_push(moves, temp_move);                          \
 }
 
+#define tests_declare_accessors()                              \
+    freecell_solver_hard_thread_t * hard_thread;               \
+    freecell_solver_instance_t * instance;                     \
+    fcs_state_with_locations_t * ptr_new_state_with_locations; \
+    fcs_move_stack_t * moves;                                  \
+    char * indirect_stacks_buffer;                             \
+    int calc_real_depth
+
+#define tests_define_accessors()                                  \
+    hard_thread = soft_thread->hard_thread;                       \
+    instance = hard_thread->instance;                             \
+    moves = hard_thread->reusable_move_stack;                     \
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer; \
+    calc_real_depth = instance->calc_real_depth;
+
 
 
 extern int freecell_solver_sfs_simple_simon_move_sequence_to_founds(

@@ -50,13 +50,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_founds(
         int reparent
         )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    tests_declare_accessors();
 
-    fcs_state_with_locations_t * ptr_new_state_with_locations;
 
-    fcs_move_stack_t * moves;
-    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int check;
@@ -77,11 +73,10 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_founds(
     fcs_card_t card, above_card;
 
     int state_stacks_num;
+    tests_define_accessors();
+
     state_stacks_num = instance->stacks_num;
 
-
-    moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -143,13 +138,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent(
         int reparent
         )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    tests_declare_accessors();
 
-    fcs_state_with_locations_t * ptr_new_state_with_locations;
 
-    fcs_move_stack_t * moves;
-    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int check;
@@ -182,11 +173,10 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent(
     int card_num, num_true_seqs, ds, dest_cards_num ;
 
     int state_stacks_num;
+    tests_define_accessors();
+
     state_stacks_num = instance->stacks_num;
 
-
-    moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -271,13 +261,9 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         int reparent
         )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    tests_declare_accessors();
 
-    fcs_state_with_locations_t * ptr_new_state_with_locations;
 
-    fcs_move_stack_t * moves;
-    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int check;
@@ -300,10 +286,9 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
     int card_num, num_true_seqs, h, ds, dest_cards_num ;
 
     int state_stacks_num;
-    state_stacks_num = instance->stacks_num;
+    tests_define_accessors();
 
-    moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+    state_stacks_num = instance->stacks_num;
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -384,13 +369,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_some_card
         int reparent
         )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    tests_declare_accessors();
 
-    fcs_state_with_locations_t * ptr_new_state_with_locations;
 
-    fcs_move_stack_t * moves;
-    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
     int check;
 
@@ -434,10 +415,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_some_card
     int junk_move_to_stacks[MAX_NUM_STACKS];
 
     int state_stacks_num;
-    state_stacks_num = instance->stacks_num;
+    tests_define_accessors();
 
-    moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+    state_stacks_num = instance->stacks_num;
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -665,13 +645,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
         int reparent
         )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    tests_declare_accessors();
 
-    fcs_state_with_locations_t * ptr_new_state_with_locations;
 
-    fcs_move_stack_t * moves;
-    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int stack, cards_num, suit, a;
@@ -686,10 +662,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
     int junk_move_to_stacks[MAX_NUM_CARDS_IN_A_STACK];
 
     int state_stacks_num;
-    state_stacks_num = instance->stacks_num;
+    tests_define_accessors();
 
-    moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+    state_stacks_num = instance->stacks_num;
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -907,13 +882,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
         int reparent
         )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    tests_declare_accessors();
 
-    fcs_state_with_locations_t * ptr_new_state_with_locations;
 
-    fcs_move_stack_t * moves;
-    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int check;
@@ -959,10 +930,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
     int num_true_seqs;
 
     int state_stacks_num;
-    state_stacks_num = instance->stacks_num;
+    tests_define_accessors();
 
-    moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+    state_stacks_num = instance->stacks_num;
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -1229,13 +1199,9 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_w
         int reparent
         )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    tests_declare_accessors();
 
-    fcs_state_with_locations_t * ptr_new_state_with_locations;
 
-    fcs_move_stack_t * moves;
-    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int check;
@@ -1278,10 +1244,9 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_w
     int junk_move_to_stacks[MAX_NUM_STACKS];
 
     int state_stacks_num;
-    state_stacks_num = instance->stacks_num;
+    tests_define_accessors();
 
-    moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+    state_stacks_num = instance->stacks_num;
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -1476,13 +1441,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         int reparent
         )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    tests_declare_accessors();
 
-    fcs_state_with_locations_t * ptr_new_state_with_locations;
 
-    fcs_move_stack_t * moves;
-    char * indirect_stacks_buffer;
     fcs_move_t temp_move;
 
     int check;
@@ -1497,10 +1458,9 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
     fcs_card_t temp_card;
 
     int state_stacks_num;
-    state_stacks_num = instance->stacks_num;
+    tests_define_accessors();
 
-    moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+    state_stacks_num = instance->stacks_num;
 
     for(stack=0 ; stack < state_stacks_num ; stack++)
     {

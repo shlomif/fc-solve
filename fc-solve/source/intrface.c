@@ -345,6 +345,8 @@ freecell_solver_instance_t * freecell_solver_alloc_instance(void)
 
     instance->num_hard_threads_finished = 0;
 
+    instance->calc_real_depth = 1;
+
     return instance;
 }
 

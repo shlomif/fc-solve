@@ -2,6 +2,16 @@
 
 * Clean up the scans interface. (less function nesting)
 
+* Get 
+./board_gen/make_pysol_freecell_board.py 980662 | ./fc-solve -to 01ABCDE -opt
+
+to work.
+
+* Make --calc-real-depth a command line option.
+
+* Make a prelude in which soft threads would have a static play before they
+repeat themselves.
+
 --- Non-pressing ---
 
 * Write an architecture document.

@@ -137,11 +137,15 @@ int freecell_solver_hard_dfs_solve_for_state(
 
     int freecells_num, stacks_num;
 
+    int calc_real_depth;
+
     freecells_num = instance->freecells_num;
     stacks_num = instance->stacks_num;
 
     derived.num_states = derived.max_num_states = 0;
     derived.states = NULL;
+
+    calc_real_depth = instance->calc_real_depth;
 
     /*
      * If this state has not been visited before - increase the number of
@@ -412,6 +416,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
     int tests_order_num = soft_thread->tests_order.num;
     int * tests_order_tests = soft_thread->tests_order.tests;
+    int calc_real_depth = instance->calc_real_depth;
 
     if (!resume)
     {
@@ -947,6 +952,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
     int freecells_num, stacks_num;
     int tests_order_num;
     int * tests_order_tests;
+    int calc_real_depth = instance->calc_real_depth;
 
     derived.num_states = 0;
     derived.max_num_states = 0;

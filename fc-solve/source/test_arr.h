@@ -35,7 +35,7 @@ extern freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TEST
 
 #define calculate_real_depth(ptr_state_orig)                       \
 {                                                                  \
-    if (1)                                                         \
+    if (calc_real_depth)                                           \
     {                                                              \
         int this_real_depth = 0;                                   \
         fcs_state_with_locations_t * ptr_state = (ptr_state_orig); \
