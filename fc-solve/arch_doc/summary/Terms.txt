@@ -1,8 +1,13 @@
 
+Depth - The number of successive f : state -> state.parent operations
+it take to reach the initial state which is the base of the states graph.
+
 f_s_ - short for freecell_solver_
 
 freecell_solver_user - a generic name to the API used by the programmer
 who wishes to utilize the Freecell Solver library in his application.
+
+Graph - 
 
 Hard Thread - a collection of soft threads, that should generally be placed
 in one system thread. Hard thread contains resources that soft threads from
@@ -29,6 +34,10 @@ It can be Soft-DFS, DFS or Best First Search. There could be any number of
 soft threads in a hard thread.
 
 Packs - see State Packs
+
+Parent - The state from which one state in the state graph was initially 
+derived from. It is possible that this state would eventually be reached
+from a different state, but its parent in that case, remains the same.
 
 Presets -
 1. A structure specifying the type of game according to number of stacks,
