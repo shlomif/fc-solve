@@ -1,5 +1,7 @@
 package MyInput;
 
+use strict;
+
 use PDL;
 use PDL::IO::FastRaw;
 
@@ -74,7 +76,8 @@ sub get_selected_scan_list
         }
         @scans;
 
-    my %black_list = (map { $_ => 0 } (7,8));
+    #my %black_list = (map { $_ => 0 } (7,8));
+    my %black_list = ();
     @selected_scans = 
         (grep 
             { 
