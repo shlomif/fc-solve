@@ -904,7 +904,242 @@ int freecell_solver_solve_instance(
 }
 
 
+enum RHT_RET
+{
+    RHT_COMPLETE_SCAN_TERMINATED,
+};
 
+int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
+{
+    freecell_solver_soft_thread_t * soft_thread;
+    int num_times_started_at;
+    int ret;
+    freecell_solver_instance_t * instance = hard_thread->instance;
+    /* 
+     * Again, making sure that not all of the soft_threads in this 
+     * hard thread are finished.
+     * */
+    while(hard_thread->num_soft_threads_finished < hard_thread->num_soft_threads)
+    {
+        soft_thread = hard_thread->soft_threads[hard_thread->st_idx];
+        /*
+         * Move to the next thread if it's already finished
+         * */
+        if (soft_thread->is_finished)
+        {
+            /*
+             * Hmmpf - duplicate code. That's ANSI C for you.
+             * A macro, anyone?
+             * */
+
+            /*
+             * Switch to the next soft thread in the hard thread,
+             * since we are going to call continue and this is
+             * a while loop
+             * */
+            hard_thread->st_idx++;
+            if (hard_thread->st_idx == hard_thread->num_soft_threads)
+            {
+                hard_thread->st_idx = 0;
+            }
+            continue;
+        }
+
+        /*
+         * Keep record of the number of iterations since this 
+         * thread started.
+         * */
+        num_times_started_at = hard_thread->num_times;
+        /*
+         * Calculate a soft thread-wise limit for this hard
+         * thread to run.
+         * */
+        hard_thread->max_num_times = hard_thread->num_times + hard_thread->num_times_left_for_soft_thread;
+
+
+
+        /* 
+         * Call the resume or solving function that is specific 
+         * to each scan
+         * 
+         * This switch-like construct calls for declaring a class
+         * that will abstract a scan. But it's not critical since
+         * I don't support user-defined scans.
+         * */
+        if (soft_thread->method == FCS_METHOD_HARD_DFS)
+        {
+            if (! soft_thread->initialized)
+            {
+                ret = freecell_solver_hard_dfs_solve_for_state(
+                    soft_thread,
+                    instance->state_copy_ptr,
+                    0,
+                    0);
+
+                soft_thread->initialized = 1;
+            }
+            else
+            {
+                ret = freecell_solver_hard_dfs_resume_solution(soft_thread, 0);
+            }
+        }
+        else if (soft_thread->method == FCS_METHOD_SOFT_DFS)
+        {
+            if (! soft_thread->initialized)
+            {
+                ret = freecell_solver_soft_dfs_solve(
+                    soft_thread,
+                    instance->state_copy_ptr
+                    );
+                soft_thread->initialized = 1;
+            }
+            else
+            {
+                ret = freecell_solver_soft_dfs_resume_solution(
+                    soft_thread
+                    );
+            }
+        }
+        else if (soft_thread->method == FCS_METHOD_RANDOM_DFS)
+        {
+            if (! soft_thread->initialized)
+            {
+                ret = freecell_solver_random_dfs_solve(
+                    soft_thread,
+                    instance->state_copy_ptr
+                    );
+
+                soft_thread->initialized = 1;
+            }
+            else
+            {
+                ret = freecell_solver_random_dfs_resume_solution(
+                    soft_thread
+                    );
+            }
+        }
+        else if ((soft_thread->method == FCS_METHOD_BFS) || (soft_thread->method == FCS_METHOD_A_STAR) || (soft_thread->method == FCS_METHOD_OPTIMIZE))
+        {
+            if (! soft_thread->initialized)
+            {
+                if (soft_thread->method == FCS_METHOD_A_STAR)
+                {
+                    freecell_solver_a_star_initialize_rater(
+                        soft_thread,
+                        instance->state_copy_ptr
+                        );
+                }
+
+                ret = freecell_solver_a_star_or_bfs_solve(
+                    soft_thread,
+                    instance->state_copy_ptr
+                    );
+
+                soft_thread->initialized = 1;
+            }
+            else
+            {
+                ret = freecell_solver_a_star_or_bfs_resume_solution(
+                    soft_thread
+                    );
+            }
+        }
+        else
+        {
+            ret = FCS_STATE_IS_NOT_SOLVEABLE;
+        }
+
+        /*
+         * Determine how much iterations we still have left
+         * */
+        hard_thread->num_times_left_for_soft_thread -= (hard_thread->num_times - num_times_started_at);
+
+        /*
+         * I use <= instead of == because it is possible that 
+         * there will be a few more iterations than what this
+         * thread was allocated, due to the fact that
+         * check_and_add_state is only called by the test 
+         * functions.
+         *
+         * It's a kludge, but it works.
+         * */
+        if (hard_thread->num_times_left_for_soft_thread <= 0)
+        {
+            /* 
+             * Switch to the next soft thread within the hard
+             * thread
+             * */
+            hard_thread->st_idx++;
+            if (hard_thread->st_idx == hard_thread->num_soft_threads)
+            {
+                hard_thread->st_idx = 0;
+            }
+            /* 
+             * Reset num_times_left_for_soft_thread 
+             * */
+            hard_thread->num_times_left_for_soft_thread = hard_thread->soft_threads[hard_thread->st_idx]->num_times_step;
+        }
+
+        /*
+         * It this thread indicated that the scan was finished,
+         * disable the thread or even stop searching altogether.
+         * */
+        if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
+        {
+            soft_thread->is_finished = 1;
+            hard_thread->num_soft_threads_finished++;
+            if (hard_thread->num_soft_threads_finished == hard_thread->num_soft_threads)
+            {
+                instance->num_hard_threads_finished++;
+            }
+            /*
+             * Check if this thread is a complete scan and if so,
+             * terminate the search
+             * */
+            if (soft_thread->is_a_complete_scan)
+            {
+                return FCS_STATE_IS_NOT_SOLVEABLE;
+            }
+            else
+            {
+                /* 
+                 * Else, make sure ret is something more sensible
+                 * */
+                ret = FCS_STATE_SUSPEND_PROCESS;
+            }
+        }
+
+        if ((ret == FCS_STATE_WAS_SOLVED) ||
+            (
+                (ret == FCS_STATE_SUSPEND_PROCESS) &&
+                /* There's a limit to the scan only 
+                 * if max_num_times is greater than 0 */
+                (
+                    (
+                        (instance->max_num_times > 0) &&
+                        (instance->num_times >= instance->max_num_times)
+                    ) ||
+                    (
+                        (instance->max_num_states_in_collection > 0) &&
+                        (instance->num_states_in_collection >= instance->max_num_states_in_collection)
+                        
+                    )
+                )
+            )
+           )
+        {
+            return ret;
+        }
+        else if ((ret == FCS_STATE_SUSPEND_PROCESS) &&
+            (hard_thread->num_times >= hard_thread->ht_max_num_times))
+        {
+            hard_thread->ht_max_num_times += hard_thread->num_times_step;
+            break;
+        }
+    }
+
+    return ret;
+}
 
 
 /* Resume a solution process that was stopped in the middle */
@@ -914,8 +1149,6 @@ int freecell_solver_resume_instance(
 {
     int ret;
     freecell_solver_hard_thread_t * hard_thread;
-    freecell_solver_soft_thread_t * soft_thread;
-    int num_times_started_at;
 
     /*
      * If the optimization thread is defined, it means we are in the 
@@ -954,227 +1187,13 @@ int freecell_solver_resume_instance(
                     instance->ht_idx++)
             {
                 hard_thread = instance->hard_threads[instance->ht_idx];
-                /* 
-                 * Again, making sure that not all of the soft_threads in this 
-                 * hard thread are finished.
-                 * */
-                while(hard_thread->num_soft_threads_finished < hard_thread->num_soft_threads)
+
+                ret = run_hard_thread(hard_thread);
+                if ((ret == FCS_STATE_IS_NOT_SOLVEABLE) ||
+                    (ret == FCS_STATE_WAS_SOLVED)
+                   )
                 {
-                    soft_thread = hard_thread->soft_threads[hard_thread->st_idx];
-                    /*
-                     * Move to the next thread if it's already finished
-                     * */
-                    if (soft_thread->is_finished)
-                    {
-                        /*
-                         * Hmmpf - duplicate code. That's ANSI C for you.
-                         * A macro, anyone?
-                         * */
-
-                        /*
-                         * Switch to the next soft thread in the hard thread,
-                         * since we are going to call continue and this is
-                         * a while loop
-                         * */
-                        hard_thread->st_idx++;
-                        if (hard_thread->st_idx == hard_thread->num_soft_threads)
-                        {
-                            hard_thread->st_idx = 0;
-                        }
-                        continue;
-                    }
-
-                    /*
-                     * Keep record of the number of iterations since this 
-                     * thread started.
-                     * */
-                    num_times_started_at = hard_thread->num_times;
-                    /*
-                     * Calculate a soft thread-wise limit for this hard
-                     * thread to run.
-                     * */
-                    hard_thread->max_num_times = hard_thread->num_times + hard_thread->num_times_left_for_soft_thread;
-
-
-
-                    /* 
-                     * Call the resume or solving function that is specific 
-                     * to each scan
-                     * 
-                     * This switch-like construct calls for declaring a class
-                     * that will abstract a scan. But it's not critical since
-                     * I don't support user-defined scans.
-                     * */
-                    if (soft_thread->method == FCS_METHOD_HARD_DFS)
-                    {
-                        if (! soft_thread->initialized)
-                        {
-                            ret = freecell_solver_hard_dfs_solve_for_state(
-                                soft_thread,
-                                instance->state_copy_ptr,
-                                0,
-                                0);
-
-                            soft_thread->initialized = 1;
-                        }
-                        else
-                        {
-                            ret = freecell_solver_hard_dfs_resume_solution(soft_thread, 0);
-                        }
-                    }
-                    else if (soft_thread->method == FCS_METHOD_SOFT_DFS)
-                    {
-                        if (! soft_thread->initialized)
-                        {
-                            ret = freecell_solver_soft_dfs_solve(
-                                soft_thread,
-                                instance->state_copy_ptr
-                                );
-                            soft_thread->initialized = 1;
-                        }
-                        else
-                        {
-                            ret = freecell_solver_soft_dfs_resume_solution(
-                                soft_thread
-                                );
-                        }
-                    }
-                    else if (soft_thread->method == FCS_METHOD_RANDOM_DFS)
-                    {
-                        if (! soft_thread->initialized)
-                        {
-                            ret = freecell_solver_random_dfs_solve(
-                                soft_thread,
-                                instance->state_copy_ptr
-                                );
-
-                            soft_thread->initialized = 1;
-                        }
-                        else
-                        {
-                            ret = freecell_solver_random_dfs_resume_solution(
-                                soft_thread
-                                );
-                        }
-                    }
-                    else if ((soft_thread->method == FCS_METHOD_BFS) || (soft_thread->method == FCS_METHOD_A_STAR) || (soft_thread->method == FCS_METHOD_OPTIMIZE))
-                    {
-                        if (! soft_thread->initialized)
-                        {
-                            if (soft_thread->method == FCS_METHOD_A_STAR)
-                            {
-                                freecell_solver_a_star_initialize_rater(
-                                    soft_thread,
-                                    instance->state_copy_ptr
-                                    );
-                            }
-
-                            ret = freecell_solver_a_star_or_bfs_solve(
-                                soft_thread,
-                                instance->state_copy_ptr
-                                );
-
-                            soft_thread->initialized = 1;
-                        }
-                        else
-                        {
-                            ret = freecell_solver_a_star_or_bfs_resume_solution(
-                                soft_thread
-                                );
-                        }
-                    }
-                    else
-                    {
-                        ret = FCS_STATE_IS_NOT_SOLVEABLE;
-                    }
-
-                    /*
-                     * Determine how much iterations we still have left
-                     * */
-                    hard_thread->num_times_left_for_soft_thread -= (hard_thread->num_times - num_times_started_at);
-
-                    /*
-                     * I use <= instead of == because it is possible that 
-                     * there will be a few more iterations than what this
-                     * thread was allocated, due to the fact that
-                     * check_and_add_state is only called by the test 
-                     * functions.
-                     *
-                     * It's a kludge, but it works.
-                     * */
-                    if (hard_thread->num_times_left_for_soft_thread <= 0)
-                    {
-                        /* 
-                         * Switch to the next soft thread within the hard
-                         * thread
-                         * */
-                        hard_thread->st_idx++;
-                        if (hard_thread->st_idx == hard_thread->num_soft_threads)
-                        {
-                            hard_thread->st_idx = 0;
-                        }
-                        /* 
-                         * Reset num_times_left_for_soft_thread 
-                         * */
-                        hard_thread->num_times_left_for_soft_thread = hard_thread->soft_threads[hard_thread->st_idx]->num_times_step;
-                    }
-
-                    /*
-                     * It this thread indicated that the scan was finished,
-                     * disable the thread or even stop searching altogether.
-                     * */
-                    if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-                    {
-                        soft_thread->is_finished = 1;
-                        hard_thread->num_soft_threads_finished++;
-                        if (hard_thread->num_soft_threads_finished == hard_thread->num_soft_threads)
-                        {
-                            instance->num_hard_threads_finished++;
-                        }
-                        /*
-                         * Check if this thread is a complete scan and if so,
-                         * terminate the search
-                         * */
-                        if (soft_thread->is_a_complete_scan)
-                        {
-                            goto end_of_hard_threads_loop;
-                        }
-                        else
-                        {
-                            /* 
-                             * Else, make sure ret is something more sensible
-                             * */
-                            ret = FCS_STATE_SUSPEND_PROCESS;
-                        }
-                    }
-
-                    if ((ret == FCS_STATE_WAS_SOLVED) ||
-                        (
-                            (ret == FCS_STATE_SUSPEND_PROCESS) &&
-                            /* There's a limit to the scan only 
-                             * if max_num_times is greater than 0 */
-                            (
-                                (
-                                    (instance->max_num_times > 0) &&
-                                    (instance->num_times >= instance->max_num_times)
-                                ) ||
-                                (
-                                    (instance->max_num_states_in_collection > 0) &&
-                                    (instance->num_states_in_collection >= instance->max_num_states_in_collection)
-                                    
-                                )
-                            )
-                        )
-                       )
-                    {
-                        goto end_of_hard_threads_loop;
-                    }
-                    else if ((ret == FCS_STATE_SUSPEND_PROCESS) &&
-                        (hard_thread->num_times >= hard_thread->ht_max_num_times))
-                    {
-                        hard_thread->ht_max_num_times += hard_thread->num_times_step;
-                        break;
-                    }
+                    goto end_of_hard_threads_loop;
                 }
             }
             /* 
