@@ -2,6 +2,20 @@
 
 * Abstract the modules and headers list across all makefiles.
 
+* Update the Win32 build information and go over the documents in general
+looking for non-up-to-date information.
+
+* Enable to run one scan after the other has finished.
+
+* a --reset flag.
+
+* --read-from-file to read configuration from there.
+
+* command line presets
+
+* After everything: reorganize the --help behaviour according to the Freshmeat
+editorial
+
 --- Non-pressing ---
 
 * Make the code splint-clean.
