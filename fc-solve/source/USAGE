@@ -8,9 +8,9 @@ Freecell Solver's Command-Line Syntax and Usage
 Most command-line switches have two versions: a short POSIX one which
 is a dash followed by a letter; and a long GNU one which is two dashes
 followed by the command string. Note, that Freecell Solver does not
-support specifing more than one command letter after a dash, (e.g:
+support specifying more than one command letter after a dash, (e.g:
 "-sip"). Furthermore, a command that accepts a parameter, will require
-this paramter to be present in the next command-line argument, not in
+this parameter to be present in the next command-line argument, not in
 the GNU manner of "--command=option".
 
 I don't use getopt because I want Freecell Solver to be a pure ANSI C
@@ -180,10 +180,10 @@ give a rough estimate on the time spent to solve a given board.
 -md [Maximal depth]
 --max-depth [Maximal depth]
 
-Freecell Solver recurses into the solution. This paramter specifies a
+Freecell Solver recurses into the solution. This parameter specifies a
 maximal recursion depth. Generally speaking, it's not a good idea to
 set it, because that way several important intermediate states become
-inaccesible.
+inaccessible.
 
 -mss [Maximal States' Number]
 --max-stored-states [Maximal States' Number]
@@ -197,10 +197,10 @@ it is possible that a stored state was not checked yet.
 --tests-order [Test's Order]
 
 This option specifies the order in which Freecell Solver will try the
-differnet types of moves that it can perform. Each move is specified by
+different types of moves that it can perform. Each move is specified by
 one character, and they are performed in the order in which they appear
-in the paramter string. You can omit tests by not including their
-correpsonding characters in the string.
+in the parameter string. You can omit tests by not including their
+corresponding characters in the string.
 
 The tests along with their characters are:
 
@@ -222,8 +222,8 @@ Atomic Freecell Tests:
 'A' - move a stack card to an empty stack.
 'B' - move a stack card to a parent on a different stack.
 'C' - move a stack card to a freecell.
-'D' - move a freecel card to a parent.
-'E' - move a freecel card to an empty stack.
+'D' - move a freecell card to a parent.
+'E' - move a freecell card to an empty stack.
 
 
 Simple Simon Tests:
@@ -240,7 +240,7 @@ Simple Simon Tests:
       cards above it.
 'h' - move a sequence to a parent on the same stack.
 
-Mainuplating the tests order can be very helpful to the quick solution
+Manipulating the tests order can be very helpful to the quick solution
 of a given board. If you found that a certain board cannot be solved in
 after a long time or in a certain maximal number of iterations, you
 should try different tests' orders. Usually, one can find a test order
@@ -273,7 +273,7 @@ soft-dfs   - A "soft" DFS scan
 The difference between "dfs" and "soft-dfs" is that the soft DFS does not
 use procedural recursion but rather its own internal stack. "random-dfs" is
 similar to "soft-dfs" only it determines to which states to recurse into 
-randomly. Its behaviour will differ depenending on the seed you supply to it.
+randomly. Its behaviour will differ depending on the seed you supply to it.
 (see the "-seed" option below.)
 
 BFS does not yield good results, and A* has a mixed behaviour, so for 
@@ -402,7 +402,7 @@ step number.
 
 Specifies the synergy between the various scans, or how much they cooperate
 between themselves. "none" means they do not cooperate and only share
-the same memory resources. "dead-end-marks" menas they try to mark states
+the same memory resources. "dead-end-marks" means they try to mark states
 that they have withdrawn from, and states whose all their derived states are 
 such, as "dead ends". This may or may not improve the speed of the solution.
 
@@ -422,7 +422,7 @@ slows it down a bit.
 --state-output
 
 This option makes little sense by itself, and is applicable only if
--i/--iter-ouput was also specified at the command-line. If specified,
+-i/--iter-output was also specified at the command-line. If specified,
 this option also output the cards and formation of the board itself,
 for every state that is checked. "fc-solve -i -s" yields a nice
 real-time display of the progress of Freecell Solver, but you usually
@@ -432,7 +432,7 @@ cannot make what is going on because it is so fast.
 8. Signal Combinations
 ----------------------
 
-If you are working on a UNIX or a simliar system then you can set some
+If you are working on a UNIX or a similar system then you can set some
 run-time options in "fc-solve" by sending it some signal
 combinations.
 
@@ -443,7 +443,7 @@ a long time to solve.
 
 If you send it the signal USR2 and then USR1, then "fc-solve"
 will print the iteration number and depth on every state that it
-checks. It is the equivalent of specifiying (or unspecifiying) the
+checks. It is the equivalent of specifying (or unspecifying) the
 option -i/--iter-output.
 
 If you send it two USR2 signals and then USR1, then "fc-solve"
