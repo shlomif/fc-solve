@@ -342,7 +342,9 @@ typedef char fcs_locs_t;
 
 #define fcs_copy_stack(state, idx, buffer) {} 
     
-#elif defined(INDIRECT_STACK_STATES)
+#elif defined(INDIRECT_STACK_STATES) /* #ifdef DEBUG_STATES
+                                        #elif defined(COMPACT_STATES)
+                                      */
 
 typedef char fcs_card_t;
 
@@ -450,10 +452,7 @@ typedef struct fcs_struct_state_t fcs_state_t;
 #define fcs_flip_stack_card(state, s, c) \
     (fcs_card_set_flipped(fcs_stack_card(state,s,c), ((fcs_card_t)0) ))
 
-#if 0
-#define fcs_duplicate_state(dest, src, buffer) \
-    freecell_solver_duplicate_state_proto(&(dest), &(src), buffer);
-#else
+
 #define fcs_duplicate_state(dest,src)           \
     {                                           \
         (dest) = (src);                         \
@@ -473,10 +472,6 @@ typedef struct fcs_struct_state_t fcs_state_t;
     }
             
             
-            
-#endif
-
-
 typedef char fcs_locs_t;
 
 #endif /* #ifdef DEBUG_STATES -
@@ -525,7 +520,7 @@ struct fcs_struct_state_with_locations_t
     int scan_visited[MAX_NUM_SCANS_BUCKETS];
 #ifdef INDIRECT_STACK_STATES
     /* 
-     * A flag that indicates which stacks were already copied.
+     * A vector of flags that indicates which stacks were already copied.
      * */
     int stacks_copy_on_write_flags; 
 #endif
