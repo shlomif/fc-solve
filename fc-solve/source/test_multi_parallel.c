@@ -511,6 +511,11 @@ int main(int argc, char * argv[])
     {
         FILE * in;
 
+        binary_output.buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
+        binary_output.ptr = binary_output.buffer;
+        binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
+
+
         in = fopen(binary_output_filename, "rb");
         if (in == NULL)
         {
@@ -563,10 +568,6 @@ int main(int argc, char * argv[])
                 exit(-1);
             }            
         }
-        binary_output.buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
-        binary_output.ptr = binary_output.buffer;
-        binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
-
     }
     else
     {
