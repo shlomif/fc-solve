@@ -114,6 +114,25 @@ require parsing the command line again.
 The function that calls the actual scans is run_hard_thread(), which is 
 called from within freecell_solver_resume_instance().
 
+Compact Allocation:
+-------------------
+
+Most resources that are allocated arbitrarily in Freecell Solver are 
+allocated in a compact manner. I.e: instead of being individually malloced,
+they are allocated in segments and placed one after the other. The segments
+are dynamically allocated and kept at a fixed location in memory. If more
+memory is needed, another segment is allocated.
+
+There are two modules whose code is used to achieve this end:
+
+1. fcs_isa.c/fcs_isa.h - Short for Indirect State Allocation, this module
+allocated vectors of states, each one is of constant size.
+
+2. alloc.c/alloc.h - allocates block of arbitrary size in a compact manner.
+
+Both of these modules support releasing the last allocated block and the last 
+one alone.
+
 
 
 
