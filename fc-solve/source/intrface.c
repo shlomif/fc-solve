@@ -916,7 +916,20 @@ int freecell_solver_solve_instance(
         int ht_idx;
         for(ht_idx=0; ht_idx < instance->num_hard_threads ; ht_idx++)
         {
-            instance->hard_threads[ht_idx]->st_idx = 0;
+            freecell_solver_hard_thread_t * hard_thread;
+            hard_thread = instance->hard_threads[ht_idx];
+            
+            if (hard_thread->prelude != NULL)
+            {
+                hard_thread->prelude_idx = 0;
+                hard_thread->st_idx = hard_thread->prelude[hard_thread->prelude_idx].scan_idx;
+                hard_thread->num_times_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx].quota;
+                hard_thread->prelude_idx++;
+            }
+            else
+            {
+                hard_thread->st_idx = 0;
+            }
         }
     }
 
@@ -949,25 +962,33 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
              * A macro, anyone?
              * */
 
-            /*
-             * Switch to the next soft thread in the hard thread,
-             * since we are going to call continue and this is
-             * a while loop
-             * */
-            if ((hard_thread->prelude != NULL) &&
-                (hard_thread->prelude_idx < hard_thread->prelude_num_items))
-            {
-                hard_thread->st_idx = hard_thread->prelude[hard_thread->prelude_idx++].scan_idx;
-                hard_thread->num_times_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx++].quota;
+#define switch_to_next_soft_thread() \
+            /*      \
+             * Switch to the next soft thread in the hard thread,   \
+             * since we are going to call continue and this is     \
+             * a while loop     \
+                             * */    \
+            if ((hard_thread->prelude != NULL) &&    \
+                (hard_thread->prelude_idx < hard_thread->prelude_num_items))   \
+            {      \
+                hard_thread->st_idx = hard_thread->prelude[hard_thread->prelude_idx].scan_idx; \
+                hard_thread->num_times_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx].quota; \
+                hard_thread->prelude_idx++; \
+            }    \
+            else       \
+            {       \
+                hard_thread->st_idx++;      \
+                if (hard_thread->st_idx == hard_thread->num_soft_threads)     \
+                {       \
+                    hard_thread->st_idx = 0;    \
+                }      \
+                hard_thread->num_times_left_for_soft_thread = hard_thread->soft_threads[hard_thread->st_idx]->num_times_step;  \
             }
-            else
-            {
-                hard_thread->st_idx++;
-                if (hard_thread->st_idx == hard_thread->num_soft_threads)
-                {
-                    hard_thread->st_idx = 0;
-                }
-            }
+
+
+
+            switch_to_next_soft_thread();
+            
             continue;
         }
 
@@ -1091,28 +1112,11 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
          * */
         if (hard_thread->num_times_left_for_soft_thread <= 0)
         {
-            /* 
-             * Switch to the next soft thread within the hard
-             * thread
-             * */
-            if ((hard_thread->prelude != NULL) &&
-                (hard_thread->prelude_idx < hard_thread->prelude_num_items))
-            {
-                hard_thread->st_idx = hard_thread->prelude[hard_thread->prelude_idx++].scan_idx;
-                hard_thread->num_times_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx++].quota;
-            }
-            else
-            {
-                hard_thread->st_idx++;
-                if (hard_thread->st_idx == hard_thread->num_soft_threads)
-                {
-                    hard_thread->st_idx = 0;
-                }
-            }
+            switch_to_next_soft_thread();
             /* 
              * Reset num_times_left_for_soft_thread 
              * */
-            hard_thread->num_times_left_for_soft_thread = hard_thread->soft_threads[hard_thread->st_idx]->num_times_step;
+            
         }
 
         /*

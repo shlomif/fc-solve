@@ -579,7 +579,10 @@ int main(int argc, char * argv[])
         freecell_solver_user_free(user.instance);
     }
 
-    fclose(binary_output);
+    if (binary_output_filename)
+    {
+        fclose(binary_output);
+    }
 
 
     return 0;

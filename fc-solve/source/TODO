@@ -1,5 +1,7 @@
 --- Pressing ---
 
+* Fix the segfault for ./mptest 1 1 1 --method soft-dfs
+
 * Clean up the scans interface. (less function nesting)
 
 * Get 
@@ -11,6 +13,10 @@ to work.
 repeat themselves.
 
 * Code support for a secondary hash value.
+
+* Convert switching a soft-thread into a macro.
+
+* Code a recycle_instance function.
 
 --- Non-pressing ---
 
