@@ -1,7 +1,7 @@
 
 WITH_DEVEL_VERSION = 1
 
-DEVEL_VER_USE_CACHE = 1
+DEVEL_VER_USE_CACHE = 0
 
 HOSTNAME = $(shell hostname)
 
@@ -83,7 +83,7 @@ $(ARC_DOCS) :: $(D)/% : src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
 	tar -xOzf $< freecell-solver-$(RECENT_STABLE_VERSION)/$(notdir $@) > $@
 
 src/win32_build/dynamic/fcs.zip: src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
-	mkdir t
+	if [ ! -d t ] ; then mkdir t ; fi
 	cd t && \
 	tar -xzvf ../$<; \
 	cd free* &&       \
