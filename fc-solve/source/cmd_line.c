@@ -32,7 +32,7 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
         if (home_dir)
         {
             home_dir_presetrc = malloc(strlen(home_dir) + 50);
-            sprintf(home_dir_presetrc, 
+            sprintf(home_dir_presetrc,
                 "%s/.freecell-solver/presetrc", home_dir
                 );
         }
