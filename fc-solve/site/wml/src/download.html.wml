@@ -6,7 +6,7 @@
 <table border="1">
 <tr>
 <td>
-<a href="freecell-solver-2.6.0.tar.gz">freecell-solver-2.6.0.tar.gz</a>
+<a href="freecell-solver-2.6.1.tar.gz">freecell-solver-2.6.1.tar.gz</a>
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpm -tb" on it.
