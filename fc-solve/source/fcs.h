@@ -461,6 +461,8 @@ struct freecell_solver_hard_thread_struct
      * state.
      * */
     char indirect_stacks_buffer[MAX_NUM_STACKS << 7];
+#else
+    char indirect_stacks_buffer[1];
 #endif
 };
 

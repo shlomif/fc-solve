@@ -143,7 +143,7 @@ typedef int fcs_locs_t;
         (state).stacks[(ds)].num_cards++;  \
     }
 
-#define fcs_duplicate_state(dest, src, buffer) \
+#define fcs_duplicate_state(dest, src) \
     (dest) = (src)
 
 #define fcs_put_card_in_freecell(state, f, card) \
@@ -179,6 +179,8 @@ typedef int fcs_locs_t;
 #endif
 
 #define fcs_clean_state(state)
+
+#define fcs_copy_stack(state, idx, buffer) {} 
 
 #elif defined(COMPACT_STATES)    /* #ifdef DEBUG_STATES */
 
@@ -301,7 +303,7 @@ typedef char fcs_locs_t;
 #define fcs_push_stack_card_into_stack(state, ds, ss, sc) \
     fcs_push_card_into_stack((state), (ds), fcs_stack_card((state), (ss), (sc)))
 
-#define fcs_duplicate_state(dest, src, buffer) \
+#define fcs_duplicate_state(dest, src) \
     (dest) = (src)
 
 #define fcs_put_card_in_freecell(state, f, card) \
@@ -342,6 +344,8 @@ typedef char fcs_locs_t;
 #define fcs_flip_stack_card(state, s, c) \
     (fcs_card_set_flipped(fcs_stack_card((state),(s),(c)), ((fcs_card_t)0) ))
 
+#define fcs_copy_stack(state, idx, buffer) {} 
+    
 #elif defined(INDIRECT_STACK_STATES)
 
 typedef char fcs_card_t;
