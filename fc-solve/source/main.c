@@ -113,8 +113,17 @@ static void my_iter_handler(
 #endif
 }
 
+struct help_screen_struct
+{
+    char * key;
+    char * screen;
+};
 
-static char * help_string =
+typedef struct help_screen_struct help_screen_t;
+
+help_screen_t help_screens[] = { 
+{
+    "options", 
 "fc-solve [options] board_file\n"
 "\n"
 "If board_file is - or unspecified reads standard input\n"
@@ -297,6 +306,30 @@ static char * help_string =
 "Freecell Solver was written by Shlomi Fish.\n"
 "Homepage: http://vipe.technion.ac.il/~shlomif/freecell-solver/\n"
 "Send comments and suggestions to shlomif@vipe.technion.ac.il\n"
+},
+{
+    "summary",
+"fc-solve [flags] [board_file|-]\n"
+"\n"
+"Reads board from standard input by default or if a \"-\" is specified.\n"
+"\n"
+"- If it takes too long to finish, type \"fc-solve --help-configs\"\n"
+"- If it erroneously reports a board as unsolvable, try adding the\n"
+"  \"-to 01ABCDE\" flag\n"
+"- If the solution is too long type \"fc-solve --help-short-sol\"\n"
+"- To present the moves only try adding \"-m\" or \"-m -snx\"\n"
+"- For a description of all options type \"fc-solve --help-options\"\n"
+"- To deal with other problems type \"fc-solve --help-problems\"\n"
+"- To turn --help into something more useful, type\n"
+"  \"fc-solve --help-real-help\"\n"
+"\n"
+"Contact Shlomi Fish, shlomif@vipe.technion.ac.il for more information.\n" 
+},
+{
+    NULL,
+    NULL
+}
+}
 ;
 
 enum MY_FCS_CMD_LINE_RET_VALUES
@@ -304,6 +337,18 @@ enum MY_FCS_CMD_LINE_RET_VALUES
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER,
 
 };
+
+static void print_help_string(char * key)
+{
+    int i;
+    for(i=0;help_screens[i].key != NULL ; i++)
+    {
+        if (!strcmp(key, help_screens[i].key))
+        {
+            printf("%s", help_screens[i].screen);
+        }
+    }
+}
 
 static int cmd_line_callback(
     void * instance,
@@ -322,7 +367,20 @@ static int cmd_line_callback(
 
     if ((!strcmp(argv[arg], "-h")) || (!strcmp(argv[arg], "--help")))
     {
-        printf("%s", help_string);
+        char * help_key;
+        
+        help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");
+        if (help_key == NULL)
+        {
+            help_key = "summary";
+        }
+        print_help_string(help_key);
+        *ret = EXIT_AND_RETURN_0;
+        return FCS_CMD_LINE_STOP;
+    }
+    else if (!strncmp(argv[arg], "--help-", 7))
+    {
+        print_help_string(argv[arg]+7);
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
@@ -454,6 +512,7 @@ static void command_signal_handler(int signal_num)
 
 static char * known_parameters[] = {
     "-h", "--help",
+        "--help-summary", "--help-options",
     "-i", "--iter-output",
     "-s", "--state-output",
     "-p", "--parseable-output",
