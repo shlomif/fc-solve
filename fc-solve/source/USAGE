@@ -352,6 +352,27 @@ This argument lets one initialize the next hard thread. If Freecell Solver was
 compiled with such support, then it is possible to run each hard thread in its
 own system thread. Each hard-thread contains one or more soft threads.
 
+--st-name [soft thread name]
+
+This argument sets the name used to identify the current soft thread. This name
+can later be used to construct the prelude (see below).
+
+--prelude [i1@st1{,i2@st2{,i3@st3...}}]
+
+Sets the prelude for the hard thread. At the beginning of the search, the
+hard thread plays a static sequence of iterations at each of the soft threads
+specified in the prelude, for the number of iterations specified.
+
+For example, if you had three soft threads named "foo", "bar" and "rin", then
+the following prelude:
+
+    --prelude 500@foo,1590@bar,100@foo,200@rin
+
+Will run 500 iterations in "foo", then 1590 in "bar", then 100 in "foo" again,
+and then 200 in "rin". After the prelude finishes, the hard thread would
+run the scans one after the other in the sequence they were defined for their
+step number.
+
 7. Run-time Display Options
 ---------------------------
 
