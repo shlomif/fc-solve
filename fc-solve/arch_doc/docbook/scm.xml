@@ -65,6 +65,72 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
     </section>
 
 
+    <section id="scm_win32_binary">
+        <title>The Win32 Binary</title>
+        <para>
+            The Win32 binary is compiled by a batch file placed on the site 
+            and found in the CVS in the location 
+            <ulink url="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/fc-solve/fc-solve/site/wml/src/win32_build/bootstrap/build.bat">/fc-solve/site/wml/src/win32_build/bootstrap/built.bat</ulink>
+        </para>
+        <para>
+            This script should be placed on a Windows NT 4.0 and above 
+            computer that has the Microsoft Visual Studio environment 
+            installed. It should be placed in a directory containing only it 
+            and the curl.exe executable from 
+            <ulink url="http://vipe.technion.ac.il/~shlomif/freecell-solver/win32_build/">the same location</ulink>.
+        </para>
+
+        <para>
+            What it does is the following:
+        </para>
+
+        <para>
+            <orderedlist>                
+                <listitem>
+                    <para>
+                        Download zip.exe and unzip.exe from the static sub-dir.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        Download fcs.zip from the dynamic sub-dir.
+                    </para>
+                </listitem>
+                
+                <listitem>
+                    <para>
+                        Unpack fcs.zip.
+                    </para>
+                </listitem>
+               
+                <listitem>
+                    <para>
+                        Determine its version number and record it in a 
+                        variable.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+
+                        Compile Freecell Solver.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Place the relevant files in a directory structure by 
+                        copying them.
+                    </para>
+                </listitem>               
+                <listitem>
+                    <para>
+                        Create a zip archive of them.
+                    </para>
+                </listitem>          
+            </orderedlist>
+        </para>        
+    </section>
 </chapter>
 
 
