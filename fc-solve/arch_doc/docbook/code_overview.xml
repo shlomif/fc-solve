@@ -194,6 +194,59 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 The code itself is very spaghettty-like but it is working.
             </para>
         </section>
+        <section id="pqueue.c">
+            <title>pqueue.c</title>
+            <para>
+                This module implements a priority queue as a binary heap. It
+                is derived from <ulink url="http://www.geocities.com/SiliconValley/Lakes/4929/">Justin Heyes-Jones</ulink> C++ code which he has kindly 
+                donated to &fcs; (while relicensing it under the public 
+                domain). Since then, the code has been converted to ANSI C
+                , modifed and optimized.
+            </para>
+            <para>
+                This module is used by the Best-First-Search scan.
+            </para>
+        </section>
+    </section>
+    <section id="overview_of_the_core_modules">
+        <title>Overview of the Core Modules</title>
+        <para>
+            Bottom-up
+        </para>
+        <section id="card.c">
+            <title>card.c</title>
+            <para>
+                Elementary functions to convert cards to and from their 
+                string representations. The <symbol>u</symbol> and
+                <symbol>p</symbol> within the code stand for "user" and
+                "perl" respectively, and mean user representation and 
+                internal C representation.
+            </para>
+            <para>
+                The first experimental version of &fcs; was written in
+                Perl, and since then the naming convention for this case 
+                persisted.
+            </para>
+        </section>
+
+        <section id="state.h">
+            <title>state.h</title>
+            <para>
+                This is a header file, but it can be considered a module
+                due to the large amount of logic that it implements. It defines 
+                fcs_state_t (which represents a complete layout of the 
+                Freecell board) and of fcs_state_with_locations_t. It contains
+                many macros for manipulating states and cards. (all of them 
+                should behave like function calls)
+            </para>
+            <para>
+                The state_with_locations_t contains the real positions of the
+                stacks and freecells (refer to (SECTION_REF Canonization and
+                Normalization)) and other things that the system uses but 
+                don't uniquely identify the state in the state collection.
+            </para>
+        </section>
+
     </section>
        
 </chapter>
