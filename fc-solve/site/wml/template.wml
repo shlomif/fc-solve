@@ -1,51 +1,6 @@
 # #use wml::des::navbar
 #include 'std/logo.wml'
 
-
-#<navbar:define name=test urlbase="$(ROOT)" 
-#    txtcol_normal="blue" txtcol_select="red">
-#           <navbar:header>
-#             <table bgcolor="bisque" cellspacing="1" cellpadding="2" border="0">
-#             <tr>
-#             <td>
-#             &nbsp;
-#             </td>
-#             <td>
-#             <table>
-#           </navbar:header>
-# 
-#           <navbar:prolog> 
-#                <tr> 
-#                <td> 
-#           </navbar:prolog>
-# 
-#           <navbar:button id=root txt="Main Page" url="." hint="Main Page" />
-#           <navbar:button id=download txt="Downloads" 
-#                          url="download/" hint="Downloads"
-#           />
-#           <navbar:button id=docs txt="Docs" url="docs/" hint="Docs" />
-#           <navbar:button id=links txt="Links" url="links.html" hint="Links" />
-#           <navbar:button id=mail_list txt="Mailing List" 
-#                          url="mailing-list/" hint="Our Mailing List"
-#           />
-# 
-#           <navbar:epilog> 
-#                </td> 
-#                </tr>
-#           </navbar:epilog>
-# 
-#           <navbar:footer>
-#            </table>
-#            </td>
-#            <td>
-#            &nbsp;
-#            </td>
-#            </tr>
-#            </table>
-#           </navbar:footer>
-#</navbar:define>
-
-
 # The Definition of the page itself
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html 
@@ -58,17 +13,36 @@
 </head>
 <body>
 
+<define-tag navbarlink>
+<if
+    ;;; Determine if %0 matches this document
+    <ifeq "$(FILENAME)" "%0"
+        "1"
+        <ifeq "$(FILENAME)" "%0index.html"
+            "1"
+            ""
+        />
+
+    />
+    ;;; If so - bolds the text
+    "<b>%1</b>"
+    ;;; If not - makes a hyperlink
+    "<a href="$(ROOT)/%0">%1</a>"
+/><br />
+</define-tag>
+
+
 <table summary="Layout Table: The first cell contains a navigation bar, the second the main page" border="0" width="99%">
 <tr>
 <td valign="top" class="navbar" style="width:20%">
-<a href="$(ROOT)/">Main</a><br />
-<a href="$(ROOT)/download.html">Downloads</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="$(ROOT)/don_woods.html">Don Woods' Solver</a><br />
-<a href="$(ROOT)/links.html">Links</a><br />
-<a href="$(ROOT)/features.html">List of Features</a><br />
+<navbarlink "" "Home" />
+<navbarlink "download.html" "Downloads" />
+&nbsp;&nbsp;&nbsp;&nbsp;<navbarlink "don_woods.html" "Don Woods' Solver" />
+<navbarlink "links.html" "Links" />
+<navbarlink "features.html" "List of Features" />
 <br />
-<a href="$(ROOT)/book.html">The Book</a><br />
-<a href="$(ROOT)/old-news.html">Old News Items</a><br />
+<navbarlink "book.html" "The Book" />
+<navbarlink "old-news.html" "Old News Items" />
 
 <define-tag validhtml>
 <br /><br /><br /><br />
