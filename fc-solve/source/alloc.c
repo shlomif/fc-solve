@@ -4,6 +4,10 @@
 
 #include "alloc.h"
 
+#ifdef DMALLOC
+#include "dmalloc.h"
+#endif
+
 #define ALLOCED_SIZE (0x10000 - 0x200)
 
 fcs_compact_allocator_t * 
@@ -97,6 +101,7 @@ void freecell_solver_compact_allocator_foreach(
         ptr += data_width;
     }
 }
-        
+
+
 
 

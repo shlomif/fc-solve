@@ -18,6 +18,8 @@
 
 #include "fcs_hash.h"
 
+#include "alloc.h"
+
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
@@ -212,6 +214,8 @@ SFO_hash_t * freecell_solver_hash_init(
        that the cork of the linked list is right at the start */
     memset(hash->entries, 0, sizeof(SFO_hash_symlink_t)*size);
 
+    hash->allocator = freecell_solver_compact_allocator_new();
+
     return hash;
 }
 
@@ -234,7 +238,7 @@ void * freecell_solver_hash_insert(
     if (list->first_item == NULL)
     {
         /* Allocate a first item with that key */
-        item = list->first_item = (SFO_hash_symlink_item_t *)malloc(sizeof(SFO_hash_symlink_item_t));
+        item = list->first_item = fcs_compact_alloc(hash->allocator, SFO_hash_symlink_item_t);
         item->next = NULL;
         item->key = key;
         item->hash_value = hash_value;
@@ -283,7 +287,7 @@ void * freecell_solver_hash_insert(
     if (optimize_for_caching)
     {
         /* Put the new element at the beginning of the list */
-        item = (SFO_hash_symlink_item_t *)malloc(sizeof(SFO_hash_symlink_item_t));
+        item = fcs_compact_alloc(hash->allocator, SFO_hash_symlink_item_t);
         item->next = list->first_item;
         item->key = key;
         item->hash_value = hash_value;
@@ -292,7 +296,7 @@ void * freecell_solver_hash_insert(
     else
     {
         /* Put the new element at the end of the list */
-        item = last_item->next = (SFO_hash_symlink_item_t *)malloc(sizeof(SFO_hash_symlink_item_t));
+        item = last_item->next = fcs_compact_alloc(hash->allocator, SFO_hash_symlink_item_t);
         item->next = NULL;
         item->key = key;
         item->hash_value = hash_value;
@@ -326,10 +330,11 @@ void freecell_solver_hash_free_with_callback(
             function_ptr(item->key, hash->context);
             next_item = item->next;
 
-            free(item);
             item = next_item;
         }
     }
+
+    freecell_solver_compact_allocator_finish(hash->allocator);
 
     free(hash->entries);
 
@@ -355,6 +360,8 @@ void freecell_solver_hash_free(
             item = next_item;
         }
     }
+
+    freecell_solver_compact_allocator_finish(hash->allocator);
 
     free(hash->entries);
 

@@ -40,6 +40,8 @@ extern void freecell_solver_compact_allocator_foreach(
     void * context
         );
 
+#define fcs_compact_alloc(allocator, what_t) ((what_t *)freecell_solver_compact_allocator_alloc((allocator), sizeof(what_t)))
+
 #ifdef __cplusplus
 };
 #endif

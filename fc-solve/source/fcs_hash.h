@@ -13,6 +13,8 @@
 extern "C" {
 #endif
 
+#include "alloc.h"
+
 typedef int SFO_hash_value_t;
 
 struct SFO_hash_symlink_item_struct
@@ -48,6 +50,8 @@ struct SFO_hash_struct
     int num_elems;
     /* A context to pass to the comparison function */
     void * context;
+
+    fcs_compact_allocator_t * allocator;
 };
 
 typedef struct SFO_hash_struct SFO_hash_t;
