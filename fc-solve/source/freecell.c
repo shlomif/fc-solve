@@ -2114,6 +2114,8 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
             {
                 sfs_check_state_begin();
 
+                my_copy_stack(stack);
+
                 fcs_pop_stack_card(new_state, stack, temp_card);
                 
                 for(a=0;a<state_stacks_num;a++)
@@ -2124,7 +2126,6 @@ int freecell_solver_sfs_atomic_move_card_to_empty_stack(
                     }
                 }
 
-                my_copy_stack(stack);
                 my_copy_stack(a);
 
                 fcs_push_card_into_stack(new_state, a, card);
