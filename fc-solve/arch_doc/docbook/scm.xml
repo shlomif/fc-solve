@@ -6,6 +6,65 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
 
 <chapter id="scm">
     <title>Software Configuration Management</title>
+    <section id="scm_game_presets_configuration">
+        <title>Game Presets Configuration</title>
+        <para>
+            The info for generating the game presets lie in the file <filename>gen_presets.pl</filename>. It
+            uses <ulink url="http://groups.yahoo.com/group/fc-solve-discuss/message/51">data 
+                structure inheritance</ulink> to determine the exact 
+            parameters to be included in each preset. Its output should 
+            later be incorporated into <filename>presets.c</filename>.
+        </para>
+    </section>
+    <section id="scm_maintaining_a_list_of_modules">
+        <title>Maintaining a list of Modules</title>
+        <para>
+            The script <filename>gen_makefile.pl</filename> maintains a list 
+            of modules and headers across all makefiles that are 
+            distributed as part of Freecell Solver.
+        </para>
+        <para>
+            Notice that the Win32 makefile is generated from a hard-coded
+            template, while the other makefiles are read and modified by it.
+        </para>
+    </section>
+
+    <section id="scm_generating_the_site">
+        <title>Generating the Site</title>
+        <para>
+            The site lies in the <ulink url="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/fc-solve/fc-solve/site/wml/">sub-directory of 
+                fc-solve/site/wml in the CVS</ulink> and 
+            is generated using GNU Make, WebMetaLanguage and CVS glue. If a 
+            development version is present, it is checked out of the CVS, 
+            packed into an archive, and placed on the site with a link in 
+            the downloads page.
+        </para>
+
+        <para>
+            Both the <ulink url="http://vipe.technion.ac.il/~shlomif/freecell-solver/">vipe.technion.ac.il main site</ulink> and 
+            the <ulink url="http://fc-solve.berlios.de/">BerliOS mirror</ulink> 
+            are generated from the same makefile and both are uploaded to 
+            their places using rsync.
+        </para>
+
+        <para>
+            The site generation process also generates a zip archive of the 
+            latest stable version so it can be used to automatically 
+            compile the Win32 binary.            
+        </para>
+    </section>
+
+    <section id="scm_freecell_solver_config">
+        <title>freecell-solver-config</title>
+        <para>
+            The autoconf process creates a freecell-solver-config program that
+            can be used as an aid in programs wishing to compile and link
+            against &fcs;. It is generated from freecell-solver-config.in by
+            the configure script and is installed system-wide.            
+        </para>
+    </section>
+
+
 </chapter>
 
 
