@@ -695,9 +695,14 @@ int freecell_solver_user_cmd_line_parse_args(
                         error_string,
                         last_arg
                         );
-
-                    if (ret != FCS_CMD_LINE_OK)
+                    
+                    if (ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
                     {
+                        /* Do nothing - continue */
+                    }
+                    else if (ret != FCS_CMD_LINE_OK)
+                    {
+                        freecell_solver_args_man_free(args_man);
                         return ret;
                     }
                 }

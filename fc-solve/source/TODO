@@ -1,6 +1,8 @@
 --- Pressing ---
 
 * --read-from-file to read configuration from there.
+    - Implement a more secure function with number of nested
+    files to read.
 
 * command line presets
 
