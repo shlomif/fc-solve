@@ -1,20 +1,8 @@
 --- Pressing ---
-
-* COW-Stacks the Simple-Simon code.
-
-* Code test functions for atomic moves.
-
 --- Non-pressing ---
 
 * Write a Perl Script to parse, analyze and do a sanity check for a solution.
 (-p -t -sam)
-
-* Put the internal_tests_order_t inside instance and soft_thread, and have
-one function for everything.
-
-* More general state_ia_alloc() mechanism
-
-* Add more fcs_ and FCS_ prefixes to the macros and globals.
 
 * Write a multi-threaded version and see if it runs ok.
 
@@ -43,8 +31,6 @@ iterations limit.
 specified in the command line (including DFS and Soft-DFS).
 
 * Check for unmalloced data and if so gracefully exit.
-
-* Code test functions for atomic moves.
 
 * Get rid of the indirect state allocation mechanism. (?) 
 
