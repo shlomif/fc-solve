@@ -3,7 +3,7 @@
 <subject "Download Freecell Solver" />
 
 <h2>Latest Stable Versions</h2>
-<table border="1">
+<table border="1" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
 <tr>
 <td>
 <a href="freecell-solver-2.6.3.tar.gz">freecell-solver-2.6.3.tar.gz</a>
@@ -40,7 +40,7 @@ A link to an "apt"-able Debian Package.
 <!--
 <h2>Development Versions</h2>
 
-<table border="1">
+<table border="1" summary="The Development Version for Freecell Solver. Link for download is on the left; Description is on the right.">
 
 <tr>
 <td>
@@ -76,7 +76,7 @@ The Development version that will lead to Freecell Solver 2.6.0.
 
 <h2>Documents</h2>
 
-<table border="1">
+<table border="1" summary="Links on the left, short descriptions on the right">
 <document "README" "The &quot;Readme&quot; File"/>
 <document "ChangeLog" "The changes log" />
 <document "USAGE" "A detailed usage document" />
@@ -89,7 +89,7 @@ The Development version that will lead to Freecell Solver 2.6.0.
 
 <h2>Utility Programs</h2>
 
-<table border="1">
+<table border="1" summary="Utility programs and patches for use within various Solitaire Implementations. Links are on the left; descriptions are on the right.">
 <tr>
 <td>
 <a href="palm_patience_getgame.tar.gz">palm_patience_getgame.tar.gz</a>
@@ -135,7 +135,7 @@ http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html
 </tr>
 </define-tag>
 
-<table border="1">
+<table border="1" summary="Older versions of Freecell Solver. In decreasing version number.">
 <ver "2.4" "3" />
 <ver "2.2" "6" />
 <ver "2.0" "2" />
