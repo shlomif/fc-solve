@@ -2,9 +2,6 @@
 
 * Convert some of the documentation to Perl-POD or DocBook.
 
-* Add support for Adrian's extensions to the standard notation.
-    - Done partially
-
 * After everything: reorganize the --help behaviour according to the Freshmeat
 editorial
 
