@@ -34,15 +34,42 @@ void args_man_free(args_man_t * manager)
 #define skip_ws() { while((*s == ' ') || (*s == '\t')) { s++; } }
 #define skip_non_ws() { while((*s != ' ') && (*s != '\t') && (*s)) { s++; }}
 
-#define add_to_last_arg(c) { *(last_arg_ptr++) = (c); if (last_arg_ptr == last_arg_end) { new_last_arg = realloc(last_arg, last_arg_end-last_arg+1024); last_arg_ptr += new_last_arg - last_arg; last_arg_end += new_last_arg - last_arg + 1024; last_arg = new_last_arg } }
+#define add_to_last_arg(c)  \
+    {         \
+        *(last_arg_ptr++) = (c);     \
+        if (last_arg_ptr == last_arg_end) \
+        {        \
+            new_last_arg = realloc(last_arg, last_arg_end-last_arg+1024);  \
+            last_arg_ptr += new_last_arg - last_arg; \
+            last_arg_end += new_last_arg - last_arg + 1024;  \
+            last_arg = new_last_arg;   \
+        }       \
+    }
+
+#define push_args_last_arg() {  \
+            new_arg = malloc(last_arg_ptr-last_arg+1); \
+            strncpy(new_arg, last_arg, last_arg_ptr-last_arg); \
+            new_arg[last_arg_ptr-last_arg] = '\0'; \
+            manager->argv[manager->argc] = new_arg; \
+            manager->argc++; \
+            if (manager->argc == manager->max_num_argv) \
+            { \
+                manager->max_num_argv += ARGS_MAN_GROW_BY; \
+                manager->argv = realloc(manager->argv, sizeof(manager->argv[0]) * manager->max_num_argv); \
+            } \
+       \
+            /* Reset last_arg_ptr so we will have an entirely new argument */ \
+            last_arg_ptr = last_arg; \
+    }
+
 int args_man_chop(args_man_t * manager, char * string)
 {
     char * s = string;
     char * start;
     char * end;
     char * new_arg;
-    char c;
     char * last_arg, * last_arg_ptr, * last_arg_end, * new_last_arg;
+    char next_char;
 
     last_arg_ptr = last_arg = malloc(1024);
     last_arg_end = last_arg + 1023;
@@ -58,38 +85,25 @@ int args_man_chop(args_man_t * manager, char * string)
             break;
         }
 AFTER_WS:
-        c = *s;
-        while ((c != ' ') && (c != '\t') && (c != '\n') && 
-               (c != '\\') && && (c != '\"') && (c != '\0') )
+        while ((*s != ' ') && (*s != '\t') && (*s != '\n') && 
+               (*s != '\\') && (*s != '\"') && (*s != '\0') )
         {
-            add_to_last_arg(c);
-            c = *(++s);
+            add_to_last_arg(*s);
+            s++;
         }
 
         
-        if ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\0'))
+        if ((*s == ' ') || (*s == '\t') || (*s == '\n') || (*s == '\0'))
         {
 NEXT_ARG:
-            new_arg = malloc(last_arg_ptr-last_arg+1);
-            strncpy(new_arg, last_arg, last_arg_ptr-last_arg);
-            new_arg[last_arg_ptr-last_arg] = '\0';
-            manager->argv[manager->argc] = new_arg;
-            manager->argc++;
-            if (manager->argc == manager->max_num_argv)
-            {
-                manager->max_num_argv += ARGS_MAN_GROW_BY;
-                manager->argv = realloc(manager->argv, sizeof(manager->argv[0]) * manager->max_num_argv);
-            }
-
-            /* Reset last_arg_ptr so we will have an entirely new argument */
-            last_arg_ptr = last_arg;
-
-            if (c == '\0')
+            push_args_last_arg();
+            
+            if (*s == '\0')
             {
                 break;
             }
         }
-        else if (c == '\\')
+        else if (*s == '\\')
         {
             char next_char = *(++s);
             s++;
@@ -107,25 +121,52 @@ NEXT_ARG:
                 add_to_last_arg(next_char);
             }
         }
-        
-        start = s;
-        skip_non_ws();
-        end = s;
-        new_arg = malloc(end-start+1);
-        strncpy(new_arg, start, end-start);
-        new_arg[end-start] = '\0';
-        manager->argv[manager->argc] = new_arg;
-        manager->argc++;
-        if (manager->argc == manager->max_num_argv)
+        else if (*s == '\"')
         {
-            manager->max_num_argv += ARGS_MAN_GROW_BY;
-            manager->argv = realloc(manager->argv, sizeof(manager->argv[0]) * manager->max_num_argv);
+            s++;
+            while ((*s != '\"') && (*s != '\0'))
+            {
+                if (*s == '\\')
+                {
+                    next_char = *(++s);
+                    if (next_char == '\0')
+                    {
+                        push_args_last_arg();
+                        
+                        goto END_OF_LOOP;
+                    }
+                    else if ((next_char == '\n') || (next_char == '\r'))
+                    {
+                        /* Do nothing */
+                    }
+                    else if ((next_char == '\\') || (next_char == '\"'))
+                    {
+                        add_to_last_arg(next_char);
+                    }
+                    else
+                    {
+                        add_to_last_arg('\\');
+                        add_to_last_arg(next_char);
+                    }
+                }
+                else
+                {
+                    add_to_last_arg(*s);
+                }
+                s++;   
+            }
+            s++;
+            goto AFTER_WS;
         }
     }
+END_OF_LOOP:
+
+    free(last_arg);
+    
     return 0;
 }
 
-#if 0
+#ifdef CMD_LINE_CHOP_WITH_MAIN
 int main(int argc, char * * argv)
 {
     args_man_t * args_man;
