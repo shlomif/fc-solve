@@ -44,6 +44,35 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             switches to a different soft thread.
         </para>
     </section>
+    <section id="overview_of_the_utility_modules">
+        <title>Overview of the Utility Modules</title>
+        <section id="app_str.c">
+            <title>app_str.c</title>
+            <para>
+                This file contains a utility class that appends sprintf'ed 
+                output to a dynmically allocated buffer while growing the 
+                buffer if necessary.
+            </para>
+            <para>
+                It is still possible that the sprintf will generate a long
+                enough string that will cause a buffer overflow. However,
+                since the class is only used to render states into strings,
+                and the margin allowed for the buffer is long enough, this
+                cannot actually happen.
+            </para>
+        </section>
+        <section id="lookup2.c">
+            <title>lookup2.c</title>
+            <para>
+                This module implements a 
+                <ulink url="http://burtleburtle.net/bob/hash/">hash function</ulink> 
+                that was developed by <ulink url="http://burtleburtle.net/bob/">Bob Jenkins</ulink>. 
+                
+                It is essentially his code, that was just integrated into 
+                &fcs; for convenience (note that it is also Public Domain).
+            </para>
+        </section>
+    </section>
        
 </chapter>
 
