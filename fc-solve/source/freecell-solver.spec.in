@@ -67,6 +67,7 @@ rm -rf $RPM_BUILD_ROOT
 make install prefix=$RPM_BUILD_ROOT/usr mandir=$RPM_BUILD_ROOT/%{_mandir}
 strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/lib/libfreecell-solver.so.%{LIBVER}
 strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/bin/fc-solve
+strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/bin/freecell-solver-range-parallel-solve
 strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/lib/libfreecell-solver.a
 
 cd $RPM_BUILD_ROOT/%{_mandir}
@@ -90,6 +91,8 @@ cd man6
 /usr/bin/make_pysol_freecell_board.py
 /usr/bin/freecell-solver-range-parallel-solve
 %{_mandir}/*/*
+/usr/share/freecell-solver/presetrc
+/usr/share/freecell-solver/presets/*
 
 %files devel
 %defattr(-,root,root)
@@ -104,6 +107,10 @@ cd man6
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Sep 02 2002 Shlomi Fish <shlomif@vipe.technion.ac.il> 2.7.15-1
+- Used strip on the range solver
+- Added the presets' related files.
+
 * Sat Feb 16 2002 Shlomi Fish <shlomif@vipe.technion.ac.il> 2.1.10-1
 - updated to version 2.1.10
 - removed the man pages symlinks (they were superceded by the ".so" links).
