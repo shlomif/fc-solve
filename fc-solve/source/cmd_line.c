@@ -13,12 +13,12 @@
 #include "dmalloc.h"
 #endif
 
-static int read_preset(char * preset_name, args_man_t * * args, char * * opened_files_dir_to_assign)
+static int read_preset(char * preset_name, args_man_t * * args, char * * opened_files_dir_to_assign, char * user_preset_dir)
 {
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * global_presetrc = NULL, * env_var_presetrc = NULL;
     char * path;
-    char * * presetrc_pathes[4] = {&env_var_presetrc, &home_dir_presetrc, &global_presetrc, NULL};
+    char * * presetrc_pathes[5] = {&env_var_presetrc, &home_dir_presetrc, &global_presetrc, &user_preset_dir, NULL};
     int path_idx;
     char line[8192];
     FILE * f = NULL;
@@ -866,7 +866,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 args_man_t * preset_args;
                 char * dir = NULL;
 
-                status = read_preset(argv[arg], &preset_args, &dir);
+                status = read_preset(argv[arg], &preset_args, &dir, NULL);
                 if (status != 0)
                 {
                     char * err_str;
