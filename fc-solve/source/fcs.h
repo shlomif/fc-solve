@@ -68,6 +68,8 @@ extern "C" {
 
 #include "pqueue.h"
 
+#include "alloc.h"
+
 /*
  * This is a linked list item that is used to implement a queue for the BFS
  * scan.
@@ -232,11 +234,11 @@ typedef struct freecell_solver_instance
     SFO_hash_t * hash;
 #endif
 
+#if defined(INDIRECT_STACK_STATES)
     /*
      * The storage mechanism for the stacks assuming INDIRECT_STACK_STATES is
      * used.
-     * */
-#if defined(INDIRECT_STACK_STATES)
+     * */    
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     SFO_hash_t * stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
@@ -437,6 +439,12 @@ struct freecell_solver_hard_thread_struct
      * this thread is skipped.
      * */
     int num_soft_threads_finished;
+
+    
+    /*
+     * This is the mechanism used to allocate memory for the stacks.
+     * */
+    fcs_compact_allocator_t * stacks_allocator;    
 };
 
 struct fcs_soft_dfs_stack_item_struct

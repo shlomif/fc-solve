@@ -269,8 +269,8 @@
 #endif
 
 #ifdef INDIRECT_STACK_STATES
-void GCC_INLINE freecell_solver_cache_stacks(
-        freecell_solver_instance_t * instance,
+static void GCC_INLINE freecell_solver_cache_stacks(
+        freecell_solver_hard_thread_t * hard_thread,
         fcs_state_with_locations_t * new_state
         )
 {
@@ -279,10 +279,13 @@ void GCC_INLINE freecell_solver_cache_stacks(
     SFO_hash_value_t hash_value_int;
 #endif
     void * cached_stack;
+    char * new_ptr;
 
     for(a=0 ; a<instance->stacks_num ; a++)
     {
-        new_state->s.stacks[a] = realloc(new_state->s.stacks[a], fcs_stack_len(new_state->s, a)+1);
+        //new_state->s.stacks[a] = realloc(new_state->s.stacks[a], fcs_stack_len(new_state->s, a)+1);
+        fcs_compact_alloc_typed_ptr_into_var(new_ptr, char, hard_thread->stacks_allocator, (fcs_stack_len(new_state->s, a)+1));
+        memcpy(new_ptr, new_state->s.stacks[a], (fcs_stack_len(new_state->s, a)+1));
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
         /* Calculate the hash value for the stack */
         /* This hash function was ripped from the Perl source code.
@@ -314,11 +317,15 @@ void GCC_INLINE freecell_solver_cache_stacks(
             1
             );
 
-        if (cached_stack != NULL)
-        {
-            free(new_state->s.stacks[a]);
-            new_state->s.stacks[a] = cached_stack;
+#define replace_with_cached(condition_expr) \
+        if (cached_stack != NULL)     \
+        {      \
+            fcs_compact_alloc_release(hard_thread->allocator);    \
+            new_state->s.stacks[a] = cached_stack;       \
         }
+
+        replace_with_cached(cached_stack != NULL);
+        
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
         cached_stack =
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
@@ -334,32 +341,23 @@ void GCC_INLINE freecell_solver_cache_stacks(
                          are keen on parenthesis matching */
 #endif
 
-        if (cached_stack != NULL)
-        {
-            free(new_state->s.stacks[a]);
-            new_state->s.stacks[a] = cached_stack;
-        }
+        replace_with_cached(cached_stack != NULL);
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
         cached_stack = (void *)rbsearch(
             new_state->s.stacks[a],
             instance->stacks_tree
             );
-        if (cached_stack != new_state->s.stacks[a])
-        {
-            free(new_state->s.stacks[a]);
-            new_state->s.stacks[a] = cached_stack;
-        }
+
+        replace_with_cached(cached_stack != new_state->s.stacks[a]);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
         cached_stack = g_tree_lookup(
              instance->stacks_tree,
              (gpointer)new_state->s.stacks[a]
              );
-        if (cached_stack != NULL)
-        {
-            free(new_state->s.stacks[a]);
-            new_state->s.stacks[a] = cached_stack;
-        }
+
+        /* replace_with_cached contains an if statement */
+        replace_with_cached(cached_stack != NULL)
         else
         {
             g_tree_insert(
@@ -373,11 +371,7 @@ void GCC_INLINE freecell_solver_cache_stacks(
             instance->stacks_hash,
             (gconstpointer)new_state->s.stacks[a]
             );
-        if (cached_stack != NULL)
-        {
-            free(new_state->s.stacks[a]);
-            new_state->s.stacks[a] = cached_stack;
-        }
+        replace_with_cached(cached_stack != NULL)
         else
         {
             g_hash_table_insert(

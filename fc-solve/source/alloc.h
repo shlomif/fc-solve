@@ -33,7 +33,7 @@ extern char *
         int how_much
             );
 #else
-#define fcs_compact_alloc_into_var(result, allocator_orig, what_t) \
+#define fcs_compact_alloc_into_var(result,allocator_orig,what_t) \
 { \
    register fcs_compact_allocator_t * allocator = (allocator_orig); \
    if (allocator->max_ptr - allocator->ptr < sizeof(what_t))  \
@@ -41,10 +41,21 @@ extern char *
         freecell_solver_compact_allocator_extend(allocator);      \
     }         \
     allocator->rollback_ptr = allocator->ptr;       \
-    allocator->ptr += ((sizeof(what_t))+(4-((sizeof(what_t))&0x3)));      \
+    allocator->ptr += ((sizeof(what_t))+(sizeof(char *)-((sizeof(what_t))&(sizeof(char *)-1))));      \
     result = (what_t *)allocator->rollback_ptr;       \
 }
 
+#define fcs_compact_alloc_typed_ptr_into_var(result, type_t, allocator_orig, how_much) \
+{ \
+    register fcs_compact_allocator_t * allocator = (allocator_orig); \
+    if (allocator->max_ptr - allocator->ptr < sizeof(what_t))  \
+    {      \
+        freecell_solver_compact_allocator_extend(allocator);      \
+    }         \
+    allocator->rollback_ptr = allocator->ptr;       \
+    allocator->ptr += ((how_much)+(sizeof(char *)-((how_much)&(sizeof(char *)-1))));      \
+    result = (type_t *)allocator->rollback_ptr;       \
+}
         
 #endif
 
