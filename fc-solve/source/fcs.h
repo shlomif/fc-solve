@@ -806,6 +806,8 @@ pq_rating_t freecell_solver_a_star_rate_state(
     fcs_state_with_locations_t * ptr_state_with_locations    
     );
 
+extern void freecell_solver_free_tests_order(fcs_tests_order_t * tests_order);
+
 #ifdef __cplusplus
 }
 #endif
