@@ -35,7 +35,7 @@ struct fcs_user_struct
      * the board 
      * */
     fcs_instance_item_t * instances_list;
-    int current_instance;
+    int current_instance_idx;
     int num_instances;
     int max_num_instances;
     int current_iterations_limit;
@@ -67,11 +67,11 @@ void * freecell_solver_user_alloc(void)
     ret->max_num_instances = 10;
     ret->instances_list = malloc(sizeof(ret->instances_list[0]) * ret->max_num_instances);
     ret->num_instances = 1;
-    ret->current_instance = 0;
+    ret->current_instance_idx = 0;
     ret->instance = freecell_solver_alloc_instance();
-    ret->instances_list[ret->current_instance].instance = ret->instance;
-    ret->instances_list[ret->current_instance].ret = ret->ret = FCS_STATE_NOT_BEGAN_YET;
-    ret->instances_list[ret->current_instance].limit = -1;
+    ret->instances_list[ret->current_instance_idx].instance = ret->instance;
+    ret->instances_list[ret->current_instance_idx].ret = ret->ret = FCS_STATE_NOT_BEGAN_YET;
+    ret->instances_list[ret->current_instance_idx].limit = -1;
     ret->current_iterations_limit = -1;
 
     ret->soft_thread =
@@ -120,7 +120,7 @@ void freecell_solver_user_limit_current_instance_iterations(
 
     user = (fcs_user_t*)user_instance;
 
-    user->instances_list[user->current_instance].limit = max_iters;
+    user->instances_list[user->current_instance_idx].limit = max_iters;
 }
 
 #ifndef min
@@ -156,9 +156,32 @@ int freecell_solver_user_solve_board(
 
     user->state_string_copy = strdup(state_as_string);
 
-    user->current_instance = 0;
+    user->current_instance_idx = 0;
 
     return freecell_solver_user_resume_solution(user_instance);
+}
+
+static void recycle_instance(
+    fcs_user_t * user,
+    int i
+    )
+{
+    if (user->instances_list[i].ret == FCS_STATE_WAS_SOLVED)
+    {
+        fcs_move_stack_destroy(user->instance->solution_moves);
+        user->instance->solution_moves = NULL;
+    }
+    else if (user->instances_list[i].ret == FCS_STATE_SUSPEND_PROCESS)
+    {
+        freecell_solver_unresume_instance(user->instances_list[i].instance);
+    }
+
+    if (user->instances_list[i].ret != FCS_STATE_NOT_BEGAN_YET)
+    {
+        freecell_solver_recycle_instance(user->instances_list[i].instance);
+    }
+
+    user->instances_list[i].ret = FCS_STATE_NOT_BEGAN_YET;    
 }
 
 int freecell_solver_user_resume_solution(
@@ -173,18 +196,18 @@ int freecell_solver_user_resume_solution(
     user = (fcs_user_t*)user_instance;
     
     /* 
-     * I expect user->current_instance to be initialized at some value.
+     * I expect user->current_instance_idx to be initialized at some value.
      * */
     for( ; 
-        run_for_first_iteration || ((user->current_instance < user->num_instances) && (ret == FCS_STATE_IS_NOT_SOLVEABLE)) ;
-        user->current_instance++
+        run_for_first_iteration || ((user->current_instance_idx < user->num_instances) && (ret == FCS_STATE_IS_NOT_SOLVEABLE)) ;
+        recycle_instance(user, user->current_instance_idx), user->current_instance_idx++
        )
     {
         run_for_first_iteration = 0;
         
-        user->instance = user->instances_list[user->current_instance].instance;
+        user->instance = user->instances_list[user->current_instance_idx].instance;
 
-        if (user->instances_list[user->current_instance].ret == FCS_STATE_NOT_BEGAN_YET)
+        if (user->instances_list[user->current_instance_idx].ret == FCS_STATE_NOT_BEGAN_YET)
         {
 
             user->state = freecell_solver_initial_user_state_to_c(
@@ -233,11 +256,11 @@ int freecell_solver_user_resume_solution(
 #define global_limit() \
         (user->instance->num_times + user->current_iterations_limit - user->iterations_board_started_at)
 #define local_limit()  \
-        (user->instances_list[user->current_instance].limit)
+        (user->instances_list[user->current_instance_idx].limit)
 #define min(a,b) (((a)<(b))?(a):(b))
 #define calc_max_iters() \
         {          \
-            if (user->instances_list[user->current_instance].limit < 0)  \
+            if (user->instances_list[user->current_instance_idx].limit < 0)  \
             {\
                 if (user->current_iterations_limit < 0)\
                 {\
@@ -272,7 +295,7 @@ int freecell_solver_user_resume_solution(
             init_num_times = user->instance->num_times;
 
             ret = user->ret = 
-                user->instances_list[user->current_instance].ret = 
+                user->instances_list[user->current_instance_idx].ret = 
                 freecell_solver_solve_instance(user->instance, &user->state);
         }
         else
@@ -283,7 +306,7 @@ int freecell_solver_user_resume_solution(
             init_num_times = user->instance->num_times;
             
             ret = user->ret = 
-                user->instances_list[user->current_instance].ret =
+                user->instances_list[user->current_instance_idx].ret =
                 freecell_solver_resume_instance(user->instance);
         }
         
@@ -298,6 +321,8 @@ int freecell_solver_user_resume_solution(
                 user->instance->stacks_num,
                 user->instance->decks_num
                 );
+
+            break;
         }
         else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
         {
@@ -964,22 +989,7 @@ void freecell_solver_user_recycle(
 
     for(i=0;i<user->num_instances;i++)
     {
-        if (user->instances_list[i].ret == FCS_STATE_WAS_SOLVED)
-        {
-            fcs_move_stack_destroy(user->instance->solution_moves);
-            user->instance->solution_moves = NULL;
-        }
-        else if (user->instances_list[i].ret == FCS_STATE_SUSPEND_PROCESS)
-        {
-            freecell_solver_unresume_instance(user->instances_list[i].instance);
-        }
-
-        if (user->instances_list[i].ret != FCS_STATE_NOT_BEGAN_YET)
-        {
-            freecell_solver_recycle_instance(user->instances_list[i].instance);
-        }
-
-        user->instances_list[i].ret = FCS_STATE_NOT_BEGAN_YET;
+        recycle_instance(user, i);
     }
     user->current_iterations_limit = -1;
     user->iterations_board_started_at = 0;
@@ -1066,11 +1076,11 @@ int freecell_solver_user_next_instance(
                 sizeof(user->instances_list[0])*user->max_num_instances
                 );
     }
-    user->current_instance = user->num_instances-1;
+    user->current_instance_idx = user->num_instances-1;
     user->instance = freecell_solver_alloc_instance();
-    user->instances_list[user->current_instance].instance = user->instance;
-    user->instances_list[user->current_instance].ret = user->ret = FCS_STATE_NOT_BEGAN_YET;
-    user->instances_list[user->current_instance].limit = -1;
+    user->instances_list[user->current_instance_idx].instance = user->instance;
+    user->instances_list[user->current_instance_idx].ret = user->ret = FCS_STATE_NOT_BEGAN_YET;
+    user->instances_list[user->current_instance_idx].limit = -1;
     
     return 0;
 }
