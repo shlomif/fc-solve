@@ -445,6 +445,11 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         if (depth+1 >= soft_thread->dfs_max_depth)
         {
             freecell_solver_increase_dfs_max_depth(soft_thread);
+
+            /* Because the address of soft_thread->soft_dfs_info may
+             * be changed
+             * */
+            the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
         }
 
         /* All the resultant states in the last test conducted were covered */
