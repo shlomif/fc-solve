@@ -338,6 +338,11 @@ freecell_solver_instance_t * freecell_solver_alloc_instance(void)
     instance->instance_tests_order.num = 0;
     instance->instance_tests_order.tests = NULL;
     instance->instance_tests_order.max_num = 0;
+
+    instance->opt_tests_order.num = 0;
+    instance->opt_tests_order.tests = NULL;
+    instance->opt_tests_order.max_num = 0;
+    
     
 
 #ifdef FCS_WITH_TALONS
@@ -461,11 +466,15 @@ void freecell_solver_free_instance(freecell_solver_instance_t * instance)
     free(instance->hard_threads);
     if (instance->optimization_thread)
     {
-        free(instance->optimization_thread->soft_threads);
-        free(instance->optimization_thread);
+        free_instance_hard_thread_callback(instance->optimization_thread);
     }
 
     free(instance->instance_tests_order.tests);
+
+    if (instance->opt_tests_order_set)
+    {
+        free(instance->opt_tests_order.tests);
+    }
 
     free(instance);
 }
@@ -821,26 +830,27 @@ static int freecell_solver_optimize_solution(
     )
 {
     freecell_solver_hard_thread_t * optimization_thread;
+    freecell_solver_soft_thread_t * soft_thread;
     
     optimization_thread = alloc_hard_thread(instance);
     instance->optimization_thread = optimization_thread;
 
+    soft_thread = optimization_thread->soft_threads[0];
+
     if (instance->opt_tests_order_set)
     {
-        if (optimization_thread->soft_threads[0]->tests_order.tests != NULL)
+        if (soft_thread->tests_order.tests != NULL)
         {
-            free(optimization_thread->soft_threads[0]->tests_order.tests);
+            free(soft_thread->tests_order.tests);
         }
         
-        optimization_thread->soft_threads[0]->tests_order = 
+        soft_thread->tests_order = 
             tests_order_dup(&(instance->opt_tests_order));
     }
     
-    optimization_thread->soft_threads[0]->method = FCS_METHOD_OPTIMIZE;
-    /*
-     * We do not need to initialize its test order because it inherits the
-     * master test order of the instance
-     * */
+    soft_thread->method = FCS_METHOD_OPTIMIZE;
+
+    soft_thread->is_a_complete_scan = 1;
 
     /* Initialize the optimization hard-thread and soft-thread */
     optimization_thread->num_times_left_for_soft_thread = 1000000;
