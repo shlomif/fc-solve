@@ -313,16 +313,21 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
     {
-        freecell_solver_user_set_iter_handler(
-            instance,
-            my_iter_handler,
-            dc
-            );
+#define set_iter_handler() \
+        freecell_solver_user_set_iter_handler(   \
+            instance,   \
+            my_iter_handler,   \
+            dc    \
+            );        \
         dc->debug_iter_output_on = 1;
+
+        set_iter_handler();
     }
     else if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
     {
+        set_iter_handler();
         dc->debug_iter_state_output = 1;
+#undef set_iter_handler
     }
     else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
     {

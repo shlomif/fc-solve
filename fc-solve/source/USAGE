@@ -284,7 +284,7 @@ states that it found and recurses into them one by one. Renegade tests
 that do not belong to any group, are processed in a non-random manner.
 
 
--asw [A* Weights]   
+-asw [A* Weights]
 --a-star-weight [A* Weights]
 
 Specify weights for the A* scan, assuming it is used. The parameter
@@ -421,12 +421,11 @@ slows it down a bit.
 -s
 --state-output
 
-This option makes little sense by itself, and is applicable only if
--i/--iter-output was also specified at the command-line. If specified,
-this option also output the cards and formation of the board itself,
-for every state that is checked. "fc-solve -i -s" yields a nice
-real-time display of the progress of Freecell Solver, but you usually
-cannot make what is going on because it is so fast.
+This option implies -i. If specified, this option outputs the cards and 
+formation of the board itself, for every state that is checked. 
+"fc-solve -s" yields a nice real-time display of the progress of 
+Freecell Solver, but you usually cannot make what is going on because 
+it is so fast.
 
 
 8. Signal Combinations
