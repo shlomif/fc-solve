@@ -11,7 +11,7 @@
 #include "dmalloc.h"
 #endif
 
-static int read_preset(char * preset_name, args_man_t * * args, char * * opened_files_dir)
+static int read_preset(char * preset_name, args_man_t * * args, char * * opened_files_dir_to_assign)
 {
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * global_presetrc = NULL, * env_var_presetrc = NULL;
@@ -22,6 +22,8 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
     char line[8192];
     FILE * f;
     char * fgets_ret;
+    char * opened_files_dir = NULL;
+    int read_next_preset = 0;
 
     home_dir = getenv("HOME");
     if (home_dir)
@@ -49,16 +51,64 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
             {
                 break;
             }
+            if (!strncmp(line, "dir=", 4))
+            {
+#define nullify_newline() \
+                {     \
+                char * s;   \
+   \
+                s = strchr(line, '\n');      \
+                if (s != NULL)     \
+                {       \
+                    *s = '\0';      \
+                }        \
+                }
+                nullify_newline();
 
-
-            
+                if (opened_files_dir != NULL)
+                {
+                    free(opened_files_dir);
+                }
+                opened_files_dir = strdup(line+4);
+            }
+            else if (!strncmp(line, "name=", 5))
+            {
+                nullify_newline();
+                if (!strcmp(line+5, preset_name))
+                {
+                    read_next_preset = 1;
+                }
+            }
+            else if (!strncmp(line, "command=", 8))
+            {
+                if (read_next_preset)
+                {
+                    *args = freecell_solver_args_man_alloc();
+                    freecell_solver_args_man_chop(*args, line+8);
+                    ret_code = 0;
+                    goto HAVE_PRESET;
+                }
+            }
         }
-        
+#undef nullify_newline
     }
+HAVE_PRESET:
 
     if (home_dir_presetrc)
     {
         free(home_dir_presetrc);
+    }
+
+    if (ret_code == 0)
+    {
+        *opened_files_dir_to_assign = opened_files_dir;
+    }
+    else
+    {
+        if (opened_files_dir)
+        {
+            free(opened_files_dir);
+        }
     }
 
     return ret_code;
@@ -596,13 +646,13 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
-            
+
             ret = freecell_solver_user_set_optimization_scan_tests_order(
-                    instance, 
+                    instance,
                     argv[arg],
                     &fcs_user_errstr
                     );
-            
+
             if (ret != 0)
             {
                 char * errstr = malloc(strlen(fcs_user_errstr)+500);
@@ -616,7 +666,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 *error_string = errstr;
 
                 *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;                
+                return FCS_CMD_LINE_ERROR_IN_ARG;
             }
         }
         else if ((!strcmp(argv[arg], "--scans-synergy")))
@@ -629,7 +679,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
-            
+
             if (!strcmp(argv[arg], "none"))
             {
                 value = 0;
@@ -641,7 +691,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             else
             {
                 char * errstr;
-                
+
                 errstr = malloc(strlen(argv[arg])+500);
 
                 sprintf(errstr, "Unknown scans' synergy type \"%s\"!\n", argv[arg]);
@@ -685,7 +735,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 int ret;
                 size_t num_read;
                 args_man_t * args_man;
-                
+
                 s = argv[arg];
                 while(isdigit(*s))
                 {
@@ -714,10 +764,10 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     char * err_str;
 
                     err_str = malloc(strlen(s)+100);
-                    sprintf(err_str, 
-                            "Could not open file \"%s\"!\nQuitting.\n", 
+                    sprintf(err_str,
+                            "Could not open file \"%s\"!\nQuitting.\n",
                             s);
-                            
+
                     *error_string = err_str;
                     *last_arg = arg;
 
@@ -739,18 +789,18 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 num_read = fread(buffer, 1, file_len, f);
                 fclose(f);
                 buffer[num_read] = '\0';
-                
+
                 args_man = freecell_solver_args_man_alloc();
                 ret = freecell_solver_args_man_chop(args_man, buffer);
                 free(buffer);
                 if (ret != 0)
                 {
-                    *error_string = 
+                    *error_string =
                         strdup("Could not parse the file. Quitting\n");
                     freecell_solver_args_man_free(args_man);
 
                     *last_arg = arg;
-                    
+
                     return FCS_CMD_LINE_ERROR_IN_ARG;
                 }
 
@@ -773,7 +823,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         ((file_nesting_count < 0) ? file_nesting_count : (file_nesting_count-1)),
                         opened_files_dir
                         );
-                    
+
                     if (ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
                     {
                         /* Do nothing - continue */
@@ -799,7 +849,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 int status;
                 args_man_t * preset_args;
                 char * dir = NULL;
-                
+
                 status = read_preset(argv[arg], &preset_args, &dir);
                 if (status != 0)
                 {
@@ -807,7 +857,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     err_str = malloc(strlen(argv[arg]) + 100);
                     sprintf(err_str, "Unable to load the \"%s\" preset!\n", argv[arg]);
                     *error_string = err_str;
-                    
+
                     *last_arg = arg;
 
                     return FCS_CMD_LINE_ERROR_IN_ARG;
