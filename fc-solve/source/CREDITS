@@ -52,4 +52,7 @@ Yotam Rubin - Preparing an initial Debian Package.
 
 Risko Gergely - Maintaining the current Debian Package.
 
+Michael Mann - Cleaning up the Simple Simon solving functions, adding a
+new test to them that improved the ratio of solutions, and helping
+in diagnosing a bug.
 
