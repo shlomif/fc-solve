@@ -12,7 +12,7 @@
 #endif
 
 
-int freecell_solver_user_cmd_line_parse_args(
+int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
     int argc,
     char * argv[],
@@ -21,7 +21,8 @@ int freecell_solver_user_cmd_line_parse_args(
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
-    int * last_arg
+    int * last_arg,
+    int file_nesting_count    
     )
 {
     int arg;
@@ -617,7 +618,11 @@ int freecell_solver_user_cmd_line_parse_args(
                 *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
-
+            if (file_nesting_count == 0)
+            {
+                /* do nothing */
+            }
+            else
             {
                 int num_to_skip = 0;
                 char * s, * buffer;
@@ -684,7 +689,7 @@ int freecell_solver_user_cmd_line_parse_args(
                 }
                 else
                 {
-                    ret = freecell_solver_user_cmd_line_parse_args(
+                    ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         args_man->argc - num_to_skip,
                         args_man->argv + num_to_skip,
@@ -693,7 +698,8 @@ int freecell_solver_user_cmd_line_parse_args(
                         callback,
                         callback_context,
                         error_string,
-                        last_arg
+                        last_arg,
+                        ((file_nesting_count < 0) ? file_nesting_count : (file_nesting_count-1))
                         );
                     
                     if (ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
@@ -719,3 +725,30 @@ int freecell_solver_user_cmd_line_parse_args(
     *last_arg = arg;
     return FCS_CMD_LINE_OK;
 }
+
+int freecell_solver_user_cmd_line_parse_args(
+    void * instance,
+    int argc,
+    char * argv[],
+    int start_arg,
+    char * * known_parameters,
+    freecell_solver_user_cmd_line_known_commands_callback_t callback,
+    void * callback_context,
+    char * * error_string,
+    int * last_arg
+    )
+{
+    return freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+        instance,
+        argc,
+        argv,
+        start_arg,
+        known_parameters,
+        callback,
+        callback_context,
+        error_string,
+        last_arg,
+        -1
+        );
+}
+
