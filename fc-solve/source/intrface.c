@@ -384,7 +384,9 @@ freecell_solver_instance_t * freecell_solver_alloc_instance(void)
 
     instance->to_reparent_states = 0;
 
-    instance->scans_synergy = 0;
+    /* Make the 1 the default, because otherwise scans will not cooperate
+     * with one another. */
+    instance->scans_synergy = 1;
 
     return instance;
 }
