@@ -7,6 +7,11 @@
 
     * Document the mapping of aliases -> test functions.
 
+    kpat:
+    -----
+
+    * Convert to the instance recycling.
+
 * Change char *'s to const char *'s in the API.
 
 * Compile with all the kdegames gcc flags and eliminate warnings.

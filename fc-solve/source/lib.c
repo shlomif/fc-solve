@@ -839,7 +839,7 @@ int freecell_solver_user_set_empty_stacks_filled_by(
 
 int freecell_solver_user_set_a_star_weight(
     void * user_instance,
-    int index,
+    int weight_index,
     double weight
     )
 {
@@ -847,7 +847,7 @@ int freecell_solver_user_set_a_star_weight(
 
     user = (fcs_user_t *)user_instance;
 
-    if ((index < 0) || (index >= (sizeof(user->soft_thread->a_star_weights)/sizeof(user->soft_thread->a_star_weights[0]))))
+    if ((weight_index < 0) || (weight_index >= (int)(sizeof(user->soft_thread->a_star_weights)/sizeof(user->soft_thread->a_star_weights[0]))))
     {
         return 1;
     }
@@ -856,7 +856,7 @@ int freecell_solver_user_set_a_star_weight(
         return 2;
     }
 
-    user->soft_thread->a_star_weights[index] = weight;
+    user->soft_thread->a_star_weights[weight_index] = weight;
 
     return 0;
 
@@ -875,15 +875,14 @@ static void freecell_solver_user_iter_handler_wrapper(
 
     user = (fcs_user_t *)user_instance;
 
-    return
-        user->iter_handler(
-            user_instance,
-            iter_num,
-            depth,
-            (void *)ptr_state_with_locations,
-            parent_iter_num,
-            user->iter_handler_context
-            );
+    user->iter_handler(
+        user_instance,
+        iter_num,
+        depth,
+        (void *)ptr_state_with_locations,
+        parent_iter_num,
+        user->iter_handler_context
+        );
 }
 
 void freecell_solver_user_set_iter_handler(
@@ -1048,7 +1047,7 @@ void freecell_solver_user_set_calc_real_depth(
 
 void freecell_solver_user_set_soft_thread_name(
     void * user_instance,
-    char * name
+    const char * name
     )
 {
     fcs_user_t * user;
@@ -1064,7 +1063,7 @@ void freecell_solver_user_set_soft_thread_name(
 
 int freecell_solver_user_set_hard_thread_prelude(
     void * user_instance,
-    char * prelude
+    const char * prelude
     )
 {
     fcs_user_t * user;

@@ -525,10 +525,13 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             {
                 int a;
-                const char * start_num;
-                const char * end_num;
+                char * start_num;
+                char * end_num;
                 char save;
-                start_num = argv[arg];
+                char * arg_copy;
+
+                arg_copy = strdup(argv[arg]);
+                start_num = arg_copy;
                 for(a=0;a<5;a++)
                 {
                     while ((*start_num > '9') && (*start_num < '0') && (*start_num != '\0'))
@@ -554,6 +557,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     *end_num = save;
                     start_num=end_num+1;
                 }
+                free(arg_copy);
             }
         }
         else if ((!strcmp(argv[arg], "-opt")) || (!strcmp(argv[arg], "--optimize-solution")))
@@ -592,7 +596,6 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             (!strcmp(argv[arg], "--next-hard-thread"))
         )
         {
-            int ret;
             int is_st = ((!strcmp(argv[arg], "-nst")) || (!strcmp(argv[arg], "--next-soft-thread")));
 
             ret =
@@ -752,11 +755,11 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             else
             {
-                int num_to_skip = 0;
-                char * s, * buffer;
+                int num_args_to_skip = 0;
+                char * buffer;
+                const char * s;
                 FILE * f;
                 long file_len;
-                int ret;
                 size_t num_read;
                 args_man_t * args_man;
 
@@ -767,7 +770,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
                 if (*s == ',')
                 {
-                    num_to_skip = atoi(argv[arg]);
+                    num_args_to_skip = atoi(argv[arg]);
                     s++;
                 }
                 if (opened_files_dir)
@@ -828,7 +831,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     return FCS_CMD_LINE_ERROR_IN_ARG;
                 }
 
-                if (num_to_skip >= args_man->argc)
+                if (num_args_to_skip >= args_man->argc)
                 {
                     /* Do nothing */
                 }
@@ -836,8 +839,8 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 {
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
-                        args_man->argc - num_to_skip,
-                        args_man->argv + num_to_skip,
+                        args_man->argc - num_args_to_skip,
+                        (const char * *)(args_man->argv + num_args_to_skip),
                         0,
                         known_parameters,
                         callback,
@@ -891,7 +894,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         preset_args->argc,
-                        preset_args->argv,
+                        (const char * *)(preset_args->argv),
                         0,
                         known_parameters,
                         callback,
@@ -933,9 +936,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 int freecell_solver_user_cmd_line_parse_args(
     void * instance,
     int argc,
-    char * argv[],
+    const char * argv[],
     int start_arg,
-    char * * known_parameters,
+    const char * * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
