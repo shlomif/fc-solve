@@ -45,15 +45,17 @@ extern char *
     result = (what_t *)allocator->rollback_ptr;       \
 }
 
-#define fcs_compact_alloc_typed_ptr_into_var(result, type_t, allocator_orig, how_much) \
+#define fcs_compact_alloc_typed_ptr_into_var(result, type_t, allocator_orig, how_much_orig) \
 { \
     register fcs_compact_allocator_t * allocator = (allocator_orig); \
+    register int how_much = (how_much_orig);     \
     if (allocator->max_ptr - allocator->ptr < how_much)  \
     {      \
         freecell_solver_compact_allocator_extend(allocator);      \
     }         \
     allocator->rollback_ptr = allocator->ptr;       \
-    allocator->ptr += ((how_much)+(sizeof(char *)-((how_much)&(sizeof(char *)-1))));      \
+    /* Round ptr to the next pointer boundary */      \
+    allocator->ptr += ((how_much)+((sizeof(char *)-((how_much)&(sizeof(char *)-1)))&(sizeof(char*)-1)));      \
     result = (type_t *)allocator->rollback_ptr;       \
 }
         
