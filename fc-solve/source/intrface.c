@@ -1144,7 +1144,24 @@ int freecell_solver_resume_instance(
 
                 ret = run_hard_thread(hard_thread);
                 if ((ret == FCS_STATE_IS_NOT_SOLVEABLE) ||
-                    (ret == FCS_STATE_WAS_SOLVED)
+                    (ret == FCS_STATE_WAS_SOLVED) ||
+                    (
+                        (ret == FCS_STATE_SUSPEND_PROCESS) &&
+                        /* There's a limit to the scan only 
+                         * if max_num_times is greater than 0 */
+                        (
+                            (
+                                (instance->max_num_times > 0) &&
+                                (instance->num_times >= instance->max_num_times)
+                            ) ||
+                            (
+                                (instance->max_num_states_in_collection > 0) &&
+                                (instance->num_states_in_collection >= instance->max_num_states_in_collection)
+                                
+                            )
+                        )
+                    )
+
                    )
                 {
                     goto end_of_hard_threads_loop;
