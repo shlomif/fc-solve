@@ -51,6 +51,14 @@ used to determine the location of the element in the hash table, but that is
 used for comparison. That is done in order to avoid needlessly comparing two
 different states with the same hash value.
 
+Soft DFS - A depth-first search scan that does not utilize procedural
+recursion. In Freecell Solver, this utilizes a stack of records, each
+containing the current state, the current test, the list of derived states,
+and other information. This deviates from the standard put every state
+at the end of one stack scheme (that exists in LM-Solve for example) and
+is harder to maintain, but can be fine-tuned and conserve resources more
+easily.
+
 Soft Thread - a singular continuus scan operating on a states collection.
 It can be Soft-DFS, DFS or Best First Search. There could be any number of
 soft threads in a hard thread.
