@@ -163,11 +163,6 @@ typedef struct freecell_solver_instance
      * all the stacks of each depth.
      * */
     fcs_move_stack_t * solution_moves;
-    /*
-     * proto_solution_moves[i] are the moves that lead from
-     * solution_states[i] to solution_states[i+1].
-     * */
-    fcs_move_stack_t * * proto_solution_moves;
 
     /*
      * Limits for the maximal depth and for the maximal number of checked

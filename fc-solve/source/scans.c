@@ -312,10 +312,6 @@ int freecell_solver_hard_dfs_resume_solution(
     {
         free(soft_thread->solution_states);
         soft_thread->solution_states = NULL;
-#if 0
-        free(instance->proto_solution_moves);
-        instance->proto_solution_moves = NULL;
-#endif
         check = FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
@@ -380,9 +376,6 @@ static void freecell_solver_increase_dfs_max_depth(
     for(d=soft_thread->dfs_max_depth ; d<new_dfs_max_depth; d++)
     {
         soft_thread->solution_states[d] = NULL;
-#if 0
-        instance->proto_solution_moves[d] = NULL;
-#endif
         soft_thread->soft_dfs_info[d].derived_states_list.max_num_states = 0;
         soft_thread->soft_dfs_info[d].test_index = 0;
         soft_thread->soft_dfs_info[d].current_state_index = 0;

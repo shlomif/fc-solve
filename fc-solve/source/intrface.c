@@ -361,8 +361,6 @@ freecell_solver_instance_t * freecell_solver_alloc_instance(void)
 
     instance->instance_solution_states = NULL;
 
-    instance->proto_solution_moves = NULL;
-
     instance->optimize_solution_path = 0;
 
 #ifdef FCS_WITH_MHASH
@@ -616,6 +614,18 @@ static void trace_solution(
     int num_solution_states;
     fcs_state_with_locations_t * s1;
     int last_depth;
+    fcs_move_stack_t * solution_moves;
+    int move_idx;
+    fcs_move_stack_t * stack;
+    fcs_move_t * moves;
+
+    if (instance->solution_moves != NULL)
+    {
+        fcs_move_stack_destroy(instance->solution_moves);
+    }
+
+    fcs_move_stack_alloc_into_var(solution_moves);
+    instance->solution_moves = solution_moves;
 
     s1 = instance->final_state;
 
@@ -626,24 +636,23 @@ static void trace_solution(
     {
         free(instance->instance_solution_states);
     }
-    if (instance->proto_solution_moves != NULL)
-    {
-        free(instance->proto_solution_moves);
-    }
 
     /* Allocate space for the solution stacks */
     instance->instance_solution_states = malloc(sizeof(fcs_state_with_locations_t *)*num_solution_states);
-    instance->proto_solution_moves = malloc(sizeof(fcs_move_stack_t *) * (num_solution_states-1));
     /* Retrace the step from the current state to its parents */
     while (s1->parent != NULL)
     {
         /* Mark the state as part of the non-optimized solution */
         s1->visited |= FCS_VISITED_IN_SOLUTION_PATH;
         /* Duplicate the move stack */
-        fcs_move_stack_duplicate_into_var(
-            instance->proto_solution_moves[s1->depth-1],
-            s1->moves_to_parent
-            );
+        {
+            stack = s1->moves_to_parent;
+            moves = stack->moves;
+            for(move_idx=stack->num_moves-1;move_idx>=0;move_idx--)
+            {
+                fcs_move_stack_push(solution_moves, moves[move_idx]);
+            }            
+        }
         /* Duplicate the state to a freshly malloced memory */
         instance->instance_solution_states[s1->depth] = (fcs_state_with_locations_t*)malloc(sizeof(fcs_state_with_locations_t));
         fcs_duplicate_state(*(instance->instance_solution_states[s1->depth]), *s1);
@@ -660,43 +669,6 @@ static void trace_solution(
 }
 
 
-
-/*
-    This function combines the move stacks of every depth to one big
-    move stack.
-*/
-static void create_total_moves_stack(
-    freecell_solver_instance_t * instance
-    )
-{
-    int depth;
-    fcs_move_stack_alloc_into_var(instance->solution_moves);
-    /* The moves are inserted from the highest depth to depth 0 in order
-       to preserve their order stack-wise
-    */
-
-/* #define MYDEBUG */
-#ifdef MYDEBUG
-    {
-        int sum = 0;
-        for( depth=0 ; depth <= instance->num_solution_states-2 ; depth++)
-        {
-            sum += instance->proto_solution_moves[depth]->num_moves;
-            printf("depth %i : %i\n", depth, sum);
-        }
-    }
-#endif
-
-    for(depth=instance->instance_num_solution_states-2;depth>=0;depth--)
-    {
-        freecell_solver_move_stack_swallow_stack(
-            instance->solution_moves,
-            instance->proto_solution_moves[depth]
-            );
-    }
-    free(instance->proto_solution_moves);
-    instance->proto_solution_moves = NULL;
-}
 
 /*
     This function optimizes the solution path using a BFS scan on the
@@ -724,7 +696,6 @@ static int freecell_solver_optimize_solution(
         {
             fcs_clean_state(instance->instance_solution_states[d]);
             free(instance->instance_solution_states[d]);
-            fcs_move_stack_destroy(instance->proto_solution_moves[d]);
         }
         /* There's one more state than move stack */
         fcs_clean_state(instance->instance_solution_states[d]);
@@ -732,9 +703,6 @@ static int freecell_solver_optimize_solution(
 
         free(instance->instance_solution_states);
         instance->instance_solution_states = NULL;
-
-        free(instance->proto_solution_moves);
-        instance->proto_solution_moves = NULL;
     }
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
@@ -1203,7 +1171,7 @@ int freecell_solver_resume_instance(
 
         if (ret == FCS_STATE_WAS_SOLVED)
         {
-            /* Create proto_solution_moves in the first place */
+            /* Create solution_moves in the first place */
             trace_solution(instance);
         }
     }
@@ -1216,15 +1184,10 @@ int freecell_solver_resume_instance(
             ret = freecell_solver_optimize_solution(instance);
             if (ret == FCS_STATE_WAS_SOLVED)
             {
-                /* Create the proto_solution_moves in the first place */
+                /* Create the solution_moves in the first place */
                 trace_solution(instance);
             }
         }
-    }
-
-    if (ret == FCS_STATE_WAS_SOLVED)
-    {
-        create_total_moves_stack(instance);
     }
 
     return ret;
@@ -1450,12 +1413,6 @@ void freecell_solver_finish_instance(
 
     clean_soft_dfs(instance);
 
-
-    if (instance->proto_solution_moves != NULL)
-    {
-        free(instance->proto_solution_moves);
-        instance->proto_solution_moves = NULL;
-    }
 
     if (instance->instance_solution_states != NULL)
     {
