@@ -26,7 +26,7 @@ freecell_solver_append_string_t * freecell_solver_append_string_alloc(int size_m
 
 int freecell_solver_append_string_sprintf(
     freecell_solver_append_string_t * app_str,
-    char * format,
+    const char * format,
     ...
     )
 {

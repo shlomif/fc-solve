@@ -153,6 +153,8 @@ extern void fcs_derived_states_list_add_state(
     list->num_states++;
 }
 #endif
+
+
 /*
     This function performs a given move on a state
 
@@ -369,7 +371,7 @@ void freecell_solver_move_stack_normalize(
     freecell_solver_move_stack_swallow_stack(moves, temp_moves);
 }
 
-GCC_INLINE int convert_freecell_num(int fcn)
+static GCC_INLINE int convert_freecell_num(int fcn)
 {
     if (fcn >= 7)
         return (fcn+3);

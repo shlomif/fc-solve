@@ -591,6 +591,10 @@ extern int freecell_solver_state_compare_indirect(const void * s1, const void * 
 extern int freecell_solver_state_compare_indirect_with_context(const void * s1, const void * s2, void * context);
 #endif
 
+#ifdef INDIRECT_STACK_STATES
+extern int freecell_solver_stack_compare_for_comparison(const void * v_s1, const void * v_s2);
+#endif
+
 #ifdef FCS_WITH_TALONS
 extern int fcs_talon_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
 #endif

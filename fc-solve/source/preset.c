@@ -37,7 +37,7 @@ enum fcs_presets_ids
     FCS_PRESET_SEAHAVEN_TOWERS,
     FCS_PRESET_SIMPLE_SIMON,
     FCS_PRESET_YUKON,
-    FCS_PRESET_BELEAGUERED_CASTLE,
+    FCS_PRESET_BELEAGUERED_CASTLE
 };
 
 static const fcs_preset_t fcs_presets[16] = 
@@ -377,7 +377,7 @@ static int fcs_get_preset_id_by_name(
     return ret;
 }
 
-int test_aliases_compare_func(const void * void_a, const void * void_b)
+static int test_aliases_compare_func(const void * void_a, const void * void_b)
 {
     return strcmp(((fcs_test_aliases_mapping_t *)void_a)->alias,((fcs_test_aliases_mapping_t *)void_b)->alias);
 }
@@ -427,7 +427,7 @@ enum TEST_TYPE
 
 enum TEST_ERRORS
 {
-    TEST_ERROR_NO_RIGHT_BRACE,
+    TEST_ERROR_NO_RIGHT_BRACE
 };
 
 struct test_ret_struct

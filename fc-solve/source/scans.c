@@ -621,7 +621,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
 
             {
-                int a, j;
+                int j;
                 int swap_save;
                 int * rand_array, * ra_ptr;
                 num_states = derived_states_list->num_states;
@@ -676,9 +676,11 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         }
 
         {
+            int * rand_array;
+            
             num_states = derived_states_list->num_states;
             derived_states = derived_states_list->states;
-            int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
+            rand_array = the_soft_dfs_info->derived_states_random_indexes;
 
             while (current_state_index <
                    num_states)

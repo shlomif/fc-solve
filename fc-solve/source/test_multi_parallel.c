@@ -23,7 +23,7 @@ struct microsoft_rand_struct
 
 typedef struct microsoft_rand_struct microsoft_rand_t;
 
-microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
+static microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
 {
     microsoft_rand_t * ret;
 
@@ -33,15 +33,15 @@ microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
     return ret;
 }
 
-void microsoft_rand_free(microsoft_rand_t * rand)
+static void microsoft_rand_free(microsoft_rand_t * self)
 {
-    free(rand);
+    free(self);
 }
 
-int microsoft_rand_rand(microsoft_rand_t * rand)
+static int microsoft_rand_rand(microsoft_rand_t * self)
 {
-    rand->seed = (rand->seed * 214013 + 2531011);
-    return (rand->seed >> 16) & 0x7fff;
+    self->seed = (self->seed * 214013 + 2531011);
+    return (self->seed >> 16) & 0x7fff;
 }
 
 typedef int CARD;
@@ -64,7 +64,7 @@ typedef int CARD;
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
 
-char * card_to_string(char * s, CARD card, int not_append_ws)
+static char * card_to_string(char * s, CARD card, int not_append_ws)
 {
     int suit = SUIT(card);
     int v = VALUE(card)+1;
@@ -106,7 +106,7 @@ char * card_to_string(char * s, CARD card, int not_append_ws)
     return s;
 }
 
-char * get_board(int gamenumber)
+static char * get_board(int gamenumber)
 {
 
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
@@ -267,7 +267,7 @@ typedef struct pack_item_struct pack_item_t;
 static int cmd_line_callback(
     void * instance,
     int argc,
-    char * argv[],
+    const char * argv[],
     int arg,
     int * num_to_skip,
     int * ret,
@@ -339,7 +339,7 @@ static int cmd_line_callback(
 #define total_iterations_limit_per_board 100000
 #endif
 
-static char * known_parameters[] = {
+static const char * known_parameters[] = {
     "-i", "--iter-output",
     "-s", "--state-output",
     "-p", "--parseable-output",
@@ -360,11 +360,13 @@ struct binary_output_struct
 
 typedef struct binary_output_struct binary_output_t;
 
-void print_int(binary_output_t * bin, int val)
+static void print_int(binary_output_t * bin, int val)
 {
-    unsigned char * buffer = bin->ptr;
+    unsigned char * buffer;    
     int p;
-            
+    
+    buffer = (unsigned char *)bin->ptr;
+
     for(p=0;p<4;p++)
     {
         buffer[p] = (val & 0xFF);
@@ -402,7 +404,7 @@ static void print_help(void)
           );
 }
 
-int read_int(FILE * f, int * dest)
+static int read_int(FILE * f, int * dest)
 {
     unsigned char buffer[4];
     int num_read;
@@ -585,7 +587,7 @@ int main(int argc, char * argv[])
         freecell_solver_user_cmd_line_parse_args(
             user.instance,
             argc,
-            argv,
+            (const char * *)argv,
             arg,
             known_parameters,
             cmd_line_callback,

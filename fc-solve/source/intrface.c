@@ -690,8 +690,6 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
 */
 #if defined(INDIRECT_STACK_STATES)
 
-extern int freecell_solver_stack_compare_for_comparison(const void * v_s1, const void * v_s2);
-
 #if ((FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_TREE) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_HASH))
 static int fcs_stack_compare_for_comparison_with_context(
     const void * v_s1,
