@@ -231,5 +231,23 @@ Overview of the core modules:
     This file is similar in spirit to freecell.c only that it contains Simple
     Simon tests.
 
+    caas.c:
+    -------
+
+    This file contains the check_and_add_state function - a function that is
+    used to determine if a reached state is found in the states collection 
+    and if so, to insert it there. (an operation that can be considered
+    atomic). 
+
+    It has several macros used to do it for the various types of states 
+    collections supported at compile time. It also has a functions to 
+    collect the new stacks that were present in a similar fashion.
+
+    scans.c:
+    --------
+
+    This module contains the functions of the various scans and their
+    auxiliary functions.
+
 
 
