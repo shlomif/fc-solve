@@ -322,6 +322,36 @@ help_screen_t help_screens[] = {
 "Send comments and suggestions to shlomif@vipe.technion.ac.il\n"
 },
 {
+    "real-help",
+"The environment variable FREECELL_SOLVER_DEFAULT_HELP sets the default help\n"
+"screen. The name of the help screen is the same name as its \"--help-\" flag\n"
+"but without the preceding \"--help-\". Type:\n"
+"\n"
+"    fc-solve --help-summary\n"
+"\n"
+"for the available help screens.\n"
+"\n"
+"Refer to your system's documentation for information on how to set environment\n"
+"variables.\n"
+},
+{
+    "problems",
+"To be discussed.\n"
+},
+{
+    "short-sol",
+"The following configurations may produce shorter solutions:\n"
+"\n"
+"    fc-solve -opt\n"
+"    fc-solve --method a-star -opt\n"
+"    fc-solve --reparent-states -opt\n"
+"    fc-solve --method a-star --reparent-states -opt\n"
+"\n"
+"If \"--method a-star\" is specified you can set the weights with\n"
+"-asw {comma separated list of 5 numeric weights}, which may improve\n"
+"the length of the solution. (refer to the USAGE file for more information)\n"
+},
+{
     "summary",
 "fc-solve [flags] [board_file|-]\n"
 "\n"
@@ -526,7 +556,8 @@ static void command_signal_handler(int signal_num)
 
 static char * known_parameters[] = {
     "-h", "--help",
-        "--help-configs", "--help-options", "--help-summary",
+        "--help-configs", "--help-options", "--help-problems", 
+        "--help-real-help", "--help-short-sol", "--help-summary",
     "-i", "--iter-output",
     "-s", "--state-output",
     "-p", "--parseable-output",
@@ -607,6 +638,7 @@ int main(int argc, char * argv[])
         file = stdin;
         fprintf(stderr, "%s", 
                 "Reading the board from the standard input.\n"
+                "Type \"fc-solve --help\" for more usage information.\n"
                );
     }
     else if (argv[arg][0] == '-')
