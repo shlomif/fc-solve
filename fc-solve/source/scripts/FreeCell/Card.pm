@@ -33,6 +33,12 @@ use vars qw(%suit_u2p_map %suit_p2u_map %value_u2p_map %value_p2u_map);
         'T' => 10,
     );
 
+sub get_card_value_from_string
+{
+    my $s = shift;
+    return $value_u2p_map{$s};
+}
+
 %value_p2u_map = reverse(%value_u2p_map);
 
 sub from_string
