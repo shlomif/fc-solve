@@ -97,5 +97,54 @@ Java is the de-facto technology for making programs run inside a browser.
 
 <h2>Safety from Failed Memory Allocations</h2>
 
+<p>
+Freecell Solver uses many calls to the memory allocations, but does not check
+that they return a valid buffer pointer. Should the memory run out, and they 
+fail, it can easily cause the entire process running it to crash.
+</p>
+
+<p>
+What needs to be implemented is a way to check if <tt>malloc()</tt> and
+<tt>realloc</tt> calls returned NULL, and if so, free all other allocated
+memory and propagate the memory upwards to the calling functions. There
+are several ways in which it can be achieived. One would be by defining an 
+exception class, much like that of Java only passed as one of the function 
+parameters and handled explicitly in each function. Another option would be 
+to keep all malloced pointers inside an Apache Portable Runtime-like 
+memory pool and to explictly free it should an allocation failed.
+</p>
+
+<p>
+This will involve a great deal of extra code and complexity, but will make 
+Freecell Solver more secure and fail-proof.
+</p>
+
+<h2>PySol Integration</h2>
+
+<p>
+<a href="http://www.oberhumer.com/opensource/pysol/">PySol</a> by Markus
+Oberhumer is by far the most feature-rich and complete open-source 
+suite of card Solitaire games. PySol's has its own ad-hoc solving mechanism
+for all of its supported variants, including those that are supported by 
+Freecell Solver. However, as far as the games supported by Freecell Solver
+are concerned, it fairs much worse, often leading the player to incorrect
+solutions.
+</p>
+
+<p>
+PySol is written in Python, a high-level cross-platform language. 
+Integrating Freecell Solver into PySol will require creating Python bindings 
+for some of Freeecell Solver API (a large part of it can be encapsulated by
+calls to its internal command line arguments-based configurator), and then
+creating the appropriate interface within the core PySol code. 
+</p>
+
+<p>
+As of January 2, 2003, PySol 4.81 is available on its site, and is ready
+to run and stable. Markus mentions there that he is working on PySol5, which
+would be based on wxPython, and include many improvements. Assuming you are
+interested in integrating it, the choice is yours whether to patch
+PySol 4.81 or wait for a beta of PySol 5.x to be released.
+</p>
 
 
