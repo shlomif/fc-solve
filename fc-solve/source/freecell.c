@@ -2230,6 +2230,86 @@ int freecell_solver_sfs_atomic_move_card_to_parent(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
+int freecell_solver_sfs_atomic_move_card_to_freecell(
+        freecell_solver_soft_thread_t * soft_thread,
+        fcs_state_with_locations_t * ptr_state_with_locations,
+        int depth,
+        int num_freestacks,
+        int num_freecells,
+        fcs_derived_states_list_t * derived_states_list,
+        int reparent
+        )
+{
+    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
+    freecell_solver_instance_t * instance = hard_thread->instance;
+    fcs_state_with_locations_t * ptr_new_state_with_locations;
+    fcs_move_stack_t * moves;
+    char * indirect_stacks_buffer;
+    int state_stacks_num;
+    int state_freecells_num;
+    int stack, cards_num, ds;
+    fcs_card_t card, temp_card;
+    fcs_move_t temp_move;
+    int check;
+    int sequences_are_built_by;
+
+    moves = hard_thread->reusable_move_stack;
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+
+    state_stacks_num = instance->stacks_num;
+    state_freecells_num = instance->freecells_num;
+
+    sequences_are_built_by = instance->sequences_are_built_by;
+
+    if (num_freecells == 0)
+    {
+        return FCS_STATE_IS_NOT_SOLVEABLE;
+    }
+
+    for(ds=0;ds<state_freecells_num;ds++)
+    {
+        if (fcs_freecell_card_num(state, ds) == 0)
+        {
+            break;
+        }
+    }
+    
+    
+
+    for(stack=0;stack<state_stacks_num;stack++)
+    {
+        cards_num = fcs_stack_len(state, stack);
+        if (cards_num > 0)
+        {
+            card = fcs_stack_card(state, stack, cards_num-1);
+
+            /* Let's move it */
+            {
+                sfs_check_state_begin();
+
+                my_copy_stack(stack);
+
+                fcs_pop_stack_card(new_state, stack, temp_card);
+                
+                fcs_put_card_in_freecell(new_state, ds, card);
+
+                fcs_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_FREECELL);
+                fcs_move_set_src_stack(temp_move, stack);
+                fcs_move_set_dest_freecell(temp_move, ds);
+
+                fcs_move_stack_push(moves, temp_move);
+
+                fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
+                fcs_move_stack_push(moves, temp_move);
+                
+                sfs_check_state_end()                
+            }
+        }
+    }
+
+    return FCS_STATE_IS_NOT_SOLVEABLE;
+}
+
 
 
 #undef state_with_locations
@@ -2260,11 +2340,12 @@ freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TESTS_NUM] 
     freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack,
     freecell_solver_sfs_atomic_move_card_to_empty_stack,
     freecell_solver_sfs_atomic_move_card_to_parent,
+    freecell_solver_sfs_atomic_move_card_to_freecell,
 #if 0
     freecell_solver_sfs_move_top_stack_cards_to_founds,
     freecell_solver_sfs_yukon_move_card_to_parent,
-#endif
     freecell_solver_sfs_yukon_move_kings_to_empty_stack,
+#endif    
     freecell_solver_sfs_yukon_do_nothing,
     freecell_solver_sfs_yukon_do_nothing,
     freecell_solver_sfs_yukon_do_nothing,
