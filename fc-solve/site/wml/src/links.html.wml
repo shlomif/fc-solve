@@ -249,6 +249,12 @@ Michael Mann ported FCS to C++ and used
 document the code. Covers version 2.2.x of the program.
 </p>
 
+<p>
+<a href="http://members.socket.net/~dominic1976/">Dominic Veit's Freecell 
+Solver</a> - a solver written in Java that does not use back-tracking and is
+still able to win 85% of the games.
+</p>
+
 <h2>Reviews of Freecell Solver</h2>
 
 <p>
