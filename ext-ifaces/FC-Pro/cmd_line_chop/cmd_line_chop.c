@@ -76,7 +76,7 @@ int args_man_chop(args_man_t * manager, char * string)
     
     while (*s != '\0')
     {
-        while ((*s == ' ') || (*s == '\t') || (*s == '\n'))
+        while ((*s == ' ') || (*s == '\t') || (*s == '\n') || (*s == '\r'))
         {
             s++;
         }
@@ -86,6 +86,7 @@ int args_man_chop(args_man_t * manager, char * string)
         }
 AFTER_WS:
         while ((*s != ' ') && (*s != '\t') && (*s != '\n') && 
+               (*s != '\r') &&
                (*s != '\\') && (*s != '\"') && (*s != '\0') )
         {
             add_to_last_arg(*s);
@@ -93,7 +94,7 @@ AFTER_WS:
         }
 
         
-        if ((*s == ' ') || (*s == '\t') || (*s == '\n') || (*s == '\0'))
+        if ((*s == ' ') || (*s == '\t') || (*s == '\n') || (*s == '\0') || (*s == '\r'))
         {
 NEXT_ARG:
             push_args_last_arg();
