@@ -86,6 +86,7 @@ foreach my $q_more (@quotas)
         ($min, $max, $min_ind, $max_ind) = minmaximum($num_solved);
     }   
     push @chosen_scans, { 'q' => $q, 'ind' => $max_ind };
+    $selected_scans[$max_ind]->{'used'} = 1;
     $total += $max;
     print "$q \@ $max_ind ($total solved)\n";
     my $this_scan_result = ($scans_data->slice(":,$max_ind"));
@@ -143,7 +144,7 @@ if ($rle)
 
 # Construct the command line
 my $cmd_line = "freecell-solver-range-parallel-solve $start_board " . ($start_board + $num_boards - 1) . " 1 \\\n" .
-    join(" -nst \\\n", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } @selected_scans) . " \\\n" .
+    join(" -nst \\\n", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } (grep { $_->{'used'} } @selected_scans)) . " \\\n" .
     "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans[$_->{'ind'}]->{'id'} } @chosen_scans) ."\"";
     
 print SCRIPT $cmd_line;

@@ -46,7 +46,8 @@ Installing under Win32
 Freecell Solver is distributed with a makefile suitable for use with 
 Microsoft Visual C++. To build it using it follow the following steps:
 
-1. Copy "config.h.win32" to "config.h"
+1. Copy "config.h.win32" to "config.h" and "prefix.h.win32" to "prefix.h";
+In the directory Presets/ copy presetrc.win32 to presetrc.
 
 2. Optionally, edit it to set its preferences
 
