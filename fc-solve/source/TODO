@@ -1,18 +1,18 @@
 --- Pressing ---
 --- Non-pressing ---
 
+* Write an architecture document.
+
 * Write a Perl Script to parse, analyze and do a sanity check for a solution.
 (-p -t -sam)
 
 * Write a multi-threaded version and see if it runs ok.
 
-* Create the ability for multiple threads to operate on the same prev_states
-collection.
+* Write a multi-processed client/server program.
 
 * Port to Java (?)
 
-* Integrate into GNOME Freecell and/or GNOME AisleRiot and/or KDE Patience
-and/or PySol.
+* Integrate into GNOME Freecell and/or GNOME AisleRiot and/or PySol.
 
 * Code algorithms for similiar solitaire games. (maybe a perl program that 
 generates C code). - DONE partialy
@@ -25,14 +25,7 @@ iterations limit.
 * Add a more verbose preset error handling. 
 (explain why it could not be applied).
 
-* Load and save instances to the disk.
-
-* Implement BFS and A* (and Minimax, and others?). Which technique can be 
-specified in the command line (including DFS and Soft-DFS).
-
 * Check for unmalloced data and if so gracefully exit.
-
-* Get rid of the indirect state allocation mechanism. (?) 
 
 * Add a limit to stacks number (in the case of Indirect Stack States),
 number of states that are stored anywhere, etc.
