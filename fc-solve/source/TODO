@@ -1,13 +1,15 @@
 --- Pressing ---
 
-* Write a function to start solving from a string.
-
 * command line presets
 
 * Convert some of the documentation to Perl-POD or DocBook.
 
 * Add support for Adrian's extensions to the standard notation.
     - Done partially
+
+* Make the range solver more user-friendly and documented.
+
+* Add support for resuming a range scan.
 
 * After everything: reorganize the --help behaviour according to the Freshmeat
 editorial

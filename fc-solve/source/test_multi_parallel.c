@@ -259,6 +259,7 @@ struct pack_item_struct
 {
     freecell_solver_display_information_context_t display_context;
     void * instance;
+    int * limit;
 };
 
 typedef struct pack_item_struct pack_item_t;
@@ -324,6 +325,17 @@ static int cmd_line_callback(
     {
         dc->display_parent_iter_num = 1;
     }
+    else if (!strcmp(argv[arg], "-mi"))
+    {
+        if (arg == argc)
+        {
+        }
+        else
+        {
+            *(item->limit) = atoi(argv[arg+1]);
+        }
+        return FCS_CMD_LINE_OK;
+    }
     else
     {
         fprintf(stderr, "Unknown option %s!\n", argv[arg]);
@@ -345,6 +357,7 @@ static char * known_parameters[] = {
     "-p", "--parseable-output",
     "-t", "--display-10-as-t",
     "-pi", "--display-parent-iter",
+    "-mi", 
     NULL
     };
 
@@ -382,6 +395,22 @@ void print_int(binary_output_t * bin, int val)
 
 #define print_int_wrapper(i) { if (binary_output.file) { print_int(&binary_output, (i));  } }
 
+static void print_help(void)
+{
+    printf("%s", 
+"freecell-solver-range-parallel-solve start end print_step\n"
+"   [--binary-output-to filename] [fc-solve Arguments...]\n"
+"\n"
+"Solves a sequence of boards from the Microsoft/Freecell Pro Deals\n"
+"\n"
+"start - the first board in the sequence\n"
+"end - the last board in the sequence (inclusive)\n"
+"print_step - at which division to print a status line\n"
+"\n"
+"--binary-output-to filename - Outputs statistics to binary file 'filename'\n"
+          );
+}
+
 int main(int argc, char * argv[])
 {
     pack_item_t user;
@@ -415,25 +444,29 @@ int main(int argc, char * argv[])
     
 
     int arg = 1, start_from_arg;
-    if (argc < 5)
+    if (argc < 4)
     {
         fprintf(stderr, "Not Enough Arguments!\n");
+        print_help();
         exit(-1);
     }
     start_board = atoi(argv[arg++]);
     end_board = atoi(argv[arg++]);
     stop_at = atoi(argv[arg++]);
-
-    if (!strcmp(argv[arg], "--total-iterations-limit"))
+    
+    if (arg != argc)
     {
-        arg++;
-        total_iterations_limit_per_board = atoi(argv[arg++]);
-    }
-
-    if (!strcmp(argv[arg], "--binary-output-to"))
-    {
-        arg++;
-        binary_output_filename = argv[arg++];
+        if (!strcmp(argv[arg], "--binary-output-to"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--binary-output-to came without an argument!\n");
+                print_help();
+                exit(-1);
+            }
+            binary_output_filename = argv[arg++];
+        }
     }
 
     start_from_arg = arg;
@@ -458,25 +491,38 @@ int main(int argc, char * argv[])
 
     if (binary_output_filename)
     {
-        binary_output.file = fopen(binary_output_filename, "wb");
-        if (! binary_output.file)
+        FILE * in;
+
+        in = fopen(binary_output_filename, "rb");
+        if (in == NULL)
         {
-            fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
-            exit(-1);
+            binary_output.file = fopen(binary_output_filename, "wb");
+            if (! binary_output.file)
+            {
+                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
+                exit(-1);
+            }
+            binary_output.buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
+            binary_output.ptr = binary_output.buffer;
+            binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
+            
+            print_int_wrapper(start_board);
+            print_int_wrapper(end_board);
+            print_int_wrapper(total_iterations_limit_per_board);
         }
-        binary_output.buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
-        binary_output.ptr = binary_output.buffer;
-        binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
-        
-        print_int_wrapper(start_board);
-        print_int_wrapper(end_board);
-        print_int_wrapper(total_iterations_limit_per_board);
-        
+        else
+        {
+            read_int(start_board);
+            read_int(end_board);
+            read_int(total_iterations_limit_per_board);
+        }
     }
     else
     {
         binary_output.file = NULL;
     }
+
+    user.limit = &total_iterations_per_limit;
 
     user.instance = freecell_solver_user_alloc();
 
