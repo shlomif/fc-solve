@@ -22,6 +22,8 @@ editorial
 
 --- Non-pressing ---
 
+* Integrate the patsolve's prioritization and mixed BFS/DFS scan.
+
 * Make the code splint-clean.
 
 * Write an architecture document.
