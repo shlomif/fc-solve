@@ -1,0 +1,29 @@
+<?xml version='1.0' ?>
+
+<!-- <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oa
+sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
+<!-- This comment is meant to settle gvim -->
+
+<chapter id="scm">
+    <title>Software Configuration Management</title>
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:4
+sgml-indent-data:t
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+sgml-parent-document: "fcs_arch_doc.xml"
+End:
+-->
+
