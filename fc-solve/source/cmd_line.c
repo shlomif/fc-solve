@@ -503,6 +503,16 @@ int freecell_solver_user_cmd_line_parse_args(
                 instance,
                 1);
         }
+        else if ((!strcmp(argv[arg], "--st-name")))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                *last_arg = arg;
+                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
+            }
+            freecell_solver_user_set_soft_thread_name(instance, argv[arg]);
+        }
         else
         {
             *last_arg = arg;

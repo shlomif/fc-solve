@@ -627,6 +627,11 @@ struct freecell_solver_soft_thread_struct
      * solve_instance() to skip to the next scan.
      * */
     int is_finished;
+
+    /*
+     * A malloced string that serves as an identification for the user.
+     * */
+    char * name;
 };
 
 typedef struct freecell_solver_soft_thread_struct freecell_solver_soft_thread_t;

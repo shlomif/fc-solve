@@ -214,6 +214,11 @@ extern void freecell_solver_user_set_calc_real_depth(
     int calc_real_depth
     );
 
+extern void freecell_solver_user_set_soft_thread_name(
+    void * user_instance,
+    char * name
+    );
+
 #ifdef __cplusplus
 }
 #endif

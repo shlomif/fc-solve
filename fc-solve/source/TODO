@@ -7,8 +7,6 @@
 
 to work.
 
-* Modify the num_active_children upon reparenting.
-
 * Make a prelude in which soft threads would have a static play before they
 repeat themselves.
 

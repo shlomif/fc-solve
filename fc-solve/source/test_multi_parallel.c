@@ -348,6 +348,23 @@ static char * known_parameters[] = {
     NULL
     };
 
+void print_int(FILE * f, int val)
+{
+    unsigned char buffer[4];
+    int p;
+    if (f == NULL)
+    {
+        return;
+    }
+            
+    for(p=0;p<4;p++)
+    {
+        buffer[p] = (val & 0xFF);
+        val >>= 8;
+    }
+    fwrite(buffer, 1, 4, f);
+}
+
 int main(int argc, char * argv[])
 {
     pack_item_t user;
@@ -375,6 +392,9 @@ int main(int argc, char * argv[])
     int pack_num_iters;
     int total_iterations_limit_per_board = 100000;
 
+    char * binary_output_filename = NULL;
+    FILE * binary_output = NULL;
+
 
     int arg = 1, start_from_arg;
     if (argc < 5)
@@ -390,6 +410,12 @@ int main(int argc, char * argv[])
     {
         arg++;
         total_iterations_limit_per_board = atoi(argv[arg++]);
+    }
+
+    if (!strcmp(argv[arg], "--binary-output-to"))
+    {
+        arg++;
+        binary_output_filename = argv[arg++];
     }
 
     start_from_arg = arg;
@@ -411,6 +437,20 @@ int main(int argc, char * argv[])
         );
 #endif
     fflush(stdout);
+
+    if (binary_output_filename)
+    {
+        binary_output = fopen(binary_output_filename, "wb");
+        if (! binary_output)
+        {
+            fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
+            exit(-1);
+        }
+        print_int(binary_output, start_board);
+        print_int(binary_output, end_board);
+        print_int(binary_output, total_iterations_limit_per_board);
+        fflush(binary_output);
+    }
 
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
@@ -473,6 +513,7 @@ int main(int argc, char * argv[])
             );
 #endif
             fflush(stdout);
+            print_int(binary_output, -1);
         }
         else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
@@ -491,7 +532,11 @@ int main(int argc, char * argv[])
                 tb.millitm*1000
             );
 #endif
-
+            print_int(binary_output, -2);
+        }
+        else
+        {
+            print_int(binary_output, freecell_solver_user_get_num_times(user.instance));
         }
 
         total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
@@ -504,6 +549,7 @@ int main(int argc, char * argv[])
         {
             total_num_iters += total_num_iters_temp;
             total_num_iters_temp = 0;
+            
 
 #ifndef WIN32
             gettimeofday(&tv,&tz);
@@ -525,9 +571,15 @@ int main(int argc, char * argv[])
             fflush(stdout);
 
         }
+        if (binary_output_filename)
+        {
+            fflush(binary_output);
+        }
 
         freecell_solver_user_free(user.instance);
     }
+
+    fclose(binary_output);
 
 
     return 0;

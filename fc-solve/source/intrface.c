@@ -228,6 +228,8 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
 
     soft_thread->is_finished = 0;
 
+    soft_thread->name = NULL;
+
     return soft_thread;
 }
 
@@ -376,6 +378,11 @@ static void free_instance_soft_thread_callback(freecell_solver_soft_thread_t * s
     free(soft_thread->a_star_pqueue);
 
     free(soft_thread->tests_order.tests);
+
+    if (soft_thread->name != NULL)
+    {
+        free(soft_thread->name);
+    }
     /* The data-structure itself was allocated */
     free(soft_thread);
 }
@@ -1277,12 +1284,6 @@ void freecell_solver_finish_instance(
     /* De-allocate the state packs */
     for(ht_idx=0;ht_idx<instance->num_hard_threads;ht_idx++)
     {
-        /* No longer needed because the stacks are now compactly allocated */
-#if 0
-        /* Destroy all the intermediate move stacks in the solution graph */
-        freecell_solver_state_ia_foreach(instance->hard_threads[ht_idx], freecell_solver_destroy_move_stack_of_state, NULL);
-#endif
-
         freecell_solver_state_ia_finish(instance->hard_threads[ht_idx]);
 
 #ifdef INDIRECT_STACK_STATES
@@ -1295,14 +1296,6 @@ void freecell_solver_finish_instance(
 
     if (instance->optimization_thread)
     {
-#if 0
-        freecell_solver_state_ia_foreach(
-            instance->optimization_thread,
-            freecell_solver_destroy_move_stack_of_state,
-            NULL
-            );
-#endif
-
         freecell_solver_state_ia_finish(instance->optimization_thread);
     }
 

@@ -764,3 +764,18 @@ void freecell_solver_user_set_calc_real_depth(
     user->instance->calc_real_depth = calc_real_depth;
 }
 
+void freecell_solver_user_set_soft_thread_name(
+    void * user_instance,
+    char * name
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+
+    if (user->soft_thread->name != NULL)
+    {
+        free(user->soft_thread->name);
+    }
+    user->soft_thread->name = strdup(name);    
+}
