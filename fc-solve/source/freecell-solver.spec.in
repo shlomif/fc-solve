@@ -97,6 +97,7 @@ cd man6
 %files devel
 %defattr(-,root,root)
 /usr/lib/libfreecell-solver.a
+/usr/lib/libfreecell-solver.la
 /usr/include/freecell-solver/fcs_cl.h
 /usr/include/freecell-solver/fcs_user.h
 /usr/include/freecell-solver/fcs_enums.h
