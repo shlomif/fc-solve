@@ -544,11 +544,6 @@ extern fcs_card_t freecell_solver_empty_card;
 #define fcs_empty_card freecell_solver_empty_card
 
 #ifdef INDIRECT_STACK_STATES
-extern void freecell_solver_duplicate_state_proto(
-    fcs_state_with_locations_t * dest,
-    fcs_state_with_locations_t * src,
-    char * buffer
-    );
 
 extern void freecell_solver_clean_state(
     fcs_state_with_locations_t * state

@@ -1,10 +1,6 @@
-<html>
-<head>
-<title>Freecell Solver Downloads</title>
-</head>
-<body bgcolor="white">
+#include 'template.wml'
 
-<h1>Download Freecell Solver</h1>
+<subject "Download Freecell Solver">
 
 <h2>Latest Stable Versions</h2>
 <table border="1">
@@ -217,14 +213,7 @@ Changes Log
 </tr>
 </table>
 
-<h2><a href="ls.html">Listing of files in this directory</a></h2>
 
 <hr>
 <a href="./">Back to the Freecell Solver Home Page</a><br>
 <br>
-<!--%start_bk2hp-->
-<a href="http://t2.technion.ac.il/~shlomif/"><img src="../images/bk2hp.gif" alt="Back to my Homepage" border=0></a>
-<!--%end_bk2hp-->
-
-</body>
-</html>

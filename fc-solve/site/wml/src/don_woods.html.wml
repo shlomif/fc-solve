@@ -1,10 +1,6 @@
-<html>
-<head>
-<title>Don Woods' Freecell Solver</title>
-</head>
-<body bgcolor="white">
+#include 'template.wml'
 
-<h1>Don Woods' Freecell Solver</h1>
+<subject "Don Woods' Freecell Solver">
 
 <p>
 <a href="don_woods_solver.zip">don_woods_solver.zip</a>
@@ -32,12 +28,3 @@ freely redistribute this source provided this notice is retained.
 <hr>
 <a href="./">Back to the Freecell Solver Home Page</a><br>
 <br>
-<!--%start_bk2hp-->
-<a href="http://t2.technion.ac.il/~shlomif/">
-<img src="../images/bk2hp.gif" alt="Back to my Homepage" border=0>
-</a>
-<!--%end_bk2hp-->
-
-
-</body>
-</html>

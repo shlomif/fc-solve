@@ -41,18 +41,20 @@ void freecell_solver_clean_state(
     fcs_state_with_locations_t * state
     )
 {
-    int s;
-    for(s=0;s<MAX_NUM_STACKS;s++)
+    fcs_card_t * * s_ptr = state->s.stacks;
+    fcs_card_t * * max_s_ptr = s_ptr+MAX_NUM_STACKS;
+    for(;s_ptr<max_s_ptr;s_ptr++)
     {
-        if (state->s.stacks[s] != NULL)
+        if (*s_ptr != NULL)
         {
-            free(state->s.stacks[s]);
+            free(*s_ptr);
         }
     }
 }
 #endif
 #ifdef INDIRECT_STACK_STATES
 
+#if 0
 /*
  * buffer is a buffer of size 128 * MAX_NUM_STACKS that is used
  * to allocate the stacks in.
@@ -83,6 +85,7 @@ void freecell_solver_duplicate_state_proto(
         }
     }
 }
+#endif
 
 #endif
 

@@ -2,7 +2,7 @@
 D = /var/www/html/fc-solve
 #D = /home/httpd/html/ip-noise
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 

@@ -1,10 +1,6 @@
-<html>
-<head>
-<title>Freecell Solver Links</title>
-</head>
-<body bgcolor="white">
+#include 'template.wml'
 
-<h1>Freecell Solver Links</h1>
+<subject "Freecell Solver Links">
 
 <h2>Resources</h2>
 
@@ -240,9 +236,4 @@ contains a lot of interesting questions and answers regarding Freecell.
 <hr>
 <a href="./">Back to the Freecell Solver Home Page</a><br>
 <br>
-<!--%start_bk2hp-->
-<a href="http://t2.technion.ac.il/~shlomif/"><img src="../images/bk2hp.gif" alt="Back to my Homepage" border=0></a>
-<!--%end_bk2hp-->
 
-</body>
-</html>
