@@ -29,8 +29,14 @@ fc-solve.6: fc-solve.pod ver.txt
 
 noinst_SCRIPTS = Makefile.win32
 
+Makefile.am: gen_makefile.pl
+	perl $<
+
+Makefile.gnu: gen_makefile.pl
+	perl $<
+
 Makefile.win32: gen_makefile.pl
-	perl $< --arch=win32 | add_cr.pl - > $@
+	perl $< --arch=win32
 
 #<<<HEADERS.START
 EXTRA_DIST += alloc.h app_str.h caas.h card.h cl_chop.h

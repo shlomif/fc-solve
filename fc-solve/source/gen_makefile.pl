@@ -48,30 +48,32 @@ my @defines=(qw(WIN32));
 
 my @debug_defines = (qw(DEBUG));
 
-print "all: fc-solve.exe freecell-solver-range-parallel-solve.exe\n\n";
+open O, ">Makefile.win32";
 
-print "OFLAGS=" . "/Og2 " . join(" ", (map { "/D".$_ } @defines)) . "\n";
-print "DFLAGS=\$(OFLAGS) " . join(" ", (map { "/D".$_ } @debug_defines)) . "\n";
+print O "all: fc-solve.exe freecell-solver-range-parallel-solve.exe\r\n\r\n";
 
-print "INCLUDES=" . join(" ", (map { $_.".h" } @headers)). "\n";
-print "CC=cl\n";
-print "LIB32=link.exe\n";
+print O "OFLAGS=" . "/Og2 " . join(" ", (map { "/D".$_ } @defines)) . "\r\n";
+print O "DFLAGS=\$(OFLAGS) " . join(" ", (map { "/D".$_ } @debug_defines)) . "\r\n";
+
+print O "INCLUDES=" . join(" ", (map { $_.".h" } @headers)). "\r\n";
+print O "CC=cl\r\n";
+print O "LIB32=link.exe\r\n";
 
 
-print "\n\n";
+print O "\r\n\r\n";
 
-print "OBJECTS = " . join(" ", (map { $_.".obj" } @objects)) . "\n";
+print O "OBJECTS = " . join(" ", (map { $_.".obj" } @objects)) . "\r\n";
 
-print "\n\n";
+print O "\r\n\r\n";
 
 foreach my $o (@objects, (map { @{$_->{'objs'}} } @targets))
 {
-    print "$o.obj: $o.c \$(INCLUDES)\n";
-    print "\t\$(CC) /c /Fo$o.obj \$(OFLAGS) $o.c\n";
-    print "\n";
+    print O "$o.obj: $o.c \$(INCLUDES)\r\n";
+    print O "\t\$(CC) /c /Fo$o.obj \$(OFLAGS) $o.c\r\n";
+    print O "\r\n";
 }
 
-print "\n\n###\n### Final Targets\n###\n\n\n";
+print O "\r\n\r\n###\r\n### Final Targets\r\n###\r\n\r\n\r\n";
 
 foreach my $t (@targets)
 {
@@ -81,25 +83,27 @@ foreach my $t (@targets)
     #my $obj_line = "\$(OBJECTS) " . join(" ", (map { "$_.obj" } @objs));
     my $obj_line = "freecell-solver-static.lib " . join(" ", (map { "$_.obj" } @objs));
 
-    print "$exe.exe: $obj_line\n";
-    print "\t\$(CC) /Fe$exe.exe /F0x2000000 $obj_line\n";
-    print "\n";
+    print O "$exe.exe: $obj_line\r\n";
+    print O "\t\$(CC) /Fe$exe.exe /F0x2000000 $obj_line\r\n";
+    print O "\r\n";
 }
 
-print "freecell-solver-static.lib: \$(OBJECTS)\n";
-print "\t\$(LIB32) -lib \$(OBJECTS) /out:freecell-solver-static.lib\n";
-print "\n";
+print O "freecell-solver-static.lib: \$(OBJECTS)\r\n";
+print O "\t\$(LIB32) -lib \$(OBJECTS) /out:freecell-solver-static.lib\r\n";
+print O "\r\n";
 
-print "freecell-solver.dll: \$(OBJECTS) freecell-solver.def\n";
-print "\t\$(LIB32) kernel32.lib user32.lib gdi32.lib /dll /out:freecell-solver.dll /implib:freeecell-solver.lib /DEF:freecell-solver.def \$(OBJECTS) \n";
-print "\n";
+print O "freecell-solver.dll: \$(OBJECTS) freecell-solver.def\r\n";
+print O "\t\$(LIB32) kernel32.lib user32.lib gdi32.lib /dll /out:freecell-solver.dll /implib:freeecell-solver.lib /DEF:freecell-solver.def \$(OBJECTS) \r\n";
+print O "\r\n";
 
-#print "fc-solve.exe: \$(OBJECTS)\n";
-#print "\t\$(CC) /Fefc-solve.exe /F0x2000000 \$(OBJECTS)\n";
-#print "\n";
+#print O "fc-solve.exe: \$(OBJECTS)\r\n";
+#print O "\t\$(CC) /Fefc-solve.exe /F0x2000000 \$(OBJECTS)\r\n";
+#print O "\r\n";
 
-print "clean:\n";
-print "\tdel *.obj *.exe *.lib *.dll *.exp\n";
+print O "clean:\r\n";
+print O "\tdel *.obj *.exe *.lib *.dll *.exp\r\n";
+
+close(O);
 
 open I, "<Makefile.am";
 open O, ">Makefile.am.new";
