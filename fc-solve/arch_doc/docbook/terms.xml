@@ -69,7 +69,6 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                         graph. Each link is a state &rarr; derived state 
                         relationship.
                     </para>
-                    </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -115,7 +114,265 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </para>
                 </listitem>
             </varlistentry>
-            
+            <varlistentry>
+                <term>Iterations</term>
+                <listitem>
+                    <para>
+                        the number of states checked by a scan, or by all the
+                        scans of a hard thread or of an instance. An iterations                         limit (called num_times in the code) is used to 
+                        restrict a soft thread, hard thread or instance from
+                        running too long, and to allocate time quotas for 
+                        different soft threads.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Move</term>
+                <listitem>
+                    <para>
+                        A one-time displacements of cards from stacks to
+                        stacks, from stacks to freecells, or from freecells to
+                        stacks. Also contain some special moves such as those
+                        for canonizing stacks, and separators. Also see Move
+                        Stacks.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Move Stacks</term>
+                <listitem>
+                    <para>
+                        A sequence of moves implemented in its own class
+                        (check <filename>move.c</filename> and 
+                        <filename>move.h</filename>).
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Normalization</term>
+                <listitem>
+                    <para>
+                        normalization is the opposite of canonization. It is
+                        meant to bring the stacks and freecells to their 
+                        absolute locations. It is normally done only when
+                        presenting a state to the user or to a code that
+                        uses the API.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Packs</term>
+                <listitem>
+                    <para>
+                        see State Packs
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Parent</term>
+                <listitem>
+                    <para>
+                        The state from which one state in the state graph was
+                        initially derived from. It is possible that this state
+                        would eventually be reached from a different state, but
+                        its parent in that case, remains the same.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Presets</term>
+                <listitem>
+                    <para>
+                        <orderedlist>
+                            <listitem>
+                                <para>
+                                    A structure specifying the type of game 
+                                    according to number of stacks, number of 
+                                    freecells, number of decks, whether kings 
+                                    can be placed in empty stacks, if 
+                                    sequences have unlimited moves, and how 
+                                    stacks are built by. Defined in 
+                                    <filename>preset.c</filename>.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    A set of command line arguments to be 
+                                    processed as if they were given on the 
+                                    command line. Can be used to shorten 
+                                    command lines. For instance 
+                                    "-l cool-jives" or "-l john-galt-line" 
+                                    load the presets "cool-jives" and 
+                                    "john-galt-line" respectively. Implemented 
+                                    mostly in <filename>cmd_line.c</filename>.
+                                </para>
+                            </listitem>
+                        </orderedlist>
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Reparent</term>
+                <listitem>
+                    <para>
+                        Let's suppose state DEST has been derived from state
+                        SRC. If the SRC.depth+1 is less than DEST.depth than
+                        DEST's parent will be reassigned to SRC. (if
+                        reparenting is enabled)
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Secondary Hash Value</term>
+                <listitem>
+                    <para>
+                        a hash value that is calculated for every state that 
+                        is not used to determine the location of the element 
+                        in the hash table, but that is used for comparison. 
+                        That is done in order to avoid needlessly comparing 
+                        two different states with the same hash value.
+                    </para>
+                    <para>
+                        Freecell Solver uses a 32-bit primary hash value. As
+                        such it is suspectible to the birthday paradox starting
+                        at about 2<superscript>16</superscript>. A seocondary
+                        hash value with extra 32-bits ensures a collision of both
+                        hash values will only happen at around 2<superscript>32</superscript> states, 
+                        which is much more states than most 32-bit systems can 
+                        handle.                        
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Soft DFS</term>
+                <listitem>
+                    <para>
+                        A depth-first search scan that does not utilize
+                        procedural recursion. In &fcs;, this utilizes a stack
+                        of records, each containing the current state, the
+                        current test, the list of derived states, and other
+                        information. This deviates from the standard scheme
+                        that puts every state at the end of one stack scheme
+                        (that exists in <ulink
+                            url="http://vipe.technion.ac.il/~shlomif/lm-solve/">LM-Solve</ulink>
+                        for example) and is harder to maintain, but can be
+                        fine-tuned and conserve resources more easily.
+
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Soft Thread</term>
+                <listitem>
+                    <para>
+                        a singular continuus scan operating on a states 
+                        collection. It can be Soft-DFS, Hard-DFS or Best 
+                        First Search. There could be any number of soft 
+                        threads in a hard thread.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Stacks</term>
+                <listitem>
+                    <para>
+                        <orderedlist>
+                            <listitem>
+                                <para>
+                                    Move Stacks (refer to them)
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    Columns of the freecell games.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    The stacks used for maintaining the 
+                                    Soft-DFS recursion.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    The environment recursion stack.
+                                </para>
+                            </listitem>
+                        </orderedlist>
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>State</term>
+                <listitem>
+                    <para>
+                        the position of the game at any given situation. A
+                        state accurately describes the contents of the stacks,
+                        freecells, and foundations at any given time. A human
+                        seeing a state can solve the game from it without
+                        further information.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>State Collection</term>
+                <listitem>
+                    <para>
+                        a collection that collects every state once and only
+                        once.  It can be sought of as an associate array (or a
+                        map) of keys only. In fact, the keys are mapped to
+                        extra information such as depth, order of stacks and
+                        freecells and others, so it is more of a key-value
+                        collection.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>State Packs</term>
+                <listitem>
+                    <para>
+                        An allocation of states. Each state pack is a buffer in
+                        memory, that contain an array of states. Each buffer
+                        remains at a constant memory location, but more buffers
+                        are allocated as necessary. The implementation of State
+                        packs reside in the files
+                        <filename>fcs_isa.c</filename> and
+                        <filename>fcs_isa.h</filename>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Test Groups</term>
+                <listitem>
+                    <para>
+                        a grouping of tests that dictate which one should be 
+                        performed one after the and placed into the same 
+                        derived states list. Afterwards, this list can be 
+                        randomized, or prioritized.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Tests</term>
+                <listitem>
+                    <para>
+                        A function that accepts a source state as input and 
+                        fills a list of derived states according to the moves 
+                        it can perform. Each game type has several type of 
+                        tests, which can be ordered and grouped according to 
+                        input from the user
+                    </para>
+                </listitem>
+            </varlistentry>
+            <!--
+            <varlistentry>
+                <term></term>
+                <listitem>
+                    <para>
+                    </para>
+                </listitem>
+            </varlistentry>
+            -->
 
         </variablelist>
     </section>
