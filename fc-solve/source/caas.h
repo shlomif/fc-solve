@@ -8,7 +8,7 @@ extern "C" {
 
 /* #define FCS_USE_INLINE */
 
-#ifdef __GNUC__
+#if defined(__GNUC__) || defined(HAVE_C_INLINE)
 #define GCC_INLINE inline
 #else
 #define GCC_INLINE

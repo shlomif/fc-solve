@@ -20,6 +20,12 @@ extern "C" {
 
 #undef CARD_DEBUG_PRES
 
+/*
+ * Define this macro if the C compiler supports the keyword inline or
+ * a similar keyword that was found by Autoconf (and defined as inline).
+ * */
+#undef HAVE_C_INLINE
+
 
 /*
     The sort margin size for the previous states array.
