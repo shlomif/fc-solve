@@ -419,6 +419,42 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         virtual_stack_len[src]--;
                     }
                     break;
+
+               case FCS_MOVE_TYPE_STACK_TO_STACK:
+                    {
+                        int num_cards, virt_num_cards;
+                        
+                        src = fcs_move_get_src_stack(move);
+                        dest = fcs_move_get_dest_stack(move);
+                        num_cards = fcs_move_get_num_cards_in_seq(move);
+                        assert(virtual_stack_len[src] >= pos.tableau[src].count);
+                        if (virtual_stack_len[src] > pos.tableau[src].count)
+                        {
+#define min(a,b) (((a)<(b))?(a):(b))
+                            virt_num_cards = min((virtual_stack_len[src]-pos.tableau[src].count), num_cards);
+#undef min
+                            virtual_stack_len[src] -= virt_num_cards;
+                            virtual_stack_len[dest] += virt_num_cards;
+                            num_cards -= virt_num_cards;
+                        }
+                        if (num_cards > 0)
+                        {
+                            fcs_move_set_type(out_move, FCS_MOVE_TYPE_STACK_TO_STACK);
+                            fcs_move_set_src_stack(out_move, src);
+                            fcs_move_set_dest_stack(out_move, dest);
+                            fcs_move_set_num_cards_in_seq(out_move, num_cards);
+                            moves_processed_add_new_move(ret, out_move);
+                            for(i=0;i<num_cards;i++)
+                            {
+                                pos.tableau[dest].cards[pos.tableau[dest].count+i] = pos.tableau[src].cards[pos.tableau[src].count-num_cards+i-1];
+                            }
+                            pos.tableau[dest].count += num_cards;
+                            pos.tableau[src].count -= num_cards;
+                            virtual_stack_len[dest] += num_cards;
+                            virtual_stack_len[src] -= num_cards;
+                        }
+                    }
+                    break;
                 
             }
         }
