@@ -18,6 +18,15 @@ I<start> is the first board to solve; I<end> is the last (inclusive) and
 I<print_step> is the division of board numbers in which to print a status
 message.
 
+Following this three mandatory parameters are several flags specific to
+the range solve. (refer to the B<OPTIONS> section for more information)
+
+Afterwards one can give it a B<fc-solve> command line that it will
+use to solve each board. Refer to the B<fc-solve>(6) man page for 
+information about its options.
+
+=head1 OPTIONS
+
 B<--total-iterations-limit> sets the maximal number of iterations with
 which to try to solve each deal. After that, the program will give up
 and report that the board was intractable.
@@ -27,16 +36,9 @@ of iterations it took to solve each board. This file can later be used with
 statistical preset optimizers such as those found in the Freecell Solver
 CVS repository.
 
-=head1 OPTIONS
-
-
-See USAGE, README and the output of "fc-solve B<--help>".
-
 =head1 SEE ALSO
 
-The B<--help> display of the program.
-
-The files under /usr/share/doc/freecell-solver-FCS_VERSION.
+B<fc-solve>(6)
 
 =head1 AUTHOR
 
