@@ -72,7 +72,40 @@ allocated by other hard threads, should he encounter them in his scan.
 A soft thread is a singular scan. It performs a scan for a certain number of 
 iterations, at which point the hard thread switches to a different soft thread.
 
-Overview of the modules:
+Overview of the utility modules:
+--------------------------------
+
+    app_str.c
+    =========
+
+    This file contains a a utility class that appends sprintf'ed output
+    to a dynamically allocated buffer growing the buffer if necessary.
+
+    lookup2.c
+    =========
+
+    Implements a hash function that was taken by Bob Jenkins. Used by the
+    Freecell Solver Hash.
+
+    rand.c and rand.h
+    =================
+
+    Implements a random number generating class. The algorithm is compatible
+    to that of the Microsoft RTL, but the generator can be instantiated.
+
+    fcs_hash.c
+    ==========
+
+    An optimized hash implementation. This hash maps keys alone, not key-value
+    pairs as usual. It stores the hash values next to the keys, and even uses
+    a secondary hash to speed up the detection of two keys with identical
+    primary hash values.
+
+    Not all the functions of the hash Abstract Data Type were implemented.
+
+
+
+Overview of the core modules:
 ------------------------
 
 (bottom up)
@@ -100,6 +133,14 @@ Overview of the modules:
     that the system uses but don't uniquely identify the state in the state 
     collection.
 
+    
+
+    state.c:
+    --------
+
+    This file contains various functions for manipulating states. Stuff like
+    normalization, canonization, state duplicating, state comparison,
+    converting to and from string format, etc.
 
 
 
