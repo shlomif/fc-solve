@@ -53,7 +53,8 @@ extern int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * callback_context,
     char * * error_string,
     int * last_arg,
-    int file_nesting_count    
+    int file_nesting_count,
+    char * opened_files_dir
     );
 
 

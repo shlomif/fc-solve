@@ -7,8 +7,6 @@
 * Add support for Adrian's extensions to the standard notation.
     - Done partially
 
-* Make the range solver more user-friendly and documented.
-
 * After everything: reorganize the --help behaviour according to the Freshmeat
 editorial
 
