@@ -16,6 +16,8 @@ done
 
 
 if $AUTOCONF ; then
+    libtoolize --automake --copy --force
+    aclocal
     automake
     autoconf
     (cd board_gen && automake && autoconf)
