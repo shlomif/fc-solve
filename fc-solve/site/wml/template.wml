@@ -1,6 +1,10 @@
 # #use wml::des::navbar
 #include 'std/logo.wml'
 
+<define-tag linktofile>
+<a href="%0">%0</a>
+</define-tag>
+
 # The Definition of the page itself
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html 

@@ -1,0 +1,58 @@
+#include '../template.wml'
+
+<subject "Freecell Solver PySol Integration"  />
+
+<h2>Introduction</h2>
+
+<p>
+This is code that enables Freecell Solver integration with 
+<a href="http://www.oberhumer.com/opensource/pysol/">PySol</a>,
+an excellent cross-platform Solitaire Suite written in Python.
+</p>
+
+<h2>Files to Download</h2>
+
+<table border="1" summary="Files to download at the left; Descriptions at
+the right">
+<tr>
+<td>
+<linktofile "FreecellSolver-0.2.0.tar.gz" />
+</td>
+<td>
+Python bindings for Freecell Solver. Can be built as an RPM. Requires 
+Freecell Solver.
+</td>
+</tr>
+<tr>
+<td>
+<linktofile "pysol-4.82-fcs-patch-0.2.0.diff" />
+</td>
+<td>
+Patch for PySol 4.82 to enable Freecell Solver integration. PySol will use
+Freecell Solver only if the Python bindings are installed.
+</td>
+</tr>
+</table>
+
+<h2>Instructions</h2>
+
+<p>
+I assume you already have Python, PySol and all of their
+requisites installed. First, install Freecell Solver. Afterwards compile
+the Python bindings for it. Afterwards download the PySol source from
+<a href="http://www.oberhumer.com/opensource/pysol/">its homepage</a>,
+apply the patch, and invoke pysol from that directory.
+</p>
+
+<h2>Notes</h2>
+
+<p>
+The current integration still leaves a lot to be desired. I haven't yet
+enabled the use of Freecell Solver for Der Katzenschwanz and Die Schlange
+, as well as all the pseudo-Freecell games like Cruel, Good Measure, 
+or Streets and Alleys. The latter may require translating moves
+to single-card moves, as Freecell Solver may move the cards one sequence at
+a time. Plus, Simple Simon cannot work because Freecell Solver also moves
+non-homogenous sequences as one, so it was not enabled at the moment.
+</p>
+
