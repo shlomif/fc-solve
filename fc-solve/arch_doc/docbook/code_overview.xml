@@ -72,6 +72,128 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 &fcs; for convenience (note that it is also Public Domain).
             </para>
         </section>
+        <section id="rand.c">
+            <title>rand.c and rand.h</title>
+            <para>
+                Implements a random number generating class. The algorithm is
+                identical to that of the Microsoft C Run-Time Library (RTL),
+                but the generator can be instantiated.
+            </para>
+        </section>
+        <section id="fcs_hash.c">
+            <title>fcs_hash.c</title>
+            <para>
+                An optimized hash implementations. This has maps keys alone,
+                not key-value pairs. It stores the hash values next to the 
+                keys, so two keys can be first compared with their hash values,
+                before the costy full comparison is done. It also uses
+                a secondary hash to speed up the detection of two keys with
+                identical primary hash values.
+            </para>
+            <para>
+                Not all the functions of the hash Abstract Data Type are
+                implemented here. Only these that need to be used by 
+                Freecell Solver.
+            </para>
+        </section>
+        
+        <section id="fcs_dm.c">
+            <title>fcs_dm.c</title>
+            <para>
+                This module implements two functions - an advanced binary
+                search one and a function to merge a small sorted array into
+                a larger sorted array. It was used until the newer hash or
+                balanced binary tree storage were implemented, and may still
+                be used if <symbol>FCS_STATE_STORAGE_INDIRECT</symbol>
+                or <symbol>FCS_STACK_STORAGE_INDIRECT</symbol> are specified.
+                <footnote id="sorted_array_as_storage">
+                    <para>
+                        It is no longer recommended to use a sorted array as
+                        a state or stack storage, as they are much slower than
+                        using a hash or a balanced binary tree, both in 
+                        asymptotic complexity (O(n<superscript>2</superscript>))) 
+                        and in average performance.
+                    </para>
+                </footnote>
+            </para>
+        </section>
+
+        <section id="fcs_isa.c">
+            <title>fcs_isa.c</title>
+            <para>
+                This module implements indirect stack allocation to states. 
+                It allocates every states in memory pools (called packs) which 
+                have a fixed location in memory and allocates as many such 
+                pools as it can.
+            </para>
+
+            <para>
+                Each pool contains several states that are placed one after 
+                the other, that thus retain their pointer. That way, memory 
+                is conserved as an individually malloced state may have a 
+                lot of overhead. (a malloced block+a fixed amount of data is 
+                rounded to the nearest power of 2)
+            </para>
+            <para>
+                fcs_isa allows releasing the last allocated state in case it 
+                will not be used.
+            </para>
+        </section>
+
+        <section id="alloc.c">
+            <title>alloc.c</title>
+            <para>
+                This module is a more sophisicated version of fcs_isa.c. What 
+                it does is compactly allocate blocks of arbitrary length, 
+                usually used for dynamically allocated Freecell columns.
+            </para>
+        </section>
+        
+
+        <section id="cl_chop.c">
+            <title>cl_chop.c</title>
+            <para>
+                This module contains a class that implements a chopping of a 
+                string into arguments. This is done using a subset of the 
+                UNIX Bourne shell functionality. Namely:
+            </para>
+            <para>
+                <orderedlist>
+                    <listitem>
+                        <para>
+                            A backslash (\) makes the next character an 
+                            actual such character.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            A newline or a whitepsace separates a word
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            A backslash at the end of the line continues the 
+                            processing
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Double quotes (") wrap an argument that may contain
+                            whitepace.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            A pound sign (#) makes a comment that extends
+                            to the end of the line.
+                        </para>
+                    </listitem>                    
+                </orderedlist>
+            </para>
+            <para>
+                The code itself is very spaghettty-like but it is working.
+            </para>
+        </section>
     </section>
        
 </chapter>
