@@ -86,6 +86,8 @@ extern "C" {
 #undef FCS_STATE_STORAGE
 #undef FCS_STACK_STORAGE
 
+#define FREECELL_SOLVER_PREFIX "@prefix@"
+
 #ifdef __cplusplus
 }
 #endif

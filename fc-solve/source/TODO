@@ -1,14 +1,11 @@
 --- Pressing ---
 
-* --read-from-file to read configuration from there.
-    - Implement a more secure function with number of nested
-    files to read.
-
 * command line presets
 
 * Convert some of the documentation to Perl-POD or DocBook.
 
 * Add support for Adrian's extensions to the standard notation.
+    - Done partially
 
 * After everything: reorganize the --help behaviour according to the Freshmeat
 editorial

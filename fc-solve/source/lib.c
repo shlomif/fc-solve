@@ -1105,6 +1105,16 @@ int freecell_solver_user_next_instance(
     }
     user->current_instance_idx = user->num_instances-1;
     user->instance = freecell_solver_alloc_instance();
+
+    /* 
+     * Switch the soft_thread variable so it won't refer to the old
+     * instance
+     * */
+    user->soft_thread = 
+        freecell_solver_instance_get_soft_thread(
+            user->instance, 0, 0
+            );
+
     user->instances_list[user->current_instance_idx].instance = user->instance;
     user->instances_list[user->current_instance_idx].ret = user->ret = FCS_STATE_NOT_BEGAN_YET;
     user->instances_list[user->current_instance_idx].limit = -1;
