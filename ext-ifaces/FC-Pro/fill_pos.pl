@@ -55,6 +55,6 @@ while(<>)
 push @freecells, ((0) x (8 - scalar(@freecells)));
 
 my ($i);
-print join("", (map { "mypos.foundations[$_] = $foundation[$_]\n" } (0 .. 3)));
-print join("", (map { "mypos.hold[$_] = $freecells[$_]\n" } (0 .. 7)));
+print join("", (map { "mypos.foundations[$_] = $foundation[$_];\n" } (0 .. 3)));
+print join("", (map { "mypos.hold[$_] = $freecells[$_];\n" } (0 .. 7)));
 

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "Fcsolvex.h"
 extern char * moves_string;
@@ -18,7 +19,7 @@ int main(int argc, char * argv[])
 
 #include "fill_pos.cpp"
 
-    ret = Free2Solver(&mypos, 4, 150000, argc-1, argv+1, my_signal_step);
+    ret = Free2Solver(&mypos, 4, atoi(argv[1]), argc-2, argv+2, my_signal_step);
 
     printf("%i\n", ret);
 

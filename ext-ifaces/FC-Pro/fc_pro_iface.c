@@ -561,12 +561,20 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     int verdict;
     int num_iters;
     int ret;
+#ifdef SHLOMIF_DEBUG
+    int current_limit = 50;
+#else
     int current_limit = 1000;
+#endif
     char * err_str;
     int ret_arg, parser_ret;
 
 
     state_string = position_to_string(orig, NoFcs);
+
+#ifdef SHLOMIF_DEBUG
+    printf("%s\n\n", state_string);
+#endif
     
     instance = freecell_solver_user_alloc();
 
@@ -658,7 +666,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         
         moves_processed = moves_processed_gen(orig, NoFcs, instance);
         num_moves = moves_processed_get_moves_left(moves_processed);
-#ifdef DEBUG
+#ifdef SHLOMIF_DEBUG
         moves_string_proto = (char *)malloc(moves_processed->num_moves*8+1);
 #else
         moves_string_proto = (char *)malloc(moves_processed->num_moves*4+1);
@@ -666,14 +674,14 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         
         /* a = num_moves-1; */
         str = moves_string_proto;
-#ifdef DEBUG
+#ifdef SHLOMIF_DEBUG
         len = 0;
 #endif
         while (! moves_processed_get_next_move(moves_processed, &move))
         {
 
             str = render_move(move, str);
-#ifdef DEBUG            
+#ifdef SHLOMIF_DEBUG            
             *(str++) = ' ';
             if ((++len % 10) == 0)
             {
@@ -683,7 +691,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 #endif
         }
         moves_processed_free(moves_processed);
-#ifndef DEBUG
+#ifndef SHLOMIF_DEBUG
         len = str-moves_string_proto;
         moves_string = malloc(len+1);
         for(a=0;a<len;a++)
