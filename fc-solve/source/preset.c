@@ -13,6 +13,7 @@
 
 #include "fcs.h"
 #include "preset.h"
+#include "test_arr.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -376,8 +377,47 @@ static int fcs_get_preset_id_by_name(
     return ret;
 }
 
+int test_aliases_compare_func(const void * void_a, const void * void_b)
+{
+    return strcmp(((fcs_test_aliases_mapping_t *)void_a)->alias,((fcs_test_aliases_mapping_t *)void_b)->alias);
+}
+
+static int string_to_test_num(const char * string)
+{
+    fcs_test_aliases_mapping_t key;
+    void * ret;
+    
+    key.alias = string;
+    
+    ret = 
+        bsearch(
+            &key, 
+            freecell_solver_sfs_tests_aliases, 
+            FCS_TESTS_ALIASES_NUM,
+            sizeof(freecell_solver_sfs_tests_aliases[0]),
+            test_aliases_compare_func
+               );
+
+    if (ret == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        return ((fcs_test_aliases_mapping_t *)ret)->test_num;
+    }
+}
+
 static int freecell_solver_char_to_test_num(char c)
 {
+    char string[2];
+    string[0] = c;
+    string[1] = '\0';
+
+    return string_to_test_num(string);
+}
+
+#if 0
     if ((c >= '0') && (c <= '9'))
     {
         return c-'0';
@@ -394,7 +434,8 @@ static int freecell_solver_char_to_test_num(char c)
     {
         return 0;
     }
-}
+#endif
+
 
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
