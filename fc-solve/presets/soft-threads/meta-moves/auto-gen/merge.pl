@@ -21,6 +21,15 @@ sub get_fn
     return get_dir($source)."/data/" . $id . ".data.bin";
 }
 
+sub file_len
+{
+    my $filename = shift;
+
+    my @data = stat($filename);
+
+    return $data[7];
+}
+
 foreach my $source ('this', 'other')
 {
     my $dir = get_dir($source);
@@ -42,7 +51,7 @@ foreach my $source ('this', 'other')
 
 foreach my $scan (grep { ($_->{'src'} eq "other") && (-e get_fn($_->{'src'}, $_->{'id'})) } @scans)
 {
-    if (! grep { ($_->{'src'} eq "this") && ($_->{'cmd'} eq $scan->{'cmd'}) } @scans)
+    if ((! grep { ($_->{'src'} eq "this") && ($_->{'cmd'} eq $scan->{'cmd'}) } @scans ) && (&file_len(&get_fn("other", $scan->{'id'})) == (3+32000)*4))
     {
         print "I need to add:\n";
         my $d = Data::Dumper->new([ $scan], [ "\$scan"]);

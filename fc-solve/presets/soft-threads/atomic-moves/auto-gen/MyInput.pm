@@ -29,7 +29,7 @@ sub get_scans_data
                 my $data_s = join("", <I>);
                 close(I);
                 my @array = unpack("l*", $data_s);
-                if (($array[0] != 1) || ($array[1] < $num_boards) || ($array[2] != 100000))
+                if (($array[0] != 1) || ($array[1] < $num_boards) || ($array[2] != 300000))
                 {
                     die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
                 }

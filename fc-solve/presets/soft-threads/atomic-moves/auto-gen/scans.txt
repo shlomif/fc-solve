@@ -3,3 +3,4 @@
 2	--method random-dfs -to [01][ABCDE] -seed 2
 3	--method random-dfs -to [01][ABCDE] -seed 3
 4	--method random-dfs -to 01[ABCDE] -seed 268
+5	--method a-star -to 01ABCDE
