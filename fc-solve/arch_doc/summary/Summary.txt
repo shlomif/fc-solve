@@ -27,4 +27,20 @@ Coding Conventions:
     - Usually freecell_solver_[class name]_function
     - Very verbose identifiers
 
-5. 
+5. Order of Tradeoffs:
+    1. Modularity - the code should be as generic as possible.
+    2. Speed - the code should be optimized for speed.
+    3. Memory Consumption - should be reduced (usually leads to better
+    speed).
+    4. Smart Algorithms.
+
+6. No global symbols - the library can be instantiated
+
+7. Separation of internals from user-interface..
+    intrface.c and below - can be changed from version to version.
+    lib.c - the API functions used by the programmer.
+    cmd_line.c - the command line parser
+    main.c/test_multi_parallel.c - two command line programs to use the
+    library (others can be written)
+
+
