@@ -30,6 +30,53 @@ generic way to order derived positions, implementing all of the random, mine,
 and Tom's back-ends, and an ability to implement more in the future.
 </p>
 
+<h2>Writing an Automatic Testing Framework</h2>
+
+<p>
+Freecell Solver at the moment has very little if any automatic tests that were 
+prepared to it. Testing it is done manually and relies on the developer's 
+intuition and the users' feedback. So far, most stable x.y.0 releases were
+followed by several minor version that fixed some things. (usually minor) 
+Many of the tests performed are semi-automatic and just a matter of
+keying the same command sequence over and over again. A unified automatic
+testing framework may go a long way into ensuring the quality of the released
+product and while not eliminating the need for an experienced developer/Q&amp;A
+engineer, will make things easier in the long run.
+</p>
+    
+<p>
+There are several type of tests I have in mind:
+</p>
+
+<ol>
+    <li>
+    Regression Tests - making sure the output of various runs of Freecell 
+    Solver is identical to runs of previous versions (by comparing MD5 
+    checksums). The solving algorithm was known to change from release
+    to release, but it is still expected to be the same unless explicitly
+    modified. If it does, one can re-initialize the checksums.
+    </li>
+    <li>
+    Unit Tests - making sure every module of Freecell Solver is not broken
+    by explicitly testing its interface.
+    </li>
+    <li>
+    Validity and Stability Tests - making sure various runs of Freecell
+    Solver do not crash and produce valid output. (that can be verified by
+    playing the solution, or analyzing the run-time trace). Also, making 
+    sure that too virtually identical runs (differing only in insignificant
+    parameters) produce identical results.
+    </li>
+</ol>
+
+<p>
+For performing the test, you can use any tool that can be easily installed on
+a GNU-based UNIX derivative. I would prefer if the tests were written in a
+combination of C, Perl and Bash (or plain sh). Still, I will accept tests 
+written in other languages or frameworks, because they are better than no 
+tests at all, and can easily be re-implemented should the need arise.
+</p>
+    
 <h2>Multi-Threading</h2>
 
 <p>
