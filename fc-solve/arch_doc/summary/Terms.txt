@@ -1,4 +1,9 @@
 
+Canonization - An extended state is canonized by its stacks being uniquely 
+sorted according to their contents, and an array of indexes describing their
+original locations sorted accordingly. This is done to make sure no two
+states with the same permutation of states exist.
+
 Depth - The number of successive f : state -> state.parent operations
 it take to reach the initial state which is the base of the states graph.
 
@@ -29,6 +34,10 @@ such as those for canonizing stacks, and separators. Also see Move Stacks.
 
 Move Stacks - A sequence of move implemented in its own class. 
 (check move.c and move.h)
+
+Normalization - normalization is the opposite of canonization. It is meant
+to bring the stacks and freecells to their absolute locations. It is normally
+done only when presenting a state to the user or to an upper state.
 
 Packs - see State Packs
 
@@ -68,6 +77,16 @@ Stacks -
     2. Columns of the freecell games.
     3. The stacks used for maintaining the Soft-DFS recursion.
     4. The environment recursion stack.
+
+State - the position of the game at any given situation. A board accurately
+describes the contents of the stacks, freecells, and foundations at any given
+time. A human seeing a state can solve the game from it without further
+information.
+
+State Collection - a collection that collects every state once and only once. 
+It can be sought of as an associate array (or a map) of keys only. In fact,
+the keys are mapped to extra information such as depth, order of stacks and
+freecells and others, so it is more of a key-value collection.
 
 State Packs - An allocation of states. Each one is a buffer in memory, that
 contain an array of packs. Each buffer remains at a constant memory location,
