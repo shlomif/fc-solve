@@ -21,7 +21,7 @@ either try them one by one, or randomizes them.
 </p>
 
 <p>
-What can be done, is to order the derived states based on some paramters, other
+What can be done, is to order the derived states based on some parameters, other
 than simply randomizing them. Currently there is a code for a state 
 prioritization that is used in the best-first-search code. Aside for that, there
 is also the prioritization <a href="http://members.tripod.com/professor_tom/">Tom Holroyd</a> 
@@ -106,12 +106,12 @@ fail, it can easily cause the entire process running it to crash.
 <p>
 What needs to be implemented is a way to check if <tt>malloc()</tt> and
 <tt>realloc</tt> calls returned NULL, and if so, free all other allocated
-memory and propagate the memory upwards to the calling functions. There
-are several ways in which it can be achieived. One would be by defining an 
+memory and propagate the memory upward to the calling functions. There
+are several ways in which it can be achieved. One would be by defining an 
 exception class, much like that of Java only passed as one of the function 
 parameters and handled explicitly in each function. Another option would be 
 to keep all malloced pointers inside an Apache Portable Runtime-like 
-memory pool and to explictly free it should an allocation failed.
+memory pool and to explicitly free it should an allocation failed.
 </p>
 
 <p>
