@@ -1,7 +1,7 @@
 
 HOSTNAME = $(shell hostname)
 
-ifeq ($(HOSTNAME),"vipe.technion.ac.il")
+ifeq ($(HOSTNAME),vipe.technion.ac.il)
 	VIPE = 1
 endif
 
