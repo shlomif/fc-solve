@@ -61,7 +61,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             freecell_solver_user_limit_depth(instance, atoi(argv[arg]));
@@ -71,7 +71,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
 
@@ -83,7 +83,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             ret = freecell_solver_user_set_tests_order(instance, argv[arg], &fcs_user_errstr);
@@ -108,7 +108,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             if (freecell_solver_user_set_num_freecells(instance, atoi(argv[arg])) != 0)
@@ -134,7 +134,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             if (freecell_solver_user_set_num_stacks(instance, atoi(argv[arg])) != 0)
@@ -160,7 +160,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             if (freecell_solver_user_set_num_decks(instance, atoi(argv[arg])) != 0)
@@ -188,7 +188,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
 
@@ -213,7 +213,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
 
@@ -234,7 +234,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
 
@@ -264,7 +264,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
 
@@ -341,7 +341,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             if (!strcmp(argv[arg], "dfs"))
@@ -389,7 +389,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             {
@@ -434,7 +434,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
 
@@ -445,7 +445,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
 
@@ -488,7 +488,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
 
@@ -515,7 +515,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             freecell_solver_user_set_soft_thread_name(instance, argv[arg]);
@@ -525,7 +525,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             freecell_solver_user_set_hard_thread_prelude(instance, argv[arg]);
@@ -536,7 +536,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             
@@ -569,7 +569,7 @@ int freecell_solver_user_cmd_line_parse_args(
             arg++;
             if (arg == argc)
             {
-                *last_arg = arg;
+                *last_arg = arg-1;
                 return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
             }
             if (!strcmp(argv[arg], "none"))

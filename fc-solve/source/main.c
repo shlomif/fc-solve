@@ -459,7 +459,14 @@ int main(int argc, char * argv[])
         return 0;
     }
     else if (
-        (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG) ||
+        (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
+            )
+    {
+        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+                " and was not supplied with one.\n", argv[arg]);
+        return (-1);
+    }
+    else if (        
         (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
         )
     {
