@@ -33,6 +33,11 @@ it to solve the board in many ways. Instance logic is implemented in
 intrface.c, and the user API is implemented in lib.c. Users are advised to
 make use of the command line interface in cmd_line.c.
 
+Iterations - the number of states checked by a scan, or by all the scans of 
+a hard thread or of an instance. An iterations limit (called num_times in
+the code) is used to restrict a soft thread, hard thread or instance from
+running too long, and to allocate time quotas for different soft threads.
+
 Moves - A one-time displacements of cards from stacks to stacks, from stacks
 to freecells, or from freecells to stacks. Also contain some special moves 
 such as those for canonizing stacks, and separators. Also see Move Stacks.

@@ -53,6 +53,19 @@ allocated compactly in a segment, where one stack starts after the other
 (check alloc.c and alloc.h). If the stack was found in the collection
 the memory that was allocated is freed for use by future stacks).
 
+Extended States:
+----------------
+
+For each position in the game graph, Freecell Solver maintains a data
+structure that identifies it called fcs_state_t. This contains the cards
+in the stacks and the freecells, and the value of the foundations. The 
+stacks and freecells are uniquely sorted to avoid states that are identical
+except for a different permutation of the stacks or the freecells.
+
+fcs_state_t is the first member of fcs_state_with_locations_t, that defines
+some other data. The real locations of the stacks and freecells are stored
+there for instance, as well as some graph information. See Canonization
+and Normalization in the terminology.
 
 The States Graph and its Use:
 -----------------------------
@@ -80,4 +93,16 @@ If it is marked as dead end, then its parent's counter would be incremented.
 If the latter is zero, the process may continue to the grand parent and so
 forth.
 
+The Life-Cycle of a freecell_solver_instance_t:
+-----------------------------------------------
+
+A freecell_solver_instance_t is allocated by lib.c to start solving
+a board. The logic of solving a board is present in intrface.c while the
+stubs to use it are implemented in lib.c.
+
+After an instance is allocated, it should be parameterized to specify how it
+will solve the board. Afterwards, freecell_solver_init_instance() should
+be called. Afterwards freecell_solver_solve_instance() should be called for
+the first time, and freecell_solver_resume_instance afterwards. (these 
+functions solve until they reach a limit of iterations number.)
 
