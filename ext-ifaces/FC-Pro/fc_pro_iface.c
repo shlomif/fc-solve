@@ -130,7 +130,16 @@ int Cvtf89(int fcn)
 }
 #endif
 
-static char * render_move(fcs_move_t move, char * string)
+struct fcs_extended_move_struct
+{
+    fcs_move_t move;
+    int to_empty_stack;
+};
+
+typedef struct fcs_extended_move_struct fcs_extended_move_t;
+
+
+static char * render_move(fcs_extended_move_t move, char * string)
 {
     /* Save the third character which will be set to '\0' by the sprintf.
      * It's a kludge, but it works.
@@ -141,46 +150,56 @@ static char * render_move(fcs_move_t move, char * string)
     int num_chars = 2;
 #endif
     
-    switch(fcs_move_get_type(move))
+    switch(fcs_move_get_type(move.move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
-                sprintf(string, "%i%iv%x", 
-                    1+fcs_move_get_src_stack(move),
-                    1+fcs_move_get_dest_stack(move),
-                    fcs_move_get_num_cards_in_seq(move)
-                    );
+                if (move.to_empty_stack)
+                {
+                    sprintf(string, "%i%iv%x", 
+                        1+fcs_move_get_src_stack(move.move),
+                        1+fcs_move_get_dest_stack(move.move),
+                        fcs_move_get_num_cards_in_seq(move.move)
+                        );
+                }
+                else
+                {
+                    sprintf(string, "%i%i", 
+                        1+fcs_move_get_src_stack(move.move),
+                        1+fcs_move_get_dest_stack(move.move)
+                        );
+                }
         break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
 				sprintf(string, "%c%i", 
 #ifndef FC89
-                    ('a'+fcs_move_get_src_freecell(move)),
+                    ('a'+fcs_move_get_src_freecell(move.move)),
 #else
-                    ('a'+Cvtf89(fcs_move_get_src_freecell(move))),
+                    ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
 #endif
-                    1+fcs_move_get_dest_stack(move)
+                    1+fcs_move_get_dest_stack(move.move)
                     );
 		break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
                 sprintf(string, "%c%c",
 #ifndef FC89
-                    ('a'+fcs_move_get_src_freecell(move)),
-                    ('a'+fcs_move_get_dest_freecell(move))
+                    ('a'+fcs_move_get_src_freecell(move.move)),
+                    ('a'+fcs_move_get_dest_freecell(move.move))
 #else
-                    ('a'+Cvtf89(fcs_move_get_src_freecell(move))),
-                    ('a'+Cvtf89(fcs_move_get_dest_freecell(move)))
+                    ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
+                    ('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)))
 #endif
 					);                        
         break;
 
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
                 sprintf(string, "%i%c",
-                    1+fcs_move_get_src_stack(move),
+                    1+fcs_move_get_src_stack(move.move),
 #ifndef FC89
-                    ('a'+fcs_move_get_dest_freecell(move))
+                    ('a'+fcs_move_get_dest_freecell(move.move))
 #else
-                    ('a'+Cvtf89(fcs_move_get_dest_freecell(move)))
+                    ('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)))
 #endif
                     );
 //sprintf(szTemp, "StF fc-%d np-%d ", fcs_move_get_dest_freecell(move), NumFCs) ;
@@ -188,20 +207,20 @@ static char * render_move(fcs_move_t move, char * string)
 		break;
 
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
-                sprintf(string, "%ih", 1+fcs_move_get_src_stack(move));
+                sprintf(string, "%ih", 1+fcs_move_get_src_stack(move.move));
         break;
         
 
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
 #ifndef FC89
-				sprintf(string, "%ch", ('a'+fcs_move_get_src_freecell(move)));
+				sprintf(string, "%ch", ('a'+fcs_move_get_src_freecell(move.move)));
 #else
-                sprintf(string, "%ch", ('a'+Cvtf89(fcs_move_get_src_freecell(move))));
+                sprintf(string, "%ch", ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))));
 #endif
         break;
 
         case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
-                sprintf(string, "%ih", fcs_move_get_src_stack(move));
+                sprintf(string, "%ih", fcs_move_get_src_stack(move.move));
         break;
 
         default:
@@ -220,17 +239,18 @@ static char * render_move(fcs_move_t move, char * string)
 
 static char * cmd_line_known_parameters[] = { NULL };
 
+
 struct moves_processed_struct
 {
     int next_move_idx;
     int num_moves;
     int max_num_moves;
-    fcs_move_t * moves;
+    fcs_extended_move_t * moves;
 };
 
 typedef struct moves_processed_struct moves_processed_t;
 
-void moves_processed_add_new_move(moves_processed_t * moves, fcs_move_t new_move)
+void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended_move_t new_move)
 {
     moves->moves[moves->num_moves++] = new_move;
     if (moves->num_moves == moves->max_num_moves)
@@ -289,14 +309,14 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         (pos.foundations[suit^0x2] > rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
-                        fcs_move_t new_move;
+                        fcs_extended_move_t new_move;
                         
                         pos.foundations[suit]++;
                         pos.tableau[i].count--;
-                        fcs_move_set_type(new_move, FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
-                        fcs_move_set_src_stack(new_move, i);
+                        fcs_move_set_type(new_move.move, FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
+                        fcs_move_set_src_stack(new_move.move, i);
                         /* (suit+1)&0x3 converts it to FCS order */
-                        fcs_move_set_foundation(new_move, (suit+1)&0x3);
+                        fcs_move_set_foundation(new_move.move, (suit+1)&0x3);
                         moves_processed_add_new_move(ret, new_move);
                         
                         break;
@@ -319,12 +339,12 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         (pos.foundations[suit^0x2] > rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
-                        fcs_move_t new_move;
+                        fcs_extended_move_t new_move;
                         pos.foundations[suit]++;
                         pos.hold[j] = 0;
-                        fcs_move_set_type(new_move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
-                        fcs_move_set_src_freecell(new_move, i);
-                        fcs_move_set_foundation(new_move, (suit+1)&0x3);
+                        fcs_move_set_type(new_move.move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
+                        fcs_move_set_src_freecell(new_move.move, i);
+                        fcs_move_set_foundation(new_move.move, (suit+1)&0x3);
                         moves_processed_add_new_move(ret, new_move);
 
                         break;
@@ -355,8 +375,12 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             pos.foundations[card >> 4]++;
                             virtual_stack_len[src]--;
                             pos.tableau[src].count--;
-                            
-                            moves_processed_add_new_move(ret, move);
+                            {
+                                fcs_extended_move_t ext_move;
+                                ext_move.move = move;
+                                                            
+                                moves_processed_add_new_move(ret, ext_move);
+                            }
                         }
                         else
                         {
@@ -375,7 +399,12 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         }
                         else
                         {
-                            moves_processed_add_new_move(ret, move);
+                            {
+                                fcs_extended_move_t ext_move;
+                                ext_move.move = move;
+                                                            
+                                moves_processed_add_new_move(ret, ext_move);
+                            }
                             pos.hold[src] = 0;
                         }
                         virtual_freecell_len[src] = 0;
@@ -393,7 +422,11 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         }
                         else
                         {
-                            moves_processed_add_new_move(ret, move);
+                            {
+                                fcs_extended_move_t ext_move;
+                                ext_move.move = move;
+                                moves_processed_add_new_move(ret, ext_move);
+                            }
                             pos.tableau[dest].cards[pos.tableau[dest].count++] = pos.hold[src];
                             pos.hold[src] = 0;
                         }                        
@@ -414,7 +447,11 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         }
                         else
                         {
-                            moves_processed_add_new_move(ret, move);
+                            {
+                                fcs_extended_move_t ext_move;
+                                ext_move.move = move;
+                                moves_processed_add_new_move(ret, ext_move);
+                            }
                             pos.hold[dest] = pos.tableau[src].cards[--pos.tableau[src].count];
                         }
                         virtual_stack_len[src]--;
@@ -445,7 +482,12 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             fcs_move_set_src_stack(out_move, src);
                             fcs_move_set_dest_stack(out_move, dest);
                             fcs_move_set_num_cards_in_seq(out_move, num_cards);
-                            moves_processed_add_new_move(ret, out_move);
+                            {
+                                fcs_extended_move_t ext_move;
+                                ext_move.move = out_move;
+                                ext_move.to_empty_stack = (pos.tableau[dest].count == 0);
+                                moves_processed_add_new_move(ret, ext_move);
+                            }
                             for(i=0;i<num_cards;i++)
                             {
                                 pos.tableau[dest].cards[pos.tableau[dest].count+i] = pos.tableau[src].cards[pos.tableau[src].count-num_cards+i-1];
@@ -491,7 +533,7 @@ int moves_processed_get_moves_left(moves_processed_t * moves)
     return moves->num_moves- moves->next_move_idx;
 }
 
-int moves_processed_get_next_move(moves_processed_t * moves, fcs_move_t * move)
+int moves_processed_get_next_move(moves_processed_t * moves, fcs_extended_move_t * move)
 {
     if (moves->next_move_idx == moves->num_moves)
     {
@@ -605,7 +647,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     {
         int num_moves;
         int a;
-        fcs_move_t move;
+        fcs_extended_move_t move;
         char * str, * moves_string_proto;
         int len;
         moves_processed_t * moves_processed;
