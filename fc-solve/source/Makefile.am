@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = 1.4
 
-SUBDIRS = board_gen man
+SUBDIRS = board_gen man Presets
 
 bin_PROGRAMS = fc-solve freecell-solver-range-parallel-solve
 fc_solve_SOURCES = main.c

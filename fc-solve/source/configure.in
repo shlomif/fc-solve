@@ -339,8 +339,10 @@ AC_DEFINE_UNQUOTED(MAX_NUM_DECKS,$max_num_decks)
 
 AC_CONFIG_SUBDIRS([board_gen])
 
-AC_OUTPUT([Makefile man/Makefile freecell-solver-config freecell-solver.spec prefix.h.proto], [chmod +x freecell-solver-config])
+AC_OUTPUT([Makefile man/Makefile freecell-solver-config freecell-solver.spec prefix.h.proto Presets/Makefile Presets/presetrc.proto Presets/presets/Makefile], [chmod +x freecell-solver-config])
 
-cat prefix.h.proto | sed s@'${prefix}'@"$prefix"@g > prefix.h
+for I in prefix.h Presets/presetrc ; do
+    cat $I.proto | sed s@'${prefix}'@"$prefix"@g > $I
+done
 
 

@@ -1,0 +1,9 @@
+dir=@datadir@/freecell-solver/presets/
+name=cool-jives
+name=cj
+command=--read-from-file 4,cool-jives.sh
+name=abra-kadabra
+command=--read-from-file 4,abra-kadabra.sh
+name=john-galt-line
+name=jgl
+command=--read-from-file 6,john_galt_line-500.sh
