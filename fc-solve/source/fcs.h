@@ -800,6 +800,12 @@ extern void freecell_solver_recycle_instance(
     freecell_solver_instance_t * instance
         );
 
+pq_rating_t freecell_solver_a_star_rate_state(
+    freecell_solver_soft_thread_t * soft_thread,
+    double * a_star_weights,
+    fcs_state_with_locations_t * ptr_state_with_locations    
+    );
+
 #ifdef __cplusplus
 }
 #endif

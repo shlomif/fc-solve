@@ -34,16 +34,16 @@
 #include "dmalloc.h"
 #endif
 
-static pq_rating_t freecell_solver_a_star_rate_state(
-    freecell_solver_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations);
-
 #define freecell_solver_a_star_enqueue_state(soft_thread,ptr_state_with_locations) \
     {        \
         freecell_solver_PQueuePush(        \
             a_star_pqueue,       \
             ptr_state_with_locations,            \
-            freecell_solver_a_star_rate_state(soft_thread, ptr_state_with_locations)   \
+            freecell_solver_a_star_rate_state( \
+                soft_thread,         \
+                a_star_weights,        \
+                ptr_state_with_locations      \
+                )   \
             );       \
     }
 
@@ -802,8 +802,9 @@ void freecell_solver_a_star_initialize_rater(
 }
 
 
-static pq_rating_t freecell_solver_a_star_rate_state(
+pq_rating_t freecell_solver_a_star_rate_state(
     freecell_solver_soft_thread_t * soft_thread,
+    double * a_star_weights,
     fcs_state_with_locations_t * ptr_state_with_locations
     )
 {
@@ -819,7 +820,6 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     int sequences_are_built_by = instance->sequences_are_built_by;
     int freecells_num = instance->freecells_num;
     int stacks_num = instance->stacks_num;
-    double * a_star_weights = soft_thread->a_star_weights;
     int unlimited_sequence_move = instance->unlimited_sequence_move;
     int decks_num = instance->decks_num;
 
@@ -980,6 +980,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
     fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->bfs_queue_last_item;
     int num_states;
     fcs_derived_state_t * derived_states;
+    double * a_star_weights = soft_thread->a_star_weights;
 
     derived.num_states = 0;
     derived.max_num_states = 0;
