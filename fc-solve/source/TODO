@@ -1,5 +1,8 @@
 --- Pressing ---
 
+* Make sure a --freecells-num, -g etc. affects all instances in 
+a sequence.
+
 * command line presets
 
 * Convert some of the documentation to Perl-POD or DocBook.
