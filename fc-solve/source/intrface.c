@@ -407,6 +407,33 @@ static void free_bfs_queue(freecell_solver_soft_thread_t * soft_thread)
     }
 }
 
+static void free_tests_order(fcs_tests_order_t * tests_order)
+{
+    /* 
+     * Free the tests order states_order instances
+     * */
+    {
+        int num, i;
+        fcs_test_t * tests;
+        
+        num = tests_order->num;
+        tests = tests_order->tests;
+        
+        for(i=0;i<num;i++)
+        {
+            if (tests[i].states_order_instance)
+            {
+                tests[i].states_order_type->free_instance(
+                    tests[i].states_order_instance
+                    );
+                tests[i].states_order_instance = NULL;                    
+            }
+        }
+        /* Free the tests array itself */
+        free(tests);
+    }    
+}
+
 static void free_instance_soft_thread_callback(freecell_solver_soft_thread_t * soft_thread, void * context)
 {
     free_bfs_queue(soft_thread);
@@ -415,7 +442,7 @@ static void free_instance_soft_thread_callback(freecell_solver_soft_thread_t * s
     freecell_solver_PQueueFree(soft_thread->a_star_pqueue);
     free(soft_thread->a_star_pqueue);
 
-    free(soft_thread->tests_order.tests);
+    free_tests_order(&(soft_thread->tests_order));
 
     if (soft_thread->name != NULL)
     {
@@ -473,11 +500,11 @@ void freecell_solver_free_instance(freecell_solver_instance_t * instance)
         free_instance_hard_thread_callback(instance->optimization_thread);
     }
 
-    free(instance->instance_tests_order.tests);
+    free_tests_order(&(instance->instance_tests_order));
 
     if (instance->opt_tests_order_set)
     {
-        free(instance->opt_tests_order.tests);
+        free_tests_order(&(instance->opt_tests_order));
     }
 
     free(instance);
