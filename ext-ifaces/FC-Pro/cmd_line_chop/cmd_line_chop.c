@@ -62,19 +62,25 @@ void args_man_free(args_man_t * manager)
             last_arg_ptr = last_arg; \
     }
 
+#define is_whitespace(c) \
+    (((c) == ' ') || ((c) == '\t') || ((c) == '\n') || ((c) == '\r'))
+
 int args_man_chop(args_man_t * manager, char * string)
 {
     char * s = string;
     char * new_arg;
     char * last_arg, * last_arg_ptr, * last_arg_end, * new_last_arg;
     char next_char;
+    int in_arg;
 
     last_arg_ptr = last_arg = malloc(1024);
     last_arg_end = last_arg + 1023;
     
     while (*s != '\0')
     {
-        while ((*s == ' ') || (*s == '\t') || (*s == '\n') || (*s == '\r'))
+LOOP_START:
+        in_arg = 0;
+        while (is_whitespace(*s))
         {
             s++;
         }
@@ -84,6 +90,7 @@ int args_man_chop(args_man_t * manager, char * string)
         }
         if (*s == '#')
         {
+            in_arg = 0;
             /* Skip to the next line */
             while((*s != '\0') && (*s != '\n'))
             {
@@ -97,6 +104,7 @@ AFTER_WS:
                (*s != '\\') && (*s != '\"') && (*s != '\0') && 
                (*s != '#'))
         {
+            in_arg = 1;
             add_to_last_arg(*s);
             s++;
         }
@@ -106,6 +114,7 @@ AFTER_WS:
         {
 NEXT_ARG:
             push_args_last_arg();
+            in_arg = 0;
             
             if (*s == '\0')
             {
@@ -123,14 +132,14 @@ NEXT_ARG:
             }
             else if ((next_char == '\n') || (next_char == '\r'))
             {
-                if(next_char == '\r')
+                if (in_arg)
                 {
-                    if (*s == '\n')
-                    {
-                        s++;
-                    }
+                    goto AFTER_WS;
                 }
-                goto AFTER_WS;
+                else
+                {
+                    goto LOOP_START;
+                }
             }
             else
             {
@@ -140,6 +149,7 @@ NEXT_ARG:
         else if (*s == '\"')
         {
             s++;
+            in_arg = 1;
             while ((*s != '\"') && (*s != '\0'))
             {
                 if (*s == '\\')
@@ -176,6 +186,7 @@ NEXT_ARG:
         }
         else if (*s == '#')
         {
+            in_arg = 0;
             /* Skip to the next line */
             while((*s != '\0') && (*s != '\n'))
             {
