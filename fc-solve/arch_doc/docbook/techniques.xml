@@ -106,21 +106,178 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
         <para>
             For each position in the game graph, Freecell Solver maintains a 
             data structure that identifies it called 
-            <symbol>fcs_state_t</symbol>. This contains the cards in the 
+            <type>fcs_state_t</type>. This contains the cards in the 
             stacks and the freecells, and the value of the foundations. The 
             stacks and freecells are uniquely sorted to avoid states that 
             are identical except for a different permutation of the stacks 
             or the freecells.
         </para>
         <para>
-fcs_state_t is the first member of fcs_state_with_locations_t, that defines
-some other data. The real locations of the stacks and freecells are stored
-there for instance, as well as some graph information. See Canonization
-and Normalization in the terminology.
- 
+            <type>fcs_state_t</type> is the first member of
+            <type>fcs_state_with_locations_t</type>, that defines some
+            other data. The real locations of the stacks and freecells are
+            stored there for instance, as well as some graph information. See
+            Canonization and Normalization in the terminology.
+        </para>
+    </section>
+    <section id="technique_the_states_graph_and_its_use">
+        <title>The States Graph and its Use</title>
+        <para>
+            When a brand new state is discovered its parent is assigned to be
+            the state from which it is derived. (check <symbol>(*Mark
+                STATE_PARENT*)</symbol>). Its depth is assigned to be the depth
+            of the parent + 1. There is a command line option
+            (--reparent-states) that specifies that if an existing state whose
+            depth is higher than the depth of state it was derived from + 1 is
+            reached, then its parent would be re-assigned.
+        </para>
+        <para>
+            An extended state has a num_active_children counter that 
+            specifies how many of those states that consider it their parent 
+            were still not marked as dead ends. If this counter reaches 0, 
+            this state also becomed inactive.
+        </para>
+
+        <para>
+            The state has a vector of flags called scan_visited, that specifies
+            if a given scan has visited it yet. If it is a complete scan it can
+            also mark it as dead end should it:
+        </para>
+
+        <para>
+            <orderedlist>
+                <listitem>
+                    <para>
+                        Recurse out of it if it's a DFS scan.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Find that it has no derived states if it is a 
+                        Best-First Search scan.
+                    </para>
+                </listitem>
+            </orderedlist>
+        </para>
+        <para>
+            If it is marked as dead end, then its parent's counter would be 
+            incremented. If the latter is zero, the process may continue to 
+            the grand parent and so forth.
         </para>
     </section>
 
+    <section id="technique_life_cycle_of_a_f_s_instance_t">
+        <title>The Life-Cycle of a freecell_solver_instance_t</title>
+        <para>
+            A <type>freecell_solver_instance_t</type> is allocated by 
+            <filename>lib.c</filename> to start solving a board. The logic
+            of solving a board is present in <filename>intrface.c</filename> 
+            while the stubs to use it are implemented in 
+            <filename>lib.c</filename>.
+        </para>
+        <para>
+            After an instance is allocated, it should be paramterized to
+            specify how it will solve the board. Afterwards, 
+            <function>freecell_solver_init_instance()</function> should
+            be called. After that, 
+            <function>freecell_solver_solve_instance()</function> should
+            be called for the first time, and 
+            <function>freecell_solver_resume_instance()</function> afterwards.
+            (these functions solve until they reach a limit of iterations 
+            number.)
+        </para>
+        <para>
+            If one would like to use the instance to solve another board, it is
+            possible to recycle it by calling
+            <function>freecell_solver_recycle_instance()</function>.  This will
+            keep its configuration but free all its associated resources, and
+            thus will not require parsing the command line again.
+        </para>
+        <para>
+            The function that calls the actual scans is 
+            <function>run_hard_thread()</function>, which is called from 
+            within <function>freecell_solver_resume_instance()</function>.
+        </para>
+    </section>
+
+    <section id="technique_compact_allocation">
+        <title>Compact Allocation</title>
+        <para>
+            Most resources that are allocated arbitrarily in &fcs; are
+            allocated in a compact manner. I.e: instead of being individually
+            malloced, they are allocated in segments and placed one after the
+            other. The segments are dynamically allocated and kept at a fixed
+            location in memory. If more memory is needed, another segment is
+            allocated.
+        </para>
+        <para>
+            There are two modules whose code is used to achieve this end:
+        </para>
+        <para>
+            <orderedlist>
+                <listitem>
+                    <para>
+                        <filename>fcs_isa.c</filename>/<filename>fcs_isa.h</filename> - 
+                        Short for Indirect State Allocation, this module 
+                        allocated vectors of states, each one is of constant 
+                        size.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <filename>alloc.c</filename>/<filename>alloc.h</filename> -
+                        allocates blocks of arbitrary size in a compact manner.
+                    </para>
+                </listitem>
+            </orderedlist>
+        </para>
+
+        <para>
+            Both of these modules support releasing the last allocated block
+            and the last one alone.
+        </para>        
+        <para>
+            Compact allocation is used for the following resources.
+        </para>
+        <para>
+            <orderedlist>
+                <listitem>
+                    <para>
+                        <emphasis>States</emphasis> - using fcs_isa. A derived 
+                        state is allocated using the hard thread's allocator, 
+                        and it is modified with the appropriate moves. If it 
+                        is found to have already existed, it is released. 
+                        Else, it is kept and a pointer to it can be found 
+                        in the states collection.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>Card stacks</emphasis> - if a card stack was 
+                        modified, it is compactly allocated (see 
+                        <symbol>(*Mark COMPACT_ALLOC_CARD_STACKS*)</symbol> ), 
+                        before one checks to see if it is present in the 
+                        stacks collection. If it was found there, its memory 
+                        is released. Else, it is kept there.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>Move stacks</emphasis> - 
+                        the move stacks leading to the parent are compactly 
+                        allocated (see (*Mark COMPACT_ALLOC_MOVE_STACKS*)).
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>Hash Elements</emphasis> - The elements of 
+                        the hash linked lists are compactly allocated with a 
+                        specialized hash allocator.
+                    </para>
+                </listitem>
+            </orderedlist>
+        </para>
+    </section>
 </chapter>
 
 
