@@ -47,11 +47,12 @@ foreach my $scan (@selected_scans)
 }
 
 
-my @quotas = ((500) x 10000);
+my @quotas = ((100) x 10000);
 my @chosen_scans = ();
 
 my $total;
 my $q = 0;
+my $total_iters = 0;
 
 foreach my $q_more (@quotas)
 {
@@ -66,7 +67,9 @@ foreach my $q_more (@quotas)
     $total += $max;
     print "$q \@ $max_ind ($total solved)\n";
     my $this_scan_result = ($scans_data->slice(":,$max_ind"));
+    $total_iters += sum((($this_scan_result <= $q) & ($this_scan_result > 0)) * $this_scan_result);
     my $indexes = which(($this_scan_result > $q) | ($this_scan_result < 0));
+    $total_iters += $indexes->nelem();
     $scans_data = $scans_data->dice($indexes, "X");
     $this_scan_result = $scans_data->slice(":,$max_ind");
     $this_scan_result = (($this_scan_result - $q) * ($this_scan_result > 0)) +
@@ -81,3 +84,5 @@ foreach my $q_more (@quotas)
 }
 
 print "scans_data = " , $scans_data, "\n";
+print "total_iters = $total_iters\n";
+
