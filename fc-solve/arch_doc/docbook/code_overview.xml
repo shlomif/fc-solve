@@ -1,0 +1,68 @@
+<?xml version='1.0' ?>
+
+<!-- <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oa
+sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
+<!-- This comment is meant to settle gvim -->
+
+<chapter id="code_overview">
+    <title>Overview of the Code</title>
+    <section id="overview_of_the_program">
+        <title>Overview of the Program</title>
+
+        <para>
+            &fcs; solves boards by using Depth-First Search or 
+            Best-First-Search scans starting from the initial board. It has 
+            a collection of the states, and constructs a tree of the 
+            states descending from each state to its "parent". A parent state 
+            means the state in which from which it was discovered.
+        </para>
+
+        <para>
+            &fcs; can run several "tests" on each state. Each test generates
+            a list of derived states. Some of the test are Freecell meta-move 
+            ones, some are Freecell atomic move ones, and the others are 
+            Simple Simon meta-move ones. The order of the tests can be 
+            specified at the command line, and tests can be grouped, and 
+            the order of checking of the tests within a group will be 
+            determined by a special callback.
+        </para>
+        <para>
+            To perform the scans themselves Freecell Solver distinguishes 
+            between soft threads, hard threads and instances. An instance is 
+            a collection of states and an initial board to explore. Each 
+            instance may have several hard threads and each hard thread may 
+            have several soft threads. A hard thread is something
+            that would likely be put in a system thread. It contains such 
+            resources, that a collision between them among several hard 
+            threads running in parallel is undesirable. Nevertheless, 
+            every hard thread can access the resources allocated by other 
+            hard threads, should he encounter them in his scan.
+        </para>
+        <para>
+            A soft thread is a singular scan. It performs a scan for a 
+            certain number of iterations, at which point the hard thread 
+            switches to a different soft thread.
+        </para>
+    </section>
+       
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:4
+sgml-indent-data:t
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+sgml-parent-document: "fcs_arch_doc.xml"
+End:
+-->
+
