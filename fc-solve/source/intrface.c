@@ -954,10 +954,19 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
              * since we are going to call continue and this is
              * a while loop
              * */
-            hard_thread->st_idx++;
-            if (hard_thread->st_idx == hard_thread->num_soft_threads)
+            if ((hard_thread->prelude != NULL) &&
+                (hard_thread->prelude_idx < hard_thread->prelude_num_items))
             {
-                hard_thread->st_idx = 0;
+                hard_thread->st_idx = hard_thread->prelude[hard_thread->prelude_idx++].scan_idx;
+                hard_thread->num_times_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx++].quota;
+            }
+            else
+            {
+                hard_thread->st_idx++;
+                if (hard_thread->st_idx == hard_thread->num_soft_threads)
+                {
+                    hard_thread->st_idx = 0;
+                }
             }
             continue;
         }
@@ -1086,10 +1095,19 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
              * Switch to the next soft thread within the hard
              * thread
              * */
-            hard_thread->st_idx++;
-            if (hard_thread->st_idx == hard_thread->num_soft_threads)
+            if ((hard_thread->prelude != NULL) &&
+                (hard_thread->prelude_idx < hard_thread->prelude_num_items))
             {
-                hard_thread->st_idx = 0;
+                hard_thread->st_idx = hard_thread->prelude[hard_thread->prelude_idx++].scan_idx;
+                hard_thread->num_times_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx++].quota;
+            }
+            else
+            {
+                hard_thread->st_idx++;
+                if (hard_thread->st_idx == hard_thread->num_soft_threads)
+                {
+                    hard_thread->st_idx = 0;
+                }
             }
             /* 
              * Reset num_times_left_for_soft_thread 
