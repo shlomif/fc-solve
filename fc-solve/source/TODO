@@ -1,11 +1,11 @@
 --- Pressing ---
 
-* Convert some of the documentation to Perl-POD or DocBook.
-
-* After everything: reorganize the --help behaviour according to the Freshmeat
-editorial
+* Implement the move stacks over-riding in the derived states list, so
+move stacks won't be allocated excessively.
 
 --- Non-pressing ---
+
+* Convert some of the documentation to Perl-POD or DocBook.
 
 * Integrate the patsolve's prioritization and mixed BFS/DFS scan.
 

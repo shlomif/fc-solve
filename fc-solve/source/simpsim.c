@@ -1063,7 +1063,7 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
                                     int the_num_true_seqs =
                                         (
                                             (false_seq_index == num_separate_false_seqs) ?
-                                                1 :
+                                                num_src_junk_true_seqs :
                                                 above_num_true_seqs[false_seq_index]
                                         );
 
