@@ -130,6 +130,30 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             alternately.
         </para>
     </section>
+    <section id="cc_separation_of_internals_from_user_interface">
+        <title>Separation of Internals from User and Application Programmer Interfaces</title>
+        <para>
+            FCS makes a clear distinction between the internals of the program,
+            that are subject to change from version to version, and between the
+            interface supplied to the user or the application programmer. All 
+            the modules starting from <filename>intrface.c</filename> and below 
+            are the internals of the program.
+        </para>        
+        <para>
+            <filename>lib.c</filename> contain the API functions used by the
+            programmer. <filename>cmd_line.c</filename> is an API to analyze
+            a &fcs; command line. It itself uses only the 
+            <filename>lib.c</filename> API. It provides a more flexible
+            interface for configuring &fcs;, even to the application 
+            programmer.
+        </para>
+        <para>
+            <filename>main.c</filename> and 
+            <filename>test_multi_parallel.c</filename> are two command line
+            programs that use the command line interface and programmers 
+            interface. Others can be written (and have been).
+        </para>
+    </section>
 </chapter>
 
 
