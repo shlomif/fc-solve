@@ -24,6 +24,7 @@ extern "C" {
 
 #include "test_arr.h"
 
+
 /*
  * The number of cards that can be moved is
  * (freecells_number + 1) * 2 ^ (free_stacks_number)
