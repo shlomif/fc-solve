@@ -1667,8 +1667,10 @@ void freecell_solver_recycle_instance(
             soft_thread = hard_thread->soft_threads[st_idx];
             soft_thread->is_finished = 0;
             soft_thread->initialized = 0;
+
             freecell_solver_rand_srand(soft_thread->rand_gen, soft_thread->rand_seed);
-            
+            /* Reset the priority queue */
+            soft_thread->a_star_pqueue->CurrentSize = 0;
         }
     }
 }
