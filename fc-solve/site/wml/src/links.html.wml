@@ -35,10 +35,15 @@ Solver Lecture</a> - A lecture I gave to the
 development of Freecell Solver.
 </p>
 
+<p>
+<a href="http://developer.berlios.de/project/?group_id=66">BerliOS' Project
+Page</a> - contains CVS instructions and other goodies.
+</p>
+
 <h2>Technologies</h2>
 
 <p class="desc">
-Technologies used by Freecell Solver.
+Technologies used by Freecell Solver or that aided in its development.
 </p>
 
 <p>
@@ -91,6 +96,17 @@ memory debugger for x86-linux. Helped trace a few hard-to-catch bugs in
 Freecell Solver.
 </p>
 
+<p>
+<a href="http://www.vim.org/">Vim - Vi Improved</a> - an excellent 
+cross-platform text editor with many powerful features.
+</p>
+
+<p>
+<a href="http://www.cvshome.org/">CVS</a> - an Open-Source source control 
+management system that is used in maintaining the Freecell Solver codebase. 
+While it has proved adequate for my needs so far, it has some limitations,
+so you may wish to look at better alternatives.
+</p>
 
 <a name="front_ends"></a>
 <h2>Programs that use Freecell Solver</h2>
