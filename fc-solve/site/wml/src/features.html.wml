@@ -23,6 +23,11 @@ debugging information on and off.
 Some configurations are very fast: can solve the Microsoft 32,000 in 22 
 minutes on a Pentium III 667 MHz machine.
 </li>
+
+<li>
+Option to use atomic moves which guarantee an accurate verdict. 
+(non-atomic scans may report a false negative)
+</li>
 </ul>
 
 <h2>Development Features</h2>
@@ -85,12 +90,23 @@ After a solution path was found it can be optimized using a BFS
 </li>
 
 <li>
+There is an option to reparent states during a scan if their depth in 
+the solution tree is higher than the one with which they were reached. This
+also tends to shorten the solution length.
+</li>
+
+<li>
 The Randomized DFS scan accepts a user-defined seed.
 </li>
 
 <li>
 Several scans can be played on the same states' collection (while switching
 from scan to scan) giving on average a faster solving time.
+</li>
+
+<li>
+It is possible to specify a static prelude of quotas to be played before the 
+perpetual loop.
 </li>
 
 </ul>

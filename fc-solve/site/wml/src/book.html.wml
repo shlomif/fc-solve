@@ -1,0 +1,18 @@
+#include '../template.wml'
+
+<subject "Freecell Solver Book" />
+
+<p>
+I am writing a book titled <i>Freecell Solver - Evolution of a C Program</i>
+that would cover the development of Freecell Solver, and various lessons
+I learned by working on it.
+</p>
+
+<p>
+If you are interested in reviewing the intermediate copies of the book, please
+let me know by 
+<a href="mailto:shlomif@vipe.technion.ac.il?subject=Freecell%20Solver%20Book">
+sending me an E-mail
+</a>.
+</p>
+

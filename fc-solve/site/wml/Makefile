@@ -29,7 +29,7 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 WML_FLAGS += --passoption=2,-X
 
-HTMLS = $(D)/index.html $(D)/download.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html
+HTMLS = $(D)/index.html $(D)/download.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html
 
 all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS)
 

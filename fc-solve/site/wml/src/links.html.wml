@@ -4,9 +4,9 @@
 
 <h2>Resources</h2>
 
-<ul>
+<p class="desc">
 Freecell Solver Resources on the Net.
-</ul>
+</p>
 
 <p>
 <a href="http://fc-solve.berlios.de/">Freecell Solver's BerliOS mirror</a> - 
@@ -30,9 +30,9 @@ history, a Freshmeat internal hit count, and other useful information.
 
 <h2>Technologies</h2>
 
-<ul>
+<p class="desc">
 Technologies used by Freecell Solver.
-</ul>
+</p>
 
 <p>
 <a href="http://www.msu.edu/user/pfaffben/avl/">libavl</a> - a very nice
@@ -101,11 +101,11 @@ as well as my own.
 
 <h2>People</h2>
 
-<ul>
+<p class="desc">
 Links to the homepages of people who contributed in any way to Freecell
 Solver. Because of spamming issues, I don't put their E-mails here. In case
 you want their E-mail address, either go to their homepage or send me an E-mail.
-</ul>
+</p>
 
 <p>
 <a href="http://www.informatik.mu-luebeck.de/~kulow/">Stephan Kulow</a> - 
@@ -139,9 +139,9 @@ in Freecell Solver.
 <a name="other_solvers"></a>
 <h2>Other Solvers</h2>
 
-<ul>
+<p class="desc">
 We have competition. But there's nothing wrong with competition. ;-)
-</ul>
+</p>
 
 <p>
 <a href="http://members.tripod.com/professor_tom/archives/">patsolve</a> -
