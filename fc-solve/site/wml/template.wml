@@ -49,6 +49,7 @@
     </li>
 </ul>
 </li>
+<li><navbarlink "docs/" "Documents" /></li>
 <li><navbarlink "links.html" "Links" />
 
 <ul class="navbarnested">
@@ -65,8 +66,7 @@
 <li><navbarlink "book.html" "The Book" /></li>
 <li><navbarlink "old-news.html" "Old News Items" /></li>
 <li><br /></li>
-<li><navbarlink "docs/" "Documents" /></li>
-<li><navbarlink "http://fc-solve.berlios.de/michael_mann/" "Doxygen Browsing by Michael Mann" /></li>
+
 </ul>
 
 <define-tag validhtml>
