@@ -773,6 +773,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     num_args_to_skip = atoi(argv[arg]);
                     s++;
                 }
+
                 if (opened_files_dir)
                 {
                     char * complete_path;
@@ -782,10 +783,21 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     f = fopen(complete_path, "rt");
                     free(complete_path);
                 }
+                else
+                {
+                    /* 
+                     * Initialize f to NULL so it will be initialized
+                     * */
+                    f = NULL;
+                }
+
+                /* Try to open from the local path */                
                 if (f == NULL)
                 {
                     f = fopen(s, "rt");
                 }
+                
+                /* If we still could not open it return an error */
                 if (f == NULL)
                 {
                     char * err_str;

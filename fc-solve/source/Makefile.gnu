@@ -25,7 +25,7 @@ END_OLFLAGS := -lm
 
 # END_OLFLAGS += -pg -lc_p
 
-OFLAGS += -ansi -W -Wall -pedantic -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE
+# OFLAGS += -ansi -W -Wall -pedantic -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE
 
 DFLAGS = $(OFLAGS) -DDEBUG
 END_DLFLAGS = $(END_OLFLAGS)
