@@ -751,6 +751,14 @@ extern int freecell_solver_a_star_or_bfs_solve(
 extern int freecell_solver_a_star_or_bfs_resume_solution(
     freecell_solver_soft_thread_t * soft_thread
     );
+
+extern int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
+    freecell_solver_soft_thread_t * soft_thread,
+    fcs_state_with_locations_t * ptr_state_with_locations_orig,
+    int resume,
+    int to_randomize
+    );
+
 #ifdef __cplusplus
 }
 #endif

@@ -393,7 +393,7 @@ static void freecell_solver_increase_dfs_max_depth(
   */
 #define the_state (ptr_state_with_locations->s)
 
-static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
+int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     freecell_solver_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig,
     int resume,
@@ -1162,32 +1162,6 @@ label_next_state:
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-
-int freecell_solver_a_star_or_bfs_solve(
-    freecell_solver_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations_orig
-    )
-{
-#error put in intrface.c
-    return
-        freecell_solver_a_star_or_bfs_do_solve_or_resume(
-            soft_thread,
-            ptr_state_with_locations_orig,
-            0
-        );
-}
-
-int freecell_solver_a_star_or_bfs_resume_solution(
-    freecell_solver_soft_thread_t * soft_thread
-    )
-{
-    return
-        freecell_solver_a_star_or_bfs_do_solve_or_resume(
-            soft_thread,
-            soft_thread->first_state_to_check,
-            1
-        );
-}
 
 
 #undef state

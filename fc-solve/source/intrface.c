@@ -763,11 +763,13 @@ static int freecell_solver_optimize_solution(
     instance->optimization_thread->max_num_times = -1;
     instance->optimization_thread->ht_max_num_times = -1;
 
+    return 
+        freecell_solver_a_star_or_bfs_do_solve_or_resume(
+            instance->optimization_thread->soft_threads[0],
+            instance->state_copy_ptr,
+            0
+            );
 
-    return freecell_solver_a_star_or_bfs_solve(
-        instance->optimization_thread->soft_threads[0],
-        instance->state_copy_ptr
-        );
 }
 
 
@@ -1051,7 +1053,7 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                         NULL,
                         1,
                         0
-                        )
+                        );
             }
         }
         else if (soft_thread->method == FCS_METHOD_RANDOM_DFS)
@@ -1061,7 +1063,7 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                 ret = 
                     freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         soft_thread,
-                        ptr_state_with_locations_orig,
+                        instance->state_copy_ptr,
                         0,
                         1
                         );
@@ -1091,18 +1093,22 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                         );
                 }
 
-                ret = freecell_solver_a_star_or_bfs_solve(
+                ret = freecell_solver_a_star_or_bfs_do_solve_or_resume(
                     soft_thread,
-                    instance->state_copy_ptr
-                    );
+                    instance->state_copy_ptr,
+                    0
+                );
 
                 soft_thread->initialized = 1;
             }
             else
             {
-                ret = freecell_solver_a_star_or_bfs_resume_solution(
-                    soft_thread
-                    );
+                ret =
+                    freecell_solver_a_star_or_bfs_do_solve_or_resume(
+                        soft_thread,
+                        soft_thread->first_state_to_check,
+                        1
+                        );
             }
         }
         else
@@ -1213,10 +1219,11 @@ int freecell_solver_resume_instance(
     if (instance->optimization_thread)
     {
         ret =
-            freecell_solver_a_star_or_bfs_solve(
+            freecell_solver_a_star_or_bfs_do_solve_or_resume(
                 instance->optimization_thread->soft_threads[0],
-                instance->state_copy_ptr
-            );
+                instance->optimization_thread->soft_threads[0]->first_state_to_check,
+                1
+                );
     }
     else
     {
