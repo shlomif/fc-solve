@@ -44,6 +44,7 @@ enum fcs_presets_ids
     FCS_PRESET_DER_KATZENSCHWANZ,
     FCS_PRESET_DIE_SCHLANGE,
     FCS_PRESET_EIGHT_OFF,
+    FCS_PRESET_FAN,
     FCS_PRESET_FORECELL,
     FCS_PRESET_FREECELL,
     FCS_PRESET_GOOD_MEASURE,
@@ -56,7 +57,7 @@ enum fcs_presets_ids
     FCS_PRESET_BELEAGUERED_CASTLE,
 };
 
-static const fcs_preset_t fcs_presets[15] = 
+static const fcs_preset_t fcs_presets[16] = 
 {
     {
         FCS_PRESET_BAKERS_DOZEN,
@@ -140,6 +141,19 @@ static const fcs_preset_t fcs_presets[15] =
         FCS_PRESET_EIGHT_OFF,
         8,
         8,
+        1,
+
+        FCS_SEQ_BUILT_BY_SUIT,
+        0,
+        FCS_ES_FILLED_BY_KINGS_ONLY,
+
+        "[01][23456789]",
+        "0123456789",
+    },
+    {
+        FCS_PRESET_FAN,
+        0,
+        18,
         1,
 
         FCS_SEQ_BUILT_BY_SUIT,
@@ -263,7 +277,7 @@ struct fcs_preset_name_struct
 
 typedef struct fcs_preset_name_struct fcs_preset_name_t;
 
-static const fcs_preset_name_t fcs_preset_names[22] =
+static const fcs_preset_name_t fcs_preset_names[23] =
 {
     {
         "bakers_dozen",
@@ -300,6 +314,10 @@ static const fcs_preset_name_t fcs_preset_names[22] =
     {
         "eight_off",
         FCS_PRESET_EIGHT_OFF,
+    },
+    {
+        "fan",
+        FCS_PRESET_FAN,
     },
     {
         "forecell",

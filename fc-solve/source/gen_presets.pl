@@ -11,6 +11,7 @@ my %presets =
     'der_katzenschwanz' => [ qw(i die_schlange sm unlimited) ],
     'die_schlange' => [ qw(i freecell f 8 s 9 d 2 esf none) ],
     'eight_off' => [ qw(i kings_only_bakers_game f 8) ],
+    'fan' => [ qw(i freecell s 18 sbb suit sm limited esf kings_only f 0) ],
     'forecell' => [ qw(i freecell esf kings_only) ],
     'freecell' => [ qw(s 8 f 4 d 1 sbb ac sm limited esf any_card to [01][23456789] at 0123456789) ],
     'good_measure' => [ qw(i bakers_dozen s 10) ],
