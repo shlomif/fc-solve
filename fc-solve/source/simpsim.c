@@ -12,6 +12,8 @@
 
 #include "tests.h"
 
+#include "ms_ca.h"
+
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif

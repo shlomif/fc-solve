@@ -24,6 +24,7 @@
 
 #include "fcs_isa.h"
 #include "tests.h"
+#include "ms_ca.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"

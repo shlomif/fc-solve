@@ -30,12 +30,6 @@ extern "C" {
  * Solver uses to solve a given board.
  * */
 
-extern fcs_move_stack_t * 
-    freecell_solver_move_stack_compact_allocate(
-        freecell_solver_hard_thread_t * hard_thread, 
-        fcs_move_stack_t * old_move_stack_to_parent
-        );
-
 extern int freecell_solver_check_and_add_state(
     freecell_solver_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * new_state,

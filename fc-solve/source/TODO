@@ -1,4 +1,7 @@
 --- Pressing ---
+
+* Clean up the scans interface. (less function nesting)
+
 --- Non-pressing ---
 
 * Write an architecture document.
@@ -29,4 +32,8 @@ iterations limit.
 
 * Add a limit to stacks number (in the case of Indirect Stack States),
 number of states that are stored anywhere, etc.
+
+* Experiment with a delta-based state storage.
+
+* Code a generic tests grouping.
 
