@@ -7,12 +7,27 @@ Threads contain a collection of state packs, and various counters and other
 variables.
 
 Moves - A one-time displacements of cards from stacks to stacks, from stacks
-to freecells, or from freecells to stacks. Also contain 
+to freecells, or from freecells to stacks. Also contain some special moves 
+such as those for canonizing stacks, and separators. Also see Move Stacks.
+
+Move Stacks - A sequence of move implemented in its own class. 
+(check move.c and move.h)
+
 Soft Thread - a singular continuus scan operating on a states collection.
 It can be Soft-DFS, DFS or Best First Search. There could be any number of
 soft threads in a hard thread.
 
 Packs - see State Packs
+
+Presets -
+1. A structure specifying the type of game according to number of stacks,
+number of freecells, number of decks, whether kings can be placed in empty 
+stacks, if sequences have unlimited moves, and how stacks are built by. Defined
+in preset.c.
+2. A set of command line arguments to be processed as if they were given on the 
+command line. Can be used to shorten command lines. For instance "-l cool-jives"
+or "-l john-galt-line" load the presets "cool-jives" and "john-galt-line" 
+respectively. Implemented mostly in cmd_line.c.
 
 State Packs - An allocation of states. Each one is a buffer in memory, that
 contain an array of packs. Each buffer remains at a constant memory location,
@@ -24,5 +39,13 @@ Stacks -
     2. Columns of the freecell games.
     3. The stacks used for maintaining the Soft-DFS recursion.
     4. The environment recursion stack.
+
+Test Groups - a grouping of tests that dictate which one should be performed
+one after the and placed into the same derived states list. Afterwards, this
+list can be randomized, or prioritized.
+
+Tests - A function that accepts a source state as input and fills a list of 
+derived states according to the moves it can perform. Each game type has several
+type of tests, which can be ordered and grouped according to input from the user.
 
 
