@@ -565,6 +565,8 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 {
                     instance->final_state = ptr_state_with_locations;
 
+                    soft_thread->num_solution_states = depth+1;
+
                     return FCS_STATE_WAS_SOLVED;
                 }
                 /*
