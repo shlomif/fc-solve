@@ -44,13 +44,6 @@ extern "C" {
 
 #include "caas.h"
 
-/*
- *  These are some macros to make it easier for the programmer.
- * */
-#define state_with_locations (*ptr_state_with_locations)
-#define state (ptr_state_with_locations->s)
-#define new_state_with_locations (*ptr_new_state_with_locations)
-#define new_state (ptr_new_state_with_locations->s)
 
 #define sfs_check_state_begin()                                                \
     fcs_state_ia_alloc_into_var(ptr_new_state_with_locations, hard_thread);    \
