@@ -34,8 +34,7 @@
 
 void freecell_solver_PQueueInitialise(
     PQUEUE *pq,
-    int32 MaxElements,
-    pq_rating_t MaxRating
+    int32 MaxElements
     )
 {
     pq->MaxSize = MaxElements;
@@ -48,9 +47,6 @@ void freecell_solver_PQueueInitialise(
     {
         printf( "Memory alloc failed!\n" );
     }
-
-    pq->MaxRating = MaxRating;
-
 }
 
 /* join a priority queue
@@ -61,7 +57,6 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
 {
     uint32 i;
     pq_element_t * Elements = pq->Elements;
-    pq_rating_t MaxRating = pq->MaxRating;
 
     int32 CurrentSize = pq->CurrentSize;
 
@@ -76,7 +71,7 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
     {
         /* set i to the first unused element and increment CurrentSize */
 
-        i = (CurrentSize += 1);
+        i = (++CurrentSize);
 
         /* while the parent of the space we're putting the new node into is worse than
            our new node, swap the space with the worse node. We keep doing that until we
@@ -88,7 +83,7 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
         {
 
             while( ( i==PQ_FIRST_ENTRY ?
-                     (MaxRating) /* return biggest possible rating if first element */
+                     (PQUEUE_MaxRating) /* return biggest possible rating if first element */
                      :
                      (PGetRating(Elements[ PQ_PARENT_INDEX(i) ]) )
                    )
@@ -148,11 +143,9 @@ void *freecell_solver_PQueuePop( PQUEUE *pq)
 
         /*  UNTESTED */
 
-        for( i=PQ_FIRST_ENTRY; PQ_LEFT_CHILD_INDEX(i) <= CurrentSize; i=child )
+        for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= CurrentSize; i=child )
         {
             /* set child to the smaller of the two children... */
-
-            child = PQ_LEFT_CHILD_INDEX(i);
 
             if( (child != CurrentSize) &&
                 (PGetRating(Elements[child + 1]) > PGetRating(Elements[child])) )

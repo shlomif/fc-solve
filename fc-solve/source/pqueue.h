@@ -18,7 +18,11 @@
 extern "C" {
 #endif
 
+#include <limits.h>
+
 #include "jhjtypes.h"
+
+#define PQUEUE_MaxRating INT_MAX
 
 typedef int32 pq_rating_t;
 
@@ -49,8 +53,7 @@ typedef struct _PQUEUE
 
 void freecell_solver_PQueueInitialise(
     PQUEUE *pq,
-    int32 MaxElements,
-    pq_rating_t MaxRating
+    int32 MaxElements
     );
 
 void freecell_solver_PQueueFree( PQUEUE *pq );

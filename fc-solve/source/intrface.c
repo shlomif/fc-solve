@@ -213,8 +213,7 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
     soft_thread->a_star_pqueue = malloc(sizeof(PQUEUE));
     freecell_solver_PQueueInitialise(
         soft_thread->a_star_pqueue,
-        1024,
-        INT_MAX
+        1024
         );
 
     /* Set the default A* weigths */
