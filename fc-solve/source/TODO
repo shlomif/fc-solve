@@ -5,6 +5,8 @@
     
     * Hyperlink to the terms from someplaces in the main document
 
+    * Document the mapping of aliases -> test functions.
+
 * Implement the move stacks over-riding in the derived states list, so
 move stacks won't be allocated excessively.
 
@@ -14,6 +16,7 @@ move stacks won't be allocated excessively.
 fashion.
 
 * Implement the mapping of names -> test functions.
+    - Done partially
 
 * Implement Patsolve's state ordering.
 
