@@ -426,10 +426,14 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     int check;
     int do_first_iteration;
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
+    int freecells_num, stacks_num;
 
     int tests_order_num = soft_thread->tests_order.num;
     int * tests_order_tests = soft_thread->tests_order.tests;
     int calc_real_depth = instance->calc_real_depth;
+
+    freecells_num = instance->freecells_num;
+    stacks_num = instance->stacks_num;
 
     if (!resume)
     {
@@ -536,7 +540,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
                 /* Count the free-cells */
                 num_freecells = 0;
-                for(a=0;a<instance->freecells_num;a++)
+                for(a=0;a<freecells_num;a++)
                 {
                     if (fcs_freecell_card_num(the_state, a) == 0)
                     {
@@ -547,7 +551,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 /* Count the number of unoccupied stacks */
 
                 num_freestacks = 0;
-                for(a=0;a<instance->stacks_num;a++)
+                for(a=0;a<stacks_num;a++)
                 {
                     if (fcs_stack_len(the_state, a) == 0)
                     {
@@ -556,7 +560,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 }
 
                 /* Check if we have reached the empty state */
-                if ((num_freestacks == instance->stacks_num) && (num_freecells == instance->freecells_num))
+                if ((num_freestacks == stacks_num) && (num_freecells == freecells_num))
                 {
                     instance->final_state = ptr_state_with_locations;
 
@@ -847,6 +851,7 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     double cards_under_sequences, temp;
     double seqs_over_renegade_cards;
     int sequences_are_built_by = instance->sequences_are_built_by;
+    int freecells_num = instance->freecells_num;
 
     cards_under_sequences = 0;
     num_freestacks = 0;
@@ -903,7 +908,7 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     ret += ((double)num_cards_in_founds/(instance->decks_num*52)) * soft_thread->a_star_weights[FCS_A_STAR_WEIGHT_CARDS_OUT];
 
     num_freecells = 0;
-    for(a=0;a<instance->freecells_num;a++)
+    for(a=0;a<freecells_num;a++)
     {
         if (fcs_freecell_card_num(state,a) == 0)
         {
@@ -915,18 +920,18 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     {
         if (instance->unlimited_sequence_move)
         {
-            temp = (((double)num_freecells+num_freestacks)/(instance->freecells_num+instance->stacks_num));
+            temp = (((double)num_freecells+num_freestacks)/(freecells_num+instance->stacks_num));
         }
         else
         {
-            temp = (((double)((num_freecells+1)<<num_freestacks)) / ((instance->freecells_num+1)<<(instance->stacks_num)));
+            temp = (((double)((num_freecells+1)<<num_freestacks)) / ((freecells_num+1)<<(instance->stacks_num)));
         }
     }
     else
     {
         if (instance->unlimited_sequence_move)
         {
-            temp = (((double)num_freecells)/instance->freecells_num);
+            temp = (((double)num_freecells)/freecells_num);
         }
         else
         {
