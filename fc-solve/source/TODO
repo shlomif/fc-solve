@@ -20,7 +20,7 @@ to work.
 
 * Write a multi-threaded version and see if it runs ok.
 
-* Write a multi-processed client/server program.
+* Write a multi-process client/server program.
 
 * Port to Java (?)
 
