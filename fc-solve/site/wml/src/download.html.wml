@@ -1,4 +1,4 @@
-#include 'template.wml'
+#include '../template.wml'
 
 <subject "Download Freecell Solver">
 
@@ -52,10 +52,12 @@ freecell-solver-2.5.26.tar.gz
 The Development version that will lead to Freecell Solver 2.6.0. 
 </td>
 </tr>
+
+</table>
 -->
 
 
-</table>
+
 
 <p>
 <a href="don_woods.html">For Don Wood's solver access this link.</a>

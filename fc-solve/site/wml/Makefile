@@ -38,8 +38,8 @@ $(SUBDIRS) :: % :
 	fi
 	
 
-$(HTMLS) :: $(D)/% : src/%.wml .wmlrc template.wml Makefile
-	wml $(WML_FLAGS) $< > $@
+$(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml Makefile
+	cd src && wml $(WML_FLAGS) $(notdir $<) > $@
 
 $(IMAGES) :: $(D)/% : src/%
 	cp -f $< $@

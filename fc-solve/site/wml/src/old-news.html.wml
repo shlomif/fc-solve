@@ -1,4 +1,4 @@
-#include 'template.wml'
+#include '../template.wml'
 
 <subject "Freecell Solver's Previous News Items">
 
