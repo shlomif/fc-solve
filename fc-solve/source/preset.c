@@ -486,7 +486,7 @@ int freecell_solver_apply_tests_order(
     return 0;
 }
 
-static int fcs_apply_preset_by_ptr(
+int freecell_solver_apply_preset_by_ptr(
     freecell_solver_instance_t * instance,
     const fcs_preset_t * preset_ptr
         )
@@ -633,5 +633,5 @@ int freecell_solver_apply_preset_by_name(
         return ret;
     }
     
-    return fcs_apply_preset_by_ptr(instance, preset_ptr);    
+    return freecell_solver_apply_preset_by_ptr(instance, preset_ptr);    
 }

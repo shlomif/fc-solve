@@ -32,6 +32,11 @@ struct fcs_preset_struct
 
 typedef struct fcs_preset_struct fcs_preset_t;
 
+extern int freecell_solver_apply_preset_by_ptr(
+    freecell_solver_instance_t * instance,
+    const fcs_preset_t * preset_ptr
+    );
+
 extern int freecell_solver_apply_preset_by_name(
     freecell_solver_instance_t * instance,
     const char * name
@@ -47,6 +52,8 @@ extern int freecell_solver_get_preset_by_name(
     const char * name,
     const fcs_preset_t * * preset_ptr
     );
+
+#define fcs_duplicate_preset(d,s) ((d) = (s))
 
 #ifdef __cplusplus
 }

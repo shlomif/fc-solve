@@ -66,6 +66,8 @@ struct fcs_user_struct
     char indirect_stacks_buffer[MAX_NUM_STACKS << 7];
 #endif
     char * state_string_copy;
+
+    fcs_preset_t common_preset;
 };
 
 typedef struct fcs_user_struct fcs_user_t;
@@ -74,11 +76,21 @@ static void user_initialize(
         fcs_user_t * ret
         )
 {
+    const fcs_preset_t * freecell_preset;
+    
+    freecell_solver_get_preset_by_name(
+        "freecell",
+        &freecell_preset
+        );
+
+    fcs_duplicate_preset(ret->common_preset, *freecell_preset);
+        
     ret->max_num_instances = 10;
     ret->instances_list = malloc(sizeof(ret->instances_list[0]) * ret->max_num_instances);
     ret->num_instances = 1;
     ret->current_instance_idx = 0;
     ret->instance = freecell_solver_alloc_instance();
+    freecell_solver_apply_preset_by_ptr(ret->instance, &(ret->common_preset));
     ret->instances_list[ret->current_instance_idx].instance = ret->instance;
     ret->instances_list[ret->current_instance_idx].ret = ret->ret = FCS_STATE_NOT_BEGAN_YET;
     ret->instances_list[ret->current_instance_idx].limit = -1;
@@ -90,7 +102,7 @@ static void user_initialize(
             );
 
     ret->state_string_copy = NULL;
-    ret->iterations_board_started_at = 0;    
+    ret->iterations_board_started_at = 0;
 }
 
 void * freecell_solver_user_alloc(void)
@@ -108,14 +120,40 @@ int freecell_solver_user_apply_preset(
     void * user_instance,
     const char * preset_name)
 {
+    const fcs_preset_t * new_preset_ptr;
     fcs_user_t * user;
+    int status;
+    int i;
 
     user = (fcs_user_t*)user_instance;
 
-    return freecell_solver_apply_preset_by_name(
-        user->instance,
-        preset_name
-        );
+    status = 
+        freecell_solver_get_preset_by_name(
+            preset_name,
+            &new_preset_ptr
+            );
+
+    if (status != FCS_PRESET_CODE_OK)
+    {
+        return status;
+    }
+
+    for(i = 0 ; i < user->num_instances ; i++)
+    {
+        status = freecell_solver_apply_preset_by_ptr(
+            user->instances_list[i].instance,
+            new_preset_ptr
+            );
+
+        if (status != FCS_PRESET_CODE_OK)
+        {
+            return status;
+        }
+    }
+
+    fcs_duplicate_preset(user->common_preset, *new_preset_ptr);
+
+    return FCS_PRESET_CODE_OK;
 }
 
 void freecell_solver_user_limit_iterations(
@@ -505,20 +543,31 @@ void freecell_solver_user_set_solving_method(
     user->soft_thread->method = method;
 }
 
+#define set_for_all_instances(what) \
+    { \
+    for(i = 0 ; i < user->num_instances ; i++)        \
+    {                    \
+        user->instances_list[i].instance->what = what;       \
+    }        \
+    user->common_preset.what = what;     \
+    }
+    
 int freecell_solver_user_set_num_freecells(
     void * user_instance,
     int freecells_num
     )
 {
     fcs_user_t * user;
+    int i;
 
     user = (fcs_user_t *)user_instance;
 
     if ((freecells_num < 0) || (freecells_num > MAX_NUM_FREECELLS))
-    {
-        return 1;
-    }
-    user->instance->freecells_num = freecells_num;
+    {     
+        return 1;     
+    }    
+
+    set_for_all_instances(freecells_num);
 
     return 0;
 }
@@ -529,6 +578,7 @@ int freecell_solver_user_set_num_stacks(
     )
 {
     fcs_user_t * user;
+    int i;
 
     user = (fcs_user_t *)user_instance;
 
@@ -536,7 +586,7 @@ int freecell_solver_user_set_num_stacks(
     {
         return 1;
     }
-    user->instance->stacks_num = stacks_num;
+    set_for_all_instances(stacks_num);
 
     return 0;
 }
@@ -547,6 +597,7 @@ int freecell_solver_user_set_num_decks(
     )
 {
     fcs_user_t * user;
+    int i;
 
     user = (fcs_user_t *)user_instance;
 
@@ -554,7 +605,7 @@ int freecell_solver_user_set_num_decks(
     {
         return 1;
     }
-    user->instance->decks_num = decks_num;
+    set_for_all_instances(decks_num);
 
     return 0;
 }
@@ -574,26 +625,30 @@ int freecell_solver_user_set_game(
 
     user = (fcs_user_t *)user_instance;
 
-    if ((freecells_num < 0) || (freecells_num > MAX_NUM_FREECELLS))
+    if (freecell_solver_user_set_num_freecells(user_instance, freecells_num))
+    {
         return 1;
-    if ((stacks_num < 1) || (stacks_num > MAX_NUM_STACKS))
+    }
+    if (freecell_solver_user_set_num_stacks(user_instance, stacks_num))
+    {
         return 2;
-    if ((decks_num < 1) || (decks_num > MAX_NUM_DECKS))
+    }
+    if (freecell_solver_user_set_num_decks(user_instance, decks_num))
+    {
         return 3;
-    if ((sequences_are_built_by < 0) || (sequences_are_built_by > 2))
+    }
+    if (freecell_solver_user_set_sequences_are_built_by_type(user_instance, sequences_are_built_by))
+    {
         return 4;
-    if ((unlimited_sequence_move < 0) || (unlimited_sequence_move > 1))
+    }
+    if (freecell_solver_user_set_sequence_move(user_instance, unlimited_sequence_move))
+    {
         return 5;
-    if ((empty_stacks_fill < 0) || (empty_stacks_fill > 2))
+    }
+    if (freecell_solver_user_set_empty_stacks_filled_by(user_instance, empty_stacks_fill))
+    {
         return 6;
-
-    user->instance->freecells_num = freecells_num;
-    user->instance->stacks_num = stacks_num;
-    user->instance->decks_num = decks_num;
-
-    user->instance->sequences_are_built_by = sequences_are_built_by;
-    user->instance->unlimited_sequence_move = unlimited_sequence_move;
-    user->instance->empty_stacks_fill = empty_stacks_fill;
+    }
 
     return 0;
 }
@@ -710,50 +765,53 @@ char * freecell_solver_user_get_invalid_state_error_string(
 
 int freecell_solver_user_set_sequences_are_built_by_type(
     void * user_instance,
-    int sbb
+    int sequences_are_built_by
     )
 {
     fcs_user_t * user;
+    int i;
 
     user = (fcs_user_t *)user_instance;
 
-    if ((sbb < 0) || (sbb > 2))
+    if ((sequences_are_built_by < 0) || (sequences_are_built_by > 2))
     {
         return 1;
     }
-    user->instance->sequences_are_built_by = sbb;
+    set_for_all_instances(sequences_are_built_by)
 
     return 0;
 }
 
 int freecell_solver_user_set_sequence_move(
     void * user_instance,
-    int unlimited
+    int unlimited_sequence_move
     )
 {
     fcs_user_t * user;
+    int i;
 
     user = (fcs_user_t *)user_instance;
 
-    user->instance->unlimited_sequence_move = (!!unlimited);
+    set_for_all_instances(unlimited_sequence_move);
 
     return 0;
 }
 
 int freecell_solver_user_set_empty_stacks_filled_by(
     void * user_instance,
-    int es_fill
+    int empty_stacks_fill
     )
 {
     fcs_user_t * user;
+    int i;
 
     user = (fcs_user_t *)user_instance;
 
-    if ((es_fill < 0) || (es_fill > 2))
+    if ((empty_stacks_fill < 0) || (empty_stacks_fill > 2))
     {
         return 1;
     }
-    user->instance->empty_stacks_fill = es_fill;
+    set_for_all_instances(empty_stacks_fill);
 
     return 0;
 }
@@ -1105,6 +1163,8 @@ int freecell_solver_user_next_instance(
     }
     user->current_instance_idx = user->num_instances-1;
     user->instance = freecell_solver_alloc_instance();
+
+    freecell_solver_apply_preset_by_ptr(user->instance, &(user->common_preset));
 
     /* 
      * Switch the soft_thread variable so it won't refer to the old
