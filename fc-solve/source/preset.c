@@ -18,24 +18,6 @@
 #include "dmalloc.h"
 #endif
 
-
-struct fcs_preset_struct
-{
-    int preset_id;
-    int freecells_num;
-    int stacks_num;
-    int decks_num;
-
-    int sequences_are_built_by;
-    int unlimited_sequence_move;
-    int empty_stacks_fill;
-
-    char tests_order[FCS_TESTS_NUM*3+1];
-    char allowed_tests[FCS_TESTS_NUM*3+1];
-};
-
-typedef struct fcs_preset_struct fcs_preset_t;
-
 enum fcs_presets_ids
 {
     FCS_PRESET_BAKERS_DOZEN,
@@ -504,15 +486,99 @@ int freecell_solver_apply_tests_order(
     return 0;
 }
 
-
-static int fcs_apply_preset(
+static int fcs_apply_preset_by_ptr(
     freecell_solver_instance_t * instance,
-    int preset_id
+    const fcs_preset_t * preset_ptr
+        )
+{
+    char * no_use;
+
+#define preset (*preset_ptr)
+    if (preset.freecells_num > MAX_NUM_FREECELLS)
+    {
+        return FCS_PRESET_CODE_FREECELLS_EXCEED_MAX;
+    }
+    if (preset.stacks_num > MAX_NUM_STACKS)
+    {
+        return FCS_PRESET_CODE_STACKS_EXCEED_MAX;
+    }
+    if (preset.decks_num > MAX_NUM_DECKS)
+    {
+        return FCS_PRESET_CODE_DECKS_EXCEED_MAX;
+    }
+    instance->freecells_num = preset.freecells_num;
+    instance->stacks_num = preset.stacks_num;
+    instance->decks_num = preset.decks_num;
+
+    instance->sequences_are_built_by = preset.sequences_are_built_by;
+    instance->unlimited_sequence_move = preset.unlimited_sequence_move;
+    instance->empty_stacks_fill = preset.empty_stacks_fill;
+
+    /* 
+     * This code makes sure that all the tests in all the existing
+     * soft threads are acceptable by the new preset.
+     * */
+
+    {
+        int ht_idx, st_idx;
+        for(ht_idx = 0; ht_idx < instance->num_hard_threads ; ht_idx++)
+        {
+            for(st_idx = 0; st_idx < instance->hard_threads[ht_idx]->num_soft_threads; st_idx++)
+            {
+                freecell_solver_soft_thread_t * soft_thread = instance->hard_threads[ht_idx]->soft_threads[st_idx];
+                
+                int num_valid_tests;
+                const char * s;
+
+                /* Check every test */
+
+                for(num_valid_tests=0;num_valid_tests < soft_thread->tests_order.num; num_valid_tests++)
+                {
+                    for(s = preset.allowed_tests;*s != '\0';s++)
+                    {
+                        /* Check if this test corresponds to this character */
+                        if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((freecell_solver_char_to_test_num(*s)%FCS_TESTS_NUM)))
+                        {
+                            break;
+                        }
+                    }
+                    /* If the end of the string was reached, it means
+                     * this test is unacceptable by this preset. */
+                    if (*s == '\0')
+                    {
+                        break;
+                    }
+                }
+                if (num_valid_tests < soft_thread->tests_order.num)
+                {
+                    freecell_solver_apply_tests_order(
+                            &(soft_thread->tests_order),
+                            preset.tests_order,
+                            &no_use);
+                }
+            }
+        }
+    }
+
+    /* Assign the master tests order */
+    
+    {
+        freecell_solver_apply_tests_order(
+            &(instance->instance_tests_order),
+            preset.tests_order,
+            &no_use);
+    }
+#undef preset
+    return FCS_PRESET_CODE_OK;
+}
+
+static int fcs_get_preset_by_id(
+    int preset_id,
+    const fcs_preset_t * * preset_ptr
     )
 {
     int preset_index;
     int num_elems;
-    char * no_use;
 
     num_elems = ( (int) (sizeof(fcs_presets)/sizeof(fcs_presets[0])));
 
@@ -520,81 +586,7 @@ static int fcs_apply_preset(
     {
         if (fcs_presets[preset_index].preset_id == preset_id)
         {
-#define preset (fcs_presets[preset_index])
-            if (preset.freecells_num > MAX_NUM_FREECELLS)
-            {
-                return FCS_PRESET_CODE_FREECELLS_EXCEED_MAX;
-            }
-            if (preset.stacks_num > MAX_NUM_STACKS)
-            {
-                return FCS_PRESET_CODE_STACKS_EXCEED_MAX;
-            }
-            if (preset.decks_num > MAX_NUM_DECKS)
-            {
-                return FCS_PRESET_CODE_DECKS_EXCEED_MAX;
-            }
-            instance->freecells_num = preset.freecells_num;
-            instance->stacks_num = preset.stacks_num;
-            instance->decks_num = preset.decks_num;
-
-            instance->sequences_are_built_by = preset.sequences_are_built_by;
-            instance->unlimited_sequence_move = preset.unlimited_sequence_move;
-            instance->empty_stacks_fill = preset.empty_stacks_fill;
-
-            /* 
-             * This code makes sure that all the tests in all the existing
-             * soft threads are acceptable by the new preset.
-             * */
-
-            {
-                int ht_idx, st_idx;
-                for(ht_idx = 0; ht_idx < instance->num_hard_threads ; ht_idx++)
-                {
-                    for(st_idx = 0; st_idx < instance->hard_threads[ht_idx]->num_soft_threads; st_idx++)
-                    {
-                        freecell_solver_soft_thread_t * soft_thread = instance->hard_threads[ht_idx]->soft_threads[st_idx];
-                        
-                        int num_valid_tests;
-                        const char * s;
-
-                        /* Check every test */
-
-                        for(num_valid_tests=0;num_valid_tests < soft_thread->tests_order.num; num_valid_tests++)
-                        {
-                            for(s = preset.allowed_tests;*s != '\0';s++)
-                            {
-                                /* Check if this test corresponds to this character */
-                                if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((freecell_solver_char_to_test_num(*s)%FCS_TESTS_NUM)))
-                                {
-                                    break;
-                                }
-                            }
-                            /* If the end of the string was reached, it means
-                             * this test is unacceptable by this preset. */
-                            if (*s == '\0')
-                            {
-                                break;
-                            }
-                        }
-                        if (num_valid_tests < soft_thread->tests_order.num)
-                        {
-                            freecell_solver_apply_tests_order(
-                                    &(soft_thread->tests_order),
-                                    preset.tests_order,
-                                    &no_use);
-                        }
-                    }
-                }
-            }
-
-            /* Assign the master tests order */
-            
-            {
-                freecell_solver_apply_tests_order(
-                    &(instance->instance_tests_order),
-                    preset.tests_order,
-                    &no_use);
-            }
+            *preset_ptr = &(fcs_presets[preset_index]);
             return FCS_PRESET_CODE_OK;
         }
     }
@@ -602,18 +594,44 @@ static int fcs_apply_preset(
     return FCS_PRESET_CODE_NOT_FOUND;
 }
 
+int freecell_solver_get_preset_by_name(
+    const char * name,
+    const fcs_preset_t * * preset_ptr
+    )
+{
+    int preset_id;
+    
+    preset_id = fcs_get_preset_id_by_name(name);
+    if (preset_id >= 0)
+    {
+        return fcs_get_preset_by_id(
+            preset_id,
+            preset_ptr
+            );
+    }
+    else
+    {
+        return FCS_PRESET_CODE_NOT_FOUND;
+    }    
+}
+
 int freecell_solver_apply_preset_by_name(
     freecell_solver_instance_t * instance,
     const char * name
     )
 {
-    int preset_id = fcs_get_preset_id_by_name(name);
-    if (preset_id >= 0)
+    int ret;
+    const fcs_preset_t * preset_ptr;
+    
+    ret = freecell_solver_get_preset_by_name(
+        name,
+        &preset_ptr
+        );
+
+    if (ret != FCS_PRESET_CODE_OK)
     {
-        return (fcs_apply_preset(instance, preset_id));
+        return ret;
     }
-    else
-    {
-        return FCS_PRESET_CODE_NOT_FOUND;
-    }
+    
+    return fcs_apply_preset_by_ptr(instance, preset_ptr);    
 }
