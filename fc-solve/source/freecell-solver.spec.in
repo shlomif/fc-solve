@@ -6,7 +6,7 @@ Group: Amusement/Games
 Source: http://vipe.technion.ac.il/~shlomif/freecell-solver/freecell-solver-%{version}.tar.gz
 Buildroot: %{_tmppath}/freecell-solver-root
 URL: http://vipe.technion.ac.il/~shlomif/freecell-solver/
-%define LIBVER 0.4.0
+%define LIBVER 0.5.0
 Serial: 7
 Requires: freecell-solver-libs = %{PACKAGE_VERSION}
 Summary: The Freecell Solver Executable
