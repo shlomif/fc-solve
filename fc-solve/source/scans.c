@@ -411,10 +411,13 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     int do_first_iteration;
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
     int freecells_num, stacks_num;
+    int dfs_max_depth;
 
     int tests_order_num = soft_thread->tests_order.num;
     int * tests_order_tests = soft_thread->tests_order.tests;
     int calc_real_depth = instance->calc_real_depth;
+    int is_a_complete_scan = soft_thread->is_a_complete_scan;
+    int soft_thread_id = soft_thread->id;
 
     freecells_num = instance->freecells_num;
     stacks_num = instance->stacks_num;
@@ -449,6 +452,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     calculate_real_depth(the_soft_dfs_info->state);
 #endif
 
+    dfs_max_depth = soft_thread->dfs_max_depth;
     /*
         The main loop.
     */
@@ -457,7 +461,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         /*
             Increase the "maximal" depth if it about to be exceeded.
         */
-        if (depth+1 >= soft_thread->dfs_max_depth)
+        if (depth+1 >= dfs_max_depth)
         {
             freecell_solver_increase_dfs_max_depth(soft_thread);
 
@@ -465,6 +469,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
              * be changed
              * */
             the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
+            dfs_max_depth = soft_thread->dfs_max_depth;
         }
 
         /* All the resultant states in the last test conducted were covered */
@@ -475,7 +480,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
             {
                 /* Backtrack to the previous depth. */
 
-                if (soft_thread->is_a_complete_scan)
+                if (is_a_complete_scan)
                 {
                     the_soft_dfs_info->state->visited |= FCS_VISITED_ALL_TESTS_DONE;
                     mark_as_dead_end(the_soft_dfs_info->state);
@@ -639,7 +644,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                  *
                  * Also, do not randomize if this is a pure soft-DFS scan.
                  * */
-                if (to_randomize && soft_thread->tests_order.tests[ the_soft_dfs_info->test_index-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
+                if (to_randomize && tests_order_tests[ the_soft_dfs_info->test_index-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
                 {
                     a = the_soft_dfs_info->derived_states_list.num_states-1;
                     while (a > 0)
@@ -683,7 +688,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 ) &&
                 (! is_scan_visited(
                     ptr_recurse_into_state_with_locations,
-                    soft_thread->id)
+                    soft_thread_id)
                 )
                )
             {

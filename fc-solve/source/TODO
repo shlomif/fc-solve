@@ -7,8 +7,6 @@ to work.
 
 * Document the new features.
 
-* Convert the soft thread switching to a switch statement.
-
 --- Non-pressing ---
 
 * Write an architecture document.

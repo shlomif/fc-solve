@@ -117,6 +117,9 @@ static void soft_thread_clean_soft_dfs(
     void * context
     )
 {
+    int num_solution_states;
+    int dfs_max_depth;
+    fcs_soft_dfs_stack_item_t * soft_dfs_info, * info_ptr;
     /* Check if a Soft-DFS-type scan was called in the first place */
     if (soft_thread->soft_dfs_info == NULL)
     {
@@ -124,24 +127,30 @@ static void soft_thread_clean_soft_dfs(
         return;
     }
 
+    soft_dfs_info = soft_thread->soft_dfs_info;
+    num_solution_states = soft_thread->num_solution_states;
+    dfs_max_depth = soft_thread->dfs_max_depth;
     /* De-allocate the Soft-DFS specific stacks */
     {
         int depth;
-        for(depth=0;depth<soft_thread->num_solution_states-1;depth++)
+        info_ptr = soft_dfs_info;
+        for(depth=0;depth<num_solution_states-1;depth++)
         {
-            free(soft_thread->soft_dfs_info[depth].derived_states_list.states);
-            free(soft_thread->soft_dfs_info[depth].derived_states_random_indexes);
+            free(info_ptr->derived_states_list.states);
+            free(info_ptr->derived_states_random_indexes);
+            info_ptr++;
         }
-        for(;depth<soft_thread->dfs_max_depth;depth++)
+        for(;depth<dfs_max_depth;depth++)
         {
-            if (soft_thread->soft_dfs_info[depth].derived_states_list.max_num_states)
+            if (info_ptr->derived_states_list.max_num_states)
             {
-                free(soft_thread->soft_dfs_info[depth].derived_states_list.states);
-                free(soft_thread->soft_dfs_info[depth].derived_states_random_indexes);
+                free(info_ptr->derived_states_list.states);
+                free(info_ptr->derived_states_random_indexes);                
             }
+            info_ptr++;            
         }
         
-        free(soft_thread->soft_dfs_info);
+        free(soft_dfs_info);
 
         soft_thread->soft_dfs_info = NULL;
 
@@ -1034,8 +1043,10 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
          * that will abstract a scan. But it's not critical since
          * I don't support user-defined scans.
          * */
-        if (soft_thread->method == FCS_METHOD_HARD_DFS)
+        switch(soft_thread->method)
         {
+            case FCS_METHOD_HARD_DFS:
+                
             if (! soft_thread->initialized)
             {
                 ret = freecell_solver_hard_dfs_solve_for_state(
@@ -1050,9 +1061,10 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
             {
                 ret = freecell_solver_hard_dfs_resume_solution(soft_thread, 0);
             }
-        }
-        else if (soft_thread->method == FCS_METHOD_SOFT_DFS)
-        {
+            break;
+
+            case FCS_METHOD_SOFT_DFS:
+
             if (! soft_thread->initialized)
             {
                 ret = 
@@ -1074,9 +1086,10 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                         0
                         );
             }
-        }
-        else if (soft_thread->method == FCS_METHOD_RANDOM_DFS)
-        {
+            break;
+
+            case FCS_METHOD_RANDOM_DFS:
+
             if (! soft_thread->initialized)
             {
                 ret = 
@@ -1099,10 +1112,12 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                         1
                         );
             }
-        }
-        else if ((soft_thread->method == FCS_METHOD_BFS) || (soft_thread->method == FCS_METHOD_A_STAR) || (soft_thread->method == FCS_METHOD_OPTIMIZE))
-        {
-            if (! soft_thread->initialized)
+            break;
+
+            case FCS_METHOD_BFS:
+            case FCS_METHOD_A_STAR:
+            case FCS_METHOD_OPTIMIZE:
+                        if (! soft_thread->initialized)
             {
                 if (soft_thread->method == FCS_METHOD_A_STAR)
                 {
@@ -1129,12 +1144,12 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                         1
                         );
             }
-        }
-        else
-        {
+            break;
+            
+            default:
             ret = FCS_STATE_IS_NOT_SOLVEABLE;
+            break;
         }
-
         /*
          * Determine how much iterations we still have left
          * */
