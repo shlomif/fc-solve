@@ -17,9 +17,8 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
 {
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * global_presetrc = NULL, * env_var_presetrc = NULL;
-    char * home_dir;
     char * path;
-    char * * presetrc_pathes[4] = {&home_dir_presetrc, &global_presetrc, &env_var_presetrc, NULL};
+    char * * presetrc_pathes[4] = {&env_var_presetrc, &home_dir_presetrc, &global_presetrc, NULL};
     int path_idx;
     char line[8192];
     FILE * f = NULL;
@@ -27,14 +26,20 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
     char * opened_files_dir = NULL;
     int read_next_preset = 0;
 
-    home_dir = getenv("HOME");
-    if (home_dir)
     {
-        home_dir_presetrc = malloc(strlen(home_dir) + 50);
-        sprintf(home_dir_presetrc, "%s/.freecell-solver/presetrc", home_dir);
+        char * home_dir;
+        home_dir = getenv("HOME");
+        if (home_dir)
+        {
+            home_dir_presetrc = malloc(strlen(home_dir) + 50);
+            sprintf(home_dir_presetrc, 
+                "%s/.freecell-solver/presetrc", home_dir
+                );
+        }
     }
+    env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
 
-    global_presetrc = strdup(FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
+    global_presetrc = (FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
 
     for(path_idx=0;(presetrc_pathes[path_idx] != NULL) ; path_idx++)
     {
