@@ -2,11 +2,15 @@
 
 <subject "Download Freecell Solver" />
 
+<define-tag linktofile>
+<a href="%0">%0</a>
+</define-tag>
+
 <h2>Latest Stable Versions</h2>
 <table border="1" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
 <tr>
 <td>
-<a href="freecell-solver-2.8.1.tar.gz">freecell-solver-2.8.1.tar.gz</a>
+<linktofile "freecell-solver-2.8.1.tar.gz" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpm -tb" on it.
@@ -16,7 +20,7 @@ Source Code. Can be built as an RPM package by running "rpm -tb" on it.
 
 <tr>
 <td>
-<a href="freecell-solver-2.8.1.win32.bin.zip">freecell-solver-2.6.3.win32.bin.zip</a>
+<linktofile "freecell-solver-2.8.1.win32.bin.zip" />
 </td>
 <td>
 Win32 Binaries
@@ -41,7 +45,7 @@ A link to an "apt"-able Debian Package.
 
 <tr>
 <td>
-<a href="freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz">freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz</a>
+<linktofile "freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz" />
 </td>
 <td>
 The Development version that will lead to Freecell Solver 2.8.0. 

@@ -1,6 +1,6 @@
 ##
 ##  wml::std::logo - Logo Insertion
-##  Copyright (c) 1997 Ralf S. Engelschall, All Rights Reserved. 
+##  Copyright (c) 1997-2001 Ralf S. Engelschall, All Rights Reserved. 
 ##
 
 #  The <preserve>/<restore> tags with multiple arguments require WML 2.0.3
@@ -27,8 +27,8 @@
     my $target = '<get-var target />';
     my $notag  = (qq|<get-var notag />| eq '' ? 1 : 0);
 
-    my $imgfile  = "$(WML_LOC_LIBDIR)/aux/logos/logo-$name.$ext";
-    my $infofile = "$(WML_LOC_LIBDIR)/aux/logos/logo-$name.info";
+    my $imgfile  = "$(WML_LOC_LIBDIR)/data/logos/logo-$name.$ext";
+    my $infofile = "$(WML_LOC_LIBDIR)/data/logos/logo-$name.info";
 
     #   make sure the logo exists
     if (! -f $imgfile or ! -f $infofile) {

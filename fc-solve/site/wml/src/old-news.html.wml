@@ -2,6 +2,103 @@
 
 <subject "Freecell Solver's Previous News Items" />
 
+<h3>29-Mar-2002</h3>
+
+<p>
+Freecell Solver 2.4.0 was released. The highlight of this release is the 
+ability for several scans to operate on the same state collection. This is
+done using a mechanism called "soft threads", which is switched in user-land 
+and does not require system multi-threading.
+</p>
+
+
+<h3>18-Feb-2002</h3>
+
+<p>
+Freecell Solver 2.2.0 came into the world today. This release features
+several improvements and fixes to the library's internals - it now resides
+solely in the "freecell_solver_" namespace, has a more robust state output, 
+and has a simplified and more modular scans' code. Aside from that, the 
+maintainance of the package became more integrated and now it is
+possible to build an RPM by typing executing rpm -ta on the archive.
+</p>
+
+<h3>19-Dec-2001</h3>
+
+<p>
+Freecell Solver 2.0.0 was released. This version features a lot of new 
+enhancements and additions:
+</p>
+
+<ol>
+<li>Added some presets for Beleaguered Castle, Citadel and Streets and
+Alleys.</li>
+<li>Re-factoring of the scans code to make it simpler.</li>
+<li>Added many functions to the programmer's library.</li>
+<li>fc-solve now uses it, so it is fully independant of the library it is
+linked against.</li>
+<li>Added a randomized DFS scan (with a user-defined seed).</li>
+<li>Win32 Makefile can now generate a working DLL</li>
+<li>Most importantly : a new initial digit! All hail the "2"!!</li>
+</ol>
+
+<h3>2-Oct-2001</h3>
+
+<p>
+Freecell Solver version 1.10.0 was released. This version can now solve
+deals of Simple Simon, as well as solving all the Freecell-like variants
+that it could before.
+</p>
+
+<h3>31-Aug-2001</h3>
+
+<p>
+Freecell Solver version 1.8.0 was released into the world. Its main
+highlight is its new building process based on GNU Autotools. Now, one
+can build a shared library, a static library and an executable across
+many UNIX variants out of the box.
+</p>
+
+<p>
+I also adapted the GNOME AisleRiot board generation program to generate
+the boards of the new Solitaire variants that were added to it and are 
+supported by Freecell Solver.
+</p>
+
+<h3>11-Apr-2001</h3>
+
+<p>
+Freecell Solver version 1.6.0 has been released. It supports a solution path
+optimization routine which enables it to generate solutions that contain a 
+smaller number of moves. Furthermore, there are some optimizations, so it 
+should be at least a little faster.
+</p>
+
+<p>
+Otherwise, a lot of comments were added to the code, to make it easier 
+for interested developers to understand it.
+</p>
+
+<h3>12-Feb-2001</h3>
+
+<p>
+I have set up a mailing-list for Freecell Solver. For the mailing-list 
+homepage and for subscription information consult the following page:
+</p>
+
+<p>
+<a href="http://groups.yahoo.com/group/fc-solve-discuss/">
+http://groups.yahoo.com/group/fc-solve-discuss/
+</a>
+</p>
+
+
+<p>
+If possible, send your questions or commentary there. If not
+you can still E-mail me (Shlomi Fish).
+</p>
+
+
 <h3>7-Feb-2001</h3>
 
 <p>

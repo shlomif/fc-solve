@@ -28,6 +28,10 @@ minutes on a Pentium III 667 MHz machine.
 Option to use atomic moves which guarantee an accurate verdict. 
 (non-atomic scans may report a false negative)
 </li>
+<li>
+Ability to read command line arguments from a file, or from a preset
+collection. Makes command lines much less verbose.
+</li>
 </ul>
 
 <h2>Development Features</h2>
