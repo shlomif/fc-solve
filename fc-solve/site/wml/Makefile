@@ -40,7 +40,7 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
 SUBDIRS_WITH_INDEXES = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
 
-SUBDIRS = $(SUBDIRS_WITH_INDEXES)
+SUBDIRS = $(SUBDIRS_WITH_INDEXES) $(D)/docs $(D)/arch_doc
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 

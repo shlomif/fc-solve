@@ -12,8 +12,12 @@
 <link rel="StyleSheet" href="$(ROOT)/style.css" type="text/css" />
 </head>
 <body>
+<define-tag rellink>
+<if <match "%0" "^http://" action="report" /> "%0" "$(ROOT)/%0" />
+</define-tag>
 
 <define-tag navbarlink>
+<set-var l="<rellink "%0" />" />
 <if
     ;;; Determine if %0 matches this document
     <ifeq "$(FILENAME)" "%0"
@@ -27,7 +31,8 @@
     ;;; If so - bolds the text
     "<b>%1</b>"
     ;;; If not - makes a hyperlink
-    "<a href="$(ROOT)/%0">%1</a>"
+    
+    "<a href="<get-var l />">%1</a>"
 />
 </define-tag>
 
@@ -59,6 +64,9 @@
 <li><br /></li>
 <li><navbarlink "book.html" "The Book" /></li>
 <li><navbarlink "old-news.html" "Old News Items" /></li>
+<li><br /></li>
+<li><navbarlink "docs/" "Documents" /></li>
+<li><navbarlink "http://fc-solve.berlios.de/michael_mann/" "Doxygen Browsing by Michael Mann" /></li>
 </ul>
 
 <define-tag validhtml>
