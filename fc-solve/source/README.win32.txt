@@ -1,5 +1,5 @@
 This package contains the Windows 95/98/NT/2000/ME binaries of 
-Freecell Solver 2.6.3. Read the file "README" for usage and other
+Freecell Solver 2.8.1. Read the file "README" for usage and other
 information.
 
 The vanilla Freecell Solver program (included here) is a text-mode
@@ -13,6 +13,10 @@ stacks and 11 initial cards per stack. If you'd like to increase
 those settings, you'll need to recompile it. It was compiled with a
 recursion stack size of 32 megabytes. (don't worry if you don't have
 so much memory in your computer - it will still run fine)
+
+To enable presets (which you should) copy the files under the 
+"To-Program-Files" sub-directory of this archive under the 
+"C:\Program Files\" directory of Windows.
 
 Freecell Solver's homepage is at the following URL:
 
