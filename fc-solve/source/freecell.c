@@ -77,7 +77,8 @@ int freecell_solver_sfs_move_top_stack_cards_to_founds(
     fcs_move_stack_t * moves;
     fcs_move_t temp_move;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     state_stacks_num = instance->stacks_num;
 
@@ -126,8 +127,6 @@ int freecell_solver_sfs_move_top_stack_cards_to_founds(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -158,7 +157,8 @@ int freecell_solver_sfs_move_freecell_cards_to_founds(
     fcs_move_t temp_move;
     int state_freecells_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     state_freecells_num = instance->freecells_num;
 
@@ -195,8 +195,6 @@ int freecell_solver_sfs_move_freecell_cards_to_founds(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -226,7 +224,8 @@ int freecell_solver_sfs_move_freecell_cards_on_top_of_stacks(
     int a,b;
     int state_freecells_num, state_stacks_num, sequences_are_built_by;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
@@ -361,8 +360,6 @@ int freecell_solver_sfs_move_freecell_cards_on_top_of_stacks(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -398,7 +395,8 @@ int freecell_solver_sfs_move_non_top_stack_cards_to_founds(
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
 
     /* Now let's check if a card that is under some other cards can be placed
@@ -503,8 +501,6 @@ int freecell_solver_sfs_move_non_top_stack_cards_to_founds(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -544,7 +540,8 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
     state_stacks_num = instance->stacks_num;
     sequences_are_built_by = instance->sequences_are_built_by;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
 
     /*
@@ -798,8 +795,6 @@ int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 #undef ds
@@ -839,7 +834,8 @@ int freecell_solver_sfs_move_stack_cards_to_different_stacks(
     state_stacks_num = instance->stacks_num;
     sequences_are_built_by = instance->sequences_are_built_by;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
 
     /* Now let's try to move a card from one stack to the other     *
@@ -1022,8 +1018,6 @@ int freecell_solver_sfs_move_stack_cards_to_different_stacks(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -1065,7 +1059,8 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
     state_stacks_num = instance->stacks_num;
     sequences_are_built_by = instance->sequences_are_built_by;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     max_sequence_len = calc_max_sequence_move(num_freecells, num_freestacks-1);
 
@@ -1262,8 +1257,6 @@ int freecell_solver_sfs_move_sequences_to_free_stacks(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -1303,7 +1296,8 @@ int freecell_solver_sfs_move_freecell_cards_to_empty_stack(
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for(fc=0;fc<state_freecells_num;fc++)
     {
@@ -1341,8 +1335,6 @@ int freecell_solver_sfs_move_freecell_cards_to_empty_stack(
             }
         }
     }
-
-    fcs_move_stack_destroy(moves);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
@@ -1382,7 +1374,8 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
     state_stacks_num = instance->stacks_num;
     sequences_are_built_by = instance->sequences_are_built_by;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
 
     /* This time try to move cards that are already on top of a parent to a different parent */
@@ -1563,8 +1556,6 @@ int freecell_solver_sfs_move_cards_to_a_different_parent(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -1603,7 +1594,8 @@ int freecell_solver_sfs_empty_stack_into_freecells(
     state_stacks_num = instance->stacks_num;
     state_freecells_num = instance->freecells_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
 
 
@@ -1647,8 +1639,6 @@ int freecell_solver_sfs_empty_stack_into_freecells(
             }
         }
     }
-
-    fcs_move_stack_destroy(moves);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 
@@ -1697,7 +1687,8 @@ int freecell_solver_sfs_yukon_move_card_to_parent(
     state_stacks_num = instance->stacks_num;
     sequences_are_built_by = instance->sequences_are_built_by;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for( ds=0 ; ds < state_stacks_num ; ds++ )
     {
@@ -1744,8 +1735,6 @@ int freecell_solver_sfs_yukon_move_card_to_parent(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -1780,7 +1769,8 @@ int freecell_solver_sfs_yukon_move_kings_to_empty_stack(
 
     state_stacks_num = instance->stacks_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
 
     for( stack=0 ; stack < state_stacks_num ; stack++)
@@ -1816,8 +1806,6 @@ int freecell_solver_sfs_yukon_move_kings_to_empty_stack(
             }
         }
     }
-
-    fcs_move_stack_destroy(moves);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
@@ -1856,7 +1844,8 @@ int freecell_solver_sfs_deal_gypsy_talon(
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     if (fcs_talon_pos(state) < fcs_talon_len(state))
     {
@@ -1872,8 +1861,6 @@ int freecell_solver_sfs_deal_gypsy_talon(
 
         sfs_check_state_end()
     }
-
-    fcs_move_stack_destroy(moves);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
@@ -1912,7 +1899,8 @@ int freecell_solver_sfs_get_card_from_klondike_talon(
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     /* Duplicate the talon and its parameters into talon_temp */
     talon_temp = malloc(sizeof(fcs_state_with_locations_t));
@@ -2020,8 +2008,6 @@ int freecell_solver_sfs_get_card_from_klondike_talon(
 #endif
     free(talon_temp->s.talon);
     free(talon_temp);
-
-    fcs_move_stack_destroy(moves);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 

@@ -96,9 +96,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
          * let's clean it. */                                             \
         fcs_clean_state(ptr_new_state_with_locations);                    \
         fcs_state_ia_release(hard_thread);                                \
-        /* We need to de-allocate the stack because that is done at       \
-         * the end of the function      */                                \
-        fcs_move_stack_destroy(moves);                                    \
         return check;                                                     \
     }                                                                     \
     else if (check == FCS_STATE_ALREADY_EXISTS)                           \
@@ -129,8 +126,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
             derived_states_list,                                          \
             ptr_new_state_with_locations                                  \
             );                                                            \
-        /* See above. */                                                  \
-        /*fcs_move_stack_alloc_into_var(moves);    */                     \
    }                                                                      \
 }
 

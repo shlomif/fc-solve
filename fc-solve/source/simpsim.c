@@ -78,7 +78,8 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_founds(
     state_stacks_num = instance->stacks_num;
 
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -126,8 +127,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_founds(
             }
         }
     }
-
-    fcs_move_stack_destroy(moves);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
@@ -183,7 +182,8 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent(
     state_stacks_num = instance->stacks_num;
 
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -254,8 +254,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent(
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -299,7 +297,8 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
     int state_stacks_num;
     state_stacks_num = instance->stacks_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -364,8 +363,6 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
 
         }
     }
-
-    fcs_move_stack_destroy(moves);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
@@ -432,7 +429,8 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_some_card
     int state_stacks_num;
     state_stacks_num = instance->stacks_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -644,8 +642,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_some_card
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -681,7 +677,8 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
     int state_stacks_num;
     state_stacks_num = instance->stacks_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -883,8 +880,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -951,7 +946,8 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
     int state_stacks_num;
     state_stacks_num = instance->stacks_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -1200,8 +1196,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -1265,7 +1259,8 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_w
     int state_stacks_num;
     state_stacks_num = instance->stacks_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -1443,8 +1438,6 @@ int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_w
         }
     }
 
-    fcs_move_stack_destroy(moves);
-
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -1480,7 +1473,8 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
     int state_stacks_num;
     state_stacks_num = instance->stacks_num;
 
-    fcs_move_stack_alloc_into_var(moves);
+    moves = hard_thread->reusable_move_stack;
+    fcs_move_stack_reset(moves);
 
     for(stack=0 ; stack < state_stacks_num ; stack++)
     {
@@ -1720,8 +1714,6 @@ int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
             }
         }
     }
-
-    fcs_move_stack_destroy(moves);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }

@@ -442,7 +442,17 @@ struct freecell_solver_hard_thread_struct
     fcs_compact_allocator_t * stacks_allocator;
 #endif
 
+    /* 
+     * This is a compact memory allocator for the move stacks associated
+     * with the states in the states collection.
+     * */
     fcs_compact_allocator_t * move_stacks_allocator;
+
+    /* 
+     * This is a move stack that is used and re-used by the 
+     * tests functions of this hard thread 
+     * */
+    fcs_move_stack_t * reusable_move_stack;
 };
 
 struct fcs_soft_dfs_stack_item_struct

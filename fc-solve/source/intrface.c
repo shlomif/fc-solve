@@ -301,6 +301,8 @@ static freecell_solver_hard_thread_t * alloc_hard_thread(
     hard_thread->move_stacks_allocator =
         freecell_solver_compact_allocator_new();
 
+    fcs_move_stack_alloc_into_var(hard_thread->reusable_move_stack);
+
     return hard_thread;
 }
 
@@ -1337,6 +1339,8 @@ void freecell_solver_finish_instance(
         freecell_solver_compact_allocator_finish(instance->hard_threads[ht_idx]->stacks_allocator);
 #endif
         freecell_solver_compact_allocator_finish(instance->hard_threads[ht_idx]->move_stacks_allocator);
+
+        fcs_move_stack_destroy(instance->hard_threads[ht_idx]->reusable_move_stack);
     }
 
     if (instance->optimization_thread)
