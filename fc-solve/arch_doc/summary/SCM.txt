@@ -1,0 +1,24 @@
+Game Presets Configuration:
+---------------------------
+
+The info for generating the game presets lie in the file gen_presets.pl. It
+uses data structure inheritance to determine the exact parameters to be 
+included in each preset. Its output should later be incorporated into presets.c
+
+Maintaining a list of Modules:
+------------------------------
+
+The file gen_makefile.pl maintains a list of modules and headers across
+all makefiles that are distributed as part of Freecell Solver. 
+
+Generating the site:
+--------------------
+
+The site lies in the sub-directory of fc-solve/site/wml in the CVS and is 
+generated using GNU Make, WebMetaLanguage and CVS glue. If a development
+version is present, it is checked out of the CVS, packed into an archive,
+and placed on the site with a link in the downloads page.
+
+Both the vipe.technion.ac.il main site and BerliOS mirror are generated from
+the same makefile and both are uploaded to their places using rsync.
+
