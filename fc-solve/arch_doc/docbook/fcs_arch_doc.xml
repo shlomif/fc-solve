@@ -1,0 +1,78 @@
+<?xml version='1.0' ?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"/usr/share/sgml/docbook/xml-dtd-4.1.2/docbookx.dtd"[
+
+<!ENTITY fcs "Freecell Solver">
+]>
+
+<book id="index">
+    <bookinfo>
+        <title>&fcs; - Architecture Document</title>
+
+        <authorgroup>
+            <author>
+                <firstname>Shlomi</firstname>
+                <surname>Fish</surname>
+                <affiliation>
+                    <address>
+                        <email>shlomif@vipe.technion.ac.il</email>
+                    </address>
+                </affiliation>
+            </author>
+        </authorgroup>
+
+        <copyright>
+            <year>2002</year>
+            <holder>Shlomi Fish</holder>
+        </copyright>
+
+        <legalnotice>
+            <!-- Ci vis pacem -->
+            <para>
+                <!-- belum. ;-) -->
+                This document is copyrighted by Shlomi Fish 
+                under the terms of the Open Publication License version 2.0 or
+                greater.
+            </para>
+        </legalnotice>
+    </bookinfo>
+
+    <chapter id="introduction">
+        <title>Introduction</title>
+        <para>
+            This is the architecture document of &fcs;. Its purpose is to
+            serve as an introduction to the code, so future hackers can 
+            understand it and work on it.
+        </para>
+        <para>
+            This document does not aim to cover every detail of the 
+            application. Such details are supposed to be documented within
+            the comments of the code. (let me know if there is something 
+            there you don't understand, and I'll add a comment) Instead,
+            it should provide an overview of the code and cover the main
+            caveats one would encounter when trying to understand it.
+        </para>
+        <para>
+            This document covers the &fcs; 2.8.x architecture, and will
+            be updated to future versions.
+        </para>
+    </chapter>
+</book>
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:4
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->
