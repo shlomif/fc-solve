@@ -334,33 +334,13 @@ void freecell_solver_hash_free_with_callback(
         }
     }
 
-    freecell_solver_compact_allocator_finish(hash->allocator);
-
-    free(hash->entries);
-
-    free(hash);
+    freecell_solver_hash_free(hash);
 }
 
 void freecell_solver_hash_free(
     SFO_hash_t * hash
     )
 {
-    int i;
-    SFO_hash_symlink_item_t * item, * next_item;
-
-
-    for(i=0;i<hash->size;i++)
-    {
-        item = hash->entries[i].first_item;
-        while (item != NULL)
-        {
-            next_item = item->next;
-
-            free(item);
-            item = next_item;
-        }
-    }
-
     freecell_solver_compact_allocator_finish(hash->allocator);
 
     free(hash->entries);
