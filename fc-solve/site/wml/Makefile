@@ -36,9 +36,9 @@ ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
 INCLUDES_PROTO = std/logo.wml
 INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
-all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS)
-
 RAW_SUBDIRS = $(D)/win32_build
+
+all : $(SUBDIRS) $(HTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS)
 
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \
