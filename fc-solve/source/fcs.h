@@ -17,6 +17,7 @@ extern "C" {
 #include "config.h"
 #include "state.h"
 #include "move.h"
+#include "ds_order.h"
 #include "fcs_enums.h"
 
 #include "rand.h"
@@ -119,6 +120,8 @@ struct fcs_tests_order_struct
 {
     int num;
     int * tests;
+    fcs_derived_states_order_t * * tests_orders_pre;
+    fcs_derived_states_order_instance_t * * tests_orders;
     int max_num;
 };
 
@@ -671,8 +674,6 @@ struct freecell_solver_soft_thread_struct
      * */
     char * name;
 };
-
-typedef struct freecell_solver_soft_thread_struct freecell_solver_soft_thread_t;
 
 
 #define FCS_SOFT_DFS_STATES_TO_CHECK_GROW_BY 32

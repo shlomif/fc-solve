@@ -101,6 +101,10 @@ struct fcs_derived_states_list_struct
 
 typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
 
+struct freecell_solver_soft_thread_struct;
+
+typedef struct freecell_solver_soft_thread_struct freecell_solver_soft_thread_t;
+
 #if 0
 extern void fcs_derived_states_list_add_state(
     fcs_derived_states_list_t * list,
