@@ -70,7 +70,7 @@ int freecell_solver_hard_dfs_solve_for_state(
     freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
     freecell_solver_instance_t * instance = hard_thread->instance;
 
-    int a;
+    int a, test_idx;
     int check;
 
     int num_freestacks, num_freecells;
@@ -159,14 +159,21 @@ int freecell_solver_hard_dfs_solve_for_state(
 
     calculate_real_depth(ptr_state_with_locations);
 
-    for(a=0 ;
-        a < soft_thread->tests_order.num;
-        a++)
+    for(test_idx=0 ;
+        test_idx < soft_thread->tests_order.num;
+        test_idx++)
     {
+        {
+            int num_states;
+            fcs_derived_state_t * derived_states;
+
+            fcs_derived_states_list_free_move_stacks(&derived);
+        }
+        
         derived.num_states = 0;
 
         check =
-            freecell_solver_sfs_tests[soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
+            freecell_solver_sfs_tests[soft_thread->tests_order.tests[test_idx] & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
                 soft_thread,
                 ptr_state_with_locations,
                 num_freestacks,
@@ -258,6 +265,10 @@ int freecell_solver_hard_dfs_solve_for_state(
 free_derived:
     if (derived.states != NULL)
     {
+        int num_states;
+        fcs_derived_state_t * derived_states;
+
+        fcs_derived_states_list_free_move_stacks(&derived);
         free(derived.states);
     }
 
