@@ -23,11 +23,9 @@ libfreecell_solver_la_LDFLAGS = -version-info 4:0:4
 libfreecell_solverinclude_HEADERS = fcs_user.h fcs_enums.h fcs_move.h fcs_cl.h
 
 fc-solve.6: fc-solve.pod ver.txt
-	cat $< | sed 's/FCS_VERSION/@VERSION@/g' | pod2man --section=6 --center="Freecell Solver" --date="2001/06/09" --release="Freecell Solver @VERSION@" > $@
-
-freecell-solver-range-parallel-solve.6: freecell-solver-range-parallel-solve.pod ver.txt
-	cat $< | sed 's/FCS_VERSION/@VERSION@/g' | pod2man --section=6 --center="Freecell Solver" --date="2001/06/09" --release="Freecell Solver @VERSION@" > $@
-
+	cat $< | sed 's/FCS_VERSION/@VERSION@/g' > fc-solve.pm 
+	pod2man --section=6 --center="Freecell Solver" --date="2001/06/09" --release="Freecell Solver @VERSION@" fc-solve.pm > $@
+	rm -f fc-solve.pm
 
 noinst_SCRIPTS = Makefile.win32
 

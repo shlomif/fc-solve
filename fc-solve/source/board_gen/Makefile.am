@@ -17,7 +17,9 @@ pi_make_microsoft_freecell_board_SOURCES = pi_make_microsoft_freecell_board.c
 EXTRA_DIST += make_pysol_freecell_board.py
 
 fc-solve-board_gen.6: fc-solve-board_gen.pod ../ver.txt
-	cat $< | sed 's/FCS_VERSION/@VERSION@/g' | pod2man --section=6 --center="board_gen" --date="2001/07/07" --release="board_gen @VERSION@" > $@
+	cat $< | sed 's/FCS_VERSION/@VERSION@/g' > fc-solve.pod
+	pod2man --section=6 --center="board_gen" --date="2001/07/07" --release="board_gen @VERSION@" fc-solve.pod > $@
+	rm -f fc-solve.pod
 
 EXTRA_DIST += fc-solve-board_gen.pod fc-solve-board_gen.6
 
