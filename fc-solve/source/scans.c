@@ -408,6 +408,9 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     int do_first_iteration;
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
 
+    int tests_order_num = soft_thread->tests_order.num;
+    int * tests_order_tests = soft_thread->tests_order.tests;
+
     if (!resume)
     {
         /*
@@ -456,7 +459,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         if (the_soft_dfs_info->current_state_index == the_soft_dfs_info->derived_states_list.num_states)
         {
 
-            if (the_soft_dfs_info->test_index >= soft_thread->tests_order.num)
+            if (the_soft_dfs_info->test_index >= tests_order_num)
             {
                 /* Backtrack to the previous depth. */
 
@@ -538,7 +541,7 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
             while (
                     /* Make sure we do not exceed the number of tests */
-                    (the_soft_dfs_info->test_index < soft_thread->tests_order.num) &&
+                    (the_soft_dfs_info->test_index < tests_order_num) &&
                     (
                         /* Always do the first test */
                         do_first_iteration ||
@@ -546,16 +549,16 @@ static int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                             /* This is a randomized scan. Else - quit after the first iteration */
                             to_randomize &&
                             /* We are still on a random group */
-                            (soft_thread->tests_order.tests[ the_soft_dfs_info->test_index ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
+                            (tests_order_tests[ the_soft_dfs_info->test_index ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
                             /* A new random group did not start */
-                            (! (soft_thread->tests_order.tests[ the_soft_dfs_info->test_index ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
+                            (! (tests_order_tests[ the_soft_dfs_info->test_index ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
                          )
                     )
                  )
             {
                 do_first_iteration = 0;
 
-                check = freecell_solver_sfs_tests[soft_thread->tests_order.tests[
+                check = freecell_solver_sfs_tests[tests_order_tests[
                         the_soft_dfs_info->test_index
                     ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                         soft_thread,
@@ -929,10 +932,15 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
 
     int method;
     int freecells_num, stacks_num;
+    int tests_order_num;
+    int * tests_order_tests;
 
     derived.num_states = 0;
     derived.max_num_states = 0;
     derived.states = NULL;
+
+    tests_order_num = soft_thread->tests_order.num;
+    tests_order_tests = soft_thread->tests_order.tests;
 
     if (!resume)
     {
@@ -1039,10 +1047,10 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
         */
         derived.num_states = 0;
         for(a=0 ;
-            a < soft_thread->tests_order.num;
+            a < tests_order_num;
             a++)
         {
-            check = freecell_solver_sfs_tests[soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
+            check = freecell_solver_sfs_tests[tests_order_tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                     soft_thread,
                     ptr_state_with_locations,
                     ptr_state_with_locations->depth,
