@@ -60,7 +60,7 @@
 
 <table summary="Layout Table: The first cell contains a navigation bar, the second the main page" border="0" width="99%">
 <tr>
-<td valign="top" class="navbar" style="width:20%"> <!-- width="20%"> -->
+<td valign="top" class="navbar" style="width:20%">
 <a href="$(ROOT)/">Main</a><br />
 <a href="$(ROOT)/download.html">Downloads</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="$(ROOT)/don_woods.html">Don Woods' Solver</a><br />

@@ -57,13 +57,13 @@ $(ARC_DOCS) :: $(D)/% : src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
 	tar -xOzf $< freecell-solver-$(RECENT_STABLE_VERSION)/$(notdir $@) > $@
 
 src/win32_build/dynamic/fcs.zip: src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
-	mkdir t    
+	mkdir t
 	cd t && \
 	tar -xzvf ../$<; \
 	cd free* &&       \
 	zip -r ../../$@ * ; \
 	cd ../../ && \
-	rm -fr t        
+	rm -fr t
 
 $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
 	cd src && wml $(WML_FLAGS) -DFILENAME="$(notdir $@)" $(notdir $<) > $@
@@ -75,8 +75,10 @@ $(RAW_SUBDIRS) :: $(D)/% : src/%
 	rm -fr $@
 	cp -r $< $@
 
+.PHONY: 
+
 # Build index.html pages for the appropriate sub-directories.
-$(INDEXES) :: $(D)/%/index.html : %
-	MYPATH=`pwd` (cd $< && perl "$$MYPATH"/gen_index.pl $@)
+$(INDEXES) :: $(D)/%/index.html : src/% gen_index.pl
+	perl gen_index.pl $< $@
 
 
