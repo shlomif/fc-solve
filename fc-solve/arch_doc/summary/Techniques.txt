@@ -106,3 +106,14 @@ be called. Afterwards freecell_solver_solve_instance() should be called for
 the first time, and freecell_solver_resume_instance afterwards. (these 
 functions solve until they reach a limit of iterations number.)
 
+If one would like to use the instance to solve another board, it is possible
+to recycle it by calling freecell_solver_recycle_instance. This will keep
+its configuration but free all its associated resources, and thus will not
+require parsing the command line again.
+
+The function that calls the actual scans is run_hard_thread(), which is 
+called from within freecell_solver_resume_instance().
+
+
+
+

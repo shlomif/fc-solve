@@ -22,3 +22,40 @@ and placed on the site with a link in the downloads page.
 Both the vipe.technion.ac.il main site and BerliOS mirror are generated from
 the same makefile and both are uploaded to their places using rsync.
 
+The site generation process also generates a zip archive of the latest stable
+version so it can be used to automatically compile the Win32 binary.
+
+freecell-solver-config:
+-----------------------
+
+The autoconf process creates a freecell-solver-config program that can be
+used as an aid in programs wishing to compile and link against Freecell 
+Solver. It is generated from freecell-solver-config.in by the configure
+script and is installed system-wide.
+
+The Win32 Binary:
+-----------------
+
+The Win32 binary is compiled by a batch file placed on the site and found in
+the CVS in the directory:
+
+http://cvs.berlios.de/cgi-bin/viewcvs.cgi/fc-solve/fc-solve/site/wml/src/win32_build/bootstrap/build.bat
+
+This script should be placed on a Windows NT 4.0 and above computer that has
+the Microsoft Visual Studio environment installed. It should be placed in
+a directory containing only it and the curl.exe executable from the same
+location.
+
+http://vipe.technion.ac.il/~shlomif/freecell-solver/win32_build/
+
+What it does is the following:
+
+1. Download zip.exe and unzip.exe from the static sub-dir.
+2. Download fcs.zip from the dynamic sub-dir.
+3. Unpack fcs.zip.
+4. Determine its version number and record it in a variable.
+5. Compile Freecell Solver.
+6. Place the relevant files in a directory structure by copying them.
+7. Create a zip archive of them.
+
+
