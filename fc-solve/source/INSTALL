@@ -60,7 +60,7 @@ Freecell Solver:
 
 2. Add all the C files except "test_multi_parallel.c" to the project.
 
-3. Copy the file config.h.win32 to config.h.
+3. Copy the file config.h.win32 to config.h and prefix.h.win32 to prefix.h.
 
 4. Build.
 
