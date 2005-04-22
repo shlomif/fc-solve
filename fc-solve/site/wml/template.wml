@@ -1,6 +1,3 @@
-# #use wml::des::navbar
-#include 'std/logo.wml'
-
 <define-tag linktofile>
 <a href="%0">%0</a>
 </define-tag>
@@ -107,7 +104,9 @@
        alt="Valid CSS!" /></a>
 </p>
 <p>
-<logo />
+<a href="http://thewml.org/" title="Website META Language" class="bless"><img 
+src="$(ROOT)/images/logo-wml.png" alt="Website Meta Language" class="bless" 
+width="100" height="50" /></a>
 </p>
 </define-tag>
 
