@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver" />
+<latemp_subject "Freecell Solver" />
 
 <h3><a href="download.html">Download Freecell Solver!</a></h3>
 

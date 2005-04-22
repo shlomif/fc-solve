@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver Links" />
+<latemp_subject "Freecell Solver Links" />
 
 <h2>Resources</h2>
 

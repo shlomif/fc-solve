@@ -54,13 +54,20 @@ $(DEVEL_ARC) :
 	./put-recent-devel-version.sh $(DEVEL_ARC)
 
 $(D)/download.html :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES) $(DEVEL_ARC)
-	(cd src && wml $(WML_FLAGS) -DFILENAME="$(notdir $@)" $(notdir $<)) > $@
+	(cd src && wml $(WML_FLAGS) -DLATEMP_FILENAME="$(notdir $@)" $(notdir $<)) > $@
 	
 else
 	RECENT_DEVEL_VERSION = ""
 	DEVEL_ARC = 
 endif
-WML_FLAGS += --passoption=2,-X -DWITH_DEVEL_VERSION=$(WITH_DEVEL_VERSION) -DRECENT_DEVEL_VERSION=$(RECENT_DEVEL_VERSION)
+
+LATEMP_WML_INCLUDE_PATH =$(shell latemp-config --wml-include-path)
+
+WML_FLAGS += --passoption=2,-X3074 \
+	-DWITH_DEVEL_VERSION=$(WITH_DEVEL_VERSION) \
+	-DRECENT_DEVEL_VERSION=$(RECENT_DEVEL_VERSION) \
+	-DLATEMP_SERVER=fc-solve -DLATEMP_THEME=perl-begin-1 \
+	-I$(LATEMP_WML_INCLUDE_PATH) --passoption=3,-I../lib/
 
 dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC)
 
@@ -84,7 +91,7 @@ src/win32_build/dynamic/fcs.zip: src/freecell-solver-$(RECENT_STABLE_VERSION).ta
 	rm -fr t
 
 $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
-	(cd src && wml $(WML_FLAGS) -DFILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<)) > $@
+	(cd src && wml $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<)) > $@
 
 $(IMAGES) :: $(D)/% : src/%
 	cp -f $< $@

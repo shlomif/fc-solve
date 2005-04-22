@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver's Future Directions" />
+<latemp_subject "Freecell Solver's Future Directions" />
 
 <p>
 While Freecell Solver is a fairly usable package that satisfies the needs of 

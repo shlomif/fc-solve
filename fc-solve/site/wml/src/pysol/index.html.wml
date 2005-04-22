@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver PySol Integration"  />
+<latemp_subject "Freecell Solver PySol Integration"  />
 
 <h2>Introduction</h2>
 

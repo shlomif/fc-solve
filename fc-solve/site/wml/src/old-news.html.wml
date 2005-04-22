@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver's Previous News Items" />
+<latemp_subject "Freecell Solver's Previous News Items" />
 
 <h3>29-Mar-2002</h3>
 

@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Freecell Solver - Documentation" />
+<latemp_subject "Freecell Solver - Documentation" />
 
 <h2>Documents of the Code</h2>
 

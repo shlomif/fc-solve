@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<subject "Don Woods' Freecell Solver" />
+<latemp_subject "Don Woods' Freecell Solver" />
 
 <p>
 <a href="don_woods_solver.zip">don_woods_solver.zip</a>
