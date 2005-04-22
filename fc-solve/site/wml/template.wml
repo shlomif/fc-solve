@@ -122,7 +122,7 @@
 </tr>
 </table>
 <p>
-<a href="http://shlomif.il.eu.org/"><img src="$(BERLIOS:*.)./images/bk2hp.gif" alt="Back to my Homepage" style="border:0" /></a>
+<a href="http://www.shlomifish.org/"><img src="$(ROOT)/images/bk2hp.png" alt="Back to my Homepage" style="border:0" /></a>
 </p>
 
 </body>

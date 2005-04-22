@@ -1,17 +1,18 @@
 #!/bin/sh
 
-export CVSROOT=":pserver:shlomif@cvs.fc-solve.berlios.de:/cvsroot/fc-solve"
-export CVS_RSH=ssh
+export SVNROOT="svn+ssh://svn.berlios.de/svnroot/repos/fc-solve"
 
 if [ ! -e t ] ; then
     mkdir t
     cd t
     rm -fr *
-    cvs checkout -r LATEST_DEVEL fc-solve/source > /dev/null 2>&1 
+    svn checkout "$SVNROOT"/tags/latest-devel/fc-solve/source > /dev/null 2>&1 
+    mkdir fc-solve
+    mv source fc-solve/
     cat fc-solve/source/ver.txt
 else
     cd t/fc-solve/source
-    cvs update > /dev/null 2>&1
+    svn update > /dev/null 2>&1
     cat ver.txt
 fi
 

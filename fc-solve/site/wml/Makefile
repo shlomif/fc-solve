@@ -18,7 +18,7 @@ else
 endif
 #D = /home/httpd/html/ip-noise
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css *.png pysol/*.tar.gz pysol/*.diff docs/*.txt))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css *.png pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
@@ -32,7 +32,7 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
 SUBDIRS_WITH_INDEXES = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
 
-SUBDIRS = $(SUBDIRS_WITH_INDEXES) $(D)/docs $(D)/arch_doc $(D)/pysol
+SUBDIRS = $(D) $(SUBDIRS_WITH_INDEXES) $(D)/docs $(D)/arch_doc $(D)/pysol $(D)/images
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
