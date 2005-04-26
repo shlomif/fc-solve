@@ -13,7 +13,7 @@ make_gnome_freecell_board_SOURCES = make_gnome_freecell_board.c
 make_aisleriot_freecell_board_SOURCES = make_aisleriot_freecell_board.c
 pi_make_microsoft_freecell_board_SOURCES = pi_make_microsoft_freecell_board.c
 
-EXTRA_DIST += make_pysol_freecell_board.py
+EXTRA_DIST = make_pysol_freecell_board.py
 
 fc-solve-board_gen.6: fc-solve-board_gen.pod ../ver.txt
 	cat $< | sed 's/FCS_VERSION/@VERSION@/g' > fc-solve.pod

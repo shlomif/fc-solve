@@ -12,7 +12,7 @@ bin_SCRIPTS=freecell-solver-config
 BUILT_SOURCES=freecell-solver-config
 freecell-solver-config: freecell-solver-config.in
 
-EXTRA_DIST += fc-solve.pod fc-solve.6
+EXTRA_DIST = fc-solve.pod fc-solve.6
 
 man_MANS = fc-solve.6
 
