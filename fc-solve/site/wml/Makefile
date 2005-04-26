@@ -61,13 +61,13 @@ else
 	DEVEL_ARC = 
 endif
 
-LATEMP_WML_INCLUDE_PATH =$(shell latemp-config --wml-include-path)
+LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags)
 
 WML_FLAGS += --passoption=2,-X3074 \
 	-DWITH_DEVEL_VERSION=$(WITH_DEVEL_VERSION) \
 	-DRECENT_DEVEL_VERSION=$(RECENT_DEVEL_VERSION) \
 	-DLATEMP_SERVER=fc-solve -DLATEMP_THEME=perl-begin-1 \
-	-I$(LATEMP_WML_INCLUDE_PATH) --passoption=3,-I../lib/
+	$(LATEMP_WML_FLAGS) --passoption=3,-I../lib/
 
 dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC)
 
