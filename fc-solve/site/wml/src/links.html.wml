@@ -255,6 +255,14 @@ Solver</a> - a solver written in Java that does not use back-tracking and is
 still able to win 85% of the games.
 </p>
 
+<p>
+<a href="http://www.numin8r.us/programs/">Gary Campbell's FCELL.COM</a> - 
+a solver for Freecell written in x86 assembler for DOS and compatible
+environments. Reportedly very fast and uses some interesting techniques.
+See <a href="http://groups.yahoo.com/group/fc-solve-discuss/messages/685">some
+discussion of it</a> in the fc-solve-discuss mailing list.
+</p>
+
 <h2>Reviews of Freecell Solver</h2>
 
 <p>
