@@ -47,44 +47,48 @@ else
 }
 my @chosen_scans = ();
 
-my $total = 0;
-my $q = 0;
+my $total_boards_solved = 0;
+my $iters_quota = 0;
 my $total_iters = 0;
 
 foreach my $q_more (@quotas)
 {
-    $q += $q_more;
-    my $num_solved = sumover(($scans_data <= $q) & ($scans_data > 0));
-    my ($min, $max, $min_ind, $max_ind) = minmaximum($num_solved);
+    $iters_quota += $q_more;
+    my (undef, $num_solved_in_iter, undef, $selected_scan_idx) =
+        minmaximum(
+            sumover(($scans_data <= $iters_quota) & ($scans_data > 0))
+          );
 
     # If no boards were solved, then try with a larger quota
-    if ($max == 0)
+    if ($num_solved_in_iter == 0)
     {
         next;
     }
 
-    push @chosen_scans, { 'q' => $q, 'ind' => $max_ind };
-    $selected_scans[$max_ind]->{'used'} = 1;
-    $total += $max;
-    print "$q \@ $max_ind ($total solved)\n";
-    my $this_scan_result = ($scans_data->slice(":,$max_ind"));
-    $total_iters += sum((($this_scan_result <= $q) & ($this_scan_result > 0)) * $this_scan_result);
-    my $indexes = which(($this_scan_result > $q) | ($this_scan_result < 0));
+    push @chosen_scans, { 'q' => $iters_quota, 'ind' => $selected_scan_idx };
+    $selected_scans[$selected_scan_idx]->{'used'} = 1;
+
+    $total_boards_solved += $num_solved_in_iter;
+    print "$iters_quota \@ $selected_scan_idx ($total_boards_solved solved)\n";
+
+    my $this_scan_result = ($scans_data->slice(":,$selected_scan_idx"));
+    $total_iters += sum((($this_scan_result <= $iters_quota) & ($this_scan_result > 0)) * $this_scan_result);
+    my $indexes = which(($this_scan_result > $iters_quota) | ($this_scan_result < 0));
     
-    $total_iters += ($indexes->nelem() * $q);
-    if ($total == $num_boards)
+    $total_iters += ($indexes->nelem() * $iters_quota);
+    if ($total_boards_solved == $num_boards)
     {
         print "Solved all!\n";
         last;
     }    
     
     $scans_data = $scans_data->dice($indexes, "X")->copy();
-    $this_scan_result = $scans_data->slice(":,$max_ind")->copy();
-    #$scans_data->slice(":,$max_ind") *= 0;
-    $scans_data->slice(":,$max_ind") .= (($this_scan_result - $q) * ($this_scan_result > 0)) +
+    $this_scan_result = $scans_data->slice(":,$selected_scan_idx")->copy();
+    #$scans_data->slice(":,$selected_scan_idx") *= 0;
+    $scans_data->slice(":,$selected_scan_idx") .= (($this_scan_result - $iters_quota) * ($this_scan_result > 0)) +
         ($this_scan_result * ($this_scan_result < 0));
 
-    $q = 0;
+    $iters_quota = 0;
 }
 
 # print "scans_data = " , $scans_data, "\n";
