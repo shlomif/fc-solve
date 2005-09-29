@@ -5,46 +5,24 @@ use strict;
 
 use PDL;
 use PDL::IO::FastRaw;
+use Getopt::Long;
 
 use MyInput;
 
 
 my $start_board = 1;
-
 my $num_boards = 32000;
-
 my $script_filename = "-";
-
 my $trace = 0;
-
 my $rle = 1;
 
-if (scalar(@ARGV))
-{
-    while (my $arg = shift(@ARGV))
-    {
-        if ($arg eq "-o")
-        {
-            $script_filename = shift;
-        }
-        elsif ($arg eq "-n")
-        {
-            $num_boards = shift;
-        }
-        elsif ($arg eq "-t")
-        {
-            $trace = 1;
-        }
-        elsif ($arg eq "--norle")
-        {
-            $rle = 0;
-        }
-        elsif ($arg eq "-s")
-        {
-            $start_board = shift;
-        }
-    }
-}
+GetOptions(
+    "o|output=s" => \$script_filename,
+    "num-boards=i" => \$num_boards,
+    "trace" => \$trace,
+    "rle" => \$rle,
+    "start-board=i" => \$start_board,
+);
 
 my $sel_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
 my @selected_scans = @$sel_scans;
