@@ -72,19 +72,6 @@ foreach my $q_more (@quotas)
     {
         next;
     }
-    if (0)
-    {
-        my $orig_max = $max;
-        while ($max == $orig_max)
-        {
-            $q--;
-            $num_solved = sumover(($scans_data <= $q) & ($scans_data > 0));
-            ($min, $max, $min_ind, $max_ind) = minmaximum($num_solved);
-        }
-        $q++;
-        $num_solved = sumover(($scans_data <= $q) & ($scans_data > 0));
-        ($min, $max, $min_ind, $max_ind) = minmaximum($num_solved);
-    }   
     push @chosen_scans, { 'q' => $q, 'ind' => $max_ind };
     $selected_scans[$max_ind]->{'used'} = 1;
     $total += $max;
