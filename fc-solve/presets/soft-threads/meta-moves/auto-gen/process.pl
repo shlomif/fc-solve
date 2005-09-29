@@ -15,6 +15,7 @@ my $num_boards = 32000;
 my $script_filename = "-";
 my $trace = 0;
 my $rle = 1;
+my $quotas_expr = undef;
 
 GetOptions(
     "o|output=s" => \$script_filename,
@@ -22,6 +23,7 @@ GetOptions(
     "trace" => \$trace,
     "rle" => \$rle,
     "start-board=i" => \$start_board,
+    "quotas-expr=s" => \$quotas_expr,
 );
 
 my $sel_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
@@ -34,7 +36,15 @@ my $scans_data = MyInput::get_scans_data($start_board, $num_boards, \@selected_s
 
 my $orig_scans_data = $scans_data->copy();
 
-my @quotas = ((350) x 5000);
+my @quotas;
+if (defined($quotas_expr))
+{
+    @quotas = (eval"$quotas_expr");
+}
+else
+{
+    @quotas = ((350) x 5000);
+}
 my @chosen_scans = ();
 
 my $total = 0;
@@ -46,10 +56,13 @@ foreach my $q_more (@quotas)
     $q += $q_more;
     my $num_solved = sumover(($scans_data <= $q) & ($scans_data > 0));
     my ($min, $max, $min_ind, $max_ind) = minmaximum($num_solved);
+
+    # If no boards were solved, then try with a larger quota
     if ($max == 0)
     {
         next;
     }
+
     push @chosen_scans, { 'q' => $q, 'ind' => $max_ind };
     $selected_scans[$max_ind]->{'used'} = 1;
     $total += $max;
