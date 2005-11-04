@@ -1,3 +1,4 @@
+<set-var latemp_with_head_meta_tags="1" />
 #include "latemp/latemp-main.wml"
 #include "shlomif/affiliations.wml"
 
