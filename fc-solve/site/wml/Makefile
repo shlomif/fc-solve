@@ -18,7 +18,7 @@ else
 endif
 #D = /home/httpd/html/ip-noise
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css *.png pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
@@ -78,17 +78,13 @@ $(SUBDIRS) :: % :
 
 RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 
-$(ARC_DOCS) :: $(D)/% : src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
-	tar -xOzf $< freecell-solver-$(RECENT_STABLE_VERSION)/$(notdir $@) > $@
+STABLE_VERSION_DIR = $(shell bash scripts/get-stable-version-dir.sh)
 
-src/win32_build/dynamic/fcs.zip: src/freecell-solver-$(RECENT_STABLE_VERSION).tar.gz
-	if [ ! -d t ] ; then mkdir t ; fi
-	cd t && \
-	tar -xzvf ../$<; \
-	cd free* &&       \
-	zip -r ../../$@ * ; \
-	cd ../../ && \
-	rm -fr t
+$(ARC_DOCS) :: $(D)/% : $(STABLE_VERSION_DIR)/%
+	cp -f "$<" "$@"
+
+src/win32_build/dynamic/fcs.zip: $(STABLE_VERSION_DIR)
+	bash scripts/get-fcs-zip.bash
 
 $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
 	(cd src && wml $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<)) > $@
