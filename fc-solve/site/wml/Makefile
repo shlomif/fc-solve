@@ -66,7 +66,7 @@ LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags)
 WML_FLAGS += --passoption=2,-X3074 \
 	-DWITH_DEVEL_VERSION=$(WITH_DEVEL_VERSION) \
 	-DRECENT_DEVEL_VERSION=$(RECENT_DEVEL_VERSION) \
-	-DLATEMP_SERVER=fc-solve -DLATEMP_THEME=perl-begin-1 \
+	-DLATEMP_SERVER=fc-solve -DLATEMP_THEME=better-scm \
 	$(LATEMP_WML_FLAGS) --passoption=3,-I../lib/
 
 dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC)

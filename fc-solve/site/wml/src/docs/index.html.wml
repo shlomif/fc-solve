@@ -4,7 +4,7 @@
 
 <h2>Documents of the Code</h2>
 
-<h3><a href="<arch:doc:url />">Architecture Document</a></h3>
+<h3 class="plain"><a href="<arch:doc:url />">Architecture Document</a></h3>
 
 <p>
 The Freecell Solver Architecture Document. Contains coding conventions, 
@@ -12,7 +12,7 @@ overview of the code and the modules, some terminology and some techniques
 that one is bound to encounter when dealing with the code.
 </p>
 
-<h3><a href="<doxygen:url />">Doxygen Browsing</a></h3>
+<h3 class="plain"><a href="<doxygen:url />">Doxygen Browsing</a></h3>
 
 <p>
 Michael Mann has ported Freecell Solver to C++ and used Doxygen to prepare a
@@ -22,7 +22,7 @@ Freecell Solver.
 
 
 
-<h3><a href="http://vipe.technion.ac.il/~shlomif/lecture/Freecell-Solver/">Lecture: Freecell Solver - Evolution of a C Program</a></h3>
+<h3 class="plain"><a href="http://vipe.technion.ac.il/~shlomif/lecture/Freecell-Solver/">Lecture: Freecell Solver - Evolution of a C Program</a></h3>
 
 <p>
 A lecture given to the <a href="http://www.haifux.org/">Haifa Linux Club</a>
@@ -30,7 +30,7 @@ about Freecell Solver. Covers various highlights from the history of the
 codebase and the community.
 </p>
 
-<h3><a href="http://groups.yahoo.com/group/hackers-il/message/2809">The Well and
+<h3 class="plain"><a href="http://groups.yahoo.com/group/hackers-il/message/2809">The Well and
 the Wall</a></h3>
 
 <p>
@@ -41,7 +41,7 @@ seminal <a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-
 same, (mostly without thinking too much about it), what I did differently, and what happened. Slightly out-of-date.
 </p>
 
-<h3><a href="$(ROOT)/book.html">Freecell Solver - Evolution of a C Program - The Book</a></h3>
+<h3 class="plain"><a href="$(ROOT)/book.html">Freecell Solver - Evolution of a C Program - The Book</a></h3>
 
 <p>
 A book I'd like to write and publish online about the evolution of the code 
@@ -64,7 +64,7 @@ expected.
 But like I said, it's still vapourware. ;-)
 </p>
 
-<h3><a href="http://freshmeat.net/articles/view/519/">Freshmeat 
+<h3 class="plain"><a href="http://freshmeat.net/articles/view/519/">Freshmeat 
 Editorial: Time to Rethink your Help Flag?</a></h3>
 
 <p>
@@ -72,7 +72,7 @@ A Freshmeat editorial I wrote about what I had planned to do with the
 exteremely long help display that Freecell Solver used to have.
 </p>
 
-<h3><a href="Freecell-Solver-TAOUP.txt">Musings about Freecell Solver after Reading "The Art of UNIX Programming"</a></h3>
+<h3 class="plain"><a href="Freecell-Solver-TAOUP.txt">Musings about Freecell Solver after Reading "The Art of UNIX Programming"</a></h3>
 
 <p>
 This is an E-mail message I sent to <a href="http://www.catb.org/~esr/">Eric

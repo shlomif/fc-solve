@@ -2,9 +2,9 @@
 
 <latemp_subject "Freecell Solver" />
 
-<h3><a href="download.html">Download Freecell Solver!</a></h3>
+<h3 class="plain"><a href="download.html">Download Freecell Solver!</a></h3>
 
-<h3><a href="links.html#other_solvers">Other Solvers</a></h3>
+<h3 class="plain"><a href="links.html#other_solvers">Other Solvers</a></h3>
 
 <p>
 This is Freecell Solver - a program that automatically solves games of 
@@ -67,58 +67,61 @@ Several other flags were added, and the code has also been greatly optimized
 and cleaned up, which makes Freecell Solver much faster than it was before.
 </p>
 
-<h3><a href="old-news.html">Previous News Items</a></h3>
+<h3 class="plain"><a href="old-news.html">Previous News Items</a></h3>
 
-
-<br /><br />
 <h2>Links</h2>
 
+<ul>
 <!--%start_mirror -->
-<ifeq "$(BERLIOS)" "BERLIOS"  
-"<a href="http://vipe.technion.ac.il/~shlomif/freecell-solver/">The Freecell Solver Homepage</a>" 
-"<a href="http://fc-solve.berlios.de/">Freecell Solver's BerliOS mirror</a>"
+<ifneq "$(BERLIOS)" "BERLIOS"  
+"<li><a href="http://fc-solve.berlios.de/">The Freecell Solver's Homepage</a></li>"
  />
-
-<br />
-
 <!--%end_mirror -->
-
+<li>
 <a href="http://www.freecell.org/">Freecell.org</a> - a web-site dedicated
-to the game.<br />
-
+to the game.
+</li>
+<li>
 <a href="http://www.solitairelaboratory.com/freecell.html">Michael Keller's Freecell site</a> -
-contains the Freecell FAQ and other stuff.<br />
-
+contains the Freecell FAQ and other stuff.
+</li>
+<li>
 <a href="http://www.rrhistorical.com/rrdata/Fcpro65/">FC-Pro</a> - a Freecell
 implementation for Windows which gives a choice of several solvers, including
-Freecell Solver.<br />
-
+Freecell Solver.
+</li>
+<li>
 <a href="http://www.cs.ruu.nl/~hansb/d.freecell/freecellhtml.html">
 An unsolvable instance of Freecell</a> - why not all possible initial Freecell 
-boards can be solved.<br />
-
+boards can be solved.
+</li>
+<li>
 <a href="http://www.geocities.com/jheyesjones/astar.html">Justin-Heyes
-Jones' A* page</a> - a page about the A* scan.<br /> 
-
+Jones' A* page</a> - a page about the A* scan.
+</li>
+<li>
 <a href="http://members.tripod.com/professor_tom/archives/index.html">
 patsolve</a> - a program by Dr. Tom Holroyd that solves Freecell and
 Seahaven Towers games. There are some fundamental differences between its
 architecture and that of Freecell Solver, so it might be worthwhile to take a
-look.<br />
+look.
+</li>
+</ul>
 
-
-<br /><br />
-
+<ul>
+<li>
 <a href="http://freshmeat.net/projects/freecellsolver/">Freecell Solver's
-Freshmeat App-Index Record</a><br />
-
+Freshmeat App-Index Record</a>
+</li>
+<li>
 <a href="http://groups.yahoo.com/group/fc-solve-discuss/">Freecell Solver's
 Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
-<br />
-
+</li>
+<li>
 <a href="http://vipe.technion.ac.il/~shlomif/lecture/Freecell-Solver/">
 Lecture about Freecell Solver</a>
-<br />
+</li>
+</ul>
 
-<h3><a href="links.html">More Links</a></h3>
+<h3 class="plain"><a href="links.html">More Links</a></h3>
 
