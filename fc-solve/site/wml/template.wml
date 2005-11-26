@@ -10,6 +10,12 @@
 
 <latemp_affiliations_buttons>
 <affil_collection_berlios />
+;;; The PayPal button
+<a 
+href="https://developer.berlios.de/project/make_donation.php?group_id=66" 
+rel="donate" title="Please donate to show your appreciation for the hard
+work conducted on Freecell Solver"><img src="$(ROOT)/images/paypal.gif"
+alt="PayPal Donate" class="paypal"/></a>
 </latemp_affiliations_buttons>
 
 

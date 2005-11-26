@@ -58,7 +58,11 @@ p.desc
     margin-left: 1.5em;
     margin-right: 1em;
 }
-
+.paypal
+{
+    border: 0;
+    margin-bottom: 1em;
+}
 ul.navbarmain { padding-left : 1em ; margin-left : 1em }
 ul.navbarnested { padding-left : 0em ; margin-left : 2em }
 div.indent { margin-left : 3em }
