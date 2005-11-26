@@ -6,7 +6,7 @@
 While Freecell Solver is a fairly usable package that satisfies the needs of 
 a large part of the users, it is by no means complete. This page hopes to
 address some of the long-term, primary issues in which I'd like to enhance it 
-in the future. It is based on the <a href="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/fc-solve/fc-solve/source/TODO">TODO</a> file, but is more elaborated and
+in the future. It is based on the <a href="http://svn.berlios.de/viewcvs/fc-solve/trunk/fc-solve/source/TODO?view=log">TODO</a> file, but is more elaborated and
 detailed.
 </p>
 

@@ -1,3 +1,10 @@
+a:visited 
+{ 
+    /* Konqi 3.4.x on Mandriva 2006 sets its to magenta, which doesn't 
+       look very well. 
+    */
+    color: purple;
+}
 a:hover { color : red }
 .navbar
 {
@@ -68,3 +75,17 @@ ul.navbarnested { padding-left : 0em ; margin-left : 2em }
 div.indent { margin-left : 3em }
 .bless { border: none; }
 
+.footer
+{
+    padding-top:1em;
+    clear: both;
+}
+.emphasis
+{
+    font-size: large;
+    font-weight: bold;
+}
+.emphasis li
+{
+    margin-top: 0.5em;
+}

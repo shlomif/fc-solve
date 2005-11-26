@@ -85,6 +85,12 @@ my $tree_contents =
             'title' => "A List of Major Tasks that can be Performed by Interesetd Developers",
         },
         {
+            'text' => "Status",
+            'url' => "current-status.html",
+            'title' => "What is the current status of Freecell Solver? Is it dead?",
+        },
+        
+        {
             'separator' => 1,
             'skip' => 1,
         },

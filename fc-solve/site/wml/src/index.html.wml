@@ -2,9 +2,12 @@
 
 <latemp_subject "Freecell Solver" />
 
-<h3 class="plain"><a href="download.html">Download Freecell Solver!</a></h3>
-
-<h3 class="plain"><a href="links.html#other_solvers">Other Solvers</a></h3>
+<ul class="emphasis">
+<li><a href="download.html">Download Freecell Solver!</a></li>
+<li><a href="links.html#other_solvers">Other Solvers</a></li>
+<li><a href="current-status.html">What is the Status of 
+Freecell Solver? Is it Dead?</a></li>
+</ul>
 
 <p>
 This is Freecell Solver - a program that automatically solves games of 
