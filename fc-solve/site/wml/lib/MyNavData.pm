@@ -89,7 +89,12 @@ my $tree_contents =
             'url' => "current-status.html",
             'title' => "What is the current status of Freecell Solver? Is it dead?",
         },
-        
+        {
+            'text' => "Give or Get Academic Credit",
+            'url' => "getting-credit.html",
+            'title' => ("Getting or Giving Academic Credit for " . 
+                "Working on Freecell Solver"),
+        },
         {
             'separator' => 1,
             'skip' => 1,
