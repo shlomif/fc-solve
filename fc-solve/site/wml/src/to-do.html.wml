@@ -1,5 +1,6 @@
 #include '../template.wml'
 
+<!-- TODO: Add id="" to the h2s and generate a TOC -->
 <latemp_subject "Freecell Solver's Future Directions" />
 
 <p>
@@ -10,7 +11,8 @@ in the future. It is based on the <a href="http://svn.berlios.de/viewcvs/fc-solv
 detailed.
 </p>
 
-<h2>Derived State Ordering and Incorporating Patsolve's Logic</h2>
+<h2 id="patsolve_logic">Derived State Ordering and Incorporating Patsolve's 
+Logic</h2>
 
 <p>
 From any given position Freecell Solver reaches it uses some functions called
@@ -30,7 +32,7 @@ generic way to order derived positions, implementing all of the random, mine,
 and Tom's back-ends, and an ability to implement more in the future.
 </p>
 
-<h2>Writing an Automatic Testing Framework</h2>
+<h2 id="automated_test_suite">Writing an Automated Testing Framework</h2>
 
 <p>
 Freecell Solver at the moment has very little if any automatic tests that were 
@@ -76,8 +78,87 @@ combination of C, Perl and Bash (or plain sh). Still, I will accept tests
 written in other languages or frameworks, because they are better than no 
 tests at all, and can easily be re-implemented should the need arise.
 </p>
-    
-<h2>Multi-Threading</h2>
+
+<h2 id="scons">Converting the Install Procedure to SCons</h2>
+
+<p>
+At the moment, Freecell Solver uses 
+<a href="http://vipe.technion.ac.il/~shlomif/lecture/Autotools/">GNU Autoconf,
+Automake and Libtool</a> as its build and installation system. However, these 
+tools are incredibly idiosyncratic and painful to work with, and have
+caused many problems in the past. A more modern and superior tool is 
+<a href="http://www.scons.org/">SCons</a>, and I had a pleasant experience
+working with it on <a href="http://web-cpan.berlios.de/latemp/">Latemp</a>.
+</p>
+
+<p>
+I believe a switch of the Freecell Solver build system to SCons is in order.
+The only thing that has to be done previously is to write a rudimentary 
+regression test suite to check the output of several board solutions before and
+after the switch. (Better safe than sorry.)
+</p>
+
+<h2 id="state_lookups">State Lookups</h2>
+
+<p>
+Currently, in order to find a suitable meta-move, Freecell Solver performs
+a large number of nested loops, each searching all the columns or 
+freecells for suitable cards or card combinations. However, it is possible
+that one can speed up such queries by "compiling" the state and forming a
+lookup table, that will allow the elimination of some loops. 
+</p>
+
+<p>
+A prospective volunteer for implementing this should study the code and
+see where such lookups can be made, implement the state compilation (once for
+each inspected state), and convert the code to using them.
+</p>
+
+<h2 id="orig_calc_states">States Calculated from the Original</h2>
+
+<p>
+In the variants of Solitaire supported by Freecell Solver, during the game,
+each column has a few of the cards from the start of the game, followed
+by a sequence of cards that decrease in rank. Thus, we can simply store:
+</p>
+
+<ol>
+<li>
+The number of original cards. 0-~104 for two deck games - we need 7 bits for 
+that. (8-bits for parity)
+</li>
+<li>
+The number of cards in the sequence. 0-12 - we need 4 bits for that.
+</li>
+<li>
+For each of the cards in the sequence we need to store their suit. That is
+0-3 which is 2-bits.
+</li>
+</ol>
+
+<p>
+Since we can determine the number of suit units from the number of cards in the
+sequence, we can store them after the column header, and thus store the
+column headers compactly. For a typical game we need 12 bits*$NUM_COLUMNS plus 
+at most 2 bits * 52 * $NUM_DECKS. For Freecell, that would make it 
+12*8+2*52 == 200 bits, which is 25 bytes. Or less in many cases.
+</p>
+
+<p>
+In comparison, the "Indirect Stacks" allocation (which is the most compact
+one implemented yet) takes 4-bytes for each column on a 32-bit 
+machine, which makes it 32 bytes, plus more to store the cards in the columns.
+This becomes worse on 64-bit computers.
+</p>
+
+<p>
+While this (the calculated from original) representation is not suitable
+for inspecting the state, in order to calculate the derived moves from it,
+it would be suitable for storing the state in the states collection. Thus,
+we will have to convert to and from that representation.
+</p>
+
+<h2 id="multi_threading">Multi-Threading</h2>
 
 <p>
 Freecell Solver can run several scans on the same states collection. However, 
@@ -115,7 +196,7 @@ Those with uni-processor machines are better off using several soft-threads
 within a single hard-thread that are arbitrated by the program.  
 </p>
 
-<h2>Porting to Java</h2>
+<h2 id="java">Porting to Java</h2>
 
 <p>
 Imagine being able to browse to a web-site which will present you with
@@ -142,7 +223,7 @@ compiler gcc can compile code to it virtual machine . However, at the moment,
 Java is the de-facto technology for making programs run inside a browser.
 </p>
 
-<h2>Safety from Failed Memory Allocations</h2>
+<h2 id="failed_allocs">Safety from Failed Memory Allocations</h2>
 
 <p>
 Freecell Solver uses many calls to the memory allocations, but does not check
@@ -166,7 +247,7 @@ This will involve a great deal of extra code and complexity, but will make
 Freecell Solver more secure and fail-proof.
 </p>
 
-<h2>PySol Integration</h2>
+<h2 id="pysol_integration">PySol Integration</h2>
 
 <p>
 <a href="http://www.oberhumer.com/opensource/pysol/">PySol</a> by Markus
@@ -194,7 +275,7 @@ interested in integrating it, the choice is yours whether to patch
 PySol 4.81 or wait for a beta of PySol 5.x to be released.
 </p>
 
-<h2>RCS-like State Storage</h2>
+<h2 id="rcs_state_storage">RCS-like State Storage</h2>
 
 <p>
 <a href="http://dmoz.org/Computers/Software/Configuration_Management/Tools/Revision_Control_System/">RCS</a> 
@@ -231,7 +312,7 @@ Note that this is a relatively speculative feature, which I only want to
 implement to see how well it run.
 </p>
 
-<h2>A Client/Server Multi-tasking Architecture</h2>
+<h2 id="client_server_multi_tasking">A Client/Server Multi-tasking Architecture</h2>
 
 <p>
 Yet another speculative feature that was inspired by a talk I had with 
@@ -264,7 +345,7 @@ server excessively.
 Again, this is something I'm planning to do, after I implement multi-threading, if I do it at all.
 </p>
 
-<h2>Generalizing Freecell Solver to non-card Games</h2>
+<h2 id="generalising">Generalising Freecell Solver to non-card Games</h2>
 
 <p>
 This is a <b>very</b> pipe-dream goal. As some of you may be aware I already
@@ -297,7 +378,7 @@ for single-card-deal Klondike in kpat that can solve on average 50% of the
 games. (I don't think it is a back-tracking heuristic, though).
 </p>
 
-<h2>Finale</h2>
+<h2 id="finale">Finale</h2>
 
 <p>
 If all or most of these changes take effect, Freecell Solver will become much
@@ -313,12 +394,13 @@ a base for similar projects with the needed subset of functionality.
 
 <p>
 Note that Freecell Solver was not the first computerized solver for Freecell to
-be written. (one of the first was <a href="http://localhost/fc-solve/don_woods.html">the one by Don Woods'</a>, and Woods is very famous for many of his 
+be written. (one of the first was <a href="http://localhost/fc-solve/don_woods.html">the one by Don Woods'</a>, and Woods is very famous for many of his
 other endeavours) It will also not the last that will be written (there is in 
 fact an AI course in the University of Massachustes, given each year, in which 
 the students are assigned to write a Freecell solver as one of their work 
 assignments). I recommend reading Eric Raymond's 
-<a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">The Cathedral and the Bazaar</a> to understand why adding more features can 
+<a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">The 
+Cathedral and the Bazaar</a> to understand why adding more features can 
 still be a good idea. CatB discusses fetchmail which is still actively 
 developed, despite the fact it will give anything most users will need and 
 more. I don't see a reason to stop developing Freecell Solver just because it 
