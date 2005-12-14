@@ -1,6 +1,7 @@
 #include '../template.wml'
 
-<!-- TODO: Add id="" to the h2s and generate a TOC -->
+#include "xhtml/1.x/std/toc.wml"
+
 <latemp_subject "Freecell Solver's Future Directions" />
 
 <p>
@@ -10,6 +11,9 @@ address some of the long-term, primary issues in which I'd like to enhance it
 in the future. It is based on the <a href="http://svn.berlios.de/viewcvs/fc-solve/trunk/fc-solve/source/TODO?view=log">TODO</a> file, but is more elaborated and
 detailed.
 </p>
+
+<h2*>Table of Contents</h2*>
+<toc />
 
 <h2 id="patsolve_logic">Derived State Ordering and Incorporating Patsolve's 
 Logic</h2>
@@ -156,6 +160,11 @@ While this (the calculated from original) representation is not suitable
 for inspecting the state, in order to calculate the derived moves from it,
 it would be suitable for storing the state in the states collection. Thus,
 we will have to convert to and from that representation.
+</p>
+
+<p>
+This feature was inspired by a similar technique used by 
+<a href="don_woods.html">Don Woods' solver</a>.
 </p>
 
 <h2 id="multi_threading">Multi-Threading</h2>
@@ -378,6 +387,41 @@ for single-card-deal Klondike in kpat that can solve on average 50% of the
 games. (I don't think it is a back-tracking heuristic, though).
 </p>
 
+<h2 id="cmd_line_prefix_tree">Command Line Prefix Tree Handling</h2>
+
+<p>
+At the moment, each flag in the command line is checked by comparing for
+each of the command line options accepted by Freecell Solver, one after the 
+other. This is sub-optimal because it is possible the relevant command line 
+option will be looked up only at the end, and also because this long process
+needs to be done for each option that was inputted on the command line.
+</p>
+
+<p>
+To resolve it it would be a good idea to define the command line processing
+by processing a prefix-tree of command line options, that once accepted will
+result in a clause being evaluated. (Or if failed, will jump to a common
+"unknown command line option" handling code.) This should be done by 
+preprocessing the command line evaluation code using a Perl program written
+for this purpose.
+</p>
+
+<h2 id="identifier_prefix">Shortening the Identifier Prefix</h2>
+
+<p>
+At the moment, the global Freecell Solver identifiers use the 
+<tt>freecell_solver_</tt> prefix. However, this prefix is too long and
+makes the code hard to read. Using the <tt>fcs_</tt> prefix wouldn't be
+desirable either, because 
+<a href="http://www.google.com/search?q=fcs&amp;ie=UTF-8&amp;oe=UTF-8">we 
+don't own the fcs</a> prefix. However 
+<a href="http://www.google.com/search?q=fc+solve&amp;ie=UTF-8&amp;oe=UTF-8">fc-solve 
+is ours</a> and as a result, we can use <tt>fc_solve_</tt> instead. Note that
+for backwards compatibility, the Freecell Solver interface functions should
+be named <tt>freecell_solver_user_<tt>. This is not an issue because they
+are not used internally.
+</p>
+
 <h2 id="finale">Finale</h2>
 
 <p>
@@ -394,7 +438,7 @@ a base for similar projects with the needed subset of functionality.
 
 <p>
 Note that Freecell Solver was not the first computerized solver for Freecell to
-be written. (one of the first was <a href="http://localhost/fc-solve/don_woods.html">the one by Don Woods'</a>, and Woods is very famous for many of his
+be written. (one of the first was <a href="don_woods.html">the one by Don Woods'</a>, and Woods is very famous for many of his
 other endeavours) It will also not the last that will be written (there is in 
 fact an AI course in the University of Massachustes, given each year, in which 
 the students are assigned to write a Freecell solver as one of their work 
