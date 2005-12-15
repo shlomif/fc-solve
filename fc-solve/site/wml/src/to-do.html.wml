@@ -424,7 +424,7 @@ don't own the fcs</a> prefix. However
 <a href="http://www.google.com/search?q=fc+solve&amp;ie=UTF-8&amp;oe=UTF-8">fc-solve 
 is ours</a> and as a result, we can use <tt>fc_solve_</tt> instead. Note that
 for backwards compatibility, the Freecell Solver interface functions should
-be named <tt>freecell_solver_user_<tt>. This is not an issue because they
+be named <tt>freecell_solver_user_</tt>. This is not an issue because they
 are not used internally.
 </p>
 
