@@ -35,6 +35,29 @@ in the <a href="features.html"><b>Features List</b></a>.
 
 <h2>News</h2>
 
+<h3>15-Dec-2005</h3>
+
+<p>
+The <a href="download.html">Downloads</a> are now working again. Plus,
+several new pages were added or updated in the site:
+</p>
+
+<ol>
+<li>
+<a href="$(ROOT)/current-status.html">The Current Status Page</a> answers
+the question "Is Freecell Solver dead?".
+</li>
+<li>
+Several new items were added to <a href="$(ROOT)/to-do.html">the "To
+Do List" page</a>. It now also features a table of contents.
+</li>
+<li>
+There is now <a href="$(ROOT)/getting-credit.html">a page 
+about Giving or Getting Academic Credit for working on Freecell
+Solver</a>.
+</li>
+</ol>
+
 <h3>4-Oct-2003</h3>
 
 <p>
