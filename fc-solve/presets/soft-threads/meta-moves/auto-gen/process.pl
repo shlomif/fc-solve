@@ -26,8 +26,10 @@ GetOptions(
     "quotas-expr=s" => \$quotas_expr,
 );
 
-my $sel_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
-my @selected_scans = @$sel_scans;
+my @selected_scans = do {
+    my $sel_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
+    @$sel_scans;
+};
     
 #my $scans_data = [];
 #my $scans_data = zeroes($num_boards, scalar(@selected_scans));
