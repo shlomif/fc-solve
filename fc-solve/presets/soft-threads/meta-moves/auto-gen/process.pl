@@ -17,6 +17,18 @@ my $trace = 0;
 my $rle = 1;
 my $quotas_expr = undef;
 
+sub get_quotas
+{
+    if (defined($quotas_expr))
+    {
+        return [eval"$quotas_expr"];
+    }
+    else
+    {
+        return [(350) x 5000];
+    }
+}
+
 GetOptions(
     "o|output=s" => \$script_filename,
     "num-boards=i" => \$num_boards,
@@ -35,22 +47,13 @@ my $scans_data = MyInput::get_scans_data($start_board, $num_boards, \@selected_s
 
 my $orig_scans_data = $scans_data->copy();
 
-my @quotas;
-if (defined($quotas_expr))
-{
-    @quotas = (eval"$quotas_expr");
-}
-else
-{
-    @quotas = ((350) x 5000);
-}
 my @chosen_scans = ();
 
 my $total_boards_solved = 0;
 my $iters_quota = 0;
 my $total_iters = 0;
 
-foreach my $q_more (@quotas)
+foreach my $q_more (@{get_quotas()})
 {
     $iters_quota += $q_more;
     my (undef, $num_solved_in_iter, undef, $selected_scan_idx) =
