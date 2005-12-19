@@ -149,8 +149,22 @@ sub get_line_of_prelude
     my $self = shift;
     return "--prelude \"" .
         join(",",
-            map { $self->format_prelude_iter($_) } @{$self->get_chosen_scans()}
+            map { $self->format_prelude_iter($_) } 
+                @{$self->get_chosen_scans()}
         ) . "\"";
+}
+
+sub calc_script_lines
+{
+    my $self = shift;
+    return
+        [
+            $self->get_line_of_command(),
+            @{$self->scan_def_line_mapping(
+                $self->get_lines_of_scan_defs()
+            )},
+            $self->get_line_of_prelude()
+        ];
 }
 
 sub calc_script_text
@@ -159,13 +173,7 @@ sub calc_script_text
     return 
         join("",
             @{$self->line_ends_mapping(
-                [
-                    $self->get_line_of_command(),
-                    @{$self->scan_def_line_mapping(
-                        $self->get_lines_of_scan_defs()
-                    )},
-                    $self->get_line_of_prelude()
-                ]
+                $self->calc_script_lines()
             )}
         );
 }
@@ -223,34 +231,63 @@ sub report_total_iters
     printf("total_iters = %s\n", $self->arbitrator()->total_iters());
 }
 
-sub run
+sub do_rle
 {
     my $self = shift;
-
-    $self->init_arbitrator();
-
-    $self->arbitrator()->calc_meta_scan();
 
     if ($self->rle())
     {
         $self->arbitrator()->do_rle();    
     }
+}
 
-    $self->report_total_iters();
+sub arbitrator_process
+{
+    my $self = shift;
 
-    $self->write_script();
+    $self->arbitrator()->calc_meta_scan();
+    $self->do_rle();
+}
 
+sub do_trace_for_board
+{
+    my $self = shift;
+    my $board = shift;
+
+    my $results = $self->arbitrator()->calc_board_iters($board);
+    print "\@info=". join(",", @{$results->{per_scan_iters}}). "\n";
+    print +($board+$self->start_board()) . ": ". $results->{board_iters} . "\n";
+}
+
+sub real_do_trace
+{
+    my $self = shift;
+    foreach my $board (0 .. $self->num_boards()-1)
+    {
+        $self->do_trace_for_board($board);
+    }
+}
+
+sub do_trace
+{
+    my $self = shift;
     # Analyze the results
 
     if ($self->trace())
     {
-        foreach my $board (0 .. $self->num_boards()-1)
-        {
-            my $results = $self->arbitrator()->calc_board_iters($board);
-            print "\@info=". join(",", @{$results->{per_scan_iters}}). "\n";
-            print +($board+$self->start_board()) . ": ". $results->{board_iters} . "\n";
-        }
+        $self->real_do_trace();
     }
+}
+
+sub run
+{
+    my $self = shift;
+
+    $self->init_arbitrator();
+    $self->arbitrator_process();
+    $self->report_total_iters();
+    $self->write_script();
+    $self->do_trace();
 
     return 0;
 }
