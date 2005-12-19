@@ -164,11 +164,6 @@ sub run
             $self->selected_scans()
         );
 
-    my $orig_scans_data = $scans_data->copy();
-
-
-
-
     my $meta_scanner =
         Shlomif::FCS::CalcMetaScan->new(
             'quotas' => $self->get_quotas(),
