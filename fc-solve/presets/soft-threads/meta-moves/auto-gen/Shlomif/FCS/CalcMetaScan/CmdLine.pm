@@ -217,6 +217,12 @@ sub get_chosen_scans
     return $self->arbitrator()->chosen_scans();
 }
 
+sub report_total_iters
+{
+    my $self = shift;
+    printf("total_iters = %s\n", $self->arbitrator()->total_iters());
+}
+
 sub run
 {
     my $self = shift;
@@ -230,7 +236,7 @@ sub run
         $self->arbitrator()->do_rle();    
     }
 
-    printf("total_iters = %s\n", $self->arbitrator()->total_iters());
+    $self->report_total_iters();
 
     $self->write_script();
 
