@@ -56,6 +56,13 @@ sub out_script
     close($fh);
 }
 
+sub get_line_of_command
+{
+    my $args_string = 
+        join(" ", $start_board, $start_board + $num_boards - 1, 1);
+    return "freecell-solver-range-parallel-solve $args_string";
+}
+
 my $selected_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
 
 my $scans_data = MyInput::get_scans_data($start_board, $num_boards, $selected_scans);
@@ -84,10 +91,8 @@ my $total_iters = $meta_scanner->total_iters();
 # print "scans_data = " , $scans_data, "\n";
 print "total_iters = $total_iters\n";
 
-
-
 # Construct the command line
-my $cmd_line = "freecell-solver-range-parallel-solve $start_board " . ($start_board + $num_boards - 1) . " 1 \\\n" .
+my $cmd_line = get_line_of_command() . " \\\n" .
     join(" -nst \\\n", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } (grep { $_->{'used'} } @$selected_scans)) . " \\\n" .
     "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans->[$_->{'ind'}]->{'id'} } @$chosen_scans) ."\"";
  
