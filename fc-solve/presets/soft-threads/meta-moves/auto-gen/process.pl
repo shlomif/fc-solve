@@ -5,12 +5,18 @@ package Shlomif::FCS::CalcMetaScan;
 use strict;
 use warnings;
 
+use PDL ();
+
 use base 'Class::Accessor';
 
 my @fields = (qw(
     chosen_scans
     iters_quota
+    num_boards
+    scans_data
+    selected_scans
     status
+    quotas
     total_boards_solved
     total_iters
 ));
@@ -42,53 +48,26 @@ sub add
 sub initialize
 {
     my $self = shift;
-   
+
+    my (%args) = (@_);
+
+    $self->quotas($args{'quotas'}) or
+        die "Quotas not specified!";
+
+    if (!exists($args{'scans_data'}))
+    {
+        die "scans_data not specified!";
+    }
+
+    $self->scans_data($args{'scans_data'}->copy());
+
+    $self->selected_scans($args{'selected_scans'}) or
+        die "selected_scans not specified!";
+
+    $self->num_boards($args{'num_boards'}) or
+        die "num_boards not specified!";
+
     return 0;
-}
-
-#use File::stat;
-
-use PDL ();
-use Getopt::Long;
-
-use MyInput;
-
-# Command line parameters
-my $start_board = 1;
-my $num_boards = 32000;
-my $script_filename = "-";
-my $trace = 0;
-my $rle = 1;
-my $quotas_expr = undef;
-
-GetOptions(
-    "o|output=s" => \$script_filename,
-    "num-boards=i" => \$num_boards,
-    "trace" => \$trace,
-    "rle" => \$rle,
-    "start-board=i" => \$start_board,
-    "quotas-expr=s" => \$quotas_expr,
-);
-
-my $self = Shlomif::FCS::CalcMetaScan->new();
-
-my $selected_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
-
-my $scans_data = MyInput::get_scans_data($start_board, $num_boards, $selected_scans);
-
-my $orig_scans_data = $scans_data->copy();
-
-sub get_quotas
-{
-    my $self = shift;
-    if (defined($quotas_expr))
-    {
-        return [eval"$quotas_expr"];
-    }
-    else
-    {
-        return [(350) x 5000];
-    }
 }
 
 sub scans_rle
@@ -126,7 +105,10 @@ sub inspect_quota
 
     my (undef, $num_solved_in_iter, undef, $selected_scan_idx) =
         PDL::minmaximum(
-            PDL::sumover(($scans_data <= $iters_quota) & ($scans_data > 0))
+            PDL::sumover(
+                ($self->scans_data() <= $iters_quota) & 
+                ($self->scans_data() > 0)
+            )
           );
 
     # If no boards were solved, then try with a larger quota
@@ -136,31 +118,39 @@ sub inspect_quota
     }
 
     push @{$self->chosen_scans()}, { 'q' => $iters_quota, 'ind' => $selected_scan_idx };
-    $selected_scans->[$selected_scan_idx]->{'used'} = 1;
+    $self->selected_scans()->[$selected_scan_idx]->{'used'} = 1;
 
     my $total_boards_solved = 
         $self->add('total_boards_solved', $num_solved_in_iter);
     print "$iters_quota \@ $selected_scan_idx ($total_boards_solved solved)\n";
 
-    my $this_scan_result = ($scans_data->slice(":,$selected_scan_idx"));
+    my $this_scan_result = ($self->scans_data()->slice(":,$selected_scan_idx"));
     $self->add('total_iters', PDL::sum((($this_scan_result <= $iters_quota) & ($this_scan_result > 0)) * $this_scan_result));
     my $indexes = PDL::which(($this_scan_result > $iters_quota) | ($this_scan_result < 0));
     
     $self->add('total_iters', ($indexes->nelem() * $iters_quota));
-    if ($total_boards_solved == $num_boards)
+    if ($total_boards_solved == $self->num_boards())
     {
         print "Solved all!\n";
         $self->status("solved_all");
         return;
     }    
     
-    $scans_data = $scans_data->dice($indexes, "X")->copy();
-    $this_scan_result = $scans_data->slice(":,$selected_scan_idx")->copy();
+    $self->scans_data(
+        $self->scans_data()->dice($indexes, "X")->copy()
+    );
+    $this_scan_result = $self->scans_data()->slice(":,$selected_scan_idx")->copy();
     #$scans_data->slice(":,$selected_scan_idx") *= 0;
-    $scans_data->slice(":,$selected_scan_idx") .= (($this_scan_result - $iters_quota) * ($this_scan_result > 0)) +
+    $self->scans_data()->slice(":,$selected_scan_idx") .= (($this_scan_result - $iters_quota) * ($this_scan_result > 0)) +
         ($this_scan_result * ($this_scan_result < 0));
 
     $self->iters_quota(0);
+}
+
+sub get_quotas
+{
+    my $self = shift;
+    return $self->quotas();
 }
 
 sub calc_meta_scan
@@ -192,15 +182,64 @@ sub do_rle
     );
 }
 
-my $meta_scan_ret = $self->calc_meta_scan();
+package main;
+
+use Getopt::Long;
+
+use MyInput;
+
+# Command line parameters
+my $start_board = 1;
+my $num_boards = 32000;
+my $script_filename = "-";
+my $trace = 0;
+my $rle = 1;
+my $quotas_expr = undef;
+
+GetOptions(
+    "o|output=s" => \$script_filename,
+    "num-boards=i" => \$num_boards,
+    "trace" => \$trace,
+    "rle" => \$rle,
+    "start-board=i" => \$start_board,
+    "quotas-expr=s" => \$quotas_expr,
+);
+
+sub get_quotas
+{    
+    if (defined($quotas_expr))
+    {
+        return [eval"$quotas_expr"];
+    }
+    else
+    {
+        return [(350) x 5000];
+    }
+}
+
+my $selected_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
+
+my $scans_data = MyInput::get_scans_data($start_board, $num_boards, $selected_scans);
+
+my $orig_scans_data = $scans_data->copy();
+
+my $meta_scanner =
+    Shlomif::FCS::CalcMetaScan->new(
+        'quotas' => get_quotas(),
+        'selected_scans' => $selected_scans,
+        'num_boards' => $num_boards,
+        'scans_data' => $scans_data,
+    );
+
+$meta_scanner->calc_meta_scan();
 
 if ($rle)
 {
-    $self->do_rle();    
+    $meta_scanner->do_rle();    
 }
 
-my $chosen_scans = $self->chosen_scans();
-my $total_iters = $self->total_iters();
+my $chosen_scans = $meta_scanner->chosen_scans();
+my $total_iters = $meta_scanner->total_iters();
     
 
 # print "scans_data = " , $scans_data, "\n";
