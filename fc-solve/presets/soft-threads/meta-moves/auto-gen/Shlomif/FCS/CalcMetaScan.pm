@@ -5,7 +5,7 @@ use warnings;
 
 use PDL ();
 
-use base 'Class::Accessor';
+use base 'Shlomif::FCS::CalcMetaScan::Base';
 
 my @fields = (qw(
     chosen_scans
