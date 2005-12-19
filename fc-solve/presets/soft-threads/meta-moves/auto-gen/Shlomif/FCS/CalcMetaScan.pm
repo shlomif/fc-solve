@@ -187,10 +187,10 @@ sub calc_board_iters
     my $self = shift;
     my $board = shift;
     my $board_iters = 0;
-    
+
     my @info = PDL::list($self->orig_scans_data()->slice("$board,:"));
     my @orig_info = @info;
-    
+
     foreach my $s (@{$self->chosen_scans()})
     {
         if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
@@ -207,7 +207,7 @@ sub calc_board_iters
             $board_iters += $s->{'q'};
         }
     }
-    
+
     return 
         {
             'per_scan_iters' => \@orig_info,
