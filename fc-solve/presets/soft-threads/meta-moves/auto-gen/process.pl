@@ -38,6 +38,24 @@ sub get_quotas
     }
 }
 
+sub out_script
+{
+    my $cmd_line_string = shift;
+
+    my $fh;
+    if ($script_filename eq "-")
+    {
+        open $fh, ">&STDOUT";
+    }
+    else
+    {
+        open $fh, ">", $script_filename;
+    }
+    print {$fh} $cmd_line_string, "\n\n\n";
+
+    close($fh);
+}
+
 my $selected_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
 
 my $scans_data = MyInput::get_scans_data($start_board, $num_boards, $selected_scans);
@@ -66,25 +84,14 @@ my $total_iters = $meta_scanner->total_iters();
 # print "scans_data = " , $scans_data, "\n";
 print "total_iters = $total_iters\n";
 
-if ($script_filename eq "-")
-{
-    open SCRIPT, ">&STDOUT";
-}
-else
-{
-    open SCRIPT, ">", $script_filename;
-}
 
 
 # Construct the command line
 my $cmd_line = "freecell-solver-range-parallel-solve $start_board " . ($start_board + $num_boards - 1) . " 1 \\\n" .
     join(" -nst \\\n", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } (grep { $_->{'used'} } @$selected_scans)) . " \\\n" .
     "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans->[$_->{'ind'}]->{'id'} } @$chosen_scans) ."\"";
-    
-print SCRIPT $cmd_line;
-print SCRIPT "\n\n\n";
-
-close(SCRIPT);
+ 
+out_script($cmd_line);
 
 # Analyze the results
 
