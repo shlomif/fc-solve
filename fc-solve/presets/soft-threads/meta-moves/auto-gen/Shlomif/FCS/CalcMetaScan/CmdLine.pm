@@ -115,12 +115,21 @@ sub line_ends_mapping
     return $self->map_all_but_last(sub { "$_[0] \\\n" }, shift);
 }
 
+sub get_used_scans
+{
+    my $self = shift;
+    return [ grep { $_->{'used'} } @{$self->selected_scans()}];
+}
+
 sub get_lines_of_scan_defs
 {
     my $self = shift;
-    return [map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } (grep { $_->{'used'} } @{$self->selected_scans()})];
+    return 
+        [map 
+            { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } 
+            @{$self->get_used_scans()}
+        ];
 }
-
 
 sub scan_def_line_mapping
 {
