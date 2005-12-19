@@ -206,28 +206,11 @@ sub run
 
     if ($self->trace())
     {
-        foreach my $board (1 .. $self->num_boards())
+        foreach my $board (0 .. $self->num_boards()-1)
         {
-            my $total_iters = 0;
-            my @info = PDL::list($orig_scans_data->slice(($board-1).",:"));
-            print ("\@info=". join(",", @info). "\n");
-            foreach my $s (@{$self->chosen_scans()})
-            {
-                if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
-                {
-                    $total_iters += $info[$s->{'ind'}];
-                    last;
-                }
-                else
-                {
-                    if ($info[$s->{'ind'}] > 0)
-                    {
-                        $info[$s->{'ind'}] -= $s->{'q'};
-                    }
-                    $total_iters += $s->{'q'};
-                }
-            }
-            print (($board+$self->start_board()-1) . ": $total_iters\n");
+            my $results = $meta_scanner->calc_board_iters($board);
+            print ("\@info=". join(",", @{$results->{per_scan_iters}}). "\n");
+            print (($board+$self->start_board()) . ": ". $results->{board_iters} . "\n");
         }
     }
 
