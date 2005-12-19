@@ -12,6 +12,7 @@ use Getopt::Long;
 use MyInput;
 
 __PACKAGE__->mk_accessors(qw(
+    arbitrator
     chosen_scans
     num_boards
     output_filename
@@ -179,7 +180,18 @@ sub write_script
     );
 }
 
-sub run
+sub calc_scans_data
+{
+    my $self = shift;
+    return
+        MyInput::get_scans_data(
+            $self->start_board(),
+            $self->num_boards(), 
+            $self->selected_scans()
+        );
+}
+
+sub init_arbitrator
 {
     my $self = shift;
 
@@ -190,31 +202,31 @@ sub run
         )
     );
 
-    my $scans_data = 
-        MyInput::get_scans_data(
-            $self->start_board(),
-            $self->num_boards(), 
-            $self->selected_scans()
-        );
-
-    my $meta_scanner =
+    return $self->arbitrator(
         Shlomif::FCS::CalcMetaScan->new(
             'quotas' => $self->get_quotas(),
             'selected_scans' => $self->selected_scans(),
             'num_boards' => $self->num_boards(),
-            'scans_data' => $scans_data,
-        );
+            'scans_data' => $self->calc_scans_data(),
+        )
+    );
+}
 
-    $meta_scanner->calc_meta_scan();
+sub run
+{
+    my $self = shift;
+
+    $self->init_arbitrator();
+
+    $self->arbitrator()->calc_meta_scan();
 
     if ($self->rle())
     {
-        $meta_scanner->do_rle();    
+        $self->arbitrator()->do_rle();    
     }
 
-    $self->chosen_scans($meta_scanner->chosen_scans());
-    # print "scans_data = " , $scans_data, "\n";
-    printf("total_iters = %s\n", $meta_scanner->total_iters());
+    $self->chosen_scans($self->arbitrator()->chosen_scans());
+    printf("total_iters = %s\n", $self->arbitrator()->total_iters());
 
     $self->write_script();
 
@@ -224,7 +236,7 @@ sub run
     {
         foreach my $board (0 .. $self->num_boards()-1)
         {
-            my $results = $meta_scanner->calc_board_iters($board);
+            my $results = $self->arbitrator()->calc_board_iters($board);
             print "\@info=". join(",", @{$results->{per_scan_iters}}). "\n";
             print +($board+$self->start_board()) . ": ". $results->{board_iters} . "\n";
         }
