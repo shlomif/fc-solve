@@ -113,7 +113,7 @@ sub scans_rle
         }
     }
     push @a, $scan;
-    return +{ 'rled_scans' => \@a, };
+    return \@a;
 }
 
 sub inspect_quota
@@ -163,7 +163,7 @@ sub inspect_quota
     $self->iters_quota(0);
 }
 
-sub find_meta_scan
+sub calc_meta_scan
 {
     my $self = shift;
 
@@ -182,17 +182,25 @@ sub find_meta_scan
             last QUOTA_LOOP;
         }
     }
-
-    return 
-        { 
-            'chosen_scans' => $self->chosen_scans(),
-            'total_iters' => $self->total_iters(),
-        };
 }
 
-my $meta_scan_ret = $self->find_meta_scan();
-my $chosen_scans = $meta_scan_ret->{'chosen_scans'};
-my $total_iters = $meta_scan_ret->{'total_iters'};
+sub do_rle
+{
+    my $self = shift;
+    $self->chosen_scans(
+        $self->scans_rle('scans' => $self->chosen_scans())
+    );
+}
+
+my $meta_scan_ret = $self->calc_meta_scan();
+
+if ($rle)
+{
+    $self->do_rle();    
+}
+
+my $chosen_scans = $self->chosen_scans();
+my $total_iters = $self->total_iters();
     
 
 # print "scans_data = " , $scans_data, "\n";
@@ -207,10 +215,6 @@ else
     open SCRIPT, ">$script_filename";    
 }
 
-if ($rle)
-{
-    $chosen_scans = $self->scans_rle('scans' => $chosen_scans)->{'rled_scans'};
-}
 
 # Construct the command line
 my $cmd_line = "freecell-solver-range-parallel-solve $start_board " . ($start_board + $num_boards - 1) . " 1 \\\n" .
