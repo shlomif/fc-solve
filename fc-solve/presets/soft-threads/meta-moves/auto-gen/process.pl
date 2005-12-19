@@ -72,7 +72,7 @@ if ($script_filename eq "-")
 }
 else
 {
-    open SCRIPT, ">$script_filename";    
+    open SCRIPT, ">", $script_filename;
 }
 
 
