@@ -5,9 +5,10 @@ use warnings;
 
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
-use Shlomif::FCS::CalcMetaScan;
-
 use Getopt::Long;
+use IO::File;
+
+use Shlomif::FCS::CalcMetaScan;
 
 use MyInput;
 
@@ -77,23 +78,30 @@ sub get_default_quotas
     return [(350) x 5000];
 }
 
+sub get_script_fh
+{
+    my $self = shift;
+    return IO::File->new(
+       ($self->output_filename() eq "-") ?
+           ">&STDOUT" :
+           ($self->output_filename(), "w")
+       );
+}
+
+sub get_script_terminator
+{
+    return "\n\n\n";
+}
+
 sub out_script
 {
     my $self = shift;
     my $cmd_line_string = shift;
 
-    my $fh;
-    if ($self->output_filename() eq "-")
-    {
-        open $fh, ">&STDOUT";
-    }
-    else
-    {
-        open $fh, ">", $self->output_filename();
-    }
-    print {$fh} $cmd_line_string, "\n\n\n";
-
-    close($fh);
+    $self->get_script_fh()->print(
+        $cmd_line_string, 
+        $self->get_script_terminator($cmd_line_string)
+    );
 }
 
 sub get_line_of_command
