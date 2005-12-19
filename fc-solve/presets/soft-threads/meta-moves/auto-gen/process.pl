@@ -63,6 +63,12 @@ sub get_line_of_command
     return "freecell-solver-range-parallel-solve $args_string";
 }
 
+sub line_ends_mapping
+{
+    my $lines = shift;
+    return [ map { "$_ \\\n" }  @$lines];
+}
+
 my $selected_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
 
 
@@ -75,6 +81,15 @@ sub get_lines_of_scan_defs
     return [map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } (grep { $_->{'used'} } @$selected_scans)];
 }
 
+sub scan_def_line_mapping
+{
+    my $scan_defs = shift;
+    return
+    [
+        (map {"$_ -nst"} @$scan_defs[0 .. $#$scan_defs-1]),
+        $scan_defs->[-1]
+    ];
+}
 
 my $meta_scanner =
     Shlomif::FCS::CalcMetaScan->new(
@@ -96,8 +111,15 @@ my $chosen_scans = $meta_scanner->chosen_scans();
 printf("total_iters = %s\n", $meta_scanner->total_iters());
 
 # Construct the command line
-my $cmd_line = get_line_of_command() . " \\\n" .
-    join(" -nst \\\n", @{get_lines_of_scan_defs()}) . " \\\n" .
+my $cmd_line = 
+    join("",
+        @{line_ends_mapping(
+            [
+                get_line_of_command(),
+                @{scan_def_line_mapping(get_lines_of_scan_defs())}
+            ]
+        )}
+    ).
     "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans->[$_->{'ind'}]->{'id'} } @$chosen_scans) ."\"";
  
 out_script($cmd_line);
