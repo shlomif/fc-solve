@@ -29,6 +29,30 @@ sub get_quotas
     }
 }
 
+sub scans_rle
+{
+    my %args = (@_);
+    my $scans_list = [@{$args{'scans'}}];
+
+    my $scan = shift(@$scans_list);
+
+    my (@a);
+    while (my $next_scan = shift(@$scans_list))
+    {
+        if ($next_scan->{'ind'} == $scan->{'ind'})
+        {
+            $scan->{'q'} += $next_scan->{'q'};
+        }
+        else
+        {
+            push @a, $scan;
+            $scan = $next_scan;
+        }
+    }
+    push @a, $scan;
+    return +{ 'rled_scans' => \@a, };
+}
+
 GetOptions(
     "o|output=s" => \$script_filename,
     "num-boards=i" => \$num_boards,
@@ -47,7 +71,7 @@ my $scans_data = MyInput::get_scans_data($start_board, $num_boards, \@selected_s
 
 my $orig_scans_data = $scans_data->copy();
 
-my @chosen_scans = ();
+my $chosen_scans = [];
 
 my $total_boards_solved = 0;
 my $iters_quota = 0;
@@ -67,7 +91,7 @@ foreach my $q_more (@{get_quotas()})
         next;
     }
 
-    push @chosen_scans, { 'q' => $iters_quota, 'ind' => $selected_scan_idx };
+    push @$chosen_scans, { 'q' => $iters_quota, 'ind' => $selected_scan_idx };
     $selected_scans[$selected_scan_idx]->{'used'} = 1;
 
     $total_boards_solved += $num_solved_in_iter;
@@ -107,29 +131,13 @@ else
 
 if ($rle)
 {
-    my (@a);
-    my $scan = shift(@chosen_scans);
-
-    while (my $next_scan = shift(@chosen_scans))
-    {
-        if ($next_scan->{'ind'} == $scan->{'ind'})
-        {
-            $scan->{'q'} += $next_scan->{'q'};
-        }
-        else
-        {
-            push @a, $scan;
-            $scan = $next_scan;
-        }
-    }
-    push @a, $scan;
-    @chosen_scans = @a;
+    $chosen_scans = scans_rle('scans' => $chosen_scans)->{'rled_scans'};
 }
 
 # Construct the command line
 my $cmd_line = "freecell-solver-range-parallel-solve $start_board " . ($start_board + $num_boards - 1) . " 1 \\\n" .
     join(" -nst \\\n", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } (grep { $_->{'used'} } @selected_scans)) . " \\\n" .
-    "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans[$_->{'ind'}]->{'id'} } @chosen_scans) ."\"";
+    "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans[$_->{'ind'}]->{'id'} } @$chosen_scans) ."\"";
     
 print SCRIPT $cmd_line;
 print SCRIPT "\n\n\n";
@@ -145,7 +153,7 @@ if ($trace)
         my $total_iters = 0;
         my @info = list($orig_scans_data->slice(($board-1).",:"));
         print ("\@info=". join(",", @info). "\n");
-        foreach my $s (@chosen_scans)
+        foreach my $s (@$chosen_scans)
         {
             if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
             {
