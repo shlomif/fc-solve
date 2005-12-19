@@ -26,6 +26,12 @@ GetOptions(
     "quotas-expr=s" => \$quotas_expr,
 );
 
+sub map_all_but_last
+{
+    my ($cb, $a) = (@_);
+    return [ (map {$cb->($_)} @$a[0 .. $#$a-1]), $a->[-1] ];
+}
+
 sub get_quotas
 {    
     if (defined($quotas_expr))
@@ -65,8 +71,7 @@ sub get_line_of_command
 
 sub line_ends_mapping
 {
-    my $lines = shift;
-    return [ map { "$_ \\\n" }  @$lines];
+    return map_all_but_last(sub { "$_[0] \\\n" }, shift);
 }
 
 my $selected_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
@@ -81,14 +86,10 @@ sub get_lines_of_scan_defs
     return [map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } (grep { $_->{'used'} } @$selected_scans)];
 }
 
+
 sub scan_def_line_mapping
 {
-    my $scan_defs = shift;
-    return
-    [
-        (map {"$_ -nst"} @$scan_defs[0 .. $#$scan_defs-1]),
-        $scan_defs->[-1]
-    ];
+    return map_all_but_last(sub { "$_[0] -nst" }, shift);
 }
 
 my $meta_scanner =
@@ -110,17 +111,22 @@ my $chosen_scans = $meta_scanner->chosen_scans();
 # print "scans_data = " , $scans_data, "\n";
 printf("total_iters = %s\n", $meta_scanner->total_iters());
 
+sub get_line_of_prelude
+{
+    return "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans->[$_->{'ind'}]->{'id'} } @$chosen_scans) ."\"";
+}
+
 # Construct the command line
 my $cmd_line = 
     join("",
         @{line_ends_mapping(
             [
                 get_line_of_command(),
-                @{scan_def_line_mapping(get_lines_of_scan_defs())}
+                @{scan_def_line_mapping(get_lines_of_scan_defs())},
+                get_line_of_prelude()
             ]
         )}
-    ).
-    "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans->[$_->{'ind'}]->{'id'} } @$chosen_scans) ."\"";
+    );
  
 out_script($cmd_line);
 
