@@ -153,6 +153,32 @@ sub get_line_of_prelude
         ) . "\"";
 }
 
+sub calc_script_text
+{
+    my $self = shift;
+    return 
+        join("",
+            @{$self->line_ends_mapping(
+                [
+                    $self->get_line_of_command(),
+                    @{$self->scan_def_line_mapping(
+                        $self->get_lines_of_scan_defs()
+                    )},
+                    $self->get_line_of_prelude()
+                ]
+            )}
+        );
+}
+
+sub write_script
+{
+    my $self = shift;
+     
+    $self->out_script(
+        $self->calc_script_text()
+    );
+}
+
 sub run
 {
     my $self = shift;
@@ -190,19 +216,7 @@ sub run
     # print "scans_data = " , $scans_data, "\n";
     printf("total_iters = %s\n", $meta_scanner->total_iters());
 
-    # Construct the command line
-    my $cmd_line =
-        join("",
-            @{$self->line_ends_mapping(
-                [
-                    $self->get_line_of_command(),
-                    @{$self->scan_def_line_mapping($self->get_lines_of_scan_defs())},
-                    $self->get_line_of_prelude()
-                ]
-            )}
-        );
-     
-    $self->out_script($cmd_line);
+    $self->write_script();
 
     # Analyze the results
 
@@ -211,8 +225,8 @@ sub run
         foreach my $board (0 .. $self->num_boards()-1)
         {
             my $results = $meta_scanner->calc_board_iters($board);
-            print ("\@info=". join(",", @{$results->{per_scan_iters}}). "\n");
-            print (($board+$self->start_board()) . ": ". $results->{board_iters} . "\n");
+            print "\@info=". join(",", @{$results->{per_scan_iters}}). "\n";
+            print +($board+$self->start_board()) . ": ". $results->{board_iters} . "\n";
         }
     }
 
