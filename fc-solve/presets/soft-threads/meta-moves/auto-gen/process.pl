@@ -100,7 +100,7 @@ if ($trace)
     foreach my $board (1 .. $num_boards)
     {
         my $total_iters = 0;
-        my @info = list($orig_scans_data->slice(($board-1).",:"));
+        my @info = PDL::list($orig_scans_data->slice(($board-1).",:"));
         print ("\@info=". join(",", @info). "\n");
         foreach my $s (@$chosen_scans)
         {
