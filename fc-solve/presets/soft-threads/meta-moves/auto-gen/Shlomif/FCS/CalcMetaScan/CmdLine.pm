@@ -13,7 +13,6 @@ use MyInput;
 
 __PACKAGE__->mk_accessors(qw(
     arbitrator
-    chosen_scans
     num_boards
     output_filename
     quotas_expr
@@ -150,7 +149,7 @@ sub get_line_of_prelude
     my $self = shift;
     return "--prelude \"" .
         join(",",
-            map { $self->format_prelude_iter($_) } @{$self->chosen_scans()}
+            map { $self->format_prelude_iter($_) } @{$self->get_chosen_scans()}
         ) . "\"";
 }
 
@@ -212,6 +211,12 @@ sub init_arbitrator
     );
 }
 
+sub get_chosen_scans
+{
+    my $self = shift;
+    return $self->arbitrator()->chosen_scans();
+}
+
 sub run
 {
     my $self = shift;
@@ -225,7 +230,6 @@ sub run
         $self->arbitrator()->do_rle();    
     }
 
-    $self->chosen_scans($self->arbitrator()->chosen_scans());
     printf("total_iters = %s\n", $self->arbitrator()->total_iters());
 
     $self->write_script();
