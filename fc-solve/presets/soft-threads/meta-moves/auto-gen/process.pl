@@ -31,9 +31,6 @@ my @selected_scans = do {
     @$sel_scans;
 };
     
-#my $scans_data = [];
-#my $scans_data = zeroes($num_boards, scalar(@selected_scans));
-
 my $scans_data = MyInput::get_scans_data($start_board, $num_boards, \@selected_scans);
 
 my $orig_scans_data = $scans_data->copy();
