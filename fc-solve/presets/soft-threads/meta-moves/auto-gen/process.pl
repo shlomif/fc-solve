@@ -65,9 +65,16 @@ sub get_line_of_command
 
 my $selected_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
 
+
 my $scans_data = MyInput::get_scans_data($start_board, $num_boards, $selected_scans);
 
 my $orig_scans_data = $scans_data->copy();
+
+sub get_lines_of_scan_defs
+{
+    return [map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } (grep { $_->{'used'} } @$selected_scans)];
+}
+
 
 my $meta_scanner =
     Shlomif::FCS::CalcMetaScan->new(
@@ -85,15 +92,12 @@ if ($rle)
 }
 
 my $chosen_scans = $meta_scanner->chosen_scans();
-my $total_iters = $meta_scanner->total_iters();
-    
-
 # print "scans_data = " , $scans_data, "\n";
-print "total_iters = $total_iters\n";
+printf("total_iters = %s\n", $meta_scanner->total_iters());
 
 # Construct the command line
 my $cmd_line = get_line_of_command() . " \\\n" .
-    join(" -nst \\\n", map { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } (grep { $_->{'used'} } @$selected_scans)) . " \\\n" .
+    join(" -nst \\\n", @{get_lines_of_scan_defs()}) . " \\\n" .
     "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans->[$_->{'ind'}]->{'id'} } @$chosen_scans) ."\"";
  
 out_script($cmd_line);
