@@ -111,13 +111,22 @@ my $chosen_scans = $meta_scanner->chosen_scans();
 # print "scans_data = " , $scans_data, "\n";
 printf("total_iters = %s\n", $meta_scanner->total_iters());
 
+sub format_prelude_iter
+{
+    my $iter = shift;
+    return $iter->{'q'} . '@' . $selected_scans->[$iter->{'ind'}]->{'id'};
+}
+
 sub get_line_of_prelude
 {
-    return "--prelude \"" . join(",", map { $_->{'q'} . "\@" . $selected_scans->[$_->{'ind'}]->{'id'} } @$chosen_scans) ."\"";
+    return "--prelude \"" .
+        join(",",
+            map { format_prelude_iter($_) } @$chosen_scans
+        ) . "\"";
 }
 
 # Construct the command line
-my $cmd_line = 
+my $cmd_line =
     join("",
         @{line_ends_mapping(
             [
