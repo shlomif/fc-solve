@@ -1,4 +1,4 @@
-package Shlomif::FCS::CalcMetaScan;
+package Shlomif::FCS::CalcMetaScan::IterState;
 
 use strict;
 use warnings;
@@ -7,7 +7,35 @@ use PDL ();
 
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
-my @fields = (qw(
+use vars (qw(@fields %fields_map));
+@fields = (qw(
+    num_solved
+    quota
+    scan_idx
+));
+
+%fields_map = (map { $_ => 1 } @fields);
+
+__PACKAGE__->mk_accessors(@fields);
+
+sub initialize
+{
+    my $self = shift;
+    %$self = (%$self, @_);
+
+    return 0;
+}
+
+package Shlomif::FCS::CalcMetaScan;
+
+use strict;
+use warnings;
+
+use base 'Shlomif::FCS::CalcMetaScan::Base';
+
+use vars (qw(@fields %fields_map));
+
+@fields = (qw(
     chosen_scans
     num_boards
     orig_scans_data
@@ -20,7 +48,7 @@ my @fields = (qw(
     trace_cb
 ));
 
-my %fields_map = (map { $_ => 1 } @fields);
+%fields_map = (map { $_ => 1 } @fields);
 
 __PACKAGE__->mk_accessors(@fields);
 
@@ -111,7 +139,7 @@ sub get_selected_scan
         my $q_more = shift(@$quotas);
         if (!defined($q_more))
         {
-            return ();
+            return undef;
         }
 
         $iters_quota += $q_more;
@@ -124,36 +152,44 @@ sub get_selected_scan
                 )
               );
     }
-    return ($iters_quota, $num_solved_in_iter, $selected_scan_idx);
+    return
+        Shlomif::FCS::CalcMetaScan::IterState->new(
+            quota => $iters_quota,
+            num_solved => $num_solved_in_iter,
+            scan_idx => $selected_scan_idx,
+        );
 }
 
 sub inspect_quota
 {
     my ($self, $quotas) = @_;
 
-    my ($iters_quota, $num_solved_in_iter, $selected_scan_idx) =
-        $self->get_selected_scan($quotas)
-            or return;
+    my $state = $self->get_selected_scan($quotas)
+        or return;
 
-    push @{$self->chosen_scans()}, { 'q' => $iters_quota, 'ind' => $selected_scan_idx };
-    $self->selected_scans()->[$selected_scan_idx]->{'used'} = 1;
+    push @{$self->chosen_scans()}, 
+        {
+            'q' => $state->quota(), 
+            'ind' => $state->scan_idx() 
+        };
+    $self->selected_scans()->[$state->scan_idx()]->{'used'} = 1;
 
     my $total_boards_solved = 
-        $self->add('total_boards_solved', $num_solved_in_iter);
+        $self->add('total_boards_solved', $state->num_solved());
 
     $self->trace(
         {
-            'iters_quota' => $iters_quota,
-            'selected_scan_idx' => $selected_scan_idx,
+            'iters_quota' => $state->quota(),
+            'selected_scan_idx' => $state->scan_idx(),
             'total_boards_solved' => $total_boards_solved,
         }
     );
 
-    my $this_scan_result = ($self->scans_data()->slice(":,$selected_scan_idx"));
-    $self->add('total_iters', PDL::sum((($this_scan_result <= $iters_quota) & ($this_scan_result > 0)) * $this_scan_result));
-    my $indexes = PDL::which(($this_scan_result > $iters_quota) | ($this_scan_result < 0));
+    my $this_scan_result = ($self->scans_data()->slice(":,".$state->scan_idx()));
+    $self->add('total_iters', PDL::sum((($this_scan_result <= $state->quota()) & ($this_scan_result > 0)) * $this_scan_result));
+    my $indexes = PDL::which(($this_scan_result > $state->quota()) | ($this_scan_result < 0));
     
-    $self->add('total_iters', ($indexes->nelem() * $iters_quota));
+    $self->add('total_iters', ($indexes->nelem() * $state->quota()));
     if ($total_boards_solved == $self->num_boards())
     {
         $self->status("solved_all");
@@ -163,9 +199,9 @@ sub inspect_quota
     $self->scans_data(
         $self->scans_data()->dice($indexes, "X")->copy()
     );
-    $this_scan_result = $self->scans_data()->slice(":,$selected_scan_idx")->copy();
-    #$scans_data->slice(":,$selected_scan_idx") *= 0;
-    $self->scans_data()->slice(":,$selected_scan_idx") .= (($this_scan_result - $iters_quota) * ($this_scan_result > 0)) +
+    $this_scan_result = $self->scans_data()->slice(":,".$state->scan_idx())->copy();
+    #$scans_data->slice(":,$state->scan_idx()") *= 0;
+    $self->scans_data()->slice(":,".$state->scan_idx()) .= (($this_scan_result - $state->quota()) * ($this_scan_result > 0)) +
         ($this_scan_result * ($this_scan_result < 0));
 }
 
