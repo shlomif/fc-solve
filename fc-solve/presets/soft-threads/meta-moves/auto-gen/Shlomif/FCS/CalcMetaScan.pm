@@ -101,7 +101,7 @@ sub inspect_quota
     my %args = (@_);
     my $q_more = $args{'q_more'};
 
-    my $iters_quota = $self->iters_quota($self->iters_quota() + $q_more);
+    my $iters_quota = $self->add('iters_quota', $q_more);
 
     my (undef, $num_solved_in_iter, undef, $selected_scan_idx) =
         PDL::minmaximum(
