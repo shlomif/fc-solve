@@ -18,6 +18,7 @@ my @fields = (qw(
     quotas
     total_boards_solved
     total_iters
+    trace_cb
 ));
 
 my %fields_map = (map { $_ => 1 } @fields);
@@ -66,6 +67,8 @@ sub initialize
 
     $self->num_boards($args{'num_boards'}) or
         die "num_boards not specified!";
+
+    $self->trace_cb($args{'trace_cb'});
 
     return 0;
 }
@@ -122,7 +125,14 @@ sub inspect_quota
 
     my $total_boards_solved = 
         $self->add('total_boards_solved', $num_solved_in_iter);
-    print "$iters_quota \@ $selected_scan_idx ($total_boards_solved solved)\n";
+
+    $self->trace(
+        {
+            'iters_quota' => $iters_quota,
+            'selected_scan_idx' => $selected_scan_idx,
+            'total_boards_solved' => $total_boards_solved,
+        }
+    );
 
     my $this_scan_result = ($self->scans_data()->slice(":,$selected_scan_idx"));
     $self->add('total_iters', PDL::sum((($this_scan_result <= $iters_quota) & ($this_scan_result > 0)) * $this_scan_result));
@@ -131,7 +141,6 @@ sub inspect_quota
     $self->add('total_iters', ($indexes->nelem() * $iters_quota));
     if ($total_boards_solved == $self->num_boards())
     {
-        print "Solved all!\n";
         $self->status("solved_all");
         return;
     }    
@@ -214,5 +223,16 @@ sub calc_board_iters
             'board_iters' => $board_iters,
         };
 }
+
+sub trace
+{
+    my ($self, $args) = @_;
+    my $trace_cb = $self->trace_cb();
+    if (UNIVERSAL::isa($trace_cb, "CODE"))
+    {
+        $trace_cb->($args);
+    }
+}
+
 1;
 

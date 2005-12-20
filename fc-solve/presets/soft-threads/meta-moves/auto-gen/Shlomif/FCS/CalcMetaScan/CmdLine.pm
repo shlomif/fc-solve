@@ -206,6 +206,14 @@ sub calc_scans_data
         );
 }
 
+sub arbitrator_trace_cb
+{
+    my $args = shift;
+    printf("%s \@ %s (%s solved)\n",
+        @$args{qw(iters_quota selected_scan_idx total_boards_solved)}
+    );
+}
+
 sub init_arbitrator
 {
     my $self = shift;
@@ -223,6 +231,7 @@ sub init_arbitrator
             'selected_scans' => $self->selected_scans(),
             'num_boards' => $self->num_boards(),
             'scans_data' => $self->calc_scans_data(),
+            'trace_cb' => \&arbitrator_trace_cb,
         )
     );
 }
@@ -236,6 +245,10 @@ sub get_chosen_scans
 sub report_total_iters
 {
     my $self = shift;
+    if ($self->arbitrator()->status() eq "solved_all")
+    {
+        print "Solved all!\n";
+    }
     printf("total_iters = %s\n", $self->arbitrator()->total_iters());
 }
 
