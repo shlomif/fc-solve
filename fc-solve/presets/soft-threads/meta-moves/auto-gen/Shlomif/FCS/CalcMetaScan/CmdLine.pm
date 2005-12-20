@@ -126,7 +126,7 @@ sub line_ends_mapping
 sub get_used_scans
 {
     my $self = shift;
-    return [ grep { $_->{'used'} } @{$self->selected_scans()}];
+    return [ grep { $_->is_used() } @{$self->selected_scans()}];
 }
 
 sub get_lines_of_scan_defs
@@ -149,7 +149,7 @@ sub format_prelude_iter
 {
     my $self = shift;
     my $iter = shift;
-    return $iter->{'q'} . '@' . $self->selected_scans()->[$iter->{'ind'}]->{'id'};
+    return $iter->{'q'} . '@' . $self->selected_scans()->[$iter->{'ind'}]->id();
 }
 
 sub get_line_of_prelude

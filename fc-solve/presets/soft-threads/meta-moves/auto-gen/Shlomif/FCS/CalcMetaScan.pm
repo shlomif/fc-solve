@@ -41,6 +41,8 @@ package Shlomif::FCS::CalcMetaScan;
 use strict;
 use warnings;
 
+use Shlomif::FCS::CalcMetaScan::Structs;
+
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
 use vars (qw(@fields %fields_map));
@@ -177,7 +179,7 @@ sub inspect_quota
         or return;
 
     $self->add_chosen($state);
-    $self->selected_scans()->[$state->scan_idx()]->{'used'} = 1;
+    $self->selected_scans()->[$state->scan_idx()]->mark_as_used();
 
     my $total_boards_solved = 
         $self->add('total_boards_solved', $state->num_solved());
@@ -271,7 +273,7 @@ sub calc_board_iters
         }
     }
 
-    return 
+    return
         {
             'per_scan_iters' => \@orig_info,
             'board_iters' => $board_iters,
