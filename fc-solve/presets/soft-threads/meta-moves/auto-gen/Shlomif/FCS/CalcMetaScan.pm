@@ -9,7 +9,6 @@ use base 'Shlomif::FCS::CalcMetaScan::Base';
 
 my @fields = (qw(
     chosen_scans
-    iters_quota
     num_boards
     orig_scans_data
     scans_data
@@ -98,27 +97,43 @@ sub scans_rle
     return \@a;
 }
 
-sub inspect_quota
+sub get_selected_scan
 {
-    my $self = shift;
-    my %args = (@_);
-    my $q_more = $args{'q_more'};
+    my ($self, $quotas) = @_;
 
-    my $iters_quota = $self->add('iters_quota', $q_more);
-
-    my (undef, $num_solved_in_iter, undef, $selected_scan_idx) =
-        PDL::minmaximum(
-            PDL::sumover(
-                ($self->scans_data() <= $iters_quota) & 
-                ($self->scans_data() > 0)
-            )
-          );
+    my $iters_quota = 0;
+    my $num_solved_in_iter = 0;
+    my $selected_scan_idx;
 
     # If no boards were solved, then try with a larger quota
-    if ($num_solved_in_iter == 0)
+    while ($num_solved_in_iter == 0)
     {
-        return;
+        my $q_more = shift(@$quotas);
+        if (!defined($q_more))
+        {
+            return ();
+        }
+
+        $iters_quota += $q_more;
+
+        (undef, $num_solved_in_iter, undef, $selected_scan_idx) =
+            PDL::minmaximum(
+                PDL::sumover(
+                    ($self->scans_data() <= $iters_quota) & 
+                    ($self->scans_data() > 0)
+                )
+              );
     }
+    return ($iters_quota, $num_solved_in_iter, $selected_scan_idx);
+}
+
+sub inspect_quota
+{
+    my ($self, $quotas) = @_;
+
+    my ($iters_quota, $num_solved_in_iter, $selected_scan_idx) =
+        $self->get_selected_scan($quotas)
+            or return;
 
     push @{$self->chosen_scans()}, { 'q' => $iters_quota, 'ind' => $selected_scan_idx };
     $self->selected_scans()->[$selected_scan_idx]->{'used'} = 1;
@@ -152,8 +167,6 @@ sub inspect_quota
     #$scans_data->slice(":,$selected_scan_idx") *= 0;
     $self->scans_data()->slice(":,$selected_scan_idx") .= (($this_scan_result - $iters_quota) * ($this_scan_result > 0)) +
         ($this_scan_result * ($this_scan_result < 0));
-
-    $self->iters_quota(0);
 }
 
 sub get_quotas
@@ -169,13 +182,13 @@ sub calc_meta_scan
     $self->chosen_scans([]);
 
     $self->total_boards_solved(0);
-    $self->iters_quota(0);
     $self->total_iters(0);
 
     $self->status("iterating");
-    QUOTA_LOOP: foreach my $q_more (@{$self->get_quotas()})
+    my $quotas = [ @{$self->get_quotas()} ];
+    QUOTA_LOOP: while (@$quotas)
     {
-        $self->inspect_quota('q_more' => $q_more);
+        $self->inspect_quota($quotas);
         if ($self->status() eq "solved_all")
         {
             last QUOTA_LOOP;
