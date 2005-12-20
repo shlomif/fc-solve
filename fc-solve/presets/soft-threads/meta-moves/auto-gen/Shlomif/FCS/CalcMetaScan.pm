@@ -26,6 +26,16 @@ sub initialize
     return 0;
 }
 
+sub get_chosen_struct
+{
+    my $self = shift;
+    return
+        {
+            'q' => $self->quota(), 
+            'ind' => $self->scan_idx() 
+        };    
+}
+
 package Shlomif::FCS::CalcMetaScan;
 
 use strict;
@@ -51,15 +61,6 @@ use vars (qw(@fields %fields_map));
 %fields_map = (map { $_ => 1 } @fields);
 
 __PACKAGE__->mk_accessors(@fields);
-
-sub new
-{
-    my $class = shift;
-    my $self = {};
-    bless $self, $class;
-    $self->initialize(@_);
-    return $self;
-}
 
 sub add
 {
@@ -160,6 +161,14 @@ sub get_selected_scan
         );
 }
 
+sub add_chosen
+{
+    my $self = shift;
+    my $state = shift;
+
+    push @{$self->chosen_scans()}, $state->get_chosen_struct();
+}
+
 sub inspect_quota
 {
     my ($self, $quotas) = @_;
@@ -167,11 +176,7 @@ sub inspect_quota
     my $state = $self->get_selected_scan($quotas)
         or return;
 
-    push @{$self->chosen_scans()}, 
-        {
-            'q' => $state->quota(), 
-            'ind' => $state->scan_idx() 
-        };
+    $self->add_chosen($state);
     $self->selected_scans()->[$state->scan_idx()]->{'used'} = 1;
 
     my $total_boards_solved = 
