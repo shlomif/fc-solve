@@ -9,6 +9,7 @@ use base 'Shlomif::FCS::CalcMetaScan::Base';
 
 use vars (qw(@fields %fields_map));
 @fields = (qw(
+    main
     num_solved
     quota
     scan_idx
@@ -34,6 +35,18 @@ sub get_chosen_struct
             'q' => $self->quota(), 
             'ind' => $self->scan_idx() 
         };    
+}
+
+sub detach
+{
+    my $self = shift;
+    $self->main(undef);
+}
+
+sub idx_slice : lvalue
+{
+    my $self = shift;
+    return $self->main()->scans_data()->slice(":,".$self->scan_idx())
 }
 
 package Shlomif::FCS::CalcMetaScan;
@@ -157,6 +170,7 @@ sub get_selected_scan
     }
     return
         Shlomif::FCS::CalcMetaScan::IterState->new(
+            main => $self,
             quota => $iters_quota,
             num_solved => $num_solved_in_iter,
             scan_idx => $selected_scan_idx,
@@ -214,7 +228,7 @@ sub inspect_quota
 
     $self->update_using_iter_state($state);
 
-    my $this_scan_result = ($self->scans_data()->slice(":,".$state->scan_idx()));
+    my $this_scan_result = $state->idx_slice();
     $self->add('total_iters', PDL::sum((($this_scan_result <= $state->quota()) & ($this_scan_result > 0)) * $this_scan_result));
     my $indexes = PDL::which(($this_scan_result > $state->quota()) | ($this_scan_result < 0));
     
@@ -222,16 +236,18 @@ sub inspect_quota
     if ($self->total_boards_solved() == $self->num_boards())
     {
         $self->status("solved_all");
-        return;
-    }    
-    
-    $self->scans_data(
-        $self->scans_data()->dice($indexes, "X")->copy()
-    );
-    $this_scan_result = $self->scans_data()->slice(":,".$state->scan_idx())->copy();
-    #$scans_data->slice(":,$state->scan_idx()") *= 0;
-    $self->scans_data()->slice(":,".$state->scan_idx()) .= (($this_scan_result - $state->quota()) * ($this_scan_result > 0)) +
-        ($this_scan_result * ($this_scan_result < 0));
+    }
+    else
+    {
+        $self->scans_data(
+            $self->scans_data()->dice($indexes, "X")->copy()
+        );
+        $this_scan_result = $state->idx_slice()->copy();
+        $state->idx_slice() .= (($this_scan_result - $state->quota()) * ($this_scan_result > 0)) +
+            ($this_scan_result * ($this_scan_result < 0));
+    }
+
+    $state->detach();
 }
 
 sub get_quotas
