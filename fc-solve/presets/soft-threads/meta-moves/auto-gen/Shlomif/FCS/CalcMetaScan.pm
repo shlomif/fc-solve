@@ -75,6 +75,17 @@ sub update_total_iters
     );
 }
 
+sub update_idx_slice
+{
+    my $state = shift;
+    my $r = $state->idx_slice()->copy();
+    # $r cannot be 0, because the ones that were 0, were already solved
+    # in $state->update_total_iters().
+    $state->idx_slice() .= 
+        (($r > 0) * ($r - $state->quota())) + 
+        (($r < 0) * ($r                  ));
+}
+
 package Shlomif::FCS::CalcMetaScan;
 
 use strict;
@@ -262,9 +273,7 @@ sub inspect_quota
     }
     else
     {
-        my $this_scan_result = $state->idx_slice()->copy();
-        $state->idx_slice() .= (($this_scan_result - $state->quota()) * ($this_scan_result > 0)) +
-            ($this_scan_result * ($this_scan_result < 0));
+        $state->update_idx_slice();
     }
 
     $state->detach();
