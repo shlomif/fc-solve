@@ -171,6 +171,40 @@ sub add_chosen
     push @{$self->chosen_scans()}, $state->get_chosen_struct();
 }
 
+sub trace_wrapper
+{
+    my ($self, $state) = @_;
+    $self->trace(
+        {
+            'iters_quota' => $state->quota(),
+            'selected_scan_idx' => $state->scan_idx(),
+            'total_boards_solved' => $self->total_boards_solved(),
+        }
+    );
+}
+
+sub mark_scan_as_used
+{
+    my ($self, $state) = @_;
+    $self->selected_scans()->[$state->scan_idx()]->mark_as_used();
+}
+
+sub update_total_boards_solved
+{
+    my ($self, $state) = @_;
+    $self->add('total_boards_solved', $state->num_solved());
+}
+
+sub update_using_iter_state
+{
+    my ($self, $state) = @_;
+
+    $self->add_chosen($state);
+    $self->mark_scan_as_used($state);
+    $self->update_total_boards_solved($state);
+    $self->trace_wrapper($state);
+}
+
 sub inspect_quota
 {
     my ($self, $quotas) = @_;
@@ -178,26 +212,14 @@ sub inspect_quota
     my $state = $self->get_selected_scan($quotas)
         or return;
 
-    $self->add_chosen($state);
-    $self->selected_scans()->[$state->scan_idx()]->mark_as_used();
-
-    my $total_boards_solved = 
-        $self->add('total_boards_solved', $state->num_solved());
-
-    $self->trace(
-        {
-            'iters_quota' => $state->quota(),
-            'selected_scan_idx' => $state->scan_idx(),
-            'total_boards_solved' => $total_boards_solved,
-        }
-    );
+    $self->update_using_iter_state($state);
 
     my $this_scan_result = ($self->scans_data()->slice(":,".$state->scan_idx()));
     $self->add('total_iters', PDL::sum((($this_scan_result <= $state->quota()) & ($this_scan_result > 0)) * $this_scan_result));
     my $indexes = PDL::which(($this_scan_result > $state->quota()) | ($this_scan_result < 0));
     
     $self->add('total_iters', ($indexes->nelem() * $state->quota()));
-    if ($total_boards_solved == $self->num_boards())
+    if ($self->total_boards_solved() == $self->num_boards())
     {
         $self->status("solved_all");
         return;
