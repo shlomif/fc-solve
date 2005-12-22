@@ -49,6 +49,32 @@ sub idx_slice : lvalue
     return $self->main()->scans_data()->slice(":,".$self->scan_idx())
 }
 
+sub update_total_iters
+{
+    my $state = shift;
+
+    # $r is the result of this scan.
+    my $r = $state->idx_slice();
+    
+    # Add the total iterations for all the states that were solved by
+    # this scan.
+    $state->main()->add('total_iters',
+        PDL::sum((($r <= $state->quota()) & ($r > 0)) * $r)
+    );
+    
+    # Find all the states that weren't solved.
+    my $indexes = PDL::which(($r > $state->quota()) | ($r < 0));
+    
+    # Add the iterations for all the states that have not been solved
+    # yet.
+    $state->main()->add('total_iters', ($indexes->nelem() * $state->quota()));
+    
+    # Keep only the states that have not been solved yet.
+    $state->main()->scans_data(
+        $state->main()->scans_data()->dice($indexes, "X")->copy()
+    );
+}
+
 package Shlomif::FCS::CalcMetaScan;
 
 use strict;
@@ -228,21 +254,15 @@ sub inspect_quota
 
     $self->update_using_iter_state($state);
 
-    my $this_scan_result = $state->idx_slice();
-    $self->add('total_iters', PDL::sum((($this_scan_result <= $state->quota()) & ($this_scan_result > 0)) * $this_scan_result));
-    my $indexes = PDL::which(($this_scan_result > $state->quota()) | ($this_scan_result < 0));
+    $state->update_total_iters();
     
-    $self->add('total_iters', ($indexes->nelem() * $state->quota()));
     if ($self->total_boards_solved() == $self->num_boards())
     {
         $self->status("solved_all");
     }
     else
     {
-        $self->scans_data(
-            $self->scans_data()->dice($indexes, "X")->copy()
-        );
-        $this_scan_result = $state->idx_slice()->copy();
+        my $this_scan_result = $state->idx_slice()->copy();
         $state->idx_slice() .= (($this_scan_result - $state->quota()) * ($this_scan_result > 0)) +
             ($this_scan_result * ($this_scan_result < 0));
     }
