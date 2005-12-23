@@ -92,6 +92,13 @@ sub mark_as_used
     $state->main()->selected_scans()->[$state->scan_idx()]->mark_as_used();
 }
 
+sub add_chosen
+{
+    my $state = shift;
+
+    push @{$state->main()->chosen_scans()}, $state->get_chosen_struct();
+}
+
 package Shlomif::FCS::CalcMetaScan;
 
 use strict;
@@ -220,13 +227,6 @@ sub get_selected_scan
         );
 }
 
-sub add_chosen
-{
-    my $self = shift;
-    my $state = shift;
-
-    push @{$self->chosen_scans()}, $state->get_chosen_struct();
-}
 
 sub trace_wrapper
 {
@@ -250,7 +250,7 @@ sub update_using_iter_state
 {
     my ($self, $state) = @_;
 
-    $self->add_chosen($state);
+    $state->add_chosen();
     $state->mark_as_used();
     $self->update_total_boards_solved($state);
     $self->trace_wrapper($state);
