@@ -105,6 +105,18 @@ sub update_total_boards_solved
     $state->main()->add('total_boards_solved', $state->num_solved());
 }
 
+sub trace_wrapper
+{
+    my $state = shift;
+    $state->main()->trace(
+        {
+            'iters_quota' => $state->quota(),
+            'selected_scan_idx' => $state->scan_idx(),
+            'total_boards_solved' => $state->main()->total_boards_solved(),
+        }
+    );
+}
+
 package Shlomif::FCS::CalcMetaScan;
 
 use strict;
@@ -234,17 +246,6 @@ sub get_selected_scan
 }
 
 
-sub trace_wrapper
-{
-    my ($self, $state) = @_;
-    $self->trace(
-        {
-            'iters_quota' => $state->quota(),
-            'selected_scan_idx' => $state->scan_idx(),
-            'total_boards_solved' => $self->total_boards_solved(),
-        }
-    );
-}
 
 
 sub update_using_iter_state
@@ -254,7 +255,7 @@ sub update_using_iter_state
     $state->add_chosen();
     $state->mark_as_used();
     $state->update_total_boards_solved();
-    $self->trace_wrapper($state);
+    $state->trace_wrapper();
 }
 
 sub inspect_quota
