@@ -99,6 +99,12 @@ sub add_chosen
     push @{$state->main()->chosen_scans()}, $state->get_chosen_struct();
 }
 
+sub update_total_boards_solved
+{
+    my $state = shift;
+    $state->main()->add('total_boards_solved', $state->num_solved());
+}
+
 package Shlomif::FCS::CalcMetaScan;
 
 use strict;
@@ -240,11 +246,6 @@ sub trace_wrapper
     );
 }
 
-sub update_total_boards_solved
-{
-    my ($self, $state) = @_;
-    $self->add('total_boards_solved', $state->num_solved());
-}
 
 sub update_using_iter_state
 {
@@ -252,7 +253,7 @@ sub update_using_iter_state
 
     $state->add_chosen();
     $state->mark_as_used();
-    $self->update_total_boards_solved($state);
+    $state->update_total_boards_solved();
     $self->trace_wrapper($state);
 }
 
