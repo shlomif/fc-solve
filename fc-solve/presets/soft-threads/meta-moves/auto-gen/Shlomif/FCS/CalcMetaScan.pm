@@ -86,6 +86,12 @@ sub update_idx_slice
         (($r < 0) * ($r                  ));
 }
 
+sub mark_as_used
+{
+    my $state = shift;
+    $state->main()->selected_scans()->[$state->scan_idx()]->mark_as_used();
+}
+
 package Shlomif::FCS::CalcMetaScan;
 
 use strict;
@@ -234,12 +240,6 @@ sub trace_wrapper
     );
 }
 
-sub mark_scan_as_used
-{
-    my ($self, $state) = @_;
-    $self->selected_scans()->[$state->scan_idx()]->mark_as_used();
-}
-
 sub update_total_boards_solved
 {
     my ($self, $state) = @_;
@@ -251,7 +251,7 @@ sub update_using_iter_state
     my ($self, $state) = @_;
 
     $self->add_chosen($state);
-    $self->mark_scan_as_used($state);
+    $state->mark_as_used();
     $self->update_total_boards_solved($state);
     $self->trace_wrapper($state);
 }
