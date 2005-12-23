@@ -1,3 +1,7 @@
+package Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas;
+
+use base 'Error';
+
 package Shlomif::FCS::CalcMetaScan::IterState;
 
 use strict;
@@ -132,6 +136,8 @@ package Shlomif::FCS::CalcMetaScan;
 use strict;
 use warnings;
 
+use Error qw(:try);
+
 use Shlomif::FCS::CalcMetaScan::Structs;
 
 use base 'Shlomif::FCS::CalcMetaScan::Base';
@@ -219,7 +225,7 @@ sub scans_rle
     return \@a;
 }
 
-sub get_selected_scan
+sub get_iter_state_params
 {
     my ($self, $quotas) = @_;
 
@@ -233,7 +239,7 @@ sub get_selected_scan
         my $q_more = shift(@$quotas);
         if (!defined($q_more))
         {
-            return undef;
+            throw Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas;
         }
 
         $iters_quota += $q_more;
@@ -247,24 +253,29 @@ sub get_selected_scan
               );
     }
     return
-        Shlomif::FCS::CalcMetaScan::IterState->new(
-            main => $self,
+        (
             quota => $iters_quota,
             num_solved => $num_solved_in_iter,
             scan_idx => $selected_scan_idx,
         );
 }
 
+sub get_selected_scan
+{
+    my ($self, $quotas) = @_;
 
-
-
+    return
+        Shlomif::FCS::CalcMetaScan::IterState->new(
+            main => $self,
+            $self->get_iter_state_params($quotas),
+        );
+}
 
 sub inspect_quota
 {
     my ($self, $quotas) = @_;
 
-    my $state = $self->get_selected_scan($quotas)
-        or return;
+    my $state = $self->get_selected_scan($quotas);
 
     $state->register_params();
 
@@ -299,13 +310,17 @@ sub calc_meta_scan
 
     $self->status("iterating");
     my $quotas = [ @{$self->get_quotas()} ];
-    QUOTA_LOOP: while (@$quotas)
+    # $self->inspect_quota() throws ::Error::OutOfQuotas if
+    # it does not have any available quotas.
+    try
     {
-        $self->inspect_quota($quotas);
-        if ($self->status() eq "solved_all")
+        while ($self->status() eq "iterating")
         {
-            last QUOTA_LOOP;
+            $self->inspect_quota($quotas);
         }
+    }
+    catch Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas with
+    {
     }
 }
 
