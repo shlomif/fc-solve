@@ -117,6 +117,16 @@ sub trace_wrapper
     );
 }
 
+sub register_params
+{
+    my $state = shift;
+
+    $state->add_chosen();
+    $state->mark_as_used();
+    $state->update_total_boards_solved();
+    $state->trace_wrapper();
+}
+
 package Shlomif::FCS::CalcMetaScan;
 
 use strict;
@@ -248,15 +258,6 @@ sub get_selected_scan
 
 
 
-sub update_using_iter_state
-{
-    my ($self, $state) = @_;
-
-    $state->add_chosen();
-    $state->mark_as_used();
-    $state->update_total_boards_solved();
-    $state->trace_wrapper();
-}
 
 sub inspect_quota
 {
@@ -265,7 +266,7 @@ sub inspect_quota
     my $state = $self->get_selected_scan($quotas)
         or return;
 
-    $self->update_using_iter_state($state);
+    $state->register_params();
 
     $state->update_total_iters();
     
