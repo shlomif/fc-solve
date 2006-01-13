@@ -65,3 +65,7 @@ $(DOC).rtf: $(DSSSL_SOURCES)
 upload: html pdf arc rtf
 	$(RSYNC) -r $(DOC) $(DOC).pdf $(DOC).rtf shlomif@shell.berlios.de:/home/groups/fc-solve/htdocs/arch_doc/
 
+clean:
+	rm -f $(DOC).pdf $(DOC).rtf $(SRC_ARCHIVE)
+	rm -fr $(HTML_XSL_TARGET)
+
