@@ -1,0 +1,48 @@
+--- Pressing ---
+
+* Convert some of the documentation to Perl-POD or DocBook.
+
+* After everything: reorganize the --help behaviour according to the Freshmeat
+editorial
+
+--- Non-pressing ---
+
+* Integrate the patsolve's prioritization and mixed BFS/DFS scan.
+
+* Make the code splint-clean.
+
+* Write an architecture document.
+
+* Write a Perl Script to parse, analyze and do a sanity check for a solution.
+(-p -t -sam)
+
+* Write a multi-threaded version and see if it runs ok.
+
+* Write a multi-process client/server program.
+
+* Port to Java (?)
+
+* Integrate into GNOME Freecell and/or GNOME AisleRiot and/or PySol.
+
+* Code algorithms for similiar solitaire games. (maybe a perl program that 
+generates C code). - DONE partialy
+
+* Comment the code.
+
+* Add a switch to ask the user if he wants to continue and enter a bigger 
+iterations limit.
+
+* Add a more verbose preset error handling. 
+(explain why it could not be applied).
+
+* Check for unmalloced data and if so gracefully exit.
+
+* Add a limit to stacks number (in the case of Indirect Stack States),
+number of states that are stored anywhere, etc.
+
+* Experiment with a delta-based state storage.
+
+* Code a generic tests grouping.
+
+* Interactive mode? Continue a scan that reached its limit.
+
