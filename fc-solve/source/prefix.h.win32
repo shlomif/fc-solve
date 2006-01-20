@@ -1,4 +1,0 @@
-#define FREECELL_SOLVER_PREFIX "c:/Program Files/Freecell Solver"
-
-#define FREECELL_SOLVER_PKG_DATA_DIR "c:/Program Files/Freecell Solver/share/freecell-solver/"
-
