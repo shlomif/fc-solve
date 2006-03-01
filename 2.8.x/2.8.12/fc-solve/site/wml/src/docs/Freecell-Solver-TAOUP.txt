@@ -1,0 +1,154 @@
+From: Shlomi Fish <shlomif@iglu.org.il>
+To: Eric S. Raymond <esr@thyrsus.com>
+Subject: TAOUP: Review + Some Possible Addition to the Book
+Date: Thu, 25 Dec 2003 01:50:37 +0200
+
+I wrote a review for "The Art of UNIX Programming" (which I read online) here:
+
+http://www.perl.org.il/kwiki/index.cgi?BookReviewTheArtOfUnixProgrammingByShlomif
+
+Note that I personally have very much enjoyed the book and would highly 
+recommend it. Still, the review contains some impressions, some of which are 
+critical of it, so it's up to you to decide whether it is "raving" or "good", 
+after you have read it.
+
+Now, here's a possible addition, which I can warn you in advance that it 
+refers to a software which I am its primary author. The program in question 
+is Freecell Solver:
+
+http://vipe.technion.ac.il/~shlomif/freecell-solver/
+
+Which is an ANSI C library and also standalone command line executable, that 
+can be used to automatically solve several variants of Card Solitaire. It's 
+not very long, only 15,000 or so lines. Now, the interesting thing about it 
+was that between version 2.6.x and version 2.8.x (two consecutive stable 
+releases) I only added usability features and did not touch the core at all. 
+Here is a description of them, as they may prove of interest:
+
+1. The revamp of the help system. Refer here:
+
+http://freshmeat.net/articles/view/519/
+
+For an editorial I wrote about it for Freshmeat. I analyze various ways of 
+dealing with an inflation of command line options, and how to gracefully 
+handle it.
+
+Of course, seeing it in action may require installing Freecell Solver and 
+playing a bit with it.
+
+2. Displaying a message to standard error saying "we accept standard input 
+now".
+
+In the grand tradition of UNIX filters, I made Freecell Solver able to accept 
+a board layout (of the Solitaire game) in the standard input if no board file 
+is specified. I made it the default behaviour even if no "-" is specified.
+
+The problem was that I also maintained some Win32 binaries of the program for 
+people to download and got a lot of questions of the form:
+
+	I downloaded Freecell Solver, unpacked it, double clicked it and it just
+        opens an empty DOS box.
+
+To resolve this problem (and also to help UNIX people for which Freecell 
+Solver just gets stuck on the command line waiting for input), I printed this 
+notice to standard error:
+
+<<<
+Reading the board from the standard input.
+Type "fc-solve --help" for more usage information.
+To cancel this message set the FREECELL_SOLVER_QUIET environment variable.
+>>>
+
+Which naturally, can be turned off by setting the appropriate environment 
+variable. This has eliminated most such questions, albeit I still get 
+questions from Windows people who are relatively clueless as far as using 
+command line applications are concerned, which I happily instruct them how to 
+use, or refer them to the WYSIWYG solution. (which I did not author entirely, 
+or even initiated)
+
+3. Using the command line arguments as a configuration language
+
+Throughout its development, Freecell Solver collected more and more features, 
+which added up to an accumulation of command line options. With the addition 
+of the multiple scans operating on the same states collection in Freecell 
+Solver 2.4.0 and later on the so-called "prelude" feature, it was possible to 
+construct command lines and shell scripts to solve boards or ranges of boards 
+quite efficiently on average. One preset is given here for illustration:
+
+<<<
+--method soft-dfs -to 0123456789 -step 500 --st-name 1 -nst \
+--method soft-dfs -to 0123467 -step 500 --st-name 2 -nst \
+--method random-dfs -seed 2 -to 0[01][23456789] -step 500 --st-name 3 -nst \
+--method random-dfs -seed 1 -to 0[0123456789] -step 500 --st-name 4 -nst \
+--method random-dfs -seed 3 -to 0[01][23467] -step 500 --st-name 5 -nst \
+--method random-dfs -seed 4 -to 0[0123467] -step 500 --st-name 9 -nst \
+--method random-dfs -to [01][23456789] -seed 8 -step 500 --st-name 10 -nst \
+--method random-dfs -to [01][23456789] -seed 268 -step 500 --st-name 12 -nst \
+--method a-star -asw 0.2,0.3,0.5,0,0 -step 500 --st-name 16 -nst \
+--method a-star -to 0123467 -asw 0.5,0,0.3,0,0 -step 500 --st-name 18 -nst \
+--method soft-dfs -to 0126394875 -step 500 --st-name 19 \
+--prelude 
+"350@2,350@5,350@9,350@12,350@2,350@10,350@3,350@9,350@5,350@18,350@2,
+350@5,350@4,350@10,350@4,350@12,1050@9,700@18,350@10,350@5,350@2,350@10,1050@16,
+350@2,700@4,350@10,1050@2,1400@3,350@18,1750@5,350@16,350@18,700@4,1050@12,2450@
+5,1400@18,1050@2,1400@10,6300@1,4900@12,8050@18"
+>>>
+
+(seriously, I'm not kidding).
+
+The problem is that it is quite uncivil to use on the command line at every 
+time. To resolve it and also allow users to manage their own custom 
+configurations like that, I added the following options to Freecell Solver:
+
+1. a --read-from-file option that processes a file as if it was given on the 
+command line. To implement it, I had to build a processor for a subset of the 
+Bourne shell syntax. (which I have to admit is one of the hairiest pieces of 
+code I had to write). This makes sure that the files are still usable as 
+shell scripts should the user want to, or that he can copy and paste things 
+from the command line.
+
+2. A -l [configuration] option that loads a certain configuration. The 
+configurations are specified in several presets files with simple formats 
+that can are found in the system-wide installation, in an 
+application-specific dot-directory under the home directory, and also in a 
+place customizable via an environment variable.  There, the user can specify 
+short commands to process in case the configuration's name is encountered, 
+which usually will just read a more verbose file.
+
+Using these two features it is possible in Freecell Solver 2.8.0 to abbreviate 
+the command line above as:
+
+$ fc-solve -l cool-jives
+
+Or alternatively, use:
+
+$ freecell-solver-range-parallel-solve 1 32000 1 -l cool-jives
+
+To solve the Microsoft Freecell 32,000 boards really quickly. ;-)
+
+This may be the case where the command line syntax of software that evolved, 
+can eventually be used as a configuration language proper, without adding 
+much more complexity to the program, that is necessary to create a 
+configuration language analyzer.
+
+Note that this later proved useful as I could configure a solver instance by 
+passing along an argv/argc style array of strings. When coding the Python 
+interface (which I aimed at providing integration of Freecell Solver into 
+PySol), I was able to leave most configuration commands alone, and just keep 
+the routine that configures an instance according to the command line 
+arguments.
+
+------
+
+Other than that - thanks for a great book and other great work (I really 
+enjoyed the CatB series, How to become a Hacker FAQ, and other resources on 
+your sites, as well), and I hope you find my review and this commentary 
+useful.
+
+---------------------------------------------------------------------
+Shlomi Fish      shlomif@iglu.org.il
+Homepage: http://t2.technion.ac.il/~shlomif/
+
+I don't believe in fairies. Oops! A fairy died.
+I don't believe in fairies. Oops! Another fairy died.
+
