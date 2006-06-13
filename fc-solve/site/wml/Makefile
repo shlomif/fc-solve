@@ -25,6 +25,8 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 HTMLS = $(D)/index.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html $(D)/current-status.html $(D)/getting-credit.html
 
+TTMLS = $(D)/style.css
+
 ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
 
 INCLUDES_PROTO = std/logo.wml
@@ -63,6 +65,8 @@ endif
 
 LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags)
 
+TTML_FLAGS = -I $$HOME/.latemp/lib
+
 WML_FLAGS += --passoption=2,-X3074 \
 	-DWITH_DEVEL_VERSION=$(WITH_DEVEL_VERSION) \
 	-DRECENT_DEVEL_VERSION=$(RECENT_DEVEL_VERSION) \
@@ -70,7 +74,7 @@ WML_FLAGS += --passoption=2,-X3074 \
 	$(LATEMP_WML_FLAGS) --passoption=3,-I../lib/ \
 	-I $${HOME}/apps/wml
 
-dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC)
+dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC) 
 
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \
@@ -96,6 +100,9 @@ $(IMAGES) :: $(D)/% : src/%
 $(RAW_SUBDIRS) :: $(D)/% : src/%
 	rm -fr $@
 	cp -r $< $@
+
+$(TTMLS) :: $(D)/% : src/%.ttml
+	ttml -o $@ $(TTML_FLAGS) -DLATEMP_FILENAME=$(patsubst $(D)/%.ttml,%,$@) $<	
 
 .PHONY: 
 

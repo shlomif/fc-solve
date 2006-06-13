@@ -2,6 +2,14 @@
 
 <latemp_subject "Freecell Solver Book" />
 
+<div class="note">
+<h2>Recent Note (13-June-2006)</h2>
+I have stopped working on the book after only finishing a few chapters, and
+do not plan on resuming working on it in the near future. If you are interested
+in learning more about Freecell Solver see the <a href="./docs/">documentation
+page</a>.
+</div>
+
 <p>
 I am writing a book titled <i>Freecell Solver - Evolution of a C Program</i>
 that would cover the development of Freecell Solver, and various lessons
