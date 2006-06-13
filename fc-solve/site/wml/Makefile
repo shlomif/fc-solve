@@ -65,7 +65,7 @@ endif
 
 LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags)
 
-TTML_FLAGS = -I $$HOME/.latemp/lib
+TTML_FLAGS = -I $$HOME/conf/wml/Latemp/lib
 
 WML_FLAGS += --passoption=2,-X3074 \
 	-DWITH_DEVEL_VERSION=$(WITH_DEVEL_VERSION) \

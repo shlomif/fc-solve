@@ -6,23 +6,17 @@ a:visited
     color: purple;
 }
 a:hover { color : red }
+[% SET navbar_width = "20%" %]
+[% PROCESS "shlomif/navbar.ttml" %]
 .navbar
 {
     background-color: #C5CAE2;
-    width : 20%;
-    padding-left : 0.5em;
-    padding-right : 0.5em;
 }
 .main 
 { 
     padding-left : 1em; 
 }
 
-/* CSS Positioning */
-.navbar
-{
-    float: left;
-}
 .main 
 {
     margin-left : 23%;
