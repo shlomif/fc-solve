@@ -144,8 +144,8 @@ Freshmeat App-Index Record</a>
 Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
 </li>
 <li>
-<a href="http://vipe.technion.ac.il/~shlomif/lecture/Freecell-Solver/">
-Lecture about Freecell Solver</a>
+<a href="<get-var presentation_url />">
+A Presentation about Freecell Solver</a>
 </li>
 </ul>
 

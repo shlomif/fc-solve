@@ -47,9 +47,9 @@ h2, h3, h4
    margin-left: 17pt;
    margin-right: 17pt;
 }
+[% PROCESS "shlomif/common_defs.ttml" %]
 p.desc
 { 
-    margin-left : 70pt;
     font-weight: bold;
 }
 .main ol, .main ul, .main dl
@@ -64,8 +64,6 @@ p.desc
     border: 0;
     margin-bottom: 1em;
 }
-ul.navbarmain { padding-left : 1em ; margin-left : 1em }
-ul.navbarnested { padding-left : 0em ; margin-left : 2em }
 div.indent { margin-left : 3em }
 .bless { border: none; }
 
@@ -84,3 +82,4 @@ div.indent { margin-left : 3em }
     margin-top: 0.5em;
 }
 [% INCLUDE "shlomif/note.ttml" %]
+[% PROCESS "shlomif/common_defs.ttml" %]

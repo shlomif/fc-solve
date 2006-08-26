@@ -93,7 +93,7 @@ tests at all, and can easily be re-implemented should the need arise.
 
 <p>
 At the moment, Freecell Solver uses 
-<a href="http://vipe.technion.ac.il/~shlomif/lecture/Autotools/">GNU Autoconf,
+<a href="http://www.shlomifish.org/lecture/Autotools/">GNU Autoconf,
 Automake and Libtool</a> as its build and installation system. However, these 
 tools are incredibly idiosyncratic and painful to work with, and have
 caused many problems in the past. A more modern and superior tool is 
@@ -364,7 +364,7 @@ Again, this is something I'm planning to do, after I implement multi-threading, 
 
 <p>
 This is a <b>very</b> pipe-dream goal. As some of you may be aware I already
-wrote <a href="http://vipe.technion.ac.il/~shlomif/lm-solve/">LM-Solve</a> as
+wrote <a href="http://www.shlomifish.org/lm-solve/">LM-Solve</a> as
 a solver for several types of Logic Mazes, which are another type of 
 single-player games (which are much easier to solve using a computer). It is
 written in Perl, but still runs quite quickly, but still largely incomplete.

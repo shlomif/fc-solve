@@ -37,7 +37,7 @@ history, a Freshmeat internal hit count, and other useful information.
 
 <li>
 <p>
-<a href="http://vipe.technion.ac.il/~shlomif/lecture/Freecell-Solver/">Freecell
+<a href="<get-var presentation_url />">Freecell
 Solver Lecture</a> - A lecture I gave to the 
 <a href="http://linuxclub.il.eu.org/">Haifa Linux Club</a> about the 
 development of Freecell Solver.

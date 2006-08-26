@@ -1,3 +1,5 @@
+Note: the links were updated after the fact, to prevent broken links.
+
 From: Shlomi Fish <shlomif@iglu.org.il>
 To: Eric S. Raymond <esr@thyrsus.com>
 Subject: TAOUP: Review + Some Possible Addition to the Book
@@ -5,7 +7,7 @@ Date: Thu, 25 Dec 2003 01:50:37 +0200
 
 I wrote a review for "The Art of UNIX Programming" (which I read online) here:
 
-http://www.perl.org.il/kwiki/index.cgi?BookReviewTheArtOfUnixProgrammingByShlomif
+http://wiki.perl.org.il/index.php/Book_Review_-_The_Art_of_Unix_Programming_-_reviewed_by_Shlomi_Fish
 
 Note that I personally have very much enjoyed the book and would highly 
 recommend it. Still, the review contains some impressions, some of which are 
@@ -16,7 +18,7 @@ Now, here's a possible addition, which I can warn you in advance that it
 refers to a software which I am its primary author. The program in question 
 is Freecell Solver:
 
-http://vipe.technion.ac.il/~shlomif/freecell-solver/
+http://fc-solve.berlios.de/
 
 Which is an ANSI C library and also standalone command line executable, that 
 can be used to automatically solve several variants of Card Solitaire. It's 

@@ -63,9 +63,11 @@ else
 	DEVEL_ARC = 
 endif
 
-LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags)
+COMMON_PREPROC_FLAGS = -I $$HOME/conf/wml/Latemp/lib
+LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags) 
 
-TTML_FLAGS = -I $$HOME/conf/wml/Latemp/lib
+TTML_FLAGS += $(COMMON_PREPROC_FLAGS)
+WML_FLAGS += $(COMMON_PREPROC_FLAGS)
 
 WML_FLAGS += --passoption=2,-X3074 \
 	-DWITH_DEVEL_VERSION=$(WITH_DEVEL_VERSION) \

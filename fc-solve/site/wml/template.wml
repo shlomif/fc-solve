@@ -39,3 +39,4 @@ alt="PayPal Donate" class="paypal"/></a>
 
 <define-tag arch:doc:url><berlios_url "arch_doc/" /></define-tag>
 <define-tag doxygen:url><berlios_url "michael_mann/" /></define-tag>
+<set-var presentation_url="http://www.shlomifish.org/lecture/Freecell-Solver/" />

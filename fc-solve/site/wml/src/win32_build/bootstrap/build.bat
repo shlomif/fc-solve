@@ -6,7 +6,7 @@ rmdir /s /q freecell-solver-*
 
 
 REM Assign the base URL of the site
-SET SERVER_URL=http://vipe.technion.ac.il/~shlomif/freecell-solver/
+SET SERVER_URL=http://fc-solve.berlios.de/
 
 REM Assign the relative place where all the files required for
 REM Building the Win32 package can be found
