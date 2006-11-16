@@ -32,7 +32,9 @@ ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
 INCLUDES_PROTO = std/logo.wml
 INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
-SUBDIRS_WITH_INDEXES = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
+# Remming out because it confuses the validator and no longer needed because
+# the web-server now supports indexes.
+# SUBDIRS_WITH_INDEXES = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
 
 SUBDIRS = $(D) $(SUBDIRS_WITH_INDEXES) $(D)/docs $(D)/arch_doc $(D)/pysol $(D)/images
 
@@ -76,7 +78,12 @@ WML_FLAGS += --passoption=2,-X3074 \
 	$(LATEMP_WML_FLAGS) --passoption=3,-I../lib/ \
 	-I $${HOME}/apps/wml
 
-dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC) 
+ifndef BERLIOS
+SUBDIRS := $(filter-out $(D)/arch_doc,$(SUBDIRS))
+HTMLS := $(filter-out $(D)/arch_doc/index.html,$(HTMLS))
+endif
+
+dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC)
 
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \

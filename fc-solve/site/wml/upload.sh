@@ -14,7 +14,7 @@ ls freecell-solver-*.tar.gz |
 echo "Uploading to Vipe"
 echo
 # scp * shlomif@vipe.technion.ac.il:public_html/freecell-solver/
-$RSYNC * shlomif@vipe.technion.ac.il:public_html/freecell-solver/
+$RSYNC * ${HOMEPAGE_SSH_PATH}/freecell-solver/
 popd
 pushd .
 cd ./dest-berlios
