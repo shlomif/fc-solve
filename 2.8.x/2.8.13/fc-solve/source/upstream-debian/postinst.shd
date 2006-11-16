@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "configure" ]; then
+ if [ -d /usr/doc -a ! -e /usr/doc/libfreecell-solver0 -a -d /usr/share/doc/libfreecell-solver0 ]; then
+  ln -sf ../share/doc/libfreecell-solver0 /usr/doc/libfreecell-solver0
+ fi
+fi
+if [ "$1" = "configure" ]; then
+ ldconfig 
+fi
+
