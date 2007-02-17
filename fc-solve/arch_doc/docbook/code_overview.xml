@@ -19,7 +19,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
 
         <para>
             &fcs; can run several "tests" on each state. Each test generates
-            a list of derived states. Some of the test are Freecell meta-move 
+            a list of derived states. Some of the tests are Freecell meta-move 
             ones, some are Freecell atomic move ones, and the others are 
             Simple Simon meta-move ones. The order of the tests can be 
             specified at the command line, and tests can be grouped, and 
@@ -167,13 +167,13 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </listitem>
                     <listitem>
                         <para>
-                            A newline or a whitespace separates a word
+                            A newline or a whitespace separates a word.
                         </para>
                     </listitem>
                     <listitem>
                         <para>
                             A backslash at the end of the line continues the 
-                            processing
+                            processing.
                         </para>
                     </listitem>
                     <listitem>
@@ -293,8 +293,8 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             <title>freecell.c</title>
             <para>
                 This module contains "test functions" for Freecell tests. A 
-                test receives an origin state and try to deduce if moves of 
-                a certain sort is possible. It fills in a derived states list.
+                test receives an origin state and tries to deduce if moves of 
+                a certain sort are possible. It fills in a derived states list.
             </para>
             <para>
                 This code uses some macros defined in tests.h. It contains
@@ -306,7 +306,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             <title>simpsim.c</title>
             <para>
                 This file is similar in spirit to 
-                <filename>freecell.c</filename> only that it contains
+                <filename>freecell.c</filename> only it contains
                 Simple Simon tests.
             </para>
         </section>

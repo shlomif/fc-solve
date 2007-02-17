@@ -169,7 +169,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     <para>
                         A move that consists of several individual moves
                         done as one, to move from state to a derived state.
-                        Some of the Freecell test and all of the
+                        Some of the Freecell tests and all of the
                         Simple Simon tests generate meta-moves.
                     </para>
                 </listitem>

@@ -32,7 +32,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
         <para>
             &fcs; is actively compiled with gcc and with the Visual C++
             ANSI C compiler. I expect that it should be compilable with
-            other proprietary compilers on various systems. As such varying
+            other proprietary compilers on various systems. As this variety
             of compilers only support the bare ANSI C standard, I have 
             to stick to it. This is despite the fact that such extensions may
             have made the code more optimized and my life as a programmer much 
