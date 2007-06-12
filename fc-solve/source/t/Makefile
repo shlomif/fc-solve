@@ -7,4 +7,4 @@ t/card-test-render.exe: card-test-render.c
 	gcc -o "$@" $< -ltap
 
 test:
-	runprove t/*
+	runprove t/*.{exe}
