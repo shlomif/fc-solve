@@ -20,7 +20,7 @@ sub card_num_normalize
 }
 
 my @suits = (qw(H C D S));
-my @card_nums =  ("A", (1 .. 9), 
+my @card_nums =  ("A", (2 .. 9), 
     {
         't' => "T",
         'non_t' => "10",
@@ -33,23 +33,33 @@ my $template = Template->new();
 
 sub indexify
 {
+    my $offset = shift;
     my $array = shift;
 
     return 
     [ 
         map 
-        { +{ 'idx' => $_, 'value' => $array->[$_] } } 
+        { +{ 'idx' => ($offset+$_), 'value' => $array->[$_] } } 
         (0 .. $#$array)
     ];
 }
 
+my $args = 
+{
+    'suits' => indexify(0, \@suits),
+    'card_nums' => indexify(1, \@card_nums),
+};
+
 $template->process(
     "card-test-render.c.tt",
-    {
-        'suits' => indexify(\@suits),
-        'card_nums' => indexify(\@card_nums),
-    },
+    $args,
     "card-test-render.c",
+) || die $template->error();
+
+$template->process(
+    "card-test-parse.c.tt",
+    $args,
+    "card-test-parse.c",
 ) || die $template->error();
 
 =begin Discard
