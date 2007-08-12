@@ -5,6 +5,8 @@ DEVEL_VER_USE_CACHE = 1
 
 HOSTNAME = $(shell hostname)
 
+RSYNC = rsync --progress --verbose --rsh=ssh -r
+
 ifeq ($(HOSTNAME),vipe.technion.ac.il)
 	VIPE = 1
 endif
@@ -119,4 +121,19 @@ $(TTMLS) :: $(D)/% : src/%.ttml
 $(INDEXES) :: $(D)/%/index.html : src/% gen_index.pl
 	perl gen_index.pl $< $@
 
+ifdef BERLIOS
 
+upload:
+	cd $(D) && $(RSYNC) * shlomif@shell.berlios.de:/home/groups/fc-solve/htdocs/
+
+else
+
+upload:
+	(cd $(D) ; \
+		ls freecell-solver-*.tar.gz | \
+		grep -vF 'freecell-solver-'"${stable_ver}" | \
+		grep -vP 'freecell-solver-[0-9]+\.[0-9]*[13579]\.' | \
+		xargs rm -f ; \
+		$(RSYNC) * $${HOMEPAGE_SSH_PATH}/freecell-solver/ \
+	)
+endif
