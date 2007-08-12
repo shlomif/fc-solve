@@ -258,7 +258,7 @@ sub do_rle
 
     if ($self->rle())
     {
-        $self->arbitrator()->do_rle();    
+        $self->arbitrator()->do_rle();
     }
 }
 
