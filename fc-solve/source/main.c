@@ -27,6 +27,7 @@ static void init_debug_context(
     freecell_solver_display_information_context_t * dc
     )
 {
+    dc->debug_iter_state_output = 0;
     dc->parseable_output = 0;
     dc->canonized_order_output = 0;
     dc->display_10_as_t = 0;

@@ -176,5 +176,5 @@ extern "C" {
 #undef inline
 #endif
 
-/* Define to `unsigned' if <sys/types.h> does not define. */
+/* Define to `unsigned int' if <sys/types.h> does not define. */
 #undef size_t

@@ -276,9 +276,10 @@ int freecell_solver_user_resume_solution(
 
         if (user->instances_list[user->current_instance_idx].ret == FCS_STATE_NOT_BEGAN_YET)
         {
-
-            user->state = freecell_solver_initial_user_state_to_c(
+            int status;
+            status = freecell_solver_initial_user_state_to_c(
                 user->state_string_copy,
+                &(user->state),
                 user->instance->freecells_num,
                 user->instance->stacks_num,
                 user->instance->decks_num
@@ -289,6 +290,13 @@ int freecell_solver_user_resume_solution(
                 ,user->indirect_stacks_buffer
 #endif
                 );
+
+            if (status != FCS_USER_STATE_TO_C__SUCCESS)
+            {
+                user->ret = FCS_STATE_INVALID_STATE;
+                user->state_validity_ret = FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
+                return user->ret;
+            }
 
             user->state_validity_ret = freecell_solver_check_state_validity(
                 &user->state,
@@ -772,27 +780,32 @@ char * freecell_solver_user_get_invalid_state_error_string(
 
     user = (fcs_user_t *)user_instance;
 
-    if (user->state_validity_ret == 0)
+    if (user->state_validity_ret == FCS_STATE_VALIDITY__OK)
     {
         return strdup("");
     }
     fcs_card_perl2user(user->state_validity_card, card_str, print_ts);
 
-    if (user->state_validity_ret == 3)
+    if (user->state_validity_ret == FCS_STATE_VALIDITY__EMPTY_SLOT)
     {
         sprintf(string, "%s",
             "There's an empty slot in one of the stacks."
             );
     }
-    else
+    else if ((user->state_validity_ret == FCS_STATE_VALIDITY__EXTRA_CARD) ||
+           (user->state_validity_ret == FCS_STATE_VALIDITY__MISSING_CARD)
+          )
     {
         sprintf(string, "%s%s.",
-            ((user->state_validity_ret == 2)? "There's an extra card: " : "There's a missing card: "),
+            ((user->state_validity_ret == FCS_STATE_VALIDITY__EXTRA_CARD)? "There's an extra card: " : "There's a missing card: "),
             card_str
         );
     }
+    else if (user->state_validity_ret == FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT)
+    {
+        sprintf(string, "%s.", "Not enough input");
+    }
     return strdup(string);
-
 }
 
 int freecell_solver_user_set_sequences_are_built_by_type(

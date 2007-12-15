@@ -592,8 +592,15 @@ extern int freecell_solver_state_compare_indirect_with_context(const void * s1, 
 extern int fcs_talon_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
 #endif
 
-extern fcs_state_with_locations_t freecell_solver_initial_user_state_to_c(
+enum FCS_USER_STATE_TO_C_RETURN_CODES
+{
+    FCS_USER_STATE_TO_C__SUCCESS = 0,
+    FCS_USER_STATE_TO_C__PREMATURE_END_OF_INPUT
+};
+
+int freecell_solver_initial_user_state_to_c(
     const char * string,
+    fcs_state_with_locations_t * out_state,
     int freecells_num,
     int stacks_num,
     int decks_num
@@ -615,6 +622,16 @@ extern char * freecell_solver_state_as_string(
     int canonized_order_output,
     int display_10_as_t
     );
+
+enum FCS_STATE_VALIDITY_CODES
+{
+    FCS_STATE_VALIDITY__OK = 0,
+    FCS_STATE_VALIDITY__EMPTY_SLOT = 3,
+    FCS_STATE_VALIDITY__EXTRA_CARD = 2,
+    FCS_STATE_VALIDITY__MISSING_CARD = 1,
+    FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4,
+};
+
 extern int freecell_solver_check_state_validity(
     fcs_state_with_locations_t * state,
     int freecells_num,
