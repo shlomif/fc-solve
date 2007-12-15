@@ -11,13 +11,9 @@ ifeq ($(HOSTNAME),vipe.technion.ac.il)
 	VIPE = 1
 endif
 
-ifdef BERLIOS
-    D = ./dest-berlios
-	WML_FLAGS = -DBERLIOS=BERLIOS
-else
-	D = ./dest
-	WML_FLAGS = 
-endif
+D = ./dest
+WML_FLAGS = -DBERLIOS=BERLIOS
+
 #D = /home/httpd/html/ip-noise
 
 IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif))
@@ -36,9 +32,11 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 
 # Remming out because it confuses the validator and no longer needed because
 # the web-server now supports indexes.
-# SUBDIRS_WITH_INDEXES = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
+# SUBDIRS_WITH_INDEXES = $(WIN32_BUILD_SUBDIRS)
+#
+WIN32_BUILD_SUBDIRS = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
 
-SUBDIRS = $(D) $(SUBDIRS_WITH_INDEXES) $(D)/docs $(D)/arch_doc $(D)/pysol $(D)/images
+SUBDIRS = $(D) $(WIN32_BUILD_SUBDIRS) $(D)/docs $(D)/arch_doc $(D)/pysol $(D)/images
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
@@ -80,12 +78,7 @@ WML_FLAGS += --passoption=2,-X3074 \
 	$(LATEMP_WML_FLAGS) --passoption=3,-I../lib/ \
 	-I $${HOME}/apps/wml
 
-ifndef BERLIOS
-SUBDIRS := $(filter-out $(D)/arch_doc,$(SUBDIRS))
-HTMLS := $(filter-out $(D)/arch_doc/index.html,$(HTMLS))
-endif
-
-dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DEVEL_ARC)
+dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES)
 
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \
@@ -121,19 +114,5 @@ $(TTMLS) :: $(D)/% : src/%.ttml
 $(INDEXES) :: $(D)/%/index.html : src/% gen_index.pl
 	perl gen_index.pl $< $@
 
-ifdef BERLIOS
-
 upload:
 	cd $(D) && $(RSYNC) * shlomif@shell.berlios.de:/home/groups/fc-solve/htdocs/
-
-else
-
-upload:
-	(cd $(D) ; \
-		ls freecell-solver-*.tar.gz | \
-		grep -vF 'freecell-solver-'"${stable_ver}" | \
-		grep -vP 'freecell-solver-[0-9]+\.[0-9]*[13579]\.' | \
-		xargs rm -f ; \
-		$(RSYNC) * $${HOMEPAGE_SSH_PATH}/freecell-solver/ \
-	)
-endif

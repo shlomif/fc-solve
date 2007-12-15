@@ -98,11 +98,6 @@ and cleaned up, which makes Freecell Solver much faster than it was before.
 <h2>Links</h2>
 
 <ul>
-<!--%start_mirror -->
-<ifneq "$(BERLIOS)" "BERLIOS"  
-"<li><a href="http://fc-solve.berlios.de/">The Freecell Solver's Homepage</a></li>"
- />
-<!--%end_mirror -->
 <li>
 <a href="http://www.freecell.org/">Freecell.org</a> - a web-site dedicated
 to the game.
