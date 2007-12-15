@@ -1,0 +1,17 @@
+This package was debianized by Yotam Rubin <yotam@makif.omer.k12.il> on
+Wed, 23 May 2001 22:53:00 +0300.
+
+The new and actual maintainer of this package is RISKO Gergely <risko@debian.org>.
+
+Upstream source can be obtained at:
+http://vipe.technion.ac.il/~shlomif/freecell-solver/freecell-solver-2.0.0.tar.gz
+It bears the following copyright:
+
+"Relax, this is not GPL software, but rather it is distributed under the
+public domain. It means it can be linked against anything, converted to 
+any different license, freely used and distributed, and anything else
+without any restrictions whatsoever. No Strings Attached!<tm>
+
+Well, enjoy!
+
+	Shlomi Fish"
