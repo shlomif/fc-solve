@@ -7,7 +7,7 @@ my $hosts =
 {
     'fc-solve' =>
     {
-        'base_url' => "http://vipe.technion.ac.il/~shlomif/freecell-solver/",
+        'base_url' => "http://fc-solve.berlios.de",
     },
 };
 

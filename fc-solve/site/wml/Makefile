@@ -3,13 +3,7 @@ WITH_DEVEL_VERSION = 1
 
 DEVEL_VER_USE_CACHE = 1
 
-HOSTNAME = $(shell hostname)
-
 RSYNC = rsync --progress --verbose --rsh=ssh -r
-
-ifeq ($(HOSTNAME),vipe.technion.ac.il)
-	VIPE = 1
-endif
 
 D = ./dest
 WML_FLAGS = -DBERLIOS=BERLIOS
