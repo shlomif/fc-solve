@@ -3,7 +3,7 @@
  * small size, in a contiguous, compact manner. The most recent block can
  * be released, but otherwise the blocks are kept for prosperity.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2002
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2002
  *
  * This file is in the public domain (it's uncopyrighted).
  */

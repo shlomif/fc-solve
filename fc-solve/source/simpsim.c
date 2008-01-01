@@ -1,7 +1,7 @@
 /*
  * simpsim.c - a module that contains Simple Simon Moves.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2001
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2001
  *
  * This file is in the public domain (it's uncopyrighted).
  */

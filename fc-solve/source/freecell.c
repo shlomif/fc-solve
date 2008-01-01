@@ -1,7 +1,7 @@
 /*
  * freecell.c - The various movement tests performed by Freecell Solver
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000-2001
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000-2001
  *
  * This file is in the public domain (it's uncopyrighted).
  */

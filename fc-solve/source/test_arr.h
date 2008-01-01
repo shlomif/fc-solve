@@ -2,7 +2,7 @@
  * test_arr.h - header file for some routines and macros involving tests and 
  * the like for Freecell Solver.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2002
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2002
  *
  * This file is in the public domain (it's uncopyrighted).
  * */

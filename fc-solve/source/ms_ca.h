@@ -2,7 +2,7 @@
  * ms_ca.h - A header file for a (possibly inline) function that compactly
  * allocates a move stack.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2002
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2002
  *
  * This file is in the public domain (it's uncopyrighted).
  * */

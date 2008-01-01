@@ -340,8 +340,8 @@ help_screen_t help_screens[] = {
 "\n"
 "\n"
 "Freecell Solver was written by Shlomi Fish.\n"
-"Homepage: http://vipe.technion.ac.il/~shlomif/freecell-solver/\n"
-"Send comments and suggestions to shlomif@vipe.technion.ac.il\n"
+"Homepage: http://fc-solve.berlios.de/\n"
+"Send comments and suggestions to http://www.shlomifish.org/me/contact-me/\n"
 },
 {
     "real-help",
@@ -389,7 +389,7 @@ help_screen_t help_screens[] = {
 "- To turn --help into something more useful, type\n"
 "  \"fc-solve --help-real-help\"\n"
 "\n"
-"Contact Shlomi Fish, shlomif@vipe.technion.ac.il for more information.\n" 
+"Contact Shlomi Fish, http://www.shlomifish.org/ for more information.\n" 
 },
 {
     NULL,

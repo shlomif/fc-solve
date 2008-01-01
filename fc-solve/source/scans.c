@@ -2,7 +2,7 @@
  * scans.c - The code that relates to the various scans.
  * Currently Hard DFS, Soft-DFS, Random-DFS, A* and BFS are implemented.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000-2001
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000-2001
  *
  * This file is in the public domain (it's uncopyrighted).
  */
