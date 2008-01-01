@@ -1,6 +1,6 @@
 
-#ifndef __ALLOC_H
-#define __ALLOC_H
+#ifndef FC_SOLVE__ALLOC_H
+#define FC_SOLVE__ALLOC_H
 
 #ifdef __cplusplus
 extern "C" 
@@ -36,7 +36,7 @@ extern char *
 #define fcs_compact_alloc_into_var(result,allocator_orig,what_t) \
 { \
    register fcs_compact_allocator_t * allocator = (allocator_orig); \
-   if (allocator->max_ptr - allocator->ptr < ((int)sizeof(what_t)))  \
+   if (allocator->max_ptr - allocator->ptr < sizeof(what_t))  \
     {      \
         freecell_solver_compact_allocator_extend(allocator);      \
     }         \

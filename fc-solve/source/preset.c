@@ -1,7 +1,7 @@
 /*
  * preset.c - game presets management for Freecell Solver
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  *
@@ -13,7 +13,6 @@
 
 #include "fcs.h"
 #include "preset.h"
-#include "test_arr.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -37,7 +36,7 @@ enum fcs_presets_ids
     FCS_PRESET_SEAHAVEN_TOWERS,
     FCS_PRESET_SIMPLE_SIMON,
     FCS_PRESET_YUKON,
-    FCS_PRESET_BELEAGUERED_CASTLE
+    FCS_PRESET_BELEAGUERED_CASTLE,
 };
 
 static const fcs_preset_t fcs_presets[16] = 
@@ -377,138 +376,25 @@ static int fcs_get_preset_id_by_name(
     return ret;
 }
 
-static int test_aliases_compare_func(const void * void_a, const void * void_b)
+static int freecell_solver_char_to_test_num(char c)
 {
-    return strcmp(((fcs_test_aliases_mapping_t *)void_a)->alias,((fcs_test_aliases_mapping_t *)void_b)->alias);
-}
-
-static int string_to_test_num(const char * string)
-{
-    fcs_test_aliases_mapping_t key;
-    void * ret;
-    
-    key.alias = string;
-    
-    ret = 
-        bsearch(
-            &key, 
-            freecell_solver_sfs_tests_aliases, 
-            FCS_TESTS_ALIASES_NUM,
-            sizeof(freecell_solver_sfs_tests_aliases[0]),
-            test_aliases_compare_func
-               );
-
-    if (ret == NULL)
-    {
-        return 0;
-    }
-    else
-    {
-        return ((fcs_test_aliases_mapping_t *)ret)->test_num;
-    }
-}
-
-static int char_to_test_num(char c)
-{
-    char string[2];
-    string[0] = c;
-    string[1] = '\0';
-
-    return string_to_test_num(string);
-}
-
-enum TEST_TYPE
-{
-    TEST_TYPE_TEST,
-    TEST_TYPE_START_GROUP,
-    TEST_TYPE_END_GROUP,
-    TEST_TYPE_SET_ORDER,
-    TEST_TYPE_ERROR
-};
-
-enum TEST_ERRORS
-{
-    TEST_ERROR_NO_RIGHT_BRACE
-};
-
-struct test_ret_struct
-{
-    int type;
-    int index;
-};
-
-typedef struct test_ret_struct test_ret_t;
-
-static test_ret_t read_token(const char * s, int * num_chars_read)
-{
-    test_ret_t ret;
-    
-    if ((*s) == '{')
-    {
-        char * end;
-
-        end = strchr(s, '}');
-        if (end == NULL)
-        {
-            ret.type = TEST_TYPE_ERROR;
-            ret.index = TEST_ERROR_NO_RIGHT_BRACE;
-        }
-        else
-        {
-            char * test_name;
-            test_name = malloc(end-s);
-            memcpy(test_name, s+1, end-s);
-            test_name[end-s-1] = '\0';
-            ret.type = TEST_TYPE_TEST;
-            ret.index = string_to_test_num(test_name);
-            free(test_name);
-            *num_chars_read = (end+1-s);
-        }
-    }
-    else
-    {
-        *num_chars_read = 1;
-        if ((*s == '['))
-        {
-            ret.type = TEST_TYPE_START_GROUP;
-        }
-        else if (*s == ']')
-        {
-            ret.type = TEST_TYPE_END_GROUP;
-        }
-        else if (*s == '=')
-        {
-            ret.type = TEST_TYPE_SET_ORDER;
-        }
-        else
-        {
-            ret.type = TEST_TYPE_TEST;
-            ret.index = char_to_test_num(*s);
-        }
-    }
-
-    return ret;
-}
-
-#if 0
     if ((c >= '0') && (c <= '9'))
     {
         return c-'0';
     }
-    else if ((c >= 'a') && (c <= 'i'))
+    else if ((c >= 'a') && (c <= 'h'))
     {
         return c-'a'+10;
     }
     else if ((c >= 'A') && (c <= 'Z'))
     {
-        return c-'A'+19;
+        return c-'A'+18;
     }
     else
     {
         return 0;
     }
-#endif
-
+}
 
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
@@ -527,14 +413,12 @@ int freecell_solver_apply_tests_order(
     const char * string,
     char * * error_string
     )
+
 {
-    int read_char_idx;
+    int a;
     int len;
     int test_index;
     int is_group, is_start_group;
-    test_ret_t test_read;
-    int num_chars_read;
-
     if (tests_order->tests)
     {
         free(tests_order->tests);
@@ -550,22 +434,9 @@ int freecell_solver_apply_tests_order(
     test_index = 0;
     is_group = 0;
     is_start_group = 0;
-    for(read_char_idx=0;(read_char_idx<len) ; read_char_idx+= num_chars_read)
+    for(a=0;(a<len) ;a++)
     {
-        test_read = read_token(string+read_char_idx, &num_chars_read);
-        
-        if (test_read.type == TEST_TYPE_ERROR)
-        {
-            *error_string = 
-                strdup(
-                    (test_read.index == TEST_ERROR_NO_RIGHT_BRACE) ? 
-                        "There's no matching right curly bracket (}) for an opening left brace ({)." :
-                        ""
-                      );
-            return 4;
-        }
-            
-        if (test_read.type == TEST_TYPE_START_GROUP)
+        if ((string[a] == '(') || (string[a] == '['))
         {
             if (is_group)
             {
@@ -577,7 +448,7 @@ int freecell_solver_apply_tests_order(
             continue;
         }
 
-        if (test_read.type == TEST_TYPE_END_GROUP)
+        if ((string[a] == ')') || (string[a] == ']'))
         {
             if (is_start_group)
             {
@@ -586,107 +457,24 @@ int freecell_solver_apply_tests_order(
             }
             if (! is_group)
             {
-                *error_string = strdup("There's a renegade right bracket.");
+                *error_string = strdup("There's a renegade right parenthesis or bracket.");
                 return 3;
             }
             is_group = 0;
             is_start_group = 0;
-
-            /* Check for an =dsorder(...) specification */
-            {
-                const char * s;
-                fcs_derived_states_order_t * order;
-                fcs_derived_states_order_instance_t * order_instance;
-                const char * end_of_spec;
-                int found;
-
-                s = string+read_char_idx+num_chars_read;
-                if (*s == '=')
-                {
-                    int i;
-                    s++;
-                                        
-                    for(i=0;i<(int)(sizeof(freecell_solver_states_orders_names)/sizeof(freecell_solver_states_orders_names[0]));i++)
-                    {
-                        int len_name;
-                        
-                        len_name = strlen(freecell_solver_states_orders_names[i].name);
-                        if (!strncmp(s,freecell_solver_states_orders_names[i].name, len_name))
-                        {
-
-                            found = 1;
-                            order = freecell_solver_states_orders_names[i].order;
-
-                            order_instance = malloc(sizeof(*order_instance));
-                            if (order->init_instance(
-                                order,
-                                order_instance,
-                                s+len_name,
-                                &end_of_spec
-                                ))
-                            {
-                                *error_string = strdup("Failed in initializing a states order");
-                                return 6;
-                            }
-
-                            /*
-                             * Advance the string pointer
-                             *
-                             * */
-                            num_chars_read = end_of_spec - (string+read_char_idx);
-
-                            break;
-                        }
-                    }
-                    if (! found)
-                    {
-                        *error_string = strdup("Unknown States Ordering!");
-                        return 5;
-                    }
-                }
-                else
-                {
-                    /* As a default - initialize a random order */
-                    found = 1;
-                    order = &freecell_solver_random_states_order;
-                    order_instance = malloc(sizeof(*order_instance));
-                    order->init_instance(
-                        order,
-                        order_instance,
-                        ")",
-                        &end_of_spec
-                        );
-                }
-                if (found)
-                {
-                    /* Assign the order and order instance in their
-                     * right place 
-                     * */
-                    tests_order->tests[test_index-1].states_order_type = order;
-                    tests_order->tests[test_index-1].states_order_instance = order_instance;
-                }
-
-            }
             continue;
         }
-        if (test_read.type == TEST_TYPE_TEST)
+        if (test_index == tests_order->max_num)
         {
-            if (test_index == tests_order->max_num)
-            {
-                tests_order->max_num += 10;
-                tests_order->tests = realloc(tests_order->tests, sizeof(tests_order->tests[0]) * tests_order->max_num);
-            }
-
-
-            tests_order->tests[test_index].test = ((test_read.index)%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
-            tests_order->tests[test_index].states_order_type = NULL;
-            tests_order->tests[test_index].states_order_instance = NULL;
-
-            test_index++;
-            is_start_group = 0;
+            tests_order->max_num += 10;
+            tests_order->tests = realloc(tests_order->tests, sizeof(tests_order->tests[0]) * tests_order->max_num);
         }
+        tests_order->tests[test_index] = (freecell_solver_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+
+        test_index++;
+        is_start_group = 0;
     }
-    if (read_char_idx != len)
+    if (a != len)
     {
         *error_string = strdup("The Input string is too long.");
         return 4;
@@ -749,7 +537,7 @@ int freecell_solver_apply_preset_by_ptr(
                     for(s = preset.allowed_tests;*s != '\0';s++)
                     {
                         /* Check if this test corresponds to this character */
-                        if ((soft_thread->tests_order.tests[num_valid_tests].test & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((char_to_test_num(*s)%FCS_TESTS_NUM)))
+                        if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((freecell_solver_char_to_test_num(*s)%FCS_TESTS_NUM)))
                         {
                             break;
                         }

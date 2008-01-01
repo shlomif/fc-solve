@@ -3,9 +3,17 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-#include "app_str.h"
-
 #define GROW_BY 4000
+
+struct freecell_solver_append_string_struct
+{
+    char * buffer;
+    char * end_of_buffer;
+    int max_size;
+    int size_of_margin;
+};
+
+typedef struct freecell_solver_append_string_struct freecell_solver_append_string_t;
 
 freecell_solver_append_string_t * freecell_solver_append_string_alloc(int size_margin)
 {
@@ -26,7 +34,7 @@ freecell_solver_append_string_t * freecell_solver_append_string_alloc(int size_m
 
 int freecell_solver_append_string_sprintf(
     freecell_solver_append_string_t * app_str,
-    const char * format,
+    char * format,
     ...
     )
 {

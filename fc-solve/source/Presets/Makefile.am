@@ -2,5 +2,5 @@ pkgdata_DATA = presetrc
 
 SUBDIRS = presets
 
-EXTRA_DIST += presetrc.win32
+EXTRA_DIST = presetrc.win32
 

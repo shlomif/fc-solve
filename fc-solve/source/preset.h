@@ -1,20 +1,19 @@
 /*
  * fcs.h - header file of the preset management functions for Freecell Solver.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
 
-#ifndef __PRESET_H
-#define __PRESET_H
+#ifndef FC_SOLVE__PRESET_H
+#define FC_SOLVE__PRESET_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "fcs.h"
-#include "test_num.h"
 
 struct fcs_preset_struct
 {

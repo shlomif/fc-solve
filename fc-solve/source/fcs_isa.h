@@ -1,5 +1,5 @@
-#ifndef __FCS_ISA_H
-#define __FCS_ISA_H
+#ifndef FC_SOLVE__FCS_ISA_H
+#define FC_SOLVE__FCS_ISA_H
 
 #ifdef __cplusplus
 extern "C" {

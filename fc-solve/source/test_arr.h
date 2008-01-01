@@ -2,19 +2,17 @@
  * test_arr.h - header file for some routines and macros involving tests and 
  * the like for Freecell Solver.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2002
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2002
  *
  * This file is in the public domain (it's uncopyrighted).
  * */
 
-#ifndef __TEST_ARR_H
-#define __TEST_ARR_H
+#ifndef FC_SOLVE__TEST_ARR_H
+#define FC_SOLVE__TEST_ARR_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "test_num.h"
 
 typedef int (*freecell_solver_solve_for_state_test_t)(
         freecell_solver_soft_thread_t *,
@@ -26,17 +24,6 @@ typedef int (*freecell_solver_solve_for_state_test_t)(
         );
 
 extern freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TESTS_NUM];
-
-struct fcs_test_aliases_mapping_struct
-{
-    const char * alias;
-    int test_num;
-};
-
-typedef struct fcs_test_aliases_mapping_struct fcs_test_aliases_mapping_t;
-
-extern fcs_test_aliases_mapping_t freecell_solver_sfs_tests_aliases[FCS_TESTS_ALIASES_NUM];
-
 
 /*
  * This macro determines if child can be placed above parent.

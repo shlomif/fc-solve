@@ -17,9 +17,9 @@ sub min
 }
 
 my @objects=(
-    qw(alloc app_str caas card cl_chop cmd_line ds_order fcs_dm fcs_hash),
-    qw(fcs_isa freecell intrface lib lookup2 move pqueue preset rand), 
-    qw(scans simpsim state tests)
+    qw(alloc app_str caas card cl_chop cmd_line fcs_dm fcs_hash fcs_isa), 
+    qw(freecell intrface lib lookup2 move pqueue preset rand), 
+    qw(scans simpsim state)
     );
 
 my @targets = (
@@ -36,11 +36,10 @@ my @targets = (
 my @headers_proto=
     (
         qw(alloc app_str caas card cl_chop), { 'name' => "config", 'gen' => 1}, 
-            qw(ds_order fcs_cl fcs fcs_dm fcs_enums),
+            qw(fcs_cl fcs fcs_dm fcs_enums),
         qw(fcs_hash fcs_isa fcs_move fcs_user inline jhjtypes lookup2), 
-
         qw(move ms_ca), {'name' => "prefix", 'gen' => 1}, 
-            qw(pqueue preset rand state test_arr test_num tests)
+            qw(pqueue preset rand state test_arr tests)
     );
 
 my @headers = (map { ref($_) eq "HASH" ? $_->{'name'} : $_ } @headers_proto);
@@ -49,32 +48,30 @@ my @defines=(qw(WIN32));
 
 my @debug_defines = (qw(DEBUG));
 
-open O, ">Makefile.win32";
+print "all: fc-solve.exe freecell-solver-range-parallel-solve.exe\n\n";
 
-print O "all: fc-solve.exe freecell-solver-range-parallel-solve.exe\r\n\r\n";
+print "OFLAGS=" . "/Og2 " . join(" ", (map { "/D".$_ } @defines)) . "\n";
+print "DFLAGS=\$(OFLAGS) " . join(" ", (map { "/D".$_ } @debug_defines)) . "\n";
 
-print O "OFLAGS=" . "/Og2 " . join(" ", (map { "/D".$_ } @defines)) . "\r\n";
-print O "DFLAGS=\$(OFLAGS) " . join(" ", (map { "/D".$_ } @debug_defines)) . "\r\n";
-
-print O "INCLUDES=" . join(" ", (map { $_.".h" } @headers)). "\r\n";
-print O "CC=cl\r\n";
-print O "LIB32=link.exe\r\n";
+print "INCLUDES=" . join(" ", (map { $_.".h" } @headers)). "\n";
+print "CC=cl\n";
+print "LIB32=link.exe\n";
 
 
-print O "\r\n\r\n";
+print "\n\n";
 
-print O "OBJECTS = " . join(" ", (map { $_.".obj" } @objects)) . "\r\n";
+print "OBJECTS = " . join(" ", (map { $_.".obj" } @objects)) . "\n";
 
-print O "\r\n\r\n";
+print "\n\n";
 
 foreach my $o (@objects, (map { @{$_->{'objs'}} } @targets))
 {
-    print O "$o.obj: $o.c \$(INCLUDES)\r\n";
-    print O "\t\$(CC) /c /Fo$o.obj \$(OFLAGS) $o.c\r\n";
-    print O "\r\n";
+    print "$o.obj: $o.c \$(INCLUDES)\n";
+    print "\t\$(CC) /c /Fo$o.obj \$(OFLAGS) $o.c\n";
+    print "\n";
 }
 
-print O "\r\n\r\n###\r\n### Final Targets\r\n###\r\n\r\n\r\n";
+print "\n\n###\n### Final Targets\n###\n\n\n";
 
 foreach my $t (@targets)
 {
@@ -84,27 +81,25 @@ foreach my $t (@targets)
     #my $obj_line = "\$(OBJECTS) " . join(" ", (map { "$_.obj" } @objs));
     my $obj_line = "freecell-solver-static.lib " . join(" ", (map { "$_.obj" } @objs));
 
-    print O "$exe.exe: $obj_line\r\n";
-    print O "\t\$(CC) /Fe$exe.exe /F0x2000000 $obj_line\r\n";
-    print O "\r\n";
+    print "$exe.exe: $obj_line\n";
+    print "\t\$(CC) /Fe$exe.exe /F0x2000000 $obj_line\n";
+    print "\n";
 }
 
-print O "freecell-solver-static.lib: \$(OBJECTS)\r\n";
-print O "\t\$(LIB32) -lib \$(OBJECTS) /out:freecell-solver-static.lib\r\n";
-print O "\r\n";
+print "freecell-solver-static.lib: \$(OBJECTS)\n";
+print "\t\$(LIB32) -lib \$(OBJECTS) /out:freecell-solver-static.lib\n";
+print "\n";
 
-print O "freecell-solver.dll: \$(OBJECTS) freecell-solver.def\r\n";
-print O "\t\$(LIB32) kernel32.lib user32.lib gdi32.lib /dll /out:freecell-solver.dll /implib:freeecell-solver.lib /DEF:freecell-solver.def \$(OBJECTS) \r\n";
-print O "\r\n";
+print "freecell-solver.dll: \$(OBJECTS) freecell-solver.def\n";
+print "\t\$(LIB32) kernel32.lib user32.lib gdi32.lib /dll /out:freecell-solver.dll /implib:freeecell-solver.lib /DEF:freecell-solver.def \$(OBJECTS) \n";
+print "\n";
 
-#print O "fc-solve.exe: \$(OBJECTS)\r\n";
-#print O "\t\$(CC) /Fefc-solve.exe /F0x2000000 \$(OBJECTS)\r\n";
-#print O "\r\n";
+#print "fc-solve.exe: \$(OBJECTS)\n";
+#print "\t\$(CC) /Fefc-solve.exe /F0x2000000 \$(OBJECTS)\n";
+#print "\n";
 
-print O "clean:\r\n";
-print O "\tdel *.obj *.exe *.lib *.dll *.exp\r\n";
-
-close(O);
+print "clean:\n";
+print "\tdel *.obj *.exe *.lib *.dll *.exp\n";
 
 open I, "<Makefile.am";
 open O, ">Makefile.am.new";

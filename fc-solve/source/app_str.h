@@ -3,8 +3,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-#ifndef __APP_STR_H
-#define __APP_STR_H
+#ifndef FC_SOLVE__APP_STR_H
+#define FC_SOLVE__APP_STR_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,7 +24,7 @@ extern freecell_solver_append_string_t * freecell_solver_append_string_alloc(int
 
 extern int freecell_solver_append_string_sprintf(
     freecell_solver_append_string_t * app_str,
-    const char * format,
+    char * format,
     ...
     );
 
@@ -36,4 +36,4 @@ extern char * freecell_solver_append_string_finalize(
 }
 #endif
 
-#endif /* #ifndef __APP_STR_H */
+#endif /* #ifndef FC_SOLVE__APP_STR_H */

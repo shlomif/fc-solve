@@ -1,42 +1,11 @@
 --- Pressing ---
 
-* Add the testing framework to the to-do list.
-    
-    Arch Doc:
-    ---------
-    
-    * Hyperlink to the terms from someplaces in the main document
+* Convert some of the documentation to Perl-POD or DocBook.
 
-    * Document the mapping of aliases -> test functions.
-
-* Change char *'s to const char *'s in the API.
-    - DONE partially
-
-* Process the prefix.h.in etc files inside Makefile.am using sed.
-
-* Implement the move stacks over-riding in the derived states list, so
-move stacks won't be allocated excessively.
-
-* Implement the derived states ordering.
-
-* Implement the perl script that displays the moves in a human viewable
-fashion.
-
-* Implement the mapping of names -> test functions.
-    - Done partially
-
-* Implement Patsolve's state ordering.
-
-    - Afterwards:
-
-    * Time the patsolve's scans into the atomic moves scans database,
-    and create an optimized meta-scan.
-
-* Make sure fc-solve -opt works.
+* After everything: reorganize the --help behaviour according to the Freshmeat
+editorial
 
 --- Non-pressing ---
-
-* Convert some of the documentation to Perl-POD or DocBook.
 
 * Integrate the patsolve's prioritization and mixed BFS/DFS scan.
 
@@ -51,13 +20,7 @@ fashion.
 
 * Write a multi-process client/server program.
 
-* Port to Java (?). Note: the only reason I want to do it is so it will be
-able to run inside an applet of a web-browser. Surf to some URL and have
-a Freecell implementation that can solve itself.
-
-Great thanks to Sun who made sure Java has a C/C++-like syntax but is so
-much incompatible. (and kudos to the Internet C++ project who aims to create
-a virtual machine with a proper gcc backend, so it will be compatible)
+* Port to Java (?)
 
 * Integrate into GNOME Freecell and/or GNOME AisleRiot and/or PySol.
 

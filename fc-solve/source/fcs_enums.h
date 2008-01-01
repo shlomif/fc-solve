@@ -2,13 +2,13 @@
  * fcs_enums.h - header file for various Freecell Solver Enumertaions. Common
  * to the main program headers and to the library headers.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
 
-#ifndef __FCS_ENUMS_H
-#define __FCS_ENUMS_H
+#ifndef FC_SOLVE__FCS_ENUMS_H
+#define FC_SOLVE__FCS_ENUMS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,7 +48,7 @@ enum freecell_solver_state_solving_return_codes
     FCS_STATE_INVALID_STATE,
     FCS_STATE_NOT_BEGAN_YET,
     FCS_STATE_DOES_NOT_EXIST,
-    FCS_STATE_OPTIMIZED
+    FCS_STATE_OPTIMIZED,
 };
 
 enum fcs_presets_return_codes
@@ -74,4 +74,4 @@ enum fcs_presets_return_codes
 }
 #endif
 
-#endif /* __FCS_ENUMS_H */
+#endif /* FC_SOLVE__FCS_ENUMS_H */

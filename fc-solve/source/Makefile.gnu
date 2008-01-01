@@ -25,8 +25,6 @@ END_OLFLAGS := -lm
 
 # END_OLFLAGS += -pg -lc_p
 
-# OFLAGS += -ansi -W -Wall -pedantic -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE
-
 DFLAGS = $(OFLAGS) -DDEBUG
 END_DLFLAGS = $(END_OLFLAGS)
 
@@ -59,7 +57,6 @@ OBJECTS =                     \
           card.o              \
           cl_chop.o           \
           cmd_line.o          \
-          ds_order.o          \
           fcs_dm.o            \
           fcs_hash.o          \
           fcs_isa.o           \
@@ -74,7 +71,6 @@ OBJECTS =                     \
           scans.o             \
           simpsim.o           \
           state.o             \
-          tests.o             \
 
 #>>>OBJECTS.END
 
@@ -82,9 +78,6 @@ OBJECTS =                     \
 DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 
 -include $(DEP_FILES)
-
-test_num.h: gen_tests_lists.pl
-	perl $<
 
 %.o: %.c
 	$(CC) -Wp,-MD,.deps/$(*F).pp -c $(OFLAGS) -o $@ $< $(END_OFLAGS)

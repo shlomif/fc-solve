@@ -2,17 +2,23 @@
  * move.h - header file for the move and move stacks functions of
  * Freecell Solver
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
 
-#ifndef __MOVE_H
-#define __MOVE_H
+#ifndef FC_SOLVE__MOVE_H
+#define FC_SOLVE__MOVE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*
+ * This include is done to prevent a warning in case stdlib.h defines
+ * max. (which is the case for the Microsoft C Compiler)
+ * */
+#include <stdlib.h>
 
 #include "state.h"
 #include "fcs_move.h"
@@ -84,26 +90,14 @@ extern char * freecell_solver_move_to_string(fcs_move_t move, int standard_notat
 
 extern char * freecell_solver_move_to_string_w_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num, int decks_num, fcs_move_t move, int standard_notation);
 
-struct fcs_derived_state_struct
-{
-    fcs_state_with_locations_t * ptr_state;
-    fcs_move_stack_t * move_stack;
-};
-
-typedef struct fcs_derived_state_struct fcs_derived_state_t;
-
 struct fcs_derived_states_list_struct
 {
     int num_states;
     int max_num_states;
-    fcs_derived_state_t * states;
+    fcs_state_with_locations_t * * states;
 };
 
 typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
-
-struct freecell_solver_soft_thread_struct;
-
-typedef struct freecell_solver_soft_thread_struct freecell_solver_soft_thread_t;
 
 #if 0
 extern void fcs_derived_states_list_add_state(
@@ -143,7 +137,10 @@ extern void fcs_derived_states_list_add_state(
               \
     if (stack->num_moves == stack->max_num_moves) \
     {      \
-        stack->max_num_moves += FCS_MOVE_STACK_GROW_BY;    \
+        int a, b;   \
+        a = (stack->max_num_moves >> 3);      \
+        b = FCS_MOVE_STACK_GROW_BY;    \
+        stack->max_num_moves += max(a,b);    \
         stack->moves = realloc(     \
             stack->moves,     \
             stack->max_num_moves * sizeof(fcs_move_t)   \
@@ -153,7 +150,7 @@ extern void fcs_derived_states_list_add_state(
             \
 }
 
-#define fcs_derived_states_list_add_state(list,state_ptr,move_stack_ptr) \
+#define fcs_derived_states_list_add_state(list,state) \
     \
 {       \
     if ((list)->num_states == (list)->max_num_states)  \
@@ -161,28 +158,15 @@ extern void fcs_derived_states_list_add_state(
         (list)->max_num_states += 16;     \
         (list)->states = realloc((list)->states, sizeof((list)->states[0]) * (list)->max_num_states); \
     }        \
-    (list)->states[(list)->num_states].ptr_state = (state_ptr);    \
-    (list)->states[(list)->num_states].move_stack = (move_stack_ptr);    \
+    (list)->states[(list)->num_states] = (state);    \
     (list)->num_states++;        \
 }
 
-#define fcs_derived_states_list_free_move_stacks(the_list)         \
-{                                                                 \
-    num_states = (the_list)->num_states;                 \
-    derived_states = (the_list)->states;                 \
-    for(a=0;a<num_states;a++)                                     \
-    {                                                             \
-        if (derived_states[a].move_stack)                         \
-        {                                                         \
-            fcs_move_stack_destroy(derived_states[a].move_stack); \
-        }                                                         \
-        derived_states[a].move_stack = NULL;                      \
-    }                                                             \
-}
+
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  /* __MOVE_H */
+#endif  /* FC_SOLVE__MOVE_H */

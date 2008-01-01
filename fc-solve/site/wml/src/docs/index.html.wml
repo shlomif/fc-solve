@@ -1,0 +1,83 @@
+#include '../template.wml'
+
+<latemp_subject "Freecell Solver - Documentation" />
+
+<h2>Documents of the Code</h2>
+
+<h3 class="plain"><a href="<arch:doc:url />">Architecture Document</a></h3>
+
+<p>
+The Freecell Solver Architecture Document. Contains coding conventions, 
+overview of the code and the modules, some terminology and some techniques 
+that one is bound to encounter when dealing with the code.
+</p>
+
+<h3 class="plain"><a href="<doxygen:url />">Doxygen Browsing</a></h3>
+
+<p>
+Michael Mann has ported Freecell Solver to C++ and used Doxygen to prepare a
+hypertext reference to the code. This is compatible with version 2.2.x of 
+Freecell Solver.
+</p>
+
+
+
+<h3 class="plain"><a href="<get-var presentation_url />">Lecture: Freecell Solver - Evolution of a C Program</a></h3>
+
+<p>
+A lecture given to the <a href="http://www.haifux.org/">Haifa Linux Club</a>
+about Freecell Solver. Covers various highlights from the history of the
+codebase and the community.
+</p>
+
+<h3 class="plain"><a href="http://groups.yahoo.com/group/hackers-il/message/2809">The Well and
+the Wall</a></h3>
+
+<p>
+Some reflections on the evolution of Freecell Solver and my interaction with 
+its users and contributors written
+after reading Eric Raymond's
+seminal <a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">"The Cathedral and the Bazaar"</a> document. What I did very much the 
+same, (mostly without thinking too much about it), what I did differently, and what happened. Slightly out-of-date.
+</p>
+
+<h3 class="plain"><a href="$(ROOT)/book.html">Freecell Solver - Evolution of a C Program - The Book</a></h3>
+
+<p>
+A book I'd like to write and publish online about the evolution of the code 
+and to lesser extent my interaction with its users, contributors and 
+co-developers. Since I did not find a suitable publisher yet, I have kept the 
+book offline and only send it to a privately-controlled mailing list. I also 
+only started to write it, and it is largely vapourware.
+</p>
+
+<p>
+This book will focus about various ANSI C and game AI techniques and the 
+semantics of using them. It should be a good discussion of interesting 
+algorithms and data structures, and how to optimize C code and program
+code in general. It will require no or little knowledge of Freecell games
+AI or algorithms and data structures, but good knowledge of ANSI C will be 
+expected.
+</p>
+
+<p>
+But like I said, it's still vapourware. ;-)
+</p>
+
+<h3 class="plain"><a href="http://freshmeat.net/articles/view/519/">Freshmeat 
+Editorial: Time to Rethink your Help Flag?</a></h3>
+
+<p>
+A Freshmeat editorial I wrote about what I had planned to do with the 
+exteremely long help display that Freecell Solver used to have.
+</p>
+
+<h3 class="plain"><a href="Freecell-Solver-TAOUP.txt">Musings about Freecell Solver after Reading "The Art of UNIX Programming"</a></h3>
+
+<p>
+This is an E-mail message I sent to <a href="http://www.catb.org/~esr/">Eric
+S. Raymond</a> in regards to his <a href="http://www.catb.org/~esr/writings/taoup/">"The Art of UNIX Programming"</a> book. In it I mention some interesting
+Freecell Solver techniques similar (but not identical) to examples that he 
+gave in the book.
+</p>
+

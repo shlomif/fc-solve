@@ -1,7 +1,7 @@
 /*
  * move.c - move and move stacks routines for Freecell Solver
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
@@ -153,8 +153,6 @@ extern void fcs_derived_states_list_add_state(
     list->num_states++;
 }
 #endif
-
-
 /*
     This function performs a given move on a state
 
@@ -371,7 +369,7 @@ void freecell_solver_move_stack_normalize(
     freecell_solver_move_stack_swallow_stack(moves, temp_moves);
 }
 
-static GCC_INLINE int convert_freecell_num(int fcn)
+GCC_INLINE int convert_freecell_num(int fcn)
 {
     if (fcn >= 7)
         return (fcn+3);

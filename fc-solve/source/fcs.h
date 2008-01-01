@@ -2,13 +2,13 @@
  * fcs.h - header file of freecell_solver_instance and of user-level
  * functions for Freecell Solver
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
 
-#ifndef __FCS_H
-#define __FCS_H
+#ifndef FC_SOLVE__FCS_H
+#define FC_SOLVE__FCS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,7 +17,6 @@ extern "C" {
 #include "config.h"
 #include "state.h"
 #include "move.h"
-#include "ds_order.h"
 #include "fcs_enums.h"
 
 #include "rand.h"
@@ -101,12 +100,10 @@ enum FCS_TESTS_ORDER_FLAGS
     FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP = 0x2000000
 };
 
-#if 0
 #ifdef FCS_WITH_TALONS
-#define FCS_TESTS_NUM 28
+#define FCS_TESTS_NUM 27
 #else
-#define FCS_TESTS_NUM 26
-#endif
+#define FCS_TESTS_NUM 25
 #endif
 
 /*
@@ -118,19 +115,10 @@ struct freecell_solver_soft_thread_struct;
 
 typedef struct freecell_solver_hard_thread_struct freecell_solver_hard_thread_t;
 
-struct fcs_test_struct
-{
-    int test;
-    fcs_derived_states_order_t * states_order_type;
-    fcs_derived_states_order_instance_t * states_order_instance;
-};
-
-typedef struct fcs_test_struct fcs_test_t;
-
 struct fcs_tests_order_struct
 {
     int num;
-    fcs_test_t * tests;
+    int * tests;
     int max_num;
 };
 
@@ -684,6 +672,8 @@ struct freecell_solver_soft_thread_struct
     char * name;
 };
 
+typedef struct freecell_solver_soft_thread_struct freecell_solver_soft_thread_t;
+
 
 #define FCS_SOFT_DFS_STATES_TO_CHECK_GROW_BY 32
 
@@ -800,14 +790,8 @@ extern void freecell_solver_recycle_instance(
     freecell_solver_instance_t * instance
         );
 
-pq_rating_t freecell_solver_a_star_rate_state(
-    freecell_solver_soft_thread_t * soft_thread,
-    double * a_star_weights,
-    fcs_state_with_locations_t * ptr_state_with_locations    
-    );
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __FCS_H */
+#endif /* FC_SOLVE__FCS_H */

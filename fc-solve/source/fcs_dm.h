@@ -9,8 +9,8 @@
     (It is not copyrighted)
 */
 
-#ifndef __FCS_DATA_H
-#define __FCS_DATA_H
+#ifndef FC_SOLVE__FCS_DATA_H
+#define FC_SOLVE__FCS_DATA_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,5 +45,5 @@ int freecell_solver_merge_large_and_small_sorted_arrays
 }
 #endif
 
-#endif /* __FCS_DATA_H */
+#endif /* FC_SOLVE__FCS_DATA_H */
 

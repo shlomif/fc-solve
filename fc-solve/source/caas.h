@@ -1,6 +1,6 @@
 
-#ifndef __CAAS_H
-#define __CAAS_H
+#ifndef FC_SOLVE__CAAS_H
+#define FC_SOLVE__CAAS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,4 +25,4 @@ extern int freecell_solver_check_and_add_state(
 }
 #endif
 
-#endif /* #ifndef __CAAS_H */
+#endif /* #ifndef FC_SOLVE__CAAS_H */

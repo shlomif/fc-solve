@@ -4,7 +4,7 @@
  * of the functions of the hash ADT are implemented, but it is useful enough
  * for Freecell Solver.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */

@@ -2,13 +2,13 @@
  * caas.c - the various possible implementations of the function
  * freecell_solver_check_and_add_state().
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
 
-#ifndef __CAAS_C
-#define __CAAS_C
+#ifndef FC_SOLVE__CAAS_C
+#define FC_SOLVE__CAAS_C
 
 #include <stdlib.h>
 #include <string.h>
@@ -310,7 +310,7 @@ static void GCC_INLINE freecell_solver_cache_stacks(
         {
             continue;
         }
-        /* (*Mark COMPACT_ALLOC_CARD_STACKS*) */
+        /* new_state->s.stacks[a] = realloc(new_state->s.stacks[a], fcs_stack_len(new_state->s, a)+1); */
         fcs_compact_alloc_typed_ptr_into_var(new_ptr, char, hard_thread->stacks_allocator, (fcs_stack_len(new_state->s, a)+1));
         memcpy(new_ptr, new_state->s.stacks[a], (fcs_stack_len(new_state->s, a)+1));
         new_state->s.stacks[a] = new_ptr;
@@ -537,7 +537,6 @@ GCC_INLINE int freecell_solver_check_and_add_state(
 
         if (new_state->moves_to_parent != NULL)
         {
-            /* (*Mark COMPACT_ALLOC_MOVE_STACKS *) */
             new_state->moves_to_parent = 
                 freecell_solver_move_stack_compact_allocate(
                     hard_thread, 
@@ -627,4 +626,4 @@ int freecell_solver_check_and_add_state(freecell_solver_instance_t * instance, f
 
 #endif
 
-#endif /* #ifndef __CAAS_C */
+#endif /* #ifndef FC_SOLVE__CAAS_C */

@@ -2,7 +2,7 @@
  * scans.c - The code that relates to the various scans.
  * Currently Hard DFS, Soft-DFS, Random-DFS, A* and BFS are implemented.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000-2001
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000-2001
  *
  * This file is in the public domain (it's uncopyrighted).
  */
@@ -34,16 +34,16 @@
 #include "dmalloc.h"
 #endif
 
+static pq_rating_t freecell_solver_a_star_rate_state(
+    freecell_solver_soft_thread_t * soft_thread,
+    fcs_state_with_locations_t * ptr_state_with_locations);
+
 #define freecell_solver_a_star_enqueue_state(soft_thread,ptr_state_with_locations) \
     {        \
         freecell_solver_PQueuePush(        \
             a_star_pqueue,       \
             ptr_state_with_locations,            \
-            freecell_solver_a_star_rate_state( \
-                soft_thread,         \
-                a_star_weights,        \
-                ptr_state_with_locations      \
-                )   \
+            freecell_solver_a_star_rate_state(soft_thread, ptr_state_with_locations)   \
             );       \
     }
 
@@ -70,7 +70,7 @@ int freecell_solver_hard_dfs_solve_for_state(
     freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
     freecell_solver_instance_t * instance = hard_thread->instance;
 
-    int a, test_idx;
+    int a;
     int check;
 
     int num_freestacks, num_freecells;
@@ -159,21 +159,14 @@ int freecell_solver_hard_dfs_solve_for_state(
 
     calculate_real_depth(ptr_state_with_locations);
 
-    for(test_idx=0 ;
-        test_idx < soft_thread->tests_order.num;
-        test_idx++)
+    for(a=0 ;
+        a < soft_thread->tests_order.num;
+        a++)
     {
-        {
-            int num_states;
-            fcs_derived_state_t * derived_states;
-
-            fcs_derived_states_list_free_move_stacks(&derived);
-        }
-        
         derived.num_states = 0;
 
         check =
-            freecell_solver_sfs_tests[soft_thread->tests_order.tests[test_idx].test & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
+            freecell_solver_sfs_tests[soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
                 soft_thread,
                 ptr_state_with_locations,
                 num_freestacks,
@@ -202,11 +195,11 @@ int freecell_solver_hard_dfs_solve_for_state(
         for(derived_state_index=0;derived_state_index<derived.num_states;derived_state_index++)
         {
             if (
-                (! (derived.states[derived_state_index].ptr_state->visited &
+                (! (derived.states[derived_state_index]->visited &
                     FCS_VISITED_DEAD_END)
                 ) &&
                 (! is_scan_visited(
-                    derived.states[derived_state_index].ptr_state,
+                    derived.states[derived_state_index],
                     soft_thread->id)
                 )
                )
@@ -214,7 +207,7 @@ int freecell_solver_hard_dfs_solve_for_state(
                 check =
                     freecell_solver_hard_dfs_solve_for_state(
                         soft_thread,
-                        derived.states[derived_state_index].ptr_state,
+                        derived.states[derived_state_index],
                         depth+1,
                         ignore_osins
                         );
@@ -265,10 +258,6 @@ int freecell_solver_hard_dfs_solve_for_state(
 free_derived:
     if (derived.states != NULL)
     {
-        int num_states;
-        fcs_derived_state_t * derived_states;
-
-        fcs_derived_states_list_free_move_stacks(&derived);
         free(derived.states);
     }
 
@@ -394,15 +383,13 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
     int dfs_max_depth;
 
     int tests_order_num = soft_thread->tests_order.num;
-    fcs_test_t * tests_order_tests = soft_thread->tests_order.tests;
+    int * tests_order_tests = soft_thread->tests_order.tests;
     int calc_real_depth = instance->calc_real_depth;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
     int test_index, current_state_index;
     fcs_derived_states_list_t * derived_states_list;
     int to_reparent_states, scans_synergy;
-    int num_states;
-    fcs_derived_state_t * derived_states;
 
     freecells_num = instance->freecells_num;
     stacks_num = instance->stacks_num;
@@ -477,9 +464,6 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                     ptr_state_with_locations->visited |= FCS_VISITED_ALL_TESTS_DONE;
                     mark_as_dead_end(ptr_state_with_locations);
                 }
-    
-                /* Free the move stacks in the derived states list */
-                fcs_derived_states_list_free_move_stacks(derived_states_list);
 
                 depth--;
 
@@ -505,9 +489,6 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                 continue; /* Just to make sure depth is not -1 now */
             }
 
-            /* Free the move stacks in the derived states list */
-            fcs_derived_states_list_free_move_stacks(derived_states_list);
-            
             derived_states_list->num_states = 0;
 
             /* If this is the first test, then count the number of unoccupied
@@ -584,9 +565,9 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                             /* This is a randomized scan. Else - quit after the first iteration */
                             to_randomize &&
                             /* We are still on a random group */
-                            (tests_order_tests[ test_index ].test & FCS_TEST_ORDER_FLAG_RANDOM) &&
+                            (tests_order_tests[ test_index ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
                             /* A new random group did not start */
-                            (! (tests_order_tests[ test_index ].test & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
+                            (! (tests_order_tests[ test_index ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
                          )
                     )
                  )
@@ -595,7 +576,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
                 check = freecell_solver_sfs_tests[tests_order_tests[
                         test_index
-                    ].test & FCS_TEST_ORDER_NO_FLAGS_MASK] (
+                    ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                         soft_thread,
                         ptr_state_with_locations,
                         the_soft_dfs_info->num_freestacks,
@@ -621,8 +602,10 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
 
             {
+                int a, j;
+                int swap_save;
                 int * rand_array, * ra_ptr;
-                num_states = derived_states_list->num_states;
+                int num_states = derived_states_list->num_states;
 
                 if (num_states >
                         the_soft_dfs_info->derived_states_random_indexes_max_size)
@@ -646,17 +629,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                  *
                  * Also, do not randomize if this is a pure soft-DFS scan.
                  * */
-                if (to_randomize && (tests_order_tests[ test_index-1 ].test & FCS_TEST_ORDER_FLAG_RANDOM))
-                {
-                    tests_order_tests[test_index - 1].states_order_instance->order->order_states(
-                        tests_order_tests[test_index - 1].states_order_instance,
-                        ptr_state_with_locations,
-                        derived_states_list,
-                        rand_array
-                        );
-                }
-#if 0
-                if (to_randomize && (tests_order_tests[ test_index-1 ].test & FCS_TEST_ORDER_FLAG_RANDOM))
+                if (to_randomize && tests_order_tests[ test_index-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
                 {
                     a = num_states-1;
                     while (a > 0)
@@ -675,7 +648,6 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         a--;
                     }
                 }
-#endif
             }
 
             /* We just performed a test, so the index of the first state that
@@ -685,11 +657,9 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         }
 
         {
-            int * rand_array;
-            
-            num_states = derived_states_list->num_states;
-            derived_states = derived_states_list->states;
-            rand_array = the_soft_dfs_info->derived_states_random_indexes;
+            int num_states = derived_states_list->num_states;
+            fcs_state_with_locations_t * * derived_states = derived_states_list->states;
+            int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
 
             while (current_state_index <
                    num_states)
@@ -699,7 +669,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                         rand_array[
                             current_state_index
                         ]
-                    ].ptr_state);
+                    ]);
 
                 current_state_index++;
                 if (
@@ -802,9 +772,8 @@ void freecell_solver_a_star_initialize_rater(
 }
 
 
-pq_rating_t freecell_solver_a_star_rate_state(
+static pq_rating_t freecell_solver_a_star_rate_state(
     freecell_solver_soft_thread_t * soft_thread,
-    double * a_star_weights,
     fcs_state_with_locations_t * ptr_state_with_locations
     )
 {
@@ -820,6 +789,7 @@ pq_rating_t freecell_solver_a_star_rate_state(
     int sequences_are_built_by = instance->sequences_are_built_by;
     int freecells_num = instance->freecells_num;
     int stacks_num = instance->stacks_num;
+    double * a_star_weights = soft_thread->a_star_weights;
     int unlimited_sequence_move = instance->unlimited_sequence_move;
     int decks_num = instance->decks_num;
 
@@ -915,8 +885,6 @@ pq_rating_t freecell_solver_a_star_rate_state(
     {
         ret += ((20000 - ptr_state_with_locations->depth)/20000.0) * a_star_weights[FCS_A_STAR_WEIGHT_DEPTH];
     }
-    printf("ptr_state=0x%p\n", ptr_state_with_locations);
-    printf("ret=%f\n", ret);
 
     return (int)(ret*INT_MAX);
 }
@@ -939,7 +907,6 @@ pq_rating_t freecell_solver_a_star_rate_state(
      * derived states list */                                   \
     if (derived.states != NULL)                                 \
     {                                                           \
-        fcs_derived_states_list_free_move_stacks(&derived);     \
         free(derived.states);                                   \
     }                                                           \
                                                                 \
@@ -968,7 +935,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
     int method;
     int freecells_num, stacks_num;
     int tests_order_num;
-    fcs_test_t * tests_order_tests;
+    int * tests_order_tests;
     int calc_real_depth = instance->calc_real_depth;
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
@@ -980,9 +947,6 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
     fcs_states_linked_list_item_t * bfs_queue = soft_thread->bfs_queue;
     PQUEUE * a_star_pqueue = soft_thread->a_star_pqueue;
     fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->bfs_queue_last_item;
-    int num_states;
-    fcs_derived_state_t * derived_states;
-    double * a_star_weights = soft_thread->a_star_weights;
 
     derived.num_states = 0;
     derived.max_num_states = 0;
@@ -1088,7 +1052,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             a < tests_order_num;
             a++)
         {
-            check = freecell_solver_sfs_tests[tests_order_tests[a].test & FCS_TEST_ORDER_NO_FLAGS_MASK] (
+            check = freecell_solver_sfs_tests[tests_order_tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                     soft_thread,
                     ptr_state_with_locations,
                     num_freestacks,
@@ -1140,19 +1104,17 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             {
                 freecell_solver_a_star_enqueue_state(
                     soft_thread,
-                    derived.states[derived_index].ptr_state
+                    derived.states[derived_index]
                     );
             }
             else
             {
                 freecell_solver_bfs_enqueue_state(
                     soft_thread,
-                    derived.states[derived_index].ptr_state
+                    derived.states[derived_index]
                     );
             }
         }
-
-        fcs_derived_states_list_free_move_stacks(&derived);
 
         if (method == FCS_METHOD_OPTIMIZE)
         {

@@ -11,8 +11,8 @@
         http://www.geocities.com/jheyesjones/astar.html
 */
 
-#ifndef __PQUEUE_H
-#define __PQUEUE_H
+#ifndef FC_SOLVE__PQUEUE_H
+#define FC_SOLVE__PQUEUE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,4 +68,4 @@ void *freecell_solver_PQueuePop( PQUEUE *pq);
 }
 #endif
 
-#endif /* #ifdef __PQUEUE_H */
+#endif /* #ifdef FC_SOLVE__PQUEUE_H */

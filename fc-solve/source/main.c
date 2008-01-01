@@ -27,6 +27,7 @@ static void init_debug_context(
     freecell_solver_display_information_context_t * dc
     )
 {
+    dc->debug_iter_state_output = 0;
     dc->parseable_output = 0;
     dc->canonized_order_output = 0;
     dc->display_10_as_t = 0;
@@ -115,8 +116,8 @@ static void my_iter_handler(
 
 struct help_screen_struct
 {
-    const char * key;
-    const char * screen;
+    char * key;
+    char * screen;
 };
 
 typedef struct help_screen_struct help_screen_t;
@@ -238,8 +239,8 @@ help_screen_t help_screens[] = {
 "        'A' - move a stack card to an empty stack.\n"
 "        'B' - move a stack card to a parent on a different stack.\n"
 "        'C' - move a stack card to a freecell.\n"
-"        'D' - move a freecell card to a parent.\n"
-"        'E' - move a freecell card to an empty stack.\n"
+"        'D' - move a freecel card to a parent.\n"
+"        'E' - move a freecel card to an empty stack.\n"
 "\n"
 "        Simple Simon Tests:\n"
 "\n"
@@ -254,8 +255,6 @@ help_screen_t help_screens[] = {
 "        'g' - move a whole stack sequence to a false parent which has some\n"
 "              cards above it.\n"
 "        'h' - move a sequence to a parent on the same stack.\n"
-"        'i' - move a sequence to a false parent (may make the game\n"
-"              intractable)\n"
 "\n"
 "        Tests are grouped with parenthesis or square brackets. Each group\n"
 "        will be randomized as a whole by the random-dfs scan.\n"
@@ -341,8 +340,8 @@ help_screen_t help_screens[] = {
 "\n"
 "\n"
 "Freecell Solver was written by Shlomi Fish.\n"
-"Homepage: http://vipe.technion.ac.il/~shlomif/freecell-solver/\n"
-"Send comments and suggestions to shlomif@vipe.technion.ac.il\n"
+"Homepage: http://fc-solve.berlios.de/\n"
+"Send comments and suggestions to http://www.shlomifish.org/me/contact-me/\n"
 },
 {
     "real-help",
@@ -382,7 +381,7 @@ help_screen_t help_screens[] = {
 "\n"
 "- If it takes too long to finish, type \"fc-solve --help-configs\"\n"
 "- If it erroneously reports a board as unsolvable, try adding the\n"
-"  \"-to 01ABCDE\" flag (or \"-to abcdefghi\" for Simple simon)\n"
+"  \"-to 01ABCDE\" flag\n"
 "- If the solution is too long type \"fc-solve --help-short-sol\"\n"
 "- To present the moves only try adding \"-m\" or \"-m -snx\"\n"
 "- For a description of all options type \"fc-solve --help-options\"\n"
@@ -390,7 +389,7 @@ help_screen_t help_screens[] = {
 "- To turn --help into something more useful, type\n"
 "  \"fc-solve --help-real-help\"\n"
 "\n"
-"Contact Shlomi Fish, shlomif@vipe.technion.ac.il for more information.\n" 
+"Contact Shlomi Fish, http://www.shlomifish.org/ for more information.\n" 
 },
 {
     NULL,
@@ -401,10 +400,11 @@ help_screen_t help_screens[] = {
 
 enum MY_FCS_CMD_LINE_RET_VALUES
 {
-    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
+    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER,
+
 };
 
-static void print_help_string(const char * key)
+static void print_help_string(char * key)
 {
     int i;
     for(i=0;help_screens[i].key != NULL ; i++)
@@ -419,7 +419,7 @@ static void print_help_string(const char * key)
 static int cmd_line_callback(
     void * instance,
     int argc,
-    const char * argv[],
+    char * argv[],
     int arg,
     int * num_to_skip,
     int * ret,
@@ -433,7 +433,7 @@ static int cmd_line_callback(
 
     if ((!strcmp(argv[arg], "-h")) || (!strcmp(argv[arg], "--help")))
     {
-        const char * help_key;
+        char * help_key;
         
         help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");
         if (help_key == NULL)
@@ -576,7 +576,7 @@ static void command_signal_handler(int signal_num)
 }
 
 
-static const char * known_parameters[] = {
+static char * known_parameters[] = {
     "-h", "--help",
         "--help-configs", "--help-options", "--help-problems", 
         "--help-real-help", "--help-short-sol", "--help-summary",
@@ -617,13 +617,11 @@ int main(int argc, char * argv[])
     current_instance = instance;
 
 
-    error_string = NULL;
-    
     parser_ret =
         freecell_solver_user_cmd_line_parse_args(
             instance,
             argc,
-            (const char * *)argv,
+            argv,
             1,
             known_parameters,
             cmd_line_callback,
@@ -724,6 +722,7 @@ int main(int argc, char * argv[])
 
     if (ret == FCS_STATE_INVALID_STATE)
     {
+        char * error_string;
         error_string =
             freecell_solver_user_get_invalid_state_error_string(
                 instance,

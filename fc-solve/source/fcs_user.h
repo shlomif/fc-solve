@@ -1,12 +1,12 @@
 /*
  * move.h - main header file for the Freecell Solver library.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
-#ifndef __FCS_USER_H
-#define __FCS_USER_H
+#ifndef FC_SOLVE__FCS_USER_H
+#define FC_SOLVE__FCS_USER_H
 
 #include "fcs_enums.h"
 #include "fcs_move.h"
@@ -155,7 +155,7 @@ extern int freecell_solver_user_set_sequence_move(
 
 extern int freecell_solver_user_set_a_star_weight(
     void * user_instance,
-    int weight_index,
+    int index,
     double weight
     );
 
@@ -222,12 +222,12 @@ extern void freecell_solver_user_set_calc_real_depth(
 
 extern void freecell_solver_user_set_soft_thread_name(
     void * user_instance,
-    const char * name
+    char * name
     );
 
 extern int freecell_solver_user_set_hard_thread_prelude(
     void * user_instance,
-    const char * prelude
+    char * prelude
     );
 
 extern void freecell_solver_user_recycle(
@@ -272,4 +272,4 @@ extern int freecell_solver_user_reset(
 }
 #endif
 
-#endif /* __FCS_USER_H */
+#endif /* FC_SOLVE__FCS_USER_H */

@@ -20,7 +20,7 @@ if $AUTOCONF ; then
     aclocal
     automake
     autoconf
-    (cd board_gen && automake && autoconf)
+    (cd board_gen && aclocal && automake && autoconf)
 fi
 
 ./configure && make dist

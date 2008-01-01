@@ -10,8 +10,8 @@
         http://www.geocities.com/jheyesjones/astar.html
 */
 
-#ifndef __JHJTYPES_H
-#define __JHJTYPES_H
+#ifndef FC_SOLVE__JHJTYPES_H
+#define FC_SOLVE__JHJTYPES_H
 
 /* Data types used in JHeyes-Jones sample code */
 
@@ -22,4 +22,4 @@ typedef unsigned short uint16;
 typedef signed char int8;
 typedef unsigned char uint8;
 
-#endif /* #ifdef __JHJTYPES_H */
+#endif /* #ifdef FC_SOLVE__JHJTYPES_H */

@@ -1,0 +1,33 @@
+#include '../template.wml'
+
+<latemp_subject "The Freecell Solver Architecture Document" />
+
+<h2>Introduction</h2>
+
+<p>
+This is the 
+<a href="$(ROOT)">Freecell
+Solver</a> 
+architecture document. Its source is written in <a
+href="http://www.docbook.org/">DocBook/XML</a> and from there converted
+to different formats. All the common formats you'd like to use are supplied
+here.
+</p>
+
+<h2>Formats</h2>
+
+<ul>
+<li>
+<a href="./fcs_arch_doc/index.html">HTML (read online)</a>
+</li>
+<li>
+<a href="./fcs_arch_doc.pdf">Acrobat Reader (PDF)</a>
+</li>
+<li>
+<a href="./fcs_arch_doc.rtf">Microsoft Word RTF</a>
+</li>
+<li>
+<a href="http://developer.berlios.de/project/showfiles.php?group_id=66&amp;release_id=6099">The Original DocBook</a>
+</li>
+</ul>
+

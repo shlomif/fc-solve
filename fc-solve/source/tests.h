@@ -3,13 +3,13 @@
  *
  * The test functions code is found in freecell.c
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
 
-#ifndef __TESTS_H
-#define __TESTS_H
+#ifndef FC_SOLVE__TESTS_H
+#define FC_SOLVE__TESTS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,6 +44,13 @@ extern "C" {
 
 #include "caas.h"
 
+/*
+ *  These are some macros to make it easier for the programmer.
+ * */
+#define state_with_locations (*ptr_state_with_locations)
+#define state (ptr_state_with_locations->s)
+#define new_state_with_locations (*ptr_new_state_with_locations)
+#define new_state (ptr_new_state_with_locations->s)
 
 #define sfs_check_state_begin()                                                \
     fcs_state_ia_alloc_into_var(ptr_new_state_with_locations, hard_thread);    \
@@ -79,7 +86,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
                                                                           \
 {                                                                         \
     fcs_state_with_locations_t * existing_state;                          \
-    fcs_move_stack_t * moves_copy;                                        \
     check = freecell_solver_check_and_add_state(                          \
         soft_thread,                                                      \
         ptr_new_state_with_locations,                                     \
@@ -124,20 +130,16 @@ fcs_move_stack_push(moves, temp_move);                                    \
             existing_state->parent = ptr_state_with_locations;            \
             existing_state->depth = ptr_state_with_locations->depth + 1;  \
         }                                                                 \
-        fcs_move_stack_duplicate_into_var(moves_copy, moves);             \
         fcs_derived_states_list_add_state(                                \
             derived_states_list,                                          \
-            existing_state,                                               \
-            moves_copy                                                    \
+            existing_state                                                \
             );                                                            \
     }                                                                     \
     else                                                                  \
     {                                                                     \
-        fcs_move_stack_duplicate_into_var(moves_copy, moves);             \
         fcs_derived_states_list_add_state(                                \
             derived_states_list,                                          \
-            ptr_new_state_with_locations,                                 \
-            moves_copy                                                    \
+            ptr_new_state_with_locations                                  \
             );                                                            \
    }                                                                      \
 }
@@ -149,20 +151,20 @@ fcs_move_stack_push(moves, temp_move);                                    \
   */
 #define fcs_flip_top_card(stack)                                   \
 {                                                                  \
-    int fcs_flip_top_card_cards_num;                                                 \
-    fcs_flip_top_card_cards_num = fcs_stack_len(new_state,stack);                    \
+    int cards_num;                                                 \
+    cards_num = fcs_stack_len(new_state,stack);                    \
                                                                    \
-    if (fcs_flip_top_card_cards_num > 0)                                             \
+    if (cards_num > 0)                                             \
     {                                                              \
         if (fcs_card_get_flipped(                                  \
                 fcs_stack_card(                                    \
                     new_state,                                     \
                     stack,                                         \
-                    fcs_flip_top_card_cards_num-1)                                   \
+                    cards_num-1)                                   \
                 ) == 1                                             \
            )                                                       \
         {                                                          \
-            fcs_flip_stack_card(new_state,stack,fcs_flip_top_card_cards_num-1);      \
+            fcs_flip_stack_card(new_state,stack,cards_num-1);      \
             fcs_move_set_type(temp_move, FCS_MOVE_TYPE_FLIP_CARD); \
             fcs_move_set_src_stack(temp_move, stack);              \
                                                                    \
@@ -222,186 +224,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
     indirect_stacks_buffer = hard_thread->indirect_stacks_buffer; \
     calc_real_depth = instance->calc_real_depth;                  \
     scans_synergy = instance->scans_synergy;
-
-extern int freecell_solver_sfs_move_top_stack_cards_to_founds(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_move_freecell_cards_to_founds(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_move_freecell_cards_on_top_of_stacks(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_move_non_top_stack_cards_to_founds(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_move_stack_cards_to_different_stacks(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_move_sequences_to_free_stacks(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_move_freecell_cards_to_empty_stack(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_move_cards_to_a_different_parent(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_empty_stack_into_freecells(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_yukon_do_nothing(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_yukon_move_card_to_parent(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_yukon_move_kings_to_empty_stack(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_deal_gypsy_talon(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_get_card_from_klondike_talon(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_atomic_move_card_to_empty_stack(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_atomic_move_card_to_parent(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_atomic_move_card_to_freecell(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_atomic_move_freecell_card_to_parent(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_atomic_move_freecell_card_to_empty_stack(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
 
 
 
@@ -476,19 +298,10 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_
         int reparent
         );
 
-extern int freecell_solver_sfs_simple_simon_move_sequence_to_false_parent(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
 #ifdef __cplusplus
 }
 #endif
 
 #define my_copy_stack(idx) fcs_copy_stack(new_state_with_locations, idx, indirect_stacks_buffer);
 
-#endif /* __TESTS_H */
+#endif /* FC_SOLVE__TESTS_H */

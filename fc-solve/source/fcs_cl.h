@@ -1,6 +1,6 @@
 
-#ifndef __FCS_CL_H
-#define __FCS_CL_H
+#ifndef FC_SOLVE__FCS_CL_H
+#define FC_SOLVE__FCS_CL_H
 
 #include "fcs_user.h"
 
@@ -12,7 +12,7 @@ typedef int (*freecell_solver_user_cmd_line_known_commands_callback_t)
     (
      void * instance,
      int argc,
-     const char * argv[],
+     char * argv[],
      int arg_index,
      int * num_to_skip,
      int * ret,
@@ -28,15 +28,15 @@ enum FCS_CMD_LINE_CALLBACK_RET_VALUES
     FCS_CMD_LINE_PARAM_WITH_NO_ARG,
     FCS_CMD_LINE_ERROR_IN_ARG,
 
-    FCS_CMD_LINE_USER = 0x10000
+    FCS_CMD_LINE_USER = 0x10000,
 };
 
 extern int freecell_solver_user_cmd_line_parse_args(
     void * instance,
     int argc,
-    const char * argv[],
+    char * argv[],
     int start_arg,
-    const char * * known_parameters,
+    char * * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
@@ -46,9 +46,9 @@ extern int freecell_solver_user_cmd_line_parse_args(
 extern int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
     int argc,
-    const char * argv[],
+    char * argv[],
     int start_arg,
-    const char * * known_parameters,
+    char * * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
@@ -62,4 +62,4 @@ extern int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 };
 #endif
 
-#endif /* #ifndef __FCS_CL_H */
+#endif /* #ifndef FC_SOLVE__FCS_CL_H */

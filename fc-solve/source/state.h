@@ -1,7 +1,7 @@
 /*
  * state.h - header file for state functions and macros for Freecell Solver
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
@@ -9,8 +9,8 @@
 
 #include "fcs_move.h"
 
-#ifndef __STATE_H
-#define __STATE_H
+#ifndef FC_SOLVE__STATE_H
+#define FC_SOLVE__STATE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -453,14 +453,12 @@ typedef struct fcs_struct_state_t fcs_state_t;
     (fcs_card_set_flipped(fcs_stack_card(state,s,c), ((fcs_card_t)0) ))
 
 
-/* (*Mark STACKS_COW_CLEAR *) */
 #define fcs_duplicate_state(dest,src)           \
     {                                           \
         (dest) = (src);                         \
         (dest).stacks_copy_on_write_flags = 0;    \
     }
 
-/* (*Mark STACKS_COW_COPY_STACK*) */
 #define fcs_copy_stack(state, idx, buffer) \
     {     \
         if (! ((state).stacks_copy_on_write_flags & (1 << idx)))        \
@@ -486,7 +484,6 @@ struct fcs_struct_state_with_locations_t
     fcs_state_t s;
     fcs_locs_t stack_locs[MAX_NUM_STACKS];
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
-    /* (*Mark STATE_PARENT*) */
     struct fcs_struct_state_with_locations_t * parent;
     fcs_move_stack_t * moves_to_parent;
     int depth;
@@ -591,16 +588,19 @@ extern int freecell_solver_state_compare_indirect(const void * s1, const void * 
 extern int freecell_solver_state_compare_indirect_with_context(const void * s1, const void * s2, void * context);
 #endif
 
-#ifdef INDIRECT_STACK_STATES
-extern int freecell_solver_stack_compare_for_comparison(const void * v_s1, const void * v_s2);
-#endif
-
 #ifdef FCS_WITH_TALONS
 extern int fcs_talon_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
 #endif
 
-extern fcs_state_with_locations_t freecell_solver_initial_user_state_to_c(
+enum FCS_USER_STATE_TO_C_RETURN_CODES
+{
+    FCS_USER_STATE_TO_C__SUCCESS = 0,
+    FCS_USER_STATE_TO_C__PREMATURE_END_OF_INPUT
+};
+
+int freecell_solver_initial_user_state_to_c(
     const char * string,
+    fcs_state_with_locations_t * out_state,
     int freecells_num,
     int stacks_num,
     int decks_num
@@ -622,6 +622,16 @@ extern char * freecell_solver_state_as_string(
     int canonized_order_output,
     int display_10_as_t
     );
+
+enum FCS_STATE_VALIDITY_CODES
+{
+    FCS_STATE_VALIDITY__OK = 0,
+    FCS_STATE_VALIDITY__EMPTY_SLOT = 3,
+    FCS_STATE_VALIDITY__EXTRA_CARD = 2,
+    FCS_STATE_VALIDITY__MISSING_CARD = 1,
+    FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4,
+};
+
 extern int freecell_solver_check_state_validity(
     fcs_state_with_locations_t * state,
     int freecells_num,
@@ -643,8 +653,8 @@ enum FCS_VISITED_T
     FCS_VISITED_IN_SOLUTION_PATH = 0x2,
     FCS_VISITED_IN_OPTIMIZED_PATH = 0x4,
     FCS_VISITED_DEAD_END = 0x8,
-    FCS_VISITED_ALL_TESTS_DONE = 0x10
+    FCS_VISITED_ALL_TESTS_DONE = 0x10,
 };
 
 
-#endif /* __STATE_H */
+#endif /* FC_SOLVE__STATE_H */

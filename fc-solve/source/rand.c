@@ -16,15 +16,15 @@ fcs_rand_t * freecell_solver_rand_alloc(unsigned int seed)
     return ret;
 }
 
-void freecell_solver_rand_free(fcs_rand_t * self)
+void freecell_solver_rand_free(fcs_rand_t * rand)
 {
-    free(self);
+    free(rand);
 }
 
 
-void freecell_solver_rand_srand(fcs_rand_t * self, int seed)
+void freecell_solver_rand_srand(fcs_rand_t * rand, int seed)
 {
-    self->seed = seed;
+    rand->seed = seed;
 }
 
 

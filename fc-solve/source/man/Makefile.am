@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = 1.4
 
-EXTRA_DIST += freecell-solver-range-parallel-solve.pod
+EXTRA_DIST = freecell-solver-range-parallel-solve.pod
 EXTRA_DIST += freecell-solver-range-parallel-solve.6
 
 man_MANS = freecell-solver-range-parallel-solve.6

@@ -24,7 +24,12 @@ void freecell_solver_state_ia_init(freecell_solver_hard_thread_t * hard_thread)
     hard_thread->max_num_state_packs = IA_STATE_PACKS_GROW_BY;
     hard_thread->state_packs = (fcs_state_with_locations_t * *)malloc(sizeof(fcs_state_with_locations_t *) * hard_thread->max_num_state_packs);
     hard_thread->num_state_packs = 1;
-    hard_thread->state_pack_len = 0x010000 / sizeof(fcs_state_with_locations_t);
+    /*
+     * All the states should fit in one 64KB segment. Now, we allocate as 
+     * many states as possible, minus one, so we would be certain that there
+     * would be place for the overhead required by the malloc algorithm.
+     * */
+    hard_thread->state_pack_len = (0x010000 / sizeof(fcs_state_with_locations_t)) - 1;
     hard_thread->state_packs[0] = malloc(hard_thread->state_pack_len*sizeof(fcs_state_with_locations_t));
 
     hard_thread->num_states_in_last_pack = 0;

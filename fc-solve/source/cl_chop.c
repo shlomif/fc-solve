@@ -123,7 +123,7 @@ NEXT_ARG:
         }
         else if (*s == '\\')
         {
-            next_char = *(++s);
+            char next_char = *(++s);
             s++;
             if (next_char == '\0')
             {

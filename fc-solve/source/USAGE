@@ -245,9 +245,6 @@ Simple Simon Tests:
 'g' - move a whole stack sequence to a false parent which has some 
       cards above it.
 'h' - move a sequence to a parent on the same stack.
-'i' - move a seuqence to a false parent. This test may make the game
-      intractable, because there are many such moves. Thus, it is not 
-      enabled by default.
 
 Manipulating the tests order can be very helpful to the quick solution
 of a given board. If you found that a certain board cannot be solved in
@@ -462,7 +459,7 @@ for information about their format)
 
 Presets that are shipped with Freecell Solver:
 
-    abra-kadabra      - a meta-moves preset
+	abra-kadabra      - a meta-moves preset
     cool-jives        - a meta-moves preset
     crooked-nose      - an atomic-moves preset (guarantees an accurate verdict)
     fools-gold        - an atomic-moves preset

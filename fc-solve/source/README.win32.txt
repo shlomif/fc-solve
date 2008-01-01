@@ -20,8 +20,7 @@ To enable presets (which you should) copy the files under the
 
 Freecell Solver's homepage is at the following URL:
 
-http://vipe.technion.ac.il/~shlomif/freecell-solver/
-
+http://fc-solve.berlios.de/
 
 Enjoy!
 
@@ -47,4 +46,3 @@ USAGE to learn more about it.
 I am aware of several other implementations of Freecell for Windows 
 using different Freecell solvers. Links to them can be
 found in the links section of the Freecell Solver homepage.
-

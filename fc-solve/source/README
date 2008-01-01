@@ -1,14 +1,14 @@
 1. Introduction
 ---------------
 
-This is Freecell Solver version 2.10.x, a program that automatically
+This is Freecell Solver version 2.8.x, a program that automatically
 solves most Freecell and Simple Simon games.
 
 Freecell Solver is distributed under the public domain.
 
 I hope you'll enjoy using it, and make the best of it.
 
-    Shlomi Fish (shlomif@vipe.technion.ac.il)
+    Shlomi Fish ( http://www.shlomifish.org/ )
 
 2. Building
 -----------

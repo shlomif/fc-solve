@@ -1,7 +1,7 @@
 /*
  * lib.c - library interface functions of Freecell Solver.
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
  * This file is in the public domain (it's uncopyrighted).
  */
@@ -240,6 +240,12 @@ static void recycle_instance(
     if (user->instances_list[i].ret != FCS_STATE_NOT_BEGAN_YET)
     {
         freecell_solver_recycle_instance(user->instances_list[i].instance);
+        /*
+         * We have to initialize init_num_times to 0 here, because it may not 
+         * get initialized again, and now the num_times of the instance
+         * is equal to 0.
+         * */
+        user->init_num_times = 0;
     }
 
     user->instances_list[i].ret = FCS_STATE_NOT_BEGAN_YET;    
@@ -270,9 +276,10 @@ int freecell_solver_user_resume_solution(
 
         if (user->instances_list[user->current_instance_idx].ret == FCS_STATE_NOT_BEGAN_YET)
         {
-
-            user->state = freecell_solver_initial_user_state_to_c(
+            int status;
+            status = freecell_solver_initial_user_state_to_c(
                 user->state_string_copy,
+                &(user->state),
                 user->instance->freecells_num,
                 user->instance->stacks_num,
                 user->instance->decks_num
@@ -283,6 +290,13 @@ int freecell_solver_user_resume_solution(
                 ,user->indirect_stacks_buffer
 #endif
                 );
+
+            if (status != FCS_USER_STATE_TO_C__SUCCESS)
+            {
+                user->ret = FCS_STATE_INVALID_STATE;
+                user->state_validity_ret = FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
+                return user->ret;
+            }
 
             user->state_validity_ret = freecell_solver_check_state_validity(
                 &user->state,
@@ -766,27 +780,32 @@ char * freecell_solver_user_get_invalid_state_error_string(
 
     user = (fcs_user_t *)user_instance;
 
-    if (user->state_validity_ret == 0)
+    if (user->state_validity_ret == FCS_STATE_VALIDITY__OK)
     {
         return strdup("");
     }
     fcs_card_perl2user(user->state_validity_card, card_str, print_ts);
 
-    if (user->state_validity_ret == 3)
+    if (user->state_validity_ret == FCS_STATE_VALIDITY__EMPTY_SLOT)
     {
         sprintf(string, "%s",
             "There's an empty slot in one of the stacks."
             );
     }
-    else
+    else if ((user->state_validity_ret == FCS_STATE_VALIDITY__EXTRA_CARD) ||
+           (user->state_validity_ret == FCS_STATE_VALIDITY__MISSING_CARD)
+          )
     {
         sprintf(string, "%s%s.",
-            ((user->state_validity_ret == 2)? "There's an extra card: " : "There's a missing card: "),
+            ((user->state_validity_ret == FCS_STATE_VALIDITY__EXTRA_CARD)? "There's an extra card: " : "There's a missing card: "),
             card_str
         );
     }
+    else if (user->state_validity_ret == FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT)
+    {
+        sprintf(string, "%s.", "Not enough input");
+    }
     return strdup(string);
-
 }
 
 int freecell_solver_user_set_sequences_are_built_by_type(
@@ -844,7 +863,7 @@ int freecell_solver_user_set_empty_stacks_filled_by(
 
 int freecell_solver_user_set_a_star_weight(
     void * user_instance,
-    int weight_index,
+    int index,
     double weight
     )
 {
@@ -852,7 +871,7 @@ int freecell_solver_user_set_a_star_weight(
 
     user = (fcs_user_t *)user_instance;
 
-    if ((weight_index < 0) || (weight_index >= (int)(sizeof(user->soft_thread->a_star_weights)/sizeof(user->soft_thread->a_star_weights[0]))))
+    if ((index < 0) || (index >= (sizeof(user->soft_thread->a_star_weights)/sizeof(user->soft_thread->a_star_weights[0]))))
     {
         return 1;
     }
@@ -861,7 +880,7 @@ int freecell_solver_user_set_a_star_weight(
         return 2;
     }
 
-    user->soft_thread->a_star_weights[weight_index] = weight;
+    user->soft_thread->a_star_weights[index] = weight;
 
     return 0;
 
@@ -888,82 +907,84 @@ static void freecell_solver_user_iter_handler_wrapper(
         parent_iter_num,
         user->iter_handler_context
         );
+
+    return;
 }
 
 void freecell_solver_user_set_iter_handler(
-    void * user_instance,
-    freecell_solver_user_iter_handler_t iter_handler,
-    void * iter_handler_context
-    )
+void * user_instance,
+freecell_solver_user_iter_handler_t iter_handler,
+void * iter_handler_context
+)
 {
-    fcs_user_t * user;
+fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+user = (fcs_user_t *)user_instance;
 
-    if (iter_handler == NULL)
-    {
-        user->instance->debug_iter_output = 0;
-    }
-    else
-    {
-        /* Disable it temporarily while we change the settings */
-        user->instance->debug_iter_output = 0;
-        user->iter_handler = iter_handler;
-        user->iter_handler_context = iter_handler_context;
-        user->instance->debug_iter_output_context = user;
-        user->instance->debug_iter_output_func = freecell_solver_user_iter_handler_wrapper;
-        user->instance->debug_iter_output = 1;
-    }
+if (iter_handler == NULL)
+{
+    user->instance->debug_iter_output = 0;
+}
+else
+{
+    /* Disable it temporarily while we change the settings */
+    user->instance->debug_iter_output = 0;
+    user->iter_handler = iter_handler;
+    user->iter_handler_context = iter_handler_context;
+    user->instance->debug_iter_output_context = user;
+    user->instance->debug_iter_output_func = freecell_solver_user_iter_handler_wrapper;
+    user->instance->debug_iter_output = 1;
+}
 }
 
 char * freecell_solver_user_iter_state_as_string(
-    void * user_instance,
-    void * ptr_state,
-    int parseable_output,
-    int canonized_order_output,
-    int display_10_as_t
-    )
+void * user_instance,
+void * ptr_state,
+int parseable_output,
+int canonized_order_output,
+int display_10_as_t
+)
 {
-    fcs_user_t * user;
+fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+user = (fcs_user_t *)user_instance;
 
-    return
-        freecell_solver_state_as_string(
-            ptr_state,
-            user->instance->freecells_num,
-            user->instance->stacks_num,
-            user->instance->decks_num,
-            parseable_output,
-            canonized_order_output,
-            display_10_as_t
-            );
+return
+    freecell_solver_state_as_string(
+        ptr_state,
+        user->instance->freecells_num,
+        user->instance->stacks_num,
+        user->instance->decks_num,
+        parseable_output,
+        canonized_order_output,
+        display_10_as_t
+        );
 }
 
 void freecell_solver_user_set_random_seed(
-    void * user_instance,
-    int seed
-    )
+void * user_instance,
+int seed
+)
 {
-    fcs_user_t * user;
+fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+user = (fcs_user_t *)user_instance;
 
-    freecell_solver_rand_srand(user->soft_thread->rand_gen, (user->soft_thread->rand_seed = seed));
+freecell_solver_rand_srand(user->soft_thread->rand_gen, (user->soft_thread->rand_seed = seed));
 }
 
 int freecell_solver_user_get_num_states_in_collection(void * user_instance)
 {
-    fcs_user_t * user;
+fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+user = (fcs_user_t *)user_instance;
 
-    return user->instance->num_states_in_collection;
+return user->instance->num_states_in_collection;
 }
 
 void freecell_solver_user_limit_num_states_in_collection(
-    void * user_instance,
-    int max_num_states
+void * user_instance,
+int max_num_states
     )
 {
     fcs_user_t * user;
@@ -1052,7 +1073,7 @@ void freecell_solver_user_set_calc_real_depth(
 
 void freecell_solver_user_set_soft_thread_name(
     void * user_instance,
-    const char * name
+    char * name
     )
 {
     fcs_user_t * user;
@@ -1068,7 +1089,7 @@ void freecell_solver_user_set_soft_thread_name(
 
 int freecell_solver_user_set_hard_thread_prelude(
     void * user_instance,
-    const char * prelude
+    char * prelude
     )
 {
     fcs_user_t * user;

@@ -1,7 +1,7 @@
 /*
  * intrface.c - instance interface functions for Freecell Solver
  *
- * Written by Shlomi Fish (shlomif@vipe.technion.ac.il), 2000-2001
+ * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000-2001
  *
  * This file is in the public domain (it's uncopyrighted).
  */
@@ -126,12 +126,9 @@ static void soft_thread_clean_soft_dfs(
     void * context
     )
 {
-    int num_solution_states, num_states;
+    int num_solution_states;
     int dfs_max_depth;
-    int a;
     fcs_soft_dfs_stack_item_t * soft_dfs_info, * info_ptr;
-    fcs_derived_state_t * derived_states;
-
     /* Check if a Soft-DFS-type scan was called in the first place */
     if (soft_thread->soft_dfs_info == NULL)
     {
@@ -146,12 +143,16 @@ static void soft_thread_clean_soft_dfs(
     {
         int depth;
         info_ptr = soft_dfs_info;
-        for(depth=0;depth<dfs_max_depth;depth++)
+        for(depth=0;depth<num_solution_states-1;depth++)
+        {
+            free(info_ptr->derived_states_list.states);
+            free(info_ptr->derived_states_random_indexes);
+            info_ptr++;
+        }
+        for(;depth<dfs_max_depth;depth++)
         {
             if (info_ptr->derived_states_list.max_num_states)
             {
-                fcs_derived_states_list_free_move_stacks(&(info_ptr->derived_states_list));
-
                 free(info_ptr->derived_states_list.states);
                 free(info_ptr->derived_states_random_indexes);
             }
@@ -219,7 +220,7 @@ static freecell_solver_soft_thread_t * alloc_soft_thread(
         );
 
     /* Set the default A* weigths */
-    for(a=0;a<(int)(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
+    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
     {
         soft_thread->a_star_weights[a] = freecell_solver_a_star_default_weights[a];
     }
@@ -407,33 +408,6 @@ static void free_bfs_queue(freecell_solver_soft_thread_t * soft_thread)
     }
 }
 
-static void free_tests_order(fcs_tests_order_t * tests_order)
-{
-    /* 
-     * Free the tests order states_order instances
-     * */
-    {
-        int num, i;
-        fcs_test_t * tests;
-        
-        num = tests_order->num;
-        tests = tests_order->tests;
-        
-        for(i=0;i<num;i++)
-        {
-            if (tests[i].states_order_instance)
-            {
-                tests[i].states_order_type->free_instance(
-                    tests[i].states_order_instance
-                    );
-                tests[i].states_order_instance = NULL;                    
-            }
-        }
-        /* Free the tests array itself */
-        free(tests);
-    }    
-}
-
 static void free_instance_soft_thread_callback(freecell_solver_soft_thread_t * soft_thread, void * context)
 {
     free_bfs_queue(soft_thread);
@@ -442,7 +416,7 @@ static void free_instance_soft_thread_callback(freecell_solver_soft_thread_t * s
     freecell_solver_PQueueFree(soft_thread->a_star_pqueue);
     free(soft_thread->a_star_pqueue);
 
-    free_tests_order(&(soft_thread->tests_order));
+    free(soft_thread->tests_order.tests);
 
     if (soft_thread->name != NULL)
     {
@@ -500,11 +474,11 @@ void freecell_solver_free_instance(freecell_solver_instance_t * instance)
         free_instance_hard_thread_callback(instance->optimization_thread);
     }
 
-    free_tests_order(&(instance->instance_tests_order));
+    free(instance->instance_tests_order.tests);
 
     if (instance->opt_tests_order_set)
     {
-        free_tests_order(&(instance->opt_tests_order));
+        free(instance->opt_tests_order.tests);
     }
 
     free(instance);
@@ -520,7 +494,7 @@ static void normalize_a_star_weights(
     double sum;
     int a;
     sum = 0;
-    for(a=0;a<(int)(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
+    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
     {
         if (soft_thread->a_star_weights[a] < 0)
         {
@@ -532,7 +506,7 @@ static void normalize_a_star_weights(
     {
         sum = 1;
     }
-    for(a=0;a<(int)(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
+    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
     {
         soft_thread->a_star_weights[a] /= sum;
     }
@@ -547,7 +521,7 @@ static void accumulate_tests_order(
     int a;
     for(a=0;a<soft_thread->tests_order.num;a++)
     {
-        *tests_order |= (1 << (soft_thread->tests_order.tests[a].test & FCS_TEST_ORDER_NO_FLAGS_MASK));
+        *tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
 }
 
@@ -561,7 +535,7 @@ static void determine_scan_completeness(
     int a;
     for(a=0;a<soft_thread->tests_order.num;a++)
     {
-        tests_order |= (1 << (soft_thread->tests_order.tests[a].test & FCS_TEST_ORDER_NO_FLAGS_MASK));
+        tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
     soft_thread->is_a_complete_scan = (tests_order == global_tests_order);
 }
@@ -645,37 +619,6 @@ static int compile_prelude(
     return FCS_COMPILE_PRELUDE_OK;    
 }
 
-static void init_tests_order_with_soft_thread_and_initial_state(
-    freecell_solver_soft_thread_t * soft_thread,
-    void * context
-    )
-{
-    int test_idx;
-    fcs_test_t * tests;
-    int num_tests;
-    fcs_state_with_locations_t * state_copy_ptr;
-    fcs_derived_states_order_instance_t * order_instance;
-
-    state_copy_ptr = (fcs_state_with_locations_t * )context;
-    num_tests = soft_thread->tests_order.num;
-    tests = soft_thread->tests_order.tests;
-    
-    for(test_idx = 0 ; 
-        test_idx < num_tests;
-        test_idx++)
-    {
-        order_instance = tests[test_idx].states_order_instance;
-        if (order_instance)
-        {
-            order_instance->order->give_init_state(
-                order_instance,
-                soft_thread,
-                state_copy_ptr
-                );
-        }
-    }
-}
-
 
 void freecell_solver_init_instance(freecell_solver_instance_t * instance)
 {
@@ -718,14 +661,13 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
              * 
              * */
             int bit_idx, num_tests = 0;
-            fcs_test_t * tests = malloc(sizeof(total_tests)*8*sizeof(tests[0]));
+            int * tests = malloc(sizeof(total_tests)*8*sizeof(tests[0]));
                         
             for(bit_idx=0; total_tests != 0; bit_idx++, total_tests >>= 1)
             {
                 if ((total_tests & 0x1) != 0)
                 {
-                    tests[num_tests].test = bit_idx;
-                    tests[num_tests].states_order_type = NULL;
+                    tests[num_tests++] = bit_idx;
                 }
             }
             tests = realloc(tests, num_tests*sizeof(tests[0]));
@@ -736,6 +678,8 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
             instance->opt_tests_order_set = 1;
         }
     }
+
+
 }
 
 
@@ -745,6 +689,8 @@ void freecell_solver_init_instance(freecell_solver_instance_t * instance)
    cache when using INDIRECT_STACK_STATES
 */
 #if defined(INDIRECT_STACK_STATES)
+
+extern int freecell_solver_stack_compare_for_comparison(const void * v_s1, const void * v_s2);
 
 #if ((FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_TREE) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_HASH))
 static int fcs_stack_compare_for_comparison_with_context(
@@ -1092,12 +1038,6 @@ int freecell_solver_solve_instance(
         }
     }
 
-    foreach_soft_thread(
-        instance,
-        init_tests_order_with_soft_thread_and_initial_state,
-        (void *)state_copy_ptr
-        );
-
     return freecell_solver_resume_instance(instance);
 }
 
@@ -1169,18 +1109,6 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
         hard_thread->max_num_times = hard_thread->num_times + hard_thread->num_times_left_for_soft_thread;
 
 
-        /* Initalize the a_star rater.
-         * This applies to random DFS as well, for the shlomif states
-         * order.
-         * * */
-        if (! soft_thread->initialized)
-        {
-            freecell_solver_a_star_initialize_rater(
-                soft_thread,
-                instance->state_copy_ptr
-                );
-        }
-
 
         /* 
          * Call the resume or solving function that is specific 
@@ -1210,7 +1138,6 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
             }
             break;
 
-            case FCS_METHOD_RANDOM_DFS:
             case FCS_METHOD_SOFT_DFS:
 
             if (! soft_thread->initialized)
@@ -1220,7 +1147,32 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                         soft_thread,
                         instance->state_copy_ptr,
                         0,
-                        (soft_thread->method == FCS_METHOD_RANDOM_DFS)
+                        0
+                        );
+                soft_thread->initialized = 1;
+            }
+            else
+            {
+                ret = 
+                    freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
+                        soft_thread,
+                        NULL,
+                        1,
+                        0
+                        );
+            }
+            break;
+
+            case FCS_METHOD_RANDOM_DFS:
+
+            if (! soft_thread->initialized)
+            {
+                ret = 
+                    freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
+                        soft_thread,
+                        instance->state_copy_ptr,
+                        0,
+                        1
                         );
 
                 soft_thread->initialized = 1;
@@ -1232,7 +1184,7 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
                         soft_thread,
                         NULL,
                         1,
-                        (soft_thread->method == FCS_METHOD_RANDOM_DFS)
+                        1
                         );
             }
             break;
@@ -1240,9 +1192,16 @@ static int run_hard_thread(freecell_solver_hard_thread_t * hard_thread)
             case FCS_METHOD_BFS:
             case FCS_METHOD_A_STAR:
             case FCS_METHOD_OPTIMIZE:
-            
-            if (! soft_thread->initialized)
+                        if (! soft_thread->initialized)
             {
+                if (soft_thread->method == FCS_METHOD_A_STAR)
+                {
+                    freecell_solver_a_star_initialize_rater(
+                        soft_thread,
+                        instance->state_copy_ptr
+                        );
+                }
+
                 ret = freecell_solver_a_star_or_bfs_do_solve_or_resume(
                     soft_thread,
                     instance->state_copy_ptr,
@@ -1554,6 +1513,20 @@ static void freecell_solver_glib_hash_foreach_destroy_stack_action
 #endif
 
 /***********************************************************/
+
+
+
+
+void freecell_solver_destroy_move_stack_of_state(
+        fcs_state_with_locations_t * ptr_state_with_locations,
+        void * context
+        )
+{
+    if (ptr_state_with_locations->moves_to_parent != NULL)
+    {
+        fcs_move_stack_destroy(ptr_state_with_locations->moves_to_parent);
+    }
+}
 
 /*
     This function should be called after the user has retrieved the

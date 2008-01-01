@@ -42,6 +42,6 @@ B<fc-solve>(6)
 
 =head1 AUTHOR
 
-Shlomi Fish E<lt>shlomif@vipe.technion.ac.ilE<gt>.
+Shlomi Fish, L<http://www.shlomifish.org/> .
 
 =cut
