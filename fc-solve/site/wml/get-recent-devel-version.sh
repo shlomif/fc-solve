@@ -1,18 +1,16 @@
 #!/bin/sh
 
 export SVNROOT="svn+ssh://svn.berlios.de/svnroot/repos/fc-solve"
-
-if [ ! -e t ] ; then
-    mkdir t
-    cd t
+TARGET_DIR="Source-Devel"
+if [ ! -e "$TARGET_DIR" ] ; then
+    (mkdir "$TARGET_DIR"
+    cd "$TARGET_DIR"
     rm -fr *
-    svn checkout "$SVNROOT"/tags/latest-devel/fc-solve/source > /dev/null 2>&1 
     mkdir fc-solve
-    mv source fc-solve/
-    cat fc-solve/source/ver.txt
+    cd fc-solve
+    svn checkout "$SVNROOT"/tags/latest-devel/fc-solve/source > /dev/null 2>&1 
+    )
 else
-    cd t/fc-solve/source
-    svn update > /dev/null 2>&1
-    cat ver.txt
+    svn update "$TARGET_DIR"/fc-solve/source > /dev/null 2>&1
 fi
-
+cat "$TARGET_DIR"/fc-solve/source/ver.txt

@@ -43,7 +43,7 @@ ifneq ($(WITH_DEVEL_VERSION),0)
 ifeq ($(DEVEL_VER_USE_CACHE),0)
 RECENT_DEVEL_VERSION = $(shell ./get-recent-devel-version.sh)
 else
-RECENT_DEVEL_VERSION = $(shell cat t/fc-solve/source/ver.txt)
+RECENT_DEVEL_VERSION = $(shell cat Source-Devel/fc-solve/source/ver.txt)
 endif
 
 DEVEL_ARC = $(D)/freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz
