@@ -18,6 +18,7 @@ my $builder = Test::Run::Builder->new(
         'base' => 0,
         'Class::Accessor' => 0,
         'File::Spec' => 0,
+        'Exception::Class' => 0,
     },
     add_to_cleanup      => [ 'Games-Solitaire-VerifySolution-*' ],
     create_makefile_pl => 'traditional',

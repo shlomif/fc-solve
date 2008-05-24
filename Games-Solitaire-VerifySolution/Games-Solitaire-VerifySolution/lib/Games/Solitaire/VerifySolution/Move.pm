@@ -18,6 +18,7 @@ our $VERSION = '0.01';
 
 use base 'Games::Solitaire::VerifySolution::Base';
 
+use Games::Solitaire::VerifySolution::Exception;
 __PACKAGE__->mk_accessors(qw(
     source_type
     dest_type
@@ -55,7 +56,23 @@ sub _from_fcs_string
 
         $self->source($1);
     }
+    elsif ($str =~ m{\AMove a card from freecell (\d+) to the foundations\z})
+    {
+        my $source = $1;
+        
+        $self->source_type("freecell");
+        $self->dest_type("foundation");
+
+        $self->source($1);
+    }
+    else
+    {
+        Games::Solitaire::VerifySolution::Exception::Parse::FCS->throw(
+            error => "Cannot parse 'FCS' String",
+        );
+    }
 }
+
 sub _init
 {
     my ($self, $args) = @_;
