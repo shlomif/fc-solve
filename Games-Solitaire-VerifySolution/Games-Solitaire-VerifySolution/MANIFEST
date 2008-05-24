@@ -1,0 +1,9 @@
+Build.PL
+Changes
+MANIFEST
+README
+lib/Games/Solitaire/VerifySolution.pm
+lib/Games/Solitaire/VerifySolution/Move.pm
+t/00-load.t
+t/pod-coverage.t
+t/pod.t
