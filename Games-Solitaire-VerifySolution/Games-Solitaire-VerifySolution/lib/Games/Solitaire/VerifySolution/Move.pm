@@ -54,7 +54,7 @@ sub _from_fcs_string
         $self->source_type("stack");
         $self->dest_type("foundation");
 
-        $self->source($1);
+        $self->source($source);
     }
     elsif ($str =~ m{\AMove a card from freecell (\d+) to the foundations\z})
     {
@@ -63,7 +63,17 @@ sub _from_fcs_string
         $self->source_type("freecell");
         $self->dest_type("foundation");
 
-        $self->source($1);
+        $self->source($source);
+    }
+    elsif ($str =~ m{\AMove a card from freecell (\d+) to stack (\d+)\z})
+    {
+        my ($source, $dest) = ($1, $2);
+        
+        $self->source_type("freecell");
+        $self->dest_type("stack");
+
+        $self->source($source);
+        $self->dest($dest);
     }
     else
     {
