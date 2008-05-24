@@ -1,11 +1,12 @@
 Build.PL
 Changes
-MANIFEST
-README
-lib/Games/Solitaire/VerifySolution.pm
+inc/Test/Run/Builder.pm
 lib/Games/Solitaire/VerifySolution/Move.pm
+lib/Games/Solitaire/VerifySolution.pm
+Makefile.PL
+MANIFEST
+META.yml
+README
 t/00-load.t
 t/pod-coverage.t
 t/pod.t
-Makefile.PL
-META.yml
