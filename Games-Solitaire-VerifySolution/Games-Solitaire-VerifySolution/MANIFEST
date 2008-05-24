@@ -10,5 +10,6 @@ META.yml
 README
 t/00-load.t
 t/01-base.t
+t/01-move.t
 t/pod-coverage.t
 t/pod.t

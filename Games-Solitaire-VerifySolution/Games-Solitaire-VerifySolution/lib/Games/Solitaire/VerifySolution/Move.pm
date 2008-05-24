@@ -16,6 +16,16 @@ Version 0.01
 
 our $VERSION = '0.01';
 
+use base 'Games::Solitaire::VerifySolution::Base';
+
+__PACKAGE__->mk_accessors(qw(
+    source_type
+    dest_type
+    source
+    dest
+    num_cards
+    _game
+    ));
 
 =head1 SYNOPSIS
 
@@ -31,6 +41,32 @@ our $VERSION = '0.01';
 =head1 FUNCTIONS
 
 =cut
+
+sub _from_fcs_string
+{
+    my ($self, $str) = @_;
+
+    if ($str =~ m{\AMove a card from stack (\d+) to the foundations\z})
+    {
+        my $source = $1;
+        
+        $self->source_type("stack");
+        $self->dest_type("foundation");
+
+        $self->source($1);
+    }
+}
+sub _init
+{
+    my ($self, $args) = @_;
+
+    $self->_game($args->{game});
+
+    if (exists($args->{fcs_string}))
+    {
+        return $self->_from_fcs_string($args->{fcs_string});
+    }
+}
 
 =head1 AUTHOR
 
