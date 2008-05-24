@@ -5,7 +5,8 @@ use strict;
 
 =head1 NAME
 
-Games::Solitaire::VerifySolution::Move - The great new Games::Solitaire::VerifySolution::Move!
+Games::Solitaire::VerifySolution::Move - a class wrapper for an individual 
+Solitaire move.
 
 =head1 VERSION
 
@@ -18,35 +19,18 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
     use Games::Solitaire::VerifySolution::Move;
 
-    my $foo = Games::Solitaire::VerifySolution::Move->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+    my $move1 = Games::Solitaire::VerifySolution::Move->new(
+        {
+            fcs_string => "Move a card from stack 0 to the foundations",
+            game => "freecell",
+        },
+    );
 
 =head1 FUNCTIONS
 
-=head2 function1
-
 =cut
-
-sub function1 {
-}
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
 
 =head1 AUTHOR
 
@@ -57,9 +41,6 @@ Shlomi Fish, C<< <shlomif at iglu.org.il> >>
 Please report any bugs or feature requests to C<bug-games-solitaire-verifysolution-move at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-VerifySolution>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-
-
 
 =head1 SUPPORT
 
@@ -98,8 +79,8 @@ L<http://search.cpan.org/dist/Games-Solitaire-VerifySolution>
 
 Copyright 2008 Shlomi Fish, all rights reserved.
 
-This program is released under the following license: mit
-
+This program is released under the following license: MIT/X11
+( L<http://www.opensource.org/licenses/mit-license.php> ).
 
 =cut
 

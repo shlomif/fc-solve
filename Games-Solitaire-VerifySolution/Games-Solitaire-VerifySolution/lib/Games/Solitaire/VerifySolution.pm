@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-Games::Solitaire::VerifySolution - The great new Games::Solitaire::VerifySolution!
+Games::Solitaire::VerifySolution - verify solutions for solitaire games.
 
 =head1 VERSION
 
@@ -15,38 +15,21 @@ Version 0.01
 
 our $VERSION = '0.01';
 
-
 =head1 SYNOPSIS
-
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
 
     use Games::Solitaire::VerifySolution;
 
-    my $foo = Games::Solitaire::VerifySolution->new();
-    ...
+    my $verifier = Games::Solitaire::VerifySolution->new();
 
-=head1 EXPORT
+    $verifier->verify_solution({ fh => \*STDIN });
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+=head1 DESCRIPTION
+
+TODO : FILL IN.
 
 =head1 FUNCTIONS
 
-=head2 function1
-
 =cut
-
-sub function1 {
-}
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
 
 =head1 AUTHOR
 
@@ -98,8 +81,8 @@ L<http://search.cpan.org/dist/Games-Solitaire-VerifySolution>
 
 Copyright 2008 Shlomi Fish, all rights reserved.
 
-This program is released under the following license: mit
-
+This program is released under the following license: MIT/X11
+( L<http://www.opensource.org/licenses/mit-license.php> ).
 
 =cut
 

@@ -1,16 +1,18 @@
 Games-Solitaire-VerifySolution
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+This is a CPAN Perl module that verifies the solutions of various variants
+of card Solitaire. It does not aim to try to be a solver for them, because
+this is too CPU intensive to be adequately done using perl5 (as of 
+perl-5.10.0). If you're interested in the latter, look at:
 
-A README file is required for CPAN modules since CPAN extracts the README
-file from a module distribution so that people browsing the archive
-can use it to get an idea of the module's uses. It is usually a good idea
-to provide version information here so that people can decide whether
-fixes for the module are worth downloading.
+* http://fc-solve.berlios.de/
 
+* http://fc-solve.berlios.de/links.html#other_solvers
+
+Instead, what Games-Solitaire-VerifySolution does is verify the solutions
+and makes sure they are correct.
+
+See http://pysolfc.sourceforge.net/ for more about cards solitaire.
 
 INSTALLATION
 
@@ -20,6 +22,9 @@ To install this module, run the following commands:
 	./Build
 	./Build test
 	./Build install
+
+Alternatively you can use CPAN.pm or CPANPLUS.pm, or more preferably your
+operating system's wrappers for them.
 
 SUPPORT AND DOCUMENTATION
 
@@ -47,5 +52,5 @@ COPYRIGHT AND LICENCE
 
 Copyright (C) 2008 Shlomi Fish
 
-This program is released under the following license: mit
+This program is released under the following license: MIT X11 License.
 
