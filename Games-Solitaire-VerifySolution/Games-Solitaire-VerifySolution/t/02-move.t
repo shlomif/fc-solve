@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 17;
 use Games::Solitaire::VerifySolution::Move;
 
 {
@@ -88,4 +88,27 @@ use Games::Solitaire::VerifySolution::Move;
     isa_ok ($e, "Games::Solitaire::VerifySolution::Exception::Parse::FCS",
         "Caught an exception that's 'FCS'"
     );
+}
+
+{
+    my $name = "FC0->Found";
+
+    my $move = Games::Solitaire::VerifySolution::Move->new(
+        {
+            fcs_string => "Move a card from freecell 0 to the foundations",
+            game => "freecell",
+        }
+    );
+
+    # TEST
+    ok ($move, "$name : checking that ::Move->new works");
+
+    # TEST
+    is ($move->source_type(), "freecell", "$name : source_type() is frecell");
+
+    # TEST
+    is ($move->dest_type(), "foundation", "$name : dest_type() is foundation");
+
+    # TEST
+    is ($move->source(), 0, "$name : source() is 0");
 }
