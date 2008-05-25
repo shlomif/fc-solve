@@ -85,6 +85,17 @@ sub _from_fcs_string
         $self->source($source);
         $self->dest($dest);
     }
+    elsif ($str =~ m{\AMove (\d+) cards from stack (\d+) to stack (\d+)\z})
+    {
+        my ($num_cards, $source, $dest) = ($1, $2, $3);
+
+        $self->source_type("stack");
+        $self->dest_type("stack");
+
+        $self->source($source);
+        $self->dest($dest);
+        $self->num_cards($num_cards);
+    }
     else
     {
         Games::Solitaire::VerifySolution::Exception::Parse::FCS->throw(
