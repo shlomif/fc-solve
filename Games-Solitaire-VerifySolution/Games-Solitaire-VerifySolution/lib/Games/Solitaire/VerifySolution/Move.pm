@@ -75,6 +75,16 @@ sub _from_fcs_string
         $self->source($source);
         $self->dest($dest);
     }
+    elsif ($str =~ m{\AMove a card from stack (\d+) to freecell (\d+)\z})
+    {
+        my ($source, $dest) = ($1, $2);
+        
+        $self->source_type("stack");
+        $self->dest_type("freecell");
+
+        $self->source($source);
+        $self->dest($dest);
+    }
     else
     {
         Games::Solitaire::VerifySolution::Exception::Parse::FCS->throw(
