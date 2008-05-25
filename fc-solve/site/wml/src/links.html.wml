@@ -167,6 +167,12 @@ Integrated Tom Holroyd's Patsolve, and the original Don Woods' solver
 as well as my own. <a href="don_woods.html">Source code</a> is available.
 </p>
 </li>
+
+<li>
+<a href="http://pysolfc.sourceforge.net/">PySolFC</a> - a collection of more
+than 1,000 Solitaire card games originally based on PySol. Has optional support
+for playing using the Freecell Solver executable.
+</li>
 </ul>
 
 <h2 id="people">People</h2>
