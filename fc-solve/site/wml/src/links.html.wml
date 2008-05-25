@@ -2,7 +2,7 @@
 
 <latemp_subject "Freecell Solver Links" />
 
-<h2>Resources</h2>
+<h2 id="resources">Resources</h2>
 
 <p class="desc">
 Freecell Solver Resources on the Net.
@@ -52,7 +52,7 @@ Page</a> - contains CVS instructions and other goodies.
 </li>
 </ul>
 
-<h2>Technologies</h2>
+<h2 id="technologies">Technologies</h2>
 
 <p class="desc">
 Technologies used by Freecell Solver or that aided in its development.
@@ -140,8 +140,7 @@ so you may wish to look at better alternatives.
 </li>
 </ul>
 
-<a name="front_ends"></a>
-<h2>Programs that use Freecell Solver</h2>
+<h2 id="front_ends">Programs that use Freecell Solver</h2>
 
 <ul>
 <li>
@@ -170,7 +169,7 @@ as well as my own. <a href="don_woods.html">Source code</a> is available.
 </li>
 </ul>
 
-<h2>People</h2>
+<h2 id="people">People</h2>
 
 <p class="desc">
 Links to the homepages of people who contributed in any way to Freecell
@@ -217,8 +216,7 @@ in Freecell Solver.
 </li>
 </ul>
 
-<a name="other_solvers"></a>
-<h2>Other Solvers</h2>
+<h2 id="other_solvers">Other Solvers</h2>
 
 <p class="desc">
 We have competition. But there's nothing wrong with competition. ;-)
@@ -341,7 +339,7 @@ discussion of it</a> in the fc-solve-discuss mailing list.
 </li>
 </ul>
 
-<h2>Reviews of Freecell Solver</h2>
+<h2 id="reviews">Reviews of Freecell Solver</h2>
 
 <ul>
 <li>
@@ -381,7 +379,7 @@ Thought of the Moment Regarding Freecell Solver</a>
 </li>
 </ul>
 
-<h2>General Freecell Links</h2>
+<h2 id="general_freecell">General Freecell Links</h2>
 
 <ul>
 <li>
