@@ -52,7 +52,8 @@ $(DEVEL_ARC) :
 	./put-recent-devel-version.sh $(DEVEL_ARC)
 
 $(D)/download.html :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES) $(DEVEL_ARC)
-	(cd src && wml $(WML_FLAGS) -DLATEMP_FILENAME="$(notdir $@)" $(notdir $<)) > $@
+	WML_LATEMP_PATH="$$(perl -MFile::Spec -e 'print File::Spec->rel2abs(shift)' '$@')" ; \
+	(cd src && wml -o "$${WML_LATEMP_PATH}" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<))
 	
 else
 	RECENT_DEVEL_VERSION = ""
@@ -90,7 +91,8 @@ src/win32_build/dynamic/fcs.zip: $(STABLE_VERSION_DIR)
 	bash scripts/get-fcs-zip.bash
 
 $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
-	(cd src && wml $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<)) > $@
+	WML_LATEMP_PATH="$$(perl -MFile::Spec -e 'print File::Spec->rel2abs(shift)' '$@')" ; \
+	(cd src && wml -o "$${WML_LATEMP_PATH}" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<))
 
 $(IMAGES) :: $(D)/% : src/%
 	cp -f $< $@
