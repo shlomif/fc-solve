@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 53;
+use Test::More tests => 59;
 use Games::Solitaire::VerifySolution::Move;
 
 {
@@ -300,6 +300,35 @@ use Games::Solitaire::VerifySolution::Move;
 
     # TEST
     is ($move->dest(), 2, "$name : dest() is 2");
+
+    # TEST
+    is ($move->num_cards(), 1, "$name : num_cards == 1");
+}
+
+{
+    my $name = "Stack0->Stack3[num==1]";
+
+    my $move = Games::Solitaire::VerifySolution::Move->new(
+        {
+            fcs_string => "Move 1 cards from stack 0 to stack 3",
+            game => "freecell",
+        }
+    );
+
+    # TEST
+    ok ($move, "$name : checking that ::Move->new works");
+
+    # TEST
+    is ($move->source_type(), "stack", "$name : source_type() is stack");
+
+    # TEST
+    is ($move->dest_type(), "stack", "$name : dest_type() is stack");
+
+    # TEST
+    is ($move->source(), 0, "$name : source() is 0");
+
+    # TEST
+    is ($move->dest(), 3, "$name : dest() is 3");
 
     # TEST
     is ($move->num_cards(), 1, "$name : num_cards == 1");
