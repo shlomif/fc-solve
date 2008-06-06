@@ -6,7 +6,7 @@ use strict;
 =head1 NAME
 
 Games::Solitaire::VerifySolution::Card - a class wrapper for an individual 
-Solitaire cards.
+Solitaire card.
 
 =head1 VERSION
 
@@ -27,12 +27,12 @@ __PACKAGE__->mk_accessors(qw(
 
 =head1 SYNOPSIS
 
-    use Games::Solitaire::VerifySolution::Move;
+    use Games::Solitaire::VerifySolution::Card;
 
-    my $move1 = Games::Solitaire::VerifySolution::Move->new(
+    # Initialise a Queen-of-Hearts
+    my $queen_of_hearts = Games::Solitaire::VerifySolution::Card->new(
         {
-            fcs_string => "Move a card from stack 0 to the foundations",
-            game => "freecell",
+            string => "QH",
         },
     );
 
@@ -112,6 +112,15 @@ sub _init
     }
 }
 
+=head2 $card->rank()
+
+Returns the rank of the card as an integer. Ace is 1, 2-10 are 2-20;
+J is 11, Q is 12 and K is 13.
+
+=head2 $card->suit()
+
+Returns "H", "C", "D" or "S" depending on the suit.
+
 =head2 $card->color()
 
 Returns "red" or "black" depending on the rank of the card.
@@ -139,7 +148,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Games::Solitaire::VerifySolution
+    perldoc Games::Solitaire::VerifySolution::Card
 
 
 You can also look for information at:
