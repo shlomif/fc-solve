@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 6;
 use Games::Solitaire::VerifySolution::Card;
 
 {
@@ -22,3 +22,21 @@ use Games::Solitaire::VerifySolution::Card;
     # TEST
     is ($card->color(), "red", "Color of AH is red");
 }
+
+{
+    my $card = Games::Solitaire::VerifySolution::Card->new(
+        {
+            string => "QC",
+        },
+    );
+
+    # TEST
+    is ($card->rank(), 12, "Rank of QC is 12");
+
+    # TEST
+    is ($card->suit(), "C", "Suit of QC is Clubs");
+
+    # TEST
+    is ($card->color(), "black", "Color of QC is black");
+}
+
