@@ -2,6 +2,7 @@ Build.PL
 Changes
 inc/Test/Run/Builder.pm
 lib/Games/Solitaire/VerifySolution/Base.pm
+lib/Games/Solitaire/VerifySolution/Card.pm
 lib/Games/Solitaire/VerifySolution/Exception.pm
 lib/Games/Solitaire/VerifySolution/Move.pm
 lib/Games/Solitaire/VerifySolution.pm
@@ -12,5 +13,6 @@ README
 t/00-load.t
 t/01-base.t
 t/02-move.t
+t/03-card.t
 t/pod-coverage.t
 t/pod.t
