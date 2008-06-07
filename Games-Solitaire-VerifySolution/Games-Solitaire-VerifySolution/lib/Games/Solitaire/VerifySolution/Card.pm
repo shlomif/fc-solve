@@ -112,6 +112,7 @@ sub _init
     }
 }
 
+
 =head2 $card->rank()
 
 Returns the rank of the card as an integer. Ace is 1, 2-10 are 2-20;
@@ -132,6 +133,24 @@ sub color
     my ($self) = @_;
 
     return $suits_map{$self->suit()}->{'color'};
+}
+
+=head2 my $copy = $card->clone();
+
+Clones the card into a new copy.
+
+=cut
+
+sub clone
+{
+    my $self = shift;
+
+    my $new_card = Games::Solitaire::VerifySolution::Card->new();
+
+    $new_card->suit($self->suit());
+    $new_card->rank($self->rank());
+
+    return $new_card;
 }
 
 =head1 AUTHOR

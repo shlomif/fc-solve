@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 18;
 use Games::Solitaire::VerifySolution::Card;
 
 {
@@ -72,4 +72,36 @@ use Games::Solitaire::VerifySolution::Card;
 
     # TEST
     is ($card->color(), "red", "Color of 5H is red");
+}
+
+{
+    my $card = Games::Solitaire::VerifySolution::Card->new(
+        {
+            string => "5H",
+        },
+    );
+
+    # TEST
+    is ($card->rank(), 5, "Rank of 5H is 5");
+
+    # TEST
+    is ($card->suit(), "H", "Suit of 5H is Hearts");
+
+    # TEST
+    is ($card->color(), "red", "Color of 5H is red");
+
+    my $copy = $card->clone();
+
+    $card->rank(1);
+    $card->suit("C");
+
+    # TEST
+    is ($copy->rank(), 5, "Rank of copy is 5");
+
+    # TEST
+    is ($copy->suit(), "H", "Suit of copy is Hearts");
+
+    # TEST
+    is ($copy->color(), "red", "Color of copy is red");
+
 }
