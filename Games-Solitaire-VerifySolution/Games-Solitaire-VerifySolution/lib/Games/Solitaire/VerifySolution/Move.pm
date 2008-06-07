@@ -19,6 +19,7 @@ our $VERSION = '0.01';
 use base 'Games::Solitaire::VerifySolution::Base';
 
 use Games::Solitaire::VerifySolution::Exception;
+
 __PACKAGE__->mk_accessors(qw(
     source_type
     dest_type

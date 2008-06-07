@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 21;
 use Games::Solitaire::VerifySolution::Card;
 
 {
@@ -104,4 +104,58 @@ use Games::Solitaire::VerifySolution::Card;
     # TEST
     is ($copy->color(), "red", "Color of copy is red");
 
+}
+
+{
+    my $card; 
+    eval {
+        $card = Games::Solitaire::VerifySolution::Card->new(
+            {
+                string => "Foobar",
+            }
+        );
+    };
+
+    my $e = Exception::Class->caught();
+
+    # TEST
+    isa_ok ($e, "Games::Solitaire::VerifySolution::Exception::Parse::Card",
+        "Caught a card parsing exception"
+    );
+}
+
+{
+    my $card; 
+    eval {
+        $card = Games::Solitaire::VerifySolution::Card->new(
+            {
+                string => "ZH",
+            }
+        );
+    };
+
+    my $e = Exception::Class->caught();
+
+    # TEST
+    isa_ok ($e, "Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownRank",
+        "unknown rank"
+    );
+}
+
+{
+    my $card; 
+    eval {
+        $card = Games::Solitaire::VerifySolution::Card->new(
+            {
+                string => "A*",
+            }
+        );
+    };
+
+    my $e = Exception::Class->caught();
+
+    # TEST
+    isa_ok ($e, "Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownSuit",
+        "unknown suit"
+    );
 }

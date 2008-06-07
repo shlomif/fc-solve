@@ -19,6 +19,7 @@ our $VERSION = '0.01';
 use base 'Games::Solitaire::VerifySolution::Base';
 
 use Games::Solitaire::VerifySolution::Exception;
+
 __PACKAGE__->mk_accessors(qw(
     rank
     suit
@@ -78,7 +79,9 @@ sub _from_string
 
     if (length($str) != 2)
     {
-        die "Card string is longer than 2";
+        Games::Solitaire::VerifySolution::Exception::Parse::Card->throw(
+            error => "string length is too long",
+        );
     }
 
     my ($rank, $suit) = split(//, $str);
@@ -89,7 +92,9 @@ sub _from_string
     }
     else
     {
-        die "Unknown rank";
+        Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownRank->throw(
+            error => "unknown rank",
+        );
     }
 
     if (exists($suits_map{$suit}))
@@ -98,7 +103,9 @@ sub _from_string
     }
     else
     {
-        die "Unknown suit";
+        Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownSuit->throw(
+            error => "unknown suit",
+        );
     }
 }
 

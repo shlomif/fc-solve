@@ -20,6 +20,12 @@ use Exception::Class (
     { isa => "Games::Solitaire::VerifySolution::Exception", },
     'Games::Solitaire::VerifySolution::Exception::Parse::FCS' =>
     { isa => "Games::Solitaire::VerifySolution::Exception::Parse", },
+    'Games::Solitaire::VerifySolution::Exception::Parse::Card' =>
+    { isa => "Games::Solitaire::VerifySolution::Exception::Parse", },
+    'Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownRank' =>
+    { isa => "Games::Solitaire::VerifySolution::Exception::Parse::Card", },
+    'Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownSuit' =>
+    { isa => "Games::Solitaire::VerifySolution::Exception::Parse::Card", },
       );
 
 =head1 SYNOPSIS
