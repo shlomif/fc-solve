@@ -238,13 +238,13 @@ sub num_freecells
     return 4;
 }
 
-=head2 $board->num_vacant_freecells()
+=head2 $board->num_empty_freecells()
 
-Returns the number of vacant Freecells in the board.
+Returns the number of empty Freecells on the board.
 
 =cut
 
-sub num_vacant_freecells
+sub num_empty_freecells
 {
     my $self = shift;
 
@@ -285,6 +285,28 @@ sub get_column
     my $index = shift;
 
     return $self->_columns->[$index];
+}
+
+=head2 $board->num_empty_columns()
+
+Returns the number of completely unoccupied columns in the board.
+
+=cut
+
+sub num_empty_columns
+{
+    my $self = shift;
+
+    my $count = 0;
+
+    foreach my $idx (0 .. ($self->num_columns()-1) )
+    {
+        if (! $self->get_column($idx)->len())
+        {
+            $count++;
+        }
+    }
+    return $count;
 }
 
 =head1 AUTHOR

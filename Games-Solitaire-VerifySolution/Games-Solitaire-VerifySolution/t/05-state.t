@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 use Games::Solitaire::VerifySolution::State;
 
 {
@@ -54,7 +54,7 @@ EOF
     is ($board->num_freecells(), 4, "Num Freecells");
 
     # TEST
-    is ($board->num_vacant_freecells(), 1, "Num vacant freecells");
+    is ($board->num_empty_freecells(), 1, "Num empty freecells");
 
     # TEST
     is ($board->num_columns(), 8, "Num columns");
@@ -69,3 +69,29 @@ EOF
         "Column 5"
     );
 }
+
+{
+    my $string = <<"EOF";
+Foundations: H-T C-7 D-6 S-J 
+Freecells:  KH      KD    
+: 9C 8D
+: KS QH JC TD
+: QC JH TC 9D 8C 7D
+: 
+: 
+: KC QD
+: 
+: QS JD
+EOF
+
+    my $board = Games::Solitaire::VerifySolution::State->new(
+        {
+            string => $string,
+            variant => "freecell",
+        }
+    );
+
+    # TEST
+    is ($board->num_empty_columns(), 3, "Num empty columns")
+}
+
