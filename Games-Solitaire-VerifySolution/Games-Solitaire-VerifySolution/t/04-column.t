@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 10;
 use Games::Solitaire::VerifySolution::Column;
 
 {
@@ -35,3 +35,21 @@ use Games::Solitaire::VerifySolution::Column;
     is ($column->pos(2)->suit(), "C", "Card[2].rank");
 }
 
+{
+    my $column = Games::Solitaire::VerifySolution::Column->new(
+        {
+            string => ": 3D TS 4H 5C 6D",
+        },
+    );
+
+    my $copy = $column->clone();
+
+    # TEST
+    is ($copy->len(), 5, "Length of copy");
+
+    # TEST
+    is ($copy->pos(1)->rank(), 10, "Rank of Copy Card");
+
+    # TEST
+    is ($copy->pos(1)->suit(), "S", "Suit of Copy Card");
+}

@@ -150,23 +150,18 @@ Returns a clone of the column.
 
 =cut
 
-=begin Nothing
-
 sub clone
 {
     my $self = shift;
 
-    my $new_card = Games::Solitaire::VerifySolution::Card->new();
+    my $new_col = Games::Solitaire::VerifySolution::Column->new();
 
-    $new_card->suit($self->suit());
-    $new_card->rank($self->rank());
+    $new_col->_cards(
+        [ map { $_->clone() } @{$self->_cards()} ]
+    );
 
-    return $new_card;
+    return $new_col;
 }
-
-=end Nothing
-
-=cut
 
 =head1 AUTHOR
 
