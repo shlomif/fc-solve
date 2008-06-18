@@ -228,6 +228,17 @@ sub num_vacant_freecells
     return $count;
 }
 
+=head2 $board->num_columns()
+
+The number of columns in the board.
+
+=cut
+
+sub num_columns
+{
+    return 8;
+}
+
 =head1 AUTHOR
 
 Shlomi Fish, C<< <shlomif at iglu.org.il> >>

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Games::Solitaire::VerifySolution::State;
 
 {
@@ -55,4 +55,7 @@ EOF
 
     # TEST
     is ($board->num_vacant_freecells(), 1, "Num vacant freecells");
+
+    # TEST
+    is ($board->num_columns(), 8, "Num columns");
 }
