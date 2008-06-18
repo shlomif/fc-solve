@@ -26,6 +26,16 @@ use Exception::Class (
     { isa => "Games::Solitaire::VerifySolution::Exception::Parse::Card", },
     'Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownSuit' =>
     { isa => "Games::Solitaire::VerifySolution::Exception::Parse::Card", },
+    'Games::Solitaire::VerifySolution::Exception::Parse::State' =>
+    { isa => "Games::Solitaire::VerifySolution::Exception::Parse", },
+    "Games::Solitaire::VerifySolution::Exception::Parse::State::Foundations" =>
+    { isa => "Games::Solitaire::VerifySolution::Exception::Parse::State", },
+    'Games::Solitaire::VerifySolution::Exception::Variant' =>
+    { isa => "Games::Solitaire::VerifySolution::Exception", 
+      fields => ["variant"],
+    },
+    'Games::Solitaire::VerifySolution::Exception::Variant::Unknown' =>
+    { isa => "Games::Solitaire::VerifySolution::Exception::Variant", },
       );
 
 =head1 SYNOPSIS

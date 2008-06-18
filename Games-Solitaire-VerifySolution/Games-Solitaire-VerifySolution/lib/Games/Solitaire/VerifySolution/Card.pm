@@ -73,6 +73,45 @@ my %suits_map =
     "D" => { name => "diamonds", color => "red", },
 );
 
+=head2 $class->calc_rank($rank_string)
+
+Calculates the numerical rank of the string passed as argument.
+
+Example:
+
+    my $ten = Games::Solitaire::VerifySolution::Card->calc_rank("T")
+    # Prints 10.
+    print "$ten\n";
+
+=cut
+
+sub calc_rank
+{
+    my ($self, $s) = @_;
+
+    return $ranks_map{$s};
+}
+
+=head2 $class->calc_rank_with_0($rank_string)
+
+Same as calc_rank only supporting "0" as the zero'th card.
+
+=cut
+
+sub calc_rank_with_0
+{
+    my ($self, $str) = @_;
+
+    if ($str eq "0")
+    {
+        return 0;
+    }
+    else
+    {
+        return $self->calc_rank($str);
+    }
+}
+
 sub _from_string
 {
     my ($self, $str) = @_;
@@ -86,11 +125,7 @@ sub _from_string
 
     my ($rank, $suit) = split(//, $str);
 
-    if (exists($ranks_map{$rank}))
-    {
-        $self->rank($ranks_map{$rank});
-    }
-    else
+    if (! defined($self->rank($self->calc_rank($rank))))
     {
         Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownRank->throw(
             error => "unknown rank",

@@ -7,6 +7,7 @@ lib/Games/Solitaire/VerifySolution/Column.pm
 lib/Games/Solitaire/VerifySolution/Exception.pm
 lib/Games/Solitaire/VerifySolution/Move.pm
 lib/Games/Solitaire/VerifySolution.pm
+lib/Games/Solitaire/VerifySolution/State.pm
 Makefile.PL
 MANIFEST
 META.yml
@@ -16,5 +17,6 @@ t/01-base.t
 t/02-move.t
 t/03-card.t
 t/04-column.t
+t/05-state.t
 t/pod-coverage.t
 t/pod.t
