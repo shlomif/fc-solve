@@ -59,24 +59,6 @@ sub _card_num_normalize
     }
 }
 
-my @card_nums =  (map { _card_num_normalize($_) } 
-    ("A", (2 .. 9), 
-    {
-        't' => "T",
-        'non_t' => "10",
-    },
-    , "J", "Q", "K"));
-
-my %ranks_map = (map { $card_nums[$_]->{t} => ($_+1) } (0 .. $#card_nums));
-
-my %suits_map =
-(
-    "H" => { name => "hearts",   color => "red", },
-    "S" => { name => "spades",   color => "black", },
-    "C" => { name => "clubs",    color => "black", },
-    "D" => { name => "diamonds", color => "red", },
-);
-
 sub _from_string
 {
     my ($self, $str) = @_;
