@@ -163,6 +163,21 @@ sub clone
     return $new_col;
 }
 
+=head2 $base_column->append($column_with_more_cards)
+
+Appends the column $column_with_more_cards to $base_column .
+
+=cut
+
+sub append
+{
+    my ($self, $more_cards) = @_;
+
+    my $more_copy = $more_cards->clone();
+
+    push @{$self->_cards()}, @{$more_copy->_cards()};
+}
+
 =head1 AUTHOR
 
 Shlomi Fish, C<< <shlomif at iglu.org.il> >>

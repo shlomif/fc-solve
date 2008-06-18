@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 13;
 use Games::Solitaire::VerifySolution::Column;
 
 {
@@ -52,4 +52,29 @@ use Games::Solitaire::VerifySolution::Column;
 
     # TEST
     is ($copy->pos(1)->suit(), "S", "Suit of Copy Card");
+}
+
+{
+    my $column1 = Games::Solitaire::VerifySolution::Column->new(
+        {
+            string => ": TH 9C 8D",
+        }
+    );
+
+    my $column2 = Games::Solitaire::VerifySolution::Column->new(
+        {
+            string => ": 7S 6D 5C",
+        }
+    );
+
+    $column1->append($column2);
+
+    # TEST
+    is ($column1->len(), 6, "Column has 6 cards after appending");
+
+    # TEST
+    is ($column1->pos(3)->rank(), 7, "Rank of appended card");
+
+    # TEST
+    is ($column1->pos(3)->suit(), "S", "Suit of appended card");
 }
