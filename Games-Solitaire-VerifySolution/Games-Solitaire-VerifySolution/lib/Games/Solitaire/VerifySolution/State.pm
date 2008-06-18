@@ -92,6 +92,15 @@ sub _assign_freecells_from_strings
     return;
 }
 
+sub _add_column
+{
+    my ($self, $col) = @_;
+
+    push @{$self->_columns()}, $col;
+
+    return;
+}
+
 sub _from_string
 {
     my ($self, $str) = @_;
@@ -129,9 +138,32 @@ sub _from_string
         );
     }
 
-    my @freecells = ($1, $2, $3, $4);
+    {
+        my @freecells = ($1, $2, $3, $4);
 
-    $self->_assign_freecells_from_strings(\@freecells);
+        $self->_assign_freecells_from_strings(\@freecells);
+    }
+
+    $self->_columns([]);
+    foreach my $col_idx (0 .. ($self->num_columns()-1))
+    {
+        if ($str !~ m{\G(:[^\n]*)\n}msg)
+        {
+            Games::Solitaire::VerifySolution::Exception::Parse::State::Columns->throw(
+                error => "Cannot parse column",
+                index => $col_idx,
+            );
+        }
+        my $column_str = $1;
+
+        $self->_add_column(
+            Games::Solitaire::VerifySolution::Column->new(
+                {
+                    string => $column_str,
+                }
+            )
+        );
+    }
 
     return;
 }
@@ -236,7 +268,23 @@ The number of columns in the board.
 
 sub num_columns
 {
+    my $self = shift;
+
     return 8;
+}
+
+=head2 $board->get_column($index)
+
+Gets the column object for column No. $index.
+
+=cut
+
+sub get_column
+{
+    my $self = shift;
+    my $index = shift;
+
+    return $self->_columns->[$index];
 }
 
 =head1 AUTHOR

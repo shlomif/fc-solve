@@ -32,6 +32,11 @@ use Exception::Class (
     { isa => "Games::Solitaire::VerifySolution::Exception::Parse::State", },
     "Games::Solitaire::VerifySolution::Exception::Parse::State::Freecells" =>
     { isa => "Games::Solitaire::VerifySolution::Exception::Parse::State", },
+    "Games::Solitaire::VerifySolution::Exception::Parse::State::Column" =>
+    { isa => "Games::Solitaire::VerifySolution::Exception::Parse::State", 
+      fields => ["index"],
+    },
+    
     'Games::Solitaire::VerifySolution::Exception::Variant' =>
     { isa => "Games::Solitaire::VerifySolution::Exception", 
       fields => ["variant"],

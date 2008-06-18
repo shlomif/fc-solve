@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 13;
 use Games::Solitaire::VerifySolution::State;
 
 {
@@ -58,4 +58,14 @@ EOF
 
     # TEST
     is ($board->num_columns(), 8, "Num columns");
+
+    # TEST
+    is ($board->get_column(0)->to_string(), ": 4C 2C 9C 8C QS JD", 
+        "Column 0"
+    );
+
+    # TEST
+    is ($board->get_column(5)->to_string(), ": 7H JS KH TS KC QD JC",
+        "Column 5"
+    );
 }
