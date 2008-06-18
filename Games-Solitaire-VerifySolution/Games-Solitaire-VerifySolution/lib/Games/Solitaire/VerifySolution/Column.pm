@@ -191,6 +191,19 @@ sub pop
     return pop(@{$self->_cards()});
 }
 
+=head2 $column->to_string()
+
+Converts to a string.
+
+=cut
+
+sub to_string
+{
+    my $self = shift;
+
+    return ":" . join("", (map { " " . $_->to_string() } @{$self->_cards()}));
+}
+
 =head1 AUTHOR
 
 Shlomi Fish, C<< <shlomif at iglu.org.il> >>

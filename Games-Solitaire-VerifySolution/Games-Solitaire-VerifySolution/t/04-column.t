@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 20;
 use Games::Solitaire::VerifySolution::Column;
 
 {
@@ -96,4 +96,25 @@ use Games::Solitaire::VerifySolution::Column;
 
     # TEST
     is ($card->suit(), "S", "Card[0].suit");
+}
+
+{
+    # TEST:$num_columns=4
+    my @column_strings = (
+        ": KH QS 5C 3S",
+        ": 7S 6D 5C",
+        ": 3D TS 4H 5C 6D",
+        ": KH QS 5C",
+    );
+
+    foreach my $string (@column_strings)
+    {
+        my $column = Games::Solitaire::VerifySolution::Column->new(
+            {
+                string => $string,
+            },
+        );
+        # TEST*$num_columns
+        is ($column->to_string(), $string, "Stringification of '$string'");
+    }
 }
