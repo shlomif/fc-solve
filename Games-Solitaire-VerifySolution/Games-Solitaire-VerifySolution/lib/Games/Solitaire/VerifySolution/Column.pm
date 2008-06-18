@@ -201,7 +201,13 @@ sub to_string
 {
     my $self = shift;
 
-    return ":" . join("", (map { " " . $_->to_string() } @{$self->_cards()}));
+    return ":" .
+        join("", 
+            (map 
+                { " " . $self->pos($_)->to_string() } 
+                (0 .. ($self->len()-1))
+            )
+        );
 }
 
 =head1 AUTHOR
