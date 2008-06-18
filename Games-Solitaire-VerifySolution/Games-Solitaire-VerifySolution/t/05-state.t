@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Games::Solitaire::VerifySolution::State;
 
 {
@@ -49,4 +49,10 @@ EOF
     
     # TEST
     is ($board->get_freecell(3)->to_string(), "9H", "Freecell 9");
+
+    # TEST
+    is ($board->num_freecells(), 4, "Num Freecells");
+
+    # TEST
+    is ($board->num_vacant_freecells(), 1, "Num vacant freecells");
 }

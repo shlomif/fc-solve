@@ -193,6 +193,41 @@ sub get_foundation_value
     return $self->_foundations()->{$suit};
 }
 
+=head2 $board->num_freecells()
+
+Returns the number of Freecells in the board.
+
+=cut
+
+sub num_freecells
+{
+    my $self = shift;
+
+    return 4;
+}
+
+=head2 $board->num_vacant_freecells()
+
+Returns the number of vacant Freecells in the board.
+
+=cut
+
+sub num_vacant_freecells
+{
+    my $self = shift;
+
+    my $count = 0;
+
+    foreach my $fc_idx (0 .. ($self->num_freecells()-1) )
+    {
+        if (!defined($self->get_freecell($fc_idx)))
+        {
+            $count++;
+        }
+    }
+    return $count;
+}
+
 =head1 AUTHOR
 
 Shlomi Fish, C<< <shlomif at iglu.org.il> >>
