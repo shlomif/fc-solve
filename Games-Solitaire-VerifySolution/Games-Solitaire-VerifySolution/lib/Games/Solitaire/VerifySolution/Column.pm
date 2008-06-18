@@ -178,6 +178,19 @@ sub append
     push @{$self->_cards()}, @{$more_copy->_cards()};
 }
 
+=head2 my $card_at_top = $column->pop()
+
+Pops a card from the top of the column and returns it.
+
+=cut
+
+sub pop
+{
+    my $self = shift;
+
+    return pop(@{$self->_cards()});
+}
+
 =head1 AUTHOR
 
 Shlomi Fish, C<< <shlomif at iglu.org.il> >>

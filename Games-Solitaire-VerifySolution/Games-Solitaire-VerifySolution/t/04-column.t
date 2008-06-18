@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 16;
 use Games::Solitaire::VerifySolution::Column;
 
 {
@@ -77,4 +77,23 @@ use Games::Solitaire::VerifySolution::Column;
 
     # TEST
     is ($column1->pos(3)->suit(), "S", "Suit of appended card");
+}
+
+{
+    my $column = Games::Solitaire::VerifySolution::Column->new(
+        {
+            string => ": KH QS 5C 3S",
+        },
+    );
+
+    my $card = $column->pop();
+
+    # TEST
+    is ($column->len(), 3, "Column has three cards");
+
+    # TEST
+    is ($card->rank(), 3, "Popped card rank");
+
+    # TEST
+    is ($card->suit(), "S", "Card[0].suit");
 }
