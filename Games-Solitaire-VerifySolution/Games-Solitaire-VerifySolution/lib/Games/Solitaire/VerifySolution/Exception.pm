@@ -30,6 +30,8 @@ use Exception::Class (
     { isa => "Games::Solitaire::VerifySolution::Exception::Parse", },
     "Games::Solitaire::VerifySolution::Exception::Parse::State::Foundations" =>
     { isa => "Games::Solitaire::VerifySolution::Exception::Parse::State", },
+    "Games::Solitaire::VerifySolution::Exception::Parse::State::Freecells" =>
+    { isa => "Games::Solitaire::VerifySolution::Exception::Parse::State", },
     'Games::Solitaire::VerifySolution::Exception::Variant' =>
     { isa => "Games::Solitaire::VerifySolution::Exception", 
       fields => ["variant"],

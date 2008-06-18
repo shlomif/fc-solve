@@ -64,6 +64,34 @@ __PACKAGE__->mk_accessors(qw(
 
 =cut
 
+sub _parse_freecell_card
+{
+    my ($self, $s) = @_;
+
+    return
+    (
+        ($s eq q{  })
+            ? undef()
+            : Games::Solitaire::VerifySolution::Card->new(
+                {
+                    string => $_,
+                }
+            )
+    );
+}
+
+sub _assign_freecells_from_strings
+{
+    my $self = shift;
+    my $string_arr = shift;
+
+    $self->_freecells(
+        [ map { $self->_parse_freecell_card($_) } @$string_arr]
+    );
+
+    return;
+}
+
 sub _from_string
 {
     my ($self, $str) = @_;
@@ -91,6 +119,19 @@ sub _from_string
 
         $self->_foundations(\%founds);
     }
+
+    my $fc_card_re = '  (..)';
+
+    if ($str !~ m{\GFreecells:$fc_card_re$fc_card_re$fc_card_re$fc_card_re\n}msg)
+    {
+        Games::Solitaire::VerifySolution::Exception::Parse::State::Freecells->throw(
+            error => "Wrong Freecell String",
+        );
+    }
+
+    my @freecells = ($1, $2, $3, $4);
+
+    $self->_assign_freecells_from_strings(\@freecells);
 
     return;
 }
@@ -123,6 +164,19 @@ sub _init
     {
         return $self->_from_string($args->{string});
     }
+}
+
+=head2 $state->get_freecell($index)
+
+Returns the contents of the freecell No. $index or undef() if it's empty.
+
+=cut
+
+sub get_freecell
+{
+    my ($self, $index) = @_;
+
+    return $self->_freecells()->[$index];
 }
 
 =head2 $state->get_foundation_value($suit, $index)
