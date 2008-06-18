@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 34;
 use Games::Solitaire::VerifySolution::Card;
 
 {
@@ -159,3 +159,35 @@ use Games::Solitaire::VerifySolution::Card;
         "unknown suit"
     );
 }
+
+{
+    # TEST:$num_cards=13
+    my @cards = (qw(
+        AS
+        2H
+        3D
+        4H
+        5H
+        6S
+        7C
+        8C
+        9H
+        TS
+        JS
+        QH
+        KS
+        ));
+    
+    foreach my $string (@cards)
+    {
+        my $card = Games::Solitaire::VerifySolution::Card->new(
+            {
+                string => $string,
+            },
+        );
+
+        # TEST*$num_cards
+        is ($card->to_string(), $string, "Stringification of '$string'");
+    }
+}
+

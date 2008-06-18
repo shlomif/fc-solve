@@ -160,6 +160,19 @@ sub clone
     return $new_card;
 }
 
+=head2 $card->to_string()
+
+Converts the card to a string representation.
+
+=cut
+
+sub to_string
+{
+    my $self = shift;
+
+    return $card_nums[$self->rank()-1]->{t} . $self->suit();
+}
+
 =head1 AUTHOR
 
 Shlomi Fish, C<< <shlomif at iglu.org.il> >>
