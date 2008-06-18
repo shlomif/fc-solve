@@ -98,7 +98,7 @@ sub _from_string
 
     my $rank_re = '[0A1-9TJQK]';
 
-    if ($str !~ m{\AFoundations: H-($rank_re) C-($rank_re) D-($rank_re) S-($rank_re)\n}gms)
+    if ($str !~ m{\AFoundations: H-($rank_re) C-($rank_re) D-($rank_re) S-($rank_re) *\n}gms)
     {
         Games::Solitaire::VerifySolution::Exception::Parse::State::Foundations->throw(
             error => "Wrong Foundations",

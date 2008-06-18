@@ -8,8 +8,16 @@ use Games::Solitaire::VerifySolution::State;
 
 {
     my $string = <<"EOF";
-Foundations: H-5 C-0 D-3 S-Q
+Foundations: H-6 C-A D-A S-4
 Freecells:  3D      JH  9H
+: 4C 2C 9C 8C QS JD
+: KS QH
+: QC 9S 8H
+: 5C 4D 3C
+: 2D KD TH TC TD 8D 7C 6D 5S
+: 7H JS KH TS KC QD JC
+: 9D 8S
+: 7S 6C 7D 6S 5D
 EOF
     my $board = Games::Solitaire::VerifySolution::State->new(
         {
@@ -19,16 +27,16 @@ EOF
     );
 
     # TEST
-    is ($board->get_foundation_value("H", 0), 5, "Foundation H Value");
+    is ($board->get_foundation_value("H", 0), 6, "Foundation H Value");
 
     # TEST
-    is ($board->get_foundation_value("C", 0), 0, "Foundation C Value");
+    is ($board->get_foundation_value("C", 0), 1, "Foundation C Value");
 
     # TEST
-    is ($board->get_foundation_value("D", 0), 3, "Foundation D Value");
+    is ($board->get_foundation_value("D", 0), 1, "Foundation D Value");
 
     # TEST
-    is ($board->get_foundation_value("S", 0), 12, "Foundation S Value");
+    is ($board->get_foundation_value("S", 0), 4, "Foundation S Value");
 
     # TEST
     is ($board->get_freecell(0)->to_string(), "3D", "Freecell 0");
