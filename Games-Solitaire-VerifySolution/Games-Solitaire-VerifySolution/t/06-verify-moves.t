@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 
@@ -74,5 +74,20 @@ EOF
 
     # TEST
     is ($board->get_column(6)->to_string(), ": AH 5S 6S AD 8H");
+
+    my $move3_bad = Games::Solitaire::Verify::Move->new(
+        {
+            fcs_string => "Move a card from stack 2 to freecell 0",
+            game => "freecell",
+        },
+    );
+
+    # TEST
+    ok($move3_bad, "Move 3 (bad) was initialised.");
+
+    # TEST
+    ok ($board->verify_and_perform_move($move2),
+        "\$move3_bad cannot be performed"
+    );
 }
 
