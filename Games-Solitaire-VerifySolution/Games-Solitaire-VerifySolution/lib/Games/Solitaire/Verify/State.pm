@@ -1,11 +1,11 @@
-package Games::Solitaire::VerifySolution::State;
+package Games::Solitaire::Verify::State;
 
 use warnings;
 use strict;
 
 =head1 NAME
 
-Games::Solitaire::VerifySolution::State - a class for Solitaire
+Games::Solitaire::Verify::State - a class for Solitaire
 states (or positions) of the entire board.
 
 =head1 VERSION
@@ -16,11 +16,11 @@ Version 0.01
 
 our $VERSION = '0.01';
 
-use base 'Games::Solitaire::VerifySolution::Base';
+use base 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::VerifySolution::Exception;
-use Games::Solitaire::VerifySolution::Card;
-use Games::Solitaire::VerifySolution::Column;
+use Games::Solitaire::Verify::Exception;
+use Games::Solitaire::Verify::Card;
+use Games::Solitaire::Verify::Column;
 
 __PACKAGE__->mk_accessors(qw(
     _columns
@@ -31,7 +31,7 @@ __PACKAGE__->mk_accessors(qw(
 
 =head1 SYNOPSIS
 
-    use Games::Solitaire::VerifySolution::State;
+    use Games::Solitaire::Verify::State;
 
     my $board = <<"EOF";
     Foundations: H-6 C-A D-A S-4
@@ -47,7 +47,7 @@ __PACKAGE__->mk_accessors(qw(
     EOF
 
     # Initialise a column
-    my $board = Games::Solitaire::VerifySolution::State->new(
+    my $board = Games::Solitaire::Verify::State->new(
         {
             string => $board,
             variant => "freecell",
@@ -72,7 +72,7 @@ sub _parse_freecell_card
     (
         ($s eq q{  })
             ? undef()
-            : Games::Solitaire::VerifySolution::Card->new(
+            : Games::Solitaire::Verify::Card->new(
                 {
                     string => $_,
                 }
@@ -109,7 +109,7 @@ sub _from_string
 
     if ($str !~ m{\AFoundations: H-($rank_re) C-($rank_re) D-($rank_re) S-($rank_re) *\n}gms)
     {
-        Games::Solitaire::VerifySolution::Exception::Parse::State::Foundations->throw(
+        Games::Solitaire::Verify::Exception::Parse::State::Foundations->throw(
             error => "Wrong Foundations",
         );
     }
@@ -121,7 +121,7 @@ sub _from_string
         foreach my $suit (qw(H C D S))
         {
             $founds{$suit} =
-                Games::Solitaire::VerifySolution::Card->calc_rank_with_0(
+                Games::Solitaire::Verify::Card->calc_rank_with_0(
                     shift(@founds_strings)
                 );
         }
@@ -133,7 +133,7 @@ sub _from_string
 
     if ($str !~ m{\GFreecells:$fc_card_re$fc_card_re$fc_card_re$fc_card_re\n}msg)
     {
-        Games::Solitaire::VerifySolution::Exception::Parse::State::Freecells->throw(
+        Games::Solitaire::Verify::Exception::Parse::State::Freecells->throw(
             error => "Wrong Freecell String",
         );
     }
@@ -149,7 +149,7 @@ sub _from_string
     {
         if ($str !~ m{\G(:[^\n]*)\n}msg)
         {
-            Games::Solitaire::VerifySolution::Exception::Parse::State::Columns->throw(
+            Games::Solitaire::Verify::Exception::Parse::State::Columns->throw(
                 error => "Cannot parse column",
                 index => $col_idx,
             );
@@ -157,7 +157,7 @@ sub _from_string
         my $column_str = $1;
 
         $self->_add_column(
-            Games::Solitaire::VerifySolution::Column->new(
+            Games::Solitaire::Verify::Column->new(
                 {
                     string => $column_str,
                 }
@@ -175,7 +175,7 @@ sub _set_variant
 
     if ($variant ne "freecell")
     {
-        Games::Solitaire::VerifySolution::Exception::Variant::Unknown->throw(
+        Games::Solitaire::Verify::Exception::Variant::Unknown->throw(
             error => "Unknown/Unsupported Variant",
             variant => $variant,
         );
@@ -316,14 +316,14 @@ Shlomi Fish, C<< <shlomif at iglu.org.il> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-games-solitaire-verifysolution-move at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-VerifySolution>.  I will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-Verify>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Games::Solitaire::VerifySolution::Column
+    perldoc Games::Solitaire::Verify::Column
 
 
 You can also look for information at:
@@ -332,19 +332,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-VerifySolution>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-Verify>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://annocpan.org/dist/Games-Solitaire-Verify>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Games-Solitaire-VerifySolution>
+L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://search.cpan.org/dist/Games-Solitaire-Verify>
 
 =back
 
@@ -361,4 +361,4 @@ This program is released under the following license: MIT/X11
 
 =cut
 
-1; # End of Games::Solitaire::VerifySolution::Move
+1; # End of Games::Solitaire::Verify::Move

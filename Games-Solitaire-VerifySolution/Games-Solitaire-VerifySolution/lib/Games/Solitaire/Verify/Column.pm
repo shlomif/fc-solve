@@ -1,11 +1,11 @@
-package Games::Solitaire::VerifySolution::Column;
+package Games::Solitaire::Verify::Column;
 
 use warnings;
 use strict;
 
 =head1 NAME
 
-Games::Solitaire::VerifySolution::Column - a class wrapper for Solitaire
+Games::Solitaire::Verify::Column - a class wrapper for Solitaire
 columns that are composed of a sequence of cards.
 
 =head1 VERSION
@@ -16,10 +16,10 @@ Version 0.01
 
 our $VERSION = '0.01';
 
-use base 'Games::Solitaire::VerifySolution::Base';
+use base 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::VerifySolution::Exception;
-use Games::Solitaire::VerifySolution::Card;
+use Games::Solitaire::Verify::Exception;
+use Games::Solitaire::Verify::Card;
 
 __PACKAGE__->mk_accessors(qw(
     _cards
@@ -27,10 +27,10 @@ __PACKAGE__->mk_accessors(qw(
 
 =head1 SYNOPSIS
 
-    use Games::Solitaire::VerifySolution::Column;
+    use Games::Solitaire::Verify::Column;
 
     # Initialise a column
-    my $column = Games::Solitaire::VerifySolution::Column->new(
+    my $column = Games::Solitaire::Verify::Column->new(
         {
             string => ": KH QS 5C",
         },
@@ -65,7 +65,7 @@ sub _from_string
 
     if ($str !~ s{\A: }{})
     {
-        Games::Solitaire::VerifySolution::Exception::Parse::Column::Prefix->throw(
+        Games::Solitaire::Verify::Exception::Parse::Column::Prefix->throw(
             error => "String does not start with \": \"",
         );
     }
@@ -77,7 +77,7 @@ sub _from_string
         [
             map
             { 
-                Games::Solitaire::VerifySolution::Card->new(
+                Games::Solitaire::Verify::Card->new(
                     {string => $_ } 
                 )
             }
@@ -113,7 +113,7 @@ sub len
 
 =head2 $column->pos($idx)
 
-Returns the card (a L<Games::Solitaire::VerifySolution::Card> object)
+Returns the card (a L<Games::Solitaire::Verify::Card> object)
 at position $idx in Column. $idx starts at 0.
 
 =cut
@@ -136,7 +136,7 @@ sub clone
 {
     my $self = shift;
 
-    my $new_col = Games::Solitaire::VerifySolution::Column->new();
+    my $new_col = Games::Solitaire::Verify::Column->new();
 
     $new_col->_cards(
         [ map { $_->clone() } @{$self->_cards()} ]
@@ -199,14 +199,14 @@ Shlomi Fish, C<< <shlomif at iglu.org.il> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-games-solitaire-verifysolution-move at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-VerifySolution>.  I will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-Verify>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Games::Solitaire::VerifySolution::Column
+    perldoc Games::Solitaire::Verify::Column
 
 
 You can also look for information at:
@@ -215,19 +215,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-VerifySolution>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-Verify>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://annocpan.org/dist/Games-Solitaire-Verify>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Games-Solitaire-VerifySolution>
+L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://search.cpan.org/dist/Games-Solitaire-Verify>
 
 =back
 
@@ -244,4 +244,4 @@ This program is released under the following license: MIT/X11
 
 =cut
 
-1; # End of Games::Solitaire::VerifySolution::Move
+1; # End of Games::Solitaire::Verify::Move

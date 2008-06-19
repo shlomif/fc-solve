@@ -1,11 +1,11 @@
-package Games::Solitaire::VerifySolution::Move;
+package Games::Solitaire::Verify::Move;
 
 use warnings;
 use strict;
 
 =head1 NAME
 
-Games::Solitaire::VerifySolution::Move - a class wrapper for an individual 
+Games::Solitaire::Verify::Move - a class wrapper for an individual 
 Solitaire move.
 
 =head1 VERSION
@@ -16,9 +16,9 @@ Version 0.01
 
 our $VERSION = '0.01';
 
-use base 'Games::Solitaire::VerifySolution::Base';
+use base 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::VerifySolution::Exception;
+use Games::Solitaire::Verify::Exception;
 
 __PACKAGE__->mk_accessors(qw(
     source_type
@@ -31,9 +31,9 @@ __PACKAGE__->mk_accessors(qw(
 
 =head1 SYNOPSIS
 
-    use Games::Solitaire::VerifySolution::Move;
+    use Games::Solitaire::Verify::Move;
 
-    my $move1 = Games::Solitaire::VerifySolution::Move->new(
+    my $move1 = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from stack 0 to the foundations",
             game => "freecell",
@@ -99,7 +99,7 @@ sub _from_fcs_string
     }
     else
     {
-        Games::Solitaire::VerifySolution::Exception::Parse::FCS->throw(
+        Games::Solitaire::Verify::Exception::Parse::FCS->throw(
             error => "Cannot parse 'FCS' String",
         );
     }
@@ -124,14 +124,14 @@ Shlomi Fish, C<< <shlomif at iglu.org.il> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-games-solitaire-verifysolution-move at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-VerifySolution>.  I will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-Verify>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Games::Solitaire::VerifySolution
+    perldoc Games::Solitaire::Verify
 
 
 You can also look for information at:
@@ -140,19 +140,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-VerifySolution>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-Verify>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://annocpan.org/dist/Games-Solitaire-Verify>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Games-Solitaire-VerifySolution>
+L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://search.cpan.org/dist/Games-Solitaire-Verify>
 
 =back
 
@@ -169,4 +169,4 @@ This program is released under the following license: MIT/X11
 
 =cut
 
-1; # End of Games::Solitaire::VerifySolution::Move
+1; # End of Games::Solitaire::Verify::Move

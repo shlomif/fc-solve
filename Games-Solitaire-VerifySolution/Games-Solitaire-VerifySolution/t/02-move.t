@@ -4,10 +4,10 @@ use strict;
 use warnings;
 
 use Test::More tests => 59;
-use Games::Solitaire::VerifySolution::Move;
+use Games::Solitaire::Verify::Move;
 
 {
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from stack 3 to the foundations",
             game => "freecell",
@@ -28,7 +28,7 @@ use Games::Solitaire::VerifySolution::Move;
 }
 
 {
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from stack 0 to the foundations",
             game => "freecell",
@@ -51,7 +51,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "FC2->Found";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from freecell 2 to the foundations",
             game => "freecell",
@@ -74,7 +74,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $move;
     eval { 
-        $move = Games::Solitaire::VerifySolution::Move->new(
+        $move = Games::Solitaire::Verify::Move->new(
             {
                 fcs_string => "This is not a legal move. QRXTOK0JH=%OVK",
                 game => "freecell",
@@ -85,7 +85,7 @@ use Games::Solitaire::VerifySolution::Move;
     my $e = Exception::Class->caught();
 
     # TEST
-    isa_ok ($e, "Games::Solitaire::VerifySolution::Exception::Parse::FCS",
+    isa_ok ($e, "Games::Solitaire::Verify::Exception::Parse::FCS",
         "Caught an exception that's 'FCS'"
     );
 }
@@ -93,7 +93,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "FC0->Found";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from freecell 0 to the foundations",
             game => "freecell",
@@ -118,7 +118,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "FC3->S2";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from freecell 3 to stack 2",
             game => "freecell",
@@ -145,7 +145,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "FC0->S2";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from freecell 0 to stack 2",
             game => "freecell",
@@ -171,7 +171,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "FC0->S0";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from freecell 0 to stack 0",
             game => "freecell",
@@ -197,7 +197,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "FC3->S0";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from freecell 3 to stack 0",
             game => "freecell",
@@ -225,7 +225,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "S4->FC3";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from stack 4 to freecell 3",
             game => "freecell",
@@ -251,7 +251,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "S4->FC0";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from stack 4 to freecell 0",
             game => "freecell",
@@ -279,7 +279,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "Stack->Stack[num==1]";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move 1 cards from stack 7 to stack 2",
             game => "freecell",
@@ -308,7 +308,7 @@ use Games::Solitaire::VerifySolution::Move;
 {
     my $name = "Stack0->Stack3[num==1]";
 
-    my $move = Games::Solitaire::VerifySolution::Move->new(
+    my $move = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move 1 cards from stack 0 to stack 3",
             game => "freecell",

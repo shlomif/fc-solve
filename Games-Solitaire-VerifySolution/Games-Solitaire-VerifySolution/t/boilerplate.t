@@ -46,8 +46,8 @@ TODO: {
     "placeholder date/time"       => qr(Date/time)
   );
 
-  module_boilerplate_ok('lib/Games/Solitaire/VerifySolution.pm');
-  module_boilerplate_ok('lib/Games/Solitaire/VerifySolution/Move.pm');
+  module_boilerplate_ok('lib/Games/Solitaire/Verify.pm');
+  module_boilerplate_ok('lib/Games/Solitaire/Verify/Move.pm');
 
 
 }

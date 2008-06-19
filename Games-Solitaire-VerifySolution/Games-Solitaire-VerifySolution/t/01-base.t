@@ -7,7 +7,7 @@ use Test::More tests => 4;
 
 package MyTest::Package;
 
-use base 'Games::Solitaire::VerifySolution::Base';
+use base 'Games::Solitaire::Verify::Base';
 
 __PACKAGE__->mk_accessors(qw(_bold));
 

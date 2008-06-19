@@ -1,11 +1,11 @@
-package Games::Solitaire::VerifySolution::Base;
+package Games::Solitaire::Verify::Base;
 
 use strict;
 use warnings;
 
 =head1 NAME
 
-Games::Solitaire::VerifySolution::Base - a base class.
+Games::Solitaire::Verify::Base - a base class.
 
 =cut
 
@@ -17,7 +17,7 @@ use base 'Class::Accessor';
 
 =head1 SYNOPSIS
 
-    use base 'Games::Solitaire::VerifySolution::Base';
+    use base 'Games::Solitaire::Verify::Base';
 
     sub _init
     {
@@ -35,7 +35,7 @@ use base 'Class::Accessor';
 
 =head1 DESCRIPTION
 
-This is the base class for L<Games::Solitaire::VerifySolution> classes.
+This is the base class for L<Games::Solitaire::Verify> classes.
 Everything is subject to change.
 
 =cut
@@ -67,14 +67,14 @@ Shlomi Fish, C<< <shlomif at iglu.org.il> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-games-solitaire-verifysolution-move at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-VerifySolution>.  I will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-Verify>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Games::Solitaire::VerifySolution
+    perldoc Games::Solitaire::Verify
 
 
 You can also look for information at:
@@ -83,19 +83,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-VerifySolution>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-Verify>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://annocpan.org/dist/Games-Solitaire-Verify>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Games-Solitaire-VerifySolution>
+L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://search.cpan.org/dist/Games-Solitaire-Verify>
 
 =back
 
@@ -112,4 +112,4 @@ This program is released under the following license: MIT/X11
 
 =cut
 
-1; # End of Games::Solitaire::VerifySolution::Move
+1; # End of Games::Solitaire::Verify::Move

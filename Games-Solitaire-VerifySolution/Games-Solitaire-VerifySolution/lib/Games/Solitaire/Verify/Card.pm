@@ -1,11 +1,11 @@
-package Games::Solitaire::VerifySolution::Card;
+package Games::Solitaire::Verify::Card;
 
 use warnings;
 use strict;
 
 =head1 NAME
 
-Games::Solitaire::VerifySolution::Card - a class wrapper for an individual 
+Games::Solitaire::Verify::Card - a class wrapper for an individual 
 Solitaire card.
 
 =head1 VERSION
@@ -16,9 +16,9 @@ Version 0.01
 
 our $VERSION = '0.01';
 
-use base 'Games::Solitaire::VerifySolution::Base';
+use base 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::VerifySolution::Exception;
+use Games::Solitaire::Verify::Exception;
 
 __PACKAGE__->mk_accessors(qw(
     rank
@@ -28,10 +28,10 @@ __PACKAGE__->mk_accessors(qw(
 
 =head1 SYNOPSIS
 
-    use Games::Solitaire::VerifySolution::Card;
+    use Games::Solitaire::Verify::Card;
 
     # Initialise a Queen-of-Hearts
-    my $queen_of_hearts = Games::Solitaire::VerifySolution::Card->new(
+    my $queen_of_hearts = Games::Solitaire::Verify::Card->new(
         {
             string => "QH",
         },
@@ -79,7 +79,7 @@ Calculates the numerical rank of the string passed as argument.
 
 Example:
 
-    my $ten = Games::Solitaire::VerifySolution::Card->calc_rank("T")
+    my $ten = Games::Solitaire::Verify::Card->calc_rank("T")
     # Prints 10.
     print "$ten\n";
 
@@ -118,7 +118,7 @@ sub _from_string
 
     if (length($str) != 2)
     {
-        Games::Solitaire::VerifySolution::Exception::Parse::Card->throw(
+        Games::Solitaire::Verify::Exception::Parse::Card->throw(
             error => "string length is too long",
         );
     }
@@ -127,7 +127,7 @@ sub _from_string
 
     if (! defined($self->rank($self->calc_rank($rank))))
     {
-        Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownRank->throw(
+        Games::Solitaire::Verify::Exception::Parse::Card::UnknownRank->throw(
             error => "unknown rank",
         );
     }
@@ -138,7 +138,7 @@ sub _from_string
     }
     else
     {
-        Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownSuit->throw(
+        Games::Solitaire::Verify::Exception::Parse::Card::UnknownSuit->throw(
             error => "unknown suit",
         );
     }
@@ -187,7 +187,7 @@ sub clone
 {
     my $self = shift;
 
-    my $new_card = Games::Solitaire::VerifySolution::Card->new();
+    my $new_card = Games::Solitaire::Verify::Card->new();
 
     $new_card->suit($self->suit());
     $new_card->rank($self->rank());
@@ -215,14 +215,14 @@ Shlomi Fish, C<< <shlomif at iglu.org.il> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-games-solitaire-verifysolution-move at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-VerifySolution>.  I will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-Verify>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Games::Solitaire::VerifySolution::Card
+    perldoc Games::Solitaire::Verify::Card
 
 
 You can also look for information at:
@@ -231,19 +231,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-VerifySolution>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-Verify>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://annocpan.org/dist/Games-Solitaire-Verify>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Games-Solitaire-VerifySolution>
+L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/Games-Solitaire-VerifySolution>
+L<http://search.cpan.org/dist/Games-Solitaire-Verify>
 
 =back
 
@@ -260,4 +260,4 @@ This program is released under the following license: MIT/X11
 
 =cut
 
-1; # End of Games::Solitaire::VerifySolution::Move
+1; # End of Games::Solitaire::Verify::Move

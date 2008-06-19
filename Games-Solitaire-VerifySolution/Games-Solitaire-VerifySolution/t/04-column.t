@@ -4,10 +4,10 @@ use strict;
 use warnings;
 
 use Test::More tests => 20;
-use Games::Solitaire::VerifySolution::Column;
+use Games::Solitaire::Verify::Column;
 
 {
-    my $column = Games::Solitaire::VerifySolution::Column->new(
+    my $column = Games::Solitaire::Verify::Column->new(
         {
             string => ": KH QS 5C",
         },
@@ -36,7 +36,7 @@ use Games::Solitaire::VerifySolution::Column;
 }
 
 {
-    my $column = Games::Solitaire::VerifySolution::Column->new(
+    my $column = Games::Solitaire::Verify::Column->new(
         {
             string => ": 3D TS 4H 5C 6D",
         },
@@ -55,13 +55,13 @@ use Games::Solitaire::VerifySolution::Column;
 }
 
 {
-    my $column1 = Games::Solitaire::VerifySolution::Column->new(
+    my $column1 = Games::Solitaire::Verify::Column->new(
         {
             string => ": TH 9C 8D",
         }
     );
 
-    my $column2 = Games::Solitaire::VerifySolution::Column->new(
+    my $column2 = Games::Solitaire::Verify::Column->new(
         {
             string => ": 7S 6D 5C",
         }
@@ -80,7 +80,7 @@ use Games::Solitaire::VerifySolution::Column;
 }
 
 {
-    my $column = Games::Solitaire::VerifySolution::Column->new(
+    my $column = Games::Solitaire::Verify::Column->new(
         {
             string => ": KH QS 5C 3S",
         },
@@ -109,7 +109,7 @@ use Games::Solitaire::VerifySolution::Column;
 
     foreach my $string (@column_strings)
     {
-        my $column = Games::Solitaire::VerifySolution::Column->new(
+        my $column = Games::Solitaire::Verify::Column->new(
             {
                 string => $string,
             },

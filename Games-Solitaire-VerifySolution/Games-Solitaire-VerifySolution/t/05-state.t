@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 14;
-use Games::Solitaire::VerifySolution::State;
+use Games::Solitaire::Verify::State;
 
 {
     my $string = <<"EOF";
@@ -19,7 +19,7 @@ Freecells:  3D      JH  9H
 : 9D 8S
 : 7S 6C 7D 6S 5D
 EOF
-    my $board = Games::Solitaire::VerifySolution::State->new(
+    my $board = Games::Solitaire::Verify::State->new(
         {
             string => $string,
             variant => "freecell",
@@ -84,7 +84,7 @@ Freecells:  KH      KD
 : QS JD
 EOF
 
-    my $board = Games::Solitaire::VerifySolution::State->new(
+    my $board = Games::Solitaire::Verify::State->new(
         {
             string => $string,
             variant => "freecell",

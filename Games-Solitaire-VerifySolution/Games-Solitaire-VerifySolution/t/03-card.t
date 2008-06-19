@@ -4,10 +4,10 @@ use strict;
 use warnings;
 
 use Test::More tests => 34;
-use Games::Solitaire::VerifySolution::Card;
+use Games::Solitaire::Verify::Card;
 
 {
-    my $card = Games::Solitaire::VerifySolution::Card->new(
+    my $card = Games::Solitaire::Verify::Card->new(
         {
             string => "AH",
         },
@@ -24,7 +24,7 @@ use Games::Solitaire::VerifySolution::Card;
 }
 
 {
-    my $card = Games::Solitaire::VerifySolution::Card->new(
+    my $card = Games::Solitaire::Verify::Card->new(
         {
             string => "QC",
         },
@@ -41,7 +41,7 @@ use Games::Solitaire::VerifySolution::Card;
 }
 
 {
-    my $card = Games::Solitaire::VerifySolution::Card->new(
+    my $card = Games::Solitaire::Verify::Card->new(
         {
             string => "KS",
         },
@@ -58,7 +58,7 @@ use Games::Solitaire::VerifySolution::Card;
 }
 
 {
-    my $card = Games::Solitaire::VerifySolution::Card->new(
+    my $card = Games::Solitaire::Verify::Card->new(
         {
             string => "5H",
         },
@@ -75,7 +75,7 @@ use Games::Solitaire::VerifySolution::Card;
 }
 
 {
-    my $card = Games::Solitaire::VerifySolution::Card->new(
+    my $card = Games::Solitaire::Verify::Card->new(
         {
             string => "5H",
         },
@@ -109,7 +109,7 @@ use Games::Solitaire::VerifySolution::Card;
 {
     my $card; 
     eval {
-        $card = Games::Solitaire::VerifySolution::Card->new(
+        $card = Games::Solitaire::Verify::Card->new(
             {
                 string => "Foobar",
             }
@@ -119,7 +119,7 @@ use Games::Solitaire::VerifySolution::Card;
     my $e = Exception::Class->caught();
 
     # TEST
-    isa_ok ($e, "Games::Solitaire::VerifySolution::Exception::Parse::Card",
+    isa_ok ($e, "Games::Solitaire::Verify::Exception::Parse::Card",
         "Caught a card parsing exception"
     );
 }
@@ -127,7 +127,7 @@ use Games::Solitaire::VerifySolution::Card;
 {
     my $card; 
     eval {
-        $card = Games::Solitaire::VerifySolution::Card->new(
+        $card = Games::Solitaire::Verify::Card->new(
             {
                 string => "ZH",
             }
@@ -137,7 +137,7 @@ use Games::Solitaire::VerifySolution::Card;
     my $e = Exception::Class->caught();
 
     # TEST
-    isa_ok ($e, "Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownRank",
+    isa_ok ($e, "Games::Solitaire::Verify::Exception::Parse::Card::UnknownRank",
         "unknown rank"
     );
 }
@@ -145,7 +145,7 @@ use Games::Solitaire::VerifySolution::Card;
 {
     my $card; 
     eval {
-        $card = Games::Solitaire::VerifySolution::Card->new(
+        $card = Games::Solitaire::Verify::Card->new(
             {
                 string => "A*",
             }
@@ -155,7 +155,7 @@ use Games::Solitaire::VerifySolution::Card;
     my $e = Exception::Class->caught();
 
     # TEST
-    isa_ok ($e, "Games::Solitaire::VerifySolution::Exception::Parse::Card::UnknownSuit",
+    isa_ok ($e, "Games::Solitaire::Verify::Exception::Parse::Card::UnknownSuit",
         "unknown suit"
     );
 }
@@ -180,7 +180,7 @@ use Games::Solitaire::VerifySolution::Card;
     
     foreach my $string (@cards)
     {
-        my $card = Games::Solitaire::VerifySolution::Card->new(
+        my $card = Games::Solitaire::Verify::Card->new(
             {
                 string => $string,
             },
