@@ -409,7 +409,7 @@ sub verify_and_perform_move
         my $f_idx = 
             first 
             { $self->get_foundation_value($suit, $_) == $rank-1 }
-            (0 .. 0)
+            (0 .. ($self->num_decks()-1))
             ;
 
         if (defined($f_idx))
@@ -442,6 +442,37 @@ sub verify_and_perform_move
         $self->_freecells()->[$fc_idx] = $self->get_column($col_idx)->pop();
 
         return 0;
+    }
+    elsif (    ($move->source_type() eq "freecell")
+            && ($move->dest_type() eq "foundation"))
+    {
+        my $fc_idx = $move->source();
+        my $card = $self->get_freecell($fc_idx);
+
+        if (!defined($card))
+        {
+            return "Freecell No. $fc_idx is empty";
+        }
+
+        my $rank = $card->rank();
+        my $suit = $card->suit();
+
+        my $f_idx =
+            first
+            { $self->get_foundation_value($suit, $_) == $rank-1 }
+            (0 .. ($self->num_decks()-1))
+            ;
+
+        if (defined($f_idx))
+        {
+            undef($self->_freecells()->[$fc_idx]);
+            $self->increment_foundation_value($suit, $f_idx);
+            return 0;
+        }
+        else
+        {
+            return "No suitable foundation";
+        }
     }
     else
     {
