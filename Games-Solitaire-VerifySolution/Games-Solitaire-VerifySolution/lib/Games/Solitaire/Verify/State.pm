@@ -121,9 +121,11 @@ sub _from_string
         foreach my $suit (qw(H C D S))
         {
             $founds{$suit} =
-                Games::Solitaire::Verify::Card->calc_rank_with_0(
-                    shift(@founds_strings)
-                );
+                [
+                    Games::Solitaire::Verify::Card->calc_rank_with_0(
+                        shift(@founds_strings)
+                    )
+                ];
         }
 
         $self->_foundations(\%founds);
@@ -144,7 +146,6 @@ sub _from_string
         $self->_assign_freecells_from_strings(\@freecells);
     }
 
-    $self->_columns([]);
     foreach my $col_idx (0 .. ($self->num_columns()-1))
     {
         if ($str !~ m{\G(:[^\n]*)\n}msg)
@@ -192,6 +193,8 @@ sub _init
     # Set the variant
     $self->_set_variant($args->{variant});
 
+    $self->_columns([]);
+
     if (exists($args->{string}))
     {
         return $self->_from_string($args->{string});
@@ -222,7 +225,7 @@ sub get_foundation_value
 {
     my ($self, $suit, $idx) = @_;
 
-    return $self->_foundations()->{$suit};
+    return $self->_foundations()->{$suit}->[$idx];
 }
 
 =head2 $board->num_freecells()
@@ -307,6 +310,49 @@ sub num_empty_columns
         }
     }
     return $count;
+}
+
+=head2 $board->clone()
+
+Returns a clone of the board, with all of its element duplicated.
+=cut
+
+sub clone
+{
+    my $self = shift;
+
+    my $copy = Games::Solitaire::Verify::State->new(
+        {
+            variant => $self->_variant(),
+        }
+    );
+
+    foreach my $idx (0 .. ($self->num_columns()-1))
+    {
+        $copy->_add_column(
+            $self->get_column($idx)->clone()
+        );
+    }
+
+    {
+        my $founds = $self->_foundations();
+        my $founds_copy = +{ 
+            map { $_ => [ @{$founds->{$_}} ] } keys(%$founds) 
+        };
+        $copy->_foundations(
+            $founds_copy
+        );
+    }
+
+    $copy->_freecells(
+        [
+            map
+            { defined($_) ? $_->clone() : $_ }
+            @{$self->_freecells()}
+        ]
+    );
+
+    return $copy;
 }
 
 =head1 AUTHOR
