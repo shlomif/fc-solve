@@ -11,14 +11,6 @@ Freecell Solver Resources on the Net.
 <ul>
 <li>
 <p>
-<a href="http://fc-solve.berlios.de/">Freecell Solver's BerliOS mirror</a> - 
-a mirror of the files contained here at the 
-<a href="http://developer.berlios.de">BerliOS</a> software hub.
-</p>
-</li>
-
-<li>
-<p>
 <a href="http://groups.yahoo.com/group/fc-solve-discuss/">Freecell Solver's
 Mailing-List</a> - a mailing-list dedicated to discussing the usage 
 and development of Freecell Solver and general techniques for solving 
@@ -38,8 +30,8 @@ history, a Freshmeat internal hit count, and other useful information.
 <li>
 <p>
 <a href="<get-var presentation_url />">Freecell
-Solver Lecture</a> - A lecture I gave to the 
-<a href="http://linuxclub.il.eu.org/">Haifa Linux Club</a> about the 
+Solver Lecture</a> - A lecture I gave to the
+<a href="http://linuxclub.il.eu.org/">Haifa Linux Club</a> about the
 development of Freecell Solver.
 </p>
 </li>
@@ -47,7 +39,9 @@ development of Freecell Solver.
 <li>
 <p>
 <a href="http://developer.berlios.de/project/?group_id=66">BerliOS' Project
-Page</a> - contains CVS instructions and other goodies.
+Page</a> - contains instructions for checking out the source from
+<a href="http://svn.berlios.de/svnroot/repos/fc-solve/trunk/">its Subversion
+repository</a> and other goodies.
 </p>
 </li>
 </ul>
@@ -132,10 +126,10 @@ cross-platform text editor with many powerful features.
 
 <li>
 <p>
-<a href="http://www.cvshome.org/">CVS</a> - an Open-Source source control 
-management system that is used in maintaining the Freecell Solver codebase. 
-While it has proved adequate for my needs so far, it has some limitations,
-so you may wish to look at better alternatives.
+<a href="http://subversion.tigris.org/">Subversion</a> - an Open-Source 
+version control management system that has been used in maintaining the
+Freecell Solver codebase. It replaced <a 
+href="http://www.cvshome.org/">CVS</a> which is older and much more limited. 
 </p>
 </li>
 </ul>
@@ -175,6 +169,7 @@ than 1,000 Solitaire card games originally based on PySol. Has optional support
 for playing using the Freecell Solver executable.
 </p>
 </li>
+
 </ul>
 
 <h2 id="people">People</h2>
@@ -313,9 +308,9 @@ C++ source code for a Seahaven Towers auto-solver.
 <li>
 <p>
 <a href="http://www.ibiblio.org/kevina/freecell/">Common LISP Solver</a> -
-by Kevin Atkinson and Shari Holstege. Written in Common LISP and the source code 
-is available under the GPL. It was written as part of an AI course project 
-and contains a final report.
+by Kevin Atkinson and Shari Holstege. Written in Common LISP and the
+source code is available under the GPL. It was written as part of an AI
+course project and contains a final report.
 </p>
 </li>
 
@@ -402,6 +397,13 @@ contains a lot of interesting questions and answers regarding Freecell.
 <a href="http://www.cs.ruu.nl/~hansb/d.freecell/freecellhtml.html">An unsolvable
 instance of Freecell</a> - a proof that not all initial Freecell instance are
 solvable.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://en.wikipedia.org/wiki/FreeCell">"FreeCell" on 
+the Wikipedia</a>.
 </p>
 </li>
 </ul>
