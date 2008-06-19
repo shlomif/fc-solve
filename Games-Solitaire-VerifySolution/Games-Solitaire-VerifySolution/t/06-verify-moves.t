@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 18;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 
@@ -170,6 +170,43 @@ EOF
     # TEST
     is ($board->get_foundation_value("S", 0), 9,
         "9S is now in founds"
+    );
+}
+
+{
+    my $string = <<"EOF";
+Foundations: H-6 C-6 D-A S-8 
+Freecells:  3D  4D  9S  5D
+: 9C 8H
+: KS QH JC
+: QC JH
+: KC QD
+: 2D KD TH TC TD 8D 7C 6D
+: 7H JS KH TS 9H 8C 7D
+: 9D
+: QS JD
+EOF
+
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string => $string,
+            variant => "freecell",
+        }
+    );
+
+    my $move1_bad = Games::Solitaire::Verify::Move->new(
+        {
+            fcs_string => "Move a card from freecell 0 to the foundations",
+            game => "freecell",
+        },
+    );
+
+    # TEST
+    ok ($move1_bad, "Move-1-Bad was initialised.");
+
+    # TEST
+    ok ($board->verify_and_perform_move($move1_bad),
+        "Testing that the move is rejected"
     );
 }
 
