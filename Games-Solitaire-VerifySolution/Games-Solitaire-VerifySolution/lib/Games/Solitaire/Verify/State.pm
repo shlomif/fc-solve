@@ -247,6 +247,18 @@ sub increment_foundation_value
     return;
 }
 
+=head2 $board->num_decks()
+
+Returns the number of decks that the variant has. Useful when querying
+the foundations.
+
+=cut
+
+sub num_decks
+{
+    return 1;
+}
+
 =head2 $board->num_freecells()
 
 Returns the number of Freecells in the board.
@@ -385,8 +397,8 @@ sub verify_and_perform_move
 {
     my ($self, $move) = @_;
 
-    if (   ($move->source_type() eq "stack")
-        && ($move->dest_type() eq "foundation"))
+    if (    ($move->source_type() eq "stack")
+         && ($move->dest_type() eq "foundation"))
     {
         my $col_idx = $move->source();
         my $card = $self->get_column($col_idx)->top();
@@ -408,8 +420,28 @@ sub verify_and_perform_move
         }
         else
         {
-            return 1;
+            return "No suitable foundation";
         }
+    }
+    elsif (    ($move->source_type() eq "stack")
+            && ($move->dest_type() eq "freecell"))
+    {
+        my $col_idx = $move->source();
+        my $fc_idx = $move->dest();
+        
+        if (! $self->get_column($col_idx)->len())
+        {
+            return "No card available in Column No. $col_idx";
+        }
+
+        if (defined($self->get_freecell($fc_idx)))
+        {
+            return "Freecell No. $fc_idx is taken";
+        }
+
+        $self->_freecells()->[$fc_idx] = $self->get_column($col_idx)->pop();
+
+        return 0;
     }
     else
     {

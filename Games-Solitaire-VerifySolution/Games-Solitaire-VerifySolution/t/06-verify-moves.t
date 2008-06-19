@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 8;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 
@@ -52,5 +52,27 @@ EOF
     is ($board->get_foundation_value("S", 0), 1,
         "AS is now in founds",
     );
+
+    my $move2 = Games::Solitaire::Verify::Move->new(
+        {
+            fcs_string => "Move a card from stack 6 to freecell 0",
+            game => "freecell",
+        },
+    );
+
+    # TEST
+    ok($move2, "Move 2 was initialised.");
+
+    # TEST
+    ok (!$board->verify_and_perform_move($move2),
+        "Testing for right movement"
+    );
+
+    # TEST
+    is ($board->get_freecell(0)->to_string(), "JD",
+        "Card has moved to the freecell");
+
+    # TEST
+    is ($board->get_column(6)->to_string(), ": AH 5S 6S AD 8H");
 }
 
