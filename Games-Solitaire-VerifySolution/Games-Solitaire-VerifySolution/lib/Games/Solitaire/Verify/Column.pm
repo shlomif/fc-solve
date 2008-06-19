@@ -126,6 +126,19 @@ sub pos
     return $self->_cards->[$idx];
 }
 
+=head2 $columnt->top()
+
+Returns the top card.
+
+=cut
+
+sub top
+{
+    my $self = shift;
+
+    return $self->pos(-1);
+}
+
 =head2 $column->clone()
 
 Returns a clone of the column.

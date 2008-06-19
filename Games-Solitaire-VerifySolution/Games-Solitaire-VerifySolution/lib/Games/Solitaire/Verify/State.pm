@@ -21,6 +21,9 @@ use base 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception;
 use Games::Solitaire::Verify::Card;
 use Games::Solitaire::Verify::Column;
+use Games::Solitaire::Verify::Move;
+
+use List::Util qw(first);
 
 __PACKAGE__->mk_accessors(qw(
     _columns
@@ -228,6 +231,22 @@ sub get_foundation_value
     return $self->_foundations()->{$suit}->[$idx];
 }
 
+=head2 $state->increment_foundation_value($suit, $index)
+
+Increments the foundation value for the suit $suit of the foundations
+No. $index .
+
+=cut
+
+sub increment_foundation_value
+{
+    my ($self, $suit, $idx) = @_;
+
+    $self->_foundations()->{$suit}->[$idx]++;
+
+    return;
+}
+
 =head2 $board->num_freecells()
 
 Returns the number of Freecells in the board.
@@ -353,6 +372,49 @@ sub clone
     );
 
     return $copy;
+}
+
+=head2 my $verdict = $board->verify_and_perform_move($move);
+
+Performs $move on the board. If successful, returns 0. Else returns a non-zero
+value. See L<Games::Solitaire::Verify::Move> for more information.
+
+=cut
+
+sub verify_and_perform_move
+{
+    my ($self, $move) = @_;
+
+    if (   ($move->source_type() eq "stack")
+        && ($move->dest_type() eq "foundation"))
+    {
+        my $col_idx = $move->source();
+        my $card = $self->get_column($col_idx)->top();
+
+        my $rank = $card->rank();
+        my $suit = $card->suit();
+
+        my $f_idx = 
+            first 
+            { $self->get_foundation_value($suit, $_) == $rank-1 }
+            (0 .. 0)
+            ;
+
+        if (defined($f_idx))
+        {
+            $self->get_column($col_idx)->pop();
+            $self->increment_foundation_value($suit, $f_idx);
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    else
+    {
+        die "Cannot handle this move type";
+    }
 }
 
 =head1 AUTHOR

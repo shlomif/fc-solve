@@ -18,5 +18,6 @@ t/02-move.t
 t/03-card.t
 t/04-column.t
 t/05-state.t
+t/06-verify-moves.t
 t/pod-coverage.t
 t/pod.t
