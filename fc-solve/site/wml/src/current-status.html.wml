@@ -25,8 +25,8 @@ in most regards. So you shouldn't think twice before using or deploying it.
 The reason a new stable branch (2.10.x or whatever) was not released was
 because Freecell Solver's primary author - Shlomi Fish - has lost interest
 in the project, and is only fixing bugs in the 2.8.x branch, if such bugs
-are discovered. He has meanwhile moved to work on new exciting projects, and 
-no-one has volunteered to continue the work on Freecell Solver. 
+are discovered. He has meanwhile moved to work on new and exciting projects,
+and no-one has volunteered to advance Freecell Solver.
 </p>
 
 <p>
