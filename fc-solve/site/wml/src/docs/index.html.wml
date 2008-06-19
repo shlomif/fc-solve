@@ -81,3 +81,20 @@ Freecell Solver techniques similar (but not identical) to examples that he
 gave in the book.
 </p>
 
+<h3 class="plain"><a href="http://www.shlomifish.org/philosophy/computers/when-c-is-best/">"When C is the Best (Tool for the Job)?"</a></h3>
+
+<p>
+An essay that tries to explain why the C language is still sometimes the
+best language to use for writing programs.
+</p>
+
+<h3 class="plain"><a href="http://www.shlomifish.org/philosophy/computers/high-quality-software/">"What 
+Makes Software High-Quality?"</a></h3>
+
+<p>
+An essay inspired by a note a developer of a competing solver said on
+the fc-solve-discuss mailing list, which also covers Freecell Solver at
+the end. See
+<a href="http://www.shlomifish.org/philosophy/computers/high-quality-software/rev2/">the second revision for hte most up-to-date text</a>.
+</p>
+
