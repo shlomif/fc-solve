@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 
@@ -252,5 +252,42 @@ EOF
     # TEST
     is ($board->get_column(0)->to_string(), ": 4C 2C 9C 8C QS JD",
         "Stack is ok after Freecell->Stack move"
+    );
+}
+
+{
+    my $string = <<"EOF";
+Foundations: H-0 C-0 D-A S-A 
+Freecells:  JD  8H  2H  4S
+: 4C 2C 9C 8C QS
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S
+: 7S 6C 7D 4D 8S 9D
+EOF
+
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string => $string,
+            variant => "freecell",
+        }
+    );
+
+    my $move1 = Games::Solitaire::Verify::Move->new(
+        {
+            fcs_string => "Move a card from freecell 0 to stack 1",
+            game => "freecell",
+        }
+    );
+
+    # TEST
+    ok ($move1, "Freecell->Stack move was initialised.");
+
+    # TEST
+    ok ($board->verify_and_perform_move($move1),
+        "Cannot Freecell ( JD ) ->Stack ( QS) move"
     );
 }
