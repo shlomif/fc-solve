@@ -96,6 +96,15 @@ sub _init
     {
         return $self->_from_string($args->{string});
     }
+    elsif (exists($args->{cards}))
+    {
+        $self->_cards($args->{cards});
+        return;
+    }
+    else
+    {
+        die "Cannot init - no 'string' or 'cards' specified."
+    }
 }
 
 =head2 $column->len()
@@ -149,10 +158,10 @@ sub clone
 {
     my $self = shift;
 
-    my $new_col = Games::Solitaire::Verify::Column->new();
-
-    $new_col->_cards(
-        [ map { $_->clone() } @{$self->_cards()} ]
+    my $new_col = Games::Solitaire::Verify::Column->new(
+        {
+            cards => [ map { $_->clone() } @{$self->_cards()} ],
+        }
     );
 
     return $new_col;

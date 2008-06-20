@@ -418,6 +418,14 @@ sub _can_put_on_top
     return 0;
 }
 
+sub _calc_max_sequence_move
+{
+    my $self = shift;
+
+    return (($self->num_empty_freecells()+1) << $self->num_empty_columns());
+}
+
+
 sub verify_and_perform_move
 {
     my ($self, $move) = @_;
@@ -465,6 +473,51 @@ sub verify_and_perform_move
             }
 
             $self->_freecells()->[$fc_idx] = $self->get_column($col_idx)->pop();
+
+            return 0;
+        }
+        elsif ($move->dest_type() eq "stack")
+        {
+            my $source = $move->source();
+            my $dest = $move->dest();
+            my $num_cards = $move->num_cards();
+
+            my $source_len = $self->get_column($source)->len() ;
+
+            if ($source_len < $num_cards)
+            {
+                return "Not enough cards in source column '$source'";
+            }
+
+            if (my $verdict = $self->_can_put_on_top(
+                    $self->get_column($dest)->top(),
+                    $self->get_column($source)->pos($source_len-$num_cards)
+                ))
+            {
+                return $verdict;
+            }
+
+            # Now let's see if we have enough resources
+            # to move the cards.
+
+            if ($num_cards > $self->_calc_max_sequence_move())
+            {
+                return "Cannot move so many cards";
+            }
+
+            # Now let's actually move them.
+            my @cards;
+            foreach my $i (1 .. $num_cards)
+            {
+                push @cards, $self->get_column($source)->pop();
+            }
+            $self->get_column($dest)->append(
+                Games::Solitaire::Verify::Column->new(
+                    {
+                        cards => [reverse @cards],
+                    }
+                )
+            );
 
             return 0;
         }
