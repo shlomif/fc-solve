@@ -393,6 +393,31 @@ value. See L<Games::Solitaire::Verify::Move> for more information.
 
 =cut
 
+# Returns 0 on success, else the error.
+sub _can_put_into_empty_column
+{
+    my ($self, $card) = @_;
+
+    return 0;
+}
+
+sub _can_put_on_top
+{
+    my ($self, $parent, $child) = @_;
+
+    if ($parent->rank() != $child->rank()+1)
+    {
+        return "Rank mismatch between parent and child cards";
+    }
+    
+    if ($parent->color() eq $child->color())
+    {
+        return "Cards are of the same color";
+    }
+    
+    return 0;
+}
+
 sub verify_and_perform_move
 {
     my ($self, $move) = @_;
@@ -475,6 +500,40 @@ sub verify_and_perform_move
             {
                 return "No suitable foundation";
             }
+        }
+        elsif ($move->dest_type() eq "stack")
+        {
+            my $fc_idx = $move->source();
+            my $col_idx = $move->dest();
+
+            my $card = $self->get_freecell($fc_idx);
+
+            if (!defined($card))
+            {
+                return "Freecell No. $fc_idx is empty"
+            }
+
+            my $push_card = sub {
+            };
+
+            my $verdict =
+                (($self->get_column($col_idx)->len() == 0)
+                    ? $self->_can_put_into_empty_column($card)
+                    : $self->_can_put_on_top(
+                        $self->get_column($col_idx)->top(), 
+                        $card
+                      )
+                );
+
+            if ($verdict)
+            {
+                return $verdict;
+            }
+
+            $self->get_column($col_idx)->push($card);
+            undef($self->_freecells()->[$fc_idx]);                
+            
+            return 0;
         }
     }
     die "Cannot handle this move type";
