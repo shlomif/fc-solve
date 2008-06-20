@@ -397,87 +397,87 @@ sub verify_and_perform_move
 {
     my ($self, $move) = @_;
 
-    if (    ($move->source_type() eq "stack")
-         && ($move->dest_type() eq "foundation"))
+    if ($move->source_type() eq "stack")
     {
-        my $col_idx = $move->source();
-        my $card = $self->get_column($col_idx)->top();
-
-        my $rank = $card->rank();
-        my $suit = $card->suit();
-
-        my $f_idx = 
-            first 
-            { $self->get_foundation_value($suit, $_) == $rank-1 }
-            (0 .. ($self->num_decks()-1))
-            ;
-
-        if (defined($f_idx))
+        if ($move->dest_type() eq "foundation")
         {
-            $self->get_column($col_idx)->pop();
-            $self->increment_foundation_value($suit, $f_idx);
+            my $col_idx = $move->source();
+            my $card = $self->get_column($col_idx)->top();
+
+            my $rank = $card->rank();
+            my $suit = $card->suit();
+
+            my $f_idx = 
+                first 
+                { $self->get_foundation_value($suit, $_) == $rank-1 }
+                (0 .. ($self->num_decks()-1))
+                ;
+
+            if (defined($f_idx))
+            {
+                $self->get_column($col_idx)->pop();
+                $self->increment_foundation_value($suit, $f_idx);
+                return 0;
+            }
+            else
+            {
+                return "No suitable foundation";
+            }
+        }
+        elsif ($move->dest_type() eq "freecell")
+        {
+            my $col_idx = $move->source();
+            my $fc_idx = $move->dest();
+            
+            if (! $self->get_column($col_idx)->len())
+            {
+                return "No card available in Column No. $col_idx";
+            }
+
+            if (defined($self->get_freecell($fc_idx)))
+            {
+                return "Freecell No. $fc_idx is taken";
+            }
+
+            $self->_freecells()->[$fc_idx] = $self->get_column($col_idx)->pop();
+
             return 0;
         }
-        else
-        {
-            return "No suitable foundation";
-        }
     }
-    elsif (    ($move->source_type() eq "stack")
-            && ($move->dest_type() eq "freecell"))
+    elsif ($move->source_type() eq "freecell")
     {
-        my $col_idx = $move->source();
-        my $fc_idx = $move->dest();
-        
-        if (! $self->get_column($col_idx)->len())
+        if ($move->dest_type() eq "foundation")
         {
-            return "No card available in Column No. $col_idx";
-        }
+            my $fc_idx = $move->source();
+            my $card = $self->get_freecell($fc_idx);
 
-        if (defined($self->get_freecell($fc_idx)))
-        {
-            return "Freecell No. $fc_idx is taken";
-        }
+            if (!defined($card))
+            {
+                return "Freecell No. $fc_idx is empty";
+            }
 
-        $self->_freecells()->[$fc_idx] = $self->get_column($col_idx)->pop();
+            my $rank = $card->rank();
+            my $suit = $card->suit();
 
-        return 0;
-    }
-    elsif (    ($move->source_type() eq "freecell")
-            && ($move->dest_type() eq "foundation"))
-    {
-        my $fc_idx = $move->source();
-        my $card = $self->get_freecell($fc_idx);
+            my $f_idx =
+                first
+                { $self->get_foundation_value($suit, $_) == $rank-1 }
+                (0 .. ($self->num_decks()-1))
+                ;
 
-        if (!defined($card))
-        {
-            return "Freecell No. $fc_idx is empty";
-        }
-
-        my $rank = $card->rank();
-        my $suit = $card->suit();
-
-        my $f_idx =
-            first
-            { $self->get_foundation_value($suit, $_) == $rank-1 }
-            (0 .. ($self->num_decks()-1))
-            ;
-
-        if (defined($f_idx))
-        {
-            undef($self->_freecells()->[$fc_idx]);
-            $self->increment_foundation_value($suit, $f_idx);
-            return 0;
-        }
-        else
-        {
-            return "No suitable foundation";
+            if (defined($f_idx))
+            {
+                undef($self->_freecells()->[$fc_idx]);
+                $self->increment_foundation_value($suit, $f_idx);
+                return 0;
+            }
+            else
+            {
+                return "No suitable foundation";
+            }
         }
     }
-    else
-    {
-        die "Cannot handle this move type";
-    }
+    die "Cannot handle this move type";
 }
 
 =head1 AUTHOR
