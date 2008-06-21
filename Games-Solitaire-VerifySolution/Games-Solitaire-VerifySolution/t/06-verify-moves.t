@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 30;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 
@@ -338,5 +338,42 @@ EOF
     is ($board->get_column(4)->to_string(),
         ": 2D KD TH TC TD 8D 7C 6D 5S",
         "Testing that the dest stack is OK."
+    );
+}
+
+{
+    my $string = <<"EOF";
+Foundations: H-5 C-A D-A S-A 
+Freecells:  6S  8H  3C  4S
+: 4C 2C 9C 8C QS JD
+: 
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D 5S
+: 2D KD TH TC TD 8D 7C
+: 7H JS KH TS KC QD
+: QH
+: 7S 6C 7D 4D 8S 9D
+EOF
+
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string => $string,
+            variant => "freecell",
+        }
+    );
+
+    my $move1_bad = Games::Solitaire::Verify::Move->new(
+        {
+            fcs_string => "Move 2 cards from stack 0 to stack 1",
+            game => "freecell",
+        }
+    );
+
+    # TEST
+    ok ($move1_bad, "Bad Stack->Stack move was initialised.");
+
+    # TEST
+    ok ($board->verify_and_perform_move($move1_bad),
+        "Cannot perform a bad stack->stack move with not enough columns."
     );
 }

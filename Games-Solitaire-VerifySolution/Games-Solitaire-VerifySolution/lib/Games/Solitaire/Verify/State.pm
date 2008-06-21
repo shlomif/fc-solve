@@ -418,11 +418,27 @@ sub _can_put_on_top
     return 0;
 }
 
+sub _can_put_on_column
+{
+    my ($self, $col_idx, $card) = @_;
+
+    return
+        (($self->get_column($col_idx)->len() == 0)
+            ? $self->_can_put_into_empty_column($card)
+            : $self->_can_put_on_top(
+                $self->get_column($col_idx)->top(),
+                $card
+              )
+        );
+}
+
 sub _calc_max_sequence_move
 {
-    my $self = shift;
+    my ($self, $args) = @_;
 
-    return (($self->num_empty_freecells()+1) << $self->num_empty_columns());
+    my $to_empty = (defined($args->{to_empty}) ? $args->{to_empty} : 0);
+
+    return (($self->num_empty_freecells()+1) << ($self->num_empty_columns()-$to_empty));
 }
 
 
@@ -489,8 +505,8 @@ sub verify_and_perform_move
                 return "Not enough cards in source column '$source'";
             }
 
-            if (my $verdict = $self->_can_put_on_top(
-                    $self->get_column($dest)->top(),
+            if (my $verdict = $self->_can_put_on_column(
+                    $dest, 
                     $self->get_column($source)->pos($source_len-$num_cards)
                 ))
             {
@@ -500,7 +516,11 @@ sub verify_and_perform_move
             # Now let's see if we have enough resources
             # to move the cards.
 
-            if ($num_cards > $self->_calc_max_sequence_move())
+            if ($num_cards > $self->_calc_max_sequence_move(
+                    {
+                        to_empty => ($self->get_column($dest)->len() == 0),
+                    }
+                    ))
             {
                 return "Cannot move so many cards";
             }
@@ -569,16 +589,7 @@ sub verify_and_perform_move
             my $push_card = sub {
             };
 
-            my $verdict =
-                (($self->get_column($col_idx)->len() == 0)
-                    ? $self->_can_put_into_empty_column($card)
-                    : $self->_can_put_on_top(
-                        $self->get_column($col_idx)->top(), 
-                        $card
-                      )
-                );
-
-            if ($verdict)
+            if (my $verdict = $self->_can_put_on_column($col_idx, $card))
             {
                 return $verdict;
             }
