@@ -17,19 +17,35 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-    use Games::Solitaire::Verify;
+    use Games::Solitaire::Verify::Solution;
 
-    my $verifier = Games::Solitaire::Verify->new();
+    my $verifier = Games::Solitaire::Verify::Solution->new();
 
     $verifier->verify_solution({ fh => \*STDIN });
 
 =head1 DESCRIPTION
 
-TODO : FILL IN.
+This is a CPAN Perl module that verifies the solutions of various variants
+of card Solitaire. It does not aim to try to be a solver for them, because
+this is too CPU intensive to be adequately done using perl5 (as of 
+perl-5.10.0). If you're interested in the latter, look at:
 
-=head1 FUNCTIONS
+=over 4
 
-=cut
+=item * http://fc-solve.berlios.de/
+
+=item * http://fc-solve.berlios.de/links.html#other_solvers
+
+=back
+
+Instead, what Games-Solitaire-Verify does is verify the solutions
+and makes sure they are correct.
+
+See L<http://pysolfc.sourceforge.net/> for more about card solitaire.
+
+=head1 SEE ALSO
+
+L<Games::Solitaire::Verify::Solution> , L<Games::Solitaire::Verify::State>
 
 =head1 AUTHOR
 
@@ -49,7 +65,6 @@ automatically be notified of progress on your bug as I make changes.
 You can find documentation for this module with the perldoc command.
 
     perldoc Games::Solitaire::Verify
-
 
 You can also look for information at:
 
