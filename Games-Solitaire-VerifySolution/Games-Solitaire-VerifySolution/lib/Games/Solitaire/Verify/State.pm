@@ -463,6 +463,25 @@ sub _calc_max_sequence_move
     return (($self->num_empty_freecells()+1) << ($self->num_empty_columns()-$to_empty));
 }
 
+sub _is_sequence_in_column
+{
+    my ($self, $source_idx, $num_cards) = @_;
+
+    my $col = $self->get_column($source_idx);
+    my $len = $col->len();
+
+    foreach my $card_idx (0 .. ($num_cards-2))
+    {
+        if ($self->_can_put_on_top(
+                $col->pos($len-1-$card_idx-1),
+                $col->pos($len-1-$card_idx),
+            ))
+        {
+            return "Not a sequence at Position $card_idx";
+        }
+    }
+}
+
 
 sub verify_and_perform_move
 {
@@ -525,6 +544,14 @@ sub verify_and_perform_move
             if ($source_len < $num_cards)
             {
                 return "Not enough cards in source column '$source'";
+            }
+
+            if (my $verdict = $self->_is_sequence_in_column(
+                    $source,
+                    $num_cards,
+                ))
+            {
+                return $verdict;
             }
 
             if (my $verdict = $self->_can_put_on_column(
