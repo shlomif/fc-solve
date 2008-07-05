@@ -205,7 +205,20 @@ sub to_string
 {
     my $self = shift;
 
-    return $card_nums[$self->rank()-1]->{t} . $self->suit();
+    return $self->rank_to_string($self->rank()) . $self->suit();
+}
+
+=head2 $class->rank_to_string($rank_idx)
+
+Converts the rank to a string.
+
+=cut
+
+sub rank_to_string
+{
+    my ($class, $rank) = @_;
+
+    return $card_nums[$rank-1]->{t};
 }
 
 =head1 AUTHOR

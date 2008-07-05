@@ -104,6 +104,13 @@ sub _add_column
     return;
 }
 
+sub _get_suits_seq
+{
+    my $class = shift;
+
+    return [qw(H C D S)];
+}
+
 sub _from_string
 {
     my ($self, $str) = @_;
@@ -121,7 +128,7 @@ sub _from_string
         my @founds_strings = ($1, $2, $3, $4);
     
         my %founds;
-        foreach my $suit (qw(H C D S))
+        foreach my $suit (@{$self->_get_suits_seq()})
         {
             $founds{$suit} =
                 [
@@ -215,6 +222,21 @@ sub get_freecell
     my ($self, $index) = @_;
 
     return $self->_freecells()->[$index];
+}
+
+=head2 $state->set_freecell($index, $card)
+
+Assigns $card to the contents of the freecell No. $index .
+
+=cut
+
+sub set_freecell
+{
+    my ($self, $index, $card) = @_;
+
+    $self->_freecells()->[$index] = $card;
+
+    return;
 }
 
 =head2 $state->get_foundation_value($suit, $index)
@@ -601,6 +623,57 @@ sub verify_and_perform_move
         }
     }
     die "Cannot handle this move type";
+}
+
+sub _stringify_freecells
+{
+    my $self = shift;
+
+    return "Freecells:" . join("",
+        map { "  " . (defined($_) ? $_->to_string() : "  ") }
+        map { $self->get_freecell($_) } 
+        (0 .. ($self->num_freecells()-1))
+    );
+}
+
+sub _stringify_foundations
+{
+    my $self = shift;
+
+    return "Foundations:" . join("",
+        (map {
+            sprintf(qq{ %s-%s},
+                $_, 
+                Games::Solitaire::Verify::Card->rank_to_string(
+                    $self->get_foundation_value($_, 0)
+                ),
+            )
+        }
+        (@{$self->_get_suits_seq()}))
+    );
+}
+
+=head2 $self->to_string()
+
+Stringifies the board into the Freecell Solver solution display notation.
+
+=cut
+
+sub to_string
+{
+    my $self = shift;
+
+    return join("", 
+        map { "$_\n" }
+        (
+            $self->_stringify_foundations(),
+            $self->_stringify_freecells(),
+            (
+                map { $self->get_column($_)->to_string() } 
+                (0 .. ($self->num_columns()-1))
+            )
+        )
+    );
 }
 
 =head1 AUTHOR

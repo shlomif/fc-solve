@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 use Games::Solitaire::Verify::State;
 
 {
@@ -133,4 +133,44 @@ EOF
 
     # TEST
     is ($copy->get_foundation_value("C", 0), 7, "Foundation C Value of Copy");
+}
+
+{
+    my $string = <<"EOF";
+Foundations: H-6 C-A D-A S-4
+Freecells:  3D      JH  9H
+: 4C 2C 9C 8C QS JD
+: KS QH
+: QC 9S 8H
+: 5C 4D 3C
+: 2D KD TH TC TD 8D 7C 6D 5S
+: 7H JS KH TS KC QD JC
+: 9D 8S
+: 7S 6C 7D 6S 5D
+EOF
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string => $string,
+            variant => "freecell",
+        }
+    );
+
+    # Do a simple move.
+    $board->set_freecell(1, $board->get_column(3)->pop());
+
+    my $new_board = <<"EOF";
+Foundations: H-6 C-A D-A S-4
+Freecells:  3D  3C  JH  9H
+: 4C 2C 9C 8C QS JD
+: KS QH
+: QC 9S 8H
+: 5C 4D
+: 2D KD TH TC TD 8D 7C 6D 5S
+: 7H JS KH TS KC QD JC
+: 9D 8S
+: 7S 6C 7D 6S 5D
+EOF
+
+    # TEST
+    is ($board->to_string(), $new_board, "Testing to_string() on a board");
 }
