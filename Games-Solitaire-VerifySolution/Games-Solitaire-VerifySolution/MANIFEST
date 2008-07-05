@@ -1,3 +1,4 @@
+bin/verify-solution
 Build.PL
 Changes
 inc/Test/Run/Builder.pm
