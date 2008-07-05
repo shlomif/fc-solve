@@ -1,0 +1,7 @@
+Revision history for Games-Solitaire-VerifySolution
+
+0.01    Sat Jul  5 19:59:36 IDT 2008
+        - First version.
+        - Can only do Freecell for now, but there's a lot of modularity
+        and extensibility infrastrucutre in place.
+        - 193 Test Assertions.
