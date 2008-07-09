@@ -22,6 +22,7 @@ my $builder = Test::Run::Builder->new(
     },
     add_to_cleanup      => [ 'Games-Solitaire-Verify-*' ],
     create_makefile_pl => 'traditional',
+    script_files => [],
 );
 
 $builder->create_build_script();

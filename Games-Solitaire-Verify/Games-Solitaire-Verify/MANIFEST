@@ -1,4 +1,3 @@
-bin/verify-solution
 Build.PL
 Changes
 inc/Test/Run/Builder.pm
@@ -14,6 +13,7 @@ Makefile.PL
 MANIFEST
 META.yml
 README
+script/verify-solution
 t/00-load.t
 t/01-base.t
 t/02-move.t
