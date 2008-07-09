@@ -10,11 +10,11 @@ states (or positions) of the entire board.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0101
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.0101';
 
 use base 'Games::Solitaire::Verify::Base';
 
@@ -663,21 +663,32 @@ sub _stringify_freecells
     );
 }
 
-sub _stringify_foundations
+sub _foundations_strings
 {
     my $self = shift;
 
-    return "Foundations:" . join("",
-        (map {
+    return [
+        map {
             sprintf(qq{ %s-%s},
-                $_, 
+                $_,
                 Games::Solitaire::Verify::Card->rank_to_string(
                     $self->get_foundation_value($_, 0)
                 ),
             )
         }
-        (@{$self->_get_suits_seq()}))
-    );
+        (@{$self->_get_suits_seq()})
+    ];
+}
+
+sub _stringify_foundations
+{
+    my $self = shift;
+
+    return   "Foundations:"
+           . join("", @{$self->_foundations_strings()})
+           . " " # We need the trailing space for compatibility with
+                 # Freecell Solver.
+           ;
 }
 
 =head2 $self->to_string()

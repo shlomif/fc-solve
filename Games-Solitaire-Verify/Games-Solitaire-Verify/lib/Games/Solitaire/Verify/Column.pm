@@ -10,11 +10,11 @@ columns that are composed of a sequence of cards.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0101
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.0101';
 
 use base 'Games::Solitaire::Verify::Base';
 
@@ -63,7 +63,7 @@ sub _from_string
 {
     my ($self, $str) = @_;
 
-    if ($str !~ s{\A: }{})
+    if ($str !~ s{\A:(?: )?}{})
     {
         Games::Solitaire::Verify::Exception::Parse::Column::Prefix->throw(
             error => "String does not start with \": \"",
@@ -219,9 +219,20 @@ sub to_string
     my $self = shift;
 
     return ":" .
-        join("", 
-            (map 
-                { " " . $self->pos($_)->to_string() } 
+        ($self->len()
+            ? $self->_non_zero_cards_string()
+            : " " # We need the single trailing space for
+                  # Freecell Solver compatibility
+        );
+}
+
+sub _non_zero_cards_string
+{
+    my $self = shift;
+
+    return join("",
+            (map
+                { " " . $self->pos($_)->to_string() }
                 (0 .. ($self->len()-1))
             )
         );

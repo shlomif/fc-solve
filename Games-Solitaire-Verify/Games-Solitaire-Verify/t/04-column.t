@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 22;
 use Games::Solitaire::Verify::Column;
 
 {
@@ -117,4 +117,18 @@ use Games::Solitaire::Verify::Column;
         # TEST*$num_columns
         is ($column->to_string(), $string, "Stringification of '$string'");
     }
+}
+
+{
+    my $column = Games::Solitaire::Verify::Column->new(
+        {
+            string => ":",
+        },
+    );
+
+    # TEST
+    is ($column->len(), 0, "Column has zero cards");
+
+    # TEST
+    is ($column->to_string(), ": ", "Trailing space on empty column");
 }

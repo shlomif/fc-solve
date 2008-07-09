@@ -10,11 +10,11 @@ of Freecell Solver (or a similar solve)
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0101
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.0101';
 
 use base 'Games::Solitaire::Verify::Base';
 
@@ -75,7 +75,7 @@ sub _init
     $self->_input_fh($args->{input_fh});
     $self->_state(undef);
     $self->_line_num(0);
-    $self->_reached_end(1);
+    $self->_reached_end(0);
 
     return 0;
 }
@@ -149,7 +149,7 @@ sub _read_move
     {
         $self->_reached_end(1);
 
-        return;
+        return "END";
     }
 
     $self->_move(Games::Solitaire::Verify::Move->new(
@@ -209,9 +209,8 @@ sub verify
 
         $self->_read_state();
 
-        while (!$self->_reached_end())
+        while (!defined(scalar($self->_read_move())))
         {
-            $self->_read_move();
             $self->_apply_move();
             $self->_read_state();
         }

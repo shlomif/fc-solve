@@ -10,11 +10,11 @@ Solitaire card.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0101
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.0101';
 
 use base 'Games::Solitaire::Verify::Base';
 
@@ -218,7 +218,14 @@ sub rank_to_string
 {
     my ($class, $rank) = @_;
 
-    return $card_nums[$rank-1]->{t};
+    if ($rank == 0)
+    {
+        return '0';
+    }
+    else
+    {
+        return $card_nums[$rank-1]->{t};
+    }
 }
 
 =head1 AUTHOR
