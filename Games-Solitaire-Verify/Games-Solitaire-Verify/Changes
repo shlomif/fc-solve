@@ -1,5 +1,13 @@
 Revision history for Games-Solitaire-VerifySolution
 
+0.0101  Wed Jul  9 16:30:27 IDT 2008
+        - Fixed various bugs:
+            - incompatible output between what we had and Freecell Solver
+            (trailing whitespace etc.)
+            - Added a test assertion for verifying that a wrong solution is
+              wrong. (which uncovered the bugs.)
+            - Fixed the solution verification logic.
+
 0.01    Sat Jul  5 19:59:36 IDT 2008
         - First version.
         - Can only do Freecell for now, but there's a lot of modularity
