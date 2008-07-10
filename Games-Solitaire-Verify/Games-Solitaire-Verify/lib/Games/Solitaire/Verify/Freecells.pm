@@ -10,11 +10,11 @@ Freecells in games such as Freecell, Baker's Game, or Seahaven Towers
 
 =head1 VERSION
 
-Version 0.0101
+Version 0.01
 
 =cut
 
-our $VERSION = '0.0101';
+our $VERSION = '0.01';
 
 use base 'Games::Solitaire::Verify::Base';
 
