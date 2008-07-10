@@ -13,4 +13,4 @@ t/card-test-parse.exe: card-test-parse.c
 	gcc -o "$@" $< -ltap -lfreecell-solver
 
 test: all
-	runprove t/*.{exe}
+	runprove t/*.{exe,t}
