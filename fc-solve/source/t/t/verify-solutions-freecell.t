@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Carp;
 use Data::Dumper;
 
@@ -53,3 +53,5 @@ sub verify_solution_test
 # TEST
 verify_solution_test({deal => 24}, "Verifying the solution of deal #24");
 
+# TEST
+verify_solution_test({deal => 1941}, "Verifying 1941 (The Hardest Deal)");
