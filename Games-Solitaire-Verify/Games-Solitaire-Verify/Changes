@@ -1,5 +1,12 @@
 Revision history for Games-Solitaire-VerifySolution
 
+0.02    Thu Jul 10 15:05:10 IDT 2008
+        - Added another test for a wrong solution.
+        - Extracted two classes from Games::Solitaire::Verify::State :
+            - lib/Games/Solitaire/Verify/Foundations.pm
+            - lib/Games/Solitaire/Verify/Freecells.pm
+        - Added List::Util to the "requires" - it was missing.
+
 0.0102  Thu Jul 10 03:06:18 IDT 2008
         - Fixed the script with the absolute path on Makefile.PL
         - Moved bin to script because it's written in pure-Perl.

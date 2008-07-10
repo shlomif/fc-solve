@@ -9,11 +9,11 @@ Games::Solitaire::Verify - verify solutions for solitaire games.
 
 =head1 VERSION
 
-Version 0.0102
+Version 0.02
 
 =cut
 
-our $VERSION = '0.0102';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
