@@ -3,9 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Carp;
 use Data::Dumper;
+use String::ShellQuote;
 
 use Games::Solitaire::Verify::Solution;
 
@@ -23,9 +24,11 @@ sub verify_solution_test
         confess "Invalid deal $deal";
     }
 
+    my $theme = $args->{theme} || ["-l", "gi"];
+
     open my $fc_solve_output, 
         "pi-make-microsoft-freecell-board $deal | " . 
-        "fc-solve -l gi -p -t -sam |"
+        "fc-solve " . shell_quote(@$theme) . " -p -t -sam |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
     # Initialise a column
@@ -55,3 +58,9 @@ verify_solution_test({deal => 24}, "Verifying the solution of deal #24");
 
 # TEST
 verify_solution_test({deal => 1941}, "Verifying 1941 (The Hardest Deal)");
+
+# TEST
+verify_solution_test({deal => 24, theme => [],}, 
+    "Solving Deal #24 with the default heuristic"
+);
+
