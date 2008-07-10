@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -62,5 +62,10 @@ verify_solution_test({deal => 1941}, "Verifying 1941 (The Hardest Deal)");
 # TEST
 verify_solution_test({deal => 24, theme => [],}, 
     "Solving Deal #24 with the default heuristic"
+);
+
+# TEST
+verify_solution_test({deal => 617, theme => ["-l", "john-galt-line"],}, 
+    "Solving Deal #617 with the john-galt-line"
 );
 
