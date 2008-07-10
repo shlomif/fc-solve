@@ -65,13 +65,28 @@ my @card_nums =  (map { _card_num_normalize($_) }
 
 my %ranks_map = (map { $card_nums[$_]->{t} => ($_+1) } (0 .. $#card_nums));
 
-my %suits_map =
+my @suits_map_proto =
 (
-    "H" => { name => "hearts",   color => "red", },
-    "S" => { name => "spades",   color => "black", },
-    "C" => { name => "clubs",    color => "black", },
-    "D" => { name => "diamonds", color => "red", },
+    ["H" => { name => "hearts",   color => "red", },],
+    ["C" => { name => "clubs",    color => "black", },],
+    ["D" => { name => "diamonds", color => "red", },],
+    ["S" => { name => "spades",   color => "black", },],
 );
+
+my %suits_map = (map {@$_} @suits_map_proto);
+
+=head2 $class->get_suits_seq()
+
+Returns the expected sequence of the suits - "H", "S", "C", "D".
+
+=cut
+
+sub get_suits_seq
+{
+    my $class = shift;
+
+    return [map { $_->[0] } @suits_map_proto];
+}
 
 =head2 $class->calc_rank($rank_string)
 
