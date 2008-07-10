@@ -24,5 +24,6 @@ t/06-verify-moves.t
 t/07-solution.t
 t/data/sample-solutions/fcs-freecell-24.txt
 t/data/sample-solutions/fcs-freecell-24-wrong-1.txt
+t/data/sample-solutions/fcs-freecell-24-wrong-2.txt
 t/pod-coverage.t
 t/pod.t
