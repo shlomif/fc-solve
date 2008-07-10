@@ -4,14 +4,28 @@ use strict;
 use warnings;
 
 use Test::More tests => 1;
-use Games::Solitaire::Verify::Solution;
-use String::ShellQuote;
 use Carp;
+use Data::Dumper;
 
-# 24 is my lucky number.
-# -- Shlomi Fish
+use Games::Solitaire::Verify::Solution;
+
+sub verify_solution_test
 {
-    open my $fc_solve_output, "pi-make-microsoft-freecell-board 24 | fc-solve -l gi -p -t -sam |"
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $args = shift;
+    my $msg = shift;
+
+    my $deal = $args->{deal};
+
+    if ($deal !~ m{\A[1-9][0-9]*\z})
+    {
+        confess "Invalid deal $deal";
+    }
+
+    open my $fc_solve_output, 
+        "pi-make-microsoft-freecell-board $deal | " . 
+        "fc-solve -l gi -p -t -sam |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
     # Initialise a column
@@ -23,9 +37,19 @@ use Carp;
     );
 
     my $verdict = $solution->verify();
-    # TEST
-    ok (!$verdict, "Everyting is OK.")
-        or diag("Verdict == " . Dumper($verdict));
+    my $test_verdict = ok (!$verdict, $msg);
+
+    if (!$test_verdict)
+    {
+        diag("Verdict == " . Dumper($verdict));
+    }
 
     close($fc_solve_output);
+
+    return $test_verdict;
 }
+
+# 24 is my lucky number. (Shlomif)
+# TEST
+verify_solution_test({deal => 24}, "Verifying the solution of deal #24");
+
