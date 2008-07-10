@@ -286,16 +286,7 @@ sub num_empty_freecells
 {
     my $self = shift;
 
-    my $count = 0;
-
-    foreach my $fc_idx (0 .. ($self->num_freecells()-1) )
-    {
-        if (!defined($self->get_freecell($fc_idx)))
-        {
-            $count++;
-        }
-    }
-    return $count;
+    return $self->_freecells->num_empty();
 }
 
 =head2 $board->num_columns()

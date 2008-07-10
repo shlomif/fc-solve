@@ -218,6 +218,28 @@ sub clone
     return $copy;
 }
 
+=head2 $self->num_empty()
+
+Returns the number of empty freecells.
+
+=cut
+
+sub num_empty
+{
+    my $self = shift;
+
+    my $count = 0;
+
+    foreach my $fc_idx (0 .. ($self->count()-1) )
+    {
+        if (!defined($self->cell($fc_idx)))
+        {
+            $count++;
+        }
+    }
+    return $count;
+}
+
 =head1 AUTHOR
 
 Shlomi Fish, C<< <shlomif at iglu.org.il> >>
