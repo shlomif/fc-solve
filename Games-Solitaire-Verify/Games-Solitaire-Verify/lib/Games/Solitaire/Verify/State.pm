@@ -22,6 +22,7 @@ use Games::Solitaire::Verify::Exception;
 use Games::Solitaire::Verify::Card;
 use Games::Solitaire::Verify::Column;
 use Games::Solitaire::Verify::Move;
+use Games::Solitaire::Verify::Freecells;
 
 use List::Util qw(first);
 
@@ -67,29 +68,19 @@ __PACKAGE__->mk_accessors(qw(
 
 =cut
 
-sub _parse_freecell_card
-{
-    my ($self, $s) = @_;
 
-    return
-    (
-        ($s eq q{  })
-            ? undef()
-            : Games::Solitaire::Verify::Card->new(
-                {
-                    string => $_,
-                }
-            )
-    );
-}
-
-sub _assign_freecells_from_strings
+sub _assign_freecells_from_string
 {
     my $self = shift;
-    my $string_arr = shift;
+    my $string = shift;
 
     $self->_freecells(
-        [ map { $self->_parse_freecell_card($_) } @$string_arr]
+        Games::Solitaire::Verify::Freecells->new(
+            {
+                count => $self->num_freecells(),
+                string => $string,
+            }
+        )
     );
 
     return;
@@ -141,20 +132,13 @@ sub _from_string
         $self->_foundations(\%founds);
     }
 
-    my $fc_card_re = '  (..)';
-
-    if ($str !~ m{\GFreecells:$fc_card_re$fc_card_re$fc_card_re$fc_card_re\n}msg)
+    if ($str !~ m{\G(Freecells:[^\n]*)\n}gms)
     {
         Games::Solitaire::Verify::Exception::Parse::State::Freecells->throw(
             error => "Wrong Freecell String",
         );
     }
-
-    {
-        my @freecells = ($1, $2, $3, $4);
-
-        $self->_assign_freecells_from_strings(\@freecells);
-    }
+    $self->_assign_freecells_from_string($1);
 
     foreach my $col_idx (0 .. ($self->num_columns()-1))
     {
@@ -221,7 +205,7 @@ sub get_freecell
 {
     my ($self, $index) = @_;
 
-    return $self->_freecells()->[$index];
+    return $self->_freecells()->cell($index);
 }
 
 =head2 $state->set_freecell($index, $card)
@@ -234,9 +218,7 @@ sub set_freecell
 {
     my ($self, $index, $card) = @_;
 
-    $self->_freecells()->[$index] = $card;
-
-    return;
+    return $self->_freecells->assign($index, $card);
 }
 
 =head2 $state->get_foundation_value($suit, $index)
@@ -398,11 +380,7 @@ sub clone
     }
 
     $copy->_freecells(
-        [
-            map
-            { defined($_) ? $_->clone() : $_ }
-            @{$self->_freecells()}
-        ]
+        $self->_freecells()->clone()
     );
 
     return $copy;
@@ -482,6 +460,18 @@ sub _is_sequence_in_column
     }
 }
 
+=head2 $self->clear_freecell($index)
+
+Clears/empties the freecell at position $pos .
+
+=cut
+
+sub clear_freecell
+{
+    my ($self, $index) = @_;
+
+    return $self->_freecells->clear($index);
+}
 
 sub verify_and_perform_move
 {
@@ -529,7 +519,7 @@ sub verify_and_perform_move
                 return "Freecell No. $fc_idx is taken";
             }
 
-            $self->_freecells()->[$fc_idx] = $self->get_column($col_idx)->pop();
+            $self->set_freecell($fc_idx, $self->get_column($col_idx)->pop());
 
             return 0;
         }
@@ -614,7 +604,7 @@ sub verify_and_perform_move
 
             if (defined($f_idx))
             {
-                undef($self->_freecells()->[$fc_idx]);
+                $self->clear_freecell($fc_idx);
                 $self->increment_foundation_value($suit, $f_idx);
                 return 0;
             }
@@ -644,7 +634,7 @@ sub verify_and_perform_move
             }
 
             $self->get_column($col_idx)->push($card);
-            undef($self->_freecells()->[$fc_idx]);                
+            $self->clear_freecell($fc_idx);
             
             return 0;
         }

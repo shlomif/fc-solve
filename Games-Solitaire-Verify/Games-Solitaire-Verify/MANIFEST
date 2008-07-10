@@ -5,6 +5,7 @@ lib/Games/Solitaire/Verify/Base.pm
 lib/Games/Solitaire/Verify/Card.pm
 lib/Games/Solitaire/Verify/Column.pm
 lib/Games/Solitaire/Verify/Exception.pm
+lib/Games/Solitaire/Verify/Freecells.pm
 lib/Games/Solitaire/Verify/Move.pm
 lib/Games/Solitaire/Verify.pm
 lib/Games/Solitaire/Verify/Solution.pm
