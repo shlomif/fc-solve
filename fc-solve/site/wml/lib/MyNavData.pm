@@ -51,8 +51,7 @@ my $tree_contents =
                 {
                     'text' => "Arch Doc",
                     'title' => "Architecture Document",
-                    'url' => "http://fc-solve.berlios.de/arch_doc/",
-                    'url_is_abs' => 1,
+                    'url' => "arch_doc/",
                 },
                 {
                     'text' => "Doxygen",
