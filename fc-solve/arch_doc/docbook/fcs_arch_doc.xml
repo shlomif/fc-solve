@@ -16,7 +16,7 @@
                 <surname>Fish</surname>
                 <affiliation>
                     <address>
-                        <email>shlomif@vipe.technion.ac.il</email>
+                        <email>shlomif@iglu.org.il</email>
                     </address>
                 </affiliation>
             </author>
@@ -46,6 +46,16 @@
                     First "stable" version covering the &fcs; 2.8.x 
                     architecture. Spell checked and revised during its
                     CVS history.
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>835</revnumber>
+                <date>11 July 2008</date>
+                <authorinitials>shlomif</authorinitials>
+                <revremark>
+                    Combined everything into one big .xml file instead of
+                    the "SYSTEM" entities. Removed the places where
+                    vipe.technion.ac.il was mentioned.
                 </revremark>
             </revision>
         </revhistory>
@@ -914,10 +924,10 @@
             </para>
 
             <para>
-                Both the <ulink url="http://vipe.technion.ac.il/~shlomif/freecell-solver/">vipe.technion.ac.il main site</ulink> and 
-                the <ulink url="http://fc-solve.berlios.de/">BerliOS mirror</ulink> 
-                are generated from the same makefile and both are uploaded to 
-                their places using rsync.
+                The <ulink url="http://fc-solve.berlios.de/">main site
+                    at BerliOS</ulink> 
+                is generated from a makefile and both uploaded to 
+                its place using rsync.
             </para>
 
             <para>
@@ -950,7 +960,7 @@
                 computer that has the Microsoft Visual Studio environment 
                 installed. It should be placed in a directory containing only it 
                 and the curl.exe executable from 
-                <ulink url="http://vipe.technion.ac.il/~shlomif/freecell-solver/win32_build/">the same location</ulink>.
+                <ulink url="http://fc-solve.berlios.de/win32_build/">the same location</ulink>.
             </para>
 
             <para>
@@ -1303,7 +1313,7 @@
                             information. This deviates from the standard scheme
                             that puts every state at the end of one stack scheme
                             (that exists in <ulink
-                                url="http://vipe.technion.ac.il/~shlomif/lm-solve/">LM-Solve</ulink>
+                                url="http://www.shlomifish.org/lm-solve/">LM-Solve</ulink>
                             for example) and is harder to maintain, but can be
                             fine-tuned and conserve resources more easily.
 
