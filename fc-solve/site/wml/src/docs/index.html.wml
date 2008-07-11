@@ -21,7 +21,6 @@ Freecell Solver.
 </p>
 
 
-
 <h3 class="plain"><a href="<get-var presentation_url />">Lecture: Freecell Solver - Evolution of a C Program</a></h3>
 
 <p>
@@ -37,7 +36,9 @@ the Wall</a></h3>
 Some reflections on the evolution of Freecell Solver and my interaction with 
 its users and contributors written
 after reading Eric Raymond's
-seminal <a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">"The Cathedral and the Bazaar"</a> document. What I did very much the 
+seminal 
+<a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">"The 
+Cathedral and the Bazaar"</a> document. What I did very much the 
 same, (mostly without thinking too much about it), what I did differently, and what happened. Slightly out-of-date.
 </p>
 
@@ -95,6 +96,13 @@ Makes Software High-Quality?"</a></h3>
 An essay inspired by a note a developer of a competing solver said on
 the fc-solve-discuss mailing list, which also covers Freecell Solver at
 the end. See
-<a href="http://www.shlomifish.org/philosophy/computers/high-quality-software/rev2/">the second revision for hte most up-to-date text</a>.
+<a href="http://www.shlomifish.org/philosophy/computers/high-quality-software/rev2/">the second revision for the most up-to-date text</a>.
+</p>
+
+<h3 class="plain"><a href="http://use.perl.org/~Shlomi+Fish/journal/36892">"Perl
+and Solitaire Games"</a></h3>
+
+<p>
+A blog entry in my use.perl.org blog about Freecell Solver and other things.
 </p>
 
