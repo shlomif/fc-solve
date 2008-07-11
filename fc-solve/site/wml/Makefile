@@ -15,7 +15,7 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
 
-HTMLS = $(D)/index.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html $(D)/current-status.html $(D)/getting-credit.html
+HTMLS = $(D)/index.html $(D)/links.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html $(D)/current-status.html $(D)/getting-credit.html $(D)/verify-code/index.html
 
 TTMLS = $(D)/style.css
 
@@ -30,7 +30,7 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 #
 WIN32_BUILD_SUBDIRS = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
 
-SUBDIRS = $(D) $(WIN32_BUILD_SUBDIRS) $(D)/docs $(D)/arch_doc $(D)/pysol $(D)/images
+SUBDIRS = $(D) $(WIN32_BUILD_SUBDIRS) $(D)/docs $(D)/arch_doc $(D)/pysol $(D)/images $(D)/verify-code/
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 

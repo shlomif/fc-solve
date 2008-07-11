@@ -36,6 +36,11 @@ my $tree_contents =
                     'text' => "PySol Integration",
                     'url' => "pysol/",
                 },
+                {
+                    'text' => "Verification",
+                    'url' => "verify-code/",
+                    'title' => "Code to Verify the Solutions of Games",
+                },
             ],
         },
         {
