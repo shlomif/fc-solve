@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -26,16 +26,18 @@ sub verify_solution_test
 
     my $theme = $args->{theme} || ["-l", "gi"];
 
+    my $variant = $args->{variant}  || "freecell";
+
     open my $fc_solve_output, 
-        "pi-make-microsoft-freecell-board $deal | " . 
-        "fc-solve " . shell_quote(@$theme) . " -p -t -sam |"
+        "make_pysol_freecell_board.py $deal $variant | " . 
+        "fc-solve -g $variant " . shell_quote(@$theme) . " -p -t -sam |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => $fc_solve_output,
-            variant => "freecell",
+            variant => $variant,
         },
     );
 
@@ -67,5 +69,10 @@ verify_solution_test({deal => 24, theme => [],},
 # TEST
 verify_solution_test({deal => 617, theme => ["-l", "john-galt-line"],}, 
     "Solving Deal #617 with the john-galt-line"
+);
+
+# TEST
+verify_solution_test({deal => 24, variant => "bakers_game", theme => [],}, 
+    "Baker's Game Deal #24"
 );
 
