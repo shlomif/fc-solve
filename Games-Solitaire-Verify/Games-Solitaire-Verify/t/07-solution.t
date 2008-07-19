@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 use Data::Dumper;
 
@@ -28,7 +28,7 @@ use File::Spec;
 
     my $verdict = $solution->verify();
     # TEST
-    ok (!$verdict, "Everyting is OK.")
+    ok (!$verdict, "Everything is OK.")
         or diag("Verdict == " . Dumper($verdict));
 
     close($input_fh);
@@ -77,6 +77,30 @@ use File::Spec;
     my $verdict = $solution->verify();
     # TEST
     ok ($verdict, "Solution is invalid")
+        or diag("Verdict == " . Dumper($verdict));
+
+    close($input_fh);
+}
+
+{
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+        qw(t data sample-solutions fcs-bakers-game-24.txt)
+    );
+
+    open (my $input_fh, "<", $input_filename)
+        or die "Cannot open file $!";
+
+    # Initialise a column
+    my $solution = Games::Solitaire::Verify::Solution->new(
+        {
+            input_fh => $input_fh,
+            variant => "bakers_game",
+        },
+    );
+
+    my $verdict = $solution->verify();
+    # TEST
+    ok (!$verdict, "Everything is OK.")
         or diag("Verdict == " . Dumper($verdict));
 
     close($input_fh);
