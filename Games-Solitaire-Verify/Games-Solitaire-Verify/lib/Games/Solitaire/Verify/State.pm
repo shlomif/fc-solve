@@ -24,6 +24,7 @@ use Games::Solitaire::Verify::Column;
 use Games::Solitaire::Verify::Move;
 use Games::Solitaire::Verify::Freecells;
 use Games::Solitaire::Verify::Foundations;
+use Games::Solitaire::Verify::VariantParams;
 
 use List::Util qw(first);
 
@@ -32,6 +33,7 @@ __PACKAGE__->mk_accessors(qw(
     _freecells
     _foundations
     _variant
+    _variant_params
     ));
 
 =head1 SYNOPSIS
@@ -162,13 +164,32 @@ sub _set_variant
     my $self = shift;
     my $variant = shift;
 
-    if ($variant ne "freecell")
+    my $params;
+
+    if ($variant eq "freecell")
+    {
+        $params = Games::Solitaire::Verify::VariantParams->new(
+            {
+                seq_build_by => "alt_color",
+            },
+        );
+    }
+    elsif ($variant eq "bakers_game")
+    {
+        $params = Games::Solitaire::Verify::VariantParams->new(
+            {
+                seq_build_by => "suit",
+            },
+        );
+    }
+    else
     {
         Games::Solitaire::Verify::Exception::Variant::Unknown->throw(
             error => "Unknown/Unsupported Variant",
             variant => $variant,
         );
     }
+    $self->_variant_params($params);
     $self->_variant($variant);
 
     return;
@@ -380,6 +401,27 @@ sub _can_put_into_empty_column
     return 0;
 }
 
+sub _is_matching_color
+{
+    my ($self, $parent, $child) = @_;
+
+    if ($self->_variant_params()->seq_build_by() eq "alt_color")
+    {
+        if ($parent->color() eq $child->color())
+        {
+            return "Cards are of the same color";
+        }
+    }
+    elsif ($self->_variant_params()->seq_build_by() eq "suit")
+    {
+        if ($parent->suit() ne $child->suit())
+        {
+            return "Suits don't match";
+        }
+    }
+    return 0;
+}
+
 sub _can_put_on_top
 {
     my ($self, $parent, $child) = @_;
@@ -389,9 +431,9 @@ sub _can_put_on_top
         return "Rank mismatch between parent and child cards";
     }
     
-    if ($parent->color() eq $child->color())
+    if (my $ret = $self->_is_matching_color($parent, $child) )
     {
-        return "Cards are of the same color";
+        return $ret;
     }
     
     return 0;

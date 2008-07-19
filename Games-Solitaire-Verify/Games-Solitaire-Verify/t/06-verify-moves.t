@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More tests => 35;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 
@@ -414,4 +414,55 @@ EOF
         "Cannot move non-sequence"
     );
 
+}
+
+{
+    my $string = <<"EOF";
+Foundations: H-2 C-0 D-A S-A 
+Freecells:  8D  8H  6S  5S
+: 4C 2C 9C 8C QS 4S
+: 5H QH 3C AC 3H 4H QD JD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD
+: 7H JS KH TS KC 7C
+: 
+: 7S 6C 7D 4D 8S 9D
+EOF
+
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string => $string,
+            variant => "bakers_game",
+        }
+    );
+
+    my $move1 = Games::Solitaire::Verify::Move->new(
+        {
+            fcs_string => "Move 1 cards from stack 4 to stack 1",
+            game => "bakers_game",
+        }
+    );
+
+    # TEST
+    ok ($move1, "Stack->Stack move was initialised.");
+
+    # TEST
+    ok (!$board->verify_and_perform_move($move1),
+        "Was able to perform a stack->stack move."
+    );
+
+    # TEST
+    is ($board->to_string(), <<"EOF", "New board is OK.");
+Foundations: H-2 C-0 D-A S-A 
+Freecells:  8D  8H  6S  5S
+: 4C 2C 9C 8C QS 4S
+: 5H QH 3C AC 3H 4H QD JD TD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC
+: 7H JS KH TS KC 7C
+: 
+: 7S 6C 7D 4D 8S 9D
+EOF
 }
