@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -79,5 +79,22 @@ verify_solution_test({deal => 24, variant => "bakers_game", theme => [],},
 # TEST
 verify_solution_test({deal => 1099, variant => "forecell", theme => [],}, 
     "Forecell Deal #1099"
+);
+
+
+# TEST
+verify_solution_test({deal => 11982, variant => "relaxed_freecell", },
+    "Relaxed Freecell Deal #11982"
+);
+
+
+# TEST
+verify_solution_test(
+    {
+        deal => 1977,
+        variant => "seahaven_towers",
+        theme => ["-l", "fools-gold",],
+    }, 
+    "Seahaven Towers #1977"
 );
 
