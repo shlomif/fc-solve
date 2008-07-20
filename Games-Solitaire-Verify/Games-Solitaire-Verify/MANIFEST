@@ -12,6 +12,7 @@ lib/Games/Solitaire/Verify.pm
 lib/Games/Solitaire/Verify/Solution.pm
 lib/Games/Solitaire/Verify/State.pm
 lib/Games/Solitaire/Verify/VariantParams.pm
+lib/Games/Solitaire/Verify/VariantsMap.pm
 Makefile.PL
 MANIFEST
 META.yml

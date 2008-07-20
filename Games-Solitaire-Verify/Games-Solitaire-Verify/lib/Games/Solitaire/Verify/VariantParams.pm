@@ -62,10 +62,8 @@ sub _init
         if (!exists($seqs_build_by{$seq_build_by}))
         {
             Games::Solitaire::Verify::Exception::VariantParams::Param::SeqBuildBy->throw(
-                {
                     error => "Unrecognised seq_build_by",
                     value => $seq_build_by,
-                }
             );
         }
         $self->seq_build_by($seq_build_by);
@@ -77,10 +75,8 @@ sub _init
         if (!exists($empty_stacks_filled_by_map{$esf}))
         {
             Games::Solitaire::Verify::Exception::VariantParams::Param::EmptyStacksFill->throw(
-                {
                     error => "Unrecognised empty_stacks_filled_by",
                     value => $esf,
-                }
             );
         }
 
@@ -93,10 +89,8 @@ sub _init
         if (! (($decks_num == 1) || ($decks_num == 2)) )
         {
             Games::Solitaire::Verify::Exception::VariantParams::Param::NumDecks->throw(
-                {
                     error => "Wrong Number of Decks",
                     value => $decks_num,
-                }
             );
         }
         $self->decks_num($decks_num);
@@ -110,10 +104,8 @@ sub _init
             ($stacks_num == 0))
         {
             Games::Solitaire::Verify::Exception::VariantParams::Param::Stacks->throw(
-                {
                     error => "stacks_num is not a number",
                     value => $stacks_num,
-                }
             );
         }
         $self->stacks_num($stacks_num)
@@ -122,15 +114,11 @@ sub _init
     {
         my $freecells_num = $args->{freecells_num};
 
-        if (($freecells_num =~ /\D/)
-                ||
-            ($freecells_num == 0))
+        if ($freecells_num =~ /\D/)
         {
             Games::Solitaire::Verify::Exception::VariantParams::Param::Freecells->throw(
-                {
                     error => "freecells_num is not a number",
                     value => $freecells_num,
-                }
             );
         }
         $self->freecells_num($freecells_num);
@@ -142,10 +130,8 @@ sub _init
         if (!exists($seq_moves{$seq_move}))
         {
             Games::Solitaire::Verify::Exception::VariantParams::Param::SeqMove->throw(
-                {
                     error => "Unrecognised sequence_move",
                     value => $seq_move,
-                }
             );
         }
 

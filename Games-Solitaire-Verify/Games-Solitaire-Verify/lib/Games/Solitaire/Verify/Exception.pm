@@ -46,6 +46,10 @@ use Exception::Class (
     {
         isa => "Games::Solitaire::Verify::Exception::VariantParams::Param",
     },
+    "Games::Solitaire::Verify::Exception::VariantParams::Param::EmptyStacksFill" =>
+    {
+        isa => "Games::Solitaire::Verify::Exception::VariantParams::Param",
+    },
     "Games::Solitaire::Verify::Exception::VariantParams::Param::Stacks" =>
     {
         isa => "Games::Solitaire::Verify::Exception::VariantParams::Param",
