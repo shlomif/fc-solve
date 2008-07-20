@@ -22,6 +22,7 @@ use Games::Solitaire::Verify::Exception;
 
 __PACKAGE__->mk_accessors(qw(
     seq_build_by
+    empty_stacks_filled_by
     ));
 
 =head1 SYNOPSIS
@@ -41,6 +42,7 @@ __PACKAGE__->mk_accessors(qw(
 =cut
 
 my %seqs_build_by = (map { $_ => 1 } (qw(alt_color suit rank)));
+my %empty_stacks_filled_by_map = (map { $_ => 1 } (qw(kings any none)));
 
 sub _init
 {
@@ -48,18 +50,39 @@ sub _init
 
     # Set the variant
     #
-    my $seq_build_by = $args->{seq_build_by};
 
-    if (!exists($seqs_build_by{$seq_build_by}))
     {
-        Games::Solitaire::Verify::Exception::VariantParams::Param::SeqBuildBy->throw(
-            {
-                error => "Unrecognised seq_build_by",
-                value => $seq_build_by,
-            }
-        );
+        my $seq_build_by = $args->{seq_build_by};
+
+        if (!exists($seqs_build_by{$seq_build_by}))
+        {
+            Games::Solitaire::Verify::Exception::VariantParams::Param::SeqBuildBy->throw(
+                {
+                    error => "Unrecognised seq_build_by",
+                    value => $seq_build_by,
+                }
+            );
+        }
+        $self->seq_build_by($seq_build_by);
     }
-    $self->seq_build_by($seq_build_by);
+
+    {
+        my $esf = $args->{empty_stacks_filled_by};
+
+        if (!exists($empty_stacks_filled_by_map{$esf}))
+        {
+            Games::Solitaire::Verify::Exception::VariantParams::Param::EmptyStacksFill->throw(
+                {
+                    error => "Unrecognised empty_stacks_filled_by",
+                    value => $esf,
+                }
+            );
+        }
+
+        $self->empty_stacks_filled_by($esf);
+    }
+
+    return 0;
 }
 
 =head2 $state->seq_build_by()

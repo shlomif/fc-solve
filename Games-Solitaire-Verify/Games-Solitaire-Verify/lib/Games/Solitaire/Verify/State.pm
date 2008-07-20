@@ -171,6 +171,7 @@ sub _set_variant
         $params = Games::Solitaire::Verify::VariantParams->new(
             {
                 seq_build_by => "alt_color",
+                empty_stacks_filled_by => "any",
             },
         );
     }
@@ -179,7 +180,17 @@ sub _set_variant
         $params = Games::Solitaire::Verify::VariantParams->new(
             {
                 seq_build_by => "suit",
+                empty_stacks_filled_by => "any",
             },
+        );
+    }
+    elsif ($variant eq "forecell")
+    {
+        $params = Games::Solitaire::Verify::VariantParams->new(
+            {
+                seq_build_by => "alt_color",
+                empty_stacks_filled_by => "kings",
+            }
         );
     }
     else
@@ -398,6 +409,13 @@ sub _can_put_into_empty_column
 {
     my ($self, $card) = @_;
 
+    if ($self->_variant_params->empty_stacks_filled_by() eq "kings")
+    {
+        if ($card->rank() != 13)
+        {
+            return "Non-king on an empty stack";
+        }
+    }
     return 0;
 }
 
