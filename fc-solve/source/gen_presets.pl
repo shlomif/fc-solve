@@ -264,9 +264,9 @@ sub preset_to_perl_module
     "$preset_name" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => $pc->{decks},
-                'stacks_num' => $pc->{stacks},
-                'freecells_num' => $pc->{freecells},
+                'num_decks' => $pc->{decks},
+                'num_columns' => $pc->{stacks},
+                'num_freecells' => $pc->{freecells},
                 'sequence_move' => "$seq_move",
                 'seq_build_by' => "$sbb",
                 'empty_stacks_filled_by' => "$esf",
