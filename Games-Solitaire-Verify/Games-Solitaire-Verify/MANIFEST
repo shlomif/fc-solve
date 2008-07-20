@@ -27,6 +27,7 @@ t/05-state.t
 t/06-verify-moves.t
 t/07-solution.t
 t/data/sample-solutions/fcs-bakers-game-24.txt
+t/data/sample-solutions/fcs-eight-off-200.txt
 t/data/sample-solutions/fcs-forecell-24.txt
 t/data/sample-solutions/fcs-freecell-24.txt
 t/data/sample-solutions/fcs-freecell-24-wrong-1.txt

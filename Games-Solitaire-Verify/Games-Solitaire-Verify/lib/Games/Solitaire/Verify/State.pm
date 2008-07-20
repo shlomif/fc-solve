@@ -276,7 +276,7 @@ sub num_freecells
 {
     my $self = shift;
 
-    return 4;
+    return $self->_variant_params->num_freecells();
 }
 
 =head2 $board->num_empty_freecells()
