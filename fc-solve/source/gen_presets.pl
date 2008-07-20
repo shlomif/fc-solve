@@ -233,32 +233,94 @@ sub preset_to_docbook_string
     return join("", map { "    <entry>$_</entry>\n" } @lines);
 }
 
-my $docbook = 0;
 
-if ($ARGV[0] = "--docbook")
+sub preset_to_perl_module
 {
-    $docbook = 1;
+    my $preset_name = shift;
+    my $pc = shift;
+
+    my %sbb_map = 
+    (
+        'ac' => "alt_color",
+        'suit' => "suit",
+        'rank' => "rank",
+    );
+
+    my $sbb = $sbb_map{$pc->{'seqs_build_by'}}
+        or die "Hoola";
+
+    my %esf_map = 
+    (
+        'kings_only' => "kings",
+        'none' => "none",
+        'any_card' => "any",
+    );
+    my $esf = $esf_map{$pc->{'empty_stacks_fill'}}
+        or die "BlahBlajjor";
+    
+    my $seq_move = $pc->{sequence_move} ? "unlimited" : "limited";
+    
+    return <<"EOF";
+    "$preset_name" =>
+        Games::Solitaire::Verify::VariantParams->new(
+            {
+                'decks_num' => $pc->{decks},
+                'stacks_num' => $pc->{stacks},
+                'freecells_num' => $pc->{freecells},
+                'sequence_move' => "$seq_move",
+                'seq_build_by' => "$sbb",
+                'empty_stacks_filled_by' => "$esf",
+            }
+        ),
+EOF
 }
+
+my $mode = "c";
+
+my $mode_arg = shift(@ARGV);
+
+if ($mode_arg eq "--docbook")
+{
+    $mode = "docbook";
+}
+elsif ($mode_arg eq "--perlmod")
+{
+    $mode = "perl-mod";
+}
+
+my %mode_callbacks =
+(
+    "c" => \&preset_to_string,
+    "docbook" => \&preset_to_docbook_string,
+    "perl-mod" => \&preset_to_perl_module,
+);
 
 foreach my $preset_name (sort {$a cmp $b } keys(%presets))
 {
-    if ($docbook && ($preset_name eq "simple_simon"))
+    if (($mode ne "c") && ($preset_name eq "simple_simon"))
     {
         next;
     }
         
     my $preset_compiled = compile_preset($preset_name);
-    push @strings, ($docbook ? \&preset_to_docbook_string : \&preset_to_string)->($preset_name, $preset_compiled);
+    push @strings, $mode_callbacks{$mode}->($preset_name, $preset_compiled);
 }
 
-if ($docbook)
+if ($mode eq "docbook")
 {
     print join("", map { "<row>\n$_</row>\n" } @strings);
 }
-else
+elsif ($mode eq "c")
 {
     print "static const fcs_preset_t fcs_presets[" . scalar(@strings) . "] = \n";
     print "{\n";
     print join("", @strings);
     print "};\n";
+}
+elsif ($mode eq "perl-mod")
+{
+    print "my %variants_map =\n";
+    print "(\n";
+    print join("", @strings);
+    print ");\n";
 }
