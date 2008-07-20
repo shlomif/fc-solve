@@ -263,7 +263,9 @@ the foundations.
 
 sub num_decks
 {
-    return 1;
+    my $self = shift;
+
+    return $self->_variant_params->num_decks();
 }
 
 =head2 $board->num_freecells()
