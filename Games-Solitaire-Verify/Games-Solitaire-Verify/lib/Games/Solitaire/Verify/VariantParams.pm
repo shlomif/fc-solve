@@ -21,8 +21,12 @@ use base 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception;
 
 __PACKAGE__->mk_accessors(qw(
-    seq_build_by
+    decks_num
     empty_stacks_filled_by
+    freecells_num
+    seq_build_by
+    sequence_move
+    stacks_num
     ));
 
 =head1 SYNOPSIS
@@ -43,6 +47,7 @@ __PACKAGE__->mk_accessors(qw(
 
 my %seqs_build_by = (map { $_ => 1 } (qw(alt_color suit rank)));
 my %empty_stacks_filled_by_map = (map { $_ => 1 } (qw(kings any none)));
+my %seq_moves = (map { $_ => 1 } (qw(limited unlimited)));
 
 sub _init
 {
@@ -80,6 +85,71 @@ sub _init
         }
 
         $self->empty_stacks_filled_by($esf);
+    }
+
+    {
+        my $decks_num = $args->{decks_num};
+
+        if (! (($decks_num == 1) || ($decks_num == 2)) )
+        {
+            Games::Solitaire::Verify::Exception::VariantParams::Param::NumDecks->throw(
+                {
+                    error => "Wrong Number of Decks",
+                    value => $decks_num,
+                }
+            );
+        }
+        $self->decks_num($decks_num);
+    }
+
+    {
+        my $stacks_num = $args->{stacks_num};
+
+        if (($stacks_num =~ /\D/)
+                ||
+            ($stacks_num == 0))
+        {
+            Games::Solitaire::Verify::Exception::VariantParams::Param::Stacks->throw(
+                {
+                    error => "stacks_num is not a number",
+                    value => $stacks_num,
+                }
+            );
+        }
+        $self->stacks_num($stacks_num)
+    }
+
+    {
+        my $freecells_num = $args->{freecells_num};
+
+        if (($freecells_num =~ /\D/)
+                ||
+            ($freecells_num == 0))
+        {
+            Games::Solitaire::Verify::Exception::VariantParams::Param::Freecells->throw(
+                {
+                    error => "freecells_num is not a number",
+                    value => $freecells_num,
+                }
+            );
+        }
+        $self->freecells_num($freecells_num);
+    }
+
+    {
+        my $seq_move = $args->{sequence_move};
+
+        if (!exists($seq_moves{$seq_move}))
+        {
+            Games::Solitaire::Verify::Exception::VariantParams::Param::SeqMove->throw(
+                {
+                    error => "Unrecognised sequence_move",
+                    value => $seq_move,
+                }
+            );
+        }
+
+        $self->sequence_move($seq_move);
     }
 
     return 0;

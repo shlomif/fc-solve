@@ -36,6 +36,28 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception::Parse::State", 
       fields => ["index"],
     },
+   
+    "Games::Solitaire::Verify::Exception::VariantParams::Param" =>
+    {
+        isa => "Games::Solitaire::Verify::Exception",
+        fields => ["value"],
+    },
+    "Games::Solitaire::Verify::Exception::VariantParams::Param::NumDecks" =>
+    {
+        isa => "Games::Solitaire::Verify::Exception::VariantParams::Param",
+    },
+    "Games::Solitaire::Verify::Exception::VariantParams::Param::Stacks" =>
+    {
+        isa => "Games::Solitaire::Verify::Exception::VariantParams::Param",
+    },
+    "Games::Solitaire::Verify::Exception::VariantParams::Param::Freecells" =>
+    {
+        isa => "Games::Solitaire::Verify::Exception::VariantParams::Param",
+    },
+    "Games::Solitaire::Verify::Exception::VariantParams::Param::SeqMove" =>
+    {
+        isa => "Games::Solitaire::Verify::Exception::VariantParams::Param",
+    },
     
     'Games::Solitaire::Verify::Exception::Variant' =>
     { isa => "Games::Solitaire::Verify::Exception", 

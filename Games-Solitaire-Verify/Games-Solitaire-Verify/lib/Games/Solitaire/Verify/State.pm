@@ -166,40 +166,42 @@ sub _set_variant
 
     my $params;
 
-    if ($variant eq "freecell")
-    {
-        $params = Games::Solitaire::Verify::VariantParams->new(
-            {
-                seq_build_by => "alt_color",
-                empty_stacks_filled_by => "any",
-            },
-        );
-    }
-    elsif ($variant eq "bakers_game")
-    {
-        $params = Games::Solitaire::Verify::VariantParams->new(
-            {
-                seq_build_by => "suit",
-                empty_stacks_filled_by => "any",
-            },
-        );
-    }
-    elsif ($variant eq "forecell")
-    {
-        $params = Games::Solitaire::Verify::VariantParams->new(
-            {
-                seq_build_by => "alt_color",
-                empty_stacks_filled_by => "kings",
-            }
-        );
-    }
-    else
-    {
-        Games::Solitaire::Verify::Exception::Variant::Unknown->throw(
-            error => "Unknown/Unsupported Variant",
-            variant => $variant,
-        );
-    }
+    my %common_params = 
+    (
+        'decks_num' => 1,
+        'stacks_num' => 8,
+        'freecells_num' => 4,
+        'sequence_move' => "limited",
+    );
+    # TODO : refactor.
+    $params = Games::Solitaire::Verify::VariantParams->new(
+        {
+            %common_params,
+            %{(
+                  ($variant eq "freecell")
+                ? +{
+                    seq_build_by => "alt_color",
+                    empty_stacks_filled_by => "any",
+                    %common_params
+                }
+                : ($variant eq "bakers_game")
+                ? +{
+                    seq_build_by => "suit",
+                    empty_stacks_filled_by => "any",
+                }
+                : ($variant eq "forecell")
+                ? +{
+                    seq_build_by => "alt_color",
+                    empty_stacks_filled_by => "kings",
+                } :
+                do {         Games::Solitaire::Verify::Exception::Variant::Unknown->throw(
+                error => "Unknown/Unsupported Variant",
+                variant => $variant,
+            );
+               }
+            )}
+        }
+    );
     $self->_variant_params($params);
     $self->_variant($variant);
 
