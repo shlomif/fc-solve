@@ -21,12 +21,12 @@ use base 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception;
 
 __PACKAGE__->mk_accessors(qw(
-    decks_num
+    num_decks
     empty_stacks_filled_by
-    freecells_num
+    num_freecells
     seq_build_by
     sequence_move
-    stacks_num
+    num_columns
     ));
 
 =head1 SYNOPSIS
@@ -84,44 +84,44 @@ sub _init
     }
 
     {
-        my $decks_num = $args->{decks_num};
+        my $num_decks = $args->{num_decks};
 
-        if (! (($decks_num == 1) || ($decks_num == 2)) )
+        if (! (($num_decks == 1) || ($num_decks == 2)) )
         {
             Games::Solitaire::Verify::Exception::VariantParams::Param::NumDecks->throw(
                     error => "Wrong Number of Decks",
-                    value => $decks_num,
+                    value => $num_decks,
             );
         }
-        $self->decks_num($decks_num);
+        $self->num_decks($num_decks);
     }
 
     {
-        my $stacks_num = $args->{stacks_num};
+        my $num_columns = $args->{num_columns};
 
-        if (($stacks_num =~ /\D/)
+        if (($num_columns =~ /\D/)
                 ||
-            ($stacks_num == 0))
+            ($num_columns == 0))
         {
             Games::Solitaire::Verify::Exception::VariantParams::Param::Stacks->throw(
-                    error => "stacks_num is not a number",
-                    value => $stacks_num,
+                    error => "num_columns is not a number",
+                    value => $num_columns,
             );
         }
-        $self->stacks_num($stacks_num)
+        $self->num_columns($num_columns)
     }
 
     {
-        my $freecells_num = $args->{freecells_num};
+        my $num_freecells = $args->{num_freecells};
 
-        if ($freecells_num =~ /\D/)
+        if ($num_freecells =~ /\D/)
         {
             Games::Solitaire::Verify::Exception::VariantParams::Param::Freecells->throw(
-                    error => "freecells_num is not a number",
-                    value => $freecells_num,
+                    error => "num_freecells is not a number",
+                    value => $num_freecells,
             );
         }
-        $self->freecells_num($freecells_num);
+        $self->num_freecells($num_freecells);
     }
 
     {

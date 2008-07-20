@@ -30,9 +30,9 @@ my %variants_map =
     "bakers_dozen" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 13,
-                'freecells_num' => 0,
+                'num_decks' => 1,
+                'num_columns' => 13,
+                'num_freecells' => 0,
                 'sequence_move' => "limited",
                 'seq_build_by' => "rank",
                 'empty_stacks_filled_by' => "none",
@@ -41,9 +41,9 @@ my %variants_map =
     "bakers_game" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 8,
-                'freecells_num' => 4,
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 4,
                 'sequence_move' => "limited",
                 'seq_build_by' => "suit",
                 'empty_stacks_filled_by' => "any",
@@ -52,9 +52,9 @@ my %variants_map =
     "beleaguered_castle" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 8,
-                'freecells_num' => 0,
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 0,
                 'sequence_move' => "limited",
                 'seq_build_by' => "rank",
                 'empty_stacks_filled_by' => "any",
@@ -63,9 +63,9 @@ my %variants_map =
     "cruel" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 12,
-                'freecells_num' => 0,
+                'num_decks' => 1,
+                'num_columns' => 12,
+                'num_freecells' => 0,
                 'sequence_move' => "limited",
                 'seq_build_by' => "suit",
                 'empty_stacks_filled_by' => "none",
@@ -74,9 +74,9 @@ my %variants_map =
     "der_katzenschwanz" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 2,
-                'stacks_num' => 9,
-                'freecells_num' => 8,
+                'num_decks' => 2,
+                'num_columns' => 9,
+                'num_freecells' => 8,
                 'sequence_move' => "unlimited",
                 'seq_build_by' => "alt_color",
                 'empty_stacks_filled_by' => "none",
@@ -85,9 +85,9 @@ my %variants_map =
     "die_schlange" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 2,
-                'stacks_num' => 9,
-                'freecells_num' => 8,
+                'num_decks' => 2,
+                'num_columns' => 9,
+                'num_freecells' => 8,
                 'sequence_move' => "limited",
                 'seq_build_by' => "alt_color",
                 'empty_stacks_filled_by' => "none",
@@ -96,9 +96,9 @@ my %variants_map =
     "eight_off" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 8,
-                'freecells_num' => 8,
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 8,
                 'sequence_move' => "limited",
                 'seq_build_by' => "suit",
                 'empty_stacks_filled_by' => "kings",
@@ -107,9 +107,9 @@ my %variants_map =
     "fan" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 18,
-                'freecells_num' => 0,
+                'num_decks' => 1,
+                'num_columns' => 18,
+                'num_freecells' => 0,
                 'sequence_move' => "limited",
                 'seq_build_by' => "suit",
                 'empty_stacks_filled_by' => "kings",
@@ -118,9 +118,9 @@ my %variants_map =
     "forecell" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 8,
-                'freecells_num' => 4,
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 4,
                 'sequence_move' => "limited",
                 'seq_build_by' => "alt_color",
                 'empty_stacks_filled_by' => "kings",
@@ -129,9 +129,9 @@ my %variants_map =
     "freecell" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 8,
-                'freecells_num' => 4,
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 4,
                 'sequence_move' => "limited",
                 'seq_build_by' => "alt_color",
                 'empty_stacks_filled_by' => "any",
@@ -140,9 +140,9 @@ my %variants_map =
     "good_measure" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 10,
-                'freecells_num' => 0,
+                'num_decks' => 1,
+                'num_columns' => 10,
+                'num_freecells' => 0,
                 'sequence_move' => "limited",
                 'seq_build_by' => "rank",
                 'empty_stacks_filled_by' => "none",
@@ -151,9 +151,9 @@ my %variants_map =
     "kings_only_bakers_game" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 8,
-                'freecells_num' => 4,
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 4,
                 'sequence_move' => "limited",
                 'seq_build_by' => "suit",
                 'empty_stacks_filled_by' => "kings",
@@ -162,9 +162,9 @@ my %variants_map =
     "relaxed_freecell" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 8,
-                'freecells_num' => 4,
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 4,
                 'sequence_move' => "unlimited",
                 'seq_build_by' => "alt_color",
                 'empty_stacks_filled_by' => "any",
@@ -173,9 +173,9 @@ my %variants_map =
     "relaxed_seahaven_towers" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 10,
-                'freecells_num' => 4,
+                'num_decks' => 1,
+                'num_columns' => 10,
+                'num_freecells' => 4,
                 'sequence_move' => "unlimited",
                 'seq_build_by' => "suit",
                 'empty_stacks_filled_by' => "kings",
@@ -184,15 +184,16 @@ my %variants_map =
     "seahaven_towers" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
-                'decks_num' => 1,
-                'stacks_num' => 10,
-                'freecells_num' => 4,
+                'num_decks' => 1,
+                'num_columns' => 10,
+                'num_freecells' => 4,
                 'sequence_move' => "limited",
                 'seq_build_by' => "suit",
                 'empty_stacks_filled_by' => "kings",
             }
         ),
 );
+
 =head1 FUNCTIONS
 
 =head2 $self->calc_variants_map()

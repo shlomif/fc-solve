@@ -302,7 +302,7 @@ sub num_columns
 {
     my $self = shift;
 
-    return $self->_variant_params->stacks_num();
+    return $self->_variant_params->num_columns();
 }
 
 =head2 $board->get_column($index)

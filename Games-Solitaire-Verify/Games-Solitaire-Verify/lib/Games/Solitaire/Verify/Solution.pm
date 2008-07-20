@@ -169,7 +169,10 @@ sub _apply_move
 
     if (my $verdict = $self->_state()->verify_and_perform_move($self->_move()))
     {
-        die $verdict;
+        Games::Solitaire::Verify::Exception::VerifyMove->throw(
+            error => "Wrong Move",
+            problem => $verdict,
+        );
     }
 
     return;
@@ -216,10 +219,20 @@ sub verify
         }
     };
 
-    my $err = $@;
-    if ($err)
+    my $err;
+    if (! $@)
     {
-        return { text => $err, line_num => $self->_line_num(), };
+        # Do nothing - no exception was thrown.
+    }
+    elsif ($err =
+        Exception::Class->caught('Games::Solitaire::Verify::Exception::VerifyMove'))
+    {
+        return { error => $err, line_num => $self->_line_num(), };
+    }
+    else
+    {
+        $err = Exception::Class->caught();
+        ref $err ? $err->rethrow : die $err;
     }
 
     return;

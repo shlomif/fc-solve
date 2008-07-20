@@ -69,6 +69,11 @@ use Exception::Class (
     },
     'Games::Solitaire::Verify::Exception::Variant::Unknown' =>
     { isa => "Games::Solitaire::Verify::Exception::Variant", },
+    'Games::Solitaire::Verify::Exception::VerifyMove' =>
+    { isa => "Games::Solitaire::Verify::Exception", 
+        fields => ["problem"],
+    },
+    
       );
 
 =head1 SYNOPSIS
