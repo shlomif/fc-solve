@@ -28,6 +28,7 @@ use Games::Solitaire::Verify::VariantParams;
 use Games::Solitaire::Verify::VariantsMap;
 
 use List::Util qw(first);
+use POSIX qw();
 
 __PACKAGE__->mk_accessors(qw(
     _columns
@@ -447,13 +448,35 @@ sub _can_put_on_column
         );
 }
 
+sub _calc_freecell_max_seq_move
+{
+    my ($self, $args) = @_;
+    my $to_empty = (defined($args->{to_empty}) ? $args->{to_empty} : 0);
+
+    return (($self->num_empty_freecells()+1) << ($self->num_empty_columns()-$to_empty))
+}
+
+sub _calc_empty_stacks_filled_by_any_card_max_seq_move
+{
+    my ($self, $args) = @_;
+
+    return 
+         +($self->_variant_params->sequence_move() eq "unlimited")
+            ? POSIX::INT_MAX()
+            : $self->_calc_freecell_max_seq_move($args)
+            ;
+}
+
 sub _calc_max_sequence_move
 {
     my ($self, $args) = @_;
 
-    my $to_empty = (defined($args->{to_empty}) ? $args->{to_empty} : 0);
-
-    return (($self->num_empty_freecells()+1) << ($self->num_empty_columns()-$to_empty));
+    return
+        (
+               ($self->_variant_params->empty_stacks_filled_by() eq "any")
+             ? $self->_calc_empty_stacks_filled_by_any_card_max_seq_move($args)
+             : ($self->num_empty_freecells() + 1)
+        );
 }
 
 sub _is_sequence_in_column
