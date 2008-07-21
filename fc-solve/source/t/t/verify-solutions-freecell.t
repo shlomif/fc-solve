@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -98,3 +98,12 @@ verify_solution_test(
     "Seahaven Towers #1977"
 );
 
+# TEST
+verify_solution_test({deal => 200, variant => "eight_off", },
+    "Eight Off #200 with -l gi"
+);
+
+# TEST
+verify_solution_test({deal => 200, variant => "eight_off", theme => [],},
+    "Eight Off #200 with default heuristic"
+);
