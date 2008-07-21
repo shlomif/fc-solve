@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = 1.4
+AUTOMAKE_OPTIONS = 1.10
 
 bin_PROGRAMS = make-gnome-freecell-board make-aisleriot-freecell-board \
           make-microsoft-freecell-board pi-make-microsoft-freecell-board

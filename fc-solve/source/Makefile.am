@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = 1.4
+AUTOMAKE_OPTIONS = 1.10
 
 SUBDIRS = board_gen man Presets
 
@@ -59,6 +59,17 @@ EXTRA_DIST += prefix.h.win32
 EXTRA_DIST += scripts/test.pl scripts/FreeCell/Object.pm 
 EXTRA_DIST += scripts/FreeCell/Card.pm scripts/FreeCell/State.pm
 
+check: prepare_check purecheck
 
+prepare_check:
+	@rm -fr installation_for_tests
+	@mkdir installation_for_tests
+	@make distdir
+	@myprefix=`pwd`/installation_for_tests ; \
+		cd freecell-solver-`cat ver.txt` &&  \
+		./configure --prefix="$$myprefix" --enable-states-type=indirect --enable-max-num-freecells=8 --enable-max-num-stacks=12 --enable-max-num-initial-cards-per-stack=104 --enable-max-num-decks=2 && \
+		make install 
 
-
+purecheck:
+	@export FCS_PATH=`pwd`/installation_for_tests/bin ; \
+	make -C t test
