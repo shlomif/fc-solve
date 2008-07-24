@@ -1,5 +1,8 @@
 --- 
 digests: 
+  freecell1941: 
+    hexdigest: 0c88efd46aadf3055ee6131477b71a0a2c7f6ca25eff4b58191087baa3cff136
+    len: 22245
   freecell24: 
     hexdigest: ef0fd5fb21649c349a8283553c83502ba831a9cf765f4372bff9243bf399fc15
     len: 32193

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -100,13 +100,12 @@ sub verify_solution_test
 # TEST
 verify_solution_test({id => "freecell24", deal => 24}, "Verifying the solution of deal #24");
 
-DumpFile($digests_storage_fn, $digests_storage);
+
+
+# TEST
+verify_solution_test({id => "freecell1941", deal => 1941}, "Verifying 1941 (The Hardest Deal)");
 
 =head1
-
-# test
-verify_solution_test({deal => 1941}, "Verifying 1941 (The Hardest Deal)");
-
 # test
 verify_solution_test({deal => 24, theme => [],}, 
     "Solving Deal #24 with the default heuristic"
@@ -155,4 +154,7 @@ verify_solution_test({deal => 200, variant => "eight_off", theme => [],},
 );
 
 =cut
+
+# Store the changes at the end so they won't get lost.
+DumpFile($digests_storage_fn, $digests_storage);
 
