@@ -57,7 +57,7 @@ sub hexdigest
 {
     my $self = shift;
 
-    return $self->_hasher->hexdigest();
+    return $self->_hasher->clone()->hexdigest();
 }
 
 sub add_file
