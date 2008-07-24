@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 4;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -105,17 +105,17 @@ verify_solution_test({id => "freecell24", deal => 24}, "Verifying the solution o
 # TEST
 verify_solution_test({id => "freecell1941", deal => 1941}, "Verifying 1941 (The Hardest Deal)");
 
-=head1
-# test
-verify_solution_test({deal => 24, theme => [],}, 
+# TEST
+verify_solution_test({id => "freecell24empty", deal => 24, theme => [],}, 
     "Solving Deal #24 with the default heuristic"
 );
 
-# test
-verify_solution_test({deal => 617, theme => ["-l", "john-galt-line"],}, 
+# TEST
+verify_solution_test({id => "freecell617jgl", deal => 617, theme => ["-l", "john-galt-line"],}, 
     "Solving Deal #617 with the john-galt-line"
 );
 
+=head1
 # test
 verify_solution_test({deal => 24, variant => "bakers_game", theme => [],}, 
     "Baker's Game Deal #24"

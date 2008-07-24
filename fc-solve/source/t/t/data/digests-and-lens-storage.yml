@@ -6,3 +6,9 @@ digests:
   freecell24: 
     hexdigest: ef0fd5fb21649c349a8283553c83502ba831a9cf765f4372bff9243bf399fc15
     len: 32193
+  freecell24empty: 
+    hexdigest: 17abf343aac1dec42b924b968588f2fa4e07632aab6932f5d084a6c754d61956
+    len: 32280
+  freecell617jgl: 
+    hexdigest: 4f595cd61a8365572e97abef8362647486d4334266e3f4a70b1b9d2dd1946448
+    len: 27193
