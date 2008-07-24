@@ -60,5 +60,18 @@ sub hexdigest
     return $self->_hasher->hexdigest();
 }
 
+sub add_file
+{
+    my $self = shift;
+    my $fh = shift;
+
+    my $buffer;
+    {
+        local $/;
+        $buffer = <$fh>;
+    }
+    return $self->add($buffer);
+}
+
 1;
 
