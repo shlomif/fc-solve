@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 use Data::Dumper;
 
@@ -274,3 +274,26 @@ use File::Spec;
     close($input_fh);
 }
 
+{
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+        qw(t data sample-solutions fcs-eight-off-200-l-gi.txt)
+    );
+
+    open (my $input_fh, "<", $input_filename)
+        or die "Cannot open file $!";
+
+    # Initialise a column
+    my $solution = Games::Solitaire::Verify::Solution->new(
+        {
+            input_fh => $input_fh,
+            variant => "eight_off",
+        },
+    );
+
+    my $verdict = $solution->verify();
+    # TEST
+    ok (!$verdict, "Eight Off -l gi Solution is OK.")
+        or diag("Verdict == " . Dumper($verdict));
+
+    close($input_fh);
+}
