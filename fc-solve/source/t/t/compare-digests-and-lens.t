@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -115,18 +115,18 @@ verify_solution_test({id => "freecell617jgl", deal => 617, theme => ["-l", "john
     "Solving Deal #617 with the john-galt-line"
 );
 
-=head1
-# test
-verify_solution_test({deal => 24, variant => "bakers_game", theme => [],}, 
+# TEST
+verify_solution_test({id => "bakers_game24default", deal => 24, variant => "bakers_game", theme => [],}, 
     "Baker's Game Deal #24"
 );
 
-# test
-verify_solution_test({deal => 1099, variant => "forecell", theme => [],}, 
+# TEST
+verify_solution_test({id => "forecell1099default", deal => 1099, variant => "forecell", theme => [],}, 
     "Forecell Deal #1099"
 );
 
 
+=head1
 # test
 verify_solution_test({deal => 11982, variant => "relaxed_freecell", },
     "Relaxed Freecell Deal #11982"

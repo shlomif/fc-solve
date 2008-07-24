@@ -1,5 +1,11 @@
 --- 
 digests: 
+  bakers_game24default: 
+    hexdigest: 9dbcd35421c82ba9673d4ea959b6580795c61032fcc67a16e3f2f609687f0162
+    len: 23938
+  forecell1099default: 
+    hexdigest: 3de0af9248bbc4abafbccb7a7bd1bf796e633e04703cff931c6c4b9c8cdbf452
+    len: 29022
   freecell1941: 
     hexdigest: 0c88efd46aadf3055ee6131477b71a0a2c7f6ca25eff4b58191087baa3cff136
     len: 22245
