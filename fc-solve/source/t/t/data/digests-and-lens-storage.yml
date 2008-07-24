@@ -18,3 +18,9 @@ digests:
   freecell617jgl: 
     hexdigest: 4f595cd61a8365572e97abef8362647486d4334266e3f4a70b1b9d2dd1946448
     len: 27193
+  relaxed_freecell11982: 
+    hexdigest: 273ab6c29e595c9e0ba89f314b49cab56c6d39f970ee7fd3a369c291b48c2943
+    len: 33426
+  seahaven_towers1977fools-gold: 
+    hexdigest: 98a46b55d0f80b98087f6ab6184bd2f270065d953dd5ee388afc74fa94193313
+    len: 18581

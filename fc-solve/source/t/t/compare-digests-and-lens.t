@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -125,17 +125,16 @@ verify_solution_test({id => "forecell1099default", deal => 1099, variant => "for
     "Forecell Deal #1099"
 );
 
-
-=head1
-# test
-verify_solution_test({deal => 11982, variant => "relaxed_freecell", },
+# TEST
+verify_solution_test({id => "relaxed_freecell11982",deal => 11982, variant => "relaxed_freecell", },
     "Relaxed Freecell Deal #11982"
 );
 
 
-# test
+# TEST
 verify_solution_test(
     {
+        id => "seahaven_towers1977fools-gold",
         deal => 1977,
         variant => "seahaven_towers",
         theme => ["-l", "fools-gold",],
@@ -143,6 +142,7 @@ verify_solution_test(
     "Seahaven Towers #1977"
 );
 
+=head1
 # test
 verify_solution_test({deal => 200, variant => "eight_off", },
     "Eight Off #200 with -l gi"
