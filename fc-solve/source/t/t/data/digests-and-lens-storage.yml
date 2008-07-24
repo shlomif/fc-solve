@@ -3,6 +3,12 @@ digests:
   bakers_game24default: 
     hexdigest: 9dbcd35421c82ba9673d4ea959b6580795c61032fcc67a16e3f2f609687f0162
     len: 23938
+  eight_off200: 
+    hexdigest: babf3516126980437e5b2798ed6b0f70dd5dde91247c20b1e12e449ee0bb1bbc
+    len: 33298
+  eight_off200default: 
+    hexdigest: e023e565c9e2e53c61eaa880a54f3559efcdc122a0af135794d203dafb8a3753
+    len: 33298
   forecell1099default: 
     hexdigest: 3de0af9248bbc4abafbccb7a7bd1bf796e633e04703cff931c6c4b9c8cdbf452
     len: 29022

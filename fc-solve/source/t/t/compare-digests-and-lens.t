@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -142,18 +142,20 @@ verify_solution_test(
     "Seahaven Towers #1977"
 );
 
-=head1
-# test
-verify_solution_test({deal => 200, variant => "eight_off", },
+# TEST
+verify_solution_test({
+        id => "eight_off200", deal => 200, variant => "eight_off",
+    },
     "Eight Off #200 with -l gi"
 );
 
-# test
-verify_solution_test({deal => 200, variant => "eight_off", theme => [],},
+# TEST
+verify_solution_test(
+    {id =>"eight_off200default", deal => 200, variant => "eight_off",
+        theme => [],
+    },
     "Eight Off #200 with default heuristic"
 );
-
-=cut
 
 # Store the changes at the end so they won't get lost.
 DumpFile($digests_storage_fn, $digests_storage);
