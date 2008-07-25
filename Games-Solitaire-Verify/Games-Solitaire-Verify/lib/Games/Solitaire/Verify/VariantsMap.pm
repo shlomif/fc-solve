@@ -9,7 +9,7 @@ use base 'Games::Solitaire::Verify::Base';
 
 =head1 NAME
 
-Games::Solitaire::Verify::VariantsMap - a mapping for the variants to
+Games::Solitaire::Verify::VariantsMap - a mapping from the variants to
 their parameters.
 
 =head1 VERSION
@@ -232,6 +232,46 @@ sub get_variant_by_id
         return $map->{$id};
     }
 }
+
+=head1 PARAMETERS
+
+=head2 Variants IDs
+
+This is a list of the available variant IDS.
+
+=over 4
+
+=item * bakers_dozen
+
+=item * bakers_game
+
+=item * beleaguered_castle
+
+=item * cruel
+
+=item * der_katzenschwanz
+
+=item * die_schlange
+
+=item * eight_off
+
+=item * fan
+
+=item * forecell
+
+=item * freecell
+
+=item * good_measure
+
+=item * kings_only_bakers_game
+
+=item * relaxed_freecell
+
+=item * relaxed_seahaven_towers
+
+=item * seahaven_towers
+
+=back
 
 =head1 SEE ALSO
 
