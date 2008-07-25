@@ -3,10 +3,10 @@
 <latemp_subject "Verifying Solutions of Solitaire Games Automatically" />
 
 <p>
-<b>Games-Solitaire-Verify</b> is a Perl CPAN (Comprehensive Perl Archive
-Network) module for verifying solutions of Solitaire games. It was designed
-to serve as an aid in the test suite of Freecell Solver, but may prove useful
-in other contexts.
+<b>Games-Solitaire-Verify</b> is a <a href="http://www.cpan.org/">CPAN 
+(Comprehensive Perl Archive Network)</a> module for verifying solutions of
+Solitaire games. It was designed to serve as an aid in the test suite of
+Freecell Solver, but may prove useful in other contexts.
 </p>
 
 <h2 id="download">Download</h2>
@@ -35,18 +35,18 @@ Repository trunk</a>.
 <ul>
 
 <li>
-Modular design for implementing game variants, but only Freecell is implemented
-so far.
+Modular design for implementing game variants - supports most of the 
+variants supported by Freecell Solver.
 </li>
 
 <li>
-Input and output are compatible with that of Freecell Solvers
+Input and output are compatible with that of Freecell Solver's
 <tt>-p -t -sam</tt> output (including several quirks).
 </li>
 
 <li>
-Can handle individual cards, columns, entire states (= board layouts), moves
-and entire solutions.
+Can handle the verification of individual cards, columns, entire states 
+(= board layouts), moves and entire solutions.
 </li>
 
 </ul>
