@@ -275,6 +275,14 @@ sub preset_to_perl_module
 EOF
 }
 
+sub preset_to_pod
+{
+    my $preset_name = shift;
+    my $pc = shift;
+
+    return "=item * $preset_name\n\n";
+}
+
 my $mode = "c";
 
 my $mode_arg = shift(@ARGV);
@@ -287,12 +295,17 @@ elsif ($mode_arg eq "--perlmod")
 {
     $mode = "perl-mod";
 }
+elsif ($mode_arg eq "--pod")
+{
+    $mode = "pod";
+}
 
 my %mode_callbacks =
 (
     "c" => \&preset_to_string,
     "docbook" => \&preset_to_docbook_string,
     "perl-mod" => \&preset_to_perl_module,
+    "pod" => \&preset_to_pod,
 );
 
 foreach my $preset_name (sort {$a cmp $b } keys(%presets))
@@ -323,4 +336,18 @@ elsif ($mode eq "perl-mod")
     print "(\n";
     print join("", @strings);
     print ");\n";
+}
+elsif ($mode eq "pod")
+{
+    print "=head1 PARAMETERS\n\n";
+
+    print "=head2 Variants IDs\n\n";
+
+    print "This is a list of the available variant IDS.\n\n";
+
+    print "=over 4\n\n";
+
+    print join("",@strings);
+
+    print "=back\n\n";
 }
