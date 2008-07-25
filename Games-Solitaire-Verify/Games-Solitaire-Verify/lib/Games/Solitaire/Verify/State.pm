@@ -161,7 +161,7 @@ sub _from_string
     return;
 }
 
-sub _set_variant
+sub _fill_non_custom_variant
 {
     my $self = shift;
     my $variant = shift;
@@ -183,12 +183,32 @@ sub _set_variant
     return;
 }
 
+sub _set_variant
+{
+    my $self = shift;
+    my $args = shift;
+
+    my $variant = $args->{variant};
+
+    if ($variant eq "custom")
+    {
+        $self->_variant($variant);
+        $self->_variant_params($args->{variant_params});
+    }
+    else
+    {
+        $self->_fill_non_custom_variant($variant);
+    }
+
+    return;
+}
+
 sub _init
 {
     my ($self, $args) = @_;
 
     # Set the variant
-    $self->_set_variant($args->{variant});
+    $self->_set_variant($args);
 
     $self->_columns([]);
 

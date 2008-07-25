@@ -28,6 +28,7 @@ __PACKAGE__->mk_accessors(qw(
     _input_fh
     _line_num
     _variant
+    _variant_params
     _state
     _move
     _reached_end
@@ -65,6 +66,16 @@ __PACKAGE__->mk_accessors(qw(
 
 =head1 FUNCTIONS
 
+=head2 Games::Solitaire::Verify::Solution->new({variant => $variant, input_fh => $input_fh})
+
+Constructs a new solution verifier with the variant $variant (see
+L<Games::Solitaire::Verify::VariantsMap> ), and the input file handle
+$input_fh.
+
+If $variant is C<"custom">, then the constructor also requires a 
+C<'variant_params'> key which should be a populated
+L<Games::Solitaire::Verify::VariantParams> object.
+
 =cut
 
 sub _init
@@ -72,6 +83,11 @@ sub _init
     my ($self, $args) = @_;
 
     $self->_variant($args->{variant});
+
+    if ($self->_variant() eq "custom")
+    {
+        $self->_variant_params($args->{variant_params});
+    }
     $self->_input_fh($args->{input_fh});
     $self->_state(undef);
     $self->_line_num(0);
@@ -80,6 +96,18 @@ sub _init
     return 0;
 }
 
+sub _calc_variant_args
+{
+    my $self = shift;
+
+    my @ret;
+    if ($self->_variant() eq "custom")
+    {
+        push @ret, ('variant_params' => $self->_variant_params());
+    }
+    push @ret, (variant => $self->_variant());
+    return \@ret;
+}
 
 sub _read_state
 {
@@ -102,7 +130,7 @@ sub _read_state
     my $new_state = Games::Solitaire::Verify::State->new(
             {
                 string => $str,
-                variant => $self->_variant(),
+                @{$self->_calc_variant_args()},
             }
         );
 
