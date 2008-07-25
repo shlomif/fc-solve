@@ -1,5 +1,18 @@
 Revision history for Games-Solitaire-VerifySolution
 
+0.03    Fri Jul 25 13:39:35 IDT 2008
+        - Added support for more variants of Solitaire, using the
+        Freecell Solver-style parameterization:
+            - num_freecells
+            - num_columns
+            - num_decks
+            - sequence_move
+            - seq_build_by
+            - empty_stacks_filled_by
+        - Added more support modules:
+            - lib/Games/Solitaire/Verify/VariantParams.pm
+            - lib/Games/Solitaire/Verify/VariantsMap.pm
+        - 
 0.02    Thu Jul 10 15:05:10 IDT 2008
         - Added another test for a wrong solution.
         - Extracted two classes from Games::Solitaire::Verify::State :
