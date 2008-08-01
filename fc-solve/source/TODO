@@ -1,13 +1,13 @@
 --- Pressing ---
 
-* Update INSTALL for the new CMake configuration.
-
-* Add a --version flag to display the version.
-
 * Update the NEWS file.
 
 * Make sure one does not need "make install" to run "make test"
 or "ctest -v".
+
+* Add support for specifying the "compact states" and "debug states"
+at compile time.
+    - Document in the "INSTALL" file.
 
 --- Non-pressing ---
 

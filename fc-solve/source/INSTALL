@@ -4,25 +4,40 @@ INSTALL file for Freecell Solver
 Quick and Dirty Compilation
 ---------------------------
 
-Usually typing "./configure" followed by "make" and "make install" will 
-build and install "fc-solve" which is the Freecell Solver executable for you.
+Freecell Solver has converted to use CMake ( http://www.cmake.org/ ) 
+starting from version 2.12.0. You'll need to install CMake version 2.6.0
+from your distribution's repository or from its source distribution.
 
-It will also build and install the board generation program, more 
-information about which can be found in the "board_gen" sub-directory of
+Next, run 
+    
+    cmake-gui .         # For the GUI configuration applet
+
+Or:
+    ccmake .            # For the Curses-based configuration applet
+
+With a fallback to:
+
+    cmake .             # Non-interactive application.
+
+This will build and install the "freecell-solver" shared library,
+and "fc-solve" which is the Freecell Solver executable for you.
+
+It will also build and install the board generation program. More 
+information about them can be found in the "board_gen" sub-directory of
 this distribution.
 
 Changing the Maximal number of Freecells or Stacks or Cards per Stack
 ---------------------------------------------------------------------
 
-The following parameters to the "configure" script which accept an argument
+The following parameters to the cmake" script which accept an argument
 control the hard-coded parameters of the Freecell Solver executables:
 
-"--enable-max-num-freecells=$NUM" - The maximal number of freecells
+"-DMAX_NUM_FREECELLS:STRING=$NUM" - The maximal number of freecells
 
-"--enable-max-num-stacks=$NUM"  - The maximal number of stacks
+"-DMAX_NUM_STACKS:STRING=$NUM" - The maximal number of stacks (columns)
 
-"--enable-max-num-initial-cards-per-stack=$NUM" - The maximal number of initial
-cards per stack.
+"-DMAX_NUM_INITIAL_CARDS_IN_A_STACK:STRING=$NUM" - The maximal number of 
+initial cards per stack.
 
 Notice that it's very important to set the maximal number of initial cards
 per stack, or else it's possible that a stack will eventually overflow.
@@ -32,13 +47,13 @@ per stack, or else it's possible that a stack will eventually overflow.
 
 In Compact States, the contents of the card stacks are stored inside the 
 states, rather than in a central collection (where the states contain only
-pointers). Despite its name, it actually consume more memory than Indirect
-Stack States which is the default.
+pointers). Despite their name, they actually consume more memory than Indirect
+Stack States which are the default.
 
 Compact states used to be faster than Indirect Stack States, but now it
-seems indirect stack states is at least slightly faster even for games
+seems indirect stack states are at least slightly faster even for games
 whose stacks are not very long. If you still would wish to enable it,
-run ./configure with the "--enable-states-type=compact" flag.
+TODO : FILL IN.
 
 Installing under Win32
 ----------------------
@@ -64,7 +79,7 @@ Freecell Solver:
 
 4. Build.
 
-If you are using gcc or some other command-line compiler, you should 
-write the makefile based on the files "Makefile" or "Makefile.lite", 
+If you are using gcc or some other command-line compiler, you should
+write the makefile based on the files "Makefile" or "Makefile.lite",
 and then compile according to it.
 
