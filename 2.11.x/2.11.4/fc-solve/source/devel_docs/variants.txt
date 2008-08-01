@@ -1,0 +1,112 @@
+Baker's Game:
+
+- One Deck
+- Sequences are built by suit
+- Empty stacks can be filled by any card
+- Limited Sequence move
+
+Eight Off/King Only Baker's Game/Seahaven towers
+
+- One Deck
+- Sequences are built by suit
+- Empty stacks can be filled by Kings only
+- Limited Sequence move
+
+Freecell:
+
+- One Deck
+- Sequences are built by alternate colours
+- Empty stacks can be filled by any card
+- Limited sequence move
+
+Forecell:
+
+- One Deck
+- Sequences are built by suit
+- Empty stacks can be filled by Kings only
+- Limited Sequence move
+
+Relaxed Freecell:
+
+- One Deck
+- Sequences are built by alternate colour
+- Empty stacks can be filled by any card
+- Unlimited Sequence move
+
+Relaxed Seahaven towers
+
+- One Deck
+- Sequences are built by suit
+- Empty stacks can be filled by Kings only
+- Unlimited Sequence move
+
+
+Der Katzenschwantz:
+
+- Two Decks
+- Sequences are built by alternate colour
+- Empty stacks cannot be filled
+- Limited Sequence move
+
+Die Schalange:
+
+- Two Decks
+- Sequences are built by alternate colour
+- Empty Stacks cannot be filled
+- Limited Sequence move
+
+Baker's Dozen/Good Measure:
+
+- One Deck
+- Sequences are built by rank regardless of suit.
+- Empty Stacks cannot be filled
+- Limited Sequence move
+
+Cruel:
+
+- One Deck
+- Sequences are built by suit.
+- Empty Stacks cannot be filled
+- Limited Sequence move
+- There is a re-deal feature.
+
+Spanish Patience:
+
+- One Deck
+- Sequences are built by rank regardless of suit.
+- Empty Stacks cannot be filled
+- Limited Sequence move
+- The _Foundations_ build by alternate colours.
+
+
+Penguin:
+- Decks wrap around, so I'm not going to implement it for the while.
+
+Stalactites:
+- Sequences cannot be built
+- The Decks wrap around
+
+
+
+--------------------------
+              Decks No. | Seqs Build By: | Fill Emp Stacks | Sequence Move:
+                       
+                       
+Baker's 
+Game               1           Suit                 Any Card
+ 
+Eight Off         1
+
+Freecell                   1
+
+Forecell                   1
+
+Relaxed 
+Freecell           1
+
+Relaxed 
+Seahaven           1
+
+DK                         2
+
+DS                         2
