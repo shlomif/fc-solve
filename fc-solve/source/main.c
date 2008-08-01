@@ -148,6 +148,8 @@ help_screen_t help_screens[] = {
 "     display the default help screen\n"
 "--help-summary\n"
 "     display the summary help screen\n"
+"--version\n"
+"     display the version number of the components\n"
 "-i     --iter-output\n"
 "     display the iteration number and depth in every state that is checked\n"
 "-s     --state-output\n"
@@ -431,7 +433,16 @@ static int cmd_line_callback(
 
     dc = (freecell_solver_display_information_context_t * )context;
 
-    if ((!strcmp(argv[arg], "-h")) || (!strcmp(argv[arg], "--help")))
+    if (!strcmp(argv[arg], "--version"))
+    {
+        printf(
+            "fc-solve\nlibfreecell-solver version %s\n",
+            freecell_solver_user_get_lib_version(instance)
+        );
+        *ret = EXIT_AND_RETURN_0;
+        return FCS_CMD_LINE_STOP;
+    }
+    else if ((!strcmp(argv[arg], "-h")) || (!strcmp(argv[arg], "--help")))
     {
         char * help_key;
         
@@ -591,6 +602,7 @@ static char * known_parameters[] = {
     "-sam", "--display-states-and-moves",
     "-pi", "--display-parent-iter",
     "--reset",
+    "--version",
     NULL
     };
 

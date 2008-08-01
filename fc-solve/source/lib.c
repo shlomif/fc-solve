@@ -1241,3 +1241,7 @@ int freecell_solver_user_reset(void * user_instance)
     return 0;
 }
 
+const char * freecell_solver_user_get_lib_version(void * user_instance)
+{
+    return VERSION;
+}

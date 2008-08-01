@@ -268,6 +268,10 @@ extern int freecell_solver_user_reset(
     );
 
 
+const char * freecell_solver_user_get_lib_version(
+    void * user_instance
+    );
+
 #ifdef __cplusplus
 }
 #endif
