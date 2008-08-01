@@ -1,9 +1,13 @@
 --- Pressing ---
 
-* Convert some of the documentation to Perl-POD or DocBook.
+* Update INSTALL for the new CMake configuration.
 
-* After everything: reorganize the --help behaviour according to the Freshmeat
-editorial
+* Add a --version flag to display the version.
+
+* Update the NEWS file.
+
+* Make sure one does not need "make install" to run "make test"
+or "ctest -v".
 
 --- Non-pressing ---
 
@@ -45,4 +49,8 @@ number of states that are stored anywhere, etc.
 * Code a generic tests grouping.
 
 * Interactive mode? Continue a scan that reached its limit.
+
+* Convert some of the documentation to Perl-POD or DocBook.
+
+* Find a way to update the ChangeLog from the svn.
 

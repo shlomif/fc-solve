@@ -1,4 +1,4 @@
-dir=@datadir@/freecell-solver/presets/
+dir=@PKGDATADIR@/presets/
 name=abra-kadabra
 name=ak
 command=--read-from-file 4,abra-kadabra.sh
@@ -26,4 +26,3 @@ command=--read-from-file 4,rin-tin-tin.sh
 name=yellow-brick-road
 name=ybr
 command=--read-from-file 4,yellow-brick-road.sh
-
