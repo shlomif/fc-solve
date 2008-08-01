@@ -48,12 +48,7 @@ endif
 
 RECENT_DEVEL_VERSION = 2.11.6
 
-DEVEL_ARC = $(D)/freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz
-
-$(DEVEL_ARC) : 
-	./put-recent-devel-version.sh $(DEVEL_ARC)
-
-$(D)/download.html :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES) $(DEVEL_ARC)
+$(D)/download.html :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
 	WML_LATEMP_PATH="$$(perl -MFile::Spec -e 'print File::Spec->rel2abs(shift)' '$@')" ; \
 	(cd src && wml -o "$${WML_LATEMP_PATH}" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<))
 	
