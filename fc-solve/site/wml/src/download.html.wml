@@ -48,7 +48,7 @@ A link to an "apt"-able Debian Package.
 
 <tr>
 <td>
-<link_to_berlios_file "freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz" />
+<link_to_berlios_file "freecell-solver-$(RECENT_DEVEL_VERSION)-Source.tar.gz" />
 </td>
 <td>
 The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_VERSION)"; my @vers = split(/\./, $a); $vers[1]++; $vers[2] = '0'; print join(".", @vers); }:>. 

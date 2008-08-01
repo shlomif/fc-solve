@@ -46,6 +46,8 @@ else
 RECENT_DEVEL_VERSION = $(shell cat Source-Devel/fc-solve/source/ver.txt)
 endif
 
+RECENT_DEVEL_VERSION = 2.11.6
+
 DEVEL_ARC = $(D)/freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz
 
 $(DEVEL_ARC) : 
