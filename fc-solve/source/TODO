@@ -9,6 +9,8 @@ or "ctest -v".
 at compile time.
     - Document in the "INSTALL" file.
 
+* Build the .so with the version numbers.
+
 --- Non-pressing ---
 
 * Integrate the patsolve's prioritization and mixed BFS/DFS scan.
