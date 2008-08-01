@@ -83,3 +83,15 @@ If you are using gcc or some other command-line compiler, you should
 write the makefile based on the files "Makefile" or "Makefile.lite",
 and then compile according to it.
 
+Testing:
+--------
+
+* To test Freecell Solver, you need to:
+
+1. Configure it.
+
+2. Run "make install".
+
+3. Type "ctest -V" (or "make test" just for the verdict).
+
+Please report any errors to me ( http://www.shlomifish.org/me/contact-me/ ).
