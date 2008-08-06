@@ -651,7 +651,10 @@ sub _verify_and_perform_move_main
                     }
                     ))
             {
-                return "Cannot move so many cards";
+                return 
+                    Games::Solitaire::Verify::Exception::Move::NotEnoughEmpties->new(
+                        move => $move,
+                    );
             }
 
             # Now let's actually move them.

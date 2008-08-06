@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 58;
+use Test::More tests => 62;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 use Games::Solitaire::Verify::Exception;
@@ -487,10 +487,38 @@ EOF
     # TEST
     ok ($move1_bad, "Bad Stack->Stack move was initialised.");
 
+    my $err = $board->verify_and_perform_move($move1_bad);
+
     # TEST
-    ok ($board->verify_and_perform_move($move1_bad),
-        "Cannot perform a bad stack->stack move with not enough columns."
+    isa_ok ($err,
+        "Games::Solitaire::Verify::Exception::Move::NotEnoughEmpties",
+        "Cannot perform a bad stack->stack move with not enough columns.",
     );
+
+    # TEST
+    is ($err->move()->source_type(),
+        $move1_bad->source_type(),
+        "source_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest_type(),
+        $move1_bad->dest_type(),
+        "dest_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->source(),
+        $move1_bad->source(),
+        "source() is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest(),
+        $move1_bad->dest(),
+        "dest() is identical in \$err->move() and original move",
+    );
+
 }
 
 {
