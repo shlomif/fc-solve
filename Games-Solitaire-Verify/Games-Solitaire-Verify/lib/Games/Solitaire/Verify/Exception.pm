@@ -85,7 +85,13 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },   
     'Games::Solitaire::Verify::Exception::Move::Dest::Freecell' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },
-    'Games::Solitaire::Verify::Exception::Move::Src::Stack::NoCards' =>
+    'Games::Solitaire::Verify::Exception::Move::Dest::Col' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },
+    'Games::Solitaire::Verify::Exception::Move::Dest::Col::NonMatchSuits' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col", 
+      fields => [qw(seq_build_by)],
+      },
+    'Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Src", },
       );
 

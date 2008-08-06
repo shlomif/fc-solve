@@ -36,6 +36,7 @@ __PACKAGE__->mk_accessors(qw(
     _foundations
     _variant
     _variant_params
+    _temp_move
     ));
 
 =head1 SYNOPSIS
@@ -422,20 +423,25 @@ sub _is_matching_color
 {
     my ($self, $parent, $child) = @_;
 
-    if ($self->_variant_params()->seq_build_by() eq "alt_color")
+    my $sbb = $self->_variant_params()->seq_build_by();
+
+    my $verdict = 
+    (
+          ($sbb eq "alt_color")
+        ? ($parent->color() eq $child->color())
+        : ($sbb eq "suit")
+        ? ($parent->suit() ne $child->suit())
+        : 0
+    );
+
+    if ($verdict)
     {
-        if ($parent->color() eq $child->color())
-        {
-            return "Cards are of the same color";
-        }
+        return Games::Solitaire::Verify::Exception::Move::Dest::Col::NonMatchSuits->new(
+            seq_build_by => $sbb,
+            move => $self->_temp_move(),
+        );
     }
-    elsif ($self->_variant_params()->seq_build_by() eq "suit")
-    {
-        if ($parent->suit() ne $child->suit())
-        {
-            return "Suits don't match";
-        }
-    }
+    
     return 0;
 }
 
@@ -537,6 +543,21 @@ sub verify_and_perform_move
 {
     my ($self, $move) = @_;
 
+    $self->_temp_move($move);
+
+    my $ret = $self->_verify_and_perform_move_main();
+
+    $self->_temp_move(undef());
+
+    return $ret;
+}
+
+sub _verify_and_perform_move_main
+{
+    my $self = shift;
+
+    my $move = $self->_temp_move();
+
     if ($move->source_type() eq "stack")
     {
         if ($move->dest_type() eq "foundation")
@@ -575,7 +596,7 @@ sub verify_and_perform_move
             if (! $self->get_column($col_idx)->len())
             {
                 return
-                    Games::Solitaire::Verify::Exception::Move::Src::Stack::NoCards->new(
+                    Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards->new(
                         move => $move,
                     );
             }
@@ -694,7 +715,7 @@ sub verify_and_perform_move
 
             if (!defined($card))
             {
-                return "Freecell No. $fc_idx is empty"
+                return "Freecell No. $fc_idx is empty";
             }
 
             my $push_card = sub {

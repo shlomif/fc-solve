@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 53;
+use Test::More tests => 58;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 use Games::Solitaire::Verify::Exception;
@@ -155,7 +155,7 @@ EOF
 
     # TEST
     isa_ok($err,
-        "Games::Solitaire::Verify::Exception::Move::Src::Stack::NoCards",
+        "Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards",
         "\$move1_bad cannot be performed due to no cards in stack",
         );
 
@@ -359,7 +359,7 @@ EOF
         }
     );
 
-    my $move1 = Games::Solitaire::Verify::Move->new(
+    my $move1_bad = Games::Solitaire::Verify::Move->new(
         {
             fcs_string => "Move a card from freecell 0 to stack 1",
             game => "freecell",
@@ -367,11 +367,43 @@ EOF
     );
 
     # TEST
-    ok ($move1, "Freecell->Stack move was initialised.");
+    ok ($move1_bad, "Freecell->Stack move was initialised.");
+
+    my $err = $board->verify_and_perform_move($move1_bad);
 
     # TEST
-    ok ($board->verify_and_perform_move($move1),
-        "Cannot Freecell ( JD ) ->Stack ( QS) move"
+    isa_ok ($err,
+        "Games::Solitaire::Verify::Exception::Move::Dest::Col::NonMatchSuits",
+        "Due to non-matching suits",
+    );
+
+    # TEST
+    is ($err->move()->source_type(),
+        $move1_bad->source_type(),
+        "source_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest_type(),
+        $move1_bad->dest_type(),
+        "dest_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->source(),
+        $move1_bad->source(),
+        "source() is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest(),
+        $move1_bad->dest(),
+        "dest() is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->seq_build_by(), "alt_color", 
+        "Error contains sequence built by alternate color"
     );
 }
 
