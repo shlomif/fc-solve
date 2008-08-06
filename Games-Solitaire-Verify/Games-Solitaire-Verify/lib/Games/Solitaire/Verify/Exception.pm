@@ -77,12 +77,16 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception", 
         fields => ["move"],
     },
+    'Games::Solitaire::Verify::Exception::Move::Src' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move", },
     'Games::Solitaire::Verify::Exception::Move::Dest' =>
     { isa => "Games::Solitaire::Verify::Exception::Move", },
     'Games::Solitaire::Verify::Exception::Move::Dest::Foundation' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },   
     'Games::Solitaire::Verify::Exception::Move::Dest::Freecell' =>
-    { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },   
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },
+    'Games::Solitaire::Verify::Exception::Move::Src::Stack::NoCards' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Src", },
       );
 
 =head1 SYNOPSIS

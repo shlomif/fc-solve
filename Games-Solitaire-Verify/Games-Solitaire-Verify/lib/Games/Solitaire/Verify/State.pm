@@ -574,7 +574,10 @@ sub verify_and_perform_move
             
             if (! $self->get_column($col_idx)->len())
             {
-                return "No card available in Column No. $col_idx";
+                return
+                    Games::Solitaire::Verify::Exception::Move::Src::Stack::NoCards->new(
+                        move => $move,
+                    );
             }
 
             if (defined($self->get_freecell($fc_idx)))
