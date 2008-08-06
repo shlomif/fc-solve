@@ -95,6 +95,10 @@ use Exception::Class (
       },
     'Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Src", },
+    'Games::Solitaire::Verify::Exception::Move::Src::Col::NonSequence' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Src", 
+      fields => [qw(pos)],
+    },
       );
 
 =head1 SYNOPSIS

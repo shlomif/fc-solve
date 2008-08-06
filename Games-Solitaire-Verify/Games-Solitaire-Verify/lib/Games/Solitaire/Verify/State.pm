@@ -521,9 +521,17 @@ sub _is_sequence_in_column
                 $col->pos($len-1-$card_idx),
             ))
         {
-            return "Not a sequence at Position $card_idx";
+            return 
+                Games::Solitaire::Verify::Exception::Move::Src::Col::NonSequence->new
+                (
+                    move => $self->_temp_move(),
+                    pos => $card_idx,
+                )
+                ;
         }
     }
+
+    return 0;
 }
 
 =head2 $self->clear_freecell($index)
