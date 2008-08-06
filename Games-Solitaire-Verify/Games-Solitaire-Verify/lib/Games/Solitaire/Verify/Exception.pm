@@ -73,7 +73,14 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception", 
         fields => ["problem"],
     },
-    
+    'Games::Solitaire::Verify::Exception::Move' =>
+    { isa => "Games::Solitaire::Verify::Exception", 
+        fields => ["move"],
+    },
+    'Games::Solitaire::Verify::Exception::Move::Dest' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move", },
+    'Games::Solitaire::Verify::Exception::Move::Dest::Foundation' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },   
       );
 
 =head1 SYNOPSIS

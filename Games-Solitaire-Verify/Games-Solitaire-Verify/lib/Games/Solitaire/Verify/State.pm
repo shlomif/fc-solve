@@ -561,7 +561,10 @@ sub verify_and_perform_move
             }
             else
             {
-                return "No suitable foundation";
+                return 
+                    Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
+                        move => $move
+                    );
             }
         }
         elsif ($move->dest_type() eq "freecell")
