@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 78;
+use Test::More tests => 84;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 use Games::Solitaire::Verify::Exception;
@@ -802,6 +802,70 @@ EOF
         "Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty",
         "\$move1_bad cannot be performed because it's an empty freecell"
     );
+
+    # TEST
+    is ($err->move()->source_type(),
+        $move1_bad->source_type(),
+        "source_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest_type(),
+        $move1_bad->dest_type(),
+        "dest_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->source(),
+        $move1_bad->source(),
+        "source() is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest(),
+        $move1_bad->dest(),
+        "dest() is identical in \$err->move() and original move",
+    );
+}
+
+{
+    my $string = <<"EOF";
+Foundations: H-5 C-A D-A S-A 
+Freecells:  6S  8H  3C  4S
+: 4C 2C 9C 8C QS JD
+: 
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D 5S
+: 2D KD TH TC TD 8D 7C
+: 7H JS KH TS KC QD
+: QH
+: 7S 6C 7D 4D 8S 9D
+EOF
+
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string => $string,
+            variant => "freecell",
+        }
+    );
+
+    my $move1_bad = Games::Solitaire::Verify::Move->new(
+        {
+            fcs_string => "Move 2 cards from stack 6 to stack 1",
+            game => "freecell",
+        }
+    );
+
+    # TEST
+    ok ($move1_bad, "Stack->Stack move was initialised.");
+
+    my $err = $board->verify_and_perform_move($move1_bad);
+
+    # TEST
+    isa_ok($err,
+        "Games::Solitaire::Verify::Exception::Move::Src::Col::NotEnoughCards",
+        "\$move1_bad cannot be performed due to not enough cards in column",
+        );
 
     # TEST
     is ($err->move()->source_type(),

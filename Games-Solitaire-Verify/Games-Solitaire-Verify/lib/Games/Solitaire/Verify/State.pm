@@ -631,7 +631,10 @@ sub _verify_and_perform_move_main
 
             if ($source_len < $num_cards)
             {
-                return "Not enough cards in source column '$source'";
+                return
+                    Games::Solitaire::Verify::Exception::Move::Src::Col::NotEnoughCards->new(
+                        move => $move,
+                    );
             }
 
             if (my $verdict = $self->_is_sequence_in_column(
