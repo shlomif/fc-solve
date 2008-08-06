@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 41;
+use Test::More tests => 45;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 use Games::Solitaire::Verify::Exception;
@@ -86,10 +86,37 @@ EOF
     # TEST
     ok($move3_bad, "Move 3 (bad) was initialised.");
 
+    my $err = $board->verify_and_perform_move($move3_bad);
+
     # TEST
-    ok ($board->verify_and_perform_move($move3_bad),
-        "\$move3_bad cannot be performed"
+    isa_ok ($err,
+        "Games::Solitaire::Verify::Exception::Move::Dest::Freecell",
+        "\$move3_bad cannot be performed due to an occupied freecell"
     );
+
+    # TEST
+    is ($err->move()->source_type(),
+        $move3_bad->source_type(),
+        "source_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest_type(),
+        $move3_bad->dest_type(),
+        "dest_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->source(),
+        $move3_bad->source(),
+        "source() is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest(),
+        $move3_bad->dest(),
+        "dest() is identical in \$err->move() and original move",
+    );    
 }
 
 {

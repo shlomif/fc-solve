@@ -81,6 +81,8 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception::Move", },
     'Games::Solitaire::Verify::Exception::Move::Dest::Foundation' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },   
+    'Games::Solitaire::Verify::Exception::Move::Dest::Freecell' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },   
       );
 
 =head1 SYNOPSIS

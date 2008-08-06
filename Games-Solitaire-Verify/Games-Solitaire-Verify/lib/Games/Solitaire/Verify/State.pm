@@ -579,7 +579,10 @@ sub verify_and_perform_move
 
             if (defined($self->get_freecell($fc_idx)))
             {
-                return "Freecell No. $fc_idx is taken";
+                return 
+                    Games::Solitaire::Verify::Exception::Move::Dest::Freecell->new(
+                        move => $move,
+                    );
             }
 
             $self->set_freecell($fc_idx, $self->get_column($col_idx)->pop());
