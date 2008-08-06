@@ -143,7 +143,7 @@ sub _from_string
     {
         if ($str !~ m{\G(:[^\n]*)\n}msg)
         {
-            Games::Solitaire::Verify::Exception::Parse::State::Columns->throw(
+            Games::Solitaire::Verify::Exception::Parse::State::Column->throw(
                 error => "Cannot parse column",
                 index => $col_idx,
             );
@@ -691,7 +691,10 @@ sub _verify_and_perform_move_main
 
             if (!defined($card))
             {
-                return "Freecell No. $fc_idx is empty";
+                return
+                    Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty->new(
+                        move => $move,
+                    );
             }
 
             my $rank = $card->rank();
