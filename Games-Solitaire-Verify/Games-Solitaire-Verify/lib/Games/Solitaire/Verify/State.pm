@@ -731,9 +731,6 @@ sub _verify_and_perform_move_main
                 );
             }
 
-            my $push_card = sub {
-            };
-
             if (my $verdict = $self->_can_put_on_column($col_idx, $card))
             {
                 return $verdict;
