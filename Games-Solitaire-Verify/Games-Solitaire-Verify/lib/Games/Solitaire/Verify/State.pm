@@ -726,7 +726,9 @@ sub _verify_and_perform_move_main
 
             if (!defined($card))
             {
-                return "Freecell No. $fc_idx is empty";
+                return Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty->new(
+                    move => $move,
+                );
             }
 
             my $push_card = sub {

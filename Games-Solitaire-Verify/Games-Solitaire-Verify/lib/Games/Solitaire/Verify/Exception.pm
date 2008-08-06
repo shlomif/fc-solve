@@ -81,6 +81,14 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception::Move", },
     'Games::Solitaire::Verify::Exception::Move::Src' =>
     { isa => "Games::Solitaire::Verify::Exception::Move", },
+    'Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Src", },
+    'Games::Solitaire::Verify::Exception::Move::Src::Col::NonSequence' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Src", 
+      fields => [qw(pos)],
+    },
+    'Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Src", },
     'Games::Solitaire::Verify::Exception::Move::Dest' =>
     { isa => "Games::Solitaire::Verify::Exception::Move", },
     'Games::Solitaire::Verify::Exception::Move::Dest::Foundation' =>
@@ -93,12 +101,6 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col", 
       fields => [qw(seq_build_by)],
       },
-    'Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards' =>
-    { isa => "Games::Solitaire::Verify::Exception::Move::Src", },
-    'Games::Solitaire::Verify::Exception::Move::Src::Col::NonSequence' =>
-    { isa => "Games::Solitaire::Verify::Exception::Move::Src", 
-      fields => [qw(pos)],
-    },
       );
 
 =head1 SYNOPSIS
