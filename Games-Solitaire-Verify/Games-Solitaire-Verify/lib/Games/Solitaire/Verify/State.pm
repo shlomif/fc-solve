@@ -735,6 +735,34 @@ sub _perform_move__freecell_to_foundation
     }
 }
 
+sub _perform_move__freecell_to_stack
+{
+    my $self = shift;
+    my $move = $self->_temp_move();
+
+    my $fc_idx = $move->source();
+    my $col_idx = $move->dest();
+
+    my $card = $self->get_freecell($fc_idx);
+
+    if (!defined($card))
+    {
+        return Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty->new(
+            move => $move,
+        );
+    }
+
+    if (my $verdict = $self->_can_put_on_column($col_idx, $card))
+    {
+        return $verdict;
+    }
+
+    $self->get_column($col_idx)->push($card);
+    $self->clear_freecell($fc_idx);
+    
+    return 0;
+}
+
 sub _verify_and_perform_move_main
 {
     my $self = shift;
@@ -764,27 +792,7 @@ sub _verify_and_perform_move_main
         }
         elsif ($move->dest_type() eq "stack")
         {
-            my $fc_idx = $move->source();
-            my $col_idx = $move->dest();
-
-            my $card = $self->get_freecell($fc_idx);
-
-            if (!defined($card))
-            {
-                return Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty->new(
-                    move => $move,
-                );
-            }
-
-            if (my $verdict = $self->_can_put_on_column($col_idx, $card))
-            {
-                return $verdict;
-            }
-
-            $self->get_column($col_idx)->push($card);
-            $self->clear_freecell($fc_idx);
-            
-            return 0;
+            return $self->_perform_move__freecell_to_stack();
         }
     }
     die "Cannot handle this move type";
