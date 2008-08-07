@@ -494,7 +494,7 @@ sub _calc_empty_stacks_filled_by_any_card_max_seq_move
 {
     my ($self, $args) = @_;
 
-    return 
+    return
          +($self->_variant_params->sequence_move() eq "unlimited")
             ? POSIX::INT_MAX()
             : $self->_calc_freecell_max_seq_move($args)
@@ -527,7 +527,7 @@ sub _is_sequence_in_column
                 $col->pos($len-1-$card_idx),
             ))
         {
-            return 
+            return
                 Games::Solitaire::Verify::Exception::Move::Src::Col::NonSequence->new
                 (
                     move => $self->_temp_move(),
@@ -596,7 +596,7 @@ sub _verify_and_perform_move_main
             }
             else
             {
-                return 
+                return
                     Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
                         move => $move
                     );
@@ -617,7 +617,7 @@ sub _verify_and_perform_move_main
 
             if (defined($self->get_freecell($fc_idx)))
             {
-                return 
+                return
                     Games::Solitaire::Verify::Exception::Move::Dest::Freecell->new(
                         move => $move,
                     );
@@ -668,7 +668,7 @@ sub _verify_and_perform_move_main
                     }
                     ))
             {
-                return 
+                return
                     Games::Solitaire::Verify::Exception::Move::NotEnoughEmpties->new(
                         move => $move,
                     );
@@ -723,7 +723,7 @@ sub _verify_and_perform_move_main
             }
             else
             {
-                return 
+                return
                     Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
                         move => $move
                     );
