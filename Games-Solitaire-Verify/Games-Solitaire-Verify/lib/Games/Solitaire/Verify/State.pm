@@ -413,7 +413,10 @@ sub _can_put_into_empty_column
     {
         if ($card->rank() != 13)
         {
-            return "Non-king on an empty stack";
+            return Games::Solitaire::Verify::Exception::Move::Dest::Col::OnlyKingsCanFillEmpty->new(
+                error => "Non-king on an empty stack",
+                move => $self->_temp_move(),
+            );
         }
     }
     return 0;

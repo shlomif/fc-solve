@@ -106,6 +106,9 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col", 
       fields => [qw(seq_build_by)],
       },
+    'Games::Solitaire::Verify::Exception::Move::Dest::Col::OnlyKingsCanFillEmpty' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col", 
+      },
       );
 
 =head1 SYNOPSIS
