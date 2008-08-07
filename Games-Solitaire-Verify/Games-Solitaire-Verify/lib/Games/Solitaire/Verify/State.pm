@@ -599,6 +599,35 @@ sub _perform_move__stack_to_foundation
     }
 }
 
+sub _perform_move__stack_to_freecell
+{
+    my $self = shift;
+    my $move = $self->_temp_move();
+
+    my $col_idx = $move->source();
+    my $fc_idx = $move->dest();
+    
+    if (! $self->get_column($col_idx)->len())
+    {
+        return
+            Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards->new(
+                move => $move,
+            );
+    }
+
+    if (defined($self->get_freecell($fc_idx)))
+    {
+        return
+            Games::Solitaire::Verify::Exception::Move::Dest::Freecell->new(
+                move => $move,
+            );
+    }
+
+    $self->set_freecell($fc_idx, $self->get_column($col_idx)->pop());
+
+    return 0;
+}
+
 sub _verify_and_perform_move_main
 {
     my $self = shift;
@@ -613,28 +642,7 @@ sub _verify_and_perform_move_main
         }
         elsif ($move->dest_type() eq "freecell")
         {
-            my $col_idx = $move->source();
-            my $fc_idx = $move->dest();
-            
-            if (! $self->get_column($col_idx)->len())
-            {
-                return
-                    Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards->new(
-                        move => $move,
-                    );
-            }
-
-            if (defined($self->get_freecell($fc_idx)))
-            {
-                return
-                    Games::Solitaire::Verify::Exception::Move::Dest::Freecell->new(
-                        move => $move,
-                    );
-            }
-
-            $self->set_freecell($fc_idx, $self->get_column($col_idx)->pop());
-
-            return 0;
+            return $self->_perform_move__stack_to_freecell();
         }
         elsif ($move->dest_type() eq "stack")
         {
