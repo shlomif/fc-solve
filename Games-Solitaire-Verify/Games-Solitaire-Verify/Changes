@@ -1,5 +1,13 @@
 Revision history for Games-Solitaire-VerifySolution
 
+0.04    Thu Aug  7 20:36:14 IDT 2008
+        - Now verify_and_perform_move in Games::Solitaire::Verify::State
+        is returning objects of exception classes, instead of stringified
+        errors, to facilitate knowing exactly why the move is invalid.
+        - Refactored Games::Solitaire::Verify::State:
+            - Extracted methods from verify_and_perform_move
+            - Converted to a ->can() dispatch table.
+
 0.03    Fri Jul 25 13:39:35 IDT 2008
         - Added support for more variants of Solitaire, using the
         Freecell Solver-style parameterization:
