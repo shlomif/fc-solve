@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 90;
+use Test::More tests => 96;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 use Games::Solitaire::Verify::Exception;
@@ -929,6 +929,70 @@ EOF
     isa_ok($err,
         "Games::Solitaire::Verify::Exception::Move::Dest::Col::OnlyKingsCanFillEmpty",
         "\$move1_bad cannot be performed because only kings can fill empty stack",
+        );
+
+    # TEST
+    is ($err->move()->source_type(),
+        $move1_bad->source_type(),
+        "source_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest_type(),
+        $move1_bad->dest_type(),
+        "dest_type is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->source(),
+        $move1_bad->source(),
+        "source() is identical in \$err->move() and original move",
+    );
+
+    # TEST
+    is ($err->move()->dest(),
+        $move1_bad->dest(),
+        "dest() is identical in \$err->move() and original move",
+    );
+}
+
+{
+    my $string = <<"EOF";
+Foundations: H-6 C-4 D-A S-7 
+Freecells:  3D  QS  9C  JD
+: 
+: KS QH JC
+: QC JH
+: KC QD
+: 2D KD TH TC TD 8D 7C 6D 5C 4D
+: 7H JS KH TS 9H 8C
+: 9D 8S 7D 6C 5D
+: 9S 8H
+EOF
+    
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string => $string,
+            variant => "freecell",
+        }
+    );
+
+    my $move1_bad = Games::Solitaire::Verify::Move->new(
+        {
+            fcs_string => "Move a card from freecell 3 to stack 1",
+            game => "freecell",
+        }
+    );
+    
+    # TEST
+    ok ($move1_bad, "Freecell->Stack move was initialised");
+
+    my $err = $board->verify_and_perform_move($move1_bad);
+
+    # TEST
+    isa_ok($err,
+        "Games::Solitaire::Verify::Exception::Move::Dest::Col::RankMismatch",
+        '$move1_bad',
         );
 
     # TEST

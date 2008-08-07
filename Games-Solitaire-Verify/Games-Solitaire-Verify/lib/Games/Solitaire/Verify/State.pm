@@ -454,7 +454,10 @@ sub _can_put_on_top
 
     if ($parent->rank() != $child->rank()+1)
     {
-        return "Rank mismatch between parent and child cards";
+        return Games::Solitaire::Verify::Exception::Move::Dest::Col::RankMismatch->new(
+            error => "Rank mismatch between parent and child cards",
+            move => $self->_temp_move(),
+        );
     }
     
     if (my $ret = $self->_is_matching_color($parent, $child) )

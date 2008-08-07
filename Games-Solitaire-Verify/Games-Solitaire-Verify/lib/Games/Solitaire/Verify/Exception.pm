@@ -109,6 +109,10 @@ use Exception::Class (
     'Games::Solitaire::Verify::Exception::Move::Dest::Col::OnlyKingsCanFillEmpty' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col", 
       },
+    'Games::Solitaire::Verify::Exception::Move::Dest::Col::RankMismatch' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col", 
+      },
+      
       );
 
 =head1 SYNOPSIS
