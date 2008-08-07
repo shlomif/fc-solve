@@ -695,6 +695,46 @@ sub _perform_move__stack_to_stack
     return 0;
 }
 
+sub _perform_move__freecell_to_foundation
+{
+    my $self = shift;
+    my $move = $self->_temp_move();
+
+    my $fc_idx = $move->source();
+    my $card = $self->get_freecell($fc_idx);
+
+    if (!defined($card))
+    {
+        return
+            Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty->new(
+                move => $move,
+            );
+    }
+
+    my $rank = $card->rank();
+    my $suit = $card->suit();
+
+    my $f_idx =
+        first
+        { $self->get_foundation_value($suit, $_) == $rank-1 }
+        (0 .. ($self->num_decks()-1))
+        ;
+
+    if (defined($f_idx))
+    {
+        $self->clear_freecell($fc_idx);
+        $self->increment_foundation_value($suit, $f_idx);
+        return 0;
+    }
+    else
+    {
+        return
+            Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
+                move => $move
+            );
+    }
+}
+
 sub _verify_and_perform_move_main
 {
     my $self = shift;
@@ -720,39 +760,7 @@ sub _verify_and_perform_move_main
     {
         if ($move->dest_type() eq "foundation")
         {
-            my $fc_idx = $move->source();
-            my $card = $self->get_freecell($fc_idx);
-
-            if (!defined($card))
-            {
-                return
-                    Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty->new(
-                        move => $move,
-                    );
-            }
-
-            my $rank = $card->rank();
-            my $suit = $card->suit();
-
-            my $f_idx =
-                first
-                { $self->get_foundation_value($suit, $_) == $rank-1 }
-                (0 .. ($self->num_decks()-1))
-                ;
-
-            if (defined($f_idx))
-            {
-                $self->clear_freecell($fc_idx);
-                $self->increment_foundation_value($suit, $f_idx);
-                return 0;
-            }
-            else
-            {
-                return
-                    Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
-                        move => $move
-                    );
-            }
+            return $self->_perform_move__freecell_to_foundation();
         }
         elsif ($move->dest_type() eq "stack")
         {
