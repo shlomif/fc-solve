@@ -566,6 +566,39 @@ sub verify_and_perform_move
     return $ret;
 }
 
+sub _perform_move__stack_to_foundation
+{
+    my $self = shift;
+
+    my $move = $self->_temp_move();
+
+    my $col_idx = $move->source();
+    my $card = $self->get_column($col_idx)->top();
+
+    my $rank = $card->rank();
+    my $suit = $card->suit();
+
+    my $f_idx = 
+        first 
+        { $self->get_foundation_value($suit, $_) == $rank-1 }
+        (0 .. ($self->num_decks()-1))
+        ;
+
+    if (defined($f_idx))
+    {
+        $self->get_column($col_idx)->pop();
+        $self->increment_foundation_value($suit, $f_idx);
+        return 0;
+    }
+    else
+    {
+        return
+            Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
+                move => $move
+            );
+    }
+}
+
 sub _verify_and_perform_move_main
 {
     my $self = shift;
@@ -576,31 +609,7 @@ sub _verify_and_perform_move_main
     {
         if ($move->dest_type() eq "foundation")
         {
-            my $col_idx = $move->source();
-            my $card = $self->get_column($col_idx)->top();
-
-            my $rank = $card->rank();
-            my $suit = $card->suit();
-
-            my $f_idx = 
-                first 
-                { $self->get_foundation_value($suit, $_) == $rank-1 }
-                (0 .. ($self->num_decks()-1))
-                ;
-
-            if (defined($f_idx))
-            {
-                $self->get_column($col_idx)->pop();
-                $self->increment_foundation_value($suit, $f_idx);
-                return 0;
-            }
-            else
-            {
-                return
-                    Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
-                        move => $move
-                    );
-            }
+            return $self->_perform_move__stack_to_foundation();
         }
         elsif ($move->dest_type() eq "freecell")
         {
