@@ -769,33 +769,19 @@ sub _verify_and_perform_move_main
 
     my $move = $self->_temp_move();
 
-    if ($move->source_type() eq "stack")
+    my $src = $move->source_type();
+    my $dest = $move->dest_type();
+
+    my $method = $self->can("_perform_move__${src}_to_${dest}");
+
+    if ($method)
     {
-        if ($move->dest_type() eq "foundation")
-        {
-            return $self->_perform_move__stack_to_foundation();
-        }
-        elsif ($move->dest_type() eq "freecell")
-        {
-            return $self->_perform_move__stack_to_freecell();
-        }
-        elsif ($move->dest_type() eq "stack")
-        {
-            return $self->_perform_move__stack_to_stack();
-        }
+        return $method->($self);
     }
-    elsif ($move->source_type() eq "freecell")
+    else
     {
-        if ($move->dest_type() eq "foundation")
-        {
-            return $self->_perform_move__freecell_to_foundation();
-        }
-        elsif ($move->dest_type() eq "stack")
-        {
-            return $self->_perform_move__freecell_to_stack();
-        }
+        die "Cannot handle this move type";
     }
-    die "Cannot handle this move type";
 }
 
 sub _stringify_freecells
