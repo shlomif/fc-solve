@@ -99,7 +99,7 @@ CONFIGURE_FILE(
     )
 
 CONFIGURE_FILE(
-    ${CMAKE_CURRENT_SOURCE_DIR}/prefix.h.cmake 
+    ${CMAKE_CURRENT_SOURCE_DIR}/prefix.h.in
     ${CMAKE_CURRENT_SOURCE_DIR}/prefix.h
     )
 
