@@ -404,21 +404,20 @@ def shlomif_main(args):
         cols.output();
 
     elif game_class == "seahaven":
-        cols = []
         freecells = []
-        for i in range(10):
-            cols.append([])
+
+        cols = Columns(10)
 
         freecells.append(empty_card())
 
         for i in range(52):
             if (i < 50):
-                cols[i%10].append(cards[i])
+                cols.add(i%10, cards[i])
             else:
                 freecells.append(cards[i])
 
         print_freecells(freecells)
-        print_cols(cols)
+        cols.output()
         
     elif game_class == "bakers_dozen":
         i, n = 0, 13 
