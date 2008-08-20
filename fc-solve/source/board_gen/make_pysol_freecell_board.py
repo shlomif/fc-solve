@@ -261,7 +261,8 @@ class Columns:
         self.cols[idx].append(card)
 
     def output(self):
-        print_cols(self.cols)
+        for column in self.cols:
+            print column_to_string(column)
 
 def empty_card():
     ret = Card(1,1,1)
@@ -287,10 +288,6 @@ def flip_card(card_str, flip):
         return "<" + card_str + ">"
     else:
         return card_str
-
-def print_cols(cols):
-    for column in cols:
-        print column_to_string(column)
 
 def print_freecells(freecells):
     print "FC: " + column_to_string(freecells)
