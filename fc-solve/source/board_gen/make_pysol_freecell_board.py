@@ -197,29 +197,30 @@ class Card:
 
     KING = 13
 
-    def __init__(self, rank, suit):
+    def __init__(self, rank, suit, print_ts):
         self.rank = rank
         self.suit = suit
         self.flipped = False
+        self.print_ts = print_ts
 
     def is_king(self):
         return self.rank == self.KING
 
-    def to_s(self, print_ts):
+    def to_s(self):
         ret = ""
-        ret = ret + get_card_num(self.rank,print_ts)
+        ret = ret + get_card_num(self.rank, self.print_ts)
         ret = ret + get_card_suit(self.suit)
         if self.flipped:
             ret = "<" + ret + ">"
 
         return ret
 
-def createCards(num_decks=1):
+def createCards(num_decks, print_ts):
     cards = []
     for deck in range(num_decks):
         for suit in range(4):
             for rank in range(13):
-                cards.append(Card(rank+1, suit))
+                cards.append(Card(rank+1, suit, print_ts))
     return cards
 
 def get_card_suit(suit):
@@ -252,11 +253,11 @@ def get_card_num(rank,print_ts):
         ret = ret + "K"
     return ret;
 
-def column_to_list_of_strings(col, print_ts):
-    return map( lambda c: c.to_s(print_ts), col)
+def column_to_list_of_strings(col):
+    return map( lambda c: c.to_s(), col)
 
-def column_to_string(col, print_ts):
-    return " ".join(column_to_list_of_strings(col, print_ts))
+def column_to_string(col):
+    return " ".join(column_to_list_of_strings(col))
 
 def flip_card(card_str, flip):
     if flip:
@@ -274,10 +275,11 @@ def shlomif_main(args):
         which_game = args[2]
     else:
         which_game = "freecell"
+
     if ((which_game == "der_katz") or (which_game == "der_katzenschwantz") or (which_game == "die_schlange") or (which_game == "gypsy")):
-        orig_cards = createCards(2)
+        orig_cards = createCards(2, print_ts)
     else:
-        orig_cards = createCards()
+        orig_cards = createCards(1, print_ts)
     if game_num <= 32000:
         r = LCRandom31()
         r.setSeed(game_num)
@@ -309,7 +311,7 @@ def shlomif_main(args):
             if (not((which_game == "die_schlange") and ((card & 0x0F) == 1))):
                 if (output != ""):
                     output = output + " "        
-                output = output + card.to_s(1, print_ts)
+                output = output + card.to_s(1)
         print output
     elif ((which_game == "freecell") or (which_game == "forecell") or (which_game == "bakers_game") or (which_game == "ko_bakers_game") or (which_game == "kings_only_bakers_game") or (which_game == "relaxed_freecell") or (which_game == "eight_off")):
         cols = []
@@ -331,10 +333,10 @@ def shlomif_main(args):
                 cols[i%8].append(cards[i])
         
         if ((which_game == "forecell") or (which_game == "eight_off")):
-            print "FC: " + column_to_string(freecells, print_ts)
+            print "FC: " + column_to_string(freecells)
 
         for column in cols:
-            print column_to_string(column, print_ts)
+            print column_to_string(column)
 
     elif ((which_game == "seahaven_towers") or (which_game == "seahaven") or (which_game == "relaxed_seahaven") or (which_game == "relaxed_seahaven_towers")):
         output = range(11);
@@ -375,7 +377,7 @@ def shlomif_main(args):
             output[i%13].append(cards[i])
 
         for i in range(13):
-            print column_to_string(output[i], print_ts)
+            print column_to_string(output[i])
     elif (which_game == "gypsy"):
         output = range(8);
         for i in range(8):
@@ -490,7 +492,7 @@ def shlomif_main(args):
         f_str = "Foundations:"
         for f in [2,0,3,1]:
             if (foundations[f] != 0):
-                f_str = f_str + " " + get_card_suit(f) + "-" + get_card_num(foundations[f], print_ts)
+                f_str = f_str + " " + get_card_suit(f) + "-" + get_card_num(foundations[f])
         
         if (f_str != "Foundations:"):
             print f_str
