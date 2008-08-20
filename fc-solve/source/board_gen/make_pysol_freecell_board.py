@@ -231,11 +231,14 @@ class Card:
         self.suit = suit
         self.flipped = False
         self.print_ts = print_ts
+        self.empty = False
 
     def is_king(self):
         return self.rank == self.KING
 
     def to_s(self):
+        if self.empty:
+            return "-"
         ret = ""
         ret = ret + get_card_num(self.rank, self.print_ts)
         ret = ret + get_card_suit(self.suit)
@@ -243,6 +246,11 @@ class Card:
             ret = "<" + ret + ">"
 
         return ret
+
+def empty_card():
+    ret = Card(1,1,1)
+    ret.empty = True
+    return ret
 
 def createCards(num_decks, print_ts):
     cards = []
@@ -263,6 +271,13 @@ def flip_card(card_str, flip):
         return "<" + card_str + ">"
     else:
         return card_str
+
+def print_cols(cols):
+    for column in cols:
+        print column_to_string(column)
+
+def print_freecells(freecells):
+    print "FC: " + column_to_string(freecells)
 
 def shlomif_main(args):
     print_ts = 0
@@ -332,26 +347,26 @@ def shlomif_main(args):
                 cols[i%8].append(cards[i])
         
         if ((which_game == "forecell") or (which_game == "eight_off")):
-            print "FC: " + column_to_string(freecells)
+            print_freecells(freecells)
 
-        for column in cols:
-            print column_to_string(column)
-
+        print_cols(cols)
     elif ((which_game == "seahaven_towers") or (which_game == "seahaven") or (which_game == "relaxed_seahaven") or (which_game == "relaxed_seahaven_towers")):
-        output = range(11);
-        for i in range(11):
-            output[i] = ""
-        output[10] = "FC: - "
+        cols = []
+        freecells = []
+        for i in range(10):
+            cols.append([])
+
+        freecells.append(empty_card())
 
         for i in range(52):
             if (i < 50):
-                output[i%10] = output[i%10] + cards[i].to_s(print_ts)
+                cols[i%10].append(cards[i])
             else:
-                output[10] = output[10] + cards[i].to_s(print_ts)
+                freecells.append(cards[i])
 
-        print output[10]
-        for i in range(10):
-            print output[i]
+        print_freecells(freecells)
+        print_cols(cols)
+        
     elif (which_game == "bakers_dozen"):
         i, n = 0, 13 
         kings = []
@@ -382,13 +397,13 @@ def shlomif_main(args):
         for i in range(8):
             output[i] = ""
         for i in range(24):
-            output[i%8] = output[i%8] + cards[i].to_s(print_ts)
+            output[i%8] = output[i%8] + cards[i].to_s()
             if (i < 16):
                 output[i%8] = output[i%8] + " "
 
         talon = "Talon:"
         for i in range(24,8*13):
-            talon = talon + " " + cards[i].to_s(print_ts)
+            talon = talon + " " + cards[i].to_s()
                 
         print talon
         for i in range(8):
@@ -404,15 +419,15 @@ def shlomif_main(args):
         card_num = 0
         for r in range(1,7):
             for s in range(7-r):
-                output[s] = output[s] + cards[card_num].to_s(print_ts)
+                output[s] = output[s] + cards[card_num].to_s()
                 card_num = card_num + 1
         for s in range(7):
-            output[s] = output[s] + cards[card_num].to_s(print_ts)
+            output[s] = output[s] + cards[card_num].to_s()
             card_num = card_num + 1
 
         talon = "Talon: "
         while card_num < 52:
-            talon = talon + cards[card_num].to_s(print_ts)
+            talon = talon + cards[card_num].to_s()
             card_num = card_num + 1
             
         
@@ -429,11 +444,11 @@ def shlomif_main(args):
         num_cards = 9
         while num_cards >= 3:
             for s in range(num_cards):
-                output[s] = output[s] + cards[card_num].to_s(print_ts)
+                output[s] = output[s] + cards[card_num].to_s()
                 card_num = card_num + 1
             num_cards = num_cards - 1
         for s in range(10):
-            output[s] = output[s] + cards[card_num].to_s(print_ts)
+            output[s] = output[s] + cards[card_num].to_s()
             card_num = card_num + 1
         for i in output:
             print i
@@ -444,14 +459,14 @@ def shlomif_main(args):
             output[i] = ""
         for i in range(1, 7):
             for j in range(i, 7):
-                output[j] = output[j] + cards[card_num].to_s(print_ts)
+                output[j] = output[j] + cards[card_num].to_s()
                 card_num = card_num + 1
         for i in range(4):
             for j in range(1,7):
-                output[j] = output[j] + cards[card_num].to_s(print_ts)
+                output[j] = output[j] + cards[card_num].to_s()
                 card_num = card_num + 1
         for i in range(7):
-            output[i] = output[i] + cards[card_num].to_s(print_ts)
+            output[i] = output[i] + cards[card_num].to_s()
             card_num = card_num + 1
         for i in output:
             print i
@@ -478,14 +493,14 @@ def shlomif_main(args):
                         foundations[cards[card_num] >> 4] = foundations[cards[card_num] >> 4] + 1;
                         card_num = card_num + 1
                         continue
-                output[s] = output[s] + cards[card_num].to_s(print_ts)
+                output[s] = output[s] + cards[card_num].to_s()
                 card_num = card_num + 1
             if (card_num == len(cards)):
                 break
                 
         if (which_game == "streets_and_alleys"):
             for s in range(4):
-                output[s] = output[s] + " " + cards[card_num].to_s(print_ts)
+                output[s] = output[s] + " " + cards[card_num].to_s()
                 card_num = card_num + 1
         
         f_str = "Foundations:"
@@ -501,8 +516,8 @@ def shlomif_main(args):
     elif (which_game == "fan"):
         output = [""] * 18
         for i in range(52-1):
-            output[i%17] = output[i%17] + cards[i].to_s(print_ts)
-        output[17] = output[17] + cards[i+1].to_s(print_ts);
+            output[i%17] = output[i%17] + cards[i].to_s()
+        output[17] = output[17] + cards[i+1].to_s();
         for i in output:
             print i
     else:

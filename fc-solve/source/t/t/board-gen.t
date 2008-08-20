@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 use Test::Differences;
 
 {
@@ -124,5 +124,30 @@ EOF
         $got,
         $expected,
         "Testing for Forecell",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py 100 seahaven_towers`;
+    
+    my $expected = <<"EOF";
+FC: - 9S 5S
+AD 5C 9C 9H 2C
+JS 9D 6H 7H 2H
+4S 4H AC 3C KH
+QC JD AS KS 8C
+7C KD 6S JC 7D
+6D AH 5H 3S 8D
+JH QS 6C 10C QD
+10D 10H 3D 4C 2D
+QH 7S 4D 5D 8S
+10S 8H 2S 3H KC
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Seahaven 100 Output",
     );
 }
