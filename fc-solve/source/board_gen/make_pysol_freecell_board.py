@@ -247,6 +247,22 @@ class Card:
 
         return ret
 
+class Columns:
+
+    def __init__(self, num):
+        self.num = num
+        cols = []
+        for i in range(num):
+            cols.append([])
+
+        self.cols = cols
+
+    def add(self, idx, card):
+        self.cols[idx].append(card)
+
+    def output(self):
+        print_cols(self.cols)
+
 def empty_card():
     ret = Card(1,1,1)
     ret.empty = True
@@ -478,23 +494,21 @@ def shlomif_main(args):
 
         card_num = 0
 
-        cols = []
-        for i in range(10):
-            cols.append([])
+        cols = Columns(10)
 
         num_cards = 9
 
         while num_cards >= 3:
             for s in range(num_cards):
-                cols[s].append(cards[card_num])
+                cols.add(s, cards[card_num])
                 card_num = card_num + 1
             num_cards = num_cards - 1
 
         for s in range(10):
-            cols[s].append(cards[card_num])
+            cols.add(s, cards[card_num])
             card_num = card_num + 1
 
-        print_cols(cols)
+        cols.output()
 
     elif game_class == "yukon":
         card_num = 0
