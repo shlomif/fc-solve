@@ -475,21 +475,27 @@ def shlomif_main(args):
         for i in output:
             print i
     elif game_class == "simple_simon":
+
         card_num = 0
-        output = range(10)
+
+        cols = []
         for i in range(10):
-            output[i] = ""
+            cols.append([])
+
         num_cards = 9
+
         while num_cards >= 3:
             for s in range(num_cards):
-                output[s] = output[s] + cards[card_num].to_s()
+                cols[s].append(cards[card_num])
                 card_num = card_num + 1
             num_cards = num_cards - 1
+
         for s in range(10):
-            output[s] = output[s] + cards[card_num].to_s()
+            cols[s].append(cards[card_num])
             card_num = card_num + 1
-        for i in output:
-            print i
+
+        print_cols(cols)
+
     elif game_class == "yukon":
         card_num = 0
         output = range(7)

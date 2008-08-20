@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Test::Differences;
 
 {
@@ -149,5 +149,29 @@ EOF
         $got,
         $expected,
         "Seahaven 100 Output",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py 250 simple_simon`;
+    
+    my $expected = <<"EOF";
+6S 6C 10C JC 9H 8D 3C 5S
+JH 2S KH 10S 7D 4D 8S 5D
+9D 8H 4S KC 7C 4C QS 5C
+4H 10D 2C 3S 8C 10H 7S
+3H 6D QH 7H 9S AD
+2D 2H 6H JS QD
+AC 5H QC AS
+KD JD KS
+9C 3D
+AH
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Simple Simon 250",
     );
 }
