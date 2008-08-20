@@ -615,12 +615,12 @@ def shlomif_main(args):
                 card_num = card_num + 1
             if (card_num == len(cards)):
                 break
-                
+
         if (which_game == "streets_and_alleys"):
             for s in range(4):
                 board.add(s, cards[card_num])
                 card_num = card_num + 1
-        
+
         print_foundations(foundations)
         board.output()
 
