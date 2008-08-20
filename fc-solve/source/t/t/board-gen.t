@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 use Test::Differences;
 
 {
@@ -311,6 +311,29 @@ JD AC 5D 6D 7S 6S QC
 7D QD 2D TS 9D 2S
 4H QS 5H 6H 3S AH
 KD 2H 4S KH 9H TH
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "streets_and_alleys 1080",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 1080 citadel`;
+
+    my $expected = <<"EOF";
+Foundations: H-2 C-2 D-2 S-2
+8D 5C 8C 6D 7S 6S
+3H 8S 5D 8H JC 7H
+JD 3C 6C JH 4C 5S
+3D JS QH TS 9D
+9S QD 6H 3S TH
+7D QS 5H KH 9H 9C
+4H 4S 7C QC
+KD KS KC 4D TC TD
 EOF
 
     # TEST
