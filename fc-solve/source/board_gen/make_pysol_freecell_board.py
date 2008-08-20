@@ -405,48 +405,48 @@ def shlomif_main(args):
         if (which_game == "die_schlange"):
             print "Foundations: H-A S-A D-A C-A H-A S-A D-A C-A"
 
-        cols = Board(9)
+        board = Board(9)
         col_idx = 0
 
         for card in cards:
             if card.is_king():
                 col_idx = col_idx + 1
             if not ((which_game == "die_schlange") and (card.rank == 1)):
-                cols.add(col_idx, card)
+                board.add(col_idx, card)
 
-        cols.output()
+        board.output()
 
     elif game_class == "freecell":
         is_fc = (which_game in ('forecell', 'eight_off'))
 
-        cols = Board(8, with_freecells=is_fc)
+        board = Board(8, with_freecells=is_fc)
 
         if is_fc:
             for i in range(52):
                 if (i < 48):
-                    cols.add(i%8, cards[i])
+                    board.add(i%8, cards[i])
                 else:
-                    cols.add_freecell(cards[i])
+                    board.add_freecell(cards[i])
                     if which_game == "eight_off":
-                        cols.add_freecell(empty_card())
+                        board.add_freecell(empty_card())
         else:
             for i in range(52):
-                cols.add(i%8, cards[i])
+                board.add(i%8, cards[i])
         
-        cols.output();
+        board.output();
 
     elif game_class == "seahaven":
-        cols = Board(10, with_freecells=True)
+        board = Board(10, with_freecells=True)
 
-        cols.add_freecell(empty_card())
+        board.add_freecell(empty_card())
 
         for i in range(52):
             if (i < 50):
-                cols.add(i%10, cards[i])
+                board.add(i%10, cards[i])
             else:
-                cols.add_freecell(cards[i])
+                board.add_freecell(cards[i])
 
-        cols.output()
+        board.output()
         
     elif game_class == "bakers_dozen":
         i, n = 0, 13 
@@ -464,12 +464,12 @@ def shlomif_main(args):
                     break
                 j = j + n
 
-        cols = Board(13)
+        board = Board(13)
 
         for i in range(52):
-            cols.add(i%13, cards[i])
+            board.add(i%13, cards[i])
         
-        cols.output()
+        board.output()
 
     elif game_class == "gypsy":
         output = range(8);
@@ -519,21 +519,21 @@ def shlomif_main(args):
 
         card_num = 0
 
-        cols = Board(10)
+        board = Board(10)
 
         num_cards = 9
 
         while num_cards >= 3:
             for s in range(num_cards):
-                cols.add(s, cards[card_num])
+                board.add(s, cards[card_num])
                 card_num = card_num + 1
             num_cards = num_cards - 1
 
         for s in range(10):
-            cols.add(s, cards[card_num])
+            board.add(s, cards[card_num])
             card_num = card_num + 1
 
-        cols.output()
+        board.output()
 
     elif game_class == "yukon":
         card_num = 0
@@ -597,14 +597,14 @@ def shlomif_main(args):
         for i in output:
             print i
     elif game_class == "fan":
-        cols = Board(18)
+        board = Board(18)
 
         for i in range(52-1):
-            cols.add(i%17, cards[i])
+            board.add(i%17, cards[i])
         
-        cols.add(17, cards[i+1])
+        board.add(17, cards[i+1])
 
-        cols.output()
+        board.output()
     else:
         print "Unknown game type " + which_game + "\n"
         
