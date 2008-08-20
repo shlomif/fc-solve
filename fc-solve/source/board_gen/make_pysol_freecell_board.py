@@ -312,6 +312,23 @@ def flip_card(card_str, flip):
     else:
         return card_str
 
+def shuffle(orig_cards, game_num):
+    if game_num <= 32000:
+        r = LCRandom31()
+        r.setSeed(game_num)
+        fcards = []
+        if (len(orig_cards) == 52):
+            for i in range(13):
+                for j in (0, 39, 26, 13):
+                    fcards.append(orig_cards[i + j])
+            orig_cards = fcards
+        r.shuffle(orig_cards)
+    else:
+        r = LCRandom64()
+        r.setSeed(game_num)
+        r.shuffle(orig_cards)
+
+    return orig_cards
 
 class WhichGame:
     REVERSE_MAP = \
@@ -333,7 +350,7 @@ class WhichGame:
                 "fan" : True
         }
 
-    def __init__(self, game_id):
+    def __init__(self, game_id, print_ts):
         mymap = {}
         for k in self.REVERSE_MAP.keys():
             if (self.REVERSE_MAP[k] == True):
@@ -343,6 +360,7 @@ class WhichGame:
                     mymap[alias] = k
         self.games_map = mymap
         self.game_id = game_id
+        self.print_ts = print_ts
 
     def lookup(self):
         return self.games_map[self.game_id];
@@ -350,23 +368,21 @@ class WhichGame:
     def is_two_decks(self):
         return self.game_id in ("der_katz", "der_katzenschwantz", "die_schlange", "gypsy")
 
-def shuffle(orig_cards, game_num):
-    if game_num <= 32000:
-        r = LCRandom31()
-        r.setSeed(game_num)
-        fcards = []
-        if (len(orig_cards) == 52):
-            for i in range(13):
-                for j in (0, 39, 26, 13):
-                    fcards.append(orig_cards[i + j])
-            orig_cards = fcards
-        r.shuffle(orig_cards)
-    else:
-        r = LCRandom64()
-        r.setSeed(game_num)
-        r.shuffle(orig_cards)
+    def get_num_decks(self):
+        if self.is_two_decks():
+            return 2
+        else:
+            return 1
 
-    return orig_cards
+    def deal(self, game_num):
+        orig_cards = createCards(self.get_num_decks(), self.print_ts)
+    
+        orig_cards = shuffle(orig_cards, game_num)
+    
+        cards = orig_cards
+        cards.reverse()
+        
+        return cards
 
 def shlomif_main(args):
     print_ts = 0
@@ -379,19 +395,11 @@ def shlomif_main(args):
     else:
         which_game = "freecell"
 
-    game_chooser = WhichGame(which_game)
+    game_chooser = WhichGame(which_game, print_ts)
 
     game_class = game_chooser.lookup()
 
-    if game_chooser.is_two_decks():
-        orig_cards = createCards(2, print_ts)
-    else:
-        orig_cards = createCards(1, print_ts)
-
-    orig_cards = shuffle(orig_cards, game_num)
-    
-    cards = orig_cards
-    cards.reverse()
+    cards = game_chooser.deal(game_num)
 
     if game_class == "der_katz":
         if (which_game == "die_schlange"):
