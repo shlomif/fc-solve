@@ -279,6 +279,39 @@ def print_cols(cols):
 def print_freecells(freecells):
     print "FC: " + column_to_string(freecells)
 
+class WhichGame:
+    REVERSE_MAP = \
+        { 
+                "freecell": 
+                [ "freecell", "forecell", "bakers_game", 
+        "ko_bakers_game", "kings_only_bakers_game", "relaxed_freecell", 
+        "eight_off" ],
+                "der_katz":
+                [ "der_katz", "der_katzenschwantz", "die_schlange"],
+                "seahaven":
+                [ "seahaven_towers", "seahaven", "relaxed_seahaven", "relaxed_seahaven_towers" ],
+                "bakers_dozen" : True,
+                "gypsy" : True,
+                "klondike" : [ "klondike", "klondike_by_threes", "casino_klondike", "small_harp", "thumb_and_pouch", "vegas_klondike", "whitehead" ],
+                "simple_simon" : True,
+                "yukon" : True,
+                "beleaguered_castle" : [ "beleaguered_castle", "streets_and_alleys", "citadel" ],
+                "fan" : True
+        }
+
+    def __init__(self):
+        mymap = {}
+        for k in self.REVERSE_MAP.keys():
+            if (self.REVERSE_MAP[k] == True):
+                mymap[k] = k
+            else:
+                for alias in self.REVERSE_MAP[k]:
+                    mymap[alias] = k
+        self.games_map = mymap
+
+    def lookup(self, id):
+        return self.games_map[id];
+          
 def shlomif_main(args):
     print_ts = 0
     if (args[1] == "-t"):
@@ -289,6 +322,10 @@ def shlomif_main(args):
         which_game = args[2]
     else:
         which_game = "freecell"
+
+    game_chooser = WhichGame()
+
+    game_class = game_chooser.lookup(which_game)
 
     if ((which_game == "der_katz") or (which_game == "der_katzenschwantz") or (which_game == "die_schlange") or (which_game == "gypsy")):
         orig_cards = createCards(2, print_ts)
@@ -314,7 +351,7 @@ def shlomif_main(args):
     for i in range(len(orig_cards)):
         cards.append(orig_cards[len(orig_cards)-i-1])
 
-    if ((which_game == "der_katz") or (which_game == "der_katzenschwantz") or (which_game == "die_schlange")):
+    if game_class == "der_katz":
         if (which_game == "die_schlange"):
             print "Foundations: H-A S-A D-A C-A H-A S-A D-A C-A"
         output = ""
@@ -327,7 +364,7 @@ def shlomif_main(args):
                     output = output + " "        
                 output = output + card.to_s(1)
         print output
-    elif ((which_game == "freecell") or (which_game == "forecell") or (which_game == "bakers_game") or (which_game == "ko_bakers_game") or (which_game == "kings_only_bakers_game") or (which_game == "relaxed_freecell") or (which_game == "eight_off")):
+    elif game_class == "freecell":
         cols = []
         freecells = []
         for i in range(8):
@@ -350,7 +387,8 @@ def shlomif_main(args):
             print_freecells(freecells)
 
         print_cols(cols)
-    elif ((which_game == "seahaven_towers") or (which_game == "seahaven") or (which_game == "relaxed_seahaven") or (which_game == "relaxed_seahaven_towers")):
+
+    elif game_class == "seahaven":
         cols = []
         freecells = []
         for i in range(10):
@@ -367,7 +405,7 @@ def shlomif_main(args):
         print_freecells(freecells)
         print_cols(cols)
         
-    elif (which_game == "bakers_dozen"):
+    elif game_class == "bakers_dozen":
         i, n = 0, 13 
         kings = []
         cards.reverse()
@@ -392,7 +430,7 @@ def shlomif_main(args):
 
         for i in range(13):
             print column_to_string(output[i])
-    elif (which_game == "gypsy"):
+    elif game_class == "gypsy":
         output = range(8);
         for i in range(8):
             output[i] = ""
@@ -408,7 +446,7 @@ def shlomif_main(args):
         print talon
         for i in range(8):
             print output[i]
-    elif ((which_game == "klondike") or (which_game == "klondike_by_threes") or (which_game == "casino_klondike") or (which_game == "small_harp") or (which_game == "thumb_and_pouch") or (which_game == "vegas_klondike") or (which_game == "whitehead")):
+    elif game_class == "klondike":
         #o = ""
         #for i in cards:
         #    o = o + " " + i.to_s()
@@ -436,7 +474,7 @@ def shlomif_main(args):
             output.reverse();
         for i in output:
             print i
-    elif (which_game == "simple_simon"):
+    elif game_class == "simple_simon":
         card_num = 0
         output = range(10)
         for i in range(10):
@@ -452,7 +490,7 @@ def shlomif_main(args):
             card_num = card_num + 1
         for i in output:
             print i
-    elif (which_game == "yukon"):
+    elif game_class == "yukon":
         card_num = 0
         output = range(7)
         for i in range(7):
@@ -470,7 +508,7 @@ def shlomif_main(args):
             card_num = card_num + 1
         for i in output:
             print i
-    elif ((which_game == "beleaguered_castle") or (which_game == "streets_and_alleys") or (which_game == "citadel")):
+    elif game_class == "beleaguered_castle":
         if (which_game == "beleaguered_castle") or (which_game == "citadel"):
             new_cards = []
             for c in cards:
@@ -513,7 +551,7 @@ def shlomif_main(args):
 
         for i in output:
             print i
-    elif (which_game == "fan"):
+    elif game_class == "fan":
         output = [""] * 18
         for i in range(52-1):
             output[i%17] = output[i%17] + cards[i].to_s()
