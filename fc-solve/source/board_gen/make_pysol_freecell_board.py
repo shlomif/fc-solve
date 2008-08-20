@@ -193,17 +193,33 @@ class LCRandom31(PysolRandom):
         self.seed = (self.seed*214013L + 2531011L) & self.MAX_SEED
         return a + (int(self.seed >> 16) % (b+1-a))
 
+class Card:
+
+    KING = 13
+
+    def __init__(self, rank, suit):
+        self.rank = rank
+        self.suit = suit
+        self.flipped = False
+
+    def is_king(self):
+        return self.rank == self.KING
+
+    def to_s(self, print_ts):
+        ret = ""
+        ret = ret + get_card_num(self.rank,print_ts)
+        ret = ret + get_card_suit(self.suit)
+        if self.flipped:
+            ret = "<" + ret + ">"
+
+        return ret
+
 def createCards(num_decks=1):
     cards = []
-    id = 0
     for deck in range(num_decks):
         for suit in range(4):
             for rank in range(13):
-                card = (suit << 4) + (rank+1)
-                #if card is None:
-                #    continue
-                cards.append(card)
-                id = id + 1
+                cards.append(Card(rank+1, suit))
     return cards
 
 def get_card_suit(suit):
@@ -236,32 +252,11 @@ def get_card_num(rank,print_ts):
         ret = ret + "K"
     return ret;
 
-def card_to_string(card,not_append_ws,print_ts,flipped=0):
-    suit = card >> 4
-    rank = card & 0x0F
-    ret = ""
-    if flipped:
-        ret = ret + "<"
-
-    ret = ret + get_card_num(rank,print_ts)
-    ret = ret + get_card_suit(suit) 
-
-    if flipped:
-        ret = ret + ">"
-    if (not(not_append_ws)):
-        ret = ret + " "
-    
-    return ret
-
 def column_to_list_of_strings(col, print_ts):
-    return map( lambda c: card_to_string(c, 1, print_ts), col)
+    return map( lambda c: c.to_s(print_ts), col)
 
 def column_to_string(col, print_ts):
     return " ".join(column_to_list_of_strings(col, print_ts))
-
-def is_card_king(card):
-    rank = card & 0x0F
-    return (rank == 13)
 
 def flip_card(card_str, flip):
     if flip:
@@ -314,7 +309,7 @@ def shlomif_main(args):
             if (not((which_game == "die_schlange") and ((card & 0x0F) == 1))):
                 if (output != ""):
                     output = output + " "        
-                output = output + card_to_string(card, 1, print_ts)
+                output = output + card.to_s(1, print_ts)
         print output
     elif ((which_game == "freecell") or (which_game == "forecell") or (which_game == "bakers_game") or (which_game == "ko_bakers_game") or (which_game == "kings_only_bakers_game") or (which_game == "relaxed_freecell") or (which_game == "eight_off")):
         cols = []
@@ -326,16 +321,11 @@ def shlomif_main(args):
             for i in range(52):
                 if (i < 48):
                     cols[i%8].append(cards[i])
-                    # output[i%8] = output[i%8] + card_to_string(cards[i], (i>=48-8), print_ts)
                 else:
                     if (which_game == "forecell"):
                         freecells.append(cards[i])
-                        # output[8] = output[8] + card_to_string(cards[i], (i == 52), print_ts)
                     else:
                         freecells.append(cards[i])
-                        # output[8] = output[8] + card_to_string(cards[i], 0, print_ts) + "-"
-                        # if (i != 52):
-                        #       output[8] = output[8] + " "
         else:
             for i in range(52):
                 cols[i%8].append(cards[i])
@@ -354,9 +344,9 @@ def shlomif_main(args):
 
         for i in range(52):
             if (i < 50):
-                output[i%10] = output[i%10] + card_to_string(cards[i], (i>=50-10), print_ts)
+                output[i%10] = output[i%10] + cards[i].to_s(print_ts)
             else:
-                output[10] = output[10] + card_to_string(cards[i], (i == 52-1), print_ts)
+                output[10] = output[10] + cards[i].to_s(print_ts)
 
         print output[10]
         for i in range(10):
@@ -366,38 +356,38 @@ def shlomif_main(args):
         kings = []
         cards.reverse()
         for c in cards:
-            if is_card_king(c):
+            if c.is_king():
                 kings.append(i)
             i = i + 1
         for i in kings:
             j = i % n
             while j < i:
-                if not is_card_king(cards[j]):
+                if not cards[j].is_king():
                     cards[i], cards[j] = cards[j], cards[i]
                     break
                 j = j + n
 
-        output = range(13);
+        output = []
         for i in range(13):
-            output[i] = ""
+            output.append([])
 
         for i in range(52):
-            output[i%13] = output[i%13] + card_to_string(cards[i], (i>=52-13), print_ts)
+            output[i%13].append(cards[i])
 
         for i in range(13):
-            print output[i]
+            print column_to_string(output[i], print_ts)
     elif (which_game == "gypsy"):
         output = range(8);
         for i in range(8):
             output[i] = ""
         for i in range(24):
-            output[i%8] = output[i%8] + flip_card(card_to_string(cards[i], 1, print_ts), (i<16))
+            output[i%8] = output[i%8] + cards[i].to_s(print_ts)
             if (i < 16):
                 output[i%8] = output[i%8] + " "
 
         talon = "Talon:"
         for i in range(24,8*13):
-            talon = talon + " " + card_to_string(cards[i], 1, print_ts)
+            talon = talon + " " + cards[i].to_s(print_ts)
                 
         print talon
         for i in range(8):
@@ -405,7 +395,7 @@ def shlomif_main(args):
     elif ((which_game == "klondike") or (which_game == "klondike_by_threes") or (which_game == "casino_klondike") or (which_game == "small_harp") or (which_game == "thumb_and_pouch") or (which_game == "vegas_klondike") or (which_game == "whitehead")):
         #o = ""
         #for i in cards:
-        #    o = o + " " + card_to_string(i, 1)
+        #    o = o + " " + i.to_s()
         #print o
         output = range(7);
         for i in range(7):
@@ -413,15 +403,15 @@ def shlomif_main(args):
         card_num = 0
         for r in range(1,7):
             for s in range(7-r):
-                output[s] = output[s] + card_to_string(cards[card_num], 0, print_ts, flipped=(which_game != "whitehead"))
+                output[s] = output[s] + cards[card_num].to_s(print_ts)
                 card_num = card_num + 1
         for s in range(7):
-            output[s] = output[s] + card_to_string(cards[card_num], 1, print_ts)
+            output[s] = output[s] + cards[card_num].to_s(print_ts)
             card_num = card_num + 1
 
         talon = "Talon: "
         while card_num < 52:
-            talon = talon + card_to_string(cards[card_num], (card_num == 52-1), print_ts)
+            talon = talon + cards[card_num].to_s(print_ts)
             card_num = card_num + 1
             
         
@@ -438,11 +428,11 @@ def shlomif_main(args):
         num_cards = 9
         while num_cards >= 3:
             for s in range(num_cards):
-                output[s] = output[s] + card_to_string(cards[card_num], 0, print_ts)
+                output[s] = output[s] + cards[card_num].to_s(print_ts)
                 card_num = card_num + 1
             num_cards = num_cards - 1
         for s in range(10):
-            output[s] = output[s] + card_to_string(cards[card_num], 1, print_ts)
+            output[s] = output[s] + cards[card_num].to_s(print_ts)
             card_num = card_num + 1
         for i in output:
             print i
@@ -453,14 +443,14 @@ def shlomif_main(args):
             output[i] = ""
         for i in range(1, 7):
             for j in range(i, 7):
-                output[j] = output[j] + card_to_string(cards[card_num], 0, print_ts, 1)
+                output[j] = output[j] + cards[card_num].to_s(print_ts)
                 card_num = card_num + 1
         for i in range(4):
             for j in range(1,7):
-                output[j] = output[j] + card_to_string(cards[card_num], 0, print_ts, 0)
+                output[j] = output[j] + cards[card_num].to_s(print_ts)
                 card_num = card_num + 1
         for i in range(7):
-            output[i] = output[i] + card_to_string(cards[card_num], 1, print_ts, 0)
+            output[i] = output[i] + cards[card_num].to_s(print_ts)
             card_num = card_num + 1
         for i in output:
             print i
@@ -487,14 +477,14 @@ def shlomif_main(args):
                         foundations[cards[card_num] >> 4] = foundations[cards[card_num] >> 4] + 1;
                         card_num = card_num + 1
                         continue
-                output[s] = output[s] + card_to_string(cards[card_num], (i == 6-1), print_ts)
+                output[s] = output[s] + cards[card_num].to_s(print_ts)
                 card_num = card_num + 1
             if (card_num == len(cards)):
                 break
                 
         if (which_game == "streets_and_alleys"):
             for s in range(4):
-                output[s] = output[s] + " " + card_to_string(cards[card_num], 1, print_ts)
+                output[s] = output[s] + " " + cards[card_num].to_s(print_ts)
                 card_num = card_num + 1
         
         f_str = "Foundations:"
@@ -510,8 +500,8 @@ def shlomif_main(args):
     elif (which_game == "fan"):
         output = [""] * 18
         for i in range(52-1):
-            output[i%17] = output[i%17] + card_to_string(cards[i], (i >= 2*17), print_ts)
-        output[17] = output[17] + card_to_string(cards[i+1], 1, print_ts);
+            output[i%17] = output[i%17] + cards[i].to_s(print_ts)
+        output[17] = output[17] + cards[i+1].to_s(print_ts);
         for i in output:
             print i
     else:
