@@ -435,15 +435,13 @@ def shlomif_main(args):
                     break
                 j = j + n
 
-        output = []
-        for i in range(13):
-            output.append([])
+        cols = Columns(13)
 
         for i in range(52):
-            output[i%13].append(cards[i])
+            cols.add(i%13, cards[i])
+        
+        cols.output()
 
-        for i in range(13):
-            print column_to_string(output[i])
     elif game_class == "gypsy":
         output = range(8);
         for i in range(8):
