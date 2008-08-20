@@ -568,12 +568,14 @@ def shlomif_main(args):
         for i in output:
             print i
     elif game_class == "fan":
-        output = [""] * 18
+        cols = Columns(18)
+
         for i in range(52-1):
-            output[i%17] = output[i%17] + cards[i].to_s()
-        output[17] = output[17] + cards[i+1].to_s();
-        for i in output:
-            print i
+            cols.add(i%17, cards[i])
+        
+        cols.add(17, cards[i+1])
+
+        cols.output()
     else:
         print "Unknown game type " + which_game + "\n"
         

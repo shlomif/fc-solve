@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 use Test::Differences;
 
 {
@@ -173,5 +173,38 @@ EOF
         $got,
         $expected,
         "Simple Simon 250",
+    );
+}
+
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 4200 fan`;
+    
+    my $expected = <<"EOF";
+7H 9H 3S
+4C 8H 8C
+TH TS 3H
+9D QD 5H
+5S AS JH
+QC 3D 6D
+5D KD 9C
+TC 4D KC
+JD 8S 9S
+7S JC 2S
+4S KS KH
+2H 5C AH
+2C QS 3C
+4H 2D 6S
+TD 6H 7D
+7C AC JS
+6C 8D QH
+AD
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Fan 4200",
     );
 }
