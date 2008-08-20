@@ -399,7 +399,7 @@ def shlomif_main(args):
                 output = output + card.to_s(1)
         print output
     elif game_class == "freecell":
-        is_fc = ((which_game == "forecell") or (which_game == "eight_off"))
+        is_fc = (which_game in ('forecell', 'eight_off'))
 
         cols = Board(8, with_freecells=is_fc)
 
