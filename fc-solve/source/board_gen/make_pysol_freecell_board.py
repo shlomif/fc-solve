@@ -264,6 +264,29 @@ class Columns:
         for column in self.cols:
             print column_to_string(column)
 
+class Board:
+    def __init__(self, num_columns, with_freecells=False):
+        self.with_freecells = with_freecells
+        self.columns = Columns(num_columns)
+        if (self.with_freecells):
+            self.freecells = []
+    
+    def add(self, idx, card):
+        return self.columns.add(idx, card)
+
+    def print_freecells(self):
+        print "FC: " + column_to_string(self.freecells)
+
+    def output(self):
+        if (self.with_freecells):
+            self.print_freecells()
+        self.columns.output()
+
+    def add_freecell(self, card):
+        if not self.with_freecells:
+            raise "Layout does not have freecells!"
+        self.freecells.append(card)
+
 def empty_card():
     ret = Card(1,1,1)
     ret.empty = True
@@ -289,8 +312,6 @@ def flip_card(card_str, flip):
     else:
         return card_str
 
-def print_freecells(freecells):
-    print "FC: " + column_to_string(freecells)
 
 class WhichGame:
     REVERSE_MAP = \
@@ -378,42 +399,37 @@ def shlomif_main(args):
                 output = output + card.to_s(1)
         print output
     elif game_class == "freecell":
-        freecells = []
+        is_fc = ((which_game == "forecell") or (which_game == "eight_off"))
 
-        cols = Columns(8);
+        cols = Board(8, with_freecells=is_fc)
 
-        if ((which_game == "forecell") or (which_game == "eight_off")):
+        if is_fc:
             for i in range(52):
                 if (i < 48):
                     cols.add(i%8, cards[i])
                 else:
+                    # TODO : what is the meaning of this conditional
                     if (which_game == "forecell"):
-                        freecells.append(cards[i])
+                        cols.add_freecell(cards[i])
                     else:
-                        freecells.append(cards[i])
+                        cols.add_freecell(cards[i])
         else:
             for i in range(52):
                 cols.add(i%8, cards[i])
         
-        if ((which_game == "forecell") or (which_game == "eight_off")):
-            print_freecells(freecells)
-
         cols.output();
 
     elif game_class == "seahaven":
-        freecells = []
+        cols = Board(10, with_freecells=True)
 
-        cols = Columns(10)
-
-        freecells.append(empty_card())
+        cols.add_freecell(empty_card())
 
         for i in range(52):
             if (i < 50):
                 cols.add(i%10, cards[i])
             else:
-                freecells.append(cards[i])
+                cols.add_freecell(cards[i])
 
-        print_freecells(freecells)
         cols.output()
         
     elif game_class == "bakers_dozen":
@@ -432,7 +448,7 @@ def shlomif_main(args):
                     break
                 j = j + n
 
-        cols = Columns(13)
+        cols = Board(13)
 
         for i in range(52):
             cols.add(i%13, cards[i])
@@ -487,7 +503,7 @@ def shlomif_main(args):
 
         card_num = 0
 
-        cols = Columns(10)
+        cols = Board(10)
 
         num_cards = 9
 
@@ -565,7 +581,7 @@ def shlomif_main(args):
         for i in output:
             print i
     elif game_class == "fan":
-        cols = Columns(18)
+        cols = Board(18)
 
         for i in range(52-1):
             cols.add(i%17, cards[i])
