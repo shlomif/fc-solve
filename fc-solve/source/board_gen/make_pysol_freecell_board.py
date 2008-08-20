@@ -333,7 +333,7 @@ class WhichGame:
                 "fan" : True
         }
 
-    def __init__(self):
+    def __init__(self, game_id):
         mymap = {}
         for k in self.REVERSE_MAP.keys():
             if (self.REVERSE_MAP[k] == True):
@@ -342,9 +342,13 @@ class WhichGame:
                 for alias in self.REVERSE_MAP[k]:
                     mymap[alias] = k
         self.games_map = mymap
+        self.game_id = game_id
 
-    def lookup(self, id):
-        return self.games_map[id];
+    def lookup(self):
+        return self.games_map[self.game_id];
+
+    def is_two_decks(self):
+        return self.game_id in ("der_katz", "der_katzenschwantz", "die_schlange", "gypsy")
 
 def shuffle(orig_cards, game_num):
     if game_num <= 32000:
@@ -375,11 +379,11 @@ def shlomif_main(args):
     else:
         which_game = "freecell"
 
-    game_chooser = WhichGame()
+    game_chooser = WhichGame(which_game)
 
-    game_class = game_chooser.lookup(which_game)
+    game_class = game_chooser.lookup()
 
-    if which_game in ("der_katz", "der_katzenschwantz", "die_schlange", "gypsy"):
+    if game_chooser.is_two_decks():
         orig_cards = createCards(2, print_ts)
     else:
         orig_cards = createCards(1, print_ts)
