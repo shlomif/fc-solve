@@ -193,6 +193,35 @@ class LCRandom31(PysolRandom):
         self.seed = (self.seed*214013L + 2531011L) & self.MAX_SEED
         return a + (int(self.seed >> 16) % (b+1-a))
 
+def get_card_num(rank,print_ts):
+    ret = ""
+    if rank == 1:
+        ret = ret + "A"
+    elif rank < 10:
+        ret = ret + str(rank)
+    elif rank == 10:
+        if print_ts:
+            ret = ret + "T"
+        else:
+            ret = ret + "10"
+    elif rank == 11:
+        ret = ret + "J"
+    elif rank == 12:
+        ret = ret + "Q"
+    elif rank == 13:
+        ret = ret + "K"
+    return ret;
+
+def get_card_suit(suit):
+    if suit == 0:
+        return "C"
+    elif suit == 1:
+        return "S"
+    elif suit == 2:
+        return "H"
+    elif suit == 3:
+        return "D"
+
 class Card:
 
     KING = 13
@@ -222,36 +251,6 @@ def createCards(num_decks, print_ts):
             for rank in range(13):
                 cards.append(Card(rank+1, suit, print_ts))
     return cards
-
-def get_card_suit(suit):
-    if suit == 0:
-        return "C"
-    elif suit == 1:
-        return "S"
-    elif suit == 2:
-        return "H"
-    elif suit == 3:
-        return "D"
-
-
-def get_card_num(rank,print_ts):
-    ret = ""
-    if rank == 1:
-        ret = ret + "A"
-    elif rank < 10:
-        ret = ret + str(rank)
-    elif rank == 10:
-        if print_ts:
-            ret = ret + "T"
-        else:
-            ret = ret + "10"
-    elif rank == 11:
-        ret = ret + "J"
-    elif rank == 12:
-        ret = ret + "Q"
-    elif rank == 13:
-        ret = ret + "K"
-    return ret;
 
 def column_to_list_of_strings(col):
     return map( lambda c: c.to_s(), col)
