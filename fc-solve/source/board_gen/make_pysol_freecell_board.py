@@ -345,26 +345,8 @@ class WhichGame:
 
     def lookup(self, id):
         return self.games_map[id];
-          
-def shlomif_main(args):
-    print_ts = 0
-    if (args[1] == "-t"):
-        print_ts = 1
-        args.pop(0)
-    game_num = long(args[1])
-    if (len(args) >= 3):
-        which_game = args[2]
-    else:
-        which_game = "freecell"
 
-    game_chooser = WhichGame()
-
-    game_class = game_chooser.lookup(which_game)
-
-    if ((which_game == "der_katz") or (which_game == "der_katzenschwantz") or (which_game == "die_schlange") or (which_game == "gypsy")):
-        orig_cards = createCards(2, print_ts)
-    else:
-        orig_cards = createCards(1, print_ts)
+def shuffle(orig_cards, game_num):
     if game_num <= 32000:
         r = LCRandom31()
         r.setSeed(game_num)
@@ -380,10 +362,32 @@ def shlomif_main(args):
         r.setSeed(game_num)
         r.shuffle(orig_cards)
 
+    return orig_cards
+
+def shlomif_main(args):
+    print_ts = 0
+    if (args[1] == "-t"):
+        print_ts = 1
+        args.pop(0)
+    game_num = long(args[1])
+    if (len(args) >= 3):
+        which_game = args[2]
+    else:
+        which_game = "freecell"
+
+    game_chooser = WhichGame()
+
+    game_class = game_chooser.lookup(which_game)
+
+    if which_game in ("der_katz", "der_katzenschwantz", "die_schlange", "gypsy"):
+        orig_cards = createCards(2, print_ts)
+    else:
+        orig_cards = createCards(1, print_ts)
+
+    orig_cards = shuffle(orig_cards, game_num)
     
-    cards = []
-    for i in range(len(orig_cards)):
-        cards.append(orig_cards[len(orig_cards)-i-1])
+    cards = orig_cards
+    cards.reverse()
 
     if game_class == "der_katz":
         if (which_game == "die_schlange"):
