@@ -247,6 +247,11 @@ class Card:
 
         return ret
 
+    def flip(self):
+        new_card = Card(self.rank, self.suit, self.print_ts)
+        new_card.flipped = 1
+        return new_card
+
 class Columns:
 
     def __init__(self, num):
@@ -536,23 +541,26 @@ def shlomif_main(args):
         board.output()
 
     elif game_class == "yukon":
+
+        board = Board(7)
         card_num = 0
-        output = range(7)
-        for i in range(7):
-            output[i] = ""
+
         for i in range(1, 7):
             for j in range(i, 7):
-                output[j] = output[j] + cards[card_num].to_s()
+                board.add(j, cards[card_num].flip())
                 card_num = card_num + 1
+
         for i in range(4):
             for j in range(1,7):
-                output[j] = output[j] + cards[card_num].to_s()
+                board.add(j, cards[card_num])
                 card_num = card_num + 1
+
         for i in range(7):
-            output[i] = output[i] + cards[card_num].to_s()
+            board.add(i, cards[card_num])
             card_num = card_num + 1
-        for i in output:
-            print i
+
+        board.output()
+
     elif game_class == "beleaguered_castle":
         if (which_game == "beleaguered_castle") or (which_game == "citadel"):
             new_cards = []
