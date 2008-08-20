@@ -381,15 +381,14 @@ def shlomif_main(args):
                 output = output + card.to_s(1)
         print output
     elif game_class == "freecell":
-        cols = []
         freecells = []
-        for i in range(8):
-            cols.append([])
+
+        cols = Columns(8);
 
         if ((which_game == "forecell") or (which_game == "eight_off")):
             for i in range(52):
                 if (i < 48):
-                    cols[i%8].append(cards[i])
+                    cols.add(i%8, cards[i])
                 else:
                     if (which_game == "forecell"):
                         freecells.append(cards[i])
@@ -397,12 +396,12 @@ def shlomif_main(args):
                         freecells.append(cards[i])
         else:
             for i in range(52):
-                cols[i%8].append(cards[i])
+                cols.add(i%8, cards[i])
         
         if ((which_game == "forecell") or (which_game == "eight_off")):
             print_freecells(freecells)
 
-        print_cols(cols)
+        cols.output();
 
     elif game_class == "seahaven":
         cols = []
