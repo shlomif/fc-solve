@@ -135,6 +135,14 @@ INSTALL(
         "share/doc/freecell-solver-${VERSION}/"
 )
 
+# Rebuild config.h if ver.txt has changed.
+ADD_CUSTOM_COMMAND(
+    OUTPUT "config.h.in"
+    DEPENDS "ver.txt"
+    COMMAND "touch" 
+    ARGS "config.h.in"
+    )
+
 ENABLE_TESTING()
 
 ADD_TEST(
