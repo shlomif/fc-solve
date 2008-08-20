@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Test::Differences;
 
 {
@@ -206,5 +206,28 @@ EOF
         $got,
         $expected,
         "Fan 4200",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 314 eight_off`;
+
+    my $expected = <<"EOF";
+FC: TD - 8D - 5D - 6S -
+7C QD 8H AS AD 2S
+5C 5H 2C QH 8C TS
+3H JD 4C 3S AH 9C
+5S 6C 4S 8S 3C KD
+QS JS 9H QC 6H 2H
+TH TC 7H 9D 3D 4H
+4D JC KC 7S JH 9S
+7D 6D 2D KH KS AC
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Eight Off 314",
     );
 }

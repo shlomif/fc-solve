@@ -408,11 +408,9 @@ def shlomif_main(args):
                 if (i < 48):
                     cols.add(i%8, cards[i])
                 else:
-                    # TODO : what is the meaning of this conditional
-                    if (which_game == "forecell"):
-                        cols.add_freecell(cards[i])
-                    else:
-                        cols.add_freecell(cards[i])
+                    cols.add_freecell(cards[i])
+                    if which_game == "eight_off":
+                        cols.add_freecell(empty_card())
         else:
             for i in range(52):
                 cols.add(i%8, cards[i])
