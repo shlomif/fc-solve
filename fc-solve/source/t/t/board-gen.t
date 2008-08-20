@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Test::Differences;
 
 {
@@ -101,5 +101,28 @@ EOF
         $got,
         $expected,
         "Testing for Bakers' Game",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py 1977 forecell`;
+    
+    my $expected = <<"EOF";
+FC: 2D 8H 5S 6H
+QH JC 7D 8S 4D 2C
+JD JH KS 9C QD 2S
+AD 10S 9D 3C 9S AC
+10C 7H 4S KD 2H 3S
+5C 6C 6D 4C 10D 8C
+JS QC 8D 7C 7S 6S
+3D AH 3H 10H 4H AS
+KC QS 5D 5H 9H KH
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Testing for Forecell",
     );
 }

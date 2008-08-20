@@ -253,6 +253,12 @@ def card_to_string(card,not_append_ws,print_ts,flipped=0):
     
     return ret
 
+def column_to_list_of_strings(col, print_ts):
+    return map( lambda c: card_to_string(c, 1, print_ts), col)
+
+def column_to_string(col, print_ts):
+    return " ".join(column_to_list_of_strings(col, print_ts))
+
 def is_card_king(card):
     rank = card & 0x0F
     return (rank == 13)
@@ -311,30 +317,35 @@ def shlomif_main(args):
                 output = output + card_to_string(card, 1, print_ts)
         print output
     elif ((which_game == "freecell") or (which_game == "forecell") or (which_game == "bakers_game") or (which_game == "ko_bakers_game") or (which_game == "kings_only_bakers_game") or (which_game == "relaxed_freecell") or (which_game == "eight_off")):
-        output = range(9)
-        for i in range(9):
-            output[i] = ""
+        cols = []
+        freecells = []
+        for i in range(8):
+            cols.append([])
 
         if ((which_game == "forecell") or (which_game == "eight_off")):
-            output[8] = "FC: ";
             for i in range(52):
                 if (i < 48):
-                    output[i%8] = output[i%8] + card_to_string(cards[i], (i>=48-8), print_ts)
+                    cols[i%8].append(cards[i])
+                    # output[i%8] = output[i%8] + card_to_string(cards[i], (i>=48-8), print_ts)
                 else:
                     if (which_game == "forecell"):
-                        output[8] = output[8] + card_to_string(cards[i], (i == 52), print_ts)
+                        freecells.append(cards[i])
+                        # output[8] = output[8] + card_to_string(cards[i], (i == 52), print_ts)
                     else:
-                        output[8] = output[8] + card_to_string(cards[i], 0, print_ts) + "-"
-                        if (i != 52):
-                            output[8] = output[8] + " "
+                        freecells.append(cards[i])
+                        # output[8] = output[8] + card_to_string(cards[i], 0, print_ts) + "-"
+                        # if (i != 52):
+                        #       output[8] = output[8] + " "
         else:
             for i in range(52):
-                output[i%8] = output[i%8] + card_to_string(cards[i], (i>=52-8), print_ts)
+                cols[i%8].append(cards[i])
         
         if ((which_game == "forecell") or (which_game == "eight_off")):
-            print output[8]
-        for i in range(8):
-            print output[i]
+            print "FC: " + column_to_string(freecells, print_ts)
+
+        for column in cols:
+            print column_to_string(column, print_ts)
+
     elif ((which_game == "seahaven_towers") or (which_game == "seahaven") or (which_game == "relaxed_seahaven") or (which_game == "relaxed_seahaven_towers")):
         output = range(11);
         for i in range(11):
