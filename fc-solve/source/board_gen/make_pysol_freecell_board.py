@@ -259,6 +259,9 @@ class Card:
         new_card.flipped = 1
         return new_card
 
+    def is_empty(self):
+        return self.empty
+
 class Columns:
 
     def __init__(self, num):
@@ -327,7 +330,7 @@ def flip_card(card_str, flip):
 def print_foundations(foundations):
     cells = []
     for f in [2,0,3,1]:
-        if (foundations[f] != 0):
+        if not foundations[f].is_empty():
             cells.append(get_card_suit(f) + "-" + foundations[f].rank_s())
 
     if len(cells):
