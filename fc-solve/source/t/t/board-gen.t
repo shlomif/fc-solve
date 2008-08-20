@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Test::Differences;
 
 {
@@ -273,5 +273,28 @@ EOF
         $got,
         $expected,
         "yukon 973",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 99 beleaguered_castle`;
+
+    my $expected = <<"EOF";
+Foundations: H-A C-A D-A S-A
+KD 3D JS 8C JC 6C
+8H TH 9C 8D 6S TD
+5S QH 2S 8S QD 9S
+7S QS 3S 6H 7D 2H
+KH 4H 4S 5D KS 3C
+JH KC 2C 7C 7H 9D
+4C QC 5C 4D JD 6D
+TS 9H 2D 3H TC 5H
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "beleaguered_castle 99",
     );
 }

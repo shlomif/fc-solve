@@ -224,6 +224,7 @@ def get_card_suit(suit):
 
 class Card:
 
+    ACE = 1
     KING = 13
 
     def __init__(self, rank, suit, print_ts):
@@ -236,11 +237,17 @@ class Card:
     def is_king(self):
         return self.rank == self.KING
 
+    def is_ace(self):
+        return self.rank == self.ACE
+
+    def rank_s(self):
+        return get_card_num(self.rank, self.print_ts)
+
     def to_s(self):
         if self.empty:
             return "-"
         ret = ""
-        ret = ret + get_card_num(self.rank, self.print_ts)
+        ret = ret + self.rank_s()
         ret = ret + get_card_suit(self.suit)
         if self.flipped:
             ret = "<" + ret + ">"
@@ -317,6 +324,18 @@ def flip_card(card_str, flip):
     else:
         return card_str
 
+def print_foundations(foundations):
+    cells = []
+    for f in [2,0,3,1]:
+        if (foundations[f] != 0):
+            cells.append(get_card_suit(f) + "-" + foundations[f].rank_s())
+
+    if len(cells):
+        print "Foundations:" + ("".join(map(lambda s: " "+s, cells)))
+
+    return;
+
+    
 def shuffle(orig_cards, game_num):
     if game_num <= 32000:
         r = LCRandom31()
@@ -562,48 +581,46 @@ def shlomif_main(args):
         board.output()
 
     elif game_class == "beleaguered_castle":
-        if (which_game == "beleaguered_castle") or (which_game == "citadel"):
-            new_cards = []
-            for c in cards:
-                if (c & 0x0F != 1):
-                    new_cards.append(c)
-            cards = new_cards;
-        output = range(8)
-        for i in range(8):
-            output[i] = ""
+        aces_up = which_game in ("beleaguered_castle", "citadel")
+    
+        foundations = map(lambda s:empty_card(),range(4))
 
+        if aces_up:
+            new_cards = []
+
+            for c in cards:
+                if c.is_ace():
+                    foundations[c.suit] = c
+                else:
+                    new_cards.append(c)
+
+            cards = new_cards;
+
+        board = Board(8)
         card_num = 0
-        if (which_game == "beleaguered_castle") or (which_game == "citadel"):
-            foundations = [1,1,1,1]
-        else:
-            foundations = [0,0,0,0]
+
         for i in range(6):
             for s in range(8):
-                if (which_game == "citadel"): 
-                    if (foundations[cards[card_num] >> 4]+1 == (cards[card_num] & 0x0F)):
-                        foundations[cards[card_num] >> 4] = foundations[cards[card_num] >> 4] + 1;
-                        card_num = card_num + 1
-                        continue
-                output[s] = output[s] + cards[card_num].to_s()
+                c = cards[card_num]
+                suit = c.suit
+                rank = c.rank
+                if (which_game == "citadel") and \
+                   (foundations[suit].rank+1 == rank):
+                    foundations[suit] = c
+                else:
+                    board.add(s, cards[card_num])
                 card_num = card_num + 1
             if (card_num == len(cards)):
                 break
                 
         if (which_game == "streets_and_alleys"):
             for s in range(4):
-                output[s] = output[s] + " " + cards[card_num].to_s()
+                board.add(s, cards[card_num])
                 card_num = card_num + 1
         
-        f_str = "Foundations:"
-        for f in [2,0,3,1]:
-            if (foundations[f] != 0):
-                f_str = f_str + " " + get_card_suit(f) + "-" + get_card_num(foundations[f])
-        
-        if (f_str != "Foundations:"):
-            print f_str
+        print_foundations(foundations)
+        board.output()
 
-        for i in output:
-            print i
     elif game_class == "fan":
         board = Board(18)
 
