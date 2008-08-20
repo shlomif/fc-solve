@@ -404,16 +404,18 @@ def shlomif_main(args):
     if game_class == "der_katz":
         if (which_game == "die_schlange"):
             print "Foundations: H-A S-A D-A C-A H-A S-A D-A C-A"
-        output = ""
+
+        cols = Board(9)
+        col_idx = 0
+
         for card in cards:
-            if ((card & 0x0F) == 13):
-                print output
-                output = ""
-            if (not((which_game == "die_schlange") and ((card & 0x0F) == 1))):
-                if (output != ""):
-                    output = output + " "        
-                output = output + card.to_s(1)
-        print output
+            if card.is_king():
+                col_idx = col_idx + 1
+            if not ((which_game == "die_schlange") and (card.rank == 1)):
+                cols.add(col_idx, card)
+
+        cols.output()
+
     elif game_class == "freecell":
         is_fc = (which_game in ('forecell', 'eight_off'))
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Test::Differences;
 
 {
@@ -229,5 +229,28 @@ EOF
         $got,
         $expected,
         "Eight Off 314",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 103 der_katzenschwantz`;
+
+    my $expected = <<"EOF";
+JC JS AH 2H 3H 2S 2D 9D 9C 4C QD TH 6H 6S 9C 3C 5H JD 4H JH 9S 7D 4D 4C JH QH 9D 2D
+KC
+KH 6D 9S 2C 3H
+KS QS
+KD TS AS 5S TD 5C 5H 3S 7C TH 6S 7H 5D 6C 4D 5S AC QS 8S 4S AH 2H JD TC 8H 3D 8S 5D 9H 6H AS 2S 8D QC AD AC 8D
+KD 6D
+KS 8C 7S QC QH 5C JS 7C 2C TS 7S 4H 9H 7D 4S 6C QD AD TD 8C 3C
+KC 7H TC 3S 3D 8H JC
+KH
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "der_katzenschwantz 103",
     );
 }
