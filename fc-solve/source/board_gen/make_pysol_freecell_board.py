@@ -216,6 +216,7 @@ def get_card_suit(suit):
     elif suit == 3:
         return "D"
 
+
 def get_card_num(rank,print_ts):
     ret = ""
     if rank == 1:
@@ -251,6 +252,10 @@ def card_to_string(card,not_append_ws,print_ts,flipped=0):
         ret = ret + " "
     
     return ret
+
+def is_card_king(card):
+    rank = card & 0x0F
+    return (rank == 13)
 
 def flip_card(card_str, flip):
     if flip:
@@ -348,19 +353,18 @@ def shlomif_main(args):
     elif (which_game == "bakers_dozen"):
         i, n = 0, 13 
         kings = []
+        cards.reverse()
         for c in cards:
-            if ((c & 0x0F) == 13):
+            if is_card_king(c):
                 kings.append(i)
             i = i + 1
         for i in kings:
             j = i % n
             while j < i:
-                if ((cards[j] & 0x0F) != 13):
-                    print "Performed Swap"
+                if not is_card_king(cards[j]):
                     cards[i], cards[j] = cards[j], cards[i]
                     break
                 j = j + n
-        cards.reverse()
 
         output = range(13);
         for i in range(13):
