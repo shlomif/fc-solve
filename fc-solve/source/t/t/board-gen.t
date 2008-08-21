@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 use Test::Differences;
 
 {
@@ -386,5 +386,27 @@ EOF
         $got,
         $expected,
         "klondike 460",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 468 small_harp`;
+
+    my $expected = <<"EOF";
+Talon: 8S AD 6S 7H AC 3S 9H 9D 8D TD 2S QH 4S JH 9C 4C QS AS AH 3H 4H KD 2D 5D
+<2H> <5C> <TH> <6C> <5S> <TS> 7D
+<JC> <2C> <3C> <3D> <TC> 7C
+<8H> <KS> <JD> <KC> 9S
+<QD> <QC> <4D> 6D
+<8C> <7S> 5H
+<6H> KH
+JS
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "small_harp 468",
     );
 }
