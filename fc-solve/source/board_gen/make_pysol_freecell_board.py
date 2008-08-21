@@ -193,25 +193,6 @@ class LCRandom31(PysolRandom):
         self.seed = (self.seed*214013L + 2531011L) & self.MAX_SEED
         return a + (int(self.seed >> 16) % (b+1-a))
 
-def get_card_num(rank,print_ts):
-    ret = ""
-    if rank == 1:
-        ret = ret + "A"
-    elif rank < 10:
-        ret = ret + str(rank)
-    elif rank == 10:
-        if print_ts:
-            ret = ret + "T"
-        else:
-            ret = ret + "10"
-    elif rank == 11:
-        ret = ret + "J"
-    elif rank == 12:
-        ret = ret + "Q"
-    elif rank == 13:
-        ret = ret + "K"
-    return ret;
-
 class Card:
 
     ACE = 1
@@ -231,7 +212,10 @@ class Card:
         return self.rank == self.ACE
 
     def rank_s(self):
-        return get_card_num(self.rank, self.print_ts)
+        s = "0A23456789TJQK"[self.rank]
+        if (not self.print_ts) and s == "T":
+            s = "10"
+        return s
 
     def suit_s(self):
         return "CSHD"[self.suit];
