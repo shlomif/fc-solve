@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 use Test::Differences;
 
 {
@@ -364,5 +364,27 @@ EOF
         $got,
         $expected,
         "gypsy 200",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 460 klondike`;
+
+    my $expected = <<"EOF";
+Talon: 3C AD AH KH KS 2H 3S 4D QS TD 8H AS 8D 6C 5D 4S 3H 6D 2C 7S AC 9S 7C TC
+QC
+<4H> 6S
+<KD> <9H> 2S
+<8S> <TH> <JD> 5H
+<TS> <JH> <5C> <KC> 2D
+<JC> <6H> <7D> <3D> <JS> 8C
+<9C> <5S> <QH> <9D> <QD> <4C> 7H
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "klondike 460",
     );
 }

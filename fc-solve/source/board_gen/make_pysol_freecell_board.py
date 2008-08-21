@@ -275,6 +275,9 @@ class Columns:
     def add(self, idx, card):
         self.cols[idx].append(card)
 
+    def rev(self):
+        self.cols.reverse()
+
     def output(self):
         for column in self.cols:
             print column_to_string(column)
@@ -289,6 +292,9 @@ class Board:
         if (self.with_talon):
             self.talon = []
     
+    def reverse_cols(self):
+        return self.columns.rev()
+
     def add(self, idx, card):
         return self.columns.add(idx, card)
 
@@ -553,33 +559,24 @@ def shlomif_main(args):
         board.output()
 
     elif game_class == "klondike":
-        #o = ""
-        #for i in cards:
-        #    o = o + " " + i.to_s()
-        #print o
-        output = range(7);
-        for i in range(7):
-            output[i] = ""
+        board = Board(7, with_talon=True)
         card_num = 0
+
         for r in range(1,7):
             for s in range(7-r):
-                output[s] = output[s] + cards[card_num].to_s()
-                card_num = card_num + 1
-        for s in range(7):
-            output[s] = output[s] + cards[card_num].to_s()
-            card_num = card_num + 1
+                board.add(s, game.next().flip())
 
-        talon = "Talon: "
-        while card_num < 52:
-            talon = talon + cards[card_num].to_s()
-            card_num = card_num + 1
-            
-        
-        print talon
-        if (not (which_game == "small_harp")):
-            output.reverse();
-        for i in output:
-            print i
+        for s in range(7):
+            board.add(s, game.next())
+
+        for card in game:
+            board.add_talon(card)
+
+        if not (which_game == "small_harp"):
+            board.reverse_cols()
+
+        board.output()
+
     elif game_class == "simple_simon":
 
         board = Board(10)
