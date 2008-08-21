@@ -459,9 +459,9 @@ class Game:
         self.cards = cards
         self.card_idx = 0
 
-    def cyclical_deal(game, num_cards, num_cols):
+    def cyclical_deal(game, num_cards, num_cols, flipped=False):
         for i in range(num_cards):
-            game.board.add(i%num_cols, game.next())
+            game.board.add(i%num_cols, game.next().flip(flipped=flipped))
         return i
 
     ### These are the games variants:
@@ -527,23 +527,25 @@ class Game:
         game.cyclical_deal(52, 13)
 
     def gypsy(game):
-        game.board = Board(8, with_talon=True)
-        for i in range(8*3):
-            game.board.add((i % 8), game.next().flip(flipped=(i<8*2)))
+        num_cols = 8
+        game.board = Board(num_cols, with_talon=True)
+
+        game.cyclical_deal(num_cols*2, num_cols, flipped=True)
+        game.cyclical_deal(num_cols, num_cols, flipped=False)
 
         for card in game:
             game.board.add_talon(card)
     
     def klondike(game):
-        game.board = Board(7, with_talon=True)
+        num_cols = 7
+        game.board = Board(num_cols, with_talon=True)
         card_num = 0
 
-        for r in range(1,7):
-            for s in range(7-r):
+        for r in range(1,num_cols):
+            for s in range(num_cols-r):
                 game.board.add(s, game.next().flip())
 
-        for s in range(7):
-            game.board.add(s, game.next())
+        game.cyclical_deal(num_cols, num_cols)
 
         for card in game:
             game.board.add_talon(card)
