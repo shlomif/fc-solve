@@ -616,30 +616,12 @@ def shlomif_main(args):
 
     game_class = game.lookup()
 
+    if not game_class:
+        raise "Unknown game type " + game.game_id + "\n"
+
     game.deal(game_num)
 
-    if game_class == "der_katz":
-        game.der_katz()
-    elif game_class == "freecell":
-        game.freecell()
-    elif game_class == "seahaven":
-        game.seahaven()
-    elif game_class == "bakers_dozen":
-        game.bakers_dozen()
-    elif game_class == "gypsy":
-        game.gypsy()
-    elif game_class == "klondike":
-        game.klondike()
-    elif game_class == "simple_simon":
-        game.simple_simon()
-    elif game_class == "yukon":
-        game.yukon()
-    elif game_class == "beleaguered_castle":
-        game.beleaguered_castle()
-    elif game_class == "fan":
-        game.fan()
-    else:
-        raise "Unknown game type " + game.game_id + "\n"
+    getattr(game, game_class)()
 
     game.board.output()
             
