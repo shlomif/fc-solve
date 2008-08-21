@@ -464,6 +464,10 @@ class Game:
             game.board.add(i%num_cols, game.next().flip(flipped=flipped))
         return i
 
+    def add_all_to_talon(game):
+        for card in game:
+            game.board.add_talon(card)
+
     ### These are the games variants:
     ### Each one is a callback.
     def der_katz(game):
@@ -532,9 +536,8 @@ class Game:
 
         game.cyclical_deal(num_cols*2, num_cols, flipped=True)
         game.cyclical_deal(num_cols, num_cols, flipped=False)
-
-        for card in game:
-            game.board.add_talon(card)
+        
+        game.add_all_to_talon()
     
     def klondike(game):
         num_cols = 7
@@ -547,8 +550,7 @@ class Game:
 
         game.cyclical_deal(num_cols, num_cols)
 
-        for card in game:
-            game.board.add_talon(card)
+        game.add_all_to_talon()
 
         if not (game.game_id == "small_harp"):
             game.board.reverse_cols()
@@ -605,18 +607,18 @@ class Game:
             game.cyclical_deal(4, 4)
 
     def yukon(game):
-        game.board = Board(7)
+        num_cols = 7
+        game.board = Board(num_cols)
 
-        for i in range(1, 7):
-            for j in range(i, 7):
+        for i in range(1, num_cols):
+            for j in range(i, num_cols):
                 game.board.add(j, game.next().flip())
 
         for i in range(4):
-            for j in range(1,7):
+            for j in range(1,num_cols):
                 game.board.add(j, game.next())
-
-        for i in range(7):
-            game.board.add(i, game.next())
+    
+        game.cyclical_deal(num_cols, num_cols)
 
 def shlomif_main(args):
     print_ts = 0
