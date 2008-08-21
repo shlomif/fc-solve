@@ -446,6 +446,161 @@ class WhichGame:
         self.cards = cards
         self.card_idx = 0
 
+    def der_katz(game):
+        if (game.game_id == "die_schlange"):
+            print "Foundations: H-A S-A D-A C-A H-A S-A D-A C-A"
+
+        game.board = board = Board(9)
+        col_idx = 0
+
+        for card in game:
+            if card.is_king():
+                col_idx = col_idx + 1
+            if not ((game.game_id == "die_schlange") and (card.rank == 1)):
+                board.add(col_idx, card)
+
+    def freecell(game):
+        is_fc = (game.game_id in ('forecell', 'eight_off'))
+
+        game.board = Board(8, with_freecells=is_fc)
+
+        if is_fc:
+            for i in range(52):
+                if (i < 48):
+                    game.board.add(i%8, game.next())
+                else:
+                    game.board.add_freecell(game.next())
+                    if game.game_id == "eight_off":
+                        game.board.add_freecell(empty_card())
+        else:
+            for i in range(52):
+                game.board.add(i%8, game.next())
+
+    def seahaven(game):
+        game.board = Board(10, with_freecells=True)
+
+        game.board.add_freecell(empty_card())
+
+        for i in range(52):
+            if (i < 50):
+                game.board.add(i%10, game.next())
+            else:
+                game.board.add_freecell(game.next())
+    
+    def bakers_dozen(game):
+        i, n = 0, 13 
+        kings = []
+        cards = game.cards
+        cards.reverse()
+        for c in cards:
+            if c.is_king():
+                kings.append(i)
+            i = i + 1
+        for i in kings:
+            j = i % n
+            while j < i:
+                if not cards[j].is_king():
+                    cards[i], cards[j] = cards[j], cards[i]
+                    break
+                j = j + n
+
+        game.board = Board(13)
+
+        for i in range(52):
+            game.board.add(i%13, cards[i])
+
+    def gypsy(game):
+        game.board = Board(8, with_talon=True)
+        for i in range(8*3):
+            game.board.add((i % 8), game.next().flip(flipped=(i<8*2)))
+
+        for card in game:
+            game.board.add_talon(card)
+    
+    def klondike(game):
+        game.board = Board(7, with_talon=True)
+        card_num = 0
+
+        for r in range(1,7):
+            for s in range(7-r):
+                game.board.add(s, game.next().flip())
+
+        for s in range(7):
+            game.board.add(s, game.next())
+
+        for card in game:
+            game.board.add_talon(card)
+
+        if not (game.game_id == "small_harp"):
+            game.board.reverse_cols()
+
+    def simple_simon(game):
+        game.board = Board(10)
+
+        num_cards = 9
+
+        while num_cards >= 3:
+            for s in range(num_cards):
+                game.board.add(s, game.next())
+            num_cards = num_cards - 1
+
+        for s in range(10):
+            game.board.add(s, game.next())
+
+    def fan(game):
+        game.board = Board(18)
+
+        for i in range(52-1):
+            game.board.add(i%17, game.next())
+        
+        game.board.add(17, game.next())
+
+    def beleaguered_castle(game):
+        aces_up = game.game_id in ("beleaguered_castle", "citadel")
+    
+        game.board = Board(8, with_foundations=True)
+
+        if aces_up:
+            new_cards = []
+
+            for c in game:
+                if c.is_ace():
+                    game.board.put_into_founds(c)
+                else:
+                    new_cards.append(c)
+
+            game.new_cards(new_cards)
+
+
+        for i in range(6):
+            for s in range(8):
+                c = game.next()
+                if (game.game_id == "citadel") and game.board.put_into_founds(c):
+                    # Already dealt with this card
+                    True
+                else:
+                    game.board.add(s, c)
+            if game.no_more_cards():
+                break
+
+        if (game.game_id == "streets_and_alleys"):
+            for s in range(4):
+                game.board.add(s, game.next())
+
+    def yukon(game):
+        game.board = Board(7)
+
+        for i in range(1, 7):
+            for j in range(i, 7):
+                game.board.add(j, game.next().flip())
+
+        for i in range(4):
+            for j in range(1,7):
+                game.board.add(j, game.next())
+
+        for i in range(7):
+            game.board.add(i, game.next())
+
 def shlomif_main(args):
     print_ts = 0
     if (args[1] == "-t"):
@@ -464,166 +619,29 @@ def shlomif_main(args):
     game.deal(game_num)
 
     if game_class == "der_katz":
-        if (which_game == "die_schlange"):
-            print "Foundations: H-A S-A D-A C-A H-A S-A D-A C-A"
-
-        board = Board(9)
-        col_idx = 0
-
-        for card in game:
-            if card.is_king():
-                col_idx = col_idx + 1
-            if not ((which_game == "die_schlange") and (card.rank == 1)):
-                board.add(col_idx, card)
-
+        game.der_katz()
     elif game_class == "freecell":
-        is_fc = (which_game in ('forecell', 'eight_off'))
-
-        board = Board(8, with_freecells=is_fc)
-
-        if is_fc:
-            for i in range(52):
-                if (i < 48):
-                    board.add(i%8, game.next())
-                else:
-                    board.add_freecell(game.next())
-                    if which_game == "eight_off":
-                        board.add_freecell(empty_card())
-        else:
-            for i in range(52):
-                board.add(i%8, game.next())
-        
+        game.freecell()
     elif game_class == "seahaven":
-        board = Board(10, with_freecells=True)
-
-        board.add_freecell(empty_card())
-
-        for i in range(52):
-            if (i < 50):
-                board.add(i%10, game.next())
-            else:
-                board.add_freecell(game.next())
-
+        game.seahaven()
     elif game_class == "bakers_dozen":
-        i, n = 0, 13 
-        kings = []
-        cards = game.cards
-        cards.reverse()
-        for c in cards:
-            if c.is_king():
-                kings.append(i)
-            i = i + 1
-        for i in kings:
-            j = i % n
-            while j < i:
-                if not cards[j].is_king():
-                    cards[i], cards[j] = cards[j], cards[i]
-                    break
-                j = j + n
-
-        board = Board(13)
-
-        for i in range(52):
-            board.add(i%13, cards[i])
-        
+        game.bakers_dozen()
     elif game_class == "gypsy":
-        board = Board(8, with_talon=True)
-        for i in range(8*3):
-            board.add((i % 8), game.next().flip(flipped=(i<8*2)))
-
-        for card in game:
-            board.add_talon(card)
-
+        game.gypsy()
     elif game_class == "klondike":
-        board = Board(7, with_talon=True)
-        card_num = 0
-
-        for r in range(1,7):
-            for s in range(7-r):
-                board.add(s, game.next().flip())
-
-        for s in range(7):
-            board.add(s, game.next())
-
-        for card in game:
-            board.add_talon(card)
-
-        if not (which_game == "small_harp"):
-            board.reverse_cols()
-
+        game.klondike()
     elif game_class == "simple_simon":
-
-        board = Board(10)
-
-        num_cards = 9
-
-        while num_cards >= 3:
-            for s in range(num_cards):
-                board.add(s, game.next())
-            num_cards = num_cards - 1
-
-        for s in range(10):
-            board.add(s, game.next())
-
+        game.simple_simon()
     elif game_class == "yukon":
-
-        board = Board(7)
-
-        for i in range(1, 7):
-            for j in range(i, 7):
-                board.add(j, game.next().flip())
-
-        for i in range(4):
-            for j in range(1,7):
-                board.add(j, game.next())
-
-        for i in range(7):
-            board.add(i, game.next())
-
+        game.yukon()
     elif game_class == "beleaguered_castle":
-        aces_up = which_game in ("beleaguered_castle", "citadel")
-    
-        board = Board(8, with_foundations=True)
-
-        if aces_up:
-            new_cards = []
-
-            for c in game:
-                if c.is_ace():
-                    board.put_into_founds(c)
-                else:
-                    new_cards.append(c)
-
-            game.new_cards(new_cards)
-
-
-        for i in range(6):
-            for s in range(8):
-                c = game.next()
-                if (which_game == "citadel") and board.put_into_founds(c):
-                    # Already dealt with this card
-                    True
-                else:
-                    board.add(s, c)
-            if game.no_more_cards():
-                break
-
-        if (which_game == "streets_and_alleys"):
-            for s in range(4):
-                board.add(s, game.next())
-
+        game.beleaguered_castle()
     elif game_class == "fan":
-        board = Board(18)
-
-        for i in range(52-1):
-            board.add(i%17, game.next())
-        
-        board.add(17, game.next())
-
+        game.fan()
     else:
-        raise "Unknown game type " + which_game + "\n"
+        raise "Unknown game type " + game.game_id + "\n"
 
-    board.output()
+    game.board.output()
             
 if __name__ == "__main__":
     sys.exit(shlomif_main(sys.argv))
