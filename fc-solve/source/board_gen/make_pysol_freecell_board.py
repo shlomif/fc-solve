@@ -373,7 +373,7 @@ def shuffle(orig_cards, game_num):
 
     return orig_cards
 
-class WhichGame:
+class Game:
     REVERSE_MAP = \
         { 
                 "freecell": 
@@ -612,7 +612,7 @@ def shlomif_main(args):
     else:
         which_game = "freecell"
 
-    game = WhichGame(which_game, print_ts)
+    game = Game(which_game, print_ts)
 
     game_class = game.lookup()
 
