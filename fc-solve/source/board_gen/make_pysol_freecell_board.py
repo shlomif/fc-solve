@@ -393,7 +393,7 @@ class Game:
                 "fan" : None
         }
 
-    def __init__(self, game_id, print_ts):
+    def __init__(self, game_id, game_num, print_ts):
         mymap = {}
         for k in self.REVERSE_MAP.keys():
             if self.REVERSE_MAP[k] is None:
@@ -403,7 +403,20 @@ class Game:
                     mymap[alias] = k
         self.games_map = mymap
         self.game_id = game_id
+        self.game_num = game_num
         self.print_ts = print_ts
+
+    def print_layout(self):
+        game_class = self.lookup()
+
+        if not game_class:
+            raise "Unknown game type " + self.game_id + "\n"
+
+        self.deal()
+
+        getattr(self, game_class)()
+
+        self.board.output()
 
     def lookup(self):
         return self.games_map[self.game_id];
@@ -417,10 +430,10 @@ class Game:
         else:
             return 1
 
-    def deal(self, game_num):
+    def deal(self):
         orig_cards = createCards(self.get_num_decks(), self.print_ts)
     
-        orig_cards = shuffle(orig_cards, game_num)
+        orig_cards = shuffle(orig_cards, self.game_num)
     
         cards = orig_cards
         cards.reverse()
@@ -446,6 +459,8 @@ class Game:
         self.cards = cards
         self.card_idx = 0
 
+    ### These are the games variants:
+    ### Each one is a callback.
     def der_katz(game):
         if (game.game_id == "die_schlange"):
             print "Foundations: H-A S-A D-A C-A H-A S-A D-A C-A"
@@ -612,19 +627,9 @@ def shlomif_main(args):
     else:
         which_game = "freecell"
 
-    game = Game(which_game, print_ts)
+    game = Game(which_game, game_num, print_ts)
+    game.print_layout();
 
-    game_class = game.lookup()
-
-    if not game_class:
-        raise "Unknown game type " + game.game_id + "\n"
-
-    game.deal(game_num)
-
-    getattr(game, game_class)()
-
-    game.board.output()
-            
 if __name__ == "__main__":
     sys.exit(shlomif_main(sys.argv))
 
