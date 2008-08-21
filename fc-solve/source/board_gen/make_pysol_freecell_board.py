@@ -357,6 +357,16 @@ def shuffle(orig_cards, game_num):
 
     return orig_cards
 
+class WhichGameIter:
+    def __init__(self, game):
+        self.game = game
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        return self.game.next()
+ 
 class WhichGame:
     REVERSE_MAP = \
         { 
@@ -408,8 +418,27 @@ class WhichGame:
     
         cards = orig_cards
         cards.reverse()
-        
-        return cards
+
+        self.cards = cards
+        self.card_idx = 0
+        return True
+    
+    def __iter__(self):
+        return WhichGameIter(self)
+
+    def no_more_cards(self):
+        return self.card_idx >= len(self.cards)
+
+    def next(self):
+        if self.no_more_cards():
+            raise StopIteration
+        c = self.cards[self.card_idx]
+        self.card_idx = self.card_idx + 1
+        return c
+
+    def new_cards(self, cards):
+        self.cards = cards
+        self.card_idx = 0
 
 def shlomif_main(args):
     print_ts = 0
@@ -422,11 +451,11 @@ def shlomif_main(args):
     else:
         which_game = "freecell"
 
-    game_chooser = WhichGame(which_game, print_ts)
+    game = WhichGame(which_game, print_ts)
 
-    game_class = game_chooser.lookup()
+    game_class = game.lookup()
 
-    cards = game_chooser.deal(game_num)
+    game.deal(game_num)
 
     if game_class == "der_katz":
         if (which_game == "die_schlange"):
@@ -435,7 +464,7 @@ def shlomif_main(args):
         board = Board(9)
         col_idx = 0
 
-        for card in cards:
+        for card in game:
             if card.is_king():
                 col_idx = col_idx + 1
             if not ((which_game == "die_schlange") and (card.rank == 1)):
@@ -451,14 +480,14 @@ def shlomif_main(args):
         if is_fc:
             for i in range(52):
                 if (i < 48):
-                    board.add(i%8, cards[i])
+                    board.add(i%8, game.next())
                 else:
-                    board.add_freecell(cards[i])
+                    board.add_freecell(game.next())
                     if which_game == "eight_off":
                         board.add_freecell(empty_card())
         else:
             for i in range(52):
-                board.add(i%8, cards[i])
+                board.add(i%8, game.next())
         
         board.output();
 
@@ -469,15 +498,16 @@ def shlomif_main(args):
 
         for i in range(52):
             if (i < 50):
-                board.add(i%10, cards[i])
+                board.add(i%10, game.next())
             else:
-                board.add_freecell(cards[i])
+                board.add_freecell(game.next())
 
         board.output()
         
     elif game_class == "bakers_dozen":
         i, n = 0, 13 
         kings = []
+        cards = game.cards
         cards.reverse()
         for c in cards:
             if c.is_king():
@@ -544,42 +574,34 @@ def shlomif_main(args):
             print i
     elif game_class == "simple_simon":
 
-        card_num = 0
-
         board = Board(10)
 
         num_cards = 9
 
         while num_cards >= 3:
             for s in range(num_cards):
-                board.add(s, cards[card_num])
-                card_num = card_num + 1
+                board.add(s, game.next())
             num_cards = num_cards - 1
 
         for s in range(10):
-            board.add(s, cards[card_num])
-            card_num = card_num + 1
+            board.add(s, game.next())
 
         board.output()
 
     elif game_class == "yukon":
 
         board = Board(7)
-        card_num = 0
 
         for i in range(1, 7):
             for j in range(i, 7):
-                board.add(j, cards[card_num].flip())
-                card_num = card_num + 1
+                board.add(j, game.next().flip())
 
         for i in range(4):
             for j in range(1,7):
-                board.add(j, cards[card_num])
-                card_num = card_num + 1
+                board.add(j, game.next())
 
         for i in range(7):
-            board.add(i, cards[card_num])
-            card_num = card_num + 1
+            board.add(i, game.next())
 
         board.output()
 
@@ -591,35 +613,33 @@ def shlomif_main(args):
         if aces_up:
             new_cards = []
 
-            for c in cards:
+            for c in game:
                 if c.is_ace():
                     foundations[c.suit] = c
                 else:
                     new_cards.append(c)
 
             cards = new_cards;
+            game.new_cards(new_cards)
 
         board = Board(8)
-        card_num = 0
 
         for i in range(6):
             for s in range(8):
-                c = cards[card_num]
+                c = game.next()
                 suit = c.suit
                 rank = c.rank
                 if (which_game == "citadel") and \
                    (foundations[suit].rank+1 == rank):
                     foundations[suit] = c
                 else:
-                    board.add(s, cards[card_num])
-                card_num = card_num + 1
-            if (card_num == len(cards)):
+                    board.add(s, c)
+            if game.no_more_cards():
                 break
 
         if (which_game == "streets_and_alleys"):
             for s in range(4):
-                board.add(s, cards[card_num])
-                card_num = card_num + 1
+                board.add(s, game.next())
 
         print_foundations(foundations)
         board.output()
@@ -628,9 +648,9 @@ def shlomif_main(args):
         board = Board(18)
 
         for i in range(52-1):
-            board.add(i%17, cards[i])
+            board.add(i%17, game.next())
         
-        board.add(17, cards[i+1])
+        board.add(17, game.next())
 
         board.output()
     else:
