@@ -254,9 +254,9 @@ class Card:
 
         return ret
 
-    def flip(self):
+    def flip(self, flipped=True):
         new_card = Card(self.rank, self.suit, self.print_ts)
-        new_card.flipped = 1
+        new_card.flipped = flipped
         return new_card
 
     def is_empty(self):
@@ -280,11 +280,14 @@ class Columns:
             print column_to_string(column)
 
 class Board:
-    def __init__(self, num_columns, with_freecells=False):
+    def __init__(self, num_columns, with_freecells=False, with_talon=False):
         self.with_freecells = with_freecells
+        self.with_talon = with_talon
         self.columns = Columns(num_columns)
         if (self.with_freecells):
             self.freecells = []
+        if (self.with_talon):
+            self.talon = []
     
     def add(self, idx, card):
         return self.columns.add(idx, card)
@@ -292,7 +295,12 @@ class Board:
     def print_freecells(self):
         print "FC: " + column_to_string(self.freecells)
 
+    def print_talon(self):
+        print "Talon: " + column_to_string(self.talon)
+
     def output(self):
+        if (self.with_talon):
+            self.print_talon()
         if (self.with_freecells):
             self.print_freecells()
         self.columns.output()
@@ -301,6 +309,12 @@ class Board:
         if not self.with_freecells:
             raise "Layout does not have freecells!"
         self.freecells.append(card)
+
+    def add_talon(self, card):
+        if not self.with_talon:
+            raise "Layout does not have a talon!"
+        
+        self.talon.append(card)
 
 def empty_card():
     ret = Card(1,1,1)
@@ -529,21 +543,15 @@ def shlomif_main(args):
         board.output()
 
     elif game_class == "gypsy":
-        output = range(8);
-        for i in range(8):
-            output[i] = ""
-        for i in range(24):
-            output[i%8] = output[i%8] + cards[i].to_s()
-            if (i < 16):
-                output[i%8] = output[i%8] + " "
+        board = Board(8, with_talon=True)
+        for i in range(8*3):
+            board.add((i % 8), game.next().flip(flipped=(i<8*2)))
 
-        talon = "Talon:"
-        for i in range(24,8*13):
-            talon = talon + " " + cards[i].to_s()
-                
-        print talon
-        for i in range(8):
-            print output[i]
+        for card in game:
+            board.add_talon(card)
+
+        board.output()
+
     elif game_class == "klondike":
         #o = ""
         #for i in cards:

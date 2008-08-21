@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Test::Differences;
 
 {
@@ -341,5 +341,28 @@ EOF
         $got,
         $expected,
         "streets_and_alleys 1080",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 200 gypsy`;
+
+    my $expected = <<"EOF";
+Talon: 9C AD 6S KH 8D 3D TC QC AD QC 7S AH 6C QH 8S 5C KD 4H 2D 8C JD 9S 7H 4C JS JH 9D JC 4D 9S AC QS 5S KS TD 2H 4H KC TC 2C JD 3H 3D KD 7C 9C 8C 6D 4C 3S TH 2S 5D 7D 6H TH 8H JS 6S 2C 4S 3C JH 2D TD 3H 5C QS AH AC 4D 5H 2H 2S JC 9D AS QD 9H 6C
+<3S> <7H> 7D
+<5H> <8D> 8S
+<TS> <4S> 6D
+<AS> <QD> QH
+<9H> <8H> 5S
+<7S> <KS> KC
+<6H> <3C> 5D
+<7C> <TS> KH
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "gypsy 200",
     );
 }
