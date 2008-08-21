@@ -373,16 +373,6 @@ def shuffle(orig_cards, game_num):
 
     return orig_cards
 
-class WhichGameIter:
-    def __init__(self, game):
-        self.game = game
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        return self.game.next()
- 
 class WhichGame:
     REVERSE_MAP = \
         { 
@@ -440,7 +430,7 @@ class WhichGame:
         return True
     
     def __iter__(self):
-        return WhichGameIter(self)
+        return self
 
     def no_more_cards(self):
         return self.card_idx >= len(self.cards)
