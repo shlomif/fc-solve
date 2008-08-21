@@ -283,14 +283,18 @@ class Columns:
             print column_to_string(column)
 
 class Board:
-    def __init__(self, num_columns, with_freecells=False, with_talon=False):
+    def __init__(self, num_columns, with_freecells=False,
+            with_talon=False, with_foundations=False):
         self.with_freecells = with_freecells
         self.with_talon = with_talon
+        self.with_foundations = with_foundations
         self.columns = Columns(num_columns)
         if (self.with_freecells):
             self.freecells = []
         if (self.with_talon):
             self.talon = []
+        if (self.with_foundations):
+            self.foundations = map(lambda s:empty_card(),range(4))
     
     def reverse_cols(self):
         return self.columns.rev()
@@ -304,9 +308,20 @@ class Board:
     def print_talon(self):
         print "Talon: " + column_to_string(self.talon)
 
+    def print_foundations(self):
+        cells = []
+        for f in [2,0,3,1]:
+            if not self.foundations[f].is_empty():
+                cells.append(get_card_suit(f) + "-" + self.foundations[f].rank_s())
+
+        if len(cells):
+            print "Foundations:" + ("".join(map(lambda s: " "+s, cells)))
+
     def output(self):
         if (self.with_talon):
             self.print_talon()
+        if (self.with_foundations):
+            self.print_foundations()
         if (self.with_freecells):
             self.print_freecells()
         self.columns.output()
@@ -322,8 +337,20 @@ class Board:
         
         self.talon.append(card)
 
+    def put_into_founds(self, card):
+        if not self.with_foundations:
+            raise "Layout does not have foundations!"
+        
+        if ((self.foundations[card.suit].rank+1) == card.rank):
+            self.foundations[card.suit] = card
+            return True
+        else:
+            return False
+        self.talon.append(card)
+
+
 def empty_card():
-    ret = Card(1,1,1)
+    ret = Card(0,0,1)
     ret.empty = True
     return ret
 
@@ -346,17 +373,6 @@ def flip_card(card_str, flip):
         return "<" + card_str + ">"
     else:
         return card_str
-
-def print_foundations(foundations):
-    cells = []
-    for f in [2,0,3,1]:
-        if not foundations[f].is_empty():
-            cells.append(get_card_suit(f) + "-" + foundations[f].rank_s())
-
-    if len(cells):
-        print "Foundations:" + ("".join(map(lambda s: " "+s, cells)))
-
-    return;
 
     
 def shuffle(orig_cards, game_num):
@@ -613,30 +629,26 @@ def shlomif_main(args):
     elif game_class == "beleaguered_castle":
         aces_up = which_game in ("beleaguered_castle", "citadel")
     
-        foundations = map(lambda s:empty_card(),range(4))
+        board = Board(8, with_foundations=True)
 
         if aces_up:
             new_cards = []
 
             for c in game:
                 if c.is_ace():
-                    foundations[c.suit] = c
+                    board.put_into_founds(c)
                 else:
                     new_cards.append(c)
 
-            cards = new_cards;
             game.new_cards(new_cards)
 
-        board = Board(8)
 
         for i in range(6):
             for s in range(8):
                 c = game.next()
-                suit = c.suit
-                rank = c.rank
-                if (which_game == "citadel") and \
-                   (foundations[suit].rank+1 == rank):
-                    foundations[suit] = c
+                if (which_game == "citadel") and board.put_into_founds(c):
+                    # Already dealt with this card
+                    True
                 else:
                     board.add(s, c)
             if game.no_more_cards():
@@ -646,7 +658,6 @@ def shlomif_main(args):
             for s in range(4):
                 board.add(s, game.next())
 
-        print_foundations(foundations)
         board.output()
 
     elif game_class == "fan":
