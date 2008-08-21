@@ -512,8 +512,6 @@ def shlomif_main(args):
             if not ((which_game == "die_schlange") and (card.rank == 1)):
                 board.add(col_idx, card)
 
-        board.output()
-
     elif game_class == "freecell":
         is_fc = (which_game in ('forecell', 'eight_off'))
 
@@ -531,8 +529,6 @@ def shlomif_main(args):
             for i in range(52):
                 board.add(i%8, game.next())
         
-        board.output();
-
     elif game_class == "seahaven":
         board = Board(10, with_freecells=True)
 
@@ -544,8 +540,6 @@ def shlomif_main(args):
             else:
                 board.add_freecell(game.next())
 
-        board.output()
-        
     elif game_class == "bakers_dozen":
         i, n = 0, 13 
         kings = []
@@ -568,8 +562,6 @@ def shlomif_main(args):
         for i in range(52):
             board.add(i%13, cards[i])
         
-        board.output()
-
     elif game_class == "gypsy":
         board = Board(8, with_talon=True)
         for i in range(8*3):
@@ -577,8 +569,6 @@ def shlomif_main(args):
 
         for card in game:
             board.add_talon(card)
-
-        board.output()
 
     elif game_class == "klondike":
         board = Board(7, with_talon=True)
@@ -597,8 +587,6 @@ def shlomif_main(args):
         if not (which_game == "small_harp"):
             board.reverse_cols()
 
-        board.output()
-
     elif game_class == "simple_simon":
 
         board = Board(10)
@@ -612,8 +600,6 @@ def shlomif_main(args):
 
         for s in range(10):
             board.add(s, game.next())
-
-        board.output()
 
     elif game_class == "yukon":
 
@@ -629,8 +615,6 @@ def shlomif_main(args):
 
         for i in range(7):
             board.add(i, game.next())
-
-        board.output()
 
     elif game_class == "beleaguered_castle":
         aces_up = which_game in ("beleaguered_castle", "citadel")
@@ -664,8 +648,6 @@ def shlomif_main(args):
             for s in range(4):
                 board.add(s, game.next())
 
-        board.output()
-
     elif game_class == "fan":
         board = Board(18)
 
@@ -674,10 +656,10 @@ def shlomif_main(args):
         
         board.add(17, game.next())
 
-        board.output()
     else:
-        print "Unknown game type " + which_game + "\n"
-        
+        raise "Unknown game type " + which_game + "\n"
+
+    board.output()
             
 if __name__ == "__main__":
     sys.exit(shlomif_main(sys.argv))
