@@ -474,14 +474,14 @@ class Game:
         if (game.game_id == "die_schlange"):
             print "Foundations: H-A S-A D-A C-A H-A S-A D-A C-A"
 
-        game.board = board = Board(9)
+        game.board = Board(9)
         col_idx = 0
 
         for card in game:
             if card.is_king():
                 col_idx = col_idx + 1
             if not ((game.game_id == "die_schlange") and (card.rank == 1)):
-                board.add(col_idx, card)
+                game.board.add(col_idx, card)
 
     def freecell(game):
         is_fc = (game.game_id in ('forecell', 'eight_off'))
