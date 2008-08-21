@@ -459,9 +459,12 @@ class Game:
         self.cards = cards
         self.card_idx = 0
 
+    def add(self, idx, card):
+        return self.board.add(idx, card)
+
     def cyclical_deal(game, num_cards, num_cols, flipped=False):
         for i in range(num_cards):
-            game.board.add(i%num_cols, game.next().flip(flipped=flipped))
+            game.add(i%num_cols, game.next().flip(flipped=flipped))
         return i
 
     def add_all_to_talon(game):
@@ -481,7 +484,7 @@ class Game:
             if card.is_king():
                 col_idx = col_idx + 1
             if not ((game.game_id == "die_schlange") and (card.rank == 1)):
-                game.board.add(col_idx, card)
+                game.add(col_idx, card)
 
     def freecell(game):
         is_fc = (game.game_id in ('forecell', 'eight_off'))
@@ -546,7 +549,7 @@ class Game:
 
         for r in range(1,num_cols):
             for s in range(num_cols-r):
-                game.board.add(s, game.next().flip())
+                game.add(s, game.next().flip())
 
         game.cyclical_deal(num_cols, num_cols)
 
@@ -562,18 +565,18 @@ class Game:
 
         while num_cards >= 3:
             for s in range(num_cards):
-                game.board.add(s, game.next())
+                game.add(s, game.next())
             num_cards = num_cards - 1
 
         for s in range(10):
-            game.board.add(s, game.next())
+            game.add(s, game.next())
 
     def fan(game):
         game.board = Board(18)
 
         game.cyclical_deal(52-1, 17)
         
-        game.board.add(17, game.next())
+        game.add(17, game.next())
 
     def beleaguered_castle(game):
         aces_up = game.game_id in ("beleaguered_castle", "citadel")
@@ -599,7 +602,7 @@ class Game:
                     # Already dealt with this card
                     True
                 else:
-                    game.board.add(s, c)
+                    game.add(s, c)
             if game.no_more_cards():
                 break
 
@@ -612,11 +615,11 @@ class Game:
 
         for i in range(1, num_cols):
             for j in range(i, num_cols):
-                game.board.add(j, game.next().flip())
+                game.add(j, game.next().flip())
 
         for i in range(4):
             for j in range(1,num_cols):
-                game.board.add(j, game.next())
+                game.add(j, game.next())
     
         game.cyclical_deal(num_cols, num_cols)
 
