@@ -462,6 +462,9 @@ class Game:
     def add(self, idx, card):
         return self.board.add(idx, card)
 
+    def add_freecell(self, card):
+        return self.board.add_freecell(card)
+
     def cyclical_deal(game, num_cards, num_cols, flipped=False):
         for i in range(num_cards):
             game.add(i%num_cols, game.next().flip(flipped=flipped))
@@ -494,21 +497,21 @@ class Game:
         if is_fc:
             game.cyclical_deal(48, 8)
             for card in game:
-                game.board.add_freecell(card)
+                game.add_freecell(card)
                 if game.game_id == "eight_off":
-                    game.board.add_freecell(empty_card())
+                    game.add_freecell(empty_card())
         else:
             game.cyclical_deal(52, 8)
 
     def seahaven(game):
         game.board = Board(10, with_freecells=True)
 
-        game.board.add_freecell(empty_card())
+        game.add_freecell(empty_card())
 
         game.cyclical_deal(50, 10)
 
         for card in game:
-            game.board.add_freecell(card)
+            game.add_freecell(card)
     
     def bakers_dozen(game):
         i, n = 0, 13 
