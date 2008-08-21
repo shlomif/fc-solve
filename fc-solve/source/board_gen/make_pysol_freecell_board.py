@@ -384,19 +384,19 @@ class WhichGame:
                 [ "der_katz", "der_katzenschwantz", "die_schlange"],
                 "seahaven":
                 [ "seahaven_towers", "seahaven", "relaxed_seahaven", "relaxed_seahaven_towers" ],
-                "bakers_dozen" : True,
-                "gypsy" : True,
+                "bakers_dozen" : None,
+                "gypsy" : None,
                 "klondike" : [ "klondike", "klondike_by_threes", "casino_klondike", "small_harp", "thumb_and_pouch", "vegas_klondike", "whitehead" ],
-                "simple_simon" : True,
-                "yukon" : True,
+                "simple_simon" : None,
+                "yukon" : None,
                 "beleaguered_castle" : [ "beleaguered_castle", "streets_and_alleys", "citadel" ],
-                "fan" : True
+                "fan" : None
         }
 
     def __init__(self, game_id, print_ts):
         mymap = {}
         for k in self.REVERSE_MAP.keys():
-            if (self.REVERSE_MAP[k] == True):
+            if self.REVERSE_MAP[k] is None:
                 mymap[k] = k
             else:
                 for alias in self.REVERSE_MAP[k]:
