@@ -459,6 +459,11 @@ class Game:
         self.cards = cards
         self.card_idx = 0
 
+    def cyclical_deal(game, num_cards, num_cols):
+        for i in range(num_cards):
+            game.board.add(i%num_cols, game.next())
+        return i
+
     ### These are the games variants:
     ### Each one is a callback.
     def der_katz(game):
@@ -480,27 +485,23 @@ class Game:
         game.board = Board(8, with_freecells=is_fc)
 
         if is_fc:
-            for i in range(52):
-                if (i < 48):
-                    game.board.add(i%8, game.next())
-                else:
-                    game.board.add_freecell(game.next())
-                    if game.game_id == "eight_off":
-                        game.board.add_freecell(empty_card())
+            game.cyclical_deal(48, 8)
+            for card in game:
+                game.board.add_freecell(card)
+                if game.game_id == "eight_off":
+                    game.board.add_freecell(empty_card())
         else:
-            for i in range(52):
-                game.board.add(i%8, game.next())
+            game.cyclical_deal(52, 8)
 
     def seahaven(game):
         game.board = Board(10, with_freecells=True)
 
         game.board.add_freecell(empty_card())
 
-        for i in range(52):
-            if (i < 50):
-                game.board.add(i%10, game.next())
-            else:
-                game.board.add_freecell(game.next())
+        game.cyclical_deal(50, 10)
+
+        for card in game:
+            game.board.add_freecell(card)
     
     def bakers_dozen(game):
         i, n = 0, 13 
@@ -518,11 +519,12 @@ class Game:
                     cards[i], cards[j] = cards[j], cards[i]
                     break
                 j = j + n
+        
+        game.new_cards(cards)
 
         game.board = Board(13)
 
-        for i in range(52):
-            game.board.add(i%13, cards[i])
+        game.cyclical_deal(52, 13)
 
     def gypsy(game):
         game.board = Board(8, with_talon=True)
@@ -565,8 +567,7 @@ class Game:
     def fan(game):
         game.board = Board(18)
 
-        for i in range(52-1):
-            game.board.add(i%17, game.next())
+        game.cyclical_deal(52-1, 17)
         
         game.board.add(17, game.next())
 
@@ -599,8 +600,7 @@ class Game:
                 break
 
         if (game.game_id == "streets_and_alleys"):
-            for s in range(4):
-                game.board.add(s, game.next())
+            game.cyclical_deal(4, 4)
 
     def yukon(game):
         game.board = Board(7)
