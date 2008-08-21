@@ -212,16 +212,6 @@ def get_card_num(rank,print_ts):
         ret = ret + "K"
     return ret;
 
-def get_card_suit(suit):
-    if suit == 0:
-        return "C"
-    elif suit == 1:
-        return "S"
-    elif suit == 2:
-        return "H"
-    elif suit == 3:
-        return "D"
-
 class Card:
 
     ACE = 1
@@ -244,7 +234,7 @@ class Card:
         return get_card_num(self.rank, self.print_ts)
 
     def suit_s(self):
-        return get_card_suit(self.suit);
+        return "CSHD"[self.suit];
 
     def to_s(self):
         if self.empty:
