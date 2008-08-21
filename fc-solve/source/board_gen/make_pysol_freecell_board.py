@@ -243,16 +243,22 @@ class Card:
     def rank_s(self):
         return get_card_num(self.rank, self.print_ts)
 
+    def suit_s(self):
+        return get_card_suit(self.suit);
+
     def to_s(self):
         if self.empty:
             return "-"
         ret = ""
         ret = ret + self.rank_s()
-        ret = ret + get_card_suit(self.suit)
+        ret = ret + self.suit_s()
         if self.flipped:
             ret = "<" + ret + ">"
 
         return ret
+
+    def found_s(self):
+        return self.suit_s() + "-" + self.rank_s()
 
     def flip(self, flipped=True):
         new_card = Card(self.rank, self.suit, self.print_ts)
@@ -312,7 +318,7 @@ class Board:
         cells = []
         for f in [2,0,3,1]:
             if not self.foundations[f].is_empty():
-                cells.append(get_card_suit(f) + "-" + self.foundations[f].rank_s())
+                cells.append(self.foundations[f].found_s())
 
         if len(cells):
             print "Foundations:" + ("".join(map(lambda s: " "+s, cells)))
