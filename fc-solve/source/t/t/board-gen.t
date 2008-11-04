@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 18;
 use Test::Differences;
 
 {
@@ -408,5 +408,29 @@ EOF
         $got,
         $expected,
         "small_harp 468",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 7537454 simple_simon`;
+    
+    my $expected = <<"EOF";
+KD TH 7H 2H 3S 7D KC 6S
+QD JC 5C TS 8H TD 5D 4C
+JS AH KS 6H 5S 9S 9D 2D
+7C QS 8D QC JD 4S 6C
+TC 2S 8C 3C 8S 9C
+7S KH QH 3D 4H
+2C 6D AC 5H
+AD AS JH
+3H 4D
+9H
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Simple Simon 7537454 (Long seed)",
     );
 }
