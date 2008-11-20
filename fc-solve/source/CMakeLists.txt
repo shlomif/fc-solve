@@ -35,6 +35,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/Makefile$"
     "/CTestTestfile.cmake$"
     "/CPackConfig.cmake$"
+    "/tags$"
 )
 
 
