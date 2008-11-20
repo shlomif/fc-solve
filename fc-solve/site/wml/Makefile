@@ -46,7 +46,7 @@ else
 RECENT_DEVEL_VERSION = $(shell cat Source-Devel/fc-solve/source/ver.txt)
 endif
 
-RECENT_DEVEL_VERSION = 2.11.6
+RECENT_DEVEL_VERSION = 2.11.10
 
 $(D)/download.html :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
 	WML_LATEMP_PATH="$$(perl -MFile::Spec -e 'print File::Spec->rel2abs(shift)' '$@')" ; \
