@@ -110,7 +110,7 @@ sub gen_radix_tree
     my $code = "";
 
     $code .= <<"EOF";
-p = argv[arg];
+p = (*arg);
 opt = FCS_OPT_UNRECOGNIZED;
 EOF
 
