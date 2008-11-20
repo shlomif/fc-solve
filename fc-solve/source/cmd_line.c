@@ -147,7 +147,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     char * opened_files_dir
     )
 {
-    int arg;
+    char * * arg, * * arg_argc;
     char * * known_param;
     int num_to_skip;
     int callback_ret;
@@ -157,17 +157,19 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
     *error_string = NULL;
 
-    for(arg=start_arg;arg<argc;arg++)
+    arg_argc = &(argv[argc]);
+
+    for(arg=&(argv[start_arg]);arg<arg_argc;arg++)
     {
         /* First check for the parameters that the user recognizes */
         known_param = known_parameters;
-        while((*known_param) && strcmp(*known_param, argv[arg]))
+        while((*known_param) && strcmp(*known_param, (*arg)))
         {
             known_param++;
         }
         if ((*known_param) != NULL )
         {
-            callback_ret = callback(instance, argc, argv, arg, &num_to_skip, &ret, callback_context);
+            callback_ret = callback(instance, argc, argv, arg-&(argv[0]), &num_to_skip, &ret, callback_context);
             if (callback_ret == FCS_CMD_LINE_SKIP)
             {
                 arg += num_to_skip-1;
@@ -175,13 +177,13 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             else if (callback_ret == FCS_CMD_LINE_STOP)
             {
-                *last_arg = arg;
+                *last_arg = arg-&(argv[0]);
                 return ret;
             }
         }
 
         /* OPT-PARSE-START */
-p = argv[arg];
+p = (*arg);
 opt = FCS_OPT_UNRECOGNIZED;
 
 {
@@ -797,46 +799,47 @@ break;
         {
         case FCS_OPT_UNRECOGNIZED:
         {
-            *last_arg = arg;
+            *last_arg = arg-&(argv[0]);
             return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
         }
         break;
 
+#define PROCESS_OPT_ARG() \
+        { \
+            arg++; \
+            if (arg == arg_argc) \
+            { \
+                *last_arg = arg-&(argv[0]); \
+                return FCS_CMD_LINE_PARAM_WITH_NO_ARG; \
+            } \
+        }
+
+#define RET_ERROR_IN_ARG() \
+        *last_arg = arg-&(argv[0]); \
+        return FCS_CMD_LINE_ERROR_IN_ARG;
+
         case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
-            freecell_solver_user_limit_depth(instance, atoi(argv[arg]));
+            PROCESS_OPT_ARG() ;
+            freecell_solver_user_limit_depth(instance, atoi((*arg)));
         }
         break;
 
         case FCS_OPT_MAX_ITERS: /* STRINGS=-mi|--max-iters; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
 
-            freecell_solver_user_limit_current_instance_iterations(instance, atoi(argv[arg]));
+            freecell_solver_user_limit_current_instance_iterations(instance, atoi((*arg)));
         }
         break;
 
         case FCS_OPT_TESTS_ORDER: /* STRINGS=-to|--tests-order; */
         {
             char * fcs_user_errstr;
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
-            ret = freecell_solver_user_set_tests_order(instance, argv[arg], &fcs_user_errstr);
+
+            PROCESS_OPT_ARG() ;
+
+            ret = freecell_solver_user_set_tests_order(instance, (*arg), &fcs_user_errstr);
             if (ret != 0)
             {
                 char * errstr = malloc(strlen(fcs_user_errstr)+500);
@@ -849,21 +852,15 @@ break;
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
         }
         break;
 
         case FCS_OPT_FREECELLS_NUM: /* STRINGS=--freecells-num; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
-            if (freecell_solver_user_set_num_freecells(instance, atoi(argv[arg])) != 0)
+            PROCESS_OPT_ARG() ;
+            if (freecell_solver_user_set_num_freecells(instance, atoi((*arg))) != 0)
             {
                 char * errstr;
 
@@ -877,21 +874,15 @@ break;
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
         }
         break;
 
         case FCS_OPT_STACKS_NUM: /* STRINGS=--stacks-num; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
-            if (freecell_solver_user_set_num_stacks(instance, atoi(argv[arg])) != 0)
+            PROCESS_OPT_ARG() ;
+            if (freecell_solver_user_set_num_stacks(instance, atoi((*arg))) != 0)
             {
                 char * errstr;
 
@@ -905,21 +896,15 @@ break;
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
         }
         break;
 
         case FCS_OPT_DECKS_NUM: /* STRINGS=--decks-num; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
-            if (freecell_solver_user_set_num_decks(instance, atoi(argv[arg])) != 0)
+            PROCESS_OPT_ARG() ;
+            if (freecell_solver_user_set_num_decks(instance, atoi((*arg))) != 0)
             {
                 char * errstr;
 
@@ -933,8 +918,7 @@ break;
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
         }
         break;
@@ -943,18 +927,13 @@ break;
         {
             int sbb;
 
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
 
-            if (!strcmp(argv[arg], "suit"))
+            if (!strcmp((*arg), "suit"))
             {
                 sbb = FCS_SEQ_BUILT_BY_SUIT;
             }
-            else if (!strcmp(argv[arg], "rank"))
+            else if (!strcmp((*arg), "rank"))
             {
                 sbb = FCS_SEQ_BUILT_BY_RANK;
             }
@@ -970,14 +949,9 @@ break;
         {
             int unlimited;
 
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
 
-            if (!strcmp(argv[arg], "unlimited"))
+            if (!strcmp((*arg), "unlimited"))
             {
                 unlimited = 1;
             }
@@ -993,18 +967,13 @@ break;
         {
             int es_fill;
 
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
 
-            if (!strcmp(argv[arg], "kings"))
+            if (!strcmp((*arg), "kings"))
             {
                 es_fill = FCS_ES_FILLED_BY_KINGS_ONLY;
             }
-            else if (!strcmp(argv[arg], "none"))
+            else if (!strcmp((*arg), "none"))
             {
                 es_fill = FCS_ES_FILLED_BY_NONE;
             }
@@ -1021,77 +990,68 @@ break;
 
         case FCS_OPT_GAME: /* STRINGS=--game|--preset|-g; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
 
-            ret = freecell_solver_user_apply_preset(instance, argv[arg]);
+            ret = freecell_solver_user_apply_preset(instance, (*arg));
             if (ret == FCS_PRESET_CODE_NOT_FOUND)
             {
                 char * errstr;
 
-                errstr = malloc(strlen(argv[arg])+500);
+                errstr = malloc(strlen((*arg))+500);
 
-                sprintf(errstr, "Unknown game \"%s\"!\n\n", argv[arg]);
+                sprintf(errstr, "Unknown game \"%s\"!\n\n", (*arg));
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
             else if (ret == FCS_PRESET_CODE_FREECELLS_EXCEED_MAX)
             {
                 char * errstr;
 
-                errstr = malloc(strlen(argv[arg])+500);
+                errstr = malloc(strlen((*arg))+500);
                 sprintf(errstr, "The game \"%s\" exceeds the maximal number "
                         "of freecells in the program.\n"
                         "Modify the file \"config.h\" and recompile, "
                         "if you wish to solve one of its boards.\n",
-                        argv[arg]
+                        (*arg)
                         );
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
             else if (ret == FCS_PRESET_CODE_STACKS_EXCEED_MAX)
             {
                 char * errstr;
 
-                errstr = malloc(strlen(argv[arg])+500);
+                errstr = malloc(strlen((*arg))+500);
 
                 sprintf(errstr, "The game \"%s\" exceeds the maximal number "
                         "of stacks in the program.\n"
                         "Modify the file \"config.h\" and recompile, "
                         "if you wish to solve one of its boards.\n",
-                        argv[arg]
+                        (*arg)
                         );
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
             else if (ret != FCS_PRESET_CODE_OK)
             {
                 char * errstr;
 
-                errstr = malloc(strlen(argv[arg])+500);
+                errstr = malloc(strlen((*arg))+500);
 
                 sprintf(errstr,
                     "The game \"%s\" exceeds the limits of the program.\n"
                     "Modify the file \"config.h\" and recompile, if you wish to solve one of its boards.\n",
-                    argv[arg]
+                    (*arg)
                 );
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
         }
         break;
@@ -1100,29 +1060,25 @@ break;
         {
             int method;
 
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
-            if (!strcmp(argv[arg], "dfs"))
+            PROCESS_OPT_ARG() ;
+
+            if (!strcmp((*arg), "dfs"))
             {
                 method = FCS_METHOD_HARD_DFS;
             }
-            else if (!strcmp(argv[arg], "soft-dfs"))
+            else if (!strcmp((*arg), "soft-dfs"))
             {
                 method = FCS_METHOD_SOFT_DFS;
             }
-            else if (!strcmp(argv[arg], "bfs"))
+            else if (!strcmp((*arg), "bfs"))
             {
                 method = FCS_METHOD_BFS;
             }
-            else if (!strcmp(argv[arg], "a-star"))
+            else if (!strcmp((*arg), "a-star"))
             {
                 method = FCS_METHOD_A_STAR;
             }
-            else if (!strcmp(argv[arg], "random-dfs"))
+            else if (!strcmp((*arg), "random-dfs"))
             {
                 method = FCS_METHOD_RANDOM_DFS;
             }
@@ -1130,18 +1086,17 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(strlen(argv[arg])+500);
+                errstr = malloc(strlen((*arg))+500);
 
                 sprintf(
                     errstr,
                     "Unknown solving method \"%s\".\n",
-                    argv[arg]
+                    (*arg)
                     );
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
 
             freecell_solver_user_set_solving_method(instance, method);
@@ -1150,18 +1105,14 @@ break;
 
         case FCS_OPT_A_STAR_WEIGHTS: /* STRINGS=-asw|--a-star-weights; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
+
             {
                 int a;
                 char * start_num;
                 char * end_num;
                 char save;
-                start_num = argv[arg];
+                start_num = (*arg);
                 for(a=0;a<5;a++)
                 {
                     while ((*start_num > '9') && (*start_num < '0') && (*start_num != '\0'))
@@ -1199,29 +1150,19 @@ break;
 
         case FCS_OPT_SEED: /* STRINGS=-seed; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
 
-            freecell_solver_user_set_random_seed(instance, atoi(argv[arg]));
+            freecell_solver_user_set_random_seed(instance, atoi((*arg)));
         }
         break;
 
         case FCS_OPT_MAX_STORED_STATES: /* STRINGS=-mss|--max-stored-states; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
 
             freecell_solver_user_limit_num_states_in_collection(
                 instance,
-                atoi(argv[arg])
+                atoi((*arg))
             );
         }
         break;
@@ -1229,7 +1170,7 @@ break;
         case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread|-nht|--next-hard-thread; */
         {
             int ret;
-            int is_st = ((!strcmp(argv[arg], "-nst")) || (!strcmp(argv[arg], "--next-soft-thread")));
+            int is_st = ((!strcmp((*arg), "-nst")) || (!strcmp((*arg), "--next-soft-thread")));
 
             ret =
                 is_st ?
@@ -1245,25 +1186,18 @@ break;
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
         }
         break;
 
         case FCS_OPT_SOFT_THREAD_STEP: /* STRINGS=-step|--soft-thread-step; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
 
             freecell_solver_user_set_soft_thread_step(
                 instance,
-                atoi(argv[arg])
+                atoi((*arg))
             );
         }
         break;
@@ -1287,41 +1221,29 @@ break;
 
         case FCS_OPT_ST_NAME: /* STRINGS=--st-name; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
-            freecell_solver_user_set_soft_thread_name(instance, argv[arg]);
+            PROCESS_OPT_ARG() ;
+
+            freecell_solver_user_set_soft_thread_name(instance, (*arg));
         }
         break;
 
         case FCS_OPT_PRELUDE: /* STRINGS=--prelude; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
-            freecell_solver_user_set_hard_thread_prelude(instance, argv[arg]);
+            PROCESS_OPT_ARG() ;
+
+            freecell_solver_user_set_hard_thread_prelude(instance, (*arg));
         }
         break;
 
         case FCS_OPT_OPTIMIZATION_TESTS_ORDER: /* STRINGS=-opt-to|--optimization-tests-order; */
         {
             char * fcs_user_errstr;
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            
+            PROCESS_OPT_ARG() ;
 
             ret = freecell_solver_user_set_optimization_scan_tests_order(
                     instance,
-                    argv[arg],
+                    (*arg),
                     &fcs_user_errstr
                     );
 
@@ -1337,8 +1259,7 @@ break;
 
                 *error_string = errstr;
 
-                *last_arg = arg;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+                RET_ERROR_IN_ARG() ;
             }
         }
         break;
@@ -1347,18 +1268,13 @@ break;
         {
             int value;
 
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
 
-            if (!strcmp(argv[arg], "none"))
+            if (!strcmp((*arg), "none"))
             {
                 value = 0;
             }
-            else if (!strcmp(argv[arg], "dead-end-marks"))
+            else if (!strcmp((*arg), "dead-end-marks"))
             {
                 value = 1;
             }
@@ -1366,12 +1282,12 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(strlen(argv[arg])+500);
+                errstr = malloc(strlen((*arg))+500);
 
-                sprintf(errstr, "Unknown scans' synergy type \"%s\"!\n", argv[arg]);
-                *last_arg = arg;
+                sprintf(errstr, "Unknown scans' synergy type \"%s\"!\n", (*arg));
                 *error_string = errstr;
-                return FCS_CMD_LINE_ERROR_IN_ARG;
+
+                RET_ERROR_IN_ARG() ;
             }
 
             freecell_solver_user_set_scans_synergy(
@@ -1389,12 +1305,8 @@ break;
 
         case FCS_OPT_READ_FROM_FILE: /* STRINGS=--read-from-file; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
+
             if (file_nesting_count == 0)
             {
                 /* do nothing */
@@ -1409,14 +1321,14 @@ break;
                 size_t num_read;
                 args_man_t * args_man;
 
-                s = argv[arg];
+                s = (*arg);
                 while(isdigit(*s))
                 {
                     s++;
                 }
                 if (*s == ',')
                 {
-                    num_to_skip = atoi(argv[arg]);
+                    num_to_skip = atoi((*arg));
                     s++;
                 }
 
@@ -1454,9 +1366,8 @@ break;
                             s);
 
                     *error_string = err_str;
-                    *last_arg = arg;
 
-                    return FCS_CMD_LINE_ERROR_IN_ARG;
+                    RET_ERROR_IN_ARG() ;
                 }
                 fseek(f, 0, SEEK_END);
                 file_len = ftell(f);
@@ -1466,9 +1377,7 @@ break;
                     *error_string = strdup("Could not allocate enough memory to parse the file. Quitting.\n");
                     fclose(f);
 
-                    *last_arg = arg;
-
-                    return FCS_CMD_LINE_ERROR_IN_ARG;
+                    RET_ERROR_IN_ARG() ;
                 }
                 fseek(f,0,SEEK_SET);
                 num_read = fread(buffer, 1, file_len, f);
@@ -1484,9 +1393,7 @@ break;
                         strdup("Could not parse the file. Quitting\n");
                     freecell_solver_args_man_free(args_man);
 
-                    *last_arg = arg;
-
-                    return FCS_CMD_LINE_ERROR_IN_ARG;
+                    RET_ERROR_IN_ARG() ;
                 }
 
                 if (num_to_skip >= args_man->argc)
@@ -1526,28 +1433,22 @@ break;
 
         case FCS_OPT_LOAD_CONFIG: /* STRINGS=-l|--load-config; */
         {
-            arg++;
-            if (arg == argc)
-            {
-                *last_arg = arg-1;
-                return FCS_CMD_LINE_PARAM_WITH_NO_ARG;
-            }
+            PROCESS_OPT_ARG() ;
+
             {
                 int status;
                 args_man_t * preset_args;
                 char * dir = NULL;
 
-                status = read_preset(argv[arg], &preset_args, &dir, NULL);
+                status = read_preset((*arg), &preset_args, &dir, NULL);
                 if (status != 0)
                 {
                     char * err_str;
-                    err_str = malloc(strlen(argv[arg]) + 100);
-                    sprintf(err_str, "Unable to load the \"%s\" configuration!\n", argv[arg]);
+                    err_str = malloc(strlen((*arg)) + 100);
+                    sprintf(err_str, "Unable to load the \"%s\" configuration!\n", (*arg));
                     *error_string = err_str;
 
-                    *last_arg = arg;
-
-                    return FCS_CMD_LINE_ERROR_IN_ARG;
+                    RET_ERROR_IN_ARG() ;
                 }
                 else
                 {
@@ -1589,7 +1490,7 @@ break;
         /* OPT-PARSE-END */
     }
 
-    *last_arg = arg;
+    *last_arg = arg-&(argv[0]);
     return FCS_CMD_LINE_OK;
 }
 
