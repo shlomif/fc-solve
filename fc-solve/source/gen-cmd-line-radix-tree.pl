@@ -18,7 +18,6 @@ my %strings_to_opts_map;
 sub gen_radix_tree
 {
     my $start = {};
-
     
     while (my ($string, $value) = each(%strings_to_opts_map))
     {
@@ -105,7 +104,56 @@ sub gen_radix_tree
         }
     }
 
-    print Dumper($start);
+    # print Dumper($start);
+    
+    # Now let's render $start into C-code.
+    my $code = "";
+
+    $code .= <<"EOF";
+const char * p = argv[arg];
+opt = FCS_OPT_UNRECOGNIZED;
+EOF
+
+    my $render;
+    
+    $render = sub {
+        my $node = shift;
+
+        my $ret = "";
+
+        if (ref($node) ne "HASH")
+        {
+            return "\n{\nopt = $node;\n}\n";
+        }
+
+        my @k = keys(%$node);
+        if (@k == 1)
+        {
+            my $key = $k[0];
+            if ((length($key) == 1) && (ref($node->{$key}) eq "HASH"))
+            {
+                return "\n{\nif (*(p++) == '$key')\n{\n" . $render->($node->{$key}) . "\n}\n\n}";
+            }
+            else
+            {
+                return "{\nif (!strcmp(p, \"$k[0]\")) {\n"
+                    . $render->($node->{$key})
+                    . "\n}\n}\n"
+                    ;
+            }
+        }
+        else
+        {
+            return "{ switch(*(p++)) { " 
+                . (map { "\ncase '" . (length($_) ? $_ : q{\\0}) . "':\n"
+                    . $render->($node->{$_}) 
+                    . "\nbreak;\n"
+                } @k)
+                . "\n}\n}\n"
+        }
+    };
+
+    return $render->($start);
 }
 
 $enum .= "FCS_OPT_UNRECOGNIZED,\n";
