@@ -80,6 +80,15 @@ while (my $line = <$module>)
 
             $enum .= "    $opt,\n";
         }
+        elsif ($line =~ m{\A\Q$ws_prefix\Eelse *\n?\z}ms)
+        {
+            $find_prefix .= $line;
+            do
+            {
+                $line = <$module>;
+                $find_prefix .= $line;
+            } while ($line !~ m/\A\Q$ws_prefix\E\}/);
+        }
     }
     elsif ($in)
     {
@@ -90,6 +99,9 @@ while (my $line = <$module>)
         $text_out .= "\n\n";
         $text_out .= "${ws_prefix}switch (opt)\n${ws_prefix}{\n$process_opts\n$ws_prefix}\n";
         $text_out .= "$ws_prefix/* OPT-PARSE-END */\n";
+
+        # Avoid an off-by-one error.
+        $text_out .= $line;
     }
     else
     {
