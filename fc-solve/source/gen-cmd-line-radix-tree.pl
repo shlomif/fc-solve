@@ -26,12 +26,12 @@ sub gen_radix_tree
         my $reached = $start;
 
         PUT_STRING:
-        while (length($remaining))
+        while (defined($value))
         {
-            if (!%$reached)
+            if ((length($remaining) == 0) || (!%$reached))
             {
                 $reached->{$remaining} = $value;
-                $remaining = "";
+                undef($value);
             }
             else
             {
@@ -80,7 +80,7 @@ sub gen_radix_tree
                 # Split at the first character 
                 foreach my $k (keys(%$reached))
                 {
-                    if ($k eq "")
+                    if (($k eq "") || (length($k) == 1))
                     {
                         next;
                     }
@@ -90,8 +90,17 @@ sub gen_radix_tree
                         substr($k,1) => $v,
                     }
                 }
-                $reached = $reached->{substr($remaining,0,1)} = {};
-                $remaining = substr($remaining,1);
+                if (length($remaining) == 1)
+                {
+                    $reached->{$remaining} = $value;
+                    $remaining = "";
+                    undef($value);
+                }
+                else
+                {
+                    $reached = $reached->{substr($remaining,0,1)} = {};
+                    $remaining = substr($remaining,1);
+                }
             }
         }
     }
