@@ -179,123 +179,628 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
         }
 
-        if (0)
-        {
-        }
         /* OPT-PARSE-START */
-        else if ((!strcmp(argv[arg], "-md"))||(!strcmp(argv[arg], "--max-depth")))
+const char * p = argv[arg];
+opt = FCS_OPT_UNRECOGNIZED;
+
+{
+if (*(p++) == '-')
+{
+{ switch(*(p++)) { 
+case '-':
+{ switch(*(p++)) { 
+case 'a':
+{
+if (!strncmp(p, "-star-weights", 13)) {
+p += 13;
+opt = FCS_OPT_A_STAR_WEIGHTS;
+
+}
+}
+
+break;
+
+case 'c':
+{
+if (!strncmp(p, "alc-real-depth", 14)) {
+p += 14;
+opt = FCS_OPT_CALC_REAL_DEPTH;
+
+}
+}
+
+break;
+
+case 'd':
+{
+if (!strncmp(p, "ecks-num", 8)) {
+p += 8;
+opt = FCS_OPT_DECKS_NUM;
+
+}
+}
+
+break;
+
+case 'e':
+{
+if (!strncmp(p, "mpty-stacks-filled-by", 21)) {
+p += 21;
+opt = FCS_OPT_EMPTY_STACKS_FILLED_BY;
+
+}
+}
+
+break;
+
+case 'f':
+{
+if (!strncmp(p, "reecells-num", 12)) {
+p += 12;
+opt = FCS_OPT_FREECELLS_NUM;
+
+}
+}
+
+break;
+
+case 'g':
+{
+if (!strncmp(p, "ame", 3)) {
+p += 3;
+opt = FCS_OPT_GAME;
+
+}
+}
+
+break;
+
+case 'l':
+{
+if (!strncmp(p, "oad-config", 10)) {
+p += 10;
+opt = FCS_OPT_LOAD_CONFIG;
+
+}
+}
+
+break;
+
+case 'm':
+{ switch(*(p++)) { 
+case 'a':
+{
+if (!strncmp(p, "x-", 2)) {
+p += 2;
+{ switch(*(p++)) { 
+case 'd':
+{
+if (!strncmp(p, "epth", 4)) {
+p += 4;
+opt = FCS_OPT_MAX_DEPTH;
+
+}
+}
+
+break;
+
+case 'i':
+{
+if (!strncmp(p, "ters", 4)) {
+p += 4;
+opt = FCS_OPT_MAX_ITERS;
+
+}
+}
+
+break;
+
+case 's':
+{
+if (!strncmp(p, "tored-states", 12)) {
+p += 12;
+opt = FCS_OPT_MAX_STORED_STATES;
+
+}
+}
+
+break;
+
+}
+}
+
+}
+}
+
+break;
+
+case 'e':
+{
+if (!strncmp(p, "thod", 4)) {
+p += 4;
+opt = FCS_OPT_METHOD;
+
+}
+}
+
+break;
+
+}
+}
+
+break;
+
+case 'n':
+{
+if (!strncmp(p, "ext-", 4)) {
+p += 4;
+{ switch(*(p++)) { 
+case 'h':
+{
+if (!strncmp(p, "ard-thread", 10)) {
+p += 10;
+opt = FCS_OPT_NEXT_SOFT_THREAD;
+
+}
+}
+
+break;
+
+case 's':
+{
+if (!strncmp(p, "oft-thread", 10)) {
+p += 10;
+opt = FCS_OPT_NEXT_SOFT_THREAD;
+
+}
+}
+
+break;
+
+}
+}
+
+}
+}
+
+break;
+
+case 'o':
+{
+if (!strncmp(p, "ptimiz", 6)) {
+p += 6;
+{ switch(*(p++)) { 
+case 'a':
+{
+if (!strncmp(p, "tion-tests-order", 16)) {
+p += 16;
+opt = FCS_OPT_OPTIMIZATION_TESTS_ORDER;
+
+}
+}
+
+break;
+
+case 'e':
+{
+if (!strncmp(p, "-solution", 9)) {
+p += 9;
+opt = FCS_OPT_OPTIMIZE_SOLUTION;
+
+}
+}
+
+break;
+
+}
+}
+
+}
+}
+
+break;
+
+case 'p':
+{
+if (!strncmp(p, "re", 2)) {
+p += 2;
+{ switch(*(p++)) { 
+case 'l':
+{
+if (!strncmp(p, "ude", 3)) {
+p += 3;
+opt = FCS_OPT_PRELUDE;
+
+}
+}
+
+break;
+
+case 's':
+{
+if (!strncmp(p, "et", 2)) {
+p += 2;
+opt = FCS_OPT_GAME;
+
+}
+}
+
+break;
+
+}
+}
+
+}
+}
+
+break;
+
+case 'r':
+
+{
+if (*(p++) == 'e')
+{
+{ switch(*(p++)) { 
+case 'a':
+{
+if (!strncmp(p, "d-from-file", 11)) {
+p += 11;
+opt = FCS_OPT_READ_FROM_FILE;
+
+}
+}
+
+break;
+
+case 'p':
+{
+if (!strncmp(p, "arent-states", 12)) {
+p += 12;
+opt = FCS_OPT_REPARENT_STATES;
+
+}
+}
+
+break;
+
+case 's':
+{
+if (!strncmp(p, "et", 2)) {
+p += 2;
+opt = FCS_OPT_RESET;
+
+}
+}
+
+break;
+
+}
+}
+
+}
+
+}
+
+break;
+
+case 's':
+{ switch(*(p++)) { 
+case 'c':
+{
+if (!strncmp(p, "ans-synergy", 11)) {
+p += 11;
+opt = FCS_OPT_SCANS_SYNERGY;
+
+}
+}
+
+break;
+
+case 'e':
+{
+if (!strncmp(p, "quence", 6)) {
+p += 6;
+{ switch(*(p++)) { 
+case '-':
+{
+if (!strncmp(p, "move", 4)) {
+p += 4;
+opt = FCS_OPT_SEQUENCE_MOVE;
+
+}
+}
+
+break;
+
+case 's':
+{
+if (!strncmp(p, "-are-built-by", 13)) {
+p += 13;
+opt = FCS_OPT_SEQUENCES_ARE_BUILT_BY;
+
+}
+}
+
+break;
+
+}
+}
+
+}
+}
+
+break;
+
+case 'o':
+{
+if (!strncmp(p, "ft-thread-step", 14)) {
+p += 14;
+opt = FCS_OPT_SOFT_THREAD_STEP;
+
+}
+}
+
+break;
+
+case 't':
+{ switch(*(p++)) { 
+case '-':
+{
+if (!strncmp(p, "name", 4)) {
+p += 4;
+opt = FCS_OPT_ST_NAME;
+
+}
+}
+
+break;
+
+case 'a':
+{
+if (!strncmp(p, "cks-num", 7)) {
+p += 7;
+opt = FCS_OPT_STACKS_NUM;
+
+}
+}
+
+break;
+
+}
+}
+
+break;
+
+}
+}
+
+break;
+
+case 't':
+{
+if (!strncmp(p, "ests-order", 10)) {
+p += 10;
+opt = FCS_OPT_TESTS_ORDER;
+
+}
+}
+
+break;
+
+}
+}
+
+break;
+
+case 'a':
+{
+if (!strncmp(p, "sw", 2)) {
+p += 2;
+opt = FCS_OPT_A_STAR_WEIGHTS;
+
+}
+}
+
+break;
+
+case 'g':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_GAME;
+}
+}
+
+break;
+
+case 'l':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_LOAD_CONFIG;
+}
+}
+
+break;
+
+case 'm':
+{ switch(*(p++)) { 
+case 'd':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_MAX_DEPTH;
+}
+}
+
+break;
+
+case 'e':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_METHOD;
+}
+}
+
+break;
+
+case 'i':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_MAX_ITERS;
+}
+}
+
+break;
+
+case 's':
+{
+if (!strncmp(p, "s", 1)) {
+p += 1;
+opt = FCS_OPT_MAX_STORED_STATES;
+
+}
+}
+
+break;
+
+}
+}
+
+break;
+
+case 'n':
+{ switch(*(p++)) { 
+case 'h':
+{
+if (!strncmp(p, "t", 1)) {
+p += 1;
+opt = FCS_OPT_NEXT_SOFT_THREAD;
+
+}
+}
+
+break;
+
+case 's':
+{
+if (!strncmp(p, "t", 1)) {
+p += 1;
+opt = FCS_OPT_NEXT_SOFT_THREAD;
+
+}
+}
+
+break;
+
+}
+}
+
+break;
+
+case 'o':
+{
+if (!strncmp(p, "pt", 2)) {
+p += 2;
+{ switch(*(p++)) { 
+case '\0':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_OPTIMIZE_SOLUTION;
+}
+}
+
+break;
+
+case '-':
+{
+if (!strncmp(p, "to", 2)) {
+p += 2;
+opt = FCS_OPT_OPTIMIZATION_TESTS_ORDER;
+
+}
+}
+
+break;
+
+}
+}
+
+}
+}
+
+break;
+
+case 's':
+{ switch(*(p++)) { 
+case 'e':
+{
+if (!strncmp(p, "ed", 2)) {
+p += 2;
+opt = FCS_OPT_SEED;
+
+}
+}
+
+break;
+
+case 't':
+{
+if (!strncmp(p, "ep", 2)) {
+p += 2;
+opt = FCS_OPT_SOFT_THREAD_STEP;
+
+}
+}
+
+break;
+
+}
+}
+
+break;
+
+case 't':
+{
+if (!strncmp(p, "o", 1)) {
+p += 1;
+opt = FCS_OPT_TESTS_ORDER;
+
+}
+}
+
+break;
+
+}
+}
+
+}
+
+}
+        switch (opt)
         {
-            opt = FCS_OPT_MAX_DEPTH;
-        }
-        else if ((!strcmp(argv[arg], "-mi"))||(!strcmp(argv[arg], "--max-iters")))
-        {
-            opt = FCS_OPT_MAX_ITERS;
-        }
-        else if ((!strcmp(argv[arg], "-to"))||(!strcmp(argv[arg], "--tests-order")))
-        {
-            opt = FCS_OPT_TESTS_ORDER;
-        }
-        else if ((!strcmp(argv[arg], "--freecells-num")))
-        {
-            opt = FCS_OPT_FREECELLS_NUM;
-        }
-        else if ((!strcmp(argv[arg], "--stacks-num")))
-        {
-            opt = FCS_OPT_STACKS_NUM;
-        }
-        else if ((!strcmp(argv[arg], "--decks-num")))
-        {
-            opt = FCS_OPT_DECKS_NUM;
-        }
-        else if ((!strcmp(argv[arg], "--sequences-are-built-by")))
-        {
-            opt = FCS_OPT_SEQUENCES_ARE_BUILT_BY;
-        }
-        else if ((!strcmp(argv[arg], "--sequence-move")))
-        {
-            opt = FCS_OPT_SEQUENCE_MOVE;
-        }
-        else if ((!strcmp(argv[arg], "--empty-stacks-filled-by")))
-        {
-            opt = FCS_OPT_EMPTY_STACKS_FILLED_BY;
-        }
-        else if ((!strcmp(argv[arg], "--game"))||(!strcmp(argv[arg], "--preset"))||(!strcmp(argv[arg], "-g")))
-        {
-            opt = FCS_OPT_GAME;
-        }
-        else if ((!strcmp(argv[arg], "-me"))||(!strcmp(argv[arg], "--method")))
-        {
-            opt = FCS_OPT_METHOD;
-        }
-        else if ((!strcmp(argv[arg], "-asw"))||(!strcmp(argv[arg], "--a-star-weights")))
-        {
-            opt = FCS_OPT_A_STAR_WEIGHTS;
-        }
-        else if ((!strcmp(argv[arg], "-opt"))||(!strcmp(argv[arg], "--optimize-solution")))
-        {
-            opt = FCS_OPT_OPTIMIZE_SOLUTION;
-        }
-        else if ((!strcmp(argv[arg], "-seed")))
-        {
-            opt = FCS_OPT_SEED;
-        }
-        else if ((!strcmp(argv[arg], "-mss"))||(!strcmp(argv[arg], "--max-stored-states")))
-        {
-            opt = FCS_OPT_MAX_STORED_STATES;
-        }
-        else if ((!strcmp(argv[arg], "-nst"))||(!strcmp(argv[arg], "--next-soft-thread"))||(!strcmp(argv[arg], "-nht"))||(!strcmp(argv[arg], "--next-hard-thread")))
-        {
-            opt = FCS_OPT_NEXT_SOFT_THREAD;
-        }
-        else if ((!strcmp(argv[arg], "-step"))||(!strcmp(argv[arg], "--soft-thread-step")))
-        {
-            opt = FCS_OPT_SOFT_THREAD_STEP;
-        }
-        else if ((!strcmp(argv[arg], "--reparent-states")))
-        {
-            opt = FCS_OPT_REPARENT_STATES;
-        }
-        else if ((!strcmp(argv[arg], "--calc-real-depth")))
-        {
-            opt = FCS_OPT_CALC_REAL_DEPTH;
-        }
-        else if ((!strcmp(argv[arg], "--st-name")))
-        {
-            opt = FCS_OPT_ST_NAME;
-        }
-        else if ((!strcmp(argv[arg], "--prelude")))
-        {
-            opt = FCS_OPT_PRELUDE;
-        }
-        else if ((!strcmp(argv[arg], "-opt-to"))||(!strcmp(argv[arg], "--optimization-tests-order")))
-        {
-            opt = FCS_OPT_OPTIMIZATION_TESTS_ORDER;
-        }
-        else if ((!strcmp(argv[arg], "--scans-synergy")))
-        {
-            opt = FCS_OPT_SCANS_SYNERGY;
-        }
-        else if ((!strcmp(argv[arg], "--reset")))
-        {
-            opt = FCS_OPT_RESET;
-        }
-        else if ((!strcmp(argv[arg], "--read-from-file")))
-        {
-            opt = FCS_OPT_READ_FROM_FILE;
-        }
-        else if ((!strcmp(argv[arg], "-l"))||(!strcmp(argv[arg], "--load-config")))
-        {
-            opt = FCS_OPT_LOAD_CONFIG;
-        }
-        else
+        case FCS_OPT_UNRECOGNIZED:
         {
             *last_arg = arg;
             return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
         }
+        break;
 
-
-        switch (opt)
-        {
         case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
         {
             arg++;

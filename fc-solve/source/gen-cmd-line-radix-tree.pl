@@ -27,7 +27,7 @@ sub gen_radix_tree
         PUT_STRING:
         while (defined($value))
         {
-            if ((length($remaining) == 0) || (!%$reached))
+            if (!%$reached)
             {
                 $reached->{$remaining} = $value;
                 undef($value);
@@ -89,7 +89,7 @@ sub gen_radix_tree
                         substr($k,1) => $v,
                     }
                 }
-                if (length($remaining) == 1)
+                if (length($remaining) <= 1)
                 {
                     $reached->{$remaining} = $value;
                     $remaining = "";
@@ -123,21 +123,25 @@ EOF
 
         if (ref($node) ne "HASH")
         {
-            return "\n{\nopt = $node;\n}\n";
+            return "\n{\nif (*p == '\\0')\n{\n\nopt = $node;\n}\n}\n";
         }
 
-        my @k = keys(%$node);
+        my @k = (sort { $a cmp $b } keys(%$node));
         if (@k == 1)
         {
             my $key = $k[0];
             if ((length($key) == 1) && (ref($node->{$key}) eq "HASH"))
             {
-                return "\n{\nif (*(p++) == '$key')\n{\n" . $render->($node->{$key}) . "\n}\n\n}";
+                return "\n{\nif (*(p++) == '$key')\n{\n" . $render->($node->{$key}) . "\n}\n\n}\n";
             }
             else
             {
-                return "{\nif (!strcmp(p, \"$k[0]\")) {\n"
-                    . $render->($node->{$key})
+                return "{\nif (!strncmp(p, \"$key\", " . length($key) . ")) {\n"
+                    . "p += " . length($key) . ";\n"
+                    . ((ref($node->{$key}) eq "HASH")
+                        ? $render->($node->{$key})
+                        : "opt = $node->{$key};\n"
+                    )
                     . "\n}\n}\n"
                     ;
             }
@@ -145,15 +149,15 @@ EOF
         else
         {
             return "{ switch(*(p++)) { " 
-                . (map { "\ncase '" . (length($_) ? $_ : q{\\0}) . "':\n"
+                . join("", (map { "\ncase '" . (length($_) ? $_ : q{\\0}) . "':\n"
                     . $render->($node->{$_}) 
                     . "\nbreak;\n"
-                } @k)
-                . "\n}\n}\n"
+                } @k))
+                . "\n}\n}\n";
         }
     };
 
-    return $render->($start);
+    return $code . $render->($start);
 }
 
 $enum .= "FCS_OPT_UNRECOGNIZED,\n";
@@ -165,12 +169,14 @@ while (my $line = <$module>)
     if ($line =~ m{\A(\s*)/\* OPT-PARSE-START \*/})
     {
         $text_out .= $line;
+
         # Skip the lines.
         UP_TO_SWITCH:
         while ($line = <$module>)
         {
             if ($line =~ m{\A *switch \(opt\) *\n?\z}ms)
             {
+                $process_opts .= $line;
                 last UP_TO_SWITCH;
             }
         }
@@ -191,6 +197,7 @@ while (my $line = <$module>)
                     %strings_to_opts_map,
                     (map { $_ => $opt } @s),
                 );
+                $enum .= "    $opt,\n";
             }
         }
 
@@ -204,7 +211,7 @@ while (my $line = <$module>)
 }
 close($module);
 
-open my $out, ">", $module_filename.".new";
+open my $out, ">", $module_filename;
 print {$out} $text_out;
 close($out);
 
