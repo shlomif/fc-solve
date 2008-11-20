@@ -102,6 +102,6 @@ print {$out} $text_out;
 close($out);
 
 open my $enum_fh, ">", "cmd_line_enum.h";
-print {$enum_fh} $enum, "\n}\n";
+print {$enum_fh} $enum, "\n};\n";
 close($enum_fh);
 
