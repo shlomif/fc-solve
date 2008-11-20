@@ -150,7 +150,10 @@ EOF
         {
             return "{ switch(*(p++)) { " 
                 . join("", (map { "\ncase '" . (length($_) ? $_ : q{\\0}) . "':\n"
-                    . $render->($node->{$_}) 
+                    . (length($_)
+                        ? $render->($node->{$_})
+                        : "{\nopt = $node->{$_};\n}\n"
+                    )
                     . "\nbreak;\n"
                 } @k))
                 . "\n}\n}\n";

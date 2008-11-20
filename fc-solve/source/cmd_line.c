@@ -719,13 +719,8 @@ if (!strncmp(p, "pt", 2)) {
 p += 2;
 { switch(*(p++)) { 
 case '\0':
-
 {
-if (*p == '\0')
-{
-
 opt = FCS_OPT_OPTIMIZE_SOLUTION;
-}
 }
 
 break;

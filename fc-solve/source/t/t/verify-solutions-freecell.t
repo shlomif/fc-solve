@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -109,3 +109,9 @@ verify_solution_test({deal => 200, variant => "eight_off", },
 verify_solution_test({deal => 200, variant => "eight_off", theme => [],},
     "Eight Off #200 with default heuristic"
 );
+
+# TEST
+verify_solution_test({deal => 24, theme => ["-opt"],}, 
+    "-opt should work."
+);
+
