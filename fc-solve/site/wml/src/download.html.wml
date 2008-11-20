@@ -17,7 +17,7 @@
 <link_to_berlios_file "freecell-solver-2.8.14.tar.gz" />
 </td>
 <td>
-Source Code. Can be built as an RPM package by running "rpm -tb" on it.
+Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
 </td>
 </tr>
 
