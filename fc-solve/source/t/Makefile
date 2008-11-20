@@ -14,3 +14,6 @@ t/card-test-parse.exe: card-test-parse.c
 
 test: all
 	runprove t/*.{exe,t}
+
+clean:
+	rm -f t/card-test-parse.exe t/card-test-render.exe
