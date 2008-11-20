@@ -26,9 +26,26 @@ while (my $line = <$module>)
             $ws_prefix = $1;
         }
 
-        my $strcmp_regex = qr{\(!strcmp *\( *argv\[arg\] *, *"-[a-zA-Z\-]+" *\) *\)};
-        if ($line =~ m{\A\Q$ws_prefix\Eelse if \(($strcmp_regex *\|\| *)*$strcmp_regex\) *\n?\z}ms)
+        my $inner_strcmp_regex = qr{!strcmp *\( *argv\[arg\] *, *"-[a-zA-Z\-]+" *\) *};
+        my $strcmp_regex = qr{\($inner_strcmp_regex\)|$inner_strcmp_regex};
+
+        my $complete_strcmp = ($line =~ m{\A\Q$ws_prefix\Eelse if \((?:$strcmp_regex *\|\| *)*$strcmp_regex\) *\n?\z}ms);
+
+        my $is_start_line = ($line =~ m{\A\Q$ws_prefix\Eelse if \( *\n?\z}ms);
+        if ($complete_strcmp || $is_start_line)
         {
+            if ($is_start_line)
+            {
+                NEXT_LINE_LOOP:
+                while (my $next_line = <$module>)
+                {
+                    $line .= $next_line;
+                    if ($next_line =~ m{\A\Q$ws_prefix\E *\) *\n?\z})
+                    {
+                        last NEXT_LINE_LOOP;
+                    }
+                }
+            }
             my @strings = ($line =~ m{"([^"]+)"}g);
             my $first = first { m{\A--} } @strings;
             if (!defined($first))
@@ -40,30 +57,37 @@ while (my $line = <$module>)
             $first =~ tr{-}{_};
             my $opt = "FCS_OPT_" . uc($first);
 
-            $find_prefix .= "else if (" . join("||", map { qq{(!strcmp(argv[arg], "$_"))} } @strings) . ")\n";
-            $find_prefix .= "{\n";
-            $find_prefix .= "    opt = $opt;\n";
-            $find_prefix .= "}\n";
+            my $indent = "        ";
+            $find_prefix .= join("",
+                map { $indent. $_ . "\n" }
+                (
+                    ("else if (" . join("||", map { qq{(!strcmp(argv[arg], "$_"))} } @strings) . ")"), 
+                    "{",
+                    "    opt = $opt;",
+                    "}"
+                )
+            );
 
-            $process_opts .= "case ${opt}:\n";
+            $process_opts .= "${ws_prefix}case ${opt}:\n";
 
             do
             {
                 $line = <$module>;
                 $process_opts .= $line
-            } while ($line !~ m/\A\Q$ws_prefix\E}/);
-            $process_opts .= "break;\n\n";
+            } while ($line !~ m/\A\Q$ws_prefix\E\}/);
+            $process_opts .= "${ws_prefix}break;\n\n";
 
             $enum .= "    $opt,\n";
         }
     }
     elsif ($in)
     {
-        $in = 0;      
-        
+        $in = 0;
+
         $text_out .= "$ws_prefix/* OPT-PARSE-START */\n";
         $text_out .= $find_prefix;
-        $text_out .= "switch (opt)\n{\n$process_opts\n}\n";
+        $text_out .= "\n\n";
+        $text_out .= "${ws_prefix}switch (opt)\n${ws_prefix}{\n$process_opts\n$ws_prefix}\n";
         $text_out .= "$ws_prefix/* OPT-PARSE-END */\n";
     }
     else

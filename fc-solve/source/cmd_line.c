@@ -176,10 +176,10 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
         }
 
-        /* OPT-PARSE-START */
         if (0)
         {
         }
+        /* OPT-PARSE-START */
         else if ((!strcmp(argv[arg], "-md")) || (!strcmp(argv[arg], "--max-depth")))
         {
             arg++;
