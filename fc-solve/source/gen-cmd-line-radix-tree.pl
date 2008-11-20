@@ -68,7 +68,7 @@ while (my $line = <$module>)
                 )
             );
 
-            $process_opts .= "${ws_prefix}case ${opt}:\n";
+            $process_opts .= "${ws_prefix}case ${opt}: /* STRINGS=" . join("|", @strings) . ";" . " */\n";
 
             do
             {
