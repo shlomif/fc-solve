@@ -12,7 +12,8 @@ my $text_in = "";
 my $ws_prefix;
 my $in = 0;
 
-open my $module, "<", "cmd_line.c";
+my $module_filename = "cmd_line.c";
+open my $module, "<", $module_filename;
 while (my $line = <$module>)
 {
     if (($line =~ m{\A(\s*)/\* OPT-PARSE-START \*/})
@@ -97,7 +98,7 @@ while (my $line = <$module>)
 }
 close($module);
 
-open my $out, ">", "cmd_line.c.out";
+open my $out, ">", $module_filename;
 print {$out} $text_out;
 close($out);
 

@@ -152,6 +152,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     int num_to_skip;
     int callback_ret;
     int ret;
+    int opt;
 
     *error_string = NULL;
 
@@ -926,13 +927,12 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
             }
         }
+        /* OPT-PARSE-END */
         else
         {
             *last_arg = arg;
             return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
         }
-        /* OPT-PARSE-END */
-        
     }
 
     *last_arg = arg;
