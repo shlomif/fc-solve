@@ -153,6 +153,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     int callback_ret;
     int ret;
     int opt;
+    const char * p;
 
     *error_string = NULL;
 
@@ -180,7 +181,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
 
         /* OPT-PARSE-START */
-const char * p = argv[arg];
+p = argv[arg];
 opt = FCS_OPT_UNRECOGNIZED;
 
 {
