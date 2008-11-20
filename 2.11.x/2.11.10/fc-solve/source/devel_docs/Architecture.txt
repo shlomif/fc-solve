@@ -1,0 +1,210 @@
+1 Introduction
+==============
+
+1.1 Introduction
+----------------
+
+This document aims to be an overview of the Freecell Solver architecture. If
+you have any questions regarding it or want some things to be modified
+or clarified, please send your request to the Freecell Solver mailing-list.
+Its homepage is:
+
+http://groups.yahoo.com/group/fc-solve-discuss/
+
+The main author of this document (and Freecell Solver in general) is Shlomi 
+Fish. This document assumes knowledge regarding how to play Freecell and 
+similiar games. Information about how to play them can be found in the
+documentation of PySol (http://pysol.tsx.org/).
+
+This document is distributed under the public domain.
+
+1.2 History
+-----------
+
+<TO BE FILLED IN>
+
+1.3 Terminology
+---------------
+
+
+1.3.1 card, suit, card number and flipped status
+________________________________________________
+
+A card has a suit and a card number. A suit is one of Hearts, Spades, 
+Diamonds and Clubs, commonly abbreviated as H, S, D and C respectively. 
+The value of each suit in Freecell Solver is:
+H = 0
+S = 1
+D = 2
+C = 3
+
+A card number is one of A, 2, 3, 4, 5, 6, 7, 8, 9, 10 (or in some notations
+T), J, Q, K. A is 1 in Freecell Solver, and the others are in their order, 
+while a card number of 0 is reserved for the empty card. The card number is
+sometimes referred to in the code as deck. This is an error, which may be
+fixed in later versions of Freecell Solver.
+
+A flipped status indicates whether the card faces down or faces up. In
+Freecell type games all cards face up, but that's not the case for Gypsy or
+Klondike-type games.
+
+
+1.3.2 stack, freecell, foundation
+_________________________________
+
+A heap of cards that is present on the playing board is called a stack in the
+Freecell Solver terminology. It should not be confused with move stacks (see
+below), the function call stack, or the Soft-DFS stacks.
+
+A freecell is a placeholder for one card. Freecell and Seahaven Towers have 4
+such freecells, but Der Katzenschwanz and Die Schlange have 8. Freecell Solver
+supports up to 127 freecells, but their maximal number has to be set at
+compile time.
+
+A foundation is the pile where all the cards needs to be moved to at the end
+of the game, one card at a time starting at Ace, and up to Kings. In Freecell
+Solver, each foundation is indexed according to its suit. If there is more
+than one set of foundations, this numbering continues, in the sense that the
+second hearts is #4, the third hearts is #8, etc. 
+
+A foundation is sometimes erroneously called a deck in the Freecell Solver
+source code.
+
+1.3.3 Deck
+__________
+
+A deck is a pack of 52 cards, i.e: 13 cards of each of the four suits. As was
+mentioned earlier, this term in the source code, sometimes refers to
+foundations or card suits. Hopefully, this use will be eliminated as the
+source code will be fixed.
+
+1.3.4 State
+___________
+
+A state is a static position of the playing board. That is, it is a snapshot
+of all the stacks with all the cards they contain, as well as the freecells
+and the value of the foundations.
+
+Freecell Solver has several ways to represent a state in memory and they will
+be explained in section 3.
+
+1.3.5 Moves, Atomic Moves
+_________________________
+
+An atomic move is one of the following:
+1. Moving a single card from one stack to the other.
+2. Moving one card from a stack to an unoccupied freecell.
+3. Moving one card from a freecell on top of a stack.
+4. Moving one card from the top of one of the stacks to the foundations.
+5. Moving one card from a freecell to the foundations.
+
+Note that PySol also supports moving a card from the foundations back to the
+stacks or the freecells. Freecell Solver does not support this kind of move
+yet, and it is questionable whether it will ever will.
+
+A move or supermove may also involve moving several cards at once from one
+stack to the other. This can be either done by using unoccupied freecells and 
+vacant stacks, or in some variants of Freecell (like Relaxed Freecell) it can
+always be done.
+
+1.3.6 Move Stacks and Multi-Moves
+_________________________________
+
+Move stacks constitute of an ordered sequence of one or more moves. Move
+stacks and the way they are managed and handled will be covered in 
+greater detail in section 5.
+
+A multi-move is a sequence of moves that aims to accomplish a certain task,
+such as moving a particular card to the foundations, or moving one card on 
+top of the other. Freecell Solver moves from one state to the other using 
+multi-moves while not storing all of the intermediate states.
+
+1.3.7 Canonizing and Normalizing States
+_______________________________________
+
+In order to avoid a situation where Freecell Solver inspects two states which
+are essentially similiar except for the order of the stacks and freecells, 
+Freecell Solver sorts them in a deterministic order. This process is called 
+state canonization.
+
+However, such states cannot be presented to the user, so it keeps an indexes 
+to the stacks and freecells outside the main data structure, so it can later
+re-calculate their true positions. Those indexes are maintained along with 
+the stacks and freecells themselves.
+
+When a state, or a move that operates on it, is brought from its canonized 
+order to the order that is presented to the user (which maintains a constant
+position of stacks and freecells) it is called normalizing the move.
+
+2. The card.c module
+====================
+
+The functions contained in the card.c are responsible for converting 
+cards between their internal representation in the program and their 
+string representations.
+
+There is nothing too sophisticated here: just a lot of parsing, 
+string making, and switch statements. Each function is preceded by
+a comment that describes it so it should not be very hard to
+understand. If something is still unclear, let me know by posting a
+message to the mailing-list.
+
+3. The state.h header file
+==========================
+
+3.1 How states are represented in FCS
+-------------------------------------
+
+There are three different ways to represent the states in Freecell Solver.
+The choice of which one to use is available at compile-time by defining one 
+and only one of the macros DEBUG_STATES, COMPACT_STATES, and
+INDIRECT_STACK_STATES at compile time.
+
+3.1.1 Debug States
+__________________
+
+Debug States is the oldest state representation method Freecell Solver had and
+was already available in version 0.2. It was then called FAST_STATES, which
+is erroneous because it proven to be much slower than Compact States which
+will be covered in subsection 3.1.2.
+
+It is also slower than Indirect Stack States, and thus should only be used 
+for debugging purposes if at all.
+
+In Debug States, a card is represented as a 4-byte data structure:
+
+<CODE>
+struct fcs_struct_card_t
+{
+    short card_num;
+    char suit;
+    char flags;
+};
+
+typedef struct fcs_struct_card_t fcs_card_t;
+</CODE>
+
+A stack is a data structure whose first element is an int that contains the
+number of the cards in the stack, and the second an array of such cards, whose
+size is MAX_NUM_CARDS_IN_A_STACK, which is a constant calculated from the
+maximal number of initial cards in a stack and other parameters.
+
+<CODE>
+struct fcs_struct_stack_t
+{
+    int num_cards;
+    fcs_card_t cards[MAX_NUM_CARDS_IN_A_STACK];
+};
+
+typedef struct fcs_struct_stack_t fc_stack_t;
+</CODE>
+
+A state is MAX_NUM_STACKS such stacks, MAX_NUM_FREECELLS stand alone cards,
+and MAX_NUM_DECKS*4 foundations.
+
+
+
+
+
+
+
