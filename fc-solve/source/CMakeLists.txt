@@ -7,6 +7,7 @@ SET(CPACK_PACKAGE_VENDOR "Shlomi Fish")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
 
+
 # Process and extract the version number.
 FILE( READ "ver.txt" VERSION)
 
@@ -20,10 +21,12 @@ LIST(GET VERSION_DIGITS 2 CPACK_PACKAGE_VERSION_PATCH)
 
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
 
+SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+
 SET(CPACK_SOURCE_IGNORE_FILES
     "/_CPack_Packages/"
     "/CMakeFiles/"
-    "freecell-solver-[0-9]+\\\\.[0-9]+\\\\.[0-9]+-(Source|Linux)(/|\\\\.(sh|tar\\\\.(gz|bz2|Z|lzma))$)"
+    "freecell-solver-[0-9]+\\\\.[0-9]+\\\\.[0-9]+(-Source|-Linux|)(/|\\\\.(sh|tar\\\\.(gz|bz2|Z|lzma))$)"
     "\\\\.o$"
     "~$"
     "/board_gen/(pi-make-microsoft-freecell-board|make-microsoft-freecell-board|make-gnome-freecell-board|make-aisleriot-freecell-board)$"
@@ -79,9 +82,14 @@ ADD_EXECUTABLE (fc-solve
     main.c
 )
 
+ADD_EXECUTABLE (freecell-solver-range-parallel-solve
+    test_multi_parallel.c
+)
+
 CHECK_FUNCTION_EXISTS(pow HAVE_POW)
 
 TARGET_LINK_LIBRARIES (fc-solve freecell-solver)
+TARGET_LINK_LIBRARIES (freecell-solver-range-parallel-solve freecell-solver)
 
 SET (INDIRECT_STACK_STATES 1)
 SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
@@ -104,14 +112,29 @@ CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/prefix.h
     )
 
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}.spec.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}.spec
+    )
+
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}-config.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}-config
+    )
+
 INSTALL(
-    TARGETS "fc-solve"
+    TARGETS "fc-solve" "freecell-solver-range-parallel-solve"
     DESTINATION "bin"
 )
 
 INSTALL(
     TARGETS "freecell-solver"
     DESTINATION "lib"
+)
+
+INSTALL(
+    FILES "freecell-solver-config"
+    DESTINATION "bin"
 )
 
 RUN_POD2MAN(
@@ -133,9 +156,19 @@ INSTALL(
         "TODO"
         "USAGE"
     DESTINATION
-        "share/doc/freecell-solver-${VERSION}/"
+        "share/doc/freecell-solver/"
 )
 
+INSTALL(
+    FILES
+        "fcs_cl.h"
+        "fcs_enums.h"
+        "fcs_move.h"
+        "fcs_user.h"
+    DESTINATION
+        "include/freecell-solver"
+)
+        
 # Rebuild config.h if ver.txt has changed.
 ADD_CUSTOM_COMMAND(
     OUTPUT "config.h.in"

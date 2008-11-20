@@ -6,10 +6,9 @@ Group: Amusement/Games
 Source: http://download.berlios.de/fc-solve/freecell-solver-%{version}.tar.gz
 Buildroot: %{_tmppath}/freecell-solver-root
 URL: http://fc-solve.berlios.de/
-%define LIBVER_MAJOR 0
-%define LIBVER %{LIBVER_MAJOR}.5.0
-Requires: freecell-solver-libs = %{PACKAGE_VERSION}
+Requires: libfreecell-solver0 = %{PACKAGE_VERSION}
 Summary: The Freecell Solver Executable
+BuildRequires: cmake
 
 %description
 The Freecell Solver package contains the fc-solve executable which is
@@ -19,22 +18,22 @@ similar card solitaire variants.
 This package also contains command line executables to generate the initial
 boards of several popular Freecell implementations.
 
-%package libs
+%package -n libfreecell-solver0
 Summary: The Freecell Solver dynamic libraries for solving Freecell games
 Group: Amusement/Games
 
-%description libs
+%description -n libfreecell-solver0
 Contains the Freecell Solver libraries that are used by some programs to solve
 games of Freecell and similar variants of card solitaire.
 
 This package is mandatory for the Freecell Solver executable too.
 
-%package devel
+%package -n libfreecell-solver0-devel
 Summary: The Freecell Solver development tools for solving Freecell games
 Group: Amusement/Games
-Requires: freecell-solver-libs = %{PACKAGE_VERSION}
+Requires: libfreecell-solver0 = %{PACKAGE_VERSION}
 
-%description devel
+%description -n libfreecell-solver0-devel
 Freecell Solver is a library for automatically solving boards of Freecell and
 similar variants of card Solitaire. This package contains the header files and 
 static libraries necessary for developing programs using Freecell Solver.
@@ -56,34 +55,28 @@ cp ../../README .
 
 
 %build
-
-./configure --prefix=/usr --enable-states-type=indirect --enable-max-num-freecells=8 --enable-max-num-stacks=12 --enable-max-num-initial-cards-per-stack=104 --enable-max-num-decks=2 --mandir=%{_mandir}
-make RPM_OPT_FLAGS="$RPM_OPT_FLAGS" 
+%cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12 -DSTATES_TYPE=indirect
+%make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install prefix=$RPM_BUILD_ROOT/usr mandir=$RPM_BUILD_ROOT/%{_mandir}
-strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/lib/libfreecell-solver.so.%{LIBVER}
-strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/bin/fc-solve
-strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/bin/freecell-solver-range-parallel-solve
-strip -R .comments --strip-unneeded $RPM_BUILD_ROOT/usr/lib/libfreecell-solver.a
-rm -f $RPM_BUILD_ROOT/usr/bin/make-microsoft-freecell-board
+rm -rf %buildroot
+cd build
+%{makeinstall_std}
+
+rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
-%files libs
+%files -n libfreecell-solver0
 /usr/lib/libfreecell-solver.so
-/usr/lib/libfreecell-solver.so.%{LIBVER_MAJOR}
-/usr/lib/libfreecell-solver.so.%{LIBVER}
-/usr/lib/libfreecell-solver.la
 /usr/share/freecell-solver/presetrc
 /usr/share/freecell-solver/presets/*
 
 %files
 %defattr(-,root,root)
-%doc README TODO ChangeLog USAGE board_gen/doc/board_gen
+%doc AUTHORS INSTALL README README.win32.txt TODO ChangeLog USAGE board_gen/doc/board_gen
 /usr/bin/fc-solve
 /usr/bin/make-aisleriot-freecell-board
 /usr/bin/make-gnome-freecell-board
@@ -92,13 +85,9 @@ rm -f $RPM_BUILD_ROOT/usr/bin/make-microsoft-freecell-board
 /usr/bin/freecell-solver-range-parallel-solve
 %{_mandir}/*/*
 
-%files devel
+%files -n libfreecell-solver0-devel
 %defattr(-,root,root)
-/usr/lib/libfreecell-solver.a
-/usr/include/freecell-solver/fcs_cl.h
-/usr/include/freecell-solver/fcs_user.h
-/usr/include/freecell-solver/fcs_enums.h
-/usr/include/freecell-solver/fcs_move.h
+/usr/include/freecell-solver/*.h
 /usr/bin/freecell-solver-config
 
 %clean
