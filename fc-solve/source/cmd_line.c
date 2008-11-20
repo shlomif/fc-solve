@@ -183,7 +183,120 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
         }
         /* OPT-PARSE-START */
-        else if ((!strcmp(argv[arg], "-md")) || (!strcmp(argv[arg], "--max-depth")))
+        else if ((!strcmp(argv[arg], "-md"))||(!strcmp(argv[arg], "--max-depth")))
+        {
+            opt = FCS_OPT_MAX_DEPTH;
+        }
+        else if ((!strcmp(argv[arg], "-mi"))||(!strcmp(argv[arg], "--max-iters")))
+        {
+            opt = FCS_OPT_MAX_ITERS;
+        }
+        else if ((!strcmp(argv[arg], "-to"))||(!strcmp(argv[arg], "--tests-order")))
+        {
+            opt = FCS_OPT_TESTS_ORDER;
+        }
+        else if ((!strcmp(argv[arg], "--freecells-num")))
+        {
+            opt = FCS_OPT_FREECELLS_NUM;
+        }
+        else if ((!strcmp(argv[arg], "--stacks-num")))
+        {
+            opt = FCS_OPT_STACKS_NUM;
+        }
+        else if ((!strcmp(argv[arg], "--decks-num")))
+        {
+            opt = FCS_OPT_DECKS_NUM;
+        }
+        else if ((!strcmp(argv[arg], "--sequences-are-built-by")))
+        {
+            opt = FCS_OPT_SEQUENCES_ARE_BUILT_BY;
+        }
+        else if ((!strcmp(argv[arg], "--sequence-move")))
+        {
+            opt = FCS_OPT_SEQUENCE_MOVE;
+        }
+        else if ((!strcmp(argv[arg], "--empty-stacks-filled-by")))
+        {
+            opt = FCS_OPT_EMPTY_STACKS_FILLED_BY;
+        }
+        else if ((!strcmp(argv[arg], "--game"))||(!strcmp(argv[arg], "--preset"))||(!strcmp(argv[arg], "-g")))
+        {
+            opt = FCS_OPT_GAME;
+        }
+        else if ((!strcmp(argv[arg], "-me"))||(!strcmp(argv[arg], "--method")))
+        {
+            opt = FCS_OPT_METHOD;
+        }
+        else if ((!strcmp(argv[arg], "-asw"))||(!strcmp(argv[arg], "--a-star-weights")))
+        {
+            opt = FCS_OPT_A_STAR_WEIGHTS;
+        }
+        else if ((!strcmp(argv[arg], "-opt"))||(!strcmp(argv[arg], "--optimize-solution")))
+        {
+            opt = FCS_OPT_OPTIMIZE_SOLUTION;
+        }
+        else if ((!strcmp(argv[arg], "-seed")))
+        {
+            opt = FCS_OPT_SEED;
+        }
+        else if ((!strcmp(argv[arg], "-mss"))||(!strcmp(argv[arg], "--max-stored-states")))
+        {
+            opt = FCS_OPT_MAX_STORED_STATES;
+        }
+        else if ((!strcmp(argv[arg], "-nst"))||(!strcmp(argv[arg], "--next-soft-thread"))||(!strcmp(argv[arg], "-nht"))||(!strcmp(argv[arg], "--next-hard-thread")))
+        {
+            opt = FCS_OPT_NEXT_SOFT_THREAD;
+        }
+        else if ((!strcmp(argv[arg], "-step"))||(!strcmp(argv[arg], "--soft-thread-step")))
+        {
+            opt = FCS_OPT_SOFT_THREAD_STEP;
+        }
+        else if ((!strcmp(argv[arg], "--reparent-states")))
+        {
+            opt = FCS_OPT_REPARENT_STATES;
+        }
+        else if ((!strcmp(argv[arg], "--calc-real-depth")))
+        {
+            opt = FCS_OPT_CALC_REAL_DEPTH;
+        }
+        else if ((!strcmp(argv[arg], "--st-name")))
+        {
+            opt = FCS_OPT_ST_NAME;
+        }
+        else if ((!strcmp(argv[arg], "--prelude")))
+        {
+            opt = FCS_OPT_PRELUDE;
+        }
+        else if ((!strcmp(argv[arg], "-opt-to"))||(!strcmp(argv[arg], "--optimization-tests-order")))
+        {
+            opt = FCS_OPT_OPTIMIZATION_TESTS_ORDER;
+        }
+        else if ((!strcmp(argv[arg], "--scans-synergy")))
+        {
+            opt = FCS_OPT_SCANS_SYNERGY;
+        }
+        else if ((!strcmp(argv[arg], "--reset")))
+        {
+            opt = FCS_OPT_RESET;
+        }
+        else if ((!strcmp(argv[arg], "--read-from-file")))
+        {
+            opt = FCS_OPT_READ_FROM_FILE;
+        }
+        else if ((!strcmp(argv[arg], "-l"))||(!strcmp(argv[arg], "--load-config")))
+        {
+            opt = FCS_OPT_LOAD_CONFIG;
+        }
+        else
+        {
+            *last_arg = arg;
+            return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
+        }
+
+
+        switch (opt)
+        {
+        case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
         {
             arg++;
             if (arg == argc)
@@ -193,7 +306,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             freecell_solver_user_limit_depth(instance, atoi(argv[arg]));
         }
-        else if ((!strcmp(argv[arg], "-mi")) || (!strcmp(argv[arg], "--max-iters")))
+        break;
+
+        case FCS_OPT_MAX_ITERS: /* STRINGS=-mi|--max-iters; */
         {
             arg++;
             if (arg == argc)
@@ -204,7 +319,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
             freecell_solver_user_limit_current_instance_iterations(instance, atoi(argv[arg]));
         }
-        else if ((!strcmp(argv[arg], "-to")) || (!strcmp(argv[arg], "--tests-order")))
+        break;
+
+        case FCS_OPT_TESTS_ORDER: /* STRINGS=-to|--tests-order; */
         {
             char * fcs_user_errstr;
             arg++;
@@ -230,7 +347,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 return FCS_CMD_LINE_ERROR_IN_ARG;
             }
         }
-        else if ((!strcmp(argv[arg], "--freecells-num")))
+        break;
+
+        case FCS_OPT_FREECELLS_NUM: /* STRINGS=--freecells-num; */
         {
             arg++;
             if (arg == argc)
@@ -256,7 +375,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 return FCS_CMD_LINE_ERROR_IN_ARG;
             }
         }
-        else if ((!strcmp(argv[arg], "--stacks-num")))
+        break;
+
+        case FCS_OPT_STACKS_NUM: /* STRINGS=--stacks-num; */
         {
             arg++;
             if (arg == argc)
@@ -282,7 +403,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 return FCS_CMD_LINE_ERROR_IN_ARG;
             }
         }
-        else if ((!strcmp(argv[arg], "--decks-num")))
+        break;
+
+        case FCS_OPT_DECKS_NUM: /* STRINGS=--decks-num; */
         {
             arg++;
             if (arg == argc)
@@ -308,7 +431,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 return FCS_CMD_LINE_ERROR_IN_ARG;
             }
         }
-        else if ((!strcmp(argv[arg], "--sequences-are-built-by")))
+        break;
+
+        case FCS_OPT_SEQUENCES_ARE_BUILT_BY: /* STRINGS=--sequences-are-built-by; */
         {
             int sbb;
 
@@ -333,7 +458,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             freecell_solver_user_set_sequences_are_built_by_type(instance, sbb);
         }
-        else if ((!strcmp(argv[arg], "--sequence-move")))
+        break;
+
+        case FCS_OPT_SEQUENCE_MOVE: /* STRINGS=--sequence-move; */
         {
             int unlimited;
 
@@ -354,7 +481,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             freecell_solver_user_set_sequence_move(instance, unlimited);
         }
-        else if (!strcmp(argv[arg], "--empty-stacks-filled-by"))
+        break;
+
+        case FCS_OPT_EMPTY_STACKS_FILLED_BY: /* STRINGS=--empty-stacks-filled-by; */
         {
             int es_fill;
 
@@ -382,11 +511,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 es_fill
                 );
         }
-        else if (
-            (!strcmp(argv[arg], "--game")) ||
-            (!strcmp(argv[arg], "--preset")) ||
-            (!strcmp(argv[arg], "-g"))
-            )
+        break;
+
+        case FCS_OPT_GAME: /* STRINGS=--game|--preset|-g; */
         {
             arg++;
             if (arg == argc)
@@ -461,7 +588,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 return FCS_CMD_LINE_ERROR_IN_ARG;
             }
         }
-        else if ((!strcmp(argv[arg], "-me")) || (!strcmp(argv[arg], "--method")))
+        break;
+
+        case FCS_OPT_METHOD: /* STRINGS=-me|--method; */
         {
             int method;
 
@@ -511,7 +640,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
             freecell_solver_user_set_solving_method(instance, method);
         }
-        else if ((!strcmp(argv[arg], "-asw")) || (!strcmp(argv[arg], "--a-star-weights")))
+        break;
+
+        case FCS_OPT_A_STAR_WEIGHTS: /* STRINGS=-asw|--a-star-weights; */
         {
             arg++;
             if (arg == argc)
@@ -552,11 +683,15 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
             }
         }
-        else if ((!strcmp(argv[arg], "-opt")) || (!strcmp(argv[arg], "--optimize-solution")))
+        break;
+
+        case FCS_OPT_OPTIMIZE_SOLUTION: /* STRINGS=-opt|--optimize-solution; */
         {
             freecell_solver_user_set_solution_optimization(instance, 1);
         }
-        else if ((!strcmp(argv[arg], "-seed")))
+        break;
+
+        case FCS_OPT_SEED: /* STRINGS=-seed; */
         {
             arg++;
             if (arg == argc)
@@ -567,7 +702,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
             freecell_solver_user_set_random_seed(instance, atoi(argv[arg]));
         }
-        else if ((!strcmp(argv[arg], "-mss")) || (!strcmp(argv[arg], "--max-stored-states")))
+        break;
+
+        case FCS_OPT_MAX_STORED_STATES: /* STRINGS=-mss|--max-stored-states; */
         {
             arg++;
             if (arg == argc)
@@ -581,12 +718,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 atoi(argv[arg])
             );
         }
-        else if (
-            (!strcmp(argv[arg], "-nst")) ||
-            (!strcmp(argv[arg], "--next-soft-thread")) ||
-            (!strcmp(argv[arg], "-nht")) ||
-            (!strcmp(argv[arg], "--next-hard-thread"))
-        )
+        break;
+
+        case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread|-nht|--next-hard-thread; */
         {
             int ret;
             int is_st = ((!strcmp(argv[arg], "-nst")) || (!strcmp(argv[arg], "--next-soft-thread")));
@@ -610,7 +744,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 return FCS_CMD_LINE_ERROR_IN_ARG;
             }
         }
-        else if ((!strcmp(argv[arg], "-step")) || (!strcmp(argv[arg], "--soft-thread-step")))
+        break;
+
+        case FCS_OPT_SOFT_THREAD_STEP: /* STRINGS=-step|--soft-thread-step; */
         {
             arg++;
             if (arg == argc)
@@ -624,20 +760,26 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 atoi(argv[arg])
             );
         }
-        else if ((!strcmp(argv[arg], "--reparent-states")))
+        break;
+
+        case FCS_OPT_REPARENT_STATES: /* STRINGS=--reparent-states; */
         {
             freecell_solver_user_set_reparent_states(
                 instance,
                 1
                 );
         }
-        else if ((!strcmp(argv[arg], "--calc-real-depth")))
+        break;
+
+        case FCS_OPT_CALC_REAL_DEPTH: /* STRINGS=--calc-real-depth; */
         {
             freecell_solver_user_set_calc_real_depth(
                 instance,
                 1);
         }
-        else if ((!strcmp(argv[arg], "--st-name")))
+        break;
+
+        case FCS_OPT_ST_NAME: /* STRINGS=--st-name; */
         {
             arg++;
             if (arg == argc)
@@ -647,7 +789,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             freecell_solver_user_set_soft_thread_name(instance, argv[arg]);
         }
-        else if ((!strcmp(argv[arg], "--prelude")))
+        break;
+
+        case FCS_OPT_PRELUDE: /* STRINGS=--prelude; */
         {
             arg++;
             if (arg == argc)
@@ -657,7 +801,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             freecell_solver_user_set_hard_thread_prelude(instance, argv[arg]);
         }
-        else if ((!strcmp(argv[arg], "-opt-to")) || (!strcmp(argv[arg], "--optimization-tests-order")))
+        break;
+
+        case FCS_OPT_OPTIMIZATION_TESTS_ORDER: /* STRINGS=-opt-to|--optimization-tests-order; */
         {
             char * fcs_user_errstr;
             arg++;
@@ -689,7 +835,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 return FCS_CMD_LINE_ERROR_IN_ARG;
             }
         }
-        else if ((!strcmp(argv[arg], "--scans-synergy")))
+        break;
+
+        case FCS_OPT_SCANS_SYNERGY: /* STRINGS=--scans-synergy; */
         {
             int value;
 
@@ -725,16 +873,15 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 value
                 );
         }
-        else if ((!strcmp(argv[arg], "-ni")) ||
-                 (!strcmp(argv[arg], "--next-instance")))
-        {
-            freecell_solver_user_next_instance(instance);
-        }
-        else if (!strcmp(argv[arg], "--reset"))
+        break;
+
+        case FCS_OPT_RESET: /* STRINGS=--reset; */
         {
             freecell_solver_user_reset(instance);
         }
-        else if (!strcmp(argv[arg], "--read-from-file"))
+        break;
+
+        case FCS_OPT_READ_FROM_FILE: /* STRINGS=--read-from-file; */
         {
             arg++;
             if (arg == argc)
@@ -869,7 +1016,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 freecell_solver_args_man_free(args_man);
             }
         }
-        else if ((!strcmp(argv[arg], "-l")) || (!strcmp(argv[arg], "--load-config")))
+        break;
+
+        case FCS_OPT_LOAD_CONFIG: /* STRINGS=-l|--load-config; */
         {
             arg++;
             if (arg == argc)
@@ -927,10 +1076,9 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
             }
         }
-        else
-        {
-            *last_arg = arg;
-            return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
+        break;
+
+
         }
         /* OPT-PARSE-END */
     }
