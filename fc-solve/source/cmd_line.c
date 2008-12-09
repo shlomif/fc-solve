@@ -342,7 +342,7 @@ case 'h':
 {
 if (!strncmp(p, "ard-thread", 10)) {
 p += 10;
-opt = FCS_OPT_NEXT_SOFT_THREAD;
+opt = FCS_OPT_NEXT_HARD_THREAD;
 
 }
 }
@@ -690,7 +690,7 @@ case 'h':
 {
 if (!strncmp(p, "t", 1)) {
 p += 1;
-opt = FCS_OPT_NEXT_SOFT_THREAD;
+opt = FCS_OPT_NEXT_HARD_THREAD;
 
 }
 }
@@ -1162,15 +1162,15 @@ break;
         }
         break;
 
-        case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread|-nht|--next-hard-thread; */
+        case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread; */
+        case FCS_OPT_NEXT_HARD_THREAD: /* STRINGS=-nht|--next-hard-thread; */
         {
             int ret;
-            int is_st = ((!strcmp((*arg), "-nst")) || (!strcmp((*arg), "--next-soft-thread")));
 
             ret =
-                is_st ?
-                    freecell_solver_user_next_soft_thread(instance) :
-                    freecell_solver_user_next_hard_thread(instance)
+                (opt == FCS_OPT_NEXT_SOFT_THREAD)
+                    ? freecell_solver_user_next_soft_thread(instance)
+                    : freecell_solver_user_next_hard_thread(instance)
                     ;
 
             if (ret)
