@@ -31,7 +31,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "~$"
     "/board_gen/(pi-make-microsoft-freecell-board|make-microsoft-freecell-board|make-gnome-freecell-board|make-aisleriot-freecell-board)$"
     "/fc-solve$"
-    "\\\\.so$"
+    "\\\\.so(\\\\.[0-9]+)*$"
     "/.svn/"
     "/t/t/.*\\\\.exe$"
     "/CMakeCache.txt$"
@@ -74,6 +74,10 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 ADD_LIBRARY (freecell-solver
     SHARED
     alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_dm.c fcs_hash.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c
+    )
+
+SET_TARGET_PROPERTIES(freecell-solver
+    PROPERTIES VERSION 0.5.0 SOVERSION 0
     )
 
 TARGET_LINK_LIBRARIES (freecell-solver m)

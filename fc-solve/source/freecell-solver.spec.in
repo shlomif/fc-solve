@@ -70,7 +70,7 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 %postun -p /sbin/ldconfig
 
 %files -n libfreecell-solver0
-/usr/lib/libfreecell-solver.so
+/usr/lib/libfreecell-solver.so*
 /usr/share/freecell-solver/presetrc
 /usr/share/freecell-solver/presets/*
 
