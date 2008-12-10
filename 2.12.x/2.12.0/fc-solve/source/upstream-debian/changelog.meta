@@ -1,0 +1,7 @@
+freecell-solver (%VERSION%) unstable; urgency=low
+
+  * this is an automatic build with the upstream debian things
+    so please don't treat it as an official package, and do not
+    bugreport about it.
+
+ -- RISKO Gergely <risko@debian.org>  Tue,  2 Jul 2002 14:33:01 +0200

@@ -1,0 +1,50 @@
+/* vim:syn=tt2
+*/
+#include <tap.h>
+#include <string.h>
+
+#include "../card.c"
+
+int main_tests()
+{
+    char buffer[1024];
+
+[% SET num_tests = 0 %]
+[% FOREACH suit = suits %]
+[% FOREACH card_num = card_nums %]
+[% FOREACH t = [0,1] %]
+[% SET t_key = t ? "t" : "non_t" %]
+[% SET card_string = ('"' 
+            _   card_num.value.${t_key}
+            _   suit.value
+            _   '"') %]
+    {
+        fcs_card_t mycard;
+        char * ret;
+
+        mycard = fcs_empty_card;
+
+        fcs_card_set_suit(mycard, [% suit.idx %]);
+        fcs_card_set_num(mycard, [% card_num.idx %]);
+
+        ret = freecell_solver_card_perl2user(mycard, buffer, [% t %]);
+        /* TEST */
+        [% SET num_tests = num_tests + 1 %]
+        ok (ret == buffer, 
+           "Return value is the beginning of the buffer.");
+        /* TEST */
+        [% SET num_tests = num_tests + 1 %]
+        ok (!strcmp(buffer, [% card_string %]),
+            "Trying to render " [% card_string %] " into a string");
+    }
+[% END %]
+[% END %]
+[% END %]
+}
+
+int main(void)
+{
+  plan_tests([% num_tests %]); 
+  main_tests(); 
+  return exit_status();
+}
