@@ -35,7 +35,7 @@ in the <a href="features.html"><b>Features List</b></a>.
 
 <h2>News</h2>
 
-<h3>10-Dec-2008</h3>
+<h3 id="news-2008-12-10">10-Dec-2008</h3>
 
 <p>
 <a href="http://en.wikipedia.org/wiki/Perl_6">Perl 6</a> will be ready by
@@ -52,7 +52,7 @@ flag.
 Happy holidays and hope you enjoy this release.
 </p>
 
-<h3>15-Dec-2005</h3>
+<h3 id="news-2005-12-15">15-Dec-2005</h3>
 
 <p>
 The <a href="download.html">Downloads</a> are now working again. Plus,
@@ -75,7 +75,7 @@ Solver</a>.
 </li>
 </ol>
 
-<h3>4-Oct-2003</h3>
+<h3 id="news-2003-10-04">4-Oct-2003</h3>
 
 <p>
 There is now <a href="./pysol/">PySol Integration with Freecell Solver</a>
@@ -83,7 +83,8 @@ available here. This enables receiving hints from Freecell Solver and seeing
 demos of it while within PySol.
 </p>
 
-<h3>28-Sep-2002</h3>
+<h3 id="news-2002-09-28">28-Sep-2002</h3>
+
 <p>
 Freecell Solver 2.8.0 has been released. This version features a better
 documentation and help screens, a preset system, and an option to read 
@@ -95,7 +96,7 @@ verdict.
 All in all: a lot of added usability!
 </p>
 
-<h3>12-Jul-2002</h3>
+<h3 id="news-2002-07-12">12-Jul-2002</h3>
 
 <p>
 Freecell Solver 2.6.0 has been spotted in the wild. This version features 

@@ -2,7 +2,7 @@
 
 <latemp_subject "Freecell Solver's Previous News Items" />
 
-<h3>29-Mar-2002</h3>
+<h3 id="news-2002-03-29">29-Mar-2002</h3>
 
 <p>
 Freecell Solver 2.4.0 was released. The highlight of this release is the 
@@ -12,7 +12,7 @@ and does not require system multi-threading.
 </p>
 
 
-<h3>18-Feb-2002</h3>
+<h3 id="news-2002-02-18">18-Feb-2002</h3>
 
 <p>
 Freecell Solver 2.2.0 came into the world today. This release features
@@ -23,7 +23,7 @@ maintainance of the package became more integrated and now it is
 possible to build an RPM by typing executing rpm -ta on the archive.
 </p>
 
-<h3>19-Dec-2001</h3>
+<h3 id="news-2001-12-19">19-Dec-2001</h3>
 
 <p>
 Freecell Solver 2.0.0 was released. This version features a lot of new 
@@ -42,7 +42,7 @@ linked against.</li>
 <li>Most importantly : a new initial digit! All hail the "2"!!</li>
 </ol>
 
-<h3>2-Oct-2001</h3>
+<h3 id="news-2001-10-02">2-Oct-2001</h3>
 
 <p>
 Freecell Solver version 1.10.0 was released. This version can now solve
@@ -50,7 +50,7 @@ deals of Simple Simon, as well as solving all the Freecell-like variants
 that it could before.
 </p>
 
-<h3>31-Aug-2001</h3>
+<h3 id="news-2001-08-31">31-Aug-2001</h3>
 
 <p>
 Freecell Solver version 1.8.0 was released into the world. Its main
@@ -65,7 +65,7 @@ the boards of the new Solitaire variants that were added to it and are
 supported by Freecell Solver.
 </p>
 
-<h3>11-Apr-2001</h3>
+<h3 id="news-2001-04-11">11-Apr-2001</h3>
 
 <p>
 Freecell Solver version 1.6.0 has been released. It supports a solution path
@@ -79,7 +79,7 @@ Otherwise, a lot of comments were added to the code, to make it easier
 for interested developers to understand it.
 </p>
 
-<h3>12-Feb-2001</h3>
+<h3 id="news-2001-02-12">12-Feb-2001</h3>
 
 <p>
 I have set up a mailing-list for Freecell Solver. For the mailing-list 
@@ -99,7 +99,7 @@ you can still E-mail me (Shlomi Fish).
 </p>
 
 
-<h3>7-Feb-2001</h3>
+<h3 id="news-2001-02-07">7-Feb-2001</h3>
 
 <p>
 The long-awaited Freecell Solver 1.4.0 is now available. Changes from the 
@@ -113,7 +113,7 @@ A choice between all of those scans is available at run-time.
 </p>
 
 
-<h3>26-Jan-2001</h3>
+<h3 id="news-2001-01-26">26-Jan-2001</h3>
 
 <p>
 I have setup a <a href="http://fc-solve.berlios.de/">mirror</a> for Freecell
@@ -127,7 +127,7 @@ The motivation for setting up the mirror was because I noticed that the
 connectivity at the Technion was not failsafe, and I want a backup site.
 </p>
 
-<h3>21-Dec-2000</h3>
+<h3 id="news-2000-12-21">21-Dec-2000</h3>
 
 <p>
 Version 1.2.0 of Freecell Solver is now available for download. This version
@@ -141,7 +141,7 @@ The code has also changed quite a bit, so it may be of interest to
 developers who are interested to look under its hood.
 </p>
 
-<h3>19-Nov-2000</h3>
+<h3 id="news-2000-11-19">19-Nov-2000</h3>
 
 <p>Freecell Solver version 1.0.0 was released. This version can solve more
 game types, and can be compiled so it will be less memory intensive which is
@@ -156,7 +156,7 @@ rather version 1.x.y. Hoorah for the new initial digit!</p>
 
 
 
-<h3>9-Oct-2000</h3>
+<h3 id="news-2000-10-09">9-Oct-2000</h3>
 
 <p>
 Freecell Solver version 0.10.0 was released. This version features support 
@@ -166,10 +166,13 @@ well as several bug-fixes.
 </p>
 
 
-<h3>28-Aug-2000</h3>
+<h3 id="news-2000-09-28">28-Aug-2000</h3>
 
+<p>
 Freecell Solver version 0.8.0 was released. New features in this version
-include:<br />
+include:
+</p>
+
 <ol>
 <li>Some bug-fixes. (users of previous versions should upgrade)</li>
 
@@ -197,10 +200,13 @@ or
 
 </ol>
 
-<h3>28-Jul-2000</h3>
+<h3 id="news-2000-07-28">28-Jul-2000</h3>
 
+<p>
 Freecell Solver version 0.6 was released. This version features a more 
-modular code as well as the following usability features:<br />
+modular code as well as the following usability features:
+</p>
+
 <ol>
 <li>An extra movement that allows Freecell Solver to solve 
 some boards which it could not solve previously.
@@ -214,9 +220,11 @@ too much memory)</li>
 order can be found that will solve a given board really fast.</li>
 </ol>
 
-<h3>6-Jun-2000</h3>
+<h3 id="news-2000-06-06">6-Jun-2000</h3>
 
+<p>
 Freecell Solver version 0.4 was released. This version contains three major
 code optimizations, so it now runs much faster. It can now also start
-solving from a non-initial board.<br />
+solving from a non-initial board.
+</p>
 
