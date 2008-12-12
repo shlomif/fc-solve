@@ -529,8 +529,8 @@ struct fcs_struct_state_with_locations_t
 typedef struct fcs_struct_state_with_locations_t fcs_state_with_locations_t;
 
 
-extern fcs_card_t freecell_solver_empty_card;
-#define fcs_empty_card freecell_solver_empty_card
+extern fcs_card_t fc_solve_empty_card;
+#define fcs_empty_card fc_solve_empty_card
 
 
 #ifdef FCS_WITH_TALONS
@@ -564,13 +564,13 @@ extern fcs_card_t freecell_solver_empty_card;
 #endif
 
 
-extern void freecell_solver_canonize_state(
+extern void fc_solve_canonize_state(
     fcs_state_with_locations_t * state,
     int freecells_num,
     int stacks_num
     );
 
-#define fcs_canonize_state(state,freecells_num,stacks_num) freecell_solver_canonize_state((state),(freecells_num),(stacks_num))
+#define fcs_canonize_state(state,freecells_num,stacks_num) fc_solve_canonize_state((state),(freecells_num),(stacks_num))
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 
@@ -580,12 +580,12 @@ typedef void * fcs_compare_context_t;
 typedef const void * fcs_compare_context_t;
 #endif
 
-extern int freecell_solver_state_compare(const void * s1, const void * s2);
-extern int freecell_solver_state_compare_equal(const void * s1, const void * s2);
-extern int freecell_solver_state_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
+extern int fc_solve_state_compare(const void * s1, const void * s2);
+extern int fc_solve_state_compare_equal(const void * s1, const void * s2);
+extern int fc_solve_state_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
 #else
-extern int freecell_solver_state_compare_indirect(const void * s1, const void * s2);
-extern int freecell_solver_state_compare_indirect_with_context(const void * s1, const void * s2, void * context);
+extern int fc_solve_state_compare_indirect(const void * s1, const void * s2);
+extern int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s2, void * context);
 #endif
 
 #ifdef FCS_WITH_TALONS
@@ -598,7 +598,7 @@ enum FCS_USER_STATE_TO_C_RETURN_CODES
     FCS_USER_STATE_TO_C__PREMATURE_END_OF_INPUT
 };
 
-int freecell_solver_initial_user_state_to_c(
+int fc_solve_initial_user_state_to_c(
     const char * string,
     fcs_state_with_locations_t * out_state,
     int freecells_num,
@@ -613,7 +613,7 @@ int freecell_solver_initial_user_state_to_c(
     );
 
 
-extern char * freecell_solver_state_as_string(
+extern char * fc_solve_state_as_string(
     fcs_state_with_locations_t * state,
     int freecells_num,
     int stacks_num,
@@ -632,7 +632,7 @@ enum FCS_STATE_VALIDITY_CODES
     FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4,
 };
 
-extern int freecell_solver_check_state_validity(
+extern int fc_solve_check_state_validity(
     fcs_state_with_locations_t * state,
     int freecells_num,
     int stacks_num,

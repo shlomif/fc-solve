@@ -5,7 +5,7 @@
 
 #define GROW_BY 4000
 
-struct freecell_solver_append_string_struct
+struct fc_solve_append_string_struct
 {
     char * buffer;
     char * end_of_buffer;
@@ -13,18 +13,18 @@ struct freecell_solver_append_string_struct
     int size_of_margin;
 };
 
-typedef struct freecell_solver_append_string_struct freecell_solver_append_string_t;
+typedef struct fc_solve_append_string_struct fc_solve_append_string_t;
 
-freecell_solver_append_string_t * freecell_solver_append_string_alloc(int size_margin)
+fc_solve_append_string_t * fc_solve_append_string_alloc(int size_margin)
 {
-    freecell_solver_append_string_t * app_str;
+    fc_solve_append_string_t * app_str;
 
     if (size_margin > GROW_BY)
     {
         return NULL;
     }
 
-    app_str = malloc(sizeof(freecell_solver_append_string_t));
+    app_str = malloc(sizeof(fc_solve_append_string_t));
     app_str->max_size = GROW_BY;
     app_str->end_of_buffer = app_str->buffer = malloc(app_str->max_size);
     app_str->size_of_margin = size_margin;
@@ -32,8 +32,8 @@ freecell_solver_append_string_t * freecell_solver_append_string_alloc(int size_m
     return app_str;
 }
 
-int freecell_solver_append_string_sprintf(
-    freecell_solver_append_string_t * app_str,
+int fc_solve_append_string_sprintf(
+    fc_solve_append_string_t * app_str,
     char * format,
     ...
     )
@@ -62,8 +62,8 @@ int freecell_solver_append_string_sprintf(
     return num_chars_written;
 }
 
-char * freecell_solver_append_string_finalize(
-    freecell_solver_append_string_t * app_str
+char * fc_solve_append_string_finalize(
+    fc_solve_append_string_t * app_str
     )
 {
     char * ret;

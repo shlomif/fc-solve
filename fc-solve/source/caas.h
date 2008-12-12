@@ -15,8 +15,8 @@ extern "C" {
  * Solver uses to solve a given board.
  * */
 
-extern int freecell_solver_check_and_add_state(
-    freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_check_and_add_state(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * new_state,
     fcs_state_with_locations_t * * existing_state
     );

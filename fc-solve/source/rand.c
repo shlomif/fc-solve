@@ -6,7 +6,7 @@
 
 #include "rand.h"
 
-fcs_rand_t * freecell_solver_rand_alloc(unsigned int seed)
+fcs_rand_t * fc_solve_rand_alloc(unsigned int seed)
 {
     fcs_rand_t * ret;
 
@@ -16,13 +16,13 @@ fcs_rand_t * freecell_solver_rand_alloc(unsigned int seed)
     return ret;
 }
 
-void freecell_solver_rand_free(fcs_rand_t * rand)
+void fc_solve_rand_free(fcs_rand_t * rand)
 {
     free(rand);
 }
 
 
-void freecell_solver_rand_srand(fcs_rand_t * rand, int seed)
+void fc_solve_rand_srand(fcs_rand_t * rand, int seed)
 {
     rand->seed = seed;
 }

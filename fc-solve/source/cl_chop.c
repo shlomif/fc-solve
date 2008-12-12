@@ -10,7 +10,7 @@
 
 #define ARGS_MAN_GROW_BY 30
 
-args_man_t * freecell_solver_args_man_alloc(void)
+args_man_t * fc_solve_args_man_alloc(void)
 {
     args_man_t * ret;
     ret = malloc(sizeof(args_man_t));
@@ -20,7 +20,7 @@ args_man_t * freecell_solver_args_man_alloc(void)
     return ret;
 }
 
-void freecell_solver_args_man_free(args_man_t * manager)
+void fc_solve_args_man_free(args_man_t * manager)
 {
     int a;
     for(a=0;a<manager->argc;a++)
@@ -65,7 +65,7 @@ void freecell_solver_args_man_free(args_man_t * manager)
 #define is_whitespace(c) \
     (((c) == ' ') || ((c) == '\t') || ((c) == '\n') || ((c) == '\r'))
 
-int freecell_solver_args_man_chop(args_man_t * manager, char * string)
+int fc_solve_args_man_chop(args_man_t * manager, char * string)
 {
     char * s = string;
     char * new_arg;

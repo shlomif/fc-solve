@@ -165,7 +165,7 @@ char * get_board(int gamenumber)
     return ret;
 }
 
-struct freecell_solver_display_information_context_struct
+struct fc_solve_display_information_context_struct
 {
     int debug_iter_state_output;
     int freecells_num;
@@ -181,7 +181,7 @@ struct freecell_solver_display_information_context_struct
     int standard_notation;
 };
 
-typedef struct freecell_solver_display_information_context_struct freecell_solver_display_information_context_t;
+typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
 
 static void my_iter_handler(
     void * user_instance,
@@ -192,8 +192,8 @@ static void my_iter_handler(
     void * lp_context
     )
 {
-    freecell_solver_display_information_context_t * context;
-    context = (freecell_solver_display_information_context_t*)lp_context;
+    fc_solve_display_information_context_t * context;
+    context = (fc_solve_display_information_context_t*)lp_context;
 
     fprintf(stdout, "Iteration: %i\n", iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
@@ -257,7 +257,7 @@ static void my_iter_handler(
 
 struct pack_item_struct
 {
-    freecell_solver_display_information_context_t display_context;
+    fc_solve_display_information_context_t display_context;
     void * instance;
 };
 
@@ -275,7 +275,7 @@ static int cmd_line_callback(
     )
 {
     pack_item_t * item;
-    freecell_solver_display_information_context_t * dc;
+    fc_solve_display_information_context_t * dc;
     item = (pack_item_t * )context;
     dc = &(item->display_context);
 

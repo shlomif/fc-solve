@@ -1,6 +1,6 @@
 /*
  * caas.c - the various possible implementations of the function
- * freecell_solver_check_and_add_state().
+ * fc_solve_check_and_add_state().
  *
  * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
  *
@@ -68,7 +68,7 @@
          * */            \
         hash_value_int &= (~(1<<((sizeof(hash_value_int)<<3)-1)));     \
     }    \
-    check = ((*existing_state = freecell_solver_hash_insert(          \
+    check = ((*existing_state = fc_solve_hash_insert(          \
         instance->hash,              \
         new_state,                   \
         hash_value_int,              \
@@ -97,7 +97,7 @@
          * */                                                           \
         hash_value_int &= (~(1<<((sizeof(hash_value_int)<<3)-1)));      \
     }                                                                   \
-    check = ((*existing_state = freecell_solver_hash_insert(            \
+    check = ((*existing_state = fc_solve_hash_insert(            \
         instance->hash,                                                 \
         new_state,                                                      \
         freecell_solver_lookup2_hash_function(                          \
@@ -117,15 +117,15 @@
                 instance->indirect_prev_states,                     \
                 instance->num_indirect_prev_states,                 \
                 sizeof(fcs_state_with_locations_t *),               \
-                freecell_solver_state_compare_indirect)) == NULL)                \
+                fc_solve_state_compare_indirect)) == NULL)                \
     {                                                               \
         /* It isn't in prev_states, but maybe it's in the sort margin */        \
-        pos_ptr = (fcs_state_with_locations_t * *)freecell_solver_bsearch(              \
+        pos_ptr = (fcs_state_with_locations_t * *)fc_solve_bsearch(              \
             &new_state,                                                     \
             instance->indirect_prev_states_margin,                          \
             instance->num_prev_states_margin,                               \
             sizeof(fcs_state_with_locations_t *),                           \
-            freecell_solver_state_compare_indirect_with_context, \
+            fc_solve_state_compare_indirect_with_context, \
             NULL,                  \
             &found);              \
                              \
@@ -160,13 +160,13 @@
                     instance->indirect_prev_states = realloc(instance->indirect_prev_states, sizeof(fcs_state_with_locations_t *) * instance->max_num_indirect_prev_states);       \
                 }             \
                             \
-                freecell_solver_merge_large_and_small_sorted_arrays(           \
+                fc_solve_merge_large_and_small_sorted_arrays(           \
                     instance->indirect_prev_states,              \
                     instance->num_indirect_prev_states,           \
                     instance->indirect_prev_states_margin,          \
                     instance->num_prev_states_margin,              \
                     sizeof(fcs_state_with_locations_t *),           \
-                    freecell_solver_state_compare_indirect_with_context,          \
+                    fc_solve_state_compare_indirect_with_context,          \
                     NULL                        \
                 );                   \
                                   \
@@ -285,8 +285,8 @@
 #endif
 
 #ifdef INDIRECT_STACK_STATES
-static void GCC_INLINE freecell_solver_cache_stacks(
-        freecell_solver_hard_thread_t * hard_thread,
+static void GCC_INLINE fc_solve_cache_stacks(
+        fc_solve_hard_thread_t * hard_thread,
         fcs_state_with_locations_t * new_state
         )
 {
@@ -296,7 +296,7 @@ static void GCC_INLINE freecell_solver_cache_stacks(
 #endif
     void * cached_stack;
     char * new_ptr;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    fc_solve_instance_t * instance = hard_thread->instance;
     int stacks_num = instance->stacks_num;
     
 
@@ -339,7 +339,7 @@ static void GCC_INLINE freecell_solver_cache_stacks(
             hash_value_int &= (~(1<<((sizeof(hash_value_int)<<3)-1)));
         }
 
-        cached_stack = (void *)freecell_solver_hash_insert(
+        cached_stack = (void *)fc_solve_hash_insert(
             instance->stacks_hash,
             new_state->s.stacks[a],
             freecell_solver_lookup2_hash_function(
@@ -418,13 +418,13 @@ static void GCC_INLINE freecell_solver_cache_stacks(
     }
 }
 #else
-#define freecell_solver_cache_stacks(instance, new_state)
+#define fc_solve_cache_stacks(instance, new_state)
 #endif
 
 
 #ifdef FCS_WITH_TALONS
-void freecell_solver_cache_talon(
-    freecell_solver_instance_t * instance,
+void fc_solve_cache_talon(
+    fc_solve_instance_t * instance,
     fcs_state_with_locations_t * new_state
     )
 {
@@ -443,7 +443,7 @@ void freecell_solver_cache_talon(
         hash_value_int &= (~(1<<((sizeof(hash_value_int)<<3)-1)));
     }
 
-    cached_talon = (void *)freecell_solver_hash_insert(
+    cached_talon = (void *)fc_solve_hash_insert(
         instance->talons_hash,
         new_state->s.talon,
         hash_value_int,
@@ -460,7 +460,7 @@ void freecell_solver_cache_talon(
 
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-guint freecell_solver_hash_function(gconstpointer key)
+guint fc_solve_hash_function(gconstpointer key)
 {
     guint hash_value;
     const char * s_ptr = (char*)key;
@@ -498,8 +498,8 @@ guint freecell_solver_hash_function(gconstpointer key)
  *
  * */
 
-GCC_INLINE int freecell_solver_check_and_add_state(
-    freecell_solver_soft_thread_t * soft_thread,
+GCC_INLINE int fc_solve_check_and_add_state(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * new_state,
     fcs_state_with_locations_t * * existing_state
     )
@@ -511,8 +511,8 @@ GCC_INLINE int freecell_solver_check_and_add_state(
     fcs_state_with_locations_t * * pos_ptr;
     int found;
 #endif
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * instance = hard_thread->instance;
 
     int check;
 
@@ -521,7 +521,7 @@ GCC_INLINE int freecell_solver_check_and_add_state(
         return FCS_STATE_BEGIN_SUSPEND_PROCESS;
     }
 
-    freecell_solver_cache_stacks(hard_thread, new_state);
+    fc_solve_cache_stacks(hard_thread, new_state);
 
     fcs_canonize_state(new_state, instance->freecells_num, instance->stacks_num);
 
@@ -538,7 +538,7 @@ GCC_INLINE int freecell_solver_check_and_add_state(
         if (new_state->moves_to_parent != NULL)
         {
             new_state->moves_to_parent = 
-                freecell_solver_move_stack_compact_allocate(
+                fc_solve_move_stack_compact_allocate(
                     hard_thread, 
                     new_state->moves_to_parent
                     );
@@ -564,7 +564,7 @@ GCC_INLINE int freecell_solver_check_and_add_state(
 
 static char meaningless_data[16] = "Hello World!";
 
-int freecell_solver_check_and_add_state(freecell_solver_instance_t * instance, fcs_state_with_locations_t * new_state, int depth)
+int fc_solve_check_and_add_state(fc_solve_instance_t * instance, fcs_state_with_locations_t * new_state, int depth)
 {
     DBT key, value;
 
@@ -582,7 +582,7 @@ int freecell_solver_check_and_add_state(freecell_solver_instance_t * instance, f
 
     fcs_canonize_state(new_state, instance->freecells_num, instance->stacks_num);
 
-    freecell_solver_cache_stacks(instance, new_state);
+    fc_solve_cache_stacks(instance, new_state);
 
     key.data = new_state;
     key.size = sizeof(*new_state);
@@ -607,7 +607,7 @@ int freecell_solver_check_and_add_state(freecell_solver_instance_t * instance, f
             &key,
             &value,
             0);
-        if (freecell_solver_solve_for_state(instance, new_state, depth+1,0) == FCS_STATE_WAS_SOLVED)
+        if (fc_solve_solve_for_state(instance, new_state, depth+1,0) == FCS_STATE_WAS_SOLVED)
         {
             return FCS_STATE_WAS_SOLVED;
         }

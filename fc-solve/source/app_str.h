@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-struct freecell_solver_append_string_struct
+struct fc_solve_append_string_struct
 {
     char * buffer;
     char * end_of_buffer;
@@ -18,18 +18,18 @@ struct freecell_solver_append_string_struct
     int size_of_margin;
 };
 
-typedef struct freecell_solver_append_string_struct freecell_solver_append_string_t;
+typedef struct fc_solve_append_string_struct fc_solve_append_string_t;
 
-extern freecell_solver_append_string_t * freecell_solver_append_string_alloc(int size_margin);
+extern fc_solve_append_string_t * fc_solve_append_string_alloc(int size_margin);
 
-extern int freecell_solver_append_string_sprintf(
-    freecell_solver_append_string_t * app_str,
+extern int fc_solve_append_string_sprintf(
+    fc_solve_append_string_t * app_str,
     char * format,
     ...
     );
 
-extern char * freecell_solver_append_string_finalize(
-    freecell_solver_append_string_t * app_str
+extern char * fc_solve_append_string_finalize(
+    fc_solve_append_string_t * app_str
     );
 
 #ifdef __cplusplus

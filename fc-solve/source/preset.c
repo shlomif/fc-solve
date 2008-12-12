@@ -376,7 +376,7 @@ static int fcs_get_preset_id_by_name(
     return ret;
 }
 
-static int freecell_solver_char_to_test_num(char c)
+static int fc_solve_char_to_test_num(char c)
 {
     if ((c >= '0') && (c <= '9'))
     {
@@ -408,7 +408,7 @@ struct internal_tests_order_struct
 
 typedef struct internal_tests_order_struct internal_tests_order_t;
 
-int freecell_solver_apply_tests_order(
+int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
     const char * string,
     char * * error_string
@@ -469,7 +469,7 @@ int freecell_solver_apply_tests_order(
             tests_order->max_num += 10;
             tests_order->tests = realloc(tests_order->tests, sizeof(tests_order->tests[0]) * tests_order->max_num);
         }
-        tests_order->tests[test_index] = (freecell_solver_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+        tests_order->tests[test_index] = (fc_solve_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
 
         test_index++;
         is_start_group = 0;
@@ -486,8 +486,8 @@ int freecell_solver_apply_tests_order(
     return 0;
 }
 
-int freecell_solver_apply_preset_by_ptr(
-    freecell_solver_instance_t * instance,
+int fc_solve_apply_preset_by_ptr(
+    fc_solve_instance_t * instance,
     const fcs_preset_t * preset_ptr
         )
 {
@@ -525,7 +525,7 @@ int freecell_solver_apply_preset_by_ptr(
         {
             for(st_idx = 0; st_idx < instance->hard_threads[ht_idx]->num_soft_threads; st_idx++)
             {
-                freecell_solver_soft_thread_t * soft_thread = instance->hard_threads[ht_idx]->soft_threads[st_idx];
+                fc_solve_soft_thread_t * soft_thread = instance->hard_threads[ht_idx]->soft_threads[st_idx];
                 
                 int num_valid_tests;
                 const char * s;
@@ -537,7 +537,7 @@ int freecell_solver_apply_preset_by_ptr(
                     for(s = preset.allowed_tests;*s != '\0';s++)
                     {
                         /* Check if this test corresponds to this character */
-                        if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((freecell_solver_char_to_test_num(*s)%FCS_TESTS_NUM)))
+                        if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((fc_solve_char_to_test_num(*s)%FCS_TESTS_NUM)))
                         {
                             break;
                         }
@@ -551,7 +551,7 @@ int freecell_solver_apply_preset_by_ptr(
                 }
                 if (num_valid_tests < soft_thread->tests_order.num)
                 {
-                    freecell_solver_apply_tests_order(
+                    fc_solve_apply_tests_order(
                             &(soft_thread->tests_order),
                             preset.tests_order,
                             &no_use);
@@ -563,7 +563,7 @@ int freecell_solver_apply_preset_by_ptr(
     /* Assign the master tests order */
     
     {
-        freecell_solver_apply_tests_order(
+        fc_solve_apply_tests_order(
             &(instance->instance_tests_order),
             preset.tests_order,
             &no_use);
@@ -594,7 +594,7 @@ static int fcs_get_preset_by_id(
     return FCS_PRESET_CODE_NOT_FOUND;
 }
 
-int freecell_solver_get_preset_by_name(
+int fc_solve_get_preset_by_name(
     const char * name,
     const fcs_preset_t * * preset_ptr
     )
@@ -615,15 +615,15 @@ int freecell_solver_get_preset_by_name(
     }    
 }
 
-int freecell_solver_apply_preset_by_name(
-    freecell_solver_instance_t * instance,
+int fc_solve_apply_preset_by_name(
+    fc_solve_instance_t * instance,
     const char * name
     )
 {
     int ret;
     const fcs_preset_t * preset_ptr;
     
-    ret = freecell_solver_get_preset_by_name(
+    ret = fc_solve_get_preset_by_name(
         name,
         &preset_ptr
         );
@@ -633,5 +633,5 @@ int freecell_solver_apply_preset_by_name(
         return ret;
     }
     
-    return freecell_solver_apply_preset_by_ptr(instance, preset_ptr);    
+    return fc_solve_apply_preset_by_ptr(instance, preset_ptr);    
 }

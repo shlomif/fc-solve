@@ -34,7 +34,7 @@ static void SFO_hash_rehash(SFO_hash_t * hash);
 
 
 
-SFO_hash_t * freecell_solver_hash_init(
+SFO_hash_t * fc_solve_hash_init(
     SFO_hash_value_t wanted_size,
     int (*compare_function)(const void * key1, const void * key2, void * context),
     void * context
@@ -69,12 +69,12 @@ SFO_hash_t * freecell_solver_hash_init(
        that the cork of the linked list is right at the start */
     memset(hash->entries, 0, sizeof(SFO_hash_symlink_t)*size);
 
-    hash->allocator = freecell_solver_compact_allocator_new();
+    hash->allocator = fc_solve_compact_allocator_new();
 
     return hash;
 }
 
-void * freecell_solver_hash_insert(
+void * fc_solve_hash_insert(
     SFO_hash_t * hash,
     void * key,
     SFO_hash_value_t hash_value,
@@ -176,7 +176,7 @@ rehash_check:
     return NULL;
 }
 
-void freecell_solver_hash_free_with_callback(
+void fc_solve_hash_free_with_callback(
     SFO_hash_t * hash,
     void (*function_ptr)(void * key, void * context)
     )
@@ -196,14 +196,14 @@ void freecell_solver_hash_free_with_callback(
         }
     }
 
-    freecell_solver_hash_free(hash);
+    fc_solve_hash_free(hash);
 }
 
-void freecell_solver_hash_free(
+void fc_solve_hash_free(
     SFO_hash_t * hash
     )
 {
-    freecell_solver_compact_allocator_finish(hash->allocator);
+    fc_solve_compact_allocator_finish(hash->allocator);
 
     free(hash->entries);
 
@@ -233,7 +233,7 @@ static void SFO_hash_rehash(
 
 #if 0
     /* Allocate a new hash with hash_init() */
-    new_hash = freecell_solver_hash_init_proto(
+    new_hash = fc_solve_hash_init_proto(
         old_size * 2,
         hash->compare_function,
         hash->context
@@ -286,6 +286,6 @@ static void SFO_hash_rehash(
 #else
 
 /* ANSI C doesn't allow empty compilation */
-static void freecell_solver_hash_c_dummy(); 
+static void fc_solve_hash_c_dummy(); 
 
 #endif /* (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || defined(INDIRECT_STACK_STATES) */

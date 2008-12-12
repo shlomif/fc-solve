@@ -22,7 +22,7 @@
 #define ALLOCED_SIZE (8*1024-10*sizeof(char *))
 
 fcs_compact_allocator_t * 
-    freecell_solver_compact_allocator_new(void)
+    fc_solve_compact_allocator_new(void)
 {
     fcs_compact_allocator_t * allocator;
 
@@ -41,7 +41,7 @@ fcs_compact_allocator_t *
     return allocator;
 }
 
-void freecell_solver_compact_allocator_extend(
+void fc_solve_compact_allocator_extend(
     fcs_compact_allocator_t * allocator
         )
 {
@@ -62,27 +62,27 @@ void freecell_solver_compact_allocator_extend(
 
 #if 0
 char * 
-    freecell_solver_compact_allocator_alloc(
+    fc_solve_compact_allocator_alloc(
         fcs_compact_allocator_t * allocator,
         int how_much
             )
 {
     if (allocator->max_ptr - allocator->ptr < how_much)
     {
-        freecell_solver_compact_allocator_extend(allocator);
+        fc_solve_compact_allocator_extend(allocator);
     }
     allocator->rollback_ptr = allocator->ptr;
     allocator->ptr += (how_much+(4-(how_much&0x3)));
     return allocator->rollback_ptr;
 }
 
-void freecell_solver_compact_allocator_release(fcs_compact_allocator_t * allocator)
+void fc_solve_compact_allocator_release(fcs_compact_allocator_t * allocator)
 {
     allocator->ptr = allocator->rollback_ptr;
 }
 #endif
 
-void freecell_solver_compact_allocator_finish(fcs_compact_allocator_t * allocator)
+void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator)
 {
     int a;
     for(a=0;a<allocator->num_packs;a++)
@@ -93,7 +93,7 @@ void freecell_solver_compact_allocator_finish(fcs_compact_allocator_t * allocato
     free(allocator);
 }
 
-void freecell_solver_compact_allocator_foreach(
+void fc_solve_compact_allocator_foreach(
     fcs_compact_allocator_t * allocator,
     int data_width,
     void (*ptr_function)(void *, void *),

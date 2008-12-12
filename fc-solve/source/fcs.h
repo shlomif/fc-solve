@@ -1,5 +1,5 @@
 /*
- * fcs.h - header file of freecell_solver_instance and of user-level
+ * fcs.h - header file of fc_solve_instance and of user-level
  * functions for Freecell Solver
  *
  * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2000
@@ -108,12 +108,12 @@ enum FCS_TESTS_ORDER_FLAGS
 
 /*
  * Declare these structures because they will be used within
- * freecell_solver_instance, and they will contain a pointer to it.
+ * fc_solve_instance, and they will contain a pointer to it.
  * */
-struct freecell_solver_hard_thread_struct;
-struct freecell_solver_soft_thread_struct;
+struct fc_solve_hard_thread_struct;
+struct fc_solve_soft_thread_struct;
 
-typedef struct freecell_solver_hard_thread_struct freecell_solver_hard_thread_t;
+typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 
 struct fcs_tests_order_struct
 {
@@ -124,7 +124,7 @@ struct fcs_tests_order_struct
 
 typedef struct fcs_tests_order_struct fcs_tests_order_t;
 
-typedef struct freecell_solver_instance
+typedef struct fc_solve_instance
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     /* The sort-margin */
@@ -316,7 +316,7 @@ typedef struct freecell_solver_instance
     int max_num_states_in_collection;
 
     int num_hard_threads;
-    struct freecell_solver_hard_thread_struct * * hard_threads;
+    struct fc_solve_hard_thread_struct * * hard_threads;
 
     /*
      * The next ID to allocate for a soft-thread.
@@ -338,7 +338,7 @@ typedef struct freecell_solver_instance
     /*
      * This is the hard-thread used for the optimization scan.
      * */
-    struct freecell_solver_hard_thread_struct * optimization_thread;
+    struct fc_solve_hard_thread_struct * optimization_thread;
 
     /*
      * A counter that determines how many of the hard threads that belong
@@ -377,7 +377,7 @@ typedef struct freecell_solver_instance
      * */
     int scans_synergy;
 
-} freecell_solver_instance_t;
+} fc_solve_instance_t;
 
 
 
@@ -394,12 +394,12 @@ struct fcs_prelude_item_struct
 typedef struct fcs_prelude_item_struct fcs_prelude_item_t;
 
 
-struct freecell_solver_hard_thread_struct
+struct fc_solve_hard_thread_struct
 {
-    freecell_solver_instance_t * instance;
+    fc_solve_instance_t * instance;
 
     int num_soft_threads;
-    struct freecell_solver_soft_thread_struct * * soft_threads;
+    struct fc_solve_soft_thread_struct * * soft_threads;
 
     /*
      * The State Packs variables are used by all the state cache
@@ -531,9 +531,9 @@ struct fcs_soft_dfs_stack_item_struct
 
 typedef struct fcs_soft_dfs_stack_item_struct fcs_soft_dfs_stack_item_t;
 
-struct freecell_solver_soft_thread_struct
+struct fc_solve_soft_thread_struct
 {
-    freecell_solver_hard_thread_t * hard_thread;
+    fc_solve_hard_thread_t * hard_thread;
 
     /*
      * The ID of the soft thread inside the instance.
@@ -672,7 +672,7 @@ struct freecell_solver_soft_thread_struct
     char * name;
 };
 
-typedef struct freecell_solver_soft_thread_struct freecell_solver_soft_thread_t;
+typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
 
 #define FCS_SOFT_DFS_STATES_TO_CHECK_GROW_BY 32
@@ -686,108 +686,108 @@ typedef struct freecell_solver_soft_thread_struct freecell_solver_soft_thread_t;
 #define FCS_A_STAR_WEIGHT_SEQS_OVER_RENEGADE_CARDS 3
 #define FCS_A_STAR_WEIGHT_DEPTH 4
 
-freecell_solver_instance_t * freecell_solver_alloc_instance(void);
+fc_solve_instance_t * fc_solve_alloc_instance(void);
 
-extern void freecell_solver_init_instance(
-    freecell_solver_instance_t * instance
+extern void fc_solve_init_instance(
+    fc_solve_instance_t * instance
     );
 
-extern void freecell_solver_free_instance(
-    freecell_solver_instance_t * instance
+extern void fc_solve_free_instance(
+    fc_solve_instance_t * instance
     );
 
-extern void freecell_solver_finish_instance(
-    freecell_solver_instance_t * instance
+extern void fc_solve_finish_instance(
+    fc_solve_instance_t * instance
     );
 
-extern int freecell_solver_solve_instance(
-    freecell_solver_instance_t * instance,
+extern int fc_solve_solve_instance(
+    fc_solve_instance_t * instance,
     fcs_state_with_locations_t * init_state
     );
 
-extern int freecell_solver_resume_instance(
-    freecell_solver_instance_t * instance
+extern int fc_solve_resume_instance(
+    fc_solve_instance_t * instance
     );
 
-extern void freecell_solver_unresume_instance(
-    freecell_solver_instance_t * instance
+extern void fc_solve_unresume_instance(
+    fc_solve_instance_t * instance
     );
 
-extern freecell_solver_soft_thread_t * freecell_solver_instance_get_soft_thread(
-    freecell_solver_instance_t * instance,
+extern fc_solve_soft_thread_t * fc_solve_instance_get_soft_thread(
+    fc_solve_instance_t * instance,
     int ht_idx,
     int st_idx
     );
 
-extern freecell_solver_soft_thread_t * freecell_solver_new_soft_thread(
-    freecell_solver_soft_thread_t * soft_thread
+extern fc_solve_soft_thread_t * fc_solve_new_soft_thread(
+    fc_solve_soft_thread_t * soft_thread
     );
 
-extern freecell_solver_soft_thread_t * freecell_solver_new_hard_thread(
-    freecell_solver_instance_t * instance
+extern fc_solve_soft_thread_t * fc_solve_new_hard_thread(
+    fc_solve_instance_t * instance
     );
 
-extern int freecell_solver_hard_dfs_solve_for_state(
-    freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_hard_dfs_solve_for_state(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations,
     int depth,
     int ignore_osins
     );
 
-extern int freecell_solver_soft_dfs_solve(
-    freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_soft_dfs_solve(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig
     );
 
-extern int freecell_solver_random_dfs_solve(
-    freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_random_dfs_solve(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig
     );
 
 
-extern void freecell_solver_a_star_initialize_rater(
-    freecell_solver_soft_thread_t * soft_thread,
+extern void fc_solve_a_star_initialize_rater(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations
     );
 
-extern int freecell_solver_a_star_or_bfs_do_solve_or_resume(
-    freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_a_star_or_bfs_do_solve_or_resume(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig,
     int resume
     );
 
-extern int freecell_solver_hard_dfs_resume_solution(
-    freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_hard_dfs_resume_solution(
+    fc_solve_soft_thread_t * soft_thread,
     int depth
     );
 
-extern int freecell_solver_soft_dfs_resume_solution(
-    freecell_solver_soft_thread_t * soft_thread
+extern int fc_solve_soft_dfs_resume_solution(
+    fc_solve_soft_thread_t * soft_thread
     );
 
-extern int freecell_solver_random_dfs_resume_solution(
-    freecell_solver_soft_thread_t * soft_thread
+extern int fc_solve_random_dfs_resume_solution(
+    fc_solve_soft_thread_t * soft_thread
     );
 
 
-extern int freecell_solver_a_star_or_bfs_solve(
-    freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_a_star_or_bfs_solve(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig
     );
 
-extern int freecell_solver_a_star_or_bfs_resume_solution(
-    freecell_solver_soft_thread_t * soft_thread
+extern int fc_solve_a_star_or_bfs_resume_solution(
+    fc_solve_soft_thread_t * soft_thread
     );
 
-extern int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
-    freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig,
     int resume,
     int to_randomize
     );
 
-extern void freecell_solver_recycle_instance(
-    freecell_solver_instance_t * instance
+extern void fc_solve_recycle_instance(
+    fc_solve_instance_t * instance
         );
 
 #ifdef __cplusplus

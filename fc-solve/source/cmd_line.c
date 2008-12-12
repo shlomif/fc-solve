@@ -94,8 +94,8 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
             {
                 if (read_next_preset)
                 {
-                    *args = freecell_solver_args_man_alloc();
-                    freecell_solver_args_man_chop(*args, line+8);
+                    *args = fc_solve_args_man_alloc();
+                    fc_solve_args_man_chop(*args, line+8);
                     ret_code = 0;
                     goto HAVE_PRESET;
                 }
@@ -1379,14 +1379,14 @@ break;
                 fclose(f);
                 buffer[num_read] = '\0';
 
-                args_man = freecell_solver_args_man_alloc();
-                ret = freecell_solver_args_man_chop(args_man, buffer);
+                args_man = fc_solve_args_man_alloc();
+                ret = fc_solve_args_man_chop(args_man, buffer);
                 free(buffer);
                 if (ret != 0)
                 {
                     *error_string =
                         strdup("Could not parse the file. Quitting\n");
-                    freecell_solver_args_man_free(args_man);
+                    fc_solve_args_man_free(args_man);
 
                     RET_ERROR_IN_ARG() ;
                 }
@@ -1417,11 +1417,11 @@ break;
                     }
                     else if (ret != FCS_CMD_LINE_OK)
                     {
-                        freecell_solver_args_man_free(args_man);
+                        fc_solve_args_man_free(args_man);
                         return ret;
                     }
                 }
-                freecell_solver_args_man_free(args_man);
+                fc_solve_args_man_free(args_man);
             }
         }
         break;
@@ -1465,7 +1465,7 @@ break;
                     {
                         free(dir);
                     }
-                    freecell_solver_args_man_free(preset_args);
+                    fc_solve_args_man_free(preset_args);
 
                     if (ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
                     {

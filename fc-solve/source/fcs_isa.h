@@ -8,9 +8,9 @@ extern "C" {
 #include "state.h"
 #include "fcs.h"
 
-extern void freecell_solver_state_ia_init(freecell_solver_hard_thread_t * hard_thread);
+extern void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread);
 #if 0
-extern fcs_state_with_locations_t * fcs_state_ia_alloc(freecell_solver_instance_t * instance);
+extern fcs_state_with_locations_t * fcs_state_ia_alloc(fc_solve_instance_t * instance);
 #else
 
 #define fcs_state_ia_alloc_into_var(ret, instance) \
@@ -33,7 +33,7 @@ extern fcs_state_with_locations_t * fcs_state_ia_alloc(freecell_solver_instance_
 
 
 #if 0
-extern void fcs_state_ia_release(freecell_solver_instance_t * instance);
+extern void fcs_state_ia_release(fc_solve_instance_t * instance);
 #else
 #define fcs_state_ia_release(instance)      \
 {                                           \
@@ -42,10 +42,10 @@ extern void fcs_state_ia_release(freecell_solver_instance_t * instance);
 
 
 #endif
-extern void freecell_solver_state_ia_finish(freecell_solver_hard_thread_t * hard_thread);
+extern void fc_solve_state_ia_finish(fc_solve_hard_thread_t * hard_thread);
 
-extern void freecell_solver_state_ia_foreach(
-        freecell_solver_hard_thread_t * hard_thread,
+extern void fc_solve_state_ia_foreach(
+        fc_solve_hard_thread_t * hard_thread,
         void (*ptr_function)(fcs_state_with_locations_t *, void *),
         void * context
         );

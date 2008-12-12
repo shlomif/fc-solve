@@ -86,7 +86,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
                                                                           \
 {                                                                         \
     fcs_state_with_locations_t * existing_state;                          \
-    check = freecell_solver_check_and_add_state(                          \
+    check = fc_solve_check_and_add_state(                          \
         soft_thread,                                                      \
         ptr_new_state_with_locations,                                     \
         &existing_state                                                   \
@@ -114,7 +114,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
         {                                                                 \
             /* Make a copy of "moves" because "moves" will be destroyed */\
             existing_state->moves_to_parent =                             \
-                freecell_solver_move_stack_compact_allocate(              \
+                fc_solve_move_stack_compact_allocate(              \
                     hard_thread, moves                                    \
                     );                                                    \
             if (!(existing_state->visited & FCS_VISITED_DEAD_END))        \
@@ -206,8 +206,8 @@ fcs_move_stack_push(moves, temp_move);                                    \
  * the tests.
  * */
 #define tests_declare_accessors()                              \
-    freecell_solver_hard_thread_t * hard_thread;               \
-    freecell_solver_instance_t * instance;                     \
+    fc_solve_hard_thread_t * hard_thread;               \
+    fc_solve_instance_t * instance;                     \
     fcs_state_with_locations_t * ptr_new_state_with_locations; \
     fcs_move_stack_t * moves;                                  \
     char * indirect_stacks_buffer;                             \
@@ -227,25 +227,16 @@ fcs_move_stack_push(moves, temp_move);                                    \
 
 
 
-extern int freecell_solver_sfs_simple_simon_move_sequence_to_founds(
-        freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
+        fc_solve_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
         int reparent
         );
-extern int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent(
-        freecell_solver_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
-        int num_freestacks,
-        int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
-        );
-
-extern int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
-        freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
+        fc_solve_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
         int num_freestacks,
         int num_freecells,
@@ -253,8 +244,8 @@ extern int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_p
         int reparent
         );
 
-extern int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
-        freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
+        fc_solve_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
         int num_freestacks,
         int num_freecells,
@@ -262,8 +253,8 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_to_true_parent_with_so
         int reparent
         );
 
-extern int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
-        freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
+        fc_solve_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
         int num_freestacks,
         int num_freecells,
@@ -271,8 +262,8 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_with_some_cards_above_
         int reparent
         );
 
-extern int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
-        freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
+        fc_solve_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
         int num_freestacks,
         int num_freecells,
@@ -280,8 +271,8 @@ extern int freecell_solver_sfs_simple_simon_move_sequence_with_junk_seq_above_to
         int reparent
         );
 
-extern int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
-        freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
+        fc_solve_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
         int num_freestacks,
         int num_freecells,
@@ -289,8 +280,17 @@ extern int freecell_solver_sfs_simple_simon_move_whole_stack_sequence_to_false_p
         int reparent
         );
 
-extern int freecell_solver_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
-        freecell_solver_soft_thread_t * soft_thread,
+extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_state_with_locations_t * ptr_state_with_locations,
+        int num_freestacks,
+        int num_freecells,
+        fcs_derived_states_list_t * derived_states_list,
+        int reparent
+        );
+
+extern int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
+        fc_solve_soft_thread_t * soft_thread,
         fcs_state_with_locations_t * ptr_state_with_locations,
         int num_freestacks,
         int num_freecells,

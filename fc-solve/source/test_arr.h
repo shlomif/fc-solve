@@ -14,8 +14,8 @@
 extern "C" {
 #endif
 
-typedef int (*freecell_solver_solve_for_state_test_t)(
-        freecell_solver_soft_thread_t *,
+typedef int (*fc_solve_solve_for_state_test_t)(
+        fc_solve_soft_thread_t *,
         fcs_state_with_locations_t *,
         int,
         int,
@@ -23,7 +23,7 @@ typedef int (*freecell_solver_solve_for_state_test_t)(
         int
         );
 
-extern freecell_solver_solve_for_state_test_t freecell_solver_sfs_tests[FCS_TESTS_NUM];
+extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
 
 /*
  * This macro determines if child can be placed above parent.

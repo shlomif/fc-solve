@@ -29,8 +29,8 @@ fcs_move_stack_t * fcs_move_stack_create(void);
 int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move);
 #endif
 
-#define fcs_move_stack_pop(stack,move) (freecell_solver_move_stack_pop(stack,move))
-extern int freecell_solver_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move);
+#define fcs_move_stack_pop(stack,move) (fc_solve_move_stack_pop(stack,move))
+extern int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move);
 
 #if 0
 void fcs_move_stack_destroy(fcs_move_stack_t * stack);
@@ -42,7 +42,7 @@ void fcs_move_stack_destroy(fcs_move_stack_t * stack);
     free(stack); \
 }
 
-extern void freecell_solver_move_stack_swallow_stack(fcs_move_stack_t * stack, fcs_move_stack_t * src_stack);
+extern void fc_solve_move_stack_swallow_stack(fcs_move_stack_t * stack, fcs_move_stack_t * src_stack);
 #if 0
 void fcs_move_stack_reset(fcs_move_stack_t * stack);
 #endif
@@ -53,8 +53,8 @@ void fcs_move_stack_reset(fcs_move_stack_t * stack);
 
 
 
-#define fcs_move_stack_get_num_moves(stack) (freecell_solver_move_stack_get_num_moves(stack))
-extern int freecell_solver_move_stack_get_num_moves(fcs_move_stack_t * stack);
+#define fcs_move_stack_get_num_moves(stack) (fc_solve_move_stack_get_num_moves(stack))
+extern int fc_solve_move_stack_get_num_moves(fcs_move_stack_t * stack);
 
 #if 0
 fcs_move_stack_t * fcs_move_stack_duplicate(fcs_move_stack_t * stack);
@@ -76,9 +76,9 @@ fcs_move_stack_t * fcs_move_stack_duplicate(fcs_move_stack_t * stack);
 
 
 
-void freecell_solver_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_move_t move, int freecells_num, int stacks_num, int decks_num);
+void fc_solve_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_move_t move, int freecells_num, int stacks_num, int decks_num);
 
-void freecell_solver_move_stack_normalize(
+void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
     fcs_state_with_locations_t * init_state,
     int freecells_num,
@@ -86,9 +86,9 @@ void freecell_solver_move_stack_normalize(
     int decks_num
     );
 
-extern char * freecell_solver_move_to_string(fcs_move_t move, int standard_notation);
+extern char * fc_solve_move_to_string(fcs_move_t move, int standard_notation);
 
-extern char * freecell_solver_move_to_string_w_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num, int decks_num, fcs_move_t move, int standard_notation);
+extern char * fc_solve_move_to_string_w_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num, int decks_num, fcs_move_t move, int standard_notation);
 
 struct fcs_derived_states_list_struct
 {

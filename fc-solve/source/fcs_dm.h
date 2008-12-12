@@ -19,7 +19,7 @@ extern "C" {
 #include <stddef.h>
 
 
-void * freecell_solver_bsearch
+void * fc_solve_bsearch
 (
     void * key,
     void * void_array,
@@ -30,7 +30,7 @@ void * freecell_solver_bsearch
     int * found
 );
 
-int freecell_solver_merge_large_and_small_sorted_arrays
+int fc_solve_merge_large_and_small_sorted_arrays
 (
     void * void_big_array,
     size_t size_big_array,

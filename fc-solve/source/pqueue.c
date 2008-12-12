@@ -32,7 +32,7 @@
    entry in the pqueue depending on whether it is ascending or descending respectively. Finally the bool32 tells you whether
    the list is sorted ascending or descending... */
 
-void freecell_solver_PQueueInitialise(
+void fc_solve_PQueueInitialise(
     PQUEUE *pq,
     int32 MaxElements
     )
@@ -53,7 +53,7 @@ void freecell_solver_PQueueInitialise(
    returns TRUE if succesful, FALSE if fails. (You fail by filling the pqueue.)
    PGetRating is a function which returns the rating of the item you're adding for sorting purposes */
 
-int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
+int fc_solve_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
 {
     uint32 i;
     pq_element_t * Elements = pq->Elements;
@@ -110,14 +110,14 @@ int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
 #define PQueueIsEmpty(pq) ((pq)->CurrentSize == 0)
 
 /* free up memory for pqueue */
-void freecell_solver_PQueueFree( PQUEUE *pq )
+void fc_solve_PQueueFree( PQUEUE *pq )
 {
     free( pq->Elements );
 }
 
 /* remove the first node from the pqueue and provide a pointer to it */
 
-void *freecell_solver_PQueuePop( PQUEUE *pq)
+void *fc_solve_PQueuePop( PQUEUE *pq)
 {
     int32 i;
     int32 child;

@@ -5,7 +5,7 @@
 
 #include "fcs_cl.h"
 
-struct freecell_solver_display_information_context_struct
+struct fc_solve_display_information_context_struct
 {
     int debug_iter_state_output;
     int freecells_num;
@@ -21,10 +21,10 @@ struct freecell_solver_display_information_context_struct
     int standard_notation;
 };
 
-typedef struct freecell_solver_display_information_context_struct freecell_solver_display_information_context_t;
+typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
 
 static void init_debug_context(
-    freecell_solver_display_information_context_t * dc
+    fc_solve_display_information_context_t * dc
     )
 {
     dc->debug_iter_state_output = 0;
@@ -48,8 +48,8 @@ static void my_iter_handler(
     void * lp_context
     )
 {
-    freecell_solver_display_information_context_t * context;
-    context = (freecell_solver_display_information_context_t*)lp_context;
+    fc_solve_display_information_context_t * context;
+    context = (fc_solve_display_information_context_t*)lp_context;
 
     fprintf(stdout, "Iteration: %i\n", iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
@@ -428,10 +428,10 @@ static int cmd_line_callback(
     void * context
     )
 {
-    freecell_solver_display_information_context_t * dc;
+    fc_solve_display_information_context_t * dc;
     *num_to_skip = 0;
 
-    dc = (freecell_solver_display_information_context_t * )context;
+    dc = (fc_solve_display_information_context_t * )context;
 
     if (!strcmp(argv[arg], "--version"))
     {
@@ -544,7 +544,7 @@ static void select_signal_handler(int signal_num)
 }
 
 static void * current_instance;
-static freecell_solver_display_information_context_t * dc;
+static fc_solve_display_information_context_t * dc;
 
 
 static void command_signal_handler(int signal_num)
@@ -618,7 +618,7 @@ int main(int argc, char * argv[])
     char user_state[USER_STATE_SIZE];
     int ret;
 
-    freecell_solver_display_information_context_t debug_context;
+    fc_solve_display_information_context_t debug_context;
 
     init_debug_context(&debug_context);
 

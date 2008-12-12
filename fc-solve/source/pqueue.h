@@ -51,16 +51,16 @@ typedef struct _PQUEUE
 #define PQ_LEFT_CHILD_INDEX(i) ((i)<<1)
 #define PQ_RIGHT_CHILD_INDEX(i) (((i)<<1)+1)
 
-void freecell_solver_PQueueInitialise(
+void fc_solve_PQueueInitialise(
     PQUEUE *pq,
     int32 MaxElements
     );
 
-void freecell_solver_PQueueFree( PQUEUE *pq );
+void fc_solve_PQueueFree( PQUEUE *pq );
 
-int freecell_solver_PQueuePush( PQUEUE *pq, void *item, pq_rating_t);
+int fc_solve_PQueuePush( PQUEUE *pq, void *item, pq_rating_t);
 
-void *freecell_solver_PQueuePop( PQUEUE *pq);
+void *fc_solve_PQueuePop( PQUEUE *pq);
 
 #define PGetRating(elem) ((elem).rating)
 

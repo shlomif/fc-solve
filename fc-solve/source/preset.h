@@ -32,23 +32,23 @@ struct fcs_preset_struct
 
 typedef struct fcs_preset_struct fcs_preset_t;
 
-extern int freecell_solver_apply_preset_by_ptr(
-    freecell_solver_instance_t * instance,
+extern int fc_solve_apply_preset_by_ptr(
+    fc_solve_instance_t * instance,
     const fcs_preset_t * preset_ptr
     );
 
-extern int freecell_solver_apply_preset_by_name(
-    freecell_solver_instance_t * instance,
+extern int fc_solve_apply_preset_by_name(
+    fc_solve_instance_t * instance,
     const char * name
     );
 
-extern int freecell_solver_apply_tests_order(
+extern int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
     const char * string,
     char * * error_string
     );
 
-extern int freecell_solver_get_preset_by_name(
+extern int fc_solve_get_preset_by_name(
     const char * name,
     const fcs_preset_t * * preset_ptr
     );

@@ -66,13 +66,13 @@ struct SFO_hash_struct
 typedef struct SFO_hash_struct SFO_hash_t;
 
 
-SFO_hash_t * freecell_solver_hash_init(
+SFO_hash_t * fc_solve_hash_init(
     SFO_hash_value_t wanted_size,
     int (*compare_function)(const void * key1, const void * key2, void * context),
     void * context
     );
 
-void * freecell_solver_hash_insert(
+void * fc_solve_hash_insert(
     SFO_hash_t * hash,
     void * key,
     SFO_hash_value_t hash_value,
@@ -81,11 +81,11 @@ void * freecell_solver_hash_insert(
     );
 
 
-void freecell_solver_hash_free(
+void fc_solve_hash_free(
     SFO_hash_t * hash
     );
 
-void freecell_solver_hash_free_with_callback(
+void fc_solve_hash_free_with_callback(
     SFO_hash_t * hash,
     void (*function_ptr)(void * key, void * context)
     );

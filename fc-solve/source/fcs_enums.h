@@ -35,7 +35,7 @@ enum FCS_TALON_T
     FCS_TALON_KLONDIKE
 };
 
-enum freecell_solver_state_solving_return_codes
+enum fc_solve_state_solving_return_codes
 {
     FCS_STATE_WAS_SOLVED,
     FCS_STATE_IS_NOT_SOLVEABLE,

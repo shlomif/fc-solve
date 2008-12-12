@@ -9,7 +9,7 @@
 
 #include "inline.h"
 
-static GCC_INLINE fcs_move_stack_t * freecell_solver_move_stack_compact_allocate(freecell_solver_hard_thread_t * hard_thread, fcs_move_stack_t * old_move_stack_to_parent)
+static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(fc_solve_hard_thread_t * hard_thread, fcs_move_stack_t * old_move_stack_to_parent)
 {
     char * ptr;
     fcs_move_stack_t * new_move_stack_to_parent;

@@ -19,7 +19,7 @@
 #include "dmalloc.h"
 #endif
 
-void freecell_solver_state_ia_init(freecell_solver_hard_thread_t * hard_thread)
+void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread)
 {
     hard_thread->max_num_state_packs = IA_STATE_PACKS_GROW_BY;
     hard_thread->state_packs = (fcs_state_with_locations_t * *)malloc(sizeof(fcs_state_with_locations_t *) * hard_thread->max_num_state_packs);
@@ -36,7 +36,7 @@ void freecell_solver_state_ia_init(freecell_solver_hard_thread_t * hard_thread)
 }
 
 #if 0
-fcs_state_with_locations_t * fcs_state_ia_alloc(freecell_solver_hard_thread_t * hard_thread)
+fcs_state_with_locations_t * fcs_state_ia_alloc(fc_solve_hard_thread_t * hard_thread)
 {
     if (hard_thread->num_states_in_last_pack == hard_thread->state_pack_len)
     {
@@ -54,13 +54,13 @@ fcs_state_with_locations_t * fcs_state_ia_alloc(freecell_solver_hard_thread_t * 
 #endif
 
 #if 0
-void fcs_state_ia_release(freecell_solver_hard_thread_t * hard_thread)
+void fcs_state_ia_release(fc_solve_hard_thread_t * hard_thread)
 {
     hard_thread->num_states_in_last_pack--;
 }
 #endif
 
-void freecell_solver_state_ia_finish(freecell_solver_hard_thread_t * hard_thread)
+void fc_solve_state_ia_finish(fc_solve_hard_thread_t * hard_thread)
 {
     int a;
     for(a=0;a<hard_thread->num_state_packs;a++)
@@ -71,7 +71,7 @@ void freecell_solver_state_ia_finish(freecell_solver_hard_thread_t * hard_thread
     hard_thread->state_packs = NULL;
 }
 
-void freecell_solver_state_ia_foreach(freecell_solver_hard_thread_t * hard_thread, void (*ptr_function)(fcs_state_with_locations_t *, void *), void * context)
+void fc_solve_state_ia_foreach(fc_solve_hard_thread_t * hard_thread, void (*ptr_function)(fcs_state_with_locations_t *, void *), void * context)
 {
     int p,s;
     for(p=0;p<hard_thread->num_state_packs-1;p++)

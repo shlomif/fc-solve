@@ -20,7 +20,7 @@
 
 struct fcs_instance_item_struct
 {
-    freecell_solver_instance_t * instance;
+    fc_solve_instance_t * instance;
     int ret;
     int limit;
 };
@@ -55,7 +55,7 @@ struct fcs_user_struct
     /*
      * A pointer to the currently active instance out of the sequence
      * */
-    freecell_solver_instance_t * instance;
+    fc_solve_instance_t * instance;
     fcs_state_with_locations_t state;
     fcs_state_with_locations_t running_state;
     int ret;
@@ -64,7 +64,7 @@ struct fcs_user_struct
     freecell_solver_user_iter_handler_t iter_handler;
     void * iter_handler_context;
 
-    freecell_solver_soft_thread_t * soft_thread;
+    fc_solve_soft_thread_t * soft_thread;
 
 #ifdef INDIRECT_STACK_STATES
     char indirect_stacks_buffer[MAX_NUM_STACKS << 7];
@@ -82,7 +82,7 @@ static void user_initialize(
 {
     const fcs_preset_t * freecell_preset;
     
-    freecell_solver_get_preset_by_name(
+    fc_solve_get_preset_by_name(
         "freecell",
         &freecell_preset
         );
@@ -93,15 +93,15 @@ static void user_initialize(
     ret->instances_list = malloc(sizeof(ret->instances_list[0]) * ret->max_num_instances);
     ret->num_instances = 1;
     ret->current_instance_idx = 0;
-    ret->instance = freecell_solver_alloc_instance();
-    freecell_solver_apply_preset_by_ptr(ret->instance, &(ret->common_preset));
+    ret->instance = fc_solve_alloc_instance();
+    fc_solve_apply_preset_by_ptr(ret->instance, &(ret->common_preset));
     ret->instances_list[ret->current_instance_idx].instance = ret->instance;
     ret->instances_list[ret->current_instance_idx].ret = ret->ret = FCS_STATE_NOT_BEGAN_YET;
     ret->instances_list[ret->current_instance_idx].limit = -1;
     ret->current_iterations_limit = -1;
 
     ret->soft_thread =
-        freecell_solver_instance_get_soft_thread(
+        fc_solve_instance_get_soft_thread(
             ret->instance, 0,0
             );
 
@@ -132,7 +132,7 @@ int freecell_solver_user_apply_preset(
     user = (fcs_user_t*)user_instance;
 
     status = 
-        freecell_solver_get_preset_by_name(
+        fc_solve_get_preset_by_name(
             preset_name,
             &new_preset_ptr
             );
@@ -144,7 +144,7 @@ int freecell_solver_user_apply_preset(
 
     for(i = 0 ; i < user->num_instances ; i++)
     {
-        status = freecell_solver_apply_preset_by_ptr(
+        status = fc_solve_apply_preset_by_ptr(
             user->instances_list[i].instance,
             new_preset_ptr
             );
@@ -199,7 +199,7 @@ int freecell_solver_user_set_tests_order(
     user = (fcs_user_t*)user_instance;
 
     return
-        freecell_solver_apply_tests_order(
+        fc_solve_apply_tests_order(
             &(user->soft_thread->tests_order),
             tests_order,
             error_string
@@ -234,12 +234,12 @@ static void recycle_instance(
     }
     else if (user->instances_list[i].ret == FCS_STATE_SUSPEND_PROCESS)
     {
-        freecell_solver_unresume_instance(user->instances_list[i].instance);
+        fc_solve_unresume_instance(user->instances_list[i].instance);
     }
 
     if (user->instances_list[i].ret != FCS_STATE_NOT_BEGAN_YET)
     {
-        freecell_solver_recycle_instance(user->instances_list[i].instance);
+        fc_solve_recycle_instance(user->instances_list[i].instance);
         /*
          * We have to initialize init_num_times to 0 here, because it may not 
          * get initialized again, and now the num_times of the instance
@@ -277,7 +277,7 @@ int freecell_solver_user_resume_solution(
         if (user->instances_list[user->current_instance_idx].ret == FCS_STATE_NOT_BEGAN_YET)
         {
             int status;
-            status = freecell_solver_initial_user_state_to_c(
+            status = fc_solve_initial_user_state_to_c(
                 user->state_string_copy,
                 &(user->state),
                 user->instance->freecells_num,
@@ -298,7 +298,7 @@ int freecell_solver_user_resume_solution(
                 return user->ret;
             }
 
-            user->state_validity_ret = freecell_solver_check_state_validity(
+            user->state_validity_ret = fc_solve_check_state_validity(
                 &user->state,
                 user->instance->freecells_num,
                 user->instance->stacks_num,
@@ -326,7 +326,7 @@ int freecell_solver_user_resume_solution(
                 user->instance->stacks_num
                 );
 
-            freecell_solver_init_instance(user->instance);
+            fc_solve_init_instance(user->instance);
 
 #define global_limit() \
         (user->instance->num_times + user->current_iterations_limit - user->iterations_board_started_at)
@@ -371,7 +371,7 @@ int freecell_solver_user_resume_solution(
 
             ret = user->ret = 
                 user->instances_list[user->current_instance_idx].ret = 
-                freecell_solver_solve_instance(user->instance, &user->state);
+                fc_solve_solve_instance(user->instance, &user->state);
         }
         else
         {
@@ -382,7 +382,7 @@ int freecell_solver_user_resume_solution(
             
             ret = user->ret = 
                 user->instances_list[user->current_instance_idx].ret =
-                freecell_solver_resume_instance(user->instance);
+                fc_solve_resume_instance(user->instance);
         }
         
         user->iterations_board_started_at += user->instance->num_times - init_num_times;
@@ -390,7 +390,7 @@ int freecell_solver_user_resume_solution(
 
         if (user->ret == FCS_STATE_WAS_SOLVED)
         {
-            freecell_solver_move_stack_normalize(
+            fc_solve_move_stack_normalize(
                 user->instance->solution_moves,
                 &(user->state),
                 user->instance->freecells_num,
@@ -447,7 +447,7 @@ int freecell_solver_user_get_next_move(
 
         if (ret == 0)
         {
-            freecell_solver_apply_move(
+            fc_solve_apply_move(
                 &(user->running_state),
                 *move,
                 user->instance->freecells_num,
@@ -475,7 +475,7 @@ char * freecell_solver_user_current_state_as_string(
     user = (fcs_user_t *)user_instance;
 
     return
-        freecell_solver_state_as_string(
+        fc_solve_state_as_string(
             &(user->running_state),
             user->instance->freecells_num,
             user->instance->stacks_num,
@@ -503,18 +503,18 @@ static void user_free_resources(
         }
         else if (ret_code == FCS_STATE_SUSPEND_PROCESS)
         {
-            freecell_solver_unresume_instance(user->instances_list[i].instance);
+            fc_solve_unresume_instance(user->instances_list[i].instance);
         }
 
         if (ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
             if (ret_code != FCS_STATE_INVALID_STATE)
             {
-                freecell_solver_finish_instance(user->instances_list[i].instance);
+                fc_solve_finish_instance(user->instances_list[i].instance);
             }
         }
 
-        freecell_solver_free_instance(user->instances_list[i].instance);
+        fc_solve_free_instance(user->instances_list[i].instance);
     }
 
     free(user->instances_list);
@@ -718,7 +718,7 @@ char * freecell_solver_user_move_to_string(
     int standard_notation
     )
 {
-    return freecell_solver_move_to_string(move, standard_notation);
+    return fc_solve_move_to_string(move, standard_notation);
 }
 
 char * freecell_solver_user_move_to_string_w_state(
@@ -732,7 +732,7 @@ char * freecell_solver_user_move_to_string_w_state(
     user = (fcs_user_t *)user_instance;
     
     return 
-        freecell_solver_move_to_string_w_state(
+        fc_solve_move_to_string_w_state(
             &(user->running_state), 
             user->instance->freecells_num, 
             user->instance->stacks_num, 
@@ -950,7 +950,7 @@ fcs_user_t * user;
 user = (fcs_user_t *)user_instance;
 
 return
-    freecell_solver_state_as_string(
+    fc_solve_state_as_string(
         ptr_state,
         user->instance->freecells_num,
         user->instance->stacks_num,
@@ -970,7 +970,7 @@ fcs_user_t * user;
 
 user = (fcs_user_t *)user_instance;
 
-freecell_solver_rand_srand(user->soft_thread->rand_gen, (user->soft_thread->rand_seed = seed));
+fc_solve_rand_srand(user->soft_thread->rand_gen, (user->soft_thread->rand_seed = seed));
 }
 
 int freecell_solver_user_get_num_states_in_collection(void * user_instance)
@@ -999,11 +999,11 @@ int freecell_solver_user_next_soft_thread(
     )
 {
     fcs_user_t * user;
-    freecell_solver_soft_thread_t * soft_thread;
+    fc_solve_soft_thread_t * soft_thread;
 
     user = (fcs_user_t *)user_instance;
 
-    soft_thread = freecell_solver_new_soft_thread(user->soft_thread);
+    soft_thread = fc_solve_new_soft_thread(user->soft_thread);
 
     if (soft_thread == NULL)
     {
@@ -1032,11 +1032,11 @@ int freecell_solver_user_next_hard_thread(
     )
 {
     fcs_user_t * user;
-    freecell_solver_soft_thread_t * soft_thread;
+    fc_solve_soft_thread_t * soft_thread;
 
     user = (fcs_user_t *)user_instance;
 
-    soft_thread = freecell_solver_new_hard_thread(user->instance);
+    soft_thread = fc_solve_new_hard_thread(user->instance);
 
     if (soft_thread == NULL)
     {
@@ -1093,7 +1093,7 @@ int freecell_solver_user_set_hard_thread_prelude(
     )
 {
     fcs_user_t * user;
-    freecell_solver_hard_thread_t * hard_thread;
+    fc_solve_hard_thread_t * hard_thread;
 
     user = (fcs_user_t *)user_instance;
 
@@ -1151,7 +1151,7 @@ int freecell_solver_user_set_optimization_scan_tests_order(
     user->instance->opt_tests_order_set = 0;
 
     ret = 
-        freecell_solver_apply_tests_order(
+        fc_solve_apply_tests_order(
             &(user->instance->opt_tests_order),
             tests_order,
             error_string
@@ -1208,16 +1208,16 @@ int freecell_solver_user_next_instance(
                 );
     }
     user->current_instance_idx = user->num_instances-1;
-    user->instance = freecell_solver_alloc_instance();
+    user->instance = fc_solve_alloc_instance();
 
-    freecell_solver_apply_preset_by_ptr(user->instance, &(user->common_preset));
+    fc_solve_apply_preset_by_ptr(user->instance, &(user->common_preset));
 
     /* 
      * Switch the soft_thread variable so it won't refer to the old
      * instance
      * */
     user->soft_thread = 
-        freecell_solver_instance_get_soft_thread(
+        fc_solve_instance_get_soft_thread(
             user->instance, 0, 0
             );
 

@@ -34,21 +34,21 @@
 #include "dmalloc.h"
 #endif
 
-static pq_rating_t freecell_solver_a_star_rate_state(
-    freecell_solver_soft_thread_t * soft_thread,
+static pq_rating_t fc_solve_a_star_rate_state(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations);
 
-#define freecell_solver_a_star_enqueue_state(soft_thread,ptr_state_with_locations) \
+#define fc_solve_a_star_enqueue_state(soft_thread,ptr_state_with_locations) \
     {        \
-        freecell_solver_PQueuePush(        \
+        fc_solve_PQueuePush(        \
             a_star_pqueue,       \
             ptr_state_with_locations,            \
-            freecell_solver_a_star_rate_state(soft_thread, ptr_state_with_locations)   \
+            fc_solve_a_star_rate_state(soft_thread, ptr_state_with_locations)   \
             );       \
     }
 
 
-#define freecell_solver_bfs_enqueue_state(soft_thread, state) \
+#define fc_solve_bfs_enqueue_state(soft_thread, state) \
     {    \
         fcs_states_linked_list_item_t * last_item_next;      \
         last_item_next = bfs_queue_last_item->next = (fcs_states_linked_list_item_t*)malloc(sizeof(fcs_states_linked_list_item_t));      \
@@ -59,16 +59,16 @@ static pq_rating_t freecell_solver_a_star_rate_state(
 
 #define the_state (ptr_state_with_locations->s)
 
-int freecell_solver_hard_dfs_solve_for_state(
-    freecell_solver_soft_thread_t * soft_thread,
+int fc_solve_hard_dfs_solve_for_state(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations,
     int depth,
     int ignore_osins
     )
 
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * instance = hard_thread->instance;
 
     int a;
     int check;
@@ -166,7 +166,7 @@ int freecell_solver_hard_dfs_solve_for_state(
         derived.num_states = 0;
 
         check =
-            freecell_solver_sfs_tests[soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
+            fc_solve_sfs_tests[soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK ] (
                 soft_thread,
                 ptr_state_with_locations,
                 num_freestacks,
@@ -205,7 +205,7 @@ int freecell_solver_hard_dfs_solve_for_state(
                )
             {
                 check =
-                    freecell_solver_hard_dfs_solve_for_state(
+                    fc_solve_hard_dfs_solve_for_state(
                         soft_thread,
                         derived.states[derived_state_index],
                         depth+1,
@@ -265,8 +265,8 @@ free_derived:
 }
 
 
-int freecell_solver_hard_dfs_resume_solution(
-    freecell_solver_soft_thread_t * soft_thread,
+int fc_solve_hard_dfs_resume_solution(
+    fc_solve_soft_thread_t * soft_thread,
     int depth
     )
 {
@@ -277,7 +277,7 @@ int freecell_solver_hard_dfs_resume_solution(
 
     if (depth < soft_thread->num_solution_states-1)
     {
-        check = freecell_solver_hard_dfs_resume_solution(
+        check = fc_solve_hard_dfs_resume_solution(
             soft_thread,
             depth+1
             );
@@ -291,7 +291,7 @@ int freecell_solver_hard_dfs_resume_solution(
 
     if (check == FCS_STATE_IS_NOT_SOLVEABLE)
     {
-        check = freecell_solver_hard_dfs_solve_for_state(
+        check = fc_solve_hard_dfs_solve_for_state(
             soft_thread,
             ptr_state_with_locations,
             depth,
@@ -319,8 +319,8 @@ int freecell_solver_hard_dfs_resume_solution(
 
 
 
-static void freecell_solver_increase_dfs_max_depth(
-    freecell_solver_soft_thread_t * soft_thread
+static void fc_solve_increase_dfs_max_depth(
+    fc_solve_soft_thread_t * soft_thread
     )
 {
     int new_dfs_max_depth = soft_thread->dfs_max_depth + 16;
@@ -351,7 +351,7 @@ static void freecell_solver_increase_dfs_max_depth(
 }
 
 /*
-    freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume is the event loop of the
+    fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume is the event loop of the
     Random-DFS scan. DFS which is recursive in nature is handled here
     without procedural recursion
     by using some dedicated stacks for the traversal.
@@ -362,15 +362,15 @@ static void freecell_solver_increase_dfs_max_depth(
     soft_thread->num_solution_states = depth+1;     \
     return (ret_value);
 
-int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
-    freecell_solver_soft_thread_t * soft_thread,
+int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig,
     int resume,
     int to_randomize
     )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * instance = hard_thread->instance;
 
     int depth;
     fcs_state_with_locations_t * ptr_state_with_locations,
@@ -403,7 +403,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         */
         depth=0;
 
-        freecell_solver_increase_dfs_max_depth(soft_thread);
+        fc_solve_increase_dfs_max_depth(soft_thread);
 
         /* Initialize the initial state to indicate it is the first */
         ptr_state_with_locations_orig->parent = NULL;
@@ -441,7 +441,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
         */
         if (depth+1 >= dfs_max_depth)
         {
-            freecell_solver_increase_dfs_max_depth(soft_thread);
+            fc_solve_increase_dfs_max_depth(soft_thread);
 
             /* Because the address of soft_thread->soft_dfs_info may
              * be changed
@@ -574,7 +574,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
             {
                 do_first_iteration = 0;
 
-                check = freecell_solver_sfs_tests[tests_order_tests[
+                check = fc_solve_sfs_tests[tests_order_tests[
                         test_index
                     ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                         soft_thread,
@@ -636,7 +636,7 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
                     {
                         j =
                             (
-                                freecell_solver_rand_get_random_number(
+                                fc_solve_rand_get_random_number(
                                     soft_thread->rand_gen
                                 )
                                 % (a+1)
@@ -731,13 +731,13 @@ int freecell_solver_soft_dfs_or_random_dfs_do_solve_or_resume(
 
 #define state (ptr_state_with_locations->s)
 
-void freecell_solver_a_star_initialize_rater(
-    freecell_solver_soft_thread_t * soft_thread,
+void fc_solve_a_star_initialize_rater(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations
     )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * instance = hard_thread->instance;
 
     int a, c, cards_num;
     fcs_card_t this_card, prev_card;
@@ -772,13 +772,13 @@ void freecell_solver_a_star_initialize_rater(
 }
 
 
-static pq_rating_t freecell_solver_a_star_rate_state(
-    freecell_solver_soft_thread_t * soft_thread,
+static pq_rating_t fc_solve_a_star_rate_state(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations
     )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * instance = hard_thread->instance;
 
     double ret=0;
     int a, c, cards_num, num_cards_in_founds;
@@ -893,7 +893,7 @@ static pq_rating_t freecell_solver_a_star_rate_state(
 
 
 /*
-    freecell_solver_a_star_or_bfs_do_solve_or_resume() is the main event
+    fc_solve_a_star_or_bfs_do_solve_or_resume() is the main event
     loop of the A* And BFS scans. It is quite simple as all it does is
     extract elements out of the queue or priority queue and run all the test
     of them.
@@ -915,14 +915,14 @@ static pq_rating_t freecell_solver_a_star_rate_state(
     return (ret_value);
 
 
-int freecell_solver_a_star_or_bfs_do_solve_or_resume(
-    freecell_solver_soft_thread_t * soft_thread,
+int fc_solve_a_star_or_bfs_do_solve_or_resume(
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig,
     int resume
     )
 {
-    freecell_solver_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    freecell_solver_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * instance = hard_thread->instance;
 
     fcs_state_with_locations_t * ptr_state_with_locations;
     int num_freestacks, num_freecells;
@@ -1052,7 +1052,7 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
             a < tests_order_num;
             a++)
         {
-            check = freecell_solver_sfs_tests[tests_order_tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
+            check = fc_solve_sfs_tests[tests_order_tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                     soft_thread,
                     ptr_state_with_locations,
                     num_freestacks,
@@ -1102,14 +1102,14 @@ int freecell_solver_a_star_or_bfs_do_solve_or_resume(
         {
             if (method == FCS_METHOD_A_STAR)
             {
-                freecell_solver_a_star_enqueue_state(
+                fc_solve_a_star_enqueue_state(
                     soft_thread,
                     derived.states[derived_index]
                     );
             }
             else
             {
-                freecell_solver_bfs_enqueue_state(
+                fc_solve_bfs_enqueue_state(
                     soft_thread,
                     derived.states[derived_index]
                     );
@@ -1157,7 +1157,7 @@ label_next_state:
         else
         {
             /* It is an A* scan */
-            ptr_state_with_locations = freecell_solver_PQueuePop(a_star_pqueue);
+            ptr_state_with_locations = fc_solve_PQueuePop(a_star_pqueue);
         }
         resume = 0;
     }

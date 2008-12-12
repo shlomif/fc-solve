@@ -17,7 +17,7 @@
 #endif
 
 /*
-    freecell_solver_bsearch - an improved binary search function. Highlights:
+    fc_solve_bsearch - an improved binary search function. Highlights:
 
     * The comparison function accepts a common context argument that
     is passed to SFO_bsearch.
@@ -25,7 +25,7 @@
     it should be placed, while setting *found to 0. If it was found
       (*found) is set to 1.
 */
-void * freecell_solver_bsearch
+void * fc_solve_bsearch
 (
     void * key,
     void * void_array,
@@ -71,7 +71,7 @@ void * freecell_solver_bsearch
 
 
 /*
-    freecell_solver_merge_large_and_small_sorted_array - merges a large sorted
+    fc_solve_merge_large_and_small_sorted_array - merges a large sorted
     array with a small sorted array. The arrays could be of any length
     whatsoever, but it works faster if the first is significantly bigger
     than the second.
@@ -82,7 +82,7 @@ void * freecell_solver_bsearch
     The array should be distinct or else there would be unexpected
     results.
 */
-int freecell_solver_merge_large_and_small_sorted_arrays
+int fc_solve_merge_large_and_small_sorted_arrays
 (
     void * void_big_array,
     size_t size_big_array,
@@ -107,7 +107,7 @@ int freecell_solver_merge_large_and_small_sorted_arrays
 
     for(item_to_move = size_small_array-1 ; item_to_move>=0; item_to_move--)
     {
-        pos_ptr = freecell_solver_bsearch (
+        pos_ptr = fc_solve_bsearch (
             small_array+item_to_move*width,
             big_array,
             size_big_array-num_big_items_moved,

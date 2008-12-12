@@ -64,7 +64,7 @@ int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
 }
 #endif
 
-int freecell_solver_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move)
+int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move)
 {
     if (stack->num_moves > 0)
     {
@@ -85,7 +85,7 @@ void fcs_move_stack_destroy(fcs_move_stack_t * stack)
 }
 #endif
 
-void freecell_solver_move_stack_swallow_stack(
+void fc_solve_move_stack_swallow_stack(
     fcs_move_stack_t * stack,
     fcs_move_stack_t * src_stack
     )
@@ -107,7 +107,7 @@ void fcs_move_stack_reset(
 }
 #endif
 
-int freecell_solver_move_stack_get_num_moves(
+int fc_solve_move_stack_get_num_moves(
     fcs_move_stack_t * stack
     )
 {
@@ -157,7 +157,7 @@ extern void fcs_derived_states_list_add_state(
     This function performs a given move on a state
 
   */
-void freecell_solver_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_move_t move, int freecells_num, int stacks_num, int decks_num)
+void fc_solve_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_move_t move, int freecells_num, int stacks_num, int decks_num)
 {
     fcs_state_t * state;
     fcs_card_t temp_card;
@@ -261,7 +261,7 @@ void freecell_solver_apply_move(fcs_state_with_locations_t * state_with_location
     user positions.
 */
 
-void freecell_solver_move_stack_normalize(
+void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
     fcs_state_with_locations_t * init_state,
     int freecells_num,
@@ -294,7 +294,7 @@ void freecell_solver_move_stack_normalize(
             &in_move
             ) == 0)
     {
-        freecell_solver_apply_move(
+        fc_solve_apply_move(
             &dynamic_state,
             in_move,
             freecells_num,
@@ -366,7 +366,7 @@ void freecell_solver_move_stack_normalize(
      * */
     fcs_move_stack_reset(moves);
 
-    freecell_solver_move_stack_swallow_stack(moves, temp_moves);
+    fc_solve_move_stack_swallow_stack(moves, temp_moves);
 }
 
 GCC_INLINE int convert_freecell_num(int fcn)
@@ -377,17 +377,17 @@ GCC_INLINE int convert_freecell_num(int fcn)
         return fcn;
 }
 
-char * freecell_solver_move_to_string(fcs_move_t move, int standard_notation)
+char * fc_solve_move_to_string(fcs_move_t move, int standard_notation)
 {
     return 
-        freecell_solver_move_to_string_w_state(
+        fc_solve_move_to_string_w_state(
             NULL, 4, 8, 1, 
             move, 
             (standard_notation == 2)?1:standard_notation
             );
 }
 
-char * freecell_solver_move_to_string_w_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num, int decks_num, fcs_move_t move, int standard_notation)
+char * fc_solve_move_to_string_w_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num, int decks_num, fcs_move_t move, int standard_notation)
 {
     char string[256];
     switch(fcs_move_get_type(move))
