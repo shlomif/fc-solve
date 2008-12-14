@@ -21,7 +21,7 @@ END_OLFLAGS := -lm
 # OFLAGS += -DDMALLOC
 # END_OLFLAGS += -ldmalloc
 
-# Toggle for profilig information.
+# Toggle for profiling information.
 # END_OFLAGS := -pg
 # END_OLFLAGS += -pg -lc_p -static-libgcc
 
