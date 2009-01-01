@@ -21,7 +21,8 @@ card solitaire games. Hosted by
 
 <li>
 <p>
-<a href="http://freshmeat.net/projects/freecellsolver/">App-Index Record</a>
+<a href="http://freshmeat.net/projects/freecellsolver/">Freshmeat.net's 
+App-Index Record</a>
 - the record for Freecell Solver at Freshmeat. You can find there a version
 history, a Freshmeat internal hit count, and other useful information.
 </p>
@@ -307,7 +308,7 @@ C++ source code for a Seahaven Towers auto-solver.
 
 <li>
 <p>
-<a href="http://www.ibiblio.org/kevina/freecell/">Common LISP Solver</a> -
+<a href="http://kevin.atkinson.dhs.org/freecell/">Common LISP Solver</a> -
 by Kevin Atkinson and Shari Holstege. Written in Common LISP and the
 source code is available under the GPL. It was written as part of an AI
 course project and contains a final report.
