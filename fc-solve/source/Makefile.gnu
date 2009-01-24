@@ -1,7 +1,7 @@
 CC = gcc
 
-
 DEBUG = 1
+PROFILE = 0
 
 ifneq ($(DEBUG),0)
 	OFLAGS := -Wall -g
@@ -22,8 +22,10 @@ END_OLFLAGS := -lm
 # END_OLFLAGS += -ldmalloc
 
 # Toggle for profiling information.
-# END_OFLAGS := -pg
-# END_OLFLAGS += -pg -lc_p -static-libgcc
+ifneq ($(PROFILE),0)
+	END_OFLAGS := -pg
+	END_OLFLAGS := -pg -lc_p -lm_p -static-libgcc
+endif
 
 DFLAGS = $(OFLAGS) -DDEBUG
 END_DLFLAGS = $(END_OLFLAGS)
