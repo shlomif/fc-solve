@@ -11,7 +11,7 @@ Games::Solitaire::Verify::Base - a base class.
 
 use vars qw($VERSION);
 
-$VERSION = '0.04';
+$VERSION = '0.05';
 
 use base 'Class::Accessor';
 

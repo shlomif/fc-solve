@@ -1,5 +1,6 @@
 Revision history for Games-Solitaire-VerifySolution
 
+0.05    Sat Jan 24 21:33:30 IST 2009
         - Made sure that when unlimited sequence move takes place, it isn't
         affected by kings_only, etc. I.e: it always allows to move an
         arbitrary number of cards when it is specified.
