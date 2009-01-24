@@ -494,11 +494,7 @@ sub _calc_empty_stacks_filled_by_any_card_max_seq_move
 {
     my ($self, $args) = @_;
 
-    return
-         +($self->_variant_params->sequence_move() eq "unlimited")
-            ? POSIX::INT_MAX()
-            : $self->_calc_freecell_max_seq_move($args)
-            ;
+    return $self->_calc_freecell_max_seq_move($args);
 }
 
 sub _calc_max_sequence_move
@@ -506,11 +502,12 @@ sub _calc_max_sequence_move
     my ($self, $args) = @_;
 
     return
-        (
-               ($self->_variant_params->empty_stacks_filled_by() eq "any")
-             ? $self->_calc_empty_stacks_filled_by_any_card_max_seq_move($args)
-             : ($self->num_empty_freecells() + 1)
-        );
+        +($self->_variant_params->sequence_move() eq "unlimited")
+            ? POSIX::INT_MAX()
+            : ($self->_variant_params->empty_stacks_filled_by() eq "any")
+            ? $self->_calc_empty_stacks_filled_by_any_card_max_seq_move($args)
+            : ($self->num_empty_freecells() + 1)
+        ;
 }
 
 sub _is_sequence_in_column
@@ -788,11 +785,7 @@ sub _stringify_freecells
 {
     my $self = shift;
 
-    return "Freecells:" . join("",
-        map { "  " . (defined($_) ? $_->to_string() : "  ") }
-        map { $self->get_freecell($_) } 
-        (0 .. ($self->num_freecells()-1))
-    );
+    return $self->_freecells()->to_string();
 }
 
 

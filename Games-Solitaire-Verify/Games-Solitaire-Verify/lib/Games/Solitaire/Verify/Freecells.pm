@@ -155,11 +155,12 @@ sub to_string
 {
     my $self = shift;
 
-    return "Freecells:" . join("",
+    return "Freecells:" . (($self->count() == 0) ? " " :
+    join("",
         map { "  " . (defined($_) ? $_->to_string() : "  ") }
         map { $self->cell($_) } 
         (0 .. ($self->count()-1))
-    );
+    ));
 }
 
 =head2 $self->cell_clone($pos)

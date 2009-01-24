@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 use Data::Dumper;
 
@@ -367,6 +367,46 @@ use File::Spec;
     my $verdict = $solution->verify();
     # TEST
     ok ($verdict, "Custom Freecell cannot solve a Relaxed Freecell Game")
+        or diag("Verdict == " . Dumper($verdict));
+
+    close($input_fh);
+}
+
+{
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
+        qw(
+        t data sample-solutions 
+        fcs-larrysan-kings-only-0-freecells-unlimited-move.txt
+        )
+    );
+
+    open (my $input_fh, "<", $input_filename)
+        or die "Cannot open file $!";
+
+    my $fc_variant_params =
+        Games::Solitaire::Verify::VariantParams->new(
+            {
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 0,
+                'sequence_move' => "unlimited",
+                'seq_build_by' => "alt_color",
+                'empty_stacks_filled_by' => "kings",
+            }
+        );
+
+    # Initialise a column
+    my $solution = Games::Solitaire::Verify::Solution->new(
+        {
+            input_fh => $input_fh,
+            variant => "custom",
+            variant_params => $fc_variant_params,
+        },
+    );
+
+    my $verdict = $solution->verify();
+    # TEST
+    ok (!$verdict, "Solution of Zero-freecell, unlimited move, kings-only freecell is OK.")
         or diag("Verdict == " . Dumper($verdict));
 
     close($input_fh);

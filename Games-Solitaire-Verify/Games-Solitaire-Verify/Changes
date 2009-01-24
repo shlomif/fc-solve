@@ -1,5 +1,11 @@
 Revision history for Games-Solitaire-VerifySolution
 
+        - Made sure that when unlimited sequence move takes place, it isn't
+        affected by kings_only, etc. I.e: it always allows to move an
+        arbitrary number of cards when it is specified.
+            - Bug discovered based on this post by larrysan:
+            - http://tech.groups.yahoo.com/group/fc-solve-discuss/message/856
+
 0.04    Thu Aug  7 20:36:14 IDT 2008
         - Now verify_and_perform_move in Games::Solitaire::Verify::State
         is returning objects of exception classes, instead of stringified
