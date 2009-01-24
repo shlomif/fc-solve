@@ -1,0 +1,58 @@
+1 Introduction
+    1.1 Introduction
+    1.2 History
+    1.3 Terminology
+        card, suit, card number,
+        state (= board), stack, freecell, 
+        foundation (sometimes erroneously referred to in the code as deck).
+        deck (=a pack of 4 suits of 13 cards each).
+        move (= supermove), atomic move, move stack
+        multimove
+        canonizing states, normalizing states
+2 The card.c module
+    2.1 Converting cards to and from strings
+3 The state.h header
+    3.1 How states are represented in FCS
+        3.1.1 Debug States
+        3.1.2 Compact States
+        3.1.3 Indirect Stack States
+    3.2 The macros used to manage the states.
+4 The state.c module
+    4.1 fcs_card_compare
+    4.2 fcs_duplicate_state (mainly in Indirect Stack States)
+    4.3 fcs_stack_compare
+        4.4 The difference between fcs_stack_compare_for_comparison
+            and fcs_stack_compare_for_stack_sort
+    4.4 fcs_canonize_state
+    4.5 fcs_state_compare - why we can use memcmp
+    4.6 fcs_initial_user_state_to_c
+    4.7 fcs_check_state_validity
+    4.8 fcs_state_as_string
+5 move.c
+    5.1 How moves are represnted and handled.
+    5.2 Move stacks and their operations
+    5.3 fcs_move_stack_normalize
+6 How the different scans are handled. (scans.c and caas.c)
+    6.1 Theoretical description of the scans.
+        6.1.1 What is DFS
+        6.1.2 What is BFS
+        6.1.3 What is A*
+    6.2 The check_and_add_state function.
+    6.3 The DFS scan
+    6.4 The BFS scan
+    6.5 The A* scan
+7 Overview of the tests (the freecell.c file)
+    <<< Fill In >>>
+8 The Interface functions (intrface.c)
+    <<< Fill In >>>
+9 Utility modules
+    9.1 fcs_isa.c
+    9.2 fcs_hash.c
+    9.3 md5c.c
+    9.4 pqueue.c
+    9.5 fcs_dm.c
+    9.6 preset.c
+10 Overview of the fcs_user interface functions
+    <<< Fill In >>>
+
+        

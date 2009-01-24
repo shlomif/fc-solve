@@ -1,0 +1,92 @@
+Built by Suit/Built by Alternate Colour:
+=============================================
+
+Define a fcs_is_parent_card(child, parent) macro, accordingly, and use it 
+wherever appropriate:
+
+move_freecell_cards_on_top_of_stacks: 671.
+
+Also make sure that the stuff with the foundations returning 
+PARENT_STATE_IS_NOT_SOLVEABLE is set.
+
+Multiple Decks:
+===============
+
+Define a MAX_DECKS macro, and implement storage for multiple decks in 
+fcs_state_t. Then, make sure all the decks checks are made with loops.
+(search for fcs_deck).
+
+
+Empty Stacks:
+=============
+
+If by any card: 
+---------------
+
+keep the algorithm as it is.
+
+If cannot at all: 
+----------
+
+calc_max_sequence_move = (num_freecells+1)
+
+In move_non_top_stack_cards_to_founds: 
+Check only if the freecells can be filled
+
+In move_stack_card_to_parent_on_the_same_stack:
+Ditto.
+
+In move_stack_cards_to_different_stacks:
+Ditto.
+
+In move_cards_to_a_different_parent:
+Ditto.
+
+move_sequences_to_free_stacks:
+Eliminate completely
+
+move_freecell_cards_to_empty_stack:
+Eliminate completely
+
+empty_stack_into_freecells:
+Elminate completely.
+
+
+If Kings Only:
+--------------
+
+calc_max_sequence_move = 
+(num_freecells+1) + 
+(((top_card==KING)&&(num_freestacks>0)) ? 1 : 0)
+
+In move_non_top_stack_cards_to_founds: 
+Check only if the freecells can be filled
+
+In move_stack_card_to_parent_on_the_same_stack:
+Ditto.
+
+In move_stack_cards_to_different_stacks:
+Ditto.
+
+In move_cards_to_a_different_parent:
+Ditto.
+
+move_sequences_to_free_stacks:
+Kings Only
+
+move_freecell_cards_to_empty_stack:
+Kings Only
+
+empty_stack_into_freecells:
+Move to last place.
+
+
+
+(Un/)Limited Sequence Move
+==========================
+
+Unlimited sequence move:
+------------------------
+
+calc_max_sequence_move == MAX_INT
+

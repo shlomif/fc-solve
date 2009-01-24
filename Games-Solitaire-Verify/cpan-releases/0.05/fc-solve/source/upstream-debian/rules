@@ -1,0 +1,245 @@
+#!/usr/bin/make -f 
+
+PACKAGEshd=libfreecell-solver0
+PACKAGEdev=libfreecell-solver-dev
+PACKAGEbin=freecell-solver-bin
+
+
+arch	= $(shell dpkg --print-architecture)
+tmp	= debian/tmp
+tmp-dev = debian/tmp-dev
+tmp-bin = debian/tmp-bin
+
+docdir		= usr/share/doc
+mandir		= usr/share/man
+bindir 		= usr/bin
+
+build: config.status
+	test -e debian/control
+	$(MAKE)
+
+
+config.status:
+	./configure \
+	--prefix=/usr \
+	--enable-states-type=indirect \
+	--enable-max-num-freecells=8 \
+	--enable-max-num-initial-cards-per-stack=104 \
+	--enable-max--num-stacks=12 \
+	--enable-max-num-decks=2 
+
+
+binary-indep: build
+
+#Build our packages.
+binary-arch: build testroot debian/control
+	#
+	# Build libfreecell-solver0 package
+	#
+	
+	make prefix=`pwd`/$(tmp)/usr install
+	install -d --mode=755 $(tmp)/$(docdir)/$(PACKAGEshd)
+	install -d --mode=755 $(tmp)/DEBIAN
+	
+	#
+	# Remove cruft 
+	#
+	
+	rm -rf $(tmp)/usr/bin
+	rm -rf $(tmp)/usr/include
+	rm -f $(tmp)/usr/lib/*a
+	rm -f $(tmp)/usr/lib/libfreecell-solver.so
+	rm -rf $(tmp)/usr/man
+	
+	#
+	# Install documentation
+	#
+	
+	install --mode=644 "debian/copyright" $(tmp)/$(docdir)/$(PACKAGEshd)
+	install --mode=644 "debian/changelog" \
+	    $(tmp)/$(docdir)/$(PACKAGEshd)/changelog.Debian
+	install --mode=644 "ChangeLog" \
+		$(tmp)/$(docdir)/$(PACKAGEshd)/changelog
+	install --mode=644 "NEWS"	      $(tmp)/$(docdir)/$(PACKAGEshd)
+	install --mode=644 "README"	      $(tmp)/$(docdir)/$(PACKAGEshd)
+	install --mode=644 "TODO"	      $(tmp)/$(docdir)/$(PACKAGEshd)
+	install --mode=644 "CREDITS"	      $(tmp)/$(docdir)/$(PACKAGEshd)
+	
+	#
+	# Compress changelogs
+	#
+	
+	gzip -9f $(tmp)/$(docdir)/$(PACKAGEshd)/changelog*
+	
+	#
+	# Strip the so and change its permssions.
+	#
+	
+	strip --strip-all -R .comment -R .note \
+	    $(tmp)/usr/lib/libfreecell-solver.so.*
+	chmod 644 $(tmp)/usr/lib/libfreecell-solver.so.*
+	
+	#
+	# Install package scripts
+	#
+	
+	install --mode=644 debian/libfreecell-solver0.shlibs $(tmp)/DEBIAN/shlibs
+	install --mode=755 debian/postinst.shd $(tmp)/DEBIAN/postinst
+	cat debian/prerm.generic | sed 's/__PKG__/$(PACKAGEshd)/g' > \
+	     $(tmp)/DEBIAN/prerm 
+	chmod 755 $(tmp)/DEBIAN/prerm $(tmp)/DEBIAN/postinst
+	dpkg-shlibdeps $(tmp)/usr/lib/libfreecell-solver.so.*
+	dpkg-gencontrol -ips -P$(tmp) -p$(PACKAGEshd)
+	dpkg --build $(tmp) ..
+	
+	#----------------------------------------------------------------------#
+	#
+	# Build libfreecell-solver-dev package
+	#
+	
+	make prefix=`pwd`/$(tmp-dev)/usr install
+	install -d --mode=755 $(tmp-dev)/$(docdir)/$(PACKAGEdev)
+	install -d --mode=755 $(tmp-dev)/DEBIAN
+	
+	#
+	# Remove cruft
+	#
+	
+	rm -rf $(tmp-dev)/usr/lib/*so*0*
+	rm -rf $(tmp-dev)/usr/lib/*.la*
+	rm -rf $(tmp-dev)/usr/bin
+	rm -rf $(tmp-dev)/usr/man
+	
+	install -d --mode=755 $(tmp-dev)/usr/bin
+	install --mode=755 "freecell-solver-config" $(tmp-dev)/usr/bin
+	
+	#
+	# Install documentation
+	#
+	
+	install --mode=644 "debian/copyright" $(tmp-dev)/$(docdir)/$(PACKAGEdev)
+	install --mode=644 "debian/changelog" \
+	    $(tmp-dev)/$(docdir)/$(PACKAGEdev)/changelog.Debian
+	install --mode=644 "ChangeLog" \
+		$(tmp-dev)/$(docdir)/$(PACKAGEdev)/changelog
+	install --mode=644 "NEWS"	      $(tmp-dev)/$(docdir)/$(PACKAGEdev)
+	install --mode=644 "README"	      $(tmp-dev)/$(docdir)/$(PACKAGEdev)
+	install --mode=644 "TODO"	      $(tmp-dev)/$(docdir)/$(PACKAGEdev)
+	install --mode=644 "CREDITS"	      $(tmp-dev)/$(docdir)/$(PACKAGEdev)
+	install --mode=644 `find devel_docs -type f -maxdepth 1`        $(tmp-dev)/$(docdir)/$(PACKAGEdev)
+	
+	install -d --mode=755 $(tmp-dev)/usr/share/lintian/overrides
+	install --mode=644 "debian/libfreecell-solver-dev.lintian" $(tmp-dev)/usr/share/lintian/overrides/libfreecell-solver-dev
+	
+	#
+	# Strip the .a
+	#
+	
+	strip --strip-debug $(tmp-dev)/usr/lib/libfreecell-solver.a
+	
+	#
+	# Compress changelogs
+	#
+	
+	gzip -9f $(tmp-dev)/$(docdir)/$(PACKAGEdev)/changelog*
+	
+	#
+	# Install special files
+	#
+	
+	cat debian/postinst.generic | sed 's/__PKG__/$(PACKAGEdev)/g' > \
+	     $(tmp-dev)/DEBIAN/postinst
+	cat debian/prerm.generic | sed 's/__PKG__/$(PACKAGEdev)/g' > \
+	     $(tmp-dev)/DEBIAN/prerm 
+	chmod 755 $(tmp-dev)/DEBIAN/prerm $(tmp-dev)/DEBIAN/postinst
+	dpkg-gencontrol -ips -P$(tmp-dev) -p$(PACKAGEdev)
+	dpkg --build $(tmp-dev) ..
+	
+	
+	#----------------------------------------------------------------------#
+	#
+	# Build freecell-solver-bin package
+	#
+	
+	make prefix=`pwd`/$(tmp-bin)/usr install
+	mv $(tmp-bin)/usr/bin/pi-make-microsoft-freecell-board $(tmp-bin)/usr/bin/make-microsoft-freecell-board
+	rm $(tmp-bin)/usr/bin/freecell-solver-range-parallel-solve
+	rm $(tmp-bin)/usr/bin/freecell-solver-config
+
+	install -d --mode=755 $(tmp-bin)/$(docdir)/$(PACKAGEbin)
+	install -d --mode=755 $(tmp-bin)/DEBIAN
+	install -d --mode=755 $(tmp-bin)/$(mandir)/man6
+	
+	#
+	# Remove cruft
+	#
+	
+	rm -rf $(tmp-bin)/usr/man
+	rm -rf $(tmp-bin)/usr/lib/
+	rm -rf $(tmp-bin)/usr/include/
+	
+	#
+	# Strip stuff
+	#
+	
+	strip --strip-all -R .comment -R .note $(tmp-bin)/usr/bin/*board
+	strip --strip-all -R .comment -R .note $(tmp-bin)/usr/bin/fc-solve
+	
+	#
+	# Install documentation
+	#
+	
+	install --mode=644 "debian/copyright" \
+	    $(tmp-bin)/$(docdir)/$(PACKAGEbin)/copyright
+	install --mode=644 "debian/changelog" \
+	    $(tmp-bin)/$(docdir)/$(PACKAGEbin)/changelog.Debian
+	install --mode=644 "ChangeLog" \
+		$(tmp-bin)/$(docdir)/$(PACKAGEbin)/changelog
+	install --mode=644 "NEWS"	      $(tmp-bin)/$(docdir)/$(PACKAGEbin)
+	install --mode=644 "USAGE"	      $(tmp-bin)/$(docdir)/$(PACKAGEbin)
+	install --mode=644 "README"	      $(tmp-bin)/$(docdir)/$(PACKAGEbin)
+	install --mode=644 "TODO"	      $(tmp-bin)/$(docdir)/$(PACKAGEbin)
+	install --mode=644 "CREDITS"	      $(tmp-bin)/$(docdir)/$(PACKAGEbin)
+	install --mode=644 "fc-solve.6"	      $(tmp-bin)/$(mandir)/man6
+	install --mode=644 board_gen/*.6 \
+		$(tmp-bin)/$(mandir)/man6
+	mv $(tmp-bin)/$(mandir)/man6/pi-make-microsoft-freecell-board.6 $(tmp-bin)/$(mandir)/man6/make-microsoft-freecell-board.6
+	#install --mode=644 debian/*.6 \
+		#$(tmp-bin)/$(mandir)/man6
+	
+	#
+	# Compress changelogs and man pages
+	#
+	
+	gzip -9f $(tmp-bin)/$(docdir)/$(PACKAGEbin)/changelog*
+	gzip -9f $(tmp-bin)/$(mandir)/man6/*
+	
+	#
+	# Install special files
+	#
+	
+	cat debian/postinst.generic | sed 's/__PKG__/$(PACKAGEbin)/g' > \
+	     $(tmp-bin)/DEBIAN/postinst
+	cat debian/prerm.generic | sed 's/__PKG__/$(PACKAGEbin)/g' > \
+	     $(tmp-bin)/DEBIAN/prerm 
+	chmod 755 $(tmp-bin)/DEBIAN/prerm $(tmp-bin)/DEBIAN/postinst
+	dpkg-shlibdeps $(tmp-bin)/usr/bin/*board $(tmp-bin)/usr/bin/fc-solve
+	dpkg-gencontrol -ips -P$(tmp-bin) -p$(PACKAGEbin)
+	dpkg --build $(tmp-bin) ..
+	
+
+clean: testroot
+	test -e debian/control
+	rm -f debian/substvars debian/files *orig* *bak* debian/*bak
+	rm -rf debian/tmp
+	rm -rf debian/tmp-dev
+	rm -rf debian/tmp-bin
+	-$(MAKE) distclean
+	rm -f config.h
+
+binary: binary-indep binary-arch
+
+testroot:
+	test root = "`whoami`" || (echo Need root privelages; exit 1);
+
+.PHONY: build binary-indep binary-arch binary clean

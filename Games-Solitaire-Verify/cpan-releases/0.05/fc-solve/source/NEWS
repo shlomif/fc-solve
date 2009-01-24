@@ -1,0 +1,13 @@
+From version 1.4.0 to 1.6.0
+---------------------------
+
+1. Freecell Solver now has a solution optimization scan. Check it out
+by adding the "-opt" flag.
+
+2. Many comments were added to the code, and you are welcome to go over
+it and see if you understand everything that goes on there. If you don't,
+contact me and I'll add some more comments.
+
+3. Several speed optimizations were done in the internal hash, so I think
+it should run at least a little faster.
+
