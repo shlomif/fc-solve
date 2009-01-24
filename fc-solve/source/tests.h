@@ -33,14 +33,12 @@ extern "C" {
  *
  * */
 #define calc_max_sequence_move(fc_num, fs_num)                    \
+    ((instance->unlimited_sequence_move) ?                         \
+            INT_MAX :                                             \
     ((instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD) ? \
-        (                                                         \
-            (instance->unlimited_sequence_move) ?                 \
-                INT_MAX :                                         \
-                (((fc_num)+1)<<(fs_num))                          \
-        ) :                                                       \
+                (((fc_num)+1)<<(fs_num))                        : \
         ((fc_num)+1)                                              \
-    )
+    ))
 
 #include "caas.h"
 

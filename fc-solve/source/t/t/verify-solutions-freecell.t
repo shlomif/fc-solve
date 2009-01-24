@@ -3,10 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
+use File::Spec;
 
 use Games::Solitaire::Verify::Solution;
 
@@ -17,22 +18,34 @@ sub verify_solution_test
     my $args = shift;
     my $msg = shift;
 
+    my $board = $args->{board};
     my $deal = $args->{deal};
 
-    if ($deal !~ m{\A[1-9][0-9]*\z})
+    if (! defined($board))
     {
-        confess "Invalid deal $deal";
+        if (!defined($deal))
+        {
+            confess "Neither Deal nor board are specified";
+        }
+        if ($deal !~ m{\A[1-9][0-9]*\z})
+        {
+            confess "Invalid deal $deal";
+        }
     }
 
     my $theme = $args->{theme} || ["-l", "gi"];
 
     my $variant = $args->{variant}  || "freecell";
+    my $is_custom = ($variant eq "custom");
+    my $variant_s = $is_custom ? "" : "-g $variant";
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
     open my $fc_solve_output, 
-        "make_pysol_freecell_board.py $deal $variant | " .
-        "$fc_solve_exe -g $variant " . shell_quote(@$theme) . " -p -t -sam |"
+        ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ") .
+        "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " . 
+        ($board ? shell_quote($board) : "") .
+        " |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
     # Initialise a column
@@ -40,6 +53,7 @@ sub verify_solution_test
         {
             input_fh => $fc_solve_output,
             variant => $variant,
+            ($is_custom ? (variant_params => $args->{variant_params}) : ()),
         },
     );
 
@@ -113,5 +127,34 @@ verify_solution_test({deal => 200, variant => "eight_off", theme => [],},
 # TEST
 verify_solution_test({deal => 24, theme => ["-opt"],}, 
     "-opt should work."
+);
+
+# TEST
+verify_solution_test(
+    {
+        board =>
+        File::Spec->catfile(
+            File::Spec->curdir(), 
+            "t",
+            "data",
+            "sample-boards",
+            "larrysan-kings-only-0-freecells-unlimited-move.txt",
+        ),
+        theme => [qw(--freecells-num 0 --empty-stacks-filled-by kings --sequence-move unlimited)],
+        variant => "custom",
+        variant_params => 
+            Games::Solitaire::Verify::VariantParams->new(
+                {
+                    'num_decks' => 1,
+                    'num_columns' => 8,
+                    'num_freecells' => 0,
+                    'sequence_move' => "unlimited",
+                    'seq_build_by' => "alt_color",
+                    'empty_stacks_filled_by' => "kings",
+                }
+            ),
+
+    },
+    "sequence move unlimited is indeed unlimited (even if not esf-by-any)."
 );
 
