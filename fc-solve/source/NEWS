@@ -17,6 +17,9 @@ compatibility.
 dependent on other options, so the sequence move will always be unlimited.
 (Thanks to larrysan for reporting this bug).
 
+5. Fixed run-tests.pl (and as a result also ctest -V and make test) to
+run properly after a raw unpacking.
+
 From version 1.4.0 to 1.6.0
 ---------------------------
 
