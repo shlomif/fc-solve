@@ -35,6 +35,22 @@ in the <a href="features.html"><b>Features List</b></a>.
 
 <h2>News</h2>
 
+<h3 id="news-2009-01-25">25-Jan-2009</h3>
+
+<p>
+Freecell Solver 2.14.0 was released today. This release features a major
+speed boost, and an important bug fix: when "--sequence-move unlimited"
+had been specified in previous versions, it sometimes did not take effect
+due to other parameters, and as a result the sequence move was still limited.
+(Thanks to larrysan for reporting this problem).
+</p>
+
+<p>
+This release comes relatively shortly after the previous release, and without
+any developer versions. This is in an effort to make more frequent stable
+releases with notable features.
+</p>
+
 <h3 id="news-2008-12-10">10-Dec-2008</h3>
 
 <p>
