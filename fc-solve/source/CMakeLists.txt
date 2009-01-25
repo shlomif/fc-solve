@@ -36,6 +36,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "\\\\.so(\\\\.[0-9]+)*$"
     "/.svn/"
     "/t/t/.*\\\\.exe$"
+    "/t/Presets"
     "/CMakeCache.txt$"
     "/Makefile$"
     "/CTestTestfile.cmake$"
