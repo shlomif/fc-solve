@@ -1,3 +1,22 @@
+From version 2.12.0 to 2.14.0
+-----------------------------
+
+1. Fixed the compilation with profiling information in Makefile.gnu (should be
+of concern only to developers). 
+
+2. Optimized move_stack_cards_to_different_stacks, yielding a substantial
+speed increase.
+
+3. Converted the identifiers from starting with freecell_solver_ to 
+starting with fc_solve_ , which is shorter and saner.
+
+freecell_solver_user_ is still used in the API in order to not break
+compatibility.
+
+4. Made sure the effect of the "--sequence-move unlimited" option is not
+dependent on other options, so the sequence move will always be unlimited.
+(Thanks to larrysan for reporting this bug).
+
 From version 1.4.0 to 1.6.0
 ---------------------------
 
