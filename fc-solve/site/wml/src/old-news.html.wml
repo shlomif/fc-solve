@@ -2,6 +2,21 @@
 
 <latemp_subject "Freecell Solver's Previous News Items" />
 
+<h3 id="news-2002-07-12">12-Jul-2002</h3>
+
+<p>
+Freecell Solver 2.6.0 has been spotted in the wild. This version features 
+atomic moves, which are slower than the traditional ones, but guarantee 
+a true verdict. It also has a <tt>--prelude</tt> switch that allows running
+a static order of quotas at start for the participating soft threads, and
+makes constructing faster solving presets easier.
+</p>
+
+<p>
+Several other flags were added, and the code has also been greatly optimized 
+and cleaned up, which makes Freecell Solver much faster than it was before.
+</p>
+
 <h3 id="news-2002-03-29">29-Mar-2002</h3>
 
 <p>
