@@ -2,35 +2,31 @@ CC = gcc
 
 DEBUG = 1
 PROFILE = 0
+WITH_TRACES = 0
 
 ifneq ($(DEBUG),0)
-	OFLAGS := -Wall -g
+	CFLAGS := -Wall -g
 else
-	OFLAGS := -Wall -O3
+	CFLAGS := -Wall -O3
 endif
 
-OLFLAGS := -Wall
-END_OLFLAGS := -lm
+ifneq ($(WITH_TRACES),0)
+	CFLAGS += -DDEBUG
+endif
 
-
-# OFLAGS += -DCARD_DEBUG_PRES -DFCS_WITH_MHASH -I /usr/local/include
-
-# END_OLFLAGS += -lmhash
-# END_OLFLAGS += -lefence
-
-# OFLAGS += -DDMALLOC
-# END_OLFLAGS += -ldmalloc
+LFLAGS := -Wall
+END_LFLAGS := -lm
 
 # Toggle for profiling information.
 ifneq ($(PROFILE),0)
 	END_OFLAGS := -pg
-	END_OLFLAGS := -pg -lc_p -lm_p -static-libgcc
+	END_LFLAGS := -pg -lc_p -lm_p -static-libgcc
 endif
 
-DFLAGS = $(OFLAGS) -DDEBUG
-END_DLFLAGS = $(END_OLFLAGS)
+DFLAGS = $(CFLAGS) -DDEBUG
+END_DLFLAGS = $(END_LFLAGS)
 
-DLFLAGS = $(OLFLAGS)
+DLFLAGS = $(LFLAGS)
 
 TARGETS = fc-solve mptest
 
@@ -38,7 +34,7 @@ ifeq ($(EXIT),1)
 
 error:
 	@echo "Error! WHICH_STATE_ALLOCATION must be defined to a legal value"
-	@echo $(OLFLAGS)
+	@echo $(LFLAGS)
 
 else
 
@@ -82,17 +78,17 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 -include $(DEP_FILES)
 
 %.o: %.c
-	$(CC) -Wp,-MD,.deps/$(*F).pp -c $(OFLAGS) -o $@ $< $(END_OFLAGS)
+	$(CC) -Wp,-MD,.deps/$(*F).pp -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
 
 libfcs.a: $(OBJECTS)
 	ar r $@ $(OBJECTS)
 	ranlib $@
 
 fc-solve: main.o libfcs.a
-	$(CC) $(OLFLAGS) -o $@ -L. $< -lfcs $(END_OLFLAGS)
+	$(CC) $(LFLAGS) -o $@ -L. $< -lfcs $(END_LFLAGS)
 
 mptest: test_multi_parallel.o libfcs.a
-	gcc -Wall -o $@ -L. $< -lfcs $(END_OLFLAGS)
+	gcc -Wall -o $@ -L. $< -lfcs $(END_LFLAGS)
 
 clean:
 	rm -f *.o $(TARGETS) libfcs.a test-lib mtest mptest
