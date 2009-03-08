@@ -362,6 +362,18 @@ static void fc_solve_increase_dfs_max_depth(
     soft_thread->num_solution_states = depth+1;     \
     return (ret_value);
 
+#ifdef DEBUG
+#define trace(message) \
+        { \
+            printf("%s. Depth=%d ; the_soft_Depth=%d ; Iters=%d ; test_index=%d ; was_just_resumed=%d ; current_state_index=%d\n", \
+                    message, \
+                    depth, (the_soft_dfs_info-soft_thread->soft_dfs_info), \
+                    instance->num_times, test_index, \
+                    was_just_resumed,current_state_index \
+                    );  \
+        }
+#endif
+
 int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_with_locations_t * ptr_state_with_locations_orig,
@@ -390,6 +402,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     int test_index, current_state_index;
     fcs_derived_states_list_t * derived_states_list;
     int to_reparent_states, scans_synergy;
+    int was_just_resumed = 0;
 
     freecells_num = instance->freecells_num;
     stacks_num = instance->stacks_num;
@@ -411,6 +424,11 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
         ptr_state_with_locations_orig->depth = 0;
 
         soft_thread->soft_dfs_info[0].state = ptr_state_with_locations_orig;
+
+#ifdef DEBUG
+        trace("Start");
+#endif
+        
     }
     else
     {
@@ -418,6 +436,12 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
             Set the initial depth to that of the last state encountered.
         */
         depth = soft_thread->num_solution_states - 1;
+
+        was_just_resumed = 1;
+
+#ifdef DEBUG
+        trace("Resume");
+#endif        
     }
 
     the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
@@ -430,6 +454,10 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
     calculate_real_depth(ptr_state_with_locations);
+ 
+#ifdef DEBUG
+     trace("Before depth loop");
+#endif        
     
     /*
         The main loop.
@@ -437,7 +465,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     while (depth >= 0)
     {
         /*
-            Increase the "maximal" depth if it about to be exceeded.
+            Increase the "maximal" depth if it is about to be exceeded.
         */
         if (depth+1 >= dfs_max_depth)
         {
@@ -452,6 +480,10 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
             derived_states_list = &(the_soft_dfs_info->derived_states_list);
         }
 
+#ifdef DEBUG
+        trace("Before current_state_index check");
+#endif
+
         /* All the resultant states in the last test conducted were covered */
         if (current_state_index == derived_states_list->num_states)
         {
@@ -465,37 +497,46 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     mark_as_dead_end(ptr_state_with_locations);
                 }
 
-                depth--;
-
-                if (check_if_limits_exceeded())
+                if (--depth < 0)
                 {
-                    the_soft_dfs_info->test_index = test_index;
-                    the_soft_dfs_info->current_state_index = current_state_index;
-                    myreturn(FCS_STATE_SUSPEND_PROCESS);
+                    break;
                 }
-
-                the_soft_dfs_info--;
-                /* 
-                 * depth (and evidently the_soft_dfs_info) might be invalid 
-                 * now, so we should check before we assign.
-                 * */
-                if (depth >= 0)
+                else
                 {
+                    the_soft_dfs_info--;
                     test_index = the_soft_dfs_info->test_index;
                     current_state_index = the_soft_dfs_info->current_state_index;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     ptr_state_with_locations = the_soft_dfs_info->state;
+                }
+
+                if (check_if_limits_exceeded())
+                {
+#ifdef DEBUG
+                    trace("Returning FCS_STATE_SUSPEND_PROCESS (inside current_state_index)");
+#endif
+
+                    myreturn(FCS_STATE_SUSPEND_PROCESS);
                 }
                 continue; /* Just to make sure depth is not -1 now */
             }
 
             derived_states_list->num_states = 0;
 
+#ifdef DEBUG
+            trace("Before iter_handler.");
+#endif
+
             /* If this is the first test, then count the number of unoccupied
                freeceels and stacks and check if we are done. */
-            if (test_index == 0)
+            if (test_index == 0 && !was_just_resumed)
             {
                 int num_freestacks, num_freecells;
+
+#ifdef DEBUG
+                trace("In iter_handler");
+#endif
+                
 
                 if (instance->debug_iter_output)
                 {
@@ -541,6 +582,10 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                 {
                     instance->final_state = ptr_state_with_locations;
 
+#ifdef DEBUG
+                    trace("Returning FCS_STATE_WAS_SOLVED");
+#endif
+
                     myreturn(FCS_STATE_WAS_SOLVED);
                 }
                 /*
@@ -551,6 +596,10 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                 the_soft_dfs_info->num_freecells = num_freecells;
                 the_soft_dfs_info->num_freestacks = num_freestacks;
             }
+            was_just_resumed = 0;
+#ifdef DEBUG
+            trace("After iter_handler");
+#endif
 
             /* Always do the first test */
             do_first_iteration = 1;
@@ -593,6 +642,10 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     derived_states_list->num_states = 0;
                     the_soft_dfs_info->current_state_index = 0;
                     the_soft_dfs_info->test_index = test_index;
+#ifdef DEBUG
+                    trace("Returning FCS_STATE_SUSPEND_PROCESS (after sfs_tests)");
+#endif
+                    
                     myreturn(FCS_STATE_SUSPEND_PROCESS);
                 }
 
@@ -708,6 +761,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     current_state_index = 0;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     derived_states_list->num_states = 0;
+                    was_just_resumed = 0;
 
                     calculate_real_depth(ptr_recurse_into_state_with_locations);
 
