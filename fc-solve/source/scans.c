@@ -748,6 +748,13 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
         }
     }
 
+    /*
+     * We need to bump the number of iterations so it will be ready with
+     * a fresh iterations number for the next scan that takes place.
+     * */
+    instance->num_times++;
+    hard_thread->num_times++;
+
     soft_thread->num_solution_states = 0;
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
