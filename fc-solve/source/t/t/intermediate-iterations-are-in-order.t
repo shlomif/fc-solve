@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -108,3 +108,9 @@ verify_solution_test({deal => 1941, theme => [],},
 # TEST
 verify_solution_test({deal => 1941}, 
     "Verifying 1941 (The Hardest Deal) with '-l gi'");
+
+# TEST
+verify_solution_test({deal => 24}, 
+    "Verifying deal No. 24 with '-l gi'");
+
+
