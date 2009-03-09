@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -113,4 +113,9 @@ assert_directly_ascending_iters({deal => 1941},
 assert_directly_ascending_iters({deal => 24}, 
     "Verifying deal No. 24 with '-l gi'");
 
+# TEST
+assert_directly_ascending_iters(
+    {deal => 100, theme => [qw(-l john-galt-line)],}, 
+    "Verifying deal No. 100 with '-l john-galt-line' to check a rotating theme"
+);
 
