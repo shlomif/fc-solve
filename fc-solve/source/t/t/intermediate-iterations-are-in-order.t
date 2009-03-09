@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -125,3 +125,14 @@ assert_directly_ascending_iters(
     "Verifying deal No. 11982 (unsolvable) with -l gi"
 );
 
+# TEST
+assert_directly_ascending_iters(
+    {deal => 2400, theme => [qw(-l fools-gold)],}, 
+    "Verifying deal No. 2400 with an atomic moves preset (fools-gold)"
+);
+
+# TEST
+assert_directly_ascending_iters(
+    {deal => 11982, theme => [qw(-l fools-gold)],}, 
+    "Verifying unsolvable deal No. 11982 with an atomic moves preset (fools-gold)"
+);
