@@ -10,6 +10,13 @@ use FindBin;
 use File::Spec;
 use File::Copy;
 use File::Path;
+use Getopt::Long;
+
+my $tests_glob = "*.{exe,t}";
+
+GetOptions(
+    '--glob=s' => \$tests_glob,
+);
 
 {
     local $ENV{FCS_PATH} = Cwd::getcwd();
@@ -59,7 +66,7 @@ use File::Path;
 
     local $ENV{FREECELL_SOLVER_PRESETRC} = $testing_preset_rc;
     chdir("$FindBin::Bin/t");
-    my @tests = glob("t/*.{exe,t}");
+    my @tests = glob("t/$tests_glob");
 
     {
         # local $ENV{FCS_PATH} = dirname(which("fc-solve"));
