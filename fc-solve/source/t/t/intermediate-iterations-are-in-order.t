@@ -106,9 +106,5 @@ verify_solution_test({deal => 1941, theme => [],},
     "Verifying 1941 (The Hardest Deal) with the default algorithm");
 
 # TEST
-TODO: {
-    local $TODO = "Proper iteration counting in -l gi is not working yet.";
-    verify_solution_test({deal => 1941}, 
-        "Verifying 1941 (The Hardest Deal) with '-l gi'");
-}
-
+verify_solution_test({deal => 1941}, 
+    "Verifying 1941 (The Hardest Deal) with '-l gi'");

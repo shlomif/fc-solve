@@ -2,7 +2,7 @@ CC = gcc
 
 DEBUG = 1
 PROFILE = 0
-WITH_TRACES = 0
+WITH_TRACES = 1
 
 ifneq ($(DEBUG),0)
 	CFLAGS := -Wall -g
