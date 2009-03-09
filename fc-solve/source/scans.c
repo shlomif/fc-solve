@@ -363,7 +363,7 @@ static void fc_solve_increase_dfs_max_depth(
     return (ret_value);
 
 #ifdef DEBUG
-#define trace(message) \
+#define TRACE0(message) \
         { \
             if (getenv("FCS_TRACE")) \
             { \
@@ -377,6 +377,8 @@ static void fc_solve_increase_dfs_max_depth(
             fflush(stdout); \
             } \
         }
+#else
+#define TRACE0(no_use) {}
 #endif
 
 int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
@@ -451,10 +453,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
 
     calculate_real_depth(ptr_state_with_locations);
  
-#ifdef DEBUG
-     trace("Before depth loop");
-#endif
-    
+    TRACE0("Before depth loop");    
     /*
         The main loop.
     */
@@ -476,10 +475,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
             derived_states_list = &(the_soft_dfs_info->derived_states_list);
         }
 
-#ifdef DEBUG
-        trace("Before current_state_index check");
-#endif
-
+        TRACE0("Before current_state_index check");
         /* All the resultant states in the last test conducted were covered */
         if (current_state_index == derived_states_list->num_states)
         {
@@ -511,20 +507,14 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
 
             derived_states_list->num_states = 0;
 
-#ifdef DEBUG
-            trace("Before iter_handler");
-#endif
-
+            TRACE0("Before iter_handler");
             /* If this is the first test, then count the number of unoccupied
                freeceels and stacks and check if we are done. */
             if (test_index == 0)
             {
                 int num_freestacks, num_freecells;
 
-#ifdef DEBUG
-                trace("In iter_handler");
-#endif
-                
+                TRACE0("In iter_handler");                
 
                 if (instance->debug_iter_output)
                 {
@@ -570,10 +560,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                 {
                     instance->final_state = ptr_state_with_locations;
 
-#ifdef DEBUG
-                    trace("Returning FCS_STATE_WAS_SOLVED");
-#endif
-
+                    TRACE0("Returning FCS_STATE_WAS_SOLVED");
                     myreturn(FCS_STATE_WAS_SOLVED);
                 }
                 /*
@@ -585,10 +572,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                 the_soft_dfs_info->num_freestacks = num_freestacks;
             }
             was_just_resumed = 0;
-#ifdef DEBUG
-            trace("After iter_handler");
-#endif
-
+            TRACE0("After iter_handler");
             /* Always do the first test */
             do_first_iteration = 1;
 
@@ -630,10 +614,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     derived_states_list->num_states = 0;
                     the_soft_dfs_info->current_state_index = 0;
                     the_soft_dfs_info->test_index = test_index;
-#ifdef DEBUG
-                    trace("Returning FCS_STATE_SUSPEND_PROCESS (after sfs_tests)");
-#endif
-                    
+                    TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (after sfs_tests)");                    
                     myreturn(FCS_STATE_SUSPEND_PROCESS);
                 }
 
@@ -757,10 +738,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     {
                         the_soft_dfs_info->current_state_index = current_state_index;
                         the_soft_dfs_info->test_index = test_index;
-#ifdef DEBUG
-                        trace("Returning FCS_STATE_SUSPEND_PROCESS (inside current_state_index)");
-#endif
-
+                        TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (inside current_state_index)");
                         myreturn(FCS_STATE_SUSPEND_PROCESS);
                     }
 
@@ -967,9 +945,11 @@ static pq_rating_t fc_solve_a_star_rate_state(
                                                                 \
     return (ret_value);
 
+#undef TRACE0
+
 #ifdef DEBUG
-#undef trace
-#define trace(message) \
+
+#define TRACE0(message) \
         { \
             if (getenv("FCS_TRACE")) \
             { \
@@ -980,6 +960,11 @@ static pq_rating_t fc_solve_a_star_rate_state(
             fflush(stdout); \
             } \
         }
+
+#else
+
+#define TRACE0(no_use) {}
+
 #endif
 
 
@@ -1041,10 +1026,7 @@ int fc_solve_a_star_or_bfs_do_solve_or_resume(
        priority queue. */
     while ( ptr_state_with_locations != NULL)
     {
-#ifdef DEBUG
-         trace("Start of loop");
-#endif
-        /*
+         TRACE0("Start of loop");        /*
          * If this is an optimization scan and the state being checked is not
          * in the original solution path - move on to the next state
          * */
@@ -1065,10 +1047,7 @@ int fc_solve_a_star_or_bfs_do_solve_or_resume(
         {
             goto label_next_state;
         }
-#ifdef DEBUG
-         trace("Counting cells");
-#endif
-
+         TRACE0("Counting cells");
         /* Count the free-cells */
         num_freecells = 0;
         for(a=0;a<freecells_num;a++)
@@ -1095,17 +1074,11 @@ int fc_solve_a_star_or_bfs_do_solve_or_resume(
         {
             soft_thread->first_state_to_check = ptr_state_with_locations;
 
-#ifdef DEBUG
-         trace("myreturn - FCS_STATE_SUSPEND_PROCESS");
-#endif
-
+            TRACE0("myreturn - FCS_STATE_SUSPEND_PROCESS");
             myreturn(FCS_STATE_SUSPEND_PROCESS);
         }
 
-#ifdef DEBUG
-         trace("debug_iter_output");
-#endif
-
+        TRACE0("debug_iter_output");
         if (instance->debug_iter_output)
         {
 #ifdef DEBUG
@@ -1135,10 +1108,7 @@ int fc_solve_a_star_or_bfs_do_solve_or_resume(
         
         calculate_real_depth(ptr_state_with_locations);
 
-#ifdef DEBUG
-         trace("perform_tests");
-#endif
-        
+        TRACE0("perform_tests");        
         /* Do all the tests at one go, because that the way it should be
            done for BFS and A*
         */
@@ -1182,10 +1152,7 @@ int fc_solve_a_star_or_bfs_do_solve_or_resume(
             hard_thread->num_times++;
         }
 
-#ifdef DEBUG
-         trace("Insert all states");
-#endif
-        
+        TRACE0("Insert all states");        
         /* Insert all the derived states into the PQ or Queue */
 
         for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
@@ -1226,10 +1193,7 @@ int fc_solve_a_star_or_bfs_do_solve_or_resume(
         ptr_state_with_locations->visited_iter = instance->num_times-1;
 
 label_next_state:
-#ifdef DEBUG
-         trace("Label next state");
-#endif
-
+        TRACE0("Label next state");
         /*
             Extract the next item in the queue/priority queue.
         */
