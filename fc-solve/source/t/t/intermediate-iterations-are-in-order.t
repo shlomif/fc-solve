@@ -13,7 +13,7 @@ use File::Spec;
 # 
 # This test verifies that when doing ./fc-solve -s -i , the iterations
 # number are precisely ascending and don't repeat themselves.
-sub verify_solution_test
+sub assert_directly_ascending_iters
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
@@ -98,19 +98,19 @@ sub verify_solution_test
 }
 
 # TEST
-verify_solution_test({deal => 24, theme => [],}
+assert_directly_ascending_iters({deal => 24, theme => [],}
     , "Verifying the trace of deal #24");
 
 # TEST
-verify_solution_test({deal => 1941, theme => [],}, 
+assert_directly_ascending_iters({deal => 1941, theme => [],}, 
     "Verifying 1941 (The Hardest Deal) with the default algorithm");
 
 # TEST
-verify_solution_test({deal => 1941}, 
+assert_directly_ascending_iters({deal => 1941}, 
     "Verifying 1941 (The Hardest Deal) with '-l gi'");
 
 # TEST
-verify_solution_test({deal => 24}, 
+assert_directly_ascending_iters({deal => 24}, 
     "Verifying deal No. 24 with '-l gi'");
 
 
