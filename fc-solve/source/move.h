@@ -76,11 +76,19 @@ fcs_move_stack_t * fcs_move_stack_duplicate(fcs_move_stack_t * stack);
 
 
 
-void fc_solve_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_move_t move, int freecells_num, int stacks_num, int decks_num);
+void fc_solve_apply_move(
+        fcs_state_t * state_with_locations_key,
+        fcs_state_extra_info_t * state_with_locations_val,
+        fcs_move_t move,
+        int freecells_num,
+        int stacks_num,
+        int decks_num
+);
 
 void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
-    fcs_state_with_locations_t * init_state,
+    fcs_state_t * init_state_key,
+    fcs_state_extra_info_t * init_state_val,
     int freecells_num,
     int stacks_num,
     int decks_num
@@ -88,24 +96,26 @@ void fc_solve_move_stack_normalize(
 
 extern char * fc_solve_move_to_string(fcs_move_t move, int standard_notation);
 
-extern char * fc_solve_move_to_string_w_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num, int decks_num, fcs_move_t move, int standard_notation);
+extern char * fc_solve_move_to_string_w_state(
+        fcs_state_t * state_key,
+        fcs_state_extra_info_t * state_val,
+        int freecells_num,
+        int stacks_num,
+        int decks_num,
+        fcs_move_t move,
+        int standard_notation
+        );
+
+typedef fcs_standalone_state_ptrs_t fcs_derived_state_keyval_pair_t;
 
 struct fcs_derived_states_list_struct
 {
     int num_states;
     int max_num_states;
-    fcs_state_with_locations_t * * states;
+    fcs_derived_state_keyval_pair_t * states;
 };
 
 typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
-
-#if 0
-extern void fcs_derived_states_list_add_state(
-    fcs_derived_states_list_t * list,
-    fcs_state_with_locations_t * state,
-    fcs_move_stack_t * move_stack
-    );
-#endif
 
 #ifndef max
 #define max(a,b) (((a)>(b))?(a):(b))
@@ -150,7 +160,8 @@ extern void fcs_derived_states_list_add_state(
             \
 }
 
-#define fcs_derived_states_list_add_state(list,state) \
+#if 0
+#define fc_solve_derived_states_list_add_state(list,state_key,state_val) \
     \
 {       \
     if ((list)->num_states == (list)->max_num_states)  \
@@ -158,11 +169,18 @@ extern void fcs_derived_states_list_add_state(
         (list)->max_num_states += 16;     \
         (list)->states = realloc((list)->states, sizeof((list)->states[0]) * (list)->max_num_states); \
     }        \
-    (list)->states[(list)->num_states] = (state);    \
+    (list)->states[(list)->num_states].key = (state_key);    \
+    (list)->states[(list)->num_states].val = (state_val);    \
     (list)->num_states++;        \
 }
 
-
+#else
+extern void fc_solve_derived_states_list_add_state(
+        fcs_derived_states_list_t * list,
+        fcs_state_t * state_key,
+        fcs_state_extra_info_t * state_val
+        );
+#endif
 
 
 #ifdef __cplusplus

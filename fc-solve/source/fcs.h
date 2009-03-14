@@ -76,7 +76,7 @@ extern "C" {
  * */
 struct fcs_states_linked_list_item_struct
 {
-    fcs_state_with_locations_t * s;
+    fcs_standalone_state_ptrs_t s;
     struct fcs_states_linked_list_item_struct * next;
 };
 
@@ -189,7 +189,8 @@ typedef struct fc_solve_instance
         int iter_num,
         int depth,
         void * instance,
-        fcs_state_with_locations_t * state,
+        fcs_state_t * state_key,
+        fcs_state_extra_info_t * state_val,
         int parent_iter_num
         );
     void * debug_iter_output_context;
@@ -296,12 +297,14 @@ typedef struct fc_solve_instance
     int optimize_solution_path;
 
     /* This is a place-holder for the initial state */
-    fcs_state_with_locations_t * state_copy_ptr;
+    fcs_state_t * state_copy_ptr_key;
+    fcs_state_extra_info_t * state_copy_ptr_val;
 
     /* This is the final state that the scan recommends to the
      * interface
      * */
-    fcs_state_with_locations_t * final_state;
+    fcs_state_t * final_state_key;
+    fcs_state_extra_info_t * final_state_val;
 
     /*
      * This is the number of states in the state collection.
@@ -410,7 +413,7 @@ struct fc_solve_hard_thread_struct
      * Such allocation is possible, because at the worst situation
      * the last state is released.
      * */
-    fcs_state_with_locations_t * * state_packs;
+    fcs_state_keyval_pair_t * * state_packs;
     int max_num_state_packs;
     int num_state_packs;
     int num_states_in_last_pack;
@@ -519,7 +522,8 @@ struct fc_solve_hard_thread_struct
 
 struct fcs_soft_dfs_stack_item_struct
 {
-    fcs_state_with_locations_t * state;
+    fcs_state_t * state_key;
+    fcs_state_extra_info_t * state_val;
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
     int test_index;
@@ -596,7 +600,8 @@ struct fc_solve_soft_thread_struct
      * The first state to be checked by the scan. It is a kind of bootstrap
      * for the algorithm.
      * */
-    fcs_state_with_locations_t * first_state_to_check;
+    fcs_state_t * first_state_to_check_key;
+    fcs_state_extra_info_t * first_state_to_check_val;
 
     /*
      * These are stacks used by the Soft-DFS for various uses.
@@ -702,7 +707,8 @@ extern void fc_solve_finish_instance(
 
 extern int fc_solve_solve_instance(
     fc_solve_instance_t * instance,
-    fcs_state_with_locations_t * init_state
+    fcs_state_t * init_state_key,
+    fcs_state_extra_info_t * init_state_val
     );
 
 extern int fc_solve_resume_instance(
@@ -729,30 +735,35 @@ extern fc_solve_soft_thread_t * fc_solve_new_hard_thread(
 
 extern int fc_solve_hard_dfs_solve_for_state(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations,
+    fcs_state_t * ptr_state_with_locations_key,
+    fcs_state_extra_info_t * ptr_state_with_locations_val,
     int depth,
     int ignore_osins
     );
 
 extern int fc_solve_soft_dfs_solve(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations_orig
+    fcs_state_t * ptr_state_with_locations_orig_key,
+    fcs_state_extra_info_t * ptr_state_with_locations_orig_val
     );
 
 extern int fc_solve_random_dfs_solve(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations_orig
+    fcs_state_t * ptr_state_with_locations_orig_key,
+    fcs_state_extra_info_t * ptr_state_with_locations_orig_val
     );
 
 
 extern void fc_solve_a_star_initialize_rater(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations
+    fcs_state_t * ptr_state_with_locations_key,
+    fcs_state_extra_info_t * ptr_state_with_locations_val
     );
 
 extern int fc_solve_a_star_or_bfs_do_solve_or_resume(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations_orig,
+    fcs_state_t * ptr_state_with_locations_orig_key,
+    fcs_state_extra_info_t * ptr_state_with_locations_orig_val,
     int resume
     );
 
@@ -772,7 +783,8 @@ extern int fc_solve_random_dfs_resume_solution(
 
 extern int fc_solve_a_star_or_bfs_solve(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations_orig
+    fcs_state_t * ptr_state_with_locations_orig_key,
+    fcs_state_extra_info_t * ptr_state_with_locations_orig_val
     );
 
 extern int fc_solve_a_star_or_bfs_resume_solution(
@@ -781,7 +793,8 @@ extern int fc_solve_a_star_or_bfs_resume_solution(
 
 extern int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_with_locations_t * ptr_state_with_locations_orig,
+    fcs_state_t * ptr_state_with_locations_orig_key,
+    fcs_state_extra_info_t * ptr_state_with_locations_orig_val,
     int resume,
     int to_randomize
     );

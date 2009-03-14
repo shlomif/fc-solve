@@ -22,6 +22,8 @@ struct SFO_hash_symlink_item_struct
 {
     /* A pointer to the data structure that is to be collected */
     void * key;
+    /* A pointer to the value associated with the key */
+    void * val;
     /* We also store the hash value corresponding to this key for faster
        comparisons */
     SFO_hash_value_t hash_value;
@@ -72,9 +74,19 @@ SFO_hash_t * fc_solve_hash_init(
     void * context
     );
 
-void * fc_solve_hash_insert(
+/*
+ * Returns 0 if the key is new and the key/val pair was inserted.
+ *      - in that case *existing_key / *existing_val will be set to key
+ *      and val respectively.
+ * Returns 1 if the key is not new and *existing_key / *existing_val
+ * was set to it.
+ */
+int fc_solve_hash_insert(
     SFO_hash_t * hash,
     void * key,
+    void * val,
+    void * * existing_key,
+    void * * existing_val,
     SFO_hash_value_t hash_value,
     SFO_hash_value_t secondary_hash_value,
     int optimize_for_caching

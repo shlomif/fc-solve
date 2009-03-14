@@ -32,12 +32,6 @@
 #include "dmalloc.h"
 #endif
 
-#define state_with_locations (*ptr_state_with_locations)
-#define state (ptr_state_with_locations->s)
-#define new_state_with_locations (*ptr_new_state_with_locations)
-#define new_state (ptr_new_state_with_locations->s)
-
-
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
 #endif
@@ -57,7 +51,8 @@
  * */
 int fc_solve_sfs_move_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -137,7 +132,8 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
  * */
 int fc_solve_sfs_move_freecell_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -193,7 +189,8 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
 
 int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -359,7 +356,8 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 
 int fc_solve_sfs_move_non_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -500,7 +498,8 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 
 int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -793,7 +792,8 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 
 int fc_solve_sfs_move_stack_cards_to_different_stacks(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1078,7 +1078,8 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
 int fc_solve_sfs_move_sequences_to_free_stacks(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1321,7 +1322,8 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 
 int fc_solve_sfs_move_freecell_cards_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1392,7 +1394,8 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
 
 int fc_solve_sfs_move_cards_to_a_different_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1614,7 +1617,8 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
 int fc_solve_sfs_empty_stack_into_freecells(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1690,7 +1694,8 @@ int fc_solve_sfs_empty_stack_into_freecells(
 
 int fc_solve_sfs_yukon_do_nothing(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1702,7 +1707,8 @@ int fc_solve_sfs_yukon_do_nothing(
 
 int fc_solve_sfs_yukon_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1779,7 +1785,8 @@ int fc_solve_sfs_yukon_move_card_to_parent(
 
 int fc_solve_sfs_yukon_move_kings_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1853,7 +1860,8 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
   */
 int fc_solve_sfs_deal_gypsy_talon(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -1900,7 +1908,8 @@ int fc_solve_sfs_deal_gypsy_talon(
 
 int fc_solve_sfs_get_card_from_klondike_talon(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -2044,7 +2053,8 @@ int fc_solve_sfs_get_card_from_klondike_talon(
 
 int fc_solve_sfs_atomic_move_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -2129,7 +2139,8 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
 
 int fc_solve_sfs_atomic_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -2205,7 +2216,8 @@ int fc_solve_sfs_atomic_move_card_to_parent(
 
 int fc_solve_sfs_atomic_move_card_to_freecell(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -2279,7 +2291,8 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
 
 int fc_solve_sfs_atomic_move_freecell_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -2352,7 +2365,8 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
 
 int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,

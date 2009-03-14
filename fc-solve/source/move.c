@@ -135,38 +135,24 @@ fcs_move_stack_t * fcs_move_stack_duplicate(
 }
 #endif
 
-#if 0
-extern void fcs_derived_states_list_add_state(
-    fcs_derived_states_list_t * list,
-    fcs_state_with_locations_t * state,
-    fcs_move_stack_t * move_stack
-    )
-{
-    if (list->num_states == list->max_num_states)
-    {
-        list->max_num_states += 16;
-        list->states = realloc(list->states, sizeof(list->states[0]) * list->max_num_states);
-        list->move_stacks = realloc(list->move_stacks, sizeof(list->move_stacks[0]) * list->max_num_states);
-    }
-    list->states[list->num_states] = state;
-    list->move_stacks[list->num_states] = move_stack;
-    list->num_states++;
-}
-#endif
 /*
     This function performs a given move on a state
 
   */
-void fc_solve_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_move_t move, int freecells_num, int stacks_num, int decks_num)
+void fc_solve_apply_move(
+        fcs_state_t * state_key,
+        fcs_state_extra_info_t * state_val,
+        fcs_move_t move,
+        int freecells_num,
+        int stacks_num,
+        int decks_num
+        )
 {
-    fcs_state_t * state;
     fcs_card_t temp_card;
     int a;
     int src_stack, dest_stack;
     int src_freecell, dest_freecell;
     int src_stack_len;
-
-    state = (&(state_with_locations->s));
 
     dest_stack = fcs_move_get_dest_stack(move);
     src_stack = fcs_move_get_src_stack(move);
@@ -178,11 +164,11 @@ void fc_solve_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
         {
-            src_stack_len = fcs_stack_len(*state, src_stack);
+            src_stack_len = fcs_stack_len(*state_key, src_stack);
             for(a=0 ; a<fcs_move_get_num_cards_in_seq(move) ; a++)
             {
                 fcs_push_stack_card_into_stack(
-                    *state,
+                    *state_key,
                     dest_stack,
                     src_stack,
                     src_stack_len - fcs_move_get_num_cards_in_seq(move)+a
@@ -191,7 +177,7 @@ void fc_solve_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_
             for(a=0 ; a<fcs_move_get_num_cards_in_seq(move) ; a++)
             {
                 fcs_pop_stack_card(
-                    *state,
+                    *state_key,
                     src_stack,
                     temp_card
                     );
@@ -200,55 +186,58 @@ void fc_solve_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_
         break;
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
         {
-            temp_card = fcs_freecell_card(*state, src_freecell);
-            fcs_push_card_into_stack(*state, dest_stack, temp_card);
-            fcs_empty_freecell(*state, src_freecell);
+            temp_card = fcs_freecell_card(*state_key, src_freecell);
+            fcs_push_card_into_stack(*state_key, dest_stack, temp_card);
+            fcs_empty_freecell(*state_key, src_freecell);
         }
         break;
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
         {
-            temp_card = fcs_freecell_card(*state, src_freecell);
-            fcs_put_card_in_freecell(*state, dest_freecell, temp_card);
-            fcs_empty_freecell(*state, src_freecell);
+            temp_card = fcs_freecell_card(*state_key, src_freecell);
+            fcs_put_card_in_freecell(*state_key, dest_freecell, temp_card);
+            fcs_empty_freecell(*state_key, src_freecell);
         }
         break;
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
         {
-            fcs_pop_stack_card(*state, src_stack, temp_card);
-            fcs_put_card_in_freecell(*state, dest_freecell, temp_card);
+            fcs_pop_stack_card(*state_key, src_stack, temp_card);
+            fcs_put_card_in_freecell(*state_key, dest_freecell, temp_card);
         }
         break;
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         {
-            fcs_pop_stack_card(*state, src_stack, temp_card);
-            fcs_increment_foundation(*state, fcs_move_get_foundation(move));
+            fcs_pop_stack_card(*state_key, src_stack, temp_card);
+            fcs_increment_foundation(*state_key, fcs_move_get_foundation(move));
         }
         break;
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
         {
-            fcs_empty_freecell(*state, src_freecell);
-            fcs_increment_foundation(*state, fcs_move_get_foundation(move));
+            fcs_empty_freecell(*state_key, src_freecell);
+            fcs_increment_foundation(*state_key, fcs_move_get_foundation(move));
         }
         break;
         case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
         {
             for(a=0;a<13;a++)
             {
-                fcs_pop_stack_card(*state, src_stack, temp_card);
-                fcs_increment_foundation(*state, fcs_move_get_foundation(move));
+                fcs_pop_stack_card(*state_key, src_stack, temp_card);
+                fcs_increment_foundation(*state_key, fcs_move_get_foundation(move));
             }
         }
         break;
 
         case FCS_MOVE_TYPE_FLIP_CARD:
         {
-            fcs_flip_stack_card(*state, src_stack, fcs_stack_len(*state, src_stack)-1);
+            fcs_flip_stack_card(*state_key, src_stack, fcs_stack_len(*state_key, src_stack)-1);
         }
         break;
 
         case FCS_MOVE_TYPE_CANONIZE:
         {
-            fcs_canonize_state(state_with_locations, freecells_num, stacks_num);
+            fc_solve_canonize_state(
+                state_key, state_val,
+                freecells_num, stacks_num
+            );
         }
         break;
 
@@ -263,7 +252,8 @@ void fc_solve_apply_move(fcs_state_with_locations_t * state_with_locations, fcs_
 
 void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
-    fcs_state_with_locations_t * init_state,
+    fcs_state_t * init_state_key,
+    fcs_state_extra_info_t * init_state_val,
     int freecells_num,
     int stacks_num,
     int decks_num
@@ -271,7 +261,7 @@ void fc_solve_move_stack_normalize(
 {
     fcs_move_stack_t * temp_moves;
     fcs_move_t in_move, out_move;
-    fcs_state_with_locations_t dynamic_state;
+    fcs_state_keyval_pair_t dynamic_state;
 #ifdef INDIRECT_STACK_STATES
     char buffer[MAX_NUM_STACKS << 7];
     int a;
@@ -280,11 +270,14 @@ void fc_solve_move_stack_normalize(
 
     fcs_move_stack_alloc_into_var(temp_moves);
 
-    fcs_duplicate_state(dynamic_state, *init_state);
+    fcs_duplicate_state(
+            dynamic_state.s, dynamic_state.info,
+            *init_state_key, *init_state_val
+            );
 #ifdef INDIRECT_STACK_STATES
     for(a=0;a<stacks_num;a++)
     {
-        fcs_copy_stack(dynamic_state, a, buffer);
+        fcs_copy_stack(dynamic_state.s, dynamic_state.info, a, buffer);
     }
 #endif
 
@@ -295,7 +288,8 @@ void fc_solve_move_stack_normalize(
             ) == 0)
     {
         fc_solve_apply_move(
-            &dynamic_state,
+            &dynamic_state.s,
+            &dynamic_state.info,
             in_move,
             freecells_num,
             stacks_num,
@@ -314,7 +308,7 @@ void fc_solve_move_stack_normalize(
                 (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
                 )
             {
-                fcs_move_set_src_stack(out_move,dynamic_state.stack_locs[(int)fcs_move_get_src_stack(in_move)]);
+                fcs_move_set_src_stack(out_move,dynamic_state.info.stack_locs[(int)fcs_move_get_src_stack(in_move)]);
             }
 
             if (
@@ -322,7 +316,7 @@ void fc_solve_move_stack_normalize(
                 (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FREECELL) ||
                 (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION))
             {
-                fcs_move_set_src_freecell(out_move,dynamic_state.fc_locs[(int)fcs_move_get_src_freecell(in_move)]);
+                fcs_move_set_src_freecell(out_move,dynamic_state.info.fc_locs[(int)fcs_move_get_src_freecell(in_move)]);
             }
 
             if (
@@ -330,7 +324,7 @@ void fc_solve_move_stack_normalize(
                 (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_STACK)
                 )
             {
-                fcs_move_set_dest_stack(out_move,dynamic_state.stack_locs[(int)fcs_move_get_dest_stack(in_move)]);
+                fcs_move_set_dest_stack(out_move,dynamic_state.info.stack_locs[(int)fcs_move_get_dest_stack(in_move)]);
             }
 
             if (
@@ -338,7 +332,7 @@ void fc_solve_move_stack_normalize(
                 (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FREECELL)
                 )
             {
-                fcs_move_set_dest_freecell(out_move,dynamic_state.fc_locs[(int)fcs_move_get_dest_freecell(in_move)]);
+                fcs_move_set_dest_freecell(out_move,dynamic_state.info.fc_locs[(int)fcs_move_get_dest_freecell(in_move)]);
             }
 
             if ((fcs_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
@@ -381,13 +375,21 @@ char * fc_solve_move_to_string(fcs_move_t move, int standard_notation)
 {
     return 
         fc_solve_move_to_string_w_state(
-            NULL, 4, 8, 1, 
+            NULL, NULL, 4, 8, 1, 
             move, 
             (standard_notation == 2)?1:standard_notation
             );
 }
 
-char * fc_solve_move_to_string_w_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num, int decks_num, fcs_move_t move, int standard_notation)
+char * fc_solve_move_to_string_w_state(
+        fcs_state_t * state_key,
+        fcs_state_extra_info_t * state_val,
+        int freecells_num,
+        int stacks_num,
+        int decks_num,
+        fcs_move_t move,
+        int standard_notation
+        )
 {
     char string[256];
     switch(fcs_move_get_type(move))
@@ -397,7 +399,7 @@ char * fc_solve_move_to_string_w_state(fcs_state_with_locations_t * state, int f
                 /* More than one card was moved */
                 (fcs_move_get_num_cards_in_seq(move) > 1) && 
                 /* It was a move to an empty stack */
-                (fcs_stack_len(state->s, fcs_move_get_dest_stack(move)) == 
+                (fcs_stack_len(*state_key, fcs_move_get_dest_stack(move)) == 
                  fcs_move_get_num_cards_in_seq(move))
                )
             {

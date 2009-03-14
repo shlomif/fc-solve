@@ -16,7 +16,8 @@ extern "C" {
 
 typedef int (*fc_solve_solve_for_state_test_t)(
         fc_solve_soft_thread_t *,
-        fcs_state_with_locations_t *,
+        fcs_state_t *,
+        fcs_state_extra_info_t *,
         int,
         int,
         fcs_derived_states_list_t *,
@@ -49,26 +50,26 @@ extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
  * It then assigns the newly updated depth throughout the path.
  * 
  * */
-#define calculate_real_depth(ptr_state_orig)                       \
+#define calculate_real_depth(ptr_state_orig_key, ptr_state_orig_val) \
 {                                                                  \
     if (calc_real_depth)                                           \
     {                                                              \
         int this_real_depth = 0;                                   \
-        fcs_state_with_locations_t * ptr_state = (ptr_state_orig); \
+        fcs_state_extra_info_t * temp_state_val = ptr_state_orig_val; \
         /* Count the number of states until the original state. */ \
-        while(ptr_state != NULL)                                   \
+        while(temp_state_val != NULL)                                   \
         {                                                          \
-            ptr_state = ptr_state->parent;                         \
+            temp_state_val = temp_state_val->parent_val;             \
             this_real_depth++;                                     \
         }                                                          \
         this_real_depth--;                                         \
-        ptr_state = (ptr_state_orig);                              \
-        /* Assign the new depth throughout the path*/              \
-        while (ptr_state->depth != this_real_depth)                \
+        temp_state_val = (ptr_state_orig_val);                      \
+        /* Assign the new depth throughout the path */             \
+        while (temp_state_val->depth != this_real_depth)            \
         {                                                          \
-            ptr_state->depth = this_real_depth;                    \
+            temp_state_val->depth = this_real_depth;                \
             this_real_depth--;                                     \
-            ptr_state = ptr_state->parent;                         \
+            temp_state_val = temp_state_val->parent_val;             \
         }                                                          \
     }                                                              \
 }                                                                  \
@@ -77,30 +78,30 @@ extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
  * This macro marks a state as a dead end, and afterwards propogates
  * this information to its parent and ancestor states.
  * */
-#define mark_as_dead_end(ptr_state_input) \
+#define mark_as_dead_end(ptr_state_input_key, ptr_state_input_val) \
 {      \
     if (scans_synergy)      \
     {        \
-        fcs_state_with_locations_t * ptr_state = (ptr_state_input); \
+        fcs_state_extra_info_t * temp_state_val = (ptr_state_input_val); \
         /* Mark as a dead end */        \
-        ptr_state->visited |= FCS_VISITED_DEAD_END; \
-        ptr_state = ptr_state->parent;          \
-        if (ptr_state != NULL)                    \
+        temp_state_val->visited |= FCS_VISITED_DEAD_END; \
+        temp_state_val = temp_state_val->parent_val;          \
+        if (temp_state_val != NULL)                    \
         {           \
             /* Decrease the refcount of the state */    \
-            ptr_state->num_active_children--;   \
-            while((ptr_state->num_active_children == 0) && (ptr_state->visited & FCS_VISITED_ALL_TESTS_DONE))  \
+            temp_state_val->num_active_children--;   \
+            while((temp_state_val->num_active_children == 0) && (temp_state_val->visited & FCS_VISITED_ALL_TESTS_DONE))  \
             {          \
                 /* Mark as dead end */        \
-                ptr_state->visited |= FCS_VISITED_DEAD_END;  \
+                temp_state_val->visited |= FCS_VISITED_DEAD_END;  \
                 /* Go to its parent state */       \
-                ptr_state = ptr_state->parent;    \
-                if (ptr_state == NULL)         \
+                temp_state_val = temp_state_val->parent_val;    \
+                if (temp_state_val == NULL)         \
                 {                \
                     break;             \
                 }      \
                 /* Decrease the refcount */       \
-                ptr_state->num_active_children--;     \
+                temp_state_val->num_active_children--;     \
             }       \
         }   \
     }      \

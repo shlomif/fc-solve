@@ -53,7 +53,12 @@ void fc_solve_PQueueInitialise(
    returns TRUE if succesful, FALSE if fails. (You fail by filling the pqueue.)
    PGetRating is a function which returns the rating of the item you're adding for sorting purposes */
 
-int fc_solve_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
+int fc_solve_PQueuePush(
+        PQUEUE *pq,
+        fcs_state_t * key,
+        fcs_state_extra_info_t * val, 
+        pq_rating_t r
+        )
 {
     uint32 i;
     pq_element_t * Elements = pq->Elements;
@@ -97,7 +102,8 @@ int fc_solve_PQueuePush( PQUEUE *pq, void *item, pq_rating_t r)
         }
 
         /* then add the element at the space we created. */
-        Elements[i].item = item;
+        Elements[i].key = key;
+        Elements[i].val = val;
         Elements[i].rating = r;
     }
 
@@ -115,9 +121,14 @@ void fc_solve_PQueueFree( PQUEUE *pq )
     free( pq->Elements );
 }
 
-/* remove the first node from the pqueue and provide a pointer to it */
+/* remove the first node from the pqueue and provide a pointer to it 
+ *
+ * Returns 0 if found.
+ * Returns 1 if not found.
+ *
+ * */
 
-void *fc_solve_PQueuePop( PQUEUE *pq)
+int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_t * * key, fcs_state_extra_info_t * * val)
 {
     int32 i;
     int32 child;
@@ -129,7 +140,9 @@ void *fc_solve_PQueuePop( PQUEUE *pq)
 
     if( PQueueIsEmpty( pq ) )
     {
-        return NULL;
+        *key = NULL;
+        *val = NULL;
+        return 1;
     }
 
     pMaxElement = Elements[PQ_FIRST_ENTRY];
@@ -167,7 +180,9 @@ void *fc_solve_PQueuePop( PQUEUE *pq)
     Elements[i] = pLastElement;
     pq->CurrentSize = CurrentSize;
 
-    return pMaxElement.item;
+    *key = pMaxElement.key;
+    *val = pMaxElement.val;
+    return 0;
 }
 
 

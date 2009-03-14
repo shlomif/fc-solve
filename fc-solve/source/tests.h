@@ -45,34 +45,37 @@ extern "C" {
 /*
  *  These are some macros to make it easier for the programmer.
  * */
-#define state_with_locations (*ptr_state_with_locations)
-#define state (ptr_state_with_locations->s)
-#define new_state_with_locations (*ptr_new_state_with_locations)
-#define new_state (ptr_new_state_with_locations->s)
+#define ptr_state_key (ptr_state_with_locations_key)
+#define ptr_state_val (ptr_state_with_locations_val)
+#define state_key (*ptr_state_key)
+#define state  (state_key)
+#define state_val (*ptr_state_val)
+#define new_state (*ptr_new_state_key)
+#define new_state_key (new_state)
+#define new_state_val (*ptr_new_state_val)
+
 
 #define sfs_check_state_begin()                                                \
-    fcs_state_ia_alloc_into_var(ptr_new_state_with_locations, hard_thread);    \
-    fcs_duplicate_state(new_state_with_locations, state_with_locations);       \
+    fcs_state_ia_alloc_into_var(ptr_new_state_key, ptr_new_state_val, hard_thread);    \
+    fcs_duplicate_state(new_state_key, new_state_val, state_key, state_val);       \
     /* Some A* and BFS parameters that need to be initialized in               \
      * the derived state.                                                      \
      * */                                                                      \
-    ptr_new_state_with_locations->parent = ptr_state_with_locations;           \
-    ptr_new_state_with_locations->moves_to_parent = moves;                     \
+    ptr_new_state_val->parent_key = ptr_state_key;           \
+    ptr_new_state_val->parent_val = ptr_state_val;           \
+    ptr_new_state_val->moves_to_parent = moves;                     \
     /* Make sure depth is consistent with the game graph.                      \
      * I.e: the depth of every newly discovered state is derived from          \
      * the state from which it was discovered. */                              \
-    ptr_new_state_with_locations->depth = ptr_state_with_locations->depth + 1; \
+    ptr_new_state_val->depth = ptr_new_state_val->depth + 1; \
     /* Mark this state as a state that was not yet visited */                  \
-    ptr_new_state_with_locations->visited = 0;                                 \
+    ptr_new_state_val->visited = 0;                                 \
     /* It's a newly created state which does not have children yet. */         \
-    ptr_new_state_with_locations->num_active_children = 0;                     \
-    memset(ptr_new_state_with_locations->scan_visited, '\0',                   \
-        sizeof(ptr_new_state_with_locations->scan_visited)                     \
+    ptr_new_state_val->num_active_children = 0;                     \
+    memset(ptr_new_state_val->scan_visited, '\0',                   \
+        sizeof(ptr_new_state_val->scan_visited)                     \
         );                                                                     \
     fcs_move_stack_reset(moves);                                               \
-
-    
-    
 
 #define sfs_check_state_end()                                             \
 /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE         \
@@ -83,11 +86,14 @@ fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);                      \
 fcs_move_stack_push(moves, temp_move);                                    \
                                                                           \
 {                                                                         \
-    fcs_state_with_locations_t * existing_state;                          \
-    check = fc_solve_check_and_add_state(                          \
+    fcs_state_t * existing_state_key;                                     \
+    fcs_state_extra_info_t * existing_state_val;                          \
+    check = fc_solve_check_and_add_state(                                 \
         soft_thread,                                                      \
-        ptr_new_state_with_locations,                                     \
-        &existing_state                                                   \
+        ptr_new_state_key,                                                \
+        ptr_new_state_val,                                                \
+        &existing_state_key,                                              \
+        &existing_state_val                                               \
         );                                                                \
     if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||                     \
         (check == FCS_STATE_SUSPEND_PROCESS))                             \
@@ -100,7 +106,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
     else if (check == FCS_STATE_ALREADY_EXISTS)                           \
     {                                                                     \
         fcs_state_ia_release(hard_thread);                                \
-        calculate_real_depth(existing_state);                             \
+        calculate_real_depth(existing_state_key, existing_state_val);     \
         /* Re-parent the existing state to this one.                      \
          *                                                                \
          * What it means is that if the depth of the state if it          \
@@ -108,36 +114,40 @@ fcs_move_stack_push(moves, temp_move);                                    \
          * already have, then re-assign its parent to this state.         \
          * */                                                             \
         if (reparent &&                                                   \
-           (existing_state->depth > ptr_state_with_locations->depth+1))   \
+           (existing_state_val->depth > ptr_state_val->depth+1))   \
         {                                                                 \
             /* Make a copy of "moves" because "moves" will be destroyed */\
-            existing_state->moves_to_parent =                             \
+            existing_state_val->moves_to_parent =                             \
                 fc_solve_move_stack_compact_allocate(              \
                     hard_thread, moves                                    \
                     );                                                    \
-            if (!(existing_state->visited & FCS_VISITED_DEAD_END))        \
+            if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))        \
             {                                                             \
-                if ((--existing_state->parent->num_active_children) == 0) \
+                if ((--existing_state_val->parent_val->num_active_children) == 0) \
                 {                                                         \
                     mark_as_dead_end(                                     \
-                        existing_state->parent                            \
+                        existing_state_val->parent_key,                   \
+                        existing_state_val->parent_val                    \
                         );                                                \
                 }                                                         \
-                ptr_state_with_locations->num_active_children++;          \
+                ptr_state_val->num_active_children++;          \
             }                                                             \
-            existing_state->parent = ptr_state_with_locations;            \
-            existing_state->depth = ptr_state_with_locations->depth + 1;  \
+            existing_state_val->parent_key = ptr_state_key;               \
+            existing_state_val->parent_val = ptr_state_val;               \
+            existing_state_val->depth = ptr_state_val->depth + 1;  \
         }                                                                 \
-        fcs_derived_states_list_add_state(                                \
+        fc_solve_derived_states_list_add_state(                                \
             derived_states_list,                                          \
-            existing_state                                                \
+            existing_state_key,                                           \
+            existing_state_val                                            \
             );                                                            \
     }                                                                     \
     else                                                                  \
     {                                                                     \
-        fcs_derived_states_list_add_state(                                \
+        fc_solve_derived_states_list_add_state(                                \
             derived_states_list,                                          \
-            ptr_new_state_with_locations                                  \
+            ptr_new_state_key,                                            \
+            ptr_new_state_val                                             \
             );                                                            \
    }                                                                      \
 }
@@ -206,7 +216,8 @@ fcs_move_stack_push(moves, temp_move);                                    \
 #define tests_declare_accessors()                              \
     fc_solve_hard_thread_t * hard_thread;               \
     fc_solve_instance_t * instance;                     \
-    fcs_state_with_locations_t * ptr_new_state_with_locations; \
+    fcs_state_t * ptr_new_state_key; \
+    fcs_state_extra_info_t * ptr_new_state_val; \
     fcs_move_stack_t * moves;                                  \
     char * indirect_stacks_buffer;                             \
     int calc_real_depth;                                       \
@@ -227,7 +238,8 @@ fcs_move_stack_push(moves, temp_move);                                    \
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -235,7 +247,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         );
 extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -244,7 +257,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
 
 extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -253,7 +267,8 @@ extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -262,7 +277,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_card
 
 extern int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -271,7 +287,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
 
 extern int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -280,7 +297,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
 
 extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -289,7 +307,8 @@ extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_w
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_with_locations_t * ptr_state_with_locations,
+        fcs_state_t * ptr_state_with_locations_key,
+        fcs_state_extra_info_t * ptr_state_with_locations_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -300,6 +319,6 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 }
 #endif
 
-#define my_copy_stack(idx) fcs_copy_stack(new_state_with_locations, idx, indirect_stacks_buffer);
+#define my_copy_stack(idx) fcs_copy_stack(new_state_key, new_state_val, idx, indirect_stacks_buffer);
 
 #endif /* FC_SOLVE__TESTS_H */

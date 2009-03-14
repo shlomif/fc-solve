@@ -68,9 +68,12 @@ SFO_hash_t * fc_solve_hash_init(
     return hash;
 }
 
-void * fc_solve_hash_insert(
+int fc_solve_hash_insert(
     SFO_hash_t * hash,
     void * key,
+    void * val,
+    void * * existing_key,
+    void * * existing_val,
     SFO_hash_value_t hash_value,
     SFO_hash_value_t secondary_hash_value,
     int optimize_for_caching
@@ -87,11 +90,12 @@ void * fc_solve_hash_insert(
     /* If first_item is non-existent */
     if (list->first_item == NULL)
     {
-        /* Allocate a first item with that key */
+        /* Allocate a first item with that key/val pair */
         fcs_compact_alloc_into_var(item, hash->allocator, SFO_hash_symlink_item_t);
         list->first_item = item;
         item->next = NULL;
         item->key = key;
+        item->val = val;
         item->hash_value = hash_value;
         item->secondary_hash_value = secondary_hash_value;
 
@@ -129,7 +133,10 @@ void * fc_solve_hash_insert(
                     list->first_item = item;
                 }
             }
-            return item->key;
+            *existing_key = item->key;
+            *existing_val = item->val;
+
+            return 1;
         }
         /* Cache the item before the current in last_item */
         last_item = item;
@@ -143,6 +150,7 @@ void * fc_solve_hash_insert(
         fcs_compact_alloc_into_var(item, hash->allocator, SFO_hash_symlink_item_t);
         item->next = list->first_item;
         item->key = key;
+        item->val = val;
         item->hash_value = hash_value;
         list->first_item = item;
         item->secondary_hash_value = secondary_hash_value;
@@ -154,6 +162,7 @@ void * fc_solve_hash_insert(
         last_item->next = item;
         item->next = NULL;
         item->key = key;
+        item->val = val;
         item->hash_value = hash_value;
         item->secondary_hash_value = secondary_hash_value;
     }
@@ -167,7 +176,10 @@ rehash_check:
         SFO_hash_rehash(hash);
     }
 
-    return NULL;
+    *existing_key = NULL;
+    *existing_val = NULL;
+
+    return 0;
 }
 
 void fc_solve_hash_free_with_callback(

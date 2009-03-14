@@ -30,8 +30,8 @@ extern "C" {
  *
  ************/
 
-#define is_scan_visited(ptr_state, scan_id) (ptr_state->scan_visited[(scan_id)>>5] & (1 << ((scan_id)&((1<<(5))-1))))
-#define set_scan_visited(ptr_state, scan_id) { ptr_state->scan_visited[(scan_id)>>5] |= (1 << ((scan_id)&((1<<(5))-1))); }
+#define is_scan_visited(ptr_state_key, ptr_state_val, scan_id) (ptr_state_val->scan_visited[(scan_id)>>5] & (1 << ((scan_id)&((1<<(5))-1))))
+#define set_scan_visited(ptr_state_key, ptr_state_val, scan_id) { ptr_state_val->scan_visited[(scan_id)>>5] |= (1 << ((scan_id)&((1<<(5))-1))); }
 
 
 #ifdef DEBUG_STATES
@@ -143,8 +143,11 @@ typedef int fcs_locs_t;
         (state).stacks[(ds)].num_cards++;  \
     }
 
-#define fcs_duplicate_state(dest, src) \
-    (dest) = (src)
+#define fcs_duplicate_state(dest_key, dest_val, src_key, src_val) \
+    { \
+    (dest_key) = (src_key); \
+    (dest_val) = (src_val); \
+    }
 
 #define fcs_put_card_in_freecell(state, f, card) \
     (state).freecells[(f)] = (card)
@@ -178,7 +181,7 @@ typedef int fcs_locs_t;
     ((state).talon[pos] = (card))
 #endif
 
-#define fcs_copy_stack(state, idx, buffer) {} 
+#define fcs_copy_stack(state_key, state_val, idx, buffer) {} 
 
 #elif defined(COMPACT_STATES)    /* #ifdef DEBUG_STATES */
 
@@ -301,8 +304,11 @@ typedef char fcs_locs_t;
 #define fcs_push_stack_card_into_stack(state, ds, ss, sc) \
     fcs_push_card_into_stack((state), (ds), fcs_stack_card((state), (ss), (sc)))
 
-#define fcs_duplicate_state(dest, src) \
-    (dest) = (src)
+#define fcs_duplicate_state(dest_key, dest_val, src_key, src_val) \
+    { \
+    (dest_key) = (src_key); \
+    (dest_val) = (src_val); \
+    }
 
 #define fcs_put_card_in_freecell(state, f, card) \
     (state).data[FCS_FREECELLS_OFFSET+(f)] = (card);
@@ -340,7 +346,7 @@ typedef char fcs_locs_t;
 #define fcs_flip_stack_card(state, s, c) \
     (fcs_card_set_flipped(fcs_stack_card((state),(s),(c)), ((fcs_card_t)0) ))
 
-#define fcs_copy_stack(state, idx, buffer) {} 
+#define fcs_copy_stack(state_key, state_val, idx, buffer) {} 
     
 #elif defined(INDIRECT_STACK_STATES) /* #ifdef DEBUG_STATES
                                         #elif defined(COMPACT_STATES)
@@ -453,21 +459,22 @@ typedef struct fcs_struct_state_t fcs_state_t;
     (fcs_card_set_flipped(fcs_stack_card(state,s,c), ((fcs_card_t)0) ))
 
 
-#define fcs_duplicate_state(dest,src)           \
-    {                                           \
-        (dest) = (src);                         \
-        (dest).stacks_copy_on_write_flags = 0;    \
+#define fcs_duplicate_state(dest_key, dest_val, src_key, src_val) \
+    { \
+    (dest_key) = (src_key); \
+    (dest_val) = (src_val); \
+    (dest_val).stacks_copy_on_write_flags = 0; \
     }
 
-#define fcs_copy_stack(state, idx, buffer) \
+#define fcs_copy_stack(state_key, state_val, idx, buffer) \
     {     \
-        if (! ((state).stacks_copy_on_write_flags & (1 << idx)))        \
+        if (! ((state_val).stacks_copy_on_write_flags & (1 << idx)))        \
         {          \
             int stack_len;      \
-            (state).stacks_copy_on_write_flags |= (1 << idx);       \
-            stack_len = fcs_stack_len((state).s,idx);     \
-            memcpy(&buffer[idx << 7], (state).s.stacks[idx], stack_len+1); \
-            (state).s.stacks[idx] = &buffer[idx << 7];     \
+            (state_val).stacks_copy_on_write_flags |= (1 << idx);       \
+            stack_len = fcs_stack_len((state_key),idx);     \
+            memcpy(&buffer[idx << 7], (state_key).stacks[idx], stack_len+1); \
+            (state_key).stacks[idx] = &buffer[idx << 7];     \
         }     \
     }
             
@@ -479,6 +486,10 @@ typedef char fcs_locs_t;
           #elif defined INDIRECT_STACK_STATES
         */
 
+/* Commenting out so the API will be broken - we're now using key/value
+ * pairs.
+ * */
+#if 0
 struct fcs_struct_state_with_locations_t
 {
     fcs_state_t s;
@@ -527,7 +538,67 @@ struct fcs_struct_state_with_locations_t
 };
 
 typedef struct fcs_struct_state_with_locations_t fcs_state_with_locations_t;
+#endif
 
+struct fcs_state_extra_info_struct
+{
+    fcs_locs_t stack_locs[MAX_NUM_STACKS];
+    fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
+    fcs_state_t * parent_key;
+    struct fcs_state_extra_info_struct * parent_val;
+    fcs_move_stack_t * moves_to_parent;
+    int depth;
+    /*
+     * This field contains global, scan-independant flags, which are used
+     * from the FCS_VISITED_T enum below.
+     *
+     * FCS_VISITED_VISITED - deprecated
+     *
+     * FCS_VISITED_IN_SOLUTION_PATH - indicates that the state is in the
+     * solution path found by the scan. (used by the optimization scan)
+     *
+     * FCS_VISITED_IN_OPTIMIZED_PATH - indicates that the state is in the
+     * optimized solution path which is computed by the optimization scan.
+     *
+     * FCS_VISITED_DEAD_END - indicates that the state does not lead to
+     * anywhere useful, and scans should not examine it in the first place.
+     * */
+    int visited;
+    /*
+     * The iteration in which this state was marked as visited
+     * */
+    int visited_iter;
+    /*
+     * This is the number of direct children of this state which were not
+     * yet declared as dead ends. Once this counter reaches zero, this
+     * state too is declared as a dead end.
+     * */
+    int num_active_children;
+    /*
+     * This is a vector of flags - one for each scan. Each indicates whether
+     * its scan has already visited this state
+     * */
+    int scan_visited[MAX_NUM_SCANS_BUCKETS];
+#ifdef INDIRECT_STACK_STATES
+    /* 
+     * A vector of flags that indicates which stacks were already copied.
+     * */
+    int stacks_copy_on_write_flags; 
+#endif
+}; 
+
+typedef struct fcs_state_extra_info_struct fcs_state_extra_info_t;
+
+typedef struct 
+{
+    fcs_state_t s;
+    fcs_state_extra_info_t info;
+} fcs_state_keyval_pair_t;
+
+typedef struct {
+    fcs_state_t * key;
+    fcs_state_extra_info_t * val;
+} fcs_standalone_state_ptrs_t;
 
 extern fcs_card_t fc_solve_empty_card;
 #define fcs_empty_card fc_solve_empty_card
@@ -565,12 +636,11 @@ extern fcs_card_t fc_solve_empty_card;
 
 
 extern void fc_solve_canonize_state(
-    fcs_state_with_locations_t * state,
+    fcs_state_t * state_key,
+    fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num
     );
-
-#define fcs_canonize_state(state,freecells_num,stacks_num) fc_solve_canonize_state((state),(freecells_num),(stacks_num))
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 
@@ -600,7 +670,8 @@ enum FCS_USER_STATE_TO_C_RETURN_CODES
 
 int fc_solve_initial_user_state_to_c(
     const char * string,
-    fcs_state_with_locations_t * out_state,
+    fcs_state_t * out_state_key,
+    fcs_state_extra_info_t * out_state_val,
     int freecells_num,
     int stacks_num,
     int decks_num
@@ -614,7 +685,8 @@ int fc_solve_initial_user_state_to_c(
 
 
 extern char * fc_solve_state_as_string(
-    fcs_state_with_locations_t * state,
+    fcs_state_t * state_key,
+    fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -633,7 +705,8 @@ enum FCS_STATE_VALIDITY_CODES
 };
 
 extern int fc_solve_check_state_validity(
-    fcs_state_with_locations_t * state,
+    fcs_state_t * state_key,
+    fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num,
     int decks_num,

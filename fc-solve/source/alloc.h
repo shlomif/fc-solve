@@ -58,7 +58,7 @@ extern char *
     allocator->ptr += ((how_much)+((sizeof(char *)-((how_much)&(sizeof(char *)-1)))&(sizeof(char*)-1)));      \
     result = (type_t *)allocator->rollback_ptr;       \
 }
-        
+
 #endif
 
 #if 0
