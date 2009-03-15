@@ -399,7 +399,7 @@ void fc_solve_derived_states_list_add_state(
             printf("%s. Depth=%d ; the_soft_Depth=%d ; Iters=%d ; test_index=%d ; was_just_resumed=%d ; current_state_index=%d ; num_states=%d\n", \
                     message, \
                     depth, (the_soft_dfs_info-soft_thread->soft_dfs_info), \
-                    instance->num_times, test_index, \
+                    instance->num_times, the_soft_dfs_info->test_index, \
                     was_just_resumed,current_state_index, \
                     (derived_states_list ? derived_states_list->num_states : -1) \
                     );  \
@@ -436,7 +436,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     int calc_real_depth = instance->calc_real_depth;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
-    int test_index, current_state_index;
+    int current_state_index;
     fcs_derived_states_list_t * derived_states_list;
     int to_reparent_states, scans_synergy;
     int was_just_resumed = 0;
@@ -478,7 +478,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
 
 
     dfs_max_depth = soft_thread->dfs_max_depth;
-    test_index = the_soft_dfs_info->test_index;
     current_state_index = the_soft_dfs_info->current_state_index;
     ptr_state_key = the_soft_dfs_info->state_key;
     ptr_state_val = the_soft_dfs_info->state_val;
@@ -515,7 +514,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
         /* All the resultant states in the last test conducted were covered */
         if (current_state_index == derived_states_list->num_states)
         {
-            if (test_index >= tests_order_num)
+            if (the_soft_dfs_info->test_index >= tests_order_num)
             {
                 /* Backtrack to the previous depth. */
 
@@ -535,7 +534,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                 else
                 {
                     the_soft_dfs_info--;
-                    test_index = the_soft_dfs_info->test_index;
                     current_state_index = the_soft_dfs_info->current_state_index;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     ptr_state_key = the_soft_dfs_info->state_key;
@@ -550,7 +548,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
             TRACE0("Before iter_handler");
             /* If this is the first test, then count the number of unoccupied
                freeceels and stacks and check if we are done. */
-            if (test_index == 0)
+            if (the_soft_dfs_info->test_index == 0)
             {
                 int num_freestacks, num_freecells;
 
@@ -620,7 +618,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
 
             while (
                     /* Make sure we do not exceed the number of tests */
-                    (test_index < tests_order_num) &&
+                    (the_soft_dfs_info->test_index < tests_order_num) &&
                     (
                         /* Always do the first test */
                         do_first_iteration ||
@@ -628,9 +626,9 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                             /* This is a randomized scan. Else - quit after the first iteration */
                             to_randomize &&
                             /* We are still on a random group */
-                            (tests_order_tests[ test_index ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
+                            (tests_order_tests[ the_soft_dfs_info->test_index ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
                             /* A new random group did not start */
-                            (! (tests_order_tests[ test_index ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
+                            (! (tests_order_tests[ the_soft_dfs_info->test_index ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
                          )
                     )
                  )
@@ -638,7 +636,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                 do_first_iteration = 0;
 
                 check = fc_solve_sfs_tests[tests_order_tests[
-                        test_index
+                        the_soft_dfs_info->test_index
                     ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                         soft_thread,
                         ptr_state_key,
@@ -656,13 +654,12 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     /* Have this test be re-performed */
                     derived_states_list->num_states = 0;
                     the_soft_dfs_info->current_state_index = 0;
-                    the_soft_dfs_info->test_index = test_index;
                     TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (after sfs_tests)");                    
                     myreturn(FCS_STATE_SUSPEND_PROCESS);
                 }
 
                 /* Move the counter to the next test */
-                test_index++;
+                the_soft_dfs_info->test_index++;
             }
 
 
@@ -694,7 +691,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                  *
                  * Also, do not randomize if this is a pure soft-DFS scan.
                  * */
-                if (to_randomize && tests_order_tests[ test_index-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
+                if (to_randomize && tests_order_tests[ the_soft_dfs_info->test_index-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
                 {
                     a = num_states-1;
                     while (a > 0)
@@ -750,7 +747,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     instance->num_times++;
                     hard_thread->num_times++;
 
-                    the_soft_dfs_info->test_index = test_index;
                     the_soft_dfs_info->current_state_index = current_state_index;
 
                     set_scan_visited(
@@ -774,7 +770,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                         ptr_state_val =
                         single_derived_state->val;
 
-                    test_index = 0;
+                    the_soft_dfs_info->test_index = 0;
                     current_state_index = 0;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     derived_states_list->num_states = 0;
@@ -788,7 +784,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     if (check_if_limits_exceeded())
                     {
                         the_soft_dfs_info->current_state_index = current_state_index;
-                        the_soft_dfs_info->test_index = test_index;
                         TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (inside current_state_index)");
                         myreturn(FCS_STATE_SUSPEND_PROCESS);
                     }
