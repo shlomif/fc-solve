@@ -412,8 +412,8 @@ void fc_solve_derived_states_list_add_state(
 
 int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_with_locations_orig_key,
-    fcs_state_extra_info_t * ptr_state_with_locations_orig_val,
+    fcs_state_t * ptr_orig_state_key,
+    fcs_state_extra_info_t * ptr_orig_state_val,
     int resume,
     int to_randomize
     )
@@ -458,13 +458,13 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
         fc_solve_increase_dfs_max_depth(soft_thread);
 
         /* Initialize the initial state to indicate it is the first */
-        ptr_state_with_locations_orig_val->parent_key = NULL;
-        ptr_state_with_locations_orig_val->parent_val = NULL;
-        ptr_state_with_locations_orig_val->moves_to_parent = NULL;
-        ptr_state_with_locations_orig_val->depth = 0;
+        ptr_orig_state_val->parent_key = NULL;
+        ptr_orig_state_val->parent_val = NULL;
+        ptr_orig_state_val->moves_to_parent = NULL;
+        ptr_orig_state_val->depth = 0;
 
-        soft_thread->soft_dfs_info[0].state_key = ptr_state_with_locations_orig_key;
-        soft_thread->soft_dfs_info[0].state_val = ptr_state_with_locations_orig_val;
+        soft_thread->soft_dfs_info[0].state_key = ptr_orig_state_key;
+        soft_thread->soft_dfs_info[0].state_val = ptr_orig_state_val;
     }
     else
     {
@@ -1066,8 +1066,8 @@ static pq_rating_t fc_solve_a_star_rate_state(
 
 int fc_solve_a_star_or_bfs_do_solve_or_resume(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_with_locations_orig_key,
-    fcs_state_extra_info_t * ptr_state_with_locations_orig_val,
+    fcs_state_t * ptr_orig_state_key,
+    fcs_state_extra_info_t * ptr_orig_state_val,
     int resume
     )
 {
@@ -1109,14 +1109,14 @@ int fc_solve_a_star_or_bfs_do_solve_or_resume(
     if (!resume)
     {
         /* Initialize the first element to indicate it is the first */
-        ptr_state_with_locations_orig_val->parent_key = NULL;
-        ptr_state_with_locations_orig_val->parent_val = NULL;
-        ptr_state_with_locations_orig_val->moves_to_parent = NULL;
-        ptr_state_with_locations_orig_val->depth = 0;
+        ptr_orig_state_val->parent_key = NULL;
+        ptr_orig_state_val->parent_val = NULL;
+        ptr_orig_state_val->moves_to_parent = NULL;
+        ptr_orig_state_val->depth = 0;
     }
 
-    ptr_state_key = ptr_state_with_locations_orig_key;
-    ptr_state_val = ptr_state_with_locations_orig_val;
+    ptr_state_key = ptr_orig_state_key;
+    ptr_state_val = ptr_orig_state_val;
 
     method = soft_thread->method;
     freecells_num = instance->freecells_num;

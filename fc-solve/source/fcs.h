@@ -743,14 +743,14 @@ extern int fc_solve_hard_dfs_solve_for_state(
 
 extern int fc_solve_soft_dfs_solve(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_with_locations_orig_key,
-    fcs_state_extra_info_t * ptr_state_with_locations_orig_val
+    fcs_state_t * ptr_orig_state_key,
+    fcs_state_extra_info_t * ptr_orig_state_val
     );
 
 extern int fc_solve_random_dfs_solve(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_with_locations_orig_key,
-    fcs_state_extra_info_t * ptr_state_with_locations_orig_val
+    fcs_state_t * ptr_orig_state_key,
+    fcs_state_extra_info_t * ptr_orig_state_val
     );
 
 
@@ -762,8 +762,8 @@ extern void fc_solve_a_star_initialize_rater(
 
 extern int fc_solve_a_star_or_bfs_do_solve_or_resume(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_with_locations_orig_key,
-    fcs_state_extra_info_t * ptr_state_with_locations_orig_val,
+    fcs_state_t * ptr_orig_state_key,
+    fcs_state_extra_info_t * ptr_orig_state_val,
     int resume
     );
 
@@ -783,8 +783,8 @@ extern int fc_solve_random_dfs_resume_solution(
 
 extern int fc_solve_a_star_or_bfs_solve(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_with_locations_orig_key,
-    fcs_state_extra_info_t * ptr_state_with_locations_orig_val
+    fcs_state_t * ptr_orig_state_key,
+    fcs_state_extra_info_t * ptr_orig_state_val
     );
 
 extern int fc_solve_a_star_or_bfs_resume_solution(
@@ -793,8 +793,8 @@ extern int fc_solve_a_star_or_bfs_resume_solution(
 
 extern int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_with_locations_orig_key,
-    fcs_state_extra_info_t * ptr_state_with_locations_orig_val,
+    fcs_state_t * ptr_orig_state_key,
+    fcs_state_extra_info_t * ptr_orig_state_val,
     int resume,
     int to_randomize
     );
