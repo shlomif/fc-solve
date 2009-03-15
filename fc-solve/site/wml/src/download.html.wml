@@ -10,11 +10,12 @@
 <a href="http://download.berlios.de/fc-solve/%0">%0</a>
 </define-tag>
 
-<h2>Latest Stable Versions</h2>
+<h2 id="latest-stable">Latest Stable Versions</h2>
+
 <table border="1" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
 <tr>
 <td>
-<link_to_berlios_file "freecell-solver-2.14.0.tar.gz" />
+<link_to_berlios_file "freecell-solver-2.16.0.tar.gz" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
@@ -42,7 +43,8 @@ A link to an "apt"-able Debian Package.
 </table>
 
 <define-tag develversion>
-<h2>Development Versions</h2>
+
+<h2 id="devel-versions">Development Versions</h2>
 
 <table border="1" summary="The Development Version for Freecell Solver. Link for download is on the left; Description is on the right.">
 
@@ -78,7 +80,7 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 </tr>
 </define-tag>
 
-<h2>Documents</h2>
+<h2 id="docs">Documents</h2>
 
 <table border="1" summary="Links on the left, short descriptions on the right">
 <document "README" "The &quot;Readme&quot; File"/>
@@ -91,7 +93,7 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 <undef document />
 
 
-<h2>Utility Programs</h2>
+<h2 id="utils">Utility Programs</h2>
 
 <table border="1" summary="Utility programs and patches for use within various Solitaire Implementations. Links are on the left; descriptions are on the right.">
 <tr>
@@ -126,7 +128,7 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 </table>
 
 
-<h2>Older Versions</h2>
+<h2 id="older-stable">Older Versions</h2>
 
 <define-tag ver>
 <tr>
@@ -137,6 +139,7 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 </define-tag>
 
 <table border="1" summary="Older versions of Freecell Solver. In decreasing version number.">
+<ver "2.14" "0" />
 <ver "2.12" "0" />
 <ver "2.8" "14" />
 <ver "2.6" "3" />
