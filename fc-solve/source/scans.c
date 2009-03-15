@@ -424,8 +424,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     int depth;
     fcs_state_t * ptr_state_key;
     fcs_state_extra_info_t * ptr_state_val;
-    fcs_state_t * ptr_recurse_into_state_with_locations_key;
-    fcs_state_extra_info_t * ptr_recurse_into_state_with_locations_val;
     int a;
     int check;
     int do_first_iteration;
@@ -734,25 +732,17 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
             {
                 single_derived_state = &(derived_states[
                         rand_array[
-                            current_state_index
+                            current_state_index++
                         ]
                     ]);
 
-                ptr_recurse_into_state_with_locations_key
-                    = single_derived_state->key;
-
-                ptr_recurse_into_state_with_locations_val
-                    = single_derived_state->val;
-
-                current_state_index++;
-
                 if (
-                    (! (ptr_recurse_into_state_with_locations_val->visited &
+                    (! (single_derived_state->val->visited &
                         FCS_VISITED_DEAD_END)
                     ) &&
                     (! is_scan_visited(
-                        ptr_recurse_into_state_with_locations_key,
-                        ptr_recurse_into_state_with_locations_val,
+                        single_derived_state->key,
+                        single_derived_state->val,
                         soft_thread_id)
                     )
                    )
@@ -764,15 +754,12 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     the_soft_dfs_info->current_state_index = current_state_index;
 
                     set_scan_visited(
-                        ptr_recurse_into_state_with_locations_key, 
-                        ptr_recurse_into_state_with_locations_val, 
+                        single_derived_state->key,
+                        single_derived_state->val,
                         soft_thread_id
                     );
 
-                    ptr_recurse_into_state_with_locations_val->visited_iter = instance->num_times;
-#if 0
-                    ptr_recurse_into_state_with_locations->parent = ptr_state_with_locations;
-#endif
+                    single_derived_state->val->visited_iter = instance->num_times;
 
                     /*
                         I'm using current_state_indexes[depth]-1 because we already
@@ -782,10 +769,10 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     the_soft_dfs_info++;
                     the_soft_dfs_info->state_key =
                         ptr_state_key =
-                        ptr_recurse_into_state_with_locations_key;
+                        single_derived_state->key;
                     the_soft_dfs_info->state_val =
                         ptr_state_val =
-                        ptr_recurse_into_state_with_locations_val;
+                        single_derived_state->val;
 
                     test_index = 0;
                     current_state_index = 0;
@@ -794,8 +781,8 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     was_just_resumed = 0;
 
                     calculate_real_depth(
-                        ptr_recurse_into_state_with_locations_key,
-                        ptr_recurse_into_state_with_locations_val
+                        ptr_state_key,
+                        ptr_state_val
                     );
 
                     if (check_if_limits_exceeded())
