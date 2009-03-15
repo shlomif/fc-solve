@@ -1541,14 +1541,14 @@ static void fc_solve_glib_hash_foreach_destroy_stack_action
 
 
 void fc_solve_destroy_move_stack_of_state(
-        fcs_state_t * ptr_state_with_locations_key,
-        fcs_state_extra_info_t * ptr_state_with_locations_val,
+        fcs_state_t * ptr_state_key,
+        fcs_state_extra_info_t * ptr_state_val,
         void * context
         )
 {
-    if (ptr_state_with_locations_val->moves_to_parent != NULL)
+    if (ptr_state_val->moves_to_parent != NULL)
     {
-        fcs_move_stack_destroy(ptr_state_with_locations_val->moves_to_parent);
+        fcs_move_stack_destroy(ptr_state_val->moves_to_parent);
     }
 }
 

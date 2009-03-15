@@ -735,8 +735,8 @@ extern fc_solve_soft_thread_t * fc_solve_new_hard_thread(
 
 extern int fc_solve_hard_dfs_solve_for_state(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_with_locations_key,
-    fcs_state_extra_info_t * ptr_state_with_locations_val,
+    fcs_state_t * ptr_state_key,
+    fcs_state_extra_info_t * ptr_state_val,
     int depth,
     int ignore_osins
     );
@@ -756,8 +756,8 @@ extern int fc_solve_random_dfs_solve(
 
 extern void fc_solve_a_star_initialize_rater(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_with_locations_key,
-    fcs_state_extra_info_t * ptr_state_with_locations_val
+    fcs_state_t * ptr_state_key,
+    fcs_state_extra_info_t * ptr_state_val
     );
 
 extern int fc_solve_a_star_or_bfs_do_solve_or_resume(

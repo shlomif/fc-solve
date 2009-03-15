@@ -45,8 +45,8 @@ extern "C" {
 /*
  *  These are some macros to make it easier for the programmer.
  * */
-#define ptr_state_key (ptr_state_with_locations_key)
-#define ptr_state_val (ptr_state_with_locations_val)
+#define ptr_state_key (ptr_state_key)
+#define ptr_state_val (ptr_state_val)
 #define state_key (*ptr_state_key)
 #define state  (state_key)
 #define state_val (*ptr_state_val)
@@ -238,8 +238,8 @@ fcs_move_stack_push(moves, temp_move);                                    \
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_with_locations_key,
-        fcs_state_extra_info_t * ptr_state_with_locations_val,
+        fcs_state_t * ptr_state_key,
+        fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -247,8 +247,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         );
 extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_with_locations_key,
-        fcs_state_extra_info_t * ptr_state_with_locations_val,
+        fcs_state_t * ptr_state_key,
+        fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -257,8 +257,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
 
 extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_with_locations_key,
-        fcs_state_extra_info_t * ptr_state_with_locations_val,
+        fcs_state_t * ptr_state_key,
+        fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -267,8 +267,8 @@ extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_with_locations_key,
-        fcs_state_extra_info_t * ptr_state_with_locations_val,
+        fcs_state_t * ptr_state_key,
+        fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -277,8 +277,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_card
 
 extern int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_with_locations_key,
-        fcs_state_extra_info_t * ptr_state_with_locations_val,
+        fcs_state_t * ptr_state_key,
+        fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -287,8 +287,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
 
 extern int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_with_locations_key,
-        fcs_state_extra_info_t * ptr_state_with_locations_val,
+        fcs_state_t * ptr_state_key,
+        fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -297,8 +297,8 @@ extern int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
 
 extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_with_locations_key,
-        fcs_state_extra_info_t * ptr_state_with_locations_val,
+        fcs_state_t * ptr_state_key,
+        fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
@@ -307,8 +307,8 @@ extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_w
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_with_locations_key,
-        fcs_state_extra_info_t * ptr_state_with_locations_val,
+        fcs_state_t * ptr_state_key,
+        fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
         fcs_derived_states_list_t * derived_states_list,
