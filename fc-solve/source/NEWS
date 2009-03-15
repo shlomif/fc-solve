@@ -1,3 +1,13 @@
+From version 2.14.0 to 2.16.0
+-----------------------------
+
+1. Made sure the indexes of the iterations when the "-s -i" flags are specified
+are consecutive. Previously, they were much more inconsistent.
+
+2. (Internals) Split ptr_state_with_locations_t into ptr_state_t (the key)
+and ptr_state_extra_info_t (the value). Not all code inside the #ifdef's
+(like the libavl / libredblack code) was ported to use it instead.
+
 From version 2.12.0 to 2.14.0
 -----------------------------
 
