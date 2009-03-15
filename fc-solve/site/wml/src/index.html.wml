@@ -35,6 +35,28 @@ in the <a href="features.html"><b>Features List</b></a>.
 
 <h2>News</h2>
 
+<h3 id="news-2009-01-25">15-Mar-2009</h3>
+
+<p>
+Freecell Solver 2.16.0 is now available. Culminating many person-years
+of effort (OK - some person-days of effort), it is the best release todate.
+</p>
+
+<p>
+The highlights of this release are a bug fix to the iteration numbers in
+the "-s -i" display, and an internal refactoring of the
+ptr_state_with_locations_t struct into a separate ptr_state_t (the key) and
+a ptr_state_extra_info_t (the value). The latter should not affect the external
+behaviour or API in any way.
+</p>
+
+<p>
+This release (like previous ones) is available from 
+<a href="download.html">the download page</a>. Next on our agenda is getting
+a binary package for Microsoft Windows out-of-the-door, and more code cleanups,
+optimisations and enhancements.
+</p>
+
 <h3 id="news-2009-01-25">25-Jan-2009</h3>
 
 <p>
