@@ -400,7 +400,7 @@ void fc_solve_derived_states_list_add_state(
                     message, \
                     depth, (the_soft_dfs_info-soft_thread->soft_dfs_info), \
                     instance->num_times, the_soft_dfs_info->test_index, \
-                    was_just_resumed,current_state_index, \
+                    was_just_resumed,the_soft_dfs_info->current_state_index, \
                     (derived_states_list ? derived_states_list->num_states : -1) \
                     );  \
             fflush(stdout); \
@@ -436,7 +436,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     int calc_real_depth = instance->calc_real_depth;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
-    int current_state_index;
     fcs_derived_states_list_t * derived_states_list;
     int to_reparent_states, scans_synergy;
     int was_just_resumed = 0;
@@ -478,7 +477,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
 
 
     dfs_max_depth = soft_thread->dfs_max_depth;
-    current_state_index = the_soft_dfs_info->current_state_index;
     ptr_state_key = the_soft_dfs_info->state_key;
     ptr_state_val = the_soft_dfs_info->state_val;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
@@ -512,7 +510,9 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
 
         TRACE0("Before current_state_index check");
         /* All the resultant states in the last test conducted were covered */
-        if (current_state_index == derived_states_list->num_states)
+        if (the_soft_dfs_info->current_state_index == 
+            derived_states_list->num_states
+           )
         {
             if (the_soft_dfs_info->test_index >= tests_order_num)
             {
@@ -534,7 +534,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                 else
                 {
                     the_soft_dfs_info--;
-                    current_state_index = the_soft_dfs_info->current_state_index;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     ptr_state_key = the_soft_dfs_info->state_key;
                     ptr_state_val = the_soft_dfs_info->state_val;
@@ -715,7 +714,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
             /* We just performed a test, so the index of the first state that
                ought to be checked in this depth is 0.
                */
-            current_state_index = 0;
+            the_soft_dfs_info->current_state_index = 0;
         }
 
         {
@@ -724,12 +723,12 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
             fcs_derived_state_keyval_pair_t * single_derived_state; 
             int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
 
-            while (current_state_index <
+            while (the_soft_dfs_info->current_state_index <
                    num_states)
             {
                 single_derived_state = &(derived_states[
                         rand_array[
-                            current_state_index++
+                            the_soft_dfs_info->current_state_index++
                         ]
                     ]);
 
@@ -746,8 +745,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                 {
                     instance->num_times++;
                     hard_thread->num_times++;
-
-                    the_soft_dfs_info->current_state_index = current_state_index;
 
                     set_scan_visited(
                         single_derived_state->key,
@@ -771,7 +768,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                         single_derived_state->val;
 
                     the_soft_dfs_info->test_index = 0;
-                    current_state_index = 0;
+                    the_soft_dfs_info->current_state_index = 0;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     derived_states_list->num_states = 0;
                     was_just_resumed = 0;
@@ -783,7 +780,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
 
                     if (check_if_limits_exceeded())
                     {
-                        the_soft_dfs_info->current_state_index = current_state_index;
                         TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (inside current_state_index)");
                         myreturn(FCS_STATE_SUSPEND_PROCESS);
                     }
