@@ -32,7 +32,7 @@ history, a Freshmeat internal hit count, and other useful information.
 <p>
 <a href="<get-var presentation_url />">Freecell
 Solver Lecture</a> - A lecture I gave to the
-<a href="http://linuxclub.il.eu.org/">Haifa Linux Club</a> about the
+<a href="http://www.haifux.org/">Haifa Linux Club</a> about the
 development of Freecell Solver.
 </p>
 </li>
@@ -43,6 +43,15 @@ development of Freecell Solver.
 Page</a> - contains instructions for checking out the source from
 <a href="http://svn.berlios.de/svnroot/repos/fc-solve/trunk/">its Subversion
 repository</a> and other goodies.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://svn.berlios.de/viewcvs/fc-solve/">ViewVC Repository Viewer</a>
+- allows one to browse the repository online with convenience. See also
+<a href="http://userscripts.org/scripts/show/35046">this GreaseMonkey script
+to provide links back to the Subversion repository's URLs</a>
 </p>
 </li>
 </ul>
@@ -96,21 +105,24 @@ is also very good.
 a library to trace memory leaks. Freecell Solver used to have some of those
 in various stages of its development, and this library helped to remove
 them. It has a rather awkward output, and I had to use a debugger
-interactively to complement it, but it is still quite helpful.
+interactively to complement it, but it is still quite helpful. Now mostly
+superceded by <a href="#valgrind">Valgrind</a>.
 </p>
 </li>
 
 <li>
 <p>
-<a href="http://www.gnu.org/software/autoconf/">Autoconf, automake and
-libtool</a> - a trio of tools that help maintain a portable building for
-a software project across UNIX and similar platforms. Freecell Solver did
-not use for a large time, but I switched to it in order to have a portable
-way to build it as a dynamically-linked library.
+<a href="http://www.cmake.org/">CMake</a> - a cross-platform, open-source
+build system, which is used by Freecell Solver to portably build
+dynamically-linked libraries and facilitate the build process on different
+operating systems. It replaced 
+<a href="http://www.gnu.org/software/autoconf/">GNU Autoconf, Automake and
+Libtool</a>, which predate CMake and have gained popularity lacking any
+good competition, but are more error-prone and slow.
 </p>
 </li>
 
-<li>
+<li id="valgrind">
 <p>
 <a href="http://developer.kde.org/~sewardj/">Valgrind</a> - a sophisticated 
 memory debugger for x86-linux. Helped trace a few hard-to-catch bugs in
@@ -127,12 +139,25 @@ cross-platform text editor with many powerful features.
 
 <li>
 <p>
-<a href="http://subversion.tigris.org/">Subversion</a> - an Open-Source 
+<a href="http://subversion.tigris.org/">Subversion</a> - an Open-Source
 version control management system that has been used in maintaining the
-Freecell Solver codebase. It replaced <a 
-href="http://www.cvshome.org/">CVS</a> which is older and much more limited. 
+Freecell Solver codebase. It replaced <a
+href="http://www.cvshome.org/">CVS</a> which is older and much more limited.
 </p>
 </li>
+
+<li>
+<p>
+<a href="http://perl-begin.org/">Perl</a> - Perl is a sophisticated,
+high-level, dynamic programming language. It is often considered a "scripting
+language", but can be easily used for writing large-scale and production code.
+Perl proved useful for writing a lot of code to automate many tasks in the
+development of Freecell Solver. Lately, it was also utilised as the foundation
+for its test suite, especially in writing <a href="$(ROOT)/verify-code/">the
+solutions' verification code</a>.
+</p>
+</li>
+
 </ul>
 
 <h2 id="front_ends">Programs that use Freecell Solver</h2>
@@ -154,9 +179,9 @@ Direct-X Freecell Implementation for Windows. Shareware.
 </p>
 </li>
 
-<li>
+<li id="freecell-pro">
 <p>
-<a href="http://www.rrhistorical.com/rrdata/Fcpro65/">Freecell Pro</a> - a
+<a href="http://www.rrhistorical.com/rrdata/Fcpro65/">FreeCell Pro</a> - a
 free Freecell implementation for Windows with many professional features. 
 Integrated Tom Holroyd's Patsolve, and the original Don Woods' solver
 as well as my own. <a href="don_woods.html">Source code</a> is available.
@@ -182,6 +207,7 @@ you want their E-mail address, either go to their homepage or send me an E-mail.
 </p>
 
 <ul>
+
 <li>
 <p>
 <a href="http://people.kde.org/stephan.html">Stephan Kulow</a> - 
@@ -218,6 +244,18 @@ for many E-mail transactions. He inspired or encouraged many features
 in Freecell Solver.
 </p>
 </li>
+
+<li>
+<p>
+<a href="http://www.shlomifish.org/open-source/interviews/adrian-ettlinger.html">Interview with Adrian Ettlinger</a> -
+an interview with Adrian Ettlinger, the maintainer of 
+<a href="freecell-pro">FreeCell Pro</a>, who
+helped in adapting it to make use of Freecell Solver. Adrian also
+maintains <a href="http://www.rrhistorical.com/rrdata/">a page about the
+American Railroad History Database</a>.
+</p>
+</li>
+
 </ul>
 
 <h2 id="other_solvers">Other Solvers</h2>
@@ -240,10 +278,10 @@ I established the mailing-list.
 <li>
 <p>
 <a href="http://www.rrhistorical.com/rrdata/Fcpro65/">Freecell Pro</a> -
-a Freecell implementation for Win32 that contains the solver by 
+a Freecell implementation for Win32 that contains the solver by
 <a href="http://www.icynic.com/~don/">Don Woods</a>.
-Very fast and relatively accurate solving. Source code is available 
-<a href="./don_woods.html">here</a>.
+Very fast and relatively accurate solving. The <a href="don_woods.html">Source 
+code</a> is available.
 </p>
 </li>
 
@@ -261,7 +299,8 @@ Source code is available, but it's in French. <tt>%-)</tt>
 <a href="http://www.qwerks.com/download/3500/FreecellTool.zip">Freecell
 Tool</a> -
 a Win32 program that hijacks games out of Microsoft Freecell and displays
-their solution.
+their solution. Provided the inspiration for Freecell Solver's Random-DFS-based
+scans.
 </p>
 </li>
 
@@ -318,7 +357,7 @@ course project and contains a final report.
 <li>
 <p>
 <a href="<doxygen:url />">C++ Port of Freecell Solver by Michael Mann</a> -
-Michael Mann ported FCS to C++ and used 
+Michael Mann ported FCS to C++ and used
 <a href="http://www.doxygen.org/">doxygen</a> to cross-reference and 
 document the code. Covers version 2.2.x of the program.
 </p>
