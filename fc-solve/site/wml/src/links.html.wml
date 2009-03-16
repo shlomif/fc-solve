@@ -380,6 +380,17 @@ See <a href="http://groups.yahoo.com/group/fc-solve-discuss/messages/685">some
 discussion of it</a> in the fc-solve-discuss mailing list.
 </p>
 </li>
+
+<li>
+<p>
+<a href="http://www.tranzoa.net/~alex/plspider.htm">plspider.exe - a solver
+for Spider Solitaire</a> - the site contains a Win32 binary, which, due
+to bad design decisions, is using many of the author's custom libraries,
+and is also multi-threaded. The author has sent me the source code, but
+I am unable to compile it because I lack the libraries that he used.
+</p>
+</li>
+
 </ul>
 
 <h2 id="reviews">Reviews of Freecell Solver</h2>
