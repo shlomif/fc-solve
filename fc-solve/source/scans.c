@@ -396,11 +396,11 @@ void fc_solve_derived_states_list_add_state(
         { \
             if (getenv("FCS_TRACE")) \
             { \
-            printf("%s. Depth=%d ; the_soft_Depth=%d ; Iters=%d ; test_index=%d ; was_just_resumed=%d ; current_state_index=%d ; num_states=%d\n", \
+            printf("%s. Depth=%d ; the_soft_Depth=%d ; Iters=%d ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
                     message, \
                     depth, (the_soft_dfs_info-soft_thread->soft_dfs_info), \
                     instance->num_times, the_soft_dfs_info->test_index, \
-                    was_just_resumed,the_soft_dfs_info->current_state_index, \
+                    the_soft_dfs_info->current_state_index, \
                     (derived_states_list ? derived_states_list->num_states : -1) \
                     );  \
             fflush(stdout); \
@@ -438,7 +438,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     int soft_thread_id = soft_thread->id;
     fcs_derived_states_list_t * derived_states_list;
     int to_reparent_states, scans_synergy;
-    int was_just_resumed = 0;
 
     freecells_num = instance->freecells_num;
     stacks_num = instance->stacks_num;
@@ -469,8 +468,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
             Set the initial depth to that of the last state encountered.
         */
         depth = soft_thread->num_solution_states - 1;
-
-        was_just_resumed = 1;
     }
 
     the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
@@ -610,7 +607,7 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                 the_soft_dfs_info->num_freecells = num_freecells;
                 the_soft_dfs_info->num_freestacks = num_freestacks;
             }
-            was_just_resumed = 0;
+
             TRACE0("After iter_handler");
             /* Always do the first test */
             do_first_iteration = 1;
@@ -771,7 +768,6 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
                     the_soft_dfs_info->current_state_index = 0;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     derived_states_list->num_states = 0;
-                    was_just_resumed = 0;
 
                     calculate_real_depth(
                         ptr_state_key,
