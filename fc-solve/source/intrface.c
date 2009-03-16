@@ -1134,26 +1134,8 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
          * */
         switch(soft_thread->method)
         {
-            case FCS_METHOD_HARD_DFS:
-                
-            if (! soft_thread->initialized)
-            {
-                ret = fc_solve_hard_dfs_solve_for_state(
-                    soft_thread,
-                    instance->state_copy_ptr_key,
-                    instance->state_copy_ptr_val,
-                    0,
-                    0);
-
-                soft_thread->initialized = 1;
-            }
-            else
-            {
-                ret = fc_solve_hard_dfs_resume_solution(soft_thread, 0);
-            }
-            break;
-
             case FCS_METHOD_SOFT_DFS:
+            case FCS_METHOD_HARD_DFS:
             case FCS_METHOD_RANDOM_DFS:
 
             if (! soft_thread->initialized)

@@ -733,13 +733,6 @@ extern fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     fc_solve_instance_t * instance
     );
 
-extern int fc_solve_hard_dfs_solve_for_state(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_key,
-    fcs_state_extra_info_t * ptr_state_val,
-    int depth,
-    int ignore_osins
-    );
 
 extern int fc_solve_soft_dfs_solve(
     fc_solve_soft_thread_t * soft_thread,
@@ -765,11 +758,6 @@ extern int fc_solve_a_star_or_bfs_do_solve_or_resume(
     fcs_state_t * ptr_orig_state_key,
     fcs_state_extra_info_t * ptr_orig_state_val,
     int resume
-    );
-
-extern int fc_solve_hard_dfs_resume_solution(
-    fc_solve_soft_thread_t * soft_thread,
-    int depth
     );
 
 extern int fc_solve_soft_dfs_resume_solution(

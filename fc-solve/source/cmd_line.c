@@ -1057,11 +1057,8 @@ break;
 
             PROCESS_OPT_ARG() ;
 
-            if (!strcmp((*arg), "dfs"))
-            {
-                method = FCS_METHOD_HARD_DFS;
-            }
-            else if (!strcmp((*arg), "soft-dfs"))
+            if (!strcmp((*arg), "soft-dfs") ||
+                !strcmp((*arg), "dfs"))
             {
                 method = FCS_METHOD_SOFT_DFS;
             }
