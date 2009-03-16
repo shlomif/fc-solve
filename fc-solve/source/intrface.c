@@ -866,14 +866,13 @@ static int fc_solve_optimize_solution(
     optimization_thread->max_num_times = -1;
     optimization_thread->ht_max_num_times = -1;
 
-    return 
-        fc_solve_a_star_or_bfs_do_solve_or_resume(
-            optimization_thread->soft_threads[0],
-            instance->state_copy_ptr_key,
-            instance->state_copy_ptr_val,
-            0
-            );
+    fc_solve_soft_thread_init_a_star_or_bfs(soft_thread);
+    soft_thread->initialized = 1;
 
+    return
+        fc_solve_a_star_or_bfs_do_solve(
+            soft_thread
+            );
 }
 
 
@@ -1155,36 +1154,16 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
             case FCS_METHOD_BFS:
             case FCS_METHOD_A_STAR:
             case FCS_METHOD_OPTIMIZE:
-                        if (! soft_thread->initialized)
-            {
-                if (soft_thread->method == FCS_METHOD_A_STAR)
-                {
-                    fc_solve_a_star_initialize_rater(
-                        soft_thread,
-                        instance->state_copy_ptr_key,
-                        instance->state_copy_ptr_val
-                        );
-                }
 
-                ret = fc_solve_a_star_or_bfs_do_solve_or_resume(
-                    soft_thread,
-                    instance->state_copy_ptr_key,
-                    instance->state_copy_ptr_val,
-                    0
-                );
+            if (! soft_thread->initialized)
+            {
+                fc_solve_soft_thread_init_a_star_or_bfs(soft_thread);
 
                 soft_thread->initialized = 1;
             }
-            else
-            {
-                ret =
-                    fc_solve_a_star_or_bfs_do_solve_or_resume(
-                        soft_thread,
-                        soft_thread->first_state_to_check_key,
-                        soft_thread->first_state_to_check_val,
-                        1
-                        );
-            }
+
+            ret = fc_solve_a_star_or_bfs_do_solve(soft_thread);
+
             break;
             
             default:
@@ -1294,11 +1273,8 @@ int fc_solve_resume_instance(
     if (instance->optimization_thread)
     {
         ret =
-            fc_solve_a_star_or_bfs_do_solve_or_resume(
-                instance->optimization_thread->soft_threads[0],
-                instance->optimization_thread->soft_threads[0]->first_state_to_check_key,
-                instance->optimization_thread->soft_threads[0]->first_state_to_check_val,
-                1
+            fc_solve_a_star_or_bfs_do_solve(
+                instance->optimization_thread->soft_threads[0]
                 );
     }
     else

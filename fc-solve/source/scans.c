@@ -760,12 +760,38 @@ static pq_rating_t fc_solve_a_star_rate_state(
 
 #endif
 
+extern void fc_solve_soft_thread_init_a_star_or_bfs(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
 
-int fc_solve_a_star_or_bfs_do_solve_or_resume(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_orig_state_key,
-    fcs_state_extra_info_t * ptr_orig_state_val,
-    int resume
+    fcs_state_t * ptr_orig_state_key = instance->state_copy_ptr_key;
+    fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
+
+    if (soft_thread->method == FCS_METHOD_A_STAR)
+    {
+        fc_solve_a_star_initialize_rater(
+            soft_thread,
+            ptr_orig_state_key,
+            ptr_orig_state_val
+            );
+    }
+
+    /* Initialize the first element to indicate it is the first */
+    ptr_orig_state_val->parent_key = NULL;
+    ptr_orig_state_val->parent_val = NULL;
+    ptr_orig_state_val->moves_to_parent = NULL;
+    ptr_orig_state_val->depth = 0;
+
+    soft_thread->first_state_to_check_key = ptr_orig_state_key;
+    soft_thread->first_state_to_check_val = ptr_orig_state_val;
+
+    return;
+}
+
+int fc_solve_a_star_or_bfs_do_solve(
+    fc_solve_soft_thread_t * soft_thread
     )
 {
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
@@ -803,17 +829,8 @@ int fc_solve_a_star_or_bfs_do_solve_or_resume(
     tests_order_num = soft_thread->tests_order.num;
     tests_order_tests = soft_thread->tests_order.tests;
 
-    if (!resume)
-    {
-        /* Initialize the first element to indicate it is the first */
-        ptr_orig_state_val->parent_key = NULL;
-        ptr_orig_state_val->parent_val = NULL;
-        ptr_orig_state_val->moves_to_parent = NULL;
-        ptr_orig_state_val->depth = 0;
-    }
-
-    ptr_state_key = ptr_orig_state_key;
-    ptr_state_val = ptr_orig_state_val;
+    ptr_state_key = soft_thread->first_state_to_check_key;
+    ptr_state_val = soft_thread->first_state_to_check_val;
 
     method = soft_thread->method;
     freecells_num = instance->freecells_num;
