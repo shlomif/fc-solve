@@ -530,7 +530,7 @@ int fc_solve_soft_dfs_do_solve(
 
 #define state (*ptr_state_key)
 
-void fc_solve_a_star_initialize_rater(
+static void initialize_a_star_rater(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_t * ptr_state_key,
     fcs_state_extra_info_t * ptr_state_val
@@ -771,7 +771,7 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
-        fc_solve_a_star_initialize_rater(
+        initialize_a_star_rater(
             soft_thread,
             ptr_orig_state_key,
             ptr_orig_state_val

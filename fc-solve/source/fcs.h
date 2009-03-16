@@ -733,46 +733,7 @@ extern fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     fc_solve_instance_t * instance
     );
 
-
-extern int fc_solve_soft_dfs_solve(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_orig_state_key,
-    fcs_state_extra_info_t * ptr_orig_state_val
-    );
-
-extern int fc_solve_random_dfs_solve(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_orig_state_key,
-    fcs_state_extra_info_t * ptr_orig_state_val
-    );
-
-
-extern void fc_solve_a_star_initialize_rater(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_key,
-    fcs_state_extra_info_t * ptr_state_val
-    );
-
 int fc_solve_a_star_or_bfs_do_solve(
-    fc_solve_soft_thread_t * soft_thread
-    );
-
-extern int fc_solve_soft_dfs_resume_solution(
-    fc_solve_soft_thread_t * soft_thread
-    );
-
-extern int fc_solve_random_dfs_resume_solution(
-    fc_solve_soft_thread_t * soft_thread
-    );
-
-
-extern int fc_solve_a_star_or_bfs_solve(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_orig_state_key,
-    fcs_state_extra_info_t * ptr_orig_state_val
-    );
-
-extern int fc_solve_a_star_or_bfs_resume_solution(
     fc_solve_soft_thread_t * soft_thread
     );
 
