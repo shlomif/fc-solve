@@ -1318,7 +1318,6 @@ label_next_state:
                 &ptr_state_val 
                 );
         }
-        resume = 0;
     }
 
     myreturn(FCS_STATE_IS_NOT_SOLVEABLE);
