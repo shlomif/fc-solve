@@ -10,7 +10,7 @@ WML_FLAGS = -DBERLIOS=BERLIOS
 
 #D = /home/httpd/html/ip-noise
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
@@ -30,7 +30,7 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 #
 WIN32_BUILD_SUBDIRS = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
 
-SUBDIRS = $(D) $(WIN32_BUILD_SUBDIRS) $(D)/docs $(D)/arch_doc $(D)/pysol $(D)/images $(D)/verify-code/
+SUBDIRS = $(D) $(WIN32_BUILD_SUBDIRS) $(D)/docs $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 

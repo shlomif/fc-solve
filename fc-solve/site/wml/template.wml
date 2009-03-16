@@ -26,6 +26,11 @@ alt="PayPal Donate" class="paypal"/></a>
 <b>Webmaster:</b> <a href="http://www.shlomifish.org/">Shlomi Fish</a> (Email: 
 <a href="mailto:shlomif@iglu.org.il">shlomif@iglu.org.il</a>).
 </p>
+<script type="text/javascript">
+<!--
+$("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]").each(function(i){ \$(this).append( ' <span class="selfl">[<a href="#' + this.id + '">link</a>]</span>' ) })
+-->
+</script>
 </latemp_webmaster>
 
 
@@ -41,3 +46,22 @@ alt="PayPal Donate" class="paypal"/></a>
 <define-tag arch:doc:url><berlios_url "arch_doc/" /></define-tag>
 <define-tag doxygen:url><berlios_url "michael_mann/" /></define-tag>
 <set-var presentation_url="http://www.shlomifish.org/lecture/Freecell-Solver/" />
+
+<define-tag my_extra_head_elements>
+<script type="text/javascript" src="$(ROOT)/js/jq.js"></script>
+</define-tag>
+
+<define-tag my_printable_head_elements>
+<style type="text/css">
+body { background-color : white; color: black; }
+td { vertical-align : top; }
+</style>
+</define-tag>
+
+<latemp_extra_head_elements>
+<if "$(PRINTABLE)" 
+    "<my_printable_head_elements />"
+    "<my_extra_head_elements />"
+    />
+</latemp_extra_head_elements>
+
