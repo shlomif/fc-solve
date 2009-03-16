@@ -17,6 +17,7 @@ __PACKAGE__->mk_accessors(qw(
     num_boards
     output_filename
     quotas_expr
+    quotas_are_cb
     rle
     selected_scans
     start_board
@@ -34,6 +35,7 @@ sub initialize
     my $trace = 0;
     my $rle = 1;
     my $quotas_expr = undef;
+    my $quotas_are_cb = 0;
 
     GetOptions(
         "o|output=s" => \$output_filename,
@@ -42,6 +44,7 @@ sub initialize
         "rle" => \$rle,
         "start-board=i" => \$start_board,
         "quotas-expr=s" => \$quotas_expr,
+        "quotas-are-cb" => \$quotas_are_cb,
     );
 
     $self->start_board($start_board);
@@ -49,7 +52,8 @@ sub initialize
     $self->output_filename($output_filename);
     $self->trace($trace);
     $self->rle($rle);
-    $self->quotas_expr($quotas_expr);    
+    $self->quotas_expr($quotas_expr);
+    $self->quotas_are_cb($quotas_are_cb);
 }
 
 
@@ -63,7 +67,11 @@ sub map_all_but_last
 sub get_quotas
 {
     my $self = shift;
-    if (defined($self->quotas_expr()))
+    if ($self->quotas_are_cb())
+    {
+        return scalar(eval($self->quotas_expr()));
+    }
+    elsif (defined($self->quotas_expr()))
     {
         return [eval $self->quotas_expr()];
     }

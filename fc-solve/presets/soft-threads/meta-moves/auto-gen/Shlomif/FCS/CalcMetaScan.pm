@@ -146,6 +146,7 @@ use vars (qw(@fields %fields_map));
 
 @fields = (qw(
     chosen_scans
+    iter_idx
     num_boards
     orig_scans_data
     scans_data
@@ -197,7 +198,20 @@ sub initialize
 
     $self->trace_cb($args{'trace_cb'});
 
+    $self->iter_idx(0);
+
     return 0;
+}
+
+sub next_iter_idx
+{
+    my $self = shift;
+
+    my $ret = $self->iter_idx();
+
+    $self->iter_idx($ret+1);
+
+    return $ret;
 }
 
 sub scans_rle
@@ -225,9 +239,25 @@ sub scans_rle
     return \@a;
 }
 
+sub get_next_quota
+{
+    my $self = shift;
+
+    my $iter = $self->next_iter_idx();
+
+    if (ref($self->quotas()) eq "ARRAY")
+    {
+        return $self->quotas()->[$iter];
+    }
+    else
+    {
+        return $self->quotas()->($iter);
+    }
+}
+
 sub get_iter_state_params
 {
-    my ($self, $quotas) = @_;
+    my $self = shift;
 
     my $iters_quota = 0;
     my $num_solved_in_iter = 0;
@@ -236,7 +266,7 @@ sub get_iter_state_params
     # If no boards were solved, then try with a larger quota
     while ($num_solved_in_iter == 0)
     {
-        my $q_more = shift(@$quotas);
+        my $q_more = $self->get_next_quota();
         if (!defined($q_more))
         {
             throw Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas;
@@ -262,20 +292,20 @@ sub get_iter_state_params
 
 sub get_selected_scan
 {
-    my ($self, $quotas) = @_;
+    my $self = shift;
 
     return
         Shlomif::FCS::CalcMetaScan::IterState->new(
             main => $self,
-            $self->get_iter_state_params($quotas),
+            $self->get_iter_state_params(),
         );
 }
 
 sub inspect_quota
 {
-    my ($self, $quotas) = @_;
+    my $self = shift;
 
-    my $state = $self->get_selected_scan($quotas);
+    my $state = $self->get_selected_scan();
 
     $state->register_params();
 
@@ -309,14 +339,13 @@ sub calc_meta_scan
     $self->total_iters(0);
 
     $self->status("iterating");
-    my $quotas = [ @{$self->get_quotas()} ];
     # $self->inspect_quota() throws ::Error::OutOfQuotas if
     # it does not have any available quotas.
     try
     {
         while ($self->status() eq "iterating")
         {
-            $self->inspect_quota($quotas);
+            $self->inspect_quota();
         }
     }
     catch Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas with
