@@ -380,7 +380,7 @@ void fc_solve_derived_states_list_add_state(
 }
 
 /*
-    fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume is the event loop of the
+    fc_solve_soft_dfs_do_solve is the event loop of the
     Random-DFS scan. DFS which is recursive in nature is handled here
     without procedural recursion
     by using some dedicated stacks for the traversal.
@@ -410,11 +410,35 @@ void fc_solve_derived_states_list_add_state(
 #define TRACE0(no_use) {}
 #endif
 
-int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
+void fc_solve_soft_thread_init_soft_dfs(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
+    
+    fcs_state_t * ptr_orig_state_key = instance->state_copy_ptr_key;
+    fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
+    /*
+        Allocate some space for the states at depth 0.
+    */
+    soft_thread->num_solution_states = 1;
+
+    fc_solve_increase_dfs_max_depth(soft_thread);
+
+    /* Initialize the initial state to indicate it is the first */
+    ptr_orig_state_val->parent_key = NULL;
+    ptr_orig_state_val->parent_val = NULL;
+    ptr_orig_state_val->moves_to_parent = NULL;
+    ptr_orig_state_val->depth = 0;
+
+    soft_thread->soft_dfs_info[0].state_key = ptr_orig_state_key;
+    soft_thread->soft_dfs_info[0].state_val = ptr_orig_state_val;
+
+    return;
+}
+
+int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_orig_state_key,
-    fcs_state_extra_info_t * ptr_orig_state_val,
-    int resume,
     int to_randomize
     )
 {
@@ -444,31 +468,11 @@ int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
     to_reparent_states = instance->to_reparent_states;
     scans_synergy = instance->scans_synergy;
 
-    if (!resume)
-    {
-        /*
-            Allocate some space for the states at depth 0.
-        */
-        depth=0;
 
-        fc_solve_increase_dfs_max_depth(soft_thread);
-
-        /* Initialize the initial state to indicate it is the first */
-        ptr_orig_state_val->parent_key = NULL;
-        ptr_orig_state_val->parent_val = NULL;
-        ptr_orig_state_val->moves_to_parent = NULL;
-        ptr_orig_state_val->depth = 0;
-
-        soft_thread->soft_dfs_info[0].state_key = ptr_orig_state_key;
-        soft_thread->soft_dfs_info[0].state_val = ptr_orig_state_val;
-    }
-    else
-    {
-        /*
-            Set the initial depth to that of the last state encountered.
-        */
-        depth = soft_thread->num_solution_states - 1;
-    }
+    /*
+        Set the initial depth to that of the last state encountered.
+    */
+    depth = soft_thread->num_solution_states - 1;
 
     the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
 

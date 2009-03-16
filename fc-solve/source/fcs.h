@@ -791,11 +791,12 @@ extern int fc_solve_a_star_or_bfs_resume_solution(
     fc_solve_soft_thread_t * soft_thread
     );
 
-extern int fc_solve_soft_dfs_or_random_dfs_do_solve_or_resume(
+extern void fc_solve_soft_thread_init_soft_dfs(
+    fc_solve_soft_thread_t * soft_thread
+    );
+
+extern int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_orig_state_key,
-    fcs_state_extra_info_t * ptr_orig_state_val,
-    int resume,
     int to_randomize
     );
 
