@@ -44,7 +44,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/tags$"
 )
 
-
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
@@ -63,6 +62,25 @@ ENDIF(WIN32 AND NOT UNIX)
 SET(CPACK_PACKAGE_EXECUTABLES 
     "fc-solve" "Single-Game Solver"
 )
+
+
+SET (INDIRECT_STACK_STATES 1)
+SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
+SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
+SET (MAX_NUM_STACKS 10 CACHE STRING "Maximal Number of Stacks")
+SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING 
+    "Maximal Number of Initial Cards in a Stack")
+SET (MAX_NUM_DECKS 2 CACHE STRING "Maximal Number of Decks (1 or 2)")
+
+SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_INTERNAL_HASH" CACHE STRING "The State Storage Type")
+SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack Storage Type")
+
+# Search for libredblack if appropriate.
+IF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_LIBREDBLACK_TREE") OR
+    (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_LIBREDBLACK_TREE"))
+    find_library(LIBREDBLACK_LIB redblack)
+ENDIF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_LIBREDBLACK_TREE") OR
+    (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_LIBREDBLACK_TREE"))
 
 INCLUDE(CPack)
 
@@ -83,7 +101,7 @@ SET_TARGET_PROPERTIES(freecell-solver
     PROPERTIES VERSION 0.5.0 SOVERSION 0
     )
 
-TARGET_LINK_LIBRARIES (freecell-solver m)
+TARGET_LINK_LIBRARIES (freecell-solver m ${LIBREDBLACK_LIB})
 
 ADD_EXECUTABLE (fc-solve
     main.c
@@ -97,17 +115,6 @@ CHECK_FUNCTION_EXISTS(pow HAVE_POW)
 
 TARGET_LINK_LIBRARIES (fc-solve freecell-solver)
 TARGET_LINK_LIBRARIES (freecell-solver-range-parallel-solve freecell-solver)
-
-SET (INDIRECT_STACK_STATES 1)
-SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
-SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
-SET (MAX_NUM_STACKS 10 CACHE STRING "Maximal Number of Stacks")
-SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING 
-    "Maximal Number of Initial Cards in a Stack")
-SET (MAX_NUM_DECKS 2 CACHE STRING "Maximal Number of Decks (1 or 2)")
-
-SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_INTERNAL_HASH" CACHE STRING "The State Storage Type")
-SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack Storage Type")
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
