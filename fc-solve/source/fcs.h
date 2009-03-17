@@ -35,7 +35,7 @@ extern "C" {
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE))
 
-#include <rb.h>
+#include <redblack.h>
 
 /* #define TREE_IMP_PREFIX(func_name) rb_##func_name */
 

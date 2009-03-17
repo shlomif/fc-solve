@@ -147,6 +147,7 @@ typedef int fcs_locs_t;
     { \
     (dest_key) = (src_key); \
     (dest_val) = (src_val); \
+    (dest_val).key = &(dest_key); \
     }
 
 #define fcs_put_card_in_freecell(state, f, card) \
@@ -308,6 +309,7 @@ typedef char fcs_locs_t;
     { \
     (dest_key) = (src_key); \
     (dest_val) = (src_val); \
+    (dest_val).key = &(dest_key); \
     }
 
 #define fcs_put_card_in_freecell(state, f, card) \
@@ -463,6 +465,7 @@ typedef struct fcs_struct_state_t fcs_state_t;
     { \
     (dest_key) = (src_key); \
     (dest_val) = (src_val); \
+    (dest_val).key = &(dest_key); \
     (dest_val).stacks_copy_on_write_flags = 0; \
     }
 
@@ -544,6 +547,7 @@ struct fcs_state_extra_info_struct
 {
     fcs_locs_t stack_locs[MAX_NUM_STACKS];
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
+    fcs_state_t * key;
     fcs_state_t * parent_key;
     struct fcs_state_extra_info_struct * parent_val;
     fcs_move_stack_t * moves_to_parent;
@@ -653,6 +657,8 @@ typedef const void * fcs_compare_context_t;
 extern int fc_solve_state_compare(const void * s1, const void * s2);
 extern int fc_solve_state_compare_equal(const void * s1, const void * s2);
 extern int fc_solve_state_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
+extern int fc_solve_state_extra_info_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
+
 #else
 extern int fc_solve_state_compare_indirect(const void * s1, const void * s2);
 extern int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s2, void * context);

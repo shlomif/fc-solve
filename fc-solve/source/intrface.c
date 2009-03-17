@@ -21,11 +21,6 @@
 
 #include "config.h"
 
-/* So the FCS_STATE_STORAGE macros would be defined */
-#if FCS_STATE_STORAGE==FCS_STATE_STORAGE_LIBREDBLACK_TREE
-#include <search.h>
-#endif
-
 #include "state.h"
 #include "card.h"
 #include "fcs_dm.h"
@@ -928,7 +923,10 @@ int fc_solve_solve_instance(
 
     /* Initialize the data structure that will manage the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-    instance->tree = rbinit(fc_solve_state_compare_with_context, NULL);
+    instance->tree = rbinit(
+            fc_solve_state_extra_info_compare_with_context,
+            NULL
+            );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE)
     instance->tree = avl_create(fc_solve_state_compare_with_context, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)
@@ -1414,20 +1412,6 @@ static void fc_solve_stack_free(void * key, void * context)
 }
 #endif
 
-#elif FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE
-static void fc_solve_libredblack_walk_destroy_stack_action
-(
-    const void * nodep,
-    const VISIT which,
-    const int depth,
-    void * arg
- )
-{
-    if ((which == leaf) || (which == preorder))
-    {
-        free((void*)nodep);
-    }
-}
 #elif FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE
 static gint fc_solve_glib_tree_walk_destroy_stack_action
 (
@@ -1549,12 +1533,6 @@ void fc_solve_finish_instance(
     rb_destroy(instance->stacks_tree, NULL);
 #endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
-#if 0
-    rbwalk(instance->stacks_tree,
-        fc_solve_libredblack_walk_destroy_stack_action,
-        NULL
-        );
-#endif
     rbdestroy(instance->stacks_tree);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
 #if 0

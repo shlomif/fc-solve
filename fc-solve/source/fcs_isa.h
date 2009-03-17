@@ -31,6 +31,7 @@ extern fcs_state_with_locations_t * fcs_state_ia_alloc(fc_solve_instance_t * ins
         ret_helper = &(instance->state_packs[instance->num_state_packs-1][instance->num_states_in_last_pack++]);       \
         ret_key = &(ret_helper->s); \
         ret_val = &(ret_helper->info); \
+        ret_val->key = ret_key;  \
     } \
 }
 

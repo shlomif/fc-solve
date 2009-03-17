@@ -4,6 +4,7 @@ DEBUG = 1
 PROFILE = 0
 WITH_TRACES = 1
 FREECELL_ONLY = 0
+WITH_LIBRB = 1
 
 ifneq ($(DEBUG),0)
 	CFLAGS := -Wall -g
@@ -19,6 +20,7 @@ ifneq ($(FREECELL_ONLY),0)
 	CFLAGS += -DFCS_FREECELL_ONLY=1
 endif
 
+
 LFLAGS := -Wall
 END_LFLAGS := -lm
 
@@ -26,6 +28,10 @@ END_LFLAGS := -lm
 ifneq ($(PROFILE),0)
 	END_OFLAGS := -pg
 	END_LFLAGS := -pg -lc_p -lm_p -static-libgcc
+endif
+
+ifneq ($(WITH_LIBRB),0)
+	END_LFLAGS += -lredblack
 endif
 
 DFLAGS = $(CFLAGS) -DDEBUG

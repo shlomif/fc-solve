@@ -382,6 +382,7 @@ static void fcs_state_init(
     {
         state_val->fc_locs[a] = a;
     }
+    state_val->key = state_key;
     state_val->parent_key = NULL;
     state_val->parent_val = NULL;
     state_val->moves_to_parent = NULL;
@@ -415,6 +416,20 @@ int fc_solve_state_compare_with_context(
     )
 {
     return memcmp(s1,s2,sizeof(fcs_state_t));
+}
+
+int fc_solve_state_extra_info_compare_with_context(
+    const void * s1,
+    const void * s2,
+    fcs_compare_context_t context
+    )
+{
+    return
+        memcmp(
+            (((fcs_state_extra_info_t *)s1)->key),
+            (((fcs_state_extra_info_t *)s2)->key),
+            sizeof(fcs_state_t)
+        );
 }
 #else
 int fc_solve_state_compare_indirect(const void * s1, const void * s2)
