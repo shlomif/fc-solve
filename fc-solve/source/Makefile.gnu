@@ -3,6 +3,7 @@ CC = gcc
 DEBUG = 1
 PROFILE = 0
 WITH_TRACES = 1
+FREECELL_ONLY = 0
 
 ifneq ($(DEBUG),0)
 	CFLAGS := -Wall -g
@@ -12,6 +13,10 @@ endif
 
 ifneq ($(WITH_TRACES),0)
 	CFLAGS += -DDEBUG
+endif
+
+ifneq ($(FREECELL_ONLY),0)
+	CFLAGS += -DFCS_FREECELL_ONLY=1
 endif
 
 LFLAGS := -Wall
