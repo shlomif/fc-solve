@@ -542,8 +542,9 @@ static void initialize_a_star_rater(
     int a, c, cards_num;
     fcs_card_t this_card, prev_card;
     double cards_under_sequences;
+#ifndef FCS_FREECELL_ONLY
     int sequences_are_built_by = instance->sequences_are_built_by;
-
+#endif
 
     cards_under_sequences = 0;
     for(a=0;a<instance->stacks_num;a++)
@@ -608,11 +609,17 @@ static pq_rating_t fc_solve_a_star_rate_state(
     fcs_card_t this_card, prev_card;
     double cards_under_sequences, temp;
     double seqs_over_renegade_cards;
+#ifndef FCS_FREECELL_ONLY
     int sequences_are_built_by = instance->sequences_are_built_by;
+#endif
     int freecells_num = instance->freecells_num;
     int stacks_num = instance->stacks_num;
     double * a_star_weights = soft_thread->a_star_weights;
+#ifndef FCS_FREECELL_ONLY
     int unlimited_sequence_move = instance->unlimited_sequence_move;
+#else
+    #define unlimited_sequence_move 0
+#endif
     int decks_num = instance->decks_num;
 
     cards_under_sequences = 0;
@@ -713,8 +720,9 @@ static pq_rating_t fc_solve_a_star_rate_state(
     return (int)(ret*INT_MAX);
 }
 
-
-
+#ifdef FCS_FREECELL_ONLY
+#undef unlimited_sequence_move
+#endif
 
 /*
     fc_solve_a_star_or_bfs_do_solve_or_resume() is the main event

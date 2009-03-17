@@ -1,5 +1,5 @@
 /*
- * fcs.h - header file of the test functions for Freecell Solver.
+ * tests.h - header file of the test functions for Freecell Solver.
  *
  * The test functions code is found in freecell.c
  *
@@ -25,6 +25,9 @@ extern "C" {
 #include "test_arr.h"
 
 
+#ifdef FCS_FREECELL_ONLY
+#define calc_max_sequence_move(fc_num, fs_num) (((fc_num)+1)<<(fs_num))
+#else
 /*
  * The number of cards that can be moved is
  * (freecells_number + 1) * 2 ^ (free_stacks_number)
@@ -39,6 +42,7 @@ extern "C" {
                 (((fc_num)+1)<<(fs_num))                        : \
         ((fc_num)+1)                                              \
     ))
+#endif
 
 #include "caas.h"
 
@@ -209,6 +213,14 @@ fcs_move_stack_push(moves, temp_move);                                    \
     fcs_move_stack_push(moves, temp_move);                          \
 }
 
+#ifdef FCS_FREECELL_ONLY
+#define tests_declare_accessors_freecell_only()
+#else
+#define tests_declare_accessors_freecell_only() \
+    int sequences_are_built_by;  \
+    int empty_stacks_fill;
+#endif
+
 /*
  * This test declares a few access variables that are used in all
  * the tests.
@@ -221,7 +233,37 @@ fcs_move_stack_push(moves, temp_move);                                    \
     fcs_move_stack_t * moves;                                  \
     char * indirect_stacks_buffer;                             \
     int calc_real_depth;                                       \
-    int scans_synergy
+    int scans_synergy;                                         \
+    tests_declare_accessors_freecell_only()
+
+#ifdef FCS_FREECELL_ONLY
+
+#define tests_define_accessors_freecell_only() {}
+
+#define tests__is_filled_by_any_card() 1
+
+#define tests__is_filled_by_kings_only() 0
+
+#define tests__is_filled_by_none() 0
+
+#else
+
+#define tests_define_accessors_freecell_only() \
+{ \
+    sequences_are_built_by = instance->sequences_are_built_by; \
+    empty_stacks_fill = instance->empty_stacks_fill;           \
+}
+
+#define tests__is_filled_by_any_card() \
+    (empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
+
+#define tests__is_filled_by_kings_only() \
+    (empty_stacks_fill == FCS_ES_FILLED_BY_KINGS_ONLY)
+
+#define tests__is_filled_by_none() \
+    (empty_stacks_fill == FCS_ES_FILLED_BY_NONE)
+
+#endif
 
 /*
  * This macro defines these accessors to have some value.
@@ -232,9 +274,8 @@ fcs_move_stack_push(moves, temp_move);                                    \
     moves = hard_thread->reusable_move_stack;                     \
     indirect_stacks_buffer = hard_thread->indirect_stacks_buffer; \
     calc_real_depth = instance->calc_real_depth;                  \
-    scans_synergy = instance->scans_synergy;
-
-
+    scans_synergy = instance->scans_synergy;                      \
+    tests_define_accessors_freecell_only()
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fc_solve_soft_thread_t * soft_thread,

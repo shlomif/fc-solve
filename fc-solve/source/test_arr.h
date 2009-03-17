@@ -26,6 +26,15 @@ typedef int (*fc_solve_solve_for_state_test_t)(
 
 extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
 
+#ifdef FCS_FREECELL_ONLY
+
+#define fcs_is_parent_card(child, parent) \
+    ((fcs_card_card_num(child)+1 == fcs_card_card_num(parent)) && \
+            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1)) \
+    )
+
+#else
+
 /*
  * This macro determines if child can be placed above parent.
  *
@@ -43,6 +52,7 @@ extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
         ))                \
     )
 
+#endif
 /*
  * This macro traces the path of the state up to the original state,
  * and thus calculates its real depth.

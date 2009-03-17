@@ -209,13 +209,12 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     int num_cards_to_relocate;
     int freecells_to_fill, freestacks_to_fill;
     int a,b;
-    int state_freecells_num, state_stacks_num, sequences_are_built_by;
+    int state_freecells_num, state_stacks_num;
 
     tests_define_accessors();
 
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
-    sequences_are_built_by = instance->sequences_are_built_by;
 
     /* Let's try to put cards in the freecells on top of stacks */
 
@@ -267,7 +266,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 
                             num_cards_to_relocate -= freecells_to_fill;
 
-                            if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
+                            if (tests__is_filled_by_any_card())
                             {
                                 freestacks_to_fill = min(num_cards_to_relocate, num_freestacks);
 
@@ -407,7 +406,7 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
                      * stacks */
 
                     if ((num_freecells +
-                        ((instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD) ?
+                        ((tests__is_filled_by_any_card()) ?
                             num_freestacks :
                             0
                         ))
@@ -517,7 +516,6 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
     int dest_cards_num, num_cards_to_relocate;
     int state_freecells_num;
     int state_stacks_num;
-    int sequences_are_built_by;
 
     fcs_move_t temp_move;
 
@@ -525,7 +523,6 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
-    sequences_are_built_by = instance->sequences_are_built_by;
 
     /*
      * Now let's try to move a stack card to a parent card which is found
@@ -581,7 +578,7 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 
                             num_cards_to_relocate -= freecells_to_fill;
 
-                            if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
+                            if (tests__is_filled_by_any_card())
                             {
                                 freestacks_to_fill = min(num_cards_to_relocate, num_freestacks);
 
@@ -814,7 +811,6 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     int seq_end;
     int state_freecells_num;
     int state_stacks_num;
-    int sequences_are_built_by;
     char * positions_by_rank;
     int positions_by_rank_size;
     char * pos_idx_to_check;
@@ -827,7 +823,6 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     decks_num = instance->decks_num;
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
-    sequences_are_built_by = instance->sequences_are_built_by;
 
     /* We need 2 chars per card - one for the stack and one 
      * for the card_idx.
@@ -954,7 +949,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
                 num_cards_to_relocate -= freecells_to_fill;
 
-                if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
+                if (tests__is_filled_by_any_card())
                 {
                     freestacks_to_fill = min(num_cards_to_relocate, num_freestacks);
 
@@ -1095,20 +1090,18 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
     int num_cards_to_relocate, freecells_to_fill, freestacks_to_fill;
     int state_freecells_num;
     int state_stacks_num;
-    int sequences_are_built_by;
 
     fcs_move_t temp_move;
 
     tests_define_accessors();
 
-    if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_NONE)
+    if (tests__is_filled_by_none())
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
-    sequences_are_built_by = instance->sequences_are_built_by;
 
     max_sequence_len = calc_max_sequence_move(num_freecells, num_freestacks-1);
 
@@ -1135,7 +1128,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
                 }
 
                 if ((fcs_stack_card_num(state, stack, c) != 13) &&
-                    (instance->empty_stacks_fill == FCS_ES_FILLED_BY_KINGS_ONLY))
+                    (tests__is_filled_by_kings_only()))
                 {
                     continue;
                 }
@@ -1151,7 +1144,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 
                     if (
                         (c > 0) &&
-                        ((instance->empty_stacks_fill == FCS_ES_FILLED_BY_KINGS_ONLY) ?
+                        ((tests__is_filled_by_kings_only()) ?
                             (fcs_card_card_num(fcs_stack_card(state, stack, c)) == 13) :
                             1
                         )
@@ -1199,7 +1192,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 
                     num_cards_to_relocate -= freecells_to_fill;
 
-                    if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
+                    if (tests__is_filled_by_any_card())
                     {
                         freestacks_to_fill = min(num_cards_to_relocate, num_freestacks);
 
@@ -1225,7 +1218,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
                             seq_start++;
                         }
                         if ((seq_start <= seq_end) &&
-                            ((instance->empty_stacks_fill == FCS_ES_FILLED_BY_KINGS_ONLY) ?
+                            ((tests__is_filled_by_kings_only()) ?
                                 (fcs_card_card_num(fcs_stack_card(state, stack, seq_start)) == 13) :
                                 1
                             )
@@ -1344,7 +1337,7 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
 
     tests_define_accessors();
 
-    if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_NONE)
+    if (tests__is_filled_by_none())
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
@@ -1356,7 +1349,7 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
     {
         card = fcs_freecell_card(state, fc);
         if (
-            (instance->empty_stacks_fill == FCS_ES_FILLED_BY_KINGS_ONLY) ?
+            (tests__is_filled_by_kings_only()) ?
                 (fcs_card_card_num(card) == 13) :
                 (fcs_card_card_num(card) != 0)
            )
@@ -1418,13 +1411,11 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
     int state_freecells_num;
     int state_stacks_num;
-    int sequences_are_built_by;
 
     tests_define_accessors();
 
     state_freecells_num = instance->freecells_num;
     state_stacks_num = instance->stacks_num;
-    sequences_are_built_by = instance->sequences_are_built_by;
 
     /* This time try to move cards that are already on top of a parent to a different parent */
 
@@ -1511,7 +1502,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
                                         num_cards_to_relocate -= freecells_to_fill;
 
-                                        if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
+                                        if (tests__is_filled_by_any_card())
                                         {
                                             freestacks_to_fill = min(num_cards_to_relocate, num_freestacks);
 
@@ -1638,7 +1629,7 @@ int fc_solve_sfs_empty_stack_into_freecells(
 
     tests_define_accessors();
 
-    if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_NONE)
+    if (tests__is_filled_by_none())
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
@@ -1725,14 +1716,12 @@ int fc_solve_sfs_yukon_move_card_to_parent(
     fcs_card_t dest_card;
 
     int state_stacks_num;
-    int sequences_are_built_by;
 
     fcs_move_t temp_move;
 
     tests_define_accessors();
 
     state_stacks_num = instance->stacks_num;
-    sequences_are_built_by = instance->sequences_are_built_by;
 
     for( ds=0 ; ds < state_stacks_num ; ds++ )
     {
@@ -2062,7 +2051,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
         )
 {
     tests_declare_accessors();
-    int empty_stacks_filled_by, state_stacks_num;
+    int state_stacks_num;
     int stack, cards_num;
     fcs_card_t card, temp_card;
     fcs_move_t temp_move;
@@ -2086,9 +2075,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
         }
     }
 
-    empty_stacks_filled_by = instance->empty_stacks_fill;
-
-    if (empty_stacks_filled_by == FCS_ES_FILLED_BY_NONE)
+    if (tests__is_filled_by_none())
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
@@ -2101,7 +2088,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
         if (cards_num > 0)
         {
             card = fcs_stack_card(state, stack, cards_num-1);
-            if ((empty_stacks_filled_by == FCS_ES_FILLED_BY_KINGS_ONLY) &&
+            if (tests__is_filled_by_kings_only() &&
                 (fcs_card_card_num(card) != 13))
             {
                 continue;
@@ -2153,14 +2140,10 @@ int fc_solve_sfs_atomic_move_card_to_parent(
     fcs_card_t card, dest_card, temp_card;
     fcs_move_t temp_move;
     int check;
-    int sequences_are_built_by;
 
     tests_define_accessors();
 
     state_stacks_num = instance->stacks_num;
-
-    sequences_are_built_by = instance->sequences_are_built_by;
-    
 
     for(stack=0;stack<state_stacks_num;stack++)
     {
@@ -2231,14 +2214,11 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
     fcs_card_t card, temp_card;
     fcs_move_t temp_move;
     int check;
-    int sequences_are_built_by;
 
     tests_define_accessors();
 
     state_stacks_num = instance->stacks_num;
     state_freecells_num = instance->freecells_num;
-
-    sequences_are_built_by = instance->sequences_are_built_by;
 
     if (num_freecells == 0)
     {
@@ -2305,17 +2285,11 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
     fcs_card_t card, dest_card;
     fcs_move_t temp_move;
     int check;
-    int sequences_are_built_by;
 
     tests_define_accessors();
 
     state_stacks_num = instance->stacks_num;
     state_freecells_num = instance->freecells_num;
-
-    sequences_are_built_by = instance->sequences_are_built_by;
-
-    
-    
 
     for(fc=0;fc<state_freecells_num;fc++)
     {
@@ -2379,7 +2353,6 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     fcs_card_t card;
     fcs_move_t temp_move;
     int check;
-    int sequences_are_built_by, empty_stacks_filled_by;
 
     tests_define_accessors();
 
@@ -2389,16 +2362,12 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     state_stacks_num = instance->stacks_num;
     state_freecells_num = instance->freecells_num;
 
-    sequences_are_built_by = instance->sequences_are_built_by;
-
     if (num_freestacks == 0)
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
-    empty_stacks_filled_by = instance->empty_stacks_fill;
-
-    if (empty_stacks_filled_by == FCS_ES_FILLED_BY_NONE)
+    if (tests__is_filled_by_none())
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
@@ -2419,7 +2388,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
             continue;
         }
 
-        if ((empty_stacks_filled_by == FCS_ES_FILLED_BY_KINGS_ONLY) &&
+        if (tests__is_filled_by_kings_only() &&
             (fcs_card_card_num(card) != 13))
         {
             continue;
