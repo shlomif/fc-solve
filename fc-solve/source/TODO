@@ -1,17 +1,10 @@
 --- Pressing ---
 
-* Update the NEWS file.
-
-* Make sure one does not need "make install" to run "make test"
-or "ctest -v".
-
-* Add support for specifying the "compact states" and "debug states"
-at compile time.
-    - Document in the "INSTALL" file.
-
-* Build the .so with the version numbers.
-
 --- Non-pressing ---
+
+* Make sure we only pass fcs_state_extra_info_t (= vals) around instead of 
+both them and fcs_state_t (= keys). That's because there's
+fcs_state_extra_info_t::key for the key.
 
 * Integrate the patsolve's prioritization and mixed BFS/DFS scan.
 
@@ -55,4 +48,11 @@ number of states that are stored anywhere, etc.
 * Convert some of the documentation to Perl-POD or DocBook.
 
 * Find a way to update the ChangeLog from the svn.
+
+* Put the rest of the news (from http://fc-solve.berlios.de/ ) inside the
+NEWS file.
+
+* Add support for specifying the "compact states" and "debug states"
+at compile time.
+    - Document in the "INSTALL" file.
 
