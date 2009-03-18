@@ -935,11 +935,7 @@ int fc_solve_solve_instance(
     instance->tree = g_tree_new(fc_solve_state_compare);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     instance->judy_array = ((Pvoid_t)NULL);
-#else
-#error not defined
-#endif
-
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     instance->hash = g_hash_table_new(
         fc_solve_hash_function,
         fc_solve_state_compare_equal
@@ -950,8 +946,10 @@ int fc_solve_solve_instance(
             fc_solve_state_compare_with_context,
             NULL
        );
+#else
+#error not defined
 #endif
-
+    
     /****************************************************/
 
 #ifdef INDIRECT_STACK_STATES
@@ -1472,14 +1470,12 @@ void fc_solve_finish_instance(
         Word_t rc_word;
         JHSFA(rc_word, instance->judy_array);
     }
-#else
-#error not defined
-#endif
-
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     fc_solve_hash_free(instance->hash);
+#else
+#error not defined
 #endif
 
 
