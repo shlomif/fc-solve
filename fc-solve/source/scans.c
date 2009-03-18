@@ -140,7 +140,6 @@ void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_increase_dfs_max_depth(soft_thread);
 
     /* Initialize the initial state to indicate it is the first */
-    ptr_orig_state_val->parent_key = NULL;
     ptr_orig_state_val->parent_val = NULL;
     ptr_orig_state_val->moves_to_parent = NULL;
     ptr_orig_state_val->depth = 0;
@@ -782,7 +781,6 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
     }
 
     /* Initialize the first element to indicate it is the first */
-    ptr_orig_state_val->parent_key = NULL;
     ptr_orig_state_val->parent_val = NULL;
     ptr_orig_state_val->moves_to_parent = NULL;
     ptr_orig_state_val->depth = 0;
@@ -909,7 +907,7 @@ int fc_solve_a_star_or_bfs_do_solve(
                     (void*)instance,
                     ptr_state_key,
                     ptr_state_val,
-                    ((ptr_state_val->parent_key == NULL) ?
+                    ((ptr_state_val->parent_val == NULL) ?
                         0 :
                         ptr_state_val->parent_val->visited_iter
                     )

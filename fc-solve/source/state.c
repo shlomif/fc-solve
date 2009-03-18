@@ -383,7 +383,6 @@ static void fcs_state_init(
         state_val->fc_locs[a] = a;
     }
     state_val->key = state_key;
-    state_val->parent_key = NULL;
     state_val->parent_val = NULL;
     state_val->moves_to_parent = NULL;
     state_val->depth = 0;

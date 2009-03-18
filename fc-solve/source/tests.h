@@ -64,7 +64,6 @@ extern "C" {
     /* Some A* and BFS parameters that need to be initialized in               \
      * the derived state.                                                      \
      * */                                                                      \
-    ptr_new_state_val->parent_key = ptr_state_key;           \
     ptr_new_state_val->parent_val = ptr_state_val;           \
     ptr_new_state_val->moves_to_parent = moves;                     \
     /* Make sure depth is consistent with the game graph.                      \
@@ -129,13 +128,12 @@ fcs_move_stack_push(moves, temp_move);                                    \
                 if ((--existing_state_val->parent_val->num_active_children) == 0) \
                 {                                                         \
                     mark_as_dead_end(                                     \
-                        existing_state_val->parent_key,                   \
+                        existing_state_val->parent_val->key,              \
                         existing_state_val->parent_val                    \
                         );                                                \
                 }                                                         \
                 ptr_state_val->num_active_children++;          \
             }                                                             \
-            existing_state_val->parent_key = ptr_state_key;               \
             existing_state_val->parent_val = ptr_state_val;               \
             existing_state_val->depth = ptr_state_val->depth + 1;  \
         }                                                                 \

@@ -548,7 +548,6 @@ struct fcs_state_extra_info_struct
     fcs_locs_t stack_locs[MAX_NUM_STACKS];
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
     fcs_state_t * key;
-    fcs_state_t * parent_key;
     struct fcs_state_extra_info_struct * parent_val;
     fcs_move_stack_t * moves_to_parent;
     int depth;

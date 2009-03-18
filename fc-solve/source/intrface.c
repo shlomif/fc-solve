@@ -914,7 +914,6 @@ int fc_solve_solve_instance(
     state_copy_ptr_val->depth = 0;
     state_copy_ptr_val->moves_to_parent = NULL;
     state_copy_ptr_val->visited = 0;
-    state_copy_ptr_val->parent_key = NULL;
     state_copy_ptr_val->parent_val = NULL;
     memset(&(state_copy_ptr_val->scan_visited), '\0', sizeof(state_copy_ptr_val->scan_visited));
 
