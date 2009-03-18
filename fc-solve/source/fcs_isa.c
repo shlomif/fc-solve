@@ -93,7 +93,10 @@ void fc_solve_state_ia_foreach(
         fcs_state_keyval_pair_t * state_ptr = hard_thread->state_packs[p];
         fcs_state_keyval_pair_t * state_end_ptr =
             state_ptr + hard_thread->num_states_in_last_pack;
-        
-        ptr_function(&(state_ptr->s), &(state_ptr->info), context);
+
+        for(; state_ptr < state_end_ptr ; state_ptr++)
+        {
+            ptr_function(&(state_ptr->s), &(state_ptr->info), context);
+        }
     }
 }
