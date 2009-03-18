@@ -131,19 +131,22 @@ static void GCC_INLINE fc_solve_cache_stacks(
 
         
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
-        cached_stack =
+
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
-            avl_insert(
+#define LIBAVL_INSERT(x,y) avl_insert(x,y)
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
-            rb_insert(
+#define LIBAVL_INSERT(x,y) rb_insert(x,y)
+#else
+#error unknown FCS_STACK_STORAGE
 #endif
+
+        cached_stack =
+            LIBAVL_INSERT(
             instance->stacks_tree,
             new_state_key->stacks[a]
             );
-#if 0
-            )        /* In order to settle gvim and other editors that
-                         are keen on parenthesis matching */
-#endif
+
+#undef LIBAVL_INSERT
 
         replace_with_cached(cached_stack != NULL);
 

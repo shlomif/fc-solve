@@ -1396,15 +1396,6 @@ void fc_solve_unresume_instance(
 }
 
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)
-
-static void fc_solve_tree_do_nothing(void * data, void * context)
-{
-}
-
-#endif
-
-
 /***********************************************************/
 
 void fc_solve_destroy_move_stack_of_state(
@@ -1459,9 +1450,9 @@ void fc_solve_finish_instance(
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     rbdestroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE)
-    avl_destroy(instance->tree, fc_solve_tree_do_nothing);
+    avl_destroy(instance->tree, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)
-    rb_destroy(instance->tree, fc_solve_tree_do_nothing);
+    rb_destroy(instance->tree, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     g_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
