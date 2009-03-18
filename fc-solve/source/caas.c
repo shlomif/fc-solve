@@ -182,6 +182,8 @@ static void GCC_INLINE fc_solve_cache_stacks(
                 (gpointer)new_state_key->stacks[a]
                 );
         }
+#else
+#error FCS_STACK_STORAGE is not set to a good value.
 #endif
     }
 }

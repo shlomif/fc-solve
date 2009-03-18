@@ -985,6 +985,8 @@ int fc_solve_solve_instance(
         fc_solve_glib_hash_stack_hash_function,
         fc_solve_glib_hash_stack_compare
         );
+#else
+#error FCS_STACK_STORAGE is not set to a good value.
 #endif
 #endif
 
@@ -1404,49 +1406,7 @@ static void fc_solve_tree_do_nothing(void * data, void * context)
 #endif
 
 
-/* A function for freeing a stack for the cleanup of the
-   stacks collection
-*/
-#ifdef INDIRECT_STACK_STATES
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
-#if 0
-static void fc_solve_stack_free(void * key, void * context)
-{
-    free(key);
-}
-#endif
-
-#elif FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE
-static gint fc_solve_glib_tree_walk_destroy_stack_action
-(
-    gpointer key,
-    gpointer value,
-    gpointer data
-)
-{
-    free(key);
-
-    return 0;
-}
-
-#elif FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH
-static void fc_solve_glib_hash_foreach_destroy_stack_action
-(
-    gpointer key,
-    gpointer value,
-    gpointer data
-)
-{
-    free(key);
-}
-#endif
-
-#endif
-
 /***********************************************************/
-
-
-
 
 void fc_solve_destroy_move_stack_of_state(
         fcs_state_t * ptr_state_key,
@@ -1525,45 +1485,24 @@ void fc_solve_finish_instance(
     /* De-allocate the stack collection while free()'ing the stacks
     in the process */
 #ifdef INDIRECT_STACK_STATES
-#if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
 #if 0
     fc_solve_hash_free_with_callback(instance->stacks_hash, fc_solve_stack_free);
 #else
     fc_solve_hash_free(instance->stacks_hash);
 #endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
-#if 0
-    avl_destroy(instance->stacks_tree, fc_solve_stack_free);
-#else
     avl_destroy(instance->stacks_tree, NULL);
-#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
-#if 0
-    rb_destroy(instance->stacks_tree, fc_solve_stack_free);
-#else
     rb_destroy(instance->stacks_tree, NULL);
-#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     rbdestroy(instance->stacks_tree);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
-#if 0
-    g_tree_traverse(
-        instance->stacks_tree,
-        fc_solve_glib_tree_walk_destroy_stack_action,
-        G_IN_ORDER,
-        NULL
-        );
-#endif
     g_tree_destroy(instance->stacks_tree);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
-#if 0
-    g_hash_table_foreach(
-        instance->stacks_hash,
-        fc_solve_glib_hash_foreach_destroy_stack_action,
-        NULL
-        );
-#endif
     g_hash_table_destroy(instance->stacks_hash);
+#else
+#error FCS_STACK_STORAGE is not set to a good value.
 #endif
 #endif
 
