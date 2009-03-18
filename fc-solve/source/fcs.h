@@ -35,7 +35,7 @@ extern "C" {
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE))
 
-#include <redblack.h>
+#include <rb.h>
 
 /* #define TREE_IMP_PREFIX(func_name) rb_##func_name */
 
@@ -45,6 +45,12 @@ extern "C" {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH) || (defined(INDIRECT_STACK_STATES) && ((FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)))
 
 #include <glib.h>
+
+#endif
+
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY))
+
+#include <Judy.h>
 
 #endif
 
@@ -202,6 +208,8 @@ typedef struct fc_solve_instance
      * */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     struct rbtree * tree;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
+    Pvoid_t judy_array;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE)
     avl_tree * tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)

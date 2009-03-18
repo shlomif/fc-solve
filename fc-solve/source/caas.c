@@ -545,6 +545,26 @@ GCC_INLINE int fc_solve_check_and_add_state(
             *existing_state = (fcs_state_with_locations_t *)(value.data);
         }
     }
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
+    {
+        PWord_t * PValue;
+        JHSI(PValue, instance->judy_array, new_state_key, sizeof(*new_state_key));
+        /* TODO : Handle out-of-memory. */
+        if (*PValue == 0)
+        {
+            /* A new state. */
+            is_state_new = 1;
+            *PValue = (PWord_t)(*existing_state_val = new_state_val);
+        }
+        else
+        {            
+            /* Already exists. */
+            is_state_new = 0;
+            *existing_state_val = (fcs_state_extra_info_t *)(*PValue);
+        }
+
+        *existing_state_key = (*existing_state_val)->key;
+    }
 #else
 #error no define
 #endif

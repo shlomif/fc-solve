@@ -933,6 +933,10 @@ int fc_solve_solve_instance(
     instance->tree = rb_create(fc_solve_state_compare_with_context, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     instance->tree = g_tree_new(fc_solve_state_compare);
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
+    instance->judy_array = ((Pvoid_t)NULL);
+#else
+#error not defined
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
@@ -1501,6 +1505,13 @@ void fc_solve_finish_instance(
     rb_destroy(instance->tree, fc_solve_tree_do_nothing);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     g_tree_destroy(instance->tree);
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
+    {
+        Word_t rc_word;
+        JHSFA(rc_word, instance->judy_array);
+    }
+#else
+#error not defined
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
