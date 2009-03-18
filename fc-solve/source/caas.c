@@ -57,6 +57,8 @@ static void GCC_INLINE fc_solve_cache_stacks(
     int a;
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     SFO_hash_value_t hash_value_int;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
+    PWord_t * PValue;
 #endif
     void * cached_stack;
     char * new_ptr;
@@ -124,7 +126,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
                 );
 
 
-            replace_with_cached(verdict);        
+            replace_with_cached(verdict);
         }
 
         
@@ -181,6 +183,24 @@ static void GCC_INLINE fc_solve_cache_stacks(
                 (gpointer)new_state_key->stacks[a],
                 (gpointer)new_state_key->stacks[a]
                 );
+        }
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
+        JHSI(
+            PValue,
+            instance->stacks_judy_array,
+            new_state_key->stacks[a], 
+            (fcs_stack_len(*new_state_key, a)+1)
+        );
+        /* TODO : Handle out-of-memory. */
+        if (*PValue == 0)
+        {
+            /*  A new stack */
+            *PValue = (PWord_t)new_state_key->stacks[a];
+        }
+        else
+        {
+            cached_stack = (void *)(*PValue);
+            replace_with_cached(1);
         }
 #else
 #error FCS_STACK_STORAGE is not set to a good value.
@@ -550,7 +570,9 @@ GCC_INLINE int fc_solve_check_and_add_state(
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     {
         PWord_t * PValue;
+
         JHSI(PValue, instance->judy_array, new_state_key, sizeof(*new_state_key));
+
         /* TODO : Handle out-of-memory. */
         if (*PValue == 0)
         {

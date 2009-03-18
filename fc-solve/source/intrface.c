@@ -687,7 +687,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
 
 extern int fc_solve_stack_compare_for_comparison(const void * v_s1, const void * v_s2);
 
-#if ((FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_TREE) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_HASH))
+#if ((FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_TREE) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_HASH) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_JUDY))
 static int fcs_stack_compare_for_comparison_with_context(
     const void * v_s1,
     const void * v_s2,
@@ -985,6 +985,8 @@ int fc_solve_solve_instance(
         fc_solve_glib_hash_stack_hash_function,
         fc_solve_glib_hash_stack_compare
         );
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
+    instance->stacks_judy_array = NULL;
 #else
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif
@@ -1501,6 +1503,11 @@ void fc_solve_finish_instance(
     g_tree_destroy(instance->stacks_tree);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->stacks_hash);
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
+    {
+        Word_t rc_word;
+        JHSFA(rc_word, instance->stacks_judy_array);
+    }
 #else
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif

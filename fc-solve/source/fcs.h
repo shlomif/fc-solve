@@ -245,6 +245,8 @@ typedef struct fc_solve_instance
     GTree * stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
     GHashTable * stacks_hash;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
+    Pvoid_t stacks_judy_array;
 #else
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif
