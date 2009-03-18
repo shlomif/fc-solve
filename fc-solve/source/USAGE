@@ -26,6 +26,10 @@ This option displays a help text on the screen. This help
 text summarizes the command-line options and their meaning, as well as
 the signal combinations that fc-solve accepts.
 
+--version
+
+This option displays the version number of the components that make
+the executable (and then exits).
 
 3. Output Options
 -----------------
