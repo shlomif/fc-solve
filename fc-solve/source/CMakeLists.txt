@@ -210,22 +210,25 @@ ADD_CUSTOM_COMMAND(
     ARGS "config.h.in"
 )
 
-# Generate some boards
-ADD_CUSTOM_COMMAND(
-    OUTPUT "24.board"
-    COMMAND "python"
-    ARGS "board_gen/make_pysol_freecell_board.py" "24" ">" "24.board"
-)
+SET (BOARDS "")
 
-ADD_CUSTOM_COMMAND(
-    OUTPUT "1941.board"
-    COMMAND "python"
-    ARGS "board_gen/make_pysol_freecell_board.py" "1941" ">" "1941.board"
-)
+MACRO(GEN_BOARD idx)
+    SET(board "${idx}.board")
+    ADD_CUSTOM_COMMAND(
+        OUTPUT ${board}
+        COMMAND "python"
+        ARGS "board_gen/make_pysol_freecell_board.py" ${idx} ">" ${board}
+    )
+    SET(BOARDS ${BOARDS} ${board})
+ENDMACRO(GEN_BOARD idx)
+
+FOREACH(idx 24 1941)
+    GEN_BOARD(${idx})
+ENDFOREACH(idx)
 
 ADD_CUSTOM_TARGET(
     boards
-    DEPENDS "24.board" "1941.board"
+    DEPENDS ${BOARDS}
 )
 
 ENABLE_TESTING()
