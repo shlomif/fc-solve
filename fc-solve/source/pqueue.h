@@ -29,7 +29,6 @@ typedef int32 pq_rating_t;
 
 typedef struct struct_pq_element_t
 {
-    fcs_state_t * key;
     fcs_state_extra_info_t * val;
     pq_rating_t rating;
 } pq_element_t;
@@ -62,12 +61,11 @@ void fc_solve_PQueueFree( PQUEUE *pq );
 
 int fc_solve_PQueuePush(
         PQUEUE *pq,
-        fcs_state_t * key,
         fcs_state_extra_info_t * val, 
         pq_rating_t r
         );
 
-int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_t * * key, fcs_state_extra_info_t * * val);
+int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_extra_info_t * * val);
 
 #define PGetRating(elem) ((elem).rating)
 

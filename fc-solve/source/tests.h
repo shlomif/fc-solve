@@ -138,7 +138,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
         }                                                                 \
         fc_solve_derived_states_list_add_state(                                \
             derived_states_list,                                          \
-            existing_state_key,                                           \
             existing_state_val                                            \
             );                                                            \
     }                                                                     \
@@ -146,7 +145,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
     {                                                                     \
         fc_solve_derived_states_list_add_state(                                \
             derived_states_list,                                          \
-            ptr_new_state_key,                                            \
             ptr_new_state_val                                             \
             );                                                            \
    }                                                                      \

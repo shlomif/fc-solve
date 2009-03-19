@@ -55,7 +55,6 @@ void fc_solve_PQueueInitialise(
 
 int fc_solve_PQueuePush(
         PQUEUE *pq,
-        fcs_state_t * key,
         fcs_state_extra_info_t * val, 
         pq_rating_t r
         )
@@ -102,7 +101,6 @@ int fc_solve_PQueuePush(
         }
 
         /* then add the element at the space we created. */
-        Elements[i].key = key;
         Elements[i].val = val;
         Elements[i].rating = r;
     }
@@ -128,7 +126,7 @@ void fc_solve_PQueueFree( PQUEUE *pq )
  *
  * */
 
-int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_t * * key, fcs_state_extra_info_t * * val)
+int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_extra_info_t * * val)
 {
     int32 i;
     int32 child;
@@ -140,7 +138,6 @@ int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_t * * key, fcs_state_extra_info_t 
 
     if( PQueueIsEmpty( pq ) )
     {
-        *key = NULL;
         *val = NULL;
         return 1;
     }
@@ -180,7 +177,6 @@ int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_t * * key, fcs_state_extra_info_t 
     Elements[i] = pLastElement;
     pq->CurrentSize = CurrentSize;
 
-    *key = pMaxElement.key;
     *val = pMaxElement.val;
     return 0;
 }

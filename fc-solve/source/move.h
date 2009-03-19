@@ -106,13 +106,11 @@ extern char * fc_solve_move_to_string_w_state(
         int standard_notation
         );
 
-typedef fcs_standalone_state_ptrs_t fcs_derived_state_keyval_pair_t;
-
 struct fcs_derived_states_list_struct
 {
     int num_states;
     int max_num_states;
-    fcs_derived_state_keyval_pair_t * states;
+    fcs_state_extra_info_t * * states;
 };
 
 typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
@@ -177,7 +175,6 @@ typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
 #else
 extern void fc_solve_derived_states_list_add_state(
         fcs_derived_states_list_t * list,
-        fcs_state_t * state_key,
         fcs_state_extra_info_t * state_val
         );
 #endif

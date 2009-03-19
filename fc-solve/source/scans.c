@@ -34,12 +34,11 @@ static pq_rating_t fc_solve_a_star_rate_state(
     fcs_state_extra_info_t * ptr_state_val
     );
 
-#define fc_solve_bfs_enqueue_state(soft_thread, state_key, state_val) \
+#define fc_solve_bfs_enqueue_state(soft_thread, state_val) \
     {    \
         fcs_states_linked_list_item_t * last_item_next;      \
         last_item_next = bfs_queue_last_item->next = (fcs_states_linked_list_item_t*)malloc(sizeof(fcs_states_linked_list_item_t));      \
-        bfs_queue_last_item->s.key = state_key;     \
-        bfs_queue_last_item->s.val = state_val;     \
+        bfs_queue_last_item->s = state_val;     \
         last_item_next->next = NULL;     \
         bfs_queue_last_item = last_item_next; \
     }
@@ -77,7 +76,6 @@ static void fc_solve_increase_dfs_max_depth(
 
 void fc_solve_derived_states_list_add_state(
         fcs_derived_states_list_t * list,
-        fcs_state_t * state_key,
         fcs_state_extra_info_t * state_val
         )
 {
@@ -86,9 +84,7 @@ void fc_solve_derived_states_list_add_state(
         (list)->max_num_states += 16;
         (list)->states = realloc((list)->states, sizeof((list)->states[0]) * (list)->max_num_states);
     }
-    (list)->states[(list)->num_states].key = (state_key);
-    (list)->states[(list)->num_states].val = (state_val);
-    (list)->num_states++;
+    (list)->states[(list)->num_states++] = state_val;
 }
 
 /*
@@ -424,25 +420,26 @@ int fc_solve_soft_dfs_do_solve(
 
         {
             int num_states = derived_states_list->num_states;
-            fcs_derived_state_keyval_pair_t * derived_states = derived_states_list->states;
-            fcs_derived_state_keyval_pair_t * single_derived_state; 
+            fcs_state_extra_info_t * * derived_states = 
+                derived_states_list->states;
             int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
+            fcs_state_extra_info_t * single_derived_state;
 
             while (the_soft_dfs_info->current_state_index <
                    num_states)
             {
-                single_derived_state = &(derived_states[
+                single_derived_state = derived_states[
                         rand_array[
                             the_soft_dfs_info->current_state_index++
                         ]
-                    ]);
+                    ];
 
                 if (
-                    (! (single_derived_state->val->visited &
+                    (! (single_derived_state->visited &
                         FCS_VISITED_DEAD_END)
                     ) &&
                     (! is_scan_visited(
-                        single_derived_state->val,
+                        single_derived_state,
                         soft_thread_id)
                     )
                    )
@@ -451,11 +448,11 @@ int fc_solve_soft_dfs_do_solve(
                     hard_thread->num_times++;
 
                     set_scan_visited(
-                        single_derived_state->val,
+                        single_derived_state,
                         soft_thread_id
                     );
 
-                    single_derived_state->val->visited_iter = instance->num_times;
+                    single_derived_state->visited_iter = instance->num_times;
 
                     /*
                         I'm using current_state_indexes[depth]-1 because we already
@@ -466,7 +463,7 @@ int fc_solve_soft_dfs_do_solve(
 
                     the_soft_dfs_info->state_val =
                         ptr_state_val =
-                        single_derived_state->val;
+                        single_derived_state;
 
                     ptr_state_key = ptr_state_val->key;
 
@@ -783,7 +780,7 @@ int fc_solve_a_star_or_bfs_do_solve(
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
 
-    fcs_state_t * ptr_state_key, * ptr_new_state_key;
+    fcs_state_t * ptr_state_key;
     fcs_state_extra_info_t * ptr_state_val, * ptr_new_state_val;
     int num_freestacks, num_freecells;
     fcs_states_linked_list_item_t * save_item;
@@ -824,7 +821,7 @@ int fc_solve_a_star_or_bfs_do_solve(
 
     /* Continue as long as there are states in the queue or
        priority queue. */
-    while ( ptr_state_key != NULL)
+    while ( ptr_state_val != NULL)
     {
          TRACE0("Start of loop");        /*
          * If this is an optimization scan and the state being checked is not
@@ -847,7 +844,9 @@ int fc_solve_a_star_or_bfs_do_solve(
         {
             goto label_next_state;
         }
-         TRACE0("Counting cells");
+        TRACE0("Counting cells");
+
+        ptr_state_key = ptr_state_val->key;
         /* Count the free-cells */
         num_freecells = 0;
         for(a=0;a<freecells_num;a++)
@@ -958,14 +957,12 @@ int fc_solve_a_star_or_bfs_do_solve(
 
         for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
         {
-            ptr_new_state_key = derived.states[derived_index].key;
-            ptr_new_state_val = derived.states[derived_index].val;
-            
+            ptr_new_state_val = derived.states[derived_index];
+
             if (method == FCS_METHOD_A_STAR)
             {
                 fc_solve_PQueuePush(
                     a_star_pqueue,
-                    ptr_new_state_key,
                     ptr_new_state_val,
                     fc_solve_a_star_rate_state(soft_thread, 
                         ptr_new_state_val
@@ -976,7 +973,6 @@ int fc_solve_a_star_or_bfs_do_solve(
             {
                 fc_solve_bfs_enqueue_state(
                     soft_thread,
-                    ptr_new_state_key,
                     ptr_new_state_val
                     );
             }
@@ -1016,14 +1012,12 @@ label_next_state:
             save_item = bfs_queue->next;
             if (save_item != bfs_queue_last_item)
             {
-                ptr_state_key = save_item->s.key;
-                ptr_state_val = save_item->s.val;
+                ptr_state_val = save_item->s;
                 bfs_queue->next = save_item->next;
                 free(save_item);
             }
             else
             {
-                ptr_state_key = NULL;
                 ptr_state_val = NULL;
             }
         }
@@ -1031,7 +1025,6 @@ label_next_state:
         {
             /* It is an A* scan */
             fc_solve_PQueuePop(a_star_pqueue, 
-                &ptr_state_key,
                 &ptr_state_val 
                 );
         }
