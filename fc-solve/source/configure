@@ -9,6 +9,7 @@ my $is_debug = 1;
 my $stack_storage;
 my $state_storage;
 my $prefix = "/usr";
+my $freecell_only = 0;
 
 sub set_both
 {
@@ -34,6 +35,7 @@ GetOptions(
     'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
+    'fc-only' => \$freecell_only,
 );
 
 # This cache is sometimes causing problems.
@@ -45,6 +47,8 @@ my @cmd= ("cmake",
     "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
     "-DCMAKE_INSTALL_PREFIX=$prefix",
     "-DDATADIR=$prefix/share",
+    ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
 );
+
 print(join(" ", @cmd), "\n");
 exec(@cmd);
