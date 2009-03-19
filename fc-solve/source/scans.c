@@ -184,7 +184,6 @@ int fc_solve_soft_dfs_do_solve(
 
     dfs_max_depth = soft_thread->dfs_max_depth;
     ptr_state_val = the_soft_dfs_info->state_val;
-    ptr_state_key = ptr_state_val->key;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
     calculate_real_depth(
@@ -274,6 +273,8 @@ int fc_solve_soft_dfs_do_solve(
                         )
                         );
                 }
+
+                ptr_state_key = ptr_state_val->key;
 
                 /* Count the free-cells */
                 num_freecells = 0;
@@ -464,8 +465,6 @@ int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info->state_val =
                         ptr_state_val =
                         single_derived_state;
-
-                    ptr_state_key = ptr_state_val->key;
 
                     the_soft_dfs_info->test_index = 0;
                     the_soft_dfs_info->current_state_index = 0;
@@ -813,7 +812,6 @@ int fc_solve_a_star_or_bfs_do_solve(
     tests_order_tests = soft_thread->tests_order.tests;
 
     ptr_state_val = soft_thread->first_state_to_check_val;
-    ptr_state_key = ptr_state_val->key;
 
     method = soft_thread->method;
     freecells_num = instance->freecells_num;
