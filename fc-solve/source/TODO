@@ -1,5 +1,7 @@
 --- Pressing ---
 
+* Fix the warnings when compiling as "./configure --release".
+
 --- Non-pressing ---
 
 * Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 
