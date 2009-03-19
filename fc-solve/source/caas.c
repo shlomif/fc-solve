@@ -318,7 +318,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
     fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val);
 
-    fc_solve_canonize_state(new_state_key, new_state_val, instance->freecells_num, instance->stacks_num);
+    fc_solve_canonize_state(new_state_val, instance->freecells_num, instance->stacks_num);
 
 /*
     The objective of this part of the code is:
@@ -480,7 +480,6 @@ GCC_INLINE int fc_solve_check_and_add_state(
     *existing_state_val = (fcs_state_extra_info_t *)rbsearch(new_state_val, 
             instance->tree
             );
-    *existing_state_key = (*existing_state_val)->key;
     is_state_new = ((*existing_state_val) == new_state_val);
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)
@@ -587,8 +586,6 @@ GCC_INLINE int fc_solve_check_and_add_state(
             is_state_new = 0;
             *existing_state_val = (fcs_state_extra_info_t *)(*PValue);
         }
-
-        *existing_state_key = (*existing_state_val)->key;
     }
 #else
 #error no define

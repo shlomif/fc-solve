@@ -218,7 +218,6 @@ void fc_solve_canonize_state(fcs_state_with_locations_t * state, int freecells_n
 #elif defined(COMPACT_STATES)
 
 void fc_solve_canonize_state(
-    fcs_state_t * state_key,
     fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num)
@@ -228,6 +227,8 @@ void fc_solve_canonize_state(
     char temp_stack[(MAX_NUM_CARDS_IN_A_STACK+1)];
     fcs_card_t temp_freecell;
     char temp_loc;
+
+    fcs_state_t * state_key = state_val->key;
 
     /* Insertion-sort the stacks */
 
@@ -282,7 +283,6 @@ void fc_solve_canonize_state(
 }
 #elif defined(INDIRECT_STACK_STATES)
 void fc_solve_canonize_state(
-    fcs_state_t * state_key,
     fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num)
@@ -291,6 +291,8 @@ void fc_solve_canonize_state(
     fcs_card_t * temp_stack;
     fcs_card_t temp_freecell;
     char temp_loc;
+
+    fcs_state_t * state_key = state_val->key;
 
     /* Insertion-sort the stacks */
     for(b=1;b<stacks_num;b++)
@@ -797,8 +799,7 @@ int fc_solve_initial_user_state_to_c(
 #undef handle_eos
 
 int fc_solve_check_state_validity(
-    fcs_state_t * state_with_locations_key,
-    fcs_state_extra_info_t * state_with_locations_val,
+    fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -812,7 +813,7 @@ int fc_solve_check_state_validity(
 
     fcs_state_t * state;
 
-    state = state_with_locations_key;
+    state = state_val->key;
 
     /* Initialize all cards to 0 */
     for(d=0;d<4;d++)
@@ -901,8 +902,7 @@ int fc_solve_check_state_validity(
 
 
 char * fc_solve_state_as_string(
-    fcs_state_t * state_with_locations_key,
-    fcs_state_extra_info_t * state_with_locations_val,
+    fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -923,7 +923,7 @@ char * fc_solve_state_as_string(
     int stack_locs[MAX_NUM_STACKS];
     int freecell_locs[MAX_NUM_FREECELLS];
 
-    state = state_with_locations_key;
+    state = state_val->key;
 
     if (canonized_order_output)
     {
@@ -940,11 +940,11 @@ char * fc_solve_state_as_string(
     {
         for(a=0;a<stacks_num;a++)
         {
-            stack_locs[(int)(state_with_locations_val->stack_locs[a])] = a;
+            stack_locs[(int)(state_val->stack_locs[a])] = a;
         }
         for(a=0;a<freecells_num;a++)
         {
-            freecell_locs[(int)(state_with_locations_val->fc_locs[a])] = a;
+            freecell_locs[(int)(state_val->fc_locs[a])] = a;
         }
     }
 

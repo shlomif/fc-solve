@@ -300,7 +300,6 @@ int freecell_solver_user_resume_solution(
             }
 
             user->state_validity_ret = fc_solve_check_state_validity(
-                &(user->state.s),
                 &(user->state.info),
                 user->instance->freecells_num,
                 user->instance->stacks_num,
@@ -328,7 +327,6 @@ int freecell_solver_user_resume_solution(
                 );
 
             fc_solve_canonize_state(
-                &user->state.s,
                 &user->state.info,
                 user->instance->freecells_num,
                 user->instance->stacks_num
@@ -484,7 +482,6 @@ char * freecell_solver_user_current_state_as_string(
 
     return
         fc_solve_state_as_string(
-            &(user->running_state.s),
             &(user->running_state.info),
             user->instance->freecells_num,
             user->instance->stacks_num,
@@ -967,7 +964,6 @@ char * freecell_solver_user_iter_state_as_string(
 
     return
         fc_solve_state_as_string(
-            ptr_state->key,
             ptr_state->val,
             user->instance->freecells_num,
             user->instance->stacks_num,

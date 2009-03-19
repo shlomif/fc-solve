@@ -236,7 +236,7 @@ void fc_solve_apply_move(
         case FCS_MOVE_TYPE_CANONIZE:
         {
             fc_solve_canonize_state(
-                state_key, state_val,
+                state_val,
                 freecells_num, stacks_num
             );
         }

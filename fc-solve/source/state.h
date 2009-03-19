@@ -639,7 +639,6 @@ extern fcs_card_t fc_solve_empty_card;
 
 
 extern void fc_solve_canonize_state(
-    fcs_state_t * state_key,
     fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num
@@ -675,7 +674,7 @@ enum FCS_USER_STATE_TO_C_RETURN_CODES
 
 int fc_solve_initial_user_state_to_c(
     const char * string,
-    fcs_state_t * out_state_key,
+    fcs_state_t * key,
     fcs_state_extra_info_t * out_state_val,
     int freecells_num,
     int stacks_num,
@@ -690,7 +689,6 @@ int fc_solve_initial_user_state_to_c(
 
 
 extern char * fc_solve_state_as_string(
-    fcs_state_t * state_key,
     fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num,
@@ -710,7 +708,6 @@ enum FCS_STATE_VALIDITY_CODES
 };
 
 extern int fc_solve_check_state_validity(
-    fcs_state_t * state_key,
     fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num,
