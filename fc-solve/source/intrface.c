@@ -909,7 +909,7 @@ int fc_solve_solve_instance(
 
     {
         int a;
-        for(a=0;a<instance->stacks_num;a++)
+        for(a=0;a<INSTANCE_STACKS_NUM;a++)
         {
             fcs_copy_stack(*state_copy_ptr_key, *state_copy_ptr_val, a, instance->hard_threads[0]->indirect_stacks_buffer);
         }

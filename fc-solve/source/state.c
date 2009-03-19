@@ -84,17 +84,6 @@ static int fcs_stack_compare(const void * s1, const void * s2)
 }
 #elif defined(INDIRECT_STACK_STATES)
 
-
-#if MAX_NUM_DECKS == 1
-static int fcs_stack_compare_for_stack_sort(const void * s1, const void * s2)
-{
-    fcs_card_t card1 = ((fcs_card_t*)s1)[1];
-    fcs_card_t card2 = ((fcs_card_t*)s2)[1];
-
-    return fcs_card_compare(&card1, &card2);
-}
-#endif
-
 int fc_solve_stack_compare_for_comparison(const void * v_s1, const void * v_s2)
 {
     const fcs_card_t * s1 = (const fcs_card_t *)v_s1;
@@ -301,11 +290,7 @@ void fc_solve_canonize_state(
         while(
             (c>0) &&
             (
-#if MAX_NUM_DECKS > 1
                 fc_solve_stack_compare_for_comparison
-#else
-                fcs_stack_compare_for_stack_sort
-#endif
                 (
                     (state_key->stacks[c]),
                     (state_key->stacks[c-1])

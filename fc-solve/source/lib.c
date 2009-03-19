@@ -277,13 +277,17 @@ int freecell_solver_user_resume_solution(
         if (user->instances_list[user->current_instance_idx].ret == FCS_STATE_NOT_BEGAN_YET)
         {
             int status;
+            fc_solve_instance_t * instance;
+
+            instance = user->instance;
+
             status = fc_solve_initial_user_state_to_c(
                 user->state_string_copy,
                 &(user->state.s),
                 &(user->state.info),
-                user->instance->freecells_num,
-                user->instance->stacks_num,
-                user->instance->decks_num
+                INSTANCE_FREECELLS_NUM,
+                INSTANCE_STACKS_NUM,
+                INSTANCE_DECKS_NUM
 #ifdef FCS_WITH_TALONS
                 ,user->instance->talon_type
 #endif
@@ -301,9 +305,9 @@ int freecell_solver_user_resume_solution(
 
             user->state_validity_ret = fc_solve_check_state_validity(
                 &(user->state.info),
-                user->instance->freecells_num,
-                user->instance->stacks_num,
-                user->instance->decks_num,
+                INSTANCE_FREECELLS_NUM,
+                INSTANCE_STACKS_NUM,
+                INSTANCE_DECKS_NUM,
 #ifdef FCS_WITH_TALONS
                 FCS_TALON_NONE,
 #endif
@@ -328,8 +332,8 @@ int freecell_solver_user_resume_solution(
 
             fc_solve_canonize_state(
                 &user->state.info,
-                user->instance->freecells_num,
-                user->instance->stacks_num
+                INSTANCE_FREECELLS_NUM,
+                INSTANCE_STACKS_NUM
                 );
 
             fc_solve_init_instance(user->instance);
@@ -399,9 +403,9 @@ int freecell_solver_user_resume_solution(
             fc_solve_move_stack_normalize(
                 user->instance->solution_moves,
                 &(user->state.info),
-                user->instance->freecells_num,
-                user->instance->stacks_num,
-                user->instance->decks_num
+                INSTANCE_FREECELLS_NUM,
+                INSTANCE_STACKS_NUM,
+                INSTANCE_DECKS_NUM
                 );
 
             break;
@@ -456,9 +460,9 @@ int freecell_solver_user_get_next_move(
             fc_solve_apply_move(
                 &(user->running_state.info),
                 *move,
-                user->instance->freecells_num,
-                user->instance->stacks_num,
-                user->instance->decks_num
+                INSTANCE_FREECELLS_NUM,
+                INSTANCE_STACKS_NUM,
+                INSTANCE_DECKS_NUM
                 );
         }
         return ret;
@@ -483,9 +487,9 @@ char * freecell_solver_user_current_state_as_string(
     return
         fc_solve_state_as_string(
             &(user->running_state.info),
-            user->instance->freecells_num,
-            user->instance->stacks_num,
-            user->instance->decks_num,
+            INSTANCE_FREECELLS_NUM,
+            INSTANCE_STACKS_NUM,
+            INSTANCE_DECKS_NUM,
             parseable_output,
             canonized_order_output,
             display_10_as_t
@@ -583,7 +587,9 @@ int freecell_solver_user_set_num_freecells(
     )
 {
     fcs_user_t * user;
+#ifndef HARD_CODED_NUM_FREECELLS
     int i;
+#endif
 
     user = (fcs_user_t *)user_instance;
 
@@ -592,7 +598,9 @@ int freecell_solver_user_set_num_freecells(
         return 1;     
     }    
 
+#ifndef HARD_CODED_NUM_FREECELLS
     set_for_all_instances(freecells_num);
+#endif
 
     return 0;
 }
@@ -603,7 +611,9 @@ int freecell_solver_user_set_num_stacks(
     )
 {
     fcs_user_t * user;
+#ifndef HARD_CODED_NUM_STACKS
     int i;
+#endif
 
     user = (fcs_user_t *)user_instance;
 
@@ -611,7 +621,9 @@ int freecell_solver_user_set_num_stacks(
     {
         return 1;
     }
+#ifndef HARD_CODED_NUM_STACKS
     set_for_all_instances(stacks_num);
+#endif
 
     return 0;
 }
@@ -622,7 +634,9 @@ int freecell_solver_user_set_num_decks(
     )
 {
     fcs_user_t * user;
+#ifndef HARD_CODED_NUM_DECKS
     int i;
+#endif
 
     user = (fcs_user_t *)user_instance;
 
@@ -630,7 +644,9 @@ int freecell_solver_user_set_num_decks(
     {
         return 1;
     }
+#ifndef HARD_CODED_NUM_DECKS
     set_for_all_instances(decks_num);
+#endif
 
     return 0;
 }
@@ -740,9 +756,9 @@ char * freecell_solver_user_move_to_string_w_state(
     return 
         fc_solve_move_to_string_w_state(
             &(user->running_state.info), 
-            user->instance->freecells_num, 
-            user->instance->stacks_num, 
-            user->instance->decks_num, 
+            INSTANCE_FREECELLS_NUM, 
+            INSTANCE_STACKS_NUM,
+            INSTANCE_DECKS_NUM,
             move, 
             standard_notation
             );
@@ -965,9 +981,9 @@ char * freecell_solver_user_iter_state_as_string(
     return
         fc_solve_state_as_string(
             ptr_state->val,
-            user->instance->freecells_num,
-            user->instance->stacks_num,
-            user->instance->decks_num,
+            INSTANCE_FREECELLS_NUM,
+            INSTANCE_STACKS_NUM,
+            INSTANCE_DECKS_NUM,
             parseable_output,
             canonized_order_output,
             display_10_as_t

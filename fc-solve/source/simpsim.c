@@ -62,13 +62,17 @@ int fc_solve_sfs_simple_simon_move_sequence_to_founds(
      * */
     fcs_card_t card, above_card;
 
-    int state_stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    int stacks_num;
+#endif
     tests_define_accessors();
 
-    state_stacks_num = instance->stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    stacks_num = instance->stacks_num;
+#endif
 
 
-    for(stack=0;stack<state_stacks_num;stack++)
+    for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
         cards_num = fcs_stack_len(state, stack);
         if (cards_num >= 13)
@@ -162,13 +166,17 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
      * */
     int card_num, num_true_seqs, ds, dest_cards_num ;
 
-    int state_stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    int stacks_num;
+#endif
     tests_define_accessors();
 
-    state_stacks_num = instance->stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    stacks_num = instance->stacks_num;
+#endif
 
 
-    for(stack=0;stack<state_stacks_num;stack++)
+    for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
         cards_num = fcs_stack_len(state, stack);
         if (cards_num > 0)
@@ -182,7 +190,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
 
             for(h=cards_num-2;h>=-1;h--)
             {
-                for(ds=0;ds<state_stacks_num;ds++)
+                for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
                 {
                     if (ds == stack)
                     {
@@ -275,12 +283,16 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
     fcs_card_t card, temp_card, dest_card;
     int card_num, num_true_seqs, h, ds, dest_cards_num ;
 
-    int state_stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    int stacks_num;
+#endif
     tests_define_accessors();
 
-    state_stacks_num = instance->stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    stacks_num = instance->stacks_num;
+#endif
 
-    for(stack=0;stack<state_stacks_num;stack++)
+    for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
         cards_num = fcs_stack_len(state, stack);
         if (cards_num > 0)
@@ -313,7 +325,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
                 continue;
             }
 
-            for(ds=0;ds<state_stacks_num;ds++)
+            for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
             {
                 dest_cards_num = fcs_stack_len(state,ds);
                 if (dest_cards_num > 0)
@@ -404,12 +416,16 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
     int after_junk_num_freestacks;
     int junk_move_to_stacks[MAX_NUM_STACKS];
 
-    int state_stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    int stacks_num;
+#endif
     tests_define_accessors();
 
-    state_stacks_num = instance->stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    stacks_num = instance->stacks_num;
+#endif
 
-    for(stack=0;stack<state_stacks_num;stack++)
+    for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
         cards_num = fcs_stack_len(state, stack);
         if (cards_num > 0)
@@ -423,7 +439,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
 
             for(h=cards_num-2;h>=-1;h--)
             {
-                for(ds=0;ds<state_stacks_num;ds++)
+                for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
                 {
                     if (ds == stack)
                     {
@@ -474,7 +490,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
                                     seq_points[num_separate_false_seqs++] = above_c+1;
                                 }
 
-                                for(a=0;a<state_stacks_num;a++)
+                                for(a=0;a<LOCAL_STACKS_NUM;a++)
                                 {
                                     stacks_map[a] = 0;
                                 }
@@ -495,7 +511,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
 
                                     /* Let's try to find a suitable parent on top one of the stacks */
                                     for(clear_junk_dest_stack=0;
-                                        clear_junk_dest_stack < state_stacks_num;
+                                        clear_junk_dest_stack < LOCAL_STACKS_NUM;
                                         clear_junk_dest_stack++
                                        )
                                     {
@@ -518,7 +534,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
                                         }
                                     }
 
-                                    if (clear_junk_dest_stack == state_stacks_num)
+                                    if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
                                     {
                                         clear_junk_dest_stack = -1;
                                     }
@@ -533,7 +549,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
                                                 /* Find an empty stack and designate it as the destination for the junk */
                                                 for(
                                                     clear_junk_dest_stack = 0;
-                                                    clear_junk_dest_stack < state_stacks_num;
+                                                    clear_junk_dest_stack < LOCAL_STACKS_NUM;
                                                     clear_junk_dest_stack++
                                                    )
                                                 {
@@ -651,12 +667,16 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
     int false_seq_index;
     int junk_move_to_stacks[MAX_NUM_CARDS_IN_A_STACK];
 
-    int state_stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    int stacks_num;
+#endif
     tests_define_accessors();
 
-    state_stacks_num = instance->stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    stacks_num = instance->stacks_num;
+#endif
 
-    for(stack=0;stack<state_stacks_num;stack++)
+    for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
         cards_num = fcs_stack_len(state, stack);
         if (cards_num > 0)
@@ -717,7 +737,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
                     seq_points[num_separate_false_seqs++] = above_c+1;
                 }
 
-                for(ds=0;ds<state_stacks_num;ds++)
+                for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
                 {
                     if (ds == stack)
                     {
@@ -735,7 +755,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
                         /* This is a suitable parent - let's check if we
                          * have enough empty stacks to make the move feasible */
 
-                            for(a=0;a<state_stacks_num;a++)
+                            for(a=0;a<LOCAL_STACKS_NUM;a++)
                             {
                                 stacks_map[a] = 0;
                             }
@@ -752,7 +772,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
 
                                 /* Let's try to find a suitable parent on top one of the stacks */
                                 for(clear_junk_dest_stack=0;
-                                    clear_junk_dest_stack < state_stacks_num;
+                                    clear_junk_dest_stack < LOCAL_STACKS_NUM;
                                     clear_junk_dest_stack++
                                    )
                                 {
@@ -775,7 +795,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
                                     }
                                 }
 
-                                if (clear_junk_dest_stack == state_stacks_num)
+                                if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
                                 {
                                     clear_junk_dest_stack = -1;
                                 }
@@ -790,7 +810,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
                                             /* Find an empty stack and designate it as the destination for the junk */
                                             for(
                                                 clear_junk_dest_stack = 0;
-                                                clear_junk_dest_stack < state_stacks_num;
+                                                clear_junk_dest_stack < LOCAL_STACKS_NUM;
                                                 clear_junk_dest_stack++
                                                )
                                             {
@@ -919,12 +939,16 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
     int end_of_junk;
     int num_true_seqs;
 
-    int state_stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    int stacks_num;
+#endif
     tests_define_accessors();
 
-    state_stacks_num = instance->stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    stacks_num = instance->stacks_num;
+#endif
 
-    for(stack=0;stack<state_stacks_num;stack++)
+    for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
         cards_num = fcs_stack_len(state, stack);
         if (cards_num > 0)
@@ -981,7 +1005,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
                 card_num = fcs_card_card_num(card);
                 suit = fcs_card_suit(card);
 
-                for(ds=0;ds<state_stacks_num;ds++)
+                for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
                 {
                     if (ds == stack)
                     {
@@ -1029,7 +1053,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
                                     seq_points[num_separate_false_seqs++] = above_c+1;
                                 }
 
-                                for(a=0;a<state_stacks_num;a++)
+                                for(a=0;a<LOCAL_STACKS_NUM;a++)
                                 {
                                     stacks_map[a] = 0;
                                 }
@@ -1059,7 +1083,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
 
                                     /* Let's try to find a suitable parent on top one of the stacks */
                                     for(clear_junk_dest_stack=0;
-                                        clear_junk_dest_stack < state_stacks_num;
+                                        clear_junk_dest_stack < LOCAL_STACKS_NUM;
                                         clear_junk_dest_stack++
                                        )
                                     {
@@ -1082,7 +1106,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
                                         }
                                     }
 
-                                    if (clear_junk_dest_stack == state_stacks_num)
+                                    if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
                                     {
                                         clear_junk_dest_stack = -1;
                                     }
@@ -1097,7 +1121,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
                                                 /* Find an empty stack and designate it as the destination for the junk */
                                                 for(
                                                     clear_junk_dest_stack = 0;
-                                                    clear_junk_dest_stack < state_stacks_num;
+                                                    clear_junk_dest_stack < LOCAL_STACKS_NUM;
                                                     clear_junk_dest_stack++
                                                    )
                                                 {
@@ -1233,12 +1257,16 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
     int false_seq_index;
     int junk_move_to_stacks[MAX_NUM_STACKS];
 
-    int state_stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    int stacks_num;
+#endif
     tests_define_accessors();
 
-    state_stacks_num = instance->stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    stacks_num = instance->stacks_num;
+#endif
 
-    for(stack=0;stack<state_stacks_num;stack++)
+    for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
         cards_num = fcs_stack_len(state, stack);
         if (cards_num > 0)
@@ -1268,7 +1296,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
             }
             if (h == -1)
             {
-                for(ds=0;ds<state_stacks_num;ds++)
+                for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
                 {
                     dest_cards_num = fcs_stack_len(state,ds);
                     if (dest_cards_num > 0)
@@ -1307,7 +1335,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
                                     seq_points[num_separate_false_seqs++] = above_c+1;
                                 }
 
-                                for(a=0;a<state_stacks_num;a++)
+                                for(a=0;a<LOCAL_STACKS_NUM;a++)
                                 {
                                     stacks_map[a] = 0;
                                 }
@@ -1332,7 +1360,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
 
                                     /* Let's try to find a suitable parent on top one of the stacks */
                                     for(clear_junk_dest_stack=0;
-                                        clear_junk_dest_stack < state_stacks_num;
+                                        clear_junk_dest_stack < LOCAL_STACKS_NUM;
                                         clear_junk_dest_stack++
                                        )
                                     {
@@ -1355,7 +1383,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
                                         }
                                     }
 
-                                    if (clear_junk_dest_stack == state_stacks_num)
+                                    if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
                                     {
                                         clear_junk_dest_stack = -1;
                                     }
@@ -1447,12 +1475,16 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 
     fcs_card_t temp_card;
 
-    int state_stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    int stacks_num;
+#endif
     tests_define_accessors();
 
-    state_stacks_num = instance->stacks_num;
+#ifndef HARD_CODED_NUM_STACKS
+    stacks_num = instance->stacks_num;
+#endif
 
-    for(stack=0 ; stack < state_stacks_num ; stack++)
+    for(stack=0 ; stack < LOCAL_STACKS_NUM ; stack++)
     {
         cards_num = fcs_stack_len(state, stack);
         if (cards_num > 2)
@@ -1574,7 +1606,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 
 
 
-                        for(a = 0 ; a < state_stacks_num ; a++)
+                        for(a = 0 ; a < LOCAL_STACKS_NUM ; a++)
                         {
                             stacks_map[a] = 0;
                         }
@@ -1590,7 +1622,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 
                             /* Let's try to find a suitable parent on top one of the stacks */
                             for(clear_junk_dest_stack=0;
-                                clear_junk_dest_stack < state_stacks_num;
+                                clear_junk_dest_stack < LOCAL_STACKS_NUM;
                                 clear_junk_dest_stack++
                                )
                             {
@@ -1613,7 +1645,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
                                 }
                             }
 
-                            if (clear_junk_dest_stack == state_stacks_num)
+                            if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
                             {
                                 clear_junk_dest_stack = -1;
                             }
@@ -1628,7 +1660,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
                                         /* Find an empty stack and designate it as the destination for the junk */
                                         for(
                                             clear_junk_dest_stack = 0;
-                                            clear_junk_dest_stack < state_stacks_num;
+                                            clear_junk_dest_stack < LOCAL_STACKS_NUM;
                                             clear_junk_dest_stack++
                                            )
                                         {

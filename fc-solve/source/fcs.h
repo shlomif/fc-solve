@@ -266,11 +266,35 @@ typedef struct fc_solve_instance
      * the beginning of the execution of the algorithm. However, there
      * is a maximal limit to them which is set in config.h.
      *
-     * decks_num can be 4 or 8
+     * decks_num can be 1 or 2 .
      * */
+
+#ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
+#define INSTANCE_FREECELLS_NUM (instance->freecells_num)
+#define LOCAL_FREECELLS_NUM (freecells_num)
+#else
+#define INSTANCE_FREECELLS_NUM HARD_CODED_NUM_FREECELLS
+#define LOCAL_FREECELLS_NUM HARD_CODED_NUM_FREECELLS
+#endif
+
+#ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
+#define INSTANCE_STACKS_NUM (instance->stacks_num)
+#define LOCAL_STACKS_NUM (>stacks_num)
+#else
+#define INSTANCE_STACKS_NUM HARD_CODED_NUM_STACKS
+#define LOCAL_STACKS_NUM HARD_CODED_NUM_STACKS
+#endif
+
+#ifndef HARD_CODED_NUM_DECKS
     int decks_num;
+#define INSTANCE_DECKS_NUM (instance->decks_num)
+#define LOCAL_DECKS_NUM (decks_num)
+#else
+#define INSTANCE_DECKS_NUM HARD_CODED_NUM_DECKS
+#define LOCAL_DECKS_NUM HARD_CODED_NUM_DECKS
+#endif
 
     /* What two adjacent cards in the same sequence can be: */
     int sequences_are_built_by;

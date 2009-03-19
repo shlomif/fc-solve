@@ -63,10 +63,11 @@ static void GCC_INLINE fc_solve_cache_stacks(
     void * cached_stack;
     char * new_ptr;
     fc_solve_instance_t * instance = hard_thread->instance;
+#ifndef HARD_CODED_NUM_STACKS
     int stacks_num = instance->stacks_num;
-    
+#endif
 
-    for(a=0 ; a<stacks_num ; a++)
+    for(a=0 ; a < LOCAL_STACKS_NUM ; a++)
     {
         /* 
          * If the stack is not a copy - it is already cached so skip
@@ -318,7 +319,10 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
     fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val);
 
-    fc_solve_canonize_state(new_state_val, instance->freecells_num, instance->stacks_num);
+    fc_solve_canonize_state(new_state_val, 
+            INSTANCE_FREECELLS_NUM, 
+            INSTANCE_STACKS_NUM
+            );
 
 /*
     The objective of this part of the code is:

@@ -506,9 +506,15 @@ int fc_solve_apply_preset_by_ptr(
     {
         return FCS_PRESET_CODE_DECKS_EXCEED_MAX;
     }
+#ifndef HARD_CODED_NUM_FREECELLS
     instance->freecells_num = preset.freecells_num;
+#endif
+#ifndef HARD_CODED_NUM_STACKS
     instance->stacks_num = preset.stacks_num;
+#endif
+#ifndef HARD_CODED_NUM_DECKS
     instance->decks_num = preset.decks_num;
+#endif
 
     instance->sequences_are_built_by = preset.sequences_are_built_by;
     instance->unlimited_sequence_move = preset.unlimited_sequence_move;
