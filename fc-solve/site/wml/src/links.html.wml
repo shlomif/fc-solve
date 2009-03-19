@@ -158,6 +158,15 @@ solutions' verification code</a>.
 </p>
 </li>
 
+<li>
+<p>
+<a href="http://www.gnu.org/software/gdb/">GDB, the GNU Debugger</a> - 
+a powerful, cross-platform, scriptable, and open-source command-line 
+debugger for binary programs (C, C++, Assembly, etc.). Made debugging and
+fixing many hard-to-catch bugs much easier.
+</p>
+</li>
+
 </ul>
 
 <h2 id="front_ends">Programs that use Freecell Solver</h2>
