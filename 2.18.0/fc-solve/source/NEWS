@@ -1,0 +1,191 @@
+Version 2.18.0 (19-Mar-2009)
+----------------------------
+
+1. Added the FCS_FREECELL_ONLY compile-time flag to hard-code the settings
+for Freecell and thus allow faster run-time. On a Pentium 4-2.4GHz machine
+running Mandriva Linux Cooker, this allows to solve the Microsoft 32,000 in 
+194.56353 seconds ( 164 deals / second ) instead of 
+228.84 seconds for the generic version ( 140 deals / second ).
+
+2. Fixed using libredblack ( http://libredblack.sourceforge.net/ ) for states 
+and stacks storage. (Compile-time options)
+
+3. Added an option to use libJudy ( http://judy.sourceforge.net/ ) for states
+and stacks storage. Yields better performance than libredblack, but worse
+than the internal hash.
+
+4. Added the -Wall by default for gcc in CMake.
+
+5. Added the boards target to generate 24.board and 1941.board.
+
+6. Updated the TODO file.
+
+7. Added previous NEWS items for previous versions (in this file).
+
+8. Now documenting the --version flag in USAGE.
+
+9. Added an experimental ./configure convenience script (written in 
+Perl) to run CMake using some configuration options. NOTE: Please don't 
+use it to build packages.
+
+10. Added "scripts/time-fcs.pl" to help time a 
+freecell-solver-range-parallel-solve dump.
+
+11. Got rid of the hard_dfs() scan. It is still accepted as an argument, but
+is now using the soft_dfs() routines instead.
+
+12. Many internal refactorings, cleanups tweaks and fine-tunings.
+
+13. Moved away change_ver.sh to scripts/old/change_ver.sh - it does not
+seem to be used any longer.
+
+Version 2.16.0 (15-Mar-2009)
+----------------------------
+
+1. Made sure the indexes of the iterations when the "-s -i" flags are specified
+are consecutive. Previously, they were much more inconsistent.
+
+2. (Internals) Split ptr_state_with_locations_t into ptr_state_t (the key)
+and ptr_state_extra_info_t (the value). Not all code inside the #ifdef's
+(like the libavl / libredblack code) was ported to use it instead.
+
+Version 2.14.0 (25-Jan-2009)
+----------------------------
+
+1. Fixed the compilation with profiling information in Makefile.gnu (should be
+of concern only to developers). 
+
+2. Optimized move_stack_cards_to_different_stacks, yielding a substantial
+speed increase.
+
+3. Converted the identifiers from starting with freecell_solver_ to 
+starting with fc_solve_ , which is shorter and saner.
+
+freecell_solver_user_ is still used in the API in order to not break
+compatibility.
+
+4. Made sure the effect of the "--sequence-move unlimited" option is not
+dependent on other options, so the sequence move will always be unlimited.
+(Thanks to larrysan for reporting this bug).
+
+5. Fixed run-tests.pl (and as a result also ctest -V and make test) to
+run properly after a raw unpacking.
+
+Version 2.12.0 ( 10-Dec-2008)
+-----------------------------
+
+1. A New Configuration and buld system based on CMake 
+( http://www.cmake.org/ ) which results in faster configurations
+and builds, and a much reduced archive size.
+
+2. There's a new suite of automated tests. See the file README for details
+how to run them.
+
+3. There's a new --version flag that prints the version of the library.
+
+4. A speed optimization to the command line processing based on a radix-tree.
+
+5. Many bug-fixes since 2.8.0. (Released as 2.8.x).
+
+Version 2.8.0 ( 28-Sep-2002 )
+-----------------------------
+
+1. Better documentation and help screens. See: 
+
+http://freshmeat.net/articles/time-to-rethink-your-help-flag
+
+2. A preset system - see the "-l" flag in USAGE.
+
+3. An option to read paramters from files. See "--read-from-file" in USAGE.
+
+4. Finally, it is now possible to run one instance of the solver after the 
+other in case the other one has returned a negative verdict. This is useful
+for example to run an atomic moves preset after a meta-moves one, as the
+latter cannot guarantee an accurate false verdict.
+
+Version 2.6.0 ( 12-Jul-2002 )
+-----------------------------
+
+1. Atomic moves and some atomic moves presets have been added. Solving
+using atomic moves guarantees that there will be no false negatives, but
+is slower than the Meta-moves-based presets. (At least for now). It also
+yields less interesting solutions.
+
+2. There is now a "--prelude" switch (see USAGE) that allows running a 
+static order of quotas at the beginning of the scan for the participating
+soft threads. It makes constructing faster solving presets easier, especially
+after utilising this code:
+
+http://svn.berlios.de/viewcvs/fc-solve/trunk/fc-solve/presets/
+
+Also see the "--st-name" option.
+
+3. The PySol "Fan" game preset was added to make_pysol_freecell_board.py and
+to Freecell Solver itself. Note that the game is played with 18 
+columns/stacks , so Freecell Solver will usually need to be recompiled.
+
+4. Several other command line options:
+    - "--reparent-states"
+    - "--calc-real-depth"
+    - "--optimization-tests-order"
+    - "--scans-synergy"
+
+See the "USAGE" file for more information.
+
+5. The internal code has undergone several speed boosts that made Freecell
+Solver much faster. Now the INDIRECT_STACK_STATES is a bit faster than
+COMPACT_STATES.
+
+6. Updated the TODO list.
+
+Version 2.4.0 ( 29-Mar-2002 )
+-----------------------------
+
+1. Now several scans are to operate on the same states' collection. This is 
+done using a mechanism called "soft threads", which is switched in user-land
+and does not require system multi-threading. In the file "USAGE" see:
+    - "-nst"  / "--next-soft-thread"
+    - "-nht"  / "--next-hard-thread"
+    - "-step" / "--soft-thread-step"
+
+2. fcs_cl.h was included in the RPM .spec.
+
+Version 2.2.0 ( 18-Feb-2002 )
+-----------------------------
+
+1. Freecell Solver's version is now kept in the file ver.txt
+
+2. Added manual pages symbolic links for the following command-line board
+generators:
+    - make-gnome-freecell-board
+    - make_pysol_freecell_board.py
+    - make-aisleriot-freecell-board 
+    - pi-make-microsoft-freecell-board
+
+3. Moved more declarations of functions to header files (ending with .h)
+
+4. Added some compiler-optional inline annotations for functions.
+
+5. The identifiers of the library are now all residing under freecell_solver_
+
+6. New flag:
+    - "--max-stored-states"
+
+7. The package can now be built as an RPM for Red Hat Linux and compatible
+systems by running rpmbuild -ta on the archive.
+
+8. Several speed-ups.
+
+Version 1.6.0 ( 11-Apr-2001 )
+-----------------------------
+
+1. Freecell Solver now has a solution optimization scan. Check it out
+by adding the "-opt" flag.
+
+2. Many comments were added to the code, and you are welcome to go over
+it and see if you understand everything that goes on there. If you don't,
+contact me and I'll add some more comments.
+
+3. Several speed optimizations were done in the internal hash, so I think
+it should run at least a little faster.
+
