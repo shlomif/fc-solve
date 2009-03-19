@@ -77,7 +77,6 @@ fcs_move_stack_t * fcs_move_stack_duplicate(fcs_move_stack_t * stack);
 
 
 void fc_solve_apply_move(
-        fcs_state_t * state_with_locations_key,
         fcs_state_extra_info_t * state_with_locations_val,
         fcs_move_t move,
         int freecells_num,

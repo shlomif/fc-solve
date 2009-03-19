@@ -457,7 +457,6 @@ int freecell_solver_user_get_next_move(
         if (ret == 0)
         {
             fc_solve_apply_move(
-                &(user->running_state.s),
                 &(user->running_state.info),
                 *move,
                 user->instance->freecells_num,

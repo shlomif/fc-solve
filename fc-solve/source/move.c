@@ -140,7 +140,6 @@ fcs_move_stack_t * fcs_move_stack_duplicate(
 
   */
 void fc_solve_apply_move(
-        fcs_state_t * state_key,
         fcs_state_extra_info_t * state_val,
         fcs_move_t move,
         int freecells_num,
@@ -153,6 +152,8 @@ void fc_solve_apply_move(
     int src_stack, dest_stack;
     int src_freecell, dest_freecell;
     int src_stack_len;
+
+    fcs_state_t * state_key = state_val->key;
 
     dest_stack = fcs_move_get_dest_stack(move);
     src_stack = fcs_move_get_src_stack(move);
@@ -288,7 +289,6 @@ void fc_solve_move_stack_normalize(
             ) == 0)
     {
         fc_solve_apply_move(
-            &dynamic_state.s,
             &dynamic_state.info,
             in_move,
             freecells_num,
