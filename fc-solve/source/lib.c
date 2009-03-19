@@ -903,7 +903,6 @@ static void freecell_solver_user_iter_handler_wrapper(
     int iter_num,
     int depth,
     void * lp_instance,
-    fcs_state_t * ptr_state_key,
     fcs_state_extra_info_t * ptr_state_val,
     int parent_iter_num
     )
@@ -911,7 +910,7 @@ static void freecell_solver_user_iter_handler_wrapper(
     fcs_user_t * user;
 
     fcs_standalone_state_ptrs_t state;
-    state.key = ptr_state_key;
+    state.key = ptr_state_val->key;
     state.val = ptr_state_val;
 
     user = (fcs_user_t *)user_instance;

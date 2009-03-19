@@ -277,7 +277,6 @@ int fc_solve_soft_dfs_do_solve(
                         instance->num_times,
                         depth,
                         (void*)instance,
-                        ptr_state_key,
                         ptr_state_val,
                         ((depth == 0) ?
                             0 :
@@ -904,7 +903,6 @@ int fc_solve_a_star_or_bfs_do_solve(
                     instance->num_times,
                     ptr_state_val->depth,
                     (void*)instance,
-                    ptr_state_key,
                     ptr_state_val,
                     ((ptr_state_val->parent_val == NULL) ?
                         0 :

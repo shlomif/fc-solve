@@ -195,7 +195,6 @@ typedef struct fc_solve_instance
         int iter_num,
         int depth,
         void * instance,
-        fcs_state_t * state_key,
         fcs_state_extra_info_t * state_val,
         int parent_iter_num
         );
