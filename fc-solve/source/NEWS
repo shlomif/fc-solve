@@ -1,3 +1,44 @@
+Version 2.18.0 (19-Mar-2009)
+----------------------------
+
+1. Added the FCS_FREECELL_ONLY compile-time flag to hard-code the settings
+for Freecell and thus allow faster run-time. On a Pentium 4-2.4GHz machine
+running Mandriva Linux Cooker, this allows to solve the Microsoft 32,000 in 
+194.56353 seconds ( 164 deals / second ) instead of 
+228.84 seconds for the generic version ( 140 deals / second ).
+
+2. Fixed using libredblack ( http://libredblack.sourceforge.net/ ) for states 
+and stacks storage. (Compile-time options)
+
+3. Added an option to use libJudy ( http://judy.sourceforge.net/ ) for states
+and stacks storage. Yields better performance than libredblack, but worse
+than the internal hash.
+
+4. Added the -Wall by default for gcc in CMake.
+
+5. Added the boards target to generate 24.board and 1941.board.
+
+6. Updated the TODO file.
+
+7. Added previous NEWS items for previous versions (in this file).
+
+8. Now documenting the --version flag in USAGE.
+
+9. Added an experimental ./configure convenience script (written in 
+Perl) to run CMake using some configuration options. NOTE: Please don't 
+use it to build packages.
+
+10. Added "scripts/time-fcs.pl" to help time a 
+freecell-solver-range-parallel-solve dump.
+
+11. Got rid of the hard_dfs() scan. It is still accepted as an argument, but
+is now using the soft_dfs() routines instead.
+
+12. Many internal refactorings, cleanups tweaks and fine-tunings.
+
+13. Moved away change_ver.sh to scripts/old/change_ver.sh - it does not
+seem to be used any longer.
+
 Version 2.16.0 (15-Mar-2009)
 ----------------------------
 
