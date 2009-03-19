@@ -109,6 +109,32 @@ and does not require system multi-threading. In the file "USAGE" see:
 
 2. fcs_cl.h was included in the RPM .spec.
 
+Version 2.2.0 ( 18-Feb-2002 )
+-----------------------------
+
+1. Freecell Solver's version is now kept in the file ver.txt
+
+2. Added manual pages symbolic links for the following command-line board
+generators:
+    - make-gnome-freecell-board
+    - make_pysol_freecell_board.py
+    - make-aisleriot-freecell-board 
+    - pi-make-microsoft-freecell-board
+
+3. Moved more declarations of functions to header files (ending with .h)
+
+4. Added some compiler-optional inline annotations for functions.
+
+5. The identifiers of the library are now all residing under freecell_solver_
+
+6. New flag:
+    - "--max-stored-states"
+
+7. The package can now be built as an RPM for Red Hat Linux and compatible
+systems by running rpmbuild -ta on the archive.
+
+8. Several speed-ups.
+
 Version 1.6.0 ( 11-Apr-2001 )
 -----------------------------
 
