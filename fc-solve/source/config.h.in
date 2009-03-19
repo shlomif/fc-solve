@@ -45,25 +45,39 @@ extern "C" {
 */
 #cmakedefine IA_STATE_PACKS_GROW_BY 32
 
+#cmakedefine FCS_FREECELL_ONLY
+
 /*
  * The maximal number of Freecells. For efficiency's sake it should be a
  * multiple of 4.
  * */
 
+#ifdef FCS_FREECELL_ONLY
+#define MAX_NUM_FREECELLS 4
+#else
 #define MAX_NUM_FREECELLS ${MAX_NUM_FREECELLS}
+#endif
 
 /*
  * The maximal number of Stacks. For efficiency's sake it should be a
  * multiple of 4.
  * */
 
+#ifdef FCS_FREECELL_ONLY
+#define MAX_NUM_STACKS 8
+#else
 #define MAX_NUM_STACKS ${MAX_NUM_STACKS}
+#endif
 /*
  * The maximal number of initial cards that can be found in a stack.
  * */
 #define MAX_NUM_INITIAL_CARDS_IN_A_STACK ${MAX_NUM_INITIAL_CARDS_IN_A_STACK}
 
+#ifdef FCS_FREECELL_ONLY
+#define MAX_NUM_DECKS 1
+#else
 #define MAX_NUM_DECKS ${MAX_NUM_DECKS}
+#endif
 
 
 #define FCS_STATE_STORAGE_INDIRECT 0
