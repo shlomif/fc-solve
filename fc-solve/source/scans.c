@@ -442,7 +442,6 @@ int fc_solve_soft_dfs_do_solve(
                         FCS_VISITED_DEAD_END)
                     ) &&
                     (! is_scan_visited(
-                        single_derived_state->key,
                         single_derived_state->val,
                         soft_thread_id)
                     )
@@ -452,7 +451,6 @@ int fc_solve_soft_dfs_do_solve(
                     hard_thread->num_times++;
 
                     set_scan_visited(
-                        single_derived_state->key,
                         single_derived_state->val,
                         soft_thread_id
                     );
@@ -844,7 +842,7 @@ int fc_solve_a_star_or_bfs_do_solve(
         if ((method == FCS_METHOD_OPTIMIZE) ?
                 (ptr_state_val->visited & FCS_VISITED_IN_OPTIMIZED_PATH) :
                 ((ptr_state_val->visited & FCS_VISITED_DEAD_END) ||
-                 (is_scan_visited(ptr_state_key, ptr_state_val, soft_thread_id)))
+                 (is_scan_visited(ptr_state_val, soft_thread_id)))
                 )
         {
             goto label_next_state;
@@ -991,7 +989,6 @@ int fc_solve_a_star_or_bfs_do_solve(
         else
         {
             set_scan_visited(
-                    ptr_state_key,
                     ptr_state_val,
                     soft_thread_id
                     );

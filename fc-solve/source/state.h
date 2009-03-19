@@ -30,8 +30,8 @@ extern "C" {
  *
  ************/
 
-#define is_scan_visited(ptr_state_key, ptr_state_val, scan_id) (ptr_state_val->scan_visited[(scan_id)>>5] & (1 << ((scan_id)&((1<<(5))-1))))
-#define set_scan_visited(ptr_state_key, ptr_state_val, scan_id) { ptr_state_val->scan_visited[(scan_id)>>5] |= (1 << ((scan_id)&((1<<(5))-1))); }
+#define is_scan_visited(ptr_state_val, scan_id) (ptr_state_val->scan_visited[(scan_id)>>5] & (1 << ((scan_id)&((1<<(5))-1))))
+#define set_scan_visited(ptr_state_val, scan_id) { ptr_state_val->scan_visited[(scan_id)>>5] |= (1 << ((scan_id)&((1<<(5))-1))); }
 
 
 #ifdef DEBUG_STATES
