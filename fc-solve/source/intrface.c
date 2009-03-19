@@ -1018,14 +1018,11 @@ int fc_solve_solve_instance(
 #endif
 
     {
-        fcs_state_t * no_use_key;
         fcs_state_extra_info_t * no_use_val;
 
         fc_solve_check_and_add_state(
             instance->hard_threads[0]->soft_threads[0],
-            state_copy_ptr_key,
             state_copy_ptr_val,
-            &no_use_key,
             &no_use_val
             );
 

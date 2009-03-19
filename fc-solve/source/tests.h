@@ -88,13 +88,10 @@ fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);                      \
 fcs_move_stack_push(moves, temp_move);                                    \
                                                                           \
 {                                                                         \
-    fcs_state_t * existing_state_key;                                     \
     fcs_state_extra_info_t * existing_state_val;                          \
     check = fc_solve_check_and_add_state(                                 \
         soft_thread,                                                      \
-        ptr_new_state_key,                                                \
         ptr_new_state_val,                                                \
-        &existing_state_key,                                              \
         &existing_state_val                                               \
         );                                                                \
     if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||                     \

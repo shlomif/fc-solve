@@ -294,9 +294,7 @@ guint fc_solve_hash_function(gconstpointer key)
 
 GCC_INLINE int fc_solve_check_and_add_state(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * new_state_key,
     fcs_state_extra_info_t * new_state_val,
-    fcs_state_t * * existing_state_key,
     fcs_state_extra_info_t * * existing_state_val
     )
 {
@@ -309,6 +307,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 #endif
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
+    fcs_state_t * new_state_key = new_state_val->key;
 
     int is_state_new;
 
@@ -398,7 +397,6 @@ GCC_INLINE int fc_solve_check_and_add_state(
         ) == 0);
         if (! is_state_new)
         {
-            *existing_state_key = existing_key_void;
             *existing_state_val = existing_val_void;
         }
     }
