@@ -129,8 +129,8 @@ void fc_solve_soft_thread_init_soft_dfs(
 {
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
     
-    fcs_state_t * ptr_orig_state_key = instance->state_copy_ptr_key;
     fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
+    fcs_state_t * ptr_orig_state_key = ptr_orig_state_val->key;
     /*
         Allocate some space for the states at depth 0.
     */
@@ -765,8 +765,8 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
 {
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
 
-    fcs_state_t * ptr_orig_state_key = instance->state_copy_ptr_key;
     fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
+    fcs_state_t * ptr_orig_state_key = ptr_orig_state_val->key;
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {

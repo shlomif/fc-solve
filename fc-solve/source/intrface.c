@@ -917,7 +917,6 @@ int fc_solve_solve_instance(
     state_copy_ptr_val->parent_val = NULL;
     memset(&(state_copy_ptr_val->scan_visited), '\0', sizeof(state_copy_ptr_val->scan_visited));
 
-    instance->state_copy_ptr_key = state_copy_ptr_key;
     instance->state_copy_ptr_val = state_copy_ptr_val;
 
     /* Initialize the data structure that will manage the state collection */

@@ -308,7 +308,6 @@ typedef struct fc_solve_instance
     int optimize_solution_path;
 
     /* This is a place-holder for the initial state */
-    fcs_state_t * state_copy_ptr_key;
     fcs_state_extra_info_t * state_copy_ptr_val;
 
     /* This is the final state that the scan recommends to the
