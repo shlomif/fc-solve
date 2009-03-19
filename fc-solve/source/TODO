@@ -2,9 +2,6 @@
 
 --- Non-pressing ---
 
-* Convert the declarations of the sfs_simple_simon functions in tests.h
-to the typedef.
-
 * Make sure we only pass fcs_state_extra_info_t (= vals) around instead of 
 both them and fcs_state_t (= keys). That's because there's
 fcs_state_extra_info_t::key for the key.
