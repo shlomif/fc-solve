@@ -62,7 +62,6 @@ static void fc_solve_increase_dfs_max_depth(
 
     for(d=soft_thread->dfs_max_depth ; d<new_dfs_max_depth; d++)
     {
-        soft_thread->soft_dfs_info[d].state_key = NULL;
         soft_thread->soft_dfs_info[d].state_val = NULL;
         soft_thread->soft_dfs_info[d].derived_states_list.max_num_states = 0;
         soft_thread->soft_dfs_info[d].test_index = 0;
@@ -130,7 +129,6 @@ void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
     
     fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
-    fcs_state_t * ptr_orig_state_key = ptr_orig_state_val->key;
     /*
         Allocate some space for the states at depth 0.
     */
@@ -143,7 +141,6 @@ void fc_solve_soft_thread_init_soft_dfs(
     ptr_orig_state_val->moves_to_parent = NULL;
     ptr_orig_state_val->depth = 0;
 
-    soft_thread->soft_dfs_info[0].state_key = ptr_orig_state_key;
     soft_thread->soft_dfs_info[0].state_val = ptr_orig_state_val;
 
     return;
@@ -190,8 +187,8 @@ int fc_solve_soft_dfs_do_solve(
 
 
     dfs_max_depth = soft_thread->dfs_max_depth;
-    ptr_state_key = the_soft_dfs_info->state_key;
     ptr_state_val = the_soft_dfs_info->state_val;
+    ptr_state_key = ptr_state_val->key;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
     calculate_real_depth(
@@ -248,8 +245,8 @@ int fc_solve_soft_dfs_do_solve(
                 {
                     the_soft_dfs_info--;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
-                    ptr_state_key = the_soft_dfs_info->state_key;
                     ptr_state_val = the_soft_dfs_info->state_val;
+                    ptr_state_key = ptr_state_val->key;
                 }
 
                 continue; /* Just to make sure depth is not -1 now */
@@ -471,12 +468,12 @@ int fc_solve_soft_dfs_do_solve(
                     */
                     depth++;
                     the_soft_dfs_info++;
-                    the_soft_dfs_info->state_key =
-                        ptr_state_key =
-                        single_derived_state->key;
+
                     the_soft_dfs_info->state_val =
                         ptr_state_val =
                         single_derived_state->val;
+
+                    ptr_state_key = ptr_state_val->key;
 
                     the_soft_dfs_info->test_index = 0;
                     the_soft_dfs_info->current_state_index = 0;

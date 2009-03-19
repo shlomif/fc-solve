@@ -532,7 +532,6 @@ struct fc_solve_hard_thread_struct
 
 struct fcs_soft_dfs_stack_item_struct
 {
-    fcs_state_t * state_key;
     fcs_state_extra_info_t * state_val;
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
