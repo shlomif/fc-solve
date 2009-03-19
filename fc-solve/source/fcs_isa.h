@@ -13,7 +13,7 @@ extern void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread);
 extern fcs_state_with_locations_t * fcs_state_ia_alloc(fc_solve_instance_t * instance);
 #else
 
-#define fcs_state_ia_alloc_into_var(ret_key, ret_val, instance) \
+#define fcs_state_ia_alloc_into_var(ret_val, instance) \
 {           \
     if ((instance)->num_states_in_last_pack == (instance)->state_pack_len)     \
     {            \
@@ -29,9 +29,8 @@ extern fcs_state_with_locations_t * fcs_state_ia_alloc(fc_solve_instance_t * ins
     {          \
         fcs_state_keyval_pair_t * ret_helper; \
         ret_helper = &(instance->state_packs[instance->num_state_packs-1][instance->num_states_in_last_pack++]);       \
-        ret_key = &(ret_helper->s); \
         ret_val = &(ret_helper->info); \
-        ret_val->key = ret_key;  \
+        ret_val->key = &(ret_helper->s);  \
     } \
 }
 

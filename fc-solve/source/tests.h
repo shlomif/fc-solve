@@ -59,7 +59,8 @@ extern "C" {
 #define new_state_val (*ptr_new_state_val)
 
 #define sfs_check_state_begin()                                                \
-    fcs_state_ia_alloc_into_var(ptr_new_state_key, ptr_new_state_val, hard_thread);    \
+    fcs_state_ia_alloc_into_var(ptr_new_state_val, hard_thread);    \
+    ptr_new_state_key = ptr_new_state_val->key;                     \
     fcs_duplicate_state(new_state_key, new_state_val, state_key, state_val);       \
     /* Some A* and BFS parameters that need to be initialized in               \
      * the derived state.                                                      \

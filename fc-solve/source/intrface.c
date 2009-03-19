@@ -897,9 +897,11 @@ int fc_solve_solve_instance(
 
     /* Allocate the first state and initialize it to init_state */
     fcs_state_ia_alloc_into_var(
-            state_copy_ptr_key, state_copy_ptr_val,
+            state_copy_ptr_val,
             instance->hard_threads[0]
             );
+
+    state_copy_ptr_key = state_copy_ptr_val->key;
 
     fcs_duplicate_state(*state_copy_ptr_key, *state_copy_ptr_val, 
             (*(init_state_val->key)), *init_state_val
