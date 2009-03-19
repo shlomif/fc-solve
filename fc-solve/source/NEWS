@@ -97,6 +97,18 @@ COMPACT_STATES.
 
 6. Updated the TODO list.
 
+Version 2.4.0 ( 29-Mar-2002 )
+-----------------------------
+
+1. Now several scans are to operate on the same states' collection. This is 
+done using a mechanism called "soft threads", which is switched in user-land
+and does not require system multi-threading. In the file "USAGE" see:
+    - "-nst"  / "--next-soft-thread"
+    - "-nht"  / "--next-hard-thread"
+    - "-step" / "--soft-thread-step"
+
+2. fcs_cl.h was included in the RPM .spec.
+
 Version 1.6.0 ( 11-Apr-2001 )
 -----------------------------
 
