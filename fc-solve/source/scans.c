@@ -517,12 +517,12 @@ int fc_solve_soft_dfs_do_solve(
 
 static void initialize_a_star_rater(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_key,
     fcs_state_extra_info_t * ptr_state_val
     )
 {
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
+    fcs_state_t * ptr_state_key = ptr_state_val->key;
 
     int a, c, cards_num;
     fcs_card_t this_card, prev_card;
@@ -766,7 +766,6 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
     {
         initialize_a_star_rater(
             soft_thread,
-            ptr_orig_state_key,
             ptr_orig_state_val
             );
     }
