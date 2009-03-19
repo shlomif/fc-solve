@@ -155,27 +155,10 @@ typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
             \
 }
 
-#if 0
-#define fc_solve_derived_states_list_add_state(list,state_key,state_val) \
-    \
-{       \
-    if ((list)->num_states == (list)->max_num_states)  \
-    {        \
-        (list)->max_num_states += 16;     \
-        (list)->states = realloc((list)->states, sizeof((list)->states[0]) * (list)->max_num_states); \
-    }        \
-    (list)->states[(list)->num_states].key = (state_key);    \
-    (list)->states[(list)->num_states].val = (state_val);    \
-    (list)->num_states++;        \
-}
-
-#else
 extern void fc_solve_derived_states_list_add_state(
         fcs_derived_states_list_t * list,
         fcs_state_extra_info_t * state_val
         );
-#endif
-
 
 #ifdef __cplusplus
 }
