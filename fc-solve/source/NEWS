@@ -49,7 +49,18 @@ how to run them.
 Version 2.8.0 ( 28-Sep-2002 )
 -----------------------------
 
-Freecell Solver 2.8.0 has been released. This version features a better documentation and help screens, a preset system, and an option to read paramters from files. Plus, it is possible to run one instance of the solver after the other in case the other one has returned a negative verdict.
+1. Better documentation and help screens. See: 
+
+http://freshmeat.net/articles/time-to-rethink-your-help-flag
+
+2. A preset system - see the "-l" flag in USAGE.
+
+3. An option to read paramters from files. See "--read-from-file" in USAGE.
+
+4. Finally, it is now possible to run one instance of the solver after the 
+other in case the other one has returned a negative verdict. This is useful
+for example to run an atomic moves preset after a meta-moves one, as the
+latter cannot guarantee an accurate false verdict.
 
 Version 1.6.0 ( 11-Apr-2001 )
 -----------------------------
