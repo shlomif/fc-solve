@@ -31,7 +31,6 @@
 
 static pq_rating_t fc_solve_a_star_rate_state(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_key,
     fcs_state_extra_info_t * ptr_state_val
     );
 
@@ -588,12 +587,12 @@ static void initialize_a_star_rater(
 
 static pq_rating_t fc_solve_a_star_rate_state(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * ptr_state_key,
     fcs_state_extra_info_t * ptr_state_val
     )
 {
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
+    fcs_state_t * ptr_state_key = ptr_state_val->key;
 
     double ret=0;
     int a, c, cards_num, num_cards_in_founds;
@@ -985,7 +984,6 @@ int fc_solve_a_star_or_bfs_do_solve(
                     ptr_new_state_key,
                     ptr_new_state_val,
                     fc_solve_a_star_rate_state(soft_thread, 
-                        ptr_new_state_key,
                         ptr_new_state_val
                         )
                     );
