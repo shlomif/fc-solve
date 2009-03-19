@@ -108,7 +108,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
     else if (check == FCS_STATE_ALREADY_EXISTS)                           \
     {                                                                     \
         fcs_state_ia_release(hard_thread);                                \
-        calculate_real_depth(existing_state_key, existing_state_val);     \
+        calculate_real_depth(existing_state_val);     \
         /* Re-parent the existing state to this one.                      \
          *                                                                \
          * What it means is that if the depth of the state if it          \

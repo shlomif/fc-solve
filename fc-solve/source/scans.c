@@ -192,7 +192,6 @@ int fc_solve_soft_dfs_do_solve(
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
     calculate_real_depth(
-        ptr_state_key,
         ptr_state_val
     );
  
@@ -481,7 +480,6 @@ int fc_solve_soft_dfs_do_solve(
                     derived_states_list->num_states = 0;
 
                     calculate_real_depth(
-                        ptr_state_key,
                         ptr_state_val
                     );
 
@@ -917,7 +915,6 @@ int fc_solve_a_star_or_bfs_do_solve(
         }
 
         calculate_real_depth(
-            ptr_state_key,
             ptr_state_val
         );
 

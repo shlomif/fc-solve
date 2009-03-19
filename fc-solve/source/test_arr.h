@@ -59,7 +59,7 @@ extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
  * It then assigns the newly updated depth throughout the path.
  * 
  * */
-#define calculate_real_depth(ptr_state_orig_key, ptr_state_orig_val) \
+#define calculate_real_depth(ptr_state_orig_val) \
 {                                                                  \
     if (calc_real_depth)                                           \
     {                                                              \
