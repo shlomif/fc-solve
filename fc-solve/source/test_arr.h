@@ -87,7 +87,7 @@ extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
  * This macro marks a state as a dead end, and afterwards propogates
  * this information to its parent and ancestor states.
  * */
-#define mark_as_dead_end(ptr_state_input_key, ptr_state_input_val) \
+#define mark_as_dead_end(ptr_state_input_val) \
 {      \
     if (scans_synergy)      \
     {        \

@@ -231,7 +231,6 @@ int fc_solve_soft_dfs_do_solve(
                 {
                     ptr_state_val->visited |= FCS_VISITED_ALL_TESTS_DONE;
                     mark_as_dead_end(
-                        ptr_state_key,
                         ptr_state_val
                     );
                 }
@@ -1009,7 +1008,6 @@ int fc_solve_a_star_or_bfs_do_solve(
                 if (is_a_complete_scan)
                 {
                     mark_as_dead_end(
-                            ptr_state_key,
                             ptr_state_val
                             );
                 }

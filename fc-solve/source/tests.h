@@ -128,7 +128,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
                 if ((--existing_state_val->parent_val->num_active_children) == 0) \
                 {                                                         \
                     mark_as_dead_end(                                     \
-                        existing_state_val->parent_val->key,              \
                         existing_state_val->parent_val                    \
                         );                                                \
                 }                                                         \
