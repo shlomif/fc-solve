@@ -898,7 +898,7 @@ int freecell_solver_user_set_a_star_weight(
 
 }
 
-static void freecell_solver_user_iter_handler_wrapper(
+static void iter_handler_wrapper(
     void * user_instance,
     int iter_num,
     int depth,
@@ -928,29 +928,29 @@ static void freecell_solver_user_iter_handler_wrapper(
 }
 
 void freecell_solver_user_set_iter_handler(
-void * user_instance,
-freecell_solver_user_iter_handler_t iter_handler,
-void * iter_handler_context
-)
+    void * user_instance,
+    freecell_solver_user_iter_handler_t iter_handler,
+    void * iter_handler_context
+    )
 {
-fcs_user_t * user;
+    fcs_user_t * user;
 
-user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)user_instance;
 
-if (iter_handler == NULL)
-{
-    user->instance->debug_iter_output = 0;
-}
-else
-{
-    /* Disable it temporarily while we change the settings */
-    user->instance->debug_iter_output = 0;
-    user->iter_handler = iter_handler;
-    user->iter_handler_context = iter_handler_context;
-    user->instance->debug_iter_output_context = user;
-    user->instance->debug_iter_output_func = freecell_solver_user_iter_handler_wrapper;
-    user->instance->debug_iter_output = 1;
-}
+    if (iter_handler == NULL)
+    {
+        user->instance->debug_iter_output = 0;
+    }
+    else
+    {
+        /* Disable it temporarily while we change the settings */
+        user->instance->debug_iter_output = 0;
+        user->iter_handler = iter_handler;
+        user->iter_handler_context = iter_handler_context;
+        user->instance->debug_iter_output_context = user;
+        user->instance->debug_iter_output_func = iter_handler_wrapper;
+        user->instance->debug_iter_output = 1;
+    }
 }
 
 char * freecell_solver_user_iter_state_as_string(
