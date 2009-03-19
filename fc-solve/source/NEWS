@@ -1,5 +1,5 @@
-From version 2.14.0 to 2.16.0
------------------------------
+Version 2.16.0 (15-Mar-2009)
+----------------------------
 
 1. Made sure the indexes of the iterations when the "-s -i" flags are specified
 are consecutive. Previously, they were much more inconsistent.
@@ -8,8 +8,8 @@ are consecutive. Previously, they were much more inconsistent.
 and ptr_state_extra_info_t (the value). Not all code inside the #ifdef's
 (like the libavl / libredblack code) was ported to use it instead.
 
-From version 2.12.0 to 2.14.0
------------------------------
+Version 2.14.0 (25-Jan-2009)
+----------------------------
 
 1. Fixed the compilation with profiling information in Makefile.gnu (should be
 of concern only to developers). 
@@ -30,7 +30,7 @@ dependent on other options, so the sequence move will always be unlimited.
 5. Fixed run-tests.pl (and as a result also ctest -V and make test) to
 run properly after a raw unpacking.
 
-From version 2.8.0 to 2.12.0
+Version 2.12.0 ( 10-Dec-2008)
 -----------------------------
 
 1. A New Configuration and buld system based on CMake 
@@ -44,8 +44,15 @@ how to run them.
 
 4. A speed optimization to the command line processing based on a radix-tree.
 
-From version 1.4.0 to 1.6.0
----------------------------
+5. Many bug-fixes since 2.8.0. (Released as 2.8.x).
+
+Version 2.8.0 ( 28-Sep-2002 )
+-----------------------------
+
+Freecell Solver 2.8.0 has been released. This version features a better documentation and help screens, a preset system, and an option to read paramters from files. Plus, it is possible to run one instance of the solver after the other in case the other one has returned a negative verdict.
+
+Version 1.6.0 ( 11-Apr-2001 )
+-----------------------------
 
 1. Freecell Solver now has a solution optimization scan. Check it out
 by adding the "-opt" flag.
