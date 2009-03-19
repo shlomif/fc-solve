@@ -1395,20 +1395,7 @@ void fc_solve_unresume_instance(
      * */
 }
 
-
 /***********************************************************/
-
-void fc_solve_destroy_move_stack_of_state(
-        fcs_state_t * ptr_state_key,
-        fcs_state_extra_info_t * ptr_state_val,
-        void * context
-        )
-{
-    if (ptr_state_val->moves_to_parent != NULL)
-    {
-        fcs_move_stack_destroy(ptr_state_val->moves_to_parent);
-    }
-}
 
 /*
     This function should be called after the user has retrieved the
