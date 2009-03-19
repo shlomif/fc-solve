@@ -379,7 +379,7 @@ int freecell_solver_user_resume_solution(
 
             ret = user->ret = 
                 user->instances_list[user->current_instance_idx].ret = 
-                fc_solve_solve_instance(user->instance, &user->state.s, &user->state.info);
+                fc_solve_solve_instance(user->instance, &user->state.info);
         }
         else
         {

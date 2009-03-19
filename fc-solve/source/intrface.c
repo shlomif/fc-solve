@@ -871,11 +871,15 @@ static int fc_solve_optimize_solution(
 }
 
 
+#ifdef FCS_WITH_TALONS
+
 extern void fc_solve_cache_talon(
     fc_solve_instance_t * instance,
     fcs_state_t * new_state_key,
     fcs_state_extra_info_t * new_state_val
     );
+
+#endif
 
 /*
     This function starts the solution process _for the first time_. If one
@@ -885,7 +889,6 @@ extern void fc_solve_cache_talon(
   */
 int fc_solve_solve_instance(
     fc_solve_instance_t * instance,
-    fcs_state_t * init_state_key,
     fcs_state_extra_info_t * init_state_val
     )
 {
@@ -899,7 +902,7 @@ int fc_solve_solve_instance(
             );
 
     fcs_duplicate_state(*state_copy_ptr_key, *state_copy_ptr_val, 
-            *init_state_key, *init_state_val
+            (*(init_state_val->key)), *init_state_val
             );
 
     {

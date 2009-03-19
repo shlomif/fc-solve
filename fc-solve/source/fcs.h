@@ -714,7 +714,6 @@ extern void fc_solve_finish_instance(
 
 extern int fc_solve_solve_instance(
     fc_solve_instance_t * instance,
-    fcs_state_t * init_state_key,
     fcs_state_extra_info_t * init_state_val
     );
 
