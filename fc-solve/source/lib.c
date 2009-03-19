@@ -400,7 +400,6 @@ int freecell_solver_user_resume_solution(
         {
             fc_solve_move_stack_normalize(
                 user->instance->solution_moves,
-                &(user->state.s),
                 &(user->state.info),
                 user->instance->freecells_num,
                 user->instance->stacks_num,
@@ -743,7 +742,6 @@ char * freecell_solver_user_move_to_string_w_state(
     
     return 
         fc_solve_move_to_string_w_state(
-            &(user->running_state.s), 
             &(user->running_state.info), 
             user->instance->freecells_num, 
             user->instance->stacks_num, 

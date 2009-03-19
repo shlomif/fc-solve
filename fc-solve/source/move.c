@@ -253,7 +253,6 @@ void fc_solve_apply_move(
 
 void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
-    fcs_state_t * init_state_key,
     fcs_state_extra_info_t * init_state_val,
     int freecells_num,
     int stacks_num,
@@ -273,7 +272,7 @@ void fc_solve_move_stack_normalize(
 
     fcs_duplicate_state(
             dynamic_state.s, dynamic_state.info,
-            *init_state_key, *init_state_val
+            *(init_state_val->key), *init_state_val
             );
 #ifdef INDIRECT_STACK_STATES
     for(a=0;a<stacks_num;a++)
@@ -375,14 +374,13 @@ char * fc_solve_move_to_string(fcs_move_t move, int standard_notation)
 {
     return 
         fc_solve_move_to_string_w_state(
-            NULL, NULL, 4, 8, 1, 
+            NULL, 4, 8, 1, 
             move, 
             (standard_notation == 2)?1:standard_notation
             );
 }
 
 char * fc_solve_move_to_string_w_state(
-        fcs_state_t * state_key,
         fcs_state_extra_info_t * state_val,
         int freecells_num,
         int stacks_num,
@@ -392,6 +390,9 @@ char * fc_solve_move_to_string_w_state(
         )
 {
     char string[256];
+
+    fcs_state_t * state_key = state_val->key;
+
     switch(fcs_move_get_type(move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:

@@ -86,7 +86,6 @@ void fc_solve_apply_move(
 
 void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
-    fcs_state_t * init_state_key,
     fcs_state_extra_info_t * init_state_val,
     int freecells_num,
     int stacks_num,
@@ -96,7 +95,6 @@ void fc_solve_move_stack_normalize(
 extern char * fc_solve_move_to_string(fcs_move_t move, int standard_notation);
 
 extern char * fc_solve_move_to_string_w_state(
-        fcs_state_t * state_key,
         fcs_state_extra_info_t * state_val,
         int freecells_num,
         int stacks_num,
