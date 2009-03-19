@@ -62,6 +62,41 @@ other in case the other one has returned a negative verdict. This is useful
 for example to run an atomic moves preset after a meta-moves one, as the
 latter cannot guarantee an accurate false verdict.
 
+Version 2.6.0 ( 12-Jul-2002 )
+-----------------------------
+
+1. Atomic moves and some atomic moves presets have been added. Solving
+using atomic moves guarantees that there will be no false negatives, but
+is slower than the Meta-moves-based presets. (At least for now). It also
+yields less interesting solutions.
+
+2. There is now a "--prelude" switch (see USAGE) that allows running a 
+static order of quotas at the beginning of the scan for the participating
+soft threads. It makes constructing faster solving presets easier, especially
+after utilising this code:
+
+http://svn.berlios.de/viewcvs/fc-solve/trunk/fc-solve/presets/
+
+Also see the "--st-name" option.
+
+3. The PySol "Fan" game preset was added to make_pysol_freecell_board.py and
+to Freecell Solver itself. Note that the game is played with 18 
+columns/stacks , so Freecell Solver will usually need to be recompiled.
+
+4. Several other command line options:
+    - "--reparent-states"
+    - "--calc-real-depth"
+    - "--optimization-tests-order"
+    - "--scans-synergy"
+
+See the "USAGE" file for more information.
+
+5. The internal code has undergone several speed boosts that made Freecell
+Solver much faster. Now the INDIRECT_STACK_STATES is a bit faster than
+COMPACT_STATES.
+
+6. Updated the TODO list.
+
 Version 1.6.0 ( 11-Apr-2001 )
 -----------------------------
 
