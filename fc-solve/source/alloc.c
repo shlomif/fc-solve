@@ -1,5 +1,5 @@
 /*
- * alloc.c - a dynamic memory allocator. It allocates blocks of relatively 
+ * alloc.c - a dynamic memory allocator. It allocates blocks of relatively
  * small size, in a contiguous, compact manner. The most recent block can
  * be released, but otherwise the blocks are kept for prosperity.
  *
@@ -21,7 +21,7 @@
 
 #define ALLOCED_SIZE (8*1024-10*sizeof(char *))
 
-fcs_compact_allocator_t * 
+fcs_compact_allocator_t *
     fc_solve_compact_allocator_new(void)
 {
     fcs_compact_allocator_t * allocator;
@@ -31,13 +31,13 @@ fcs_compact_allocator_t *
     allocator->max_num_packs = IA_STATE_PACKS_GROW_BY;
     allocator->packs = (char * *)malloc(sizeof(allocator->packs[0]) * allocator->max_num_packs);
     allocator->num_packs = 1;
-    allocator->max_ptr = 
-        (allocator->ptr = 
-        allocator->rollback_ptr = 
-        allocator->packs[0] = 
+    allocator->max_ptr =
+        (allocator->ptr =
+        allocator->rollback_ptr =
+        allocator->packs[0] =
         malloc(ALLOCED_SIZE))
             + ALLOCED_SIZE;
-    
+
     return allocator;
 }
 
@@ -51,17 +51,17 @@ void fc_solve_compact_allocator_extend(
         allocator->max_num_packs += IA_STATE_PACKS_GROW_BY;
         allocator->packs = (char * *)realloc(allocator->packs, sizeof(allocator->packs[0]) * allocator->max_num_packs);
     }
-    
-    allocator->max_ptr = 
-        (allocator->ptr = 
-        allocator->rollback_ptr = 
-        allocator->packs[allocator->num_packs++] = 
+
+    allocator->max_ptr =
+        (allocator->ptr =
+        allocator->rollback_ptr =
+        allocator->packs[allocator->num_packs++] =
         malloc(ALLOCED_SIZE))
             + ALLOCED_SIZE;
 }
 
 #if 0
-char * 
+char *
     fc_solve_compact_allocator_alloc(
         fcs_compact_allocator_t * allocator,
         int how_much

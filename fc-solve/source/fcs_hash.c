@@ -244,7 +244,7 @@ static void SFO_hash_rehash(
         hash->compare_function,
         hash->context
         );
-#endif    
+#endif
 
     old_size = hash->size;
     new_size = old_size << 1;
@@ -292,6 +292,6 @@ static void SFO_hash_rehash(
 #else
 
 /* ANSI C doesn't allow empty compilation */
-static void fc_solve_hash_c_dummy(); 
+static void fc_solve_hash_c_dummy();
 
 #endif /* (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || defined(INDIRECT_STACK_STATES) */

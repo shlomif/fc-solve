@@ -8,7 +8,7 @@ use IO::All;
 foreach my $file (glob("*.c"))
 {
     my @lines = io($file)->getlines();
-    
+
     my @new;
 
     while (defined(my $l = shift(@lines)))

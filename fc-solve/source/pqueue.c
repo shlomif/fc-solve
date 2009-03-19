@@ -55,7 +55,7 @@ void fc_solve_PQueueInitialise(
 
 int fc_solve_PQueuePush(
         PQUEUE *pq,
-        fcs_state_extra_info_t * val, 
+        fcs_state_extra_info_t * val,
         pq_rating_t r
         )
 {
@@ -119,7 +119,7 @@ void fc_solve_PQueueFree( PQUEUE *pq )
     free( pq->Elements );
 }
 
-/* remove the first node from the pqueue and provide a pointer to it 
+/* remove the first node from the pqueue and provide a pointer to it
  *
  * Returns 0 if found.
  * Returns 1 if not found.

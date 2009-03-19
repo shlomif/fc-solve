@@ -355,7 +355,7 @@ struct binary_output_struct
     FILE * file;
     char * buffer;
     char * buffer_end;
-    char * ptr;    
+    char * ptr;
 };
 
 typedef struct binary_output_struct binary_output_t;
@@ -364,7 +364,7 @@ void print_int(binary_output_t * bin, int val)
 {
     unsigned char * buffer = (unsigned char *)bin->ptr;
     int p;
-            
+
     for(p=0;p<4;p++)
     {
         buffer[p] = (val & 0xFF);
@@ -384,7 +384,7 @@ void print_int(binary_output_t * bin, int val)
 
 static void print_help(void)
 {
-    printf("\n%s", 
+    printf("\n%s",
 "freecell-solver-range-parallel-solve start end print_step\n"
 "   [--binary-output-to filename] [--total-iterations-limit limit]\n"
 "   [fc-solve Arguments...]\n"
@@ -406,14 +406,14 @@ int read_int(FILE * f, int * dest)
 {
     unsigned char buffer[4];
     int num_read;
-    
+
     num_read = fread(buffer, 1, 4, f);
     if (num_read != 4)
     {
         return 1;
     }
     *dest = (buffer[0]+((buffer[1]+((buffer[2]+((buffer[3])<<8))<<8))<<8));
-    
+
     return 0;
 }
 
@@ -447,7 +447,7 @@ int main(int argc, char * argv[])
     char * binary_output_filename = NULL;
 
     binary_output_t binary_output;
-    
+
 
     int arg = 1, start_from_arg;
     if (argc < 4)
@@ -459,7 +459,7 @@ int main(int argc, char * argv[])
     start_board = atoi(argv[arg++]);
     end_board = atoi(argv[arg++]);
     stop_at = atoi(argv[arg++]);
-    
+
     for (;arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--binary-output-to"))
@@ -528,7 +528,7 @@ int main(int argc, char * argv[])
                 fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
                 exit(-1);
             }
-            
+
             print_int_wrapper(start_board);
             print_int_wrapper(end_board);
             print_int_wrapper(total_iterations_limit_per_board);
@@ -545,7 +545,7 @@ int main(int argc, char * argv[])
                            );     \
                     exit(-1);       \
                 }       \
-            }        
+            }
             read_int_wrapper(start_board);
             read_int_wrapper(end_board);
             read_int_wrapper(total_iterations_limit_per_board);
@@ -569,7 +569,7 @@ int main(int argc, char * argv[])
             {
                 fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
                 exit(-1);
-            }            
+            }
         }
     }
     else
@@ -580,7 +580,7 @@ int main(int argc, char * argv[])
     user.instance = freecell_solver_user_alloc();
 
     arg = start_from_arg;
-    
+
     parser_ret =
         freecell_solver_user_cmd_line_parse_args(
             user.instance,
@@ -607,7 +607,7 @@ int main(int argc, char * argv[])
                 " and was not supplied with one.\n", argv[arg]);
         return (-1);
     }
-    else if (        
+    else if (
         (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
         )
     {
@@ -619,11 +619,11 @@ int main(int argc, char * argv[])
         return (-1);
     }
 
-    
+
 
     ret = 0;
-    
-    
+
+
 
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
@@ -635,7 +635,7 @@ int main(int argc, char * argv[])
 
         freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
 
-        ret = 
+        ret =
             freecell_solver_user_solve_board(
                 user.instance,
                 buffer
@@ -698,7 +698,7 @@ int main(int argc, char * argv[])
         {
             total_num_iters += total_num_iters_temp;
             total_num_iters_temp = 0;
-            
+
 
 #ifndef WIN32
             gettimeofday(&tv,&tz);
@@ -725,7 +725,7 @@ int main(int argc, char * argv[])
             fflush(stdout);
 
         }
-        
+
 
         freecell_solver_user_recycle(user.instance);
     }

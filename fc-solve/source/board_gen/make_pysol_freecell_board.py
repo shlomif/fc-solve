@@ -2,9 +2,9 @@
 #
 # make_pysol_freecell_board.py - Program to generate the boards of
 # PySol for input into Freecell Solver.
-# 
+#
 # Usage: make_pysol_freecell_board.py [board number] | fc-solve
-# 
+#
 # Or on non-UNIXes:
 #
 # python make_pysol_freecell_board.py [board number] | fc-solve
@@ -15,7 +15,7 @@
 # Based on the code by Markus Franz Xaver Johannes Oberhumer.
 # Modified by Shlomi Fish, 2000
 #
-# Since much of the code here is ripped from the actual PySol code, this 
+# Since much of the code here is ripped from the actual PySol code, this
 # program is distributed under the GNU General Public License.
 #
 #
@@ -171,7 +171,7 @@ class LCRandom64(PysolRandom):
     def random(self):
         self.seed = (self.seed*6364136223846793005L + 1L) & self.MAX_SEED
         return ((self.seed >> 21) & 0x7fffffffL) / 2147483648.0
-        
+
 
 
 # /***********************************************************************
@@ -275,7 +275,7 @@ class Board:
             self.talon = []
         if (self.with_foundations):
             self.foundations = map(lambda s:empty_card(),range(4))
-    
+
     def reverse_cols(self):
         return self.columns.rev()
 
@@ -314,13 +314,13 @@ class Board:
     def add_talon(self, card):
         if not self.with_talon:
             raise "Layout does not have a talon!"
-        
+
         self.talon.append(card)
 
     def put_into_founds(self, card):
         if not self.with_foundations:
             raise "Layout does not have foundations!"
-        
+
         if ((self.foundations[card.suit].rank+1) == card.rank):
             self.foundations[card.suit] = card
             return True
@@ -354,7 +354,7 @@ def flip_card(card_str, flip):
     else:
         return card_str
 
-    
+
 def shuffle(orig_cards, game_num):
     if game_num <= 32000:
         r = LCRandom31()
@@ -375,10 +375,10 @@ def shuffle(orig_cards, game_num):
 
 class Game:
     REVERSE_MAP = \
-        { 
-                "freecell": 
-                [ "freecell", "forecell", "bakers_game", 
-        "ko_bakers_game", "kings_only_bakers_game", "relaxed_freecell", 
+        {
+                "freecell":
+                [ "freecell", "forecell", "bakers_game",
+        "ko_bakers_game", "kings_only_bakers_game", "relaxed_freecell",
         "eight_off" ],
                 "der_katz":
                 [ "der_katz", "der_katzenschwantz", "die_schlange"],
@@ -432,16 +432,16 @@ class Game:
 
     def deal(self):
         orig_cards = createCards(self.get_num_decks(), self.print_ts)
-    
+
         orig_cards = shuffle(orig_cards, self.game_num)
-    
+
         cards = orig_cards
         cards.reverse()
 
         self.cards = cards
         self.card_idx = 0
         return True
-    
+
     def __iter__(self):
         return self
 
@@ -512,9 +512,9 @@ class Game:
 
         for card in game:
             game.add_freecell(card)
-    
+
     def bakers_dozen(game):
-        i, n = 0, 13 
+        i, n = 0, 13
         kings = []
         cards = game.cards
         cards.reverse()
@@ -529,7 +529,7 @@ class Game:
                     cards[i], cards[j] = cards[j], cards[i]
                     break
                 j = j + n
-        
+
         game.new_cards(cards)
 
         game.board = Board(13)
@@ -542,9 +542,9 @@ class Game:
 
         game.cyclical_deal(num_cols*2, num_cols, flipped=True)
         game.cyclical_deal(num_cols, num_cols, flipped=False)
-        
+
         game.add_all_to_talon()
-    
+
     def klondike(game):
         num_cols = 7
         game.board = Board(num_cols, with_talon=True)
@@ -578,12 +578,12 @@ class Game:
         game.board = Board(18)
 
         game.cyclical_deal(52-1, 17)
-        
+
         game.add(17, game.next())
 
     def beleaguered_castle(game):
         aces_up = game.game_id in ("beleaguered_castle", "citadel")
-    
+
         game.board = Board(8, with_foundations=True)
 
         if aces_up:
@@ -623,7 +623,7 @@ class Game:
         for i in range(4):
             for j in range(1,num_cols):
                 game.add(j, game.next())
-    
+
         game.cyclical_deal(num_cols, num_cols)
 
 def shlomif_main(args):

@@ -10,12 +10,12 @@
  * very portable.
  *
  * Another Note: Boards 1 through 32000 are the same as Microsoft Freecell's.
- * 
+ *
  * Written by Shlomi Fish, 2000
  *
  * This code is under the public domain.
- * 
- * 
+ *
+ *
  */
 
 #include <stdio.h>
@@ -43,7 +43,7 @@ typedef int card_t;
 struct struct_pysol_random_context
 {
     integer64 seed;
-    double (*random)(struct struct_pysol_random_context *); 
+    double (*random)(struct struct_pysol_random_context *);
     int (*randint)(struct struct_pysol_random_context *, int a, int b);
 };
 
@@ -79,8 +79,8 @@ void pysol_shuffle(pysol_random_context * context, card_t * seq, int len)
     int j;
     card_t temp;
     int n;
-    
-    n = len-1;    
+
+    n = len-1;
     while (n > 0)
     {
     	j = context->randint(context,0,n);
@@ -94,7 +94,7 @@ void pysol_shuffle(pysol_random_context * context, card_t * seq, int len)
 void pysol_create_cards(card_t * cards)
 {
     int id, suit, rank;
-    
+
     id = 0;
     for (suit=0;suit<4;suit++)
     {
@@ -144,7 +144,7 @@ char * card_to_string(char * s, int card, int not_append_ws)
     {
         strcat(s, " ");
     }
-    
+
     return s;
 }
 
@@ -176,7 +176,7 @@ int main(int argc, char * argv[])
     }
 
     pysol_create_cards(orig_cards);
-    
+
     if (game_num <= 32000)
     {
     	int fcards[NUM_CARDS];
@@ -215,15 +215,15 @@ int main(int argc, char * argv[])
     {
     	cards[i] = orig_cards[NUM_CARDS-i-1];
     }
-    
+
     for (i = 0; i < NUM_STACKS; i++) {
         output[i][0] = '\0';
     }
 
     for (i = 0; i < NUM_CARDS; i++) {
-        strcat(output[i % NUM_STACKS], 
-            card_to_string(card_string, 
-                cards[i], 
+        strcat(output[i % NUM_STACKS],
+            card_to_string(card_string,
+                cards[i],
                 (i>=NUM_CARDS-NUM_STACKS)
             )
         );

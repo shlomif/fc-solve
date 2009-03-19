@@ -6,8 +6,8 @@ fc-solve - The Freecell Solver command-line program for solving Freecell Games
 
 Detailed by invoking "fc-solve B<--help>".
 
-For the impatient, just type "fc-solve I<my-board>" 
-at the command line, where I<my-board> is a file that contains 
+For the impatient, just type "fc-solve I<my-board>"
+at the command line, where I<my-board> is a file that contains
 a valid board for input.
 
 =head1 DESCRIPTION
@@ -18,7 +18,7 @@ in:
 
 1. Its help screen, which can be printed by typing "fc-solve B<--help>".
 
-2. The README and USAGE text files in the Freecell Solver documentation 
+2. The README and USAGE text files in the Freecell Solver documentation
 directory. (usually: /usr/share/doc/freecell-solver-FCS_VERSION/* ).
 
 This man page is only a symbolic one, so sorry if you were looking for more

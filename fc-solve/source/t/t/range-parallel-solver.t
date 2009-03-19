@@ -30,7 +30,7 @@ sub verify_solution_test
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
-    open my $fc_solve_output, 
+    open my $fc_solve_output,
         "make_pysol_freecell_board.py $deal $variant | " .
         "$fc_solve_exe -g $variant " . shell_quote(@$theme) . " -p -t -sam |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";

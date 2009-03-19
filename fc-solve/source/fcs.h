@@ -231,7 +231,7 @@ typedef struct fc_solve_instance
     /*
      * The storage mechanism for the stacks assuming INDIRECT_STACK_STATES is
      * used.
-     * */    
+     * */
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     SFO_hash_t * stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
@@ -393,7 +393,7 @@ typedef struct fc_solve_instance
      * The tests order for the optimization scan as specified by the user.
      * */
     int opt_tests_order_set;
-    
+
     fcs_tests_order_t opt_tests_order;
 
     /*
@@ -402,12 +402,12 @@ typedef struct fc_solve_instance
      * */
     int to_reparent_states;
 
-    /* 
+    /*
      * This variable determines how the scans cooperate with each other.
-     * 
-     * A value of 0 indicates that they don't and only share the same 
+     *
+     * A value of 0 indicates that they don't and only share the same
      * states collection.
-     * 
+     *
      * A value of 1 indicates that they mark states as dead-end,
      * which may help or hinder other scans.
      * */
@@ -474,7 +474,7 @@ struct fc_solve_hard_thread_struct
     int num_times_step;
 
     /*
-     * This is the number of iterations that still have to be done for 
+     * This is the number of iterations that still have to be done for
      * soft_threads[st_idx]. It is reset to (st_idx+1)->num_times_step
      * when st_idx is incremented.
      * */
@@ -510,15 +510,15 @@ struct fc_solve_hard_thread_struct
     fcs_compact_allocator_t * stacks_allocator;
 #endif
 
-    /* 
+    /*
      * This is a compact memory allocator for the move stacks associated
      * with the states in the states collection.
      * */
     fcs_compact_allocator_t * move_stacks_allocator;
 
-    /* 
-     * This is a move stack that is used and re-used by the 
-     * tests functions of this hard thread 
+    /*
+     * This is a move stack that is used and re-used by the
+     * tests functions of this hard thread
      * */
     fcs_move_stack_t * reusable_move_stack;
 
@@ -537,7 +537,7 @@ struct fc_solve_hard_thread_struct
     int prelude_num_items;
     int prelude_idx;
     fcs_prelude_item_t * prelude;
-    
+
 };
 
 
@@ -562,7 +562,7 @@ struct fcs_soft_dfs_stack_item_struct
     int num_freestacks;
     int num_freecells;
     int derived_states_random_indexes_max_size;
-    int * derived_states_random_indexes;  
+    int * derived_states_random_indexes;
 };
 
 typedef struct fcs_soft_dfs_stack_item_struct fcs_soft_dfs_stack_item_t;
@@ -662,7 +662,7 @@ struct fc_solve_soft_thread_struct
      * num_freecells[i] - ditto for the freecells.
      *
      * */
-    
+
     fcs_soft_dfs_stack_item_t * soft_dfs_info;
 
     /* The depth of the DFS stacks */
@@ -677,7 +677,7 @@ struct fc_solve_soft_thread_struct
      * The initial seed of this random number generator
      * */
     int rand_seed;
-    
+
 
     /*
      * A flag that indicates if this soft thread have already been

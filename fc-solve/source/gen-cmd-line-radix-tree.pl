@@ -18,7 +18,7 @@ my %strings_to_opts_map;
 sub gen_radix_tree
 {
     my $start = {};
-    
+
     while (my ($string, $value) = each(%strings_to_opts_map))
     {
         my $remaining = $string;
@@ -37,11 +37,11 @@ sub gen_radix_tree
                 my @keys = keys(%$reached);
                 for my $pos (reverse(1 .. length($remaining)))
                 {
-                    if (my $k = 
+                    if (my $k =
                         first
                         {
                             substr($_, 0, $pos) eq
-                            substr($remaining, 0, $pos) 
+                            substr($remaining, 0, $pos)
                         } @keys
                     )
                     {
@@ -75,8 +75,8 @@ sub gen_radix_tree
                         }
                     }
                 }
-                
-                # Split at the first character 
+
+                # Split at the first character
                 foreach my $k (keys(%$reached))
                 {
                     if (($k eq "") || (length($k) == 1))
@@ -84,7 +84,7 @@ sub gen_radix_tree
                         next;
                     }
                     my $v = delete($reached->{$k});
-                    $reached->{substr($k,0,1)} = 
+                    $reached->{substr($k,0,1)} =
                     {
                         substr($k,1) => $v,
                     }
@@ -105,7 +105,7 @@ sub gen_radix_tree
     }
 
     # print Dumper($start);
-    
+
     # Now let's render $start into C-code.
     my $code = "";
 
@@ -115,7 +115,7 @@ opt = FCS_OPT_UNRECOGNIZED;
 EOF
 
     my $render;
-    
+
     $render = sub {
         my $node = shift;
 
@@ -148,7 +148,7 @@ EOF
         }
         else
         {
-            return "{ switch(*(p++)) { " 
+            return "{ switch(*(p++)) { "
                 . join("", (map { "\ncase '" . (length($_) ? $_ : q{\\0}) . "':\n"
                     . (length($_)
                         ? $render->($node->{$_})

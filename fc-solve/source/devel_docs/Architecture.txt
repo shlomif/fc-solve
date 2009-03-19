@@ -11,8 +11,8 @@ Its homepage is:
 
 http://groups.yahoo.com/group/fc-solve-discuss/
 
-The main author of this document (and Freecell Solver in general) is Shlomi 
-Fish. This document assumes knowledge regarding how to play Freecell and 
+The main author of this document (and Freecell Solver in general) is Shlomi
+Fish. This document assumes knowledge regarding how to play Freecell and
 similiar games. Information about how to play them can be found in the
 documentation of PySol (http://pysol.tsx.org/).
 
@@ -30,8 +30,8 @@ This document is distributed under the public domain.
 1.3.1 card, suit, card number and flipped status
 ________________________________________________
 
-A card has a suit and a card number. A suit is one of Hearts, Spades, 
-Diamonds and Clubs, commonly abbreviated as H, S, D and C respectively. 
+A card has a suit and a card number. A suit is one of Hearts, Spades,
+Diamonds and Clubs, commonly abbreviated as H, S, D and C respectively.
 The value of each suit in Freecell Solver is:
 H = 0
 S = 1
@@ -39,7 +39,7 @@ D = 2
 C = 3
 
 A card number is one of A, 2, 3, 4, 5, 6, 7, 8, 9, 10 (or in some notations
-T), J, Q, K. A is 1 in Freecell Solver, and the others are in their order, 
+T), J, Q, K. A is 1 in Freecell Solver, and the others are in their order,
 while a card number of 0 is reserved for the empty card. The card number is
 sometimes referred to in the code as deck. This is an error, which may be
 fixed in later versions of Freecell Solver.
@@ -65,7 +65,7 @@ A foundation is the pile where all the cards needs to be moved to at the end
 of the game, one card at a time starting at Ace, and up to Kings. In Freecell
 Solver, each foundation is indexed according to its suit. If there is more
 than one set of foundations, this numbering continues, in the sense that the
-second hearts is #4, the third hearts is #8, etc. 
+second hearts is #4, the third hearts is #8, etc.
 
 A foundation is sometimes erroneously called a deck in the Freecell Solver
 source code.
@@ -103,7 +103,7 @@ stacks or the freecells. Freecell Solver does not support this kind of move
 yet, and it is questionable whether it will ever will.
 
 A move or supermove may also involve moving several cards at once from one
-stack to the other. This can be either done by using unoccupied freecells and 
+stack to the other. This can be either done by using unoccupied freecells and
 vacant stacks, or in some variants of Freecell (like Relaxed Freecell) it can
 always be done.
 
@@ -111,39 +111,39 @@ always be done.
 _________________________________
 
 Move stacks constitute of an ordered sequence of one or more moves. Move
-stacks and the way they are managed and handled will be covered in 
+stacks and the way they are managed and handled will be covered in
 greater detail in section 5.
 
 A multi-move is a sequence of moves that aims to accomplish a certain task,
-such as moving a particular card to the foundations, or moving one card on 
-top of the other. Freecell Solver moves from one state to the other using 
+such as moving a particular card to the foundations, or moving one card on
+top of the other. Freecell Solver moves from one state to the other using
 multi-moves while not storing all of the intermediate states.
 
 1.3.7 Canonizing and Normalizing States
 _______________________________________
 
 In order to avoid a situation where Freecell Solver inspects two states which
-are essentially similiar except for the order of the stacks and freecells, 
-Freecell Solver sorts them in a deterministic order. This process is called 
+are essentially similiar except for the order of the stacks and freecells,
+Freecell Solver sorts them in a deterministic order. This process is called
 state canonization.
 
-However, such states cannot be presented to the user, so it keeps an indexes 
+However, such states cannot be presented to the user, so it keeps an indexes
 to the stacks and freecells outside the main data structure, so it can later
-re-calculate their true positions. Those indexes are maintained along with 
+re-calculate their true positions. Those indexes are maintained along with
 the stacks and freecells themselves.
 
-When a state, or a move that operates on it, is brought from its canonized 
+When a state, or a move that operates on it, is brought from its canonized
 order to the order that is presented to the user (which maintains a constant
 position of stacks and freecells) it is called normalizing the move.
 
 2. The card.c module
 ====================
 
-The functions contained in the card.c are responsible for converting 
-cards between their internal representation in the program and their 
+The functions contained in the card.c are responsible for converting
+cards between their internal representation in the program and their
 string representations.
 
-There is nothing too sophisticated here: just a lot of parsing, 
+There is nothing too sophisticated here: just a lot of parsing,
 string making, and switch statements. Each function is preceded by
 a comment that describes it so it should not be very hard to
 understand. If something is still unclear, let me know by posting a
@@ -156,7 +156,7 @@ message to the mailing-list.
 -------------------------------------
 
 There are three different ways to represent the states in Freecell Solver.
-The choice of which one to use is available at compile-time by defining one 
+The choice of which one to use is available at compile-time by defining one
 and only one of the macros DEBUG_STATES, COMPACT_STATES, and
 INDIRECT_STACK_STATES at compile time.
 
@@ -168,7 +168,7 @@ was already available in version 0.2. It was then called FAST_STATES, which
 is erroneous because it proven to be much slower than Compact States which
 will be covered in subsection 3.1.2.
 
-It is also slower than Indirect Stack States, and thus should only be used 
+It is also slower than Indirect Stack States, and thus should only be used
 for debugging purposes if at all.
 
 In Debug States, a card is represented as a 4-byte data structure:

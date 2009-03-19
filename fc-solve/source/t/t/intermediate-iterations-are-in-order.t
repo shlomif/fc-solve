@@ -10,7 +10,7 @@ use String::ShellQuote;
 use File::Spec;
 
 
-# 
+#
 # This test verifies that when doing ./fc-solve -s -i , the iterations
 # number are precisely ascending and don't repeat themselves.
 sub assert_directly_ascending_iters
@@ -43,9 +43,9 @@ sub assert_directly_ascending_iters
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
-    open my $fc_solve_output, 
+    open my $fc_solve_output,
         ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ") .
-        "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -s -i -p -t -sam " . 
+        "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -s -i -p -t -sam " .
         ($board ? shell_quote($board) : "") .
         " |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
@@ -102,37 +102,37 @@ assert_directly_ascending_iters({deal => 24, theme => [],}
     , "Verifying the trace of deal #24");
 
 # TEST
-assert_directly_ascending_iters({deal => 1941, theme => [],}, 
+assert_directly_ascending_iters({deal => 1941, theme => [],},
     "Verifying 1941 (The Hardest Deal) with the default algorithm");
 
 # TEST
-assert_directly_ascending_iters({deal => 1941}, 
+assert_directly_ascending_iters({deal => 1941},
     "Verifying 1941 (The Hardest Deal) with '-l gi'");
 
 # TEST
-assert_directly_ascending_iters({deal => 24}, 
+assert_directly_ascending_iters({deal => 24},
     "Verifying deal No. 24 with '-l gi'");
 
 # TEST
 assert_directly_ascending_iters(
-    {deal => 100, theme => [qw(-l john-galt-line)],}, 
+    {deal => 100, theme => [qw(-l john-galt-line)],},
     "Verifying deal No. 100 with '-l john-galt-line' to check a rotating theme"
 );
 
 # TEST
 assert_directly_ascending_iters(
-    {deal => 11982, }, 
+    {deal => 11982, },
     "Verifying deal No. 11982 (unsolvable) with -l gi"
 );
 
 # TEST
 assert_directly_ascending_iters(
-    {deal => 2400, theme => [qw(-l fools-gold)],}, 
+    {deal => 2400, theme => [qw(-l fools-gold)],},
     "Verifying deal No. 2400 with an atomic moves preset (fools-gold)"
 );
 
 # TEST
 assert_directly_ascending_iters(
-    {deal => 11982, theme => [qw(-l fools-gold)],}, 
+    {deal => 11982, theme => [qw(-l fools-gold)],},
     "Verifying unsolvable deal No. 11982 with an atomic moves preset (fools-gold)"
 );

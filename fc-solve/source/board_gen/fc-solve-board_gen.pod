@@ -1,6 +1,6 @@
 =head1 NAME
 
-make-gnome-freecell-board, make-aisleriot-freecell-board, 
+make-gnome-freecell-board, make-aisleriot-freecell-board,
 pi-make-microsoft-freecell-board, make_pysol_freecell_board.py -
 Programs to generate boards to be used as input to Freecell Solver.
 
@@ -19,10 +19,10 @@ of the Freecell games of several popular Solitaire implementations. Those boards
 can be in turn be inputted to B<fc-solve> by means of a pipeline, or placed
 inside a file for safe-keeping.
 
-B<make_pysol_freecell_board.py> and B<make-aisleriot-freecell-board> also 
-accept an optional third argument which indicates the game type. This type 
-defaults to  Freecell, but is useful for generating the boards of other games. 
-Note that  using this flag does not preclude one from using the "--game" 
+B<make_pysol_freecell_board.py> and B<make-aisleriot-freecell-board> also
+accept an optional third argument which indicates the game type. This type
+defaults to  Freecell, but is useful for generating the boards of other games.
+Note that  using this flag does not preclude one from using the "--game"
 flag of B<fc-solve>.
 
 A common paradigm for using those programs is something like:
@@ -30,7 +30,7 @@ A common paradigm for using those programs is something like:
 bash:~# pi-make-microsoft-freecell-board 11982 | fc-solve -opt
 
 If the "-t" option is specified, then the 10 cards are printed with "T"'s,
-instead of "10"'s. While this does not have any effect on B<fc-solve> it 
+instead of "10"'s. While this does not have any effect on B<fc-solve> it
 may prove useful for other solvers or solitaire implementations which do
 not accept "10"'s.
 
@@ -40,20 +40,20 @@ B<make-gnome-freecell-board>
 
 Generate the boards of the standalone Freecell program that comes with the
 GNOME desktop.
- 
+
 B<make-aisleriot-freecell-board>
 
 Generate the Freecell boards of GNOME's AisleRiot.
- 
+
 B<make_pysol_freecell_board.py>
 
 A Python script that generates the boards of the various games of PySol.
- 
+
 B<pi-make-microsoft-freecell-board>
 
 A program that generates the boards of Microsoft Freecell and of the
 Freecell Pro implementation of Freecell.
- 
+
 =head1 OPTIONS
 
 I<board-number> is the board number as a decimal number.
@@ -93,11 +93,11 @@ relaxed_seahaven   - Relaxed Seahaven Towers
 
 seahaven           - Seahaven Towers (I<*>)
 
-simple_simon       - Simple Simon (I<*>) 
+simple_simon       - Simple Simon (I<*>)
 
 streets_and_alleys - Streets and Alleys
 
-make-aisleriot-freecell-board supports only the games marked with an 
+make-aisleriot-freecell-board supports only the games marked with an
 asterisk (I<*>).
 
 =head1 SEE ALSO

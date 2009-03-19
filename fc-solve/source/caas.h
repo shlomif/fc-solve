@@ -7,7 +7,7 @@ extern "C" {
 #endif
 
 /* #define FCS_USE_INLINE */
-    
+
 /*
  * check_and_add_state is defined in caas.c.
  *

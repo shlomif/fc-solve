@@ -1,17 +1,17 @@
 /*
     make_gnome_freecell_board.c - Program to generate a GNOME Freecell
     board for input to Freecell Solver.
-    
+
     Usage: make-gnome-freecell-board [board number] | fc-solve
-    
+
     Note: this program uses srand() and rand() so it generates different
     boards on different systems. If you want it to generate the board
     you are playing, make sure it uses the same libc as the computer on
     which you run GNOME Freecell.
-    
+
     Written By Eric Warmenhoven, 2000
     Modified by Shlomi Fish, 2000
-    
+
     This program is distributed under the public domain
     (It's not copyrighted)
 
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
     for (i = 0; i < 8; i++) {
         printf("%s\n", output[i]);
     }
-    
+
     free(deck);
 
     return 0;
@@ -93,7 +93,7 @@ int *deck_shuffle() {
     for (i = 0; i < 52; i++) {
         deck[i] = deck_temp[51 - i];
     }
-    
+
     free(deck_temp);
 
     return deck;
@@ -103,7 +103,7 @@ char *num_to_card(char * card, int num, int not_append_ws, int print_ts) {
 
     if (num % 13 == 9) {
         if (print_ts)
-        {   
+        {
             sprintf(card, "T");
         }
         else

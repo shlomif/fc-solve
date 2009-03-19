@@ -266,7 +266,7 @@ void fc_solve_move_stack_normalize(
     char buffer[MAX_NUM_STACKS << 7];
     int a;
 #endif
-    
+
 
     fcs_move_stack_alloc_into_var(temp_moves);
 
@@ -372,10 +372,10 @@ GCC_INLINE int convert_freecell_num(int fcn)
 
 char * fc_solve_move_to_string(fcs_move_t move, int standard_notation)
 {
-    return 
+    return
         fc_solve_move_to_string_w_state(
-            NULL, 4, 8, 1, 
-            move, 
+            NULL, 4, 8, 1,
+            move,
             (standard_notation == 2)?1:standard_notation
             );
 }
@@ -396,15 +396,15 @@ char * fc_solve_move_to_string_w_state(
     switch(fcs_move_get_type(move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
-            if ((standard_notation == 2) && 
+            if ((standard_notation == 2) &&
                 /* More than one card was moved */
-                (fcs_move_get_num_cards_in_seq(move) > 1) && 
+                (fcs_move_get_num_cards_in_seq(move) > 1) &&
                 /* It was a move to an empty stack */
-                (fcs_stack_len(*state_key, fcs_move_get_dest_stack(move)) == 
+                (fcs_stack_len(*state_key, fcs_move_get_dest_stack(move)) ==
                  fcs_move_get_num_cards_in_seq(move))
                )
             {
-                sprintf(string, "%i%iv%x", 
+                sprintf(string, "%i%iv%x",
                     1+fcs_move_get_src_stack(move),
                     1+fcs_move_get_dest_stack(move),
                     fcs_move_get_num_cards_in_seq(move)

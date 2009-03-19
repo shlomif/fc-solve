@@ -69,7 +69,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
 
     for(a=0 ; a < LOCAL_STACKS_NUM ; a++)
     {
-        /* 
+        /*
          * If the stack is not a copy - it is already cached so skip
          * to the next stack
          * */
@@ -105,7 +105,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
              * */
             hash_value_int &= (~(1<<((sizeof(hash_value_int)<<3)-1)));
         }
-        
+
 
         {
             void * dummy;
@@ -130,7 +130,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
             replace_with_cached(verdict);
         }
 
-        
+
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
 
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
@@ -192,7 +192,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
         JHSI(
             PValue,
             instance->stacks_judy_array,
-            new_state_key->stacks[a], 
+            new_state_key->stacks[a],
             (fcs_stack_len(*new_state_key, a)+1)
         );
         /* TODO : Handle out-of-memory. */
@@ -319,14 +319,14 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
     fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val);
 
-    fc_solve_canonize_state(new_state_val, 
-            INSTANCE_FREECELLS_NUM, 
+    fc_solve_canonize_state(new_state_val,
+            INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM
             );
 
 /*
     The objective of this part of the code is:
-    1. To check if new_state_key / new_state_val is already in the prev_states 
+    1. To check if new_state_key / new_state_val is already in the prev_states
        collection.
     2. If not, to add it and to set check to true.
     3. If so, to set check to false.
@@ -481,7 +481,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
     }
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-    *existing_state_val = (fcs_state_extra_info_t *)rbsearch(new_state_val, 
+    *existing_state_val = (fcs_state_extra_info_t *)rbsearch(new_state_val,
             instance->tree
             );
     is_state_new = ((*existing_state_val) == new_state_val);
@@ -585,7 +585,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
             *PValue = (PWord_t)(*existing_state_val = new_state_val);
         }
         else
-        {            
+        {
             /* Already exists. */
             is_state_new = 0;
             *existing_state_val = (fcs_state_extra_info_t *)(*PValue);
@@ -605,9 +605,9 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
         if (new_state_val->moves_to_parent != NULL)
         {
-            new_state_val->moves_to_parent = 
+            new_state_val->moves_to_parent =
                 fc_solve_move_stack_compact_allocate(
-                    hard_thread, 
+                    hard_thread,
                     new_state_val->moves_to_parent
                     );
         }

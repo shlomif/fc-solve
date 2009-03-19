@@ -1,4 +1,4 @@
-#!/usr/bin/perl 
+#!/usr/bin/perl
 
 use strict;
 use warnings;
@@ -20,7 +20,7 @@ sub card_num_normalize
 }
 
 my @suits = (qw(H C D S));
-my @card_nums =  ("A", (2 .. 9), 
+my @card_nums =  ("A", (2 .. 9),
     {
         't' => "T",
         'non_t' => "10",
@@ -36,15 +36,15 @@ sub indexify
     my $offset = shift;
     my $array = shift;
 
-    return 
-    [ 
-        map 
-        { +{ 'idx' => ($offset+$_), 'value' => $array->[$_] } } 
+    return
+    [
+        map
+        { +{ 'idx' => ($offset+$_), 'value' => $array->[$_] } }
         (0 .. $#$array)
     ];
 }
 
-my $args = 
+my $args =
 {
     'suits' => indexify(0, \@suits),
     'card_nums' => indexify(1, \@card_nums),

@@ -1,5 +1,5 @@
 /*
- * make_aisleriot_freecell_board.c - Program to generate a GNOME Aisleriot 
+ * make_aisleriot_freecell_board.c - Program to generate a GNOME Aisleriot
  * Freecell board for input to Freecell Solver.
  *
  * Usage: make-aisleriot-frecell-board [board number] | fc-solve
@@ -12,8 +12,8 @@
  * Written by Shlomi Fish, 2000
  *
  * This code is under the public domain.
- * 
- * 
+ *
+ *
  */
 
 
@@ -51,7 +51,7 @@ void shuffle_deck(int len)
 {
     int ref1, ref2;
     int temp_card;
-    
+
     for(ref1=0 ; ref1<len ; ref1++)
     {
         ref2 = ref1 + (random()%(len-ref1));
@@ -84,7 +84,7 @@ char * card_to_string(char * s, int card, int not_append_ws, int print_ts)
         {
             strcpy(s, "10");
         }
-    }    
+    }
     else
     {
         strcpy(s, (v == 11)?"J":((v == 12)?"Q":"K"));
@@ -110,7 +110,7 @@ char * card_to_string(char * s, int card, int not_append_ws, int print_ts)
     {
         strcat(s, " ");
     }
-    
+
     return s;
 }
 
@@ -132,7 +132,7 @@ int main(int argc, char * argv[])
     int which_game = 0;
     int print_ts = 0;
     int arg;
-    
+
     if (argc == 1)
     {
         srandom(time(NULL));
@@ -144,7 +144,7 @@ int main(int argc, char * argv[])
         {
             print_ts = 1;
             arg++;
-        }        
+        }
         srandom(atoi(argv[arg]));
         arg++;
         if (arg < argc)
@@ -188,7 +188,7 @@ int main(int argc, char * argv[])
             {
                 fprintf(stderr, "Unknown game type \"%s\"!\n", argv[2]);
                 return -1;
-            }            
+            }
         }
     }
 
@@ -207,7 +207,7 @@ int main(int argc, char * argv[])
             for(j = i ; j < 7 ; j++)
             {
                 strcat(output[j], card_to_string(card_string, deck[card_num], (j == i), print_ts));
-                card_num++;                            
+                card_num++;
             }
         }
 
@@ -218,26 +218,26 @@ int main(int argc, char * argv[])
         }
         printf("\n");
 
-        for (i = 0; i < 7; i++) 
+        for (i = 0; i < 7; i++)
         {
             printf("%s\n", output[i]);
         }
-        
+
     }
     else if (which_game == GAME_FREECELL)
     {
         /* Freecell */
-        for (i = 0; i < 8; i++) 
+        for (i = 0; i < 8; i++)
         {
             output[i][0] = '\0';
         }
 
-        for (i = 0; i < 52; i++) 
+        for (i = 0; i < 52; i++)
         {
             strcat(output[i % 8], card_to_string( card_string, deck[i], (i>=52-8), print_ts));
         }
 
-        for (i = 0; i < 8; i++) 
+        for (i = 0; i < 8; i++)
         {
             printf("%s\n", output[i]);
         }
@@ -245,16 +245,16 @@ int main(int argc, char * argv[])
     else if (which_game == GAME_EIGHT_OFF)
     {
         /* Freecell */
-        for (i = 0; i < 8; i++) 
+        for (i = 0; i < 8; i++)
         {
             output[i][0] = '\0';
         }
 
-        for (i = 0; i < 48; i++) 
+        for (i = 0; i < 48; i++)
         {
             strcat(output[i % 8], card_to_string( card_string, deck[i], (i>=48-8), print_ts));
         }
-        
+
         freecells[0] = '\0';
         for ( ; i < 52 ; i++)
         {
@@ -263,7 +263,7 @@ int main(int argc, char * argv[])
 
         printf("FC: %s\n", freecells);
 
-        for (i = 0; i < 8; i++) 
+        for (i = 0; i < 8; i++)
         {
             printf("%s\n", output[i]);
         }
@@ -286,7 +286,7 @@ int main(int argc, char * argv[])
         {
             strcat(freecells, card_to_string(card_string, deck[i], (i == 52-1), print_ts));
         }
-        
+
         printf("%s\n", freecells);
 
         for( i = 0 ; i < 10 ; i++)
@@ -301,7 +301,7 @@ int main(int argc, char * argv[])
             output[i][0] = '\0';
         }
 #define index_prog_to_pysol(i) ((((i)%2) == 1)*4 + ((i/2)%4))
-        for (i = 0; i < 48; i++) 
+        for (i = 0; i < 48; i++)
         {
             strcat(output[index_prog_to_pysol(i % 8)], card_to_string( card_string, deck[i], (i>=48-8), print_ts));
         }
@@ -320,7 +320,7 @@ int main(int argc, char * argv[])
             output[i][0] = '\0';
         }
 #define index_prog_to_pysol(i) ((((i)%2) == 1)*4 + ((i/2)%4))
-        for (i = 0; i < 48; i++) 
+        for (i = 0; i < 48; i++)
         {
             strcat(output[index_prog_to_pysol(i % 8)], card_to_string( card_string, deck[i], (i>=48-8), print_ts));
         }
@@ -330,14 +330,14 @@ int main(int argc, char * argv[])
             strcat(output[(i%8)], " ");
             strcat(output[(i%8)], card_to_string(card_string, deck[i], 1, print_ts));
         }
-        
+
         for (i = 0; i < 8; i++)
         {
             printf("%s\n", output[i]);
-        }        
+        }
     }
     return 0;
 }
 
-    
- 
+
+

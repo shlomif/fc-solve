@@ -41,7 +41,7 @@ GetOptions(
 # This cache is sometimes causing problems.
 unlink("CMakeCache.txt");
 
-my @cmd= ("cmake", 
+my @cmd= ("cmake",
     ("-DCMAKE_BUILD_TYPE=" . ($is_debug ? "debug" : "release")),
     "-DFCS_STATE_STORAGE=FCS_STATE_STORAGE_$state_storage",
     "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",

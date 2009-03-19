@@ -17,7 +17,7 @@ open my $module, "<", $module_filename;
 while (my $line = <$module>)
 {
     if (($line =~ m{\A(\s*)/\* OPT-PARSE-START \*/})
-           .. 
+           ..
         ($line =~ m{/\* OPT-PARSE-END \*/})
     )
     {
@@ -62,7 +62,7 @@ while (my $line = <$module>)
             $find_prefix .= join("",
                 map { $indent. $_ . "\n" }
                 (
-                    ("else if (" . join("||", map { qq{(!strcmp(argv[arg], "$_"))} } @strings) . ")"), 
+                    ("else if (" . join("||", map { qq{(!strcmp(argv[arg], "$_"))} } @strings) . ")"),
                     "{",
                     "    opt = $opt;",
                     "}"

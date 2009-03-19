@@ -2,7 +2,7 @@
 
 use strict;
 
-my %presets = 
+my %presets =
 (
     'bakers_game' => [ qw(i freecell sbb suit) ],
     'bakers_dozen' => [ qw(s 13 f 0 d 1 sbb rank sm limited esf none to 0123456789 at 0123456789) ],
@@ -43,7 +43,7 @@ sub compile_preset
     while ($cmd = shift(@params))
     {
         $arg = shift(@params);
-        
+
         if ($cmd =~ /^(i|inherits?)$/)
         {
             if (!exists($presets{$arg}))
@@ -58,7 +58,7 @@ sub compile_preset
             {
                 die "Argument to stacks is not an integer!\n";
             }
-            $compiled->{'stacks'} = $arg;            
+            $compiled->{'stacks'} = $arg;
         }
         elsif ($cmd =~ /^(f|freecells?)$/)
         {
@@ -121,7 +121,7 @@ sub compile_preset
             die "Unknown Command $cmd\n";
         }
     }
-    
+
     };
 
     if ($@)
@@ -136,22 +136,22 @@ sub preset_to_string
 {
     my $preset_name = shift;
     my $pc = shift;
-    
+
     my @lines = ();
 
     my $arg;
 
     eval
     {
-    
+
     push @lines, ("FCS_PRESET_" . uc($preset_name));
-    
+
     if (!exists($pc->{'freecells'}))
     {
         die "Freecells were not defined!\n";
     }
     push @lines, $pc->{'freecells'};
-    
+
     if (!exists($pc->{'stacks'}))
     {
         die "Stacks were not defined!\n";
@@ -179,7 +179,7 @@ sub preset_to_string
 
     if (!exists($pc->{'empty_stacks_fill'}))
     {
-        die "Empty Stacks Fill is undefined!\n";        
+        die "Empty Stacks Fill is undefined!\n";
     }
     $arg = $pc->{'empty_stacks_fill'};
     push @lines, "FCS_ES_FILLED_BY_" . (($arg eq "none") ? "NONE" : ($arg eq "any_card") ? "ANY_CARD" : "KINGS_ONLY");
@@ -216,14 +216,14 @@ sub preset_to_docbook_string
     my @lines;
 
     push @lines, join(" ", (map { ucfirst($_) } split(/_/, $preset_name)));
-    
+
     push @lines, ($pc->{'stacks'}, $pc->{'freecells'}, $pc->{'decks'});
 
     my $sbb = $pc->{'seqs_build_by'};
-    push @lines, 
-        (($sbb eq "ac") ? "Alternate Colour" : 
-            ($sbb eq "suit") ? "Suit" : 
-            "Rank");    
+    push @lines,
+        (($sbb eq "ac") ? "Alternate Colour" :
+            ($sbb eq "suit") ? "Suit" :
+            "Rank");
 
     my $arg = $pc->{'empty_stacks_fill'};
     push @lines, (($arg eq "none") ? "None" : ($arg eq "any_card") ? "Any Card" : "Kings Only");
@@ -239,7 +239,7 @@ sub preset_to_perl_module
     my $preset_name = shift;
     my $pc = shift;
 
-    my %sbb_map = 
+    my %sbb_map =
     (
         'ac' => "alt_color",
         'suit' => "suit",
@@ -249,7 +249,7 @@ sub preset_to_perl_module
     my $sbb = $sbb_map{$pc->{'seqs_build_by'}}
         or die "Hoola";
 
-    my %esf_map = 
+    my %esf_map =
     (
         'kings_only' => "kings",
         'none' => "none",
@@ -257,9 +257,9 @@ sub preset_to_perl_module
     );
     my $esf = $esf_map{$pc->{'empty_stacks_fill'}}
         or die "BlahBlajjor";
-    
+
     my $seq_move = $pc->{sequence_move} ? "unlimited" : "limited";
-    
+
     return <<"EOF";
     "$preset_name" =>
         Games::Solitaire::Verify::VariantParams->new(
@@ -314,7 +314,7 @@ foreach my $preset_name (sort {$a cmp $b } keys(%presets))
     {
         next;
     }
-        
+
     my $preset_compiled = compile_preset($preset_name);
     push @strings, $mode_callbacks{$mode}->($preset_name, $preset_compiled);
 }

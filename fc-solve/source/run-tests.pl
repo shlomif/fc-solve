@@ -39,7 +39,7 @@ GetOptions(
             if ($f =~ m{\.sh\z})
             {
                 copy(
-                    File::Spec->catfile($pset_files_src, $f), 
+                    File::Spec->catfile($pset_files_src, $f),
                     File::Spec->catfile($pset_files_dest, $f)
                 );
             }

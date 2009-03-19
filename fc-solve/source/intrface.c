@@ -153,7 +153,7 @@ static void soft_thread_clean_soft_dfs(
             }
             info_ptr++;
         }
-        
+
         free(soft_dfs_info);
 
         soft_thread->soft_dfs_info = NULL;
@@ -195,7 +195,7 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
     soft_thread->tests_order.num = 0;
     soft_thread->tests_order.tests = NULL;
     soft_thread->tests_order.max_num = 0;
-    
+
 
     /* Initialize all the Soft-DFS stacks to NULL */
     soft_thread->soft_dfs_info = NULL;
@@ -233,10 +233,10 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
     }
 #else
     soft_thread->tests_order.num = soft_thread->hard_thread->instance->instance_tests_order.num;
-    soft_thread->tests_order.tests = 
+    soft_thread->tests_order.tests =
         malloc(sizeof(soft_thread->tests_order.tests[0]) * soft_thread->tests_order.num);
-    memcpy(soft_thread->tests_order.tests, 
-        soft_thread->hard_thread->instance->instance_tests_order.tests, 
+    memcpy(soft_thread->tests_order.tests,
+        soft_thread->hard_thread->instance->instance_tests_order.tests,
         sizeof(soft_thread->tests_order.tests[0]) * soft_thread->tests_order.num
         );
     soft_thread->tests_order.max_num = soft_thread->tests_order.num;
@@ -287,7 +287,7 @@ static fc_solve_hard_thread_t * alloc_hard_thread(
     hard_thread->num_soft_threads_finished = 0;
 
 #ifdef INDIRECT_STACK_STATES
-    hard_thread->stacks_allocator = 
+    hard_thread->stacks_allocator =
         fc_solve_compact_allocator_new();
 #endif
     hard_thread->move_stacks_allocator =
@@ -340,8 +340,8 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->opt_tests_order.num = 0;
     instance->opt_tests_order.tests = NULL;
     instance->opt_tests_order.max_num = 0;
-    
-    
+
+
 
 #ifdef FCS_WITH_TALONS
     instance->talon_type = FCS_TALON_NONE;
@@ -432,7 +432,7 @@ static void free_instance_hard_thread_callback(fc_solve_hard_thread_t * hard_thr
         free (hard_thread->prelude);
     }
     fcs_move_stack_destroy(hard_thread->reusable_move_stack);
-                
+
     free(hard_thread->soft_threads);
 
     if (hard_thread->move_stacks_allocator)
@@ -445,7 +445,7 @@ static void free_instance_hard_thread_callback(fc_solve_hard_thread_t * hard_thr
         fc_solve_compact_allocator_finish(hard_thread->stacks_allocator);
     }
 #endif
-    free(hard_thread);    
+    free(hard_thread);
 }
 
 /*
@@ -558,7 +558,7 @@ static int compile_prelude(
     string = hard_thread->prelude_as_string;
 
     p = string;
-    
+
     while (! last_one)
     {
         p_quota = p;
@@ -584,7 +584,7 @@ static int compile_prelude(
         }
         *p = '\0';
         p++;
-        
+
         for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
         {
             if (!strcmp(hard_thread->soft_threads[st_idx]->name, p_scan))
@@ -611,7 +611,7 @@ static int compile_prelude(
     hard_thread->prelude_num_items = num_items;
     hard_thread->prelude_idx = 0;
 
-    return FCS_COMPILE_PRELUDE_OK;    
+    return FCS_COMPILE_PRELUDE_OK;
 }
 
 
@@ -653,11 +653,11 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
              *
              * What this code does is convert the bit map of total_tests
              * to a valid tests order.
-             * 
+             *
              * */
             int bit_idx, num_tests = 0;
             int * tests = malloc(sizeof(total_tests)*8*sizeof(tests[0]));
-                        
+
             for(bit_idx=0; total_tests != 0; bit_idx++, total_tests >>= 1)
             {
                 if ((total_tests & 0x1) != 0)
@@ -798,7 +798,7 @@ static void trace_solution(
             for(move_idx=stack->num_moves-1;move_idx>=0;move_idx--)
             {
                 fcs_move_stack_push(solution_moves, moves[move_idx]);
-            }            
+            }
         }
         /* Duplicate the state to a freshly malloced memory */
 
@@ -817,7 +817,7 @@ static fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
     ret.max_num = ret.num = orig->num;
     ret.tests = malloc(sizeof(ret.tests[0]) * ret.num);
     memcpy(ret.tests, orig->tests, sizeof(ret.tests[0]) * ret.num);
-    
+
     return ret;
 }
 
@@ -831,7 +831,7 @@ static int fc_solve_optimize_solution(
 {
     fc_solve_hard_thread_t * optimization_thread;
     fc_solve_soft_thread_t * soft_thread;
-    
+
     optimization_thread = alloc_hard_thread(instance);
     instance->optimization_thread = optimization_thread;
 
@@ -843,11 +843,11 @@ static int fc_solve_optimize_solution(
         {
             free(soft_thread->tests_order.tests);
         }
-        
-        soft_thread->tests_order = 
+
+        soft_thread->tests_order =
             tests_order_dup(&(instance->opt_tests_order));
     }
-    
+
     soft_thread->method = FCS_METHOD_OPTIMIZE;
 
     soft_thread->is_a_complete_scan = 1;
@@ -903,7 +903,7 @@ int fc_solve_solve_instance(
 
     state_copy_ptr_key = state_copy_ptr_val->key;
 
-    fcs_duplicate_state(*state_copy_ptr_key, *state_copy_ptr_val, 
+    fcs_duplicate_state(*state_copy_ptr_key, *state_copy_ptr_val,
             (*(init_state_val->key)), *init_state_val
             );
 
@@ -952,7 +952,7 @@ int fc_solve_solve_instance(
 #else
 #error not defined
 #endif
-    
+
     /****************************************************/
 
 #ifdef INDIRECT_STACK_STATES
@@ -1040,7 +1040,7 @@ int fc_solve_solve_instance(
         {
             fc_solve_hard_thread_t * hard_thread;
             hard_thread = instance->hard_threads[ht_idx];
-            
+
             if (hard_thread->prelude != NULL)
             {
                 hard_thread->prelude_idx = 0;
@@ -1065,8 +1065,8 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
     int num_times_started_at;
     int ret;
     fc_solve_instance_t * instance = hard_thread->instance;
-    /* 
-     * Again, making sure that not all of the soft_threads in this 
+    /*
+     * Again, making sure that not all of the soft_threads in this
      * hard thread are finished.
      * */
 
@@ -1110,12 +1110,12 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 
 
             switch_to_next_soft_thread();
-            
+
             continue;
         }
 
         /*
-         * Keep record of the number of iterations since this 
+         * Keep record of the number of iterations since this
          * thread started.
          * */
         num_times_started_at = hard_thread->num_times;
@@ -1127,10 +1127,10 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 
 
 
-        /* 
-         * Call the resume or solving function that is specific 
+        /*
+         * Call the resume or solving function that is specific
          * to each scan
-         * 
+         *
          * This switch-like construct calls for declaring a class
          * that will abstract a scan. But it's not critical since
          * I don't support user-defined scans.
@@ -1169,7 +1169,7 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
             ret = fc_solve_a_star_or_bfs_do_solve(soft_thread);
 
             break;
-            
+
             default:
             ret = FCS_STATE_IS_NOT_SOLVEABLE;
             break;
@@ -1180,10 +1180,10 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
         hard_thread->num_times_left_for_soft_thread -= (hard_thread->num_times - num_times_started_at);
 
         /*
-         * I use <= instead of == because it is possible that 
+         * I use <= instead of == because it is possible that
          * there will be a few more iterations than what this
          * thread was allocated, due to the fact that
-         * check_and_add_state is only called by the test 
+         * check_and_add_state is only called by the test
          * functions.
          *
          * It's a kludge, but it works.
@@ -1191,10 +1191,10 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
         if (hard_thread->num_times_left_for_soft_thread <= 0)
         {
             switch_to_next_soft_thread();
-            /* 
-             * Reset num_times_left_for_soft_thread 
+            /*
+             * Reset num_times_left_for_soft_thread
              * */
-            
+
         }
 
         /*
@@ -1219,7 +1219,7 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
             }
             else
             {
-                /* 
+                /*
                  * Else, make sure ret is something more sensible
                  * */
                 ret = FCS_STATE_SUSPEND_PROCESS;
@@ -1229,7 +1229,7 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
         if ((ret == FCS_STATE_WAS_SOLVED) ||
             (
                 (ret == FCS_STATE_SUSPEND_PROCESS) &&
-                /* There's a limit to the scan only 
+                /* There's a limit to the scan only
                  * if max_num_times is greater than 0 */
                 (
                     (
@@ -1239,7 +1239,7 @@ static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                     (
                         (instance->max_num_states_in_collection > 0) &&
                         (instance->num_states_in_collection >= instance->max_num_states_in_collection)
-                        
+
                     )
                 )
             )
@@ -1268,7 +1268,7 @@ int fc_solve_resume_instance(
     fc_solve_hard_thread_t * hard_thread;
 
     /*
-     * If the optimization thread is defined, it means we are in the 
+     * If the optimization thread is defined, it means we are in the
      * optimization phase of the total scan. In that case, just call
      * its scanning function.
      *
@@ -1309,7 +1309,7 @@ int fc_solve_resume_instance(
                     (ret == FCS_STATE_WAS_SOLVED) ||
                     (
                         (ret == FCS_STATE_SUSPEND_PROCESS) &&
-                        /* There's a limit to the scan only 
+                        /* There's a limit to the scan only
                          * if max_num_times is greater than 0 */
                         (
                             (
@@ -1319,7 +1319,7 @@ int fc_solve_resume_instance(
                             (
                                 (instance->max_num_states_in_collection > 0) &&
                                 (instance->num_states_in_collection >= instance->max_num_states_in_collection)
-                                
+
                             )
                         )
                     )
@@ -1329,8 +1329,8 @@ int fc_solve_resume_instance(
                     goto end_of_hard_threads_loop;
                 }
             }
-            /* 
-             * Avoid over-flow 
+            /*
+             * Avoid over-flow
              * */
             if (instance->ht_idx == instance->num_hard_threads)
             {
@@ -1425,7 +1425,7 @@ void fc_solve_finish_instance(
 #endif
         fc_solve_compact_allocator_finish(hard_thread->move_stacks_allocator);
         hard_thread->move_stacks_allocator = NULL;
-        
+
     }
 
     if (instance->optimization_thread)
@@ -1492,7 +1492,7 @@ void fc_solve_finish_instance(
 #endif
 
 
-    clean_soft_dfs(instance);    
+    clean_soft_dfs(instance);
 }
 
 fc_solve_soft_thread_t * fc_solve_instance_get_soft_thread(
@@ -1577,7 +1577,7 @@ void fc_solve_recycle_instance(
     int ht_idx, st_idx;
     fc_solve_hard_thread_t * hard_thread;
     fc_solve_soft_thread_t * soft_thread;
-    
+
     fc_solve_finish_instance(instance);
 
     instance->num_times = 0;
@@ -1594,7 +1594,7 @@ void fc_solve_recycle_instance(
         hard_thread->move_stacks_allocator =
             fc_solve_compact_allocator_new();
 #ifdef INDIRECT_STACK_STATES
-        hard_thread->stacks_allocator = 
+        hard_thread->stacks_allocator =
             fc_solve_compact_allocator_new();
 #endif
         for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)

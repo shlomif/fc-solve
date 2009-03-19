@@ -39,7 +39,7 @@ enum fcs_presets_ids
     FCS_PRESET_BELEAGUERED_CASTLE,
 };
 
-static const fcs_preset_t fcs_presets[16] = 
+static const fcs_preset_t fcs_presets[16] =
 {
     {
         FCS_PRESET_BAKERS_DOZEN,
@@ -520,7 +520,7 @@ int fc_solve_apply_preset_by_ptr(
     instance->unlimited_sequence_move = preset.unlimited_sequence_move;
     instance->empty_stacks_fill = preset.empty_stacks_fill;
 
-    /* 
+    /*
      * This code makes sure that all the tests in all the existing
      * soft threads are acceptable by the new preset.
      * */
@@ -532,7 +532,7 @@ int fc_solve_apply_preset_by_ptr(
             for(st_idx = 0; st_idx < instance->hard_threads[ht_idx]->num_soft_threads; st_idx++)
             {
                 fc_solve_soft_thread_t * soft_thread = instance->hard_threads[ht_idx]->soft_threads[st_idx];
-                
+
                 int num_valid_tests;
                 const char * s;
 
@@ -567,7 +567,7 @@ int fc_solve_apply_preset_by_ptr(
     }
 
     /* Assign the master tests order */
-    
+
     {
         fc_solve_apply_tests_order(
             &(instance->instance_tests_order),
@@ -606,7 +606,7 @@ int fc_solve_get_preset_by_name(
     )
 {
     int preset_id;
-    
+
     preset_id = fcs_get_preset_id_by_name(name);
     if (preset_id >= 0)
     {
@@ -618,7 +618,7 @@ int fc_solve_get_preset_by_name(
     else
     {
         return FCS_PRESET_CODE_NOT_FOUND;
-    }    
+    }
 }
 
 int fc_solve_apply_preset_by_name(
@@ -628,7 +628,7 @@ int fc_solve_apply_preset_by_name(
 {
     int ret;
     const fcs_preset_t * preset_ptr;
-    
+
     ret = fc_solve_get_preset_by_name(
         name,
         &preset_ptr
@@ -638,6 +638,6 @@ int fc_solve_apply_preset_by_name(
     {
         return ret;
     }
-    
-    return fc_solve_apply_preset_by_ptr(instance, preset_ptr);    
+
+    return fc_solve_apply_preset_by_ptr(instance, preset_ptr);
 }

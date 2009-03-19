@@ -1,15 +1,15 @@
 /*
     make_microsoft_freecell_board.c - Program to generate the initial
-    board of Microsoft Freecell or Freecell Pro for input to 
+    board of Microsoft Freecell or Freecell Pro for input to
     Freecell Solver.
 
     Usage: make-microsoft-freecell-board [board-number] | fc-solve
 
-    Note: this program will generate the boards for Microsoft Freecell and 
-    FC-Pro only if it is compiled with a Microsoft C compiler such as 
+    Note: this program will generate the boards for Microsoft Freecell and
+    FC-Pro only if it is compiled with a Microsoft C compiler such as
     Visual C++.
 
-    If you want to generate the code without those compilers use the 
+    If you want to generate the code without those compilers use the
     pi-make-microsoft-freecell-board program.
 
     Based on the code by Jim Horne (who wrote the original Microsoft Freecell)
@@ -93,7 +93,7 @@ char * card_to_string(char * s, CARD card, int not_append_ws, int print_ts)
     {
         strcat(s, " ");
     }
-    
+
     return s;
 }
 
@@ -136,7 +136,7 @@ int main(int argc, char * argv[])
         card[(i%8)+1][i/8] = deck[j];
         deck[j] = deck[--wLeft];
     }
-    
+
     {
         int stack;
         int c;
@@ -147,17 +147,17 @@ int main(int argc, char * argv[])
         {
             for(c=0 ; c < (6+(stack<5)) ; c++)
             {
-                printf("%s", 
-                    card_to_string(card_string, 
-                            card[stack][c], 
+                printf("%s",
+                    card_to_string(card_string,
+                            card[stack][c],
                             (c == (6+(stack<5))),
                             print_ts
                     )
-                );        
+                );
             }
             printf("%s", "\n");
         }
-    } 
+    }
 
     return 0;
 }

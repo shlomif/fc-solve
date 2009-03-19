@@ -1,6 +1,6 @@
 /*
     pi_make_microsoft_freecell_board.c - Program to generate the initial
-    board of Microsoft Freecell or Freecell Pro for input to 
+    board of Microsoft Freecell or Freecell Pro for input to
     Freecell Solver.
 
     Usage: pi-make-microsoft-freecell-board [board-number] | fc-solve
@@ -47,7 +47,7 @@ void microsoft_rand_free(microsoft_rand_t * rand)
 int microsoft_rand_rand(microsoft_rand_t * rand)
 {
     rand->seed = (rand->seed * 214013 + 2531011);
-    return (rand->seed >> 16) & 0x7fff;    
+    return (rand->seed >> 16) & 0x7fff;
 }
 
 typedef int CARD;
@@ -119,7 +119,7 @@ char * card_to_string(char * s, CARD card, int not_append_ws, int print_ts)
     {
         strcat(s, " ");
     }
-    
+
     return s;
 }
 
@@ -163,7 +163,7 @@ int main(int argc, char * argv[])
         card[(i%8)+1][i/8] = deck[j];
         deck[j] = deck[--wLeft];
     }
-    
+
     {
         int stack;
         int c;
@@ -174,14 +174,14 @@ int main(int argc, char * argv[])
         {
             for(c=0 ; c < (6+(stack<5)) ; c++)
             {
-                printf("%s", 
+                printf("%s",
                     card_to_string(
-                        card_string, 
-                        card[stack][c], 
+                        card_string,
+                        card[stack][c],
                         (c == (6+(stack<5))),
                         print_ts
                     )
-                );        
+                );
             }
             printf("%s", "\n");
         }

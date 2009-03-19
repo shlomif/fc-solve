@@ -3,7 +3,7 @@
     1.2 History
     1.3 Terminology
         card, suit, card number,
-        state (= board), stack, freecell, 
+        state (= board), stack, freecell,
         foundation (sometimes erroneously referred to in the code as deck).
         deck (=a pack of 4 suits of 13 cards each).
         move (= supermove), atomic move, move stack
@@ -55,4 +55,4 @@
 10 Overview of the fcs_user interface functions
     <<< Fill In >>>
 
-        
+

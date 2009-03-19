@@ -37,8 +37,8 @@ MACRO(PREPROCESS_PATH_PERL SOURCE DEST)
     SET(PATH_PERL ${PERL_EXECUTABLE})
     ADD_CUSTOM_COMMAND(
         OUTPUT ${DEST}
-        COMMAND ${PATH_PERL} 
-        ARGS "-e" 
+        COMMAND ${PATH_PERL}
+        ARGS "-e"
         "open I, qq{<\$ARGV[0]}; open O, qq{>\$ARGV[1]}; while(<I>){s{\\@PATH_PERL\\@}{\$ARGV[2]}g;print O \$_;} close(I); close(O);"
         ${SOURCE}
         ${DEST}
@@ -58,8 +58,8 @@ MACRO(RUN_POD2MAN SOURCE DEST SECTION CENTER RELEASE)
     SET(PATH_PERL ${PERL_EXECUTABLE})
     ADD_CUSTOM_COMMAND(
         OUTPUT ${DEST}
-        COMMAND ${PATH_PERL} 
-        ARGS "-e" 
+        COMMAND ${PATH_PERL}
+        ARGS "-e"
         "my (\$src, \$dest, \$sect, \$center, \$release) = @ARGV; my \$pod = qq{Hoola.pod}; use File::Copy; copy(\$src, \$pod); system(qq{pod2man --section=\$sect --center=\"\$center\" --release=\"\$release\" \$pod > \$dest}); unlink(\$pod)"
         ${SOURCE}
         ${DEST}

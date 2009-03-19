@@ -189,9 +189,9 @@ opt = FCS_OPT_UNRECOGNIZED;
 {
 if (*(p++) == '-')
 {
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case '-':
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'a':
 {
 if (!strncmp(p, "-star-weights", 13)) {
@@ -270,12 +270,12 @@ opt = FCS_OPT_LOAD_CONFIG;
 break;
 
 case 'm':
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'a':
 {
 if (!strncmp(p, "x-", 2)) {
 p += 2;
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'd':
 {
 if (!strncmp(p, "epth", 4)) {
@@ -337,7 +337,7 @@ case 'n':
 {
 if (!strncmp(p, "ext-", 4)) {
 p += 4;
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'h':
 {
 if (!strncmp(p, "ard-thread", 10)) {
@@ -372,7 +372,7 @@ case 'o':
 {
 if (!strncmp(p, "ptimiz", 6)) {
 p += 6;
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'a':
 {
 if (!strncmp(p, "tion-tests-order", 16)) {
@@ -407,7 +407,7 @@ case 'p':
 {
 if (!strncmp(p, "re", 2)) {
 p += 2;
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'l':
 {
 if (!strncmp(p, "ude", 3)) {
@@ -443,7 +443,7 @@ case 'r':
 {
 if (*(p++) == 'e')
 {
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'a':
 {
 if (!strncmp(p, "d-from-file", 11)) {
@@ -487,7 +487,7 @@ break;
 break;
 
 case 's':
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'c':
 {
 if (!strncmp(p, "ans-synergy", 11)) {
@@ -503,7 +503,7 @@ case 'e':
 {
 if (!strncmp(p, "quence", 6)) {
 p += 6;
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case '-':
 {
 if (!strncmp(p, "move", 4)) {
@@ -546,7 +546,7 @@ opt = FCS_OPT_SOFT_THREAD_STEP;
 break;
 
 case 't':
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case '-':
 {
 if (!strncmp(p, "name", 4)) {
@@ -631,7 +631,7 @@ opt = FCS_OPT_LOAD_CONFIG;
 break;
 
 case 'm':
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'd':
 
 {
@@ -685,7 +685,7 @@ break;
 break;
 
 case 'n':
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'h':
 {
 if (!strncmp(p, "t", 1)) {
@@ -717,7 +717,7 @@ case 'o':
 {
 if (!strncmp(p, "pt", 2)) {
 p += 2;
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case '\0':
 {
 opt = FCS_OPT_OPTIMIZE_SOLUTION;
@@ -745,7 +745,7 @@ break;
 break;
 
 case 's':
-{ switch(*(p++)) { 
+{ switch(*(p++)) {
 case 'e':
 {
 if (!strncmp(p, "ed", 2)) {
@@ -1230,7 +1230,7 @@ break;
         case FCS_OPT_OPTIMIZATION_TESTS_ORDER: /* STRINGS=-opt-to|--optimization-tests-order; */
         {
             char * fcs_user_errstr;
-            
+
             PROCESS_OPT_ARG() ;
 
             ret = freecell_solver_user_set_optimization_scan_tests_order(
@@ -1335,18 +1335,18 @@ break;
                 }
                 else
                 {
-                    /* 
+                    /*
                      * Initialize f to NULL so it will be initialized
                      * */
                     f = NULL;
                 }
 
-                /* Try to open from the local path */                
+                /* Try to open from the local path */
                 if (f == NULL)
                 {
                     f = fopen(s, "rt");
                 }
-                
+
                 /* If we still could not open it return an error */
                 if (f == NULL)
                 {

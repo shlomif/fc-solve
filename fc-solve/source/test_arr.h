@@ -1,5 +1,5 @@
 /*
- * test_arr.h - header file for some routines and macros involving tests and 
+ * test_arr.h - header file for some routines and macros involving tests and
  * the like for Freecell Solver.
  *
  * Written by Shlomi Fish ( http://www.shlomifish.org/ ), 2002
@@ -57,7 +57,7 @@ extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
  * and thus calculates its real depth.
  *
  * It then assigns the newly updated depth throughout the path.
- * 
+ *
  * */
 #define calculate_real_depth(ptr_state_orig_val) \
 {                                                                  \
@@ -137,7 +137,7 @@ extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
             instance->max_num_states_in_collection)                   \
         )                                                             \
     )
-        
+
 
 #ifdef __cplusplus
 }

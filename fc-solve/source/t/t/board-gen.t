@@ -8,7 +8,7 @@ use Test::Differences;
 
 {
     my $bakers_dozen_24_got = `python ../board_gen/make_pysol_freecell_board.py -t 24 bakers_dozen`;
-    
+
     my $bakers_dozen_24_expected = <<"EOF";
 KD 8H AC AS
 KC 3D 8C 2S
@@ -35,7 +35,7 @@ EOF
 
 {
     my $got = `python ../board_gen/make_pysol_freecell_board.py -t 10800 bakers_dozen`;
-    
+
     my $expected = <<"EOF";
 KC 3S AC AD
 JD 9H 6H JS
@@ -62,7 +62,7 @@ EOF
 
 {
     my $got = `python ../board_gen/make_pysol_freecell_board.py 24 freecell`;
-    
+
     my $expected = <<"EOF";
 4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
@@ -84,7 +84,7 @@ EOF
 
 {
     my $got = `python ../board_gen/make_pysol_freecell_board.py 24 bakers_game`;
-    
+
     my $expected = <<"EOF";
 4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
@@ -106,7 +106,7 @@ EOF
 
 {
     my $got = `python ../board_gen/make_pysol_freecell_board.py 1977 forecell`;
-    
+
     my $expected = <<"EOF";
 FC: 2D 8H 5S 6H
 QH JC 7D 8S 4D 2C
@@ -129,7 +129,7 @@ EOF
 
 {
     my $got = `python ../board_gen/make_pysol_freecell_board.py 100 seahaven_towers`;
-    
+
     my $expected = <<"EOF";
 FC: - 9S 5S
 AD 5C 9C 9H 2C
@@ -154,7 +154,7 @@ EOF
 
 {
     my $got = `python ../board_gen/make_pysol_freecell_board.py 250 simple_simon`;
-    
+
     my $expected = <<"EOF";
 6S 6C 10C JC 9H 8D 3C 5S
 JH 2S KH 10S 7D 4D 8S 5D
@@ -179,7 +179,7 @@ EOF
 
 {
     my $got = `python ../board_gen/make_pysol_freecell_board.py -t 4200 fan`;
-    
+
     my $expected = <<"EOF";
 7H 9H 3S
 4C 8H 8C
@@ -413,7 +413,7 @@ EOF
 
 {
     my $got = `python ../board_gen/make_pysol_freecell_board.py -t 7537454 simple_simon`;
-    
+
     my $expected = <<"EOF";
 KD TH 7H 2H 3S 7D KC 6S
 QD JC 5C TS 8H TD 5D 4C

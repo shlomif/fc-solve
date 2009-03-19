@@ -214,7 +214,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         )
 {
     tests_declare_accessors();
-    
+
     int dest_cards_num;
     int ds, fc, dc;
     fcs_card_t dest_card, src_card, temp_card, dest_below_card;
@@ -356,7 +356,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
                                 }
 
                                 /* Now put the freecell card on top of the stack */
-                                
+
                                 fcs_push_card_into_stack(new_state, ds, src_card);
                                 fcs_empty_freecell(new_state, fc);
                                 fcs_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_STACK);
@@ -388,7 +388,7 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
         )
 {
     tests_declare_accessors();
-    
+
     int check;
 
     int stack;
@@ -840,7 +840,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     int check;
 
     int stack, c, cards_num, a, dc, ds,b;
-    
+
     int is_seq_in_dest;
     fcs_card_t card, temp_card, this_card, prev_card;
     fcs_card_t dest_below_card, dest_card;
@@ -874,16 +874,16 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     stacks_num = instance->stacks_num;
 #endif
 
-    /* We need 2 chars per card - one for the stack and one 
+    /* We need 2 chars per card - one for the stack and one
      * for the card_idx.
      *
      * We also need it times 13 for each of the ranks.
      *
-     * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a 
+     * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
      * (-1,-1) (= end) padding.
      * */
     positions_by_rank_size =
-        (sizeof(positions_by_rank[0]) * 2 * 13) * 
+        (sizeof(positions_by_rank[0]) * 2 * 13) *
         ((LOCAL_DECKS_NUM << 2) + 1)
         ;
 
@@ -904,7 +904,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
         /* Populate positions_by_rank by looping over the stacks and indices
          * looking for the cards and filling them. */
-    
+
         for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
         {
             dest_cards_num = fcs_stack_len(state, ds);
@@ -972,7 +972,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
             for(pos_idx_to_check = &positions_by_rank[
                 (((LOCAL_DECKS_NUM<< 2)+1) << 1) * (fcs_card_card_num(card))
-                ] 
+                ]
                 ;
                 ((*pos_idx_to_check) >= 0)
                 ;
@@ -1045,7 +1045,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                             from_which_stack = ds;
                         }
                         my_copy_stack(from_which_stack);
-                        
+
                         fcs_pop_stack_card(new_state, from_which_stack, temp_card);
 
                         fcs_put_card_in_freecell(new_state, b, temp_card);
@@ -1078,7 +1078,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                         {
                             from_which_stack = ds;
                         }
-                        
+
                         my_copy_stack(b);
                         fcs_pop_stack_card(new_state, from_which_stack, temp_card);
                         fcs_push_card_into_stack(new_state, b, temp_card);
@@ -1606,7 +1606,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
                                                         break;
                                                     }
                                                 }
-                                                
+
                                                 fcs_pop_stack_card(new_state, ds, temp_card);
 
                                                 fcs_put_card_in_freecell(new_state, b, temp_card);
@@ -1729,7 +1729,7 @@ int fc_solve_sfs_empty_stack_into_freecells(
                 /* We can empty it */
 
                 sfs_check_state_begin()
-                
+
                 my_copy_stack(stack);
 
                 for(c=0;c<cards_num;c++)
@@ -2118,7 +2118,7 @@ int fc_solve_sfs_get_card_from_klondike_talon(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 
 }
-       
+
 #endif
 
 int fc_solve_sfs_atomic_move_card_to_empty_stack(
@@ -2164,7 +2164,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
-    
+
 
     for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
@@ -2184,7 +2184,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
                 my_copy_stack(stack);
 
                 fcs_pop_stack_card(new_state, stack, temp_card);
-                
+
 
                 my_copy_stack(empty_stack_idx);
 
@@ -2199,8 +2199,8 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
 
                 fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
                 fcs_move_stack_push(moves, temp_move);
-                
-                sfs_check_state_end()                
+
+                sfs_check_state_end()
             }
         }
     }
@@ -2238,7 +2238,7 @@ int fc_solve_sfs_atomic_move_card_to_parent(
         if (cards_num > 0)
         {
             card = fcs_stack_card(state, stack, cards_num-1);
-            
+
             for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
             {
                 if (ds == stack)
@@ -2260,7 +2260,7 @@ int fc_solve_sfs_atomic_move_card_to_parent(
                             my_copy_stack(ds);
 
                             fcs_pop_stack_card(new_state, stack, temp_card);
-                            
+
                             fcs_push_card_into_stack(new_state, ds, card);
 
                             fcs_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);
@@ -2272,8 +2272,8 @@ int fc_solve_sfs_atomic_move_card_to_parent(
 
                             fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
                             fcs_move_stack_push(moves, temp_move);
-                            
-                            sfs_check_state_end()                
+
+                            sfs_check_state_end()
                         }
                     }
                 }
@@ -2326,8 +2326,8 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
             break;
         }
     }
-    
-    
+
+
 
     for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
@@ -2343,7 +2343,7 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
                 my_copy_stack(stack);
 
                 fcs_pop_stack_card(new_state, stack, temp_card);
-                
+
                 fcs_put_card_in_freecell(new_state, ds, card);
 
                 fcs_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_FREECELL);
@@ -2354,8 +2354,8 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
 
                 fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
                 fcs_move_stack_push(moves, temp_move);
-                
-                sfs_check_state_end()                
+
+                sfs_check_state_end()
             }
         }
     }
@@ -2400,7 +2400,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
         {
             continue;
         }
-        
+
         for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
         {
             ds_cards_num = fcs_stack_len(state, ds);
@@ -2416,7 +2416,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
                         my_copy_stack(ds);
 
                         fcs_empty_freecell(new_state, fc);
-                        
+
                         fcs_push_card_into_stack(new_state, ds, card);
 
                         fcs_move_set_type(temp_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
@@ -2428,8 +2428,8 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
 
                         fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
                         fcs_move_stack_push(moves, temp_move);
-                        
-                        sfs_check_state_end()                
+
+                        sfs_check_state_end()
                     }
                 }
             }
@@ -2481,7 +2481,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
-    
+
     for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
     {
         if (fcs_stack_len(state, ds) == 0)
@@ -2502,7 +2502,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
             (fcs_card_card_num(card) != 13))
         {
             continue;
-        }        
+        }
 
         {
             sfs_check_state_begin();
@@ -2510,7 +2510,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
             my_copy_stack(ds);
 
             fcs_empty_freecell(new_state, fc);
-            
+
             fcs_push_card_into_stack(new_state, ds, card);
 
             fcs_move_set_type(temp_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
@@ -2522,8 +2522,8 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
 
             fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
             fcs_move_stack_push(moves, temp_move);
-            
-            sfs_check_state_end()                
+
+            sfs_check_state_end()
         }
     }
 

@@ -60,7 +60,7 @@ ELSE(WIN32 AND NOT UNIX)
   SET(CPACK_SOURCE_STRIP_FILES "")
 ENDIF(WIN32 AND NOT UNIX)
 
-SET(CPACK_PACKAGE_EXECUTABLES 
+SET(CPACK_PACKAGE_EXECUTABLES
     "fc-solve" "Single-Game Solver"
 )
 
@@ -69,7 +69,7 @@ SET (INDIRECT_STACK_STATES 1)
 SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
 SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
 SET (MAX_NUM_STACKS 10 CACHE STRING "Maximal Number of Stacks")
-SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING 
+SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING
     "Maximal Number of Initial Cards in a Stack")
 SET (MAX_NUM_DECKS 2 CACHE STRING "Maximal Number of Decks (1 or 2)")
 
@@ -203,12 +203,12 @@ INSTALL(
     DESTINATION
         "include/freecell-solver"
 )
-        
+
 # Rebuild config.h if ver.txt has changed.
 ADD_CUSTOM_COMMAND(
     OUTPUT "config.h.in"
     DEPENDS "ver.txt"
-    COMMAND "touch" 
+    COMMAND "touch"
     ARGS "config.h.in"
 )
 

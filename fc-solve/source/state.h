@@ -182,7 +182,7 @@ typedef int fcs_locs_t;
     ((state).talon[pos] = (card))
 #endif
 
-#define fcs_copy_stack(state_key, state_val, idx, buffer) {} 
+#define fcs_copy_stack(state_key, state_val, idx, buffer) {}
 
 #elif defined(COMPACT_STATES)    /* #ifdef DEBUG_STATES */
 
@@ -348,8 +348,8 @@ typedef char fcs_locs_t;
 #define fcs_flip_stack_card(state, s, c) \
     (fcs_card_set_flipped(fcs_stack_card((state),(s),(c)), ((fcs_card_t)0) ))
 
-#define fcs_copy_stack(state_key, state_val, idx, buffer) {} 
-    
+#define fcs_copy_stack(state_key, state_val, idx, buffer) {}
+
 #elif defined(INDIRECT_STACK_STATES) /* #ifdef DEBUG_STATES
                                         #elif defined(COMPACT_STATES)
                                       */
@@ -480,8 +480,8 @@ typedef struct fcs_struct_state_t fcs_state_t;
             (state_key).stacks[idx] = &buffer[idx << 7];     \
         }     \
     }
-            
-            
+
+
 typedef char fcs_locs_t;
 
 #endif /* #ifdef DEBUG_STATES -
@@ -533,10 +533,10 @@ struct fcs_struct_state_with_locations_t
      * */
     int scan_visited[MAX_NUM_SCANS_BUCKETS];
 #ifdef INDIRECT_STACK_STATES
-    /* 
+    /*
      * A vector of flags that indicates which stacks were already copied.
      * */
-    int stacks_copy_on_write_flags; 
+    int stacks_copy_on_write_flags;
 #endif
 };
 
@@ -583,16 +583,16 @@ struct fcs_state_extra_info_struct
      * */
     int scan_visited[MAX_NUM_SCANS_BUCKETS];
 #ifdef INDIRECT_STACK_STATES
-    /* 
+    /*
      * A vector of flags that indicates which stacks were already copied.
      * */
-    int stacks_copy_on_write_flags; 
+    int stacks_copy_on_write_flags;
 #endif
-}; 
+};
 
 typedef struct fcs_state_extra_info_struct fcs_state_extra_info_t;
 
-typedef struct 
+typedef struct
 {
     fcs_state_t s;
     fcs_state_extra_info_t info;

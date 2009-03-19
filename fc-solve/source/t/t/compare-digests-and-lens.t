@@ -22,7 +22,7 @@ sub should_fill_in_id
     my $id = shift;
 
     return
-    (   
+    (
         exists($digests_storage->{digests}->{$id})
         ?  (($ENV{'FCS_DIGESTS_REPLACE_IDS'} || "") =~ m{\Q,$id,\E} )
         :  (($ENV{'FCS_DIGESTS_FILL_IDS'} || "") =~ m{\Q,$id,\E} )
@@ -56,12 +56,12 @@ sub verify_solution_test
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
-    open my $fc_solve_output, 
+    open my $fc_solve_output,
         "make_pysol_freecell_board.py $deal $variant | " .
         "$fc_solve_exe -g $variant " . shell_quote(@$theme) . " -p -t -sam |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
-    my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new(); 
+    my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new();
 
     $sha->add_file($fc_solve_output);
 
@@ -106,22 +106,22 @@ verify_solution_test({id => "freecell24", deal => 24}, "Verifying the solution o
 verify_solution_test({id => "freecell1941", deal => 1941}, "Verifying 1941 (The Hardest Deal)");
 
 # TEST
-verify_solution_test({id => "freecell24empty", deal => 24, theme => [],}, 
+verify_solution_test({id => "freecell24empty", deal => 24, theme => [],},
     "Solving Deal #24 with the default heuristic"
 );
 
 # TEST
-verify_solution_test({id => "freecell617jgl", deal => 617, theme => ["-l", "john-galt-line"],}, 
+verify_solution_test({id => "freecell617jgl", deal => 617, theme => ["-l", "john-galt-line"],},
     "Solving Deal #617 with the john-galt-line"
 );
 
 # TEST
-verify_solution_test({id => "bakers_game24default", deal => 24, variant => "bakers_game", theme => [],}, 
+verify_solution_test({id => "bakers_game24default", deal => 24, variant => "bakers_game", theme => [],},
     "Baker's Game Deal #24"
 );
 
 # TEST
-verify_solution_test({id => "forecell1099default", deal => 1099, variant => "forecell", theme => [],}, 
+verify_solution_test({id => "forecell1099default", deal => 1099, variant => "forecell", theme => [],},
     "Forecell Deal #1099"
 );
 
@@ -138,7 +138,7 @@ verify_solution_test(
         deal => 1977,
         variant => "seahaven_towers",
         theme => ["-l", "fools-gold",],
-    }, 
+    },
     "Seahaven Towers #1977"
 );
 

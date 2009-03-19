@@ -14,7 +14,7 @@ int main_tests()
 [% FOREACH card_num = card_nums %]
 [% FOREACH t = [0,1] %]
 [% SET t_key = t ? "t" : "non_t" %]
-[% SET card_string = ('"' 
+[% SET card_string = ('"'
             _   card_num.value.${t_key}
             _   suit.value
             _   '"') %]
@@ -38,7 +38,7 @@ int main_tests()
 
 int main(void)
 {
-  plan_tests([% num_tests %]); 
-  main_tests(); 
+  plan_tests([% num_tests %]);
+  main_tests();
   return exit_status();
 }

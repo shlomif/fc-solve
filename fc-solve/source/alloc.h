@@ -3,7 +3,7 @@
 #define FC_SOLVE__ALLOC_H
 
 #ifdef __cplusplus
-extern "C" 
+extern "C"
 {
 #endif
 
@@ -20,14 +20,14 @@ struct fcs_compact_allocator_struct
 
 typedef struct fcs_compact_allocator_struct fcs_compact_allocator_t;
 
-extern fcs_compact_allocator_t * 
+extern fcs_compact_allocator_t *
     fc_solve_compact_allocator_new(void);
 
 extern void fc_solve_compact_allocator_extend(
     fcs_compact_allocator_t * allocator
         );
 #if 0
-extern char * 
+extern char *
     fc_solve_compact_allocator_alloc(
         fcs_compact_allocator_t * allocator,
         int how_much
@@ -67,11 +67,11 @@ extern void fc_solve_compact_allocator_release(fcs_compact_allocator_t * allocat
 #define fcs_compact_alloc_release(allocator) \
 {    \
     (allocator)->ptr = (allocator)->rollback_ptr; \
-} 
+}
 #endif
 
 extern void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator);
-    
+
 extern void fc_solve_compact_allocator_foreach(
     fcs_compact_allocator_t * allocator,
     int data_width,
@@ -82,5 +82,5 @@ extern void fc_solve_compact_allocator_foreach(
 #ifdef __cplusplus
 };
 #endif
-    
+
 #endif

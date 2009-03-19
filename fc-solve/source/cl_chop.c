@@ -75,7 +75,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
 
     last_arg_ptr = last_arg = malloc(1024);
     last_arg_end = last_arg + 1023;
-    
+
     while (*s != '\0')
     {
 LOOP_START:
@@ -99,9 +99,9 @@ LOOP_START:
             continue;
         }
 AFTER_WS:
-        while ((*s != ' ') && (*s != '\t') && (*s != '\n') && 
+        while ((*s != ' ') && (*s != '\t') && (*s != '\n') &&
                (*s != '\r') &&
-               (*s != '\\') && (*s != '\"') && (*s != '\0') && 
+               (*s != '\\') && (*s != '\"') && (*s != '\0') &&
                (*s != '#'))
         {
             in_arg = 1;
@@ -109,13 +109,13 @@ AFTER_WS:
             s++;
         }
 
-        
+
         if ((*s == ' ') || (*s == '\t') || (*s == '\n') || (*s == '\0') || (*s == '\r'))
         {
 NEXT_ARG:
             push_args_last_arg();
             in_arg = 0;
-            
+
             if (*s == '\0')
             {
                 break;
@@ -158,7 +158,7 @@ NEXT_ARG:
                     if (next_char == '\0')
                     {
                         push_args_last_arg();
-                        
+
                         goto END_OF_LOOP;
                     }
                     else if ((next_char == '\n') || (next_char == '\r'))
@@ -179,7 +179,7 @@ NEXT_ARG:
                 {
                     add_to_last_arg(*s);
                 }
-                s++;   
+                s++;
             }
             s++;
             goto AFTER_WS;
@@ -198,7 +198,7 @@ NEXT_ARG:
 END_OF_LOOP:
 
     free(last_arg);
-    
+
     return 0;
 }
 
@@ -213,15 +213,15 @@ int main(int argc, char * * argv)
 #else
     {
         FILE * f;
-        
+
         f = fopen(argv[1],"rb");
         string = calloc(4096,1);
         fread(string, 4095, 1, f);
         fclose(f);
     }
-        
+
 #endif
-    
+
     /* Initialize an arg man */
     args_man = args_man_alloc();
     /* Call it on string */

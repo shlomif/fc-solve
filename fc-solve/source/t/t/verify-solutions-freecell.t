@@ -41,9 +41,9 @@ sub verify_solution_test
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
-    open my $fc_solve_output, 
+    open my $fc_solve_output,
         ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ") .
-        "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " . 
+        "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
         ($board ? shell_quote($board) : "") .
         " |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
@@ -78,22 +78,22 @@ verify_solution_test({deal => 24}, "Verifying the solution of deal #24");
 verify_solution_test({deal => 1941}, "Verifying 1941 (The Hardest Deal)");
 
 # TEST
-verify_solution_test({deal => 24, theme => [],}, 
+verify_solution_test({deal => 24, theme => [],},
     "Solving Deal #24 with the default heuristic"
 );
 
 # TEST
-verify_solution_test({deal => 617, theme => ["-l", "john-galt-line"],}, 
+verify_solution_test({deal => 617, theme => ["-l", "john-galt-line"],},
     "Solving Deal #617 with the john-galt-line"
 );
 
 # TEST
-verify_solution_test({deal => 24, variant => "bakers_game", theme => [],}, 
+verify_solution_test({deal => 24, variant => "bakers_game", theme => [],},
     "Baker's Game Deal #24"
 );
 
 # TEST
-verify_solution_test({deal => 1099, variant => "forecell", theme => [],}, 
+verify_solution_test({deal => 1099, variant => "forecell", theme => [],},
     "Forecell Deal #1099"
 );
 
@@ -110,7 +110,7 @@ verify_solution_test(
         deal => 1977,
         variant => "seahaven_towers",
         theme => ["-l", "fools-gold",],
-    }, 
+    },
     "Seahaven Towers #1977"
 );
 
@@ -125,7 +125,7 @@ verify_solution_test({deal => 200, variant => "eight_off", theme => [],},
 );
 
 # TEST
-verify_solution_test({deal => 24, theme => ["-opt"],}, 
+verify_solution_test({deal => 24, theme => ["-opt"],},
     "-opt should work."
 );
 
@@ -134,7 +134,7 @@ verify_solution_test(
     {
         board =>
         File::Spec->catfile(
-            File::Spec->curdir(), 
+            File::Spec->curdir(),
             "t",
             "data",
             "sample-boards",
@@ -142,7 +142,7 @@ verify_solution_test(
         ),
         theme => [qw(--freecells-num 0 --empty-stacks-filled-by kings --sequence-move unlimited)],
         variant => "custom",
-        variant_params => 
+        variant_params =>
             Games::Solitaire::Verify::VariantParams->new(
                 {
                     'num_decks' => 1,

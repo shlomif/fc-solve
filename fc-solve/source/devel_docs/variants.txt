@@ -90,21 +90,21 @@ Stalactites:
 
 --------------------------
               Decks No. | Seqs Build By: | Fill Emp Stacks | Sequence Move:
-                       
-                       
-Baker's 
+
+
+Baker's
 Game               1           Suit                 Any Card
- 
+
 Eight Off         1
 
 Freecell                   1
 
 Forecell                   1
 
-Relaxed 
+Relaxed
 Freecell           1
 
-Relaxed 
+Relaxed
 Seahaven           1
 
 DK                         2

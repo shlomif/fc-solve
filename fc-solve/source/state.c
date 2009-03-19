@@ -467,8 +467,8 @@ int fc_solve_initial_user_state_to_c(
         out_state_key,
         out_state_val,
         stacks_num
-#ifdef INDIRECT_STACK_STATES        
-        , indirect_stacks_buffer  
+#ifdef INDIRECT_STACK_STATES
+        , indirect_stacks_buffer
 #endif
         );
     str = string;

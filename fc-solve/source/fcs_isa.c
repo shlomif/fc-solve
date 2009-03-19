@@ -25,7 +25,7 @@ void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread)
     hard_thread->state_packs = (fcs_state_keyval_pair_t * *)malloc(sizeof(fcs_state_keyval_pair_t *) * hard_thread->max_num_state_packs);
     hard_thread->num_state_packs = 1;
     /*
-     * All the states should fit in one 64KB segment. Now, we allocate as 
+     * All the states should fit in one 64KB segment. Now, we allocate as
      * many states as possible, minus one, so we would be certain that there
      * would be place for the overhead required by the malloc algorithm.
      * */

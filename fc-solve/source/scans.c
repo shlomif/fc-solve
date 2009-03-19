@@ -123,7 +123,7 @@ void fc_solve_soft_thread_init_soft_dfs(
     )
 {
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
-    
+
     fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
     /*
         Allocate some space for the states at depth 0.
@@ -199,8 +199,8 @@ int fc_solve_soft_dfs_do_solve(
     calculate_real_depth(
         ptr_state_val
     );
- 
-    TRACE0("Before depth loop");    
+
+    TRACE0("Before depth loop");
     /*
         The main loop.
     */
@@ -224,7 +224,7 @@ int fc_solve_soft_dfs_do_solve(
 
         TRACE0("Before current_state_index check");
         /* All the resultant states in the last test conducted were covered */
-        if (the_soft_dfs_info->current_state_index == 
+        if (the_soft_dfs_info->current_state_index ==
             derived_states_list->num_states
            )
         {
@@ -264,7 +264,7 @@ int fc_solve_soft_dfs_do_solve(
             {
                 int num_freestacks, num_freecells;
 
-                TRACE0("In iter_handler");                
+                TRACE0("In iter_handler");
 
                 if (instance->debug_iter_output)
                 {
@@ -308,7 +308,7 @@ int fc_solve_soft_dfs_do_solve(
                 }
 
                 /* Check if we have reached the empty state */
-                if ((num_freestacks == LOCAL_STACKS_NUM) && 
+                if ((num_freestacks == LOCAL_STACKS_NUM) &&
                     (num_freecells  == LOCAL_FREECELLS_NUM))
                 {
                     instance->final_state_val = ptr_state_val;
@@ -366,7 +366,7 @@ int fc_solve_soft_dfs_do_solve(
                     /* Have this test be re-performed */
                     derived_states_list->num_states = 0;
                     the_soft_dfs_info->current_state_index = 0;
-                    TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (after sfs_tests)");                    
+                    TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (after sfs_tests)");
                     myreturn(FCS_STATE_SUSPEND_PROCESS);
                 }
 
@@ -432,7 +432,7 @@ int fc_solve_soft_dfs_do_solve(
 
         {
             int num_states = derived_states_list->num_states;
-            fcs_state_extra_info_t * * derived_states = 
+            fcs_state_extra_info_t * * derived_states =
                 derived_states_list->states;
             int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
             fcs_state_extra_info_t * single_derived_state;
@@ -819,8 +819,8 @@ int fc_solve_a_star_or_bfs_do_solve(
     int calc_real_depth = instance->calc_real_depth;
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
-    int to_reparent_states = 
-        (instance->to_reparent_states || 
+    int to_reparent_states =
+        (instance->to_reparent_states ||
          (soft_thread->method == FCS_METHOD_OPTIMIZE)
         );
     int scans_synergy = instance->scans_synergy;
@@ -935,7 +935,7 @@ int fc_solve_a_star_or_bfs_do_solve(
             ptr_state_val
         );
 
-        TRACE0("perform_tests");        
+        TRACE0("perform_tests");
         /* Do all the tests at one go, because that the way it should be
            done for BFS and A*
         */
@@ -972,14 +972,14 @@ int fc_solve_a_star_or_bfs_do_solve(
             ptr_state_val->visited |= FCS_VISITED_ALL_TESTS_DONE;
         }
 
-        /* Increase the number of iterations by one . 
+        /* Increase the number of iterations by one .
          * */
         {
             instance->num_times++;
             hard_thread->num_times++;
         }
 
-        TRACE0("Insert all states");        
+        TRACE0("Insert all states");
         /* Insert all the derived states into the PQ or Queue */
 
         for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
@@ -991,7 +991,7 @@ int fc_solve_a_star_or_bfs_do_solve(
                 fc_solve_PQueuePush(
                     a_star_pqueue,
                     ptr_new_state_val,
-                    fc_solve_a_star_rate_state(soft_thread, 
+                    fc_solve_a_star_rate_state(soft_thread,
                         ptr_new_state_val
                         )
                     );
@@ -1051,8 +1051,8 @@ label_next_state:
         else
         {
             /* It is an A* scan */
-            fc_solve_PQueuePop(a_star_pqueue, 
-                &ptr_state_val 
+            fc_solve_PQueuePop(a_star_pqueue,
+                &ptr_state_val
                 );
         }
     }

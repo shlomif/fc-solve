@@ -138,7 +138,7 @@ help_screen_t help_screens[] = {
 "USAGE file in the Freecell Solver distribution\n"
 },
 {
-    "options", 
+    "options",
 "fc-solve [options] board_file\n"
 "\n"
 "If board_file is - or unspecified reads standard input\n"
@@ -391,7 +391,7 @@ help_screen_t help_screens[] = {
 "- To turn --help into something more useful, type\n"
 "  \"fc-solve --help-real-help\"\n"
 "\n"
-"Contact Shlomi Fish, http://www.shlomifish.org/ for more information.\n" 
+"Contact Shlomi Fish, http://www.shlomifish.org/ for more information.\n"
 },
 {
     NULL,
@@ -445,7 +445,7 @@ static int cmd_line_callback(
     else if ((!strcmp(argv[arg], "-h")) || (!strcmp(argv[arg], "--help")))
     {
         char * help_key;
-        
+
         help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");
         if (help_key == NULL)
         {
@@ -499,11 +499,11 @@ static int cmd_line_callback(
     else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
     {
         dc->standard_notation = 1;
-    
+
     }
     else if ((!strcmp(argv[arg], "-snx")) || (!strcmp(argv[arg], "--standard-notation-extended")))
     {
-        dc->standard_notation = 2;   
+        dc->standard_notation = 2;
     }
     else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
     {
@@ -521,7 +521,7 @@ static int cmd_line_callback(
             instance,
             NULL,
             NULL
-            );                
+            );
         *num_to_skip = 0;
         return FCS_CMD_LINE_OK;
     }
@@ -589,7 +589,7 @@ static void command_signal_handler(int signal_num)
 
 static char * known_parameters[] = {
     "-h", "--help",
-        "--help-configs", "--help-options", "--help-problems", 
+        "--help-configs", "--help-options", "--help-problems",
         "--help-real-help", "--help-short-sol", "--help-summary",
     "-i", "--iter-output",
     "-s", "--state-output",
@@ -655,7 +655,7 @@ int main(int argc, char * argv[])
                 " and was not supplied with one.\n", argv[arg]);
         return (-1);
     }
-    else if (        
+    else if (
         (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
         )
     {
@@ -673,7 +673,7 @@ int main(int argc, char * argv[])
         file = stdin;
         if (!getenv("FREECELL_SOLVER_QUIET"))
         {
-            fprintf(stderr, "%s", 
+            fprintf(stderr, "%s",
                     "Reading the board from the standard input.\n"
                     "Type \"fc-solve --help\" for more usage information.\n"
                     "To cancel this message set the FREECELL_SOLVER_QUIET environment variable.\n"
