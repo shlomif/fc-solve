@@ -33,7 +33,7 @@ GetOptions(
     'prefix' => \$prefix,
     'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
-    'lrb|libredblack' => sub { return set_both("LIBREDBLACK"); },
+    'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
 );
 
 # This cache is sometimes causing problems.
