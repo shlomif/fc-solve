@@ -2,10 +2,6 @@
 
 --- Non-pressing ---
 
-* Make sure we only pass fcs_state_extra_info_t (= vals) around instead of 
-both them and fcs_state_t (= keys). That's because there's
-fcs_state_extra_info_t::key for the key.
-
 * Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 
 sfs_check_state_end() ) to functions, and see if it actually makes it faster.
 
