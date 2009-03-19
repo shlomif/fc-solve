@@ -277,9 +277,7 @@ int freecell_solver_user_resume_solution(
         if (user->instances_list[user->current_instance_idx].ret == FCS_STATE_NOT_BEGAN_YET)
         {
             int status;
-            fc_solve_instance_t * instance;
-
-            instance = user->instance;
+            fc_solve_instance_t * instance = user->instance;
 
             status = fc_solve_initial_user_state_to_c(
                 user->state_string_copy,
@@ -400,6 +398,7 @@ int freecell_solver_user_resume_solution(
 
         if (user->ret == FCS_STATE_WAS_SOLVED)
         {
+            fc_solve_instance_t * instance = user->instance;
             fc_solve_move_stack_normalize(
                 user->instance->solution_moves,
                 &(user->state.info),
@@ -446,30 +445,34 @@ int freecell_solver_user_get_next_move(
     fcs_user_t * user;
 
     user = (fcs_user_t*)user_instance;
-    if (user->ret == FCS_STATE_WAS_SOLVED)
+
     {
-        int ret;
-
-        ret = fcs_move_stack_pop(
-            user->instance->solution_moves,
-            move
-            );
-
-        if (ret == 0)
+        fc_solve_instance_t * instance = user->instance;
+        if (user->ret == FCS_STATE_WAS_SOLVED)
         {
-            fc_solve_apply_move(
-                &(user->running_state.info),
-                *move,
-                INSTANCE_FREECELLS_NUM,
-                INSTANCE_STACKS_NUM,
-                INSTANCE_DECKS_NUM
+            int ret;
+
+            ret = fcs_move_stack_pop(
+                user->instance->solution_moves,
+                move
                 );
+
+            if (ret == 0)
+            {
+                fc_solve_apply_move(
+                    &(user->running_state.info),
+                    *move,
+                    INSTANCE_FREECELLS_NUM,
+                    INSTANCE_STACKS_NUM,
+                    INSTANCE_DECKS_NUM
+                    );
+            }
+            return ret;
         }
-        return ret;
-    }
-    else
-    {
-        return 1;
+        else
+        {
+            return 1;
+        }
     }
 }
 
@@ -484,16 +487,20 @@ char * freecell_solver_user_current_state_as_string(
 
     user = (fcs_user_t *)user_instance;
 
-    return
-        fc_solve_state_as_string(
-            &(user->running_state.info),
-            INSTANCE_FREECELLS_NUM,
-            INSTANCE_STACKS_NUM,
-            INSTANCE_DECKS_NUM,
-            parseable_output,
-            canonized_order_output,
-            display_10_as_t
-            );
+    {
+        fc_solve_instance_t * instance = user->instance;
+
+        return
+            fc_solve_state_as_string(
+                &(user->running_state.info),
+                INSTANCE_FREECELLS_NUM,
+                INSTANCE_STACKS_NUM,
+                INSTANCE_DECKS_NUM,
+                parseable_output,
+                canonized_order_output,
+                display_10_as_t
+                );
+    }
 }
 
 static void user_free_resources(
@@ -750,9 +757,11 @@ char * freecell_solver_user_move_to_string_w_state(
     )
 {
     fcs_user_t * user;
+    fc_solve_instance_t * instance;
 
     user = (fcs_user_t *)user_instance;
-    
+    instance = user->instance;
+
     return 
         fc_solve_move_to_string_w_state(
             &(user->running_state.info), 
@@ -972,9 +981,11 @@ char * freecell_solver_user_iter_state_as_string(
 )
 {
     fcs_user_t * user;
+    fc_solve_instance_t * instance;
     fcs_standalone_state_ptrs_t * ptr_state;
 
     user = (fcs_user_t *)user_instance;
+    instance = user->instance;
 
     ptr_state = (fcs_standalone_state_ptrs_t *)ptr_state_void;
 

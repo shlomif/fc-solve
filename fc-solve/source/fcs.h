@@ -281,7 +281,7 @@ typedef struct fc_solve_instance
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #define INSTANCE_STACKS_NUM (instance->stacks_num)
-#define LOCAL_STACKS_NUM (>stacks_num)
+#define LOCAL_STACKS_NUM (stacks_num)
 #else
 #define INSTANCE_STACKS_NUM HARD_CODED_NUM_STACKS
 #define LOCAL_STACKS_NUM HARD_CODED_NUM_STACKS
