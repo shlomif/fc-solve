@@ -303,7 +303,6 @@ int fc_solve_soft_dfs_do_solve(
                 /* Check if we have reached the empty state */
                 if ((num_freestacks == stacks_num) && (num_freecells == freecells_num))
                 {
-                    instance->final_state_key = ptr_state_key;
                     instance->final_state_val = ptr_state_val;
 
                     TRACE0("Returning FCS_STATE_WAS_SOLVED");
@@ -760,7 +759,6 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
 
     fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
-    fcs_state_t * ptr_orig_state_key = ptr_orig_state_val->key;
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
@@ -775,7 +773,6 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
     ptr_orig_state_val->moves_to_parent = NULL;
     ptr_orig_state_val->depth = 0;
 
-    soft_thread->first_state_to_check_key = ptr_orig_state_key;
     soft_thread->first_state_to_check_val = ptr_orig_state_val;
 
     return;
@@ -820,8 +817,8 @@ int fc_solve_a_star_or_bfs_do_solve(
     tests_order_num = soft_thread->tests_order.num;
     tests_order_tests = soft_thread->tests_order.tests;
 
-    ptr_state_key = soft_thread->first_state_to_check_key;
     ptr_state_val = soft_thread->first_state_to_check_val;
+    ptr_state_key = ptr_state_val->key;
 
     method = soft_thread->method;
     freecells_num = instance->freecells_num;
@@ -877,7 +874,6 @@ int fc_solve_a_star_or_bfs_do_solve(
 
         if (check_if_limits_exceeded())
         {
-            soft_thread->first_state_to_check_key = ptr_state_key;
             soft_thread->first_state_to_check_val = ptr_state_val;
 
             TRACE0("myreturn - FCS_STATE_SUSPEND_PROCESS");
@@ -906,7 +902,6 @@ int fc_solve_a_star_or_bfs_do_solve(
 
         if ((num_freestacks == stacks_num) && (num_freecells == freecells_num))
         {
-            instance->final_state_key = ptr_state_key;
             instance->final_state_val = ptr_state_val;
 
             myreturn(FCS_STATE_WAS_SOLVED);
@@ -942,7 +937,6 @@ int fc_solve_a_star_or_bfs_do_solve(
                 (check == FCS_STATE_SUSPEND_PROCESS))
             {
                 /* Save the current position in the scan */
-                soft_thread->first_state_to_check_key = ptr_state_key;
                 soft_thread->first_state_to_check_val = ptr_state_val;
 
                 myreturn(FCS_STATE_SUSPEND_PROCESS);

@@ -313,7 +313,6 @@ typedef struct fc_solve_instance
     /* This is the final state that the scan recommends to the
      * interface
      * */
-    fcs_state_t * final_state_key;
     fcs_state_extra_info_t * final_state_val;
 
     /*
@@ -609,7 +608,6 @@ struct fc_solve_soft_thread_struct
      * The first state to be checked by the scan. It is a kind of bootstrap
      * for the algorithm.
      * */
-    fcs_state_t * first_state_to_check_key;
     fcs_state_extra_info_t * first_state_to_check_val;
 
     /*
