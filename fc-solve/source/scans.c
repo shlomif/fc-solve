@@ -352,7 +352,6 @@ int fc_solve_soft_dfs_do_solve(
                         the_soft_dfs_info->test_index
                     ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                         soft_thread,
-                        ptr_state_key,
                         ptr_state_val,
                         the_soft_dfs_info->num_freestacks,
                         the_soft_dfs_info->num_freecells,
@@ -939,7 +938,6 @@ int fc_solve_a_star_or_bfs_do_solve(
         {
             check = fc_solve_sfs_tests[tests_order_tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                     soft_thread,
-                    ptr_state_key,
                     ptr_state_val,
                     num_freestacks,
                     num_freecells,

@@ -225,6 +225,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
 #define tests_declare_accessors()                              \
     fc_solve_hard_thread_t * hard_thread;               \
     fc_solve_instance_t * instance;                     \
+    fcs_state_t * ptr_state_key; \
     fcs_state_t * ptr_new_state_key; \
     fcs_state_extra_info_t * ptr_new_state_val; \
     fcs_move_stack_t * moves;                                  \
@@ -266,6 +267,7 @@ fcs_move_stack_push(moves, temp_move);                                    \
  * This macro defines these accessors to have some value.
  * */
 #define tests_define_accessors()                                  \
+    ptr_state_key = ptr_state_val->key;                           \
     hard_thread = soft_thread->hard_thread;                       \
     instance = hard_thread->instance;                             \
     moves = hard_thread->reusable_move_stack;                     \
@@ -276,7 +278,6 @@ fcs_move_stack_push(moves, temp_move);                                    \
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_key,
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
@@ -285,7 +286,6 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         );
 extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_key,
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
@@ -295,7 +295,6 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
 
 extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_key,
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
@@ -305,7 +304,6 @@ extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_key,
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
@@ -315,7 +313,6 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_card
 
 extern int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_key,
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
@@ -325,7 +322,6 @@ extern int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true
 
 extern int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_key,
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
@@ -335,7 +331,6 @@ extern int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_p
 
 extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_key,
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
@@ -345,7 +340,6 @@ extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_w
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_t * ptr_state_key,
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
