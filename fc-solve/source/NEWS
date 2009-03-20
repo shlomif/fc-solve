@@ -193,6 +193,12 @@ it is linked against.
 
 6. Win32 Makefile can now generate a working DLL.
 
+Version 1.10.0 ( 02-Oct-2001 )
+------------------------------
+
+Added support for solving deals of "Simple Simon" in addition to
+all the freecell-like variants that it could solve before.
+
 Version 1.6.0 ( 11-Apr-2001 )
 -----------------------------
 
