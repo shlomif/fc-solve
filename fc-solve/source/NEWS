@@ -302,3 +302,10 @@ Freecell Solver will stop before it consumes too much memory)
 
 4. Specify the order of the movements that will be tested. Usually, a test 
 order can be found that will solve a given board really quickly.
+
+Version 0.4 ( 06-Jun-2000 )
+---------------------------
+
+1. Three major code optimizations. Freecell Solver now runs much faster.
+
+2. Freecell Solver is now able to start solving from a non-initial board.
