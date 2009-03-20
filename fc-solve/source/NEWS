@@ -239,3 +239,22 @@ very practical.
 The choice between all those scans can be specified at run-time using 
 command-line arguments.
 
+Version 1.2.0 ( 21-Dec-2000 )
+-----------------------------
+
+1. Several moves were improved or added, so it can solve more layouts.
+
+2. A more robust command-line argument handling, so less segfaults can be
+expected if it's improperly used.
+
+Version 1.0.0 ( 19-Nov-2000 )
+-----------------------------
+
+1. Added support for solving more game types.
+
+2. Can be compiled so it will be less memory intensive (INDIRECT_STACK_STATES).
+
+3. There's a library interface for use by third-party developers. It suports
+suspending a solution process and resuming it from its last position.
+
+4. Several random bug-fixes.
