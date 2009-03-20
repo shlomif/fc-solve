@@ -236,5 +236,6 @@ introduced).
 4. A New Breadth-First-Search (BFS or BrFS) scan was introduced. It's not
 very practical.
 
-5. The choice between all those scans is available at run-time.
+The choice between all those scans can be specified at run-time using 
+command-line arguments.
 
