@@ -199,6 +199,16 @@ Version 1.10.0 ( 02-Oct-2001 )
 Added support for solving deals of "Simple Simon" in addition to
 all the freecell-like variants that it could solve before.
 
+Version 1.8.0 ( 31-Aug-2001 )
+-----------------------------
+
+1. A new build and configuration process based on the GNU Autotools (Autoconf,
+Automake and libtool). This allows portably build shared and static libraries
+and stuff like that.
+
+2. The GNOME AisleRiot board-generation program can generate the boards of
+the more Solitaire variants which are supported by Freecell Solver.
+
 Version 1.6.0 ( 11-Apr-2001 )
 -----------------------------
 
