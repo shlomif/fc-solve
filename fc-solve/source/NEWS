@@ -270,3 +270,21 @@ solutiosn.
 
 3. Several bug-fixes.
 
+Version 0.8.0 ( 28-Aug-2000 )
+-----------------------------
+
+1. Some bug-fixes. 
+
+2. Support for a variable number of freecells, columns, and cards per column.
+
+3. Board generators for Microsoft Freecell, Freecell Pro and PySol.
+
+4. An option to use the balanced binary tree implementations of libavl
+( http://adtinfo.org/ ), glib ( http://en.wikipedia.org/wiki/GLib ), or 
+libredblack ( http://libredblack.sourceforge.net/ ). Using them makes 
+Freecell Solver about 33% faster.
+
+5. Support for using "T" instead of "10" in board input/output.
+
+6. Improved Documentation.
+
