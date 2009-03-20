@@ -222,3 +222,19 @@ contact me and I'll add some more comments.
 3. Several speed optimizations were done in the internal hash, so I think
 it should run at least a little faster.
 
+Version 1.4.0 ( 07-Feb-2001 )
+-----------------------------
+
+1. Many fixes for bugs and memory leaks.
+
+2. A Soft-DFS scan - Depth-First Search that does not use procedural recursion
+was introduced.
+
+3. A New Best-first Search Scan (called A* in the code and documentation was
+introduced).
+
+4. A New Breadth-First-Search (BFS or BrFS) scan was introduced. It's not
+very practical.
+
+5. The choice between all those scans is available at run-time.
+
