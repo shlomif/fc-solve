@@ -288,3 +288,17 @@ Freecell Solver about 33% faster.
 
 6. Improved Documentation.
 
+Version 0.6 ( 28-Jul-2000 )
+---------------------------
+
+1. An extra movement that allows Freecell Solver to solve some boards which
+it could not solve previously.
+
+2. The order of the stacks and freecells is preserved throughout the
+solutions.
+
+3. There is now in abilitiy to limit to a certain number of iterations (so 
+Freecell Solver will stop before it consumes too much memory)
+
+4. Specify the order of the movements that will be tested. Usually, a test 
+order can be found that will solve a given board really quickly.
