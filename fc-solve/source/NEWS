@@ -176,6 +176,23 @@ systems by running rpmbuild -ta on the archive.
 
 8. Several speed-ups.
 
+Version 2.0.0 ( 19-Dec-2001 )
+-----------------------------
+
+1. Added some presets for the PySol games "Beleaguered Castle", "Citadel" 
+and "Streets and Alleys".
+
+2. Re-factoring of the scans code to make it simpler.
+
+3. Added many functions to the external API.
+
+4. fc-solve now uses it, so it is fully loosely-coupled with the library
+it is linked against.
+
+5. Added a randomized DFS scan (with a user-defined seed).
+
+6. Win32 Makefile can now generate a working DLL.
+
 Version 1.6.0 ( 11-Apr-2001 )
 -----------------------------
 
