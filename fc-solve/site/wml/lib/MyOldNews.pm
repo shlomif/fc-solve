@@ -366,15 +366,15 @@ several new pages were added or updated in the site:
 
 <ol>
 <li>
-<a href="$(ROOT)/current-status.html">The Current Status Page</a> answers
+<a href="./current-status.html">The Current Status Page</a> answers
 the question "Is Freecell Solver dead?".
 </li>
 <li>
-Several new items were added to <a href="$(ROOT)/to-do.html">the "To
+Several new items were added to <a href="./to-do.html">the "To
 Do List" page</a>. It now also features a table of contents.
 </li>
 <li>
-There is now <a href="$(ROOT)/getting-credit.html">a page 
+There is now <a href="./getting-credit.html">a page 
 about Giving or Getting Academic Credit for working on Freecell
 Solver</a>.
 </li>

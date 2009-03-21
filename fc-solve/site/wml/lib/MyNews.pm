@@ -41,5 +41,13 @@ sub print_old
         ;
 }
 
+sub print_new
+{
+    my $results = MyOldNews::get_old_news();
+    print map { _render_old_news_item($_) } 
+        reverse(@{$results}[(@{$results} - $num_new_items) .. $#{$results}])
+        ;
+
+}
 1;
 

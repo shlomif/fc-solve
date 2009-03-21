@@ -35,104 +35,10 @@ in the <a href="features.html"><b>Features List</b></a>.
 
 <h2>News</h2>
 
-<h3 id="news-2009-03-15">15-Mar-2009</h3>
-
-<p>
-Freecell Solver 2.16.0 is now available. Culminating many person-years
-of effort (OK - some person-days of effort), it is the best release todate.
-</p>
-
-<p>
-The highlights of this release are a bug fix to the iteration numbers in
-the "-s -i" display, and an internal refactoring of the
-ptr_state_with_locations_t struct into a separate ptr_state_t (the key) and
-a ptr_state_extra_info_t (the value). The latter should not affect the external
-behaviour or API in any way.
-</p>
-
-<p>
-This release (like previous ones) is available from 
-<a href="download.html">the download page</a>. Next on our agenda is getting
-a binary package for Microsoft Windows out-of-the-door, and more code cleanups,
-optimisations and enhancements.
-</p>
-
-<h3 id="news-2009-01-25">25-Jan-2009</h3>
-
-<p>
-Freecell Solver 2.14.0 was released today. This release features a major
-speed boost, and an important bug fix: when "--sequence-move unlimited"
-had been specified in previous versions, it sometimes did not take effect
-due to other parameters, and as a result the sequence move was still limited.
-(Thanks to larrysan for reporting this problem).
-</p>
-
-<p>
-This release comes relatively shortly after the previous release, and without
-any developer versions. This is in an effort to make more frequent stable
-releases with notable features.
-</p>
-
-<h3 id="news-2008-12-10">10-Dec-2008</h3>
-
-<p>
-<a href="http://en.wikipedia.org/wiki/Perl_6">Perl 6</a> will be ready by
-Christmas, but of an unknown year. On the other hand, Freecell Solver 2.12.0,
-is already ready for Christmas 2008, and was released today. The highlights
-are a new configuration and build system based on <a 
-href="http://www.cmake.org/">CMake</a>, which results in faster configurations 
-and builds, and a much reduced archive size; a new suite of automated tests;
-an optimisation to the command line processing and a new <tt>--version</tt>
-flag.
-</p>
-
-<p>
-Happy holidays and hope you enjoy this release.
-</p>
-
-<h3 id="news-2005-12-15">15-Dec-2005</h3>
-
-<p>
-The <a href="download.html">Downloads</a> are now working again. Plus,
-several new pages were added or updated in the site:
-</p>
-
-<ol>
-<li>
-<a href="$(ROOT)/current-status.html">The Current Status Page</a> answers
-the question "Is Freecell Solver dead?".
-</li>
-<li>
-Several new items were added to <a href="$(ROOT)/to-do.html">the "To
-Do List" page</a>. It now also features a table of contents.
-</li>
-<li>
-There is now <a href="$(ROOT)/getting-credit.html">a page 
-about Giving or Getting Academic Credit for working on Freecell
-Solver</a>.
-</li>
-</ol>
-
-<h3 id="news-2003-10-04">4-Oct-2003</h3>
-
-<p>
-There is now <a href="./pysol/">PySol Integration with Freecell Solver</a>
-available here. This enables receiving hints from Freecell Solver and seeing
-demos of it while within PySol.
-</p>
-
-<h3 id="news-2002-09-28">28-Sep-2002</h3>
-
-<p>
-Freecell Solver 2.8.0 has been released. This version features a better
-documentation and help screens, a preset system, and an option to read 
-paramters from files. Plus, it is possible to run one instance of the 
-solver after the other in case the other one has returned a negative 
-verdict.
-</p>
-<p>
-All in all: a lot of added usability!
-</p>
+<:{
+use MyNews;
+MyNews::print_new();
+}:>
 
 <h3 class="plain"><a href="old-news.html">Previous News Items</a></h3>
 
