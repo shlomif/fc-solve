@@ -17,13 +17,14 @@ sub _render_news_item
     my $item = shift;
 
     my $issued = $item->{'issued'};
-    my $id = $item->{'id'};
     my $html = $item->{'html'};
     my $title = $item->{'title'} || "";
 
     $title = $issued->strftime("%d-%b-%Y")
         . (length($title) ? ": " : "") 
         . $title;
+
+    my $id = $issued->strftime("news-%Y-%m-%d");
 
     # Remove a leading 0 which is ugly.
     $title =~ s{\A0}{};
@@ -56,7 +57,7 @@ sub _convert_from_old_news_item
         {
             issued => $issued,
             html => $html,
-            id => $issued->strftime("news-%Y-%m-%d"),
+            # id => $issued->strftime("news-%Y-%m-%d"),
         };
 }
 
@@ -79,8 +80,7 @@ sub _calc_blog_news
                 issued => $entry->issued->clone(),
                 html => _filter_out_br_tags($entry->content->body()),
                 title => $entry->title(),
-                id => 
-                ($entry->issued->strftime("news-%Y-%m-%d-") . $entry->id()),
+                # id => ($entry->issued->strftime("news-%Y-%m-%d-"),
             }
             ;
     }
