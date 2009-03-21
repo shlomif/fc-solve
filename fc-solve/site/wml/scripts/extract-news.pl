@@ -8,6 +8,7 @@ use IO::All;
 use POSIX;
 
 my @results;
+my $last_time;
 
 foreach my $file (qw(index old-news))
 {
@@ -17,7 +18,7 @@ foreach my $file (qw(index old-news))
     while (defined(my $l = shift(@lines)))
     {
         if (my ($y, $m, $d, $formatted_date) =
-            ($l =~ m[\A<h3 id="news-(\d{4})-(\d{1,2})-(\d{1,2})>([^<]+)</h3> *\z]
+            ($l =~ m[\A<h3 id="news-(\d{4})-(\d{1,2})-(\d{1,2})">([^<]+)</h3> *\z]
             ))
         {
             my $time = mktime(0, 30, 12, $d, $m-1, $y-1900);
@@ -30,6 +31,11 @@ foreach my $file (qw(index old-news))
             {
                 die "Expected format '$exp_format' differs in line '$l'!";
             }
+            if (defined($last_time) && ($last_time <= $time))
+            {
+                die "Last time on line '$l' is not descending.";
+            }
+            $last_time = $time;
 
             my $html = "";
             my $html_l;
@@ -37,17 +43,22 @@ foreach my $file (qw(index old-news))
             GET_HTML:
             while (defined($html_l = shift(@lines)))
             {
-                if ($html_l =~ m{\A<h3>})
+                if ($html_l =~ m{\A<h3})
                 {
                     last GET_HTML;
                 }
-                $html .= $html_l;
+                $html .= $html_l . "\n";
             }
-            $l = $html_l;
-            push @results, { year => $y, mon => $m, day_of_month => $d, html => $html };
-            redo LINES_LOOP;
+            unshift (@lines, $html_l);
+            push @results,
+                {
+                    year => $y,
+                    mon => int($m),
+                    day_of_month => int($d),
+                    html => $html,
+                };
         }
     }
 }
 
-print Data::Dumper->new([\@results])->Dump();
+io("MyOldNews.pm")->print(Data::Dumper->new([[reverse(@results)]])->Dump());
