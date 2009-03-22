@@ -8,7 +8,7 @@ SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
 
 # Setting for NSIS :
-SET(CPACK_NSIS_MUI_ICON "fc-solve.ico")
+SET(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.ico")
 SET(CPACK_NSIS_MUI_UNIICON ${CPACK_NSIS_MUI_ICON})
 SET(CPACK_PACKAGE_ICON ${CPACK_NSIS_MUI_ICON})
 SET(CPACK_NSIS_MODIFY_PATH "ON")
@@ -56,8 +56,8 @@ SET(CPACK_SOURCE_IGNORE_FILES
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
-  SET(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
-  SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
+  SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\dondorf-king.bmp")
+  SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\fc-solve.exe")
   SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} My Famous Project")
   SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\fc-solve.berlios.de")
   SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\fc-solve.berlios.de")
