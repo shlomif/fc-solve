@@ -31,7 +31,7 @@ GetOptions(
     'r|release' => sub { my ($opt, $val) = @_; $is_debug = !$val },
     'c|cols=s' => \$stack_storage,
     'p|pos=s' => \$state_storage,
-    'prefix' => \$prefix,
+    'prefix=s' => \$prefix,
     'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
