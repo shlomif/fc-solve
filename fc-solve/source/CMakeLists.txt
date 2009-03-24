@@ -194,6 +194,17 @@ INSTALL(
     DESTINATION "lib"
 )
 
+IF (WIN32 AND NOT UNIX)
+    # This is so on Windows, the .dll's will be installed in the bin/ 
+    # directory as well where the Freecell Solver command-line utilities
+    # will be able to find them.
+
+    INSTALL(
+        TARGETS "freecell-solver"
+        DESTINATION "bin"
+    )
+ENDIF (WIN32 AND NOT UNIX)
+
 INSTALL(
     FILES "freecell-solver-config"
     DESTINATION "bin"
