@@ -68,6 +68,29 @@ SET(CPACK_PACKAGE_EXECUTABLES
     "fc-solve" "Single-Game Solver"
 )
 
+### This is to set the RPATH correctly, so when installed under a prefix
+### the executables will find the libraries.
+### 
+### See:
+###
+### http://www.cmake.org/Wiki/CMake_RPATH_handling
+###
+### (Taken from that wiki page)
+
+# use, i.e. don't skip the full RPATH for the build tree
+SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+# when building, don't use the install RPATH already
+# (but later on when installing)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+
+# the RPATH to be used when installing
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
 
 SET (INDIRECT_STACK_STATES 1)
 SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
