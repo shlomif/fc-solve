@@ -4,7 +4,7 @@ INSTALL file for Freecell Solver
 Quick and Dirty Compilation
 ---------------------------
 
-Freecell Solver has converted to use CMake ( http://www.cmake.org/ ) 
+Freecell Solver was converted to use CMake ( http://www.cmake.org/ ) 
 starting from version 2.12.0. You'll need to install CMake version 2.6.0
 from your distribution's repository or from its source distribution.
 

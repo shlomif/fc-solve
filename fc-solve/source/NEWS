@@ -1,5 +1,26 @@
+Version 2.20.0 (26-Mar-2009)
+----------------------------
+
 1. Updated the "NEWS" file (this file) with all previous version up
 to 0.4 (the first release after the first initial release).
+
+2. Many fixes to the Win32 NSIS Package creation process of CMake/CPack .
+The NSIS package is now built and installed properly.
+
+3. Fixed a bug with the recycling logic of the optimization thread.
+
+This influenced "freecell-solver-range-parallel-solve 1 2 1 -opt" among other
+things. In the process, I refactored the code a bit after trying to follow
+some false leads.
+
+4. Fixed the --prefix flag in ./configure to be treated as a string instead
+of a boolean.
+
+5. Fixed the running of the executables under a specified PREFIX:
+
+http://www.cmake.org/Wiki/CMake_RPATH_handling
+
+6. Minor changes to "README", "INSTALL" and "USAGE".
 
 Version 2.18.0 (19-Mar-2009)
 ----------------------------

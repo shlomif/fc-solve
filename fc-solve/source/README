@@ -1,8 +1,9 @@
 1. Introduction
 ---------------
 
-This is Freecell Solver version 2.8.x, a program that automatically
-solves most Freecell and Simple Simon games.
+This is Freecell Solver version 2.20.x, a program that automatically
+solves most layouts of Freecell, and similar Solitaire variants as
+well as those of Simple Simon.
 
 Freecell Solver is distributed under the public domain.
 
@@ -13,12 +14,7 @@ I hope you'll enjoy using it, and make the best of it.
 2. Building
 -----------
 
-Read the file "INSTALL" for information on how to do that. For the impatient:
-type:
-
-./configure
-make
-make install
+Read the file "INSTALL" for information on how to do that.
 
 3. Usage
 --------
