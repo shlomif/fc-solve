@@ -85,7 +85,10 @@ sub _calc_blog_news
             ;
     }
 
-    return \@results;
+    return [ sort 
+        { DateTime->compare($a->{'issued'}, $b->{'issued'}) } 
+        @results
+    ];
 }
 
 my $num_new_items = 6;
@@ -100,6 +103,8 @@ sub _print_results
 {
     my $start_idx = shift;
     my $end_idx = shift;
+
+    binmode STDOUT, ":utf8";
 
     print map { _render_news_item($_) } 
         reverse(@{$results}[$start_idx .. $end_idx])
