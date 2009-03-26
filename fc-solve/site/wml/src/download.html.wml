@@ -15,7 +15,7 @@
 <table border="1" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
 <tr>
 <td>
-<link_to_berlios_file "freecell-solver-2.18.0.tar.gz" />
+<link_to_berlios_file "freecell-solver-2.20.0.tar.gz" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
@@ -24,10 +24,10 @@ Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
 
 <tr>
 <td>
-<link_to_berlios_file "freecell-solver-2.8.6.win32.bin.zip" />
+<link_to_berlios_file "freecell-solver-2.20.0-win32.exe" />
 </td>
 <td>
-Win32 Binaries
+Win32 Binaries. Download the .exe and it will set up an interactive installer.
 </td>
 </tr>
 
@@ -139,6 +139,7 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 </define-tag>
 
 <table border="1" summary="Older versions of Freecell Solver. In decreasing version number.">
+<ver "2.18" "0" />
 <ver "2.16" "0" />
 <ver "2.14" "0" />
 <ver "2.12" "0" />
