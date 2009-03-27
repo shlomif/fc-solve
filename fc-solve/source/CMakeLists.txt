@@ -155,8 +155,10 @@ ADD_LIBRARY (freecell-solver-static
     )
 
 SET_TARGET_PROPERTIES(freecell-solver-static PROPERTIES OUTPUT_NAME "freecell-solver")
-SET_TARGET_PROPERTIES(freecell-solver PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-SET_TARGET_PROPERTIES(freecell-solver-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+SET_TARGET_PROPERTIES(
+    freecell-solver freecell-solver-static 
+    PROPERTIES CLEAN_DIRECT_OUTPUT 1
+)
 
 SET_TARGET_PROPERTIES(freecell-solver
     PROPERTIES VERSION 0.5.0 SOVERSION 0
