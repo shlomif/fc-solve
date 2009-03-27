@@ -30,8 +30,8 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "\\\\.o$"
     "~$"
     "/board_gen/(pi-make-microsoft-freecell-board|make-microsoft-freecell-board|make-gnome-freecell-board|make-aisleriot-freecell-board)$"
-    "/fc-solve$"
-    "/libfcs\\\\.a$"
+    "/(fc-solve|freecell-solver-range-parallel-solve)$"
+    "/lib(fcs|freecell-solver)\\\\.a$"
     "\\\\.so(\\\\.[0-9]+)*$"
     "/.svn/"
     "/t/t/.*\\\\.exe$"
@@ -42,6 +42,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/CPackConfig.cmake$"
     "/tags$"
     "/([0-9]+)\\\\.board$"
+    "/config\\\\.h$"
 )
 
 IF(WIN32 AND NOT UNIX)
