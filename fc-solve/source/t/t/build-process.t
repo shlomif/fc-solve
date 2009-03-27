@@ -15,7 +15,7 @@ if (! $ENV{'FCS_TEST_BUILD'} )
     plan skip_all => "Skipping because FCS_TEST_BUILD is not set";
 }
 
-plan tests => 6;
+plan tests => 8;
 
 # Change directory to the Freecell Solver base distribution directory.
 chdir($ENV{"FCS_PATH"});
@@ -25,7 +25,9 @@ sub test_cmd
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     my ($cmd, $blurb) = @_;
 
-    if (!ok (!system(@$cmd), $blurb))
+    my $sys_ret = ref($cmd) eq "ARRAY" ? system(@$cmd) : system($cmd);
+
+    if (!ok (!$sys_ret, $blurb))
     {
         die "Command failed! $!.";
     }
@@ -69,4 +71,9 @@ sub test_cmd
     # TEST
     ok ((none { m{/libfreecell-solver\.a\z} } @tar_lines),
         "Archive does not contain libfreecell-solver.a");
+
+    # TEST
+    test_cmd ("rpmbuild -tb $arc_name 2>/dev/null", 
+        "rpmbuild -tb is successful."
+    );
 }

@@ -41,6 +41,17 @@ static libraries necessary for developing programs using Freecell Solver.
 You should install it if you are a game developer who would like to use 
 Freecell Solver from within your programs.
 
+%package -n libfreecell-solver0-static
+Summary: The Freecell Solver static libraries
+Group: Amusement/Games
+Requires: libfreecell-solver0 = %{PACKAGE_VERSION}
+
+%description -n libfreecell-solver0-static
+Freecell Solver is a library for automatically solving boards of Freecell and
+similar variants of card Solitaire. This package contains the static libraries.
+
+It is not generally required.
+
 %prep
 %setup
 # This is a hack that is meant to make sure the README of the board
@@ -73,6 +84,9 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 /usr/lib/libfreecell-solver.so*
 /usr/share/freecell-solver/presetrc
 /usr/share/freecell-solver/presets/*
+
+%files -n libfreecell-solver0-static
+/usr/lib/libfreecell-solver.a
 
 %files
 %defattr(-,root,root)
