@@ -145,6 +145,15 @@ ADD_LIBRARY (freecell-solver
     alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_dm.c fcs_hash.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c
     )
 
+ADD_LIBRARY (freecell-solver-static
+    STATIC
+    alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_dm.c fcs_hash.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c
+    )
+
+SET_TARGET_PROPERTIES(freecell-solver-static PROPERTIES OUTPUT_NAME "freecell-solver")
+SET_TARGET_PROPERTIES(freecell-solver PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+SET_TARGET_PROPERTIES(freecell-solver-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+
 SET_TARGET_PROPERTIES(freecell-solver
     PROPERTIES VERSION 0.5.0 SOVERSION 0
     )
@@ -166,12 +175,12 @@ TARGET_LINK_LIBRARIES (freecell-solver-range-parallel-solve freecell-solver)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/config.h
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
     )
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/prefix.h.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/prefix.h
+    ${CMAKE_CURRENT_BINARY_DIR}/prefix.h
     )
 
 CONFIGURE_FILE(
@@ -181,7 +190,7 @@ CONFIGURE_FILE(
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}-config.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}-config
+    ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_NAME}-config
     )
 
 INSTALL(
@@ -190,7 +199,7 @@ INSTALL(
 )
 
 INSTALL(
-    TARGETS "freecell-solver"
+    TARGETS "freecell-solver" "freecell-solver-static"
     DESTINATION "lib"
 )
 
@@ -206,19 +215,19 @@ IF (WIN32 AND NOT UNIX)
 ENDIF (WIN32 AND NOT UNIX)
 
 INSTALL(
-    FILES "freecell-solver-config"
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_NAME}-config"
     DESTINATION "bin"
 )
 
 RUN_POD2MAN(
-    "fc-solve.pod"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.pod"
     "fc-solve.6"
     "6"
     "Freecell Solver"
     "Freecell Solver ${VERSION}"
 )
 
-INSTALL_MAN ("fc-solve.6" 6)
+INSTALL_MAN ("${CMAKE_CURRENT_BINARY_DIR}/fc-solve.6" 6)
 
 INSTALL(
     FILES

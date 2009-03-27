@@ -21,14 +21,14 @@ ADD_EXECUTABLE(
 )
 
 RUN_POD2MAN(
-    "fc-solve-board_gen.pod"
+    "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve-board_gen.pod"
     "fc-solve-board_gen.6"
     "6"
     "board_gen"
     "board_gen ${VERSION}"
 )
 
-INSTALL_MAN("fc-solve-board_gen.6" 6)
+INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/fc-solve-board_gen.6" 6)
 
 # Install the nroff symbolic links.
 INSTALL_MAN ("make-aisleriot-freecell-board.6" 6)

@@ -5,11 +5,11 @@ SET(CMAKE_VERBOSE_MAKEFILE ON)
 INCLUDE( "${CMAKE_CURRENT_SOURCE_DIR}/../Common.cmake" )
 
 RUN_POD2MAN(
-    "freecell-solver-range-parallel-solve.pod"
+    "${CMAKE_CURRENT_SOURCE_DIR}/freecell-solver-range-parallel-solve.pod"
     "freecell-solver-range-parallel-solve.6"
     "6"
     "Freecell Solver"
     "Freecell Solver ${VERSION}"
 )
 
-INSTALL_MAN ( "freecell-solver-range-parallel-solve.6" 6)
+INSTALL_MAN ( "${CMAKE_CURRENT_BINARY_DIR}/freecell-solver-range-parallel-solve.6" 6)
