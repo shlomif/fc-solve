@@ -67,9 +67,9 @@ if test "$echo_exec_prefix" = "yes" ; then
 fi
 
 if test "$echo_cflags" = "yes" ; then
-    echo -I@includedir@/freecell-solver
+    echo -I@CMAKE_INSTALL_PREFIX@/include/freecell-solver
 fi
 
 if test "$echo_libs" = "yes" ; then
-    echo -L@libdir@ @LIBS@
+    echo -L@CMAKE_INSTALL_PREFIX@/lib -l@CPACK_PACKAGE_NAME@
 fi
