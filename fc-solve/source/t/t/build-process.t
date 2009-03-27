@@ -15,7 +15,7 @@ if (! $ENV{'FCS_TEST_BUILD'} )
     plan skip_all => "Skipping because FCS_TEST_BUILD is not set";
 }
 
-plan tests => 8;
+plan tests => 7;
 
 # Change directory to the Freecell Solver base distribution directory.
 chdir($ENV{"FCS_PATH"});
@@ -25,7 +25,11 @@ sub test_cmd
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     my ($cmd, $blurb) = @_;
 
-    my $sys_ret = ref($cmd) eq "ARRAY" ? system(@$cmd) : system($cmd);
+    my $sys_ret = 
+        ((ref($cmd) eq "ARRAY")
+            ? system(@$cmd)
+            : system($cmd)
+        );
 
     if (!ok (!$sys_ret, $blurb))
     {
@@ -51,7 +55,6 @@ sub test_cmd
         "Archive exists."
     );
 
-    # TEST
     open my $tar_fh, "-|", "tar", "-tzvf", $arc_name
         or die "Could not open Tar '$arc_name' for opening.";
 
