@@ -10,6 +10,7 @@ my $stack_storage;
 my $state_storage;
 my $prefix = "/usr";
 my $freecell_only = 0;
+my $build_static_lib = 0;
 
 sub set_both
 {
@@ -36,6 +37,7 @@ GetOptions(
     'hash' => \&set_hash,
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
     'fc-only' => \$freecell_only,
+    'static' => \$build_static_lib,
 );
 
 # This cache is sometimes causing problems.
@@ -48,6 +50,7 @@ my @cmd= ("cmake",
     "-DCMAKE_INSTALL_PREFIX=$prefix",
     "-DDATADIR=$prefix/share",
     ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
+    ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
 );
 
 print(join(" ", @cmd), "\n");

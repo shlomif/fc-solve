@@ -106,6 +106,8 @@ SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack
 
 SET (FCS_FRECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell")
 
+SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
+
 # Search for libredblack if appropriate.
 IF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_LIBREDBLACK_TREE") OR
     (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_LIBREDBLACK_TREE"))
@@ -146,21 +148,30 @@ INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 
 SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_dm.c fcs_hash.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c)
 
+SET (FREECELL_SOLVER_LIBS)
+
 ADD_LIBRARY (freecell-solver
     SHARED
     ${FREECELL_SOLVER_LIB_MODULES}
     )
 
-ADD_LIBRARY (freecell-solver-static
-    STATIC
-    ${FREECELL_SOLVER_LIB_MODULES}
+LIST (APPEND FREECELL_SOLVER_LIBS "freecell-solver")
+IF (${BUILD_STATIC_LIBRARY})
+    ADD_LIBRARY (freecell-solver-static
+        STATIC
+        ${FREECELL_SOLVER_LIB_MODULES}
     )
+    LIST (APPEND FREECELL_SOLVER_LIBS "freecell-solver-static")
 
-SET_TARGET_PROPERTIES(freecell-solver-static PROPERTIES OUTPUT_NAME "freecell-solver")
-SET_TARGET_PROPERTIES(
-    freecell-solver freecell-solver-static 
-    PROPERTIES CLEAN_DIRECT_OUTPUT 1
-)
+    SET_TARGET_PROPERTIES(
+        freecell-solver-static 
+        PROPERTIES OUTPUT_NAME "freecell-solver"
+    )
+    SET_TARGET_PROPERTIES(
+        ${FREECELL_SOLVER_LIBS}
+        PROPERTIES CLEAN_DIRECT_OUTPUT 1
+    )
+ENDIF (${BUILD_STATIC_LIBRARY})
 
 SET_TARGET_PROPERTIES(freecell-solver
     PROPERTIES VERSION 0.5.0 SOVERSION 0
@@ -207,7 +218,7 @@ INSTALL(
 )
 
 INSTALL(
-    TARGETS "freecell-solver" "freecell-solver-static"
+    TARGETS ${FREECELL_SOLVER_LIBS}
     DESTINATION "lib"
 )
 
