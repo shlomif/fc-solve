@@ -17,5 +17,8 @@ $(XHTML_INDEX): $(XML)
 		-o $(XHTML) \
 		xhtml $<
 
+upload:
+	rsync -a -v --progress $(XHTML) $(XML) $(UPLOAD_PATH)
+
 %.show:
 	@echo "$* = $($*)"
