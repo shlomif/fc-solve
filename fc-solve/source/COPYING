@@ -1,15 +1,27 @@
 Relax, this is not GPL software, but rather it is distributed under the
-MIT/X11 License ( http://en.wikipedia.org/wiki/MIT_License ). What this means
-is that the code and binaries here can be linked against anything, converted 
-to any different license, freely used and distributed, and anything else 
-without any restrictions whatsoever. No Strings Attached!<tm>
+MIT/X11 License ( http://en.wikipedia.org/wiki/MIT_License ).
 
-Well, enjoy!
+What this means is that the code and binaries here can be linked against
+anything, converted to any different license, freely used and distributed, and
+anything else without any restrictions whatsoever. No Strings Attached!<tm>
+
+Regardless of that, some files in the distribution are derived from sources
+that were placed by their authors under the Public Domain ( 
+http://en.wikipedia.org/wiki/Public_domain ) however defined,
+and were kept under these terms with all rights disclaimed. These files
+are:
+
+* jhjtypes.h
+* lookup2.c
+* lookup2.h
+* pqueue.c
+* pqueue.h
 
     Shlomi Fish
 
-Here is the license text (or "legalese") itself:
+Here is the license text (or "legalese") for most of the code:
 
+{{{{{{{{{{{{{{
 Copyright (c) 2000 Shlomi Fish
 
 Permission is hereby granted, free of charge, to any person
@@ -32,3 +44,4 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+}}}}}}}}}}}}}}
