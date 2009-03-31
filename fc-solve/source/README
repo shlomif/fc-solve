@@ -5,7 +5,9 @@ This is Freecell Solver version 2.20.x, a program that automatically
 solves most layouts of Freecell, and similar Solitaire variants as
 well as those of Simple Simon.
 
-Freecell Solver is distributed under the public domain.
+Freecell Solver is distributed under the MIT/X11 License 
+( http://en.wikipedia.org/wiki/MIT_License ), a free, permissive, 
+public-domain like, open-source license.
 
 I hope you'll enjoy using it, and make the best of it.
 
