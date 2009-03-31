@@ -1,7 +1,7 @@
 Name: freecell-solver
 Version: @VERSION@
 Release: 1 
-License: Public Domain
+License: MIT
 Group: Amusement/Games
 Source: http://download.berlios.de/fc-solve/freecell-solver-%{version}.tar.gz
 Buildroot: %{_tmppath}/freecell-solver-root
@@ -108,6 +108,10 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Mar 31 2009 Shlomi Fish <shlomif@iglu.org.il> 2.21.2-1
+- Adapted to the CMake build system.
+- Changed the license from "Public Domain" to "MIT".
+
 * Mon Oct 24 2005 Shlomi Fish <shlomif@iglu.org.il> 2.8.11-1
 - Changed "Copyright" to "License"
 
