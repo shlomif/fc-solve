@@ -28,13 +28,9 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 # the web-server now supports indexes.
 # SUBDIRS_WITH_INDEXES = $(WIN32_BUILD_SUBDIRS)
 #
-WIN32_BUILD_SUBDIRS = $(D)/win32_build $(D)/win32_build/bootstrap $(D)/win32_build/dynamic $(D)/win32_build/static
-
-SUBDIRS = $(D) $(WIN32_BUILD_SUBDIRS) $(D)/docs $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/
+SUBDIRS = $(D) $(D)/docs $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
-
-IMAGES += $(addprefix $(D)/win32_build/,bootstrap/curl.exe bootstrap/build.bat static/zip.exe static/unzip.exe dynamic/fcs.zip)
 
 all: dummy
 
