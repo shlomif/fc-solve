@@ -1,3 +1,26 @@
+Version 2.22.0 (31-Mar-2009)
+----------------------------
+
+1. Various improvements to the CMake build process:
+    - Updated freecell-solver-config
+    - Fixed the building if build from a different directory.
+        (e.g: mkdir build ; cd build ; cmake ..)
+    - Now also building a static library by default. There's a cmake option
+    to trigger it off.
+    - Thanks to RISKO Gergely (the maintainer of the Freecell Solver Debian 
+    package) for a contributed patch.
+
+2. Fixed the rpmbuild -tb process on Mandriva Linux Cooker (and 
+possibly other systems).
+
+3. Removed some old, unnecessary and/or no-longer-working files.
+
+4. Converted the package from the Public Domain to the MIT/X11 Licence
+( http://en.wikipedia.org/wiki/MIT_License ). This change was done due to
+the many problems with licensing source under the public domain:
+
+    - http://linuxmafia.com/faq/Licensing_and_Law/public-domain.html
+
 Version 2.20.0 (26-Mar-2009)
 ----------------------------
 
