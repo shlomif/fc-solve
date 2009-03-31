@@ -38,9 +38,9 @@ collection. Makes command lines much less verbose.
 
 <ul>
 <li>
-Available as a library for use within third-party applications. The license
-is Public Domain, which means it can be used without any restrictions 
-everywhere.
+Available as a library for use within third-party applications. It is
+licensed under <a href="http://en.wikipedia.org/wiki/MIT_License">the
+MIT/X11 License</a>, which means it can be used without any restrictions.
 </li>
 
 <li>

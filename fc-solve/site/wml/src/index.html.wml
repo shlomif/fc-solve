@@ -11,11 +11,15 @@ Freecell Solver? Is it Dead?</a></li>
 
 <p>
 This is Freecell Solver - a program that automatically solves games of 
-Freecell and similar Solitaire variants such as Eight Off, Forecell and
-Seahaven Towers, as well as Simple Simon boards. Freecell Solver is free 
-software distributed under the public domain. It is written in ANSI C 
-and requires a C compiler to be built.  Nevertheless, binaries for 
-Windows 32-bit are available.
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar 
+variants of <a href="http://en.wikipedia.org/wiki/Solitaire">Card 
+Solitaire</a> such as Eight Off, Forecell and
+Seahaven Towers, as well as Simple Simon boards. Freecell Solver is 
+<a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">free 
+and open source software</a> freely available under the 
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 License</a>. 
+It is written in ANSI C and requires a C compiler to be built.  Nevertheless, 
+binaries for Microsoft Windows 32-bit are available.
 </p>
 
 <p>
@@ -28,10 +32,6 @@ Freecell Solver can also be built as a library for use within your own
 Solitaire implementations. A more detailed list of features can be found
 in the <a href="features.html"><b>Features List</b></a>.
 </p>
-
-
-<br />
-<br />
 
 <h2>News</h2>
 
