@@ -30,11 +30,18 @@
 
         <legalnotice>
             <!-- Ci vis pacem -->
-            <para>
+            <para>              
                 <!-- belum. ;-) -->
-                This document is copyrighted by Shlomi Fish 
-                under the terms of the Open Publication License version 2.0 or
-                greater.
+                This work is licensed under the 
+                <ulink url="http://creativecommons.org/licenses/by/3.0/">Creative 
+                    Commons Attribution 3.0 Unported License</ulink> (or at 
+                your option a greater version of it).
+            </para>
+            <para>
+                It was written by
+                <ulink url="http://www.shlomifish.org/">Shlomi Fish</ulink>, 
+                and one should attribute a derived work to him, while linking
+                to his homepage.
             </para>
         </legalnotice>
         <revhistory>
