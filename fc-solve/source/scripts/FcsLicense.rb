@@ -36,6 +36,7 @@ def license_to_comment()
     return text
 end
 
+
 def change_c_file(filename)
     outfn = filename + ".new"
     outfile = File.open(outfn, "w")
@@ -74,3 +75,19 @@ EOF
     outfile.close
     File.rename(outfn, filename)
 end
+
+def license_to_perl_pod()
+    text = $X11L_TEMPLATE
+    text += "\n"
+    text.sub!(/<year>/, "2000");
+    text.sub!(/<copyright holders>/, "Shlomi Fish");
+
+    return "\n\n=head1 COPYRIGHT AND LICENSE\n\n" + text + "\n\n=cut\n\n";
+end
+
+def change_perl_file(filename)
+    File.open(filename, "a") do |fh|
+        fh.write(license_to_perl_pod())
+    end
+end
+
