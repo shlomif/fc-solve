@@ -1,0 +1,57 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+my $is_debug = 1;
+my $stack_storage;
+my $state_storage;
+my $prefix = "/usr";
+my $freecell_only = 0;
+my $build_static_lib = 0;
+
+sub set_both
+{
+    my $val = shift;
+    $stack_storage = $state_storage = $val;
+
+    return;
+}
+
+sub set_hash
+{
+    return set_both("INTERNAL_HASH");
+}
+
+set_hash();
+
+GetOptions(
+    'd|debug' => \$is_debug,
+    'r|release' => sub { my ($opt, $val) = @_; $is_debug = !$val },
+    'c|cols=s' => \$stack_storage,
+    'p|pos=s' => \$state_storage,
+    'prefix=s' => \$prefix,
+    'judy' => sub { return set_both("JUDY"); },
+    'hash' => \&set_hash,
+    'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
+    'fc-only' => \$freecell_only,
+    'static' => \$build_static_lib,
+);
+
+# This cache is sometimes causing problems.
+unlink("CMakeCache.txt");
+
+my @cmd= ("cmake",
+    ("-DCMAKE_BUILD_TYPE=" . ($is_debug ? "debug" : "release")),
+    "-DFCS_STATE_STORAGE=FCS_STATE_STORAGE_$state_storage",
+    "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
+    "-DCMAKE_INSTALL_PREFIX=$prefix",
+    "-DDATADIR=$prefix/share",
+    ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
+    ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
+);
+
+print(join(" ", @cmd), "\n");
+exec(@cmd);
