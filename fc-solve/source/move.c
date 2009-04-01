@@ -291,8 +291,8 @@ void fc_solve_move_stack_normalize(
     fcs_move_stack_alloc_into_var(temp_moves);
 
     fcs_duplicate_state(
-            dynamic_state.s, dynamic_state.info,
-            *(init_state_val->key), *init_state_val
+            &(dynamic_state.s), &(dynamic_state.info),
+            (init_state_val->key), init_state_val
             );
 #ifdef INDIRECT_STACK_STATES
     for(a=0;a<stacks_num;a++)

@@ -923,8 +923,8 @@ int fc_solve_solve_instance(
 
     state_copy_ptr_key = state_copy_ptr_val->key;
 
-    fcs_duplicate_state(*state_copy_ptr_key, *state_copy_ptr_val,
-            (*(init_state_val->key)), *init_state_val
+    fcs_duplicate_state(state_copy_ptr_key, state_copy_ptr_val,
+            ((init_state_val->key)), init_state_val
             );
 
     {

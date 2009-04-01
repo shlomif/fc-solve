@@ -61,6 +61,135 @@
  * sequences_are_built_by - the type of sequences of this board.
  * */
 
+int fc_solve_sfs_check_state_begin(
+    fc_solve_hard_thread_t * hard_thread,
+    fcs_state_t * * out_ptr_new_state_key,
+    fcs_state_extra_info_t * * out_ptr_new_state_val,
+    fcs_state_extra_info_t * ptr_state_val,
+    fcs_move_stack_t * moves
+    )
+{
+    fcs_state_extra_info_t * ptr_new_state_val;
+
+    fcs_state_ia_alloc_into_var(ptr_new_state_val, hard_thread);
+    *(out_ptr_new_state_key) = ptr_new_state_val->key;
+    fcs_duplicate_state(
+            (*(out_ptr_new_state_key)),
+            ptr_new_state_val,
+            ptr_state_val->key, 
+            ptr_state_val
+    );
+    /* Some A* and BFS parameters that need to be initialized in
+     * the derived state.
+     * */
+    ptr_new_state_val->parent_val = ptr_state_val;
+    ptr_new_state_val->moves_to_parent = moves;
+    /* Make sure depth is consistent with the game graph.
+     * I.e: the depth of every newly discovered state is derived from
+     * the state from which it was discovered. */
+    ptr_new_state_val->depth = ptr_new_state_val->depth + 1;
+    /* Mark this state as a state that was not yet visited */
+    ptr_new_state_val->visited = 0;
+    /* It's a newly created state which does not have children yet. */
+    ptr_new_state_val->num_active_children = 0;
+    memset(ptr_new_state_val->scan_visited, '\0',
+        sizeof(ptr_new_state_val->scan_visited)
+        );
+    fcs_move_stack_reset(moves);
+
+    *out_ptr_new_state_val = ptr_new_state_val;
+
+    return 0;
+}
+
+int fc_solve_sfs_check_state_end(
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_state_extra_info_t * ptr_state_val,
+    fcs_state_extra_info_t * ptr_new_state_val,
+    fcs_move_stack_t * moves,
+    fcs_derived_states_list_t * derived_states_list,
+    int reparent
+    )
+{
+    fcs_move_t temp_move;
+    fc_solve_hard_thread_t * hard_thread;
+    int check;
+    int calc_real_depth;
+    int scans_synergy;
+
+    hard_thread = soft_thread->hard_thread;
+    calc_real_depth = hard_thread->instance->calc_real_depth;
+
+    /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE
+     * because it indicates that the order of the stacks and freecells
+     * need to be recalculated
+     * */
+    fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
+    fcs_move_stack_push(moves, temp_move);
+
+    {
+        fcs_state_extra_info_t * existing_state_val;
+        check = fc_solve_check_and_add_state(
+            soft_thread,
+            ptr_new_state_val,
+            &existing_state_val
+            );
+        if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
+            (check == FCS_STATE_SUSPEND_PROCESS))
+        {
+            /* This state is not going to be used, so
+             * let's clean it. */
+            fcs_state_ia_release(hard_thread);
+        }
+        else if (check == FCS_STATE_ALREADY_EXISTS)
+        {
+            fcs_state_ia_release(hard_thread);
+            calculate_real_depth(existing_state_val);
+            /* Re-parent the existing state to this one.
+             *
+             * What it means is that if the depth of the state if it
+             * can be reached from this one is lower than what it
+             * already have, then re-assign its parent to this state.
+             * */
+            if (reparent &&
+               (existing_state_val->depth > ptr_state_val->depth+1))   \
+            {
+                /* Make a copy of "moves" because "moves" will be destroyed */\
+                existing_state_val->moves_to_parent =
+                    fc_solve_move_stack_compact_allocate(
+                        hard_thread, moves
+                        );
+                if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))
+                {
+                    if ((--existing_state_val->parent_val->num_active_children) == 0)
+                    {
+                        mark_as_dead_end(
+                            existing_state_val->parent_val
+                            );
+                    }
+                    ptr_state_val->num_active_children++;
+                }
+                existing_state_val->parent_val = ptr_state_val;
+                existing_state_val->depth = ptr_state_val->depth + 1;
+            }
+            fc_solve_derived_states_list_add_state(
+                derived_states_list,
+                existing_state_val
+                );
+        }
+        else
+        {
+            fc_solve_derived_states_list_add_state(
+                derived_states_list,
+                ptr_new_state_val
+                );
+        }
+    }
+
+    return check;
+}
+
+
 /*
  * This function tries to move stack cards that are present at the
  * top of stacks to the foundations.
@@ -90,7 +219,6 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
     tests_define_accessors();
 
     moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
@@ -1960,7 +2088,6 @@ int fc_solve_sfs_deal_gypsy_talon(
     }
 
     moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
     if (fcs_talon_pos(state) < fcs_talon_len(state))
     {
@@ -2467,7 +2594,6 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     tests_define_accessors();
 
     moves = hard_thread->reusable_move_stack;
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;

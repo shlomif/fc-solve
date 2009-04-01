@@ -342,10 +342,10 @@ int freecell_solver_user_resume_solution(
              * state to it before state is canonized
              * */
             fcs_duplicate_state(
-                user->running_state.s,
-                user->running_state.info,
-                user->state.s,
-                user->state.info
+                &(user->running_state.s),
+                &(user->running_state.info),
+                &(user->state.s),
+                &(user->state.info)
                 );
 
             fc_solve_canonize_state(

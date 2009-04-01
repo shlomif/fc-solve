@@ -163,11 +163,11 @@ typedef int fcs_locs_t;
         (state).stacks[(ds)].num_cards++;  \
     }
 
-#define fcs_duplicate_state(dest_key, dest_val, src_key, src_val) \
+#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
     { \
-    (dest_key) = (src_key); \
-    (dest_val) = (src_val); \
-    (dest_val).key = &(dest_key); \
+    *(ptr_dest_key) = *(ptr_src_key); \
+    *(ptr_dest_val) = *(ptr_src_val); \
+    (ptr_dest_val)->key = ptr_dest_key; \
     }
 
 #define fcs_put_card_in_freecell(state, f, card) \
@@ -325,11 +325,11 @@ typedef char fcs_locs_t;
 #define fcs_push_stack_card_into_stack(state, ds, ss, sc) \
     fcs_push_card_into_stack((state), (ds), fcs_stack_card((state), (ss), (sc)))
 
-#define fcs_duplicate_state(dest_key, dest_val, src_key, src_val) \
+#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
     { \
-    (dest_key) = (src_key); \
-    (dest_val) = (src_val); \
-    (dest_val).key = &(dest_key); \
+    *(ptr_dest_key) = *(ptr_src_key); \
+    *(ptr_dest_val) = *(ptr_src_val); \
+    (ptr_dest_val)->key = ptr_dest_key; \
     }
 
 #define fcs_put_card_in_freecell(state, f, card) \
@@ -480,13 +480,12 @@ typedef struct fcs_struct_state_t fcs_state_t;
 #define fcs_flip_stack_card(state, s, c) \
     (fcs_card_set_flipped(fcs_stack_card(state,s,c), ((fcs_card_t)0) ))
 
-
-#define fcs_duplicate_state(dest_key, dest_val, src_key, src_val) \
+#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
     { \
-    (dest_key) = (src_key); \
-    (dest_val) = (src_val); \
-    (dest_val).key = &(dest_key); \
-    (dest_val).stacks_copy_on_write_flags = 0; \
+    *(ptr_dest_key) = *(ptr_src_key); \
+    *(ptr_dest_val) = *(ptr_src_val); \
+    (ptr_dest_val)->key = ptr_dest_key; \
+    (ptr_dest_val)->stacks_copy_on_write_flags = 0; \
     }
 
 #define fcs_copy_stack(state_key, state_val, idx, buffer) \
