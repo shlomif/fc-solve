@@ -218,8 +218,6 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
 
     tests_define_accessors();
 
-    moves = hard_thread->reusable_move_stack;
-
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
@@ -2087,8 +2085,6 @@ int fc_solve_sfs_deal_gypsy_talon(
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
-    moves = hard_thread->reusable_move_stack;
-
     if (fcs_talon_pos(state) < fcs_talon_len(state))
     {
         sfs_check_state_begin()
@@ -2592,8 +2588,6 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     int check;
 
     tests_define_accessors();
-
-    moves = hard_thread->reusable_move_stack;
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
