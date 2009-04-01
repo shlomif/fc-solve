@@ -111,23 +111,7 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
 
                     sfs_check_state_begin();
 
-#define MYTEMP
-
-#ifdef MYTEMP
-    {
-        int idx = stack;
-        if (! ((new_state_val).stacks_copy_on_write_flags & (1 << idx)))
-        {
-            int stack_len;
-            (new_state_val).stacks_copy_on_write_flags |= (1 << idx);
-            stack_len = fcs_stack_len((new_state_key),idx);
-            memcpy(&indirect_stacks_buffer[idx << 7], (new_state_key).stacks[idx], stack_len+1);
-            (new_state_key).stacks[idx] = &indirect_stacks_buffer[idx << 7];
-        }
-    }
-#else
                     my_copy_stack(stack);
-#endif
                     fcs_pop_stack_card(new_state, stack, temp_card);
 
                     fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
