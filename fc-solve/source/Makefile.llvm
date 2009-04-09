@@ -1,0 +1,111 @@
+CC = llvm-gcc
+
+DEBUG = 0
+PROFILE = 0
+WITH_TRACES = 0
+FREECELL_ONLY = 0
+WITH_LIBRB = 0
+
+ifneq ($(DEBUG),0)
+	CFLAGS := -Wall -g
+else
+	CFLAGS := -Wall -O5
+endif
+
+ifneq ($(WITH_TRACES),0)
+	CFLAGS += -DDEBUG
+endif
+
+ifneq ($(FREECELL_ONLY),0)
+	CFLAGS += -DFCS_FREECELL_ONLY=1
+endif
+
+
+LFLAGS := -Wall
+END_LFLAGS :=
+
+CFLAGS += -emit-llvm
+LFLAGS += -emit-llvm
+
+# Toggle for profiling information.
+ifneq ($(PROFILE),0)
+	END_OFLAGS := -pg
+	END_LFLAGS := -pg -lc_p -lm_p -static-libgcc
+endif
+
+ifneq ($(WITH_LIBRB),0)
+	END_LFLAGS += -lredblack
+endif
+
+DFLAGS = $(CFLAGS) -DDEBUG
+END_DLFLAGS = $(END_LFLAGS)
+
+DLFLAGS = $(LFLAGS)
+
+TARGETS = fc-solve.bc mptest.bc
+
+ifeq ($(EXIT),1)
+
+error:
+	@echo "Error! WHICH_STATE_ALLOCATION must be defined to a legal value"
+	@echo $(LFLAGS)
+
+else
+
+all: $(TARGETS)
+
+board_gen: dummy
+	make -C board_gen/
+
+dummy:
+
+
+
+#<<<OBJECTS.START
+OBJECTS =                     \
+          alloc.bc             \
+          app_str.bc           \
+          caas.bc              \
+          card.bc              \
+          cl_chop.bc           \
+          cmd_line.bc          \
+          fcs_dm.bc            \
+          fcs_hash.bc          \
+          fcs_isa.bc           \
+          freecell.bc          \
+          intrface.bc          \
+          lib.bc               \
+          lookup2.bc           \
+          move.bc              \
+          pqueue.bc            \
+          preset.bc            \
+          rand.bc              \
+          scans.bc             \
+          simpsim.bc           \
+          state.bc             \
+
+#>>>OBJECTS.END
+
+# MYOBJ.o ==> .deps/MYOBJ.P
+DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
+
+-include $(DEP_FILES)
+
+$(OBJECTS) main.bc test_multi_parallel.bc: %.bc: %.c
+	$(CC) -Wp,-MD,.deps/$(*F).pp -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
+
+libfcs.a: $(OBJECTS)
+	llvm-ar r $@ $(OBJECTS)
+	llvm-ranlib $@
+
+fc-solve.bc: main.bc libfcs.a
+	llvm-ld -r -o $@ main.bc $(OBJECTS)
+
+mptest.bc: test_multi_parallel.bc libfcs.a
+	llvm-ld -r -o $@ test_multi_parallel.bc $(OBJECTS)
+
+clean:
+	rm -f *.bc $(TARGETS) libfcs.a test-lib mtest mptest
+
+endif
+
