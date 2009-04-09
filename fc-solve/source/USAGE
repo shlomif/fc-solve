@@ -151,7 +151,9 @@ Specifies which cards can fill an empty stack.
 -g [game]
 
 Specifies the type of game. Each preset implies several of the
-settings options above and sometimes even the tests order below. 
+settings options above and sometimes even the tests order below. The
+default configuration is for Freecell.
+
 Available presets:
 
      bakers_dozen         - Baker's Dozen
@@ -164,7 +166,7 @@ Available presets:
      eight_off            - Eight Off
      fan                  - Fan
      forecell             - Forecell
-     freecell             - Freecell
+     freecell             - Freecell (default)
      good_measure         - Good Measure
      ko_bakers_game       - Kings' Only Baker's Game
      relaxed_freecell     - Relaxed Freecell
