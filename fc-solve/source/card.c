@@ -35,6 +35,15 @@
 #include "dmalloc.h"
 #endif
 
+#ifdef DEBUG_STATES
+
+fcs_card_t fc_solve_empty_card = {0,0};
+
+#elif defined(COMPACT_STATES) || defined (INDIRECT_STACK_STATES)
+
+fcs_card_t fc_solve_empty_card = (fcs_card_t)0;
+
+#endif
 
 #define uc(c) ( (((c)>='a') && ((c)<='z')) ?  ((c)+'A'-'a') : (c))
 
@@ -43,7 +52,7 @@
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.
  * */
-int freecell_solver_u2p_card_number(const char * string)
+int fc_solve_u2p_card_number(const char * string)
 {
     char rest;
 
@@ -98,7 +107,7 @@ int freecell_solver_u2p_card_number(const char * string)
  * The suit letter may come somewhat after the beginning of the string.
  *
  * */
-int freecell_solver_u2p_suit(const char * suit)
+int fc_solve_u2p_suit(const char * suit)
 {
     char c;
 
@@ -143,7 +152,7 @@ static int fcs_u2p_flipped_status(const char * str)
  * This function converts an entire card from its string representations
  * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
  * */
-fcs_card_t freecell_solver_card_user2perl(const char * str)
+fcs_card_t fc_solve_card_user2perl(const char * str)
 {
     fcs_card_t card;
 #if defined(COMPACT_STATES)||defined(INDIRECT_STACK_STATES)
@@ -187,7 +196,7 @@ static char card_map_3_T[14][4] = { " ", "A", "2", "3", "4", "5", "6", "7", "8",
  * t - whether 10 should be printed as T or not.
  * flipped - whether the card is face down
  * */
-char * freecell_solver_p2u_card_number(
+char * fc_solve_p2u_card_number(
     int num,
     char * str,
     int * card_num_is_null,
@@ -230,7 +239,7 @@ char * freecell_solver_p2u_card_number(
  * Converts a suit to its user representation.
  *
  * */
-char * freecell_solver_p2u_suit(int suit, char * str, int card_num_is_null, int flipped)
+char * fc_solve_p2u_suit(int suit, char * str, int card_num_is_null, int flipped)
 {
 #ifndef CARD_DEBUG_PRES
     if (flipped)
@@ -265,7 +274,7 @@ char * freecell_solver_p2u_suit(int suit, char * str, int card_num_is_null, int 
  * Convert an entire card to its user representation.
  *
  * */
-char * freecell_solver_card_perl2user(fcs_card_t card, char * str, int t)
+char * fc_solve_card_perl2user(fcs_card_t card, char * str, int t)
 {
     int card_num_is_null;
 #ifdef CARD_DEBUG_PRES

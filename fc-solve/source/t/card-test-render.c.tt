@@ -27,7 +27,7 @@ int main_tests()
         fcs_card_set_suit(mycard, [% suit.idx %]);
         fcs_card_set_num(mycard, [% card_num.idx %]);
 
-        ret = freecell_solver_card_perl2user(mycard, buffer, [% t %]);
+        ret = fc_solve_card_perl2user(mycard, buffer, [% t %]);
         /* TEST */
         [% SET num_tests = num_tests + 1 %]
         ok (ret == buffer,
@@ -40,6 +40,8 @@ int main_tests()
 [% END %]
 [% END %]
 [% END %]
+
+    return 0;
 }
 
 int main(void)

@@ -137,7 +137,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
                 new_state_key->stacks[a],
                 &cached_stack,
                 &dummy,
-                freecell_solver_lookup2_hash_function(
+                fc_solve_lookup2_hash_function(
                     (ub1 *)new_state_key->stacks[a],
                     (fcs_stack_len(*new_state_key, a)+1),
                     24
@@ -411,7 +411,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
         new_state_val,
         &existing_key_void,
         &existing_val_void,
-        freecell_solver_lookup2_hash_function(
+        fc_solve_lookup2_hash_function(
             (ub1 *)new_state_key,
             sizeof(*new_state_key),
             24

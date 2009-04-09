@@ -45,17 +45,6 @@
 #define min(a,b) ((a)<(b)?(a):(b))
 #endif
 
-
-#ifdef DEBUG_STATES
-
-fcs_card_t fc_solve_empty_card = {0,0};
-
-#elif defined(COMPACT_STATES) || defined (INDIRECT_STACK_STATES)
-
-fcs_card_t fc_solve_empty_card = (fcs_card_t)0;
-
-#endif
-
 static int fcs_card_compare(const void * card1, const void * card2)
 {
     const fcs_card_t * c1 = (const fcs_card_t *)card1;

@@ -46,7 +46,7 @@ extern void fc_solve_rand_free(fcs_rand_t * rand);
 
 extern void fc_solve_rand_srand(fcs_rand_t * rand, int seed);
 
-static GCC_INLINE int freecell_solver_rand_rand15(fcs_rand_t * rand)
+static GCC_INLINE int fc_solve_rand_rand15(fcs_rand_t * rand)
 {
     rand->seed = (rand->seed * 214013 + 2531011);
     return (rand->seed >> 16) & 0x7fff;
@@ -61,8 +61,8 @@ static GCC_INLINE int freecell_solver_rand_rand15(fcs_rand_t * rand)
 static GCC_INLINE int fc_solve_rand_get_random_number(fcs_rand_t * rand)
 {
     int one, two;
-    one = freecell_solver_rand_rand15(rand);
-    two = freecell_solver_rand_rand15(rand);
+    one = fc_solve_rand_rand15(rand);
+    two = fc_solve_rand_rand15(rand);
 
     return (one | (two << 15));
 }
