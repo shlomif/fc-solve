@@ -353,7 +353,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
 #endif
-    int num_freecells;
+    int num_vacant_freecells;
     int num_vacant_stacks;
 
     tests_define_accessors();
@@ -365,7 +365,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     stacks_num = instance->stacks_num;
 #endif
 
-    num_freecells = soft_thread->num_freecells;
+    num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     /* Let's try to put cards in the freecells on top of stacks */
@@ -414,7 +414,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
                         {
                             num_cards_to_relocate = dest_cards_num - dc - 1;
 
-                            freecells_to_fill = min(num_cards_to_relocate, num_freecells);
+                            freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
 
                             num_cards_to_relocate -= freecells_to_fill;
 
@@ -526,7 +526,7 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
 #endif
-    int num_freecells;
+    int num_vacant_freecells;
     int num_vacant_stacks;
 
     fcs_move_t temp_move;
@@ -539,7 +539,7 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    num_freecells = soft_thread->num_freecells;
+    num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     /* Now let's check if a card that is under some other cards can be placed
@@ -563,7 +563,7 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
                      * can move the cards above it to the freecells and
                      * stacks */
 
-                    if ((num_freecells +
+                    if ((num_vacant_freecells +
                         ((tests__is_filled_by_any_card()) ?
                             num_vacant_stacks :
                             0
@@ -578,7 +578,7 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 
 
                         /* Fill the freecells with the top cards */
-                        for(a=0 ; a<min(num_freecells, cards_num-(c+1)) ; a++)
+                        for(a=0 ; a<min(num_vacant_freecells, cards_num-(c+1)) ; a++)
                         {
                             /* Find a vacant freecell */
                             for(b=0; b<LOCAL_FREECELLS_NUM; b++)
@@ -602,7 +602,7 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
                         }
 
                         /* Fill the free stacks with the cards below them */
-                        for(a=0; a < cards_num-(c+1) - min(num_freecells, cards_num-(c+1)) ; a++)
+                        for(a=0; a < cards_num-(c+1) - min(num_vacant_freecells, cards_num-(c+1)) ; a++)
                         {
                             /* Find a vacant stack */
                             for(b=0;b<LOCAL_STACKS_NUM;b++)
@@ -674,7 +674,7 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    int num_freecells;
+    int num_vacant_freecells;
     int num_vacant_stacks;
 
     fcs_move_t temp_move;
@@ -687,7 +687,7 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    num_freecells = soft_thread->num_freecells;
+    num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     /*
@@ -740,7 +740,7 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
                         {
                             num_cards_to_relocate = dest_cards_num - dc - 1;
 
-                            freecells_to_fill = min(num_cards_to_relocate, num_freecells);
+                            freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
 
                             num_cards_to_relocate -= freecells_to_fill;
 
@@ -983,7 +983,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 #ifndef HARD_CODED_NUM_DECKS
     int decks_num;
 #endif
-    int num_freecells;
+    int num_vacant_freecells;
     int num_vacant_stacks;
 
     fcs_move_t temp_move;
@@ -999,7 +999,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    num_freecells = soft_thread->num_freecells;
+    num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     /* We need 2 chars per card - one for the stack and one
@@ -1123,7 +1123,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
                 num_cards_to_relocate = dest_cards_num - dc - 1 + cards_num - seq_end - 1;
 
-                freecells_to_fill = min(num_cards_to_relocate, num_freecells);
+                freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
 
                 num_cards_to_relocate -= freecells_to_fill;
 
@@ -1139,7 +1139,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                 }
 
                 if ((num_cards_to_relocate == 0) &&
-                   (calc_max_sequence_move(num_freecells-freecells_to_fill, num_vacant_stacks-freestacks_to_fill) >=
+                   (calc_max_sequence_move(num_vacant_freecells-freecells_to_fill, num_vacant_stacks-freestacks_to_fill) >=
                     seq_end - c + 1))
                 {
                     /* We can move it */
@@ -1268,7 +1268,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    int num_freecells;
+    int num_vacant_freecells;
     int num_vacant_stacks;
 
     fcs_move_t temp_move;
@@ -1286,10 +1286,10 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    num_freecells = soft_thread->num_freecells;
+    num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    max_sequence_len = calc_max_sequence_move(num_freecells, num_vacant_stacks-1);
+    max_sequence_len = calc_max_sequence_move(num_vacant_freecells, num_vacant_stacks-1);
 
     /* Now try to move sequences to empty stacks */
 
@@ -1374,7 +1374,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
                 {
                     num_cards_to_relocate = cards_num - seq_end - 1;
 
-                    freecells_to_fill = min(num_cards_to_relocate, num_freecells);
+                    freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
 
                     num_cards_to_relocate -= freecells_to_fill;
 
@@ -1395,7 +1395,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
                         int seq_start = c;
                         while (
                             (calc_max_sequence_move(
-                                num_freecells-freecells_to_fill,
+                                num_vacant_freecells-freecells_to_fill,
                                 num_vacant_stacks-freestacks_to_fill-1) < seq_end-seq_start+1)
                                 &&
                             (seq_start <= seq_end)
@@ -1601,7 +1601,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    int num_freecells;
+    int num_vacant_freecells;
     int num_vacant_stacks;
 
     tests_define_accessors();
@@ -1612,7 +1612,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    num_freecells = soft_thread->num_freecells;
+    num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     /* This time try to move cards that are already on top of a parent to a different parent */
@@ -1696,7 +1696,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
                                     {
                                         num_cards_to_relocate = dest_cards_num - dc - 1;
 
-                                        freecells_to_fill = min(num_cards_to_relocate, num_freecells);
+                                        freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
 
                                         num_cards_to_relocate -= freecells_to_fill;
 
@@ -1712,7 +1712,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
                                         }
 
                                         if ((num_cards_to_relocate == 0) &&
-                                           (calc_max_sequence_move(num_freecells-freecells_to_fill, num_vacant_stacks-freestacks_to_fill) >=
+                                           (calc_max_sequence_move(num_vacant_freecells-freecells_to_fill, num_vacant_stacks-freestacks_to_fill) >=
                                             cards_num - c))
                                         {
                                             /* We can move it */
@@ -1822,7 +1822,7 @@ int fc_solve_sfs_empty_stack_into_freecells(
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
 #endif
-    int num_freecells;
+    int num_vacant_freecells;
     int num_vacant_stacks;
 
     fcs_move_t temp_move;
@@ -1841,7 +1841,7 @@ int fc_solve_sfs_empty_stack_into_freecells(
     freecells_num = instance->freecells_num;
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
-    num_freecells = soft_thread->num_freecells;
+    num_vacant_freecells = soft_thread->num_vacant_freecells;
 
 
     /* Now, let's try to empty an entire stack into the freecells, so other cards can
@@ -1852,7 +1852,7 @@ int fc_solve_sfs_empty_stack_into_freecells(
         for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
         {
             cards_num = fcs_stack_len(state, stack);
-            if (cards_num <= num_freecells)
+            if (cards_num <= num_vacant_freecells)
             {
                 /* We can empty it */
 
@@ -2411,7 +2411,7 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
     fcs_card_t card, temp_card;
     fcs_move_t temp_move;
     int check;
-    int num_freecells;
+    int num_vacant_freecells;
 
     tests_define_accessors();
 
@@ -2421,9 +2421,9 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
 #endif
-    num_freecells = soft_thread->num_freecells;
+    num_vacant_freecells = soft_thread->num_vacant_freecells;
 
-    if (num_freecells == 0)
+    if (num_vacant_freecells == 0)
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }

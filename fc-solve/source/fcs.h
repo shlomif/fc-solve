@@ -584,7 +584,7 @@ struct fcs_soft_dfs_stack_item_struct
     int current_state_index;
     int test_index;
     int num_vacant_stacks;
-    int num_freecells;
+    int num_vacant_freecells;
     int derived_states_random_indexes_max_size;
     int * derived_states_random_indexes;
 };
@@ -683,7 +683,7 @@ struct fc_solve_soft_thread_struct
      * num_vacant_stacks[i] - the number of unoccpied stacks that correspond
      * to solution_states[i].
      *
-     * num_freecells[i] - ditto for the freecells.
+     * num_vacant_freecells[i] - ditto for the freecells.
      *
      * */
 
@@ -741,7 +741,7 @@ struct fc_solve_soft_thread_struct
      * The number of vacnat freecells in the current state - is read
      * from the test functions in freecell.c .
      * */
-    int num_freecells;
+    int num_vacant_freecells;
 };
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
