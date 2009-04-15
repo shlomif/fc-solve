@@ -152,7 +152,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
     fcs_move_t temp_move;
 
     int check;
-    int num_freestacks;
+    int num_vacant_stacks;
 
     /*
      * stack - the source stack index on which the sequence currently resides.
@@ -190,7 +190,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
     stacks_num = instance->stacks_num;
 #endif
 
-    num_freestacks = soft_thread->num_freestacks;
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
@@ -223,7 +223,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
                         {
                             /* This is a suitable parent - let's check if we
                              * have enough empty stacks to make the move feasible */
-                            if (calc_max_sequence_move(0, num_freestacks) >= num_true_seqs)
+                            if (calc_max_sequence_move(0, num_vacant_stacks) >= num_true_seqs)
                             {
                                 /* We can do it - so let's move */
 
@@ -300,7 +300,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
     int stacks_num;
 #endif
 
-    int num_freestacks;
+    int num_vacant_stacks;
 
     tests_define_accessors();
 
@@ -308,7 +308,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
     stacks_num = instance->stacks_num;
 #endif
 
-    num_freestacks = soft_thread->num_freestacks;
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
@@ -355,7 +355,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
                     {
                         /* This is a suitable parent - let's check if we
                          * have enough empty stacks to make the move feasible */
-                        if (calc_max_sequence_move(0, num_freestacks) >= num_true_seqs)
+                        if (calc_max_sequence_move(0, num_vacant_stacks) >= num_true_seqs)
                         {
                             /* We can do it - so let's move */
 
@@ -434,14 +434,14 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    int num_freestacks;
+    int num_vacant_stacks;
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    num_freestacks = soft_thread->num_freestacks;
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
@@ -515,7 +515,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
                                 stacks_map[stack] = 1;
                                 stacks_map[ds] = 1;
 
-                                after_junk_num_freestacks = num_freestacks;
+                                after_junk_num_freestacks = num_vacant_stacks;
 
                                 for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
                                 {
@@ -560,7 +560,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
                                     if (clear_junk_dest_stack == -1)
                                     {
                                         /* Check if there is a vacant stack */
-                                        if (num_freestacks > 0)
+                                        if (num_vacant_stacks > 0)
                                         {
                                             if (calc_max_sequence_move(0, after_junk_num_freestacks-1) >= above_num_true_seqs[false_seq_index])
                                             {
@@ -685,7 +685,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    int num_freestacks;
+    int num_vacant_stacks;
 
     tests_define_accessors();
 
@@ -693,7 +693,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
     stacks_num = instance->stacks_num;
 #endif
 
-    num_freestacks = soft_thread->num_freestacks;
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
@@ -781,7 +781,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
                             stacks_map[stack] = 1;
                             stacks_map[ds] = 1;
 
-                            after_junk_num_freestacks = num_freestacks;
+                            after_junk_num_freestacks = num_vacant_stacks;
 
                             for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
                             {
@@ -822,7 +822,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
                                 if (clear_junk_dest_stack == -1)
                                 {
                                     /* Check if there is a vacant stack */
-                                    if (num_freestacks > 0)
+                                    if (num_vacant_stacks > 0)
                                     {
                                         if (calc_max_sequence_move(0, after_junk_num_freestacks-1) >= above_num_true_seqs[false_seq_index])
                                         {
@@ -958,14 +958,14 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    int num_freestacks;
+    int num_vacant_stacks;
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    num_freestacks = soft_thread->num_freestacks;
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
@@ -1079,7 +1079,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
                                 stacks_map[stack] = 1;
                                 stacks_map[ds] = 1;
 
-                                after_junk_num_freestacks = num_freestacks;
+                                after_junk_num_freestacks = num_vacant_stacks;
 
                                 for(false_seq_index=0;false_seq_index<num_separate_false_seqs+1;false_seq_index++)
                                 {
@@ -1133,7 +1133,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
                                     if (clear_junk_dest_stack == -1)
                                     {
                                         /* Check if there is a vacant stack */
-                                        if (num_freestacks > 0)
+                                        if (num_vacant_stacks > 0)
                                         {
                                             if (calc_max_sequence_move(0, after_junk_num_freestacks-1) >= the_num_true_seqs)
                                             {
@@ -1277,14 +1277,14 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
     int stacks_num;
 #endif
 
-    int num_freestacks;
+    int num_vacant_stacks;
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    num_freestacks = soft_thread->num_freestacks;
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
@@ -1362,7 +1362,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
                                 stacks_map[stack] = 1;
                                 stacks_map[ds] = 1;
 
-                                after_junk_num_freestacks = num_freestacks;
+                                after_junk_num_freestacks = num_vacant_stacks;
 
                                 for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
                                 {
@@ -1419,7 +1419,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
                                 {
                                     /* This is a suitable parent - let's check if we
                                      * have enough empty stacks to make the move feasible */
-                                    if (calc_max_sequence_move(0, num_freestacks) >= num_true_seqs)
+                                    if (calc_max_sequence_move(0, num_vacant_stacks) >= num_true_seqs)
                                     {
                                         /* We can do it - so let's move */
 
@@ -1495,14 +1495,14 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    int num_freestacks;
+    int num_vacant_stacks;
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    num_freestacks = soft_thread->num_freestacks;
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for(stack=0 ; stack < LOCAL_STACKS_NUM ; stack++)
     {
@@ -1632,7 +1632,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
                         }
                         stacks_map[stack] = 1;
 
-                        after_junk_num_freestacks = num_freestacks;
+                        after_junk_num_freestacks = num_vacant_stacks;
 
                         for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
                         {
@@ -1673,7 +1673,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
                             if (clear_junk_dest_stack == -1)
                             {
                                 /* Check if there is a vacant stack */
-                                if (num_freestacks > 0)
+                                if (num_vacant_stacks > 0)
                                 {
                                     if (calc_max_sequence_move(0, after_junk_num_freestacks-1) >= above_num_true_seqs[false_seq_index])
                                     {

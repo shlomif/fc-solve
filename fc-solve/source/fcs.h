@@ -583,7 +583,7 @@ struct fcs_soft_dfs_stack_item_struct
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
     int test_index;
-    int num_freestacks;
+    int num_vacant_stacks;
     int num_freecells;
     int derived_states_random_indexes_max_size;
     int * derived_states_random_indexes;
@@ -680,7 +680,7 @@ struct fc_solve_soft_thread_struct
      * FCS performs each test separately, so states_to_check[i] and
      * friends will not be overpopulated.
      *
-     * num_freestacks[i] - the number of unoccpied stacks that correspond
+     * num_vacant_stacks[i] - the number of unoccpied stacks that correspond
      * to solution_states[i].
      *
      * num_freecells[i] - ditto for the freecells.
@@ -735,7 +735,7 @@ struct fc_solve_soft_thread_struct
      * The number of vacant stacks in the current state - is read from
      * the test functions in freecell.c .
      * */
-    int num_freestacks;
+    int num_vacant_stacks;
 
     /* 
      * The number of vacnat freecells in the current state - is read
