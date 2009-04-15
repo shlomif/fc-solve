@@ -66,6 +66,10 @@ GetOptions(
 
     local $ENV{FREECELL_SOLVER_PRESETRC} = $testing_preset_rc;
     chdir("$FindBin::Bin/t");
+    if (system("make", "-s"))
+    {
+        die "make failed";
+    }
     my @tests = glob("t/$tests_glob");
 
     {
