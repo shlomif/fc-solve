@@ -200,7 +200,7 @@ int fc_solve_soft_dfs_do_solve(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    to_reparent_states = instance->to_reparent_states;
+    to_reparent_states = instance->to_reparent_states_real;
     scans_synergy = instance->scans_synergy;
 
 
@@ -839,10 +839,8 @@ int fc_solve_a_star_or_bfs_do_solve(
     int calc_real_depth = instance->calc_real_depth;
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
-    int to_reparent_states =
-        (instance->to_reparent_states ||
-         (soft_thread->method == FCS_METHOD_OPTIMIZE)
-        );
+    int to_reparent_states = instance->to_reparent_states_real;
+
     int scans_synergy = instance->scans_synergy;
     fcs_states_linked_list_item_t * bfs_queue = soft_thread->bfs_queue;
     PQUEUE * a_star_pqueue = soft_thread->a_star_pqueue;

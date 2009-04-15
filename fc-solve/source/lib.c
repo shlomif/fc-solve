@@ -1234,7 +1234,7 @@ void freecell_solver_user_set_reparent_states(
 
     user = (fcs_user_t *)user_instance;
 
-    user->instance->to_reparent_states = to_reparent_states;
+    user->instance->to_reparent_states_proto = to_reparent_states;
 }
 
 void freecell_solver_user_set_scans_synergy(

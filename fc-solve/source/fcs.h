@@ -419,9 +419,13 @@ typedef struct fc_solve_instance
     /*
      * This flag indicates whether scans should or should not reparent the
      * states their encounter to a lower depth in the depth tree
+     *
+     * _proto is the one inputted by the user.
+     * _real is calculated based on other factors such as whether the 
+     * scan method is FCS_METHOD_OPTIMIZE. 
      * */
-    int to_reparent_states;
-
+    int to_reparent_states_proto;
+    int to_reparent_states_real;
     /*
      * This variable determines how the scans cooperate with each other.
      *

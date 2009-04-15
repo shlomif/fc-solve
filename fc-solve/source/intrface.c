@@ -397,7 +397,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->calc_real_depth = 0;
 
-    instance->to_reparent_states = 0;
+    instance->to_reparent_states_proto = 0;
 
     /* Make the 1 the default, because otherwise scans will not cooperate
      * with one another. */
@@ -854,6 +854,7 @@ static int fc_solve_optimize_solution(
 
     optimization_thread = alloc_hard_thread(instance);
     instance->optimization_thread = optimization_thread;
+    instance->to_reparent_states_real = 1;
 
     soft_thread = optimization_thread->soft_threads[0];
 
@@ -1075,9 +1076,10 @@ int fc_solve_solve_instance(
         }
     }
 
+    instance->to_reparent_states_real = instance->to_reparent_states_proto;
+
     return fc_solve_resume_instance(instance);
 }
-
 
 static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 {
