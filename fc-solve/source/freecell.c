@@ -107,18 +107,19 @@ int fc_solve_sfs_check_state_end(
     fcs_state_extra_info_t * ptr_state_val,
     fcs_state_extra_info_t * ptr_new_state_val,
     fcs_move_stack_t * moves,
-    fcs_derived_states_list_t * derived_states_list,
-    int reparent
+    fcs_derived_states_list_t * derived_states_list
     )
 {
     fcs_move_t temp_move;
     fc_solve_hard_thread_t * hard_thread;
+    fc_solve_instance_t * instance;
     int check;
     int calc_real_depth;
     int scans_synergy;
 
     hard_thread = soft_thread->hard_thread;
-    calc_real_depth = hard_thread->instance->calc_real_depth;
+    instance = hard_thread->instance;
+    calc_real_depth = instance->calc_real_depth;
 
     /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE
      * because it indicates that the order of the stacks and freecells
@@ -151,7 +152,7 @@ int fc_solve_sfs_check_state_end(
              * can be reached from this one is lower than what it
              * already have, then re-assign its parent to this state.
              * */
-            if (reparent &&
+            if (instance->to_reparent_states_real &&
                (existing_state_val->depth > ptr_state_val->depth+1))   \
             {
                 /* Make a copy of "moves" because "moves" will be destroyed */\
@@ -199,8 +200,7 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -279,8 +279,7 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -339,8 +338,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -513,8 +511,7 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -662,8 +659,7 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -961,8 +957,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -1256,8 +1251,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -1505,8 +1499,7 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -1584,8 +1577,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -1812,8 +1804,7 @@ int fc_solve_sfs_empty_stack_into_freecells(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -1896,8 +1887,7 @@ int fc_solve_sfs_yukon_do_nothing(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     return FCS_STATE_IS_NOT_SOLVEABLE;
@@ -1908,8 +1898,7 @@ int fc_solve_sfs_yukon_move_card_to_parent(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -1987,8 +1976,7 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -2065,8 +2053,7 @@ int fc_solve_sfs_deal_gypsy_talon(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -2109,8 +2096,7 @@ int fc_solve_sfs_get_card_from_klondike_talon(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -2253,8 +2239,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -2340,8 +2325,7 @@ int fc_solve_sfs_atomic_move_card_to_parent(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -2416,8 +2400,7 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -2495,8 +2478,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -2571,8 +2553,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();

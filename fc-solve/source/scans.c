@@ -375,8 +375,7 @@ int fc_solve_soft_dfs_do_solve(
                         ptr_state_val,
                         the_soft_dfs_info->num_freestacks,
                         the_soft_dfs_info->num_freecells,
-                        derived_states_list,
-                        to_reparent_states
+                        derived_states_list
                     );
 
                 if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
@@ -839,7 +838,6 @@ int fc_solve_a_star_or_bfs_do_solve(
     int calc_real_depth = instance->calc_real_depth;
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
-    int to_reparent_states = instance->to_reparent_states_real;
 
     int scans_synergy = instance->scans_synergy;
     fcs_states_linked_list_item_t * bfs_queue = soft_thread->bfs_queue;
@@ -967,12 +965,7 @@ int fc_solve_a_star_or_bfs_do_solve(
                     ptr_state_val,
                     num_freestacks,
                     num_freecells,
-                    &derived,
-                    /*
-                     * We want to reparent the new states, only if this
-                     * is an optimization scan.
-                     * */
-                    to_reparent_states
+                    &derived
                     );
             if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
                 (check == FCS_STATE_EXCEEDS_MAX_NUM_TIMES) ||

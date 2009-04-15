@@ -56,8 +56,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -148,8 +147,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -275,8 +273,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -387,8 +384,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -667,8 +663,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -908,8 +903,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -1229,8 +1223,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();
@@ -1475,8 +1468,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         fcs_state_extra_info_t * ptr_state_val,
         int num_freestacks,
         int num_freecells,
-        fcs_derived_states_list_t * derived_states_list,
-        int reparent
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors();

@@ -39,8 +39,7 @@ typedef int (*fc_solve_solve_for_state_test_t)(
         fcs_state_extra_info_t *,
         int,
         int,
-        fcs_derived_states_list_t *,
-        int
+        fcs_derived_states_list_t *
         );
 
 extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
