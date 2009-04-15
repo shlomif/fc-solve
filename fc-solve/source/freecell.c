@@ -198,8 +198,6 @@ int fc_solve_sfs_check_state_end(
 int fc_solve_sfs_move_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -277,8 +275,6 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
 int fc_solve_sfs_move_freecell_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -336,8 +332,6 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
 int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -359,6 +353,8 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
 #endif
+    int num_freecells;
+    int num_freestacks;
 
     tests_define_accessors();
 
@@ -368,6 +364,9 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
+
+    num_freecells = soft_thread->num_freecells;
+    num_freestacks = soft_thread->num_freestacks;
 
     /* Let's try to put cards in the freecells on top of stacks */
 
@@ -509,8 +508,6 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 int fc_solve_sfs_move_non_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -529,6 +526,8 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
 #endif
+    int num_freecells;
+    int num_freestacks;
 
     fcs_move_t temp_move;
 
@@ -540,8 +539,8 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-
-
+    num_freecells = soft_thread->num_freecells;
+    num_freestacks = soft_thread->num_freestacks;
 
     /* Now let's check if a card that is under some other cards can be placed
      * in the foundations. */
@@ -657,8 +656,6 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -677,6 +674,8 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
+    int num_freecells;
+    int num_freestacks;
 
     fcs_move_t temp_move;
 
@@ -688,6 +687,8 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
+    num_freecells = soft_thread->num_freecells;
+    num_freestacks = soft_thread->num_freestacks;
 
     /*
      * Now let's try to move a stack card to a parent card which is found
@@ -955,8 +956,6 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 int fc_solve_sfs_move_stack_cards_to_different_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -984,6 +983,8 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 #ifndef HARD_CODED_NUM_DECKS
     int decks_num;
 #endif
+    int num_freecells;
+    int num_freestacks;
 
     fcs_move_t temp_move;
 
@@ -998,6 +999,8 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
+    num_freecells = soft_thread->num_freecells;
+    num_freestacks = soft_thread->num_freestacks;
 
     /* We need 2 chars per card - one for the stack and one
      * for the card_idx.
@@ -1249,8 +1252,6 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 int fc_solve_sfs_move_sequences_to_free_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1267,6 +1268,8 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
+    int num_freecells;
+    int num_freestacks;
 
     fcs_move_t temp_move;
 
@@ -1283,6 +1286,8 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
+    num_freecells = soft_thread->num_freecells;
+    num_freestacks = soft_thread->num_freestacks;
 
     max_sequence_len = calc_max_sequence_move(num_freecells, num_freestacks-1);
 
@@ -1497,8 +1502,6 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 int fc_solve_sfs_move_freecell_cards_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1575,8 +1578,6 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
 int fc_solve_sfs_move_cards_to_a_different_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1600,6 +1601,8 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
+    int num_freecells;
+    int num_freestacks;
 
     tests_define_accessors();
 
@@ -1609,6 +1612,8 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
+    num_freecells = soft_thread->num_freecells;
+    num_freestacks = soft_thread->num_freestacks;
 
     /* This time try to move cards that are already on top of a parent to a different parent */
 
@@ -1802,8 +1807,6 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 int fc_solve_sfs_empty_stack_into_freecells(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1819,6 +1822,8 @@ int fc_solve_sfs_empty_stack_into_freecells(
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
 #endif
+    int num_freecells;
+    int num_freestacks;
 
     fcs_move_t temp_move;
 
@@ -1835,6 +1840,8 @@ int fc_solve_sfs_empty_stack_into_freecells(
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
 #endif
+    num_freestacks = soft_thread->num_freestacks;
+    num_freecells = soft_thread->num_freecells;
 
 
     /* Now, let's try to empty an entire stack into the freecells, so other cards can
@@ -1885,8 +1892,6 @@ int fc_solve_sfs_empty_stack_into_freecells(
 int fc_solve_sfs_yukon_do_nothing(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1896,8 +1901,6 @@ int fc_solve_sfs_yukon_do_nothing(
 int fc_solve_sfs_yukon_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1974,8 +1977,6 @@ int fc_solve_sfs_yukon_move_card_to_parent(
 int fc_solve_sfs_yukon_move_kings_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1989,10 +1990,13 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
+    int num_freestacks;
 
     fcs_move_t temp_move;
 
     tests_define_accessors();
+
+    num_freestacks = soft_thread->num_freestacks;
 
     if (num_freestacks == 0)
     {
@@ -2051,8 +2055,6 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
 int fc_solve_sfs_deal_gypsy_talon(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2094,8 +2096,6 @@ int fc_solve_sfs_deal_gypsy_talon(
 int fc_solve_sfs_get_card_from_klondike_talon(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2237,8 +2237,6 @@ int fc_solve_sfs_get_card_from_klondike_talon(
 int fc_solve_sfs_atomic_move_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2251,8 +2249,11 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
     fcs_move_t temp_move;
     int check;
     int empty_stack_idx;
+    int num_freestacks;
 
     tests_define_accessors();
+
+    num_freestacks = soft_thread->num_freestacks;
 
     if (num_freestacks == 0)
     {
@@ -2323,8 +2324,6 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
 int fc_solve_sfs_atomic_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2398,8 +2397,6 @@ int fc_solve_sfs_atomic_move_card_to_parent(
 int fc_solve_sfs_atomic_move_card_to_freecell(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2414,6 +2411,7 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
     fcs_card_t card, temp_card;
     fcs_move_t temp_move;
     int check;
+    int num_freecells;
 
     tests_define_accessors();
 
@@ -2423,6 +2421,7 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
 #endif
+    num_freecells = soft_thread->num_freecells;
 
     if (num_freecells == 0)
     {
@@ -2476,8 +2475,6 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
 int fc_solve_sfs_atomic_move_freecell_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2551,8 +2548,6 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
 int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        int num_freestacks,
-        int num_freecells,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2567,6 +2562,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     fcs_card_t card;
     fcs_move_t temp_move;
     int check;
+    int num_freestacks;
 
     tests_define_accessors();
 
@@ -2576,6 +2572,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
 #endif
+    num_freestacks = soft_thread->num_freestacks;
 
     if (num_freestacks == 0)
     {

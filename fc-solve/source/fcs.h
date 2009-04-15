@@ -730,6 +730,18 @@ struct fc_solve_soft_thread_struct
      * A malloced string that serves as an identification for the user.
      * */
     char * name;
+
+    /* 
+     * The number of vacant stacks in the current state - is read from
+     * the test functions in freecell.c .
+     * */
+    int num_freestacks;
+
+    /* 
+     * The number of vacnat freecells in the current state - is read
+     * from the test functions in freecell.c .
+     * */
+    int num_freecells;
 };
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;

@@ -37,8 +37,6 @@ extern "C" {
 typedef int (*fc_solve_solve_for_state_test_t)(
         fc_solve_soft_thread_t *,
         fcs_state_extra_info_t *,
-        int,
-        int,
         fcs_derived_states_list_t *
         );
 

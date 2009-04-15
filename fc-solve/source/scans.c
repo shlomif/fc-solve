@@ -215,7 +215,7 @@ int fc_solve_soft_dfs_do_solve(
     dfs_max_depth = soft_thread->dfs_max_depth;
     ptr_state_val = the_soft_dfs_info->state_val;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
-
+    
     calculate_real_depth(
         ptr_state_val
     );
@@ -270,6 +270,8 @@ int fc_solve_soft_dfs_do_solve(
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     ptr_state_val = the_soft_dfs_info->state_val;
                     ptr_state_key = ptr_state_val->key;
+                    soft_thread->num_freecells = the_soft_dfs_info->num_freecells;
+                    soft_thread->num_freestacks = the_soft_dfs_info->num_freestacks;
                 }
 
                 continue; /* Just to make sure depth is not -1 now */
@@ -341,8 +343,12 @@ int fc_solve_soft_dfs_do_solve(
                     appropriate stacks, so they won't be calculated over and over
                     again.
                   */
-                the_soft_dfs_info->num_freecells = num_freecells;
-                the_soft_dfs_info->num_freestacks = num_freestacks;
+                soft_thread->num_freecells =
+                    the_soft_dfs_info->num_freecells =
+                    num_freecells;
+                soft_thread->num_freestacks =
+                    the_soft_dfs_info->num_freestacks =
+                    num_freestacks;
             }
 
             TRACE0("After iter_handler");
@@ -373,8 +379,6 @@ int fc_solve_soft_dfs_do_solve(
                     ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                         soft_thread,
                         ptr_state_val,
-                        the_soft_dfs_info->num_freestacks,
-                        the_soft_dfs_info->num_freecells,
                         derived_states_list
                     );
 
@@ -951,6 +955,10 @@ int fc_solve_a_star_or_bfs_do_solve(
             ptr_state_val
         );
 
+        soft_thread->num_freecells = num_freecells;
+        soft_thread->num_freestacks = num_freestacks;
+
+
         TRACE0("perform_tests");
         /* Do all the tests at one go, because that the way it should be
            done for BFS and A*
@@ -963,8 +971,6 @@ int fc_solve_a_star_or_bfs_do_solve(
             check = fc_solve_sfs_tests[tests_order_tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
                     soft_thread,
                     ptr_state_val,
-                    num_freestacks,
-                    num_freecells,
                     &derived
                     );
             if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
