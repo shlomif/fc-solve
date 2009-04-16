@@ -4,13 +4,12 @@
 #include <assert.h>
 
 #include "fc_pro_iface_pos.h"
-#include "fcs_user.h"
-#include "fcs_cl.h"
 
+#ifdef WITH_FREE2SOLVER
 char * moves_string;
-static const char * ranks_map = "0A23456789TJQK";
+#endif
 
-char szTemp[50] ;
+static const char * ranks_map = "0A23456789TJQK";
 
 static char * rank_to_string(int rank, char * buf)
 {
@@ -110,15 +109,6 @@ int Cvtf89(int fcn)
 	return (fcn >= 7) ? (fcn+3) : fcn;
 }
 
-struct fcs_extended_move_struct
-{
-    fcs_move_t move;
-    int to_empty_stack;
-};
-
-typedef struct fcs_extended_move_struct fcs_extended_move_t;
-
-
 static char * render_move(fcs_extended_move_t move, char * string)
 {
     switch(fcs_move_get_type(move.move))
@@ -182,20 +172,7 @@ static char * render_move(fcs_extended_move_t move, char * string)
     return string+strlen(string);
 }
 
-static char * cmd_line_known_parameters[] = { NULL };
-
-
-struct moves_processed_struct
-{
-    int next_move_idx;
-    int num_moves;
-    int max_num_moves;
-    fcs_extended_move_t * moves;
-};
-
-typedef struct moves_processed_struct moves_processed_t;
-
-void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended_move_t new_move)
+static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended_move_t new_move)
 {
     moves->moves[moves->num_moves++] = new_move;
     if (moves->num_moves == moves->max_num_moves)
@@ -249,6 +226,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
          * */
         while (1)
         {
+#ifdef CHECK_STATE
             {
                 /* Check the intermediate position validity */
                 char exists[4*13];
@@ -290,6 +268,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                     }
                 }
             }
+#endif
             
             for(i=0;i<8;i++)
             {
@@ -527,6 +506,9 @@ void moves_processed_free(moves_processed_t * moves)
     free(moves);
 }
 
+#ifdef WITH_FREE2SOLVER
+static char * cmd_line_known_parameters[] = { NULL };
+
 int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char * * cmd_line_argv,
 	 int (*signal_step)(int step_limit))
 {
@@ -649,4 +631,5 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 
     return ret;
 }
+#endif
 
