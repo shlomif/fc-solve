@@ -134,22 +134,20 @@ char * card_to_string(char * s, CARD card, int not_append_ws)
     return s;
 }
 
-char * get_board(int gamenumber)
+void get_board(int gamenumber, Position * pos)
 {
-
-    CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
 
     int  i, j;                /*  generic counters */
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
+    int col;
     char * ret;
     char * append_to;
+    CARD card, suit;
 
     microsoft_rand_t * randomizer;
 
-
-    ret = malloc(1024);
-    ret[0] = '\0';
+    memset(pos, '\0', sizeof(*pos));
 
     /* shuffle cards */
 
@@ -162,37 +160,17 @@ char * get_board(int gamenumber)
     for (i = 0; i < 52; i++)
     {
         j = microsoft_rand_rand(randomizer) % wLeft;
-        card[(i%8)+1][i/8] = deck[j];
+        col = (i%8);
+        card = deck[j];
+        suit = SUIT(card);
+        pos->tableau[col].cards[pos->tableau[col].count++]
+            = (VALUE(card)+1) 
+            + (((suit == 3) ? suit : ((suit+1)%3))<<4)
+            ;
         deck[j] = deck[--wLeft];
     }
 
     microsoft_rand_free(randomizer);
-
-    append_to = ret;
-
-    {
-        int stack;
-        int c;
-
-        char card_string[10];
-
-        for(stack=1 ; stack<9 ; stack++ )
-        {
-            for(c=0 ; c < (6+(stack<5)) ; c++)
-            {
-                append_to += sprintf(append_to, "%s",
-                    card_to_string(
-                        card_string,
-                        card[stack][c],
-                        (c == (6+(stack<5)))
-                    )
-                );
-            }
-            append_to += sprintf(append_to, "%s", "\n");
-        }
-    }
-
-    return ret;
 }
 
 struct fc_solve_display_information_context_struct
@@ -453,8 +431,8 @@ int main(int argc, char * argv[])
     /* char buffer[2048]; */
     int ret;
     int board_num;
-    char * buffer;
     int start_board, end_board, stop_at;
+    char * buffer;
 #ifndef WIN32
     struct timeval tv;
     struct timezone tz;
@@ -478,8 +456,10 @@ int main(int argc, char * argv[])
 
     binary_output_t binary_output;
 
-
     int arg = 1, start_from_arg;
+
+    Position pos;
+
     if (argc < 4)
     {
         fprintf(stderr, "Not Enough Arguments!\n");
@@ -649,15 +629,16 @@ int main(int argc, char * argv[])
         return (-1);
     }
 
-
-
     ret = 0;
-
-
 
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
-        buffer = get_board(board_num);
+        get_board(board_num, &pos);
+
+        buffer = fc_solve_fc_pro_position_to_string(&pos, 4);
+#if 0
+        printf("%s\n", buffer);
+#endif
 
         board_num_iters = 0;
 

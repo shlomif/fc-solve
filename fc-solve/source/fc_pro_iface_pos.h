@@ -25,6 +25,8 @@ typedef struct pos_struct {
 	Column	tableau[8];
 } Position;
 
+extern char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells);
+
 struct fcs_extended_move_struct
 {
     fcs_move_t move;

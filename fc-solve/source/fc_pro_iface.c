@@ -35,7 +35,7 @@ static char * card_to_string(Card card, char * buf)
     return buf;
 }
 
-static char * position_to_string(Position * pos, int num_freecells)
+char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
 {
     int a, stack;
     char buffer[4000], temp[4][20];
@@ -214,7 +214,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
         if (getenv("FCS_OUTPUT_INTERMEDIATE_POS"))
         {
             char * as_str;
-            as_str = position_to_string(&pos, NoFcs);
+            as_str = fc_solve_fc_pro_position_to_string(&pos, NoFcs);
             printf("state =\n<<<\n%s\n>>>\n\n", as_str);
             free(as_str);
         }
@@ -522,7 +522,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     int ret_arg, parser_ret;
 
 
-    state_string = position_to_string(orig, NoFcs);
+    state_string = fc_solve_fc_pro_position_to_string(orig, NoFcs);
 
     instance = freecell_solver_user_alloc();
 
