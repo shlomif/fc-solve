@@ -136,13 +136,10 @@ char * card_to_string(char * s, CARD card, int not_append_ws)
 
 void get_board(int gamenumber, Position * pos)
 {
-
     int  i, j;                /*  generic counters */
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
     int col;
-    char * ret;
-    char * append_to;
     CARD card, suit;
 
     microsoft_rand_t * randomizer;

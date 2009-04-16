@@ -286,8 +286,6 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         (pos.foundations[suit^0x2] > rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
-                        fcs_extended_move_t new_move;
-                        
                         pos.foundations[suit]++;
                         pos.tableau[i].count--;
 
@@ -317,7 +315,6 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         (pos.foundations[suit^0x2] > rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
-                        fcs_extended_move_t new_move;
                         pos.foundations[suit]++;
                         pos.hold[j] = 0;
 
