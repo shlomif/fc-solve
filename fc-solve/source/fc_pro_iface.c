@@ -3,16 +3,10 @@
 #include <string.h>
 #include <assert.h>
 
-#if 1
-#include "Fcsolvex.h"
-#else
-#include "main.h"
-#include "Fcsolve.h"
-#endif
+#include "fc_pro_iface_pos.h"
 #include "fcs_user.h"
 #include "fcs_cl.h"
-//extern int signal_step(int) ;
-int NumFCs ;
+
 char * moves_string;
 static const char * ranks_map = "0A23456789TJQK";
 
@@ -25,7 +19,7 @@ static char * rank_to_string(int rank, char * buf)
     return buf;
 }
 
-static const char * suits_map = "CDSH";
+static const char * suits_map = "HCDS";
 
 static char * suit_to_string(int suit, char * buf)
 {
@@ -111,24 +105,10 @@ static char * position_to_string(Position * pos, int num_freecells)
     return strdup(buffer);
 }
 
-
-
-
-enum FCS_IFACE_MODES
-{
-    FCS_IFACE_MODE_DFS,
-    FCS_IFACE_MODE_A_STAR,
-
-    FCS_IFACE_MODE_OPT = 0x10000,
-};
-#ifdef FC89
 int Cvtf89(int fcn)
 {
-	if ((NumFCs > 7) && (fcn >= 7))
-		return (fcn+3) ;
-	return fcn ;
+	return (fcn >= 7) ? (fcn+3) : fcn;
 }
-#endif
 
 struct fcs_extended_move_struct
 {
@@ -141,15 +121,6 @@ typedef struct fcs_extended_move_struct fcs_extended_move_t;
 
 static char * render_move(fcs_extended_move_t move, char * string)
 {
-    /* Save the third character which will be set to '\0' by the sprintf.
-     * It's a kludge, but it works.
-     * */
-#if 0
-    char c = string[2];
-	char b ;  //ABE
-    int num_chars = 2;
-#endif
-    
     switch(fcs_move_get_type(move.move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
@@ -172,38 +143,23 @@ static char * render_move(fcs_extended_move_t move, char * string)
 
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
 				sprintf(string, "%c%i", 
-#ifndef FC89
-                    ('a'+fcs_move_get_src_freecell(move.move)),
-#else
                     ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
-#endif
                     1+fcs_move_get_dest_stack(move.move)
                     );
 		break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
                 sprintf(string, "%c%c",
-#ifndef FC89
-                    ('a'+fcs_move_get_src_freecell(move.move)),
-                    ('a'+fcs_move_get_dest_freecell(move.move))
-#else
                     ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
                     ('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)))
-#endif
 					);                        
         break;
 
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
                 sprintf(string, "%i%c",
                     1+fcs_move_get_src_stack(move.move),
-#ifndef FC89
-                    ('a'+fcs_move_get_dest_freecell(move.move))
-#else
                     ('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)))
-#endif
                     );
-//sprintf(szTemp, "StF fc-%d np-%d ", fcs_move_get_dest_freecell(move), NumFCs) ;
-//MainMessage(szTemp) ;
 		break;
 
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
@@ -212,11 +168,7 @@ static char * render_move(fcs_extended_move_t move, char * string)
         
 
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
-#ifndef FC89
-				sprintf(string, "%ch", ('a'+fcs_move_get_src_freecell(move.move)));
-#else
                 sprintf(string, "%ch", ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))));
-#endif
         break;
 
         case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
@@ -227,13 +179,6 @@ static char * render_move(fcs_extended_move_t move, char * string)
             string[0] = '\0';
         break;
     }
-#if 0
-    /* Restore that character */
-    string[2] = c;
-	b = string[0] ;  // Swap characters -- ABE
-	string[0] = string[1] ;
-	string[1] = b ;
-#endif
     return string+strlen(string);
 }
 
@@ -288,6 +233,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
     
     for(move_idx=0; move_idx < num_back_end_moves ; move_idx ++)
     {
+#if 0
         if (getenv("FCS_OUTPUT_INTERMEDIATE_POS"))
         {
             char * as_str;
@@ -295,6 +241,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
             printf("state =\n<<<\n%s\n>>>\n\n", as_str);
             free(as_str);
         }
+#endif
 
 
         /* 
@@ -364,14 +311,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         
                         pos.foundations[suit]++;
                         pos.tableau[i].count--;
-                        fcs_move_set_type(new_move.move, FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
-                        fcs_move_set_src_stack(new_move.move, i);
-                        /* (suit+1)&0x3 converts it to FCS order */
-                        fcs_move_set_foundation(new_move.move, (suit+1)&0x3);
-                        if (getenv("FCS_AUTOMOVE"))
-                        {
-                           moves_processed_add_new_move(ret, new_move);
-                        }
+
+                        /* An Automove. */
                         
                         break;
                     }
@@ -400,13 +341,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         fcs_extended_move_t new_move;
                         pos.foundations[suit]++;
                         pos.hold[j] = 0;
-                        fcs_move_set_type(new_move.move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
-                        fcs_move_set_src_freecell(new_move.move, j);
-                        fcs_move_set_foundation(new_move.move, (suit+1)&0x3);
-                        if (getenv("FCS_AUTOMOVE"))
-                        {
-                            moves_processed_add_new_move(ret, new_move);
-                        }
+
+                        /* We've just done an auto-move */
                         break;
                     }                        
                     
@@ -567,28 +503,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
         }
     }
 
-#if 0
-    /* 
-     * This is a debugging code. It seems that everything works well 
-     * */
-    {
-        int count=0;
-        for(i=0;i<8;i++)
-        {
-            count += (pos.tableau[i].count == 0);
-            count += (virtual_stack_len[i] == 0);
-        }
-        for(i=0;i<NoFcs;i++)
-        {
-            count += (pos.hold[i] == 0);
-            count += (virtual_freecell_len[i] == 0);
-        }
-        printf("count=%i\n", count);
-    }
-#endif
-
     return ret;
-    
 }
 
 int moves_processed_get_moves_left(moves_processed_t * moves)
@@ -612,8 +527,6 @@ void moves_processed_free(moves_processed_t * moves)
     free(moves);
 }
 
-
-//int Free2Solver(Position * orig, int NoFcs, int limit, int mode, int option, char * * ret_moves)
 int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char * * cmd_line_argv,
 	 int (*signal_step)(int step_limit))
 {
@@ -622,21 +535,13 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     int verdict;
     int num_iters;
     int ret;
-#ifdef SHLOMIF_DEBUG
-    int current_limit = 50;
-#else
     int current_limit = 1000;
-#endif
     char * err_str;
     int ret_arg, parser_ret;
 
 
     state_string = position_to_string(orig, NoFcs);
 
-#ifdef SHLOMIF_DEBUG
-    printf("%s\n\n", state_string);
-#endif
-    
     instance = freecell_solver_user_alloc();
 
 	NumFCs = NoFcs ;
@@ -673,21 +578,6 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 
     freecell_solver_user_limit_iterations(instance, current_limit);
 
-#if 0
-    freecell_solver_user_set_solving_method(
-        instance,
-        (((mode & 0xFFFF) == FCS_IFACE_MODE_DFS) ?
-            FCS_METHOD_SOFT_DFS :
-            FCS_METHOD_A_STAR
-        )
-    );
-
-    freecell_solver_user_set_solution_optimization(
-        instance,
-        (mode & FCS_IFACE_MODE_OPT) ? 1 : 0
-        );
-#endif
-          
     verdict = freecell_solver_user_solve_board(instance, state_string);
 
     free(state_string);
@@ -700,7 +590,6 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
            )
           )
     {
-//        if (signal_step(current_limit, signal_step_context) != 0)
         if (signal_step(current_limit) != 0)
         {
             break;
@@ -711,8 +600,6 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     }
 
     num_iters = freecell_solver_user_get_num_times(instance);
-
-//    *ret_moves = NULL;
 
     if (verdict == FCS_STATE_WAS_SOLVED)
     {
@@ -727,32 +614,16 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         
         moves_processed = moves_processed_gen(orig, NoFcs, instance);
         num_moves = moves_processed_get_moves_left(moves_processed);
-#ifdef SHLOMIF_DEBUG
-        moves_string_proto = (char *)malloc(moves_processed->num_moves*8+1);
-#else
         moves_string_proto = (char *)malloc(moves_processed->num_moves*4+1);
-#endif
         
         /* a = num_moves-1; */
         str = moves_string_proto;
-#ifdef SHLOMIF_DEBUG
-        len = 0;
-#endif
+
         while (! moves_processed_get_next_move(moves_processed, &move))
         {
-
             str = render_move(move, str);
-#ifdef SHLOMIF_DEBUG            
-            *(str++) = ' ';
-            if ((++len % 10) == 0)
-            {
-                *(str++) = '\n';
-            }
-            *(str) = '\0';
-#endif
         }
         moves_processed_free(moves_processed);
-#ifndef SHLOMIF_DEBUG
         len = str-moves_string_proto;
         moves_string = malloc(len+1);
         for(a=0;a<len;a++)
@@ -761,15 +632,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         }
         moves_string[a] = '\0';
         free(moves_string_proto);
-#else
-        moves_string = moves_string_proto;
-#endif
         
-#if 0
-        moves_string[num_moves*2] = '\0';
-#endif
-
-//        *ret_moves = moves_string;
     }
     else if (verdict == FCS_STATE_IS_NOT_SOLVEABLE)
     {
@@ -787,26 +650,3 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     return ret;
 }
 
-#if 0
-
-static int my_signal_step(int step_limit)
-{
-    printf("num_iters=%i\n", step_limit);
-    return 0;
-}
-int main(int argc, char * argv[])
-{
-    Position mypos;
-    int ret;
-
-#include "fill_pos.cpp"
-
-    ret = Free2Solver(&mypos, 4, 150000, argc-1, argv+1, my_signal_step);
-
-    printf("%i\n", ret);
-
-    printf("%s\n", moves_string);
-
-    return 0;
-}
-#endif
