@@ -705,7 +705,7 @@ int main(int argc, char * argv[])
 
             fc_pro_moves = moves_processed_gen(&pos, 4, user.instance);
 
-            printf("[[Num FCPro Moves]]=%d\n",
+            printf("[[Num FCPro Moves]]=%d\n[[Start]]\n",
                     moves_processed_get_moves_left(fc_pro_moves)
                   );
 
@@ -718,7 +718,7 @@ int main(int argc, char * argv[])
                     );
             }
             moves_processed_free(fc_pro_moves);
-            printf("\n");
+            printf("\n%s\n", "[[End]]");
         }
 
         total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
