@@ -51,6 +51,8 @@ moves_processed_t * moves_processed_gen(
         void * instance
         );
 
+char * moves_processed_render_move(fcs_extended_move_t move, char * string);
+
 extern int moves_processed_get_moves_left(moves_processed_t * moves);
 extern int moves_processed_get_next_move(moves_processed_t * moves, fcs_extended_move_t * move);
 extern void moves_processed_free(moves_processed_t * moves);

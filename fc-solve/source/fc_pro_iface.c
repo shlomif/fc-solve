@@ -109,7 +109,7 @@ int Cvtf89(int fcn)
 	return (fcn >= 7) ? (fcn+3) : fcn;
 }
 
-static char * render_move(fcs_extended_move_t move, char * string)
+char * moves_processed_render_move(fcs_extended_move_t move, char * string)
 {
     switch(fcs_move_get_type(move.move))
     {
@@ -603,7 +603,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 
         while (! moves_processed_get_next_move(moves_processed, &move))
         {
-            str = render_move(move, str);
+            str = moves_processed_render_move(move, str);
         }
         moves_processed_free(moves_processed);
         len = str-moves_string_proto;

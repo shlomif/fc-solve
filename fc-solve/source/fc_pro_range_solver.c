@@ -430,9 +430,11 @@ int main(int argc, char * argv[])
     pack_item_t user;
     /* char buffer[2048]; */
     int ret;
+    int len;
     int board_num;
     int start_board, end_board, stop_at;
     char * buffer;
+    char temp_str[10];
 #ifndef WIN32
     struct timeval tv;
     struct timezone tz;
@@ -696,7 +698,30 @@ int main(int argc, char * argv[])
         }
         else
         {
+            moves_processed_t * fc_pro_moves;
+            fcs_extended_move_t move;
+
             print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
+            printf("[[Num FCS Moves]]=%d\n",
+                    freecell_solver_user_get_moves_left(user.instance)
+                  );
+
+            fc_pro_moves = moves_processed_gen(&pos, 4, user.instance);
+
+            printf("[[Num FCPro Moves]]=%d\n",
+                    moves_processed_get_moves_left(fc_pro_moves)
+                  );
+
+            len = 0;
+            while (! moves_processed_get_next_move(fc_pro_moves, &move))
+            {
+                moves_processed_render_move(move, temp_str);
+                printf("%s%c", temp_str,
+                        ((((++len) % 10) == 0) ? '\n' : ' ')
+                    );
+            }
+            moves_processed_free(fc_pro_moves);
+            printf("\n");
         }
 
         total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
