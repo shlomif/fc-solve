@@ -141,6 +141,7 @@ char * get_board(int gamenumber)
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
     char * ret;
+    char * append_to;
 
     microsoft_rand_t * randomizer;
 
@@ -165,6 +166,7 @@ char * get_board(int gamenumber)
 
     microsoft_rand_free(randomizer);
 
+    append_to = ret;
 
     {
         int stack;
@@ -176,7 +178,7 @@ char * get_board(int gamenumber)
         {
             for(c=0 ; c < (6+(stack<5)) ; c++)
             {
-                sprintf(ret+strlen(ret), "%s",
+                append_to += sprintf(append_to, "%s",
                     card_to_string(
                         card_string,
                         card[stack][c],
@@ -184,7 +186,7 @@ char * get_board(int gamenumber)
                     )
                 );
             }
-            sprintf(ret+strlen(ret), "%s", "\n");
+            append_to += sprintf(append_to, "%s", "\n");
         }
     }
 
