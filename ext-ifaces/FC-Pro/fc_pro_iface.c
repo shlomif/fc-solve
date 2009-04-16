@@ -288,11 +288,62 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
     
     for(move_idx=0; move_idx < num_back_end_moves ; move_idx ++)
     {
+        if (getenv("FCS_OUTPUT_INTERMEDIATE_POS"))
+        {
+            char * as_str;
+            as_str = position_to_string(&pos, NoFcs);
+            printf("state =\n<<<\n%s\n>>>\n\n", as_str);
+            free(as_str);
+        }
+
+
         /* 
          * Move safe cards to the foundations 
          * */
         while (1)
         {
+            {
+                /* Check the intermediate position validity */
+                char exists[4*13];
+                int rank, suit;
+                int fc, col, count, i;
+                Card card;
+
+                memset(exists, '\0', sizeof(exists));
+                for (suit=0;suit<4;suit++)
+                {
+                    for(rank=1;rank<=pos.foundations[suit];rank++)
+                    {
+                        exists[rank-1+suit*13] = 1;
+                    }
+                }
+                for (col=0;col<8;col++)
+                {
+                    count = pos.tableau[col].count;
+                    for (i=0;i<count;i++)
+                    {
+                        card = pos.tableau[col].cards[i];
+                        exists[(card & 0x0F)-1+(card >> 4)*13] = 1;
+                    }
+                }
+                for (fc=0;fc<NoFcs;fc++)
+                {
+                    card = pos.hold[fc];
+                    if (card != 0)
+                    {
+                        exists[(card & 0x0F)-1+(card >> 4)*13] = 1;
+                    }
+                }
+                for (i=0;i<52;i++)
+                {
+                    if (exists[i] != 1)
+                    {
+                        printf("Invalid position!!!!!!!!!!!\n");
+                        exit(-1);
+                    }
+                }
+            }
+            
             for(i=0;i<8;i++)
             {
                 int rank, suit;
@@ -317,11 +368,18 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         fcs_move_set_src_stack(new_move.move, i);
                         /* (suit+1)&0x3 converts it to FCS order */
                         fcs_move_set_foundation(new_move.move, (suit+1)&0x3);
-                        moves_processed_add_new_move(ret, new_move);
+                        if (getenv("FCS_AUTOMOVE"))
+                        {
+                           moves_processed_add_new_move(ret, new_move);
+                        }
                         
                         break;
                     }
                 }
+            }
+            if (i < 8)
+            {
+                continue;
             }
             for(j=0;j<NoFcs;j++)
             {
@@ -345,8 +403,10 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         fcs_move_set_type(new_move.move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
                         fcs_move_set_src_freecell(new_move.move, j);
                         fcs_move_set_foundation(new_move.move, (suit+1)&0x3);
-                        moves_processed_add_new_move(ret, new_move);
-
+                        if (getenv("FCS_AUTOMOVE"))
+                        {
+                            moves_processed_add_new_move(ret, new_move);
+                        }
                         break;
                     }                        
                     
@@ -405,6 +465,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                                                             
                                 moves_processed_add_new_move(ret, ext_move);
                             }
+                            pos.foundations[pos.hold[src] >> 4]++;
                             pos.hold[src] = 0;
                         }
                         virtual_freecell_len[src] = 0;
