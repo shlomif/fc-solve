@@ -1,2 +1,2 @@
 #!/bin/bash
-perl -lne '/^\Q[[NumFCS Moves]]\E=(\d+)/ && ($n=$1);/^\Q[[Num FCPro Moves]]\E=(\d+)/ && print "$n\t$1";' "$@"
+perl -lne '/^\Q[[Num FCS Moves]]\E=(\d+)/ && ($n=$1);/^\Q[[Num FCPro Moves]]\E=(\d+)/ && print "$n\t$1";' "$@"
