@@ -141,7 +141,6 @@ ENDIF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_JUDY") OR
 SET (MY_LINK_FLAGS "")
 SET (MY_TO_PROFILE "")
 IF (CMAKE_BUILD_TYPE STREQUAL profile)
-    MESSAGE (STATUS "In profile cond") 
     SET (MY_TO_PROFILE "1")
     SET (CMAKE_C_FLAGS_PROFILE "${CMAKE_C_FLAGS_DEBUG} -pg")
     SET (MY_LINK_FLAGS "-pg -static-libgcc")
@@ -215,9 +214,7 @@ ADD_EXECUTABLE (freecell-solver-fc-pro-range-solve
     fc_pro_iface.c
 )
 
-MESSAGE (STATUS "MY_LINK_FLAGS == <<${MY_LINK_FLAGS}>>")
 IF (MY_LINK_FLAGS)
-    MESSAGE (STATUS "In MY_LINK_FLAGS cond") 
     SET_TARGET_PROPERTIES(
         ${FREECELL_SOLVER_LIBS} 
         fc-solve
