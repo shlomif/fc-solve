@@ -2,6 +2,9 @@
 
 * Fix the warnings when compiling as "./configure --release".
 
+* Make sure that the distribution (tar.gz etc.) ships with a Makefile
+or equivalent under the t/ (testing) directory.
+
 --- Non-pressing ---
 
 * Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 

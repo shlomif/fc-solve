@@ -30,19 +30,25 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "\\\\.o$"
     "~$"
     "/board_gen/(pi-make-microsoft-freecell-board|make-microsoft-freecell-board|make-gnome-freecell-board|make-aisleriot-freecell-board)$"
-    "/(fc-solve|freecell-solver-range-parallel-solve)$"
-    "/lib(fcs|freecell-solver)\\\\.a$"
+    "/(fc-solve|freecell-solver-range-parallel-solve|freecell-solver-fc-pro-range-solve)$"
+    "/lib(fcs|freecell-solver)\\\\.(a|la)$"
     "\\\\.so(\\\\.[0-9]+)*$"
     "/.svn/"
     "/t/t/.*\\\\.exe$"
     "/t/Presets"
-    "/CMakeCache.txt$"
+    "/CMakeCache\\\\.txt$"
     "/Makefile$"
-    "/CTestTestfile.cmake$"
-    "/CPackConfig.cmake$"
+    "/CTestTestfile\\\\.cmake$"
+    "/cmake_install\\\\.cmake$"
+    "/CPackConfig\\\\.cmake$"
+    "/CPackSourceConfig\\\\.cmake$"
     "/tags$"
+    "/freecell-solver-config$"
     "/([0-9]+)\\\\.board$"
     "/config\\\\.h$"
+    "/install_manifest\\\\.txt$"
+    "^/t/card-test-(parse|render)\\\\.c$"
+    "^/Testing"
 )
 
 IF(WIN32 AND NOT UNIX)
@@ -108,7 +114,7 @@ SET (FCS_FRECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able t
 
 SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
 
-SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_dm.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c)
+SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c)
 
 # Add the fcs_hash.c if (and only if) it is being used.
 # 
@@ -119,6 +125,12 @@ IF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INTERNAL_HASH") OR
 
 ENDIF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INTERNAL_HASH") OR
     (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_INTERNAL_HASH"))
+
+# Add fcs_dm.c if (and only if) it is being used.
+# 
+IF (${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INDIRECT")
+    LIST(APPEND FREECELL_SOLVER_LIB_MODULES fcs_dm.c)
+ENDIF (${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INDIRECT")
 
 # Search for libredblack if appropriate.
 IF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_LIBREDBLACK_TREE") OR
