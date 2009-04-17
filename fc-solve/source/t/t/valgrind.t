@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -11,13 +11,18 @@ use File::Spec;
 
 use Games::Solitaire::Verify::Solution;
 
+sub test_using_valgrind
 {
+    my $cmd_line_args = shift;
+    my $blurb = shift;
+
     my $log_fn = "valgrind.log";
+
     system(
         "valgrind",
         "--log-file=$log_fn",
         $ENV{'FCS_PATH'} . "/freecell-solver-range-parallel-solve",
-        "1", "2", "1", "-l", "gi",
+        @$cmd_line_args,
     );
     
     open my $read_from_valgrind, "<", $log_fn
@@ -34,10 +39,21 @@ use Games::Solitaire::Verify::Solution;
     }
     close ($read_from_valgrind);
 
-    # TEST
-    if (ok ($found, "\"range-parallel-solve 1 2 1 -l gi\" returned no errors"))
+    if (ok ($found, $blurb))
     {
         unlink($log_fn);
     }
 }
+
+# TEST
+test_using_valgrind(
+    ["1", "2", "1", "-l", "gi"],
+    "\"range-parallel-solve 1 2 1 -l gi\" returned no errors"
+);
+
+# TEST
+test_using_valgrind(
+    ["1", "2", "1", "-opt"],
+    "\"range-parallel-solve 1 2 1 -opt\" returned no errors"
+);
 

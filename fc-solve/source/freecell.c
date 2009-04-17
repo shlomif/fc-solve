@@ -120,6 +120,7 @@ int fc_solve_sfs_check_state_end(
     hard_thread = soft_thread->hard_thread;
     instance = hard_thread->instance;
     calc_real_depth = instance->calc_real_depth;
+    scans_synergy = instance->scans_synergy;
 
     /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE
      * because it indicates that the order of the stacks and freecells

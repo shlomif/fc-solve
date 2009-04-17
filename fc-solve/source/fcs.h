@@ -396,6 +396,11 @@ typedef struct fc_solve_instance
      * */
     struct fc_solve_hard_thread_struct * optimization_thread;
 
+    /* 
+     * Specifies that we are now running the optimization thread.
+     * */
+    int in_optimization_thread;
+
     /*
      * A counter that determines how many of the hard threads that belong
      * to this hard thread have already finished. If it becomes num_hard_threads

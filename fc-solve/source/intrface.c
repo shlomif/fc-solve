@@ -392,6 +392,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 #endif
 
     instance->optimization_thread = NULL;
+    instance->in_optimization_thread = 0;
 
     instance->num_hard_threads_finished = 0;
 
@@ -849,12 +850,18 @@ static int fc_solve_optimize_solution(
     fc_solve_instance_t * instance
     )
 {
-    fc_solve_hard_thread_t * optimization_thread;
     fc_solve_soft_thread_t * soft_thread;
+    fc_solve_hard_thread_t * optimization_thread;
 
-    optimization_thread = alloc_hard_thread(instance);
-    instance->optimization_thread = optimization_thread;
     instance->to_reparent_states_real = 1;
+
+    if (! instance->optimization_thread)
+    {
+        instance->optimization_thread = 
+            alloc_hard_thread(instance);
+    }
+
+    optimization_thread = instance->optimization_thread;
 
     soft_thread = optimization_thread->soft_threads[0];
 
@@ -885,6 +892,8 @@ static int fc_solve_optimize_solution(
     fc_solve_soft_thread_init_a_star_or_bfs(soft_thread);
     soft_thread->initialized = 1;
 
+    instance->in_optimization_thread = 1;
+   
     return
         fc_solve_a_star_or_bfs_do_solve(
             soft_thread
@@ -1296,7 +1305,7 @@ int fc_solve_resume_instance(
      *
      * Else, proceed with the normal total scan.
      * */
-    if (instance->optimization_thread)
+    if (instance->in_optimization_thread)
     {
         ret =
             fc_solve_a_star_or_bfs_do_solve(
@@ -1384,7 +1393,7 @@ int fc_solve_resume_instance(
         {
             /* Call optimize_solution only once. Make sure that if
              * it has already run - we retain the old ret. */
-            if (! instance->optimization_thread)
+            if (! instance->in_optimization_thread)
             {
                 ret = fc_solve_optimize_solution(instance);
             }
@@ -1625,6 +1634,9 @@ static void recycle_hard_thread(
         fc_solve_rand_srand(soft_thread->rand_gen, soft_thread->rand_seed);
         /* Reset the priority queue */
         soft_thread->a_star_pqueue->CurrentSize = 0;
+        /* Rest the BFS Queue (also used for the optimization scan. */
+        free_bfs_queue(soft_thread);
+        fc_solve_initialize_bfs_queue(soft_thread);
     }
 
     return;
@@ -1646,14 +1658,18 @@ void fc_solve_recycle_instance(
     {
         recycle_hard_thread(instance->hard_threads[ht_idx]);
     }
+#if 1
+    if (instance->optimization_thread)
+    {
+        recycle_hard_thread(instance->optimization_thread);
+    }
+    instance->in_optimization_thread = 0;
+#else
     /*
         For the time being instance->optimization_thread must be NULL when
         the solution has started. Else, it breaks the internal code's
         expectations.
-    */
-#if 0    
-    recycle_hard_thread(instance->optimization_thread);
-#else
+    */    
     if (instance->optimization_thread)
     {
         free_instance_hard_thread_callback(instance->optimization_thread);

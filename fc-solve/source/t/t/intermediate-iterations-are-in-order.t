@@ -51,7 +51,7 @@ sub assert_directly_ascending_iters
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
     my $verdict = 1;
-    my $diag;
+    my $diag = "";
     {
         my $last_iter;
         LINE_LOOP:
@@ -66,7 +66,7 @@ sub assert_directly_ascending_iters
                     if ($new_iter ne "0")
                     {
                         $verdict = 0;
-                        $diag = "The iterations do not start at 0.";
+                        $diag .= "The iterations do not start at 0.";
                     }
                 }
                 else
@@ -74,7 +74,7 @@ sub assert_directly_ascending_iters
                     if ($new_iter != $last_iter+1)
                     {
                         $verdict = 0;
-                        $diag = "Iteration $new_iter does not directly follow $last_iter";
+                        $diag .= "Iteration $new_iter does not directly follow $last_iter";
                     }
                 }
                 $last_iter = $new_iter;
@@ -86,13 +86,17 @@ sub assert_directly_ascending_iters
         }
     }
 
+    if (! close($fc_solve_output))
+    {
+        $verdict = 0;
+        $diag .= "Process failed";
+    }
+
     my $test_verdict = ok($verdict, $msg);
-    if (defined($diag))
+    if (length($diag))
     {
         diag($diag);
     }
-
-    close($fc_solve_output);
 
     return $test_verdict;
 }
