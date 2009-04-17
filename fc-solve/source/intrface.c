@@ -661,6 +661,11 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
         fc_solve_state_ia_init(hard_thread);
     }
 
+    if (instance->optimization_thread)
+    {
+        fc_solve_state_ia_init(instance->optimization_thread);
+    }
+
     /* Normalize the A* Weights, so the sum of all of them would be 1. */
     foreach_soft_thread(instance, normalize_a_star_weights, NULL);
 
@@ -694,12 +699,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             instance->opt_tests_order_set = 1;
         }
     }
-
-
 }
-
-
-
 
 /* These are all stack comparison functions to be used for the stacks
    cache when using INDIRECT_STACK_STATES
@@ -858,10 +858,15 @@ static int fc_solve_optimize_solution(
     if (! instance->optimization_thread)
     {
         instance->optimization_thread = 
+            optimization_thread =
             alloc_hard_thread(instance);
-    }
 
-    optimization_thread = instance->optimization_thread;
+        fc_solve_state_ia_init(optimization_thread);
+    }
+    else
+    {
+        optimization_thread = instance->optimization_thread;
+    }
 
     soft_thread = optimization_thread->soft_threads[0];
 
@@ -882,7 +887,6 @@ static int fc_solve_optimize_solution(
 
     /* Initialize the optimization hard-thread and soft-thread */
     optimization_thread->num_times_left_for_soft_thread = 1000000;
-    fc_solve_state_ia_init(optimization_thread);
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
