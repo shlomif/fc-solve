@@ -33,7 +33,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/(fc-solve|freecell-solver-range-parallel-solve|freecell-solver-fc-pro-range-solve)$"
     "/lib(fcs|freecell-solver)\\\\.(a|la)$"
     "\\\\.so(\\\\.[0-9]+)*$"
-    "/.svn/"
+    "/\\\\.svn/"
     "/t/t/.*\\\\.exe$"
     "/t/Presets"
     "/CMakeCache\\\\.txt$"
@@ -47,8 +47,8 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/([0-9]+)\\\\.board$"
     "/config\\\\.h$"
     "/install_manifest\\\\.txt$"
-    "^/t/card-test-(parse|render)\\\\.c$"
-    "^/Testing"
+    "/t/card-test-(parse|render)\\\\.c$"
+    "/Testing/"
 )
 
 IF(WIN32 AND NOT UNIX)
