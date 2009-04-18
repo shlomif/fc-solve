@@ -1,3 +1,27 @@
+Version 2.24.0 (18-Apr-2009)
+----------------------------
+
+1. Many code cleanups and internal changes. Reduced the size of the library
+considerably.
+
+2. Added Makefile.llvm to build LLVM bitcodes from the Freecell Solver
+sources. So far, they seem significantly slower than the native code compiled
+using gcc-4.3.2.
+
+3. Implemented "cmake -DCMAKE_BUILD_TYPE=profile" . Can be activated using 
+"./configure --profile"
+
+4. Now build (but not installing) freecell-solver-fc-pro-range-solve , which
+runs a range of MS-Freecell / Freecell Pro boards using the solver and outputs
+the number of FCS moves, the number of FC-Pro moves, and the FC-Pro moves
+in standard notation.
+
+5. Fixed some bugs (crashes, leaks, etc.) when running -opt on a range
+of boards (or recycling instances with -opt in general).
+
+6. Some CMake / Build system cleanups and improvements. Among them, trimmed 
+the distribution from unnecessary files.
+
 Version 2.22.0 (31-Mar-2009)
 ----------------------------
 
