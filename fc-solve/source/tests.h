@@ -182,14 +182,14 @@ int fc_solve_sfs_check_state_end(
  * the tests.
  * */
 #define tests_declare_accessors()                              \
+    tests_declare_accessors_freecell_only()                    \
     fc_solve_hard_thread_t * hard_thread;               \
     fc_solve_instance_t * instance;                     \
     fcs_state_t * ptr_state_key; \
     fcs_state_t * ptr_new_state_key; \
     fcs_state_extra_info_t * ptr_new_state_val; \
     fcs_move_stack_t * moves;                                  \
-    char * indirect_stacks_buffer;                             \
-    tests_declare_accessors_freecell_only()
+    char * indirect_stacks_buffer                             \
 
 #ifdef FCS_FREECELL_ONLY
 
