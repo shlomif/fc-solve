@@ -112,6 +112,11 @@ SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack
 
 SET (FCS_FREECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell")
 
+SET (FCS_DISABLE_SECONDARY_HASH_VALUE "" 
+    CACHE BOOL 
+    "Disable the secondary hash value calculation and track-keeping."
+)
+
 SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
 
 SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c)

@@ -76,7 +76,9 @@ static void GCC_INLINE fc_solve_cache_stacks(
 {
     int a;
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
+#ifndef FCS_STATE_STORAGE_INTERNAL_HASH
     SFO_hash_value_t hash_value_int;
+#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     PWord_t * PValue;
 #endif
@@ -103,6 +105,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
         new_state_key->stacks[a] = new_ptr;
 
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
         /* Calculate the hash value for the stack */
         /* This hash function was ripped from the Perl source code.
          * (It is not derived work however). */
@@ -125,7 +128,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
              * */
             hash_value_int &= (~(1<<((sizeof(hash_value_int)<<3)-1)));
         }
-
+#endif
 
         {
             void * dummy;
@@ -142,14 +145,14 @@ static void GCC_INLINE fc_solve_cache_stacks(
                     (fcs_stack_len(*new_state_key, a)+1),
                     24
                     ),
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
                 hash_value_int,
+#endif
                 1
                 );
 
-
             replace_with_cached(verdict);
         }
-
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
 
@@ -320,7 +323,9 @@ GCC_INLINE int fc_solve_check_and_add_state(
     )
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
     SFO_hash_value_t hash_value_int;
+#endif
 #endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     fcs_state_with_locations_t * * pos_ptr;
@@ -385,6 +390,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
 
 #else
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
     {
         const char * s_ptr = (char*)new_state_key;
         const char * s_end = s_ptr+sizeof(*new_state_key);
@@ -403,6 +409,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
          * */
         hash_value_int &= (~(1<<((sizeof(hash_value_int)<<3)-1)));
     }
+#endif
     {
         void * existing_key_void, * existing_val_void;
     is_state_new = (fc_solve_hash_insert(
@@ -416,7 +423,9 @@ GCC_INLINE int fc_solve_check_and_add_state(
             sizeof(*new_state_key),
             24
             ),
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
         hash_value_int,
+#endif
         1
         ) == 0);
         if (! is_state_new)
@@ -424,8 +433,6 @@ GCC_INLINE int fc_solve_check_and_add_state(
             *existing_state_val = existing_val_void;
         }
     }
-
-
 #endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     /* Try to see if the state is found in indirect_prev_states */

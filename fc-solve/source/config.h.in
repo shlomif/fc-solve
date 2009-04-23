@@ -67,6 +67,7 @@ extern "C" {
 #cmakedefine IA_STATE_PACKS_GROW_BY 32
 
 #cmakedefine FCS_FREECELL_ONLY
+#cmakedefine FCS_DISABLE_SECONDARY_HASH_VALUE
 
 /*
  * The maximal number of Freecells. For efficiency's sake it should be a

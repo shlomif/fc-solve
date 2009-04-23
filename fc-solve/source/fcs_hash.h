@@ -47,11 +47,13 @@ struct SFO_hash_symlink_item_struct
     /* We also store the hash value corresponding to this key for faster
        comparisons */
     SFO_hash_value_t hash_value;
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
     /*
      * We also store a secondary hash value, which is not used for indexing,
      * but is used to speed up comparison.
      * */
     SFO_hash_value_t secondary_hash_value;
+#endif
     /* The next item in the list */
     struct SFO_hash_symlink_item_struct * next;
 };
@@ -108,7 +110,9 @@ int fc_solve_hash_insert(
     void * * existing_key,
     void * * existing_val,
     SFO_hash_value_t hash_value,
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
     SFO_hash_value_t secondary_hash_value,
+#endif
     int optimize_for_caching
     );
 

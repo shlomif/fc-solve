@@ -95,7 +95,9 @@ int fc_solve_hash_insert(
     void * * existing_key,
     void * * existing_val,
     SFO_hash_value_t hash_value,
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
     SFO_hash_value_t secondary_hash_value,
+#endif
     int optimize_for_caching
     )
 {
@@ -117,7 +119,9 @@ int fc_solve_hash_insert(
         item->key = key;
         item->val = val;
         item->hash_value = hash_value;
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
         item->secondary_hash_value = secondary_hash_value;
+#endif
 
         goto rehash_check;
     }
@@ -135,7 +139,9 @@ int fc_solve_hash_insert(
         */
         if (
             (item->hash_value == hash_value) &&
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
             (item->secondary_hash_value == secondary_hash_value) &&
+#endif
             (!(hash->compare_function(item->key, key, hash->context)))
            )
         {
@@ -173,7 +179,9 @@ int fc_solve_hash_insert(
         item->val = val;
         item->hash_value = hash_value;
         list->first_item = item;
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
         item->secondary_hash_value = secondary_hash_value;
+#endif
     }
     else
     {
@@ -184,7 +192,9 @@ int fc_solve_hash_insert(
         item->key = key;
         item->val = val;
         item->hash_value = hash_value;
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
         item->secondary_hash_value = secondary_hash_value;
+#endif
     }
 
 rehash_check:
