@@ -148,7 +148,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
 #ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
                 hash_value_int,
 #endif
-                1
+                0
                 );
 
             replace_with_cached(verdict);
@@ -426,7 +426,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 #ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
         hash_value_int,
 #endif
-        1
+        0
         ) == 0);
         if (! is_state_new)
         {
