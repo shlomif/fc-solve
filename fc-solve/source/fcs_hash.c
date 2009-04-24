@@ -57,7 +57,8 @@ SFO_hash_t * fc_solve_hash_init(
     int size;
     SFO_hash_t * hash;
 
-    /* Find a prime number that is greater than the initial wanted size */
+    /* Find a size that's a power of 2 that's just greater than 
+     * the wanted_size. */
     size = 256;
     while (size < wanted_size)
     {
