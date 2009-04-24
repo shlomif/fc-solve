@@ -95,11 +95,10 @@ int fc_solve_hash_insert(
     void * val,
     void * * existing_key,
     void * * existing_val,
-    SFO_hash_value_t hash_value,
+    SFO_hash_value_t hash_value
 #ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
-    SFO_hash_value_t secondary_hash_value,
+    , SFO_hash_value_t secondary_hash_value
 #endif
-    int optimize_for_caching
     )
 {
     int place;
@@ -146,20 +145,6 @@ int fc_solve_hash_insert(
             (!(hash->compare_function(item->key, key, hash->context)))
            )
         {
-            if (optimize_for_caching)
-            {
-                /*
-                 * Place the item in the beginning of the chain.
-                 * If last_item == NULL it is already the first item so leave
-                 * it alone
-                 * */
-                if (last_item != NULL)
-                {
-                    last_item->next = item->next;
-                    item->next = list->first_item;
-                    list->first_item = item;
-                }
-            }
             *existing_key = item->key;
             *existing_val = item->val;
 
@@ -171,20 +156,6 @@ int fc_solve_hash_insert(
         item = item->next;
     }
 
-    if (optimize_for_caching)
-    {
-        /* Put the new element at the beginning of the list */
-        fcs_compact_alloc_into_var(item, hash->allocator, SFO_hash_symlink_item_t);
-        item->next = list->first_item;
-        item->key = key;
-        item->val = val;
-        item->hash_value = hash_value;
-        list->first_item = item;
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
-        item->secondary_hash_value = secondary_hash_value;
-#endif
-    }
-    else
     {
         /* Put the new element at the end of the list */
         fcs_compact_alloc_into_var(item, hash->allocator, SFO_hash_symlink_item_t);
@@ -259,25 +230,12 @@ static void SFO_hash_rehash(
 {
     int old_size, new_size, new_size_bitmask;
     int i;
-#if 0
-    SFO_hash_t * new_hash;
-#endif
     SFO_hash_symlink_item_t * item, * next_item;
     int place;
     SFO_hash_symlink_t * new_entries;
 
     old_size = hash->size;
 
-#if 0
-    /* Allocate a new hash with hash_init() */
-    new_hash = fc_solve_hash_init_proto(
-        old_size * 2,
-        hash->compare_function,
-        hash->context
-        );
-#endif
-
-    old_size = hash->size;
     new_size = old_size << 1;
     new_size_bitmask = new_size - 1;
 
@@ -312,9 +270,6 @@ static void SFO_hash_rehash(
     free(hash->entries);
 
     /* Copy the new hash to the old one */
-#if 0
-    *hash = *new_hash;
-#endif
     hash->entries = new_entries;
     hash->size = new_size;
     hash->size_bitmask = new_size_bitmask;

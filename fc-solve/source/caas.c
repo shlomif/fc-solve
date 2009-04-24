@@ -144,11 +144,10 @@ static void GCC_INLINE fc_solve_cache_stacks(
                     (ub1 *)new_state_key->stacks[a],
                     (fcs_stack_len(*new_state_key, a)+1),
                     24
-                    ),
+                    )
 #ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
-                hash_value_int,
+                , hash_value_int
 #endif
-                0
                 );
 
             replace_with_cached(verdict);
@@ -422,11 +421,10 @@ GCC_INLINE int fc_solve_check_and_add_state(
             (ub1 *)new_state_key,
             sizeof(*new_state_key),
             24
-            ),
+            )
 #ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
-        hash_value_int,
+        , hash_value_int
 #endif
-        0
         ) == 0);
         if (! is_state_new)
         {

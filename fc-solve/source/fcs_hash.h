@@ -109,11 +109,10 @@ int fc_solve_hash_insert(
     void * val,
     void * * existing_key,
     void * * existing_val,
-    SFO_hash_value_t hash_value,
+    SFO_hash_value_t hash_value
 #ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
-    SFO_hash_value_t secondary_hash_value,
+    , SFO_hash_value_t secondary_hash_value
 #endif
-    int optimize_for_caching
     );
 
 
