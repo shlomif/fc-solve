@@ -76,7 +76,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
 {
     int a;
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-#ifndef FCS_STATE_STORAGE_INTERNAL_HASH
+#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
     SFO_hash_value_t hash_value_int;
 #endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
