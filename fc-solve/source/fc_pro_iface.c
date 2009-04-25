@@ -350,6 +350,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             {
                                 fcs_extended_move_t ext_move;
                                 ext_move.move = move;
+                                /* Stub value to settle gcc. Isn't used. */
+                                ext_move.to_empty_stack = 0;
                                                             
                                 moves_processed_add_new_move(ret, ext_move);
                             }
@@ -374,7 +376,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             {
                                 fcs_extended_move_t ext_move;
                                 ext_move.move = move;
-                                                            
+                                /* Stub value to settle gcc. Isn't used. */
+                                ext_move.to_empty_stack = 0;
+
                                 moves_processed_add_new_move(ret, ext_move);
                             }
                             pos.foundations[pos.hold[src] >> 4]++;
@@ -398,6 +402,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             {
                                 fcs_extended_move_t ext_move;
                                 ext_move.move = move;
+                                /* Stub value to settle gcc. Isn't used. */
+                                ext_move.to_empty_stack = 0;
+
                                 moves_processed_add_new_move(ret, ext_move);
                             }
                             pos.tableau[dest].cards[pos.tableau[dest].count++] = pos.hold[src];
@@ -422,7 +429,11 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         {
                             {
                                 fcs_extended_move_t ext_move;
+
                                 ext_move.move = move;
+                                /* Stub value to settle gcc. Isn't used. */
+                                ext_move.to_empty_stack = 0;
+
                                 moves_processed_add_new_move(ret, ext_move);
                             }
                             pos.hold[dest] = pos.tableau[src].cards[--pos.tableau[src].count];
