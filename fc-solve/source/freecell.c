@@ -117,6 +117,8 @@ int fc_solve_sfs_check_state_end(
     int calc_real_depth;
     int scans_synergy;
 
+    temp_move = fc_solve_empty_move;
+
     hard_thread = soft_thread->hard_thread;
     instance = hard_thread->instance;
     calc_real_depth = instance->calc_real_depth;
@@ -221,6 +223,8 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
     stacks_num = instance->stacks_num;
 #endif
 
+    temp_move = fc_solve_empty_move;
+
     for( stack=0 ; stack < LOCAL_STACKS_NUM ; stack++)
     {
         cards_num = fcs_stack_len(state, stack);
@@ -294,6 +298,8 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
 #endif
+
+    temp_move = fc_solve_empty_move;
 
     /* Now check the same for the free cells */
     for( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
@@ -1003,6 +1009,8 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
+    temp_move = fc_solve_empty_move;
+
     /* We need 2 chars per card - one for the stack and one
      * for the card_idx.
      *
@@ -1281,6 +1289,8 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
+    temp_move = fc_solve_empty_move;
+
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
 #endif
@@ -1535,6 +1545,8 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
+    
+    temp_move = fc_solve_empty_move;
 
     for(fc=0;fc<LOCAL_FREECELLS_NUM;fc++)
     {
@@ -1606,6 +1618,8 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
     int num_vacant_stacks;
 
     tests_define_accessors();
+
+    temp_move = fc_solve_empty_move;
 
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
@@ -1834,6 +1848,8 @@ int fc_solve_sfs_empty_stack_into_freecells(
     {
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
+
+    temp_move = fc_solve_empty_move;
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
@@ -2415,6 +2431,8 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
     int num_vacant_freecells;
 
     tests_define_accessors();
+
+    temp_move = fc_solve_empty_move;
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;

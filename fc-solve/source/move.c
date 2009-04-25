@@ -38,6 +38,8 @@
 
 #include "inline.h"
 
+const fcs_move_t fc_solve_empty_move = {"\0\0\0\0"};
+
 #if 0
 /* This variable was used for debugging. */
 int msc_counter=0;
@@ -286,6 +288,8 @@ void fc_solve_move_stack_normalize(
     char buffer[MAX_NUM_STACKS << 7];
     int a;
 #endif
+
+    out_move = fc_solve_empty_move;
 
 
     fcs_move_stack_alloc_into_var(temp_moves);

@@ -43,6 +43,7 @@ extern "C" {
 #include "state.h"
 #include "fcs_move.h"
 
+extern const fcs_move_t fc_solve_empty_move;
 
 #if 0
 fcs_move_stack_t * fcs_move_stack_create(void);

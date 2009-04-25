@@ -88,6 +88,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_founds(
     stacks_num = instance->stacks_num;
 #endif
 
+    temp_move = fc_solve_empty_move;
 
     for(stack=0;stack<LOCAL_STACKS_NUM;stack++)
     {
