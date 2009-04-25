@@ -96,7 +96,7 @@ int fc_solve_hash_insert(
     void * * existing_key,
     void * * existing_val,
     SFO_hash_value_t hash_value
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     , SFO_hash_value_t secondary_hash_value
 #endif
     )
@@ -119,7 +119,7 @@ int fc_solve_hash_insert(
         item->key = key;
         item->val = val;
         item->hash_value = hash_value;
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         item->secondary_hash_value = secondary_hash_value;
 #endif
 
@@ -139,7 +139,7 @@ int fc_solve_hash_insert(
         */
         if (
             (item->hash_value == hash_value) &&
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
             (item->secondary_hash_value == secondary_hash_value) &&
 #endif
             (!(hash->compare_function(item->key, key, hash->context)))
@@ -164,7 +164,7 @@ int fc_solve_hash_insert(
         item->key = key;
         item->val = val;
         item->hash_value = hash_value;
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         item->secondary_hash_value = secondary_hash_value;
 #endif
     }

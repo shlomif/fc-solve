@@ -76,7 +76,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
 {
     int a;
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     SFO_hash_value_t hash_value_int;
 #endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
@@ -105,7 +105,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
         new_state_key->stacks[a] = new_ptr;
 
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         /* Calculate the hash value for the stack */
         /* This hash function was ripped from the Perl source code.
          * (It is not derived work however). */
@@ -145,7 +145,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
                     (fcs_stack_len(*new_state_key, a)+1),
                     24
                     )
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
                 , hash_value_int
 #endif
                 );
@@ -322,7 +322,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
     )
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     SFO_hash_value_t hash_value_int;
 #endif
 #endif
@@ -357,7 +357,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
   */
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     {
         const char * s_ptr = (char*)new_state_key;
         const char * s_end = s_ptr+sizeof(*new_state_key);
@@ -390,7 +390,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
             sizeof(*new_state_key),
             24
             )
-#ifndef FCS_DISABLE_SECONDARY_HASH_VALUE
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         , hash_value_int
 #endif
         ) == 0);

@@ -112,9 +112,9 @@ SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack
 
 SET (FCS_FREECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell")
 
-SET (FCS_DISABLE_SECONDARY_HASH_VALUE "" 
+SET (FCS_ENABLE_SECONDARY_HASH_VALUE "" 
     CACHE BOOL 
-    "Disable the secondary hash value calculation and track-keeping."
+    "Enable the secondary hash value calculation and track-keeping. Seems to slow things down."
 )
 
 SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )

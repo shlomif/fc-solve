@@ -10,7 +10,7 @@ my $stack_storage;
 my $state_storage;
 my $prefix = "/usr";
 my $freecell_only = 0;
-my $secondary_hash_value = 1;
+my $secondary_hash_value = 0;
 my $build_static_lib = 0;
 
 sub set_both
@@ -84,7 +84,7 @@ my @cmd= ("cmake",
     "-DDATADIR=$prefix/share",
     ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
     ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
-    ($secondary_hash_value ? () : ("-DFCS_DISABLE_SECONDARY_HASH_VALUE=1")),
+    ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
 );
 
 print(join(" ", @cmd), "\n");
