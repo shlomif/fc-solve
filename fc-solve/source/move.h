@@ -125,7 +125,7 @@ extern char * fc_solve_move_to_string_w_state(
         );
 
 typedef struct {
-    fcs_state_extra_info_t * state;
+    fcs_state_extra_info_t * state_ptr;
     union 
     {
         void * ptr;

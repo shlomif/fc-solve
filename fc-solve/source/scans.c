@@ -106,7 +106,7 @@ void fc_solve_derived_states_list_add_state(
         (list)->max_num_states += 16;
         (list)->states = realloc((list)->states, sizeof((list)->states[0]) * (list)->max_num_states);
     }
-    (list)->states[(list)->num_states].state = state_val;
+    (list)->states[(list)->num_states].state_ptr = state_val;
     (list)->states[(list)->num_states++].context.i = context;
 }
 
@@ -462,7 +462,7 @@ int fc_solve_soft_dfs_do_solve(
                         rand_array[
                             the_soft_dfs_info->current_state_index++
                         ]
-                    ].state;
+                    ].state_ptr;
 
                 if (
                     (! (single_derived_state->visited &
@@ -1006,7 +1006,7 @@ int fc_solve_a_star_or_bfs_do_solve(
 
         for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
         {
-            ptr_new_state_val = derived.states[derived_index].state;
+            ptr_new_state_val = derived.states[derived_index].state_ptr;
 
             if (method == FCS_METHOD_A_STAR)
             {
