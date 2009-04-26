@@ -106,6 +106,7 @@ int fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val,
     fcs_state_extra_info_t * ptr_new_state_val,
+    int state_context_value,
     fcs_move_stack_t * moves,
     fcs_derived_states_list_t * derived_states_list
     )
@@ -179,7 +180,7 @@ int fc_solve_sfs_check_state_end(
             fc_solve_derived_states_list_add_state(
                 derived_states_list,
                 existing_state_val,
-                0
+                state_context_value
                 );
         }
         else
@@ -187,7 +188,7 @@ int fc_solve_sfs_check_state_end(
             fc_solve_derived_states_list_add_state(
                 derived_states_list,
                 ptr_new_state_val,
-                0
+                state_context_value
                 );
         }
     }

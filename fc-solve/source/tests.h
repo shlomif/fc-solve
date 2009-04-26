@@ -99,6 +99,7 @@ int fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val,
     fcs_state_extra_info_t * ptr_new_state_val,
+    int state_context_value,
     fcs_move_stack_t * moves,
     fcs_derived_states_list_t * derived_states_list
     );
@@ -106,7 +107,7 @@ int fc_solve_sfs_check_state_end(
 
 #define sfs_check_state_end()                                             \
     { \
-        check = fc_solve_sfs_check_state_end(soft_thread, ptr_state_val, ptr_new_state_val, moves, derived_states_list);                         \
+        check = fc_solve_sfs_check_state_end(soft_thread, ptr_state_val, ptr_new_state_val, state_context_value, moves, derived_states_list);                         \
         if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||                   \
             (check == FCS_STATE_SUSPEND_PROCESS))                            \
         {         \
@@ -190,7 +191,9 @@ int fc_solve_sfs_check_state_end(
     fcs_state_t * ptr_new_state_key; \
     fcs_state_extra_info_t * ptr_new_state_val; \
     fcs_move_stack_t * moves;                                  \
+    int state_context_value;                                  \
     char * indirect_stacks_buffer                             \
+       
 
 #ifdef FCS_FREECELL_ONLY
 
@@ -230,6 +233,7 @@ int fc_solve_sfs_check_state_end(
     instance = hard_thread->instance;                             \
     moves = hard_thread->reusable_move_stack;                     \
     indirect_stacks_buffer = hard_thread->indirect_stacks_buffer; \
+    state_context_value = 0;                                      \
     tests_define_accessors_freecell_only()
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
