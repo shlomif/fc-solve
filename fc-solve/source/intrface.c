@@ -141,7 +141,7 @@ static void soft_thread_clean_soft_dfs(
     void * context
     )
 {
-    int num_solution_states;
+    int max_depth;
     int dfs_max_depth;
     fcs_soft_dfs_stack_item_t * soft_dfs_info, * info_ptr;
     /* Check if a Soft-DFS-type scan was called in the first place */
@@ -152,16 +152,17 @@ static void soft_thread_clean_soft_dfs(
     }
 
     soft_dfs_info = soft_thread->soft_dfs_info;
-    num_solution_states = soft_thread->num_solution_states;
+    max_depth = soft_thread->depth;
     dfs_max_depth = soft_thread->dfs_max_depth;
     /* De-allocate the Soft-DFS specific stacks */
     {
         int depth;
         info_ptr = soft_dfs_info;
-        for(depth=0;depth<num_solution_states-1;depth++)
+        for(depth=0;depth<max_depth;depth++)
         {
             free(info_ptr->derived_states_list.states);
             free(info_ptr->derived_states_random_indexes);
+            free(info_ptr->positions_by_rank);
             info_ptr++;
         }
         for(;depth<dfs_max_depth;depth++)
@@ -233,6 +234,8 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
         soft_thread->a_star_pqueue,
         1024
         );
+
+    soft_thread->a_star_positions_by_rank = NULL;
 
     /* Set the default A* weigths */
     for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)

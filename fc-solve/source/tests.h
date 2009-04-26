@@ -103,6 +103,7 @@ int fc_solve_sfs_check_state_end(
     fcs_derived_states_list_t * derived_states_list
     );
 
+
 #define sfs_check_state_end()                                             \
     { \
         check = fc_solve_sfs_check_state_end(soft_thread, ptr_state_val, ptr_new_state_val, moves, derived_states_list);                         \
@@ -278,6 +279,7 @@ extern int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
         );
+
 
 #ifdef __cplusplus
 }

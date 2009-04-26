@@ -592,6 +592,7 @@ struct fcs_soft_dfs_stack_item_struct
     int num_vacant_freecells;
     int derived_states_random_indexes_max_size;
     int * derived_states_random_indexes;
+    char * positions_by_rank;
 };
 
 typedef struct fcs_soft_dfs_stack_item_struct fcs_soft_dfs_stack_item_t;
@@ -650,6 +651,8 @@ struct fc_solve_soft_thread_struct
     PQUEUE * a_star_pqueue;
     double a_star_initial_cards_under_sequences;
 
+    char * a_star_positions_by_rank;
+
     /*
      * The A* weights of the different A* tests. Those weights determine the
      * commulative weight of the state.
@@ -695,7 +698,7 @@ struct fc_solve_soft_thread_struct
     fcs_soft_dfs_stack_item_t * soft_dfs_info;
 
     /* The depth of the DFS stacks */
-    int num_solution_states;
+    int depth;
 
     /*
      * A pseudo-random number generator for use in the random-DFS scan
@@ -824,6 +827,11 @@ extern int fc_solve_soft_dfs_do_solve(
 
 extern void fc_solve_recycle_instance(
     fc_solve_instance_t * instance
+        );
+
+extern char * fc_solve_get_the_positions_by_rank_data(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_state_extra_info_t * ptr_state_val
         );
 
 #ifdef __cplusplus

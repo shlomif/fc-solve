@@ -584,7 +584,7 @@ int freecell_solver_user_get_current_depth(
 
     user = (fcs_user_t *)user_instance;
 
-    return (user->soft_thread->num_solution_states - 1);
+    return (user->soft_thread->depth);
 }
 
 void freecell_solver_user_set_solving_method(

@@ -89,6 +89,7 @@ static void fc_solve_increase_dfs_max_depth(
         soft_thread->soft_dfs_info[d].derived_states_list.states = NULL;
         soft_thread->soft_dfs_info[d].derived_states_random_indexes = NULL;
         soft_thread->soft_dfs_info[d].derived_states_random_indexes_max_size = 0;
+        soft_thread->soft_dfs_info[d].positions_by_rank = NULL;
     }
 
     soft_thread->dfs_max_depth = new_dfs_max_depth;
@@ -118,7 +119,6 @@ void fc_solve_derived_states_list_add_state(
 #define the_state (*ptr_state_key)
 
 #define myreturn(ret_value) \
-    soft_thread->num_solution_states = depth+1;     \
     return (ret_value);
 
 #ifdef DEBUG
@@ -128,7 +128,7 @@ void fc_solve_derived_states_list_add_state(
             { \
             printf("%s. Depth=%d ; the_soft_Depth=%d ; Iters=%d ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
                     message, \
-                    depth, (the_soft_dfs_info-soft_thread->soft_dfs_info), \
+                    soft_thread->depth, (the_soft_dfs_info-soft_thread->soft_dfs_info), \
                     instance->num_times, the_soft_dfs_info->test_index, \
                     the_soft_dfs_info->current_state_index, \
                     (derived_states_list ? derived_states_list->num_states : -1) \
@@ -150,7 +150,7 @@ void fc_solve_soft_thread_init_soft_dfs(
     /*
         Allocate some space for the states at depth 0.
     */
-    soft_thread->num_solution_states = 1;
+    soft_thread->depth = 0;
 
     fc_solve_increase_dfs_max_depth(soft_thread);
 
@@ -172,7 +172,6 @@ int fc_solve_soft_dfs_do_solve(
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
 
-    int depth;
     fcs_state_t * ptr_state_key;
     fcs_state_extra_info_t * ptr_state_val;
     int a;
@@ -205,14 +204,7 @@ int fc_solve_soft_dfs_do_solve(
     to_reparent_states = instance->to_reparent_states_real;
     scans_synergy = instance->scans_synergy;
 
-
-    /*
-        Set the initial depth to that of the last state encountered.
-    */
-    depth = soft_thread->num_solution_states - 1;
-
-    the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
-
+    the_soft_dfs_info = &(soft_thread->soft_dfs_info[soft_thread->depth]);
 
     dfs_max_depth = soft_thread->dfs_max_depth;
     ptr_state_val = the_soft_dfs_info->state_val;
@@ -226,19 +218,19 @@ int fc_solve_soft_dfs_do_solve(
     /*
         The main loop.
     */
-    while (depth >= 0)
+    while (soft_thread->depth >= 0)
     {
         /*
             Increase the "maximal" depth if it is about to be exceeded.
         */
-        if (depth+1 >= dfs_max_depth)
+        if (soft_thread->depth+1 >= dfs_max_depth)
         {
             fc_solve_increase_dfs_max_depth(soft_thread);
 
             /* Because the address of soft_thread->soft_dfs_info may
              * be changed
              * */
-            the_soft_dfs_info = &(soft_thread->soft_dfs_info[depth]);
+            the_soft_dfs_info = &(soft_thread->soft_dfs_info[soft_thread->depth]);
             dfs_max_depth = soft_thread->dfs_max_depth;
             /* This too has to be re-synced */
             derived_states_list = &(the_soft_dfs_info->derived_states_list);
@@ -262,7 +254,8 @@ int fc_solve_soft_dfs_do_solve(
                     );
                 }
 
-                if (--depth < 0)
+                free(the_soft_dfs_info->positions_by_rank);
+                if (--soft_thread->depth < 0)
                 {
                     break;
                 }
@@ -298,12 +291,12 @@ int fc_solve_soft_dfs_do_solve(
                     instance->debug_iter_output_func(
                         (void*)instance->debug_iter_output_context,
                         instance->num_times,
-                        depth,
+                        soft_thread->depth,
                         (void*)instance,
                         ptr_state_val,
-                        ((depth == 0) ?
+                        ((soft_thread->depth == 0) ?
                             0 :
-                            soft_thread->soft_dfs_info[depth-1].state_val->visited_iter
+                            soft_thread->soft_dfs_info[soft_thread->depth-1].state_val->visited_iter
                         )
                         );
                 }
@@ -495,7 +488,7 @@ int fc_solve_soft_dfs_do_solve(
                         I'm using current_state_indexes[depth]-1 because we already
                         increased it by one, so now it refers to the next state.
                     */
-                    depth++;
+                    soft_thread->depth++;
                     the_soft_dfs_info++;
 
                     the_soft_dfs_info->state_val =
@@ -504,6 +497,7 @@ int fc_solve_soft_dfs_do_solve(
 
                     the_soft_dfs_info->test_index = 0;
                     the_soft_dfs_info->current_state_index = 0;
+                    the_soft_dfs_info->positions_by_rank = NULL;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     derived_states_list->num_states = 0;
 
@@ -530,7 +524,7 @@ int fc_solve_soft_dfs_do_solve(
     instance->num_times++;
     hard_thread->num_times++;
 
-    soft_thread->num_solution_states = 0;
+    soft_thread->depth = -1;
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
@@ -745,7 +739,7 @@ static pq_rating_t fc_solve_a_star_rate_state(
 #endif
 
 /*
-    fc_solve_a_star_or_bfs_do_solve_or_resume() is the main event
+    fc_solve_a_star_or_bfs_do_solve() is the main event
     loop of the A* And BFS scans. It is quite simple as all it does is
     extract elements out of the queue or priority queue and run all the test
     of them.
@@ -763,8 +757,14 @@ static pq_rating_t fc_solve_a_star_rate_state(
     }                                                           \
                                                                 \
     soft_thread->bfs_queue_last_item = bfs_queue_last_item;     \
+    if (soft_thread->a_star_positions_by_rank)                  \
+    {                                                           \
+        free(soft_thread->a_star_positions_by_rank);            \
+        soft_thread->a_star_positions_by_rank = NULL;           \
+    }                                                           \
                                                                 \
     return (ret_value);
+
 
 #undef TRACE0
 
@@ -958,6 +958,11 @@ int fc_solve_a_star_or_bfs_do_solve(
         soft_thread->num_vacant_freecells = num_vacant_freecells;
         soft_thread->num_vacant_stacks = num_vacant_stacks;
 
+        if (soft_thread->a_star_positions_by_rank)
+        {
+            free(soft_thread->a_star_positions_by_rank);
+            soft_thread->a_star_positions_by_rank = NULL;
+        }
 
         TRACE0("perform_tests");
         /* Do all the tests at one go, because that the way it should be
@@ -1075,6 +1080,131 @@ label_next_state:
     }
 
     myreturn(FCS_STATE_IS_NOT_SOLVEABLE);
+}
+
+/*
+ * Calculate, cache and return the positions_by_rank meta-data
+ * about the currently-evaluated state.
+ */
+extern char * fc_solve_get_the_positions_by_rank_data(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_state_extra_info_t * ptr_state_val
+        )
+{
+    char * * positions_by_rank_location;
+    switch(soft_thread->method)
+    {
+        case FCS_METHOD_SOFT_DFS:
+        case FCS_METHOD_RANDOM_DFS:
+            {
+                positions_by_rank_location = &(
+                    soft_thread->soft_dfs_info[
+                        soft_thread->depth
+                    ].positions_by_rank
+                    );
+            }
+            break;
+        default:
+            {
+                positions_by_rank_location = &(
+                        soft_thread->a_star_positions_by_rank
+                        );
+            }
+            break;
+    }
+
+    if (! *positions_by_rank_location)
+    {
+        int positions_by_rank_size;
+        char * positions_by_rank;
+        fcs_card_t dest_below_card, dest_card;
+        int is_seq_in_dest;
+        fc_solve_instance_t * instance;
+        int c, ds, dest_cards_num, dc;
+        fcs_state_t * ptr_state_key;
+
+        ptr_state_key = ptr_state_val->key;
+
+#ifndef HARD_CODED_NUM_DECKS
+        int decks_num;
+#endif
+#ifndef HARD_CODED_NUM_STACKS
+        int stacks_num;
+#endif
+#ifndef FCS_FREECELL_ONLY
+        int sequences_are_built_by;
+#endif
+
+        instance = soft_thread->hard_thread->instance;
+
+#ifndef HARD_CODED_NUM_DECKS
+        decks_num = instance->decks_num;
+#endif
+#ifndef HARD_CODED_NUM_STACKS
+        stacks_num = instance->stacks_num;
+#endif
+#ifndef FCS_FREECELL_ONLY
+        sequences_are_built_by = instance->sequences_are_built_by;
+#endif
+        /* We need 2 chars per card - one for the stack and one
+         * for the card_idx.
+         *
+         * We also need it times 13 for each of the ranks.
+         *
+         * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+         * (-1,-1) (= end) padding.
+         * */
+        positions_by_rank_size =
+            (sizeof(positions_by_rank[0]) * 2 * 13) *
+            ((LOCAL_DECKS_NUM << 2) + 1)
+            ;
+
+        positions_by_rank = malloc(positions_by_rank_size);
+
+        memset(positions_by_rank, -1, positions_by_rank_size);
+
+        {
+            char * positions_by_rank_slots[13];
+
+            /* Initialize the pointers to the first available slots */
+            for(c=0;c<13;c++)
+            {
+                positions_by_rank_slots[c] = &positions_by_rank[
+                    (((LOCAL_DECKS_NUM << 2)+1) << 1) * c
+                ];
+            }
+
+            /* Populate positions_by_rank by looping over the stacks and indices
+             * looking for the cards and filling them. */
+
+            for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
+            {
+                dest_cards_num = fcs_stack_len((*ptr_state_key), ds);
+                for(dc=0;dc<dest_cards_num;dc++)
+                {
+                    dest_card = fcs_stack_card(*(ptr_state_key), ds, dc);
+                    is_seq_in_dest = 0;
+                    if (dest_cards_num - 1 > dc)
+                    {
+                        dest_below_card = fcs_stack_card((*ptr_state_key), ds, dc+1);
+                        if (fcs_is_parent_card(dest_below_card, dest_card))
+                        {
+                            is_seq_in_dest = 1;
+                        }
+                    }
+                    if (!is_seq_in_dest)
+                    {
+                        *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = ds;
+                        *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = dc;
+                    }
+                }
+            }
+        }
+
+        *positions_by_rank_location = positions_by_rank;
+    }
+
+    return *positions_by_rank_location;
 }
 
 #undef myreturn

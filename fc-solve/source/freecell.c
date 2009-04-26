@@ -973,10 +973,8 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     int check;
 
     int stack, c, cards_num, a, dc, ds,b;
-
-    int is_seq_in_dest;
     fcs_card_t card, temp_card, this_card, prev_card;
-    fcs_card_t dest_below_card, dest_card;
+    fcs_card_t dest_card;
     int freecells_to_fill, freestacks_to_fill;
     int dest_cards_num, num_cards_to_relocate;
     int seq_end;
@@ -987,7 +985,6 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     int stacks_num;
 #endif
     char * positions_by_rank;
-    int positions_by_rank_size;
     char * pos_idx_to_check;
 #ifndef HARD_CODED_NUM_DECKS
     int decks_num;
@@ -1013,60 +1010,11 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
     temp_move = fc_solve_empty_move;
 
-    /* We need 2 chars per card - one for the stack and one
-     * for the card_idx.
-     *
-     * We also need it times 13 for each of the ranks.
-     *
-     * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
-     * (-1,-1) (= end) padding.
-     * */
-    positions_by_rank_size =
-        (sizeof(positions_by_rank[0]) * 2 * 13) *
-        ((LOCAL_DECKS_NUM << 2) + 1)
-        ;
-
-    positions_by_rank = malloc(positions_by_rank_size);
-
-    memset(positions_by_rank, -1, positions_by_rank_size);
-
-    {
-        char * positions_by_rank_slots[13];
-
-        /* Initialize the pointers to the first available slots */
-        for(c=0;c<13;c++)
-        {
-            positions_by_rank_slots[c] = &positions_by_rank[
-                (((LOCAL_DECKS_NUM << 2)+1) << 1) * c
-            ];
-        }
-
-        /* Populate positions_by_rank by looping over the stacks and indices
-         * looking for the cards and filling them. */
-
-        for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
-        {
-            dest_cards_num = fcs_stack_len(state, ds);
-            for(dc=0;dc<dest_cards_num;dc++)
-            {
-                dest_card = fcs_stack_card(state, ds, dc);
-                is_seq_in_dest = 0;
-                if (dest_cards_num - 1 > dc)
-                {
-                    dest_below_card = fcs_stack_card(state, ds, dc+1);
-                    if (fcs_is_parent_card(dest_below_card, dest_card))
-                    {
-                        is_seq_in_dest = 1;
-                    }
-                }
-                if (!is_seq_in_dest)
-                {
-                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = ds;
-                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = dc;
-                }
-            }
-        }
-    }
+    positions_by_rank = 
+        fc_solve_get_the_positions_by_rank_data(
+            soft_thread,
+            ptr_state_val
+        );
 
     /* Now let's try to move a card from one stack to the other     *
      * Note that it does not involve moving cards lower than king   *
@@ -1117,8 +1065,8 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                 ;
                )
             {
-                ds = *(pos_idx_to_check)++;
-                dc = *(pos_idx_to_check)++;
+                ds = *(pos_idx_to_check++);
+                dc = *(pos_idx_to_check++);
 
                 if (ds == stack)
                 {
@@ -1252,8 +1200,6 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
             }
         }
     }
-
-    free (positions_by_rank);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
