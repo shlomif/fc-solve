@@ -96,7 +96,8 @@ static void fc_solve_increase_dfs_max_depth(
 
 void fc_solve_derived_states_list_add_state(
         fcs_derived_states_list_t * list,
-        fcs_state_extra_info_t * state_val
+        fcs_state_extra_info_t * state_val,
+        int context
         )
 {
     if ((list)->num_states == (list)->max_num_states)
@@ -104,7 +105,8 @@ void fc_solve_derived_states_list_add_state(
         (list)->max_num_states += 16;
         (list)->states = realloc((list)->states, sizeof((list)->states[0]) * (list)->max_num_states);
     }
-    (list)->states[(list)->num_states++] = state_val;
+    (list)->states[(list)->num_states].state = state_val;
+    (list)->states[(list)->num_states++].context.i = context;
 }
 
 /*
@@ -455,7 +457,7 @@ int fc_solve_soft_dfs_do_solve(
 
         {
             int num_states = derived_states_list->num_states;
-            fcs_state_extra_info_t * * derived_states =
+            fcs_derived_states_list_item_t * derived_states =
                 derived_states_list->states;
             int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
             fcs_state_extra_info_t * single_derived_state;
@@ -467,7 +469,7 @@ int fc_solve_soft_dfs_do_solve(
                         rand_array[
                             the_soft_dfs_info->current_state_index++
                         ]
-                    ];
+                    ].state;
 
                 if (
                     (! (single_derived_state->visited &
@@ -540,8 +542,6 @@ int fc_solve_soft_dfs_do_solve(
 #define FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
 #define FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
 
-#define state (*ptr_state_key)
-
 static void initialize_a_star_rater(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val
@@ -563,22 +563,22 @@ static void initialize_a_star_rater(
     cards_under_sequences = 0;
     for(a=0;a<INSTANCE_STACKS_NUM;a++)
     {
-        cards_num = fcs_stack_len(state, a);
+        cards_num = fcs_stack_len((*ptr_state_key), a);
         if (cards_num <= 1)
         {
             continue;
         }
 
         c = cards_num-2;
-        this_card = fcs_stack_card(state, a, c+1);
-        prev_card = fcs_stack_card(state, a, c);
+        this_card = fcs_stack_card((*ptr_state_key), a, c+1);
+        prev_card = fcs_stack_card(*(ptr_state_key), a, c);
         while (fcs_is_parent_card(this_card,prev_card) && (c >= 0))
         {
             c--;
             this_card = prev_card;
             if (c>=0)
             {
-                prev_card = fcs_stack_card(state, a, c);
+                prev_card = fcs_stack_card(*(ptr_state_key), a, c);
             }
         }
         cards_under_sequences += pow(c+1, FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT);
@@ -647,7 +647,7 @@ static pq_rating_t fc_solve_a_star_rate_state(
     seqs_over_renegade_cards = 0;
     for(a=0;a<LOCAL_STACKS_NUM;a++)
     {
-        cards_num = fcs_stack_len(state, a);
+        cards_num = fcs_stack_len(*(ptr_state_key), a);
         if (cards_num == 0)
         {
             num_vacant_stacks++;
@@ -659,15 +659,15 @@ static pq_rating_t fc_solve_a_star_rate_state(
         }
 
         c = cards_num-2;
-        this_card = fcs_stack_card(state, a, c+1);
-        prev_card = fcs_stack_card(state, a, c);
+        this_card = fcs_stack_card((*ptr_state_key), a, c+1);
+        prev_card = fcs_stack_card((*ptr_state_key), a, c);
         while ((c >= 0) && fcs_is_parent_card(this_card,prev_card))
         {
             c--;
             this_card = prev_card;
             if (c>=0)
             {
-                prev_card = fcs_stack_card(state, a, c);
+                prev_card = fcs_stack_card((*ptr_state_key), a, c);
             }
         }
         cards_under_sequences += pow(c+1, FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT);
@@ -691,7 +691,7 @@ static pq_rating_t fc_solve_a_star_rate_state(
     num_cards_in_founds = 0;
     for(a=0;a<(LOCAL_DECKS_NUM<<2);a++)
     {
-        num_cards_in_founds += fcs_foundation_value(state, a);
+        num_cards_in_founds += fcs_foundation_value((*ptr_state_key), a);
     }
 
     ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * a_star_weights[FCS_A_STAR_WEIGHT_CARDS_OUT];
@@ -699,7 +699,7 @@ static pq_rating_t fc_solve_a_star_rate_state(
     num_vacant_freecells = 0;
     for(a=0;a<LOCAL_FREECELLS_NUM;a++)
     {
-        if (fcs_freecell_card_num(state,a) == 0)
+        if (fcs_freecell_card_num((*ptr_state_key),a) == 0)
         {
             num_vacant_freecells++;
         }
@@ -898,7 +898,7 @@ int fc_solve_a_star_or_bfs_do_solve(
         num_vacant_freecells = 0;
         for(a=0;a<LOCAL_FREECELLS_NUM;a++)
         {
-            if (fcs_freecell_card_num(state, a) == 0)
+            if (fcs_freecell_card_num((*ptr_state_key), a) == 0)
             {
                 num_vacant_freecells++;
             }
@@ -909,7 +909,7 @@ int fc_solve_a_star_or_bfs_do_solve(
         num_vacant_stacks = 0;
         for(a=0;a<LOCAL_STACKS_NUM;a++)
         {
-            if (fcs_stack_len(state, a) == 0)
+            if (fcs_stack_len((*ptr_state_key), a) == 0)
             {
                 num_vacant_stacks++;
             }
@@ -1001,7 +1001,7 @@ int fc_solve_a_star_or_bfs_do_solve(
 
         for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
         {
-            ptr_new_state_val = derived.states[derived_index];
+            ptr_new_state_val = derived.states[derived_index].state;
 
             if (method == FCS_METHOD_A_STAR)
             {
@@ -1078,5 +1078,3 @@ label_next_state:
 }
 
 #undef myreturn
-
-#undef state

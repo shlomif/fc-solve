@@ -124,11 +124,21 @@ extern char * fc_solve_move_to_string_w_state(
         int standard_notation
         );
 
+typedef struct {
+    fcs_state_extra_info_t * state;
+    union 
+    {
+        void * ptr;
+        int i;
+        char c[sizeof(void*)/sizeof(char)];
+    } context;
+} fcs_derived_states_list_item_t;
+
 struct fcs_derived_states_list_struct
 {
     int num_states;
     int max_num_states;
-    fcs_state_extra_info_t * * states;
+    fcs_derived_states_list_item_t * states;
 };
 
 typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
@@ -178,7 +188,8 @@ typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
 
 extern void fc_solve_derived_states_list_add_state(
         fcs_derived_states_list_t * list,
-        fcs_state_extra_info_t * state_val
+        fcs_state_extra_info_t * state_val,
+        int context
         );
 
 #ifdef __cplusplus

@@ -178,14 +178,16 @@ int fc_solve_sfs_check_state_end(
             }
             fc_solve_derived_states_list_add_state(
                 derived_states_list,
-                existing_state_val
+                existing_state_val,
+                0
                 );
         }
         else
         {
             fc_solve_derived_states_list_add_state(
                 derived_states_list,
-                ptr_new_state_val
+                ptr_new_state_val,
+                0
                 );
         }
     }
