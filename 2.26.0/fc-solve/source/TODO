@@ -1,0 +1,56 @@
+--- Pressing ---
+
+--- Non-pressing ---
+
+* Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 
+sfs_check_state_end() ) to functions, and see if it actually makes it faster.
+
+* Interactive mode? Continue a scan that reached its limit.
+
+* Convert some of the documentation to Perl-POD or DocBook.
+
+* Find a way to update the ChangeLog from the svn.
+
+* Put the rest of the news (from http://fc-solve.berlios.de/ ) inside the
+NEWS file.
+
+* Add support for specifying the "compact states" and "debug states"
+at compile time.
+    - Document in the "INSTALL" file.
+
+* Investigate ways to perform more pointer arithematics and 
+(ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
+
+* In the states handling, there's still some room for pointer arithmetics.
+
+--- Long-term ---
+
+* Code a generic tests grouping.
+
+* Integrate the patsolve's prioritization and mixed BFS/DFS scan.
+
+* Update the architecture document.
+
+* Make a super-strict parsable-output without all the quirks of
+-p -t (see Games-Solitaire-Verify for why).
+
+* Write a multi-threaded version.
+
+* Port to Java (?)
+
+* Add a switch to ask the user if he wants to continue and enter a bigger 
+iterations limit.
+
+* Check for unmalloced data and if so gracefully exit.
+
+* Experiment with a delta-based state storage.
+
+--- To be considered ---
+
+* Make the code splint-clean. ( https://sourceforge.net/projects/splint/ )
+
+* Write a multi-process client/server program.
+
+* Add a limit to stacks number (in the case of Indirect Stack States),
+number of states that are stored anywhere, etc.
+

@@ -1,0 +1,21 @@
+*** patience.tcl.orig	Sat Jul  4 15:59:01 1998
+--- patience.tcl	Sat Jul  4 16:02:25 1998
+***************
+*** 691,703 ****
+--- 691,706 ----
+          }
+          set fuelle($hand) 0
+          set nochDa [llength $karten]
++         set handfile [open "/tmp/hand" "w"]
+          while {$nochDa > 0} {
+            set oben [unifRand $nochDa] 
++           puts $handfile "[lindex $karten $oben]"
+            set stapel($hand,$fuelle($hand)) [lindex $karten $oben]
+            set karten [lreplace $karten $oben $oben]
+            incr fuelle($hand)
+            incr nochDa -1
+          }
++         close $handfile
+        }
+      }
+      proc mkMenue {} {
