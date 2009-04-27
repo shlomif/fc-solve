@@ -111,6 +111,7 @@ SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_INTERNAL_HASH" CACHE STRING "The State
 SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack Storage Type")
 
 SET (FCS_FREECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell")
+SET (FCS_WITH_TEST_SUITE "" CACHE BOOL "Also build and run the test suite.")
 
 SET (FCS_ENABLE_SECONDARY_HASH_VALUE "" 
     CACHE BOOL 
@@ -356,9 +357,3 @@ ADD_CUSTOM_TARGET(
     DEPENDS ${BOARDS}
 )
 
-ENABLE_TESTING()
-
-ADD_TEST(
-    tap-tests
-    perl run-tests.pl
-)

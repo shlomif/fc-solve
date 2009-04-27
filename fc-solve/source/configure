@@ -85,6 +85,7 @@ my @cmd= ("cmake",
     ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
     ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
     ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
+    "-DFCS_WITH_TEST_SUITE=1",
 );
 
 print(join(" ", @cmd), "\n");

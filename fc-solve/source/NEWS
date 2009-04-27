@@ -25,6 +25,9 @@ involved a lot of refactoring and re-structuring of the internals. Now
 Freecell Solver is significantly faster.
     - http://tech.groups.yahoo.com/group/fc-solve-discuss/message/943
 
+8. Fixed the testing targets and the building of the rpm from the tar.gz
+archive.
+
 Version 2.24.0 (18-Apr-2009)
 ----------------------------
 
