@@ -1617,7 +1617,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
     int num_cards_to_relocate;
     int dest_cards_num;
     fcs_card_t card, temp_card, upper_card, lower_card;
-    fcs_card_t dest_card, dest_below_card;
+    fcs_card_t dest_card;
     int freecells_to_fill, freestacks_to_fill;
 
     fcs_move_t temp_move;
@@ -1746,8 +1746,10 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
                 is_seq_in_dest = 0;
                 if (dest_cards_num - 1 > dc)
                 {
-                    dest_below_card = fcs_stack_card(state, ds, dc+1);
-                    if (fcs_is_parent_card(dest_below_card,dest_card))
+                    if (fcs_is_parent_card(
+                            fcs_stack_card(state, ds, dc+1),
+                            dest_card
+                        ))
                     {
                         is_seq_in_dest = 1;
                     }
