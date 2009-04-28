@@ -126,14 +126,6 @@ typedef int fcs_locs_t;
 #define fcs_foundation_value(state, found) \
     ( (state).foundations[(found)] )
 
-
-#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
-    { \
-    *(ptr_dest_key) = *(ptr_src_key); \
-    *(ptr_dest_val) = *(ptr_src_val); \
-    (ptr_dest_val)->key = ptr_dest_key; \
-    }
-
 #define fcs_put_card_in_freecell(state, f, card) \
     (state).freecells[(f)] = (card)
 
@@ -249,13 +241,6 @@ typedef char fcs_locs_t;
 
 #define fcs_foundation_value(state, d) \
     ( (state).data[FCS_FOUNDATIONS_OFFSET+(d)])
-
-#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
-    { \
-    *(ptr_dest_key) = *(ptr_src_key); \
-    *(ptr_dest_val) = *(ptr_src_val); \
-    (ptr_dest_val)->key = ptr_dest_key; \
-    }
 
 #define fcs_put_card_in_freecell(state, f, card) \
     (state).data[FCS_FREECELLS_OFFSET+(f)] = (card);
