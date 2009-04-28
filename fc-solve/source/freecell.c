@@ -1742,15 +1742,18 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
                 /* Corresponding cards - see if it is feasible to move
                    the source to the destination. */
 
-                if (dest_cards_num - 1 > dc)
+                /* Don't move if there's a sequence of cards in the
+                 * destination. 
+                 * */
+                if ((dc + 1 < dest_cards_num)
+                        && 
+                    fcs_is_parent_card(
+                        fcs_stack_card(state, ds, dc+1),
+                        dest_card
+                    )
+                   )
                 {
-                    if (fcs_is_parent_card(
-                            fcs_stack_card(state, ds, dc+1),
-                            dest_card
-                        ))
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
                 num_cards_to_relocate = dest_cards_num - dc - 1;
