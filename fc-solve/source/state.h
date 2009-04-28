@@ -263,12 +263,6 @@ typedef struct fcs_struct_state_with_locations_t fcs_state_with_locations_t;
 #endif
 typedef char fcs_locs_t;
 
-#define fcs_card_card_num(card) \
-    ( (card) & 0x0F )
-
-#define fcs_card_suit(card) \
-    ( ((card) >> 4) & 0x03 )
-
 #define fcs_stack_len(state, s) \
     ( (state).data[s*(MAX_NUM_CARDS_IN_A_STACK+1)] )
 
@@ -377,12 +371,6 @@ struct fcs_struct_state_t
 };
 
 typedef struct fcs_struct_state_t fcs_state_t;
-
-#define fcs_card_card_num(card) \
-    ( (card) & 0x0F )
-
-#define fcs_card_suit(card) \
-    ( ((card) >> 4) & 0x03 )
 
 #define fcs_card_get_flipped(card) \
     ( (card) >> 6 )
@@ -498,6 +486,18 @@ typedef char fcs_locs_t;
 
 #define fcs_stack_card_suit(state, s, c) \
     ( fcs_card_suit(fcs_stack_card((state),(s),(c))) )
+
+/* These are macros that are common to COMPACT_STATES and 
+ * INDIRECT_STACK_STATES */
+#if defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
+
+#define fcs_card_card_num(card) \
+    ( (card) & 0x0F )
+
+#define fcs_card_suit(card) \
+    ( ((card) >> 4) & 0x03 )
+
+#endif
 
 /* Commenting out so the API will be broken - we're now using key/value
  * pairs.
