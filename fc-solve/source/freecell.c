@@ -1650,7 +1650,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
     {
         cards_num = fcs_stack_len(state, stack);
 
-        for (c=0 ; c<cards_num ; c++)
+        for (c=1 ; c<cards_num ; c++)
         {
             /* Check if there is a sequence here. */
             for(a=c+1 ; a<cards_num ; a++)
@@ -1686,27 +1686,12 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
             card = fcs_stack_card(state, stack, c);
 
-
-            /* Do not move cards that are already found above a suitable parent */
-            a = 1;
-            if (c != 0)
-            {
-                prev_card = fcs_stack_card(state, stack, c-1);
-                if (fcs_is_parent_card(card,prev_card))
-                {
-                   a = 0;
-                }
-            }
-            /* And do not move cards that are flipped */
-            if (!a)
-            {
-                this_card = fcs_stack_card(state,stack,c);
-                if (fcs_card_get_flipped(this_card))
-                {
-                    a = 0;
-                }
-            }
-            if (!a)
+            /* Only move cards that are already found above a suitable 
+             * parent. And do not move cards that are flipped.
+             * */
+            if (fcs_is_parent_card(card, fcs_stack_card(state, stack, c-1))
+                && (! fcs_card_get_flipped(card))
+               )
             {
                 for(ds=0 ; ds<LOCAL_STACKS_NUM; ds++)
                 {
