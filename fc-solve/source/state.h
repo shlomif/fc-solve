@@ -111,12 +111,6 @@ typedef int fcs_locs_t;
 #define fcs_stack_card(state, s, c) \
     ( (state).stacks[(s)].cards[(c)] )
 
-#define fcs_stack_card_suit(state, s, c) \
-    ( fcs_card_suit(fcs_stack_card((state),(s),(c))) )
-
-#define fcs_stack_card_num(state, s, c) \
-    ( fcs_card_card_num(fcs_stack_card((state),(s),(c))) )
-
 #define fcs_card_card_num(card) \
     ( (card).card_num )
 
@@ -281,11 +275,6 @@ typedef char fcs_locs_t;
 #define fcs_stack_card(state, s, c) \
     ( (state).data[(s)*(MAX_NUM_CARDS_IN_A_STACK+1)+(c)+1] )
 
-#define fcs_stack_card_num(state, s, c) \
-    ( fcs_card_card_num(fcs_stack_card((state),(s),(c))) )
-
-#define fcs_stack_card_suit(state, s, c) \
-    ( fcs_card_suit(fcs_stack_card((state),(s),(c))) )
 
 #define FCS_FREECELLS_OFFSET ((MAX_NUM_STACKS)*(MAX_NUM_CARDS_IN_A_STACK+1))
 
@@ -407,12 +396,6 @@ typedef struct fcs_struct_state_t fcs_state_t;
 #define fcs_stack_card(state, s, c) \
     ( (state).stacks[(s)][c+1] )
 
-#define fcs_stack_card_num(state, s, c) \
-    ( fcs_card_card_num(fcs_stack_card((state),(s),(c))) )
-
-#define fcs_stack_card_suit(state, s, c) \
-    ( fcs_card_suit(fcs_stack_card((state),(s),(c))) )
-
 #define fcs_freecell_card(state, f) \
     ( (state).freecells[(f)] )
 
@@ -507,6 +490,14 @@ typedef char fcs_locs_t;
           #elif defined COMPACT_STATES -
           #elif defined INDIRECT_STACK_STATES
         */
+
+/* These are macros that are common to all three _STATES types. */
+
+#define fcs_stack_card_num(state, s, c) \
+    ( fcs_card_card_num(fcs_stack_card((state),(s),(c))) )
+
+#define fcs_stack_card_suit(state, s, c) \
+    ( fcs_card_suit(fcs_stack_card((state),(s),(c))) )
 
 /* Commenting out so the API will be broken - we're now using key/value
  * pairs.
