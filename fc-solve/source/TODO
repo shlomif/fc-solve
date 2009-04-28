@@ -2,6 +2,12 @@
 
 --- Non-pressing ---
 
+* Make DEBUG_STATES and COMPACT_STATES functional again.
+    - extract some common macros in all places.
+
+* Create a first-class-citizen fcs_state_column_t and convert fcs_stack_len(),
+fcs_stack_card(), etc. to use them.
+
 * Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 
 sfs_check_state_end() ) to functions, and see if it actually makes it faster.
 
