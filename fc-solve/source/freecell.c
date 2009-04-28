@@ -1613,7 +1613,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
     int check;
 
     int stack, cards_num, c, a, b, ds, dc;
-    int is_seq_in_src, is_seq_in_dest;
+    int is_seq_in_dest;
     int num_cards_to_relocate;
     int dest_cards_num;
     fcs_card_t card, this_card, prev_card, temp_card;
@@ -1653,7 +1653,6 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
         for (c=0 ; c<cards_num ; c++)
         {
             /* Check if there is a sequence here. */
-            is_seq_in_src = 1;
             for(a=c+1 ; a<cards_num ; a++)
             {
                 this_card = fcs_stack_card(state, stack, a);
@@ -1664,9 +1663,23 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
                 }
                 else
                 {
-                    is_seq_in_src = 0;
+                    /* 
+                     * There isn't a sequence - we can skip, this 
+                     * "c"-var-based card.
+                     *
+                     * I wish C had Perl's "next LABEL;"
+                     * */
                     break;
                 }
+            }
+
+            /*
+             * There isn't a sequence - we can skip, this 
+             * "c"-var-based card.
+             * */
+            if (a < cards_num)
+            {
+                continue;
             }
 
             /* Find a card which this card can be put on; */
@@ -1721,102 +1734,99 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
                                 if (! is_seq_in_dest)
                                 {
-                                    if (is_seq_in_src)
+                                    num_cards_to_relocate = dest_cards_num - dc - 1;
+
+                                    freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
+
+                                    num_cards_to_relocate -= freecells_to_fill;
+
+                                    if (tests__is_filled_by_any_card())
                                     {
-                                        num_cards_to_relocate = dest_cards_num - dc - 1;
+                                        freestacks_to_fill = min(num_cards_to_relocate, num_vacant_stacks);
 
-                                        freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
+                                        num_cards_to_relocate -= freestacks_to_fill;
+                                    }
+                                    else
+                                    {
+                                        freestacks_to_fill = 0;
+                                    }
 
-                                        num_cards_to_relocate -= freecells_to_fill;
+                                    if ((num_cards_to_relocate == 0) &&
+                                       (calc_max_sequence_move(num_vacant_freecells-freecells_to_fill, num_vacant_stacks-freestacks_to_fill) >=
+                                        cards_num - c))
+                                    {
+                                        /* We can move it */
 
-                                        if (tests__is_filled_by_any_card())
+                                        sfs_check_state_begin()
+
+
+                                        /* Fill the freecells with the top cards */
+
+                                        my_copy_stack(ds);
+                                        for(a=0 ; a<freecells_to_fill ; a++)
                                         {
-                                            freestacks_to_fill = min(num_cards_to_relocate, num_vacant_stacks);
-
-                                            num_cards_to_relocate -= freestacks_to_fill;
-                                        }
-                                        else
-                                        {
-                                            freestacks_to_fill = 0;
-                                        }
-
-                                        if ((num_cards_to_relocate == 0) &&
-                                           (calc_max_sequence_move(num_vacant_freecells-freecells_to_fill, num_vacant_stacks-freestacks_to_fill) >=
-                                            cards_num - c))
-                                        {
-                                            /* We can move it */
-
-                                            sfs_check_state_begin()
-
-
-                                            /* Fill the freecells with the top cards */
-
-                                            my_copy_stack(ds);
-                                            for(a=0 ; a<freecells_to_fill ; a++)
+                                            /* Find a vacant freecell */
+                                            for(b=0;b<LOCAL_FREECELLS_NUM;b++)
                                             {
-                                                /* Find a vacant freecell */
-                                                for(b=0;b<LOCAL_FREECELLS_NUM;b++)
+                                                if (fcs_freecell_card_num(new_state, b) == 0)
                                                 {
-                                                    if (fcs_freecell_card_num(new_state, b) == 0)
-                                                    {
-                                                        break;
-                                                    }
+                                                    break;
                                                 }
-
-                                                fcs_pop_stack_card(new_state, ds, temp_card);
-
-                                                fcs_put_card_in_freecell(new_state, b, temp_card);
-
-                                                fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
-                                                fcs_move_set_src_stack(temp_move,ds);
-                                                fcs_move_set_dest_freecell(temp_move,b);
-                                                fcs_move_stack_push(moves, temp_move);
                                             }
 
-                                            /* Fill the free stacks with the cards below them */
-                                            for(a=0; a < freestacks_to_fill ; a++)
+                                            fcs_pop_stack_card(new_state, ds, temp_card);
+
+                                            fcs_put_card_in_freecell(new_state, b, temp_card);
+
+                                            fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
+                                            fcs_move_set_src_stack(temp_move,ds);
+                                            fcs_move_set_dest_freecell(temp_move,b);
+                                            fcs_move_stack_push(moves, temp_move);
+                                        }
+
+                                        /* Fill the free stacks with the cards below them */
+                                        for(a=0; a < freestacks_to_fill ; a++)
+                                        {
+                                            /*  Find a vacant stack */
+                                            for(b=0;b<LOCAL_STACKS_NUM;b++)
                                             {
-                                                /*  Find a vacant stack */
-                                                for(b=0;b<LOCAL_STACKS_NUM;b++)
+                                                if (fcs_stack_len(new_state, b) == 0)
                                                 {
-                                                    if (fcs_stack_len(new_state, b) == 0)
-                                                    {
-                                                        break;
-                                                    }
+                                                    break;
                                                 }
-
-                                                my_copy_stack(b);
-
-                                                fcs_pop_stack_card(new_state, ds, temp_card);
-                                                fcs_push_card_into_stack(new_state, b, temp_card);
-
-                                                fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
-                                                fcs_move_set_src_stack(temp_move,ds);
-                                                fcs_move_set_dest_stack(temp_move,b);
-                                                fcs_move_set_num_cards_in_seq(temp_move,1);
-                                                fcs_move_stack_push(moves, temp_move);
                                             }
 
-                                            my_copy_stack(stack);
+                                            my_copy_stack(b);
 
-                                            for(a=c ; a <= cards_num-1 ; a++)
-                                            {
-                                                fcs_push_stack_card_into_stack(new_state, ds, stack, a);
-                                            }
-
-                                            for(a=0;a<cards_num-c;a++)
-                                            {
-                                                fcs_pop_stack_card(new_state, stack, temp_card);
-                                            }
+                                            fcs_pop_stack_card(new_state, ds, temp_card);
+                                            fcs_push_card_into_stack(new_state, b, temp_card);
 
                                             fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
-                                            fcs_move_set_src_stack(temp_move,stack);
-                                            fcs_move_set_dest_stack(temp_move,ds);
-                                            fcs_move_set_num_cards_in_seq(temp_move,cards_num-c);
+                                            fcs_move_set_src_stack(temp_move,ds);
+                                            fcs_move_set_dest_stack(temp_move,b);
+                                            fcs_move_set_num_cards_in_seq(temp_move,1);
                                             fcs_move_stack_push(moves, temp_move);
-
-                                            sfs_check_state_end()
                                         }
+
+                                        my_copy_stack(stack);
+
+                                        for(a=c ; a <= cards_num-1 ; a++)
+                                        {
+                                            fcs_push_stack_card_into_stack(new_state, ds, stack, a);
+                                        }
+
+                                        for(a=0;a<cards_num-c;a++)
+                                        {
+                                            fcs_pop_stack_card(new_state, stack, temp_card);
+                                        }
+
+                                        fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
+                                        fcs_move_set_src_stack(temp_move,stack);
+                                        fcs_move_set_dest_stack(temp_move,ds);
+                                        fcs_move_set_num_cards_in_seq(temp_move,cards_num-c);
+                                        fcs_move_stack_push(moves, temp_move);
+
+                                        sfs_check_state_end()
                                     }
                                 }
                             }
