@@ -126,9 +126,6 @@ typedef int fcs_locs_t;
 #define fcs_foundation_value(state, found) \
     ( (state).foundations[(found)] )
 
-#define fcs_increment_foundation(state, found) \
-    ( (state).foundations[(found)]++ )
-
 #define fcs_set_foundation(state, found, value) \
     ( (state).foundations[(found)] = (value) )
 
@@ -274,9 +271,6 @@ typedef char fcs_locs_t;
 #define fcs_foundation_value(state, d) \
     ( (state).data[FCS_FOUNDATIONS_OFFSET+(d)])
 
-#define fcs_increment_foundation(state, d) \
-    ( (state).data[FCS_FOUNDATIONS_OFFSET+(d)]++ )
-
 #define fcs_set_foundation(state, d, value) \
     ( (state).data[FCS_FOUNDATIONS_OFFSET+(d)] = (value) )
 
@@ -362,9 +356,6 @@ typedef struct fcs_struct_state_t fcs_state_t;
 #define fcs_foundation_value(state, d) \
     ( (state).foundations[(d)] )
 
-#define fcs_increment_foundation(state, d) \
-    ( (state).foundations[(d)]++ )
-
 #define fcs_set_foundation(state, d, value) \
     ( (state).foundations[(d)] = (value) )
 
@@ -449,6 +440,9 @@ typedef char fcs_locs_t;
 
 #define fcs_freecell_card_suit(state, f) \
     ( fcs_card_suit(fcs_freecell_card((state),(f))) )
+
+#define fcs_increment_foundation(state, d) \
+    ( (fcs_foundation_value((state), (d)))++)
 
 /* These are macros that are common to COMPACT_STATES and 
  * INDIRECT_STACK_STATES */
