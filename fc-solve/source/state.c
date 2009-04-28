@@ -155,13 +155,18 @@ static int fcs_talon_compare_with_context(const void * p1, const void * p2, fcs_
 #endif
 
 #ifdef DEBUG_STATES
-void fc_solve_canonize_state(fcs_state_with_locations_t * state, int freecells_num, int stacks_num)
+void fc_solve_canonize_state(
+    fcs_state_extra_info_t * state_val,
+    int freecells_num,
+    int stacks_num)
 {
     int b,c;
 
     fc_stack_t temp_stack;
     fcs_card_t temp_freecell;
     int temp_loc;
+
+    fcs_state_t * state_key = state_val->key;
 
     /* Insertion-sort the stacks */
     for(b=1;b<stacks_num;b++)
@@ -170,18 +175,18 @@ void fc_solve_canonize_state(fcs_state_with_locations_t * state, int freecells_n
         while(
             (c>0) &&
             (fcs_stack_compare(
-                &(state->s.stacks[c]),
-                &(state->s.stacks[c-1])
+                &(state_key->stacks[c]),
+                &(state_key->stacks[c-1])
                 ) < 0)
             )
         {
-            temp_stack = state->s.stacks[c];
-            state->s.stacks[c] = state->s.stacks[c-1];
-            state->s.stacks[c-1] = temp_stack;
+            temp_stack = state_key->stacks[c];
+            state_key->stacks[c] = state_key->stacks[c-1];
+            state_key->stacks[c-1] = temp_stack;
 
-            temp_loc = state->stack_locs[c];
-            state->stack_locs[c] = state->stack_locs[c-1];
-            state->stack_locs[c-1] = temp_loc;
+            temp_loc = state_val->stack_locs[c];
+            state_val->stack_locs[c] = state_val->stack_locs[c-1];
+            state_val->stack_locs[c-1] = temp_loc;
 
             c--;
         }
@@ -195,18 +200,18 @@ void fc_solve_canonize_state(fcs_state_with_locations_t * state, int freecells_n
         while(
             (c>0)     &&
             (fcs_card_compare(
-                &(state->s.freecells[c]),
-                &(state->s.freecells[c-1])
+                &(state_key->freecells[c]),
+                &(state_key->freecells[c-1])
                 ) < 0)
             )
         {
-            temp_freecell = state->s.freecells[c];
-            state->s.freecells[c] = state->s.freecells[c-1];
-            state->s.freecells[c-1] = temp_freecell;
+            temp_freecell = state_key->freecells[c];
+            state_key->freecells[c] = state_key->freecells[c-1];
+            state_key->freecells[c-1] = temp_freecell;
 
-            temp_loc = state->fc_locs[c];
-            state->fc_locs[c] = state->fc_locs[c-1];
-            state->fc_locs[c-1] = temp_loc;
+            temp_loc = state_val->fc_locs[c];
+            state_val->fc_locs[c] = state_val->fc_locs[c-1];
+            state_val->fc_locs[c-1] = temp_loc;
 
             c--;
         }
