@@ -70,7 +70,17 @@ GetOptions(
     {
         die "make failed";
     }
-    my @tests = glob("t/$tests_glob");
+
+    # Put the valgrind test last because it takes a long time.
+    my @tests =
+        sort
+        { 
+            (($a =~ /valgrind/) <=> ($b =~ /valgrind/))
+                ||
+            ($a cmp $b)
+        }
+        glob("t/$tests_glob")
+        ;
 
     {
         # local $ENV{FCS_PATH} = dirname(which("fc-solve"));
