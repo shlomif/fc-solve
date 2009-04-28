@@ -8,20 +8,22 @@ MACRO(MY_ADD_EXE EXE_FILE C_FILE)
 
     ADD_EXECUTABLE(
         ${EXE_FILE}
-        ${C_FILE_SRC}
+        ${C_FILE}
     )
 
     TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB})
 
     SET_SOURCE_FILES_PROPERTIES (
-        "${C_FILE_SRC}"
-        PROPERTIES OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../card.c"
+        "${C_FILE}"
+        PROPERTIES 
+            OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../card.c"
+            GENERATED "1"
     )
 
     ADD_CUSTOM_COMMAND(
-        OUTPUT "${C_FILE_SRC}"
+        OUTPUT "${C_FILE}"
         COMMAND "perl" ARGS "${CMAKE_CURRENT_SOURCE_DIR}/generate-card-tests.pl"
-        MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/card-test-render.c.tt"
+        MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/${C_FILE}.tt"
         DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/generate-card-tests.pl"
     )
 
