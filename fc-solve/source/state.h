@@ -339,13 +339,6 @@ typedef struct fcs_struct_state_t fcs_state_t;
 #define fcs_flip_stack_card(state, s, c) \
     (fcs_card_set_flipped(fcs_stack_card(state,s,c), ((fcs_card_t)0) ))
 
-#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
-    { \
-    *(ptr_dest_key) = *(ptr_src_key); \
-    *(ptr_dest_val) = *(ptr_src_val); \
-    (ptr_dest_val)->key = ptr_dest_key; \
-    (ptr_dest_val)->stacks_copy_on_write_flags = 0; \
-    }
 
 #define fcs_copy_stack(state_key, state_val, idx, buffer) \
     {     \
@@ -359,6 +352,10 @@ typedef struct fcs_struct_state_t fcs_state_t;
         }     \
     }
 
+#define fcs_duplicate_state_extra(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val)  \
+    {   \
+        (ptr_dest_val)->stacks_copy_on_write_flags = 0; \
+    }
 
 typedef char fcs_locs_t;
 
@@ -403,6 +400,19 @@ typedef char fcs_locs_t;
 
 #define fcs_push_stack_card_into_stack(state, ds, ss, sc) \
     fcs_push_card_into_stack((state), (ds), fcs_stack_card((state), (ss), (sc)))
+
+#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
+    { \
+    *(ptr_dest_key) = *(ptr_src_key); \
+    *(ptr_dest_val) = *(ptr_src_val); \
+    (ptr_dest_val)->key = ptr_dest_key; \
+    fcs_duplicate_state_extra(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val);   \
+    }
+
+#if defined(COMPACT_STATES) || defined(DEBUG_STATES)
+#define fcs_duplicate_state_extra(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
+    {} 
+#endif
 
 /* These are macros that are common to COMPACT_STATES and 
  * INDIRECT_STACK_STATES */
