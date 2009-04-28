@@ -123,12 +123,6 @@ typedef int fcs_locs_t;
 #define fcs_freecell_card(state, f) \
     ( (state).freecells[(f)] )
 
-#define fcs_freecell_card_num(state, f) \
-    ( fcs_card_card_num(fcs_freecell_card((state),(f))) )
-
-#define fcs_freecell_card_suit(state, f) \
-    ( fcs_card_suit(fcs_freecell_card((state),(f))) )
-
 #define fcs_foundation_value(state, found) \
     ( (state).foundations[(found)] )
 
@@ -275,12 +269,6 @@ typedef char fcs_locs_t;
 #define fcs_freecell_card(state, f) \
     ( (state).data[FCS_FREECELLS_OFFSET+(f)] )
 
-#define fcs_freecell_card_num(state, f) \
-    ( fcs_card_card_num(fcs_freecell_card((state),(f))) )
-
-#define fcs_freecell_card_suit(state, f) \
-    ( fcs_card_suit(fcs_freecell_card((state),(f))) )
-
 #define FCS_FOUNDATIONS_OFFSET (((MAX_NUM_STACKS)*(MAX_NUM_CARDS_IN_A_STACK+1))+(MAX_NUM_FREECELLS))
 
 #define fcs_foundation_value(state, d) \
@@ -371,12 +359,6 @@ typedef struct fcs_struct_state_t fcs_state_t;
 #define fcs_freecell_card(state, f) \
     ( (state).freecells[(f)] )
 
-#define fcs_freecell_card_num(state, f) \
-    ( fcs_card_card_num(fcs_freecell_card((state),(f))) )
-
-#define fcs_freecell_card_suit(state, f) \
-    ( fcs_card_suit(fcs_freecell_card((state),(f))) )
-
 #define fcs_foundation_value(state, d) \
     ( (state).foundations[(d)] )
 
@@ -461,6 +443,12 @@ typedef char fcs_locs_t;
 
 #define fcs_stack_card_suit(state, s, c) \
     ( fcs_card_suit(fcs_stack_card((state),(s),(c))) )
+
+#define fcs_freecell_card_num(state, f) \
+    ( fcs_card_card_num(fcs_freecell_card((state),(f))) )
+
+#define fcs_freecell_card_suit(state, f) \
+    ( fcs_card_suit(fcs_freecell_card((state),(f))) )
 
 /* These are macros that are common to COMPACT_STATES and 
  * INDIRECT_STACK_STATES */
