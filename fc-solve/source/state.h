@@ -126,9 +126,6 @@ typedef int fcs_locs_t;
 #define fcs_foundation_value(state, found) \
     ( (state).foundations[(found)] )
 
-#define fcs_empty_freecell(state, f) \
-    (state).freecells[(f)] = fcs_empty_card
-
 #define fcs_card_set_suit(card, d) \
     (card).suit = (d)
 
@@ -239,9 +236,6 @@ typedef char fcs_locs_t;
 #define fcs_foundation_value(state, d) \
     ( (state).data[FCS_FOUNDATIONS_OFFSET+(d)])
 
-#define fcs_empty_freecell(state, f) \
-    fcs_put_card_in_freecell((state), (f), fcs_empty_card)
-
 #ifdef FCS_WITH_TALONS
 #define fcs_talon_len(state) \
     ((state).talon_params[0])
@@ -294,9 +288,6 @@ typedef struct fcs_struct_state_t fcs_state_t;
 
 #define fcs_foundation_value(state, d) \
     ( (state).foundations[(d)] )
-
-#define fcs_empty_freecell(state, f) \
-    fcs_put_card_in_freecell((state), (f), fcs_empty_card)
 
 #ifdef FCS_WITH_TALONS
 #define fcs_talon_len(state) \
@@ -392,6 +383,9 @@ typedef char fcs_locs_t;
 
 #define fcs_put_card_in_freecell(state, f, card) \
     (fcs_freecell_card((state), (f)) = (card))
+
+#define fcs_empty_freecell(state, f) \
+    fcs_put_card_in_freecell((state), (f), fcs_empty_card)
 
 /* These are macros that are common to COMPACT_STATES and 
  * INDIRECT_STACK_STATES */
