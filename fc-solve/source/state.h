@@ -126,12 +126,6 @@ typedef int fcs_locs_t;
 #define fcs_foundation_value(state, found) \
     ( (state).foundations[(found)] )
 
-#define fcs_push_stack_card_into_stack(state, ds, ss, sc) \
-    {             \
-        (state).stacks[(ds)].cards[(state).stacks[(ds)].num_cards] = (state).stacks[(ss)].cards[(sc)]; \
-        (state).stacks[(ds)].num_cards++; \
-    }
-
 #define fcs_push_card_into_stack(state, ds, from) \
     {            \
         (state).stacks[(ds)].cards[(state).stacks[(ds)].num_cards] = (from); \
@@ -267,9 +261,6 @@ typedef char fcs_locs_t;
         (state).data[(ds)*(MAX_NUM_CARDS_IN_A_STACK+1)]++;     \
     }
 
-#define fcs_push_stack_card_into_stack(state, ds, ss, sc) \
-    fcs_push_card_into_stack((state), (ds), fcs_stack_card((state), (ss), (sc)))
-
 #define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
     { \
     *(ptr_dest_key) = *(ptr_src_key); \
@@ -341,9 +332,6 @@ typedef struct fcs_struct_state_t fcs_state_t;
         (state).stacks[(ds)][fcs_stack_len((state), (ds))+1] = (from); \
         (state).stacks[(ds)][0]++;      \
     }
-
-#define fcs_push_stack_card_into_stack(state, ds, ss, sc) \
-    fcs_push_card_into_stack((state), (ds), fcs_stack_card((state), (ss), (sc)))
 
 #define fcs_put_card_in_freecell(state, f, card) \
     (state).freecells[(f)] = (card)
@@ -422,6 +410,9 @@ typedef char fcs_locs_t;
         fcs_stack_card((state), (s),  \
                 (-- fcs_stack_len((state), (s)))) = fcs_empty_card; \
     }
+
+#define fcs_push_stack_card_into_stack(state, ds, ss, sc) \
+    fcs_push_card_into_stack((state), (ds), fcs_stack_card((state), (ss), (sc)))
 
 /* These are macros that are common to COMPACT_STATES and 
  * INDIRECT_STACK_STATES */
