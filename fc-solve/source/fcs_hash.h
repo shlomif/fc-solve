@@ -34,7 +34,6 @@ extern "C" {
 #endif
 
 #include "alloc.h"
-#include "lookup2.h"
 
 typedef int SFO_hash_value_t;
 

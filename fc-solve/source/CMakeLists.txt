@@ -120,7 +120,7 @@ SET (FCS_ENABLE_SECONDARY_HASH_VALUE ""
 
 SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
 
-SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_isa.c freecell.c intrface.c lib.c lookup2.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c)
+SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_isa.c freecell.c intrface.c lib.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c)
 
 # Add the fcs_hash.c if (and only if) it is being used.
 # 

@@ -39,15 +39,13 @@
 
 #include "fcs_isa.h"
 
-#include "lookup2.h"
-
-
 #ifdef INDIRECT_STACK_STATES
 #include "fcs_hash.h"
 #endif
 
 #include "caas.h"
 #include "ms_ca.h"
+#include "inline.h"
 
 #include "test_arr.h"
 
@@ -55,9 +53,25 @@
 #include "dmalloc.h"
 #endif
 
+typedef  unsigned long  int  ub4;   /* unsigned 4-byte quantities */
+typedef  unsigned       char ub1;
 
+static GCC_INLINE ub4 perl_hash_function(
+    register ub1 *s_ptr,        /* the key */
+    register ub4  length        /* the length of the key */
+    )
+{
+    register ub4  hash_value_int = 0;
+    register ub1 * s_end = s_ptr+length;
 
+    while (s_ptr < s_end)
+    {
+        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
+    }
+    hash_value_int += (hash_value_int>>5);
 
+    return hash_value_int;
+}
 
 #ifdef INDIRECT_STACK_STATES
 
@@ -140,10 +154,9 @@ static void GCC_INLINE fc_solve_cache_stacks(
                 new_state_key->stacks[a],
                 &cached_stack,
                 &dummy,
-                fc_solve_lookup2_hash_function(
+                perl_hash_function(
                     (ub1 *)new_state_key->stacks[a],
-                    (fcs_stack_len(*new_state_key, a)+1),
-                    24
+                    (fcs_stack_len(*new_state_key, a)+1)
                     )
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
                 , hash_value_int
@@ -385,10 +398,9 @@ GCC_INLINE int fc_solve_check_and_add_state(
         new_state_val,
         &existing_key_void,
         &existing_val_void,
-        fc_solve_lookup2_hash_function(
+        perl_hash_function(
             (ub1 *)new_state_key,
-            sizeof(*new_state_key),
-            24
+            sizeof(*new_state_key)
             )
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         , hash_value_int
