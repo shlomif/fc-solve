@@ -2,9 +2,6 @@
 
 --- Non-pressing ---
 
-* Make DEBUG_STATES and COMPACT_STATES functional again.
-    - extract some common macros in all places.
-
 * Create a first-class-citizen fcs_state_column_t and convert fcs_stack_len(),
 fcs_stack_card(), etc. to use them.
 
