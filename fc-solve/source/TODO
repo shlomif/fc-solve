@@ -2,6 +2,9 @@
 
 --- Non-pressing ---
 
+* Experiment with using bit members for cards:
+    - http://en.wikipedia.org/wiki/Bit_field
+
 * Create a first-class-citizen fcs_state_column_t and convert fcs_stack_len(),
 fcs_stack_card(), etc. to use them.
 
