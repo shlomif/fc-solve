@@ -1612,11 +1612,11 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
     int check;
 
-    int stack, cards_num, c, a, b, ds, dc;
+    int stack, cards_num, c, min_card_height, a, b, ds, dc;
     int is_seq_in_dest;
     int num_cards_to_relocate;
     int dest_cards_num;
-    fcs_card_t card, this_card, prev_card, temp_card;
+    fcs_card_t card, temp_card, upper_card, lower_card;
     fcs_card_t dest_card, dest_below_card;
     int freecells_to_fill, freestacks_to_fill;
 
@@ -1650,48 +1650,54 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
     {
         cards_num = fcs_stack_len(state, stack);
 
-        for (c=1 ; c<cards_num ; c++)
+        /* 
+         * If there's only one card in the column, then it won't be above a 
+         * parent, so there's no sense in moving it.
+         *
+         * If there are no cards in the column, then there's nothing to do
+         * here, and the algorithm will be confused
+         * */
+        if (cards_num < 2)
         {
-            /* Check if there is a sequence here. */
-            for(a=c+1 ; a<cards_num ; a++)
+            continue;
+        }
+
+        upper_card = fcs_stack_card(state, stack, cards_num-1);
+
+        /*
+         * min_card_height is the minimal height of the card that is above
+         * a true parent.
+         *
+         * It must be:
+         *
+         * 1. >= 1 - because the height 0 should not be moved.
+         *
+         * 2. <= cards_num-1 - because the height 0
+         */
+        for (min_card_height = cards_num-2
+            ; min_card_height >= 0
+            ; upper_card = lower_card, min_card_height--
+            )
+        {
+            lower_card = fcs_stack_card(state, stack, min_card_height);
+            if (! fcs_is_parent_card(upper_card, lower_card))
             {
-                this_card = fcs_stack_card(state, stack, a);
-                prev_card = fcs_stack_card(state, stack, a-1);
-
-                if (fcs_is_parent_card(this_card,prev_card))
-                {
-                }
-                else
-                {
-                    /* 
-                     * There isn't a sequence - we can skip, this 
-                     * "c"-var-based card.
-                     *
-                     * I wish C had Perl's "next LABEL;"
-                     * */
-                    break;
-                }
+                break;
             }
+        }
 
-            /*
-             * There isn't a sequence - we can skip, this 
-             * "c"-var-based card.
-             * */
-            if (a < cards_num)
-            {
-                continue;
-            }
+        min_card_height += 2;
 
+        for(c=min_card_height ; c < cards_num ; c++)
+        {
             /* Find a card which this card can be put on; */
 
             card = fcs_stack_card(state, stack, c);
 
-            /* Only move cards that are already found above a suitable 
-             * parent. And do not move cards that are flipped.
+            /*
+             * Do not move cards that are flipped.
              * */
-            if (fcs_is_parent_card(card, fcs_stack_card(state, stack, c-1))
-                && (! fcs_card_get_flipped(card))
-               )
+            if (! fcs_card_get_flipped(card))
             {
                 for(ds=0 ; ds<LOCAL_STACKS_NUM; ds++)
                 {
