@@ -152,14 +152,8 @@ typedef int fcs_locs_t;
     ((state).talon[pos] = (card))
 #endif
 
-#define fcs_copy_stack(state_key, state_val, idx, buffer) {}
 
 #elif defined(COMPACT_STATES)    /* #ifdef DEBUG_STATES */
-
-
-
-
-
 
 
 typedef char fcs_card_t;
@@ -252,8 +246,6 @@ typedef char fcs_locs_t;
 
 #define fcs_flip_stack_card(state, s, c) \
     (fcs_card_set_flipped(fcs_stack_card((state),(s),(c)), ((fcs_card_t)0) ))
-
-#define fcs_copy_stack(state_key, state_val, idx, buffer) {}
 
 #elif defined(INDIRECT_STACK_STATES) /* #ifdef DEBUG_STATES
                                         #elif defined(COMPACT_STATES)
@@ -377,8 +369,12 @@ typedef char fcs_locs_t;
     }
 
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
+
 #define fcs_duplicate_state_extra(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
     {} 
+
+#define fcs_copy_stack(state_key, state_val, idx, buffer) {}
+
 #endif
 
 #define fcs_put_card_in_freecell(state, f, card) \
