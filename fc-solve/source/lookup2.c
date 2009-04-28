@@ -72,6 +72,26 @@ mix() was built out of 36 single-cycle latency instructions in a
 --------------------------------------------------------------------
 */
 
+#define FCS_USE_PERL_HASH
+
+#ifdef FCS_USE_PERL_HASH
+ub4 fc_solve_lookup2_hash_function(
+    register ub1 *s_ptr,        /* the key */
+    register ub4  length,   /* the length of the key */
+    register ub4  hash_value_int    /* the previous hash, or an arbitrary value */
+    )
+{
+    register ub1 * s_end = s_ptr+length;
+
+    while (s_ptr < s_end)
+    {
+        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
+    }
+    hash_value_int += (hash_value_int>>5);
+
+    return hash_value_int;
+}
+#else
 ub4 fc_solve_lookup2_hash_function(
     register ub1 *k,        /* the key */
     register ub4  length,   /* the length of the key */
@@ -117,3 +137,4 @@ ub4 fc_solve_lookup2_hash_function(
    /*-------------------------------------------- report the result */
    return c;
 }
+#endif
