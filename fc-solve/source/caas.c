@@ -246,8 +246,12 @@ static void GCC_INLINE fc_solve_cache_stacks(
 #endif
     }
 }
-#else
-#define fc_solve_cache_stacks(instance, new_state)
+
+#else /* #ifdef INDIRECT_STACK_STATES */
+
+#define fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val) \
+    {}
+
 #endif
 
 
