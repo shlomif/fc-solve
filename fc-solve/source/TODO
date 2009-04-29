@@ -2,6 +2,9 @@
 
 --- Non-pressing ---
 
+* Document the process for getting the Freecell Solver test suite running
+successfully. (Try on a new installation / VM).
+
 * Experiment with using bit members for cards:
     - http://en.wikipedia.org/wiki/Bit_field
 
