@@ -470,6 +470,7 @@ int fc_solve_initial_user_state_to_c(
     int s,c;
     const char * str;
     fcs_card_t card;
+    fcs_cards_column_t col;
     int first_line;
 
     int prefix_found;
@@ -756,6 +757,7 @@ int fc_solve_initial_user_state_to_c(
         }
 #endif
 
+        col = fcs_state_get_col(ret, s);
         for(c=0 ; c < MAX_NUM_CARDS_IN_A_STACK ; c++)
         {
             /* Move to the next card */
@@ -781,13 +783,14 @@ int fc_solve_initial_user_state_to_c(
             {
                 str++;
             }
+            /*  TODO : handle end-of-string. */
             if ((*str == '\n') || (*str == '\r'))
             {
                 break;
             }
             card = fcs_card_user2perl(str);
 
-            fcs_push_card_into_stack(ret, s, card);
+            fcs_col_push_card(col, card);
         }
     }
 
@@ -809,8 +812,11 @@ int fc_solve_check_state_validity(
 {
     int cards[4][14];
     int c, s, d, f;
+    int col_len;
 
     fcs_state_t * state;
+    fcs_cards_column_t col;
+    fcs_card_t card;
 
     state = state_val->key;
 
@@ -846,16 +852,19 @@ int fc_solve_check_state_validity(
     /* Mark the cards in the stacks */
     for(s=0;s<stacks_num;s++)
     {
-        for(c=0;c<fcs_stack_len(*state,s);c++)
+        col = fcs_state_get_col(*state, s);
+        col_len = fcs_col_len(col);
+        for(c=0;c<col_len;c++)
         {
-            if (fcs_stack_card_num(*state, s, c) == 0)
+            card = fcs_col_get_card(col,c);
+            if (fcs_card_card_num(card) == 0)
             {
                 *misplaced_card = fcs_empty_card;
                 return 3;
             }
             cards
-                [fcs_stack_card_suit(*state, s, c)]
-                [fcs_stack_card_num(*state, s, c)] ++;
+                [fcs_card_suit(card)]
+                [fcs_card_card_num(card)] ++;
 
         }
     }
@@ -913,7 +922,9 @@ char * fc_solve_state_as_string(
     fcs_state_t * state;
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_[10];
     int a, card_num_is_null, b;
-    int max_num_cards, s, card_num, len;
+    int max_num_cards, s, card_num;
+    fcs_cards_column_t col;
+    int col_len;
 
     char str2[128], str3[128], * str2_ptr, * str3_ptr;
 
@@ -1037,9 +1048,11 @@ char * fc_solve_state_as_string(
         max_num_cards = 0;
         for(s=0;s<stacks_num;s++)
         {
-            if (fcs_stack_len(*state, stack_locs[s]) > max_num_cards)
+            col = fcs_state_get_col(*state, stack_locs[s]);
+            col_len = fcs_col_len(col);
+            if (col_len > max_num_cards)
             {
-                max_num_cards = fcs_stack_len(*state, stack_locs[s]);
+                max_num_cards = col_len;
             }
         }
 
@@ -1047,7 +1060,9 @@ char * fc_solve_state_as_string(
         {
             for(s = 0; s<stacks_num; s++)
             {
-                if (card_num >= fcs_stack_len(*state, stack_locs[s]))
+                col = fcs_state_get_col(*state, stack_locs[s]);
+                col_len = fcs_col_len(col);
+                if (card_num >= col_len)
                 {
                     fc_solve_append_string_sprintf(
                         app_str,
@@ -1060,10 +1075,7 @@ char * fc_solve_state_as_string(
                         app_str,
                         "%3s ",
                         fcs_card_perl2user(
-                            fcs_stack_card(
-                                *state,
-                                stack_locs[s],
-                                card_num),
+                            fcs_col_get_card(col, card_num),
                             stack_card_,
                             display_10_as_t
                             )
@@ -1113,22 +1125,19 @@ char * fc_solve_state_as_string(
 
         for(s=0;s<stacks_num;s++)
         {
+            col = fcs_state_get_col(*state, stack_locs[s]);
+            col_len = fcs_col_len(col);
             fc_solve_append_string_sprintf(app_str, "%s", ": ");
 
-            len = fcs_stack_len(*state, stack_locs[s]);
-            for(card_num=0;card_num<len;card_num++)
+            for(card_num=0;card_num<col_len;card_num++)
             {
                 fcs_card_perl2user(
-                    fcs_stack_card(
-                        *state,
-                        stack_locs[s],
-                        card_num
-                    ),
+                    fcs_col_get_card(col, card_num),
                     stack_card_,
                     display_10_as_t
                 );
                 fc_solve_append_string_sprintf(app_str, "%s", stack_card_);
-                if (card_num < len-1)
+                if (card_num < col_len-1)
                 {
                     fc_solve_append_string_sprintf(app_str, "%s", " ");
                 }

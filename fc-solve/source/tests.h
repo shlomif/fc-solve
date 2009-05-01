@@ -39,6 +39,8 @@ extern "C" {
 #include <limits.h>
 #include <string.h>
 
+#include "inline.h"
+
 #include "fcs_isa.h"
 #include "fcs.h"
 
@@ -119,30 +121,62 @@ int fc_solve_sfs_check_state_end(
     This macro checks if the top card in the stack is a flipped card
     , and if so flips it so its face is up.
   */
-#define fcs_flip_top_card(stack)                                   \
+#define fcs_flip_top_card(stack_idx)                                   \
 {                                                                  \
     int cards_num;                                                 \
-    cards_num = fcs_stack_len(new_state,stack);                    \
+    fcs_cards_column_t col;                                        \
+    col = fcs_state_get_col(new_state, stack_idx);                 \
+    cards_num = fcs_col_len(col);                         \
                                                                    \
     if (cards_num > 0)                                             \
     {                                                              \
         if (fcs_card_get_flipped(                                  \
-                fcs_stack_card(                                    \
-                    new_state,                                     \
-                    stack,                                         \
-                    cards_num-1)                                   \
+                fcs_col_get_card(col, cards_num-1)        \
                 ) == 1                                             \
            )                                                       \
         {                                                          \
-            fcs_flip_stack_card(new_state,stack,cards_num-1);      \
+            fcs_col_flip_card(col, cards_num-1);                   \
             fcs_move_set_type(temp_move, FCS_MOVE_TYPE_FLIP_CARD); \
-            fcs_move_set_src_stack(temp_move, stack);              \
+            fcs_move_set_src_stack(temp_move, stack_idx);              \
                                                                    \
             fcs_move_stack_push(moves, temp_move);                 \
         }                                                          \
     }                                                              \
 }
 
+static GCC_INLINE void fc_solve_move_sequence_function(
+        fcs_state_t * new_state_ptr,
+        fcs_move_stack_t * moves,
+        int dest_idx,
+        int source_idx,
+        int start,
+        int end
+        )
+{
+    int i;
+    fcs_cards_column_t new_src_col, new_dest_col;
+    fcs_move_t temp_move;
+
+    new_src_col = fcs_state_get_col(*new_state_ptr, source_idx);
+    new_dest_col = fcs_state_get_col(*new_state_ptr, dest_idx);
+
+    for ( i = start ; i <= end ; i++)
+    {
+        fcs_col_push_col_card(new_dest_col, new_src_col, i);
+    }
+
+    for ( i = start ; i <= end ; i++)
+    {
+        fcs_col_pop_top(new_src_col);
+    }
+
+    fcs_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);
+    fcs_move_set_src_stack(temp_move, source_idx);
+    fcs_move_set_dest_stack(temp_move, dest_idx);
+    fcs_move_set_num_cards_in_seq(temp_move, end-start+1);
+
+    fcs_move_stack_push(moves, temp_move);
+}
 
 /*
  * dest is the destination stack
@@ -151,25 +185,10 @@ int fc_solve_sfs_check_state_end(
  * end is the end height
  * a is the iterator
  * */
-#define fcs_move_sequence(dest, source, start, end, a)              \
-{                                                                   \
-    for ( a = (start) ; a <= (end) ; a++)                           \
-    {                                                               \
-        fcs_push_stack_card_into_stack(new_state, dest, source, a); \
-    }                                                               \
-                                                                    \
-    for ( a = (start) ; a <= (end) ; a++)                           \
-    {                                                               \
-        fcs_pop_stack_card(new_state, source, temp_card);           \
-    }                                                               \
-                                                                    \
-    fcs_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);     \
-    fcs_move_set_src_stack(temp_move, source);                      \
-    fcs_move_set_dest_stack(temp_move, dest);                       \
-    fcs_move_set_num_cards_in_seq(temp_move, (end)-(start)+1);      \
-                                                                    \
-    fcs_move_stack_push(moves, temp_move);                          \
-}
+#define fcs_move_sequence(dest_idx, source_idx, start_idx, end_idx) \
+    {   \
+        fc_solve_move_sequence_function(ptr_new_state_key, moves, dest_idx, source_idx, start_idx, end_idx); \
+    }
 
 #ifdef FCS_FREECELL_ONLY
 #define tests_declare_accessors_freecell_only()

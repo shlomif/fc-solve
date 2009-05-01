@@ -755,3 +755,46 @@ With "./configure -r --fc-only --states-type=COMPACT_STATES":
 
 143.285588979721s
 
+========================================================================
+
+In:
+
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/first-class-citizen-card-columns-objects
+
+( r1566 )
+
+With "./configure -r --fc-only" after transforming the code to use 
+fcs_cards_column_t:
+
+134.631727933884s
+
+========================================================================
+
+In:
+
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/first-class-citizen-card-columns-objects
+
+( r1612 )
+
+With "./configure -r --fc-only" after more transformations:
+
+141.339107990265s
+
+========================================================================
+
+In the trunk (r1612) with "./configure -r --fc-only":
+
+134.495909929276s
+
+========================================================================
+
+In:
+
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/first-class-citizen-card-columns-objects
+
+( r1615 )
+
+./configure -r --fc-only --states-type="COMPACT_STATES"
+
+139.495526790619s
+

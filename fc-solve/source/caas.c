@@ -102,6 +102,8 @@ static void GCC_INLINE fc_solve_cache_stacks(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num = instance->stacks_num;
 #endif
+    fcs_cards_column_t column;
+    register int col_len;
 
     for(a=0 ; a < LOCAL_STACKS_NUM ; a++)
     {
@@ -114,8 +116,12 @@ static void GCC_INLINE fc_solve_cache_stacks(
             continue;
         }
         /* new_state_key->stacks[a] = realloc(new_state_key->stacks[a], fcs_stack_len(new_state_key, a)+1); */
-        fcs_compact_alloc_typed_ptr_into_var(new_ptr, char, hard_thread->stacks_allocator, (fcs_stack_len(*new_state_key, a)+1));
-        memcpy(new_ptr, new_state_key->stacks[a], (fcs_stack_len(*new_state_key, a)+1));
+
+        column = fcs_state_get_col(*new_state_key, a);
+        col_len = (fcs_col_len(column)+1);
+
+        fcs_compact_alloc_typed_ptr_into_var(new_ptr, char, hard_thread->stacks_allocator, col_len);
+        memcpy(new_ptr, column, col_len);
         new_state_key->stacks[a] = new_ptr;
 
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
@@ -148,15 +154,17 @@ static void GCC_INLINE fc_solve_cache_stacks(
             void * dummy;
             int verdict;
 
+            column = fcs_state_get_col(*new_state_key, a);
+
             verdict = fc_solve_hash_insert(
                 instance->stacks_hash,
-                new_state_key->stacks[a],
-                new_state_key->stacks[a],
+                column,
+                column,
                 &cached_stack,
                 &dummy,
                 perl_hash_function(
                     (ub1 *)new_state_key->stacks[a],
-                    (fcs_stack_len(*new_state_key, a)+1)
+                    col_len
                     )
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
                 , hash_value_int
