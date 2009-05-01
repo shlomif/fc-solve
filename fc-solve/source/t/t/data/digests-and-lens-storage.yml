@@ -30,3 +30,9 @@ digests:
   seahaven_towers1977fools-gold: 
     hexdigest: 98a46b55d0f80b98087f6ab6184bd2f270065d953dd5ee388afc74fa94193313
     len: 18581
+  simple_simon19806default: 
+    hexdigest: 22daf3a91b41c513e22906f4fe5c0b507e75a39b30a5ea6fcacb11e14c7fc48f
+    len: 20447
+  simple_simon24default: 
+    hexdigest: aec27e6a4b8e628a42cdfddf0db62fe3f79146aa16d36f3ba6a0050ba7355c57
+    len: 22216

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 12;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -155,6 +155,22 @@ verify_solution_test(
         theme => [],
     },
     "Eight Off #200 with default heuristic"
+);
+
+# TEST
+verify_solution_test(
+    {id => "simple_simon24default", deal => 24, variant => "simple_simon",
+        theme => [],
+    },
+    "Simple Simon #24 with default theme",
+);
+
+# TEST
+verify_solution_test(
+    {id => "simple_simon19806default", deal => 19806, variant => "simple_simon",
+        theme => [],
+    },
+    "Simple Simon #19806 with default theme",
 );
 
 # Store the changes at the end so they won't get lost.
