@@ -106,7 +106,7 @@ char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
 
 int Cvtf89(int fcn)
 {
-	return (fcn >= 7) ? (fcn+3) : fcn;
+    return (fcn >= 7) ? (fcn+3) : fcn;
 }
 
 char * moves_processed_render_move(fcs_extended_move_t move, char * string)
@@ -132,17 +132,17 @@ char * moves_processed_render_move(fcs_extended_move_t move, char * string)
         break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
-				sprintf(string, "%c%i", 
+                sprintf(string, "%c%i", 
                     ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
                     1+fcs_move_get_dest_stack(move.move)
                     );
-		break;
+        break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
                 sprintf(string, "%c%c",
                     ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
                     ('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)))
-					);                        
+                    );                        
         break;
 
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
@@ -150,7 +150,7 @@ char * moves_processed_render_move(fcs_extended_move_t move, char * string)
                     1+fcs_move_get_src_stack(move.move),
                     ('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)))
                     );
-		break;
+        break;
 
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
                 sprintf(string, "%ih", 1+fcs_move_get_src_stack(move.move));
@@ -518,7 +518,7 @@ void moves_processed_free(moves_processed_t * moves)
 static char * cmd_line_known_parameters[] = { NULL };
 
 int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char * * cmd_line_argv,
-	 int (*signal_step)(int step_limit))
+    int (*signal_step)(int step_limit))
 {
     char * state_string;
     void * instance;
@@ -534,7 +534,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 
     instance = freecell_solver_user_alloc();
 
-	NumFCs = NoFcs ;
+    NumFCs = NoFcs ;
 
     parser_ret = freecell_solver_user_cmd_line_parse_args(
             instance,
@@ -626,8 +626,8 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     }
     else if (verdict == FCS_STATE_IS_NOT_SOLVEABLE)
     {
-		if (num_iters == 0)
-			num_iters++ ;
+        if (num_iters == 0)
+            num_iters++ ;
         ret = -num_iters;
     }
     else if ((verdict == FCS_STATE_SUSPEND_PROCESS) || (verdict == FCS_STATE_BEGIN_SUSPEND_PROCESS))
