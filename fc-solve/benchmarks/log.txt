@@ -838,3 +838,10 @@ With:
 
 136.598108053207s
 
+========================================================================
+
+Trunk (r1639) with ./configure -r --fc-only after running strip on the 
+binaries:
+
+132.314429998398s
+
