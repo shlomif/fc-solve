@@ -1087,6 +1087,8 @@ label_next_state:
     myreturn(FCS_STATE_IS_NOT_SOLVEABLE);
 }
 
+#undef myreturn
+
 /*
  * Calculate, cache and return the positions_by_rank meta-data
  * about the currently-evaluated state.
@@ -1226,4 +1228,3 @@ extern char * fc_solve_get_the_positions_by_rank_data(
     return *positions_by_rank_location;
 }
 
-#undef myreturn
