@@ -1148,6 +1148,9 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 #ifndef FCS_FREECELL_ONLY
         sequences_are_built_by = instance->sequences_are_built_by;
 #endif
+
+        /* We don't keep track of kings (rank == 13). */
+#define NUM_POS_BY_RANK_SLOTS 13
         {
             int positions_by_rank_size;
             /* We need 2 chars per card - one for the stack and one
@@ -1159,7 +1162,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
              * (-1,-1) (= end) padding.
              * */
             positions_by_rank_size =
-                (sizeof(positions_by_rank[0]) * 2 * 13) *
+                (sizeof(positions_by_rank[0]) * 2 * NUM_POS_BY_RANK_SLOTS) *
                 ((LOCAL_DECKS_NUM << 2) + 1)
                 ;
 
@@ -1169,13 +1172,13 @@ extern char * fc_solve_get_the_positions_by_rank_data(
         }
 
         {
-            char * positions_by_rank_slots[13];
+            char * positions_by_rank_slots[NUM_POS_BY_RANK_SLOTS];
 
             {
                 int c;
 
                 /* Initialize the pointers to the first available slots */
-                for(c=0;c<13;c++)
+                for ( c=0 ; c < NUM_POS_BY_RANK_SLOTS ; c++ )
                 {
                     positions_by_rank_slots[c] = &positions_by_rank[
                         (((LOCAL_DECKS_NUM << 2)+1) << 1) * c
