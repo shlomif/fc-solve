@@ -434,7 +434,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
             )
         {
             for(pos_idx_to_check = &positions_by_rank[
-                (((LOCAL_DECKS_NUM<< 2)+1) << 1) * (fcs_card_card_num(src_card))
+                FCS_POS_BY_RANK_WIDTH * (fcs_card_card_num(src_card))
                 ]
                 ;
                 ((*pos_idx_to_check) >= 0)
@@ -1192,7 +1192,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
             }
 
             for(pos_idx_to_check = &positions_by_rank[
-                (((LOCAL_DECKS_NUM<< 2)+1) << 1) * (fcs_card_card_num(card))
+                FCS_POS_BY_RANK_WIDTH * (fcs_card_card_num(card))
                 ]
                 ;
                 ((*pos_idx_to_check) >= 0)
@@ -1788,7 +1788,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
             }
 
             for(pos_idx_to_check = &positions_by_rank[
-                (((LOCAL_DECKS_NUM<< 2)+1) << 1) * (fcs_card_card_num(card))
+                FCS_POS_BY_RANK_WIDTH * (fcs_card_card_num(card))
                 ]
                 ;
                 ((*pos_idx_to_check) >= 0)

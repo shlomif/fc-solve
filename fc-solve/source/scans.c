@@ -1151,25 +1151,18 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 
         /* We don't keep track of kings (rank == 13). */
 #define NUM_POS_BY_RANK_SLOTS 13
-        {
-            int positions_by_rank_size;
-            /* We need 2 chars per card - one for the stack and one
-             * for the card_idx.
-             *
-             * We also need it times 13 for each of the ranks.
-             *
-             * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
-             * (-1,-1) (= end) padding.
-             * */
-            positions_by_rank_size =
-                (sizeof(positions_by_rank[0]) * 2 * NUM_POS_BY_RANK_SLOTS) *
-                ((LOCAL_DECKS_NUM << 2) + 1)
-                ;
+        /* We need 2 chars per card - one for the column_idx and one
+         * for the card_idx.
+         *
+         * We also need it times 13 for each of the ranks.
+         *
+         * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+         * (-1,-1) (= end) padding.             * */
+#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH)
 
-            positions_by_rank = malloc(positions_by_rank_size);
+        positions_by_rank = malloc(FCS_POS_BY_RANK_SIZE);
 
-            memset(positions_by_rank, -1, positions_by_rank_size);
-        }
+        memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
 
         {
             char * positions_by_rank_slots[NUM_POS_BY_RANK_SLOTS];
