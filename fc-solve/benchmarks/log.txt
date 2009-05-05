@@ -818,3 +818,23 @@ After doing the while loop with pointer arithmetics: (--fc-only -r)
 
 137.727283000946s
 
+========================================================================
+
+After the this_card = prev_card optimisation in scans.c:
+
+132.69849896431s
+
+========================================================================
+
+In:
+
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/switch-to-fcs_move_stack_push_params
+
+With:
+
+./configure -r --fc-only
+
+(r1636)
+
+136.598108053207s
+
