@@ -798,3 +798,23 @@ https://svn.berlios.de/svnroot/repos/fc-solve/branches/first-class-citizen-card-
 
 139.495526790619s
 
+========================================================================
+
+In the trunk after getting rid of the explicit cards_num for the columns'
+length:
+
+134.596004009247s
+
+========================================================================
+
+In the trunk after better localising the 
+fc_solve_get_the_positions_by_rank_data() local variables.
+
+134.500791072845
+
+========================================================================
+
+After doing the while loop with pointer arithmetics: (--fc-only -r)
+
+137.727283000946s
+
