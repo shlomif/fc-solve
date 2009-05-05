@@ -1188,32 +1188,40 @@ extern char * fc_solve_get_the_positions_by_rank_data(
                 for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
                 {
                     fcs_cards_column_t dest_col;
-                    int dc;
                     int dest_cards_num;
+                    fcs_card_t dest_card;
 
                     dest_col = fcs_state_get_col(*(ptr_state_key), ds);
                     dest_cards_num = fcs_col_len(dest_col);
-                    for(dc=0;dc<dest_cards_num;dc++)
-                    {
-                        int is_seq_in_dest;
-                        fcs_card_t dest_below_card, dest_card;
 
-                        dest_card = fcs_col_get_card(dest_col, dc);
-                        is_seq_in_dest = 0;
-                        if (dest_cards_num - 1 > dc)
+                    if (dest_cards_num == 0)
+                    {
+                        continue;
+                    }
+
+                    {
+                        fcs_card_t dest_below_card;
+                        int dc;
+                        for (
+                              dc=0,
+                              dest_card = fcs_col_get_card(dest_col, 0)
+                                ;
+                              dc+1 < dest_cards_num
+                                ;
+                              dc++,
+                              dest_card = dest_below_card
+                            )
                         {
                             dest_below_card = fcs_col_get_card(dest_col, dc+1);
-                            if (fcs_is_parent_card(dest_below_card, dest_card))
+                            if (!fcs_is_parent_card(dest_below_card, dest_card))
                             {
-                                is_seq_in_dest = 1;
+                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = ds;
+                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = dc;
                             }
                         }
-                        if (!is_seq_in_dest)
-                        {
-                            *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = ds;
-                            *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = dc;
-                        }
                     }
+                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = ds;
+                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = dest_cards_num-1;
                 }
             }
         }
