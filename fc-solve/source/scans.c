@@ -1120,17 +1120,11 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 
     if (! *positions_by_rank_location)
     {
-        int positions_by_rank_size;
         char * positions_by_rank;
-        fcs_card_t dest_below_card, dest_card;
-        int is_seq_in_dest;
         fc_solve_instance_t * instance;
-        int c, ds, dest_cards_num, dc;
         fcs_state_t * ptr_state_key;
-        fcs_cards_column_t dest_col;
 
         ptr_state_key = ptr_state_val->key;
-
 #ifndef HARD_CODED_NUM_DECKS
         int decks_num;
 #endif
@@ -1152,57 +1146,75 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 #ifndef FCS_FREECELL_ONLY
         sequences_are_built_by = instance->sequences_are_built_by;
 #endif
-        /* We need 2 chars per card - one for the stack and one
-         * for the card_idx.
-         *
-         * We also need it times 13 for each of the ranks.
-         *
-         * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
-         * (-1,-1) (= end) padding.
-         * */
-        positions_by_rank_size =
-            (sizeof(positions_by_rank[0]) * 2 * 13) *
-            ((LOCAL_DECKS_NUM << 2) + 1)
-            ;
+        {
+            int positions_by_rank_size;
+            /* We need 2 chars per card - one for the stack and one
+             * for the card_idx.
+             *
+             * We also need it times 13 for each of the ranks.
+             *
+             * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+             * (-1,-1) (= end) padding.
+             * */
+            positions_by_rank_size =
+                (sizeof(positions_by_rank[0]) * 2 * 13) *
+                ((LOCAL_DECKS_NUM << 2) + 1)
+                ;
 
-        positions_by_rank = malloc(positions_by_rank_size);
+            positions_by_rank = malloc(positions_by_rank_size);
 
-        memset(positions_by_rank, -1, positions_by_rank_size);
+            memset(positions_by_rank, -1, positions_by_rank_size);
+        }
 
         {
             char * positions_by_rank_slots[13];
 
-            /* Initialize the pointers to the first available slots */
-            for(c=0;c<13;c++)
             {
-                positions_by_rank_slots[c] = &positions_by_rank[
-                    (((LOCAL_DECKS_NUM << 2)+1) << 1) * c
-                ];
+                int c;
+
+                /* Initialize the pointers to the first available slots */
+                for(c=0;c<13;c++)
+                {
+                    positions_by_rank_slots[c] = &positions_by_rank[
+                        (((LOCAL_DECKS_NUM << 2)+1) << 1) * c
+                    ];
+                }
             }
 
-            /* Populate positions_by_rank by looping over the stacks and indices
-             * looking for the cards and filling them. */
+            /* Populate positions_by_rank by looping over the stacks and
+             * indices looking for the cards and filling them. */
 
-            for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
             {
-                dest_col = fcs_state_get_col(*(ptr_state_key), ds);
-                dest_cards_num = fcs_col_len(dest_col);
-                for(dc=0;dc<dest_cards_num;dc++)
+                int ds;
+
+                for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
                 {
-                    dest_card = fcs_col_get_card(dest_col, dc);
-                    is_seq_in_dest = 0;
-                    if (dest_cards_num - 1 > dc)
+                    fcs_cards_column_t dest_col;
+                    int dc;
+                    int dest_cards_num;
+
+                    dest_col = fcs_state_get_col(*(ptr_state_key), ds);
+                    dest_cards_num = fcs_col_len(dest_col);
+                    for(dc=0;dc<dest_cards_num;dc++)
                     {
-                        dest_below_card = fcs_col_get_card(dest_col, dc+1);
-                        if (fcs_is_parent_card(dest_below_card, dest_card))
+                        int is_seq_in_dest;
+                        fcs_card_t dest_below_card, dest_card;
+
+                        dest_card = fcs_col_get_card(dest_col, dc);
+                        is_seq_in_dest = 0;
+                        if (dest_cards_num - 1 > dc)
                         {
-                            is_seq_in_dest = 1;
+                            dest_below_card = fcs_col_get_card(dest_col, dc+1);
+                            if (fcs_is_parent_card(dest_below_card, dest_card))
+                            {
+                                is_seq_in_dest = 1;
+                            }
                         }
-                    }
-                    if (!is_seq_in_dest)
-                    {
-                        *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = ds;
-                        *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = dc;
+                        if (!is_seq_in_dest)
+                        {
+                            *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = ds;
+                            *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = dc;
+                        }
                     }
                 }
             }
