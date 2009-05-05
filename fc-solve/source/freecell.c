@@ -263,13 +263,6 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
 
                     fcs_flip_top_card(stack_idx);
 
-                    /* The last move needs to be FCS_MOVE_TYPE_CANONIZE
-                     * because it indicates that the internal order of the
-                     * stacks
-                     * and freecells may have changed. */
-                    fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
-                    fcs_move_stack_push(moves, temp_move);
-
                     sfs_check_state_end()
                     break;
                 }
@@ -330,9 +323,6 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
                     fcs_move_set_src_freecell(temp_move,fc);
                     fcs_move_set_foundation(temp_move,deck*4+fcs_card_suit(card));
 
-                    fcs_move_stack_push(moves, temp_move);
-
-                    fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
                     fcs_move_stack_push(moves, temp_move);
 
                     sfs_check_state_end();
@@ -2485,9 +2475,6 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
 
                 fcs_move_stack_push(moves, temp_move);
 
-                fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
-                fcs_move_stack_push(moves, temp_move);
-
                 sfs_check_state_end()
             }
         }
@@ -2562,9 +2549,6 @@ int fc_solve_sfs_atomic_move_card_to_parent(
                             fcs_move_set_dest_stack(temp_move, ds);
                             fcs_move_set_num_cards_in_seq(temp_move, 1);
 
-                            fcs_move_stack_push(moves, temp_move);
-
-                            fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
                             fcs_move_stack_push(moves, temp_move);
 
                             sfs_check_state_end()
@@ -2651,9 +2635,6 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
 
                 fcs_move_stack_push(moves, temp_move);
 
-                fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
-                fcs_move_stack_push(moves, temp_move);
-
                 sfs_check_state_end()
             }
         }
@@ -2725,9 +2706,6 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
                         fcs_move_set_dest_stack(temp_move, ds);
                         fcs_move_set_num_cards_in_seq(temp_move, 1);
 
-                        fcs_move_stack_push(moves, temp_move);
-
-                        fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
                         fcs_move_stack_push(moves, temp_move);
 
                         sfs_check_state_end()
@@ -2825,9 +2803,6 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
             fcs_move_set_dest_stack(temp_move, ds);
             fcs_move_set_num_cards_in_seq(temp_move, 1);
 
-            fcs_move_stack_push(moves, temp_move);
-
-            fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
             fcs_move_stack_push(moves, temp_move);
 
             sfs_check_state_end()
