@@ -1105,11 +1105,11 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
     int check;
 
-    int stack_idx, c, cards_num, a, dc, ds,b;
+    int stack_idx, c, a, dc, ds,b;
     fcs_card_t card, top_card, this_card, prev_card;
     fcs_card_t dest_card;
     int freecells_to_fill, freestacks_to_fill;
-    int dest_cards_num, num_cards_to_relocate;
+    int num_cards_to_relocate;
     int seq_end;
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
@@ -1157,12 +1157,11 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     for (stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
         col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
 
-        for (c=0 ; c<cards_num ; c=seq_end+1)
+        for (c=0 ; c<fcs_col_len(col) ; c=seq_end+1)
         {
             /* Check if there is a sequence here. */
-            for(seq_end=c ; seq_end<cards_num-1 ; seq_end++)
+            for(seq_end=c ; seq_end<fcs_col_len(col)-1 ; seq_end++)
             {
                 this_card = fcs_col_get_card(col, seq_end+1);
                 prev_card = fcs_col_get_card(col, seq_end);
@@ -1208,7 +1207,6 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                     continue;
                 }
                 dest_col = fcs_state_get_col(state, ds);
-                dest_cards_num = fcs_col_len(dest_col);
                 dest_card = fcs_col_get_card(dest_col, dc);
 
                 if (! fcs_is_parent_card(card, dest_card))
@@ -1216,7 +1214,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                     continue;
                 }
 
-                num_cards_to_relocate = dest_cards_num - dc - 1 + cards_num - seq_end - 1;
+                num_cards_to_relocate = fcs_col_len(dest_col) - dc - 1 + fcs_col_len(col) - seq_end - 1;
 
                 freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
 
