@@ -13,6 +13,7 @@ my $freecell_only = 0;
 my $secondary_hash_value = 0;
 my $build_static_lib = 0;
 my $states_type;
+my $test_suite = 1;
 
 sub set_both
 {
@@ -54,6 +55,7 @@ GetOptions(
     'p|pos=s' => \$state_storage,
     'prefix=s' => \$prefix,
     'secondary!' => \$secondary_hash_value,
+    'test-suite!' => \$test_suite,
     'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
@@ -88,7 +90,7 @@ my @cmd= ("cmake",
     ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
     ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
-    "-DFCS_WITH_TEST_SUITE=1",
+    ($test_suite ? ("-DFCS_WITH_TEST_SUITE=1") : ()),
 );
 
 print(join(" ", @cmd), "\n");
