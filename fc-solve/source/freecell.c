@@ -2053,6 +2053,8 @@ int fc_solve_sfs_yukon_move_card_to_parent(
 
     tests_define_accessors();
 
+    temp_move = fc_solve_empty_move;
+
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
@@ -2133,6 +2135,7 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
     tests_define_accessors();
 
     num_vacant_stacks = soft_thread->num_vacant_stacks;
+    temp_move = fc_solve_empty_move;
 
     if (num_vacant_stacks == 0)
     {
