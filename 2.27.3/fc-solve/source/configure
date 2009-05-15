@@ -1,0 +1,124 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+my $build_type = "debug";
+my $stack_storage;
+my $state_storage;
+my $prefix = "/usr";
+my $freecell_only = 0;
+my $secondary_hash_value = 0;
+my $build_static_lib = 0;
+my $states_type;
+my $test_suite = 1;
+
+sub set_both
+{
+    my $val = shift;
+    $stack_storage = $state_storage = $val;
+
+    return;
+}
+
+sub set_hash
+{
+    return set_both("INTERNAL_HASH");
+}
+
+set_hash();
+
+my @new_argv;
+for (my $idx = 0; $idx < @ARGV ; $idx++)
+{
+    if ($ARGV[$idx] =~ m{\A-l(.*)\z}ms)
+    {
+        my $arg = $1;
+        if (! length($arg))
+        {
+            $arg = $ARGV[++$idx];
+        }
+        if ($arg eq "tt") # Threads test.
+        {
+            push @new_argv, qw(-r --fc-only --notest-suite);
+        }
+        else
+        {
+            die "Unknown -l argument '$arg'!";
+        }
+    }
+    else
+    {
+        push @new_argv, $ARGV[$idx];
+    }
+}
+
+@ARGV = @new_argv;
+
+GetOptions(
+    'd|debug' => sub {
+        my ($opt, $val) = @_;
+        if ($val)
+        {
+            $build_type = "debug";
+        }
+        return;
+    },
+    'r|release' => sub {
+        my ($opt, $val) = @_;
+        if ($val) 
+        {
+            $build_type = "release";
+        } 
+        elsif ($build_type eq "release")
+        {
+            $build_type = "debug";
+        }
+        return;
+    },
+    'c|cols=s' => \$stack_storage,
+    'p|pos=s' => \$state_storage,
+    'prefix=s' => \$prefix,
+    'secondary!' => \$secondary_hash_value,
+    'test-suite!' => \$test_suite,
+    'judy' => sub { return set_both("JUDY"); },
+    'hash' => \&set_hash,
+    'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
+    'fc-only' => \$freecell_only,
+    'static' => \$build_static_lib,
+    'states-type=s' => \$states_type,
+    'profile' => sub {
+        my ($opt, $val) = @_;
+        if ($val) 
+        {
+            $build_type = "profile";
+        } 
+        elsif ($build_type eq "profile")
+        {
+            $build_type = "debug";
+        }
+        return;
+    },
+) or
+    die "Wrong options";
+
+# This cache is sometimes causing problems.
+unlink("CMakeCache.txt");
+
+my @cmd= ("cmake",
+    "-DCMAKE_BUILD_TYPE=$build_type",
+    "-DFCS_STATE_STORAGE=FCS_STATE_STORAGE_$state_storage",
+    "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
+    "-DCMAKE_INSTALL_PREFIX=$prefix",
+    "-DDATADIR=$prefix/share",
+    ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
+    ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
+    ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
+    (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
+    ($test_suite ? ("-DFCS_WITH_TEST_SUITE=1") : ()),
+);
+
+print(join(" ", @cmd), "\n");
+exec(@cmd);
