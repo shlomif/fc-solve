@@ -9,8 +9,6 @@
 use strict;
 use warnings;
 
-my @lines = <ARGV>;
-
 sub get_time
 {
     my $l = shift;
@@ -24,7 +22,19 @@ sub get_time
     }
 }
 
-print +(get_time($lines[-1]) - get_time($lines[0])), "\n";
+foreach my $file (@ARGV)
+{
+    open my $in, "<", $file
+        or die "Cannot open $file";
+    my @lines = <$in>;
+    close($in);
+    if (@ARGV > 1)
+    {
+        print "${file}:";
+    }
+    print +(get_time($lines[-1]) - get_time($lines[0])), "\n";
+}
+
 
 
 =head1 COPYRIGHT AND LICENSE
