@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ -e debian ]
+then
+    echo Hey, debian directory/symlink/file exists, why?
+    exit 1
+else
+    ver=`cat ver.txt`
+
+    ln -s upstream-debian debian
+    sed s/%VERSION%/$ver-1/ <debian/changelog.meta >debian/changelog
+    fakeroot debian/rules binary
+    fakeroot debian/rules clean
+    rm debian/changelog
+    rm debian
+fi
