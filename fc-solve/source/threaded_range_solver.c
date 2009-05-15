@@ -475,10 +475,6 @@ typedef __int64 very_long_int_t;
 very_long_int_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
-static int num_finished_threads = 0;
-static pthread_mutex_t num_finished_threads_lock;
-
-
 void * worker_thread(void * void_context)
 {
     context_t * context;
@@ -667,11 +663,6 @@ void * worker_thread(void * void_context)
     freecell_solver_user_free(user.instance);
 
 ret_label:
-
-    pthread_mutex_lock(&num_finished_threads_lock);
-    num_finished_threads++;
-    pthread_mutex_unlock(&num_finished_threads_lock);
-
     return NULL;
 }
 
@@ -854,16 +845,11 @@ int main(int argc, char * argv[])
         );
     }
 
-#define num_finished_threads_copy idx
-
-    do 
+    /* Wait for all threads to finish. */
+    for( idx = 0 ; idx < num_workers ; idx++)
     {
-        sleep(1);
-
-        pthread_mutex_lock(&num_finished_threads_lock);
-        num_finished_threads_copy = num_finished_threads;
-        pthread_mutex_unlock(&num_finished_threads_lock);
-    } while (num_finished_threads_copy != num_workers);
+        pthread_join(workers[idx], NULL);
+    }
 
 #ifndef WIN32
             gettimeofday(&tv,&tz);
