@@ -845,3 +845,87 @@ binaries:
 
 132.314429998398s
 
+========================================================================
+
+/branches/solving-using-several-instances-in-different-pthreads
+
+With ./configure -r --fc-only using  
+
+{{{
+./freecell-solver-multi-thread-solve 1 32000 500 -l gi | tee dump
+}}}
+
+I'm getting
+
+{{{{{{{{{{{{{{{{{{
+Started at 1242387607.216835
+Reached Board No. 500 at 1242387608.768269 (total_num_iters=78781)
+Reached Board No. 1000 at 1242387610.540911 (total_num_iters=268043)
+Reached Board No. 1500 at 1242387612.141175 (total_num_iters=447606)
+Reached Board No. 2000 at 1242387613.666406 (total_num_iters=809201)
+Reached Board No. 2500 at 1242387615.594558 (total_num_iters=1061973)
+Reached Board No. 3000 at 1242387617.393844 (total_num_iters=1358751)
+Reached Board No. 3500 at 1242387619.279625 (total_num_iters=1456931)
+Reached Board No. 4000 at 1242387620.986607 (total_num_iters=1853324)
+Reached Board No. 4500 at 1242387622.860846 (total_num_iters=2245137)
+Reached Board No. 5000 at 1242387624.568274 (total_num_iters=2339310)
+Reached Board No. 5500 at 1242387626.568132 (total_num_iters=2750448)
+Reached Board No. 6000 at 1242387628.279932 (total_num_iters=2933097)
+Reached Board No. 6500 at 1242387630.424060 (total_num_iters=3155073)
+Reached Board No. 7000 at 1242387632.148269 (total_num_iters=3721617)
+Reached Board No. 7500 at 1242387633.810056 (total_num_iters=3899091)
+Reached Board No. 8000 at 1242387635.565195 (total_num_iters=4313986)
+Reached Board No. 8500 at 1242387637.127002 (total_num_iters=4485704)
+Reached Board No. 9000 at 1242387639.062439 (total_num_iters=4856343)
+Reached Board No. 9500 at 1242387640.235108 (total_num_iters=4934987)
+Reached Board No. 10000 at 1242387642.226001 (total_num_iters=5295812)
+Reached Board No. 10500 at 1242387644.022277 (total_num_iters=5493879)
+Reached Board No. 11000 at 1242387645.603889 (total_num_iters=5580627)
+Reached Board No. 11500 at 1242387647.233190 (total_num_iters=5672906)
+Reached Board No. 12000 at 1242387648.964144 (total_num_iters=6013875)
+Unsolved Board No. 11982 at 1242387650.997994
+Reached Board No. 12500 at 1242387651.543373 (total_num_iters=6796133)
+Reached Board No. 13000 at 1242387653.151412 (total_num_iters=6887551)
+Reached Board No. 13500 at 1242387654.918604 (total_num_iters=6978975)
+Reached Board No. 14000 at 1242387656.754488 (total_num_iters=7396544)
+Reached Board No. 14500 at 1242387658.615138 (total_num_iters=8013979)
+Reached Board No. 15000 at 1242387660.227682 (total_num_iters=8320033)
+Reached Board No. 15500 at 1242387662.173154 (total_num_iters=8610274)
+Reached Board No. 16000 at 1242387664.164606 (total_num_iters=8821604)
+Reached Board No. 16500 at 1242387665.604434 (total_num_iters=8914968)
+Reached Board No. 17000 at 1242387667.567260 (total_num_iters=9191892)
+Reached Board No. 17500 at 1242387669.538660 (total_num_iters=9769989)
+Reached Board No. 18000 at 1242387671.044870 (total_num_iters=9947586)
+Reached Board No. 18500 at 1242387672.475155 (total_num_iters=10131079)
+Reached Board No. 19000 at 1242387674.333959 (total_num_iters=10226875)
+Reached Board No. 19500 at 1242387676.052207 (total_num_iters=10507400)
+Reached Board No. 20000 at 1242387677.614067 (total_num_iters=10601400)
+Reached Board No. 20500 at 1242387679.521512 (total_num_iters=10883078)
+Reached Board No. 21000 at 1242387681.353746 (total_num_iters=10978942)
+Reached Board No. 21500 at 1242387682.772446 (total_num_iters=11052451)
+Reached Board No. 22000 at 1242387684.468800 (total_num_iters=12147110)
+Reached Board No. 22500 at 1242387686.084086 (total_num_iters=12282997)
+Reached Board No. 23000 at 1242387687.729079 (total_num_iters=12821430)
+Reached Board No. 23500 at 1242387689.596047 (total_num_iters=13102995)
+Reached Board No. 24000 at 1242387691.319793 (total_num_iters=13307213)
+Reached Board No. 24500 at 1242387693.064794 (total_num_iters=13498504)
+Reached Board No. 25000 at 1242387694.641027 (total_num_iters=13592963)
+Reached Board No. 25500 at 1242387696.554731 (total_num_iters=13867167)
+Reached Board No. 26000 at 1242387698.592715 (total_num_iters=14090711)
+Reached Board No. 26500 at 1242387700.268101 (total_num_iters=14181839)
+Reached Board No. 27000 at 1242387701.967426 (total_num_iters=14278592)
+Reached Board No. 27500 at 1242387703.835704 (total_num_iters=14393902)
+Reached Board No. 28000 at 1242387705.649583 (total_num_iters=15502445)
+Reached Board No. 28500 at 1242387707.498916 (total_num_iters=15597153)
+Reached Board No. 29000 at 1242387709.471263 (total_num_iters=15700612)
+Reached Board No. 29500 at 1242387711.345328 (total_num_iters=15797310)
+Reached Board No. 30000 at 1242387713.518212 (total_num_iters=16690486)
+Reached Board No. 30500 at 1242387715.444571 (total_num_iters=16793169)
+Reached Board No. 31000 at 1242387717.380726 (total_num_iters=17114989)
+Reached Board No. 31500 at 1242387719.384270 (total_num_iters=17213773)
+Reached Board No. 32000 at 1242387721.737463 (total_num_iters=17338340)
+Finished at 1242387722.265880 (total_num_iters=18589554)
+}}}}}}}}}}}}}}}}}}
+
+115.049045085907s
+
