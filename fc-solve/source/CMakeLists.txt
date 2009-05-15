@@ -30,7 +30,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "\\\\.o$"
     "~$"
     "/board_gen/(pi-make-microsoft-freecell-board|make-microsoft-freecell-board|make-gnome-freecell-board|make-aisleriot-freecell-board)$"
-    "/(fc-solve|freecell-solver-range-parallel-solve|freecell-solver-fc-pro-range-solve)$"
+    "/(fc-solve|freecell-solver-range-parallel-solve|freecell-solver-fc-pro-range-solve|freecell-solver-multi-thread-solve)$"
     "/lib(fcs|freecell-solver)\\\\.(a|la)$"
     "\\\\.so(\\\\.[0-9]+)*$"
     "/\\\\.svn/"
