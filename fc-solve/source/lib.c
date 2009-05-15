@@ -297,7 +297,9 @@ int freecell_solver_user_resume_solution(
         if (user->instances_list[user->current_instance_idx].ret == FCS_STATE_NOT_BEGAN_YET)
         {
             int status;
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
             fc_solve_instance_t * instance = user->instance;
+#endif
 
             status = fc_solve_initial_user_state_to_c(
                 user->state_string_copy,
@@ -418,7 +420,9 @@ int freecell_solver_user_resume_solution(
 
         if (user->ret == FCS_STATE_WAS_SOLVED)
         {
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
             fc_solve_instance_t * instance = user->instance;
+#endif
             fc_solve_move_stack_normalize(
                 user->instance->solution_moves,
                 &(user->state.info),
@@ -467,7 +471,9 @@ int freecell_solver_user_get_next_move(
     user = (fcs_user_t*)user_instance;
 
     {
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
         fc_solve_instance_t * instance = user->instance;
+#endif
         if (user->ret == FCS_STATE_WAS_SOLVED)
         {
             int ret;
@@ -508,7 +514,9 @@ char * freecell_solver_user_current_state_as_string(
     user = (fcs_user_t *)user_instance;
 
     {
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
         fc_solve_instance_t * instance = user->instance;
+#endif
 
         return
             fc_solve_state_as_string(
