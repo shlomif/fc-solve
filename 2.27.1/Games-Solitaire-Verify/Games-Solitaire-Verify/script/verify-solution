@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use blib;
+
+use Data::Dumper;
+use Games::Solitaire::Verify::Solution;
+
+{
+    # Initialise a column
+    my $solution = Games::Solitaire::Verify::Solution->new(
+        {
+            input_fh => \*STDIN, 
+            variant => "freecell",
+        },
+    );
+
+    my $verdict = $solution->verify();
+    if (!$verdict)
+    {
+        print "OK.\n";
+        exit(0);
+    }
+    else
+    {
+        print STDERR Dumper($verdict);
+    }
+}

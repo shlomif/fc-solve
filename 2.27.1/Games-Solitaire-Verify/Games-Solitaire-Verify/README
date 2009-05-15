@@ -1,0 +1,56 @@
+Games-Solitaire-Verify
+
+This is a CPAN Perl module that verifies the solutions of various variants
+of card Solitaire. It does not aim to try to be a solver for them, because
+this is too CPU intensive to be adequately done using perl5 (as of 
+perl-5.10.0). If you're interested in the latter, look at:
+
+* http://fc-solve.berlios.de/
+
+* http://fc-solve.berlios.de/links.html#other_solvers
+
+Instead, what Games-Solitaire-Verify does is verify the solutions
+and makes sure they are correct.
+
+See http://pysolfc.sourceforge.net/ for more about card solitaire.
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Build.PL
+	./Build
+	./Build test
+	./Build install
+
+Alternatively you can use CPAN.pm or CPANPLUS.pm, or more preferably your
+operating system's wrappers for them.
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc Games::Solitaire::Verify
+
+You can also look for information at:
+
+    RT, CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-Verify
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/Games-Solitaire-Verify
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/Games-Solitaire-Verify
+
+    Search CPAN
+        http://search.cpan.org/dist/Games-Solitaire-Verify
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2008 Shlomi Fish
+
+This program is released under the following license: MIT X11 License.
+

@@ -1,0 +1,10 @@
+#include '../template.wml'
+
+<latemp_subject "Freecell Solver's Previous News Items" />
+
+<:{
+use MyNews;
+
+MyNews::print_old();
+}:>
+
