@@ -4,6 +4,7 @@
 # are the core developers and halo developers, and not end-users. Please
 # see the INSTALL file for proper building instructions using cmake.
 #
+# "Tatzer" (Taf-Tzadik-Reish) is the Hebrew word for "configure!".
 
 use strict;
 use warnings;
