@@ -2,6 +2,12 @@
 
 --- Non-pressing ---
 
+* Experiment with converting the many max_num_* / num_* pairs to num_*
+only (with ((num & 0x10) == 0) as a resize check.) 
+
+* Experiment with using a union in the soft_thread to unify common elements
+that are used only by one of the scans.
+
 * Move the trunk, branches, tags, etc. to under /fc-solve. (?)
 
 * Default on building from the .tar.bz2 and distribute them instead of
