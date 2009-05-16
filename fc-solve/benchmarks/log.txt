@@ -937,3 +937,29 @@ https://svn.berlios.de/svnroot/repos/fc-solve/branches/get_rid_of_max_num_in_gro
 With two worker threads and ./configure -r --fc-only:
 
 114.385474920273s
+
+========================================================================
+
+Trunk with ./configure -r --fc-only and:
+
+{{{
+ADD_DEFINITIONS("-march=pentium4")
+ADD_DEFINITIONS("-fomit-frame-pointer")
+}}}
+
+With two worker threads:
+
+111.654791116714s
+
+========================================================================
+
+Trunk with ./configure -r --fc-only and Intel's icc:
+
+124.266519069672s
+
+========================================================================
+
+Trunk with ./configure -r --fc-only, 3 worker thread and Intel's icc:
+
+106.386187076569s
+
