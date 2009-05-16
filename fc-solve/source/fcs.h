@@ -141,11 +141,12 @@ struct fc_solve_soft_thread_struct;
 
 typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 
+#define TESTS_ORDER_GROW_BY 16
+
 struct fcs_tests_order_struct
 {
     int num;
     int * tests;
-    int max_num;
 };
 
 typedef struct fcs_tests_order_struct fcs_tests_order_t;
@@ -159,13 +160,11 @@ typedef struct fc_solve_instance
     /* The number of states in the sort margin */
     int num_prev_states_margin;
 
-    /* The sorted cached states, their number and their maximal size.
-     * max_num_indirect_prev_states may increase as the
-     * indirect_prev_states is realloced.
+    /* The sorted cached states, and their number. The maximal
+     * size is calculated based on the number.
      * */
     fcs_standalone_state_ptrs_t * indirect_prev_states;
     int num_indirect_prev_states;
-    int max_num_indirect_prev_states;
 #endif
 
     /* The number of states that were checked by the solving algorithm.
@@ -476,7 +475,6 @@ struct fc_solve_hard_thread_struct
      * the last state is released.
      * */
     fcs_state_keyval_pair_t * * state_packs;
-    int max_num_state_packs;
     int num_state_packs;
     int num_states_in_last_pack;
     int state_pack_len;
@@ -677,9 +675,6 @@ struct fc_solve_soft_thread_struct
      * to those states.
      *
      * num_states_to_check[i] - the size of states_to_check[i]
-     *
-     * max_num_states_to_check[i] - the limit of pointers that can be
-     * placed in states_to_check[i] without resizing.
      *
      * current_state_indexes[i] - the index of the last checked state
      * in depth i.

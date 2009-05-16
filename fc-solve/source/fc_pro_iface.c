@@ -172,14 +172,21 @@ char * moves_processed_render_move(fcs_extended_move_t move, char * string)
     return string+strlen(string);
 }
 
+#define MOVES_PROCESSED_GROW_BY 32
 static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended_move_t new_move)
 {
-    moves->moves[moves->num_moves++] = new_move;
-    if (moves->num_moves == moves->max_num_moves)
+    if (! ((++moves->num_moves) & (MOVES_PROCESSED_GROW_BY - 1)))
     {
-        moves->max_num_moves += 32;
-        moves->moves = realloc(moves->moves, sizeof(moves->moves[0]) * moves->max_num_moves);
-    }
+        moves->moves =
+            realloc(
+                moves->moves,
+                (
+                    sizeof(moves->moves[0])
+                    * (moves->num_moves + MOVES_PROCESSED_GROW_BY)
+                )
+            );
+    }    
+    moves->moves[moves->num_moves-1] = new_move;
 }
 
 moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * instance)
@@ -193,10 +200,11 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
 
     pos = *orig;
     
+    num_back_end_moves = freecell_solver_user_get_moves_left(instance);
+
     ret = malloc(sizeof(*ret));
     ret->num_moves = 0;
-    ret->max_num_moves = num_back_end_moves = freecell_solver_user_get_moves_left(instance);
-    ret->moves = malloc(sizeof(ret->moves[0]) * ret->max_num_moves);
+    ret->moves = malloc(sizeof(ret->moves[0]) * MOVES_PROCESSED_GROW_BY);
     ret->next_move_idx = 0;
 
     for(i=0;i<8;i++)

@@ -39,7 +39,6 @@ struct moves_processed_struct
 {
     int next_move_idx;
     int num_moves;
-    int max_num_moves;
     fcs_extended_move_t * moves;
 };
 

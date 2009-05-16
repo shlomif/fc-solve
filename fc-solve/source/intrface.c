@@ -167,7 +167,7 @@ static void soft_thread_clean_soft_dfs(
         }
         for(;depth<dfs_max_depth;depth++)
         {
-            if (info_ptr->derived_states_list.max_num_states)
+            if (info_ptr->derived_states_list.states)
             {
                 free(info_ptr->derived_states_list.states);
                 free(info_ptr->derived_states_random_indexes);
@@ -215,8 +215,6 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
 
     soft_thread->tests_order.num = 0;
     soft_thread->tests_order.tests = NULL;
-    soft_thread->tests_order.max_num = 0;
-
 
     /* Initialize all the Soft-DFS stacks to NULL */
     soft_thread->soft_dfs_info = NULL;
@@ -256,13 +254,17 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
     }
 #else
     soft_thread->tests_order.num = soft_thread->hard_thread->instance->instance_tests_order.num;
+    /* Bound the maximal number up to the next product of 
+     * TESTS_ORDER_GROW_BY . 
+     * */
     soft_thread->tests_order.tests =
-        malloc(sizeof(soft_thread->tests_order.tests[0]) * soft_thread->tests_order.num);
+        malloc(sizeof(soft_thread->tests_order.tests[0]) * 
+            ((soft_thread->tests_order.num & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
+        );
     memcpy(soft_thread->tests_order.tests,
         soft_thread->hard_thread->instance->instance_tests_order.tests,
         sizeof(soft_thread->tests_order.tests[0]) * soft_thread->tests_order.num
         );
-    soft_thread->tests_order.max_num = soft_thread->tests_order.num;
 #endif
 
     soft_thread->is_finished = 0;
@@ -343,7 +345,6 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     instance->num_indirect_prev_states = 0;
-    instance->max_num_indirect_prev_states = 0;
 #endif
 
     instance->num_times = 0;
@@ -356,13 +357,11 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->instance_tests_order.num = 0;
     instance->instance_tests_order.tests = NULL;
-    instance->instance_tests_order.max_num = 0;
 
     instance->opt_tests_order_set = 0;
 
     instance->opt_tests_order.num = 0;
     instance->opt_tests_order.tests = NULL;
-    instance->opt_tests_order.max_num = 0;
 
 
 
@@ -574,11 +573,10 @@ static int compile_prelude(
     char * string;
     int last_one = 0;
     int num_items = 0;
-    int max_num_items = 16;
     fcs_prelude_item_t * prelude;
     int st_idx;
 
-    prelude = malloc(sizeof(prelude[0]) * max_num_items);
+    prelude = NULL;
     string = hard_thread->prelude_as_string;
 
     p = string;
@@ -621,17 +619,17 @@ static int compile_prelude(
             free(prelude);
             return FCS_COMPILE_PRELUDE_UNKNOWN_SCAN_ID;
         }
+#define PRELUDE_GROW_BY 16
+        if (! (num_items & (PRELUDE_GROW_BY-1)))
+        {
+            prelude = realloc(prelude, sizeof(prelude[0]) * (num_items+PRELUDE_GROW_BY));
+        }
         prelude[num_items].scan_idx = st_idx;
         prelude[num_items].quota = atoi(p_quota);
         num_items++;
-        if (num_items == max_num_items)
-        {
-            max_num_items += 16;
-            prelude = realloc(prelude, sizeof(prelude[0]) * max_num_items);
-        }
     }
 
-    hard_thread->prelude = prelude;
+    hard_thread->prelude = realloc(prelude, sizeof(prelude[0]) * num_items);
     hard_thread->prelude_num_items = num_items;
     hard_thread->prelude_idx = 0;
 
@@ -690,7 +688,6 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             tests = realloc(tests, num_tests*sizeof(tests[0]));
             instance->opt_tests_order.tests = tests;
             instance->opt_tests_order.num =
-                instance->opt_tests_order.max_num =
                 num_tests;
             instance->opt_tests_order_set = 1;
         }
@@ -831,8 +828,12 @@ static fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
 {
     fcs_tests_order_t ret;
 
-    ret.max_num = ret.num = orig->num;
-    ret.tests = malloc(sizeof(ret.tests[0]) * ret.num);
+    ret.num = orig->num;
+    
+    ret.tests = 
+        malloc(sizeof(ret.tests[0]) * 
+            ((ret.num & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
+        );
     memcpy(ret.tests, orig->tests, sizeof(ret.tests[0]) * ret.num);
 
     return ret;
@@ -982,13 +983,7 @@ int fc_solve_solve_instance(
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     instance->num_prev_states_margin = 0;
 
-    instance->max_num_indirect_prev_states = PREV_STATES_GROW_BY;
-
-    instance->indirect_prev_states =
-        (fcs_standalone_state_ptrs_t *)malloc(
-            sizeof(instance->indirect_prev_states[0]) 
-            * instance->max_num_indirect_prev_states
-        );
+    instance->indirect_prev_states = NULL;
 #else
 #error not defined
 #endif
@@ -1501,7 +1496,6 @@ void fc_solve_finish_instance(
     instance->num_prev_states_margin = 0;
 
     instance->num_indirect_prev_states = 0;
-    instance->max_num_indirect_prev_states = 0;
 
     free(instance->indirect_prev_states);
     instance->indirect_prev_states = NULL;

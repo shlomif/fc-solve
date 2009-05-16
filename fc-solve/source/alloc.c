@@ -46,10 +46,8 @@ fcs_compact_allocator_t *
 {
     fcs_compact_allocator_t * allocator;
 
-
     allocator = (fcs_compact_allocator_t *)malloc(sizeof(*allocator));
-    allocator->max_num_packs = IA_STATE_PACKS_GROW_BY;
-    allocator->packs = (char * *)malloc(sizeof(allocator->packs[0]) * allocator->max_num_packs);
+    allocator->packs = (char * *)malloc(sizeof(allocator->packs[0]) * IA_STATE_PACKS_GROW_BY);
     allocator->num_packs = 1;
     allocator->max_ptr =
         (allocator->ptr =
@@ -66,16 +64,19 @@ void fc_solve_compact_allocator_extend(
         )
 {
     /* Allocate a new pack */
-    if (allocator->num_packs == allocator->max_num_packs)
+    if (! ((++allocator->num_packs) & (IA_STATE_PACKS_GROW_BY-1)))
     {
-        allocator->max_num_packs += IA_STATE_PACKS_GROW_BY;
-        allocator->packs = (char * *)realloc(allocator->packs, sizeof(allocator->packs[0]) * allocator->max_num_packs);
+        allocator->packs = (char * *)realloc(
+            allocator->packs,
+            sizeof(allocator->packs[0]) * 
+                ((allocator->num_packs) + IA_STATE_PACKS_GROW_BY)
+        );
     }
 
     allocator->max_ptr =
         (allocator->ptr =
         allocator->rollback_ptr =
-        allocator->packs[allocator->num_packs++] =
+        allocator->packs[allocator->num_packs-1] =
         malloc(ALLOCED_SIZE))
             + ALLOCED_SIZE;
 }

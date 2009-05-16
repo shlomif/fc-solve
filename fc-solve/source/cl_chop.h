@@ -32,7 +32,6 @@ struct args_man_struct
 {
     int argc;
     char * * argv;
-    int max_num_argv;
 };
 
 typedef struct args_man_struct args_man_t;

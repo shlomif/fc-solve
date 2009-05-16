@@ -464,19 +464,15 @@ GCC_INLINE int fc_solve_check_and_add_state(
             if (instance->num_prev_states_margin >= PREV_STATES_SORT_MARGIN)
             {
                 /* The sort margin is full, let's combine it with the main array */
-                if (instance->num_indirect_prev_states + instance->num_prev_states_margin > instance->max_num_indirect_prev_states)
-                {
-                    while (instance->num_indirect_prev_states + instance->num_prev_states_margin > instance->max_num_indirect_prev_states)
-                    {
-                        instance->max_num_indirect_prev_states += PREV_STATES_GROW_BY;
-                    }
-                    instance->indirect_prev_states =
-                        realloc(
-                            instance->indirect_prev_states,
-                            sizeof(instance->indirect_prev_states[0])
-                            * instance->max_num_indirect_prev_states
-                        );
-                }
+
+                instance->indirect_prev_states = 
+                    realloc(
+                        instance->indirect_prev_states,
+                        sizeof(instance->indirect_prev_states[0])
+                        * (instance->num_indirect_prev_states
+                            + instance->num_prev_states_margin
+                        )
+                    );
 
                 fc_solve_merge_large_and_small_sorted_arrays(
                     instance->indirect_prev_states,

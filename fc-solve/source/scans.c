@@ -82,7 +82,6 @@ static void fc_solve_increase_dfs_max_depth(
     for(d=soft_thread->dfs_max_depth ; d<new_dfs_max_depth; d++)
     {
         soft_thread->soft_dfs_info[d].state_val = NULL;
-        soft_thread->soft_dfs_info[d].derived_states_list.max_num_states = 0;
         soft_thread->soft_dfs_info[d].test_index = 0;
         soft_thread->soft_dfs_info[d].current_state_index = 0;
         soft_thread->soft_dfs_info[d].derived_states_list.num_states = 0;
@@ -95,16 +94,31 @@ static void fc_solve_increase_dfs_max_depth(
     soft_thread->dfs_max_depth = new_dfs_max_depth;
 }
 
+#define DERIVED_STATES_LIST_GROW_BY 16
 void fc_solve_derived_states_list_add_state(
         fcs_derived_states_list_t * list,
         fcs_state_extra_info_t * state_val,
         int context
         )
 {
-    if ((list)->num_states == (list)->max_num_states)
+    if (
+        (!(
+           (list->num_states+(list->states != NULL))
+           & (DERIVED_STATES_LIST_GROW_BY-1)
+          )
+        )
+       )
     {
-        (list)->max_num_states += 16;
-        (list)->states = realloc((list)->states, sizeof((list)->states[0]) * (list)->max_num_states);
+        (list)->states = realloc(
+            (list)->states, 
+            (
+                sizeof((list)->states[0])
+                * (list->num_states
+                    + (list->states!=NULL)
+                    + DERIVED_STATES_LIST_GROW_BY
+                  )
+            )
+        );
     }
     (list)->states[(list)->num_states].state_ptr = state_val;
     (list)->states[(list)->num_states++].context.i = context;
@@ -854,7 +868,6 @@ int fc_solve_a_star_or_bfs_do_solve(
     fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->bfs_queue_last_item;
 
     derived.num_states = 0;
-    derived.max_num_states = 0;
     derived.states = NULL;
 
     tests_order_num = soft_thread->tests_order.num;

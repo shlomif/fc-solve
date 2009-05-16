@@ -929,3 +929,11 @@ Finished at 1242387722.265880 (total_num_iters=18589554)
 
 115.049045085907s
 
+
+========================================================================
+
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/get_rid_of_max_num_in_growing_arrays
+
+With two worker threads and ./configure -r --fc-only:
+
+114.385474920273s

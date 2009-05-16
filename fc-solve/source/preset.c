@@ -441,9 +441,8 @@ int fc_solve_apply_tests_order(
     if (tests_order->tests)
     {
         free(tests_order->tests);
-        tests_order->max_num = 10;
         tests_order->num = 0;
-        tests_order->tests = malloc(sizeof(tests_order->tests[0])*tests_order->max_num );
+        tests_order->tests = malloc(sizeof(tests_order->tests[0])*TESTS_ORDER_GROW_BY);
     }
 
 #if 0
@@ -483,14 +482,18 @@ int fc_solve_apply_tests_order(
             is_start_group = 0;
             continue;
         }
-        if (test_index == tests_order->max_num)
-        {
-            tests_order->max_num += 10;
-            tests_order->tests = realloc(tests_order->tests, sizeof(tests_order->tests[0]) * tests_order->max_num);
-        }
-        tests_order->tests[test_index] = (fc_solve_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
 
-        test_index++;
+        if (! ((test_index) & (TESTS_ORDER_GROW_BY - 1)))
+        {
+            tests_order->tests =
+                realloc(
+                    tests_order->tests,
+                    sizeof(tests_order->tests[0]) * (test_index+TESTS_ORDER_GROW_BY)
+                );
+        }
+
+        tests_order->tests[test_index++] = (fc_solve_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+
         is_start_group = 0;
     }
     if (a != len)

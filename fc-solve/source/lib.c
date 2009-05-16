@@ -56,7 +56,6 @@ struct fcs_user_struct
      * */
     fcs_instance_item_t * instances_list;
     int num_instances;
-    int max_num_instances;
 
     int current_instance_idx;
     /*
@@ -96,6 +95,8 @@ struct fcs_user_struct
 
 typedef struct fcs_user_struct fcs_user_t;
 
+#define USER_INSTANCES_GROW_BY 8
+
 static void user_initialize(
         fcs_user_t * ret
         )
@@ -109,8 +110,7 @@ static void user_initialize(
 
     fcs_duplicate_preset(ret->common_preset, *freecell_preset);
 
-    ret->max_num_instances = 10;
-    ret->instances_list = malloc(sizeof(ret->instances_list[0]) * ret->max_num_instances);
+    ret->instances_list = malloc(sizeof(ret->instances_list[0]) * USER_INSTANCES_GROW_BY);
     ret->num_instances = 1;
     ret->current_instance_idx = 0;
     ret->instance = fc_solve_alloc_instance();
@@ -1265,14 +1265,14 @@ int freecell_solver_user_next_instance(
 
     user = (fcs_user_t *)user_instance;
 
-    user->num_instances++;
-    if (user->num_instances == user->max_num_instances)
+
+    if (! ((++user->num_instances) & (USER_INSTANCES_GROW_BY-1)))
     {
-        user->max_num_instances += 10;
         user->instances_list =
             realloc(
                 user->instances_list,
-                sizeof(user->instances_list[0])*user->max_num_instances
+                sizeof(user->instances_list[0])
+                * (user->num_instances + USER_INSTANCES_GROW_BY)
                 );
     }
     user->current_instance_idx = user->num_instances-1;

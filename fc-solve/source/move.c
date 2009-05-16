@@ -54,10 +54,9 @@ fcs_move_stack_t * fcs_move_stack_create(void)
     /* Allocate the data structure itself */
     ret = (fcs_move_stack_t *)malloc(sizeof(fcs_move_stack_t));
 
-    ret->max_num_moves = FCS_MOVE_STACK_GROW_BY;
     ret->num_moves = 0;
     /* Allocate some space for the moves */
-    ret->moves = (fcs_move_t *)malloc(sizeof(fcs_move_t)*ret->max_num_moves);
+    ret->moves = (fcs_move_t *)malloc(sizeof(fcs_move_t)*FCS_MOVE_STACK_GROW_BY);
 
     return ret;
 }
@@ -69,20 +68,15 @@ int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
     /* If all the moves inside the stack are taken then
        resize the move vector */
 
-    if (stack->num_moves == stack->max_num_moves)
+    if (! ((stack->num_moves+1) & (FCS_MOVE_STACK_GROW_BY-1)))
     {
-        int a, b;
-        a = (stack->max_num_moves >> 3);
-        b = FCS_MOVE_STACK_GROW_BY;
-        stack->max_num_moves += max(a,b);
         stack->moves = realloc(
             stack->moves,
-            stack->max_num_moves * sizeof(fcs_move_t)
+            (stack->num_moves+1 + FCS_MOVE_STACK_GROW_BY) *
+                sizeof(stack->moves[0])
             );
     }
     stack->moves[stack->num_moves++] = move;
-
-    return 0;
 }
 #endif
 
@@ -136,26 +130,6 @@ int fc_solve_move_stack_get_num_moves(
     return stack->num_moves;
 }
 
-#if 0
-/*
-    This function duplicates a move stack
-*/
-fcs_move_stack_t * fcs_move_stack_duplicate(
-    fcs_move_stack_t * stack
-    )
-{
-    fcs_move_stack_t * ret;
-
-    ret = (fcs_move_stack_t *)malloc(sizeof(fcs_move_stack_t));
-
-    ret->max_num_moves = stack->max_num_moves;
-    ret->num_moves = stack->num_moves;
-    ret->moves = (fcs_move_t *)malloc(sizeof(fcs_move_t) * ret->max_num_moves);
-    memcpy(ret->moves, stack->moves, sizeof(fcs_move_t) * ret->max_num_moves);
-
-    return ret;
-}
-#endif
 
 /*
     This function performs a given move on a state

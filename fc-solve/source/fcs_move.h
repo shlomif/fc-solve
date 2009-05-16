@@ -127,7 +127,6 @@ typedef struct fcs_move_struct fcs_move_t;
 struct fcs_move_stack_struct
 {
     fcs_move_t * moves;
-    int max_num_moves;
     int num_moves;
 };
 

@@ -397,7 +397,6 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 
     derived_states_list = &derived_states_struct;
     derived_states_struct.num_states = 0;
-    derived_states_struct.max_num_states = 0;
     derived_states_struct.states = NULL;
 
     positions_by_rank =

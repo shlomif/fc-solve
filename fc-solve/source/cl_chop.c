@@ -34,15 +34,14 @@
 #include <dmalloc.h>
 #endif
 
-#define ARGS_MAN_GROW_BY 30
+#define ARGS_MAN_GROW_BY 32
 
 args_man_t * fc_solve_args_man_alloc(void)
 {
     args_man_t * ret;
     ret = malloc(sizeof(args_man_t));
     ret->argc = 0;
-    ret->max_num_argv = ARGS_MAN_GROW_BY;
-    ret->argv = malloc(sizeof(ret->argv[0]) * ret->max_num_argv);
+    ret->argv = malloc(sizeof(ret->argv[0]) * ARGS_MAN_GROW_BY);
     return ret;
 }
 
@@ -78,10 +77,12 @@ void fc_solve_args_man_free(args_man_t * manager)
             new_arg[last_arg_ptr-last_arg] = '\0'; \
             manager->argv[manager->argc] = new_arg; \
             manager->argc++; \
-            if (manager->argc == manager->max_num_argv) \
+            if (! (manager->argc & (ARGS_MAN_GROW_BY-1))) \
             { \
-                manager->max_num_argv += ARGS_MAN_GROW_BY; \
-                manager->argv = realloc(manager->argv, sizeof(manager->argv[0]) * manager->max_num_argv); \
+                manager->argv = realloc( \
+                    manager->argv,  \
+                    sizeof(manager->argv[0]) * (manager->argc + ARGS_MAN_GROW_BY) \
+                    ); \
             } \
        \
             /* Reset last_arg_ptr so we will have an entirely new argument */ \

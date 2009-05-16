@@ -45,7 +45,6 @@ static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(fc_sol
     new_moves_to_parent = (fcs_move_t *)(ptr+sizeof(fcs_move_stack_t));
     new_move_stack_to_parent->moves = new_moves_to_parent;
     new_move_stack_to_parent->num_moves =
-        new_move_stack_to_parent->max_num_moves =
         old_move_stack_to_parent->num_moves;
     memcpy(new_moves_to_parent, old_move_stack_to_parent->moves, sizeof(fcs_move_t)*old_move_stack_to_parent->num_moves);
     return new_move_stack_to_parent;

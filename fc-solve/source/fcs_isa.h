@@ -43,13 +43,11 @@ extern fcs_state_with_locations_t * fcs_state_ia_alloc(fc_solve_instance_t * ins
 {           \
     if ((instance)->num_states_in_last_pack == (instance)->state_pack_len)     \
     {            \
-        if (instance->num_state_packs == instance->max_num_state_packs)    \
+        if (! ((instance->num_state_packs+1) & (IA_STATE_PACKS_GROW_BY-1) ))    \
         {        \
-            instance->max_num_state_packs += IA_STATE_PACKS_GROW_BY;      \
-            instance->state_packs = (fcs_state_keyval_pair_t * *)realloc(instance->state_packs, sizeof(fcs_state_keyval_pair_t *) * instance->max_num_state_packs);      \
+            instance->state_packs = (fcs_state_keyval_pair_t * *)realloc(instance->state_packs, sizeof(instance->state_packs[0]) * (instance->num_state_packs + IA_STATE_PACKS_GROW_BY));      \
         }          \
-        instance->state_packs[instance->num_state_packs] = malloc(instance->state_pack_len * sizeof(fcs_state_keyval_pair_t));     \
-        instance->num_state_packs++;       \
+        instance->state_packs[instance->num_state_packs++] = malloc(instance->state_pack_len * sizeof(fcs_state_keyval_pair_t));     \
         instance->num_states_in_last_pack = 0;       \
     }         \
     {          \

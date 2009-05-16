@@ -37,7 +37,6 @@ extern "C"
 struct fcs_compact_allocator_struct
 {
     char * * packs;
-    int max_num_packs;
     int num_packs;
     char * max_ptr;
     char * ptr;
