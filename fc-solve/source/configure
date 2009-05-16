@@ -14,6 +14,8 @@ my $secondary_hash_value = 0;
 my $build_static_lib = 0;
 my $states_type;
 my $test_suite = 1;
+my $cpu_arch;
+my $omit_frame;
 
 sub set_both
 {
@@ -43,6 +45,10 @@ for (my $idx = 0; $idx < @ARGV ; $idx++)
         if ($arg eq "tt") # Threads test.
         {
             push @new_argv, qw(-r --fc-only --notest-suite);
+        }
+        elsif ($arg eq "p4b") # Pentium 4 Benchmark.
+        {
+            push @new_argv, qw(-r --fc-only --arch=pentium4 --omit-frame);
         }
         else
         {
@@ -101,6 +107,8 @@ GetOptions(
         }
         return;
     },
+    'arch=s' => \$cpu_arch,
+    'omit-frame!' => \$omit_frame,
 ) or
     die "Wrong options";
 
@@ -118,6 +126,8 @@ my @cmd= ("cmake",
     ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
     ($test_suite ? ("-DFCS_WITH_TEST_SUITE=1") : ()),
+    (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
+    ($omit_frame ? "-DOPTIMIZATION_OMIT_FRAME_POINTER=1" : ()),
 );
 
 print(join(" ", @cmd), "\n");
