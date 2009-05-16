@@ -154,7 +154,7 @@ typedef struct fc_solve_instance
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     /* The sort-margin */
-    fcs_state_with_locations_t * indirect_prev_states_margin[PREV_STATES_SORT_MARGIN];
+    fcs_standalone_state_ptrs_t indirect_prev_states_margin[PREV_STATES_SORT_MARGIN];
 
     /* The number of states in the sort margin */
     int num_prev_states_margin;
@@ -163,7 +163,7 @@ typedef struct fc_solve_instance
      * max_num_indirect_prev_states may increase as the
      * indirect_prev_states is realloced.
      * */
-    fcs_state_with_locations_t * * indirect_prev_states;
+    fcs_standalone_state_ptrs_t * indirect_prev_states;
     int num_indirect_prev_states;
     int max_num_indirect_prev_states;
 #endif

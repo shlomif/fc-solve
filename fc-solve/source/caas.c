@@ -352,7 +352,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 #endif
 #endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
-    fcs_state_with_locations_t * * pos_ptr;
+    fcs_standalone_state_ptrs_t * pos_ptr;
     int found;
 #endif
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
@@ -425,18 +425,18 @@ GCC_INLINE int fc_solve_check_and_add_state(
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     /* Try to see if the state is found in indirect_prev_states */
-    if ((pos_ptr = (fcs_state_with_locations_t * *)bsearch(&new_state,
+    if ((pos_ptr = (fcs_standalone_state_ptrs_t *)bsearch(&new_state_key,
                 instance->indirect_prev_states,
                 instance->num_indirect_prev_states,
-                sizeof(fcs_state_with_locations_t *),
+                sizeof(instance->indirect_prev_states[0]),
                 fc_solve_state_compare_indirect)) == NULL)
     {
         /* It isn't in prev_states, but maybe it's in the sort margin */
-        pos_ptr = (fcs_state_with_locations_t * *)fc_solve_bsearch(
-            &new_state,
+        pos_ptr = (fcs_standalone_state_ptrs_t *)fc_solve_bsearch(
+            &new_state_key,
             instance->indirect_prev_states_margin,
             instance->num_prev_states_margin,
-            sizeof(fcs_state_with_locations_t *),
+            sizeof(instance->indirect_prev_states_margin[0]),
             fc_solve_state_compare_indirect_with_context,
             NULL,
             &found);
@@ -444,7 +444,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
         if (found)
         {
             is_state_new = 0;
-            *existing_state = *pos_ptr;
+            *existing_state_val = pos_ptr->val;
         }
         else
         {
@@ -452,11 +452,12 @@ GCC_INLINE int fc_solve_check_and_add_state(
              * margin */
             memmove((void*)(pos_ptr+1),
                     (void*)pos_ptr,
-                    sizeof(fcs_state_with_locations_t *) *
+                    sizeof(*pos_ptr) *
                     (instance->num_prev_states_margin-
                       (pos_ptr-instance->indirect_prev_states_margin)
                     ));
-            *pos_ptr = new_state;
+            pos_ptr->key = new_state_key;
+            pos_ptr->val = new_state_val;
 
             instance->num_prev_states_margin++;
 
@@ -469,7 +470,12 @@ GCC_INLINE int fc_solve_check_and_add_state(
                     {
                         instance->max_num_indirect_prev_states += PREV_STATES_GROW_BY;
                     }
-                    instance->indirect_prev_states = realloc(instance->indirect_prev_states, sizeof(fcs_state_with_locations_t *) * instance->max_num_indirect_prev_states);
+                    instance->indirect_prev_states =
+                        realloc(
+                            instance->indirect_prev_states,
+                            sizeof(instance->indirect_prev_states[0])
+                            * instance->max_num_indirect_prev_states
+                        );
                 }
 
                 fc_solve_merge_large_and_small_sorted_arrays(
@@ -477,7 +483,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
                     instance->num_indirect_prev_states,
                     instance->indirect_prev_states_margin,
                     instance->num_prev_states_margin,
-                    sizeof(fcs_state_with_locations_t *),
+                    sizeof(instance->indirect_prev_states[0]),
                     fc_solve_state_compare_indirect_with_context,
                     NULL
                 );
@@ -492,7 +498,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
     }
     else
     {
-        *existing_state = *pos_ptr;
+        *existing_state_val = pos_ptr->val;
         is_state_new = 0;
     }
 

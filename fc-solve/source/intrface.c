@@ -643,13 +643,6 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
 {
     int ht_idx;
     fc_solve_hard_thread_t * hard_thread;
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
-    instance->num_prev_states_margin = 0;
-
-    instance->max_num_indirect_prev_states = PREV_STATES_GROW_BY;
-
-    instance->indirect_prev_states = (fcs_state_with_locations_t * *)malloc(sizeof(fcs_state_with_locations_t *) * instance->max_num_indirect_prev_states);
-#endif
 
     /* Initialize the state packs */
     for(ht_idx=0;ht_idx<instance->num_hard_threads;ht_idx++)
@@ -986,6 +979,16 @@ int fc_solve_solve_instance(
             fc_solve_state_compare_with_context,
             NULL
        );
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
+    instance->num_prev_states_margin = 0;
+
+    instance->max_num_indirect_prev_states = PREV_STATES_GROW_BY;
+
+    instance->indirect_prev_states =
+        (fcs_standalone_state_ptrs_t *)malloc(
+            sizeof(instance->indirect_prev_states[0]) 
+            * instance->max_num_indirect_prev_states
+        );
 #else
 #error not defined
 #endif
@@ -1463,9 +1466,6 @@ void fc_solve_finish_instance(
 {
     int ht_idx;
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
-    free(instance->indirect_prev_states);
-#endif
 
     /* De-allocate the state packs */
     for(ht_idx=0;ht_idx<instance->num_hard_threads;ht_idx++)
@@ -1497,11 +1497,17 @@ void fc_solve_finish_instance(
     g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     fc_solve_hash_free(instance->hash);
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
+    instance->num_prev_states_margin = 0;
+
+    instance->num_indirect_prev_states = 0;
+    instance->max_num_indirect_prev_states = 0;
+
+    free(instance->indirect_prev_states);
+    instance->indirect_prev_states = NULL;
 #else
 #error not defined
 #endif
-
-
 
     /* De-allocate the stack collection while free()'ing the stacks
     in the process */
