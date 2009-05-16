@@ -55,7 +55,7 @@ enum fcs_presets_ids
     FCS_PRESET_SEAHAVEN_TOWERS,
     FCS_PRESET_SIMPLE_SIMON,
     FCS_PRESET_YUKON,
-    FCS_PRESET_BELEAGUERED_CASTLE,
+    FCS_PRESET_BELEAGUERED_CASTLE
 };
 
 static const fcs_preset_t fcs_presets[16] =
@@ -267,7 +267,7 @@ static const fcs_preset_t fcs_presets[16] =
 
         "abcdefgh",
         "abcdefgh",
-    },
+    }
 };
 
 struct fcs_preset_name_struct

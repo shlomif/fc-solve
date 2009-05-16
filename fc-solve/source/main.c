@@ -428,8 +428,7 @@ help_screen_t help_screens[] = {
 
 enum MY_FCS_CMD_LINE_RET_VALUES
 {
-    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER,
-
+    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
 };
 
 static void print_help_string(char * key)

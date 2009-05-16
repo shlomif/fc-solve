@@ -1139,7 +1139,6 @@ extern char * fc_solve_get_the_positions_by_rank_data(
         fc_solve_instance_t * instance;
         fcs_state_t * ptr_state_key;
 
-        ptr_state_key = ptr_state_val->key;
 #ifndef HARD_CODED_NUM_DECKS
         int decks_num;
 #endif
@@ -1149,6 +1148,8 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 #ifndef FCS_FREECELL_ONLY
         int sequences_are_built_by;
 #endif
+
+        ptr_state_key = ptr_state_val->key;
 
         instance = soft_thread->hard_thread->instance;
 

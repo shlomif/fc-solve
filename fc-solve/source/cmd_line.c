@@ -46,13 +46,23 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * global_presetrc = NULL, * env_var_presetrc = NULL;
     char * path;
-    char * * presetrc_pathes[5] = {&env_var_presetrc, &home_dir_presetrc, &global_presetrc, &user_preset_dir, NULL};
+    char * * presetrc_pathes[5];
     int path_idx;
     char line[8192];
     FILE * f = NULL;
     char * fgets_ret;
     char * opened_files_dir = NULL;
     int read_next_preset = 0;
+   
+
+    {
+        register int idx = 0;
+        presetrc_pathes[idx++] = &env_var_presetrc;
+        presetrc_pathes[idx++] = &home_dir_presetrc;
+        presetrc_pathes[idx++] = &global_presetrc;
+        presetrc_pathes[idx++] = &user_preset_dir;
+        presetrc_pathes[idx++] = NULL;
+    }
 
     {
         char * home_dir;

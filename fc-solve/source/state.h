@@ -369,7 +369,7 @@ typedef char fcs_locs_t;
 #if defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
 
 #define fcs_col_len(col) \
-    ( (int)((col)[0]) )
+    ( ((col)[0]) )
 
 #define fcs_col_get_card(col, c_idx) \
     ((col)[(c_idx)+1])
@@ -609,7 +609,7 @@ enum FCS_STATE_VALIDITY_CODES
     FCS_STATE_VALIDITY__EMPTY_SLOT = 3,
     FCS_STATE_VALIDITY__EXTRA_CARD = 2,
     FCS_STATE_VALIDITY__MISSING_CARD = 1,
-    FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4,
+    FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4
 };
 
 extern int fc_solve_check_state_validity(
@@ -633,7 +633,7 @@ enum FCS_VISITED_T
     FCS_VISITED_IN_SOLUTION_PATH = 0x2,
     FCS_VISITED_IN_OPTIMIZED_PATH = 0x4,
     FCS_VISITED_DEAD_END = 0x8,
-    FCS_VISITED_ALL_TESTS_DONE = 0x10,
+    FCS_VISITED_ALL_TESTS_DONE = 0x10
 };
 
 

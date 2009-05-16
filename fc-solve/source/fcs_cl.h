@@ -54,7 +54,7 @@ enum FCS_CMD_LINE_CALLBACK_RET_VALUES
     FCS_CMD_LINE_PARAM_WITH_NO_ARG,
     FCS_CMD_LINE_ERROR_IN_ARG,
 
-    FCS_CMD_LINE_USER = 0x10000,
+    FCS_CMD_LINE_USER = 0x10000
 };
 
 extern int freecell_solver_user_cmd_line_parse_args(
