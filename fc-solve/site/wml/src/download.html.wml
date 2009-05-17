@@ -24,7 +24,7 @@ Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
 
 <tr>
 <td>
-<link_to_berlios_file "freecell-solver-2.20.0-win32.exe" />
+<link_to_berlios_file "freecell-solver-2.28.0-win32.exe" />
 </td>
 <td>
 Win32 Binaries. Download the .exe and it will set up an interactive installer.
