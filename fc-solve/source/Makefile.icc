@@ -9,9 +9,12 @@ WITH_LIBRB = 0
 ifneq ($(DEBUG),0)
 	CFLAGS := -Wall -g
 else
-	CFLAGS := -Wall -O3
+	# CFLAGS := -Wall -O3 -fomit-frame-pointer -march=pentium4
 	# CFLAGS := -Wall -Os
+	CFLAGS := -Wall -fast
 endif
+
+LFLAGS := $(CFLAGS)
 
 ifneq ($(WITH_TRACES),0)
 	CFLAGS += -DDEBUG
@@ -22,7 +25,6 @@ ifneq ($(FREECELL_ONLY),0)
 endif
 
 
-LFLAGS := -Wall
 END_LFLAGS := -lm
 
 # Toggle for profiling information.
@@ -109,10 +111,10 @@ fc-solve: main.o libfcs.a
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-range-parallel-solve: test_multi_parallel.o libfreecell-solver.so
-	$(CC) -Wall -o $@  $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
+	$(CC) $(LFLAGS) -o $@  $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o libfreecell-solver.so
-	$(CC) -Wall -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
 
 clean:
 	rm -f *.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver*
