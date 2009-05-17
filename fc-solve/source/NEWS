@@ -1,3 +1,56 @@
+Version 2.28.0 (17-May-2009)
+----------------------------
+
+1. Several cleanups, refactoring and optimizations - especially to the
+freecell.c file.
+
+2. Converted more move functions ot positions_by_rank.
+
+3. Changed the hash function from Bob Jenkins's to perl 5's and inlined it.
+These were substantial optimizations.
+
+4. Unified many macros in state.h instead of having duplicate definitions
+for every state type. Verified that the alternative state types (
+COMPACT_STATES and DEBUG_STATES) build correctly.
+
+5. Added the optional -Werror=implicit-function-declarations flag to the
+compiler.
+
+6. Added tests for some Simple Simon boards.
+
+7. Created an fcs_cards_column_t type and converted the internals to use it.
+
+8. Added the threaded range solver - freecell-solver-multi-thread-solve .
+It performs better than the serial one on my machine.  It is built only if 
+pthreads (POSIX threads) is found.
+
+9. Add the HACKING file with some information on benchmarking.
+
+10. Renamed the configuration script to "Tatzer" so people who are used
+to Autoconf's "./configure ; make ; make install" won't use it.
+
+11. Got rid of all the max_num_$something in the dynamically-growing
+arrays because num_$something is enough to tell where the limit is and grow it 
+if necessary. There's now a lot of bit-fiddling logic to grow the 
+dynamically-growing arrays when necessary.
+
+12. Added support for adding the gcc -fomit-frame-pointer and -march=$CPU_ARCH
+flags.
+
+13. Added the following makefiles for alternative Linux compilers:
+
+    - Makefile.icc
+    - Makefile.tcc
+    - Makefile.tendra
+    - Makefile.lcc
+    - Makefile.pcc
+
+So far only Intel's icc and TenDRA produce working executables that
+pass all the tests. The code had to be adapted to be compiled using TenDRA.
+
+14. Added scripts/fcs-win32-create-package.pl that provides some guidance
+in creating a package under Windows.
+
 Version 2.26.0 (27-Apr-2009)
 ----------------------------
 
