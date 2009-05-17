@@ -34,10 +34,12 @@ in the <a href="features.html"><b>Features List</b></a>.
 </p>
 
 <h2>News</h2>
-
 <:{
-use MyNews;
-MyNews::print_new();
+use FreecellSolver::Site::News;
+
+binmode STDOUT, ":utf8";
+my $news = FreecellSolver::Site::News->new();
+print $news->render_front_page();
 }:>
 
 <h3 class="plain"><a href="old-news.html">Previous News Items</a></h3>
