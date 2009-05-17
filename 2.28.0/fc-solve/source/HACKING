@@ -1,0 +1,30 @@
+How to benchmark a Freecell Solver Release:
+-------------------------------------------
+
+Requirements: perl-5.8.x or above, CMake, gcc, bash and a working 
+pthreads-devel package.
+
+1. Download the Freecell Solver .tar.bz2 archive from 
+http://fc-solve.berlios.de/.
+
+2. Unpack and cd to the freecell-solver-* directory.
+
+3. Run "./Tatzer -l tt".
+
+4. Type "make" to build everything.
+
+5. Run "bash scripts/time-threads-num.bash $MAX_NUM_THREADS" . 
+
+The default for $MAX_NUM_THREADS is 6, where 7 completely hogs my system. If 
+you have many CPUs and/or cores and you are confident that raising it will 
+not overload your system, you may try to raise it.
+
+Running the benchmarking threads is better done when the computer is not 
+loaded.
+
+6. Wait.
+
+7. Type "perl scripts/time-fcs.pl DUMPS/*" and copy-and-paste the results to
+the Freecell Solver developers with specifications of your computer that are 
+as detailed as possible.
+
