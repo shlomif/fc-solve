@@ -1,0 +1,173 @@
+--- src/games/freecell.py.orig	2003-10-04 12:52:12.000000000 +0200
++++ src/games/freecell.py	2003-09-22 08:49:31.000000000 +0300
+@@ -78,7 +78,7 @@
+     Talon_Class = InitialDealTalonStack
+     Foundation_Class = SS_FoundationStack
+     RowStack_Class = FreeCell_RowStack
+-    Hint_Class = FreeCellSolverWrapper(FreeCellType_Hint, 0, 0)
++    Hint_Class = FreeCellSolverWrapper(FreeCellType_Hint, {})
+ 
+ 
+     #
+@@ -127,7 +127,7 @@
+ 
+ class RelaxedFreeCell(FreeCell):
+     RowStack_Class = AC_RowStack
+-    Hint_Class = FreeCellSolverWrapper(FreeCellType_Hint, 0, 0, 1)
++    Hint_Class = FreeCellSolverWrapper(FreeCellType_Hint, {'sm' : "unlimited"})
+ 
+ 
+ # /***********************************************************************
+@@ -136,6 +136,7 @@
+ 
+ class ForeCell(FreeCell):
+     RowStack_Class = StackWrapper(FreeCell_AC_RowStack, base_rank=KING)
++    Hint_Class = FreeCellSolverWrapper(FreeCellType_Hint, {'esf' : "kings"})
+ 
+     def startGame(self):
+         for i in range(5):
+--- src/games/bakersgame.py.orig	2003-10-04 12:51:50.000000000 +0200
++++ src/games/bakersgame.py	2003-09-22 08:49:31.000000000 +0300
+@@ -41,7 +41,7 @@
+     from game import Game
+     from layout import Layout
+     from hint import AbstractHint, DefaultHint, CautiousDefaultHint
+-    from hint import FreeCellType_Hint
++    from hint import FreeCellType_Hint, FreeCellSolverWrapper
+ 
+ 
+ # /***********************************************************************
+@@ -75,7 +75,7 @@
+ class BakersGame(Game):
+     Layout_Method = Layout.freeCellLayout
+     RowStack_Class = BakersGame_RowStack
+-    Hint_Class = FreeCellType_Hint
++    Hint_Class = FreeCellSolverWrapper(FreeCellType_Hint, {'sbb' : "suit" })
+ 
+     #
+     # game layout
+@@ -123,6 +123,7 @@
+ 
+ class KingOnlyBakersGame(BakersGame):
+     RowStack_Class = StackWrapper(FreeCell_SS_RowStack, base_rank=KING)
++    Hint_Class = FreeCellSolverWrapper(FreeCellType_Hint, {'sbb' : "suit", 'esf' : "kings" })
+ 
+ 
+ # /***********************************************************************
+@@ -237,6 +238,8 @@
+ class RelaxedSeahavenTowers(SeahavenTowers):
+     RowStack_Class = KingSS_RowStack
+ 
++    Hint_Class = FreeCellSolverWrapper(FreeCellType_Hint, {'sbb' : "suit", 'esf' : "kings", 'sm' : "unlimited",})
++
+ 
+ # /***********************************************************************
+ # // Penguin
+--- src/hint.py.orig	2003-09-02 12:06:21.000000000 +0300
++++ src/hint.py	2003-09-22 08:51:08.000000000 +0300
+@@ -685,12 +685,11 @@
+ # //
+ # ************************************************************************/
+ 
+-pysolfreecellsolver = None
++FreecellSolver = None
+ try:
+-    import pysolfreecellsolver
++    import FreecellSolver
+ except:
+-    pysolfreecellsolver = None
+-
++    FreecellSolver = None
+ 
+ class FreeCellSolverWrapper:
+     class FreeCellSolver_Hint(AbstractHint):
+@@ -725,28 +724,75 @@
+                 board = board + string.strip(b) + "\n"
+             #
+             ##print board
+-            solver = apply(pysolfreecellsolver.FCSolver, self.fcs_args)
+-            try:
+-                h = solver.solve(board)
+-            except:
+-                h = None
+-            if h:
+-                i = len(h)
+-                assert i % 3 == 0
++            # solver = apply(FreecellSolver.FCSolver, self.fcs_args)
++            solver = FreecellSolver.alloc()
++            solver.config(["-l", "good-intentions"]);
++            solver.config(["--decks-num", self.fcs_args[0],
++                    "--stacks-num", self.fcs_args[1],
++                    "--freecells-num", self.fcs_args[2],                    
++                    ])
++
++            game_type = self.fcs_args[3]
++            game_type_defaults = {'sbb' : 'alternate_color', 'sm' : 'limited', 'esf': 'all'}
++            for k,v in game_type_defaults.items():
++                if (not game_type.has_key(k)):
++                    game_type[k] = v
++            
++            solver.config(["--sequences-are-built-by", game_type['sbb'],
++                    "--sequence-move", game_type['sm'],
++                    "--empty-stacks-filled-by", game_type['esf'],
++                    ])
++
++            solver.limit_iterations(200000)
++            
++            h = solver.solve(board)
++            if (h == "solved"):
++                move = solver.get_next_move()
++                hint = None
++                founds_map = [2,0,3,1,6,4,7,5]
++                my_hints = []
++                while (move):
++                    if (move['type'] == "s2s"):
++                        ncards = move['num_cards']
++                    else:
++                        ncards = 1
++                    src_idx = move['src']
++                    if ((move['type'] == "s2s") or (move['type'] == "s2found") or (move['type'] == "s2f")):
++                        src = self.game.s.rows[src_idx]
++                    else:
++                        src = self.game.s.reserves[src_idx]
++                    d_idx = move['dest']
++                    if ((move['type'] == "s2s") or (move['type'] == "f2s")):
++                        dest = self.game.s.rows[d_idx]
++                    elif ((move['type'] == "s2f") or (move['type'] == "f2f")):
++                        dest = self.game.s.reserves[d_idx]
++                    else:
++                        dest = self.game.s.foundations[founds_map[d_idx]]
++                        
++                    # hint = (999999, 0, ncards, src, dest, None, 0)
++                    my_hints.append([ncards, src, dest])
++                    # self.hints.append(hint)
++                    move = solver.get_next_move();
+                 hint = None
+-                map = self.game.s.foundations + self.game.s.rows + self.game.s.reserves
+-                while i > 0:
+-                    i = i - 3
+-                    v = struct.unpack("<BBB", h[i:i+3])
+-                    hint = (999999, 0, v[0], map[v[1]], map[v[2]], None, hint)
++                for i in reverse(my_hints):
++                    hint = (999999, 0, i[0], i[1], i[2], None, hint)
+                 self.hints.append(hint)
++                #i = len(h)
++                #assert i % 3 == 0
++                #hint = None
++                #map = self.game.s.foundations + self.game.s.rows + self.game.s.reserves
++                #while i > 0:
++                #    i = i - 3
++                #    v = struct.unpack("<BBB", h[i:i+3])
++                #    hint = (999999, 0, v[0], map[v[1]], map[v[2]], None, hint)
++                #self.hints.append(hint)
+ 
+     def __init__(self, Fallback_Class, *args):
+         self.Fallback_Class = Fallback_Class
+         self.args = args
+ 
+     def __call__(self, game, level):
+-        if pysolfreecellsolver is None:
++        if FreecellSolver is None:
+             hint = self.Fallback_Class(game, level)
+         else:
+             hint = self.FreeCellSolver_Hint(game, level)

@@ -1,0 +1,69 @@
+Shlomi Fish (me) - doing most of the work on Freecell Solver.
+
+Eric Warmenhoven - sending a program that generates the board of GNOME 
+Freecell.
+
+Hai Huang - noting several boards of Microsoft Freecell that could not be
+solved by Freecell Solver.
+
+Magnus Reftel - noting the correct procedure for calculating how many cards 
+can be moved as a function of the free freecells and free stacks.
+
+Colin Plumb - writing the MD5 code.
+
+Ron Rivest - inventing the MD5 hashing algorithm.
+
+Jim Horne - supplying the shuffling algorithm for 
+Microsoft Freecell/Freecell Pro.
+
+Tom Holroyd - sending several Seahaven Towers games which Freecell Solver
+was unable to solve, thus making me improve the algorithm.
+
+Markus F. X. J. Oberhumer - writing PySol on whose code the board generation
+program for it is based. Also, contributing some patches.
+
+Justin-Heyes Jones - wrote a nice introduction to the A* algorithm, and 
+wrote the basis for the pqueue.c code.
+
+Stephan Kulow - integrated Freecell Solver into the kpat Solitaire suite for
+KDE 2.1 and onwards; reported several bugs and memory leaks.
+
+Michael Keller - Contributing some useful input about some minor features
+lacking and the Spades/Clubs mix-up.
+
+GeYong - He created Freecell Tool, whose randomized scan provided 
+inspiration for the random-DFS scan of Freecell Solver.
+
+Adrian Ettlinger - Integrating Freecell Solver into "Freecell Pro", and
+contributing some input.
+
+The perl 5.x Hackers - I copied its hash function.
+
+Gergeley Kontra - wrote a Vim script to align text which I used.
+
+Bob Jenkins - wrote the lookup2 hash function, which I now use as the
+primary hash.
+(check http://burtleburtle.net/bob/hash/)
+
+Tzafrir Cohen - His "RPM" lecture provided help in creating the RPM
+Spec.
+
+Yotam Rubin - Preparing an initial Debian Package.
+
+Risko Gergely - Maintaining the current Debian Package.
+
+Chris Moore - Pointing to an out-of-date comment regarding the 
+MAX_NUM_CARDS_IN_A_STACK which I updated.
+
+Anonymous (on http://xrl.us/h6ex ) - for pointing out the malloc.h and 
+leading double underscores problems.
+
+Con Radchenko - supplying a small patch, and reporting a bug with
+"--method dfs", and supplying some other input. Integrated Freecell Solver
+into http://pysolfc.sourceforge.net/ .
+
+larrysan45 - reporting a problem with "--sequence-move unlimited"
+and "--empty-stacks-filled-by kings", which resulted in a bug fix.
+
+Ido Kanner ( http://ik.homelinux.org/ ) - reporting a segfault when running
+freecell-solver-2.28.0 on x86-64, and allowing to diagnose it. 

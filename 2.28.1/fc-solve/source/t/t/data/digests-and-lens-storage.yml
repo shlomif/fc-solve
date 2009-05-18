@@ -1,0 +1,38 @@
+--- 
+digests: 
+  bakers_game24default: 
+    hexdigest: 9dbcd35421c82ba9673d4ea959b6580795c61032fcc67a16e3f2f609687f0162
+    len: 23938
+  eight_off200: 
+    hexdigest: babf3516126980437e5b2798ed6b0f70dd5dde91247c20b1e12e449ee0bb1bbc
+    len: 33298
+  eight_off200default: 
+    hexdigest: e023e565c9e2e53c61eaa880a54f3559efcdc122a0af135794d203dafb8a3753
+    len: 33298
+  forecell1099default: 
+    hexdigest: 3de0af9248bbc4abafbccb7a7bd1bf796e633e04703cff931c6c4b9c8cdbf452
+    len: 29022
+  freecell1941: 
+    hexdigest: 0c88efd46aadf3055ee6131477b71a0a2c7f6ca25eff4b58191087baa3cff136
+    len: 22245
+  freecell24: 
+    hexdigest: ef0fd5fb21649c349a8283553c83502ba831a9cf765f4372bff9243bf399fc15
+    len: 32193
+  freecell24empty: 
+    hexdigest: 17abf343aac1dec42b924b968588f2fa4e07632aab6932f5d084a6c754d61956
+    len: 32280
+  freecell617jgl: 
+    hexdigest: 4f595cd61a8365572e97abef8362647486d4334266e3f4a70b1b9d2dd1946448
+    len: 27193
+  relaxed_freecell11982: 
+    hexdigest: 273ab6c29e595c9e0ba89f314b49cab56c6d39f970ee7fd3a369c291b48c2943
+    len: 33426
+  seahaven_towers1977fools-gold: 
+    hexdigest: 98a46b55d0f80b98087f6ab6184bd2f270065d953dd5ee388afc74fa94193313
+    len: 18581
+  simple_simon19806default: 
+    hexdigest: 22daf3a91b41c513e22906f4fe5c0b507e75a39b30a5ea6fcacb11e14c7fc48f
+    len: 20447
+  simple_simon24default: 
+    hexdigest: aec27e6a4b8e628a42cdfddf0db62fe3f79146aa16d36f3ba6a0050ba7355c57
+    len: 22216
