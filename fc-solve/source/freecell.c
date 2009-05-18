@@ -2819,6 +2819,11 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
 #undef new_state_with_locations
 #undef new_state
 
+#ifdef FCS_FREECELL_ONLY
+#define WRAP_SIMPSIM(f) NULL
+#else
+#define WRAP_SIMPSIM(f) f
+#endif
 
 fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM] =
 {
@@ -2832,14 +2837,14 @@ fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM] =
     fc_solve_sfs_move_freecell_cards_to_empty_stack,
     fc_solve_sfs_move_cards_to_a_different_parent,
     fc_solve_sfs_empty_stack_into_freecells,
-    fc_solve_sfs_simple_simon_move_sequence_to_founds,
-    fc_solve_sfs_simple_simon_move_sequence_to_true_parent,
-    fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent,
-    fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above,
-    fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent,
-    fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above,
-    fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above,
-    fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack,
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_founds),
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_true_parent),
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent),
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above),
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent),
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above),
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above),
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack),
     fc_solve_sfs_atomic_move_card_to_empty_stack,
     fc_solve_sfs_atomic_move_card_to_parent,
     fc_solve_sfs_atomic_move_card_to_freecell,

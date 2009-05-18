@@ -132,6 +132,10 @@ SET (${STATES_TYPE} 1)
 
 SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_isa.c freecell.c intrface.c lib.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c)
 
+IF (FCS_FREECELL_ONLY)
+    LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES simpsim.c)
+ENDIF (FCS_FREECELL_ONLY)
+
 # Add the fcs_hash.c if (and only if) it is being used.
 # 
 IF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INTERNAL_HASH") OR

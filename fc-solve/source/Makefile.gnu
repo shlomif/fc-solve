@@ -1,16 +1,16 @@
 CC = gcc
 
-DEBUG = 1
+DEBUG = 0
 PROFILE = 0
 WITH_TRACES = 0
-FREECELL_ONLY = 0
+FREECELL_ONLY = 1
 WITH_LIBRB = 0
 
 ifneq ($(DEBUG),0)
 	CFLAGS := -Wall -g
 else
-	CFLAGS := -Wall -O3
-	# CFLAGS := -Wall -Os
+	# CFLAGS := -Wall -O3
+	CFLAGS := -Wall -Os
 endif
 
 ifneq ($(WITH_TRACES),0)
@@ -62,7 +62,7 @@ dummy:
 
 
 #<<<OBJECTS.START
-OBJECTS =                     \
+OBJECTS :=                     \
           alloc.o             \
           app_str.o           \
           caas.o              \
@@ -81,10 +81,13 @@ OBJECTS =                     \
           preset.o            \
           rand.o              \
           scans.o             \
-          simpsim.o           \
           state.o             \
 
 #>>>OBJECTS.END
+
+ifeq ($(FREECELL_ONLY),0)
+	CFLAGS += simpsim.o
+endif
 
 # MYOBJ.o ==> .deps/MYOBJ.P
 DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
@@ -111,7 +114,7 @@ freecell-solver-multi-thread-solve: threaded_range_solver.o libfreecell-solver.s
 	gcc -Wall -o $@ -Wl,-rpath,. -L. $< -lfreecell-solver -lpthread $(END_LFLAGS)
 
 clean:
-	rm -f *.o $(TARGETS) libfcs.a test-lib mtest
+	rm -f *.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*
 
 endif
 
