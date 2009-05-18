@@ -75,7 +75,6 @@ OBJECTS :=                     \
           freecell.o          \
           intrface.o          \
           lib.o               \
-          lookup2.o           \
           move.o              \
           pqueue.o            \
           preset.o            \
