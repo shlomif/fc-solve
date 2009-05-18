@@ -1,3 +1,9 @@
+Version 2.28.1 (18-May-2009)
+----------------------------
+
+1. Added a fix to an off-by-one-error in alloc.h that caused a segfault
+on x86-64. (Thanks to Ido Kanner).
+
 Version 2.28.0 (17-May-2009)
 ----------------------------
 
