@@ -86,7 +86,7 @@ OBJECTS :=                     \
 #>>>OBJECTS.END
 
 ifeq ($(FREECELL_ONLY),0)
-	CFLAGS += simpsim.o
+	OBJECTS += simpsim.o
 endif
 
 # MYOBJ.o ==> .deps/MYOBJ.P
