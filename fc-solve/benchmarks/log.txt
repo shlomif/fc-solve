@@ -963,3 +963,9 @@ Trunk with ./configure -r --fc-only, 3 worker threads and Intel's icc:
 
 106.386187076569s
 
+========================================================================
+
+Trunk r1732 with the non-threaded range-solver and tcc (TinyCC / TurboCC):
+
+266.824592828751s
+
