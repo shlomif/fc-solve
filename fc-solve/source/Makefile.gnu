@@ -6,9 +6,10 @@ WITH_LIBRB = 0
 
 COMPILER = gcc
 # COMPILER = icc
+# COMPILER = tendra
 
 CFLAGS := -Wall
-GCC_OR_ICC := 
+GCC_COMPAT := 
 
 ifeq ($(COMPILER),gcc)
 	CC = gcc
@@ -16,14 +17,24 @@ ifeq ($(COMPILER),gcc)
 else ifeq ($(COMPILER),icc)
 	CC = icc
 	GCC_COMPAT := 1
+else ifeq ($(COMPILER),tendra)
+	CC = tcc
+	CFLAGS := -Ysystem
+	ifeq ($(DEBUG),1)
+		CFLAGS += -g
+	endif
+	CREATE_SHARED := ld -shared
 else
 	CC = error
 endif
 
 ifeq ($(GCC_COMPAT),1)
-	CFLAGS += -g
-else
-	CFLAGS += -Os
+	CREATE_SHARED := $(CC) -shared
+	ifeq ($(DEBUG),1)
+		CFLAGS += -g
+	else
+		CFLAGS += -Os
+	endif
 endif
 
 ifneq ($(WITH_TRACES),0)
@@ -113,7 +124,7 @@ libfcs.a: $(OBJECTS)
 	ranlib $@
 
 libfreecell-solver.so: $(OBJECTS)
-	$(CC) -shared -o $@ $(OBJECTS)
+	$(CREATE_SHARED) -o $@ $(OBJECTS)
 
 LIB_LINK_PRE := -Wl,-rpath,. -L.
 LIB_LINK_POST := -lfreecell-solver
