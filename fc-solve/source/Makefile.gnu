@@ -1,12 +1,11 @@
-COMPILER = gcc
-# COMPILER = icc
-
-
 DEBUG = 0
 PROFILE = 0
 WITH_TRACES = 0
 FREECELL_ONLY = 1
 WITH_LIBRB = 0
+
+COMPILER = gcc
+# COMPILER = icc
 
 CFLAGS := -Wall
 GCC_OR_ICC := 
@@ -17,7 +16,7 @@ ifeq ($(COMPILER),gcc)
 else ifeq ($(COMPILER),icc)
 	CC = icc
 	GCC_COMPAT := 1
-else ifdef undefined
+else
 	CC = error
 endif
 
