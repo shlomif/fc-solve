@@ -6,6 +6,7 @@ WITH_LIBRB = 0
 
 COMPILER = gcc
 # COMPILER = icc
+# COMPILER = pcc
 # COMPILER = tcc
 # COMPILER = tendra
 
@@ -18,6 +19,10 @@ ifeq ($(COMPILER),gcc)
 else ifeq ($(COMPILER),icc)
 	CC = icc
 	GCC_COMPAT := 1
+else ifeq ($(COMPILER),pcc)	
+	CC = pcc 
+	GCC_COMPAT := 1
+	CFLAGS += -I /usr/include/linux -I /usr/lib/gcc/i586-manbo-linux-gnu/4.3.2/include/
 else ifeq ($(COMPILER),tcc)
 	CC = tcc
 	GCC_COMPAT := 1
