@@ -6,6 +6,7 @@ WITH_LIBRB = 0
 
 COMPILER = gcc
 # COMPILER = icc
+# COMPILER = tcc
 # COMPILER = tendra
 
 CFLAGS := -Wall
@@ -16,6 +17,9 @@ ifeq ($(COMPILER),gcc)
 	GCC_COMPAT := 1
 else ifeq ($(COMPILER),icc)
 	CC = icc
+	GCC_COMPAT := 1
+else ifeq ($(COMPILER),tcc)
+	CC = tcc
 	GCC_COMPAT := 1
 else ifeq ($(COMPILER),tendra)
 	CC = tcc
@@ -63,7 +67,8 @@ END_DLFLAGS = $(END_LFLAGS)
 
 DLFLAGS = $(LFLAGS)
 
-TARGETS = fc-solve libfreecell-solver.so \
+FCS_SHARED_LIB = libfreecell-solver.so.0
+TARGETS = fc-solve $(FCS_SHARED_LIB) \
 		  freecell-solver-range-parallel-solve \
 		  freecell-solver-multi-thread-solve
 
@@ -123,20 +128,29 @@ libfcs.a: $(OBJECTS)
 	ar r $@ $(OBJECTS)
 	ranlib $@
 
-libfreecell-solver.so: $(OBJECTS)
+$(FCS_SHARED_LIB): $(OBJECTS)
 	$(CREATE_SHARED) -o $@ $(OBJECTS)
+	if ! test -e libfreecell-solver.so ; then \
+		ln -s $@ libfreecell-solver.so ; \
+	fi
 
-LIB_LINK_PRE := -Wl,-rpath,. -L.
+ifeq ($(COMPILER),tcc)
+    LIB_LINK_PRE :=
+else
+    LIB_LINK_PRE := -Wl,-rpath,. 
+endif
+
+LIB_LINK_PRE += -L.
 LIB_LINK_POST := -lfreecell-solver
 
 fc-solve: main.o libfcs.a
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
-freecell-solver-range-parallel-solve: test_multi_parallel.o libfreecell-solver.so
-	gcc -Wall -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
+freecell-solver-range-parallel-solve: test_multi_parallel.o $(FCS_SHARED_LIB)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
-freecell-solver-multi-thread-solve: threaded_range_solver.o libfreecell-solver.so
-	gcc -Wall -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
+freecell-solver-multi-thread-solve: threaded_range_solver.o $(FCS_SHARED_LIB)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
 
 clean:
 	rm -f *.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*
