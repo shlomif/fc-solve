@@ -141,12 +141,6 @@ extern "C" {
 #define FCS_STATE_STORAGE ${FCS_STATE_STORAGE}
 #define FCS_STACK_STORAGE ${FCS_STACK_STORAGE}
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-
 /* Define to 1 if you have the `avl' library (-lavl). */
 #undef HAVE_LIBAVL
 
@@ -185,4 +179,10 @@ extern "C" {
 #ifndef __cplusplus
 #undef inline
 #endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif    /* #ifndef FC_SOLVE__CONFIG_H */
 
