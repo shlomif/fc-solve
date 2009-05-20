@@ -1,6 +1,19 @@
 #!/bin/bash
-MAX="${1:-6}"
+
+PARAM1="$1"
 shift
+PARAM2="$1"
+shift
+
+MIN=1
+MAX=6
+
+if ! test -z "$PARAM2" ; then
+    MIN="$PARAM1"
+    MAX="$PARAM2"
+elif ! test -z "$PARAM1" ; then
+    MAX="$PARAM1"
+fi
 
 strip * > /dev/null 2>&1
 
@@ -17,7 +30,7 @@ if ! test -e "$p_dir" ; then
 fi
 
 export FREECELL_SOLVER_PRESETRC="$(ls $(pwd)/"$p_dir"/presetrc)"
-for NUM in $(seq 1 "$MAX") ; do
+for NUM in $(seq "$MIN" "$MAX") ; do
     echo "Testing $NUM"
     ./freecell-solver-multi-thread-solve 1 32000 500 \
         --num-workers "$NUM" -l gi \
