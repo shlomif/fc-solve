@@ -28,6 +28,17 @@
 
 #include <stdio.h>
 
+#include "config.h"
+
+/* This is a fallback in case this module is still compiled with
+ * FCS_DISABLE_SIMPLE_SIMON.
+ * */
+#ifdef FCS_DISABLE_SIMPLE_SIMON
+
+char fc_solve_simple_simon_nothing;
+
+#else
+
 #include "fcs.h"
 
 #include "tests.h"
@@ -1790,4 +1801,6 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 #undef state
 #undef new_state_with_locations
 #undef new_state
+
+#endif /* #ifdef FCS_DISABLE_SIMPLE_SIMON */
 

@@ -70,6 +70,7 @@ extern "C" {
 #cmakedefine FCS_FREECELL_ONLY
 #endif
 
+#cmakedefine FCS_DISABLE_SIMPLE_SIMON
 
 /* 
  * This flag is not such a good idea because it seems to slow things
@@ -90,6 +91,9 @@ extern "C" {
 #define HARD_CODED_NUM_FREECELLS 4
 #define HARD_CODED_NUM_STACKS 8
 #define HARD_CODED_NUM_DECKS 1
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+#define FCS_DISABLE_SIMPLE_SIMON
+#endif
 #endif
 
 #ifdef HARD_CODED_NUM_FREECELLS

@@ -22,6 +22,7 @@ my $states_type;
 my $test_suite = 1;
 my $cpu_arch;
 my $omit_frame;
+my $no_simple_simon = 0;
 
 sub set_both
 {
@@ -115,6 +116,7 @@ GetOptions(
     },
     'arch=s' => \$cpu_arch,
     'omit-frame!' => \$omit_frame,
+    'without-simple-simon!' => \$no_simple_simon,
 ) or
     die "Wrong options";
 
@@ -128,6 +130,7 @@ my @cmd= ("cmake",
     "-DCMAKE_INSTALL_PREFIX=$prefix",
     "-DDATADIR=$prefix/share",
     ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
+    ($no_simple_simon ? ("-DFCS_DISABLE_SIMPLE_SIMON=1") : ()),
     ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
     ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),

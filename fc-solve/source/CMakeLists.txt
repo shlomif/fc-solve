@@ -111,7 +111,8 @@ SET (MAX_NUM_DECKS 2 CACHE STRING "Maximal Number of Decks (1 or 2)")
 SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_INTERNAL_HASH" CACHE STRING "The State Storage Type")
 SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack Storage Type")
 
-SET (FCS_FREECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell")
+SET (FCS_FREECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell (not recommended)")
+SET (FCS_DISABLE_SIMPLE_SIMON "" CACHE BOOL "Exclude being able to solve Simple Simon from the Binary (not recommended)")
 SET (FCS_WITH_TEST_SUITE "" CACHE BOOL "Also build and run the test suite.")
 
 SET (FCS_ENABLE_SECONDARY_HASH_VALUE "" 
@@ -133,8 +134,12 @@ SET (${STATES_TYPE} 1)
 SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c caas.c card.c cl_chop.c cmd_line.c fcs_isa.c freecell.c intrface.c lib.c move.c pqueue.c preset.c rand.c scans.c simpsim.c state.c)
 
 IF (FCS_FREECELL_ONLY)
-    LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES simpsim.c)
+    SET (FCS_DISABLE_SIMPLE_SIMON 1)
 ENDIF (FCS_FREECELL_ONLY)
+
+IF (FCS_DISABLE_SIMPLE_SIMON)
+    LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES simpsim.c)
+ENDIF (FCS_DISABLE_SIMPLE_SIMON)
 
 # Add the fcs_hash.c if (and only if) it is being used.
 # 
