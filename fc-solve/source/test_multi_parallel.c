@@ -36,6 +36,7 @@
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
+#include "unused.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -49,7 +50,7 @@ struct microsoft_rand_struct
 
 typedef struct microsoft_rand_struct microsoft_rand_t;
 
-microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
+static microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
 {
     microsoft_rand_t * ret;
 
@@ -59,12 +60,12 @@ microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
     return ret;
 }
 
-void microsoft_rand_free(microsoft_rand_t * rand)
+static void microsoft_rand_free(microsoft_rand_t * rand)
 {
     free(rand);
 }
 
-int microsoft_rand_rand(microsoft_rand_t * rand)
+static int microsoft_rand_rand(microsoft_rand_t * rand)
 {
     rand->seed = (rand->seed * 214013 + 2531011);
     return (rand->seed >> 16) & 0x7fff;
@@ -90,7 +91,7 @@ typedef int CARD;
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
 
-char * card_to_string(char * s, CARD card, int not_append_ws)
+static char * card_to_string(char * s, CARD card, int not_append_ws)
 {
     int suit = SUIT(card);
     int v = VALUE(card)+1;
@@ -132,7 +133,7 @@ char * card_to_string(char * s, CARD card, int not_append_ws)
     return s;
 }
 
-char * get_board(int gamenumber)
+static char * get_board(int gamenumber)
 {
 
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
@@ -294,11 +295,11 @@ typedef struct pack_item_struct pack_item_t;
 
 static int cmd_line_callback(
     void * instance,
-    int argc,
+    int argc GCC_UNUSED,
     char * argv[],
     int arg,
     int * num_to_skip,
-    int * ret,
+    int * ret GCC_UNUSED,
     void * context
     )
 {
@@ -388,14 +389,14 @@ struct binary_output_struct
 
 typedef struct binary_output_struct binary_output_t;
 
-void print_int(binary_output_t * bin, int val)
+static void print_int(binary_output_t * bin, int val)
 {
     unsigned char * buffer = (unsigned char *)bin->ptr;
     int p;
 
     for(p=0;p<4;p++)
     {
-        buffer[p] = (val & 0xFF);
+        buffer[p] = (unsigned char)(val & 0xFF);
         val >>= 8;
     }
     bin->ptr += 4;
@@ -430,7 +431,7 @@ static void print_help(void)
           );
 }
 
-int read_int(FILE * f, int * dest)
+static int read_int(FILE * f, int * dest)
 {
     unsigned char buffer[4];
     int num_read;
@@ -459,7 +460,6 @@ int main(int argc, char * argv[])
 #else
     struct _timeb tb;
 #endif
-    int board_num_iters;
     int total_num_iters_temp = 0;
 #ifndef WIN32
     long long total_num_iters = 0;
@@ -469,7 +469,6 @@ int main(int argc, char * argv[])
     char * error_string;
     int parser_ret;
 
-    int pack_num_iters;
     int total_iterations_limit_per_board = -1;
 
     char * binary_output_filename = NULL;
@@ -656,10 +655,6 @@ int main(int argc, char * argv[])
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
         buffer = get_board(board_num);
-
-        board_num_iters = 0;
-
-        pack_num_iters = 0;
 
         freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
 

@@ -40,6 +40,7 @@
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
+#include "unused.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -53,7 +54,7 @@ struct microsoft_rand_struct
 
 typedef struct microsoft_rand_struct microsoft_rand_t;
 
-microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
+static microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
 {
     microsoft_rand_t * ret;
 
@@ -63,12 +64,12 @@ microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
     return ret;
 }
 
-void microsoft_rand_free(microsoft_rand_t * rand)
+static void microsoft_rand_free(microsoft_rand_t * rand)
 {
     free(rand);
 }
 
-int microsoft_rand_rand(microsoft_rand_t * rand)
+static int microsoft_rand_rand(microsoft_rand_t * rand)
 {
     rand->seed = (rand->seed * 214013 + 2531011);
     return (rand->seed >> 16) & 0x7fff;
@@ -94,7 +95,7 @@ typedef int CARD;
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
 
-char * card_to_string(char * s, CARD card, int not_append_ws)
+static char * card_to_string(char * s, CARD card, int not_append_ws)
 {
     int suit = SUIT(card);
     int v = VALUE(card)+1;
@@ -136,7 +137,7 @@ char * card_to_string(char * s, CARD card, int not_append_ws)
     return s;
 }
 
-char * get_board(int gamenumber)
+static char * get_board(int gamenumber)
 {
 
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
@@ -298,11 +299,11 @@ typedef struct pack_item_struct pack_item_t;
 
 static int cmd_line_callback(
     void * instance,
-    int argc,
+    int argc GCC_UNUSED,
     char * argv[],
     int arg,
     int * num_to_skip,
-    int * ret,
+    int * ret GCC_UNUSED,
     void * context
     )
 {
@@ -390,28 +391,6 @@ struct binary_output_struct
     char * ptr;
 };
 
-typedef struct binary_output_struct binary_output_t;
-
-void print_int(binary_output_t * bin, int val)
-{
-    unsigned char * buffer = (unsigned char *)bin->ptr;
-    int p;
-
-    for(p=0;p<4;p++)
-    {
-        buffer[p] = (val & 0xFF);
-        val >>= 8;
-    }
-    bin->ptr += 4;
-    if (bin->ptr == bin->buffer_end)
-    {
-        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->file);
-        fflush(bin->file);
-        /* Reset ptr to the beginning */
-        bin->ptr = bin->buffer;
-    }
-}
-
 #define print_int_wrapper(i) { }
 
 static void print_help(void)
@@ -427,26 +406,9 @@ static void print_help(void)
 "end - the last board in the sequence (inclusive)\n"
 "print_step - at which division to print a status line\n"
 "\n"
-"--binary-output-to   filename\n"
-"     Outputs statistics to binary file 'filename'\n"
 "--total-iterations-limit  limit\n"
 "     Limits each board for up to 'limit' iterations.\n"
           );
-}
-
-int read_int(FILE * f, int * dest)
-{
-    unsigned char buffer[4];
-    int num_read;
-
-    num_read = fread(buffer, 1, 4, f);
-    if (num_read != 4)
-    {
-        return 1;
-    }
-    *dest = (buffer[0]+((buffer[1]+((buffer[2]+((buffer[3])<<8))<<8))<<8));
-
-    return 0;
 }
 
 static const pthread_mutex_t initial_mutex_constant =
@@ -476,7 +438,7 @@ typedef __int64 very_long_int_t;
 very_long_int_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
-void * worker_thread(void * void_context)
+static void * worker_thread(void * void_context)
 {
     context_t * context;
     pack_item_t user;
@@ -687,10 +649,6 @@ int main(int argc, char * argv[])
     int num_workers = 3;
     pthread_t * workers;
 
-    char * binary_output_filename = NULL;
-
-    binary_output_t binary_output;
-
     int arg = 1, start_from_arg, idx, check;
 
     context_t context;
@@ -709,18 +667,7 @@ int main(int argc, char * argv[])
 
     for (;arg < argc; arg++)
     {
-        if (!strcmp(argv[arg], "--binary-output-to"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--binary-output-to came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            binary_output_filename = argv[arg];
-        }
-        else if (!strcmp(argv[arg], "--total-iterations-limit"))
+        if (!strcmp(argv[arg], "--total-iterations-limit"))
         {
             arg++;
             if (arg == argc)
@@ -777,73 +724,6 @@ int main(int argc, char * argv[])
 #endif
     fflush(stdout);
 
-    if (binary_output_filename)
-    {
-        FILE * in;
-
-        binary_output.buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
-        binary_output.ptr = binary_output.buffer;
-        binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
-
-
-        in = fopen(binary_output_filename, "rb");
-        if (in == NULL)
-        {
-            binary_output.file = fopen(binary_output_filename, "wb");
-            if (! binary_output.file)
-            {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
-                exit(-1);
-            }
-
-            print_int_wrapper(next_board_num);
-            print_int_wrapper(end_board);
-            print_int_wrapper(total_iterations_limit_per_board);
-        }
-        else
-        {
-            long file_len;
-#define read_int_wrapper(var) \
-            {       \
-                if (read_int(in, &var))  \
-                {        \
-                    fprintf(stderr, "%s", \
-                        "Output file is too short to deduce the configuration!\n"    \
-                           );     \
-                    exit(-1);       \
-                }       \
-            }
-            read_int_wrapper(next_board_num);
-            read_int_wrapper(end_board);
-            read_int_wrapper(total_iterations_limit_per_board);
-
-            fseek(in, 0, SEEK_END);
-            file_len = ftell(in);
-            if (file_len % 4 != 0)
-            {
-                fprintf(stderr, "%s", "Output file has an invalid length. Terminating.\n");
-                exit(-1);
-            }
-            next_board_num += (file_len-12)/4;
-            if (next_board_num >= end_board)
-            {
-                fprintf(stderr, "%s", "Output file was already finished being generated.\n");
-                exit(-1);
-            }
-            fclose(in);
-            binary_output.file = fopen(binary_output_filename, "ab");
-            if (! binary_output.file)
-            {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
-                exit(-1);
-            }
-        }
-    }
-    else
-    {
-        binary_output.file = NULL;
-    }
-
     context.argc = argc;
     context.argv = argv;
     context.arg = start_from_arg;
@@ -859,6 +739,14 @@ int main(int argc, char * argv[])
             worker_thread,
             &context
         );
+        if (check)
+        {
+            fprintf(stderr, 
+                "Worker Thread No. %d Initialization failed!\n", 
+                idx
+            );
+            exit(-1);
+        }
     }
 
     /* Wait for all threads to finish. */
