@@ -30,6 +30,7 @@
 #include <signal.h>
 
 #include "fcs_cl.h"
+#include "unused.h"
 
 struct fc_solve_display_information_context_struct
 {
@@ -445,7 +446,7 @@ static void print_help_string(char * key)
 
 static int cmd_line_callback(
     void * instance,
-    int argc,
+    int argc GCC_UNUSED,
     char * argv[],
     int arg,
     int * num_to_skip,
@@ -563,7 +564,7 @@ static int cmd_line_callback(
 static int command_num = 0;
 static int debug_iter_output_on = 0;
 
-static void select_signal_handler(int signal_num)
+static void select_signal_handler(int signal_num GCC_UNUSED)
 {
     command_num = (command_num+1)%3;
 }
@@ -572,7 +573,7 @@ static void * current_instance;
 static fc_solve_display_information_context_t * dc;
 
 
-static void command_signal_handler(int signal_num)
+static void command_signal_handler(int signal_num GCC_UNUSED)
 {
     if (command_num == 0)
     {
@@ -637,7 +638,6 @@ int main(int argc, char * argv[])
 {
     int parser_ret;
     void * instance;
-    char * error_string;
     int arg;
     FILE * file;
     char user_state[USER_STATE_SIZE];
@@ -654,43 +654,46 @@ int main(int argc, char * argv[])
     current_instance = instance;
 
 
-    parser_ret =
-        freecell_solver_user_cmd_line_parse_args(
-            instance,
-            argc,
-            argv,
-            1,
-            known_parameters,
-            cmd_line_callback,
-            &debug_context,
-            &error_string,
-            &arg
-            );
+    {
+        char * error_string;
+        parser_ret =
+            freecell_solver_user_cmd_line_parse_args(
+                instance,
+                argc,
+                argv,
+                1,
+                known_parameters,
+                cmd_line_callback,
+                &debug_context,
+                &error_string,
+                &arg
+                );
 
-    if (parser_ret == EXIT_AND_RETURN_0)
-    {
-        freecell_solver_user_free(instance);
-        return 0;
-    }
-    else if (
-        (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-            )
-    {
-        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                " and was not supplied with one.\n", argv[arg]);
-        return (-1);
-    }
-    else if (
-        (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-        )
-    {
-        if (error_string != NULL)
+        if (parser_ret == EXIT_AND_RETURN_0)
         {
-            fprintf(stderr, "%s", error_string);
-            free(error_string);
+            freecell_solver_user_free(instance);
+            return 0;
         }
-        freecell_solver_user_free(instance);
-        return -1;
+        else if (
+            (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
+                )
+        {
+            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+                    " and was not supplied with one.\n", argv[arg]);
+            return (-1);
+        }
+        else if (
+            (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
+            )
+        {
+            if (error_string != NULL)
+            {
+                fprintf(stderr, "%s", error_string);
+                free(error_string);
+            }
+            freecell_solver_user_free(instance);
+            return -1;
+        }
     }
 
     if ((arg == argc) || (!strcmp(argv[arg], "-")))
@@ -760,6 +763,7 @@ int main(int argc, char * argv[])
     if (ret == FCS_STATE_INVALID_STATE)
     {
         char * error_string;
+
         error_string =
             freecell_solver_user_get_invalid_state_error_string(
                 instance,
@@ -767,6 +771,7 @@ int main(int argc, char * argv[])
                 );
         printf("%s\n", error_string);
         free(error_string);
+        error_string = NULL;
     }
     else
     {
