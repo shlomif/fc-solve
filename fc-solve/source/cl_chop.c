@@ -97,7 +97,6 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
     char * s = string;
     char * new_arg;
     char * last_arg, * last_arg_ptr, * last_arg_end, * new_last_arg;
-    char next_char;
     int in_arg;
 
     last_arg_ptr = last_arg = malloc(1024);
@@ -181,6 +180,8 @@ NEXT_ARG:
             {
                 if (*s == '\\')
                 {
+                    char next_char;
+
                     next_char = *(++s);
                     if (next_char == '\0')
                     {
