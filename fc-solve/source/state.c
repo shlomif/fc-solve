@@ -35,6 +35,7 @@
 #include "card.h"
 #include "fcs_enums.h"
 #include "app_str.h"
+#include "unused.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -362,26 +363,28 @@ static void fcs_state_init(
 #endif
     )
 {
-    int a;
+    int i;
+
     memset(state_key, 0, sizeof(*state_key));
-    for(a=0;a<MAX_NUM_STACKS;a++)
+
+    for(i=0;i<MAX_NUM_STACKS;i++)
     {
-        state_val->stack_locs[a] = a;
+        state_val->stack_locs[i] = (char)i;
     }
 #ifdef INDIRECT_STACK_STATES
-    for(a=0;a<stacks_num;a++)
+    for(i=0;i<stacks_num;i++)
     {
-        state_key->stacks[a] = &indirect_stacks_buffer[a << 7];
-        memset(state_key->stacks[a], '\0', MAX_NUM_DECKS*52+1);
+        state_key->stacks[i] = &indirect_stacks_buffer[i << 7];
+        memset(state_key->stacks[i], '\0', MAX_NUM_DECKS*52+1);
     }
-    for(;a<MAX_NUM_STACKS;a++)
+    for(;i<MAX_NUM_STACKS;i++)
     {
-        state_key->stacks[a] = NULL;
+        state_key->stacks[i] = NULL;
     }
 #endif
-    for(a=0;a<MAX_NUM_FREECELLS;a++)
+    for(i=0;i<MAX_NUM_FREECELLS;i++)
     {
-        state_val->fc_locs[a] = a;
+        state_val->fc_locs[i] = (char)i;
     }
     state_val->key = state_key;
     state_val->parent_val = NULL;
@@ -412,7 +415,7 @@ int fc_solve_state_compare_equal(const void * s1, const void * s2)
 int fc_solve_state_compare_with_context(
     const void * s1,
     const void * s2,
-    fcs_compare_context_t context
+    fcs_compare_context_t context GCC_UNUSED
     )
 {
     return memcmp(s1,s2,sizeof(fcs_state_t));
@@ -421,7 +424,7 @@ int fc_solve_state_compare_with_context(
 int fc_solve_state_extra_info_compare_with_context(
     const void * s1,
     const void * s2,
-    fcs_compare_context_t context
+    fcs_compare_context_t context GCC_UNUSED
     )
 {
     return
@@ -444,9 +447,14 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 #endif
 
 static const char * const freecells_prefixes[] = { "FC:", "Freecells:", "Freecell:", ""};
+
 static const char * const foundations_prefixes[] = { "Decks:", "Deck:", "Founds:", "Foundations:", "Foundation:", "Found:", ""};
+
+#ifdef FCS_WITH_TALONS
 static const char * const talon_prefixes[] = { "Talon:", "Queue:" , ""};
 static const char * const num_redeals_prefixes[] = { "Num-Redeals:", "Readels-Num:", "Readeals-Number:", ""};
+#endif
+
 
 #ifdef WIN32
 #define strncasecmp(a,b,c) (strnicmp((a),(b),(c)))

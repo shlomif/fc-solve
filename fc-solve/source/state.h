@@ -73,12 +73,13 @@ struct fcs_struct_stack_t
 
 typedef struct fcs_struct_stack_t fc_stack_t;
 typedef fc_stack_t * fcs_cards_column_t;
+typedef int fcs_state_foundation_t;
 
 struct fcs_struct_state_t
 {
     fc_stack_t stacks[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
-    int foundations[MAX_NUM_DECKS*4];
+    fcs_state_foundation_t foundations[MAX_NUM_DECKS*4];
 #ifdef FCS_WITH_TALONS
     fcs_card_t * talon;
     char talon_params[4];
@@ -142,6 +143,7 @@ typedef int fcs_locs_t;
 
 typedef char fcs_card_t;
 typedef fcs_card_t * fcs_cards_column_t;
+typedef fcs_card_t fcs_state_foundation_t;
 /*
  * Card:
  * Bits 0-3 - Card Number
@@ -232,12 +234,13 @@ typedef char fcs_locs_t;
 
 typedef char fcs_card_t;
 typedef fcs_card_t * fcs_cards_column_t;
+typedef char fcs_state_foundation_t;
 
 struct fcs_struct_state_t
 {
     fcs_cards_column_t stacks[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
-    char foundations[MAX_NUM_DECKS*4];
+    fcs_state_foundation_t foundations[MAX_NUM_DECKS*4];
 #ifdef FCS_WITH_TALONS
     fcs_card_t * talon;
     char talon_params[4];
@@ -316,7 +319,7 @@ typedef char fcs_locs_t;
     ( (fcs_foundation_value((state), (d)))++)
 
 #define fcs_set_foundation(state, found, value) \
-    ( (fcs_foundation_value((state), (d))) = (value) )
+    ( (fcs_foundation_value((state), (found))) = (fcs_state_foundation_t)(value) )
 
 #define fcs_col_pop_top(col) \
     {       \
