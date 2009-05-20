@@ -1109,11 +1109,15 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
                                     int clear_junk_dest_stack = -1;
 
                                     fcs_card_t the_card =
+                                    (
+                                        (fcs_card_t)
                                         (
                                             (false_seq_index == num_separate_false_seqs) ?
                                                 (fcs_col_get_card(col, end_of_junk+1)) :
                                                 (fcs_col_get_card(dest_col, seq_points[false_seq_index]))
-                                        );
+                                        )
+                                    )   
+                                    ;
 
                                     int the_num_true_seqs =
                                         (

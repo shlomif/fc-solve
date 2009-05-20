@@ -353,6 +353,8 @@ static int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         )
 {
     tests_declare_accessors();
+    tests_declare_seqs_built_by();
+    tests_declare_empty_stacks_fill();
 
     fcs_derived_states_list_t derived_states_struct;
     fcs_derived_states_list_t * derived_states_list;
@@ -382,6 +384,8 @@ static int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     char * pos_idx_to_check;
 
     tests_define_accessors();
+    tests_define_seqs_built_by();
+    tests_define_empty_stacks_fill();
 
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
@@ -596,6 +600,7 @@ static int fc_solve_sfs_move_non_top_stack_cards_to_founds(
         )
 {
     tests_declare_accessors();
+    tests_declare_empty_stacks_fill();
 
     int check;
 
@@ -617,6 +622,7 @@ static int fc_solve_sfs_move_non_top_stack_cards_to_founds(
     fcs_move_t temp_move;
 
     tests_define_accessors();
+    tests_define_empty_stacks_fill();
 
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
@@ -754,6 +760,9 @@ static int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         )
 {
     tests_declare_accessors();
+    tests_declare_seqs_built_by();
+    tests_declare_empty_stacks_fill();
+
     int check;
 
     int stack_idx, c, cards_num, a, dc,b;
@@ -775,6 +784,8 @@ static int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
     fcs_move_t temp_move;
 
     tests_define_accessors();
+    tests_define_seqs_built_by();
+    tests_define_empty_stacks_fill();
 
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
@@ -1092,6 +1103,8 @@ static int fc_solve_sfs_move_stack_cards_to_different_stacks(
         )
 {
     tests_declare_accessors();
+    tests_declare_seqs_built_by();
+    tests_declare_empty_stacks_fill();
 
     int check;
 
@@ -1119,6 +1132,8 @@ static int fc_solve_sfs_move_stack_cards_to_different_stacks(
     fcs_move_t temp_move;
 
     tests_define_accessors();
+    tests_define_seqs_built_by();
+    tests_define_empty_stacks_fill();
 
 #ifndef HARD_CODED_NUM_DECKS
     decks_num = INSTANCE_DECKS_NUM;
@@ -1341,6 +1356,8 @@ static int fc_solve_sfs_move_sequences_to_free_stacks(
         )
 {
     tests_declare_accessors();
+    tests_declare_empty_stacks_fill();
+    tests_declare_seqs_built_by();
     int check;
 
     int stack_idx, cards_num, c, ds, a, b, seq_end;
@@ -1360,6 +1377,8 @@ static int fc_solve_sfs_move_sequences_to_free_stacks(
     fcs_move_t temp_move;
 
     tests_define_accessors();
+    tests_define_empty_stacks_fill();
+    tests_define_seqs_built_by();
 
     if (tests__is_filled_by_none())
     {
@@ -1583,6 +1602,8 @@ static int fc_solve_sfs_move_freecell_cards_to_empty_stack(
         )
 {
     tests_declare_accessors();
+    tests_declare_empty_stacks_fill();
+
     int check;
     int fc, stack_idx;
     fcs_card_t card;
@@ -1599,6 +1620,7 @@ static int fc_solve_sfs_move_freecell_cards_to_empty_stack(
     /* Let's try to put cards that occupy freecells on an empty stack */
 
     tests_define_accessors();
+    tests_define_empty_stacks_fill();
 
     if (tests__is_filled_by_none())
     {
@@ -1669,6 +1691,8 @@ static int fc_solve_sfs_move_cards_to_a_different_parent(
         )
 {
     tests_declare_accessors();
+    tests_declare_seqs_built_by();
+    tests_declare_empty_stacks_fill();
 
     int check;
 
@@ -1697,6 +1721,8 @@ static int fc_solve_sfs_move_cards_to_a_different_parent(
     char * pos_idx_to_check;
 
     tests_define_accessors();
+    tests_define_seqs_built_by();
+    tests_define_empty_stacks_fill();
 
     temp_move = fc_solve_empty_move;
 
@@ -1935,6 +1961,7 @@ static int fc_solve_sfs_empty_stack_into_freecells(
         )
 {
     tests_declare_accessors();
+    tests_declare_empty_stacks_fill();
 
     int check;
 
@@ -1953,6 +1980,7 @@ static int fc_solve_sfs_empty_stack_into_freecells(
     fcs_move_t temp_move;
 
     tests_define_accessors();
+    tests_define_empty_stacks_fill();
 
     if (tests__is_filled_by_none())
     {
@@ -2403,6 +2431,7 @@ static int fc_solve_sfs_atomic_move_card_to_empty_stack(
         )
 {
     tests_declare_accessors();
+    tests_declare_empty_stacks_fill();
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
@@ -2415,6 +2444,7 @@ static int fc_solve_sfs_atomic_move_card_to_empty_stack(
     fcs_cards_column_t col;
 
     tests_define_accessors();
+    tests_define_empty_stacks_fill();
 
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
@@ -2496,6 +2526,7 @@ static int fc_solve_sfs_atomic_move_card_to_parent(
         )
 {
     tests_declare_accessors();
+    tests_declare_seqs_built_by();
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
@@ -2506,6 +2537,7 @@ static int fc_solve_sfs_atomic_move_card_to_parent(
     fcs_cards_column_t col, dest_col;
 
     tests_define_accessors();
+    tests_define_seqs_built_by();
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
@@ -2656,6 +2688,7 @@ static int fc_solve_sfs_atomic_move_freecell_card_to_parent(
         )
 {
     tests_declare_accessors();
+    tests_declare_seqs_built_by();
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
@@ -2669,6 +2702,7 @@ static int fc_solve_sfs_atomic_move_freecell_card_to_parent(
     fcs_cards_column_t dest_col;
 
     tests_define_accessors();
+    tests_define_seqs_built_by();
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
@@ -2731,6 +2765,7 @@ static int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         )
 {
     tests_declare_accessors();
+    tests_declare_empty_stacks_fill();
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
@@ -2744,6 +2779,7 @@ static int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     int num_vacant_stacks;
 
     tests_define_accessors();
+    tests_define_empty_stacks_fill();
 
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;

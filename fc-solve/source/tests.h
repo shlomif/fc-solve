@@ -190,11 +190,15 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #ifdef FCS_FREECELL_ONLY
 #define tests_declare_accessors_freecell_only()
+#define tests_declare_seqs_built_by()
+#define tests_declare_empty_stacks_fill()
 #else
 #define tests_declare_accessors_freecell_only() \
-    int sequences_are_built_by;  \
-    int empty_stacks_fill; \
     fc_solve_instance_t * instance;
+#define tests_declare_seqs_built_by() \
+    int sequences_are_built_by;
+#define tests_declare_empty_stacks_fill() \
+    int empty_stacks_fill;
 #endif
 
 /*
@@ -230,8 +234,6 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #define tests_define_accessors_freecell_only() \
 { \
     instance = hard_thread->instance;                     \
-    sequences_are_built_by = instance->sequences_are_built_by; \
-    empty_stacks_fill = instance->empty_stacks_fill;           \
 }
 
 #define tests__is_filled_by_any_card() \
@@ -258,6 +260,24 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #define tests_define_accessors()  \
     tests_define_accessors_no_stacks();       \
     indirect_stacks_buffer = hard_thread->indirect_stacks_buffer; \
+
+#ifdef FCS_FREECELL_ONLY
+
+#define tests_define_seqs_built_by()
+#define tests_define_empty_stacks_fill()
+#else
+
+#define tests_define_seqs_built_by()   \
+{ \
+    sequences_are_built_by = instance->sequences_are_built_by; \
+}
+
+#define tests_define_empty_stacks_fill() \
+{ \
+    empty_stacks_fill = instance->empty_stacks_fill; \
+}
+
+#endif
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fc_solve_soft_thread_t * soft_thread,
