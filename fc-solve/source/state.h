@@ -636,5 +636,8 @@ enum FCS_VISITED_T
     FCS_VISITED_ALL_TESTS_DONE = 0x10
 };
 
+#if defined(INDIRECT_STACK_STATES)
+extern int fc_solve_stack_compare_for_comparison(const void * v_s1, const void * v_s2);
+#endif
 
 #endif /* FC_SOLVE__STATE_H */

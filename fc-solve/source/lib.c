@@ -33,6 +33,7 @@
 #include "fcs.h"
 #include "preset.h"
 #include "fcs_user.h"
+#include "unused.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -281,6 +282,8 @@ int freecell_solver_user_resume_solution(
     fcs_user_t * user;
 
     user = (fcs_user_t*)user_instance;
+
+    ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
     /*
      * I expect user->current_instance_idx to be initialized at some value.
@@ -616,15 +619,14 @@ void freecell_solver_user_set_solving_method(
     user->common_preset.what = what;     \
     }
 
+#ifndef HARD_CODED_NUM_FREECELLS
 int freecell_solver_user_set_num_freecells(
     void * user_instance,
     int freecells_num
     )
 {
     fcs_user_t * user;
-#ifndef HARD_CODED_NUM_FREECELLS
     int i;
-#endif
 
     user = (fcs_user_t *)user_instance;
 
@@ -633,22 +635,28 @@ int freecell_solver_user_set_num_freecells(
         return 1;
     }
 
-#ifndef HARD_CODED_NUM_FREECELLS
     set_for_all_instances(freecells_num);
-#endif
 
     return 0;
 }
+#else
+int freecell_solver_user_set_num_freecells(
+    void * user_instance GCC_UNUSED,
+    int freecells_num GCC_UNUSED
+    )
+{
+    return 0;
+}
+#endif
 
+#ifndef HARD_CODED_NUM_STACKS
 int freecell_solver_user_set_num_stacks(
     void * user_instance,
     int stacks_num
     )
 {
     fcs_user_t * user;
-#ifndef HARD_CODED_NUM_STACKS
     int i;
-#endif
 
     user = (fcs_user_t *)user_instance;
 
@@ -656,22 +664,28 @@ int freecell_solver_user_set_num_stacks(
     {
         return 1;
     }
-#ifndef HARD_CODED_NUM_STACKS
     set_for_all_instances(stacks_num);
-#endif
 
     return 0;
 }
+#else
+int freecell_solver_user_set_num_stacks(
+    void * user_instance GCC_UNUSED,
+    int stacks_num GCC_UNUSED
+    )
+{
+    return 0;
+}
+#endif
 
+#ifndef HARD_CODED_NUM_DECKS
 int freecell_solver_user_set_num_decks(
     void * user_instance,
     int decks_num
     )
 {
     fcs_user_t * user;
-#ifndef HARD_CODED_NUM_DECKS
     int i;
-#endif
 
     user = (fcs_user_t *)user_instance;
 
@@ -679,13 +693,19 @@ int freecell_solver_user_set_num_decks(
     {
         return 1;
     }
-#ifndef HARD_CODED_NUM_DECKS
     set_for_all_instances(decks_num);
-#endif
 
     return 0;
 }
-
+#else
+int freecell_solver_user_set_num_decks(
+    void * user_instance GCC_UNUSED,
+    int decks_num GCC_UNUSED
+    )
+{
+    return 0;
+}
+#endif
 
 int freecell_solver_user_set_game(
     void * user_instance,
@@ -697,10 +717,6 @@ int freecell_solver_user_set_game(
     int empty_stacks_fill
     )
 {
-    fcs_user_t * user;
-
-    user = (fcs_user_t *)user_instance;
-
     if (freecell_solver_user_set_num_freecells(user_instance, freecells_num))
     {
         return 1;
@@ -785,10 +801,14 @@ char * freecell_solver_user_move_to_string_w_state(
     )
 {
     fcs_user_t * user;
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     fc_solve_instance_t * instance;
+#endif
 
     user = (fcs_user_t *)user_instance;
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))    
     instance = user->instance;
+#endif
 
     return
         fc_solve_move_to_string_w_state(
@@ -949,7 +969,7 @@ static void iter_handler_wrapper(
     void * user_instance,
     int iter_num,
     int depth,
-    void * lp_instance,
+    void * lp_instance GCC_UNUSED,
     fcs_state_extra_info_t * ptr_state_val,
     int parent_iter_num
     )
@@ -1000,20 +1020,30 @@ void freecell_solver_user_set_iter_handler(
     }
 }
 
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
+#define HARD_CODED_UNUSED 
+#else
+#define HARD_CODED_UNUSED GCC_UNUSED
+#endif
+
 char * freecell_solver_user_iter_state_as_string(
-    void * user_instance,
+    void * user_instance HARD_CODED_UNUSED,
     void * ptr_state_void,
     int parseable_output,
     int canonized_order_output,
     int display_10_as_t
 )
 {
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     fcs_user_t * user;
     fc_solve_instance_t * instance;
+#endif
     fcs_standalone_state_ptrs_t * ptr_state;
 
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     user = (fcs_user_t *)user_instance;
     instance = user->instance;
+#endif
 
     ptr_state = (fcs_standalone_state_ptrs_t *)ptr_state_void;
 
@@ -1309,7 +1339,9 @@ int freecell_solver_user_reset(void * user_instance)
     return 0;
 }
 
-const char * freecell_solver_user_get_lib_version(void * user_instance)
+const char * freecell_solver_user_get_lib_version(
+    void * user_instance GCC_UNUSED
+    )
 {
     return VERSION;
 }

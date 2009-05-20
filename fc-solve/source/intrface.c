@@ -51,6 +51,7 @@
 #include "caas.h"
 
 #include "preset.h"
+#include "unused.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -138,7 +139,7 @@ static void foreach_soft_thread(
 
 static void soft_thread_clean_soft_dfs(
     fc_solve_soft_thread_t * soft_thread,
-    void * context
+    void * context GCC_UNUSED
     )
 {
     int max_depth;
@@ -426,7 +427,10 @@ static void free_bfs_queue(fc_solve_soft_thread_t * soft_thread)
     }
 }
 
-static void free_instance_soft_thread_callback(fc_solve_soft_thread_t * soft_thread, void * context)
+static void free_instance_soft_thread_callback(
+        fc_solve_soft_thread_t * soft_thread,
+        void * context GCC_UNUSED
+        )
 {
     free_bfs_queue(soft_thread);
     fc_solve_rand_free(soft_thread->rand_gen);
@@ -505,7 +509,7 @@ void fc_solve_free_instance(fc_solve_instance_t * instance)
 
 static void normalize_a_star_weights(
     fc_solve_soft_thread_t * soft_thread,
-    void * context
+    void * context GCC_UNUSED
     )
 {
     /* Normalize the A* Weights, so the sum of all of them would be 1. */
@@ -520,7 +524,7 @@ static void normalize_a_star_weights(
         }
         sum += soft_thread->a_star_weights[a];
     }
-    if (sum == 0)
+    if (sum < 1e-6)
     {
         sum = 1;
     }
@@ -699,8 +703,6 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
 */
 #if defined(INDIRECT_STACK_STATES)
 
-extern int fc_solve_stack_compare_for_comparison(const void * v_s1, const void * v_s2);
-
 #if ((FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_TREE) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_HASH) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_JUDY))
 static int fcs_stack_compare_for_comparison_with_context(
     const void * v_s1,
@@ -708,7 +710,7 @@ static int fcs_stack_compare_for_comparison_with_context(
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     const
 #endif
-    void * context
+    void * context GCC_UNUSED
 
     )
 {
@@ -1421,7 +1423,7 @@ int fc_solve_resume_instance(
     finish_instance() and free_instance().
   */
 void fc_solve_unresume_instance(
-    fc_solve_instance_t * instance
+    fc_solve_instance_t * instance GCC_UNUSED
     )
 {
     /*
