@@ -384,13 +384,13 @@ typedef char fcs_locs_t;
     ( (card) >> 6 )
 
 #define fcs_card_set_num(card, num) \
-    (card) = (((card)&0xF0)|(num));
+    (card) = ((fcs_card_t)(((card)&0xF0)|(num)));
 
 #define fcs_card_set_suit(card, suit) \
-    (card) = (((card)&0x4F)|((suit)<<4));
+    (card) = ((fcs_card_t)(((card)&0x4F)|((suit)<<4)));
 
 #define fcs_card_set_flipped(card, flipped) \
-    (card) = (((card)&((fcs_card_t)0x3F))|((fcs_card_t)((flipped)<<6)))
+    (card) = ((fcs_card_t)(((card)&((fcs_card_t)0x3F))|((fcs_card_t)((flipped)<<6))))
 
 #endif
 

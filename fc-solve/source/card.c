@@ -28,6 +28,7 @@
  */
 
 #include <string.h>
+#include <ctype.h>
 
 #include "card.h"
 
@@ -45,8 +46,6 @@ fcs_card_t fc_solve_empty_card = (fcs_card_t)0;
 
 #endif
 
-#define uc(c) ( (((c)>='a') && ((c)<='z')) ?  ((c)+'A'-'a') : (c))
-
 /*
  * This function converts a card number from its user representation
  * (e.g: "A", "K", "9") to its card number that can be used by
@@ -54,47 +53,45 @@ fcs_card_t fc_solve_empty_card = (fcs_card_t)0;
  * */
 int fc_solve_u2p_card_number(const char * string)
 {
-    char rest;
-
     while (1)
     {
-        rest = uc(*string);
-
-        if ((rest == '\0') || (rest == ' ') || (rest == '\t'))
+        switch (toupper(*string))
         {
-            return 0;
-        }
-        if (rest == 'A')
-        {
-            return 1;
-        }
-        else if (rest =='J')
-        {
-            return 11;
-        }
-        else if (rest == 'Q')
-        {
-            return 12;
-        }
-        else if (rest == 'K')
-        {
-            return 13;
-        }
-        else if (rest == '1')
-        {
-            return (*(string+1) == '0')?10:1;
-        }
-        else if ((rest == '0') || (rest == 'T'))
-        {
-            return 10;
-        }
-        else if ((rest >= '2') && (rest <= '9'))
-        {
-            return (rest-'0');
-        }
-        else
-        {
-            string++;
+            case '\0':
+            case ' ':
+            case '\t':
+                return 0;
+            case 'A':
+                return 1;
+            case 'J':
+                return 11;
+            case 'Q':
+                return 12;
+            case 'K':
+                return 13;
+            case '1':
+                return (*(string+1) == '0')?10:1;
+            case 'T':
+            case '0':
+                return 10;
+            case '2':
+                return 2;
+            case '3':
+                return 3;
+            case '4':
+                return 4;
+            case '5':
+                return 5;
+            case '6':
+                return 6;
+            case '7':
+                return 7;
+            case '8':
+                return 8;
+            case '9':
+                return 9;
+            default:
+                string++;
         }
     }
 }
@@ -109,31 +106,24 @@ int fc_solve_u2p_card_number(const char * string)
  * */
 int fc_solve_u2p_suit(const char * suit)
 {
-    char c;
-
-    c = uc(*suit);
-    while (
-            (c != 'H') &&
-            (c != 'S') &&
-            (c != 'D') &&
-            (c != 'C') &&
-            (c != ' ') &&
-            (c != '\0'))
+    while (1)
     {
-        suit++;
-        c = uc(*suit);
+        switch(toupper(*suit))
+        {
+            case 'H':
+            case ' ':
+            case '\0':
+                return 0;
+            case 'C':
+                return 1;
+            case 'D':
+                return 2;
+            case 'S':
+                return 3;
+            default:
+                suit++;
+        }
     }
-
-    if (c == 'H')
-        return 0;
-    else if (c == 'C')
-        return 1;
-    else if (c == 'D')
-        return 2;
-    else if (c == 'S')
-        return 3;
-    else
-        return 0;
 }
 
 static int fcs_u2p_flipped_status(const char * str)
@@ -148,6 +138,7 @@ static int fcs_u2p_flipped_status(const char * str)
     }
     return 0;
 }
+
 /*
  * This function converts an entire card from its string representations
  * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
@@ -155,9 +146,9 @@ static int fcs_u2p_flipped_status(const char * str)
 fcs_card_t fc_solve_card_user2perl(const char * str)
 {
     fcs_card_t card;
-#if defined(COMPACT_STATES)||defined(INDIRECT_STACK_STATES)
-    card = 0;
-#endif
+
+    card = fcs_empty_card;
+
     fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
     fcs_card_set_num(card, fcs_u2p_card_number(str));
     fcs_card_set_suit(card, fcs_u2p_suit(str));
