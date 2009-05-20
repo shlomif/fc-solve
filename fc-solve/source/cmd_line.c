@@ -187,7 +187,6 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     char * * known_param;
     int num_to_skip;
     int callback_ret;
-    int ret;
     int opt;
     const char * p;
 
@@ -205,6 +204,8 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         if ((*known_param) != NULL )
         {
+            int ret;
+
             callback_ret = callback(instance, argc, argv, arg-&(argv[0]), &num_to_skip, &ret, callback_context);
             if (callback_ret == FCS_CMD_LINE_SKIP)
             {
@@ -866,6 +867,7 @@ break;
 
         case FCS_OPT_TESTS_ORDER: /* STRINGS=-to|--tests-order; */
         {
+            int ret;
             char * fcs_user_errstr;
 
             PROCESS_OPT_ARG() ;
@@ -1021,6 +1023,8 @@ break;
 
         case FCS_OPT_GAME: /* STRINGS=--game|--preset|-g; */
         {
+            int ret;
+
             PROCESS_OPT_ARG() ;
 
             ret = freecell_solver_user_apply_preset(instance, (*arg));
@@ -1265,6 +1269,7 @@ break;
 
         case FCS_OPT_OPTIMIZATION_TESTS_ORDER: /* STRINGS=-opt-to|--optimization-tests-order; */
         {
+            int ret;
             char * fcs_user_errstr;
 
             PROCESS_OPT_ARG() ;
@@ -1341,13 +1346,15 @@ break;
             }
             else
             {
-                int num_to_skip = 0;
                 char * s, * buffer;
                 FILE * f;
                 long file_len;
                 int ret;
                 size_t num_read;
                 args_man_t * args_man;
+                int num_file_args_to_skip;
+
+                num_file_args_to_skip = 0;
 
                 s = (*arg);
                 while(isdigit(*s))
@@ -1356,15 +1363,20 @@ break;
                 }
                 if (*s == ',')
                 {
-                    num_to_skip = atoi((*arg));
+                    num_file_args_to_skip = atoi((*arg));
                     s++;
                 }
 
                 if (opened_files_dir)
                 {
                     char * complete_path;
+                    register int len;
 
-                    complete_path = malloc(strlen(opened_files_dir)+strlen(s)+1);
+                    len = strlen(opened_files_dir);
+                    len += strlen(s);
+                    len++;
+
+                    complete_path = malloc(len);
                     sprintf(complete_path, "%s%s", opened_files_dir, s);
                     f = fopen(complete_path, "rt");
                     free(complete_path);
@@ -1424,7 +1436,7 @@ break;
                     RET_ERROR_IN_ARG() ;
                 }
 
-                if (num_to_skip >= args_man->argc)
+                if (num_file_args_to_skip >= args_man->argc)
                 {
                     /* Do nothing */
                 }
@@ -1432,8 +1444,8 @@ break;
                 {
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
-                        args_man->argc - num_to_skip,
-                        args_man->argv + num_to_skip,
+                        args_man->argc - num_file_args_to_skip,
+                        args_man->argv + num_file_args_to_skip,
                         0,
                         known_parameters,
                         callback,
@@ -1480,6 +1492,8 @@ break;
                 }
                 else
                 {
+                    int ret;
+
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         preset_args->argc,
