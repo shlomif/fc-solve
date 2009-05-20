@@ -456,6 +456,7 @@ static const pthread_mutex_t initial_mutex_constant =
 static int next_board_num;
 static int end_board;
 static pthread_mutex_t next_board_num_lock;
+static int board_num_step = 1;
 
 typedef struct {
     int argc;
@@ -485,6 +486,7 @@ void * worker_thread(void * void_context)
     int ret;
     char * * argv;
     int board_num;
+    int quota_end;
     char * buffer;
     int stop_at;
 #ifndef WIN32
@@ -542,119 +544,122 @@ void * worker_thread(void * void_context)
 
     ret = 0;
 
-    while (1)
+    do
     {
         pthread_mutex_lock(&next_board_num_lock);
-        board_num = next_board_num++;
+        board_num = next_board_num;
+        quota_end = (next_board_num += board_num_step);
         pthread_mutex_unlock(&next_board_num_lock);
 
-        if (board_num > end_board)
+        if (quota_end > end_board+1)
         {
-            break;
+            quota_end = end_board+1;
         }
-
-        buffer = get_board(board_num);
-
-        freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
-
-        ret =
-            freecell_solver_user_solve_board(
-                user.instance,
-                buffer
-                );
-
-        free(buffer);
-
-
-        if (ret == FCS_STATE_SUSPEND_PROCESS)
+        for(;board_num<quota_end;board_num++)
         {
+            buffer = get_board(board_num);
+
+            freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
+
+            ret =
+                freecell_solver_user_solve_board(
+                    user.instance,
+                    buffer
+                    );
+
+            free(buffer);
+
+
+            if (ret == FCS_STATE_SUSPEND_PROCESS)
+            {
 #ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Intractable Board No. %i at %li.%.6li\n",
-                board_num,
-                tv.tv_sec,
-                tv.tv_usec
-                );
+                gettimeofday(&tv,&tz);
+                printf("Intractable Board No. %i at %li.%.6li\n",
+                    board_num,
+                    tv.tv_sec,
+                    tv.tv_usec
+                    );
 #else
-            _ftime(&tb);
-            printf("Intractable Board No. %i at %li.%.6i\n",
-                board_num,
-                tb.time,
-                tb.millitm*1000
-            );
+                _ftime(&tb);
+                printf("Intractable Board No. %i at %li.%.6i\n",
+                    board_num,
+                    tb.time,
+                    tb.millitm*1000
+                );
 #endif
-            fflush(stdout);
-            print_int_wrapper(-1);
-        }
-        else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-        {
+                fflush(stdout);
+                print_int_wrapper(-1);
+            }
+            else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
+            {
 #ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Unsolved Board No. %i at %li.%.6li\n",
-                board_num,
-                tv.tv_sec,
-                tv.tv_usec
-                );
+                gettimeofday(&tv,&tz);
+                printf("Unsolved Board No. %i at %li.%.6li\n",
+                    board_num,
+                    tv.tv_sec,
+                    tv.tv_usec
+                    );
 #else
-            _ftime(&tb);
-            printf("Unsolved Board No. %i at %li.%.6i\n",
-                board_num,
-                tb.time,
-                tb.millitm*1000
-            );
+                _ftime(&tb);
+                printf("Unsolved Board No. %i at %li.%.6i\n",
+                    board_num,
+                    tb.time,
+                    tb.millitm*1000
+                );
 #endif
-            print_int_wrapper(-2);
-        }
-        else
-        {
-            print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
-        }
+                print_int_wrapper(-2);
+            }
+            else
+            {
+                print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
+            }
 
-        total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
-        if (total_num_iters_temp > 1000000)
-        {
-            pthread_mutex_lock(&total_num_iters_lock);
-            total_num_iters += total_num_iters_temp;
-            pthread_mutex_unlock(&total_num_iters_lock);
-            total_num_iters_temp = 0;
-        }
+            total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
+            if (total_num_iters_temp > 1000000)
+            {
+                pthread_mutex_lock(&total_num_iters_lock);
+                total_num_iters += total_num_iters_temp;
+                pthread_mutex_unlock(&total_num_iters_lock);
+                total_num_iters_temp = 0;
+            }
 
-        if (board_num % stop_at == 0)
-        {
-            very_long_int_t total_num_iters_copy;
+            if (board_num % stop_at == 0)
+            {
+                very_long_int_t total_num_iters_copy;
 
-            pthread_mutex_lock(&total_num_iters_lock);
-            total_num_iters_copy = (total_num_iters += total_num_iters_temp);
-            pthread_mutex_unlock(&total_num_iters_lock);
-            total_num_iters_temp = 0;
+                pthread_mutex_lock(&total_num_iters_lock);
+                total_num_iters_copy = (total_num_iters += total_num_iters_temp);
+                pthread_mutex_unlock(&total_num_iters_lock);
+                total_num_iters_temp = 0;
 
 #ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
-                board_num,
-                tv.tv_sec,
-                tv.tv_usec,
-                total_num_iters_copy
-                );
+                gettimeofday(&tv,&tz);
+                printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
+                    board_num,
+                    tv.tv_sec,
+                    tv.tv_usec,
+                    total_num_iters_copy
+                    );
 #else
-            _ftime(&tb);
-            printf(
+                _ftime(&tb);
+                printf(
 #ifdef __GNUC__
-                    "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
+                        "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
 #else
-                    "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
+                        "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
 #endif
-                board_num,
-                tb.time,
-                tb.millitm*1000,
-                total_num_iters_copy
-            );
+                    board_num,
+                    tb.time,
+                    tb.millitm*1000,
+                    total_num_iters_copy
+                );
 #endif
-            fflush(stdout);
-        }
+                fflush(stdout);
+            }
 
-        freecell_solver_user_recycle(user.instance);
-    }
+            freecell_solver_user_recycle(user.instance);
+        }
+    } while (board_num <= end_board);
 
     pthread_mutex_lock(&total_num_iters_lock);
     total_num_iters += total_num_iters_temp;
@@ -736,6 +741,17 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
             num_workers = atoi(argv[arg]);
+        }
+        else if (!strcmp(argv[arg], "--worker-step"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--worker-step came without an argument!\n");
+                print_help();
+                exit(-1);
+            }
+            board_num_step = atoi(argv[arg]);
         }
         else
         {
