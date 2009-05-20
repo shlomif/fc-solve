@@ -37,6 +37,7 @@
 #endif
 
 #include "inline.h"
+#include "unused.h"
 
 const fcs_move_t fc_solve_empty_move = {"\0\0\0\0"};
 
@@ -140,7 +141,7 @@ void fc_solve_apply_move(
         fcs_move_t move,
         int freecells_num,
         int stacks_num,
-        int decks_num
+        int decks_num GCC_UNUSED
         )
 {
     fcs_card_t card;
@@ -386,9 +387,9 @@ char * fc_solve_move_to_string(fcs_move_t move, int standard_notation)
 
 char * fc_solve_move_to_string_w_state(
         fcs_state_extra_info_t * state_val,
-        int freecells_num,
-        int stacks_num,
-        int decks_num,
+        int freecells_num GCC_UNUSED, 
+        int stacks_num GCC_UNUSED,
+        int decks_num GCC_UNUSED,
         fcs_move_t move,
         int standard_notation
         )
@@ -452,10 +453,10 @@ char * fc_solve_move_to_string_w_state(
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
             if (standard_notation)
             {
-                sprintf(string, "%c%c",
-                    ('a'+convert_freecell_num(fcs_move_get_src_freecell(move))),
-                    ('a'+convert_freecell_num(fcs_move_get_dest_freecell(move)))
-                    );
+                register char src_c = (char)('a'+(char)convert_freecell_num(fcs_move_get_src_freecell(move)));
+                register char dest_c = (char)('a'+(char)convert_freecell_num(fcs_move_get_dest_freecell(move)));
+
+                sprintf(string, "%c%c", src_c, dest_c);
             }
             else
             {

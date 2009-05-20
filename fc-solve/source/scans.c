@@ -188,7 +188,6 @@ int fc_solve_soft_dfs_do_solve(
 
     fcs_state_t * ptr_state_key;
     fcs_state_extra_info_t * ptr_state_val;
-    int a;
     int check;
     int do_first_iteration;
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
@@ -206,7 +205,7 @@ int fc_solve_soft_dfs_do_solve(
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
     fcs_derived_states_list_t * derived_states_list;
-    int to_reparent_states, scans_synergy;
+    int scans_synergy;
 
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
@@ -215,7 +214,6 @@ int fc_solve_soft_dfs_do_solve(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    to_reparent_states = instance->to_reparent_states_real;
     scans_synergy = instance->scans_synergy;
 
     the_soft_dfs_info = &(soft_thread->soft_dfs_info[soft_thread->depth]);
@@ -294,6 +292,7 @@ int fc_solve_soft_dfs_do_solve(
             if (the_soft_dfs_info->test_index == 0)
             {
                 int num_vacant_stacks, num_vacant_freecells;
+                int i;
 
                 TRACE0("In iter_handler");
 
@@ -319,9 +318,9 @@ int fc_solve_soft_dfs_do_solve(
 
                 /* Count the free-cells */
                 num_vacant_freecells = 0;
-                for(a=0;a<LOCAL_FREECELLS_NUM;a++)
+                for(i=0;i<LOCAL_FREECELLS_NUM;i++)
                 {
-                    if (fcs_freecell_card_num(the_state, a) == 0)
+                    if (fcs_freecell_card_num(the_state, i) == 0)
                     {
                         num_vacant_freecells++;
                     }
@@ -330,9 +329,9 @@ int fc_solve_soft_dfs_do_solve(
                 /* Count the number of unoccupied stacks */
 
                 num_vacant_stacks = 0;
-                for(a=0;a<LOCAL_STACKS_NUM;a++)
+                for(i=0;i<LOCAL_STACKS_NUM;i++)
                 {
-                    if (fcs_col_len(fcs_state_get_col(the_state, a)) == 0)
+                    if (fcs_col_len(fcs_state_get_col(the_state, i)) == 0)
                     {
                         num_vacant_stacks++;
                     }
@@ -1136,7 +1135,9 @@ extern char * fc_solve_get_the_positions_by_rank_data(
     if (! *positions_by_rank_location)
     {
         char * positions_by_rank;
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
         fc_solve_instance_t * instance;
+#endif
         fcs_state_t * ptr_state_key;
 
 #ifndef HARD_CODED_NUM_DECKS
@@ -1151,7 +1152,9 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 
         ptr_state_key = ptr_state_val->key;
 
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
         instance = soft_thread->hard_thread->instance;
+#endif
 
 #ifndef HARD_CODED_NUM_DECKS
         decks_num = instance->decks_num;
@@ -1229,13 +1232,13 @@ extern char * fc_solve_get_the_positions_by_rank_data(
                             dest_below_card = fcs_col_get_card(dest_col, dc+1);
                             if (!fcs_is_parent_card(dest_below_card, dest_card))
                             {
-                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = ds;
-                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = dc;
+                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)ds;
+                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)dc;
                             }
                         }
                     }
-                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = ds;
-                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = top_card_idx;
+                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)ds;
+                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)top_card_idx;
                 }
             }
         }
