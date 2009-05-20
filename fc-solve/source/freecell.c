@@ -43,6 +43,7 @@
 #include "fcs_isa.h"
 #include "tests.h"
 #include "ms_ca.h"
+#include "unused.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -201,7 +202,7 @@ int fc_solve_sfs_check_state_end(
  * This function tries to move stack cards that are present at the
  * top of stacks to the foundations.
  * */
-int fc_solve_sfs_move_top_stack_cards_to_founds(
+static int fc_solve_sfs_move_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -278,13 +279,13 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
  * This test moves single cards that are present in the freecells to
  * the foundations.
  * */
-int fc_solve_sfs_move_freecell_cards_to_founds(
+static int fc_solve_sfs_move_freecell_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors_no_stacks();
     int fc;
     int deck;
     fcs_card_t card;
@@ -294,7 +295,7 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
     int freecells_num;
 #endif
 
-    tests_define_accessors();
+    tests_define_accessors_no_stacks();
 
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
@@ -345,7 +346,7 @@ static int derived_states_compare_callback(
     return ((a < b) ? (-1) : (a > b) ? (1) : 0);
 }
 
-int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
+static int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * final_derived_states_list
@@ -588,7 +589,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_move_non_top_stack_cards_to_founds(
+static int fc_solve_sfs_move_non_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -746,7 +747,7 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 }
 
 
-int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
+static int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1084,7 +1085,7 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 #undef dest_col
 #undef dest_cards_num
 
-int fc_solve_sfs_move_stack_cards_to_different_stacks(
+static int fc_solve_sfs_move_stack_cards_to_different_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1333,7 +1334,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_move_sequences_to_free_stacks(
+static int fc_solve_sfs_move_sequences_to_free_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1575,7 +1576,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_move_freecell_cards_to_empty_stack(
+static int fc_solve_sfs_move_freecell_cards_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1661,7 +1662,7 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_move_cards_to_a_different_parent(
+static int fc_solve_sfs_move_cards_to_a_different_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1927,7 +1928,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_empty_stack_into_freecells(
+static int fc_solve_sfs_empty_stack_into_freecells(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2019,16 +2020,18 @@ int fc_solve_sfs_empty_stack_into_freecells(
 
 }
 
-int fc_solve_sfs_yukon_do_nothing(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * derived_states_list
+static int fc_solve_sfs_yukon_do_nothing(
+        fc_solve_soft_thread_t * soft_thread GCC_UNUSED,
+        fcs_state_extra_info_t * ptr_state_val GCC_UNUSED,
+        fcs_derived_states_list_t * derived_states_list GCC_UNUSED
         )
 {
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_yukon_move_card_to_parent(
+/* Disabling Yukon solving for the time being. */
+#if 0
+static int fc_solve_sfs_yukon_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2110,7 +2113,7 @@ int fc_solve_sfs_yukon_move_card_to_parent(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_yukon_move_kings_to_empty_stack(
+static int fc_solve_sfs_yukon_move_kings_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2189,6 +2192,7 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
+#endif
 
 #ifdef FCS_WITH_TALONS
 /*
@@ -2392,7 +2396,7 @@ int fc_solve_sfs_get_card_from_klondike_talon(
 
 #endif
 
-int fc_solve_sfs_atomic_move_card_to_empty_stack(
+static int fc_solve_sfs_atomic_move_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2485,7 +2489,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_atomic_move_card_to_parent(
+static int fc_solve_sfs_atomic_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2564,7 +2568,7 @@ int fc_solve_sfs_atomic_move_card_to_parent(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_atomic_move_card_to_freecell(
+static int fc_solve_sfs_atomic_move_card_to_freecell(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2645,7 +2649,7 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_atomic_move_freecell_card_to_parent(
+static int fc_solve_sfs_atomic_move_freecell_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2720,7 +2724,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
+static int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list

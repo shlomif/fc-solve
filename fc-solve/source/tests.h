@@ -123,19 +123,17 @@ int fc_solve_sfs_check_state_end(
   */
 #define fcs_flip_top_card(stack_idx)                                   \
 {                                                                  \
-    int cards_num;                                                 \
-    fcs_cards_column_t col;                                        \
-    col = fcs_state_get_col(new_state, stack_idx);                 \
-    cards_num = fcs_col_len(col);                         \
+    fcs_cards_column_t flip_top_card_col;                                        \
+    flip_top_card_col = fcs_state_get_col(new_state, stack_idx);                 \
                                                                    \
-    if (cards_num > 0)                                             \
+    if (fcs_col_len(flip_top_card_col) > 0)                                             \
     {                                                              \
         if (fcs_card_get_flipped(                                  \
-                fcs_col_get_card(col, cards_num-1)        \
+                fcs_col_get_card(flip_top_card_col, fcs_col_len(flip_top_card_col)-1)        \
                 ) == 1                                             \
            )                                                       \
         {                                                          \
-            fcs_col_flip_card(col, cards_num-1);                   \
+            fcs_col_flip_card(col, fcs_col_len(flip_top_card_col)-1);                   \
             fcs_move_set_type(temp_move, FCS_MOVE_TYPE_FLIP_CARD); \
             fcs_move_set_src_stack(temp_move, stack_idx);              \
                                                                    \
@@ -195,25 +193,28 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #else
 #define tests_declare_accessors_freecell_only() \
     int sequences_are_built_by;  \
-    int empty_stacks_fill;
+    int empty_stacks_fill; \
+    fc_solve_instance_t * instance;
 #endif
 
 /*
- * This test declares a few access variables that are used in all
+ * This macro declares a few access variables that are used in all
  * the tests.
  * */
-#define tests_declare_accessors()                              \
+#define tests_declare_accessors_no_stacks()         \
     tests_declare_accessors_freecell_only()                    \
     fc_solve_hard_thread_t * hard_thread;               \
-    fc_solve_instance_t * instance;                     \
     fcs_state_t * ptr_state_key; \
     fcs_state_t * ptr_new_state_key; \
     fcs_state_extra_info_t * ptr_new_state_val; \
     fcs_move_stack_t * moves;                                  \
-    int state_context_value;                                  \
-    char * indirect_stacks_buffer                             \
-       
+    int state_context_value                                  \
 
+#define tests_declare_accessors() \
+    tests_declare_accessors_no_stacks();           \
+    char * indirect_stacks_buffer                             \
+
+#define tests_declare_no_
 #ifdef FCS_FREECELL_ONLY
 
 #define tests_define_accessors_freecell_only() {}
@@ -228,6 +229,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #define tests_define_accessors_freecell_only() \
 { \
+    instance = hard_thread->instance;                     \
     sequences_are_built_by = instance->sequences_are_built_by; \
     empty_stacks_fill = instance->empty_stacks_fill;           \
 }
@@ -246,14 +248,16 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 /*
  * This macro defines these accessors to have some value.
  * */
-#define tests_define_accessors()                                  \
+#define tests_define_accessors_no_stacks()                                  \
     ptr_state_key = ptr_state_val->key;                           \
     hard_thread = soft_thread->hard_thread;                       \
-    instance = hard_thread->instance;                             \
     moves = hard_thread->reusable_move_stack;                     \
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer; \
     state_context_value = 0;                                      \
     tests_define_accessors_freecell_only()
+
+#define tests_define_accessors()  \
+    tests_define_accessors_no_stacks();       \
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer; \
 
 extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fc_solve_soft_thread_t * soft_thread,

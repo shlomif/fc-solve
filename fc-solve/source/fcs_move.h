@@ -103,14 +103,14 @@ struct fcs_move_struct
 #define FCS_MOVE_NUM_CARDS_IN_SEQ    3
 #define FCS_MOVE_NUM_CARDS_FLIPPED   3
 
-#define fcs_move_set_src_stack(move,value)        (move).c[FCS_MOVE_SRC] = (value);
-#define fcs_move_set_src_freecell(move,value)     (move).c[FCS_MOVE_SRC] = (value);
-#define fcs_move_set_dest_stack(move,value)       (move).c[FCS_MOVE_DEST] = (value);
-#define fcs_move_set_dest_freecell(move,value)    (move).c[FCS_MOVE_DEST] = (value);
-#define fcs_move_set_foundation(move,value)       (move).c[FCS_MOVE_DEST] = (value);
-#define fcs_move_set_type(move,value)             (move).c[FCS_MOVE_TYPE] = (value);
-#define fcs_move_set_num_cards_in_seq(move,value) (move).c[FCS_MOVE_NUM_CARDS_IN_SEQ] = (value);
-#define fcs_move_set_num_cards_flipped(move,value) (move).c[FCS_MOVE_NUM_CARDS_FLIPPED] = (value);
+#define fcs_move_set_src_stack(move,value)        (move).c[FCS_MOVE_SRC] = ((unsigned char)(value));
+#define fcs_move_set_src_freecell(move,value)     (move).c[FCS_MOVE_SRC] = ((unsigned char)(value));
+#define fcs_move_set_dest_stack(move,value)       (move).c[FCS_MOVE_DEST] = ((unsigned char)(value));
+#define fcs_move_set_dest_freecell(move,value)    (move).c[FCS_MOVE_DEST] = ((unsigned char)(value));
+#define fcs_move_set_foundation(move,value)       (move).c[FCS_MOVE_DEST] = ((unsigned char)(value));
+#define fcs_move_set_type(move,value)             (move).c[FCS_MOVE_TYPE] = ((unsigned char)(value));
+#define fcs_move_set_num_cards_in_seq(move,value) (move).c[FCS_MOVE_NUM_CARDS_IN_SEQ] = ((unsigned char)(value));
+#define fcs_move_set_num_cards_flipped(move,value) (move).c[FCS_MOVE_NUM_CARDS_FLIPPED] = ((unsigned char)(value));
 
 #define fcs_move_get_src_stack(move)              ((move).c[FCS_MOVE_SRC])
 #define fcs_move_get_src_freecell(move)           ((move).c[FCS_MOVE_SRC])
