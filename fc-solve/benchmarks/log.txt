@@ -969,3 +969,20 @@ Trunk r1732 with the non-threaded range-solver and tcc (TinyCC / TurboCC):
 
 266.824592828751s
 
+========================================================================
+
+Trunk (r1735) "./Tatzer -l p4b" with:
+
+./freecell-solver-multi-thread-solve 1 32000 500 --num-workers 2 \
+    --worker-step 1 -l gi 
+
+113.422488927841s
+
+========================================================================
+
+Trunk (r1735) "./Tatzer -l p4b" with:
+
+./freecell-solver-multi-thread-solve 1 32000 500 --num-workers 2 \
+    --worker-step 16 -l gi
+
+113.577511072159s
