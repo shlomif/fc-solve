@@ -2,9 +2,6 @@
 
 --- Non-pressing ---
 
-* Unify all the compiler makefiles ( Makefile.icc , Makefile.tenra , etc.)
-into one.
-
 * Experiment with using a union in the soft_thread to unify common elements
 that are used only by one of the scans.
 
