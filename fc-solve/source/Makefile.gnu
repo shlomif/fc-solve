@@ -2,6 +2,7 @@ DEBUG = 0
 PROFILE = 0
 WITH_TRACES = 0
 FREECELL_ONLY = 1
+DISABLE_SIMPLE_SIMON := 1
 WITH_LIBRB = 0
 
 COMPILER = gcc
@@ -9,6 +10,11 @@ COMPILER = gcc
 # COMPILER = pcc
 # COMPILER = tcc
 # COMPILER = tendra
+
+
+ifeq ($(FREECELL_ONLY),1)
+	DISABLE_SIMPLE_SIMON := 1
+endif
 
 CFLAGS := -Wall
 GCC_COMPAT := 
@@ -52,6 +58,10 @@ endif
 
 ifneq ($(FREECELL_ONLY),0)
 	CFLAGS += -DFCS_FREECELL_ONLY=1
+endif
+
+ifneq ($(DISABLE_SIMPLE_SIMON),0)
+	CFLAGS += -DFCS_DISABLE_SIMPLE_SIMON=1
 endif
 
 LFLAGS := $(CFLAGS)
@@ -117,7 +127,7 @@ OBJECTS :=                     \
 
 #>>>OBJECTS.END
 
-ifeq ($(FREECELL_ONLY),0)
+ifeq ($(DISABLE_SIMPLE_SIMON),0)
 	OBJECTS += simpsim.o
 endif
 
