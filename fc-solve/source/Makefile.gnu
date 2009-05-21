@@ -7,6 +7,7 @@ WITH_LIBRB = 0
 
 COMPILER = gcc
 # COMPILER = icc
+# COMPILER = lcc
 # COMPILER = pcc
 # COMPILER = tcc
 # COMPILER = tendra
@@ -21,6 +22,9 @@ GCC_COMPAT :=
 
 ifeq ($(COMPILER),gcc)
 	CC = gcc
+	GCC_COMPAT := 1
+else ifeq ($(COMPILER),icc)
+	CC = lcc
 	GCC_COMPAT := 1
 else ifeq ($(COMPILER),icc)
 	CC = icc
