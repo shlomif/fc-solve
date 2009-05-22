@@ -116,7 +116,7 @@ GetOptions(
     },
     'arch=s' => \$cpu_arch,
     'omit-frame!' => \$omit_frame,
-    'without-simple-simon!' => \$no_simple_simon,
+    'disable-simple-simon!' => \$no_simple_simon,
 ) or
     die "Wrong options";
 
