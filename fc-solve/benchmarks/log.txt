@@ -986,3 +986,21 @@ Trunk (r1735) "./Tatzer -l p4b" with:
     --worker-step 16 -l gi
 
 113.577511072159s
+
+========================================================================
+
+Trunk (r1755) with "./Tatzer -l p4b" after running strip on the 
+binaries and regular (non-threaded) range-solver "-l gi": (gcc-4.4.0)
+
+122.316657066345s
+
+========================================================================
+
+Trunk (r1755) with "./Tatzer -l p4b" after running strip on the 
+binaries and regular (non-threaded) range-solver "-l gi": (gcc-4.4.0)
+
+./freecell-solver-multi-thread-solve 1 32000 500 --num-workers 3 \
+    --worker-step 16 -l gi
+
+114.755166053772s
+
