@@ -802,41 +802,8 @@ extern fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     fc_solve_instance_t * instance
     );
 
-int fc_solve_a_star_or_bfs_do_solve(
-    fc_solve_soft_thread_t * soft_thread
-    );
-
-extern void fc_solve_soft_thread_init_soft_dfs(
-    fc_solve_soft_thread_t * soft_thread
-    );
-
-extern void fc_solve_soft_thread_init_a_star_or_bfs(
-    fc_solve_soft_thread_t * soft_thread
-    );
-
-
-extern int fc_solve_soft_dfs_do_solve(
-    fc_solve_soft_thread_t * soft_thread,
-    int to_randomize
-    );
-
 extern void fc_solve_recycle_instance(
     fc_solve_instance_t * instance
-        );
-
-/* We need 2 chars per card - one for the column_idx and one
- * for the card_idx.
- *
- * We also need it times 13 for each of the ranks.
- *
- * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
- * (-1,-1) (= end) padding.
- * */
-#define FCS_POS_BY_RANK_WIDTH (((LOCAL_DECKS_NUM<< 2)+1) << 1)
-
-extern char * fc_solve_get_the_positions_by_rank_data(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val
         );
 
 #ifdef __cplusplus

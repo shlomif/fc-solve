@@ -37,13 +37,9 @@
 
 #include "state.h"
 #include "card.h"
-#include "fcs_dm.h"
-#include "instance.h"
-
-#include "fcs_isa.h"
+#include "scans.h"
 
 #include "test_arr.h"
-#include "caas.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"

@@ -37,10 +37,9 @@
 
 #include "state.h"
 #include "card.h"
-#include "fcs_dm.h"
 #include "instance.h"
+#include "scans.h"
 
-#include "fcs_isa.h"
 #include "tests.h"
 #include "ms_ca.h"
 #include "unused.h"
