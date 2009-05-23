@@ -143,6 +143,3 @@ void fc_solve_compact_allocator_foreach(
     }
 }
 
-
-
-
