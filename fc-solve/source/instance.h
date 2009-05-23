@@ -565,16 +565,7 @@ struct fc_solve_hard_thread_struct
 };
 
 
-
-
-
 /********************************************/
-
-
-
-
-
-
 
 
 struct fcs_soft_dfs_stack_item_struct
