@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 
-// 1997 wilson callan
-// 1994 don woods
+/* 1997 wilson callan */
+/* 1994 don woods */
 
 #include "fcs_user.h"
 #include "fcs_cl.h"

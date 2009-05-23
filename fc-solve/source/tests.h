@@ -216,7 +216,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #define tests_declare_accessors() \
     tests_declare_accessors_no_stacks();           \
-    char * indirect_stacks_buffer                             \
+    char * indirect_stacks_buffer;                             \
 
 #define tests_declare_no_
 #ifdef FCS_FREECELL_ONLY

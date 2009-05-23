@@ -208,7 +208,7 @@ static int fc_solve_sfs_move_top_stack_cards_to_founds(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
     int stack_idx;
     fcs_cards_column_t col;
     int cards_num;
@@ -352,9 +352,9 @@ static int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         fcs_derived_states_list_t * final_derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_seqs_built_by();
-    tests_declare_empty_stacks_fill();
+    tests_declare_accessors()
+    tests_declare_seqs_built_by()
+    tests_declare_empty_stacks_fill()
 
     fcs_derived_states_list_t derived_states_struct;
     fcs_derived_states_list_t * derived_states_list;
@@ -599,8 +599,8 @@ static int fc_solve_sfs_move_non_top_stack_cards_to_founds(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_empty_stacks_fill();
+    tests_declare_accessors()
+    tests_declare_empty_stacks_fill()
 
     int check;
 
@@ -759,9 +759,9 @@ static int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_seqs_built_by();
-    tests_declare_empty_stacks_fill();
+    tests_declare_accessors()
+    tests_declare_seqs_built_by()
+    tests_declare_empty_stacks_fill()
 
     int check;
 
@@ -1102,9 +1102,9 @@ static int fc_solve_sfs_move_stack_cards_to_different_stacks(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_seqs_built_by();
-    tests_declare_empty_stacks_fill();
+    tests_declare_accessors()
+    tests_declare_seqs_built_by()
+    tests_declare_empty_stacks_fill()
 
     int check;
 
@@ -1355,9 +1355,9 @@ static int fc_solve_sfs_move_sequences_to_free_stacks(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_empty_stacks_fill();
-    tests_declare_seqs_built_by();
+    tests_declare_accessors()
+    tests_declare_empty_stacks_fill()
+    tests_declare_seqs_built_by()
     int check;
 
     int stack_idx, cards_num, c, ds, a, b, seq_end;
@@ -1601,8 +1601,8 @@ static int fc_solve_sfs_move_freecell_cards_to_empty_stack(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_empty_stacks_fill();
+    tests_declare_accessors()
+    tests_declare_empty_stacks_fill()
 
     int check;
     int fc, stack_idx;
@@ -1690,9 +1690,9 @@ static int fc_solve_sfs_move_cards_to_a_different_parent(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_seqs_built_by();
-    tests_declare_empty_stacks_fill();
+    tests_declare_accessors()
+    tests_declare_seqs_built_by()
+    tests_declare_empty_stacks_fill()
 
     int check;
 
@@ -1960,8 +1960,8 @@ static int fc_solve_sfs_empty_stack_into_freecells(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_empty_stacks_fill();
+    tests_declare_accessors()
+    tests_declare_empty_stacks_fill()
 
     int check;
 
@@ -2065,7 +2065,7 @@ static int fc_solve_sfs_yukon_move_card_to_parent(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
     int check;
 
@@ -2147,7 +2147,7 @@ static int fc_solve_sfs_yukon_move_kings_to_empty_stack(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
     int check;
 
@@ -2233,7 +2233,7 @@ int fc_solve_sfs_deal_gypsy_talon(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
     int check;
 
@@ -2280,7 +2280,7 @@ int fc_solve_sfs_get_card_from_klondike_talon(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
 
     fcs_state_with_locations_t * talon_temp;
@@ -2430,8 +2430,8 @@ static int fc_solve_sfs_atomic_move_card_to_empty_stack(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_empty_stacks_fill();
+    tests_declare_accessors()
+    tests_declare_empty_stacks_fill()
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
@@ -2525,8 +2525,8 @@ static int fc_solve_sfs_atomic_move_card_to_parent(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_seqs_built_by();
+    tests_declare_accessors()
+    tests_declare_seqs_built_by()
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
@@ -2606,7 +2606,7 @@ static int fc_solve_sfs_atomic_move_card_to_freecell(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
@@ -2687,8 +2687,8 @@ static int fc_solve_sfs_atomic_move_freecell_card_to_parent(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_seqs_built_by();
+    tests_declare_accessors()
+    tests_declare_seqs_built_by()
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
@@ -2764,8 +2764,9 @@ static int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
-    tests_declare_empty_stacks_fill();
+    tests_declare_accessors()
+    tests_declare_empty_stacks_fill()
+
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif

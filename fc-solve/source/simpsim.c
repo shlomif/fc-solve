@@ -70,7 +70,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
 
     fcs_move_t temp_move;
@@ -164,7 +164,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
 
 
@@ -293,7 +293,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
 
 
@@ -408,7 +408,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
 
     int check;
@@ -694,7 +694,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
     int stack_idx, cards_num, suit, a;
     fcs_card_t card, dest_card;
@@ -940,7 +940,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
     int check;
 
@@ -1269,7 +1269,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
     int check;
 
@@ -1519,7 +1519,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         fcs_derived_states_list_t * derived_states_list
         )
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
     int check;
 
