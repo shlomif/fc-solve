@@ -65,8 +65,8 @@ typedef int CARD;
 #define     MAXPOS          7
 #define     MAXCOL          8
 
-const static char const * card_to_string_values = "A23456789TJQK";
-const static char const * card_to_string_suits = "CDHS";
+static const char * card_to_string_values = "A23456789TJQK";
+static const char * card_to_string_suits = "CDHS";
 
 static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
 {

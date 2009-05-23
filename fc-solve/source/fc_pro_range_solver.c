@@ -39,6 +39,7 @@
 
 #include "fc_pro_iface_pos.h"
 #include "range_solvers_gen_ms_boards.h"
+#include "unused.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -71,8 +72,8 @@ static GCC_INLINE void fc_pro_get_board(long gamenumber, Position * pos)
         card = deck[j];
         suit = SUIT(card);
         pos->tableau[col].cards[pos->tableau[col].count++]
-            = (VALUE(card)+1) 
-            + (((suit == 3) ? suit : ((suit+1)%3))<<4)
+            = (Card)((VALUE(card)+1) 
+            + (((suit == 3) ? suit : ((suit+1)%3))<<4))
             ;
         deck[j] = deck[--wLeft];
     }
@@ -179,11 +180,11 @@ typedef struct pack_item_struct pack_item_t;
 
 static int cmd_line_callback(
     void * instance,
-    int argc,
+    int argc GCC_UNUSED,
     char * argv[],
     int arg,
     int * num_to_skip,
-    int * ret,
+    int * ret GCC_UNUSED,
     void * context
     )
 {
@@ -273,14 +274,14 @@ struct binary_output_struct
 
 typedef struct binary_output_struct binary_output_t;
 
-void print_int(binary_output_t * bin, int val)
+static void print_int(binary_output_t * bin, int val)
 {
     unsigned char * buffer = (unsigned char *)bin->ptr;
     int p;
 
     for(p=0;p<4;p++)
     {
-        buffer[p] = (val & 0xFF);
+        buffer[p] = (unsigned char)(val & 0xFF);
         val >>= 8;
     }
     bin->ptr += 4;
@@ -315,7 +316,7 @@ static void print_help(void)
           );
 }
 
-int read_int(FILE * f, int * dest)
+static int read_int(FILE * f, int * dest)
 {
     unsigned char buffer[4];
     int num_read;
@@ -346,7 +347,6 @@ int main(int argc, char * argv[])
 #else
     struct _timeb tb;
 #endif
-    int board_num_iters;
     int total_num_iters_temp = 0;
 #ifndef WIN32
     long long total_num_iters = 0;
@@ -356,7 +356,6 @@ int main(int argc, char * argv[])
     char * error_string;
     int parser_ret;
 
-    int pack_num_iters;
     int total_iterations_limit_per_board = -1;
 
     char * binary_output_filename = NULL;
@@ -546,10 +545,6 @@ int main(int argc, char * argv[])
 #if 0
         printf("%s\n", buffer);
 #endif
-
-        board_num_iters = 0;
-
-        pack_num_iters = 0;
 
         freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
 

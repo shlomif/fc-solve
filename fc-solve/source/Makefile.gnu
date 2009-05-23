@@ -24,10 +24,10 @@ ifeq ($(COMPILER),gcc)
 	CC = gcc
 	GCC_COMPAT := 1
 else ifeq ($(COMPILER),icc)
-	CC = lcc
-	GCC_COMPAT := 1
-else ifeq ($(COMPILER),icc)
 	CC = icc
+	GCC_COMPAT := 1
+else ifeq ($(COMPILER),lcc)
+	CC = lcc
 	GCC_COMPAT := 1
 else ifeq ($(COMPILER),pcc)	
 	CC = pcc 
@@ -88,8 +88,9 @@ DLFLAGS = $(LFLAGS)
 
 FCS_SHARED_LIB = libfreecell-solver.so.0
 TARGETS = fc-solve $(FCS_SHARED_LIB) \
-		  freecell-solver-range-parallel-solve \
-		  freecell-solver-multi-thread-solve
+          freecell-solver-range-parallel-solve \
+          freecell-solver-multi-thread-solve \
+          freecell-solver-fc-pro-range-solve
 
 ifeq ($(EXIT),1)
 
@@ -170,6 +171,11 @@ freecell-solver-range-parallel-solve: test_multi_parallel.o $(FCS_SHARED_LIB)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o $(FCS_SHARED_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
+
+FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o
+
+freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(FCS_SHARED_LIB)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FC_PRO_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
 
 clean:
 	rm -f *.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*

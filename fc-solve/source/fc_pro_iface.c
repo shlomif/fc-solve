@@ -58,11 +58,11 @@ char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
         {
             if (pos->foundations[a] != 0)
             {
+                suit_to_string(a, temp[0]);
+                rank_to_string(pos->foundations[a], temp[1]);
                 s_end += sprintf(
                     s_end, 
-                    " %s-%s", 
-                    suit_to_string(a, temp[0]),
-                    rank_to_string(pos->foundations[a], temp[1])
+                    " %s-%s", temp[0], temp[1]
                     );
             }
         }
@@ -104,7 +104,7 @@ char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
     return strdup(buffer);
 }
 
-int Cvtf89(int fcn)
+static int Cvtf89(int fcn)
 {
     return (fcn >= 7) ? (fcn+3) : fcn;
 }
@@ -139,10 +139,13 @@ char * moves_processed_render_move(fcs_extended_move_t move, char * string)
         break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
-                sprintf(string, "%c%c",
-                    ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
-                    ('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)))
-                    );                        
+        {
+            char c1, c2;
+
+            c1 = (char)('a'+Cvtf89(fcs_move_get_src_freecell(move.move)));
+            c2 = (char)('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)));
+            sprintf(string, "%c%c", c1, c2);
+        }
         break;
 
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
@@ -486,8 +489,10 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             {
                                 pos.tableau[dest].cards[pos.tableau[dest].count+i] = pos.tableau[src].cards[pos.tableau[src].count-num_cards+i];
                             }
-                            pos.tableau[dest].count += num_cards;
-                            pos.tableau[src].count -= num_cards;
+                            pos.tableau[dest].count = 
+                                (uchar)(pos.tableau[dest].count+num_cards);
+                            pos.tableau[src].count = 
+                                (uchar)(pos.tableau[src].count - num_cards);
                             virtual_stack_len[dest] += num_cards;
                             virtual_stack_len[src] -= num_cards;
                         }
