@@ -41,38 +41,18 @@
 #include "fcs_user.h"
 #include "fcs_cl.h"
 #include "unused.h"
+#include "inline.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
 
+typedef long microsoft_rand_t;
 
-struct microsoft_rand_struct
+static GCC_INLINE int microsoft_rand_rand(microsoft_rand_t * rand)
 {
-    long seed;
-};
-
-typedef struct microsoft_rand_struct microsoft_rand_t;
-
-static microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
-{
-    microsoft_rand_t * ret;
-
-    ret = malloc(sizeof(microsoft_rand_t));
-    ret->seed = (long)seed;
-
-    return ret;
-}
-
-static void microsoft_rand_free(microsoft_rand_t * rand)
-{
-    free(rand);
-}
-
-static int microsoft_rand_rand(microsoft_rand_t * rand)
-{
-    rand->seed = (rand->seed * 214013 + 2531011);
-    return (rand->seed >> 16) & 0x7fff;
+    *rand= ((*rand) * 214013 + 2531011);
+    return ((*rand) >> 16) & 0x7fff;
 }
 
 typedef int CARD;
@@ -137,7 +117,7 @@ static char * card_to_string(char * s, CARD card, int not_append_ws)
     return s;
 }
 
-static char * get_board(int gamenumber)
+static char * get_board(long gamenumber)
 {
 
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
@@ -147,9 +127,6 @@ static char * get_board(int gamenumber)
     CARD deck[52];            /* deck of 52 unique cards */
     char * ret;
     char * append_to;
-
-    microsoft_rand_t * randomizer;
-
 
     ret = malloc(1024);
     ret[0] = '\0';
@@ -161,15 +138,13 @@ static char * get_board(int gamenumber)
         deck[i] = i;
     }
 
-    randomizer = microsoft_rand_alloc(gamenumber);            /* gamenumber is seed for rand() */
+    /* gamenumber is seed for rand() . */
     for (i = 0; i < 52; i++)
     {
-        j = microsoft_rand_rand(randomizer) % wLeft;
+        j = microsoft_rand_rand(&gamenumber) % wLeft;
         card[(i%8)+1][i/8] = deck[j];
         deck[j] = deck[--wLeft];
     }
-
-    microsoft_rand_free(randomizer);
 
     append_to = ret;
 
