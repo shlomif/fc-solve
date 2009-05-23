@@ -37,38 +37,18 @@
 #include "fcs_user.h"
 #include "fcs_cl.h"
 #include "unused.h"
+#include "inline.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
 
+typedef long microsoft_rand_t;
 
-struct microsoft_rand_struct
+static GCC_INLINE int microsoft_rand_rand(microsoft_rand_t * rand)
 {
-    long seed;
-};
-
-typedef struct microsoft_rand_struct microsoft_rand_t;
-
-static microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
-{
-    microsoft_rand_t * ret;
-
-    ret = malloc(sizeof(microsoft_rand_t));
-    ret->seed = (long)seed;
-
-    return ret;
-}
-
-static void microsoft_rand_free(microsoft_rand_t * rand)
-{
-    free(rand);
-}
-
-static int microsoft_rand_rand(microsoft_rand_t * rand)
-{
-    rand->seed = (rand->seed * 214013 + 2531011);
-    return (rand->seed >> 16) & 0x7fff;
+    *rand= ((*rand) * 214013 + 2531011);
+    return ((*rand) >> 16) & 0x7fff;
 }
 
 typedef int CARD;
@@ -88,67 +68,36 @@ typedef int CARD;
 #define     VALUE(card)     ((card) / 4)
 #define     COLOUR(card)    (SUIT(card) == DIAMOND || SUIT(card) == HEART)
 
-#define     MAXPOS         21
-#define     MAXCOL          9    /* includes top row as column 0 */
+#define     MAXPOS          7
+#define     MAXCOL          8
 
-static char * card_to_string(char * s, CARD card, int not_append_ws)
+const static char const * card_to_string_values = "A23456789TJQK";
+const static char const * card_to_string_suits = "CDHS";
+
+static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
 {
-    int suit = SUIT(card);
-    int v = VALUE(card)+1;
-
-    if (v == 1)
+    s[0] = card_to_string_values[VALUE(card)];
+    s[1] = card_to_string_suits[SUIT(card)];
+    
+    if (not_append_ws)
     {
-        strcpy(s, "A");
-    }
-    else if (v <= 10)
-    {
-        sprintf(s, "%i", v);
+        return &(s[2]);
     }
     else
     {
-        strcpy(s, (v == 11)?"J":((v == 12)?"Q":"K"));
+        s[2] = ' ';
+        return &(s[3]);
     }
-
-    switch (suit)
-    {
-        case CLUB:
-            strcat(s, "C");
-            break;
-        case DIAMOND:
-            strcat(s, "D");
-            break;
-        case HEART:
-            strcat(s, "H");
-            break;
-        case SPADE:
-            strcat(s, "S");
-            break;
-    }
-    if (!not_append_ws)
-    {
-        strcat(s, " ");
-    }
-
-
-    return s;
 }
 
-static char * get_board(int gamenumber)
+static GCC_INLINE void get_board(long gamenumber, char * ret)
 {
-
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
 
     int  i, j;                /*  generic counters */
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
-    char * ret;
     char * append_to;
-
-    microsoft_rand_t * randomizer;
-
-
-    ret = malloc(1024);
-    ret[0] = '\0';
 
     /* shuffle cards */
 
@@ -157,15 +106,12 @@ static char * get_board(int gamenumber)
         deck[i] = i;
     }
 
-    randomizer = microsoft_rand_alloc(gamenumber);            /* gamenumber is seed for rand() */
     for (i = 0; i < 52; i++)
     {
-        j = microsoft_rand_rand(randomizer) % wLeft;
-        card[(i%8)+1][i/8] = deck[j];
+        j = microsoft_rand_rand(&gamenumber) % wLeft;
+        card[(i%8)][i/8] = deck[j];
         deck[j] = deck[--wLeft];
     }
-
-    microsoft_rand_free(randomizer);
 
     append_to = ret;
 
@@ -173,25 +119,21 @@ static char * get_board(int gamenumber)
         int stack;
         int c;
 
-        char card_string[10];
-
-        for(stack=1 ; stack<9 ; stack++ )
+        for(stack=0 ; stack<8 ; stack++ )
         {
-            for(c=0 ; c < (6+(stack<5)) ; c++)
+            for(c=0 ; c < (6+(stack<4)) ; c++)
             {
-                append_to += sprintf(append_to, "%s",
+                append_to =
                     card_to_string(
-                        card_string,
+                        append_to,
                         card[stack][c],
-                        (c == (6+(stack<5)))
-                    )
-                );
+                        (c == (6-1+(stack<4)))
+                    );
             }
-            append_to += sprintf(append_to, "%s", "\n");
+            *(append_to++) = '\n';
         }
     }
-
-    return ret;
+    *(append_to) = '\0';
 }
 
 struct fc_solve_display_information_context_struct
@@ -452,7 +394,6 @@ int main(int argc, char * argv[])
     /* char buffer[2048]; */
     int ret;
     int board_num;
-    char * buffer;
     int start_board, end_board, stop_at;
 #ifndef WIN32
     struct timeval tv;
@@ -472,9 +413,9 @@ int main(int argc, char * argv[])
     int total_iterations_limit_per_board = -1;
 
     char * binary_output_filename = NULL;
+    char state_string[52*3 + 8 + 1];
 
     binary_output_t binary_output;
-
 
     int arg = 1, start_from_arg;
     if (argc < 4)
@@ -654,18 +595,15 @@ int main(int argc, char * argv[])
 
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
-        buffer = get_board(board_num);
+        get_board(board_num, state_string);
 
         freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
 
         ret =
             freecell_solver_user_solve_board(
                 user.instance,
-                buffer
+                state_string
                 );
-
-        free(buffer);
-
 
         if (ret == FCS_STATE_SUSPEND_PROCESS)
         {
