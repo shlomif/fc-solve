@@ -40,7 +40,7 @@ char fc_solve_simple_simon_nothing;
 
 #else
 
-#include "fcs.h"
+#include "instance.h"
 
 #include "tests.h"
 

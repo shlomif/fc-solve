@@ -30,7 +30,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "fcs.h"
+#include "instance.h"
 #include "preset.h"
 
 #ifdef DMALLOC

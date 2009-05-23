@@ -33,7 +33,7 @@
 extern "C" {
 #endif
 
-#include "fcs.h"
+#include "instance.h"
 
 struct fcs_preset_struct
 {

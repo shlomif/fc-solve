@@ -32,7 +32,7 @@ extern "C" {
 #endif
 
 #include "state.h"
-#include "fcs.h"
+#include "instance.h"
 
 extern void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread);
 #if 0

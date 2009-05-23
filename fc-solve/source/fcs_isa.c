@@ -32,7 +32,7 @@
 
 
 #include "state.h"
-#include "fcs.h"
+#include "instance.h"
 
 #include "fcs_isa.h"
 

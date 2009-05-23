@@ -38,7 +38,7 @@ extern "C" {
 /* For fcs_state_extra_info_t */
 #include "state.h"
 /* For fc_solve_soft_thread_t and fcs_derived_states_list_t */
-#include "fcs.h"
+#include "instance.h"
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
 extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(

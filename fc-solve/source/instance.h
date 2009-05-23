@@ -22,8 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * fcs.h - header file of fc_solve_instance and of user-level
- * functions for Freecell Solver
+ * instance.h - header file of fc_solve_instance_t / fc_solve_hard_thread_t /
+ * fc_solve_soft_thread_t .
  *
  */
 

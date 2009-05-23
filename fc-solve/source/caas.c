@@ -35,7 +35,7 @@
 #include <stdio.h>
 
 #include "fcs_dm.h"
-#include "fcs.h"
+#include "instance.h"
 
 #include "fcs_isa.h"
 

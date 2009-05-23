@@ -42,7 +42,7 @@ extern "C" {
 #include "inline.h"
 
 #include "fcs_isa.h"
-#include "fcs.h"
+#include "instance.h"
 
 #include "test_arr.h"
 
