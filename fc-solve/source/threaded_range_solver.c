@@ -84,9 +84,13 @@ static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
     {
         strcpy(s, "A");
     }
-    else if (v <= 10)
+    else if (v <= 9)
     {
         sprintf(s, "%i", v);
+    }
+    else if (v == 10)
+    {
+        strcpy(s, "T");
     }
     else
     {
@@ -117,18 +121,15 @@ static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
     return s;
 }
 
-static char * get_board(long gamenumber)
+static GCC_INLINE void get_board(long gamenumber, char * ret)
 {
-
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
 
     int  i, j;                /*  generic counters */
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
-    char * ret;
     char * append_to;
 
-    ret = malloc(1024);
     ret[0] = '\0';
 
     /* shuffle cards */
@@ -169,8 +170,6 @@ static char * get_board(long gamenumber)
             append_to += sprintf(append_to, "%s", "\n");
         }
     }
-
-    return ret;
 }
 
 struct fc_solve_display_information_context_struct
@@ -358,14 +357,6 @@ static char * known_parameters[] = {
 
 #define BINARY_OUTPUT_NUM_INTS 16
 
-struct binary_output_struct
-{
-    FILE * file;
-    char * buffer;
-    char * buffer_end;
-    char * ptr;
-};
-
 #define print_int_wrapper(i) { }
 
 static void print_help(void)
@@ -424,7 +415,6 @@ static void * worker_thread(void * void_context)
     char * * argv;
     int board_num;
     int quota_end;
-    char * buffer;
     int stop_at;
 #ifndef WIN32
     struct timeval tv;
@@ -433,6 +423,9 @@ static void * worker_thread(void * void_context)
     struct _timeb tb;
 #endif    
     long total_num_iters_temp = 0;
+    /* 52 cards of 3 chars (suit+rank+whitespace) each, 
+     * plus 8 newlines, plus one '\0' terminator*/
+    char state_string[52*3 + 8 + 1];
 
     context = (context_t *)void_context;
     arg = context->arg;
@@ -494,18 +487,15 @@ static void * worker_thread(void * void_context)
         }
         for(;board_num<quota_end;board_num++)
         {
-            buffer = get_board(board_num);
+            get_board(board_num, state_string);
 
             freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
 
             ret =
                 freecell_solver_user_solve_board(
                     user.instance,
-                    buffer
+                    state_string
                     );
-
-            free(buffer);
-
 
             if (ret == FCS_STATE_SUSPEND_PROCESS)
             {
@@ -611,7 +601,6 @@ ret_label:
 
 int main(int argc, char * argv[])
 {
-    /* char buffer[2048]; */
     int stop_at;
 #ifndef WIN32
     struct timeval tv;
