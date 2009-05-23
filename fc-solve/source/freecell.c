@@ -44,6 +44,7 @@
 #include "tests.h"
 #include "ms_ca.h"
 #include "unused.h"
+#include "simpsim.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -2854,9 +2855,7 @@ static int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-#undef state_with_locations
 #undef state
-#undef new_state_with_locations
 #undef new_state
 
 #ifdef FCS_DISABLE_SIMPLE_SIMON

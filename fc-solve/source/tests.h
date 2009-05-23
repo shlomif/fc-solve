@@ -279,58 +279,6 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #endif
 
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-extern int fc_solve_sfs_simple_simon_move_sequence_to_founds(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * derived_states_list
-        );
-
-extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * derived_states_list
-        );
-
-extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * derived_states_list
-        );
-
-extern int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * derived_states_list
-        );
-
-extern int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * derived_states_list
-        );
-
-extern int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * derived_states_list
-        );
-
-extern int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * derived_states_list
-        );
-
-extern int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * derived_states_list
-        );
-
-#endif /* #ifndef FCS_DISABLE_SIMPLE_SIMON */
-
-
 #ifdef __cplusplus
 }
 #endif
