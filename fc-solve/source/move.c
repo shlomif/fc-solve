@@ -537,3 +537,34 @@ char * fc_solve_move_to_string_w_state(
 
     return strdup(string);
 }
+
+#define DERIVED_STATES_LIST_GROW_BY 16
+void fc_solve_derived_states_list_add_state(
+        fcs_derived_states_list_t * list,
+        fcs_state_extra_info_t * state_val,
+        int context
+        )
+{
+    if (
+        (!(
+           (list->num_states+(list->states != NULL))
+           & (DERIVED_STATES_LIST_GROW_BY-1)
+          )
+        )
+       )
+    {
+        (list)->states = realloc(
+            (list)->states, 
+            (
+                sizeof((list)->states[0])
+                * (list->num_states
+                    + (list->states!=NULL)
+                    + DERIVED_STATES_LIST_GROW_BY
+                  )
+            )
+        );
+    }
+    (list)->states[(list)->num_states].state_ptr = state_val;
+    (list)->states[(list)->num_states++].context.i = context;
+}
+

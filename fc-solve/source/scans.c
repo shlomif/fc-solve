@@ -94,36 +94,6 @@ static void fc_solve_increase_dfs_max_depth(
     soft_thread->dfs_max_depth = new_dfs_max_depth;
 }
 
-#define DERIVED_STATES_LIST_GROW_BY 16
-void fc_solve_derived_states_list_add_state(
-        fcs_derived_states_list_t * list,
-        fcs_state_extra_info_t * state_val,
-        int context
-        )
-{
-    if (
-        (!(
-           (list->num_states+(list->states != NULL))
-           & (DERIVED_STATES_LIST_GROW_BY-1)
-          )
-        )
-       )
-    {
-        (list)->states = realloc(
-            (list)->states, 
-            (
-                sizeof((list)->states[0])
-                * (list->num_states
-                    + (list->states!=NULL)
-                    + DERIVED_STATES_LIST_GROW_BY
-                  )
-            )
-        );
-    }
-    (list)->states[(list)->num_states].state_ptr = state_val;
-    (list)->states[(list)->num_states++].context.i = context;
-}
-
 /*
     fc_solve_soft_dfs_do_solve is the event loop of the
     Random-DFS scan. DFS which is recursive in nature is handled here
