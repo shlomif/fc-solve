@@ -1004,3 +1004,27 @@ binaries and regular (non-threaded) range-solver "-l gi": (gcc-4.4.0)
 
 114.755166053772s
 
+========================================================================
+
+r1768 trunk - before the board-generation related optimisations - 
+threaded-range-solver "-l gi" (gcc-4.4.0): "./Tatzer -l p4b":
+
+{{{{{{{{{{{{
+$ perl scripts/time-fcs.pl DUMPS/dump00*
+DUMPS/dump001:130.104535102844
+DUMPS/dump002:110.937661170959
+DUMPS/dump003:111.599701166153
+}}}}}}}}}}}}
+
+========================================================================
+
+r1774 trunk - after the board-generation related optimisations - 
+threaded-range-solver "-l gi" (gcc-4.4.0): "./Tatzer -l p4b":
+
+{{{{{{{{{{{{
+$ perl scripts/time-fcs.pl DUMPS/dump00*
+DUMPS/dump001:131.400728940964
+DUMPS/dump002:110.844954967499
+DUMPS/dump003:111.173483133316
+}}}}}}}}}}}}
+
