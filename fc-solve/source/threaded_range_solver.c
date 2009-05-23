@@ -72,8 +72,8 @@ typedef int CARD;
 #define     VALUE(card)     ((card) / 4)
 #define     COLOUR(card)    (SUIT(card) == DIAMOND || SUIT(card) == HEART)
 
-#define     MAXPOS         21
-#define     MAXCOL          9    /* includes top row as column 0 */
+#define     MAXPOS          7
+#define     MAXCOL          8
 
 const static char const * card_to_string_values = "A23456789TJQK";
 const static char const * card_to_string_suits = "CDHS";
@@ -114,7 +114,7 @@ static GCC_INLINE void get_board(long gamenumber, char * ret)
     for (i = 0; i < 52; i++)
     {
         j = microsoft_rand_rand(&gamenumber) % wLeft;
-        card[(i%8)+1][i/8] = deck[j];
+        card[(i%8)][i/8] = deck[j];
         deck[j] = deck[--wLeft];
     }
 
@@ -124,15 +124,15 @@ static GCC_INLINE void get_board(long gamenumber, char * ret)
         int stack;
         int c;
 
-        for(stack=1 ; stack<9 ; stack++ )
+        for(stack=0 ; stack<8 ; stack++ )
         {
-            for(c=0 ; c < (6+(stack<5)) ; c++)
+            for(c=0 ; c < (6+(stack<4)) ; c++)
             {
                 append_to =
                     card_to_string(
                         append_to,
                         card[stack][c],
-                        (c == (6-1+(stack<5)))
+                        (c == (6-1+(stack<4)))
                     );
             }
             *(append_to++) = '\n';
