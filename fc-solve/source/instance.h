@@ -148,7 +148,7 @@ typedef struct
     int * tests;
 } fcs_tests_order_t;
 
-typedef struct fc_solve_instance
+typedef struct
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     /* The sort-margin */
