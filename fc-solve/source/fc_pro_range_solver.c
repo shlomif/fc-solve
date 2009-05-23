@@ -38,111 +38,22 @@
 #include "fcs_cl.h"
 
 #include "fc_pro_iface_pos.h"
+#include "range_solvers_gen_ms_boards.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
 
-
-struct microsoft_rand_struct
-{
-    long seed;
-};
-
-typedef struct microsoft_rand_struct microsoft_rand_t;
-
-microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
-{
-    microsoft_rand_t * ret;
-
-    ret = malloc(sizeof(microsoft_rand_t));
-    ret->seed = (long)seed;
-
-    return ret;
-}
-
-void microsoft_rand_free(microsoft_rand_t * rand)
-{
-    free(rand);
-}
-
-int microsoft_rand_rand(microsoft_rand_t * rand)
-{
-    rand->seed = (rand->seed * 214013 + 2531011);
-    return (rand->seed >> 16) & 0x7fff;
-}
-
-typedef int CARD;
-
-#define     BLACK           0               /* COLOUR(card) */
-#define     RED             1
-
-#define     ACE             0               /*  VALUE(card) */
-#define     DEUCE           1
-
-#define     CLUB            0               /*  SUIT(card)  */
-#define     DIAMOND         1
-#define     HEART           2
-#define     SPADE           3
-
 #define     SUIT(card)      ((card) % 4)
 #define     VALUE(card)     ((card) / 4)
-#define     COLOUR(card)    (SUIT(card) == DIAMOND || SUIT(card) == HEART)
 
-#define     MAXPOS         21
-#define     MAXCOL          9    /* includes top row as column 0 */
-
-char * card_to_string(char * s, CARD card, int not_append_ws)
-{
-    int suit = SUIT(card);
-    int v = VALUE(card)+1;
-
-    if (v == 1)
-    {
-        strcpy(s, "A");
-    }
-    else if (v <= 10)
-    {
-        sprintf(s, "%i", v);
-    }
-    else
-    {
-        strcpy(s, (v == 11)?"J":((v == 12)?"Q":"K"));
-    }
-
-    switch (suit)
-    {
-        case CLUB:
-            strcat(s, "C");
-            break;
-        case DIAMOND:
-            strcat(s, "D");
-            break;
-        case HEART:
-            strcat(s, "H");
-            break;
-        case SPADE:
-            strcat(s, "S");
-            break;
-    }
-    if (!not_append_ws)
-    {
-        strcat(s, " ");
-    }
-
-
-    return s;
-}
-
-void get_board(int gamenumber, Position * pos)
+static GCC_INLINE void fc_pro_get_board(long gamenumber, Position * pos)
 {
     int  i, j;                /*  generic counters */
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
     int col;
     CARD card, suit;
-
-    microsoft_rand_t * randomizer;
 
     memset(pos, '\0', sizeof(*pos));
 
@@ -153,10 +64,9 @@ void get_board(int gamenumber, Position * pos)
         deck[i] = i;
     }
 
-    randomizer = microsoft_rand_alloc(gamenumber);            /* gamenumber is seed for rand() */
     for (i = 0; i < 52; i++)
     {
-        j = microsoft_rand_rand(randomizer) % wLeft;
+        j = microsoft_rand_rand(&gamenumber) % wLeft;
         col = (i%8);
         card = deck[j];
         suit = SUIT(card);
@@ -166,8 +76,6 @@ void get_board(int gamenumber, Position * pos)
             ;
         deck[j] = deck[--wLeft];
     }
-
-    microsoft_rand_free(randomizer);
 }
 
 struct fc_solve_display_information_context_struct
@@ -632,7 +540,7 @@ int main(int argc, char * argv[])
 
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
-        get_board(board_num, &pos);
+        fc_pro_get_board(board_num, &pos);
 
         buffer = fc_solve_fc_pro_position_to_string(&pos, 4);
 #if 0
