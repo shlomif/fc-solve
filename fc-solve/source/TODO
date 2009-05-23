@@ -7,9 +7,6 @@ that are used only by one of the scans.
 
 * Move the trunk, branches, tags, etc. to under /fc-solve. (?)
 
-* Default on building from the .tar.bz2 and distribute them instead of
-the .tar.gz's (less space).
-
 * Re-organize the source code to be more sensibly organized.
 
 * Experiment with using bit members for cards:
