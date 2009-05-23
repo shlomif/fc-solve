@@ -75,48 +75,23 @@ typedef int CARD;
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
 
+const static char const * card_to_string_values = "A23456789TJQK";
+const static char const * card_to_string_suits = "CDHS";
+
 static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
 {
-    int suit = SUIT(card);
-    int v = VALUE(card)+1;
-
-    if (v == 1)
+    s[0] = card_to_string_values[VALUE(card)];
+    s[1] = card_to_string_suits[SUIT(card)];
+    
+    if (not_append_ws)
     {
-        strcpy(s, "A");
-    }
-    else if (v <= 9)
-    {
-        sprintf(s, "%i", v);
-    }
-    else if (v == 10)
-    {
-        strcpy(s, "T");
+        s[2] = '\0';
     }
     else
     {
-        strcpy(s, (v == 11)?"J":((v == 12)?"Q":"K"));
+        s[2] = ' ';
+        s[3] = '\0';
     }
-
-    switch (suit)
-    {
-        case CLUB:
-            strcat(s, "C");
-            break;
-        case DIAMOND:
-            strcat(s, "D");
-            break;
-        case HEART:
-            strcat(s, "H");
-            break;
-        case SPADE:
-            strcat(s, "S");
-            break;
-    }
-    if (!not_append_ws)
-    {
-        strcat(s, " ");
-    }
-
 
     return s;
 }
