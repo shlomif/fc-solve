@@ -114,7 +114,6 @@ OBJECTS :=                     \
           app_str.o           \
           caas.o              \
           card.o              \
-          cl_chop.o           \
           cmd_line.o          \
           fcs_dm.o            \
           fcs_hash.o          \
@@ -127,6 +126,7 @@ OBJECTS :=                     \
           preset.o            \
           rand.o              \
           scans.o             \
+		  split_cmd_line.o    \
           state.o             \
 
 #>>>OBJECTS.END

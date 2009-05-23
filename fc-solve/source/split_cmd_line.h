@@ -1,4 +1,3 @@
-
 /* Copyright (c) 2000 Shlomi Fish
  *
  * Permission is hereby granted, free of charge, to any person
@@ -23,22 +22,22 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * split_cmd_line.h: split command line arguments from a big string according
+ * to a subset of Bourne shell's semantics. Useful for reading command
+ * line arguments from files.
  */
-#ifndef FC_SOLVE__CMD_LINE_CHOP_H
-#define FC_SOLVE__CMD_LINE_CHOP_H
+#ifndef FC_SOLVE__SPLIT_CMD_LINE_H
+#define FC_SOLVE__SPLIT_CMD_LINE_H
 
-struct args_man_struct
+typedef struct 
 {
     int argc;
     char * * argv;
-};
-
-typedef struct args_man_struct args_man_t;
+} args_man_t;
 
 extern args_man_t * fc_solve_args_man_alloc(void);
 extern void fc_solve_args_man_free(args_man_t * manager);
 extern int fc_solve_args_man_chop(args_man_t * manager, char * string);
 
-#endif /* #ifndef FC_SOLVE__CMD_LINE_CHOP_H */
+#endif /* #ifndef FC_SOLVE__SPLIT_CMD_LINE_H */
 

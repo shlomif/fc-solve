@@ -31,7 +31,7 @@
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
-#include "cl_chop.h"
+#include "split_cmd_line.h"
 
 #include "prefix.h"
 

@@ -22,13 +22,15 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * split_cmd_line.c: split command line arguments from a big string according
+ * to a subset of Bourne shell's semantics. Useful for reading command
+ * line arguments from files.
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "cl_chop.h"
+#include "split_cmd_line.h"
 
 #ifdef DMALLOC
 #include <dmalloc.h>
