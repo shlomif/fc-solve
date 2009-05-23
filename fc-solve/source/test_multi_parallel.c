@@ -38,103 +38,11 @@
 #include "fcs_cl.h"
 #include "unused.h"
 #include "inline.h"
+#include "range_solvers_gen_ms_boards.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
-
-typedef long microsoft_rand_t;
-
-static GCC_INLINE int microsoft_rand_rand(microsoft_rand_t * rand)
-{
-    *rand= ((*rand) * 214013 + 2531011);
-    return ((*rand) >> 16) & 0x7fff;
-}
-
-typedef int CARD;
-
-#define     BLACK           0               /* COLOUR(card) */
-#define     RED             1
-
-#define     ACE             0               /*  VALUE(card) */
-#define     DEUCE           1
-
-#define     CLUB            0               /*  SUIT(card)  */
-#define     DIAMOND         1
-#define     HEART           2
-#define     SPADE           3
-
-#define     SUIT(card)      ((card) % 4)
-#define     VALUE(card)     ((card) / 4)
-#define     COLOUR(card)    (SUIT(card) == DIAMOND || SUIT(card) == HEART)
-
-#define     MAXPOS          7
-#define     MAXCOL          8
-
-const static char const * card_to_string_values = "A23456789TJQK";
-const static char const * card_to_string_suits = "CDHS";
-
-static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
-{
-    s[0] = card_to_string_values[VALUE(card)];
-    s[1] = card_to_string_suits[SUIT(card)];
-    
-    if (not_append_ws)
-    {
-        return &(s[2]);
-    }
-    else
-    {
-        s[2] = ' ';
-        return &(s[3]);
-    }
-}
-
-static GCC_INLINE void get_board(long gamenumber, char * ret)
-{
-    CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
-
-    int  i, j;                /*  generic counters */
-    int  wLeft = 52;          /*  cards left to be chosen in shuffle */
-    CARD deck[52];            /* deck of 52 unique cards */
-    char * append_to;
-
-    /* shuffle cards */
-
-    for (i = 0; i < 52; i++)      /* put unique card in each deck loc. */
-    {
-        deck[i] = i;
-    }
-
-    for (i = 0; i < 52; i++)
-    {
-        j = microsoft_rand_rand(&gamenumber) % wLeft;
-        card[(i%8)][i/8] = deck[j];
-        deck[j] = deck[--wLeft];
-    }
-
-    append_to = ret;
-
-    {
-        int stack;
-        int c;
-
-        for(stack=0 ; stack<8 ; stack++ )
-        {
-            for(c=0 ; c < (6+(stack<4)) ; c++)
-            {
-                append_to =
-                    card_to_string(
-                        append_to,
-                        card[stack][c],
-                        (c == (6-1+(stack<4)))
-                    );
-            }
-            *(append_to++) = '\n';
-        }
-    }
-    *(append_to) = '\0';
-}
 
 struct fc_solve_display_information_context_struct
 {
@@ -413,7 +321,7 @@ int main(int argc, char * argv[])
     int total_iterations_limit_per_board = -1;
 
     char * binary_output_filename = NULL;
-    char state_string[52*3 + 8 + 1];
+    fcs_state_string_t state_string;
 
     binary_output_t binary_output;
 
