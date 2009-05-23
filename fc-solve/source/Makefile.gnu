@@ -120,7 +120,7 @@ OBJECTS :=                     \
           fcs_hash.o          \
           fcs_isa.o           \
           freecell.o          \
-          intrface.o          \
+          instance.o          \
           lib.o               \
           move.o              \
           pqueue.o            \

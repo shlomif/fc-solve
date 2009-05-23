@@ -22,8 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * intrface.c - instance interface functions for Freecell Solver
- *
+ * instance.c - instance/hard_thread/soft_thread functions for 
+ * Freecell Solver.
  */
 
 #include <stdlib.h>
