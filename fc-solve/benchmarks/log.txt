@@ -14,7 +14,7 @@ home desktop machine. Its specs are:
 
 With internal_hash_stacks and internal_hash_states, as compiled by CMake:
 
-{{{{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1237323598.193932
 Reached Board No. 500 at 1237323601.089328 (total_num_iters=256382)
 Reached Board No. 1000 at 1237323604.765368 (total_num_iters=544994)
@@ -81,7 +81,7 @@ Reached Board No. 30500 at 1237323810.110274 (total_num_iters=17594887)
 Reached Board No. 31000 at 1237323813.792166 (total_num_iters=17909180)
 Reached Board No. 31500 at 1237323818.377080 (total_num_iters=18259685)
 Reached Board No. 32000 at 1237323822.262284 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 Finished in 224.068351984024s.
 
@@ -89,7 +89,7 @@ Finished in 224.068351984024s.
 
 With libredblack_stacks and libredblack_states:
 
-{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1237323894.904116
 Reached Board No. 500 at 1237323898.377263 (total_num_iters=256382)
 Reached Board No. 1000 at 1237323902.403690 (total_num_iters=544994)
@@ -156,7 +156,7 @@ Reached Board No. 30500 at 1237324147.591196 (total_num_iters=17594887)
 Reached Board No. 31000 at 1237324152.085195 (total_num_iters=17909180)
 Reached Board No. 31500 at 1237324157.835143 (total_num_iters=18259685)
 Reached Board No. 32000 at 1237324162.645930 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 Finished at 267.741814136505 s.
 
@@ -164,7 +164,7 @@ Finished at 267.741814136505 s.
 
 With judy_stacks and judy_states, as compiled by CMake:
 
-{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1237409718.919392
 Reached Board No. 500 at 1237409722.495742 (total_num_iters=256382)
 Reached Board No. 1000 at 1237409726.459633 (total_num_iters=544994)
@@ -231,7 +231,7 @@ Reached Board No. 30500 at 1237409958.832542 (total_num_iters=17594887)
 Reached Board No. 31000 at 1237409963.160205 (total_num_iters=17909180)
 Reached Board No. 31500 at 1237409968.484830 (total_num_iters=18259685)
 Reached Board No. 32000 at 1237409973.084741 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 Finished in 254.165349006653s.
 
@@ -241,7 +241,7 @@ Finished in 254.165349006653s.
 
 trunk r1310
 
-{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1237464551.430457
 Reached Board No. 500 at 1237464554.061585 (total_num_iters=256382)
 Reached Board No. 1000 at 1237464557.123683 (total_num_iters=544994)
@@ -308,7 +308,7 @@ Reached Board No. 30500 at 1237464735.063678 (total_num_iters=17594887)
 Reached Board No. 31000 at 1237464738.331226 (total_num_iters=17909180)
 Reached Board No. 31500 at 1237464742.470268 (total_num_iters=18259685)
 Reached Board No. 32000 at 1237464745.993986 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 194.563528776169s
 
@@ -318,7 +318,7 @@ With ./configure -r (internal_hash):
 
 trunk r1310
 
-{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1237466492.703289
 Reached Board No. 500 at 1237466495.716216 (total_num_iters=256382)
 Reached Board No. 1000 at 1237466499.150380 (total_num_iters=544994)
@@ -385,7 +385,7 @@ Reached Board No. 30500 at 1237466708.940814 (total_num_iters=17594887)
 Reached Board No. 31000 at 1237466712.715625 (total_num_iters=17909180)
 Reached Board No. 31500 at 1237466717.478588 (total_num_iters=18259685)
 Reached Board No. 32000 at 1237466721.542229 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 228.838939905167s
 
@@ -398,7 +398,7 @@ https://svn.berlios.de/svnroot/repos/fc-solve/branches/extract-ansi-c-macros-int
 
 Revision 1419
 
-{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1238613691.619237
 Reached Board No. 500 at 1238613694.657634 (total_num_iters=256382)
 Reached Board No. 1000 at 1238613698.122641 (total_num_iters=544994)
@@ -465,7 +465,7 @@ Reached Board No. 30500 at 1238613907.928519 (total_num_iters=17594887)
 Reached Board No. 31000 at 1238613911.719320 (total_num_iters=17909180)
 Reached Board No. 31500 at 1238613916.478621 (total_num_iters=18259685)
 Reached Board No. 32000 at 1238613920.536927 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 228.917690038681s
 
@@ -475,7 +475,7 @@ With "./configure --nosecondary -r" - using:
 
 #define FCS_DISABLE_SECONDARY_HASH_VALUE
 
-{{{{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1240517800.579888
 Reached Board No. 500 at 1240517803.233586 (total_num_iters=256382)
 Reached Board No. 1000 at 1240517806.240367 (total_num_iters=544994)
@@ -542,7 +542,7 @@ Reached Board No. 30500 at 1240517986.535458 (total_num_iters=17594887)
 Reached Board No. 31000 at 1240517989.858748 (total_num_iters=17909180)
 Reached Board No. 31500 at 1240517994.053824 (total_num_iters=18259685)
 Reached Board No. 32000 at 1240517997.621056 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 197.041167974472s - new record!!!
 
@@ -552,7 +552,7 @@ With:
 
 ./configure --nosecondary --fc-only -r
 
-{{{{{{{{{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1240518427.360183
 Reached Board No. 500 at 1240518429.718421 (total_num_iters=256382)
 Reached Board No. 1000 at 1240518432.391987 (total_num_iters=544994)
@@ -619,7 +619,7 @@ Reached Board No. 30500 at 1240518592.892528 (total_num_iters=17594887)
 Reached Board No. 31000 at 1240518595.856120 (total_num_iters=17909180)
 Reached Board No. 31500 at 1240518599.607509 (total_num_iters=18259685)
 Reached Board No. 32000 at 1240518602.797188 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 175.43700504303s
 
@@ -627,7 +627,7 @@ Reached Board No. 32000 at 1240518602.797188 (total_num_iters=18589554)
 
 With "./configure --nosecondary -r" and making optimizing_for_cache false:
 
-{{{{{{{{{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1240562375.727664
 Reached Board No. 500 at 1240562378.395630 (total_num_iters=256382)
 Reached Board No. 1000 at 1240562381.413858 (total_num_iters=544994)
@@ -694,7 +694,7 @@ Reached Board No. 30500 at 1240562561.093750 (total_num_iters=17594887)
 Reached Board No. 31000 at 1240562564.414884 (total_num_iters=17909180)
 Reached Board No. 31500 at 1240562568.610554 (total_num_iters=18259685)
 Reached Board No. 32000 at 1240562572.179158 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 196.4514939785s
 
@@ -851,13 +851,13 @@ binaries:
 
 With ./configure -r --fc-only using  
 
-{{{
+{{{{{{{{{{{{
 ./freecell-solver-multi-thread-solve 1 32000 500 -l gi | tee dump
-}}}
+}}}}}}}}}}}}
 
 I'm getting
 
-{{{{{{{{{{{{{{{{{{
+{{{{{{{{{{{{
 Started at 1242387607.216835
 Reached Board No. 500 at 1242387608.768269 (total_num_iters=78781)
 Reached Board No. 1000 at 1242387610.540911 (total_num_iters=268043)
@@ -925,7 +925,7 @@ Reached Board No. 31000 at 1242387717.380726 (total_num_iters=17114989)
 Reached Board No. 31500 at 1242387719.384270 (total_num_iters=17213773)
 Reached Board No. 32000 at 1242387721.737463 (total_num_iters=17338340)
 Finished at 1242387722.265880 (total_num_iters=18589554)
-}}}}}}}}}}}}}}}}}}
+}}}}}}}}}}}}
 
 115.049045085907s
 
@@ -942,10 +942,10 @@ With two worker threads and ./configure -r --fc-only:
 
 Trunk with ./configure -r --fc-only and:
 
-{{{
+{{{{{{{{{{{{
 ADD_DEFINITIONS("-march=pentium4")
 ADD_DEFINITIONS("-fomit-frame-pointer")
-}}}
+}}}}}}}}}}}}
 
 With two worker threads:
 
