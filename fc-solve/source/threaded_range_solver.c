@@ -85,15 +85,13 @@ static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
     
     if (not_append_ws)
     {
-        s[2] = '\0';
+        return &(s[2]);
     }
     else
     {
         s[2] = ' ';
-        s[3] = '\0';
+        return &(s[3]);
     }
-
-    return s;
 }
 
 static GCC_INLINE void get_board(long gamenumber, char * ret)
@@ -104,8 +102,6 @@ static GCC_INLINE void get_board(long gamenumber, char * ret)
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
     char * append_to;
-
-    ret[0] = '\0';
 
     /* shuffle cards */
 
@@ -128,23 +124,21 @@ static GCC_INLINE void get_board(long gamenumber, char * ret)
         int stack;
         int c;
 
-        char card_string[10];
-
         for(stack=1 ; stack<9 ; stack++ )
         {
             for(c=0 ; c < (6+(stack<5)) ; c++)
             {
-                append_to += sprintf(append_to, "%s",
+                append_to =
                     card_to_string(
-                        card_string,
+                        append_to,
                         card[stack][c],
-                        (c == (6+(stack<5)))
-                    )
-                );
+                        (c == (6-1+(stack<5)))
+                    );
             }
-            append_to += sprintf(append_to, "%s", "\n");
+            *(append_to++) = '\n';
         }
     }
+    *(append_to) = '\0';
 }
 
 struct fc_solve_display_information_context_struct
