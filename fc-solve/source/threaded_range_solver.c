@@ -75,7 +75,7 @@ typedef int CARD;
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
 
-static char * card_to_string(char * s, CARD card, int not_append_ws)
+static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
 {
     int suit = SUIT(card);
     int v = VALUE(card)+1;
