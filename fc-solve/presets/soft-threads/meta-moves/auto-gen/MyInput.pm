@@ -94,4 +94,98 @@ sub get_selected_scan_list
     return \@selected_scans;
 }
 
+sub get_next_id
+{
+    my $id;
+
+    open my $in, "<", "next-id.txt";
+    $id = <I>;
+    chomp($id);
+    close($in);
+    open my $out, ">", "next-id.txt";
+    print $out ($id+1);
+    close($out);
+
+    return $id;
+}
+
+sub get_prev_scans
+{
+    my @prev_scans;
+    open my $in, "<", "scans.txt";
+    while (my $line = <$in>)
+    {
+        chomp($line);
+        my ($scan_id, $cmd_line) = split(/\t/, $line);
+        push @prev_scans, { 'id' => $scan_id, 'cmd_line' => $cmd_line };
+    }
+    close($in);
+
+    return \@prev_scans;
+}
+
+sub get_scan_cmd_line
+{
+    my $args = shift;
+
+    my $min_board = $args->{'min'} || 1;
+    my $max_board = $args->{'max'} || 32_000;
+    my $id = $args->{'id'};
+    my $argv = $args->{'argv'};
+
+    return
+    [
+        qw(freecell-solver-range-parallel-solve), 
+        $min_board, $max_board, "20",
+        qw(--total-iterations-limit 100000 --binary-output-to), 
+        "data/$id.data.bin",
+        @$argv,
+    ];
+}
+
+sub time_scan
+{
+    my $args = shift;
+
+    my $min_board = $args->{'min'} || 1;
+    my $max_board = $args->{'max'} || 32_000;
+    my $id = $args->{'id'};
+
+    my $cmd_line = get_scan_cmd_line($args);
+
+    open my $from_cmd, "-|", @$cmd_line
+        or die "Could not start '@$cmd_line'";
+    my (@fcs_moves, @fc_pro_moves);
+    while (my $line = <$from_cmd>)
+    {
+        chomp($line);
+        if ($line =~ m{\A\[\[Num FCS Moves\]\]=(.*)\z}o)
+        {
+            push @fcs_moves, $1;
+        }
+        elsif ($line =~ m{\A\[\[Num FCPro Moves\]\]=(.*)\z}o)
+        {
+            push @fc_pro_moves, $1;
+        }
+    }
+    close($from_cmd);
+    if ((@fcs_moves != ($max_board - $min_board + 1))
+            ||
+        (@fc_pro_moves != ($max_board - $min_board + 1))
+    )
+    {
+        die "Incorrect number of FCS Moves or FC-Pro Moves";
+    }
+    {
+        open my $out, ">", "data/$id.fcs.moves.txt";
+        print {$out} join("\n", @fcs_moves, "");
+        close($out);
+    }
+    {
+        open my $out, ">", "data/$id.fcpro.moves.txt";
+        print {$out} join("\n", @fc_pro_moves, "");
+        close($out);
+    }
+}
+
 1;
