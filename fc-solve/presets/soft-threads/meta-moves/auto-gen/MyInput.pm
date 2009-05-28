@@ -135,7 +135,7 @@ sub get_scan_cmd_line
 
     return
     [
-        qw(freecell-solver-range-parallel-solve), 
+        qw(freecell-solver-fc-pro-range-solve), 
         $min_board, $max_board, "20",
         qw(--total-iterations-limit 100000 --binary-output-to), 
         "data/$id.data.bin",
@@ -155,37 +155,26 @@ sub time_scan
 
     open my $from_cmd, "-|", @$cmd_line
         or die "Could not start '@$cmd_line'";
-    my (@fcs_moves, @fc_pro_moves);
+    open my $fcs_out, ">", "data/$id.fcs.moves.txt";
+    open my $fc_pro_out, ">", "data/$id.fcpro.moves.txt";
+    $fcs_out->autoflush(1);
+    $fc_pro_out->autoflush(1);
     while (my $line = <$from_cmd>)
     {
+        print $line;
         chomp($line);
         if ($line =~ m{\A\[\[Num FCS Moves\]\]=(.*)\z}o)
         {
-            push @fcs_moves, $1;
+            print {$fcs_out} "$1\n";
         }
         elsif ($line =~ m{\A\[\[Num FCPro Moves\]\]=(.*)\z}o)
         {
-            push @fc_pro_moves, $1;
+            print {$fc_pro_out} "$1\n";
         }
     }
     close($from_cmd);
-    if ((@fcs_moves != ($max_board - $min_board + 1))
-            ||
-        (@fc_pro_moves != ($max_board - $min_board + 1))
-    )
-    {
-        die "Incorrect number of FCS Moves or FC-Pro Moves";
-    }
-    {
-        open my $out, ">", "data/$id.fcs.moves.txt";
-        print {$out} join("\n", @fcs_moves, "");
-        close($out);
-    }
-    {
-        open my $out, ">", "data/$id.fcpro.moves.txt";
-        print {$out} join("\n", @fc_pro_moves, "");
-        close($out);
-    }
+    close($fcs_out);
+    close($fc_pro_out);
 }
 
 1;
