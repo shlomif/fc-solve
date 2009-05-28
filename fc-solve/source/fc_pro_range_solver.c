@@ -576,6 +576,7 @@ int main(int argc, char * argv[])
 #endif
             fflush(stdout);
             print_int_wrapper(-1);
+            printf("%s", "[[Num FCS Moves]]=-1\n[[Num FCPro Moves]]=-1\n");
         }
         else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
@@ -595,6 +596,7 @@ int main(int argc, char * argv[])
             );
 #endif
             print_int_wrapper(-2);
+            printf("%s", "[[Num FCS Moves]]=-2\n[[Num FCPro Moves]]=-2\n");
         }
         else
         {
