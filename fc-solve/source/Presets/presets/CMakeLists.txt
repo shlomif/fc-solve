@@ -4,6 +4,7 @@ INSTALL(
         "cool-jives.sh"
         "crooked-nose.sh"
         "fools-gold.sh"
+        "gooey-unknown-thing.sh"
         "hello-world.sh"
         "john_galt_line-500.sh"
         "rin-tin-tin.sh"

@@ -470,6 +470,8 @@ Presets that are shipped with Freecell Solver:
     crooked-nose      - an atomic-moves preset (guarantees an accurate verdict)
     fools-gold        - an atomic-moves preset
     good-intentions   - runs cool-jives and then fools-gold
+    gooey-unknown-thing - a meta-moves preset that aims to minimise the
+            outcome solution's length.
     hello-world       - a meta-moves preset
     john-galt-line    - a meta-moves preset
     rin-tin-tin       - a meta-moves preset
