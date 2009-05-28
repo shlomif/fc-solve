@@ -3,10 +3,34 @@ package MyInput;
 use strict;
 use warnings;
 
+use File::Path;
+
 use Shlomif::FCS::CalcMetaScan::Structs;
 
 use PDL;
 use PDL::IO::FastRaw;
+
+sub _slurp
+{
+    my $filename = shift;
+
+    open my $in, "<", $filename
+        or die "Could not open $filename";
+    
+    binmode $in;
+    local $/;
+    my $content = <$in>;
+    close($in);
+    return $content;
+}
+
+sub _read_text_ints_file
+{
+    my $filename = shift;
+    my $text = _slurp($filename);
+
+    return [split(/[\n\r]+/, $text)];
+}
 
 sub get_scans_data
 {
@@ -17,22 +41,20 @@ sub get_scans_data
         
     my $scan_idx = 0;
 
-    if (! -d "./.data-proc")
-    {
-        mkdir ("./.data-proc");
-    }
+    my $data_dir = ".data-proc";
+    my $lens_dir = ".data-len-proc";
+
+    mkpath($data_dir, $lens_dir);
 
     foreach my $scan (@selected_scans)
     {
         print "scan_idx=$scan_idx\n";
         {
             my @orig_stat = stat("./data/" . $scan->id() .  ".data.bin");
-            my @proc_stat = stat("./.data-proc/" . $scan->id());
+            my @proc_stat = stat("$data_dir/" . $scan->id());
             if ((! scalar(@proc_stat)) || $orig_stat[9] > $proc_stat[9])
             {
-                open I, "<./data/" . $scan->id() .  ".data.bin";
-                my $data_s = join("", <I>);
-                close(I);
+                my $data_s = _slurp("./data/" . $scan->id() .  ".data.bin");
                 my @array = unpack("l*", $data_s);
                 if (($array[0] != 1) || ($array[1] < $num_boards) || ($array[2] != 100000))
                 {
@@ -42,6 +64,42 @@ sub get_scans_data
                 my $c = pdl(\@array);
                 
                 writefraw($c, "./.data-proc/" . $scan->id());
+            }
+        }
+        {
+            my $src = "./data/" . $scan->id() .  ".data.bin";
+            my $dest = "$lens_dir/" . $scan->id();
+
+            my @orig_stat = stat($src);
+            my @proc_stat = stat($dest);
+
+            if ((! scalar(@proc_stat)) || $orig_stat[9] > $proc_stat[9])
+            {
+                my $data_s = _slurp($src);
+
+                my @iters = unpack("l*", $data_s);
+                if (($iters[0] != 1) || ($iters[1] < $num_boards) 
+                    || ($iters[2] != 100000)
+                )
+                {
+                    die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
+                }
+
+                # Remove the header
+                splice @iters, 0, 3;
+
+                my $c = pdl(
+                    [\@iters, 
+                    _read_text_ints_file(
+                        "data/" . $scan->id() . ".fcs.moves.txt"
+                    ),
+                    _read_text_ints_file(
+                        "data/" . $scan->id() . ".fcpro.moves.txt"
+                    ),
+                    ]
+                );
+                
+                writefraw($c, $dest);
             }
         }
         my $c = readfraw("./.data-proc/" . $scan->id());
