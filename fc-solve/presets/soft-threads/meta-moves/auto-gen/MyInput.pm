@@ -32,12 +32,14 @@ sub _read_text_ints_file
     return [split(/[\n\r]+/, $text)];
 }
 
-sub get_scans_data
+sub _get_scans_data_helper
 {
     my $start_board = shift;
     my $num_boards = shift;
     my @selected_scans = @{shift()};
+
     my $scans_data = zeroes($num_boards, scalar(@selected_scans));
+    my $scans_lens_data = zeroes($num_boards, scalar(@selected_scans), 3);
         
     my $scan_idx = 0;
 
@@ -65,6 +67,11 @@ sub get_scans_data
                 
                 writefraw($c, "./.data-proc/" . $scan->id());
             }
+        }
+        {
+            my $c = readfraw("./.data-proc/" . $scan->id());
+            my $b = $scans_data->slice(":,$scan_idx");
+            $b += $c->slice((2+$start_board).":".($num_boards+1+$start_board));
         }
         {
             my $src = "./data/" . $scan->id() .  ".data.bin";
@@ -102,14 +109,31 @@ sub get_scans_data
                 writefraw($c, $dest);
             }
         }
-        my $c = readfraw("./.data-proc/" . $scan->id());
-        my $b = $scans_data->slice(":,$scan_idx");
-        $b += $c->slice((2+$start_board).":".($num_boards+1+$start_board));
+        {
+            my $c = readfraw("$lens_dir/" . $scan->id());
+            my $b = $scans_lens_data->slice(":,$scan_idx,:");
+            $b += $c->slice(
+                sprintf(
+                    "%d:%d,:,*",
+                    ($start_board-1),
+                    (($num_boards-1)+($start_board-1))
+                )
+            )->xchg(1,2);
+        }
         $scan_idx++;
     }
 
-    return $scans_data;
+    return { 'scans' => $scans_data, 'with_lens' => $scans_lens_data };
+}
 
+sub get_scans_data
+{
+    return _get_scans_data_helper(@_)->{'scans'};
+}
+
+sub get_scans_lens_data
+{
+    return _get_scans_data_helper(@_)->{'with_lens'};
 }
 
 sub get_selected_scan_list
