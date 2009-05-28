@@ -15,6 +15,7 @@ use MyInput;
 __PACKAGE__->mk_accessors(qw(
     arbitrator
     num_boards
+    optimize_for
     output_filename
     quotas_expr
     quotas_are_cb
@@ -36,6 +37,7 @@ sub initialize
     my $rle = 1;
     my $quotas_expr = undef;
     my $quotas_are_cb = 0;
+    my $optimize_for = "speed";
 
     GetOptions(
         "o|output=s" => \$output_filename,
@@ -45,6 +47,7 @@ sub initialize
         "start-board=i" => \$start_board,
         "quotas-expr=s" => \$quotas_expr,
         "quotas-are-cb" => \$quotas_are_cb,
+        "opt-for=s" => \$optimize_for,
     );
 
     $self->start_board($start_board);
@@ -54,6 +57,9 @@ sub initialize
     $self->rle($rle);
     $self->quotas_expr($quotas_expr);
     $self->quotas_are_cb($quotas_are_cb);
+    $self->optimize_for($optimize_for);
+
+    return;
 }
 
 
@@ -206,12 +212,20 @@ sub write_script
 sub calc_scans_data
 {
     my $self = shift;
+    my @params =
+    (
+        $self->start_board(),
+        $self->num_boards(),
+        $self->selected_scans()
+    );
+
     return
-        MyInput::get_scans_data(
-            $self->start_board(),
-            $self->num_boards(), 
-            $self->selected_scans()
-        );
+    (
+        ($self->optimize_for() eq "len")
+            ? MyInput::get_scans_lens_data(@params)
+            : MyInput::get_scans_data(@params)
+    )
+    ;
 }
 
 sub arbitrator_trace_cb
@@ -240,6 +254,7 @@ sub init_arbitrator
             'num_boards' => $self->num_boards(),
             'scans_data' => $self->calc_scans_data(),
             'trace_cb' => \&arbitrator_trace_cb,
+            'optimize_for' => $self->optimize_for(),
         )
     );
 }

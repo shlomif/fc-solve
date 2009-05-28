@@ -50,7 +50,16 @@ sub detach
 sub idx_slice : lvalue
 {
     my $self = shift;
-    return $self->main()->scans_data()->slice(":,".$self->scan_idx())
+
+    my $scans_data = $self->main()->scans_data();
+
+    my @dims = $scans_data->dims();
+
+    return $scans_data->slice(
+        join(",",
+            ":", $self->scan_idx(), (("(0)") x (@dims-2))
+        )
+    );
 }
 
 sub update_total_iters
@@ -149,6 +158,7 @@ use vars (qw(@fields %fields_map));
     iter_idx
     num_boards
     orig_scans_data
+    optimize_for
     scans_data
     selected_scans
     status
@@ -199,6 +209,8 @@ sub initialize
     $self->trace_cb($args{'trace_cb'});
 
     $self->iter_idx(0);
+
+    $self->optimize_for($args{'optimize_for'});
 
     return 0;
 }
@@ -256,6 +268,64 @@ sub get_next_quota
 }
 
 sub get_iter_state_params
+{
+    my $self = shift;
+    return
+        $self->can('get_iter_state_params_' . $self->optimize_for())
+             ->($self, @_)
+        ;
+}
+
+sub _my_sum_over
+{
+    my $pdl = shift;
+
+    return $pdl->sumover()->slice(":,(0)");
+}
+
+sub get_iter_state_params_len
+{
+    my $self = shift;
+
+    my $iters_quota = 0;
+    my $num_solved_in_iter = 0;
+    my $selected_scan_idx;
+
+    # If no boards were solved, then try with a larger quota
+    while ($num_solved_in_iter == 0)
+    {
+        my $q_more = $self->get_next_quota();
+        if (!defined($q_more))
+        {
+            throw Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas;
+        }
+
+        $iters_quota += $q_more;
+
+        my $iters = $self->scans_data()->slice(":,:,0");
+        my $solved = (($iters <= $iters_quota) & ($iters > 0));
+        my $num_moves = $self->scans_data->slice(":,:,2");
+        my $solved_moves = $solved * $num_moves;
+        
+        my $solved_moves_sums = _my_sum_over($solved_moves);
+        my $solved_moves_counts = _my_sum_over($solved);
+        my $solved_moves_avgs = $solved_moves_sums / $solved_moves_counts;
+        
+        (undef, undef, $selected_scan_idx, undef) =
+            $solved_moves_avgs->minmaximum()
+            ;
+
+        $num_solved_in_iter = $solved_moves_counts->at($selected_scan_idx);
+    }
+    return
+        (
+            quota => $iters_quota,
+            num_solved => $num_solved_in_iter,
+            scan_idx => $selected_scan_idx,
+        );
+}
+
+sub get_iter_state_params_speed
 {
     my $self = shift;
 
