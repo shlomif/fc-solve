@@ -426,11 +426,14 @@ sub _is_matching_color
 {
     my ($self, $parent, $child) = @_;
 
+    my $rules = $self->_variant_params()->rules();
     my $sbb = $self->_variant_params()->seq_build_by();
 
     my $verdict = 
     (
-          ($sbb eq "alt_color")
+          ($rules eq "simple_simon")
+        ? 0
+        : ($sbb eq "alt_color")
         ? ($parent->color() eq $child->color())
         : ($sbb eq "suit")
         ? ($parent->suit() ne $child->suit())
