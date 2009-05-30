@@ -515,17 +515,21 @@ sub _calc_max_sequence_move
 
 sub _is_sequence_in_column
 {
-    my ($self, $source_idx, $num_cards) = @_;
+    my ($self, $source_idx, $num_cards, $num_seq_components_ref) = @_;
 
     my $col = $self->get_column($source_idx);
     my $len = $col->len();
 
+    my $rules = $self->_variant_params()->rules();
+
+    my $num_comps = 1;
+
     foreach my $card_idx (0 .. ($num_cards-2))
     {
-        if ($self->_can_put_on_top(
-                $col->pos($len-1-$card_idx-1),
-                $col->pos($len-1-$card_idx),
-            ))
+        my $parent = $col->pos($len-1-$card_idx-1);
+        my $child = $col->pos($len-1-$card_idx);
+
+        if ($self->_can_put_on_top($parent, $child))
         {
             return
                 Games::Solitaire::Verify::Exception::Move::Src::Col::NonSequence->new
@@ -535,7 +539,16 @@ sub _is_sequence_in_column
                 )
                 ;
         }
+        
+        $num_comps +=
+        (
+              ($rules eq "simple_simon")
+            ? (($parent->suit() ne $child->suit()) ? 1 : 0)
+            : 1
+        );
     }
+
+    ${$num_seq_components_ref} = $num_comps;
 
     return 0;
 }
@@ -647,9 +660,11 @@ sub _perform_move__stack_to_stack
             );
     }
 
+    my $num_seq_components;
     if (my $verdict = $self->_is_sequence_in_column(
             $source,
             $num_cards,
+            \$num_seq_components,
         ))
     {
         return $verdict;
@@ -666,7 +681,7 @@ sub _perform_move__stack_to_stack
     # Now let's see if we have enough resources
     # to move the cards.
 
-    if ($num_cards > $self->_calc_max_sequence_move(
+    if ($num_seq_components > $self->_calc_max_sequence_move(
             {
                 to_empty => ($self->get_column($dest)->len() == 0),
             }
