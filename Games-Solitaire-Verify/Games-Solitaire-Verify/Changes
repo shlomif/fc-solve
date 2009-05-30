@@ -1,4 +1,10 @@
-Revision history for Games-Solitaire-VerifySolution
+Revision history for Games-Solitaire-Verify
+
+0.06    Sat May 30 15:56:13 IDT 2009
+        - Now the module can verify Simple Simon moves and solutions. 
+            - The support has many loose ends including many non-existent 
+            exceptions, but it should still yield a true verdict 
+            if-and-only-if the solution is correct.
 
 0.05    Sat Jan 24 21:33:30 IST 2009
         - Made sure that when unlimited sequence move takes place, it isn't
