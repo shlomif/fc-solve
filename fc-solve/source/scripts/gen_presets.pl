@@ -260,7 +260,18 @@ sub preset_to_perl_module
 
     my $seq_move = $pc->{sequence_move} ? "unlimited" : "limited";
 
-    return <<"EOF";
+    my $simple_simon = "";
+
+    if ($preset_name eq "simple_simon")
+    {
+        $simple_simon = <<'EOF';
+                'rules' => "simple_simon",
+EOF
+
+        chomp($simple_simon);
+    }
+
+    my $ret_val = <<"EOF";
     "$preset_name" =>
         Games::Solitaire::Verify::VariantParams->new(
             {
@@ -270,9 +281,14 @@ sub preset_to_perl_module
                 'sequence_move' => "$seq_move",
                 'seq_build_by' => "$sbb",
                 'empty_stacks_filled_by' => "$esf",
+$simple_simon
             }
         ),
 EOF
+
+    $ret_val =~ s{\n\s*\n}{\n}gms;
+
+    return $ret_val;
 }
 
 sub preset_to_pod
@@ -308,11 +324,15 @@ my %mode_callbacks =
     "pod" => \&preset_to_pod,
 );
 
+PRESETS_LOOP:
 foreach my $preset_name (sort {$a cmp $b } keys(%presets))
 {
-    if (($mode ne "c") && ($preset_name eq "simple_simon"))
+    if ($preset_name eq "simple_simon")
     {
-        next;
+        if ($mode eq "docbook")
+        {
+            next PRESETS_LOOP;
+        }
     }
 
     my $preset_compiled = compile_preset($preset_name);
@@ -343,7 +363,7 @@ elsif ($mode eq "pod")
 
     print "=head2 Variants IDs\n\n";
 
-    print "This is a list of the available variant IDS.\n\n";
+    print "This is a list of the available variant IDs.\n\n";
 
     print "=over 4\n\n";
 
