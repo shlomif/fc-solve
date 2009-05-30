@@ -21,12 +21,13 @@ use base 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception;
 
 __PACKAGE__->mk_accessors(qw(
-    num_decks
     empty_stacks_filled_by
+    num_columns
+    num_decks
     num_freecells
+    rules
     seq_build_by
     sequence_move
-    num_columns
     ));
 
 =head1 SYNOPSIS
@@ -48,6 +49,7 @@ __PACKAGE__->mk_accessors(qw(
 my %seqs_build_by = (map { $_ => 1 } (qw(alt_color suit rank)));
 my %empty_stacks_filled_by_map = (map { $_ => 1 } (qw(kings any none)));
 my %seq_moves = (map { $_ => 1 } (qw(limited unlimited)));
+my %rules_collection = (map { $_ => 1 } (qw(freecell simple_simon)));
 
 sub _init
 {
@@ -136,6 +138,19 @@ sub _init
         }
 
         $self->sequence_move($seq_move);
+    }
+
+    {
+        my $rules = $args->{rules} || "freecell";
+
+        if (!exists($rules_collection{$rules}))
+        {
+            Games::Solitaire::Verify::Exception::VariantParams::Param::Rules->throw(
+                    error => "Unrecognised rules",
+                    value => $rules,
+            );
+        }
+        $self->rules($rules);
     }
 
     return 0;

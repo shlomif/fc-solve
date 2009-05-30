@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 96;
+use Test::More tests => 100;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 use Games::Solitaire::Verify::Exception;
@@ -1017,5 +1017,54 @@ EOF
     is ($err->move()->dest(),
         $move1_bad->dest(),
         "dest() is identical in \$err->move() and original move",
+    );
+}
+
+{
+    my $string = <<"EOF";
+Foundations: H-0 C-0 D-0 S-0 
+Freecells: 
+: 4C QH 3C 8C AD JH 8S KS
+: 5H 9S 6H AC 4D TD 4S 6D
+: QC 2S JC 9H QS KC 4H 8D
+: 5D KD TH 5C 3H 8H 7C
+: 2D JS KH TC 3S JD
+: 7H 5S 6S TS 9D
+: AH 6C 7D 2H
+: 7S 9C QD
+: 2C 3D
+: AS
+EOF
+    
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string => $string,
+            variant => "simple_simon",
+        }
+    );
+
+    my $move1 = Games::Solitaire::Verify::Move->new(
+        {
+            fcs_string => "Move 1 cards from stack 4 to stack 7",
+            game => "simple_simon",
+        },
+    );
+    
+    # TEST
+    ok ($move1, "Simple Simon move was initialised.");
+
+    # TEST
+    ok (!$board->verify_and_perform_move($move1),
+        "Testing for right movement"
+    );
+
+    # TEST
+    is ($board->get_column(4)->to_string(), ": 2D JS KH TC 3S",
+        "Checking that the card was moved."
+    );
+
+    # TEST
+    is ($board->get_column(7)->to_string(), ": 7S 9C QD JD",
+        "Checking that the card was moved."
     );
 }

@@ -192,6 +192,18 @@ my %variants_map =
                 'empty_stacks_filled_by' => "kings",
             }
         ),
+    "simple_simon" =>
+        Games::Solitaire::Verify::VariantParams->new(
+            {
+                'num_decks' => 1,
+                'num_columns' => 10,
+                'num_freecells' => 0,
+                'sequence_move' => "limited",
+                'seq_build_by' => "suit",
+                'empty_stacks_filled_by' => "any",
+                'rules' => "simple_simon",
+            }
+        ),
 );
 
 =head1 FUNCTIONS
@@ -237,7 +249,7 @@ sub get_variant_by_id
 
 =head2 Variants IDs
 
-This is a list of the available variant IDS.
+This is a list of the available variant IDs.
 
 =over 4
 
@@ -270,6 +282,8 @@ This is a list of the available variant IDS.
 =item * relaxed_seahaven_towers
 
 =item * seahaven_towers
+
+=item * simple_simon
 
 =back
 
