@@ -1,0 +1,108 @@
+<!-- TITLE=Adventures in Compiling-->
+<p>
+I've generally been using <a href="http://gcc.gnu.org/">GCC (= The
+    GNU Compiler Collection)</a> exclusively for
+compiling <a href="http://fc-solve.berlios.de/">Freecell Solver</a>
+under Linux for its constant development. For a time, I used to compile the 
+Windows binaries using Microsoft Visual C ("cl.exe") and a really hideous 
+batch file I wrote for the purpose (so it  would work on the Technion's 
+computers). Lately, however, I've switched to compiling using 
+<a href="http://www.mingw.org/">MinGW</a> on Windows, which is gcc based.
+</p>
+
+<p>
+A few weeks ago, I decided to try out other compilers and see what they
+had to offer. I
+downloaded the proprietary <a href="http://en.wikipedia.org/wiki/Intel_C%2B%2B_Compiler">icc (Intel's C Compiler)</a>, which is 
+gcc-compatible and has a Linux trial version. It was a huge download and ended
+up occupying a lot of space on the hard-disk. At first, I could not get it to 
+emit working code, but after messing a little with my makefiles, I was 
+successful. It is about the same speed as gcc for compiling my ANSI C program 
+(maybe a bit slower), and generates somewhat faster code.
+</p>.
+
+<p>
+icc kept emitting many of the so-called "remarks" which I eventually took upon
+myself to eliminate. This improved the quality of my code. But it worked
+properly with these many remarks being emitted. After installing icc,
+msec (the Mandriva security mechanism) complained about world-writable files
+in the icc installation, so I reported it on the Intel forum. 
+</p>
+
+<p>
+The next compiler I tried was <a href="http://bellard.org/tcc/">tcc, the 
+    Tiny/Turbo C Compiler</a>. The version in the Mandriva repositories was 
+old and did not yield a working binary, and so I tried upgrading to version 
+0.9.24 and then to the git version, but none of them worked either. I 
+<a href="http://lists.gnu.org/archive/html/tinycc-devel/2009-05/msg00032.html">reported this attempt to the tcc mailing list</a>.
+</p>
+
+<p>
+I also tried icc's -fast flag, which is supposed to make the output faster,
+but it actually made the binaries slower (much slower than even gcc).
+</p>
+
+<p>
+However, later on, after cleaning up my makefile, tcc produced perfectly
+working binaries. I don't know what the problem was, but it was solved. (I
+reported that in a reply). Compiling with tcc is much faster than with gcc,
+but the resulting code is much slower than gcc's, and occupies more space on 
+the disk.
+</p>
+
+<p>
+The next compiler was <a href="http://www.tendra.org/">TenDRA</a>. Now
+the homepage a 403 (and still does) and so I went on Freenode and asked. I 
+eventually did:
+</p>
+
+<pre>
+$ svn co http://svn.tendra.org/trunk/
+</pre>
+
+<p>
+Only to discover that 
+<a href="http://svn.tendra.org/trunk/tendra/INSTALL">http://svn.tendra.org/trunk/tendra/INSTALL</a> is 
+empty except for a reference to the Trac web-site (which was also off-line). 
+So I needed to use the guidance of the people from Freenode's #tendra to build 
+it.
+</p>
+
+<p>
+In the process, I had to install <a 
+    href="http://www.crufty.net/help/sjg/bmake.html">bmake</a>, 
+because that's the only make
+that would compile TenDRA. The ./configure in the standard distribution
+failed to work here, but I was able to find an .src.rpm which compiled 
+and installed fine. The TenDRA boot process also complained about one of my 
+system's header which had a list or enum with a trailing comma, and I had 
+to manually fix the code.
+</p>
+
+<p>
+But I was able to build TenDRA and install it, and it was able to compile
+a working program. Before it did, though, I had to fix many compilation
+errors it reported, as TenDRA is stricter than gcc. It also didn't recognise
+my use of strdup, and I had to specify -Ysystem for it to work (the previous
+-Y's I tried did not work properly). But then it worked. 
+</p>
+
+<p>
+TenDRA generated larger and slower executables than gcc but it worked.
+</p>
+
+<p>
+I failed to get <a href="http://www.cs.princeton.edu/software/lcc/">lcc 
+    (which isn't strictly open source )</a> and 
+<a href="http://pcc.ludd.ltu.se/">pcc (which is open source )</a> to 
+either compile  or produce working code. Seems like neither of them are ready
+for prime time - at least not here on Mandriva Linux Cooker.
+</p>
+
+<p>
+So after a lot of frustration, my experiments with different compilers
+were mostly successful. As a result, my code is more strict, and better
+tested. So I guess it was worth it.
+</p><div class="blogger-post-footer"><img width='1' height='1' src='//blogger.googleusercontent.com/tracker/96099636168698788-5863435541892256733?l=fc-solve.blogspot.com'/></div>
+
+<p><a href="http://fc-solve.blogspot.com/2009/05/adventures-in-compiling.html">See comments and comment on this.</a></p>
