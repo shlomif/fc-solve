@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use Data::Dumper;
 
@@ -407,6 +407,29 @@ use File::Spec;
     my $verdict = $solution->verify();
     # TEST
     ok (!$verdict, "Solution of Zero-freecell, unlimited move, kings-only freecell is OK.")
+        or diag("Verdict == " . Dumper($verdict));
+
+    close($input_fh);
+}
+
+{
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+        qw(t data sample-solutions fcs-simple-simon-24.txt)
+    );
+
+    open (my $input_fh, "<", $input_filename)
+        or die "Cannot open file $!";
+
+    my $solution = Games::Solitaire::Verify::Solution->new(
+        {
+            input_fh => $input_fh,
+            variant => "simple_simon",
+        },
+    );
+
+    my $verdict = $solution->verify();
+    # TEST
+    ok (!$verdict, "Everything is OK with Simple Simon Deal No. 24.")
         or diag("Verdict == " . Dumper($verdict));
 
     close($input_fh);

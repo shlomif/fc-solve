@@ -36,5 +36,6 @@ t/data/sample-solutions/fcs-freecell-24-wrong-2.txt
 t/data/sample-solutions/fcs-larrysan-kings-only-0-freecells-unlimited-move.txt
 t/data/sample-solutions/fcs-relaxed-freecell-11982.txt
 t/data/sample-solutions/fcs-seahaven-towers-1977.txt
+t/data/sample-solutions/fcs-simple-simon-24.txt
 t/pod-coverage.t
 t/pod.t
