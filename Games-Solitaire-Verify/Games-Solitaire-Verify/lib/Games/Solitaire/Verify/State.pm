@@ -612,6 +612,71 @@ sub _perform_move__stack_to_foundation
     }
 }
 
+sub _perform_move__stack_seq_to_foundation
+{
+    my $self = shift;
+
+    my $move = $self->_temp_move();
+
+    my $rules = $self->_variant_params()->rules();
+
+    if ($rules ne "simple_simon")
+    {
+        return Games::Solitaire::Verify::Exception::Move::Unsupported->new(
+            move => $move
+        );
+    }
+
+    my $col_idx = $move->source();
+
+    my $num_seq_components;
+    my $verdict =
+        $self->_is_sequence_in_column(
+            $col_idx,
+            13,
+            \$num_seq_components,
+        );
+
+    if ($verdict)
+    {
+        return $verdict;
+    }
+
+    if ($num_seq_components != 1)
+    {
+        return Games::Solitaire::Verify::Exception::Move::NotTrueSeq->new(
+            move => $move
+        );
+    }
+    
+    my $card = $self->get_column($col_idx)->top();
+
+    my $suit = $card->suit();
+
+    my $f_idx =
+        first
+        { $self->get_foundation_value($suit, $_) == 0 }
+        (0 .. ($self->num_decks()-1))
+        ;
+
+    if (defined($f_idx))
+    {
+        foreach my $card_idx (1 .. 13)
+        {
+            $self->get_column($col_idx)->pop();
+            $self->increment_foundation_value($suit, $f_idx);
+        }
+        return 0;
+    }
+    else
+    {
+        return
+            Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
+                move => $move
+            );
+    }
+}
+
 sub _perform_move__stack_to_freecell
 {
     my $self = shift;
