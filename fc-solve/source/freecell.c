@@ -41,7 +41,7 @@
 #include "scans.h"
 
 #include "tests.h"
-#include "ms_ca.h"
+#include "move_stack_compact_alloc.h"
 #include "unused.h"
 #include "simpsim.h"
 

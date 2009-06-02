@@ -44,8 +44,6 @@ char fc_solve_simple_simon_nothing;
 
 #include "tests.h"
 
-#include "ms_ca.h"
-
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif

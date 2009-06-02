@@ -44,7 +44,7 @@
 #endif
 
 #include "caas.h"
-#include "ms_ca.h"
+#include "move_stack_compact_alloc.h"
 #include "inline.h"
 
 #include "test_arr.h"
