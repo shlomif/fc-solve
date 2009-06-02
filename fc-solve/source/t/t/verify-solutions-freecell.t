@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 14;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -156,5 +156,21 @@ verify_solution_test(
 
     },
     "sequence move unlimited is indeed unlimited (even if not esf-by-any)."
+);
+
+# TEST
+verify_solution_test(
+    {deal => 24, variant => "simple_simon",
+        theme => [],
+    },
+    "Simple Simon #24 with default theme",
+);
+
+# TEST
+verify_solution_test(
+    {deal => 19806, variant => "simple_simon",
+        theme => [],
+    },
+    "Simple Simon #19806 with default theme",
 );
 
