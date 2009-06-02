@@ -336,8 +336,7 @@ guint fc_solve_hash_function(gconstpointer key)
  *
  *    If it isn't:
  *
- *        5b. Call solve_for_state() on the board.
- *
+ *        5b. Add the new state and return FCS_STATE_DOES_NOT_EXIST
  * */
 
 GCC_INLINE int fc_solve_check_and_add_state(

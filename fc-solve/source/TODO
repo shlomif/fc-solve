@@ -4,6 +4,9 @@
 
 * Add fcs_flip_top_card() to the things that are not done in FCS_FREECELL_ONLY.
 
+* Do the test for SUSPEND_PROCESS in only one place. There isn't a need for
+it to be done in several places.
+
 * Experiment with using a union in the soft_thread to unify common elements
 that are used only by one of the scans.
 

@@ -1349,9 +1349,9 @@ int fc_solve_sfs_check_state_end(
              * already have, then re-assign its parent to this state.
              * */
             if (instance->to_reparent_states_real &&
-               (existing_state_val->depth > ptr_state_val->depth+1))   \
+               (existing_state_val->depth > ptr_state_val->depth+1))
             {
-                /* Make a copy of "moves" because "moves" will be destroyed */\
+                /* Make a copy of "moves" because "moves" will be destroyed */
                 existing_state_val->moves_to_parent =
                     fc_solve_move_stack_compact_allocate(
                         hard_thread, moves
