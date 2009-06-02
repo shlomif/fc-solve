@@ -38,6 +38,9 @@
 #include "state.h"
 #include "card.h"
 #include "scans.h"
+#include "fcs_isa.h"
+#include "caas.h"
+#include "move_stack_compact_alloc.h"
 
 #include "test_arr.h"
 
@@ -143,6 +146,37 @@ void fc_solve_soft_thread_init_soft_dfs(
 
     return;
 }
+
+/*
+ * This macro traces the path of the state up to the original state,
+ * and thus calculates its real depth.
+ *
+ * It then assigns the newly updated depth throughout the path.
+ *
+ * */
+#define calculate_real_depth(ptr_state_orig_val) \
+{                                                                  \
+    if (calc_real_depth)                                           \
+    {                                                              \
+        int this_real_depth = 0;                                   \
+        fcs_state_extra_info_t * temp_state_val = ptr_state_orig_val; \
+        /* Count the number of states until the original state. */ \
+        while(temp_state_val != NULL)                                   \
+        {                                                          \
+            temp_state_val = temp_state_val->parent_val;             \
+            this_real_depth++;                                     \
+        }                                                          \
+        this_real_depth--;                                         \
+        temp_state_val = (ptr_state_orig_val);                      \
+        /* Assign the new depth throughout the path */             \
+        while (temp_state_val->depth != this_real_depth)            \
+        {                                                          \
+            temp_state_val->depth = this_real_depth;                \
+            this_real_depth--;                                     \
+            temp_state_val = temp_state_val->parent_val;             \
+        }                                                          \
+    }                                                              \
+}                                                                  \
 
 int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * soft_thread,
@@ -1213,5 +1247,144 @@ extern char * fc_solve_get_the_positions_by_rank_data(
     }
 
     return *positions_by_rank_location;
+}
+
+/* 
+ * These functions are used by the move functions in freecell.c and
+ * simpsim.c.
+ * */
+int fc_solve_sfs_check_state_begin(
+    fc_solve_hard_thread_t * hard_thread,
+    fcs_state_t * * out_ptr_new_state_key,
+    fcs_state_extra_info_t * * out_ptr_new_state_val,
+    fcs_state_extra_info_t * ptr_state_val,
+    fcs_move_stack_t * moves
+    )
+{
+    fcs_state_extra_info_t * ptr_new_state_val;
+
+    fcs_state_ia_alloc_into_var(ptr_new_state_val, hard_thread);
+    *(out_ptr_new_state_key) = ptr_new_state_val->key;
+    fcs_duplicate_state(
+            (*(out_ptr_new_state_key)),
+            ptr_new_state_val,
+            ptr_state_val->key, 
+            ptr_state_val
+    );
+    /* Some A* and BFS parameters that need to be initialized in
+     * the derived state.
+     * */
+    ptr_new_state_val->parent_val = ptr_state_val;
+    ptr_new_state_val->moves_to_parent = moves;
+    /* Make sure depth is consistent with the game graph.
+     * I.e: the depth of every newly discovered state is derived from
+     * the state from which it was discovered. */
+    ptr_new_state_val->depth = ptr_new_state_val->depth + 1;
+    /* Mark this state as a state that was not yet visited */
+    ptr_new_state_val->visited = 0;
+    /* It's a newly created state which does not have children yet. */
+    ptr_new_state_val->num_active_children = 0;
+    memset(ptr_new_state_val->scan_visited, '\0',
+        sizeof(ptr_new_state_val->scan_visited)
+        );
+    fcs_move_stack_reset(moves);
+
+    *out_ptr_new_state_val = ptr_new_state_val;
+
+    return 0;
+}
+
+int fc_solve_sfs_check_state_end(
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_state_extra_info_t * ptr_state_val,
+    fcs_state_extra_info_t * ptr_new_state_val,
+    int state_context_value,
+    fcs_move_stack_t * moves,
+    fcs_derived_states_list_t * derived_states_list
+    )
+{
+    fcs_move_t temp_move;
+    fc_solve_hard_thread_t * hard_thread;
+    fc_solve_instance_t * instance;
+    int check;
+    int calc_real_depth;
+    int scans_synergy;
+
+    temp_move = fc_solve_empty_move;
+
+    hard_thread = soft_thread->hard_thread;
+    instance = hard_thread->instance;
+    calc_real_depth = instance->calc_real_depth;
+    scans_synergy = instance->scans_synergy;
+
+    /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE
+     * because it indicates that the order of the stacks and freecells
+     * need to be recalculated
+     * */
+    fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
+    fcs_move_stack_push(moves, temp_move);
+
+    {
+        fcs_state_extra_info_t * existing_state_val;
+        check = fc_solve_check_and_add_state(
+            soft_thread,
+            ptr_new_state_val,
+            &existing_state_val
+            );
+        if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
+            (check == FCS_STATE_SUSPEND_PROCESS))
+        {
+            /* This state is not going to be used, so
+             * let's clean it. */
+            fcs_state_ia_release(hard_thread);
+        }
+        else if (check == FCS_STATE_ALREADY_EXISTS)
+        {
+            fcs_state_ia_release(hard_thread);
+            calculate_real_depth(existing_state_val);
+            /* Re-parent the existing state to this one.
+             *
+             * What it means is that if the depth of the state if it
+             * can be reached from this one is lower than what it
+             * already have, then re-assign its parent to this state.
+             * */
+            if (instance->to_reparent_states_real &&
+               (existing_state_val->depth > ptr_state_val->depth+1))   \
+            {
+                /* Make a copy of "moves" because "moves" will be destroyed */\
+                existing_state_val->moves_to_parent =
+                    fc_solve_move_stack_compact_allocate(
+                        hard_thread, moves
+                        );
+                if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))
+                {
+                    if ((--existing_state_val->parent_val->num_active_children) == 0)
+                    {
+                        mark_as_dead_end(
+                            existing_state_val->parent_val
+                            );
+                    }
+                    ptr_state_val->num_active_children++;
+                }
+                existing_state_val->parent_val = ptr_state_val;
+                existing_state_val->depth = ptr_state_val->depth + 1;
+            }
+            fc_solve_derived_states_list_add_state(
+                derived_states_list,
+                existing_state_val,
+                state_context_value
+                );
+        }
+        else
+        {
+            fc_solve_derived_states_list_add_state(
+                derived_states_list,
+                ptr_new_state_val,
+                state_context_value
+                );
+        }
+    }
+
+    return check;
 }
 

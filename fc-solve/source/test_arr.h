@@ -42,6 +42,24 @@ typedef int (*fc_solve_solve_for_state_test_t)(
 
 extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
 
+extern int fc_solve_sfs_check_state_begin(
+    fc_solve_hard_thread_t * hard_thread,
+    fcs_state_t * * out_ptr_state_key,
+    fcs_state_extra_info_t * * out_ptr_new_state_val,
+    fcs_state_extra_info_t * ptr_state_val,
+    fcs_move_stack_t * moves
+    );
+
+
+int fc_solve_sfs_check_state_end(
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_state_extra_info_t * ptr_state_val,
+    fcs_state_extra_info_t * ptr_new_state_val,
+    int state_context_value,
+    fcs_move_stack_t * moves,
+    fcs_derived_states_list_t * derived_states_list
+    );
+
 #ifdef FCS_FREECELL_ONLY
 
 #define fcs_is_parent_card(child, parent) \
@@ -69,36 +87,6 @@ extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
     )
 
 #endif
-/*
- * This macro traces the path of the state up to the original state,
- * and thus calculates its real depth.
- *
- * It then assigns the newly updated depth throughout the path.
- *
- * */
-#define calculate_real_depth(ptr_state_orig_val) \
-{                                                                  \
-    if (calc_real_depth)                                           \
-    {                                                              \
-        int this_real_depth = 0;                                   \
-        fcs_state_extra_info_t * temp_state_val = ptr_state_orig_val; \
-        /* Count the number of states until the original state. */ \
-        while(temp_state_val != NULL)                                   \
-        {                                                          \
-            temp_state_val = temp_state_val->parent_val;             \
-            this_real_depth++;                                     \
-        }                                                          \
-        this_real_depth--;                                         \
-        temp_state_val = (ptr_state_orig_val);                      \
-        /* Assign the new depth throughout the path */             \
-        while (temp_state_val->depth != this_real_depth)            \
-        {                                                          \
-            temp_state_val->depth = this_real_depth;                \
-            this_real_depth--;                                     \
-            temp_state_val = temp_state_val->parent_val;             \
-        }                                                          \
-    }                                                              \
-}                                                                  \
 
 /*
  * This macro marks a state as a dead end, and afterwards propogates
