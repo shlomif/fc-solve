@@ -24,8 +24,8 @@
 /*
  * TODO : header file for check_and_add_state.h
  */
-#ifndef FC_SOLVE__CAAS_H
-#define FC_SOLVE__CAAS_H
+#ifndef FC_SOLVE__CHECK_AND_ADD_STATE_H
+#define FC_SOLVE__CHECK_AND_ADD_STATE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,4 +52,4 @@ extern int fc_solve_check_and_add_state(
 }
 #endif
 
-#endif /* #ifndef FC_SOLVE__CAAS_H */
+#endif /* #ifndef FC_SOLVE__CHECK_AND_ADD_STATE_H */
