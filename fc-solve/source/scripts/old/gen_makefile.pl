@@ -17,7 +17,7 @@ sub min
 }
 
 my @objects=(
-    qw(alloc app_str caas card cl_chop cmd_line fcs_dm fcs_hash fcs_isa),
+    qw(alloc app_str check_and_add_state card cl_chop cmd_line fcs_dm fcs_hash fcs_isa),
     qw(freecell intrface lib lookup2 move pqueue preset rand),
     qw(scans simpsim state)
     );
@@ -35,7 +35,7 @@ my @targets = (
 
 my @headers_proto=
     (
-        qw(alloc app_str caas card cl_chop), { 'name' => "config", 'gen' => 1},
+        qw(alloc app_str check_and_add_state card cl_chop), { 'name' => "config", 'gen' => 1},
             qw(fcs_cl fcs fcs_dm fcs_enums),
         qw(fcs_hash fcs_isa fcs_move fcs_user inline jhjtypes lookup2),
         qw(move ms_ca), {'name' => "prefix", 'gen' => 1},

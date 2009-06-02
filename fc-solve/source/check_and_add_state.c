@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * caas.c - the various possible implementations of the function
+ * check_and_add_state.c - the various possible implementations of the function
  * fc_solve_check_and_add_state().
  *
  */
@@ -34,6 +34,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "check_and_add_state.h"
+
 #include "fcs_dm.h"
 #include "instance.h"
 
@@ -43,7 +45,6 @@
 #include "fcs_hash.h"
 #endif
 
-#include "caas.h"
 #include "move_stack_compact_alloc.h"
 #include "inline.h"
 

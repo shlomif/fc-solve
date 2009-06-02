@@ -1,4 +1,3 @@
-
 /* Copyright (c) 2000 Shlomi Fish
  *
  * Permission is hereby granted, free of charge, to any person
@@ -23,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * TODO : header file for check_and_add_state.h
  */
 #ifndef FC_SOLVE__CAAS_H
 #define FC_SOLVE__CAAS_H
@@ -32,10 +31,12 @@
 extern "C" {
 #endif
 
+#include "instance.h"
+
 /* #define FCS_USE_INLINE */
 
 /*
- * check_and_add_state is defined in caas.c.
+ * check_and_add_state is defined in check_and_add_state.c.
  *
  * DFS stands for Depth First Search which is the type of scan Freecell
  * Solver uses to solve a given board.

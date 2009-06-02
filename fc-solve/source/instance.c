@@ -48,10 +48,9 @@
 
 #include "fcs_isa.h"
 
-#include "caas.h"
-
 #include "preset.h"
 #include "unused.h"
+#include "check_and_add_state.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"
@@ -768,7 +767,7 @@ static gint fc_solve_glib_hash_stack_compare (
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 /*
- * This hash function is defined in caas.c
+ * This hash function is defined in check_and_add_state.c
  *
  * */
 extern guint fc_solve_hash_function(gconstpointer key);

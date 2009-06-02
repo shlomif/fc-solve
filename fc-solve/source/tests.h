@@ -66,8 +66,6 @@ extern "C" {
     ))
 #endif
 
-#include "caas.h"
-
 /*
  *  These are some macros to make it easier for the programmer.
  * */
