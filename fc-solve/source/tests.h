@@ -261,10 +261,10 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #endif
 
+#define my_copy_stack(idx) fcs_copy_stack(new_state_key, new_state_val, idx, indirect_stacks_buffer);
+
 #ifdef __cplusplus
 }
 #endif
-
-#define my_copy_stack(idx) fcs_copy_stack(new_state_key, new_state_val, idx, indirect_stacks_buffer);
 
 #endif /* FC_SOLVE__TESTS_H */
