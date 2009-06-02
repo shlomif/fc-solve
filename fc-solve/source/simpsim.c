@@ -42,7 +42,7 @@ char fc_solve_simple_simon_nothing;
 
 #include "instance.h"
 
-#include "tests.h"
+#include "meta_move_funcs_helpers.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"

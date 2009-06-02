@@ -40,7 +40,7 @@
 #include "instance.h"
 #include "scans.h"
 
-#include "tests.h"
+#include "meta_move_funcs_helpers.h"
 #include "unused.h"
 #include "simpsim.h"
 

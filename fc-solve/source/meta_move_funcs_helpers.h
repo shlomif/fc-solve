@@ -28,8 +28,8 @@
  *
  */
 
-#ifndef FC_SOLVE__TESTS_H
-#define FC_SOLVE__TESTS_H
+#ifndef FC_SOLVE__META_MOVE_FUNCS_HELPERS_H
+#define FC_SOLVE__META_MOVE_FUNCS_HELPERS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -267,4 +267,4 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 }
 #endif
 
-#endif /* FC_SOLVE__TESTS_H */
+#endif /* FC_SOLVE__META_MOVE_FUNCS_HELPERS_H */
