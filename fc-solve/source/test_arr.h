@@ -40,8 +40,6 @@ typedef int (*fc_solve_solve_for_state_test_t)(
         fcs_derived_states_list_t *
         );
 
-extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
-
 extern int fc_solve_sfs_check_state_begin(
     fc_solve_hard_thread_t * hard_thread,
     fcs_state_t * * out_ptr_state_key,
