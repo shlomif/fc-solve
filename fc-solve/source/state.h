@@ -306,6 +306,35 @@ typedef char fcs_locs_t;
 
 /* These are macros that are common to all three _STATES types. */
 
+/*
+ * This macro determines if child can be placed above parent.
+ *
+ * The variable sequences_are_built_by has to be initialized to
+ * the sequences_are_built_by member of the instance.
+ *
+ * */
+
+#ifdef FCS_FREECELL_ONLY
+
+#define fcs_is_parent_card(child, parent) \
+    ((fcs_card_card_num(child)+1 == fcs_card_card_num(parent)) && \
+            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1)) \
+    )
+
+#else
+
+#define fcs_is_parent_card(child, parent) \
+    ((fcs_card_card_num(child)+1 == fcs_card_card_num(parent)) && \
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ?   \
+        1 :                                                          \
+        ((sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ?   \
+            (fcs_card_suit(child) == fcs_card_suit(parent)) :     \
+            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1))   \
+        ))                \
+    )
+
+#endif
+
 #define fcs_col_get_card_num(col, c_idx) \
     fcs_card_card_num(fcs_col_get_card((col), (c_idx)))
 
