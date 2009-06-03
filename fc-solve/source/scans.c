@@ -203,6 +203,7 @@ static fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM] =
  * It then assigns the newly updated depth throughout the path.
  *
  * */
+
 #define calculate_real_depth(ptr_state_orig_val) \
 {                                                                  \
     if (calc_real_depth)                                           \
@@ -225,7 +226,41 @@ static fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM] =
             temp_state_val = temp_state_val->parent_val;             \
         }                                                          \
     }                                                              \
-}                                                                  \
+}
+
+/*
+ * This macro marks a state as a dead end, and afterwards propogates
+ * this information to its parent and ancestor states.
+ * */
+
+#define mark_as_dead_end(ptr_state_input_val) \
+{      \
+    if (scans_synergy)      \
+    {        \
+        fcs_state_extra_info_t * temp_state_val = (ptr_state_input_val); \
+        /* Mark as a dead end */        \
+        temp_state_val->visited |= FCS_VISITED_DEAD_END; \
+        temp_state_val = temp_state_val->parent_val;          \
+        if (temp_state_val != NULL)                    \
+        {           \
+            /* Decrease the refcount of the state */    \
+            temp_state_val->num_active_children--;   \
+            while((temp_state_val->num_active_children == 0) && (temp_state_val->visited & FCS_VISITED_ALL_TESTS_DONE))  \
+            {          \
+                /* Mark as dead end */        \
+                temp_state_val->visited |= FCS_VISITED_DEAD_END;  \
+                /* Go to its parent state */       \
+                temp_state_val = temp_state_val->parent_val;    \
+                if (temp_state_val == NULL)         \
+                {                \
+                    break;             \
+                }      \
+                /* Decrease the refcount */       \
+                temp_state_val->num_active_children--;     \
+            }       \
+        }   \
+    }      \
+}
 
 int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * soft_thread,

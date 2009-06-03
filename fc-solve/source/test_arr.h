@@ -33,38 +33,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * This macro marks a state as a dead end, and afterwards propogates
- * this information to its parent and ancestor states.
- * */
-#define mark_as_dead_end(ptr_state_input_val) \
-{      \
-    if (scans_synergy)      \
-    {        \
-        fcs_state_extra_info_t * temp_state_val = (ptr_state_input_val); \
-        /* Mark as a dead end */        \
-        temp_state_val->visited |= FCS_VISITED_DEAD_END; \
-        temp_state_val = temp_state_val->parent_val;          \
-        if (temp_state_val != NULL)                    \
-        {           \
-            /* Decrease the refcount of the state */    \
-            temp_state_val->num_active_children--;   \
-            while((temp_state_val->num_active_children == 0) && (temp_state_val->visited & FCS_VISITED_ALL_TESTS_DONE))  \
-            {          \
-                /* Mark as dead end */        \
-                temp_state_val->visited |= FCS_VISITED_DEAD_END;  \
-                /* Go to its parent state */       \
-                temp_state_val = temp_state_val->parent_val;    \
-                if (temp_state_val == NULL)         \
-                {                \
-                    break;             \
-                }      \
-                /* Decrease the refcount */       \
-                temp_state_val->num_active_children--;     \
-            }       \
-        }   \
-    }      \
-}
 
 /*
  * This macro checks if we need to terminate from running this soft
