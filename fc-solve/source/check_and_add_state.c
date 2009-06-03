@@ -48,7 +48,7 @@
 #include "move_stack_compact_alloc.h"
 #include "inline.h"
 
-#include "test_arr.h"
+#include "check_limits.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"

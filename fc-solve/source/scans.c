@@ -44,7 +44,7 @@
 #include "freecell.h"
 #include "simpsim.h"
 
-#include "test_arr.h"
+#include "check_limits.h"
 
 #ifdef DMALLOC
 #include "dmalloc.h"

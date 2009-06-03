@@ -39,7 +39,7 @@ my @headers_proto=
             qw(fcs_cl fcs fcs_dm fcs_enums),
         qw(fcs_hash fcs_isa fcs_move fcs_user inline jhjtypes lookup2),
         qw(move ms_ca), {'name' => "prefix", 'gen' => 1},
-            qw(pqueue preset rand state test_arr tests)
+            qw(pqueue preset rand state check_limits tests)
     );
 
 my @headers = (map { ref($_) eq "HASH" ? $_->{'name'} : $_ } @headers_proto);

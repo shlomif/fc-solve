@@ -22,13 +22,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * test_arr.h - header file for some routines and macros involving tests and
- * the like for Freecell Solver.
- *
+ * check_limits.h - header file for the check_if_limits_exceeded() macro.
  */
 
-#ifndef FC_SOLVE__TEST_ARR_H
-#define FC_SOLVE__TEST_ARR_H
+#ifndef FC_SOLVE__CHECK_LIMITS_H
+#define FC_SOLVE__CHECK_LIMITS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,9 +54,8 @@ extern "C" {
         )                                                             \
     )
 
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* #ifndef FC_SOLVE__CHECK_LIMITS_H */

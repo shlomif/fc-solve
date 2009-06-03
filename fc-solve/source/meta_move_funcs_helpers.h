@@ -44,9 +44,6 @@ extern "C" {
 #include "fcs_isa.h"
 #include "instance.h"
 
-#include "test_arr.h"
-
-
 #ifdef FCS_FREECELL_ONLY
 #define calc_max_sequence_move(fc_num, fs_num) (((fc_num)+1)<<(fs_num))
 #else
