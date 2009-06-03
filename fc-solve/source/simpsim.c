@@ -31,6 +31,8 @@
 #include "config.h"
 #include "simpsim.h"
 
+#include "scans.h"
+
 /* This is a fallback in case this module is still compiled with
  * FCS_DISABLE_SIMPLE_SIMON.
  * */

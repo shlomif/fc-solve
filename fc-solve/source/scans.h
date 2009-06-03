@@ -68,6 +68,30 @@ extern char * fc_solve_get_the_positions_by_rank_data(
         fcs_state_extra_info_t * ptr_state_val
         );
 
+typedef int (*fc_solve_solve_for_state_test_t)(
+        fc_solve_soft_thread_t *,
+        fcs_state_extra_info_t *,
+        fcs_derived_states_list_t *
+        );
+
+extern int fc_solve_sfs_check_state_begin(
+    fc_solve_hard_thread_t * hard_thread,
+    fcs_state_t * * out_ptr_state_key,
+    fcs_state_extra_info_t * * out_ptr_new_state_val,
+    fcs_state_extra_info_t * ptr_state_val,
+    fcs_move_stack_t * moves
+    );
+
+
+extern int fc_solve_sfs_check_state_end(
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_state_extra_info_t * ptr_state_val,
+    fcs_state_extra_info_t * ptr_new_state_val,
+    int state_context_value,
+    fcs_move_stack_t * moves,
+    fcs_derived_states_list_t * derived_states_list
+    );
+
 #ifdef __cplusplus
 }
 #endif
