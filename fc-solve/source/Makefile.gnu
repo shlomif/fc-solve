@@ -113,7 +113,7 @@ dummy:
 OBJECTS :=                     \
           alloc.o             \
           app_str.o           \
-          caas.o              \
+          check_and_add_state.o \
           card.o              \
           cmd_line.o          \
           fcs_dm.o            \
