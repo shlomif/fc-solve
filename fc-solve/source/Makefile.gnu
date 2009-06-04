@@ -42,13 +42,15 @@ else ifeq ($(COMPILER),tendra)
 	ifeq ($(DEBUG),1)
 		CFLAGS += -g
 	endif
-	CREATE_SHARED := ld -shared
+	CREATE_SHARED = ld -shared
+	END_SHARED := 	
 else
 	CC = error
 endif
 
 ifeq ($(GCC_COMPAT),1)
-	CREATE_SHARED := $(CC) -shared
+	CREATE_SHARED = $(CC) $(CFLAGS) -shared
+	END_SHARED = $(END_LFLAGS)
 	ifeq ($(DEBUG),1)
 		CFLAGS += -g
 	else
@@ -149,7 +151,7 @@ libfcs.a: $(OBJECTS)
 	ranlib $@
 
 $(FCS_SHARED_LIB): $(OBJECTS)
-	$(CREATE_SHARED) -o $@ $(OBJECTS)
+	$(CREATE_SHARED) -o $@ $(OBJECTS) $(END_SHARED)
 	if ! test -e libfreecell-solver.so ; then \
 		ln -s $@ libfreecell-solver.so ; \
 	fi
