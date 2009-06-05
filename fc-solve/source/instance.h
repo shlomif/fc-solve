@@ -47,12 +47,17 @@ extern "C" {
 
 #endif
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE))
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
 
 #include "fcs_libavl2_state_storage.h"
 
 #endif
 
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
+
+#include "fcs_libavl2_stack_storage.h"
+
+#endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH) || (defined(INDIRECT_STACK_STATES) && ((FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)))
 
@@ -240,10 +245,8 @@ typedef struct
      * */
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     SFO_hash_t * stacks_hash;
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
-    avl_tree * stacks_tree;
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
-    rb_tree * stacks_tree;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
+    fcs_libavl2_stacks_tree_table_t * stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     struct rbtree * stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)

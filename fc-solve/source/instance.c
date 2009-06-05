@@ -998,14 +998,10 @@ int fc_solve_solve_instance(
             fcs_stack_compare_for_comparison_with_context,
             NULL
         );
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
-    instance->stacks_tree = avl_create(
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
+    instance->stacks_tree = fcs_libavl2_stacks_tree_create(
             fcs_stack_compare_for_comparison_with_context,
-            NULL
-            );
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
-    instance->stacks_tree = rb_create(
-            fcs_stack_compare_for_comparison_with_context,
+            NULL,
             NULL
             );
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
@@ -1509,10 +1505,8 @@ void fc_solve_finish_instance(
 #else
     fc_solve_hash_free(instance->stacks_hash);
 #endif
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
-    avl_destroy(instance->stacks_tree, NULL);
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
-    rb_destroy(instance->stacks_tree, NULL);
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
+    fcs_libavl2_stacks_tree_destroy(instance->stacks_tree, NULL);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     rbdestroy(instance->stacks_tree);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)

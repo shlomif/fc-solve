@@ -196,6 +196,7 @@ IF (${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_LIBAVL2_TREE")
     LIST(APPEND FREECELL_SOLVER_LIB_MODULES "${LIBAVL2_COPIED_MODULES_DIR}/${C_FN}")
     INCLUDE_DIRECTORIES(BEFORE "${LIBAVL2_COPIED_MODULES_DIR}")
     SET (MPROT "FC_SOLVE__STATE_STORAGE_H")
+    SET (PREFIXO "fcs_libavl2_states_tree")
     FILE (WRITE "${LIBAVL2_COPIED_MODULES_DIR}/fcs_libavl2_state_storage.h"
 "
 #ifndef ${MPROT}
@@ -203,16 +204,53 @@ IF (${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_LIBAVL2_TREE")
 
 #include \"${H_FN}\"
 
-typedef struct ${TREE_TYPE}_table fcs_libavl2_states_tree_table_t;
-#define fcs_libavl2_states_tree_insert(a,b) ${TREE_TYPE}_insert((a),(b))
-#define fcs_libavl2_states_tree_create(a,b,c) ${TREE_TYPE}_create((a),(b),(c))
-#define fcs_libavl2_states_tree_destroy(a,b) ${TREE_TYPE}_destroy((a),(b))
+typedef struct ${TREE_TYPE}_table ${PREFIXO}_table_t;
+#define ${PREFIXO}_insert(a,b) ${TREE_TYPE}_insert((a),(b))
+#define ${PREFIXO}_create(a,b,c) ${TREE_TYPE}_create((a),(b),(c))
+#define ${PREFIXO}_destroy(a,b) ${TREE_TYPE}_destroy((a),(b))
+
+#endif /* ${MPROT} */
+"
+)
+
+ENDIF (${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_LIBAVL2_TREE")
+
+IF (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_LIBAVL2_TREE")
+    SET (LIBAVL2_SOURCE_DIR "/home/shlomi/Download/unpack/prog/c/avl-2.0.3")
+    SET (LIBAVL2_COPIED_MODULES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libavl2")
+    SET (TREE_TYPE "${FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE}")
+    FILE (MAKE_DIRECTORY "${LIBAVL2_COPIED_MODULES_DIR}")
+    SET (C_FN "${TREE_TYPE}.c")
+    SET (H_FN "${TREE_TYPE}.h")
+    CONFIGURE_FILE ("${LIBAVL2_SOURCE_DIR}/${C_FN}" 
+        "${LIBAVL2_COPIED_MODULES_DIR}/${C_FN}"
+        COPYONLY
+    )
+    CONFIGURE_FILE ("${LIBAVL2_SOURCE_DIR}/${H_FN}" 
+        "${LIBAVL2_COPIED_MODULES_DIR}/${H_FN}"
+        COPYONLY
+    )
+    LIST(APPEND FREECELL_SOLVER_LIB_MODULES "${LIBAVL2_COPIED_MODULES_DIR}/${C_FN}")
+    INCLUDE_DIRECTORIES(BEFORE "${LIBAVL2_COPIED_MODULES_DIR}")
+    SET (MPROT "FC_SOLVE__STACK_STORAGE_H")
+    SET (PREFIXO "fcs_libavl2_stacks_tree")
+    FILE (WRITE "${LIBAVL2_COPIED_MODULES_DIR}/fcs_libavl2_stack_storage.h"
+"
+#ifndef ${MPROT}
+#define ${MPROT}
+
+#include \"${H_FN}\"
+
+typedef struct ${TREE_TYPE}_table ${PREFIXO}_table_t;
+#define ${PREFIXO}_insert(a,b) ${TREE_TYPE}_insert((a),(b))
+#define ${PREFIXO}_create(a,b,c) ${TREE_TYPE}_create((a),(b),(c))
+#define ${PREFIXO}_destroy(a,b) ${TREE_TYPE}_destroy((a),(b))
 
 #endif /* ${MPROT} */
 "
     )
 
-ENDIF (${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_LIBAVL2_TREE")
+ENDIF (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_LIBAVL2_TREE")
 
 SET (MY_LINK_FLAGS "")
 SET (MY_TO_PROFILE "")

@@ -175,23 +175,13 @@ static void GCC_INLINE fc_solve_cache_stacks(
             replace_with_cached(verdict);
         }
 
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
-
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE)
-#define LIBAVL_INSERT(x,y) avl_insert(x,y)
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE)
-#define LIBAVL_INSERT(x,y) rb_insert(x,y)
-#else
-#error unknown FCS_STACK_STORAGE
-#endif
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
 
         cached_stack =
-            LIBAVL_INSERT(
-            instance->stacks_tree,
-            new_state_key->stacks[a]
+            fcs_libavl2_stacks_tree_insert(
+                instance->stacks_tree,
+                new_state_key->stacks[a]
             );
-
-#undef LIBAVL_INSERT
 
         replace_with_cached(cached_stack != NULL);
 
