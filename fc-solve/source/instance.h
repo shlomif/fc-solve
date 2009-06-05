@@ -47,17 +47,9 @@ extern "C" {
 
 #endif
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_AVL_TREE))
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE))
 
 #include <avl.h>
-
-#endif
-
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL_REDBLACK_TREE))
-
-#include <rb.h>
-
-/* #define TREE_IMP_PREFIX(func_name) rb_##func_name */
 
 #endif
 
@@ -225,10 +217,8 @@ typedef struct
     struct rbtree * tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     Pvoid_t judy_array;
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE)
-    avl_tree * tree;
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)
-    rb_tree * tree;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
+    struct avl_table * tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     GTree * tree;
 #endif

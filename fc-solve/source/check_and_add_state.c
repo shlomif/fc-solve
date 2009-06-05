@@ -504,16 +504,21 @@ GCC_INLINE int fc_solve_check_and_add_state(
             );
     is_state_new = ((*existing_state_val) == new_state_val);
 
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
 
+#define fcs_libavl_states_tree_insert(a,b) avl_insert((a),(b))
+
+#if 0
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE)
 #define fcs_libavl_states_tree_insert(a,b) avl_insert((a),(b))
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)
 #define fcs_libavl_states_tree_insert(a,b) rb_insert((a),(b))
 #endif
+#endif
 
-    *existing_state = fcs_libavl_states_tree_insert(instance->tree, new_state);
-    is_state_new = (*existing_state == NULL);
+    *existing_state_val = (fcs_state_extra_info_t *)
+        fcs_libavl_states_tree_insert(instance->tree, new_state_val);
+    is_state_new = ((*existing_state_val) == NULL);
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     *existing_state = g_tree_lookup(instance->tree, (gpointer)new_state);

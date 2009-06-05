@@ -962,10 +962,8 @@ int fc_solve_solve_instance(
             fc_solve_state_extra_info_compare_with_context,
             NULL
             );
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE)
-    instance->tree = avl_create(fc_solve_state_compare_with_context, NULL);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)
-    instance->tree = rb_create(fc_solve_state_compare_with_context, NULL);
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
+    instance->tree = avl_create(fc_solve_state_extra_info_compare_with_context, NULL, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     instance->tree = g_tree_new(fc_solve_state_compare);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
@@ -1478,10 +1476,8 @@ void fc_solve_finish_instance(
     /* De-allocate the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     rbdestroy(instance->tree);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_AVL_TREE)
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
     avl_destroy(instance->tree, NULL);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL_REDBLACK_TREE)
-    rb_destroy(instance->tree, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     g_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)

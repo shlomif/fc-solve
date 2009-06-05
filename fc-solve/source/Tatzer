@@ -23,6 +23,7 @@ my $test_suite = 1;
 my $cpu_arch;
 my $omit_frame;
 my $no_simple_simon = 0;
+my $state_storage_libavl2_tree;
 
 sub set_both
 {
@@ -93,6 +94,7 @@ GetOptions(
     },
     'c|cols=s' => \$stack_storage,
     'p|pos=s' => \$state_storage,
+    'libavl2-p=s' => \$state_storage_libavl2_tree,
     'prefix=s' => \$prefix,
     'secondary!' => \$secondary_hash_value,
     'test-suite!' => \$test_suite,
@@ -120,6 +122,11 @@ GetOptions(
 ) or
     die "Wrong options";
 
+if ($state_storage_libavl2_tree)
+{
+    $state_storage = "LIBAVL2_TREE";
+}
+
 # This cache is sometimes causing problems.
 unlink("CMakeCache.txt");
 
@@ -137,6 +144,10 @@ my @cmd= ("cmake",
     ($test_suite ? ("-DFCS_WITH_TEST_SUITE=1") : ()),
     (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
     ($omit_frame ? "-DOPTIMIZATION_OMIT_FRAME_POINTER=1" : ()),
+    ($state_storage_libavl2_tree
+        ? "-DFCS_STATE_STORAGE_LIBAVL2_TREE_TYPE=$state_storage_libavl2_tree"
+        : ()
+    ),
 );
 
 print(join(" ", @cmd), "\n");
