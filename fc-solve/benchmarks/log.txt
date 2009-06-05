@@ -1076,3 +1076,14 @@ time ./freecell-solver-range-parallel-solve 1 32000 500 -l gi | tee dump-rtavl
 
 177.308125972748s
 
+========================================================================
+
+
+r1826 trunk after ./Tatzer -l p4b --judy
+and doing:
+
+{{{{{{{{{{{{
+time ./freecell-solver-range-parallel-solve 1 32000 500 -l gi | tee dump-rtavl
+}}}}}}}}}}}}
+
+169.985544919968s
