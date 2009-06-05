@@ -49,7 +49,7 @@ extern "C" {
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE))
 
-#include <avl.h>
+#include "fcs_libavl2_state_storage.h"
 
 #endif
 
@@ -218,7 +218,7 @@ typedef struct
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     Pvoid_t judy_array;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
-    struct avl_table * tree;
+    fcs_libavl2_states_tree_table_t * tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     GTree * tree;
 #endif
