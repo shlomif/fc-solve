@@ -223,17 +223,19 @@ static void GCC_INLINE fc_solve_cache_stacks(
                 );
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
+        column = fcs_state_get_col(*new_state_key, a);
+
         JHSI(
             PValue,
             instance->stacks_judy_array,
-            new_state_key->stacks[a],
-            (fcs_stack_len(*new_state_key, a)+1)
+            column,
+            (1+fcs_col_len(column))
         );
         /* TODO : Handle out-of-memory. */
         if (*PValue == 0)
         {
             /*  A new stack */
-            *PValue = (PWord_t)new_state_key->stacks[a];
+            *PValue = (PWord_t)column;
         }
         else
         {
