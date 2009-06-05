@@ -1028,3 +1028,51 @@ DUMPS/dump002:110.844954967499
 DUMPS/dump003:111.173483133316
 }}}}}}}}}}}}
 
+========================================================================
+
+r1821 trunk - after using:
+
+{{{{{{{{{{{{
+#!/bin/bash
+make -f Makefile.gnu FREECELL_ONLY=1 \
+    CFLAGS='-DFCS_FREECELL_ONLY=1 -O3 -Wall -Werror=implicit-function-declaration -march=pentium4 -fomit-frame-pointer -fprofile-generate -fPIC' \
+
+    # END_LFLAGS='-lm -lgcov -static-libgcc' \
+    # CREATE_SHARED='
+}}}}}}}}}}}}
+
+and:
+
+{{{{{{{{{{{{
+#!/bin/bash
+cat profile-guided-optimisations.bash |
+    perl -pe 's/-fprofile-generate/-fprofile-use/' |
+    bash
+}}}}}}}}}}}}
+
+And running 
+./freecell-solver-range-parallel-solve 1 32000 500 -l gi | tee dump
+
+126.168390989304s
+
+========================================================================
+
+r1821 trunk - after ./Tatzer -l p4b and doing:
+
+{{{{{{{{{{{{
+./freecell-solver-range-parallel-solve 1 32000 500 -l gi | tee dump2
+}}}}}}}}}}}}
+
+124.147925853729s
+
+========================================================================
+
+r1826 trunk after ./Tatzer -l p4b --libavl2-p=rtavl --libavl2-c=rtavl
+and doing:
+
+{{{{{{{{{{{{
+time ./freecell-solver-range-parallel-solve 1 32000 500 -l gi | tee dump-rtavl
+}}}}}}}}}}}}
+
+177.308125972748s
+
