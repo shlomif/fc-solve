@@ -126,6 +126,7 @@ int fc_solve_u2p_suit(const char * suit)
     }
 }
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
 static int fcs_u2p_flipped_status(const char * str)
 {
     while (*str != '\0')
@@ -138,6 +139,7 @@ static int fcs_u2p_flipped_status(const char * str)
     }
     return 0;
 }
+#endif
 
 /*
  * This function converts an entire card from its string representations
@@ -149,7 +151,9 @@ fcs_card_t fc_solve_card_user2perl(const char * str)
 
     card = fcs_empty_card;
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
     fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
+#endif
     fcs_card_set_num(card, fcs_u2p_card_number(str));
     fcs_card_set_suit(card, fcs_u2p_suit(str));
 
@@ -191,15 +195,18 @@ char * fc_solve_p2u_card_number(
     int num,
     char * str,
     int * card_num_is_null,
-    int t,
-    int flipped)
+    int t
+#ifndef FCS_WITHOUT_CARD_FLIPPING
+    , int flipped
+#endif
+    )
 {
     char (*card_map_3) [4] = card_map_3_10;
     if (t)
     {
         card_map_3 = card_map_3_T;
     }
-#ifdef CARD_DEBUG_PRES
+#if defined(CARD_DEBUG_PRES) || defined(FCS_WITHOUT_CARD_FLIPPING)
     if (0)
     {
     }
@@ -230,9 +237,13 @@ char * fc_solve_p2u_card_number(
  * Converts a suit to its user representation.
  *
  * */
-char * fc_solve_p2u_suit(int suit, char * str, int card_num_is_null, int flipped)
+char * fc_solve_p2u_suit(int suit, char * str, int card_num_is_null
+#ifndef FCS_WITHOUT_CARD_FLIPPING
+        , int flipped
+#endif
+        )
 {
-#ifndef CARD_DEBUG_PRES
+#if !defined(CARD_DEBUG_PRES) && !defined(FCS_WITHOUT_CARD_FLIPPING)
     if (flipped)
     {
         strncpy(str, "*", 2);
@@ -276,23 +287,29 @@ char * fc_solve_card_perl2user(fcs_card_t card, char * str, int t)
     }
 #endif
 
-    fcs_p2u_card_number(
+    fc_solve_p2u_card_number(
         fcs_card_card_num(card),
         str,
         &card_num_is_null,
-        t,
+        t
+#ifndef FCS_WITHOUT_CARD_FLIPPING
+        ,
         fcs_card_get_flipped(card)
+#endif
         );
     /*
      * Notice that if card_num_is_null is found to be true
      * it will affect the output of the suit too.
      *
      * */
-    fcs_p2u_suit(
+    fc_solve_p2u_suit(
         fcs_card_suit(card),
         str+strlen(str),
-        card_num_is_null,
+        card_num_is_null
+#ifndef FCS_WITHOUT_CARD_FLIPPING
+        ,
         fcs_card_get_flipped(card)
+#endif
         );
 
 #ifdef CARD_DEBUG_PRES

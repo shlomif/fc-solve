@@ -113,6 +113,7 @@ SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack
 
 SET (FCS_FREECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell (not recommended)")
 SET (FCS_DISABLE_SIMPLE_SIMON "" CACHE BOOL "Exclude being able to solve Simple Simon from the Binary (not recommended)")
+SET (FCS_WITHOUT_CARD_FLIPPING "" CACHE BOOL "Exclude the flipping of cards from the binary.")
 SET (FCS_WITH_TEST_SUITE "" CACHE BOOL "Also build and run the test suite.")
 
 SET (FCS_ENABLE_SECONDARY_HASH_VALUE "" 

@@ -34,9 +34,8 @@
 extern "C" {
 #endif
 
-#ifndef FC_SOLVE__STATE_H
+#include "config.h"
 #include "state.h"
-#endif
 
 /*
  * This function converts an entire card from its string representations
@@ -74,12 +73,11 @@ extern char * fc_solve_p2u_card_number(
     int num,
     char * str,
     int * card_num_is_null,
-    int t,
-    int flipped
+    int t
+#ifndef FCS_WITHOUT_CARD_FLIPPING
+    , int flipped
+#endif
     );
-
-#define fcs_p2u_card_number(num,str,card_num_is_null,t,flipped) \
-    (fc_solve_p2u_card_number((num),(str),(card_num_is_null),(t),(flipped)))
 
 /*
  * Converts a suit to its user representation.
@@ -88,12 +86,12 @@ extern char * fc_solve_p2u_card_number(
 char * fc_solve_p2u_suit(
     int suit,
     char * str,
-    int card_num_is_null,
+    int card_num_is_null
+#ifndef FCS_WITHOUT_CARD_FLIPPING
+    ,
     int flipped
+#endif
     );
-
-#define fcs_p2u_suit(suit,str,card_num_is_null,flipped) \
-    (fc_solve_p2u_suit((suit),(str),(card_num_is_null),(flipped)))
 
 /*
  * This function converts a card number from its user representation

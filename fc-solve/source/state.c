@@ -968,12 +968,14 @@ char * fc_solve_state_as_string(
 
     for(a=0;a<decks_num*4;a++)
     {
-        fcs_p2u_card_number(
+        fc_solve_p2u_card_number(
             fcs_foundation_value(*state, a),
             decks[a],
             &card_num_is_null,
-            display_10_as_t,
-            0
+            display_10_as_t
+#ifndef FCS_WITHOUT_CARD_FLIPPING
+            ,0
+#endif
             );
         if (decks[a][0] == ' ')
             decks[a][0] = '0';
