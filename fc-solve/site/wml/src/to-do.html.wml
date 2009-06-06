@@ -27,18 +27,21 @@ credit</a>.
 Logic</h3>
 
 <p>
-From any given position Freecell Solver reaches it uses some functions called
-tests to generate a list of subsequent positions that can be reached from it.
-Each test corresponds to one move type, and they output the derived states in
-the order they found them. FCS groups the lists into test groups, and then
-either try them one by one, or randomizes them.
+From any given position Freecell Solver reaches it uses some move
+functions to generate a list of subsequent positions that can be reached from 
+it. Each one of those functions corresponds to one move type, and they output 
+the derived states in the order they found them. FCS (= Freecell Solver)
+groups the lists into test groups, and then either try them one by one, or
+randomizes them.
 </p>
 
 <p>
 What can be done, is to order the derived states based on some parameters, other
-than simply randomizing them. Currently there is a code for a state 
-prioritization that is used in the best-first-search code. Aside for that, there
-is also the prioritization <a href="http://members.tripod.com/professor_tom/">Tom Holroyd</a> 
+than simply randomizing them. Currently there is a code for a state
+prioritization that is used in the best-first-search code. Aside for that, 
+there
+is also the prioritization 
+<a href="http://members.tripod.com/professor_tom/">Tom Holroyd</a> 
 implemented for Patsolve. What I would like to have for the next release, is a 
 generic way to order derived positions, implementing all of the random, mine, 
 and Tom's back-ends, and an ability to implement more in the future.
@@ -61,9 +64,10 @@ each inspected state), and convert the code to using them.
 </p>
 
 <p>
-<b>Note:</b> This was implemented to a very limited extent in only one
-of the "test" functions in <tt>freecell.c</tt>. It should be implemented
-in other test functions as well, while possibly extending the scope.
+<b>Note:</b> This was implemented to a very limited extent in only three 
+of the "test" functions in <tt>freecell.c</tt>. (As determined by profiling)
+It should be implemented in other test functions as well, while possibly
+extending the functionality scope.
 </p>
 
 <h3 id="orig_calc_states">States Calculated from the Original</h3>
@@ -76,11 +80,15 @@ by a sequence of cards that decrease in rank. Thus, we can simply store:
 
 <ol>
 <li>
-The number of original cards. 0-104 for two deck games - we need 7 bits for 
+The number of original cards. 0-104 for two deck games - we need 7 bits for
 that. (8-bits for parity)
 </li>
 <li>
-The number of cards in the sequence. 0-12 - we need 4 bits for that.
+The number of cards in the sequence. 0-13 - we need 4 bits for that.
+</li>
+<li>
+Possibly the first top card - if no original cards are left in the
+column. (6-bits)
 </li>
 <li>
 For each of the cards in the sequence we need to store their suit. That is
@@ -99,8 +107,8 @@ at most 2 bits * 52 * $NUM_DECKS. For Freecell, that would make it
 <p>
 In comparison, the "Indirect Stacks" allocation (which is the most compact
 one implemented yet) takes 4-bytes for each column on a 32-bit 
-machine, which makes it 32 bytes, plus more to store the cards in the columns.
-This becomes worse on 64-bit computers.
+machine (because it uses a pointer), which makes it 32 bytes, plus more to 
+store the cards in the columns. This becomes worse on 64-bit computers.
 </p>
 
 <p>
@@ -112,7 +120,7 @@ we will have to convert to and from that representation.
 
 <p>
 This suggested feature was inspired by a similar technique used by
-<a href="don_woods.html">Don Woods' solver</a>.
+<a href="don_woods.html">the Don Woods solver</a>.
 </p>
 
 <h3 id="multi_threading">Multi-Threading</h3>
@@ -131,8 +139,8 @@ as a whole.
 The codebase foundation for thread-enabling is already in the code, based on 
 the distinction between soft-threads that encompass a single scan, and 
 hard-threads - a collection of soft-threads that share some resources. Every
-hard-thread can run only one of its soft-thread at the time, but several 
-hard-threads would be able to run simultaneously, assuming suitable locking 
+hard-thread can run only one of its soft-thread at the time, but several
+hard-threads would be able to run simultaneously, assuming suitable
 locking mechanisms are in place.
 </p>
 
@@ -150,7 +158,7 @@ it POSIX threads, the Win32 API, APR or whatever).
 Making Freecell Solver thread-enabled is not high on my agenda, because few
 users have multi-processor machines that can somehow benefit from this scheme.
 Those with uni-processor machines are better off using several soft-threads
-within a single hard-thread that are arbitrated by the program.  
+within a single hard-thread that are arbitrated by the program.
 </p>
 
 <h3 id="java">Porting to Java</h3>
@@ -184,7 +192,7 @@ Java is the de-facto technology for making programs run inside a browser.
 
 <p>
 Freecell Solver uses many calls to the memory allocations, but does not check
-that they return a valid buffer pointer. Should the memory run out, and they 
+that they return a valid buffer pointer. Should the memory run out, and they
 fail, it can easily cause the entire process running it to crash.
 </p>
 
@@ -193,9 +201,9 @@ What needs to be implemented is a way to check if <tt>malloc()</tt> and
 <tt>realloc</tt> calls returned NULL, and if so, free all other allocated
 memory and propagate the memory upward to the calling functions. There
 are several ways in which it can be achieved. One would be by defining an 
-exception class, much like that of Java only passed as one of the function 
+exception class, much like that of Java only passed as one of the function
 parameters and handled explicitly in each function. Another option would be 
-to keep all malloced pointers inside an Apache Portable Runtime-like 
+to keep all malloced pointers inside an Apache Portable Runtime-like
 memory pool and to explicitly free it should an allocation failed.
 </p>
 
@@ -209,22 +217,22 @@ Freecell Solver more secure and fail-proof.
 <p>
 <a href="http://dmoz.org/Computers/Software/Configuration_Management/Tools/Revision_Control_System/">RCS</a> 
 is short for Revision Control System, and is an early version control system
-for UNIX computers, that is still in use today. (either directly or 
-indirectly). RCS works by storing the original file, and then storing the 
+for UNIX computers, that is still in use today. (either directly or
+indirectly). RCS works by storing the original file, and then storing the
 differences from the original to its subsequent versions, and from each 
 subsequent versions to its subsequent versions etc. To extract a file of 
-version X, it starts from the original version and applies patches 
+version X, it starts from the original version and applies patches
 0-&gt;1, 1-&gt;2 until X-1 -&gt; X.
 </p>
 
 <p>
-<a href="http://nadav.harel.org.il/">Nadav Har'El</a> suggested that instead
-of storing the entire state in memory, Freecell Solver will only store the moves
-leading to this state from its predecessor. That way, a lot of memory will
-be conserved, and FCS may even run faster. Freecell Solver already stores the
-moves to the parent states, because they are required to output the solution
-as a sequence of individual moves. However, it still requires the bulk board 
-layout to distinguish between similar states.
+<a href="http://nadav.harel.org.il/">Nadav Har'El</a> suggested that
+instead of storing the entire state in memory, Freecell Solver will only store
+the moves leading to this state from its predecessor. That way, a lot of memory
+will be conserved, and FCS may even run faster. Freecell Solver already stores
+the moves to the parent states, because they are required to output the
+solution as a sequence of individual moves. However, it still requires the bulk
+board layout to distinguish between similar states.
 </p>
 
 <p>
@@ -237,7 +245,7 @@ does not spend too much time constructing states from scratch.
 </p>
 
 <p>
-Note that this is a relatively speculative feature, which I only want to 
+This is a relatively speculative feature, which I only want to 
 implement to see how well it run.
 </p>
 
@@ -281,7 +289,7 @@ This is a <b>very</b> pipe-dream goal. As some of you may be aware I already
 wrote <a href="http://www.shlomifish.org/lm-solve/">LM-Solve</a> as
 a solver for several types of Logic Mazes, which are another type of 
 single-player games (which are much easier to solve using a computer). It is
-written in Perl, but still runs quite quickly, but still largely incomplete.
+written in Perl, still runs quite quickly, but is still largely incomplete.
 It is also still a standalone program without a usable API.
 </p>
 
@@ -301,8 +309,10 @@ enjoy the power that the Freecell Solver framework gives them.
 <p>
 Notice that my attempt at solving several talon-based games Solitaire Card
 games like Klondike or Gypsy was not successful. That does not mean it can't be
-done. Michael Mann was more successful with <a href="http://fc-solve.berlios.de/michael_mann/">his 
-    port of Freecell Solver</a>, and Stephan Kulow has an interesting heuristic 
+done. Michael Mann was more successful with 
+<a href="http://fc-solve.berlios.de/michael_mann/">his 
+    port of Freecell Solver</a>, and Stephan Kulow has an interesting 
+    heuristic 
 for single-card-deal Klondike in kpat that can solve on average 50% of the 
 games. (I don't think it is a back-tracking heuristic, though).
 </p>
@@ -311,9 +321,9 @@ games. (I don't think it is a back-tracking heuristic, though).
 
 <p>
 If all or most of these changes take effect, Freecell Solver will become much
-more "bloated" with features and enhancements than it already is today. Freecell
-Solver has already turned, from a proof-of-concept solver I used to test if 
-my initial idea on how to solve Freecell would work, to an architecture 
+more "bloated" with features and enhancements than it already is today.
+Freecell Solver has already turned, from a proof-of-concept solver I used to 
+test if my initial idea on how to solve Freecell would work, to an architecture 
 dedicated to solving Freecell and similar Solitaires. I think it satisfies the
 needs of most users quite adequately. However, I think that enhancing it 
 further is still a good idea, because it will make the code more modular and 
@@ -323,8 +333,8 @@ a base for similar projects with the needed subset of functionality.
 
 <p>
 Note that Freecell Solver was not the first computerized solver for Freecell to
-be written. (one of the first was <a href="don_woods.html">the one by Don Woods'</a>, and Woods is very famous for many of his
-other endeavours) It will also not the last that will be written (there is in 
+be written. (One of the first was <a href="don_woods.html">the one by Don Woods</a>, and Woods is very famous for many of his
+other endeavours.) It will also not the last that will be written (there is in 
 fact an AI course in the University of Massachustes, given each year, in which 
 the students are assigned to write a Freecell solver as one of their work 
 assignments). I recommend reading Eric Raymond's 
