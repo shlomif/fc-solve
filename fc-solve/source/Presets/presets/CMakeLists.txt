@@ -8,6 +8,7 @@ INSTALL(
         "hello-world.sh"
         "john_galt_line-500.sh"
         "rin-tin-tin.sh"
+        "sand-stone.sh"
         "yellow-brick-road.sh"
     DESTINATION
         "${PKGDATADIR}/presets"
