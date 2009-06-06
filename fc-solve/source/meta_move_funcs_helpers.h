@@ -100,6 +100,7 @@ extern "C" {
     This macro checks if the top card in the stack is a flipped card
     , and if so flips it so its face is up.
   */
+#ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_flip_top_card(stack_idx)                                   \
 {                                                                  \
     fcs_cards_column_t flip_top_card_col;                                        \
@@ -120,6 +121,9 @@ extern "C" {
         }                                                          \
     }                                                              \
 }
+#else
+#define fcs_flip_top_card(stack_idx) {}
+#endif
 
 static GCC_INLINE void fc_solve_move_sequence_function(
         fcs_state_t * new_state_ptr,

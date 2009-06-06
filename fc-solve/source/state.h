@@ -105,8 +105,10 @@ typedef int fcs_locs_t;
 #define fcs_card_suit(card) \
     ((int)( (card).suit ))
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_card_get_flipped(card) \
     ( (card).flags )
+#endif
 
 #define fcs_freecell_card(state, f) \
     ( (state).freecells[(f)] )
@@ -120,8 +122,10 @@ typedef int fcs_locs_t;
 #define fcs_card_set_num(card, num) \
     (card).card_num = (num)
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_card_set_flipped(card, flipped) \
     (card).flags = (flipped)
+#endif
 
 #ifdef FCS_WITH_TALONS
 #define fcs_talon_len(state) \
@@ -392,9 +396,10 @@ typedef char fcs_locs_t;
 #define fcs_empty_freecell(state, f) \
     fcs_put_card_in_freecell((state), (f), fcs_empty_card)
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_col_flip_card(col, c) \
     (fcs_card_set_flipped(fcs_col_get_card((col), (c)), 0))
-
+#endif
 
 /* These are macros that are common to COMPACT_STATES and 
  * INDIRECT_STACK_STATES */
@@ -412,8 +417,10 @@ typedef char fcs_locs_t;
 #define fcs_card_suit(card) \
     ( ((card) >> 4) & 0x03 )
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_card_get_flipped(card) \
     ( (card) >> 6 )
+#endif
 
 #define fcs_card_set_num(card, num) \
     (card) = ((fcs_card_t)(((card)&0xF0)|(num)));
@@ -421,8 +428,10 @@ typedef char fcs_locs_t;
 #define fcs_card_set_suit(card, suit) \
     (card) = ((fcs_card_t)(((card)&0x4F)|((suit)<<4)));
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_card_set_flipped(card, flipped) \
     (card) = ((fcs_card_t)(((card)&((fcs_card_t)0x3F))|((fcs_card_t)((flipped)<<6))))
+#endif
 
 #endif
 

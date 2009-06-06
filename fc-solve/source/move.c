@@ -228,6 +228,7 @@ void fc_solve_apply_move(
         }
         break;
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
         case FCS_MOVE_TYPE_FLIP_CARD:
         {
             col = fcs_state_get_col(*state_key, src_stack);
@@ -235,6 +236,7 @@ void fc_solve_apply_move(
             fcs_col_flip_card(col, src_stack_len-1);
         }
         break;
+#endif
 
         case FCS_MOVE_TYPE_CANONIZE:
         {

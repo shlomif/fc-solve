@@ -1047,11 +1047,13 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
             card = fcs_col_get_card(col, c);
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
             /* Make sure the card is not flipped or else we can't move it */
             if (fcs_card_get_flipped(card))
             {
                 continue;
             }
+#endif
 
             /* Skip if it's a King - nothing to put it on. */
             if (fcs_card_card_num(card) == 13)
@@ -1658,6 +1660,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
             card = fcs_col_get_card(col, c);
 
+#ifndef FCS_WITHOUT_CARD_FLIPPING
             /*
              * Do not move cards that are flipped.
              * */
@@ -1665,6 +1668,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
             {
                 continue;
             }
+#endif
 
             for(pos_idx_to_check = &positions_by_rank[
                 FCS_POS_BY_RANK_WIDTH * (fcs_card_card_num(card))
@@ -1970,10 +1974,12 @@ int fc_solve_sfs_yukon_move_card_to_parent(
                 for( c=cards_num-1 ; c >= 0 ; c--)
                 {
                     card = fcs_col_get_card(col, c);
+#ifndef FCS_WITHOUT_CARD_FLIPPING
                     if (fcs_card_get_flipped(card))
                     {
                         break;
                     }
+#endif
                     if (fcs_is_parent_card(card, dest_card))
                     {
                         
@@ -2046,10 +2052,12 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
         for( c=cards_num-1 ; c >= 1 ; c--)
         {
             card = fcs_col_get_card(col, c);
+#ifndef FCS_WITHOUT_CARD_FLIPPING
             if (fcs_card_get_flipped(card))
             {
                 break;
             }
+#endif
             if (fcs_card_card_num(card) == 13)
             {
                 /* It's a King - so let's move it */
