@@ -477,6 +477,7 @@ Presets that are shipped with Freecell Solver:
     rin-tin-tin       - a meta-moves prese
     sand-stone        - an atomic-moves preset that aims to minimise the
             outcome solution's length.
+    slick-rock        - run gooey-unknown-thing and then sand-stone
     yellow-brick-road - a meta-moves preset
 
 They can be abbreviated into their lowercase acronym (i.e: "ak" or "rtt").
