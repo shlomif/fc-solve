@@ -67,3 +67,9 @@ and "--empty-stacks-filled-by kings", which resulted in a bug fix.
 
 Ido Kanner ( http://ik.homelinux.org/ ) - reporting a segfault when running
 freecell-solver-2.28.0 on x86-64, and allowing to diagnose it. 
+
+Gary Campbell ( http://numin8r.us/ ) - participating in the mailing list
+and inspiring some past (and possibly future) work on optimising the
+length of the resultant solutions. He was given the honour of naming the
+"sand-stone" and "slick-rock" "-l" presets. Has his own solver for
+Freecell for DOS on his homepage.
