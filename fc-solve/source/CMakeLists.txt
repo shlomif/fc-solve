@@ -127,6 +127,7 @@ SET (OPTIMIZATION_OMIT_FRAME_POINTER "" CACHE STRING "Use -fomit-frame-pointer w
 
 SET (FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE "avl" CACHE STRING "The libavl2 tree type used for the state storage. Ignored if not set to libavl2")
 SET (FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE "avl" CACHE STRING "The libavl2 tree type used for the stack storage. Ignored if not set to libavl2")
+SET (LIBAVL2_SOURCE_DIR "/usr/src/avl-2.0.3" CACHE STRING "The location of the libavl2 source tree (from which files are copied)")
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")
@@ -178,7 +179,6 @@ IF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_JUDY") OR
 ENDIF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_JUDY") OR
        (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_JUDY"))
 
-SET (LIBAVL2_SOURCE_DIR "/home/shlomi/Download/unpack/prog/c/avl-2.0.3")
 SET (LIBAVL2_COPIED_MODULES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libavl2")
 
 # Initialize to the empty list - it may or may not be populated.
