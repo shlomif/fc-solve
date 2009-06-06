@@ -474,7 +474,9 @@ Presets that are shipped with Freecell Solver:
             outcome solution's length.
     hello-world       - a meta-moves preset
     john-galt-line    - a meta-moves preset
-    rin-tin-tin       - a meta-moves preset
+    rin-tin-tin       - a meta-moves prese
+    sand-stone        - an atomic-moves preset that aims to minimise the
+            outcome solution's length.
     yellow-brick-road - a meta-moves preset
 
 They can be abbreviated into their lowercase acronym (i.e: "ak" or "rtt").
