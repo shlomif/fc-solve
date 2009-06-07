@@ -1,3 +1,56 @@
+Version 2.30.0: (07-Jun-2009)
+-----------------------------
+
+1. Added the presets "gooey-unknown-thing", "sand-stone" and "slick-rock"
+to minimize the resultant solutions' length.
+
+2. The Freecell Solver states storage and columns storage can now be
+made to use any of the trees provided by libavl2 
+( http://www.stanford.edu/~blp/avl/ ) . The results seem to be somewhat
+slower than libJudy and much slower than our own custom hash.
+
+3. Fixed the auto-moves calculation in fc_pro_iface.c .
+
+It was too pessimistic before, and had an off-by-one error. A card
+can be automatically moved if all foundations of opposite color are -2
+and the opposite foundation is -3.
+
+4. Now one can exclude the Simple Simon-related move routines and logic from
+the binaries during compilation. See "FCS_DISABLE_SIMPLE_SIMON" in the
+CMake configuration.
+
+5. Added scripts/measure-binaries-sizes.rb to measure the sizes of the binaries
+in various configurations.
+
+6. Merged Makefile.icc , Makefile.tendra , Makefile.tcc , Makefile.pcc
+and Makefile.lcc into Makefile.gnu. Which compiler can be specified using
+the Makefile.gnu COMPILER variable.
+
+7. Added the threaded_range_solver "--worker-step $N" argument.
+
+What is does is allow allocating uniform quotas to the different threads
+to process. So far increasing the quotas from 1 to 16 does not seem to improve
+the situation.
+
+8. Fixed many warnings reported by the Intel C++ compiler (icc)
+
+9. Re-organized the code - renamed many files, moved declarations and
+definitions to different files, and did a lot of overhaul.
+
+10. Got rid of FCS_DEBUG_MOVES - it was never used and became obnoxious.
+
+11. Added scripts/verify-simple-simon-range.pl and
+scripts/simple-simon-stats-analysis.pl .
+
+12. Added a regression test for verifying the validity of a 
+Simple Simon solution.
+
+13. Fixed Makefile.gnu to propagate CFLAGS to CREATE_SHARED.
+
+14. Implemented FCS_WITHOUT_CARD_FLIPPING to exclude a lot of card flipping
+code at build time. It is disabled by default because strangely it seems
+to make the execution speed worse.
+
 Version 2.28.1 (18-May-2009)
 ----------------------------
 
