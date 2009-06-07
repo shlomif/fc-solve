@@ -1,0 +1,85 @@
+a:visited 
+{ 
+    /* Konqi 3.4.x on Mandriva 2006 sets its to magenta, which doesn't 
+       look very well. 
+    */
+    color: purple;
+}
+a:hover { color : red }
+[% SET navbar_width = "20%" %]
+[% PROCESS "shlomif/navbar.ttml" %]
+.navbar
+{
+    background-color: #C5CAE2;
+}
+.main 
+{ 
+    padding-left : 1em; 
+}
+
+.main 
+{
+    margin-left : 23%;
+}
+
+
+h2
+{
+    background-color: #FFEE00;
+}
+h3
+{
+    background-color: #00D000;
+}
+.plain
+{
+    background-color: transparent;
+}
+h2, h3, h4
+{ 
+    padding-left: 4pt;
+    padding-right: 4pt;    
+    padding-top: 1pt;
+    padding-bottom: 1pt;
+}
+.main p, .main table
+{
+   margin-left: 17pt;
+   margin-right: 17pt;
+}
+[% PROCESS "shlomif/common_defs.ttml" %]
+p.desc
+{ 
+    font-weight: bold;
+}
+.main ol, .main ul, .main dl
+{
+    padding-left: 1em;
+    padding-right: 1em;
+    margin-left: 1.5em;
+    margin-right: 1em;
+}
+.paypal
+{
+    border: 0;
+    margin-bottom: 1em;
+}
+div.indent { margin-left : 3em }
+.bless { border: none; }
+
+.footer
+{
+    padding-top:1em;
+    clear: both;
+}
+.emphasis
+{
+    font-size: large;
+    font-weight: bold;
+}
+.emphasis li
+{
+    margin-top: 0.5em;
+}
+[% INCLUDE "shlomif/note.ttml" %]
+[% PROCESS "shlomif/common_defs.ttml" %]
