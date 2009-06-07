@@ -1,0 +1,36 @@
+<h1>Freecell Solver 2.30.0 was Released</h1>
+
+<!-- Tags: freecell, solver, solving, 2.30.0, release, version, cmake, solitaire, patience, games, libavl, avl, binary, trees, balanced, solution, length, minimisation, minimise, minimize, minimization
+-->
+
+<p>
+<a href="http://fc-solve.berlios.de/">Freecell Solver</a> version 2.30.0
+has been released. It is available in the form of a source tarball from 
+<a href="http://fc-solve.berlios.de/download.html">the 
+    download page</a>.
+</p>
+
+<p>
+This release adds the run-time presets "gooey-unknown-thing", "sand-stone" 
+and "slick-rock" that aim to minimise the average lengths of the resultant 
+solutions. (as opposed to minimising the time it takes to solve). It also
+adds support for using any of the tree imlpementation supplied by
+<a href="http://www.stanford.edu/~blp/avl/">libavl version 2</a> for
+both the positions storage and the stacks storage.
+</p>
+
+<p>
+There's a bug fix in the fc-pro range solver for a bug that caused the 
+Freecell Pro compatible moves to be mis-calculated. Moreover, the code
+has experienced a substantial re-organisation and the Makefiles for the
+different compiler were merged into one (which was later fixed).
+</p>
+
+<p>
+There are also new compile-time options to exclude various functionality
+that may not be needed.
+</p>
+
+<p>
+Download it while its hot!
+</p>
