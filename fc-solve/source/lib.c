@@ -1068,7 +1068,7 @@ void freecell_solver_user_set_random_seed(
 
     user = (fcs_user_t *)user_instance;
 
-    fc_solve_rand_srand(user->soft_thread->rand_gen, (user->soft_thread->rand_seed = seed));
+    fc_solve_rand_init(&(user->soft_thread->rand_gen), (user->soft_thread->rand_seed = seed));
 }
 
 int freecell_solver_user_get_num_states_in_collection(void * user_instance)

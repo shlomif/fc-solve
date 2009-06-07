@@ -34,22 +34,25 @@ extern "C" {
 
 #include "inline.h"
 
-struct fcs_rand_struct
+typedef long fcs_rand_t;
+
+static GCC_INLINE void fc_solve_rand_init(fcs_rand_t * rand, unsigned int seed)
 {
-    long seed;
-};
+    *rand = (long)seed;
+}
 
-typedef struct fcs_rand_struct fcs_rand_t;
-
-extern fcs_rand_t * fc_solve_rand_alloc(unsigned int seed);
+#if 0
 extern void fc_solve_rand_free(fcs_rand_t * rand);
+#endif
 
+#if 0
 extern void fc_solve_rand_srand(fcs_rand_t * rand, int seed);
+#endif
 
 static GCC_INLINE int fc_solve_rand_rand15(fcs_rand_t * rand)
 {
-    rand->seed = (rand->seed * 214013 + 2531011);
-    return (rand->seed >> 16) & 0x7fff;
+    *rand = ((*rand) * 214013 + 2531011);
+    return ((*rand) >> 16) & 0x7fff;
 }
 
 /*

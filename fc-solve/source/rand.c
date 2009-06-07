@@ -32,6 +32,7 @@
 
 #include "rand.h"
 
+#if 0
 fcs_rand_t * fc_solve_rand_alloc(unsigned int seed)
 {
     fcs_rand_t * ret;
@@ -46,11 +47,12 @@ void fc_solve_rand_free(fcs_rand_t * rand)
 {
     free(rand);
 }
+#endif
 
-
+#if 0
 void fc_solve_rand_srand(fcs_rand_t * rand, int seed)
 {
     rand->seed = seed;
 }
-
+#endif
 

@@ -241,7 +241,7 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
         soft_thread->a_star_weights[a] = fc_solve_a_star_default_weights[a];
     }
 
-    soft_thread->rand_gen = fc_solve_rand_alloc(soft_thread->rand_seed = 24);
+    fc_solve_rand_init(&(soft_thread->rand_gen), soft_thread->rand_seed = 24);
 
     soft_thread->initialized = 0;
 
@@ -432,7 +432,6 @@ static void free_instance_soft_thread_callback(
         )
 {
     free_bfs_queue(soft_thread);
-    fc_solve_rand_free(soft_thread->rand_gen);
 
     fc_solve_PQueueFree(soft_thread->a_star_pqueue);
     free(soft_thread->a_star_pqueue);
@@ -1629,7 +1628,7 @@ static void recycle_hard_thread(
         soft_thread->is_finished = 0;
         soft_thread->initialized = 0;
 
-        fc_solve_rand_srand(soft_thread->rand_gen, soft_thread->rand_seed);
+        fc_solve_rand_init(&(soft_thread->rand_gen), soft_thread->rand_seed);
         /* Reset the priority queue */
         soft_thread->a_star_pqueue->CurrentSize = 0;
         /* Rest the BFS Queue (also used for the optimization scan. */

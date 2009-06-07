@@ -290,6 +290,7 @@ int fc_solve_soft_dfs_do_solve(
     int soft_thread_id = soft_thread->id;
     fcs_derived_states_list_t * derived_states_list;
     int scans_synergy;
+    fcs_rand_t * rand_gen;
 
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
@@ -305,6 +306,8 @@ int fc_solve_soft_dfs_do_solve(
     dfs_max_depth = soft_thread->dfs_max_depth;
     ptr_state_val = the_soft_dfs_info->state_val;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
+    
+    rand_gen = &(soft_thread->rand_gen);
     
     calculate_real_depth(
         ptr_state_val
@@ -526,7 +529,7 @@ int fc_solve_soft_dfs_do_solve(
                         j =
                             (
                                 fc_solve_rand_get_random_number(
-                                    soft_thread->rand_gen
+                                    rand_gen
                                 )
                                 % (a+1)
                             );
