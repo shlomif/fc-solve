@@ -292,9 +292,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                     rank = card & 0x0F;
                     suit = card >> 4;
                     /* Check if we can safely move it */
-                    if ((pos.foundations[suit^0x1] > rank-2) &&
-                        (pos.foundations[suit^0x1^0x2] > rank-2) && 
-                        (pos.foundations[suit^0x2] > rank-3) &&
+                    if ((pos.foundations[suit^0x1] >= rank-2) &&
+                        (pos.foundations[suit^0x1^0x2] >= rank-2) && 
+                        (pos.foundations[suit^0x2] >= rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
                         pos.foundations[suit]++;
@@ -321,9 +321,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                     rank = card & 0x0F;
                     suit = card >> 4;
                     /* Check if we can safely move it */
-                    if ((pos.foundations[suit^0x1] > rank-2) &&
-                        (pos.foundations[suit^0x1^0x2] > rank-2) && 
-                        (pos.foundations[suit^0x2] > rank-3) &&
+                    if ((pos.foundations[suit^0x1] >= rank-2) &&
+                        (pos.foundations[suit^0x1^0x2] >= rank-2) && 
+                        (pos.foundations[suit^0x2] >= rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
                         pos.foundations[suit]++;
