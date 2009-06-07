@@ -22,7 +22,13 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * test_multi_parallel.c - the Freecell Solver range solver.
+ *
+ * Also see:
+ *  - fc_pro_range_solver.c - range solver that can count the moves in 
+ *  the solution and display the FC-Pro ones.
+ *  - threaded_range_solver.c - solve different boards in several POSIX
+ *  threads.
  */
 #include <stdio.h>
 #include <stdlib.h>

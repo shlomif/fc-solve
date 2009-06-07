@@ -22,7 +22,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * main.c - the main() and related functions of the fc-solve command line
+ * executable.
+ *
+ * It is documented in the documents "README", "USAGE", etc. in the 
+ * Freecell Solver distribution from http://fc-solve.berlios.de/ .
  */
 #include <string.h>
 #include <stdio.h>

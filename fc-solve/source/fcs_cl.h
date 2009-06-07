@@ -23,7 +23,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * fcs_cl.h - the Freecell Solver command line arguments-like parsing routines.
+ * Useful for more easily configuring a Freecell Solver instance.
  */
 #ifndef FC_SOLVE__FCS_CL_H
 #define FC_SOLVE__FCS_CL_H

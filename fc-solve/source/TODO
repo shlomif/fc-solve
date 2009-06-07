@@ -2,6 +2,9 @@
 
 --- Non-pressing ---
 
+* Change fc_solve_rand_alloc() away from malloc() into handling a pointer
+to a rand_struct.
+
 * Add fcs_flip_top_card() to the things that are not done in FCS_FREECELL_ONLY.
 
 * Do the test for SUSPEND_PROCESS in only one place. There isn't a need for

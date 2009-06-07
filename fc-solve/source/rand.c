@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * rand.c: the Freecell Solver pseudo-random number generator.
  */
 #include <stdlib.h>
 

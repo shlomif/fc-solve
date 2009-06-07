@@ -1,4 +1,3 @@
-
 /* Copyright (c) 2000 Shlomi Fish
  *
  * Permission is hereby granted, free of charge, to any person
@@ -23,7 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * alloc.h - the Freecell Solver compact allocator. Used to allocate
+ * columns and other small allocations of a short size. Is able to revert the
+ * last allocation.
  */
 #ifndef FC_SOLVE__ALLOC_H
 #define FC_SOLVE__ALLOC_H

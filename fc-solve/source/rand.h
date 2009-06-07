@@ -23,7 +23,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * rand.h - header for the Freecell Solver pseudo-random number generator.
  */
 #ifndef FC_SOLVE__RAND_H
 #define FC_SOLVE__RAND_H

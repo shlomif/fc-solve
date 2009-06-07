@@ -22,7 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * cmd_line.c - the Freecell Solver command line arguments-like parsing 
+ * routines. Useful for more easily configuring a Freecell Solver instance.
  */
 #include <string.h>
 #include <stdlib.h>

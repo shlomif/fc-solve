@@ -22,8 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
- */
+ * fcs_isa.h - the Freecell Solver indirect-states-allocation. Compactly
+ * allocates (i.e: with less overhead) vectors of states.
+ * */
 #ifndef FC_SOLVE__FCS_ISA_H
 #define FC_SOLVE__FCS_ISA_H
 

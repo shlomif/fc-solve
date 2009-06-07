@@ -22,7 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * fc_pro_range_solver.c - the FC-Pro range solver. Solves a range of
+ * boards and displays the moves counts and the number of moves in their
+ * solution.
  */
 #include <stdio.h>
 #include <stdlib.h>

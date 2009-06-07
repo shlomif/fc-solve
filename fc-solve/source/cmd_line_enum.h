@@ -22,7 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * cmd_line_enum.h - the ANSI C enum (= enumeration) for the command line
+ * arguments. Partially auto-generated.
  */
 enum FCS_COMMAND_LINE_OPTIONS
 {

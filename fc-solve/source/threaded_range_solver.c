@@ -22,7 +22,12 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ *  threaded_range_solver.c - a range solver that solves different boards in 
+ *  several POSIX threads.
+ *
+ *  See also:
+ *      - fc_pro_range_solver.c
+ *      - test_multi_parallel.c
  */
 #include <stdio.h>
 #include <stdlib.h>

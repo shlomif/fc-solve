@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : header file for check_and_add_state.h
+ * header file for fc_solve_check_and_add_state() .
  */
 #ifndef FC_SOLVE__CHECK_AND_ADD_STATE_H
 #define FC_SOLVE__CHECK_AND_ADD_STATE_H

@@ -22,7 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * TODO : Add a description of this file.
+ * app_str.c - implements an append-to-dynamically-growing string printf
+ * functionality.
  */
 #include <string.h>
 #include <stdio.h>
