@@ -53,7 +53,7 @@ extern int fc_solve_a_star_or_bfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
     );
 
-/* We need 3 chars per card - one for flags, one for the column_idx and one
+/* We need 2 chars per card - one for the column_idx and one
  * for the card_idx.
  *
  * We also need it times 13 for each of the ranks.
@@ -61,7 +61,7 @@ extern int fc_solve_a_star_or_bfs_do_solve(
  * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
  * (-1,-1) (= end) padding.
  * */
-#define FCS_POS_BY_RANK_WIDTH (((LOCAL_DECKS_NUM<< 2)+1) * 3)
+#define FCS_POS_BY_RANK_WIDTH (((LOCAL_DECKS_NUM<< 2)+1) << 1)
 
 extern char * fc_solve_get_the_positions_by_rank_data(
         fc_solve_soft_thread_t * soft_thread,

@@ -290,20 +290,14 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
                 (fcs_card_card_num(src_card) != 13)
             )
         {
-            int flags;
             for(pos_idx_to_check = &positions_by_rank[
                 FCS_POS_BY_RANK_WIDTH * (fcs_card_card_num(src_card))
                 ]
                 ;
-                ((flags = *(pos_idx_to_check++)) >= 0)
+                ((*pos_idx_to_check) >= 0)
                 ;
                )
             {
-                if (flags)
-                {
-                    pos_idx_to_check += 2;
-                    continue;
-                }
                 ds = *(pos_idx_to_check++);
                 dc = *(pos_idx_to_check++);
 
@@ -465,30 +459,26 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 int fc_solve_sfs_move_non_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * final_derived_states_list
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors()
     tests_declare_empty_stacks_fill()
 
-    fcs_derived_states_list_t derived_states_struct;
-    fcs_derived_states_list_t * derived_states_list;
-    char * positions_by_rank;
-    char * pos_idx_to_check;
-
     int check;
-    int deck;
 
+    int stack_idx;
+    int cards_num;
+    int c, a, b;
+    fcs_card_t top_card, card;
+    fcs_cards_column_t col;
+    int deck;
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
 #endif
-#ifndef HARD_CODED_NUM_DECKS
-    int decks_num;
-#endif
-
     int num_vacant_freecells;
     int num_vacant_stacks;
 
@@ -503,153 +493,105 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-#ifndef HARD_CODED_NUM_DECKS
-    decks_num = instance->decks_num;
-#endif
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
-
-    derived_states_list = &derived_states_struct;
-    derived_states_struct.num_states = 0;
-    derived_states_struct.states = NULL;    
-
-    positions_by_rank =
-        fc_solve_get_the_positions_by_rank_data(
-            soft_thread,
-            ptr_state_val
-        );
 
     /* Now let's check if a card that is under some other cards can be placed
      * in the foundations. */
 
-    for (deck=0 ; deck < LOCAL_DECKS_NUM ; deck++)
+    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
-        int suit;
-
-        for (suit=0 ; suit < 4 ; suit++)
+        col = fcs_state_get_col(state, stack_idx);
+        cards_num = fcs_col_len(col);
+        /*
+         * We starts from cards_num-2 because the top card is already covered
+         * by move_top_stack_cards_to_founds.
+         * */
+        for(c=cards_num-2 ; c >= 0 ; c--)
         {
-            register int rank;
-
-            rank = fcs_foundation_value(state, ((deck<<2)|suit));
-
-            /* The foundation is already saturated. */
-            if (rank == 13)
+            card = fcs_col_get_card(col, c);
+            for(deck=0;deck<INSTANCE_DECKS_NUM;deck++)
             {
-                continue;
-            }
-
-            for(pos_idx_to_check = &positions_by_rank[
-                FCS_POS_BY_RANK_WIDTH * rank
-                ]
-                ;
-                (*(pos_idx_to_check++) >= 0)
-                ;
-               )
-            {
-                int stack_idx, c;
-                fcs_cards_column_t col;
-
-                stack_idx = *(pos_idx_to_check++);
-                c = *(pos_idx_to_check++);
-                
-                col = fcs_state_get_col(state, stack_idx);
-
-                /* Skip top-cards */
-                if (c == fcs_col_len(col)-1)
+                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_card_num(card)-1)
                 {
-                    continue;
-                }
+                    /* The card is foundation-able. Now let's check if we
+                     * can move the cards above it to the freecells and
+                     * stacks */
 
-                if (fcs_card_suit(fcs_col_get_card(col, c)) != suit)
-                {
-                    continue;
-                }
-            
-#define cards_num fcs_col_len(col)
-                if ((num_vacant_freecells +
-                    ((tests__is_filled_by_any_card()) ?
-                        num_vacant_stacks :
-                        0
-                    ))
-                        >= cards_num-(c+1))
-                {
-                    fcs_cards_column_t new_src_col;
-                    int a;
-                    /* We can move it */
-
-                    sfs_check_state_begin()
-
-                    my_copy_stack(stack_idx);
-
-                    new_src_col = fcs_state_get_col(new_state, stack_idx);
-
-                    /* Fill the freecells with the top cards */
-                    for(a=0 ; a<min(num_vacant_freecells, cards_num-(c+1)) ; a++)
+                    if ((num_vacant_freecells +
+                        ((tests__is_filled_by_any_card()) ?
+                            num_vacant_stacks :
+                            0
+                        ))
+                            >= cards_num-(c+1))
                     {
-                        int b;
-                        fcs_card_t top_card;
+                        fcs_cards_column_t new_src_col;
+                        /* We can move it */
 
-                        /* Find a vacant freecell */
-                        for(b=0; b<LOCAL_FREECELLS_NUM; b++)
+                        sfs_check_state_begin()
+
+                        my_copy_stack(stack_idx);
+
+                        new_src_col = fcs_state_get_col(new_state, stack_idx);
+
+                        /* Fill the freecells with the top cards */
+                        for(a=0 ; a<min(num_vacant_freecells, cards_num-(c+1)) ; a++)
                         {
-                            if (fcs_freecell_card_num(new_state, b) == 0)
+                            /* Find a vacant freecell */
+                            for(b=0; b<LOCAL_FREECELLS_NUM; b++)
                             {
-                                break;
+                                if (fcs_freecell_card_num(new_state, b) == 0)
+                                {
+                                    break;
+                                }
                             }
-                        }
-                        fcs_col_pop_card(new_src_col, top_card);
+                            fcs_col_pop_card(new_src_col, top_card);
 
-                        fcs_put_card_in_freecell(new_state, b, top_card);
+                            fcs_put_card_in_freecell(new_state, b, top_card);
 
-                        fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
-                        fcs_move_set_src_stack(temp_move,stack_idx);
-                        fcs_move_set_dest_freecell(temp_move,b);
+                            fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
+                            fcs_move_set_src_stack(temp_move,stack_idx);
+                            fcs_move_set_dest_freecell(temp_move,b);
 
-                        fcs_move_stack_push(moves, temp_move);
+                            fcs_move_stack_push(moves, temp_move);
 
-                        fcs_flip_top_card(stack_idx);
-                    }
-
-                    /* TODO: we are checking the same b's over
-                     * and over again. Optimize it. */
-
-                    /* Fill the free stacks with the cards below them */
-                    for(a=0; a < cards_num-(c+1) - min(num_vacant_freecells, cards_num-(c+1)) ; a++)
-                    {
-                        fcs_cards_column_t new_b_col;
-                        int b;
-                        fcs_card_t top_card;
-
-                        /* Find a vacant stack */
-                        for(b=0;b<LOCAL_STACKS_NUM;b++)
-                        {
-                            if (fcs_col_len(
-                                fcs_state_get_col(new_state, b)
-                                ) == 0)
-                            {
-                                break;
-                            }
+                            fcs_flip_top_card(stack_idx);
                         }
 
-                        my_copy_stack(b);
+                        /* TODO: we are checking the same b's over
+                         * and over again. Optimize it. */
 
-                        new_b_col = fcs_state_get_col(new_state, b);
+                        /* Fill the free stacks with the cards below them */
+                        for(a=0; a < cards_num-(c+1) - min(num_vacant_freecells, cards_num-(c+1)) ; a++)
+                        {
+                            fcs_cards_column_t new_b_col;
+                            /* Find a vacant stack */
+                            for(b=0;b<LOCAL_STACKS_NUM;b++)
+                            {
+                                if (fcs_col_len(
+                                    fcs_state_get_col(new_state, b)
+                                    ) == 0)
+                                {
+                                    break;
+                                }
+                            }
 
-                        fcs_col_pop_card(new_src_col, top_card);
-                        fcs_col_push_card(new_b_col, top_card);
+                            my_copy_stack(b);
 
-                        fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
-                        fcs_move_set_src_stack(temp_move,stack_idx);
-                        fcs_move_set_dest_stack(temp_move,b);
-                        fcs_move_set_num_cards_in_seq(temp_move,1);
+                            new_b_col = fcs_state_get_col(new_state, b);
 
-                        fcs_move_stack_push(moves, temp_move);
+                            fcs_col_pop_card(new_src_col, top_card);
+                            fcs_col_push_card(new_b_col, top_card);
 
-                        fcs_flip_top_card(stack_idx);
-                    }
+                            fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
+                            fcs_move_set_src_stack(temp_move,stack_idx);
+                            fcs_move_set_dest_stack(temp_move,b);
+                            fcs_move_set_num_cards_in_seq(temp_move,1);
 
-                    {
-                        fcs_card_t top_card;
+                            fcs_move_stack_push(moves, temp_move);
+
+                            fcs_flip_top_card(stack_idx);
+                        }
 
                         fcs_col_pop_card(new_src_col, top_card);
                         fcs_increment_foundation(new_state, deck*4+fcs_card_suit(top_card));
@@ -661,46 +603,14 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
                         fcs_move_stack_push(moves, temp_move);
 
                         fcs_flip_top_card(stack_idx);
+
+                        sfs_check_state_end()
                     }
-#undef cards_num
-
-                    /* 
-                     * This is to preserve the order that the
-                     * initial (non-optimized) version of the
-                     * function used - for backwards-compatibility
-                     * and consistency.
-                     * */
-                    state_context_value = 
-                        ((stack_idx << 8) | (255-c))
-                        ;
-
-                    sfs_check_state_end()
+                    break;
                 }
             }
         }
     }
-
-    qsort(
-        derived_states_struct.states,
-        derived_states_struct.num_states,
-        sizeof(derived_states_struct.states[0]),
-        derived_states_compare_callback
-    );
-
-    {
-        int i;
-
-        for (i=0 ; i<derived_states_struct.num_states ; i++)
-        {
-            fc_solve_derived_states_list_add_state(
-                final_derived_states_list,
-                derived_states_struct.states[i].state_ptr,
-                0
-            );
-        }
-    }
-
-    free(derived_states_struct.states);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
@@ -1118,8 +1028,6 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
         for (c=0 ; c<fcs_col_len(col) ; c=seq_end+1)
         {
-            int flags;
-
             /* Check if there is a sequence here. */
             for(seq_end=c ; seq_end<fcs_col_len(col)-1 ; seq_end++)
             {
@@ -1157,15 +1065,10 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                 FCS_POS_BY_RANK_WIDTH * (fcs_card_card_num(card))
                 ]
                 ;
-                ((flags = *(pos_idx_to_check++)) >= 0)
+                ((*pos_idx_to_check) >= 0)
                 ;
                )
             {
-                if (flags)
-                {
-                    pos_idx_to_check += 2;
-                    continue;
-                }
                 ds = *(pos_idx_to_check++);
                 dc = *(pos_idx_to_check++);
 
@@ -1753,8 +1656,6 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
         for(c=min_card_height ; c < cards_num ; c++)
         {
-            int flags;
-
             /* Find a card which this card can be put on; */
 
             card = fcs_col_get_card(col, c);
@@ -1773,15 +1674,10 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
                 FCS_POS_BY_RANK_WIDTH * (fcs_card_card_num(card))
                 ]
                 ;
-                ((flags = *(pos_idx_to_check++)) >= 0)
+                ((*pos_idx_to_check) >= 0)
                 ;
                )
             {
-                if (flags)
-                {
-                    pos_idx_to_check += 2;
-                    continue;
-                }
                 ds = *(pos_idx_to_check++);
                 dc = *(pos_idx_to_check++);
 

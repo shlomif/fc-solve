@@ -1278,7 +1278,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
                 for ( c=0 ; c < NUM_POS_BY_RANK_SLOTS ; c++ )
                 {
                     positions_by_rank_slots[c] = &positions_by_rank[
-                        FCS_POS_BY_RANK_WIDTH * c
+                        (((LOCAL_DECKS_NUM << 2)+1) << 1) * c
                     ];
                 }
             }
@@ -1317,17 +1317,13 @@ extern char * fc_solve_get_the_positions_by_rank_data(
                             )
                         {
                             dest_below_card = fcs_col_get_card(dest_col, dc+1);
-                            *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = 
-                                ((fcs_is_parent_card(
-                                    dest_below_card, dest_card)
-                                 ) ? ((char)1) : ((char)0)
-                                )
-                            ;
-                            *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)ds;
-                            *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)dc;
+                            if (!fcs_is_parent_card(dest_below_card, dest_card))
+                            {
+                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)ds;
+                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)dc;
+                            }
                         }
                     }
-                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)0;
                     *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)ds;
                     *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)top_card_idx;
                 }
