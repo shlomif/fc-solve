@@ -19,7 +19,7 @@ HTMLS = $(D)/index.html $(D)/links.html $(D)/download.html $(D)/don_woods.html $
 
 TTMLS = $(D)/style.css
 
-ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS
+ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS $(D)/NEWS
 
 INCLUDES_PROTO = std/logo.wml
 INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))

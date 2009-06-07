@@ -92,8 +92,9 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 <h2 id="docs">Documents</h2>
 
 <table border="1" summary="Links on the left, short descriptions on the right">
-<document "README" "The &quot;Readme&quot; File"/>
+<document "README" "The &quot;Readme&quot; File" />
 <document "ChangeLog" "The changes log" />
+<document "NEWS" "The file containing what's new in every release." />
 <document "USAGE" "A detailed usage document" />
 <document "TODO" "The todo list" />
 <document "AUTHORS" "List of authors and contributors" />
