@@ -1136,7 +1136,6 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                         {
                             from_which_stack = ds;
                         }
-                        my_copy_stack(from_which_stack);
 
                         new_from_which_col = fcs_state_get_col(new_state, from_which_stack);
 
