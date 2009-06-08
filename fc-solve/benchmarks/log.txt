@@ -1100,3 +1100,23 @@ Non-threaded:
 Threaded:
 
 107.07123208046s
+
+With icc:
+
+Non-threaded:
+
+115.439105987549s
+
+Threaded:
+
+103.577337026596s
+
+========================================================================
+
+r1878 after ./Tatzer -l p4b: (and after the empty_two_cols_from_new_state()
+refactoring)
+
+Non-threaded:
+
+119.177080869675s
+
