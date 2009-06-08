@@ -52,6 +52,8 @@
 #include "unused.h"
 #include "check_and_add_state.h"
 
+#include "inline.h"
+
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
@@ -88,12 +90,7 @@ static const double fc_solve_a_star_default_weights[5] = {0.5,0,0.3,0,0.2};
 #endif
 
 
-
-
-
-
-
-static void fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * soft_thread)
+static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * soft_thread)
 {
     /* Initialize the BFS queue. We have one dummy element at the beginning
        in order to make operations simpler. */
