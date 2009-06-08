@@ -191,6 +191,18 @@ static void clean_soft_dfs(
     foreach_soft_thread(instance, soft_thread_clean_soft_dfs, NULL);
 }
 
+static void reset_soft_thread(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    soft_thread->is_finished = 0;
+    soft_thread->initialized = 0;
+
+    fc_solve_rand_init(&(soft_thread->rand_gen), soft_thread->rand_seed);
+
+    fc_solve_initialize_bfs_queue(soft_thread);
+}
+
 static fc_solve_soft_thread_t * alloc_soft_thread(
         fc_solve_hard_thread_t * hard_thread
         )
@@ -224,8 +236,6 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
 
     soft_thread->orig_method = FCS_METHOD_NONE;
 
-    fc_solve_initialize_bfs_queue(soft_thread);
-
     /* Initialize the priotity queue of the A* scan */
     soft_thread->a_star_pqueue = malloc(sizeof(PQUEUE));
     fc_solve_PQueueInitialise(
@@ -241,9 +251,7 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
         soft_thread->a_star_weights[a] = fc_solve_a_star_default_weights[a];
     }
 
-    fc_solve_rand_init(&(soft_thread->rand_gen), soft_thread->rand_seed = 24);
-
-    soft_thread->initialized = 0;
+    soft_thread->rand_seed = 24;
 
     soft_thread->num_times_step = NUM_TIMES_STEP;
 
@@ -267,7 +275,7 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
         );
 #endif
 
-    soft_thread->is_finished = 0;
+    reset_soft_thread(soft_thread);
 
     soft_thread->name = NULL;
 
@@ -1623,15 +1631,14 @@ static void recycle_hard_thread(
     for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
     {
         soft_thread = hard_thread->soft_threads[st_idx];
-        soft_thread->is_finished = 0;
-        soft_thread->initialized = 0;
 
-        fc_solve_rand_init(&(soft_thread->rand_gen), soft_thread->rand_seed);
         /* Reset the priority queue */
         soft_thread->a_star_pqueue->CurrentSize = 0;
-        /* Rest the BFS Queue (also used for the optimization scan. */
+        /* Reset the BFS Queue (also used for the optimization scan. */
         free_bfs_queue(soft_thread);
-        fc_solve_initialize_bfs_queue(soft_thread);
+
+        reset_soft_thread(soft_thread);
+        
     }
 
     return;
