@@ -791,7 +791,7 @@ int fc_solve_initial_user_state_to_c(
             {
                 str++;
             }
-            /*  TODO : handle end-of-string. */
+            handle_eos();
             if ((*str == '\n') || (*str == '\r'))
             {
                 break;
