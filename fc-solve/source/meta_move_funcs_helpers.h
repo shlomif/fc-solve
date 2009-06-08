@@ -113,7 +113,7 @@ extern "C" {
                 ) == 1                                             \
            )                                                       \
         {                                                          \
-            fcs_col_flip_card(col, fcs_col_len(flip_top_card_col)-1);                   \
+            fcs_col_flip_card(flip_top_card_col, fcs_col_len(flip_top_card_col)-1);                   \
             fcs_move_set_type(temp_move, FCS_MOVE_TYPE_FLIP_CARD); \
             fcs_move_set_src_stack(temp_move, stack_idx);              \
                                                                    \
