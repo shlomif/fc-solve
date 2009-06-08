@@ -435,6 +435,8 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     decks_num = instance->decks_num;
 #endif
 
+    temp_move = fc_solve_empty_move;
+
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
@@ -631,6 +633,8 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 #endif
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
+
+    temp_move = fc_solve_empty_move;
 
     /* Now let's check if a card that is under some other cards can be placed
      * in the foundations. */
