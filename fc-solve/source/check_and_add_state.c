@@ -231,7 +231,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
             column,
             (1+fcs_col_len(column))
         );
-        /* TODO : Handle out-of-memory. */
+        /* later_todo : Handle out-of-memory. */
         if (*PValue == 0)
         {
             /*  A new stack */
@@ -590,7 +590,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
         JHSI(PValue, instance->judy_array, new_state_key, sizeof(*new_state_key));
 
-        /* TODO : Handle out-of-memory. */
+        /* later_todo : Handle out-of-memory. */
         if (*PValue == 0)
         {
             /* A new state. */
