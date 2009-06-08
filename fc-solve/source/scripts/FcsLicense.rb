@@ -62,7 +62,7 @@ def change_c_file(filename)
             outfile.puts(license_to_comment())
             outfile.puts(<<"EOF")
 /*
- * TODO : Add a description of this file.
+ * #{"todo".upcase()} : Add a description of this file.
  */
 EOF
             outfile.puts(l)
