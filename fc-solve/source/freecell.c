@@ -971,7 +971,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
     int check;
 
-    int stack_idx, c, a, dc, ds,b;
+    int stack_idx, c, a, dc, ds;
     fcs_card_t card, top_card, this_card, prev_card;
     fcs_card_t dest_card;
     int freecells_to_fill, freestacks_to_fill;
@@ -1116,88 +1116,101 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                     my_copy_stack(stack_idx);
                     my_copy_stack(ds);
 
-                    for(a=0 ; a<freecells_to_fill ; a++)
                     {
-                        fcs_cards_column_t new_from_which_col;
-                        /* Find a vacant freecell */
-                        for(b=0;b<LOCAL_FREECELLS_NUM;b++)
+                        int dest_fc_idx;
+
+                        dest_fc_idx = 0; 
+                        for(a=0 ; a<freecells_to_fill ; a++, dest_fc_idx++)
                         {
-                            if (fcs_freecell_card_num(new_state, b) == 0)
+                            fcs_cards_column_t new_from_which_col;
+                            /* Find a vacant freecell */
+                            for( ; dest_fc_idx < LOCAL_FREECELLS_NUM ; dest_fc_idx++)
                             {
-                                break;
+                                if (fcs_freecell_card_num(
+                                            new_state, dest_fc_idx
+                                    ) == 0)
+                                {
+                                    break;
+                                }
                             }
+
+                            if (fcs_col_len(fcs_state_get_col(new_state,ds)) == dc+1)
+                            {
+                                from_which_stack = stack_idx;
+                            }
+                            else
+                            {
+                                from_which_stack = ds;
+                            }
+
+                            new_from_which_col = fcs_state_get_col(new_state, from_which_stack);
+
+                            fcs_col_pop_card(new_from_which_col, top_card);
+
+                            fcs_put_card_in_freecell(
+                                new_state, 
+                                dest_fc_idx,
+                                top_card
+                            );
+
+                            fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
+                            fcs_move_set_src_stack(temp_move,from_which_stack);
+                            fcs_move_set_dest_freecell(temp_move,dest_fc_idx);
+                            fcs_move_stack_push(moves, temp_move);
+
+                            fcs_flip_top_card(from_which_stack);
                         }
-
-                        if (fcs_col_len(fcs_state_get_col(new_state,ds)) == dc+1)
-                        {
-                            from_which_stack = stack_idx;
-                        }
-                        else
-                        {
-                            from_which_stack = ds;
-                        }
-
-                        new_from_which_col = fcs_state_get_col(new_state, from_which_stack);
-
-                        fcs_col_pop_card(new_from_which_col, top_card);
-
-                        fcs_put_card_in_freecell(new_state, b, top_card);
-
-                        fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
-                        fcs_move_set_src_stack(temp_move,from_which_stack);
-                        fcs_move_set_dest_freecell(temp_move,b);
-                        fcs_move_stack_push(moves, temp_move);
-
-                        fcs_flip_top_card(from_which_stack);
                     }
 
-                    /* Fill the free stacks with the cards below them */
-                    for(a=0; a < freestacks_to_fill ; a++)
                     {
-                        fcs_cards_column_t new_from_which_col, new_b_col;
+                        int put_cards_in_col_idx;
 
-                        /*  Find a vacant stack */
-                        /* TODO: we are checking the same b's over
-                         * and over again. Optimize it. */
-                        /* Find a vacant stack */
-                        for(b=0;b<LOCAL_STACKS_NUM;b++)
+                        put_cards_in_col_idx = 0;
+                        /* Fill the free stacks with the cards below them */
+                        for(a=0; a < freestacks_to_fill ; a++, put_cards_in_col_idx++)
                         {
-                            if (fcs_col_len(
-                                fcs_state_get_col(new_state, b)
-                                ) == 0)
+                            fcs_cards_column_t new_from_which_col, new_b_col;
+
+                            /*  Find a vacant stack */
+                            for( ; put_cards_in_col_idx < LOCAL_STACKS_NUM ; put_cards_in_col_idx++)
                             {
-                                break;
+                                if (fcs_col_len(
+                                    fcs_state_get_col(new_state, put_cards_in_col_idx)
+                                    ) == 0)
+                                {
+                                    break;
+                                }
                             }
+
+                            if (fcs_col_len(
+                                fcs_state_get_col(new_state, ds)
+                                ) == dc+1
+                            )
+                            {
+                                from_which_stack = stack_idx;
+                            }
+                            else
+                            {
+                                from_which_stack = ds;
+                            }
+
+                            my_copy_stack(put_cards_in_col_idx);
+
+                            new_b_col = fcs_state_get_col(new_state, put_cards_in_col_idx);
+
+                            new_from_which_col = fcs_state_get_col(new_state, from_which_stack);
+
+                            fcs_col_pop_card(new_from_which_col, top_card);
+                            fcs_col_push_card(new_b_col, top_card);
+
+                            fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
+                            fcs_move_set_src_stack(temp_move,from_which_stack);
+                            fcs_move_set_dest_stack(temp_move,put_cards_in_col_idx);
+                            fcs_move_set_num_cards_in_seq(temp_move,1);
+                            fcs_move_stack_push(moves, temp_move);
+
+                            fcs_flip_top_card(from_which_stack);
                         }
-
-                        if (fcs_col_len(
-                            fcs_state_get_col(new_state, ds)
-                            ) == dc+1
-                        )
-                        {
-                            from_which_stack = stack_idx;
-                        }
-                        else
-                        {
-                            from_which_stack = ds;
-                        }
-
-                        my_copy_stack(b);
-
-                        new_b_col = fcs_state_get_col(new_state, b);
-
-                        new_from_which_col = fcs_state_get_col(new_state, from_which_stack);
-
-                        fcs_col_pop_card(new_from_which_col, top_card);
-                        fcs_col_push_card(new_b_col, top_card);
-
-                        fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
-                        fcs_move_set_src_stack(temp_move,from_which_stack);
-                        fcs_move_set_dest_stack(temp_move,b);
-                        fcs_move_set_num_cards_in_seq(temp_move,1);
-                        fcs_move_stack_push(moves, temp_move);
-
-                        fcs_flip_top_card(from_which_stack);
                     }
 
                     fcs_move_sequence(ds, stack_idx, c, seq_end);
