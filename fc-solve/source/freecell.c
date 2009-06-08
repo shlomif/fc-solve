@@ -1341,28 +1341,26 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
     
     temp_move = fc_solve_empty_move;
 
-    for(fc=0;fc<LOCAL_FREECELLS_NUM;fc++)
+    if (soft_thread->num_vacant_stacks)
     {
-        card = fcs_freecell_card(state, fc);
-        if (
-            (tests__is_filled_by_kings_only()) ?
-                (fcs_card_card_num(card) == 13) :
-                (fcs_card_card_num(card) != 0)
-           )
+        for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
         {
-            /* TODO: we are checking the same b's over
-             * and over again. Optimize it. Also this is duplicate
-             * code. */
-            for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+            if (fcs_col_len(
+                fcs_state_get_col(state, stack_idx)
+                ) == 0)
             {
-                if (fcs_col_len(
-                    fcs_state_get_col(state, stack_idx)
-                    ) == 0)
-                {
-                    break;
-                }
+                break;
             }
-            if (stack_idx != LOCAL_STACKS_NUM)
+        }
+
+        for(fc=0;fc<LOCAL_FREECELLS_NUM;fc++)
+        {
+            card = fcs_freecell_card(state, fc);
+            if (
+                (tests__is_filled_by_kings_only()) ?
+                    (fcs_card_card_num(card) == 13) :
+                    (fcs_card_card_num(card) != 0)
+               )
             {
                 fcs_cards_column_t new_src_col;
                 /* We can move it */
