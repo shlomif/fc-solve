@@ -45,13 +45,8 @@ extern "C" {
 #define MAX_NUM_SCANS_BUCKETS 1
 #define MAX_NUM_SCANS (MAX_NUM_SCANS_BUCKETS * (sizeof(int)*8))
 
-/**********
- * TODO: Change 5 to the log2 of sizeof(int)*8
- *
- ************/
-
-#define is_scan_visited(ptr_state_val, scan_id) (ptr_state_val->scan_visited[(scan_id)>>5] & (1 << ((scan_id)&((1<<(5))-1))))
-#define set_scan_visited(ptr_state_val, scan_id) { ptr_state_val->scan_visited[(scan_id)>>5] |= (1 << ((scan_id)&((1<<(5))-1))); }
+#define is_scan_visited(ptr_state_val, scan_id) (ptr_state_val->scan_visited[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] & (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))))
+#define set_scan_visited(ptr_state_val, scan_id) { ptr_state_val->scan_visited[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] |= (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))); }
 
 
 #ifdef DEBUG_STATES

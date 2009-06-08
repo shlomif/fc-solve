@@ -90,6 +90,8 @@ extern "C" {
  * */
 #cmakedefine FCS_ENABLE_SECONDARY_HASH_VALUE
 
+#cmakedefine FCS_INT_BIT_SIZE_LOG2 ${FCS_INT_BIT_SIZE_LOG2}
+
 /*
  * The maximal number of Freecells. For efficiency's sake it should be a
  * multiple of 4.
@@ -190,6 +192,10 @@ extern "C" {
 
 /* Version number of package */
 #define VERSION "${VERSION}"
+
+#ifndef FCS_INT_BIT_SIZE_LOG2
+#define FCS_INT_BIT_SIZE_LOG2 ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
+#endif
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
