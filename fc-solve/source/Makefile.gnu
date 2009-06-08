@@ -4,6 +4,7 @@ WITH_TRACES = 0
 FREECELL_ONLY = 0
 DISABLE_SIMPLE_SIMON := 0
 WITH_LIBRB = 0
+OPT_FOR_SIZE = 1
 
 COMPILER = gcc
 # COMPILER = icc
@@ -54,7 +55,11 @@ ifeq ($(GCC_COMPAT),1)
 	ifeq ($(DEBUG),1)
 		CFLAGS += -g
 	else
-		CFLAGS += -Os
+		ifeq ($(OPT_FOR_SIZE),1)
+			CFLAGS += -Os
+		else
+			CFLAGS += -O3 -march=pentium4 -fomit-frame-pointer
+		endif
 	endif
 endif
 
