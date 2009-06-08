@@ -45,6 +45,8 @@
 #include "unused.h"
 #include "freecell.h"
 
+#include "inline.h"
+
 #ifdef DMALLOC
 #include "dmalloc.h"
 #endif
@@ -214,7 +216,7 @@ static int derived_states_compare_callback(
  * This function empties two stacks from the new state
  * into freeeclls and empty columns
  */
-static int empty_two_cols_from_new_state(
+static GCC_INLINE int empty_two_cols_from_new_state(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_new_state_val,
         fcs_move_stack_t * moves,
