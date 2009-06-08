@@ -27,7 +27,7 @@ end
 
 def mk_gnu_and_measure(preset, args)
     system("make -f Makefile.gnu clean");
-    system("make -f Makefile.gnu all #{args}");
+    system("make -f Makefile.gnu all #{args} DEBUG=0 OPT_FOR_SIZE=1");
     measure_size(preset);
 end
 
@@ -48,10 +48,10 @@ config_and_measure("r-no-simple-simon-omit-frame",
 # This is in order to reset all the flags in config.h.
 config("");
 
-mk_gnu_and_measure("gcc-Os", "FREECELL_ONLY=0 DISABLE_SIMPLE_SIMON=0 DEBUG=0")
-mk_gnu_and_measure("gcc-Os-fc-only", "FREECELL_ONLY=1 DEBUG=0")
+mk_gnu_and_measure("gcc-Os", "FREECELL_ONLY=0 DISABLE_SIMPLE_SIMON=0")
+mk_gnu_and_measure("gcc-Os-fc-only", "FREECELL_ONLY=1")
 mk_gnu_and_measure("gcc-Os-no-simple-simon", 
-                   "FREECELL_ONLY=0 DISABLE_SIMPLE_SIMON=1 DEBUG=0"
+                   "FREECELL_ONLY=0 DISABLE_SIMPLE_SIMON=1"
                   )
 
 $log.close()
