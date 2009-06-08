@@ -1844,6 +1844,16 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
     stacks_num = instance->stacks_num;
 #endif
 
+    for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
+    {
+        if (fcs_col_len(
+            fcs_state_get_col(state, ds)
+            ) == 0)
+        {
+            break;
+        }
+    }
+
     for( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         col = fcs_state_get_col(state, stack_idx);
@@ -1862,24 +1872,9 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
                 /* It's a King - so let's move it */
                 sfs_check_state_begin();
 
-                /* TODO: state here should probably be new_state */
-                /* TODO: we are checking the same b's over
-                 * and over again. Optimize it. Also this is duplicate
-                 * code. */
-                for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
-                {
-                    if (fcs_col_len(
-                        fcs_state_get_col(state, ds)
-                        ) == 0)
-                    {
-                        break;
-                    }
-                }
-
                 my_copy_stack(stack_idx);
                 my_copy_stack(ds);
                 fcs_move_sequence(ds, stack_idx, c, cards_num-1);
-
 
                 fcs_flip_top_card(stack_idx);
 
@@ -2126,9 +2121,6 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
 #ifndef HARD_CODED_NUM_STACKS
     stacks_num = instance->stacks_num;
 #endif
-    /* TODO: we are checking the same b's over
-     * and over again. Optimize it. Also this is duplicate
-     * code. */
 
     for(empty_stack_idx=0;empty_stack_idx<LOCAL_STACKS_NUM;empty_stack_idx++)
     {
@@ -2470,9 +2462,6 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
-    /* TODO: we are checking the same b's over
-     * and over again. Optimize it. Also this is duplicate
-     * code. */
     /* Find a vacant stack */
     for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
     {
