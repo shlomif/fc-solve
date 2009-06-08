@@ -22,10 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * alloc.c - a dynamic memory allocator. It allocates blocks of relatively
- * small size, in a contiguous, compact manner. The most recent block can
- * be released, but otherwise the blocks are kept for prosperity.
- *
+ * alloc.c - the Freecell Solver compact allocator. Used to allocate
+ * columns and other small allocations of a short size. Is able to revert the
+ * last allocation.
  */
 
 #include <stdlib.h>
