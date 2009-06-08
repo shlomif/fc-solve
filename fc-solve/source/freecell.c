@@ -525,7 +525,6 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 
                             sfs_check_state_begin()
 
-
                             /* Fill the freecells with the top cards */
 
                             my_copy_stack(ds);
@@ -1399,10 +1398,10 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
     int check;
 
-    int stack_idx, cards_num, c, min_card_height, a, b, ds, dc;
+    int stack_idx, cards_num, c, min_card_height, ds, dc;
     int num_cards_to_relocate;
     int dest_cards_num;
-    fcs_card_t card, top_card, upper_card, lower_card;
+    fcs_card_t card, upper_card, lower_card;
     fcs_card_t dest_card;
     int freecells_to_fill, freestacks_to_fill;
     fcs_cards_column_t col, dest_col;
@@ -1584,6 +1583,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
                 /* We can move it */
 
                 {
+                    int cols_indexes[3];
                     fcs_cards_column_t new_dest_col;
 
                     sfs_check_state_begin()
@@ -1593,58 +1593,19 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
                     my_copy_stack(ds);
 
                     new_dest_col = fcs_state_get_col(new_state, ds);
-                    for(a=0 ; a<freecells_to_fill ; a++)
-                    {
-                        /* Find a vacant freecell */
-                        for(b=0;b<LOCAL_FREECELLS_NUM;b++)
-                        {
-                            if (fcs_freecell_card_num(new_state, b) == 0)
-                            {
-                                break;
-                            }
-                        }
 
-                        fcs_col_pop_card(new_dest_col, top_card);
+                    cols_indexes[0] = ds;
+                    cols_indexes[1] = -1;
+                    cols_indexes[2] = -1;
 
-                        fcs_put_card_in_freecell(new_state, b, top_card);
-
-                        fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
-                        fcs_move_set_src_stack(temp_move,ds);
-                        fcs_move_set_dest_freecell(temp_move,b);
-                        fcs_move_stack_push(moves, temp_move);
-                    }
-
-                    /* TODO: we are checking the same b's over
-                     * and over again. Optimize it. Also this is duplicate
-                     * code. */
-                    /* Fill the free stacks with the cards below them */
-                    for(a=0; a < freestacks_to_fill ; a++)
-                    {
-                        fcs_cards_column_t new_b_col;
-                        /*  Find a vacant stack */
-                        for(b=0;b<LOCAL_STACKS_NUM;b++)
-                        {
-                            if (fcs_col_len(
-                                fcs_state_get_col(new_state, b)
-                                ) == 0)
-                            {
-                                break;
-                            }
-                        }
-
-                        my_copy_stack(b);
-
-                        new_b_col = fcs_state_get_col(new_state, b);
-
-                        fcs_col_pop_card(new_dest_col, top_card);
-                        fcs_col_push_card(new_b_col, top_card);
-
-                        fcs_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
-                        fcs_move_set_src_stack(temp_move,ds);
-                        fcs_move_set_dest_stack(temp_move,b);
-                        fcs_move_set_num_cards_in_seq(temp_move,1);
-                        fcs_move_stack_push(moves, temp_move);
-                    }
+                    empty_two_cols_from_new_state(
+                        soft_thread,
+                        ptr_new_state_val,
+                        moves,
+                        cols_indexes,
+                        freestacks_to_fill + freecells_to_fill,
+                        0
+                    );
 
                     my_copy_stack(stack_idx);
 
