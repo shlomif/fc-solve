@@ -1120,3 +1120,10 @@ Non-threaded:
 
 119.177080869675s
 
+========================================================================
+
+r1878 after making empty_two_cols_from_new_state() GCC_INLINE:
+./Tatzer -l p4b:
+
+118.614977121353s
+
