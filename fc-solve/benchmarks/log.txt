@@ -997,7 +997,7 @@ binaries and regular (non-threaded) range-solver "-l gi": (gcc-4.4.0)
 ========================================================================
 
 Trunk (r1755) with "./Tatzer -l p4b" after running strip on the 
-binaries and regular (non-threaded) range-solver "-l gi": (gcc-4.4.0)
+binaries and threaded range solver "-l gi": (gcc-4.4.0)
 
 ./freecell-solver-multi-thread-solve 1 32000 500 --num-workers 3 \
     --worker-step 16 -l gi
@@ -1083,7 +1083,20 @@ r1826 trunk after ./Tatzer -l p4b --judy
 and doing:
 
 {{{{{{{{{{{{
-time ./freecell-solver-range-parallel-solve 1 32000 500 -l gi | tee dump-rtavl
+time ./freecell-solver-range-parallel-solve 1 32000 500 -l gi
 }}}}}}}}}}}}
 
 169.985544919968s
+
+
+========================================================================
+
+r1864 trunk after ./Tatzer -l p4b:
+
+Non-threaded:
+
+118.82307100296s
+
+Threaded:
+
+107.07123208046s
