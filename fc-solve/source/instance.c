@@ -274,6 +274,24 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
     return soft_thread;
 }
 
+/* This is the commmon code from alloc_hard_thread() and 
+ * recycle_hard_thread() */
+static void reset_hard_thread(
+    fc_solve_hard_thread_t * hard_thread
+    )
+{
+    hard_thread->num_times = 0;
+    hard_thread->ht_max_num_times = hard_thread->num_times_step;
+    hard_thread->max_num_times = -1;
+    hard_thread->num_soft_threads_finished = 0;
+#ifdef INDIRECT_STACK_STATES
+    hard_thread->stacks_allocator =
+        fc_solve_compact_allocator_new();
+#endif
+    hard_thread->move_stacks_allocator =
+        fc_solve_compact_allocator_new();
+}
+
 static fc_solve_hard_thread_t * alloc_hard_thread(
         fc_solve_instance_t * instance
         )
@@ -291,8 +309,6 @@ static fc_solve_hard_thread_t * alloc_hard_thread(
 
     hard_thread->instance = instance;
 
-    hard_thread->num_times = 0;
-
     hard_thread->num_soft_threads = 1;
 
     hard_thread->soft_threads =
@@ -305,25 +321,15 @@ static fc_solve_hard_thread_t * alloc_hard_thread(
     /* Set a limit on the Hard-Thread's scan. */
     hard_thread->num_times_step = NUM_TIMES_STEP;
 
-    hard_thread->ht_max_num_times = hard_thread->num_times_step;
-
-    hard_thread->max_num_times = -1;
-
-    hard_thread->num_soft_threads_finished = 0;
-
-#ifdef INDIRECT_STACK_STATES
-    hard_thread->stacks_allocator =
-        fc_solve_compact_allocator_new();
-#endif
-    hard_thread->move_stacks_allocator =
-        fc_solve_compact_allocator_new();
-
-    fcs_move_stack_alloc_into_var(hard_thread->reusable_move_stack);
 
     hard_thread->prelude_as_string = NULL;
     hard_thread->prelude = NULL;
     hard_thread->prelude_num_items = 0;
     hard_thread->prelude_idx = 0;
+
+    reset_hard_thread(hard_thread);
+
+    fcs_move_stack_alloc_into_var(hard_thread->reusable_move_stack);
 
     return hard_thread;
 }
@@ -1612,16 +1618,8 @@ static void recycle_hard_thread(
     int st_idx;
     fc_solve_soft_thread_t * soft_thread;
 
-    hard_thread->num_times = 0;
-    hard_thread->ht_max_num_times = hard_thread->num_times_step;
-    hard_thread->max_num_times = -1;
-    hard_thread->num_soft_threads_finished = 0;
-    hard_thread->move_stacks_allocator =
-        fc_solve_compact_allocator_new();
-#ifdef INDIRECT_STACK_STATES
-    hard_thread->stacks_allocator =
-        fc_solve_compact_allocator_new();
-#endif
+    reset_hard_thread(hard_thread);
+
     for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
     {
         soft_thread = hard_thread->soft_threads[st_idx];
