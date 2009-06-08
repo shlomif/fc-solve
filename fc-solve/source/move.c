@@ -133,9 +133,8 @@ int fc_solve_move_stack_get_num_moves(
 
 
 /*
-    This function performs a given move on a state
-
-  */
+ * This function performs a given move on a state
+ */
 void fc_solve_apply_move(
         fcs_state_extra_info_t * state_val,
         fcs_move_t move,
@@ -145,12 +144,9 @@ void fc_solve_apply_move(
         )
 {
     fcs_card_t card;
-    int a;
     fcs_cards_column_t col;
 
     fcs_state_t * state_key = state_val->key;
-
-    /*  TODO : unify to a single dest/src. */
 
 #define src fcs_move_get_src_stack(move)
 #define dest fcs_move_get_dest_freecell(move)
@@ -159,20 +155,19 @@ void fc_solve_apply_move(
         case FCS_MOVE_TYPE_STACK_TO_STACK:
         {
             fcs_cards_column_t dest_col;
-            int src_stack_len;
+            int i;
 
             col = fcs_state_get_col(*state_key, src);
             dest_col = fcs_state_get_col(*state_key, dest);
-            src_stack_len = fcs_col_len(col);
-            for(a=0 ; a<fcs_move_get_num_cards_in_seq(move) ; a++)
+            for(i=0 ; i<fcs_move_get_num_cards_in_seq(move) ; i++)
             {
                 fcs_col_push_col_card(
                     dest_col,
                     col, 
-                    src_stack_len - fcs_move_get_num_cards_in_seq(move)+a
+                    fcs_col_len(col) - fcs_move_get_num_cards_in_seq(move)+i
                 );
             }
-            for(a=0 ; a<fcs_move_get_num_cards_in_seq(move) ; a++)
+            for(i=0 ; i<fcs_move_get_num_cards_in_seq(move) ; i++)
             {
                 fcs_col_pop_top(col);
             }
@@ -214,8 +209,10 @@ void fc_solve_apply_move(
         break;
         case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
         {
+            int i;
+
             col = fcs_state_get_col(*state_key, src);
-            for(a=0;a<13;a++)
+            for (i=0 ; i<13 ; i++)
             {
                 fcs_col_pop_top(col);
                 fcs_increment_foundation(*state_key, fcs_move_get_foundation(move));
