@@ -618,7 +618,7 @@ enum
     FCS_COMPILE_PRELUDE_UNKNOWN_SCAN_ID
 };
 
-static int compile_prelude(
+static GCC_INLINE int compile_prelude(
     fc_solve_hard_thread_t * hard_thread
     )
 {

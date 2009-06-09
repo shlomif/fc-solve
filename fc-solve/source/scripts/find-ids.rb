@@ -118,6 +118,15 @@ ignore_list = %w{
     callback_choice
     calloc
     clean_soft_dfs
+    allowed_tests
+    determine_scan_completeness
+    soft_thread_clean_soft_dfs
+    card_idx
+    card_to_string_suits
+    card_to_string_values
+    child_suit
+    command_signal_handler
+    compile_prelude
 }
 
 ignore = Hash.new
