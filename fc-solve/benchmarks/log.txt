@@ -1134,3 +1134,10 @@ r1886 after refactoring instance.c:
 
 117.668596029282s
 
+========================================================================
+
+r1920 after identifer cleanup:
+
+./Tatzer -l p4b, serial range-solver:
+
+122.154226064682s
