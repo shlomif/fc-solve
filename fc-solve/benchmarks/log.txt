@@ -1141,3 +1141,19 @@ r1920 after identifer cleanup:
 ./Tatzer -l p4b, serial range-solver:
 
 122.154226064682s
+
+========================================================================
+
+r1944 after identifier cleanup:
+
+./Tatzer -l p4b, serial range-solver:
+
+118.590605974197s
+
+Multi-threaded:
+
+107.319893121719s
+
+In the virtual console:
+
+117.870433092117s
