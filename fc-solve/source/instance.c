@@ -399,11 +399,6 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->solution_moves = NULL;
 
     instance->optimize_solution_path = 0;
-
-#ifdef FCS_WITH_MHASH
-    instance->mhash_type = MHASH_MD5;
-#endif
-
     instance->optimization_thread = NULL;
     instance->in_optimization_thread = 0;
 

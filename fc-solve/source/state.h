@@ -153,7 +153,7 @@ typedef fcs_card_t fcs_state_foundation_t;
 struct fcs_struct_state_t
 {
     fcs_card_t data[MAX_NUM_STACKS*(MAX_NUM_CARDS_IN_A_STACK+1)+MAX_NUM_FREECELLS+4*MAX_NUM_DECKS];
-#ifdef FCS_WITH_TALON
+#ifdef FCS_WITH_TALONS
     fcs_card_t * talon;
     char talon_params[4];
 #endif
