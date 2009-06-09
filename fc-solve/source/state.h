@@ -51,22 +51,19 @@ extern "C" {
 
 #ifdef DEBUG_STATES
 
-struct fcs_struct_card_t
+typedef struct
 {
     short card_num;
     char suit;
     char flags;
-};
+} fcs_card_t;
 
-typedef struct fcs_struct_card_t fcs_card_t;
-
-struct fcs_struct_stack_t
+typedef struct
 {
     int num_cards;
     fcs_card_t cards[MAX_NUM_CARDS_IN_A_STACK];
-};
+} fc_stack_t;
 
-typedef struct fcs_struct_stack_t fc_stack_t;
 typedef fc_stack_t * fcs_cards_column_t;
 typedef int fcs_state_foundation_t;
 
@@ -247,9 +244,6 @@ struct fcs_struct_state_t
 };
 
 typedef struct fcs_struct_state_t fcs_state_t;
-
-#define fcs_standalone_stack_len(stack) \
-    ( (int)(stack[0]) )
 
 #define fcs_state_get_col(state, col_idx) \
     ( (state).stacks[(col_idx)] )

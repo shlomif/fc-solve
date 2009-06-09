@@ -31,6 +31,7 @@
 #include <ctype.h>
 
 #include "card.h"
+#include "inline.h"
 
 #ifdef DEBUG_STATES
 
@@ -123,7 +124,7 @@ int fc_solve_u2p_suit(const char * suit)
 }
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
-static int fcs_u2p_flipped_status(const char * str)
+static GCC_INLINE int fcs_u2p_flipped_status(const char * str)
 {
     while (*str != '\0')
     {

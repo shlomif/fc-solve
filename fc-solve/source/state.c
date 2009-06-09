@@ -36,6 +36,7 @@
 #include "fcs_enums.h"
 #include "app_str.h"
 #include "unused.h"
+#include "inline.h"
 
 #ifndef min
 #define min(a,b) ((a)<(b)?(a):(b))
@@ -349,7 +350,7 @@ void fc_solve_canonize_state(
 
 #endif
 
-static void fcs_state_init(
+static GCC_INLINE void fcs_state_init(
     fcs_state_t * state_key,
     fcs_state_extra_info_t * state_val,
     int stacks_num

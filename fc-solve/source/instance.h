@@ -439,14 +439,11 @@ typedef struct
 /***************************************************/
 
 
-struct fcs_prelude_item_struct
+typedef struct
 {
     int scan_idx;
     int quota;
-};
-
-typedef struct fcs_prelude_item_struct fcs_prelude_item_t;
-
+} fcs_prelude_item_t;
 
 struct fc_solve_hard_thread_struct
 {
@@ -561,7 +558,7 @@ struct fc_solve_hard_thread_struct
 /********************************************/
 
 
-struct fcs_soft_dfs_stack_item_struct
+typedef struct
 {
     fcs_state_extra_info_t * state_val;
     fcs_derived_states_list_t derived_states_list;
@@ -572,9 +569,7 @@ struct fcs_soft_dfs_stack_item_struct
     int derived_states_random_indexes_max_size;
     int * derived_states_random_indexes;
     char * positions_by_rank;
-};
-
-typedef struct fcs_soft_dfs_stack_item_struct fcs_soft_dfs_stack_item_t;
+} fcs_soft_dfs_stack_item_t;
 
 struct fc_solve_soft_thread_struct
 {

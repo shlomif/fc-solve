@@ -54,10 +54,10 @@ enum
     FCS_MOVE_TYPE_NULL
 };
 
-struct fcs_move_struct
+typedef struct
 {
     unsigned char c[4];
-};
+} fcs_move_t;
 
 #define FCS_MOVE_TYPE                0
 #define FCS_MOVE_SRC                 1
@@ -82,16 +82,11 @@ struct fcs_move_struct
 #define fcs_move_get_type(move)                   ((move).c[FCS_MOVE_TYPE])
 #define fcs_move_get_num_cards_in_seq(move)       ((move).c[FCS_MOVE_NUM_CARDS_IN_SEQ])
 
-typedef struct fcs_move_struct fcs_move_t;
-
-struct fcs_move_stack_struct
+typedef struct
 {
     fcs_move_t * moves;
     int num_moves;
-};
-
-typedef struct fcs_move_stack_struct fcs_move_stack_t;
-
+} fcs_move_stack_t;
 
 #ifdef __cplusplus
 }

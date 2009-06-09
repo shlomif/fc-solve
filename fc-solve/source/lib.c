@@ -42,7 +42,7 @@ typedef struct
     int limit;
 }  fcs_instance_item_t;
 
-struct fcs_user_struct
+typedef struct
 {
     /*
      * This is a list of several consecutive instances that are run
@@ -86,9 +86,7 @@ struct fcs_user_struct
     char * state_string_copy;
 
     fcs_preset_t common_preset;
-};
-
-typedef struct fcs_user_struct fcs_user_t;
+} fcs_user_t;
 
 #define USER_INSTANCES_GROW_BY 8
 

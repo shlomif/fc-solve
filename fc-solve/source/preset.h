@@ -35,7 +35,7 @@ extern "C" {
 
 #include "instance.h"
 
-struct fcs_preset_struct
+typedef struct
 {
     int preset_id;
     int freecells_num;
@@ -48,9 +48,7 @@ struct fcs_preset_struct
 
     char tests_order[FCS_TESTS_NUM*3+1];
     char allowed_tests[FCS_TESTS_NUM*3+1];
-};
-
-typedef struct fcs_preset_struct fcs_preset_t;
+} fcs_preset_t;
 
 extern int fc_solve_apply_preset_by_ptr(
     fc_solve_instance_t * instance,

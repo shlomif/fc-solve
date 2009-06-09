@@ -151,6 +151,10 @@ ignore_list = %w{
     fcs_klondike_talon_queue_to_stack
     fcs_klondike_talon_redeal_bare
     fcs_move_set_num_cards_flipped
+    fcs_get_preset_id_by_name
+    fcs_preset_name_t
+    fcs_state_init
+    final_ret
 }
 
 

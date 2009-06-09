@@ -266,13 +266,11 @@ static const fcs_preset_t fcs_presets[16] =
     }
 };
 
-struct fcs_preset_name_struct
+typedef struct
 {
     const char name[32];
     int preset_id;
-};
-
-typedef struct fcs_preset_name_struct fcs_preset_name_t;
+} fcs_preset_name_t;
 
 static const fcs_preset_name_t fcs_preset_names[23] =
 {
