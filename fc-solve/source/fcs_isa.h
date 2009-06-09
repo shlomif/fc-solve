@@ -36,9 +36,6 @@ extern "C" {
 #include "instance.h"
 
 extern void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread);
-#if 0
-extern fcs_state_with_locations_t * fcs_state_ia_alloc(fc_solve_instance_t * instance);
-#else
 
 #define fcs_state_ia_alloc_into_var(ret_val, instance) \
 {           \
@@ -58,9 +55,6 @@ extern fcs_state_with_locations_t * fcs_state_ia_alloc(fc_solve_instance_t * ins
         ret_val->key = &(ret_helper->s);  \
     } \
 }
-
-#endif
-
 
 #if 0
 extern void fcs_state_ia_release(fc_solve_instance_t * instance);

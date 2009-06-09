@@ -54,9 +54,6 @@ void fc_solve_args_man_free(args_man_t * manager)
     free(manager);
 }
 
-#define skip_ws() { while((*s == ' ') || (*s == '\t')) { s++; } }
-#define skip_non_ws() { while((*s != ' ') && (*s != '\t') && (*s)) { s++; }}
-
 #define add_to_last_arg(c)  \
     {         \
         *(last_arg_ptr++) = (c);     \

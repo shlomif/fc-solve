@@ -33,7 +33,7 @@
 #include "instance.h"
 #include "preset.h"
 
-enum fcs_presets_ids
+enum
 {
     FCS_PRESET_BAKERS_DOZEN,
     FCS_PRESET_BAKERS_GAME,
@@ -414,14 +414,6 @@ static int fc_solve_char_to_test_num(char c)
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
 #endif
-
-struct internal_tests_order_struct
-{
-    int tests_order_num;
-    int tests_order[FCS_TESTS_NUM];
-};
-
-typedef struct internal_tests_order_struct internal_tests_order_t;
 
 int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,

@@ -2051,7 +2051,7 @@ int fc_solve_sfs_get_card_from_klondike_talon(
                     );
 
                 memcpy(
-                    ptr_new_state_with_locations->s.talon_params,
+                    ptr_new_state_key->talon_params,
                     talon_temp->s.talon_params,
                     sizeof(ptr_state_with_locations->s.talon_params)
                 );

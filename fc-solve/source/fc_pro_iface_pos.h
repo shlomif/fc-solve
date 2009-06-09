@@ -19,7 +19,7 @@ typedef struct {
 Card	cards[19];
 } Column;
 
-typedef struct pos_struct {
+typedef struct {
 	uchar	foundations[4];
 	Card	hold[8];
 	Column	tableau[8];

@@ -26,7 +26,7 @@ extern "C" {
 
 typedef int pq_rating_t;
 
-typedef struct struct_pq_element_t
+typedef struct
 {
     fcs_state_extra_info_t * val;
     pq_rating_t rating;

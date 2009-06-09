@@ -38,11 +38,6 @@
 const fcs_move_t fc_solve_empty_move = {"\0\0\0\0"};
 
 #if 0
-/* This variable was used for debugging. */
-int msc_counter=0;
-#endif
-
-#if 0
 /* This function allocates an empty move stack */
 fcs_move_stack_t * fcs_move_stack_create(void)
 {

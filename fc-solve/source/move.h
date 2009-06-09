@@ -72,7 +72,6 @@ void fcs_move_stack_reset(fcs_move_stack_t * stack);
     (stack)->num_moves = 0;   \
 }
 
-#define fcs_move_stack_get_num_moves(stack) (fc_solve_move_stack_get_num_moves(stack))
 extern int fc_solve_move_stack_get_num_moves(fcs_move_stack_t * stack);
 
 void fc_solve_apply_move(

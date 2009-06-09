@@ -112,7 +112,6 @@ static void GCC_INLINE fc_solve_cache_stacks(
         {
             continue;
         }
-        /* new_state_key->stacks[a] = realloc(new_state_key->stacks[a], fcs_stack_len(new_state_key, a)+1); */
 
         column = fcs_state_get_col(*new_state_key, a);
         col_len = (fcs_col_len(column)+1);
@@ -128,7 +127,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
          * (It is not derived work however). */
         {
             const char * s_ptr = (char*)(new_state_key->stacks[a]);
-            const char * s_end = s_ptr+fcs_stack_len(*new_state_key, a)+1;
+            const char * s_end = s_ptr+fcs_col_len(s_ptr)+1;
             hash_value_int = 0;
             while (s_ptr < s_end)
             {

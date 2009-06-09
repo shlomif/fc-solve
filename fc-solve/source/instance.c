@@ -1036,7 +1036,7 @@ int fc_solve_solve_instance(
             NULL
             );
 
-        fc_solve_cache_talon(instance, instance->state_copy_ptr);
+        fc_solve_cache_talon(instance, instance->state_copy_ptr_val);
     }
 #endif
 
@@ -1501,11 +1501,7 @@ void fc_solve_finish_instance(
     in the process */
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-#if 0
-    fc_solve_hash_free_with_callback(instance->stacks_hash, fc_solve_stack_free);
-#else
     fc_solve_hash_free(instance->stacks_hash);
-#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_stacks_tree_destroy(instance->stacks_tree, NULL);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)

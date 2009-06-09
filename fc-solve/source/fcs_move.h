@@ -35,7 +35,7 @@
 extern "C" {
 #endif
 
-enum fcs_move_types
+enum
 {
     FCS_MOVE_TYPE_STACK_TO_STACK,
     FCS_MOVE_TYPE_STACK_TO_FREECELL,
@@ -81,7 +81,6 @@ struct fcs_move_struct
 #define fcs_move_get_foundation(move)             ((move).c[FCS_MOVE_DEST])
 #define fcs_move_get_type(move)                   ((move).c[FCS_MOVE_TYPE])
 #define fcs_move_get_num_cards_in_seq(move)       ((move).c[FCS_MOVE_NUM_CARDS_IN_SEQ])
-#define fcs_move_get_num_cards_flipped(move,value) ((move).c[FCS_MOVE_NUM_CARDS_FLIPPED])
 
 typedef struct fcs_move_struct fcs_move_t;
 

@@ -71,7 +71,7 @@ enum
     FCS_STATE_OPTIMIZED
 };
 
-enum fcs_presets_return_codes
+enum
 {
     FCS_PRESET_CODE_OK,
     FCS_PRESET_CODE_NOT_FOUND,
