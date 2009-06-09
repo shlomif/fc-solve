@@ -357,6 +357,13 @@ GCC_INLINE int fc_solve_check_and_add_state(
         return FCS_STATE_BEGIN_SUSPEND_PROCESS;
     }
 
+    if ((instance->max_depth >= 0) &&
+        (new_state_val->depth >= instance->max_depth))
+    {
+        return FCS_STATE_EXCEEDS_MAX_DEPTH;
+    }
+
+
     fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val);
 
     fc_solve_canonize_state(new_state_val,
