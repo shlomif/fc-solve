@@ -588,7 +588,7 @@ int fc_solve_apply_preset_by_ptr(
     return FCS_PRESET_CODE_OK;
 }
 
-static int fcs_get_preset_by_id(
+static GCC_INLINE int fcs_get_preset_by_id(
     int preset_id,
     const fcs_preset_t * * preset_ptr
     )
