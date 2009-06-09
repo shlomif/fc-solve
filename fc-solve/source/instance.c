@@ -780,9 +780,6 @@ static int fcs_stack_compare_for_comparison_with_context(
 #endif
 
 
-
-
-
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
 /* A hash calculation function for use in glib's hash */
 static guint fc_solve_glib_hash_stack_hash_function (
@@ -802,10 +799,8 @@ static guint fc_solve_glib_hash_stack_hash_function (
     }
     hash_value_int += (hash_value_int >> 5);
 
+    return hash_value_int;
 }
-
-
-
 
 
 static gint fc_solve_glib_hash_stack_compare (
