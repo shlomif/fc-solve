@@ -226,6 +226,27 @@ ignore_list = %w{
     void_b
     void_context
     worker_thread
+    alloc_soft_thread
+    int
+    if
+    instance
+    endif
+    void
+    define
+    soft_thread
+    char
+    user
+    return
+    else
+    ret
+    for
+    card
+    include
+    hard_thread
+    break
+    ifndef
+    talon_len
+    synergy
 }
 
 
