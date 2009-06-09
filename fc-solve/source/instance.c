@@ -329,7 +329,7 @@ static void reset_soft_thread(
     fc_solve_initialize_bfs_queue(soft_thread);
 }
 
-static fc_solve_soft_thread_t * alloc_soft_thread(
+static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
         fc_solve_hard_thread_t * hard_thread
         )
 {
@@ -441,14 +441,11 @@ static fc_solve_hard_thread_t * alloc_hard_thread(
 
     hard_thread->instance = instance;
 
-    hard_thread->num_soft_threads = 1;
+    hard_thread->num_soft_threads = 0;
 
-    hard_thread->soft_threads =
-        malloc(sizeof(hard_thread->soft_threads[0]) *
-               hard_thread->num_soft_threads
-        );
+    hard_thread->soft_threads = NULL;
 
-    hard_thread->soft_threads[0] = alloc_soft_thread(hard_thread);
+    fc_solve_new_soft_thread(hard_thread);
 
     /* Set a limit on the Hard-Thread's scan. */
     hard_thread->num_times_step = NUM_TIMES_STEP;
@@ -1607,13 +1604,11 @@ fc_solve_soft_thread_t * fc_solve_instance_get_soft_thread(
 }
 
 fc_solve_soft_thread_t * fc_solve_new_soft_thread(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_hard_thread_t * hard_thread
     )
 {
     fc_solve_soft_thread_t * ret;
-    fc_solve_hard_thread_t * hard_thread;
-
-    hard_thread = soft_thread->hard_thread;
+    
     ret = alloc_soft_thread(hard_thread);
 
     /* Exceeded the maximal number of Soft-Threads in an instance */

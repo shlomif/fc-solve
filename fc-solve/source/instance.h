@@ -761,7 +761,7 @@ extern fc_solve_soft_thread_t * fc_solve_instance_get_soft_thread(
     );
 
 extern fc_solve_soft_thread_t * fc_solve_new_soft_thread(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_hard_thread_t * hard_thread
     );
 
 extern fc_solve_soft_thread_t * fc_solve_new_hard_thread(

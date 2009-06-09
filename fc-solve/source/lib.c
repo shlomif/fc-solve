@@ -1093,7 +1093,7 @@ int freecell_solver_user_next_soft_thread(
 
     user = (fcs_user_t *)user_instance;
 
-    soft_thread = fc_solve_new_soft_thread(user->soft_thread);
+    soft_thread = fc_solve_new_soft_thread(user->soft_thread->hard_thread);
 
     if (soft_thread == NULL)
     {
