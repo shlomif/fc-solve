@@ -52,14 +52,9 @@ extern fcs_compact_allocator_t *
 extern void fc_solve_compact_allocator_extend(
     fcs_compact_allocator_t * allocator
         );
-#if 0
-extern char *
-    fc_solve_compact_allocator_alloc(
-        fcs_compact_allocator_t * allocator,
-        int how_much
-            );
-#else
+
 #define fcs_compact_alloc_into_var_MYSIZE(what_t) ((sizeof(what_t))+(sizeof(char *)-((sizeof(what_t))&(sizeof(char *)-1))))
+
 #define fcs_compact_alloc_into_var(result,allocator_orig,what_t) \
 { \
    register fcs_compact_allocator_t * allocator = (allocator_orig); \
@@ -85,8 +80,6 @@ extern char *
     allocator->ptr += ((how_much)+((sizeof(char *)-((how_much)&(sizeof(char *)-1)))&(sizeof(char*)-1)));      \
     result = (type_t *)allocator->rollback_ptr;       \
 }
-
-#endif
 
 #if 0
 extern void fc_solve_compact_allocator_release(fcs_compact_allocator_t * allocator);
