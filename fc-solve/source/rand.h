@@ -41,14 +41,6 @@ static GCC_INLINE void fc_solve_rand_init(fcs_rand_t * rand, unsigned int seed)
     *rand = (long)seed;
 }
 
-#if 0
-extern void fc_solve_rand_free(fcs_rand_t * rand);
-#endif
-
-#if 0
-extern void fc_solve_rand_srand(fcs_rand_t * rand, int seed);
-#endif
-
 static GCC_INLINE int fc_solve_rand_rand15(fcs_rand_t * rand)
 {
     *rand = ((*rand) * 214013 + 2531011);
