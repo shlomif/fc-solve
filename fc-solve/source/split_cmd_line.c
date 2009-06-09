@@ -32,10 +32,6 @@
 
 #include "split_cmd_line.h"
 
-#ifdef DMALLOC
-#include <dmalloc.h>
-#endif
-
 #define ARGS_MAN_GROW_BY 32
 
 args_man_t * fc_solve_args_man_alloc(void)

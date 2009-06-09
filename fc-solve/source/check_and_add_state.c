@@ -50,10 +50,6 @@
 
 #include "check_limits.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 typedef  unsigned long  int  ub4;   /* unsigned 4-byte quantities */
 typedef  unsigned       char ub1;
 

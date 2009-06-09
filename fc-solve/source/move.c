@@ -32,10 +32,6 @@
 #include "move.h"
 #include "state.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 #include "inline.h"
 #include "unused.h"
 

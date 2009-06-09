@@ -36,10 +36,6 @@
 
 #include "fcs_isa.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread)
 {
     hard_thread->state_packs = (fcs_state_keyval_pair_t * *)malloc(sizeof(fcs_state_keyval_pair_t *) * IA_STATE_PACKS_GROW_BY);

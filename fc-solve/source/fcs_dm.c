@@ -31,10 +31,6 @@
 
 #include "fcs_dm.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 /*
     fc_solve_bsearch - an improved binary search function. Highlights:
 

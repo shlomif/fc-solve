@@ -35,10 +35,6 @@
 #include "fcs_user.h"
 #include "unused.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 struct fcs_instance_item_struct
 {
     fc_solve_instance_t * instance;

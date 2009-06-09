@@ -46,10 +46,6 @@
 #include "inline.h"
 #include "range_solvers_gen_ms_boards.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 struct fc_solve_display_information_context_struct
 {
     int debug_iter_state_output;

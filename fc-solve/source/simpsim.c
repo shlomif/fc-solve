@@ -46,11 +46,6 @@ char fc_solve_simple_simon_nothing;
 
 #include "meta_move_funcs_helpers.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
-
 #define fcs_is_ss_false_parent(parent, child) \
     (fcs_card_card_num(parent) == fcs_card_card_num(child)+1)
 

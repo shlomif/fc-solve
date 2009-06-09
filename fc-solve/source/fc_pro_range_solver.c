@@ -43,10 +43,6 @@
 #include "range_solvers_gen_ms_boards.h"
 #include "unused.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 #define     SUIT(card)      ((card) % 4)
 #define     VALUE(card)     ((card) / 4)
 

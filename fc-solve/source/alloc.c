@@ -34,10 +34,6 @@
 
 #include "alloc.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 #define ALLOCED_SIZE (8*1024-10*sizeof(char *))
 
 fcs_compact_allocator_t *

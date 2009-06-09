@@ -54,10 +54,6 @@
 
 #include "inline.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 /*
     General use of this interface:
     1. fc_solve_alloc_instance()

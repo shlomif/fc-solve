@@ -36,10 +36,6 @@
 
 #include "prefix.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 #include "cmd_line_enum.h"
 
 static int read_preset(char * preset_name, args_man_t * * args, char * * opened_files_dir_to_assign, char * user_preset_dir)

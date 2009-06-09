@@ -40,10 +40,6 @@
 
 #include "alloc.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 static void SFO_hash_rehash(SFO_hash_t * hash);
 
 

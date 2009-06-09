@@ -32,10 +32,6 @@
 
 #include "card.h"
 
-#ifdef DMALLOC
-#include "dmalloc.h"
-#endif
-
 #ifdef DEBUG_STATES
 
 fcs_card_t fc_solve_empty_card = {0,0};
