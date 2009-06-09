@@ -25,9 +25,6 @@
 #include "dmalloc.h"
 #endif
 
-#define TRUE 1
-#define FALSE 0
-
 /* initialise the priority queue with a maximum size of maxelements. maxrating is the highest or lowest value of an
    entry in the pqueue depending on whether it is ascending or descending respectively. Finally the bool32 tells you whether
    the list is sorted ascending or descending... */
@@ -107,8 +104,7 @@ int fc_solve_PQueuePush(
 
     pq->CurrentSize = CurrentSize;
 
-    return TRUE;
-
+    return 1;
 }
 
 #define PQueueIsEmpty(pq) ((pq)->CurrentSize == 0)

@@ -31,8 +31,6 @@
 #ifndef FC_SOLVE__FCS_MOVE_H
 #define FC_SOLVE__FCS_MOVE_H
 
-#define FCS_COMPACT_MOVES
-
 #ifdef __cplusplus
 extern "C" {
 #endif
