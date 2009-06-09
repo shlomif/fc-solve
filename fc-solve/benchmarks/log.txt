@@ -1127,3 +1127,10 @@ r1878 after making empty_two_cols_from_new_state() GCC_INLINE:
 
 118.614977121353s
 
+========================================================================
+
+r1886 after refactoring instance.c:
+./Tatzer -l p4b , serial range-solver:
+
+117.668596029282s
+
