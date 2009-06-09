@@ -62,32 +62,4 @@ void fc_solve_state_ia_finish(fc_solve_hard_thread_t * hard_thread)
     hard_thread->state_packs = NULL;
 }
 
-void fc_solve_state_ia_foreach(
-        fc_solve_hard_thread_t * hard_thread,
-        void (*ptr_function)(fcs_state_t *, fcs_state_extra_info_t *, void *),
-        void * context
-        )
-{
-    int p;
-    for(p=0;p<hard_thread->num_state_packs-1;p++)
-    {
-        fcs_state_keyval_pair_t * state_ptr = hard_thread->state_packs[p];
-        fcs_state_keyval_pair_t * state_end_ptr =
-            state_ptr + hard_thread->state_pack_len;
 
-        for(; state_ptr < state_end_ptr ; state_ptr++)
-        {
-            ptr_function(&(state_ptr->s), &(state_ptr->info), context);
-        }
-    }
-    {
-        fcs_state_keyval_pair_t * state_ptr = hard_thread->state_packs[p];
-        fcs_state_keyval_pair_t * state_end_ptr =
-            state_ptr + hard_thread->num_states_in_last_pack;
-
-        for(; state_ptr < state_end_ptr ; state_ptr++)
-        {
-            ptr_function(&(state_ptr->s), &(state_ptr->info), context);
-        }
-    }
-}

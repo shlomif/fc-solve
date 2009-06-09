@@ -68,11 +68,6 @@ extern void fcs_state_ia_release(fc_solve_instance_t * instance);
 #endif
 extern void fc_solve_state_ia_finish(fc_solve_hard_thread_t * hard_thread);
 
-extern void fc_solve_state_ia_foreach(
-        fc_solve_hard_thread_t * hard_thread,
-        void (*ptr_function)(fcs_state_t *, fcs_state_extra_info_t *, void *),
-        void * context
-        );
 #ifdef __cplusplus
 }
 #endif

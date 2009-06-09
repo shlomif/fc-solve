@@ -136,6 +136,35 @@ extern int fc_solve_sfs_yukon_do_nothing(
         fcs_derived_states_list_t * derived_states_list
         );
 
+#if 0
+extern int fc_solve_sfs_yukon_move_card_to_parent(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_state_extra_info_t * ptr_state_val,
+        fcs_derived_states_list_t * derived_states_list
+        );
+extern int fc_solve_sfs_yukon_move_kings_to_empty_stack(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_state_extra_info_t * ptr_state_val,
+        fcs_derived_states_list_t * derived_states_list
+        );
+#endif
+        
+#ifdef FCS_WITH_TALONS
+
+extern int fc_solve_sfs_deal_gypsy_talon(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_state_extra_info_t * ptr_state_val,
+        fcs_derived_states_list_t * derived_states_list
+        );
+
+extern int fc_solve_sfs_get_card_from_klondike_talon(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_state_extra_info_t * ptr_state_val,
+        fcs_derived_states_list_t * derived_states_list
+        );
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif

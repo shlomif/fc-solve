@@ -901,7 +901,7 @@ static fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
     This function optimizes the solution path using a BFS scan on the
     states in the solution path.
 */
-static int fc_solve_optimize_solution(
+static GCC_INLINE int fc_solve_optimize_solution(
     fc_solve_instance_t * instance
     )
 {
