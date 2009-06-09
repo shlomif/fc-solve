@@ -8,7 +8,6 @@ use Data::Dumper;
 my $text_out;
 my $find_prefix;
 my $process_opts = "";
-my $enum = "enum FCS_COMMAND_LINE_OPTIONS\n{\n";
 my $text_in = "";
 my $ws_prefix;
 my $in = 0;
@@ -148,7 +147,7 @@ EOF
         }
         else
         {
-            return "{ switch(*(p++)) { "
+            return "{ switch(*(p++)) {"
                 . join("", (map { "\ncase '" . (length($_) ? $_ : q{\\0}) . "':\n"
                     . (length($_)
                         ? $render->($node->{$_})
@@ -163,7 +162,8 @@ EOF
     return $code . $render->($start);
 }
 
-$enum .= "FCS_OPT_UNRECOGNIZED,\n";
+my $ws = " " x 4;
+my @enum = "FCS_OPT_UNRECOGNIZED";
 
 my $module_filename = "cmd_line.c";
 open my $module, "<", $module_filename;
@@ -200,7 +200,7 @@ while (my $line = <$module>)
                     %strings_to_opts_map,
                     (map { $_ => $opt } @s),
                 );
-                $enum .= "    $opt,\n";
+                push @enum, $opt;
             }
         }
 
@@ -219,10 +219,40 @@ print {$out} $text_out;
 close($out);
 
 open my $enum_fh, ">", "cmd_line_enum.h";
-print {$enum_fh} $enum, "\n};\n";
+print {$enum_fh} <<'EOF';
+/* Copyright (c) 2000 Shlomi Fish
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+/*
+ * cmd_line_enum.h - the ANSI C enum (= enumeration) for the command line
+ * arguments. Partially auto-generated.
+ */
+EOF
+print {$enum_fh} "enum\n{\n", 
+    (map { $ws . $_ . ",\n" } @enum[0..$#enum-1]),
+    $ws . $enum[-1] . "\n",
+    "};\n";
 close($enum_fh);
-
-
 
 =head1 COPYRIGHT AND LICENSE
 

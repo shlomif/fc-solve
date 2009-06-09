@@ -25,9 +25,9 @@
  * cmd_line_enum.h - the ANSI C enum (= enumeration) for the command line
  * arguments. Partially auto-generated.
  */
-enum FCS_COMMAND_LINE_OPTIONS
+enum
 {
-FCS_OPT_UNRECOGNIZED,
+    FCS_OPT_UNRECOGNIZED,
     FCS_OPT_MAX_DEPTH,
     FCS_OPT_MAX_ITERS,
     FCS_OPT_TESTS_ORDER,
