@@ -112,6 +112,8 @@ ignore_list = %w{
     PQUEUE_MaxRating
     PQ_LEFT_CHILD_INDEX
     PQueueIsEmpty
+    VERSION
+    Word_t
 }
 
 ignore = Hash.new
