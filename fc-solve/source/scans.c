@@ -51,8 +51,6 @@ static pq_rating_t fc_solve_a_star_rate_state(
     fcs_state_extra_info_t * ptr_state_val
     );
 
-#define fc_solve_bfs_enqueue_state(soft_thread, state_val) \
-
 static void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
     )
