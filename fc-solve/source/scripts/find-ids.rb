@@ -145,6 +145,12 @@ ignore_list = %w{
     fc_solve_solve_for_state_test_t
     fcs_compact_alloc_release
     fcs_freecell_card_suit
+    fcs_get_preset_by_id
+    fcs_instance_item_t
+    fcs_klondike_talon_decrement_stack
+    fcs_klondike_talon_queue_to_stack
+    fcs_klondike_talon_redeal_bare
+    fcs_move_set_num_cards_flipped
 }
 
 

@@ -38,23 +38,6 @@
 const fcs_move_t fc_solve_empty_move = {"\0\0\0\0"};
 
 #if 0
-/* This function allocates an empty move stack */
-fcs_move_stack_t * fcs_move_stack_create(void)
-{
-    fcs_move_stack_t * ret;
-
-    /* Allocate the data structure itself */
-    ret = (fcs_move_stack_t *)malloc(sizeof(fcs_move_stack_t));
-
-    ret->num_moves = 0;
-    /* Allocate some space for the moves */
-    ret->moves = (fcs_move_t *)malloc(sizeof(fcs_move_t)*FCS_MOVE_STACK_GROW_BY);
-
-    return ret;
-}
-#endif
-
-#if 0
 int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
 {
     /* If all the moves inside the stack are taken then

@@ -45,3 +45,19 @@ int fc_solve_move_stack_get_num_moves(
 
 #endif
 
+#if 0
+/* This function allocates an empty move stack */
+fcs_move_stack_t * fcs_move_stack_create(void)
+{
+    fcs_move_stack_t * ret;
+
+    /* Allocate the data structure itself */
+    ret = (fcs_move_stack_t *)malloc(sizeof(fcs_move_stack_t));
+
+    ret->num_moves = 0;
+    /* Allocate some space for the moves */
+    ret->moves = (fcs_move_t *)malloc(sizeof(fcs_move_t)*FCS_MOVE_STACK_GROW_BY);
+
+    return ret;
+}
+#endif

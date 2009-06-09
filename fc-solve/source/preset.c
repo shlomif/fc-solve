@@ -370,7 +370,7 @@ static const fcs_preset_name_t fcs_preset_names[23] =
     },
 };
 
-static int fcs_get_preset_id_by_name(
+static GCC_INLINE int fcs_get_preset_id_by_name(
     const char * name
 )
 {

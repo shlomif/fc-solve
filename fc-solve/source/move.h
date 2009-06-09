@@ -46,7 +46,6 @@ extern "C" {
 extern const fcs_move_t fc_solve_empty_move;
 
 #if 0
-fcs_move_stack_t * fcs_move_stack_create(void);
 int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move);
 #endif
 

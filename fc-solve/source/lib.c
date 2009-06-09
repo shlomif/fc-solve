@@ -35,14 +35,12 @@
 #include "fcs_user.h"
 #include "unused.h"
 
-struct fcs_instance_item_struct
+typedef struct 
 {
     fc_solve_instance_t * instance;
     int ret;
     int limit;
-};
-
-typedef struct fcs_instance_item_struct fcs_instance_item_t;
+}  fcs_instance_item_t;
 
 struct fcs_user_struct
 {
