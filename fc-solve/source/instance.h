@@ -730,9 +730,6 @@ struct fc_solve_soft_thread_struct
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
-
-#define FCS_SOFT_DFS_STATES_TO_CHECK_GROW_BY 32
-
 /*
  * An enum that specifies the meaning of each A* weight.
  * */
