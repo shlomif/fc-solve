@@ -571,7 +571,7 @@ static void determine_scan_completeness(
     soft_thread->is_a_complete_scan = (tests_order == global_tests_order);
 }
 
-enum FCS_COMPILE_PRELUDE_ERRORS_T
+enum
 {
     FCS_COMPILE_PRELUDE_OK,
     FCS_COMPILE_PRELUDE_NO_AT_SIGN,
