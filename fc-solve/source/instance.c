@@ -96,42 +96,8 @@ static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * so
     soft_thread->bfs_queue_last_item->next = NULL;
 }
 
-static void foreach_soft_thread(
-    fc_solve_instance_t * instance,
-    void (*soft_thread_callback)(
-        fc_solve_soft_thread_t * soft_thread,
-        void * context
-        ),
-    void * context
-    )
-
-{
-    int ht_idx, st_idx;
-    fc_solve_hard_thread_t * hard_thread;
-    int num_soft_threads;
-    fc_solve_soft_thread_t * * ht_soft_threads;
-    for(ht_idx = 0 ; ht_idx<instance->num_hard_threads; ht_idx++)
-    {
-        hard_thread = instance->hard_threads[ht_idx];
-        num_soft_threads = hard_thread->num_soft_threads;
-        ht_soft_threads = hard_thread->soft_threads;
-        for(st_idx = 0 ; st_idx < num_soft_threads; st_idx++)
-        {
-            soft_thread_callback(ht_soft_threads[st_idx], context);
-        }
-    }
-
-    if (instance->optimization_thread)
-    {
-        soft_thread_callback(instance->optimization_thread->soft_threads[0], context);
-    }
-}
-
-
-
-static void soft_thread_clean_soft_dfs(
-    fc_solve_soft_thread_t * soft_thread,
-    void * context GCC_UNUSED
+static GCC_INLINE void soft_thread_clean_soft_dfs(
+    fc_solve_soft_thread_t * soft_thread
     )
 {
     int max_depth;
@@ -177,11 +143,179 @@ static void soft_thread_clean_soft_dfs(
     }
 }
 
+static void free_bfs_queue(fc_solve_soft_thread_t * soft_thread)
+{
+    /* Free the BFS linked list */
+    fcs_states_linked_list_item_t * item, * next_item;
+    item = soft_thread->bfs_queue;
+    while (item != NULL)
+    {
+        next_item = item->next;
+        free(item);
+        item = next_item;
+    }
+}
+
+static GCC_INLINE void free_instance_soft_thread_callback(
+        fc_solve_soft_thread_t * soft_thread
+        )
+{
+    free_bfs_queue(soft_thread);
+
+    fc_solve_PQueueFree(soft_thread->a_star_pqueue);
+    free(soft_thread->a_star_pqueue);
+
+    free(soft_thread->tests_order.tests);
+
+    if (soft_thread->name != NULL)
+    {
+        free(soft_thread->name);
+    }
+    /* The data-structure itself was allocated */
+    free(soft_thread);
+}
+
+static GCC_INLINE void normalize_a_star_weights(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    /* Normalize the A* Weights, so the sum of all of them would be 1. */
+    double sum;
+    int a;
+    sum = 0;
+    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
+    {
+        if (soft_thread->a_star_weights[a] < 0)
+        {
+            soft_thread->a_star_weights[a] = fc_solve_a_star_default_weights[a];
+        }
+        sum += soft_thread->a_star_weights[a];
+    }
+    if (sum < 1e-6)
+    {
+        sum = 1;
+    }
+    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
+    {
+        soft_thread->a_star_weights[a] /= sum;
+    }
+}
+
+static GCC_INLINE void accumulate_tests_order(
+    fc_solve_soft_thread_t * soft_thread,
+    void * context
+    )
+{
+    int * tests_order = (int *)context;
+    int a;
+    for(a=0;a<soft_thread->tests_order.num;a++)
+    {
+        *tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
+    }
+}
+
+static GCC_INLINE void determine_scan_completeness(
+    fc_solve_soft_thread_t * soft_thread,
+    void * context
+    )
+{
+    int global_tests_order = *(int *)context;
+    int tests_order = 0;
+    int a;
+    for(a=0;a<soft_thread->tests_order.num;a++)
+    {
+        tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
+    }
+    soft_thread->is_a_complete_scan = (tests_order == global_tests_order);
+}
+
+enum
+{
+    FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS,
+    FOREACH_SOFT_THREAD_FREE_INSTANCE,
+    FOREACH_SOFT_THREAD_NORMALIZE_A_STAR_WEIGHTS,
+    FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER,
+    FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS
+};
+
+static void foreach_soft_thread(
+    fc_solve_instance_t * instance,
+    int callback_choice,
+    void * context
+    )
+{
+    int ht_idx, st_idx;
+    fc_solve_hard_thread_t * hard_thread;
+    int num_soft_threads;
+    fc_solve_soft_thread_t * * ht_soft_threads;
+    for(ht_idx = 0 ; ht_idx<=instance->num_hard_threads; ht_idx++)
+    {
+        if (ht_idx < instance->num_hard_threads)
+        {
+            hard_thread = instance->hard_threads[ht_idx];
+        }
+        else if (instance->optimization_thread)
+        {
+            hard_thread = instance->optimization_thread;
+        }
+        else
+        {
+            break;
+        }
+        num_soft_threads = hard_thread->num_soft_threads;
+        ht_soft_threads = hard_thread->soft_threads;
+        for(st_idx = 0 ; st_idx < num_soft_threads; st_idx++)
+        {
+            register fc_solve_soft_thread_t * soft_thread;
+
+            soft_thread = ht_soft_threads[st_idx];
+
+            switch (callback_choice)
+            {
+                case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
+                    soft_thread_clean_soft_dfs( 
+                        soft_thread
+                    );
+                    break;
+
+                case FOREACH_SOFT_THREAD_FREE_INSTANCE:
+                    free_instance_soft_thread_callback( 
+                        soft_thread
+                    );
+                    break;
+
+                case FOREACH_SOFT_THREAD_NORMALIZE_A_STAR_WEIGHTS:
+                    normalize_a_star_weights( 
+                        soft_thread
+                    );
+                    break;
+
+                case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
+                    accumulate_tests_order(
+                        soft_thread,
+                        context
+                    );
+                    break;
+
+                case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
+                    determine_scan_completeness(
+                        soft_thread,
+                        context
+                    );
+                    break;
+            }
+        }
+    }
+}
+
+
+
+
 static void clean_soft_dfs(
         fc_solve_instance_t * instance
         )
 {
-    foreach_soft_thread(instance, soft_thread_clean_soft_dfs, NULL);
+    foreach_soft_thread(instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
 }
 
 static void reset_soft_thread(
@@ -415,38 +549,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
 
 
-static void free_bfs_queue(fc_solve_soft_thread_t * soft_thread)
-{
-    /* Free the BFS linked list */
-    fcs_states_linked_list_item_t * item, * next_item;
-    item = soft_thread->bfs_queue;
-    while (item != NULL)
-    {
-        next_item = item->next;
-        free(item);
-        item = next_item;
-    }
-}
 
-static void free_instance_soft_thread_callback(
-        fc_solve_soft_thread_t * soft_thread,
-        void * context GCC_UNUSED
-        )
-{
-    free_bfs_queue(soft_thread);
-
-    fc_solve_PQueueFree(soft_thread->a_star_pqueue);
-    free(soft_thread->a_star_pqueue);
-
-    free(soft_thread->tests_order.tests);
-
-    if (soft_thread->name != NULL)
-    {
-        free(soft_thread->name);
-    }
-    /* The data-structure itself was allocated */
-    free(soft_thread);
-}
 
 static void free_instance_hard_thread_callback(fc_solve_hard_thread_t * hard_thread)
 {
@@ -484,7 +587,7 @@ void fc_solve_free_instance(fc_solve_instance_t * instance)
 {
     int ht_idx;
 
-    foreach_soft_thread(instance, free_instance_soft_thread_callback, NULL);
+    foreach_soft_thread(instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
 
     for(ht_idx=0; ht_idx < instance->num_hard_threads; ht_idx++)
     {
@@ -507,60 +610,6 @@ void fc_solve_free_instance(fc_solve_instance_t * instance)
 }
 
 
-static void normalize_a_star_weights(
-    fc_solve_soft_thread_t * soft_thread,
-    void * context GCC_UNUSED
-    )
-{
-    /* Normalize the A* Weights, so the sum of all of them would be 1. */
-    double sum;
-    int a;
-    sum = 0;
-    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
-    {
-        if (soft_thread->a_star_weights[a] < 0)
-        {
-            soft_thread->a_star_weights[a] = fc_solve_a_star_default_weights[a];
-        }
-        sum += soft_thread->a_star_weights[a];
-    }
-    if (sum < 1e-6)
-    {
-        sum = 1;
-    }
-    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
-    {
-        soft_thread->a_star_weights[a] /= sum;
-    }
-}
-
-static void accumulate_tests_order(
-    fc_solve_soft_thread_t * soft_thread,
-    void * context
-    )
-{
-    int * tests_order = (int *)context;
-    int a;
-    for(a=0;a<soft_thread->tests_order.num;a++)
-    {
-        *tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
-    }
-}
-
-static void determine_scan_completeness(
-    fc_solve_soft_thread_t * soft_thread,
-    void * context
-    )
-{
-    int global_tests_order = *(int *)context;
-    int tests_order = 0;
-    int a;
-    for(a=0;a<soft_thread->tests_order.num;a++)
-    {
-        tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
-    }
-    soft_thread->is_a_complete_scan = (tests_order == global_tests_order);
-}
 
 enum
 {
@@ -665,12 +714,24 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
     }
 
     /* Normalize the A* Weights, so the sum of all of them would be 1. */
-    foreach_soft_thread(instance, normalize_a_star_weights, NULL);
+    foreach_soft_thread(
+        instance,
+        FOREACH_SOFT_THREAD_NORMALIZE_A_STAR_WEIGHTS, 
+        NULL
+    );
 
     {
         int total_tests = 0;
-        foreach_soft_thread(instance, accumulate_tests_order, &total_tests);
-        foreach_soft_thread(instance, determine_scan_completeness, &total_tests);
+        foreach_soft_thread(
+            instance, 
+            FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER, 
+            &total_tests
+        );
+        foreach_soft_thread(
+            instance,
+            FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS,
+            &total_tests
+        );
         if (instance->opt_tests_order_set == 0)
         {
             /*
