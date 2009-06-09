@@ -37,15 +37,13 @@
 extern "C" {
 #endif
 
-struct fc_solve_append_string_struct
+typedef struct
 {
     char * buffer;
     char * end_of_buffer;
     int max_size;
     int size_of_margin;
-};
-
-typedef struct fc_solve_append_string_struct fc_solve_append_string_t;
+} fc_solve_append_string_t;
 
 extern fc_solve_append_string_t * fc_solve_append_string_alloc(int size_margin);
 
