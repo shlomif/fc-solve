@@ -27,13 +27,11 @@ typedef struct {
 
 extern char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells);
 
-struct fcs_extended_move_struct
+typedef struct
 {
     fcs_move_t move;
     int to_empty_stack;
-};
-
-typedef struct fcs_extended_move_struct fcs_extended_move_t;
+} fcs_extended_move_t;
 
 struct moves_processed_struct
 {

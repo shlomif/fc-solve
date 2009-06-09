@@ -109,13 +109,11 @@ typedef struct {
     } context;
 } fcs_derived_states_list_item_t;
 
-struct fcs_derived_states_list_struct
+typedef struct 
 {
     int num_states;
     fcs_derived_states_list_item_t * states;
-};
-
-typedef struct fcs_derived_states_list_struct fcs_derived_states_list_t;
+} fcs_derived_states_list_t;
 
 #ifndef max
 #define max(a,b) (((a)>(b))?(a):(b))
