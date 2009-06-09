@@ -76,7 +76,7 @@ void fcs_move_stack_reset(fcs_move_stack_t * stack);
 extern int fc_solve_move_stack_get_num_moves(fcs_move_stack_t * stack);
 
 void fc_solve_apply_move(
-        fcs_state_extra_info_t * state_with_locations_val,
+        fcs_state_extra_info_t * state_val,
         fcs_move_t move,
         int freecells_num,
         int stacks_num,

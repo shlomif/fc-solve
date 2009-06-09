@@ -21,11 +21,10 @@ extern "C" {
 #include <limits.h>
 
 #include "state.h"
-#include "jhjtypes.h"
 
 #define PQUEUE_MaxRating INT_MAX
 
-typedef int32 pq_rating_t;
+typedef int pq_rating_t;
 
 typedef struct struct_pq_element_t
 {
@@ -35,8 +34,8 @@ typedef struct struct_pq_element_t
 
 typedef struct _PQUEUE
 {
-    int32 MaxSize;
-    int32 CurrentSize;
+    int MaxSize;
+    int CurrentSize;
     pq_element_t * Elements; /* pointer to void pointers */
     pq_rating_t MaxRating; /* biggest element possible */
 } PQUEUE;
@@ -54,7 +53,7 @@ typedef struct _PQUEUE
 
 void fc_solve_PQueueInitialise(
     PQUEUE *pq,
-    int32 MaxElements
+    int MaxElements
     );
 
 void fc_solve_PQueueFree( PQUEUE *pq );

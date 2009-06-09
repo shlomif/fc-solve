@@ -31,7 +31,7 @@
 
 void fc_solve_PQueueInitialise(
     PQUEUE *pq,
-    int32 MaxElements
+    int MaxElements
     )
 {
     pq->MaxSize = MaxElements;
@@ -56,10 +56,10 @@ int fc_solve_PQueuePush(
         pq_rating_t r
         )
 {
-    uint32 i;
+    unsigned int i;
     pq_element_t * Elements = pq->Elements;
 
-    int32 CurrentSize = pq->CurrentSize;
+    int CurrentSize = pq->CurrentSize;
 
     if (CurrentSize == pq->MaxSize )
     {
@@ -124,10 +124,10 @@ void fc_solve_PQueueFree( PQUEUE *pq )
 
 int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_extra_info_t * * val)
 {
-    int32 i;
-    int32 child;
+    int i;
+    int child;
     pq_element_t * Elements = pq->Elements;
-    int32 CurrentSize = pq->CurrentSize;
+    int CurrentSize = pq->CurrentSize;
 
     pq_element_t pMaxElement;
     pq_element_t pLastElement;
