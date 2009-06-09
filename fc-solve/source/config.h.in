@@ -160,17 +160,8 @@ extern "C" {
 #define FCS_STATE_STORAGE ${FCS_STATE_STORAGE}
 #define FCS_STACK_STORAGE ${FCS_STACK_STORAGE}
 
-/* Define to 1 if you have the `avl' library (-lavl). */
-#undef HAVE_LIBAVL
-
-/* Define to 1 if you have the `glib' library (-lglib). */
-#undef HAVE_LIBGLIB
-
 /* Define to 1 if you have the `m' library (-lm). */
 #cmakedefine HAVE_LIBM
-
-/* Define to 1 if you have the `redblack' library (-lredblack). */
-#undef HAVE_LIBREDBLACK
 
 /* Name of package */
 #define PACKAGE "${PACKAGE}"

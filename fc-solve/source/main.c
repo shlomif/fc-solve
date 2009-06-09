@@ -431,7 +431,7 @@ help_screen_t help_screens[] = {
 }
 ;
 
-enum MY_FCS_CMD_LINE_RET_VALUES
+enum
 {
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
 };
