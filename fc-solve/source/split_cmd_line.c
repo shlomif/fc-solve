@@ -232,7 +232,7 @@ END_OF_LOOP:
     return 0;
 }
 
-#ifdef CMD_LINE_CHOP_WITH_MAIN
+#if 0
 int main(int argc, char * * argv)
 {
     args_man_t * args_man;
