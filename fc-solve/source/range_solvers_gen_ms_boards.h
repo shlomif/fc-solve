@@ -50,7 +50,6 @@ typedef int CARD;
 
 #define     SUIT(card)      ((card) % 4)
 #define     VALUE(card)     ((card) / 4)
-#define     COLOUR(card)    (SUIT(card) == DIAMOND || SUIT(card) == HEART)
 
 #define     MAXPOS          7
 #define     MAXCOL          8

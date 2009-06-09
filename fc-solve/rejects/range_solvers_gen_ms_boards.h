@@ -8,4 +8,4 @@
 #define     DIAMOND         1
 #define     HEART           2
 #define     SPADE           3
-
+#define     COLOUR(card)    (SUIT(card) == DIAMOND || SUIT(card) == HEART)
