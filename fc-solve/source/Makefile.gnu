@@ -137,7 +137,6 @@ OBJECTS :=                     \
           move.o              \
           pqueue.o            \
           preset.o            \
-          rand.o              \
           scans.o             \
 		  split_cmd_line.o    \
           state.o             \
