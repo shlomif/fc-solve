@@ -59,12 +59,10 @@ struct SFO_hash_symlink_item_struct
 
 typedef struct SFO_hash_symlink_item_struct SFO_hash_symlink_item_t;
 
-struct SFO_hash_symlink_struct
+typedef struct 
 {
     SFO_hash_symlink_item_t * first_item;
-};
-
-typedef struct SFO_hash_symlink_struct SFO_hash_symlink_t;
+} SFO_hash_symlink_t;
 
 typedef struct
 {
