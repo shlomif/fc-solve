@@ -216,17 +216,16 @@ static GCC_INLINE void accumulate_tests_order(
 
 static GCC_INLINE void determine_scan_completeness(
     fc_solve_soft_thread_t * soft_thread,
-    void * context
+    void * global_tests_order
     )
 {
-    int global_tests_order = *(int *)context;
     int tests_order = 0;
     int a;
     for(a=0;a<soft_thread->tests_order.num;a++)
     {
         tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
-    soft_thread->is_a_complete_scan = (tests_order == global_tests_order);
+    soft_thread->is_a_complete_scan = (tests_order == *(int *)global_tests_order);
 }
 
 enum

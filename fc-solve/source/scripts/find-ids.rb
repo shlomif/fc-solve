@@ -155,6 +155,33 @@ ignore_list = %w{
     fcs_preset_name_t
     fcs_state_init
     final_ret
+    foundations_prefixes
+    free_instance_soft_thread_callback
+    freecell_solver_user_get_current_depth
+    freecell_solver_user_get_limit_iterations
+    freecell_solver_user_get_num_soft_threads_in_instance
+    freecell_solver_user_move_to_string
+    freecell_solver_user_next_instance
+    freecell_solver_user_set_game
+    fcs_u2p_flipped_status
+    freecells_prefixes
+    from
+    g_hash_table_destroy
+    g_hash_table_insert
+    g_hash_table_lookup
+    g_hash_table_new
+    g_tree_destroy
+    g_tree_insert
+    g_tree_lookup
+    g_tree_new
+    global_tests_order
+    help_screen_t
+    how_much_orig
+    initialize_a_star_rater
+    inline
+    into
+    is_whitespace
+    isdigit
 }
 
 

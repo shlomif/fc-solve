@@ -182,12 +182,6 @@ extern "C" {
 #define FCS_INT_BIT_SIZE_LOG2 ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
 #endif
 
-/* Define to `__inline__' or `__inline' if that's what the C compiler
-   calls it, or to nothing if 'inline' is not supported under any name.  */
-#ifndef __cplusplus
-#undef inline
-#endif
-
 #ifdef __cplusplus
 }
 #endif

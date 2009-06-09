@@ -145,13 +145,11 @@ static void my_iter_handler(
 #endif
 }
 
-struct help_screen_struct
+typedef struct
 {
-    char * key;
-    char * screen;
-};
-
-typedef struct help_screen_struct help_screen_t;
+    const char * key;
+    const char * screen;
+} help_screen_t;
 
 help_screen_t help_screens[] = {
 {

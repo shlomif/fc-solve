@@ -623,7 +623,7 @@ int fc_solve_soft_dfs_do_solve(
 #define FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
 #define FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
 
-static void initialize_a_star_rater(
+static GCC_INLINE void initialize_a_star_rater(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val
     )
