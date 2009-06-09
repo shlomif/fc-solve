@@ -40,6 +40,7 @@
 #include "fcs_cl.h"
 
 #include "fc_pro_iface_pos.h"
+#define FCS_WITHOUT_GET_BOARD
 #include "range_solvers_gen_ms_boards.h"
 #include "unused.h"
 

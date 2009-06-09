@@ -54,6 +54,7 @@ typedef int CARD;
 #define     MAXPOS          7
 #define     MAXCOL          8
 
+#ifndef FCS_WITHOUT_GET_BOARD
 static const char * card_to_string_values = "A23456789TJQK";
 static const char * card_to_string_suits = "CDHS";
 
@@ -118,6 +119,7 @@ static GCC_INLINE void get_board(long gamenumber, char * ret)
     }
     *(append_to) = '\0';
 }
+#endif
 
 typedef char fcs_state_string_t[52*3 + 8 + 1];
 
