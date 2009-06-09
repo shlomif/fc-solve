@@ -253,9 +253,9 @@ int main(int argc, char * * argv)
 #endif
 
     /* Initialize an arg man */
-    args_man = args_man_alloc();
+    args_man = fc_solve_args_man_alloc();
     /* Call it on string */
-    args_man_chop(args_man, string);
+    fc_solve_args_man_chop(args_man, string);
 
     /* Now use args_man->argc and args_man->argv */
     {
@@ -266,7 +266,7 @@ int main(int argc, char * * argv)
         }
     }
     /* Free the allocated memory */
-    args_man_free(args_man);
+    fc_solve_args_man_free(args_man);
 
     free(string);
 
