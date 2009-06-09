@@ -66,7 +66,7 @@ struct SFO_hash_symlink_struct
 
 typedef struct SFO_hash_symlink_struct SFO_hash_symlink_t;
 
-struct SFO_hash_struct
+typedef struct
 {
     /* The vector of the hash table itself */
     SFO_hash_symlink_t * entries;
@@ -84,10 +84,7 @@ struct SFO_hash_struct
     void * context;
 
     fcs_compact_allocator_t * allocator;
-};
-
-typedef struct SFO_hash_struct SFO_hash_t;
-
+} SFO_hash_t;
 
 SFO_hash_t * fc_solve_hash_init(
     SFO_hash_value_t wanted_size,
