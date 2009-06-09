@@ -99,7 +99,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
 
     while (*s != '\0')
     {
-LOOP_START:
+loop_start:
         in_arg = 0;
         while (is_whitespace(*s))
         {
@@ -159,7 +159,7 @@ NEXT_ARG:
                 }
                 else
                 {
-                    goto LOOP_START;
+                    goto loop_start;
                 }
             }
             else

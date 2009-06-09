@@ -130,7 +130,7 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
                     *args = fc_solve_args_man_alloc();
                     fc_solve_args_man_chop(*args, line+8);
                     ret_code = 0;
-                    goto HAVE_PRESET;
+                    goto have_preset;
                 }
             }
         }
@@ -138,7 +138,7 @@ static int read_preset(char * preset_name, args_man_t * * args, char * * opened_
         f = NULL;
 #undef nullify_newline
     }
-HAVE_PRESET:
+have_preset:
 
     if (f)
     {
