@@ -6,7 +6,7 @@ ignore_list = %w{
     PACKAGE_NAME PACKAGE_STRING PACKAGE_TARNAME PACKAGE_VERSION
     PTHREAD_MUTEX_INITIALIZER SEEK_SET SIGUSR1 SIGUSR2
     __attribute__ arg_index atof bsearch
-    close db_open do
+    close db_open do fc_solve_hash_c_dummy
 }
 ignore = Hash.new
 for s in ignore_list do
