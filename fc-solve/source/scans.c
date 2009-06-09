@@ -52,13 +52,6 @@ static pq_rating_t fc_solve_a_star_rate_state(
     );
 
 #define fc_solve_bfs_enqueue_state(soft_thread, state_val) \
-    {    \
-        fcs_states_linked_list_item_t * last_item_next;      \
-        last_item_next = bfs_queue_last_item->next = (fcs_states_linked_list_item_t*)malloc(sizeof(fcs_states_linked_list_item_t));      \
-        bfs_queue_last_item->s = state_val;     \
-        last_item_next->next = NULL;     \
-        bfs_queue_last_item = last_item_next; \
-    }
 
 static void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
@@ -1120,10 +1113,17 @@ int fc_solve_a_star_or_bfs_do_solve(
             }
             else
             {
-                fc_solve_bfs_enqueue_state(
-                    soft_thread,
-                    ptr_new_state_val
+                /* Enqueue the new state. */
+                fcs_states_linked_list_item_t * last_item_next;
+
+                last_item_next = 
+                    bfs_queue_last_item->next =
+                    ((fcs_states_linked_list_item_t*)
+                        malloc(sizeof(*last_item_next))
                     );
+                bfs_queue_last_item->s = ptr_new_state_val;
+                last_item_next->next = NULL;
+                bfs_queue_last_item = last_item_next;
             }
         }
 
