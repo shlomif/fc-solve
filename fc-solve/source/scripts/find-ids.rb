@@ -182,6 +182,42 @@ ignore_list = %w{
     into
     is_whitespace
     isdigit
+    iter_handler_wrapper
+    length
+    memmove
+    microsoft_rand_t
+    nc1
+    nc2
+    new_move
+    no_use_val
+    normalize_a_star_weights
+    not_append_ws
+    num_redeals_prefixes
+    old_buffer
+    opened_files_dir_to_assign
+    p1
+    p2
+    parents_suit
+    ptr_state_input_val
+    ptr_state_void
+    ranks_map
+    rbdestroy
+    rbinit
+    rbsearch
+    rbtree
+    rehash_check
+    run_hard_thread
+    screen
+    select_signal_handler
+    signal_num
+    src_c
+    src_col
+    start_idx
+    stdarg
+    stddef
+    suits_map
+    talon_prefixes
+    tests_order_dup
 }
 
 

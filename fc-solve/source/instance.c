@@ -360,8 +360,6 @@ static fc_solve_soft_thread_t * alloc_soft_thread(
     /* The default solving method */
     soft_thread->method = FCS_METHOD_SOFT_DFS;
 
-    soft_thread->orig_method = FCS_METHOD_NONE;
-
     /* Initialize the priotity queue of the A* scan */
     soft_thread->a_star_pqueue = malloc(sizeof(PQUEUE));
     fc_solve_PQueueInitialise(
@@ -881,7 +879,7 @@ static void trace_solution(
 }
 
 
-static fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
+static GCC_INLINE fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
 {
     fcs_tests_order_t ret;
 
@@ -1146,7 +1144,7 @@ int fc_solve_solve_instance(
     return fc_solve_resume_instance(instance);
 }
 
-static int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
+static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 {
     fc_solve_soft_thread_t * soft_thread;
     int num_times_started_at;

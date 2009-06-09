@@ -604,13 +604,6 @@ struct fc_solve_soft_thread_struct
     int method;
 
     /*
-     * A place-holder for the original method of the scan in case
-     * it is replaced by FCS_METHOD_OPTIMIZE
-     *
-     * */
-    int orig_method;
-
-    /*
      * A linked list that serves as the queue for the BFS scan.
      * */
     fcs_states_linked_list_item_t * bfs_queue;

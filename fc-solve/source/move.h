@@ -114,10 +114,6 @@ typedef struct
     fcs_derived_states_list_item_t * states;
 } fcs_derived_states_list_t;
 
-#ifndef max
-#define max(a,b) (((a)>(b))?(a):(b))
-#endif
-
 #define FCS_MOVE_STACK_GROW_BY 16
 
 /* This macro allocates an empty move stack */

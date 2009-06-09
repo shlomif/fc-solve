@@ -33,14 +33,12 @@ typedef struct
     int to_empty_stack;
 } fcs_extended_move_t;
 
-struct moves_processed_struct
+typedef struct
 {
     int next_move_idx;
     int num_moves;
     fcs_extended_move_t * moves;
-};
-
-typedef struct moves_processed_struct moves_processed_t;
+} moves_processed_t;
 
 moves_processed_t * moves_processed_gen(
         Position * orig,

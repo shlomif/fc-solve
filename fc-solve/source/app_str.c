@@ -75,7 +75,7 @@ int fc_solve_append_string_sprintf(
         /*
          * Adjust end_of_buffer to the new buffer start
          * */
-        app_str->end_of_buffer = app_str->buffer + (app_str->end_of_buffer - old_buffer);
+        app_str->end_of_buffer += app_str->buffer - old_buffer;
     }
 
     return num_chars_written;

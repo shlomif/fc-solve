@@ -35,10 +35,11 @@
 #include "split_cmd_line.h"
 
 #include "prefix.h"
+#include "inline.h"
 
 #include "cmd_line_enum.h"
 
-static int read_preset(char * preset_name, args_man_t * * args, char * * opened_files_dir_to_assign, char * user_preset_dir)
+static GCC_INLINE int read_preset(char * preset_name, args_man_t * * args, char * * opened_files_dir_to_assign, char * user_preset_dir)
 {
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * global_presetrc = NULL, * env_var_presetrc = NULL;
