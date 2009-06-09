@@ -47,6 +47,7 @@ extern "C" {
  * */
 #cmakedefine HAVE_C_INLINE
 
+#cmakedefine FCS_INLINE_KEYWORD ${FCS_INLINE_KEYWORD}
 
 /*
     The sort margin size for the previous states array.

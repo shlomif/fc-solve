@@ -30,9 +30,9 @@
 #ifndef FC_SOLVE__INLINE_H
 #define FC_SOLVE__INLINE_H
 
-#if defined(__GNUC__) || defined(HAVE_C_INLINE)
-#define GCC_INLINE inline
-#else
+#if defined(HAVE_C_INLINE)
+#define GCC_INLINE FCS_INLINE_KEYWORD
+#elif defined(__GNUC__)
 #define GCC_INLINE
 #endif
 
