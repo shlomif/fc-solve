@@ -1,7 +1,16 @@
 #!/bin/bash
 
+RUN_SERIAL=false
+
 PARAM1="$1"
 shift
+
+if test "$PARAM1" = "-s" ; then
+    RUN_SERIAL=true
+    PARAM1="$1"
+    shift
+fi
+
 PARAM2="$1"
 shift
 
@@ -30,6 +39,11 @@ if ! test -e "$p_dir" ; then
 fi
 
 export FREECELL_SOLVER_PRESETRC="$(ls $(pwd)/"$p_dir"/presetrc)"
+
+if $RUN_SERIAL ; then
+    ./freecell-solver-range-parallel-solve 1 32000 500 -l gi > dump
+fi
+
 for NUM in $(seq "$MIN" "$MAX") ; do
     echo "Testing $NUM"
     ./freecell-solver-multi-thread-solve 1 32000 500 \
