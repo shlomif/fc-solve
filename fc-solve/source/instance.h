@@ -116,7 +116,7 @@ typedef struct fcs_states_linked_list_item_struct fcs_states_linked_list_item_t;
  * 6|RANDOM_START_RANDOM_GROUP, 7|RANDOM, 8
  *
  * */
-enum FCS_TESTS_ORDER_FLAGS
+enum
 {
     FCS_TEST_ORDER_NO_FLAGS_MASK = 0xFFFFFF,
     FCS_TEST_ORDER_FLAG_RANDOM = 0x1000000,

@@ -430,60 +430,6 @@ typedef char fcs_locs_t;
 
 #endif
 
-/* Commenting out so the API will be broken - we're now using key/value
- * pairs.
- * */
-#if 0
-struct fcs_struct_state_with_locations_t
-{
-    fcs_state_t s;
-    fcs_locs_t stack_locs[MAX_NUM_STACKS];
-    fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
-    struct fcs_struct_state_with_locations_t * parent;
-    fcs_move_stack_t * moves_to_parent;
-    int depth;
-    /*
-     * This field contains global, scan-independant flags, which are used
-     * from the FCS_VISITED_T enum below.
-     *
-     * FCS_VISITED_VISITED - deprecated
-     *
-     * FCS_VISITED_IN_SOLUTION_PATH - indicates that the state is in the
-     * solution path found by the scan. (used by the optimization scan)
-     *
-     * FCS_VISITED_IN_OPTIMIZED_PATH - indicates that the state is in the
-     * optimized solution path which is computed by the optimization scan.
-     *
-     * FCS_VISITED_DEAD_END - indicates that the state does not lead to
-     * anywhere useful, and scans should not examine it in the first place.
-     * */
-    int visited;
-    /*
-     * The iteration in which this state was marked as visited
-     * */
-    int visited_iter;
-    /*
-     * This is the number of direct children of this state which were not
-     * yet declared as dead ends. Once this counter reaches zero, this
-     * state too is declared as a dead end.
-     * */
-    int num_active_children;
-    /*
-     * This is a vector of flags - one for each scan. Each indicates whether
-     * its scan has already visited this state
-     * */
-    int scan_visited[MAX_NUM_SCANS_BUCKETS];
-#ifdef INDIRECT_STACK_STATES
-    /*
-     * A vector of flags that indicates which stacks were already copied.
-     * */
-    int stacks_copy_on_write_flags;
-#endif
-};
-
-typedef struct fcs_struct_state_with_locations_t fcs_state_with_locations_t;
-#endif
-
 struct fcs_state_extra_info_struct
 {
     fcs_locs_t stack_locs[MAX_NUM_STACKS];
@@ -494,9 +440,7 @@ struct fcs_state_extra_info_struct
     int depth;
     /*
      * This field contains global, scan-independant flags, which are used
-     * from the FCS_VISITED_T enum below.
-     *
-     * FCS_VISITED_VISITED - deprecated
+     * from the FCS_VISITED_* enum below.
      *
      * FCS_VISITED_IN_SOLUTION_PATH - indicates that the state is in the
      * solution path found by the scan. (used by the optimization scan)
@@ -607,7 +551,7 @@ extern int fc_solve_state_compare_indirect_with_context(const void * s1, const v
 extern int fcs_talon_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
 #endif
 
-enum FCS_USER_STATE_TO_C_RETURN_CODES
+enum
 {
     FCS_USER_STATE_TO_C__SUCCESS = 0,
     FCS_USER_STATE_TO_C__PREMATURE_END_OF_INPUT
@@ -639,7 +583,7 @@ extern char * fc_solve_state_as_string(
     int display_10_as_t
     );
 
-enum FCS_STATE_VALIDITY_CODES
+enum
 {
     FCS_STATE_VALIDITY__OK = 0,
     FCS_STATE_VALIDITY__EMPTY_SLOT = 3,
@@ -663,13 +607,12 @@ extern int fc_solve_check_state_validity(
 }
 #endif
 
-enum FCS_VISITED_T
+enum
 {
-    FCS_VISITED_VISITED = 0x1,
-    FCS_VISITED_IN_SOLUTION_PATH = 0x2,
-    FCS_VISITED_IN_OPTIMIZED_PATH = 0x4,
-    FCS_VISITED_DEAD_END = 0x8,
-    FCS_VISITED_ALL_TESTS_DONE = 0x10
+    FCS_VISITED_IN_SOLUTION_PATH = 0x1,
+    FCS_VISITED_IN_OPTIMIZED_PATH = 0x2,
+    FCS_VISITED_DEAD_END = 0x4,
+    FCS_VISITED_ALL_TESTS_DONE = 0x8,
 };
 
 #if defined(INDIRECT_STACK_STATES)
