@@ -75,7 +75,7 @@ static GCC_INLINE ub4 perl_hash_function(
 #define replace_with_cached(condition_expr) \
         if (condition_expr)     \
         {      \
-            fcs_compact_alloc_release(hard_thread->stacks_allocator);    \
+            fcs_compact_alloc_release(stacks_allocator);    \
             new_state_key->stacks[a] = cached_stack;       \
         }
 
@@ -101,6 +101,9 @@ static void GCC_INLINE fc_solve_cache_stacks(
 #endif
     fcs_cards_column_t column;
     register int col_len;
+    fcs_compact_allocator_t * stacks_allocator;
+    
+    stacks_allocator = hard_thread->stacks_allocator;
 
     for(a=0 ; a < LOCAL_STACKS_NUM ; a++)
     {

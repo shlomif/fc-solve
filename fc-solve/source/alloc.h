@@ -35,16 +35,14 @@ extern "C"
 #endif
 
 
-struct fcs_compact_allocator_struct
+typedef struct
 {
     char * * packs;
     int num_packs;
     char * max_ptr;
     char * ptr;
     char * rollback_ptr;
-};
-
-typedef struct fcs_compact_allocator_struct fcs_compact_allocator_t;
+} fcs_compact_allocator_t;
 
 extern fcs_compact_allocator_t *
     fc_solve_compact_allocator_new(void);

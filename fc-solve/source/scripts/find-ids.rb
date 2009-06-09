@@ -143,6 +143,7 @@ ignore_list = %w{
     fc_solve_optimize_solution
     fc_solve_rand_get_random_number
     fc_solve_solve_for_state_test_t
+    fcs_compact_alloc_release
 }
 
 
