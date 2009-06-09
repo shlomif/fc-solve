@@ -311,7 +311,7 @@ static void foreach_soft_thread(
 
 
 
-static void clean_soft_dfs(
+static GCC_INLINE void clean_soft_dfs(
         fc_solve_instance_t * instance
         )
 {

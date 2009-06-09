@@ -114,6 +114,10 @@ ignore_list = %w{
     PQueueIsEmpty
     VERSION
     Word_t
+    accumulate_tests_order
+    callback_choice
+    calloc
+    clean_soft_dfs
 }
 
 ignore = Hash.new
