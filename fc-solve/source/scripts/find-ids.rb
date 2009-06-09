@@ -137,6 +137,8 @@ ignore_list = %w{
     end_of_hard_threads_loop
     existing_key_void
     fc_pro_get_board
+    fc_solve_glib_hash_stack_compare
+    fc_solve_glib_hash_stack_hash_function
 }
 
 
