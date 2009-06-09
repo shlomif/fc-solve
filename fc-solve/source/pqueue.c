@@ -17,8 +17,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "jhjtypes.h"
-
 #include "pqueue.h"
 
 #ifdef DMALLOC
