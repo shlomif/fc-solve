@@ -115,14 +115,6 @@ void fcs_move_stack_reset(
 }
 #endif
 
-int fc_solve_move_stack_get_num_moves(
-    fcs_move_stack_t * stack
-    )
-{
-    return stack->num_moves;
-}
-
-
 /*
  * This function performs a given move on a state
  */

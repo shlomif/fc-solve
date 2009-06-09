@@ -35,5 +35,13 @@ fcs_move_stack_t * fcs_move_stack_duplicate(
 
     return ret;
 }
+
+int fc_solve_move_stack_get_num_moves(
+    fcs_move_stack_t * stack
+    )
+{
+    return stack->num_moves;
+}
+
 #endif
 

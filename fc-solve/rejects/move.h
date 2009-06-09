@@ -34,3 +34,4 @@ fcs_move_stack_t * fcs_move_stack_duplicate(fcs_move_stack_t * stack);
     (final_ret) = ret;       \
 }
 
+extern int fc_solve_move_stack_get_num_moves(fcs_move_stack_t * stack);

@@ -138,6 +138,8 @@ ignore_list = %w{
     fc_pro_get_board
     fc_solve_glib_hash_stack_compare
     fc_solve_glib_hash_stack_hash_function
+    fc_solve_initialize_bfs_queue
+    fc_solve_move_sequence_function
 }
 
 
