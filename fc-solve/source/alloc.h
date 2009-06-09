@@ -81,14 +81,10 @@ extern void fc_solve_compact_allocator_extend(
     result = (type_t *)allocator->rollback_ptr;       \
 }
 
-#if 0
-extern void fc_solve_compact_allocator_release(fcs_compact_allocator_t * allocator);
-#else
 #define fcs_compact_alloc_release(allocator) \
 {    \
     (allocator)->ptr = (allocator)->rollback_ptr; \
 }
-#endif
 
 extern void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator);
 
