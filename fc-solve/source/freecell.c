@@ -2081,11 +2081,6 @@ int fc_solve_sfs_get_card_from_klondike_talon(
         }
     }
 
-
-
-#if 0
- cleanup:
-#endif
     free(talon_temp->s.talon);
     free(talon_temp);
 

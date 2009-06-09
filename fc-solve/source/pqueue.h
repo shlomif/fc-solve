@@ -32,7 +32,7 @@ typedef struct struct_pq_element_t
     pq_rating_t rating;
 } pq_element_t;
 
-typedef struct _PQUEUE
+typedef struct
 {
     int MaxSize;
     int CurrentSize;

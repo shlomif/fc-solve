@@ -53,13 +53,6 @@ extern "C" {
     The sort margin size for the previous states array.
 */
 #define PREV_STATES_SORT_MARGIN 32
-/*
-    The amount prev_states grow by each time it each resized.
-    Should be greater than 0 and in order for the program to be
-    efficient, should be much bigger than
-    PREV_STATES_SORT_MARGIN.
-*/
-#define PREV_STATES_GROW_BY 128
 
 /*
     The amount the pack pointers array grows by. Shouldn't be too high
