@@ -6,6 +6,6 @@ ARGV.each do |fn|
     $_.scan(/([a-zA-Z_]\w+)/).each{ |s| id = s[0]; col[id] ||= 0; col[id] += 1}
 end
 
-puts col.keys.sort { |x,y| col[x] <=> col[y] || (x <=> y)}.map{ 
+puts col.keys.sort_by { |x| [col[x],x] }.map{ 
     |k| sprintf("%10d  %s", col[k], k)
 }

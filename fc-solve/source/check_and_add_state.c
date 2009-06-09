@@ -267,7 +267,6 @@ void fc_solve_cache_talon(
     int hash_value_int;
 
     new_state_key->talon = realloc(new_state_key->talon, fcs_klondike_talon_len(new_state_key)+1);
-#error Add Hash Code
     hash_value_int = *(SFO_hash_value_t*)instance->hash_value;
     if (hash_value_int < 0)
     {

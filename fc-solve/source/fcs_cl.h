@@ -46,7 +46,7 @@ typedef int (*freecell_solver_user_cmd_line_known_commands_callback_t)
      void * context
      );
 
-enum FCS_CMD_LINE_CALLBACK_RET_VALUES
+enum
 {
     FCS_CMD_LINE_OK,
     FCS_CMD_LINE_SKIP,

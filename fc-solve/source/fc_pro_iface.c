@@ -237,7 +237,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
          * */
         while (1)
         {
-#ifdef CHECK_STATE
+#if 0
             {
                 /* Check the intermediate position validity */
                 char exists[4*13];

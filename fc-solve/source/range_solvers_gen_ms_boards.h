@@ -47,16 +47,6 @@ static GCC_INLINE int microsoft_rand_rand(microsoft_rand_t * rand)
 
 typedef int CARD;
 
-#define     BLACK           0               /* COLOUR(card) */
-#define     RED             1
-
-#define     ACE             0               /*  VALUE(card) */
-#define     DEUCE           1
-
-#define     CLUB            0               /*  SUIT(card)  */
-#define     DIAMOND         1
-#define     HEART           2
-#define     SPADE           3
 
 #define     SUIT(card)      ((card) % 4)
 #define     VALUE(card)     ((card) / 4)
