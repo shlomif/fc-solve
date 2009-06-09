@@ -332,7 +332,7 @@ int freecell_solver_user_resume_solution(
 #endif
                 &(user->state_validity_card));
 
-            if (user->state_validity_ret != 0)
+            if (user->state_validity_ret != FCS_STATE_VALIDITY__OK)
             {
                 user->ret = FCS_STATE_INVALID_STATE;
                 return user->ret;

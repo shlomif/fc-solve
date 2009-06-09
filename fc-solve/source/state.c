@@ -863,7 +863,7 @@ int fc_solve_check_state_validity(
             if (fcs_card_card_num(card) == 0)
             {
                 *misplaced_card = fcs_empty_card;
-                return 3;
+                return FCS_STATE_VALIDITY__EMPTY_SLOT;
             }
             cards
                 [fcs_card_suit(card)]
@@ -901,12 +901,16 @@ int fc_solve_check_state_validity(
                 *misplaced_card = fcs_empty_card;
                 fcs_card_set_suit(*misplaced_card, d);
                 fcs_card_set_num(*misplaced_card, c);
-                return (cards[d][c] < decks_num) ? 1 : 2;
+                return ((cards[d][c] < decks_num) 
+                    ? FCS_STATE_VALIDITY__MISSING_CARD
+                    : FCS_STATE_VALIDITY__EXTRA_CARD
+                    )
+                    ;
             }
         }
     }
 
-    return 0;
+    return FCS_STATE_VALIDITY__OK;
 }
 
 #undef state

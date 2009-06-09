@@ -16,7 +16,7 @@ typedef uchar		Card;/* 00ssrrrr: s=suit, r=rank(1-13) */
 
 typedef struct {
 	uchar	count;		/* number rdof cards in column */
-Card	cards[19];
+    Card	cards[19];
 } Column;
 
 typedef struct {
