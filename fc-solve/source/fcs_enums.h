@@ -34,28 +34,28 @@
 extern "C" {
 #endif
 
-enum FCS_EMPTY_STACKS_FILL_T
+enum
 {
     FCS_ES_FILLED_BY_ANY_CARD,
     FCS_ES_FILLED_BY_KINGS_ONLY,
     FCS_ES_FILLED_BY_NONE
 };
 
-enum FCS_SEQUENCES_ARE_BUILT_BY_T
+enum
 {
     FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
     FCS_SEQ_BUILT_BY_SUIT,
     FCS_SEQ_BUILT_BY_RANK
 };
 
-enum FCS_TALON_T
+enum
 {
     FCS_TALON_NONE,
     FCS_TALON_GYPSY,
     FCS_TALON_KLONDIKE
 };
 
-enum fc_solve_state_solving_return_codes
+enum
 {
     FCS_STATE_WAS_SOLVED,
     FCS_STATE_IS_NOT_SOLVEABLE,
