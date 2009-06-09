@@ -127,7 +127,18 @@ ignore_list = %w{
     child_suit
     command_signal_handler
     compile_prelude
+    condition_expr
+    derived_states
+    derived_states_compare_callback
+    dest_c
+    dummy
+    elem
+    end_idx
+    end_of_hard_threads_loop
+    existing_key_void
+    fc_pro_get_board
 }
+
 
 ignore = Hash.new
 for s in ignore_list do
