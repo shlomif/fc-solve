@@ -197,7 +197,7 @@ ignore_list = %w{
     opened_files_dir_to_assign
     p1
     p2
-    parents_suit
+    parent_suit
     ptr_state_input_val
     ptr_state_void
     ranks_map
@@ -205,6 +205,7 @@ ignore_list = %w{
     rbinit
     rbsearch
     rbtree
+    read_preset
     rehash_check
     run_hard_thread
     screen
@@ -218,6 +219,13 @@ ignore_list = %w{
     suits_map
     talon_prefixes
     tests_order_dup
+    toupper
+    type_t
+    user_preset_dir
+    void_a
+    void_b
+    void_context
+    worker_thread
 }
 
 
