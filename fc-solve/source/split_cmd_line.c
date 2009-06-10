@@ -119,7 +119,7 @@ loop_start:
             }
             continue;
         }
-AFTER_WS:
+after_ws:
         while ((*s != ' ') && (*s != '\t') && (*s != '\n') &&
                (*s != '\r') &&
                (*s != '\\') && (*s != '\"') && (*s != '\0') &&
@@ -155,7 +155,7 @@ NEXT_ARG:
             {
                 if (in_arg)
                 {
-                    goto AFTER_WS;
+                    goto after_ws;
                 }
                 else
                 {
@@ -205,7 +205,7 @@ NEXT_ARG:
                 s++;
             }
             s++;
-            goto AFTER_WS;
+            goto after_ws;
         }
         else if (*s == '#')
         {
