@@ -623,6 +623,35 @@ int fc_solve_soft_dfs_do_solve(
 #define FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
 #define FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
 
+static GCC_INLINE int update_col_cards_under_sequences(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_cards_column_t col,
+        double * cards_under_sequences_ptr
+        )
+{
+    int cards_num;
+    int c;
+    fcs_card_t this_card, prev_card;
+#ifndef FCS_FREECELL_ONLY
+    int sequences_are_built_by = soft_thread->hard_thread->instance->sequences_are_built_by;
+#endif
+
+    cards_num = fcs_col_len(col);
+    c = cards_num - 2;
+    this_card = fcs_col_get_card(col, c+1);
+    prev_card = fcs_col_get_card(col, c);
+    while ((c >= 0) && fcs_is_parent_card(this_card,prev_card))
+    {
+        this_card = prev_card;
+        if (--c>=0)
+        {
+            prev_card = fcs_col_get_card(col, c);
+        }
+    }
+    *cards_under_sequences_ptr += pow(c+1, FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT);
+    return c;
+}
+
 static GCC_INLINE void initialize_a_star_rater(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val
@@ -634,37 +663,13 @@ static GCC_INLINE void initialize_a_star_rater(
 #endif
     fcs_state_t * ptr_state_key = ptr_state_val->key;
 
-    int a, c, cards_num;
-    fcs_card_t this_card, prev_card;
+    int a;
     double cards_under_sequences;
-    fcs_cards_column_t col;
-#ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by = instance->sequences_are_built_by;
-#endif
 
     cards_under_sequences = 0;
     for(a=0;a<INSTANCE_STACKS_NUM;a++)
     {
-        col = fcs_state_get_col(*ptr_state_key, a);
-        cards_num = fcs_col_len(col);
-        if (cards_num <= 1)
-        {
-            continue;
-        }
-
-        c = cards_num-2;
-        this_card = fcs_col_get_card(col, c+1);
-        prev_card = fcs_col_get_card(col, c);
-        while (fcs_is_parent_card(this_card,prev_card) && (c >= 0))
-        {
-            c--;
-            this_card = prev_card;
-            if (c>=0)
-            {
-                prev_card = fcs_col_get_card(col, c);
-            }
-        }
-        cards_under_sequences += pow(c+1, FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT);
+        update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*ptr_state_key, a), &cards_under_sequences);
     }
     soft_thread->a_star_initial_cards_under_sequences = cards_under_sequences;
 }
@@ -691,6 +696,7 @@ static GCC_INLINE void initialize_a_star_rater(
 
 #endif
 
+
 static pq_rating_t fc_solve_a_star_rate_state(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val
@@ -703,13 +709,9 @@ static pq_rating_t fc_solve_a_star_rate_state(
     double ret=0;
     int a, c, cards_num, num_cards_in_founds;
     int num_vacant_stacks, num_vacant_freecells;
-    fcs_card_t this_card, prev_card;
     double cards_under_sequences, temp;
     double seqs_over_renegade_cards;
     fcs_cards_column_t col;
-#ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by = instance->sequences_are_built_by;
-#endif
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num = instance->freecells_num;
 #endif
@@ -744,19 +746,7 @@ static pq_rating_t fc_solve_a_star_rate_state(
             continue;
         }
 
-        c = cards_num-2;
-        this_card = fcs_col_get_card(col, c+1);
-        prev_card = fcs_col_get_card(col, c);
-        while ((c >= 0) && fcs_is_parent_card(this_card,prev_card))
-        {
-            c--;
-            this_card = prev_card;
-            if (c>=0)
-            {
-                prev_card = fcs_col_get_card(col, c);
-            }
-        }
-        cards_under_sequences += pow(c+1, FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT);
+        c = update_col_cards_under_sequences(soft_thread, col, &cards_under_sequences);
         if (c >= 0)
         {
             seqs_over_renegade_cards +=
