@@ -259,6 +259,7 @@ static int next_board_num;
 static int end_board;
 static pthread_mutex_t next_board_num_lock;
 static int board_num_step = 1;
+static int update_total_num_iters_threshold = 1000000;
 
 typedef struct {
     int argc;
@@ -416,7 +417,7 @@ static void * worker_thread(void * void_context)
             }
 
             total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
-            if (total_num_iters_temp > 1000000)
+            if (total_num_iters_temp >= update_total_num_iters_threshold)
             {
                 pthread_mutex_lock(&total_num_iters_lock);
                 total_num_iters += total_num_iters_temp;
@@ -537,6 +538,17 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
             board_num_step = atoi(argv[arg]);
+        }
+        else if (!strcmp(argv[arg], "--iters-update-on"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--iters-update-on came without an argument!\n");
+                print_help();
+                exit(-1);
+            }
+            update_total_num_iters_threshold = atoi(argv[arg]);
         }
         else
         {
