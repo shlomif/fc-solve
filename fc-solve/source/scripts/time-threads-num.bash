@@ -46,7 +46,9 @@ fi
 
 for NUM in $(seq "$MIN" "$MAX") ; do
     echo "Testing $NUM"
-    ./freecell-solver-multi-thread-solve 1 32000 500 \
-        --num-workers "$NUM" -l gi \
+    ./freecell-solver-multi-thread-solve 1 32000 4000 \
+        --iters-update-on 10000000 \
+        --num-workers "$NUM" \
+        -l gi \
         > "$(printf "DUMPS/dump%.3i" "$NUM")"
 done
