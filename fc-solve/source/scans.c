@@ -623,6 +623,8 @@ int fc_solve_soft_dfs_do_solve(
 #define FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
 #define FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
 
+#define FCS_SEQS_OVER_RENEGADE_POWER(n) pow(n, FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
+
 static GCC_INLINE int update_col_cards_under_sequences(
         fc_solve_soft_thread_t * soft_thread,
         fcs_cards_column_t col,
@@ -752,7 +754,7 @@ static pq_rating_t fc_solve_a_star_rate_state(
             seqs_over_renegade_cards +=
                 ((unlimited_sequence_move) ?
                     1 :
-                    pow(cards_num-c-1, FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
+                    FCS_SEQS_OVER_RENEGADE_POWER(cards_num-c-1)
                     );
         }
     }
@@ -761,7 +763,8 @@ static pq_rating_t fc_solve_a_star_rate_state(
             / soft_thread->a_star_initial_cards_under_sequences) * a_star_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
 
     ret += (seqs_over_renegade_cards /
-               pow(LOCAL_DECKS_NUM*52, FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT) )
+               FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4))
+            )
            * a_star_weights[FCS_A_STAR_WEIGHT_SEQS_OVER_RENEGADE_CARDS];
 
     num_cards_in_founds = 0;

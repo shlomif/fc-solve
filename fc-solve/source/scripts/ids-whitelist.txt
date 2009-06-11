@@ -270,3 +270,5 @@ talon_len
 synergy
 after_ws
 DERIVED_STATES_LIST_GROW_BY
+FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT
+cards_under_sequences_ptr
