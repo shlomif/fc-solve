@@ -346,3 +346,15 @@ empty_stack_col
 env_var_presetrc
 existing_val_void
 fc_solve_PQueueFree
+fc_solve_PQueueInitialise
+fc_solve_PQueuePop
+fc_solve_PQueuePush
+fc_solve_a_star_rate_state
+fc_solve_a_star_rate_state
+MaxElements
+FC_SOLVE_APPEND_STRING_MARGIN_SIZE
+fc_solve_append_string_finalize
+fc_solve_append_string_init
+GROW_BY
+fc_solve_apply_preset_by_name
+fc_solve_cache_stacks

@@ -936,7 +936,8 @@ char * fc_solve_state_as_string(
 
     char str2[128], str3[128], * str2_ptr, * str3_ptr;
 
-    fc_solve_append_string_t * app_str;
+    fc_solve_append_string_t app_str_struct;
+#define app_str (&app_str_struct)
 
     int stack_locs[MAX_NUM_STACKS];
     int freecell_locs[MAX_NUM_FREECELLS];
@@ -981,7 +982,7 @@ char * fc_solve_state_as_string(
             decks[a][0] = '0';
     }
 
-    app_str = fc_solve_append_string_alloc(512);
+    fc_solve_append_string_init(&app_str_struct);
 
     if(!parseable_output)
     {
@@ -1156,5 +1157,5 @@ char * fc_solve_state_as_string(
         }
     }
 
-    return fc_solve_append_string_finalize(app_str);
+    return fc_solve_append_string_finalize(&app_str_struct);
 }

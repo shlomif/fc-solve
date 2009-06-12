@@ -30,6 +30,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#include "inline.h"
+
 #ifndef FC_SOLVE__APP_STR_H
 #define FC_SOLVE__APP_STR_H
 
@@ -42,19 +44,34 @@ typedef struct
     char * buffer;
     char * end_of_buffer;
     int max_size;
-    int size_of_margin;
 } fc_solve_append_string_t;
 
-extern fc_solve_append_string_t * fc_solve_append_string_alloc(int size_margin);
+#define GROW_BY 4000
+#define FC_SOLVE_APPEND_STRING_MARGIN_SIZE 500
+
+static GCC_INLINE void fc_solve_append_string_init(fc_solve_append_string_t * app_str)
+{
+    app_str->max_size = GROW_BY;
+    app_str->end_of_buffer = app_str->buffer = malloc(app_str->max_size);
+
+    return;
+}
+
+
+static GCC_INLINE char * fc_solve_append_string_finalize(
+    fc_solve_append_string_t * app_str
+    )
+{
+    char * ret;
+    ret = strdup(app_str->buffer);
+    free(app_str->buffer);
+    return ret;
+}
 
 extern int fc_solve_append_string_sprintf(
     fc_solve_append_string_t * app_str,
     char * format,
     ...
-    );
-
-extern char * fc_solve_append_string_finalize(
-    fc_solve_append_string_t * app_str
     );
 
 #ifdef __cplusplus
