@@ -39,6 +39,8 @@ extern "C" {
 #include "move.h"
 #include "fcs_enums.h"
 
+#include "inline.h"
+
 #include "rand.h"
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE))
@@ -764,9 +766,36 @@ extern fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     fc_solve_hard_thread_t * hard_thread
     );
 
-extern fc_solve_soft_thread_t * fc_solve_new_hard_thread(
+extern fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
+        fc_solve_instance_t * instance
+        );
+
+static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     fc_solve_instance_t * instance
-    );
+    )
+{
+    fc_solve_hard_thread_t * ret;
+
+    /* Exceeded the maximal number of Soft-Threads in an instance */
+    ret = fc_solve_instance__alloc_hard_thread(instance);
+
+    if (ret == NULL)
+    {
+        return NULL;
+    }
+
+    instance->hard_threads =
+        realloc(
+            instance->hard_threads,
+            (sizeof(instance->hard_threads[0]) * (instance->num_hard_threads+1))
+            );
+
+    instance->hard_threads[instance->num_hard_threads] = ret;
+
+    instance->num_hard_threads++;
+
+    return ret->soft_threads[0];
+}
 
 extern void fc_solve_recycle_instance(
     fc_solve_instance_t * instance

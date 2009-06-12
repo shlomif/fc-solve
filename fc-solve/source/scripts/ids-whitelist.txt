@@ -470,3 +470,9 @@ fc_solve_talon_prefixes
 fc_solve_merge_large_and_small_sorted_arrays
 fc_solve_move_stack_compact_allocate
 fc_solve_move_stack_normalize
+fc_solve_move_stack_swallow_stack
+fc_solve_move_to_string
+fc_solve_new_hard_thread
+fc_solve_p2u_suit
+fc_solve_rand_init
+fc_solve_rand_rand15

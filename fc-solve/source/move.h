@@ -240,8 +240,6 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fc_solve_move_stack_swallow_stack(moves, temp_moves);
 }
 
-extern char * fc_solve_move_to_string(fcs_move_t move, int standard_notation);
-
 extern char * fc_solve_move_to_string_w_state(
         fcs_state_extra_info_t * state_val,
         int freecells_num,
@@ -250,6 +248,17 @@ extern char * fc_solve_move_to_string_w_state(
         fcs_move_t move,
         int standard_notation
         );
+
+static GCC_INLINE char * fc_solve_move_to_string(fcs_move_t move, int standard_notation)
+{
+    return
+        fc_solve_move_to_string_w_state(
+            NULL, 4, 8, 1,
+            move,
+            (standard_notation == 2)?1:standard_notation
+            );
+}
+
 
 typedef struct {
     fcs_state_extra_info_t * state_ptr;

@@ -205,15 +205,6 @@ GCC_INLINE int convert_freecell_num(int fcn)
         return fcn;
 }
 
-char * fc_solve_move_to_string(fcs_move_t move, int standard_notation)
-{
-    return
-        fc_solve_move_to_string_w_state(
-            NULL, 4, 8, 1,
-            move,
-            (standard_notation == 2)?1:standard_notation
-            );
-}
 
 char * fc_solve_move_to_string_w_state(
         fcs_state_extra_info_t * state_val,

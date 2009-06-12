@@ -424,7 +424,7 @@ static void reset_hard_thread(
         fc_solve_compact_allocator_new();
 }
 
-static fc_solve_hard_thread_t * alloc_hard_thread(
+fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
         fc_solve_instance_t * instance
         )
 {
@@ -518,7 +518,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->hard_threads = malloc(sizeof(instance->hard_threads[0]) * instance->num_hard_threads);
 
-    instance->hard_threads[0] = alloc_hard_thread(instance);
+    instance->hard_threads[0] = fc_solve_instance__alloc_hard_thread(instance);
 
     instance->solution_moves = NULL;
 
@@ -893,7 +893,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     {
         instance->optimization_thread = 
             optimization_thread =
-            alloc_hard_thread(instance);
+            fc_solve_instance__alloc_hard_thread(instance);
 
         fc_solve_state_ia_init(optimization_thread);
     }
@@ -1599,33 +1599,6 @@ fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     return ret;
 }
 
-fc_solve_soft_thread_t * fc_solve_new_hard_thread(
-    fc_solve_instance_t * instance
-    )
-{
-    fc_solve_hard_thread_t * ret;
-
-    /* Exceeded the maximal number of Soft-Threads in an instance */
-    ret = alloc_hard_thread(instance);
-
-    if (ret == NULL)
-    {
-        return NULL;
-    }
-
-    instance->hard_threads =
-        realloc(
-            instance->hard_threads,
-            (sizeof(instance->hard_threads[0]) * (instance->num_hard_threads+1))
-            );
-
-    instance->hard_threads[instance->num_hard_threads] = ret;
-
-    instance->num_hard_threads++;
-
-    return ret->soft_threads[0];
-}
-
 static void recycle_hard_thread(
     fc_solve_hard_thread_t * hard_thread
     )
@@ -1667,23 +1640,10 @@ void fc_solve_recycle_instance(
     {
         recycle_hard_thread(instance->hard_threads[ht_idx]);
     }
-#if 1
     if (instance->optimization_thread)
     {
         recycle_hard_thread(instance->optimization_thread);
     }
     instance->in_optimization_thread = 0;
-#else
-    /*
-        For the time being instance->optimization_thread must be NULL when
-        the solution has started. Else, it breaks the internal code's
-        expectations.
-    */    
-    if (instance->optimization_thread)
-    {
-        free_instance_hard_thread_callback(instance->optimization_thread);
-        instance->optimization_thread = NULL;
-    }
-#endif
 }
 

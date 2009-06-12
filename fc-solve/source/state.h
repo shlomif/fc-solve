@@ -594,20 +594,6 @@ extern char * fc_solve_p2u_card_number(
     );
 
 /*
- * Converts a suit to its user representation.
- *
- * */
-char * fc_solve_p2u_suit(
-    int suit,
-    char * str,
-    int card_num_is_null
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-    ,
-    int flipped
-#endif
-    );
-
-/*
  * This function converts a card number from its user representation
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.

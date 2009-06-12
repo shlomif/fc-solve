@@ -234,7 +234,7 @@ char * fc_solve_p2u_card_number(
  * Converts a suit to its user representation.
  *
  * */
-char * fc_solve_p2u_suit(int suit, char * str, int card_num_is_null
+static GCC_INLINE char * fc_solve_p2u_suit(int suit, char * str, int card_num_is_null
 #ifndef FCS_WITHOUT_CARD_FLIPPING
         , int flipped
 #endif
