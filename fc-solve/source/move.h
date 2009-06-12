@@ -75,7 +75,7 @@ void fcs_move_stack_destroy(fcs_move_stack_t * stack);
     free(stack); \
 }
 
-extern void fc_solve_move_stack_swallow_stack(fcs_move_stack_t * stack, fcs_move_stack_t * src_stack);
+
 #if 0
 void fcs_move_stack_reset(fcs_move_stack_t * stack);
 #endif
@@ -113,6 +113,19 @@ void fc_solve_apply_move(
     ret->moves = (fcs_move_t *)malloc(sizeof(ret->moves[0])*FCS_MOVE_STACK_GROW_BY);  \
                 \
     (final_ret) = ret;       \
+}
+
+static GCC_INLINE void fc_solve_move_stack_swallow_stack(
+    fcs_move_stack_t * stack,
+    fcs_move_stack_t * src_stack
+    )
+{
+    fcs_move_t move;
+    while (!fc_solve_move_stack_pop(src_stack, &move))
+    {
+        fcs_move_stack_push(stack, move);
+    }
+    fcs_move_stack_destroy(src_stack);
 }
 
 static GCC_INLINE void fc_solve_move_stack_normalize(

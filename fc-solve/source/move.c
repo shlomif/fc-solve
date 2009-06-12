@@ -76,18 +76,6 @@ void fcs_move_stack_destroy(fcs_move_stack_t * stack)
 }
 #endif
 
-void fc_solve_move_stack_swallow_stack(
-    fcs_move_stack_t * stack,
-    fcs_move_stack_t * src_stack
-    )
-{
-    fcs_move_t move;
-    while (!fc_solve_move_stack_pop(src_stack, &move))
-    {
-        fcs_move_stack_push(stack, move);
-    }
-    fcs_move_stack_destroy(src_stack);
-}
 
 #if 0
 void fcs_move_stack_reset(
