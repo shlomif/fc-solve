@@ -33,6 +33,8 @@
 #include "instance.h"
 #include "preset.h"
 
+#include "inline.h"
+
 enum
 {
     FCS_PRESET_BAKERS_DOZEN,
@@ -389,7 +391,7 @@ static GCC_INLINE int fcs_get_preset_id_by_name(
     return ret;
 }
 
-static int fc_solve_char_to_test_num(char c)
+static GCC_INLINE int fc_solve_char_to_test_num(char c)
 {
     if ((c >= '0') && (c <= '9'))
     {

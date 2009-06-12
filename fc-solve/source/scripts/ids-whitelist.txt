@@ -454,3 +454,9 @@ tests
 tb
 app_str
 fc_solve_cache_talon
+fc_solve_check_state_validity
+fc_solve_char_to_test_num
+fc_solve_free_instance
+fc_solve_increase_dfs_max_depth
+fc_solve_init_instance
+fc_solve_hash_function

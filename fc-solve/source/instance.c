@@ -807,22 +807,7 @@ static gint fc_solve_glib_hash_stack_compare (
 #endif /* (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH) */
 
 
-
-
-
 #endif /* defined(INDIRECT_STACK_STATES) */
-
-
-
-
-
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-/*
- * This hash function is defined in check_and_add_state.c
- *
- * */
-extern guint fc_solve_hash_function(gconstpointer key);
-#endif
 
 /*
  * This function traces the solution from the final state down

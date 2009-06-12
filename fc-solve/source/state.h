@@ -25,16 +25,18 @@
  * state.h - header file for state functions and macros for Freecell Solver
  *
  */
-#include "config.h"
-
-#include "fcs_move.h"
-
 #ifndef FC_SOLVE__STATE_H
 #define FC_SOLVE__STATE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "config.h"
+
+#include "fcs_move.h"
+
+#include "inline.h"
 
 #if MAX_NUM_INITIAL_CARDS_IN_A_STACK+12>(MAX_NUM_DECKS*52)
 #define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_DECKS*52)
@@ -586,7 +588,7 @@ enum
     FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4
 };
 
-extern int fc_solve_check_state_validity(
+static GCC_INLINE int fc_solve_check_state_validity(
     fcs_state_extra_info_t * state_val,
     int freecells_num,
     int stacks_num,
@@ -594,8 +596,109 @@ extern int fc_solve_check_state_validity(
 #ifdef FCS_WITH_TALONS
     int talon_type,
 #endif
-    fcs_card_t * misplaced_card
-    );
+    fcs_card_t * misplaced_card)
+{
+    int cards[4][14];
+    int c, s, d, f;
+    int col_len;
+
+    fcs_state_t * state;
+    fcs_cards_column_t col;
+    fcs_card_t card;
+
+    state = state_val->key;
+
+    /* Initialize all cards to 0 */
+    for(d=0;d<4;d++)
+    {
+        for(c=1;c<=13;c++)
+        {
+            cards[d][c] = 0;
+        }
+    }
+
+    /* Mark the cards in the decks */
+    for(d=0;d<decks_num*4;d++)
+    {
+        for(c=1;c<=fcs_foundation_value(*state, d);c++)
+        {
+            cards[d%4][c]++;
+        }
+    }
+
+    /* Mark the cards in the freecells */
+    for(f=0;f<freecells_num;f++)
+    {
+        if (fcs_freecell_card_num(*state, f) != 0)
+        {
+            cards
+                [fcs_freecell_card_suit(*state, f)]
+                [fcs_freecell_card_num(*state, f)] ++;
+        }
+    }
+
+    /* Mark the cards in the stacks */
+    for(s=0;s<stacks_num;s++)
+    {
+        col = fcs_state_get_col(*state, s);
+        col_len = fcs_col_len(col);
+        for(c=0;c<col_len;c++)
+        {
+            card = fcs_col_get_card(col,c);
+            if (fcs_card_card_num(card) == 0)
+            {
+                *misplaced_card = fcs_empty_card;
+                return FCS_STATE_VALIDITY__EMPTY_SLOT;
+            }
+            cards
+                [fcs_card_suit(card)]
+                [fcs_card_card_num(card)] ++;
+
+        }
+    }
+
+#ifdef FCS_WITH_TALONS
+    /* Mark the cards in the (gypsy) talon */
+    if ((talon_type == FCS_TALON_GYPSY) || (talon_type == FCS_TALON_KLONDIKE))
+    {
+        for(c = ((talon_type == FCS_TALON_GYPSY)?fcs_talon_pos(*state):1) ;
+            c < ((talon_type==FCS_TALON_GYPSY) ? fcs_talon_len(*state) : (fcs_klondike_talon_len(*state)+1)) ;
+            c++)
+        {
+            if (fcs_get_talon_card(*state,c) != fcs_empty_card)
+            {
+                cards
+                    [fcs_card_suit(fcs_get_talon_card(*state, c))]
+                    [fcs_card_card_num(fcs_get_talon_card(*state, c))] ++;
+            }
+        }
+    }
+#endif
+
+    /* Now check if there are extra or missing cards */
+
+    for(d=0;d<4;d++)
+    {
+        for(c=1;c<=13;c++)
+        {
+            if (cards[d][c] != decks_num)
+            {
+                *misplaced_card = fcs_empty_card;
+                fcs_card_set_suit(*misplaced_card, d);
+                fcs_card_set_num(*misplaced_card, c);
+                return ((cards[d][c] < decks_num) 
+                    ? FCS_STATE_VALIDITY__MISSING_CARD
+                    : FCS_STATE_VALIDITY__EXTRA_CARD
+                    )
+                    ;
+            }
+        }
+    }
+
+    return FCS_STATE_VALIDITY__OK;
+}
+
+#undef state
 
 #ifdef __cplusplus
 }

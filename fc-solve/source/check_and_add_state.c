@@ -290,7 +290,6 @@ static GCC_INLINE void fc_solve_cache_talon(
 }
 #endif
 
-
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 guint fc_solve_hash_function(gconstpointer key)
 {
