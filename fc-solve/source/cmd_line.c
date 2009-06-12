@@ -48,7 +48,6 @@ static GCC_INLINE int read_preset(char * preset_name, args_man_t * * args_man, c
     int path_idx;
     char line[8192];
     FILE * f = NULL;
-    char * fgets_ret;
     char * opened_files_dir = NULL;
     int read_next_preset = 0;
    
@@ -91,8 +90,7 @@ static GCC_INLINE int read_preset(char * preset_name, args_man_t * * args_man, c
         }
         while(1)
         {
-            fgets_ret = fgets(line, sizeof(line), f);
-            if (fgets_ret == NULL)
+            if (fgets(line, sizeof(line), f) == NULL)
             {
                 break;
             }

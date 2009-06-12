@@ -183,23 +183,6 @@ struct fcs_struct_state_t
 
 typedef struct fcs_struct_state_t fcs_state_t;
 
-#if 0
-struct fcs_struct_state_with_locations_t
-{
-    fcs_state_t s;
-    char stack_locs[MAX_NUM_STACKS];
-    char fc_locs[MAX_NUM_FREECELLS];
-    struct fcs_struct_state_with_locations_t * parent;
-    fcs_move_stack_t * moves_to_parent;
-    int depth;
-    int visited;
-    int visited_iter;
-    int num_active_children;
-    int scan_visited[MAX_NUM_SCANS_BUCKETS];
-};
-
-typedef struct fcs_struct_state_with_locations_t fcs_state_with_locations_t;
-#endif
 typedef char fcs_locs_t;
 
 #define fcs_state_get_col(state, col_idx) \
@@ -601,7 +584,6 @@ extern char * fc_solve_p2u_card_number(
  * the program.
  * */
 extern int fc_solve_u2p_card_number(const char * string);
-#define fcs_u2p_card_number(string) (fc_solve_u2p_card_number(string))
 
 /*
  * This function converts a string containing a suit letter (that is
@@ -611,7 +593,6 @@ extern int fc_solve_u2p_card_number(const char * string);
  *
  * */
 extern int fc_solve_u2p_suit(const char * deck);
-#define fcs_u2p_suit(deck) (fc_solve_u2p_suit(deck))
 
 static GCC_INLINE void fc_solve_state_init(
     fcs_state_t * state_key,
@@ -835,11 +816,11 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
                     str++;
                 if ((*str == '\n') || (*str == '\r'))
                     break;
-                d = fcs_u2p_suit(str);
+                d = fc_solve_u2p_suit(str);
                 str++;
                 while (*str == '-')
                     str++;
-                c = fcs_u2p_card_number(str);
+                c = fc_solve_u2p_card_number(str);
                 while (
                         (*str != ' ') &&
                         (*str != '\t') &&

@@ -1479,7 +1479,7 @@ void fc_solve_unresume_instance(
 
 /***********************************************************/
 
-static void finish_hard_thread(
+static GCC_INLINE void finish_hard_thread(
     fc_solve_hard_thread_t * hard_thread
     )
 {
