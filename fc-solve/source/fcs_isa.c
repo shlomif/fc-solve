@@ -51,15 +51,5 @@ void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread)
     hard_thread->num_states_in_last_pack = 0;
 }
 
-void fc_solve_state_ia_finish(fc_solve_hard_thread_t * hard_thread)
-{
-    int a;
-    for(a=0;a<hard_thread->num_state_packs;a++)
-    {
-        free(hard_thread->state_packs[a]);
-    }
-    free(hard_thread->state_packs);
-    hard_thread->state_packs = NULL;
-}
 
 

@@ -35,6 +35,8 @@ extern "C" {
 #include "state.h"
 #include "instance.h"
 
+#include "inline.h"
+
 extern void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread);
 
 #define fcs_state_ia_alloc_into_var(ret_val, instance) \
@@ -66,7 +68,17 @@ extern void fcs_state_ia_release(fc_solve_instance_t * instance);
 
 
 #endif
-extern void fc_solve_state_ia_finish(fc_solve_hard_thread_t * hard_thread);
+
+static GCC_INLINE void fc_solve_state_ia_finish(fc_solve_hard_thread_t * hard_thread)
+{
+    int a;
+    for(a=0;a<hard_thread->num_state_packs;a++)
+    {
+        free(hard_thread->state_packs[a]);
+    }
+    free(hard_thread->state_packs);
+    hard_thread->state_packs = NULL;
+}
 
 #ifdef __cplusplus
 }

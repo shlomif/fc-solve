@@ -1116,6 +1116,30 @@ int fc_solve_solve_instance(
     return fc_solve_resume_instance(instance);
 }
 
+static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
+
+    fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
+    /*
+        Allocate some space for the states at depth 0.
+    */
+    soft_thread->depth = 0;
+
+    fc_solve_increase_dfs_max_depth(soft_thread);
+
+    /* Initialize the initial state to indicate it is the first */
+    ptr_orig_state_val->parent_val = NULL;
+    ptr_orig_state_val->moves_to_parent = NULL;
+    ptr_orig_state_val->depth = 0;
+
+    soft_thread->soft_dfs_info[0].state_val = ptr_orig_state_val;
+
+    return;
+}
+
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 {
     fc_solve_soft_thread_t * soft_thread;
@@ -1599,7 +1623,7 @@ fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     return ret;
 }
 
-static void recycle_hard_thread(
+void fc_solve_instance__recycle_hard_thread(
     fc_solve_hard_thread_t * hard_thread
     )
 {
@@ -1622,28 +1646,5 @@ static void recycle_hard_thread(
     }
 
     return;
-}
-
-void fc_solve_recycle_instance(
-    fc_solve_instance_t * instance
-        )
-{
-    int ht_idx;
-
-    fc_solve_finish_instance(instance);
-
-    instance->num_times = 0;
-
-    instance->num_hard_threads_finished = 0;
-
-    for(ht_idx = 0;  ht_idx < instance->num_hard_threads; ht_idx++)
-    {
-        recycle_hard_thread(instance->hard_threads[ht_idx]);
-    }
-    if (instance->optimization_thread)
-    {
-        recycle_hard_thread(instance->optimization_thread);
-    }
-    instance->in_optimization_thread = 0;
 }
 

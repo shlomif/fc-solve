@@ -47,7 +47,7 @@
 #include "check_limits.h"
 #include "inline.h"
 
-static void fc_solve_increase_dfs_max_depth(
+void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
     )
 {
@@ -104,29 +104,6 @@ static void fc_solve_increase_dfs_max_depth(
 #define TRACE0(no_use) {}
 #endif
 
-void fc_solve_soft_thread_init_soft_dfs(
-    fc_solve_soft_thread_t * soft_thread
-    )
-{
-    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
-
-    fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
-    /*
-        Allocate some space for the states at depth 0.
-    */
-    soft_thread->depth = 0;
-
-    fc_solve_increase_dfs_max_depth(soft_thread);
-
-    /* Initialize the initial state to indicate it is the first */
-    ptr_orig_state_val->parent_val = NULL;
-    ptr_orig_state_val->moves_to_parent = NULL;
-    ptr_orig_state_val->depth = 0;
-
-    soft_thread->soft_dfs_info[0].state_val = ptr_orig_state_val;
-
-    return;
-}
 
 #ifdef FCS_DISABLE_SIMPLE_SIMON
 #define WRAP_SIMPSIM(f) NULL

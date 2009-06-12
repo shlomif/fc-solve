@@ -797,9 +797,32 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     return ret->soft_threads[0];
 }
 
-extern void fc_solve_recycle_instance(
+extern void fc_solve_instance__recycle_hard_thread(
+    fc_solve_hard_thread_t * hard_thread
+    );
+
+static GCC_INLINE void fc_solve_recycle_instance(
     fc_solve_instance_t * instance
-        );
+        )
+{
+    int ht_idx;
+
+    fc_solve_finish_instance(instance);
+
+    instance->num_times = 0;
+
+    instance->num_hard_threads_finished = 0;
+
+    for(ht_idx = 0;  ht_idx < instance->num_hard_threads; ht_idx++)
+    {
+        fc_solve_instance__recycle_hard_thread(instance->hard_threads[ht_idx]);
+    }
+    if (instance->optimization_thread)
+    {
+        fc_solve_instance__recycle_hard_thread(instance->optimization_thread);
+    }
+    instance->in_optimization_thread = 0;
+}
 
 #ifdef __cplusplus
 }

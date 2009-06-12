@@ -538,7 +538,9 @@ typedef const void * fcs_compare_context_t;
 #endif
 
 extern int fc_solve_state_compare(const void * s1, const void * s2);
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 extern int fc_solve_state_compare_equal(const void * s1, const void * s2);
+#endif
 extern int fc_solve_state_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
 extern int fc_solve_state_extra_info_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
 

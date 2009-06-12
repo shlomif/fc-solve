@@ -1,5 +1,5 @@
 /* Copyright (c) 2009 Shlomi Fish
- *
+*
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -35,10 +35,6 @@ extern "C" {
 
 #include "config.h"
 #include "instance.h"
-
-extern void fc_solve_soft_thread_init_soft_dfs(
-    fc_solve_soft_thread_t * soft_thread
-    );
 
 extern int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * soft_thread,
@@ -90,6 +86,10 @@ extern int fc_solve_sfs_check_state_end(
     int state_context_value,
     fcs_move_stack_t * moves,
     fcs_derived_states_list_t * derived_states_list
+    );
+
+extern void fc_solve_increase_dfs_max_depth(
+    fc_solve_soft_thread_t * soft_thread
     );
 
 #ifdef __cplusplus
