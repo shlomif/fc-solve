@@ -855,7 +855,7 @@ char * freecell_solver_user_get_invalid_state_error_string(
     {
         return strdup("");
     }
-    fcs_card_perl2user(user->state_validity_card, card_str, print_ts);
+    fc_solve_card_perl2user(user->state_validity_card, card_str, print_ts);
 
     if (user->state_validity_ret == FCS_STATE_VALIDITY__EMPTY_SLOT)
     {

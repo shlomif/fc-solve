@@ -954,16 +954,6 @@ static GCC_INLINE int fc_solve_optimize_solution(
 }
 
 
-#ifdef FCS_WITH_TALONS
-
-extern void fc_solve_cache_talon(
-    fc_solve_instance_t * instance,
-    fcs_state_t * new_state_key,
-    fcs_state_extra_info_t * new_state_val
-    );
-
-#endif
-
 /*
     This function starts the solution process _for the first time_. If one
     wishes to proceed after the iterations limit was reached, one should

@@ -56,10 +56,6 @@ extern char * fc_solve_card_perl2user(
     int t
     );
 
-#define fcs_card_perl2user(card,str,t) (fc_solve_card_perl2user((card),(str),(t)))
-
-
-
 /*
  * Converts a card_number from its internal representation to a string.
  *

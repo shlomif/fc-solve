@@ -255,7 +255,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
 
 
 #ifdef FCS_WITH_TALONS
-void fc_solve_cache_talon(
+static GCC_INLINE void fc_solve_cache_talon(
     fc_solve_instance_t * instance,
     fcs_state_t * new_state_key,
     fcs_state_extra_info_t * new_state_val

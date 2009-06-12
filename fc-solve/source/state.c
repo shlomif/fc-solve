@@ -993,7 +993,7 @@ char * fc_solve_state_as_string(
             for(b=0;b<min(freecells_num-a*4, 4);b++)
             {
                 str2_ptr += sprintf(str2_ptr, "%3s ",
-                    fcs_card_perl2user(
+                    fc_solve_card_perl2user(
                         fcs_freecell_card(
                             *state,
                             freecell_locs[a*4+b]
@@ -1085,7 +1085,7 @@ char * fc_solve_state_as_string(
                     fc_solve_append_string_sprintf(
                         app_str,
                         "%3s ",
-                        fcs_card_perl2user(
+                        fc_solve_card_perl2user(
                             fcs_col_get_card(col, card_num),
                             stack_card_,
                             display_10_as_t
@@ -1118,7 +1118,7 @@ char * fc_solve_state_as_string(
             fc_solve_append_string_sprintf(
                 app_str,
                 "%3s",
-                fcs_card_perl2user(
+                fc_solve_card_perl2user(
                     fcs_freecell_card(
                         *state,
                         freecell_locs[a]
@@ -1142,7 +1142,7 @@ char * fc_solve_state_as_string(
 
             for(card_num=0;card_num<col_len;card_num++)
             {
-                fcs_card_perl2user(
+                fc_solve_card_perl2user(
                     fcs_col_get_card(col, card_num),
                     stack_card_,
                     display_10_as_t
