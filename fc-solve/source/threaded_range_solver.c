@@ -218,8 +218,6 @@ static int cmd_line_callback(
     return FCS_CMD_LINE_SKIP;
 }
 
-#define LIMIT_STEP 500
-
 static char * known_parameters[] = {
     "-i", "--iter-output",
     "-s", "--state-output",

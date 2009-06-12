@@ -58,14 +58,10 @@ static void fc_solve_increase_dfs_max_depth(
     int new_dfs_max_depth = soft_thread->dfs_max_depth + 16;
     int d;
 
-#define MYREALLOC(what) \
-    soft_thread->what = realloc( \
-        soft_thread->what,       \
-        sizeof(soft_thread->what[0])*new_dfs_max_depth \
-        ); \
-
-    MYREALLOC(soft_dfs_info);
-#undef MYREALLOC
+    soft_thread->soft_dfs_info = realloc(
+        soft_thread->soft_dfs_info,
+        sizeof(soft_thread->soft_dfs_info[0])*new_dfs_max_depth
+        );
 
     for(d=soft_thread->dfs_max_depth ; d<new_dfs_max_depth; d++)
     {

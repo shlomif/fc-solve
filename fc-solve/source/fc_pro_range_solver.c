@@ -247,7 +247,6 @@ static int cmd_line_callback(
     return FCS_CMD_LINE_SKIP;
 }
 
-#define LIMIT_STEP 500
 #if 0
 #define total_iterations_limit_per_board 100000
 #endif
