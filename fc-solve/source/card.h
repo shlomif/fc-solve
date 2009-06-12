@@ -42,9 +42,6 @@ extern "C" {
  * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
  * */
 extern fcs_card_t fc_solve_card_user2perl(const char * str);
-#define fcs_card_user2perl(str) (fc_solve_card_user2perl(str))
-
-
 
 /*
  * Convert an entire card to its user representation.
