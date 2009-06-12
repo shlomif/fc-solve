@@ -143,7 +143,7 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
     }
 }
 
-static void free_bfs_queue(fc_solve_soft_thread_t * soft_thread)
+static GCC_INLINE void free_bfs_queue(fc_solve_soft_thread_t * soft_thread)
 {
     /* Free the BFS linked list */
     fcs_states_linked_list_item_t * item, * next_item;
@@ -317,7 +317,7 @@ static GCC_INLINE void clean_soft_dfs(
     foreach_soft_thread(instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
 }
 
-static void reset_soft_thread(
+static GCC_INLINE void reset_soft_thread(
     fc_solve_soft_thread_t * soft_thread
     )
 {
@@ -408,7 +408,7 @@ static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
 
 /* This is the commmon code from alloc_hard_thread() and 
  * recycle_hard_thread() */
-static void reset_hard_thread(
+static GCC_INLINE void reset_hard_thread(
     fc_solve_hard_thread_t * hard_thread
     )
 {
@@ -539,13 +539,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     return instance;
 }
 
-
-
-
-
-
-
-static void free_instance_hard_thread_callback(fc_solve_hard_thread_t * hard_thread)
+static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t * hard_thread)
 {
     if (hard_thread->prelude_as_string)
     {
@@ -1277,6 +1271,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
              * */
 
         }
+#undef switch_to_next_soft_thread
 
         /*
          * It this thread indicated that the scan was finished,

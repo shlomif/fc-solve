@@ -263,13 +263,11 @@ typedef struct fcs_struct_state_t fcs_state_t;
     {     \
         if (! ((state_val).stacks_copy_on_write_flags & (1 << idx)))        \
         {          \
-            int stack_len;      \
             fcs_cards_column_t copy_stack_col; \
                                     \
             (state_val).stacks_copy_on_write_flags |= (1 << idx);       \
             copy_stack_col = fcs_state_get_col(state_key, idx); \
-            stack_len = fcs_col_len(copy_stack_col);            \
-            memcpy(&buffer[idx << 7], copy_stack_col, stack_len+1); \
+            memcpy(&buffer[idx << 7], copy_stack_col, fcs_col_len(copy_stack_col)+1); \
             fcs_state_get_col(state_key, idx) = &buffer[idx << 7];     \
         }     \
     }

@@ -576,7 +576,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
         else
         {
             is_state_new = 0;
-            *existing_state = (fcs_state_with_locations_t *)(value.data);
+            *existing_state = ;
         }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)

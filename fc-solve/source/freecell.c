@@ -1949,9 +1949,6 @@ int fc_solve_sfs_get_card_from_klondike_talon(
 {
     tests_declare_accessors()
 
-
-    fcs_state_with_locations_t * talon_temp;
-
     fcs_move_t temp_move;
 
     int check;
@@ -1963,6 +1960,8 @@ int fc_solve_sfs_get_card_from_klondike_talon(
     int a;
     fcs_cards_column_t col;
 
+    fcs_state_extra_info_t talon_temp;
+
     tests_define_accessors();
 
     if (instance->talon_type != FCS_TALON_KLONDIKE)
@@ -1971,7 +1970,6 @@ int fc_solve_sfs_get_card_from_klondike_talon(
     }
 
     /* Duplicate the talon and its parameters into talon_temp */
-    talon_temp = malloc(sizeof(fcs_state_with_locations_t));
     talon_temp->s.talon = malloc(fcs_klondike_talon_len(state)+1);
     memcpy(
         talon_temp->s.talon,
