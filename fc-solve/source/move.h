@@ -63,7 +63,6 @@ extern const fcs_move_t fc_solve_empty_move;
     stack->moves[stack->num_moves++] = move;    \
             \
 }
-#define fcs_move_stack_pop(stack,move) (fc_solve_move_stack_pop(stack,move))
 extern int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move);
 
 #if 0
@@ -148,7 +147,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #endif
 
     while (
-        fcs_move_stack_pop(
+        fc_solve_move_stack_pop(
             moves,
             &in_move
             ) == 0)

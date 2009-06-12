@@ -473,7 +473,7 @@ int freecell_solver_user_get_next_move(
         {
             int ret;
 
-            ret = fcs_move_stack_pop(
+            ret = fc_solve_move_stack_pop(
                 user->instance->solution_moves,
                 move
                 );

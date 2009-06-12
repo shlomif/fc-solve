@@ -82,7 +82,7 @@ void fc_solve_move_stack_swallow_stack(
     )
 {
     fcs_move_t move;
-    while (!fcs_move_stack_pop(src_stack, &move))
+    while (!fc_solve_move_stack_pop(src_stack, &move))
     {
         fcs_move_stack_push(stack, move);
     }

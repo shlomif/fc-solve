@@ -469,3 +469,4 @@ fc_solve_num_redeals_prefixes
 fc_solve_talon_prefixes
 fc_solve_merge_large_and_small_sorted_arrays
 fc_solve_move_stack_compact_allocate
+fc_solve_move_stack_normalize
