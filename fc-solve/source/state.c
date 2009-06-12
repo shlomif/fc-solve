@@ -703,7 +703,7 @@ int fc_solve_initial_user_state_to_c(
                     break;
                 }
 
-                card = fcs_card_user2perl(str);
+                card = fc_solve_card_user2perl(str);
 
                 fcs_put_card_in_talon(ret, c+(talon_type==FCS_TALON_KLONDIKE), card);
             }
