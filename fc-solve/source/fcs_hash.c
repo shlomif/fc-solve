@@ -40,7 +40,9 @@
 
 #include "alloc.h"
 
-static void SFO_hash_rehash(SFO_hash_t * hash);
+#include "inline.h"
+
+static void GCC_INLINE SFO_hash_rehash(SFO_hash_t * hash);
 
 
 
@@ -197,7 +199,7 @@ void fc_solve_hash_free(
     hash table, allowing for smaller chains, and faster lookup.
 
   */
-static void SFO_hash_rehash(
+static void GCC_INLINE SFO_hash_rehash(
     SFO_hash_t * hash
     )
 {

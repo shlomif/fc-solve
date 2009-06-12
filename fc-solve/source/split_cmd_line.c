@@ -133,7 +133,7 @@ after_ws:
 
         if ((*s == ' ') || (*s == '\t') || (*s == '\n') || (*s == '\0') || (*s == '\r'))
         {
-NEXT_ARG:
+next_arg:
             push_args_last_arg();
             in_arg = 0;
 
@@ -149,7 +149,7 @@ NEXT_ARG:
             if (next_char == '\0')
             {
                 s--;
-                goto NEXT_ARG;
+                goto next_arg;
             }
             else if ((next_char == '\n') || (next_char == '\r'))
             {
@@ -215,7 +215,7 @@ NEXT_ARG:
             {
                 s++;
             }
-            goto NEXT_ARG;
+            goto next_arg;
         }
     }
 END_OF_LOOP:
