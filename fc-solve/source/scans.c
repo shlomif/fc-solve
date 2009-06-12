@@ -45,11 +45,7 @@
 #include "simpsim.h"
 
 #include "check_limits.h"
-
-static pq_rating_t fc_solve_a_star_rate_state(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_state_extra_info_t * ptr_state_val
-    );
+#include "inline.h"
 
 static void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
@@ -695,7 +691,7 @@ static GCC_INLINE void initialize_a_star_rater(
 #endif
 
 
-static pq_rating_t fc_solve_a_star_rate_state(
+static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val
     )

@@ -135,7 +135,6 @@ OBJECTS :=                     \
           instance.o          \
           lib.o               \
           move.o              \
-          pqueue.o            \
           preset.o            \
           scans.o             \
 		  split_cmd_line.o    \

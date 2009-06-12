@@ -136,7 +136,7 @@ ENDIF(NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STA
 
 SET (${STATES_TYPE} 1)
 
-SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c card.c check_and_add_state.c cmd_line.c fcs_isa.c freecell.c instance.c lib.c move.c pqueue.c preset.c scans.c simpsim.c split_cmd_line.c state.c)
+SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c card.c check_and_add_state.c cmd_line.c fcs_isa.c freecell.c instance.c lib.c move.c preset.c scans.c simpsim.c split_cmd_line.c state.c)
 
 IF (FCS_FREECELL_ONLY)
     SET (FCS_DISABLE_SIMPLE_SIMON 1)
