@@ -103,12 +103,6 @@ int fc_solve_PQueuePush(
 
 #define PQueueIsEmpty(pq) ((pq)->CurrentSize == 0)
 
-/* free up memory for pqueue */
-void fc_solve_PQueueFree( PQUEUE *pq )
-{
-    free( pq->Elements );
-}
-
 /* remove the first node from the pqueue and provide a pointer to it
  *
  * Returns 0 if found.

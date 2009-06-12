@@ -1519,7 +1519,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
     int check;
 
     int stack_idx, cards_num, pc, cc;
-    fcs_card_t parent_card, child_card;
+    fcs_card_t parent_card;
     int a;
     int after_junk_num_freestacks;
     int false_seq_index;
@@ -1559,9 +1559,10 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
                     continue;
                 }
 
-
                 for(cc = pc + 2 ; cc < cards_num ; cc++)
                 {
+                    register fcs_card_t child_card;
+
                     child_card = fcs_col_get_card(col, cc);
                     if (fcs_is_ss_true_parent(
                             parent_card,

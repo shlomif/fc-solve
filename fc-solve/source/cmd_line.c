@@ -39,7 +39,7 @@
 
 #include "cmd_line_enum.h"
 
-static GCC_INLINE int read_preset(char * preset_name, args_man_t * * args, char * * opened_files_dir_to_assign, char * user_preset_dir)
+static GCC_INLINE int read_preset(char * preset_name, args_man_t * * args_man, char * * opened_files_dir_to_assign, char * user_preset_dir)
 {
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * global_presetrc = NULL, * env_var_presetrc = NULL;
@@ -128,8 +128,8 @@ static GCC_INLINE int read_preset(char * preset_name, args_man_t * * args, char 
             {
                 if (read_next_preset)
                 {
-                    *args = fc_solve_args_man_alloc();
-                    fc_solve_args_man_chop(*args, line+8);
+                    *args_man = fc_solve_args_man_alloc();
+                    fc_solve_args_man_chop(*args_man, line+8);
                     ret_code = 0;
                     goto have_preset;
                 }

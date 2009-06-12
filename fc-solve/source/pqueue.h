@@ -22,6 +22,8 @@ extern "C" {
 
 #include "state.h"
 
+#include "inline.h"
+
 #define PQUEUE_MaxRating INT_MAX
 
 typedef int pq_rating_t;
@@ -54,7 +56,10 @@ void fc_solve_PQueueInitialise(
     int MaxElements
     );
 
-void fc_solve_PQueueFree( PQUEUE *pq );
+static void GCC_INLINE fc_solve_PQueueFree( PQUEUE *pq )
+{
+    free( pq->Elements );
+}
 
 int fc_solve_PQueuePush(
         PQUEUE *pq,
