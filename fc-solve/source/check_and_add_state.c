@@ -506,7 +506,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
     is_state_new = ((*existing_state_val) == NULL);
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
-    *existing_state = g_tree_lookup(instance->tree, (gpointer)new_state);
+    *existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
     if (*existing_state == NULL)
     {
         /* The new state was not found. Let's insert it.
@@ -514,8 +514,8 @@ GCC_INLINE int fc_solve_check_and_add_state(
          * will return it. */
         g_tree_insert(
             instance->tree,
-            (gpointer)new_state,
-            (gpointer)new_state
+            (gpointer)new_state_key,
+            (gpointer)new_state_val
             );
         is_state_new = 1;
     }
@@ -527,16 +527,17 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-    *existing_state = g_hash_table_lookup(instance->hash, (gpointer)new_state);
-    if (*existing_state == NULL)
+    *existing_state_val = g_hash_table_lookup(instance->hash, 
+            (gpointer)new_state_key);
+    if (*existing_state_val == NULL)
     {
         /* The new state was not found. Let's insert it.
          * The value must be the same as the key, so g_tree_lookup()
          * will return it. */
         g_hash_table_insert(
             instance->hash,
-            (gpointer)new_state,
-            (gpointer)new_state
+            (gpointer)new_state_key,
+            (gpointer)new_state_val
 
             );
         is_state_new = 1;
@@ -576,7 +577,6 @@ GCC_INLINE int fc_solve_check_and_add_state(
         else
         {
             is_state_new = 0;
-            *existing_state = ;
         }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)

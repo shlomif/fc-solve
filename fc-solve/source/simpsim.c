@@ -695,7 +695,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
     fcs_card_t card, dest_card;
     int card_num, num_true_seqs, ds, dest_cards_num ;
     int check;
-    int sc, num_separate_false_seqs, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
+    int src_card_height, num_separate_false_seqs, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
     int stacks_map[MAX_NUM_STACKS];
     int after_junk_num_freestacks;
@@ -724,19 +724,19 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
         cards_num = fcs_col_len(col);
         if (cards_num > 0)
         {
-            for( sc = cards_num-1 ; sc >= 0 ; sc-- )
+            for( src_card_height = cards_num-1 ; src_card_height >= 0 ; src_card_height-- )
             {
                 int above_c;
                 fcs_card_t above_card, up_above_card;
                 int end_of_src_seq;
 
-                card = fcs_col_get_card(col, sc);
+                card = fcs_col_get_card(col, src_card_height);
                 suit = fcs_card_suit(card);
                 card_num = fcs_card_card_num(card);
 
                 num_true_seqs = 1;
 
-                for (end_of_src_seq = sc+1; end_of_src_seq < cards_num ; end_of_src_seq++)
+                for (end_of_src_seq = src_card_height+1; end_of_src_seq < cards_num ; end_of_src_seq++)
                 {
                     above_card = fcs_col_get_card(col, end_of_src_seq);
                     if (!fcs_is_ss_false_parent(card, above_card))
@@ -914,7 +914,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
                                         fcs_move_sequence(junk_move_to_stacks[false_seq_index], src_stack, start, end);
                                     }
 
-                                    fcs_move_sequence(ds, stack_idx, sc, end_of_src_seq-1);
+                                    fcs_move_sequence(ds, stack_idx, src_card_height, end_of_src_seq-1);
 
                                     sfs_check_state_end();
                                 }

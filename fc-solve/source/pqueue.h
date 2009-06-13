@@ -41,7 +41,7 @@ typedef struct
 
 typedef struct
 {
-    int MaxSize;
+    int max_size;
     int CurrentSize;
     pq_element_t * Elements; /* pointer to void pointers */
 } PQUEUE;
@@ -64,7 +64,7 @@ static void GCC_INLINE fc_solve_PQueueInitialise(
     int MaxElements
     )
 {
-    pq->MaxSize = MaxElements;
+    pq->max_size = MaxElements;
 
     pq->CurrentSize = 0;
 
@@ -95,12 +95,9 @@ static GCC_INLINE int fc_solve_PQueuePush(
 
     int CurrentSize = pq->CurrentSize;
 
-    if (CurrentSize == pq->MaxSize )
+    if (CurrentSize == pq->max_size )
     {
-        int new_size;
-        new_size = pq->MaxSize + 256;
-        pq->Elements = Elements = (pq_element_t *)realloc( Elements, sizeof(pq_element_t) * (new_size+1));
-        pq->MaxSize = new_size;
+        pq->Elements = Elements = (pq_element_t *)realloc( Elements, sizeof(pq_element_t) * ((pq->max_size += 256)+1));
     }
 
     {
