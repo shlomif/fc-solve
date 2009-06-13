@@ -507,7 +507,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     *existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
-    if (*existing_state == NULL)
+    if (*existing_state_val == NULL)
     {
         /* The new state was not found. Let's insert it.
          * The value must be the same as the key, so g_tree_lookup()
