@@ -79,12 +79,7 @@
     a guideline for the user.
 */
 
-#if 0
-static const double fc_solve_a_star_default_weights[5] = {0.5,0,0.5,0,0};
-#else
 static const double fc_solve_a_star_default_weights[5] = {0.5,0,0.3,0,0.2};
-#endif
-
 
 static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * soft_thread)
 {

@@ -230,15 +230,13 @@ static char * known_parameters[] = {
 
 #define BINARY_OUTPUT_NUM_INTS 16
 
-struct binary_output_struct
+typedef struct
 {
     FILE * file;
     char * buffer;
     char * buffer_end;
     char * ptr;
-};
-
-typedef struct binary_output_struct binary_output_t;
+} binary_output_t;
 
 static void print_int(binary_output_t * bin, int val)
 {

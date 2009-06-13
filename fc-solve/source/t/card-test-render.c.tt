@@ -22,7 +22,7 @@ int main_tests()
         fcs_card_t mycard;
         char * ret;
 
-        mycard = fcs_empty_card;
+        mycard = fc_solve_empty_card;
 
         fcs_card_set_suit(mycard, [% suit.idx %]);
         fcs_card_set_num(mycard, [% card_num.idx %]);

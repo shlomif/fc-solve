@@ -315,8 +315,8 @@ typedef char fcs_locs_t;
 
 #endif
 
-#define fcs_col_get_card_num(col, c_idx) \
-    fcs_card_card_num(fcs_col_get_card((col), (c_idx)))
+#define fcs_col_get_card_num(col, card_idx) \
+    fcs_card_card_num(fcs_col_get_card((col), (card_idx)))
 
 #define fcs_freecell_card_num(state, f) \
     ( fcs_card_card_num(fcs_freecell_card((state),(f))) )
@@ -332,7 +332,7 @@ typedef char fcs_locs_t;
 
 #define fcs_col_pop_top(col) \
     {       \
-        fcs_col_get_card((col), (--fcs_col_len(col))) = fcs_empty_card;  \
+        fcs_col_get_card((col), (--fcs_col_len(col))) = fc_solve_empty_card;  \
     }
 
 #define fcs_col_pop_card(col, into) \
@@ -370,7 +370,7 @@ typedef char fcs_locs_t;
     (fcs_freecell_card((state), (f)) = (card))
 
 #define fcs_empty_freecell(state, f) \
-    fcs_put_card_in_freecell((state), (f), fcs_empty_card)
+    fcs_put_card_in_freecell((state), (f), fc_solve_empty_card)
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_col_flip_card(col, c) \
@@ -384,8 +384,8 @@ typedef char fcs_locs_t;
 #define fcs_col_len(col) \
     ( ((col)[0]) )
 
-#define fcs_col_get_card(col, c_idx) \
-    ((col)[(c_idx)+1])
+#define fcs_col_get_card(col, card_idx) \
+    ((col)[(card_idx)+1])
 
 #define fcs_card_card_num(card) \
     ( (card) & 0x0F )
@@ -470,8 +470,6 @@ typedef struct {
 } fcs_standalone_state_ptrs_t;
 
 extern fcs_card_t fc_solve_empty_card;
-#define fcs_empty_card fc_solve_empty_card
-
 
 #ifdef FCS_WITH_TALONS
 #define fcs_klondike_talon_len(state) \
@@ -500,7 +498,7 @@ extern fcs_card_t fc_solve_empty_card;
     }
 
 #define fcs_klondike_talon_decrement_stack(state) \
-    ((state).talon[(int)((fcs_klondike_talon_stack_pos(state)--)+1)] = fcs_empty_card)
+    ((state).talon[(int)((fcs_klondike_talon_stack_pos(state)--)+1)] = fc_solve_empty_card)
 #endif
 
 
@@ -764,7 +762,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
 
                 if ((*str == '*') || (*str == '-'))
                 {
-                    card = fcs_empty_card;
+                    card = fc_solve_empty_card;
                 }
                 else
                 {
@@ -1073,7 +1071,7 @@ static GCC_INLINE int fc_solve_check_state_validity(
             card = fcs_col_get_card(col,c);
             if (fcs_card_card_num(card) == 0)
             {
-                *misplaced_card = fcs_empty_card;
+                *misplaced_card = fc_solve_empty_card;
                 return FCS_STATE_VALIDITY__EMPTY_SLOT;
             }
             cards
@@ -1091,7 +1089,7 @@ static GCC_INLINE int fc_solve_check_state_validity(
             c < ((talon_type==FCS_TALON_GYPSY) ? fcs_talon_len(*state) : (fcs_klondike_talon_len(*state)+1)) ;
             c++)
         {
-            if (fcs_get_talon_card(*state,c) != fcs_empty_card)
+            if (fcs_get_talon_card(*state,c) != fc_solve_empty_card)
             {
                 cards
                     [fcs_card_suit(fcs_get_talon_card(*state, c))]
@@ -1109,7 +1107,7 @@ static GCC_INLINE int fc_solve_check_state_validity(
         {
             if (cards[d][c] != decks_num)
             {
-                *misplaced_card = fcs_empty_card;
+                *misplaced_card = fc_solve_empty_card;
                 fcs_card_set_suit(*misplaced_card, d);
                 fcs_card_set_num(*misplaced_card, c);
                 return ((cards[d][c] < decks_num) 

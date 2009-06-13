@@ -146,7 +146,7 @@ fcs_card_t fc_solve_card_user2perl(const char * str)
 {
     fcs_card_t card;
 
-    card = fcs_empty_card;
+    card = fc_solve_empty_card;
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
