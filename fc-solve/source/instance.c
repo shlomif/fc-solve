@@ -1452,23 +1452,6 @@ int fc_solve_resume_instance(
 
 
 
-/*
-    Clean up a solving process that was terminated in the middle.
-    This function does not substitute for later calling
-    finish_instance() and free_instance().
-  */
-void fc_solve_unresume_instance(
-    fc_solve_instance_t * instance GCC_UNUSED
-    )
-{
-    /*
-     * Do nothing - since finish_instance() can take care of solution_states
-     * and proto_solution_moves as they were created by these scans, then
-     * I don't need to do it here, too
-     *
-     * */
-}
-
 /***********************************************************/
 
 static GCC_INLINE void finish_hard_thread(
@@ -1567,31 +1550,6 @@ void fc_solve_finish_instance(
 
 
     clean_soft_dfs(instance);
-}
-
-fc_solve_soft_thread_t * fc_solve_instance_get_soft_thread(
-        fc_solve_instance_t * instance,
-        int ht_idx,
-        int st_idx
-        )
-{
-    if (ht_idx >= instance->num_hard_threads)
-    {
-        return NULL;
-    }
-    else
-    {
-        fc_solve_hard_thread_t * hard_thread;
-        hard_thread = instance->hard_threads[ht_idx];
-        if (st_idx >= hard_thread->num_soft_threads)
-        {
-            return NULL;
-        }
-        else
-        {
-            return hard_thread->soft_threads[st_idx];
-        }
-    }
 }
 
 fc_solve_soft_thread_t * fc_solve_new_soft_thread(

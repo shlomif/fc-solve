@@ -112,9 +112,7 @@ static void user_initialize(
     ret->current_iterations_limit = -1;
 
     ret->soft_thread =
-        fc_solve_instance_get_soft_thread(
-            ret->instance, 0,0
-            );
+        fc_solve_instance_get_first_soft_thread(ret->instance);
 
     ret->state_string_copy = NULL;
     ret->iterations_board_started_at = 0;
@@ -243,10 +241,13 @@ static void recycle_instance(
         fcs_move_stack_destroy(user->instance->solution_moves);
         user->instance->solution_moves = NULL;
     }
+    /* fc_solve_unresume_instance is empty. */
+#if 0
     else if (user->instances_list[i].ret == FCS_STATE_SUSPEND_PROCESS)
     {
         fc_solve_unresume_instance(user->instances_list[i].instance);
     }
+#endif
 
     if (user->instances_list[i].ret != FCS_STATE_NOT_BEGAN_YET)
     {
@@ -539,10 +540,13 @@ static void user_free_resources(
             fcs_move_stack_destroy(user->instance->solution_moves);
             user->instance->solution_moves = NULL;
         }
+        /* fc_solve_unresume_instance is empty. */
+#if 0
         else if (ret_code == FCS_STATE_SUSPEND_PROCESS)
         {
             fc_solve_unresume_instance(user->instances_list[i].instance);
         }
+#endif
 
         if (ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
@@ -1302,9 +1306,7 @@ int freecell_solver_user_next_instance(
      * instance
      * */
     user->soft_thread =
-        fc_solve_instance_get_soft_thread(
-            user->instance, 0, 0
-            );
+        fc_solve_instance_get_first_soft_thread(user->instance);
 
     user->instances_list[user->current_instance_idx].instance = user->instance;
     user->instances_list[user->current_instance_idx].ret = user->ret = FCS_STATE_NOT_BEGAN_YET;

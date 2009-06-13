@@ -40,6 +40,7 @@ extern "C" {
 #include "fcs_enums.h"
 
 #include "inline.h"
+#include "unused.h"
 
 #include "rand.h"
 
@@ -752,15 +753,32 @@ extern int fc_solve_resume_instance(
     fc_solve_instance_t * instance
     );
 
-extern void fc_solve_unresume_instance(
-    fc_solve_instance_t * instance
-    );
 
-extern fc_solve_soft_thread_t * fc_solve_instance_get_soft_thread(
-    fc_solve_instance_t * instance,
-    int ht_idx,
-    int st_idx
-    );
+/*
+    Clean up a solving process that was terminated in the middle.
+    This function does not substitute for later calling
+    finish_instance() and free_instance().
+  */
+static GCC_INLINE void fc_solve_unresume_instance(
+    fc_solve_instance_t * instance GCC_UNUSED
+    )
+{
+    /*
+     * Do nothing - since finish_instance() can take care of solution_states
+     * and proto_solution_moves as they were created by these scans, then
+     * I don't need to do it here, too
+     *
+     * */
+}
+
+
+static GCC_INLINE fc_solve_soft_thread_t * 
+    fc_solve_instance_get_first_soft_thread(
+        fc_solve_instance_t * instance
+        )
+{
+    return instance->hard_threads[0]->soft_threads[0];
+}
 
 extern fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     fc_solve_hard_thread_t * hard_thread
