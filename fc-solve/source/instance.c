@@ -989,7 +989,8 @@ int fc_solve_solve_instance(
         fc_solve_state_compare_equal
         );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    instance->hash = fc_solve_hash_init(
+     fc_solve_hash_init(
+            &(instance->hash),
             2048,
             fc_solve_state_compare_with_context,
             NULL
@@ -1008,7 +1009,8 @@ int fc_solve_solve_instance(
     /* Initialize the data structure that will manage the stack
        collection */
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
-    instance->stacks_hash = fc_solve_hash_init(
+    fc_solve_hash_init(
+            &(instance->stacks_hash ),
             2048,
             fcs_stack_compare_for_comparison_with_context,
             NULL
@@ -1524,7 +1526,7 @@ void fc_solve_finish_instance(
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_free(instance->hash);
+    fc_solve_hash_free(&(instance->hash));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     instance->num_prev_states_margin = 0;
 
@@ -1540,7 +1542,7 @@ void fc_solve_finish_instance(
     in the process */
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_free(instance->stacks_hash);
+    fc_solve_hash_free(&(instance->stacks_hash));
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_stacks_tree_destroy(instance->stacks_tree, NULL);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)

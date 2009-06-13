@@ -156,7 +156,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
             column = fcs_state_get_col(*new_state_key, a);
 
             verdict = fc_solve_hash_insert(
-                instance->stacks_hash,
+                &(instance->stacks_hash),
                 column,
                 column,
                 &cached_stack,
@@ -400,7 +400,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
     {
         void * existing_key_void, * existing_val_void;
     is_state_new = (fc_solve_hash_insert(
-        instance->hash,
+        &(instance->hash),
         new_state_key,
         new_state_val,
         &existing_key_void,

@@ -46,15 +46,14 @@ static void GCC_INLINE SFO_hash_rehash(SFO_hash_t * hash);
 
 
 
-SFO_hash_t * fc_solve_hash_init(
+void fc_solve_hash_init(
+    SFO_hash_t * hash,
     SFO_hash_value_t wanted_size,
     int (*compare_function)(const void * key1, const void * key2, void * context),
     void * context
     )
 {
     int size;
-    SFO_hash_t * hash;
-
     /* Find a size that's a power of 2 that's just greater than 
      * the wanted_size. */
     size = 256;
@@ -62,8 +61,6 @@ SFO_hash_t * fc_solve_hash_init(
     {
         size <<= 1;
     }
-
-    hash = (SFO_hash_t *)malloc(sizeof(SFO_hash_t));
 
     hash->size = size;
     hash->size_bitmask = size-1;
@@ -84,7 +81,7 @@ SFO_hash_t * fc_solve_hash_init(
 
     hash->allocator = fc_solve_compact_allocator_new();
 
-    return hash;
+    return;
 }
 
 int fc_solve_hash_insert(
@@ -181,18 +178,6 @@ rehash_check:
 
     return 0;
 }
-
-void fc_solve_hash_free(
-    SFO_hash_t * hash
-    )
-{
-    fc_solve_compact_allocator_finish(hash->allocator);
-
-    free(hash->entries);
-
-    free(hash);
-}
-
 
 /*
     This function "rehashes" a hash. I.e: it increases the size of its

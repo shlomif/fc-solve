@@ -35,6 +35,8 @@ extern "C" {
 
 #include "alloc.h"
 
+#include "inline.h"
+
 typedef int SFO_hash_value_t;
 
 struct SFO_hash_symlink_item_struct
@@ -84,7 +86,9 @@ typedef struct
     fcs_compact_allocator_t * allocator;
 } SFO_hash_t;
 
-SFO_hash_t * fc_solve_hash_init(
+extern void
+fc_solve_hash_init(
+    SFO_hash_t * hash,
     SFO_hash_value_t wanted_size,
     int (*compare_function)(const void * key1, const void * key2, void * context),
     void * context
@@ -97,7 +101,7 @@ SFO_hash_t * fc_solve_hash_init(
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-int fc_solve_hash_insert(
+extern int fc_solve_hash_insert(
     SFO_hash_t * hash,
     void * key,
     void * val,
@@ -110,9 +114,15 @@ int fc_solve_hash_insert(
     );
 
 
-void fc_solve_hash_free(
+
+static GCC_INLINE void fc_solve_hash_free(
     SFO_hash_t * hash
-    );
+    )
+{
+    fc_solve_compact_allocator_finish(hash->allocator);
+
+    free(hash->entries);
+}
 
 #ifdef __cplusplus
 }
