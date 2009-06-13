@@ -1973,13 +1973,13 @@ int fc_solve_sfs_get_card_from_klondike_talon(
     talon_temp->s.talon = malloc(fcs_klondike_talon_len(state)+1);
     memcpy(
         talon_temp->s.talon,
-        ptr_state_with_locations->s.talon,
+        ptr_state_key->talon,
         fcs_klondike_talon_len(state)+1
         );
     memcpy(
         talon_temp->s.talon_params,
-        ptr_state_with_locations->s.talon_params,
-        sizeof(ptr_state_with_locations->s.talon_params)
+        ptr_state_key->talon_params,
+        sizeof(ptr_state_key->talon_params)
         );
 
     /* Make sure we redeal the talon only once */
@@ -2051,7 +2051,7 @@ int fc_solve_sfs_get_card_from_klondike_talon(
                 memcpy(
                     ptr_new_state_key->talon_params,
                     talon_temp->s.talon_params,
-                    sizeof(ptr_state_with_locations->s.talon_params)
+                    sizeof(ptr_state_key->talon_params)
                 );
 
                 for(a=0;a<=num_redeals_done;a++)

@@ -414,7 +414,7 @@ char * fc_solve_state_as_string(
     )
 {
     fcs_state_t * state;
-    char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_[10];
+    char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
     int a, card_num_is_null, b;
     int max_num_cards, s, card_num;
     fcs_cards_column_t col;
@@ -573,7 +573,7 @@ char * fc_solve_state_as_string(
                         "%3s ",
                         fc_solve_card_perl2user(
                             fcs_col_get_card(col, card_num),
-                            stack_card_,
+                            stack_card_str,
                             display_10_as_t
                             )
                         );
@@ -630,10 +630,10 @@ char * fc_solve_state_as_string(
             {
                 fc_solve_card_perl2user(
                     fcs_col_get_card(col, card_num),
-                    stack_card_,
+                    stack_card_str,
                     display_10_as_t
                 );
-                fc_solve_append_string_sprintf(app_str, "%s", stack_card_);
+                fc_solve_append_string_sprintf(app_str, "%s", stack_card_str);
                 if (card_num < col_len-1)
                 {
                     fc_solve_append_string_sprintf(app_str, "%s", " ");

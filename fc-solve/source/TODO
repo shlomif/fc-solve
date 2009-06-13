@@ -2,6 +2,9 @@
 
 --- Non-pressing ---
 
+* See about getting rid of the unused context variable where appropriate.
+* See about replacing fcs_isa.c with the alloc.c.
+
 * Change fc_solve_rand_alloc() away from malloc() into handling a pointer
 to a rand_struct.
 
