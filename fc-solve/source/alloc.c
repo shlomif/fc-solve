@@ -36,12 +36,10 @@
 
 #define ALLOCED_SIZE (8*1024-10*sizeof(char *))
 
-fcs_compact_allocator_t *
-    fc_solve_compact_allocator_new(void)
+void fc_solve_compact_allocator_init(
+    fcs_compact_allocator_t * allocator
+    )
 {
-    fcs_compact_allocator_t * allocator;
-
-    allocator = (fcs_compact_allocator_t *)malloc(sizeof(*allocator));
     allocator->packs = (char * *)malloc(sizeof(allocator->packs[0]) * IA_STATE_PACKS_GROW_BY);
     allocator->num_packs = 1;
     allocator->max_ptr =
@@ -50,8 +48,7 @@ fcs_compact_allocator_t *
         allocator->packs[0] =
         malloc(ALLOCED_SIZE))
             + ALLOCED_SIZE;
-
-    return allocator;
+    return;
 }
 
 void fc_solve_compact_allocator_extend(
@@ -85,5 +82,4 @@ void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator)
         free(allocator->packs[a]);
     }
     free(allocator->packs);
-    free(allocator);
 }

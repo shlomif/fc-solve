@@ -410,11 +410,9 @@ static GCC_INLINE void reset_hard_thread(
     hard_thread->max_num_times = -1;
     hard_thread->num_soft_threads_finished = 0;
 #ifdef INDIRECT_STACK_STATES
-    hard_thread->stacks_allocator =
-        fc_solve_compact_allocator_new();
+    fc_solve_compact_allocator_init(&(hard_thread->stacks_allocator));
 #endif
-    hard_thread->move_stacks_allocator =
-        fc_solve_compact_allocator_new();
+    fc_solve_compact_allocator_init(&(hard_thread->move_stacks_allocator));
 }
 
 fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
@@ -546,14 +544,16 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
 
     free(hard_thread->soft_threads);
 
-    if (hard_thread->move_stacks_allocator)
+    if (hard_thread->move_stacks_allocator.packs)
     {
-        fc_solve_compact_allocator_finish(hard_thread->move_stacks_allocator);
+        fc_solve_compact_allocator_finish(&(hard_thread->move_stacks_allocator));
+        hard_thread->move_stacks_allocator.packs = NULL;
     }
 #ifdef INDIRECT_STACK_STATES
-    if (hard_thread->stacks_allocator)
+    if (hard_thread->stacks_allocator.packs)
     {
-        fc_solve_compact_allocator_finish(hard_thread->stacks_allocator);
+        fc_solve_compact_allocator_finish(&(hard_thread->stacks_allocator));
+        hard_thread->stacks_allocator.packs = NULL;
     }
 #endif
     free(hard_thread);
@@ -1459,12 +1459,12 @@ static GCC_INLINE void finish_hard_thread(
     fc_solve_state_ia_finish(hard_thread);
 
 #ifdef INDIRECT_STACK_STATES
-    fc_solve_compact_allocator_finish(hard_thread->stacks_allocator);
-    hard_thread->stacks_allocator = NULL;
+    fc_solve_compact_allocator_finish(&(hard_thread->stacks_allocator));
+    hard_thread->stacks_allocator.packs = NULL;
 #endif
 
-    fc_solve_compact_allocator_finish(hard_thread->move_stacks_allocator);
-    hard_thread->move_stacks_allocator = NULL;
+    fc_solve_compact_allocator_finish(&(hard_thread->move_stacks_allocator));
+    hard_thread->move_stacks_allocator.packs = NULL;
 
     return;
 }

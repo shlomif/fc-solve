@@ -524,14 +524,14 @@ struct fc_solve_hard_thread_struct
     /*
      * This is the mechanism used to allocate memory for the stacks.
      * */
-    fcs_compact_allocator_t * stacks_allocator;
+    fcs_compact_allocator_t stacks_allocator;
 #endif
 
     /*
      * This is a compact memory allocator for the move stacks associated
      * with the states in the states collection.
      * */
-    fcs_compact_allocator_t * move_stacks_allocator;
+    fcs_compact_allocator_t move_stacks_allocator;
 
     /*
      * This is a move stack that is used and re-used by the

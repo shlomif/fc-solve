@@ -44,8 +44,8 @@ typedef struct
     char * rollback_ptr;
 } fcs_compact_allocator_t;
 
-extern fcs_compact_allocator_t *
-    fc_solve_compact_allocator_new(void);
+extern void
+    fc_solve_compact_allocator_init(fcs_compact_allocator_t * allocator);
 
 extern void fc_solve_compact_allocator_extend(
     fcs_compact_allocator_t * allocator

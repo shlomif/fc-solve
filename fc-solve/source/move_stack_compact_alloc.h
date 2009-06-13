@@ -43,7 +43,7 @@ static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(fc_sol
     fcs_compact_alloc_typed_ptr_into_var(
         ptr,
         char,
-        hard_thread->move_stacks_allocator,
+        &(hard_thread->move_stacks_allocator),
         (sizeof(fcs_move_stack_t) + sizeof(fcs_move_t)*old_move_stack_to_parent->num_moves)
         );
     new_move_stack_to_parent = (fcs_move_stack_t *)ptr;

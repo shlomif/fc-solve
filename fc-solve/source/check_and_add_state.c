@@ -103,7 +103,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
     register int col_len;
     fcs_compact_allocator_t * stacks_allocator;
     
-    stacks_allocator = hard_thread->stacks_allocator;
+    stacks_allocator = &(hard_thread->stacks_allocator);
 
     for(a=0 ; a < LOCAL_STACKS_NUM ; a++)
     {
@@ -119,7 +119,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
         column = fcs_state_get_col(*new_state_key, a);
         col_len = (fcs_col_len(column)+1);
 
-        fcs_compact_alloc_typed_ptr_into_var(new_ptr, char, hard_thread->stacks_allocator, col_len);
+        fcs_compact_alloc_typed_ptr_into_var(new_ptr, char, stacks_allocator, col_len);
         memcpy(new_ptr, column, col_len);
         new_state_key->stacks[a] = new_ptr;
 

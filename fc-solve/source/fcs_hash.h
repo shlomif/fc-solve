@@ -83,7 +83,7 @@ typedef struct
     /* A context to pass to the comparison function */
     void * context;
 
-    fcs_compact_allocator_t * allocator;
+    fcs_compact_allocator_t allocator;
 } fc_solve_hash_t;
 
 extern void
@@ -119,7 +119,7 @@ static GCC_INLINE void fc_solve_hash_free(
     fc_solve_hash_t * hash
     )
 {
-    fc_solve_compact_allocator_finish(hash->allocator);
+    fc_solve_compact_allocator_finish(&(hash->allocator));
 
     free(hash->entries);
 }

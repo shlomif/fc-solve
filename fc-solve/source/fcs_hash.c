@@ -79,7 +79,7 @@ void fc_solve_hash_init(
        that the cork of the linked list is right at the start */
     memset(hash->entries, 0, sizeof(fc_solve_hash_symlink_t)*size);
 
-    hash->allocator = fc_solve_compact_allocator_new();
+    fc_solve_compact_allocator_init(&(hash->allocator));
 
     return;
 }
@@ -108,7 +108,7 @@ int fc_solve_hash_insert(
     if (list->first_item == NULL)
     {
         /* Allocate a first item with that key/val pair */
-        fcs_compact_alloc_into_var(item, hash->allocator, fc_solve_hash_symlink_item_t);
+        fcs_compact_alloc_into_var(item, &(hash->allocator), fc_solve_hash_symlink_item_t);
         list->first_item = item;
         item->next = NULL;
         item->key = key;
@@ -153,7 +153,7 @@ int fc_solve_hash_insert(
 
     {
         /* Put the new element at the end of the list */
-        fcs_compact_alloc_into_var(item, hash->allocator, fc_solve_hash_symlink_item_t);
+        fcs_compact_alloc_into_var(item, &(hash->allocator), fc_solve_hash_symlink_item_t);
         last_item->next = item;
         item->next = NULL;
         item->key = key;
