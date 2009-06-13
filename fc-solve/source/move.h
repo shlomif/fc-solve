@@ -65,16 +65,10 @@ extern const fcs_move_t fc_solve_empty_move;
 }
 extern int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move);
 
-#if 0
-void fcs_move_stack_destroy(fcs_move_stack_t * stack);
-#endif
-
-#define fcs_move_stack_destroy(stack) \
-{     \
-    free((stack)->moves);  \
-    free(stack); \
+#define fcs_move_stack_static_destroy(stack) \
+{ \
+    free((stack).moves); \
 }
-
 
 #if 0
 void fcs_move_stack_reset(fcs_move_stack_t * stack);
@@ -100,19 +94,12 @@ void fc_solve_apply_move(
 */
 
 #define FCS_MOVE_STACK_GROW_BY 16
-/* This macro allocates an empty move stack */
-#define fcs_move_stack_alloc_into_var(final_ret) \
+/* This macro initialises an empty move stack */
+#define fcs_move_stack_init(ret) \
 {       \
-    fcs_move_stack_t * ret; \
-        \
-    /* Allocate the data structure itself */      \
-    ret = (fcs_move_stack_t *)malloc(sizeof(fcs_move_stack_t));    \
-       \
-    ret->num_moves = 0;        \
+    ret.num_moves = 0;        \
     /* Allocate some space for the moves */     \
-    ret->moves = (fcs_move_t *)malloc(sizeof(ret->moves[0])*FCS_MOVE_STACK_GROW_BY);  \
-                \
-    (final_ret) = ret;       \
+    ret.moves = (fcs_move_t *)malloc(sizeof(ret.moves[0])*FCS_MOVE_STACK_GROW_BY);  \
 }
 
 static GCC_INLINE void fc_solve_move_stack_swallow_stack(
@@ -125,7 +112,6 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
     {
         fcs_move_stack_push(stack, move);
     }
-    fcs_move_stack_destroy(src_stack);
 }
 
 static GCC_INLINE void fc_solve_move_stack_normalize(
@@ -136,7 +122,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     int decks_num
     )
 {
-    fcs_move_stack_t * temp_moves;
+    fcs_move_stack_t temp_moves;
     fcs_move_t in_move, out_move;
     fcs_state_keyval_pair_t dynamic_state;
 #ifdef INDIRECT_STACK_STATES
@@ -146,7 +132,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 
     out_move = fc_solve_empty_move;
 
-    fcs_move_stack_alloc_into_var(temp_moves);
+    fcs_move_stack_init(temp_moves);
 
     fcs_duplicate_state(
             &(dynamic_state.s), &(dynamic_state.info),
@@ -226,7 +212,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
                 fcs_move_set_num_cards_in_seq(out_move,fcs_move_get_num_cards_in_seq(in_move));
             }
 
-            fcs_move_stack_push(temp_moves, out_move);
+            fcs_move_stack_push((&temp_moves), out_move);
         }
     }
 
@@ -237,7 +223,8 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
      * */
     fcs_move_stack_reset(moves);
 
-    fc_solve_move_stack_swallow_stack(moves, temp_moves);
+    fc_solve_move_stack_swallow_stack(moves, (&temp_moves));
+    fcs_move_stack_static_destroy(temp_moves);
 }
 
 extern char * fc_solve_move_to_string_w_state(

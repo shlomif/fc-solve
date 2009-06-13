@@ -58,16 +58,10 @@ extern void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread);
     } \
 }
 
-#if 0
-extern void fcs_state_ia_release(fc_solve_instance_t * instance);
-#else
 #define fcs_state_ia_release(instance)      \
 {                                           \
     (instance)->num_states_in_last_pack--;    \
 }
-
-
-#endif
 
 static GCC_INLINE void fc_solve_state_ia_finish(fc_solve_hard_thread_t * hard_thread)
 {

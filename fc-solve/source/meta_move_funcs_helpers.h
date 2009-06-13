@@ -235,7 +235,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #define tests_define_accessors_no_stacks()                                  \
     ptr_state_key = ptr_state_val->key;                           \
     hard_thread = soft_thread->hard_thread;                       \
-    moves = hard_thread->reusable_move_stack;                     \
+    moves = &(hard_thread->reusable_move_stack);                     \
     state_context_value = 0;                                      \
     tests_define_accessors_freecell_only()
 

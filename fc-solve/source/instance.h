@@ -174,7 +174,7 @@ typedef struct
      * It is created only after the solution was found by swallowing
      * all the stacks of each depth.
      * */
-    fcs_move_stack_t * solution_moves;
+    fcs_move_stack_t solution_moves;
 
     /*
      * Limits for the maximal depth and for the maximal number of checked
@@ -537,7 +537,7 @@ struct fc_solve_hard_thread_struct
      * This is a move stack that is used and re-used by the
      * tests functions of this hard thread
      * */
-    fcs_move_stack_t * reusable_move_stack;
+    fcs_move_stack_t reusable_move_stack;
 
 #ifdef INDIRECT_STACK_STATES
     /*

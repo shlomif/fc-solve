@@ -68,14 +68,6 @@ int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move)
     }
 }
 
-#if 0
-void fcs_move_stack_destroy(fcs_move_stack_t * stack)
-{
-    free(stack->moves);
-    free(stack);
-}
-#endif
-
 
 #if 0
 void fcs_move_stack_reset(

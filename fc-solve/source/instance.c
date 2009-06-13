@@ -453,7 +453,7 @@ fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
 
     reset_hard_thread(hard_thread);
 
-    fcs_move_stack_alloc_into_var(hard_thread->reusable_move_stack);
+    fcs_move_stack_init(hard_thread->reusable_move_stack);
 
     return hard_thread;
 }
@@ -515,7 +515,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->hard_threads[0] = fc_solve_instance__alloc_hard_thread(instance);
 
-    instance->solution_moves = NULL;
+    instance->solution_moves.moves = NULL;
 
     instance->optimize_solution_path = 0;
     instance->optimization_thread = NULL;
@@ -544,7 +544,7 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
     {
         free (hard_thread->prelude);
     }
-    fcs_move_stack_destroy(hard_thread->reusable_move_stack);
+    fcs_move_stack_static_destroy(hard_thread->reusable_move_stack);
 
     free(hard_thread->soft_threads);
 
@@ -810,22 +810,22 @@ static void trace_solution(
         Trace the solution.
     */
     fcs_state_extra_info_t * s1_val;
-    fcs_move_stack_t * solution_moves;
     int move_idx;
     fcs_move_stack_t * stack;
     fcs_move_t * moves;
+    fcs_move_stack_t * solution_moves_ptr;
 
-    if (instance->solution_moves != NULL)
+    if (instance->solution_moves.moves != NULL)
     {
-        fcs_move_stack_destroy(instance->solution_moves);
-        instance->solution_moves = NULL;
+        fcs_move_stack_static_destroy(instance->solution_moves);
+        instance->solution_moves.moves = NULL;
     }
 
-    fcs_move_stack_alloc_into_var(solution_moves);
-    instance->solution_moves = solution_moves;
+    fcs_move_stack_init(instance->solution_moves);
 
     s1_val = instance->final_state_val;
 
+    solution_moves_ptr = &(instance->solution_moves);
     /* Retrace the step from the current state to its parents */
     while (s1_val->parent_val != NULL)
     {
@@ -837,7 +837,7 @@ static void trace_solution(
             moves = stack->moves;
             for(move_idx=stack->num_moves-1;move_idx>=0;move_idx--)
             {
-                fcs_move_stack_push(solution_moves, moves[move_idx]);
+                fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
             }
         }
         /* Duplicate the state to a freshly malloced memory */

@@ -736,3 +736,10 @@ fcs_card_set_num
 fcs_card_set_suit
 fcs_klondike_talon_num_redeals_left
 card_str
+solution_moves_ptr
+fcs_move_stack_init
+fcs_put_card_in_talon
+fcs_soft_dfs_stack_item_t
+fcs_stack_compare
+fcs_stack_compare_for_comparison_with_context
+fcs_state_ia_release

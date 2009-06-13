@@ -238,8 +238,8 @@ static void recycle_instance(
 {
     if (user->instances_list[i].ret == FCS_STATE_WAS_SOLVED)
     {
-        fcs_move_stack_destroy(user->instance->solution_moves);
-        user->instance->solution_moves = NULL;
+        fcs_move_stack_static_destroy(user->instance->solution_moves);
+        user->instance->solution_moves.moves = NULL;
     }
     /* fc_solve_unresume_instance is empty. */
 #if 0
@@ -418,7 +418,7 @@ int freecell_solver_user_resume_solution(
             fc_solve_instance_t * instance = user->instance;
 #endif
             fc_solve_move_stack_normalize(
-                user->instance->solution_moves,
+                &(user->instance->solution_moves),
                 &(user->state.info),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
@@ -473,7 +473,7 @@ int freecell_solver_user_get_next_move(
             int ret;
 
             ret = fc_solve_move_stack_pop(
-                user->instance->solution_moves,
+                &(user->instance->solution_moves),
                 move
                 );
 
@@ -537,8 +537,8 @@ static void user_free_resources(
 
         if (ret_code == FCS_STATE_WAS_SOLVED)
         {
-            fcs_move_stack_destroy(user->instance->solution_moves);
-            user->instance->solution_moves = NULL;
+            fcs_move_stack_static_destroy(user->instance->solution_moves);
+            user->instance->solution_moves.moves = NULL;
         }
         /* fc_solve_unresume_instance is empty. */
 #if 0
@@ -763,7 +763,7 @@ int freecell_solver_user_get_moves_left(void * user_instance)
 
     user = (fcs_user_t *)user_instance;
     if (user->ret == FCS_STATE_WAS_SOLVED)
-        return user->instance->solution_moves->num_moves;
+        return user->instance->solution_moves.num_moves;
     else
         return 0;
 }

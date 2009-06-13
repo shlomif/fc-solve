@@ -61,3 +61,12 @@ fcs_move_stack_t * fcs_move_stack_create(void)
     return ret;
 }
 #endif
+
+#if 0
+void fcs_move_stack_destroy(fcs_move_stack_t * stack)
+{
+    free(stack->moves);
+    free(stack);
+}
+#endif
+

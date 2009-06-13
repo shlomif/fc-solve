@@ -37,3 +37,10 @@ fcs_move_stack_t * fcs_move_stack_duplicate(fcs_move_stack_t * stack);
 extern int fc_solve_move_stack_get_num_moves(fcs_move_stack_t * stack);
 
 fcs_move_stack_t * fcs_move_stack_create(void);
+
+#define fcs_move_stack_destroy(stack) \
+{     \
+    fcs_move_stack_static_destroy(*stack); \
+    free(stack); \
+}
+
