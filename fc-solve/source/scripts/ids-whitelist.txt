@@ -735,3 +735,4 @@ fcs_card_set_flipped
 fcs_card_set_num
 fcs_card_set_suit
 fcs_klondike_talon_num_redeals_left
+card_str
