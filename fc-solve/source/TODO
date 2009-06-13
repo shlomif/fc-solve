@@ -2,6 +2,10 @@
 
 --- Non-pressing ---
 
+* Play with moving commonly accessed struct elements to the struct to fit
+within the processor's cache line. Like the Linux kernel where the most
+important elements are at the first 32 bytes of the struct.
+
 * See about getting rid of the unused context variable where appropriate.
 
 * See about replacing fcs_isa.c with the alloc.c.

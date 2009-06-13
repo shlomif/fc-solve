@@ -55,20 +55,6 @@ int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
 }
 #endif
 
-int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move)
-{
-    if (stack->num_moves > 0)
-    {
-        *move = stack->moves[--stack->num_moves];
-        return 0;
-    }
-    else
-    {
-        return 1;
-    }
-}
-
-
 #if 0
 void fcs_move_stack_reset(
     fcs_move_stack_t * stack

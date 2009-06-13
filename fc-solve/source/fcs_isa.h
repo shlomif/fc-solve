@@ -39,28 +39,28 @@ extern "C" {
 
 extern void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread);
 
-#define fcs_state_ia_alloc_into_var(ret_val, instance) \
+#define fcs_state_ia_alloc_into_var(ret_val, hard_thread) \
 {           \
-    if ((instance)->num_states_in_last_pack == (instance)->state_pack_len)     \
+    if ((hard_thread)->num_states_in_last_pack == (hard_thread)->state_pack_len)     \
     {            \
-        if (! ((instance->num_state_packs+1) & (IA_STATE_PACKS_GROW_BY-1) ))    \
+        if (! ((hard_thread->num_state_packs+1) & (IA_STATE_PACKS_GROW_BY-1) ))    \
         {        \
-            instance->state_packs = (fcs_state_keyval_pair_t * *)realloc(instance->state_packs, sizeof(instance->state_packs[0]) * (instance->num_state_packs + IA_STATE_PACKS_GROW_BY));      \
+            hard_thread->state_packs = (fcs_state_keyval_pair_t * *)realloc(hard_thread->state_packs, sizeof(hard_thread->state_packs[0]) * (hard_thread->num_state_packs + IA_STATE_PACKS_GROW_BY));      \
         }          \
-        instance->state_packs[instance->num_state_packs++] = malloc(instance->state_pack_len * sizeof(fcs_state_keyval_pair_t));     \
-        instance->num_states_in_last_pack = 0;       \
+        hard_thread->state_packs[hard_thread->num_state_packs++] = malloc(hard_thread->state_pack_len * sizeof(fcs_state_keyval_pair_t));     \
+        hard_thread->num_states_in_last_pack = 0;       \
     }         \
     {          \
         fcs_state_keyval_pair_t * ret_helper; \
-        ret_helper = &(instance->state_packs[instance->num_state_packs-1][instance->num_states_in_last_pack++]);       \
+        ret_helper = &(hard_thread->state_packs[hard_thread->num_state_packs-1][hard_thread->num_states_in_last_pack++]);       \
         ret_val = &(ret_helper->info); \
         ret_val->key = &(ret_helper->s);  \
     } \
 }
 
-#define fcs_state_ia_release(instance)      \
+#define fcs_state_ia_release(hard_thread)      \
 {                                           \
-    (instance)->num_states_in_last_pack--;    \
+    (hard_thread)->num_states_in_last_pack--;    \
 }
 
 static GCC_INLINE void fc_solve_state_ia_finish(fc_solve_hard_thread_t * hard_thread)

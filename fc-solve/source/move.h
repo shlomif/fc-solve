@@ -63,7 +63,19 @@ extern const fcs_move_t fc_solve_empty_move;
     stack->moves[stack->num_moves++] = move;    \
             \
 }
-extern int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move);
+
+static GCC_INLINE int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move)
+{
+    if (stack->num_moves > 0)
+    {
+        *move = stack->moves[--stack->num_moves];
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
 
 #define fcs_move_stack_static_destroy(stack) \
 { \
