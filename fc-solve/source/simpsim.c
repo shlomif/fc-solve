@@ -1518,7 +1518,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 
     int check;
 
-    int stack_idx, cards_num, parend_card_height, child_card_height;
+    int stack_idx, cards_num, parent_card_height, child_card_height;
     fcs_card_t parent_card;
     int a;
     int after_junk_num_freestacks;
@@ -1546,20 +1546,20 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         if (cards_num > 2)
         {
             /* Search for a parent card */
-            for(parend_card_height=0; parend_card_height < cards_num-1 ; parend_card_height++)
+            for(parent_card_height=0; parent_card_height < cards_num-1 ; parent_card_height++)
             {
-                parent_card = fcs_col_get_card(col, parend_card_height);
+                parent_card = fcs_col_get_card(col, parent_card_height);
                 if (
                     fcs_is_ss_true_parent(
                         parent_card,
-                        fcs_col_get_card(col, parend_card_height+1)
+                        fcs_col_get_card(col, parent_card_height+1)
                         )
                    )
                 {
                     continue;
                 }
 
-                for(child_card_height = parend_card_height + 2 ; child_card_height < cards_num ; child_card_height++)
+                for(child_card_height = parent_card_height + 2 ; child_card_height < cards_num ; child_card_height++)
                 {
                     register fcs_card_t child_card;
 
@@ -1572,7 +1572,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
                     {
                         /* We have a matching parent and child cards */
 #if 0
-                        printf("Stack %i, Parent %i, Child %i\n", stack_idx, parend_card_height, child_card_height);
+                        printf("Stack %i, Parent %i, Child %i\n", stack_idx, parent_card_height, child_card_height);
                         fflush(stdout);
 #endif
 
@@ -1642,7 +1642,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
                         above_card = fcs_col_get_card(col, child_card_height-1);
                         above_num_true_seqs[num_separate_false_seqs] = 1;
                         for(above_c = child_card_height-2;
-                            above_c > parend_card_height ;
+                            above_c > parent_card_height ;
                             above_c--
                             )
                         {
@@ -1656,7 +1656,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
                             above_card = up_above_card;
                         }
 
-                        if (parend_card_height < child_card_height - 1)
+                        if (parent_card_height < child_card_height - 1)
                         {
                             seq_points[num_separate_false_seqs++] = above_c+1;
                         }

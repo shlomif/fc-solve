@@ -133,6 +133,7 @@ void fc_solve_apply_move(
             fcs_empty_freecell(*state_key, src);
         }
         break;
+
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
         {
             col = fcs_state_get_col(*state_key, src);
@@ -140,6 +141,7 @@ void fc_solve_apply_move(
             fcs_put_card_in_freecell(*state_key, dest, card);
         }
         break;
+
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         {
             col = fcs_state_get_col(*state_key, src);
@@ -147,12 +149,14 @@ void fc_solve_apply_move(
             fcs_increment_foundation(*state_key, fcs_move_get_foundation(move));
         }
         break;
+
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
         {
             fcs_empty_freecell(*state_key, src);
             fcs_increment_foundation(*state_key, fcs_move_get_foundation(move));
         }
         break;
+
         case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
         {
             int i;

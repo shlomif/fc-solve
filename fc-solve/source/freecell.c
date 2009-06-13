@@ -2187,7 +2187,7 @@ int fc_solve_sfs_atomic_move_card_to_parent(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    int stack_idx, cards_num, ds, ds_cards_num;
+    int stack_idx, cards_num, ds;
     fcs_card_t card, dest_card;
     fcs_move_t temp_move;
     int check;
@@ -2216,11 +2216,11 @@ int fc_solve_sfs_atomic_move_card_to_parent(
                 }
 
                 dest_col = fcs_state_get_col(state, ds);
-                ds_cards_num = fcs_col_len(dest_col);
 
-                if (ds_cards_num > 0)
+                if (fcs_col_len(dest_col) > 0)
                 {
-                    dest_card = fcs_col_get_card(dest_col, ds_cards_num-1);
+                    dest_card = fcs_col_get_card(dest_col, 
+                            fcs_col_len(dest_col)-1);
                     if (fcs_is_parent_card(card, dest_card))
                     {
                         /* Let's move it */
@@ -2352,7 +2352,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
 #ifndef HARD_CODED_NUM_FREECELLS
     int freecells_num;
 #endif
-    int fc, ds, ds_cards_num;
+    int fc, ds;
     fcs_card_t card, dest_card;
     fcs_move_t temp_move;
     int check;
@@ -2379,10 +2379,9 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
         for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
         {
             dest_col = fcs_state_get_col(state, ds);
-            ds_cards_num = fcs_col_len(dest_col);
-            if (ds_cards_num > 0)
+            if (fcs_col_len(dest_col) > 0)
             {
-                dest_card = fcs_col_get_card(dest_col, ds_cards_num-1);
+                dest_card = fcs_col_get_card(dest_col, fcs_col_len(dest_col)-1);
                 if (fcs_is_parent_card(card, dest_card))
                 {
                     /* Let's move it */
