@@ -1147,3 +1147,4 @@ derived
 col_num_cards
 as_string
 a_star_pqueue
+FC_SOLVE_PQUEUE_MaxRating

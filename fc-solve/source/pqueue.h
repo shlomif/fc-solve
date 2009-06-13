@@ -27,7 +27,7 @@ extern "C" {
 /* manage a priority queue as a heap
    the heap is implemented as a fixed size array of pointers to your data */
 
-#define PQUEUE_MaxRating INT_MAX
+#define FC_SOLVE_PQUEUE_MaxRating INT_MAX
 
 #define PGetRating(elem) ((elem).rating)
 
@@ -118,7 +118,7 @@ static GCC_INLINE int fc_solve_PQueuePush(
         {
 
             while( ( i==PQ_FIRST_ENTRY ?
-                     (PQUEUE_MaxRating) /* return biggest possible rating if first element */
+                     (FC_SOLVE_PQUEUE_MaxRating) /* return biggest possible rating if first element */
                      :
                      (PGetRating(Elements[ PQ_PARENT_INDEX(i) ]) )
                    )
