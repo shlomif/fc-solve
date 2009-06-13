@@ -238,7 +238,7 @@ typedef struct
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     GHashTable * hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    SFO_hash_t hash;
+    fc_solve_hash_t hash;
 #endif
 
 #if defined(INDIRECT_STACK_STATES)
@@ -247,7 +247,7 @@ typedef struct
      * used.
      * */
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    SFO_hash_t stacks_hash;
+    fc_solve_hash_t stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_stacks_tree_table_t * stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
@@ -335,7 +335,7 @@ typedef struct
     int talon_type;
 
     /* The Klondike Talons' Cache */
-    SFO_hash_t * talons_hash;
+    fc_solve_hash_t * talons_hash;
 
 #endif
 

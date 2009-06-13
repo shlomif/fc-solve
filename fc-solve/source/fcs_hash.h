@@ -37,9 +37,9 @@ extern "C" {
 
 #include "inline.h"
 
-typedef int SFO_hash_value_t;
+typedef int fc_solve_hash_value_t;
 
-struct SFO_hash_symlink_item_struct
+struct fc_solve_hash_symlink_item_struct
 {
     /* A pointer to the data structure that is to be collected */
     void * key;
@@ -47,29 +47,29 @@ struct SFO_hash_symlink_item_struct
     void * val;
     /* We also store the hash value corresponding to this key for faster
        comparisons */
-    SFO_hash_value_t hash_value;
+    fc_solve_hash_value_t hash_value;
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     /*
      * We also store a secondary hash value, which is not used for indexing,
      * but is used to speed up comparison.
      * */
-    SFO_hash_value_t secondary_hash_value;
+    fc_solve_hash_value_t secondary_hash_value;
 #endif
     /* The next item in the list */
-    struct SFO_hash_symlink_item_struct * next;
+    struct fc_solve_hash_symlink_item_struct * next;
 };
 
-typedef struct SFO_hash_symlink_item_struct SFO_hash_symlink_item_t;
+typedef struct fc_solve_hash_symlink_item_struct fc_solve_hash_symlink_item_t;
 
 typedef struct 
 {
-    SFO_hash_symlink_item_t * first_item;
-} SFO_hash_symlink_t;
+    fc_solve_hash_symlink_item_t * first_item;
+} fc_solve_hash_symlink_t;
 
 typedef struct
 {
     /* The vector of the hash table itself */
-    SFO_hash_symlink_t * entries;
+    fc_solve_hash_symlink_t * entries;
     /* A comparison function that can be used for comparing two keys
        in the collection */
     int (*compare_function)(const void * key1, const void * key2, void * context);
@@ -84,12 +84,12 @@ typedef struct
     void * context;
 
     fcs_compact_allocator_t * allocator;
-} SFO_hash_t;
+} fc_solve_hash_t;
 
 extern void
 fc_solve_hash_init(
-    SFO_hash_t * hash,
-    SFO_hash_value_t wanted_size,
+    fc_solve_hash_t * hash,
+    fc_solve_hash_value_t wanted_size,
     int (*compare_function)(const void * key1, const void * key2, void * context),
     void * context
     );
@@ -102,21 +102,21 @@ fc_solve_hash_init(
  * was set to it.
  */
 extern int fc_solve_hash_insert(
-    SFO_hash_t * hash,
+    fc_solve_hash_t * hash,
     void * key,
     void * val,
     void * * existing_key,
     void * * existing_val,
-    SFO_hash_value_t hash_value
+    fc_solve_hash_value_t hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    , SFO_hash_value_t secondary_hash_value
+    , fc_solve_hash_value_t secondary_hash_value
 #endif
     );
 
 
 
 static GCC_INLINE void fc_solve_hash_free(
-    SFO_hash_t * hash
+    fc_solve_hash_t * hash
     )
 {
     fc_solve_compact_allocator_finish(hash->allocator);

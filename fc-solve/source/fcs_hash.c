@@ -42,13 +42,13 @@
 
 #include "inline.h"
 
-static void GCC_INLINE SFO_hash_rehash(SFO_hash_t * hash);
+static void GCC_INLINE fc_solve_hash_rehash(fc_solve_hash_t * hash);
 
 
 
 void fc_solve_hash_init(
-    SFO_hash_t * hash,
-    SFO_hash_value_t wanted_size,
+    fc_solve_hash_t * hash,
+    fc_solve_hash_value_t wanted_size,
     int (*compare_function)(const void * key1, const void * key2, void * context),
     void * context
     )
@@ -68,8 +68,8 @@ void fc_solve_hash_init(
     hash->num_elems = 0;
 
     /* Allocate a table of size entries */
-    hash->entries = (SFO_hash_symlink_t *)malloc(
-        sizeof(SFO_hash_symlink_t) * size
+    hash->entries = (fc_solve_hash_symlink_t *)malloc(
+        sizeof(fc_solve_hash_symlink_t) * size
         );
 
     hash->compare_function = compare_function;
@@ -77,7 +77,7 @@ void fc_solve_hash_init(
 
     /* Initialize all the cells of the hash table to NULL, which indicate
        that the cork of the linked list is right at the start */
-    memset(hash->entries, 0, sizeof(SFO_hash_symlink_t)*size);
+    memset(hash->entries, 0, sizeof(fc_solve_hash_symlink_t)*size);
 
     hash->allocator = fc_solve_compact_allocator_new();
 
@@ -85,20 +85,20 @@ void fc_solve_hash_init(
 }
 
 int fc_solve_hash_insert(
-    SFO_hash_t * hash,
+    fc_solve_hash_t * hash,
     void * key,
     void * val,
     void * * existing_key,
     void * * existing_val,
-    SFO_hash_value_t hash_value
+    fc_solve_hash_value_t hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    , SFO_hash_value_t secondary_hash_value
+    , fc_solve_hash_value_t secondary_hash_value
 #endif
     )
 {
     int place;
-    SFO_hash_symlink_t * list;
-    SFO_hash_symlink_item_t * item, * last_item;
+    fc_solve_hash_symlink_t * list;
+    fc_solve_hash_symlink_item_t * item, * last_item;
 
     /* Get the index of the appropriate chain in the hash table */
     place = hash_value & (hash->size_bitmask);
@@ -108,7 +108,7 @@ int fc_solve_hash_insert(
     if (list->first_item == NULL)
     {
         /* Allocate a first item with that key/val pair */
-        fcs_compact_alloc_into_var(item, hash->allocator, SFO_hash_symlink_item_t);
+        fcs_compact_alloc_into_var(item, hash->allocator, fc_solve_hash_symlink_item_t);
         list->first_item = item;
         item->next = NULL;
         item->key = key;
@@ -153,7 +153,7 @@ int fc_solve_hash_insert(
 
     {
         /* Put the new element at the end of the list */
-        fcs_compact_alloc_into_var(item, hash->allocator, SFO_hash_symlink_item_t);
+        fcs_compact_alloc_into_var(item, hash->allocator, fc_solve_hash_symlink_item_t);
         last_item->next = item;
         item->next = NULL;
         item->key = key;
@@ -170,7 +170,7 @@ rehash_check:
 
     if (hash->num_elems > ((hash->size*3)>>2))
     {
-        SFO_hash_rehash(hash);
+        fc_solve_hash_rehash(hash);
     }
 
     *existing_key = NULL;
@@ -184,22 +184,22 @@ rehash_check:
     hash table, allowing for smaller chains, and faster lookup.
 
   */
-static void GCC_INLINE SFO_hash_rehash(
-    SFO_hash_t * hash
+static void GCC_INLINE fc_solve_hash_rehash(
+    fc_solve_hash_t * hash
     )
 {
     int old_size, new_size, new_size_bitmask;
     int i;
-    SFO_hash_symlink_item_t * item, * next_item;
+    fc_solve_hash_symlink_item_t * item, * next_item;
     int place;
-    SFO_hash_symlink_t * new_entries;
+    fc_solve_hash_symlink_t * new_entries;
 
     old_size = hash->size;
 
     new_size = old_size << 1;
     new_size_bitmask = new_size - 1;
 
-    new_entries = calloc(new_size, sizeof(SFO_hash_symlink_t));
+    new_entries = calloc(new_size, sizeof(fc_solve_hash_symlink_t));
 
     /* Copy the items to the new hash while not allocating them again */
     for(i=0;i<old_size;i++)
