@@ -899,7 +899,7 @@ int fc_solve_a_star_or_bfs_do_solve(
 
     int scans_synergy = instance->scans_synergy;
     fcs_states_linked_list_item_t * bfs_queue = soft_thread->bfs_queue;
-    PQUEUE * a_star_pqueue = soft_thread->a_star_pqueue;
+    PQUEUE * a_star_pqueue = &(soft_thread->a_star_pqueue);
     fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->bfs_queue_last_item;
 
     derived.num_states = 0;

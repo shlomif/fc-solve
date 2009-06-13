@@ -618,7 +618,7 @@ struct fc_solve_soft_thread_struct
 
     /*
      * The priority queue of the A* scan */
-    PQUEUE * a_star_pqueue;
+    PQUEUE a_star_pqueue;
     double a_star_initial_cards_under_sequences;
 
     char * a_star_positions_by_rank;

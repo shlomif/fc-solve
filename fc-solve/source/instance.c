@@ -157,8 +157,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
 {
     free_bfs_queue(soft_thread);
 
-    fc_solve_PQueueFree(soft_thread->a_star_pqueue);
-    free(soft_thread->a_star_pqueue);
+    fc_solve_PQueueFree(&(soft_thread->a_star_pqueue));
 
     free(soft_thread->tests_order.tests);
 
@@ -356,9 +355,8 @@ static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
     soft_thread->method = FCS_METHOD_SOFT_DFS;
 
     /* Initialize the priotity queue of the A* scan */
-    soft_thread->a_star_pqueue = malloc(sizeof(PQUEUE));
     fc_solve_PQueueInitialise(
-        soft_thread->a_star_pqueue,
+        &(soft_thread->a_star_pqueue),
         1024
         );
 
@@ -1587,7 +1585,7 @@ void fc_solve_instance__recycle_hard_thread(
         soft_thread = hard_thread->soft_threads[st_idx];
 
         /* Reset the priority queue */
-        soft_thread->a_star_pqueue->CurrentSize = 0;
+        soft_thread->a_star_pqueue.CurrentSize = 0;
         /* Reset the BFS Queue (also used for the optimization scan. */
         free_bfs_queue(soft_thread);
 
