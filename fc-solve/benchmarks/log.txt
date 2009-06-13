@@ -1157,3 +1157,16 @@ Multi-threaded:
 In the virtual console:
 
 117.870433092117s
+
+========================================================================
+
+r1985 with linking against tcmalloc (./Tatzer -l p4b ; gcc):
+
+Non-threaded:
+
+122.214457988739s
+
+Threaded:
+
+104.79748916626s
+
