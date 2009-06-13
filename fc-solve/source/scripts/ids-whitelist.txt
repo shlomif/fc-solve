@@ -711,3 +711,6 @@ fc_solve_apply_move
 fc_solve_bsearch
 fc_solve_check_and_add_state
 fc_solve_compact_allocator_extend
+fc_solve_alloc_instance
+fc_solve_fc_pro_position_to_string
+fc_solve_finish_instance
