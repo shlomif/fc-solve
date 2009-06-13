@@ -336,8 +336,13 @@ ELSE(UNIX)
     SET(MATH_LIB )
 ENDIF(UNIX)
 
+# Optionally link against Google's TCMalloc if it's available:
+# http://goog-perftools.sourceforge.net/
+# This gives better performance for the threaded programs.
+FIND_LIBRARY(LIBTCMALLOC_LIB tcmalloc)
+
 TARGET_LINK_LIBRARIES (freecell-solver 
-    ${MATH_LIB} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB}
+    ${MATH_LIB} ${LIBTCMALLOC_LIB} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB}
     )
 
 SET(FREECELL_SOLVER_EXECUTABLES )
