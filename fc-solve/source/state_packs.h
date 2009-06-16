@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * fcs_isa.h - the Freecell Solver indirect-states-allocation. Compactly
+ * state_pack.h - the Freecell Solver states packs allocation. Compactly
  * allocates (i.e: with less overhead) vectors of states.
  * */
 #ifndef FC_SOLVE__STATE_PACKS_H

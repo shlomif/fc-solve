@@ -21,8 +21,8 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-/* fcs_isa.c - Freecell Solver Indirect State Allocation Routines
-
+/* 
+ * state_packs.c - Freecell Solver State Packs Allocation Routines.
  */
 
 #include <stdlib.h>
