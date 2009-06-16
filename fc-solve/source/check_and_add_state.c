@@ -39,7 +39,7 @@
 #include "fcs_dm.h"
 #include "instance.h"
 
-#include "fcs_isa.h"
+#include "state_packs.h"
 
 #ifdef INDIRECT_STACK_STATES
 #include "fcs_hash.h"

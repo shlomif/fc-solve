@@ -25,8 +25,8 @@
  * fcs_isa.h - the Freecell Solver indirect-states-allocation. Compactly
  * allocates (i.e: with less overhead) vectors of states.
  * */
-#ifndef FC_SOLVE__FCS_ISA_H
-#define FC_SOLVE__FCS_ISA_H
+#ifndef FC_SOLVE__STATE_PACKS_H
+#define FC_SOLVE__STATE_PACKS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,4 +78,4 @@ static GCC_INLINE void fc_solve_state_ia_finish(fc_solve_state_packs_t * state_p
 }
 #endif
 
-#endif
+#endif /* FC_SOLVE__STATE_PACKS_H */

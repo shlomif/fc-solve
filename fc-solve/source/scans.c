@@ -38,7 +38,7 @@
 #include "state.h"
 #include "card.h"
 #include "scans.h"
-#include "fcs_isa.h"
+#include "state_packs.h"
 #include "check_and_add_state.h"
 #include "move_stack_compact_alloc.h"
 #include "freecell.h"

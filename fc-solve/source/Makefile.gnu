@@ -130,7 +130,6 @@ OBJECTS :=                     \
           cmd_line.o          \
           fcs_dm.o            \
           fcs_hash.o          \
-          fcs_isa.o           \
           freecell.o          \
           instance.o          \
           lib.o               \
@@ -139,6 +138,7 @@ OBJECTS :=                     \
           scans.o             \
 		  split_cmd_line.o    \
           state.o             \
+          state_packs.o       \
 
 #>>>OBJECTS.END
 

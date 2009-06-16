@@ -41,7 +41,7 @@ extern "C" {
 
 #include "inline.h"
 
-#include "fcs_isa.h"
+#include "state_packs.h"
 #include "instance.h"
 
 #ifdef FCS_FREECELL_ONLY

@@ -34,7 +34,7 @@
 #include "state.h"
 #include "instance.h"
 
-#include "fcs_isa.h"
+#include "state_packs.h"
 
 void fc_solve_state_ia_init(fc_solve_state_packs_t * state_packs)
 {
