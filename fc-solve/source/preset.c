@@ -411,10 +411,6 @@ static GCC_INLINE int fc_solve_char_to_test_num(char c)
     }
 }
 
-#ifndef min
-#define min(a,b) (((a)<(b))?(a):(b))
-#endif
-
 int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
     const char * string,
@@ -433,9 +429,6 @@ int fc_solve_apply_tests_order(
         tests_order->tests = malloc(sizeof(tests_order->tests[0])*TESTS_ORDER_GROW_BY);
     }
 
-#if 0
-    instance->tests_order_num = min(strlen(string), FCS_TESTS_NUM);
-#endif
     len = strlen(string);
     test_index = 0;
     is_group = 0;
