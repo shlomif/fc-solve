@@ -36,20 +36,18 @@
 
 #include "fcs_isa.h"
 
-void fc_solve_state_ia_init(fc_solve_hard_thread_t * hard_thread)
+void fc_solve_state_ia_init(fc_solve_state_packs_t * state_packs)
 {
-    hard_thread->state_packs = (fcs_state_keyval_pair_t * *)malloc(sizeof(fcs_state_keyval_pair_t *) * IA_STATE_PACKS_GROW_BY);
-    hard_thread->num_state_packs = 1;
+    state_packs->state_packs = (fcs_state_keyval_pair_t * *)malloc(sizeof(fcs_state_keyval_pair_t *) * IA_STATE_PACKS_GROW_BY);
+    state_packs->num_state_packs = 1;
     /*
      * All the states should fit in one 64KB segment. Now, we allocate as
      * many states as possible, minus one, so we would be certain that there
      * would be place for the overhead required by the malloc algorithm.
      * */
-    hard_thread->state_pack_len = (0x010000 / sizeof(fcs_state_keyval_pair_t)) - 1;
-    hard_thread->state_packs[0] = malloc(hard_thread->state_pack_len*sizeof(fcs_state_keyval_pair_t));
+    state_packs->state_pack_len = (0x010000 / sizeof(fcs_state_keyval_pair_t)) - 1;
+    state_packs->state_packs[0] = malloc(state_packs->state_pack_len*sizeof(fcs_state_keyval_pair_t));
 
-    hard_thread->num_states_in_last_pack = 0;
+    state_packs->num_states_in_last_pack = 0;
 }
-
-
 

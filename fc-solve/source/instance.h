@@ -448,13 +448,8 @@ typedef struct
     int quota;
 } fcs_prelude_item_t;
 
-struct fc_solve_hard_thread_struct
+typedef struct
 {
-    fc_solve_instance_t * instance;
-
-    int num_soft_threads;
-    struct fc_solve_soft_thread_struct * * soft_threads;
-
     /*
      * The State Packs variables are used by all the state cache
      * management routines. A pack stores as many states as can fit
@@ -468,6 +463,14 @@ struct fc_solve_hard_thread_struct
     int num_state_packs;
     int num_states_in_last_pack;
     int state_pack_len;
+} fc_solve_state_packs_t;
+
+struct fc_solve_hard_thread_struct
+{
+    fc_solve_instance_t * instance;
+
+    int num_soft_threads;
+    struct fc_solve_soft_thread_struct * * soft_threads;
 
     /*
      * The hard thread count of how many states he checked himself. The
@@ -519,6 +522,8 @@ struct fc_solve_hard_thread_struct
      * this thread is skipped.
      * */
     int num_soft_threads_finished;
+
+    fc_solve_state_packs_t state_packs;
 
 #ifdef INDIRECT_STACK_STATES
     /*

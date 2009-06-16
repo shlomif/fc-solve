@@ -1306,7 +1306,11 @@ int fc_solve_sfs_check_state_begin(
 {
     fcs_state_extra_info_t * ptr_new_state_val;
 
-    fcs_state_ia_alloc_into_var(ptr_new_state_val, hard_thread);
+    ptr_new_state_val =
+        fcs_state_ia_alloc_into_var(
+            &(hard_thread->state_packs)
+        );
+
     *(out_ptr_new_state_key) = ptr_new_state_val->key;
     fcs_duplicate_state(
             (*(out_ptr_new_state_key)),
@@ -1379,11 +1383,11 @@ int fc_solve_sfs_check_state_end(
         {
             /* This state is not going to be used, so
              * let's clean it. */
-            fcs_state_ia_release(hard_thread);
+            fcs_state_ia_release(&(hard_thread->state_packs));
         }
         else if (check == FCS_STATE_ALREADY_EXISTS)
         {
-            fcs_state_ia_release(hard_thread);
+            fcs_state_ia_release(&(hard_thread->state_packs));
             calculate_real_depth(existing_state_val);
             /* Re-parent the existing state to this one.
              *
