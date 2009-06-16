@@ -165,7 +165,7 @@ have_preset:
 }
 
 
-int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+int DLLEXPORT freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
     int argc,
     char * argv[],
@@ -1532,7 +1532,7 @@ break;
     return FCS_CMD_LINE_OK;
 }
 
-int freecell_solver_user_cmd_line_parse_args(
+int DLLEXPORT freecell_solver_user_cmd_line_parse_args(
     void * instance,
     int argc,
     char * argv[],

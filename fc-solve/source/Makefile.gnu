@@ -57,7 +57,7 @@ ifeq ($(GCC_COMPAT),1)
 		CFLAGS += -g
 	else
 		ifeq ($(OPT_FOR_SIZE),1)
-			CFLAGS += -Os
+			CFLAGS += -Os -fvisibility=hidden
 		else
 			CFLAGS += -O3 -march=pentium4 -fomit-frame-pointer
 		endif
