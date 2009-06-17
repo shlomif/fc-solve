@@ -32,6 +32,7 @@
 
 #include "instance.h"
 #include "preset.h"
+#include "move_funcs_order.h"
 
 #include "inline.h"
 
@@ -389,104 +390,6 @@ static GCC_INLINE int fcs_get_preset_id_by_name(
     }
 
     return ret;
-}
-
-static GCC_INLINE int fc_solve_char_to_test_num(char c)
-{
-    if ((c >= '0') && (c <= '9'))
-    {
-        return c-'0';
-    }
-    else if ((c >= 'a') && (c <= 'h'))
-    {
-        return c-'a'+10;
-    }
-    else if ((c >= 'A') && (c <= 'Z'))
-    {
-        return c-'A'+18;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-int fc_solve_apply_tests_order(
-    fcs_tests_order_t * tests_order,
-    const char * string,
-    char * * error_string
-    )
-
-{
-    int a;
-    int len;
-    int test_index;
-    int is_group, is_start_group;
-    if (tests_order->tests)
-    {
-        free(tests_order->tests);
-        tests_order->num = 0;
-        tests_order->tests = malloc(sizeof(tests_order->tests[0])*TESTS_ORDER_GROW_BY);
-    }
-
-    len = strlen(string);
-    test_index = 0;
-    is_group = 0;
-    is_start_group = 0;
-    for(a=0;(a<len) ;a++)
-    {
-        if ((string[a] == '(') || (string[a] == '['))
-        {
-            if (is_group)
-            {
-                *error_string = strdup("There's a nested random group.");
-                return 1;
-            }
-            is_group = 1;
-            is_start_group = 1;
-            continue;
-        }
-
-        if ((string[a] == ')') || (string[a] == ']'))
-        {
-            if (is_start_group)
-            {
-                *error_string = strdup("There's an empty group.");
-                return 2;
-            }
-            if (! is_group)
-            {
-                *error_string = strdup("There's a renegade right parenthesis or bracket.");
-                return 3;
-            }
-            is_group = 0;
-            is_start_group = 0;
-            continue;
-        }
-
-        if (! ((test_index) & (TESTS_ORDER_GROW_BY - 1)))
-        {
-            tests_order->tests =
-                realloc(
-                    tests_order->tests,
-                    sizeof(tests_order->tests[0]) * (test_index+TESTS_ORDER_GROW_BY)
-                );
-        }
-
-        tests_order->tests[test_index++] = (fc_solve_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
-
-        is_start_group = 0;
-    }
-    if (a != len)
-    {
-        *error_string = strdup("The Input string is too long.");
-        return 4;
-    }
-
-    tests_order->num = test_index;
-    *error_string = NULL;
-
-    return 0;
 }
 
 int fc_solve_apply_preset_by_ptr(
