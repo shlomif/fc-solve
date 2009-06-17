@@ -135,7 +135,6 @@ OBJECTS :=                     \
           lib.o               \
           move.o              \
           move_funcs_order.o  \
-          preset.o            \
           scans.o             \
 		  split_cmd_line.o    \
           state.o             \
@@ -145,6 +144,10 @@ OBJECTS :=                     \
 
 ifeq ($(DISABLE_SIMPLE_SIMON),0)
 	OBJECTS += simpsim.o
+endif
+
+ifeq ($(FREECELL_ONLY),0)
+	OBJECTS += preset.o
 endif
 
 # MYOBJ.o ==> .deps/MYOBJ.P
