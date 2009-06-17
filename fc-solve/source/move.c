@@ -55,15 +55,6 @@ int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
 }
 #endif
 
-#if 0
-void fcs_move_stack_reset(
-    fcs_move_stack_t * stack
-    )
-{
-    stack->num_moves = 0;
-}
-#endif
-
 /*
  * This function performs a given move on a state
  */

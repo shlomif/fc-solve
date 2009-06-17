@@ -82,9 +82,6 @@ static GCC_INLINE int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move
     free((stack).moves); \
 }
 
-#if 0
-void fcs_move_stack_reset(fcs_move_stack_t * stack);
-#endif
 #define fcs_move_stack_reset(stack) \
 {      \
     (stack)->num_moves = 0;   \

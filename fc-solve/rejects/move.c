@@ -70,3 +70,13 @@ void fcs_move_stack_destroy(fcs_move_stack_t * stack)
 }
 #endif
 
+
+#if 0
+void fcs_move_stack_reset(
+    fcs_move_stack_t * stack
+    )
+{
+    stack->num_moves = 0;
+}
+#endif
+
