@@ -673,8 +673,10 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
     fcs_state_extra_info_t * ptr_state_val
     )
 {
+#ifndef FCS_FREECELL_ONLY
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
+#endif
     fcs_state_t * ptr_state_key = ptr_state_val->key;
 
     double ret=0;
@@ -753,7 +755,12 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
         }
     }
 
-    if (instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
+#ifdef FCS_FREECELL_ONLY
+#define is_filled_by_any_card() 1
+#else
+#define is_filled_by_any_card() (instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
+#endif
+    if (is_filled_by_any_card())
     {
         if (unlimited_sequence_move)
         {

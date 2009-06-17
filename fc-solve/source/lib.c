@@ -87,13 +87,16 @@ typedef struct
 #endif
     char * state_string_copy;
 
+#ifndef FCS_FREECELL_ONLY
     fcs_preset_t common_preset;
+#endif
 } fcs_user_t;
 
 static void user_initialize(
         fcs_user_t * ret
         )
 {
+#ifndef FCS_FREECELL_ONLY
     const fcs_preset_t * freecell_preset;
 
     fc_solve_get_preset_by_name(
@@ -102,12 +105,15 @@ static void user_initialize(
         );
 
     fcs_duplicate_preset(ret->common_preset, *freecell_preset);
+#endif
 
     ret->instances_list = malloc(sizeof(ret->instances_list[0]));
     ret->num_instances = 1;
     ret->current_instance_idx = 0;
     ret->instance = fc_solve_alloc_instance();
+#ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_ptr(ret->instance, &(ret->common_preset));
+#endif
     ret->instances_list[ret->current_instance_idx].instance = ret->instance;
     ret->instances_list[ret->current_instance_idx].ret = ret->ret = FCS_STATE_NOT_BEGAN_YET;
     ret->instances_list[ret->current_instance_idx].limit = -1;
@@ -135,6 +141,9 @@ int DLLEXPORT freecell_solver_user_apply_preset(
     void * user_instance,
     const char * preset_name)
 {
+#ifdef FCS_FREECELL_ONLY
+    return FCS_PRESET_CODE_OK;
+#else
     const fcs_preset_t * new_preset_ptr;
     fcs_user_t * user;
     int status;
@@ -169,6 +178,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
     fcs_duplicate_preset(user->common_preset, *new_preset_ptr);
 
     return FCS_PRESET_CODE_OK;
+#endif
 }
 
 void DLLEXPORT freecell_solver_user_limit_iterations(
@@ -888,6 +898,7 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
     int sequences_are_built_by
     )
 {
+#ifndef FCS_FREECELL_ONLY
     fcs_user_t * user;
     int i;
 
@@ -898,6 +909,7 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
         return 1;
     }
     set_for_all_instances(sequences_are_built_by)
+#endif
 
     return 0;
 }
@@ -907,13 +919,14 @@ int DLLEXPORT freecell_solver_user_set_sequence_move(
     int unlimited_sequence_move
     )
 {
+#ifndef FCS_FREECELL_ONLY
     fcs_user_t * user;
     int i;
 
     user = (fcs_user_t *)user_instance;
 
     set_for_all_instances(unlimited_sequence_move);
-
+#endif
     return 0;
 }
 
@@ -922,6 +935,7 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
     int empty_stacks_fill
     )
 {
+#ifndef FCS_FREECELL_ONLY
     fcs_user_t * user;
     int i;
 
@@ -932,7 +946,7 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
         return 1;
     }
     set_for_all_instances(empty_stacks_fill);
-
+#endif
     return 0;
 }
 
@@ -1301,7 +1315,9 @@ int DLLEXPORT freecell_solver_user_next_instance(
     user->current_instance_idx = user->num_instances-1;
     user->instance = fc_solve_alloc_instance();
 
+#ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_ptr(user->instance, &(user->common_preset));
+#endif
 
     /*
      * Switch the soft_thread variable so it won't refer to the old

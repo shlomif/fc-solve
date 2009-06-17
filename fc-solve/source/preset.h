@@ -33,6 +33,9 @@
 extern "C" {
 #endif
 
+#include "config.h"
+
+#ifndef FCS_FREECELL_ONLY
 #include "instance.h"
 
 typedef struct
@@ -66,6 +69,8 @@ extern int fc_solve_get_preset_by_name(
     );
 
 #define fcs_duplicate_preset(d,s) ((d) = (s))
+
+#endif /* FCS_FREECELL_ONLY */
 
 #ifdef __cplusplus
 }

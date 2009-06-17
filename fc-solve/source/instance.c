@@ -51,6 +51,7 @@
 #include "preset.h"
 #include "unused.h"
 #include "check_and_add_state.h"
+#include "move_funcs_order.h"
 
 #include "inline.h"
 
@@ -497,7 +498,18 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->num_hard_threads = 0;
 
+#ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_name(instance, "freecell");
+#else
+    {
+        char * no_use;
+        fc_solve_apply_tests_order(
+            &(instance->instance_tests_order),
+            "[01][23456789]",
+            &no_use
+        );
+    }
+#endif
 
     /****************************************/
 

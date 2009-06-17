@@ -308,6 +308,7 @@ typedef struct
 #define LOCAL_DECKS_NUM HARD_CODED_NUM_DECKS
 #endif
 
+#ifndef FCS_FREECELL_ONLY
     /* What two adjacent cards in the same sequence can be: */
     int sequences_are_built_by;
     /* Whether an entire sequence can be moved from one place to the
@@ -317,6 +318,7 @@ typedef struct
      * With what cards can empty stacks be filled with.
      * */
     int empty_stacks_fill;
+#endif
 
 #ifdef FCS_WITH_TALONS
     /*
