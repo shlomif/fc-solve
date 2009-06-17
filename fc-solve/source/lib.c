@@ -33,6 +33,8 @@
 #include "instance.h"
 #include "preset.h"
 #include "fcs_user.h"
+#include "move_funcs_order.h"
+
 #include "unused.h"
 
 typedef struct 

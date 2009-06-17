@@ -60,12 +60,6 @@ extern int fc_solve_apply_preset_by_name(
     const char * name
     );
 
-extern int fc_solve_apply_tests_order(
-    fcs_tests_order_t * tests_order,
-    const char * string,
-    char * * error_string
-    );
-
 extern int fc_solve_get_preset_by_name(
     const char * name,
     const fcs_preset_t * * preset_ptr
