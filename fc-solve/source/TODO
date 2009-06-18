@@ -2,8 +2,6 @@
 
 --- Non-pressing ---
 
-* Do not compile preset.c for FCS_FREECELL_ONLY programs.
-
 * Play with moving commonly accessed struct elements to the struct to fit
 within the processor's cache line. Like the Linux kernel where the most
 important elements are at the first 32 bytes of the struct.
