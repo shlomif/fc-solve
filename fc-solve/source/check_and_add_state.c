@@ -39,8 +39,6 @@
 #include "fcs_dm.h"
 #include "instance.h"
 
-#include "state_packs.h"
-
 #ifdef INDIRECT_STACK_STATES
 #include "fcs_hash.h"
 #endif
@@ -103,7 +101,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
     register int col_len;
     fcs_compact_allocator_t * stacks_allocator;
     
-    stacks_allocator = &(hard_thread->stacks_allocator);
+    stacks_allocator = &(hard_thread->allocator);
 
     for(a=0 ; a < LOCAL_STACKS_NUM ; a++)
     {

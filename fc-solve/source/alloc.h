@@ -34,6 +34,9 @@ extern "C"
 {
 #endif
 
+#include "state.h"
+
+#include "inline.h"
 
 typedef struct
 {
@@ -85,6 +88,22 @@ extern void fc_solve_compact_allocator_extend(
 }
 
 extern void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator);
+
+static GCC_INLINE fcs_state_extra_info_t * fcs_state_ia_alloc_into_var(fcs_compact_allocator_t * state_packs)
+{
+    {
+        register fcs_state_keyval_pair_t * ret_helper;
+        fcs_compact_alloc_typed_ptr_into_var(
+            ret_helper, 
+            fcs_state_keyval_pair_t, 
+            state_packs,
+            sizeof(*ret_helper)
+            );
+
+        ret_helper->info.key = &(ret_helper->s);
+        return &(ret_helper->info);
+    }
+}
 
 #ifdef __cplusplus
 };

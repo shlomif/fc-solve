@@ -38,7 +38,7 @@
 #include "state.h"
 #include "card.h"
 #include "scans.h"
-#include "state_packs.h"
+#include "alloc.h"
 #include "check_and_add_state.h"
 #include "move_stack_compact_alloc.h"
 #include "freecell.h"
@@ -1315,7 +1315,7 @@ int fc_solve_sfs_check_state_begin(
 
     ptr_new_state_val =
         fcs_state_ia_alloc_into_var(
-            &(hard_thread->state_packs)
+            &(hard_thread->allocator)
         );
 
     *(out_ptr_new_state_key) = ptr_new_state_val->key;
@@ -1390,11 +1390,11 @@ int fc_solve_sfs_check_state_end(
         {
             /* This state is not going to be used, so
              * let's clean it. */
-            fcs_state_ia_release(&(hard_thread->state_packs));
+            fcs_compact_alloc_release(&(hard_thread->allocator));
         }
         else if (check == FCS_STATE_ALREADY_EXISTS)
         {
-            fcs_state_ia_release(&(hard_thread->state_packs));
+            fcs_compact_alloc_release(&(hard_thread->allocator));
             calculate_real_depth(existing_state_val);
             /* Re-parent the existing state to this one.
              *

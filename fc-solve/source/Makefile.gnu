@@ -138,7 +138,7 @@ OBJECTS :=                     \
           scans.o             \
 		  split_cmd_line.o    \
           state.o             \
-          state_packs.o       \
+
 
 #>>>OBJECTS.END
 

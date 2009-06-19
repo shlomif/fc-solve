@@ -46,8 +46,6 @@
 #include "instance.h"
 #include "scans.h"
 
-#include "state_packs.h"
-
 #include "preset.h"
 #include "unused.h"
 #include "check_and_add_state.h"
@@ -410,10 +408,7 @@ static GCC_INLINE void reset_hard_thread(
     hard_thread->ht_max_num_times = hard_thread->num_times_step;
     hard_thread->max_num_times = -1;
     hard_thread->num_soft_threads_finished = 0;
-#ifdef INDIRECT_STACK_STATES
-    fc_solve_compact_allocator_init(&(hard_thread->stacks_allocator));
-#endif
-    fc_solve_compact_allocator_init(&(hard_thread->move_stacks_allocator));
+    fc_solve_compact_allocator_init(&(hard_thread->allocator));
 }
 
 fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
@@ -556,18 +551,11 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
 
     free(hard_thread->soft_threads);
 
-    if (hard_thread->move_stacks_allocator.packs)
+    if (hard_thread->allocator.packs)
     {
-        fc_solve_compact_allocator_finish(&(hard_thread->move_stacks_allocator));
-        hard_thread->move_stacks_allocator.packs = NULL;
+        fc_solve_compact_allocator_finish(&(hard_thread->allocator));
+        hard_thread->allocator.packs = NULL;
     }
-#ifdef INDIRECT_STACK_STATES
-    if (hard_thread->stacks_allocator.packs)
-    {
-        fc_solve_compact_allocator_finish(&(hard_thread->stacks_allocator));
-        hard_thread->stacks_allocator.packs = NULL;
-    }
-#endif
     free(hard_thread);
 }
 
@@ -698,12 +686,6 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
         }
         hard_thread->num_times_left_for_soft_thread =
             hard_thread->soft_threads[0]->num_times_step;
-        fc_solve_state_ia_init(&(hard_thread->state_packs));
-    }
-
-    if (instance->optimization_thread)
-    {
-        fc_solve_state_ia_init(&(instance->optimization_thread->state_packs));
     }
 
     /* Normalize the A* Weights, so the sum of all of them would be 1. */
@@ -894,7 +876,6 @@ static GCC_INLINE int fc_solve_optimize_solution(
             optimization_thread =
             fc_solve_instance__alloc_hard_thread(instance);
 
-        fc_solve_state_ia_init(&(optimization_thread->state_packs));
     }
     else
     {
@@ -955,7 +936,7 @@ int fc_solve_solve_instance(
     /* Allocate the first state and initialize it to init_state */
     state_copy_ptr_val = 
         fcs_state_ia_alloc_into_var(
-            &(instance->hard_threads[0]->state_packs)
+            &(instance->hard_threads[0]->allocator)
         );
 
     state_copy_ptr_key = state_copy_ptr_val->key;
@@ -1468,15 +1449,8 @@ static GCC_INLINE void finish_hard_thread(
     fc_solve_hard_thread_t * hard_thread
     )
 {
-    fc_solve_state_ia_finish(&(hard_thread->state_packs));
-
-#ifdef INDIRECT_STACK_STATES
-    fc_solve_compact_allocator_finish(&(hard_thread->stacks_allocator));
-    hard_thread->stacks_allocator.packs = NULL;
-#endif
-
-    fc_solve_compact_allocator_finish(&(hard_thread->move_stacks_allocator));
-    hard_thread->move_stacks_allocator.packs = NULL;
+    fc_solve_compact_allocator_finish(&(hard_thread->allocator));
+    hard_thread->allocator.packs = NULL;
 
     return;
 }

@@ -450,23 +450,6 @@ typedef struct
     int quota;
 } fcs_prelude_item_t;
 
-typedef struct
-{
-    /*
-     * The State Packs variables are used by all the state cache
-     * management routines. A pack stores as many states as can fit
-     * in a 64KB segment, and those variables manage an array of
-     * such packs.
-     *
-     * Such allocation is possible, because at the worst situation
-     * the last state is released.
-     * */
-    fcs_state_keyval_pair_t * * state_packs;
-    int num_state_packs;
-    int num_states_in_last_pack;
-    int state_pack_len;
-} fc_solve_state_packs_t;
-
 struct fc_solve_hard_thread_struct
 {
     fc_solve_instance_t * instance;
@@ -525,20 +508,11 @@ struct fc_solve_hard_thread_struct
      * */
     int num_soft_threads_finished;
 
-    fc_solve_state_packs_t state_packs;
-
-#ifdef INDIRECT_STACK_STATES
     /*
-     * This is the mechanism used to allocate memory for the stacks.
+     * This is the mechanism used to allocate memory for stacks, states
+     * and move stacks.
      * */
-    fcs_compact_allocator_t stacks_allocator;
-#endif
-
-    /*
-     * This is a compact memory allocator for the move stacks associated
-     * with the states in the states collection.
-     * */
-    fcs_compact_allocator_t move_stacks_allocator;
+    fcs_compact_allocator_t allocator;
 
     /*
      * This is a move stack that is used and re-used by the
