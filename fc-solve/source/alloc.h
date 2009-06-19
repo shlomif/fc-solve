@@ -68,18 +68,20 @@ extern void fc_solve_compact_allocator_extend(
     result = (what_t *)allocator->rollback_ptr;       \
 }
 
-#define fcs_compact_alloc_typed_ptr_into_var(result, type_t, allocator_orig, how_much_orig) \
-{ \
-    register fcs_compact_allocator_t * allocator = (allocator_orig); \
-    register int how_much = (how_much_orig);     \
-    if (allocator->max_ptr - allocator->ptr < how_much)  \
-    {      \
-        fc_solve_compact_allocator_extend(allocator);      \
-    }         \
-    allocator->rollback_ptr = allocator->ptr;       \
-    /* Round ptr to the next pointer boundary */      \
-    allocator->ptr += ((how_much)+((sizeof(char *)-((how_much)&(sizeof(char *)-1)))&(sizeof(char*)-1)));      \
-    result = (type_t *)allocator->rollback_ptr;       \
+static GCC_INLINE void * fcs_compact_alloc_ptr(fcs_compact_allocator_t * allocator, int how_much)
+{
+    if (allocator->max_ptr - allocator->ptr < how_much+sizeof(char*))
+    {
+        fc_solve_compact_allocator_extend(allocator);
+    }
+    else
+    {
+        allocator->rollback_ptr = allocator->ptr;
+    }
+    /* Round ptr to the next pointer boundary */
+    allocator->ptr += ((how_much)+((sizeof(char *)-((how_much)&(sizeof(char *)-1)))&(sizeof(char*)-1)));
+
+    return allocator->rollback_ptr;
 }
 
 #define fcs_compact_alloc_release(allocator) \
@@ -89,15 +91,15 @@ extern void fc_solve_compact_allocator_extend(
 
 extern void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator);
 
-static GCC_INLINE fcs_state_extra_info_t * fcs_state_ia_alloc_into_var(fcs_compact_allocator_t * state_packs)
+static GCC_INLINE fcs_state_extra_info_t * fcs_state_ia_alloc_into_var(fcs_compact_allocator_t * allocator)
 {
     {
         register fcs_state_keyval_pair_t * ret_helper;
-        fcs_compact_alloc_typed_ptr_into_var(
-            ret_helper, 
-            fcs_state_keyval_pair_t, 
-            state_packs,
-            sizeof(*ret_helper)
+
+        ret_helper =
+            (fcs_state_keyval_pair_t *) 
+            fcs_compact_alloc_ptr(allocator, 
+                sizeof(*ret_helper)
             );
 
         ret_helper->info.key = &(ret_helper->s);
