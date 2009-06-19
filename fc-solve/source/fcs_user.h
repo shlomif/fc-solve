@@ -171,7 +171,7 @@ DLLEXPORT extern int freecell_solver_user_set_empty_stacks_filled_by(
 
 DLLEXPORT extern int freecell_solver_user_set_sequence_move(
     void * user_instance,
-    int unlimited
+    int unlimited_sequence_move
     );
 
 DLLEXPORT extern int freecell_solver_user_set_a_star_weight(

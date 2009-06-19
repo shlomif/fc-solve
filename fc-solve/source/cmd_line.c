@@ -976,19 +976,12 @@ break;
 
         case FCS_OPT_SEQUENCE_MOVE: /* STRINGS=--sequence-move; */
         {
-            int unlimited;
-
             PROCESS_OPT_ARG() ;
 
-            if (!strcmp((*arg), "unlimited"))
-            {
-                unlimited = 1;
-            }
-            else
-            {
-                unlimited = 0;
-            }
-            freecell_solver_user_set_sequence_move(instance, unlimited);
+            freecell_solver_user_set_sequence_move(
+                instance,
+                !strcmp((*arg), "unlimited")
+            );
         }
         break;
 

@@ -170,7 +170,7 @@ void fc_solve_apply_move(
 #undef src
 }
 
-GCC_INLINE int convert_freecell_num(int fcn)
+static GCC_INLINE int convert_freecell_num(int fcn)
 {
     if (fcn >= 7)
         return (fcn+3);

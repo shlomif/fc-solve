@@ -188,7 +188,7 @@ static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended
     moves->moves[moves->num_moves-1] = new_move;
 }
 
-moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * instance)
+moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void * instance)
 {
     Position pos;
     moves_processed_t * ret;
@@ -210,7 +210,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
     {
         virtual_stack_len[i] = orig->tableau[i].count;        
     }
-    for(i=0;i<NoFcs;i++)
+    for(i=0;i<num_freecells;i++)
     {
         virtual_freecell_len[i] = (orig->hold[i] != 0) ? 1 : 0;
     }
@@ -221,7 +221,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
         if (getenv("FCS_OUTPUT_INTERMEDIATE_POS"))
         {
             char * as_str;
-            as_str = fc_solve_fc_pro_position_to_string(&pos, NoFcs);
+            as_str = fc_solve_fc_pro_position_to_string(&pos, num_freecells);
             printf("state =\n<<<\n%s\n>>>\n\n", as_str);
             free(as_str);
         }
@@ -258,7 +258,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         exists[(card & 0x0F)-1+(card >> 4)*13] = 1;
                     }
                 }
-                for (fc=0;fc<NoFcs;fc++)
+                for (fc=0;fc<num_freecells;fc++)
                 {
                     card = pos.hold[fc];
                     if (card != 0)
@@ -306,7 +306,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
             {
                 continue;
             }
-            for(j=0;j<NoFcs;j++)
+            for(j=0;j<num_freecells;j++)
             {
                 int rank, suit;
                 Card card;
@@ -331,7 +331,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                     
                 }
             }
-            if ((i == 8) && (j == NoFcs))
+            if ((i == 8) && (j == num_freecells))
             {
                 break;
             }
