@@ -108,7 +108,7 @@ int fc_solve_hash_insert(
     if (list->first_item == NULL)
     {
         /* Allocate a first item with that key/val pair */
-        fcs_compact_alloc_into_var(item, &(hash->allocator), fc_solve_hash_symlink_item_t);
+        item = fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item));
         list->first_item = item;
         item->next = NULL;
         item->key = key;
@@ -153,7 +153,7 @@ int fc_solve_hash_insert(
 
     {
         /* Put the new element at the end of the list */
-        fcs_compact_alloc_into_var(item, &(hash->allocator), fc_solve_hash_symlink_item_t);
+        item = fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item));
         last_item->next = item;
         item->next = NULL;
         item->key = key;

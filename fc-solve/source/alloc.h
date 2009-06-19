@@ -54,20 +54,6 @@ extern void fc_solve_compact_allocator_extend(
     fcs_compact_allocator_t * allocator
         );
 
-#define fcs_compact_alloc_into_var_MYSIZE(what_t) ((sizeof(what_t))+(sizeof(char *)-((sizeof(what_t))&(sizeof(char *)-1))))
-
-#define fcs_compact_alloc_into_var(result,allocator_orig,what_t) \
-{ \
-   register fcs_compact_allocator_t * allocator = (allocator_orig); \
-   if (allocator->max_ptr - allocator->ptr < fcs_compact_alloc_into_var_MYSIZE(what_t))  \
-    {      \
-        fc_solve_compact_allocator_extend(allocator);      \
-    }         \
-    allocator->rollback_ptr = allocator->ptr;       \
-    allocator->ptr += fcs_compact_alloc_into_var_MYSIZE(what_t);      \
-    result = (what_t *)allocator->rollback_ptr;       \
-}
-
 static GCC_INLINE void * fcs_compact_alloc_ptr(fcs_compact_allocator_t * allocator, int how_much)
 {
     /* Round ptr to the next pointer boundary */
