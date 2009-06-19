@@ -70,7 +70,13 @@ extern void fc_solve_compact_allocator_extend(
 
 static GCC_INLINE void * fcs_compact_alloc_ptr(fcs_compact_allocator_t * allocator, int how_much)
 {
-    if (allocator->max_ptr - allocator->ptr < how_much+sizeof(char*))
+    /* Round ptr to the next pointer boundary */
+    how_much +=
+        (
+         (sizeof(char *)-((how_much)&(sizeof(char *)-1)))&(sizeof(char*)-1)
+        );
+
+    if (allocator->max_ptr - allocator->ptr < how_much)
     {
         fc_solve_compact_allocator_extend(allocator);
     }
@@ -78,8 +84,7 @@ static GCC_INLINE void * fcs_compact_alloc_ptr(fcs_compact_allocator_t * allocat
     {
         allocator->rollback_ptr = allocator->ptr;
     }
-    /* Round ptr to the next pointer boundary */
-    allocator->ptr += ((how_much)+((sizeof(char *)-((how_much)&(sizeof(char *)-1)))&(sizeof(char*)-1)));
+    allocator->ptr += how_much;
 
     return allocator->rollback_ptr;
 }
