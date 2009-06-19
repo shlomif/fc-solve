@@ -49,6 +49,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/install_manifest\\\\.txt$"
     "/t/card-test-(parse|render)\\\\.c$"
     "/Testing/"
+    "ids-whitelist\\\\.txt"
 )
 
 IF(WIN32 AND NOT UNIX)
