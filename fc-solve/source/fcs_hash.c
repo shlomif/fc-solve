@@ -99,6 +99,7 @@ int fc_solve_hash_insert(
     int place;
     fc_solve_hash_symlink_t * list;
     fc_solve_hash_symlink_item_t * item, * last_item;
+    fc_solve_hash_symlink_item_t * * item_placeholder;
 
     /* Get the index of the appropriate chain in the hash table */
     place = hash_value & (hash->size_bitmask);
@@ -108,17 +109,8 @@ int fc_solve_hash_insert(
     if (list->first_item == NULL)
     {
         /* Allocate a first item with that key/val pair */
-        item = fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item));
-        list->first_item = item;
-        item->next = NULL;
-        item->key = key;
-        item->val = val;
-        item->hash_value = hash_value;
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-        item->secondary_hash_value = secondary_hash_value;
-#endif
-
-        goto rehash_check;
+        item_placeholder = &(list->first_item);
+        goto alloc_item;
     }
 
     /* Initialize item to the chain's first_item */
@@ -151,24 +143,20 @@ int fc_solve_hash_insert(
         item = item->next;
     }
 
-    {
-        /* Put the new element at the end of the list */
-        item = fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item));
-        last_item->next = item;
-        item->next = NULL;
-        item->key = key;
-        item->val = val;
-        item->hash_value = hash_value;
+    item_placeholder = &(last_item->next);
+
+alloc_item:
+    /* Put the new element at the end of the list */
+    item = *(item_placeholder) = fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item));
+    item->next = NULL;
+    item->key = key;
+    item->val = val;
+    item->hash_value = hash_value;
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-        item->secondary_hash_value = secondary_hash_value;
+    item->secondary_hash_value = secondary_hash_value;
 #endif
-    }
 
-rehash_check:
-
-    hash->num_elems++;
-
-    if (hash->num_elems > ((hash->size*3)>>2))
+    if ((++hash->num_elems) > ((hash->size*3)>>2))
     {
         fc_solve_hash_rehash(hash);
     }
