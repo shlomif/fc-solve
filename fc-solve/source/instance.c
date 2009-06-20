@@ -740,6 +740,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
 #if defined(INDIRECT_STACK_STATES)
 
 #if ((FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_TREE) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_HASH) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_JUDY))
+#if (!((FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH) && (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) && !defined(FCS_WITH_CONTEXT_VARIABLE)))
 static int fcs_stack_compare_for_comparison_with_context(
     const void * v_s1,
     const void * v_s2,
@@ -752,6 +753,7 @@ static int fcs_stack_compare_for_comparison_with_context(
 {
     return fc_solve_stack_compare_for_comparison(v_s1, v_s2);
 }
+#endif
 #endif
 
 
@@ -983,8 +985,13 @@ int fc_solve_solve_instance(
      fc_solve_hash_init(
             &(instance->hash),
             2048,
+#ifdef FCS_WITH_CONTEXT_VARIABLE
             fc_solve_state_compare_with_context,
+
             NULL
+#else
+            fc_solve_state_compare
+#endif
        );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     instance->num_prev_states_margin = 0;
@@ -1003,8 +1010,12 @@ int fc_solve_solve_instance(
     fc_solve_hash_init(
             &(instance->stacks_hash ),
             2048,
+#ifdef FCS_WITH_CONTEXT_VARIABLE
             fcs_stack_compare_for_comparison_with_context,
             NULL
+#else
+            fc_solve_stack_compare_for_comparison
+#endif
         );
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     instance->stacks_tree = fcs_libavl2_stacks_tree_create(

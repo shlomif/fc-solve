@@ -122,6 +122,11 @@ SET (FCS_ENABLE_SECONDARY_HASH_VALUE ""
     "Enable the secondary hash value calculation and track-keeping. Seems to slow things down."
 )
 
+SET (FCS_WITH_CONTEXT_VARIABLE "1" 
+    CACHE BOOL 
+    "Enable the context (extra void *) as passed to the comparison functions, etc."
+)
+
 SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
 
 SET (CPU_ARCH "" CACHE STRING "A specific CPU architecture to pass to gcc")

@@ -33,6 +33,8 @@
 extern "C" {
 #endif
 
+#include "config.h"
+
 #include "alloc.h"
 
 #include "inline.h"
@@ -72,7 +74,14 @@ typedef struct
     fc_solve_hash_symlink_t * entries;
     /* A comparison function that can be used for comparing two keys
        in the collection */
+#ifdef FCS_WITH_CONTEXT_VARIABLE
     int (*compare_function)(const void * key1, const void * key2, void * context);
+    /* A context to pass to the comparison function */
+    void * context;
+#else
+    int (*compare_function)(const void * key1, const void * key2);
+#endif
+
     /* The size of the hash table */
     int size;
 
@@ -80,8 +89,6 @@ typedef struct
     int size_bitmask;
     /* The number of elements stored inside the hash */
     int num_elems;
-    /* A context to pass to the comparison function */
-    void * context;
 
     fcs_compact_allocator_t allocator;
 } fc_solve_hash_t;
@@ -90,8 +97,12 @@ extern void
 fc_solve_hash_init(
     fc_solve_hash_t * hash,
     fc_solve_hash_value_t wanted_size,
+#ifdef FCS_WITH_CONTEXT_VARIABLE
     int (*compare_function)(const void * key1, const void * key2, void * context),
     void * context
+#else
+    int (*compare_function)(const void * key1, const void * key2)
+#endif
     );
 
 /*

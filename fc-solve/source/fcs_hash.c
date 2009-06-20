@@ -49,8 +49,12 @@ static void GCC_INLINE fc_solve_hash_rehash(fc_solve_hash_t * hash);
 void fc_solve_hash_init(
     fc_solve_hash_t * hash,
     fc_solve_hash_value_t wanted_size,
+#ifdef FCS_WITH_CONTEXT_VARIABLE
     int (*compare_function)(const void * key1, const void * key2, void * context),
     void * context
+#else
+    int (*compare_function)(const void * key1, const void * key2)
+#endif
     )
 {
     int size;
@@ -73,7 +77,9 @@ void fc_solve_hash_init(
         );
 
     hash->compare_function = compare_function;
+#ifdef FCS_WITH_CONTEXT_VARIABLE
     hash->context = context;
+#endif
 
     /* Initialize all the cells of the hash table to NULL, which indicate
        that the cork of the linked list is right at the start */
@@ -129,7 +135,11 @@ int fc_solve_hash_insert(
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
             (item->secondary_hash_value == secondary_hash_value) &&
 #endif
-            (!(hash->compare_function(item->key, key, hash->context)))
+            (!(hash->compare_function(item->key, key
+#ifdef FCS_WITH_CONTEXT_VARIABLE
+                                      , hash->context
+#endif
+               )))
            )
         {
             *existing_key = item->key;
