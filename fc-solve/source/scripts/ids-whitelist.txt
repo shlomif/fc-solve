@@ -1529,3 +1529,4 @@ fc_solve_canonize_state
 fc_solve_card_perl2user
 flip_top_card_col
 fc_solve_apply_tests_order
+FCS_WITH_CONTEXT_VARIABLE
