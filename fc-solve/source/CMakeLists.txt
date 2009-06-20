@@ -288,7 +288,9 @@ ADD_SUBDIRECTORY ("t")
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-SET(COMPILER_FLAGS_TO_CHECK "-Wall" "-Werror=implicit-function-declaration")
+SET(COMPILER_FLAGS_TO_CHECK 
+    "-Wall" "-Werror=implicit-function-declaration" "-fvisibility=hidden"
+)
 
 IF (CPU_ARCH)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-march=${CPU_ARCH}")
