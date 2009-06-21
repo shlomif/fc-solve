@@ -221,7 +221,7 @@ sub calc_scans_data
 
     return
     (
-        ($self->optimize_for() eq "len")
+        ($self->optimize_for() =~ m{len})
             ? MyInput::get_scans_lens_data(@params)
             : MyInput::get_scans_data(@params)
     )

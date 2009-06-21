@@ -325,6 +325,47 @@ sub get_iter_state_params_len
         );
 }
 
+sub get_iter_state_params_minmax_len
+{
+    my $self = shift;
+
+    my $iters_quota = 0;
+    my $num_solved_in_iter = 0;
+    my $selected_scan_idx;
+
+    # If no boards were solved, then try with a larger quota
+    while ($num_solved_in_iter == 0)
+    {
+        my $q_more = $self->get_next_quota();
+        if (!defined($q_more))
+        {
+            throw Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas;
+        }
+
+        $iters_quota += $q_more;
+
+        my $iters = $self->scans_data()->slice(":,:,0");
+        my $solved = (($iters <= $iters_quota) & ($iters > 0));
+        my $num_moves = $self->scans_data->slice(":,:,2");
+        my $solved_moves = $solved * $num_moves;
+        
+        my $solved_moves_maxima = $solved_moves->maximum()->slice(":,(0),(0)");
+        my $solved_moves_counts = _my_sum_over($solved);
+        
+        (undef, undef, $selected_scan_idx, undef) =
+            $solved_moves_maxima->minmaximum()
+            ;
+
+        $num_solved_in_iter = $solved_moves_counts->at($selected_scan_idx);
+    }
+    return
+        (
+            quota => $iters_quota,
+            num_solved => $num_solved_in_iter,
+            scan_idx => $selected_scan_idx,
+        );
+}
+
 sub get_iter_state_params_speed
 {
     my $self = shift;
