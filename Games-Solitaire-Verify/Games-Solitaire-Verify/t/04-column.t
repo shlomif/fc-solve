@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 use Games::Solitaire::Verify::Column;
 
 {
@@ -131,4 +131,48 @@ use Games::Solitaire::Verify::Column;
 
     # TEST
     is ($column->to_string(), ": ", "Trailing space on empty column");
+}
+
+{
+    my $column;
+    
+    eval
+    {
+        $column= Games::Solitaire::Verify::Column->new(
+            {
+                string => "KH QS 5C",
+            },
+        );
+    };
+
+    my $err = $@;
+
+    # TEST
+    isa_ok(
+        $err,
+        "Games::Solitaire::Verify::Exception::Parse::Column::Prefix",
+        "Errot thrown upon a column without a :",
+    );
+}
+
+{
+    my $column;
+    
+    eval
+    {
+        $column= Games::Solitaire::Verify::Column->new(
+            {
+                string => "==<foo />== KH QS 5C",
+            },
+        );
+    };
+
+    my $err = $@;
+
+    # TEST
+    isa_ok(
+        $err,
+        "Games::Solitaire::Verify::Exception::Parse::Column::Prefix",
+        "Errot thrown upon a column without a :",
+    );
 }

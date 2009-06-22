@@ -26,6 +26,10 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception::Parse::Card", },
     'Games::Solitaire::Verify::Exception::Parse::Card::UnknownSuit' =>
     { isa => "Games::Solitaire::Verify::Exception::Parse::Card", },
+    'Games::Solitaire::Verify::Exception::Parse::Column' =>
+    { isa => "Games::Solitaire::Verify::Exception::Parse", },
+    'Games::Solitaire::Verify::Exception::Parse::Column::Prefix' =>
+    { isa => "Games::Solitaire::Verify::Exception::Parse::Column", },
     'Games::Solitaire::Verify::Exception::Parse::State' =>
     { isa => "Games::Solitaire::Verify::Exception::Parse", },
     "Games::Solitaire::Verify::Exception::Parse::State::Foundations" =>
