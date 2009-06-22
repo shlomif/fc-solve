@@ -644,7 +644,7 @@ sub _perform_move__stack_seq_to_foundation
 
     if ($num_seq_components != 1)
     {
-        return Games::Solitaire::Verify::Exception::Move::NotTrueSeq->new(
+        return Games::Solitaire::Verify::Exception::Move::Src::Col::NotTrueSeq->new(
             move => $move
         );
     }

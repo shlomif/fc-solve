@@ -91,7 +91,8 @@ use Exception::Class (
     },
     'Games::Solitaire::Verify::Exception::Move::Src::Col::NotEnoughCards' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Src::Col", },
-    
+    'Games::Solitaire::Verify::Exception::Move::Src::Col::NotTrueSeq' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move::Src::Col", },
     'Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Src", },
     'Games::Solitaire::Verify::Exception::Move::Dest' =>
