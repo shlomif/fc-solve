@@ -24,6 +24,42 @@ my $builder = Test::Run::Builder->new(
     add_to_cleanup      => [ 'Games-Solitaire-Verify-*' ],
     create_makefile_pl => 'traditional',
     script_files => [],
+    meta_merge =>
+    {
+        resources =>
+        {
+            repository => "http://svn.berlios.de/svnroot/repos/fc-solve/trunk/Games-Solitaire-Verify/",
+            homepage => "http://fc-solve.berlios.de/verify-code/",
+            MailingList => "http://tech.groups.yahoo.com/group/fc-solve-discuss/",
+        },
+        keywords =>
+        [
+            "baker's dozen",
+            "baker's game",
+            "card",
+            "card games",
+            "cards",
+            "eight off",
+            "forecell",
+            "foundations",
+            "freecell",
+            "french",
+            "games",
+            "moves",
+            "patience",
+            "seahaven",
+            "seahaven towers",
+            "simple simon",
+            "single-player",
+            "solitaire",
+            "solutions",
+            "solve",
+            "solving",
+            "verification",
+            "verify",
+        ],
+    },
+
 );
 
 $builder->create_build_script();
