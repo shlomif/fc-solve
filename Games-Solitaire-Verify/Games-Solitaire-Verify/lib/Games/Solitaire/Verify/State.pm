@@ -622,9 +622,10 @@ sub _perform_move__stack_seq_to_foundation
 
     if ($rules ne "simple_simon")
     {
-        return Games::Solitaire::Verify::Exception::Move::Unsupported->new(
-            move => $move
-        );
+        return Games::Solitaire::Verify::Exception::Move::Variant::Unsupported
+            ->new(
+                move => $move
+            );
     }
 
     my $col_idx = $move->source();

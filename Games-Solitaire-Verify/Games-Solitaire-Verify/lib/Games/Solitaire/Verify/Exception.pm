@@ -77,6 +77,8 @@ use Exception::Class (
     { isa => "Games::Solitaire::Verify::Exception", 
         fields => ["move"],
     },
+   'Games::Solitaire::Verify::Exception::Move::Variant::Unsupported' =>
+    { isa => "Games::Solitaire::Verify::Exception::Move", },
     'Games::Solitaire::Verify::Exception::Move::NotEnoughEmpties' =>
     { isa => "Games::Solitaire::Verify::Exception::Move", },
     'Games::Solitaire::Verify::Exception::Move::Src' =>
