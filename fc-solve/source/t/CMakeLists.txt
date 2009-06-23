@@ -27,7 +27,7 @@ MACRO(MY_ADD_EXE EXE_FILE C_FILE)
 
 ENDMACRO(MY_ADD_EXE EXE_FILE C_FILE)
 
-IF ("${FCS_WITH_TEST_SUITE}")
+IF (FCS_WITH_TEST_SUITE)
 
     FIND_LIBRARY(LIBTAP_LIB tap)
 
@@ -47,10 +47,5 @@ IF ("${FCS_WITH_TEST_SUITE}")
     #    PROPERTIES OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../card.c"
     #)
 
-    ADD_CUSTOM_TARGET(
-        "test"
-        "cd" ".." "&&" "perl" "run-tests.pl"
-    )
-
-ENDIF("${FCS_WITH_TEST_SUITE}")
+ENDIF(FCS_WITH_TEST_SUITE)
 

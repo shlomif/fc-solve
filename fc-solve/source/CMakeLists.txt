@@ -522,3 +522,15 @@ ADD_CUSTOM_TARGET(
     DEPENDS ${BOARDS}
 )
 
+IF (FCS_WITH_TEST_SUITE)
+    
+    ADD_CUSTOM_TARGET(
+        "test"
+        "perl" "run-tests.pl"
+    )
+
+    ADD_DEPENDENCIES(
+        "test"
+        "all"
+    )
+ENDIF(FCS_WITH_TEST_SUITE)
