@@ -407,6 +407,14 @@ I am unable to compile it because I lack the libraries that he used.
 </p>
 </li>
 
+<li>
+<p>
+<a href="http://download.cnet.com/FreeCell-Solver/3000-18522_4-54671.html">GUI 
+FreeCell Solver 1.0rc5 for Mac OS X 10.2 by JCP Software</a> - it's hard
+to know which solving library it uses and whether it is original. The
+web-site is short on details.
+</p>
+</li>
 </ul>
 
 <h2 id="reviews">Reviews of Freecell Solver</h2>
