@@ -29,6 +29,7 @@
 #ifndef FC_SOLVE__FCS_CL_H
 #define FC_SOLVE__FCS_CL_H
 
+#include "fcs_dllexport.h"
 #include "fcs_user.h"
 
 #ifdef __cplusplus
@@ -58,7 +59,7 @@ enum
     FCS_CMD_LINE_USER = 0x10000
 };
 
-extern int freecell_solver_user_cmd_line_parse_args(
+DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args(
     void * instance,
     int argc,
     char * argv[],
@@ -70,7 +71,7 @@ extern int freecell_solver_user_cmd_line_parse_args(
     int * last_arg
     );
 
-extern int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
     int argc,
     char * argv[],
