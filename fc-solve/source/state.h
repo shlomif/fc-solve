@@ -644,6 +644,9 @@ static const char * const fc_solve_talon_prefixes[] = { "Talon:", "Queue:" , ""}
 static const char * const fc_solve_num_redeals_prefixes[] = { "Num-Redeals:", "Readels-Num:", "Readeals-Number:", ""};
 #endif
 
+#ifdef WIN32
+#define strncasecmp(a,b,c) (strnicmp((a),(b),(c)))
+#endif
 
 static GCC_INLINE int fc_solve_initial_user_state_to_c(
     const char * string,

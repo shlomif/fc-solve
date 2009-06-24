@@ -399,10 +399,6 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 
 #endif
 
-#ifdef WIN32
-#define strncasecmp(a,b,c) (strnicmp((a),(b),(c)))
-#endif
-
 char * fc_solve_state_as_string(
     fcs_state_extra_info_t * state_val,
     int freecells_num,
