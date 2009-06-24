@@ -1,0 +1,99 @@
+This is a log for how to get the test suite up and running:
+
+#. Install the svn client.
+
+	On Debian: 
+	# apt-get install subversion.
+
+#. Install cmake (at least version 2.6.3):
+	
+	On Debian:
+	# apt-get install cmake
+	$ cmake --version # Make sure it's 2.6.3.
+
+#. Install make, gcc and other needed applications:
+
+	On Debian:
+	# apt-get install make gcc g++
+
+(g++ is required by CMake even for ANSI C projects for some reason).
+
+#. Install valgrind
+
+	On Debian:
+	# apt-get install valgrind
+
+#. Install perl (at least perl-5.8.9 - perl-5.10.0 is recommended).
+
+#. Install perl's Template Toolkit:
+
+	# apt-get install libtemplate-perl
+
+#. Install the libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap )
+development headers.
+
+	On Debian:
+	$ tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz 
+	$ cd tap-1.01
+	$ ./configure --prefix="$HOME/apps/libtap"
+	$ make CFLAGS+=-UHAVE_LIBPTHREAD
+	$ make install
+	# For gcc finding tap.h in the includes
+	$ echo 'export CPATH="$HOME/apps/libtap/include:$CPATH"' >> ~/.bashrc
+	# For CMake to find the TAP library.
+	$ echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bashrc
+
+	On Mandriva:
+	# urpmi libtap-devel
+
+
+#. Check out the latest Freecell Solver sources:
+
+	$  svn co https://svn.berlios.de/svnroot/repos/fc-solve/trunk/
+
+#.
+	$ cd trunk/fc-solve/source/
+
+#. Configure the Freecell Solver build
+
+	$ ./configure
+
+#. Build Freecell Solver:
+
+	$ make
+
+#. Install the dependencies of the test suite:
+
+	- Download local::lib from http://search.cpan.org/dist/local-lib/
+	and follow the instructions to set it up
+	- Restart bash
+	$ export PERL_MM_USE_DEFAULT=1
+	$ perl -Mlocal::lib -MCPAN -e 'install Task::Test::Run::AllPlugins'
+	$ perl -Mlocal::lib -MCPAN -e 'install(qw(String::ShellQuote Test::Differences Games::Solitaire::Verify))'
+	$ perl -Mlocal::lib -MCPAN -e 'install(qw(YAML::Syck))'
+
+#. Set up the Test::Run plugins.
+	$ echo 'export HARNESS_PLUGINS="ColorSummary ColorFileVerdicts AlternateInterpreters"' >> ~/.bashrc
+	$ echo 'export HARNESS_ALT_INTRP_FILE="$HOME/.test-run-alt-intrp.yml"' >> ~/.bashrc
+	- Put the following under $HOME/.test-run-alt-intrp.yml:
+
+{{{{
+---
+- cmd: unity
+  pattern: \.exe\z
+  type: regex
+}}}}
+
+	- And put the following script called unity in your path (executable):
+
+{{{{
+#!/usr/bin/perl
+exec { $ARGV[0] } @ARGV;
+}}}}
+
+
+#. Test Freecell Solver:
+
+	$ export FREECELL_SOLVER_QUIET=1
+	$ export PATH="`pwd`/board_gen:$PATH"
+	$ make test
