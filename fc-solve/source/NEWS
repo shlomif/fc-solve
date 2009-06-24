@@ -1,3 +1,41 @@
+Version 2.32.0: (24-Jun-2009)
+-----------------------------
+
+1. Added meaningful heading comments to the *.c and *.h files where they
+were absent.
+
+2. Many small memory/speed optimisations.
+
+3. Removed a lot of unnecessary code and merged a lot of code. Used:
+scripts/find-ids.rb for finding uncommonly occuring identifiers.
+
+4. Converted many macros to inline functions.
+
+5. Now calculating the bit-width of the 'int' data type in the CMake version. 
+There's a fallback logic for it in config.h.
+
+6. Extracted empty_two_cols_from_new_state() in freecell.c.
+
+7. Restored the max_depth functionality. Currently not working very well.
+
+8. Now supporting inline on non-GCC compilers using CMake.
+
+9. Made many functions that were used only once or twice inline.
+
+10. Added the --iters-update-on option to the threaded range solver.
+
+11. Fixed some CMake bugs (especially wrong compiler flags to check).
+
+12. Optionally link with Google's tcmalloc, which yields better performance
+(especially for the multi-threaded solver).
+
+13. Added the support for DLLEXPORT to not export fc_solve_* from the DLL.
+This reduces the size of the .so / .dll considerably.
+    
+    - Added -fvisibility=hidden to the build.
+
+14. Got rid of using preset.c for FCS_FREECELL_ONLY.
+
 Version 2.30.0: (07-Jun-2009)
 -----------------------------
 
