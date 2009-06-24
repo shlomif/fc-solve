@@ -533,4 +533,5 @@ IF (FCS_WITH_TEST_SUITE)
         "test"
         "all"
     )
+
 ENDIF(FCS_WITH_TEST_SUITE)
