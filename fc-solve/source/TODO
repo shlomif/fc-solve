@@ -12,11 +12,6 @@ where the most important elements are at the first 32 bytes of the struct.
 suit, and to traverse only the possible parents or children based on the
 suit.
 
-* Change fc_solve_rand_alloc() away from malloc() into handling a pointer
-to a rand_struct.
-
-* Add fcs_flip_top_card() to the things that are not done in FCS_FREECELL_ONLY.
-
 * Do the test for SUSPEND_PROCESS (check_if_limits_exceeded() ) in only one 
 place. There isn't a need for it to be done in several places.
 
@@ -33,17 +28,11 @@ that are used only by one of the scans.
 * Abstract away the move of a single card from one column to another
 in freecell.c.
 
-* Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 
-sfs_check_state_end() ) to functions, and see if it actually makes it faster.
-
 * Interactive mode? Continue a scan that reached its limit.
 
 * Convert some of the documentation to Perl-POD or DocBook.
 
 * Find a way to update the ChangeLog from the svn.
-
-* Put the rest of the news (from http://fc-solve.berlios.de/ ) inside the
-NEWS file.
 
 * Investigate ways to perform more pointer arithematics and 
 (ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
