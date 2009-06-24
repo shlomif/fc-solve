@@ -154,10 +154,10 @@ DLLEXPORT extern int freecell_solver_user_set_num_decks(
 DLLEXPORT extern int freecell_solver_user_get_max_num_decks(void);
 
 
-extern char * freecell_solver_user_get_invalid_state_error_string(
+DLLEXPORT extern char * freecell_solver_user_get_invalid_state_error_string(
     void * user_instance,
     int print_ts
-    ) DLLEXPORT;
+    );
 
 DLLEXPORT extern int freecell_solver_user_set_sequences_are_built_by_type(
     void * user_instance,
