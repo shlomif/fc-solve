@@ -11,7 +11,7 @@ presented solution.
 
 <li>
 Can present either the intermediate states (stepping at one move or sequence
-move) or the moves that are required for the solution.
+move) or the moves that are required for the solution, or both. 
 </li>
 
 <li>
@@ -21,7 +21,7 @@ debugging information on and off.
 
 <li>
 Some configurations are very fast: can solve the first Microsoft Freecell
-32,000 deals in 112 seconds on a Pentium 4-2.4 GHz computer. (286 layouts
+32,000 deals in 101 seconds on a Pentium 4-2.4 GHz computer. (315 layouts
 per second).
 </li>
 
@@ -92,7 +92,7 @@ It is possible to resume a scan from a pre-empted position.
 </li>
 
 <li>
-After a solution path was found it can be optimized using a BFS 
+After a solution path was found it can be optimized using a BrFS 
 (= Breadth-First Search) scan on the intermediate states.
 </li>
 
@@ -146,27 +146,57 @@ Supports games of one and two decks.
 
 <li>
 <p>
-List of <a href="http://pysolfc.sourceforge.net/">PySol</a> variants that can 
-be solved:
+List of <a href="http://pysolfc.sourceforge.net/">PySol (PySolFC 
+version)</a> variants that can be solved:
 </p>
 <ul>
+<li>American Canister</li>
 <li>Baker's Dozen</li>
 <li>Baker's Game</li>
+<li>Bath</li>
 <li>Beleaguered Castle</li>
+<li>Box Fan</li>
+<li>British Canister</li>
+<li>Canister</li>
+<li>Castles in Spain</li>
+<li>Cat's Tail</li>
+<li>Challenge Freecell</li>
 <li>Citadel</li>
 <li>Cruel</li>
-<li>Der Katzenschwanz</li>
-<li>Die Schlange</li>
+<li>Deep</li>
 <li>Eight Off</li>
+<li>Exiled Kings</li>
+<li>Fan</li>
+<li>Fastness</li>
 <li>Forecell</li>
+<li>Free Fan</li>
 <li>Freecell</li>
 <li>Good Measure</li>
-<li>Kings' Only Baker's Game</li>
+<li>Kentish</li>
+<li>King Only Baker's Game</li>
+<li>KingCell</li>
+<li>Kings</li>
+<li>Lightweight</li>
+<li>Ocean Towers</li>
+<li>Opus</li>
+<li>Penelope's Web</li>
+<li>Penguin</li>
+<li>Portuguese Solitaire</li>
 <li>Relaxed Freecell</li>
 <li>Relaxed Seahaven Towers</li>
+<li>Repair</li>
+<li>Retinue</li>
 <li>Seahaven Towers</li>
+<li>Seven by Five</li>
+<li>Seven by Four</li>
 <li>Simple Simon</li>
+<li>Snake</li>
+<li>Somerset</li>
+<li>Spanish Patience II</li>
 <li>Streets and Alleys</li>
+<li>Stronghold</li>
+<li>Super Challenge Freecell</li>
+<li>Tuxedo</li>
 </ul>
 <p>
 More user-invented variants can be specified on the command-line using
