@@ -26,6 +26,8 @@
  *
  */
 
+#define BUILDING_DLL 1
+
 #include <stdio.h>
 
 #include "config.h"

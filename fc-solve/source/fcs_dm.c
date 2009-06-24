@@ -26,6 +26,8 @@
 
  */
 
+#define BUILDING_DLL 1
+
 #include <stddef.h>
 #include <string.h>
 

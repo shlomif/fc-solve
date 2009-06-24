@@ -25,6 +25,9 @@
  * cmd_line.c - the Freecell Solver command line arguments-like parsing 
  * routines. Useful for more easily configuring a Freecell Solver instance.
  */
+
+#define BUILDING_DLL 1
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>

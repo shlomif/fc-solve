@@ -26,6 +26,9 @@
  * to a subset of Bourne shell's semantics. Useful for reading command
  * line arguments from files.
  */
+
+#define BUILDING_DLL 1
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

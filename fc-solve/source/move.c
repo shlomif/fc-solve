@@ -25,6 +25,9 @@
  * move.c - move and move stacks routines for Freecell Solver
  *
  */
+
+#define BUILDING_DLL 1
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

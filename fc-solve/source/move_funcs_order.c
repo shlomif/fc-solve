@@ -26,6 +26,8 @@
  *
  */
 
+#define BUILDING_DLL 1
+
 #include "move_funcs_order.h"
 
 int fc_solve_apply_tests_order(

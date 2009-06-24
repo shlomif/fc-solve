@@ -25,6 +25,8 @@
  * app_str.c - implements an append-to-dynamically-growing string printf
  * functionality.
  */
+#define BUILDING_DLL 1
+
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>

@@ -30,6 +30,8 @@
 #ifndef FC_SOLVE__CAAS_C
 #define FC_SOLVE__CAAS_C
 
+#define BUILDING_DLL 1
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
