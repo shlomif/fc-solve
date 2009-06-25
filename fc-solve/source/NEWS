@@ -1,3 +1,21 @@
+Version 2.32.1: (25-Jun-2009)
+-----------------------------
+
+1. Added a "#define BUILDING_DLL 1" so fcs_dllexport.h will work fine on
+Microsoft Visual C++.
+
+2. Normalised the DLLEXPORT modifiers.
+
+3. Some fixes to the CMake build system: 
+    - CHECK_C_COMPILER_FLAG now uses a different variable for each flag,
+    since the variable was cached.
+    - tcmalloc is now truly optional.
+
+4. Moved the declaration of the strncasecmp(a,b,c) macro for WIN32 systems
+to before its first use.
+
+5. All of this was done to fix many build/compilation problems.
+
 Version 2.32.0: (24-Jun-2009)
 -----------------------------
 
