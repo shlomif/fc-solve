@@ -1,5 +1,6 @@
 Build.PL
 Changes
+COPYING
 inc/Test/Run/Builder.pm
 lib/Games/Solitaire/Verify/Base.pm
 lib/Games/Solitaire/Verify/Card.pm
