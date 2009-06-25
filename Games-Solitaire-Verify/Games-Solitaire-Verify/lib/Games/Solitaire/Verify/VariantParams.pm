@@ -232,7 +232,7 @@ L<http://search.cpan.org/dist/Games-Solitaire-Verify>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 Shlomi Fish, all rights reserved.
+Copyright 2008 Shlomi Fish.
 
 This program is released under the following license: MIT/X11
 ( L<http://www.opensource.org/licenses/mit-license.php> ).
