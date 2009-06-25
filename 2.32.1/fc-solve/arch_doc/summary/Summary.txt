@@ -1,0 +1,291 @@
+* Organization:
+
+    - Introduction
+    - Coding Conventions
+    - Overview of the Program
+    - Overview of the Modules
+    - Interesting Techniques Used.
+    - Software Configuration Management - maintaining the code
+
+Coding Conventions:
+-------------------
+
+1. Bottom Up Design and Evolution
+
+2. Strict adherence to the ANSI C language
+    - No gcc extensions
+    - No C++
+    - No C99
+
+3. Strict adherence to the ANSI C Standrad Library
+    - No dependency of glib, apr, and similar tools
+    - Can optionally be compiled to make use of some binary trees and
+        hash implementations
+    - a lot of logic of them was implemented from scratch
+
+4. Namespace purity
+    - All global symbols lie in the freecell_solver_ namespace
+    - Some macros are prefixed with fcs_
+    - Usually freecell_solver_[class name]_function
+    - Very verbose identifiers
+
+5. Order of Tradeoffs:
+    1. Modularity - the code should be as generic as possible.
+    2. Speed - the code should be optimized for speed.
+    3. Memory Consumption - should be reduced (usually leads to better
+    speed).
+    4. Smart Algorithms.
+
+6. No global symbols - the library can be instantiated
+
+7. Separation of internals from user-interface..
+    intrface.c and below - can be changed from version to version.
+    lib.c - the API functions used by the programmer.
+    cmd_line.c - the command line parser
+    main.c/test_multi_parallel.c - two command line programs to use the
+    library (others can be written)
+
+Overview of the Program:
+------------------------
+
+Freecell Solver solves boards by using Depth-First Search or Best-First-Search
+scans starting from the initial board. It has a collection of the states,
+and constructs a tree of the states descending from each state to its "parent".
+A parent state means the state in which from which it was discovered.
+
+Freecell Solver can run several "tests" on each state. Each test generates
+a list of derived states. Some of the test are Freecell meta-move ones, some
+are Freecell atomic move ones, and the others are Simple Simon meta-move ones.
+The order of the tests can be specified at the command line, and tests
+can be grouped, and the order of checking of the tests within a group
+will be determined by a special callback.
+
+To perform the scans themselves Freecell Solver distinguishes between soft
+threads, hard threads and instances. An instance is a collection of states
+and an initial board to explore. Each instance may have several hard threads
+and each hard thread may have several soft threads. A hard thread is something
+that would likely be put in a system thread. It contains such resources,
+that a collision between them among several hard threads running in parallel
+is undesirable. Nevertheless, every hard thread can access the resources 
+allocated by other hard threads, should he encounter them in his scan.
+
+A soft thread is a singular scan. It performs a scan for a certain number of 
+iterations, at which point the hard thread switches to a different soft thread.
+
+Overview of the utility modules:
+--------------------------------
+
+    app_str.c
+    =========
+
+    This file contains a a utility class that appends sprintf'ed output
+    to a dynamically allocated buffer growing the buffer if necessary.
+
+    lookup2.c
+    =========
+
+    Implements a hash function that was taken by Bob Jenkins. Used by the
+    Freecell Solver Hash.
+
+    rand.c and rand.h
+    =================
+
+    Implements a random number generating class. The algorithm is compatible
+    to that of the Microsoft RTL, but the generator can be instantiated.
+
+    fcs_hash.c
+    ==========
+
+    An optimized hash implementation. This hash maps keys alone, not key-value
+    pairs as usual. It stores the hash values next to the keys, and even uses
+    a secondary hash to speed up the detection of two keys with identical
+    primary hash values.
+
+    Not all the functions of the hash Abstract Data Type were implemented.
+
+    fcs_dm.c
+    =========
+
+    This module implements two functions - an advanced binary search one and
+    a function to merge a large and sort array. It was used until the newer
+    hash or balanced binary tree storage was used, and can still be used.
+
+    fcs_isa.c
+    =========
+
+    This module implements indirect stack allocation to states. It allocates
+    every states in memory pools (called packs) which have a fixed location 
+    in memory and allocates as many such pools as it can.
+
+    Each pool contains several states that are placed one after the other, 
+    that thus retain their pointer. That way, memory is conserved as an
+    individually malloced state may have a lot of overhead. (a malloced 
+    block+a fixed amount of data is rounded to the nearest power of 2)
+
+    fcs_isa allows releasing the last allocated state in case it will
+    not be used.
+    
+    alloc.c:
+    ========
+
+    This module is a more sophisicated version of fcs_isa.c. What it does is
+    compactly allocate blocks of arbitrary length, usually used for
+    dynamically allocated Freecell columns.
+
+    cl_chop.c:
+    ==========
+
+    This module contains a class that implements a chopping of a string into
+    arguments. This is done using a subset of the UNIX Bourne shell
+    functionality. Namely:
+
+    1. A backslash (\) makes the next character actual
+    2. A newline or a whitespace separates a word
+    3. A backslash at the end of the line continues the processing
+    4. Double Quotes enwrap an argument that may contain whitespace.
+    5. A pound sign (#) makes a comment that extends to the end of the line.
+
+    The code itself is very spaghetty like but it's working.
+    
+    pqueue.c:
+    =========
+
+    This module implements a priority queue as a binary heap. It is derived
+    from Justin Heyes Jones C++ code which has kindly donated it to Freecell
+    Solver, relicensing it under the public domain. Since then the code has
+    been converted to ANSI C and optimized.
+
+    It is used by the Best-First-Search scan.
+
+Overview of the core modules:
+------------------------
+
+(bottom up)
+
+    card.c
+    ======
+
+    Elementary functions to convert cards to and from their string 
+    representations.
+
+    The u and the p stand for user and perl respectively, and mean user 
+    representation and internal C representation. (The first version of 
+    Freecell Solver was written in Perl).
+
+    state.h
+    =======
+
+    Definition of the fcs_state_t (which represents a complete layout of the 
+    Freecell board) and of fcs_state_with_locations_t. Contains many macros
+    for manipulating states and strings all of them should behave like function
+    calls.
+
+    The state_with_locations_t contains the real positions of the stacks and
+    freecells (refer to SECT<Canonization and Normalization>) and other things
+    that the system uses but don't uniquely identify the state in the state 
+    collection.
+
+    state.c:
+    --------
+
+    This file contains various functions for manipulating states. Stuff like
+    normalization, canonization, state duplicating, state comparison,
+    converting to and from string format, etc.
+
+    move.c and move.h:
+    ------------------
+
+    This module contains routines for handling individual moves
+    (freecell->stack, stack->freecell, stack->stack) and various special
+    moves as well as entire moves stacks, which abstract a sequence
+    of moves to be played between two intermediate states.
+
+    preset.c:
+    ---------
+
+    This file manages the presets, presets being a configuration of stacks
+    number, freecells number, decks number, and the other parameters that
+    define how a game is played. A preset is a variant of Solitaire such as
+    Freecell, Baker's Game, Simple Simon, Good Measure, etc. Many of them 
+    are categorized in PySol under different categories than the Freecell
+    category. Moreover, some "Freecell-like" games such as Penguin are not
+    supported by Freecell Solver yet.
+
+    The routines in the file enable applying a preset to an instance (by its
+    name), applying a preset to an instance by a pointer to it, etc.
+    It is also used by lib.c.
+    
+
+    freecell.c:
+    -----------
+
+    This module contains "test functions" for Freecell Tests. A tests receives
+    an origin state and try to deduce if moves of a certain sort is possible.
+    It fills in a derived states list.
+
+    This code uses some macros defined in tests.h.
+
+    simpsim.c:
+    ----------
+
+    This file is similar in spirit to freecell.c only that it contains Simple
+    Simon tests.
+
+    caas.c:
+    -------
+
+    This file contains the check_and_add_state function - a function that is
+    used to determine if a reached state is found in the states collection 
+    and if so, to insert it there. (an operation that can be considered
+    atomic). 
+
+    It has several macros used to do it for the various types of states 
+    collections supported at compile time. It also has a functions to 
+    collect the new stacks that were present in a similar fashion.
+
+    It is being used by the tests functions to put a state in the state
+    collection.
+
+    scans.c:
+    --------
+
+    This module contains the functions of the various scans and their
+    auxiliary functions. The scan functions run tests and traverse the
+    graph according to some inherent logic. Currently present are 
+    random-dfs/soft-dfs (soft-dfs is random-dfs without randomizing
+    groups), Hard-DFS and Best-First-Search (named A* in the code).
+
+    intrface.c:
+    -----------
+
+    This module contains the logic that manages a solver instance, configures
+    it and runs it. It uses the scans module to perform the scan and other
+    modules to configure it. Note that the interface presented here is 
+    very raw, and not meant to be used as an API.
+
+    lib.c:
+    ------
+
+    This module contains the user API. It manages a sequence of instances
+    that can be used to solve a board, and then recycled to solve another.
+    It uses intrface.c to perform its operations, and do the actual
+    configuring and solving. It supplies the file fcs_user.h which
+    contains one function for doing any given operation, and these functions
+    are implemented in lib.c.
+
+    cmd_line.c:
+    -----------
+    
+    This module can be used to analyze an array of strings (similar to that 
+    given to the main() function) and configure a user instance accordingly.
+    It also implements reading such arguments from files and a presets 
+    mechanism that can be used to assign names to common configuration and
+    load them.
+
+
+    
+
+
+
+
+
