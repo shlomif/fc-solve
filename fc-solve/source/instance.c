@@ -80,16 +80,38 @@
     a guideline for the user.
 */
 
-static const double fc_solve_a_star_default_weights[5] = {0.5,0,0.3,0,0.2};
+const double fc_solve_a_star_default_weights[5] = {0.5,0,0.3,0,0.2};
 
-static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * soft_thread)
+#define my_brfs_queue (soft_thread->method_specific.befs.meth.brfs.bfs_queue)
+#define my_brfs_queue_last_item \
+    (soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item)
+
+
+static GCC_INLINE void normalize_a_star_weights(
+    fc_solve_soft_thread_t * soft_thread
+    )
 {
-    /* Initialize the BFS queue. We have one dummy element at the beginning
-       in order to make operations simpler. */
-    soft_thread->bfs_queue = (fcs_states_linked_list_item_t*)malloc(sizeof(fcs_states_linked_list_item_t));
-    soft_thread->bfs_queue->next = (fcs_states_linked_list_item_t*)malloc(sizeof(fcs_states_linked_list_item_t));
-    soft_thread->bfs_queue_last_item = soft_thread->bfs_queue->next;
-    soft_thread->bfs_queue_last_item->next = NULL;
+    /* Normalize the A* Weights, so the sum of all of them would be 1. */
+    double sum;
+    int a;
+    sum = 0;
+#define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
+    for(a=0;a<(sizeof(my_a_star_weights)/sizeof(my_a_star_weights[0]));a++)
+    {
+        if (my_a_star_weights[a] < 0)
+        {
+            my_a_star_weights[a] = fc_solve_a_star_default_weights[a];
+        }
+        sum += my_a_star_weights[a];
+    }
+    if (sum < 1e-6)
+    {
+        sum = 1;
+    }
+    for(a=0;a<(sizeof(my_a_star_weights)/sizeof(my_a_star_weights[0]));a++)
+    {
+        my_a_star_weights[a] /= sum;
+    }
 }
 
 static GCC_INLINE void soft_thread_clean_soft_dfs(
@@ -100,15 +122,18 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
     int dfs_max_depth;
     fcs_soft_dfs_stack_item_t * soft_dfs_info, * info_ptr;
     /* Check if a Soft-DFS-type scan was called in the first place */
-    if (soft_thread->soft_dfs_info == NULL)
+    if (!(
+            FC_SOLVE_IS_DFS(soft_thread)
+        && soft_thread->method_specific.soft_dfs.soft_dfs_info
+       ))
     {
         /* If not - do nothing */
         return;
     }
 
-    soft_dfs_info = soft_thread->soft_dfs_info;
-    max_depth = soft_thread->depth;
-    dfs_max_depth = soft_thread->dfs_max_depth;
+    soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info;
+    max_depth = soft_thread->method_specific.soft_dfs.depth;
+    dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
     /* De-allocate the Soft-DFS specific stacks */
     {
         int depth;
@@ -132,9 +157,9 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
 
         free(soft_dfs_info);
 
-        soft_thread->soft_dfs_info = NULL;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info = NULL;
 
-        soft_thread->dfs_max_depth = 0;
+        soft_thread->method_specific.soft_dfs.dfs_max_depth = 0;
 
     }
 }
@@ -143,23 +168,32 @@ static GCC_INLINE void free_bfs_queue(fc_solve_soft_thread_t * soft_thread)
 {
     /* Free the BFS linked list */
     fcs_states_linked_list_item_t * item, * next_item;
-    item = soft_thread->bfs_queue;
+    item = my_brfs_queue;
     while (item != NULL)
     {
         next_item = item->next;
         free(item);
         item = next_item;
     }
+    my_brfs_queue = my_brfs_queue_last_item = NULL;
 }
 
 static GCC_INLINE void free_instance_soft_thread_callback(
         fc_solve_soft_thread_t * soft_thread
         )
 {
-    free_bfs_queue(soft_thread);
-
-    fc_solve_PQueueFree(&(soft_thread->a_star_pqueue));
-
+    switch (soft_thread->method)
+    {
+        case FCS_METHOD_BFS:
+        case FCS_METHOD_OPTIMIZE:
+            free_bfs_queue(soft_thread);
+            break;
+        case FCS_METHOD_A_STAR:
+            fc_solve_PQueueFree(
+                    &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue)
+            );
+            break;
+    }
     free(soft_thread->tests_order.tests);
 
     if (soft_thread->name != NULL)
@@ -168,32 +202,6 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     }
     /* The data-structure itself was allocated */
     free(soft_thread);
-}
-
-static GCC_INLINE void normalize_a_star_weights(
-    fc_solve_soft_thread_t * soft_thread
-    )
-{
-    /* Normalize the A* Weights, so the sum of all of them would be 1. */
-    double sum;
-    int a;
-    sum = 0;
-    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
-    {
-        if (soft_thread->a_star_weights[a] < 0)
-        {
-            soft_thread->a_star_weights[a] = fc_solve_a_star_default_weights[a];
-        }
-        sum += soft_thread->a_star_weights[a];
-    }
-    if (sum < 1e-6)
-    {
-        sum = 1;
-    }
-    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
-    {
-        soft_thread->a_star_weights[a] /= sum;
-    }
 }
 
 static GCC_INLINE void accumulate_tests_order(
@@ -227,7 +235,6 @@ enum
 {
     FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS,
     FOREACH_SOFT_THREAD_FREE_INSTANCE,
-    FOREACH_SOFT_THREAD_NORMALIZE_A_STAR_WEIGHTS,
     FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER,
     FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS
 };
@@ -278,12 +285,6 @@ static void foreach_soft_thread(
                     );
                     break;
 
-                case FOREACH_SOFT_THREAD_NORMALIZE_A_STAR_WEIGHTS:
-                    normalize_a_star_weights( 
-                        soft_thread
-                    );
-                    break;
-
                 case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
                     accumulate_tests_order(
                         soft_thread,
@@ -318,10 +319,6 @@ static GCC_INLINE void reset_soft_thread(
 {
     soft_thread->is_finished = 0;
     soft_thread->initialized = 0;
-
-    fc_solve_rand_init(&(soft_thread->rand_gen), soft_thread->rand_seed);
-
-    fc_solve_initialize_bfs_queue(soft_thread);
 }
 
 static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
@@ -329,7 +326,6 @@ static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
         )
 {
     fc_solve_soft_thread_t * soft_thread;
-    int a;
 
     /* Make sure we are not exceeding the maximal number of soft threads
      * for an instance. */
@@ -344,32 +340,20 @@ static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
 
     soft_thread->id = (hard_thread->instance->next_soft_thread_id)++;
 
-    soft_thread->dfs_max_depth = 0;
+    soft_thread->method_specific.soft_dfs.dfs_max_depth = 0;
 
     soft_thread->tests_order.num = 0;
     soft_thread->tests_order.tests = NULL;
 
     /* Initialize all the Soft-DFS stacks to NULL */
-    soft_thread->soft_dfs_info = NULL;
+    soft_thread->method_specific.soft_dfs.soft_dfs_info = NULL;
 
     /* The default solving method */
     soft_thread->method = FCS_METHOD_SOFT_DFS;
 
-    /* Initialize the priotity queue of the A* scan */
-    fc_solve_PQueueInitialise(
-        &(soft_thread->a_star_pqueue),
-        1024
-        );
+    soft_thread->method_specific.befs.a_star_positions_by_rank = NULL;
 
-    soft_thread->a_star_positions_by_rank = NULL;
-
-    /* Set the default A* weigths */
-    for(a=0;a<(sizeof(soft_thread->a_star_weights)/sizeof(soft_thread->a_star_weights[0]));a++)
-    {
-        soft_thread->a_star_weights[a] = fc_solve_a_star_default_weights[a];
-    }
-
-    soft_thread->rand_seed = 24;
+    soft_thread->method_specific.soft_dfs.rand_seed = 24;
 
     soft_thread->num_times_step = NUM_TIMES_STEP;
 
@@ -689,13 +673,6 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
         hard_thread->num_times_left_for_soft_thread =
             hard_thread->soft_threads[0]->num_times_step;
     }
-
-    /* Normalize the A* Weights, so the sum of all of them would be 1. */
-    foreach_soft_thread(
-        instance,
-        FOREACH_SOFT_THREAD_NORMALIZE_A_STAR_WEIGHTS, 
-        NULL
-    );
 
     {
         int total_tests = 0;
@@ -1121,7 +1098,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     /*
         Allocate some space for the states at depth 0.
     */
-    soft_thread->depth = 0;
+    soft_thread->method_specific.soft_dfs.depth = 0;
 
     fc_solve_increase_dfs_max_depth(soft_thread);
 
@@ -1130,7 +1107,11 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     ptr_orig_state_val->moves_to_parent = NULL;
     ptr_orig_state_val->depth = 0;
 
-    soft_thread->soft_dfs_info[0].state_val = ptr_orig_state_val;
+    soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state_val = ptr_orig_state_val;
+    fc_solve_rand_init(
+            &(soft_thread->method_specific.soft_dfs.rand_gen), 
+            soft_thread->method_specific.soft_dfs.rand_seed
+    );
 
     return;
 }
@@ -1583,11 +1564,21 @@ void fc_solve_instance__recycle_hard_thread(
     {
         soft_thread = hard_thread->soft_threads[st_idx];
 
-        /* Reset the priority queue */
-        soft_thread->a_star_pqueue.CurrentSize = 0;
-        /* Reset the BFS Queue (also used for the optimization scan. */
-        free_bfs_queue(soft_thread);
+        switch (soft_thread->method)
+        {
+            case FCS_METHOD_A_STAR:
+                /* Reset the priority queue */
+                soft_thread->method_specific.befs.meth.befs.a_star_pqueue.CurrentSize
+                    = 0
+                    ;
+                break;
+            case FCS_METHOD_BFS:
+            case FCS_METHOD_OPTIMIZE:
+                /* Reset the BFS Queue (also used for the optimization scan. */
+                free_bfs_queue(soft_thread);
+                break;
 
+        }
         reset_soft_thread(soft_thread);
         
     }

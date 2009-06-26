@@ -53,27 +53,27 @@ void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    int new_dfs_max_depth = soft_thread->dfs_max_depth + 16;
+    int new_dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth + 16;
     int d;
 
-    soft_thread->soft_dfs_info = realloc(
-        soft_thread->soft_dfs_info,
-        sizeof(soft_thread->soft_dfs_info[0])*new_dfs_max_depth
+    soft_thread->method_specific.soft_dfs.soft_dfs_info = realloc(
+        soft_thread->method_specific.soft_dfs.soft_dfs_info,
+        sizeof(soft_thread->method_specific.soft_dfs.soft_dfs_info[0])*new_dfs_max_depth
         );
 
-    for(d=soft_thread->dfs_max_depth ; d<new_dfs_max_depth; d++)
+    for(d=soft_thread->method_specific.soft_dfs.dfs_max_depth ; d<new_dfs_max_depth; d++)
     {
-        soft_thread->soft_dfs_info[d].state_val = NULL;
-        soft_thread->soft_dfs_info[d].test_index = 0;
-        soft_thread->soft_dfs_info[d].current_state_index = 0;
-        soft_thread->soft_dfs_info[d].derived_states_list.num_states = 0;
-        soft_thread->soft_dfs_info[d].derived_states_list.states = NULL;
-        soft_thread->soft_dfs_info[d].derived_states_random_indexes = NULL;
-        soft_thread->soft_dfs_info[d].derived_states_random_indexes_max_size = 0;
-        soft_thread->soft_dfs_info[d].positions_by_rank = NULL;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].state_val = NULL;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].test_index = 0;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].current_state_index = 0;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].derived_states_list.num_states = 0;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].derived_states_list.states = NULL;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].derived_states_random_indexes = NULL;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].derived_states_random_indexes_max_size = 0;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].positions_by_rank = NULL;
     }
 
-    soft_thread->dfs_max_depth = new_dfs_max_depth;
+    soft_thread->method_specific.soft_dfs.dfs_max_depth = new_dfs_max_depth;
 }
 
 /*
@@ -84,9 +84,6 @@ void fc_solve_increase_dfs_max_depth(
   */
 #define the_state (*ptr_state_key)
 
-#define myreturn(ret_value) \
-    return (ret_value);
-
 #ifdef DEBUG
 #define TRACE0(message) \
         { \
@@ -94,7 +91,7 @@ void fc_solve_increase_dfs_max_depth(
             { \
             printf("%s. Depth=%d ; the_soft_Depth=%d ; Iters=%d ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
                     message, \
-                    soft_thread->depth, (the_soft_dfs_info-soft_thread->soft_dfs_info), \
+                    soft_thread->method_specific.soft_dfs.depth, (the_soft_dfs_info-soft_thread->method_specific.soft_dfs.soft_dfs_info), \
                     instance->num_times, the_soft_dfs_info->test_index, \
                     the_soft_dfs_info->current_state_index, \
                     (derived_states_list ? derived_states_list->num_states : -1) \
@@ -259,13 +256,13 @@ int fc_solve_soft_dfs_do_solve(
 #endif
     scans_synergy = instance->scans_synergy;
 
-    the_soft_dfs_info = &(soft_thread->soft_dfs_info[soft_thread->depth]);
+    the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth]);
 
-    dfs_max_depth = soft_thread->dfs_max_depth;
+    dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
     ptr_state_val = the_soft_dfs_info->state_val;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
     
-    rand_gen = &(soft_thread->rand_gen);
+    rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
     
     calculate_real_depth(
         ptr_state_val
@@ -275,20 +272,20 @@ int fc_solve_soft_dfs_do_solve(
     /*
         The main loop.
     */
-    while (soft_thread->depth >= 0)
+    while (soft_thread->method_specific.soft_dfs.depth >= 0)
     {
         /*
             Increase the "maximal" depth if it is about to be exceeded.
         */
-        if (soft_thread->depth+1 >= dfs_max_depth)
+        if (soft_thread->method_specific.soft_dfs.depth+1 >= dfs_max_depth)
         {
             fc_solve_increase_dfs_max_depth(soft_thread);
 
-            /* Because the address of soft_thread->soft_dfs_info may
+            /* Because the address of soft_thread->method_specific.soft_dfs.soft_dfs_info may
              * be changed
              * */
-            the_soft_dfs_info = &(soft_thread->soft_dfs_info[soft_thread->depth]);
-            dfs_max_depth = soft_thread->dfs_max_depth;
+            the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth]);
+            dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
             /* This too has to be re-synced */
             derived_states_list = &(the_soft_dfs_info->derived_states_list);
         }
@@ -312,7 +309,7 @@ int fc_solve_soft_dfs_do_solve(
                 }
 
                 free(the_soft_dfs_info->positions_by_rank);
-                if (--soft_thread->depth < 0)
+                if (--soft_thread->method_specific.soft_dfs.depth < 0)
                 {
                     break;
                 }
@@ -349,12 +346,12 @@ int fc_solve_soft_dfs_do_solve(
                     instance->debug_iter_output_func(
                         (void*)instance->debug_iter_output_context,
                         instance->num_times,
-                        soft_thread->depth,
+                        soft_thread->method_specific.soft_dfs.depth,
                         (void*)instance,
                         ptr_state_val,
-                        ((soft_thread->depth == 0) ?
+                        ((soft_thread->method_specific.soft_dfs.depth == 0) ?
                             0 :
-                            soft_thread->soft_dfs_info[soft_thread->depth-1].state_val->visited_iter
+                            soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth-1].state_val->visited_iter
                         )
                         );
                 }
@@ -389,7 +386,7 @@ int fc_solve_soft_dfs_do_solve(
                     instance->final_state_val = ptr_state_val;
 
                     TRACE0("Returning FCS_STATE_WAS_SOLVED");
-                    myreturn(FCS_STATE_WAS_SOLVED);
+                    return FCS_STATE_WAS_SOLVED;
                 }
                 /*
                     Cache num_vacant_freecells and num_vacant_stacks in their
@@ -443,7 +440,7 @@ int fc_solve_soft_dfs_do_solve(
                     derived_states_list->num_states = 0;
                     the_soft_dfs_info->current_state_index = 0;
                     TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (after sfs_tests)");
-                    myreturn(FCS_STATE_SUSPEND_PROCESS);
+                    return FCS_STATE_SUSPEND_PROCESS;
                 }
 
                 /* Move the counter to the next test */
@@ -546,7 +543,7 @@ int fc_solve_soft_dfs_do_solve(
                         I'm using current_state_indexes[depth]-1 because we already
                         increased it by one, so now it refers to the next state.
                     */
-                    soft_thread->depth++;
+                    soft_thread->method_specific.soft_dfs.depth++;
                     the_soft_dfs_info++;
 
                     the_soft_dfs_info->state_val =
@@ -566,7 +563,7 @@ int fc_solve_soft_dfs_do_solve(
                     if (check_if_limits_exceeded())
                     {
                         TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (inside current_state_index)");
-                        myreturn(FCS_STATE_SUSPEND_PROCESS);
+                        return FCS_STATE_SUSPEND_PROCESS;
                     }
 
                     break;
@@ -582,7 +579,7 @@ int fc_solve_soft_dfs_do_solve(
     instance->num_times++;
     hard_thread->num_times++;
 
-    soft_thread->depth = -1;
+    soft_thread->method_specific.soft_dfs.depth = -1;
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
@@ -644,7 +641,7 @@ static GCC_INLINE void initialize_a_star_rater(
     {
         update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*ptr_state_key, a), &cards_under_sequences);
     }
-    soft_thread->a_star_initial_cards_under_sequences = cards_under_sequences;
+    soft_thread->method_specific.befs.meth.befs.a_star_initial_cards_under_sequences = cards_under_sequences;
 }
 
 #undef TRACE0
@@ -693,7 +690,8 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num = instance->stacks_num;
 #endif
-    double * a_star_weights = soft_thread->a_star_weights;
+#define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
+    double * a_star_weights = my_a_star_weights;
 #ifndef FCS_FREECELL_ONLY
     int unlimited_sequence_move = instance->unlimited_sequence_move;
 #else
@@ -732,8 +730,8 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
         }
     }
 
-    ret += ((soft_thread->a_star_initial_cards_under_sequences - cards_under_sequences)
-            / soft_thread->a_star_initial_cards_under_sequences) * a_star_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
+    ret += ((soft_thread->method_specific.befs.meth.befs.a_star_initial_cards_under_sequences - cards_under_sequences)
+            / soft_thread->method_specific.befs.meth.befs.a_star_initial_cards_under_sequences) * a_star_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
 
     ret += (seqs_over_renegade_cards /
                FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4))
@@ -811,24 +809,6 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
     there are no more states in the queue.
 */
 
-#define myreturn(ret_value)                                     \
-    /* Free the memory that was allocated by the                \
-     * derived states list */                                   \
-    if (derived.states != NULL)                                 \
-    {                                                           \
-        free(derived.states);                                   \
-    }                                                           \
-                                                                \
-    soft_thread->bfs_queue_last_item = bfs_queue_last_item;     \
-    if (soft_thread->a_star_positions_by_rank)                  \
-    {                                                           \
-        free(soft_thread->a_star_positions_by_rank);            \
-        soft_thread->a_star_positions_by_rank = NULL;           \
-    }                                                           \
-                                                                \
-    return (ret_value);
-
-
 #undef TRACE0
 
 #ifdef DEBUG
@@ -851,6 +831,54 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
 
 #endif
 
+#define my_brfs_queue (soft_thread->method_specific.befs.meth.brfs.bfs_queue)
+#define my_brfs_queue_last_item \
+    (soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item)
+
+static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * soft_thread)
+{
+    /* Initialize the BFS queue. We have one dummy element at the beginning
+       in order to make operations simpler. */
+    my_brfs_queue = 
+        (fcs_states_linked_list_item_t*)malloc(
+            sizeof(fcs_states_linked_list_item_t)
+        );
+    my_brfs_queue->next = 
+    my_brfs_queue_last_item = 
+        my_brfs_queue->next =
+        (fcs_states_linked_list_item_t*)
+        malloc(sizeof(fcs_states_linked_list_item_t))
+        ;
+    my_brfs_queue_last_item->next = NULL;
+}
+
+
+static GCC_INLINE void normalize_a_star_weights(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    /* Normalize the A* Weights, so the sum of all of them would be 1. */
+    double sum;
+    int a;
+    sum = 0;
+    for(a=0;a<(sizeof(my_a_star_weights)/sizeof(my_a_star_weights[0]));a++)
+    {
+        if (my_a_star_weights[a] < 0)
+        {
+            my_a_star_weights[a] = fc_solve_a_star_default_weights[a];
+        }
+        sum += my_a_star_weights[a];
+    }
+    if (sum < 1e-6)
+    {
+        sum = 1;
+    }
+    for(a=0;a<(sizeof(my_a_star_weights)/sizeof(my_a_star_weights[0]));a++)
+    {
+        my_a_star_weights[a] /= sum;
+    }
+}
+
 extern void fc_solve_soft_thread_init_a_star_or_bfs(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -861,10 +889,22 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
+        /* Initialize the priotity queue of the A* scan */
+        fc_solve_PQueueInitialise(
+            &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue),
+            1024
+        );
+
+        normalize_a_star_weights(soft_thread);
+
         initialize_a_star_rater(
             soft_thread,
             ptr_orig_state_val
             );
+    }
+    else
+    {
+        fc_solve_initialize_bfs_queue(soft_thread);
     }
 
     /* Initialize the first element to indicate it is the first */
@@ -907,9 +947,7 @@ int fc_solve_a_star_or_bfs_do_solve(
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
 
     int scans_synergy = instance->scans_synergy;
-    fcs_states_linked_list_item_t * bfs_queue = soft_thread->bfs_queue;
-    PQUEUE * a_star_pqueue = &(soft_thread->a_star_pqueue);
-    fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->bfs_queue_last_item;
+    int error_code;
 
     derived.num_states = 0;
     derived.states = NULL;
@@ -983,7 +1021,8 @@ int fc_solve_a_star_or_bfs_do_solve(
             soft_thread->first_state_to_check_val = ptr_state_val;
 
             TRACE0("myreturn - FCS_STATE_SUSPEND_PROCESS");
-            myreturn(FCS_STATE_SUSPEND_PROCESS);
+            error_code = FCS_STATE_SUSPEND_PROCESS;
+            goto my_return_label;
         }
 
         TRACE0("debug_iter_output");
@@ -1010,7 +1049,8 @@ int fc_solve_a_star_or_bfs_do_solve(
         {
             instance->final_state_val = ptr_state_val;
 
-            myreturn(FCS_STATE_WAS_SOLVED);
+            error_code = FCS_STATE_WAS_SOLVED;
+            goto my_return_label;
         }
 
         calculate_real_depth(
@@ -1020,10 +1060,10 @@ int fc_solve_a_star_or_bfs_do_solve(
         soft_thread->num_vacant_freecells = num_vacant_freecells;
         soft_thread->num_vacant_stacks = num_vacant_stacks;
 
-        if (soft_thread->a_star_positions_by_rank)
+        if (soft_thread->method_specific.befs.a_star_positions_by_rank)
         {
-            free(soft_thread->a_star_positions_by_rank);
-            soft_thread->a_star_positions_by_rank = NULL;
+            free(soft_thread->method_specific.befs.a_star_positions_by_rank);
+            soft_thread->method_specific.befs.a_star_positions_by_rank = NULL;
         }
 
         TRACE0("perform_tests");
@@ -1047,7 +1087,8 @@ int fc_solve_a_star_or_bfs_do_solve(
                 /* Save the current position in the scan */
                 soft_thread->first_state_to_check_val = ptr_state_val;
 
-                myreturn(FCS_STATE_SUSPEND_PROCESS);
+                error_code = FCS_STATE_SUSPEND_PROCESS;
+                goto my_return_label;
             }
         }
 
@@ -1073,7 +1114,7 @@ int fc_solve_a_star_or_bfs_do_solve(
             if (method == FCS_METHOD_A_STAR)
             {
                 fc_solve_PQueuePush(
-                    a_star_pqueue,
+                    &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue),
                     ptr_new_state_val,
                     fc_solve_a_star_rate_state(soft_thread,
                         ptr_new_state_val
@@ -1084,6 +1125,7 @@ int fc_solve_a_star_or_bfs_do_solve(
             {
                 /* Enqueue the new state. */
                 fcs_states_linked_list_item_t * last_item_next;
+                fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item;
 
                 last_item_next = 
                     bfs_queue_last_item->next =
@@ -1092,7 +1134,7 @@ int fc_solve_a_star_or_bfs_do_solve(
                     );
                 bfs_queue_last_item->s = ptr_new_state_val;
                 last_item_next->next = NULL;
-                bfs_queue_last_item = last_item_next;
+                soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item = last_item_next;
             }
         }
 
@@ -1127,6 +1169,9 @@ label_next_state:
         */
         if ((method == FCS_METHOD_BFS) || (method == FCS_METHOD_OPTIMIZE))
         {
+            fcs_states_linked_list_item_t * bfs_queue = soft_thread->method_specific.befs.meth.brfs.bfs_queue;
+            fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item;
+
             save_item = bfs_queue->next;
             if (save_item != bfs_queue_last_item)
             {
@@ -1142,13 +1187,29 @@ label_next_state:
         else
         {
             /* It is an A* scan */
-            fc_solve_PQueuePop(a_star_pqueue,
+            fc_solve_PQueuePop(
+                &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue),
                 &ptr_state_val
                 );
         }
     }
 
-    myreturn(FCS_STATE_IS_NOT_SOLVEABLE);
+    error_code = FCS_STATE_IS_NOT_SOLVEABLE;
+my_return_label:
+    /* Free the memory that was allocated by the
+     * derived states list */
+    if (derived.states != NULL)
+    {
+        free(derived.states);
+    }
+
+    if (soft_thread->method_specific.befs.a_star_positions_by_rank)
+    {
+        free(soft_thread->method_specific.befs.a_star_positions_by_rank);
+        soft_thread->method_specific.befs.a_star_positions_by_rank = NULL;
+    }
+
+    return error_code;
 }
 
 #undef myreturn
@@ -1169,8 +1230,8 @@ extern char * fc_solve_get_the_positions_by_rank_data(
         case FCS_METHOD_RANDOM_DFS:
             {
                 positions_by_rank_location = &(
-                    soft_thread->soft_dfs_info[
-                        soft_thread->depth
+                    soft_thread->method_specific.soft_dfs.soft_dfs_info[
+                        soft_thread->method_specific.soft_dfs.depth
                     ].positions_by_rank
                     );
             }
@@ -1178,7 +1239,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
         default:
             {
                 positions_by_rank_location = &(
-                        soft_thread->a_star_positions_by_rank
+                        soft_thread->method_specific.befs.a_star_positions_by_rank
                         );
             }
             break;

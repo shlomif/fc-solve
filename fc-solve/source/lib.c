@@ -603,7 +603,7 @@ int DLLEXPORT freecell_solver_user_get_current_depth(
 
     user = (fcs_user_t *)user_instance;
 
-    return (user->soft_thread->depth);
+    return (user->soft_thread->method_specific.soft_dfs.depth);
 }
 
 void DLLEXPORT freecell_solver_user_set_solving_method(
@@ -616,6 +616,35 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     user = (fcs_user_t *)user_instance;
 
     user->soft_thread->method = method;
+
+    switch (method)
+    {
+        case FCS_METHOD_A_STAR:
+        {
+            double * my_a_star_weights;
+            int a;
+
+            my_a_star_weights = user->soft_thread->method_specific.befs.meth.befs.a_star_weights;
+            for(a = 0;
+                a<(sizeof(fc_solve_a_star_default_weights)/
+                    sizeof(fc_solve_a_star_default_weights[0]));
+                a++)
+            {
+                my_a_star_weights[a] = fc_solve_a_star_default_weights[a];
+            }
+
+            user->soft_thread->method_specific.befs.meth.befs.a_star_pqueue.Elements = NULL;
+        }
+        break;
+        case FCS_METHOD_OPTIMIZE:
+        case FCS_METHOD_BFS:
+        {
+            user->soft_thread->method_specific.befs.meth.brfs.bfs_queue =
+            user->soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item =
+            NULL;
+        }
+        break;
+    }
 }
 
 #define set_for_all_instances(what) \
@@ -962,7 +991,8 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 
     user = (fcs_user_t *)user_instance;
 
-    if ((index < 0) || (index >= (sizeof(user->soft_thread->a_star_weights)/sizeof(user->soft_thread->a_star_weights[0]))))
+#define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
+    if ((index < 0) || (index >= (sizeof(user->my_a_star_weights)/sizeof(user->my_a_star_weights[0]))))
     {
         return 1;
     }
@@ -971,7 +1001,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
         return 2;
     }
 
-    user->soft_thread->a_star_weights[index] = weight;
+    user->my_a_star_weights[index] = weight;
 
     return 0;
 
@@ -1080,7 +1110,10 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
 
     user = (fcs_user_t *)user_instance;
 
-    fc_solve_rand_init(&(user->soft_thread->rand_gen), (user->soft_thread->rand_seed = seed));
+    fc_solve_rand_init(
+            &(user->soft_thread->method_specific.soft_dfs.rand_gen), 
+            (user->soft_thread->method_specific.soft_dfs.rand_seed = seed)
+            );
 }
 
 int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * user_instance)

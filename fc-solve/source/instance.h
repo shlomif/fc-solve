@@ -577,86 +577,104 @@ struct fc_solve_soft_thread_struct
 
 
     /*
-     * The (temporary) max depth of the Soft-DFS scans)
-     * */
-    int dfs_max_depth;
-    /*
      * The method (i.e: DFS, Soft-DFS, BFS or A*) that is used by this
      * instance.
      *
      * */
     int method;
 
-    /*
-     * A linked list that serves as the queue for the BFS scan.
-     * */
-    fcs_states_linked_list_item_t * bfs_queue;
-    /*
-     * The last item in the linked list, so new items can be added at it,
-     * thus making it a queue.
-     * */
-    fcs_states_linked_list_item_t * bfs_queue_last_item;
+    union
+    {
+        struct
+        {
+            /*
+             * The (temporary) max depth of the Soft-DFS scans)
+             * */
+            int dfs_max_depth;
 
-    /*
-     * The priority queue of the A* scan */
-    PQUEUE a_star_pqueue;
-    double a_star_initial_cards_under_sequences;
+            /*
+             * These are stacks used by the Soft-DFS for various uses.
+             *
+             * states_to_check - an array of states to be checked next. Not 
+             * all of them will be checked because it is possible that future 
+             * states already visited them.
+             *
+             * states_to_check_move_stacks - an array of move stacks that
+             * lead to those states.
+             *
+             * num_states_to_check - the size of states_to_check[i]
+             *
+             * current_state_indexes - the index of the last checked state
+             * in depth i.
+             *
+             * test_indexes - the index of the test that was last
+             * performed. FCS performs each test separately, so
+             * states_to_check and friends will not be overpopulated.
+             *
+             * num_vacant_stacks - the number of unoccpied stacks that 
+             * correspond
+             * to solution_states.
+             *
+             * num_vacant_freecells - ditto for the freecells.
+             *
+             * */
 
-    char * a_star_positions_by_rank;
+            fcs_soft_dfs_stack_item_t * soft_dfs_info;
 
-    /*
-     * The A* weights of the different A* tests. Those weights determine the
-     * commulative weight of the state.
-     *
-     * */
-    double a_star_weights[5];
+            /* The depth of the DFS stacks */
+            int depth;
+
+            /*
+             * A pseudo-random number generator for use in the random-DFS scan
+             * */
+            fcs_rand_t rand_gen;
+
+            /*
+             * The initial seed of this random number generator
+             * */
+            int rand_seed;
+        } soft_dfs;
+        struct
+        {
+            char * a_star_positions_by_rank;
+            union
+            {
+                struct
+                {
+                    /*
+                     * A linked list that serves as the queue for the BFS scan.
+                     * */
+                    fcs_states_linked_list_item_t * bfs_queue;
+                    /*
+                     * The last item in the linked list, so new items can be added at 
+                     * it, thus making it a queue.
+                     * */
+                    fcs_states_linked_list_item_t * bfs_queue_last_item;
+                } brfs;
+                struct
+                {
+                    /*
+                     * The priority queue of the A* scan */
+                    PQUEUE a_star_pqueue;
+                    double a_star_initial_cards_under_sequences;
+
+                    /*
+                     * The A* weights of the different A* tests. Those weights
+                     * determine the commulative weight of the state.
+                     *
+                     * */
+                    double a_star_weights[5];
+                } befs;
+            } meth;
+        } befs;
+    } method_specific;
+
 
     /*
      * The first state to be checked by the scan. It is a kind of bootstrap
      * for the algorithm.
      * */
     fcs_state_extra_info_t * first_state_to_check_val;
-
-    /*
-     * These are stacks used by the Soft-DFS for various uses.
-     *
-     * states_to_check[i] - an array of states to be checked next. Not all
-     * of them will be checked because it is possible that future states
-     * already visited them.
-     *
-     * states_to_check_move_stacks[i] - an array of move stacks that lead
-     * to those states.
-     *
-     * num_states_to_check[i] - the size of states_to_check[i]
-     *
-     * current_state_indexes[i] - the index of the last checked state
-     * in depth i.
-     *
-     * test_indexes[i] - the index of the test that was last performed.
-     * FCS performs each test separately, so states_to_check[i] and
-     * friends will not be overpopulated.
-     *
-     * num_vacant_stacks[i] - the number of unoccpied stacks that correspond
-     * to solution_states[i].
-     *
-     * num_vacant_freecells[i] - ditto for the freecells.
-     *
-     * */
-
-    fcs_soft_dfs_stack_item_t * soft_dfs_info;
-
-    /* The depth of the DFS stacks */
-    int depth;
-
-    /*
-     * A pseudo-random number generator for use in the random-DFS scan
-     * */
-    fcs_rand_t rand_gen;
-
-    /*
-     * The initial seed of this random number generator
-     * */
-    int rand_seed;
 
 
     /*
@@ -701,6 +719,11 @@ struct fc_solve_soft_thread_struct
 };
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
+
+#define FC_SOLVE_IS_DFS(soft_thread) \
+    ((soft_thread->method == FCS_METHOD_SOFT_DFS) ||  \
+     (soft_thread->method == FCS_METHOD_RANDOM_DFS) \
+    )
 
 /*
  * An enum that specifies the meaning of each A* weight.
@@ -822,6 +845,8 @@ static GCC_INLINE void fc_solve_recycle_instance(
     }
     instance->in_optimization_thread = 0;
 }
+
+extern const double fc_solve_a_star_default_weights[5];
 
 #ifdef __cplusplus
 }
