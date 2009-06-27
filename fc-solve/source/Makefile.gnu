@@ -21,6 +21,7 @@ endif
 
 CFLAGS := -Wall
 GCC_COMPAT := 
+INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp 
 
 ifeq ($(COMPILER),gcc)
 	CC = gcc
@@ -28,6 +29,17 @@ ifeq ($(COMPILER),gcc)
 else ifeq ($(COMPILER),icc)
 	CC = icc
 	GCC_COMPAT := 1
+else ifeq ($(COMPILER),sun)
+	CFLAGS :=
+	CC = cc
+	GCC_COMPAT := 0
+	INIT_CFLAGS :=
+	CREATE_SHARED = $(CC) $(CFLAGS) -shared
+	ifeq ($(OPT_FOR_SIZE),1)
+		CFLAGS +=
+	else
+		CFLAGS += -fast
+	endif
 else ifeq ($(COMPILER),lcc)
 	CC = lcc
 	GCC_COMPAT := 1
@@ -52,7 +64,7 @@ endif
 
 ifeq ($(GCC_COMPAT),1)
 	CREATE_SHARED = $(CC) $(CFLAGS) -shared
-	END_SHARED = $(END_LFLAGS)
+	END_SHARED = $(END_LFLAGS) 
 	ifeq ($(DEBUG),1)
 		CFLAGS += -g
 	else
@@ -63,6 +75,8 @@ ifeq ($(GCC_COMPAT),1)
 		endif
 	endif
 endif
+
+END_SHARED += -ltcmalloc
 
 ifneq ($(WITH_TRACES),0)
 	CFLAGS += -DDEBUG
@@ -156,7 +170,7 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 -include $(DEP_FILES)
 
 %.o: %.c
-	$(CC) -Wp,-MD,.deps/$(*F).pp -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
+	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
 
 libfcs.a: $(OBJECTS)
 	ar r $@ $(OBJECTS)
