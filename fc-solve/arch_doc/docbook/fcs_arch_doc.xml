@@ -385,7 +385,7 @@
             <section id="alloc.c">
                 <title>alloc.c</title>
                 <para>
-                    This module compactly allocate blocks of arbitrary length, 
+                    This module compactly allocates blocks of arbitrary length, 
                     usually used for dynamically allocated Freecell columns.
                     The blocks are allocated one after the other inside
                     malloc()'ed memory segments that are thus guaranteed
@@ -499,10 +499,10 @@
             <section id="state.c">
                 <title>state.c</title>
                 <para>
-                    This file contains various functions for manipulating states.
-                    Among the many things implemented in it are state canonisation,
-                    state duplicating, state comparison and converting to and from
-                    string format.
+                    This file contains various functions for manipulating
+                    states. Among the many things implemented in it are state
+                    canonisation, state duplicating, state comparison and 
+                    converting to and from string format.
                 </para>
             </section>
 
@@ -526,8 +526,8 @@
                     variant of Solitaire such as Freecell, Baker's Game, Simple 
                     Simon, Good Measure, etc. Many of them are categorised in 
                     PySol under different categories than the Freecell category. 
-                    Moreover, some "Freecell-like" games such as Penguin are not
-                    supported by Freecell Solver yet.
+                    Moreover, some "Freecell-like" games such as Penguin are
+                    not supported by Freecell Solver yet.
                 </para>
                 <para>
                     The routines in the file enable applying a preset to an 
@@ -541,12 +541,16 @@
             <section id="freecell.c">
                 <title>freecell.c</title>
                 <para>
-                    This module contains "test functions" for Freecell tests. A 
-                    test receives an origin state and tries to deduce if moves of 
-                    a certain sort are possible. It fills in a derived states list.
+
+                    This module contains move functions for Freecell tests. A
+                    move function receives an origin state and tries to deduce
+                    if moves of a certain kind are possible. It fills in a
+                    derived states list.
+
                 </para>
                 <para>
-                    This code uses some macros defined in tests.h. It contains
+                    This code uses some macros defined in 
+                    <filename>meta_move_funcs_helpers.h</filename>. It contains
                     both meta-move tests and atomic moves ones.
                 </para>
             </section>
@@ -556,23 +560,26 @@
                 <para>
                     This file is similar in spirit to 
                     <filename>freecell.c</filename> only it contains
-                    Simple Simon tests.
+                    <ulink url="http://en.wikipedia.org/wiki/Simple_Simon_(solitaire)">Simple 
+                        Simon</ulink> move functions.
                 </para>
             </section>
 
             <section id="caas.c">
                 <title>caas.c</title>
                 <para>
-                    This file contains the <function>check_and_add_state</function> 
-                    function - a function that is used to determine if a reached 
-                    state is found in the states collection and if so, to insert 
-                    it there. (an operation that can be considered atomic). 
+                    This file contains the 
+                    <function>check_and_add_state</function> 
+                    function - a function that is used to determine if a 
+                    reached state is found in the states collection and if so,
+                    to insert it there. (an operation that can be considered
+                    atomic). 
                 </para>
                 <para>
-                    It has several macros used to do it for the various types of 
-                    states collections supported at compile time. It also has a 
-                    function to collect the new stacks that were present in a 
-                    similar fashion.
+                    It has several #ifdef'ed portions used to do it for the 
+                    various types of states collections supported at compile 
+                    time. It also has a function to collect the new stacks 
+                    that were present in a similar fashion.
                 </para>
                 <para>
                     It is being used by the tests functions to put a state in 
@@ -583,25 +590,27 @@
             <section id="scans.c">
                 <title>scans.c</title>
                 <para>
-                    This module contains the functions of the various scans and 
-                    their auxiliary functions. The scan functions run tests and 
-                    traverse the graph according to some inherent logic. Currently 
-                    present are random-dfs/soft-dfs (soft-dfs is random-dfs 
-                    without randomising groups), Hard-DFS, 
+
+                    This module contains the functions of the various scans and
+                    their auxiliary functions. The scan functions run tests and
+                    traverse the graph according to some inherent logic.
+                    Currently present are random-dfs/soft-dfs (soft-dfs is
+                    random-dfs without randomising groups),
                     Best-First-Search (named A* in the code) and
                     Breadth-First-Search (named BFS in the code) functions.
+
                 </para>
             </section>
 
            
-            <section id="intrface.c">
-                <title>intrface.c</title>
+            <section id="instance.c">
+                <title>instance.c</title>
                 <para>
-                    This module contains the logic that manages a solver instance,
-                    configures it and runs it. It used the scans module to 
-                    perform the scan and other modules to configure it. Note that
-                    the interface presented here is very raw, and not meant
-                    to be used as an API.
+                    This module contains the logic that manages a solver
+                    instance, configures it and runs it. It used the scans 
+                    module to perform the scan and other modules to configure 
+                    it. Note that the interface presented here is very raw, 
+                    and not meant to be used as an API.
                 </para>
             </section>
 
@@ -609,13 +618,14 @@
             <section id="lib.c">
                 <title>lib.c</title>
                 <para>
-                    This module contains the user API. It manages a sequence of 
-                    instances that can be used to solve a board, and then recycled 
-                    to solve another. It uses intrface.c to perform its 
-                    operations, and do the actual configuring and solving. It 
-                    supplies the API header file <filename>fcs_user.h</filename> 
-                    which contains one function for doing any given operation, and 
-                    these functions are implemented in lib.c.
+                    This module contains the user API. It manages a sequence 
+                    of instances that can be used to solve a board, and then
+                    recycled to solve another. It uses instance.c to perform
+                    its operations, and do the actual configuring and solving.
+                    It supplies the API header file 
+                    <filename>fcs_user.h</filename> which contains one
+                    function for doing any given operation, and these 
+                    functions are implemented in lib.c.
                 </para>
             </section>
 
@@ -624,10 +634,10 @@
                 <para>
                     This module can be used to analyse an array of strings 
                     (similar to that given to the <function>main()</function> 
-                    function) and configure a user instance accordingly. It also 
-                    implements reading such arguments from files and a presets 
-                    mechanism that can be used to assign names to common 
-                    configuration and load them.
+                    function) and configure a user instance accordingly. It 
+                    also implements reading such arguments from files and a 
+                    presets mechanism that can be used to assign names to
+                    common configuration and load them.
                 </para>
             </section>
 
