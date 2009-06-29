@@ -22,9 +22,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * tests.h - header file of the test functions for Freecell Solver.
+ * meta_move_funcs_helpers.h - header file of the move functions of Freecell
+ * Solver.
  *
- * The test functions code is found in freecell.c
+ * The move functions code itself is found in freecell.c and simpsim.c.
  *
  */
 
