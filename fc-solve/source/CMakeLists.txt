@@ -44,6 +44,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/CPackSourceConfig\\\\.cmake$"
     "/tags$"
     "/freecell-solver-config$"
+    "/libfreecell-solver\\\\.pc$"
     "/([0-9]+)\\\\.board$"
     "/config\\\\.h$"
     "/install_manifest\\\\.txt$"
@@ -443,6 +444,12 @@ CONFIGURE_FILE(
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}-config.in
     ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_NAME}-config
+    )
+
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib${CPACK_PACKAGE_NAME}.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/lib${CPACK_PACKAGE_NAME}.pc
+    @ONLY
     )
 
 INSTALL(
