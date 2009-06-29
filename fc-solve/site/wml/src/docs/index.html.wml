@@ -29,6 +29,19 @@ about Freecell Solver. Covers various highlights from the history of the
 codebase and the community.
 </p>
 
+<h4 class="plain"><a href="http://www.shlomifish.org/lecture/Freecell-Solver/The-Next-Pres/">Lecture: Freecell Solver - The Next Presentation</a></h4>
+
+<p>
+A second installment in the series of presentations about Freecell Solver.
+</p>
+
+<h3 class="plain"><a href="http://www.shlomifish.org/lecture/Freecell-Solver/project-intro/">Freecell Solver - Project Introduction</a></h3>
+
+<p>
+This is a small presentation that introduces the Freecell Solver project to
+people who may be interested in contributing to it.
+</p>
+
 <h3 class="plain"><a href="http://groups.yahoo.com/group/hackers-il/message/2809">The Well and
 the Wall</a></h3>
 
@@ -104,5 +117,12 @@ and Solitaire Games"</a></h3>
 
 <p>
 A blog entry in my use.perl.org blog about Freecell Solver and other things.
+</p>
+
+<h3 class="plain"><a href="http://www.shlomifish.org/philosophy/computers/optimizing-code-for-speed/">"Optimizing Code for Speed"</a></h3>
+
+<p>
+An essay about optimisation that gives some examples from Freecell Solver
+and elsewhere.
 </p>
 
