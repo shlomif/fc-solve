@@ -996,18 +996,6 @@
                 later be incorporated into <filename>presets.c</filename>.
             </para>
         </section>
-        <section id="scm_maintaining_a_list_of_modules">
-            <title>Maintaining a list of Modules</title>
-            <para>
-                The script <filename>gen_makefile.pl</filename> maintains a 
-                list of modules and headers across all makefiles that are 
-                distributed as part of Freecell Solver.
-            </para>
-            <para>
-                Notice that the Win32 makefile is generated from a hard-coded
-                template, while the other makefiles are read and modified by it.
-            </para>
-        </section>
 
         <section id="scm_generating_the_site">
             <title>Generating the Site</title>
