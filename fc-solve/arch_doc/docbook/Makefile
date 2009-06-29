@@ -4,6 +4,7 @@ XHTML = $(DOC)
 XHTML_INDEX = $(XHTML)/index.html
 PDF = $(DOC).pdf
 RTF = $(DOC).rtf
+CSS = $(XHTML)/style.css
 
 DOCMAKE = docmake -v --make 
 
@@ -11,7 +12,7 @@ UPLOAD_PATH = shlomif@shell.berlios.de:/home/groups/fc-solve/htdocs/arch_doc/
 
 all: xhtml pdf rtf
 
-xhtml: $(XHTML_INDEX)
+xhtml: $(XHTML_INDEX) $(CSS)
 
 $(XHTML_INDEX): $(XML)
 	$(DOCMAKE) \
@@ -20,6 +21,9 @@ $(XHTML_INDEX): $(XML)
 		-x shlomif-essays-xhtml.xsl	\
 		-o $(XHTML) \
 		xhtml $<
+
+$(CSS): style.css $(XHTML_INDEX) 
+	cp -f $< $@
 
 pdf: $(PDF)
 
