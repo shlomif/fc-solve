@@ -72,7 +72,7 @@
         <title>Introduction</title>
         <para>
             This is the architecture document of &fcs;. Its purpose is to
-            serve as an introduction to the code, so future hackers can 
+            serve as an introduction to the code, so future contributors can 
             understand it and work on it.
         </para>
         <para>
@@ -95,7 +95,7 @@
             <para>
                 &fcs; was designed bottom-up: first by writing functions to input
                 cards and then to handle states and finally the algorithm itself. I
-                find that bottom-up design (as evangelized by Paul Graham and 
+                find that bottom-up design (as evangelised by Paul Graham and 
                 others)- start by writing small utility functions and classes 
                 and then integrate into a grander scheme, has been a guiding 
                 principle when working on &fcs;.
@@ -119,7 +119,7 @@
                 other proprietary compilers on various systems. As this variety
                 of compilers only support the bare ANSI C standard, I have 
                 to stick to it. This is despite the fact that such extensions may
-                have made the code more optimized and my life as a programmer much 
+                have made the code more optimised and my life as a programmer much 
                 easier.            
             </para>
         </section>
@@ -171,7 +171,7 @@
                     </listitem>
                     <listitem>
                         <para>
-                            Speed - the code should be optimized for speed. Many 
+                            Speed - the code should be optimised for speed. Many 
                             times in the code, it was made a bit less 
                             comprehensible to gain speed, and many times extra
                             techniques are implemented to ensure this goal.
@@ -225,7 +225,7 @@
             </para>        
             <para>
                 <filename>lib.c</filename> contain the API functions used by the
-                programmer. <filename>cmd_line.c</filename> is an API to analyze
+                programmer. <filename>cmd_line.c</filename> is an API to analyse
                 a &fcs; command line. It itself uses only the 
                 <filename>lib.c</filename> API. It provides a more flexible
                 interface for configuring &fcs;, even to the application 
@@ -318,7 +318,7 @@
             <section id="fcs_hash.c">
                 <title>fcs_hash.c</title>
                 <para>
-                    An optimized hash implementations. This has maps keys alone,
+                    An optimised hash implementations. This has maps keys alone,
                     not key-value pairs. It stores the hash values next to the 
                     keys, so two keys can be first compared with their hash values,
                     before the costly full comparison is done. It also uses
@@ -333,7 +333,7 @@
             </section>
             
             <section id="fcs_dm.c">
-                <title>fas_dm.c</title>
+                <title>fcs_dm.c</title>
                 <para>
                     This module implements two functions - an advanced binary
                     search one and a function to merge a small sorted array into
@@ -402,7 +402,7 @@
                         </listitem>
                         <listitem>
                             <para>
-                                A newline or a whitespace separates a word.
+                                A newline or a white-space separates a word.
                             </para>
                         </listitem>
                         <listitem>
@@ -414,7 +414,7 @@
                         <listitem>
                             <para>
                                 Double quotes (") wrap an argument that may contain
-                                whitespace.
+                                white-space.
                             </para>
                         </listitem>
                         <listitem>
@@ -434,9 +434,9 @@
                 <para>
                     This module implements a priority queue as a binary heap. It
                     is derived from <ulink url="http://www.geocities.com/SiliconValley/Lakes/4929/">Justin Heyes-Jones</ulink> C++ code which he has kindly 
-                    donated to &fcs; (while relicensing it under the public 
+                    donated to &fcs; (while re-licensing it under the public 
                     domain). Since then, the code has been converted to ANSI C
-                    , modified and optimized.
+                    , modified and optimised.
                 </para>
                 <para>
                     This module is used by the Best-First-Search scan.
@@ -476,8 +476,8 @@
                 </para>
                 <para>
                     The state_with_locations_t contains the real positions of the
-                    stacks and freecells (refer to (SECTION_REF Canonization and
-                    Normalization)) and other things that the system uses but 
+                    stacks and freecells (refer to (SECTION_REF Canonisation and
+                    Normalisation)) and other things that the system uses but 
                     don't uniquely identify the state in the state collection.
                 </para>
             </section>
@@ -486,7 +486,7 @@
                 <title>state.c</title>
                 <para>
                     This file contains various functions for manipulating states.
-                    Among the many things implemented in it are state canonization,
+                    Among the many things implemented in it are state canonisation,
                     state duplicating, state comparison and converting to and from
                     string format.
                 </para>
@@ -510,7 +510,7 @@
                     number, freecells number, decks number, and the other 
                     parameters that define how a game is played. A preset is a 
                     variant of Solitaire such as Freecell, Baker's Game, Simple 
-                    Simon, Good Measure, etc. Many of them are categorized in 
+                    Simon, Good Measure, etc. Many of them are categorised in 
                     PySol under different categories than the Freecell category. 
                     Moreover, some "Freecell-like" games such as Penguin are not
                     supported by Freecell Solver yet.
@@ -573,7 +573,7 @@
                     their auxiliary functions. The scan functions run tests and 
                     traverse the graph according to some inherent logic. Currently 
                     present are random-dfs/soft-dfs (soft-dfs is random-dfs 
-                    without randomizing groups), Hard-DFS, 
+                    without randomising groups), Hard-DFS, 
                     Best-First-Search (named A* in the code) and
                     Breadth-First-Search (named BFS in the code) functions.
                 </para>
@@ -608,7 +608,7 @@
             <section id="cmd_line.c">
                 <title>cmd_line.c</title>
                 <para>
-                    This module can be used to analyze an array of strings 
+                    This module can be used to analyse an array of strings 
                     (similar to that given to the <function>main()</function> 
                     function) and configure a user instance accordingly. It also 
                     implements reading such arguments from files and a presets 
@@ -673,7 +673,7 @@
                             in this configuration 
                             each stack is a pointer to a stack in memory. 
                             The stacks are also collected and there is one copy
-                            of each stack organization (say [KS QH 6H]) in 
+                            of each stack organisation (say [KS QH 6H]) in 
                             memory. Since a pointer to a stack uniquely 
                             identifies a stack, the states can be compared by
                             comparing their memory contents.
@@ -681,7 +681,7 @@
                         <para>
                             This is now the default configuration, and in the 
                             2.5.x development tree, many enhancements were done to 
-                            optimize it. It was benchmarked to be slightly faster 
+                            optimise it. It was benchmarked to be slightly faster 
                             than Compact States, even for games like freecell.
                         </para>
                     </listitem>
@@ -732,7 +732,7 @@
                 <type>fcs_state_with_locations_t</type>, that defines some
                 other data. The real locations of the stacks and freecells are
                 stored there for instance, as well as some graph information. See
-                Canonization and Normalization in the terminology.
+                Canonisation and Normalisation in the terminology.
             </para>
         </section>
         <section id="technique_the_states_graph_and_its_use">
@@ -791,7 +791,7 @@
                 <filename>lib.c</filename>.
             </para>
             <para>
-                After an instance is allocated, it should be parametrized to
+                After an instance is allocated, it should be parametrised to
                 specify how it will solve the board. Afterwards, 
                 <function>freecell_solver_init_instance()</function> should
                 be called. After that, 
@@ -887,7 +887,7 @@
                         <para>
                             <emphasis>Hash Elements</emphasis> - The elements of 
                             the hash linked lists are compactly allocated with a 
-                            specialized hash allocator.
+                            specialised hash allocator.
                         </para>
                     </listitem>
                 </orderedlist>
@@ -978,13 +978,13 @@
                 <orderedlist>                
                     <listitem>
                         <para>
-                            Download zip.exe and unzip.exe from the static sub-dir.
+                            Download zip.exe and unzip.exe from the static sub-directory.
                         </para>
                     </listitem>
 
                     <listitem>
                         <para>
-                            Download fcs.zip from the dynamic sub-dir.
+                            Download fcs.zip from the dynamic sub-directory.
                         </para>
                     </listitem>
                     
@@ -1029,10 +1029,10 @@
             <variablelist>
                 <title>Terms used throughout the Code</title>
                 <varlistentry>
-                    <term>Canonization</term>
+                    <term>Canonisation</term>
                     <listitem>
                         <para>
-                            An extended state is canonized by its stacks being
+                            An extended state is canonised by its stacks being
                             uniquely sorted according to their contents, and an
                             array of indexes describing their original locations
                             sorted accordingly. This is done to make sure no two
@@ -1099,7 +1099,7 @@
                     <listitem>
                         <para>
                             a generic name of the API used by the programmer
-                            who wishes to utilize the &fcs; library in his
+                            who wishes to utilise the &fcs; library in his
                             application. Named after the prefix of the functions
                             of this library.
                         </para>
@@ -1146,7 +1146,7 @@
                     <listitem>
                         <para>
                             an initial board, a collection of states and all the
-                            scans associated with it. An instance is initialized
+                            scans associated with it. An instance is initialised
                             whenever one wishes to solve new board. By using
                             command line parameters it is possible to configure it
                             to solve the board in many ways. Instance logic is
@@ -1199,7 +1199,7 @@
                             A one-time displacements of cards from stacks to
                             stacks, from stacks to freecells, or from freecells to
                             stacks. Also contain some special moves such as those
-                            for canonizing stacks, and separators. Also see Move
+                            for canonising stacks, and separators. Also see Move
                             Stacks.
                         </para>
                     </listitem>
@@ -1215,10 +1215,10 @@
                     </listitem>
                 </varlistentry>
                 <varlistentry>
-                    <term>Normalization</term>
+                    <term>Normalisation</term>
                     <listitem>
                         <para>
-                            normalization is the opposite of canonization. It is
+                            normalisation is the opposite of canonisation. It is
                             meant to bring the stacks and freecells to their 
                             absolute locations. It is normally done only when
                             presenting a state to the user or to a code that
@@ -1278,7 +1278,7 @@
                     </listitem>
                 </varlistentry>
                 <varlistentry>
-                    <term>Reparent</term>
+                    <term>Re-parent</term>
                     <listitem>
                         <para>
                             Let's suppose state DEST has been derived from state
@@ -1313,8 +1313,8 @@
                     <term>Soft DFS</term>
                     <listitem>
                         <para>
-                            A depth-first search scan that does not utilize
-                            procedural recursion. In &fcs;, this utilizes a stack
+                            A depth-first search scan that does not utilise
+                            procedural recursion. In &fcs;, this utilises a stack
                             of records, each containing the current state, the
                             current test, the list of derived states, and other
                             information. This deviates from the standard scheme
@@ -1414,7 +1414,7 @@
                             a grouping of tests that dictate which one should be 
                             performed one after the and placed into the same 
                             derived states list. Afterwards, this list can be 
-                            randomized, or prioritized.
+                            randomised, or prioritised.
                         </para>
                     </listitem>
                 </varlistentry>
