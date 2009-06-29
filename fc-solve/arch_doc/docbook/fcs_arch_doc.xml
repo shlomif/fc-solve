@@ -745,7 +745,7 @@
                             This configuration used to be the fastest for 
                             limited stack games such as Freecell. After 
                             &fcs; 2.6.x, it seems that Indirect Stack States 
-                            has become slightly faster than it, too.
+                            has become slightly faster than it.
                         </para>
                     </listitem>
                     <listitem>
@@ -760,10 +760,13 @@
                             comparing their memory contents.
                         </para>
                         <para>
-                            This is now the default configuration, and in the 
-                            2.5.x development tree, many enhancements were done to 
-                            optimise it. It was benchmarked to be slightly faster 
-                            than Compact States, even for games like freecell.
+
+                            This is now the default configuration, and in the
+                            2.5.x development tree, many enhancements were done
+                            to optimise it. It was benchmarked to be slightly
+                            faster than Compact States, even for games like
+                            Freecell.
+
                         </para>
                     </listitem>
                 </orderedlist>
@@ -781,7 +784,8 @@
             </para>
             <para>
                 Later on when a stack is changed, its flag is set, and a 
-                stack is copied to a hard-thread wide indirect stacks buffer 
+                stack is copied to a indirect stacks buffer of the
+                hard thread.
                 and modified there. (check (*Mark STACKS_COW_COPY_STACK*) ).
             </para>
             <para>
@@ -800,44 +804,49 @@
         <section id="technique_extended_states">
             <title>Extended States</title>
             <para>
-                For each position in the game graph, Freecell Solver maintains a 
-                data structure that identifies it called 
-                <type>fcs_state_t</type>. This contains the cards in the 
-                stacks and the freecells, and the value of the foundations. The 
-                stacks and freecells are uniquely sorted to avoid states that 
-                are identical except for a different permutation of the stacks 
+
+                For each position in the game graph, Freecell Solver maintains
+                a data structure which identifies it called
+                <type>fcs_state_t</type>. This contains the cards in the stacks
+                and the freecells, and the value of the foundations. The stacks
+                and freecells are uniquely sorted to avoid states that are
+                identical except for a different permutation of the stacks
                 or the freecells.
+
             </para>
             <para>
-                <type>fcs_state_t</type> is the first member of
-                <type>fcs_state_with_locations_t</type>, that defines some
-                other data. The real locations of the stacks and freecells are
-                stored there for instance, as well as some graph information. See
-                Canonisation and Normalisation in the terminology.
+                <type>fcs_state_extra_info_t</type> contains a pointer to the
+                <type>fcs_state_t</type> which it is associated with, 
+                and defines some other data. The real locations of the stacks
+                and freecells are stored there for instance, as well as some 
+                graph information. See 
+                <link linkend="term_canonisation">Canonisation</link> and 
+                <link linkend="term_normalisation">Normalisation</link> in the 
+                <link linkend="terms">terminology</link>.
             </para>
         </section>
         <section id="technique_the_states_graph_and_its_use">
             <title>The States Graph and its Use</title>
             <para>
-                When a brand new state is discovered its parent is assigned to be
-                the state from which it is derived. (check <symbol>(*Mark
-                    STATE_PARENT*)</symbol>). Its depth is assigned to be the depth
-                of the parent + 1. There is a command line option
-                (--reparent-states) that specifies that if an existing state whose
-                depth is higher than the depth of state it was derived from + 1 is
-                reached, then its parent would be re-assigned.
+                When a brand new state is discovered its parent is assigned to 
+                be the state from which it is derived. (check <symbol>(*Mark
+                    STATE_PARENT*)</symbol>). Its depth is assigned to be the 
+                depth of the parent + 1. There is a command line option
+                (--reparent-states) that specifies that if an existing state
+                whose depth is higher than the depth of state it was derived 
+                from + 1 is reached, then its parent would be re-assigned.
             </para>
             <para>
                 An extended state has a num_active_children counter that 
-                specifies how many of those states that consider it their parent 
-                were still not marked as dead ends. If this counter reaches 0, 
-                this state also becomes inactive.
+                specifies how many of those states that consider it their
+                parent were still not marked as dead ends. If this counter
+                reaches 0, this state also becomes inactive.
             </para>
 
             <para>
-                The state has a vector of flags called scan_visited, that specifies
-                if a given scan has visited it yet. If it is a complete scan it can
-                also mark it as dead end should it:
+                The state has a vector of flags called scan_visited, that
+                specifies if a given scan has visited it yet. If it is a
+                complete scan it can also mark it as dead end should it:
             </para>
 
             <para>
@@ -868,7 +877,7 @@
                 A <type>freecell_solver_instance_t</type> is allocated by 
                 <filename>lib.c</filename> to start solving a board. The logic
                 of solving a board is present in <filename>intrface.c</filename> 
-                while the stubs to use it are implemented in 
+                while the external API functions to use it are implemented in 
                 <filename>lib.c</filename>.
             </para>
             <para>
@@ -883,8 +892,8 @@
                 number.)
             </para>
             <para>
-                If one would like to use the instance to solve another board, it is
-                possible to recycle it by calling
+                If one would like to use the instance to solve another board, 
+                it is possible to recycle it by calling
                 <function>freecell_solver_recycle_instance()</function>.  This will
                 keep its configuration but free all its associated resources, and
                 thus will not require parsing the command line again.
@@ -899,26 +908,20 @@
         <section id="technique_compact_allocation">
             <title>Compact Allocation</title>
             <para>
+
                 Most resources that are allocated arbitrarily in &fcs; are
-                allocated in a compact manner. I.e: instead of being individually
-                malloced, they are allocated in segments and placed one after the
-                other. The segments are dynamically allocated and kept at a fixed
-                location in memory. If more memory is needed, another segment is
-                allocated.
+                allocated in a compact manner. I.e: instead of being
+                individually malloced, they are allocated in segments and
+                placed one after the other. The segments are dynamically
+                allocated and kept at a fixed location in memory. If more
+                memory is needed, another segment is allocated.
+
             </para>
             <para>
-                There are two modules whose code is used to achieve this end:
+                 The module that is responsible for this is:
             </para>
             <para>
                 <orderedlist>
-                    <listitem>
-                        <para>
-                            <filename>fcs_isa.c</filename>/<filename>fcs_isa.h</filename> - 
-                            Short for Indirect State Allocation, this module 
-                            allocated vectors of states, each one is of constant 
-                            size.
-                        </para>
-                    </listitem>
                     <listitem>
                         <para>
                             <filename>alloc.c</filename>/<filename>alloc.h</filename> -
@@ -929,7 +932,7 @@
             </para>
 
             <para>
-                Both of these modules support releasing the last allocated block
+                It supports releasing the last allocated block
                 and the last one alone.
             </para>        
             <para>
@@ -939,22 +942,26 @@
                 <orderedlist>
                     <listitem>
                         <para>
-                            <emphasis>States</emphasis> - using fcs_isa. A derived 
-                            state is allocated using the hard thread's allocator, 
-                            and it is modified with the appropriate moves. If it 
-                            is found to have already existed, it is released. 
-                            Else, it is kept and a pointer to it can be found 
+
+                            <emphasis>States</emphasis> - a derived state is
+                            allocated using the hard thread's allocator, and it
+                            is modified with the appropriate moves. If it is
+                            found to have already existed, it is released.
+                            Else, it is kept and a pointer to it can be found
                             in the states collection.
+
                         </para>
                     </listitem>
                     <listitem>
                         <para>
-                            <emphasis>Card stacks</emphasis> - if a card stack was 
-                            modified, it is compactly allocated (see 
-                            <symbol>(*Mark COMPACT_ALLOC_CARD_STACKS*)</symbol> ), 
-                            before one checks to see if it is present in the 
-                            stacks collection. If it was found there, its memory 
-                            is released. Else, it is kept there.
+
+                            <emphasis>Card stacks</emphasis> - if a card stack
+                            was modified, it is compactly allocated (see
+                            <symbol>(*Mark COMPACT_ALLOC_CARD_STACKS*)</symbol>
+                            ), before one checks to see if it is present in the
+                            stacks collection. If it was found there, its
+                            memory is released. Else, it is kept there.
+
                         </para>
                     </listitem>
                     <listitem>
@@ -966,9 +973,9 @@
                     </listitem>
                     <listitem>
                         <para>
-                            <emphasis>Hash Elements</emphasis> - The elements of 
-                            the hash linked lists are compactly allocated with a 
-                            specialised hash allocator.
+                            <emphasis>Hash Elements</emphasis> - The elements
+                            of the hash linked lists are compactly allocated
+                            with a hash-wide hash allocator.
                         </para>
                     </listitem>
                 </orderedlist>
@@ -980,8 +987,10 @@
         <section id="scm_game_presets_configuration">
             <title>Game Presets Configuration</title>
             <para>
-                The info for generating the game presets lie in the file <filename>gen_presets.pl</filename>. It
-                uses <ulink url="http://groups.yahoo.com/group/fc-solve-discuss/message/51">data 
+                The info for generating the game presets is present in the 
+                file <filename>gen_presets.pl</filename>. It
+                uses <ulink 
+                    url="http://groups.yahoo.com/group/fc-solve-discuss/message/51">data 
                     structure inheritance</ulink> to determine the exact 
                 parameters to be included in each preset. Its output should 
                 later be incorporated into <filename>presets.c</filename>.
@@ -990,8 +999,8 @@
         <section id="scm_maintaining_a_list_of_modules">
             <title>Maintaining a list of Modules</title>
             <para>
-                The script <filename>gen_makefile.pl</filename> maintains a list 
-                of modules and headers across all makefiles that are 
+                The script <filename>gen_makefile.pl</filename> maintains a 
+                list of modules and headers across all makefiles that are 
                 distributed as part of Freecell Solver.
             </para>
             <para>
@@ -1110,7 +1119,7 @@
             <variablelist>
                 <title>Terms used throughout the Code</title>
                 <varlistentry>
-                    <term>Canonisation</term>
+                    <term id="term_canonisation">Canonisation</term>
                     <listitem>
                         <para>
                             An extended state is canonised by its stacks being
@@ -1296,7 +1305,7 @@
                     </listitem>
                 </varlistentry>
                 <varlistentry>
-                    <term>Normalisation</term>
+                    <term id="term_normalisation">Normalisation</term>
                     <listitem>
                         <para>
                             normalisation is the opposite of canonisation. It is
