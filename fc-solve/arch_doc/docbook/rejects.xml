@@ -106,4 +106,57 @@
                 </orderedlist>
             </para>        
         </section>
+                <varlistentry>
+                    <term>Packs</term>
+                    <listitem>
+                        <para>
+
+                            See <link 
+                                linkend="term_state_packs">State Packs</link>.
+
+                        </para>
+                    </listitem>
+                </varlistentry>
+        
+                <varlistentry id="term_state_packs">
+                    <term>State Packs</term>
+                    <listitem>
+                        <para>
+                            An allocation of states. Each state pack is a buffer in
+                            memory, that contain an array of states. Each buffer
+                            remains at a constant memory location, but more buffers
+                            are allocated as necessary. The implementation of State
+                            packs reside in the files
+                            <filename>fcs_isa.c</filename> and
+                            <filename>fcs_isa.h</filename>.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Secondary Hash Value</term>
+                    <listitem>
+                        <para>
+
+                            A hash value that is calculated for every state
+                            that is not used to determine the location of the
+                            element in the hash table, but that is used for
+                            comparison.  That is done in order to avoid
+                            needlessly comparing two different states with the
+                            same hash value.
+
+                        </para>
+                        <para>
+
+                            Freecell Solver uses a 32-bit primary hash value.
+                            As such it is susceptible to the birthday paradox
+                            starting at about 2<superscript>16</superscript>. A
+                            secondary hash value with extra 32-bits ensures a
+                            collision of both hash values will only happen at
+                            around 2<superscript>32</superscript> states, which
+                            is much more states than most 32-bit systems can
+                            handle.
+
+                        </para>
+                    </listitem>
+                </varlistentry>
 
