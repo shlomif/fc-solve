@@ -103,6 +103,7 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 %defattr(-,root,root)
 /usr/include/freecell-solver/*.h
 /usr/bin/freecell-solver-config
+/usr/lib/pkgconfig/*.pc
 
 %clean
 rm -rf $RPM_BUILD_ROOT

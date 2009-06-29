@@ -510,6 +510,14 @@ INSTALL(
         "include/freecell-solver"
 )
 
+
+INSTALL(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/lib${CPACK_PACKAGE_NAME}.pc"
+    DESTINATION 
+        "lib/pkgconfig"
+)
+
 # Rebuild config.h if ver.txt has changed.
 ADD_CUSTOM_COMMAND(
     OUTPUT "config.h.in"
