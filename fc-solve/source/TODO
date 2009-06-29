@@ -2,6 +2,8 @@
 
 --- Non-pressing ---
 
+* Write automated tests for split_cmd_line.c . 
+
 * Play with moving commonly accessed struct elements to the start of
 the struct to fit within the processor's cache line. Like the Linux kernel 
 where the most important elements are at the first 32 bytes of the struct.
