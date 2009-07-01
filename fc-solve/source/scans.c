@@ -947,6 +947,14 @@ int fc_solve_a_star_or_bfs_do_solve(
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
 
     int scans_synergy = instance->scans_synergy;
+    union {
+        struct {
+            fcs_states_linked_list_item_t * queue;
+            fcs_states_linked_list_item_t * queue_last_item;
+        } brfs;
+        PQUEUE * a_star_pqueue;
+    } scan_specific;
+
     int error_code;
 
     derived.num_states = 0;
@@ -958,6 +966,15 @@ int fc_solve_a_star_or_bfs_do_solve(
     ptr_state_val = soft_thread->first_state_to_check_val;
 
     method = soft_thread->method;
+    if (method == FCS_METHOD_A_STAR)
+    {
+        scan_specific.a_star_pqueue = &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue);
+    }
+    else
+    {
+        scan_specific.brfs.queue = my_brfs_queue;
+        scan_specific.brfs.queue_last_item = my_brfs_queue_last_item;
+    }
 #ifndef HARD_CODED_NUM_FREECELLS
     freecells_num = instance->freecells_num;
 #endif
@@ -1114,9 +1131,10 @@ int fc_solve_a_star_or_bfs_do_solve(
             if (method == FCS_METHOD_A_STAR)
             {
                 fc_solve_PQueuePush(
-                    &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue),
+                    scan_specific.a_star_pqueue,
                     ptr_new_state_val,
-                    fc_solve_a_star_rate_state(soft_thread,
+                    fc_solve_a_star_rate_state(
+                        soft_thread,
                         ptr_new_state_val
                         )
                     );
@@ -1125,16 +1143,16 @@ int fc_solve_a_star_or_bfs_do_solve(
             {
                 /* Enqueue the new state. */
                 fcs_states_linked_list_item_t * last_item_next;
-                fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item;
 
-                last_item_next = 
-                    bfs_queue_last_item->next =
+                last_item_next =
+                    scan_specific.brfs.queue_last_item->next = 
                     ((fcs_states_linked_list_item_t*)
                         malloc(sizeof(*last_item_next))
                     );
-                bfs_queue_last_item->s = ptr_new_state_val;
+
+                scan_specific.brfs.queue_last_item->s = ptr_new_state_val;
                 last_item_next->next = NULL;
-                soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item = last_item_next;
+                scan_specific.brfs.queue_last_item = last_item_next;
             }
         }
 
@@ -1167,30 +1185,27 @@ label_next_state:
         /*
             Extract the next item in the queue/priority queue.
         */
-        if ((method == FCS_METHOD_BFS) || (method == FCS_METHOD_OPTIMIZE))
+        if (method == FCS_METHOD_A_STAR)
         {
-            fcs_states_linked_list_item_t * bfs_queue = soft_thread->method_specific.befs.meth.brfs.bfs_queue;
-            fcs_states_linked_list_item_t * bfs_queue_last_item = soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item;
-
-            save_item = bfs_queue->next;
-            if (save_item != bfs_queue_last_item)
+            /* It is an A* scan */
+            fc_solve_PQueuePop(
+                scan_specific.a_star_pqueue,
+                &ptr_state_val
+                );
+        }
+        else
+        {
+            save_item = scan_specific.brfs.queue->next;
+            if (save_item != scan_specific.brfs.queue_last_item)
             {
                 ptr_state_val = save_item->s;
-                bfs_queue->next = save_item->next;
+                scan_specific.brfs.queue->next = save_item->next;
                 free(save_item);
             }
             else
             {
                 ptr_state_val = NULL;
             }
-        }
-        else
-        {
-            /* It is an A* scan */
-            fc_solve_PQueuePop(
-                &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue),
-                &ptr_state_val
-                );
         }
     }
 
@@ -1201,6 +1216,11 @@ my_return_label:
     if (derived.states != NULL)
     {
         free(derived.states);
+    }
+
+    if (method != FCS_METHOD_A_STAR)
+    {
+        my_brfs_queue_last_item = scan_specific.brfs.queue_last_item;
     }
 
     if (soft_thread->method_specific.befs.a_star_positions_by_rank)
