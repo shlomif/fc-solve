@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 use Carp;
 use IPC::Open2;
 
@@ -220,5 +220,39 @@ check_split(
         "Eight",
     ],
     "Mixed quotes and backslash space with leading and trailing space",
+);
+
+# TEST
+check_split(
+    <<'EOF',
+# This is a comment.
+OneWord word2 "Word 3"  \
+    Word-No-4
+
+EOF
+    [
+        "OneWord",
+        "word2",
+        "Word 3",
+        "Word-No-4",
+    ],
+    "Leading comment",
+);
+
+# TEST
+check_split(
+    <<'EOF',
+# This is a comment.
+OneWord word2 "Word 3"  \
+   WORD_NO_444    # End of line comment.
+
+EOF
+    [
+        "OneWord",
+        "word2",
+        "Word 3",
+        "WORD_NO_444",
+    ],
+    "Leading comment",
 );
 
