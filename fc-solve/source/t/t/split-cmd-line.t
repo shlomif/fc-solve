@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Carp;
 use IPC::Open2;
 
@@ -153,5 +153,28 @@ check_split(
         "Platro\\Day",
     ],
     "Backslash",
+);
+
+# TEST
+check_split(
+    qq{Hi "Mostly \\"Done deal\\" Plurality" There},
+    [
+        "Hi",
+        "Mostly \"Done deal\" Plurality",
+        "There",
+    ],
+    "Backslash-quotes inside quotes.",
+);
+
+
+# TEST
+check_split(
+    qq{Hi "Mostly \\"Done deal\\" w\\\\o Plurality" There},
+    [
+        "Hi",
+        "Mostly \"Done deal\" w\\o Plurality",
+        "There",
+    ],
+    "Backslash-quotes and backslash inside quotes.",
 );
 
