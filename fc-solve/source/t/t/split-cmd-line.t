@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 12;
 use Carp;
 use IPC::Open2;
 
@@ -176,5 +176,29 @@ check_split(
         "There",
     ],
     "Backslash-quotes and backslash inside quotes.",
+);
+
+
+# TEST
+check_split(
+    qq{Aloha\\ Audrey and Alan\n},
+    [
+        "Aloha Audrey",
+        "and",
+        "Alan",
+    ],
+    "backslash-space.",
+);
+
+
+# TEST
+check_split(
+    qq{Aloha\\ Audrey and Alan},
+    [
+        "Aloha Audrey",
+        "and",
+        "Alan",
+    ],
+    "backslash-space without newline",
 );
 
