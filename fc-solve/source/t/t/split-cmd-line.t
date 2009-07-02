@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 use Carp;
 use IPC::Open2;
 
@@ -114,7 +114,7 @@ check_split(
         q{"The},
         q{Adventure"},
     ],
-    "Escaped quotes",
+    "Escaped quotes with newline",
 );
 
 
@@ -127,6 +127,31 @@ check_split(
         q{"The},
         q{Adventure"},
     ],
-    "Escaped quotes",
+    "Escaped quotes line with trailing space",
+);
+
+
+# TEST
+check_split(
+    qq{I read \\"The       Adventure\\"      },
+    [
+        "I",
+        "read",
+        q{"The},
+        q{Adventure"},
+    ],
+    "Escaped quotes with trailing space.",
+);
+
+
+# TEST
+check_split(
+    qq{GNU\\\\Linux and Platro\\\\Day\n},
+    [
+        "GNU\\Linux",
+        "and",
+        "Platro\\Day",
+    ],
+    "Backslash",
 );
 
