@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 4;
 use Carp;
 use IPC::Open2;
 
@@ -65,5 +65,43 @@ check_split(
     "one two three",
     ["one", "two", "three",],
     "Simple barewords",
+);
+
+
+# TEST
+check_split(
+    "one two three lom-prom-tom KuTler abruptChange Come-Together",
+    [
+        "one", "two", "three", "lom-prom-tom", "KuTler", 
+        "abruptChange", "Come-Together",
+    ],
+    "Simple barewords No. 2",
+);
+
+# TEST
+check_split(
+    q{I read    "The Adventures of Tom Sawyer" and liked it.},
+    [
+        "I",
+        "read",
+        "The Adventures of Tom Sawyer",
+        "and",
+        "liked",
+        "it.",
+    ],
+    "Words in quotes + more than one space.",
+);
+
+
+# TEST
+check_split(
+    qq{I read \\"The       Adventure\\"},
+    [
+        "I",
+        "read",
+        q{"The},
+        q{Adventure"},
+    ],
+    "Escaped quotes",
 );
 

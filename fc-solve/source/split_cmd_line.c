@@ -222,6 +222,10 @@ next_arg:
         }
     }
 END_OF_LOOP:
+    if (last_arg_ptr != last_arg)
+    {
+        push_args_last_arg();
+    }
 
     free(last_arg);
 
