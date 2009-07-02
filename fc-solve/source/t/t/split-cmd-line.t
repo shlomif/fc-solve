@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 14;
 use Carp;
 use IPC::Open2;
 
@@ -197,5 +197,28 @@ check_split(
         "Alan",
     ],
     "backslash-space without newline",
+);
+
+# TEST
+check_split(
+    qq{One\\ Two" Three Four Five"Six\\ Seven & Eight\n},
+    [
+        "One Two Three Four FiveSix Seven",
+        "&",
+        "Eight",
+    ],
+    "Mixed quotes and backslash space.",
+);
+
+
+# TEST
+check_split(
+    qq{       One\\ Two" Three Four Five"Six\\ Seven & Eight   },
+    [
+        "One Two Three Four FiveSix Seven",
+        "&",
+        "Eight",
+    ],
+    "Mixed quotes and backslash space with leading and trailing space",
 );
 
