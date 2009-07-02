@@ -41,6 +41,18 @@ IF (FCS_WITH_TEST_SUITE)
         "card-test-parse.c"
     )
 
+    ADD_EXECUTABLE(
+        "out-split-cmd-line.exe"
+        "out-split-cmd-line.c"
+    )
+
+    SET_SOURCE_FILES_PROPERTIES (
+        "out-split-cmd-line.c"
+        PROPERTIES 
+            OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../split_cmd_line.c"
+            GENERATED "1"
+    )
+
     # SET_SOURCE_FILES_PROPERTIES (
     #    "card-test-parse.c"
     #    "card-test-render.c"
