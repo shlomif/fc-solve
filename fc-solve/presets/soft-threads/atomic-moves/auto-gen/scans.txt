@@ -14,3 +14,4 @@
 13	--method soft-dfs -to ABC01DE
 14	--method soft-dfs -to 01EABCD
 15	--method soft-dfs -to 01BDAEC
+16	--method random-dfs -to [01][ABCDE] -seed 4
