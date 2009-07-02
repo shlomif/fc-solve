@@ -166,7 +166,6 @@ check_split(
     "Backslash-quotes inside quotes.",
 );
 
-
 # TEST
 check_split(
     qq{Hi "Mostly \\"Done deal\\" w\\\\o Plurality" There},
@@ -178,7 +177,6 @@ check_split(
     "Backslash-quotes and backslash inside quotes.",
 );
 
-
 # TEST
 check_split(
     qq{Aloha\\ Audrey and Alan\n},
@@ -189,7 +187,6 @@ check_split(
     ],
     "backslash-space.",
 );
-
 
 # TEST
 check_split(
