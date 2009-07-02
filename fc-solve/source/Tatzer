@@ -120,6 +120,10 @@ GetOptions(
         }
         return;
     },
+    'minsize' => sub {
+        $build_type = "MinSizeRel";
+        return;
+    },
     'arch=s' => \$cpu_arch,
     'omit-frame!' => \$omit_frame,
     'disable-simple-simon!' => \$no_simple_simon,
