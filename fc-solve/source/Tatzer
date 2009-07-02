@@ -26,6 +26,7 @@ my $no_simple_simon = 0;
 my $state_storage_libavl2_tree;
 my $stack_storage_libavl2_tree;
 my $without_flipping = 0;
+my $with_context_var = 1;
 
 sub set_both
 {
@@ -123,6 +124,7 @@ GetOptions(
     'omit-frame!' => \$omit_frame,
     'disable-simple-simon!' => \$no_simple_simon,
     'without-flip!' => \$without_flipping,
+    'with-ctx-var!' => \$with_context_var,
 ) or
     die "Wrong options";
 
@@ -165,6 +167,10 @@ my @cmd= ("cmake",
     (exists($ENV{"LIBAVL2_SOURCE_DIR"})
         ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
         : ()
+    ),
+    ($with_context_var
+        ? "-DFCS_WITH_CONTEXT_VARIABLE=1"
+        : "-DFCS_WITH_CONTEXT_VARIABLE="
     ),
 );
 

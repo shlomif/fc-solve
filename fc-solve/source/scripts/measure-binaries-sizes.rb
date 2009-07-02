@@ -32,7 +32,7 @@ def mk_gnu_and_measure(preset, args)
 end
 
 # This is in order to reset all the flags in config.h.
-config("");
+config("--nowith-context-var");
 
 mk_gnu_and_measure("gcc-Os", "FREECELL_ONLY=0 DISABLE_SIMPLE_SIMON=0")
 mk_gnu_and_measure("gcc-Os-fc-only", "FREECELL_ONLY=1")
@@ -41,6 +41,9 @@ mk_gnu_and_measure("gcc-Os-no-simple-simon",
                   )
 mk_gnu_and_measure("gcc-Os-fc-only-no-flips", 
                    "FREECELL_ONLY=1 WITHOUT_CARD_FLIPS=1"
+                  )
+mk_gnu_and_measure("gcc-Os-fc-only-no-flips-no-ctx", 
+                   "FREECELL_ONLY=1 WITHOUT_CARD_FLIPS=1 WITHOUT_CONTEXT_VAR=1"
                   )
 
 config_and_measure("default", "")
