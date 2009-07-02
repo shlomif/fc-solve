@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 use Carp;
 use IPC::Open2;
 
@@ -96,6 +96,31 @@ check_split(
 # TEST
 check_split(
     qq{I read \\"The       Adventure\\"},
+    [
+        "I",
+        "read",
+        q{"The},
+        q{Adventure"},
+    ],
+    "Escaped quotes",
+);
+
+# TEST
+check_split(
+    qq{I read \\"The       Adventure\\"\n},
+    [
+        "I",
+        "read",
+        q{"The},
+        q{Adventure"},
+    ],
+    "Escaped quotes",
+);
+
+
+# TEST
+check_split(
+    qq{I read \\"The       Adventure\\"                \n},
     [
         "I",
         "read",
