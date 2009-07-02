@@ -24,11 +24,10 @@ elif ! test -z "$PARAM1" ; then
     MAX="$PARAM1"
 fi
 
+OUT_DIR="${OUT_DIR:-.}"
 strip * > /dev/null 2>&1
 
-if ! test -e DUMPS ; then
-    mkdir DUMPS
-fi
+mkdir -p "$OUT_DIR/DUMPS"
 
 p_dir="__p"
 if ! test -e "$p_dir" ; then
@@ -41,7 +40,7 @@ fi
 export FREECELL_SOLVER_PRESETRC="$(ls $(pwd)/"$p_dir"/presetrc)"
 
 if $RUN_SERIAL ; then
-    ./freecell-solver-range-parallel-solve 1 32000 500 -l gi > dump
+    ./freecell-solver-range-parallel-solve 1 32000 500 -l gi > "$OUT_DIR"/dump
 fi
 
 for NUM in $(seq "$MIN" "$MAX") ; do
@@ -50,5 +49,5 @@ for NUM in $(seq "$MIN" "$MAX") ; do
         --iters-update-on 10000000 \
         --num-workers "$NUM" \
         -l gi \
-        > "$(printf "DUMPS/dump%.3i" "$NUM")"
+        > "$(printf "$OUT_DIR/DUMPS/dump%.3i" "$NUM")"
 done
