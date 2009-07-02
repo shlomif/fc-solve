@@ -344,7 +344,7 @@ option can possibly make solutions shorter.
 
 --calc-real-depth
 
-This options become effective only if --reparent-states is specified. What it
+This option becomes effective only if --reparent-states is specified. What it
 does, is explicitly calculate the depth of the state by tracing its path
 to the initial state. This may make depth consideration more accurate.
 
