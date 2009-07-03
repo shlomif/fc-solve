@@ -987,27 +987,37 @@ int fc_solve_a_star_or_bfs_do_solve(
        priority queue. */
     while ( ptr_state_val != NULL)
     {
-         TRACE0("Start of loop");        /*
-         * If this is an optimization scan and the state being checked is not
-         * in the original solution path - move on to the next state
-         * */
-        if ((method == FCS_METHOD_OPTIMIZE) && (!(ptr_state_val->visited & FCS_VISITED_IN_SOLUTION_PATH)))
+        TRACE0("Start of loop");
+
         {
-            goto label_next_state;
+             register int temp_visited = ptr_state_val->visited;
+
+            /*
+             * If this is an optimization scan and the state being checked is 
+             * not in the original solution path - move on to the next state
+             * */
+            /*
+             * It the state has already been visited - move on to the next
+             * state.
+             * */
+            if ((method == FCS_METHOD_OPTIMIZE) ?
+                    (
+                        (!temp_visited & FCS_VISITED_IN_SOLUTION_PATH)
+                            ||
+                        (temp_visited & FCS_VISITED_IN_OPTIMIZED_PATH)
+                    )
+                    :
+                    (
+                        (temp_visited & FCS_VISITED_DEAD_END)
+                            ||
+                        (is_scan_visited(ptr_state_val, soft_thread_id))
+                    )
+                )
+            {
+                goto label_next_state;
+            }
         }
 
-        /*
-         * It the state has already been visited - move on to the next
-         * state.
-         * */
-        if ((method == FCS_METHOD_OPTIMIZE) ?
-                (ptr_state_val->visited & FCS_VISITED_IN_OPTIMIZED_PATH) :
-                ((ptr_state_val->visited & FCS_VISITED_DEAD_END) ||
-                 (is_scan_visited(ptr_state_val, soft_thread_id)))
-                )
-        {
-            goto label_next_state;
-        }
         TRACE0("Counting cells");
 
         ptr_state_key = ptr_state_val->key;
