@@ -1230,4 +1230,15 @@ Threaded:
 
 100.230436086655s
 
+========================================================================
 
+r2097 ; ./Tatzer -l p4b ; after strip
+ARGS="-l abra-kadabra" bash scripts/time-threads-num.bash -s 2 4
+
+Non-threaded:
+
+113.911669969559s
+
+Threaded:
+
+103.850987911224s
