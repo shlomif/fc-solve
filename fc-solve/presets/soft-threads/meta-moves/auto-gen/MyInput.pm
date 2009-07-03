@@ -141,11 +141,11 @@ sub get_selected_scan_list
     my $start_board = shift;
     my $num_boards = shift;
 
-    local(*I);
     my @scans;
 
-    open I, "<scans.txt";
-    while (my $line = <I>)
+    open my $scans_fh, "<", "scans.txt"
+        or die "Could not open 'scans.txt' - $!.";
+    while (my $line = <$scans_fh>)
     {
         chomp($line);
         my ($id, $cmd_line) = split(/\t/, $line);
@@ -155,7 +155,7 @@ sub get_selected_scan_list
                 cmd_line => $cmd_line
             );
     }
-    close(I);
+    close($scans_fh);
 
     my @selected_scans = 
         grep 
@@ -165,7 +165,12 @@ sub get_selected_scan_list
         }
         @scans;
 
-    my %black_list = (map { $_ => 0 } (7,8));
+    open my $black_list_fh, "<", "scans-black-list.txt";
+    my @black_list_ids = <$black_list_fh>;
+    chomp(@black_list_ids);
+    close($black_list_fh);
+
+    my %black_list = (map { /(\d+)/?($1 => 1) : () } @black_list_ids);
     @selected_scans = 
         (grep 
             {
@@ -181,7 +186,7 @@ sub get_next_id
     my $id;
 
     open my $in, "<", "next-id.txt";
-    $id = <I>;
+    $id = <$in>;
     chomp($id);
     close($in);
     open my $out, ">", "next-id.txt";
