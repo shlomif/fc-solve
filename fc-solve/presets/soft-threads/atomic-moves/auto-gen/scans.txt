@@ -17,3 +17,4 @@
 16	--method random-dfs -to [01][ABCDE] -seed 4
 17	--method random-dfs -to [01][ABD][CE] -seed 8
 18	--method soft-dfs -to 01DECAB
+19	--method random-dfs -to [01][ABCDE] -seed 71
