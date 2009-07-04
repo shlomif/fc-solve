@@ -469,7 +469,7 @@ Presets that are shipped with Freecell Solver:
     cool-jives        - a meta-moves preset
     crooked-nose      - an atomic-moves preset (guarantees an accurate verdict)
     fools-gold        - an atomic-moves preset
-    good-intentions   - runs cool-jives and then fools-gold
+    good-intentions   - runs "cool-jives" and then "fools-gold"
     gooey-unknown-thing - a meta-moves preset that aims to minimise the
             outcome solution's length.
     hello-world       - a meta-moves preset
@@ -477,7 +477,9 @@ Presets that are shipped with Freecell Solver:
     rin-tin-tin       - a meta-moves prese
     sand-stone        - an atomic-moves preset that aims to minimise the
             outcome solution's length.
-    slick-rock        - run gooey-unknown-thing and then sand-stone
+    slick-rock        - run "gooey-unknown-thing" and then "sand-stone"
+    toons-for-twenty-somethings - an atomic-moves preset that solves
+            more boards efficiently than "fools-gold".
     yellow-brick-road - a meta-moves preset
 
 They can be abbreviated into their lowercase acronym (i.e: "ak" or "rtt").

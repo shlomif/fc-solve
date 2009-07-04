@@ -9,6 +9,7 @@ INSTALL(
         "john_galt_line-500.sh"
         "rin-tin-tin.sh"
         "sand-stone.sh"
+        "toons-for-twenty-somethings.sh"
         "yellow-brick-road.sh"
     DESTINATION
         "${PKGDATADIR}/presets"
