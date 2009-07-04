@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 18;
 use Carp;
 use IPC::Open2;
 
@@ -254,5 +254,36 @@ EOF
         "WORD_NO_444",
     ],
     "Leading comment",
+);
+
+# TEST
+check_split(
+    <<'EOF',
+First Line
+Second Line
+EOF
+    [
+        "First",
+        "Line",
+        "Second",
+        "Line",
+    ],
+    "Two lines",
+);
+
+
+# TEST
+check_split(
+    <<'EOF',
+First Line   \
+Second Line
+EOF
+    [
+        "First",
+        "Line",
+        "Second",
+        "Line",
+    ],
+    "Two lines with trailing backslash",
 );
 
