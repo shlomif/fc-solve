@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 20;
 use Carp;
 use IPC::Open2;
 
@@ -285,5 +285,39 @@ EOF
         "Line",
     ],
     "Two lines with trailing backslash",
+);
+
+# TEST
+check_split(
+    <<'EOF',
+First Line   
+Second Line
+"Third ""L-R"
+EOF
+    [
+        "First",
+        "Line",
+        "Second",
+        "Line",
+        "Third L-R",
+    ],
+    "Three lines.",
+);
+
+# TEST
+check_split(
+    <<'EOF',
+First Line   
+Second Line                 # A comment
+"Third ""L-R"
+EOF
+    [
+        "First",
+        "Line",
+        "Second",
+        "Line",
+        "Third L-R",
+    ],
+    "Three lines with a comment",
 );
 
