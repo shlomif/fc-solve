@@ -12,6 +12,13 @@ use File::Copy;
 use File::Path;
 use Getopt::Long;
 
+sub run_tests
+{
+    my $tests = shift;
+
+    exec("runprove", @$tests);
+}
+
 my $tests_glob = "*.{exe,t}";
 
 GetOptions(
@@ -85,7 +92,7 @@ GetOptions(
     {
         # local $ENV{FCS_PATH} = dirname(which("fc-solve"));
         print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
-        exec("runprove", @tests);
+        run_tests(\@tests);
     }
 }
 
