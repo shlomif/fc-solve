@@ -49,13 +49,19 @@ sub test_cmd
     close($ver_fh);
     chomp($version);
 
-    my $arc_name = "freecell-solver-$version.tar.gz";
+    my $tar_arc = "freecell-solver-$version.tar";
+    my $arc_name = "$tar_arc.bz2";
+
+    # We need to delete the tar.gz because rpmbuild -tb may work on the
+    # .bz2 with the .gz still present.
+    unlink("$tar_arc.gz");
+
     # TEST
     ok (scalar(-e $arc_name), 
         "Archive exists."
     );
 
-    open my $tar_fh, "-|", "tar", "-tzvf", $arc_name
+    open my $tar_fh, "-|", "tar", "-tvf", $arc_name
         or die "Could not open Tar '$arc_name' for opening.";
 
     my @tar_lines = (<$tar_fh>);

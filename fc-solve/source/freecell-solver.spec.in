@@ -3,7 +3,7 @@ Version: @VERSION@
 Release: 1 
 License: MIT
 Group: Amusement/Games
-Source: http://download.berlios.de/fc-solve/freecell-solver-%{version}.tar.gz
+Source: http://download.berlios.de/fc-solve/freecell-solver-%{version}.tar.bz2
 Buildroot: %{_tmppath}/freecell-solver-root
 URL: http://fc-solve.berlios.de/
 Requires: libfreecell-solver0 = %{PACKAGE_VERSION}
