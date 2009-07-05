@@ -56,7 +56,7 @@ These are instruction how to get the test suite up and running:
 	On Debian:
 	# apt-get install valgrind
 
-#. Install perl (at least perl-5.8.9 - perl-5.10.0 is recommended).
+#. Install perl (at least perl-5.8.9 - perl-5.10.0 or above is recommended).
 
 #. Install perl's Template Toolkit:
 
@@ -89,7 +89,7 @@ development headers.
 
 #. Configure the Freecell Solver build
 
-	$ ./configure
+	$ ./Tatzer
 
 #. Build Freecell Solver:
 
