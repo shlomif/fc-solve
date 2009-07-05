@@ -103,7 +103,7 @@ development headers.
 	$ export PERL_MM_USE_DEFAULT=1
 	$ perl -Mlocal::lib -MCPAN -e 'install Task::Test::Run::AllPlugins'
 	$ perl -Mlocal::lib -MCPAN -e 'install(qw(String::ShellQuote Test::Differences Games::Solitaire::Verify))'
-	$ perl -Mlocal::lib -MCPAN -e 'install(qw(YAML::Syck))'
+	$ perl -Mlocal::lib -MCPAN -e 'install(qw(YAML::XS))'
 
 #. Set up the Test::Run plugins.
 	$ echo 'export HARNESS_PLUGINS="ColorSummary ColorFileVerdicts AlternateInterpreters"' >> ~/.bashrc

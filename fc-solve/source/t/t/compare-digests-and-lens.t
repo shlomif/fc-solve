@@ -8,7 +8,7 @@ use Carp;
 use Data::Dumper;
 use String::ShellQuote;
 
-use YAML::Syck;
+use YAML::XS qw(DumpFile LoadFile);
 
 use lib './t/lib';
 
