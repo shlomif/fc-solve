@@ -251,6 +251,8 @@ Simple Simon Tests:
 'g' - move a whole stack sequence to a false parent which has some 
       cards above it.
 'h' - move a sequence to a parent on the same stack.
+'i' - move any sequence to a false parent (using it may make the solution
+much slower).
 
 Manipulating the tests order can be very helpful to the quick solution
 of a given board. If you found that a certain board cannot be solved in

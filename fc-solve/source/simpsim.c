@@ -1796,6 +1796,114 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
+int fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_state_extra_info_t * ptr_state_val,
+        fcs_derived_states_list_t * derived_states_list
+        )
+{
+    tests_declare_accessors();
+
+    int check;
+
+    /*
+     * stack - the source stack index
+     * cards_num - number of cards in "stack"
+     * ds - the dest stack index
+     * dest_cards_num - number of cards in "ds".
+     * card - the current card
+     * next_card - the next card on the stack.
+     * h - the height of the current card on "stack"
+     * num_true_seqs - the number of true sequences on the current
+     *                 false sequence
+     * */
+    int stack_idx;
+    fcs_card_t card, next_card;
+    int num_true_seqs, seq_size, h, ds, dest_cards_num;
+    fcs_cards_column_t col, dest_col;
+    int cards_num;
+    int num_vacant_stacks;
+
+#ifndef HARD_CODED_NUM_STACKS
+    int stacks_num;
+#endif
+
+    tests_define_accessors();
+
+#ifndef HARD_CODED_NUM_STACKS
+    stacks_num = instance->stacks_num;
+#endif    
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
+
+    for(stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+    {
+        col = fcs_state_get_col(state, stack_idx);
+        cards_num = fcs_col_len(col);
+		if (cards_num <= 0)
+		{
+			continue;
+		}
+
+		card = fcs_col_get_card(col,cards_num-1);
+        num_true_seqs = 1;
+		seq_size = 1;
+
+        /* Stop if we reached the bottom of the stack */
+        for(h=cards_num-2;h>-1;h--)
+        {
+            next_card = fcs_col_get_card(col, h);
+            /* If this is no longer a sequence - move to the next stack */
+			if (!fcs_is_ss_false_parent(next_card, card))
+			{
+				break;
+			}
+
+			seq_size++;
+
+			if (!fcs_suit_is_ss_true_parent(next_card, card))
+			{
+				num_true_seqs++;
+			}
+
+            card = next_card;
+        }
+
+		/* take the sequence and try and put it on another stack */
+        for(ds=0 ; ds < LOCAL_STACKS_NUM ; ds++)
+        {
+            dest_col = fcs_state_get_col(state, ds);
+            dest_cards_num = fcs_col_len(dest_col);
+            if (dest_cards_num <= 0)
+            {
+				continue;
+			}
+
+			if (!fcs_is_ss_false_parent(fcs_col_get_card(col, dest_cards_num-1), card))
+			{
+				continue;
+			}
+
+			/* This is a suitable parent - let's check if we
+             * have enough empty stacks to make the move feasible */
+            if (calc_max_sequence_move(0, num_vacant_stacks) < num_true_seqs)
+            {
+				continue;
+			}
+
+            /* We can do it - so let's move */
+            sfs_check_state_begin();
+
+            my_copy_stack(stack_idx);
+            my_copy_stack(ds);
+
+            fcs_move_sequence(ds, stack_idx, h+1, h+seq_size);
+            sfs_check_state_end();
+        }
+    }
+
+    return FCS_STATE_IS_NOT_SOLVEABLE;
+}
+
 #undef state
 #undef new_state
 

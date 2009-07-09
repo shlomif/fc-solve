@@ -38,7 +38,8 @@ fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM] =
     WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent),
     WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above),
     WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above),
-    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack)
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack),
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 };
 
 
@@ -66,5 +67,6 @@ fcs_test_aliases_mapping_t fc_solve_sfs_tests_aliases[FCS_TESTS_ALIASES_NUM] =
     { "e", 19 },
     { "f", 20 },
     { "g", 21 },
-    { "h", 22 }
+    { "h", 22 },
+    { "i", 23 }
 };

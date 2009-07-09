@@ -101,12 +101,10 @@ my @tests =
         'aliases' => [ qw(h) ],
     },
     # TODO : Enable later.
-    (0 ?
-    ({
+    {
         'function' => "simple_simon_move_sequence_to_false_parent",
         'aliases' => [ qw(i) ],
-    }) : (),
-    )
+    },
 );
 
 my (%declared_tests, %aliases);

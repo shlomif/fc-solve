@@ -11,9 +11,9 @@
 #include "config.h"
 #include "scans.h"
 
-#define FCS_TESTS_NUM 23
+#define FCS_TESTS_NUM 24
 
-#define FCS_TESTS_ALIASES_NUM 23
+#define FCS_TESTS_ALIASES_NUM 24
 
 typedef struct
 {
