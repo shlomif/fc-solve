@@ -126,12 +126,6 @@ enum
     FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP = 0x2000000
 };
 
-#ifdef FCS_WITH_TALONS
-#define FCS_TESTS_NUM 27
-#else
-#define FCS_TESTS_NUM 25
-#endif
-
 /*
  * Declare these structures because they will be used within
  * fc_solve_instance, and they will contain a pointer to it.

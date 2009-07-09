@@ -434,6 +434,7 @@ int fc_solve_apply_preset_by_ptr(
 
     {
         int ht_idx, st_idx;
+        char test_name[2] = {0};
         for(ht_idx = 0; ht_idx < instance->num_hard_threads ; ht_idx++)
         {
             for(st_idx = 0; st_idx < instance->hard_threads[ht_idx]->num_soft_threads; st_idx++)
@@ -449,8 +450,9 @@ int fc_solve_apply_preset_by_ptr(
                 {
                     for(s = preset.allowed_tests;*s != '\0';s++)
                     {
+                        test_name[0] = *s;
                         /* Check if this test corresponds to this character */
-                        if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((fc_solve_char_to_test_num(*s)%FCS_TESTS_NUM)))
+                        if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM)))
                         {
                             break;
                         }

@@ -154,6 +154,7 @@ OBJECTS :=                     \
           instance.o          \
           lib.o               \
           move.o              \
+		  move_funcs_maps.o   \
           move_funcs_order.o  \
           scans.o             \
 		  split_cmd_line.o    \

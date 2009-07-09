@@ -37,6 +37,7 @@ extern "C" {
 
 #ifndef FCS_FREECELL_ONLY
 #include "instance.h"
+#include "move_funcs_maps.h"
 
 typedef struct
 {

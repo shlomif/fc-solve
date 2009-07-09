@@ -29,6 +29,7 @@
 #define BUILDING_DLL 1
 
 #include "move_funcs_order.h"
+#include "move_funcs_maps.h"
 
 int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
@@ -40,6 +41,8 @@ int fc_solve_apply_tests_order(
     int len;
     int test_index;
     int is_group, is_start_group;
+    char test_name[2] = {0};
+
     if (tests_order->tests)
     {
         free(tests_order->tests);
@@ -91,7 +94,8 @@ int fc_solve_apply_tests_order(
                 );
         }
 
-        tests_order->tests[test_index++] = (fc_solve_char_to_test_num(string[a])%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+        test_name[0] = string[a];
+        tests_order->tests[test_index++] = (fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
 
         is_start_group = 0;
     }

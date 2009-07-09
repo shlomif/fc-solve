@@ -33,28 +33,43 @@
 extern "C" {
 #endif
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "instance.h"
+#include "move_funcs_maps.h"
 
 #include "inline.h"
 
-static GCC_INLINE int fc_solve_char_to_test_num(char c)
+static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
+        const void * a,
+        const void * b
+        )
 {
-    if ((c >= '0') && (c <= '9'))
-    {
-        return c-'0';
-    }
-    else if ((c >= 'a') && (c <= 'h'))
-    {
-        return c-'a'+10;
-    }
-    else if ((c >= 'A') && (c <= 'Z'))
-    {
-        return c-'A'+18;
-    }
-    else
-    {
-        return 0;
-    }
+    return
+        strcmp(
+            ((const fcs_test_aliases_mapping_t *)a)->alias,
+            ((const fcs_test_aliases_mapping_t *)b)->alias
+        );
+}
+
+static GCC_INLINE int fc_solve_string_to_test_num(const char * s)
+{
+    fcs_test_aliases_mapping_t needle;
+    fcs_test_aliases_mapping_t * result;
+
+    needle.alias = s;
+
+    result = (fcs_test_aliases_mapping_t *)
+        bsearch(
+            &needle,
+            fc_solve_sfs_tests_aliases,
+            FCS_TESTS_ALIASES_NUM,
+            sizeof(fc_solve_sfs_tests_aliases[0]),
+            fc_solve_string_to_test_num_compare_func
+            );
+
+    return (result ? result->test_num : 0);
 }
 
 extern int fc_solve_apply_tests_order(
