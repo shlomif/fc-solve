@@ -385,6 +385,17 @@ opt = FCS_OPT_NEXT_HARD_THREAD;
 
 break;
 
+case 'i':
+{
+if (!strncmp(p, "nstance", 7)) {
+p += 7;
+opt = FCS_OPT_NEXT_INSTANCE;
+
+}
+}
+
+break;
+
 case 's':
 {
 if (!strncmp(p, "oft-thread", 10)) {
@@ -728,6 +739,18 @@ if (!strncmp(p, "t", 1)) {
 p += 1;
 opt = FCS_OPT_NEXT_HARD_THREAD;
 
+}
+}
+
+break;
+
+case 'i':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_NEXT_INSTANCE;
 }
 }
 
@@ -1190,6 +1213,11 @@ break;
             );
         }
         break;
+
+        case FCS_OPT_NEXT_INSTANCE: /* STRINGS=-ni|--next-instance; */
+        {
+            freecell_solver_user_next_instance(instance);
+        }
 
         case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread; */
         case FCS_OPT_NEXT_HARD_THREAD: /* STRINGS=-nht|--next-hard-thread; */

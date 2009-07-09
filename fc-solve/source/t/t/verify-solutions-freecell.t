@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -180,6 +180,14 @@ verify_solution_test(
         theme => ["-to", "abcdefghi",],
     },
     "Simple Simon #1 with abcdefghi (move seq to false parent)",
+);
+
+# TEST
+verify_solution_test(
+    {deal => 1, variant => "simple_simon",
+        theme => ["-to", "abcdefgh", "-ni", "-to", "abcdefghi",],
+    },
+    "Simple Simon #1 using an -ni",
 );
 
 =head1 COPYRIGHT AND LICENSE
