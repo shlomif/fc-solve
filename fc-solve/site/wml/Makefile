@@ -79,3 +79,6 @@ $(INDEXES) :: $(D)/%/index.html : src/% gen_index.pl
 
 upload:
 	cd $(D) && $(RSYNC) * shlomif@shell.berlios.de:/home/groups/fc-solve/htdocs/
+
+upload_temp:
+	cd $(D) && $(RSYNC) -a --inplace * $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp/

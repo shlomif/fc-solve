@@ -2,11 +2,23 @@
 
 <latemp_subject "Freecell Solver PySol Integration"  />
 
+<h2 id="note">Recent Note (09-July-2009)</h2>
+
+<p>
+The contents of this page have become largely irrelevant with the
+more recent development of
+<a href="http://pysolfc.sourceforge.net/">PySolFC</a> and its integration
+with Freecell Solver. The PySolFC developers took a different approach than
+mine and relied on calling the fc-solve executable for solving the layouts
+of the Solitaire games. Nevertheless, it's a valid approach and Freecell
+Solver works beautifully there.
+</p>
+
 <h2>Introduction</h2>
 
 <p>
 This is code that enables Freecell Solver integration with 
-<a href="http://www.oberhumer.com/opensource/pysol/">PySol</a>,
+<a href="http://pysolfc.sourceforge.net/">PySol</a>,
 an excellent cross-platform Solitaire Suite written in Python.
 </p>
 
@@ -40,7 +52,7 @@ Freecell Solver only if the Python bindings are installed.
 I assume you already have Python, PySol and all of their
 requisites installed. First, install Freecell Solver. Afterwards compile
 the Python bindings for it. Afterwards download the PySol source from
-<a href="http://www.oberhumer.com/opensource/pysol/">its homepage</a>,
+<a href="http://pysolfc.sourceforge.net/">its homepage</a>,
 apply the patch, and invoke pysol from that directory.
 </p>
 
