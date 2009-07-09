@@ -1878,7 +1878,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
 				continue;
 			}
 
-			if (!fcs_is_ss_false_parent(fcs_col_get_card(col, dest_cards_num-1), card))
+			if (!fcs_is_ss_false_parent(fcs_col_get_card(dest_col, dest_cards_num-1), card))
 			{
 				continue;
 			}

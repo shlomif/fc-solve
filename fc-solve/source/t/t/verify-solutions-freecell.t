@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -172,6 +172,14 @@ verify_solution_test(
         theme => [],
     },
     "Simple Simon #19806 with default theme",
+);
+
+# TEST
+verify_solution_test(
+    {deal => 1, variant => "simple_simon",
+        theme => ["-to", "abcdefghi",],
+    },
+    "Simple Simon #1 with abcdefghi (move seq to false parent)",
 );
 
 =head1 COPYRIGHT AND LICENSE
