@@ -36,6 +36,9 @@ digests:
   simple_simon1with_i:
     hexdigest: 7e3c9bc28bbcaff17c813624eb311b54c407b380c9b16dfedc7511971b9d5cf2
     len: 22634
+  simple_simon1with_next_instance:
+    hexdigest: 460e7dfb0a7aa1e1211d7dda1615acee5d0a8fd3a9ef7a25c43eea680c249e49
+    len: 22635
   simple_simon24default:
     hexdigest: aec27e6a4b8e628a42cdfddf0db62fe3f79146aa16d36f3ba6a0050ba7355c57
     len: 22216

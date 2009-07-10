@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -179,6 +179,17 @@ verify_solution_test(
         theme => ["-to", "abcdefghi"],
     },
     "Simple Simon #1 with seq-to-false-parent",
+);
+
+# TEST
+verify_solution_test(
+    {
+        id => "simple_simon1with_next_instance", 
+        deal => 1,
+        variant => "simple_simon",
+        theme => ["-to", "abcdefgh", "--next-instance", "-to", "abcdefghi",],
+    },
+    "Simple Simon #1 using an --next-instance",
 );
 
 # Store the changes at the end so they won't get lost.
