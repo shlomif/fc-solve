@@ -3,17 +3,30 @@
 use strict;
 use warnings;
 
-use IO::All;
+use Getopt::Long;
+
+use String::ShellQuote;
 use Data::Dumper;
 
 use Games::Solitaire::Verify::Solution;
 
-my $dump = io()->file("total_dump.txt");
+my $theme;
+GetOptions(
+    'l|load=s' => \$theme,
+);
 
-LINES_LOOP:
-while (!$dump->eof())
+my $theme_s = "";
+if (defined($theme))
 {
-    my @l = (map { $dump->chomp()->getline() } (1 .. 4)))
+    $theme_s = shell_quote("-l", $theme);
+}
+
+open my $dump, "<", "total_dump.txt";
+LINES_LOOP:
+while (!eof($dump))
+{
+    my @l = (map { scalar(<$dump>) } (1 .. 4));
+    chomp(@l);
     my ($deal) = ($l[0] =~ m{\A(\d+):});
     print "Testing Deal No. $deal\n";
 
@@ -25,7 +38,7 @@ while (!$dump->eof())
     my $variant = "simple_simon";
     open my $fc_solve_output,
         +("make_pysol_freecell_board.py $deal $variant | " . 
-        "./fc-solve -g $variant -p -t -sam - |")
+        "./fc-solve -g $variant -p -t -sam $theme_s - |")
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
     # Initialise a column
@@ -47,3 +60,4 @@ while (!$dump->eof())
     close($fc_solve_output);
 }
 
+close($dump);
