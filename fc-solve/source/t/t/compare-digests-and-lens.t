@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -171,6 +171,14 @@ verify_solution_test(
         theme => [],
     },
     "Simple Simon #19806 with default theme",
+);
+
+# TEST
+verify_solution_test(
+    {id => "simple_simon1with_i", deal => 1, variant => "simple_simon",
+        theme => ["-to", "abcdefghi"],
+    },
+    "Simple Simon #1 with seq-to-false-parent",
 );
 
 # Store the changes at the end so they won't get lost.
