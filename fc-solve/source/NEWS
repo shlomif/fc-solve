@@ -1,3 +1,35 @@
+Version 2.34.0: (10-Jul-2009)
+-----------------------------
+
+1. Added generation and installation of a libfreecell-solver.pc pkg-config
+file.
+
+2. Added the preset "toons-for-twenty-somethings".
+
+It is an atomic moves preset that can solve the MS 32K deals.
+
+3. Re-implemented the missing --next-instance/-ni flag.
+
+4. Added the "-l the-last-mohican"/"-l tlm" theme for Simple Simon
+that can solve more boards.
+
+5. Now can rpmbuild -tb a tar.bz2.
+
+6. Added information on running the test suite to the "HACKING" file.
+
+7. Added a Python ctypes example under examples/ .
+
+8. Added support for Sun Studio to Makefile.gnu. the -fast flag yields worse
+results than gcc.
+
+9. Fixed some typos in the --help and the "USAGE" files.
+
+10. Some internal changes:
+    - The soft_thread structure now uses a union.
+    - Added some tests to the command line-like argument splitting.
+        - fixed a minor bug with it.
+
+
 Version 2.32.1: (25-Jun-2009)
 -----------------------------
 
