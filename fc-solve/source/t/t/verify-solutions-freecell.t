@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 18;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -188,6 +188,23 @@ verify_solution_test(
         theme => ["-to", "abcdefgh", "-ni", "-to", "abcdefghi",],
     },
     "Simple Simon #1 using an -ni",
+);
+
+# TEST
+verify_solution_test(
+    {deal => 1, variant => "simple_simon",
+        theme => ["-to", "abcdefgh", "--next-instance", "-to", "abcdefghi",],
+    },
+    "Simple Simon #1 using an -ni",
+);
+
+
+# TEST
+verify_solution_test(
+    {deal => 1, variant => "simple_simon",
+        theme => ["-l", "tlm",],
+    },
+    "Simple Simon #1 using the 'the-last-mohican' theme",
 );
 
 =head1 COPYRIGHT AND LICENSE
