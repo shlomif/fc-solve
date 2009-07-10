@@ -250,6 +250,7 @@ help_screen_t help_screens[] = {
 "        'g' - move a whole stack sequence to a false parent which has some\n"
 "              cards above it.\n"
 "        'h' - move a sequence to a parent on the same stack.\n"
+"        'i' - move a sequence to a false parent.\n"
 "\n"
 "        Tests are grouped with parenthesis or square brackets. Each group\n"
 "        will be randomized as a whole by the random-dfs scan.\n"
