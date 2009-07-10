@@ -480,6 +480,8 @@ Presets that are shipped with Freecell Solver:
     sand-stone        - an atomic-moves preset that aims to minimise the
             outcome solution's length.
     slick-rock        - run "gooey-unknown-thing" and then "sand-stone"
+    the-last-mohican  - a preset for solving Simple Simon. Yields less
+            false negatives than the default one, but might be slower. 
     toons-for-twenty-somethings - an atomic-moves preset that solves
             more boards efficiently than "fools-gold".
     yellow-brick-road - a meta-moves preset
