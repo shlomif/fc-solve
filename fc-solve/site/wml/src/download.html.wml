@@ -16,7 +16,7 @@
 <tr>
 <td>
 # <a href="http://www.shlomifish.org/Files/files/code/fcs/freecell-solver-2.32.1.tar.bz2">freecell-solver-2.32.1.tar.bz2</a>
-<link_to_berlios_file "freecell-solver-2.32.1.tar.bz2" />
+<link_to_berlios_file "freecell-solver-2.34.0.tar.bz2" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
@@ -151,6 +151,7 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 
 <table border="1" summary="Older versions of Freecell Solver. In decreasing version number.">
 <set-var download_suffix="bz2" />
+<ver "2.32" "1" />
 <ver "2.30" "0" />
 <ver "2.28" "1" />
 <set-var download_suffix="gz" />
