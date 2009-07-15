@@ -2,6 +2,10 @@
 
 --- Non-pressing ---
 
+* Experiment with getting rid of pointer to functions in the hash comparison
+functions. They may incur a large run-time overhead. (inspired by Linux
+kernel patterns from LWN.net).
+
 * Play with moving commonly accessed struct elements to the start of
 the struct to fit within the processor's cache line. Like the Linux kernel 
 where the most important elements are at the first 32 bytes of the struct.
