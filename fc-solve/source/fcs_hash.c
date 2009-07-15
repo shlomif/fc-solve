@@ -152,7 +152,7 @@ int fc_solve_hash_insert(
             : fc_solve_state_compare(item->key, key) \
             ))
 #else
-#define MY_HASH_COMPARE (!(hash->compare_function(item->key, key MY_HASH_CONTEXT_VAR)))
+#define MY_HASH_COMPARE() (!(hash->compare_function(item->key, key MY_HASH_CONTEXT_VAR)))
 #endif
 
     while (item != NULL)
