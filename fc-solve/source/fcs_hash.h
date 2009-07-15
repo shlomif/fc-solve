@@ -39,8 +39,6 @@ extern "C" {
 
 #include "inline.h"
 
-#define FCS_INLINED_HASH_COMPARISON 1
-
 typedef int fc_solve_hash_value_t;
 
 struct fc_solve_hash_symlink_item_struct

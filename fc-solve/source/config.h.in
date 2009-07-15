@@ -84,6 +84,11 @@ extern "C" {
  * */
 #cmakedefine FCS_ENABLE_SECONDARY_HASH_VALUE
 
+/*  
+ * This flag controls a hash behaviour. It seems to improve things somewhat.
+ * */
+#cmakedefine FCS_INLINED_HASH_COMPARISON ${FCS_INLINED_HASH_COMPARISON}
+
 #cmakedefine FCS_INT_BIT_SIZE_LOG2 ${FCS_INT_BIT_SIZE_LOG2}
 
 #cmakedefine FCS_WITH_CONTEXT_VARIABLE 
