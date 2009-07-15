@@ -1139,8 +1139,79 @@ enum
     FCS_VISITED_ALL_TESTS_DONE = 0x8,
 };
 
+#ifndef min
+#define min(a,b) ((a)<(b)?(a):(b))
+#endif
+
+static GCC_INLINE int fc_solve_card_compare(
+        const fcs_card_t * c1,
+        const fcs_card_t * c2
+        )
+{
+    if (fcs_card_card_num(*c1) > fcs_card_card_num(*c2))
+    {
+        return 1;
+    }
+    else if (fcs_card_card_num(*c1) < fcs_card_card_num(*c2))
+    {
+        return -1;
+    }
+    else
+    {
+        if (fcs_card_suit(*c1) > fcs_card_suit(*c2))
+        {
+            return 1;
+        }
+        else if (fcs_card_suit(*c1) < fcs_card_suit(*c2))
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+}
+
 #if defined(INDIRECT_STACK_STATES)
-extern int fc_solve_stack_compare_for_comparison(const void * v_s1, const void * v_s2);
+static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * v_s1, const void * v_s2)
+{
+    const fcs_card_t * s1 = (const fcs_card_t *)v_s1;
+    const fcs_card_t * s2 = (const fcs_card_t *)v_s2;
+
+    int min_len;
+    int a, ret;
+
+    min_len = min(s1[0], s2[0]);
+
+    for(a=0;a<min_len;a++)
+    {
+        ret = fc_solve_card_compare(s1+a+1,s2+a+1);
+        if (ret != 0)
+        {
+            return ret;
+        }
+    }
+    /*
+     * The reason I do the stack length comparisons after the card-by-card
+     * comparison is to maintain correspondence with
+     * fcs_stack_compare_for_stack_sort, and with the one card comparison
+     * of the other state representation mechanisms.
+     * */
+    if (s1[0] < s2[0])
+    {
+        return -1;
+    }
+    else if (s1[0] > s2[0])
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 #endif
 
 #endif /* FC_SOLVE__STATE_H */

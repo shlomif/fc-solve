@@ -40,47 +40,13 @@
 #include "unused.h"
 #include "inline.h"
 
-#ifndef min
-#define min(a,b) ((a)<(b)?(a):(b))
-#endif
-
-static int fcs_card_compare(const void * card1, const void * card2)
-{
-    const fcs_card_t * c1 = (const fcs_card_t *)card1;
-    const fcs_card_t * c2 = (const fcs_card_t *)card2;
-
-    if (fcs_card_card_num(*c1) > fcs_card_card_num(*c2))
-    {
-        return 1;
-    }
-    else if (fcs_card_card_num(*c1) < fcs_card_card_num(*c2))
-    {
-        return -1;
-    }
-    else
-    {
-        if (fcs_card_suit(*c1) > fcs_card_suit(*c2))
-        {
-            return 1;
-        }
-        else if (fcs_card_suit(*c1) < fcs_card_suit(*c2))
-        {
-            return -1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-}
-
 #ifdef DEBUG_STATES
 static int fcs_stack_compare(const void * s1, const void * s2)
 {
     fcs_card_t card1 = ((const fc_stack_t *)s1)->cards[0];
     fcs_card_t card2 = ((const fc_stack_t *)s2)->cards[0];
 
-    return fcs_card_compare(&card1, &card2);
+    return fc_solve_card_compare(&card1, &card2);
 }
 #elif defined(COMPACT_STATES)
 static int fcs_stack_compare(const void * s1, const void * s2)
@@ -88,48 +54,8 @@ static int fcs_stack_compare(const void * s1, const void * s2)
     fcs_card_t card1 = ((fcs_card_t*)s1)[1];
     fcs_card_t card2 = ((fcs_card_t*)s2)[1];
 
-    return fcs_card_compare(&card1, &card2);
+    return fc_solve_card_compare(&card1, &card2);
 }
-#elif defined(INDIRECT_STACK_STATES)
-
-int fc_solve_stack_compare_for_comparison(const void * v_s1, const void * v_s2)
-{
-    const fcs_card_t * s1 = (const fcs_card_t *)v_s1;
-    const fcs_card_t * s2 = (const fcs_card_t *)v_s2;
-
-    int min_len;
-    int a, ret;
-
-    min_len = min(s1[0], s2[0]);
-
-    for(a=0;a<min_len;a++)
-    {
-        ret = fcs_card_compare(s1+a+1,s2+a+1);
-        if (ret != 0)
-        {
-            return ret;
-        }
-    }
-    /*
-     * The reason I do the stack length comparisons after the card-by-card
-     * comparison is to maintain correspondence with
-     * fcs_stack_compare_for_stack_sort, and with the one card comparison
-     * of the other state representation mechanisms.
-     * */
-    if (s1[0] < s2[0])
-    {
-        return -1;
-    }
-    else if (s1[0] > s2[0])
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
 #endif
 
 #ifdef FCS_WITH_TALONS
@@ -198,7 +124,7 @@ void fc_solve_canonize_state(
         c = b;
         while(
             (c>0)     &&
-            (fcs_card_compare(
+            (fc_solve_card_compare(
                 &(state_key->freecells[c]),
                 &(state_key->freecells[c-1])
                 ) < 0)
@@ -265,7 +191,7 @@ void fc_solve_canonize_state(
 
         while(
             (c>0)    &&
-            (fcs_card_compare(
+            (fc_solve_card_compare(
                 state_key->data+FCS_FREECELLS_OFFSET+c,
                 state_key->data+FCS_FREECELLS_OFFSET+c-1
                 ) < 0)
@@ -331,7 +257,7 @@ void fc_solve_canonize_state(
         c = b;
         while(
             (c>0)     &&
-            (fcs_card_compare(
+            (fc_solve_card_compare(
                 &(state_key->freecells[c]),
                 &(state_key->freecells[c-1])
                 ) < 0)

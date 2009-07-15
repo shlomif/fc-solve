@@ -370,7 +370,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         (user->instance->num_times + user->current_iterations_limit - user->iterations_board_started_at)
 #define local_limit()  \
         (user->instances_list[user->current_instance_idx].limit)
+#ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
+#endif
 #define calc_max_iters() \
         {          \
             if (user->instances_list[user->current_instance_idx].limit < 0)  \
