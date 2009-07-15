@@ -43,6 +43,8 @@
 
 #include "inline.h"
 
+#include "state.h"
+
 static void GCC_INLINE fc_solve_hash_rehash(fc_solve_hash_t * hash);
 
 
@@ -50,11 +52,15 @@ static void GCC_INLINE fc_solve_hash_rehash(fc_solve_hash_t * hash);
 void fc_solve_hash_init(
     fc_solve_hash_t * hash,
     fc_solve_hash_value_t wanted_size,
+#ifdef FCS_INLINED_HASH_COMPARISON
+    int is_stacks
+#else
 #ifdef FCS_WITH_CONTEXT_VARIABLE
     int (*compare_function)(const void * key1, const void * key2, void * context),
     void * context
 #else
     int (*compare_function)(const void * key1, const void * key2)
+#endif
 #endif
     )
 {
@@ -77,9 +83,13 @@ void fc_solve_hash_init(
         sizeof(fc_solve_hash_symlink_t) * size
         );
 
+#ifdef FCS_INLINED_HASH_COMPARISON
+    hash->is_stacks = is_stacks;
+#else
     hash->compare_function = compare_function;
 #ifdef FCS_WITH_CONTEXT_VARIABLE
     hash->context = context;
+#endif
 #endif
 
     /* Initialize all the cells of the hash table to NULL, which indicate
@@ -107,7 +117,13 @@ int fc_solve_hash_insert(
     fc_solve_hash_symlink_t * list;
     fc_solve_hash_symlink_item_t * item, * last_item;
     fc_solve_hash_symlink_item_t * * item_placeholder;
+#ifdef FCS_INLINED_HASH_COMPARISON
+    int is_stacks;
+#endif
 
+#ifdef FCS_INLINED_HASH_COMPARISON
+    is_stacks = hash->is_stacks;
+#endif
     /* Get the index of the appropriate chain in the hash table */
     place = hash_value & (hash->size_bitmask);
 
@@ -124,23 +140,33 @@ int fc_solve_hash_insert(
     item = list->first_item;
     last_item = NULL;
 
+#ifdef FCS_WITH_CONTEXT_VARIABLE
+#define MY_HASH_CONTEXT_VAR    , hash->context
+#else
+#define MY_HASH_CONTEXT_VAR
+#endif
+
+#ifdef FCS_INLINED_HASH_COMPARISON
+#define MY_HASH_COMPARE() (!(is_stacks \
+            ? fc_solve_stack_compare_for_comparison(item->key, key) \
+            : fc_solve_state_compare(item->key, key) \
+            ))
+#else
+#define MY_HASH_COMPARE (!(hash->compare_function(item->key, key MY_HASH_CONTEXT_VAR)))
+#endif
+
     while (item != NULL)
     {
         /*
             We first compare the hash values, because it is faster than
             comparing the entire data structure.
-
         */
         if (
-            (item->hash_value == hash_value) &&
+            (item->hash_value == hash_value)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-            (item->secondary_hash_value == secondary_hash_value) &&
+            && (item->secondary_hash_value == secondary_hash_value)
 #endif
-            (!(hash->compare_function(item->key, key
-#ifdef FCS_WITH_CONTEXT_VARIABLE
-                                      , hash->context
-#endif
-               )))
+            && MY_HASH_COMPARE()
            )
         {
             *existing_key = item->key;
