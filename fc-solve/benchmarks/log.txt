@@ -1242,3 +1242,19 @@ Non-threaded:
 Threaded:
 
 103.850987911224s
+
+
+========================================================================
+
+r2153 ; ./Tatzer -l p4b ; after strip ; With FCS_INLINED_HASH_COMPARISON
+
+Non-threaded:
+
+124.6719789505
+
+Threaded:
+
+110.936299085617
+
+Significant slowdown - why?
+
