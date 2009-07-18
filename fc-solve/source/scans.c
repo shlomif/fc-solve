@@ -955,7 +955,7 @@ int fc_solve_a_star_or_bfs_do_solve(
              * */
             if ((method == FCS_METHOD_OPTIMIZE) ?
                     (
-                        (!temp_visited & FCS_VISITED_IN_SOLUTION_PATH)
+                        (!(temp_visited & FCS_VISITED_IN_SOLUTION_PATH))
                             ||
                         (temp_visited & FCS_VISITED_IN_OPTIMIZED_PATH)
                     )
