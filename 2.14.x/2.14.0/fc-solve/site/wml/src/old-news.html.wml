@@ -1,0 +1,230 @@
+#include '../template.wml'
+
+<latemp_subject "Freecell Solver's Previous News Items" />
+
+<h3 id="news-2002-03-29">29-Mar-2002</h3>
+
+<p>
+Freecell Solver 2.4.0 was released. The highlight of this release is the 
+ability for several scans to operate on the same state collection. This is
+done using a mechanism called "soft threads", which is switched in user-land 
+and does not require system multi-threading.
+</p>
+
+
+<h3 id="news-2002-02-18">18-Feb-2002</h3>
+
+<p>
+Freecell Solver 2.2.0 came into the world today. This release features
+several improvements and fixes to the library's internals - it now resides
+solely in the "freecell_solver_" namespace, has a more robust state output, 
+and has a simplified and more modular scans' code. Aside from that, the 
+maintainance of the package became more integrated and now it is
+possible to build an RPM by typing executing rpm -ta on the archive.
+</p>
+
+<h3 id="news-2001-12-19">19-Dec-2001</h3>
+
+<p>
+Freecell Solver 2.0.0 was released. This version features a lot of new 
+enhancements and additions:
+</p>
+
+<ol>
+<li>Added some presets for Beleaguered Castle, Citadel and Streets and
+Alleys.</li>
+<li>Re-factoring of the scans code to make it simpler.</li>
+<li>Added many functions to the programmer's library.</li>
+<li>fc-solve now uses it, so it is fully independant of the library it is
+linked against.</li>
+<li>Added a randomized DFS scan (with a user-defined seed).</li>
+<li>Win32 Makefile can now generate a working DLL</li>
+<li>Most importantly : a new initial digit! All hail the "2"!!</li>
+</ol>
+
+<h3 id="news-2001-10-02">2-Oct-2001</h3>
+
+<p>
+Freecell Solver version 1.10.0 was released. This version can now solve
+deals of Simple Simon, as well as solving all the Freecell-like variants
+that it could before.
+</p>
+
+<h3 id="news-2001-08-31">31-Aug-2001</h3>
+
+<p>
+Freecell Solver version 1.8.0 was released into the world. Its main
+highlight is its new building process based on GNU Autotools. Now, one
+can build a shared library, a static library and an executable across
+many UNIX variants out of the box.
+</p>
+
+<p>
+I also adapted the GNOME AisleRiot board generation program to generate
+the boards of the new Solitaire variants that were added to it and are 
+supported by Freecell Solver.
+</p>
+
+<h3 id="news-2001-04-11">11-Apr-2001</h3>
+
+<p>
+Freecell Solver version 1.6.0 has been released. It supports a solution path
+optimization routine which enables it to generate solutions that contain a 
+smaller number of moves. Furthermore, there are some optimizations, so it 
+should be at least a little faster.
+</p>
+
+<p>
+Otherwise, a lot of comments were added to the code, to make it easier 
+for interested developers to understand it.
+</p>
+
+<h3 id="news-2001-02-12">12-Feb-2001</h3>
+
+<p>
+I have set up a mailing-list for Freecell Solver. For the mailing-list 
+homepage and for subscription information consult the following page:
+</p>
+
+<p>
+<a href="http://groups.yahoo.com/group/fc-solve-discuss/">
+http://groups.yahoo.com/group/fc-solve-discuss/
+</a>
+</p>
+
+
+<p>
+If possible, send your questions or commentary there. If not
+you can still E-mail me (Shlomi Fish).
+</p>
+
+
+<h3 id="news-2001-02-07">7-Feb-2001</h3>
+
+<p>
+The long-awaited Freecell Solver 1.4.0 is now available. Changes from the 
+previous version include some fixes for bugs and memory leaks (mostly
+library-related), as well as an improved Soft-DFS scan, plus A* and BFS
+scans. (which are experimental and do not always work properly).
+</p>
+
+<p>
+A choice between all of those scans is available at run-time.
+</p>
+
+
+<h3 id="news-2001-01-26">26-Jan-2001</h3>
+
+<p>
+I have setup a <a href="http://fc-solve.berlios.de/">mirror</a> for Freecell
+Solver at <a href="http://developer.berlios.de/">BerliOS</a>. It will
+contain much of the same contents as this one, but will not be updated as
+frequently.
+</p>
+
+<p>
+The motivation for setting up the mirror was because I noticed that the
+connectivity at the Technion was not failsafe, and I want a backup site.
+</p>
+
+<h3 id="news-2000-12-21">21-Dec-2000</h3>
+
+<p>
+Version 1.2.0 of Freecell Solver is now available for download. This version
+has several improved moves so it can solve more boards. It also sports a
+more robust command-line argument handling so you can expect much less 
+segfaults if you use it improperly.
+</p>
+
+<p>
+The code has also changed quite a bit, so it may be of interest to
+developers who are interested to look under its hood.
+</p>
+
+<h3 id="news-2000-11-19">19-Nov-2000</h3>
+
+<p>Freecell Solver version 1.0.0 was released. This version can solve more
+game types, and can be compiled so it will be less memory intensive which is
+especially good for such games as Die Schlange or Der Katzenschwantz.</p>
+
+<p>Now there is also a library interface for use with games, which supports
+suspending a solution process and resuming it from its last position. And
+naturally, there is a bug fix or two, so you should upgrade. :-)</p>
+
+<p>But the most important news is that it is no longer version 0.x.y but
+rather version 1.x.y. Hoorah for the new initial digit!</p>
+
+
+
+<h3 id="news-2000-10-09">9-Oct-2000</h3>
+
+<p>
+Freecell Solver version 0.10.0 was released. This version features support 
+for several Solitaire variants besides Freecell, such as Forecell, Seahaven
+Towers and Eight Off. Aside from that, it offers a more verbose solution, as
+well as several bug-fixes.
+</p>
+
+
+<h3 id="news-2000-09-28">28-Aug-2000</h3>
+
+<p>
+Freecell Solver version 0.8.0 was released. New features in this version
+include:
+</p>
+
+<ol>
+<li>Some bug-fixes. (users of previous versions should upgrade)</li>
+
+<li>Support for a variable number of freecells, stacks, and cards per stack.
+</li>
+
+<li>Board generators for Microsoft Freecell, Freecell Pro and PySol.
+</li>
+
+<li>An option to use the balanced binary tree implementations of 
+<a href="http://www.msu.edu/user/pfaffben/avl/">libavl</a>
+,
+<a href="http://www.gtk.org/">glib</a>
+, 
+or 
+<a href="http://libredblack.sourceforge.net/">libredblack</a>
+. Using them makes Freecell Solver about 33% faster.
+</li>
+
+<li>Support for using "T" instead of "10" in board input/output.
+</li>
+
+<li>Improved Documentation.
+</li>
+
+</ol>
+
+<h3 id="news-2000-07-28">28-Jul-2000</h3>
+
+<p>
+Freecell Solver version 0.6 was released. This version features a more 
+modular code as well as the following usability features:
+</p>
+
+<ol>
+<li>An extra movement that allows Freecell Solver to solve 
+some boards which it could not solve previously.
+</li>
+<li>The order of the stacks and freecells is preserved 
+throughout the solutions.
+</li>
+<li>Limit to a certain number of iterations (so it will stop before it consumes 
+too much memory)</li>
+<li>Specify the order of the movements that will be tested. Usually, a test 
+order can be found that will solve a given board really fast.</li>
+</ol>
+
+<h3 id="news-2000-06-06">6-Jun-2000</h3>
+
+<p>
+Freecell Solver version 0.4 was released. This version contains three major
+code optimizations, so it now runs much faster. It can now also start
+solving from a non-initial board.
+</p>
+
