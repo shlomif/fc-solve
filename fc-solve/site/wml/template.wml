@@ -2,6 +2,10 @@
 #include "latemp/latemp-main.wml"
 #include "shlomif/affiliations.wml"
 
+<define-tag rss_feed whitespace="delete">
+http://fc-solve.blogspot.com/feeds/posts/default?alt=rss
+</define-tag>
+
 <latemp_lang "en-US" />
 <latemp_encoding "utf-8" />
 <latemp_author "Shlomi Fish" />
@@ -16,6 +20,13 @@ href="https://developer.berlios.de/project/make_donation.php?group_id=66"
 rel="donate" title="Please donate to show your appreciation for the hard
 work conducted on Freecell Solver"><img src="$(ROOT)/images/paypal.gif"
 alt="PayPal Donate" class="paypal"/></a>
+<br />
+<a href="<rss_feed />" rel="rss feed" title="Subscribe to Our News"><img 
+    src="$(ROOT)/images/rss.png"
+    alt="RSS Feed"
+    class="bless"
+    /></a>
+
 </latemp_affiliations_buttons>
 
 
@@ -49,6 +60,8 @@ $("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]").each(function(i){ \$(this).append
 
 <define-tag my_extra_head_elements>
 <script type="text/javascript" src="$(ROOT)/js/jq.js"></script>
+<link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="<rss_feed />" />
+<link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default" />
 </define-tag>
 
 <define-tag my_printable_head_elements>
