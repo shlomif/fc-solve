@@ -1250,14 +1250,27 @@ r2153 ; ./Tatzer -l p4b ; after strip ; With FCS_INLINED_HASH_COMPARISON
 
 Non-threaded:
 
-124.6719789505
+124.6719789505s
 
 Threaded:
 
-110.936299085617
+110.936299085617s
 
 Significant slowdown - why?
 
     -- Answer: because now "-l gi" actually runs the atomic moves scan
     after the meta-moves one when "-l cool-jives" fails in # 11,982. This
     increases the run-time significantly.
+
+========================================================================
+
+r2165 ; ./Tatzer -l p4b ; after strip ; ARGS="-l cj"
+
+Non-threaded:
+
+113.775923967361s
+
+Threaded:
+
+100.525493860245s
+
