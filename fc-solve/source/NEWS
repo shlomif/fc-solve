@@ -278,7 +278,7 @@ the many problems with licensing source under the public domain:
 Version 2.20.0 (26-Mar-2009)
 ----------------------------
 
-1. Updated the "NEWS" file (this file) with all previous version up
+1. Updated the "NEWS" file (this file) with all the previous versions up
 to 0.4 (the first release after the first initial release).
 
 2. Many fixes to the Win32 NSIS Package creation process of CMake/CPack .
