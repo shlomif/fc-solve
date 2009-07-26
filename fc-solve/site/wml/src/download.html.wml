@@ -10,6 +10,22 @@
 <a href="http://download.berlios.de/fc-solve/%0">%0</a>
 </define-tag>
 
+<h2 id="download-gui-instead">Stop! Don't you want a Graphical Interface?</h2>
+
+<p>
+Freecell Solver is essentially a library that is accompanied by several
+command-line programs. If you prefer a more graphical program with a convenient
+interface and animating the solution look at the
+<a href="$(ROOT)/links.html#front_ends">graphical front-ends</a> that people
+have prepared.
+</p>
+
+<p>
+Of these I can recommend <a href="http://pysolfc.sourceforge.net/">PySolFC</a>
+which is open-source, cross-platform, configurable and supports a very
+large number of Solitaire variants.
+</p>
+
 <h2 id="latest-stable">Latest Stable Versions</h2>
 
 <table border="1" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
