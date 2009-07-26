@@ -82,9 +82,6 @@
 
 const double fc_solve_a_star_default_weights[5] = {0.5,0,0.3,0,0.2};
 
-#define my_brfs_queue (soft_thread->method_specific.befs.meth.brfs.bfs_queue)
-#define my_brfs_queue_last_item \
-    (soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item)
 
 
 static GCC_INLINE void normalize_a_star_weights(
@@ -164,19 +161,6 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
     }
 }
 
-static GCC_INLINE void free_bfs_queue(fc_solve_soft_thread_t * soft_thread)
-{
-    /* Free the BFS linked list */
-    fcs_states_linked_list_item_t * item, * next_item;
-    item = my_brfs_queue;
-    while (item != NULL)
-    {
-        next_item = item->next;
-        free(item);
-        item = next_item;
-    }
-    my_brfs_queue = my_brfs_queue_last_item = NULL;
-}
 
 static GCC_INLINE void free_instance_soft_thread_callback(
         fc_solve_soft_thread_t * soft_thread
@@ -186,7 +170,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     {
         case FCS_METHOD_BFS:
         case FCS_METHOD_OPTIMIZE:
-            free_bfs_queue(soft_thread);
+            fc_solve_free_bfs_queue(soft_thread);
             break;
         case FCS_METHOD_A_STAR:
             fc_solve_PQueueFree(
@@ -313,13 +297,6 @@ static GCC_INLINE void clean_soft_dfs(
     foreach_soft_thread(instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
 }
 
-static GCC_INLINE void reset_soft_thread(
-    fc_solve_soft_thread_t * soft_thread
-    )
-{
-    soft_thread->is_finished = 0;
-    soft_thread->initialized = 0;
-}
 
 static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
         fc_solve_hard_thread_t * hard_thread
@@ -377,24 +354,11 @@ static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
         );
 #endif
 
-    reset_soft_thread(soft_thread);
+    fc_solve_reset_soft_thread(soft_thread);
 
     soft_thread->name = NULL;
 
     return soft_thread;
-}
-
-/* This is the commmon code from alloc_hard_thread() and 
- * recycle_hard_thread() */
-static GCC_INLINE void reset_hard_thread(
-    fc_solve_hard_thread_t * hard_thread
-    )
-{
-    hard_thread->num_times = 0;
-    hard_thread->ht_max_num_times = hard_thread->num_times_step;
-    hard_thread->max_num_times = -1;
-    hard_thread->num_soft_threads_finished = 0;
-    fc_solve_compact_allocator_init(&(hard_thread->allocator));
 }
 
 fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
@@ -429,7 +393,7 @@ fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
     hard_thread->prelude_num_items = 0;
     hard_thread->prelude_idx = 0;
 
-    reset_hard_thread(hard_thread);
+    fc_solve_reset_hard_thread(hard_thread);
 
     fcs_move_stack_init(hard_thread->reusable_move_stack);
 
@@ -1566,38 +1530,4 @@ fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     return ret;
 }
 
-void fc_solve_instance__recycle_hard_thread(
-    fc_solve_hard_thread_t * hard_thread
-    )
-{
-    int st_idx;
-    fc_solve_soft_thread_t * soft_thread;
-
-    reset_hard_thread(hard_thread);
-
-    for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
-    {
-        soft_thread = hard_thread->soft_threads[st_idx];
-
-        switch (soft_thread->method)
-        {
-            case FCS_METHOD_A_STAR:
-                /* Reset the priority queue */
-                soft_thread->method_specific.befs.meth.befs.a_star_pqueue.CurrentSize
-                    = 0
-                    ;
-                break;
-            case FCS_METHOD_BFS:
-            case FCS_METHOD_OPTIMIZE:
-                /* Reset the BFS Queue (also used for the optimization scan. */
-                free_bfs_queue(soft_thread);
-                break;
-
-        }
-        reset_soft_thread(soft_thread);
-        
-    }
-
-    return;
-}
 
