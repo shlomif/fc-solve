@@ -1,0 +1,49 @@
+#include '../template.wml'
+
+<latemp_subject "What's the Status of Freecell Solver? Is it Dead?" />
+
+<h2 id="update">Update</h2>
+
+<p>
+<b>4-July-2009</b>: development of Freecell Solver was now resumed. There
+have been a few stable releases with new features, and Freecell Solver
+is under active development again. As a result, this page is no longer
+relevant.
+</p>
+
+<h2 id="status">What is the Status of Freecell Solver?</h2>
+
+<p>
+<b>Last Updated</b>: 26-Nov-2005
+</p>
+
+<p>
+Due to the fact that the last stable branch of Freecell Solver was released
+a few years ago (on 28-September-2002), one might get the impression that
+Freecell Solver is a "dead" project. However, the real status is a bit more
+complex than that.
+</p>
+
+<p>
+First of all, Freecell Solver 2.8.x is <b>more than good enough</b> as it is. 
+It is very fast, powerful, usable, configurable, portable and can easily be 
+installed and packaged. See its <a href="features.html">Features List</a> for
+more information. No other Solitaire solver is even remotely close to it 
+in most regards. So you shouldn't think twice before using or deploying it.
+</p>
+
+<p>
+The reason a new stable branch (2.10.x or whatever) was not released was
+because Freecell Solver's primary author - Shlomi Fish - has lost interest
+in the project, and is only fixing bugs in the 2.8.x branch, if such bugs
+are discovered. He has meanwhile moved to work on new and exciting projects,
+and no-one has volunteered to advance Freecell Solver.
+</p>
+
+<p>
+Fish is willing to help any volunteers who wish to continue working on the
+library. It <a href="getting-credit.html">can also serve as a good 
+students' project to get academic credit for</a>, and Shlomi is willing to 
+provide any reasonable mental aid for that.
+</p>
+
