@@ -7,6 +7,14 @@ my $builder = Module::Build->new(
     license             => 'mit',
     dist_author         => q{Shlomi Fish <shlomif@iglu.org.il>},
     dist_version_from   => 'lib/Task/FreecellSolver/Testing.pm',
+    requires => {
+        "Games::Solitaire::Verify" => 0,
+        "String::ShellQuote" => 0,
+        "Task::Test::Run::AllPlugins" => 0,
+        "Template" => 0,
+        "Test::Differences" => 0,
+        "YAML::XS",
+    },
     build_requires => {
         'Test::More' => 0,
     },

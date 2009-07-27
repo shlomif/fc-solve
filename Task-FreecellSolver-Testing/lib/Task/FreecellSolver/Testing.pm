@@ -5,61 +5,38 @@ use strict;
 
 =head1 NAME
 
-Task::FreecellSolver::Testing - The great new Task::FreecellSolver::Testing!
+Task::FreecellSolver::Testing - install the CPAN dependencies of the
+Freecell Solver test suite.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0.1
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.0.1';
 
+# Load the dependencies so we'll be sure they are installed.
+use Games::Solitaire::Verify;
+use String::ShellQuote;
+use Task::Test::Run::AllPlugins;
+use Template;
+use Test::Differences;
+use YAML::XS;
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
-    use Task::FreecellSolver::Testing;
-
-    my $foo = Task::FreecellSolver::Testing->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 FUNCTIONS
-
-=head2 function1
-
-=cut
-
-sub function1 {
-}
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
+    $ perl -MCPAN -e 'install "Task::FreecellSolver::Testing"'
 
 =head1 AUTHOR
 
-Shlomi Fish, C<< <shlomif at iglu.org.il> >>
+Shlomi Fish, L<http://www.shlomifish.org/>
 
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-task-freecellsolver-testing at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Task-FreecellSolver-Testing>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-
-
 
 =head1 SUPPORT
 
@@ -121,7 +98,6 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-
 
 =cut
 
