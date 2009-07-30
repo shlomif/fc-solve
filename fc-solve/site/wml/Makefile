@@ -34,7 +34,7 @@ INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
 all: dummy
 
-COMMON_PREPROC_FLAGS = -I $$HOME/conf/wml/Latemp/lib
+COMMON_PREPROC_FLAGS = -I $$HOME/conf/wml/Latemp/lib -I../lib
 LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags) 
 
 TTML_FLAGS += $(COMMON_PREPROC_FLAGS)

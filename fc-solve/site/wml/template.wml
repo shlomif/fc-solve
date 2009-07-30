@@ -1,6 +1,7 @@
 <set-var latemp_with_head_meta_tags="1" />
 #include "latemp/latemp-main.wml"
 #include "shlomif/affiliations.wml"
+#include "share-this.wml"
 
 <define-tag rss_feed whitespace="delete">
 http://fc-solve.blogspot.com/feeds/posts/default?alt=rss
@@ -78,3 +79,6 @@ td { vertical-align : top; }
     />
 </latemp_extra_head_elements>
 
+<latemp_after_body>
+<share_this_button />
+</latemp_after_body>
