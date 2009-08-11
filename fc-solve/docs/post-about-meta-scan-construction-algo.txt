@@ -11,7 +11,7 @@ it quickly, but normally most scans will perform poorly on some boards.
 
 Furthermore, Freecell Solver has support for running several scans on
 the same state collection by giving each scan a quota of iterations to
-trun and then interrupting it, and switching to a different scan. As a
+try and then interrupting it, and switching to a different scan. As a
 result, I was able to construct meta-scans that comprise of several
 individual scans which generally perform better than any individual
 scan.
