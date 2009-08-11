@@ -139,51 +139,52 @@ Game Variants Options
 
 
 --freecells-num [Number of Freecells]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies the number of freecells which are available to
 the program. Freecell Solver can use any number of freecells as long as
 it does not exceed its maximal number.
 
 This maximum is hard-coded into the program, and can be specified at
-compile-time by modifying the file "config.h". See the file INSTALL for
+compile-time by modifying the file +config.h+. See the file +INSTALL+ for
 details.
 
-
 --stacks-num [Number of Stacks]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies the number of stacks present in the board. Again,
 this number cannot exceed the maximal number of stacks, which can be
-specified in the file "config.h" during compile-time of Freecell
+specified in the file +config.h+ during compile-time of Freecell
 Solver.
 
-
 --decks-num [Number of Decks]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This options specifies how many decks are found in the board. This number
 cannot exceed the maximal number of decks, which can be specified in the
-file "config.h" during compile time of Freecell Solver.
-
+file +config.h+ during compile time of Freecell Solver.
 
 --sequences-are-built-by {suit|alternate_color|rank}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies whether a card sequence is built by suit or by
 alternate colour or by rank regardless of suit.
 
-
 --sequence-move {limited|unlimited}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies whether the sequence move is limited by the
 number of freecells or vacant stacks or not. 
 
 
 --empty-stacks-filled-by {kings|none|all}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies which cards can fill an empty stack.
 
 
---game [game]
---preset [game]
--g [game]
+--game [game] , --preset [game] , -g [game]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the type of game. Each preset implies several of the
 settings options above and sometimes even the tests order below. The
@@ -191,24 +192,26 @@ default configuration is for Freecell.
 
 Available presets:
 
-     bakers_dozen         - Baker's Dozen
-     bakers_game          - Baker's Game
-     beleaguered_castle   - Beleaguered Castle
-     citadel              - Citadel
-     cruel                - Cruel
-     der_katz             - Der Katzenschwanz
-     die_schlange         - Die Schlange
-     eight_off            - Eight Off
-     fan                  - Fan
-     forecell             - Forecell
-     freecell             - Freecell (default)
-     good_measure         - Good Measure
-     ko_bakers_game       - Kings' Only Baker's Game
-     relaxed_freecell     - Relaxed Freecell
-     relaxed_sehaven      - Relaxed Seahaven Towers
-     seahaven             - Seahaven Towers
-     simple_simon         - Simple Simon
-     streets_and_alleys   - Streets and Alleys
+|==================================================
+| +bakers_dozen+         | Baker's Dozen
+| +bakers_game+          | Baker's Game
+| +beleaguered_castle+   | Beleaguered Castle
+| +citadel+              | Citadel
+| +cruel+                | Cruel
+| +der_katz+             | Der Katzenschwanz
+| +die_schlange+         | Die Schlange
+| +eight_off+            | Eight Off
+| +fan+                  | Fan
+| +forecell+             | Forecell
+| +freecell+             | Freecell (default)
+| +good_measure+         | Good Measure
+| +ko_bakers_game+       | Kings' Only Baker's Game
+| +relaxed_freecell+     | Relaxed Freecell
+| +relaxed_sehaven+      | Relaxed Seahaven Towers
+| +seahaven+             | Seahaven Towers
+| +simple_simon+         | Simple Simon
+| +streets_and_alleys+   | Streets and Alleys
+|==================================================
 
 Note: in order to solve Der Katzenschwanz and Die Schlange I recommend you
 compile Freecell Solver with the INDIRECT_STACK_STATES option, or else it will
@@ -217,31 +220,31 @@ consume much more memory. For details consult the file INSTALL.
 5. Solving Algorithm Options
 ----------------------------
 
--mi [Maximal number of iterations]
---max-iters [Maximal number of iterations]
+-mi [Iterations num] , --max-iters [Itearations num]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This parameter limits the maximal number of states to check. This will
 give a rough estimate on the time spent to solve a given board.
 
 
--md [Maximal depth]
---max-depth [Maximal depth]
+-md [Maximal depth] , --max-depth [Maximal depth]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Freecell Solver recurses into the solution. This parameter specifies a
 maximal recursion depth. Generally speaking, it's not a good idea to
 set it, because that way several important intermediate states become
 inaccessible.
 
--mss [Maximal States' Number]
---max-stored-states [Maximal States' Number]
+-mss [num] , --max-stored-states [num]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Limits the number of the states stored by the program in the computer's
 memory. This differs from the maximal number of iterations in the sense, that
 it is possible that a stored state was not checked yet.
 
 
--to [Test's Order]
---tests-order [Test's Order]
+-to [Test's Order] , --tests-order [Test's Order]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies the order in which Freecell Solver will try the
 different types of moves that it can perform. Each move is specified by
@@ -251,43 +254,38 @@ corresponding characters in the string.
 
 The tests along with their characters are:
 
-Freecell Tests:
-
-'0' - put top stack cards in the foundations.
-'1' - put freecell cards in the foundations.
-'2' - put freecell cards on top of stacks.
-'3' - put non-top stack cards in the foundations.
-'4' - move stack cards to different stacks.
-'5' - move stack cards to a parent card on the same stack.
-'6' - move sequences of cards onto free stacks.
-'7' - put freecell cards on empty stacks.
-'8' - move cards to a different parent.
-'9' - empty an entire stack into the freecells.
-
-Atomic Freecell Tests:
-
-'A' - move a stack card to an empty stack.
-'B' - move a stack card to a parent on a different stack.
-'C' - move a stack card to a freecell.
-'D' - move a freecell card to a parent.
-'E' - move a freecell card to an empty stack.
-
-
-Simple Simon Tests:
-
-'a' - move a full sequence to the foundations.
-'b' - move a sequence to a true parent of his. 
-'c' - move a whole stack sequence to a false parent (in order to clear 
-      the stack) 
-'d' - move a sequence to a true parent that has some cards above it. 
-'e' - move a sequence with some cards above it to a true parent. 
-'f' - move a sequence with a junk sequence above it to a true parent that 
-      has some cards above it. 
-'g' - move a whole stack sequence to a false parent which has some 
-      cards above it.
-'h' - move a sequence to a parent on the same stack.
-'i' - move any sequence to a false parent (using it may make the solution
+|====================================================
+2+|Freecell Tests:
+|'0' | put top stack cards in the foundations.
+|'1' | put freecell cards in the foundations.
+|'2' | put freecell cards on top of stacks.
+|'3' | put non-top stack cards in the foundations.
+|'4' | move stack cards to different stacks.
+|'5' | move stack cards to a parent card on the same stack.
+|'6' | move sequences of cards onto free stacks.
+|'7' | put freecell cards on empty stacks.
+|'8' | move cards to a different parent.
+|'9' | empty an entire stack into the freecells.
+2+|Atomic Freecell Tests:
+|'A' | move a stack card to an empty stack.
+|'B' | move a stack card to a parent on a different stack.
+|'C' | move a stack card to a freecell.
+|'D' | move a freecell card to a parent.
+|'E' | move a freecell card to an empty stack.
+2+|Simple Simon Tests:
+|'a' | move a full sequence to the foundations.
+|'b' | move a sequence to a true parent of his. 
+|'c' | move a whole stack sequence to a false parent (in order to clear the stack) 
+|'d' | move a sequence to a true parent that has some cards above it. 
+|'e' | move a sequence with some cards above it to a true parent. 
+|'f' | move a sequence with a junk sequence above it to a true parent that 
+has some cards above it. 
+|'g' | move a whole stack sequence to a false parent which has some 
+cards above it.
+|'h' | move a sequence to a parent on the same stack.
+|'i' | move any sequence to a false parent (using it may make the solution
 much slower).
+|=====================================================
 
 Manipulating the tests order can be very helpful to the quick solution
 of a given board. If you found that a certain board cannot be solved in
@@ -296,7 +294,7 @@ should try different tests' orders. Usually, one can find a test order
 that solves a board very quickly.
 
 Note that this test order usually makes sense only for the Depth-First 
-Search scans (see the "--method" option below).
+Search scans (see the +--method+ option below).
 
 Also note that Freecell tests are not suitable for solving Simple Simon games
 and Simple Simon tests are not suitable for solving anything except Simple
@@ -307,40 +305,41 @@ Tests can be grouped together into random groups using parenthesis
 only relevant to the Random DFS scan (see below).
 
 
--me [Solving Method]
---method [Solving Method]
+-me [Solving Method] , --method [Solving Method]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies the solving method that will be used to solve the
 board. Currently, the following methods are available:
 
-a-star     - An A* scan
-bfs        - A Breadth-First Search (or BFS) scan
-dfs        - A Depth-First Search (or DFS) scan
-random-dfs - A randomized DFS scan
-soft-dfs   - A "soft" DFS scan
+* +a-star+ - A A* scan
+* +bfs+ - A Breadth-First Search (or BFS) scan
+* +dfs+ - A Depth-First Search (or DFS) scan
+* +random-dfs+ - A randomized DFS scan
+* +soft-dfs+ - A "soft" DFS scan
 
-The difference between "dfs" and "soft-dfs" is that the soft DFS does not
-use procedural recursion but rather its own internal stack. "random-dfs" is
-similar to "soft-dfs" only it determines to which states to recurse into 
-randomly. Its behaviour will differ depending on the seed you supply to it.
-(see the "-seed" option below.)
+Starting from recent Freecell Solver versions there is no difference between
++dfs+ and +soft-dfs+. In earlier versions, use of +soft-dfs+ is recommended.
++random-dfs+ is similar to +soft-dfs+ only it determines to which states to
+recurse into randomly. Its behaviour will differ depending on the seed you
+supply to it.  (see the "-seed" option below.)
 
 BFS does not yield good results, and A* has a mixed behaviour, so for 
-the time being I recommend using either DFS or Soft-DFS.
+the time being I recommend using Soft-DFS or Andom-DFS.
 
 The Random-DFS scan processes every tests' random group, randomizes the
 states that it found and recurses into them one by one. Renegade tests
 that do not belong to any group, are processed in a non-random manner.
 
 
--asw [A* Weights]
---a-star-weight [A* Weights]
+-asw [A* Weights] , --a-star-weight [A* Weights]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specify weights for the A* scan, assuming it is used. The parameter
 should be a comma-separated list of numbers, each one is proportional
 to the weight of its corresponding test.
 
 The numbers are, in order:
+
 1. The number of cards out.
 2. The maximal sequence move.
 3. The number of cards under sequences.
@@ -351,21 +350,22 @@ The default weights are respectively: 0.5,0,0.3,0,0.2
 
 
 -seed [Seed Number]
+~~~~~~~~~~~~~~~~~~~
 
 Specifies a seed to be used by Freecell Solver's internal random number 
-generator. This seed may alter the behaviour and speed of the "random-dfs"
+generator. This seed may alter the behaviour and speed of the +random-dfs+
 scan.
 
 
--opt
---optimize-solution
+-opt , --optimize-solution
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option instructs Freecell Solver to try and optimize the solution
 path so it will have a smaller number of moves.
 
 
--opt-to [tests order]
---optimization-tests-order [tests order]
+-opt-to [tests order] , --optimization-tests-order [tests order]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This argument specifies the test order for the optimization scan, in case
 it should be different than an order that contains all the tests that were
@@ -373,6 +373,7 @@ used in all the normal scans.
 
 
 --reparent-states
+~~~~~~~~~~~~~~~~~
 
 This option specifies that states that were encountered whose depth in the
 states graph can be improved should be reparented to the new parent. This 
@@ -380,14 +381,15 @@ option can possibly make solutions shorter.
 
 
 --calc-real-depth
+~~~~~~~~~~~~~~~~~
 
-This option becomes effective only if --reparent-states is specified. What it
-does, is explicitly calculate the depth of the state by tracing its path
+This option becomes effective only if +--reparent-states+ is specified. What
+it does, is explicitly calculate the depth of the state by tracing its path
 to the initial state. This may make depth consideration more accurate.
 
 
-6. Running Several Scans in Parallel:
--------------------------------------
+Running Several Scans in Parallel:
+----------------------------------
 
 Starting from Version 2.4.0, Freecell Solver can run several scans in 
 parallel on the same state collection. Each scan resides in its own
