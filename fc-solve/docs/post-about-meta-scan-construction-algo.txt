@@ -1,0 +1,51 @@
+Hi all,
+
+my name is Shlomi Fish and I'm the originator and lead developer of
+Freecell Solver ( http://fc-solve.berlios.de/ ), an automated solver for
+several variants of cards solitaire. 
+
+Now, fc-solve is very configurable, and one can construct many
+individual scans that will operate on the same state collection.
+For any given board, one can find an individual scan that will solve
+it quickly, but normally most scans will perform poorly on some boards.
+
+Furthermore, Freecell Solver has support for running several scans on
+the same state collection by giving each scan a quota of iterations to
+trun and then interrupting it, and switching to a different scan. As a
+result, I was able to construct meta-scans that comprise of several
+individual scans which generally perform better than any individual
+scan.
+
+It was done by declaring a sequence of mapping of {$Scan_ID, $Quota} 
+($ indicates a variable a-la shell or Perl) which are ran for every
+board that the solver attempts to solve. It tries $Scan_ID[$idx] for
+$Quota[$idx] iterations, and then (in case it could not solve the board
+already) interrupts it, and switches to a different $Scan_ID[$idx+1]
+for $Quota[$idx+1]. If the Scan_ID was already started, it will be
+resumed from the position it reached, without restarting.
+
+To construct such a sequence, which will have reasonable performance, we
+measured the performance of several individual scans across a range of
+initial layouts (the first 32,000 Microsoft Freecell deals, in our case) and 
+then used the following algorithm, which is greedy, but not optimal:
+
+* http://www.shlomifish.org/lecture/Perl/Lightning/Opt-Multi-Task-in-PDL/
+
+* http://www.shlomifish.org/lecture/Freecell-Solver/The-Next-Pres/slides/multi-tasking/best-meta-scan/opt-algorithm.html
+
+I'll describe it here:
+
+{{{{{{{{{{{{{
+1. Allocate a quota of iterations.
+
+2. Chose the scan that solves the largest number of boards.
+
+3. If no boards could be solved with any of the scans, increase the
+quota by another quota.
+
+4. Repeat steps 1-3 as long as there are unsolved boards.
+}}}}}}}}}}}}}
+
+Note that once a quota of iterations was allocated to an individual
+scan, it will make progress with them in solving the board, and after
+interrupted will take less time to solve the board, subsequentially.
