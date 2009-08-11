@@ -58,9 +58,13 @@ These are instruction how to get the test suite up and running:
 
 #. Install perl (at least perl-5.8.9 - perl-5.10.0 or above is recommended).
 
-#. Install perl's Template Toolkit:
+#. Install the dependencies of the test suite:
 
-	# apt-get install libtemplate-perl
+	- Download local::lib from http://search.cpan.org/dist/local-lib/
+	and follow the instructions to set it up
+	- Restart bash
+	$ export PERL_MM_USE_DEFAULT=1
+    $ perl -Mlocal::lib -MCPAN -e 'install Task::FreecellSolver::Testing'
 
 #. Install the libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap )
 development headers.
@@ -79,7 +83,6 @@ development headers.
 	On Mandriva:
 	# urpmi libtap-devel
 
-
 #. Check out the latest Freecell Solver sources:
 
 	$  svn co https://svn.berlios.de/svnroot/repos/fc-solve/trunk/
@@ -94,16 +97,6 @@ development headers.
 #. Build Freecell Solver:
 
 	$ make
-
-#. Install the dependencies of the test suite:
-
-	- Download local::lib from http://search.cpan.org/dist/local-lib/
-	and follow the instructions to set it up
-	- Restart bash
-	$ export PERL_MM_USE_DEFAULT=1
-	$ perl -Mlocal::lib -MCPAN -e 'install Task::Test::Run::AllPlugins'
-	$ perl -Mlocal::lib -MCPAN -e 'install(qw(String::ShellQuote Test::Differences Games::Solitaire::Verify))'
-	$ perl -Mlocal::lib -MCPAN -e 'install(qw(YAML::XS))'
 
 #. Set up the Test::Run plugins.
 	$ echo 'export HARNESS_PLUGINS="ColorSummary ColorFileVerdicts AlternateInterpreters"' >> ~/.bashrc
