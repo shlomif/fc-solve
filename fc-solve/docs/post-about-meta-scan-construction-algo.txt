@@ -36,6 +36,7 @@ then used the following algorithm, which is greedy, but not optimal:
 I'll describe it here:
 
 {{{{{{{{{{{{{
+
 1. Allocate a quota of iterations.
 
 2. Chose the scan that solves the largest number of boards.
@@ -44,8 +45,44 @@ I'll describe it here:
 quota by another quota.
 
 4. Repeat steps 1-3 as long as there are unsolved boards.
+
 }}}}}}}}}}}}}
 
 Note that once a quota of iterations was allocated to an individual
-scan, it will make progress with them in solving the board, and after
-interrupted will take less time to solve the board, subsequentially.
+scan, it will make progress with them in solving the board, and once
+interrupted will take less time to solve the boards, after it is resumed.
+
+I've recently created several variations of this algorithm:
+
+http://tech.groups.yahoo.com/group/fc-solve-discuss/message/980
+
+In this variation, instead of assigning the quota to the scan that
+solves the most boards, it is assigned to the scan which generates the
+minimal average solution length for the boards that it solves within the
+quota.
+
+My questions are:
+
+1. What is the name of this meta-scan generating algorithm? I'm asking
+because I want to package the code I used to construct the meta-scan and
+distribute it as open-source software, and would like to use the right
+terminology.
+
+2. Are there documented algorithms for constructing such meta-scans that
+generally generate better results?
+
+3. Assuming we want to use this algorithm, is are there any documented
+ways to optimise the choice of the sequence of quotas' sizes so it will
+yield better results. For example, I can assign the algorithm the
+sequence {300,300,300...} or {500,500,500,500...} or
+{300,301,302,303,304...} or {300,500,300,500} etc. and it will yield
+different results at any time.
+
+------------------
+
+I'll be grateful for anyone who can answer any of these questions.
+
+Regards,
+
+    Shlomi Fish ( http://www.shlomifish.org/ )
+
