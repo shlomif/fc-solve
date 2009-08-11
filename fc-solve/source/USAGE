@@ -393,35 +393,32 @@ to the initial state. This may make depth consideration more accurate.
 Running Several Scans in Parallel:
 ----------------------------------
 
-Starting from Version 2.4.0, Freecell Solver can run several scans in 
+Starting from Version 2.4.0, Freecell Solver can run several scans in
 parallel on the same state collection. Each scan resides in its own
 "Soft Thread". By specifying several soft threads on the command line
-one can create use several parallel scans. Once one of the scans 
+one can create use several parallel scans. Once one of the scans
 reaches a solution, the solution will be displayed.
 
+-nst , --next-soft-thread
+~~~~~~~~~~~~~~~~~~~~~~~
 
--nst
---next-soft-thread
-
-This option creates a new soft-thread and let the other scan-specific options
-initialize it. For example:
+This option creates a new soft-thread and makes the following scan-specific
+options initialize it. For example:
 
 # fc-solve --method a-star -nst --method soft-dfs -to 0123467 myboard.txt
 
 will run an A* scan and a Soft-DFS scan with a tests order of 0123467 on
 myboard.txt.
 
-
--step [Number of Iterations in the Step]
---soft-thread-step [Number of Iterations in the Step]
+-step [Step] , --soft-thread-step [Step]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option will set the number of iterations with which to run the 
 soft thread before switching to the next one. By specifying a larger 
 step, one can give a certain scan a longer run-time and a higher priority.
 
-
--nht
---next-hard-thread
+-nht , --next-hard-thread
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This argument lets one initialize the next hard thread. If Freecell Solver was
 compiled with such support, then it is possible to run each hard thread in its
@@ -429,12 +426,14 @@ own system thread. Each hard-thread contains one or more soft threads.
 
 
 --st-name [soft thread name]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This argument sets the name used to identify the current soft thread. This name
 can later be used to construct the prelude (see below).
 
 
 --prelude [i1@st1{,i2@st2{,i3@st3...}}]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets the prelude for the hard thread. At the beginning of the search, the
 hard thread plays a static sequence of iterations at each of the soft threads
@@ -452,16 +451,17 @@ step number.
 
 
 --scans-synergy {none|dead-ends-mark}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the synergy between the various scans, or how much they cooperate
-between themselves. "none" means they do not cooperate and only share
-the same memory resources. "dead-end-marks" means they try to mark states
+between themselves. +none+ means they do not cooperate and only share
+the same memory resources. +dead-end-marks+ means they try to mark states
 that they have withdrawn from, and states whose all their derived states are 
 such, as "dead ends". This may or may not improve the speed of the solution.
 
 
--ni
---next-instance
+-ni , --next-instance
+~~~~~~~~~~~~~~~~~~~~
 
 This option allows to run two or more separate solvers one after the
 other. If the first one returned an unsolvable verdict, then the second
@@ -470,18 +470,20 @@ after a meta-moves scan, so we will always get an accurate verdict and
 still enjoy some of the speed of the meta-moves scan.
 
 
-7. Meta-Options
----------------
+Meta-Options
+------------
 
 
 --reset
+~~~~~~~
 
 This option resets the program to its initial state, losing all the
-logic that was inputted to it up to that state. Afterwards, it can
-be set to a different configuration, again.
+configuration logic that was inputted to it up to that state. Afterwards,
+it can be set to a different configuration, again.
 
 
---read-from-file [{num_skip},]filename
+--read-from-file [num_skip,]filename
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option will read the configuration options from a file. The format
 of the file is similar to that used by the UNIX Bourne Shell. (i.e:
@@ -492,8 +494,8 @@ The filename can be preceeded by an optional number of the arguments to
 skip followed by a comma. (the default is 0)
 
 
--l [preset]
---load-config [preset]
+-l [preset] , --load-config [preset]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Reads the configuration specified by [preset] and configures the solver
 accordingly. A preset is a set of command line arguments to be analyzed
@@ -506,34 +508,39 @@ for information about their format)
 
 Presets that are shipped with Freecell Solver:
 
-    abra-kadabra      - a meta-moves preset
-    cool-jives        - a meta-moves preset
-    crooked-nose      - an atomic-moves preset (guarantees an accurate verdict)
-    fools-gold        - an atomic-moves preset
-    good-intentions   - runs "cool-jives" and then "fools-gold"
-    gooey-unknown-thing - a meta-moves preset that aims to minimise the
-            outcome solution's length.
-    hello-world       - a meta-moves preset
-    john-galt-line    - a meta-moves preset
-    rin-tin-tin       - a meta-moves prese
-    sand-stone        - an atomic-moves preset that aims to minimise the
-            outcome solution's length.
-    slick-rock        - run "gooey-unknown-thing" and then "sand-stone"
-    the-last-mohican  - a preset for solving Simple Simon. Yields less
-            false negatives than the default one, but might be slower. 
-    toons-for-twenty-somethings - an atomic-moves preset that solves
+[width="50%"]
+|===================================================
+|+abra-kadabra+                |a meta-moves preset
+|+cool-jives+                  |a meta-moves preset
+|+crooked-nose+                |an atomic-moves preset (guarantees an 
+            accurate verdict)
+|+fools-gold+                  |an atomic-moves preset
+|+good-intentions+             |runs "cool-jives" and then "fools-gold"
+|+gooey-unknown-thing+         |a meta-moves preset that aims to minimise
+            the outcome solution's length.
+|+hello-world+                 |a meta-moves preset
+|+john-galt-line+              |a meta-moves preset
+|+rin-tin-tin+                 |a meta-moves prese
+|+sand-stone+                  |an atomic-moves preset that aims to
+            minimise the outcome solution's length.
+|+slick-rock+                  |run "gooey-unknown-thing" and then "sand-stone"
+|+the-last-mohican+            |a preset for solving Simple Simon. Yields
+            less false negatives than the default one, but might be slower. 
+|+toons-for-twenty-somethings+ |an atomic-moves preset that solves
             more boards efficiently than "fools-gold".
-    yellow-brick-road - a meta-moves preset
+|+yellow-brick-road+           |a meta-moves preset
+|====================================================
+
 
 They can be abbreviated into their lowercase acronym (i.e: "ak" or "rtt").
 
 
-8. Run-time Display Options
----------------------------
+Run-time Display Options
+------------------------
 
 
--i
---iter-output
+-i , --iter-output
+~~~~~~~~~~~~~~~~~~
 
 This option tells fc-solve to print the iteration number and the
 recursion depth of every state which is checked, to the standard
@@ -541,8 +548,8 @@ output. It's a good way to keep track of how it's doing, but the output
 slows it down a bit.
 
 
--s
---state-output
+-s , --state-output
+~~~~~~~~~~~~~~~~~~~
 
 This option implies -i. If specified, this option outputs the cards and 
 formation of the board itself, for every state that is checked. 
@@ -551,24 +558,24 @@ Freecell Solver, but you usually cannot make what is going on because
 it is so fast.
 
 
-9. Signal Combinations
-----------------------
+Signal Combinations
+-------------------
 
 If you are working on a UNIX or a similar system then you can set some
 run-time options in "fc-solve" by sending it some signal
 combinations.
 
 If you send the signal USR1, without sending any other signals before
-that, then "fc-solve" will output the present number of
+that, then +fc-solve+ will output the present number of
 iterations. This method is a good way to monitor an instance that takes
 a long time to solve.
 
-If you send it the signal USR2 and then USR1, then "fc-solve"
+If you send it the signal USR2 and then USR1, then +fc-solve+
 will print the iteration number and depth on every state that it
 checks. It is the equivalent of specifying (or unspecifying) the
 option -i/--iter-output.
 
-If you send it two USR2 signals and then USR1, then "fc-solve"
+If you send it two USR2 signals and then USR1, then +fc-solve+
 will also print the board of every state. Again, this will only be done
 assuming the iteration output is turned on.
 
