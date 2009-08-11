@@ -6,8 +6,9 @@ several variants of cards solitaire.
 
 Now, fc-solve is very configurable, and one can construct many
 individual scans that will operate on the same state collection.
-For any given board, one can find an individual scan that will solve
-it quickly, but normally most scans will perform poorly on some boards.
+For any given board, one can usually find an individual scan that 
+will solve it quickly, but normally most scans will perform poorly 
+on some boards.
 
 Furthermore, Freecell Solver has support for running several scans on
 the same state collection by giving each scan a quota of iterations to
@@ -52,7 +53,7 @@ Note that once a quota of iterations was allocated to an individual
 scan, it will make progress with them in solving the board, and once
 interrupted will take less time to solve the boards, after it is resumed.
 
-I've recently created several variations of this algorithm:
+I've recently created a variation of this algorithm:
 
 http://tech.groups.yahoo.com/group/fc-solve-discuss/message/980
 
