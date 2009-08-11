@@ -192,26 +192,27 @@ default configuration is for Freecell.
 
 Available presets:
 
-|==================================================
-| +bakers_dozen+         | Baker's Dozen
-| +bakers_game+          | Baker's Game
-| +beleaguered_castle+   | Beleaguered Castle
-| +citadel+              | Citadel
-| +cruel+                | Cruel
-| +der_katz+             | Der Katzenschwanz
-| +die_schlange+         | Die Schlange
-| +eight_off+            | Eight Off
-| +fan+                  | Fan
-| +forecell+             | Forecell
-| +freecell+             | Freecell (default)
-| +good_measure+         | Good Measure
-| +ko_bakers_game+       | Kings' Only Baker's Game
-| +relaxed_freecell+     | Relaxed Freecell
-| +relaxed_sehaven+      | Relaxed Seahaven Towers
-| +seahaven+             | Seahaven Towers
-| +simple_simon+         | Simple Simon
-| +streets_and_alleys+   | Streets and Alleys
-|==================================================
+[width="50%"]
+|================================================
+|+bakers_dozen+         |Baker's Dozen
+|+bakers_game+          |Baker's Game
+|+beleaguered_castle+   |Beleaguered Castle
+|+citadel+              |Citadel
+|+cruel+                |Cruel
+|+der_katz+             |Der Katzenschwanz
+|+die_schlange+         |Die Schlange
+|+eight_off+            |Eight Off
+|+fan+                  |Fan
+|+forecell+             |Forecell
+|+freecell+             |Freecell (default)
+|+good_measure+         |Good Measure
+|+ko_bakers_game+       |Kings' Only Baker's Game
+|+relaxed_freecell+     |Relaxed Freecell
+|+relaxed_sehaven+      |Relaxed Seahaven Towers
+|+seahaven+             |Seahaven Towers
+|+simple_simon+         |Simple Simon
+|+streets_and_alleys+   |Streets and Alleys
+|================================================
 
 Note: in order to solve Der Katzenschwanz and Die Schlange I recommend you
 compile Freecell Solver with the INDIRECT_STACK_STATES option, or else it will
@@ -254,6 +255,7 @@ corresponding characters in the string.
 
 The tests along with their characters are:
 
+[width="80%",cols="1,10"]
 |====================================================
 2+|Freecell Tests:
 |'0' | put top stack cards in the foundations.
