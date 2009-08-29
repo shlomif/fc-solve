@@ -38,7 +38,7 @@ sub test_using_valgrind
         {
             $found_error_summary = 1;
         }
-        elsif (index($l, q{malloc/free: in use at exit: 0 bytes}) >= 0)
+        elsif (index($l, q{in use at exit: 0 bytes}) >= 0)
         {
             $found_malloc_free = 1;
         }
