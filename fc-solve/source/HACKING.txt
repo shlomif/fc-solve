@@ -132,7 +132,5 @@ libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
 
 13. Test Freecell Solver:
 
-	$ export FREECELL_SOLVER_QUIET=1
-	$ export PATH="`pwd`/board_gen:$PATH"
 	$ make test
 

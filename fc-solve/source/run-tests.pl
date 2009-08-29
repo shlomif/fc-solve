@@ -11,6 +11,7 @@ use File::Spec;
 use File::Copy;
 use File::Path;
 use Getopt::Long;
+use Env::Path;
 
 sub run_tests
 {
@@ -72,6 +73,9 @@ GetOptions(
 
 
     local $ENV{FREECELL_SOLVER_PRESETRC} = $testing_preset_rc;
+    local $ENV{FREECELL_SOLVER_QUIET} = 1;
+    Env::Path->PATH->Prepend(File::Spec->catdir(Cwd::getcwd(), "board_gen"));
+
     chdir("$FindBin::Bin/t");
     if (system("make", "-s"))
     {
