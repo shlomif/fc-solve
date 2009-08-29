@@ -77,17 +77,18 @@ libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
     # urpmi libtap-devel
 +
 * On Debian:
-
-	$ tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz 
-	$ cd tap-1.01
-	$ ./configure --prefix="$HOME/apps/libtap"
-	$ make CFLAGS+=-UHAVE_LIBPTHREAD
-	$ make install
-	# For gcc finding tap.h in the includes
-	$ echo 'export CPATH="$HOME/apps/libtap/include:$CPATH"' >> ~/.bashrc
-	# For CMake to find the TAP library.
-	$ echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bashrc
 +
+-------------------------------
+tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz 
+cd tap-1.01
+./configure --prefix="$HOME/apps/libtap"
+make CFLAGS+=-UHAVE_LIBPTHREAD
+make install
+# For gcc finding tap.h in the includes
+echo 'export CPATH="$HOME/apps/libtap/include:$CPATH"' >> ~/.bashrc
+# For CMake finding libtap.
+echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bashrc
+------------------------------
 
 4. Check out the latest Freecell Solver sources:
 +
