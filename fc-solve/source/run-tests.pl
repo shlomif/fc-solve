@@ -74,7 +74,10 @@ GetOptions(
 
     local $ENV{FREECELL_SOLVER_PRESETRC} = $testing_preset_rc;
     local $ENV{FREECELL_SOLVER_QUIET} = 1;
-    Env::Path->PATH->Prepend(File::Spec->catdir(Cwd::getcwd(), "board_gen"));
+    Env::Path->PATH->Prepend(
+        File::Spec->catdir(Cwd::getcwd(), "board_gen"),
+        File::Spec->catdir(Cwd::getcwd(), "t", "scripts"),
+    );
 
     chdir("$FindBin::Bin/t");
     if (system("make", "-s"))

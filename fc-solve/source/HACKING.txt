@@ -125,11 +125,6 @@ libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
       pattern: \.exe\z
       type: regex
 
-* And put the following script called unity in your path (executable):
-
-    #!/usr/bin/perl
-    exec { $ARGV[0] } @ARGV;
-
 13. Test Freecell Solver:
 
 	$ make test
