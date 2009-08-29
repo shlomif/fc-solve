@@ -113,19 +113,7 @@ libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
 
 	$ make
 
-12. Set up the Test::Run plugins.
-
-	$ echo 'export HARNESS_PLUGINS="ColorSummary ColorFileVerdicts AlternateInterpreters"' >> ~/.bashrc
-	$ echo 'export HARNESS_ALT_INTRP_FILE="$HOME/.test-run-alt-intrp.yml"' >> ~/.bashrc
-+
-* Put the following under $HOME/.test-run-alt-intrp.yml:
-
-    ---
-    - cmd: unity
-      pattern: \.exe\z
-      type: regex
-
-13. Test Freecell Solver:
+12. Test Freecell Solver:
 
 	$ make test
 

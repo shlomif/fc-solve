@@ -79,6 +79,19 @@ GetOptions(
         File::Spec->catdir(Cwd::getcwd(), "t", "scripts"),
     );
 
+    local $ENV{HARNESS_ALT_INTRP_FILE} =
+        File::Spec->rel2abs(
+            File::Spec->catdir(
+                File::Spec->curdir(),
+                "t", "config", "alternate-interpreters.yml",
+            ),
+        )
+        ;
+
+    local $ENV{HARNESS_PLUGINS} = 
+        "ColorSummary ColorFileVerdicts AlternateInterpreters"
+        ;
+
     chdir("$FindBin::Bin/t");
     if (system("make", "-s"))
     {
