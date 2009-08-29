@@ -498,13 +498,13 @@ INSTALL_MAN ("${CMAKE_CURRENT_BINARY_DIR}/fc-solve.6" 6)
 
 INSTALL(
     FILES
-        "AUTHORS.txt"
-        "HACKING.txt"
-        "INSTALL.txt"
-        "README.txt"
+        "AUTHORS"
+        "HACKING"
+        "INSTALL"
+        "README"
         "README.win32.txt"
-        "TODO.txt"
-        "USAGE.txt"
+        "TODO"
+        "USAGE"
     DESTINATION
         "share/doc/freecell-solver/"
 )
@@ -560,7 +560,7 @@ FIND_PACKAGE(Asciidoc)
 
 IF(ASCIIDOC_FOUND)
     SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt" 
-        "README.txt" "USAGE.txt" "TODO.txt" 
+        "README.txt" "TODO.txt" "USAGE.txt" 
     )
 
     SET (_pdf_targets)
