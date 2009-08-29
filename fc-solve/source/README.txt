@@ -1,3 +1,9 @@
+Freecell Solver Readme File
+===========================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2009-08-29
+:Revision: $Id$
+
 Introduction
 ------------
 

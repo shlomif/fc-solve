@@ -1,5 +1,8 @@
 Freecell Solver's Command-Line Syntax and Usage
 ===============================================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2009-08-29
+:Revision: $Id$
 
 
 The programs

@@ -1,10 +1,20 @@
-This package contains the Windows 95/98/NT/2000/ME binaries of
-Freecell Solver 2.8.1. Read the file "README" for usage and other
+Freecell Solver Windows README
+==============================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2009-08-14
+:Revision: $Id$
+
+This package contains the Windows 95/98/NT/2000/ME/XP/2003/Vista binaries of
+Freecell Solver. Read the file "README" for usage and other
 information.
 
 The vanilla Freecell Solver program (included here) is a text-mode
 program. If you want a nice graphical interface for it, then
-download Freecell Pro:
+download PySol-FC:
+
+http://pysolfc.sourceforge.net/
+
+Or may be Freecell Pro:
 
 http://www.rrhistorical.com/rrdata/Fcpro65/
 
@@ -14,10 +24,6 @@ those settings, you'll need to recompile it. It was compiled with a
 recursion stack size of 32 megabytes. (don't worry if you don't have
 so much memory in your computer - it will still run fine)
 
-To enable presets (which you should) copy the files under the
-"To-Program-Files" sub-directory of this archive under the
-"C:\Program Files\" directory of Windows.
-
 Freecell Solver's homepage is at the following URL:
 
 http://fc-solve.berlios.de/
@@ -26,8 +32,8 @@ Enjoy!
 
 	Shlomi Fish
 
-Notes to Windows Users:
------------------------
+Notes to Windows Users
+----------------------
 
 The fc-solve.exe executable is a command-line program. If you
 double-click its icon it will just wait for keyboard input. To use
@@ -38,11 +44,15 @@ However, many times the programs in the board_gen directory can do the
 job for you. For instance, the following command line feeds fc-solve
 with initial board No. 24 of Microsoft Freecell:
 
-> .\board_gen\make-microsoft-freecell-board 24 | .\fc-solve
+-----------
+.\board_gen\pi-make-microsoft-freecell-board 24 | .\fc-solve
+-----------
 
 fc-solve accepts many options, and you may wish to consult the file
 USAGE to learn more about it.
 
 I am aware of several other implementations of Freecell for Windows
 using different Freecell solvers. Links to them can be
-found in the links section of the Freecell Solver homepage.
+found in the links section of the Freecell Solver homepage:
+
+http://fc-solve.berlios.de/links.html#other_solvers
