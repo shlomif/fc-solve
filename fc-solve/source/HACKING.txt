@@ -39,49 +39,42 @@ Getting the test suite up and running
 
 These are instruction how to get the test suite up and running:
 
-1. Install the svn client.
+1. Install the dependencies: Subversion, CMake (2.6.3 or later only), make,
+gcc, g\++, valgrind, perl5 (at least perl-5.8.9, perl-5.10.0 or above is
+recommended),  
++
 +
 * On Debian: 
 +
-	    +# apt-get install subversion.+
+--------------------
+apt-get install subversion cmake make gcc g++ valgrind perl
+--------------------
++
+* On Mandriva:
++
+-------------------
+urpmi subversion cmake make gcc g++ valgrind perl perl-devel
+-------------------
 
-
-2. Install cmake (at least version 2.6.3):
-+
-* On Debian:
-+
-	+# apt-get install cmake+
-	+$ cmake --version # Make sure it's 2.6.3 or higher.+
-+
-
-3. Install make, gcc and other needed applications:
-+
-* On Debian:
-+
-    # apt-get install make gcc g++
-+
-(g++ is required by CMake even for ANSI C projects for some reason).
-
-4. Install valgrind
-+
-* On Debian:
-+
-    # apt-get install valgrind+
-
-5. Install perl (at least perl-5.8.9 - perl-5.10.0 or above is recommended).
-
-6. Install the dependencies of the test suite:
+2. Install the dependencies of the test suite:
 +
 * Download +local::lib+ from http://search.cpan.org/dist/local-lib/
 and follow the instructions to set it up.
 +
-* Restart bash
+* Restart bash (no need to restart the computer, just open a new terminal
+window).
++
+----------
+export PERL_MM_USE_DEFAULT=1
+perl -Mlocal::lib -MCPAN -e 'install Task::FreecellSolver::Testing'
+----------
 
-    $ export PERL_MM_USE_DEFAULT=1
-    $ perl -Mlocal::lib -MCPAN -e 'install Task::FreecellSolver::Testing'
-
-7. Install the development headers of 
+3. Install the development headers of 
 libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
++
+* On Mandriva:
++
+    # urpmi libtap-devel
 +
 * On Debian:
 
@@ -95,25 +88,24 @@ libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
 	# For CMake to find the TAP library.
 	$ echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bashrc
 +
-* On Mandriva:
 
-	# urpmi libtap-devel
+4. Check out the latest Freecell Solver sources:
++
+-------------------
+svn co https://svn.berlios.de/svnroot/repos/fc-solve/trunk/
+-------------------
 
-8. Check out the latest Freecell Solver sources:
+5. +$ cd trunk/fc-solve/source/+
 
-	$  svn co https://svn.berlios.de/svnroot/repos/fc-solve/trunk/
-
-9. +$ cd trunk/fc-solve/source/+
-
-10. Configure the Freecell Solver build
+6. Cnfigure the Freecell Solver build
 
 	$ ./Tatzer
 
-11. Build Freecell Solver:
+7. Build Freecell Solver:
 
 	$ make
 
-12. Test Freecell Solver:
+8. Test Freecell Solver:
 
 	$ make test
 
