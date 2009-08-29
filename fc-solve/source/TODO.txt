@@ -1,6 +1,10 @@
---- Pressing ---
+Pressing
+--------
 
---- Non-pressing ---
+None.
+
+Non-pressing
+------------
 
 * Experiment with getting rid of pointer to functions in the hash comparison
 functions. They may incur a large run-time overhead. (inspired by Linux
@@ -16,8 +20,8 @@ where the most important elements are at the first 32 bytes of the struct.
 suit, and to traverse only the possible parents or children based on the
 suit.
 
-* Do the test for SUSPEND_PROCESS (check_if_limits_exceeded() ) in only one 
-place. There isn't a need for it to be done in several places.
+* Do the test for +SUSPEND_PROCESS+ (+check_if_limits_exceeded()+ ) in only 
+one place. There isn't a need for it to be done in several places.
 
 * Experiment with using a union in the soft_thread to unify common elements
 that are used only by one of the scans.
@@ -27,7 +31,7 @@ that are used only by one of the scans.
 * Re-organize the source code to be more sensibly organized.
 
 * Experiment with using bit members for cards:
-    - http://en.wikipedia.org/wiki/Bit_field
+** http://en.wikipedia.org/wiki/Bit_field
 
 * Abstract away the move of a single card from one column to another
 in freecell.c.
@@ -43,7 +47,8 @@ in freecell.c.
 
 * In the states handling, there's still some room for pointer arithmetics.
 
---- Long-term ---
+Long-term
+---------
 
 * Code a generic tests grouping.
 
@@ -68,9 +73,10 @@ iterations limit.
 * Add a way to build the various libavl2 trees to be used as 
 positions/columns collections.
 
---- To be considered ---
+To be considered
+----------------
 
-* Make the code splint-clean. ( https://sourceforge.net/projects/splint/ )
+* Make the code https://sourceforge.net/projects/splint/[splint]-clean.
 
 * Write a multi-process client/server program.
 

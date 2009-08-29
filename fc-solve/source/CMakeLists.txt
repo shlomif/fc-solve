@@ -1,11 +1,13 @@
 INCLUDE( "${CMAKE_CURRENT_SOURCE_DIR}/Common.cmake" )
 
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 # This is the equivalent to perform a "make dist"/"make distdir" etc.
 SET(CPACK_PACKAGE_NAME "freecell-solver")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Freecell Solver")
 SET(CPACK_PACKAGE_VENDOR "Shlomi Fish")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
-SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
+SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.txt")
 
 # Process and extract the version number.
 FILE( READ "ver.txt" VERSION)
@@ -34,6 +36,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/lib(fcs|freecell-solver)\\\\.(a|la)$"
     "\\\\.so(\\\\.[0-9]+)*$"
     "/\\\\.svn/"
+    "\\\\.(pdf|fo)$"
     "/t/t/.*\\\\.exe$"
     "/t/Presets"
     "/CMakeCache\\\\.txt$"
@@ -495,12 +498,13 @@ INSTALL_MAN ("${CMAKE_CURRENT_BINARY_DIR}/fc-solve.6" 6)
 
 INSTALL(
     FILES
-        "AUTHORS"
-        "INSTALL"
-        "README"
+        "AUTHORS.txt"
+        "HACKING.txt"
+        "INSTALL.txt"
+        "README.txt"
         "README.win32.txt"
-        "TODO"
-        "USAGE"
+        "TODO.txt"
+        "USAGE.txt"
     DESTINATION
         "share/doc/freecell-solver/"
 )
@@ -551,6 +555,77 @@ ADD_CUSTOM_TARGET(
     boards
     DEPENDS ${BOARDS}
 )
+
+FIND_PACKAGE(Asciidoc)
+
+IF(ASCIIDOC_FOUND)
+    SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt" 
+        "README.txt" "USAGE.txt" "TODO.txt" 
+    )
+
+    SET (_pdf_targets)
+
+    FOREACH(_file ${_docfiles})
+        GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
+        SET(_in "${_file_we}")
+        SET(_out "${_file_we}.html")
+        # MESSAGE(STATUS "_in == <<${_in}>> _out == <<${_out}>>")
+
+        # -a toc 
+        ADD_CUSTOM_COMMAND(
+            OUTPUT "${_out}"
+            COMMAND ${ASCIIDOC_EXECUTABLE} 
+                -o ${_out} ${_file}
+            DEPENDS ${_file}
+            COMMENT "Asciidoc ${_in}"
+            )
+
+        SET(_docbook "${_file_we}.xml")
+
+        ADD_CUSTOM_COMMAND(
+            OUTPUT "${_docbook}"
+            COMMAND ${ASCIIDOC_EXECUTABLE} 
+                --backend=docbook -o ${_docbook} ${_file}
+            DEPENDS ${_file}
+            COMMENT "Asciidoc->DocBook ${_in}"
+            )
+
+        SET (_pdf "${_file_we}.pdf")
+
+        SET (target "${_file_we}_build")
+
+        ADD_CUSTOM_COMMAND(
+            OUTPUT "${_pdf}"
+            COMMAND docmake -v --make -o ${_pdf} pdf ${_docbook}
+            DEPENDS ${_docbook}
+            COMMENT "docmake to PDF"
+        )
+
+        ADD_CUSTOM_COMMAND(
+            OUTPUT ${_file_we}
+            COMMAND cp -f "${_file_we}.txt" ${_file_we}
+            DEPENDS "${_file_we}.txt"
+            COMMENT "copy AsciiDoc to non-\".txt\" file"
+        )
+    
+        ADD_CUSTOM_TARGET(${target} ALL echo -n
+            DEPENDS "${_out}" "${_docbook}" "${_file_we}"
+        )
+
+        ADD_CUSTOM_TARGET(${_in}_pdf echo -n
+            DEPENDS "${_pdf}"
+        )
+
+        LIST(APPEND _pdf_targets ${_in}_pdf)
+
+    ENDFOREACH(_file)
+
+    MESSAGE ("PDF_TARGETS == ${_pdf_targets}")
+    ADD_CUSTOM_TARGET("pdfs" echo -n
+        DEPENDS ${_pdf_targets}
+    )
+
+ENDIF(ASCIIDOC_FOUND)
 
 IF (FCS_WITH_TEST_SUITE)
     

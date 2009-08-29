@@ -2,54 +2,84 @@ Freecell Solver's Command-Line Syntax and Usage
 ===============================================
 
 
-1. The programs
----------------
+The programs
+------------
 
-Most command-line switches have two versions: a short POSIX one which
-is a dash followed by a letter; and a long GNU one which is two dashes
-followed by the command string. Note, that Freecell Solver does not
-support specifying more than one command letter after a dash, (e.g:
-"-sip"). Furthermore, a command that accepts a parameter, will require
-this parameter to be present in the next command-line argument, not in
-the GNU manner of "--command=option".
+Most command-line switches have two versions:
 
-I don't use getopt because I want Freecell Solver to be a pure ANSI C
-program, so I'm sorry for the inconvenience.
+* A short POSIX one which is a dash followed by a letter or a few. This option
+must come standalone and not clustered:  +-sam+ is not equivalent to 
+specifying +-s+, +-a+ and +-m+.
 
+* A long switch which is two dashes followed by the command string. For
+example: +--prelude+, +--st-name+.
 
-2. Getting Help
----------------
+If command line arguments have parameters, they are followed in separate
+parameters - Freecell Solver won't recognise an option preceded by an equal
+sign. +--st-name=myname+ is invalid - +--st-name myname+ is OK.
 
--h      --help
+Getting Help
+------------
 
-This option displays a help text on the screen. This help
-text summarizes the command-line options and their meaning, as well as
-the signal combinations that fc-solve accepts.
+-h , --help
+~~~~~~~~~~~~~~~
+
+This option displays a help text on the screen. This help gives a help
+display summarizing some ways to use the program and get more help.
 
 --version
+~~~~~~~~~
 
 This option displays the version number of the components that make
 the executable (and then exits).
 
-3. Output Options
------------------
+--help-configs
+~~~~~~~~~~~~~~
 
--p      --parseable-output
+Some help on the various configurations of Freecell Solver.
 
-This option will display the stacks in a format that can be more easily
+--help-options
+~~~~~~~~~~~~~~
+
+A help screen giving an overview of all available options.
+
+--help-real-help
+~~~~~~~~~~~~~~~~
+
+Explains how to change the default help screen to a different one.
+
+--help-short-sol
+~~~~~~~~~~~~~~~~
+
+How to generate shorter solutions.
+
+--help-summary
+~~~~~~~~~~~~~~
+
+The default help screen.
+
+Output Options
+--------------
+
+-p , --parseable-output
+~~~~~~~~~~~~~~~~~~~~~~~
+
+This option will display the columns in a format that can be more easily
 manipulated by text-processing programs such as grep or perl. Namely,
 The freecells will be displayed in one line, and the foundations in a
-separate line. Plus, Each stack will be displayed horizontally, in its
-own line, while beginning with a ":".
+separate line. Plus, Each column will be displayed horizontally, in its
+own line, while beginning with a +:+.
 
 
--t      --display-10-as-t
+-t , --display-10-as-t
+~~~~~~~~~~~~~~~~~~~~~~
 
-This option will display the 10 cards as a capital T instead of a 10.
+This option will display the 10 cards as a capital +T +instead of a +10+.
 Thus, the cards will be more properly aligned.
 
 
--c      --canonized-order-output
+-c , --canonized-order-output
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Freecell Solver re-arranges the stacks and freecells in a given state
 according to their first card. It keeps their actual position in a
@@ -59,7 +89,8 @@ One should be warned that that way the place of a given stack in the
 board will not be preserved throughout the solution.
 
 
--m      --display-moves
+-m , --display-moves
+~~~~~~~~~~~~~~~~~~~~
 
 This option will display the moves instead of the intermediate states.
 Each move will be displayed in a separate line, in a format that is
@@ -67,7 +98,8 @@ human-readable, but that can also be parsed and analyzed by a computer
 program with some effort on the programmer's part.
 
 
--sn     --standard-notation
+-sn , --standard-notation
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option will display the moves in standard notation in which every
 move consists of two characters and there are ten moves in a line. Naturally,
@@ -79,76 +111,80 @@ web-page:
 
 http://home.earthlink.net/~fomalhaut/freecell.html
 
--snx    --standard-notation-extended
+-snx , --standard-notation-extended
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This option is similar to the previous one, only that when a sequence
+This option is similar to the previous one, except that when a sequence
 move is made to an empty stack with more than one card in the sequence,
 the move will be followed with "v" and the number of cards moved in 
 hexadecimal.
 
--sam      --display-states-and-moves
+-sam , --display-states-and-moves
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option will display both the intermediate states and the moves that 
 are needed to move from one to another. The standard notation
 option applies to it to.
 
 
--pi       --display-parent-iter
+-pi , --display-parent-iter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option (assuming the -s and -i options are specified) will also
 display the iteration index of the state from which the current state
 was derived. This is especially useful for A* or BFS scans.
 
-4. Game Variants Options
-------------------------
+Game Variants Options
+---------------------
 
 
 --freecells-num [Number of Freecells]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies the number of freecells which are available to
 the program. Freecell Solver can use any number of freecells as long as
 it does not exceed its maximal number.
 
 This maximum is hard-coded into the program, and can be specified at
-compile-time by modifying the file "config.h". See the file INSTALL for
+compile-time by modifying the file +config.h+. See the file +INSTALL+ for
 details.
 
-
 --stacks-num [Number of Stacks]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies the number of stacks present in the board. Again,
 this number cannot exceed the maximal number of stacks, which can be
-specified in the file "config.h" during compile-time of Freecell
+specified in the file +config.h+ during compile-time of Freecell
 Solver.
 
-
 --decks-num [Number of Decks]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This options specifies how many decks are found in the board. This number
 cannot exceed the maximal number of decks, which can be specified in the
-file "config.h" during compile time of Freecell Solver.
-
+file +config.h+ during compile time of Freecell Solver.
 
 --sequences-are-built-by {suit|alternate_color|rank}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies whether a card sequence is built by suit or by
 alternate colour or by rank regardless of suit.
 
-
 --sequence-move {limited|unlimited}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies whether the sequence move is limited by the
 number of freecells or vacant stacks or not. 
 
 
 --empty-stacks-filled-by {kings|none|all}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies which cards can fill an empty stack.
 
 
---game [game]
---preset [game]
--g [game]
+--game [game] , --preset [game] , -g [game]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the type of game. Each preset implies several of the
 settings options above and sometimes even the tests order below. The
@@ -156,24 +192,27 @@ default configuration is for Freecell.
 
 Available presets:
 
-     bakers_dozen         - Baker's Dozen
-     bakers_game          - Baker's Game
-     beleaguered_castle   - Beleaguered Castle
-     citadel              - Citadel
-     cruel                - Cruel
-     der_katz             - Der Katzenschwanz
-     die_schlange         - Die Schlange
-     eight_off            - Eight Off
-     fan                  - Fan
-     forecell             - Forecell
-     freecell             - Freecell (default)
-     good_measure         - Good Measure
-     ko_bakers_game       - Kings' Only Baker's Game
-     relaxed_freecell     - Relaxed Freecell
-     relaxed_sehaven      - Relaxed Seahaven Towers
-     seahaven             - Seahaven Towers
-     simple_simon         - Simple Simon
-     streets_and_alleys   - Streets and Alleys
+[width="50%"]
+|================================================
+|+bakers_dozen+         |Baker's Dozen
+|+bakers_game+          |Baker's Game
+|+beleaguered_castle+   |Beleaguered Castle
+|+citadel+              |Citadel
+|+cruel+                |Cruel
+|+der_katz+             |Der Katzenschwanz
+|+die_schlange+         |Die Schlange
+|+eight_off+            |Eight Off
+|+fan+                  |Fan
+|+forecell+             |Forecell
+|+freecell+             |Freecell (default)
+|+good_measure+         |Good Measure
+|+ko_bakers_game+       |Kings' Only Baker's Game
+|+relaxed_freecell+     |Relaxed Freecell
+|+relaxed_sehaven+      |Relaxed Seahaven Towers
+|+seahaven+             |Seahaven Towers
+|+simple_simon+         |Simple Simon
+|+streets_and_alleys+   |Streets and Alleys
+|================================================
 
 Note: in order to solve Der Katzenschwanz and Die Schlange I recommend you
 compile Freecell Solver with the INDIRECT_STACK_STATES option, or else it will
@@ -182,31 +221,31 @@ consume much more memory. For details consult the file INSTALL.
 5. Solving Algorithm Options
 ----------------------------
 
--mi [Maximal number of iterations]
---max-iters [Maximal number of iterations]
+-mi [Iterations num] , --max-iters [Itearations num]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This parameter limits the maximal number of states to check. This will
 give a rough estimate on the time spent to solve a given board.
 
 
--md [Maximal depth]
---max-depth [Maximal depth]
+-md [Maximal depth] , --max-depth [Maximal depth]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Freecell Solver recurses into the solution. This parameter specifies a
 maximal recursion depth. Generally speaking, it's not a good idea to
 set it, because that way several important intermediate states become
 inaccessible.
 
--mss [Maximal States' Number]
---max-stored-states [Maximal States' Number]
+-mss [num] , --max-stored-states [num]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Limits the number of the states stored by the program in the computer's
 memory. This differs from the maximal number of iterations in the sense, that
 it is possible that a stored state was not checked yet.
 
 
--to [Test's Order]
---tests-order [Test's Order]
+-to [Test's Order] , --tests-order [Test's Order]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies the order in which Freecell Solver will try the
 different types of moves that it can perform. Each move is specified by
@@ -216,43 +255,39 @@ corresponding characters in the string.
 
 The tests along with their characters are:
 
-Freecell Tests:
-
-'0' - put top stack cards in the foundations.
-'1' - put freecell cards in the foundations.
-'2' - put freecell cards on top of stacks.
-'3' - put non-top stack cards in the foundations.
-'4' - move stack cards to different stacks.
-'5' - move stack cards to a parent card on the same stack.
-'6' - move sequences of cards onto free stacks.
-'7' - put freecell cards on empty stacks.
-'8' - move cards to a different parent.
-'9' - empty an entire stack into the freecells.
-
-Atomic Freecell Tests:
-
-'A' - move a stack card to an empty stack.
-'B' - move a stack card to a parent on a different stack.
-'C' - move a stack card to a freecell.
-'D' - move a freecell card to a parent.
-'E' - move a freecell card to an empty stack.
-
-
-Simple Simon Tests:
-
-'a' - move a full sequence to the foundations.
-'b' - move a sequence to a true parent of his. 
-'c' - move a whole stack sequence to a false parent (in order to clear 
-      the stack) 
-'d' - move a sequence to a true parent that has some cards above it. 
-'e' - move a sequence with some cards above it to a true parent. 
-'f' - move a sequence with a junk sequence above it to a true parent that 
-      has some cards above it. 
-'g' - move a whole stack sequence to a false parent which has some 
-      cards above it.
-'h' - move a sequence to a parent on the same stack.
-'i' - move any sequence to a false parent (using it may make the solution
+[width="80%",cols="1,10"]
+|====================================================
+2+|Freecell Tests:
+|'0' | put top stack cards in the foundations.
+|'1' | put freecell cards in the foundations.
+|'2' | put freecell cards on top of stacks.
+|'3' | put non-top stack cards in the foundations.
+|'4' | move stack cards to different stacks.
+|'5' | move stack cards to a parent card on the same stack.
+|'6' | move sequences of cards onto free stacks.
+|'7' | put freecell cards on empty stacks.
+|'8' | move cards to a different parent.
+|'9' | empty an entire stack into the freecells.
+2+|Atomic Freecell Tests:
+|'A' | move a stack card to an empty stack.
+|'B' | move a stack card to a parent on a different stack.
+|'C' | move a stack card to a freecell.
+|'D' | move a freecell card to a parent.
+|'E' | move a freecell card to an empty stack.
+2+|Simple Simon Tests:
+|'a' | move a full sequence to the foundations.
+|'b' | move a sequence to a true parent of his. 
+|'c' | move a whole stack sequence to a false parent (in order to clear the stack) 
+|'d' | move a sequence to a true parent that has some cards above it. 
+|'e' | move a sequence with some cards above it to a true parent. 
+|'f' | move a sequence with a junk sequence above it to a true parent that 
+has some cards above it. 
+|'g' | move a whole stack sequence to a false parent which has some 
+cards above it.
+|'h' | move a sequence to a parent on the same stack.
+|'i' | move any sequence to a false parent (using it may make the solution
 much slower).
+|=====================================================
 
 Manipulating the tests order can be very helpful to the quick solution
 of a given board. If you found that a certain board cannot be solved in
@@ -261,7 +296,7 @@ should try different tests' orders. Usually, one can find a test order
 that solves a board very quickly.
 
 Note that this test order usually makes sense only for the Depth-First 
-Search scans (see the "--method" option below).
+Search scans (see the +--method+ option below).
 
 Also note that Freecell tests are not suitable for solving Simple Simon games
 and Simple Simon tests are not suitable for solving anything except Simple
@@ -272,40 +307,41 @@ Tests can be grouped together into random groups using parenthesis
 only relevant to the Random DFS scan (see below).
 
 
--me [Solving Method]
---method [Solving Method]
+-me [Solving Method] , --method [Solving Method]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies the solving method that will be used to solve the
 board. Currently, the following methods are available:
 
-a-star     - An A* scan
-bfs        - A Breadth-First Search (or BFS) scan
-dfs        - A Depth-First Search (or DFS) scan
-random-dfs - A randomized DFS scan
-soft-dfs   - A "soft" DFS scan
+* +a-star+ - A A* scan
+* +bfs+ - A Breadth-First Search (or BFS) scan
+* +dfs+ - A Depth-First Search (or DFS) scan
+* +random-dfs+ - A randomized DFS scan
+* +soft-dfs+ - A "soft" DFS scan
 
-The difference between "dfs" and "soft-dfs" is that the soft DFS does not
-use procedural recursion but rather its own internal stack. "random-dfs" is
-similar to "soft-dfs" only it determines to which states to recurse into 
-randomly. Its behaviour will differ depending on the seed you supply to it.
-(see the "-seed" option below.)
+Starting from recent Freecell Solver versions there is no difference between
++dfs+ and +soft-dfs+. In earlier versions, use of +soft-dfs+ is recommended.
++random-dfs+ is similar to +soft-dfs+ only it determines to which states to
+recurse into randomly. Its behaviour will differ depending on the seed you
+supply to it.  (see the "-seed" option below.)
 
 BFS does not yield good results, and A* has a mixed behaviour, so for 
-the time being I recommend using either DFS or Soft-DFS.
+the time being I recommend using Soft-DFS or Andom-DFS.
 
 The Random-DFS scan processes every tests' random group, randomizes the
 states that it found and recurses into them one by one. Renegade tests
 that do not belong to any group, are processed in a non-random manner.
 
 
--asw [A* Weights]
---a-star-weight [A* Weights]
+-asw [A* Weights] , --a-star-weight [A* Weights]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specify weights for the A* scan, assuming it is used. The parameter
 should be a comma-separated list of numbers, each one is proportional
 to the weight of its corresponding test.
 
 The numbers are, in order:
+
 1. The number of cards out.
 2. The maximal sequence move.
 3. The number of cards under sequences.
@@ -316,21 +352,22 @@ The default weights are respectively: 0.5,0,0.3,0,0.2
 
 
 -seed [Seed Number]
+~~~~~~~~~~~~~~~~~~~
 
 Specifies a seed to be used by Freecell Solver's internal random number 
-generator. This seed may alter the behaviour and speed of the "random-dfs"
+generator. This seed may alter the behaviour and speed of the +random-dfs+
 scan.
 
 
--opt
---optimize-solution
+-opt , --optimize-solution
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option instructs Freecell Solver to try and optimize the solution
 path so it will have a smaller number of moves.
 
 
--opt-to [tests order]
---optimization-tests-order [tests order]
+-opt-to [tests order] , --optimization-tests-order [tests order]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This argument specifies the test order for the optimization scan, in case
 it should be different than an order that contains all the tests that were
@@ -338,6 +375,7 @@ used in all the normal scans.
 
 
 --reparent-states
+~~~~~~~~~~~~~~~~~
 
 This option specifies that states that were encountered whose depth in the
 states graph can be improved should be reparented to the new parent. This 
@@ -345,44 +383,42 @@ option can possibly make solutions shorter.
 
 
 --calc-real-depth
+~~~~~~~~~~~~~~~~~
 
-This option becomes effective only if --reparent-states is specified. What it
-does, is explicitly calculate the depth of the state by tracing its path
+This option becomes effective only if +--reparent-states+ is specified. What
+it does, is explicitly calculate the depth of the state by tracing its path
 to the initial state. This may make depth consideration more accurate.
 
 
-6. Running Several Scans in Parallel:
--------------------------------------
+Running Several Scans in Parallel
+---------------------------------
 
-Starting from Version 2.4.0, Freecell Solver can run several scans in 
+Starting from Version 2.4.0, Freecell Solver can run several scans in
 parallel on the same state collection. Each scan resides in its own
 "Soft Thread". By specifying several soft threads on the command line
-one can create use several parallel scans. Once one of the scans 
+one can create use several parallel scans. Once one of the scans
 reaches a solution, the solution will be displayed.
 
+-nst , --next-soft-thread
+~~~~~~~~~~~~~~~~~~~~~~~
 
--nst
---next-soft-thread
-
-This option creates a new soft-thread and let the other scan-specific options
-initialize it. For example:
+This option creates a new soft-thread and makes the following scan-specific
+options initialize it. For example:
 
 # fc-solve --method a-star -nst --method soft-dfs -to 0123467 myboard.txt
 
 will run an A* scan and a Soft-DFS scan with a tests order of 0123467 on
 myboard.txt.
 
-
--step [Number of Iterations in the Step]
---soft-thread-step [Number of Iterations in the Step]
+-step [Step] , --soft-thread-step [Step]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option will set the number of iterations with which to run the 
 soft thread before switching to the next one. By specifying a larger 
 step, one can give a certain scan a longer run-time and a higher priority.
 
-
--nht
---next-hard-thread
+-nht , --next-hard-thread
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This argument lets one initialize the next hard thread. If Freecell Solver was
 compiled with such support, then it is possible to run each hard thread in its
@@ -390,12 +426,14 @@ own system thread. Each hard-thread contains one or more soft threads.
 
 
 --st-name [soft thread name]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This argument sets the name used to identify the current soft thread. This name
 can later be used to construct the prelude (see below).
 
 
 --prelude [i1@st1{,i2@st2{,i3@st3...}}]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets the prelude for the hard thread. At the beginning of the search, the
 hard thread plays a static sequence of iterations at each of the soft threads
@@ -413,16 +451,17 @@ step number.
 
 
 --scans-synergy {none|dead-ends-mark}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the synergy between the various scans, or how much they cooperate
-between themselves. "none" means they do not cooperate and only share
-the same memory resources. "dead-end-marks" means they try to mark states
+between themselves. +none+ means they do not cooperate and only share
+the same memory resources. +dead-end-marks+ means they try to mark states
 that they have withdrawn from, and states whose all their derived states are 
 such, as "dead ends". This may or may not improve the speed of the solution.
 
 
--ni
---next-instance
+-ni , --next-instance
+~~~~~~~~~~~~~~~~~~~~
 
 This option allows to run two or more separate solvers one after the
 other. If the first one returned an unsolvable verdict, then the second
@@ -431,18 +470,20 @@ after a meta-moves scan, so we will always get an accurate verdict and
 still enjoy some of the speed of the meta-moves scan.
 
 
-7. Meta-Options
----------------
+Meta-Options
+------------
 
 
 --reset
+~~~~~~~
 
 This option resets the program to its initial state, losing all the
-logic that was inputted to it up to that state. Afterwards, it can
-be set to a different configuration, again.
+configuration logic that was inputted to it up to that state. Afterwards,
+it can be set to a different configuration, again.
 
 
---read-from-file [{num_skip},]filename
+--read-from-file [num_skip,]filename
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option will read the configuration options from a file. The format
 of the file is similar to that used by the UNIX Bourne Shell. (i.e:
@@ -453,8 +494,8 @@ The filename can be preceeded by an optional number of the arguments to
 skip followed by a comma. (the default is 0)
 
 
--l [preset]
---load-config [preset]
+-l [preset] , --load-config [preset]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Reads the configuration specified by [preset] and configures the solver
 accordingly. A preset is a set of command line arguments to be analyzed
@@ -467,34 +508,39 @@ for information about their format)
 
 Presets that are shipped with Freecell Solver:
 
-    abra-kadabra      - a meta-moves preset
-    cool-jives        - a meta-moves preset
-    crooked-nose      - an atomic-moves preset (guarantees an accurate verdict)
-    fools-gold        - an atomic-moves preset
-    good-intentions   - runs "cool-jives" and then "fools-gold"
-    gooey-unknown-thing - a meta-moves preset that aims to minimise the
-            outcome solution's length.
-    hello-world       - a meta-moves preset
-    john-galt-line    - a meta-moves preset
-    rin-tin-tin       - a meta-moves prese
-    sand-stone        - an atomic-moves preset that aims to minimise the
-            outcome solution's length.
-    slick-rock        - run "gooey-unknown-thing" and then "sand-stone"
-    the-last-mohican  - a preset for solving Simple Simon. Yields less
-            false negatives than the default one, but might be slower. 
-    toons-for-twenty-somethings - an atomic-moves preset that solves
+[width="50%"]
+|===================================================
+|+abra-kadabra+                |a meta-moves preset
+|+cool-jives+                  |a meta-moves preset
+|+crooked-nose+                |an atomic-moves preset (guarantees an 
+            accurate verdict)
+|+fools-gold+                  |an atomic-moves preset
+|+good-intentions+             |runs "cool-jives" and then "fools-gold"
+|+gooey-unknown-thing+         |a meta-moves preset that aims to minimise
+            the outcome solution's length.
+|+hello-world+                 |a meta-moves preset
+|+john-galt-line+              |a meta-moves preset
+|+rin-tin-tin+                 |a meta-moves prese
+|+sand-stone+                  |an atomic-moves preset that aims to
+            minimise the outcome solution's length.
+|+slick-rock+                  |run "gooey-unknown-thing" and then "sand-stone"
+|+the-last-mohican+            |a preset for solving Simple Simon. Yields
+            less false negatives than the default one, but might be slower. 
+|+toons-for-twenty-somethings+ |an atomic-moves preset that solves
             more boards efficiently than "fools-gold".
-    yellow-brick-road - a meta-moves preset
+|+yellow-brick-road+           |a meta-moves preset
+|====================================================
+
 
 They can be abbreviated into their lowercase acronym (i.e: "ak" or "rtt").
 
 
-8. Run-time Display Options
----------------------------
+Run-time Display Options
+------------------------
 
 
--i
---iter-output
+-i , --iter-output
+~~~~~~~~~~~~~~~~~~
 
 This option tells fc-solve to print the iteration number and the
 recursion depth of every state which is checked, to the standard
@@ -502,8 +548,8 @@ output. It's a good way to keep track of how it's doing, but the output
 slows it down a bit.
 
 
--s
---state-output
+-s , --state-output
+~~~~~~~~~~~~~~~~~~~
 
 This option implies -i. If specified, this option outputs the cards and 
 formation of the board itself, for every state that is checked. 
@@ -512,24 +558,24 @@ Freecell Solver, but you usually cannot make what is going on because
 it is so fast.
 
 
-9. Signal Combinations
-----------------------
+Signal Combinations
+-------------------
 
 If you are working on a UNIX or a similar system then you can set some
 run-time options in "fc-solve" by sending it some signal
 combinations.
 
 If you send the signal USR1, without sending any other signals before
-that, then "fc-solve" will output the present number of
+that, then +fc-solve+ will output the present number of
 iterations. This method is a good way to monitor an instance that takes
 a long time to solve.
 
-If you send it the signal USR2 and then USR1, then "fc-solve"
+If you send it the signal USR2 and then USR1, then +fc-solve+
 will print the iteration number and depth on every state that it
 checks. It is the equivalent of specifying (or unspecifying) the
 option -i/--iter-output.
 
-If you send it two USR2 signals and then USR1, then "fc-solve"
+If you send it two USR2 signals and then USR1, then +fc-solve+
 will also print the board of every state. Again, this will only be done
 assuming the iteration output is turned on.
 
