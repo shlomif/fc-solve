@@ -48,27 +48,27 @@ for Hearts, Spades, Diamonds and Clubs respectively).
 Here is an example board: (PySol board No. 24)
 
 -----------------------
-4S 2S 9S 8S QC 4C 2H
-5H QH 3S AS 3H 4H QD
-QS 9C 6H 9H 3C KC 3D
-5D 2C JS 5S JH 6D AC
-2D KD 10H 10S 10D 8D
-7H JC KH 10C KS 7S
-AH 5C 6C AD 8H JD
-7C 6S 7D 4D 8C 9D
+4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD 10H 10C 10D 8D
+7H JS KH 10S KC 7C
+AH 5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
 -----------------------
 
 And another one: (PySol board No. 198246790)
 
 -----------------------
-KD JH 5H 7D 9H KS 9D
+KD JH 5H 7D 9H KC 9D
 3H JD 5D 8H QH 7H 2D
-4D 3C QS 3S 6C QC KC
-10S 9C 6D 9S QD 8C 10D
-10C 8S 7C 10H 2S AC
-8D AS AH 4H JS 4S
-6H 7S 4C 5C 5S JC
-AD KH 6S 2H 3D 2C
+4D 3S QC 3C 6S QS KS
+10C 9S 6D 9C QD 8S 10D
+10S 8C 7S 10H 2C AS
+8D AC AH 4H JC 4C
+6H 7C 4S 5S 5C JS
+AD KH 6C 2H 3D 2S
 -----------------------
 
 You can specify the contents of the freecells by prefixing the line with
