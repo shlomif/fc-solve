@@ -85,3 +85,8 @@ and inspiring some past (and possibly future) work on optimising the
 length of the resultant solutions. He was given the honour of naming the
 "sand-stone" and "slick-rock" "-l" presets. Has his own solver for
 Freecell for DOS on his homepage.
+
+* *LECA Dimitri (Pythack)* ( http://pythack.com/ ) - tried to run the
+Freecell Solver test suite and benchmarks on Archlinux, reported some
+problems in the process. This in turn eventually made us simplify the process 
+and also uncovered some bugs in the dependencies.
