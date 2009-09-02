@@ -27,6 +27,7 @@ my $state_storage_libavl2_tree;
 my $stack_storage_libavl2_tree;
 my $without_flipping = 0;
 my $with_context_var = 1;
+my $max_bench_threads_num = 4;
 
 sub set_both
 {
@@ -129,6 +130,7 @@ GetOptions(
     'disable-simple-simon!' => \$no_simple_simon,
     'without-flip!' => \$without_flipping,
     'with-ctx-var!' => \$with_context_var,
+    'max-bench-threads-num=i' => \$max_bench_threads_num,
 ) or
     die "Wrong options";
 
@@ -148,6 +150,7 @@ unlink("CMakeCache.txt");
 my @cmd= ("cmake",
     "-DCMAKE_BUILD_TYPE=$build_type",
     "-DFCS_STATE_STORAGE=FCS_STATE_STORAGE_$state_storage",
+    "-DMAX_NUM_BENCHMARK_THREADS=$max_bench_threads_num",
     "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
     "-DCMAKE_INSTALL_PREFIX=$prefix",
     "-DDATADIR=$prefix/share",
