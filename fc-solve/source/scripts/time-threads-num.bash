@@ -42,6 +42,7 @@ fi
 export FREECELL_SOLVER_PRESETRC="$(ls $(pwd)/"$p_dir"/presetrc)"
 
 if $RUN_SERIAL ; then
+    echo "Testing Serial Run"
     ./freecell-solver-range-parallel-solve 1 32000 500 $ARGS > "$OUT_DIR"/dump
 fi
 
