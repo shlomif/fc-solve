@@ -15,24 +15,17 @@ http://fc-solve.berlios.de/ .
 
 2. Unpack and cd to the freecell-solver-* directory.
 
-3. Run +./Tatzer -l tt+.
+3. Run +./Tatzer -l tt --max-bench-threads-num=4+ , where 4 is the maximal
+number of threads you'd like to run which is a function of the number of
+processors/cores your computer has.
 
 4. Type +make+ to build everything.
 
-5. Run +bash scripts/time-threads-num.bash -s 2 $MAX_NUM_THREADS+ . 
-+
-The default for +$MAX_NUM_THREADS+ is 6, where 7 completely hogs my system. If 
-you have many CPUs and/or cores and you are confident that raising it will 
-not overload your system, you may try to raise it.
-+
-Running the benchmarking threads is better done when the computer is not 
-loaded.
+5. Type +make bench+.
 
-6. Wait.
-
-7. Type "perl scripts/time-fcs.pl dump DUMPS/*" and copy-and-paste the results 
-to the Freecell Solver developers with specifications of your computer that 
-are as detailed as possible.
+6. You can use +perl scripts/time-fcs.pl dump DUMPS/*+ and copy-and-paste the 
+results to the Freecell Solver developers with specifications of your computer 
+that are as detailed as possible.
 
 Getting the test suite up and running
 -------------------------------------
