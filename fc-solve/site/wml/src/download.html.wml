@@ -100,7 +100,10 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 <set-var %attributes />
 <tr>
 <td>
-<a href="<get-var fn />"><get-var fn /></a>
+<a href="docs/distro/<get-var fn />.html"><get-var fn /></a>
+</td>
+<td>
+<a href="<get-var fn />">Plaintext</a>
 </td>
 <td>
 <ifeq "<get-var desc />" "" "<get-var fn />" "<get-var desc />" />
