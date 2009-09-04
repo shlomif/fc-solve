@@ -115,6 +115,11 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 <h2 id="docs">Documents</h2>
 
 <table border="1" summary="Links on the left, short descriptions on the right">
+<tr>
+<th>HTML</th>
+<th>Plaintext</th>
+<th>Description</th>
+</tr>
 <document fn="README" desc="The &quot;Readme&quot; File" />
 <document fn="NEWS" desc="The file containing what's new in every release." />
 <document fn="USAGE" desc="A detailed usage document" />
