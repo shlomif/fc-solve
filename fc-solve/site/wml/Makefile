@@ -19,7 +19,9 @@ HTMLS = $(D)/index.html $(D)/links.html $(D)/download.html $(D)/don_woods.html $
 
 TTMLS = $(D)/style.css
 
-ARC_DOCS = $(D)/README $(D)/USAGE $(D)/ChangeLog $(D)/TODO $(D)/AUTHORS $(D)/NEWS
+DOCS_PROTO = README USAGE TODO AUTHORS NEWS
+ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
+DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
 INCLUDES_PROTO = std/logo.wml
 INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
@@ -28,7 +30,7 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 # the web-server now supports indexes.
 # SUBDIRS_WITH_INDEXES = $(WIN32_BUILD_SUBDIRS)
 #
-SUBDIRS = $(D) $(D)/docs $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/
+SUBDIRS = $(D) $(D)/docs $(D)/docs/distro $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
@@ -45,7 +47,7 @@ WML_FLAGS += --passoption=2,-X3074 \
 	$(LATEMP_WML_FLAGS) --passoption=3,-I../lib/ \
 	-I $${HOME}/apps/wml
 
-dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES)
+dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS)
 
 $(SUBDIRS) :: % : 
 	@if [ ! -e $@ ] ; then \
@@ -55,6 +57,9 @@ $(SUBDIRS) :: % :
 RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 
 $(ARC_DOCS) :: $(D)/% : ../../source/%
+	cp -f "$<" "$@"
+
+$(DOCS_HTMLS) :: $(D)/docs/distro/% : ../../source/%
 	cp -f "$<" "$@"
 
 $(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)

@@ -561,7 +561,7 @@ FIND_PACKAGE(Asciidoc)
 
 IF(ASCIIDOC_FOUND)
     SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt" 
-        "README.txt" "TODO.txt" "USAGE.txt" 
+        "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" 
     )
 
     SET (_pdf_targets)

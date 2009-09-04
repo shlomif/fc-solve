@@ -1,3 +1,9 @@
+Freecell Solver's News File
+===========================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2009-09-05
+:Revision: $Id$
+
 Version 2.34.0: (10-Jul-2009)
 -----------------------------
 
@@ -5,7 +11,7 @@ Version 2.34.0: (10-Jul-2009)
 file.
 
 2. Added the preset "toons-for-twenty-somethings".
-
++
 It is an atomic moves preset that can solve the MS 32K deals.
 
 3. Re-implemented the missing --next-instance/-ni flag.
@@ -98,7 +104,7 @@ made to use any of the trees provided by libavl2
 slower than libJudy and much slower than our own custom hash.
 
 3. Fixed the auto-moves calculation in fc_pro_iface.c .
-
++
 It was too pessimistic before, and had an off-by-one error. A card
 can be automatically moved if all foundations of opposite color are -2
 and the opposite foundation is -3.
@@ -115,7 +121,7 @@ and Makefile.lcc into Makefile.gnu. Which compiler can be specified using
 the Makefile.gnu COMPILER variable.
 
 7. Added the threaded_range_solver "--worker-step $N" argument.
-
++
 What is does is allow allocating uniform quotas to the different threads
 to process. So far increasing the quotas from 1 to 16 does not seem to improve
 the situation.
@@ -185,13 +191,13 @@ dynamically-growing arrays when necessary.
 flags.
 
 13. Added the following makefiles for alternative Linux compilers:
-
++
     - Makefile.icc
     - Makefile.tcc
     - Makefile.tendra
     - Makefile.lcc
     - Makefile.pcc
-
++
 So far only Intel's icc and TenDRA produce working executables that
 pass all the tests. The code had to be adapted to be compiled using TenDRA.
 
@@ -285,7 +291,7 @@ to 0.4 (the first release after the first initial release).
 The NSIS package is now built and installed properly.
 
 3. Fixed a bug with the recycling logic of the optimization thread.
-
++
 This influenced "freecell-solver-range-parallel-solve 1 2 1 -opt" among other
 things. In the process, I refactored the code a bit after trying to follow
 some false leads.
@@ -293,9 +299,8 @@ some false leads.
 4. Fixed the --prefix flag in ./configure to be treated as a string instead
 of a boolean.
 
-5. Fixed the running of the executables under a specified PREFIX:
-
-http://www.cmake.org/Wiki/CMake_RPATH_handling
+5. Fixed the running of the executables under a specified PREFIX 
+( http://www.cmake.org/Wiki/CMake_RPATH_handling )
 
 6. Minor changes to "README", "INSTALL" and "USAGE".
 
@@ -361,7 +366,7 @@ speed increase.
 
 3. Converted the identifiers from starting with freecell_solver_ to 
 starting with fc_solve_ , which is shorter and saner.
-
++
 freecell_solver_user_ is still used in the API in order to not break
 compatibility.
 
@@ -392,7 +397,7 @@ Version 2.8.0 ( 28-Sep-2002 )
 -----------------------------
 
 1. Better documentation and help screens. See: 
-
++
 http://freshmeat.net/articles/time-to-rethink-your-help-flag
 
 2. A preset system - see the "-l" flag in USAGE.
@@ -416,9 +421,9 @@ yields less interesting solutions.
 static order of quotas at the beginning of the scan for the participating
 soft threads. It makes constructing faster solving presets easier, especially
 after utilising this code:
-
++
 http://svn.berlios.de/viewcvs/fc-solve/trunk/fc-solve/presets/
-
++
 Also see the "--st-name" option.
 
 3. The PySol "Fan" game preset was added to make_pysol_freecell_board.py and
@@ -426,11 +431,12 @@ to Freecell Solver itself. Note that the game is played with 18
 columns/stacks , so Freecell Solver will usually need to be recompiled.
 
 4. Several other command line options:
++
     - "--reparent-states"
     - "--calc-real-depth"
     - "--optimization-tests-order"
     - "--scans-synergy"
-
++
 See the "USAGE" file for more information.
 
 5. The internal code has undergone several speed boosts that made Freecell
@@ -445,6 +451,7 @@ Version 2.4.0 ( 29-Mar-2002 )
 1. Now several scans are to operate on the same states' collection. This is 
 done using a mechanism called "soft threads", which is switched in user-land
 and does not require system multi-threading. In the file "USAGE" see:
++
     - "-nst"  / "--next-soft-thread"
     - "-nht"  / "--next-hard-thread"
     - "-step" / "--soft-thread-step"
@@ -458,6 +465,7 @@ Version 2.2.0 ( 18-Feb-2002 )
 
 2. Added manual pages symbolic links for the following command-line board
 generators:
++
     - make-gnome-freecell-board
     - make_pysol_freecell_board.py
     - make-aisleriot-freecell-board 
@@ -470,6 +478,7 @@ generators:
 5. The identifiers of the library are now all residing under freecell_solver_
 
 6. New flag:
++
     - "--max-stored-states"
 
 7. The package can now be built as an RPM for Red Hat Linux and compatible
