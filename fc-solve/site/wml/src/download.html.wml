@@ -96,25 +96,27 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 </ul>
 
 <define-tag document>
+<preserve fn desc />
+<set-var %attributes />
 <tr>
 <td>
-<a href="%0">%0</a>
+<a href="<get-var fn />"><get-var fn /></a>
 </td>
 <td>
-<ifeq "%1" "" "%0" "%1" />
+<ifeq "<get-var desc />" "" "<get-var fn />" "<get-var desc />" />
 </td>
 </tr>
+<restore fn desc />
 </define-tag>
 
 <h2 id="docs">Documents</h2>
 
 <table border="1" summary="Links on the left, short descriptions on the right">
-<document "README" "The &quot;Readme&quot; File" />
-<document "ChangeLog" "The changes log" />
-<document "NEWS" "The file containing what's new in every release." />
-<document "USAGE" "A detailed usage document" />
-<document "TODO" "The todo list" />
-<document "AUTHORS" "List of authors and contributors" />
+<document fn="README" desc="The &quot;Readme&quot; File" />
+<document fn="NEWS" desc="The file containing what's new in every release." />
+<document fn="USAGE" desc="A detailed usage document" />
+<document fn="TODO" desc="The todo list" />
+<document fn="AUTHORS" desc="List of authors and contributors" />
 </table>
 
 <undef document />
