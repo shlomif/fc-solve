@@ -80,6 +80,37 @@ own line, while beginning with a +:+.
 This option will display the 10 cards as a capital +T +instead of a +10+.
 Thus, the cards will be more properly aligned.
 
+For example, here is a command line using +-p+ and +-t+:
+
+---------------------
+$ pi-make-microsoft-freecell-board 24 | fc-solve -p -t
+-=-=-=-=-=-=-=-=-=-=-=-
+
+Foundations: H-0 C-0 D-0 S-0 
+Freecells:                   
+: 4C 2C 9C 8C QS 4S 2H       
+: 5H QH 3C AC 3H 4H QD       
+: QC 9S 6H 9H 3S KS 3D       
+: 5D 2S JC 5C JH 6D AS
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S 9D
+
+
+====================
+
+Foundations: H-0 C-0 D-0 S-A
+Freecells:
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S 9D
+---------------------
 
 -c , --canonized-order-output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -100,6 +131,22 @@ Each move will be displayed in a separate line, in a format that is
 human-readable, but that can also be parsed and analyzed by a computer
 program with some effort on the programmer's part.
 
+For example:
+
+----------------------
+$ pi-make-microsoft-freecell-board 24 | fc-solve -m | head -30                                                                     
+-=-=-=-=-=-=-=-=-=-=-=-                                                         
+
+Move a card from stack 3 to the foundations
+
+====================
+
+Move a card from stack 6 to freecell 0
+
+====================
+
+Move a card from stack 6 to freecell 1
+----------------------
 
 -sn , --standard-notation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -129,6 +176,58 @@ This option will display both the intermediate states and the moves that
 are needed to move from one to another. The standard notation
 option applies to it to.
 
+--------------------------------
+$ pi-make-microsoft-freecell-board 24 | fc-solve -sam -p -t | head -50                                                             
+-=-=-=-=-=-=-=-=-=-=-=-                                                         
+
+Foundations: H-0 C-0 D-0 S-0 
+Freecells:                   
+: 4C 2C 9C 8C QS 4S 2H       
+: 5H QH 3C AC 3H 4H QD       
+: QC 9S 6H 9H 3S KS 3D       
+: 5D 2S JC 5C JH 6D AS       
+: 2D KD TH TC TD 8D          
+: 7H JS KH TS KC 7C          
+: AH 5S 6S AD 8H JD          
+: 7S 6C 7D 4D 8S 9D          
+
+
+====================
+
+Move a card from stack 3 to the foundations
+
+Foundations: H-0 C-0 D-0 S-A 
+Freecells:                   
+: 4C 2C 9C 8C QS 4S 2H       
+: 5H QH 3C AC 3H 4H QD       
+: QC 9S 6H 9H 3S KS 3D       
+: 5D 2S JC 5C JH 6D          
+: 2D KD TH TC TD 8D          
+: 7H JS KH TS KC 7C          
+: AH 5S 6S AD 8H JD          
+: 7S 6C 7D 4D 8S 9D
+
+
+====================
+
+Move a card from stack 6 to freecell 0
+
+Foundations: H-0 C-0 D-0 S-A
+Freecells:  JD
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H
+: 7S 6C 7D 4D 8S 9D
+
+
+====================
+
+Move a card from stack 6 to freecell 1
+--------------------------------
 
 -pi , --display-parent-iter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -140,7 +239,6 @@ was derived. This is especially useful for A* or BFS scans.
 Game Variants Options
 ---------------------
 
-
 --freecells-num [Number of Freecells]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -149,8 +247,8 @@ the program. Freecell Solver can use any number of freecells as long as
 it does not exceed its maximal number.
 
 This maximum is hard-coded into the program, and can be specified at
-compile-time by modifying the file +config.h+. See the file +INSTALL+ for
-details.
+compile-time by modifying the file +config.h+. See the file +INSTALL+ 
+(or alternatively +INSTALL.html+) for details.
 
 --stacks-num [Number of Stacks]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
