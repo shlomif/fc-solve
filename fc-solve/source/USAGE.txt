@@ -348,7 +348,7 @@ $ fc-solve -g freecell --sequences-are-built-by rank --sequence-move unlimited
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This parameter limits the maximal number of states to check. This will
-give a rough estimate on the time spent to solve a given board.
+give a rough limit on the time spent to solve a given board.
 
 
 -md [Maximal depth] , --max-depth [Maximal depth]
@@ -356,7 +356,7 @@ give a rough estimate on the time spent to solve a given board.
 
 Freecell Solver recurses into the solution. This parameter specifies a
 maximal recursion depth. Generally speaking, it's not a good idea to
-set it, because that way several important intermediate states become
+set it, because that way several important intermediate states may become
 inaccessible.
 
 -mss [num] , --max-stored-states [num]
@@ -418,8 +418,8 @@ after a long time or in a certain maximal number of iterations, you
 should try different tests' orders. Usually, one can find a test order
 that solves a board very quickly.
 
-Note that this test order usually makes sense only for the Depth-First 
-Search scans (see the +--method+ option below).
+Note that this test order usually makes sense only for the Soft-DFS
+and Random DFS scans (see the +--method+ option below).
 
 Also note that Freecell tests are not suitable for solving Simple Simon games
 and Simple Simon tests are not suitable for solving anything except Simple
@@ -436,7 +436,7 @@ only relevant to the Random DFS scan (see below).
 This option specifies the solving method that will be used to solve the
 board. Currently, the following methods are available:
 
-* +a-star+ - A A* scan
+* +a-star+ - A Best-First-Search scan (not "A*" as it was once thought to be)
 * +bfs+ - A Breadth-First Search (or BFS) scan
 * +dfs+ - A Depth-First Search (or DFS) scan
 * +random-dfs+ - A randomized DFS scan
@@ -448,7 +448,7 @@ Starting from recent Freecell Solver versions there is no difference between
 recurse into randomly. Its behaviour will differ depending on the seed you
 supply to it.  (see the "-seed" option below.)
 
-BFS does not yield good results, and A* has a mixed behaviour, so for 
+BFS does not yield good results, and +a-star+ has a mixed behaviour, so for 
 the time being I recommend using Soft-DFS or Andom-DFS.
 
 The Random-DFS scan processes every tests' random group, randomizes the
@@ -459,9 +459,9 @@ that do not belong to any group, are processed in a non-random manner.
 -asw [A* Weights] , --a-star-weight [A* Weights]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Specify weights for the A* scan, assuming it is used. The parameter
-should be a comma-separated list of numbers, each one is proportional
-to the weight of its corresponding test.
+Specify weights for the +a-star+ (= "Best-First Search") scan, assuming it is 
+used. The parameter should be a comma-separated list of numbers, each one is 
+proportional to the weight of its corresponding test.
 
 The numbers are, in order:
 
@@ -477,7 +477,7 @@ The default weights are respectively: 0.5,0,0.3,0,0.2
 -seed [Seed Number]
 ~~~~~~~~~~~~~~~~~~~
 
-Specifies a seed to be used by Freecell Solver's internal random number 
+Specifies a seed to be used by Freecell Solver's internal random number
 generator. This seed may alter the behaviour and speed of the +random-dfs+
 scan.
 
@@ -528,7 +528,9 @@ reaches a solution, the solution will be displayed.
 This option creates a new soft-thread and makes the following scan-specific
 options initialize it. For example:
 
-# fc-solve --method a-star -nst --method soft-dfs -to 0123467 myboard.txt
+----------------------
+$ fc-solve --method a-star -nst --method soft-dfs -to 0123467 myboard.txt
+----------------------
 
 will run an A* scan and a Soft-DFS scan with a tests order of 0123467 on
 myboard.txt.
@@ -565,7 +567,9 @@ specified in the prelude, for the number of iterations specified.
 For example, if you had three soft threads named "foo", "bar" and "rin", then
 the following prelude:
 
-    --prelude 500@foo,1590@bar,100@foo,200@rin
+------------
+--prelude 500@foo,1590@bar,100@foo,200@rin
+------------
 
 Will run 500 iterations in "foo", then 1590 in "bar", then 100 in "foo" again,
 and then 200 in "rin". After the prelude finishes, the hard thread would
