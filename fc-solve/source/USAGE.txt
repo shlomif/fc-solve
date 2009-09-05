@@ -262,8 +262,8 @@ Solver.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This options specifies how many decks are found in the board. This number
-cannot exceed the maximal number of decks, which can be specified in the
-file +config.h+ during compile time of Freecell Solver.
+cannot exceed the maximal number of decks, which can be specified by the
+Freecell Solver build system.
 
 --sequences-are-built-by {suit|alternate_color|rank}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -318,6 +318,28 @@ Available presets:
 Note: in order to solve Der Katzenschwanz and Die Schlange I recommend you
 compile Freecell Solver with the INDIRECT_STACK_STATES option, or else it will
 consume much more memory. For details consult the file INSTALL.
+
+Examples
+~~~~~~~~
+
+To solve PySol Eight Off game No. 1,000 type:
+
+-----------------------
+$ make_pysol_freecell_board.py 1000 eight_off | fc-solve -g eight_off
+-----------------------
+
+To solve PySol Baker's Game No. 50, type:
+
+-----------------------
+$ make_pysol_freecell_board.py 50 bakers_game | fc-solve -g bakers_game
+-----------------------
+
+If you want to solve a game similar to Freecell only with sequences built
+by rank, and unlimited sequence move, do:
+
+------------------------------------------
+$ fc-solve -g freecell --sequences-are-built-by rank --sequence-move unlimited
+------------------------------------------
 
 5. Solving Algorithm Options
 ----------------------------
