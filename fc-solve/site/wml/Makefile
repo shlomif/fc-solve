@@ -82,8 +82,8 @@ $(TTMLS) :: $(D)/% : src/%.ttml
 $(INDEXES) :: $(D)/%/index.html : src/% gen_index.pl
 	perl gen_index.pl $< $@
 
-upload:
+upload: all
 	cd $(D) && $(RSYNC) * shlomif@shell.berlios.de:/home/groups/fc-solve/htdocs/
 
-upload_temp:
+upload_temp: all
 	cd $(D) && $(RSYNC) -a --inplace * $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp/
