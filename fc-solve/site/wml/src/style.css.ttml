@@ -81,5 +81,16 @@ div.indent { margin-left : 3em }
 {
     margin-top: 0.5em;
 }
+table.downloads
+{
+    border: #444 medium solid;
+}
+.downloads td, .downloads th
+{
+    vertical-align: top;
+    padding: 0.2em 0.2em 0.2em 0.2em;
+    border: #666 thin solid;
+}
+
 [% INCLUDE "shlomif/note.ttml" %]
 [% PROCESS "shlomif/common_defs.ttml" %]

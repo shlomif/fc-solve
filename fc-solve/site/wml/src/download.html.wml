@@ -28,7 +28,7 @@ large number of Solitaire variants.
 
 <h2 id="latest-stable">Latest Stable Versions</h2>
 
-<table border="1" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
+<table class="downloads" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
 <tr>
 <td>
 # <a href="http://www.shlomifish.org/Files/files/code/fcs/freecell-solver-2.32.1.tar.bz2">freecell-solver-2.32.1.tar.bz2</a>
@@ -63,7 +63,7 @@ A link to an "apt"-able Debian Package in the Debian pool of packages.
 
 <h2 id="devel-versions">Development Versions</h2>
 
-<table border="1" summary="The Development Version for Freecell Solver. Link for download is on the left; Description is on the right.">
+<table class="downloads" summary="The Development Version for Freecell Solver. Link for download is on the left; Description is on the right.">
 
 <tr>
 <td>
@@ -114,7 +114,7 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 
 <h2 id="docs">Documents</h2>
 
-<table border="1" summary="Links on the left, short descriptions on the right">
+<table class="downloads" summary="Links on the left, short descriptions on the right">
 <tr>
 <th>HTML</th>
 <th>Plaintext</th>
@@ -132,7 +132,7 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 
 <h2 id="utils">Utility Programs</h2>
 
-<table border="1" summary="Utility programs and patches for use within various Solitaire Implementations. Links are on the left; descriptions are on the right.">
+<table class="downloads" summary="Utility programs and patches for use within various Solitaire Implementations. Links are on the left; descriptions are on the right.">
 <tr>
 <td>
 <a href="palm_patience_getgame.tar.gz">palm_patience_getgame.tar.gz</a>
@@ -175,7 +175,7 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 </tr>
 </define-tag>
 
-<table border="1" summary="Older versions of Freecell Solver. In decreasing version number.">
+<table class="downloads" summary="Older versions of Freecell Solver. In decreasing version number.">
 <set-var download_suffix="bz2" />
 <ver "2.32" "1" />
 <ver "2.30" "0" />
