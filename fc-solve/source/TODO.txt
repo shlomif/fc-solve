@@ -7,7 +7,9 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-None.
+* Create a meaningful man-page from +README.xml+ / +USAGE.xml+ etc.
+
+* Add some command line examples to +USAGE.txt+ .
 
 Non-pressing
 ------------
