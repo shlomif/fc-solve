@@ -415,6 +415,15 @@ to know which solving library it uses and whether it is original. The
 web-site is short on details.
 </p>
 </li>
+
+<li>
+<p>
+<a href="http://broadcast.oreilly.com/2009/01/january-column-graph-algorithm.html">Algorithm to Solve FreeCell Solitaire Games</a> - George T. Heineman's
+step-by-step tutorial on O'Reilly-Net about how to construct a solver for 
+Freecell in Java.
+</p>
+</li>
+
 </ul>
 
 <h2 id="reviews">Reviews of Freecell Solver</h2>
