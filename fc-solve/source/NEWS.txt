@@ -277,7 +277,7 @@ possibly other systems).
 
 4. Converted the package from the Public Domain to the MIT/X11 Licence
 ( http://en.wikipedia.org/wiki/MIT_License ). This change was done due to
-the many problems with licensing source under the public domain:
+the many problems with licensing source code under the public domain:
 
     - http://linuxmafia.com/faq/Licensing_and_Law/public-domain.html
 
