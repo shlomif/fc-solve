@@ -1,0 +1,15 @@
+#include '../template.wml'
+<latemp_subject "Freecell Solver Support" />
+
+<h2 id="bugs">Report Bugs</h2>
+
+<p>
+One can report bugs on the
+<a href="http://developer.berlios.de/bugs/?group_id=66">Berlios.de 
+Bug-tracker</a> (which requires to register and login at Berlios.de),
+on <a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/">the
+fc-solve-discuss mailing list</a> (at YahooGroups - may require registration),
+or <a href="http://www.shlomifish.org/me/contact-me/">directly 
+to the maintainer</a> in many online ways.
+</p>
+

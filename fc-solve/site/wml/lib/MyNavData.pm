@@ -94,6 +94,11 @@ my $tree_contents =
             'title' => "What is the current status of Freecell Solver? Is it dead?",
         },
         {
+            'text' => "Support",
+            'url' => "support.html",
+            'title' => "Report bugs, get help and get other support",
+        },
+        {
             'text' => "Give or Get Academic Credit",
             'url' => "getting-credit.html",
             'title' => ("Getting or Giving Academic Credit for " . 
