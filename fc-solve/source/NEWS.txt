@@ -564,7 +564,7 @@ Version 1.0.0 ( 19-Nov-2000 )
 
 2. Can be compiled so it will be less memory intensive (INDIRECT_STACK_STATES).
 
-3. There's an API for use by third-party developers. It suports
+3. There's an API for use by third-party developers. It supports
 suspending a solution process and resuming it from its last position.
 
 4. Several random bug-fixes.
