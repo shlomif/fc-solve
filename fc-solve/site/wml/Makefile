@@ -15,7 +15,7 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
 
-HTMLS = $(D)/index.html $(D)/links.html $(D)/download.html $(D)/support.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html $(D)/current-status.html $(D)/getting-credit.html $(D)/verify-code/index.html
+HTMLS = $(D)/code-of-conduct/index.html $(D)/index.html $(D)/links.html $(D)/download.html $(D)/support.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html $(D)/current-status.html $(D)/getting-credit.html $(D)/verify-code/index.html
 
 TTMLS = $(D)/style.css
 
@@ -30,7 +30,7 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 # the web-server now supports indexes.
 # SUBDIRS_WITH_INDEXES = $(WIN32_BUILD_SUBDIRS)
 #
-SUBDIRS = $(D) $(D)/docs $(D)/docs/distro $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/
+SUBDIRS = $(D) $(D)/code-of-conduct $(D)/docs $(D)/docs/distro $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
