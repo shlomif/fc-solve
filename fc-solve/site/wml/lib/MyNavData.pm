@@ -99,6 +99,11 @@ my $tree_contents =
             'title' => "Report bugs, get help and get other support",
         },
         {
+            'text' => "Code of Conduct",
+            'url' => "code-of-conduct/",
+            'title' => "Code of Conduct and Diversity Statement",
+        },
+        {
             'text' => "Give or Get Academic Credit",
             'url' => "getting-credit.html",
             'title' => ("Getting or Giving Academic Credit for " . 
