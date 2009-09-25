@@ -80,5 +80,7 @@ td { vertical-align : top; }
 </latemp_extra_head_elements>
 
 <latemp_after_body>
+<br />
+<br />
 <share_this_button />
 </latemp_after_body>

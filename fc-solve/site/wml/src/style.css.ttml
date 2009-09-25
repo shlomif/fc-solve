@@ -91,6 +91,20 @@ table.downloads
     padding: 0.2em 0.2em 0.2em 0.2em;
     border: #666 thin solid;
 }
-
+.stop
+{
+    padding: 0.5em;
+    background-color: #FFD2D2;
+}
+.stop img.sign
+{
+    float: left;
+    margin: 1em;
+}
+.stop h2
+{
+    overflow: hidden;
+    background-color: transparent;
+}
 [% INCLUDE "shlomif/note.ttml" %]
 [% PROCESS "shlomif/common_defs.ttml" %]

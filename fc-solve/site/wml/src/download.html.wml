@@ -10,6 +10,10 @@
 <a href="http://download.berlios.de/fc-solve/%0">%0</a>
 </define-tag>
 
+<define-tag download_stop>
+<div class="stop">
+<img src="$(ROOT)/images/Stop_hand_nuvola.png" class="sign" alt="Stop Sign" />
+
 <h2 id="download-gui-instead">Stop! Don't you want a Graphical Interface?</h2>
 
 <p>
@@ -25,6 +29,10 @@ Of these I can recommend <a href="http://pysolfc.sourceforge.net/">PySolFC</a>
 which is open-source, cross-platform, configurable and supports a very
 large number of Solitaire variants.
 </p>
+</div>
+</define-tag>
+
+<download_stop />
 
 <h2 id="latest-stable">Latest Stable Versions</h2>
 
