@@ -93,6 +93,7 @@ table.downloads
 }
 .stop
 {
+    border: solid medium #880000;
     padding: 0.5em;
     background-color: #FFD2D2;
 }
