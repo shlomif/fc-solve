@@ -90,3 +90,8 @@ Freecell for DOS on his homepage.
 Freecell Solver test suite and benchmarks on Archlinux, reported some
 problems in the process. This in turn eventually made us simplify the process 
 and also uncovered some bugs in the dependencies.
+
+* http://commons.wikimedia.org/wiki/User:Stannered - created
+http://commons.wikimedia.org/wiki/File:Stop_hand_nuvola.svg[The stop sign
+that we use on the download page], which is under the Creative Commons
+Attribution ShareAlike licence. Thanks!
