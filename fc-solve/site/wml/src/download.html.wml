@@ -17,18 +17,20 @@
 <h2 id="download-gui-instead">Stop! Don't you want a Graphical Interface?</h2>
 
 <p>
-Freecell Solver is essentially a library that is accompanied by several
-command-line programs. If you prefer a more graphical program with a convenient
+Freecell Solver is <b>not</b> a graphical program, and is instead oriented
+towards software developers and users of the UNIX/Linux or Windows command 
+lines. If you prefer a graphical program with a convenient
 interface and animating the solution look at the
-<a href="$(ROOT)/links.html#front_ends">graphical front-ends</a> that people
-have prepared.
+<a href="$(ROOT)/links.html#front_ends"><b>graphical front-ends</b></a> for
+Freecell Solver that people have prepared.
 </p>
 
 <p>
-Of these I can recommend <a href="http://pysolfc.sourceforge.net/">PySolFC</a>
+Of these we can recommend <a href="http://pysolfc.sourceforge.net/">PySolFC</a>
 which is open-source, cross-platform, configurable and supports a very
 large number of Solitaire variants.
 </p>
+
 </div>
 </define-tag>
 
