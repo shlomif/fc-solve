@@ -1,6 +1,11 @@
 #include '../template.wml'
+#include "fcs-distribution-docs.wml"
 
 <latemp_subject "Freecell Solver - Documentation" />
+
+<h2 id="distributed-docs">Distributed Documents</h2>
+
+<fcs_distribution_documents />
 
 <h2>Documents of the Code</h2>
 

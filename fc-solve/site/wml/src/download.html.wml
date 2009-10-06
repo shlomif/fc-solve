@@ -1,4 +1,5 @@
 #include '../template.wml'
+#include "fcs-distribution-docs.wml"
 
 <latemp_subject "Download Freecell Solver" />
 
@@ -105,40 +106,9 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 
 </ul>
 
-<define-tag document>
-<preserve fn desc />
-<set-var %attributes />
-<tr>
-<td>
-<a href="$(ROOT)/docs/distro/<get-var fn />.html"><get-var fn /></a>
-</td>
-<td>
-<a href="<get-var fn />">Plaintext</a>
-</td>
-<td>
-<ifeq "<get-var desc />" "" "<get-var fn />" "<get-var desc />" />
-</td>
-</tr>
-<restore fn desc />
-</define-tag>
-
 <h2 id="docs">Documents</h2>
 
-<table class="downloads" summary="Links on the left, short descriptions on the right">
-<tr>
-<th>HTML</th>
-<th>Plaintext</th>
-<th>Description</th>
-</tr>
-<document fn="README" desc="The &quot;Readme&quot; File" />
-<document fn="NEWS" desc="The file containing what's new in every release." />
-<document fn="USAGE" desc="A detailed usage document" />
-<document fn="TODO" desc="The todo list" />
-<document fn="AUTHORS" desc="List of authors and contributors" />
-</table>
-
-<undef document />
-
+<fcs_distribution_documents />
 
 <h2 id="utils">Utility Programs</h2>
 
