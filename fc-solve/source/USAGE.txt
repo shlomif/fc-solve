@@ -18,8 +18,8 @@ specifying +-s+, +-a+ and +-m+.
 example: +--prelude+, +--st-name+.
 
 If command line arguments have parameters, they are followed in separate
-parameters - Freecell Solver won't recognise an option preceded by an equal
-sign. +--st-name=myname+ is invalid - +--st-name myname+ is OK.
+parameters - Freecell Solver won't recognise a parameter preceded by an equal
+sign. +--st-name=myname+ is invalid, while +--st-name myname+ is OK.
 
 Getting Help
 ------------
