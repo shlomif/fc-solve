@@ -91,7 +91,7 @@ svn co https://svn.berlios.de/svnroot/repos/fc-solve/trunk/
 
 5. +$ cd trunk/fc-solve/source/+
 
-6. Cnfigure the Freecell Solver build
+6. Configure the Freecell Solver build
 
 	$ ./Tatzer
 
