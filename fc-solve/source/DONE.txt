@@ -14,3 +14,7 @@ sfs_check_state_end() ) to functions, and see if it actually makes it faster.
 * Make sure that "rpmbuild -tb freecell-solver....tar.bz2" works.
 Right now, it only works if the .tar.gz is present.
 
+* Experiment with getting rid of pointer to functions in the hash comparison
+functions. They may incur a large run-time overhead. (inspired by Linux
+kernel patterns from LWN.net).
+
