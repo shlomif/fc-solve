@@ -103,3 +103,30 @@ svn co https://svn.berlios.de/svnroot/repos/fc-solve/trunk/
 
 	$ make test
 
+Style Guidelines
+----------------
+
+Freecell Solver uses its own style based on the preferences of its primary
+author (Shlomi Fish). Some guidelines for the style will be given here.
+
+4 Spaces for Indentation
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Freecell Solver source code should be kept free of horizontal
+tabs (\t, HT, \x09) and use spaces alone. Furthermore, there should be
+a 4 wide space indentation inside blocks:
+
+----------------
+if (COND())
+{
+    int i;
+
+    printf("%s\n", "COND() is successful!");
+
+    for (i=0 ; i < 10 ; i++)
+    {
+        ...
+    }
+}
+----------------
+
