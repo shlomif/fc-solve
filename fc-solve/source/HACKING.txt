@@ -178,3 +178,51 @@ for(dc=0;dc<c-1;dc++)
 
 +TODO: Fill in+
 
+Identifier Naming Conventions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here are some naming conventions for identifiers:
+
+1. Please do not use capital letters (including not +CamelCase+) - use
+all lowercase letters with words separated by underscores. Remember, C is 
+case sensitive.
+
+2. Note, however, that comments should be phrased in proper English, with
+proper Capitalization and distinction between uppercase and lowercase
+letters. So should the rest of the Freecell Solver internal and external
+documentation.
+
+3. Some commonly used abbreviations:
+
+----------------
+max - maximum
+num - numbers
+cols - columns
+dest - destination
+src - source
+ds - dest stack
+stack - usually the source stack
+ptr - pointer
+val - value
+c - the card index/position within the column
+----------------
+
+Don't comment-out - use #if 0 to temporarily remove code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Code should not be commented-out using gigantic +/* ... */+ comments. Instead,
+it should be out-blocked using +#if 0...#endif+.
+
+In Perl code one can use the following POD paradigm to remove a block of
+code:
+
+----------------
+=begin Comment
+
+Code here.
+
+=end Comment
+
+=cut
+----------------
+
