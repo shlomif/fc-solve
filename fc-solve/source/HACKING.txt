@@ -130,3 +130,34 @@ if (COND())
 }
 ----------------
 
+Curly Braces Alignment
+~~~~~~~~~~~~~~~~~~~~~~
+
+The opening curly brace of an if-statement or a for-statement should be
+placed below the statement on the same level as the other line, and the
+inner block indented by 4 spaces. A good example can be found in the previous
+section. Here are some bad examples:
+
+----------------
+if ( COND() ) {
+    /* Bad because the opening brace is on the same line.
+}
+----------------
+
+----------------
+if ( COND() )
+    {
+    /* Bad because the left and right braces are indented along with 
+    the block. */
+    printf(....)
+    }
+----------------
+
+----------------
+/* GNU Style - fear and loathing. */
+if ( COND() )
+  {
+    printf(....)  
+  }
+----------------
+
