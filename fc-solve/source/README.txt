@@ -15,7 +15,14 @@ Freecell Solver is distributed under the MIT/X11 License
 ( http://en.wikipedia.org/wiki/MIT_License ), a free, permissive, 
 public-domain like, open-source license.
 
-I hope you'll enjoy using it, and make the best of it.
+Note that the Freecell Solver source and Win32 binary distributions *do not*
+provide a graphical user-interface (GUI) and are primarily meant to be used
+by Solitaire researchers and software developers. If you're looking for a
+suitable GUI based on Freecell Solver, see our links at:
+
+http://fc-solve.berlios.de/links.html#front_ends
+
+I hope you'll enjoy using Freecell Solver, and make the best of it.
 
 -- Shlomi Fish ( http://www.shlomifish.org/ )
 
@@ -45,7 +52,7 @@ The card number is one of: +A,1,2,3,4,5,6,7,8,9,10,J,Q,K+. Alterantively
 +T+ can be used instead of +10+. The card deck is one of:  +H,S,D,C+ (standing
 for Hearts, Spades, Diamonds and Clubs respectively).
 
-Here is an example board: (PySol board No. 24)
+Here is an example board: (PySol/Microsoft board No. 24)
 
 -----------------------
 4C 2C 9C 8C QS 4S 2H
