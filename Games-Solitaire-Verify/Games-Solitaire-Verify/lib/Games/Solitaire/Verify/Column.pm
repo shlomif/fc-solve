@@ -21,9 +21,9 @@ use base 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception;
 use Games::Solitaire::Verify::Card;
 
-__PACKAGE__->mk_accessors(qw(
+__PACKAGE__->mk_acc_ref([qw(
     _cards
-    ));
+    )]);
 
 =head1 SYNOPSIS
 

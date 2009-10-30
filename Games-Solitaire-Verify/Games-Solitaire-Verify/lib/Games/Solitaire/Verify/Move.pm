@@ -20,14 +20,14 @@ use base 'Games::Solitaire::Verify::Base';
 
 use Games::Solitaire::Verify::Exception;
 
-__PACKAGE__->mk_accessors(qw(
+__PACKAGE__->mk_acc_ref([qw(
     source_type
     dest_type
     source
     dest
     num_cards
     _game
-    ));
+    )]);
 
 =head1 SYNOPSIS
 

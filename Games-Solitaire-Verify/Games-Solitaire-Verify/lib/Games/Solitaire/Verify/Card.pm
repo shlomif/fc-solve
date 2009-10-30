@@ -20,11 +20,11 @@ use base 'Games::Solitaire::Verify::Base';
 
 use Games::Solitaire::Verify::Exception;
 
-__PACKAGE__->mk_accessors(qw(
+__PACKAGE__->mk_acc_ref([qw(
     rank
     suit
     _game
-    ));
+    )]);
 
 =head1 SYNOPSIS
 

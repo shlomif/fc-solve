@@ -23,10 +23,10 @@ use Games::Solitaire::Verify::Card;
 
 use List::Util qw(first);
 
-__PACKAGE__->mk_accessors(qw(
+__PACKAGE__->mk_acc_ref([qw(
     _num_decks
     _founds
-    ));
+    )]);
 
 =head1 SYNOPSIS
 

@@ -20,7 +20,7 @@ use base 'Games::Solitaire::Verify::Base';
 
 use Games::Solitaire::Verify::Exception;
 
-__PACKAGE__->mk_accessors(qw(
+__PACKAGE__->mk_acc_ref([qw(
     empty_stacks_filled_by
     num_columns
     num_decks
@@ -28,7 +28,7 @@ __PACKAGE__->mk_accessors(qw(
     rules
     seq_build_by
     sequence_move
-    ));
+    )]);
 
 =head1 SYNOPSIS
 
