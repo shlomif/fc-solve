@@ -72,9 +72,21 @@ Gotta love dynamic languages like Perl 5.
 sub mk_accessors
 {
     my $package = shift;
-    my @names = @_;
+    return $package->mk_acc_ref([@_]); 
+}
 
-    my $mapping = +{ map { $_ => $_ } @names };
+=head2 __PACKAGE__->mk_acc_ref([qw(method1 method2 method3)])
+
+Creates the accessors in the array-ref of names at run-time.
+
+=cut
+
+sub mk_acc_ref
+{
+    my $package = shift;
+    my $names = shift;
+
+    my $mapping = +{ map { $_ => $_ } @$names };
 
     eval <<"EOF";
 package $package;
