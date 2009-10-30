@@ -13,7 +13,7 @@ use vars qw($VERSION);
 
 $VERSION = '0.08';
 
-use base 'Class::Accessor';
+use Class::XSAccessor;
 
 =head1 SYNOPSIS
 
@@ -58,6 +58,32 @@ sub new
     $self->_init(@_);
 
     return $self;
+}
+
+=head2 __PACKAGE__->mk_accessors(qw(method1 method2 method3))
+
+Equivalent to L<Class::Accessor>'s mk_accessors only using Class::XSAccessor.
+It beats running an ugly script on my code, and can be done at run-time.
+
+Gotta love dynamic languages like Perl 5.
+
+=cut
+
+sub mk_accessors
+{
+    my $package = shift;
+    my @names = @_;
+
+    my $mapping = +{ map { $_ => $_ } @names };
+
+    eval <<"EOF";
+package $package;
+
+Class::XSAccessor->import(
+    accessors => \$mapping,            
+);
+EOF
+
 }
 
 =head1 AUTHOR

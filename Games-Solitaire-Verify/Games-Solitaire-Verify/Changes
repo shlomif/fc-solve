@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+        - Converted from Class-Accessor to Class-XSAccessor (with a function
+        emulating mk_accessors for convenience.).
+            - This made the test suite run faster.
+
 0.08    Sat Jul  4 11:24:29 IDT 2009
         - Removed the "all rights reserved" language. I was told it is
         incompatible with the MIT/X11 License.

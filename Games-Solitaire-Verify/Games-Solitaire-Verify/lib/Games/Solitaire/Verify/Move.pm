@@ -126,6 +126,30 @@ sub _init
     }
 }
 
+=head1 METHODS
+
+=head2 $move->source_type()
+
+Accessor for the solitaire card game's board layout's type - 
+C<"stack">, C<"freecell">, etc. used in the layout.
+
+=head2 $move->dest_type()
+
+Accessor for the destination type - C<"stack">, C<"freecell">, 
+C<"destination">.
+
+=head2 $move->source()
+
+The index number of the source.
+
+=head2 $move->dest()
+
+The index number of the destination.
+
+=head2 $move->num_cards()
+
+Number of cards affects - only relevant for a stack-to-stack move usually.
+
 =head1 AUTHOR
 
 Shlomi Fish, C<< <shlomif at iglu.org.il> >>

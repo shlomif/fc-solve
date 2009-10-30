@@ -16,7 +16,7 @@ my $builder = Test::Run::Builder->new(
     },
     requires => {
         'base' => 0,
-        'Class::Accessor' => 0,
+        'Class::XSAccessor' => 0,
         'File::Spec' => 0,
         'Exception::Class' => 0,
         'List::Util' => 0,

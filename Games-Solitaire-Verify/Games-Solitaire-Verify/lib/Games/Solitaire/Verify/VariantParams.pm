@@ -156,7 +156,45 @@ sub _init
     return 0;
 }
 
-=head2 $state->seq_build_by()
+=head2 $variant_params->empty_stacks_filled_by()
+
+What empty stacks can be filled by:
+
+=over 4
+
+=item * any
+
+=item * none
+
+=item * kings
+
+=back
+
+=head2 $variant_params->num_columns()
+
+The number of columns the variant has.
+
+=head2 $variant_params->num_decks()
+
+The numbe of decks the variant has.
+
+=head2 $variant_params->num_freecells()
+
+The number of freecells the variant has.
+
+=head2 $variant_params->rules()
+
+The rules by which the variant obides:
+
+=over 4
+
+=item * freecell
+
+=item * simple_simon
+
+=back
+
+=head2 $variant_params->seq_build_by()
 
 Returns the sequence build by:
 
@@ -165,6 +203,16 @@ Returns the sequence build by:
 =item * alt_color
 
 =item * suit
+
+=back
+
+=head2 $variant_params->sequence_move()
+
+=over 4
+
+=item * limited
+
+=item * unlimited
 
 =back
 
