@@ -48,7 +48,7 @@ sub initialize
         "quotas-expr=s" => \$quotas_expr,
         "quotas-are-cb" => \$quotas_are_cb,
         "opt-for=s" => \$optimize_for,
-    );
+    ) or exit(1);
 
     $self->start_board($start_board);
     $self->num_boards($num_boards);
