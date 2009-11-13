@@ -25,7 +25,7 @@ __PACKAGE__->mk_accessors(qw(
     trace
 ));
 
-sub initialize
+sub _init
 {
     my $self = shift;
 

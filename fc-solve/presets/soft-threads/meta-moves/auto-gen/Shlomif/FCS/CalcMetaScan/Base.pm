@@ -10,13 +10,13 @@ sub new
     my $class = shift;
     my $self = {};
     bless $self, $class;
-    $self->initialize(@_);
+    $self->_init(@_);
     return $self;
 }
 
-sub initialize
+sub _init
 {
-    die "you must override initialize().";
+    die "you must override _init().";
 }
 
 1;

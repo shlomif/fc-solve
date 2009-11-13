@@ -23,7 +23,7 @@ use vars (qw(@fields %fields_map));
 
 __PACKAGE__->mk_accessors(@fields);
 
-sub initialize
+sub _init
 {
     my $self = shift;
     %$self = (%$self, @_);
@@ -183,7 +183,7 @@ sub add
     return $self->get($field);
 }
 
-sub initialize
+sub _init
 {
     my $self = shift;
 
