@@ -23,7 +23,7 @@ sub _init
     $self->used(0);
     foreach my $field (grep {exists($fields_map{$_})} keys(%args))
     {
-        $self->set($field, $args{$field});
+        $self->$field($args{$field});
     }
 
     return 0;

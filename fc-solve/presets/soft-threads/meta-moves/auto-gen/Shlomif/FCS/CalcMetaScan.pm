@@ -179,8 +179,7 @@ sub add
     {
         die "Cannot add to field \"$field\"!";
     }
-    $self->set($field, $self->get($field) + $diff);
-    return $self->get($field);
+    return $self->$field($self->$field() + $diff);
 }
 
 sub _init
