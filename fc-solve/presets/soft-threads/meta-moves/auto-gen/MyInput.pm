@@ -136,6 +136,21 @@ sub get_scans_lens_data
     return _get_scans_data_helper(@_)->{'with_lens'};
 }
 
+sub _filter_scans_based_on_black_list_ids
+{
+    my ($selected_scans, $black_list_ids) = @_;
+
+    my %black_list = (map { /(\d+)/?($1 => 1) : () } @$black_list_ids);
+
+    return
+        [grep 
+            {
+                !exists($black_list{$_->id()}) 
+            }
+            @$selected_scans
+        ];
+}
+
 sub get_selected_scan_list
 {
     my $start_board = shift;
@@ -170,15 +185,10 @@ sub get_selected_scan_list
     chomp(@black_list_ids);
     close($black_list_fh);
 
-    my %black_list = (map { /(\d+)/?($1 => 1) : () } @black_list_ids);
-    @selected_scans = 
-        (grep 
-            {
-                !exists($black_list{$_->id()}) 
-            }
-            @selected_scans
+    return _filter_scans_based_on_black_list_ids(
+        \@selected_scans,
+        \@black_list_ids,
         );
-    return \@selected_scans;
 }
 
 sub get_next_id
