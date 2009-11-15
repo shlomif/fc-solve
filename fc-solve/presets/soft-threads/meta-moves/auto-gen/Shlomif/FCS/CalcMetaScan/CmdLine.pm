@@ -222,20 +222,14 @@ sub write_script
 sub calc_scans_data
 {
     my $self = shift;
-    my @params =
-    (
-        $self->start_board(),
-        $self->num_boards(),
-        $self->selected_scans()
-    );
 
-    return
-    (
-        ($self->optimize_for() =~ m{len})
-            ? $self->_input_obj()->get_scans_lens_data(@params)
-            : $self->_input_obj()->get_scans_data(@params)
-    )
-    ;
+    my $method = 
+        (($self->optimize_for() =~ m{len})
+            ? "get_scans_lens_data"
+            : "get_scans_data"
+        );
+
+    return $self->_input_obj->$method($self->selected_scans());
 }
 
 sub arbitrator_trace_cb

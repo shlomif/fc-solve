@@ -55,12 +55,12 @@ sub _get_scans_data_helper
 {
     my $self = shift;
 
-    my $start_board = shift;
-    my $num_boards = shift;
     my $selected_scans = shift;
 
-    my $scans_data = zeroes($num_boards, scalar(@$selected_scans));
-    my $scans_lens_data = zeroes($num_boards, scalar(@$selected_scans), 3);
+    my $start_board = $self->start_board();
+
+    my $scans_data = zeroes($self->num_boards(), scalar(@$selected_scans));
+    my $scans_lens_data = zeroes($self->num_boards(), scalar(@$selected_scans), 3);
         
     my $scan_idx = 0;
 
@@ -79,7 +79,7 @@ sub _get_scans_data_helper
             {
                 my $data_s = _slurp("./data/" . $scan->id() .  ".data.bin");
                 my @array = unpack("l*", $data_s);
-                if (($array[0] != 1) || ($array[1] < $num_boards) || ($array[2] != 100000))
+                if (($array[0] != 1) || ($array[1] < $self->num_boards) || ($array[2] != 100000))
                 {
                     die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
                 }
@@ -92,7 +92,7 @@ sub _get_scans_data_helper
         {
             my $c = readfraw("./.data-proc/" . $scan->id());
             my $b = $scans_data->slice(":,$scan_idx");
-            $b += $c->slice((2+$start_board).":".($num_boards+1+$start_board));
+            $b += $c->slice((2+$start_board).":".($self->num_boards()+1+$start_board));
         }
         {
             my $src = "./data/" . $scan->id() .  ".data.bin";
@@ -106,7 +106,7 @@ sub _get_scans_data_helper
                 my $data_s = _slurp($src);
 
                 my @iters = unpack("l*", $data_s);
-                if (($iters[0] != 1) || ($iters[1] < $num_boards) 
+                if (($iters[0] != 1) || ($iters[1] < $self->num_boards()) 
                     || ($iters[2] != 100000)
                 )
                 {
@@ -137,7 +137,7 @@ sub _get_scans_data_helper
                 sprintf(
                     "%d:%d,:,*",
                     ($start_board-1),
-                    (($num_boards-1)+($start_board-1))
+                    (($self->num_boards()-1)+($start_board-1))
                 )
             )->xchg(1,2);
         }
