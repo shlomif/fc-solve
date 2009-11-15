@@ -49,7 +49,10 @@ sub _slurp
 
 sub _read_text_ints_file
 {
+    my $self = shift;
+
     my $filename = shift;
+
     my $text = _slurp($filename);
 
     return [split(/[\n\r]+/, $text)];
@@ -138,10 +141,10 @@ sub _get_scans_data_helper
 
                 my $c = pdl(
                     [\@iters, 
-                    _read_text_ints_file(
+                    $self->_read_text_ints_file(
                         "data/" . $scan->id() . ".fcs.moves.txt"
                     ),
-                    _read_text_ints_file(
+                    $self->_read_text_ints_file(
                         "data/" . $scan->id() . ".fcpro.moves.txt"
                     ),
                     ]
