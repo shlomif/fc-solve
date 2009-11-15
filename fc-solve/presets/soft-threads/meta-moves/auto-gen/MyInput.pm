@@ -166,6 +166,14 @@ sub _filter_scans_based_on_black_list_ids
         ];
 }
 
+sub _is_scan_suitable
+{
+    my ($self, $start_board, $num_boards, $scan) = @_;
+
+    my @stat = stat("./data/".$scan->id().".data.bin");
+    return (scalar(@stat) && ($stat[7] >= 12+($num_boards+$start_board-1)*4));
+}
+
 sub get_selected_scan_list
 {
     my $self = shift;
@@ -192,8 +200,7 @@ sub get_selected_scan_list
     my @selected_scans = 
         grep 
         { 
-            my @stat = stat("./data/".$_->id().".data.bin");
-            scalar(@stat) && ($stat[7] >= 12+($num_boards+$start_board-1)*4);
+            $self->_is_scan_suitable($start_board, $num_boards, $_)
         }
         @scans;
 
