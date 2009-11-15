@@ -14,6 +14,7 @@ use MyInput;
 
 __PACKAGE__->mk_accessors(qw(
     arbitrator
+    _input_obj
     num_boards
     optimize_for
     output_filename
@@ -58,6 +59,10 @@ sub _init
     $self->quotas_expr($quotas_expr);
     $self->quotas_are_cb($quotas_are_cb);
     $self->optimize_for($optimize_for);
+
+    $self->_input_obj(
+        MyInput->new()
+    );
 
     return;
 }
@@ -222,8 +227,8 @@ sub calc_scans_data
     return
     (
         ($self->optimize_for() =~ m{len})
-            ? MyInput::get_scans_lens_data(@params)
-            : MyInput::get_scans_data(@params)
+            ? $self->_input_obj()->get_scans_lens_data(@params)
+            : $self->_input_obj()->get_scans_data(@params)
     )
     ;
 }
@@ -241,7 +246,7 @@ sub init_arbitrator
     my $self = shift;
 
     $self->selected_scans(
-        MyInput::get_selected_scan_list(
+        $self->_input_obj()->get_selected_scan_list(
             $self->start_board(),
             $self->num_boards(),
         )

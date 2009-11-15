@@ -5,10 +5,19 @@ use warnings;
 
 use File::Path;
 
+use base 'Shlomif::FCS::CalcMetaScan::Base';
+
 use Shlomif::FCS::CalcMetaScan::Structs;
 
 use PDL;
 use PDL::IO::FastRaw;
+
+sub _init
+{
+    my $self = shift;
+
+    return;
+}
 
 sub _slurp
 {
@@ -128,11 +137,15 @@ sub _get_scans_data_helper
 
 sub get_scans_data
 {
+    my $self = shift;
+
     return _get_scans_data_helper(@_)->{'scans'};
 }
 
 sub get_scans_lens_data
 {
+    my $self = shift;
+
     return _get_scans_data_helper(@_)->{'with_lens'};
 }
 
@@ -153,6 +166,8 @@ sub _filter_scans_based_on_black_list_ids
 
 sub get_selected_scan_list
 {
+    my $self = shift;
+
     my $start_board = shift;
     my $num_boards = shift;
 
