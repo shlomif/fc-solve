@@ -61,7 +61,12 @@ sub _init
     $self->optimize_for($optimize_for);
 
     $self->_input_obj(
-        MyInput->new()
+        MyInput->new(
+            {
+                start_board => $self->start_board(),
+                num_boards => $self->num_boards(),
+            }
+        )
     );
 
     return;
@@ -246,10 +251,7 @@ sub init_arbitrator
     my $self = shift;
 
     $self->selected_scans(
-        $self->_input_obj()->get_selected_scan_list(
-            $self->start_board(),
-            $self->num_boards(),
-        )
+        $self->_input_obj()->get_selected_scan_list()
     );
 
     return $self->arbitrator(

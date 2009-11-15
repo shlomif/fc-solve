@@ -12,10 +12,20 @@ use Shlomif::FCS::CalcMetaScan::Structs;
 use PDL;
 use PDL::IO::FastRaw;
 
+__PACKAGE__->mk_accessors(
+    qw(
+        start_board
+        num_boards
+    )
+);
+
 sub _init
 {
     my $self = shift;
+    my $args = shift;
 
+    $self->start_board($args->{'start_board'});
+    $self->num_boards($args->{'num_boards'});
     return;
 }
 
@@ -168,18 +178,20 @@ sub _filter_scans_based_on_black_list_ids
 
 sub _is_scan_suitable
 {
-    my ($self, $start_board, $num_boards, $scan) = @_;
+    my ($self, $scan) = @_;
 
     my @stat = stat("./data/".$scan->id().".data.bin");
-    return (scalar(@stat) && ($stat[7] >= 12+($num_boards+$start_board-1)*4));
+    return
+    (
+        scalar(@stat)
+            && 
+        ($stat[7] >= 12 + ($self->num_boards() + $self->start_board() -1) * 4)
+    );
 }
 
 sub get_selected_scan_list
 {
     my $self = shift;
-
-    my $start_board = shift;
-    my $num_boards = shift;
 
     my @scans;
 
@@ -200,7 +212,7 @@ sub get_selected_scan_list
     my @selected_scans = 
         grep 
         { 
-            $self->_is_scan_suitable($start_board, $num_boards, $_)
+            $self->_is_scan_suitable($_)
         }
         @scans;
 
