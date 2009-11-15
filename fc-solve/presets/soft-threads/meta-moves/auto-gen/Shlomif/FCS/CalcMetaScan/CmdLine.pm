@@ -21,7 +21,6 @@ __PACKAGE__->mk_accessors(qw(
     quotas_expr
     quotas_are_cb
     rle
-    selected_scans
     start_board
     trace
 ));
@@ -72,6 +71,12 @@ sub _init
     return;
 }
 
+sub selected_scans
+{
+    my $self = shift;
+
+    return $self->_input_obj->selected_scans();
+}
 
 sub map_all_but_last
 {
@@ -229,7 +234,7 @@ sub calc_scans_data
             : "get_scans_data"
         );
 
-    return $self->_input_obj->$method($self->selected_scans());
+    return $self->_input_obj->$method();
 }
 
 sub arbitrator_trace_cb
@@ -243,10 +248,6 @@ sub arbitrator_trace_cb
 sub init_arbitrator
 {
     my $self = shift;
-
-    $self->selected_scans(
-        $self->_input_obj()->get_selected_scan_list()
-    );
 
     return $self->arbitrator(
         Shlomif::FCS::CalcMetaScan->new(

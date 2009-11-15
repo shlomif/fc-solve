@@ -16,6 +16,7 @@ __PACKAGE__->mk_accessors(
     qw(
         start_board
         num_boards
+        selected_scans
     )
 );
 
@@ -26,6 +27,9 @@ sub _init
 
     $self->start_board($args->{'start_board'});
     $self->num_boards($args->{'num_boards'});
+
+    $self->_calc_selected_scan_list();
+
     return;
 }
 
@@ -55,7 +59,7 @@ sub _get_scans_data_helper
 {
     my $self = shift;
 
-    my $selected_scans = shift;
+    my $selected_scans = $self->selected_scans();
 
     my $start_board = $self->start_board();
 
@@ -151,19 +155,19 @@ sub get_scans_data
 {
     my $self = shift;
 
-    return $self->_get_scans_data_helper(@_)->{'scans'};
+    return $self->_get_scans_data_helper()->{'scans'};
 }
 
 sub get_scans_lens_data
 {
     my $self = shift;
 
-    return $self->_get_scans_data_helper(@_)->{'with_lens'};
+    return $self->_get_scans_data_helper()->{'with_lens'};
 }
 
 sub _filter_scans_based_on_black_list_ids
 {
-    my ($selected_scans, $black_list_ids) = @_;
+    my ($scans, $black_list_ids) = @_;
 
     my %black_list = (map { /(\d+)/?($1 => 1) : () } @$black_list_ids);
 
@@ -172,7 +176,7 @@ sub _filter_scans_based_on_black_list_ids
             {
                 !exists($black_list{$_->id()}) 
             }
-            @$selected_scans
+            @$scans
         ];
 }
 
@@ -189,7 +193,7 @@ sub _is_scan_suitable
     );
 }
 
-sub get_selected_scan_list
+sub _calc_selected_scan_list
 {
     my $self = shift;
 
@@ -209,22 +213,25 @@ sub get_selected_scan_list
     }
     close($scans_fh);
 
-    my @selected_scans = 
-        grep 
-        { 
-            $self->_is_scan_suitable($_)
-        }
-        @scans;
-
     open my $black_list_fh, "<", "scans-black-list.txt";
     my @black_list_ids = <$black_list_fh>;
     chomp(@black_list_ids);
     close($black_list_fh);
 
-    return _filter_scans_based_on_black_list_ids(
-        \@selected_scans,
-        \@black_list_ids,
-        );
+    $self->selected_scans(
+        _filter_scans_based_on_black_list_ids(
+            [
+                grep 
+                { 
+                    $self->_is_scan_suitable($_)
+                }
+                @scans
+            ],
+            \@black_list_ids,
+        )
+    );
+
+    return;
 }
 
 sub get_next_id
