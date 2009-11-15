@@ -55,6 +55,22 @@ sub _read_text_ints_file
     return [split(/[\n\r]+/, $text)];
 }
 
+# Number of selected scans.
+sub _num_sel_scans
+{
+    my $self = shift;
+
+    return scalar(@{$self->selected_scans()});
+}
+
+sub _gen_initial_scans_tensor
+{
+    my $self = shift;
+    my $extra_dims = shift || [];
+
+    return zeroes($self->num_boards(), $self->_num_sel_scans, @$extra_dims);
+}
+
 sub _get_scans_data_helper
 {
     my $self = shift;
@@ -63,8 +79,8 @@ sub _get_scans_data_helper
 
     my $start_board = $self->start_board();
 
-    my $scans_data = zeroes($self->num_boards(), scalar(@$selected_scans));
-    my $scans_lens_data = zeroes($self->num_boards(), scalar(@$selected_scans), 3);
+    my $scans_data = $self->_gen_initial_scans_tensor();
+    my $scans_lens_data = $self->_gen_initial_scans_tensor([3]);
         
     my $scan_idx = 0;
 
