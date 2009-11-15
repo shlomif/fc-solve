@@ -43,6 +43,8 @@ sub _read_text_ints_file
 
 sub _get_scans_data_helper
 {
+    my $self = shift;
+
     my $start_board = shift;
     my $num_boards = shift;
     my @selected_scans = @{shift()};
@@ -139,14 +141,14 @@ sub get_scans_data
 {
     my $self = shift;
 
-    return _get_scans_data_helper(@_)->{'scans'};
+    return $self->_get_scans_data_helper(@_)->{'scans'};
 }
 
 sub get_scans_lens_data
 {
     my $self = shift;
 
-    return _get_scans_data_helper(@_)->{'with_lens'};
+    return $self->_get_scans_data_helper(@_)->{'with_lens'};
 }
 
 sub _filter_scans_based_on_black_list_ids
