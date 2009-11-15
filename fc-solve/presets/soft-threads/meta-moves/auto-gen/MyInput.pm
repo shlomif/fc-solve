@@ -167,18 +167,25 @@ sub _get_scans_data_helper
     return { 'scans' => $scans_data, 'with_lens' => $scans_lens_data };
 }
 
+sub _get_scans_data_generic
+{
+    my ($self, $id) = @_;
+
+    return $self->_get_scans_data_helper()->{$id};
+}
+
 sub get_scans_data
 {
     my $self = shift;
 
-    return $self->_get_scans_data_helper()->{'scans'};
+    return $self->_get_scans_data_generic('scans');
 }
 
 sub get_scans_lens_data
 {
     my $self = shift;
 
-    return $self->_get_scans_data_helper()->{'with_lens'};
+    return $self->_get_scans_data_generic('with_lens');
 }
 
 sub _filter_scans_based_on_black_list_ids
