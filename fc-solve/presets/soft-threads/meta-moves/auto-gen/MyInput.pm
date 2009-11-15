@@ -47,10 +47,10 @@ sub _get_scans_data_helper
 
     my $start_board = shift;
     my $num_boards = shift;
-    my @selected_scans = @{shift()};
+    my $selected_scans = shift;
 
-    my $scans_data = zeroes($num_boards, scalar(@selected_scans));
-    my $scans_lens_data = zeroes($num_boards, scalar(@selected_scans), 3);
+    my $scans_data = zeroes($num_boards, scalar(@$selected_scans));
+    my $scans_lens_data = zeroes($num_boards, scalar(@$selected_scans), 3);
         
     my $scan_idx = 0;
 
@@ -59,7 +59,7 @@ sub _get_scans_data_helper
 
     mkpath($data_dir, $lens_dir);
 
-    foreach my $scan (@selected_scans)
+    foreach my $scan (@$selected_scans)
     {
         print "scan_idx=$scan_idx\n";
         {
@@ -100,7 +100,7 @@ sub _get_scans_data_helper
                     || ($iters[2] != 100000)
                 )
                 {
-                    die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
+                    die "Incorrect file format in scan " . $scan->id() . "!\n";
                 }
 
                 # Remove the header
