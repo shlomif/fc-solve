@@ -269,11 +269,14 @@ sub get_selected_scan
 {
     my $self = shift;
 
-    return
+    my $iter_state = 
         Shlomif::FCS::CalcMetaScan::IterState->new(
-            main => $self,
             %{$self->get_iter_state_params()},
         );
+
+    $iter_state->attach_to($self);
+
+    return $iter_state;
 }
 
 sub inspect_quota

@@ -9,7 +9,7 @@ use base 'Shlomif::FCS::CalcMetaScan::Base';
 
 use vars (qw(@fields %fields_map));
 @fields = (qw(
-    main
+    _main
     num_solved
     quota
     scan_idx
@@ -32,6 +32,16 @@ sub _init
     return 0;
 }
 
+sub attach_to
+{
+    my $self = shift;
+    my $main_obj = shift;
+
+    $self->_main($main_obj);
+
+    return;
+}
+
 sub get_chosen_struct
 {
     my $self = shift;
@@ -45,14 +55,14 @@ sub get_chosen_struct
 sub detach
 {
     my $self = shift;
-    $self->main(undef);
+    $self->_main(undef);
 }
 
 sub idx_slice : lvalue
 {
     my $self = shift;
 
-    my $scans_data = $self->main()->scans_data();
+    my $scans_data = $self->_main()->scans_data();
 
     my @dims = $scans_data->dims();
 
@@ -72,7 +82,7 @@ sub update_total_iters
     
     # Add the total iterations for all the states that were solved by
     # this scan.
-    $state->main()->add('total_iters',
+    $state->_main()->add('total_iters',
         PDL::sum((($r <= $state->quota()) & ($r > 0)) * $r)
     );
     
@@ -81,11 +91,11 @@ sub update_total_iters
     
     # Add the iterations for all the states that have not been solved
     # yet.
-    $state->main()->add('total_iters', ($indexes->nelem() * $state->quota()));
+    $state->_main()->add('total_iters', ($indexes->nelem() * $state->quota()));
     
     # Keep only the states that have not been solved yet.
-    $state->main()->scans_data(
-        $state->main()->scans_data()->dice($indexes, "X")->copy()
+    $state->_main()->scans_data(
+        $state->_main()->scans_data()->dice($indexes, "X")->copy()
     );
 }
 
@@ -103,7 +113,7 @@ sub update_idx_slice
 sub _mark_as_used
 {
     my $state = shift;
-    $state->main()->selected_scans()->[$state->scan_idx()]->mark_as_used();
+    $state->_main()->selected_scans()->[$state->scan_idx()]->mark_as_used();
 
     return;
 }
@@ -112,7 +122,7 @@ sub _add_chosen
 {
     my $state = shift;
 
-    push @{$state->main()->chosen_scans()}, $state->get_chosen_struct();
+    push @{$state->_main()->chosen_scans()}, $state->get_chosen_struct();
 
     return;
 }
@@ -121,7 +131,7 @@ sub _update_total_boards_solved
 {
     my $state = shift;
 
-    $state->main()->add('total_boards_solved', $state->num_solved());
+    $state->_main()->add('total_boards_solved', $state->num_solved());
 
     return;
 }
@@ -130,11 +140,11 @@ sub _trace_wrapper
 {
     my $state = shift;
 
-    $state->main()->trace(
+    $state->_main()->trace(
         {
             'iters_quota' => $state->quota(),
             'selected_scan_idx' => $state->scan_idx(),
-            'total_boards_solved' => $state->main()->total_boards_solved(),
+            'total_boards_solved' => $state->_main()->total_boards_solved(),
         }
     );
 
