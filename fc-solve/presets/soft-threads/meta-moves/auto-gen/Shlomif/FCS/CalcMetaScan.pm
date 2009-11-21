@@ -213,7 +213,7 @@ sub _init
     return 0;
 }
 
-sub next_iter_idx
+sub _next_iter_idx
 {
     my $self = shift;
 
@@ -253,7 +253,7 @@ sub get_next_quota
 {
     my $self = shift;
 
-    my $iter = $self->next_iter_idx();
+    my $iter = $self->_next_iter_idx();
 
     if (ref($self->quotas()) eq "ARRAY")
     {
