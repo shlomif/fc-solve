@@ -177,6 +177,7 @@ sub get_iter_state_params_len
 
         $num_solved_in_iter = $solved_moves_counts->at($selected_scan_idx);
     }
+
     return
     {
         quota => $iters_quota,
@@ -220,6 +221,7 @@ sub get_iter_state_params_minmax_len
 
         $num_solved_in_iter = $solved_moves_counts->at($selected_scan_idx);
     }
+
     return
     {
         quota => $iters_quota,
@@ -257,6 +259,7 @@ sub get_iter_state_params_speed
                 )
               );
     }
+
     return
     {
         quota => $iters_quota,

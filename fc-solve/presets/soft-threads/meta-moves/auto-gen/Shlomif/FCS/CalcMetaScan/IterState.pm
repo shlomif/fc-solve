@@ -30,7 +30,9 @@ sub _init
 
     my $args = shift;
 
-    %{$self} = (%{$self}, %$args);
+    $self->quota( $args->{'quota'} );
+    $self->num_solved( $args->{'num_solved'} );
+    $self->scan_idx( $args->{'scan_idx'} );
 
     return 0;
 }
