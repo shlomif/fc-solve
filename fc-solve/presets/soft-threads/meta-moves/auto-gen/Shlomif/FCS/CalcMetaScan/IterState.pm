@@ -100,28 +100,36 @@ sub update_idx_slice
         (($r < 0) * ($r                  ));
 }
 
-sub mark_as_used
+sub _mark_as_used
 {
     my $state = shift;
     $state->main()->selected_scans()->[$state->scan_idx()]->mark_as_used();
+
+    return;
 }
 
-sub add_chosen
+sub _add_chosen
 {
     my $state = shift;
 
     push @{$state->main()->chosen_scans()}, $state->get_chosen_struct();
+
+    return;
 }
 
-sub update_total_boards_solved
+sub _update_total_boards_solved
 {
     my $state = shift;
+
     $state->main()->add('total_boards_solved', $state->num_solved());
+
+    return;
 }
 
-sub trace_wrapper
+sub _trace_wrapper
 {
     my $state = shift;
+
     $state->main()->trace(
         {
             'iters_quota' => $state->quota(),
@@ -129,16 +137,18 @@ sub trace_wrapper
             'total_boards_solved' => $state->main()->total_boards_solved(),
         }
     );
+
+    return;
 }
 
 sub register_params
 {
     my $state = shift;
 
-    $state->add_chosen();
-    $state->mark_as_used();
-    $state->update_total_boards_solved();
-    $state->trace_wrapper();
+    $state->_add_chosen();
+    $state->_mark_as_used();
+    $state->_update_total_boards_solved();
+    $state->_trace_wrapper();
 
     return;
 }
