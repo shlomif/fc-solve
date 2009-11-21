@@ -22,7 +22,7 @@ use Exception::Class
 
 %fields_map = (map { $_ => 1 } @fields);
 
-__PACKAGE__->mk_accessors(@fields);
+__PACKAGE__->mk_acc_ref(\@fields);
 
 sub _init
 {
@@ -169,7 +169,7 @@ use vars (qw(@fields %fields_map));
 
 %fields_map = (map { $_ => 1 } @fields);
 
-__PACKAGE__->mk_accessors(@fields);
+__PACKAGE__->mk_acc_ref(\@fields);
 
 sub add
 {

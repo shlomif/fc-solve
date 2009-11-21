@@ -12,7 +12,8 @@ use Shlomif::FCS::CalcMetaScan;
 
 use MyInput;
 
-__PACKAGE__->mk_accessors(qw(
+__PACKAGE__->mk_acc_ref(
+    [qw(
     arbitrator
     _input_obj
     num_boards
@@ -23,7 +24,8 @@ __PACKAGE__->mk_accessors(qw(
     rle
     start_board
     trace
-));
+    )]
+);
 
 sub _init
 {
