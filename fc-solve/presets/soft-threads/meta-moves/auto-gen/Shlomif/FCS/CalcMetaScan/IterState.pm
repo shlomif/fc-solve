@@ -12,7 +12,7 @@ use vars (qw(@fields %fields_map));
     _main
     _num_solved
     _quota
-    scan_idx
+    _scan_idx
 ));
 
 use Exception::Class
@@ -32,7 +32,7 @@ sub _init
 
     $self->_quota( $args->{'quota'} );
     $self->_num_solved( $args->{'num_solved'} );
-    $self->scan_idx( $args->{'scan_idx'} );
+    $self->_scan_idx( $args->{'scan_idx'} );
 
     return 0;
 }
@@ -53,7 +53,7 @@ sub get_chosen_struct
     return
         {
             'q' => $self->_quota(), 
-            'ind' => $self->scan_idx() 
+            'ind' => $self->_scan_idx() 
         };    
 }
 
@@ -73,7 +73,7 @@ sub idx_slice : lvalue
 
     return $scans_data->slice(
         join(",",
-            ":", $self->scan_idx(), (("(0)") x (@dims-2))
+            ":", $self->_scan_idx(), (("(0)") x (@dims-2))
         )
     );
 }
@@ -118,7 +118,7 @@ sub update_idx_slice
 sub _mark_as_used
 {
     my $state = shift;
-    $state->_main()->selected_scans()->[$state->scan_idx()]->mark_as_used();
+    $state->_main()->selected_scans()->[$state->_scan_idx()]->mark_as_used();
 
     return;
 }
@@ -148,7 +148,7 @@ sub _trace_wrapper
     $state->_main()->trace(
         {
             'iters_quota' => $state->_quota(),
-            'selected_scan_idx' => $state->scan_idx(),
+            'selected_scan_idx' => $state->_scan_idx(),
             'total_boards_solved' => $state->_main()->total_boards_solved(),
         }
     );
