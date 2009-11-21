@@ -139,6 +139,8 @@ sub register_params
     $state->mark_as_used();
     $state->update_total_boards_solved();
     $state->trace_wrapper();
+
+    return;
 }
 
 1;
