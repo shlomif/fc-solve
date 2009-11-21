@@ -128,10 +128,10 @@ sub get_next_quota
 sub get_iter_state_params
 {
     my $self = shift;
-    return
-        $self->can('get_iter_state_params_' . $self->optimize_for())
-             ->($self, @_)
-        ;
+
+    my $method = 'get_iter_state_params_' . $self->optimize_for();
+
+    return $self->$method();
 }
 
 sub _my_sum_over
@@ -178,11 +178,11 @@ sub get_iter_state_params_len
         $num_solved_in_iter = $solved_moves_counts->at($selected_scan_idx);
     }
     return
-        (
-            quota => $iters_quota,
-            num_solved => $num_solved_in_iter,
-            scan_idx => $selected_scan_idx,
-        );
+    {
+        quota => $iters_quota,
+        num_solved => $num_solved_in_iter,
+        scan_idx => $selected_scan_idx,
+    };
 }
 
 sub get_iter_state_params_minmax_len
@@ -221,11 +221,11 @@ sub get_iter_state_params_minmax_len
         $num_solved_in_iter = $solved_moves_counts->at($selected_scan_idx);
     }
     return
-        (
-            quota => $iters_quota,
-            num_solved => $num_solved_in_iter,
-            scan_idx => $selected_scan_idx,
-        );
+    {
+        quota => $iters_quota,
+        num_solved => $num_solved_in_iter,
+        scan_idx => $selected_scan_idx,
+    };
 }
 
 sub get_iter_state_params_speed
@@ -258,11 +258,11 @@ sub get_iter_state_params_speed
               );
     }
     return
-        (
-            quota => $iters_quota,
-            num_solved => $num_solved_in_iter,
-            scan_idx => $selected_scan_idx,
-        );
+    {
+        quota => $iters_quota,
+        num_solved => $num_solved_in_iter,
+        scan_idx => $selected_scan_idx,
+    };
 }
 
 sub get_selected_scan
@@ -272,7 +272,7 @@ sub get_selected_scan
     return
         Shlomif::FCS::CalcMetaScan::IterState->new(
             main => $self,
-            $self->get_iter_state_params(),
+            %{$self->get_iter_state_params()},
         );
 }
 
