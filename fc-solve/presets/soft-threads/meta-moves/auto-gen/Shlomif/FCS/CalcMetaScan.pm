@@ -1,7 +1,3 @@
-package Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas;
-
-use base 'Error';
-
 package Shlomif::FCS::CalcMetaScan::IterState;
 
 use strict;
@@ -18,6 +14,11 @@ use vars (qw(@fields %fields_map));
     quota
     scan_idx
 ));
+
+use Exception::Class
+(
+    'Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas'
+);
 
 %fields_map = (map { $_ => 1 } @fields);
 
@@ -144,8 +145,6 @@ package Shlomif::FCS::CalcMetaScan;
 
 use strict;
 use warnings;
-
-use Error qw(:try);
 
 use Shlomif::FCS::CalcMetaScan::Structs;
 
@@ -296,7 +295,9 @@ sub get_iter_state_params_len
         my $q_more = $self->get_next_quota();
         if (!defined($q_more))
         {
-            throw Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas;
+            Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas->throw(
+                error => "No q_more",
+            );
         }
 
         $iters_quota += $q_more;
@@ -338,7 +339,9 @@ sub get_iter_state_params_minmax_len
         my $q_more = $self->get_next_quota();
         if (!defined($q_more))
         {
-            throw Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas;
+            Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas->throw(
+                error => "No q_more",
+            );
         }
 
         $iters_quota += $q_more;
@@ -379,7 +382,9 @@ sub get_iter_state_params_speed
         my $q_more = $self->get_next_quota();
         if (!defined($q_more))
         {
-            throw Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas;
+            Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas->throw(
+                error => "No q_more"
+            );
         }
 
         $iters_quota += $q_more;
@@ -451,15 +456,28 @@ sub calc_meta_scan
     $self->status("iterating");
     # $self->inspect_quota() throws ::Error::OutOfQuotas if
     # it does not have any available quotas.
-    try
+    eval
     {
         while ($self->status() eq "iterating")
         {
             $self->inspect_quota();
         }
-    }
-    catch Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas with
+    };
+    if (my $err = Exception::Class->caught('Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas'))
     {
+        # Do nothing - continue.
+    }
+    else
+    {
+        $err = Exception::Class->caught();
+        if (ref($err))
+        {
+            $err->rethrow;
+        }
+        else
+        {
+            die $err;
+        }
     }
 }
 
