@@ -11,7 +11,7 @@ use vars (qw(@fields %fields_map));
 @fields = (qw(
     _main
     num_solved
-    quota
+    _quota
     scan_idx
 ));
 
@@ -30,7 +30,7 @@ sub _init
 
     my $args = shift;
 
-    $self->quota( $args->{'quota'} );
+    $self->_quota( $args->{'quota'} );
     $self->num_solved( $args->{'num_solved'} );
     $self->scan_idx( $args->{'scan_idx'} );
 
@@ -52,7 +52,7 @@ sub get_chosen_struct
     my $self = shift;
     return
         {
-            'q' => $self->quota(), 
+            'q' => $self->_quota(), 
             'ind' => $self->scan_idx() 
         };    
 }
@@ -88,15 +88,15 @@ sub update_total_iters
     # Add the total iterations for all the states that were solved by
     # this scan.
     $state->_main()->add('total_iters',
-        PDL::sum((($r <= $state->quota()) & ($r > 0)) * $r)
+        PDL::sum((($r <= $state->_quota()) & ($r > 0)) * $r)
     );
     
     # Find all the states that weren't solved.
-    my $indexes = PDL::which(($r > $state->quota()) | ($r < 0));
+    my $indexes = PDL::which(($r > $state->_quota()) | ($r < 0));
     
     # Add the iterations for all the states that have not been solved
     # yet.
-    $state->_main()->add('total_iters', ($indexes->nelem() * $state->quota()));
+    $state->_main()->add('total_iters', ($indexes->nelem() * $state->_quota()));
     
     # Keep only the states that have not been solved yet.
     $state->_main()->scans_data(
@@ -111,7 +111,7 @@ sub update_idx_slice
     # $r cannot be 0, because the ones that were 0, were already solved
     # in $state->update_total_iters().
     $state->idx_slice() .= 
-        (($r > 0) * ($r - $state->quota())) + 
+        (($r > 0) * ($r - $state->_quota())) + 
         (($r < 0) * ($r                  ));
 }
 
@@ -147,7 +147,7 @@ sub _trace_wrapper
 
     $state->_main()->trace(
         {
-            'iters_quota' => $state->quota(),
+            'iters_quota' => $state->_quota(),
             'selected_scan_idx' => $state->scan_idx(),
             'total_boards_solved' => $state->_main()->total_boards_solved(),
         }
