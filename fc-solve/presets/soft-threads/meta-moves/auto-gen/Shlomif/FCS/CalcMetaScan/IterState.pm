@@ -10,7 +10,7 @@ use base 'Shlomif::FCS::CalcMetaScan::Base';
 use vars (qw(@fields %fields_map));
 @fields = (qw(
     _main
-    num_solved
+    _num_solved
     _quota
     scan_idx
 ));
@@ -31,7 +31,7 @@ sub _init
     my $args = shift;
 
     $self->_quota( $args->{'quota'} );
-    $self->num_solved( $args->{'num_solved'} );
+    $self->_num_solved( $args->{'num_solved'} );
     $self->scan_idx( $args->{'scan_idx'} );
 
     return 0;
@@ -136,7 +136,7 @@ sub _update_total_boards_solved
 {
     my $state = shift;
 
-    $state->_main()->add('total_boards_solved', $state->num_solved());
+    $state->_main()->add('total_boards_solved', $state->_num_solved());
 
     return;
 }
