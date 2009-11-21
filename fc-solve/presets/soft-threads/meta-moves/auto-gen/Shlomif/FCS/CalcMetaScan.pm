@@ -271,7 +271,7 @@ sub get_selected_scan
 
     my $iter_state = 
         Shlomif::FCS::CalcMetaScan::IterState->new(
-            %{$self->get_iter_state_params()},
+            $self->get_iter_state_params(),
         );
 
     $iter_state->attach_to($self);

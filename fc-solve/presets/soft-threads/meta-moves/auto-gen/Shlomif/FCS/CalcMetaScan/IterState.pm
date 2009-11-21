@@ -27,7 +27,10 @@ __PACKAGE__->mk_acc_ref(\@fields);
 sub _init
 {
     my $self = shift;
-    %$self = (%$self, @_);
+
+    my $args = shift;
+
+    %{$self} = (%{$self}, %$args);
 
     return 0;
 }
