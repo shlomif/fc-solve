@@ -213,15 +213,15 @@ Don't comment-out - use #if 0 to temporarily remove code
 Code should not be commented-out using gigantic +/* ... */+ comments. Instead,
 it should be out-blocked using +#if 0...#endif+.
 
-In Perl code one can use the following POD paradigm to remove a block of
+In Perl code, one can use the following POD paradigm to remove a block of
 code:
 
 ----------------
-=begin Comment
+=begin Removed
 
-Code here.
+Removed code here.
 
-=end Comment
+=end Removed
 
 =cut
 ----------------
