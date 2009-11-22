@@ -348,7 +348,7 @@ Freecell games. Source code is available and is explained in detail.
 <p>
 <a href="http://www.williamtp.com/cv.html">William Tunstall-Pedoe's
 Solver</a> - he mentions he wrote one in his C.V., which contains other
-interseting artificial intelligence musings. The source code and the binary 
+interesting artificial intelligence musings. The source code and the binary 
 are not available for free download online and may or may not be available 
 upon request.
 </p>
@@ -451,8 +451,8 @@ quite amusing, IMO.
 
 <li>
 <p>
-<a href="http://lists.golum.org/pipermail/golum-nontech/2001-October/000303.html">
-A review by Mark Turnage of the "Group of Linux Users in Memphis"</a> - also
+<a href="http://lists.golum.org/pipermail/golum-nontech/2001-October/000303.html">A
+review by Mark Turnage of the "Group of Linux Users in Memphis"</a> - also
 quite amusing.
 </p>
 </li>
@@ -477,7 +477,7 @@ contains a lot of interesting questions and answers regarding Freecell.
 
 <li>
 <p>
-<a href="http://cards.wikia.com/wiki/Main_Page">Card Games Wikia 
+<a href="http://cards.wikia.com/wiki/Main_Page">Card Games Wikia
 (Deckipedia)</a> - a wiki about card games, including but not limited to
 Solitaire games such as Freecell.
 </p>
@@ -485,9 +485,9 @@ Solitaire games such as Freecell.
 
 <li>
 <p>
-<a href="http://www.cs.ruu.nl/~hansb/d.freecell/freecellhtml.html">An unsolvable
-instance of Freecell</a> - a proof that not all initial Freecell instance are
-solvable.
+<a href="http://people.cs.uu.nl/hansb/d.freecell/freecellhtml.html">An
+unsolvable instance of Freecell</a> - a proof that not all initial Freecell
+instances are solvable.
 </p>
 </li>
 
