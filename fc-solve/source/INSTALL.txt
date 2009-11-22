@@ -8,8 +8,11 @@ Quick and Dirty Compilation
 ---------------------------
 
 Freecell Solver was converted to use CMake ( http://www.cmake.org/ ) 
-starting from version 2.12.0. You'll need to install CMake version 2.6.0
-from your distribution's repository or from its source distribution.
+starting from version 2.12.0. You'll need to install CMake version 2.6.3
+or later from your distribution's repository or from its source
+distribution. *NOTE*: CMake 2.6.2 (that ships with some releases of Ubuntu)
+won't work due to a regression bug so please don't report any errors with
+it.
 
 Next, run:
 
