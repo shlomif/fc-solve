@@ -96,11 +96,11 @@ sub _get_scans_data_helper
     {
         print "scan_idx=$scan_idx\n";
         {
-            my @orig_stat = stat("./data/" . $scan->id() .  ".data.bin");
+            my @orig_stat = stat($scan->data_file_path());
             my @proc_stat = stat("$data_dir/" . $scan->id());
             if ((! scalar(@proc_stat)) || $orig_stat[9] > $proc_stat[9])
             {
-                my $data_s = _slurp("./data/" . $scan->id() .  ".data.bin");
+                my $data_s = _slurp($scan->data_file_path());
                 my @array = unpack("l*", $data_s);
                 if (($array[0] != 1) || ($array[1] < $self->num_boards) || ($array[2] != 100000))
                 {
@@ -118,7 +118,7 @@ sub _get_scans_data_helper
             $b += $c->slice((2+$start_board).":".($self->num_boards()+1+$start_board));
         }
         {
-            my $src = "./data/" . $scan->id() .  ".data.bin";
+            my $src = $scan->data_file_path();
             my $dest = "$lens_dir/" . $scan->id();
 
             my @orig_stat = stat($src);
@@ -210,7 +210,7 @@ sub _is_scan_suitable
 {
     my ($self, $scan) = @_;
 
-    my @stat = stat("./data/".$scan->id().".data.bin");
+    my @stat = stat($scan->data_file_path());
     return
     (
         scalar(@stat)

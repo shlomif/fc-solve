@@ -41,5 +41,19 @@ sub is_used
     return $self->used();
 }
 
+=head2 $scan->data_file_path()
+
+Returns the path to the data file of the scan, where the numbers of iterations
+per board are stored.
+
+=cut
+
+sub data_file_path
+{
+    my $self = shift;
+
+    return "./data/" . $self->id() .  ".data.bin";
+}
+
 1;
 
