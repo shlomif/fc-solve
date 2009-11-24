@@ -255,21 +255,27 @@ sub _black_list_ids_list
     return \@black_list_ids;
 }
 
+sub _suitable_scans_list
+{
+    my $self = shift;
+
+    return
+    [
+        grep
+        {
+            $self->_is_scan_suitable($_)
+        }
+        @{$self->_get_all_scans_list_from_file()}
+    ];
+}
+
 sub _calc_selected_scan_list
 {
     my $self = shift;
 
-    my $scans_list = $self->_get_all_scans_list_from_file();
-
     $self->selected_scans(
         _filter_scans_based_on_black_list_ids(
-            [
-                grep 
-                { 
-                    $self->_is_scan_suitable($_)
-                }
-                @$scans_list,
-            ],
+            $self->_suitable_scans_list(),
             $self->_black_list_ids_list(),
         )
     );
