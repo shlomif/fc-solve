@@ -242,16 +242,24 @@ sub _get_all_scans_list_from_file
     return \@scans;
 }
 
+sub _black_list_ids_list
+{
+    my $self = shift;
+    
+    open my $black_list_fh, "<", "scans-black-list.txt"
+        or die "Could not open 'scans-black-list.txt'! $!.";
+    my @black_list_ids = <$black_list_fh>;
+    chomp(@black_list_ids);
+    close($black_list_fh);
+
+    return \@black_list_ids;
+}
+
 sub _calc_selected_scan_list
 {
     my $self = shift;
 
     my $scans_list = $self->_get_all_scans_list_from_file();
-    
-    open my $black_list_fh, "<", "scans-black-list.txt";
-    my @black_list_ids = <$black_list_fh>;
-    chomp(@black_list_ids);
-    close($black_list_fh);
 
     $self->selected_scans(
         _filter_scans_based_on_black_list_ids(
@@ -262,7 +270,7 @@ sub _calc_selected_scan_list
                 }
                 @$scans_list,
             ],
-            \@black_list_ids,
+            $self->_black_list_ids_list(),
         )
     );
 
