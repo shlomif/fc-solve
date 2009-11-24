@@ -219,7 +219,7 @@ sub _is_scan_suitable
     );
 }
 
-sub _calc_selected_scan_list
+sub _get_all_scans_list_from_file
 {
     my $self = shift;
 
@@ -239,6 +239,15 @@ sub _calc_selected_scan_list
     }
     close($scans_fh);
 
+    return \@scans;
+}
+
+sub _calc_selected_scan_list
+{
+    my $self = shift;
+
+    my $scans_list = $self->_get_all_scans_list_from_file();
+    
     open my $black_list_fh, "<", "scans-black-list.txt";
     my @black_list_ids = <$black_list_fh>;
     chomp(@black_list_ids);
@@ -251,7 +260,7 @@ sub _calc_selected_scan_list
                 { 
                     $self->_is_scan_suitable($_)
                 }
-                @scans
+                @$scans_list,
             ],
             \@black_list_ids,
         )
