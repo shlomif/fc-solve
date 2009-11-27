@@ -621,7 +621,7 @@ IF(ASCIIDOC_FOUND)
 
     ENDFOREACH(_file)
 
-    MESSAGE ("PDF_TARGETS == ${_pdf_targets}")
+    # MESSAGE ("PDF_TARGETS == ${_pdf_targets}")
     ADD_CUSTOM_TARGET("pdfs" echo -n
         DEPENDS ${_pdf_targets}
     )
