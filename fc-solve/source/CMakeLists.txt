@@ -499,13 +499,8 @@ INSTALL_MAN ("${CMAKE_CURRENT_BINARY_DIR}/fc-solve.6" 6)
 
 INSTALL(
     FILES
-        "AUTHORS"
-        "HACKING"
-        "INSTALL"
-        "README"
+        ${docs_to_install}
         "README.win32.txt"
-        "TODO"
-        "USAGE"
     DESTINATION
         "share/doc/freecell-solver/"
 )
@@ -559,10 +554,18 @@ ADD_CUSTOM_TARGET(
 
 FIND_PACKAGE(Asciidoc)
 
+SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt" 
+    "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" 
+)
+
+SET (docs_to_install)
+FOREACH(_file ${_docfiles})
+    GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
+    SET(_full_file "${CMAKE_CURRENT_BINARY_DIR}/${_file_we}")
+    LIST(APPEND docs_to_install ${_full_file})
+ENDFOREACH(_file)
+
 IF(ASCIIDOC_FOUND)
-    SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt" 
-        "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" 
-    )
 
     SET (_pdf_targets)
 
@@ -570,14 +573,15 @@ IF(ASCIIDOC_FOUND)
         GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
         SET(_in "${_file_we}")
         SET(_out "${_file_we}.html")
+        SET(_full_file "${CMAKE_CURRENT_SOURCE_DIR}/${_file}")
         # MESSAGE(STATUS "_in == <<${_in}>> _out == <<${_out}>>")
 
         # -a toc 
         ADD_CUSTOM_COMMAND(
             OUTPUT "${_out}"
             COMMAND ${ASCIIDOC_EXECUTABLE} 
-                -o ${_out} ${_file}
-            DEPENDS ${_file}
+                -o ${_out} "${_full_file}"
+            DEPENDS "${_full_file}"
             COMMENT "Asciidoc ${_in}"
             )
 
@@ -586,8 +590,8 @@ IF(ASCIIDOC_FOUND)
         ADD_CUSTOM_COMMAND(
             OUTPUT "${_docbook}"
             COMMAND ${ASCIIDOC_EXECUTABLE} 
-                --backend=docbook -o ${_docbook} ${_file}
-            DEPENDS ${_file}
+                --backend=docbook -o ${_docbook} "${_full_file}"
+            DEPENDS "${_full_file}"
             COMMENT "Asciidoc->DocBook ${_in}"
             )
 
@@ -604,7 +608,7 @@ IF(ASCIIDOC_FOUND)
 
         ADD_CUSTOM_COMMAND(
             OUTPUT ${_file_we}
-            COMMAND cp -f "${_file_we}.txt" ${_file_we}
+            COMMAND cp -f "${_full_file}" ${_file_we}
             DEPENDS "${_file_we}.txt"
             COMMENT "copy AsciiDoc to non-\".txt\" file"
         )

@@ -90,7 +90,6 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS INSTALL README README.win32.txt TODO ChangeLog USAGE board_gen/doc/board_gen
 /usr/bin/fc-solve
 /usr/bin/make-aisleriot-freecell-board
 /usr/bin/make-gnome-freecell-board
@@ -98,6 +97,7 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 /usr/bin/make_pysol_freecell_board.py
 /usr/bin/freecell-solver-range-parallel-solve
 %{_mandir}/*/*
+%{_docdir}/*
 
 %files -n libfreecell-solver0-devel
 %defattr(-,root,root)
