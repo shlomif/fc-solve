@@ -4,6 +4,27 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 2.36.0: (27-Nov-2009)
+-----------------------------
+
+1. Converted the +README+ / +USAGE+ / +NEWS+ etc. files to 
+http://www.methods.co.nz/asciidoc/[AsciiDoc] . The sources are in .txt
+and they are copied to their non-.txt files. The PDF build is still a bit
+broken due to a strange CMake problem.
+
+2. Simplified the test suite and benchmarking process. (Thanks to
+http://pythack.com/[LECA Dimitri (Pythack)] for the inspiration).
+
+3. Many documents were otherwise enhanced with examples and other enhancements.
+
+4. Inlined the hash comparison and several other functions in the code.
+This made the code a little faster.
+
+5. Clarified the documentation for broken versions of CMake (cmake-2.6.2)
+like the one that ships with some versions of Ubuntu.
+
+6. Fixed the tests for a valgrind regression.
+
 Version 2.34.0: (10-Jul-2009)
 -----------------------------
 
