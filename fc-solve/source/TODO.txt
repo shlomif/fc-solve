@@ -11,6 +11,12 @@ Pressing
 
 * Add some command line examples to +USAGE.txt+ .
 
+* Abstract away the hash changes for the columns-vs-states hash.
+** Create an enum for choosing which one.
+** Create wrapper macros based on the #ifdef.
+
+* s/may be/maybe/ in +README.win32.txt+ .
+
 Non-pressing
 ------------
 
