@@ -17,14 +17,6 @@ http://en.wikipedia.org/wiki/Public_domain ) however defined,
 and were kept under these terms with all rights disclaimed. These files
 are:
 
-* jhjtypes.h
-
-* lookup2.c
-
-* lookup2.h
-
-* pqueue.c
-
 * pqueue.h
 
 -- Shlomi Fish
