@@ -18,3 +18,5 @@ Right now, it only works if the .tar.gz is present.
 functions. They may incur a large run-time overhead. (inspired by Linux
 kernel patterns from LWN.net).
 
+* s/may be/maybe/ in +README.win32.txt+ .
+

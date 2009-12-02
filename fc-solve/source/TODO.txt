@@ -15,7 +15,7 @@ Pressing
 ** Create an enum for choosing which one.
 ** Create wrapper macros based on the #ifdef.
 
-* s/may be/maybe/ in +README.win32.txt+ .
+* Update the "long solutions" help screen of fc-solve with the new presets.
 
 Non-pressing
 ------------
