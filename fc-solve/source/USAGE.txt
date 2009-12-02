@@ -647,7 +647,7 @@ Presets that are shipped with Freecell Solver:
             the outcome solution's length.
 |+hello-world+                 |a meta-moves preset
 |+john-galt-line+              |a meta-moves preset
-|+rin-tin-tin+                 |a meta-moves prese
+|+rin-tin-tin+                 |a meta-moves preset
 |+sand-stone+                  |an atomic-moves preset that aims to
             minimise the outcome solution's length.
 |+slick-rock+                  |run "gooey-unknown-thing" and then "sand-stone"
