@@ -20,3 +20,5 @@ kernel patterns from LWN.net).
 
 * s/may be/maybe/ in +README.win32.txt+ .
 
+* Update the "long solutions" help screen of fc-solve with the new presets.
+

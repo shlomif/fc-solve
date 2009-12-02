@@ -15,8 +15,6 @@ Pressing
 ** Create an enum for choosing which one.
 ** Create wrapper macros based on the #ifdef.
 
-* Update the "long solutions" help screen of fc-solve with the new presets.
-
 Non-pressing
 ------------
 
