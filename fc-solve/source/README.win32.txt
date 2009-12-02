@@ -14,7 +14,7 @@ download PySol-FC:
 
 http://pysolfc.sourceforge.net/
 
-Or may be Freecell Pro:
+Or maybe Freecell Pro:
 
 http://www.rrhistorical.com/rrdata/Fcpro65/
 
