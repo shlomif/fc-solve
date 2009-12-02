@@ -360,14 +360,13 @@ help_screen_t help_screens[] = {
     "short-sol",
 "The following configurations may produce shorter solutions:\n"
 "\n"
-"    fc-solve -opt\n"
-"    fc-solve --method a-star -opt\n"
-"    fc-solve --reparent-states -opt\n"
-"    fc-solve --method a-star --reparent-states -opt\n"
+"    fc-solve -l gooey-unknown-thing\n"
+"    fc-solve -l slick-rock\n"
 "\n"
-"If \"--method a-star\" is specified you can set the weights with\n"
-"-asw {comma separated list of 5 numeric weights}, which may improve\n"
-"the length of the solution. (refer to the USAGE file for more information)\n"
+"You may also try adding the \"-opt\" and/or \"--reparent-states\" options"
+"which may make things a little better.\n"
+"\n"
+"Refer to the file 'USAGE' for more information.\n"
 },
 {
     "summary",
