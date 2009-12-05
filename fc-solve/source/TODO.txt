@@ -18,6 +18,11 @@ Pressing
 Non-pressing
 ------------
 
+* Experiment with making fcs_move_t a bit-field with half-octets/etc. for
+the various fields.
+** Make sure that the amount required can fit there using CMake and a log2
+function.
+
 * Play with moving commonly accessed struct elements to the start of
 the struct to fit within the processor's cache line. Like the Linux kernel 
 where the most important elements are at the first 32 bytes of the struct.
