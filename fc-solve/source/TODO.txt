@@ -15,9 +15,6 @@ Pressing
 ** Create an enum for choosing which one.
 ** Create wrapper macros based on the #ifdef.
 
-* Deal with the inability to "make package_source" inside an unpacked
-.../freecell-solver-x.y.z/ directory.
-
 Non-pressing
 ------------
 

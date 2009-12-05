@@ -22,3 +22,6 @@ kernel patterns from LWN.net).
 
 * Update the "long solutions" help screen of fc-solve with the new presets.
 
+* Deal with the inability to "make package_source" inside an unpacked
+.../freecell-solver-x.y.z/ directory.
+
