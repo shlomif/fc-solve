@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 21;
 use Test::Differences;
 
 {
@@ -434,6 +434,77 @@ EOF
         "Simple Simon 7537454 (Long seed)",
     );
 }
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -F 800600`;
+
+    my $expected = <<"EOF";
+3H 10S QH 10D 8D JC AS
+3S KC 2D 6D 5S 10H 5C
+JH 6S 4D 8S 7H 7D 6H
+4C 7C 9D AH 4H 5D 8C
+7S KS QD 3D 5H 2H
+8H 9H 2C AC KD AD
+JS 9C 4S 9S 10C 2S
+JD QS QC KH 3C 6C
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Freecell PySolFC 800600",
+    );
+}
+
+
+{
+    my $got =
+        `python ../board_gen/make_pysol_freecell_board.py --pysolfc 800600`
+        ;
+
+    my $expected = <<"EOF";
+3H 10S QH 10D 8D JC AS
+3S KC 2D 6D 5S 10H 5C
+JH 6S 4D 8S 7H 7D 6H
+4C 7C 9D AH 4H 5D 8C
+7S KS QD 3D 5H 2H
+8H 9H 2C AC KD AD
+JS 9C 4S 9S 10C 2S
+JD QS QC KH 3C 6C
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Freecell PySolFC 800600 (Long flag).",
+    );
+}
+
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -F -t 800600`;
+
+    my $expected = <<"EOF";
+3H TS QH TD 8D JC AS
+3S KC 2D 6D 5S TH 5C
+JH 6S 4D 8S 7H 7D 6H
+4C 7C 9D AH 4H 5D 8C
+7S KS QD 3D 5H 2H
+8H 9H 2C AC KD AD
+JS 9C 4S 9S TC 2S
+JD QS QC KH 3C 6C
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Freecell PySolFC 800600",
+    );
+}
+
 
 =head1 COPYRIGHT AND LICENSE
 
