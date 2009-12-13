@@ -54,6 +54,7 @@
 
 # imports
 import sys, os, re, string, time, types
+import random
 
 # PySol imports
 
@@ -192,6 +193,57 @@ class LCRandom31(PysolRandom):
     def randint(self, a, b):
         self.seed = (self.seed*214013L + 2531011L) & self.MAX_SEED
         return a + (int(self.seed >> 16) % (b+1-a))
+
+# ************************************************************************
+# * Mersenne Twister random number generator
+# * uses standart python module `random'
+# ************************************************************************
+
+class BasicRandom:
+    #MAX_SEED = 0L
+    #MAX_SEED = 0xffffffffffffffffL  # 64 bits
+    MAX_SEED = 100000000000000000000L # 20 digits
+
+    ORIGIN_UNKNOWN  = 0
+    ORIGIN_RANDOM   = 1
+    ORIGIN_PREVIEW  = 2         # random from preview
+    ORIGIN_SELECTED = 3         # manually entered
+    ORIGIN_NEXT_GAME = 4        # "Next game number"
+
+    def __str__(self):
+        return self.str(self.initial_seed)
+
+    def str(self, seed):
+        return '%020d' % seed
+
+    def reset(self):
+        raise SubclassResponsibility
+
+    def copy(self):
+        random = self.__class__(0L)
+        random.__dict__.update(self.__dict__)
+        return random
+
+    def increaseSeed(self, seed):
+        if seed < self.MAX_SEED:
+            return seed + 1L
+        return 0L
+
+    def _getRandomSeed(self):
+        t = long(time.time() * 256.0)
+        t = (t ^ (t >> 24)) % (self.MAX_SEED + 1L)
+        return t
+
+class MTRandom(BasicRandom, random.Random):
+
+    def setSeed(self, seed):
+        random.Random.__init__(self, seed)
+        self.initial_seed = seed
+        self.initial_state = self.getstate()
+        self.origin = self.ORIGIN_UNKNOWN
+
+    def reset(self):
+        self.setstate(self.initial_state)
 
 class Card:
 
@@ -355,7 +407,7 @@ def flip_card(card_str, flip):
         return card_str
 
 
-def shuffle(orig_cards, game_num):
+def shuffle(orig_cards, game_num, is_pysol_fc_deals):
     if game_num <= 32000:
         r = LCRandom31()
         r.setSeed(game_num)
@@ -367,7 +419,11 @@ def shuffle(orig_cards, game_num):
             orig_cards = fcards
         r.shuffle(orig_cards)
     else:
-        r = LCRandom64()
+        r = 0
+        if (is_pysol_fc_deals):
+            r = MTRandom()
+        else:
+            r = LCRandom64()
         r.setSeed(game_num)
         r.shuffle(orig_cards)
 
@@ -393,7 +449,7 @@ class Game:
                 "fan" : None
         }
 
-    def __init__(self, game_id, game_num, print_ts):
+    def __init__(self, game_id, game_num, is_pysol_fc_deals, print_ts):
         mymap = {}
         for k in self.REVERSE_MAP.keys():
             if self.REVERSE_MAP[k] is None:
@@ -405,6 +461,7 @@ class Game:
         self.game_id = game_id
         self.game_num = game_num
         self.print_ts = print_ts
+        self.is_pysol_fc_deals = is_pysol_fc_deals
 
     def print_layout(self):
         game_class = self.lookup()
@@ -433,7 +490,7 @@ class Game:
     def deal(self):
         orig_cards = createCards(self.get_num_decks(), self.print_ts)
 
-        orig_cards = shuffle(orig_cards, self.game_num)
+        orig_cards = shuffle(orig_cards, self.game_num, self.is_pysol_fc_deals)
 
         cards = orig_cards
         cards.reverse()
@@ -628,16 +685,24 @@ class Game:
 
 def shlomif_main(args):
     print_ts = 0
-    if (args[1] == "-t"):
-        print_ts = 1
-        args.pop(0)
+    pysol_fc_deals = 0
+    while args[1][0] == '-':
+        if (args[1] == "-t"):
+            print_ts = 1
+            args.pop(0)
+        elif ((args[1] == "--pysolfc") or (args[1] == "-F")):
+            pysol_fc_deals = 1
+            args.pop(0)
+        else:
+            raise "Unknown flag " + args[1] + "!"
+
     game_num = long(args[1])
     if (len(args) >= 3):
         which_game = args[2]
     else:
         which_game = "freecell"
 
-    game = Game(which_game, game_num, print_ts)
+    game = Game(which_game, game_num, pysol_fc_deals, print_ts)
     game.print_layout();
 
 if __name__ == "__main__":
