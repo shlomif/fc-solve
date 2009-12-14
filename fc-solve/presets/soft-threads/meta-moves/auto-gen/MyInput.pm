@@ -74,6 +74,16 @@ sub _gen_initial_scans_tensor
     return zeroes($self->num_boards(), $self->_num_sel_scans, @$extra_dims);
 }
 
+sub _should_update
+{
+    my ($self, $src_path, $dest_path) = @_;
+
+    my @orig_stat = stat($src_path);
+    my @proc_stat = stat($dest_path);
+
+    return ((! @proc_stat) || ($orig_stat[9] > $proc_stat[9]));
+}
+
 sub _get_scans_data_helper
 {
     my $self = shift;
@@ -96,9 +106,8 @@ sub _get_scans_data_helper
     {
         print "scan_idx=$scan_idx\n";
         {
-            my @orig_stat = stat($scan->data_file_path());
-            my @proc_stat = stat("$data_dir/" . $scan->id());
-            if ((! scalar(@proc_stat)) || $orig_stat[9] > $proc_stat[9])
+            my $dest_path = $data_dir . "/" . $scan->id();
+            if ($self->_should_update($scan->data_file_path(), $dest_path))
             {
                 my $data_s = _slurp($scan->data_file_path());
                 my @array = unpack("l*", $data_s);
@@ -109,7 +118,7 @@ sub _get_scans_data_helper
                 
                 my $c = pdl(\@array);
                 
-                writefraw($c, "./.data-proc/" . $scan->id());
+                writefraw($c, $dest_path);
             }
         }
         {
@@ -121,10 +130,7 @@ sub _get_scans_data_helper
             my $src = $scan->data_file_path();
             my $dest = "$lens_dir/" . $scan->id();
 
-            my @orig_stat = stat($src);
-            my @proc_stat = stat($dest);
-
-            if ((! scalar(@proc_stat)) || $orig_stat[9] > $proc_stat[9])
+            if ($self->_should_update($src, $dest))
             {
                 my $data_s = _slurp($src);
 
