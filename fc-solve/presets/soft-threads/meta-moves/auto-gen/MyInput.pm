@@ -122,9 +122,9 @@ sub _get_scans_data_helper
             }
         }
         {
-            my $c = readfraw("./.data-proc/" . $scan->id());
-            my $b = $scans_data->slice(":,$scan_idx");
-            $b += $c->slice((2+$start_board).":".($self->num_boards()+1+$start_board));
+            my $scan_vec = readfraw("./.data-proc/" . $scan->id());
+            my $scans_data_slice = $scans_data->slice(":,$scan_idx");
+            $scans_data_slice += $scan_vec->slice((2+$start_board).":".($self->num_boards()+1+$start_board));
         }
         {
             my $src = $scan->data_file_path();
@@ -160,9 +160,9 @@ sub _get_scans_data_helper
             }
         }
         {
-            my $c = readfraw("$lens_dir/" . $scan->id());
-            my $b = $scans_lens_data->slice(":,$scan_idx,:");
-            $b += $c->slice(
+            my $scan_vec = readfraw("$lens_dir/" . $scan->id());
+            my $scans_data_slice = $scans_lens_data->slice(":,$scan_idx,:");
+            $scans_data_slice += $scan_vec->slice(
                 sprintf(
                     "%d:%d,:,*",
                     ($start_board-1),
@@ -170,6 +170,9 @@ sub _get_scans_data_helper
                 )
             )->xchg(1,2);
         }
+    }
+    continue
+    {
         $scan_idx++;
     }
 
