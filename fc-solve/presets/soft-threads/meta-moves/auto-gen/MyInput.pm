@@ -12,12 +12,12 @@ use Shlomif::FCS::CalcMetaScan::Structs;
 use PDL;
 use PDL::IO::FastRaw;
 
-__PACKAGE__->mk_accessors(
-    qw(
+__PACKAGE__->mk_acc_ref(
+    [qw(
         start_board
         num_boards
         selected_scans
-    )
+    )],
 );
 
 sub _init
