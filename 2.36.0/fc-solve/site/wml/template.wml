@@ -1,0 +1,86 @@
+<set-var latemp_with_head_meta_tags="1" />
+#include "latemp/latemp-main.wml"
+#include "shlomif/affiliations.wml"
+#include "share-this.wml"
+
+<define-tag rss_feed whitespace="delete">
+http://fc-solve.blogspot.com/feeds/posts/default?alt=rss
+</define-tag>
+
+<latemp_lang "en-US" />
+<latemp_encoding "utf-8" />
+<latemp_author "Shlomi Fish" />
+<latemp_meta_desc "Freecell Solver - a Program and a Library written in ANSI C for Solving Games of Freecell and similar Solitaire Variants" />
+<latemp_common_keywords "Freecell, Freecell Solver, solvers, AI, artificial intelligence, solitaire, Simple Simon, Baker's Game, Seahaven Towers, Shlomi Fish, games" />
+
+<latemp_affiliations_buttons>
+<affil_collection_berlios />
+;;; The PayPal button
+<a 
+href="https://developer.berlios.de/project/make_donation.php?group_id=66" 
+rel="donate" title="Please donate to show your appreciation for the hard
+work conducted on Freecell Solver"><img src="$(ROOT)/images/paypal.gif"
+alt="PayPal Donate" class="paypal"/></a>
+<br />
+<a href="<rss_feed />" rel="rss feed" title="Subscribe to Our News"><img 
+    src="$(ROOT)/images/rss.png"
+    alt="RSS Feed"
+    class="bless"
+    /></a>
+
+</latemp_affiliations_buttons>
+
+
+
+
+<latemp_webmaster>
+<p>
+<b>Webmaster:</b> <a href="http://www.shlomifish.org/">Shlomi Fish</a> (Email: 
+<a href="mailto:shlomif@iglu.org.il">shlomif@iglu.org.il</a>).
+</p>
+<script type="text/javascript">
+<!--
+$("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]").each(function(i){ \$(this).append( ' <span class="selfl">[<a href="#' + this.id + '">link</a>]</span>' ) })
+-->
+</script>
+</latemp_webmaster>
+
+
+
+
+<define-tag linktofile>
+<a href="%0">%0</a>
+</define-tag>
+<define-tag berlios_url whitespace="delete">
+<if "$(BERLIOS)" "$(ROOT)/%0" "http://fc-solve.berlios.de/%0" />
+</define-tag>
+
+<define-tag arch:doc:url><berlios_url "arch_doc/" /></define-tag>
+<define-tag doxygen:url><berlios_url "michael_mann/" /></define-tag>
+<set-var presentation_url="http://www.shlomifish.org/lecture/Freecell-Solver/" />
+
+<define-tag my_extra_head_elements>
+<script type="text/javascript" src="$(ROOT)/js/jq.js"></script>
+<link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="<rss_feed />" />
+<link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default" />
+</define-tag>
+
+<define-tag my_printable_head_elements>
+<style type="text/css">
+body { background-color : white; color: black; }
+td { vertical-align : top; }
+</style>
+</define-tag>
+
+<latemp_extra_head_elements>
+<if "$(PRINTABLE)" 
+    "<my_printable_head_elements />"
+    "<my_extra_head_elements />"
+    />
+</latemp_extra_head_elements>
+
+<latemp_after_body>
+<br />
+<br />
+<share_this_button />
+</latemp_after_body>

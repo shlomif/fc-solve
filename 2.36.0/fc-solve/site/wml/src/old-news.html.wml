@@ -1,0 +1,11 @@
+#include '../template.wml'
+
+<latemp_subject "Freecell Solver's Previous News Items" />
+<:{
+use FreecellSolver::Site::News;
+
+binmode STDOUT, ":utf8";
+my $news = FreecellSolver::Site::News->new();
+print $news->render_old();
+}:>
+
