@@ -104,7 +104,6 @@ sub _get_scans_data_helper
 
     foreach my $scan (@$selected_scans)
     {
-        print "scan_idx=$scan_idx\n";
         {
             my $dest_path = $data_dir . "/" . $scan->id();
             if ($self->_should_update($scan->data_file_path(), $dest_path))
