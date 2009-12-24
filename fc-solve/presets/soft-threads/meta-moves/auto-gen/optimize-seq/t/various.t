@@ -21,20 +21,34 @@ use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn )
     is ($trap->stdout(), "7\n8\n", "Black list is OK.");
 }
 
+# TEST:$cnt=0;
+sub test_scan_cmd_line
 {
+    my ($id, $cmd_line) = @_;
+
     trap {    
-        # TEST
-        ok (!system("mono find_opt.exe test_lookup_scan_cmd_line_by_id 3"));
+        # TEST:$cnt++;
+        ok (!system(
+                "mono", "find_opt.exe", "test_lookup_scan_cmd_line_by_id", $id
+            ),
+            "test_lookup_scan_cmd_line_by_id($id) ran successfully."
+        );
     };
 
-    # TEST
-    $trap->stderr_is("", 
-        "test_lookup_scan_cmd_line did not return any errors."
+    # TEST:$cnt++;
+    $trap->stderr_is("",
+        "test_lookup_scan_cmd_line_by_id($id) did not return any errors."
     );
 
-    # TEST
+    # TEST:$cnt++;
     $trap->stdout_is(
-        "--method random-dfs -seed 2 -to 0[01][23456789]\n", 
-        "test_lookup_scan_cmd_line(3) is OK.",
+        "$cmd_line\n",
+        "test_lookup_scan_cmd_line($id) is OK.",
     );
 }
+# TEST:$tests_for_scan_cmd_line=$cnt;
+
+
+# TEST*$tests_for_scan_cmd_line
+test_scan_cmd_line(3, "--method random-dfs -seed 2 -to 0[01][23456789]");
+
