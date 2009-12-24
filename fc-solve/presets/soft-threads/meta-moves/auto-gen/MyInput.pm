@@ -84,6 +84,13 @@ sub _should_update
     return ((! @proc_stat) || ($orig_stat[9] > $proc_stat[9]));
 }
 
+# Number of numbers in the header of the solutions' iteration counts
+my $NUM_NUMBERS_IN_HEADER = 3;
+
+my $HEADER_START_BOARD_IDX = 0;
+my $HEADER_NUM_BOARDS = 1;
+my $HEADER_ITERATIONS_LIMIT = 2;
+
 sub _get_scans_data_helper
 {
     my $self = shift;
@@ -110,7 +117,10 @@ sub _get_scans_data_helper
             {
                 my $data_s = _slurp($scan->data_file_path());
                 my @array = unpack("l*", $data_s);
-                if (($array[0] != 1) || ($array[1] < $self->num_boards) || ($array[2] != 100000))
+                if (($array[$HEADER_START_BOARD_IDX] != 1) || 
+                    ($array[$HEADER_NUM_BOARDS] < $self->num_boards) || 
+                    ($array[$HEADER_ITERATIONS_LIMIT] != 100000)
+                   )
                 {
                     die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
                 }
@@ -123,7 +133,11 @@ sub _get_scans_data_helper
         {
             my $scan_vec = readfraw("./.data-proc/" . $scan->id());
             my $scans_data_slice = $scans_data->slice(":,$scan_idx");
-            $scans_data_slice += $scan_vec->slice((2+$start_board).":".($self->num_boards()+1+$start_board));
+            # Board No. 1 starts at index 0.
+            my $start_idx = $NUM_NUMBERS_IN_HEADER + ($start_board - 1);
+            $scans_data_slice += $scan_vec->slice(
+                $start_idx.":".($start_idx + $self->num_boards()-1)
+            );
         }
         {
             my $src = $scan->data_file_path();
@@ -142,7 +156,7 @@ sub _get_scans_data_helper
                 }
 
                 # Remove the header
-                splice @iters, 0, 3;
+                splice @iters, 0, $NUM_NUMBERS_IN_HEADER;
 
                 my $c = pdl(
                     [\@iters, 
