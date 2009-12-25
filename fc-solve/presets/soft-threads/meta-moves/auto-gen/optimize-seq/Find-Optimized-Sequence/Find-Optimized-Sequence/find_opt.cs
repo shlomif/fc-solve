@@ -182,6 +182,8 @@ class Process
 		
 		int quota = quota_step;
 		
+		long total_iters = 0;
+		
 		for (int quota_idx = 0; quota_idx < quota_iters_num ; quota_idx++)
 		{
 			int max_solved_boards = 0;
@@ -231,9 +233,12 @@ class Process
 					new int [scans_num , num_boards-max_solved_boards];
 				int target_idx = 0;
 				
+				total_iters += num_boards * quota;
+				
 				for(int board_idx = 0; board_idx < num_boards; board_idx++)
 				{
 					int source_max_datum = running_scans_data[max_solved_scan_idx,board_idx];
+
 					if ((source_max_datum < 0) || (source_max_datum > quota))
 					{
 						for (int scan_idx = 0; scan_idx < scans_num ; scan_idx++)
@@ -246,8 +251,15 @@ class Process
 									? (source_datum - quota) : source_datum
 								);
 						}
-						
+					
 						target_idx++;
+					}
+					else
+					{
+						/* We only iterated for source_max_datum iterations for 
+						 * scan_idx == max_solved_scan_idx 
+						 * */
+						total_iters -= (quota-source_max_datum);
 					}
 				}
 				
@@ -296,7 +308,10 @@ class Process
 		}
 		
 
+		Console.WriteLine("total_iters = " + total_iters);
+		
 		bool is_first = true;
+		
 		foreach (Quota_Allocation quota_a in rled_allocs)
 		{
 			if (! is_first)
