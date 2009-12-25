@@ -426,6 +426,57 @@ class Process
 		
 		return rled_allocs;
 	}
+	
+	public void FindOptimalQuotas(int quota_iters_num)
+	{	
+		const int initial_quota_value = 350;
+		
+		const int start_quota = 100;
+		const int end_quota = 1000;
+		
+		List<Quota_Allocation> rled_allocs = null;
+				
+		int [] running_quotas = get_constant_quotas(quota_iters_num, initial_quota_value);
+		
+		for(int quota_idx = 0; quota_idx < quota_iters_num ; quota_idx++)
+		{
+			int min_quota = -1;
+			long min_quota_iters = -1;
+			for (int quota_value = start_quota; quota_value <= end_quota ; quota_value++)
+			{
+				if (quota_value % 50 == 0)
+				{
+					Console.WriteLine("Reached " + quota_value);
+				}
+				running_quotas[quota_idx] = quota_value;
+				
+				long iters = -1;
+				
+				GetQuotasAllocation(quota_iters_num,
+				                    running_quotas,
+				                    ref rled_allocs,
+				                    ref iters);
+				    
+        		if ((min_quota_iters < 0) || (iters < min_quota_iters))
+        		{
+            		min_quota = quota_value;
+            		min_quota_iters = iters;
+        		}
+			}
+			
+			running_quotas[quota_idx] = min_quota;
+			
+#if true
+			/* A trace. */
+			Console.WriteLine(string.Format("Found {0} for No. {1} ({2})",
+			                                min_quota,
+			                                quota_idx,
+			                                min_quota_iters));
+#endif
+
+		}
+	}
+	
 }
 
 class Program
@@ -494,6 +545,16 @@ class Program
             Process p = new Process(input);
             p.SampleRunWithConstantQuotas(quota_value);
 		}
+		else if (cmd == "find_optimal_quotas")
+		{
+            Input input = new Input(start_board, num_boards);
+            input.read_data();
+			
+			int iters_num = Convert.ToInt32(args[1]);
+
+            Process p = new Process(input);
+            p.FindOptimalQuotas(iters_num);
+		}		
         // List<double> myList = new List<double>();
 		else
 		{
