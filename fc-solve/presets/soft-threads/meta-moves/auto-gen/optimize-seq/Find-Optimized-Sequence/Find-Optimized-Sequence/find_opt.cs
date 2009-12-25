@@ -28,9 +28,10 @@ class Input
 	public const string data_dir
 		= "/home/shlomi/progs/freecell/trunk/fc-solve/presets/soft-threads/meta-moves/auto-gen";
 	
-	
 	public List<int> blacklist;
 	public List<InputScan> scans;
+	
+	public InputScan [] scans_arr;
 	
 	public int [,] scans_data;
 	
@@ -75,6 +76,8 @@ class Input
 				scans.Add(scan);
 			}
         }		
+		
+		calc_scan_array();
 	}
 	
 	public void read_data()
@@ -123,6 +126,18 @@ class Input
 			scan_idx++;
 		}
 	}
+
+	protected void calc_scan_array()
+	{
+		scans_arr = new InputScan[scans.Count];
+		
+		int scan_idx = 0;
+		foreach (InputScan scan in scans)
+		{
+			scans_arr[scan_idx++] = scan;
+		}
+	}
+	
 }
 
 class Quota_Allocation
@@ -187,19 +202,7 @@ class Process
 	void print_quota_allocations (System.Collections.Generic.List<Quota_Allocation> rled_allocs)
 	{
 		int scans_num = input.scans.Count;
-		
-		InputScan [] scans = new InputScan[scans_num];
-		
-		/* Calculate the scans array */
-		{
-			int scan_idx = 0;
-			foreach (InputScan scan in input.scans)
-			{
-				scans[scan_idx] = scan;
-				scan_idx++;
-			}
-		}
-		
+				
 		bool is_first = true;
 		
 		foreach (Quota_Allocation quota_a in rled_allocs)
@@ -210,7 +213,7 @@ class Process
 			}
 			
 			Console.Write(
-				"" +quota_a.quota + "@" + scans[quota_a.scan_idx].id
+				"" +quota_a.quota + "@" + input.scans_arr[quota_a.scan_idx].id
 			);
 			
 			is_first = false;
