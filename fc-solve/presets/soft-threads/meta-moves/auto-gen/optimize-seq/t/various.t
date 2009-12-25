@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 30;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 # TEST:$cnt=0;
@@ -134,3 +134,29 @@ test_process_sample_run(
 EOF
 );
 
+sub test_process_sample_run_with_constant_quotas
+{
+    my ($quota_value, $output) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    return test_find_opt_command_output(
+        "test_process_sample_run_with_constant_quotas",
+        [$quota_value],
+        $output,
+    );
+}
+# TEST:$test_process_sample_run_with_constant_quotas=$test_find_opt_command_output;
+
+# TEST*$test_process_sample_run_with_constant_quotas
+test_process_sample_run_with_constant_quotas(
+    240,
+    sprintf("total_iters = %i\n%s", 18_543_231, strip_newlines(<<'EOF'),),
+240@2,240@5,240@9,240@2,240@5,240@9,240@4,240@17,240@4,240@2,480@12,240@17,
+240@2,240@5,480@18,240@5,480@3,240@5,240@9,480@10,240@2,240@10,240@2,480@15,
+480@5,240@11,480@20,240@4,240@11,240@18,240@11,240@17,240@11,720@12,240@10,
+240@16,240@20,480@1,1440@2,240@5,720@9,240@10,240@16,240@17,240@18,
+960@2,960@12,480@16,480@18,720@15,1200@17,1440@18,1680@10,3600@17,4560@12,
+5520@1,5760@20
+EOF
+);

@@ -193,6 +193,24 @@ class Process
 
 		return quotas;
 	}
+
+	public void SampleRunWithConstantQuotas(int quota_value)
+	{
+		const int quota_iters_num = 5000;
+				
+		long total_iters = -1;
+		List<Quota_Allocation> rled_allocs = null;
+		
+		GetQuotasAllocation(quota_iters_num,
+		                    get_constant_quotas(quota_iters_num, quota_value),
+		                    ref rled_allocs,
+		                    ref total_iters
+		                    );
+		
+		Console.WriteLine("total_iters = " + total_iters);
+		
+		print_quota_allocations(rled_allocs);
+	}
 	
 	public void SampleRun()
 	{
@@ -433,6 +451,16 @@ class Program
             Process p = new Process(input);
             p.SampleRun();
         }
+		else if (cmd == "test_process_sample_run_with_constant_quotas")
+		{
+            Input input = new Input(start_board, num_boards);
+            input.read_data();
+			
+			int quota_value = Convert.ToInt32(args[1]);
+
+            Process p = new Process(input);
+            p.SampleRunWithConstantQuotas(quota_value);
+		}
         // List<double> myList = new List<double>();
 		else
 		{
