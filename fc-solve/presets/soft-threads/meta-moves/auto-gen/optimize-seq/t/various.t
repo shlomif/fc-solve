@@ -22,33 +22,48 @@ use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn )
 }
 
 # TEST:$cnt=0;
-sub test_scan_cmd_line
+sub test_find_opt_command_output
 {
-    my ($id, $cmd_line) = @_;
+    my ($cmd, $cmd_args, $output) = @_;
+
+    my $test_id = "$cmd(" . join(",", @$cmd_args) . ")";
 
     trap {    
         # TEST:$cnt++;
         ok (!system(
-                "mono", "find_opt.exe", "test_lookup_scan_cmd_line_by_id", $id
+                "mono", "find_opt.exe", $cmd, @$cmd_args,
             ),
-            "test_lookup_scan_cmd_line_by_id($id) ran successfully."
+            "$test_id ran successfully."
         );
     };
 
     # TEST:$cnt++;
     $trap->stderr_is("",
-        "test_lookup_scan_cmd_line_by_id($id) did not return any errors."
+        "$test_id did not return any errors."
     );
 
     # TEST:$cnt++;
     $trap->stdout_is(
-        "$cmd_line\n",
-        "test_lookup_scan_cmd_line($id) is OK.",
+        "$output\n",
+        "$test_id output is OK.",
     );
 
     return;
 }
-# TEST:$tests_for_scan_cmd_line=$cnt;
+# TEST:$test_find_opt_command_output=$cnt;
+
+sub test_scan_cmd_line
+{
+    my ($id, $cmd_line) = @_;
+
+    return test_find_opt_command_output(
+        "test_lookup_scan_cmd_line_by_id",
+        [ $id, ],
+        $cmd_line,
+    );
+}
+
+# TEST:$tests_for_scan_cmd_line=$test_find_opt_command_output;
 
 
 # TEST*$tests_for_scan_cmd_line
