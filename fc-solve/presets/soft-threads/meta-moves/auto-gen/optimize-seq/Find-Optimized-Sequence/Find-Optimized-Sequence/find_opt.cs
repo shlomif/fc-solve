@@ -152,11 +152,8 @@ class Process
 		input = new_input;
 	}
 	
-	public void SampleRun()
+	protected int [] get_default_quotas(int quota_iters_num)
 	{
-		// This is temporary - naturally they will later be sorted out.
-		const int quota_iters_num = 5000;
-		
 		const int default_quota = 350;
 			
 		int [] quotas = new int[quota_iters_num];
@@ -165,11 +162,22 @@ class Process
 		{
 			quotas[i] = default_quota;
 		}
-		
+
+		return quotas;
+	}
+	
+	public void SampleRun()
+	{
+		const int quota_iters_num = 5000;
+				
 		long total_iters = -1;
 		List<Quota_Allocation> rled_allocs = null;
 		
-		GetQuotasAllocation(quota_iters_num, quotas, ref rled_allocs, ref total_iters);
+		GetQuotasAllocation(quota_iters_num,
+		                    get_default_quotas(quota_iters_num), 
+		                    ref rled_allocs,
+		                    ref total_iters
+		                    );
 		
 		Console.WriteLine("total_iters = " + total_iters);
 		
@@ -186,7 +194,6 @@ class Process
 				scan_idx++;
 			}
 		}
-		
 		
 		bool is_first = true;
 		
