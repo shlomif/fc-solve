@@ -30,6 +30,8 @@ class Input
 	public List<int> blacklist;
 	public List<InputScan> scans;
 	
+	public int [,] data;
+	
 	public Input(int new_start_board, int new_num_boards)
 	{
 		start_board = new_start_board;
@@ -77,7 +79,7 @@ class Input
 	{
 		read_scans_file();
 		
-		int [,] data = new int [scans.Count,32000];
+		data = new int [scans.Count,32000];
 		
 		int scan_idx = 0;
 		foreach (InputScan scan in scans)
@@ -148,6 +150,26 @@ class Program
 			
 			InputScan scan = input.scans.Find(e => e.id == id);
 			Console.WriteLine(scan.cmd_line);
+		}
+		else if (cmd == "test_lookup_iters")
+		{
+			Input input = new Input(start_board, num_boards);
+			input.read_data();
+			
+			int scan_id = Convert.ToInt32(args[1]);
+			int board_idx = Convert.ToInt32(args[2]);
+			
+			int scan_idx = 0;
+			foreach (InputScan scan in input.scans)
+			{
+				if (scan.id == scan_id)
+				{
+					break;
+				}
+				scan_idx++;
+			}
+			
+			Console.WriteLine(input.data[scan_idx , (board_idx-input.start_board)]);
 		}
         // List<double> myList = new List<double>();
 		else

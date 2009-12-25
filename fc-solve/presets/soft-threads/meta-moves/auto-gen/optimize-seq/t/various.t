@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 15;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 {
@@ -57,4 +57,39 @@ test_scan_cmd_line(16, "--method a-star -asw 0.2,0.3,0.5,0,0");
 
 # TEST*$tests_for_scan_cmd_line
 test_scan_cmd_line(1, "--method soft-dfs -to 0123456789",);
+
+# TEST:$cnt=0;
+sub test_lookup_iters
+{
+    my ($scan_id, $board_idx, $iters_num) = @_;
+
+    my $test_id = "test_lookup_iters($scan_id, $board_idx)";
+
+    trap {
+        # TEST:$cnt++;
+        ok (!system(
+                "mono", "find_opt.exe", "test_lookup_iters", 
+                $scan_id, $board_idx,
+            ),
+             "$test_id ran successfully.",
+        );
+    };
+
+    # TEST:$cnt++;
+    $trap->stderr_is("",
+        "$test_id did not return any errors."
+    );
+
+    # TEST:$cnt++;
+    $trap->stdout_is(
+        "$iters_num\n",
+        "$test_id returns the right number of iterations.",
+    );
+
+    return;
+}
+# TEST:$lookup_iters=$cnt;
+
+# TEST*$lookup_iters
+test_lookup_iters(1, 24 => 136);
 
