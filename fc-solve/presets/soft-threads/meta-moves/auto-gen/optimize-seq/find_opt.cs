@@ -72,6 +72,53 @@ class Input
 			}
         }		
 	}
+	
+	public void read_data()
+	{
+		read_scans_file();
+		
+		int [,] data = new int [scans.Count,32000];
+		
+		int scan_idx = 0;
+		foreach (InputScan scan in scans)
+		{
+			string file_path = 
+				data_file_path("data/" + scan.id + ".data.bin");
+			
+			BinaryReader binReader =
+			    new BinaryReader(File.Open(file_path, FileMode.Open));
+			
+			{
+				int start, num, iters_limit;
+			
+				start = binReader.ReadInt32();
+				num = binReader.ReadInt32();
+				iters_limit = binReader.ReadInt32();
+				
+				if (start != start_board)
+				{
+					throw new ArgumentException("Start board does not match in " + scan.id);
+				}
+				
+				if (num != num_boards)
+				{
+					throw new ArgumentException("Num boards does not match in " + scan.id);
+				}
+				
+				if (iters_limit != 100000)
+				{
+					throw  new ArgumentException("Iters limits is wrong in scan No. " + scan.id);
+				}
+			}
+			
+			for (int board_idx = 0; board_idx < num_boards ; board_idx++)
+			{
+				data[scan_idx,board_idx] = binReader.ReadInt32();				
+			}
+
+			scan_idx++;
+		}
+	}
 }
 
 class Program
