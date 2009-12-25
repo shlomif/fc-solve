@@ -25,7 +25,9 @@ class Input
 	public int start_board;
 	public int num_boards;
 	
-	public const string data_dir = "..";
+	public const string data_dir
+		= "/home/shlomi/progs/freecell/trunk/fc-solve/presets/soft-threads/meta-moves/auto-gen";
+	
 	
 	public List<int> blacklist;
 	public List<InputScan> scans;
@@ -199,7 +201,7 @@ class Process
 				
 				for(int board_idx = 0; board_idx < num_boards; board_idx++)
 				{
-					if (running_scans_data[max_solved_scan_idx,board_idx] >= quota)
+					if (running_scans_data[max_solved_scan_idx,board_idx] > quota)
 					{
 						for (int scan_idx = 0; scan_idx < scans_num ; scan_idx++)
 						{
@@ -211,6 +213,7 @@ class Process
 									? (source_datum - quota) : source_datum
 								);
 						}
+						
 						target_idx++;
 					}
 				}
@@ -244,7 +247,7 @@ class Process
 
 		foreach (Quota_Allocation quota_a in allocations)
 		{
-			Console.WriteLine(
+			Console.Write(
 				  Convert.ToString(quota_a.quota) + "@"
 			    + quota_a.scan_idx + ","
 			);
