@@ -178,12 +178,17 @@ class Process
 	protected int [] get_default_quotas(int quota_iters_num)
 	{
 		const int default_quota = 350;
-			
+		
+		return get_constant_quotas(quota_iters_num, default_quota);
+	}
+	
+	protected int [] get_constant_quotas(int quota_iters_num, int quota_value)
+	{
 		int [] quotas = new int[quota_iters_num];
 		
 		for (int i = 0; i < quota_iters_num ; i++)
 		{
-			quotas[i] = default_quota;
+			quotas[i] = quota_value;
 		}
 
 		return quotas;
