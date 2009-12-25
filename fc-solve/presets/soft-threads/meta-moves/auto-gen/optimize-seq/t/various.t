@@ -11,6 +11,8 @@ sub test_find_opt_command_output
 {
     my ($cmd, $cmd_args, $output) = @_;
 
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
     my $test_id = "$cmd(" . join(",", @$cmd_args) . ")";
 
     trap {    
@@ -51,6 +53,8 @@ sub test_scan_cmd_line
 {
     my ($id, $cmd_line) = @_;
 
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
     return test_find_opt_command_output(
         "test_lookup_scan_cmd_line_by_id",
         [ $id, ],
@@ -74,6 +78,8 @@ sub test_lookup_iters
 {
     my ($scan_id, $board_idx, $iters_num) = @_;
     
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
     return test_find_opt_command_output(
         "test_lookup_iters",
         [ $scan_id, $board_idx, ],
@@ -97,6 +103,9 @@ test_lookup_iters(5, 24070 => 83);
 sub test_process_sample_run
 {
     my ($output) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
     return test_find_opt_command_output(
         "test_process_sample_run",
         [],
