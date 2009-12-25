@@ -154,8 +154,25 @@ class Process
 	
 	public void SampleRun()
 	{
-		List<Quota_Allocation> allocations = new List<Quota_Allocation>();
+		// This is temporary - naturally they will later be sorted out.
+		const int quota_iters_num = 5000;
+		
+		const int default_quota = 350;
 			
+		int [] quotas = new int[quota_iters_num];
+		
+		for (int i = 0; i < quota_iters_num ; i++)
+		{
+			quotas[i] = default_quota;
+		}
+		
+		long total_iters = -1;
+		List<Quota_Allocation> rled_allocs = null;
+		
+		GetQuotasAllocation(quota_iters_num, quotas, ref rled_allocs, ref total_iters);
+		
+		Console.WriteLine("total_iters = " + total_iters);
+		
 		int scans_num = input.scans.Count;
 		
 		InputScan [] scans = new InputScan[scans_num];
@@ -169,23 +186,48 @@ class Process
 				scan_idx++;
 			}
 		}
-				
-		// This is temporary - naturally they will later be sorted out.
-		const int quota_iters_num = 5000;
 		
+		
+		bool is_first = true;
+		
+		foreach (Quota_Allocation quota_a in rled_allocs)
+		{
+			if (! is_first)
+			{
+				Console.Write(",");
+			}
+			
+			Console.Write(
+				"" +quota_a.quota + "@" + scans[quota_a.scan_idx].id
+			);
+			
+			is_first = false;
+		}
+		Console.WriteLine("");		
+	}
+	
+	public void GetQuotasAllocation(int quota_iters_num,
+	                                int [] quotas,
+	                                ref List<Quota_Allocation> rled_allocs,
+	                                ref long total_iters
+	                                )
+	{
+		List<Quota_Allocation> allocations = new List<Quota_Allocation>();
+			
+		int scans_num = input.scans.Count;
+	
 		int [,] running_scans_data = input.scans_data;
-		
 		
 		int num_boards = input.num_boards;
 		
-		const int quota_step = 350;
+		int quota = 0;
 		
-		int quota = quota_step;
-		
-		long total_iters = 0;
+		total_iters = 0;
 		
 		for (int quota_idx = 0; quota_idx < quota_iters_num ; quota_idx++)
-		{
+		{	
+			quota += quotas[quota_idx];
+			
 			int max_solved_boards = 0;
 			int max_solved_scan_idx = -1;
 			
@@ -272,15 +314,11 @@ class Process
 				running_scans_data = new_running_scans_data;
 			    num_boards = target_idx;
 				
-				quota = quota_step;
-			}
-			else
-			{
-				quota += quota_step;
+				quota = 0;
 			}
 		}
 		
-		List<Quota_Allocation> rled_allocs = new List<Quota_Allocation>();
+		rled_allocs = new List<Quota_Allocation>();
 		{
 			/* RLE the allocations */
 			
@@ -305,27 +343,7 @@ class Process
 				}
 			}
 			rled_allocs.Add(to_add);
-		}
-		
-
-		Console.WriteLine("total_iters = " + total_iters);
-		
-		bool is_first = true;
-		
-		foreach (Quota_Allocation quota_a in rled_allocs)
-		{
-			if (! is_first)
-			{
-				Console.Write(",");
-			}
-			
-			Console.Write(
-				"" +quota_a.quota + "@" + scans[quota_a.scan_idx].id
-			);
-			
-			is_first = false;
-		}
-		Console.WriteLine("");
+		}	
 	}
 }
 
