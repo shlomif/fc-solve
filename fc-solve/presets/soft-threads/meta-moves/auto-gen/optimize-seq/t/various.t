@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 12;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 {
@@ -54,4 +54,7 @@ test_scan_cmd_line(3, "--method random-dfs -seed 2 -to 0[01][23456789]");
 
 # TEST*$tests_for_scan_cmd_line
 test_scan_cmd_line(16, "--method a-star -asw 0.2,0.3,0.5,0,0");
+
+# TEST*$tests_for_scan_cmd_line
+test_scan_cmd_line(1, "--method soft-dfs -to 0123456789",);
 
