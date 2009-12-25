@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 30;
+use Test::More tests => 33;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 # TEST:$cnt=0;
@@ -158,5 +158,15 @@ test_process_sample_run_with_constant_quotas(
 240@16,240@20,480@1,1440@2,240@5,720@9,240@10,240@16,240@17,240@18,
 960@2,960@12,480@16,480@18,720@15,1200@17,1440@18,1680@10,3600@17,4560@12,
 5520@1,5760@20
+EOF
+);
+
+# TEST*$test_process_sample_run_with_constant_quotas
+test_process_sample_run_with_constant_quotas(
+    1073,
+    sprintf("total_iters = %i\n%s", 21_014_295, strip_newlines(<<'EOF'),),
+1073@2,1073@5,1073@9,1073@15,1073@18,1073@10,1073@3,1073@12,1073@9,1073@11,
+1073@20,2146@2,1073@11,1073@12,1073@20,2146@5,1073@17,1073@2,1073@16,2146@18,
+2146@10,4292@20,5365@12,5365@17,6438@1
 EOF
 );
