@@ -156,6 +156,13 @@ class Input
 		}
 	}
 	
+	public string FormatQuota(Quota_Allocation quota_a)
+	{
+		return 
+			string.Format(
+				"{0}@{1}", quota_a.quota, scans_arr[quota_a.scan_idx].id
+		    );
+	}
 }
 
 
@@ -211,9 +218,7 @@ class Process
 				Console.Write(",");
 			}
 			
-			Console.Write(
-				"" +quota_a.quota + "@" + input.scans_arr[quota_a.scan_idx].id
-			);
+			Console.Write(input.FormatQuota(quota_a));
 			
 			is_first = false;
 		}
