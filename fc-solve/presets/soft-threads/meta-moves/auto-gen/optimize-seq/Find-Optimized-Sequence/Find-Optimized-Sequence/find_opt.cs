@@ -318,32 +318,37 @@ class Process
 			}
 		}
 		
-		rled_allocs = new List<Quota_Allocation>();
-		{
+		rled_allocs = run_length_encode_allocations(allocations);
+	}
+
+	protected List<Quota_Allocation> run_length_encode_allocations (List<Quota_Allocation> allocations)
+	{
+		List<Quota_Allocation> rled_allocs = new List<Quota_Allocation>();
 			/* RLE the allocations */
 			
-			Quota_Allocation to_add = null;
-			foreach (Quota_Allocation item in allocations)
+		Quota_Allocation to_add = null;
+		foreach (Quota_Allocation item in allocations)
+		{
+			if (to_add == null)
 			{
-				if (to_add == null)
+				to_add = new Quota_Allocation(item);
+			}
+			else
+			{
+				if (to_add.scan_idx == item.scan_idx)
 				{
-					to_add = new Quota_Allocation(item);
+					to_add.quota += item.quota;
 				}
 				else
 				{
-					if (to_add.scan_idx == item.scan_idx)
-					{
-						to_add.quota += item.quota;
-					}
-					else
-					{
-						rled_allocs.Add(to_add);
-						to_add = new Quota_Allocation(item);
-					}
+					rled_allocs.Add(to_add);
+					to_add = new Quota_Allocation(item);
 				}
 			}
-			rled_allocs.Add(to_add);
-		}	
+		}
+		rled_allocs.Add(to_add);
+		
+		return rled_allocs;
 	}
 }
 
