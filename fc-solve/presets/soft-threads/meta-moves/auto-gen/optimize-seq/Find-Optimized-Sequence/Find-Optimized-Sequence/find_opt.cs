@@ -149,13 +149,27 @@ class Process
 	public void SampleRun()
 	{
 		List<Quota_Allocation> allocations = new List<Quota_Allocation>();
+			
+		int scans_num = input.scans.Count;
 		
+		InputScan [] scans = new InputScan[scans_num];
+		
+		/* Calculate the scans array */
+		{
+			int scan_idx = 0;
+			foreach (InputScan scan in input.scans)
+			{
+				scans[scan_idx] = scan;
+				scan_idx++;
+			}
+		}
+				
 		// This is temporary - naturally they will later be sorted out.
 		const int quota_iters_num = 5000;
 		
 		int [,] running_scans_data = input.scans_data;
 		
-		int scans_num = input.scans.Count;
+		
 		int num_boards = input.num_boards;
 		
 		const int quota_step = 350;
@@ -181,6 +195,16 @@ class Process
 						solved_boards++;
 					}
 				}
+
+#if false
+				Console.WriteLine ("Scan idx is " + scan_idx);
+				Console.WriteLine(
+					string.Format(
+				    	"Solved {0} boards at scan {1} at quota_idx {2}",
+				        solved_boards, scans[scan_idx].id, quota_idx
+				    )
+			    );
+#endif
 				
 				if (solved_boards > max_solved_boards)
 				{
@@ -234,24 +258,22 @@ class Process
 				quota += quota_step;
 			}
 		}
-		
-		InputScan [] scans = new InputScan[scans_num];
-		
-		{
-			int scan_idx = 0;
-			foreach (InputScan scan in input.scans)
-			{
-				scans[scan_idx] = scan;
-			}
-		}
 
+		bool is_first = true;
 		foreach (Quota_Allocation quota_a in allocations)
 		{
+			if (! is_first)
+			{
+				Console.Write(",");
+			}
+			
 			Console.Write(
-				  Convert.ToString(quota_a.quota) + "@"
-			    + quota_a.scan_idx + ","
+				"" +quota_a.quota + "@" + scans[quota_a.scan_idx].id
 			);
+			
+			is_first = false;
 		}
+		Console.WriteLine("");
 	}
 }
 
