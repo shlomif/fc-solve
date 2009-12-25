@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 27;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 {
@@ -103,4 +103,55 @@ test_lookup_iters(16, 97 => 14139);
 
 # TEST*$lookup_iters
 test_lookup_iters(5, 24070 => 83);
+
+# TEST:$cnt=0;
+sub test_process_sample_run
+{
+    my ($output) = @_;
+
+    my $test_id = "test_sample_run";
+
+    trap {
+        # TEST:$cnt++;
+        ok (!system(
+                "mono", "find_opt.exe", "test_process_sample_run",
+            ),
+             "$test_id ran successfully.",
+        );
+    };
+
+    # TEST:$cnt++;
+    $trap->stderr_is("",
+        "$test_id did not return any errors."
+    );
+
+    # TEST:$cnt++;
+    $trap->stdout_is(
+        "$output\n",
+        "$test_id returned the correct output.",
+    );
+
+    return;
+}
+# TEST:$test_process_sample_run=$cnt;
+
+sub strip_newlines
+{
+    my $s = shift;
+
+    $s =~ s/\n//g;
+
+    return $s;
+}
+
+# TEST*$test_process_sample_run
+test_process_sample_run(
+    strip_newlines(<<'EOF'),
+350@2,350@5,350@9,350@20,350@2,350@12,350@3,350@5,350@4,350@9,350@15,
+350@2,350@18,350@12,350@5,350@11,700@10,350@4,350@5,350@3,350@15,350@18,
+350@15,700@5,350@18,350@3,350@9,350@18,1400@5,350@15,350@16,1050@10,
+350@11,1050@16,1050@17,350@18,1050@12,1400@4,1050@18,1050@17,
+1400@10,2100@11,3500@17,4900@12,6300@1,6300@20
+EOF
+);
 

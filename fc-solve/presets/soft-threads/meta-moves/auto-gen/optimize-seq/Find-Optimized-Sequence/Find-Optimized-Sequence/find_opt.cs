@@ -135,6 +135,12 @@ class Quota_Allocation
 		scan_idx = new_scan_idx;
 		quota = new_quota;
 	}
+	
+	public Quota_Allocation(Quota_Allocation other)
+	{
+		scan_idx = other.scan_idx;
+		quota = other.quota;
+	}
 }
 
 class Process
@@ -190,7 +196,9 @@ class Process
 				
 				for (int board_idx = 0; board_idx < num_boards ; board_idx++)
 				{
-					if (running_scans_data[scan_idx, board_idx] <= quota)
+					int datum = running_scans_data[scan_idx, board_idx];
+					
+					if ((datum > 0) && (datum <= quota))
 					{
 						solved_boards++;
 					}
@@ -216,7 +224,7 @@ class Process
 			if (max_solved_boards > 0)
 			{
 				allocations.Add(new Quota_Allocation(max_solved_scan_idx, quota));
-								
+				
 				/* Update the iterations */
 				
 				int [,] new_running_scans_data =
@@ -225,7 +233,8 @@ class Process
 				
 				for(int board_idx = 0; board_idx < num_boards; board_idx++)
 				{
-					if (running_scans_data[max_solved_scan_idx,board_idx] > quota)
+					int source_max_datum = running_scans_data[max_solved_scan_idx,board_idx];
+					if ((source_max_datum < 0) || (source_max_datum > quota))
 					{
 						for (int scan_idx = 0; scan_idx < scans_num ; scan_idx++)
 						{
@@ -258,9 +267,37 @@ class Process
 				quota += quota_step;
 			}
 		}
+		
+		List<Quota_Allocation> rled_allocs = new List<Quota_Allocation>();
+		{
+			/* RLE the allocations */
+			
+			Quota_Allocation to_add = null;
+			foreach (Quota_Allocation item in allocations)
+			{
+				if (to_add == null)
+				{
+					to_add = new Quota_Allocation(item);
+				}
+				else
+				{
+					if (to_add.scan_idx == item.scan_idx)
+					{
+						to_add.quota += item.quota;
+					}
+					else
+					{
+						rled_allocs.Add(to_add);
+						to_add = new Quota_Allocation(item);
+					}
+				}
+			}
+			rled_allocs.Add(to_add);
+		}
+		
 
 		bool is_first = true;
-		foreach (Quota_Allocation quota_a in allocations)
+		foreach (Quota_Allocation quota_a in rled_allocs)
 		{
 			if (! is_first)
 			{
