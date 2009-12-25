@@ -1,4 +1,4 @@
-#if 0
+/*
 using System;
 
 namespace FindOptimizedSequence
@@ -11,4 +11,4 @@ namespace FindOptimizedSequence
 		}
 	}
 }
-#endif
+*/

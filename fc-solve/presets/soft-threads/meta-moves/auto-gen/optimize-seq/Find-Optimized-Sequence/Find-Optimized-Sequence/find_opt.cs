@@ -30,7 +30,7 @@ class Input
 	public List<int> blacklist;
 	public List<InputScan> scans;
 	
-	public int [,] data;
+	public int [,] scans_data;
 	
 	public Input(int new_start_board, int new_num_boards)
 	{
@@ -79,7 +79,7 @@ class Input
 	{
 		read_scans_file();
 		
-		data = new int [scans.Count,32000];
+		scans_data = new int [scans.Count,num_boards];
 		
 		int scan_idx = 0;
 		foreach (InputScan scan in scans)
@@ -115,10 +115,139 @@ class Input
 			
 			for (int board_idx = 0; board_idx < num_boards ; board_idx++)
 			{
-				data[scan_idx,board_idx] = binReader.ReadInt32();				
+				scans_data[scan_idx,board_idx] = binReader.ReadInt32();				
 			}
 
 			scan_idx++;
+		}
+	}
+}
+
+class Quota_Allocation
+{
+	public int scan_idx;
+	public int quota;
+	
+	public Quota_Allocation(int new_scan_idx, int new_quota)
+	{
+		scan_idx = new_scan_idx;
+		quota = new_quota;
+	}
+}
+
+class Process
+{
+	protected Input input;
+	
+	public Process(Input new_input)
+	{
+		input = new_input;
+	}
+	
+	public void SampleRun()
+	{
+		List<Quota_Allocation> allocations = new List<Quota_Allocation>();
+		
+		// This is temporary - naturally they will later be sorted out.
+		const int quota_iters_num = 5000;
+		
+		int [,] running_scans_data = input.scans_data;
+		
+		int scans_num = input.scans.Count;
+		int num_boards = input.num_boards;
+		
+		const int quota_step = 350;
+		
+		int quota = quota_step;
+		
+		for (int quota_idx = 0; quota_idx < quota_iters_num ; quota_idx++)
+		{
+			int max_solved_boards = 0;
+			int max_solved_scan_idx = -1;
+			
+			/*
+			 * Find the scan which solves the largest number of boards.
+			 * */
+			for (int scan_idx = 0; scan_idx < scans_num ; scan_idx++)
+			{
+				int solved_boards = 0;
+				
+				for (int board_idx = 0; board_idx < num_boards ; board_idx++)
+				{
+					if (running_scans_data[scan_idx, board_idx] <= quota)
+					{
+						solved_boards++;
+					}
+				}
+				
+				if (solved_boards > max_solved_boards)
+				{
+					max_solved_boards = solved_boards;
+					max_solved_scan_idx = scan_idx;
+				}
+			}
+			
+			if (max_solved_boards > 0)
+			{
+				allocations.Add(new Quota_Allocation(max_solved_scan_idx, quota));
+								
+				/* Update the iterations */
+				
+				int [,] new_running_scans_data =
+					new int [scans_num , num_boards-max_solved_boards];
+				int target_idx = 0;
+				
+				for(int board_idx = 0; board_idx < num_boards; board_idx++)
+				{
+					if (running_scans_data[max_solved_scan_idx,board_idx] >= quota)
+					{
+						for (int scan_idx = 0; scan_idx < scans_num ; scan_idx++)
+						{
+							int source_datum =
+								running_scans_data[scan_idx,board_idx];
+						
+							new_running_scans_data[scan_idx, target_idx] = 
+								((max_solved_scan_idx == scan_idx)
+									? (source_datum - quota) : source_datum
+								);
+						}
+						target_idx++;
+					}
+				}
+				
+				/* This is an assertion. */
+				if (target_idx != num_boards-max_solved_boards)
+				{
+					throw new ApplicationException("target_idx is not max_solved_boards");
+				}
+				
+				running_scans_data = new_running_scans_data;
+			    num_boards = target_idx;
+				
+				quota = quota_step;
+			}
+			else
+			{
+				quota += quota_step;
+			}
+		}
+		
+		InputScan [] scans = new InputScan[scans_num];
+		
+		{
+			int scan_idx = 0;
+			foreach (InputScan scan in input.scans)
+			{
+				scans[scan_idx] = scan;
+			}
+		}
+
+		foreach (Quota_Allocation quota_a in allocations)
+		{
+			Console.WriteLine(
+				  Convert.ToString(quota_a.quota) + "@"
+			    + quota_a.scan_idx + ","
+			);
 		}
 	}
 }
@@ -169,8 +298,16 @@ class Program
 				scan_idx++;
 			}
 			
-			Console.WriteLine(input.data[scan_idx , (board_idx-input.start_board)]);
+			Console.WriteLine(input.scans_data[scan_idx , (board_idx-input.start_board)]);
 		}
+        else if (cmd == "test_process_sample_run")
+        {
+            Input input = new Input(start_board, num_boards);
+            input.read_data();
+
+            Process p = new Process(input);
+            p.SampleRun();
+        }
         // List<double> myList = new List<double>();
 		else
 		{
