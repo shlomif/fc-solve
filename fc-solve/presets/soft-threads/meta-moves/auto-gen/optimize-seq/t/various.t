@@ -45,6 +45,8 @@ sub test_scan_cmd_line
         "$cmd_line\n",
         "test_lookup_scan_cmd_line($id) is OK.",
     );
+
+    return;
 }
 # TEST:$tests_for_scan_cmd_line=$cnt;
 
