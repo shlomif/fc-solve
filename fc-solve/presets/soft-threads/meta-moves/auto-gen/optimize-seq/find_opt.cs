@@ -36,11 +36,15 @@ class Input
 		num_boards = new_num_boards;
 	}
 	
+	public string data_file_path(string basename)
+	{
+		return data_dir + "/" + basename;
+	}
 	
 	public void read_scan_black_list()
 	{
 		blacklist = new List<int>();
-		StreamReader f = new StreamReader(data_dir + "/scans-black-list.txt");
+		StreamReader f = new StreamReader(data_file_path("scans-black-list.txt"));
 		
      	string line;
 		
@@ -54,7 +58,7 @@ class Input
 	{
 		scans = new List<InputScan>();
 		read_scan_black_list();
-		StreamReader f = new StreamReader(data_dir + "/scans.txt");
+		StreamReader f = new StreamReader(data_file_path("scans.txt"));
 		
 		string line;
 
