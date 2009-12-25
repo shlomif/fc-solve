@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 24;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 {
@@ -100,4 +100,7 @@ test_lookup_iters(1, 100 => 57282);
 
 # TEST*$lookup_iters
 test_lookup_iters(16, 97 => 14139);
+
+# TEST*$lookup_iters
+test_lookup_iters(5, 24070 => 83);
 
