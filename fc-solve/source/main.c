@@ -363,7 +363,7 @@ help_screen_t help_screens[] = {
 "    fc-solve -l gooey-unknown-thing\n"
 "    fc-solve -l slick-rock\n"
 "\n"
-"You may also try adding the \"-opt\" and/or \"--reparent-states\" options"
+"You may also try adding the \"-opt\" and/or \"--reparent-states\" options\n"
 "which may make things a little better.\n"
 "\n"
 "Refer to the file 'USAGE' for more information.\n"
