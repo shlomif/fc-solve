@@ -181,6 +181,11 @@ class Process
 		
 		Console.WriteLine("total_iters = " + total_iters);
 		
+		print_quota_allocations(rled_allocs);
+	}
+
+	void print_quota_allocations (System.Collections.Generic.List<Quota_Allocation> rled_allocs)
+	{
 		int scans_num = input.scans.Count;
 		
 		InputScan [] scans = new InputScan[scans_num];
@@ -210,8 +215,9 @@ class Process
 			
 			is_first = false;
 		}
-		Console.WriteLine("");		
+		Console.WriteLine("");
 	}
+
 	
 	public void GetQuotasAllocation(int quota_iters_num,
 	                                int [] quotas,
