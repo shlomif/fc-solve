@@ -75,37 +75,17 @@ test_scan_cmd_line(16, "--method a-star -asw 0.2,0.3,0.5,0,0");
 # TEST*$tests_for_scan_cmd_line
 test_scan_cmd_line(1, "--method soft-dfs -to 0123456789",);
 
-# TEST:$cnt=0;
 sub test_lookup_iters
 {
     my ($scan_id, $board_idx, $iters_num) = @_;
-
-    my $test_id = "test_lookup_iters($scan_id, $board_idx)";
-
-    trap {
-        # TEST:$cnt++;
-        ok (!system(
-                "mono", "find_opt.exe", "test_lookup_iters", 
-                $scan_id, $board_idx,
-            ),
-             "$test_id ran successfully.",
-        );
-    };
-
-    # TEST:$cnt++;
-    $trap->stderr_is("",
-        "$test_id did not return any errors."
+    
+    return test_find_opt_command_output(
+        "test_lookup_iters",
+        [ $scan_id, $board_idx, ],
+        $iters_num,
     );
-
-    # TEST:$cnt++;
-    $trap->stdout_is(
-        "$iters_num\n",
-        "$test_id returns the right number of iterations.",
-    );
-
-    return;
 }
-# TEST:$lookup_iters=$cnt;
+# TEST:$lookup_iters=$test_find_opt_command_output;
 
 # TEST*$lookup_iters
 test_lookup_iters(1, 24 => 136);
@@ -119,36 +99,16 @@ test_lookup_iters(16, 97 => 14139);
 # TEST*$lookup_iters
 test_lookup_iters(5, 24070 => 83);
 
-# TEST:$cnt=0;
 sub test_process_sample_run
 {
     my ($output) = @_;
-
-    my $test_id = "test_sample_run";
-
-    trap {
-        # TEST:$cnt++;
-        ok (!system(
-                "mono", "find_opt.exe", "test_process_sample_run",
-            ),
-             "$test_id ran successfully.",
-        );
-    };
-
-    # TEST:$cnt++;
-    $trap->stderr_is("",
-        "$test_id did not return any errors."
+    return test_find_opt_command_output(
+        "test_process_sample_run",
+        [],
+        $output,
     );
-
-    # TEST:$cnt++;
-    $trap->stdout_is(
-        "$output\n",
-        "$test_id returned the correct output.",
-    );
-
-    return;
 }
-# TEST:$test_process_sample_run=$cnt;
+# TEST:$test_process_sample_run=$test_find_opt_command_output;
 
 sub strip_newlines
 {
