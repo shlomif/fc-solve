@@ -2,6 +2,24 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 
+class Quota_Allocation
+{
+	public int scan_idx;
+	public int quota;
+	
+	public Quota_Allocation(int new_scan_idx, int new_quota)
+	{
+		scan_idx = new_scan_idx;
+		quota = new_quota;
+	}
+	
+	public Quota_Allocation(Quota_Allocation other)
+	{
+		scan_idx = other.scan_idx;
+		quota = other.quota;
+	}
+}
+
 class InputScan
 {
 	public int id;
@@ -140,23 +158,6 @@ class Input
 	
 }
 
-class Quota_Allocation
-{
-	public int scan_idx;
-	public int quota;
-	
-	public Quota_Allocation(int new_scan_idx, int new_quota)
-	{
-		scan_idx = new_scan_idx;
-		quota = new_quota;
-	}
-	
-	public Quota_Allocation(Quota_Allocation other)
-	{
-		scan_idx = other.scan_idx;
-		quota = other.quota;
-	}
-}
 
 class Process
 {
@@ -201,8 +202,6 @@ class Process
 
 	void print_quota_allocations (System.Collections.Generic.List<Quota_Allocation> rled_allocs)
 	{
-		int scans_num = input.scans.Count;
-				
 		bool is_first = true;
 		
 		foreach (Quota_Allocation quota_a in rled_allocs)
