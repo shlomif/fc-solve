@@ -9,15 +9,18 @@ use Getopt::Long;
 use IO::File;
 
 use Shlomif::FCS::CalcMetaScan;
+use Shlomif::FCS::CalcMetaScan::PostProcessor;
 
 use MyInput;
 
 __PACKAGE__->mk_acc_ref(
     [qw(
     arbitrator
+    _chosen_scans
     _input_obj
     num_boards
     optimize_for
+    _offset_quotas
     output_filename
     quotas_expr
     quotas_are_cb
@@ -40,6 +43,7 @@ sub _init
     my $quotas_expr = undef;
     my $quotas_are_cb = 0;
     my $optimize_for = "speed";
+    my $offset_quotas = 0;
 
     GetOptions(
         "o|output=s" => \$output_filename,
@@ -49,6 +53,7 @@ sub _init
         "start-board=i" => \$start_board,
         "quotas-expr=s" => \$quotas_expr,
         "quotas-are-cb" => \$quotas_are_cb,
+        "offset-quotas" => \$offset_quotas,
         "opt-for=s" => \$optimize_for,
     ) or exit(1);
 
@@ -60,6 +65,7 @@ sub _init
     $self->quotas_expr($quotas_expr);
     $self->quotas_are_cb($quotas_are_cb);
     $self->optimize_for($optimize_for);
+    $self->_offset_quotas($offset_quotas);
 
     $self->_input_obj(
         MyInput->new(
@@ -176,11 +182,30 @@ sub scan_def_line_mapping
     return $self->map_all_but_last(sub { "$_[0] -nst" }, shift);
 }
 
+sub _calc_iter_quota
+{
+    my $self = shift;
+    my $quota = shift;
+
+    if ($self->_offset_quotas())
+    {
+        return $quota+1;
+    }
+    else
+    {
+        return $quota;
+    }
+}
+
 sub format_prelude_iter
 {
     my $self = shift;
+
     my $iter = shift;
-    return $iter->{'q'} . '@' . $self->selected_scans()->[$iter->{'ind'}]->id();
+
+    return $iter->{'q'} . '@'
+        . $self->selected_scans()->[$iter->{'ind'}]->id()
+        ;
 }
 
 sub get_line_of_prelude
@@ -189,7 +214,7 @@ sub get_line_of_prelude
     return "--prelude \"" .
         join(",",
             map { $self->format_prelude_iter($_) } 
-                @{$self->get_chosen_scans()}
+                @{$self->_chosen_scans()}
         ) . "\"";
 }
 
@@ -263,12 +288,6 @@ sub init_arbitrator
     );
 }
 
-sub get_chosen_scans
-{
-    my $self = shift;
-    return $self->arbitrator()->chosen_scans();
-}
-
 sub report_total_iters
 {
     my $self = shift;
@@ -279,22 +298,21 @@ sub report_total_iters
     printf("total_iters = %s\n", $self->arbitrator()->total_iters());
 }
 
-sub do_rle
-{
-    my $self = shift;
-
-    if ($self->rle())
-    {
-        $self->arbitrator()->do_rle();
-    }
-}
-
 sub arbitrator_process
 {
     my $self = shift;
 
     $self->arbitrator()->calc_meta_scan();
-    $self->do_rle();
+
+    my $scans =
+        Shlomif::FCS::CalcMetaScan::PostProcessor->new(
+            {
+                do_rle => $self->rle(),
+                offset_quotas => $self->_offset_quotas(),
+            }
+        )->process($self->arbitrator->chosen_scans());
+
+     $self->_chosen_scans($scans);
 }
 
 sub do_trace_for_board

@@ -84,31 +84,6 @@ sub _next_iter_idx
     return $ret;
 }
 
-sub scans_rle
-{
-    my $self = shift;
-    my %args = (@_);
-    my $scans_list = [@{$args{'scans'}}];
-
-    my $scan = shift(@$scans_list);
-
-    my (@a);
-    while (my $next_scan = shift(@$scans_list))
-    {
-        if ($next_scan->{'ind'} == $scan->{'ind'})
-        {
-            $scan->{'q'} += $next_scan->{'q'};
-        }
-        else
-        {
-            push @a, $scan;
-            $scan = $next_scan;
-        }
-    }
-    push @a, $scan;
-    return \@a;
-}
-
 sub get_next_quota
 {
     my $self = shift;
@@ -345,14 +320,6 @@ sub calc_meta_scan
             die $err;
         }
     }
-}
-
-sub do_rle
-{
-    my $self = shift;
-    $self->chosen_scans(
-        $self->scans_rle('scans' => $self->chosen_scans())
-    );
 }
 
 sub calc_board_iters
