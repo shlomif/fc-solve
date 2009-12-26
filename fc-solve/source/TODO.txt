@@ -89,6 +89,19 @@ iterations limit.
 * Add a way to build the various libavl2 trees to be used as 
 positions/columns collections.
 
+* Adapt the scans based on the parameters of the initial board.
++
+** Try to find a correlation between various parameters of the initial board 
+(such as those calculated in the A* scan or the number of steps required to
+sort the cards in each column by rank), and the performance of various scans 
+and then:
++
+1. Calculate the initial parameters on startup.
++
+2. See what would be a good meta-scan based on them.
++
+3. Use it.
+
 To be considered
 ----------------
 
