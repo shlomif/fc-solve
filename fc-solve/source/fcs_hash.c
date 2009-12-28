@@ -53,7 +53,7 @@ void fc_solve_hash_init(
     fc_solve_hash_t * hash,
     fc_solve_hash_value_t wanted_size,
 #ifdef FCS_INLINED_HASH_COMPARISON
-    int is_stacks
+    enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
 #ifdef FCS_WITH_CONTEXT_VARIABLE
     int (*compare_function)(const void * key1, const void * key2, void * context),
@@ -84,7 +84,7 @@ void fc_solve_hash_init(
         );
 
 #ifdef FCS_INLINED_HASH_COMPARISON
-    hash->is_stacks = is_stacks;
+    hash->hash_type = hash_type;
 #else
     hash->compare_function = compare_function;
 #ifdef FCS_WITH_CONTEXT_VARIABLE
@@ -118,11 +118,11 @@ int fc_solve_hash_insert(
     fc_solve_hash_symlink_item_t * item, * last_item;
     fc_solve_hash_symlink_item_t * * item_placeholder;
 #ifdef FCS_INLINED_HASH_COMPARISON
-    int is_stacks;
+    enum FCS_INLINED_HASH_DATA_TYPE hash_type;
 #endif
 
 #ifdef FCS_INLINED_HASH_COMPARISON
-    is_stacks = hash->is_stacks;
+    hash_type = hash->hash_type;
 #endif
     /* Get the index of the appropriate chain in the hash table */
     place = hash_value & (hash->size_bitmask);
@@ -147,7 +147,7 @@ int fc_solve_hash_insert(
 #endif
 
 #ifdef FCS_INLINED_HASH_COMPARISON
-#define MY_HASH_COMPARE() (!(is_stacks \
+#define MY_HASH_COMPARE() (!(hash_type == FCS_INLINED_HASH__COLUMNS \
             ? fc_solve_stack_compare_for_comparison(item->key, key) \
             : fc_solve_state_compare(item->key, key) \
             ))

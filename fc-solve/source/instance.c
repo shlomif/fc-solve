@@ -936,7 +936,7 @@ int fc_solve_solve_instance(
             &(instance->hash),
             2048,
 #ifdef FCS_INLINED_HASH_COMPARISON
-            0
+            FCS_INLINED_HASH__STATES
 #else
 #ifdef FCS_WITH_CONTEXT_VARIABLE
             fc_solve_state_compare_with_context,
@@ -965,7 +965,7 @@ int fc_solve_solve_instance(
             &(instance->stacks_hash ),
             2048,
 #ifdef FCS_INLINED_HASH_COMPARISON
-            1
+            FCS_INLINED_HASH__COLUMNS
 #else
 #ifdef FCS_WITH_CONTEXT_VARIABLE
             fcs_stack_compare_for_comparison_with_context,

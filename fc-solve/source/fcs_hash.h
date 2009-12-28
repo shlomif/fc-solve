@@ -39,6 +39,14 @@ extern "C" {
 
 #include "inline.h"
 
+#ifdef FCS_INLINED_HASH_COMPARISON
+enum FCS_INLINED_HASH_DATA_TYPE
+{
+    FCS_INLINED_HASH__COLUMNS,
+    FCS_INLINED_HASH__STATES,
+};
+#endif
+
 typedef int fc_solve_hash_value_t;
 
 struct fc_solve_hash_symlink_item_struct
@@ -75,7 +83,7 @@ typedef struct
     /* A comparison function that can be used for comparing two keys
        in the collection */
 #ifdef FCS_INLINED_HASH_COMPARISON
-    int is_stacks;
+    enum FCS_INLINED_HASH_DATA_TYPE hash_type;
 #else
 #ifdef FCS_WITH_CONTEXT_VARIABLE
     int (*compare_function)(const void * key1, const void * key2, void * context);
@@ -103,7 +111,7 @@ fc_solve_hash_init(
     fc_solve_hash_t * hash,
     fc_solve_hash_value_t wanted_size,
 #ifdef FCS_INLINED_HASH_COMPARISON
-    int is_stacks
+    enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
 #ifdef FCS_WITH_CONTEXT_VARIABLE
     int (*compare_function)(const void * key1, const void * key2, void * context),

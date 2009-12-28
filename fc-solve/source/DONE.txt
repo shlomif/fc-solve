@@ -28,3 +28,6 @@ kernel patterns from LWN.net).
 * Make sure that we can build Freecell Solver inside a ./build directory
 without relying on asciidoc.
 
+* Abstract away the hash changes for the columns-vs-states hash.
+** Create an enum for choosing which one.
+
