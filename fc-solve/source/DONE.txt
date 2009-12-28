@@ -25,3 +25,6 @@ kernel patterns from LWN.net).
 * Deal with the inability to "make package_source" inside an unpacked
 .../freecell-solver-x.y.z/ directory.
 
+* Make sure that we can build Freecell Solver inside a ./build directory
+without relying on asciidoc.
+
