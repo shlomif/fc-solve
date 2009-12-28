@@ -575,25 +575,25 @@ IF(ASCIIDOC_FOUND)
     FOREACH(_file ${_docfiles})
         GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
         SET(_in "${_file_we}")
-        SET(_out "${_file_we}.html")
+        SET(_html_out "${CMAKE_CURRENT_SOURCE_DIR}/${_file_we}.html")
         SET(_full_file "${CMAKE_CURRENT_SOURCE_DIR}/${_file}")
-        # MESSAGE(STATUS "_in == <<${_in}>> _out == <<${_out}>>")
+        SET(_docbook_out "${CMAKE_CURRENT_SOURCE_DIR}/${_file_we}.xml")
+        # MESSAGE(STATUS "_in == <<${_in}>> _html_out == <<${_html_out}>>")
 
         # -a toc 
         ADD_CUSTOM_COMMAND(
-            OUTPUT "${_out}"
+            OUTPUT "${_html_out}"
             COMMAND ${ASCIIDOC_EXECUTABLE} 
-                -o ${_out} "${_full_file}"
+                -o ${_html_out} "${_full_file}"
             DEPENDS "${_full_file}"
             COMMENT "Asciidoc ${_in}"
             )
 
-        SET(_docbook "${_file_we}.xml")
 
         ADD_CUSTOM_COMMAND(
-            OUTPUT "${_docbook}"
+            OUTPUT "${_docbook_out}"
             COMMAND ${ASCIIDOC_EXECUTABLE} 
-                --backend=docbook -o ${_docbook} "${_full_file}"
+                --backend=docbook -o ${_docbook_out} "${_full_file}"
             DEPENDS "${_full_file}"
             COMMENT "Asciidoc->DocBook ${_in}"
             )
@@ -604,8 +604,8 @@ IF(ASCIIDOC_FOUND)
 
         ADD_CUSTOM_COMMAND(
             OUTPUT "${_pdf}"
-            COMMAND docmake -v --make -o ${_pdf} pdf ${_docbook}
-            DEPENDS ${_docbook}
+            COMMAND docmake -v --make -o ${_pdf} pdf ${_docbook_out}
+            DEPENDS ${_docbook_out}
             COMMENT "docmake to PDF"
         )
 
@@ -617,7 +617,7 @@ IF(ASCIIDOC_FOUND)
         )
     
         ADD_CUSTOM_TARGET(${target} ALL echo -n
-            DEPENDS "${_out}" "${_docbook}" "${_file_we}"
+            DEPENDS "${_html_out}" "${_docbook_out}" "${_file_we}"
         )
 
         ADD_CUSTOM_TARGET(${_in}_pdf echo -n
