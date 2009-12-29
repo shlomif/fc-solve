@@ -8,7 +8,11 @@ Programs to generate boards to be used as input to Freecell Solver.
 
 B<program> I<[-t]> I<board-number>
 
-or for make_pysol_freecell_board.py and make-aisleriot-freecell-board:
+or for make_pysol_freecell_board.py:
+
+B<program> I<[-t]> I<[-F]> I<board-number> [I<game-string>]
+
+or for make-aisleriot-freecell-board:
 
 B<program> I<[-t]> I<board-number> [I<game-string>]
 
@@ -25,9 +29,13 @@ defaults to  Freecell, but is useful for generating the boards of other games.
 Note that  using this flag does not preclude one from using the "--game"
 flag of B<fc-solve>.
 
+B<make_pysol_freecell_board.py> accepts another parameter called I<-F>
+or I<--pysolfc> that deals the PySolFC boards instead of the classic PySol
+ones.
+
 A common paradigm for using those programs is something like:
 
-bash:~# pi-make-microsoft-freecell-board 11982 | fc-solve -opt
+    bash:~$ pi-make-microsoft-freecell-board 11982 | fc-solve -l gi
 
 If the "-t" option is specified, then the 10 cards are printed with "T"'s,
 instead of "10"'s. While this does not have any effect on B<fc-solve> it
