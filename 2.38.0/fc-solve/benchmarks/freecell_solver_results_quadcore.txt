@@ -1,0 +1,70 @@
+# These are results for running Freecell Solver (with tcmalloc) on:
+# Asus MVP32 Deluxe
+# Phenom 9850BE running at 2,5 GHz
+# 4GB Corsair XLS DDR2 memory
+# Seagate ST3750330NS SATA II HD with NCQ (AHCI)
+# ATI HD4890 1GB GDDR5
+DUMPS/dump001:80.6410200595856                                            
+DUMPS/dump002:40.562824010849                                             
+DUMPS/dump003:27.7061891555786                                            
+DUMPS/dump004:21.2622020244598                                            
+DUMPS/dump005:22.2278110980988                                            
+DUMPS/dump006:21.2628099918365                                            
+DUMPS/dump007:22.0927438735962                                            
+DUMPS/dump008:22.4017648696899                                            
+DUMPS/dump009:22.6620399951935                                            
+DUMPS/dump010:23.0397288799286                                            
+DUMPS/dump011:23.7247319221497                                            
+DUMPS/dump012:23.9092018604279                                            
+DUMPS/dump013:24.4860920906067                                            
+DUMPS/dump014:24.6129038333893                                            
+DUMPS/dump015:26.0652329921722                                            
+DUMPS/dump016:28.3088099956512                                            
+DUMPS/dump017:25.3053998947144                                            
+DUMPS/dump018:26.0393350124359                                            
+DUMPS/dump019:25.2616920471191                                            
+DUMPS/dump020:26.0829229354858                                            
+DUMPS/dump021:25.2253429889679                                            
+DUMPS/dump022:26.2305829524994                                            
+DUMPS/dump023:27.0869879722595                                            
+DUMPS/dump024:26.116229057312                                             
+DUMPS/dump025:26.5082800388336                                            
+DUMPS/dump026:27.7458679676056                                            
+DUMPS/dump027:27.759929895401                                             
+DUMPS/dump028:28.1778361797333                                            
+DUMPS/dump029:28.3477108478546                                            
+DUMPS/dump030:28.1531322002411                                            
+DUMPS/dump031:27.6548500061035                                            
+DUMPS/dump032:27.8057639598846                                            
+DUMPS/dump033:27.6714742183685                                            
+DUMPS/dump034:28.5409240722656                                            
+DUMPS/dump035:27.7750890254974                                            
+DUMPS/dump036:29.2211410999298                                            
+DUMPS/dump037:28.3358469009399                                            
+DUMPS/dump038:29.5728919506073                                            
+DUMPS/dump039:30.3162319660187                                            
+DUMPS/dump040:29.518373966217                                             
+DUMPS/dump041:28.7977969646454                                            
+DUMPS/dump042:29.2221140861511
+DUMPS/dump043:29.0662939548492
+DUMPS/dump044:29.4148168563843
+DUMPS/dump045:29.6434631347656
+DUMPS/dump046:29.0221309661865
+DUMPS/dump047:28.9823648929596
+DUMPS/dump048:28.3072230815887
+DUMPS/dump049:30.7977550029755
+DUMPS/dump050:30.352725982666
+DUMPS/dump051:29.7758090496063
+DUMPS/dump052:29.871230840683
+DUMPS/dump053:30.9806628227234
+DUMPS/dump054:30.6896221637726
+DUMPS/dump055:30.55131483078
+DUMPS/dump056:31.0397729873657
+DUMPS/dump057:31.3535618782043
+DUMPS/dump058:30.9070839881897
+DUMPS/dump059:30.7724659442902
+DUMPS/dump060:30.2161540985107
+DUMPS/dump061:30.9807498455048
+DUMPS/dump062:31.9631848335266
+DUMPS/dump063:31.500091791153
+DUMPS/dump064:30.2066280841827
