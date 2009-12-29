@@ -4,6 +4,17 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 2.38.0
+--------------
+
+1. Made sure that one can build Freecell Solver outside the source directory
+without needing AsciiDoc. (That was a major build-sytem problem).
+
+2. Add a missing newline at the end of one of the lines of the help.
+
+3. Add the "-F"/"--pysolfc" flag to board_gen/make_pysol_freecell_board.py
+for generating PySolFC deals.
+
 Version 2.36.0: (27-Nov-2009)
 -----------------------------
 
