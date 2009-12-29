@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 use Test::Differences;
 
 {
@@ -505,6 +505,29 @@ EOF
     );
 }
 
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -F -t 2400240 simple_simon`;
+
+    my $expected = <<"EOF";
+9D 5C 7D 4H TH 7S KH AC
+TC KD AD 5S 9C 5D AH QC
+2C 3H JH 5H 8D JC 9H JD
+4D QD KS 8H QH 2D QS
+6D 3D 6H TS 3C 2H
+7C JS 9S 2S 6S
+8S 4C AS 4S
+KC 8C TD
+6C 7H
+3S
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "Freecell PySolFC 2400240 Simple Simon",
+    );
+}
 
 =head1 COPYRIGHT AND LICENSE
 
