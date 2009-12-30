@@ -26,12 +26,12 @@ sub scans_rle
 {
     my $self = shift;
 
-    my $scans_list = shift;
+    my @scans_list = @{shift()};
 
-    my $scan = shift(@$scans_list);
+    my $scan = shift(@scans_list);
 
     my (@a);
-    while (my $next_scan = shift(@$scans_list))
+    while (my $next_scan = shift(@scans_list))
     {
         if ($next_scan->{'ind'} == $scan->{'ind'})
         {

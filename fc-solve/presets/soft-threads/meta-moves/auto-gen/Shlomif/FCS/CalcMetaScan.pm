@@ -355,6 +355,71 @@ sub calc_board_iters
         };
 }
 
+sub simulate_board
+{
+    my ($self, $board) = @_;
+
+    my @info = PDL::list($self->orig_scans_data()->slice("$board,:"));
+
+    my $board_iters = 0;
+
+    my @scan_runs;
+
+    my $status = "Unsolved";
+
+    my $add_new_scan_run = sub {
+        my $scan_run = shift;
+
+        push @scan_runs, $scan_run;
+        
+        $board_iters += $scan_run->iters();
+    };
+
+    SCANS_LOOP:
+    foreach my $s (@{$self->chosen_scans()})
+    {
+        if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
+        {
+            $add_new_scan_run->(
+                Shlomif::FCS::CalcMetaScan::ScanRun->new(
+                    {
+                        iters => $info[$s->{'ind'}],
+                        scan => $s->{'ind'},
+                    },
+                )
+            );
+
+            $status = "Solved";
+            last SCANS_LOOP;
+        }
+        else
+        {
+            if ($info[$s->{'ind'}] > 0)
+            {
+                $info[$s->{'ind'}] -= $s->{'q'};
+            }
+
+            $add_new_scan_run->( 
+                Shlomif::FCS::CalcMetaScan::ScanRun->new(
+                    {
+                        iters => $s->{'q'},
+                        scan => $s->{'ind'},
+                    },
+                )
+            );
+        }
+    }
+
+    return
+        Shlomif::FCS::CalcMetaScan::SimulationResults->new(
+            {
+                status => $status,
+                scan_runs => \@scan_runs,
+                total_iters => $board_iters,
+            }
+        );
+}
+
 sub trace
 {
     my ($self, $args) = @_;
@@ -363,6 +428,60 @@ sub trace
     {
         $trace_cb->($args);
     }
+}
+
+package Shlomif::FCS::CalcMetaScan::ScanRun;
+
+use base 'Shlomif::FCS::CalcMetaScan::Base';
+
+__PACKAGE__->mk_acc_ref([qw(iters scan)]);
+
+sub _init
+{
+    my ($self, $args) = @_;
+
+    $self->iters($args->{iters});
+    $self->scan($args->{scan});
+
+    return;
+}
+
+package Shlomif::FCS::CalcMetaScan::SimulationResults;
+
+use base 'Shlomif::FCS::CalcMetaScan::Base';
+
+__PACKAGE__->mk_acc_ref([qw(status scan_runs total_iters)]);
+
+sub _init
+{
+    my ($self, $args) = @_;
+
+    $self->status($args->{status});
+    $self->scan_runs($args->{scan_runs});
+    $self->total_iters($args->{total_iters});
+
+    return;
+}
+
+sub get_total_iters
+{
+    return shift->total_iters();
+}
+
+sub get_status
+{
+    return shift->status();
+}
+
+sub get_run_string
+{
+    my $self = shift;
+    my $scan_mapper = shift;
+
+    return join("",
+        map { sprintf('%i@%i,', $_->iters(), $scan_mapper->($_->scan()), ) }
+        @{$self->scan_runs()}
+    );
 }
 
 1;

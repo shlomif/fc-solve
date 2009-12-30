@@ -13,6 +13,8 @@ use Shlomif::FCS::CalcMetaScan::PostProcessor;
 
 use MyInput;
 
+use Carp;
+
 __PACKAGE__->mk_acc_ref(
     [qw(
     arbitrator
@@ -25,6 +27,7 @@ __PACKAGE__->mk_acc_ref(
     quotas_expr
     quotas_are_cb
     rle
+    _simulate_to
     start_board
     trace
     )]
@@ -44,6 +47,7 @@ sub _init
     my $quotas_are_cb = 0;
     my $optimize_for = "speed";
     my $offset_quotas = 0;
+    my $simulate_to = undef;
 
     GetOptions(
         "o|output=s" => \$output_filename,
@@ -55,6 +59,7 @@ sub _init
         "quotas-are-cb" => \$quotas_are_cb,
         "offset-quotas" => \$offset_quotas,
         "opt-for=s" => \$optimize_for,
+        "simulate-to=s" => \$simulate_to,
     ) or exit(1);
 
     $self->start_board($start_board);
@@ -66,6 +71,7 @@ sub _init
     $self->quotas_are_cb($quotas_are_cb);
     $self->optimize_for($optimize_for);
     $self->_offset_quotas($offset_quotas);
+    $self->_simulate_to($simulate_to);
 
     $self->_input_obj(
         MyInput->new(
@@ -197,6 +203,14 @@ sub _calc_iter_quota
     }
 }
 
+sub _map_scan_idx_to_id
+{
+    my $self = shift;
+    my $index = shift;
+
+    return $self->selected_scans()->[$index]->id();
+}
+
 sub format_prelude_iter
 {
     my $self = shift;
@@ -204,7 +218,7 @@ sub format_prelude_iter
     my $iter = shift;
 
     return $iter->{'q'} . '@'
-        . $self->selected_scans()->[$iter->{'ind'}]->id()
+        . $self->_map_scan_idx_to_id($iter->{'ind'})
         ;
 }
 
@@ -345,6 +359,58 @@ sub do_trace
     }
 }
 
+sub _do_simulation_for_board
+{
+    my ($self, $board) = @_;
+
+    my $results = $self->arbitrator()->simulate_board($board);
+
+    my $scan_mapper = sub {
+        my $index = shift;
+
+        return $self->_map_scan_idx_to_id($index);
+    };
+
+    return 
+        sprintf("%i:%s:%s:%i",
+            $board+1,
+            $results->get_status(),
+            $results->get_run_string($scan_mapper),
+            $results->get_total_iters(),
+        );
+}
+
+sub _real_do_simulation
+{
+    my $self = shift;
+
+    open my $simulate_out_fh, ">", $self->_simulate_to()
+        or Carp::confess("Could not open " . $self->_simulate_to() . " - $!");
+
+    foreach my $board (0 .. $self->num_boards()-1)
+    {
+        print {$simulate_out_fh} $self->_do_simulation_for_board($board), "\n";
+    }
+
+    close($simulate_out_fh);
+
+    return;
+}
+
+
+sub _do_simulation
+{
+    my $self = shift;
+    # Analyze the results
+
+    if (defined($self->_simulate_to()))
+    {
+        $self->_real_do_simulation();
+    }
+
+    return;
+}
+
 sub run
 {
     my $self = shift;
@@ -354,6 +420,7 @@ sub run
     $self->report_total_iters();
     $self->write_script();
     $self->do_trace();
+    $self->_do_simulation();
 
     return 0;
 }

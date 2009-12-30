@@ -63,7 +63,7 @@ sub detach
     $self->_main(undef);
 }
 
-sub idx_slice : lvalue
+sub idx_slice
 {
     my $self = shift;
 
@@ -110,7 +110,8 @@ sub update_idx_slice
     my $r = $state->idx_slice()->copy();
     # $r cannot be 0, because the ones that were 0, were already solved
     # in $state->update_total_iters().
-    $state->idx_slice() .= 
+    my $idx_slice = $state->idx_slice();
+    $idx_slice .= 
         (($r > 0) * ($r - $state->_quota())) + 
         (($r < 0) * ($r                  ));
 }
