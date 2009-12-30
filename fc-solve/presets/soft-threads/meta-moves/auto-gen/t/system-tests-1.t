@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 11;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 use Carp;
@@ -130,5 +130,35 @@ package main;
         24,
         q{24:Solved:300@2,300@5,300@9,119@2,:1019},
         "24 was simulated correctly."
+    );
+}
+
+{
+    my $simu_fn = "100-200-quota-simulation.txt";
+
+    trap {    
+        # TEST
+        ok (!system("perl process.pl --quotas-expr='((100,200)x100)' --simulate-to=$simu_fn > 100-200-quota-output.got"));
+    };
+
+    my $stderr = $trap->stderr();
+
+    # TEST
+    is ($stderr, "", "process.pl did not return any errors on stderr");
+
+    my $simu = FCS::SimuTest->new($simu_fn);
+
+    # TEST
+    $simu->is_board_line(
+        1000, 
+        q{1000:Solved:125@2,:125}, 
+        "1,000 was simulated correctly."
+    );
+
+    # TEST
+    $simu->is_board_line(
+        15_001,
+        q{15001:Solved:400@2,300@5,300@9,200@5,100@9,200@16,300@2,100@16,200@9,88@5,:2188},
+        "15,001 was simulated correctly."
     );
 }

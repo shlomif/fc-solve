@@ -51,10 +51,12 @@ sub get_chosen_struct
 {
     my $self = shift;
     return
-        {
-            'q' => $self->_quota(), 
-            'ind' => $self->_scan_idx() 
-        };    
+        Shlomif::FCS::CalcMetaScan::ScanRun->new(
+            {
+                iters => $self->_quota(), 
+                scan => $self->_scan_idx() 
+            }
+        );
 }
 
 sub detach

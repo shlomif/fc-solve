@@ -28,6 +28,7 @@ __PACKAGE__->mk_acc_ref(
     quotas_are_cb
     rle
     _simulate_to
+    _post_processor
     start_board
     trace
     )]
@@ -53,7 +54,7 @@ sub _init
         "o|output=s" => \$output_filename,
         "num-boards=i" => \$num_boards,
         "trace" => \$trace,
-        "rle" => \$rle,
+        "rle!" => \$rle,
         "start-board=i" => \$start_board,
         "quotas-expr=s" => \$quotas_expr,
         "quotas-are-cb" => \$quotas_are_cb,
@@ -78,6 +79,15 @@ sub _init
             {
                 start_board => $self->start_board(),
                 num_boards => $self->num_boards(),
+            }
+        )
+    );
+
+    $self->_post_processor(
+        Shlomif::FCS::CalcMetaScan::PostProcessor->new(
+            {
+                do_rle => $self->rle(),
+                offset_quotas => $self->_offset_quotas(),
             }
         )
     );
@@ -217,8 +227,8 @@ sub format_prelude_iter
 
     my $iter = shift;
 
-    return $iter->{'q'} . '@'
-        . $self->_map_scan_idx_to_id($iter->{'ind'})
+    return $iter->iters() . '@'
+        . $self->_map_scan_idx_to_id($iter->scan())
         ;
 }
 
@@ -318,15 +328,11 @@ sub arbitrator_process
 
     $self->arbitrator()->calc_meta_scan();
 
-    my $scans =
-        Shlomif::FCS::CalcMetaScan::PostProcessor->new(
-            {
-                do_rle => $self->rle(),
-                offset_quotas => $self->_offset_quotas(),
-            }
-        )->process($self->arbitrator->chosen_scans());
+    my $scans = $self->_post_processor->process(
+        $self->arbitrator->chosen_scans()
+    );
 
-     $self->_chosen_scans($scans);
+    $self->_chosen_scans($scans);
 }
 
 sub do_trace_for_board
@@ -359,6 +365,23 @@ sub do_trace
     }
 }
 
+sub _get_run_string
+{
+    my $self = shift;
+    my $results = shift;
+
+    return join("",
+        map 
+        { 
+            sprintf('%i@%i,', 
+                $_->iters(), 
+                $self->_map_scan_idx_to_id($_->scan())
+            )
+        }
+        @{$self->_post_processor->process($results->scan_runs())},
+    );
+}
+
 sub _do_simulation_for_board
 {
     my ($self, $board) = @_;
@@ -375,7 +398,7 @@ sub _do_simulation_for_board
         sprintf("%i:%s:%s:%i",
             $board+1,
             $results->get_status(),
-            $results->get_run_string($scan_mapper),
+            $self->_get_run_string($results),
             $results->get_total_iters(),
         );
 }

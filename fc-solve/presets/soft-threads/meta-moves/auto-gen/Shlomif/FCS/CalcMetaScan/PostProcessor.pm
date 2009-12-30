@@ -33,9 +33,9 @@ sub scans_rle
     my (@a);
     while (my $next_scan = shift(@scans_list))
     {
-        if ($next_scan->{'ind'} == $scan->{'ind'})
+        if ($next_scan->scan() == $scan->scan())
         {
-            $scan->{'q'} += $next_scan->{'q'};
+            $scan->iters( $scan->iters() + $next_scan->iters() );
         }
         else
         {
@@ -51,13 +51,16 @@ sub process
 {
     my $self = shift;
 
-    my $scans = shift;
+    my $scans_orig = shift;
+
+    # clone the scans.
+    my $scans = [ map { $_->clone(); } @{$scans_orig}];
 
     if ($self->_offset_quotas)
     {
         $scans =
         [
-            map { my $ret = { %$_ }; $ret->{'q'}++; $ret }
+            map { my $ret = $_->clone(); $ret->iters($ret->iters()+1); $ret; }
             @$scans
         ];
     }

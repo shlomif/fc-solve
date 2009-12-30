@@ -333,18 +333,18 @@ sub calc_board_iters
 
     foreach my $s (@{$self->chosen_scans()})
     {
-        if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
+        if (($info[$s->scan()] > 0) && ($info[$s->scan()] <= $s->iters()))
         {
-            $board_iters += $info[$s->{'ind'}];
+            $board_iters += $info[$s->iters()];
             last;
         }
         else
         {
-            if ($info[$s->{'ind'}] > 0)
+            if ($info[$s->scan()] > 0)
             {
-                $info[$s->{'ind'}] -= $s->{'q'};
+                $info[$s->scan()] -= $s->iters();
             }
-            $board_iters += $s->{'q'};
+            $board_iters += $s->iters();
         }
     }
 
@@ -378,13 +378,13 @@ sub simulate_board
     SCANS_LOOP:
     foreach my $s (@{$self->chosen_scans()})
     {
-        if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
+        if (($info[$s->scan()] > 0) && ($info[$s->scan()] <= $s->iters()))
         {
             $add_new_scan_run->(
                 Shlomif::FCS::CalcMetaScan::ScanRun->new(
                     {
-                        iters => $info[$s->{'ind'}],
-                        scan => $s->{'ind'},
+                        iters => $info[$s->scan()],
+                        scan => $s->scan(),
                     },
                 )
             );
@@ -394,16 +394,16 @@ sub simulate_board
         }
         else
         {
-            if ($info[$s->{'ind'}] > 0)
+            if ($info[$s->scan()] > 0)
             {
-                $info[$s->{'ind'}] -= $s->{'q'};
+                $info[$s->scan()] -= $s->iters();
             }
 
             $add_new_scan_run->( 
                 Shlomif::FCS::CalcMetaScan::ScanRun->new(
                     {
-                        iters => $s->{'q'},
-                        scan => $s->{'ind'},
+                        iters => $s->iters(),
+                        scan => $s->scan(),
                     },
                 )
             );
@@ -446,6 +446,13 @@ sub _init
     return;
 }
 
+sub clone
+{
+    my $self = shift;
+
+    return ref($self)->new({iters => $self->iters(), scan => $self->scan()});
+}
+
 package Shlomif::FCS::CalcMetaScan::SimulationResults;
 
 use base 'Shlomif::FCS::CalcMetaScan::Base';
@@ -471,17 +478,6 @@ sub get_total_iters
 sub get_status
 {
     return shift->status();
-}
-
-sub get_run_string
-{
-    my $self = shift;
-    my $scan_mapper = shift;
-
-    return join("",
-        map { sprintf('%i@%i,', $_->iters(), $scan_mapper->($_->scan()), ) }
-        @{$self->scan_runs()}
-    );
 }
 
 1;
