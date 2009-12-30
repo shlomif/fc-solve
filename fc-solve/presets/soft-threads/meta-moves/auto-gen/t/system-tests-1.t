@@ -3,8 +3,6 @@
 use strict;
 use warnings;
 
-use IO::All;
-
 use Test::More tests => 7;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
@@ -54,11 +52,37 @@ With a trailing comma.
 
 =cut
 
-sub extract_simu_line
-{
-    my ($simu_text_ref, $board_id) = @_;
+package FCS::SimuTest;
 
-    if (my ($line) = ${$simu_text_ref} =~ m{^(\Q$board_id\E:[^\n]*?)\n}ms)
+use IO::All;
+
+sub new
+{
+    my $class = shift;
+
+    my $filename = shift;
+
+    my $self = {};
+
+    bless $self, $class;
+
+    $self->{text_ref} = \(scalar(io->file($filename)->slurp()));
+
+    return $self;
+}
+
+sub text_ref
+{
+    my $self = shift;
+
+    return $self->{text_ref};
+}
+
+sub _extract_line
+{
+    my ($self, $board_id) = @_;
+
+    if (my ($line) = ${$self->text_ref()} =~ m{^(\Q$board_id\E:[^\n]*?)\n}ms)
     {
         return $line;
     }
@@ -67,6 +91,17 @@ sub extract_simu_line
         Carp::confess "Could not match board ID '$board_id';";
     }
 }
+
+sub is_board_line
+{
+    my ($self, $board_id, $expected, $blurb) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    Test::More::is ($self->_extract_line($board_id), $expected, $blurb);
+}
+
+package main;
 
 {
     my $simu_fn = "300-quota-simulation.txt";
@@ -81,23 +116,19 @@ sub extract_simu_line
     # TEST
     is ($stderr, "", "process.pl did not return any errors on stderr");
 
-    my $simu_text = io->file($simu_fn)->slurp();
+    my $simu = FCS::SimuTest->new($simu_fn);
 
-    {
-        my $board1 = q{1:Solved:300@2,300@5,244@9,:844};
+    # TEST
+    $simu->is_board_line(
+        1, 
+        q{1:Solved:300@2,300@5,244@9,:844}, 
+        "1 was simulated correctly."
+    );
 
-        my $line1 = extract_simu_line(\$simu_text, 1);
-
-        # TEST
-        is ($line1, $board1, "1 was simulated correctly.");
-    }
-
-    {
-        my $board24 = q{24:Solved:300@2,300@5,300@9,119@2,:1019};
-
-        my $line24 = extract_simu_line(\$simu_text, 24);
-
-        # TEST
-        is ($line24, $board24, "24 was simulated correctly.");
-    }
+    # TEST
+    $simu->is_board_line(
+        24,
+        q{24:Solved:300@2,300@5,300@9,119@2,:1019},
+        "24 was simulated correctly."
+    );
 }
