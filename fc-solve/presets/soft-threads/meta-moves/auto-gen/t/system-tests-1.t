@@ -55,20 +55,54 @@ With a trailing comma.
 package FCS::SimuTest;
 
 use IO::All;
+use Test::Trap;
 
 sub new
 {
     my $class = shift;
 
-    my $filename = shift;
+    my ($fn_base, $cmd_line) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my $self = {};
 
     bless $self, $class;
 
-    $self->{text_ref} = \(scalar(io->file($filename)->slurp()));
+    $self->{fn_base} = $fn_base;
+
+    trap {
+        Test::More::ok (!system(
+                join(
+                    " ", $^X, "process.pl", @$cmd_line, 
+                    "--simulate-to=".$self->_simulate_to(),
+                    ">",
+                    $self->_output_got()
+                )
+            ),
+            "Running to " . $self->_simulate_to(),
+        );
+    };
+
+    my $stderr = $trap->stderr();
+
+    Test::More::is ($stderr, "", 
+        "process.pl of " . $self->_simulate_to()
+        . " did not return any errors on stderr");
+
+    $self->{text_ref} = \(scalar(io->file($self->_simulate_to)->slurp()));
 
     return $self;
+}
+
+sub _simulate_to
+{
+    return shift->fn_base() . "-simulation.txt";
+}
+
+sub _output_got
+{
+    return shift->fn_base() . "-output.got";
 }
 
 sub text_ref
@@ -76,6 +110,13 @@ sub text_ref
     my $self = shift;
 
     return $self->{text_ref};
+}
+
+sub fn_base
+{
+    my $self = shift;
+
+    return $self->{fn_base};
 }
 
 sub _extract_line
@@ -101,22 +142,20 @@ sub is_board_line
     Test::More::is ($self->_extract_line($board_id), $expected, $blurb);
 }
 
+sub DESTROY
+{
+    my $self = shift;
+
+    unlink($self->_simulate_to(), $self->_output_got());
+
+    return;
+}
+
 package main;
 
 {
-    my $simu_fn = "300-quota-simulation.txt";
-
-    trap {    
-        # TEST
-        ok (!system("perl process.pl --quotas-expr='(300)x100' --simulate-to=$simu_fn > 300-quota-output.got"));
-    };
-
-    my $stderr = $trap->stderr();
-
-    # TEST
-    is ($stderr, "", "process.pl did not return any errors on stderr");
-
-    my $simu = FCS::SimuTest->new($simu_fn);
+    # TEST*2
+    my $simu = FCS::SimuTest->new("300-quota", ["--quotas-expr='((300)x100)'"]);
 
     # TEST
     $simu->is_board_line(
@@ -134,19 +173,8 @@ package main;
 }
 
 {
-    my $simu_fn = "100-200-quota-simulation.txt";
-
-    trap {    
-        # TEST
-        ok (!system("perl process.pl --quotas-expr='((100,200)x100)' --simulate-to=$simu_fn > 100-200-quota-output.got"));
-    };
-
-    my $stderr = $trap->stderr();
-
-    # TEST
-    is ($stderr, "", "process.pl did not return any errors on stderr");
-
-    my $simu = FCS::SimuTest->new($simu_fn);
+    # TEST*2
+    my $simu = FCS::SimuTest->new("100-200-quota", ["--quotas-expr='((100,200)x100)'"]);
 
     # TEST
     $simu->is_board_line(
