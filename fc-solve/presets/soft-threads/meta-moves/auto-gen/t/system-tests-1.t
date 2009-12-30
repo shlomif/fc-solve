@@ -8,6 +8,8 @@ use IO::All;
 use Test::More tests => 7;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
+use Carp;
+
 {
     trap {    
         # TEST
@@ -52,6 +54,20 @@ With a trailing comma.
 
 =cut
 
+sub extract_simu_line
+{
+    my ($simu_text_ref, $board_id) = @_;
+
+    if (my ($line) = ${$simu_text_ref} =~ m{^(\Q$board_id\E:[^\n]*?)\n}ms)
+    {
+        return $line;
+    }
+    else
+    {
+        Carp::confess "Could not match board ID '$board_id';";
+    }
+}
+
 {
     my $simu_fn = "300-quota-simulation.txt";
 
@@ -67,17 +83,21 @@ With a trailing comma.
 
     my $simu_text = io->file($simu_fn)->slurp();
 
-    my $board1 = q{1:Solved:300@2,300@5,244@9,:844};
+    {
+        my $board1 = q{1:Solved:300@2,300@5,244@9,:844};
 
-    my ($line1) = $simu_text =~ m{^(1:[^\n]*?)\n}ms;
+        my $line1 = extract_simu_line(\$simu_text, 1);
 
-    # TEST
-    is ($line1, $board1, "1 was simulated correctly.");
+        # TEST
+        is ($line1, $board1, "1 was simulated correctly.");
+    }
 
-    my $board24 = q{24:Solved:300@2,300@5,300@9,119@2,:1019};
+    {
+        my $board24 = q{24:Solved:300@2,300@5,300@9,119@2,:1019};
 
-    my ($line24) = $simu_text =~ m{^(24:[^\n]*?)\n}ms;
+        my $line24 = extract_simu_line(\$simu_text, 24);
 
-    # TEST
-    is ($line24, $board24, "24 was simulated correctly.");
+        # TEST
+        is ($line24, $board24, "24 was simulated correctly.");
+    }
 }
