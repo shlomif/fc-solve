@@ -23,7 +23,7 @@ __PACKAGE__->mk_acc_ref(
     _num_boards
     _optimize_for
     _offset_quotas
-    output_filename
+    _output_filename
     _quotas_expr
     _quotas_are_cb
     rle
@@ -65,7 +65,7 @@ sub _init
 
     $self->_start_board($_start_board);
     $self->_num_boards($num_boards);
-    $self->output_filename($output_filename);
+    $self->_output_filename($output_filename);
     $self->trace($trace);
     $self->rle($rle);
     $self->_quotas_expr($_quotas_expr);
@@ -135,9 +135,9 @@ sub get_script_fh
 {
     my $self = shift;
     return IO::File->new(
-       ($self->output_filename() eq "-") ?
+       ($self->_output_filename() eq "-") ?
            ">&STDOUT" :
-           ($self->output_filename(), "w")
+           ($self->_output_filename(), "w")
        );
 }
 
