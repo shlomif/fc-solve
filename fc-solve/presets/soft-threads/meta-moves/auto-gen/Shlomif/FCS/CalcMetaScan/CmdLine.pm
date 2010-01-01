@@ -17,7 +17,7 @@ use Carp;
 
 __PACKAGE__->mk_acc_ref(
     [qw(
-    arbitrator
+    _arbitrator
     _chosen_scans
     _input_obj
     _num_boards
@@ -300,7 +300,7 @@ sub init_arbitrator
 {
     my $self = shift;
 
-    return $self->arbitrator(
+    return $self->_arbitrator(
         Shlomif::FCS::CalcMetaScan->new(
             'quotas' => $self->get_quotas(),
             'selected_scans' => $self->selected_scans(),
@@ -315,21 +315,21 @@ sub init_arbitrator
 sub report_total_iters
 {
     my $self = shift;
-    if ($self->arbitrator()->status() eq "solved_all")
+    if ($self->_arbitrator()->status() eq "solved_all")
     {
         print "Solved all!\n";
     }
-    printf("total_iters = %s\n", $self->arbitrator()->total_iters());
+    printf("total_iters = %s\n", $self->_arbitrator()->total_iters());
 }
 
-sub arbitrator_process
+sub _arbitrator_process
 {
     my $self = shift;
 
-    $self->arbitrator()->calc_meta_scan();
+    $self->_arbitrator()->calc_meta_scan();
 
     my $scans = $self->_post_processor->process(
-        $self->arbitrator->chosen_scans()
+        $self->_arbitrator->chosen_scans()
     );
 
     $self->_chosen_scans($scans);
@@ -340,7 +340,7 @@ sub do_trace_for_board
     my $self = shift;
     my $board = shift;
 
-    my $results = $self->arbitrator()->calc_board_iters($board);
+    my $results = $self->_arbitrator()->calc_board_iters($board);
     print "\@info=". join(",", @{$results->{per_scan_iters}}). "\n";
     print +($board+$self->_start_board()) . ": ". $results->{board_iters} . "\n";
 }
@@ -386,7 +386,7 @@ sub _do_simulation_for_board
 {
     my ($self, $board) = @_;
 
-    my $results = $self->arbitrator()->simulate_board($board);
+    my $results = $self->_arbitrator()->simulate_board($board);
 
     my $scan_mapper = sub {
         my $index = shift;
@@ -439,7 +439,7 @@ sub run
     my $self = shift;
 
     $self->init_arbitrator();
-    $self->arbitrator_process();
+    $self->_arbitrator_process();
     $self->report_total_iters();
     $self->write_script();
     $self->_do_trace();
