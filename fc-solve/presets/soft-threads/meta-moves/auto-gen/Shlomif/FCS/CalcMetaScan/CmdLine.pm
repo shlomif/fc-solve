@@ -266,7 +266,7 @@ sub calc_script_text
         );
 }
 
-sub write_script
+sub _write_script
 {
     my $self = shift;
      
@@ -312,7 +312,7 @@ sub init_arbitrator
     );
 }
 
-sub report_total_iters
+sub _report_total_iters
 {
     my $self = shift;
     if ($self->_arbitrator()->status() eq "solved_all")
@@ -440,8 +440,8 @@ sub run
 
     $self->init_arbitrator();
     $self->_arbitrator_process();
-    $self->report_total_iters();
-    $self->write_script();
+    $self->_report_total_iters();
+    $self->_write_script();
     $self->_do_trace();
     $self->_do_simulation();
 
