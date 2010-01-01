@@ -16,7 +16,7 @@ use vars (qw(@fields %fields_map));
     _num_boards
     _orig_scans_data
     _optimize_for
-    scans_data
+    _scans_data
     selected_scans
     status
     quotas
@@ -56,7 +56,7 @@ sub _init
     }
 
     $self->_orig_scans_data($args->{'scans_data'}->copy());
-    $self->scans_data($self->_orig_scans_data()->copy());
+    $self->_scans_data($self->_orig_scans_data()->copy());
 
     $self->selected_scans($args->{'selected_scans'}) or
         die "selected_scans not specified!";
@@ -137,9 +137,9 @@ sub get_iter_state_params_len
 
         $iters_quota += $q_more;
 
-        my $iters = $self->scans_data()->slice(":,:,0");
+        my $iters = $self->_scans_data()->slice(":,:,0");
         my $solved = (($iters <= $iters_quota) & ($iters > 0));
-        my $num_moves = $self->scans_data->slice(":,:,2");
+        my $num_moves = $self->_scans_data->slice(":,:,2");
         my $solved_moves = $solved * $num_moves;
         
         my $solved_moves_sums = _my_sum_over($solved_moves);
@@ -182,9 +182,9 @@ sub get_iter_state_params_minmax_len
 
         $iters_quota += $q_more;
 
-        my $iters = $self->scans_data()->slice(":,:,0");
+        my $iters = $self->_scans_data()->slice(":,:,0");
         my $solved = (($iters <= $iters_quota) & ($iters > 0));
-        my $num_moves = $self->scans_data->slice(":,:,2");
+        my $num_moves = $self->_scans_data->slice(":,:,2");
         my $solved_moves = $solved * $num_moves;
         
         my $solved_moves_maxima = $solved_moves->maximum()->slice(":,(0),(0)");
@@ -229,8 +229,8 @@ sub get_iter_state_params_speed
         (undef, $num_solved_in_iter, undef, $selected_scan_idx) =
             PDL::minmaximum(
                 PDL::sumover(
-                    ($self->scans_data() <= $iters_quota) & 
-                    ($self->scans_data() > 0)
+                    ($self->_scans_data() <= $iters_quota) & 
+                    ($self->_scans_data() > 0)
                 )
               );
     }

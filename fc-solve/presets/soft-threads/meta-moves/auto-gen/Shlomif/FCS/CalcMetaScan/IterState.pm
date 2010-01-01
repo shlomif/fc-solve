@@ -69,7 +69,7 @@ sub idx_slice
 {
     my $self = shift;
 
-    my $scans_data = $self->_main()->scans_data();
+    my $scans_data = $self->_main()->_scans_data();
 
     my @dims = $scans_data->dims();
 
@@ -101,8 +101,8 @@ sub update_total_iters
     $state->_main()->add('total_iters', ($indexes->nelem() * $state->_quota()));
     
     # Keep only the states that have not been solved yet.
-    $state->_main()->scans_data(
-        $state->_main()->scans_data()->dice($indexes, "X")->copy()
+    $state->_main()->_scans_data(
+        $state->_main()->_scans_data()->dice($indexes, "X")->copy()
     );
 }
 
