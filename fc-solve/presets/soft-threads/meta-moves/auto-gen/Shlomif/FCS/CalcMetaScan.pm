@@ -19,7 +19,7 @@ use vars (qw(@fields %fields_map));
     _scans_data
     _selected_scans
     _status
-    quotas
+    _quotas
     total_boards_solved
     total_iters
     trace_cb
@@ -47,7 +47,7 @@ sub _init
 
     my $args = shift;
 
-    $self->quotas($args->{'quotas'}) or
+    $self->_quotas($args->{'quotas'}) or
         die "Quotas not specified!";
 
     if (!exists($args->{'scans_data'}))
@@ -90,13 +90,13 @@ sub get_next_quota
 
     my $iter = $self->_next_iter_idx();
 
-    if (ref($self->quotas()) eq "ARRAY")
+    if (ref($self->_quotas()) eq "ARRAY")
     {
-        return $self->quotas()->[$iter];
+        return $self->_quotas()->[$iter];
     }
     else
     {
-        return $self->quotas()->($iter);
+        return $self->_quotas()->($iter);
     }
 }
 
@@ -277,12 +277,6 @@ sub inspect_quota
     }
 
     $state->detach();
-}
-
-sub get_quotas
-{
-    my $self = shift;
-    return $self->quotas();
 }
 
 =head2 my $chosen_scans_array_ref = $self->chosen_scans()
