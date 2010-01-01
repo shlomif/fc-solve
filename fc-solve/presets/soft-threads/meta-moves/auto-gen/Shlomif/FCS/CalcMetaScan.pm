@@ -259,7 +259,7 @@ sub _get_iter_state_params_speed
     };
 }
 
-sub get_selected_scan
+sub _get_selected_scan
 {
     my $self = shift;
 
@@ -277,7 +277,7 @@ sub inspect_quota
 {
     my $self = shift;
 
-    my $state = $self->get_selected_scan();
+    my $state = $self->_get_selected_scan();
 
     $state->register_params();
 
