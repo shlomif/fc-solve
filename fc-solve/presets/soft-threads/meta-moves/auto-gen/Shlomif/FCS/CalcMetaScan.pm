@@ -285,6 +285,13 @@ sub get_quotas
     return $self->quotas();
 }
 
+=head2 my $chosen_scans_array_ref = $self->chosen_scans()
+
+Returns the scans that have been chosen to perform the iteration. Each one is
+a Shlomif::FCS::CalcMetaScan::ScanRun object.
+
+=cut
+
 sub calc_meta_scan
 {
     my $self = shift;
