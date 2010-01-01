@@ -14,7 +14,7 @@ use vars (qw(@fields %fields_map));
     chosen_scans
     _iter_idx
     _num_boards
-    orig_scans_data
+    _orig_scans_data
     optimize_for
     scans_data
     selected_scans
@@ -55,8 +55,8 @@ sub _init
         die "scans_data not specified!";
     }
 
-    $self->orig_scans_data($args->{'scans_data'}->copy());
-    $self->scans_data($self->orig_scans_data()->copy());
+    $self->_orig_scans_data($args->{'scans_data'}->copy());
+    $self->scans_data($self->_orig_scans_data()->copy());
 
     $self->selected_scans($args->{'selected_scans'}) or
         die "selected_scans not specified!";
@@ -335,7 +335,7 @@ sub calc_board_iters
     my $board = shift;
     my $board_iters = 0;
 
-    my @info = PDL::list($self->orig_scans_data()->slice("$board,:"));
+    my @info = PDL::list($self->_orig_scans_data()->slice("$board,:"));
     my @orig_info = @info;
 
     foreach my $s (@{$self->chosen_scans()})
@@ -366,7 +366,7 @@ sub simulate_board
 {
     my ($self, $board) = @_;
 
-    my @info = PDL::list($self->orig_scans_data()->slice("$board,:"));
+    my @info = PDL::list($self->_orig_scans_data()->slice("$board,:"));
 
     my $board_iters = 0;
 
