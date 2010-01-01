@@ -95,7 +95,7 @@ sub _init
     return;
 }
 
-sub selected_scans
+sub _selected_scans
 {
     my $self = shift;
 
@@ -179,7 +179,7 @@ sub line_ends_mapping
 sub get_used_scans
 {
     my $self = shift;
-    return [ grep { $_->is_used() } @{$self->selected_scans()}];
+    return [ grep { $_->is_used() } @{$self->_selected_scans()}];
 }
 
 sub get_lines_of_scan_defs
@@ -218,7 +218,7 @@ sub _map_scan_idx_to_id
     my $self = shift;
     my $index = shift;
 
-    return $self->selected_scans()->[$index]->id();
+    return $self->_selected_scans()->[$index]->id();
 }
 
 sub format_prelude_iter
@@ -303,7 +303,7 @@ sub _init_arbitrator
     return $self->_arbitrator(
         Shlomif::FCS::CalcMetaScan->new(
             'quotas' => $self->get_quotas(),
-            'selected_scans' => $self->selected_scans(),
+            'selected_scans' => $self->_selected_scans(),
             'num_boards' => $self->_num_boards(),
             'scans_data' => $self->_calc_scans_data(),
             'trace_cb' => \&arbitrator_trace_cb,
