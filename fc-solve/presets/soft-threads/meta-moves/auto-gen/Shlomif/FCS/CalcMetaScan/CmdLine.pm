@@ -102,7 +102,7 @@ sub _selected_scans
     return $self->_input_obj->selected_scans();
 }
 
-sub map_all_but_last
+sub _map_all_but_last
 {
     my $self = shift;
 
@@ -175,7 +175,7 @@ sub _get_line_of_command
 sub line_ends_mapping
 {
     my $self = shift;
-    return $self->map_all_but_last(sub { "$_[0] \\\n" }, shift);
+    return $self->_map_all_but_last(sub { "$_[0] \\\n" }, shift);
 }
 
 sub get_used_scans
@@ -197,7 +197,7 @@ sub get_lines_of_scan_defs
 sub scan_def_line_mapping
 {
     my $self = shift;
-    return $self->map_all_but_last(sub { "$_[0] -nst" }, shift);
+    return $self->_map_all_but_last(sub { "$_[0] -nst" }, shift);
 }
 
 sub _calc_iter_quota
