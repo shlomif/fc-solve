@@ -54,22 +54,22 @@ With a trailing comma.
 
 package FCS::SimuTest;
 
+use base 'Shlomif::FCS::CalcMetaScan::Base';
+
 use IO::All;
 use Test::Trap;
 
-sub new
+__PACKAGE__->mk_acc_ref([qw(text_ref fn_base)]);
+
+sub _init
 {
-    my $class = shift;
+    my $self = shift;
 
     my ($fn_base, $cmd_line) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my $self = {};
-
-    bless $self, $class;
-
-    $self->{fn_base} = $fn_base;
+    $self->fn_base($fn_base);
 
     trap {
         Test::More::ok (!system(
@@ -90,7 +90,7 @@ sub new
         "process.pl of " . $self->_simulate_to()
         . " did not return any errors on stderr");
 
-    $self->{text_ref} = \(scalar(io->file($self->_simulate_to)->slurp()));
+    $self->text_ref(\(scalar(io->file($self->_simulate_to)->slurp())));
 
     return $self;
 }
@@ -103,20 +103,6 @@ sub _simulate_to
 sub _output_got
 {
     return shift->fn_base() . "-output.got";
-}
-
-sub text_ref
-{
-    my $self = shift;
-
-    return $self->{text_ref};
-}
-
-sub fn_base
-{
-    my $self = shift;
-
-    return $self->{fn_base};
 }
 
 sub _extract_line
