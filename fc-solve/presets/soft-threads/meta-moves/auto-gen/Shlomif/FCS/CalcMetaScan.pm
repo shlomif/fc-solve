@@ -84,7 +84,7 @@ sub _next_iter_idx
     return $ret;
 }
 
-sub get_next_quota
+sub _get_next_quota
 {
     my $self = shift;
 
@@ -127,7 +127,7 @@ sub get_iter_state_params_len
     # If no boards were solved, then try with a larger quota
     while ($num_solved_in_iter == 0)
     {
-        my $q_more = $self->get_next_quota();
+        my $q_more = $self->_get_next_quota();
         if (!defined($q_more))
         {
             Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas->throw(
@@ -172,7 +172,7 @@ sub get_iter_state_params_minmax_len
     # If no boards were solved, then try with a larger quota
     while ($num_solved_in_iter == 0)
     {
-        my $q_more = $self->get_next_quota();
+        my $q_more = $self->_get_next_quota();
         if (!defined($q_more))
         {
             Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas->throw(
@@ -216,7 +216,7 @@ sub get_iter_state_params_speed
     # If no boards were solved, then try with a larger quota
     while ($num_solved_in_iter == 0)
     {
-        my $q_more = $self->get_next_quota();
+        my $q_more = $self->_get_next_quota();
         if (!defined($q_more))
         {
             Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas->throw(
