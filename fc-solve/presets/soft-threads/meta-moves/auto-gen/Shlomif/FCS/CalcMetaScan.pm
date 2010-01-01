@@ -21,7 +21,7 @@ use vars (qw(@fields %fields_map));
     _status
     _quotas
     _total_boards_solved
-    total_iters
+    _total_iters
     trace_cb
 ));
 
@@ -293,7 +293,7 @@ sub calc_meta_scan
     $self->chosen_scans([]);
 
     $self->_total_boards_solved(0);
-    $self->total_iters(0);
+    $self->_total_iters(0);
 
     $self->_status("iterating");
     # $self->inspect_quota() throws ::Error::OutOfQuotas if
@@ -452,6 +452,30 @@ sub trace
     {
         $trace_cb->($args);
     }
+}
+
+=head2 my $n = $calc_meta_scan->get_total_iters()
+
+Returns the total iterations count so far.
+
+=cut
+
+sub get_total_iters
+{
+    my $self = shift;
+
+    return $self->_total_iters();
+}
+
+sub _add_to_total_iters
+{
+    my $self = shift;
+    
+    my $how_much = shift;
+
+    $self->add('_total_iters', $how_much);
+
+    return;
 }
 
 package Shlomif::FCS::CalcMetaScan::ScanRun;

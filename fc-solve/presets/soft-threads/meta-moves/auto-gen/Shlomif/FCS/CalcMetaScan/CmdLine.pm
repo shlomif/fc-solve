@@ -323,7 +323,7 @@ sub _report_total_iters
     {
         print "Solved all!\n";
     }
-    printf("total_iters = %s\n", $self->_arbitrator()->total_iters());
+    printf("total_iters = %s\n", $self->_arbitrator()->get_total_iters());
 }
 
 sub _arbitrator_process

@@ -89,7 +89,7 @@ sub update_total_iters
     
     # Add the total iterations for all the states that were solved by
     # this scan.
-    $state->_main()->add('total_iters',
+    $state->_main()->_add_to_total_iters(
         PDL::sum((($r <= $state->_quota()) & ($r > 0)) * $r)
     );
     
@@ -98,7 +98,7 @@ sub update_total_iters
     
     # Add the iterations for all the states that have not been solved
     # yet.
-    $state->_main()->add('total_iters', ($indexes->nelem() * $state->_quota()));
+    $state->_main()->_add_to_total_iters($indexes->nelem() * $state->_quota());
     
     # Keep only the states that have not been solved yet.
     $state->_main()->_scans_data(
