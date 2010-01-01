@@ -346,10 +346,21 @@ sub calc_meta_scan
     }
 }
 
+=head2 $calc_meta_scan->calc_board_iters($board_idx)
+
+Calculates the iterations of the board $board_idx in all the scans.
+
+Returns a hash_ref containing the key 'per_scan_iters' for the iterations
+per scan, and 'board_iters' for the total board iterations when ran in the
+scans.
+
+=cut
+
 sub calc_board_iters
 {
     my $self = shift;
     my $board = shift;
+
     my $board_iters = 0;
 
     my @info = PDL::list($self->_orig_scans_data()->slice("$board,:"));
