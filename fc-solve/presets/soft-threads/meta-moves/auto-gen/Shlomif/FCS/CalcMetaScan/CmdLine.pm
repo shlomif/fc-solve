@@ -25,7 +25,7 @@ __PACKAGE__->mk_acc_ref(
     _offset_quotas
     output_filename
     quotas_expr
-    quotas_are_cb
+    _quotas_are_cb
     rle
     _simulate_to
     _post_processor
@@ -69,7 +69,7 @@ sub _init
     $self->trace($trace);
     $self->rle($rle);
     $self->quotas_expr($quotas_expr);
-    $self->quotas_are_cb($quotas_are_cb);
+    $self->_quotas_are_cb($quotas_are_cb);
     $self->optimize_for($optimize_for);
     $self->_offset_quotas($offset_quotas);
     $self->_simulate_to($simulate_to);
@@ -112,7 +112,7 @@ sub map_all_but_last
 sub get_quotas
 {
     my $self = shift;
-    if ($self->quotas_are_cb())
+    if ($self->_quotas_are_cb())
     {
         return scalar(eval($self->quotas_expr()));
     }
