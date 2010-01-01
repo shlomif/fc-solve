@@ -157,7 +157,7 @@ sub out_script
     );
 }
 
-sub get_line_of_command
+sub _get_line_of_command
 {
     my $self = shift;
     
@@ -232,7 +232,7 @@ sub format_prelude_iter
         ;
 }
 
-sub get_line_of_prelude
+sub _get_line_of_prelude
 {
     my $self = shift;
     return "--prelude \"" .
@@ -247,11 +247,11 @@ sub calc_script_lines
     my $self = shift;
     return
         [
-            $self->get_line_of_command(),
+            $self->_get_line_of_command(),
             @{$self->scan_def_line_mapping(
                 $self->get_lines_of_scan_defs()
             )},
-            $self->get_line_of_prelude()
+            $self->_get_line_of_prelude()
         ];
 }
 
@@ -345,7 +345,7 @@ sub do_trace_for_board
     print +($board+$self->_start_board()) . ": ". $results->{board_iters} . "\n";
 }
 
-sub real_do_trace
+sub _real_do_trace
 {
     my $self = shift;
     foreach my $board (0 .. $self->_num_boards()-1)
@@ -354,14 +354,14 @@ sub real_do_trace
     }
 }
 
-sub do_trace
+sub _do_trace
 {
     my $self = shift;
     # Analyze the results
 
     if ($self->trace())
     {
-        $self->real_do_trace();
+        $self->_real_do_trace();
     }
 }
 
@@ -442,7 +442,7 @@ sub run
     $self->arbitrator_process();
     $self->report_total_iters();
     $self->write_script();
-    $self->do_trace();
+    $self->_do_trace();
     $self->_do_simulation();
 
     return 0;
