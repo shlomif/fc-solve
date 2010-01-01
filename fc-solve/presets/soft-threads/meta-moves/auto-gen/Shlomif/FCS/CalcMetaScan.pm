@@ -108,9 +108,9 @@ sub _calc_get_iter_state_param_method
 
     my %resolve = 
     (
-        len => "get_iter_state_params_len",
-        minmax_len => "get_iter_state_params_minmax_len",
-        speed => "get_iter_state_params_speed",
+        len => "_get_iter_state_params_len",
+        minmax_len => "_get_iter_state_params_minmax_len",
+        speed => "_get_iter_state_params_speed",
     );
 
     return $resolve{$optimize_for};
@@ -132,7 +132,7 @@ sub _my_sum_over
     return $pdl->sumover()->slice(":,(0)");
 }
 
-sub get_iter_state_params_len
+sub _get_iter_state_params_len
 {
     my $self = shift;
 
@@ -177,7 +177,7 @@ sub get_iter_state_params_len
     };
 }
 
-sub get_iter_state_params_minmax_len
+sub _get_iter_state_params_minmax_len
 {
     my $self = shift;
 
@@ -221,7 +221,7 @@ sub get_iter_state_params_minmax_len
     };
 }
 
-sub get_iter_state_params_speed
+sub _get_iter_state_params_speed
 {
     my $self = shift;
 
