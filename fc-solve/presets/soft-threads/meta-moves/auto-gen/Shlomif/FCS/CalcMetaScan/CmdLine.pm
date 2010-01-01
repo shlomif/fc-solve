@@ -105,8 +105,10 @@ sub _selected_scans
 sub map_all_but_last
 {
     my $self = shift;
-    my ($cb, $a) = (@_);
-    return [ (map {$cb->($_)} @$a[0 .. $#$a-1]), $a->[-1] ];
+
+    my ($cb, $arr_ref) = (@_);
+
+    return [ (map {$cb->($_)} @$arr_ref[0 .. $#$arr_ref-1]), $arr_ref->[-1] ];
 }
 
 sub get_quotas
