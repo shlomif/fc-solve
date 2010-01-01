@@ -12,7 +12,7 @@ use vars (qw(@fields %fields_map));
 
 @fields = (qw(
     chosen_scans
-    iter_idx
+    _iter_idx
     num_boards
     orig_scans_data
     optimize_for
@@ -66,7 +66,7 @@ sub _init
 
     $self->trace_cb($args->{'trace_cb'});
 
-    $self->iter_idx(0);
+    $self->_iter_idx(0);
 
     $self->optimize_for($args->{'optimize_for'});
 
@@ -77,9 +77,9 @@ sub _next_iter_idx
 {
     my $self = shift;
 
-    my $ret = $self->iter_idx();
+    my $ret = $self->_iter_idx();
 
-    $self->iter_idx($ret+1);
+    $self->_iter_idx($ret+1);
 
     return $ret;
 }
