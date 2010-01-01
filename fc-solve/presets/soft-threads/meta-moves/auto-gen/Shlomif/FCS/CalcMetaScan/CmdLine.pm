@@ -21,7 +21,7 @@ __PACKAGE__->mk_acc_ref(
     _chosen_scans
     _input_obj
     _num_boards
-    optimize_for
+    _optimize_for
     _offset_quotas
     output_filename
     _quotas_expr
@@ -70,7 +70,7 @@ sub _init
     $self->rle($rle);
     $self->_quotas_expr($_quotas_expr);
     $self->_quotas_are_cb($quotas_are_cb);
-    $self->optimize_for($optimize_for);
+    $self->_optimize_for($optimize_for);
     $self->_offset_quotas($offset_quotas);
     $self->_simulate_to($simulate_to);
 
@@ -275,12 +275,12 @@ sub _write_script
     );
 }
 
-sub calc_scans_data
+sub _calc_scans_data
 {
     my $self = shift;
 
     my $method = 
-        (($self->optimize_for() =~ m{len})
+        (($self->_optimize_for() =~ m{len})
             ? "get_scans_lens_data"
             : "get_scans_data"
         );
@@ -296,7 +296,7 @@ sub arbitrator_trace_cb
     );
 }
 
-sub init_arbitrator
+sub _init_arbitrator
 {
     my $self = shift;
 
@@ -305,9 +305,9 @@ sub init_arbitrator
             'quotas' => $self->get_quotas(),
             'selected_scans' => $self->selected_scans(),
             'num_boards' => $self->_num_boards(),
-            'scans_data' => $self->calc_scans_data(),
+            'scans_data' => $self->_calc_scans_data(),
             'trace_cb' => \&arbitrator_trace_cb,
-            'optimize_for' => $self->optimize_for(),
+            'optimize_for' => $self->_optimize_for(),
         )
     );
 }
@@ -438,7 +438,7 @@ sub run
 {
     my $self = shift;
 
-    $self->init_arbitrator();
+    $self->_init_arbitrator();
     $self->_arbitrator_process();
     $self->_report_total_iters();
     $self->_write_script();
