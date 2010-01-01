@@ -20,16 +20,16 @@ __PACKAGE__->mk_acc_ref(
     arbitrator
     _chosen_scans
     _input_obj
-    num_boards
+    _num_boards
     optimize_for
     _offset_quotas
     output_filename
-    quotas_expr
+    _quotas_expr
     _quotas_are_cb
     rle
     _simulate_to
     _post_processor
-    start_board
+    _start_board
     trace
     )]
 );
@@ -39,12 +39,12 @@ sub _init
     my $self = shift;
 
     # Command line parameters
-    my $start_board = 1;
+    my $_start_board = 1;
     my $num_boards = 32000;
     my $output_filename = "-";
     my $trace = 0;
     my $rle = 1;
-    my $quotas_expr = undef;
+    my $_quotas_expr = undef;
     my $quotas_are_cb = 0;
     my $optimize_for = "speed";
     my $offset_quotas = 0;
@@ -55,20 +55,20 @@ sub _init
         "num-boards=i" => \$num_boards,
         "trace" => \$trace,
         "rle!" => \$rle,
-        "start-board=i" => \$start_board,
-        "quotas-expr=s" => \$quotas_expr,
+        "start-board=i" => \$_start_board,
+        "quotas-expr=s" => \$_quotas_expr,
         "quotas-are-cb" => \$quotas_are_cb,
         "offset-quotas" => \$offset_quotas,
         "opt-for=s" => \$optimize_for,
         "simulate-to=s" => \$simulate_to,
     ) or exit(1);
 
-    $self->start_board($start_board);
-    $self->num_boards($num_boards);
+    $self->_start_board($_start_board);
+    $self->_num_boards($num_boards);
     $self->output_filename($output_filename);
     $self->trace($trace);
     $self->rle($rle);
-    $self->quotas_expr($quotas_expr);
+    $self->_quotas_expr($_quotas_expr);
     $self->_quotas_are_cb($quotas_are_cb);
     $self->optimize_for($optimize_for);
     $self->_offset_quotas($offset_quotas);
@@ -77,8 +77,8 @@ sub _init
     $self->_input_obj(
         MyInput->new(
             {
-                start_board => $self->start_board(),
-                num_boards => $self->num_boards(),
+                start_board => $self->_start_board(),
+                num_boards => $self->_num_boards(),
             }
         )
     );
@@ -114,11 +114,11 @@ sub get_quotas
     my $self = shift;
     if ($self->_quotas_are_cb())
     {
-        return scalar(eval($self->quotas_expr()));
+        return scalar(eval($self->_quotas_expr()));
     }
-    elsif (defined($self->quotas_expr()))
+    elsif (defined($self->_quotas_expr()))
     {
-        return [eval $self->quotas_expr()];
+        return [eval $self->_quotas_expr()];
     }
     else
     {
@@ -163,8 +163,8 @@ sub get_line_of_command
     
     my $args_string = 
         join(" ", 
-            $self->start_board(), 
-            $self->start_board() + $self->num_boards() - 1, 
+            $self->_start_board(), 
+            $self->_start_board() + $self->_num_boards() - 1, 
             1
         );
     return "freecell-solver-range-parallel-solve $args_string";
@@ -304,7 +304,7 @@ sub init_arbitrator
         Shlomif::FCS::CalcMetaScan->new(
             'quotas' => $self->get_quotas(),
             'selected_scans' => $self->selected_scans(),
-            'num_boards' => $self->num_boards(),
+            'num_boards' => $self->_num_boards(),
             'scans_data' => $self->calc_scans_data(),
             'trace_cb' => \&arbitrator_trace_cb,
             'optimize_for' => $self->optimize_for(),
@@ -342,13 +342,13 @@ sub do_trace_for_board
 
     my $results = $self->arbitrator()->calc_board_iters($board);
     print "\@info=". join(",", @{$results->{per_scan_iters}}). "\n";
-    print +($board+$self->start_board()) . ": ". $results->{board_iters} . "\n";
+    print +($board+$self->_start_board()) . ": ". $results->{board_iters} . "\n";
 }
 
 sub real_do_trace
 {
     my $self = shift;
-    foreach my $board (0 .. $self->num_boards()-1)
+    foreach my $board (0 .. $self->_num_boards()-1)
     {
         $self->do_trace_for_board($board);
     }
@@ -410,7 +410,7 @@ sub _real_do_simulation
     open my $simulate_out_fh, ">", $self->_simulate_to()
         or Carp::confess("Could not open " . $self->_simulate_to() . " - $!");
 
-    foreach my $board (0 .. $self->num_boards()-1)
+    foreach my $board (0 .. $self->_num_boards()-1)
     {
         print {$simulate_out_fh} $self->_do_simulation_for_board($board), "\n";
     }
