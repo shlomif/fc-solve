@@ -273,7 +273,7 @@ sub _get_selected_scan
     return $iter_state;
 }
 
-sub inspect_quota
+sub _inspect_quota
 {
     my $self = shift;
 
@@ -312,13 +312,13 @@ sub calc_meta_scan
     $self->_total_iters(0);
 
     $self->_status("iterating");
-    # $self->inspect_quota() throws ::Error::OutOfQuotas if
+    # $self->_inspect_quota() throws ::Error::OutOfQuotas if
     # it does not have any available quotas.
     eval
     {
         while ($self->_status() eq "iterating")
         {
-            $self->inspect_quota();
+            $self->_inspect_quota();
         }
     };
     if (my $err = Exception::Class->caught('Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas'))
