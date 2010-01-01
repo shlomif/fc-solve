@@ -148,7 +148,7 @@ sub _trace_wrapper
 {
     my $state = shift;
 
-    $state->_main()->trace(
+    $state->_main()->_trace(
         {
             'iters_quota' => $state->_quota(),
             'selected_scan_idx' => $state->_scan_idx(),

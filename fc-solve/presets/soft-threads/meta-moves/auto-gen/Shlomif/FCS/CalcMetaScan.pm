@@ -485,7 +485,7 @@ sub simulate_board
         );
 }
 
-sub trace
+sub _trace
 {
     my ($self, $args) = @_;
     
