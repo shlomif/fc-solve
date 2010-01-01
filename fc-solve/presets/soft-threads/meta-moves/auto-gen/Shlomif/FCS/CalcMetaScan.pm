@@ -300,6 +300,13 @@ sub _inspect_quota
 Returns the scans that have been chosen to perform the iteration. Each one is
 a Shlomif::FCS::CalcMetaScan::ScanRun object.
 
+=head2 $calc_meta_scan->calc_meta_scan()
+
+Calculates the meta-scan after initialisation. See here for the details
+of the algorithm:
+
+L<http://www.shlomifish.org/lecture/Freecell-Solver/The-Next-Pres/slides/multi-tasking/best-meta-scan/>
+
 =cut
 
 sub calc_meta_scan
