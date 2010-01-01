@@ -111,7 +111,7 @@ sub _map_all_but_last
     return [ (map {$cb->($_)} @$arr_ref[0 .. $#$arr_ref-1]), $arr_ref->[-1] ];
 }
 
-sub get_quotas
+sub _get_quotas
 {
     my $self = shift;
     if ($self->_quotas_are_cb())
@@ -124,16 +124,16 @@ sub get_quotas
     }
     else
     {
-        return $self->get_default_quotas();
+        return $self->_get_default_quotas();
     }
 }
 
-sub get_default_quotas
+sub _get_default_quotas
 {
     return [(350) x 5000];
 }
 
-sub get_script_fh
+sub _get_script_fh
 {
     my $self = shift;
     return IO::File->new(
@@ -143,19 +143,19 @@ sub get_script_fh
        );
 }
 
-sub get_script_terminator
+sub _get_script_terminator
 {
     return "\n\n\n";
 }
 
-sub out_script
+sub _out_script
 {
     my $self = shift;
     my $cmd_line_string = shift;
 
-    $self->get_script_fh()->print(
+    $self->_get_script_fh()->print(
         $cmd_line_string, 
-        $self->get_script_terminator($cmd_line_string)
+        $self->_get_script_terminator($cmd_line_string)
     );
 }
 
@@ -172,29 +172,29 @@ sub _get_line_of_command
     return "freecell-solver-range-parallel-solve $args_string";
 }
 
-sub line_ends_mapping
+sub _line_ends_mapping
 {
     my $self = shift;
     return $self->_map_all_but_last(sub { "$_[0] \\\n" }, shift);
 }
 
-sub get_used_scans
+sub _get_used_scans
 {
     my $self = shift;
     return [ grep { $_->is_used() } @{$self->_selected_scans()}];
 }
 
-sub get_lines_of_scan_defs
+sub _get_lines_of_scan_defs
 {
     my $self = shift;
     return 
         [map 
             { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } 
-            @{$self->get_used_scans()}
+            @{$self->_get_used_scans()}
         ];
 }
 
-sub scan_def_line_mapping
+sub _scan_def_line_mapping
 {
     my $self = shift;
     return $self->_map_all_but_last(sub { "$_[0] -nst" }, shift);
@@ -223,7 +223,7 @@ sub _map_scan_idx_to_id
     return $self->_selected_scans()->[$index]->id();
 }
 
-sub format_prelude_iter
+sub _format_prelude_iter
 {
     my $self = shift;
 
@@ -239,31 +239,31 @@ sub _get_line_of_prelude
     my $self = shift;
     return "--prelude \"" .
         join(",",
-            map { $self->format_prelude_iter($_) } 
+            map { $self->_format_prelude_iter($_) } 
                 @{$self->_chosen_scans()}
         ) . "\"";
 }
 
-sub calc_script_lines
+sub _calc_script_lines
 {
     my $self = shift;
     return
         [
             $self->_get_line_of_command(),
-            @{$self->scan_def_line_mapping(
-                $self->get_lines_of_scan_defs()
+            @{$self->_scan_def_line_mapping(
+                $self->_get_lines_of_scan_defs()
             )},
             $self->_get_line_of_prelude()
         ];
 }
 
-sub calc_script_text
+sub _calc_script_text
 {
     my $self = shift;
     return 
         join("",
-            @{$self->line_ends_mapping(
-                $self->calc_script_lines()
+            @{$self->_line_ends_mapping(
+                $self->_calc_script_lines()
             )}
         );
 }
@@ -272,8 +272,8 @@ sub _write_script
 {
     my $self = shift;
      
-    $self->out_script(
-        $self->calc_script_text()
+    $self->_out_script(
+        $self->_calc_script_text()
     );
 }
 
@@ -290,7 +290,7 @@ sub _calc_scans_data
     return $self->_input_obj->$method();
 }
 
-sub arbitrator_trace_cb
+sub _arbitrator_trace_cb
 {
     my $args = shift;
     printf("%s \@ %s (%s solved)\n",
@@ -304,11 +304,11 @@ sub _init_arbitrator
 
     return $self->_arbitrator(
         Shlomif::FCS::CalcMetaScan->new(
-            'quotas' => $self->get_quotas(),
+            'quotas' => $self->_get_quotas(),
             'selected_scans' => $self->_selected_scans(),
             'num_boards' => $self->_num_boards(),
             'scans_data' => $self->_calc_scans_data(),
-            'trace_cb' => \&arbitrator_trace_cb,
+            'trace_cb' => \&_arbitrator_trace_cb,
             'optimize_for' => $self->_optimize_for(),
         )
     );
@@ -337,7 +337,7 @@ sub _arbitrator_process
     $self->_chosen_scans($scans);
 }
 
-sub do_trace_for_board
+sub _do_trace_for_board
 {
     my $self = shift;
     my $board = shift;
@@ -352,7 +352,7 @@ sub _real_do_trace
     my $self = shift;
     foreach my $board (0 .. $self->_num_boards()-1)
     {
-        $self->do_trace_for_board($board);
+        $self->_do_trace_for_board($board);
     }
 }
 
