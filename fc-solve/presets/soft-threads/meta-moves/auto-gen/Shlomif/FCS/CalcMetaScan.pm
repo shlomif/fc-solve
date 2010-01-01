@@ -413,6 +413,13 @@ sub get_final_status
     return $self->_status();
 }
 
+=head2 my $sim_results_obj = $calc_meta_scan->simulate_board($board_idx)
+
+Simulates the board No $board_idx through the scan. Returns a 
+L<Shlomif::FCS::CalcMetaScan::SimulationResults> object.
+
+=cut
+
 sub simulate_board
 {
     my ($self, $board) = @_;
