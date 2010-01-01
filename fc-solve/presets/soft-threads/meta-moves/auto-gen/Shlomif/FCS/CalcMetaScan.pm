@@ -15,7 +15,7 @@ use vars (qw(@fields %fields_map));
     _iter_idx
     _num_boards
     _orig_scans_data
-    optimize_for
+    _optimize_for
     scans_data
     selected_scans
     status
@@ -68,7 +68,7 @@ sub _init
 
     $self->_iter_idx(0);
 
-    $self->optimize_for($args->{'optimize_for'});
+    $self->_optimize_for($args->{'optimize_for'});
 
     return 0;
 }
@@ -104,7 +104,7 @@ sub get_iter_state_params
 {
     my $self = shift;
 
-    my $method = 'get_iter_state_params_' . $self->optimize_for();
+    my $method = 'get_iter_state_params_' . $self->_optimize_for();
 
     return $self->$method();
 }
