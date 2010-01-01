@@ -26,11 +26,11 @@ __PACKAGE__->mk_acc_ref(
     _output_filename
     _quotas_expr
     _quotas_are_cb
-    rle
+    _should_rle_be_done
     _simulate_to
     _post_processor
     _start_board
-    trace
+    _should_trace_be_done
     )]
 );
 
@@ -42,8 +42,8 @@ sub _init
     my $_start_board = 1;
     my $num_boards = 32000;
     my $output_filename = "-";
-    my $trace = 0;
-    my $rle = 1;
+    my $should_trace_be_done = 0;
+    my $should_rle_be_done = 1;
     my $_quotas_expr = undef;
     my $quotas_are_cb = 0;
     my $optimize_for = "speed";
@@ -53,8 +53,8 @@ sub _init
     GetOptions(
         "o|output=s" => \$output_filename,
         "num-boards=i" => \$num_boards,
-        "trace" => \$trace,
-        "rle!" => \$rle,
+        "trace" => \$should_trace_be_done,
+        "rle!" => \$should_rle_be_done,
         "start-board=i" => \$_start_board,
         "quotas-expr=s" => \$_quotas_expr,
         "quotas-are-cb" => \$quotas_are_cb,
@@ -66,8 +66,8 @@ sub _init
     $self->_start_board($_start_board);
     $self->_num_boards($num_boards);
     $self->_output_filename($output_filename);
-    $self->trace($trace);
-    $self->rle($rle);
+    $self->_should_trace_be_done($should_trace_be_done);
+    $self->_should_rle_be_done($should_rle_be_done);
     $self->_quotas_expr($_quotas_expr);
     $self->_quotas_are_cb($quotas_are_cb);
     $self->_optimize_for($optimize_for);
@@ -86,7 +86,7 @@ sub _init
     $self->_post_processor(
         Shlomif::FCS::CalcMetaScan::PostProcessor->new(
             {
-                do_rle => $self->rle(),
+                do_rle => $self->_should_rle_be_done(),
                 offset_quotas => $self->_offset_quotas(),
             }
         )
@@ -359,7 +359,7 @@ sub _do_trace
     my $self = shift;
     # Analyze the results
 
-    if ($self->trace())
+    if ($self->_should_trace_be_done())
     {
         $self->_real_do_trace();
     }
