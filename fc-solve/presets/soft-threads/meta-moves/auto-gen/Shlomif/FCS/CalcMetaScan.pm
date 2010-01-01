@@ -22,7 +22,7 @@ use vars (qw(@fields %fields_map));
     _quotas
     _total_boards_solved
     _total_iters
-    trace_cb
+    _trace_cb
 ));
 
 use PDL ();
@@ -64,7 +64,7 @@ sub _init
     $self->_num_boards($args->{'num_boards'}) or
         die "num_boards not specified!";
 
-    $self->trace_cb($args->{'trace_cb'});
+    $self->_trace_cb($args->{'trace_cb'});
 
     $self->_iter_idx(0);
 
@@ -447,11 +447,13 @@ sub simulate_board
 sub trace
 {
     my ($self, $args) = @_;
-    my $trace_cb = $self->trace_cb();
-    if (UNIVERSAL::isa($trace_cb, "CODE"))
+    
+    if (my $trace_callback = $self->_trace_cb())
     {
-        $trace_cb->($args);
+        $trace_callback->($args);
     }
+
+    return;
 }
 
 =head2 my $n = $calc_meta_scan->get_total_iters()
