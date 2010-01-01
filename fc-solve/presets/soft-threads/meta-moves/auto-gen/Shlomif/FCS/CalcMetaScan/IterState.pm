@@ -139,7 +139,7 @@ sub _update_total_boards_solved
 {
     my $state = shift;
 
-    $state->_main()->add('total_boards_solved', $state->_num_solved());
+    $state->_main()->add('_total_boards_solved', $state->_num_solved());
 
     return;
 }
@@ -152,7 +152,7 @@ sub _trace_wrapper
         {
             'iters_quota' => $state->_quota(),
             'selected_scan_idx' => $state->_scan_idx(),
-            'total_boards_solved' => $state->_main()->total_boards_solved(),
+            'total_boards_solved' => $state->_main()->_total_boards_solved(),
         }
     );
 

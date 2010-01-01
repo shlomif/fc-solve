@@ -20,7 +20,7 @@ use vars (qw(@fields %fields_map));
     _selected_scans
     _status
     _quotas
-    total_boards_solved
+    _total_boards_solved
     total_iters
     trace_cb
 ));
@@ -267,7 +267,7 @@ sub inspect_quota
 
     $state->update_total_iters();
     
-    if ($self->total_boards_solved() == $self->_num_boards())
+    if ($self->_total_boards_solved() == $self->_num_boards())
     {
         $self->_status("solved_all");
     }
@@ -292,7 +292,7 @@ sub calc_meta_scan
 
     $self->chosen_scans([]);
 
-    $self->total_boards_solved(0);
+    $self->_total_boards_solved(0);
     $self->total_iters(0);
 
     $self->_status("iterating");
