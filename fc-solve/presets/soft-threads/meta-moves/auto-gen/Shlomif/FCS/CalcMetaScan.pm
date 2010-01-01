@@ -100,11 +100,27 @@ sub _get_next_quota
     }
 }
 
-sub get_iter_state_params
+sub _calc_get_iter_state_param_method
 {
     my $self = shift;
 
-    my $method = 'get_iter_state_params_' . $self->_optimize_for();
+    my $optimize_for = $self->_optimize_for();
+
+    my %resolve = 
+    (
+        len => "get_iter_state_params_len",
+        minmax_len => "get_iter_state_params_minmax_len",
+        speed => "get_iter_state_params_speed",
+    );
+
+    return $resolve{$optimize_for};
+}
+
+sub _get_iter_state_params
+{
+    my $self = shift;
+
+    my $method = $self->_calc_get_iter_state_param_method();
 
     return $self->$method();
 }
@@ -249,7 +265,7 @@ sub get_selected_scan
 
     my $iter_state = 
         Shlomif::FCS::CalcMetaScan::IterState->new(
-            $self->get_iter_state_params(),
+            $self->_get_iter_state_params(),
         );
 
     $iter_state->attach_to($self);
