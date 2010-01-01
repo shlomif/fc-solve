@@ -21,16 +21,16 @@ __PACKAGE__->mk_acc_ref(
     _chosen_scans
     _input_obj
     _num_boards
-    _optimize_for
     _offset_quotas
+    _optimize_for
     _output_filename
-    _quotas_expr
-    _quotas_are_cb
-    _should_rle_be_done
-    _simulate_to
     _post_processor
-    _start_board
+    _quotas_are_cb
+    _quotas_expr
+    _should_rle_be_done
     _should_trace_be_done
+    _simulate_to
+    _start_board
     )]
 );
 
