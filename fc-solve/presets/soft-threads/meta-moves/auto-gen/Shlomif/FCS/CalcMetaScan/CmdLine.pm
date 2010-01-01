@@ -304,12 +304,14 @@ sub _init_arbitrator
 
     return $self->_arbitrator(
         Shlomif::FCS::CalcMetaScan->new(
-            'quotas' => $self->_get_quotas(),
-            'selected_scans' => $self->_selected_scans(),
-            'num_boards' => $self->_num_boards(),
-            'scans_data' => $self->_calc_scans_data(),
-            'trace_cb' => \&_arbitrator_trace_cb,
-            'optimize_for' => $self->_optimize_for(),
+            {
+                'quotas' => $self->_get_quotas(),
+                'selected_scans' => $self->_selected_scans(),
+                'num_boards' => $self->_num_boards(),
+                'scans_data' => $self->_calc_scans_data(),
+                'trace_cb' => \&_arbitrator_trace_cb,
+                'optimize_for' => $self->_optimize_for(),
+            }
         )
     );
 }

@@ -45,30 +45,30 @@ sub _init
 {
     my $self = shift;
 
-    my (%args) = (@_);
+    my $args = shift;
 
-    $self->quotas($args{'quotas'}) or
+    $self->quotas($args->{'quotas'}) or
         die "Quotas not specified!";
 
-    if (!exists($args{'scans_data'}))
+    if (!exists($args->{'scans_data'}))
     {
         die "scans_data not specified!";
     }
 
-    $self->orig_scans_data($args{'scans_data'}->copy());
+    $self->orig_scans_data($args->{'scans_data'}->copy());
     $self->scans_data($self->orig_scans_data()->copy());
 
-    $self->selected_scans($args{'selected_scans'}) or
+    $self->selected_scans($args->{'selected_scans'}) or
         die "selected_scans not specified!";
 
-    $self->num_boards($args{'num_boards'}) or
+    $self->num_boards($args->{'num_boards'}) or
         die "num_boards not specified!";
 
-    $self->trace_cb($args{'trace_cb'});
+    $self->trace_cb($args->{'trace_cb'});
 
     $self->iter_idx(0);
 
-    $self->optimize_for($args{'optimize_for'});
+    $self->optimize_for($args->{'optimize_for'});
 
     return 0;
 }
