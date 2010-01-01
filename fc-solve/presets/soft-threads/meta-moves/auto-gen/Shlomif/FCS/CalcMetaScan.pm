@@ -13,7 +13,7 @@ use vars (qw(@fields %fields_map));
 @fields = (qw(
     chosen_scans
     _iter_idx
-    num_boards
+    _num_boards
     orig_scans_data
     optimize_for
     scans_data
@@ -61,7 +61,7 @@ sub _init
     $self->selected_scans($args->{'selected_scans'}) or
         die "selected_scans not specified!";
 
-    $self->num_boards($args->{'num_boards'}) or
+    $self->_num_boards($args->{'num_boards'}) or
         die "num_boards not specified!";
 
     $self->trace_cb($args->{'trace_cb'});
@@ -267,7 +267,7 @@ sub inspect_quota
 
     $state->update_total_iters();
     
-    if ($self->total_boards_solved() == $self->num_boards())
+    if ($self->total_boards_solved() == $self->_num_boards())
     {
         $self->status("solved_all");
     }
