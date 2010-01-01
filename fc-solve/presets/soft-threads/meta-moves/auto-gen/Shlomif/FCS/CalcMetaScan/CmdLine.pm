@@ -319,7 +319,7 @@ sub _init_arbitrator
 sub _report_total_iters
 {
     my $self = shift;
-    if ($self->_arbitrator()->status() eq "solved_all")
+    if ($self->_arbitrator()->get_final_status() eq "solved_all")
     {
         print "Solved all!\n";
     }

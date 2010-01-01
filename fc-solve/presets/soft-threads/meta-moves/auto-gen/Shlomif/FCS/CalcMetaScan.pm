@@ -17,8 +17,8 @@ use vars (qw(@fields %fields_map));
     _orig_scans_data
     _optimize_for
     _scans_data
-    selected_scans
-    status
+    _selected_scans
+    _status
     quotas
     total_boards_solved
     total_iters
@@ -58,7 +58,7 @@ sub _init
     $self->_orig_scans_data($args->{'scans_data'}->copy());
     $self->_scans_data($self->_orig_scans_data()->copy());
 
-    $self->selected_scans($args->{'selected_scans'}) or
+    $self->_selected_scans($args->{'selected_scans'}) or
         die "selected_scans not specified!";
 
     $self->_num_boards($args->{'num_boards'}) or
@@ -269,7 +269,7 @@ sub inspect_quota
     
     if ($self->total_boards_solved() == $self->_num_boards())
     {
-        $self->status("solved_all");
+        $self->_status("solved_all");
     }
     else
     {
@@ -301,19 +301,19 @@ sub calc_meta_scan
     $self->total_boards_solved(0);
     $self->total_iters(0);
 
-    $self->status("iterating");
+    $self->_status("iterating");
     # $self->inspect_quota() throws ::Error::OutOfQuotas if
     # it does not have any available quotas.
     eval
     {
-        while ($self->status() eq "iterating")
+        while ($self->_status() eq "iterating")
         {
             $self->inspect_quota();
         }
     };
     if (my $err = Exception::Class->caught('Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas'))
     {
-        # Do nothing - continue.
+        $self->_status("out_of_quotas");
     }
     else
     {
@@ -360,6 +360,29 @@ sub calc_board_iters
             'per_scan_iters' => \@orig_info,
             'board_iters' => $board_iters,
         };
+}
+
+=head2 my $status = $calc_meta_scan->get_final_status()
+
+Returns the status as string:
+
+=over 4
+
+=item * "solved_all"
+
+=item * "iterating"
+
+=item * "out_of_quotas"
+
+=back
+
+=cut
+
+sub get_final_status
+{
+    my $self = shift;
+
+    return $self->_status();
 }
 
 sub simulate_board

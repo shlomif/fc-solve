@@ -121,7 +121,7 @@ sub update_idx_slice
 sub _mark_as_used
 {
     my $state = shift;
-    $state->_main()->selected_scans()->[$state->_scan_idx()]->mark_as_used();
+    $state->_main()->_selected_scans()->[$state->_scan_idx()]->mark_as_used();
 
     return;
 }
