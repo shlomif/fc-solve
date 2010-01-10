@@ -250,7 +250,8 @@ class Card:
     ACE = 1
     KING = 13
 
-    def __init__(self, rank, suit, print_ts):
+    def __init__(self, id, rank, suit, print_ts):
+        self.id = id
         self.rank = rank
         self.suit = suit
         self.flipped = False
@@ -287,7 +288,7 @@ class Card:
         return self.suit_s() + "-" + self.rank_s()
 
     def flip(self, flipped=True):
-        new_card = Card(self.rank, self.suit, self.print_ts)
+        new_card = Card(self.id, self.rank, self.suit, self.print_ts)
         new_card.flipped = flipped
         return new_card
 
@@ -382,16 +383,18 @@ class Board:
 
 
 def empty_card():
-    ret = Card(0,0,1)
+    ret = Card(0,0,0,1)
     ret.empty = True
     return ret
 
 def createCards(num_decks, print_ts):
     cards = []
     for deck in range(num_decks):
+        id = 0
         for suit in range(4):
             for rank in range(13):
-                cards.append(Card(rank+1, suit, print_ts))
+                cards.append(Card(id, rank+1, suit, print_ts))
+                id = id + 1
     return cards
 
 def column_to_list_of_strings(col):
@@ -446,7 +449,8 @@ class Game:
                 "simple_simon" : None,
                 "yukon" : None,
                 "beleaguered_castle" : [ "beleaguered_castle", "streets_and_alleys", "citadel" ],
-                "fan" : None
+                "fan" : None,
+                "black_hole" : None,
         }
 
     def __init__(self, game_id, game_num, is_pysol_fc_deals, print_ts):
@@ -637,6 +641,39 @@ class Game:
         game.cyclical_deal(52-1, 17)
 
         game.add(17, game.next())
+
+    def _shuffleHookMoveSorter(self, cards, func, ncards):
+        # note that we reverse the cards, so that smaller sort_orders
+        # will be nearer to the top of the Talon
+        sitems, i = [], len(cards)
+        for c in cards[:]:
+            select, sort_order = func(c)
+            if select:
+                cards.remove(c)
+                sitems.append((sort_order, i, c))
+                if len(sitems) >= ncards:
+                    break
+            i = i - 1
+        sitems.sort()
+        sitems.reverse()
+        scards = map(lambda item: item[2], sitems)
+        return cards, scards
+
+    def _shuffleHookMoveToBottom(self, cards, func, ncards=999999):
+        # move cards to bottom of the Talon (i.e. last cards to be dealt)
+        cards, scards = self._shuffleHookMoveSorter(cards, func, ncards)
+        ret = scards + cards
+        return ret
+
+    def black_hole(game):
+        game.board = Board(17)
+
+        # move Ace to bottom of the Talon (i.e. last cards to be dealt)
+        game.cards = game._shuffleHookMoveToBottom(game.cards, lambda c: (c.id == 13, c.suit), 1)
+        game.next()
+        game.cyclical_deal(52-1, 17)
+
+        print "Foundations: AS"
 
     def beleaguered_castle(game):
         aces_up = game.game_id in ("beleaguered_castle", "citadel")

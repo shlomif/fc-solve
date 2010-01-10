@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 23;
 use Test::Differences;
 
 {
@@ -526,6 +526,38 @@ EOF
         $got,
         $expected,
         "Freecell PySolFC 2400240 Simple Simon",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py --pysolfc -t 45508856405861261758 black_hole`;
+
+    my $expected = <<"EOF";
+Foundations: AS
+2S 3D 6S
+2C 5D 7H
+3C 7C 3S
+4C AC JS
+9D QC 4S
+QD 6C 8H
+TC JC TS
+8D 7S 8S
+7D 3H 5H
+JD 9C 2H
+TD 6D QH
+2D KH KC
+4D KD AH
+4H JH 5C
+AD 9S QS
+6H KS TH
+5S 9H 8C
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "PySolFC 45508856405861261758 black_hole",
     );
 }
 
