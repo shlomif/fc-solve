@@ -435,6 +435,13 @@ Freecell in Java.
 </p>
 </li>
 
+<li>
+<p>
+<a href="http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/">Solver 
+for "Black Hole" Solitaire</a> - a solver for the solitaire "Black Hole" in
+Perl 5 by the same author as Freecell Solver.
+</p>
+</li>
 </ul>
 
 <h2 id="reviews">Reviews of Freecell Solver</h2>
