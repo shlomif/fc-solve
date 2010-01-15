@@ -1182,8 +1182,25 @@ break;
                         a,
                         atof(start_num)
                         );
-                    *end_num = save;
+                    /* Make sure that if the string terminated here -
+                     * we stop.
+                     * */
+                    if ((*end_num = save) == '\0')
+                    {
+                        break;
+                    }
                     start_num=end_num+1;
+                }
+                /* Initialize the rest of the a_star_weights to 0 so
+                 * we won't have partial initialization. 
+                 * */
+                for(;a<5;a++)
+                {
+                    freecell_solver_user_set_a_star_weight(
+                        instance,
+                        a,
+                        0
+                        );
                 }
             }
         }

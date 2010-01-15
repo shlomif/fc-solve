@@ -1026,6 +1026,41 @@ static void iter_handler_wrapper(
 
     user = (fcs_user_t *)user_instance;
 
+#ifdef DEBUG
+    {
+
+        fc_solve_instance_t * instance = user->instance;
+        int ht_idx, st_idx;
+
+        for (ht_idx = 0; ht_idx < instance->num_hard_threads ; ht_idx++)
+        {
+            fc_solve_hard_thread_t * hard_thread = 
+                instance->hard_threads[ht_idx];
+
+            for (st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
+            {
+                fc_solve_soft_thread_t * soft_thread =
+                    hard_thread->soft_threads[st_idx];
+
+                if (!strcmp(soft_thread->name, "11"))
+                {
+                    double * w =
+                        soft_thread->method_specific.befs.meth.
+                                    befs.a_star_weights
+                        ;
+
+                    printf("BeFS-Weights[\"11\"]=(%f,%f,%f,%f,%f)\n",
+                            w[0], w[1], w[2], w[3], w[4]
+                          );
+
+                    goto myend;
+                }
+            }
+        }
+                
+    }
+myend:
+#endif
     user->iter_handler(
         user_instance,
         iter_num,

@@ -870,6 +870,49 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
     return;
 }
 
+#define DEBUG
+#ifdef DEBUG
+#if 0
+static void dump_pqueue (
+    fc_solve_soft_thread_t * soft_thread,
+    const char * stage_id,
+    PQUEUE * pq
+    )
+{
+    int i;
+    char * s; 
+
+    if (strcmp(soft_thread->name, "11"))
+    {
+        return;
+    }
+
+    printf("<pqueue_dump stage=\"%s\">\n\n", stage_id);
+
+    for (i = PQ_FIRST_ENTRY ; i < pq->CurrentSize ; i++)
+    {
+        printf("Rating[%d] = %d\nState[%d] = <<<\n", i, pq->Elements[i].rating, i);
+        s = fc_solve_state_as_string(pq->Elements[i].val, 
+                soft_thread->hard_thread->instance->freecells_num,
+                soft_thread->hard_thread->instance->stacks_num,
+                soft_thread->hard_thread->instance->decks_num,
+                1,
+                0,
+                1
+                );
+
+        printf("%s\n>>>\n\n", s);
+
+        free(s);
+    }
+
+    printf("\n\n</pqueue_dump>\n\n");
+}
+#else
+#define dump_pqueue(a,b,c) {}
+#endif
+#endif
+
 int fc_solve_a_star_or_bfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -941,6 +984,10 @@ int fc_solve_a_star_or_bfs_do_solve(
     while ( ptr_state_val != NULL)
     {
         TRACE0("Start of loop");
+
+#ifdef DEBUG
+        dump_pqueue(soft_thread, "loop_start", scan_specific.a_star_pqueue);
+#endif
 
         {
              register int temp_visited = ptr_state_val->visited;
@@ -1150,6 +1197,10 @@ label_next_state:
         */
         if (method == FCS_METHOD_A_STAR)
         {
+
+#ifdef DEBUG
+        dump_pqueue(soft_thread, "before_pop", scan_specific.a_star_pqueue);
+#endif
             /* It is an A* scan */
             fc_solve_PQueuePop(
                 scan_specific.a_star_pqueue,
