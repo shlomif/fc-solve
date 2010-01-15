@@ -1389,3 +1389,20 @@ DLLEXPORT const char * freecell_solver_user_get_lib_version(
 {
     return VERSION;
 }
+
+DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
+    void * user_instance
+    )
+{
+    fcs_user_t * user;
+    fc_solve_hard_thread_t * hard_thread;
+    fc_solve_instance_t * instance;
+
+    user = (fcs_user_t *)user_instance;
+
+    instance = user->instance;
+
+    hard_thread = instance->hard_threads[instance->ht_idx];
+
+    return hard_thread->soft_threads[hard_thread->st_idx]->name;
+}

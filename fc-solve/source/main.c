@@ -87,6 +87,9 @@ static void my_iter_handler(
     fprintf(stdout, "Stored-States: %i\n",
         freecell_solver_user_get_num_states_in_collection(user_instance)
         );
+    fprintf(stdout, "Scan: %s\n", 
+        freecell_solver_user_get_current_soft_thread_name(user_instance)
+        );
     if (context->display_parent_iter_num)
     {
         fprintf(stdout, "Parent Iteration: %i\n", parent_iter_num);

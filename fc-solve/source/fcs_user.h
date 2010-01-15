@@ -293,6 +293,10 @@ DLLEXPORT const char * freecell_solver_user_get_lib_version(
     void * user_instance
     );
 
+DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
+    void * user_instance
+    );
+
 #ifdef __cplusplus
 }
 #endif
