@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -35,7 +35,7 @@ sub assert_directly_ascending_iters
         }
     }
 
-    my $theme = $args->{theme} || ["-l", "gi"];
+    my $theme = $args->{theme} || ["-l", "cj"];
 
     my $variant = $args->{variant}  || "freecell";
     my $is_custom = ($variant eq "custom");
@@ -43,17 +43,22 @@ sub assert_directly_ascending_iters
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
-    open my $fc_solve_output,
+    my $fc_solve_cmd_line = 
+    (
         ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ") .
         "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -s -i -p -t -sam " .
-        ($board ? shell_quote($board) : "") .
-        " |"
+        ($board ? shell_quote($board) : "")
+    );
+
+    open my $fc_solve_output,
+        "$fc_solve_cmd_line |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
     my $verdict = 1;
     my $diag = "";
     {
         my $last_iter;
+        my $iters_count;
         LINE_LOOP:
         while (my $line = <$fc_solve_output>)
         {
@@ -83,6 +88,25 @@ sub assert_directly_ascending_iters
                     last LINE_LOOP;
                 }
             }
+            elsif ($line =~ m{\ATotal number of states checked is (\d+)\.\z})
+            {
+                $iters_count = $1;
+            }
+        }
+
+        if ($verdict)
+        {
+            if (!defined($iters_count))
+            {
+               $verdict = 0;
+               $diag = "Did not encounter total number of states checked.";
+            }
+            elsif ($iters_count != $last_iter+1)
+            {
+                $verdict = 0;
+                $diag = "iters_count == $iters_count while last_iter == $last_iter\n" 
+                . "It should be iters_count == last_iter+1";
+            }
         }
     }
 
@@ -111,11 +135,11 @@ assert_directly_ascending_iters({deal => 1941, theme => [],},
 
 # TEST
 assert_directly_ascending_iters({deal => 1941},
-    "Verifying 1941 (The Hardest Deal) with '-l gi'");
+    "Verifying 1941 (The Hardest Deal) with '-l cj'");
 
 # TEST
 assert_directly_ascending_iters({deal => 24},
-    "Verifying deal No. 24 with '-l gi'");
+    "Verifying deal No. 24 with '-l cj'");
 
 # TEST
 assert_directly_ascending_iters(
@@ -126,7 +150,7 @@ assert_directly_ascending_iters(
 # TEST
 assert_directly_ascending_iters(
     {deal => 11982, },
-    "Verifying deal No. 11982 (unsolvable) with -l gi"
+    "Verifying deal No. 11982 (unsolvable) with -l cj"
 );
 
 # TEST
@@ -140,6 +164,10 @@ assert_directly_ascending_iters(
     {deal => 11982, theme => [qw(-l fools-gold)],},
     "Verifying unsolvable deal No. 11982 with an atomic moves preset (fools-gold)"
 );
+
+# TEST
+assert_directly_ascending_iters({deal => 24, theme => ["--method", "a-star",],}
+    , "Verifying the trace of deal #24 with BeFS");
 
 =head1 COPYRIGHT AND LICENSE
 

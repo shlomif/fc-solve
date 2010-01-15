@@ -170,6 +170,12 @@ void fc_solve_increase_dfs_max_depth(
     }      \
 }
 
+#define BUMP_NUM_TIMES() \
+{       \
+    instance->num_times++; \
+    hard_thread->num_times++; \
+}
+
 int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * soft_thread,
     int to_randomize
@@ -337,6 +343,8 @@ int fc_solve_soft_dfs_do_solve(
                     (num_vacant_freecells  == LOCAL_FREECELLS_NUM))
                 {
                     instance->final_state_val = ptr_state_val;
+                    
+                    BUMP_NUM_TIMES();
 
                     TRACE0("Returning FCS_STATE_WAS_SOLVED");
                     return FCS_STATE_WAS_SOLVED;
@@ -482,8 +490,7 @@ int fc_solve_soft_dfs_do_solve(
                     )
                    )
                 {
-                    instance->num_times++;
-                    hard_thread->num_times++;
+                    BUMP_NUM_TIMES();
 
                     set_scan_visited(
                         single_derived_state,
@@ -529,8 +536,7 @@ int fc_solve_soft_dfs_do_solve(
      * We need to bump the number of iterations so it will be ready with
      * a fresh iterations number for the next scan that takes place.
      * */
-    instance->num_times++;
-    hard_thread->num_times++;
+    BUMP_NUM_TIMES();
 
     soft_thread->method_specific.soft_dfs.depth = -1;
 
@@ -1076,6 +1082,8 @@ int fc_solve_a_star_or_bfs_do_solve(
         {
             instance->final_state_val = ptr_state_val;
 
+            BUMP_NUM_TIMES();
+
             error_code = FCS_STATE_WAS_SOLVED;
             goto my_return_label;
         }
@@ -1126,10 +1134,8 @@ int fc_solve_a_star_or_bfs_do_solve(
 
         /* Increase the number of iterations by one .
          * */
-        {
-            instance->num_times++;
-            hard_thread->num_times++;
-        }
+        BUMP_NUM_TIMES();
+
 
         TRACE0("Insert all states");
         /* Insert all the derived states into the PQ or Queue */

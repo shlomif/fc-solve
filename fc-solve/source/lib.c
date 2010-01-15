@@ -94,6 +94,16 @@ typedef struct
 #endif
 } fcs_user_t;
 
+
+static void iter_handler_wrapper(
+    void * user_instance,
+    int iter_num,
+    int depth,
+    void * lp_instance GCC_UNUSED,
+    fcs_state_extra_info_t * ptr_state_val,
+    int parent_iter_num
+    );
+
 static void user_initialize(
         fcs_user_t * ret
         )
@@ -113,6 +123,8 @@ static void user_initialize(
     ret->num_instances = 1;
     ret->current_instance_idx = 0;
     ret->instance = fc_solve_alloc_instance();
+    ret->instance->debug_iter_output_context = ret;
+    ret->instance->debug_iter_output_func = iter_handler_wrapper;
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_ptr(ret->instance, &(ret->common_preset));
 #endif
@@ -1083,19 +1095,29 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
 
     user = (fcs_user_t *)user_instance;
 
+    user->iter_handler = iter_handler;
+
     if (iter_handler == NULL)
     {
-        user->instance->debug_iter_output = 0;
+        int i;
+
+        for (i=0; i < user->num_instances ; i++)
+        {
+            user->instances_list[i].instance->debug_iter_output = 0;
+        }
     }
     else
     {
+        int i;
+
         /* Disable it temporarily while we change the settings */
         user->instance->debug_iter_output = 0;
-        user->iter_handler = iter_handler;
         user->iter_handler_context = iter_handler_context;
-        user->instance->debug_iter_output_context = user;
-        user->instance->debug_iter_output_func = iter_handler_wrapper;
-        user->instance->debug_iter_output = 1;
+        for (i=0; i < user->num_instances ; i++)
+        {
+            user->instances_list[i].instance->debug_iter_output
+                = 1;
+        }
     }
 }
 
@@ -1401,6 +1423,10 @@ int DLLEXPORT freecell_solver_user_next_instance(
     user->instances_list[user->current_instance_idx].instance = user->instance;
     user->instances_list[user->current_instance_idx].ret = user->ret = FCS_STATE_NOT_BEGAN_YET;
     user->instances_list[user->current_instance_idx].limit = -1;
+
+    user->instance->debug_iter_output_func = iter_handler_wrapper;
+    user->instance->debug_iter_output_context = user;
+    user->instance->debug_iter_output = (user->iter_handler != NULL);
 
     return 0;
 }
