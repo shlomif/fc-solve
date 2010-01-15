@@ -1,6 +1,7 @@
 INSTALL(
     FILES
         "abra-kadabra.sh"
+        "blue-yonder.sh"
         "cool-jives.sh"
         "crooked-nose.sh"
         "fools-gold.sh"
