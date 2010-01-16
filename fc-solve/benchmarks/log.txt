@@ -1274,3 +1274,23 @@ Threaded:
 
 100.525493860245s
 
+========================================================================
+
+r2491 ; ./Tatzer -l p4b ; after strip ; ARGS="-l cj"
+
+Threaded:
+
+103.287826776505s
+
+========================================================================
+
+r2491 ; ./Tatzer -l p4b ; after strip ; ARGS="--read-from-file 4,blue-yonder.bash"
+
+Threaded:
+
+101.246355056763s
+
+Threaded in virtual console (X-less):
+
+100.779133796692s
+
