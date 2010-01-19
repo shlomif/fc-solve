@@ -82,12 +82,6 @@ typedef struct
 #define fcs_move_get_type(move)                   ((move).c[FCS_MOVE_TYPE])
 #define fcs_move_get_num_cards_in_seq(move)       ((move).c[FCS_MOVE_NUM_CARDS_IN_SEQ])
 
-typedef struct
-{
-    fcs_move_t * moves;
-    int num_moves;
-} fcs_move_stack_t;
-
 #ifdef __cplusplus
 }
 #endif

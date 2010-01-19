@@ -1460,7 +1460,7 @@ int fc_solve_sfs_check_state_end(
     fcs_derived_states_list_t * derived_states_list
     )
 {
-    fcs_move_t temp_move;
+    fcs_internal_move_t temp_move;
     fc_solve_hard_thread_t * hard_thread;
     fc_solve_instance_t * instance;
     int check;
@@ -1478,7 +1478,7 @@ int fc_solve_sfs_check_state_end(
      * because it indicates that the order of the stacks and freecells
      * need to be recalculated
      * */
-    fcs_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
+    fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
     fcs_move_stack_push(moves, temp_move);
 
     {

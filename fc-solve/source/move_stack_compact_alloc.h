@@ -38,7 +38,7 @@ static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(fc_sol
 {
     char * ptr;
     fcs_move_stack_t * new_move_stack_to_parent;
-    fcs_move_t * new_moves_to_parent;
+    fcs_internal_move_t * new_moves_to_parent;
 
     ptr = 
         (char*)fcs_compact_alloc_ptr(
@@ -49,7 +49,7 @@ static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(fc_sol
         );
 
     new_move_stack_to_parent = (fcs_move_stack_t *)ptr;
-    new_moves_to_parent = (fcs_move_t *)(ptr+sizeof(fcs_move_stack_t));
+    new_moves_to_parent = (fcs_internal_move_t *)(ptr+sizeof(fcs_move_stack_t));
     new_move_stack_to_parent->moves = new_moves_to_parent;
     new_move_stack_to_parent->num_moves =
         old_move_stack_to_parent->num_moves;

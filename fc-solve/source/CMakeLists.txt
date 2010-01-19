@@ -140,6 +140,11 @@ SET (FCS_INLINED_HASH_COMPARISON "1"
     "Inline the hash comparisons."
 )
 
+SET (FCS_USE_COMPACT_MOVE_TOKENS "" 
+    CACHE BOOL 
+    "Use more compact tokens for moves internally (makes things slower)"
+)
+
 SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
 
 SET (CPU_ARCH "" CACHE STRING "A specific CPU architecture to pass to gcc")

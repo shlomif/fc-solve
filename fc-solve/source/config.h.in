@@ -94,6 +94,12 @@ extern "C" {
 #cmakedefine FCS_WITH_CONTEXT_VARIABLE 
 
 /*
+ * This flag determines whether we are using the more compact but slower,
+ * internal move tokens.
+ *  */
+#cmakedefine FCS_USE_COMPACT_MOVE_TOKENS
+
+/*
  * The maximal number of Freecells. For efficiency's sake it should be a
  * multiple of 4.
  * */

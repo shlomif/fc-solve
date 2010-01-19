@@ -42,6 +42,8 @@ extern "C" {
 
 #include "card.h"
 
+#include "internal_move_struct.h"
+
 #if MAX_NUM_INITIAL_CARDS_IN_A_STACK+12>(MAX_NUM_DECKS*52)
 #define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_DECKS*52)
 #else

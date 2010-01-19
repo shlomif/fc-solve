@@ -70,7 +70,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_founds(
     tests_declare_accessors()
 
 
-    fcs_move_t temp_move;
+    fcs_internal_move_t temp_move;
 
     int check;
 
@@ -141,9 +141,9 @@ int fc_solve_sfs_simple_simon_move_sequence_to_founds(
                 }
 
 
-                fcs_move_set_type(temp_move, FCS_MOVE_TYPE_SEQ_TO_FOUNDATION);
-                fcs_move_set_src_stack(temp_move, stack_idx);
-                fcs_move_set_foundation(temp_move,suit);
+                fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_SEQ_TO_FOUNDATION);
+                fcs_int_move_set_src_stack(temp_move, stack_idx);
+                fcs_int_move_set_foundation(temp_move,suit);
                 fcs_move_stack_push(moves,temp_move);
 
                 sfs_check_state_end();

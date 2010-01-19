@@ -756,7 +756,7 @@ static void trace_solution(
     fcs_state_extra_info_t * s1_val;
     int move_idx;
     fcs_move_stack_t * stack;
-    fcs_move_t * moves;
+    fcs_internal_move_t * moves;
     fcs_move_stack_t * solution_moves_ptr;
 
     if (instance->solution_moves.moves != NULL)

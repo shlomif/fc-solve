@@ -114,8 +114,8 @@ extern "C" {
            )                                                       \
         {                                                          \
             fcs_col_flip_card(flip_top_card_col, fcs_col_len(flip_top_card_col)-1);                   \
-            fcs_move_set_type(temp_move, FCS_MOVE_TYPE_FLIP_CARD); \
-            fcs_move_set_src_stack(temp_move, stack_idx);              \
+            fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_FLIP_CARD); \
+            fcs_int_move_set_src_stack(temp_move, stack_idx);              \
                                                                    \
             fcs_move_stack_push(moves, temp_move);                 \
         }                                                          \
@@ -136,7 +136,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 {
     int i;
     fcs_cards_column_t new_src_col, new_dest_col;
-    fcs_move_t temp_move;
+    fcs_internal_move_t temp_move;
 
     new_src_col = fcs_state_get_col(*new_state_ptr, source_idx);
     new_dest_col = fcs_state_get_col(*new_state_ptr, dest_idx);
@@ -151,10 +151,10 @@ static GCC_INLINE void fc_solve_move_sequence_function(
         fcs_col_pop_top(new_src_col);
     }
 
-    fcs_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);
-    fcs_move_set_src_stack(temp_move, source_idx);
-    fcs_move_set_dest_stack(temp_move, dest_idx);
-    fcs_move_set_num_cards_in_seq(temp_move, end-start+1);
+    fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);
+    fcs_int_move_set_src_stack(temp_move, source_idx);
+    fcs_int_move_set_dest_stack(temp_move, dest_idx);
+    fcs_int_move_set_num_cards_in_seq(temp_move, end-start+1);
 
     fcs_move_stack_push(moves, temp_move);
 }

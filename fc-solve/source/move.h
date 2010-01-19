@@ -41,11 +41,11 @@ extern "C" {
 #include <stdlib.h>
 
 #include "state.h"
-#include "fcs_move.h"
+#include "internal_move_struct.h"
 
 #include "inline.h"
 
-extern const fcs_move_t fc_solve_empty_move;
+extern const fcs_internal_move_t fc_solve_empty_move;
 
 #define fcs_move_stack_push(stack, move) \
 {           \
@@ -64,7 +64,7 @@ extern const fcs_move_t fc_solve_empty_move;
             \
 }
 
-static GCC_INLINE int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move_t * move)
+static GCC_INLINE int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_internal_move_t * move)
 {
     if (stack->num_moves > 0)
     {
@@ -89,7 +89,7 @@ static GCC_INLINE int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_move
 
 void fc_solve_apply_move(
         fcs_state_extra_info_t * state_val,
-        fcs_move_t move,
+        fcs_internal_move_t move,
         int freecells_num,
         int stacks_num,
         int decks_num
@@ -108,7 +108,7 @@ void fc_solve_apply_move(
 {       \
     ret.num_moves = 0;        \
     /* Allocate some space for the moves */     \
-    ret.moves = (fcs_move_t *)malloc(sizeof(ret.moves[0])*FCS_MOVE_STACK_GROW_BY);  \
+    ret.moves = (fcs_internal_move_t *)malloc(sizeof(ret.moves[0])*FCS_MOVE_STACK_GROW_BY);  \
 }
 
 static GCC_INLINE void fc_solve_move_stack_swallow_stack(
@@ -116,7 +116,7 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
     fcs_move_stack_t * src_stack
     )
 {
-    fcs_move_t move;
+    fcs_internal_move_t move;
     while (!fc_solve_move_stack_pop(src_stack, &move))
     {
         fcs_move_stack_push(stack, move);
@@ -132,7 +132,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     )
 {
     fcs_move_stack_t temp_moves;
-    fcs_move_t in_move, out_move;
+    fcs_internal_move_t in_move, out_move;
     fcs_state_keyval_pair_t dynamic_state;
 #ifdef INDIRECT_STACK_STATES
     char buffer[MAX_NUM_STACKS << 7];
@@ -167,58 +167,58 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             stacks_num,
             decks_num
             );
-        if (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_CANONIZE)
+        if (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_CANONIZE)
         {
             /* Do Nothing */
         }
         else
         {
-            fcs_move_set_type(out_move, fcs_move_get_type(in_move));
-            if ((fcs_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_STACK) ||
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FREECELL) ||
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
+            fcs_int_move_set_type(out_move, fcs_int_move_get_type(in_move));
+            if ((fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_STACK) ||
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FREECELL) ||
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
                 )
             {
-                fcs_move_set_src_stack(out_move,dynamic_state.info.stack_locs[(int)fcs_move_get_src_stack(in_move)]);
+                fcs_int_move_set_src_stack(out_move,dynamic_state.info.stack_locs[(int)fcs_int_move_get_src_stack(in_move)]);
             }
 
             if (
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_STACK) ||
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FREECELL) ||
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION))
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_STACK) ||
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FREECELL) ||
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION))
             {
-                fcs_move_set_src_freecell(out_move,dynamic_state.info.fc_locs[(int)fcs_move_get_src_freecell(in_move)]);
+                fcs_int_move_set_src_freecell(out_move,dynamic_state.info.fc_locs[(int)fcs_int_move_get_src_freecell(in_move)]);
             }
 
             if (
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_STACK) ||
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_STACK)
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_STACK) ||
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_STACK)
                 )
             {
-                fcs_move_set_dest_stack(out_move,dynamic_state.info.stack_locs[(int)fcs_move_get_dest_stack(in_move)]);
+                fcs_int_move_set_dest_stack(out_move,dynamic_state.info.stack_locs[(int)fcs_int_move_get_dest_stack(in_move)]);
             }
 
             if (
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FREECELL) ||
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FREECELL)
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FREECELL) ||
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FREECELL)
                 )
             {
-                fcs_move_set_dest_freecell(out_move,dynamic_state.info.fc_locs[(int)fcs_move_get_dest_freecell(in_move)]);
+                fcs_int_move_set_dest_freecell(out_move,dynamic_state.info.fc_locs[(int)fcs_int_move_get_dest_freecell(in_move)]);
             }
 
-            if ((fcs_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION) ||
-                (fcs_move_get_type(in_move) == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
+            if ((fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION) ||
+                (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
 
                )
             {
-                fcs_move_set_foundation(out_move,fcs_move_get_foundation(in_move));
+                fcs_int_move_set_foundation(out_move,fcs_int_move_get_foundation(in_move));
             }
 
-            if ((fcs_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_STACK))
+            if ((fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_STACK))
             {
-                fcs_move_set_num_cards_in_seq(out_move,fcs_move_get_num_cards_in_seq(in_move));
+                fcs_int_move_set_num_cards_in_seq(out_move,fcs_int_move_get_num_cards_in_seq(in_move));
             }
 
             fcs_move_stack_push((&temp_moves), out_move);
