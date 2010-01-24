@@ -6,7 +6,7 @@ sys.path.append("./t/lib");
 from TAP.Simple import *
 from ctypes import *
 
-plan(2)
+plan(3)
 
 def main():
     fcs = CDLL("../libfreecell-solver.so")
@@ -33,7 +33,16 @@ def main():
     )
     
     # TEST
-    is_ok(last_arg.value, 2, "Processed two arguments");  
+    is_ok(last_arg.value, 2, "Processed two arguments");
+
+    get_weight = fcs.fc_solve_user_INTERNAL_get_befs_weight
+
+    get_weight.restype = c_double
+
+    weight = get_weight(user, 0)
+
+    # TEST
+    ok((weight == 5.0), "weight[0] is 5");
 
     fcs.freecell_solver_user_free(user);
 

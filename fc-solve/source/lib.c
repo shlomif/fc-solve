@@ -1040,6 +1040,24 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 
 }
 
+
+#ifdef FCS_COMPILE_DEBUG_FUNCTIONS
+double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
+    void * user_instance,
+    int index
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)user_instance;
+
+#define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
+
+    return user->my_a_star_weights[index];
+}
+
+#endif
+
 static void iter_handler_wrapper(
     void * user_instance,
     int iter_num,
