@@ -20,7 +20,7 @@ sub run_tests
     exec("runprove", @$tests);
 }
 
-my $tests_glob = "*.{exe,t}";
+my $tests_glob = "*.{exe,py,t}";
 
 GetOptions(
     '--glob=s' => \$tests_glob,
