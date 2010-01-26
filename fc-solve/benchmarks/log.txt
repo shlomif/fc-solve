@@ -1303,3 +1303,12 @@ Threaded in virtual console (X-less):
 
 99.1132578849792s
 
+========================================================================
+
+r2505 ; ./Tatzer -l p4b ; after strip ; ARGS="-l by" ; \
+kernel-2.6.30.3 (vanilla)
+
+Threaded in virtual console (X-less):
+
+98.9306669235229s
+
