@@ -4,6 +4,35 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 2.40.0: (27-Jan-2010)
+-----------------------------
+
+1. make_pysol_freecell_board.py now has support for "Black Hole" dealing. See:
+http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/ .
+
+2. Added the "Scan:" header to indicate the current scan / soft-thread 
+when using the -s -i flags.
+
+3. *Security*: Fixed a string overflow bug in +cmd_line.c+ with the +-asw+
+weights. As a result of this problem, Freecell Solver can write several NUL
+characters ('\0') to after the string specifying the command line argument.
++
+Now unspecified +-asw+ are set to 0.
+
+4. Fixed an off-by-1 iterations count report when a board was found to be 
+solvable.
+
+5. iter_handler is now applied globally across all instances.
+
+6. Add the +-l blue-yonder+ / +-l by+ preset that is extra fast at solving
+the Microsoft 32,00 based on running the optimization algorithm:
++
+http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1027 .
+
+7. Added a compile-time option to reduce the size of the internal move token
+structs. This may make memory consumption smaller, but definitely makes
+Freecell Solver run slower, so it is off by default.
+
 Version 2.38.0: (29-Dec-2009)
 -----------------------------
 
