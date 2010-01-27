@@ -6,7 +6,7 @@ sys.path.append("./t/lib");
 from TAP.Simple import *
 from ctypes import *
 
-plan(7)
+plan(13)
 
 class FC_Solve:
     # TEST:$num_befs_weights=5;
@@ -53,11 +53,15 @@ class FC_Solve:
         self._set_befs_weights(name, string)
 
         for idx in range(0, self.NUM_BEFS_WEIGHTS):
-            top = weights[idx]
-            bottom = top
+            top = bottom = weights[idx]
+            # floating-point values.
+            if (top != int(top) + 0.0):
+                top = top + 1e-6
+                bottom = bottom - 1e-6
+                
             have = self.get_befs_weight(self.user, idx)
             # TEST:$test_befs=$test_befs+$num_befs_weights;
-            if (not ok((have == top), \
+            if (not ok((bottom <= have) and (have <= top), \
                     name + " - Testing Weight No. " + str(idx))):
                 diag("Should be: [" + str(bottom) + "," + str(top) + "] ; " +
                         "Is: " + str(have))
@@ -73,6 +77,11 @@ def main():
             "5,4,3,0,2",
             [5.0, 4.0, 3.0, 0.0, 2.0])
 
+    # TEST*$test_befs
+    fcs.test_befs_weights("Simple - fractions", 
+            "0.2,0.3,0.4,0.5,0.6",
+            [0.2,0.3,0.4,0.5,0.6])
+    
 
 #----------------------------------------------------------------------
 
