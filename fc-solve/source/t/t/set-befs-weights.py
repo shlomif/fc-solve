@@ -6,7 +6,7 @@ sys.path.append("./t/lib");
 from TAP.Simple import *
 from ctypes import *
 
-plan(19)
+plan(24)
 
 class FC_Solve:
     # TEST:$num_befs_weights=5;
@@ -67,9 +67,6 @@ class FC_Solve:
                         "Is: " + str(have))
 
 def main():
-    # TEST
-    ok(1, "Dummy assertion")
-
     fcs = FC_Solve()
 
     # TEST*$test_befs
@@ -87,6 +84,11 @@ def main():
             "0.2,0.35,0.4\x00500\x00600.7\x00",
             [0.2,0.35,0.4,0,0])
     
+    # TEST*$test_befs
+    fcs.test_befs_weights("One number with a trailing comma", 
+            "100,\x002,3,4,5,6,7,8,9,100\x00",
+            [100,0,0,0,0])
+
 
 #----------------------------------------------------------------------
 
