@@ -1160,7 +1160,21 @@ break;
                 char * end_num;
                 char save;
                 start_num = (*arg);
-                for(a=0;a<5;a++)
+
+                /* Initialize all the Best Frist Search weights at first
+                 * to 0 so
+                 * we won't have partial initialization. 
+                 * */
+                for (a=0 ; a<5 ; a++)
+                {
+                    freecell_solver_user_set_a_star_weight(
+                        instance,
+                        a,
+                        0
+                        );
+                }
+                
+                for (a=0 ; a<5 ; a++)
                 {
                     while ((*start_num > '9') && (*start_num < '0') && (*start_num != '\0'))
                     {
@@ -1190,17 +1204,6 @@ break;
                         break;
                     }
                     start_num=end_num+1;
-                }
-                /* Initialize the rest of the a_star_weights to 0 so
-                 * we won't have partial initialization. 
-                 * */
-                for(;a<5;a++)
-                {
-                    freecell_solver_user_set_a_star_weight(
-                        instance,
-                        a,
-                        0
-                        );
                 }
             }
         }

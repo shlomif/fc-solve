@@ -73,6 +73,8 @@ class Builder(object):
 
     self.current += 1
 
+    return is_ok
+
   def reset(self):
     self.__dict__.clear()
     for key in self.global_defaults.iterkeys():
