@@ -21,7 +21,7 @@ class FC_Solve:
 
         self.get_befs_weight.restype = c_double
 
-    # TEST:$set_befs_w_cnt=0;
+    # TEST:$set_befs=0;
     def _set_befs_weights(self, weights_s):
 
         last_arg = c_int()
@@ -39,7 +39,7 @@ class FC_Solve:
             byref(last_arg)    # last_arg
         )
         
-        # TEST:$set_befs_w_cnt++;
+        # TEST:$set_befs++;
         is_ok(last_arg.value, 2, "Processed two arguments");
 
     def __destroy__(self):
@@ -51,7 +51,7 @@ class FC_Solve:
             top = weights[idx]
             bottom = top
             have = self.get_befs_weight(self.user, idx)
-            # TEST:$test_befs+=$num_befs_weights;
+            # TEST:$test_befs=$test_befs+$num_befs_weights;
             if (not ok((have == top), \
                     name + " - Testing Weight No. " + str(idx))):
                 diag("Should be: [" + str(bottom) + "," + str(top) + "] ; " +
@@ -63,7 +63,7 @@ def main():
 
     fcs = FC_Solve()
 
-    # TEST*$set_befs_w_cnt
+    # TEST*$set_befs
     fcs._set_befs_weights("5,4,3,0,2")
 
     # TEST*$test_befs
