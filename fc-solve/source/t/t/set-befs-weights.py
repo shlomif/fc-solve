@@ -6,7 +6,7 @@ sys.path.append("./t/lib");
 from TAP.Simple import *
 from ctypes import *
 
-plan(13)
+plan(19)
 
 class FC_Solve:
     # TEST:$num_befs_weights=5;
@@ -81,6 +81,11 @@ def main():
     fcs.test_befs_weights("Simple - fractions", 
             "0.2,0.3,0.4,0.5,0.6",
             [0.2,0.3,0.4,0.5,0.6])
+ 
+    # TEST*$test_befs
+    fcs.test_befs_weights("Testing end after three numbers", 
+            "0.2,0.35,0.4\x00500\x00600.7\x00",
+            [0.2,0.35,0.4,0,0])
     
 
 #----------------------------------------------------------------------
