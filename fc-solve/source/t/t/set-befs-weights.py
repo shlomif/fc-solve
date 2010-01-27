@@ -22,7 +22,7 @@ class FC_Solve:
         self.get_befs_weight.restype = c_double
 
     # TEST:$set_befs=0;
-    def _set_befs_weights(self, weights_s):
+    def _set_befs_weights(self, name, weights_s):
 
         last_arg = c_int()
         error_string = c_char_p()
@@ -40,13 +40,18 @@ class FC_Solve:
         )
         
         # TEST:$set_befs++;
-        is_ok(last_arg.value, 2, "Processed two arguments");
+        is_ok(last_arg.value, 2,
+                name + " - assign weights - processed two arguments");
 
     def __destroy__(self):
         self.fcs.freecell_solver_user_free(self.user);
 
     # TEST:$test_befs=0;
-    def _test_befs_weights(self, name, weights):
+    def test_befs_weights(self, name, string, weights):
+
+        # TEST:$test_befs=$test_befs+$set_befs;
+        self._set_befs_weights(name, string)
+
         for idx in range(0, self.NUM_BEFS_WEIGHTS):
             top = weights[idx]
             bottom = top
@@ -63,11 +68,10 @@ def main():
 
     fcs = FC_Solve()
 
-    # TEST*$set_befs
-    fcs._set_befs_weights("5,4,3,0,2")
-
     # TEST*$test_befs
-    fcs._test_befs_weights("Simple - all integers", [5.0, 4.0, 3.0, 0.0, 2.0])
+    fcs.test_befs_weights("Simple - all integers", 
+            "5,4,3,0,2",
+            [5.0, 4.0, 3.0, 0.0, 2.0])
 
 
 #----------------------------------------------------------------------
