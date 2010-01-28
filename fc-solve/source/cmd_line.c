@@ -1238,6 +1238,7 @@ break;
         {
             freecell_solver_user_next_instance(instance);
         }
+        break;
 
         case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread; */
         case FCS_OPT_NEXT_HARD_THREAD: /* STRINGS=-nht|--next-hard-thread; */
