@@ -227,12 +227,13 @@ static void foreach_soft_thread(
     void * context
     )
 {
-    int ht_idx, st_idx;
+    int ht_idx;
     fc_solve_hard_thread_t * hard_thread;
-    int num_soft_threads;
+
     for(ht_idx = 0 ; ht_idx<=instance->num_hard_threads; ht_idx++)
     {
-        register fc_solve_soft_thread_t * soft_thread;
+        ST_LOOP_DECLARE_VARS();
+
         if (ht_idx < instance->num_hard_threads)
         {
             hard_thread = &(instance->hard_threads[ht_idx]);
@@ -245,9 +246,8 @@ static void foreach_soft_thread(
         {
             break;
         }
-        num_soft_threads = hard_thread->num_soft_threads;
-        soft_thread = hard_thread->soft_threads;
-        for(st_idx = 0 ; st_idx < num_soft_threads; st_idx++, soft_thread++)
+
+        ST_LOOP_START()
         {
             switch (callback_choice)
             {
@@ -527,7 +527,7 @@ static GCC_INLINE int compile_prelude(
     int last_one = 0;
     int num_items = 0;
     fcs_prelude_item_t * prelude;
-    int st_idx;
+    ST_LOOP_DECLARE_VARS();
 
     prelude = NULL;
     string = hard_thread->prelude_as_string;
@@ -560,14 +560,14 @@ static GCC_INLINE int compile_prelude(
         *p = '\0';
         p++;
 
-        for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
+        ST_LOOP_START()
         {
-            if (!strcmp(hard_thread->soft_threads[st_idx].name, p_scan))
+            if (!strcmp(soft_thread->name, p_scan))
             {
                 break;
             }
         }
-        if (st_idx == hard_thread->num_soft_threads)
+        if (ST_LOOP_FINISHED())
         {
             free(prelude);
             return FCS_COMPILE_PRELUDE_UNKNOWN_SCAN_ID;
@@ -577,7 +577,7 @@ static GCC_INLINE int compile_prelude(
         {
             prelude = realloc(prelude, sizeof(prelude[0]) * (num_items+PRELUDE_GROW_BY));
         }
-        prelude[num_items].scan_idx = st_idx;
+        prelude[num_items].scan_idx = ST_LOOP_INDEX();
         prelude[num_items].quota = atoi(p_quota);
         num_items++;
     }

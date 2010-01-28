@@ -433,17 +433,15 @@ int fc_solve_apply_preset_by_ptr(
      * */
 
     {
-        int st_idx;
         char test_name[2] = {0};
 
         HT_LOOP_DECLARE_VARS();
 
         HT_LOOP_START()
         {
-            fc_solve_soft_thread_t * soft_thread =
-                hard_thread->soft_threads;
+            ST_LOOP_DECLARE_VARS();
 
-            for(st_idx = 0; st_idx < hard_thread->num_soft_threads; st_idx++, soft_thread++)
+            ST_LOOP_START()
             {
                 int num_valid_tests;
                 const char * s;

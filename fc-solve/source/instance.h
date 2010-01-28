@@ -135,6 +135,24 @@ struct fc_solve_soft_thread_struct;
 
 typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 
+
+/* ST_LOOP == soft threads' loop - macros to abstract it. */
+#define ST_LOOP_DECLARE_VARS() \
+    fc_solve_soft_thread_t * soft_thread, * end_soft_thread
+
+#define ST_LOOP_START() \
+    for ( end_soft_thread = ( \
+              (soft_thread = hard_thread->soft_threads) \
+              + hard_thread->num_soft_threads \
+          ) ; \
+         soft_thread < end_soft_thread ;  \
+         soft_thread++ \
+         )
+
+#define ST_LOOP_FINISHED() (soft_thread == end_soft_thread)
+
+#define ST_LOOP_INDEX() (soft_thread - hard_thread->soft_threads)
+
 #define TESTS_ORDER_GROW_BY 16
 typedef struct
 {
@@ -862,13 +880,11 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
     fc_solve_hard_thread_t * hard_thread
     )
 {
-    int st_idx;
-    fc_solve_soft_thread_t * soft_thread;
+    ST_LOOP_DECLARE_VARS();
 
     fc_solve_reset_hard_thread(hard_thread);
 
-    soft_thread = hard_thread->soft_threads;
-    for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++, soft_thread++)
+    ST_LOOP_START()
     {
         switch (soft_thread->method)
         {
@@ -930,6 +946,7 @@ extern const double fc_solve_a_star_default_weights[5];
          hard_thread < end_hard_thread ;  \
          hard_thread++ \
          )
+
 
 #ifdef __cplusplus
 }

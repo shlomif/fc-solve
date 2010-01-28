@@ -1078,20 +1078,15 @@ static void iter_handler_wrapper(
 
 #ifdef DEBUG
     {
-
         fc_solve_instance_t * instance = user->instance;
-        int ht_idx, st_idx;
+        HT_LOOP_DECLARE_VARS();
 
-        for (ht_idx = 0; ht_idx < instance->num_hard_threads ; ht_idx++)
+        HT_LOOP_START()
         {
-            fc_solve_hard_thread_t * hard_thread = 
-                instance->hard_threads[ht_idx];
+            ST_LOOP_DECLARE_VARS();
 
-            for (st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
+            ST_LOOP_START()
             {
-                fc_solve_soft_thread_t * soft_thread =
-                    hard_thread->soft_threads[st_idx];
-
                 if (!strcmp(soft_thread->name, "11"))
                 {
                     double * w =
