@@ -360,7 +360,7 @@ typedef struct
     int max_num_states_in_collection;
 
     int num_hard_threads;
-    struct fc_solve_hard_thread_struct * * hard_threads;
+    struct fc_solve_hard_thread_struct * hard_threads;
 
     /*
      * The next ID to allocate for a soft-thread.
@@ -775,15 +775,16 @@ static GCC_INLINE fc_solve_soft_thread_t *
         fc_solve_instance_t * instance
         )
 {
-    return &(instance->hard_threads[0]->soft_threads[0]);
+    return &(instance->hard_threads[0].soft_threads[0]);
 }
 
 extern fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     fc_solve_hard_thread_t * hard_thread
     );
 
-extern fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
-        fc_solve_instance_t * instance
+extern void fc_solve_instance__init_hard_thread(
+        fc_solve_instance_t * instance,
+        fc_solve_hard_thread_t * hard_thread
         );
 
 static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
@@ -792,10 +793,9 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
 {
     fc_solve_hard_thread_t * ret;
 
-    /* Exceeded the maximal number of Soft-Threads in an instance */
-    ret = fc_solve_instance__alloc_hard_thread(instance);
-
-    if (ret == NULL)
+    /* Make sure we are not exceeding the maximal number of soft threads
+     * for an instance. */
+    if (instance->next_soft_thread_id == MAX_NUM_SCANS)
     {
         return NULL;
     }
@@ -806,7 +806,10 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
             (sizeof(instance->hard_threads[0]) * (instance->num_hard_threads+1))
             );
 
-    instance->hard_threads[instance->num_hard_threads] = ret;
+    fc_solve_instance__init_hard_thread(
+        instance,
+        (ret = &(instance->hard_threads[instance->num_hard_threads]))
+    );
 
     instance->num_hard_threads++;
 
@@ -903,8 +906,9 @@ static GCC_INLINE void fc_solve_recycle_instance(
 
     for(ht_idx = 0;  ht_idx < instance->num_hard_threads; ht_idx++)
     {
-        fc_solve_instance__recycle_hard_thread(instance->hard_threads[ht_idx]);
+        fc_solve_instance__recycle_hard_thread(&(instance->hard_threads[ht_idx]));
     }
+
     if (instance->optimization_thread)
     {
         fc_solve_instance__recycle_hard_thread(instance->optimization_thread);

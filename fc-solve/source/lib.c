@@ -122,6 +122,7 @@ static void user_initialize(
     ret->instances_list = malloc(sizeof(ret->instances_list[0]));
     ret->num_instances = 1;
     ret->current_instance_idx = 0;
+    ret->iter_handler = NULL;
     ret->instance = fc_solve_alloc_instance();
     ret->instance->debug_iter_output_context = ret;
     ret->instance->debug_iter_output_func = iter_handler_wrapper;
@@ -1500,7 +1501,7 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
 
     instance = user->instance;
 
-    hard_thread = instance->hard_threads[instance->ht_idx];
+    hard_thread = &(instance->hard_threads[instance->ht_idx]);
 
     return hard_thread->soft_threads[hard_thread->st_idx].name;
 }

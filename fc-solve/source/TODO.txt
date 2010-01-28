@@ -7,12 +7,17 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
+* Handle the case where the instance->hard_threads are re-allocated and
+the pointers from the soft_threads to them are not updated.
+
 * Create a meaningful man-page from +README.xml+ / +USAGE.xml+ etc.
 
 * Add some command line examples to +USAGE.txt+ .
 
 Non-pressing
 ------------
+
+* Inline fc_solve_free_instance().
 
 * Experiment with making fcs_move_t a bit-field with half-octets/etc. for
 the various fields.

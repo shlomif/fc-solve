@@ -235,7 +235,7 @@ static void foreach_soft_thread(
         register fc_solve_soft_thread_t * soft_thread;
         if (ht_idx < instance->num_hard_threads)
         {
-            hard_thread = instance->hard_threads[ht_idx];
+            hard_thread = &(instance->hard_threads[ht_idx]);
         }
         else if (instance->optimization_thread)
         {
@@ -343,21 +343,11 @@ static GCC_INLINE void init_soft_thread(
     soft_thread->name = NULL;
 }
 
-fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
-        fc_solve_instance_t * instance
+void fc_solve_instance__init_hard_thread(
+        fc_solve_instance_t * instance,
+        fc_solve_hard_thread_t * hard_thread
         )
 {
-    fc_solve_hard_thread_t * hard_thread;
-
-    /* Make sure we are not exceeding the maximal number of soft threads
-     * for an instance. */
-    if (instance->next_soft_thread_id == MAX_NUM_SCANS)
-    {
-        return NULL;
-    }
-
-    hard_thread = malloc(sizeof(fc_solve_hard_thread_t));
-
     hard_thread->instance = instance;
 
     hard_thread->num_soft_threads = 0;
@@ -378,8 +368,6 @@ fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
     fc_solve_reset_hard_thread(hard_thread);
 
     fcs_move_stack_init(hard_thread->reusable_move_stack);
-
-    return hard_thread;
 }
 
 
@@ -425,6 +413,8 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->num_hard_threads = 0;
 
+    instance->hard_threads = NULL;
+
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_name(instance, "freecell");
 #else
@@ -444,11 +434,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->next_soft_thread_id = 0;
 
-    instance->num_hard_threads = 1;
-
-    instance->hard_threads = malloc(sizeof(instance->hard_threads[0]) * instance->num_hard_threads);
-
-    instance->hard_threads[0] = fc_solve_instance__alloc_hard_thread(instance);
+    fc_solve_new_hard_thread(instance);
 
     instance->solution_moves.moves = NULL;
 
@@ -488,7 +474,6 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
         fc_solve_compact_allocator_finish(&(hard_thread->allocator));
         hard_thread->allocator.packs = NULL;
     }
-    free(hard_thread);
 }
 
 /*
@@ -498,18 +483,25 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
   */
 void fc_solve_free_instance(fc_solve_instance_t * instance)
 {
-    int ht_idx;
+    fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
 
     foreach_soft_thread(instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
 
-    for(ht_idx=0; ht_idx < instance->num_hard_threads; ht_idx++)
+    end_hard_thread = instance->hard_threads + instance->num_hard_threads;
+
+    for (hard_thread = instance->hard_threads ; 
+         hard_thread < end_hard_thread ; 
+         hard_thread++
+         )
     {
-        free_instance_hard_thread_callback(instance->hard_threads[ht_idx]);
+        free_instance_hard_thread_callback(hard_thread);
     }
+
     free(instance->hard_threads);
     if (instance->optimization_thread)
     {
         free_instance_hard_thread_callback(instance->optimization_thread);
+        free(instance->optimization_thread);
     }
 
     free(instance->instance_tests_order.tests);
@@ -605,13 +597,16 @@ static GCC_INLINE int compile_prelude(
 
 void fc_solve_init_instance(fc_solve_instance_t * instance)
 {
-    int ht_idx;
-    fc_solve_hard_thread_t * hard_thread;
+    fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
 
     /* Initialize the state packs */
-    for(ht_idx=0;ht_idx<instance->num_hard_threads;ht_idx++)
+    end_hard_thread = instance->hard_threads + instance->num_hard_threads;
+
+    for (hard_thread = instance->hard_threads ; 
+         hard_thread < end_hard_thread ; 
+         hard_thread++
+         )
     {
-        hard_thread = instance->hard_threads[ht_idx];
         if (hard_thread->prelude_as_string)
         {
             compile_prelude(hard_thread);
@@ -808,7 +803,9 @@ static GCC_INLINE int fc_solve_optimize_solution(
     {
         instance->optimization_thread = 
             optimization_thread =
-            fc_solve_instance__alloc_hard_thread(instance);
+            malloc(sizeof(*optimization_thread));
+
+        fc_solve_instance__init_hard_thread(instance, optimization_thread);
 
     }
     else
@@ -870,7 +867,7 @@ int fc_solve_solve_instance(
     /* Allocate the first state and initialize it to init_state */
     state_copy_ptr_val = 
         fcs_state_ia_alloc_into_var(
-            &(instance->hard_threads[0]->allocator)
+            &(instance->hard_threads[0].allocator)
         );
 
     state_copy_ptr_key = state_copy_ptr_val->key;
@@ -883,7 +880,7 @@ int fc_solve_solve_instance(
         int a;
         for(a=0;a<INSTANCE_STACKS_NUM;a++)
         {
-            fcs_copy_stack(*state_copy_ptr_key, *state_copy_ptr_val, a, instance->hard_threads[0]->indirect_stacks_buffer);
+            fcs_copy_stack(*state_copy_ptr_key, *state_copy_ptr_val, a, instance->hard_threads[0].indirect_stacks_buffer);
         }
     }
 
@@ -1015,7 +1012,7 @@ int fc_solve_solve_instance(
         fcs_state_extra_info_t * no_use_val;
 
         fc_solve_check_and_add_state(
-            &(instance->hard_threads[0]->soft_threads[0]),
+            &(instance->hard_threads[0].soft_threads[0]),
             state_copy_ptr_val,
             &no_use_val
             );
@@ -1024,12 +1021,14 @@ int fc_solve_solve_instance(
 
     instance->ht_idx = 0;
     {
-        int ht_idx;
-        for(ht_idx=0; ht_idx < instance->num_hard_threads ; ht_idx++)
-        {
-            fc_solve_hard_thread_t * hard_thread;
-            hard_thread = instance->hard_threads[ht_idx];
+        fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
 
+        end_hard_thread = instance->hard_threads + instance->num_hard_threads;
+        for (hard_thread = instance->hard_threads ; 
+             hard_thread < end_hard_thread ; 
+             hard_thread++
+             )
+        {
             if (hard_thread->prelude != NULL)
             {
                 hard_thread->prelude_idx = 0;
@@ -1321,7 +1320,7 @@ int fc_solve_resume_instance(
                 instance->ht_idx < instance->num_hard_threads ;
                     instance->ht_idx++)
             {
-                hard_thread = instance->hard_threads[instance->ht_idx];
+                hard_thread = &(instance->hard_threads[instance->ht_idx]);
 
                 ret = run_hard_thread(hard_thread);
                 if ((ret == FCS_STATE_IS_NOT_SOLVEABLE) ||
@@ -1418,20 +1417,22 @@ void fc_solve_finish_instance(
     fc_solve_instance_t * instance
     )
 {
-    int ht_idx;
+    fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
 
-
+    end_hard_thread = instance->hard_threads + instance->num_hard_threads;
     /* De-allocate the state packs */
-    for(ht_idx=0;ht_idx<instance->num_hard_threads;ht_idx++)
+    for (hard_thread = instance->hard_threads ; 
+         hard_thread < end_hard_thread ; 
+         hard_thread++
+         )
     {
-        finish_hard_thread(instance->hard_threads[ht_idx]);
+        finish_hard_thread(hard_thread);
     }
 
     if (instance->optimization_thread)
     {
         finish_hard_thread(instance->optimization_thread);
     }
-
 
     /* De-allocate the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)

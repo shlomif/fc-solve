@@ -433,12 +433,21 @@ int fc_solve_apply_preset_by_ptr(
      * */
 
     {
-        int ht_idx, st_idx;
+        int st_idx;
         char test_name[2] = {0};
-        for(ht_idx = 0; ht_idx < instance->num_hard_threads ; ht_idx++)
+
+        fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
+
+        end_hard_thread = instance->hard_threads + instance->num_hard_threads;
+        for (hard_thread = instance->hard_threads ; 
+            hard_thread < end_hard_thread ; 
+            hard_thread++
+        )
         {
-            fc_solve_soft_thread_t * soft_thread = instance->hard_threads[ht_idx]->soft_threads;
-            for(st_idx = 0; st_idx < instance->hard_threads[ht_idx]->num_soft_threads; st_idx++, soft_thread++)
+            fc_solve_soft_thread_t * soft_thread =
+                hard_thread->soft_threads;
+
+            for(st_idx = 0; st_idx < hard_thread->num_soft_threads; st_idx++, soft_thread++)
             {
                 int num_valid_tests;
                 const char * s;
