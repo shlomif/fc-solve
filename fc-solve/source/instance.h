@@ -918,8 +918,18 @@ static GCC_INLINE void fc_solve_recycle_instance(
 
 extern const double fc_solve_a_star_default_weights[5];
 
+/* HT_LOOP == hard threads' loop - macros to abstract it. */
 #define HT_LOOP_DECLARE_VARS() \
     fc_solve_hard_thread_t * hard_thread, * end_hard_thread
+
+#define HT_LOOP_START() \
+    for ( end_hard_thread = ( \
+              (hard_thread = instance->hard_threads) \
+              + instance->num_hard_threads \
+          ) ; \
+         hard_thread < end_hard_thread ;  \
+         hard_thread++ \
+         )
 
 #ifdef __cplusplus
 }

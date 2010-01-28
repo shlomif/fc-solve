@@ -438,11 +438,7 @@ int fc_solve_apply_preset_by_ptr(
 
         HT_LOOP_DECLARE_VARS();
 
-        end_hard_thread = instance->hard_threads + instance->num_hard_threads;
-        for (hard_thread = instance->hard_threads ; 
-            hard_thread < end_hard_thread ; 
-            hard_thread++
-        )
+        HT_LOOP_START()
         {
             fc_solve_soft_thread_t * soft_thread =
                 hard_thread->soft_threads;

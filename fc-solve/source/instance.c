@@ -487,12 +487,7 @@ void fc_solve_free_instance(fc_solve_instance_t * instance)
 
     foreach_soft_thread(instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
 
-    end_hard_thread = instance->hard_threads + instance->num_hard_threads;
-
-    for (hard_thread = instance->hard_threads ; 
-         hard_thread < end_hard_thread ; 
-         hard_thread++
-         )
+    HT_LOOP_START()
     {
         free_instance_hard_thread_callback(hard_thread);
     }
@@ -600,12 +595,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
     HT_LOOP_DECLARE_VARS();
 
     /* Initialize the state packs */
-    end_hard_thread = instance->hard_threads + instance->num_hard_threads;
-
-    for (hard_thread = instance->hard_threads ; 
-         hard_thread < end_hard_thread ; 
-         hard_thread++
-         )
+    HT_LOOP_START()
     {
         if (hard_thread->prelude_as_string)
         {
@@ -1023,11 +1013,7 @@ int fc_solve_solve_instance(
     {
         HT_LOOP_DECLARE_VARS();
 
-        end_hard_thread = instance->hard_threads + instance->num_hard_threads;
-        for (hard_thread = instance->hard_threads ; 
-             hard_thread < end_hard_thread ; 
-             hard_thread++
-             )
+        HT_LOOP_START()
         {
             if (hard_thread->prelude != NULL)
             {
@@ -1419,12 +1405,8 @@ void fc_solve_finish_instance(
 {
     HT_LOOP_DECLARE_VARS();
 
-    end_hard_thread = instance->hard_threads + instance->num_hard_threads;
     /* De-allocate the state packs */
-    for (hard_thread = instance->hard_threads ; 
-         hard_thread < end_hard_thread ; 
-         hard_thread++
-         )
+    HT_LOOP_START()
     {
         finish_hard_thread(hard_thread);
     }
