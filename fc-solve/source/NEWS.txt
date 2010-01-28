@@ -441,7 +441,7 @@ run properly after a raw unpacking.
 Version 2.12.0 ( 10-Dec-2008)
 -----------------------------
 
-1. A New Configuration and buld system based on CMake 
+1. A New Configuration and build system based on CMake 
 ( http://www.cmake.org/ ) which results in faster configurations
 and builds, and a much reduced archive size.
 
