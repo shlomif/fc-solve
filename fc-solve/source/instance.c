@@ -430,7 +430,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     /****************************************/
 
-    instance->debug_iter_output = 0;
+    instance->debug_iter_output_func = NULL;
 
     instance->next_soft_thread_id = 0;
 

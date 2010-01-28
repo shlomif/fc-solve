@@ -297,7 +297,7 @@ int fc_solve_soft_dfs_do_solve(
 
                 TRACE0("In iter_handler");
 
-                if (instance->debug_iter_output)
+                if (instance->debug_iter_output_func)
                 {
 #ifdef DEBUG
                     printf("ST Name: %s\n", soft_thread->name);
@@ -1059,7 +1059,7 @@ int fc_solve_a_star_or_bfs_do_solve(
         }
 
         TRACE0("debug_iter_output");
-        if (instance->debug_iter_output)
+        if (instance->debug_iter_output_func)
         {
 #ifdef DEBUG
             printf("ST Name: %s\n", soft_thread->name);

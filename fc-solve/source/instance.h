@@ -218,18 +218,14 @@ typedef struct
      * and Soft-DFS scans but at present support for A* and BFS is not
      * too good, as its hard to tell which state came from which parent state.
      *
-     * debug_iter_output is a flag that indicates whether to use this feature
-     * at all.
-     *
      * debug_iter_output_func is a pointer to the function that performs the
-     * debugging.
+     * debugging. If NULL, this feature is not used.
      *
      * debug_iter_output_context is a user-specified context for it, that
      * may include data that is not included in the instance structure.
      *
      * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
      * */
-    int debug_iter_output;
     void (*debug_iter_output_func)(
         void * context,
         int iter_num,

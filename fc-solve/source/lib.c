@@ -125,7 +125,6 @@ static void user_initialize(
     ret->iter_handler = NULL;
     ret->instance = fc_solve_alloc_instance();
     ret->instance->debug_iter_output_context = ret;
-    ret->instance->debug_iter_output_func = iter_handler_wrapper;
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_ptr(ret->instance, &(ret->common_preset));
 #endif
@@ -1136,20 +1135,18 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
 
         for (i=0; i < user->num_instances ; i++)
         {
-            user->instances_list[i].instance->debug_iter_output = 0;
+            user->instances_list[i].instance->debug_iter_output_func = NULL;
         }
     }
     else
     {
         int i;
 
-        /* Disable it temporarily while we change the settings */
-        user->instance->debug_iter_output = 0;
         user->iter_handler_context = iter_handler_context;
         for (i=0; i < user->num_instances ; i++)
         {
-            user->instances_list[i].instance->debug_iter_output
-                = 1;
+            user->instances_list[i].instance->debug_iter_output_func 
+                = iter_handler_wrapper;
         }
     }
 }
@@ -1457,9 +1454,9 @@ int DLLEXPORT freecell_solver_user_next_instance(
     user->instances_list[user->current_instance_idx].ret = user->ret = FCS_STATE_NOT_BEGAN_YET;
     user->instances_list[user->current_instance_idx].limit = -1;
 
-    user->instance->debug_iter_output_func = iter_handler_wrapper;
+    user->instance->debug_iter_output_func =
+        (user->iter_handler ? iter_handler_wrapper : NULL);
     user->instance->debug_iter_output_context = user;
-    user->instance->debug_iter_output = (user->iter_handler != NULL);
 
     return 0;
 }
