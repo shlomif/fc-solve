@@ -1312,3 +1312,25 @@ Threaded in virtual console (X-less):
 
 98.9306669235229s
 
+========================================================================
+
+fc-solve-2.40.0 :
+./Tatzer -l p4b ; after strip ; ARGS="-l by" ; \
+2.6.33-desktop-0.rc5.1mnb
+IceWM
+
+Threaded:
+
+100.849442958832s
+
+========================================================================
+
+r2522 ; 
+./Tatzer -l p4b ; after strip ; ARGS="-l by" ; \
+2.6.33-desktop-0.rc5.1mnb
+IceWM
+
+Threaded:
+
+100.605317115784s
+
