@@ -135,6 +135,18 @@ struct fc_solve_soft_thread_struct;
 
 typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 
+/* HT_LOOP == hard threads' loop - macros to abstract it. */
+#define HT_LOOP_DECLARE_VARS() \
+    fc_solve_hard_thread_t * hard_thread, * end_hard_thread
+
+#define HT_LOOP_START() \
+    for ( end_hard_thread = ( \
+              (hard_thread = instance->hard_threads) \
+              + instance->num_hard_threads \
+          ) ; \
+         hard_thread < end_hard_thread ;  \
+         hard_thread++ \
+         )
 
 /* ST_LOOP == soft threads' loop - macros to abstract it. */
 #define ST_LOOP_DECLARE_VARS() \
@@ -810,6 +822,7 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     )
 {
     fc_solve_hard_thread_t * ret;
+    HT_LOOP_DECLARE_VARS();
 
     /* Make sure we are not exceeding the maximal number of soft threads
      * for an instance. */
@@ -823,6 +836,18 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
             instance->hard_threads,
             (sizeof(instance->hard_threads[0]) * (instance->num_hard_threads+1))
             );
+
+    /* Since we realloc()ed the hard_threads, their addresses changed,
+     * so we need to update it.
+     * */
+    HT_LOOP_START()
+    {
+        ST_LOOP_DECLARE_VARS();
+        ST_LOOP_START()
+        {
+            soft_thread->hard_thread = hard_thread;
+        }
+    }
 
     fc_solve_instance__init_hard_thread(
         instance,
@@ -934,18 +959,6 @@ static GCC_INLINE void fc_solve_recycle_instance(
 
 extern const double fc_solve_a_star_default_weights[5];
 
-/* HT_LOOP == hard threads' loop - macros to abstract it. */
-#define HT_LOOP_DECLARE_VARS() \
-    fc_solve_hard_thread_t * hard_thread, * end_hard_thread
-
-#define HT_LOOP_START() \
-    for ( end_hard_thread = ( \
-              (hard_thread = instance->hard_threads) \
-              + instance->num_hard_threads \
-          ) ; \
-         hard_thread < end_hard_thread ;  \
-         hard_thread++ \
-         )
 
 
 #ifdef __cplusplus

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -205,6 +205,14 @@ verify_solution_test(
         theme => ["-l", "tlm",],
     },
     "Simple Simon #1 using the 'the-last-mohican' theme",
+);
+
+
+# TEST
+verify_solution_test(
+    {deal => 24, theme => ["-nht",],
+    },
+    "Testing a solution with the -nht flag.",
 );
 
 =head1 COPYRIGHT AND LICENSE
