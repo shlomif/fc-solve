@@ -184,8 +184,6 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     {
         free(soft_thread->name);
     }
-    /* The data-structure itself was allocated */
-    free(soft_thread);
 }
 
 static GCC_INLINE void accumulate_tests_order(
@@ -232,9 +230,9 @@ static void foreach_soft_thread(
     int ht_idx, st_idx;
     fc_solve_hard_thread_t * hard_thread;
     int num_soft_threads;
-    fc_solve_soft_thread_t * * ht_soft_threads;
     for(ht_idx = 0 ; ht_idx<=instance->num_hard_threads; ht_idx++)
     {
+        register fc_solve_soft_thread_t * soft_thread;
         if (ht_idx < instance->num_hard_threads)
         {
             hard_thread = instance->hard_threads[ht_idx];
@@ -248,13 +246,9 @@ static void foreach_soft_thread(
             break;
         }
         num_soft_threads = hard_thread->num_soft_threads;
-        ht_soft_threads = hard_thread->soft_threads;
-        for(st_idx = 0 ; st_idx < num_soft_threads; st_idx++)
+        soft_thread = hard_thread->soft_threads;
+        for(st_idx = 0 ; st_idx < num_soft_threads; st_idx++, soft_thread++)
         {
-            register fc_solve_soft_thread_t * soft_thread;
-
-            soft_thread = ht_soft_threads[st_idx];
-
             switch (callback_choice)
             {
                 case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
@@ -298,21 +292,11 @@ static GCC_INLINE void clean_soft_dfs(
 }
 
 
-static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
-        fc_solve_hard_thread_t * hard_thread
+static GCC_INLINE void init_soft_thread(
+        fc_solve_hard_thread_t * hard_thread,
+        fc_solve_soft_thread_t * soft_thread
         )
 {
-    fc_solve_soft_thread_t * soft_thread;
-
-    /* Make sure we are not exceeding the maximal number of soft threads
-     * for an instance. */
-    if (hard_thread->instance->next_soft_thread_id == MAX_NUM_SCANS)
-    {
-        return NULL;
-    }
-
-    soft_thread = malloc(sizeof(fc_solve_soft_thread_t));
-
     soft_thread->hard_thread = hard_thread;
 
     soft_thread->id = (hard_thread->instance->next_soft_thread_id)++;
@@ -357,8 +341,6 @@ static GCC_INLINE fc_solve_soft_thread_t * alloc_soft_thread(
     fc_solve_reset_soft_thread(soft_thread);
 
     soft_thread->name = NULL;
-
-    return soft_thread;
 }
 
 fc_solve_hard_thread_t * fc_solve_instance__alloc_hard_thread(
@@ -593,7 +575,7 @@ static GCC_INLINE int compile_prelude(
 
         for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
         {
-            if (!strcmp(hard_thread->soft_threads[st_idx]->name, p_scan))
+            if (!strcmp(hard_thread->soft_threads[st_idx].name, p_scan))
             {
                 break;
             }
@@ -635,7 +617,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             compile_prelude(hard_thread);
         }
         hard_thread->num_times_left_for_soft_thread =
-            hard_thread->soft_threads[0]->num_times_step;
+            hard_thread->soft_threads[0].num_times_step;
     }
 
     {
@@ -834,7 +816,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
         optimization_thread = instance->optimization_thread;
     }
 
-    soft_thread = optimization_thread->soft_threads[0];
+    soft_thread = optimization_thread->soft_threads;
 
     if (instance->opt_tests_order_set)
     {
@@ -1033,7 +1015,7 @@ int fc_solve_solve_instance(
         fcs_state_extra_info_t * no_use_val;
 
         fc_solve_check_and_add_state(
-            instance->hard_threads[0]->soft_threads[0],
+            &(instance->hard_threads[0]->soft_threads[0]),
             state_copy_ptr_val,
             &no_use_val
             );
@@ -1109,7 +1091,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
     ret = FCS_STATE_SUSPEND_PROCESS;
     while(hard_thread->num_soft_threads_finished < hard_thread->num_soft_threads)
     {
-        soft_thread = hard_thread->soft_threads[hard_thread->st_idx];
+        soft_thread = &(hard_thread->soft_threads[hard_thread->st_idx]);
         /*
          * Move to the next thread if it's already finished
          * */
@@ -1140,7 +1122,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                 {       \
                     hard_thread->st_idx = 0;    \
                 }      \
-                hard_thread->num_times_left_for_soft_thread = hard_thread->soft_threads[hard_thread->st_idx]->num_times_step;  \
+                hard_thread->num_times_left_for_soft_thread = hard_thread->soft_threads[hard_thread->st_idx].num_times_step;  \
             }
 
 
@@ -1315,7 +1297,7 @@ int fc_solve_resume_instance(
     {
         ret =
             fc_solve_a_star_or_bfs_do_solve(
-                instance->optimization_thread->soft_threads[0]
+                &(instance->optimization_thread->soft_threads[0])
                 );
     }
     else
@@ -1515,16 +1497,20 @@ fc_solve_soft_thread_t * fc_solve_new_soft_thread(
 {
     fc_solve_soft_thread_t * ret;
     
-    ret = alloc_soft_thread(hard_thread);
-
-    /* Exceeded the maximal number of Soft-Threads in an instance */
-    if (ret == NULL)
+    /* Make sure we are not exceeding the maximal number of soft threads
+     * for an instance. */
+    if (hard_thread->instance->next_soft_thread_id == MAX_NUM_SCANS)
     {
         return NULL;
     }
 
     hard_thread->soft_threads = realloc(hard_thread->soft_threads, sizeof(hard_thread->soft_threads[0])*(hard_thread->num_soft_threads+1));
-    hard_thread->soft_threads[hard_thread->num_soft_threads] = ret;
+
+    init_soft_thread(
+            hard_thread, 
+            (ret = &(hard_thread->soft_threads[hard_thread->num_soft_threads]))
+            );
+
     hard_thread->num_soft_threads++;
 
     return ret;

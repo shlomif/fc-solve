@@ -437,10 +437,9 @@ int fc_solve_apply_preset_by_ptr(
         char test_name[2] = {0};
         for(ht_idx = 0; ht_idx < instance->num_hard_threads ; ht_idx++)
         {
-            for(st_idx = 0; st_idx < instance->hard_threads[ht_idx]->num_soft_threads; st_idx++)
+            fc_solve_soft_thread_t * soft_thread = instance->hard_threads[ht_idx]->soft_threads;
+            for(st_idx = 0; st_idx < instance->hard_threads[ht_idx]->num_soft_threads; st_idx++, soft_thread++)
             {
-                fc_solve_soft_thread_t * soft_thread = instance->hard_threads[ht_idx]->soft_threads[st_idx];
-
                 int num_valid_tests;
                 const char * s;
 

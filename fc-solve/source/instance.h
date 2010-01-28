@@ -449,7 +449,7 @@ struct fc_solve_hard_thread_struct
     fc_solve_instance_t * instance;
 
     int num_soft_threads;
-    struct fc_solve_soft_thread_struct * * soft_threads;
+    struct fc_solve_soft_thread_struct * soft_threads;
 
     /*
      * The hard thread count of how many states he checked himself. The
@@ -775,7 +775,7 @@ static GCC_INLINE fc_solve_soft_thread_t *
         fc_solve_instance_t * instance
         )
 {
-    return instance->hard_threads[0]->soft_threads[0];
+    return &(instance->hard_threads[0]->soft_threads[0]);
 }
 
 extern fc_solve_soft_thread_t * fc_solve_new_soft_thread(
@@ -810,7 +810,7 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
 
     instance->num_hard_threads++;
 
-    return ret->soft_threads[0];
+    return &(ret->soft_threads[0]);
 }
 
 #define my_brfs_queue (soft_thread->method_specific.befs.meth.brfs.bfs_queue)
@@ -864,10 +864,9 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
     fc_solve_reset_hard_thread(hard_thread);
 
-    for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++)
+    soft_thread = hard_thread->soft_threads;
+    for(st_idx = 0; st_idx < hard_thread->num_soft_threads ; st_idx++, soft_thread++)
     {
-        soft_thread = hard_thread->soft_threads[st_idx];
-
         switch (soft_thread->method)
         {
             case FCS_METHOD_A_STAR:

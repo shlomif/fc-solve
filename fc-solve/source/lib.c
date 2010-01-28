@@ -1502,5 +1502,5 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
 
     hard_thread = instance->hard_threads[instance->ht_idx];
 
-    return hard_thread->soft_threads[hard_thread->st_idx]->name;
+    return hard_thread->soft_threads[hard_thread->st_idx].name;
 }
