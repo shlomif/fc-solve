@@ -483,7 +483,7 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
   */
 void fc_solve_free_instance(fc_solve_instance_t * instance)
 {
-    fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
+    HT_LOOP_DECLARE_VARS();
 
     foreach_soft_thread(instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
 
@@ -597,7 +597,7 @@ static GCC_INLINE int compile_prelude(
 
 void fc_solve_init_instance(fc_solve_instance_t * instance)
 {
-    fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
+    HT_LOOP_DECLARE_VARS();
 
     /* Initialize the state packs */
     end_hard_thread = instance->hard_threads + instance->num_hard_threads;
@@ -1021,7 +1021,7 @@ int fc_solve_solve_instance(
 
     instance->ht_idx = 0;
     {
-        fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
+        HT_LOOP_DECLARE_VARS();
 
         end_hard_thread = instance->hard_threads + instance->num_hard_threads;
         for (hard_thread = instance->hard_threads ; 
@@ -1417,7 +1417,7 @@ void fc_solve_finish_instance(
     fc_solve_instance_t * instance
     )
 {
-    fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
+    HT_LOOP_DECLARE_VARS();
 
     end_hard_thread = instance->hard_threads + instance->num_hard_threads;
     /* De-allocate the state packs */

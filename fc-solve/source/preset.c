@@ -436,7 +436,7 @@ int fc_solve_apply_preset_by_ptr(
         int st_idx;
         char test_name[2] = {0};
 
-        fc_solve_hard_thread_t * hard_thread, * end_hard_thread;
+        HT_LOOP_DECLARE_VARS();
 
         end_hard_thread = instance->hard_threads + instance->num_hard_threads;
         for (hard_thread = instance->hard_threads ; 

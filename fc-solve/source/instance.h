@@ -918,6 +918,9 @@ static GCC_INLINE void fc_solve_recycle_instance(
 
 extern const double fc_solve_a_star_default_weights[5];
 
+#define HT_LOOP_DECLARE_VARS() \
+    fc_solve_hard_thread_t * hard_thread, * end_hard_thread
+
 #ifdef __cplusplus
 }
 #endif
