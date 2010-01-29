@@ -680,6 +680,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     }
 }
 
+#ifndef FCS_FREECELL_ONLY
 static void apply_game_params_for_all_instances(
         fcs_user_t * user
         )
@@ -694,6 +695,7 @@ static void apply_game_params_for_all_instances(
 
     return;
 }
+#endif
 
 #ifndef HARD_CODED_NUM_FREECELLS
 int DLLEXPORT freecell_solver_user_set_num_freecells(
