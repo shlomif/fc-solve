@@ -44,29 +44,34 @@ sub set_hash
 
 set_hash();
 
-my @new_argv;
-for (my $idx = 0; $idx < @ARGV ; $idx++)
-{
-    if ($ARGV[$idx] =~ m{\A-l(.*)\z}ms)
-    {
-        my $arg = $1 || $ARGV[++$idx];
+my %themes =
+(
+    tt => [qw(-r --fc-only --notest-suite)],
+    p4b => [qw(-l tt --arch=pentium4 --omit-frame)],
+);
 
-        if ($arg eq "tt") # Threads test.
+my @new_argv = @ARGV;
+
+CALC_NEW_ARGV:
+for (my $idx = 0; $idx < @new_argv ; $idx++)
+{
+    if ($new_argv[$idx] =~ m{\A-l(.*)\z}ms)
+    {
+        my $start_idx = $idx;
+
+        my $param = $1 || $new_argv[++$idx];
+
+        if (! (my $cmd = $themes{$param}) )
         {
-            push @new_argv, qw(-r --fc-only --notest-suite);
-        }
-        elsif ($arg eq "p4b") # Pentium 4 Benchmark.
-        {
-            push @new_argv, qw(-r --fc-only --arch=pentium4 --omit-frame);
+            die "Unknown -l argument $param!";
         }
         else
         {
-            die "Unknown -l argument '$arg'!";
+            splice (@new_argv, $start_idx, $idx-$start_idx+1, @$cmd);
         }
-    }
-    else
-    {
-        push @new_argv, $ARGV[$idx];
+        
+        $idx = $start_idx;
+        redo CALC_NEW_ARGV;
     }
 }
 
