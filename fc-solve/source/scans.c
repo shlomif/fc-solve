@@ -207,11 +207,11 @@ int fc_solve_soft_dfs_do_solve(
     fcs_rand_t * rand_gen;
 
 #ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = instance->freecells_num;
+    freecells_num = INSTANCE_FREECELLS_NUM;
 #endif
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = instance->stacks_num;
+    stacks_num = INSTANCE_STACKS_NUM;
 #endif
     scans_synergy = instance->scans_synergy;
 
@@ -562,7 +562,9 @@ static GCC_INLINE int update_col_cards_under_sequences(
     int c;
     fcs_card_t this_card, prev_card;
 #ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by = soft_thread->hard_thread->instance->sequences_are_built_by;
+    int sequences_are_built_by = 
+        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(soft_thread->hard_thread->instance)
+        ;
 #endif
 
     cards_num = fcs_col_len(col);
@@ -644,20 +646,20 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
     double seqs_over_renegade_cards;
     fcs_cards_column_t col;
 #ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num = instance->freecells_num;
+    int freecells_num = INSTANCE_FREECELLS_NUM;
 #endif
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num = instance->stacks_num;
+    int stacks_num = INSTANCE_STACKS_NUM;
 #endif
 #define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
     double * a_star_weights = my_a_star_weights;
 #ifndef FCS_FREECELL_ONLY
-    int unlimited_sequence_move = instance->unlimited_sequence_move;
+    int unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #else
     #define unlimited_sequence_move 0
 #endif
 #ifndef HARD_CODED_NUM_DECKS
-    int decks_num = instance->decks_num;
+    int decks_num = INSTANCE_DECKS_NUM;
 #endif
 
     cards_under_sequences = 0;
@@ -717,7 +719,7 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
 #ifdef FCS_FREECELL_ONLY
 #define is_filled_by_any_card() 1
 #else
-#define is_filled_by_any_card() (instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
+#define is_filled_by_any_card() (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
 #endif
     if (is_filled_by_any_card())
     {
@@ -899,9 +901,9 @@ static void dump_pqueue (
     {
         printf("Rating[%d] = %d\nState[%d] = <<<\n", i, pq->Elements[i].rating, i);
         s = fc_solve_state_as_string(pq->Elements[i].val, 
-                soft_thread->hard_thread->instance->freecells_num,
-                soft_thread->hard_thread->instance->stacks_num,
-                soft_thread->hard_thread->instance->decks_num,
+                soft_thread->hard_thread->INSTANCE_FREECELLS_NUM,
+                soft_thread->hard_thread->INSTANCE_STACKS_NUM,
+                soft_thread->hard_thread->INSTANCE_DECKS_NUM,
                 1,
                 0,
                 1
@@ -978,11 +980,11 @@ int fc_solve_a_star_or_bfs_do_solve(
         scan_specific.brfs.queue_last_item = my_brfs_queue_last_item;
     }
 #ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = instance->freecells_num;
+    freecells_num = INSTANCE_FREECELLS_NUM;
 #endif
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = instance->stacks_num;
+    stacks_num = INSTANCE_STACKS_NUM;
 #endif
 
     /* Continue as long as there are states in the queue or
@@ -1310,13 +1312,13 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 #endif
 
 #ifndef HARD_CODED_NUM_DECKS
-        decks_num = instance->decks_num;
+        decks_num = INSTANCE_DECKS_NUM;
 #endif
 #ifndef HARD_CODED_NUM_STACKS
-        stacks_num = instance->stacks_num;
+        stacks_num = INSTANCE_STACKS_NUM;
 #endif
 #ifndef FCS_FREECELL_ONLY
-        sequences_are_built_by = instance->sequences_are_built_by;
+        sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
 
         /* We don't keep track of kings (rank == 13). */

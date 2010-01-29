@@ -680,14 +680,20 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     }
 }
 
-#define set_for_all_instances(what) \
-    { \
-    for(i = 0 ; i < user->num_instances ; i++)        \
-    {                    \
-        user->instances_list[i].instance->what = what;       \
-    }        \
-    user->common_preset.what = what;     \
+static void apply_game_params_for_all_instances(
+        fcs_user_t * user
+        )
+{
+    int i;
+
+    for(i = 0 ; i < user->num_instances ; i++)
+    {
+        user->instances_list[i].instance->game_params = 
+            user->common_preset.game_params;
     }
+
+    return;
+}
 
 #ifndef HARD_CODED_NUM_FREECELLS
 int DLLEXPORT freecell_solver_user_set_num_freecells(
@@ -696,7 +702,6 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
     )
 {
     fcs_user_t * user;
-    int i;
 
     user = (fcs_user_t *)user_instance;
 
@@ -705,7 +710,9 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
         return 1;
     }
 
-    set_for_all_instances(freecells_num);
+    user->common_preset.game_params.freecells_num = freecells_num;
+
+    apply_game_params_for_all_instances(user);
 
     return 0;
 }
@@ -726,7 +733,6 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
     )
 {
     fcs_user_t * user;
-    int i;
 
     user = (fcs_user_t *)user_instance;
 
@@ -734,7 +740,8 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
     {
         return 1;
     }
-    set_for_all_instances(stacks_num);
+    user->common_preset.game_params.stacks_num = stacks_num;
+    apply_game_params_for_all_instances(user);
 
     return 0;
 }
@@ -755,7 +762,6 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
     )
 {
     fcs_user_t * user;
-    int i;
 
     user = (fcs_user_t *)user_instance;
 
@@ -763,7 +769,9 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
     {
         return 1;
     }
-    set_for_all_instances(decks_num);
+
+    user->common_preset.game_params.decks_num = decks_num;
+    apply_game_params_for_all_instances(user);
 
     return 0;
 }
@@ -964,7 +972,6 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
 {
 #ifndef FCS_FREECELL_ONLY
     fcs_user_t * user;
-    int i;
 
     user = (fcs_user_t *)user_instance;
 
@@ -972,7 +979,11 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
     {
         return 1;
     }
-    set_for_all_instances(sequences_are_built_by)
+    
+    user->common_preset.game_params.game_flags &= (~0x3);
+    user->common_preset.game_params.game_flags |= sequences_are_built_by;
+
+    apply_game_params_for_all_instances(user);
 #endif
 
     return 0;
@@ -985,11 +996,14 @@ int DLLEXPORT freecell_solver_user_set_sequence_move(
 {
 #ifndef FCS_FREECELL_ONLY
     fcs_user_t * user;
-    int i;
 
     user = (fcs_user_t *)user_instance;
 
-    set_for_all_instances(unlimited_sequence_move);
+    user->common_preset.game_params.game_flags &= (~(1 << 4));
+    user->common_preset.game_params.game_flags |=
+        ((unlimited_sequence_move != 0)<< 4);
+
+    apply_game_params_for_all_instances(user);
 #endif
     return 0;
 }
@@ -1001,7 +1015,6 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
 {
 #ifndef FCS_FREECELL_ONLY
     fcs_user_t * user;
-    int i;
 
     user = (fcs_user_t *)user_instance;
 
@@ -1009,7 +1022,12 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
     {
         return 1;
     }
-    set_for_all_instances(empty_stacks_fill);
+
+    user->common_preset.game_params.game_flags &= (~(0x3 << 2));
+    user->common_preset.game_params.game_flags |=
+        (empty_stacks_fill << 2);
+
+    apply_game_params_for_all_instances(user);
 #endif
     return 0;
 }

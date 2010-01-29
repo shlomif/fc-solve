@@ -53,14 +53,17 @@ extern "C" {
  *
  * See the Freecell FAQ and the source code of PySol
  *
+ * TODO : place INSTANCE_GAME_FLAGS inside a local variable.
  * */
 #define calc_max_sequence_move(fc_num, fs_num)                    \
-    ((instance->unlimited_sequence_move) ?                         \
+    (INSTANCE_UNLIMITED_SEQUENCE_MOVE ?                         \
             INT_MAX :                                             \
-    ((instance->empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD) ? \
+    ((empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD) ? \
                 (((fc_num)+1)<<(fs_num))                        : \
         ((fc_num)+1)                                              \
     ))
+
+#define calc_max_simple_simon_seq_move(fs_num) (1 << (fs_num))
 #endif
 
 /*
@@ -251,12 +254,12 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #define tests_define_seqs_built_by()   \
 { \
-    sequences_are_built_by = instance->sequences_are_built_by; \
+    sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance); \
 }
 
 #define tests_define_empty_stacks_fill() \
 { \
-    empty_stacks_fill = instance->empty_stacks_fill; \
+    empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL; \
 }
 
 #endif

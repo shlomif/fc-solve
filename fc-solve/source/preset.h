@@ -42,13 +42,8 @@ extern "C" {
 typedef struct
 {
     int preset_id;
-    int freecells_num;
-    int stacks_num;
-    int decks_num;
 
-    int sequences_are_built_by;
-    int unlimited_sequence_move;
-    int empty_stacks_fill;
+    fcs_game_type_params_t game_params;
 
     char tests_order[FCS_TESTS_NUM*3+1];
     char allowed_tests[FCS_TESTS_NUM*3+1];

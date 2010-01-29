@@ -1,6 +1,9 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
+use warnings;
+
+use Template;
 
 my %presets =
 (
@@ -132,6 +135,26 @@ sub compile_preset
     return $compiled;
 }
 
+my $c_template = Template->new();
+
+my $c_template_input = <<"EOF";
+    {
+        [% preset %],
+        MAKE_GAME_PARAMS(
+            [% fc %],
+            [% s %],
+            [% d %],
+
+            [% sbb %],
+            [% sm %],
+            [% esf %]
+        ),
+
+        [% tests_order %],
+        [% allowed_tests %]
+    }
+EOF
+
 sub preset_to_string
 {
     my $preset_name = shift;
@@ -203,10 +226,17 @@ sub preset_to_string
         die "Preset name: $preset_name\n$@\n";
     }
 
-    my @lines_p = (map { "        $_," } @lines);
-    my @lines_with_spaces = (@lines_p[0 .. 3], "", @lines_p[4 .. 6], "", @lines_p[7 .. $#lines_p]);
+    my %vars;
 
-    return "    {\n" . join("\n", @lines_with_spaces) . "\n" . "    },\n";
+    @vars{qw(preset fc s d sbb sm esf tests_order allowed_tests)} = @lines;
+
+    my $ret;
+    
+    $c_template->process(\$c_template_input, \%vars, \$ret);
+    
+    $ret =~ s{\s+\z}{}ms;
+
+    return $ret;
 }
 
 sub preset_to_docbook_string
@@ -301,7 +331,7 @@ sub preset_to_pod
 
 my $mode = "c";
 
-my $mode_arg = shift(@ARGV);
+my $mode_arg = shift(@ARGV) || "--cc";
 
 if ($mode_arg eq "--docbook")
 {
@@ -347,8 +377,8 @@ elsif ($mode eq "c")
 {
     print "static const fcs_preset_t fcs_presets[" . scalar(@strings) . "] = \n";
     print "{\n";
-    print join("", @strings);
-    print "};\n";
+    print join(",\n", @strings);
+    print "\n};\n";
 }
 elsif ($mode eq "perl-mod")
 {

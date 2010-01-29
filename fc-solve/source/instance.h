@@ -172,6 +172,70 @@ typedef struct
     int * tests;
 } fcs_tests_order_t;
 
+typedef unsigned char fcs_game_limit_t;
+
+typedef struct {
+    /*
+     * The number of Freecells, Stacks and Foundations present in the game.
+     *
+     * freecells_num and stacks_num are variable and may be specified at
+     * the beginning of the execution of the algorithm. However, there
+     * is a maximal limit to them which is set in config.h.
+     *
+     * decks_num can be 1 or 2 .
+     * */
+
+#ifndef HARD_CODED_NUM_FREECELLS
+    fcs_game_limit_t freecells_num;
+#define INSTANCE_FREECELLS_NUM (instance->game_params.freecells_num)
+#define LOCAL_FREECELLS_NUM (freecells_num)
+#else
+#define INSTANCE_FREECELLS_NUM HARD_CODED_NUM_FREECELLS
+#define LOCAL_FREECELLS_NUM HARD_CODED_NUM_FREECELLS
+#endif
+
+#ifndef HARD_CODED_NUM_STACKS
+    fcs_game_limit_t stacks_num;
+#define INSTANCE_STACKS_NUM (instance->game_params.stacks_num)
+#define LOCAL_STACKS_NUM (stacks_num)
+#else
+#define INSTANCE_STACKS_NUM HARD_CODED_NUM_STACKS
+#define LOCAL_STACKS_NUM HARD_CODED_NUM_STACKS
+#endif
+
+#ifndef HARD_CODED_NUM_DECKS
+    fcs_game_limit_t decks_num;
+#define INSTANCE_DECKS_NUM (instance->game_params.decks_num)
+#define LOCAL_DECKS_NUM (decks_num)
+#else
+#define INSTANCE_DECKS_NUM HARD_CODED_NUM_DECKS
+#define LOCAL_DECKS_NUM HARD_CODED_NUM_DECKS
+#endif
+
+#ifndef FCS_FREECELL_ONLY
+    /* sequences_are_built_by - (bits 0:1) - what two adjacent cards in the 
+     * same sequence can be.
+     *
+     * empty_stacks_fill (bits 2:3) - with what cards can empty stacks be 
+     * filled with.
+     *
+     * unlimited_sequence_move - (bit 4) - whether an entire sequence can be 
+     * moved from one place to the other regardless of the number of 
+     * unoccupied Freecells there are. 
+     * */
+    fcs_game_limit_t game_flags;
+
+#define INSTANCE_GAME_FLAGS  (instance->game_params.game_flags)
+#define GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) \
+    ((instance)->game_params.game_flags & 0x3)
+
+#define INSTANCE_UNLIMITED_SEQUENCE_MOVE  (INSTANCE_GAME_FLAGS & (1 << 4))
+#define INSTANCE_EMPTY_STACKS_FILL   ((INSTANCE_GAME_FLAGS >> 2) & 0x3)
+
+#endif
+
+} fcs_game_type_params_t;
+
 typedef struct
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
@@ -292,53 +356,11 @@ typedef struct
 #endif
 
     /*
-     * The number of Freecells, Stacks and Foundations present in the game.
+     * The parameters of the game - see the declaration of
+     * fcs_game_type_params_t .
      *
-     * freecells_num and stacks_num are variable and may be specified at
-     * the beginning of the execution of the algorithm. However, there
-     * is a maximal limit to them which is set in config.h.
-     *
-     * decks_num can be 1 or 2 .
      * */
-
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#define INSTANCE_FREECELLS_NUM (instance->freecells_num)
-#define LOCAL_FREECELLS_NUM (freecells_num)
-#else
-#define INSTANCE_FREECELLS_NUM HARD_CODED_NUM_FREECELLS
-#define LOCAL_FREECELLS_NUM HARD_CODED_NUM_FREECELLS
-#endif
-
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
-#define INSTANCE_STACKS_NUM (instance->stacks_num)
-#define LOCAL_STACKS_NUM (stacks_num)
-#else
-#define INSTANCE_STACKS_NUM HARD_CODED_NUM_STACKS
-#define LOCAL_STACKS_NUM HARD_CODED_NUM_STACKS
-#endif
-
-#ifndef HARD_CODED_NUM_DECKS
-    int decks_num;
-#define INSTANCE_DECKS_NUM (instance->decks_num)
-#define LOCAL_DECKS_NUM (decks_num)
-#else
-#define INSTANCE_DECKS_NUM HARD_CODED_NUM_DECKS
-#define LOCAL_DECKS_NUM HARD_CODED_NUM_DECKS
-#endif
-
-#ifndef FCS_FREECELL_ONLY
-    /* What two adjacent cards in the same sequence can be: */
-    int sequences_are_built_by;
-    /* Whether an entire sequence can be moved from one place to the
-     * other regardless of the number of unoccupied Freecells there are. */
-    int unlimited_sequence_move;
-    /*
-     * With what cards can empty stacks be filled with.
-     * */
-    int empty_stacks_fill;
-#endif
+    fcs_game_type_params_t game_params;
 
 #ifdef FCS_WITH_TALONS
     /*

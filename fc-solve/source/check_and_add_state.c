@@ -97,7 +97,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
     char * new_ptr;
     fc_solve_instance_t * instance = hard_thread->instance;
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num = instance->stacks_num;
+    int stacks_num = INSTANCE_STACKS_NUM;
 #endif
     fcs_cards_column_t column;
     register int col_len;

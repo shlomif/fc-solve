@@ -58,215 +58,249 @@ enum
     FCS_PRESET_BELEAGUERED_CASTLE
 };
 
-static const fcs_preset_t fcs_presets[16] =
+#define MAKE_GAME_PARAMS(fc, s, d, sbb, sm, esf) \
+    { fc, s, d, (sbb | (esf << 2) | (sm << 4))}
+static const fcs_preset_t fcs_presets[16] = 
 {
     {
         FCS_PRESET_BAKERS_DOZEN,
-        0,
-        13,
-        1,
+        MAKE_GAME_PARAMS(
+            0,
+            13,
+            1,
 
-        FCS_SEQ_BUILT_BY_RANK,
-        0,
-        FCS_ES_FILLED_BY_NONE,
+            FCS_SEQ_BUILT_BY_RANK,
+            0,
+            FCS_ES_FILLED_BY_NONE
+        ),
 
         "0123456789",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_BAKERS_GAME,
-        4,
-        8,
-        1,
+        MAKE_GAME_PARAMS(
+            4,
+            8,
+            1,
 
-        FCS_SEQ_BUILT_BY_SUIT,
-        0,
-        FCS_ES_FILLED_BY_ANY_CARD,
+            FCS_SEQ_BUILT_BY_SUIT,
+            0,
+            FCS_ES_FILLED_BY_ANY_CARD
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_BELEAGUERED_CASTLE,
-        0,
-        8,
-        1,
+        MAKE_GAME_PARAMS(
+            0,
+            8,
+            1,
 
-        FCS_SEQ_BUILT_BY_RANK,
-        0,
-        FCS_ES_FILLED_BY_ANY_CARD,
+            FCS_SEQ_BUILT_BY_RANK,
+            0,
+            FCS_ES_FILLED_BY_ANY_CARD
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_CRUEL,
-        0,
-        12,
-        1,
+        MAKE_GAME_PARAMS(
+            0,
+            12,
+            1,
 
-        FCS_SEQ_BUILT_BY_SUIT,
-        0,
-        FCS_ES_FILLED_BY_NONE,
+            FCS_SEQ_BUILT_BY_SUIT,
+            0,
+            FCS_ES_FILLED_BY_NONE
+        ),
 
         "0123456789",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_DER_KATZENSCHWANZ,
-        8,
-        9,
-        2,
+        MAKE_GAME_PARAMS(
+            8,
+            9,
+            2,
 
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
-        1,
-        FCS_ES_FILLED_BY_NONE,
+            FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
+            1,
+            FCS_ES_FILLED_BY_NONE
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_DIE_SCHLANGE,
-        8,
-        9,
-        2,
+        MAKE_GAME_PARAMS(
+            8,
+            9,
+            2,
 
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
-        0,
-        FCS_ES_FILLED_BY_NONE,
+            FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
+            0,
+            FCS_ES_FILLED_BY_NONE
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_EIGHT_OFF,
-        8,
-        8,
-        1,
+        MAKE_GAME_PARAMS(
+            8,
+            8,
+            1,
 
-        FCS_SEQ_BUILT_BY_SUIT,
-        0,
-        FCS_ES_FILLED_BY_KINGS_ONLY,
+            FCS_SEQ_BUILT_BY_SUIT,
+            0,
+            FCS_ES_FILLED_BY_KINGS_ONLY
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_FAN,
-        0,
-        18,
-        1,
+        MAKE_GAME_PARAMS(
+            0,
+            18,
+            1,
 
-        FCS_SEQ_BUILT_BY_SUIT,
-        0,
-        FCS_ES_FILLED_BY_KINGS_ONLY,
+            FCS_SEQ_BUILT_BY_SUIT,
+            0,
+            FCS_ES_FILLED_BY_KINGS_ONLY
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_FORECELL,
-        4,
-        8,
-        1,
+        MAKE_GAME_PARAMS(
+            4,
+            8,
+            1,
 
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
-        0,
-        FCS_ES_FILLED_BY_KINGS_ONLY,
+            FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
+            0,
+            FCS_ES_FILLED_BY_KINGS_ONLY
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_FREECELL,
-        4,
-        8,
-        1,
+        MAKE_GAME_PARAMS(
+            4,
+            8,
+            1,
 
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
-        0,
-        FCS_ES_FILLED_BY_ANY_CARD,
+            FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
+            0,
+            FCS_ES_FILLED_BY_ANY_CARD
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_GOOD_MEASURE,
-        0,
-        10,
-        1,
+        MAKE_GAME_PARAMS(
+            0,
+            10,
+            1,
 
-        FCS_SEQ_BUILT_BY_RANK,
-        0,
-        FCS_ES_FILLED_BY_NONE,
+            FCS_SEQ_BUILT_BY_RANK,
+            0,
+            FCS_ES_FILLED_BY_NONE
+        ),
 
         "0123456789",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_KINGS_ONLY_BAKERS_GAME,
-        4,
-        8,
-        1,
+        MAKE_GAME_PARAMS(
+            4,
+            8,
+            1,
 
-        FCS_SEQ_BUILT_BY_SUIT,
-        0,
-        FCS_ES_FILLED_BY_KINGS_ONLY,
+            FCS_SEQ_BUILT_BY_SUIT,
+            0,
+            FCS_ES_FILLED_BY_KINGS_ONLY
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_RELAXED_FREECELL,
-        4,
-        8,
-        1,
+        MAKE_GAME_PARAMS(
+            4,
+            8,
+            1,
 
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
-        1,
-        FCS_ES_FILLED_BY_ANY_CARD,
+            FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
+            1,
+            FCS_ES_FILLED_BY_ANY_CARD
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_RELAXED_SEAHAVEN_TOWERS,
-        4,
-        10,
-        1,
+        MAKE_GAME_PARAMS(
+            4,
+            10,
+            1,
 
-        FCS_SEQ_BUILT_BY_SUIT,
-        1,
-        FCS_ES_FILLED_BY_KINGS_ONLY,
+            FCS_SEQ_BUILT_BY_SUIT,
+            1,
+            FCS_ES_FILLED_BY_KINGS_ONLY
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_SEAHAVEN_TOWERS,
-        4,
-        10,
-        1,
+        MAKE_GAME_PARAMS(
+            4,
+            10,
+            1,
 
-        FCS_SEQ_BUILT_BY_SUIT,
-        0,
-        FCS_ES_FILLED_BY_KINGS_ONLY,
+            FCS_SEQ_BUILT_BY_SUIT,
+            0,
+            FCS_ES_FILLED_BY_KINGS_ONLY
+        ),
 
         "[01][23456789]",
-        "0123456789",
+        "0123456789"
     },
     {
         FCS_PRESET_SIMPLE_SIMON,
-        0,
-        10,
-        1,
+        MAKE_GAME_PARAMS(
+            0,
+            10,
+            1,
 
-        FCS_SEQ_BUILT_BY_SUIT,
-        0,
-        FCS_ES_FILLED_BY_ANY_CARD,
+            FCS_SEQ_BUILT_BY_SUIT,
+            0,
+            FCS_ES_FILLED_BY_ANY_CARD
+        ),
 
         "abcdefgh",
-        "abcdefgh",
+        "abcdefgh"
     }
 };
 
@@ -401,31 +435,20 @@ int fc_solve_apply_preset_by_ptr(
     char * no_use;
 
 #define preset (*preset_ptr)
-    if (preset.freecells_num > MAX_NUM_FREECELLS)
+    if (preset.game_params.freecells_num > MAX_NUM_FREECELLS)
     {
         return FCS_PRESET_CODE_FREECELLS_EXCEED_MAX;
     }
-    if (preset.stacks_num > MAX_NUM_STACKS)
+    if (preset.game_params.stacks_num > MAX_NUM_STACKS)
     {
         return FCS_PRESET_CODE_STACKS_EXCEED_MAX;
     }
-    if (preset.decks_num > MAX_NUM_DECKS)
+    if (preset.game_params.decks_num > MAX_NUM_DECKS)
     {
         return FCS_PRESET_CODE_DECKS_EXCEED_MAX;
     }
-#ifndef HARD_CODED_NUM_FREECELLS
-    instance->freecells_num = preset.freecells_num;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    instance->stacks_num = preset.stacks_num;
-#endif
-#ifndef HARD_CODED_NUM_DECKS
-    instance->decks_num = preset.decks_num;
-#endif
 
-    instance->sequences_are_built_by = preset.sequences_are_built_by;
-    instance->unlimited_sequence_move = preset.unlimited_sequence_move;
-    instance->empty_stacks_fill = preset.empty_stacks_fill;
+    instance->game_params = preset.game_params;
 
     /*
      * This code makes sure that all the tests in all the existing
