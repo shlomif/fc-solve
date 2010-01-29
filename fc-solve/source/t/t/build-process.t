@@ -27,15 +27,16 @@ sub test_cmd
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     my ($cmd, $blurb) = @_;
 
-    my $sys_ret = 
-        ((ref($cmd) eq "ARRAY")
-            ? system(@$cmd)
-            : system($cmd)
-        );
+    my @cmd = (ref($cmd) eq "ARRAY") ? @$cmd : $cmd;
+
+    my $sys_ret = system(@cmd);
 
     if (!ok (!$sys_ret, $blurb))
     {
-        die "Command failed! $!.";
+        Carp::confess("Command [" . 
+            join(" ", (map { qq/"$_"/ } @cmd)) . 
+                "] failed! $!."
+            );
     }
 }
 
