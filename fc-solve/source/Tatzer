@@ -49,11 +49,8 @@ for (my $idx = 0; $idx < @ARGV ; $idx++)
 {
     if ($ARGV[$idx] =~ m{\A-l(.*)\z}ms)
     {
-        my $arg = $1;
-        if (! length($arg))
-        {
-            $arg = $ARGV[++$idx];
-        }
+        my $arg = $1 || $ARGV[++$idx];
+
         if ($arg eq "tt") # Threads test.
         {
             push @new_argv, qw(-r --fc-only --notest-suite);
