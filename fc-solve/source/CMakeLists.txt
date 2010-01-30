@@ -402,6 +402,7 @@ MACRO(FCS_ADD_EXEC target)
     ADD_EXECUTABLE(${target} ${modules})
     LIST(APPEND FREECELL_SOLVER_EXECUTABLES ${target})
     TARGET_LINK_LIBRARIES (${target} ${MY_TARGET_LINK_LIBS})
+    INSTALL (TARGETS ${target} DESTINATION "bin")
 ENDMACRO(FCS_ADD_EXEC target)
 
 FCS_ADD_EXEC(fc-solve main.c)
@@ -481,11 +482,6 @@ CONFIGURE_FILE(
     ${CMAKE_CURRENT_BINARY_DIR}/lib${CPACK_PACKAGE_NAME}.pc
     @ONLY
     )
-
-INSTALL(
-    TARGETS "fc-solve" "freecell-solver-range-parallel-solve"
-    DESTINATION "bin"
-)
 
 INSTALL(
     TARGETS ${FREECELL_SOLVER_LIBS}

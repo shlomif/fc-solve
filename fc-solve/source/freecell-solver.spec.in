@@ -91,11 +91,13 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 %files
 %defattr(-,root,root)
 /usr/bin/fc-solve
+/usr/bin/freecell-solver-fc-pro-range-solve
+/usr/bin/freecell-solver-multi-thread-solve
+/usr/bin/freecell-solver-range-parallel-solve
 /usr/bin/make-aisleriot-freecell-board
 /usr/bin/make-gnome-freecell-board
-/usr/bin/pi-make-microsoft-freecell-board
 /usr/bin/make_pysol_freecell_board.py
-/usr/bin/freecell-solver-range-parallel-solve
+/usr/bin/pi-make-microsoft-freecell-board
 %{_mandir}/*/*
 %{_docdir}/*
 
