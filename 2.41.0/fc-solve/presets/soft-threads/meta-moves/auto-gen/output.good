@@ -1,0 +1,79 @@
+350 @ 1 (19341 solved)
+350 @ 4 (25164 solved)
+350 @ 5 (27889 solved)
+350 @ 14 (29137 solved)
+350 @ 1 (29912 solved)
+350 @ 8 (30438 solved)
+350 @ 2 (30799 solved)
+350 @ 4 (31066 solved)
+350 @ 3 (31265 solved)
+350 @ 5 (31411 solved)
+350 @ 9 (31515 solved)
+350 @ 1 (31597 solved)
+350 @ 12 (31664 solved)
+350 @ 8 (31718 solved)
+350 @ 4 (31759 solved)
+350 @ 7 (31795 solved)
+350 @ 6 (31826 solved)
+350 @ 6 (31853 solved)
+350 @ 3 (31873 solved)
+350 @ 4 (31889 solved)
+350 @ 2 (31901 solved)
+350 @ 9 (31912 solved)
+350 @ 12 (31922 solved)
+350 @ 9 (31930 solved)
+350 @ 4 (31937 solved)
+350 @ 4 (31943 solved)
+350 @ 12 (31949 solved)
+350 @ 2 (31954 solved)
+350 @ 5 (31958 solved)
+350 @ 12 (31962 solved)
+350 @ 4 (31964 solved)
+350 @ 4 (31966 solved)
+350 @ 4 (31968 solved)
+350 @ 4 (31970 solved)
+350 @ 9 (31972 solved)
+350 @ 10 (31974 solved)
+350 @ 6 (31975 solved)
+350 @ 6 (31976 solved)
+350 @ 6 (31977 solved)
+350 @ 7 (31978 solved)
+350 @ 10 (31979 solved)
+350 @ 10 (31980 solved)
+350 @ 10 (31981 solved)
+350 @ 11 (31982 solved)
+350 @ 11 (31983 solved)
+350 @ 11 (31984 solved)
+350 @ 12 (31985 solved)
+700 @ 8 (31987 solved)
+350 @ 8 (31988 solved)
+700 @ 3 (31989 solved)
+700 @ 3 (31990 solved)
+700 @ 12 (31991 solved)
+350 @ 12 (31992 solved)
+1050 @ 11 (31993 solved)
+1400 @ 6 (31994 solved)
+2100 @ 7 (31995 solved)
+3500 @ 11 (31996 solved)
+4900 @ 8 (31997 solved)
+6300 @ 0 (31998 solved)
+6300 @ 14 (31999 solved)
+total_iters = 18382968
+freecell-solver-range-parallel-solve 1 32000 1 \
+--method soft-dfs -to 0123456789 -step 500 --st-name 1 -nst \
+--method soft-dfs -to 0123467 -step 500 --st-name 2 -nst \
+--method random-dfs -seed 2 -to 0[01][23456789] -step 500 --st-name 3 -nst \
+--method random-dfs -seed 1 -to 0[0123456789] -step 500 --st-name 4 -nst \
+--method random-dfs -seed 3 -to 0[01][23467] -step 500 --st-name 5 -nst \
+--method random-dfs -seed 4 -to 0[0123467] -step 500 --st-name 9 -nst \
+--method random-dfs -to [01][23456789] -seed 8 -step 500 --st-name 10 -nst \
+--method a-star -asw 0.2,0.8,0,0 -step 500 --st-name 11 -nst \
+--method random-dfs -to [01][23456789] -seed 268 -step 500 --st-name 12 -nst \
+--method random-dfs -to [0123456789] -seed 142 -step 500 --st-name 15 -nst \
+--method a-star -asw 0.2,0.3,0.5,0,0 -step 500 --st-name 16 -nst \
+--method random-dfs -to [01][23456789] -seed 5 -step 500 --st-name 17 -nst \
+--method a-star -to 0123467 -asw 0.5,0,0.3,0,0 -step 500 --st-name 18 -nst \
+--method random-dfs -seed 105 -step 500 --st-name 20 \
+--prelude "350@2,350@5,350@9,350@20,350@2,350@12,350@3,350@5,350@4,350@9,350@15,350@2,350@18,350@12,350@5,350@11,700@10,350@4,350@5,350@3,350@15,350@18,350@15,700@5,350@18,350@3,350@9,350@18,1400@5,350@15,350@16,1050@10,350@11,1050@16,1050@17,350@18,1050@12,1400@4,1050@18,1050@17,1400@10,2100@11,3500@17,4900@12,6300@1,6300@20"
+
+

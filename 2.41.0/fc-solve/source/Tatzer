@@ -1,0 +1,215 @@
+#!/usr/bin/env perl
+
+# This is a script to configure the distribution. Its primary audience
+# are the core developers and halo developers, and not end-users. Please
+# see the INSTALL file for proper building instructions using cmake.
+#
+# "Tatzer" (Taf-Tzadik-Reish) is the Hebrew word for "configure!".
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+my $build_type = "debug";
+my $stack_storage;
+my $state_storage;
+my $prefix = "/usr";
+my $freecell_only = 0;
+my $secondary_hash_value = 0;
+my $build_static_lib = 0;
+my $states_type;
+my $test_suite = 1;
+my $cpu_arch;
+my $omit_frame;
+my $no_simple_simon = 0;
+my $state_storage_libavl2_tree;
+my $stack_storage_libavl2_tree;
+my $without_flipping = 0;
+my $with_context_var = 1;
+my $max_bench_threads_num = 4;
+
+sub set_both
+{
+    my $val = shift;
+    $stack_storage = $state_storage = $val;
+
+    return;
+}
+
+sub set_hash
+{
+    return set_both("INTERNAL_HASH");
+}
+
+set_hash();
+
+my %themes =
+(
+    tt => [qw(-r --fc-only --notest-suite)],
+    p4b => [qw(-l tt --arch=pentium4 --omit-frame)],
+);
+
+my @new_argv = @ARGV;
+
+CALC_NEW_ARGV:
+for (my $idx = 0; $idx < @new_argv ; $idx++)
+{
+    if ($new_argv[$idx] =~ m{\A-l(.*)\z}ms)
+    {
+        my $start_idx = $idx;
+
+        my $param = $1 || $new_argv[++$idx];
+
+        if (! (my $cmd = $themes{$param}) )
+        {
+            die "Unknown -l argument $param!";
+        }
+        else
+        {
+            splice (@new_argv, $start_idx, $idx-$start_idx+1, @$cmd);
+        }
+        
+        $idx = $start_idx;
+        redo CALC_NEW_ARGV;
+    }
+}
+
+@ARGV = @new_argv;
+
+GetOptions(
+    'd|debug' => sub {
+        my ($opt, $val) = @_;
+        if ($val)
+        {
+            $build_type = "debug";
+        }
+        return;
+    },
+    'r|release' => sub {
+        my ($opt, $val) = @_;
+        if ($val) 
+        {
+            $build_type = "release";
+        } 
+        elsif ($build_type eq "release")
+        {
+            $build_type = "debug";
+        }
+        return;
+    },
+    'c|cols=s' => \$stack_storage,
+    'p|pos=s' => \$state_storage,
+    'libavl2-p=s' => \$state_storage_libavl2_tree,
+    'libavl2-c=s' => \$stack_storage_libavl2_tree,
+    'prefix=s' => \$prefix,
+    'secondary!' => \$secondary_hash_value,
+    'test-suite!' => \$test_suite,
+    'judy' => sub { return set_both("JUDY"); },
+    'hash' => \&set_hash,
+    'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
+    'fc-only' => \$freecell_only,
+    'static' => \$build_static_lib,
+    'states-type=s' => \$states_type,
+    'profile' => sub {
+        my ($opt, $val) = @_;
+        if ($val) 
+        {
+            $build_type = "profile";
+        } 
+        elsif ($build_type eq "profile")
+        {
+            $build_type = "debug";
+        }
+        return;
+    },
+    'minsize' => sub {
+        $build_type = "MinSizeRel";
+        return;
+    },
+    'arch=s' => \$cpu_arch,
+    'omit-frame!' => \$omit_frame,
+    'disable-simple-simon!' => \$no_simple_simon,
+    'without-flip!' => \$without_flipping,
+    'with-ctx-var!' => \$with_context_var,
+    'max-bench-threads-num=i' => \$max_bench_threads_num,
+) or
+    die "Wrong options";
+
+if ($state_storage_libavl2_tree)
+{
+    $state_storage = "LIBAVL2_TREE";
+}
+
+if ($stack_storage_libavl2_tree)
+{
+    $stack_storage = "LIBAVL2_TREE";
+}
+
+# This cache is sometimes causing problems.
+unlink("CMakeCache.txt");
+
+my @cmd= ("cmake",
+    "-DCMAKE_BUILD_TYPE=$build_type",
+    "-DFCS_STATE_STORAGE=FCS_STATE_STORAGE_$state_storage",
+    "-DMAX_NUM_BENCHMARK_THREADS=$max_bench_threads_num",
+    "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
+    "-DCMAKE_INSTALL_PREFIX=$prefix",
+    "-DDATADIR=$prefix/share",
+    ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
+    ($no_simple_simon ? ("-DFCS_DISABLE_SIMPLE_SIMON=1") : ()),
+    ($without_flipping ? ("-DFCS_WITHOUT_CARD_FLIPPING=1") : ()),
+    ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
+    ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
+    (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
+    ($test_suite ? ("-DFCS_WITH_TEST_SUITE=1") : ()),
+    (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
+    ($omit_frame ? "-DOPTIMIZATION_OMIT_FRAME_POINTER=1" : ()),
+    ($state_storage_libavl2_tree
+        ? "-DFCS_STATE_STORAGE_LIBAVL2_TREE_TYPE=$state_storage_libavl2_tree"
+        : ()
+    ),
+    ($stack_storage_libavl2_tree
+        ? "-DFCS_STACK_STORAGE_LIBAVL2_TREE_TYPE=$stack_storage_libavl2_tree"
+        : ()
+    ),
+    (exists($ENV{"LIBAVL2_SOURCE_DIR"})
+        ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
+        : ()
+    ),
+    ($with_context_var
+        ? "-DFCS_WITH_CONTEXT_VARIABLE=1"
+        : "-DFCS_WITH_CONTEXT_VARIABLE="
+    ),
+);
+
+print(join(" ", @cmd), "\n");
+exec(@cmd);
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2009 Shlomi Fish
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+=cut
+
