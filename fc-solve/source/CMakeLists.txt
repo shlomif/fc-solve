@@ -643,9 +643,10 @@ IF(ASCIIDOC_FOUND)
     ENDFOREACH(_file)
 
     # MESSAGE ("PDF_TARGETS == ${_pdf_targets}")
-    ADD_CUSTOM_TARGET("pdfs" echo -n
-        DEPENDS ${_pdf_targets}
-    )
+
+    SET (_master_pdf_target "pdfs")
+    ADD_CUSTOM_TARGET("${_master_pdf_target}" echo -n)
+    ADD_DEPENDENCIES("${_master_pdf_target}" ${_pdf_targets})
 
 ENDIF(ASCIIDOC_FOUND)
 
