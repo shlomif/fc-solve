@@ -14,6 +14,9 @@ the pointers from the soft_threads to them are not updated.
 
 * Add some command line examples to +USAGE.txt+ .
 
+* Check that AsciiDoc is not required for preparing an .rpm (using a
+test script.)
+
 Non-pressing
 ------------
 
