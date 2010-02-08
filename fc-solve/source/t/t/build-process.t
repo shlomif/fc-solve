@@ -11,6 +11,7 @@ use File::Spec;
 use List::MoreUtils qw(none);
 use Cwd;
 use File::Path;
+use Env::Path;
 
 if (! $ENV{'FCS_TEST_BUILD'} )
 {
@@ -104,11 +105,36 @@ sub test_cmd
 
     chdir($orig_cwd);
 
+    my $failing_asciidoc_dir = File::Spec->catdir($orig_cwd, "asciidoc-fail");
+    rmtree($failing_asciidoc_dir);
+
+    mkpath($failing_asciidoc_dir);
+    my $asciidoc_bin = File::Spec->catfile($failing_asciidoc_dir, "asciidoc");
+
+    {
+        open my $out, ">", $asciidoc_bin
+            or die "Cannot write to '$asciidoc_bin'";
+        print {$out} <<"EOF";
+#!$^X
+exit(-1);
+EOF
+
+        close($out);
+    }
+
+    chmod(0755, $asciidoc_bin);
+
     # Delete the unpacked directory.
     rmtree($base);
 
     # Now test the rpm building.
     {
+        local $ENV{PATH} = $ENV{PATH};
+
+        Env::Path->PATH->Prepend(
+            $failing_asciidoc_dir,
+        );
+
         # We need to delete the tar.gz because rpmbuild -tb may work on the
         # .bz2 with the .gz still present.
         unlink("$tar_arc.gz");
@@ -143,6 +169,8 @@ sub test_cmd
             "rpmbuild -tb is successful."
         );
     }
+
+    rmtree($failing_asciidoc_dir);
 }
 
 =head1 COPYRIGHT AND LICENSE
