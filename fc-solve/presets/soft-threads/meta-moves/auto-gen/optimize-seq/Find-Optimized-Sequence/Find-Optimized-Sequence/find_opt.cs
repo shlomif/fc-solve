@@ -76,8 +76,7 @@ class Input
 	public int start_board;
 	public int num_boards;
 	
-	public const string data_dir
-		= "/home/shlomi/progs/freecell/trunk/fc-solve/presets/soft-threads/meta-moves/auto-gen";
+	public const string data_dir = "..";
 	
 	public List<int> blacklist;
 	public List<InputScan> scans;
@@ -94,7 +93,7 @@ class Input
 	
 	public string data_file_path(string basename)
 	{
-		return data_dir + "/" + basename;
+		return Path.Combine(data_dir, basename);
 	}
 	
 	public void read_scan_black_list()
@@ -141,7 +140,7 @@ class Input
 		foreach (InputScan scan in scans)
 		{
 			string file_path = 
-				data_file_path("data/" + scan.id + ".data.bin");
+				data_file_path(Path.Combine("data", scan.id + ".data.bin"));
 			
 			BinaryReader binReader =
 			    new BinaryReader(File.Open(file_path, FileMode.Open));
