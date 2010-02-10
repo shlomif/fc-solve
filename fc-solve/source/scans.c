@@ -189,11 +189,8 @@ int fc_solve_soft_dfs_do_solve(
     int check;
     int do_first_iteration;
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
     int dfs_max_depth;
 
@@ -206,13 +203,10 @@ int fc_solve_soft_dfs_do_solve(
     int scans_synergy;
     fcs_rand_t * rand_gen;
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
 #endif
 
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
     scans_synergy = instance->scans_synergy;
 
     the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth]);
@@ -645,11 +639,9 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
     double cards_under_sequences, temp;
     double seqs_over_renegade_cards;
     fcs_cards_column_t col;
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num = INSTANCE_FREECELLS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num = INSTANCE_STACKS_NUM;
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    DECLARE_GAME_PARAMS();
 #endif
 #define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
     double * a_star_weights = my_a_star_weights;
@@ -658,8 +650,9 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
 #else
     #define unlimited_sequence_move 0
 #endif
-#ifndef HARD_CODED_NUM_DECKS
-    int decks_num = INSTANCE_DECKS_NUM;
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    SET_GAME_PARAMS();
 #endif
 
     cards_under_sequences = 0;
@@ -938,12 +931,11 @@ int fc_solve_a_star_or_bfs_do_solve(
     int derived_index;
 
     int method;
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
-#endif
+
     int tests_order_num;
     int * tests_order_tests;
     int calc_real_depth = instance->calc_real_depth;
@@ -979,12 +971,9 @@ int fc_solve_a_star_or_bfs_do_solve(
         scan_specific.brfs.queue = my_brfs_queue;
         scan_specific.brfs.queue_last_item = my_brfs_queue_last_item;
     }
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
-#endif
 
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
 #endif
 
     /* Continue as long as there are states in the queue or
@@ -1290,33 +1279,23 @@ extern char * fc_solve_get_the_positions_by_rank_data(
     if (! *positions_by_rank_location)
     {
         char * positions_by_rank;
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
+#if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
         fc_solve_instance_t * instance;
+        DECLARE_GAME_PARAMS();
 #endif
         fcs_state_t * ptr_state_key;
 
-#ifndef HARD_CODED_NUM_DECKS
-        int decks_num;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-        int stacks_num;
-#endif
 #ifndef FCS_FREECELL_ONLY
         int sequences_are_built_by;
 #endif
 
         ptr_state_key = ptr_state_val->key;
 
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
+#if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
         instance = soft_thread->hard_thread->instance;
+        SET_GAME_PARAMS();
 #endif
 
-#ifndef HARD_CODED_NUM_DECKS
-        decks_num = INSTANCE_DECKS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-        stacks_num = INSTANCE_STACKS_NUM;
-#endif
 #ifndef FCS_FREECELL_ONLY
         sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif

@@ -185,10 +185,22 @@ typedef struct {
      * decks_num can be 1 or 2 .
      * */
 
+#define DECLARE_GAME_PARAMS() \
+    fcs_game_type_params_t game_params
+
+#define SET_INSTANCE_GAME_PARAMS(inst) \
+    game_params = (inst)->game_params
+
+#define SET_GAME_PARAMS() \
+    SET_INSTANCE_GAME_PARAMS(instance)
+
+#define DECLARE_AND_SET_GAME_PARAMS() \
+    fcs_game_type_params_t game_params = instance->game_params
+
 #ifndef HARD_CODED_NUM_FREECELLS
     fcs_game_limit_t freecells_num;
 #define INSTANCE_FREECELLS_NUM (instance->game_params.freecells_num)
-#define LOCAL_FREECELLS_NUM (freecells_num)
+#define LOCAL_FREECELLS_NUM (game_params.freecells_num)
 #else
 #define INSTANCE_FREECELLS_NUM HARD_CODED_NUM_FREECELLS
 #define LOCAL_FREECELLS_NUM HARD_CODED_NUM_FREECELLS
@@ -197,7 +209,7 @@ typedef struct {
 #ifndef HARD_CODED_NUM_STACKS
     fcs_game_limit_t stacks_num;
 #define INSTANCE_STACKS_NUM (instance->game_params.stacks_num)
-#define LOCAL_STACKS_NUM (stacks_num)
+#define LOCAL_STACKS_NUM (game_params.stacks_num)
 #else
 #define INSTANCE_STACKS_NUM HARD_CODED_NUM_STACKS
 #define LOCAL_STACKS_NUM HARD_CODED_NUM_STACKS
@@ -206,7 +218,7 @@ typedef struct {
 #ifndef HARD_CODED_NUM_DECKS
     fcs_game_limit_t decks_num;
 #define INSTANCE_DECKS_NUM (instance->game_params.decks_num)
-#define LOCAL_DECKS_NUM (decks_num)
+#define LOCAL_DECKS_NUM (game_params.decks_num)
 #else
 #define INSTANCE_DECKS_NUM HARD_CODED_NUM_DECKS
 #define LOCAL_DECKS_NUM HARD_CODED_NUM_DECKS

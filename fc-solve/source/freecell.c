@@ -80,7 +80,7 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
     fcs_card_t card;
     int check;
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
 
     fcs_internal_move_t temp_move;
@@ -88,7 +88,7 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
 
     temp_move = fc_solve_empty_move;
@@ -156,13 +156,13 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
     int check;
     fcs_internal_move_t temp_move;
 #ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
+    DECLARE_GAME_PARAMS();
 #endif
 
     tests_define_accessors_no_stacks();
 
 #ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
+    SET_GAME_PARAMS();
 #endif
 
     temp_move = fc_solve_empty_move;
@@ -231,17 +231,15 @@ static GCC_INLINE int empty_two_cols_from_new_state(
     fcs_state_t * ptr_new_state_key;
     int ret = -1;
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
 #ifdef INDIRECT_STACK_STATES
     char * indirect_stacks_buffer;
 #endif
 
     ptr_new_state_key = ptr_new_state_val->key;
+
 
     num_cards_to_move_from_columns[0] = nc1;
     num_cards_to_move_from_columns[1] = nc2;
@@ -252,17 +250,10 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 
     temp_move = fc_solve_empty_move;
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num =
-        soft_thread->hard_thread
-                   ->instance->game_params.freecells_num
-                   ;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_INSTANCE_GAME_PARAMS(soft_thread->hard_thread->instance);
 #endif
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num =
-        soft_thread->hard_thread
-                   ->instance->game_params.stacks_num;
-#endif
+
 #ifdef INDIRECT_STACK_STATES
     indirect_stacks_buffer = soft_thread->hard_thread->indirect_stacks_buffer;
 #endif
@@ -412,14 +403,9 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     int num_cards_to_relocate;
     int freecells_to_fill, freestacks_to_fill;
     int a;
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
-#endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
-#ifndef HARD_CODED_NUM_DECKS
-    int decks_num;
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    DECLARE_GAME_PARAMS();
 #endif
     int num_vacant_freecells;
     int num_vacant_stacks;
@@ -430,14 +416,8 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_DECKS
-    decks_num = INSTANCE_DECKS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    SET_GAME_PARAMS();
 #endif
 
     temp_move = fc_solve_empty_move;
@@ -616,11 +596,8 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
     fcs_card_t top_card, card;
     fcs_cards_column_t col;
     int deck;
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
-#endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
     int num_vacant_freecells;
     int num_vacant_stacks;
@@ -630,11 +607,8 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_DECKS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
 #endif
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
@@ -734,11 +708,8 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
     fcs_card_t dest_below_card, dest_card;
     int freecells_to_fill, freestacks_to_fill;
     int num_cards_to_relocate;
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
     int num_vacant_freecells;
     int num_vacant_stacks;
@@ -750,12 +721,10 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
 #endif
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
+
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
@@ -927,17 +896,11 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     int freecells_to_fill, freestacks_to_fill;
     int num_cards_to_relocate;
     int seq_end;
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    DECLARE_GAME_PARAMS();
 #endif
     char * positions_by_rank;
     char * pos_idx_to_check;
-#ifndef HARD_CODED_NUM_DECKS
-    int decks_num;
-#endif
     int num_vacant_freecells;
     int num_vacant_stacks;
     fcs_cards_column_t col, dest_col;
@@ -948,15 +911,10 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
 
-#ifndef HARD_CODED_NUM_DECKS
-    decks_num = INSTANCE_DECKS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    SET_GAME_PARAMS();
 #endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
+
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
@@ -1102,11 +1060,8 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
     fcs_card_t this_card, prev_card;
     int max_sequence_len;
     int num_cards_to_relocate, freecells_to_fill, freestacks_to_fill;
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
     int num_vacant_freecells;
     int num_vacant_stacks;
@@ -1125,11 +1080,8 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 
     temp_move = fc_solve_empty_move;
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
 #endif
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
@@ -1323,11 +1275,8 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
 
     fcs_internal_move_t temp_move;
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
 
     /* Let's try to put cards that occupy freecells on an empty stack */
@@ -1340,13 +1289,10 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
         return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
 #endif
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
-    
+
     temp_move = fc_solve_empty_move;
 
     if (soft_thread->num_vacant_stacks)
@@ -1417,14 +1363,8 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
     fcs_internal_move_t temp_move;
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
-#endif
-#ifndef HARD_CODED_NUM_DECKS
-    int decks_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    DECLARE_GAME_PARAMS();
 #endif
     int num_vacant_freecells;
     int num_vacant_stacks;
@@ -1437,14 +1377,8 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
     temp_move = fc_solve_empty_move;
 
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_DECKS
-    decks_num = INSTANCE_DECKS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    SET_GAME_PARAMS();
 #endif
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
@@ -1642,12 +1576,10 @@ int fc_solve_sfs_empty_stack_into_freecells(
 
     int stack_idx, cards_num, c, b;
     fcs_card_t top_card;
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
+
     int num_vacant_freecells;
     int num_vacant_stacks;
     fcs_cards_column_t col;
@@ -1663,13 +1595,10 @@ int fc_solve_sfs_empty_stack_into_freecells(
     }
 
     temp_move = fc_solve_empty_move;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
+#endif
 
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
-#endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
     num_vacant_freecells = soft_thread->num_vacant_freecells;
 
@@ -2100,7 +2029,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
     tests_declare_accessors()
     tests_declare_empty_stacks_fill()
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
     int stack_idx, cards_num;
     fcs_card_t card;
@@ -2121,7 +2050,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
     }
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
 
     for(empty_stack_idx=0;empty_stack_idx<LOCAL_STACKS_NUM;empty_stack_idx++)
@@ -2192,7 +2121,7 @@ int fc_solve_sfs_atomic_move_card_to_parent(
     tests_declare_accessors()
     tests_declare_seqs_built_by()
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
     int stack_idx, cards_num, ds;
     fcs_card_t card, dest_card;
@@ -2204,7 +2133,7 @@ int fc_solve_sfs_atomic_move_card_to_parent(
     tests_define_seqs_built_by();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
@@ -2271,12 +2200,11 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
         )
 {
     tests_declare_accessors()
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
+
     int stack_idx, cards_num, ds;
     fcs_card_t card;
     fcs_internal_move_t temp_move;
@@ -2288,12 +2216,10 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
 
     temp_move = fc_solve_empty_move;
 
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
 #endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
-#endif
+
     num_vacant_freecells = soft_thread->num_vacant_freecells;
 
     if (num_vacant_freecells == 0)
@@ -2353,12 +2279,11 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
 {
     tests_declare_accessors()
     tests_declare_seqs_built_by()
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
+
     int fc, ds;
     fcs_card_t card, dest_card;
     fcs_internal_move_t temp_move;
@@ -2368,11 +2293,8 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
     tests_define_accessors();
     tests_define_seqs_built_by();
 
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
 #endif
 
     for(fc=0;fc<LOCAL_FREECELLS_NUM;fc++)
@@ -2430,12 +2352,10 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     tests_declare_accessors()
     tests_declare_empty_stacks_fill()
 
-#ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
 #endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    int freecells_num;
-#endif
+
     int fc, ds;
     fcs_card_t card;
     fcs_internal_move_t temp_move;
@@ -2445,11 +2365,8 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
-#ifndef HARD_CODED_NUM_FREECELLS
-    freecells_num = INSTANCE_FREECELLS_NUM;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 

@@ -89,12 +89,12 @@ int fc_solve_sfs_simple_simon_move_sequence_to_founds(
     fcs_card_t card, above_card;
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
 
     temp_move = fc_solve_empty_move;
@@ -197,12 +197,12 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
     fcs_cards_column_t col, dest_col;
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
 
     num_vacant_stacks = soft_thread->num_vacant_stacks;
@@ -315,7 +315,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
     fcs_cards_column_t col, dest_col;
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
 
     int num_vacant_stacks;
@@ -323,7 +323,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
 
     num_vacant_stacks = soft_thread->num_vacant_stacks;
@@ -453,14 +453,14 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
     int junk_move_to_stacks[MAX_NUM_STACKS];
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
     int num_vacant_stacks;
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
@@ -705,7 +705,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
     int junk_move_to_stacks[MAX_NUM_CARDS_IN_A_STACK];
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
     int num_vacant_stacks;
 
@@ -715,7 +715,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
 
     num_vacant_stacks = soft_thread->num_vacant_stacks;
@@ -982,7 +982,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
     int num_true_seqs;
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
     int num_vacant_stacks;
 
@@ -992,7 +992,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
@@ -1308,7 +1308,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
     int junk_move_to_stacks[MAX_NUM_STACKS];
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
 
     int num_vacant_stacks;
@@ -1319,7 +1319,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
@@ -1528,7 +1528,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
     int child_seq_index;
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
     int num_vacant_stacks;
 
@@ -1537,7 +1537,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
@@ -1825,13 +1825,13 @@ int fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
     int num_vacant_stacks;
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    DECLARE_GAME_PARAMS();
 #endif
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
+    SET_GAME_PARAMS();
 #endif    
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
