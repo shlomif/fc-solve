@@ -452,16 +452,33 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
                 (fcs_card_card_num(src_card) != 13)
             )
         {
-#define FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card) \
-            (((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ? 0 \
+
+#define FCS_POS_BY_RANK_MAP(x) ((x) << 1)
+
+#ifdef FCS_FREECELL_ONLY
+
+#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card) ((fcs_card_suit(card)^0x1)&(0x2-1))
+
+#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP() (2)
+
+#else
+
+#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card) \
+            ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ? 0 \
                 : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? \
                 fcs_card_suit(card) : ((fcs_card_suit(card)^0x1)&(0x2-1)) \
-            ) << 1)
-#define FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP() \
-            (((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ? 1 \
+            )
+
+#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP() \
+            ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ? 1 \
                 : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? \
                 4 : 2 \
-            ) << 1)
+            )
+
+#endif
+
+#define FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card) FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card))
+#define FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP() FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card) \
             pos_idx_to_check = &positions_by_rank[ \
