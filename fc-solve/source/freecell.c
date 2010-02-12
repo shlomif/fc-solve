@@ -138,8 +138,10 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-static GCC_INLINE void sort_derived_states(fcs_derived_states_list_t * derived_states_list, 
-        int initial_derived_states_num_states)
+static GCC_INLINE void sort_derived_states(
+        fcs_derived_states_list_t * derived_states_list, 
+        int initial_derived_states_num_states
+        )
 {
     fcs_derived_states_list_item_t * b, * c, * limit, * start;
     fcs_derived_states_list_item_t temp;
