@@ -138,6 +138,25 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
+static GCC_INLINE void sort_derived_states(fcs_derived_states_list_t * derived_states_list, 
+        int initial_derived_states_num_states)
+{
+    fcs_derived_states_list_item_t * b, * c, * limit, * start;
+    fcs_derived_states_list_item_t temp;
+
+    start = derived_states_list->states + initial_derived_states_num_states;
+    limit = derived_states_list->states + derived_states_list->num_states;
+
+    for (b = start+1 ; b < limit ; b++)
+    {
+        for (c = b ; (c > start) && (c[0].context.i < c[-1].context.i); c--)
+        {
+            temp = c[-1];
+            c[-1] = c[0];
+            c[0] = temp;
+        }
+    }
+}
 
 /*
  * This test moves single cards that are present in the freecells to
@@ -197,17 +216,6 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
     }
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
-}
-
-static int derived_states_compare_callback(
-        const void * void_a,
-        const void * void_b
-        )
-{
-    int a = ((const fcs_derived_states_list_item_t *)void_a)->context.i;
-    int b = ((const fcs_derived_states_list_item_t *)void_b)->context.i;
-    
-    return ((a < b) ? (-1) : (a > b) ? (1) : 0);
 }
 
 /*
@@ -383,26 +391,24 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * final_derived_states_list
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors()
     tests_declare_seqs_built_by()
     tests_declare_empty_stacks_fill()
 
-    fcs_derived_states_list_t derived_states_struct;
-    fcs_derived_states_list_t * derived_states_list;
     int dest_cards_num;
     int ds, fc, dc;
     fcs_cards_column_t dest_col;
     fcs_card_t dest_card, src_card, dest_below_card;
     int check;
+    int initial_derived_states_num_states;
 
     fcs_internal_move_t temp_move;
     int is_seq_in_dest;
     int num_cards_to_relocate;
     int freecells_to_fill, freestacks_to_fill;
-    int a;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     DECLARE_GAME_PARAMS();
@@ -425,9 +431,7 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    derived_states_list = &derived_states_struct;
-    derived_states_struct.num_states = 0;
-    derived_states_struct.states = NULL;
+    initial_derived_states_num_states = derived_states_list->num_states;
 
     positions_by_rank =
         fc_solve_get_the_positions_by_rank_data(
@@ -592,24 +596,8 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         }
     }
 
-    qsort(
-        derived_states_struct.states,
-        derived_states_struct.num_states,
-        sizeof(derived_states_struct.states[0]),
-        derived_states_compare_callback
-    );
-
-    for (a=0 ; a<derived_states_struct.num_states ; a++)
-    {
-        fc_solve_derived_states_list_add_state(
-            final_derived_states_list,
-            derived_states_struct.states[a].state_ptr,
-            0
-        );
-    }
-
-    free(derived_states_struct.states);
-
+    sort_derived_states(derived_states_list, initial_derived_states_num_states);
+  
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -912,21 +900,20 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 #undef dest_col
 #undef dest_cards_num
 
+
 int fc_solve_sfs_move_stack_cards_to_different_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * final_derived_states_list
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors()
     tests_declare_seqs_built_by()
     tests_declare_empty_stacks_fill()
 
-    fcs_derived_states_list_t derived_states_struct;
-    fcs_derived_states_list_t * derived_states_list;    
     int check;
 
-    int stack_idx, c, dc, ds, a;
+    int stack_idx, c, dc, ds, initial_derived_states_num_states;
     fcs_card_t card, this_card, prev_card;
     fcs_card_t dest_card;
     int freecells_to_fill, freestacks_to_fill;
@@ -954,10 +941,8 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    derived_states_list = &derived_states_struct;
-    derived_states_struct.num_states = 0;
-    derived_states_struct.states = NULL;
-    
+    initial_derived_states_num_states = derived_states_list->num_states;
+
     temp_move = fc_solve_empty_move;
 
     positions_by_rank = 
@@ -1082,25 +1067,8 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
         }
     }
 
+    sort_derived_states(derived_states_list, initial_derived_states_num_states);
 
-    qsort(
-        derived_states_struct.states,
-        derived_states_struct.num_states,
-        sizeof(derived_states_struct.states[0]),
-        derived_states_compare_callback
-    );
-
-    for (a=0 ; a<derived_states_struct.num_states ; a++)
-    {
-        fc_solve_derived_states_list_add_state(
-            final_derived_states_list,
-            derived_states_struct.states[a].state_ptr,
-            0
-        );
-    }
-
-    free(derived_states_struct.states);
-    
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
@@ -1403,7 +1371,7 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
 int fc_solve_sfs_move_cards_to_a_different_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
-        fcs_derived_states_list_t * final_derived_states_list
+        fcs_derived_states_list_t * derived_states_list
         )
 {
     tests_declare_accessors()
@@ -1411,16 +1379,15 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
     tests_declare_empty_stacks_fill()
 
     int check;
-    fcs_derived_states_list_t derived_states_struct;
-    fcs_derived_states_list_t * derived_states_list;
 
-    int stack_idx, cards_num, c, min_card_height, ds, dc, a;
+    int stack_idx, cards_num, c, min_card_height, ds, dc;
     int num_cards_to_relocate;
     int dest_cards_num;
     fcs_card_t card, upper_card, lower_card;
     fcs_card_t dest_card;
     int freecells_to_fill, freestacks_to_fill;
     fcs_cards_column_t col, dest_col;
+    int initial_derived_states_num_states;
 
     fcs_internal_move_t temp_move;
 
@@ -1444,9 +1411,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
     num_vacant_freecells = soft_thread->num_vacant_freecells;
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    derived_states_list = &derived_states_struct;
-    derived_states_struct.num_states = 0;
-    derived_states_struct.states = NULL;
+    initial_derived_states_num_states = derived_states_list->num_states;
 
     positions_by_rank =
         fc_solve_get_the_positions_by_rank_data(
@@ -1620,23 +1585,7 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
         }
     }
 
-    qsort(
-        derived_states_struct.states,
-        derived_states_struct.num_states,
-        sizeof(derived_states_struct.states[0]),
-        derived_states_compare_callback
-    );
-
-    for (a=0 ; a<derived_states_struct.num_states ; a++)
-    {
-        fc_solve_derived_states_list_add_state(
-            final_derived_states_list,
-            derived_states_struct.states[a].state_ptr,
-            0
-        );
-    }
-
-    free(derived_states_struct.states);
+    sort_derived_states(derived_states_list, initial_derived_states_num_states);
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
