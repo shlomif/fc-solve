@@ -1316,25 +1316,12 @@ extern char * fc_solve_get_the_positions_by_rank_data(
         memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
 
         {
-            char * positions_by_rank_slots[NUM_POS_BY_RANK_SLOTS];
-
-            {
-                int c;
-
-                /* Initialize the pointers to the first available slots */
-                for ( c=0 ; c < NUM_POS_BY_RANK_SLOTS ; c++ )
-                {
-                    positions_by_rank_slots[c] = &positions_by_rank[
-                        (((LOCAL_DECKS_NUM << 2)+1) << 1) * c
-                    ];
-                }
-            }
-
             /* Populate positions_by_rank by looping over the stacks and
              * indices looking for the cards and filling them. */
 
             {
                 int ds;
+                char * ptr;
 
                 for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
                 {
@@ -1366,13 +1353,33 @@ extern char * fc_solve_get_the_positions_by_rank_data(
                             dest_below_card = fcs_col_get_card(dest_col, dc+1);
                             if (!fcs_is_parent_card(dest_below_card, dest_card))
                             {
-                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)ds;
-                                *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)dc;
+#if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
+#define INCREMENT_PTR_BY_NUM_DECKS() \
+                                for(;(*ptr) != -1;ptr += (4 << 1)) \
+                                { \
+                                }
+#else
+#define INCREMENT_PTR_BY_NUM_DECKS() \ {}
+#endif
+
+#define ASSIGN_PTR(dest_stack, dest_col) \
+                                ptr = &positions_by_rank[ \
+                                    (FCS_POS_BY_RANK_WIDTH * \
+                                     (fcs_card_card_num(dest_card)-1) \
+                                    ) \
+                                    + \
+                                    (fcs_card_suit(dest_card)<<1) \
+                                ]; \
+                                INCREMENT_PTR_BY_NUM_DECKS() \
+                                *(ptr++) = (char)(dest_stack); \
+                                *(ptr) = (char)(dest_col)
+
+
+                                ASSIGN_PTR(ds, dc);
                             }
                         }
                     }
-                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)ds;
-                    *(positions_by_rank_slots[fcs_card_card_num(dest_card)-1]++) = (char)top_card_idx;
+                    ASSIGN_PTR(ds, top_card_idx);
                 }
             }
         }
