@@ -488,7 +488,7 @@ int main(int argc, char * argv[])
 
             readers = initial_readers;
             /* I'm the master. */
-            select_ret = select (mymax, &readers,  NULL, NULL, NULL);
+            select_ret = select (mymax, &readers, NULL, NULL, NULL);
 
             if (select_ret == -1)
             {
@@ -496,21 +496,21 @@ int main(int argc, char * argv[])
             }
             else if (select_ret)
             {
-                printf("master-foo\n");
                 for(idx=0; idx<num_workers; idx++)
                 {
-                    printf("mas idx=%i\n", idx);
                     int fd = workers[idx].child_to_parent_pipe[READ_FD];
 
                     if (FD_ISSET(fd, &readers))
                     {
-                        printf("Read write to proc %i.\n", idx);
                         read (fd, &response, sizeof(response));
+
+                        if (response.num_finished_boards == -1)
+                        {
+                            continue;
+                        }
 
                         total_num_iters += response.num_iters;
                         total_num_finished_boards += response.num_finished_boards;
-
-                        printf("Proc %i end_board=%i board_num=%i tot_finished=%i.\n", idx, end_board, next_board_num, total_num_finished_boards);
 
                         WRITE_REQUEST();
 
@@ -584,6 +584,7 @@ int main(int argc, char * argv[])
             {
                 break;
             }
+
             response.num_finished_boards =
                 request.quota_end - request.board_num + 1;
 
@@ -662,10 +663,12 @@ int main(int argc, char * argv[])
 
         freecell_solver_user_free(user.instance);
 
+        response.num_finished_boards = -1;
+        write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
+
         close(workers[idx].child_to_parent_pipe[WRITE_FD]);
         close(workers[idx].parent_to_child_pipe[READ_FD]);
 
-        printf("Proc %i exiting.\n", idx);
         /* Cleanup */
         exit(0);
 
