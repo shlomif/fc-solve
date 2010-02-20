@@ -352,16 +352,12 @@ int worker_func(int idx, worker_t w, void * instance)
         write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
     }
 
+    /* Cleanup */
     freecell_solver_user_free(instance);
-
-    response.num_finished_boards = -1;
-
-    write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
 
     close(w.child_to_parent_pipe[WRITE_FD]);
     close(w.parent_to_child_pipe[READ_FD]);
 
-    /* Cleanup */
     return 0;
 }
 
@@ -658,11 +654,6 @@ int main(int argc, char * argv[])
                         /* FD_ISSET can be set on EOF, so we check if
                          * read failed. */
                         if (read (fd, &response, sizeof(response)) < sizeof(response))
-                        {
-                            continue;
-                        }
-                        
-                        if (response.num_finished_boards == -1)
                         {
                             continue;
                         }
