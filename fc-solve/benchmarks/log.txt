@@ -1345,3 +1345,28 @@ Threaded:
 
 95.6929581165314s
 
+========================================================================
+
+r2640 ;
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l by" 
+PROG="./freecell-solver-fork-solve"
+2.6.33-desktop-0.rc8.1mnb
+Virtual Console
+
+Multiproc:
+
+94.044084072113s
+
+{{{{{{{{{{{{
+Started at 1266685041.258715
+Reached Board No. 4000 at 1266685052.702632 (total_num_iters=2232774)
+Reached Board No. 8000 at 1266685064.422297 (total_num_iters=4507587)
+Reached Board No. 12000 at 1266685075.570034 (total_num_iters=6693689)
+Reached Board No. 16000 at 1266685088.051940 (total_num_iters=9077159)
+Reached Board No. 20000 at 1266685099.088107 (total_num_iters=11274791)
+Reached Board No. 24000 at 1266685110.548054 (total_num_iters=13519808)
+Reached Board No. 28000 at 1266685122.337970 (total_num_iters=15802397)
+Unsolved Board No. 11982 at 1266685076.187721
+Finished at 1266685135.302799 (total_num_iters=18253266)
+}}}}}}}}}}}}
+
