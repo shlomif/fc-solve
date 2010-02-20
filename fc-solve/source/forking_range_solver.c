@@ -431,6 +431,16 @@ int main(int argc, char * argv[])
             }
             board_num_step = atoi(argv[arg]);
         }
+        else if (!strcmp(argv[arg], "--iters-update-on"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--iters-update-on came without an argument!\n");
+                print_help();
+                exit(-1);
+            }
+        }
         else
         {
             break;
@@ -540,7 +550,7 @@ int main(int argc, char * argv[])
     {
         worker_t w = workers[idx];
         free(workers);
-        return worker_func(idx, w, &user);
+        return worker_func(idx, w, user.instance);
     }
 
     freecell_solver_user_free(user.instance);
