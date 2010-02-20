@@ -502,8 +502,13 @@ int main(int argc, char * argv[])
 
                     if (FD_ISSET(fd, &readers))
                     {
-                        read (fd, &response, sizeof(response));
-
+                        /* FD_ISSET can be set on EOF, so we check if
+                         * read failed. */
+                        if (read (fd, &response, sizeof(response)) < sizeof(response))
+                        {
+                            continue;
+                        }
+                        
                         if (response.num_finished_boards == -1)
                         {
                             continue;
@@ -579,7 +584,7 @@ int main(int argc, char * argv[])
             response.num_iters = 0;
             
             read(w.parent_to_child_pipe[READ_FD], &request, sizeof(request));
-            
+
             if (request.board_num == -1)
             {
                 break;
@@ -664,6 +669,7 @@ int main(int argc, char * argv[])
         freecell_solver_user_free(user.instance);
 
         response.num_finished_boards = -1;
+
         write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
 
         close(workers[idx].child_to_parent_pipe[WRITE_FD]);
