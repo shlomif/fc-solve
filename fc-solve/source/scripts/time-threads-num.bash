@@ -1,28 +1,28 @@
 #!/bin/bash
 
 RUN_SERIAL=false
+PROG="${PROG:-./freecell-solver-multi-thread-solve}"
 
-PARAM1="$1"
-shift
+while getopts "sp" flag ; do
+    # Run the serial scan first.
+    if   [ "$flag" = "s" ] ; then
+        RUN_SERIAL=true
+    # Run the multi-process version instead of the multi-threaded version.
+    elif [ "$flag" = "p" ] ; then
+        PROG="./freecell-solver-fork-solve"
+    fi
+done
 
-if test "$PARAM1" = "-s" ; then
-    RUN_SERIAL=true
-    PARAM1="$1"
+while [ $OPTIND -ne 1 ] ; do
     shift
-fi
+    let OPTIND--
+done
 
-PARAM2="$1"
+MIN="${1:-1}"
 shift
 
-MIN=1
-MAX=6
-
-if ! test -z "$PARAM2" ; then
-    MIN="$PARAM1"
-    MAX="$PARAM2"
-elif ! test -z "$PARAM1" ; then
-    MAX="$PARAM1"
-fi
+MAX="${1:-6}"
+shift
 
 OUT_DIR="${OUT_DIR:-.}"
 ARGS="${ARGS:--l gi}"
@@ -46,8 +46,6 @@ if $RUN_SERIAL ; then
     ./freecell-solver-range-parallel-solve 1 32000 500 $ARGS > "$OUT_DIR"/dump
 fi
 
-PROG="${PROG:-./freecell-solver-multi-thread-solve}"
-
 for NUM in $(seq "$MIN" "$MAX") ; do
     echo "Testing $NUM"
     $PROG 1 32000 4000 \
@@ -56,3 +54,4 @@ for NUM in $(seq "$MIN" "$MAX") ; do
         $ARGS \
         > "$(printf "$OUT_DIR/DUMPS/dump%.3i" "$NUM")"
 done
+
