@@ -411,8 +411,11 @@ int main(int argc, char * argv[])
         request_t request;
         int total_num_finished_boards = 0;
         int total_num_boards_to_check = end_board - next_board_num + 1;
+        int next_milestone = next_board_num + stop_at;
 
-        FD_ZERO(&readers);
+        next_milestone -= (next_milestone % stop_at);
+
+        FD_ZERO(&initial_readers);
 
         for(idx=0; idx<num_workers; idx++)
         {
@@ -454,6 +457,35 @@ int main(int argc, char * argv[])
 
         while (total_num_finished_boards < total_num_boards_to_check)
         {
+            if (total_num_finished_boards >= next_milestone)
+            {
+#ifndef WIN32
+                gettimeofday(&tv,&tz);
+                printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
+                    next_milestone,
+                    tv.tv_sec,
+                    tv.tv_usec,
+                    total_num_iters
+                    );
+#else
+                _ftime(&tb);
+                printf(
+#ifdef __GNUC__
+                        "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
+#else
+                        "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
+#endif
+                    next_milestone,
+                    tb.time,
+                    tb.millitm*1000,
+                    total_num_iters
+                );
+#endif
+                fflush(stdout);
+
+                next_milestone += stop_at;
+            }
+
             readers = initial_readers;
             /* I'm the master. */
             select_ret = select (mymax, &readers,  NULL, NULL, NULL);
@@ -464,16 +496,21 @@ int main(int argc, char * argv[])
             }
             else if (select_ret)
             {
+                printf("master-foo\n");
                 for(idx=0; idx<num_workers; idx++)
                 {
+                    printf("mas idx=%i\n", idx);
                     int fd = workers[idx].child_to_parent_pipe[READ_FD];
 
                     if (FD_ISSET(fd, &readers))
                     {
+                        printf("Read write to proc %i.\n", idx);
                         read (fd, &response, sizeof(response));
 
                         total_num_iters += response.num_iters;
                         total_num_finished_boards += response.num_finished_boards;
+
+                        printf("Proc %i end_board=%i board_num=%i tot_finished=%i.\n", idx, end_board, next_board_num, total_num_finished_boards);
 
                         WRITE_REQUEST();
 
@@ -552,7 +589,7 @@ int main(int argc, char * argv[])
 
 #define board_num (request.board_num)
 #define total_num_iters_temp (response.num_iters)
-            for(;board_num<request.quota_end;board_num++)
+            for(;board_num<=request.quota_end;board_num++)
             {
                 get_board(board_num, state_string);
 
@@ -612,39 +649,7 @@ int main(int argc, char * argv[])
 
                 /*  TODO : implement at the master. */
 #if 0
-                if (board_num % stop_at == 0)
-                {
-                    very_long_int_t total_num_iters_copy;
 
-                    pthread_mutex_lock(&total_num_iters_lock);
-                    total_num_iters_copy = (total_num_iters += total_num_iters_temp);
-                    pthread_mutex_unlock(&total_num_iters_lock);
-                    total_num_iters_temp = 0;
-
-#ifndef WIN32
-                    gettimeofday(&tv,&tz);
-                    printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
-                        board_num,
-                        tv.tv_sec,
-                        tv.tv_usec,
-                        total_num_iters_copy
-                        );
-#else
-                    _ftime(&tb);
-                    printf(
-#ifdef __GNUC__
-                            "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
-#else
-                            "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
-#endif
-                        board_num,
-                        tb.time,
-                        tb.millitm*1000,
-                        total_num_iters_copy
-                    );
-#endif
-                    fflush(stdout);
-                }
 #endif
 
                 freecell_solver_user_recycle(user.instance);
@@ -657,6 +662,10 @@ int main(int argc, char * argv[])
 
         freecell_solver_user_free(user.instance);
 
+        close(workers[idx].child_to_parent_pipe[WRITE_FD]);
+        close(workers[idx].parent_to_child_pipe[READ_FD]);
+
+        printf("Proc %i exiting.\n", idx);
         /* Cleanup */
         exit(0);
 
