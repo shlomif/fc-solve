@@ -46,9 +46,11 @@ if $RUN_SERIAL ; then
     ./freecell-solver-range-parallel-solve 1 32000 500 $ARGS > "$OUT_DIR"/dump
 fi
 
+PROG="${PROG:-./freecell-solver-multi-thread-solve}"
+
 for NUM in $(seq "$MIN" "$MAX") ; do
     echo "Testing $NUM"
-    ./freecell-solver-multi-thread-solve 1 32000 4000 \
+    $PROG 1 32000 4000 \
         --iters-update-on 10000000 \
         --num-workers "$NUM" \
         $ARGS \
