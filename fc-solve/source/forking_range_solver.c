@@ -39,7 +39,6 @@
 #include <sys/types.h>
 #include <sys/timeb.h>
 #endif
-#include <pthread.h>
 #ifndef WIN32
 #include <unistd.h>
 #endif
@@ -219,15 +218,6 @@ static void print_help(void)
           );
 }
 
-static const pthread_mutex_t initial_mutex_constant =
-    PTHREAD_MUTEX_INITIALIZER
-    ;
-
-static int next_board_num;
-static int end_board;
-static int board_num_step = 1;
-static int update_total_num_iters_threshold = 1000000;
-
 typedef struct {
     int argc;
     char * * argv;
@@ -265,9 +255,120 @@ typedef struct
     int num_finished_boards;
 } response_t;
 
+int worker_func(int idx, worker_t w, void * instance)
+{
+    /* I'm one of the slaves */
+    request_t request;
+    response_t response;
+    int ret;
+    fcs_state_string_t state_string;
+    struct timeval tv;
+    struct timezone tz;
+
+    while(1)
+    {
+        response.num_iters = 0;
+        
+        read(w.parent_to_child_pipe[READ_FD], &request, sizeof(request));
+
+        if (request.board_num == -1)
+        {
+            break;
+        }
+
+        response.num_finished_boards =
+            request.quota_end - request.board_num + 1;
+
+#define board_num (request.board_num)
+#define total_num_iters_temp (response.num_iters)
+        for(;board_num<=request.quota_end;board_num++)
+        {
+            get_board(board_num, state_string);
+
+            freecell_solver_user_limit_iterations(instance, total_iterations_limit_per_board);
+
+            ret =
+                freecell_solver_user_solve_board(
+                    instance,
+                    state_string
+                    );
+
+            if (ret == FCS_STATE_SUSPEND_PROCESS)
+            {
+#ifndef WIN32
+                gettimeofday(&tv,&tz);
+                printf("Intractable Board No. %i at %li.%.6li\n",
+                    board_num,
+                    tv.tv_sec,
+                    tv.tv_usec
+                    );
+#else
+                _ftime(&tb);
+                printf("Intractable Board No. %i at %li.%.6i\n",
+                    board_num,
+                    tb.time,
+                    tb.millitm*1000
+                );
+#endif
+                fflush(stdout);
+                print_int_wrapper(-1);
+            }
+            else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
+            {
+#ifndef WIN32
+                gettimeofday(&tv,&tz);
+                printf("Unsolved Board No. %i at %li.%.6li\n",
+                    board_num,
+                    tv.tv_sec,
+                    tv.tv_usec
+                    );
+#else
+                _ftime(&tb);
+                printf("Unsolved Board No. %i at %li.%.6i\n",
+                    board_num,
+                    tb.time,
+                    tb.millitm*1000
+                );
+#endif
+                print_int_wrapper(-2);
+            }
+            else
+            {
+                print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
+            }
+
+            total_num_iters_temp += freecell_solver_user_get_num_times(instance);
+
+            /*  TODO : implement at the master. */
+#if 0
+
+#endif
+
+            freecell_solver_user_recycle(instance);
+        }
+#undef board_num
+#undef total_num_iters_temp
+
+        write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
+    }
+
+    freecell_solver_user_free(instance);
+
+    response.num_finished_boards = -1;
+
+    write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
+
+    close(w.child_to_parent_pipe[WRITE_FD]);
+    close(w.parent_to_child_pipe[READ_FD]);
+
+    /* Cleanup */
+    return 0;
+}
+
 int main(int argc, char * argv[])
 {
     int stop_at;
+    int parser_ret;
 #ifndef WIN32
     struct timeval tv;
     struct timezone tz;
@@ -277,6 +378,11 @@ int main(int argc, char * argv[])
 
     int num_workers = 3;
     worker_t * workers;
+    int next_board_num;
+    int end_board;
+    int board_num_step = 1;
+    char * error_string;
+    pack_item_t user;
 
     int arg = 1, start_from_arg, idx;
 
@@ -325,17 +431,6 @@ int main(int argc, char * argv[])
             }
             board_num_step = atoi(argv[arg]);
         }
-        else if (!strcmp(argv[arg], "--iters-update-on"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--iters-update-on came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            update_total_num_iters_threshold = atoi(argv[arg]);
-        }
         else
         {
             break;
@@ -359,6 +454,46 @@ int main(int argc, char * argv[])
         );
 #endif
     fflush(stdout);
+    
+    user.instance = freecell_solver_user_alloc();
+
+    parser_ret =
+        freecell_solver_user_cmd_line_parse_args(
+            user.instance,
+            argc,
+            argv,
+            arg,
+            known_parameters,
+            cmd_line_callback,
+            &user,
+            &error_string,
+            &arg
+        );
+
+    if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
+    {
+        fprintf(stderr, "Unknown option: %s", argv[arg]);
+        return -1;
+    }
+    else if (
+        (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
+            )
+    {
+        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+                " and was not supplied with one.\n", argv[arg]);
+        return -1;
+    }
+    else if (
+        (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
+        )
+    {
+        if (error_string != NULL)
+        {
+            fprintf(stderr, "%s", error_string);
+            free(error_string);
+        }
+        return -1;
+    }
 
     workers = malloc(sizeof(workers[0])*num_workers);
 
@@ -401,286 +536,134 @@ int main(int argc, char * argv[])
         }
     }
 
-    if (idx == num_workers)
+    if (idx < num_workers)
     {
-        /* I'm the master. */
-        fd_set readers, initial_readers;
-        int select_ret;
-        int mymax = -1;
-        response_t response;
-        request_t request;
-        int total_num_finished_boards = 0;
-        int total_num_boards_to_check = end_board - next_board_num + 1;
-        int next_milestone = next_board_num + stop_at;
+        worker_t w = workers[idx];
+        free(workers);
+        return worker_func(idx, w, &user);
+    }
 
-        next_milestone -= (next_milestone % stop_at);
+    /* I'm the master. */
+    fd_set readers, initial_readers;
+    int select_ret;
+    int mymax = -1;
+    response_t response;
+    request_t request;
+    int total_num_finished_boards = 0;
+    int total_num_boards_to_check = end_board - next_board_num + 1;
+    int next_milestone = next_board_num + stop_at;
 
-        FD_ZERO(&initial_readers);
+    next_milestone -= (next_milestone % stop_at);
 
-        for(idx=0; idx<num_workers; idx++)
+    FD_ZERO(&initial_readers);
+
+    for(idx=0; idx<num_workers; idx++)
+    {
+        int fd = workers[idx].child_to_parent_pipe[READ_FD];
+        FD_SET(fd, &initial_readers);
+        if (fd > mymax)
         {
-            int fd = workers[idx].child_to_parent_pipe[READ_FD];
-            FD_SET(fd, &initial_readers);
-            if (fd > mymax)
-            {
-                mymax = fd;
-            }
+            mymax = fd;
         }
+    }
 
-        mymax++;
+    mymax++;
 
 #define WRITE_REQUEST() \
-                        if (next_board_num > end_board) \
+                    if (next_board_num > end_board) \
+                    { \
+                        request.board_num = -1; \
+                    } \
+                    else \
+                    { \
+                        request.board_num = next_board_num; \
+                        if ((next_board_num += board_num_step) > end_board) \
                         { \
-                            request.board_num = -1; \
+                            next_board_num = end_board+1; \
                         } \
-                        else \
-                        { \
-                            request.board_num = next_board_num; \
-                            if ((next_board_num += board_num_step) > end_board) \
-                            { \
-                                next_board_num = end_board+1; \
-                            } \
-                            request.quota_end = next_board_num-1; \
-                        } \
-      \
-                        write( \
-                                workers[idx].parent_to_child_pipe[WRITE_FD], \
-                                &request, \
-                                sizeof(request) \
-                        )
+                        request.quota_end = next_board_num-1; \
+                    } \
+  \
+                    write( \
+                            workers[idx].parent_to_child_pipe[WRITE_FD], \
+                            &request, \
+                            sizeof(request) \
+                    )
 
-        for(idx=0; idx<num_workers; idx++)
-        {
-            WRITE_REQUEST();
-        }
-
-        while (total_num_finished_boards < total_num_boards_to_check)
-        {
-            if (total_num_finished_boards >= next_milestone)
-            {
-#ifndef WIN32
-                gettimeofday(&tv,&tz);
-                printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
-                    next_milestone,
-                    tv.tv_sec,
-                    tv.tv_usec,
-                    total_num_iters
-                    );
-#else
-                _ftime(&tb);
-                printf(
-#ifdef __GNUC__
-                        "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
-#else
-                        "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
-#endif
-                    next_milestone,
-                    tb.time,
-                    tb.millitm*1000,
-                    total_num_iters
-                );
-#endif
-                fflush(stdout);
-
-                next_milestone += stop_at;
-            }
-
-            readers = initial_readers;
-            /* I'm the master. */
-            select_ret = select (mymax, &readers, NULL, NULL, NULL);
-
-            if (select_ret == -1)
-            {
-                perror("select()");
-            }
-            else if (select_ret)
-            {
-                for(idx=0; idx<num_workers; idx++)
-                {
-                    int fd = workers[idx].child_to_parent_pipe[READ_FD];
-
-                    if (FD_ISSET(fd, &readers))
-                    {
-                        /* FD_ISSET can be set on EOF, so we check if
-                         * read failed. */
-                        if (read (fd, &response, sizeof(response)) < sizeof(response))
-                        {
-                            continue;
-                        }
-                        
-                        if (response.num_finished_boards == -1)
-                        {
-                            continue;
-                        }
-
-                        total_num_iters += response.num_iters;
-                        total_num_finished_boards += response.num_finished_boards;
-
-                        WRITE_REQUEST();
-
-                    }
-                }
-            }
-        }
-
-    }
-    else
+    for(idx=0; idx<num_workers; idx++)
     {
-        /* I'm one of the slaves */
-        worker_t w = workers[idx];
-        char * error_string;
-        request_t request;
-        response_t response;
-        pack_item_t user;
-        int ret;
-        int parser_ret;
-        fcs_state_string_t state_string;
-
-        free(workers);
-
-        user.instance = freecell_solver_user_alloc();
-
-        parser_ret =
-            freecell_solver_user_cmd_line_parse_args(
-                user.instance,
-                argc,
-                argv,
-                arg,
-                known_parameters,
-                cmd_line_callback,
-                &user,
-                &error_string,
-                &arg
-            );
-
-        if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
-        {
-            fprintf(stderr, "Unknown option: %s", argv[arg]);
-            goto ret_label;
-        }
-        else if (
-            (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-                )
-        {
-            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                    " and was not supplied with one.\n", argv[arg]);
-            goto ret_label;
-        }
-        else if (
-            (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-            )
-        {
-            if (error_string != NULL)
-            {
-                fprintf(stderr, "%s", error_string);
-                free(error_string);
-            }
-            goto ret_label;
-        }
-
-        while(1)
-        {
-            response.num_iters = 0;
-            
-            read(w.parent_to_child_pipe[READ_FD], &request, sizeof(request));
-
-            if (request.board_num == -1)
-            {
-                break;
-            }
-
-            response.num_finished_boards =
-                request.quota_end - request.board_num + 1;
-
-#define board_num (request.board_num)
-#define total_num_iters_temp (response.num_iters)
-            for(;board_num<=request.quota_end;board_num++)
-            {
-                get_board(board_num, state_string);
-
-                freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
-
-                ret =
-                    freecell_solver_user_solve_board(
-                        user.instance,
-                        state_string
-                        );
-
-                if (ret == FCS_STATE_SUSPEND_PROCESS)
-                {
-#ifndef WIN32
-                    gettimeofday(&tv,&tz);
-                    printf("Intractable Board No. %i at %li.%.6li\n",
-                        board_num,
-                        tv.tv_sec,
-                        tv.tv_usec
-                        );
-#else
-                    _ftime(&tb);
-                    printf("Intractable Board No. %i at %li.%.6i\n",
-                        board_num,
-                        tb.time,
-                        tb.millitm*1000
-                    );
-#endif
-                    fflush(stdout);
-                    print_int_wrapper(-1);
-                }
-                else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-                {
-#ifndef WIN32
-                    gettimeofday(&tv,&tz);
-                    printf("Unsolved Board No. %i at %li.%.6li\n",
-                        board_num,
-                        tv.tv_sec,
-                        tv.tv_usec
-                        );
-#else
-                    _ftime(&tb);
-                    printf("Unsolved Board No. %i at %li.%.6i\n",
-                        board_num,
-                        tb.time,
-                        tb.millitm*1000
-                    );
-#endif
-                    print_int_wrapper(-2);
-                }
-                else
-                {
-                    print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
-                }
-
-                total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
-
-                /*  TODO : implement at the master. */
-#if 0
-
-#endif
-
-                freecell_solver_user_recycle(user.instance);
-            }
-#undef board_num
-#undef total_num_iters_temp
-
-            write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
-        }
-
-        freecell_solver_user_free(user.instance);
-
-        response.num_finished_boards = -1;
-
-        write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
-
-        close(workers[idx].child_to_parent_pipe[WRITE_FD]);
-        close(workers[idx].parent_to_child_pipe[READ_FD]);
-
-        /* Cleanup */
-        exit(0);
-
-        ret_label:
-        exit(-1);
+        WRITE_REQUEST();
     }
+
+    while (total_num_finished_boards < total_num_boards_to_check)
+    {
+        if (total_num_finished_boards >= next_milestone)
+        {
+#ifndef WIN32
+            gettimeofday(&tv,&tz);
+            printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
+                next_milestone,
+                tv.tv_sec,
+                tv.tv_usec,
+                total_num_iters
+                );
+#else
+            _ftime(&tb);
+            printf(
+#ifdef __GNUC__
+                    "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
+#else
+                    "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
+#endif
+                next_milestone,
+                tb.time,
+                tb.millitm*1000,
+                total_num_iters
+            );
+#endif
+            fflush(stdout);
+
+            next_milestone += stop_at;
+        }
+
+        readers = initial_readers;
+        /* I'm the master. */
+        select_ret = select (mymax, &readers, NULL, NULL, NULL);
+
+        if (select_ret == -1)
+        {
+            perror("select()");
+        }
+        else if (select_ret)
+        {
+            for(idx=0; idx<num_workers; idx++)
+            {
+                int fd = workers[idx].child_to_parent_pipe[READ_FD];
+
+                if (FD_ISSET(fd, &readers))
+                {
+                    /* FD_ISSET can be set on EOF, so we check if
+                     * read failed. */
+                    if (read (fd, &response, sizeof(response)) < sizeof(response))
+                    {
+                        continue;
+                    }
+                    
+                    if (response.num_finished_boards == -1)
+                    {
+                        continue;
+                    }
+
+                    total_num_iters += response.num_iters;
+                    total_num_finished_boards += response.num_finished_boards;
+
+                    WRITE_REQUEST();
+
+                }
+            }
+        }
+    }
+
 
     {
         int status;
