@@ -543,122 +543,126 @@ int main(int argc, char * argv[])
         return worker_func(idx, w, &user);
     }
 
-    /* I'm the master. */
-    fd_set readers, initial_readers;
-    int select_ret;
-    int mymax = -1;
-    response_t response;
-    request_t request;
-    int total_num_finished_boards = 0;
-    int total_num_boards_to_check = end_board - next_board_num + 1;
-    int next_milestone = next_board_num + stop_at;
+    freecell_solver_user_free(user.instance);
 
-    next_milestone -= (next_milestone % stop_at);
-
-    FD_ZERO(&initial_readers);
-
-    for(idx=0; idx<num_workers; idx++)
     {
-        int fd = workers[idx].child_to_parent_pipe[READ_FD];
-        FD_SET(fd, &initial_readers);
-        if (fd > mymax)
-        {
-            mymax = fd;
-        }
-    }
+        /* I'm the master. */
+        fd_set readers, initial_readers;
+        int select_ret;
+        int mymax = -1;
+        response_t response;
+        request_t request;
+        int total_num_finished_boards = 0;
+        int total_num_boards_to_check = end_board - next_board_num + 1;
+        int next_milestone = next_board_num + stop_at;
 
-    mymax++;
+        next_milestone -= (next_milestone % stop_at);
+
+        FD_ZERO(&initial_readers);
+
+        for(idx=0; idx<num_workers; idx++)
+        {
+            int fd = workers[idx].child_to_parent_pipe[READ_FD];
+            FD_SET(fd, &initial_readers);
+            if (fd > mymax)
+            {
+                mymax = fd;
+            }
+        }
+
+        mymax++;
 
 #define WRITE_REQUEST() \
-                    if (next_board_num > end_board) \
-                    { \
-                        request.board_num = -1; \
-                    } \
-                    else \
-                    { \
-                        request.board_num = next_board_num; \
-                        if ((next_board_num += board_num_step) > end_board) \
+                        if (next_board_num > end_board) \
                         { \
-                            next_board_num = end_board+1; \
+                            request.board_num = -1; \
                         } \
-                        request.quota_end = next_board_num-1; \
-                    } \
-  \
-                    write( \
-                            workers[idx].parent_to_child_pipe[WRITE_FD], \
-                            &request, \
-                            sizeof(request) \
-                    )
+                        else \
+                        { \
+                            request.board_num = next_board_num; \
+                            if ((next_board_num += board_num_step) > end_board) \
+                            { \
+                                next_board_num = end_board+1; \
+                            } \
+                            request.quota_end = next_board_num-1; \
+                        } \
+      \
+                        write( \
+                                workers[idx].parent_to_child_pipe[WRITE_FD], \
+                                &request, \
+                                sizeof(request) \
+                        )
 
-    for(idx=0; idx<num_workers; idx++)
-    {
-        WRITE_REQUEST();
-    }
-
-    while (total_num_finished_boards < total_num_boards_to_check)
-    {
-        if (total_num_finished_boards >= next_milestone)
+        for(idx=0; idx<num_workers; idx++)
         {
-#ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
-                next_milestone,
-                tv.tv_sec,
-                tv.tv_usec,
-                total_num_iters
-                );
-#else
-            _ftime(&tb);
-            printf(
-#ifdef __GNUC__
-                    "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
-#else
-                    "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
-#endif
-                next_milestone,
-                tb.time,
-                tb.millitm*1000,
-                total_num_iters
-            );
-#endif
-            fflush(stdout);
-
-            next_milestone += stop_at;
+            WRITE_REQUEST();
         }
 
-        readers = initial_readers;
-        /* I'm the master. */
-        select_ret = select (mymax, &readers, NULL, NULL, NULL);
-
-        if (select_ret == -1)
+        while (total_num_finished_boards < total_num_boards_to_check)
         {
-            perror("select()");
-        }
-        else if (select_ret)
-        {
-            for(idx=0; idx<num_workers; idx++)
+            if (total_num_finished_boards >= next_milestone)
             {
-                int fd = workers[idx].child_to_parent_pipe[READ_FD];
+#ifndef WIN32
+                gettimeofday(&tv,&tz);
+                printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
+                    next_milestone,
+                    tv.tv_sec,
+                    tv.tv_usec,
+                    total_num_iters
+                    );
+#else
+                _ftime(&tb);
+                printf(
+#ifdef __GNUC__
+                        "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
+#else
+                        "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
+#endif
+                    next_milestone,
+                    tb.time,
+                    tb.millitm*1000,
+                    total_num_iters
+                );
+#endif
+                fflush(stdout);
 
-                if (FD_ISSET(fd, &readers))
+                next_milestone += stop_at;
+            }
+
+            readers = initial_readers;
+            /* I'm the master. */
+            select_ret = select (mymax, &readers, NULL, NULL, NULL);
+
+            if (select_ret == -1)
+            {
+                perror("select()");
+            }
+            else if (select_ret)
+            {
+                for(idx=0; idx<num_workers; idx++)
                 {
-                    /* FD_ISSET can be set on EOF, so we check if
-                     * read failed. */
-                    if (read (fd, &response, sizeof(response)) < sizeof(response))
+                    int fd = workers[idx].child_to_parent_pipe[READ_FD];
+
+                    if (FD_ISSET(fd, &readers))
                     {
-                        continue;
+                        /* FD_ISSET can be set on EOF, so we check if
+                         * read failed. */
+                        if (read (fd, &response, sizeof(response)) < sizeof(response))
+                        {
+                            continue;
+                        }
+                        
+                        if (response.num_finished_boards == -1)
+                        {
+                            continue;
+                        }
+
+                        total_num_iters += response.num_iters;
+                        total_num_finished_boards += response.num_finished_boards;
+
+                        WRITE_REQUEST();
+
                     }
-                    
-                    if (response.num_finished_boards == -1)
-                    {
-                        continue;
-                    }
-
-                    total_num_iters += response.num_iters;
-                    total_num_finished_boards += response.num_finished_boards;
-
-                    WRITE_REQUEST();
-
                 }
             }
         }
