@@ -17,6 +17,11 @@ the pointers from the soft_threads to them are not updated.
 * Check that AsciiDoc is not required for preparing an .rpm (using a
 test script.)
 
+* Convert the +char * []+ arrays in the fcs_cl.h etc. to 
++const char * []+ (arrays of constant strings). Its use is a relic of 
++char * argv[]+ being non-const and having them as constant will bring many
+advantages.
+
 Non-pressing
 ------------
 
