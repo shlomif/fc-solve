@@ -25,6 +25,11 @@ advantages.
 Non-pressing
 ------------
 
+* Implement Gary Campbell's FCELL.COM's methodology of trying several
+atomic scans in different instances (with bounded quotas) and picking the 
+shortest solution out of them all. Slow, but will produce highly short 
+solutions.
+
 * Inline fc_solve_free_instance().
 
 * Experiment with making fcs_move_t a bit-field with half-octets/etc. for
