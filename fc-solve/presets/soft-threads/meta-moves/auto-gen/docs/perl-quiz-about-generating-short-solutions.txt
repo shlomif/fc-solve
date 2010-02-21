@@ -54,7 +54,7 @@ Now, what I'd like to do is create a meta-scan that runs several of this
 individual scans one after the other, each with a certain quota of iterations, 
 and will select the shortest solution of all those that were able to solve
 the board. Let's suppose I have a total of $tot iterations to split among these
-scans, and can split them among the scans into $q[0], $q[1], $q[2] etc. quotas
+scans, and can split them among the scans into @q[0..$last_scan] quotas.
 
 My question is given $tot - what should @q be so it will, on average,
 yield the shortest solutions for the 32,000 sample board?
