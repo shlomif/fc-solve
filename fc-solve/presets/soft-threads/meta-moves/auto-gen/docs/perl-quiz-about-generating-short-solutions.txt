@@ -1,0 +1,51 @@
+Subject: Perl QOTW #2010-02-22 - Freecell Scans with Short Solutions
+
+IMPORTANT: Please do not post solutions, hints, or other spoilers
+until at least 60 hours after the date of this message.  Thanks. Requests
+for clarifications and other discussion would be OK.
+
+---------------
+
+Today I'm borrowing the collective wisdom of the Perl Quiz-of-the-Whatever
+forum for an alogrithmic task I need to accomplish for my own project - 
+Freecell Solver - http://fc-solve.berlios.de/ , which is an automated solver 
+for http://en.wikipedia.org/wiki/FreeCell and several other types of card 
+Solitaire. 
+
+fc-solve starts from the initial layout of the Solitaire game, and recurses
+into more and more positions (which are counted by the solver's iterations) 
+until it reaches the final state where all cards were moved to the
+foundations. Then it after certain number of 
+iterations (which are roughly indicative of how long it takes it to run), it
+yields a solution of a certain length (which is desired to be as short as
+possible). 
+
+Now, fc-solve has several different atomic scans, that when run alone, each
+yields different solutions with different iteration counts and lengths.
+
+In this Subversion directory, I have collected the iterations counts and the
+solutions lengths of a sample of boards - the first 32,000 games in Microsoft
+Windows FreeCell:
+
+http://svn.berlios.de/svnroot/repos/fc-solve/trunk/fc-solve/presets/soft-threads/meta-moves/auto-gen/
+
+(short URL - http://xrl.us/bgwj3o ; there's also an https:// equivalent, which
+may work better, but it's a self-signed certificate).
+
+After installing the dependencies - PDL (= the Perl Data Language) , 
+Class::XSAccessor and Exception::Class (and maybe some others) you can query 
+it by using the script query.pl like that:
+
+<<<
+shlomi[fcs]:$presets$ scan="1"
+shlomi[fcs]:$presets$ board_idx="120"
+shlomi[fcs]:$presets$ perl query.pl -l "$scan" "$board_idx"
+123
+128
+>>>
+
+Though you probably would like to inspect the query.pl source code and
+see how you can access the data directly using PDL, and convert it to a 
+different format.
+
+

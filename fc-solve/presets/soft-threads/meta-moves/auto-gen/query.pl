@@ -12,6 +12,12 @@ use Shlomif::FCS::CalcMetaScan;
 
 use MyInput;
 
+my $with_len = 0;
+
+GetOptions(
+    "l!" => \$with_len,
+);
+
 my ($scan_id, $board_idx) = @ARGV;
 
 my @guessed_quotas = ((350) x 300);
@@ -38,5 +44,16 @@ my $scan_idx =
     (0 .. $#{$input_obj->selected_scans()})
     ;
 
-print $input_obj->get_scans_data()->at($board_idx-$start_board, $scan_idx), "\n";
+
+if ($with_len)
+{
+    my $at = sub {
+        return $input_obj->get_scans_lens_data()->at($board_idx-$start_board, $scan_idx, shift());
+    };
+    print map { $at->($_) , "\n" } (0, 1);
+}
+else
+{
+    print $input_obj->get_scans_data()->at($board_idx-$start_board, $scan_idx), "\n";
+}
 
