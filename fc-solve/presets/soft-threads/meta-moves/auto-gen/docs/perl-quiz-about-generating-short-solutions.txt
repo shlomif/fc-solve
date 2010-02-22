@@ -15,8 +15,8 @@ several other types of card solitaire.
 
 fc-solve starts from the initial layout of the solitaire game and recurses
 into more and more positions, which are counted by the solver's iterations,
-until it reaches the final, solved state where all cards were moved to the
-foundations.
+until it reaches the final, solved, state where all cards have been moved to 
+the foundations.
 
 After a certain number of iterations (which are roughly indicative of 
 how long it took it to run), it yields a solution of a certain length ,which 
