@@ -51,9 +51,9 @@ shlomi[fcs]:$presets$ perl query.pl -l "$scan_id" "$board_idx"
 
 (First line is the iterations count; second line is the solution's length).
 
-Though you probably would like to inspect the query.pl source code and
-see how you can access the data directly using PDL, and convert it to a 
-different format.
+You probably would like to inspect the query.pl source code and
+see how you can access the data directly using PDL, and possibly use PDL
+to convert it to a different format.
 
 Now, what I'd like to do is create a meta-scan that runs several of these
 individual scans one after the other, each with a certain quota of iterations, 
