@@ -49,7 +49,7 @@ shlomi[fcs]:$presets$ perl query.pl -l "$scan_id" "$board_idx"
 128
 >>>
 
-(First line is the iterations count ; second line is the solution's length).
+(First line is the iterations count; second line is the solution's length).
 
 Though you probably would like to inspect the query.pl source code and
 see how you can access the data directly using PDL, and convert it to a 
