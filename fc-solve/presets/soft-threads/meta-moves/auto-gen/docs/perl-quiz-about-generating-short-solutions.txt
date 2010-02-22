@@ -8,8 +8,8 @@ Requests for clarifications and other discussion would be OK.
 ---------------
 
 Today I'm borrowing the collective wisdom of the Perl Quiz-of-the-Whatever
-forum for an algorithmic task I need to accomplish for my own project - 
-Freecell Solver ( http://fc-solve.berlios.de/ ), which is an automated solver 
+forum for an algorithmic task I need to accomplish for my own project -
+Freecell Solver ( http://fc-solve.berlios.de/ ) - which is an automated solver 
 for http://en.wikipedia.org/wiki/FreeCell and several other types of card 
 Solitaire. 
 
