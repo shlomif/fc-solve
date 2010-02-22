@@ -9,18 +9,18 @@ Requests for clarifications and other discussion would be OK.
 
 Today I'm borrowing the collective wisdom of the Perl Quiz-of-the-Whatever
 forum for an algorithmic task I need to accomplish for my own project - 
-Freecell Solver - http://fc-solve.berlios.de/ , which is an automated solver 
+Freecell Solver ( http://fc-solve.berlios.de/ ), which is an automated solver 
 for http://en.wikipedia.org/wiki/FreeCell and several other types of card 
 Solitaire. 
 
 fc-solve starts from the initial layout of the Solitaire game and recurses
-into more and more positions (which are counted by the solver's iterations) 
+into more and more positions, which are counted by the solver's iterations,
 until it reaches the final, solved state where all cards were moved to the
 foundations.
 
 After a certain number of iterations (which are roughly indicative of 
-how long it took it to run), it yields a solution of a certain length (which 
-is desired to be as short as possible). Note that it may also report that it
+how long it took it to run), it yields a solution of a certain length ,which 
+is desired to be as short as possible. Note that it may also report that it
 is unable to solve the board (after going over all the derived positions) or 
 that it could not find a solution within the quota of iterations that have
 been allocated for it. 
