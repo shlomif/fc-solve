@@ -89,7 +89,7 @@ Etc.
 Let's suppose I have a total of $tot iterations to split among all the 
 scans in scans.txt in the distribution, into @q[0 .. $last_scan] quotas.
 
-My question is given $tot - what should @q be so it will, on average,
+My question is: given $tot, what should @q be so it will, on average,
 yield the shortest solutions for the 32,000 sample board?
 
 Hope you enjoy this quiz.
