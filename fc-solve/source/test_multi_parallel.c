@@ -113,7 +113,7 @@ typedef struct pack_item_struct pack_item_t;
 static int cmd_line_callback(
     void * instance,
     int argc GCC_UNUSED,
-    char * argv[],
+    const char * argv[],
     int arg,
     int * num_to_skip,
     int * ret GCC_UNUSED,
@@ -184,7 +184,7 @@ static int cmd_line_callback(
 #define total_iterations_limit_per_board 100000
 #endif
 
-static char * known_parameters[] = {
+static const char * known_parameters[] = {
     "-i", "--iter-output",
     "-s", "--state-output",
     "-p", "--parseable-output",
@@ -425,7 +425,7 @@ int main(int argc, char * argv[])
         freecell_solver_user_cmd_line_parse_args(
             user.instance,
             argc,
-            argv,
+            (const char * *)argv,
             arg,
             known_parameters,
             cmd_line_callback,

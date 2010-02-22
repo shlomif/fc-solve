@@ -243,12 +243,12 @@ DLLEXPORT extern void freecell_solver_user_set_calc_real_depth(
 
 DLLEXPORT extern void freecell_solver_user_set_soft_thread_name(
     void * user_instance,
-    char * name
+    const char * name
     );
 
 DLLEXPORT extern int freecell_solver_user_set_hard_thread_prelude(
     void * user_instance,
-    char * prelude
+    const char * prelude
     );
 
 DLLEXPORT extern void freecell_solver_user_recycle(

@@ -401,7 +401,7 @@ enum
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
 };
 
-static void print_help_string(char * key)
+static void print_help_string(const char * key)
 {
     int i;
     for(i=0;help_screens[i].key != NULL ; i++)
@@ -416,7 +416,7 @@ static void print_help_string(char * key)
 static int cmd_line_callback(
     void * instance,
     int argc GCC_UNUSED,
-    char * argv[],
+    const char * argv[],
     int arg,
     int * num_to_skip,
     int * ret,
@@ -629,9 +629,9 @@ int main(int argc, char * argv[])
             freecell_solver_user_cmd_line_parse_args(
                 instance,
                 argc,
-                argv,
+                (const char * *)argv,
                 1,
-                known_parameters,
+                (const char * *)known_parameters,
                 cmd_line_callback,
                 &debug_context,
                 &error_string,

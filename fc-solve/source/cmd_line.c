@@ -42,12 +42,12 @@
 
 #include "cmd_line_enum.h"
 
-static GCC_INLINE int read_preset(char * preset_name, args_man_t * * args_man, char * * opened_files_dir_to_assign, char * user_preset_dir)
+static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_man, char * * opened_files_dir_to_assign, const char * user_preset_dir)
 {
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * global_presetrc = NULL, * env_var_presetrc = NULL;
-    char * path;
-    char * * presetrc_pathes[5];
+    const char * path;
+    const char * * presetrc_pathes[5];
     int path_idx;
     char line[8192];
     FILE * f = NULL;
@@ -57,9 +57,9 @@ static GCC_INLINE int read_preset(char * preset_name, args_man_t * * args_man, c
 
     {
         register int idx = 0;
-        presetrc_pathes[idx++] = &env_var_presetrc;
-        presetrc_pathes[idx++] = &home_dir_presetrc;
-        presetrc_pathes[idx++] = &global_presetrc;
+        presetrc_pathes[idx++] = (const char * *)&env_var_presetrc;
+        presetrc_pathes[idx++] = (const char * *)&home_dir_presetrc;
+        presetrc_pathes[idx++] = (const char * *)&global_presetrc;
         presetrc_pathes[idx++] = &user_preset_dir;
         presetrc_pathes[idx++] = NULL;
     }
@@ -171,19 +171,20 @@ have_preset:
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
     int argc,
-    char * argv[],
+    const char * argv[],
     int start_arg,
-    char * * known_parameters,
+    const char * * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
     int * last_arg,
     int file_nesting_count,
-    char * opened_files_dir
+    const char * opened_files_dir
     )
 {
-    char * * arg, * * arg_argc;
-    char * * known_param;
+    const char * * arg;
+    const char * * arg_argc;
+    const char * * known_param;
     int num_to_skip;
     int callback_ret;
     int opt;
@@ -1156,10 +1157,13 @@ break;
 
             {
                 int a;
-                char * start_num;
-                char * end_num;
-                char save;
+                const char * start_num;
+                const char * end_num;
+                char * substring_copy;
+
                 start_num = (*arg);
+
+                substring_copy = malloc(strlen(start_num) + 1);
 
                 /* Initialize all the Best Frist Search weights at first
                  * to 0 so
@@ -1189,22 +1193,25 @@ break;
                     {
                         end_num++;
                     }
-                    save = *end_num;
-                    *end_num = '\0';
+
+                    strncpy(substring_copy, start_num, end_num-start_num);
+                    substring_copy[end_num-start_num] = '\0';
                     freecell_solver_user_set_a_star_weight(
                         instance,
                         a,
-                        atof(start_num)
+                        atof(substring_copy)
                         );
                     /* Make sure that if the string terminated here -
                      * we stop.
                      * */
-                    if ((*end_num = save) == '\0')
+                    if (*end_num == '\0')
                     {
                         break;
                     }
                     start_num=end_num+1;
                 }
+
+                free(substring_copy);
             }
         }
         break;
@@ -1387,7 +1394,8 @@ break;
             }
             else
             {
-                char * s, * buffer;
+                const char * s;
+                char * buffer;
                 FILE * f;
                 long file_len;
                 int ret;
@@ -1486,7 +1494,7 @@ break;
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         args_man->argc - num_file_args_to_skip,
-                        args_man->argv + num_file_args_to_skip,
+                        (const char **)(args_man->argv + num_file_args_to_skip),
                         0,
                         known_parameters,
                         callback,
@@ -1538,7 +1546,7 @@ break;
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         preset_args->argc,
-                        preset_args->argv,
+                        (const char * *)preset_args->argv,
                         0,
                         known_parameters,
                         callback,
@@ -1580,9 +1588,9 @@ break;
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args(
     void * instance,
     int argc,
-    char * argv[],
+    const char * argv[],
     int start_arg,
-    char * * known_parameters,
+    const char * * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,

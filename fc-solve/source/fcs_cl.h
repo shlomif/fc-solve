@@ -40,7 +40,7 @@ typedef int (*freecell_solver_user_cmd_line_known_commands_callback_t)
     (
      void * instance,
      int argc,
-     char * argv[],
+     const char * argv[],
      int arg_index,
      int * num_to_skip,
      int * ret,
@@ -62,9 +62,9 @@ enum
 DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args(
     void * instance,
     int argc,
-    char * argv[],
+    const char * argv[],
     int start_arg,
-    char * * known_parameters,
+    const char * * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
@@ -74,15 +74,15 @@ DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args(
 DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
     int argc,
-    char * argv[],
+    const char * argv[],
     int start_arg,
-    char * * known_parameters,
+    const char * * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
     int * last_arg,
     int file_nesting_count,
-    char * opened_files_dir
+    const char * opened_files_dir
     );
 
 
