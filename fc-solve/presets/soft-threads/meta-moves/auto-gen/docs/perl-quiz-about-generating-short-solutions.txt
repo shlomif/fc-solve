@@ -62,7 +62,8 @@ the board.
 
 Let's look at a numeric example (based on the actual statistics):
 
-Deal No. | Scans Statistics
+----------------------------------------------------------------
+Deal No. | Scans Statistics                                    |
          | 1 Iters | 1 Len | 2 Iters | 2 Len | 3 Iters | 3 Len |
 ----------------------------------------------------------------
  1       |  123    | 127   |  1711   | 120   | 1285    | 161   |
@@ -75,6 +76,7 @@ Deal No. | Scans Statistics
  8       |   70    |  98   |    70   |  98   |  122    | 125   |
  9       |   -1    |  -1   | 47169   | 135   | 1097    | 136   |
 10       |  189    | 135   |   115   | 125   | 3043    | 202   |
+----------------------------------------------------------------
 
 Now if I allocate 400 iterations to each of the three scans here (and
 none to any other) then for deal #1, scan #1 will yield a solution of
