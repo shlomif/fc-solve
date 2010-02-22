@@ -26,7 +26,7 @@ that it could not find a solution within the quota of iterations that have
 been allocated for it. 
 
 Now, fc-solve has many different atomic scans, that when run alone, each
-yields different solutions with different iteration counts and lengths.
+yield different solutions with different iteration counts and lengths.
 
 In this Subversion directory, I have collected the iterations counts and the
 solutions lengths of a sample of boards - the first 32,000 games in Microsoft
