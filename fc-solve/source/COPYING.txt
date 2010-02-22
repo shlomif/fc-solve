@@ -11,14 +11,6 @@ What this means is that the code and binaries here can be linked against
 anything, converted to any different license, freely used and distributed, and
 anything else without any restrictions whatsoever. No Strings Attached!<tm>
 
-Regardless of that, some files in the distribution are derived from sources
-that were placed by their authors under the Public Domain ( 
-http://en.wikipedia.org/wiki/Public_domain ) however defined,
-and were kept under these terms with all rights disclaimed. These files
-are:
-
-* pqueue.h
-
 -- Shlomi Fish
 
 Here is the license text (or "legalese") for most of the code:

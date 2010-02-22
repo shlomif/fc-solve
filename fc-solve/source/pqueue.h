@@ -1,14 +1,39 @@
+/* Copyright (c) 2000 Justin Heyes Jones
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 /*
     pqueue.h - header file for the priority queue implementation.
 
     Originally written by Justin-Heyes Jones
     Modified by Shlomi Fish, 2000
 
-    This file is in the public domain (it's uncopyrighted).
+    This file is available under either the MIT/X11 license (see above)
+    or the public domain.
 
     Check out Justin-Heyes Jones' A* page from which this code has
     originated:
-        http://www.geocities.com/jheyesjones/astar.html
+
+        http://www.heyes-jones.com/astar.html
 */
 
 #ifndef FC_SOLVE__PQUEUE_H
