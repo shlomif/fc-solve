@@ -62,4 +62,4 @@ continue
 
 
 # Flair is our temporary name for these independently evaluated instances
-print join("\n--next-flair ", map { "--flair-id $_->{id} --flair-quota $_->{quota} $_->{cmd_line}" } @results);
+print join(" \\\n--next-flair ", map { "--flair-id $_->{id} --flair-quota $_->{quota} $_->{cmd_line}" } @results);
