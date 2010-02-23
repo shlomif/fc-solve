@@ -16,11 +16,11 @@ def test_board(idx, want_string):
 
     fc_solve_get_board(idx, c_char_p(buffer))
 
-    ok (buffer[0:buffer.find("\0")] == want_string, 
+    ok (buffer[0:buffer.find("\0")] == want_string,
         ("board %d was generated fine" % (idx)))
 
 def main():
-    plan(2)
+    plan(3)
 
     # TEST
     test_board(24,
@@ -44,6 +44,18 @@ AC QC 4D 8C QH 9C 3S
 6S 7H JH TD TC QD
 TS AD 9S KH 4S 4C
 JS KS 3C 7C 7S 5H
+""");
+
+    # TEST
+    test_board(1234567,
+"""2H 7S 4S 4D 8C KD QD
+9C KH 5D 6C TC 5H 7D
+JC TH JD 2S KS TS 9H
+4H 8H 5C 9D 5S JS 3D
+AD 3H 6D JH 3S KC
+QC 9S 8D AS 7C 8S
+AC 3C QH TD 6S 6H
+2C 2D 4C 7H AH QS
 """);
 
 if __name__ == "__main__":
