@@ -361,6 +361,11 @@ IF (BUILD_STATIC_LIBRARY)
     )
 ENDIF (BUILD_STATIC_LIBRARY)
 
+ADD_LIBRARY (fcs_gen_ms_freecell_boards
+    SHARED
+    gen_boards_lib.c
+    )
+
 SET_TARGET_PROPERTIES(freecell-solver
     PROPERTIES VERSION 0.5.0 SOVERSION 0
     )

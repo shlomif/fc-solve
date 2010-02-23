@@ -32,6 +32,7 @@
 #define FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H
 
 #include "inline.h"
+#include "fcs_dllexport.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -74,7 +75,11 @@ static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
     }
 }
 
+#ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
+extern void DLLEXPORT fc_solve_get_board(long gamenumber, char * ret)
+#else
 static GCC_INLINE void get_board(long gamenumber, char * ret)
+#endif
 {
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
 
