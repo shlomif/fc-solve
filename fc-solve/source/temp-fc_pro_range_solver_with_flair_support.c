@@ -138,10 +138,18 @@ static void my_iter_handler(
     }
 }
 
+typedef struct
+{
+    void * instance;
+    int quota;
+    char * id;
+} fcs_flair_t;
+
 struct pack_item_struct
 {
     fc_solve_display_information_context_t display_context;
-    void * instance;
+    int num_flairs;
+    fcs_flair_t * flairs;
 };
 
 typedef struct pack_item_struct pack_item_t;
@@ -297,9 +305,24 @@ static int read_int(FILE * f, int * dest)
     return 0;
 }
 
+static fcs_flair_t * next_flair(pack_item_t * user)
+{
+    fcs_flair_t * ret;
+    user->flairs = realloc(user->flairs, ++(user->num_flairs));
+    ret = &(user->flairs[user->num_flairs-1]);
+    
+    ret->instance = freecell_solver_user_alloc();
+    ret->quota = 0;
+    ret->id = NULL;
+
+    return ret;
+}
+
 int main(int argc, char * argv[])
 {
     pack_item_t user;
+    fcs_flair_t * last_flair, * flair, * good_flair;
+
     /* char buffer[2048]; */
     int ret;
     int len;
@@ -328,7 +351,9 @@ int main(int argc, char * argv[])
 
     binary_output_t binary_output;
 
-    int arg = 1, start_from_arg;
+    /* TODO: Investigate whether we can get rid of this 
+     * start_from_arg. */
+    int arg = 1, start_from_arg, end_arg;
 
     Position pos;
 
@@ -459,49 +484,86 @@ int main(int argc, char * argv[])
         binary_output.file = NULL;
     }
 
-    user.instance = freecell_solver_user_alloc();
-
-    arg = start_from_arg;
-
-    parser_ret =
-        freecell_solver_user_cmd_line_parse_args(
-            user.instance,
-            argc,
-            (const char * *)argv,
-            arg,
-            known_parameters,
-            cmd_line_callback,
-            &user,
-            &error_string,
-            &arg
-            );
-
-    if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
+    user.num_flairs = 0;
+    user.flairs = NULL;
+    
+    for(arg = start_from_arg ; arg < argc ; arg++)
     {
-        fprintf(stderr, "Unknown option: %s", argv[arg]);
-        return (-1);
-    }
-    else if (
-        (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-            )
-    {
-        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                " and was not supplied with one.\n", argv[arg]);
-        return (-1);
-    }
-    else if (
-        (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-        )
-    {
-        if (error_string != NULL)
+        last_flair = next_flair(&user);
+
+        if (!strcmp(argv[arg++], "--flair-id"))
         {
-            fprintf(stderr, "%s", error_string);
-            free(error_string);
+            fprintf(stderr, "No --flair-id\n");
+            exit(-1);
         }
-        return (-1);
+        else if (arg == argc)
+        {
+            fprintf(stderr, "Reached --flair-id end");
+            exit(-1);
+        }
+        last_flair->id = strdup(argv[arg++]);
+
+        if (!strcmp(argv[arg++], "--flair-quota"))
+        {
+            fprintf(stderr, "No --flair-quota\n");
+            exit(-1);
+        }
+        else if (arg == argc)
+        {
+            fprintf(stderr, "Reached --flair-quota end");
+            exit(-1);
+        }
+        last_flair->quota = atoi(argv[arg++]);
+
+        end_arg = arg;
+
+        while ((end_arg < argc) && strcmp(argv[end_arg], "--next-flair"))
+        {
+            end_arg++;
+        }
+
+        parser_ret =
+            freecell_solver_user_cmd_line_parse_args(
+                last_flair->instance,
+                end_arg,
+                (const char * *)argv,
+                arg,
+                known_parameters,
+                cmd_line_callback,
+                &user,
+                &error_string,
+                &arg
+                );
+
+        if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
+        {
+            fprintf(stderr, "Unknown option: %s", argv[arg]);
+            return (-1);
+        }
+        else if (
+            (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
+                )
+        {
+            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+                    " and was not supplied with one.\n", argv[arg]);
+            return (-1);
+        }
+        else if (
+            (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
+            )
+        {
+            if (error_string != NULL)
+            {
+                fprintf(stderr, "%s", error_string);
+                free(error_string);
+            }
+            return (-1);
+        }
+
+        arg = end_arg;
     }
 
-    ret = 0;
+    last_flair++;
 
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
@@ -512,69 +574,115 @@ int main(int argc, char * argv[])
         printf("%s\n", buffer);
 #endif
 
-        freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
+#define FLAIR_LOOP() \
+        for(flair = user.flairs ; flair < last_flair ; flair++)
 
-        ret =
-            freecell_solver_user_solve_board(
-                user.instance,
-                buffer
-                );
-
-        free(buffer);
-
-
-        if (ret == FCS_STATE_SUSPEND_PROCESS)
+        FLAIR_LOOP()
         {
-#ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Intractable Board No. %i at %li.%.6li\n",
-                board_num,
-                tv.tv_sec,
-                tv.tv_usec
-                );
-#else
-            _ftime(&tb);
-            printf("Intractable Board No. %i at %li.%.6i\n",
-                board_num,
-                tb.time,
-                tb.millitm*1000
-            );
-#endif
-            fflush(stdout);
-            print_int_wrapper(-1);
-            printf("%s", "[[Num FCS Moves]]=-1\n[[Num FCPro Moves]]=-1\n");
+            freecell_solver_user_limit_iterations(
+                    flair->instance, 
+                    flair->quota
+                    );
         }
-        else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
+
+        good_flair = NULL;
+
+        FLAIR_LOOP()
         {
-#ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Unsolved Board No. %i at %li.%.6li\n",
-                board_num,
-                tv.tv_sec,
-                tv.tv_usec
+            ret =
+                freecell_solver_user_solve_board(
+                    flair->instance,
+                    buffer
                 );
+
+
+            if (ret == FCS_STATE_SUSPEND_PROCESS)
+            {
+                /* 
+                 * Do nothing - this board could not be solved by
+                 * this flair - move on to the next.
+                 * */
+#if 0
+#ifndef WIN32
+                gettimeofday(&tv,&tz);
+                printf("Intractable Board No. %i at %li.%.6li\n",
+                    board_num,
+                    tv.tv_sec,
+                    tv.tv_usec
+                    );
 #else
-            _ftime(&tb);
-            printf("Unsolved Board No. %i at %li.%.6i\n",
-                board_num,
-                tb.time,
-                tb.millitm*1000
-            );
+                _ftime(&tb);
+                printf("Intractable Board No. %i at %li.%.6i\n",
+                    board_num,
+                    tb.time,
+                    tb.millitm*1000
+                );
 #endif
-            print_int_wrapper(-2);
-            printf("%s", "[[Num FCS Moves]]=-2\n[[Num FCPro Moves]]=-2\n");
+                fflush(stdout);
+                print_int_wrapper(-1);
+                printf("%s", "[[Num FCS Moves]]=-1\n[[Num FCPro Moves]]=-1\n");
+#endif
+            }
+            else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
+            {
+#if 0
+#ifndef WIN32
+                gettimeofday(&tv,&tz);
+                printf("Unsolved Board No. %i at %li.%.6li\n",
+                    board_num,
+                    tv.tv_sec,
+                    tv.tv_usec
+                    );
+#else
+                _ftime(&tb);
+                printf("Unsolved Board No. %i at %li.%.6i\n",
+                    board_num,
+                    tb.time,
+                    tb.millitm*1000
+                );
+#endif
+                print_int_wrapper(-2);
+                printf("%s", "[[Num FCS Moves]]=-2\n[[Num FCPro Moves]]=-2\n");
+#endif
+            }
+            else /* The state could be solved. */
+            {
+                if (!good_flair)
+                {
+                    good_flair = flair;
+                }
+                else
+                {
+                    if (freecell_solver_user_get_moves_left(
+                            flair->instance
+                        )
+                            < 
+                        freecell_solver_user_get_moves_left(
+                            good_flair->instance
+                        )
+                    )
+                    {
+                        good_flair = flair;
+                    }
+                }
+            }
         }
-        else
+        
+        flair = good_flair;
+        if (good_flair)
         {
             moves_processed_t * fc_pro_moves;
             fcs_extended_move_t move;
 
-            print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
+            print_int_wrapper(freecell_solver_user_get_num_times(
+                        good_flair->instance));
             printf("[[Num FCS Moves]]=%d\n",
-                    freecell_solver_user_get_moves_left(user.instance)
-                  );
+                freecell_solver_user_get_num_times(
+                    good_flair->instance
+                    )
+            );
 
-            fc_pro_moves = moves_processed_gen(&pos, 4, user.instance);
+            fc_pro_moves = moves_processed_gen(&pos, 4, good_flair->instance);
 
             printf("[[Num FCPro Moves]]=%d\n[[Start]]\n",
                     moves_processed_get_moves_left(fc_pro_moves)
@@ -591,18 +699,45 @@ int main(int argc, char * argv[])
             moves_processed_free(fc_pro_moves);
             printf("\n%s\n", "[[End]]");
         }
-
-        total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
-        if (total_num_iters_temp > 1000000)
+        else
         {
-            total_num_iters += total_num_iters_temp;
-            total_num_iters_temp = 0;
+#ifndef WIN32
+                gettimeofday(&tv,&tz);
+                printf("Intractable Board No. %i at %li.%.6li\n",
+                    board_num,
+                    tv.tv_sec,
+                    tv.tv_usec
+                    );
+#else
+                _ftime(&tb);
+                printf("Intractable Board No. %i at %li.%.6i\n",
+                    board_num,
+                    tb.time,
+                    tb.millitm*1000
+                );
+#endif
+                fflush(stdout);
+                print_int_wrapper(-1);
+                printf("%s", "[[Num FCS Moves]]=-1\n[[Num FCPro Moves]]=-1\n");
         }
+
+        FLAIR_LOOP()
+        {
+            total_num_iters_temp +=
+                freecell_solver_user_get_num_times(flair->instance);
+            if (total_num_iters_temp > 1000000)
+            {
+                total_num_iters += total_num_iters_temp;
+                total_num_iters_temp = 0;
+            }
+
+            freecell_solver_user_recycle(flair->instance);
+        }
+
         if (board_num % stop_at == 0)
         {
             total_num_iters += total_num_iters_temp;
             total_num_iters_temp = 0;
-
 
 #ifndef WIN32
             gettimeofday(&tv,&tz);
@@ -630,11 +765,13 @@ int main(int argc, char * argv[])
 
         }
 
-
-        freecell_solver_user_recycle(user.instance);
+        free(buffer);
     }
 
-    freecell_solver_user_free(user.instance);
+    FLAIR_LOOP()
+    {
+        freecell_solver_user_free(flair->instance);
+    }
 
     if (binary_output_filename)
     {
