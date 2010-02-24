@@ -22,9 +22,15 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * fc_pro_range_solver.c - the FC-Pro range solver. Solves a range of
- * boards and displays the moves counts and the number of moves in their
- * solution.
+ * temp-fc_pro_range_solver_with_flair_support.c - the FC-Pro range 
+ * solver. Solves a range of boards and displays the moves counts and 
+ * the number of moves in their solution.
+ *
+ * This program was meant to be a temporary support in order
+ * to experiment with "flairs" (working names) which are instances 
+ * of the solvers that are all being ran to solve the board, one 
+ * after the other and then the shortest solution is chosen to be
+ * displayed.
  */
 #include <stdio.h>
 #include <stdlib.h>
