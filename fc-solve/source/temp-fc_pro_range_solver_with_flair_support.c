@@ -481,6 +481,9 @@ int main(int argc, char * argv[])
     user.num_flairs = 0;
     user.flairs = NULL;
     
+    /* To settle gcc. */
+    last_flair = NULL;
+
     for(; arg < argc ; arg++)
     {
         last_flair = next_flair(&user);
