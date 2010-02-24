@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -57,6 +57,12 @@ sub test_using_valgrind
 
 # TEST
 test_using_valgrind(
+    [qw(1 2 1 --method a-star)],
+    qq{range-parallel-solve for board #2 using the BeFS method valgrind}
+);
+
+# TEST
+test_using_valgrind(
     ["1", "2", "1", "-l", "gi"],
     qq{"range-parallel-solve 1 2 1 -l gi" returned no errors}
 );
@@ -72,6 +78,7 @@ test_using_valgrind(
     [qw(11981 11983 1 -opt)],
     qq{"range-parallel-solve 11981 11983 1 -opt" returned no errors}
 );
+
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -99,6 +99,7 @@ static void GCC_INLINE fc_solve_PQueueInitialise(
 static void GCC_INLINE fc_solve_PQueueFree( PQUEUE *pq )
 {
     free( pq->Elements );
+    pq->Elements = NULL;
 }
 
 

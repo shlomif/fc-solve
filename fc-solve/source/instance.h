@@ -944,11 +944,15 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
         switch (soft_thread->method)
         {
             case FCS_METHOD_A_STAR:
-                /* Reset the priority queue */
-                soft_thread->method_specific.befs.meth.befs.a_star_pqueue.CurrentSize
-                    = 0
-                    ;
+                /* Free the priority queue. It will be reallocated by
+                 * fc_solve_soft_thread_init_a_star_or_bfs() .
+                 * */
+                fc_solve_PQueueFree(
+                    &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue)
+                );
+                
                 break;
+
             case FCS_METHOD_BFS:
             case FCS_METHOD_OPTIMIZE:
                 /* Reset the BFS Queue (also used for the optimization scan. */
