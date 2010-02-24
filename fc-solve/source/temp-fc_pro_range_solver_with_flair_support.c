@@ -308,7 +308,7 @@ static int read_int(FILE * f, int * dest)
 static fcs_flair_t * next_flair(pack_item_t * user)
 {
     fcs_flair_t * ret;
-    user->flairs = realloc(user->flairs, ++(user->num_flairs));
+    user->flairs = realloc(user->flairs, sizeof(user->flairs[0]) * ++(user->num_flairs));
     ret = &(user->flairs[user->num_flairs-1]);
     
     ret->instance = freecell_solver_user_alloc();
@@ -485,7 +485,7 @@ int main(int argc, char * argv[])
     {
         last_flair = next_flair(&user);
 
-        if (!strcmp(argv[arg++], "--flair-id"))
+        if (strcmp(argv[arg++], "--flair-id"))
         {
             fprintf(stderr, "No --flair-id\n");
             exit(-1);
@@ -497,7 +497,7 @@ int main(int argc, char * argv[])
         }
         last_flair->id = strdup(argv[arg++]);
 
-        if (!strcmp(argv[arg++], "--flair-quota"))
+        if (strcmp(argv[arg++], "--flair-quota"))
         {
             fprintf(stderr, "No --flair-quota\n");
             exit(-1);
