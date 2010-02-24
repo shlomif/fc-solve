@@ -674,7 +674,7 @@ int main(int argc, char * argv[])
             print_int_wrapper(freecell_solver_user_get_num_times(
                         good_flair->instance));
             printf("[[Num FCS Moves]]=%d\n",
-                freecell_solver_user_get_num_times(
+                freecell_solver_user_get_moves_left(
                     good_flair->instance
                     )
             );
