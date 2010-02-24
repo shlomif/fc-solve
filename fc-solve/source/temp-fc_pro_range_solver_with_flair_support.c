@@ -351,9 +351,7 @@ int main(int argc, char * argv[])
 
     binary_output_t binary_output;
 
-    /* TODO: Investigate whether we can get rid of this 
-     * start_from_arg. */
-    int arg = 1, start_from_arg, end_arg;
+    int arg = 1, end_arg;
 
     Position pos;
 
@@ -396,10 +394,6 @@ int main(int argc, char * argv[])
             break;
         }
     }
-
-    start_from_arg = arg;
-
-
 
     /* for(board_num=1;board_num<100000;board_num++) */
 #ifndef WIN32
@@ -487,7 +481,7 @@ int main(int argc, char * argv[])
     user.num_flairs = 0;
     user.flairs = NULL;
     
-    for(arg = start_from_arg ; arg < argc ; arg++)
+    for(; arg < argc ; arg++)
     {
         last_flair = next_flair(&user);
 
