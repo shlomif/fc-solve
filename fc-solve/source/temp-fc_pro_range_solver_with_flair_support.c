@@ -765,7 +765,10 @@ int main(int argc, char * argv[])
     FLAIR_LOOP()
     {
         freecell_solver_user_free(flair->instance);
+        free(flair->id);
     }
+
+    free(user.flairs);
 
     if (binary_output_filename)
     {
