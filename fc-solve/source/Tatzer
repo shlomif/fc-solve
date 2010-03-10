@@ -47,8 +47,9 @@ set_hash();
 my %themes =
 (
     tt => [qw(-r --fc-only --notest-suite)],
-    p4b => [qw(-l tt --arch=pentium4 --omit-frame)],
-    x64b => [qw(-l tt --arch=barcelona --omit-frame)],
+    bench => [qw(-l tt --omit-frame)],
+    p4b => [qw(-l bench --arch=pentium4)],
+    x64b => [qw(-l bench --arch=barcelona)],
 );
 
 my @new_argv = @ARGV;
