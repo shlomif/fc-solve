@@ -48,6 +48,7 @@ my %themes =
 (
     tt => [qw(-r --fc-only --notest-suite)],
     p4b => [qw(-l tt --arch=pentium4 --omit-frame)],
+    x64b => [qw(-l tt --arch=barcelona --omit-frame)],
 );
 
 my @new_argv = @ARGV;
