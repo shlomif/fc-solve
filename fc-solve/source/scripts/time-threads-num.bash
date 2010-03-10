@@ -2,14 +2,18 @@
 
 RUN_SERIAL=false
 PROG="${PROG:-./freecell-solver-multi-thread-solve}"
+MAX_BOARD="32000"
 
-while getopts "sp" flag ; do
+while getopts "spt:" flag ; do
     # Run the serial scan first.
     if   [ "$flag" = "s" ] ; then
         RUN_SERIAL=true
     # Run the multi-process version instead of the multi-threaded version.
     elif [ "$flag" = "p" ] ; then
         PROG="./freecell-solver-fork-solve"
+    # Maximal board - mnemonic - "to".
+    elif [ "$flag" = "t" ] ; then
+        MAX_BOARD="$OPTARG"
     fi
 done
 
@@ -48,7 +52,7 @@ fi
 
 for NUM in $(seq "$MIN" "$MAX") ; do
     echo "Testing $NUM"
-    $PROG 1 32000 4000 \
+    $PROG 1 "$MAX_BOARD" 4000 \
         --iters-update-on 10000000 \
         --num-workers "$NUM" \
         $ARGS \
