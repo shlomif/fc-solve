@@ -113,7 +113,7 @@ typedef struct pack_item_struct pack_item_t;
 static int cmd_line_callback(
     void * instance,
     int argc GCC_UNUSED,
-    const char * argv[],
+    freecell_solver_str_t argv[],
     int arg,
     int * num_to_skip,
     int * ret GCC_UNUSED,
@@ -425,7 +425,7 @@ int main(int argc, char * argv[])
         freecell_solver_user_cmd_line_parse_args(
             user.instance,
             argc,
-            (const char * *)argv,
+            (freecell_solver_str_t *)argv,
             arg,
             known_parameters,
             cmd_line_callback,

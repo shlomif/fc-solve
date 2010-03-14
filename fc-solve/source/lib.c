@@ -1325,7 +1325,7 @@ void DLLEXPORT freecell_solver_user_set_calc_real_depth(
 
 void DLLEXPORT freecell_solver_user_set_soft_thread_name(
     void * user_instance,
-    const char * name
+    freecell_solver_str_t name
     )
 {
     fcs_user_t * user;

@@ -171,20 +171,20 @@ have_preset:
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
     int argc,
-    const char * argv[],
+    freecell_solver_str_t argv[],
     int start_arg,
-    const char * * known_parameters,
+    freecell_solver_str_t * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
     int * last_arg,
     int file_nesting_count,
-    const char * opened_files_dir
+    freecell_solver_str_t opened_files_dir
     )
 {
-    const char * * arg;
-    const char * * arg_argc;
-    const char * * known_param;
+    freecell_solver_str_t * arg;
+    freecell_solver_str_t * arg_argc;
+    freecell_solver_str_t * known_param;
     int num_to_skip;
     int callback_ret;
     int opt;
@@ -1157,8 +1157,8 @@ break;
 
             {
                 int a;
-                const char * start_num;
-                const char * end_num;
+                freecell_solver_str_t start_num;
+                freecell_solver_str_t end_num;
                 char * substring_copy;
 
                 start_num = (*arg);
@@ -1394,7 +1394,7 @@ break;
             }
             else
             {
-                const char * s;
+                freecell_solver_str_t s;
                 char * buffer;
                 FILE * f;
                 long file_len;
@@ -1494,7 +1494,7 @@ break;
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         args_man->argc - num_file_args_to_skip,
-                        (const char **)(args_man->argv + num_file_args_to_skip),
+                        (freecell_solver_str_t *)(args_man->argv + num_file_args_to_skip),
                         0,
                         known_parameters,
                         callback,
@@ -1546,7 +1546,7 @@ break;
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         preset_args->argc,
-                        (const char * *)preset_args->argv,
+                        (freecell_solver_str_t *)preset_args->argv,
                         0,
                         known_parameters,
                         callback,
@@ -1588,9 +1588,9 @@ break;
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args(
     void * instance,
     int argc,
-    const char * argv[],
+    freecell_solver_str_t argv[],
     int start_arg,
-    const char * * known_parameters,
+    freecell_solver_str_t * known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * callback_context,
     char * * error_string,
