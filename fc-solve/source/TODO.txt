@@ -22,6 +22,8 @@ test script.)
 +char * argv[]+ being non-const and having them as constant will bring many
 advantages.
 
+* Add a +-o+ option to fc-solve to output to a different file than stdout.
+
 Non-pressing
 ------------
 
