@@ -98,3 +98,7 @@ Attribution ShareAlike licence. Thanks!
 
 * David Stevenson - inspiring a documentation clarification for broken
 versions of CMake (e.g: cmake-2.6.2).
+
+* Jurij Bortnik ( http://freecellgamesolutions.com ) - reported some broken
+links on the Freecell Solver homepage.
+
