@@ -442,6 +442,15 @@ for "Black Hole" Solitaire</a> - a solver for the solitaire "Black Hole" in
 Perl 5 by the same author as Freecell Solver.
 </p>
 </li>
+
+<li>
+<p>
+<a href="https://sourceforge.net/projects/freecelljsolver/">FreeCell 
+Java Solver</a> - a solver for Freecell written in Java on Sourceforge.net.
+Open source under the restrictive GPLv3 licence.
+</p>
+</li>
+
 </ul>
 
 <h2 id="reviews">Reviews of Freecell Solver</h2>
