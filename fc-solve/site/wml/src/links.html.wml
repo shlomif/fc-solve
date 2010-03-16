@@ -349,7 +349,7 @@ A freeware program by Lingyun Tuo that automatically solves Freecell.
 <li>
 <p>
 <a href="http://www.barthelet.org/freecell/freecell.html">A Solver for
-Mathematica</a> - a Mathematica application by Luc Barthlet that solves 
+Mathematica</a> - a Mathematica application by Luc Barthlet that solves
 Freecell games. Source code is available and is explained in detail.
 </p>
 </li>
@@ -367,7 +367,7 @@ upon request.
 <li>
 <p>
 <a href="http://seahaven.sourceforge.net/">X11 Seahaven</a> - contains
-C++ source code for a Seahaven Towers auto-solver. 
+C++ source code for a Seahaven Towers auto-solver.
 </p>
 </li>
 
