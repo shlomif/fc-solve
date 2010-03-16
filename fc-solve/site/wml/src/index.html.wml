@@ -59,9 +59,9 @@ contains the
 (Frequently Asked Questions)</a> and other stuff.
 </li>
 <li>
-<a href="http://web.archive.org/web/20080530220607/http://www.rrhistorical.com/rrdata/Fcpro65/">FC-Pro</a> - a Freecell
-implementation for Windows which gives a choice of several solvers, including
-Freecell Solver.
+<a href="http://pysolfc.sourceforge.net/">PySol Fan Club Edition</a> - a
+cross-platform, open-source implementation of many Solitaire games with
+very good embedding of Freecell Solver.
 </li>
 <li>
 <a href="http://people.cs.uu.nl/hansb/d.freecell/freecellhtml.html">
