@@ -74,8 +74,8 @@ Technologies used by Freecell Solver or that aided in its development.
 <p>
 <a href="http://www.msu.edu/user/pfaffben/avl/">libavl</a> - a very nice
 library which contains optimized C implementations of an AVL and Red-Black 
-binary trees. It's GPLed, which means it can only be used by
-certain types of Open-Source software.
+binary trees. It used to be GPLed but is now LGPLed, which means it can be
+used in open-source and proprietary code.
 </p>
 </li>
 
@@ -246,8 +246,7 @@ I still hold discussions about FCS in the mailing-list or in private.
 
 <li>
 <p>
-<a href="http://www.geocities.com/SiliconValley/Lakes/4929/">
-Justin Heyes-Jones</a> - I learned about the A* scan through his webpage,
+<a href="http://www.heyes-jones.com/">Justin Heyes-Jones</a> - I learned about the A* scan through his webpage,
 and he allowed me to incorporate his binary heap code into Freecell Solver.
 </p>
 </li>
@@ -257,7 +256,7 @@ and he allowed me to incorporate his binary heap code into Freecell Solver.
 <a href="http://www.oberhumer.com/mfx/">Markus FXJ Oberhumer</a> - 
 contributed some bug-fixes and bug-reports 
 to Freecell Solver. He is the author of 
-<a href="http://www.oberhumer.com/opensource/pysol/">PySol</a>,
+<a href="http://pysolfc.sourceforge.net/">PySol</a>,
 a very nice Solitaire suite which is written in Python. I used its 
 code to write a script that automatically generates its initial boards.
 </p>
