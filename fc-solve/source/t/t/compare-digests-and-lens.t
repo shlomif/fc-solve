@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -44,6 +44,7 @@ sub verify_solution_test
     my $id = $args->{id};
 
     my $deal = $args->{deal};
+    my $msdeals = $args->{msdeals};
 
     if ($deal !~ m{\A[1-9][0-9]*\z})
     {
@@ -57,7 +58,10 @@ sub verify_solution_test
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
     open my $fc_solve_output,
-        "make_pysol_freecell_board.py $deal $variant | " .
+        ($msdeals 
+            ? "pi-make-microsoft-freecell-board $deal | " 
+            : "make_pysol_freecell_board.py $deal $variant | "
+        ) .
         "$fc_solve_exe -g $variant " . shell_quote(@$theme) . " -p -t -sam |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
@@ -190,6 +194,17 @@ verify_solution_test(
         theme => ["-to", "abcdefgh", "--next-instance", "-to", "abcdefghi",],
     },
     "Simple Simon #1 using an --next-instance",
+);
+
+# TEST
+verify_solution_test(
+    {
+        id => "freecell254076_l_by", 
+        deal => 254076,
+        msdeals => 1,
+        theme => ["-l", "by", "--scans-synergy", "dead-end-marks"],
+    }, 
+    "Freecell MS 254,076 while using -l by with dead-end-marks"
 );
 
 # Store the changes at the end so they won't get lost.

@@ -21,6 +21,9 @@ digests:
   freecell24empty:
     hexdigest: 31fc6e1191e6d3ac1ae5662c934c693f7a8e7031b80fd252f1bfb1548f011d76
     len: 32280
+  freecell254076_l_by:
+    hexdigest: 712350d4798716bb13f506eb37889583610e7f1ad61899b3e52a231d65599ee2
+    len: 51781
   freecell617jgl:
     hexdigest: 34bc7c9fe871e50275975323be93c133e73f135db751a985a32f92323f1d6377
     len: 27193
