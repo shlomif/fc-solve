@@ -1215,9 +1215,11 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
             }
             /*
              * Check if this thread is a complete scan and if so,
-             * terminate the search
+             * terminate the search. Note that if the scans synergy is set,
+             * then we may still need to continue running the other threads
+             * which may have blocked some positions / states in the graph.
              * */
-            if (soft_thread->is_a_complete_scan)
+            if (soft_thread->is_a_complete_scan && (!instance->scans_synergy))
             {
                 return FCS_STATE_IS_NOT_SOLVEABLE;
             }

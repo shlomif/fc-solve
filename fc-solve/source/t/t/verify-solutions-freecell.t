@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 20;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -20,6 +20,7 @@ sub verify_solution_test
 
     my $board = $args->{board};
     my $deal = $args->{deal};
+    my $msdeals = $args->{msdeals};
 
     if (! defined($board))
     {
@@ -42,7 +43,10 @@ sub verify_solution_test
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
     open my $fc_solve_output,
-        ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ") .
+        ($msdeals ? 
+            "pi-make-microsoft-freecell-board $deal | " : 
+            ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ")
+        ) .
         "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
         ($board ? shell_quote($board) : "") .
         " |"
@@ -213,6 +217,14 @@ verify_solution_test(
     {deal => 24, theme => ["-nht",],
     },
     "Testing a solution with the -nht flag.",
+);
+
+# TEST
+verify_solution_test(
+    { deal => 254076, msdeals => 1,
+        theme => ["-l", "by", "--scans-synergy", "dead-end-marks"],
+    },
+    "There is a solution for 254,076 with -l by and a scans synergy.",
 );
 
 =head1 COPYRIGHT AND LICENSE
