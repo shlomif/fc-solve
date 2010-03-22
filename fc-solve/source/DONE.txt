@@ -31,3 +31,17 @@ without relying on asciidoc.
 * Abstract away the hash changes for the columns-vs-states hash.
 ** Create an enum for choosing which one.
 
+* Investigate +pi-make-microsoft-freecell-board 254076 | fc-solve -l by+ -
+it should be solvable.
+
+* Convert the +char * []+ arrays in the fcs_cl.h etc. to 
++const char * []+ (arrays of constant strings). Its use is a relic of 
++char * argv[]+ being non-const and having them as constant will bring many
+advantages.
+
+* Check that AsciiDoc is not required for preparing an .rpm (using a
+test script.)
+
+* Handle the case where the instance->hard_threads are re-allocated and
+the pointers from the soft_threads to them are not updated.
+
