@@ -577,7 +577,7 @@ run the scans one after the other in the sequence they were defined for their
 step number.
 
 
---scans-synergy {none|dead-ends-mark}
+--scans-synergy {none|dead-end-marks}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the synergy between the various scans, or how much they cooperate
