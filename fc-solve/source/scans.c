@@ -881,7 +881,8 @@ static void dump_pqueue (
     )
 {
     int i;
-    char * s; 
+    char * s;
+    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
 
     if (strcmp(soft_thread->name, "11"))
     {
@@ -894,9 +895,9 @@ static void dump_pqueue (
     {
         printf("Rating[%d] = %d\nState[%d] = <<<\n", i, pq->Elements[i].rating, i);
         s = fc_solve_state_as_string(pq->Elements[i].val, 
-                soft_thread->hard_thread->INSTANCE_FREECELLS_NUM,
-                soft_thread->hard_thread->INSTANCE_STACKS_NUM,
-                soft_thread->hard_thread->INSTANCE_DECKS_NUM,
+                INSTANCE_FREECELLS_NUM,
+                INSTANCE_STACKS_NUM,
+                INSTANCE_DECKS_NUM,
                 1,
                 0,
                 1
