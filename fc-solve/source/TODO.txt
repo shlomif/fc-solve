@@ -24,6 +24,9 @@ advantages.
 
 * Add a +-o+ option to fc-solve to output to a different file than stdout.
 
+* Investigate +pi-make-microsoft-freecell-board 254076 | fc-solve -l by+ -
+it should be solvable.
+
 Non-pressing
 ------------
 
