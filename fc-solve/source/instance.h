@@ -292,6 +292,15 @@ enum
      * A flag that indicates if instance->opt_tests_order was set.
      */
     FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = (1 << 3),
+    /*
+     * This flag indicates whether scans should or should not reparent the
+     * states their encounter to a lower depth in the depth tree
+     *
+     * _proto is the one inputted by the user.
+     * _real is calculated based on other factors such as whether the 
+     * scan method is FCS_METHOD_OPTIMIZE. 
+     * */
+    FCS_RUNTIME_TO_REPARENT_STATES_PROTO = (1 << 4),
 };
 
 typedef struct
@@ -508,7 +517,6 @@ typedef struct
      * _real is calculated based on other factors such as whether the 
      * scan method is FCS_METHOD_OPTIMIZE. 
      * */
-    int to_reparent_states_proto;
     int to_reparent_states_real;
     /*
      * This variable determines how the scans cooperate with each other.

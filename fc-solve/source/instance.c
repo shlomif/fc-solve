@@ -447,7 +447,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 
-    instance->to_reparent_states_proto = 0;
+    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO );
 
     /* Make the 1 the default, because otherwise scans will not cooperate
      * with one another. */
@@ -1033,7 +1033,7 @@ int fc_solve_solve_instance(
         }
     }
 
-    instance->to_reparent_states_real = instance->to_reparent_states_proto;
+    instance->to_reparent_states_real = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO);
 
     return fc_solve_resume_instance(instance);
 }
