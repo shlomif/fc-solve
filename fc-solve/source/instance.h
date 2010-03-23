@@ -796,7 +796,7 @@ struct fc_solve_soft_thread_struct
     int num_vacant_stacks;
 
     /* 
-     * The number of vacnat freecells in the current state - is read
+     * The number of vacant freecells in the current state - is read
      * from the test functions in freecell.c .
      * */
     int num_vacant_freecells;
