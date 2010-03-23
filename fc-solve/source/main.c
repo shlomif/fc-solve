@@ -595,7 +595,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
 }
 
 
-static char * known_parameters[] = {
+static freecell_solver_str_t known_parameters[] = {
     "-h", "--help",
         "--help-configs", "--help-options", "--help-problems",
         "--help-real-help", "--help-short-sol", "--help-summary",
@@ -643,9 +643,9 @@ int main(int argc, char * argv[])
             freecell_solver_user_cmd_line_parse_args(
                 instance,
                 argc,
-                (const char * *)argv,
+                (freecell_solver_str_t *)argv,
                 1,
-                (const char * *)known_parameters,
+                (freecell_solver_str_t *)known_parameters,
                 cmd_line_callback,
                 &debug_context,
                 &error_string,
