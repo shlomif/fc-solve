@@ -199,7 +199,7 @@ int fc_solve_soft_dfs_do_solve(
     fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
     fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
-    int is_a_complete_scan = soft_thread->is_a_complete_scan;
+    fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     int soft_thread_id = soft_thread->id;
     fcs_derived_states_list_t * derived_states_list;
     fcs_rand_t * rand_gen;
@@ -966,7 +966,7 @@ int fc_solve_a_star_or_bfs_do_solve(
     fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
     fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
     int soft_thread_id = soft_thread->id;
-    int is_a_complete_scan = soft_thread->is_a_complete_scan;
+    fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
 
     union {
         struct {

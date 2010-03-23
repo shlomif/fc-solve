@@ -645,6 +645,11 @@ enum
      * initialized.
      * */
     FCS_SOFT_THREAD_INITIALIZED = (1 << 0),
+    /*
+     * A flag that indicates if this scan contains all the tests that
+     * are accessible to all the other scans
+     * */
+    FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN = (1 << 1),
 };
 
 struct fc_solve_soft_thread_struct
@@ -776,12 +781,6 @@ struct fc_solve_soft_thread_struct
      * The number of iterations with which to process this scan
      * */
     int num_times_step;
-
-    /*
-     * A flag that indicates if this scan contains all the tests that
-     * are accessible to all the other scans
-     * */
-    int is_a_complete_scan;
 
     /*
      * A flag that indicates if this scan has completed a scan. Used by

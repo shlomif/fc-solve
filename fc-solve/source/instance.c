@@ -210,7 +210,9 @@ static GCC_INLINE void determine_scan_completeness(
     {
         tests_order |= (1 << (soft_thread->tests_order.tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
-    soft_thread->is_a_complete_scan = (tests_order == *(int *)global_tests_order);
+    STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN, 
+        (tests_order == *(int *)global_tests_order)
+    );
 }
 
 enum
@@ -822,7 +824,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     soft_thread->method = FCS_METHOD_OPTIMIZE;
 
-    soft_thread->is_a_complete_scan = 1;
+    STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
 
     /* Initialize the optimization hard-thread and soft-thread */
     optimization_thread->num_times_left_for_soft_thread = 1000000;
@@ -1228,7 +1230,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
              * then we may still need to continue running the other threads
              * which may have blocked some positions / states in the graph.
              * */
-            if (soft_thread->is_a_complete_scan && 
+            if (STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN) && 
                     (! STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY))
                )
             {
