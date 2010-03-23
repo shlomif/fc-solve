@@ -415,8 +415,8 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    int num_vacant_freecells;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks;
     char * positions_by_rank;
     char * pos_idx_to_check, * last_pos_idx;
 
@@ -623,8 +623,8 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    int num_vacant_freecells;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks;
 
     fcs_internal_move_t temp_move;
 
@@ -735,8 +735,8 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    int num_vacant_freecells;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks;
     fcs_cards_column_t col;
 
     fcs_internal_move_t temp_move;
@@ -926,8 +926,8 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 #endif
     char * positions_by_rank;
     char * pos_idx_to_check, * last_pos_idx;
-    int num_vacant_freecells;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks;
     fcs_cards_column_t col, dest_col;
 
     fcs_internal_move_t temp_move;
@@ -1092,8 +1092,8 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    int num_vacant_freecells;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks;
     fcs_cards_column_t col;
 
     fcs_internal_move_t temp_move;
@@ -1396,8 +1396,8 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    int num_vacant_freecells;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks;
     char * positions_by_rank;
     char * pos_idx_to_check, * last_pos_idx;
 
@@ -1609,8 +1609,8 @@ int fc_solve_sfs_empty_stack_into_freecells(
     DECLARE_GAME_PARAMS();
 #endif
 
-    int num_vacant_freecells;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks;
     fcs_cards_column_t col;
 
     fcs_internal_move_t temp_move;
@@ -1793,7 +1793,7 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     fcs_internal_move_t temp_move;
 
@@ -2065,7 +2065,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
     fcs_internal_move_t temp_move;
     int check;
     int empty_stack_idx;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
     fcs_cards_column_t col;
 
     tests_define_accessors();
@@ -2238,7 +2238,7 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
     fcs_card_t card;
     fcs_internal_move_t temp_move;
     int check;
-    int num_vacant_freecells;
+    fcs_game_limit_t num_vacant_freecells;
     fcs_cards_column_t col;
 
     tests_define_accessors();
@@ -2389,7 +2389,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     fcs_card_t card;
     fcs_internal_move_t temp_move;
     int check;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     tests_define_accessors();
     tests_define_empty_stacks_fill();

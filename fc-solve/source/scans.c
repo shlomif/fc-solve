@@ -286,7 +286,7 @@ int fc_solve_soft_dfs_do_solve(
                freeceels and stacks and check if we are done. */
             if (the_soft_dfs_info->test_index == 0)
             {
-                int num_vacant_stacks, num_vacant_freecells;
+                fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
                 int i;
 
                 TRACE0("In iter_handler");
@@ -635,7 +635,7 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
 
     double ret=0;
     int a, c, cards_num, num_cards_in_founds;
-    int num_vacant_stacks, num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
     double cards_under_sequences, temp;
     double seqs_over_renegade_cards;
     fcs_cards_column_t col;
@@ -947,7 +947,7 @@ int fc_solve_a_star_or_bfs_do_solve(
 
     fcs_state_t * ptr_state_key;
     fcs_state_extra_info_t * ptr_state_val, * ptr_new_state_val;
-    int num_vacant_stacks, num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
     fcs_states_linked_list_item_t * save_item;
     int a;
     int check;

@@ -166,7 +166,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
 
 
     int check;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     /*
      * stack - the source stack index on which the sequence currently resides.
@@ -318,7 +318,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
     DECLARE_GAME_PARAMS();
 #endif
 
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     tests_define_accessors();
 
@@ -455,7 +455,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();
 #endif
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     tests_define_accessors();
 
@@ -707,7 +707,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();
 #endif
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     fcs_cards_column_t col;
     fcs_cards_column_t dest_col;
@@ -984,7 +984,7 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();
 #endif
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     fcs_cards_column_t col;
     fcs_cards_column_t dest_col;
@@ -1311,7 +1311,7 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
     DECLARE_GAME_PARAMS();
 #endif
 
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     fcs_cards_column_t col;
     fcs_cards_column_t dest_col;
@@ -1530,7 +1530,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();
 #endif
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     fcs_cards_column_t col;
     fcs_cards_column_t clear_junk_dest_col;
@@ -1822,7 +1822,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
     int num_true_seqs, seq_size, h, ds, dest_cards_num;
     fcs_cards_column_t col, dest_col;
     int cards_num;
-    int num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();

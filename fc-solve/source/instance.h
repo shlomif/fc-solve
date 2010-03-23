@@ -631,11 +631,11 @@ typedef struct
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
     int test_index;
-    int num_vacant_stacks;
-    int num_vacant_freecells;
     int derived_states_random_indexes_max_size;
     int * derived_states_random_indexes;
     char * positions_by_rank;
+    fcs_game_limit_t num_vacant_stacks;
+    fcs_game_limit_t num_vacant_freecells;
 } fcs_soft_dfs_stack_item_t;
 
 enum
@@ -786,6 +786,18 @@ struct fc_solve_soft_thread_struct
 
     fcs_runtime_flags_t runtime_flags;
 
+    /* 
+     * The number of vacant stacks in the current state - is read from
+     * the test functions in freecell.c .
+     * */
+     fcs_game_limit_t num_vacant_stacks;
+
+    /* 
+     * The number of vacant freecells in the current state - is read
+     * from the test functions in freecell.c .
+     * */
+    fcs_game_limit_t num_vacant_freecells;
+
     /*
      * The number of iterations with which to process this scan
      * */
@@ -796,17 +808,6 @@ struct fc_solve_soft_thread_struct
      * */
     char * name;
 
-    /* 
-     * The number of vacant stacks in the current state - is read from
-     * the test functions in freecell.c .
-     * */
-    int num_vacant_stacks;
-
-    /* 
-     * The number of vacant freecells in the current state - is read
-     * from the test functions in freecell.c .
-     * */
-    int num_vacant_freecells;
 };
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
