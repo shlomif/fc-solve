@@ -400,7 +400,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->instance_tests_order.num = 0;
     instance->instance_tests_order.tests = NULL;
 
-    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 
     instance->opt_tests_order.num = 0;
     instance->opt_tests_order.tests = NULL;
@@ -438,20 +438,20 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->solution_moves.moves = NULL;
 
-    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH);
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH);
  
     instance->optimization_thread = NULL;
-    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 
     instance->num_hard_threads_finished = 0;
 
-    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 
-    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO );
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO );
 
     /* Make the 1 the default, because otherwise scans will not cooperate
      * with one another. */
-    INSTANCE_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY); 
+    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY); 
 
     return instance;
 }
@@ -502,7 +502,7 @@ void fc_solve_free_instance(fc_solve_instance_t * instance)
 
     free(instance->instance_tests_order.tests);
 
-    if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
+    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
         free(instance->opt_tests_order.tests);
     }
@@ -618,7 +618,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS,
             &total_tests
         );
-        if (!INSTANCE_QUERY_FLAG(
+        if (!STRUCT_QUERY_FLAG(
                 instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET
             )
         )
@@ -643,7 +643,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             instance->opt_tests_order.tests = tests;
             instance->opt_tests_order.num =
                 num_tests;
-            INSTANCE_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
+            STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
         }
     }
 }
@@ -791,7 +791,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     fc_solve_soft_thread_t * soft_thread;
     fc_solve_hard_thread_t * optimization_thread;
 
-    INSTANCE_TURN_ON_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL);
+    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL);
 
     if (! instance->optimization_thread)
     {
@@ -809,7 +809,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     soft_thread = optimization_thread->soft_threads;
 
-    if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
+    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
         if (soft_thread->tests_order.tests != NULL)
         {
@@ -835,7 +835,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     fc_solve_soft_thread_init_a_star_or_bfs(soft_thread);
     soft_thread->initialized = 1;
 
-    INSTANCE_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
+    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
    
     return
         fc_solve_a_star_or_bfs_do_solve(
@@ -1033,9 +1033,9 @@ int fc_solve_solve_instance(
         }
     }
 
-    INSTANCE_SET_FLAG_TO(instance,
+    STRUCT_SET_FLAG_TO(instance,
         FCS_RUNTIME_TO_REPARENT_STATES_REAL,
-        INSTANCE_QUERY_FLAG(
+        STRUCT_QUERY_FLAG(
             instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO
         )
     );
@@ -1229,7 +1229,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
              * which may have blocked some positions / states in the graph.
              * */
             if (soft_thread->is_a_complete_scan && 
-                    (! INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY))
+                    (! STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY))
                )
             {
                 return FCS_STATE_IS_NOT_SOLVEABLE;
@@ -1291,7 +1291,7 @@ int fc_solve_resume_instance(
      *
      * Else, proceed with the normal total scan.
      * */
-    if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
+    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
     {
         ret =
             fc_solve_a_star_or_bfs_do_solve(
@@ -1375,11 +1375,11 @@ int fc_solve_resume_instance(
 
     if (ret == FCS_STATE_WAS_SOLVED)
     {
-        if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH))
+        if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH))
         {
             /* Call optimize_solution only once. Make sure that if
              * it has already run - we retain the old ret. */
-            if (! INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
+            if (! STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
             {
                 ret = fc_solve_optimize_solution(instance);
             }

@@ -196,8 +196,8 @@ int fc_solve_soft_dfs_do_solve(
 
     int tests_order_num = soft_thread->tests_order.num;
     int * tests_order_tests = soft_thread->tests_order.tests;
-    fcs_runtime_flags_t calc_real_depth = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
-    fcs_runtime_flags_t scans_synergy = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+    fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
@@ -963,8 +963,8 @@ int fc_solve_a_star_or_bfs_do_solve(
     fc_solve_solve_for_state_test_t * tests_list, * tests_list_end;
     fc_solve_solve_for_state_test_t * next_test;
 
-    fcs_runtime_flags_t calc_real_depth = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
-    fcs_runtime_flags_t scans_synergy = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+    fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
 
@@ -1486,8 +1486,8 @@ int fc_solve_sfs_check_state_end(
     hard_thread = soft_thread->hard_thread;
     instance = hard_thread->instance;
 
-    calc_real_depth = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
-    scans_synergy = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+    calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
     /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE
      * because it indicates that the order of the stacks and freecells
@@ -1520,7 +1520,7 @@ int fc_solve_sfs_check_state_end(
              * can be reached from this one is lower than what it
              * already have, then re-assign its parent to this state.
              * */
-            if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
+            if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
                (existing_state_val->depth > ptr_state_val->depth+1))
             {
                 /* Make a copy of "moves" because "moves" will be destroyed */

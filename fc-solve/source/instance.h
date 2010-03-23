@@ -256,21 +256,21 @@ typedef struct {
 
 typedef fcs_game_limit_t fcs_runtime_flags_t;
 
-#define INSTANCE_CLEAR_FLAG(instance, flag) \
+#define STRUCT_CLEAR_FLAG(instance, flag) \
     { (instance)->runtime_flags &= ~flag; }
 
-#define INSTANCE_TURN_ON_FLAG(instance, flag) \
+#define STRUCT_TURN_ON_FLAG(instance, flag) \
     { (instance)->runtime_flags |= flag; }
 
-#define INSTANCE_QUERY_FLAG(instance, flag) \
+#define STRUCT_QUERY_FLAG(instance, flag) \
     ((instance)->runtime_flags & flag)
 
-#define INSTANCE_SET_FLAG_TO(instance, flag, value) \
+#define STRUCT_SET_FLAG_TO(instance, flag, value) \
 { \
-    INSTANCE_CLEAR_FLAG(instance, flag); \
+    STRUCT_CLEAR_FLAG(instance, flag); \
     if (value) \
     { \
-        INSTANCE_TURN_ON_FLAG(instance, flag); \
+        STRUCT_TURN_ON_FLAG(instance, flag); \
     } \
 }
 
@@ -1028,7 +1028,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
     {
         fc_solve_instance__recycle_hard_thread(instance->optimization_thread);
     }
-    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 }
 
 extern const double fc_solve_a_star_default_weights[5];

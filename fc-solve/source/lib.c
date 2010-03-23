@@ -863,7 +863,7 @@ void DLLEXPORT freecell_solver_user_set_solution_optimization(
 
     user = (fcs_user_t *)user_instance;
 
-    INSTANCE_SET_FLAG_TO(user->instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
+    STRUCT_SET_FLAG_TO(user->instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
 }
 
 DLLEXPORT char * freecell_solver_user_move_to_string(
@@ -1320,7 +1320,7 @@ void DLLEXPORT freecell_solver_user_set_calc_real_depth(
 
     user = (fcs_user_t *)user_instance;
 
-    INSTANCE_SET_FLAG_TO(user->instance, FCS_RUNTIME_CALC_REAL_DEPTH, calc_real_depth);
+    STRUCT_SET_FLAG_TO(user->instance, FCS_RUNTIME_CALC_REAL_DEPTH, calc_real_depth);
 }
 
 void DLLEXPORT freecell_solver_user_set_soft_thread_name(
@@ -1400,7 +1400,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
         user->instance->opt_tests_order.tests = NULL;
     }
 
-    INSTANCE_CLEAR_FLAG(user->instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
+    STRUCT_CLEAR_FLAG(user->instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 
     ret =
         fc_solve_apply_tests_order(
@@ -1411,7 +1411,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 
     if (!ret)
     {
-        INSTANCE_TURN_ON_FLAG(user->instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
+        STRUCT_TURN_ON_FLAG(user->instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
     }
 
     return ret;
@@ -1426,7 +1426,7 @@ void DLLEXPORT freecell_solver_user_set_reparent_states(
 
     user = (fcs_user_t *)user_instance;
 
-    INSTANCE_SET_FLAG_TO(user->instance,
+    STRUCT_SET_FLAG_TO(user->instance,
             FCS_RUNTIME_TO_REPARENT_STATES_PROTO, to_reparent_states);
 }
 
@@ -1439,7 +1439,7 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
 
     user = (fcs_user_t *)user_instance;
 
-    INSTANCE_SET_FLAG_TO(user->instance, FCS_RUNTIME_SCANS_SYNERGY, synergy);
+    STRUCT_SET_FLAG_TO(user->instance, FCS_RUNTIME_SCANS_SYNERGY, synergy);
 }
 
 int DLLEXPORT freecell_solver_user_next_instance(
