@@ -1091,7 +1091,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
         /*
          * Move to the next thread if it's already finished
          * */
-        if (soft_thread->is_finished)
+        if (STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED))
         {
             /*
              * Hmmpf - duplicate code. That's ANSI C for you.
@@ -1218,7 +1218,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
          * */
         if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
-            soft_thread->is_finished = 1;
+            STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED);
             hard_thread->num_soft_threads_finished++;
             if (hard_thread->num_soft_threads_finished == hard_thread->num_soft_threads)
             {
