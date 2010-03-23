@@ -1094,7 +1094,7 @@ int fc_solve_a_star_or_bfs_do_solve(
         }
 
         TRACE0("perform_tests");
-        /* Do all the tests at one go, because that the way it should be
+        /* Do all the tests at one go, because that is the way it should be
            done for BFS and A*
         */
         derived.num_states = 0;
