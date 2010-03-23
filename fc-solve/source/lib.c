@@ -1400,7 +1400,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
         user->instance->opt_tests_order.tests = NULL;
     }
 
-    user->instance->opt_tests_order_set = 0;
+    INSTANCE_CLEAR_FLAG(user->instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 
     ret =
         fc_solve_apply_tests_order(
@@ -1411,7 +1411,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 
     if (!ret)
     {
-        user->instance->opt_tests_order_set = 1;
+        INSTANCE_TURN_ON_FLAG(user->instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
     }
 
     return ret;

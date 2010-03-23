@@ -288,6 +288,10 @@ enum
      * the depth of a state that was reached.
      * */
     FCS_RUNTIME_CALC_REAL_DEPTH = (1 << 2),
+    /*
+     * A flag that indicates if instance->opt_tests_order was set.
+     */
+    FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = (1 << 3),
 };
 
 typedef struct
@@ -494,8 +498,6 @@ typedef struct
     /*
      * The tests order for the optimization scan as specified by the user.
      * */
-    int opt_tests_order_set;
-
     fcs_tests_order_t opt_tests_order;
 
     /*

@@ -400,7 +400,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->instance_tests_order.num = 0;
     instance->instance_tests_order.tests = NULL;
 
-    instance->opt_tests_order_set = 0;
+    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 
     instance->opt_tests_order.num = 0;
     instance->opt_tests_order.tests = NULL;
@@ -502,7 +502,7 @@ void fc_solve_free_instance(fc_solve_instance_t * instance)
 
     free(instance->instance_tests_order.tests);
 
-    if (instance->opt_tests_order_set)
+    if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
         free(instance->opt_tests_order.tests);
     }
@@ -618,7 +618,10 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS,
             &total_tests
         );
-        if (instance->opt_tests_order_set == 0)
+        if (!INSTANCE_QUERY_FLAG(
+                instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET
+            )
+        )
         {
             /*
              *
@@ -640,7 +643,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             instance->opt_tests_order.tests = tests;
             instance->opt_tests_order.num =
                 num_tests;
-            instance->opt_tests_order_set = 1;
+            INSTANCE_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
         }
     }
 }
@@ -806,7 +809,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     soft_thread = optimization_thread->soft_threads;
 
-    if (instance->opt_tests_order_set)
+    if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
         if (soft_thread->tests_order.tests != NULL)
         {
