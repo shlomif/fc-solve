@@ -45,3 +45,5 @@ test script.)
 * Handle the case where the instance->hard_threads are re-allocated and
 the pointers from the soft_threads to them are not updated.
 
+* Add a +-o+ option to fc-solve to output to a different file than stdout.
+

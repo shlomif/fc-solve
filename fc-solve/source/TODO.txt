@@ -11,8 +11,6 @@ Pressing
 
 * Add some command line examples to +USAGE.txt+ .
 
-* Add a +-o+ option to fc-solve to output to a different file than stdout.
-
 Non-pressing
 ------------
 
