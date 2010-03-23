@@ -1320,7 +1320,7 @@ void DLLEXPORT freecell_solver_user_set_calc_real_depth(
 
     user = (fcs_user_t *)user_instance;
 
-    user->instance->calc_real_depth = calc_real_depth;
+    INSTANCE_SET_FLAG_TO(user->instance, FCS_RUNTIME_CALC_REAL_DEPTH, calc_real_depth);
 }
 
 void DLLEXPORT freecell_solver_user_set_soft_thread_name(

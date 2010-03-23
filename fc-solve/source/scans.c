@@ -196,7 +196,7 @@ int fc_solve_soft_dfs_do_solve(
 
     int tests_order_num = soft_thread->tests_order.num;
     int * tests_order_tests = soft_thread->tests_order.tests;
-    int calc_real_depth = instance->calc_real_depth;
+    fcs_runtime_flags_t calc_real_depth = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
     fcs_derived_states_list_t * derived_states_list;
@@ -963,7 +963,7 @@ int fc_solve_a_star_or_bfs_do_solve(
     fc_solve_solve_for_state_test_t * tests_list, * tests_list_end;
     fc_solve_solve_for_state_test_t * next_test;
 
-    int calc_real_depth = instance->calc_real_depth;
+    fcs_runtime_flags_t calc_real_depth = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
 
@@ -1478,14 +1478,15 @@ int fc_solve_sfs_check_state_end(
     fc_solve_hard_thread_t * hard_thread;
     fc_solve_instance_t * instance;
     int check;
-    int calc_real_depth;
+    fcs_runtime_flags_t calc_real_depth;
     int scans_synergy;
 
     temp_move = fc_solve_empty_move;
 
     hard_thread = soft_thread->hard_thread;
     instance = hard_thread->instance;
-    calc_real_depth = instance->calc_real_depth;
+
+    calc_real_depth = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
     scans_synergy = instance->scans_synergy;
 
     /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE

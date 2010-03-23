@@ -445,7 +445,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->num_hard_threads_finished = 0;
 
-    instance->calc_real_depth = 0;
+    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 
     instance->to_reparent_states_proto = 0;
 

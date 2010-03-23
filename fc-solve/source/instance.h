@@ -283,6 +283,11 @@ enum
      * Specifies that we are now running the optimization thread.
      * */
     FCS_RUNTIME_IN_OPTIMIZATION_THREAD = (1 << 1),
+    /*
+     * A flag that indicates whether or not to explicitly calculate
+     * the depth of a state that was reached.
+     * */
+    FCS_RUNTIME_CALC_REAL_DEPTH = (1 << 2),
 };
 
 typedef struct
@@ -485,12 +490,6 @@ typedef struct
      * the instance terminates.
      * */
     int num_hard_threads_finished;
-
-    /*
-     * A flag that indicates whether or not to explicitly calculate
-     * the depth of a state that was reached.
-     * */
-    int calc_real_depth;
 
     /*
      * The tests order for the optimization scan as specified by the user.
