@@ -861,12 +861,35 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
         fc_solve_initialize_bfs_queue(soft_thread);
     }
 
+    {
+        fc_solve_solve_for_state_test_t * tests_list, * next_test;
+        int tests_order_num;
+        int * tests_order_tests;
+        int i;
+
+        tests_order_tests = soft_thread->tests_order.tests;
+        
+        tests_order_num = soft_thread->tests_order.num;
+
+        tests_list = malloc(sizeof(tests_list[0]) * tests_order_num);
+
+        for (i = 0, next_test = tests_list ; i < tests_order_num ; i++)
+        {
+            *(next_test++) =
+                    fc_solve_sfs_tests[
+                        tests_order_tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK
+                    ];
+        }
+        soft_thread->method_specific.befs.tests_list = tests_list;
+        soft_thread->method_specific.befs.tests_list_end = next_test;
+    }
+
     /* Initialize the first element to indicate it is the first */
     ptr_orig_state_val->parent_val = NULL;
     ptr_orig_state_val->moves_to_parent = NULL;
     ptr_orig_state_val->depth = 0;
 
-    soft_thread->first_state_to_check_val = ptr_orig_state_val;
+    soft_thread->first_state_to_check_val = ptr_orig_state_val;  
 
     return;
 }
@@ -937,8 +960,9 @@ int fc_solve_a_star_or_bfs_do_solve(
     DECLARE_GAME_PARAMS();
 #endif
 
-    int tests_order_num;
-    int * tests_order_tests;
+    fc_solve_solve_for_state_test_t * tests_list, * tests_list_end;
+    fc_solve_solve_for_state_test_t * next_test;
+
     int calc_real_depth = instance->calc_real_depth;
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
@@ -957,8 +981,8 @@ int fc_solve_a_star_or_bfs_do_solve(
     derived.num_states = 0;
     derived.states = NULL;
 
-    tests_order_num = soft_thread->tests_order.num;
-    tests_order_tests = soft_thread->tests_order.tests;
+    tests_list = soft_thread->method_specific.befs.tests_list;
+    tests_list_end = soft_thread->method_specific.befs.tests_list_end;
 
     ptr_state_val = soft_thread->first_state_to_check_val;
 
@@ -1098,11 +1122,12 @@ int fc_solve_a_star_or_bfs_do_solve(
            done for BFS and A*
         */
         derived.num_states = 0;
-        for(a=0 ;
-            a < tests_order_num;
-            a++)
+        for(next_test = tests_list;
+            next_test < tests_list_end;
+            next_test++
+           )
         {
-            check = fc_solve_sfs_tests[tests_order_tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
+            check = (*next_test)(
                     soft_thread,
                     ptr_state_val,
                     &derived
