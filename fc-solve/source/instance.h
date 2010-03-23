@@ -638,6 +638,15 @@ typedef struct
     char * positions_by_rank;
 } fcs_soft_dfs_stack_item_t;
 
+enum
+{
+    /*
+     * A flag that indicates if this soft thread have already been
+     * initialized.
+     * */
+    FCS_SOFT_THREAD_INITIALIZED = (1 << 0),
+};
+
 struct fc_solve_soft_thread_struct
 {
     fc_solve_hard_thread_t * hard_thread;
@@ -761,11 +770,7 @@ struct fc_solve_soft_thread_struct
     fcs_state_extra_info_t * first_state_to_check_val;
 
 
-    /*
-     * A flag that indicates if this soft thread have already been
-     * initialized.
-     * */
-    int initialized;
+    fcs_runtime_flags_t runtime_flags;
 
     /*
      * The number of iterations with which to process this scan
@@ -958,7 +963,7 @@ static GCC_INLINE void fc_solve_reset_soft_thread(
     )
 {
     soft_thread->is_finished = 0;
-    soft_thread->initialized = 0;
+    STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
 }
 
 static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
