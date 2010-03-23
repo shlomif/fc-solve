@@ -254,6 +254,25 @@ typedef struct {
 
 } fcs_game_type_params_t;
 
+typedef fcs_game_limit_t fcs_runtime_flags_t;
+
+#define INSTANCE_CLEAR_FLAG(instance, flag) \
+    { (instance)->runtime_flags &= ~flag; }
+
+#define INSTANCE_TURN_ON_FLAG(instance, flag) \
+    { (instance)->runtime_flags |= flag; }
+
+#define INSTANCE_QUERY_FLAG(instance, flag) \
+    ((instance)->runtime_flags & flag)
+
+enum
+{
+    /* A flag that indicates whether to optimize the solution path
+       at the end of the scan */
+    FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = (1 << 0),
+
+};
+
 typedef struct
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
@@ -401,9 +420,7 @@ typedef struct
 
 #endif
 
-    /* A flag that indicates whether to optimize the solution path
-       at the end of the scan */
-    int optimize_solution_path;
+    fcs_runtime_flags_t runtime_flags;
 
     /* This is a place-holder for the initial state */
     fcs_state_extra_info_t * state_copy_ptr_val;

@@ -438,7 +438,8 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->solution_moves.moves = NULL;
 
-    instance->optimize_solution_path = 0;
+    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH);
+ 
     instance->optimization_thread = NULL;
     instance->in_optimization_thread = 0;
 
@@ -1364,7 +1365,7 @@ int fc_solve_resume_instance(
 
     if (ret == FCS_STATE_WAS_SOLVED)
     {
-        if (instance->optimize_solution_path)
+        if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH))
         {
             /* Call optimize_solution only once. Make sure that if
              * it has already run - we retain the old ret. */
