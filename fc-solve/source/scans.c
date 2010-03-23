@@ -197,17 +197,17 @@ int fc_solve_soft_dfs_do_solve(
     int tests_order_num = soft_thread->tests_order.num;
     int * tests_order_tests = soft_thread->tests_order.tests;
     fcs_runtime_flags_t calc_real_depth = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    fcs_runtime_flags_t scans_synergy = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
     int soft_thread_id = soft_thread->id;
     fcs_derived_states_list_t * derived_states_list;
-    int scans_synergy;
     fcs_rand_t * rand_gen;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
 
-    scans_synergy = instance->scans_synergy;
 
     the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth]);
 
@@ -964,10 +964,10 @@ int fc_solve_a_star_or_bfs_do_solve(
     fc_solve_solve_for_state_test_t * next_test;
 
     fcs_runtime_flags_t calc_real_depth = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    fcs_runtime_flags_t scans_synergy = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
     int soft_thread_id = soft_thread->id;
     int is_a_complete_scan = soft_thread->is_a_complete_scan;
 
-    int scans_synergy = instance->scans_synergy;
     union {
         struct {
             fcs_states_linked_list_item_t * queue;
@@ -1479,7 +1479,7 @@ int fc_solve_sfs_check_state_end(
     fc_solve_instance_t * instance;
     int check;
     fcs_runtime_flags_t calc_real_depth;
-    int scans_synergy;
+    fcs_runtime_flags_t scans_synergy;
 
     temp_move = fc_solve_empty_move;
 
@@ -1487,7 +1487,7 @@ int fc_solve_sfs_check_state_end(
     instance = hard_thread->instance;
 
     calc_real_depth = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
-    scans_synergy = instance->scans_synergy;
+    scans_synergy = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
     /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE
      * because it indicates that the order of the stacks and freecells

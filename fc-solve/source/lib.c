@@ -1439,7 +1439,7 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
 
     user = (fcs_user_t *)user_instance;
 
-    user->instance->scans_synergy = synergy;
+    INSTANCE_SET_FLAG_TO(user->instance, FCS_RUNTIME_SCANS_SYNERGY, synergy);
 }
 
 int DLLEXPORT freecell_solver_user_next_instance(

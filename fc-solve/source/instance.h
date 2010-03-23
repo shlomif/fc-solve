@@ -302,6 +302,16 @@ enum
      * */
     FCS_RUNTIME_TO_REPARENT_STATES_PROTO = (1 << 4),
     FCS_RUNTIME_TO_REPARENT_STATES_REAL  = (1 << 5),
+    /*
+     * This variable determines how the scans cooperate with each other.
+     *
+     * A value of 0 indicates that they don't and only share the same
+     * states collection.
+     *
+     * A value of 1 indicates that they mark states as dead-end,
+     * which may help or hinder other scans.
+     * */
+    FCS_RUNTIME_SCANS_SYNERGY  = (1 << 6),
 };
 
 typedef struct
@@ -509,18 +519,6 @@ typedef struct
      * The tests order for the optimization scan as specified by the user.
      * */
     fcs_tests_order_t opt_tests_order;
-    
-    /*
-     * This variable determines how the scans cooperate with each other.
-     *
-     * A value of 0 indicates that they don't and only share the same
-     * states collection.
-     *
-     * A value of 1 indicates that they mark states as dead-end,
-     * which may help or hinder other scans.
-     * */
-    int scans_synergy;
-
 } fc_solve_instance_t;
 
 

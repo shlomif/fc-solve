@@ -451,7 +451,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     /* Make the 1 the default, because otherwise scans will not cooperate
      * with one another. */
-    instance->scans_synergy = 1;
+    INSTANCE_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY); 
 
     return instance;
 }
@@ -1228,7 +1228,9 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
              * then we may still need to continue running the other threads
              * which may have blocked some positions / states in the graph.
              * */
-            if (soft_thread->is_a_complete_scan && (!instance->scans_synergy))
+            if (soft_thread->is_a_complete_scan && 
+                    (! INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY))
+               )
             {
                 return FCS_STATE_IS_NOT_SOLVEABLE;
             }
