@@ -50,6 +50,7 @@ struct fc_solve_display_information_context_struct
     int display_moves;
     int display_states;
     int standard_notation;
+    const char * output_filename;
 };
 
 typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
@@ -66,9 +67,8 @@ static void init_debug_context(
     dc->display_moves = 0;
     dc->display_states = 1;
     dc->standard_notation = 0;
+    dc->output_filename = NULL;
 }
-
-
 
 static void my_iter_handler(
     void * user_instance,
@@ -146,6 +146,8 @@ help_screen_t help_screens[] = {
 "     display the summary help screen\n"
 "--version\n"
 "     display the version number of the components\n"
+"-o [Filename] --output [Filename]\n"
+"     Redirect output to a file.\n"
 "-i     --iter-output\n"
 "     display the iteration number and depth in every state that is checked\n"
 "-s     --state-output\n"
@@ -415,7 +417,7 @@ static void print_help_string(const char * key)
 
 static int cmd_line_callback(
     void * instance,
-    int argc GCC_UNUSED,
+    int argc,
     const char * argv[],
     int arg,
     int * num_to_skip,
@@ -482,6 +484,17 @@ static int cmd_line_callback(
     {
         dc->canonized_order_output = 1;
     }
+    else if ((!strcmp(argv[arg], "-o")) || (!strcmp(argv[arg], "--output")))
+    {
+        arg++;
+        if (arg == argc)
+        {
+            return FCS_CMD_LINE_STOP;        
+        }
+        *num_to_skip = 2;
+        dc->output_filename = (const char *)argv[arg];
+        return FCS_CMD_LINE_SKIP;
+    }    
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
     {
         dc->display_10_as_t = 1;
@@ -596,6 +609,7 @@ static char * known_parameters[] = {
     "-snx", "--standard-notation-extended",
     "-sam", "--display-states-and-moves",
     "-pi", "--display-parent-iter",
+    "-o", "--output",
     "--reset",
     "--version",
     NULL
@@ -744,17 +758,35 @@ int main(int argc, char * argv[])
     }
     else
     {
+        FILE * output_fh;
+
+        if (debug_context.output_filename)
+        {
+            output_fh = fopen(debug_context.output_filename, "wt");
+            if (! output_fh)
+            {
+                fprintf(stderr, 
+                        "Could not open output file '%s' for writing!",
+                        debug_context.output_filename
+                       );
+                return -1;
+            }
+        }
+        else
+        {
+            output_fh = stdout;
+        }
+
         if (ret == FCS_STATE_WAS_SOLVED)
         {
-            printf("-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+            fprintf(output_fh, "-=-=-=-=-=-=-=-=-=-=-=-\n\n");
             {
                 fcs_move_t move;
                 FILE * move_dump;
                 char * as_string;
                 int move_num = 0;
 
-                move_dump = stdout;
-
+                move_dump = output_fh;
 
                 if (debug_context.display_states)
                 {
@@ -845,23 +877,31 @@ int main(int argc, char * argv[])
                 }
             }
 
-            printf("This game is solveable.\n");
+            fprintf(output_fh, "This game is solveable.\n");
         }
         else
         {
-            printf ("I could not solve this game.\n");
+            fprintf (output_fh, "I could not solve this game.\n");
         }
 
-        printf(
+        fprintf(
+            output_fh,
             "Total number of states checked is %i.\n",
             freecell_solver_user_get_num_times(instance)
             );
 #if 1
-        printf(
+        fprintf(
+            output_fh,
             "This scan generated %i states.\n",
             freecell_solver_user_get_num_states_in_collection(instance)
             );
 #endif
+
+        if (debug_context.output_filename)
+        {
+            fclose(output_fh);
+            output_fh = NULL;
+        }
     }
 
     freecell_solver_user_free(instance);

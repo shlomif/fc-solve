@@ -236,6 +236,22 @@ This option (assuming the -s and -i options are specified) will also
 display the iteration index of the state from which the current state
 was derived. This is especially useful for A* or BFS scans.
 
+-o [filename] , --output [filename]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Outputs to a file instead of standard output. So for example:
+
+----------------------
+$ fc-solve -o 2405.solution.txt 2405.board
+----------------------
+
+Will put the solution to the file in 2405.board in the file 
++2405.solution.txt+ . This will also be done using:
+
+----------------------
+$ fc-solve --output 2405.solution.txt 2405.board
+----------------------
+
 Game Variants Options
 ---------------------
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -45,6 +45,7 @@ sub verify_solution_test
 
     my $deal = $args->{deal};
     my $msdeals = $args->{msdeals};
+    my $output_file = $args->{output_file};
 
     if ($deal !~ m{\A[1-9][0-9]*\z})
     {
@@ -57,19 +58,40 @@ sub verify_solution_test
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
-    open my $fc_solve_output,
+    my $fc_solve_output;
+
+    my $cl_prefix = 
         ($msdeals 
-            ? "pi-make-microsoft-freecell-board $deal | " 
-            : "make_pysol_freecell_board.py $deal $variant | "
-        ) .
-        "$fc_solve_exe -g $variant " . shell_quote(@$theme) . " -p -t -sam |"
-        or Carp::confess "Error! Could not open the fc-solve pipeline";
+                ? "pi-make-microsoft-freecell-board $deal | " 
+                : "make_pysol_freecell_board.py $deal $variant | "
+        ) . $fc_solve_exe . " ";
+    my $cl_suffix = "-g $variant " . shell_quote(@$theme) . " -p -t -sam";
+
+    if (! $output_file)
+    {
+        open $fc_solve_output, "$cl_prefix $cl_suffix |"
+            or Carp::confess "Error! Could not open the fc-solve pipeline";
+    }
+    else
+    {
+        if (system("$cl_prefix -o " . shell_quote($output_file) . " $cl_suffix"))
+        {
+            Carp::confess"Error could not execute the fc-solve pipeline.";
+        }
+        open $fc_solve_output, "<", $output_file
+            or Carp::confess("Could not open file for reading - $!");
+    }
 
     my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new();
 
     $sha->add_file($fc_solve_output);
 
     close ($fc_solve_output);
+
+    if ($output_file)
+    {
+        unlink($output_file);
+    }
 
     if (should_fill_in_id($id))
     {
@@ -206,6 +228,11 @@ verify_solution_test(
     }, 
     "Freecell MS 254,076 while using -l by with dead-end-marks"
 );
+
+# TEST
+verify_solution_test({id => "freecell24", deal => 24, 
+        output_file => "24.solution.txt",}, 
+    "Verifying the solution of deal No. 24 with -o");
 
 # Store the changes at the end so they won't get lost.
 DumpFile($digests_storage_fn, $digests_storage);
