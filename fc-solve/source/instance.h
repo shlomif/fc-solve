@@ -279,7 +279,10 @@ enum
     /* A flag that indicates whether to optimize the solution path
        at the end of the scan */
     FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = (1 << 0),
-
+    /* 
+     * Specifies that we are now running the optimization thread.
+     * */
+    FCS_RUNTIME_IN_OPTIMIZATION_THREAD = (1 << 1),
 };
 
 typedef struct
@@ -475,11 +478,6 @@ typedef struct
      * This is the hard-thread used for the optimization scan.
      * */
     struct fc_solve_hard_thread_struct * optimization_thread;
-
-    /* 
-     * Specifies that we are now running the optimization thread.
-     * */
-    int in_optimization_thread;
 
     /*
      * A counter that determines how many of the hard threads that belong
@@ -1031,7 +1029,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
     {
         fc_solve_instance__recycle_hard_thread(instance->optimization_thread);
     }
-    instance->in_optimization_thread = 0;
+    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 }
 
 extern const double fc_solve_a_star_default_weights[5];

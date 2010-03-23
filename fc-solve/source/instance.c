@@ -441,7 +441,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH);
  
     instance->optimization_thread = NULL;
-    instance->in_optimization_thread = 0;
+    INSTANCE_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 
     instance->num_hard_threads_finished = 0;
 
@@ -832,7 +832,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     fc_solve_soft_thread_init_a_star_or_bfs(soft_thread);
     soft_thread->initialized = 1;
 
-    instance->in_optimization_thread = 1;
+    INSTANCE_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
    
     return
         fc_solve_a_star_or_bfs_do_solve(
@@ -1281,7 +1281,7 @@ int fc_solve_resume_instance(
      *
      * Else, proceed with the normal total scan.
      * */
-    if (instance->in_optimization_thread)
+    if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
     {
         ret =
             fc_solve_a_star_or_bfs_do_solve(
@@ -1369,7 +1369,7 @@ int fc_solve_resume_instance(
         {
             /* Call optimize_solution only once. Make sure that if
              * it has already run - we retain the old ret. */
-            if (! instance->in_optimization_thread)
+            if (! INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
             {
                 ret = fc_solve_optimize_solution(instance);
             }
