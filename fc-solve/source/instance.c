@@ -791,7 +791,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     fc_solve_soft_thread_t * soft_thread;
     fc_solve_hard_thread_t * optimization_thread;
 
-    instance->to_reparent_states_real = 1;
+    INSTANCE_TURN_ON_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL);
 
     if (! instance->optimization_thread)
     {
@@ -1033,7 +1033,12 @@ int fc_solve_solve_instance(
         }
     }
 
-    instance->to_reparent_states_real = INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO);
+    INSTANCE_SET_FLAG_TO(instance,
+        FCS_RUNTIME_TO_REPARENT_STATES_REAL,
+        INSTANCE_QUERY_FLAG(
+            instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO
+        )
+    );
 
     return fc_solve_resume_instance(instance);
 }

@@ -1520,7 +1520,7 @@ int fc_solve_sfs_check_state_end(
              * can be reached from this one is lower than what it
              * already have, then re-assign its parent to this state.
              * */
-            if (instance->to_reparent_states_real &&
+            if (INSTANCE_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
                (existing_state_val->depth > ptr_state_val->depth+1))
             {
                 /* Make a copy of "moves" because "moves" will be destroyed */
