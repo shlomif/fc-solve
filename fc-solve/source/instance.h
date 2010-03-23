@@ -265,6 +265,15 @@ typedef fcs_game_limit_t fcs_runtime_flags_t;
 #define INSTANCE_QUERY_FLAG(instance, flag) \
     ((instance)->runtime_flags & flag)
 
+#define INSTANCE_SET_FLAG_TO(instance, flag, value) \
+{ \
+    INSTANCE_CLEAR_FLAG(instance, flag); \
+    if (value) \
+    { \
+        INSTANCE_TURN_ON_FLAG(instance, flag); \
+    } \
+}
+
 enum
 {
     /* A flag that indicates whether to optimize the solution path

@@ -863,11 +863,7 @@ void DLLEXPORT freecell_solver_user_set_solution_optimization(
 
     user = (fcs_user_t *)user_instance;
 
-    INSTANCE_CLEAR_FLAG(user->instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH);
-    if (optimize)
-    {
-        INSTANCE_TURN_ON_FLAG(user->instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH);
-    }
+    INSTANCE_SET_FLAG_TO(user->instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
 }
 
 DLLEXPORT char * freecell_solver_user_move_to_string(
