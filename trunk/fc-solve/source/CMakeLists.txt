@@ -299,6 +299,7 @@ INCLUDE(CPack)
 include(CheckFunctionExists)
 INCLUDE(CheckCCompilerFlag)
 INCLUDE(FindThreads)
+INCLUDE(CheckIncludeFiles)
 
 ADD_SUBDIRECTORY ("board_gen")
 ADD_SUBDIRECTORY ("man")
@@ -386,7 +387,12 @@ ENDIF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
 # Find libqt4 because Freecell Solver™ Enterprise Edition requires it.
 FIND_PACKAGE(Qt4 4.4.3 COMPONENTS QtCore QtGui QtXml REQUIRED )
 
-# 
+CHECK_INCLUDE_FILES("gmp.h" GMP_H_FOUND)
+
+IF (NOT GMP_H_FOUND)
+    MESSAGE(FATAL_ERROR "gmp.h was not found")
+ENDIF(NOT GMP_H_FOUND)
+
 TARGET_LINK_LIBRARIES (freecell-solver 
     ${MATH_LIB} ${LIBTCMALLOC_LIB_LIST} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB}
     )
