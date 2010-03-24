@@ -1,8 +1,15 @@
-Freecell Solver's News File
-===========================
+Freecell Solver™ Enterprise Edition's News File
+===============================================
 Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
+
+Freecell Solver™ Enterprise Edition Version 1.0.0
+-----------------------------------------
+
+1. Made Freecell Solver 2.40.0 Enterprise ready, thus yielding
+Freecell Solver™ Enterprise Edition version 1.0.0. Read the +README.txt+
+file for details.
 
 Version 2.40.0: (27-Jan-2010)
 -----------------------------
