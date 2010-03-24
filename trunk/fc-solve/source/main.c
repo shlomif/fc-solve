@@ -390,6 +390,10 @@ help_screen_t help_screens[] = {
 "Contact Shlomi Fish, http://www.shlomifish.org/ for more information.\n"
 },
 {
+"enterprise",
+"Happy April Fools' Day!\n" 
+},
+{
     NULL,
     NULL
 }
@@ -586,6 +590,7 @@ static char * known_parameters[] = {
     "-h", "--help",
         "--help-configs", "--help-options", "--help-problems",
         "--help-real-help", "--help-short-sol", "--help-summary",
+        "--help-enterprise",
     "-i", "--iter-output",
     "-s", "--state-output",
     "-p", "--parseable-output",

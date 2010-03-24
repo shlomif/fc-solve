@@ -1,5 +1,5 @@
-Freecell Solver Readme File
-===========================
+Freecell Solver™ Enterprise Edition Readme File
+===============================================
 Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-08-29
 :Revision: $Id$
@@ -7,24 +7,15 @@ Shlomi Fish <shlomif@cpan.org>
 Introduction
 ------------
 
-This is Freecell Solver version 2.40.x, a program that automatically
-solves most layouts of Freecell, and similar Solitaire variants as
-well as those of Simple Simon.
+This is Freecell Solver™ Enterprise Edition version 1.0.0. For information
+about the enterprise features, build the program and type:
 
-Freecell Solver is distributed under the MIT/X11 License 
-( http://en.wikipedia.org/wiki/MIT_License ), a free, permissive, 
-public-domain like, open-source license.
+-------------
+$ ./fc-solve --help-enterprise
+-------------
 
-Note that the Freecell Solver source and Win32 binary distributions *do not*
-provide a graphical user-interface (GUI) and are primarily meant to be used
-by Solitaire researchers and software developers. If you're looking for a
-suitable GUI based on Freecell Solver, see our links at:
-
-http://fc-solve.berlios.de/links.html#front_ends
-
-I hope you'll enjoy using Freecell Solver, and make the best of it.
-
--- Shlomi Fish ( http://www.shlomifish.org/ )
+Freecell Solver™ Enterprise Edition is distributed under the Affero General
+Public License v3 (AGPLv3) as detailed in the file +COPYING.txt+.
 
 Building
 --------
