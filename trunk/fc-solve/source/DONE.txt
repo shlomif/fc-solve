@@ -1,0 +1,33 @@
+* Add fcs_flip_top_card() to the things that are not done in FCS_FREECELL_ONLY.
+
+* Change fc_solve_rand_alloc() away from malloc() into handling a pointer
+to a rand_struct.
+
+* Put the rest of the news (from http://fc-solve.berlios.de/ ) inside the
+NEWS file.
+
+* Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 
+sfs_check_state_end() ) to functions, and see if it actually makes it faster.
+
+* Write automated tests for split_cmd_line.c . 
+
+* Make sure that "rpmbuild -tb freecell-solver....tar.bz2" works.
+Right now, it only works if the .tar.gz is present.
+
+* Experiment with getting rid of pointer to functions in the hash comparison
+functions. They may incur a large run-time overhead. (inspired by Linux
+kernel patterns from LWN.net).
+
+* s/may be/maybe/ in +README.win32.txt+ .
+
+* Update the "long solutions" help screen of fc-solve with the new presets.
+
+* Deal with the inability to "make package_source" inside an unpacked
+.../freecell-solver-x.y.z/ directory.
+
+* Make sure that we can build Freecell Solver inside a ./build directory
+without relying on asciidoc.
+
+* Abstract away the hash changes for the columns-vs-states hash.
+** Create an enum for choosing which one.
+
