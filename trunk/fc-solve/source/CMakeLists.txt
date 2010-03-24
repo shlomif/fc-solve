@@ -300,6 +300,7 @@ include(CheckFunctionExists)
 INCLUDE(CheckCCompilerFlag)
 INCLUDE(FindThreads)
 INCLUDE(CheckIncludeFiles)
+INCLUDE(FindPkgConfig)
 
 ADD_SUBDIRECTORY ("board_gen")
 ADD_SUBDIRECTORY ("man")
@@ -387,11 +388,26 @@ ENDIF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
 # Find libqt4 because Freecell Solver™ Enterprise Edition requires it.
 FIND_PACKAGE(Qt4 4.4.3 COMPONENTS QtCore QtGui QtXml REQUIRED )
 
+# Find GNU MP because Freecell Solver™ Enterprise Edition requires it.
 CHECK_INCLUDE_FILES("gmp.h" GMP_H_FOUND)
 
 IF (NOT GMP_H_FOUND)
     MESSAGE(FATAL_ERROR "gmp.h was not found")
 ENDIF(NOT GMP_H_FOUND)
+
+# Find Boost because Freecell Solver™ Enterprise Edition requires it.
+FIND_PACKAGE( Boost 1.36.0 )
+
+IF(NOT Boost_FOUND)
+    MESSAGE(FATAL_ERROR "Boost was not found")
+ENDIF()
+
+# Find glib2 because Freecell Solver™ Enterprise Edition requires it.
+PKG_CHECK_MODULES (GLIB2   glib-2.0>=2.20)
+
+IF(NOT GLIB2_FOUND)
+    MESSAGE(FATAL_ERROR "glib2 was not found")
+ENDIF()
 
 TARGET_LINK_LIBRARIES (freecell-solver 
     ${MATH_LIB} ${LIBTCMALLOC_LIB_LIST} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB}
