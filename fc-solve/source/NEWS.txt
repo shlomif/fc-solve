@@ -4,6 +4,41 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 2.42.0: (27-March-2010)
+-------------------------------
+
+1. Add the +-o+ / +--output+ flag to +fc-solve+ to output to a file.
+
+2. Now installing the new executables ( freecell-solver-fc-pro-range-solve , 
+freecell-solver-multi-thread-solve , freecell-solver-range-parallel-solve , 
+etc.) by default.
+
+3. Bug fix: added a missing break after a case in cmd_line.c.
+
+4. Fixed the Makefile's "pdfs" target.
+
+5. Converted many +char *+ data types in the interface to 
++freecell_solver_string_t+, which can be +const char *+. The default is
++const char *+.
+
+6. +pqueue.h+ was converted to the MIT/X11 license, with the permission of its
+author. Freecell Solver is now fullly MIT/X11.
+
+7. Fixed a Best-First-Search recycling memory leak that was reported by 
+valgrind.
+
+8. Bug fix: now continuing a solution if a is_a_complete_scan thread terminates 
+with the scans synergy set to +dead-end-marks+. This was done to avoid states 
+reported as falsely unsolvable such as MS 254,076 with +-l by+. 
+
+9. Added a forking range solver - not installed by default. See:
+http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1038 . Sometimes
+it yields somewhat better performance.
+
+10. Disabled tcmalloc in debug mode because it messes things up.
+
+11. Various internals cleanups and optimizations.
+
 Version 2.40.0: (27-Jan-2010)
 -----------------------------
 
