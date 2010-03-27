@@ -16,7 +16,7 @@ sub run
 
 run(
 	[
-	qq{C:\\Program Files\\CMake 2.6\\bin\\CMake},
+	qq{C:\\Program Files\\CMake 2.8\\bin\\CMake},
 	"-G", "MinGW Makefiles",
 	@ARGV,
 	"."
