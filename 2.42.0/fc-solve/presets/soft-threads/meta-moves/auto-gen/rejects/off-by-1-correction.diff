@@ -1,0 +1,26 @@
+Index: Shlomif/FCS/CalcMetaScan.pm
+===================================================================
+--- Shlomif/FCS/CalcMetaScan.pm	(revision 2467)
++++ Shlomif/FCS/CalcMetaScan.pm	(working copy)
+@@ -55,9 +55,19 @@
+         die "scans_data not specified!";
+     }
+ 
+-    $self->_orig_scans_data($args->{'scans_data'}->copy());
+-    $self->_scans_data($self->_orig_scans_data()->copy());
++    my $orig_data = $args->{'scans_data'}->copy();
+ 
++    # This is an off-by-1 adjustment to make sure that when scans
++    # are played, they are evaluated according to the quotas properly. The
++    # problem is that if scan "foo" is reported to solve the deal in 100
++    # iterations, then it will have to reach Iteration No. 100 to do that,
++    # and that will in fact require 101 prelude iterations in total
++    # (regardless of how they are split among the quotas.).
++    $orig_data->where($orig_data > 0) += 1;
++
++    $self->_orig_scans_data($orig_data);
++    $self->_scans_data($orig_data->copy());
++
+     $self->_selected_scans($args->{'selected_scans'}) or
+         die "selected_scans not specified!";
+ 

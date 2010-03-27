@@ -1,0 +1,37 @@
+*** moves.c.orig	Sat Oct 14 04:42:22 1995
+--- moves.c	Fri Jul  3 17:38:42 1998
+***************
+*** 329,334 ****
+--- 329,337 ----
+  static void shuffle(void) {
+      int i, d, v, c;
+      int tmp[MAXCARDS];
++     char *suit = "CSHD";
++     char *rank = "A23456789TJQK";
++     FILE *hand;
+  
+      if (game.graphic)
+  	show_message(" ");
+***************
+*** 357,362 ****
+--- 360,379 ----
+  	/* printf("c = %d, card = %d\n", c, game.cards[i-1]); */
+  	tmp[c] = -1;
+      }
++ 
++     /* dump the layout into /tmp/hand -- this uses the Seahaven layout!! */
++ 
++     hand = fopen("/tmp/hand", "w");
++     for (i = 0; i < rules.numcards; i++) {
++ 	fprintf(hand, "%c%c", rank[RANK(game.cards[i])], suit[SUIT(game.cards[i])]);
++ 	if ((i % 5) == 4) {
++ 	    fputc('\n', hand);
++ 	} else {
++ 	    fputc(' ', hand);
++ 	}
++     }
++     fputc('\n', hand);
++     fclose(hand);
+  }
+  
+  Pileindex getpile(Cardindex ind) {

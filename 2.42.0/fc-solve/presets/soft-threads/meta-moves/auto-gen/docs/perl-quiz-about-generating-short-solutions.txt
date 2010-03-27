@@ -1,0 +1,98 @@
+Subject: Perl QOTW #2010-02-22 - Freecell Scans with Short Solutions
+
+IMPORTANT: Please do not post solutions, hints, or other spoilers
+until at least 60 hours after the date of this message.  Thanks.
+
+Requests for clarifications and other discussion would be OK.
+
+---------------
+
+Today I'm borrowing the collective wisdom of the Perl Quiz-of-the-Whatever
+forum for an algorithmic task I need to accomplish for my own project.
+The project in question is Freecell Solver ( http://fc-solve.berlios.de/ ),
+which is an automated solver for http://en.wikipedia.org/wiki/FreeCell and 
+several other types of card solitaire. 
+
+fc-solve starts from the initial layout of the solitaire game and recurses
+into more and more positions, which are counted by the solver's iterations,
+until it reaches the final, solved, state where all cards have been moved to 
+the foundations.
+
+After a certain number of iterations (which are roughly indicative of 
+how long it took it to run), it yields a solution of a certain length ,which 
+is desired to be as short as possible. Note that it may also report that it
+is unable to solve the board (after going over all the derived positions) or 
+that it could not find a solution within the quota of iterations that have
+been allocated for it. 
+
+Now, fc-solve has many different atomic scans, that when run alone, each
+yield different solutions with different iteration counts and lengths.
+
+In this Subversion directory, I have collected the iterations counts and the
+solutions lengths of a sample of boards - the first 32,000 games in Microsoft
+Windows FreeCell:
+
+http://svn.berlios.de/svnroot/repos/fc-solve/trunk/fc-solve/presets/soft-threads/meta-moves/auto-gen/
+
+(short URL - http://xrl.us/bgwj3o ; there's also an https:// equivalent, which
+may work better, but it's a self-signed certificate).
+
+After installing the dependencies - PDL (= the Perl Data Language) , 
+Class::XSAccessor and Exception::Class (and maybe some others) you can query 
+it by using the script query.pl like that:
+
+<<<
+shlomi[fcs]:$presets$ scan_id="1"
+shlomi[fcs]:$presets$ board_idx="120"
+shlomi[fcs]:$presets$ perl query.pl -l "$scan_id" "$board_idx"
+123
+128
+>>>
+
+(First line is the iterations count; second line is the solution's length).
+
+You probably would like to inspect the query.pl source code and
+see how you can access the data directly using PDL, and possibly use PDL
+to convert it to a different format.
+
+Now, what I'd like to do is create a meta-scan that runs several of these
+individual scans one after the other, each with a certain quota of iterations, 
+and will select the shortest solution of all those that were able to solve
+the board. 
+
+Let's look at a numeric example (based on the actual statistics):
+
+----------------------------------------------------------------
+Deal No. | Scans Statistics                                    |
+         | 1 Iters | 1 Len | 2 Iters | 2 Len | 3 Iters | 3 Len |
+----------------------------------------------------------------
+ 1       |  123    | 127   |  1711   | 120   | 1285    | 161   |
+ 2       |   98    | 145   |    96   | 138   |   98    | 107   |
+ 3       |  125    | 115   |   104   | 109   |   93    | 110   |
+ 4       |  117    | 123   |   236   | 129   |  447    | 153   |
+ 5       |  110    | 143   |   101   | 136   |  691    | 175   |
+ 6       |  403    | 176   |   262   | 122   |  125    | 130   |
+ 7       | 1260    | 134   |   307   | 125   | 1823    | 165   |
+ 8       |   70    |  98   |    70   |  98   |  122    | 125   |
+ 9       |   -1    |  -1   | 47169   | 135   | 1097    | 136   |
+10       |  189    | 135   |   115   | 125   | 3043    | 202   |
+----------------------------------------------------------------
+
+Now if I allocate 400 iterations to each of the three scans here (and
+none to any other) then for deal #1, scan #1 will yield a solution of
+127 steps, while scan #2 will not yield any solution at all (since it requires
+1,711 iterations) and neither will scan #3 giving us a solution of 127 moves.
+
+For deal #2 all scans will finish well before the iterations limit, and the
+shortest solution chosen will be scan #3 with its 107 steps solution. 
+
+Etc.
+
+Let's suppose I have a total of $tot iterations to split among all the 
+scans in scans.txt in the distribution, into @q[0 .. $last_scan] quotas.
+
+My question is: given $tot, what should @q be so it will, on average,
+yield the shortest solutions for the 32,000 sample board?
+
+Hope you enjoy this quiz.
+
