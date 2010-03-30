@@ -4,26 +4,71 @@ use strict;
 use warnings;
 
 use Test::More tests => 16;
-use Carp;
 use Data::Dumper;
-use String::ShellQuote;
-
-use YAML::XS qw(DumpFile LoadFile);
 
 use lib './t/lib';
 
 use Games::Solitaire::FC_Solve::ShaAndLen;
 
-my $digests_storage_fn = "./t/data/digests-and-lens-storage.yml";
-my $digests_storage = LoadFile($digests_storage_fn);
+package Games::Solitaire::FC_Solve::CheckResults;
+
+use YAML::XS qw(DumpFile LoadFile);
+
+use base 'Class::Accessor';
+use String::ShellQuote;
+use Carp;
+
+use Test::More;
+
+__PACKAGE__->mk_accessors(qw(
+    digests_storage_fn
+    digests_storage
+    ));
+
+sub new
+{
+    my $class = shift;
+    my $self = {};
+
+    bless $self, $class;
+
+    $self->_init(@_);
+
+    return $self;
+}
+
+sub _init
+{
+    my $self = shift;
+    my $args = shift;
+
+    $self->digests_storage_fn($args->{data_filename});
+    $self->digests_storage(LoadFile($self->digests_storage_fn()));
+
+    return 0;
+}
+
+sub end
+{
+    my $self = shift;
+
+    # Make sure we do it only once.
+    if (defined($self->digests_storage_fn()))
+    {
+        DumpFile($self->digests_storage_fn(), $self->digests_storage());
+        $self->digests_storage_fn(undef());
+    }
+}
 
 sub should_fill_in_id
 {
+    my $self = shift;
+
     my $id = shift;
 
     return
     (
-        exists($digests_storage->{digests}->{$id})
+        exists($self->digests_storage->{digests}->{$id})
         ?  (($ENV{'FCS_DIGESTS_REPLACE_IDS'} || "") =~ m{\Q,$id,\E} )
         :  (($ENV{'FCS_DIGESTS_FILL_IDS'} || "") =~ m{\Q,$id,\E} )
     );
@@ -31,6 +76,8 @@ sub should_fill_in_id
 
 sub verify_solution_test
 {
+    my $self = shift;
+
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my $args = shift;
@@ -93,15 +140,15 @@ sub verify_solution_test
         unlink($output_file);
     }
 
-    if (should_fill_in_id($id))
+    if ($self->should_fill_in_id($id))
     {
-        $digests_storage->{digests}->{$id} =
+        $self->digests_storage->{digests}->{$id} =
         {
             'len' => $sha->len(),
             'hexdigest' => $sha->hexdigest(),
         }
     }
-    my $info = $digests_storage->{digests}->{$id};
+    my $info = $self->digests_storage->{digests}->{$id};
 
     my $test_verdict = ok (
         ($sha->hexdigest() eq $info->{'hexdigest'}) &&
@@ -120,6 +167,23 @@ sub verify_solution_test
     close($fc_solve_output);
 
     return $test_verdict;
+}
+
+package main;
+
+my $digests_storage_fn = "./t/data/digests-and-lens-storage.yml";
+
+my $verifier = Games::Solitaire::FC_Solve::CheckResults->new(
+    {
+        data_filename => $digests_storage_fn,
+    }
+);
+
+sub verify_solution_test
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    return $verifier->verify_solution_test(@_);
 }
 
 # 24 is my lucky number. (Shlomif)
@@ -235,7 +299,8 @@ verify_solution_test({id => "freecell24", deal => 24,
     "Verifying the solution of deal No. 24 with -o");
 
 # Store the changes at the end so they won't get lost.
-DumpFile($digests_storage_fn, $digests_storage);
+$verifier->end();
+
 
 =head1 COPYRIGHT AND LICENSE
 
