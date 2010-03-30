@@ -15,6 +15,7 @@ use Games::Solitaire::FC_Solve::ShaAndLen;
 __PACKAGE__->mk_accessors(qw(
     digests_storage_fn
     digests_storage
+    trim_stats
     ));
 
 sub new
@@ -36,6 +37,7 @@ sub _init
 
     $self->digests_storage_fn($args->{data_filename});
     $self->digests_storage(LoadFile($self->digests_storage_fn()));
+    $self->trim_stats($args->{trim_stats});
 
     return 0;
 }
@@ -123,7 +125,21 @@ sub verify_solution_test
 
     my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new();
 
-    $sha->add_file($fc_solve_output);
+    if ($self->trim_stats)
+    {
+        $sha->add_processed_slurp(
+            $fc_solve_output, 
+            sub {
+                my $s = shift;
+                $s =~ s/^(This game is solveable\.\n).*/$1/ms;
+                return $s;
+            }
+        );
+    }
+    else
+    {
+        $sha->add_file($fc_solve_output);
+    }
 
     close ($fc_solve_output);
 
