@@ -60,17 +60,31 @@ sub hexdigest
     return $self->_hasher->clone()->hexdigest();
 }
 
+sub _unity
+{
+    return shift;
+}
+
 sub add_file
 {
     my $self = shift;
     my $fh = shift;
+
+    return $self->add_processed_slurp($fh, \&_unity);
+}
+
+sub add_processed_slurp
+{
+    my $self = shift;
+    my $fh = shift;
+    my $callback = shift;
 
     my $buffer;
     {
         local $/;
         $buffer = <$fh>;
     }
-    return $self->add($buffer);
+    return $self->add(scalar($callback->($buffer)));
 }
 
 1;
