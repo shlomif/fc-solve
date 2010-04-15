@@ -1,16 +1,17 @@
 Jane wants to find short solutions for Freecell games using Freecell Solver.
 She gets the following statistics:
 
-Default Soft-DFS:             | --method a-star
--------------------------------------------------------------
-Iters:123 ; Length: 128       | Iters: 1355 ; Length: 126
-Iters:98 ; Length: 146        | Iters: 116 ; Length: 95
-Iters:125 ; Length: 116       | Iters: 83 ; Length: 92
-Iters:117 ; Length: 124       | Iters: 1263 ; Length: 111
-Iters:110 ; Length: 144       | Iters: 328 ; Length: 131
-Iters:403 ; Length: 177       | Iters: 13185 ; Length: 108
-Iters:1260 ; Length: 135      | Iters: 457 ; Length: 123
-Iters:70 ; Length: 99         | Iters: 175 ; Length: 109
+------------------------------
+      | Default Soft-DFS          | --method a-star
+1     | Iters: 123 ; Length: 128  | Iters: 1355 ; Length: 126
+2     | Iters: 98 ; Length: 146   | Iters: 116 ; Length: 95
+3     | Iters: 125 ; Length: 116  | Iters: 83 ; Length: 92
+4     | Iters: 117 ; Length: 124  | Iters: 1263 ; Length: 111
+5     | Iters: 110 ; Length: 144  | Iters: 328 ; Length: 131
+6     | Iters: 403 ; Length: 177  | Iters: 13185 ; Length: 108
+7     | Iters: 1260 ; Length: 135 | Iters: 457 ; Length: 123
+8     | Iters: 70 ; Length: 99    | Iters: 175 ; Length: 109
+------------------------------
 
 She decides to run the BeFS (so-called "a-star") method for 1,500 iterations
 and the DFS one for 500 iterations, like so:
