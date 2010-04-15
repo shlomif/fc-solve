@@ -34,9 +34,13 @@ moves-solution for board No. 2.
 On the other hand for this board:
 
 ------------------------------
-Iters:403 ; Length: 177       | Iters: 13185 ; Length: 108
+Iters:403 ; Length: 177 | Iters: 13185 ; Length: 108
 ------------------------------
 
 We cannot solve it using a-star in time (because 13,185 > 1,500) so Jane ends
 up with a 177-long solution. Oh well.
+
+Step 2: Stop Points
+===================
+
 
