@@ -63,4 +63,4 @@ fc-solve \
 ------------------------------
 
 Then if we found any solution after 500 iterations of +dfs+ and 1,500
-iterations of befs, then  the 10,000 iterations of +funky+ won't be run.
+iterations of befs, then the 10,000 iterations of +funky+ won't be run.
