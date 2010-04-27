@@ -41,7 +41,7 @@ We cannot solve it using a-star in time (because 13,185 > 1,500) so Jane ends
 up with a 177-long solution. Oh well.
 
 Step 2: Check Points
-===================
+====================
 
 Check points can be specified using the "CP:" syntax and allow to stop the
 process in the middle after a solution was reached. There's one implicit
@@ -64,3 +64,12 @@ fc-solve \
 
 Then if we found any solution after 500 iterations of +dfs+ and 1,500
 iterations of befs, then the 10,000 iterations of +funky+ won't be run.
+
+Step 3: Looping
+===============
+
+If a solution is not found within the first running of +--flares-plan+,
+then it will loop the plan again and so forth until either a solution is 
+found or no more iterations are left.
+
+
