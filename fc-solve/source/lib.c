@@ -109,7 +109,7 @@ typedef struct
 
 
 static void iter_handler_wrapper(
-    void * user_instance,
+    void * api_instance,
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
@@ -240,25 +240,25 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 }
 
 void DLLEXPORT freecell_solver_user_limit_iterations(
-    void * user_instance,
+    void * api_instance,
     int max_iters
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t*)user_instance;
+    user = (fcs_user_t*)api_instance;
 
     user->current_iterations_limit = max_iters;
 }
 
 void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
-    void * user_instance,
+    void * api_instance,
     int max_iters
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t*)user_instance;
+    user = (fcs_user_t*)api_instance;
 
     user->instances_list[user->current_instance_idx].limit = max_iters;
 }
@@ -268,14 +268,14 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
 #endif
 
 int DLLEXPORT freecell_solver_user_set_tests_order(
-    void * user_instance,
+    void * api_instance,
     const char * tests_order,
     char * * error_string
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t*)user_instance;
+    user = (fcs_user_t*)api_instance;
 
     return
         fc_solve_apply_tests_order(
@@ -286,19 +286,19 @@ int DLLEXPORT freecell_solver_user_set_tests_order(
 }
 
 int DLLEXPORT freecell_solver_user_solve_board(
-    void * user_instance,
+    void * api_instance,
     const char * state_as_string
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t*)user_instance;
+    user = (fcs_user_t*)api_instance;
 
     user->state_string_copy = strdup(state_as_string);
 
     user->current_instance_idx = 0;
 
-    return freecell_solver_user_resume_solution(user_instance);
+    return freecell_solver_user_resume_solution(api_instance);
 }
 
 static void recycle_instance(
@@ -348,7 +348,7 @@ static void recycle_instance(
 }
 
 int DLLEXPORT freecell_solver_user_resume_solution(
-    void * user_instance
+    void * api_instance
     )
 {
     int init_num_times;
@@ -356,7 +356,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     int ret;
     fcs_user_t * user;
 
-    user = (fcs_user_t*)user_instance;
+    user = (fcs_user_t*)api_instance;
 
     ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
@@ -556,13 +556,13 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 }
 
 int DLLEXPORT freecell_solver_user_get_next_move(
-    void * user_instance,
+    void * api_instance,
     fcs_move_t * user_move
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t*)user_instance;
+    user = (fcs_user_t*)api_instance;
 
     {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
@@ -617,7 +617,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 }
 
 DLLEXPORT char * freecell_solver_user_current_state_as_string(
-    void * user_instance,
+    void * api_instance,
     int parseable_output,
     int canonized_order_output,
     int display_10_as_t
@@ -625,7 +625,7 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
@@ -695,12 +695,12 @@ static void user_free_resources(
 }
 
 void DLLEXPORT freecell_solver_user_free(
-    void * user_instance
+    void * api_instance
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     user_free_resources(user);
 
@@ -708,24 +708,24 @@ void DLLEXPORT freecell_solver_user_free(
 }
 
 int DLLEXPORT freecell_solver_user_get_current_depth(
-    void * user_instance
+    void * api_instance
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     return (user->soft_thread->method_specific.soft_dfs.depth);
 }
 
 void DLLEXPORT freecell_solver_user_set_solving_method(
-    void * user_instance,
+    void * api_instance,
     int method
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     user->soft_thread->method = method;
 
@@ -775,13 +775,13 @@ static void apply_game_params_for_all_instances(
 
 #ifndef HARD_CODED_NUM_FREECELLS
 int DLLEXPORT freecell_solver_user_set_num_freecells(
-    void * user_instance,
+    void * api_instance,
     int freecells_num
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     if ((freecells_num < 0) || (freecells_num > MAX_NUM_FREECELLS))
     {
@@ -796,7 +796,7 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
 }
 #else
 int DLLEXPORT freecell_solver_user_set_num_freecells(
-    void * user_instance GCC_UNUSED,
+    void * api_instance GCC_UNUSED,
     int freecells_num GCC_UNUSED
     )
 {
@@ -806,13 +806,13 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
 
 #ifndef HARD_CODED_NUM_STACKS
 int DLLEXPORT freecell_solver_user_set_num_stacks(
-    void * user_instance,
+    void * api_instance,
     int stacks_num
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     if ((stacks_num < 0) || (stacks_num > MAX_NUM_STACKS))
     {
@@ -825,7 +825,7 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
 }
 #else
 int DLLEXPORT freecell_solver_user_set_num_stacks(
-    void * user_instance GCC_UNUSED,
+    void * api_instance GCC_UNUSED,
     int stacks_num GCC_UNUSED
     )
 {
@@ -835,13 +835,13 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
 
 #ifndef HARD_CODED_NUM_DECKS
 int DLLEXPORT freecell_solver_user_set_num_decks(
-    void * user_instance,
+    void * api_instance,
     int decks_num
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     if ((decks_num < 0) || (decks_num > MAX_NUM_DECKS))
     {
@@ -855,7 +855,7 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
 }
 #else
 int DLLEXPORT freecell_solver_user_set_num_decks(
-    void * user_instance GCC_UNUSED,
+    void * api_instance GCC_UNUSED,
     int decks_num GCC_UNUSED
     )
 {
@@ -864,7 +864,7 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
 #endif
 
 int DLLEXPORT freecell_solver_user_set_game(
-    void * user_instance,
+    void * api_instance,
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -873,27 +873,27 @@ int DLLEXPORT freecell_solver_user_set_game(
     int empty_stacks_fill
     )
 {
-    if (freecell_solver_user_set_num_freecells(user_instance, freecells_num))
+    if (freecell_solver_user_set_num_freecells(api_instance, freecells_num))
     {
         return 1;
     }
-    if (freecell_solver_user_set_num_stacks(user_instance, stacks_num))
+    if (freecell_solver_user_set_num_stacks(api_instance, stacks_num))
     {
         return 2;
     }
-    if (freecell_solver_user_set_num_decks(user_instance, decks_num))
+    if (freecell_solver_user_set_num_decks(api_instance, decks_num))
     {
         return 3;
     }
-    if (freecell_solver_user_set_sequences_are_built_by_type(user_instance, sequences_are_built_by))
+    if (freecell_solver_user_set_sequences_are_built_by_type(api_instance, sequences_are_built_by))
     {
         return 4;
     }
-    if (freecell_solver_user_set_sequence_move(user_instance, unlimited_sequence_move))
+    if (freecell_solver_user_set_sequence_move(api_instance, unlimited_sequence_move))
     {
         return 5;
     }
-    if (freecell_solver_user_set_empty_stacks_filled_by(user_instance, empty_stacks_fill))
+    if (freecell_solver_user_set_empty_stacks_filled_by(api_instance, empty_stacks_fill))
     {
         return 6;
     }
@@ -901,29 +901,29 @@ int DLLEXPORT freecell_solver_user_set_game(
     return 0;
 }
 
-int DLLEXPORT freecell_solver_user_get_num_times(void * user_instance)
+int DLLEXPORT freecell_solver_user_get_num_times(void * api_instance)
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     return user->iterations_board_started_at + user->fc_solve_obj->num_times - user->init_num_times;
 }
 
-int DLLEXPORT freecell_solver_user_get_limit_iterations(void * user_instance)
+int DLLEXPORT freecell_solver_user_get_limit_iterations(void * api_instance)
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     return user->fc_solve_obj->max_num_times;
 }
 
-int DLLEXPORT freecell_solver_user_get_moves_left(void * user_instance)
+int DLLEXPORT freecell_solver_user_get_moves_left(void * api_instance)
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
         return user->fc_solve_obj->solution_moves.num_moves;
     else
@@ -931,13 +931,13 @@ int DLLEXPORT freecell_solver_user_get_moves_left(void * user_instance)
 }
 
 void DLLEXPORT freecell_solver_user_set_solution_optimization(
-    void * user_instance,
+    void * api_instance,
     int optimize
 )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(user->fc_solve_obj, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
 }
@@ -951,7 +951,7 @@ DLLEXPORT char * freecell_solver_user_move_to_string(
 }
 
 DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
-    void * user_instance,
+    void * api_instance,
     fcs_move_t move,
     int standard_notation
     )
@@ -961,7 +961,7 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
     fc_solve_instance_t * instance;
 #endif
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))    
     instance = 
         user->fc_solve_obj;
@@ -979,13 +979,13 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
 }
 
 void DLLEXPORT freecell_solver_user_limit_depth(
-    void * user_instance,
+    void * api_instance,
     int max_depth
 )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     user->fc_solve_obj->max_depth = max_depth;
 }
@@ -1007,14 +1007,14 @@ int DLLEXPORT freecell_solver_user_get_max_num_decks(void)
 
 
 char * freecell_solver_user_get_invalid_state_error_string(
-    void * user_instance,
+    void * api_instance,
     int print_ts
     )
 {
     fcs_user_t * user;
     char string[80], card_str[10];
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     if (user->state_validity_ret == FCS_STATE_VALIDITY__OK)
     {
@@ -1045,14 +1045,14 @@ char * freecell_solver_user_get_invalid_state_error_string(
 }
 
 int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
-    void * user_instance,
+    void * api_instance,
     int sequences_are_built_by
     )
 {
 #ifndef FCS_FREECELL_ONLY
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     if ((sequences_are_built_by < 0) || (sequences_are_built_by > 2))
     {
@@ -1069,14 +1069,14 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
 }
 
 int DLLEXPORT freecell_solver_user_set_sequence_move(
-    void * user_instance,
+    void * api_instance,
     int unlimited_sequence_move
     )
 {
 #ifndef FCS_FREECELL_ONLY
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     user->common_preset.game_params.game_flags &= (~(1 << 4));
     user->common_preset.game_params.game_flags |=
@@ -1088,14 +1088,14 @@ int DLLEXPORT freecell_solver_user_set_sequence_move(
 }
 
 int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
-    void * user_instance,
+    void * api_instance,
     int empty_stacks_fill
     )
 {
 #ifndef FCS_FREECELL_ONLY
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     if ((empty_stacks_fill < 0) || (empty_stacks_fill > 2))
     {
@@ -1112,14 +1112,14 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
 }
 
 int DLLEXPORT freecell_solver_user_set_a_star_weight(
-    void * user_instance,
+    void * api_instance,
     int index,
     double weight
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
 #define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
     if ((index < 0) || (index >= (sizeof(user->my_a_star_weights)/sizeof(user->my_a_star_weights[0]))))
@@ -1140,13 +1140,13 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
-    void * user_instance,
+    void * api_instance,
     int index
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
 #define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
 
@@ -1156,7 +1156,7 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 #endif
 
 static void iter_handler_wrapper(
-    void * user_instance,
+    void * api_instance,
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
@@ -1170,7 +1170,7 @@ static void iter_handler_wrapper(
     state.key = ptr_state_val->key;
     state.val = ptr_state_val;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
 #ifdef DEBUG
     {
@@ -1203,7 +1203,7 @@ static void iter_handler_wrapper(
 myend:
 #endif
     user->iter_handler(
-        user_instance,
+        api_instance,
         iter_num,
         depth,
         (void *)&state,
@@ -1216,7 +1216,7 @@ myend:
 
 void set_debug_iter_output_func_to_val(fcs_user_t * user,
         void (*value)(
-    void * user_instance,
+    void * api_instance,
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
@@ -1231,14 +1231,14 @@ void set_debug_iter_output_func_to_val(fcs_user_t * user,
 }
 
 void DLLEXPORT freecell_solver_user_set_iter_handler(
-    void * user_instance,
+    void * api_instance,
     freecell_solver_user_iter_handler_t iter_handler,
     void * iter_handler_context
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     user->iter_handler = iter_handler;
 
@@ -1260,7 +1260,7 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
 #endif
 
 DLLEXPORT char * freecell_solver_user_iter_state_as_string(
-    void * user_instance HARD_CODED_UNUSED,
+    void * api_instance HARD_CODED_UNUSED,
     void * ptr_state_void,
     int parseable_output,
     int canonized_order_output,
@@ -1274,7 +1274,7 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
     fcs_standalone_state_ptrs_t * ptr_state;
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
     instance = 
         user->fc_solve_obj;
 #endif
@@ -1294,13 +1294,13 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
 }
 
 void DLLEXPORT freecell_solver_user_set_random_seed(
-    void * user_instance,
+    void * api_instance,
     int seed
 )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     fc_solve_rand_init(
             &(user->soft_thread->method_specific.soft_dfs.rand_gen), 
@@ -1308,35 +1308,35 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
             );
 }
 
-int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * user_instance)
+int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * api_instance)
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     return user->fc_solve_obj->num_states_in_collection;
 }
 
 void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
-    void * user_instance,
+    void * api_instance,
     int max_num_states
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t*)user_instance;
+    user = (fcs_user_t*)api_instance;
 
     user->fc_solve_obj->max_num_states_in_collection = max_num_states;
 }
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(
-    void * user_instance
+    void * api_instance
     )
 {
     fcs_user_t * user;
     fc_solve_soft_thread_t * soft_thread;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     soft_thread = fc_solve_new_soft_thread(user->soft_thread->hard_thread);
 
@@ -1351,25 +1351,25 @@ int DLLEXPORT freecell_solver_user_next_soft_thread(
 }
 
 extern void DLLEXPORT freecell_solver_user_set_soft_thread_step(
-    void * user_instance,
+    void * api_instance,
     int num_times_step
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     user->soft_thread->num_times_step = num_times_step;
 }
 
 int DLLEXPORT freecell_solver_user_next_hard_thread(
-    void * user_instance
+    void * api_instance
     )
 {
     fcs_user_t * user;
     fc_solve_soft_thread_t * soft_thread;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     soft_thread = fc_solve_new_hard_thread(user->fc_solve_obj);
 
@@ -1384,36 +1384,36 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(
 }
 
 int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
-    void * user_instance
+    void * api_instance
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     return user->fc_solve_obj->next_soft_thread_id;
 }
 
 void DLLEXPORT freecell_solver_user_set_calc_real_depth(
-    void * user_instance,
+    void * api_instance,
     int calc_real_depth
 )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(user->fc_solve_obj, FCS_RUNTIME_CALC_REAL_DEPTH, calc_real_depth);
 }
 
 void DLLEXPORT freecell_solver_user_set_soft_thread_name(
-    void * user_instance,
+    void * api_instance,
     freecell_solver_str_t name
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     if (user->soft_thread->name != NULL)
     {
@@ -1423,14 +1423,14 @@ void DLLEXPORT freecell_solver_user_set_soft_thread_name(
 }
 
 int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
-    void * user_instance,
+    void * api_instance,
     const char * prelude
     )
 {
     fcs_user_t * user;
     fc_solve_hard_thread_t * hard_thread;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     hard_thread = user->soft_thread->hard_thread;
 
@@ -1445,13 +1445,13 @@ int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
 }
 
 void DLLEXPORT freecell_solver_user_recycle(
-    void * user_instance
+    void * api_instance
     )
 {
     fcs_user_t * user;
     int i;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     for(i=0;i<user->num_instances;i++)
     {
@@ -1467,7 +1467,7 @@ void DLLEXPORT freecell_solver_user_recycle(
 }
 
 int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
-    void * user_instance,
+    void * api_instance,
     const char * tests_order,
     char * * error_string
     )
@@ -1475,7 +1475,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     fcs_user_t * user;
     int ret;
 
-    user = (fcs_user_t*)user_instance;
+    user = (fcs_user_t*)api_instance;
 
     if (user->fc_solve_obj->opt_tests_order.tests)
     {
@@ -1501,26 +1501,26 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 }
 
 void DLLEXPORT freecell_solver_user_set_reparent_states(
-    void * user_instance,
+    void * api_instance,
     int to_reparent_states
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(user->fc_solve_obj,
             FCS_RUNTIME_TO_REPARENT_STATES_PROTO, to_reparent_states);
 }
 
 void DLLEXPORT freecell_solver_user_set_scans_synergy(
-    void * user_instance,
+    void * api_instance,
     int synergy
     )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(user->fc_solve_obj, FCS_RUNTIME_SCANS_SYNERGY, synergy);
 }
@@ -1575,11 +1575,11 @@ int DLLEXPORT freecell_solver_user_next_instance(
     return 0;
 }
 
-int DLLEXPORT freecell_solver_user_reset(void * user_instance)
+int DLLEXPORT freecell_solver_user_reset(void * api_instance)
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     user_free_resources(user);
 
@@ -1589,21 +1589,21 @@ int DLLEXPORT freecell_solver_user_reset(void * user_instance)
 }
 
 DLLEXPORT const char * freecell_solver_user_get_lib_version(
-    void * user_instance GCC_UNUSED
+    void * api_instance GCC_UNUSED
     )
 {
     return VERSION;
 }
 
 DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
-    void * user_instance
+    void * api_instance
     )
 {
     fcs_user_t * user;
     fc_solve_hard_thread_t * hard_thread;
     fc_solve_instance_t * instance;
 
-    user = (fcs_user_t *)user_instance;
+    user = (fcs_user_t *)api_instance;
 
     instance = 
         user->fc_solve_obj;
