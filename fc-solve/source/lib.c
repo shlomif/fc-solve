@@ -47,7 +47,7 @@
 typedef struct
 {
     fc_solve_instance_t * obj;
-    int ret;
+    int ret_code;
     int limit;
 } fcs_flare_item_t;
 
@@ -55,7 +55,7 @@ typedef struct
 {
     int num_flares;
     fcs_flare_item_t flares[1];
-    int ret;
+    int ret_code;
     int limit;
 }  fcs_instance_item_t;
 
@@ -89,7 +89,7 @@ typedef struct
     fc_solve_instance_t * fc_solve_obj;
     fcs_state_keyval_pair_t state;
     fcs_state_keyval_pair_t running_state;
-    int ret;
+    int ret_code;
     int state_validity_ret;
     fcs_card_t state_validity_card;
     freecell_solver_user_iter_handler_t iter_handler;
@@ -139,7 +139,7 @@ static void iter_handler_wrapper(
     }
 
 static void user_initialize(
-        fcs_user_t * ret
+        fcs_user_t * user
         )
 {
     fcs_instance_item_t * user_instance;
@@ -152,34 +152,37 @@ static void user_initialize(
         &freecell_preset
         );
 
-    fcs_duplicate_preset(ret->common_preset, *freecell_preset);
+    fcs_duplicate_preset(user->common_preset, *freecell_preset);
 #endif
 
-    ret->instances_list = malloc(sizeof(ret->instances_list[0]));
-    ret->num_instances = 1;
-    ret->current_instance_idx = 0;
-    ret->iter_handler = NULL;
-    ret->fc_solve_obj = fc_solve_alloc_instance();
-    ret->fc_solve_obj->debug_iter_output_context = ret;
+    user->instances_list = malloc(sizeof(user->instances_list[0]));
+    user->num_instances = 1;
+    user->current_instance_idx = 0;
+    user->iter_handler = NULL;
+    user->fc_solve_obj = fc_solve_alloc_instance();
+    user->fc_solve_obj->debug_iter_output_context = user;
 #ifndef FCS_FREECELL_ONLY
-    fc_solve_apply_preset_by_ptr(ret->fc_solve_obj, &(ret->common_preset));
+    fc_solve_apply_preset_by_ptr(user->fc_solve_obj, &(user->common_preset));
 #endif
-    user_instance = &(ret->instances_list[ret->current_instance_idx]);
+    user_instance = &(user->instances_list[user->current_instance_idx]);
     user_instance->num_flares = 1;
     /* TODO : Later - allocate the flares array. */
 
     flare = &(user_instance->flares[user_instance->num_flares-1]);
 
-    flare->obj = ret->fc_solve_obj;
-    flare->ret = user_instance->ret = ret->ret = FCS_STATE_NOT_BEGAN_YET;
+    flare->obj = user->fc_solve_obj;
+    flare->ret_code =
+        user_instance->ret_code =
+        user->ret_code =
+        FCS_STATE_NOT_BEGAN_YET;
     flare->limit = user_instance->limit = -1;
-    ret->current_iterations_limit = -1;
+    user->current_iterations_limit = -1;
 
-    ret->soft_thread =
-        fc_solve_instance_get_first_soft_thread(ret->fc_solve_obj);
+    user->soft_thread =
+        fc_solve_instance_get_first_soft_thread(user->fc_solve_obj);
 
-    ret->state_string_copy = NULL;
-    ret->iterations_board_started_at = 0;
+    user->state_string_copy = NULL;
+    user->iterations_board_started_at = 0;
 }
 
 void DLLEXPORT * freecell_solver_user_alloc(void)
@@ -308,7 +311,7 @@ static void recycle_instance(
 
     user_instance = &(user->instances_list[i]);
 
-    if (user_instance->ret == FCS_STATE_WAS_SOLVED)
+    if (user_instance->ret_code == FCS_STATE_WAS_SOLVED)
     {
         fcs_move_stack_static_destroy(user->fc_solve_obj->solution_moves);
         user->fc_solve_obj->solution_moves.moves = NULL;
@@ -327,7 +330,7 @@ static void recycle_instance(
 
         flare = &(user_instance->flares[flare_idx]);
 
-        if (flare->ret != FCS_STATE_NOT_BEGAN_YET)
+        if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
             fc_solve_recycle_instance(flare->obj);
             /*
@@ -337,11 +340,11 @@ static void recycle_instance(
              * */
             user->init_num_times = 0;
 
-            flare->ret = FCS_STATE_NOT_BEGAN_YET;
+            flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
         }
     }
 
-    user_instance->ret = FCS_STATE_NOT_BEGAN_YET;
+    user_instance->ret_code = FCS_STATE_NOT_BEGAN_YET;
 }
 
 int DLLEXPORT freecell_solver_user_resume_solution(
@@ -379,7 +382,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         flare = &(user_instance->flares[flare_idx]);
 
-        if (user_instance->ret == FCS_STATE_NOT_BEGAN_YET)
+        if (user_instance->ret_code == FCS_STATE_NOT_BEGAN_YET)
         {
             int status;
 
@@ -404,9 +407,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             if (status != FCS_USER_STATE_TO_C__SUCCESS)
             {
-                user->ret = FCS_STATE_INVALID_STATE;
+                user->ret_code = FCS_STATE_INVALID_STATE;
                 user->state_validity_ret = FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
-                return user->ret;
+                return user->ret_code;
             }
 
             user->state_validity_ret = fc_solve_check_state_validity(
@@ -421,8 +424,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             if (user->state_validity_ret != FCS_STATE_VALIDITY__OK)
             {
-                user->ret = FCS_STATE_INVALID_STATE;
-                return user->ret;
+                user->ret_code = FCS_STATE_INVALID_STATE;
+                return user->ret_code;
             }
 
 
@@ -487,9 +490,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
 
-            ret = user->ret =
-                user_instance->ret =
-                flare->ret =
+            ret = user->ret_code =
+                user_instance->ret_code =
+                flare->ret_code =
                 fc_solve_solve_instance(user->fc_solve_obj, &user->state.info);
         }
         else
@@ -499,16 +502,16 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
 
-            ret = user->ret =
-                user_instance->ret =
-                flare->ret =
+            ret = user->ret_code =
+                user_instance->ret_code =
+                flare->ret_code =
                 fc_solve_resume_instance(user->fc_solve_obj);
         }
 
         user->iterations_board_started_at += user->fc_solve_obj->num_times - init_num_times;
         user->init_num_times = user->fc_solve_obj->num_times;
 
-        if (user->ret == FCS_STATE_WAS_SOLVED)
+        if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
             fc_solve_instance_t * instance = 
@@ -524,7 +527,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             break;
         }
-        else if (user->ret == FCS_STATE_SUSPEND_PROCESS)
+        else if (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
         {
             /*
              * First - check if we exceeded our limit. If so - we must terminate
@@ -566,7 +569,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         fc_solve_instance_t * instance = 
             user->fc_solve_obj;
 #endif
-        if (user->ret == FCS_STATE_WAS_SOLVED)
+        if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
             int ret;
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
@@ -652,7 +655,7 @@ static void user_free_resources(
     {
         int ret_code;
 
-        ret_code = flare->ret;
+        ret_code = flare->ret_code;
 
         /*  TODO : for later It's possible two flares in a single-instance
          *  will be solved. Make sure the check is instance-wide.
@@ -921,7 +924,7 @@ int DLLEXPORT freecell_solver_user_get_moves_left(void * user_instance)
     fcs_user_t * user;
 
     user = (fcs_user_t *)user_instance;
-    if (user->ret == FCS_STATE_WAS_SOLVED)
+    if (user->ret_code == FCS_STATE_WAS_SOLVED)
         return user->fc_solve_obj->solution_moves.num_moves;
     else
         return 0;
@@ -1559,7 +1562,10 @@ int DLLEXPORT freecell_solver_user_next_instance(
     flare = &(user_instance->flares[user_instance->num_flares-1]);
 
     flare->obj = user->fc_solve_obj;
-    flare->ret = user_instance->ret = user->ret = FCS_STATE_NOT_BEGAN_YET;
+    flare->ret_code =
+        user_instance->ret_code =
+        user->ret_code =
+        FCS_STATE_NOT_BEGAN_YET;
     flare->limit = user_instance->limit = -1;
     
     user->fc_solve_obj->debug_iter_output_func =
