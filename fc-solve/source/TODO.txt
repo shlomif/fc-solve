@@ -11,13 +11,15 @@ Pressing
 
 * Add some command line examples to +USAGE.txt+ .
 
-Non-pressing
-------------
-
 * Implement Gary Campbell's FCELL.COM's methodology of trying several
 atomic scans in different instances (with bounded quotas) and picking the 
 shortest solution out of them all. Slow, but will produce highly short 
 solutions.
+** Called Flares - we've started to implement them and should continue.
+** See the Flares functional spec under ../docs
+
+Non-pressing
+------------
 
 * Inline fc_solve_free_instance().
 
