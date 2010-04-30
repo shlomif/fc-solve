@@ -123,16 +123,16 @@ static void iter_handler_wrapper(
 #define FLARES_LOOP_START() \
     for(user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++) \
     { \
-        fcs_instance_item_t * user_instance; \
+        fcs_instance_item_t * instance_item; \
         int flare_idx; \
            \
-        user_instance = &(user->instances_list[user_inst_idx]); \
+        instance_item = &(user->instances_list[user_inst_idx]); \
                   \
-        for(flare_idx = 0; flare_idx < user_instance->num_flares; flare_idx++) \
+        for(flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++) \
         {      \
             fcs_flare_item_t * flare; \
                        \
-            flare = &(user_instance->flares[flare_idx]);
+            flare = &(instance_item->flares[flare_idx]);
 
 #define FLARES_LOOP_END() \
         } \
@@ -142,7 +142,7 @@ static void user_initialize(
         fcs_user_t * user
         )
 {
-    fcs_instance_item_t * user_instance;
+    fcs_instance_item_t * instance_item;
     fcs_flare_item_t * flare;
 #ifndef FCS_FREECELL_ONLY
     const fcs_preset_t * freecell_preset;
@@ -164,18 +164,18 @@ static void user_initialize(
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_ptr(user->fc_solve_obj, &(user->common_preset));
 #endif
-    user_instance = &(user->instances_list[user->current_instance_idx]);
-    user_instance->num_flares = 1;
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+    instance_item->num_flares = 1;
     /* TODO : Later - allocate the flares array. */
 
-    flare = &(user_instance->flares[user_instance->num_flares-1]);
+    flare = &(instance_item->flares[instance_item->num_flares-1]);
 
     flare->obj = user->fc_solve_obj;
     flare->ret_code =
-        user_instance->ret_code =
+        instance_item->ret_code =
         user->ret_code =
         FCS_STATE_NOT_BEGAN_YET;
-    flare->limit = user_instance->limit = -1;
+    flare->limit = instance_item->limit = -1;
     user->current_iterations_limit = -1;
 
     user->soft_thread =
@@ -223,7 +223,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 
     FLARES_LOOP_START()
         status = fc_solve_apply_preset_by_ptr(
-            user_instance->flares[flare_idx].obj,
+            instance_item->flares[flare_idx].obj,
             new_preset_ptr
             );
 
@@ -307,11 +307,11 @@ static void recycle_instance(
     )
 {
     int flare_idx;
-    fcs_instance_item_t * user_instance;
+    fcs_instance_item_t * instance_item;
 
-    user_instance = &(user->instances_list[i]);
+    instance_item = &(user->instances_list[i]);
 
-    if (user_instance->ret_code == FCS_STATE_WAS_SOLVED)
+    if (instance_item->ret_code == FCS_STATE_WAS_SOLVED)
     {
         fcs_move_stack_static_destroy(user->fc_solve_obj->solution_moves);
         user->fc_solve_obj->solution_moves.moves = NULL;
@@ -324,11 +324,11 @@ static void recycle_instance(
     }
 #endif
 
-    for(flare_idx = 0; flare_idx < user_instance->num_flares ; flare_idx++)
+    for(flare_idx = 0; flare_idx < instance_item->num_flares ; flare_idx++)
     {
         fcs_flare_item_t * flare;
 
-        flare = &(user_instance->flares[flare_idx]);
+        flare = &(instance_item->flares[flare_idx]);
 
         if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
@@ -344,7 +344,7 @@ static void recycle_instance(
         }
     }
 
-    user_instance->ret_code = FCS_STATE_NOT_BEGAN_YET;
+    instance_item->ret_code = FCS_STATE_NOT_BEGAN_YET;
 }
 
 int DLLEXPORT freecell_solver_user_resume_solution(
@@ -368,21 +368,21 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         recycle_instance(user, user->current_instance_idx), user->current_instance_idx++
        )
     {
-        fcs_instance_item_t * user_instance;
+        fcs_instance_item_t * instance_item;
         fcs_flare_item_t * flare;
         int flare_idx;
 
         run_for_first_iteration = 0;
 
-        user_instance = &(user->instances_list[user->current_instance_idx]);
+        instance_item = &(user->instances_list[user->current_instance_idx]);
         /* TODO : For later - loop over the flares based on the flares plan. */
-        user->fc_solve_obj = user_instance->flares[0].obj;
+        user->fc_solve_obj = instance_item->flares[0].obj;
 
         flare_idx = 0;
 
-        flare = &(user_instance->flares[flare_idx]);
+        flare = &(instance_item->flares[flare_idx]);
 
-        if (user_instance->ret_code == FCS_STATE_NOT_BEGAN_YET)
+        if (instance_item->ret_code == FCS_STATE_NOT_BEGAN_YET)
         {
             int status;
 
@@ -450,13 +450,13 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 #define global_limit() \
         (user->fc_solve_obj->num_times + user->current_iterations_limit - user->iterations_board_started_at)
 #define local_limit()  \
-        (user_instance->limit)
+        (instance_item->limit)
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
 #endif
 #define calc_max_iters() \
         {          \
-            if (user_instance->limit < 0)  \
+            if (instance_item->limit < 0)  \
             {\
                 if (user->current_iterations_limit < 0)\
                 {\
@@ -491,7 +491,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
 
             ret = user->ret_code =
-                user_instance->ret_code =
+                instance_item->ret_code =
                 flare->ret_code =
                 fc_solve_solve_instance(user->fc_solve_obj, &user->state.info);
         }
@@ -503,7 +503,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
 
             ret = user->ret_code =
-                user_instance->ret_code =
+                instance_item->ret_code =
                 flare->ret_code =
                 fc_solve_resume_instance(user->fc_solve_obj);
         }
@@ -1530,7 +1530,7 @@ int DLLEXPORT freecell_solver_user_next_instance(
     )
 {
     fcs_user_t * user;
-    fcs_instance_item_t * user_instance;
+    fcs_instance_item_t * instance_item;
     fcs_flare_item_t * flare;    
 
     user = (fcs_user_t *)from_user_instance;
@@ -1549,8 +1549,8 @@ int DLLEXPORT freecell_solver_user_next_instance(
     fc_solve_apply_preset_by_ptr(user->fc_solve_obj, &(user->common_preset));
 #endif
 
-    user_instance = &(user->instances_list[user->current_instance_idx]);
-    user_instance->num_flares = 1;
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+    instance_item->num_flares = 1;
 
     /*
      * Switch the soft_thread variable so it won't refer to the old
@@ -1559,14 +1559,14 @@ int DLLEXPORT freecell_solver_user_next_instance(
     user->soft_thread =
         fc_solve_instance_get_first_soft_thread(user->fc_solve_obj);
 
-    flare = &(user_instance->flares[user_instance->num_flares-1]);
+    flare = &(instance_item->flares[instance_item->num_flares-1]);
 
     flare->obj = user->fc_solve_obj;
     flare->ret_code =
-        user_instance->ret_code =
+        instance_item->ret_code =
         user->ret_code =
         FCS_STATE_NOT_BEGAN_YET;
-    flare->limit = user_instance->limit = -1;
+    flare->limit = instance_item->limit = -1;
     
     user->fc_solve_obj->debug_iter_output_func =
         (user->iter_handler ? iter_handler_wrapper : NULL);
