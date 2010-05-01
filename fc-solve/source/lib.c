@@ -209,7 +209,7 @@ void DLLEXPORT * freecell_solver_user_alloc(void)
 }
 
 int DLLEXPORT freecell_solver_user_apply_preset(
-    void * from_user_instance,
+    void * api_instance,
     const char * preset_name)
 {
 #ifdef FCS_FREECELL_ONLY
@@ -220,7 +220,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
     int status;
     FLARES_LOOP_DECLARE_VARS();
 
-    user = (fcs_user_t*)from_user_instance;
+    user = (fcs_user_t*)api_instance;
 
     status =
         fc_solve_get_preset_by_name(
@@ -1540,14 +1540,14 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
 }
 
 int DLLEXPORT freecell_solver_user_next_instance(
-    void * from_user_instance
+    void * api_instance
     )
 {
     fcs_user_t * user;
     fcs_instance_item_t * instance_item;
     fcs_flare_item_t * flare;    
 
-    user = (fcs_user_t *)from_user_instance;
+    user = (fcs_user_t *)api_instance;
 
     user->instances_list =
         realloc(
