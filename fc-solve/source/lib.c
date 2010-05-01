@@ -144,12 +144,12 @@ static void iter_handler_wrapper(
     FLARES_LOOP_END_FLARES() \
     FLARES_LOOP_END_INSTANCES()
 
+static int user_next_instance(fcs_user_t * user);
+
 static void user_initialize(
         fcs_user_t * user
         )
 {
-    fcs_instance_item_t * instance_item;
-    fcs_flare_item_t * flare;
 #ifndef FCS_FREECELL_ONLY
     const fcs_preset_t * freecell_preset;
 
@@ -161,40 +161,17 @@ static void user_initialize(
     fcs_duplicate_preset(user->common_preset, *freecell_preset);
 #endif
 
-    user->instances_list = malloc(sizeof(user->instances_list[0]));
-    user->num_instances = 1;
-    user->current_instance_idx = 0;
+    user->instances_list = NULL;
+    user->num_instances = 0;
     user->iter_handler = NULL;
-    user->fc_solve_obj = fc_solve_alloc_instance();
-    user->fc_solve_obj->debug_iter_output_context = user;
-#ifndef FCS_FREECELL_ONLY
-    fc_solve_apply_preset_by_ptr(user->fc_solve_obj, &(user->common_preset));
-#endif
-    instance_item = &(user->instances_list[user->current_instance_idx]);
-    instance_item->num_flares = 0;
-    instance_item->flares = NULL;
-
-    instance_item->flares =
-        realloc(
-            instance_item->flares,
-            sizeof(instance_item->flares[0]) * (++(instance_item->num_flares))
-        );
-    
-    flare = &(instance_item->flares[instance_item->num_flares-1]);
-
-    flare->obj = user->fc_solve_obj;
-    flare->ret_code =
-        instance_item->ret_code =
-        user->ret_code =
-        FCS_STATE_NOT_BEGAN_YET;
-    flare->limit = instance_item->limit = -1;
     user->current_iterations_limit = -1;
-
-    user->soft_thread =
-        fc_solve_instance_get_first_soft_thread(user->fc_solve_obj);
 
     user->state_string_copy = NULL;
     user->iterations_board_started_at = 0;
+
+    user_next_instance(user);
+
+    return;
 }
 
 void DLLEXPORT * freecell_solver_user_alloc(void)
@@ -1543,11 +1520,15 @@ int DLLEXPORT freecell_solver_user_next_instance(
     void * api_instance
     )
 {
-    fcs_user_t * user;
+    return user_next_instance((fcs_user_t *)api_instance);
+}
+
+static int user_next_instance(
+    fcs_user_t * user
+    )
+{
     fcs_instance_item_t * instance_item;
     fcs_flare_item_t * flare;    
-
-    user = (fcs_user_t *)api_instance;
 
     user->instances_list =
         realloc(
