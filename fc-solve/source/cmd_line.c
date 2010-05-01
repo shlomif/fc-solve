@@ -274,10 +274,28 @@ opt = FCS_OPT_EMPTY_STACKS_FILLED_BY;
 break;
 
 case 'f':
+{ switch(*(p++)) {
+case 'l':
 {
-if (!strncmp(p, "reecells-num", 12)) {
-p += 12;
+if (!strncmp(p, "are-name", 8)) {
+p += 8;
+opt = FCS_OPT_FLARE_NAME;
+
+}
+}
+
+break;
+
+case 'r':
+{
+if (!strncmp(p, "eecells-num", 11)) {
+p += 11;
 opt = FCS_OPT_FREECELLS_NUM;
+
+}
+}
+
+break;
 
 }
 }
@@ -1333,6 +1351,14 @@ break;
             PROCESS_OPT_ARG() ;
 
             freecell_solver_user_set_soft_thread_name(instance, (*arg));
+        }
+        break;
+
+        case FCS_OPT_FLARE_NAME: /* STRINGS=--flare-name; */
+        {
+            PROCESS_OPT_ARG() ;
+
+            freecell_solver_user_set_flare_name(instance, (*arg));
         }
         break;
 

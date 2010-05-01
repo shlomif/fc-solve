@@ -49,6 +49,7 @@ typedef struct
     fc_solve_instance_t * obj;
     int ret_code;
     int limit;
+    char * name;
 } fcs_flare_item_t;
 
 typedef struct 
@@ -671,6 +672,12 @@ static void user_free_resources(
         }
 
         fc_solve_free_instance(flare->obj);
+
+        if (flare->name)
+        {
+            free(flare->name);
+            flare->name = NULL;
+        }
     }
     FLARES_LOOP_END_FLARES()
         free(instance_item->flares);
@@ -1413,6 +1420,31 @@ void DLLEXPORT freecell_solver_user_set_soft_thread_name(
     user->soft_thread->name = strdup(name);
 }
 
+void DLLEXPORT freecell_solver_user_set_flare_name(
+    void * api_instance,
+    freecell_solver_str_t name
+    )
+{
+    fcs_user_t * user;
+    fcs_instance_item_t * instance_item;
+    fcs_flare_item_t * flare;
+
+    user = (fcs_user_t *)api_instance;
+
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+
+    flare = &(instance_item->flares[instance_item->num_flares-1]);
+
+    if (flare->name != NULL)
+    {
+        free(flare->name);
+    }
+
+    flare->name = strdup(name);
+
+    return;
+}
+
 int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
     void * api_instance,
     const char * prelude
@@ -1558,6 +1590,8 @@ static int user_next_flare(fcs_user_t * user)
     flare->obj->debug_iter_output_func =
         (user->iter_handler ? iter_handler_wrapper : NULL);
     flare->obj->debug_iter_output_context = user;
+
+    flare->name = NULL;
 
     return 0;
 }

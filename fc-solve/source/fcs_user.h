@@ -251,6 +251,11 @@ DLLEXPORT extern void freecell_solver_user_set_soft_thread_name(
     freecell_solver_str_t name
     );
 
+DLLEXPORT extern void freecell_solver_user_set_flare_name(
+    void * user_instance,
+    freecell_solver_str_t name
+    );
+
 DLLEXPORT extern int freecell_solver_user_set_hard_thread_prelude(
     void * user_instance,
     freecell_solver_str_t prelude
