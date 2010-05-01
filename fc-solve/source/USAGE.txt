@@ -626,6 +626,46 @@ picks the one with the shortest solution.
 
 This is a name that identifies the flare for use in the flares' plan.
 
+--flares-plan [flare plan]
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This instance-wide parameter gives a plan for the flares as a big string. Here
+are some examples:
+
+------------
+--flares-plan "RunIndef:FlareyFlare"
+------------
+
+This plan will run the flare with the name +FlareyFlare+ indefinetely, until it 
+terminates. Once a RunIndef action is encountered, the rest of the plan is
+ignored.
+
+------------
+--flares-plan "Run:500@MyFlare,Run:2000@FooFlare"
+------------
+
+Runs +MyFlare+ for 500 iterations and +FooFlare+ for 2,000
+iterations. Note that both flares will be run and won't share any resources
+between them, and then the minimal solution out of both flares (or only
+those that finished ). If no flares finished, then Freecell Solver will run
+them both again for the same number of iterations each, until at least one
+finishes (or it ran out of the iterations' limit).
+
+------------
+--flares-plan "Run:500@dfs,Run:1500@befs,CP:,Run:10000@funky"
+------------
+
+This runs the flares identified by +dfs+ and +befs+ and then see if a solution
+was reached ("CP:" stands for *"checkpoint"*), and if so yield it. If both
+flares did not reach a solution yet, or failed to solve the board, it will run
+the flare +funky+ for 10,000 iterations and yield its solution. And like the
+previous case, this solution will loop after it ended for as long as the 
+no flare solved the board or the program did not run out of iterations.
+
+Using checkpoints one can yield a possibly sub-optimal (as far as solution
+length is concerned) solution that will still solve faster than letting all
+the flares run.
+
 Meta-Options
 ------------
 
