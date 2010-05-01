@@ -54,7 +54,7 @@ typedef struct
 typedef struct 
 {
     int num_flares;
-    fcs_flare_item_t flares[1];
+    fcs_flare_item_t * flares;
     int ret_code;
     int limit;
 }  fcs_instance_item_t;
@@ -134,9 +134,15 @@ static void iter_handler_wrapper(
                        \
             flare = &(instance_item->flares[flare_idx]);
 
-#define FLARES_LOOP_END() \
-        } \
+#define FLARES_LOOP_END_FLARES() \
+        }
+
+#define FLARES_LOOP_END_INSTANCES() \
     }
+
+#define FLARES_LOOP_END() \
+    FLARES_LOOP_END_FLARES() \
+    FLARES_LOOP_END_INSTANCES()
 
 static void user_initialize(
         fcs_user_t * user
@@ -165,9 +171,15 @@ static void user_initialize(
     fc_solve_apply_preset_by_ptr(user->fc_solve_obj, &(user->common_preset));
 #endif
     instance_item = &(user->instances_list[user->current_instance_idx]);
-    instance_item->num_flares = 1;
-    /* TODO : Later - allocate the flares array. */
+    instance_item->num_flares = 0;
+    instance_item->flares = NULL;
 
+    instance_item->flares =
+        realloc(
+            instance_item->flares,
+            sizeof(instance_item->flares[0]) * (++(instance_item->num_flares))
+        );
+    
     flare = &(instance_item->flares[instance_item->num_flares-1]);
 
     flare->obj = user->fc_solve_obj;
@@ -683,7 +695,9 @@ static void user_free_resources(
 
         fc_solve_free_instance(flare->obj);
     }
-    FLARES_LOOP_END()
+    FLARES_LOOP_END_FLARES()
+        free(instance_item->flares);
+    FLARES_LOOP_END_INSTANCES()
 
     free(user->instances_list);
 
@@ -1550,7 +1564,14 @@ int DLLEXPORT freecell_solver_user_next_instance(
 #endif
 
     instance_item = &(user->instances_list[user->current_instance_idx]);
-    instance_item->num_flares = 1;
+    instance_item->num_flares = 0;
+    instance_item->flares = NULL;
+
+    instance_item->flares =
+        realloc(
+            instance_item->flares,
+            sizeof(instance_item->flares[0]) * (++(instance_item->num_flares))
+        );
 
     /*
      * Switch the soft_thread variable so it won't refer to the old
@@ -1571,6 +1592,37 @@ int DLLEXPORT freecell_solver_user_next_instance(
     user->fc_solve_obj->debug_iter_output_func =
         (user->iter_handler ? iter_handler_wrapper : NULL);
     user->fc_solve_obj->debug_iter_output_context = user;
+
+    return 0;
+}
+
+int DLLEXPORT freecell_solver_user_next_flare(
+    void * api_instance
+    )
+{
+    fcs_user_t * user;
+    fcs_instance_item_t * instance_item;
+    fcs_flare_item_t * flare;    
+
+    user = (fcs_user_t *)api_instance;
+
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+
+    instance_item->flares =
+        realloc(
+            instance_item->flares,
+            sizeof(instance_item->flares[0]) * (++(instance_item->num_flares))
+        );
+
+    flare = &(instance_item->flares[instance_item->num_flares-1]);
+    flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
+    flare->limit = -1;
+    
+    flare->obj = fc_solve_alloc_instance();
+
+#ifndef FCS_FREECELL_ONLY
+    fc_solve_apply_preset_by_ptr(flare->obj, &(user->common_preset));
+#endif
 
     return 0;
 }

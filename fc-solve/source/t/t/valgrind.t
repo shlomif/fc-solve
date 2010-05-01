@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -71,6 +71,12 @@ test_using_valgrind(
 test_using_valgrind(
     ["1", "2", "1", "-opt"],
     qq{"range-parallel-solve 1 2 1 -opt" returned no errors}
+);
+
+# TEST
+test_using_valgrind(
+    ["1", "2", "1", "--next-flare"],
+    qq{"range-parallel-solve 1 2 1 --next-flare" returned no errors}
 );
 
 # TEST

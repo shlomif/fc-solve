@@ -612,6 +612,19 @@ one would run and so on. One use of it is to run an atomic moves scan
 after a meta-moves scan, so we will always get an accurate verdict and
 still enjoy some of the speed of the meta-moves scan.
 
+-nf , --next-flare
+~~~~~~~~~~~~~~~~~~
+
+Each instance contains several flares. Flares are various alternative scans,
+that are ran one after another, as specified in the +--flares-plan+ below
+or defaulting to running only the first flare (which isn't very useful). Out
+of all the flares that are successful in solving a board, Freecell Solver
+picks the one with the shortest solution.
+
+--flare-name [flare name]
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is a name that identifies the flare for use in the flares' plan.
 
 Meta-Options
 ------------

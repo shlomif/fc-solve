@@ -375,6 +375,17 @@ case 'n':
 if (!strncmp(p, "ext-", 4)) {
 p += 4;
 { switch(*(p++)) {
+case 'f':
+{
+if (!strncmp(p, "lare", 4)) {
+p += 4;
+opt = FCS_OPT_NEXT_FLARE;
+
+}
+}
+
+break;
+
 case 'h':
 {
 if (!strncmp(p, "ard-thread", 10)) {
@@ -734,6 +745,18 @@ break;
 
 case 'n':
 { switch(*(p++)) {
+case 'f':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_NEXT_FLARE;
+}
+}
+
+break;
+
 case 'h':
 {
 if (!strncmp(p, "t", 1)) {
@@ -1244,6 +1267,12 @@ break;
         case FCS_OPT_NEXT_INSTANCE: /* STRINGS=-ni|--next-instance; */
         {
             freecell_solver_user_next_instance(instance);
+        }
+        break;
+
+        case FCS_OPT_NEXT_FLARE: /* STRINGS=-nf|--next-flare; */
+        {
+            freecell_solver_user_next_flare(instance);
         }
         break;
 
