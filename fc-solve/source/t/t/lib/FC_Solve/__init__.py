@@ -90,6 +90,15 @@ class FC_Solve:
         ok(error_string.value == None,
                 name + " - error_string returned NULL.")
 
+
+    def flare_plan_num_items_is(self, name, want_num_items):
+        got_num_items = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_num_items(
+                self.user
+        )
+
+        ok (want_num_items == got_num_items, 
+                name + " - got_num_items.")
+
     # TEST:$flare_plan_item_is_run_indef=0;
     def flare_plan_item_is_run_indef(self, name, item_idx, flare_idx):
         get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
