@@ -89,3 +89,19 @@ class FC_Solve:
         # TEST:$compile_flares_plan_ok++;
         ok(error_string.value == None,
                 name + " - error_string returned NULL.")
+
+    # TEST:$flare_plan_item_is_run_indef=0;
+    def flare_plan_item_is_run_indef(self, name, item_idx, flare_idx):
+        get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
+        get_plan_type.restype = c_char_p
+        
+        # TEST:$flare_plan_item_is_run_indef++;
+        ok (get_plan_type(self.user, item_idx) == "RunIndef",
+                name + " - write type")
+
+        got_flare_idx = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(self.user, flare_idx);
+
+        # TEST:$flare_plan_item_is_run_indef++;
+        ok (got_flare_idx == flare_idx,
+                name + " - matchin flare_idx")
+

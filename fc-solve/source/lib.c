@@ -1596,7 +1596,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
     {
         instance_item->flares_plan_string = NULL;
     }
-    instance_item->flares_plan_compiled = 1;
+    instance_item->flares_plan_compiled = 0;
 
     return 0;
 }
