@@ -277,9 +277,33 @@ case 'f':
 { switch(*(p++)) {
 case 'l':
 {
-if (!strncmp(p, "are-name", 8)) {
-p += 8;
+if (!strncmp(p, "are", 3)) {
+p += 3;
+{ switch(*(p++)) {
+case '-':
+{
+if (!strncmp(p, "name", 4)) {
+p += 4;
 opt = FCS_OPT_FLARE_NAME;
+
+}
+}
+
+break;
+
+case 's':
+{
+if (!strncmp(p, "-plan", 5)) {
+p += 5;
+opt = FCS_OPT_FLARES_PLAN;
+
+}
+}
+
+break;
+
+}
+}
 
 }
 }
@@ -1367,6 +1391,14 @@ break;
             PROCESS_OPT_ARG() ;
 
             freecell_solver_user_set_hard_thread_prelude(instance, (*arg));
+        }
+        break;
+
+        case FCS_OPT_FLARES_PLAN: /* STRINGS=--flares-plan; */
+        {
+            PROCESS_OPT_ARG() ;
+
+            freecell_solver_user_set_flares_plan(instance, (*arg));
         }
         break;
 

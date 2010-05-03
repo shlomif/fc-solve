@@ -52,10 +52,38 @@ typedef struct
     char * name;
 } fcs_flare_item_t;
 
+enum
+{
+    FLARES_PLAN_RUN_INDEFINITELY,
+    FLARES_PLAN_RUN_COUNT_ITERS,
+    FLARES_PLAN_CHECKPOINT,
+} FLARES_PLAN_TYPE;
+
+typedef struct
+{
+    int type;
+    int flare_idx;
+    int count_iters;
+} flares_plan_item;
+
 typedef struct 
 {
     int num_flares;
     fcs_flare_item_t * flares;
+    flares_plan_item * plan;
+    int num_plan_items;
+    char * flares_plan_string;
+    /*
+     * The default flares_plan_compiled is "False", which means that the 
+     * flares_plan_string was set and needs to be processed. Once
+     * the compile function is called, it is set to "True" and it is set
+     * to "False" if the flares_plan_string is set to a different value.
+     *
+     * Upon starting to run, one checks if flares_plan_compiled is false 
+     * and if so, compiles the flares plan, and sets the flares_plan_compiled 
+     * string to true.
+     */
+    int flares_plan_compiled;
     int ret_code;
     int limit;
 }  fcs_instance_item_t;
@@ -681,6 +709,10 @@ static void user_free_resources(
     }
     FLARES_LOOP_END_FLARES()
         free(instance_item->flares);
+        if(instance_item->flares_plan_string)
+        {
+            free(instance_item->flares_plan_string);
+        }
     FLARES_LOOP_END_INSTANCES()
 
     free(user->instances_list);
@@ -1467,6 +1499,28 @@ int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
     return 0;
 }
 
+int DLLEXPORT freecell_solver_user_set_flares_plan(
+    void * api_instance,
+    const char * flares_plan_string
+    )
+{
+    fcs_user_t * user;
+    fcs_instance_item_t * instance_item;
+
+    user = (fcs_user_t *)api_instance;
+
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+
+    if (instance_item->flares_plan_string)
+    {
+        free(instance_item->flares_plan_string);
+    }
+    instance_item->flares_plan_string = strdup(flares_plan_string);
+    instance_item->flares_plan_compiled = 1;
+
+    return 0;
+}
+
 void DLLEXPORT freecell_solver_user_recycle(
     void * api_instance
     )
@@ -1615,6 +1669,12 @@ static int user_next_instance(
     instance_item = &(user->instances_list[user->current_instance_idx]);
     instance_item->num_flares = 0;
     instance_item->flares = NULL;
+    instance_item->plan = NULL;
+    instance_item->num_plan_items = 0;
+    instance_item->flares_plan_string = NULL;
+    instance_item->flares_plan_compiled = 0;
+
+    /* ret_code and limit are set at user_next_flare(). */
 
     return user_next_flare(user);
 }
