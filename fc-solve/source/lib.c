@@ -365,6 +365,79 @@ static void recycle_instance(
     instance_item->ret_code = FCS_STATE_NOT_BEGAN_YET;
 }
 
+enum FCS_COMPILE_FLARES_RET
+{
+    FCS_COMPILE_FLARES_RET_OK = 0,
+};
+
+static int user_compile_all_flares_plans(
+    fcs_user_t * user,
+    int * instance_list_index,
+    char * * error_string
+    )
+{
+    int user_inst_idx;
+
+    for(user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++)
+    {
+        fcs_instance_item_t * instance_item;
+
+        *instance_list_index = user_inst_idx; 
+
+        instance_item = &(user->instances_list[user_inst_idx]);
+
+        if (instance_item->flares_plan_compiled)
+        {
+            continue;
+        }
+        
+        /* If the plan string is NULL or empty, then set the plan
+         * to run only the first flare indefinitely.*/
+        if ((! instance_item->flares_plan_string) ||
+           (! instance_item->flares_plan_string[0]))
+        {
+            if (instance_item->plan)
+            {
+                free(instance_item->plan);
+            }
+            instance_item->num_plan_items = 1;
+            instance_item->plan = malloc(
+                      sizeof(instance_item->plan[0])
+                    * instance_item->num_plan_items
+            );
+            instance_item->plan[0].type = FLARES_PLAN_RUN_INDEFINITELY;
+            /* Set to the first flare. */
+            instance_item->plan[0].flare_idx = 0;
+            instance_item->plan[0].count_iters = -1;
+            continue;
+        }
+
+        /* Tough luck - gotta parse the string. ;-) */
+        {
+            /*  TODO : Implement the actual thing. */
+            if (instance_item->plan)
+            {
+                free(instance_item->plan);
+            }
+            instance_item->num_plan_items = 1;
+            instance_item->plan = malloc(
+                      sizeof(instance_item->plan[0])
+                    * instance_item->num_plan_items
+            );
+            instance_item->plan[0].type = FLARES_PLAN_RUN_INDEFINITELY;
+            /* Set to the first flare. */
+            instance_item->plan[0].flare_idx = 0;
+            instance_item->plan[0].count_iters = -1;
+            continue;
+        }        
+    }
+
+    *instance_list_index = -1;
+    *error_string = NULL;
+
+    return FCS_COMPILE_FLARES_RET_OK;
+}
+
 int DLLEXPORT freecell_solver_user_resume_solution(
     void * api_instance
     )
@@ -1515,7 +1588,14 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
     {
         free(instance_item->flares_plan_string);
     }
-    instance_item->flares_plan_string = strdup(flares_plan_string);
+    if (flares_plan_string)
+    {
+        instance_item->flares_plan_string = strdup(flares_plan_string);
+    }
+    else
+    {
+        instance_item->flares_plan_string = NULL;
+    }
     instance_item->flares_plan_compiled = 1;
 
     return 0;
@@ -1724,3 +1804,97 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
 
     return hard_thread->soft_threads[hard_thread->st_idx].name;
 }
+
+
+#ifdef FCS_COMPILE_DEBUG_FUNCTIONS
+
+int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
+    void * api_instance,
+    int * instance_list_index,
+    char * * error_string
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)api_instance;
+
+    return user_compile_all_flares_plans(user, instance_list_index, error_string);
+}
+
+int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
+    void * api_instance
+    )
+{
+    fcs_user_t * user;
+    fcs_instance_item_t * instance_item;
+
+    user = (fcs_user_t *)api_instance;
+
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+
+    return instance_item->num_plan_items;
+}
+
+const DLLEXPORT char * fc_solve_user_INTERNAL_get_flares_plan_item_type(
+    void * api_instance,
+    int item_idx
+    )
+{
+    fcs_user_t * user;
+    fcs_instance_item_t * instance_item;
+
+    user = (fcs_user_t *)api_instance;
+
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+
+    switch(instance_item->plan[item_idx].type)
+    {
+        case FLARES_PLAN_RUN_INDEFINITELY:
+            return "RunIndef";
+            break;
+        case FLARES_PLAN_RUN_COUNT_ITERS:
+            return "Run";
+            break;
+        case FLARES_PLAN_CHECKPOINT:
+            return "CP";
+            break;
+        default:
+            fprintf(stderr, "%s\n", 
+                    "Unknown flares plan item type. Something is Wrong on the Internet."
+                   );
+            exit(-1);
+    }
+}
+
+int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+    void * api_instance,
+    int item_idx
+    )
+{
+    fcs_user_t * user;
+    fcs_instance_item_t * instance_item;
+
+    user = (fcs_user_t *)api_instance;
+
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+
+    return instance_item->plan[item_idx].flare_idx;
+}
+
+int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_count_iters(
+    void * api_instance,
+    int item_idx
+    )
+{
+    fcs_user_t * user;
+    fcs_instance_item_t * instance_item;
+
+    user = (fcs_user_t *)api_instance;
+
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+
+    return instance_item->plan[item_idx].count_iters;
+}
+
+#endif
+
