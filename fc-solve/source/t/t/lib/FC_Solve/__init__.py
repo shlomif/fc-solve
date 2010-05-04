@@ -114,11 +114,41 @@ class FC_Solve:
         
         # TEST:$flare_plan_item_is_run_indef++;
         ok (get_plan_type(self.user, item_idx) == "RunIndef",
-                name + " - write type")
+                name + " - right type")
 
-        got_flare_idx = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(self.user, flare_idx);
+        got_flare_idx = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(self.user, item_idx);
 
         # TEST:$flare_plan_item_is_run_indef++;
         ok (got_flare_idx == flare_idx,
-                name + " - matchin flare_idx")
+                name + " - matching flare_idx")
+
+    # TEST:$flare_plan_item_is_run=0;
+    def flare_plan_item_is_run(self, name, item_idx, flare_idx, iters_count):
+        get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
+        get_plan_type.restype = c_char_p
+        
+        # TEST:$flare_plan_item_is_run++;
+        ok (get_plan_type(self.user, item_idx) == "Run",
+                name + " - right type")
+
+        got_flare_idx = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(self.user, item_idx);
+
+        # TEST:$flare_plan_item_is_run++;
+        ok (got_flare_idx == flare_idx,
+                name + " - matching flare_idx")
+        
+        got_iters_count = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(self.user, item_idx);
+
+        # TEST:$flare_plan_item_is_run++;
+        ok (got_iters_count == iters_count,
+                name + " - matching iters_count")
+
+    # TEST:$flare_plan_item_is_checkpoint=0;
+    def flare_plan_item_is_checkpoint(self, name, item_idx):
+        get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
+        get_plan_type.restype = c_char_p
+        
+        # TEST:$flare_plan_item_is_checkpoint++;
+        ok (get_plan_type(self.user, item_idx) == "CP",
+                name + " - right type")
 

@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include "card.h"
 #include "instance.h"
@@ -368,7 +369,24 @@ static void recycle_instance(
 enum FCS_COMPILE_FLARES_RET
 {
     FCS_COMPILE_FLARES_RET_OK = 0,
+    FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND,
+    FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND,
+    FCS_COMPILE_FLARES_UNKNOWN_FLARE_NAME,
 };
+
+static int string_starts_with(
+    const char * str,
+    const char * prefix,
+    int check_len
+    )
+{
+    return
+        (
+         (check_len == strlen(prefix)) 
+            && (!strncmp(str, prefix, check_len))
+        )
+        ;
+}
 
 static int user_compile_all_flares_plans(
     fcs_user_t * user,
@@ -414,22 +432,111 @@ static int user_compile_all_flares_plans(
 
         /* Tough luck - gotta parse the string. ;-) */
         {
+            int num_plan_items = 0;
+            char * item_start, * item_end, * cmd_end;
+            flares_plan_item * plan = NULL;
+
             /*  TODO : Implement the actual thing. */
             if (instance_item->plan)
             {
                 free(instance_item->plan);
             }
-            instance_item->num_plan_items = 1;
-            instance_item->plan = malloc(
-                      sizeof(instance_item->plan[0])
-                    * instance_item->num_plan_items
-            );
-            instance_item->plan[0].type = FLARES_PLAN_RUN_INDEFINITELY;
-            /* Set to the first flare. */
-            instance_item->plan[0].flare_idx = 0;
-            instance_item->plan[0].count_iters = -1;
+
+            item_start = instance_item->flares_plan_string;
+
+            do
+            {
+                cmd_end = strchr(item_start, ':');
+
+                if (! cmd_end)
+                {
+                    *error_string = strdup("Could not find a \":\" for a command.");
+                    *instance_list_index = user_inst_idx;
+                    return FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND;
+                }
+
+                if (string_starts_with(item_start, "Run", cmd_end-item_start))
+                {
+                    char * at_sign, * after_at_sign;
+                    int count_iters;
+                    int found_flare;
+                    int flare_idx;
+
+                    /* It's a Run item - handle it. */
+                    cmd_end++;
+                    count_iters = atoi(cmd_end);
+                    
+                    at_sign = cmd_end;
+
+                    while ((*at_sign) && isdigit(*at_sign))
+                    {
+                        at_sign++;
+                    }
+                    
+                    if (*at_sign != '@')
+                    {
+                        *error_string = strdup("Could not find a \"@\" directly after the digits after the 'Run:' command.");
+                        *instance_list_index = user_inst_idx;
+                        return FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND;
+                    }
+                    after_at_sign = at_sign+1;
+
+                    /* 
+                     * Position item_end at the end of item (designated by ",")
+                     * or alternatively the end of the string.
+                     * */
+                    item_end = strchr(after_at_sign, ',');
+                    if (!item_end)
+                    {
+                        item_end = after_at_sign+strlen(after_at_sign); 
+                    }
+
+                    found_flare = 0;
+                    for(flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++)
+                    {
+                        fcs_flare_item_t * flare;
+                        flare = &(instance_item->flares[flare_idx]);
+                        
+                        if (!strncmp(flare->name, after_at_sign, item_end-after_at_sign))
+                        {
+                            found_flare = 1;
+                            break;
+                        }
+                    }
+
+                    if (! found_flare)
+                    {
+                        /* TODO : write what the flare name is.  */
+                        *error_string = strdup("Unknown flare name.");
+                        *instance_list_index = user_inst_idx;
+                        return FCS_COMPILE_FLARES_UNKNOWN_FLARE_NAME;
+                    }
+
+                    num_plan_items++;
+
+                    /* TODO : free plan upon an error. */
+                    plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
+                    plan[num_plan_items-1].type = FLARES_PLAN_RUN_COUNT_ITERS;
+                    plan[num_plan_items-1].flare_idx = flare_idx;
+                    plan[num_plan_items-1].count_iters = count_iters;
+                }
+                item_start = item_end+1;
+            } while (*item_end);
+
+            num_plan_items++;
+            plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
+
+            /* An implicit checkpoint. */
+            plan[num_plan_items-1].type = FLARES_PLAN_CHECKPOINT;
+            plan[num_plan_items-1].flare_idx = -1;
+            plan[num_plan_items-1].count_iters = -1;
+
+            instance_item->num_plan_items = num_plan_items;
+            instance_item->plan = plan;
+
+            /*  TODO : add plan compiled? */
             continue;
-        }        
+        }
     }
 
     *instance_list_index = -1;
@@ -1881,7 +1988,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     return instance_item->plan[item_idx].flare_idx;
 }
 
-int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_count_iters(
+int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     void * api_instance,
     int item_idx
     )
