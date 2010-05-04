@@ -101,16 +101,8 @@ def test_with_checkpoints():
     fcs.flare_plan_item_is_checkpoint(("%s No. 4" % (testname)), 4);
 
 
-def main():
 
-    test_null_plan()
-
-    test_empty_plan()
-
-    test_two_runs()
-
-    test_with_checkpoints()
-
+def test_with_checkpoints_and_explicit_checkpoint():
     testname = "With checkpoints with explicit checkpoint at end."
 
     fcs = FC_Solve()
@@ -147,6 +139,12 @@ def main():
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(("%s No. 4" % (testname)), 4);
 
+
+
+
+def test_with_run_indef():
+    testname = "With RunIndef"
+
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
@@ -179,6 +177,21 @@ def main():
     
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(("%s No. 4" % (testname)), 4);
+
+
+def main():
+
+    test_null_plan()
+
+    test_empty_plan()
+
+    test_two_runs()
+
+    test_with_checkpoints()
+
+    test_with_checkpoints_and_explicit_checkpoint()
+
+    test_with_run_indef()
 
 #----------------------------------------------------------------------
 
