@@ -38,36 +38,33 @@ def test_empty_plan():
     # TEST*$flare_plan_item_is_run_indef
     fcs.flare_plan_item_is_run_indef(name, 0, 0);
 
-def main():
-
-    test_null_plan()
-
-    test_empty_plan()
-
+def test_two_runs():
     # Create a fresh instance
     fcs = FC_Solve()
 
+    name = "Two Run's"
     # TEST*$input_cmd_line
     fcs.input_cmd_line("Input Flares", 
         ["--flare-name", "dfs", "-nf",
          "--flare-name", "befs", "--method", "a-star"])
 
     # TEST*$compile_flares_plan_ok
-    fcs.compile_flares_plan_ok("two Run's", "Run:500@befs,Run:1500@dfs")
+    fcs.compile_flares_plan_ok(name, "Run:500@befs,Run:1500@dfs")
 
     # 2 runs and then the implicit checkpoint.
     # TEST
-    fcs.flare_plan_num_items_is("two Run's", 3);
+    fcs.flare_plan_num_items_is(name, 3);
 
     # TEST*$flare_plan_item_is_run
-    fcs.flare_plan_item_is_run("two Run's No. 0", 0, 1, 500);
+    fcs.flare_plan_item_is_run(name + " No. 0", 0, 1, 500);
 
     # TEST*$flare_plan_item_is_run
-    fcs.flare_plan_item_is_run("two Run's No. 1", 1, 0, 1500);
+    fcs.flare_plan_item_is_run(name + " No. 1", 1, 0, 1500);
 
     # TEST*$flare_plan_item_is_checkpoint
-    fcs.flare_plan_item_is_checkpoint("two Run's No. 2", 2);
-    
+    fcs.flare_plan_item_is_checkpoint(name + " No. 2", 2);
+
+def test_with_checkpoints():    
     testname = "With checkpoints"
 
     fcs = FC_Solve()
@@ -102,6 +99,17 @@ def main():
     
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(("%s No. 4" % (testname)), 4);
+
+
+def main():
+
+    test_null_plan()
+
+    test_empty_plan()
+
+    test_two_runs()
+
+    test_with_checkpoints()
 
     testname = "With checkpoints with explicit checkpoint at end."
 
