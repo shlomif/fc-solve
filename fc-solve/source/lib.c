@@ -31,6 +31,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <assert.h>
 
 #include "card.h"
 #include "instance.h"
@@ -436,6 +437,7 @@ static int user_compile_all_flares_plans(
             int num_plan_items = 0;
             char * item_start, * item_end, * cmd_end;
             flares_plan_item * plan = NULL;
+            int last_item_type = -1;
 
             /*  TODO : Implement the actual thing. */
             if (instance_item->plan)
@@ -517,7 +519,8 @@ static int user_compile_all_flares_plans(
 
                     /* TODO : free plan upon an error. */
                     plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
-                    plan[num_plan_items-1].type = FLARES_PLAN_RUN_COUNT_ITERS;
+                    last_item_type = plan[num_plan_items-1].type =
+                        FLARES_PLAN_RUN_COUNT_ITERS;
                     plan[num_plan_items-1].flare_idx = flare_idx;
                     plan[num_plan_items-1].count_iters = count_iters;
                 }
@@ -535,20 +538,26 @@ static int user_compile_all_flares_plans(
 
                     /* TODO : free plan upon an error. */
                     plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
-                    plan[num_plan_items-1].type = FLARES_PLAN_CHECKPOINT;
+                    last_item_type = plan[num_plan_items-1].type =
+                        FLARES_PLAN_CHECKPOINT;
                     plan[num_plan_items-1].flare_idx = -1;
                     plan[num_plan_items-1].count_iters = -1;
                 }
                 item_start = item_end+1;
             } while (*item_end);
 
-            num_plan_items++;
-            plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
+            assert(last_item_type != -1);
 
-            /* An implicit checkpoint. */
-            plan[num_plan_items-1].type = FLARES_PLAN_CHECKPOINT;
-            plan[num_plan_items-1].flare_idx = -1;
-            plan[num_plan_items-1].count_iters = -1;
+            if (last_item_type != FLARES_PLAN_CHECKPOINT)
+            {
+                num_plan_items++;
+                plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
+
+                /* Add an implicit checkpoint. */
+                plan[num_plan_items-1].type = FLARES_PLAN_CHECKPOINT;
+                plan[num_plan_items-1].flare_idx = -1;
+                plan[num_plan_items-1].count_iters = -1;
+            }
 
             instance_item->num_plan_items = num_plan_items;
             instance_item->plan = plan;
