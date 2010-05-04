@@ -372,8 +372,10 @@ enum FCS_COMPILE_FLARES_RET
     FCS_COMPILE_FLARES_RET_OK = 0,
     FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND,
     FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND,
-    FCS_COMPILE_FLARES_UNKNOWN_FLARE_NAME,
-    FCS_COMPILE_FLARES_JUNK_AFTER_CP
+    FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME,
+    FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP,
+    FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND,
+    FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF
 };
 
 static int string_starts_with(
@@ -512,7 +514,7 @@ static int user_compile_all_flares_plans(
                         /* TODO : write what the flare name is.  */
                         *error_string = strdup("Unknown flare name.");
                         *instance_list_index = user_inst_idx;
-                        return FCS_COMPILE_FLARES_UNKNOWN_FLARE_NAME;
+                        return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
 
                     num_plan_items++;
@@ -531,7 +533,7 @@ static int user_compile_all_flares_plans(
                     {
                         *error_string = strdup("Junk after CP (Checkpoint) command.");
                         *instance_list_index = user_inst_idx;
-                        return FCS_COMPILE_FLARES_JUNK_AFTER_CP;
+                        return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
                     }
 
                     num_plan_items++;
@@ -542,6 +544,58 @@ static int user_compile_all_flares_plans(
                         FLARES_PLAN_CHECKPOINT;
                     plan[num_plan_items-1].flare_idx = -1;
                     plan[num_plan_items-1].count_iters = -1;
+                }
+                else if (string_starts_with(item_start, "RunIndef", cmd_end-item_start))
+                {
+                    int found_flare;
+                    int flare_idx;
+
+                    cmd_end++;
+                    item_end = strchr(cmd_end, ',');
+                    if (item_end)
+                    {
+                        *error_string = strdup("Junk after last RunIndef command. Must be the final command.");
+                        *instance_list_index = user_inst_idx;
+                        return FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF;
+                    }
+                    item_end = cmd_end+strlen(cmd_end);
+
+                    found_flare = 0;
+                    for(flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++)
+                    {
+                        fcs_flare_item_t * flare;
+                        flare = &(instance_item->flares[flare_idx]);
+                        
+                        if (!strncmp(flare->name, cmd_end, item_end-cmd_end))
+                        {
+                            found_flare = 1;
+                            break;
+                        }
+                    }
+
+                    if (! found_flare)
+                    {
+                        /* TODO : write what the flare name is.  */
+                        *error_string = strdup("Unknown flare name in RunIndef command.");
+                        *instance_list_index = user_inst_idx;
+                        return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
+                    }
+
+                    num_plan_items++;
+
+                    /* TODO : free plan upon an error. */
+                    plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
+                    last_item_type = plan[num_plan_items-1].type =
+                        FLARES_PLAN_RUN_INDEFINITELY;
+                    plan[num_plan_items-1].flare_idx = flare_idx;
+                    plan[num_plan_items-1].count_iters = -1;                    
+                }
+                else
+                {
+                    /* TODO : Write the unknown command in the error string. */
+                    *error_string = strdup("Unknown command.");
+                    *instance_list_index = user_inst_idx;
+                    return FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND;
                 }
                 item_start = item_end+1;
             } while (*item_end);
