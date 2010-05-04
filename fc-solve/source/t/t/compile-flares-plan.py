@@ -9,17 +9,25 @@ from FC_Solve import FC_Solve
 
 plan(76)
 
-def main():
+def test_null_plan():
     fcs = FC_Solve()
 
+    name = "null plan"
+
     # TEST*$compile_flares_plan_ok
-    fcs.compile_flares_plan_ok("null plan", None)
+    fcs.compile_flares_plan_ok(name, None)
 
     # TEST
-    fcs.flare_plan_num_items_is("null plan", 1);
+    fcs.flare_plan_num_items_is(name, 1);
 
     # TEST*$flare_plan_item_is_run_indef
-    fcs.flare_plan_item_is_run_indef("null plan", 0, 0);
+    fcs.flare_plan_item_is_run_indef(name, 0, 0);
+
+def main():
+
+    test_null_plan()
+
+    fcs = FC_Solve()
 
     # TEST*$compile_flares_plan_ok
     fcs.compile_flares_plan_ok("empty string plan", "")
