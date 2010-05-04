@@ -18,6 +18,10 @@ new instance_item copies in +lib.c+ .
 * Normalise the +_free()+ and +_finish()+ methods in regards to the previous
 commits of the A* functionality.
 
+* Flares: make sure the empty/null plan generates a run-indef followed by
+a checkpoint instead of just a run-indef.
+** Correct the tests.
+
 * Implement Gary Campbell's FCELL.COM's methodology of trying several
 atomic scans in different instances (with bounded quotas) and picking the 
 shortest solution out of them all. Slow, but will produce highly short 
