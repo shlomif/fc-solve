@@ -7,7 +7,7 @@ from TAP.Simple import *
 # TEST:source "$^CURRENT_DIRNAME/lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
 
-plan(76)
+plan(77)
 
 def test_null_plan():
     fcs = FC_Solve()
@@ -23,17 +23,26 @@ def test_null_plan():
     # TEST*$flare_plan_item_is_run_indef
     fcs.flare_plan_item_is_run_indef(name, 0, 0);
 
+def test_empty_plan():
+
+    fcs = FC_Solve()
+
+    name = "empty string plan"
+
+    # TEST*$compile_flares_plan_ok
+    fcs.compile_flares_plan_ok(name, "")
+
+    # TEST
+    fcs.flare_plan_num_items_is(name, 1);
+
+    # TEST*$flare_plan_item_is_run_indef
+    fcs.flare_plan_item_is_run_indef(name, 0, 0);
+
 def main():
 
     test_null_plan()
 
-    fcs = FC_Solve()
-
-    # TEST*$compile_flares_plan_ok
-    fcs.compile_flares_plan_ok("empty string plan", "")
-
-    # TEST*$flare_plan_item_is_run_indef
-    fcs.flare_plan_item_is_run_indef("empty string plan", 0, 0);
+    test_empty_plan()
 
     # Create a fresh instance
     fcs = FC_Solve()
