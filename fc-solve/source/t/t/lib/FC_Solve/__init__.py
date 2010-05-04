@@ -14,16 +14,19 @@ class FC_Solve:
 
         self.get_befs_weight.restype = c_double
 
-    # TEST:$set_befs=0;
-    def _set_befs_weights(self, name, weights_s):
+    # TEST:$input_cmd_line=0;
+    def input_cmd_line(self, name, cmd_line_args):
 
         last_arg = c_int()
         error_string = c_char_p()
         known_params = c_char_p(None)
+
+        cmd_line_args_tuple = tuple(cmd_line_args)
+
         self.fcs.freecell_solver_user_cmd_line_parse_args(
             self.user, # instance
-            2,    # argc
-            ((c_char_p * 2)("-asw", weights_s)),  # argv
+            len(cmd_line_args),    # argc
+            ((c_char_p * len(cmd_line_args))(*cmd_line_args_tuple)),  # argv
             0,   # start_arg
             byref(known_params), # known_params
             None,   # callback
@@ -31,10 +34,15 @@ class FC_Solve:
             byref(error_string),  # error_string
             byref(last_arg)    # last_arg
         )
-        
-        # TEST:$set_befs++;
-        is_ok(last_arg.value, 2,
-                name + " - assign weights - processed two arguments");
+
+        # TEST:$input_cmd_line++;
+        is_ok(last_arg.value, len(cmd_line_args),
+                name + " - assign weights - processed two arguments")
+
+    # TEST:$set_befs=0;
+    def _set_befs_weights(self, name, weights_s):
+        # TEST:$set_befs=$set_befs+$input_cmd_line;
+        self.input_cmd_line(name, ["-asw", weights_s])
 
     def __destroy__(self):
         self.fcs.freecell_solver_user_free(self.user);
