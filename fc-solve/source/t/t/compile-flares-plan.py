@@ -7,7 +7,7 @@ from TAP.Simple import *
 # TEST:source "$^CURRENT_DIRNAME/lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
 
-plan(26)
+plan(43)
 
 def main():
     fcs = FC_Solve()
@@ -50,6 +50,40 @@ def main():
 
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint("two Run's No. 2", 2);
+    
+    fcs = FC_Solve()
+
+    # TEST*$input_cmd_line
+    fcs.input_cmd_line("Input Flares", 
+        ["--flare-name", "dfs", "-nf",
+         "--flare-name", "befs", "--method", "a-star", "-nf",
+         "--flare-name", "foo", "--method", "a-star",
+            "-asw", "0.2,0.3,0.5,0,0", "-nf",
+         "--flare-name", "bar", "-to", "[01][23467]",
+         ])
+
+    testname = "With checkpoints"
+    # TEST*$compile_flares_plan_ok
+    fcs.compile_flares_plan_ok(testname, "Run:500@dfs,Run:300@bar,CP:,Run:1000@befs")
+
+    # 4 items and then the implicit checkpoint.
+    # TEST
+    fcs.flare_plan_num_items_is(testname, 5);
+
+    # TEST*$flare_plan_item_is_run
+    fcs.flare_plan_item_is_run(("%s No. 0" % (testname)), 0, 0, 500);
+
+    # TEST*$flare_plan_item_is_run
+    fcs.flare_plan_item_is_run(("%s No. 1" % (testname)), 1, 3, 300);
+
+    # TEST*$flare_plan_item_is_checkpoint
+    fcs.flare_plan_item_is_checkpoint(("%s No. 2" % (testname)), 2);
+    
+    # TEST*$flare_plan_item_is_run
+    fcs.flare_plan_item_is_run(("%s No. 3" % (testname)), 3, 1, 1000);
+    
+    # TEST*$flare_plan_item_is_checkpoint
+    fcs.flare_plan_item_is_checkpoint(("%s No. 4" % (testname)), 4);
 
 #----------------------------------------------------------------------
 

@@ -372,6 +372,7 @@ enum FCS_COMPILE_FLARES_RET
     FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND,
     FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND,
     FCS_COMPILE_FLARES_UNKNOWN_FLARE_NAME,
+    FCS_COMPILE_FLARES_JUNK_AFTER_CP
 };
 
 static int string_starts_with(
@@ -520,6 +521,24 @@ static int user_compile_all_flares_plans(
                     plan[num_plan_items-1].flare_idx = flare_idx;
                     plan[num_plan_items-1].count_iters = count_iters;
                 }
+                else if (string_starts_with(item_start, "CP", cmd_end-item_start))
+                {
+                    item_end = cmd_end+1;
+                    if (! (((*item_end) == ',') || (! (*item_end))))
+                    {
+                        *error_string = strdup("Junk after CP (Checkpoint) command.");
+                        *instance_list_index = user_inst_idx;
+                        return FCS_COMPILE_FLARES_JUNK_AFTER_CP;
+                    }
+
+                    num_plan_items++;
+
+                    /* TODO : free plan upon an error. */
+                    plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
+                    plan[num_plan_items-1].type = FLARES_PLAN_CHECKPOINT;
+                    plan[num_plan_items-1].flare_idx = -1;
+                    plan[num_plan_items-1].count_iters = -1;
+                }
                 item_start = item_end+1;
             } while (*item_end);
 
@@ -534,7 +553,7 @@ static int user_compile_all_flares_plans(
             instance_item->num_plan_items = num_plan_items;
             instance_item->plan = plan;
 
-            /*  TODO : add plan compiled? */
+            instance_item->flares_plan_compiled = 1;
             continue;
         }
     }
