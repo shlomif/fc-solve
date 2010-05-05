@@ -47,3 +47,11 @@ the pointers from the soft_threads to them are not updated.
 
 * Add a +-o+ option to fc-solve to output to a different file than stdout.
 
+* Flares: make sure the empty/null plan generates a run-indef followed by
+a checkpoint instead of just a run-indef.
+** Correct the tests.
+
+* Extract the common functionality out of both copies of the "initialise
+new instance_item copies in +lib.c+ .
+** Also the flares.
+
