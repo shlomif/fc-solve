@@ -392,6 +392,60 @@ static int string_starts_with(
         ;
 }
 
+static GCC_INLINE int add_to_plan(
+        fcs_instance_item_t * instance_item,
+        int mytype,
+        int flare_idx,
+        int count_iters
+    )
+{
+    int next_item;
+    
+    next_item = instance_item->num_plan_items;
+
+    instance_item->plan =
+        realloc(
+            instance_item->plan,
+            sizeof(instance_item->plan[0]) * ++(instance_item->num_plan_items)
+            );
+    
+    instance_item->plan[next_item].type = mytype;
+    instance_item->plan[next_item].flare_idx = flare_idx;
+    instance_item->plan[next_item].count_iters = count_iters;
+
+    return mytype;
+}
+
+static GCC_INLINE int add_count_iters_to_plan(
+        fcs_instance_item_t * instance_item,
+        int flare_idx,
+        int count_iters
+    )
+{
+    return add_to_plan(instance_item,
+            FLARES_PLAN_RUN_COUNT_ITERS, flare_idx, count_iters
+            );
+}
+
+
+static GCC_INLINE int add_checkpoint_to_plan(
+        fcs_instance_item_t * instance_item
+    )
+{
+    return add_to_plan(instance_item,
+            FLARES_PLAN_CHECKPOINT, -1, -1
+            );
+}
+
+static GCC_INLINE int add_run_indef_to_plan(
+        fcs_instance_item_t * instance_item,
+        int flare_idx
+    )
+{
+    return add_to_plan(instance_item,
+            FLARES_PLAN_RUN_INDEFINITELY, flare_idx, -1
+            );
+}
 static int user_compile_all_flares_plans(
     fcs_user_t * user,
     int * instance_list_index,
@@ -442,14 +496,14 @@ static int user_compile_all_flares_plans(
 
         /* Tough luck - gotta parse the string. ;-) */
         {
-            int num_plan_items = 0;
             char * item_start, * item_end, * cmd_end;
-            flares_plan_item * plan = NULL;
             int last_item_type = -1;
 
             if (instance_item->plan)
             {
                 free(instance_item->plan);
+                instance_item->plan = NULL;
+                instance_item->num_plan_items = 0;
             }
 
             item_start = instance_item->flares_plan_string;
@@ -522,14 +576,8 @@ static int user_compile_all_flares_plans(
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
 
-                    num_plan_items++;
-
                     /* TODO : free plan upon an error. */
-                    plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
-                    last_item_type = plan[num_plan_items-1].type =
-                        FLARES_PLAN_RUN_COUNT_ITERS;
-                    plan[num_plan_items-1].flare_idx = flare_idx;
-                    plan[num_plan_items-1].count_iters = count_iters;
+                    last_item_type = add_count_iters_to_plan(instance_item, flare_idx, count_iters);
                 }
                 else if (string_starts_with(item_start, "CP", cmd_end-item_start))
                 {
@@ -541,14 +589,8 @@ static int user_compile_all_flares_plans(
                         return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
                     }
 
-                    num_plan_items++;
-
                     /* TODO : free plan upon an error. */
-                    plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
-                    last_item_type = plan[num_plan_items-1].type =
-                        FLARES_PLAN_CHECKPOINT;
-                    plan[num_plan_items-1].flare_idx = -1;
-                    plan[num_plan_items-1].count_iters = -1;
+                    last_item_type = add_checkpoint_to_plan(instance_item);
                 }
                 else if (string_starts_with(item_start, "RunIndef", cmd_end-item_start))
                 {
@@ -586,14 +628,7 @@ static int user_compile_all_flares_plans(
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
 
-                    num_plan_items++;
-
-                    /* TODO : free plan upon an error. */
-                    plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
-                    last_item_type = plan[num_plan_items-1].type =
-                        FLARES_PLAN_RUN_INDEFINITELY;
-                    plan[num_plan_items-1].flare_idx = flare_idx;
-                    plan[num_plan_items-1].count_iters = -1;                    
+                    last_item_type = add_run_indef_to_plan(instance_item, flare_idx);
                 }
                 else
                 {
@@ -609,17 +644,8 @@ static int user_compile_all_flares_plans(
 
             if (last_item_type != FLARES_PLAN_CHECKPOINT)
             {
-                num_plan_items++;
-                plan = realloc(plan, sizeof(plan[0]) * num_plan_items);
-
-                /* Add an implicit checkpoint. */
-                plan[num_plan_items-1].type = FLARES_PLAN_CHECKPOINT;
-                plan[num_plan_items-1].flare_idx = -1;
-                plan[num_plan_items-1].count_iters = -1;
+                last_item_type = add_checkpoint_to_plan(instance_item);
             }
-
-            instance_item->num_plan_items = num_plan_items;
-            instance_item->plan = plan;
 
             instance_item->flares_plan_compiled = 1;
             continue;
