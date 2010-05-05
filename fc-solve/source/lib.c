@@ -414,7 +414,8 @@ static int user_compile_all_flares_plans(
         }
         
         /* If the plan string is NULL or empty, then set the plan
-         * to run only the first flare indefinitely.*/
+         * to run only the first flare indefinitely. (And then have
+         * an implicit checkpoint for good measure.) */
         if ((! instance_item->flares_plan_string) ||
            (! instance_item->flares_plan_string[0]))
         {
@@ -422,15 +423,20 @@ static int user_compile_all_flares_plans(
             {
                 free(instance_item->plan);
             }
-            instance_item->num_plan_items = 1;
+            instance_item->num_plan_items = 2;
             instance_item->plan = malloc(
                       sizeof(instance_item->plan[0])
                     * instance_item->num_plan_items
             );
-            instance_item->plan[0].type = FLARES_PLAN_RUN_INDEFINITELY;
             /* Set to the first flare. */
+            instance_item->plan[0].type = FLARES_PLAN_RUN_INDEFINITELY;
             instance_item->plan[0].flare_idx = 0;
             instance_item->plan[0].count_iters = -1;
+            instance_item->plan[1].type = FLARES_PLAN_CHECKPOINT;
+            instance_item->plan[1].flare_idx = -1;
+            instance_item->plan[1].count_iters = -1;
+
+            instance_item->flares_plan_compiled = 1;
             continue;
         }
 
@@ -441,7 +447,6 @@ static int user_compile_all_flares_plans(
             flares_plan_item * plan = NULL;
             int last_item_type = -1;
 
-            /*  TODO : Implement the actual thing. */
             if (instance_item->plan)
             {
                 free(instance_item->plan);
