@@ -74,6 +74,9 @@ typedef struct
     fcs_flare_item_t * flares;
     flares_plan_item * plan;
     int num_plan_items;
+    int current_plan_item_idx;
+    int minimal_solution_flare_idx;
+    int all_plan_items_finished_so_far;
     char * flares_plan_string;
     /*
      * The default flares_plan_compiled is "False", which means that the 
@@ -305,68 +308,6 @@ int DLLEXPORT freecell_solver_user_set_tests_order(
             );
 }
 
-int DLLEXPORT freecell_solver_user_solve_board(
-    void * api_instance,
-    const char * state_as_string
-    )
-{
-    fcs_user_t * user;
-
-    user = (fcs_user_t*)api_instance;
-
-    user->state_string_copy = strdup(state_as_string);
-
-    user->current_instance_idx = 0;
-
-    return freecell_solver_user_resume_solution(api_instance);
-}
-
-static void recycle_instance(
-    fcs_user_t * user,
-    int i
-    )
-{
-    int flare_idx;
-    fcs_instance_item_t * instance_item;
-
-    instance_item = &(user->instances_list[i]);
-
-    if (instance_item->ret_code == FCS_STATE_WAS_SOLVED)
-    {
-        fcs_move_stack_static_destroy(user->fc_solve_obj->solution_moves);
-        user->fc_solve_obj->solution_moves.moves = NULL;
-    }
-    /* fc_solve_unresume_instance is empty. */
-#if 0
-    else if (user->instances_list[i].ret == FCS_STATE_SUSPEND_PROCESS)
-    {
-        fc_solve_unresume_instance(user->instances_list[i].instance);
-    }
-#endif
-
-    for(flare_idx = 0; flare_idx < instance_item->num_flares ; flare_idx++)
-    {
-        fcs_flare_item_t * flare;
-
-        flare = &(instance_item->flares[flare_idx]);
-
-        if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
-        {
-            fc_solve_recycle_instance(flare->obj);
-            /*
-             * We have to initialize init_num_times to 0 here, because it may 
-             * not get initialized again, and now the num_times of the instance
-             * is equal to 0.
-             * */
-            user->init_num_times = 0;
-
-            flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
-        }
-    }
-
-    instance_item->ret_code = FCS_STATE_NOT_BEGAN_YET;
-}
-
 enum FCS_COMPILE_FLARES_RET
 {
     FCS_COMPILE_FLARES_RET_OK = 0,
@@ -446,6 +387,7 @@ static GCC_INLINE int add_run_indef_to_plan(
             FLARES_PLAN_RUN_INDEFINITELY, flare_idx, -1
             );
 }
+
 static int user_compile_all_flares_plans(
     fcs_user_t * user,
     int * instance_list_index,
@@ -657,6 +599,91 @@ static int user_compile_all_flares_plans(
 
     return FCS_COMPILE_FLARES_RET_OK;
 }
+int DLLEXPORT freecell_solver_user_solve_board(
+    void * api_instance,
+    const char * state_as_string
+    )
+{
+    fcs_user_t * user;
+    int ret_code;
+    char * error_string;
+    int instance_list_index;
+
+    user = (fcs_user_t*)api_instance;
+
+    user->state_string_copy = strdup(state_as_string);
+
+    user->current_instance_idx = 0;
+    
+    ret_code =
+        user_compile_all_flares_plans(
+            user,
+            &instance_list_index,
+            &error_string
+        );
+
+    if (ret_code != FCS_COMPILE_FLARES_RET_OK)
+    {
+        free(error_string);
+     
+        return FCS_STATE_FLARES_PLAN_ERROR;
+    }
+
+    return freecell_solver_user_resume_solution(api_instance);
+}
+
+static void recycle_instance(
+    fcs_user_t * user,
+    int i
+    )
+{
+    int flare_idx;
+    fcs_instance_item_t * instance_item;
+
+    instance_item = &(user->instances_list[i]);
+
+    /* fc_solve_unresume_instance is empty. */
+#if 0
+    else if (user->instances_list[i].ret == FCS_STATE_SUSPEND_PROCESS)
+    {
+        fc_solve_unresume_instance(user->instances_list[i].instance);
+    }
+#endif
+
+    for(flare_idx = 0; flare_idx < instance_item->num_flares ; flare_idx++)
+    {
+        fcs_flare_item_t * flare;
+
+        flare = &(instance_item->flares[flare_idx]);
+
+        if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
+        {
+            fc_solve_recycle_instance(flare->obj);
+            /*
+             * We have to initialize init_num_times to 0 here, because it may 
+             * not get initialized again, and now the num_times of the instance
+             * is equal to 0.
+             * */
+            user->init_num_times = 0;
+
+            flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
+        }
+
+        if (flare->obj->solution_moves.moves)
+        {
+            fcs_move_stack_static_destroy(flare->obj->solution_moves);
+            flare->obj->solution_moves.moves = NULL;
+        }
+        
+    }
+
+    instance_item->ret_code = FCS_STATE_NOT_BEGAN_YET;
+
+    instance_item->current_plan_item_idx = 0;
+    instance_item->minimal_solution_flare_idx = -1;
+
+    return;
+}
 
 int DLLEXPORT freecell_solver_user_resume_solution(
     void * api_instance
@@ -676,24 +703,76 @@ int DLLEXPORT freecell_solver_user_resume_solution(
      * */
     for( ;
         run_for_first_iteration || ((user->current_instance_idx < user->num_instances) && (ret == FCS_STATE_IS_NOT_SOLVEABLE)) ;
-        recycle_instance(user, user->current_instance_idx), user->current_instance_idx++
        )
     {
         fcs_instance_item_t * instance_item;
         fcs_flare_item_t * flare;
         int flare_idx;
+        
+        flares_plan_item * current_plan_item;
+        int flare_iters_quota;
 
         run_for_first_iteration = 0;
 
         instance_item = &(user->instances_list[user->current_instance_idx]);
-        /* TODO : For later - loop over the flares based on the flares plan. */
-        user->fc_solve_obj = instance_item->flares[0].obj;
 
-        flare_idx = 0;
+        if (instance_item->current_plan_item_idx ==
+                instance_item->num_plan_items
+           )
+        {
+            /* 
+             * If all the plan items finished so far, it means this instance
+             * cannot be reused, because it will always yield a cannot
+             * be found result. So instead of looping infinitely, 
+             * move to the next instance, or exit. */
+            if (instance_item->all_plan_items_finished_so_far)
+            {
+                recycle_instance(user, user->current_instance_idx);
+                user->current_instance_idx++;
+                continue;
+            }
+            /* Otherwise - restart the plan again. */
+            else
+            {
+                instance_item->all_plan_items_finished_so_far = 1;
+                instance_item->current_plan_item_idx = 0;
+            }
+        }
+
+        current_plan_item = &(instance_item->plan[instance_item->current_plan_item_idx++]);
+        
+       
+        if (current_plan_item->type == FLARES_PLAN_CHECKPOINT)
+        {
+            if (instance_item->minimal_solution_flare_idx >= 0)
+            {
+                user->fc_solve_obj = instance_item->flares[instance_item->minimal_solution_flare_idx].obj;
+                ret = user->ret_code = FCS_STATE_WAS_SOLVED;
+                
+                break;
+            }
+            else
+            {
+                continue;
+            }
+        }
+        else if (current_plan_item->type == FLARES_PLAN_RUN_INDEFINITELY)
+        {
+            flare_iters_quota = -1;
+        }
+        else /* (current_plan_item->type == FLARES_PLAN_RUN_COUNT_ITERS)  */
+        {
+            flare_iters_quota = current_plan_item->count_iters;
+        }
+
+        flare_idx = current_plan_item->flare_idx;
 
         flare = &(instance_item->flares[flare_idx]);
 
-        if (instance_item->ret_code == FCS_STATE_NOT_BEGAN_YET)
+        /* TODO : For later - loop over the flares based on the flares plan. */
+        user->fc_solve_obj = flare->obj;
+
+        if (flare->ret_code == FCS_STATE_NOT_BEGAN_YET)
         {
             int status;
 
@@ -786,12 +865,17 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 }\
                 else\
                 {\
-                    int a, b;\
+                    int a, b, mymin;\
                     \
                     a = global_limit();\
                     b = local_limit();\
         \
-                    user->fc_solve_obj->max_num_times = min(a,b);\
+                    mymin = min(a,b); \
+                    if (flare_iters_quota >= 0) \
+                    { \
+                        mymin = min(mymin, flare_iters_quota); \
+                    } \
+                    user->fc_solve_obj->max_num_times = mymin ;\
                 }\
             }\
         }
@@ -828,6 +912,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             fc_solve_instance_t * instance = 
                 user->fc_solve_obj;
 #endif
+            /* 
+             * TODO : maybe only normalize the final moves' stack in
+             * order to speed things up.
+             * */
             fc_solve_move_stack_normalize(
                 &(user->fc_solve_obj->solution_moves),
                 &(user->state.info),
@@ -836,7 +924,20 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 INSTANCE_DECKS_NUM
                 );
 
-            break;
+            if (instance_item->minimal_solution_flare_idx < 0)
+            {
+                instance_item->minimal_solution_flare_idx = flare_idx;
+            }
+            else
+            {
+                if (instance_item->flares[instance_item->minimal_solution_flare_idx].obj->solution_moves.num_moves >
+                    user->fc_solve_obj->solution_moves.num_moves)
+                {
+                    instance_item->minimal_solution_flare_idx = flare_idx;
+                }
+            }
+            ret = user->ret_code = instance_item->ret_code =
+                FCS_STATE_IS_NOT_SOLVEABLE;
         }
         else if (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
         {
@@ -973,8 +1074,8 @@ static void user_free_resources(
          *  */
         if (ret_code == FCS_STATE_WAS_SOLVED)
         {
-            fcs_move_stack_static_destroy(user->fc_solve_obj->solution_moves);
-            user->fc_solve_obj->solution_moves.moves = NULL;
+            fcs_move_stack_static_destroy(flare->obj->solution_moves);
+            flare->obj->solution_moves.moves = NULL;
         }
         /* fc_solve_unresume_instance is empty. */
 #if 0
@@ -1002,9 +1103,13 @@ static void user_free_resources(
     }
     FLARES_LOOP_END_FLARES()
         free(instance_item->flares);
-        if(instance_item->flares_plan_string)
+        if (instance_item->flares_plan_string)
         {
             free(instance_item->flares_plan_string);
+        }
+        if (instance_item->plan)
+        {
+            free(instance_item->plan);
         }
     FLARES_LOOP_END_INSTANCES()
 
@@ -1973,6 +2078,10 @@ static int user_next_instance(
     instance_item->num_plan_items = 0;
     instance_item->flares_plan_string = NULL;
     instance_item->flares_plan_compiled = 0;
+
+    instance_item->current_plan_item_idx = 0;
+    instance_item->minimal_solution_flare_idx = -1;
+    instance_item->all_plan_items_finished_so_far = 1;
 
     /* ret_code and limit are set at user_next_flare(). */
 

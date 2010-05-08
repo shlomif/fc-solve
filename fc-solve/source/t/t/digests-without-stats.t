@@ -12,7 +12,7 @@ statistics like the number of states checked and the number of stored states.
 
 =cut
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use lib './t/lib';
 
@@ -38,6 +38,19 @@ sub verify_solution_test
 # TEST
 verify_solution_test({id => "freecell_default24", deal => 24, theme => [],}, 
     "Verifying the solution of deal #24");
+
+# TEST
+verify_solution_test(
+    {
+        id => "freecell_simple_flare_2",
+        deal => 2,
+        theme => [qw(
+            --flare-name dfs
+            --next-flare --method a-star --flare-name befs
+            --flares-plan Run:500@dfs,Run:1500@befs)
+        ],
+    }
+);
 
 # Store the changes at the end so they won't get lost.
 $verifier->end();
