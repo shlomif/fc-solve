@@ -12,7 +12,7 @@ statistics like the number of states checked and the number of stored states.
 
 =cut
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 use lib './t/lib';
 
@@ -62,6 +62,22 @@ verify_solution_test(
             --flare-name dfs
             --next-flare --method a-star --flare-name befs
             --flares-plan), q{Run:300@dfs,Run:3000@befs,CP:,Run:200@dfs},
+        ],
+    }
+);
+
+# This should generate the same results as --method dfs.
+# It checks that the plan is restarted over after it reaches the end
+# and yields the end.
+# TEST
+verify_solution_test(
+    {
+        id => "freecell_flares_cp_1_circular_deal_6",
+        deal => 6,
+        theme => [qw(
+            --flare-name dfs
+            --next-flare --method a-star --flare-name befs
+            --flares-plan), q{Run:300@dfs,Run:1000@befs,CP:,Run:100@dfs},
         ],
     }
 );
