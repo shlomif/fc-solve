@@ -708,6 +708,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         fcs_instance_item_t * instance_item;
         fcs_flare_item_t * flare;
         int flare_idx;
+        int solve_start = 0;
         
         flares_plan_item * current_plan_item;
         int flare_iters_quota;
@@ -837,6 +838,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             fc_solve_init_instance(user->fc_solve_obj);
 
+            solve_start = 1;
+        }
+
 #define parameterized_fixed_limit(increment) \
     (user->fc_solve_obj->num_times + increment - user->iterations_board_started_at)
 #define parameterized_limit(increment) (((increment) < 0) ? (-1) : parameterized_fixed_limit(increment))
@@ -869,27 +873,18 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->fc_solve_obj->max_num_times = mymin; \
         }
 
-            calc_max_iters();
+        calc_max_iters();
 
-            user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
+        user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
 
-            ret = user->ret_code =
-                instance_item->ret_code =
-                flare->ret_code =
-                fc_solve_solve_instance(user->fc_solve_obj, &user->state.info);
-        }
-        else
-        {
-
-            calc_max_iters();
-
-            user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
-
-            ret = user->ret_code =
-                instance_item->ret_code =
-                flare->ret_code =
-                fc_solve_resume_instance(user->fc_solve_obj);
-        }
+        ret = user->ret_code =
+            instance_item->ret_code =
+            flare->ret_code =
+            (
+                solve_start
+                ? fc_solve_solve_instance(user->fc_solve_obj, &user->state.info)
+                : fc_solve_resume_instance(user->fc_solve_obj)
+            );
 
         user->iterations_board_started_at += user->fc_solve_obj->num_times - init_num_times;
         user->init_num_times = user->fc_solve_obj->num_times;
