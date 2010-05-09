@@ -837,49 +837,37 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             fc_solve_init_instance(user->fc_solve_obj);
 
-#define global_limit() \
-        (user->fc_solve_obj->num_times + user->current_iterations_limit - user->iterations_board_started_at)
+#define parameterized_fixed_limit(increment) \
+    (user->fc_solve_obj->num_times + increment - user->iterations_board_started_at)
+#define parameterized_limit(increment) (((increment) < 0) ? (-1) : parameterized_fixed_limit(increment))
 #define local_limit()  \
         (instance_item->limit)
+#define NUM_ITERS_LIMITS 3
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
 #endif
 #define calc_max_iters() \
         {          \
-            if (instance_item->limit < 0)  \
-            {\
-                if (user->current_iterations_limit < 0)\
-                {\
-                    user->fc_solve_obj->max_num_times = -1;\
-                }\
-                else\
-                {\
-                    user->fc_solve_obj->max_num_times = global_limit();\
-                }\
-            }\
-            else\
-            {\
-                if (user->current_iterations_limit < 0)\
-                {\
-                    user->fc_solve_obj->max_num_times = local_limit();\
-                }\
-                else\
-                {\
-                    int a, b, mymin;\
+            int limits[NUM_ITERS_LIMITS]; \
+            int limit_idx; \
+            int mymin, new_lim; \
                     \
-                    a = global_limit();\
-                    b = local_limit();\
-        \
-                    mymin = min(a,b); \
-                    if (flare_iters_quota >= 0) \
-                    { \
-                        mymin = min(mymin, flare_iters_quota); \
-                    } \
-                    user->fc_solve_obj->max_num_times = mymin ;\
-                }\
-            }\
+            limits[0] = local_limit(); \
+            limits[1] = parameterized_limit(user->current_iterations_limit); \
+            limits[2] = parameterized_limit(flare_iters_quota); \
+                    \
+            mymin = limits[0];  \
+            for (limit_idx=1;limit_idx<NUM_ITERS_LIMITS;limit_idx++) \
+            {          \
+                new_lim = limits[limit_idx]; \
+                if (new_lim >= 0) \
+                {      \
+                    mymin = (mymin < 0) ? new_lim : min(mymin, new_lim); \
+                } \
+            } \
+                    \
+            user->fc_solve_obj->max_num_times = mymin; \
         }
-
 
             calc_max_iters();
 
@@ -951,6 +939,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 break;
             }
 
+            ret = FCS_STATE_IS_NOT_SOLVEABLE;
+
             /*
              * Determine if we exceeded the instance-specific quota and if
              * so, designate it as unsolvable.
@@ -959,7 +949,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 (user->fc_solve_obj->num_times >= local_limit())
                )
             {
-                ret = FCS_STATE_IS_NOT_SOLVEABLE;
+                recycle_instance(user, user->current_instance_idx);
+                user->current_instance_idx++;
+                continue;
             }
         }
     }

@@ -12,7 +12,7 @@ statistics like the number of states checked and the number of stored states.
 
 =cut
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 use lib './t/lib';
 
@@ -48,6 +48,20 @@ verify_solution_test(
             --flare-name dfs
             --next-flare --method a-star --flare-name befs
             --flares-plan Run:500@dfs,Run:1500@befs)
+        ],
+    }
+);
+
+# This should generate the same results as --method dfs.
+# TEST
+verify_solution_test(
+    {
+        id => "freecell_flares_cp_1_deal_6",
+        deal => 6,
+        theme => [qw(
+            --flare-name dfs
+            --next-flare --method a-star --flare-name befs
+            --flares-plan), q{Run:300@dfs,Run:3000@befs,CP:,Run:200@dfs}
         ],
     }
 );
