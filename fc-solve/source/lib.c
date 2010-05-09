@@ -850,30 +850,28 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
 #endif
-#define calc_max_iters() \
-        {          \
-            int limits[NUM_ITERS_LIMITS]; \
-            int limit_idx; \
-            int mymin, new_lim; \
-                    \
-            limits[0] = local_limit(); \
-            limits[1] = parameterized_limit(user->current_iterations_limit); \
-            limits[2] = parameterized_limit(flare_iters_quota); \
-                    \
-            mymin = limits[0];  \
-            for (limit_idx=1;limit_idx<NUM_ITERS_LIMITS;limit_idx++) \
-            {          \
-                new_lim = limits[limit_idx]; \
-                if (new_lim >= 0) \
-                {      \
-                    mymin = (mymin < 0) ? new_lim : min(mymin, new_lim); \
-                } \
-            } \
-                    \
-            user->fc_solve_obj->max_num_times = mymin; \
-        }
 
-        calc_max_iters();
+        {
+            int limits[NUM_ITERS_LIMITS];
+            int limit_idx;
+            int mymin, new_lim;
+
+            limits[0] = local_limit();
+            limits[1] = parameterized_limit(user->current_iterations_limit);
+            limits[2] = parameterized_limit(flare_iters_quota);
+
+            mymin = limits[0];
+            for (limit_idx=1;limit_idx<NUM_ITERS_LIMITS;limit_idx++)
+            {
+                new_lim = limits[limit_idx];
+                if (new_lim >= 0)
+                {
+                    mymin = (mymin < 0) ? new_lim : min(mymin, new_lim);
+                }
+            }
+
+            user->fc_solve_obj->max_num_times = mymin;
+        }
 
         user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
 
