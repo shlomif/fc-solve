@@ -28,6 +28,11 @@ solutions.
 Non-pressing
 ------------
 
+* If +-opt+ is specified for the flare, then make sure that if the flares
+loop stop it when it's doing the optimization scan, then the optimization scan
+goes on until it ends.
+** Not sure about it.
+
 * Inline fc_solve_free_instance().
 
 * Experiment with making fcs_move_t a bit-field with half-octets/etc. for
