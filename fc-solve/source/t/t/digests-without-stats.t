@@ -12,7 +12,7 @@ statistics like the number of states checked and the number of stored states.
 
 =cut
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 use lib './t/lib';
 
@@ -78,6 +78,20 @@ verify_solution_test(
             --flare-name dfs
             --next-flare --method a-star --flare-name befs
             --flares-plan), q{Run:300@dfs,Run:1000@befs,CP:,Run:100@dfs},
+        ],
+    }
+);
+
+# This should test the run-indefinitely
+# TEST
+verify_solution_test(
+    {
+        id => "freecell_flares_run_indef_1_deal_6",
+        deal => 6,
+        theme => [qw(
+            --flare-name dfs
+            --next-flare --method a-star --flare-name befs
+            --flares-plan), q{Run:500@dfs,RunIndef:befs},
         ],
     }
 );

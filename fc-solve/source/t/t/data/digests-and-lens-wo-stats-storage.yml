@@ -9,6 +9,9 @@ digests:
   freecell_flares_cp_1_deal_6:
     hexdigest: 8340633a168d679597850ffbd8ecc3da9cb505a3ef30c64c8e81fcb3331fd794
     len: 43366
+  freecell_flares_run_indef_1_deal_6:
+    hexdigest: 2ec049013efa2df679b0749e44976e78d41853583f1f3eaeea7779a3ed6435d2
+    len: 26133
   freecell_simple_flare_2:
     hexdigest: b31dd9752111db5cb2f6e3d8707f37138720bb62a6fb2e7e721c7bf4c7e2a406
     len: 21461
