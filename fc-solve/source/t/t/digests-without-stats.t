@@ -61,7 +61,7 @@ verify_solution_test(
         theme => [qw(
             --flare-name dfs
             --next-flare --method a-star --flare-name befs
-            --flares-plan), q{Run:300@dfs,Run:3000@befs,CP:,Run:200@dfs}
+            --flares-plan), q{Run:300@dfs,Run:3000@befs,CP:,Run:200@dfs},
         ],
     }
 );

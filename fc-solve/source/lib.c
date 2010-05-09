@@ -599,6 +599,7 @@ static int user_compile_all_flares_plans(
 
     return FCS_COMPILE_FLARES_RET_OK;
 }
+
 int DLLEXPORT freecell_solver_user_solve_board(
     void * api_instance,
     const char * state_as_string
@@ -1171,7 +1172,9 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         break;
     }
 }
+
 #ifndef FCS_FREECELL_ONLY
+
 static void apply_game_params_for_all_instances(
         fcs_user_t * user
         )
@@ -1184,9 +1187,11 @@ static void apply_game_params_for_all_instances(
 
     return;
 }
+
 #endif
 
 #ifndef HARD_CODED_NUM_FREECELLS
+
 int DLLEXPORT freecell_solver_user_set_num_freecells(
     void * api_instance,
     int freecells_num
@@ -1207,7 +1212,9 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
 
     return 0;
 }
+
 #else
+
 int DLLEXPORT freecell_solver_user_set_num_freecells(
     void * api_instance GCC_UNUSED,
     int freecells_num GCC_UNUSED
@@ -1215,6 +1222,7 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
 {
     return 0;
 }
+
 #endif
 
 #ifndef HARD_CODED_NUM_STACKS
@@ -1236,7 +1244,9 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
 
     return 0;
 }
+
 #else
+
 int DLLEXPORT freecell_solver_user_set_num_stacks(
     void * api_instance GCC_UNUSED,
     int stacks_num GCC_UNUSED
@@ -1244,6 +1254,7 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
 {
     return 0;
 }
+
 #endif
 
 #ifndef HARD_CODED_NUM_DECKS
@@ -1266,7 +1277,9 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
 
     return 0;
 }
+
 #else
+
 int DLLEXPORT freecell_solver_user_set_num_decks(
     void * api_instance GCC_UNUSED,
     int decks_num GCC_UNUSED
@@ -1274,6 +1287,7 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
 {
     return 0;
 }
+
 #endif
 
 int DLLEXPORT freecell_solver_user_set_game(
