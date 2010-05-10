@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -82,6 +82,12 @@ test_using_valgrind(
 # TEST
 test_using_valgrind(
     [qw(11981 11983 1 -opt)],
+    qq{"range-parallel-solve 11981 11983 1 -opt" returned no errors}
+);
+
+# TEST
+test_using_valgrind(
+    [qw(1 3 1 --flare-name dfs --next-flare --method a-star --flare-name befs --flares-plan), q(Run:300@dfs,Run:500@befs,CP:,Run:200@dfs),],
     qq{"range-parallel-solve 11981 11983 1 -opt" returned no errors}
 );
 
