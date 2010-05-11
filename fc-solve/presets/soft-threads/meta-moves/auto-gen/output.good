@@ -1,20 +1,20 @@
-350 @ 1 (19341 solved)
-350 @ 4 (25164 solved)
-350 @ 5 (27889 solved)
-350 @ 14 (29137 solved)
-350 @ 1 (29912 solved)
-350 @ 8 (30438 solved)
-350 @ 2 (30799 solved)
-350 @ 4 (31066 solved)
-350 @ 3 (31265 solved)
-350 @ 5 (31411 solved)
-350 @ 9 (31515 solved)
-350 @ 1 (31597 solved)
-350 @ 12 (31664 solved)
-350 @ 8 (31718 solved)
-350 @ 4 (31759 solved)
-350 @ 7 (31795 solved)
-350 @ 6 (31826 solved)
+350 @ 1 (19327 solved)
+350 @ 4 (25149 solved)
+350 @ 5 (27873 solved)
+350 @ 14 (29120 solved)
+350 @ 1 (29899 solved)
+350 @ 8 (30428 solved)
+350 @ 2 (30788 solved)
+350 @ 4 (31057 solved)
+350 @ 3 (31258 solved)
+350 @ 5 (31408 solved)
+350 @ 9 (31511 solved)
+350 @ 1 (31594 solved)
+350 @ 12 (31660 solved)
+350 @ 8 (31715 solved)
+350 @ 4 (31758 solved)
+350 @ 7 (31794 solved)
+350 @ 6 (31825 solved)
 350 @ 6 (31853 solved)
 350 @ 3 (31873 solved)
 350 @ 4 (31889 solved)
@@ -58,7 +58,7 @@
 4900 @ 8 (31997 solved)
 6300 @ 0 (31998 solved)
 6300 @ 14 (31999 solved)
-total_iters = 18382968
+total_iters = 18452659
 freecell-solver-range-parallel-solve 1 32000 1 \
 --method soft-dfs -to 0123456789 -step 500 --st-name 1 -nst \
 --method soft-dfs -to 0123467 -step 500 --st-name 2 -nst \
@@ -67,7 +67,7 @@ freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -seed 3 -to 0[01][23467] -step 500 --st-name 5 -nst \
 --method random-dfs -seed 4 -to 0[0123467] -step 500 --st-name 9 -nst \
 --method random-dfs -to [01][23456789] -seed 8 -step 500 --st-name 10 -nst \
---method a-star -asw 0.2,0.8,0,0 -step 500 --st-name 11 -nst \
+--method a-star -asw 0.2,0.8,0,0,0 -step 500 --st-name 11 -nst \
 --method random-dfs -to [01][23456789] -seed 268 -step 500 --st-name 12 -nst \
 --method random-dfs -to [0123456789] -seed 142 -step 500 --st-name 15 -nst \
 --method a-star -asw 0.2,0.3,0.5,0,0 -step 500 --st-name 16 -nst \

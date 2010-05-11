@@ -8,9 +8,9 @@ use Shlomif::FCS::CalcMetaScan::Structs;
 
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
-use vars (qw(@fields %fields_map));
+use PDL ();
 
-@fields = (qw(
+__PACKAGE__->mk_acc_ref([qw(
     chosen_scans
     _iter_idx
     _num_boards
@@ -23,23 +23,7 @@ use vars (qw(@fields %fields_map));
     _total_boards_solved
     _total_iters
     _trace_cb
-));
-
-use PDL ();
-
-%fields_map = (map { $_ => 1 } @fields);
-
-__PACKAGE__->mk_acc_ref(\@fields);
-
-sub add
-{
-    my ($self, $field, $diff) = @_;
-    if (!exists($fields_map{$field}))
-    {
-        die "Cannot add to field \"$field\"!";
-    }
-    return $self->$field($self->$field() + $diff);
-}
+)]);
 
 sub _init
 {
@@ -516,11 +500,21 @@ sub _add_to_total_iters
     
     my $how_much = shift;
 
-    $self->add('_total_iters', $how_much);
+    $self->_total_iters($self->_total_iters() + $how_much);
 
     return;
 }
 
+sub _add_to_total_boards_solved
+{
+    my $self = shift;
+    
+    my $how_much = shift;
+
+    $self->_total_boards_solved($self->_total_boards_solved() + $how_much);
+
+    return;
+}
 package Shlomif::FCS::CalcMetaScan::ScanRun;
 
 use base 'Shlomif::FCS::CalcMetaScan::Base';

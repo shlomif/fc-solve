@@ -139,7 +139,7 @@ sub _update_total_boards_solved
 {
     my $state = shift;
 
-    $state->_main()->add('_total_boards_solved', $state->_num_solved());
+    $state->_main()->_add_to_total_boards_solved($state->_num_solved());
 
     return;
 }
