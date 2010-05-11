@@ -128,14 +128,14 @@ package main;
     # TEST
     $simu->is_board_line(
         1, 
-        q{1:Solved:300@2,300@5,244@9,:844}, 
+        q{1:Solved:300@2,245@9,:545},
         "1 was simulated correctly."
     );
 
     # TEST
     $simu->is_board_line(
         24,
-        q{24:Solved:300@2,300@5,300@9,119@2,:1019},
+        q{24:Solved:300@2,300@9,300@5,120@2,:1020},
         "24 was simulated correctly."
     );
 }
@@ -147,14 +147,14 @@ package main;
     # TEST
     $simu->is_board_line(
         1000, 
-        q{1000:Solved:125@2,:125}, 
+        q{1000:Solved:126@2,:126}, 
         "1,000 was simulated correctly."
     );
 
     # TEST
     $simu->is_board_line(
         15_001,
-        q{15001:Solved:400@2,300@5,300@9,200@5,100@9,200@16,300@2,100@16,200@9,88@5,:2188},
+        q{15001:Solved:400@2,300@5,500@9,100@5,200@16,100@2,189@5,:1789},
         "15,001 was simulated correctly."
     );
 }
