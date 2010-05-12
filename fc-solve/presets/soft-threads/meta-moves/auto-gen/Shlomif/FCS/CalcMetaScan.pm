@@ -386,6 +386,11 @@ sub calc_flares_meta_scan
 
     my $loop_iter_num = 0;
 
+    my $UNSOLVED_NUM_MOVES_CONSTANT = 64 * 1024 * 1024;
+
+    my $last_avg = $UNSOLVED_NUM_MOVES_CONSTANT;
+
+    FLARES_LOOP:
     while (my $q_more = $self->_get_next_quota())
     {
         $iters_quota += $q_more;
@@ -421,7 +426,7 @@ sub calc_flares_meta_scan
 
         # print "\$num_moves_repeat =", join(",",$num_moves_repeat->dims()), "\n";
 
-        my $UNSOLVED_NUM_MOVES_CONSTANT = 64 * 1024 * 1024;
+        
 
         my $num_moves_solved = 
             ($solved * $num_moves_repeat) + ($solved->not() * $UNSOLVED_NUM_MOVES_CONSTANT);
@@ -445,6 +450,13 @@ sub calc_flares_meta_scan
         ($min_avg, undef, $selected_scan_idx, undef) =
             $solved_moves_avgs->minmaximum()
             ;
+
+        if ($min_avg > $last_avg)
+        {
+            next FLARES_LOOP;
+        }
+
+        $last_avg = $min_avg;
 
         push @{$self->chosen_scans()}, 
             Shlomif::FCS::CalcMetaScan::ScanRun->new(
