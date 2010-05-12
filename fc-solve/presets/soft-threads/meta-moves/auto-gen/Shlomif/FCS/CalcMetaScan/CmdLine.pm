@@ -452,6 +452,28 @@ sub run
     return 0;
 }
 
+sub run_flares
+{
+    my $self = shift;
+
+    $self->_optimize_for("len");
+    $self->_init_arbitrator();
+
+    $self->_arbitrator()->calc_flares_meta_scan();
+
+    my $scans = $self->_post_processor->process(
+        $self->_arbitrator->chosen_scans()
+    );
+
+    $self->_chosen_scans($scans);
+    $self->_report_total_iters();
+    $self->_write_script();
+    $self->_do_trace();
+    $self->_do_simulation();
+
+    return 0;
+}
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2010 Shlomi Fish

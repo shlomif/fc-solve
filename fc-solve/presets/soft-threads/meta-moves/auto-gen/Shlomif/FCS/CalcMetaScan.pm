@@ -57,6 +57,10 @@ sub _init
     return 0;
 }
 
+my $BOARDS_DIM = 0;
+my $SCANS_DIM = 1;
+my $STATISTICS_DIM = 2;
+
 sub _next_iter_idx
 {
     my $self = shift;
@@ -116,6 +120,13 @@ sub _my_sum_over
     return $pdl->sumover()->slice(":,(0)");
 }
 
+sub _my_xchg_sum_over
+{
+    my $pdl = shift;
+
+    return _my_sum_over($pdl->xchg(0,1));
+}
+
 sub _get_iter_state_params_len
 {
     my $self = shift;
@@ -145,7 +156,7 @@ sub _get_iter_state_params_len
         my $solved_moves_sums = _my_sum_over($solved_moves);
         my $solved_moves_counts = _my_sum_over($solved);
         my $solved_moves_avgs = $solved_moves_sums / $solved_moves_counts;
-        
+
         (undef, undef, $selected_scan_idx, undef) =
             $solved_moves_avgs->minmaximum()
             ;
@@ -327,6 +338,128 @@ sub calc_meta_scan
         {
             die $err;
         }
+    }
+}
+
+=head2 $self->calc_flares_meta_scan()
+
+This function calculates the flares meta-scan: i.e: assuming that all atomic
+scans are run one after the other and the shortest solutions of all
+successful scans are being picked.
+
+=cut
+
+sub _get_num_scans
+{
+    my $self = shift;
+
+    return (($self->_scans_data()->dims())[$SCANS_DIM]);
+}
+
+sub calc_flares_meta_scan
+{
+    my $self = shift;
+
+    $self->chosen_scans([]);
+
+    $self->_total_boards_solved(0);
+    $self->_total_iters(0);
+
+    $self->_status("iterating");
+
+    my $iters_quota = 0;
+    my $flares_num_iters = PDL::Core::pdl([(0) x $self->_get_num_scans()]);
+    my $ones_constant = PDL::Core::pdl(
+        [map { [1] } (1 .. $self->_get_num_scans())]
+    );
+
+    my $next_num_iters_for_each_scan_x_scan = 
+        (($ones_constant x $flares_num_iters));
+
+
+    my $num_moves = $self->_scans_data->slice(":,:,1");
+
+    # The number of moves for dimension 0,1,2 above.
+    my $num_moves_repeat = $num_moves->clump(1..2)->xchg(0,1)->dummy(0,$self->_get_num_scans());
+
+    my $selected_scan_idx;
+
+    my $loop_iter_num = 0;
+
+    while (my $q_more = $self->_get_next_quota())
+    {
+        $iters_quota += $q_more;
+        
+        # Next number of iterations for each scan x scan combination.
+        my $next_num_iters = 
+            (($ones_constant x $flares_num_iters) + 
+                (PDL::MatrixOps::identity($self->_get_num_scans())
+                    * $iters_quota
+                )
+            );
+
+        # print "\$next_num_iters = $next_num_iters\n";
+
+        my $iters = $self->_scans_data()->slice(":,:,0");
+
+        my $iters_repeat =
+            $iters->dummy(0,$self->_get_num_scans())->xchg(1,2)->clump(2 .. 3);
+
+        # print "\$iters_repeat =", join(",",$iters_repeat->dims()), "\n";
+
+        my $next_num_iters_repeat = 
+            $next_num_iters->dummy(0,$self->_num_boards())->xchg(0,2);
+
+        # print "\$next_num_iters_repeat =", join(",",$next_num_iters_repeat->dims()), "\n";
+
+        # A boolean tensor of which boards were solved:
+        # Dimension 0 - Which scan is it. - size - _get_num_scans()
+        # Dimension 1 - Which scan we added the quota to 
+        #   - size - _get_num_scans()
+        # Dimension 2 - Which board. - size - _num_boards()
+        my $solved = ($iters_repeat >= 0) * ($iters_repeat < $next_num_iters_repeat);
+
+        # print "\$num_moves_repeat =", join(",",$num_moves_repeat->dims()), "\n";
+
+        my $UNSOLVED_NUM_MOVES_CONSTANT = 64 * 1024 * 1024;
+
+        my $num_moves_solved = 
+            ($solved * $num_moves_repeat) + ($solved->not() * $UNSOLVED_NUM_MOVES_CONSTANT);
+
+        my $minimal_num_moves_solved = $num_moves_solved->xchg(0,1)->minimum();
+
+        my $is_solved =
+            ($minimal_num_moves_solved != $UNSOLVED_NUM_MOVES_CONSTANT)
+            ;
+
+        my $minimal_with_zeroes = $is_solved * $minimal_num_moves_solved;
+
+        my $solved_moves_sums = _my_xchg_sum_over($minimal_with_zeroes);
+        my $solved_moves_counts = _my_xchg_sum_over($is_solved);
+        my $solved_moves_avgs = $solved_moves_sums / $solved_moves_counts;
+
+        # print join(",", $solved_moves_avgs->minmaximum()), "\n";
+
+        (undef, undef, $selected_scan_idx, undef) =
+            $solved_moves_avgs->minmaximum()
+            ;
+
+        push @{$self->chosen_scans()}, 
+            Shlomif::FCS::CalcMetaScan::ScanRun->new(
+                {
+                    iters => $iters_quota, 
+                    scan => $selected_scan_idx,
+                }
+            );
+
+        $flares_num_iters->set($selected_scan_idx, $flares_num_iters->at($selected_scan_idx)+$iters_quota);
+        $self->_selected_scans()->[$selected_scan_idx]->mark_as_used();
+
+        $iters_quota = 0;
+    }
+    continue
+    {
+        print "Finished ", $loop_iter_num++, "\n";
     }
 }
 
@@ -515,6 +648,7 @@ sub _add_to_total_boards_solved
 
     return;
 }
+
 package Shlomif::FCS::CalcMetaScan::ScanRun;
 
 use base 'Shlomif::FCS::CalcMetaScan::Base';
