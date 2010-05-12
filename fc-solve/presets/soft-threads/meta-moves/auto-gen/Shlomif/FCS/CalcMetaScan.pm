@@ -440,7 +440,9 @@ sub calc_flares_meta_scan
 
         # print join(",", $solved_moves_avgs->minmaximum()), "\n";
 
-        (undef, undef, $selected_scan_idx, undef) =
+        my $min_avg;
+
+        ($min_avg, undef, $selected_scan_idx, undef) =
             $solved_moves_avgs->minmaximum()
             ;
 
@@ -456,10 +458,8 @@ sub calc_flares_meta_scan
         $self->_selected_scans()->[$selected_scan_idx]->mark_as_used();
 
         $iters_quota = 0;
-    }
-    continue
-    {
-        print "Finished ", $loop_iter_num++, "\n";
+
+        print "Finished ", $loop_iter_num++, " ; Avg = $min_avg\n";
     }
 }
 
