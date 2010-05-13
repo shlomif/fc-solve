@@ -469,7 +469,22 @@ sub calc_flares_meta_scan
 
         my $num_solved = $solved_moves_counts->at($selected_scan_idx);
 
-        print "Finished ", $loop_iter_num++, " ; #Solved = $num_solved ; Avg = $min_avg\n";
+        my $flares_num_iters_repeat =
+            $flares_num_iters->dummy(0,$self->_num_boards());
+
+        # A boolean tensor:
+        # Dimension 0 - board.
+        # Dimension 1 - scans.
+        my $solved_with_which_iter = 
+            ($flares_num_iters_repeat >= $iters->clump(1 .. 2))
+            & ($iters->clump(1 .. 2) >= 0)
+            ;
+
+        my $total_num_iters =
+            (($solved_with_which_iter * $flares_num_iters_repeat)->sum()
+            + ($solved_with_which_iter->not()->andover() * $flares_num_iters->sum())->sum());
+
+        print "Finished ", $loop_iter_num++, " ; #Solved = $num_solved ; Iters = $total_num_iters ; Avg = $min_avg\n";
     }
 }
 
