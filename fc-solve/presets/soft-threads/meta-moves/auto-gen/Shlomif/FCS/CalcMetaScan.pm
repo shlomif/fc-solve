@@ -452,11 +452,6 @@ sub calc_flares_meta_scan
             $solved_moves_avgs->minmaximum()
             ;
 
-        if ($min_avg > $last_avg)
-        {
-            next FLARES_LOOP;
-        }
-
         $last_avg = $min_avg;
 
         push @{$self->chosen_scans()}, 
@@ -472,7 +467,9 @@ sub calc_flares_meta_scan
 
         $iters_quota = 0;
 
-        print "Finished ", $loop_iter_num++, " ; Avg = $min_avg\n";
+        my $num_solved = $solved_moves_counts->at($selected_scan_idx);
+
+        print "Finished ", $loop_iter_num++, " ; #Solved = $num_solved ; Avg = $min_avg\n";
     }
 }
 
