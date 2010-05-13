@@ -433,14 +433,15 @@ sub calc_flares_meta_scan
 
         my $minimal_num_moves_solved = $num_moves_solved->xchg(0,1)->minimum();
 
-        my $is_solved =
+        my $which_minima_are_solved =
             ($minimal_num_moves_solved != $UNSOLVED_NUM_MOVES_CONSTANT)
             ;
 
-        my $minimal_with_zeroes = $is_solved * $minimal_num_moves_solved;
+        my $minimal_with_zeroes =
+            $which_minima_are_solved * $minimal_num_moves_solved;
 
         my $solved_moves_sums = _my_xchg_sum_over($minimal_with_zeroes);
-        my $solved_moves_counts = _my_xchg_sum_over($is_solved);
+        my $solved_moves_counts = _my_xchg_sum_over($which_minima_are_solved);
         my $solved_moves_avgs = $solved_moves_sums / $solved_moves_counts;
 
         # print join(",", $solved_moves_avgs->minmaximum()), "\n";
