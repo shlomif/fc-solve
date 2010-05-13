@@ -20,6 +20,7 @@ __PACKAGE__->mk_acc_ref(
     _arbitrator
     _chosen_scans
     _input_obj
+    _is_flares
     _num_boards
     _offset_quotas
     _optimize_for
@@ -73,6 +74,7 @@ sub _init
     $self->_optimize_for($optimize_for);
     $self->_offset_quotas($offset_quotas);
     $self->_simulate_to($simulate_to);
+    $self->_is_flares(0);
 
     $self->_input_obj(
         MyInput->new(
@@ -184,12 +186,22 @@ sub _get_used_scans
     return [ grep { $_->is_used() } @{$self->_selected_scans()}];
 }
 
+sub _get_scan_line
+{
+    my ($self, $line) = @_;
+
+    return $line->{'cmd_line'} . " -step 500 " 
+        . join(" ", map { $_, $line->{'id'} } 
+            ("--st-name", ($self->_is_flares() ? "--flare-name" : ()))
+        );
+}
+
 sub _get_lines_of_scan_defs
 {
     my $self = shift;
     return 
         [map 
-            { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } 
+            { $self->_get_scan_line($_) } 
             @{$self->_get_used_scans()}
         ];
 }
@@ -197,7 +209,11 @@ sub _get_lines_of_scan_defs
 sub _scan_def_line_mapping
 {
     my $self = shift;
-    return $self->_map_all_but_last(sub { "$_[0] -nst" }, shift);
+
+    return $self->_map_all_but_last(sub { 
+            "$_[0] " . ($self->_is_flares() ? "-nf" : "-nst") 
+        }, shift
+    );
 }
 
 sub _calc_iter_quota
@@ -229,7 +245,7 @@ sub _format_prelude_iter
 
     my $iter = shift;
 
-    return $iter->iters() . '@'
+    return ($self->_is_flares() ? "Run:" : "") . $iter->iters() . '@'
         . $self->_map_scan_idx_to_id($iter->scan())
         ;
 }
@@ -237,7 +253,7 @@ sub _format_prelude_iter
 sub _get_line_of_prelude
 {
     my $self = shift;
-    return "--prelude \"" .
+    return +($self->_is_flares() ? "--flares-plan" : "--prelude") . qq{ "} .
         join(",",
             map { $self->_format_prelude_iter($_) } 
                 @{$self->_chosen_scans()}
@@ -457,6 +473,8 @@ sub run_flares
     my $self = shift;
 
     $self->_optimize_for("len");
+    $self->_is_flares(1);
+
     $self->_init_arbitrator();
 
     $self->_arbitrator()->calc_flares_meta_scan();
