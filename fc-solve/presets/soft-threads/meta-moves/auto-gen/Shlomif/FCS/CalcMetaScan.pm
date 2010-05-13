@@ -3,6 +3,8 @@ package Shlomif::FCS::CalcMetaScan;
 use strict;
 use warnings;
 
+use IO::Handle;
+
 use Shlomif::FCS::CalcMetaScan::IterState;
 use Shlomif::FCS::CalcMetaScan::Structs;
 
@@ -481,10 +483,14 @@ sub calc_flares_meta_scan
             ;
 
         my $total_num_iters =
-            (($solved_with_which_iter * $flares_num_iters_repeat)->sum()
-            + ($solved_with_which_iter->not()->andover() * $flares_num_iters->sum())->sum());
+        (
+            ($solved_with_which_iter * $flares_num_iters_repeat)->sum()
+            + ($solved_with_which_iter->not()->andover() 
+                * $flares_num_iters->sum())->sum()
+        );
 
         print "Finished ", $loop_iter_num++, " ; #Solved = $num_solved ; Iters = $total_num_iters ; Avg = $min_avg\n";
+        STDOUT->flush();
     }
 }
 
