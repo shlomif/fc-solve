@@ -12,7 +12,7 @@ statistics like the number of states checked and the number of stored states.
 
 =cut
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 use lib './t/lib';
 
@@ -92,6 +92,26 @@ verify_solution_test(
             --flare-name dfs
             --next-flare --method a-star --flare-name befs
             --flares-plan), q{Run:500@dfs,RunIndef:befs},
+        ],
+    }
+);
+
+# This checks for an infinite loop when several identically-spaced quotas
+# are given to the flares.
+# TEST
+verify_solution_test(
+    {
+        id => "freecell_flares_equally_spaced_quotas_deal_1",
+        deal => 1,
+        theme => [
+            # This is to avoid warnings on commas in qw(...)
+        grep { /\S/ } split(/\s+/, <<'EOF')
+            
+--method a-star -asw 0.2,0.8,0,0,0 -step 500 --st-name 11 --flare-name 11 -nf
+--method a-star -to 0123467 -asw 0.5,0,0.3,0,0 -step 500 --st-name 18 --flare-name 18 -nf
+--flares-plan Run:200@18,Run:200@11,Run:200@18
+EOF
+
         ],
     }
 );

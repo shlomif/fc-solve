@@ -843,7 +843,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         }
 
 #define parameterized_fixed_limit(increment) \
-    (user->fc_solve_obj->num_times + increment - user->iterations_board_started_at)
+    (user->iterations_board_started_at + increment)
 #define parameterized_limit(increment) (((increment) < 0) ? (-1) : parameterized_fixed_limit(increment))
 #define local_limit()  \
         (instance_item->limit)
@@ -871,7 +871,11 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 }
             }
 
-            user->fc_solve_obj->max_num_times = mymin;
+            user->fc_solve_obj->max_num_times =
+                ((mymin < 0)
+                    ? -1
+                    : user->fc_solve_obj->num_times + mymin - user->iterations_board_started_at
+                    );
         }
 
         user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
@@ -947,6 +951,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 user->current_instance_idx++;
                 continue;
             }
+            instance_item->all_plan_items_finished_so_far = 0;
         }
     }
 
