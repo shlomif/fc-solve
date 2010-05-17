@@ -69,3 +69,18 @@ print
     join(",", map { "Run:$_->{quota}\@$_->{id}" } @results),
     "'\n",
 );
+
+{
+    my $x = $data->slice(":,:,2")->clump(1..2);
+
+    $x = ($x >= 0) * $x + ($x < 0) * PDL->ones($x->dims()) * 100_000;
+
+    my @histogram =
+        $x->xchg(0,1)->minimum_ind()->histogram(1,0,scalar(@results))->list();
+
+    print map { $results[$_]->{id} . ": " . $histogram[$_] . "\n" }
+        reverse sort { $histogram[$a] <=> $histogram[$b] }
+        (0 .. $#histogram)
+        ;
+}
+
