@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Getopt::Long;
-use IO::All;
 
 use List::Util qw(min);
 
