@@ -107,7 +107,10 @@ sub _get_scans_data_helper
     my $data_dir = ".data-proc";
     my $lens_dir = ".data-len-proc";
 
-    mkpath($data_dir, $lens_dir);
+    foreach my $dir ($data_dir, $lens_dir)
+    {
+        mkpath($dir);
+    }
 
     foreach my $scan (@$selected_scans)
     {
