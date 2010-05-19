@@ -75,12 +75,18 @@ print
 
     $x = ($x >= 0) * $x + ($x < 0) * PDL->ones($x->dims()) * 100_000;
 
-    my @histogram =
-        $x->xchg(0,1)->minimum_ind()->histogram(1,0,scalar(@results))->list();
+    my $histograms =
+        $x->xchg(0,1)->qsorti()->xchg(0,1)->histogram(1,0,scalar(@results));
 
+    print $histograms;
+
+=begin Foo
     print map { $results[$_]->{id} . ": " . $histogram[$_] . "\n" }
         reverse sort { $histogram[$a] <=> $histogram[$b] }
         (0 .. $#histogram)
         ;
+
+=cut
+
 }
 
