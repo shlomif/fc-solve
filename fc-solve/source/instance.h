@@ -840,7 +840,7 @@ extern void fc_solve_finish_instance(
     fc_solve_instance_t * instance
     );
 
-extern int fc_solve_solve_instance(
+extern void fc_solve_start_instance_process_with_board(
     fc_solve_instance_t * instance,
     fcs_state_extra_info_t * init_state_val
     );

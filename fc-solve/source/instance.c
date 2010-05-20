@@ -854,12 +854,11 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
 
 /*
-    This function starts the solution process _for the first time_. If one
-    wishes to proceed after the iterations limit was reached, one should
-    use fc_solve_resume_instance.
-
+    This function associates a board with an fc_solve_instance_t and
+    does other initialisations. After it, you must call 
+    fc_solve_resume_instance() repeatedly.
   */
-int fc_solve_solve_instance(
+void fc_solve_start_instance_process_with_board(
     fc_solve_instance_t * instance,
     fcs_state_extra_info_t * init_state_val
     )
@@ -1049,7 +1048,7 @@ int fc_solve_solve_instance(
         )
     );
 
-    return fc_solve_resume_instance(instance);
+    return;
 }
 
 static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(

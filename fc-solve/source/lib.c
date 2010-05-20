@@ -872,14 +872,16 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
 
+        if (solve_start)
+        {
+            fc_solve_start_instance_process_with_board(
+                user->fc_solve_obj, &user->state.info
+            );
+        }
         ret = user->ret_code =
             instance_item->ret_code =
             flare->ret_code =
-            (
-                solve_start
-                ? fc_solve_solve_instance(user->fc_solve_obj, &user->state.info)
-                : fc_solve_resume_instance(user->fc_solve_obj)
-            );
+                fc_solve_resume_instance(user->fc_solve_obj);
 
         user->iterations_board_started_at += user->fc_solve_obj->num_times - init_num_times;
         user->init_num_times = user->fc_solve_obj->num_times;
