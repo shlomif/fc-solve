@@ -89,7 +89,6 @@ typedef struct
      * string to true.
      */
     int flares_plan_compiled;
-    int ret_code;
     int limit;
 }  fcs_instance_item_t;
 
@@ -670,8 +669,6 @@ static void recycle_instance(
         
     }
 
-    instance_item->ret_code = FCS_STATE_NOT_BEGAN_YET;
-
     instance_item->current_plan_item_idx = 0;
     instance_item->minimal_solution_flare_idx = -1;
 
@@ -879,7 +876,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             );
         }
         ret = user->ret_code =
-            instance_item->ret_code =
             flare->ret_code =
                 fc_solve_resume_instance(user->fc_solve_obj);
 
@@ -916,8 +912,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                     instance_item->minimal_solution_flare_idx = flare_idx;
                 }
             }
-            ret = user->ret_code = instance_item->ret_code =
-                FCS_STATE_IS_NOT_SOLVEABLE;
+            ret = user->ret_code = FCS_STATE_IS_NOT_SOLVEABLE;
         }
         else if (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
         {
@@ -2034,7 +2029,7 @@ static int user_next_flare(fcs_user_t * user)
     fc_solve_apply_preset_by_ptr(flare->obj, &(user->common_preset));
 #endif
 
-    user->ret_code = instance_item->ret_code = flare->ret_code =
+    user->ret_code = flare->ret_code =
         FCS_STATE_NOT_BEGAN_YET;
 
     flare->obj->debug_iter_output_func =
