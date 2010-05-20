@@ -18,6 +18,9 @@ digests:
   freecell24:
     hexdigest: 1ba0c0ce085e72be7f608ffb8fe44367382eb0bbbf06da6ab136473af5d8353a
     len: 32193
+  freecell24_children_playing_ball:
+    hexdigest: 17e5f41853d059a0f7cab8bf14b85c85e0b95e5f8f5dbb2dc6f5add54f36abf6
+    len: 26819
   freecell24empty:
     hexdigest: 31fc6e1191e6d3ac1ae5662c934c693f7a8e7031b80fd252f1bfb1548f011d76
     len: 32280

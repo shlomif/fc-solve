@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 
 use lib './t/lib';
 
@@ -135,6 +135,11 @@ verify_solution_test(
 verify_solution_test({id => "freecell24", deal => 24, 
         output_file => "24.solution.txt",}, 
     "Verifying the solution of deal No. 24 with -o");
+
+# TEST
+verify_solution_test({id => "freecell24_children_playing_ball", deal => 24, 
+        theme => ["-l", "children-playing-ball"],}, 
+    "Verifying the solution of deal No. 24 with -l cpb");
 
 # Store the changes at the end so they won't get lost.
 $verifier->end();
