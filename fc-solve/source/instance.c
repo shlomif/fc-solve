@@ -70,7 +70,7 @@
        FCS_STATE_SUSPEND_PROCESS then call
        fc_solve_unresume_instance().
     9. If the solving was successful you can use the move stacks or the
-       intermediate stacks. (Just don't destory them in any way).
+       intermediate stacks. (Just don't destroy them in any way).
     10. Call fc_solve_finish_instance().
     11. Call fc_solve_free_instance().
 
