@@ -643,14 +643,6 @@ static void recycle_instance(
 
     instance_item = &(user->instances_list[i]);
 
-    /* fc_solve_unresume_instance is empty. */
-#if 0
-    else if (user->instances_list[i].ret == FCS_STATE_SUSPEND_PROCESS)
-    {
-        fc_solve_unresume_instance(user->instances_list[i].instance);
-    }
-#endif
-
     for(flare_idx = 0; flare_idx < instance_item->num_flares ; flare_idx++)
     {
         fcs_flare_item_t * flare;
@@ -1068,13 +1060,6 @@ static void user_free_resources(
             fcs_move_stack_static_destroy(flare->obj->solution_moves);
             flare->obj->solution_moves.moves = NULL;
         }
-        /* fc_solve_unresume_instance is empty. */
-#if 0
-        else if (ret_code == FCS_STATE_SUSPEND_PROCESS)
-        {
-            fc_solve_unresume_instance(user->instances_list[i].instance);
-        }
-#endif
 
         if (ret_code != FCS_STATE_NOT_BEGAN_YET)
         {

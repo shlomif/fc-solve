@@ -66,13 +66,10 @@
        then increase the iteration limit and call
        fc_solve_resume_instance().
     7. Repeat Step #6 zero or more times.
-    8. If the last call to solve_instance() or resume_instance() returned
-       FCS_STATE_SUSPEND_PROCESS then call
-       fc_solve_unresume_instance().
-    9. If the solving was successful you can use the move stacks or the
+    8. If the solving was successful you can use the move stacks or the
        intermediate stacks. (Just don't destroy them in any way).
-    10. Call fc_solve_finish_instance().
-    11. Call fc_solve_free_instance().
+    9. Call fc_solve_finish_instance().
+    10. Call fc_solve_free_instance().
 
     The library functions inside lib.c (a.k.a fcs_user()) give an
     easier approach for embedding Freecell Solver into your library. The
