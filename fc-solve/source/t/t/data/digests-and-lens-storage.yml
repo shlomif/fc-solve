@@ -21,6 +21,9 @@ digests:
   freecell24_children_playing_ball:
     hexdigest: 17e5f41853d059a0f7cab8bf14b85c85e0b95e5f8f5dbb2dc6f5add54f36abf6
     len: 26819
+  freecell24_sentient_pearls:
+    hexdigest: 8e43f23cc1caf77cd1b428996d007688ba1811564b9bb1b40d16197eea875b70
+    len: 30094
   freecell24empty:
     hexdigest: 31fc6e1191e6d3ac1ae5662c934c693f7a8e7031b80fd252f1bfb1548f011d76
     len: 32280

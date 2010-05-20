@@ -725,6 +725,9 @@ second on a Pentium 4 2.4GHz).
 |+sand-stone+                  |an atomic-moves preset that aims to
             minimise the outcome solution's length.
 |+slick-rock+                  |run "gooey-unknown-thing" and then "sand-stone"
+|+sentient-pearls+             |a meta-moves and flares based preset with
+short solutions. Much faster than +children-playing-ball+ but yields less
+optimal solutions.
 |+the-last-mohican+            |a preset for solving Simple Simon. Yields
             less false negatives than the default one, but might be slower. 
 |+toons-for-twenty-somethings+ |an atomic-moves preset that solves
