@@ -596,7 +596,7 @@ static GCC_INLINE void initialize_befs_rater(
     {
         update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*ptr_state_key, a), &cards_under_sequences);
     }
-    soft_thread->method_specific.befs.meth.befs.a_star_initial_cards_under_sequences = cards_under_sequences;
+    soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value = cards_under_sequences;
 }
 
 #undef TRACE0
@@ -684,8 +684,8 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         }
     }
 
-    ret += ((soft_thread->method_specific.befs.meth.befs.a_star_initial_cards_under_sequences - cards_under_sequences)
-            / soft_thread->method_specific.befs.meth.befs.a_star_initial_cards_under_sequences) * befs_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
+    ret += ((soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value - cards_under_sequences)
+            / soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value) * befs_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
 
     ret += (seqs_over_renegade_cards /
                FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4))

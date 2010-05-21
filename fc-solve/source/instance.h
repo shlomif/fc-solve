@@ -763,7 +763,7 @@ struct fc_solve_soft_thread_struct
                     /*
                      * The priority queue of the A* scan */
                     PQUEUE pqueue;
-                    double a_star_initial_cards_under_sequences;
+                    double initial_cards_under_sequences_value;
 
                     /*
                      * The A* weights of the different A* tests. Those weights
