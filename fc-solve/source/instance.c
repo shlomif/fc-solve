@@ -77,11 +77,11 @@
     a guideline for the user.
 */
 
-const double fc_solve_a_star_default_weights[5] = {0.5,0,0.3,0,0.2};
+const double fc_solve_default_befs_weights[5] = {0.5,0,0.3,0,0.2};
 
 
 
-static GCC_INLINE void normalize_a_star_weights(
+static GCC_INLINE void normalize_befs_weights(
     fc_solve_soft_thread_t * soft_thread
     )
 {
@@ -89,22 +89,22 @@ static GCC_INLINE void normalize_a_star_weights(
     double sum;
     int a;
     sum = 0;
-#define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
-    for(a=0;a<(sizeof(my_a_star_weights)/sizeof(my_a_star_weights[0]));a++)
+#define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
+    for(a=0;a<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));a++)
     {
-        if (my_a_star_weights[a] < 0)
+        if (my_befs_weights[a] < 0)
         {
-            my_a_star_weights[a] = fc_solve_a_star_default_weights[a];
+            my_befs_weights[a] = fc_solve_default_befs_weights[a];
         }
-        sum += my_a_star_weights[a];
+        sum += my_befs_weights[a];
     }
     if (sum < 1e-6)
     {
         sum = 1;
     }
-    for(a=0;a<(sizeof(my_a_star_weights)/sizeof(my_a_star_weights[0]));a++)
+    for(a=0;a<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));a++)
     {
-        my_a_star_weights[a] /= sum;
+        my_befs_weights[a] /= sum;
     }
 }
 

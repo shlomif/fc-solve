@@ -770,7 +770,7 @@ struct fc_solve_soft_thread_struct
                      * determine the commulative weight of the state.
                      *
                      * */
-                    double a_star_weights[5];
+                    double befs_weights[5];
                 } befs;
             } meth;
         } befs;
@@ -1039,9 +1039,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 }
 
-extern const double fc_solve_a_star_default_weights[5];
-
-
+extern const double fc_solve_default_befs_weights[5];
 
 #ifdef __cplusplus
 }

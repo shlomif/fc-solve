@@ -643,8 +643,8 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     DECLARE_GAME_PARAMS();
 #endif
-#define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
-    double * a_star_weights = my_a_star_weights;
+#define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
+    double * befs_weights = my_befs_weights;
 #ifndef FCS_FREECELL_ONLY
     int unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #else
@@ -685,12 +685,12 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
     }
 
     ret += ((soft_thread->method_specific.befs.meth.befs.a_star_initial_cards_under_sequences - cards_under_sequences)
-            / soft_thread->method_specific.befs.meth.befs.a_star_initial_cards_under_sequences) * a_star_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
+            / soft_thread->method_specific.befs.meth.befs.a_star_initial_cards_under_sequences) * befs_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
 
     ret += (seqs_over_renegade_cards /
                FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4))
             )
-           * a_star_weights[FCS_A_STAR_WEIGHT_SEQS_OVER_RENEGADE_CARDS];
+           * befs_weights[FCS_A_STAR_WEIGHT_SEQS_OVER_RENEGADE_CARDS];
 
     num_cards_in_founds = 0;
     for(a=0;a<(LOCAL_DECKS_NUM<<2);a++)
@@ -698,7 +698,7 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
         num_cards_in_founds += fcs_foundation_value((*ptr_state_key), a);
     }
 
-    ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * a_star_weights[FCS_A_STAR_WEIGHT_CARDS_OUT];
+    ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * befs_weights[FCS_A_STAR_WEIGHT_CARDS_OUT];
 
     num_vacant_freecells = 0;
     for(a=0;a<LOCAL_FREECELLS_NUM;a++)
@@ -737,11 +737,11 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
         }
     }
 
-    ret += (temp * a_star_weights[FCS_A_STAR_WEIGHT_MAX_SEQUENCE_MOVE]);
+    ret += (temp * befs_weights[FCS_A_STAR_WEIGHT_MAX_SEQUENCE_MOVE]);
 
     if (ptr_state_val->depth <= 20000)
     {
-        ret += ((20000 - ptr_state_val->depth)/20000.0) * a_star_weights[FCS_A_STAR_WEIGHT_DEPTH];
+        ret += ((20000 - ptr_state_val->depth)/20000.0) * befs_weights[FCS_A_STAR_WEIGHT_DEPTH];
     }
 
     TRACE0("Before return");
@@ -807,7 +807,7 @@ static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * so
 }
 
 
-static GCC_INLINE void normalize_a_star_weights(
+static GCC_INLINE void normalize_befs_weights(
     fc_solve_soft_thread_t * soft_thread
     )
 {
@@ -815,21 +815,21 @@ static GCC_INLINE void normalize_a_star_weights(
     double sum;
     int a;
     sum = 0;
-    for(a=0;a<(sizeof(my_a_star_weights)/sizeof(my_a_star_weights[0]));a++)
+    for(a=0;a<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));a++)
     {
-        if (my_a_star_weights[a] < 0)
+        if (my_befs_weights[a] < 0)
         {
-            my_a_star_weights[a] = fc_solve_a_star_default_weights[a];
+            my_befs_weights[a] = fc_solve_default_befs_weights[a];
         }
-        sum += my_a_star_weights[a];
+        sum += my_befs_weights[a];
     }
     if (sum < 1e-6)
     {
         sum = 1;
     }
-    for(a=0;a<(sizeof(my_a_star_weights)/sizeof(my_a_star_weights[0]));a++)
+    for(a=0;a<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));a++)
     {
-        my_a_star_weights[a] /= sum;
+        my_befs_weights[a] /= sum;
     }
 }
 
@@ -849,7 +849,7 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
             1024
         );
 
-        normalize_a_star_weights(soft_thread);
+        normalize_befs_weights(soft_thread);
 
         initialize_a_star_rater(
             soft_thread,

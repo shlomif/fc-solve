@@ -1134,16 +1134,16 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     {
         case FCS_METHOD_A_STAR:
         {
-            double * my_a_star_weights;
+            double * my_befs_weights;
             int a;
 
-            my_a_star_weights = user->soft_thread->method_specific.befs.meth.befs.a_star_weights;
+            my_befs_weights = user->soft_thread->method_specific.befs.meth.befs.befs_weights;
             for(a = 0;
-                a<(sizeof(fc_solve_a_star_default_weights)/
-                    sizeof(fc_solve_a_star_default_weights[0]));
+                a<(sizeof(fc_solve_default_befs_weights)/
+                    sizeof(fc_solve_default_befs_weights[0]));
                 a++)
             {
-                my_a_star_weights[a] = fc_solve_a_star_default_weights[a];
+                my_befs_weights[a] = fc_solve_default_befs_weights[a];
             }
 
             user->soft_thread->method_specific.befs.meth.befs.a_star_pqueue.Elements = NULL;
@@ -1535,8 +1535,8 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 
     user = (fcs_user_t *)api_instance;
 
-#define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
-    if ((index < 0) || (index >= (sizeof(user->my_a_star_weights)/sizeof(user->my_a_star_weights[0]))))
+#define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
+    if ((index < 0) || (index >= (sizeof(user->my_befs_weights)/sizeof(user->my_befs_weights[0]))))
     {
         return 1;
     }
@@ -1545,7 +1545,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
         return 2;
     }
 
-    user->my_a_star_weights[index] = weight;
+    user->my_befs_weights[index] = weight;
 
     return 0;
 
@@ -1562,9 +1562,9 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 
     user = (fcs_user_t *)api_instance;
 
-#define my_a_star_weights soft_thread->method_specific.befs.meth.befs.a_star_weights
+#define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
 
-    return user->my_a_star_weights[index];
+    return user->my_befs_weights[index];
 }
 
 #endif
@@ -1600,8 +1600,8 @@ static void iter_handler_wrapper(
                 if (!strcmp(soft_thread->name, "11"))
                 {
                     double * w =
-                        soft_thread->method_specific.befs.meth.
-                                    befs.a_star_weights
+                        soft_thread->method_specific.befs
+                            .meth.befs.befs_weights
                         ;
 
                     printf("BeFS-Weights[\"11\"]=(%f,%f,%f,%f,%f)\n",
