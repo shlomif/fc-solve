@@ -541,10 +541,10 @@ int fc_solve_soft_dfs_do_solve(
 #undef state
 #undef myreturn
 
-#define FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
-#define FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
+#define FCS_BEFS_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
+#define FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
 
-#define FCS_SEQS_OVER_RENEGADE_POWER(n) pow(n, FCS_A_STAR_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
+#define FCS_SEQS_OVER_RENEGADE_POWER(n) pow(n, FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
 
 static GCC_INLINE int update_col_cards_under_sequences(
         fc_solve_soft_thread_t * soft_thread,
@@ -573,7 +573,7 @@ static GCC_INLINE int update_col_cards_under_sequences(
             prev_card = fcs_col_get_card(col, c);
         }
     }
-    *cards_under_sequences_ptr += pow(c+1, FCS_A_STAR_CARDS_UNDER_SEQUENCES_EXPONENT);
+    *cards_under_sequences_ptr += pow(c+1, FCS_BEFS_CARDS_UNDER_SEQUENCES_EXPONENT);
     return c;
 }
 
