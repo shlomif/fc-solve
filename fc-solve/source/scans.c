@@ -622,7 +622,7 @@ static GCC_INLINE void initialize_a_star_rater(
 #endif
 
 
-static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
+static GCC_INLINE pq_rating_t befs_rate_state(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val
     )
@@ -1166,7 +1166,7 @@ int fc_solve_befs_or_bfs_do_solve(
                 fc_solve_PQueuePush(
                     scan_specific.pqueue,
                     ptr_new_state_val,
-                    fc_solve_a_star_rate_state(
+                    befs_rate_state(
                         soft_thread,
                         ptr_new_state_val
                         )
