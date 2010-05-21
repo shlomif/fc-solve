@@ -61,26 +61,27 @@ void fc_solve_args_man_free(args_man_t * manager)
 
 #define add_to_last_arg(c)  \
     {         \
-        *(last_arg_ptr++) = (c);     \
-        if (last_arg_ptr == last_arg_end) \
+        *(manager->last_arg_ptr++) = (c);     \
+        if (manager->last_arg_ptr == manager->last_arg_end) \
         {        \
-            new_last_arg = realloc(last_arg, last_arg_end-last_arg+1024);  \
-            last_arg_ptr += new_last_arg - last_arg; \
-            last_arg_end += new_last_arg - last_arg + 1024;  \
-            last_arg = new_last_arg;   \
+            new_last_arg = realloc(manager->last_arg, manager->last_arg_end-manager->last_arg+1024);  \
+            manager->last_arg_ptr += new_last_arg - manager->last_arg; \
+            manager->last_arg_end += new_last_arg - manager->last_arg + 1024;  \
+            manager->last_arg = new_last_arg;   \
         }       \
     }
 
-static GCC_INLINE void push_args_last_arg(args_man_t * manager, char * last_arg, char * * ptr_last_arg_ptr)
+static GCC_INLINE void push_args_last_arg(args_man_t * manager)
 {
-    char * new_arg, * last_arg_ptr;
+    char * new_arg;
 
-    last_arg_ptr = *ptr_last_arg_ptr;
+    new_arg = malloc(manager->last_arg_ptr-manager->last_arg+1);
 
-    new_arg = malloc(last_arg_ptr-last_arg+1);
-
-    strncpy(new_arg, last_arg, last_arg_ptr-last_arg);
-    new_arg[last_arg_ptr-last_arg] = '\0';
+    strncpy(
+        new_arg, manager->last_arg,
+        manager->last_arg_ptr-manager->last_arg
+     );
+    new_arg[manager->last_arg_ptr-manager->last_arg] = '\0';
 
     manager->argv[(manager->argc)++] = new_arg;
 
@@ -93,7 +94,7 @@ static GCC_INLINE void push_args_last_arg(args_man_t * manager, char * last_arg,
     }
 
     /* Reset last_arg_ptr so we will have an entirely new argument */
-    *(ptr_last_arg_ptr) = last_arg;
+    manager->last_arg_ptr = manager->last_arg;
 
     return;
 }
@@ -106,11 +107,11 @@ static GCC_INLINE int is_whitespace(char c)
 int fc_solve_args_man_chop(args_man_t * manager, char * string)
 {
     char * s = string;
-    char * last_arg, * last_arg_ptr, * last_arg_end, * new_last_arg;
+    char * new_last_arg;
     int in_arg;
 
-    last_arg_ptr = last_arg = malloc(1024);
-    last_arg_end = last_arg + 1023;
+    manager->last_arg_ptr = manager->last_arg = malloc(1024);
+    manager->last_arg_end = manager->last_arg + 1023;
 
     while (*s != '\0')
     {
@@ -188,9 +189,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                             next_char = *(++s);
                             if (next_char == '\0')
                             {
-                                push_args_last_arg(
-                                    manager, last_arg, &last_arg_ptr
-                                );
+                                push_args_last_arg(manager);
 
                                 goto END_OF_LOOP;
                             }
@@ -241,9 +240,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
 
         if (push_next_arg_flag)
         {
-            push_args_last_arg(
-                manager, last_arg, &last_arg_ptr
-            );
+            push_args_last_arg(manager);
             in_arg = 0;
 
             if (*s == '\0')
@@ -254,14 +251,13 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
     }
 
 END_OF_LOOP:
-    if (last_arg_ptr != last_arg)
+    if (manager->last_arg_ptr != manager->last_arg)
     {
-        push_args_last_arg(
-            manager, last_arg, &last_arg_ptr
-        );
+        push_args_last_arg(manager);
     }
 
-    free(last_arg);
+    free(manager->last_arg);
+    manager->last_arg = manager->last_arg_ptr = manager->last_arg_end = NULL;
 
     return 0;
 }

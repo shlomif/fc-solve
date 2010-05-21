@@ -33,6 +33,8 @@ typedef struct
 {
     int argc;
     char * * argv;
+    /* These fields are for internal use only. */
+    char * last_arg, * last_arg_ptr, * last_arg_end;
 } args_man_t;
 
 extern args_man_t * fc_solve_args_man_alloc(void);
