@@ -205,6 +205,9 @@ stack - usually the source stack
 ptr - pointer
 val - value
 c - the card index/position within the column
+befs - Best First Search (one of the types of searches used by Freecell Solver)
+a_star - also refers to "befs" from historical reasons (should be converted
+to "befs" in the non-external interface.)
 ----------------
 
 Don't comment-out - use #if 0 to temporarily remove code
