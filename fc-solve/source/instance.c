@@ -85,7 +85,7 @@ static GCC_INLINE void normalize_befs_weights(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    /* Normalize the A* Weights, so the sum of all of them would be 1. */
+    /* Normalize the Best-First-Search Weights, so the sum of all of them would be 1. */
     double sum;
     int a;
     sum = 0;

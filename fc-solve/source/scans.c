@@ -23,7 +23,7 @@
  */
 /*
  * scans.c - The code that relates to the various scans.
- * Currently Hard DFS, Soft-DFS, Random-DFS, A* and BFS are implemented.
+ * Currently Hard DFS, Soft-DFS, Random-DFS, BeFS and BFS are implemented.
  *
  */
 
@@ -755,7 +755,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
 /*
     fc_solve_befs_or_bfs_do_solve() is the main event
-    loop of the A* And BFS scans. It is quite simple as all it does is
+    loop of the BeFS And BFS scans. It is quite simple as all it does is
     extract elements out of the queue or priority queue and run all the test
     of them.
 
@@ -811,7 +811,7 @@ static GCC_INLINE void normalize_befs_weights(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    /* Normalize the A* Weights, so the sum of all of them would be 1. */
+    /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
     double sum;
     int a;
     sum = 0;
@@ -843,7 +843,7 @@ extern void fc_solve_soft_thread_init_befs_or_bfs(
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
-        /* Initialize the priotity queue of the A* scan */
+        /* Initialize the priotity queue of the BeFS scan */
         fc_solve_PQueueInitialise(
             &(soft_thread->method_specific.befs.meth.befs.pqueue),
             1024
@@ -1118,8 +1118,9 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
         TRACE0("perform_tests");
-        /* Do all the tests at one go, because that is the way it should be
-           done for BFS and A*
+        /* 
+         * Do all the tests at one go, because that is the way it should be
+         * done for BFS and BeFS.
         */
         derived.num_states = 0;
         for(next_test = tests_list;
@@ -1222,9 +1223,9 @@ label_next_state:
         {
 
 #ifdef DEBUG
-        dump_pqueue(soft_thread, "before_pop", scan_specific.pqueue);
+            dump_pqueue(soft_thread, "before_pop", scan_specific.pqueue);
 #endif
-            /* It is an A* scan */
+            /* It is an BeFS scan */
             fc_solve_PQueuePop(
                 scan_specific.pqueue,
                 &ptr_state_val
@@ -1442,7 +1443,7 @@ int fc_solve_sfs_check_state_begin(
             ptr_state_val->key, 
             ptr_state_val
     );
-    /* Some A* and BFS parameters that need to be initialized in
+    /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.
      * */
     ptr_new_state_val->parent_val = ptr_state_val;

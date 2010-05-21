@@ -357,7 +357,7 @@ typedef struct
     /*
      * The debug_iter_output variables provide a programmer programmable way
      * to debug the algorithm while it is running. This works well for DFS
-     * and Soft-DFS scans but at present support for A* and BFS is not
+     * and Soft-DFS scans but at present support for BeFS and BFS is not
      * too good, as its hard to tell which state came from which parent state.
      *
      * debug_iter_output_func is a pointer to the function that performs the
@@ -683,7 +683,7 @@ struct fc_solve_soft_thread_struct
 
 
     /*
-     * The method (i.e: DFS, Soft-DFS, BFS or A*) that is used by this
+     * The method (i.e: DFS, Soft-DFS, BFS or BeFS) that is used by this
      * instance.
      *
      * */
@@ -761,14 +761,14 @@ struct fc_solve_soft_thread_struct
                 struct
                 {
                     /*
-                     * The priority queue of the A* scan */
+                     * The priority queue of the BeFS scan 
+                     * */
                     PQUEUE pqueue;
                     double initial_cards_under_sequences_value;
 
                     /*
-                     * The A* weights of the different A* tests. Those weights
-                     * determine the commulative weight of the state.
-                     *
+                     * The BeFS weights of the different BeFS tests. Those
+                     * weights determine the commulative priority of the state.
                      * */
                     double befs_weights[5];
                 } befs;
@@ -818,7 +818,7 @@ typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
     )
 
 /*
- * An enum that specifies the meaning of each A* weight.
+ * An enum that specifies the meaning of each BeFS weight.
  * */
 #define FCS_BEFS_WEIGHT_CARDS_OUT 0
 #define FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE 1
