@@ -14,9 +14,23 @@ Pressing
 * Normalise the +_free()+ and +_finish()+ methods in regards to the previous
 commits of the A* functionality.
 
+* Update fc-solve and friends to handle the "wrong-flares-plan" compilation
+problem.
+
 Non-pressing
 ------------
 
+* Change "A*" in the code's comments to BeFS.
+
+* Implement Soft-DFS and Random-DFS as pointers to test functions, similar
+to what was done in the BeFS/BFS scan. Currently there is this code there:
+
+----------------
+fc_solve_sfs_tests[tests_order_tests[
+                        the_soft_dfs_info->test_index
+                    ] & FCS_TEST_ORDER_NO_FLAGS_MASK]
+----------------
+ 
 * If +-opt+ is specified for the flare, then make sure that if the flares
 loop stop it when it's doing the optimization scan, then the optimization scan
 goes on until it ends.
