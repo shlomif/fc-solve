@@ -59,17 +59,24 @@ void fc_solve_args_man_free(args_man_t * manager)
     free(manager);
 }
 
-#define add_to_last_arg(c)  \
-    {         \
-        *(manager->last_arg_ptr++) = (c);     \
-        if (manager->last_arg_ptr == manager->last_arg_end) \
-        {        \
-            new_last_arg = realloc(manager->last_arg, manager->last_arg_end-manager->last_arg+1024);  \
-            manager->last_arg_ptr += new_last_arg - manager->last_arg; \
-            manager->last_arg_end += new_last_arg - manager->last_arg + 1024;  \
-            manager->last_arg = new_last_arg;   \
-        }       \
+static GCC_INLINE void add_to_last_arg(args_man_t * manager, char c)
+{
+    *(manager->last_arg_ptr++) = c;
+
+    if (manager->last_arg_ptr == manager->last_arg_end)
+    {
+        char * new_last_arg;
+
+        new_last_arg = realloc(manager->last_arg, 
+            manager->last_arg_end-manager->last_arg+1024
+        );
+        manager->last_arg_ptr += new_last_arg - manager->last_arg;
+        manager->last_arg_end += new_last_arg - manager->last_arg + 1024;
+        manager->last_arg = new_last_arg;
     }
+
+    return;
+}
 
 static GCC_INLINE void push_args_last_arg(args_man_t * manager)
 {
@@ -107,7 +114,6 @@ static GCC_INLINE int is_whitespace(char c)
 int fc_solve_args_man_chop(args_man_t * manager, char * string)
 {
     char * s = string;
-    char * new_last_arg;
     int in_arg;
 
     manager->last_arg_ptr = manager->last_arg = malloc(1024);
@@ -172,7 +178,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                         }
                         else
                         {
-                            add_to_last_arg(next_char);
+                            add_to_last_arg(manager, next_char);
                         }
                     }
                     break;
@@ -199,17 +205,17 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                             }
                             else if ((next_char == '\\') || (next_char == '\"'))
                             {
-                                add_to_last_arg(next_char);
+                                add_to_last_arg(manager, next_char);
                             }
                             else
                             {
-                                add_to_last_arg('\\');
-                                add_to_last_arg(next_char);
+                                add_to_last_arg(manager, '\\');
+                                add_to_last_arg(manager, next_char);
                             }
                         }
                         else
                         {
-                            add_to_last_arg(*s);
+                            add_to_last_arg(manager, *s);
                         }
                         s++;
                     }
@@ -230,7 +236,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                     default:
 
                     in_arg = 1;
-                    add_to_last_arg(*s);
+                    add_to_last_arg(manager, *s);
                     s++;
 
                     break;
