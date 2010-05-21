@@ -11,19 +11,8 @@ Pressing
 
 * Add some command line examples to +USAGE.txt+ .
 
-* Extract the common functionality out of both copies of the "initialise
-new instance_item copies in +lib.c+ .
-** Also the flares.
-
 * Normalise the +_free()+ and +_finish()+ methods in regards to the previous
 commits of the A* functionality.
-
-* Implement Gary Campbell's FCELL.COM's methodology of trying several
-atomic scans in different instances (with bounded quotas) and picking the 
-shortest solution out of them all. Slow, but will produce highly short 
-solutions.
-** Called Flares - we've started to implement them and should continue.
-** See the Flares functional spec under ../docs
 
 Non-pressing
 ------------
