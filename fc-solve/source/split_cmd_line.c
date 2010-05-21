@@ -35,6 +35,8 @@
 
 #include "split_cmd_line.h"
 
+#include "inline.h"
+
 #define ARGS_MAN_GROW_BY 32
 
 args_man_t * fc_solve_args_man_alloc(void)
@@ -87,8 +89,10 @@ void fc_solve_args_man_free(args_man_t * manager)
             last_arg_ptr = last_arg; \
     }
 
-#define is_whitespace(c) \
-    (((c) == ' ') || ((c) == '\t') || ((c) == '\n') || ((c) == '\r'))
+static GCC_INLINE int is_whitespace(char c)
+{
+    return ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'));
+}
 
 int fc_solve_args_man_chop(args_man_t * manager, char * string)
 {
@@ -151,6 +155,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                         }
                         else if ((next_char == '\n') || (next_char == '\r'))
                         {
+                            /* Skip to the next line. */
                             if (! in_arg)
                             {
                                 still_loop = 0;
