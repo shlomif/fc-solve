@@ -325,9 +325,11 @@ enum FCS_COMPILE_FLARES_RET
 static int string_starts_with(
     const char * str,
     const char * prefix,
-    int check_len
+    const char * end
     )
 {
+    register int check_len = end-str;
+
     return
         (
          (check_len == strlen(prefix)) 
@@ -464,7 +466,7 @@ static int user_compile_all_flares_plans(
                     return FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND;
                 }
 
-                if (string_starts_with(item_start, "Run", cmd_end-item_start))
+                if (string_starts_with(item_start, "Run", cmd_end))
                 {
                     char * at_sign, * after_at_sign;
                     int count_iters;
@@ -529,7 +531,7 @@ static int user_compile_all_flares_plans(
                     /* TODO : free plan upon an error. */
                     last_item_type = add_count_iters_to_plan(instance_item, flare_idx, count_iters);
                 }
-                else if (string_starts_with(item_start, "CP", cmd_end-item_start))
+                else if (string_starts_with(item_start, "CP", cmd_end))
                 {
                     item_end = cmd_end+1;
                     if (! (((*item_end) == ',') || (! (*item_end))))
@@ -542,7 +544,7 @@ static int user_compile_all_flares_plans(
                     /* TODO : free plan upon an error. */
                     last_item_type = add_checkpoint_to_plan(instance_item);
                 }
-                else if (string_starts_with(item_start, "RunIndef", cmd_end-item_start))
+                else if (string_starts_with(item_start, "RunIndef", cmd_end))
                 {
                     int found_flare;
                     int flare_idx;
