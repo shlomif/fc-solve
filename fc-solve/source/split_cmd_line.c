@@ -123,98 +123,106 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
             }
             continue;
         }
-after_ws:
-        while ((*s != ' ') && (*s != '\t') && (*s != '\n') &&
-               (*s != '\r') &&
-               (*s != '\\') && (*s != '\"') && (*s != '\0') &&
-               (*s != '#'))
-        {
-            in_arg = 1;
-            add_to_last_arg(*s);
-            s++;
-        }
 
-
-        if ((*s == ' ') || (*s == '\t') || (*s == '\n') || (*s == '\0') || (*s == '\r'))
         {
-            push_next_arg_flag = 1;
-        }
-        else if (*s == '\\')
-        {
-            char next_char = *(++s);
-            s++;
-            if (next_char == '\0')
+            int still_loop = 1;
+            while (still_loop)
             {
-                s--;
-                push_next_arg_flag = 1;
-            }
-            else if ((next_char == '\n') || (next_char == '\r'))
-            {
-                if (in_arg)
+                switch(*s)
                 {
-                    goto after_ws;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else
-            {
-                add_to_last_arg(next_char);
-            }
-        }
-        else if (*s == '\"')
-        {
-            s++;
-            in_arg = 1;
-            while ((*s != '\"') && (*s != '\0'))
-            {
-                if (*s == '\\')
-                {
-                    char next_char;
+                    case ' ':
+                    case '\t':
+                    case '\n':
+                    case '\0':
+                    case '\r':
+                        push_next_arg_flag = 1;
+                        still_loop = 0;
+                    break;
 
-                    next_char = *(++s);
-                    if (next_char == '\0')
+                    case '\\':
                     {
-                        push_args_last_arg();
+                        char next_char = *(++s);
+                        s++;
+                        if (next_char == '\0')
+                        {
+                            s--;
+                            push_next_arg_flag = 1;
+                            still_loop = 0;
+                        }
+                        else if ((next_char == '\n') || (next_char == '\r'))
+                        {
+                            if (! in_arg)
+                            {
+                                still_loop = 0;
+                            }
+                        }
+                        else
+                        {
+                            add_to_last_arg(next_char);
+                        }
+                    }
+                    break;
 
-                        goto END_OF_LOOP;
-                    }
-                    else if ((next_char == '\n') || (next_char == '\r'))
+                    case '\"':
+                    s++;
+                    in_arg = 1;
+                    while ((*s != '\"') && (*s != '\0'))
                     {
-                        /* Do nothing */
+                        if (*s == '\\')
+                        {
+                            char next_char;
+
+                            next_char = *(++s);
+                            if (next_char == '\0')
+                            {
+                                push_args_last_arg();
+
+                                goto END_OF_LOOP;
+                            }
+                            else if ((next_char == '\n') || (next_char == '\r'))
+                            {
+                                /* Do nothing */
+                            }
+                            else if ((next_char == '\\') || (next_char == '\"'))
+                            {
+                                add_to_last_arg(next_char);
+                            }
+                            else
+                            {
+                                add_to_last_arg('\\');
+                                add_to_last_arg(next_char);
+                            }
+                        }
+                        else
+                        {
+                            add_to_last_arg(*s);
+                        }
+                        s++;
                     }
-                    else if ((next_char == '\\') || (next_char == '\"'))
+                    s++;
+                    break;
+
+                    case '#':
+                    in_arg = 0;
+                    /* Skip to the next line */
+                    while((*s != '\0') && (*s != '\n'))
                     {
-                        add_to_last_arg(next_char);
+                        s++;
                     }
-                    else
-                    {
-                        add_to_last_arg('\\');
-                        add_to_last_arg(next_char);
-                    }
-                }
-                else
-                {
+                    push_next_arg_flag = 1;
+                    still_loop = 0;
+                    break;
+
+                    default:
+
+                    in_arg = 1;
                     add_to_last_arg(*s);
-                }
-                s++;
-            }
-            s++;
-            goto after_ws;
-        }
-        else if (*s == '#')
-        {
-            in_arg = 0;
-            /* Skip to the next line */
-            while((*s != '\0') && (*s != '\n'))
-            {
-                s++;
-            }
-            push_next_arg_flag = 1;
-        }
+                    s++;
 
+                    break;
+                }
+            }
+        }
 
         if (push_next_arg_flag)
         {
