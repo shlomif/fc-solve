@@ -355,6 +355,17 @@ static void * worker_thread(void * void_context)
                 fflush(stdout);
                 print_int_wrapper(-1);
             }
+            else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
+            {
+                const char * error_string;
+                
+                error_string =
+                    freecell_solver_user_get_last_error_string(user.instance);
+
+                fprintf(stderr, "Flares Plan: %s\n", error_string);
+
+                goto theme_error;
+            }
             else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
             {
 #ifndef WIN32
@@ -430,6 +441,7 @@ static void * worker_thread(void * void_context)
     total_num_iters += total_num_iters_temp;
     pthread_mutex_unlock(&total_num_iters_lock);
 
+theme_error:
     freecell_solver_user_free(user.instance);
 
 ret_label:
