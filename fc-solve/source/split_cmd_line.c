@@ -102,6 +102,8 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
 
     while (*s != '\0')
     {
+        int push_next_arg_flag = 0;
+
 loop_start:
         in_arg = 0;
         while (is_whitespace(*s))
@@ -136,14 +138,7 @@ after_ws:
 
         if ((*s == ' ') || (*s == '\t') || (*s == '\n') || (*s == '\0') || (*s == '\r'))
         {
-next_arg:
-            push_args_last_arg();
-            in_arg = 0;
-
-            if (*s == '\0')
-            {
-                break;
-            }
+            push_next_arg_flag = 1;
         }
         else if (*s == '\\')
         {
@@ -152,7 +147,7 @@ next_arg:
             if (next_char == '\0')
             {
                 s--;
-                goto next_arg;
+                push_next_arg_flag = 1;
             }
             else if ((next_char == '\n') || (next_char == '\r'))
             {
@@ -218,9 +213,22 @@ next_arg:
             {
                 s++;
             }
-            goto next_arg;
+            push_next_arg_flag = 1;
+        }
+
+
+        if (push_next_arg_flag)
+        {
+            push_args_last_arg();
+            in_arg = 0;
+
+            if (*s == '\0')
+            {
+                break;
+            }
         }
     }
+
 END_OF_LOOP:
     if (last_arg_ptr != last_arg)
     {
