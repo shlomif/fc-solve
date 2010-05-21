@@ -833,7 +833,7 @@ static GCC_INLINE void normalize_befs_weights(
     }
 }
 
-extern void fc_solve_soft_thread_init_a_star_or_bfs(
+extern void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * soft_thread
     )
 {
