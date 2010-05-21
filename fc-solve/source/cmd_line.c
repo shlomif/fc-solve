@@ -233,7 +233,7 @@ case 'a':
 {
 if (!strncmp(p, "-star-weights", 13)) {
 p += 13;
-opt = FCS_OPT_A_STAR_WEIGHTS;
+opt = FCS_OPT_BEFS_WEIGHTS;
 
 }
 }
@@ -700,7 +700,7 @@ case 'a':
 {
 if (!strncmp(p, "sw", 2)) {
 p += 2;
-opt = FCS_OPT_A_STAR_WEIGHTS;
+opt = FCS_OPT_BEFS_WEIGHTS;
 
 }
 }
@@ -1216,7 +1216,7 @@ break;
         }
         break;
 
-        case FCS_OPT_A_STAR_WEIGHTS: /* STRINGS=-asw|--a-star-weights; */
+        case FCS_OPT_BEFS_WEIGHTS: /* STRINGS=-asw|--a-star-weights; */
         {
             PROCESS_OPT_ARG() ;
 
