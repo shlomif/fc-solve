@@ -104,7 +104,6 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
     {
         int push_next_arg_flag = 0;
 
-loop_start:
         in_arg = 0;
         while (is_whitespace(*s))
         {
@@ -157,7 +156,7 @@ after_ws:
                 }
                 else
                 {
-                    goto loop_start;
+                    continue;
                 }
             }
             else
