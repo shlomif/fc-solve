@@ -685,12 +685,12 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     }
 
     ret += ((soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value - cards_under_sequences)
-            / soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value) * befs_weights[FCS_A_STAR_WEIGHT_CARDS_UNDER_SEQUENCES];
+            / soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value) * befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES];
 
     ret += (seqs_over_renegade_cards /
                FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4))
             )
-           * befs_weights[FCS_A_STAR_WEIGHT_SEQS_OVER_RENEGADE_CARDS];
+           * befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS];
 
     num_cards_in_founds = 0;
     for(a=0;a<(LOCAL_DECKS_NUM<<2);a++)
@@ -698,7 +698,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         num_cards_in_founds += fcs_foundation_value((*ptr_state_key), a);
     }
 
-    ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * befs_weights[FCS_A_STAR_WEIGHT_CARDS_OUT];
+    ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT];
 
     num_vacant_freecells = 0;
     for(a=0;a<LOCAL_FREECELLS_NUM;a++)
@@ -737,11 +737,11 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         }
     }
 
-    ret += (temp * befs_weights[FCS_A_STAR_WEIGHT_MAX_SEQUENCE_MOVE]);
+    ret += (temp * befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE]);
 
     if (ptr_state_val->depth <= 20000)
     {
-        ret += ((20000 - ptr_state_val->depth)/20000.0) * befs_weights[FCS_A_STAR_WEIGHT_DEPTH];
+        ret += ((20000 - ptr_state_val->depth)/20000.0) * befs_weights[FCS_BEFS_WEIGHT_DEPTH];
     }
 
     TRACE0("Before return");
