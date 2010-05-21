@@ -577,7 +577,7 @@ static GCC_INLINE int update_col_cards_under_sequences(
     return c;
 }
 
-static GCC_INLINE void initialize_a_star_rater(
+static GCC_INLINE void initialize_befs_rater(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val
     )
@@ -851,7 +851,7 @@ extern void fc_solve_soft_thread_init_befs_or_bfs(
 
         normalize_befs_weights(soft_thread);
 
-        initialize_a_star_rater(
+        initialize_befs_rater(
             soft_thread,
             ptr_orig_state_val
             );
