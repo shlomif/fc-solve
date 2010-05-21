@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -91,6 +91,11 @@ test_using_valgrind(
     qq{"range-parallel-solve 11981 11983 1 -opt" returned no errors}
 );
 
+# TEST
+test_using_valgrind(
+    [qw(1 2 1 --flares-plan), q(Run:500@foo)],
+    qq{"range-parallel-solve --flares-plan Run:500\@foo" does not crash.}
+);
 
 =head1 COPYRIGHT AND LICENSE
 

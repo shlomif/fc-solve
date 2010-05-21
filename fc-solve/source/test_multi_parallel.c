@@ -497,6 +497,17 @@ int main(int argc, char * argv[])
             fflush(stdout);
             print_int_wrapper(-1);
         }
+        else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
+        {
+            const char * error_string;
+            
+            error_string =
+                freecell_solver_user_get_last_error_string(user.instance);
+
+            printf("Flares Plan: %s\n", error_string);
+
+            break;
+        }
         else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
 #ifndef WIN32

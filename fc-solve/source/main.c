@@ -756,6 +756,14 @@ int main(int argc, char * argv[])
         free(error_string);
         error_string = NULL;
     }
+    else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
+    {
+        const char * error_string;
+        
+        error_string = freecell_solver_user_get_last_error_string(instance);
+
+        printf("Flares Plan: %s\n", error_string);
+    }
     else
     {
         FILE * output_fh;

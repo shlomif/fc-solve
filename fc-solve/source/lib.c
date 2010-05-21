@@ -138,6 +138,8 @@ typedef struct
 #ifndef FCS_FREECELL_ONLY
     fcs_preset_t common_preset;
 #endif
+
+    char * error_string;
 } fcs_user_t;
 
 
@@ -201,6 +203,8 @@ static void user_initialize(
 
     user->state_string_copy = NULL;
     user->iterations_board_started_at = 0;
+
+    user->error_string = NULL;
 
     user_next_instance(user);
 
@@ -502,6 +506,11 @@ static int user_compile_all_flares_plans(
                         fcs_flare_item_t * flare;
                         flare = &(instance_item->flares[flare_idx]);
                         
+                        if (! flare->name)
+                        {
+                            continue;
+                        }
+
                         if (!strncmp(flare->name, after_at_sign, item_end-after_at_sign))
                         {
                             found_flare = 1;
@@ -554,6 +563,11 @@ static int user_compile_all_flares_plans(
                         fcs_flare_item_t * flare;
                         flare = &(instance_item->flares[flare_idx]);
                         
+                        if (! flare->name)
+                        {
+                            continue;
+                        }
+
                         if (!strncmp(flare->name, cmd_end, item_end-cmd_end))
                         {
                             found_flare = 1;
@@ -624,7 +638,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
 
     if (ret_code != FCS_COMPILE_FLARES_RET_OK)
     {
-        free(error_string);
+        user->error_string = error_string;
      
         return FCS_STATE_FLARES_PLAN_ERROR;
     }
@@ -1092,6 +1106,12 @@ static void user_free_resources(
     {
         free(user->state_string_copy);
         user->state_string_copy = NULL;
+    }
+
+    if (user->error_string)
+    {
+        free(user->error_string);
+        user->error_string = NULL;
     }
 }
 
@@ -2120,6 +2140,17 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
     return hard_thread->soft_threads[hard_thread->st_idx].name;
 }
 
+DLLEXPORT const char * freecell_solver_user_get_last_error_string(
+    void * api_instance
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)api_instance;
+
+    return user->error_string;
+}
+
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
@@ -2210,6 +2241,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
 
     return instance_item->plan[item_idx].count_iters;
 }
+
 
 #endif
 
