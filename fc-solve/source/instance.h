@@ -979,12 +979,12 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
     ST_LOOP_START()
     {
-        int a_star_or_bfs = 0;
+        int is_scan_befs_or_bfs = 0;
 
         switch (soft_thread->method)
         {
             case FCS_METHOD_A_STAR:
-                a_star_or_bfs = 1;
+                is_scan_befs_or_bfs = 1;
                 /* Free the priority queue. It will be reallocated by
                  * fc_solve_soft_thread_init_befs_or_bfs() .
                  * */
@@ -996,14 +996,14 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
             case FCS_METHOD_BFS:
             case FCS_METHOD_OPTIMIZE:
-                a_star_or_bfs = 1;
+                is_scan_befs_or_bfs = 1;
                 /* Reset the BFS Queue (also used for the optimization scan. */
                 fc_solve_free_bfs_queue(soft_thread);
                 break;
 
         }
 
-        if (a_star_or_bfs)
+        if (is_scan_befs_or_bfs)
         {
             free (soft_thread->method_specific.befs.tests_list);
             soft_thread->method_specific.befs.tests_list = NULL;
