@@ -62,3 +62,8 @@ solutions.
 ** Called Flares - we've started to implement them and should continue.
 ** See the Flares functional spec under ../docs
 
+* Update fc-solve and friends to handle the "wrong-flares-plan" compilation
+problem.
+
+* Change "A*" in the code's comments to BeFS.
+

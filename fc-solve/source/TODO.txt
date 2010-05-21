@@ -14,13 +14,8 @@ Pressing
 * Normalise the +_free()+ and +_finish()+ methods in regards to the previous
 commits of the A* functionality.
 
-* Update fc-solve and friends to handle the "wrong-flares-plan" compilation
-problem.
-
 Non-pressing
 ------------
-
-* Change "A*" in the code's comments to BeFS.
 
 * Implement Soft-DFS and Random-DFS as pointers to test functions, similar
 to what was done in the BeFS/BFS scan. Currently there is this code there:
