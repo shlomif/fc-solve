@@ -157,11 +157,14 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                     case '\n':
                     case '\0':
                     case '\r':
-                        push_next_arg_flag = 1;
-                        still_loop = 0;
+
+                    push_next_arg_flag = 1;
+                    still_loop = 0;
+
                     break;
 
                     case '\\':
+
                     {
                         char next_char = *(++s);
                         s++;
@@ -187,6 +190,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                     break;
 
                     case '\"':
+
                     s++;
                     in_arg = 1;
                     while ((*s != '\"') && (*s != '\0'))
@@ -226,6 +230,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                     break;
 
                     case '#':
+
                     in_arg = 0;
                     /* Skip to the next line */
                     while((*s != '\0') && (*s != '\n'))
