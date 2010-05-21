@@ -163,23 +163,23 @@ static GCC_INLINE void free_instance_soft_thread_callback(
         fc_solve_soft_thread_t * soft_thread
         )
 {
-    int a_star_or_bfs = 0;
+    int is_scan_befs_or_bfs = 0;
     switch (soft_thread->method)
     {
         case FCS_METHOD_BFS:
         case FCS_METHOD_OPTIMIZE:
             fc_solve_free_bfs_queue(soft_thread);
-            a_star_or_bfs = 1;
+            is_scan_befs_or_bfs = 1;
             break;
         case FCS_METHOD_A_STAR:
             fc_solve_PQueueFree(
                     &(soft_thread->method_specific.befs.meth.befs.pqueue)
             );
-            a_star_or_bfs = 1;
+            is_scan_befs_or_bfs = 1;
             break;
     }
 
-    if (a_star_or_bfs)
+    if (is_scan_befs_or_bfs)
     {
         free (soft_thread->method_specific.befs.tests_list);
         soft_thread->method_specific.befs.tests_list = NULL;
