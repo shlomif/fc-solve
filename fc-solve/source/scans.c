@@ -1111,10 +1111,10 @@ int fc_solve_a_star_or_bfs_do_solve(
         soft_thread->num_vacant_freecells = num_vacant_freecells;
         soft_thread->num_vacant_stacks = num_vacant_stacks;
 
-        if (soft_thread->method_specific.befs.a_star_positions_by_rank)
+        if (soft_thread->method_specific.befs.befs_positions_by_rank)
         {
-            free(soft_thread->method_specific.befs.a_star_positions_by_rank);
-            soft_thread->method_specific.befs.a_star_positions_by_rank = NULL;
+            free(soft_thread->method_specific.befs.befs_positions_by_rank);
+            soft_thread->method_specific.befs.befs_positions_by_rank = NULL;
         }
 
         TRACE0("perform_tests");
@@ -1260,10 +1260,10 @@ my_return_label:
         my_brfs_queue_last_item = scan_specific.brfs.queue_last_item;
     }
 
-    if (soft_thread->method_specific.befs.a_star_positions_by_rank)
+    if (soft_thread->method_specific.befs.befs_positions_by_rank)
     {
-        free(soft_thread->method_specific.befs.a_star_positions_by_rank);
-        soft_thread->method_specific.befs.a_star_positions_by_rank = NULL;
+        free(soft_thread->method_specific.befs.befs_positions_by_rank);
+        soft_thread->method_specific.befs.befs_positions_by_rank = NULL;
     }
 
     return error_code;
@@ -1296,7 +1296,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
         default:
             {
                 positions_by_rank_location = &(
-                        soft_thread->method_specific.befs.a_star_positions_by_rank
+                        soft_thread->method_specific.befs.befs_positions_by_rank
                         );
             }
             break;

@@ -321,7 +321,7 @@ static GCC_INLINE void init_soft_thread(
     /* The default solving method */
     soft_thread->method = FCS_METHOD_SOFT_DFS;
 
-    soft_thread->method_specific.befs.a_star_positions_by_rank = NULL;
+    soft_thread->method_specific.befs.befs_positions_by_rank = NULL;
 
     soft_thread->method_specific.soft_dfs.rand_seed = 24;
 

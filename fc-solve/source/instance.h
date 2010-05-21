@@ -742,7 +742,7 @@ struct fc_solve_soft_thread_struct
         } soft_dfs;
         struct
         {
-            char * a_star_positions_by_rank;
+            char * befs_positions_by_rank;
             fc_solve_solve_for_state_test_t * tests_list, * tests_list_end;
             union
             {
