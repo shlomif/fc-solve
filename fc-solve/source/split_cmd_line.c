@@ -81,14 +81,17 @@ static GCC_INLINE void add_to_last_arg(args_man_t * manager, char c)
 static GCC_INLINE void push_args_last_arg(args_man_t * manager)
 {
     char * new_arg;
+    int length;
 
-    new_arg = malloc(manager->last_arg_ptr - manager->last_arg+1);
+    length = manager->last_arg_ptr - manager->last_arg;
+
+    new_arg = malloc(length+1);
 
     strncpy(
         new_arg, manager->last_arg,
-        manager->last_arg_ptr - manager->last_arg
-     );
-    new_arg[manager->last_arg_ptr - manager->last_arg] = '\0';
+        length
+    );
+    new_arg[length] = '\0';
 
     manager->argv[(manager->argc)++] = new_arg;
 
