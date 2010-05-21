@@ -71,23 +71,32 @@ void fc_solve_args_man_free(args_man_t * manager)
         }       \
     }
 
-#define push_args_last_arg() {  \
-            new_arg = malloc(last_arg_ptr-last_arg+1); \
-            strncpy(new_arg, last_arg, last_arg_ptr-last_arg); \
-            new_arg[last_arg_ptr-last_arg] = '\0'; \
-            manager->argv[manager->argc] = new_arg; \
-            manager->argc++; \
-            if (! (manager->argc & (ARGS_MAN_GROW_BY-1))) \
-            { \
-                manager->argv = realloc( \
-                    manager->argv,  \
-                    sizeof(manager->argv[0]) * (manager->argc + ARGS_MAN_GROW_BY) \
-                    ); \
-            } \
-       \
-            /* Reset last_arg_ptr so we will have an entirely new argument */ \
-            last_arg_ptr = last_arg; \
+static GCC_INLINE void push_args_last_arg(args_man_t * manager, char * last_arg, char * * ptr_last_arg_ptr)
+{
+    char * new_arg, * last_arg_ptr;
+
+    last_arg_ptr = *ptr_last_arg_ptr;
+
+    new_arg = malloc(last_arg_ptr-last_arg+1);
+
+    strncpy(new_arg, last_arg, last_arg_ptr-last_arg);
+    new_arg[last_arg_ptr-last_arg] = '\0';
+
+    manager->argv[(manager->argc)++] = new_arg;
+
+    if (! (manager->argc & (ARGS_MAN_GROW_BY-1)))
+    {
+        manager->argv = realloc(
+            manager->argv,
+            sizeof(manager->argv[0]) * (manager->argc + ARGS_MAN_GROW_BY)
+        );
     }
+
+    /* Reset last_arg_ptr so we will have an entirely new argument */
+    *(ptr_last_arg_ptr) = last_arg;
+
+    return;
+}
 
 static GCC_INLINE int is_whitespace(char c)
 {
@@ -97,7 +106,6 @@ static GCC_INLINE int is_whitespace(char c)
 int fc_solve_args_man_chop(args_man_t * manager, char * string)
 {
     char * s = string;
-    char * new_arg;
     char * last_arg, * last_arg_ptr, * last_arg_end, * new_last_arg;
     int in_arg;
 
@@ -180,7 +188,9 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                             next_char = *(++s);
                             if (next_char == '\0')
                             {
-                                push_args_last_arg();
+                                push_args_last_arg(
+                                    manager, last_arg, &last_arg_ptr
+                                );
 
                                 goto END_OF_LOOP;
                             }
@@ -231,7 +241,9 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
 
         if (push_next_arg_flag)
         {
-            push_args_last_arg();
+            push_args_last_arg(
+                manager, last_arg, &last_arg_ptr
+            );
             in_arg = 0;
 
             if (*s == '\0')
@@ -244,7 +256,9 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
 END_OF_LOOP:
     if (last_arg_ptr != last_arg)
     {
-        push_args_last_arg();
+        push_args_last_arg(
+            manager, last_arg, &last_arg_ptr
+        );
     }
 
     free(last_arg);
