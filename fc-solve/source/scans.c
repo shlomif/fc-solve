@@ -754,7 +754,7 @@ static GCC_INLINE pq_rating_t fc_solve_a_star_rate_state(
 #endif
 
 /*
-    fc_solve_a_star_or_bfs_do_solve() is the main event
+    fc_solve_befs_or_bfs_do_solve() is the main event
     loop of the A* And BFS scans. It is quite simple as all it does is
     extract elements out of the queue or priority queue and run all the test
     of them.
@@ -938,7 +938,7 @@ static void dump_pqueue (
 #endif
 #endif
 
-int fc_solve_a_star_or_bfs_do_solve(
+int fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
     )
 {

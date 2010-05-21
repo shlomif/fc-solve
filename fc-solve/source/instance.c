@@ -847,7 +847,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
    
     return
-        fc_solve_a_star_or_bfs_do_solve(
+        fc_solve_befs_or_bfs_do_solve(
             soft_thread
             );
 }
@@ -1186,7 +1186,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                 STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
             }
 
-            ret = fc_solve_a_star_or_bfs_do_solve(soft_thread);
+            ret = fc_solve_befs_or_bfs_do_solve(soft_thread);
 
             break;
 
@@ -1302,7 +1302,7 @@ int fc_solve_resume_instance(
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
     {
         ret =
-            fc_solve_a_star_or_bfs_do_solve(
+            fc_solve_befs_or_bfs_do_solve(
                 &(instance->optimization_thread->soft_threads[0])
                 );
     }
