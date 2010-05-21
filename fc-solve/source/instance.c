@@ -173,7 +173,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
             break;
         case FCS_METHOD_A_STAR:
             fc_solve_PQueueFree(
-                    &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue)
+                    &(soft_thread->method_specific.befs.meth.befs.pqueue)
             );
             a_star_or_bfs = 1;
             break;

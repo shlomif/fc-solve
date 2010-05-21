@@ -1146,7 +1146,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
                 my_befs_weights[a] = fc_solve_default_befs_weights[a];
             }
 
-            user->soft_thread->method_specific.befs.meth.befs.a_star_pqueue.Elements = NULL;
+            user->soft_thread->method_specific.befs.meth.befs.pqueue.Elements = NULL;
         }
         break;
         case FCS_METHOD_OPTIMIZE:

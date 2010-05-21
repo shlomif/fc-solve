@@ -762,7 +762,7 @@ struct fc_solve_soft_thread_struct
                 {
                     /*
                      * The priority queue of the A* scan */
-                    PQUEUE a_star_pqueue;
+                    PQUEUE pqueue;
                     double a_star_initial_cards_under_sequences;
 
                     /*
@@ -989,7 +989,7 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
                  * fc_solve_soft_thread_init_a_star_or_bfs() .
                  * */
                 fc_solve_PQueueFree(
-                    &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue)
+                    &(soft_thread->method_specific.befs.meth.befs.pqueue)
                 );
                 
                 break;

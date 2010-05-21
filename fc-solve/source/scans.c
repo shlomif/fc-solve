@@ -845,7 +845,7 @@ extern void fc_solve_soft_thread_init_a_star_or_bfs(
     {
         /* Initialize the priotity queue of the A* scan */
         fc_solve_PQueueInitialise(
-            &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue),
+            &(soft_thread->method_specific.befs.meth.befs.pqueue),
             1024
         );
 
@@ -973,7 +973,7 @@ int fc_solve_a_star_or_bfs_do_solve(
             fcs_states_linked_list_item_t * queue;
             fcs_states_linked_list_item_t * queue_last_item;
         } brfs;
-        PQUEUE * a_star_pqueue;
+        PQUEUE * pqueue;
     } scan_specific;
 
     int error_code;
@@ -989,7 +989,7 @@ int fc_solve_a_star_or_bfs_do_solve(
     method = soft_thread->method;
     if (method == FCS_METHOD_A_STAR)
     {
-        scan_specific.a_star_pqueue = &(soft_thread->method_specific.befs.meth.befs.a_star_pqueue);
+        scan_specific.pqueue = &(soft_thread->method_specific.befs.meth.befs.pqueue);
     }
     else
     {
@@ -1008,7 +1008,7 @@ int fc_solve_a_star_or_bfs_do_solve(
         TRACE0("Start of loop");
 
 #ifdef DEBUG
-        dump_pqueue(soft_thread, "loop_start", scan_specific.a_star_pqueue);
+        dump_pqueue(soft_thread, "loop_start", scan_specific.pqueue);
 #endif
 
         {
@@ -1164,7 +1164,7 @@ int fc_solve_a_star_or_bfs_do_solve(
             if (method == FCS_METHOD_A_STAR)
             {
                 fc_solve_PQueuePush(
-                    scan_specific.a_star_pqueue,
+                    scan_specific.pqueue,
                     ptr_new_state_val,
                     fc_solve_a_star_rate_state(
                         soft_thread,
@@ -1222,11 +1222,11 @@ label_next_state:
         {
 
 #ifdef DEBUG
-        dump_pqueue(soft_thread, "before_pop", scan_specific.a_star_pqueue);
+        dump_pqueue(soft_thread, "before_pop", scan_specific.pqueue);
 #endif
             /* It is an A* scan */
             fc_solve_PQueuePop(
-                scan_specific.a_star_pqueue,
+                scan_specific.pqueue,
                 &ptr_state_val
                 );
         }
