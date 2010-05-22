@@ -797,12 +797,13 @@ static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * so
         (fcs_states_linked_list_item_t*)malloc(
             sizeof(fcs_states_linked_list_item_t)
         );
-    my_brfs_queue->next = 
+
     my_brfs_queue_last_item = 
         my_brfs_queue->next =
         (fcs_states_linked_list_item_t*)
         malloc(sizeof(fcs_states_linked_list_item_t))
         ;
+
     my_brfs_queue_last_item->next = NULL;
 }
 
