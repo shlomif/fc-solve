@@ -316,6 +316,7 @@ static GCC_INLINE void init_soft_thread(
 
     soft_thread->method_specific.soft_dfs.tests_list.num_lists = 0;
     soft_thread->method_specific.soft_dfs.tests_list.lists = NULL;
+    soft_thread->method_specific.befs.tests_list = NULL;
 
     /* The default solving method */
     soft_thread->method = FCS_METHOD_SOFT_DFS;
@@ -1090,6 +1091,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             soft_thread->method_specific.soft_dfs.rand_seed
     );
 
+    if (! soft_thread->method_specific.soft_dfs.tests_list.lists)
     {
         fcs_tests_list_of_lists * tests_list_of_lists;
         fc_solve_solve_for_state_test_t * tests_list, * next_test;

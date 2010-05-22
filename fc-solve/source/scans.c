@@ -871,6 +871,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         fc_solve_initialize_bfs_queue(soft_thread);
     }
 
+    if (! soft_thread->method_specific.befs.tests_list)
     {
         fc_solve_solve_for_state_test_t * tests_list, * next_test;
         int tests_order_num;

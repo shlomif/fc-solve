@@ -1048,8 +1048,6 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
         }
 
-        fc_solve_release_tests_list(soft_thread, is_scan_befs_or_bfs);
-
         fc_solve_reset_soft_thread(soft_thread);
     }
 
