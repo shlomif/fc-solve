@@ -67,3 +67,15 @@ problem.
 
 * Change "A*" in the code's comments to BeFS.
 
+* Normalise the +_free()+ and +_finish()+ methods in regards to the previous
+commits of the A* functionality.
+
+* Implement Soft-DFS and Random-DFS as pointers to test functions, similar
+to what was done in the BeFS/BFS scan. Currently there is this code there:
+
+----------------
+fc_solve_sfs_tests[tests_order_tests[
+                        the_soft_dfs_info->test_index
+                    ] & FCS_TEST_ORDER_NO_FLAGS_MASK]
+----------------
+
