@@ -179,11 +179,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
             break;
     }
 
-    if (is_scan_befs_or_bfs)
-    {
-        free (soft_thread->method_specific.befs.tests_list);
-        soft_thread->method_specific.befs.tests_list = NULL;
-    }    
+    fc_solve_release_tests_list(soft_thread, is_scan_befs_or_bfs);
 
     free(soft_thread->tests_order.tests);
 
@@ -317,6 +313,9 @@ static GCC_INLINE void init_soft_thread(
 
     /* Initialize all the Soft-DFS stacks to NULL */
     soft_thread->method_specific.soft_dfs.soft_dfs_info = NULL;
+
+    soft_thread->method_specific.soft_dfs.tests_list.num_lists = 0;
+    soft_thread->method_specific.soft_dfs.tests_list.lists = NULL;
 
     /* The default solving method */
     soft_thread->method = FCS_METHOD_SOFT_DFS;
@@ -1051,6 +1050,21 @@ void fc_solve_start_instance_process_with_board(
     return;
 }
 
+static GCC_INLINE void * memdup(void * src, size_t mysize)
+{
+    void * dest;
+
+    dest = malloc(mysize);
+    if (dest == NULL)
+    {
+        return NULL;
+    }
+
+    memcpy(dest, src, mysize);
+
+    return dest;
+}
+
 static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -1075,6 +1089,95 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             &(soft_thread->method_specific.soft_dfs.rand_gen), 
             soft_thread->method_specific.soft_dfs.rand_seed
     );
+
+    {
+        fcs_tests_list_of_lists * tests_list_of_lists;
+        fc_solve_solve_for_state_test_t * tests_list, * next_test;
+        fcs_tests_list_t * tests_list_struct_ptr;
+
+        int tests_order_num;
+        int * tests_order_tests;
+        int start_i;
+        int master_to_randomize = 
+            (soft_thread->method == FCS_METHOD_RANDOM_DFS)
+            ;
+        int do_first_iteration;
+
+        tests_order_tests = soft_thread->tests_order.tests;
+        
+        tests_order_num = soft_thread->tests_order.num;
+
+        tests_list_of_lists =
+            &(soft_thread->method_specific.soft_dfs.tests_list);
+
+        tests_list_of_lists->num_lists = 0;
+        tests_list_of_lists->lists =
+            malloc(
+                sizeof(tests_list_of_lists->lists[0]) * tests_order_num
+            );
+
+        tests_list = malloc(sizeof(tests_list[0]) * tests_order_num);
+
+        start_i = 0;
+        while (start_i < tests_order_num)
+        {
+            int i;
+
+            do_first_iteration = 1;
+
+            for (i = start_i, next_test = tests_list ;
+                    (i < tests_order_num) &&
+                    (do_first_iteration ||
+                    ((!master_to_randomize) ||
+                     (
+                        /* We are still on a random group */
+                        (tests_order_tests[ i ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
+                        /* A new random group did not start */
+                        (! (tests_order_tests[ i ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
+                        
+                     )
+                    )
+                    )
+                    ; 
+                    i++)
+            {
+                do_first_iteration = 0;
+                *(next_test++) =
+                        fc_solve_sfs_tests[
+                            tests_order_tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK
+                        ];
+            }
+
+            tests_list_struct_ptr = 
+                &(tests_list_of_lists->lists[tests_list_of_lists->num_lists++])
+                ;
+
+            ;
+            tests_list_struct_ptr->tests =
+                memdup(tests_list,
+                    sizeof(tests_list[0])
+                    * (tests_list_struct_ptr->num_tests = i-start_i)
+                );
+
+            tests_list_struct_ptr->to_randomize = 
+                master_to_randomize && 
+                (i > start_i) && 
+                (tests_order_tests[ i-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
+                ;
+
+            start_i = i;
+        }
+
+        tests_list_of_lists->lists =
+            realloc(
+                tests_list_of_lists->lists,
+                sizeof(tests_list_of_lists->lists[0]) * 
+                tests_list_of_lists->num_lists
+            );
+
+        free(tests_list);
+    }
+ 
 
     return;
 }
@@ -1167,11 +1270,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                 STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
             }
 
-            ret =
-                fc_solve_soft_dfs_do_solve(
-                    soft_thread,
-                    (soft_thread->method == FCS_METHOD_RANDOM_DFS)
-                    );
+            ret = fc_solve_soft_dfs_do_solve(soft_thread);
 
             break;
 

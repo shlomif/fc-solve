@@ -630,6 +630,7 @@ typedef struct
     fcs_state_extra_info_t * state_val;
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
+    int tests_list_index;
     int test_index;
     int derived_states_random_indexes_max_size;
     int * derived_states_random_indexes;
@@ -660,6 +661,17 @@ enum
     FCS_SOFT_THREAD_IS_FINISHED = (1 << 2),
 
 };
+
+typedef struct {
+    fc_solve_solve_for_state_test_t * tests;
+    int num_tests;
+    int to_randomize;
+} fcs_tests_list_t;
+
+typedef struct {
+    int num_lists;
+    fcs_tests_list_t * lists;
+} fcs_tests_list_of_lists;
 
 struct fc_solve_soft_thread_struct
 {
@@ -739,6 +751,11 @@ struct fc_solve_soft_thread_struct
              * The initial seed of this random number generator
              * */
             int rand_seed;
+
+            /* 
+             * The tests to be performed in a preprocessed form.
+             * */
+            fcs_tests_list_of_lists tests_list;
         } soft_dfs;
         struct
         {
@@ -969,6 +986,34 @@ static GCC_INLINE void fc_solve_reset_soft_thread(
     STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
 }
 
+static GCC_INLINE void fc_solve_release_tests_list(
+    fc_solve_soft_thread_t * soft_thread,
+    int is_scan_befs_or_bfs
+)
+{
+    if (is_scan_befs_or_bfs)
+    {
+        free (soft_thread->method_specific.befs.tests_list);
+        soft_thread->method_specific.befs.tests_list = NULL;
+    }
+    else
+    {
+        /* A DFS Scan. */
+        if (soft_thread->method_specific.soft_dfs.tests_list.lists)
+        {
+            int i;
+            for (i=0 ; 
+                i < soft_thread->method_specific.soft_dfs.tests_list.num_lists ; 
+                i++)
+            {
+                free (soft_thread->method_specific.soft_dfs.tests_list.lists[i].tests);
+            }
+            free (soft_thread->method_specific.soft_dfs.tests_list.lists);
+            soft_thread->method_specific.soft_dfs.tests_list.lists = NULL;
+        }
+    }
+}
+
 static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
     fc_solve_hard_thread_t * hard_thread
     )
@@ -1003,13 +1048,9 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
         }
 
-        if (is_scan_befs_or_bfs)
-        {
-            free (soft_thread->method_specific.befs.tests_list);
-            soft_thread->method_specific.befs.tests_list = NULL;
-        }
+        fc_solve_release_tests_list(soft_thread, is_scan_befs_or_bfs);
+
         fc_solve_reset_soft_thread(soft_thread);
-        
     }
 
     return;

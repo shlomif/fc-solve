@@ -36,10 +36,7 @@ extern "C" {
 #include "config.h"
 #include "instance.h"
 
-extern int fc_solve_soft_dfs_do_solve(
-    fc_solve_soft_thread_t * soft_thread,
-    int to_randomize
-    );
+extern int fc_solve_soft_dfs_do_solve(fc_solve_soft_thread_t * soft_thread);
 
 extern void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * soft_thread

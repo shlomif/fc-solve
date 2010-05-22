@@ -65,6 +65,7 @@ void fc_solve_increase_dfs_max_depth(
     for(d=soft_thread->method_specific.soft_dfs.dfs_max_depth ; d<new_dfs_max_depth; d++)
     {
         soft_thread->method_specific.soft_dfs.soft_dfs_info[d].state_val = NULL;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].tests_list_index = 0;
         soft_thread->method_specific.soft_dfs.soft_dfs_info[d].test_index = 0;
         soft_thread->method_specific.soft_dfs.soft_dfs_info[d].current_state_index = 0;
         soft_thread->method_specific.soft_dfs.soft_dfs_info[d].derived_states_list.num_states = 0;
@@ -177,8 +178,7 @@ void fc_solve_increase_dfs_max_depth(
 }
 
 int fc_solve_soft_dfs_do_solve(
-    fc_solve_soft_thread_t * soft_thread,
-    int to_randomize
+    fc_solve_soft_thread_t * soft_thread
     )
 {
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
@@ -194,8 +194,6 @@ int fc_solve_soft_dfs_do_solve(
 #endif
     int dfs_max_depth;
 
-    int tests_order_num = soft_thread->tests_order.num;
-    int * tests_order_tests = soft_thread->tests_order.tests;
     fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
     fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
@@ -203,6 +201,7 @@ int fc_solve_soft_dfs_do_solve(
     int soft_thread_id = soft_thread->id;
     fcs_derived_states_list_t * derived_states_list;
     fcs_rand_t * rand_gen;
+    int local_to_randomize = 0;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -221,6 +220,7 @@ int fc_solve_soft_dfs_do_solve(
         ptr_state_val
     );
 
+#define THE_TESTS_LIST soft_thread->method_specific.soft_dfs.tests_list
     TRACE0("Before depth loop");
     /*
         The main loop.
@@ -249,7 +249,8 @@ int fc_solve_soft_dfs_do_solve(
             derived_states_list->num_states
            )
         {
-            if (the_soft_dfs_info->test_index >= tests_order_num)
+            /* Check if we already tried all the tests here. */
+            if (the_soft_dfs_info->tests_list_index == THE_TESTS_LIST.num_lists)
             {
                 /* Backtrack to the previous depth. */
 
@@ -284,7 +285,9 @@ int fc_solve_soft_dfs_do_solve(
             TRACE0("Before iter_handler");
             /* If this is the first test, then count the number of unoccupied
                freeceels and stacks and check if we are done. */
-            if (the_soft_dfs_info->test_index == 0)
+            if (   (the_soft_dfs_info->test_index == 0)
+                && (the_soft_dfs_info->tests_list_index == 0)
+               )
             {
                 fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
                 int i;
@@ -357,31 +360,27 @@ int fc_solve_soft_dfs_do_solve(
             }
 
             TRACE0("After iter_handler");
-            /* Always do the first test */
-            do_first_iteration = 1;
 
+            if (the_soft_dfs_info->tests_list_index < THE_TESTS_LIST.num_lists)
+            {
+                /* Always do the first test */
+                do_first_iteration = 1;
+                local_to_randomize = THE_TESTS_LIST.lists[
+                    the_soft_dfs_info->tests_list_index
+                    ].to_randomize;
             while (
-                    /* Make sure we do not exceed the number of tests */
-                    (the_soft_dfs_info->test_index < tests_order_num) &&
-                    (
-                        /* Always do the first test */
-                        do_first_iteration ||
-                        (
-                            /* This is a randomized scan. Else - quit after the first iteration */
-                            to_randomize &&
-                            /* We are still on a random group */
-                            (tests_order_tests[ the_soft_dfs_info->test_index ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
-                            /* A new random group did not start */
-                            (! (tests_order_tests[ the_soft_dfs_info->test_index ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
-                         )
-                    )
-                 )
+                    /* Always do the first test */
+                    do_first_iteration ||
+                    /* This is a randomized scan. Else - quit after the first iteration */
+                    local_to_randomize
+            )
             {
                 do_first_iteration = 0;
 
-                check = fc_solve_sfs_tests[tests_order_tests[
-                        the_soft_dfs_info->test_index
-                    ] & FCS_TEST_ORDER_NO_FLAGS_MASK] (
+                check = THE_TESTS_LIST.lists[
+                    the_soft_dfs_info->tests_list_index
+                    ].tests[the_soft_dfs_info->test_index]
+                    (
                         soft_thread,
                         ptr_state_val,
                         derived_states_list
@@ -399,9 +398,18 @@ int fc_solve_soft_dfs_do_solve(
                 }
 
                 /* Move the counter to the next test */
-                the_soft_dfs_info->test_index++;
+                if ((++the_soft_dfs_info->test_index) == 
+                        THE_TESTS_LIST.lists[
+                            the_soft_dfs_info->tests_list_index
+                        ].num_tests
+                   )
+                {
+                    the_soft_dfs_info->tests_list_index++;
+                    the_soft_dfs_info->test_index = 0;
+                    break;
+                }
             }
-
+            }
 
             {
                 int a, j;
@@ -431,7 +439,7 @@ int fc_solve_soft_dfs_do_solve(
                  *
                  * Also, do not randomize if this is a pure soft-DFS scan.
                  * */
-                if (to_randomize && tests_order_tests[ the_soft_dfs_info->test_index-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
+                if (local_to_randomize)
                 {
                     a = num_states-1;
                     while (a > 0)
@@ -504,6 +512,7 @@ int fc_solve_soft_dfs_do_solve(
                         ptr_state_val =
                         single_derived_state;
 
+                    the_soft_dfs_info->tests_list_index = 0;
                     the_soft_dfs_info->test_index = 0;
                     the_soft_dfs_info->current_state_index = 0;
                     the_soft_dfs_info->positions_by_rank = NULL;
@@ -834,7 +843,7 @@ static GCC_INLINE void normalize_befs_weights(
     }
 }
 
-extern void fc_solve_soft_thread_init_befs_or_bfs(
+void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * soft_thread
     )
 {
