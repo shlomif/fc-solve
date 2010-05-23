@@ -11,7 +11,7 @@ Version 3.0.0: (TODO : FILL IN)
 alternative scans and then picking up the one with the shortest solution.
 
 2. Add the +-l children-playing-ball+ and +-l sentient-pearls+ presets
-that further optimise on solution length.
+that optimize on solution length (based on flares).
 
 3. Add +scripts/tag-fc-solve-release.bash+ to tag using svn.
 
