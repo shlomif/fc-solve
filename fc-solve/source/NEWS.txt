@@ -4,6 +4,30 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.0.0: (TODO : FILL IN)
+-------------------------------
+
+1. Implement the flares API (see +USAGE.txt+), which allows running several
+alternative scans and then picking up the one with the shortest solution.
+
+2. Add the +-l children-playing-ball+ and +-l sentient-pearls+ presets
+that further optimise on solution length.
+
+3. Add +scripts/tag-fc-solve-release.bash+ to tag using svn.
+
+4. Updated the CMake version in the build-on-win32.pl scritp.
+
+5. Add +scripts/stat-analysis-2.pl+ which is a faster version of the
+script for statistical analysis of the solution length.
+
+6. Refactored the +split_cmd_line.c+ module.
+
+7. Renamed many "a_star" and "A*" occurences in the code to "BeFS", because
+what was thought to be the A* scan was actually Best-First-Search.
+
+8. Convert the soft-DFS tests' order to a list-of-lists-of-tests, and no
+longer recalculating the tests_list on any recycling.
+
 Version 2.42.0: (27-March-2010)
 -------------------------------
 
