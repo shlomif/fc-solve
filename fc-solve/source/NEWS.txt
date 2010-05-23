@@ -4,8 +4,8 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
-Version 3.0.0: (TODO : FILL IN)
--------------------------------
+Version 3.0.0: (23-May-2010)
+----------------------------
 
 1. Implement the flares API (see +USAGE.txt+), which allows running several
 alternative scans and then picking up the one with the shortest solution.
