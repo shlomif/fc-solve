@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+use String::ShellQuote;
+use IO::All;
+
+my @fcs_args;
+GetOptions(
+);
+
+@fcs_args = @ARGV;
+
+my $args_quoted = shell_quote(@fcs_args);
+my $fcs_output = `fc-solve $args_quoted`;
+
+my $is_solvable = (($fcs_output =~ m{^This game is solveable}ms) ? 1 : 0);
+my ($num_iters) = ($fcs_output =~ m{^Total number of states checked is (\d+)\.$}ms);
+my $sol_len = () = ($fcs_output =~ m{^===+$}msg);
+
+print "Iters: $num_iters ; Length: $sol_len\n";

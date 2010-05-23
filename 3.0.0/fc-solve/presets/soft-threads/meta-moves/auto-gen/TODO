@@ -1,0 +1,5 @@
+* Add a check to make sure that it finishes once no future-solvable boards
+are left.
+
+* Remove the new function from CalcMetaScan.pm.
+
