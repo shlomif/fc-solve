@@ -1370,3 +1370,16 @@ Unsolved Board No. 11982 at 1266685076.187721
 Finished at 1266685135.302799 (total_num_iters=18253266)
 }}}}}}}}}}}}
 
+========================================================================
+
+r2884 ;
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l by" ; \
+2.6.33.4-desktop-3mnb
+ssh console (while not running X-Windows).
+
+Threaded:
+
+93.8695681095123s
+
+========================================================================
+
