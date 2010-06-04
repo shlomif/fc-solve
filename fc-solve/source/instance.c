@@ -572,7 +572,7 @@ static GCC_INLINE int compile_prelude(
 
         ST_LOOP_START()
         {
-            if (!strcmp(soft_thread->name, p_scan))
+            if (soft_thread->name && (!strcmp(soft_thread->name, p_scan)))
             {
                 break;
             }

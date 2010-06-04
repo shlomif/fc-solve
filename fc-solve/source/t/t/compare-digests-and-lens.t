@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 
 use lib './t/lib';
 
@@ -145,6 +145,15 @@ verify_solution_test({id => "freecell24_children_playing_ball", deal => 24,
 verify_solution_test({id => "freecell24_sentient_pearls", deal => 24, 
         theme => ["-l", "sentient-pearls"],}, 
     "Verifying the solution of deal No. 24 with -l sp");
+
+
+# TEST
+verify_solution_test({id => "freecell24with_empty_soft_thread_name", deal => 1, 
+        # theme => ["-l", "by"],
+        theme => ["-to", "013[2456789]", "-nst", "-l" ,"by",],
+    },
+    "Solving Deal #24 with an empty soft thread name"
+);
 
 # Store the changes at the end so they won't get lost.
 $verifier->end();
