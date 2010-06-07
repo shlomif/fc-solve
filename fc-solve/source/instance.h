@@ -81,6 +81,12 @@ extern "C" {
 
 #endif
 
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+
+#include "google_hash.h"
+
+#endif
+
 #ifdef INDIRECT_STACK_STATES
 #include "fcs_hash.h"
 
@@ -401,6 +407,8 @@ typedef struct
     GHashTable * hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     fc_solve_hash_t hash;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+    fcs_states_google_hash_handle_t hash;
 #endif
 
 #if defined(INDIRECT_STACK_STATES)

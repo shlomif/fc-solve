@@ -418,6 +418,21 @@ GCC_INLINE int fc_solve_check_and_add_state(
             *existing_state_val = existing_val_void;
         }
     }
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+    {
+        void * existing_key_void, * existing_val_void;
+    is_state_new = (fc_solve_states_google_hash_insert(
+        instance->hash,
+        new_state_key,
+        new_state_val,
+        &existing_key_void,
+        &existing_val_void
+        ) == 0);
+        if (! is_state_new)
+        {
+            *existing_state_val = existing_val_void;
+        }
+    }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     /* Try to see if the state is found in indirect_prev_states */
     if ((pos_ptr = (fcs_standalone_state_ptrs_t *)bsearch(&new_state_key,

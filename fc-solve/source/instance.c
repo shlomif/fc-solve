@@ -928,6 +928,8 @@ void fc_solve_start_instance_process_with_board(
 #endif
 #endif
        );
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+     instance->hash = fc_solve_states_google_hash_new();
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     instance->num_prev_states_margin = 0;
 
@@ -1554,6 +1556,8 @@ void fc_solve_finish_instance(
     g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     fc_solve_hash_free(&(instance->hash));
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+    fc_solve_states_google_hash_free(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     instance->num_prev_states_margin = 0;
 
