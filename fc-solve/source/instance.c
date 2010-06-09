@@ -976,6 +976,8 @@ void fc_solve_start_instance_process_with_board(
         fc_solve_glib_hash_stack_hash_function,
         fc_solve_glib_hash_stack_compare
         );
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
+    instance->stacks_hash = fc_solve_columns_google_hash_new();
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     instance->stacks_judy_array = NULL;
 #else
@@ -1582,6 +1584,8 @@ void fc_solve_finish_instance(
     g_tree_destroy(instance->stacks_tree);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->stacks_hash);
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
+    fc_solve_columns_google_hash_free(instance->stacks_hash);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     {
         Word_t rc_word;

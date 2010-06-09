@@ -59,6 +59,30 @@ void fc_solve_states_google_hash_free(fcs_states_google_hash_handle_t hash);
 
 #endif
 
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
+
+typedef void * fcs_columns_google_hash_handle_t;
+
+extern fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new();
+
+/*
+ * Returns 0 if the key is new and the key/val pair was inserted.
+ *      - in that case *existing_key / *existing_val will be set to key
+ *      and val respectively.
+ * Returns 1 if the key is not new and *existing_key / *existing_val
+ * was set to it.
+ */
+extern int fc_solve_columns_google_hash_insert(
+    fcs_columns_google_hash_handle_t hash,
+    void * key,
+    void * val,
+    void * * existing_key,
+    void * * existing_val);
+
+void fc_solve_columns_google_hash_free(fcs_columns_google_hash_handle_t hash);
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif

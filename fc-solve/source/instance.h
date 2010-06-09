@@ -87,6 +87,12 @@ extern "C" {
 
 #endif
 
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
+
+#include "google_hash.h"
+
+#endif
+
 #ifdef INDIRECT_STACK_STATES
 #include "fcs_hash.h"
 
@@ -426,6 +432,8 @@ typedef struct
     GTree * stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
     GHashTable * stacks_hash;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
+    fcs_columns_google_hash_handle_t stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     Pvoid_t stacks_judy_array;
 #else

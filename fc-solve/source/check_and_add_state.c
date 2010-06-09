@@ -173,6 +173,23 @@ static void GCC_INLINE fc_solve_cache_stacks(
             replace_with_cached(verdict);
         }
 
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
+        {
+            int verdict;
+            void * dummy;
+
+            column = fcs_state_get_col(*new_state_key, a);
+
+            verdict = fc_solve_columns_google_hash_insert(
+                    instance->stacks_hash,
+                    column,
+                    column,
+                    &cached_stack,
+                    &dummy
+                    );
+
+            replace_with_cached(verdict);
+        }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
 
         cached_stack =
@@ -421,13 +438,15 @@ GCC_INLINE int fc_solve_check_and_add_state(
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     {
         void * existing_key_void, * existing_val_void;
-    is_state_new = (fc_solve_states_google_hash_insert(
-        instance->hash,
-        new_state_key,
-        new_state_val,
-        &existing_key_void,
-        &existing_val_void
-        ) == 0);
+
+        is_state_new = (fc_solve_states_google_hash_insert(
+            instance->hash,
+            new_state_key,
+            new_state_val,
+            &existing_key_void,
+            &existing_val_void
+            ) == 0);
+
         if (! is_state_new)
         {
             *existing_state_val = existing_val_void;
