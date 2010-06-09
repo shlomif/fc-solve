@@ -34,6 +34,8 @@
 
 using google::dense_hash_map;      // namespace where class lives by default
 
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+
 struct state_equality
 {
   bool operator()(const char* s1, const char* s2) const
@@ -128,3 +130,4 @@ extern "C" void fc_solve_states_google_hash_free(
     return;
 }
 
+#endif
