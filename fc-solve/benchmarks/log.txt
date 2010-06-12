@@ -1383,3 +1383,12 @@ Threaded:
 
 ========================================================================
 
+r2895 ; 
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/likely-addition/fc-solve/source
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l by" ; \
+2.6.33.5-desktop-1mnb
+ssh console (while not running X-Windows).
+
+Threaded:
+
+93.6305630207062
