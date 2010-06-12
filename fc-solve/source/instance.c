@@ -54,6 +54,7 @@
 #include "move_funcs_order.h"
 
 #include "inline.h"
+#include "likely.h"
 
 /*
     General use of this interface:
@@ -92,13 +93,13 @@ static GCC_INLINE void normalize_befs_weights(
 #define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
     for(a=0;a<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));a++)
     {
-        if (my_befs_weights[a] < 0)
+        if (unlikely(my_befs_weights[a] < 0))
         {
             my_befs_weights[a] = fc_solve_default_befs_weights[a];
         }
         sum += my_befs_weights[a];
     }
-    if (sum < 1e-6)
+    if (unlikely(sum < 1e-6))
     {
         sum = 1;
     }
@@ -141,7 +142,7 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
         }
         for(;depth<dfs_max_depth;depth++)
         {
-            if (info_ptr->derived_states_list.states)
+            if (likely(info_ptr->derived_states_list.states))
             {
                 free(info_ptr->derived_states_list.states);
                 free(info_ptr->derived_states_random_indexes);
@@ -183,7 +184,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
 
     free(soft_thread->tests_order.tests);
 
-    if (soft_thread->name != NULL)
+    if (likely(soft_thread->name != NULL))
     {
         free(soft_thread->name);
     }
@@ -467,11 +468,11 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
 static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t * hard_thread)
 {
-    if (hard_thread->prelude_as_string)
+    if (likely(hard_thread->prelude_as_string))
     {
         free (hard_thread->prelude_as_string);
     }
-    if (hard_thread->prelude)
+    if (likely(hard_thread->prelude))
     {
         free (hard_thread->prelude);
     }
@@ -479,7 +480,7 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
 
     free(hard_thread->soft_threads);
 
-    if (hard_thread->allocator.packs)
+    if (likely(hard_thread->allocator.packs))
     {
         fc_solve_compact_allocator_finish(&(hard_thread->allocator));
         hard_thread->allocator.packs = NULL;

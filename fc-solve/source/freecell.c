@@ -48,6 +48,7 @@
 #include "freecell.h"
 
 #include "inline.h"
+#include "likely.h"
 
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
@@ -991,7 +992,7 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 #endif
 
             /* Skip if it's a King - nothing to put it on. */
-            if (fcs_card_card_num(card) == 13)
+            if (unlikely(fcs_card_card_num(card) == 13))
             {
                 continue;
             }
@@ -1028,9 +1029,9 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
                     freestacks_to_fill = 0;
                 }
 
-                if ((num_cards_to_relocate == 0) &&
+                if (unlikely((num_cards_to_relocate == 0) &&
                    (calc_max_sequence_move(num_vacant_freecells-freecells_to_fill, num_vacant_stacks-freestacks_to_fill) >=
-                    seq_end - c + 1))
+                    seq_end - c + 1)))
                 {
                     int cols_indexes[3];
                     sfs_check_state_begin()

@@ -49,6 +49,7 @@
 
 #include "check_limits.h"
 #include "inline.h"
+#include "likely.h"
 
 void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
@@ -1314,7 +1315,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
             break;
     }
 
-    if (! *positions_by_rank_location)
+    if (unlikely(! *positions_by_rank_location))
     {
         char * positions_by_rank;
 #if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
@@ -1370,7 +1371,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
                     dest_col = fcs_state_get_col(*(ptr_state_key), ds);
                     top_card_idx = fcs_col_len(dest_col);
 
-                    if ((top_card_idx--) == 0)
+                    if (unlikely((top_card_idx--) == 0))
                     {
                         continue;
                     }
