@@ -1391,4 +1391,4 @@ ssh console (while not running X-Windows).
 
 Threaded:
 
-93.6305630207062
+93.6305630207062s
