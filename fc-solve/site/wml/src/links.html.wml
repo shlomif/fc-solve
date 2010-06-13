@@ -123,7 +123,7 @@ superceded by <a href="#valgrind">Valgrind</a>.
 build system, which is used by Freecell Solver to portably build
 dynamically-linked libraries and facilitate the build process on different
 operating systems. It replaced 
-<a href="http://www.gnu.org/software/autoconf/">GNU Autoconf, Automake and
+<a href="http://www.shlomifish.org/open-source/anti/autohell/">GNU Autoconf, Automake and
 Libtool</a>, which predate CMake and have gained popularity lacking any
 good competition, but are more error-prone and slow.
 </p>
