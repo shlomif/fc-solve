@@ -12,6 +12,7 @@ INSTALL(
         "rin-tin-tin.sh"
         "sand-stone.sh"
         "sentient-pearls.sh"
+        "the-iglu-cabal.sh"
         "toons-for-twenty-somethings.sh"
         "yellow-brick-road.sh"
     DESTINATION

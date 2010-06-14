@@ -729,6 +729,8 @@ second on a Pentium 4 2.4GHz).
 |+sentient-pearls+             |a meta-moves and flares based preset with
 short solutions. Much faster than +children-playing-ball+ but yields less
 optimal solutions.
+|+the-iglu-cabal+              |a meta-moves preset that yields faster
+solutions on average than +blue-yonder+.
 |+the-last-mohican+            |a preset for solving Simple Simon. Yields
             less false negatives than the default one, but might be slower. 
 |+toons-for-twenty-somethings+ |an atomic-moves preset that solves
