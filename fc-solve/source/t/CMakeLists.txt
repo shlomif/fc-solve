@@ -31,6 +31,15 @@ IF (FCS_WITH_TEST_SUITE)
 
     FIND_LIBRARY(LIBTAP_LIB tap)
 
+    IF (LIBTAP_LIB STREQUAL "LIBTAP_LIB-NOTFOUND")
+        MESSAGE (FATAL_ERROR "You need to install libtap from:
+http://www.shlomifish.org/open-source/projects/libtap/
+in order to run the test suite. You may specify
+cmake -DFCS_WITH_TEST_SUITE=\"\" to get rid of this message.
+"
+        )
+    ENDIF (LIBTAP_LIB STREQUAL "LIBTAP_LIB-NOTFOUND")
+
     MY_ADD_EXE (
         "t/card-test-render.exe"
         "card-test-render.c"
