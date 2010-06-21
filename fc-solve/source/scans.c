@@ -258,8 +258,9 @@ int fc_solve_soft_dfs_do_solve(
 
     /*
         The main loop.
+        We exit out of it when DEPTH() is decremented below zero.
     */
-    while (likely(DEPTH() >= 0))
+    while (1)
     {
         /*
             Increase the "maximal" depth if it is about to be exceeded.
