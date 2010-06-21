@@ -1,0 +1,81 @@
+* Mandriva Linux 2010.1.
+* Acer Aspire 5738DZG
+* x86-64.
+* gcc-4.5.0.
+
+<<<<<<<<<<<<<<<
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Pentium(R) Dual-Core CPU       T4300  @ 2.10GHz
+stepping	: 10
+cpu MHz		: 2100.000
+cache size	: 1024 KB
+physical id	: 0
+siblings	: 2
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good aperfmperf pni dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm xsave lahf_lm
+bogomips	: 4189.34
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Pentium(R) Dual-Core CPU       T4300  @ 2.10GHz
+stepping	: 10
+cpu MHz		: 1200.000
+cache size	: 1024 KB
+physical id	: 0
+siblings	: 2
+core id		: 1
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good aperfmperf pni dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm xsave lahf_lm
+bogomips	: 4189.29
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+>>>>>>>>>>>>>>>>>>
+
+------------------------------
+
+the-iglu-cabal preset ; r2933 ; 
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
+
+34.8752400875092s
+
+------------------------------
+
+stuff.bash (with a -dto scan) ; r2933 
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
+
+33.5600700378418s
+
+------------------------------
+
+foss-nessy.bash (with two -dto scan) ; r2938 
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
+
+33.366259098053s
+
+------------------------------
+
+

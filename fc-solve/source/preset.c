@@ -468,16 +468,30 @@ int fc_solve_apply_preset_by_ptr(
             {
                 int num_valid_tests;
                 const char * s;
+                int depth_idx;
+                fcs_by_depth_tests_order_t * by_depth_tests_order;
+                int tests_order_num;
+                int * tests_order_tests;
 
                 /* Check every test */
 
-                for(num_valid_tests=0;num_valid_tests < soft_thread->tests_order.num; num_valid_tests++)
+                by_depth_tests_order = 
+                    soft_thread->by_depth_tests_order.by_depth_tests;
+
+                for (depth_idx = 0 ;
+                    depth_idx < soft_thread->by_depth_tests_order.num ; 
+                    depth_idx++)
+                {
+                    tests_order_tests = by_depth_tests_order[depth_idx].tests_order.tests;
+                    tests_order_num = by_depth_tests_order[depth_idx].tests_order.num;
+ 
+                for(num_valid_tests=0;num_valid_tests < tests_order_num; num_valid_tests++)
                 {
                     for(s = preset.allowed_tests;*s != '\0';s++)
                     {
                         test_name[0] = *s;
                         /* Check if this test corresponds to this character */
-                        if ((soft_thread->tests_order.tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM)))
+                        if ((tests_order_tests[num_valid_tests] & FCS_TEST_ORDER_NO_FLAGS_MASK) == ((fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM)))
                         {
                             break;
                         }
@@ -489,12 +503,14 @@ int fc_solve_apply_preset_by_ptr(
                         break;
                     }
                 }
-                if (num_valid_tests < soft_thread->tests_order.num)
+                if (num_valid_tests < tests_order_num)
                 {
                     fc_solve_apply_tests_order(
-                            &(soft_thread->tests_order),
-                            preset.tests_order,
-                            &no_use);
+                        &(by_depth_tests_order[depth_idx].tests_order),
+                        preset.tests_order,
+                        &no_use
+                    );
+                }
                 }
             }
         }

@@ -152,3 +152,19 @@ class FC_Solve:
         ok (get_plan_type(self.user, item_idx) == "CP",
                 name + " - right type")
 
+    def num_by_depth_tests_order_is(self, name, want_num):
+        got_num = self.fcs.fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
+                self.user
+        )
+
+        ok (want_num == got_num, name + " - by_depth_tests_order.")
+
+    def by_depth_max_depth_of_depth_idx_is(self, name, depth_idx, want_num):
+        got_num = self.fcs.fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
+            self.user,
+            depth_idx
+        )
+
+        ok (want_num == got_num,
+            name + " - max_depth_of_depth_idx_is for" + str(depth_idx) + ".")
+

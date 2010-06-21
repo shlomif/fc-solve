@@ -293,22 +293,105 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
 #define min(a,b) (((a)<(b))?(a):(b))
 #endif
 
+int DLLEXPORT freecell_solver_user_set_depth_tests_order(
+    void * api_instance,
+    int min_depth,
+    const char * tests_order,
+    char * * error_string
+    )
+{
+    fcs_user_t * user;
+    fcs_instance_item_t * instance_item;
+    int depth_idx;
+    int ret_code;
+
+    user = (fcs_user_t *)api_instance;
+
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+    
+    *error_string = NULL;
+
+    if (min_depth < 0)
+    {
+        *error_string = strdup("Depth is negative.");
+        return 1;
+    }
+
+    if (min_depth == 0)
+    {
+        depth_idx = 0;
+    }
+    else
+    {
+        for (depth_idx = 0
+                ;
+                ;
+                depth_idx++
+            )
+        {
+            if (depth_idx == user->soft_thread->by_depth_tests_order.num-1)
+            {
+                break;
+            }
+            else if (min_depth < user->soft_thread
+                    ->by_depth_tests_order.by_depth_tests[depth_idx].max_depth
+                    )
+            {
+                break;
+            }
+        }
+
+        depth_idx++;
+    }
+
+    if (depth_idx == user->soft_thread->by_depth_tests_order.num)
+    {
+        user->soft_thread->by_depth_tests_order.by_depth_tests =
+            realloc(
+                user->soft_thread->by_depth_tests_order.by_depth_tests,
+                (++user->soft_thread->by_depth_tests_order.num) *
+                sizeof(user->soft_thread->by_depth_tests_order.by_depth_tests[0])
+                );
+
+        user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order.num = 0;
+        user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order.tests = NULL;
+    }
+
+    if (depth_idx > 0)
+    {
+        user->soft_thread->
+            by_depth_tests_order.by_depth_tests[depth_idx-1].max_depth = min_depth;
+    }
+
+    user->soft_thread->
+        by_depth_tests_order.by_depth_tests[depth_idx].max_depth = INT_MAX;
+
+    ret_code =
+        fc_solve_apply_tests_order(
+            &(user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order),
+            tests_order,
+            error_string
+            );
+
+    user->soft_thread->by_depth_tests_order.by_depth_tests =
+        realloc(
+            user->soft_thread->by_depth_tests_order.by_depth_tests,
+            (user->soft_thread->by_depth_tests_order.num = depth_idx+1) *
+            sizeof(user->soft_thread->by_depth_tests_order.by_depth_tests[0])
+        );
+    
+    return ret_code;
+}
+
 int DLLEXPORT freecell_solver_user_set_tests_order(
     void * api_instance,
     const char * tests_order,
     char * * error_string
     )
 {
-    fcs_user_t * user;
-
-    user = (fcs_user_t*)api_instance;
-
-    return
-        fc_solve_apply_tests_order(
-            &(user->soft_thread->tests_order),
-            tests_order,
-            error_string
-            );
+    return freecell_solver_user_set_depth_tests_order(
+            api_instance, 0, tests_order, error_string
+    );
 }
 
 enum FCS_COMPILE_FLARES_RET
@@ -2244,6 +2327,28 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     return instance_item->plan[item_idx].count_iters;
 }
 
+int DLLEXPORT fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
+    void * api_instance
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)api_instance;
+
+    return user->soft_thread->by_depth_tests_order.num;
+}
+
+int DLLEXPORT fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
+    void * api_instance,
+    int depth_idx
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)api_instance;
+
+    return user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].max_depth;
+}
 
 #endif
 

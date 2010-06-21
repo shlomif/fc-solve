@@ -190,6 +190,18 @@ typedef struct
     int * tests;
 } fcs_tests_order_t;
 
+typedef struct
+{
+    int max_depth;
+    fcs_tests_order_t tests_order;
+} fcs_by_depth_tests_order_t;
+
+typedef struct
+{
+    int num;
+    fcs_by_depth_tests_order_t * by_depth_tests;
+} fcs_by_depth_tests_order_array_t;
+
 typedef unsigned char fcs_game_limit_t;
 
 typedef struct {
@@ -689,6 +701,16 @@ typedef struct {
     fcs_tests_list_t * lists;
 } fcs_tests_list_of_lists;
 
+typedef struct {
+    int max_depth;
+    fcs_tests_list_of_lists tests;
+} fcs_tests_by_depth_unit_t;
+
+typedef struct {
+    int num_units;
+    fcs_tests_by_depth_unit_t * by_depth_units;
+} fcs_tests_by_depth_array_t;
+
 struct fc_solve_soft_thread_struct
 {
     fc_solve_hard_thread_t * hard_thread;
@@ -707,7 +729,7 @@ struct fc_solve_soft_thread_struct
      * that it can be lower than FCS_TESTS_NUM, thus enabling several tests
      * to be removed completely.
      * */
-    fcs_tests_order_t tests_order;
+    fcs_by_depth_tests_order_array_t by_depth_tests_order;
 
 
     /*
@@ -771,7 +793,7 @@ struct fc_solve_soft_thread_struct
             /* 
              * The tests to be performed in a preprocessed form.
              * */
-            fcs_tests_list_of_lists tests_list;
+            fcs_tests_by_depth_array_t tests_by_depth_array;
         } soft_dfs;
         struct
         {
@@ -1015,18 +1037,29 @@ static GCC_INLINE void fc_solve_release_tests_list(
     else
     {
         /* A DFS Scan. */
-        if (soft_thread->method_specific.soft_dfs.tests_list.lists)
+        int unit_idx;
+        fcs_tests_by_depth_array_t * arr;
+
+        arr = &(soft_thread->method_specific.soft_dfs.tests_by_depth_array);
+        for (unit_idx = 0 ; unit_idx < arr->num_units ; unit_idx++)
         {
-            int i;
-            for (i=0 ; 
-                i < soft_thread->method_specific.soft_dfs.tests_list.num_lists ; 
-                i++)
+            if (arr->by_depth_units[unit_idx].tests.lists)
             {
-                free (soft_thread->method_specific.soft_dfs.tests_list.lists[i].tests);
+                fcs_tests_list_t * lists = arr->by_depth_units[unit_idx].tests.lists;
+                int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
+                int i;
+
+                for (i=0 ; 
+                    i < num_lists ; 
+                    i++)
+                {
+                    free (lists[i].tests);
+                }
+                free (lists);
             }
-            free (soft_thread->method_specific.soft_dfs.tests_list.lists);
-            soft_thread->method_specific.soft_dfs.tests_list.lists = NULL;
         }
+        free(arr->by_depth_units);
+        arr->by_depth_units = NULL;
     }
 }
 

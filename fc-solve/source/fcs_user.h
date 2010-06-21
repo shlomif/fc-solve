@@ -324,6 +324,16 @@ DLLEXPORT const char * freecell_solver_user_get_last_error_string(
     void * api_instance
     );
 
+/* 
+ * This sets the tests_order from min_depth onwards.
+ * */
+DLLEXPORT extern int freecell_solver_user_set_depth_tests_order(
+    void * user_instance,
+    int min_depth,
+    const char * tests_order,
+    char * * error_string
+    );
+
 #ifdef __cplusplus
 }
 #endif

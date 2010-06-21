@@ -193,7 +193,7 @@ int fc_solve_soft_dfs_do_solve(
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    int dfs_max_depth;
+    int dfs_max_depth, by_depth_max_depth, by_depth_min_depth;
 
     fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
     fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
@@ -201,8 +201,10 @@ int fc_solve_soft_dfs_do_solve(
     fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     int soft_thread_id = soft_thread->id;
     fcs_derived_states_list_t * derived_states_list;
+    fcs_tests_by_depth_unit_t * by_depth_units, * curr_by_depth_unit;
     fcs_rand_t * rand_gen;
     int local_to_randomize = 0;
+    int * depth_ptr;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -221,24 +223,55 @@ int fc_solve_soft_dfs_do_solve(
         ptr_state_val
     );
 
-#define THE_TESTS_LIST soft_thread->method_specific.soft_dfs.tests_list
+    by_depth_units = soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units;
+
+#define THE_TESTS_LIST curr_by_depth_unit->tests
     TRACE0("Before depth loop");
+
+#define GET_DEPTH(ptr) ((ptr)->max_depth)
+
+#define RECALC_BY_DEPTH_LIMITS() \
+    { \
+        by_depth_max_depth = GET_DEPTH(curr_by_depth_unit); \
+        by_depth_min_depth = (curr_by_depth_unit == by_depth_units) ? 0 : GET_DEPTH(curr_by_depth_unit-1); \
+    }
+
+    depth_ptr = &(soft_thread->method_specific.soft_dfs.depth);
+
+#define DEPTH() (*depth_ptr)
+
+    {
+        for (
+            curr_by_depth_unit = by_depth_units
+                ;
+            (
+                DEPTH()           
+                >= GET_DEPTH(curr_by_depth_unit)
+            )
+                ;
+            curr_by_depth_unit++
+            )
+        {
+        }
+        RECALC_BY_DEPTH_LIMITS();
+    }
+
     /*
         The main loop.
     */
-    while (soft_thread->method_specific.soft_dfs.depth >= 0)
+    while (DEPTH() >= 0)
     {
         /*
             Increase the "maximal" depth if it is about to be exceeded.
         */
-        if (soft_thread->method_specific.soft_dfs.depth+1 >= dfs_max_depth)
+        if (DEPTH()+1 >= dfs_max_depth)
         {
             fc_solve_increase_dfs_max_depth(soft_thread);
 
             /* Because the address of soft_thread->method_specific.soft_dfs.soft_dfs_info may
              * be changed
              * */
-            the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth]);
+            the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[DEPTH()]);
             dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
             /* This too has to be re-synced */
             derived_states_list = &(the_soft_dfs_info->derived_states_list);
@@ -264,7 +297,7 @@ int fc_solve_soft_dfs_do_solve(
                 }
 
                 free(the_soft_dfs_info->positions_by_rank);
-                if (--soft_thread->method_specific.soft_dfs.depth < 0)
+                if (--DEPTH() < 0)
                 {
                     break;
                 }
@@ -276,6 +309,12 @@ int fc_solve_soft_dfs_do_solve(
                     ptr_state_key = ptr_state_val->key;
                     soft_thread->num_vacant_freecells = the_soft_dfs_info->num_vacant_freecells;
                     soft_thread->num_vacant_stacks = the_soft_dfs_info->num_vacant_stacks;
+
+                    if (unlikely(DEPTH() < by_depth_min_depth))
+                    {
+                        curr_by_depth_unit--;
+                        RECALC_BY_DEPTH_LIMITS();
+                   }
                 }
 
                 continue; /* Just to make sure depth is not -1 now */
@@ -506,7 +545,11 @@ int fc_solve_soft_dfs_do_solve(
                         I'm using current_state_indexes[depth]-1 because we already
                         increased it by one, so now it refers to the next state.
                     */
-                    soft_thread->method_specific.soft_dfs.depth++;
+                    if (unlikely(++DEPTH() >= by_depth_max_depth))
+                    {
+                        curr_by_depth_unit++;
+                        RECALC_BY_DEPTH_LIMITS();
+                    }
                     the_soft_dfs_info++;
 
                     the_soft_dfs_info->state_val =
@@ -542,7 +585,7 @@ int fc_solve_soft_dfs_do_solve(
      * */
     BUMP_NUM_TIMES();
 
-    soft_thread->method_specific.soft_dfs.depth = -1;
+    DEPTH() = -1;
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
@@ -879,9 +922,9 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         int * tests_order_tests;
         int i;
 
-        tests_order_tests = soft_thread->tests_order.tests;
+        tests_order_tests = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests;
         
-        tests_order_num = soft_thread->tests_order.num;
+        tests_order_num = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num;
 
         tests_list = malloc(sizeof(tests_list[0]) * tests_order_num);
 

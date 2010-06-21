@@ -446,6 +446,18 @@ Tests can be grouped together into random groups using parenthesis
 (e.g: "(0123)") or square brackets ("[012][3456789]"). Such grouping is
 only relevant to the Random DFS scan (see below).
 
+-dto [Min Depth],[Tests' Order] , --depth-tests-order [Min Depth],[Tests' Order]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sets the Tests' order starting from the minimal depth onwards. This way, if
+a Soft-DFS scan recurses deeply into the game, it will use a different tests' order.
+
+Note that if you set the tests' order of a minimal depth of say 50, then it will
+override all the tests' order of 50 and above. As a result, it is recommended that
+you set the minimal depth tests order in an increasing depth.
+
+It should be noted that the +-to+ or +--tests-order+ option above is equivalent
+to using this option with a minimal depth of 0. 
 
 -me [Solving Method] , --method [Solving Method]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -717,6 +729,9 @@ second on a Pentium 4 2.4GHz).
 |+crooked-nose+                |an atomic-moves preset (guarantees an 
             accurate verdict)
 |+fools-gold+                  |an atomic-moves preset
+|+foss-nessy+                  |a meta-moves preset (that depends on Freecell
+Solver 3.2.0 and above) that yields solutions faster on average than 
++the-iglu-cabal+.
 |+good-intentions+             |runs "cool-jives" and then "fools-gold"
 |+gooey-unknown-thing+         |a meta-moves preset that aims to minimise
             the outcome solution's length.
