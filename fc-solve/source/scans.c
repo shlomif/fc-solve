@@ -259,12 +259,12 @@ int fc_solve_soft_dfs_do_solve(
     /*
         The main loop.
     */
-    while (DEPTH() >= 0)
+    while (likely(DEPTH() >= 0))
     {
         /*
             Increase the "maximal" depth if it is about to be exceeded.
         */
-        if (DEPTH()+1 >= dfs_max_depth)
+        if (unlikely(DEPTH()+1 >= dfs_max_depth))
         {
             fc_solve_increase_dfs_max_depth(soft_thread);
 
@@ -297,7 +297,7 @@ int fc_solve_soft_dfs_do_solve(
                 }
 
                 free(the_soft_dfs_info->positions_by_rank);
-                if (--DEPTH() < 0)
+                if (unlikely(--DEPTH() < 0))
                 {
                     break;
                 }
@@ -376,8 +376,8 @@ int fc_solve_soft_dfs_do_solve(
                 }
 
                 /* Check if we have reached the empty state */
-                if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&
-                    (num_vacant_freecells  == LOCAL_FREECELLS_NUM))
+                if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
+                    (num_vacant_freecells  == LOCAL_FREECELLS_NUM)))
                 {
                     instance->final_state_val = ptr_state_val;
                     
