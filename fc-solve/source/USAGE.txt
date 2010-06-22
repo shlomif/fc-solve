@@ -450,14 +450,32 @@ only relevant to the Random DFS scan (see below).
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets the Tests' order starting from the minimal depth onwards. This way, if
-a Soft-DFS scan recurses deeply into the game, it will use a different tests' order.
+a Soft-DFS scan recurses deeply into the game, it will use a different tests'
+order.
 
-Note that if you set the tests' order of a minimal depth of say 50, then it will
-override all the tests' order of 50 and above. As a result, it is recommended that
-you set the minimal depth tests order in an increasing depth.
+Note that if you set the tests' order of a minimal depth of say 50, then it
+will override all the tests' order of 50 and above. As a result, it is
+recommended that you set the minimal depth tests order in an increasing
+depth.
 
-It should be noted that the +-to+ or +--tests-order+ option above is equivalent
-to using this option with a minimal depth of 0. 
+It should be noted that the +-to+ or +--tests-order+ option above is
+equivalent to using this option with a minimal depth of 0. 
+
+Here are some examples:
+
+---------------------
+-to 0123456789 -dto 30,0138924567
+---------------------
+
+This sets the tests' order to +0123456789+ for all depths below 30 and to
++0138924567+ for all depths above it.
+
+---------------------
+-to 0123457 -dto 10,750123 -dto 25,710235
+---------------------
+
+This sets the tests' order to +0123457+ for depths -9 (those below 10),
+to +750123+ for depths 10-24, and to +710235+ for the depths 25 onwards.
 
 -me [Solving Method] , --method [Solving Method]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
