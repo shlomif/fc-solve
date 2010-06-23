@@ -2153,6 +2153,30 @@ DLLEXPORT const char * freecell_solver_user_get_last_error_string(
     return user->error_string;
 }
 
+int DLLEXPORT freecell_solver_user_set_depth_tests_order(
+    void * api_instance,
+    int min_depth,
+    const char * tests_order,
+    char * * error_string
+    )
+{
+    fcs_user_t * user;
+    fcs_instance_item_t * instance_item;
+
+    user = (fcs_user_t *)api_instance;
+
+    instance_item = &(user->instances_list[user->current_instance_idx]);
+    
+    *error_string = NULL;
+
+    if (min_depth < 0)
+    {
+        *error_string = strdup("Depth is negative.");
+        return 1;
+    }
+
+    return 0;
+}
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 

@@ -252,12 +252,38 @@ opt = FCS_OPT_CALC_REAL_DEPTH;
 break;
 
 case 'd':
+
 {
-if (!strncmp(p, "ecks-num", 8)) {
-p += 8;
+if (*(p++) == 'e')
+{
+{ switch(*(p++)) {
+case 'c':
+{
+if (!strncmp(p, "ks-num", 6)) {
+p += 6;
 opt = FCS_OPT_DECKS_NUM;
 
 }
+}
+
+break;
+
+case 'p':
+{
+if (!strncmp(p, "th-tests-order", 14)) {
+p += 14;
+opt = FCS_OPT_DEPTH_TESTS_ORDER;
+
+}
+}
+
+break;
+
+}
+}
+
+}
+
 }
 
 break;
@@ -701,6 +727,17 @@ case 'a':
 if (!strncmp(p, "sw", 2)) {
 p += 2;
 opt = FCS_OPT_BEFS_WEIGHTS;
+
+}
+}
+
+break;
+
+case 'd':
+{
+if (!strncmp(p, "to", 2)) {
+p += 2;
+opt = FCS_OPT_DEPTH_TESTS_ORDER;
 
 }
 }
@@ -1663,6 +1700,53 @@ break;
         }
         break;
 
+        case FCS_OPT_DEPTH_TESTS_ORDER: /* STRINGS=-dto|--depth-tests-order; */
+        {
+            PROCESS_OPT_ARG() ;
+
+            {
+                char * fcs_user_errstr;
+                int min_depth;
+                int ret;
+                const char * s;
+
+                min_depth = 0;
+
+                s = (*arg);
+                while(isdigit(*s))
+                {
+                    s++;
+                }
+                if (*s == ',')
+                {
+                    min_depth = atoi((*arg));
+                    s++;
+                }
+
+                ret = freecell_solver_user_set_depth_tests_order(
+                        instance,
+                        min_depth,
+                        (*arg),
+                        &fcs_user_errstr
+                        );
+                
+                if (ret != 0)
+                {
+                    char * errstr = malloc(strlen(fcs_user_errstr)+500);
+                    sprintf(
+                            errstr,
+                            "Error in depth tests' order!\n%s\n",
+                            fcs_user_errstr
+                           );
+                    free(fcs_user_errstr);
+
+                    *error_string = errstr;
+
+                    RET_ERROR_IN_ARG() ;
+                }
+            }
+        }
+        break;
 
         }
         /* OPT-PARSE-END */
