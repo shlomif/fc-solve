@@ -1,0 +1,10 @@
+all: freecell-solver-multi-thread-solve
+	
+freecell-solver-multi-thread-solve:
+	./Tatzer -l p4b --notest-suite --prefix="$${HOME}/apps/test/fc-solve"
+	make
+	make install
+
+bench: all
+	ARGS="--worker-step 16 -l the-iglu-cabal" \
+		 bash scripts/time-threads-num.bash 2 3
