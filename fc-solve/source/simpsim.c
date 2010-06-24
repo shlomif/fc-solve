@@ -72,7 +72,6 @@ int fc_solve_sfs_simple_simon_move_sequence_to_founds(
 
     fcs_internal_move_t temp_move;
 
-    int check;
 
     /*
      * stack - the stack index from which to move cards to the founds.
@@ -165,7 +164,6 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
 
 
 
-    int check;
     fcs_game_limit_t num_vacant_stacks;
 
     /*
@@ -294,7 +292,6 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
 
 
 
-    int check;
 
     /*
      * stack - the source stack index
@@ -408,7 +405,6 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
     tests_declare_accessors()
 
 
-    int check;
     fcs_cards_column_t col;
     fcs_cards_column_t clear_junk_dest_col;
     fcs_cards_column_t dest_col;
@@ -696,7 +692,6 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
     int stack_idx, cards_num, suit, a;
     fcs_card_t card, dest_card;
     int card_num, num_true_seqs, ds, dest_cards_num ;
-    int check;
     int src_card_height, num_separate_false_seqs, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
     int stacks_map[MAX_NUM_STACKS];
@@ -939,7 +934,6 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
 {
     tests_declare_accessors()
 
-    int check;
 
     /*
      * stack - the source stack index
@@ -1268,7 +1262,6 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
 {
     tests_declare_accessors()
 
-    int check;
 
     /*
      * stack - the source stack index
@@ -1518,7 +1511,6 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 {
     tests_declare_accessors()
 
-    int check;
 
     int stack_idx, cards_num, parent_card_height, child_card_height;
     fcs_card_t parent_card;
@@ -1803,8 +1795,6 @@ int fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
         )
 {
     tests_declare_accessors();
-
-    int check;
 
     /*
      * stack - the source stack index

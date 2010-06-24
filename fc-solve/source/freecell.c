@@ -79,7 +79,6 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
     int cards_num;
     int deck;
     fcs_card_t card;
-    int check;
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();
 #endif
@@ -175,7 +174,6 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
     int fc;
     int deck;
     fcs_card_t card;
-    int check;
     fcs_internal_move_t temp_move;
 #ifndef HARD_CODED_NUM_FREECELLS
     DECLARE_GAME_PARAMS();
@@ -405,7 +403,6 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     int ds, fc, dc;
     fcs_cards_column_t dest_col;
     fcs_card_t dest_card, src_card, dest_below_card;
-    int check;
     int initial_derived_states_num_states;
 
     fcs_internal_move_t temp_move;
@@ -613,7 +610,6 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
     tests_declare_accessors()
     tests_declare_empty_stacks_fill()
 
-    int check;
 
     int stack_idx;
     int cards_num;
@@ -725,7 +721,6 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
     tests_declare_seqs_built_by()
     tests_declare_empty_stacks_fill()
 
-    int check;
 
     int stack_idx, c, cards_num, a, dc;
     int is_seq_in_dest;
@@ -914,7 +909,6 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
     tests_declare_seqs_built_by()
     tests_declare_empty_stacks_fill()
 
-    int check;
 
     int stack_idx, c, dc, ds, initial_derived_states_num_states;
     fcs_card_t card, this_card, prev_card;
@@ -1084,7 +1078,6 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
     tests_declare_accessors()
     tests_declare_empty_stacks_fill()
     tests_declare_seqs_built_by()
-    int check;
 
     int stack_idx, cards_num, c, ds, b, seq_end;
     fcs_card_t this_card, prev_card;
@@ -1299,7 +1292,6 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
     tests_declare_accessors()
     tests_declare_empty_stacks_fill()
 
-    int check;
     int fc, stack_idx;
     fcs_card_t card;
 
@@ -1381,7 +1373,6 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
     tests_declare_seqs_built_by()
     tests_declare_empty_stacks_fill()
 
-    int check;
 
     int stack_idx, cards_num, c, min_card_height, ds, dc;
     int num_cards_to_relocate;
@@ -1602,7 +1593,6 @@ int fc_solve_sfs_empty_stack_into_freecells(
     tests_declare_accessors()
     tests_declare_empty_stacks_fill()
 
-    int check;
 
     int stack_idx, cards_num, c, b;
     fcs_card_t top_card;
@@ -1701,7 +1691,6 @@ int fc_solve_sfs_yukon_move_card_to_parent(
 {
     tests_declare_accessors()
 
-    int check;
 
     int stack_idx, cards_num, c, ds;
     int dest_cards_num;
@@ -1785,7 +1774,6 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
 {
     tests_declare_accessors()
 
-    int check;
 
     int stack_idx, cards_num, c, ds;
     fcs_card_t card;
@@ -1868,7 +1856,6 @@ int fc_solve_sfs_deal_gypsy_talon(
 {
     tests_declare_accessors()
 
-    int check;
 
     fcs_card_t temp_card;
     int a;
@@ -1917,7 +1904,6 @@ int fc_solve_sfs_get_card_from_klondike_talon(
 
     fcs_internal_move_t temp_move;
 
-    int check;
     int num_redeals_left, num_redeals_done, num_cards_moved[2];
     int first_iter;
     fcs_card_t card_to_check, top_card;
@@ -2064,7 +2050,6 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
     int stack_idx, cards_num;
     fcs_card_t card;
     fcs_internal_move_t temp_move;
-    int check;
     int empty_stack_idx;
     fcs_game_limit_t num_vacant_stacks;
     fcs_cards_column_t col;
@@ -2156,7 +2141,6 @@ int fc_solve_sfs_atomic_move_card_to_parent(
     int stack_idx, cards_num, ds;
     fcs_card_t card, dest_card;
     fcs_internal_move_t temp_move;
-    int check;
     fcs_cards_column_t col, dest_col;
 
     tests_define_accessors();
@@ -2238,7 +2222,6 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
     int stack_idx, cards_num, ds;
     fcs_card_t card;
     fcs_internal_move_t temp_move;
-    int check;
     fcs_game_limit_t num_vacant_freecells;
     fcs_cards_column_t col;
 
@@ -2317,7 +2300,6 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
     int fc, ds;
     fcs_card_t card, dest_card;
     fcs_internal_move_t temp_move;
-    int check;
     fcs_cards_column_t dest_col;
 
     tests_define_accessors();
@@ -2389,7 +2371,6 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     int fc, ds;
     fcs_card_t card;
     fcs_internal_move_t temp_move;
-    int check;
     fcs_game_limit_t num_vacant_stacks;
 
     tests_define_accessors();
