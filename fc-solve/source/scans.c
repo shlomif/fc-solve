@@ -427,17 +427,6 @@ int fc_solve_soft_dfs_do_solve(
                         derived_states_list
                     );
 
-                if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
-                    (check == FCS_STATE_EXCEEDS_MAX_NUM_TIMES) ||
-                    (check == FCS_STATE_SUSPEND_PROCESS))
-                {
-                    /* Have this test be re-performed */
-                    derived_states_list->num_states = 0;
-                    the_soft_dfs_info->current_state_index = 0;
-                    TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (after sfs_tests)");
-                    return FCS_STATE_SUSPEND_PROCESS;
-                }
-
                 /* Move the counter to the next test */
                 if ((++the_soft_dfs_info->test_index) == 
                         THE_TESTS_LIST.lists[
@@ -1006,7 +995,6 @@ int fc_solve_befs_or_bfs_do_solve(
     fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
     fcs_states_linked_list_item_t * save_item;
     int a;
-    int check;
     fcs_derived_states_list_t derived;
     int derived_index;
 
@@ -1184,21 +1172,11 @@ int fc_solve_befs_or_bfs_do_solve(
             next_test++
            )
         {
-            check = (*next_test)(
-                    soft_thread,
-                    ptr_state_val,
-                    &derived
-                    );
-            if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
-                (check == FCS_STATE_EXCEEDS_MAX_NUM_TIMES) ||
-                (check == FCS_STATE_SUSPEND_PROCESS))
-            {
-                /* Save the current position in the scan */
-                soft_thread->first_state_to_check_val = ptr_state_val;
-
-                error_code = FCS_STATE_SUSPEND_PROCESS;
-                goto my_return_label;
-            }
+            (*next_test)(
+                soft_thread,
+                ptr_state_val,
+                &derived
+            );
         }
 
         if (is_a_complete_scan)
@@ -1560,14 +1538,7 @@ int fc_solve_sfs_check_state_end(
             ptr_new_state_val,
             &existing_state_val
             );
-        if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||
-            (check == FCS_STATE_SUSPEND_PROCESS))
-        {
-            /* This state is not going to be used, so
-             * let's clean it. */
-            fcs_compact_alloc_release(&(hard_thread->allocator));
-        }
-        else if (check == FCS_STATE_ALREADY_EXISTS)
+        if (check == FCS_STATE_ALREADY_EXISTS)
         {
             fcs_compact_alloc_release(&(hard_thread->allocator));
             calculate_real_depth(existing_state_val);
