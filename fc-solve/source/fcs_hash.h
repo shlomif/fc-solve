@@ -102,6 +102,8 @@ typedef struct
     /* The number of elements stored inside the hash */
     int num_elems;
 
+    int max_num_elems_before_resize;
+
     fcs_compact_allocator_t allocator;
 } fc_solve_hash_t;
 

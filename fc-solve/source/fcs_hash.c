@@ -75,6 +75,7 @@ void fc_solve_hash_init(
 
     hash->size = size;
     hash->size_bitmask = size-1;
+    hash->max_num_elems_before_resize = (size << 1);
 
     hash->num_elems = 0;
 
@@ -113,7 +114,6 @@ int fc_solve_hash_insert(
 #endif
     )
 {
-    int place;
     fc_solve_hash_symlink_t * list;
     fc_solve_hash_symlink_item_t * item, * last_item;
     fc_solve_hash_symlink_item_t * * item_placeholder;
@@ -125,20 +125,23 @@ int fc_solve_hash_insert(
     hash_type = hash->hash_type;
 #endif
     /* Get the index of the appropriate chain in the hash table */
-    place = hash_value & (hash->size_bitmask);
+#define PLACE() (hash_value & (hash->size_bitmask))
 
-    list = &(hash->entries[place]);
+    list = (hash->entries + PLACE());
+
+#undef PLACE
+
     /* If first_item is non-existent */
     if (list->first_item == NULL)
     {
         /* Allocate a first item with that key/val pair */
         item_placeholder = &(list->first_item);
-        goto alloc_item;
     }
-
-    /* Initialize item to the chain's first_item */
-    item = list->first_item;
-    last_item = NULL;
+    else
+    {
+        /* Initialize item to the chain's first_item */
+        item = list->first_item;
+        last_item = NULL;
 
 #ifdef FCS_WITH_CONTEXT_VARIABLE
 #define MY_HASH_CONTEXT_VAR    , hash->context
@@ -148,52 +151,53 @@ int fc_solve_hash_insert(
 
 #ifdef FCS_INLINED_HASH_COMPARISON
 #define MY_HASH_COMPARE() (!(hash_type == FCS_INLINED_HASH__COLUMNS \
-            ? fc_solve_stack_compare_for_comparison(item->key, key) \
-            : fc_solve_state_compare(item->key, key) \
-            ))
+                ? fc_solve_stack_compare_for_comparison(item->key, key) \
+                : fc_solve_state_compare(item->key, key) \
+                ))
 #else
 #define MY_HASH_COMPARE() (!(hash->compare_function(item->key, key MY_HASH_CONTEXT_VAR)))
 #endif
 
-    while (item != NULL)
-    {
-        /*
-            We first compare the hash values, because it is faster than
-            comparing the entire data structure.
-        */
-        if (
-            (item->hash_value == hash_value)
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-            && (item->secondary_hash_value == secondary_hash_value)
-#endif
-            && MY_HASH_COMPARE()
-           )
+        while (item != NULL)
         {
-            *existing_key = item->key;
-            *existing_val = item->val;
+            /*
+                We first compare the hash values, because it is faster than
+                comparing the entire data structure.
+            */
+            if (
+                (item->hash_value == hash_value)
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
+                && (item->secondary_hash_value == secondary_hash_value)
+#endif
+                && MY_HASH_COMPARE()
+               )
+            {
+                *existing_key = item->key;
+                *existing_val = item->val;
 
-            return 1;
+                return 1;
+            }
+            /* Cache the item before the current in last_item */
+            last_item = item;
+            /* Move to the next item */
+            item = item->next;
         }
-        /* Cache the item before the current in last_item */
-        last_item = item;
-        /* Move to the next item */
-        item = item->next;
+
+        item_placeholder = &(last_item->next);
     }
 
-    item_placeholder = &(last_item->next);
-
-alloc_item:
     /* Put the new element at the end of the list */
     item = *(item_placeholder) = fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item));
-    item->next = NULL;
+    /* Do an in-order insertion. */
     item->key = key;
     item->val = val;
     item->hash_value = hash_value;
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     item->secondary_hash_value = secondary_hash_value;
 #endif
+    item->next = NULL;
 
-    if ((++hash->num_elems) > ((hash->size*3)>>2))
+    if ((++hash->num_elems) > hash->max_num_elems_before_resize)
     {
         fc_solve_hash_rehash(hash);
     }
@@ -258,6 +262,7 @@ static void GCC_INLINE fc_solve_hash_rehash(
     hash->entries = new_entries;
     hash->size = new_size;
     hash->size_bitmask = new_size_bitmask;
+    hash->max_num_elems_before_resize = (new_size << 1);
 }
 
 #else
