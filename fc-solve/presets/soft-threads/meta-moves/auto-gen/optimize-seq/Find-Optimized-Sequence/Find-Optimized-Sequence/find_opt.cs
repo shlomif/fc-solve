@@ -76,7 +76,7 @@ class Input
 	public int start_board;
 	public int num_boards;
 	
-	public const string data_dir = "..";
+	public string data_dir;
 	
 	public List<int> blacklist;
 	public List<InputScan> scans;
@@ -87,6 +87,11 @@ class Input
 	
 	public Input(int new_start_board, int new_num_boards)
 	{
+        data_dir = Environment.GetEnvironmentVariable("FCS_DATA_DIR");
+        if (data_dir == null)
+        {
+            data_dir = "..";
+        }
 		start_board = new_start_board;
 		num_boards = new_num_boards;
 	}
