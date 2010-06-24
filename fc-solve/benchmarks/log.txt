@@ -1435,3 +1435,17 @@ After sudo_renice.
 Threaded:
 
 90.5781240463257
+
+========================================================================
+
+r2965 ;
+trunk
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l fn"
+2.6.33.5-desktop-1mnb
+virtual console (while not running X-Windows).
+gcc-4.5.0 with "-flto".
+Using sudo_renice.
+
+Threaded:
+
+87.8155500888824s
