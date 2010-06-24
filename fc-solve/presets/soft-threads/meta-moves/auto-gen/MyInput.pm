@@ -346,6 +346,11 @@ sub get_scan_cmd_line
     my $max_board = $args->{'max'} || 32_000;
     my $id = $args->{'id'};
     my $argv = $args->{'argv'};
+    my @fc_num = 
+        (exists($args->{'freecells_num'})
+            ?  ("--freecells-num" , $args->{'freecells_num'}) 
+            : ()
+        );
 
     return
     [
@@ -354,6 +359,7 @@ sub get_scan_cmd_line
         qw(--total-iterations-limit 100000 --binary-output-to), 
         "data/$id.data.bin",
         @$argv,
+        @fc_num,
     ];
 }
 
