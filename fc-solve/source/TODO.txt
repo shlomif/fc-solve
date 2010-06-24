@@ -109,6 +109,10 @@ and then:
 +
 3. Use it.
 
+* Convert the boolean values in the C code to a specialised boolean typedef
+called +fcs_bool_t+, just so readers can tell they are booleans instead of
+ints.
+
 To be considered
 ----------------
 
