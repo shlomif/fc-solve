@@ -1,12 +1,12 @@
 DEBUG = 0
 PROFILE = 0
 WITH_TRACES = 0
-FREECELL_ONLY = 0
+FREECELL_ONLY = 1
 DISABLE_SIMPLE_SIMON := 0
 WITHOUT_CARD_FLIPS := 0
 WITH_LIBRB = 0
-OPT_FOR_SIZE = 1
-WITHOUT_CONTEXT_VAR := 0
+OPT_FOR_SIZE = 0
+OPT_AND_DEBUG = 1
 
 COMPILER = gcc
 # COMPILER = icc
@@ -68,12 +68,12 @@ ifeq ($(GCC_COMPAT),1)
 	END_SHARED = $(END_LFLAGS) 
 	ifeq ($(DEBUG),1)
 		CFLAGS += -g
+	else ifeq ($(OPT_FOR_SIZE),1)
+		CFLAGS += -Os -fvisibility=hidden
+	else ifeq ($(OPT_AND_DEBUG),1)
+		CFLAGS += -g -O2 -march=pentium4 -flto
 	else
-		ifeq ($(OPT_FOR_SIZE),1)
-			CFLAGS += -Os -fvisibility=hidden
-		else
-			CFLAGS += -O3 -march=pentium4 -fomit-frame-pointer
-		endif
+		CFLAGS += -O3 -march=pentium4 -fomit-frame-pointer -flto
 	endif
 endif
 
@@ -88,15 +88,11 @@ ifneq ($(FREECELL_ONLY),0)
 endif
 
 ifneq ($(DISABLE_SIMPLE_SIMON),0)
-	CFLAGS += -DFCS_DISABLE_SIMPLE_SIMON=1
+	# CFLAGS += -DFCS_DISABLE_SIMPLE_SIMON=1
 endif
 
 ifneq ($(WITHOUT_CARD_FLIPS),0)
 	CFLAGS += -DFCS_WITHOUT_CARD_FLIPPING=1
-endif
-
-ifeq ($(WITHOUT_CONTEXT_VAR),0)
-	CFLAGS += -DFCS_WITH_CONTEXT_VARIABLE=1
 endif
 
 
@@ -196,7 +192,8 @@ else
 endif
 
 LIB_LINK_PRE += -L.
-LIB_LINK_POST := -lfreecell-solver
+# LIB_LINK_POST := -lfreecell-solver
+LIB_LINK_POST := -lfcs
 
 fc-solve: main.o libfcs.a
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
@@ -205,7 +202,7 @@ freecell-solver-range-parallel-solve: test_multi_parallel.o $(FCS_SHARED_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o $(FCS_SHARED_LIB)
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) -ltcmalloc
 
 FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o
 
