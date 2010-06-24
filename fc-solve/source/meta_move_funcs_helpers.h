@@ -92,8 +92,7 @@ extern "C" {
 #define sfs_check_state_end()                                             \
     { \
         check = fc_solve_sfs_check_state_end(soft_thread, ptr_state_val, ptr_new_state_val, state_context_value, moves, derived_states_list);                         \
-        if ((check == FCS_STATE_BEGIN_SUSPEND_PROCESS) ||                   \
-            (check == FCS_STATE_SUSPEND_PROCESS))                            \
+        if (check == FCS_STATE_SUSPEND_PROCESS)                \
         {         \
             return check;         \
         }         \
