@@ -70,7 +70,7 @@ extern int fc_solve_sfs_check_state_begin(
     );
 
 
-extern int fc_solve_sfs_check_state_end(
+extern void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val,
     fcs_state_extra_info_t * ptr_new_state_val,

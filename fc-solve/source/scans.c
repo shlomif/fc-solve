@@ -1500,7 +1500,7 @@ int fc_solve_sfs_check_state_begin(
     return 0;
 }
 
-int fc_solve_sfs_check_state_end(
+void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * ptr_state_val,
     fcs_state_extra_info_t * ptr_new_state_val,
@@ -1512,9 +1512,9 @@ int fc_solve_sfs_check_state_end(
     fcs_internal_move_t temp_move;
     fc_solve_hard_thread_t * hard_thread;
     fc_solve_instance_t * instance;
-    int check;
     fcs_runtime_flags_t calc_real_depth;
     fcs_runtime_flags_t scans_synergy;
+    fcs_state_extra_info_t * existing_state_val;
 
     temp_move = fc_solve_empty_move;
 
@@ -1531,60 +1531,56 @@ int fc_solve_sfs_check_state_end(
     fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
     fcs_move_stack_push(moves, temp_move);
 
+    if (fc_solve_check_and_add_state(
+        soft_thread,
+        ptr_new_state_val,
+        &existing_state_val
+        ) == FCS_STATE_ALREADY_EXISTS)
     {
-        fcs_state_extra_info_t * existing_state_val;
-        check = fc_solve_check_and_add_state(
-            soft_thread,
-            ptr_new_state_val,
-            &existing_state_val
-            );
-        if (check == FCS_STATE_ALREADY_EXISTS)
+        fcs_compact_alloc_release(&(hard_thread->allocator));
+        calculate_real_depth(existing_state_val);
+        /* Re-parent the existing state to this one.
+         *
+         * What it means is that if the depth of the state if it
+         * can be reached from this one is lower than what it
+         * already have, then re-assign its parent to this state.
+         * */
+        if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
+           (existing_state_val->depth > ptr_state_val->depth+1))
         {
-            fcs_compact_alloc_release(&(hard_thread->allocator));
-            calculate_real_depth(existing_state_val);
-            /* Re-parent the existing state to this one.
-             *
-             * What it means is that if the depth of the state if it
-             * can be reached from this one is lower than what it
-             * already have, then re-assign its parent to this state.
-             * */
-            if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
-               (existing_state_val->depth > ptr_state_val->depth+1))
+            /* Make a copy of "moves" because "moves" will be destroyed */
+            existing_state_val->moves_to_parent =
+                fc_solve_move_stack_compact_allocate(
+                    hard_thread, moves
+                    );
+            if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))
             {
-                /* Make a copy of "moves" because "moves" will be destroyed */
-                existing_state_val->moves_to_parent =
-                    fc_solve_move_stack_compact_allocate(
-                        hard_thread, moves
-                        );
-                if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))
+                if ((--existing_state_val->parent_val->num_active_children) == 0)
                 {
-                    if ((--existing_state_val->parent_val->num_active_children) == 0)
-                    {
-                        mark_as_dead_end(
-                            existing_state_val->parent_val
-                            );
-                    }
-                    ptr_state_val->num_active_children++;
+                    mark_as_dead_end(
+                        existing_state_val->parent_val
+                        );
                 }
-                existing_state_val->parent_val = ptr_state_val;
-                existing_state_val->depth = ptr_state_val->depth + 1;
+                ptr_state_val->num_active_children++;
             }
-            fc_solve_derived_states_list_add_state(
-                derived_states_list,
-                existing_state_val,
-                state_context_value
-                );
+            existing_state_val->parent_val = ptr_state_val;
+            existing_state_val->depth = ptr_state_val->depth + 1;
         }
-        else
-        {
-            fc_solve_derived_states_list_add_state(
-                derived_states_list,
-                ptr_new_state_val,
-                state_context_value
-                );
-        }
+        fc_solve_derived_states_list_add_state(
+            derived_states_list,
+            existing_state_val,
+            state_context_value
+        );
+    }
+    else
+    {
+        fc_solve_derived_states_list_add_state(
+            derived_states_list,
+            ptr_new_state_val,
+            state_context_value
+        );
     }
 
-    return check;
+    return;
 }
 
