@@ -366,11 +366,6 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
     int is_state_new;
 
-    if (check_if_limits_exceeded())
-    {
-        return FCS_STATE_BEGIN_SUSPEND_PROCESS;
-    }
-
     if ((instance->max_depth >= 0) &&
         (new_state_val->depth >= instance->max_depth))
     {
