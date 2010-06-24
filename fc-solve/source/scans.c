@@ -1531,11 +1531,11 @@ void fc_solve_sfs_check_state_end(
     fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
     fcs_move_stack_push(moves, temp_move);
 
-    if (fc_solve_check_and_add_state(
+    if (! fc_solve_check_and_add_state(
         soft_thread,
         ptr_new_state_val,
         &existing_state_val
-        ) == FCS_STATE_ALREADY_EXISTS)
+        ))
     {
         fcs_compact_alloc_release(&(hard_thread->allocator));
         calculate_real_depth(existing_state_val);

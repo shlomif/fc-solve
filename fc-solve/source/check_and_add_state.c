@@ -366,11 +366,14 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
     int is_state_new;
 
+    /* #if'ing out because it doesn't belong here. */
+#if 0
     if ((instance->max_depth >= 0) &&
         (new_state_val->depth >= instance->max_depth))
     {
         return FCS_STATE_EXCEEDS_MAX_DEPTH;
     }
+#endif
 
 
     fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val);
@@ -648,13 +651,8 @@ GCC_INLINE int fc_solve_check_and_add_state(
                     new_state_val->moves_to_parent
                     );
         }
-
-        return FCS_STATE_DOES_NOT_EXIST;
     }
-    else
-    {
-        return FCS_STATE_ALREADY_EXISTS;
-    }
+    return is_state_new;
 }
 
 #endif /* #ifndef FC_SOLVE__CAAS_C */
