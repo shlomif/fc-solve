@@ -1421,3 +1421,17 @@ Threaded:
 
 90.6340231895447s
 
+========================================================================
+
+r2957 ;
+trunk
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l fn"
+(foss-nessy - new theme with -dto)
+2.6.33.5-desktop-1mnb
+virtual console (while not running X-Windows).
+gcc-4.5.0 with "-flto".
+After sudo_renice.
+
+Threaded:
+
+90.5781240463257
