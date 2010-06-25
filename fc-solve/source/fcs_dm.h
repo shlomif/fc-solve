@@ -38,6 +38,7 @@ extern "C" {
 
 #include <stddef.h>
 
+#include "bool.h"
 
 void * fc_solve_bsearch
 (
@@ -47,7 +48,7 @@ void * fc_solve_bsearch
     size_t width,
     int (* compare)(const void *, const void *, void *),
     void * context,
-    int * found
+    fcs_bool_t * found
 );
 
 int fc_solve_merge_large_and_small_sorted_arrays

@@ -50,7 +50,7 @@ void * fc_solve_bsearch
     size_t width,
     int (* compare)(const void *, const void *, void *),
     void * context,
-    int * found
+    fcs_bool_t * found
 )
 {
     int low = 0;
@@ -76,12 +76,12 @@ void * fc_solve_bsearch
         }
         else
         {
-            *found = 1;
+            *found = TRUE;
             return (void*)(array+mid*width);
         }
     }
 
-    *found = 0;
+    *found = FALSE;
     return ((void*)(array+(high+1)*width));
 }
 
