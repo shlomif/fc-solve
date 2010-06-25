@@ -123,12 +123,12 @@ help_screen_t help_screens[] = {
     "configs",
 "These configurations are usually faster than the unmodified run:\n"
 "\n"
-"    fc-solve -l cool-jives\n"
-"    fc-solve -l john-galt-line\n"
+"    fc-solve -l foss-nessy\n"
+"    fc-solve -l the-iglu-cabal\n"
 "\n"
 "Or if you want an accurate verdict:\n"
 "\n"
-"    fc-solve -l fools-gold\n"
+"    fc-solve -l toons-for-twenty-somethings\n"
 "\n"
 "If you want to try constructing your own configurations refer to the\n"
 "USAGE file in the Freecell Solver distribution\n"
@@ -369,6 +369,7 @@ help_screen_t help_screens[] = {
     "short-sol",
 "The following configurations may produce shorter solutions:\n"
 "\n"
+"    fc-solve -l children-playing-ball\n"
 "    fc-solve -l gooey-unknown-thing\n"
 "    fc-solve -l slick-rock\n"
 "\n"
