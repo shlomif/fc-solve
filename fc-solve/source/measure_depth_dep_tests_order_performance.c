@@ -41,27 +41,8 @@
 #include "inline.h"
 #include "range_solvers_gen_ms_boards.h"
 
-struct fc_solve_display_information_context_struct
-{
-    int debug_iter_state_output;
-    int freecells_num;
-    int stacks_num;
-    int decks_num;
-    int parseable_output;
-    int canonized_order_output;
-    int display_10_as_t;
-    int display_parent_iter_num;
-    int debug_iter_output_on;
-    int display_moves;
-    int display_states;
-    int standard_notation;
-};
-
-typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
-
 struct pack_item_struct
 {
-    fc_solve_display_information_context_t display_context;
     void * instance;
 };
 
