@@ -40,6 +40,7 @@
 #include "move_funcs_order.h"
 
 #include "unused.h"
+#include "bool.h"
 
 /* A flare is an alternative scan algorithm to be tried. All flares in
  * a single instance are being evaluated and then one picks the shortest 
