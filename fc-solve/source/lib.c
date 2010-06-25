@@ -405,7 +405,7 @@ enum FCS_COMPILE_FLARES_RET
     FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF
 };
 
-static int string_starts_with(
+static fcs_bool_t string_starts_with(
     const char * str,
     const char * prefix,
     const char * end
@@ -553,7 +553,7 @@ static int user_compile_all_flares_plans(
                 {
                     char * at_sign, * after_at_sign;
                     int count_iters;
-                    int found_flare;
+                    fcs_bool_t found_flare;
                     int flare_idx;
 
                     /* It's a Run item - handle it. */
@@ -629,7 +629,7 @@ static int user_compile_all_flares_plans(
                 }
                 else if (string_starts_with(item_start, "RunIndef", cmd_end))
                 {
-                    int found_flare;
+                    fcs_bool_t found_flare;
                     int flare_idx;
 
                     cmd_end++;
@@ -642,7 +642,7 @@ static int user_compile_all_flares_plans(
                     }
                     item_end = cmd_end+strlen(cmd_end);
 
-                    found_flare = 0;
+                    found_flare = FALSE;
                     for(flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++)
                     {
                         fcs_flare_item_t * flare;
@@ -655,7 +655,7 @@ static int user_compile_all_flares_plans(
 
                         if (!strncmp(flare->name, cmd_end, item_end-cmd_end))
                         {
-                            found_flare = 1;
+                            found_flare = TRUE;
                             break;
                         }
                     }
@@ -1739,7 +1739,8 @@ myend:
     return;
 }
 
-void set_debug_iter_output_func_to_val(fcs_user_t * user,
+void set_debug_iter_output_func_to_val(
+    fcs_user_t * user,
         void (*value)(
     void * api_instance,
     int iter_num,
