@@ -328,14 +328,15 @@ char * fc_solve_state_as_string(
     int freecells_num,
     int stacks_num,
     int decks_num,
-    int parseable_output,
-    int canonized_order_output,
-    int display_10_as_t
+    fcs_bool_t parseable_output,
+    fcs_bool_t canonized_order_output,
+    fcs_bool_t display_10_as_t
     )
 {
     fcs_state_t * state;
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
-    int a, card_num_is_null, b;
+    int a, b;
+    fcs_bool_t card_num_is_null;
     int max_num_cards, s, card_num;
     fcs_cards_column_t col;
     int col_len;

@@ -39,6 +39,7 @@ extern "C" {
 #include "fcs_move.h"
 
 #include "inline.h"
+#include "bool.h"
 
 #include "card.h"
 
@@ -1009,9 +1010,9 @@ extern char * fc_solve_state_as_string(
     int freecells_num,
     int stacks_num,
     int decks_num,
-    int parseable_output,
-    int canonized_order_output,
-    int display_10_as_t
+    fcs_bool_t parseable_output,
+    fcs_bool_t canonized_order_output,
+    fcs_bool_t display_10_as_t
     );
 
 enum
