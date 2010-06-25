@@ -441,6 +441,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->num_states_in_collection = 0;
 
     instance->max_num_times = -1;
+    instance->effective_max_num_times = INT_MAX;
     instance->max_depth = -1;
     instance->max_num_states_in_collection = -1;
 
@@ -1426,8 +1427,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                  * if max_num_times is greater than 0 */
                 (
                     (
-                        (instance->max_num_times > 0) &&
-                        (instance->num_times >= instance->max_num_times)
+                        (instance->num_times >= instance->effective_max_num_times)
                     ) ||
                     (
                         (instance->max_num_states_in_collection > 0) &&
@@ -1505,10 +1505,8 @@ int fc_solve_resume_instance(
                         /* There's a limit to the scan only
                          * if max_num_times is greater than 0 */
                         (
-                            (
-                                (instance->max_num_times > 0) &&
-                                (instance->num_times >= instance->max_num_times)
-                            ) ||
+                            (instance->num_times >= instance->effective_max_num_times)
+                            ||
                             (
                                 (instance->max_num_states_in_collection > 0) &&
                                 (instance->num_states_in_collection >= instance->max_num_states_in_collection)

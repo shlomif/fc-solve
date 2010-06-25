@@ -377,6 +377,13 @@ typedef struct
      * */
     int max_depth;
     int max_num_times;
+    /* 
+     * Like max_num_times only defaults to MAX_INT if below zero so it will
+     * work without checking if it's zero.
+     *
+     * Normally should be used instead.
+     * */
+    int effective_max_num_times;
 
     /*
      * The debug_iter_output variables provide a programmer programmable way

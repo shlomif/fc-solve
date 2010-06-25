@@ -959,11 +959,17 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 }
             }
 
-            user->fc_solve_obj->max_num_times =
-                ((mymin < 0)
-                    ? -1
-                    : user->fc_solve_obj->num_times + mymin - user->iterations_board_started_at
-                    );
+            if (mymin < 0)
+            {
+                user->fc_solve_obj->max_num_times = -1;
+                user->fc_solve_obj->effective_max_num_times = INT_MAX;
+            }
+            else
+            {
+                user->fc_solve_obj->max_num_times = 
+                    user->fc_solve_obj->effective_max_num_times = 
+                    (user->fc_solve_obj->num_times + mymin - user->iterations_board_started_at);
+            }
         }
 
         user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
