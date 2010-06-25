@@ -444,6 +444,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->effective_max_num_times = INT_MAX;
     instance->max_depth = -1;
     instance->max_num_states_in_collection = -1;
+    instance->effective_max_num_states_in_collection = INT_MAX;
 
     instance->instance_tests_order.num = 0;
     instance->instance_tests_order.tests = NULL;
@@ -1429,10 +1430,8 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                     (
                         (instance->num_times >= instance->effective_max_num_times)
                     ) ||
-                    (
-                        (instance->max_num_states_in_collection > 0) &&
-                        (instance->num_states_in_collection >= instance->max_num_states_in_collection)
-
+                    (instance->num_states_in_collection >= 
+                        instance->effective_max_num_states_in_collection
                     )
                 )
             )
@@ -1507,11 +1506,7 @@ int fc_solve_resume_instance(
                         (
                             (instance->num_times >= instance->effective_max_num_times)
                             ||
-                            (
-                                (instance->max_num_states_in_collection > 0) &&
-                                (instance->num_states_in_collection >= instance->max_num_states_in_collection)
-
-                            )
+                            (instance->num_states_in_collection >= instance->effective_max_num_states_in_collection)
                         )
                     )
 

@@ -383,7 +383,7 @@ typedef struct
      *
      * Normally should be used instead.
      * */
-    int effective_max_num_times;
+    int effective_max_num_times, effective_max_num_states_in_collection;
 
     /*
      * The debug_iter_output variables provide a programmer programmable way

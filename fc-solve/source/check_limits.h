@@ -45,10 +45,8 @@ extern "C" {
             ||                                                        \
         (hard_thread->num_times >= hard_thread->max_num_times)        \
             ||                                                        \
-        ((instance->max_num_states_in_collection >= 0) &&             \
         (instance->num_states_in_collection >=                        \
-            instance->max_num_states_in_collection)                   \
-        )                                                             \
+            instance->effective_max_num_states_in_collection)         \
     )
 
 #ifdef __cplusplus

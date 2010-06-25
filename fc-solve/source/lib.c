@@ -1851,7 +1851,19 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
 
     user = (fcs_user_t*)api_instance;
 
-    user->fc_solve_obj->max_num_states_in_collection = max_num_states;
+    if (max_num_states < 0)
+    {
+        user->fc_solve_obj->max_num_states_in_collection = -1;
+        user->fc_solve_obj->effective_max_num_states_in_collection = INT_MAX;
+    }
+    else
+    {
+        user->fc_solve_obj->effective_max_num_states_in_collection =
+            user->fc_solve_obj->max_num_states_in_collection = 
+                max_num_states;
+    }
+
+    return;
 }
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(
