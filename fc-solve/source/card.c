@@ -34,6 +34,7 @@
 
 #include "card.h"
 #include "inline.h"
+#include "bool.h"
 
 #ifdef DEBUG_STATES
 
@@ -105,7 +106,7 @@ int fc_solve_u2p_card_number(const char * string)
  * */
 int fc_solve_u2p_suit(const char * suit)
 {
-    while (1)
+    while (TRUE)
     {
         switch(toupper(*suit))
         {
@@ -128,7 +129,7 @@ int fc_solve_u2p_suit(const char * suit)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
 static GCC_INLINE int fcs_u2p_flipped_status(const char * str)
 {
-    while (*str != '\0')
+    while (*str)
     {
         if ((*str != ' ') && (*str != '\t'))
         {
@@ -136,7 +137,7 @@ static GCC_INLINE int fcs_u2p_flipped_status(const char * str)
         }
         str++;
     }
-    return 0;
+    return FALSE;
 }
 #endif
 
@@ -193,10 +194,10 @@ static char card_map_3_T[14][4] = { " ", "A", "2", "3", "4", "5", "6", "7", "8",
 char * fc_solve_p2u_card_number(
     int num,
     char * str,
-    int * card_num_is_null,
-    int t
+    fcs_bool_t * card_num_is_null,
+    fcs_bool_t t
 #ifndef FCS_WITHOUT_CARD_FLIPPING
-    , int flipped
+    , fcs_bool_t flipped
 #endif
     )
 {
@@ -206,17 +207,14 @@ char * fc_solve_p2u_card_number(
         card_map_3 = card_map_3_T;
     }
 #if defined(CARD_DEBUG_PRES) || defined(FCS_WITHOUT_CARD_FLIPPING)
-    if (0)
-    {
-    }
 #else
     if (flipped)
     {
         strncpy(str, "*", 2);
-        *card_num_is_null = 0;
+        *card_num_is_null = FALSE;
     }
-#endif
     else
+#endif
     {
         if ((num >= 0) && (num <= 13))
         {
@@ -226,7 +224,7 @@ char * fc_solve_p2u_card_number(
         else
         {
             strncpy(str, card_map_3[0], strlen(card_map_3[0])+1);
-            *card_num_is_null = 1;
+            *card_num_is_null = TRUE;
         }
     }
     return str;
@@ -236,9 +234,12 @@ char * fc_solve_p2u_card_number(
  * Converts a suit to its user representation.
  *
  * */
-static GCC_INLINE char * fc_solve_p2u_suit(int suit, char * str, int card_num_is_null
+static GCC_INLINE char * fc_solve_p2u_suit(
+        int suit,
+        char * str,
+        fcs_bool_t card_num_is_null
 #ifndef FCS_WITHOUT_CARD_FLIPPING
-        , int flipped
+        , fcs_bool_t flipped
 #endif
         )
 {
@@ -275,9 +276,9 @@ static GCC_INLINE char * fc_solve_p2u_suit(int suit, char * str, int card_num_is
  * Convert an entire card to its user representation.
  *
  * */
-char * fc_solve_card_perl2user(fcs_card_t card, char * str, int t)
+char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
 {
-    int card_num_is_null;
+    fcs_bool_t card_num_is_null;
 #ifdef CARD_DEBUG_PRES
     if (fcs_card_get_flipped(card))
     {
