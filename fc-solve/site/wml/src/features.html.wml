@@ -21,7 +21,7 @@ debugging information on and off.
 
 <li>
 Some configurations are very fast: can solve the first Microsoft Freecell
-32,000 deals in 101 seconds on a Pentium 4-2.4 GHz computer. (315 layouts
+32,000 deals in 88 seconds on a Pentium 4-2.4 GHz computer. (364 layouts
 per second).
 </li>
 
