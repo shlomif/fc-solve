@@ -38,6 +38,7 @@ extern "C" {
 #include "alloc.h"
 
 #include "inline.h"
+#include "bool.h"
 
 #ifdef FCS_INLINED_HASH_COMPARISON
 enum FCS_INLINED_HASH_DATA_TYPE
@@ -125,13 +126,13 @@ fc_solve_hash_init(
     );
 
 /*
- * Returns 0 if the key is new and the key/val pair was inserted.
+ * Returns FALSE if the key is new and the key/val pair was inserted.
  *      - in that case *existing_key / *existing_val will be set to key
  *      and val respectively.
- * Returns 1 if the key is not new and *existing_key / *existing_val
+ * Returns TRUE if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-extern int fc_solve_hash_insert(
+extern fcs_bool_t fc_solve_hash_insert(
     fc_solve_hash_t * hash,
     void * key,
     void * val,

@@ -102,7 +102,7 @@ void fc_solve_hash_init(
     return;
 }
 
-int fc_solve_hash_insert(
+fcs_bool_t fc_solve_hash_insert(
     fc_solve_hash_t * hash,
     void * key,
     void * val,
@@ -175,7 +175,7 @@ int fc_solve_hash_insert(
                 *existing_key = item->key;
                 *existing_val = item->val;
 
-                return 1;
+                return TRUE;
             }
             /* Cache the item before the current in last_item */
             last_item = item;
@@ -205,7 +205,7 @@ int fc_solve_hash_insert(
     *existing_key = NULL;
     *existing_val = NULL;
 
-    return 0;
+    return FALSE;
 }
 
 /*
