@@ -48,6 +48,7 @@ extern "C" {
 #include "state.h"
 
 #include "inline.h"
+#include "bool.h"
 
 /* manage a priority queue as a heap
    the heap is implemented as a fixed size array of pointers to your data */
@@ -110,7 +111,7 @@ static void GCC_INLINE fc_solve_PQueueFree( PQUEUE *pq )
    returns TRUE if succesful, FALSE if fails. (You fail by filling the pqueue.)
    PGetRating is a function which returns the rating of the item you're adding for sorting purposes */
 
-static GCC_INLINE int fc_solve_PQueuePush(
+static GCC_INLINE void fc_solve_PQueuePush(
         PQUEUE *pq,
         fcs_state_extra_info_t * val,
         pq_rating_t r
@@ -161,7 +162,7 @@ static GCC_INLINE int fc_solve_PQueuePush(
 
     pq->CurrentSize = CurrentSize;
 
-    return 1;
+    return;
 }
 
 #define PQueueIsEmpty(pq) ((pq)->CurrentSize == 0)
@@ -173,7 +174,9 @@ static GCC_INLINE int fc_solve_PQueuePush(
  *
  * */
 
-static GCC_INLINE int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_extra_info_t * * val)
+static GCC_INLINE void fc_solve_PQueuePop(
+    PQUEUE *pq,
+    fcs_state_extra_info_t * * val)
 {
     int i;
     int child;
@@ -186,7 +189,7 @@ static GCC_INLINE int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_extra_info_t * *
     if( PQueueIsEmpty( pq ) )
     {
         *val = NULL;
-        return 1;
+        return;
     }
 
     pMaxElement = Elements[PQ_FIRST_ENTRY];
@@ -225,7 +228,8 @@ static GCC_INLINE int fc_solve_PQueuePop( PQUEUE *pq, fcs_state_extra_info_t * *
     pq->CurrentSize = CurrentSize;
 
     *val = pMaxElement.val;
-    return 0;
+
+    return;
 }
 
 
