@@ -1033,7 +1033,7 @@ static GCC_INLINE void fc_solve_reset_soft_thread(
 
 static GCC_INLINE void fc_solve_release_tests_list(
     fc_solve_soft_thread_t * soft_thread,
-    int is_scan_befs_or_bfs
+    fcs_bool_t is_scan_befs_or_bfs
 )
 {
     if (is_scan_befs_or_bfs)
@@ -1080,12 +1080,9 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
     ST_LOOP_START()
     {
-        int is_scan_befs_or_bfs = 0;
-
         switch (soft_thread->method)
         {
             case FCS_METHOD_A_STAR:
-                is_scan_befs_or_bfs = 1;
                 /* Free the priority queue. It will be reallocated by
                  * fc_solve_soft_thread_init_befs_or_bfs() .
                  * */
@@ -1097,7 +1094,6 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
             case FCS_METHOD_BFS:
             case FCS_METHOD_OPTIMIZE:
-                is_scan_befs_or_bfs = 1;
                 /* Reset the BFS Queue (also used for the optimization scan. */
                 fc_solve_free_bfs_queue(soft_thread);
                 break;

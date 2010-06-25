@@ -88,25 +88,34 @@ static GCC_INLINE void normalize_befs_weights(
     )
 {
     /* Normalize the Best-First-Search Weights, so the sum of all of them would be 1. */
+
     double sum;
-    int a;
+
+    int weight_idx;
+
     sum = 0;
 #define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
-    for(a=0;a<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));a++)
+    for (
+        weight_idx = 0 
+            ; 
+        weight_idx < (sizeof(my_befs_weights)/sizeof(my_befs_weights[0]))
+            ;
+        weight_idx++
+    )
     {
-        if (unlikely(my_befs_weights[a] < 0))
+        if (unlikely(my_befs_weights[weight_idx] < 0))
         {
-            my_befs_weights[a] = fc_solve_default_befs_weights[a];
+            my_befs_weights[weight_idx] = fc_solve_default_befs_weights[weight_idx];
         }
-        sum += my_befs_weights[a];
+        sum += my_befs_weights[weight_idx];
     }
     if (unlikely(sum < 1e-6))
     {
         sum = 1;
     }
-    for(a=0;a<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));a++)
+    for(weight_idx=0;weight_idx<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));weight_idx++)
     {
-        my_befs_weights[a] /= sum;
+        my_befs_weights[weight_idx] /= sum;
     }
 }
 
@@ -183,19 +192,19 @@ static GCC_INLINE void free_instance_soft_thread_callback(
         fc_solve_soft_thread_t * soft_thread
         )
 {
-    int is_scan_befs_or_bfs = 0;
+    fcs_bool_t is_scan_befs_or_bfs = FALSE;
     switch (soft_thread->method)
     {
         case FCS_METHOD_BFS:
         case FCS_METHOD_OPTIMIZE:
             fc_solve_free_bfs_queue(soft_thread);
-            is_scan_befs_or_bfs = 1;
+            is_scan_befs_or_bfs = TRUE;
             break;
         case FCS_METHOD_A_STAR:
             fc_solve_PQueueFree(
                     &(soft_thread->method_specific.befs.meth.befs.pqueue)
             );
-            is_scan_befs_or_bfs = 1;
+            is_scan_befs_or_bfs = TRUE;
             break;
     }
 
@@ -215,14 +224,14 @@ static GCC_INLINE void accumulate_tests_order(
     )
 {
     int * tests_order = (int *)context;
-    int a;
+    int i;
     fcs_tests_order_t * st_tests_order;
 
     st_tests_order = &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order);
     
-    for(a=0;a<st_tests_order->num;a++)
+    for ( i=0 ; i < st_tests_order->num ; i++)
     {
-        *tests_order |= (1 << (st_tests_order->tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
+        *tests_order |= (1 << (st_tests_order->tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
 
     return;
@@ -234,14 +243,14 @@ static GCC_INLINE void determine_scan_completeness(
     )
 {
     int tests_order = 0;
-    int a;
+    int i;
     fcs_tests_order_t * st_tests_order;
 
     st_tests_order = &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order);
 
-    for(a=0;a<st_tests_order->num;a++)
+    for ( i=0 ; i < st_tests_order->num ; i++ )
     {
-        tests_order |= (1 << (st_tests_order->tests[a] & FCS_TEST_ORDER_NO_FLAGS_MASK));
+        tests_order |= (1 << (st_tests_order->tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
     STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN, 
         (tests_order == *(int *)global_tests_order)
@@ -924,10 +933,10 @@ void fc_solve_start_instance_process_with_board(
             );
 
     {
-        int a;
-        for(a=0;a<INSTANCE_STACKS_NUM;a++)
+        int i;
+        for ( i=0 ; i < INSTANCE_STACKS_NUM ; i++ )
         {
-            fcs_copy_stack(*state_copy_ptr_key, *state_copy_ptr_val, a, instance->hard_threads[0].indirect_stacks_buffer);
+            fcs_copy_stack(*state_copy_ptr_key, *state_copy_ptr_val, i, instance->hard_threads[0].indirect_stacks_buffer);
         }
     }
 
@@ -1150,10 +1159,10 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
         int tests_order_num;
         int * tests_order_tests;
         int start_i;
-        int master_to_randomize = 
+        fcs_bool_t master_to_randomize = 
             (soft_thread->method == FCS_METHOD_RANDOM_DFS)
             ;
-        int do_first_iteration;
+        fcs_bool_t do_first_iteration;
         int depth_idx;
         fcs_by_depth_tests_order_t * by_depth_tests_order;
 
@@ -1194,7 +1203,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             {
                 int i;
 
-                do_first_iteration = 1;
+                do_first_iteration = TRUE;
 
                 for (i = start_i, next_test = tests_list ;
                         (i < tests_order_num) &&
@@ -1212,7 +1221,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                         ; 
                         i++)
                 {
-                    do_first_iteration = 0;
+                    do_first_iteration = FALSE;
                     *(next_test++) =
                         fc_solve_sfs_tests[
                         tests_order_tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK
