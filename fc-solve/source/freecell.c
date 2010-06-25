@@ -67,7 +67,7 @@
  * This function tries to move stack cards that are present at the
  * top of stacks to the foundations.
  * */
-int fc_solve_sfs_move_top_stack_cards_to_founds(
+void fc_solve_sfs_move_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -135,7 +135,7 @@ int fc_solve_sfs_move_top_stack_cards_to_founds(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
 static GCC_INLINE void sort_derived_states(
@@ -164,7 +164,7 @@ static GCC_INLINE void sort_derived_states(
  * This test moves single cards that are present in the freecells to
  * the foundations.
  * */
-int fc_solve_sfs_move_freecell_cards_to_founds(
+void fc_solve_sfs_move_freecell_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -216,7 +216,7 @@ int fc_solve_sfs_move_freecell_cards_to_founds(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
 /*
@@ -389,7 +389,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
     }
 }
 
-int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
+void fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -598,10 +598,10 @@ int fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 
     sort_derived_states(derived_states_list, initial_derived_states_num_states);
   
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_move_non_top_stack_cards_to_founds(
+void fc_solve_sfs_move_non_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -707,11 +707,11 @@ int fc_solve_sfs_move_non_top_stack_cards_to_founds(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
 
-int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
+void fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -892,14 +892,14 @@ int fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 #undef ds
 #undef dest_col
 #undef dest_cards_num
 
 
-int fc_solve_sfs_move_stack_cards_to_different_stacks(
+void fc_solve_sfs_move_stack_cards_to_different_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1066,10 +1066,10 @@ int fc_solve_sfs_move_stack_cards_to_different_stacks(
 
     sort_derived_states(derived_states_list, initial_derived_states_num_states);
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_move_sequences_to_free_stacks(
+void fc_solve_sfs_move_sequences_to_free_stacks(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1098,7 +1098,7 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
 
     if (tests__is_filled_by_none())
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
     temp_move = fc_solve_empty_move;
@@ -1280,10 +1280,10 @@ int fc_solve_sfs_move_sequences_to_free_stacks(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_move_freecell_cards_to_empty_stack(
+void fc_solve_sfs_move_freecell_cards_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1308,7 +1308,7 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
 
     if (tests__is_filled_by_none())
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
@@ -1360,10 +1360,10 @@ int fc_solve_sfs_move_freecell_cards_to_empty_stack(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_move_cards_to_a_different_parent(
+void fc_solve_sfs_move_cards_to_a_different_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1581,10 +1581,10 @@ int fc_solve_sfs_move_cards_to_a_different_parent(
 
     sort_derived_states(derived_states_list, initial_derived_states_num_states);
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_empty_stack_into_freecells(
+void fc_solve_sfs_empty_stack_into_freecells(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1611,7 +1611,7 @@ int fc_solve_sfs_empty_stack_into_freecells(
 
     if (tests__is_filled_by_none())
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
     temp_move = fc_solve_empty_move;
@@ -1668,22 +1668,22 @@ int fc_solve_sfs_empty_stack_into_freecells(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 
 }
 
-int fc_solve_sfs_yukon_do_nothing(
+void fc_solve_sfs_yukon_do_nothing(
         fc_solve_soft_thread_t * soft_thread GCC_UNUSED,
         fcs_state_extra_info_t * ptr_state_val GCC_UNUSED,
         fcs_derived_states_list_t * derived_states_list GCC_UNUSED
         )
 {
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
 /* Disabling Yukon solving for the time being. */
 #if 0
-int fc_solve_sfs_yukon_move_card_to_parent(
+void fc_solve_sfs_yukon_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1763,10 +1763,10 @@ int fc_solve_sfs_yukon_move_card_to_parent(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_yukon_move_kings_to_empty_stack(
+void fc_solve_sfs_yukon_move_kings_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1793,7 +1793,7 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
 
     if (num_vacant_stacks == 0)
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
 #ifndef HARD_CODED_NUM_STACKS
@@ -1839,7 +1839,7 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 #endif
 
@@ -1848,7 +1848,7 @@ int fc_solve_sfs_yukon_move_kings_to_empty_stack(
     Let's try to deal the Gypsy-type Talon.
 
   */
-int fc_solve_sfs_deal_gypsy_talon(
+void fc_solve_sfs_deal_gypsy_talon(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1866,7 +1866,7 @@ int fc_solve_sfs_deal_gypsy_talon(
 
     if (instance->talon_type != FCS_TALON_GYPSY)
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
     if (fcs_talon_pos(state) < fcs_talon_len(state))
@@ -1890,11 +1890,11 @@ int fc_solve_sfs_deal_gypsy_talon(
         sfs_check_state_end()
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
 
-int fc_solve_sfs_get_card_from_klondike_talon(
+void fc_solve_sfs_get_card_from_klondike_talon(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1918,7 +1918,7 @@ int fc_solve_sfs_get_card_from_klondike_talon(
 
     if (instance->talon_type != FCS_TALON_KLONDIKE)
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
     /* Duplicate the talon and its parameters into talon_temp */
@@ -2030,13 +2030,13 @@ int fc_solve_sfs_get_card_from_klondike_talon(
     free(talon_temp->s.talon);
     free(talon_temp);
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 
 }
 
 #endif
 
-int fc_solve_sfs_atomic_move_card_to_empty_stack(
+void fc_solve_sfs_atomic_move_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2061,7 +2061,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
 
     if (num_vacant_stacks == 0)
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
 #ifndef HARD_CODED_NUM_STACKS
@@ -2080,7 +2080,7 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
 
     if (tests__is_filled_by_none())
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
@@ -2124,10 +2124,10 @@ int fc_solve_sfs_atomic_move_card_to_empty_stack(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_atomic_move_card_to_parent(
+void fc_solve_sfs_atomic_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2204,10 +2204,10 @@ int fc_solve_sfs_atomic_move_card_to_parent(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_atomic_move_card_to_freecell(
+void fc_solve_sfs_atomic_move_card_to_freecell(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2237,7 +2237,7 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
 
     if (num_vacant_freecells == 0)
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
     for(ds=0;ds<LOCAL_FREECELLS_NUM;ds++)
@@ -2281,10 +2281,10 @@ int fc_solve_sfs_atomic_move_card_to_freecell(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_atomic_move_freecell_card_to_parent(
+void fc_solve_sfs_atomic_move_freecell_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2352,10 +2352,10 @@ int fc_solve_sfs_atomic_move_freecell_card_to_parent(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
+void fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -2383,12 +2383,12 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
 
     if (num_vacant_stacks == 0)
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
     if (tests__is_filled_by_none())
     {
-        return FCS_STATE_IS_NOT_SOLVEABLE;
+        return;
     }
 
     /* Find a vacant stack */
@@ -2440,7 +2440,7 @@ int fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
 #undef state

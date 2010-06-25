@@ -61,7 +61,7 @@ char fc_solve_simple_simon_nothing;
     )
 
 
-int fc_solve_sfs_simple_simon_move_sequence_to_founds(
+void fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -150,11 +150,11 @@ int fc_solve_sfs_simple_simon_move_sequence_to_founds(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
 
-int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
+void fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -279,10 +279,10 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
+void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -393,10 +393,10 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
+void fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -678,10 +678,10 @@ int fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
+void fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -923,10 +923,10 @@ int fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
+void fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1251,10 +1251,10 @@ int fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_w
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
+void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1500,10 +1500,10 @@ int fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_som
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
+void fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1785,10 +1785,10 @@ int fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
-int fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
+void fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_extra_info_t * ptr_state_val,
         fcs_derived_states_list_t * derived_states_list
@@ -1891,7 +1891,7 @@ int fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
         }
     }
 
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return;
 }
 
 #undef state

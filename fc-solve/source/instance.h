@@ -145,7 +145,7 @@ enum
 struct fc_solve_hard_thread_struct;
 struct fc_solve_soft_thread_struct;
 
-typedef int (*fc_solve_solve_for_state_test_t)(
+typedef void (*fc_solve_solve_for_state_test_t)(
         struct fc_solve_soft_thread_struct *,
         fcs_state_extra_info_t *,
         fcs_derived_states_list_t *
