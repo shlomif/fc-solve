@@ -31,6 +31,8 @@
 #include "move_funcs_order.h"
 #include "move_funcs_maps.h"
 
+#include "bool.h"
+
 int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
     const char * string,
@@ -40,7 +42,7 @@ int fc_solve_apply_tests_order(
     int a;
     int len;
     int test_index;
-    int is_group, is_start_group;
+    fcs_bool_t is_group, is_start_group;
     char test_name[2] = {0};
 
     if (tests_order->tests)
@@ -52,8 +54,9 @@ int fc_solve_apply_tests_order(
 
     len = strlen(string);
     test_index = 0;
-    is_group = 0;
-    is_start_group = 0;
+    is_group = FALSE;
+    is_start_group = FALSE;
+
     for(a=0;(a<len) ;a++)
     {
         if ((string[a] == '(') || (string[a] == '['))
@@ -63,8 +66,8 @@ int fc_solve_apply_tests_order(
                 *error_string = strdup("There's a nested random group.");
                 return 1;
             }
-            is_group = 1;
-            is_start_group = 1;
+            is_group = TRUE;
+            is_start_group = TRUE;
             continue;
         }
 
@@ -80,8 +83,8 @@ int fc_solve_apply_tests_order(
                 *error_string = strdup("There's a renegade right parenthesis or bracket.");
                 return 3;
             }
-            is_group = 0;
-            is_start_group = 0;
+            is_group = FALSE;
+            is_start_group = FALSE;
             continue;
         }
 
@@ -95,9 +98,14 @@ int fc_solve_apply_tests_order(
         }
 
         test_name[0] = string[a];
-        tests_order->tests[test_index++] = (fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM) | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0) | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0);
+        tests_order->tests[test_index++] = 
+        (
+            (fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM)
+            | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0)
+            | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0)
+        );
 
-        is_start_group = 0;
+        is_start_group = FALSE;
     }
     if (a != len)
     {
