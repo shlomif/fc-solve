@@ -78,10 +78,15 @@ void fc_solve_compact_allocator_extend(
 
 void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator)
 {
-    int a;
-    for(a=0;a<allocator->num_packs;a++)
+    char * * curr_pack, * * packs_end;
+
+    packs_end = (curr_pack = allocator->packs) + allocator->num_packs;
+
+    for ( ; curr_pack < packs_end ; curr_pack++)
     {
-        free(allocator->packs[a]);
+        free(*(curr_pack));
     }
+
     free(allocator->packs);
 }
+

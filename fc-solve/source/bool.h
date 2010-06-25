@@ -22,60 +22,24 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * app_str.h - implements an append-to-dynamically-growing string printf
- * functionality.
+ * bool.h - the purpose of this file is to define the fcs_bool_t type
+ * and the related constants of TRUE and FALSE.
+ *
  */
-#include <string.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
 
-#include "inline.h"
+#ifndef FC_SOLVE__BOOL_H
+#define FC_SOLVE__BOOL_H
 
-#ifndef FC_SOLVE__APP_STR_H
-#define FC_SOLVE__APP_STR_H
+#include "config.h"
 
-#ifdef __cplusplus
-extern "C" {
+typedef int fcs_bool_t;
+
+#ifndef FALSE
+#define FALSE 0
 #endif
 
-typedef struct
-{
-    char * buffer;
-    char * end_of_buffer;
-    int max_size;
-} fc_solve_append_string_t;
-
-#define GROW_BY 4000
-#define FC_SOLVE_APPEND_STRING_MARGIN_SIZE 500
-
-static GCC_INLINE void fc_solve_append_string_init(fc_solve_append_string_t * app_str)
-{
-    app_str->max_size = GROW_BY;
-    app_str->end_of_buffer = app_str->buffer = malloc(app_str->max_size);
-
-    return;
-}
-
-
-static GCC_INLINE char * fc_solve_append_string_finalize(
-    fc_solve_append_string_t * app_str
-    )
-{
-    char * ret;
-    ret = strdup(app_str->buffer);
-    free(app_str->buffer);
-    return ret;
-}
-
-extern void fc_solve_append_string_sprintf(
-    fc_solve_append_string_t * app_str,
-    char * format,
-    ...
-    );
-
-#ifdef __cplusplus
-}
+#ifndef TRUE
+#define TRUE 1
 #endif
 
-#endif /* #ifndef FC_SOLVE__APP_STR_H */
+#endif

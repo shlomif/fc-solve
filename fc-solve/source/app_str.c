@@ -34,18 +34,16 @@
 
 #include "app_str.h"
 
-int fc_solve_append_string_sprintf(
+void fc_solve_append_string_sprintf(
     fc_solve_append_string_t * app_str,
     char * format,
     ...
     )
 {
-    int num_chars_written;
     va_list my_va_list;
 
     va_start(my_va_list, format);
-    num_chars_written = vsprintf(app_str->end_of_buffer, format, my_va_list);
-    app_str->end_of_buffer += num_chars_written;
+    app_str->end_of_buffer += vsprintf(app_str->end_of_buffer, format, my_va_list);
     /*
      * Check to see if we don't have enough space in which case we should
      * resize
@@ -61,6 +59,6 @@ int fc_solve_append_string_sprintf(
         app_str->end_of_buffer += app_str->buffer - old_buffer;
     }
 
-    return num_chars_written;
+    return;
 }
 
