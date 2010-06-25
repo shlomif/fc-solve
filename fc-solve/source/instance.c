@@ -882,7 +882,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
-    optimization_thread->max_num_times = -1;
+    optimization_thread->max_num_times = INT_MAX;
     optimization_thread->ht_max_num_times = INT_MAX;
 
     fc_solve_soft_thread_init_befs_or_bfs(soft_thread);

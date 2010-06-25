@@ -43,8 +43,7 @@ extern "C" {
             ||                                                        \
         (hard_thread->num_times >= hard_thread->ht_max_num_times)     \
             ||                                                        \
-        ((hard_thread->max_num_times >= 0) &&                         \
-        (hard_thread->num_times >= hard_thread->max_num_times))       \
+        (hard_thread->num_times >= hard_thread->max_num_times)        \
             ||                                                        \
         ((instance->max_num_states_in_collection >= 0) &&             \
         (instance->num_states_in_collection >=                        \

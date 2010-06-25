@@ -1018,7 +1018,7 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
 {
     hard_thread->num_times = 0;
     hard_thread->ht_max_num_times = hard_thread->num_times_step;
-    hard_thread->max_num_times = -1;
+    hard_thread->max_num_times = INT_MAX;
     hard_thread->num_soft_threads_finished = 0;
     fc_solve_compact_allocator_init(&(hard_thread->allocator));
 }
