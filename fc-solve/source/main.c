@@ -35,20 +35,29 @@
 
 #include "fcs_cl.h"
 #include "unused.h"
+#include "bool.h"
+
+enum STANDARD_NOTATION_TYPE
+{
+    STANDARD_NOTATION_NO,
+    STANDARD_NOTATION_REGULAR,
+    STANDARD_NOTATION_EXTENDED
+};
+
 
 struct fc_solve_display_information_context_struct
 {
-    int debug_iter_state_output;
+    fcs_bool_t debug_iter_state_output;
     int freecells_num;
     int stacks_num;
     int decks_num;
-    int parseable_output;
-    int canonized_order_output;
-    int display_10_as_t;
-    int display_parent_iter_num;
-    int debug_iter_output_on;
-    int display_moves;
-    int display_states;
+    fcs_bool_t parseable_output;
+    fcs_bool_t canonized_order_output;
+    fcs_bool_t display_10_as_t;
+    fcs_bool_t display_parent_iter_num;
+    fcs_bool_t debug_iter_output_on;
+    fcs_bool_t display_moves;
+    fcs_bool_t display_states;
     int standard_notation;
     const char * output_filename;
 };
@@ -59,14 +68,14 @@ static void init_debug_context(
     fc_solve_display_information_context_t * dc
     )
 {
-    dc->debug_iter_state_output = 0;
-    dc->parseable_output = 0;
-    dc->canonized_order_output = 0;
-    dc->display_10_as_t = 0;
-    dc->display_parent_iter_num = 0;
-    dc->display_moves = 0;
-    dc->display_states = 1;
-    dc->standard_notation = 0;
+    dc->debug_iter_state_output = FALSE;
+    dc->parseable_output = FALSE;
+    dc->canonized_order_output = FALSE;
+    dc->display_10_as_t = FALSE;
+    dc->display_parent_iter_num = FALSE;
+    dc->display_moves = FALSE;
+    dc->display_states = TRUE;
+    dc->standard_notation = STANDARD_NOTATION_NO;
     dc->output_filename = NULL;
 }
 
@@ -471,23 +480,23 @@ static int cmd_line_callback(
             my_iter_handler,   \
             dc    \
             );        \
-        dc->debug_iter_output_on = 1;
+        dc->debug_iter_output_on = TRUE;
 
         set_iter_handler();
     }
     else if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
     {
         set_iter_handler();
-        dc->debug_iter_state_output = 1;
+        dc->debug_iter_state_output = TRUE;
 #undef set_iter_handler
     }
     else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
     {
-        dc->parseable_output = 1;
+        dc->parseable_output = TRUE;
     }
     else if ((!strcmp(argv[arg], "-c")) || (!strcmp(argv[arg], "--canonized-order-output")))
     {
-        dc->canonized_order_output = 1;
+        dc->canonized_order_output = TRUE;
     }
     else if ((!strcmp(argv[arg], "-o")) || (!strcmp(argv[arg], "--output")))
     {
@@ -502,30 +511,30 @@ static int cmd_line_callback(
     }    
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
     {
-        dc->display_10_as_t = 1;
+        dc->display_10_as_t = TRUE;
     }
     else if ((!strcmp(argv[arg], "-m")) || (!strcmp(argv[arg], "--display-moves")))
     {
-        dc->display_moves = 1;
-        dc->display_states = 0;
+        dc->display_moves = TRUE;
+        dc->display_states = FALSE;
     }
     else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
     {
-        dc->standard_notation = 1;
+        dc->standard_notation = STANDARD_NOTATION_REGULAR;
 
     }
     else if ((!strcmp(argv[arg], "-snx")) || (!strcmp(argv[arg], "--standard-notation-extended")))
     {
-        dc->standard_notation = 2;
+        dc->standard_notation = STANDARD_NOTATION_EXTENDED;
     }
     else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
     {
-        dc->display_moves = 1;
-        dc->display_states = 1;
+        dc->display_moves = TRUE;
+        dc->display_states = TRUE;
     }
     else if ((!strcmp(argv[arg], "-pi")) || (!strcmp(argv[arg], "--display-parent-iter")))
     {
-        dc->display_parent_iter_num = 1;
+        dc->display_parent_iter_num = TRUE;
     }
     else if ((!strcmp(argv[arg], "--reset")))
     {
@@ -549,7 +558,7 @@ static int cmd_line_callback(
 
 
 static int command_num = 0;
-static int debug_iter_output_on = 0;
+static int debug_iter_output_on = FALSE;
 
 static void select_signal_handler(int signal_num GCC_UNUSED)
 {
@@ -579,7 +588,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
                 NULL,
                 NULL
                 );
-            debug_iter_output_on = 0;
+            debug_iter_output_on = FALSE;
         }
         else
         {
@@ -588,7 +597,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
                 my_iter_handler,
                 dc
                 );
-            debug_iter_output_on = 1;
+            debug_iter_output_on = TRUE;
         }
     }
     else if (command_num == 2)
