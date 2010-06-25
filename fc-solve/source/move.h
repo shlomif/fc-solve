@@ -44,6 +44,7 @@ extern "C" {
 #include "internal_move_struct.h"
 
 #include "inline.h"
+#include "bool.h"
 
 extern const fcs_internal_move_t fc_solve_empty_move;
 
@@ -64,16 +65,16 @@ extern const fcs_internal_move_t fc_solve_empty_move;
             \
 }
 
-static GCC_INLINE int fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_internal_move_t * move)
+static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_internal_move_t * move)
 {
     if (stack->num_moves > 0)
     {
         *move = stack->moves[--stack->num_moves];
-        return 0;
+        return FALSE;
     }
     else
     {
-        return 1;
+        return TRUE;
     }
 }
 
@@ -136,7 +137,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_state_keyval_pair_t dynamic_state;
 #ifdef INDIRECT_STACK_STATES
     char buffer[MAX_NUM_STACKS << 7];
-    int a;
+    int i;
 #endif
 
     out_move = fc_solve_empty_move;
@@ -148,9 +149,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             (init_state_val->key), init_state_val
             );
 #ifdef INDIRECT_STACK_STATES
-    for(a=0;a<stacks_num;a++)
+    for (i=0 ; i < stacks_num ; i++)
     {
-        fcs_copy_stack(dynamic_state.s, dynamic_state.info, a, buffer);
+        fcs_copy_stack(dynamic_state.s, dynamic_state.info, i, buffer);
     }
 #endif
 
