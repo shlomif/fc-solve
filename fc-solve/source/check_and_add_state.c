@@ -76,7 +76,7 @@ static GCC_INLINE ub4 perl_hash_function(
         if (condition_expr)     \
         {      \
             fcs_compact_alloc_release(stacks_allocator);    \
-            new_state_key->stacks[a] = cached_stack;       \
+            new_state_key->stacks[i] = cached_stack;       \
         }
 
 static void GCC_INLINE fc_solve_cache_stacks(
@@ -85,7 +85,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
         fcs_state_extra_info_t * new_state_val
         )
 {
-    int a;
+    int i;
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     SFO_hash_value_t hash_value_int;
@@ -105,23 +105,23 @@ static void GCC_INLINE fc_solve_cache_stacks(
     
     stacks_allocator = &(hard_thread->allocator);
 
-    for(a=0 ; a < LOCAL_STACKS_NUM ; a++)
+    for(i=0 ; i < LOCAL_STACKS_NUM ; i++)
     {
         /*
          * If the stack is not a copy - it is already cached so skip
          * to the next stack
          * */
-        if (! (new_state_val->stacks_copy_on_write_flags & (1 << a)))
+        if (! (new_state_val->stacks_copy_on_write_flags & (1 << i)))
         {
             continue;
         }
 
-        column = fcs_state_get_col(*new_state_key, a);
+        column = fcs_state_get_col(*new_state_key, i);
         col_len = (fcs_col_len(column)+1);
 
         new_ptr = (char*)fcs_compact_alloc_ptr(stacks_allocator, col_len);
         memcpy(new_ptr, column, col_len);
-        new_state_key->stacks[a] = new_ptr;
+        new_state_key->stacks[i] = new_ptr;
 
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -129,7 +129,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
         /* This hash function was ripped from the Perl source code.
          * (It is not derived work however). */
         {
-            const char * s_ptr = (char*)(new_state_key->stacks[a]);
+            const char * s_ptr = (char*)(new_state_key->stacks[i]);
             const char * s_end = s_ptr+fcs_col_len(s_ptr)+1;
             hash_value_int = 0;
             while (s_ptr < s_end)
@@ -153,7 +153,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
             void * dummy;
             int verdict;
 
-            column = fcs_state_get_col(*new_state_key, a);
+            column = fcs_state_get_col(*new_state_key, i);
 
             verdict = fc_solve_hash_insert(
                 &(instance->stacks_hash),
@@ -162,7 +162,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
                 &cached_stack,
                 &dummy,
                 perl_hash_function(
-                    (ub1 *)new_state_key->stacks[a],
+                    (ub1 *)new_state_key->stacks[i],
                     col_len
                     )
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -178,7 +178,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
             int verdict;
             void * dummy;
 
-            column = fcs_state_get_col(*new_state_key, a);
+            column = fcs_state_get_col(*new_state_key, i);
 
             verdict = fc_solve_columns_google_hash_insert(
                     instance->stacks_hash,
@@ -195,22 +195,22 @@ static void GCC_INLINE fc_solve_cache_stacks(
         cached_stack =
             fcs_libavl2_stacks_tree_insert(
                 instance->stacks_tree,
-                new_state_key->stacks[a]
+                new_state_key->stacks[i]
             );
 
         replace_with_cached(cached_stack != NULL);
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
         cached_stack = (void *)rbsearch(
-            new_state_key->stacks[a],
+            new_state_key->stacks[i],
             instance->stacks_tree
             );
 
-        replace_with_cached(cached_stack != new_state_key->stacks[a]);
+        replace_with_cached(cached_stack != new_state_key->stacks[i]);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
         cached_stack = g_tree_lookup(
              instance->stacks_tree,
-             (gpointer)new_state_key->stacks[a]
+             (gpointer)new_state_key->stacks[i]
              );
 
         /* replace_with_cached contains an if statement */
@@ -219,26 +219,26 @@ static void GCC_INLINE fc_solve_cache_stacks(
         {
             g_tree_insert(
                 instance->stacks_tree,
-                (gpointer)new_state_key->stacks[a],
-                (gpointer)new_state_key->stacks[a]
+                (gpointer)new_state_key->stacks[i],
+                (gpointer)new_state_key->stacks[i]
                 );
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
         cached_stack = g_hash_table_lookup(
             instance->stacks_hash,
-            (gconstpointer)new_state_key->stacks[a]
+            (gconstpointer)new_state_key->stacks[i]
             );
         replace_with_cached(cached_stack != NULL)
         else
         {
             g_hash_table_insert(
                 instance->stacks_hash,
-                (gpointer)new_state_key->stacks[a],
-                (gpointer)new_state_key->stacks[a]
+                (gpointer)new_state_key->stacks[i],
+                (gpointer)new_state_key->stacks[i]
                 );
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
-        column = fcs_state_get_col(*new_state_key, a);
+        column = fcs_state_get_col(*new_state_key, i);
 
         JHSI(
             PValue,
