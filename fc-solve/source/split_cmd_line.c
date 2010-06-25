@@ -36,6 +36,7 @@
 #include "split_cmd_line.h"
 
 #include "inline.h"
+#include "bool.h"
 
 #define ARGS_MAN_GROW_BY 32
 
@@ -109,7 +110,7 @@ static GCC_INLINE void push_args_last_arg(args_man_t * manager)
     return;
 }
 
-static GCC_INLINE int is_whitespace(char c)
+static GCC_INLINE fcs_bool_t is_whitespace(char c)
 {
     return ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'));
 }
@@ -117,16 +118,16 @@ static GCC_INLINE int is_whitespace(char c)
 int fc_solve_args_man_chop(args_man_t * manager, char * string)
 {
     char * s = string;
-    int in_arg;
+    fcs_bool_t in_arg;
 
     manager->last_arg_ptr = manager->last_arg = malloc(1024);
     manager->last_arg_end = manager->last_arg + 1023;
 
     while (*s != '\0')
     {
-        int push_next_arg_flag = 0;
+        fcs_bool_t push_next_arg_flag = FALSE;
 
-        in_arg = 0;
+        in_arg = FALSE;
         while (is_whitespace(*s))
         {
             s++;
@@ -137,7 +138,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
         }
         if (*s == '#')
         {
-            in_arg = 0;
+            in_arg = FALSE;
             /* Skip to the next line */
             while((*s != '\0') && (*s != '\n'))
             {
@@ -147,7 +148,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
         }
 
         {
-            int still_loop = 1;
+            fcs_bool_t still_loop = TRUE;
             while (still_loop)
             {
                 switch(*s)
@@ -158,8 +159,8 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                     case '\0':
                     case '\r':
 
-                    push_next_arg_flag = 1;
-                    still_loop = 0;
+                    push_next_arg_flag = TRUE;
+                    still_loop = FALSE;
 
                     break;
 
@@ -171,15 +172,15 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                         if (next_char == '\0')
                         {
                             s--;
-                            push_next_arg_flag = 1;
-                            still_loop = 0;
+                            push_next_arg_flag = TRUE;
+                            still_loop = FALSE;
                         }
                         else if ((next_char == '\n') || (next_char == '\r'))
                         {
                             /* Skip to the next line. */
                             if (! in_arg)
                             {
-                                still_loop = 0;
+                                still_loop = FALSE;
                             }
                         }
                         else
@@ -192,7 +193,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
                     case '\"':
 
                     s++;
-                    in_arg = 1;
+                    in_arg = TRUE;
                     while ((*s != '\"') && (*s != '\0'))
                     {
                         if (*s == '\\')
@@ -231,19 +232,19 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
 
                     case '#':
 
-                    in_arg = 0;
+                    in_arg = FALSE;
                     /* Skip to the next line */
                     while((*s != '\0') && (*s != '\n'))
                     {
                         s++;
                     }
-                    push_next_arg_flag = 1;
-                    still_loop = 0;
+                    push_next_arg_flag = TRUE;
+                    still_loop = FALSE;
                     break;
 
                     default:
 
-                    in_arg = 1;
+                    in_arg = TRUE;
                     add_to_last_arg(manager, *s);
                     s++;
 
@@ -255,7 +256,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
         if (push_next_arg_flag)
         {
             push_args_last_arg(manager);
-            in_arg = 0;
+            in_arg = FALSE;
 
             if (*s == '\0')
             {
