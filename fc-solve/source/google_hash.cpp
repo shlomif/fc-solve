@@ -92,7 +92,7 @@ extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-extern "C" int fc_solve_states_google_hash_insert(
+extern "C" fcs_bool_t fc_solve_states_google_hash_insert(
     fcs_states_google_hash_handle_t void_hash,
     void * key,
     void * val,
@@ -109,14 +109,14 @@ extern "C" int fc_solve_states_google_hash_insert(
     {
         *existing_key = NULL;
         *existing_val = NULL;
-        return 0;
+        return FALSE;
     }
     else
     {
         *existing_key = (*(result.first)).first;
         *existing_val = (*(result.first)).second;
 
-        return 1;
+        return TRUE;
     }
 }
 
@@ -169,7 +169,7 @@ extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-extern "C" int fc_solve_columns_google_hash_insert(
+extern "C" fcs_bool_t fc_solve_columns_google_hash_insert(
     fcs_columns_google_hash_handle_t void_hash,
     void * key,
     void * val,
@@ -186,14 +186,14 @@ extern "C" int fc_solve_columns_google_hash_insert(
     {
         *existing_key = NULL;
         *existing_val = NULL;
-        return 0;
+        return FALSE;
     }
     else
     {
         *existing_key = (*(result.first)).first;
         *existing_val = (*(result.first)).second;
 
-        return 1;
+        return TRUE;
     }
 }
 

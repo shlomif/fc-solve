@@ -35,6 +35,8 @@ extern "C" {
 
 #include "config.h"
 
+#include "bool.h"
+
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
 
 typedef void * fcs_states_google_hash_handle_t;
@@ -48,7 +50,7 @@ extern fcs_states_google_hash_handle_t fc_solve_states_google_hash_new();
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-extern int fc_solve_states_google_hash_insert(
+extern fcs_bool_t fc_solve_states_google_hash_insert(
     fcs_states_google_hash_handle_t hash,
     void * key,
     void * val,
@@ -72,7 +74,7 @@ extern fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new();
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-extern int fc_solve_columns_google_hash_insert(
+extern fcs_bool_t fc_solve_columns_google_hash_insert(
     fcs_columns_google_hash_handle_t hash,
     void * key,
     void * val,
