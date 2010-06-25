@@ -185,6 +185,13 @@ static GCC_INLINE int convert_freecell_num(int fcn)
 }
 
 
+enum STANDARD_NOTATION_TYPE
+{
+    STANDARD_NOTATION_NO = 0,
+    STANDARD_NOTATION_REGULAR = 1,
+    STANDARD_NOTATION_EXTENDED = 2
+};
+
 char * fc_solve_move_to_string_w_state(
         fcs_state_extra_info_t * state_val,
         int freecells_num GCC_UNUSED, 
@@ -201,7 +208,7 @@ char * fc_solve_move_to_string_w_state(
     switch(fcs_move_get_type(move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
-            if ((standard_notation == 2) &&
+            if ((standard_notation == STANDARD_NOTATION_EXTENDED) &&
                 /* More than one card was moved */
                 (fcs_move_get_num_cards_in_seq(move) > 1) &&
                 /* It was a move to an empty stack */
