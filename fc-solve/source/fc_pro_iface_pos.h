@@ -11,6 +11,8 @@ extern "C" {
 #include "fcs_user.h"
 #include "fcs_cl.h"
 
+#include "bool.h"
+
 typedef unsigned char	uchar;
 typedef uchar		Card;/* 00ssrrrr: s=suit, r=rank(1-13) */
 
@@ -30,7 +32,7 @@ extern char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecel
 typedef struct
 {
     fcs_move_t move;
-    int to_empty_stack;
+    fcs_bool_t to_empty_stack;
 } fcs_extended_move_t;
 
 typedef struct

@@ -5,6 +5,8 @@
 
 #include "fc_pro_iface_pos.h"
 
+#include "inline.h"
+
 static const char * ranks_map = "0A23456789TJQK";
 
 static char * rank_to_string(int rank, char * buf)
@@ -100,7 +102,7 @@ char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
     return strdup(buffer);
 }
 
-static int Cvtf89(int fcn)
+static GCC_INLINE int Cvtf89(int fcn)
 {
     return (fcn >= 7) ? (fcn+3) : fcn;
 }

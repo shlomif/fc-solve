@@ -43,6 +43,7 @@
 #define FCS_WITHOUT_GET_BOARD
 #include "range_solvers_gen_ms_boards.h"
 #include "unused.h"
+#include "bool.h"
 
 #define     SUIT(card)      ((card) % 4)
 #define     VALUE(card)     ((card) / 4)
@@ -80,18 +81,18 @@ static GCC_INLINE void fc_pro_get_board(long gamenumber, Position * pos)
 
 struct fc_solve_display_information_context_struct
 {
-    int debug_iter_state_output;
+    fcs_bool_t debug_iter_state_output;
     int freecells_num;
     int stacks_num;
     int decks_num;
-    int parseable_output;
-    int canonized_order_output;
-    int display_10_as_t;
-    int display_parent_iter_num;
-    int debug_iter_output_on;
-    int display_moves;
-    int display_states;
-    int standard_notation;
+    fcs_bool_t parseable_output;
+    fcs_bool_t canonized_order_output;
+    fcs_bool_t display_10_as_t;
+    fcs_bool_t display_parent_iter_num;
+    fcs_bool_t debug_iter_output_on;
+    fcs_bool_t display_moves;
+    fcs_bool_t display_states;
+    fcs_bool_t standard_notation;
 };
 
 typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
@@ -165,41 +166,41 @@ static int cmd_line_callback(
             my_iter_handler,
             dc
             );
-        dc->debug_iter_output_on = 1;
+        dc->debug_iter_output_on = TRUE;
     }
     else if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
     {
-        dc->debug_iter_state_output = 1;
+        dc->debug_iter_state_output = TRUE;
     }
     else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
     {
-        dc->parseable_output = 1;
+        dc->parseable_output = TRUE;
     }
     else if ((!strcmp(argv[arg], "-c")) || (!strcmp(argv[arg], "--canonized-order-output")))
     {
-        dc->canonized_order_output = 1;
+        dc->canonized_order_output = TRUE;
     }
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
     {
-        dc->display_10_as_t = 1;
+        dc->display_10_as_t = TRUE;
     }
     else if ((!strcmp(argv[arg], "-m")) || (!strcmp(argv[arg], "--display-moves")))
     {
-        dc->display_moves = 1;
-        dc->display_states = 0;
+        dc->display_moves = TRUE;
+        dc->display_states = FALSE;
     }
     else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
     {
-        dc->standard_notation = 1;
+        dc->standard_notation = TRUE;
     }
     else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
     {
-        dc->display_moves = 1;
-        dc->display_states = 1;
+        dc->display_moves = TRUE;
+        dc->display_states = TRUE;
     }
     else if ((!strcmp(argv[arg], "-pi")) || (!strcmp(argv[arg], "--display-parent-iter")))
     {
-        dc->display_parent_iter_num = 1;
+        dc->display_parent_iter_num = TRUE;
     }
     else
     {
