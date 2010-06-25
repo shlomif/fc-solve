@@ -151,11 +151,10 @@ static void GCC_INLINE fc_solve_cache_stacks(
 
         {
             void * dummy;
-            int verdict;
 
             column = fcs_state_get_col(*new_state_key, i);
 
-            verdict = fc_solve_hash_insert(
+            replace_with_cached(fc_solve_hash_insert(
                 &(instance->stacks_hash),
                 column,
                 column,
@@ -168,27 +167,25 @@ static void GCC_INLINE fc_solve_cache_stacks(
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
                 , hash_value_int
 #endif
-                );
-
-            replace_with_cached(verdict);
+                )
+            );
         }
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
         {
-            int verdict;
             void * dummy;
 
             column = fcs_state_get_col(*new_state_key, i);
 
-            verdict = fc_solve_columns_google_hash_insert(
+            replace_with_cached(
+                fc_solve_columns_google_hash_insert(
                     instance->stacks_hash,
                     column,
                     column,
                     &cached_stack,
                     &dummy
-                    );
-
-            replace_with_cached(verdict);
+                )
+            );
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
 
@@ -345,7 +342,7 @@ guint fc_solve_hash_function(gconstpointer key)
  *        5b. Add the new state and return FCS_STATE_DOES_NOT_EXIST
  * */
 
-GCC_INLINE int fc_solve_check_and_add_state(
+GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * new_state_val,
     fcs_state_extra_info_t * * existing_state_val
@@ -358,13 +355,13 @@ GCC_INLINE int fc_solve_check_and_add_state(
 #endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     fcs_standalone_state_ptrs_t * pos_ptr;
-    int found;
+    fcs_bool_t found;
 #endif
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
     fcs_state_t * new_state_key = new_state_val->key;
 
-    int is_state_new;
+    fcs_bool_t is_state_new;
 
     /* #if'ing out because it doesn't belong here. */
 #if 0
@@ -414,7 +411,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 #endif
     {
         void * existing_key_void, * existing_val_void;
-    is_state_new = (fc_solve_hash_insert(
+        if (! (is_state_new = (!fc_solve_hash_insert(
         &(instance->hash),
         new_state_key,
         new_state_val,
@@ -427,8 +424,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         , hash_value_int
 #endif
-        ) == 0);
-        if (! is_state_new)
+        ))))
         {
             *existing_state_val = existing_val_void;
         }
@@ -470,7 +466,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
         if (found)
         {
-            is_state_new = 0;
+            is_state_new = FALSE;
             *existing_state_val = pos_ptr->val;
         }
         else
@@ -515,14 +511,14 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
                 instance->num_prev_states_margin=0;
             }
-            is_state_new = 1;
+            is_state_new = TRUE;
         }
 
     }
     else
     {
         *existing_state_val = pos_ptr->val;
-        is_state_new = 0;
+        is_state_new = FALSE;
     }
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
@@ -539,7 +535,7 @@ GCC_INLINE int fc_solve_check_and_add_state(
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     *existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
-    if (*existing_state_val == NULL)
+    if ((is_state_new = (*existing_state_val == NULL)))
     {
         /* The new state was not found. Let's insert it.
          * The value must be the same as the key, so g_tree_lookup()
@@ -549,19 +545,12 @@ GCC_INLINE int fc_solve_check_and_add_state(
             (gpointer)new_state_key,
             (gpointer)new_state_val
             );
-        is_state_new = 1;
     }
-    else
-    {
-        is_state_new = 0;
-    }
-
-
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     *existing_state_val = g_hash_table_lookup(instance->hash, 
             (gpointer)new_state_key);
-    if (*existing_state_val == NULL)
+    if ((is_state_new = (*existing_state_val == NULL)))
     {
         /* The new state was not found. Let's insert it.
          * The value must be the same as the key, so g_tree_lookup()
@@ -572,11 +561,6 @@ GCC_INLINE int fc_solve_check_and_add_state(
             (gpointer)new_state_val
 
             );
-        is_state_new = 1;
-    }
-    else
-    {
-        is_state_new = 0;
     }
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
@@ -584,13 +568,13 @@ GCC_INLINE int fc_solve_check_and_add_state(
         DBT key, value;
         key.data = new_state;
         key.size = sizeof(*new_state);
-        if (instance->db->get(
+        if ((is_state_new = (instance->db->get(
             instance->db,
             NULL,
             &key,
             &value,
             0
-            ) == 0)
+            ) == 0)))
         {
             /* The new state was not found. Let's insert it.
              * The value must be the same as the key, so g_tree_lookup()
@@ -604,11 +588,6 @@ GCC_INLINE int fc_solve_check_and_add_state(
                 &key,
                 &value,
                 0);
-            is_state_new = 1;
-        }
-        else
-        {
-            is_state_new = 0;
         }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
@@ -618,16 +597,14 @@ GCC_INLINE int fc_solve_check_and_add_state(
         JHSI(PValue, instance->judy_array, new_state_key, sizeof(*new_state_key));
 
         /* later_todo : Handle out-of-memory. */
-        if (*PValue == 0)
+        if ((is_state_new = (*PValue == 0)))
         {
             /* A new state. */
-            is_state_new = 1;
             *PValue = (PWord_t)(*existing_state_val = new_state_val);
         }
         else
         {
             /* Already exists. */
-            is_state_new = 0;
             *existing_state_val = (fcs_state_extra_info_t *)(*PValue);
         }
     }

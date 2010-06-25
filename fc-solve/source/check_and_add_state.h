@@ -32,6 +32,7 @@ extern "C" {
 #endif
 
 #include "config.h"
+#include "bool.h"
 #include "instance.h"
 
 /* #define FCS_USE_INLINE */
@@ -43,7 +44,7 @@ extern "C" {
  * Solver uses to solve a given board.
  * */
 
-extern int fc_solve_check_and_add_state(
+extern fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_extra_info_t * new_state_val,
     fcs_state_extra_info_t * * existing_state_val
