@@ -50,6 +50,7 @@
 #include "check_limits.h"
 #include "inline.h"
 #include "likely.h"
+#include "bool.h"
 
 void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
@@ -187,8 +188,6 @@ int fc_solve_soft_dfs_do_solve(
 
     fcs_state_t * ptr_state_key;
     fcs_state_extra_info_t * ptr_state_val;
-    int check;
-    int do_first_iteration;
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
@@ -203,7 +202,7 @@ int fc_solve_soft_dfs_do_solve(
     fcs_derived_states_list_t * derived_states_list;
     fcs_tests_by_depth_unit_t * by_depth_units, * curr_by_depth_unit;
     fcs_rand_t * rand_gen;
-    int local_to_randomize = 0;
+    fcs_bool_t local_to_randomize = FALSE;
     int * depth_ptr;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
@@ -405,20 +404,13 @@ int fc_solve_soft_dfs_do_solve(
             if (the_soft_dfs_info->tests_list_index < THE_TESTS_LIST.num_lists)
             {
                 /* Always do the first test */
-                do_first_iteration = 1;
                 local_to_randomize = THE_TESTS_LIST.lists[
                     the_soft_dfs_info->tests_list_index
                     ].to_randomize;
-            while (
-                    /* Always do the first test */
-                    do_first_iteration ||
-                    /* This is a randomized scan. Else - quit after the first iteration */
-                    local_to_randomize
-            )
+            do
             {
-                do_first_iteration = 0;
 
-                check = THE_TESTS_LIST.lists[
+                THE_TESTS_LIST.lists[
                     the_soft_dfs_info->tests_list_index
                     ].tests[the_soft_dfs_info->test_index]
                     (
@@ -438,7 +430,7 @@ int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info->test_index = 0;
                     break;
                 }
-            }
+            } while (local_to_randomize);
             }
 
             {
