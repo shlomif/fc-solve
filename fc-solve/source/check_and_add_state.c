@@ -47,6 +47,7 @@
 
 #include "move_stack_compact_alloc.h"
 #include "inline.h"
+#include "likely.h"
 
 #include "check_limits.h"
 
@@ -335,12 +336,43 @@ guint fc_solve_hash_function(gconstpointer key)
  *    that were already checked.
  *    If it is:
  *
- *        5a. Return FCS_STATE_ALREADY_EXISTS
+ *        5a. Return FALSE.
  *
  *    If it isn't:
  *
- *        5b. Add the new state and return FCS_STATE_DOES_NOT_EXIST
+ *        5b. Add the new state and return TRUE.
  * */
+
+static GCC_INLINE void on_state_new(
+    fc_solve_instance_t * instance,
+    fc_solve_hard_thread_t * hard_thread,
+    fcs_state_extra_info_t * new_state_val
+)
+{
+    register fcs_state_extra_info_t * parent_state_val;
+
+    /* The new state was not found in the cache, and it was already inserted */
+    if (likely(parent_state_val = new_state_val->parent_val))
+    {
+        parent_state_val->num_active_children++;
+    }
+    instance->num_states_in_collection++;
+
+    /*  
+     *  TODO : test if we can merge this condition with the check for
+     *  the new_state_val->parent_val .
+     */
+    if (likely(new_state_val->moves_to_parent))
+    {
+        new_state_val->moves_to_parent =
+            fc_solve_move_stack_compact_allocate(
+                    hard_thread,
+                    new_state_val->moves_to_parent
+                    );
+    }
+
+    return;
+}
 
 GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_soft_thread_t * soft_thread,
@@ -360,8 +392,6 @@ GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
     fcs_state_t * new_state_key = new_state_val->key;
-
-    fcs_bool_t is_state_new;
 
     /* #if'ing out because it doesn't belong here. */
 #if 0
@@ -411,7 +441,7 @@ GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
 #endif
     {
         void * existing_key_void, * existing_val_void;
-        if (! (is_state_new = (!fc_solve_hash_insert(
+        if (fc_solve_hash_insert(
         &(instance->hash),
         new_state_key,
         new_state_val,
@@ -424,9 +454,15 @@ GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         , hash_value_int
 #endif
-        ))))
+        ))
         {
             *existing_state_val = existing_val_void;
+            return FALSE;
+        }
+        else
+        {
+            on_state_new(instance, hard_thread, new_state_val);
+            return TRUE;
         }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
@@ -611,25 +647,6 @@ GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
 #else
 #error no define
 #endif
-    if (is_state_new)
-    {
-        /* The new state was not found in the cache, and it was already inserted */
-        if (new_state_val->parent_val)
-        {
-            new_state_val->parent_val->num_active_children++;
-        }
-        instance->num_states_in_collection++;
-
-        if (new_state_val->moves_to_parent != NULL)
-        {
-            new_state_val->moves_to_parent =
-                fc_solve_move_stack_compact_allocate(
-                    hard_thread,
-                    new_state_val->moves_to_parent
-                    );
-        }
-    }
-    return is_state_new;
 }
 
 #endif /* #ifndef FC_SOLVE__CAAS_C */
