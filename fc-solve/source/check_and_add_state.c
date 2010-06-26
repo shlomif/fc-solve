@@ -355,21 +355,14 @@ static GCC_INLINE void on_state_new(
     if (likely(parent_state_val = new_state_val->parent_val))
     {
         parent_state_val->num_active_children++;
-    }
-    instance->num_states_in_collection++;
-
-    /*  
-     *  TODO : test if we can merge this condition with the check for
-     *  the new_state_val->parent_val .
-     */
-    if (likely(new_state_val->moves_to_parent))
-    {
+        /* If parent_val is defined, so is moves_to_parent */
         new_state_val->moves_to_parent =
             fc_solve_move_stack_compact_allocate(
-                    hard_thread,
-                    new_state_val->moves_to_parent
-                    );
+                hard_thread,
+                new_state_val->moves_to_parent
+            );
     }
+    instance->num_states_in_collection++;
 
     return;
 }
