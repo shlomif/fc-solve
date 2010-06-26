@@ -1477,3 +1477,16 @@ Threaded:
 
 86.9535999298096s
 
+========================================================================
+
+r3000 ; trunk
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l fn"
+2.6.33.5-desktop-1mnb
+virutal console (while not running X-Windows).
+gcc-4.5.0 with "-flto".
+Using sudo_renice.
+
+Threaded:
+
+86.7596380710602s
+
