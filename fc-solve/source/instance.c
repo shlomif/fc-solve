@@ -1138,11 +1138,6 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
     fc_solve_increase_dfs_max_depth(soft_thread);
 
-    /* Initialize the initial state to indicate it is the first */
-    ptr_orig_state_val->parent_val = NULL;
-    ptr_orig_state_val->moves_to_parent = NULL;
-    ptr_orig_state_val->depth = 0;
-
     soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state_val = ptr_orig_state_val;
     fc_solve_rand_init(
             &(soft_thread->method_specific.soft_dfs.rand_gen), 

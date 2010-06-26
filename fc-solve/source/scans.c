@@ -921,11 +921,6 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         soft_thread->method_specific.befs.tests_list_end = next_test;
     }
 
-    /* Initialize the first element to indicate it is the first */
-    ptr_orig_state_val->parent_val = NULL;
-    ptr_orig_state_val->moves_to_parent = NULL;
-    ptr_orig_state_val->depth = 0;
-
     soft_thread->first_state_to_check_val = ptr_orig_state_val;  
 
     return;
