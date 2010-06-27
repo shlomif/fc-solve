@@ -79,3 +79,14 @@ fc_solve_sfs_tests[tests_order_tests[
                     ] & FCS_TEST_ORDER_NO_FLAGS_MASK]
 ----------------
 
+* Convert some of the documentation to Perl-POD or DocBook.
+** Converted to AsciiDoc, which can generate DocBook.
+
+* Find a way to update the ChangeLog from the svn.
+** Rejected per advice of http://producingoss.com/[Producing Open Source
+Software]
+
+* Convert the boolean values in the C code to a specialised boolean typedef
+called +fcs_bool_t+, just so readers can tell they are booleans instead of
+ints.
+

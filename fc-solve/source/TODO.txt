@@ -61,10 +61,6 @@ in freecell.c.
 
 * Interactive mode? Continue a scan that reached its limit.
 
-* Convert some of the documentation to Perl-POD or DocBook.
-
-* Find a way to update the ChangeLog from the svn.
-
 * Investigate ways to perform more pointer arithematics and 
 (ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
 
@@ -108,10 +104,6 @@ and then:
 2. See what would be a good meta-scan based on them.
 +
 3. Use it.
-
-* Convert the boolean values in the C code to a specialised boolean typedef
-called +fcs_bool_t+, just so readers can tell they are booleans instead of
-ints.
 
 To be considered
 ----------------
