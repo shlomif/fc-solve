@@ -1072,7 +1072,7 @@ void fc_solve_start_instance_process_with_board(
         fcs_state_extra_info_t * no_use_val;
 
         fc_solve_check_and_add_state(
-            &(instance->hard_threads[0].soft_threads[0]),
+            instance->hard_threads,
             state_copy_ptr_val,
             &no_use_val
             );

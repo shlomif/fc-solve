@@ -1519,7 +1519,7 @@ void fc_solve_sfs_check_state_end(
     fcs_move_stack_push(moves, temp_move);
 
     if (! fc_solve_check_and_add_state(
-        soft_thread,
+        hard_thread,
         ptr_new_state_val,
         &existing_state_val
         ))
