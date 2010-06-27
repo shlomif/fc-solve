@@ -201,6 +201,7 @@ int fc_solve_soft_dfs_do_solve(
     int soft_thread_id = soft_thread->id;
     fcs_derived_states_list_t * derived_states_list;
     fcs_tests_by_depth_unit_t * by_depth_units, * curr_by_depth_unit;
+    fcs_tests_list_of_lists * the_tests_list_ptr;
     fcs_rand_t * rand_gen;
     fcs_bool_t local_to_randomize = FALSE;
     int * depth_ptr;
@@ -224,7 +225,7 @@ int fc_solve_soft_dfs_do_solve(
 
     by_depth_units = soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units;
 
-#define THE_TESTS_LIST curr_by_depth_unit->tests
+#define THE_TESTS_LIST (*the_tests_list_ptr)
     TRACE0("Before depth loop");
 
 #define GET_DEPTH(ptr) ((ptr)->max_depth)
@@ -233,6 +234,7 @@ int fc_solve_soft_dfs_do_solve(
     { \
         by_depth_max_depth = GET_DEPTH(curr_by_depth_unit); \
         by_depth_min_depth = (curr_by_depth_unit == by_depth_units) ? 0 : GET_DEPTH(curr_by_depth_unit-1); \
+        the_tests_list_ptr = &(curr_by_depth_unit->tests); \
     }
 
     depth_ptr = &(soft_thread->method_specific.soft_dfs.depth);
