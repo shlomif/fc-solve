@@ -7,4 +7,4 @@ test: all
 	runprove t/*.t
 
 results: all
-	mono ./find_opt.exe find_optimal_quotas 300 | tee find_optimal_quotas-300.dump
+	mono ./find_opt.exe find_optimal_quotas 300 
