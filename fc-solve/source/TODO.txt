@@ -11,6 +11,10 @@ Pressing
 
 * Add some command line examples to +USAGE.txt+ .
 
+* Deal with the fact that:
++./freecell-solver-range-parallel-solve 1 100 1 -mi 1+ displays 
+"Unsolved Board" instead of "Intractable Board".
+
 Non-pressing
 ------------
 
