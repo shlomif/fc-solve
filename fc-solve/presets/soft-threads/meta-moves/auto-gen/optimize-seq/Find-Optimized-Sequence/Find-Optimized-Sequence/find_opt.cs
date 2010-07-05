@@ -34,6 +34,7 @@
 using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 class Quota_Allocation
 {
@@ -206,6 +207,8 @@ class Input
 class Process
 {
     protected Input input;
+
+    const int initial_quota_value = 350;
 
     public Process(Input new_input)
     {
@@ -431,18 +434,69 @@ class Process
         return rled_allocs;
     }
 
+
     public void FindOptimalQuotas(int quota_iters_num)
     {
-        const int initial_quota_value = 350;
 
+        int [] running_quotas = get_constant_quotas(quota_iters_num, initial_quota_value);
+
+        FindOptimalQuotasProcess(quota_iters_num, ref running_quotas, 0);
+    }
+
+    public void ResumeFindOptimalQuotas(string filename, int quota_iters_num)
+    {
+        int next_quota = 0;
+
+        StreamReader reader =
+            new StreamReader(File.Open(filename, FileMode.Open));
+
+        int [] running_quotas = get_constant_quotas(quota_iters_num, initial_quota_value);
+
+        Regex re = new Regex(@"^Found (\d+) for No. (\d+) \(\d+\)$");
+
+        string line;
+
+        while((line = reader.ReadLine()) != null)
+        {
+            Match match = re.Match(line);
+            if (match.Success)
+            {
+                if (Convert.ToInt32(match.Groups[2].Value) != next_quota)
+                {
+                    throw new ApplicationException("next_quota is out of order on line" + line);
+                }
+                
+#if false
+                Console.WriteLine(
+                    string.Format(
+                        "+++ReFound {0} for No. {1}",
+                        match.Groups[1].Value, match.Groups[2].Value
+                    )
+                );
+#endif
+
+                running_quotas[next_quota] =
+                    Convert.ToInt32(match.Groups[1].Value);
+
+                next_quota++;
+            }
+        }
+
+        FindOptimalQuotasProcess(
+            quota_iters_num, ref running_quotas, next_quota
+        );
+    }
+    
+
+    public void FindOptimalQuotasProcess(int quota_iters_num, ref int [] running_quotas, int start_idx)
+    {
         const int start_quota = 100;
         const int end_quota = 1000;
 
         List<Quota_Allocation> rled_allocs = null;
 
-        int [] running_quotas = get_constant_quotas(quota_iters_num, initial_quota_value);
 
-        for(int quota_idx = 0; quota_idx < quota_iters_num ; quota_idx++)
+        for(int quota_idx = start_idx; quota_idx < quota_iters_num ; quota_idx++)
         {
             int min_quota = -1;
             long min_quota_iters = -1;
@@ -558,6 +612,17 @@ class Program
 
             Process p = new Process(input);
             p.FindOptimalQuotas(iters_num);
+        }
+        else if (cmd == "continue_find_optimal_quotas")
+        {
+            Input input = new Input(start_board, num_boards);
+            input.read_data();
+
+            int iters_num = Convert.ToInt32(args[1]);
+            string resume_from_filename = args[2];
+
+            Process p = new Process(input);
+            p.ResumeFindOptimalQuotas(resume_from_filename, iters_num);
         }
         // List<double> myList = new List<double>();
         else

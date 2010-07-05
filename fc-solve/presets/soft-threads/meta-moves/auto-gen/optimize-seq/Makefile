@@ -8,3 +8,7 @@ test: all
 
 results: all
 	mono ./find_opt.exe find_optimal_quotas 300 
+
+more_results: all
+	mono ./find_opt.exe continue_find_optimal_quotas 300 \
+		"$(FCS_DATA_DIR)/find_optimal_quotas-300.dump"
