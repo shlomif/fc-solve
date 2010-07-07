@@ -60,6 +60,9 @@ extern "C" {
 */
 #cmakedefine IA_STATE_PACKS_GROW_BY 32
 
+/* The size of a single pack in alloc.c/alloc.h measured in 1024 chars. */
+#cmakedefine FCS_IA_PACK_SIZE ${FCS_IA_PACK_SIZE}
+
 #ifndef FCS_FREECELL_ONLY
 #cmakedefine FCS_FREECELL_ONLY
 #endif

@@ -36,7 +36,7 @@
 
 #include "alloc.h"
 
-#define ALLOCED_SIZE (64*1024-(256+128))
+#define ALLOCED_SIZE (FCS_IA_PACK_SIZE*1024-(256+128))
 
 void fc_solve_compact_allocator_init(
     fcs_compact_allocator_t * allocator
