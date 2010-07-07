@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 22;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -225,6 +225,54 @@ verify_solution_test(
         theme => ["-l", "by", "--scans-synergy", "dead-end-marks"],
     },
     "There is a solution for 254,076 with -l by and a scans synergy.",
+);
+
+# This command line theme yields an especially short solution to the
+# previously intractable deal #12 .
+# TEST
+verify_solution_test(
+    {
+        deal => 12,
+        theme => [qw(--freecells-num 2 -to '[012][347]' --method random-dfs -seed 33)],
+        variant => "custom",
+        msdeals => 1,
+        variant_params => 
+        Games::Solitaire::Verify::VariantParams->new(
+            {
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 2,
+                'sequence_move' => "limited",
+                'seq_build_by' => "alt_color",
+                'empty_stacks_filled_by' => "any",
+            }
+        ),
+    },
+    "Checking the 2-freecells '-seed 33' preset."
+);
+
+# This command line theme yields an ever shorter solution to the
+# previously intractable deal #12 .
+# TEST
+verify_solution_test(
+    {
+        deal => 12,
+        theme => [qw(--freecells-num 2 -to '[012][347]' --method random-dfs -seed 236)],
+        variant => "custom",
+        msdeals => 1,
+        variant_params => 
+        Games::Solitaire::Verify::VariantParams->new(
+            {
+                'num_decks' => 1,
+                'num_columns' => 8,
+                'num_freecells' => 2,
+                'sequence_move' => "limited",
+                'seq_build_by' => "alt_color",
+                'empty_stacks_filled_by' => "any",
+            }
+        ),
+    },
+    "Checking the 2-freecells '-seed 236' preset."
 );
 
 =head1 COPYRIGHT AND LICENSE
