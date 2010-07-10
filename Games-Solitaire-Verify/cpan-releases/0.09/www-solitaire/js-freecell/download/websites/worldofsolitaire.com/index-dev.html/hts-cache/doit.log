@@ -1,0 +1,8 @@
++*.gif +*.png -ad.doubleclick.net/* -O ~/websites/# worldofsolitaire.com/index-dev.html -*.zip
+File generated automatically on Wed, 12 Aug 2009 01:59:10, do NOT edit
+
+To update a mirror, just launch httrack without any parameters
+The existing cache will be used (and modified)
+To have other options, retype all parameters and launch HTTrack
+To continue an interrupted mirror, just launch httrack without any parameters
+

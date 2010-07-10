@@ -1,0 +1,124 @@
+Freecell Solver's To-do list
+============================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2009-08-14
+:Revision: $Id$
+
+Pressing
+--------
+
+* Create a meaningful man-page from +README.xml+ / +USAGE.xml+ etc.
+
+* Add some command line examples to +USAGE.txt+ .
+
+* Deal with the fact that:
++./freecell-solver-range-parallel-solve 1 100 1 -mi 1+ displays 
+"Unsolved Board" instead of "Intractable Board".
+
+Non-pressing
+------------
+
+* Experiment with using "selection sort" instead of "insertion sort" when
+sorting small data sets (columns, freecells, derived states, etc.).
+
+* Optimize the Soft-DFS and Random-DFS tests_list implementation (direct
+pointers to test functions).
+ 
+* Divide the scan type variable into two variables: super-scan 
+(DFS vs BeFS/BFS/Opt) and sub-scan (random_dfs, soft_dfs, etc.), to facilitate 
+multiplexing them.
+
+* If +-opt+ is specified for the flare, then make sure that if the flares
+loop stop it when it's doing the optimization scan, then the optimization scan
+goes on until it ends.
+** Not sure about it.
+
+* Inline fc_solve_free_instance().
+
+* Experiment with making fcs_move_t a bit-field with half-octets/etc. for
+the various fields.
+** Make sure that the amount required can fit there using CMake and a log2
+function.
+
+* Play with moving commonly accessed struct elements to the start of
+the struct to fit within the processor's cache line. Like the Linux kernel 
+where the most important elements are at the first 32 bytes of the struct.
+
+* See about getting rid of the unused context variable where appropriate.
+
+* Investigate a way to have positions_by_rank also index according to the
+suit, and to traverse only the possible parents or children based on the
+suit.
+
+* Do the test for +SUSPEND_PROCESS+ (+check_if_limits_exceeded()+ ) in only 
+one place. There isn't a need for it to be done in several places.
+
+* Experiment with using a union in the soft_thread to unify common elements
+that are used only by one of the scans.
+
+* Move the trunk, branches, tags, etc. to under /fc-solve. (?)
+
+* Re-organize the source code to be more sensibly organized.
+
+* Experiment with using bit members for cards:
+** http://en.wikipedia.org/wiki/Bit_field
+
+* Abstract away the move of a single card from one column to another
+in freecell.c.
+
+* Interactive mode? Continue a scan that reached its limit.
+
+* Investigate ways to perform more pointer arithematics and 
+(ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
+
+* In the states handling, there's still some room for pointer arithmetics.
+
+Long-term
+---------
+
+* Code a generic tests grouping.
+
+* Integrate the patsolve's prioritization and mixed BFS/DFS scan.
+
+* Update the architecture document.
+
+* Make a super-strict parsable-output without all the quirks of
+-p -t (see Games-Solitaire-Verify for why).
+
+* Write a multi-threaded version.
+
+* Port to Java (?)
+
+* Add a switch to ask the user if he wants to continue and enter a bigger 
+iterations limit.
+
+* Check for unmalloced data and if so gracefully exit.
+
+* Experiment with a delta-based state storage.
+
+* Add a way to build the various libavl2 trees to be used as 
+positions/columns collections.
+
+* Adapt the scans based on the parameters of the initial board.
++
+** Try to find a correlation between various parameters of the initial board 
+(such as those calculated in the A* scan or the number of steps required to
+sort the cards in each column by rank), and the performance of various scans 
+and then:
++
+1. Calculate the initial parameters on startup.
++
+2. See what would be a good meta-scan based on them.
++
+3. Use it.
+
+To be considered
+----------------
+
+* Make the code https://sourceforge.net/projects/splint/[splint]-clean.
+
+* Write a multi-process client/server program.
+
+* Add a limit to stacks number (in the case of Indirect Stack States),
+number of states that are stored anywhere, etc.
+

@@ -1,0 +1,43 @@
+<h1>Freecell Solver 2.18.0 Was Released</h1>
+
+<p>
+As <a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/message/887">previously
+    announced on the fc-solve-discuss mailing list</a>, version 2.18.0 of 
+<a href="http://fc-solve.berlios.de/">Freecell Solver</a> is now available
+for download as a source tarball from 
+<a href="http://fc-solve.berlios.de/download.html">the download page</a>.
+</p>
+
+<p>
+Here are some highlights of the new release:
+</p>
+
+<ol>
+<li>
+Added the FCS_FREECELL_ONLY compile-time flag to hard-code the settings
+for Freecell and thus allow a faster run-time. When applied, it improves
+the speed of the solver from 140 deals / second to 164 deals / second.
+</li>
+<li>
+Fixed using <a href="http://libredblack.sourceforge.net/">libredblack</a>
+for states and stacks storage, and also added a 
+<a href="http://judy.sourceforge.net/">libJudy</a>-based backend for them.
+</li>
+<li>
+Added the -Wall (= turn "all" warnings on) by default for gcc in the CMake
+build.
+</li>
+<li>
+Updated the "TODO" file in the distribution which was heavily out-of-date.
+</li>
+<li>
+Documented the "What's new" of some previous releases in the "NEWS" file.
+</li>
+<li>
+Got rid of the Hard-DFS scan, which was no longer useful. It is still accepted 
+as an argument, but is now using the Soft-DFS routines instead.
+</li>
+<li>
+Many internal refactorings, cleanups, tweaks and fine-tunings.
+</li>
+</ol>

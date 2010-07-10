@@ -1,0 +1,197 @@
+#include '../template.wml'
+#include "fcs-distribution-docs.wml"
+
+<latemp_subject "Download Freecell Solver" />
+
+<define-tag linktofile>
+<a href="%0">%0</a>
+</define-tag>
+
+<define-tag link_to_berlios_file>
+<a href="http://download.berlios.de/fc-solve/%0">%0</a>
+</define-tag>
+
+<define-tag download_stop>
+<div class="stop">
+<img src="$(ROOT)/images/Stop_hand_nuvola.png" class="sign" alt="Stop Sign" />
+
+<h2 id="download-gui-instead">Stop! Don't you want a Graphical Interface?</h2>
+
+<p>
+Freecell Solver is <b>not</b> a graphical program, and is instead oriented
+towards software developers and users of the UNIX/Linux or Windows command 
+lines. If you prefer a graphical program with a convenient
+interface and an animated solution look at the
+<a href="$(ROOT)/links.html#front_ends"><b>graphical front-ends</b></a> for
+Freecell Solver that people have prepared.
+</p>
+
+<p>
+Of these we can recommend <a href="http://pysolfc.sourceforge.net/">PySolFC</a>
+which is open-source, cross-platform, configurable and supports a very
+large number of Solitaire variants.
+</p>
+
+</div>
+</define-tag>
+
+<download_stop />
+
+<h2 id="latest-stable">Latest Stable Versions</h2>
+
+<table class="downloads" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
+<tr>
+<td>
+# <a href="http://www.shlomifish.org/Files/files/code/fcs/freecell-solver-2.32.1.tar.bz2">freecell-solver-2.32.1.tar.bz2</a>
+<link_to_berlios_file "freecell-solver-3.0.0.tar.bz2" />
+</td>
+<td>
+Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
+</td>
+</tr>
+
+<tr>
+<td>
+<link_to_berlios_file "freecell-solver-2.42.0-win32.exe" />
+</td>
+<td>
+Win32 Binaries. Download the .exe and it will set up an interactive installer.
+</td>
+</tr>
+
+<tr>
+<td>
+<a href="http://packages.debian.org/source/squeeze/freecell-solver">Debian Package</a>
+</td>
+<td>
+A link to an "apt"-able Debian Package in the Debian pool of packages.
+</td>
+</tr>
+
+</table>
+
+<define-tag develversion>
+
+<h2 id="devel-versions">Development Versions</h2>
+
+<table class="downloads" summary="The Development Version for Freecell Solver. Link for download is on the left; Description is on the right.">
+
+<tr>
+<td>
+<link_to_berlios_file "freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz" />
+</td>
+<td>
+The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_VERSION)"; my @vers = split(/\./, $a); $vers[1]++; $vers[2] = '0'; print join(".", @vers); }:>. 
+</td>
+</tr>
+
+</table>
+</define-tag>
+
+<ifneq "$(WITH_DEVEL_VERSION)" ""
+    "<develversion />" />
+
+
+<h2 id="download_other_solvers">Other Solvers</h2>
+
+<ul>
+
+<li>
+<link_to_berlios_file "patsolve-shlomif-3.0.2.tar.bz2" />
+</li>
+
+<li>
+<a href="don_woods.html">For Don Wood's solver access this link.</a>
+</li>
+
+</ul>
+
+<h2 id="docs">Documents</h2>
+
+<fcs_distribution_documents />
+
+<h2 id="utils">Utility Programs</h2>
+
+<table class="downloads" summary="Utility programs and patches for use within various Solitaire Implementations. Links are on the left; descriptions are on the right.">
+<tr>
+<td>
+<a href="palm_patience_getgame.tar.gz">palm_patience_getgame.tar.gz</a>
+</td>
+<td>
+Dumps games from Patience 2.5 on PalmOS. You need all the
+usual PalmOS tools to use this. The README tells you where
+you can find Patience 2.5. prc file included.
+</td>
+</tr>
+
+<tr>
+<td>
+<a href="xpat2-1.04.patch">xpat2-1.04.patch</a>
+</td>
+<td>
+This is a patch for xpat2 that dumps its games to a file.
+</td>
+</tr>
+
+<tr>
+<td>
+<a href="patience-1.9.patch">patience-1.9.patch</a>
+</td>
+<td>
+Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html">"Patience" Tcl implementation</a>.
+</td>
+</tr>
+
+</table>
+
+
+<h2 id="older-stable">Older Versions</h2>
+
+<define-tag ver>
+<tr>
+<td>
+<a href="http://download.berlios.de/fc-solve/freecell-solver-%0.%1.tar.<get-var download_suffix />">Version %0.%1</a>
+</td>
+</tr>
+</define-tag>
+
+<table class="downloads" summary="Older versions of Freecell Solver. In decreasing version number.">
+<set-var download_suffix="bz2" />
+<ver "2.42" "0" />
+<ver "2.40" "0" />
+<ver "2.38" "0" />
+<ver "2.36" "0" />
+<ver "2.34" "0" />
+<ver "2.32" "1" />
+<ver "2.30" "0" />
+<ver "2.28" "1" />
+<set-var download_suffix="gz" />
+<ver "2.26" "0" />
+<ver "2.24" "0" />
+<ver "2.22" "0" />
+<ver "2.20" "0" />
+<ver "2.18" "0" />
+<ver "2.16" "0" />
+<ver "2.14" "0" />
+<ver "2.12" "0" />
+<ver "2.8" "14" />
+<ver "2.6" "3" />
+<ver "2.4" "3" />
+<ver "2.2" "6" />
+<ver "2.0" "2" />
+<ver "1.10" "4" />
+<ver "1.8" "3" />
+<ver "1.6" "4" />
+<ver "1.4" "6" />
+<ver "1.2" "0" />
+<ver "1.0" "2" />
+<ver "0.10" "0" />
+<ver "0.8" "1" />
+<ver "0.6" "2" />
+<ver "0.4" "2" />
+<ver "0.2" "1" />
+</table>
+
+<undef ver />
+
+

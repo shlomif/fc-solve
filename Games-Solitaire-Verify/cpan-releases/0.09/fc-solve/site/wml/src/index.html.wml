@@ -1,0 +1,102 @@
+#include '../template.wml'
+
+<latemp_subject "Freecell Solver" />
+
+<ul class="emphasis">
+<li><a href="download.html">Download Freecell Solver!</a></li>
+<li><a href="links.html#other_solvers">Other Solvers</a></li>
+</ul>
+
+<p>
+This is Freecell Solver - a program that automatically solves layouts of 
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar 
+variants of <a href="http://en.wikipedia.org/wiki/Solitaire">Card 
+Solitaire</a> such as Eight Off, Forecell and
+Seahaven Towers, as well as 
+<a href="http://en.wikipedia.org/wiki/Simple_Simon_%28solitaire%29">Simple 
+Simon</a> boards. Freecell Solver is 
+<a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">free 
+and open source software</a> freely available under the 
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 License</a>. 
+It is written in ANSI C and requires a C compiler to be built.  Nevertheless, 
+binaries for Microsoft Windows 32-bit are available.
+</p>
+
+<p>
+Included with the archive is source code for programs that can automatically 
+feed it with the boards of several popular Solitaire Implementations.
+</p>
+
+<p>
+Freecell Solver can also be built as a library for use within your own
+Solitaire implementations. A more detailed list of features can be found
+in the <a href="features.html"><b>Features List</b></a>.
+</p>
+
+<h2>News</h2>
+<:{
+use FreecellSolver::Site::News;
+
+binmode STDOUT, ":utf8";
+my $news = FreecellSolver::Site::News->new();
+print $news->render_front_page();
+}:>
+
+<h3 class="plain"><a href="old-news.html">Previous News Items</a></h3>
+
+<h2>Links</h2>
+
+<ul>
+<li>
+<a href="http://www.freecell.org/">Freecell.org</a> - a web-site dedicated
+to the game.
+</li>
+<li>
+<a href="http://www.solitairelaboratory.com/freecell.html">Michael
+Keller's Freecell site</a> -
+contains the 
+<a href="http://www.solitairelaboratory.com/fcfaq.html">Freecell FAQ
+(Frequently Asked Questions)</a> and other stuff.
+</li>
+<li>
+<a href="http://pysolfc.sourceforge.net/">PySol Fan Club Edition</a> - a
+cross-platform, open-source implementation of many Solitaire games with
+very good embedding of Freecell Solver.
+</li>
+<li>
+<a href="http://people.cs.uu.nl/hansb/d.freecell/freecellhtml.html">
+An unsolvable instance of Freecell</a> - why not all possible initial Freecell 
+boards can be solved.
+</li>
+<li>
+<a href="http://www.heyes-jones.com/astar.html">Justin-Heyes
+Jones' A* page</a> - a page about the A* scan.
+</li>
+<li>
+<a href="$(ROOT)/download.html#download_other_solvers">
+patsolve</a> - a program by Dr. Tom Holroyd that solves Freecell and
+Seahaven Towers games. There are some fundamental differences between its
+architecture and that of Freecell Solver, so it might be worthwhile to take a
+look. I've done some modifications on it to fix some build bugs.
+</li>
+</ul>
+
+<ul>
+<li>
+<a href="http://freshmeat.net/projects/freecellsolver/">Freecell Solver's
+Freshmeat App-Index Record</a>
+</li>
+<li>
+<a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/">Freecell Solver's
+Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
+</li>
+<li>
+<a href="http://fc-solve.blogspot.com/">The Freecell Solver Blog</a>
+</li>
+<li>
+<a href="<get-var presentation_url />">A Presentation about Freecell Solver</a>
+</li>
+</ul>
+
+<h3 class="plain"><a href="links.html">More Links</a></h3>
+

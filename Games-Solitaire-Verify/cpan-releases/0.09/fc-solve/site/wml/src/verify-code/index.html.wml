@@ -1,0 +1,52 @@
+#include '../template.wml'
+
+<latemp_subject "Verifying Solutions of Solitaire Games Automatically" />
+
+<p>
+<b>Games-Solitaire-Verify</b> is a <a href="http://www.cpan.org/">CPAN 
+(Comprehensive Perl Archive Network)</a> module for verifying solutions of
+Solitaire games. It was designed to serve as an aid in the test suite of
+Freecell Solver, but may prove useful in other contexts.
+</p>
+
+<h2 id="download">Download</h2>
+
+<ul>
+
+<li>
+<a href="http://search.cpan.org/dist/Games-Solitaire-Verify/"><b>Latest 
+Stable Version on CPAN</b></a> - includes online documentation.
+</li>
+
+<li>
+<a href="http://cpan.uwinnipeg.ca/dist/Games-Solitaire-Verify">Games-Solitaire-Verify on Kobesearch</a> (an alternative CPAN interface).
+</li>
+
+<li>
+<a href="http://svn.berlios.de/svnroot/repos/fc-solve/trunk/Games-Solitaire-Verify/">Subversion 
+Repository trunk</a>.
+</li>
+
+</ul>
+
+<h2 id="features">Features and Limitations</h2>
+
+<ul>
+
+<li>
+Modular design for implementing game variants - supports most of the 
+variants supported by Freecell Solver.
+</li>
+
+<li>
+Input and output are compatible with that of Freecell Solver's
+<tt>-p -t -sam</tt> output (including several quirks).
+</li>
+
+<li>
+Can handle the verification of individual cards, columns, entire states 
+(= board layouts), moves and entire solutions.
+</li>
+
+</ul>
+
