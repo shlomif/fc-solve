@@ -20,6 +20,7 @@ my $builder = Test::Run::Builder->new(
         'File::Spec' => 0,
         'Exception::Class' => 0,
         'List::Util' => 0,
+        'Getopt::Long' => '2.36',
     },
     add_to_cleanup      => [ 'Games-Solitaire-Verify-*' ],
     create_makefile_pl => 'traditional',
