@@ -5,9 +5,10 @@ use warnings;
 
 use base 'Games::Solitaire::Verify::Base';
 
-use Getopt::Long;
+use Getopt::Long qw(GetOptionsFromArray);
 
 use Games::Solitaire::Verify::VariantsMap;
+use Games::Solitaire::Verify::Solution;
 
 __PACKAGE__->mk_acc_ref(
     [
@@ -37,7 +38,7 @@ sub _init
 
             if (!defined($variant_params))
             {
-                die "Unknown variant '$g'!\n";
+                die "Unknown variant '$game'!\n";
             }
         },
         'freecells-num=i' => sub {
@@ -126,8 +127,17 @@ sub run
     my $filename = $self->_filename();
     my $variant_params = $self->_variant_params();
 
-    open my $fh, "<", $filename
-        or die "Cannot open '$filename' - $!";
+    my $fh;
+
+    if ($filename eq "-")
+    {
+        $fh = *STDIN;
+    }
+    else
+    {
+        open $fh, "<", $filename
+            or die "Cannot open '$filename' - $!";
+    }
 
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
