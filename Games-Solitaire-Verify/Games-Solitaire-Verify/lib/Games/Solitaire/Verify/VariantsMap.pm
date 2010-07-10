@@ -18,7 +18,7 @@ Version 0.03
 
 =cut
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 sub _init
 {

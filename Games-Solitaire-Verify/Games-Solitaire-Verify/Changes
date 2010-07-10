@@ -1,8 +1,11 @@
 Revision history for Games-Solitaire-Verify
 
+0.09    Sat Jul 10 12:28:47 IDT 2010
         - Converted from Class-Accessor to Class-XSAccessor (with a function
         emulating mk_accessors for convenience.).
             - This made the test suite run faster.
+        - Add the script/verify-solitaire-solution and 
+        lib/Games/Solitaire/Verify/App/CmdLine.pm .
 
 0.08    Sat Jul  4 11:24:29 IDT 2009
         - Removed the "all rights reserved" language. I was told it is
