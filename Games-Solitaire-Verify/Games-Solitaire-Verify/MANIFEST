@@ -19,7 +19,7 @@ Makefile.PL
 MANIFEST
 META.yml
 README
-script/verify-solution
+script/verify-solitaire-solution
 t/00-load.t
 t/01-base.t
 t/02-move.t

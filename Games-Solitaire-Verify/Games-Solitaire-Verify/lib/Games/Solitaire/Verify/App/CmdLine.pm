@@ -32,7 +32,7 @@ sub _init
     GetOptionsFromArray(
         $argv,
         'g|game|variant=s' => sub {
-            my $game = shift;
+            my (undef, $game) = @_;
 
             $variant_params = $variant_map->get_variant_by_id($game);
 
@@ -42,15 +42,15 @@ sub _init
             }
         },
         'freecells-num=i' => sub {
-            my $n = shift;
+            my (undef, $n) = @_;
             $variant_params->num_freecells($n);
         },
         'stacks-num=i' => sub {
-            my $n = shift;
+            my (undef, $n) = @_;
             $variant_params->num_columns($n);
         },
         'decks-num=i' => sub {
-            my $n = shift;
+            my (undef, $n) = @_;
 
             if (! ( ($n == 1) || ($n == 2) ) )
             {
@@ -60,7 +60,7 @@ sub _init
             $variant_params->num_decks($n);
         },
         'sequences-are-built-by=s' => sub {
-            my $val = shift;
+            my (undef, $val) = @_;
 
             my %seqs_build_by = 
             (
@@ -80,7 +80,7 @@ sub _init
             $variant_params->seqs_build_by($proc_val);
         },
         'empty-stacks-filled-by=s' => sub {
-            my $val = shift;
+            my (undef, $val) = @_;
 
             my %empty_stacks_filled_by_map =
             (map { $_ => 1 } (qw(kings any none)));
@@ -93,7 +93,7 @@ sub _init
             $variant_params->empty_stacks_filled_by($val);
         },
         'sequence-move=s' => sub {
-            my $val = shift;
+            my (undef, $val) = @_;
 
             my %seq_moves = (map { $_ => 1 } (qw(limited unlimited)));
 
