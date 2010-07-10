@@ -230,7 +230,13 @@ sub clone
 
     return __PACKAGE__->new(
         {
+            empty_stacks_filled_by => $self->empty_stacks_filled_by(),
+            num_columns => $self->num_columns(),
+            num_decks => $self->num_decks(),
+            num_freecells => $self->num_freecells(),
+            rules => $self->rules(),
             seq_build_by => $self->seq_build_by(),
+            sequence_move => $self->sequence_move(),
         }
     );
 }

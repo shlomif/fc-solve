@@ -241,7 +241,7 @@ sub get_variant_by_id
     }
     else
     {
-        return $map->{$id};
+        return $map->{$id}->clone();
     }
 }
 
