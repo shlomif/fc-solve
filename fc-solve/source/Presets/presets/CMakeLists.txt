@@ -13,6 +13,7 @@ INSTALL(
         "rin-tin-tin.sh"
         "sand-stone.sh"
         "sentient-pearls.sh"
+        "tea-for-two.sh"
         "the-iglu-cabal.sh"
         "toons-for-twenty-somethings.sh"
         "yellow-brick-road.sh"
