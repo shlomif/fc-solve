@@ -73,6 +73,13 @@ in freecell.c.
 
 * In the states handling, there's still some room for pointer arithmetics.
 
+* Implement more of Kevin Atkinson's Common Lisp solver's atomic move types,
+and try to contruct good heuristics out of them.
+
+* Play with writing a memory-re-cycling Soft-DFS scan: if a sub-tree was
+marked as a dead-end, then its states might be able to be placed on a linked
+list of states that can be reused.
+
 Long-term
 ---------
 
