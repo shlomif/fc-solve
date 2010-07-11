@@ -8,6 +8,7 @@ use base 'Class::Accessor';
 
 use XML::Feed;
 use CGI;
+use Encode;
 
 __PACKAGE__->mk_accessors(qw(
     feed
@@ -31,9 +32,11 @@ sub _calc_entry_body
     my ($self, $entry) = @_;
     my $body = $entry->content()->body();
 
+    my $title = decode('UTF-8', $entry->title());
+
     $body =~ s{<a name="cut[^"]*"></a>}{}g;
 
-    return "<!-- TITLE=" . CGI::escapeHTML($entry->title()) . "-->\n" . $body;
+    return "<!-- TITLE=" . CGI::escapeHTML($title) . "-->\n" . $body;
 }
 
 sub run
