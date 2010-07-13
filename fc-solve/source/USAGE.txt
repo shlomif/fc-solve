@@ -762,6 +762,9 @@ Solver 3.2.0 and above) that yields solutions faster on average than
 |+sentient-pearls+             |a meta-moves and flares based preset with
 short solutions. Much faster than +children-playing-ball+ but yields less
 optimal solutions.
+|+tea-for-two+                 |a meta-moves preset optimized for 
+two-freecells' Freecell games (although it can work on other Freecell-like
+games as well).
 |+the-iglu-cabal+              |a meta-moves preset that yields faster
 solutions on average than +blue-yonder+.
 |+the-last-mohican+            |a preset for solving Simple Simon. Yields
