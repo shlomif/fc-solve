@@ -4,6 +4,29 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.2.0: (13-Jul-2010)
+----------------------------
+
+1. Add the +--depth-tests-order+ (or +-dto+ for short) flag that allows
+varying the tests' order based on the depth. This allows for interesting
+(and faster) searches.
+
+2. Add the +the-iglu-cabal+ , +foss-nessy+ and +tea-for-two+ presets.
+The latter is optimized for two freecell deals.
+
+3. Fixed a bug where when specifying the +--max-iters+ flag it did not
+yield an +FCS_STATE_SUSPEND_PROCESS+ return code.
+
+4. Fix a crash when using a --prelude with a soft thread with a NULL name.
+
+5. Add support for Google's Dense Hash for the states' storage and the stacks
+storage. It does not perform as well as our own custom hash.
+
+6. Internals: defined a boolean data type +fcs_bool_t+ with two constants
++TRUE+ and +FALSE+ , so it can be semantically different.
+
+7. Some optimizations.
+
 Version 3.0.0: (23-May-2010)
 ----------------------------
 
