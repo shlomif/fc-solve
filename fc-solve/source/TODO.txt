@@ -18,6 +18,9 @@ Pressing
 Non-pressing
 ------------
 
+* With the +fc-solve+ command line program: add a flag to trigger different
+notice on having reached +FCS_SUSPEND_PROCESS+.
+
 * Experiment with using "selection sort" instead of "insertion sort" when
 sorting small data sets (columns, freecells, derived states, etc.).
 
