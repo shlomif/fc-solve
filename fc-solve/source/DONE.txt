@@ -90,3 +90,7 @@ Software]
 called +fcs_bool_t+, just so readers can tell they are booleans instead of
 ints.
 
+* Deal with the fact that:
++./freecell-solver-range-parallel-solve 1 100 1 -mi 1+ displays 
+"Unsolved Board" instead of "Intractable Board".
+
