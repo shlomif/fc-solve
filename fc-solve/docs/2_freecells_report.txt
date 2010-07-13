@@ -10,7 +10,7 @@ Solvable
 * By using the extended range (8,200,000 iterations) +-to 01ABCDE+ scan:
 +grep -l '^This game is solv' *.sol  | wc -l+ yields: 14.
 
-* *Total:* 25367.
+* *Total:* 25,367.
 
 "Provably" unsolvable
 ---------------------
