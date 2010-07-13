@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 6;
 
 my $range_solver = $ENV{'FCS_PATH'} . "/freecell-solver-range-parallel-solve";
 
@@ -21,6 +21,18 @@ ok (!system($range_solver, "1", "2", "1", "-opt"), "Range solver with -opt was s
 ok (!system($range_solver, "1", "64", "1", "-l", "cool-jives", "-opt"), 
     "Range solver with -opt and a large number of boards was succesful."
 );
+
+{
+    my $output = `$range_solver 1 3 1 -mi 1`;
+
+    foreach my $deal (1 .. 3)
+    {
+        # TEST*3
+        like($output, qr{^Intractable Board No. \Q$deal\E}ms,
+            "Boards are marked as intractable given --max-iters"
+        );
+    }
+}
 
 =head1 COPYRIGHT AND LICENSE
 

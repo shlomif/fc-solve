@@ -124,6 +124,7 @@ typedef struct
     fcs_state_keyval_pair_t state;
     fcs_state_keyval_pair_t running_state;
     int ret_code;
+    fcs_bool_t all_instances_were_suspended;
     int state_validity_ret;
     fcs_card_t state_validity_card;
     freecell_solver_user_iter_handler_t iter_handler;
@@ -204,6 +205,7 @@ static void user_initialize(
 
     user->state_string_copy = NULL;
     user->iterations_board_started_at = 0;
+    user->all_instances_were_suspended = TRUE;
 
     user->error_string = NULL;
 
@@ -985,6 +987,11 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             flare->ret_code =
                 fc_solve_resume_instance(user->fc_solve_obj);
 
+        if (ret != FCS_STATE_SUSPEND_PROCESS)
+        {
+            user->all_instances_were_suspended = FALSE;
+        }
+
         user->iterations_board_started_at += user->fc_solve_obj->num_times - init_num_times;
         user->init_num_times = user->fc_solve_obj->num_times;
 
@@ -1050,7 +1057,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         }
     }
 
-    return ret;
+    return 
+    (
+        user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret
+    );
 }
 
 int DLLEXPORT freecell_solver_user_get_next_move(
