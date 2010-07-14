@@ -4,7 +4,7 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
-Version 3.2.0: (13-Jul-2010)
+Version 3.2.0: (14-Jul-2010)
 ----------------------------
 
 1. Add the +--depth-tests-order+ (or +-dto+ for short) flag that allows
