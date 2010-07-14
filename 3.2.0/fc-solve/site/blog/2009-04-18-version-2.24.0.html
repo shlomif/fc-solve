@@ -1,0 +1,28 @@
+<h1>Freecell Solver 2.24.0 was Released</h1>
+
+<!-- Tags: freecell, solver, solving, 2.24.0, release, version, optimization scan, range, solver, profiling, cleanups, refactoring, llvm
+-->
+
+<p>
+<a href="http://fc-solve.berlios.de/">Freecell Solver</a> version 2.24.0
+was released today. It is available in a source archive from 
+<a href="http://fc-solve.berlios.de/download.html">the 
+    download page</a>. Windows command-line binaries should be available
+momentarily.
+</p>
+
+<p>
+This version contains some fixes to crashes and memory leaks when
+using the <tt>-opt</tt> with a range
+of boards (or otherwise when a solver instance is recycled), a new
+"freecell-solver-fc-pro-range-solve" executable (built by default,
+but not installed), which runs a range of 
+deals using the solver and outputs the number of FCS moves, the number of 
+FC-Pro moves, and the FC-Pro moves in standard notation.
+</p>
+
+<p>
+For developers, this release also contains a build type for profiling,
+many cleanups to the code, and a makefile to generate
+<a href="http://llvm.org/">LLVM</a> bitcode.
+</p>

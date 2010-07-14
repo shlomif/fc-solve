@@ -1,0 +1,12 @@
+HTTrack3.43-7+libhtsjava.so.2 launched on Wed, 12 Aug 2009 01:59:10 at +*.gif +*.png -ad.doubleclick.net/* worldofsolitaire.com/index-dev.html -*.zip
+(httrack +*.gif +*.png -ad.doubleclick.net/* -O ~/websites/# worldofsolitaire.com/index-dev.html -*.zip )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+
+HTTrack Website Copier/3.43-7 mirror complete in 3 minutes 31 seconds : 153 links scanned, 152 files written (6384543 bytes overall) [5204091 bytes received at 24663 bytes/sec], 1685831 bytes transfered using HTTP compression in 3 files, ratio 26%, 2.4 requests per connection
+(No errors, 0 warnings, 0 messages)
+02:02:41	Info: 	Top index rebuilt (done)
