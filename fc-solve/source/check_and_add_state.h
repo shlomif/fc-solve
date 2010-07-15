@@ -46,8 +46,8 @@ extern "C" {
 
 GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t * hard_thread,
-    fcs_state_extra_info_t * new_state_val,
-    fcs_state_extra_info_t * * existing_state_val
+    fcs_state_keyval_pair_t * new_state_val,
+    fcs_state_keyval_pair_t * * existing_state_val
     );
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)

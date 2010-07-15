@@ -89,7 +89,7 @@ static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(fcs_move_stack_t * stack, f
 }
 
 void fc_solve_apply_move(
-        fcs_state_extra_info_t * state_val,
+        fcs_state_keyval_pair_t * state_val,
         fcs_internal_move_t move,
         int freecells_num,
         int stacks_num,
@@ -126,7 +126,7 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
 
 static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
-    fcs_state_extra_info_t * init_state_val,
+    fcs_state_keyval_pair_t * init_state,
     int freecells_num,
     int stacks_num,
     int decks_num
@@ -145,13 +145,13 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_init(temp_moves);
 
     fcs_duplicate_state(
-            &(dynamic_state.s), &(dynamic_state.info),
-            (init_state_val->key), init_state_val
+            &(dynamic_state),
+            init_state
             );
 #ifdef INDIRECT_STACK_STATES
     for (i=0 ; i < stacks_num ; i++)
     {
-        fcs_copy_stack(dynamic_state.s, dynamic_state.info, i, buffer);
+        fcs_copy_stack(dynamic_state, i, buffer);
     }
 #endif
 
@@ -162,7 +162,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             ) == 0)
     {
         fc_solve_apply_move(
-            &dynamic_state.info,
+            &dynamic_state,
             in_move,
             freecells_num,
             stacks_num,
@@ -238,7 +238,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 }
 
 extern char * fc_solve_move_to_string_w_state(
-        fcs_state_extra_info_t * state_val,
+        fcs_state_keyval_pair_t * state,
         int freecells_num,
         int stacks_num,
         int decks_num,
@@ -258,7 +258,7 @@ static GCC_INLINE char * fc_solve_move_to_string(fcs_move_t move, int standard_n
 
 
 typedef struct {
-    fcs_state_extra_info_t * state_ptr;
+    fcs_state_keyval_pair_t * state_ptr;
     union 
     {
         void * ptr;
@@ -277,7 +277,7 @@ typedef struct
 
 extern void fc_solve_derived_states_list_add_state(
         fcs_derived_states_list_t * list,
-        fcs_state_extra_info_t * state_val,
+        fcs_state_keyval_pair_t * state_val,
         int context
         );
 

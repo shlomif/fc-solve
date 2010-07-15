@@ -69,29 +69,28 @@ extern "C" {
 /*
  *  These are some macros to make it easier for the programmer.
  * */
-#define ptr_state_key (ptr_state_key)
-#define ptr_state_val (ptr_state_val)
-#define state_key (*ptr_state_key)
+#define ptr_state_key (&(ptr_state->s))
+#define ptr_state_val (&(ptr_state->info))
+#define state_key (ptr_state->s)
 #define state  (state_key)
-#define state_val (*ptr_state_val)
-#define new_state (*ptr_new_state_key)
-#define new_state_key (new_state)
-#define new_state_val (*ptr_new_state_val)
+#define state_val (ptr_state->info)
+#define new_state (ptr_new_state->s)
+#define new_state_key (ptr_new_state->s)
+#define new_state_val (ptr_new_state->info)
 
 
 #define sfs_check_state_begin()                                     \
     {         \
         fc_solve_sfs_check_state_begin(hard_thread,  \
-                &ptr_new_state_key,                  \
-                &ptr_new_state_val,                  \
-                ptr_state_val,                       \
+                &ptr_new_state,                      \
+                ptr_state,                           \
                 moves);                              \
     }
 
 
 #define sfs_check_state_end() \
     { \
-        fc_solve_sfs_check_state_end(soft_thread, ptr_state_val, ptr_new_state_val, state_context_value, moves, derived_states_list); \
+        fc_solve_sfs_check_state_end(soft_thread, ptr_state, ptr_new_state, state_context_value, moves, derived_states_list); \
     }
 
 /*
@@ -124,7 +123,7 @@ extern "C" {
 #endif
 
 static GCC_INLINE void fc_solve_move_sequence_function(
-        fcs_state_t * new_state_ptr,
+        fcs_state_keyval_pair_t * new_state_ptr,
         fcs_move_stack_t * moves,
         int dest_idx,
         int source_idx,
@@ -136,8 +135,8 @@ static GCC_INLINE void fc_solve_move_sequence_function(
     fcs_cards_column_t new_src_col, new_dest_col;
     fcs_internal_move_t temp_move;
 
-    new_src_col = fcs_state_get_col(*new_state_ptr, source_idx);
-    new_dest_col = fcs_state_get_col(*new_state_ptr, dest_idx);
+    new_src_col = fcs_state_get_col(new_state_ptr->s, source_idx);
+    new_dest_col = fcs_state_get_col(new_state_ptr->s, dest_idx);
 
     for ( i = start ; i <= end ; i++)
     {
@@ -166,7 +165,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  * */
 #define fcs_move_sequence(dest_idx, source_idx, start_idx, end_idx) \
     {   \
-        fc_solve_move_sequence_function(ptr_new_state_key, moves, dest_idx, source_idx, start_idx, end_idx); \
+        fc_solve_move_sequence_function(ptr_new_state, moves, dest_idx, source_idx, start_idx, end_idx); \
     }
 
 #ifdef FCS_FREECELL_ONLY
@@ -189,9 +188,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #define tests_declare_accessors_no_stacks()         \
     tests_declare_accessors_freecell_only()                    \
     fc_solve_hard_thread_t * hard_thread;               \
-    fcs_state_t * ptr_state_key; \
-    fcs_state_t * ptr_new_state_key; \
-    fcs_state_extra_info_t * ptr_new_state_val; \
+    fcs_state_keyval_pair_t * ptr_new_state; \
     fcs_move_stack_t * moves;                                  \
     int state_context_value                                  \
 
@@ -231,7 +228,6 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  * This macro defines these accessors to have some value.
  * */
 #define tests_define_accessors_no_stacks()                                  \
-    ptr_state_key = ptr_state_val->key;                           \
     hard_thread = soft_thread->hard_thread;                       \
     moves = &(hard_thread->reusable_move_stack);                     \
     state_context_value = 0;                                      \
@@ -259,7 +255,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #endif
 
-#define my_copy_stack(idx) fcs_copy_stack(new_state_key, new_state_val, idx, indirect_stacks_buffer);
+#define my_copy_stack(idx) fcs_copy_stack((*ptr_new_state), idx, indirect_stacks_buffer);
 
 #ifdef __cplusplus
 }

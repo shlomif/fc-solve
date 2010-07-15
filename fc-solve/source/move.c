@@ -66,7 +66,7 @@ int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
  * This function performs a given move on a state
  */
 void fc_solve_apply_move(
-        fcs_state_extra_info_t * state_val,
+        fcs_state_keyval_pair_t * state,
         fcs_internal_move_t move,
         int freecells_num,
         int stacks_num,
@@ -76,8 +76,7 @@ void fc_solve_apply_move(
     fcs_card_t card;
     fcs_cards_column_t col;
 
-    fcs_state_t * state_key = state_val->key;
-
+#define state_key (&(state->s))
     switch(fcs_int_move_get_type(move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
@@ -167,13 +166,14 @@ void fc_solve_apply_move(
         case FCS_MOVE_TYPE_CANONIZE:
         {
             fc_solve_canonize_state(
-                state_val,
+                state,
                 freecells_num, stacks_num
             );
         }
         break;
 
     }
+#undef state_key
 }
 
 static GCC_INLINE int convert_freecell_num(int fcn)
@@ -193,7 +193,7 @@ enum STANDARD_NOTATION_TYPE
 };
 
 char * fc_solve_move_to_string_w_state(
-        fcs_state_extra_info_t * state_val,
+        fcs_state_keyval_pair_t * state,
         int freecells_num GCC_UNUSED, 
         int stacks_num GCC_UNUSED,
         int decks_num GCC_UNUSED,
@@ -203,8 +203,7 @@ char * fc_solve_move_to_string_w_state(
 {
     char string[256];
 
-    fcs_state_t * state_key = state_val->key;
-
+#define state_key (&(state->s))
     switch(fcs_move_get_type(move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
@@ -341,6 +340,7 @@ char * fc_solve_move_to_string_w_state(
             string[0] = '\0';
         break;
     }
+#undef state_key
 
     return strdup(string);
 }
@@ -348,7 +348,7 @@ char * fc_solve_move_to_string_w_state(
 #define DERIVED_STATES_LIST_GROW_BY 16
 void fc_solve_derived_states_list_add_state(
         fcs_derived_states_list_t * list,
-        fcs_state_extra_info_t * state_val,
+        fcs_state_keyval_pair_t * state,
         int context
         )
 {
@@ -371,7 +371,7 @@ void fc_solve_derived_states_list_add_state(
             )
         );
     }
-    (list)->states[(list)->num_states].state_ptr = state_val;
+    (list)->states[(list)->num_states].state_ptr = state;
     (list)->states[(list)->num_states++].context.i = context;
 }
 

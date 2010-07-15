@@ -782,7 +782,7 @@ static void trace_solution(
     /*
         Trace the solution.
     */
-    fcs_state_extra_info_t * s1_val;
+    fcs_state_keyval_pair_t * s1;
     int move_idx;
     fcs_move_stack_t * stack;
     fcs_internal_move_t * moves;
@@ -796,17 +796,17 @@ static void trace_solution(
 
     fcs_move_stack_init(instance->solution_moves);
 
-    s1_val = instance->final_state_val;
+    s1 = instance->final_state;
 
     solution_moves_ptr = &(instance->solution_moves);
     /* Retrace the step from the current state to its parents */
-    while (s1_val->parent_val != NULL)
+    while (s1->info.parent != NULL)
     {
         /* Mark the state as part of the non-optimized solution */
-        s1_val->visited |= FCS_VISITED_IN_SOLUTION_PATH;
+        s1->info.visited |= FCS_VISITED_IN_SOLUTION_PATH;
         /* Duplicate the move stack */
         {
-            stack = s1_val->moves_to_parent;
+            stack = s1->info.moves_to_parent;
             moves = stack->moves;
             for(move_idx=stack->num_moves-1;move_idx>=0;move_idx--)
             {
@@ -816,10 +816,10 @@ static void trace_solution(
         /* Duplicate the state to a freshly malloced memory */
 
         /* Move to the parent state */
-        s1_val = s1_val->parent_val;
+        s1 = s1->info.parent;
     }
     /* There's one more state than there are move stacks */
-    s1_val->visited |= FCS_VISITED_IN_SOLUTION_PATH;
+    s1->info.visited |= FCS_VISITED_IN_SOLUTION_PATH;
 }
 
 
@@ -914,40 +914,41 @@ static GCC_INLINE int fc_solve_optimize_solution(
   */
 void fc_solve_start_instance_process_with_board(
     fc_solve_instance_t * instance,
-    fcs_state_extra_info_t * init_state_val
+    fcs_state_keyval_pair_t * init_state
     )
 {
-    fcs_state_t * state_copy_ptr_key;
-    fcs_state_extra_info_t * state_copy_ptr_val;
+    fcs_state_keyval_pair_t * state_copy_ptr;
 
     /* Allocate the first state and initialize it to init_state */
-    state_copy_ptr_val = 
+    state_copy_ptr = 
         fcs_state_ia_alloc_into_var(
             &(instance->hard_threads[0].allocator)
         );
 
-    state_copy_ptr_key = state_copy_ptr_val->key;
-
-    fcs_duplicate_state(state_copy_ptr_key, state_copy_ptr_val,
-            ((init_state_val->key)), init_state_val
+    fcs_duplicate_state(state_copy_ptr,
+            init_state
             );
 
     {
         int i;
+        char * buffer;
+
+        buffer = instance->hard_threads[0].indirect_stacks_buffer;
+
         for ( i=0 ; i < INSTANCE_STACKS_NUM ; i++ )
         {
-            fcs_copy_stack(*state_copy_ptr_key, *state_copy_ptr_val, i, instance->hard_threads[0].indirect_stacks_buffer);
+            fcs_copy_stack((*state_copy_ptr), i, buffer);
         }
     }
 
     /* Initialize the state to be a base state for the game tree */
-    state_copy_ptr_val->depth = 0;
-    state_copy_ptr_val->moves_to_parent = NULL;
-    state_copy_ptr_val->visited = 0;
-    state_copy_ptr_val->parent_val = NULL;
-    memset(&(state_copy_ptr_val->scan_visited), '\0', sizeof(state_copy_ptr_val->scan_visited));
+    state_copy_ptr->info.depth = 0;
+    state_copy_ptr->info.moves_to_parent = NULL;
+    state_copy_ptr->info.visited = 0;
+    state_copy_ptr->info.parent = NULL;
+    memset(&(state_copy_ptr->info.scan_visited), '\0', sizeof(state_copy_ptr->info.scan_visited));
 
-    instance->state_copy_ptr_val = state_copy_ptr_val;
+    instance->state_copy_ptr = state_copy_ptr;
 
     /* Initialize the data structure that will manage the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
@@ -1069,12 +1070,12 @@ void fc_solve_start_instance_process_with_board(
 #endif
 
     {
-        fcs_state_extra_info_t * no_use_val;
+        fcs_state_keyval_pair_t * no_use;
 
         fc_solve_check_and_add_state(
             instance->hard_threads,
-            state_copy_ptr_val,
-            &no_use_val
+            state_copy_ptr,
+            &no_use
             );
 
     }
@@ -1130,7 +1131,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 {
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
 
-    fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
+    fcs_state_keyval_pair_t * ptr_orig_state = instance->state_copy_ptr;
     /*
         Allocate some space for the states at depth 0.
     */
@@ -1138,7 +1139,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
     fc_solve_increase_dfs_max_depth(soft_thread);
 
-    soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state_val = ptr_orig_state_val;
+    soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state = ptr_orig_state;
     fc_solve_rand_init(
             &(soft_thread->method_specific.soft_dfs.rand_gen), 
             soft_thread->method_specific.soft_dfs.rand_seed

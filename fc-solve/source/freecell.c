@@ -69,7 +69,7 @@
  * */
 void fc_solve_sfs_move_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -166,7 +166,7 @@ static GCC_INLINE void sort_derived_states(
  * */
 void fc_solve_sfs_move_freecell_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -225,7 +225,7 @@ void fc_solve_sfs_move_freecell_cards_to_founds(
  */
 static GCC_INLINE int empty_two_cols_from_new_state(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_new_state_val,
+        fcs_state_keyval_pair_t * ptr_new_state,
         fcs_move_stack_t * moves,
         const int cols_indexes[3],
         int nc1, int nc2
@@ -237,7 +237,6 @@ static GCC_INLINE int empty_two_cols_from_new_state(
     fcs_cards_column_t new_from_which_col;
     fcs_card_t top_card;
     fcs_internal_move_t temp_move;
-    fcs_state_t * ptr_new_state_key;
     int ret = -1;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
@@ -246,9 +245,6 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 #ifdef INDIRECT_STACK_STATES
     char * indirect_stacks_buffer;
 #endif
-
-    ptr_new_state_key = ptr_new_state_val->key;
-
 
     num_cards_to_move_from_columns[0] = nc1;
     num_cards_to_move_from_columns[1] = nc2;
@@ -391,7 +387,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 
 void fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -436,7 +432,7 @@ void fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
     positions_by_rank =
         fc_solve_get_the_positions_by_rank_data(
             soft_thread,
-            ptr_state_val
+            ptr_state
         );
 
     /* Let's try to put cards in the freecells on top of stacks */
@@ -561,7 +557,7 @@ void fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 
                         empty_two_cols_from_new_state(
                                 soft_thread,
-                                ptr_new_state_val,
+                                ptr_new_state,
                                 moves,
                                 cols_indexes,
                                 dest_cards_num - dc - 1,
@@ -603,7 +599,7 @@ void fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
 
 void fc_solve_sfs_move_non_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -679,7 +675,7 @@ void fc_solve_sfs_move_non_top_stack_cards_to_founds(
 
                         empty_two_cols_from_new_state(
                             soft_thread,
-                            ptr_new_state_val,
+                            ptr_new_state,
                             moves,
                             cols_indexes,
                             cards_num-(c+1),
@@ -713,7 +709,7 @@ void fc_solve_sfs_move_non_top_stack_cards_to_founds(
 
 void fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -837,7 +833,7 @@ void fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 
                                 last_dest = empty_two_cols_from_new_state(
                                     soft_thread,
-                                    ptr_new_state_val,
+                                    ptr_new_state,
                                     moves,
                                     cols_indexes,
                                     /* We're moving one extra card */
@@ -849,7 +845,7 @@ void fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 
                                 empty_two_cols_from_new_state(
                                     soft_thread,
-                                    ptr_new_state_val,
+                                    ptr_new_state,
                                     moves,
                                     cols_indexes,
                                     c - dc - 1,
@@ -901,7 +897,7 @@ void fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
 
 void fc_solve_sfs_move_stack_cards_to_different_stacks(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -945,7 +941,7 @@ void fc_solve_sfs_move_stack_cards_to_different_stacks(
     positions_by_rank = 
         fc_solve_get_the_positions_by_rank_data(
             soft_thread,
-            ptr_state_val
+            ptr_state
         );
 
     /* Now let's try to move a card from one stack to the other     *
@@ -1039,7 +1035,7 @@ void fc_solve_sfs_move_stack_cards_to_different_stacks(
 
                     empty_two_cols_from_new_state(
                         soft_thread,
-                        ptr_new_state_val,
+                        ptr_new_state,
                         moves,
                         cols_indexes,
                         fcs_col_len(dest_col) - dc - 1,
@@ -1071,7 +1067,7 @@ void fc_solve_sfs_move_stack_cards_to_different_stacks(
 
 void fc_solve_sfs_move_sequences_to_free_stacks(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1240,7 +1236,7 @@ void fc_solve_sfs_move_sequences_to_free_stacks(
 
                             empty_ret = empty_two_cols_from_new_state(
                                 soft_thread,
-                                ptr_new_state_val,
+                                ptr_new_state,
                                 moves,
                                 cols_indexes,
                                 freecells_to_fill + freestacks_to_fill,
@@ -1285,7 +1281,7 @@ void fc_solve_sfs_move_sequences_to_free_stacks(
 
 void fc_solve_sfs_move_freecell_cards_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1365,7 +1361,7 @@ void fc_solve_sfs_move_freecell_cards_to_empty_stack(
 
 void fc_solve_sfs_move_cards_to_a_different_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1410,7 +1406,7 @@ void fc_solve_sfs_move_cards_to_a_different_parent(
     positions_by_rank =
         fc_solve_get_the_positions_by_rank_data(
             soft_thread,
-            ptr_state_val
+            ptr_state
         );
 
     /* This time try to move cards that are already on top of a parent to a different parent */
@@ -1559,7 +1555,7 @@ void fc_solve_sfs_move_cards_to_a_different_parent(
 
                     empty_two_cols_from_new_state(
                         soft_thread,
-                        ptr_new_state_val,
+                        ptr_new_state,
                         moves,
                         cols_indexes,
                         freestacks_to_fill + freecells_to_fill,
@@ -1586,7 +1582,7 @@ void fc_solve_sfs_move_cards_to_a_different_parent(
 
 void fc_solve_sfs_empty_stack_into_freecells(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1674,7 +1670,7 @@ void fc_solve_sfs_empty_stack_into_freecells(
 
 void fc_solve_sfs_yukon_do_nothing(
         fc_solve_soft_thread_t * soft_thread GCC_UNUSED,
-        fcs_state_extra_info_t * ptr_state_val GCC_UNUSED,
+        fcs_state_keyval_pair_t * ptr_state GCC_UNUSED,
         fcs_derived_states_list_t * derived_states_list GCC_UNUSED
         )
 {
@@ -1685,7 +1681,7 @@ void fc_solve_sfs_yukon_do_nothing(
 #if 0
 void fc_solve_sfs_yukon_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1768,7 +1764,7 @@ void fc_solve_sfs_yukon_move_card_to_parent(
 
 void fc_solve_sfs_yukon_move_kings_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1850,7 +1846,7 @@ void fc_solve_sfs_yukon_move_kings_to_empty_stack(
   */
 void fc_solve_sfs_deal_gypsy_talon(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1896,7 +1892,7 @@ void fc_solve_sfs_deal_gypsy_talon(
 
 void fc_solve_sfs_get_card_from_klondike_talon(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1912,7 +1908,7 @@ void fc_solve_sfs_get_card_from_klondike_talon(
     int a;
     fcs_cards_column_t col;
 
-    fcs_state_extra_info_t talon_temp;
+    fcs_state_keyval_pair_t talon_temp;
 
     tests_define_accessors();
 
@@ -2038,7 +2034,7 @@ void fc_solve_sfs_get_card_from_klondike_talon(
 
 void fc_solve_sfs_atomic_move_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2129,7 +2125,7 @@ void fc_solve_sfs_atomic_move_card_to_empty_stack(
 
 void fc_solve_sfs_atomic_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2209,7 +2205,7 @@ void fc_solve_sfs_atomic_move_card_to_parent(
 
 void fc_solve_sfs_atomic_move_card_to_freecell(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2286,7 +2282,7 @@ void fc_solve_sfs_atomic_move_card_to_freecell(
 
 void fc_solve_sfs_atomic_move_freecell_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -2357,7 +2353,7 @@ void fc_solve_sfs_atomic_move_freecell_card_to_parent(
 
 void fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {

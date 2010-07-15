@@ -35,117 +35,117 @@ extern "C" {
 #endif
 
 #include "config.h"
-/* For fcs_state_extra_info_t */
+/* For fcs_state_keyval_pair_t */
 #include "state.h"
 /* For fc_solve_soft_thread_t and fcs_derived_states_list_t */
 #include "instance.h"
 
 extern void fc_solve_sfs_move_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_move_freecell_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_move_freecell_cards_on_top_of_stacks(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * final_derived_states_list
         );
 
 extern void fc_solve_sfs_move_non_top_stack_cards_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_move_stack_cards_to_different_stacks(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_move_sequences_to_free_stacks(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_move_freecell_cards_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_move_cards_to_a_different_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_empty_stack_into_freecells(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_atomic_move_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_atomic_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_atomic_move_card_to_freecell(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_atomic_move_freecell_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_yukon_do_nothing(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 #if 0
 extern void fc_solve_sfs_yukon_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_yukon_move_kings_to_empty_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 #endif
@@ -154,13 +154,13 @@ extern void fc_solve_sfs_yukon_move_kings_to_empty_stack(
 
 extern void fc_solve_sfs_deal_gypsy_talon(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 
 extern void fc_solve_sfs_get_card_from_klondike_talon(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         );
 

@@ -150,7 +150,7 @@ static void iter_handler_wrapper(
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
-    fcs_state_extra_info_t * ptr_state_val,
+    fcs_state_keyval_pair_t * ptr_state_val,
     int parent_iter_num
     );
 
@@ -875,8 +875,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             status = fc_solve_initial_user_state_to_c(
                 user->state_string_copy,
-                &(user->state.s),
-                &(user->state.info),
+                &(user->state),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM
@@ -896,7 +895,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             }
 
             user->state_validity_ret = fc_solve_check_state_validity(
-                &(user->state.info),
+                &(user->state),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM,
@@ -916,14 +915,12 @@ int DLLEXPORT freecell_solver_user_resume_solution(
              * state to it before state is canonized
              * */
             fcs_duplicate_state(
-                &(user->running_state.s),
-                &(user->running_state.info),
-                &(user->state.s),
-                &(user->state.info)
+                &(user->running_state),
+                &(user->state)
                 );
 
             fc_solve_canonize_state(
-                &user->state.info,
+                &(user->state),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM
                 );
@@ -980,7 +977,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         if (solve_start)
         {
             fc_solve_start_instance_process_with_board(
-                user->fc_solve_obj, &user->state.info
+                user->fc_solve_obj, &(user->state)
             );
         }
         ret = user->ret_code =
@@ -1007,7 +1004,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
              * */
             fc_solve_move_stack_normalize(
                 &(user->fc_solve_obj->solution_moves),
-                &(user->state.info),
+                &(user->state),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM
@@ -1104,7 +1101,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
             if (ret == 0)
             {
                 fc_solve_apply_move(
-                    &(user->running_state.info),
+                    &(user->running_state),
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
                     internal_move,
 #else
@@ -1142,7 +1139,7 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
 
         return
             fc_solve_state_as_string(
-                &(user->running_state.info),
+                &(user->running_state),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM,
@@ -1505,7 +1502,7 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
 
     return
         fc_solve_move_to_string_w_state(
-            &(user->running_state.info),
+            &(user->running_state),
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM,
             INSTANCE_DECKS_NUM,
@@ -1696,15 +1693,11 @@ static void iter_handler_wrapper(
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
-    fcs_state_extra_info_t * ptr_state_val,
+    fcs_state_keyval_pair_t * ptr_state_raw,
     int parent_iter_num
     )
 {
     fcs_user_t * user;
-
-    fcs_standalone_state_ptrs_t state;
-    state.key = ptr_state_val->key;
-    state.val = ptr_state_val;
 
     user = (fcs_user_t *)api_instance;
 
@@ -1742,7 +1735,7 @@ myend:
         api_instance,
         iter_num,
         depth,
-        (void *)&state,
+        (void *)ptr_state_raw,
         parent_iter_num,
         user->iter_handler_context
         );
@@ -1757,7 +1750,7 @@ void set_debug_iter_output_func_to_val(
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
-    fcs_state_extra_info_t * ptr_state_val,
+    fcs_state_keyval_pair_t * ptr_state_val,
     int parent_iter_num
     ))
 {
@@ -1808,7 +1801,6 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
     fcs_user_t * user;
     fc_solve_instance_t * instance;
 #endif
-    fcs_standalone_state_ptrs_t * ptr_state;
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     user = (fcs_user_t *)api_instance;
@@ -1816,11 +1808,9 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
         user->fc_solve_obj;
 #endif
 
-    ptr_state = (fcs_standalone_state_ptrs_t *)ptr_state_void;
-
     return
         fc_solve_state_as_string(
-            ptr_state->val,
+            ((fcs_state_keyval_pair_t *)ptr_state_void),
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM,
             INSTANCE_DECKS_NUM,

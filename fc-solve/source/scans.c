@@ -66,7 +66,7 @@ void fc_solve_increase_dfs_max_depth(
 
     for(d=soft_thread->method_specific.soft_dfs.dfs_max_depth ; d<new_dfs_max_depth; d++)
     {
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].state_val = NULL;
+        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].state = NULL;
         soft_thread->method_specific.soft_dfs.soft_dfs_info[d].tests_list_index = 0;
         soft_thread->method_specific.soft_dfs.soft_dfs_info[d].test_index = 0;
         soft_thread->method_specific.soft_dfs.soft_dfs_info[d].current_state_index = 0;
@@ -86,7 +86,7 @@ void fc_solve_increase_dfs_max_depth(
     without procedural recursion
     by using some dedicated stacks for the traversal.
   */
-#define the_state (*ptr_state_key)
+#define the_state (ptr_state->s)
 
 #ifdef DEBUG
 #define TRACE0(message) \
@@ -115,26 +115,26 @@ void fc_solve_increase_dfs_max_depth(
  *
  * */
 
-#define calculate_real_depth(ptr_state_orig_val) \
+#define calculate_real_depth(ptr_state_orig) \
 {                                                                  \
     if (calc_real_depth)                                           \
     {                                                              \
         int this_real_depth = 0;                                   \
-        fcs_state_extra_info_t * temp_state_val = ptr_state_orig_val; \
+        fcs_state_keyval_pair_t * temp_state = ptr_state_orig; \
         /* Count the number of states until the original state. */ \
-        while(temp_state_val != NULL)                                   \
+        while(temp_state != NULL)                                   \
         {                                                          \
-            temp_state_val = temp_state_val->parent_val;             \
+            temp_state = temp_state->info.parent;             \
             this_real_depth++;                                     \
         }                                                          \
         this_real_depth--;                                         \
-        temp_state_val = (ptr_state_orig_val);                      \
+        temp_state = (ptr_state_orig);                      \
         /* Assign the new depth throughout the path */             \
-        while (temp_state_val->depth != this_real_depth)            \
+        while (temp_state->info.depth != this_real_depth)            \
         {                                                          \
-            temp_state_val->depth = this_real_depth;                \
+            temp_state->info.depth = this_real_depth;                \
             this_real_depth--;                                     \
-            temp_state_val = temp_state_val->parent_val;             \
+            temp_state = temp_state->info.parent;             \
         }                                                          \
     }                                                              \
 }
@@ -144,30 +144,30 @@ void fc_solve_increase_dfs_max_depth(
  * this information to its parent and ancestor states.
  * */
 
-#define mark_as_dead_end(ptr_state_input_val) \
+#define mark_as_dead_end(ptr_state_input) \
 {      \
     if (scans_synergy)      \
     {        \
-        fcs_state_extra_info_t * temp_state_val = (ptr_state_input_val); \
+        fcs_state_keyval_pair_t * temp_state = (ptr_state_input); \
         /* Mark as a dead end */        \
-        temp_state_val->visited |= FCS_VISITED_DEAD_END; \
-        temp_state_val = temp_state_val->parent_val;          \
-        if (temp_state_val != NULL)                    \
+        temp_state->info.visited |= FCS_VISITED_DEAD_END; \
+        temp_state = temp_state->info.parent;          \
+        if (temp_state != NULL)                    \
         {           \
             /* Decrease the refcount of the state */    \
-            temp_state_val->num_active_children--;   \
-            while((temp_state_val->num_active_children == 0) && (temp_state_val->visited & FCS_VISITED_ALL_TESTS_DONE))  \
+            temp_state->info.num_active_children--;   \
+            while((temp_state->info.num_active_children == 0) && (temp_state->info.visited & FCS_VISITED_ALL_TESTS_DONE))  \
             {          \
                 /* Mark as dead end */        \
-                temp_state_val->visited |= FCS_VISITED_DEAD_END;  \
+                temp_state->info.visited |= FCS_VISITED_DEAD_END;  \
                 /* Go to its parent state */       \
-                temp_state_val = temp_state_val->parent_val;    \
-                if (temp_state_val == NULL)         \
+                temp_state = temp_state->info.parent;    \
+                if (temp_state == NULL)         \
                 {                \
                     break;             \
                 }      \
                 /* Decrease the refcount */       \
-                temp_state_val->num_active_children--;     \
+                temp_state->info.num_active_children--;     \
             }       \
         }   \
     }      \
@@ -186,8 +186,7 @@ int fc_solve_soft_dfs_do_solve(
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
 
-    fcs_state_t * ptr_state_key;
-    fcs_state_extra_info_t * ptr_state_val;
+    fcs_state_keyval_pair_t * ptr_state;
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
@@ -214,13 +213,13 @@ int fc_solve_soft_dfs_do_solve(
     the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth]);
 
     dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
-    ptr_state_val = the_soft_dfs_info->state_val;
+    ptr_state = the_soft_dfs_info->state;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
     
     rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
     
     calculate_real_depth(
-        ptr_state_val
+        ptr_state
     );
 
     by_depth_units = soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units;
@@ -292,9 +291,9 @@ int fc_solve_soft_dfs_do_solve(
 
                 if (is_a_complete_scan)
                 {
-                    ptr_state_val->visited |= FCS_VISITED_ALL_TESTS_DONE;
+                    ptr_state->info.visited |= FCS_VISITED_ALL_TESTS_DONE;
                     mark_as_dead_end(
-                        ptr_state_val
+                        ptr_state
                     );
                 }
 
@@ -307,8 +306,7 @@ int fc_solve_soft_dfs_do_solve(
                 {
                     the_soft_dfs_info--;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
-                    ptr_state_val = the_soft_dfs_info->state_val;
-                    ptr_state_key = ptr_state_val->key;
+                    ptr_state = the_soft_dfs_info->state;
                     soft_thread->num_vacant_freecells = the_soft_dfs_info->num_vacant_freecells;
                     soft_thread->num_vacant_stacks = the_soft_dfs_info->num_vacant_stacks;
 
@@ -346,15 +344,13 @@ int fc_solve_soft_dfs_do_solve(
                         instance->num_times,
                         soft_thread->method_specific.soft_dfs.depth,
                         (void*)instance,
-                        ptr_state_val,
+                        ptr_state,
                         ((soft_thread->method_specific.soft_dfs.depth == 0) ?
                             0 :
-                            soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth-1].state_val->visited_iter
+                            soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth-1].state->info.visited_iter
                         )
                         );
                 }
-
-                ptr_state_key = ptr_state_val->key;
 
                 /* Count the free-cells */
                 num_vacant_freecells = 0;
@@ -381,7 +377,7 @@ int fc_solve_soft_dfs_do_solve(
                 if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
                     (num_vacant_freecells  == LOCAL_FREECELLS_NUM)))
                 {
-                    instance->final_state_val = ptr_state_val;
+                    instance->final_state = ptr_state;
                     
                     BUMP_NUM_TIMES();
 
@@ -417,7 +413,7 @@ int fc_solve_soft_dfs_do_solve(
                     ].tests[the_soft_dfs_info->test_index]
                     (
                         soft_thread,
-                        ptr_state_val,
+                        ptr_state,
                         derived_states_list
                     );
 
@@ -495,7 +491,7 @@ int fc_solve_soft_dfs_do_solve(
             fcs_derived_states_list_item_t * derived_states =
                 derived_states_list->states;
             int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
-            fcs_state_extra_info_t * single_derived_state;
+            fcs_state_keyval_pair_t * single_derived_state;
 
             while (the_soft_dfs_info->current_state_index <
                    num_states)
@@ -507,7 +503,7 @@ int fc_solve_soft_dfs_do_solve(
                     ].state_ptr;
 
                 if (
-                    (! (single_derived_state->visited &
+                    (! (single_derived_state->info.visited &
                         FCS_VISITED_DEAD_END)
                     ) &&
                     (! is_scan_visited(
@@ -523,7 +519,7 @@ int fc_solve_soft_dfs_do_solve(
                         soft_thread_id
                     );
 
-                    single_derived_state->visited_iter = instance->num_times;
+                    single_derived_state->info.visited_iter = instance->num_times;
 
                     /*
                         I'm using current_state_indexes[depth]-1 because we already
@@ -536,8 +532,8 @@ int fc_solve_soft_dfs_do_solve(
                     }
                     the_soft_dfs_info++;
 
-                    the_soft_dfs_info->state_val =
-                        ptr_state_val =
+                    the_soft_dfs_info->state =
+                        ptr_state =
                         single_derived_state;
 
                     the_soft_dfs_info->tests_list_index = 0;
@@ -548,7 +544,7 @@ int fc_solve_soft_dfs_do_solve(
                     derived_states_list->num_states = 0;
 
                     calculate_real_depth(
-                        ptr_state_val
+                        ptr_state
                     );
 
                     if (check_if_limits_exceeded())
@@ -616,14 +612,13 @@ static GCC_INLINE int update_col_cards_under_sequences(
 
 static GCC_INLINE void initialize_befs_rater(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_extra_info_t * ptr_state_val
+    fcs_state_keyval_pair_t * ptr_state
     )
 {
 #ifndef HARD_CODED_NUM_STACKS
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
 #endif
-    fcs_state_t * ptr_state_key = ptr_state_val->key;
 
     int a;
     double cards_under_sequences;
@@ -631,7 +626,7 @@ static GCC_INLINE void initialize_befs_rater(
     cards_under_sequences = 0;
     for(a=0;a<INSTANCE_STACKS_NUM;a++)
     {
-        update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*ptr_state_key, a), &cards_under_sequences);
+        update_col_cards_under_sequences(soft_thread, fcs_state_get_col(ptr_state->s, a), &cards_under_sequences);
     }
     soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value = cards_under_sequences;
 }
@@ -661,14 +656,13 @@ static GCC_INLINE void initialize_befs_rater(
 
 static GCC_INLINE pq_rating_t befs_rate_state(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_extra_info_t * ptr_state_val
+    fcs_state_keyval_pair_t * ptr_state
     )
 {
 #ifndef FCS_FREECELL_ONLY
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
 #endif
-    fcs_state_t * ptr_state_key = ptr_state_val->key;
 
     double ret=0;
     int a, c, cards_num, num_cards_in_founds;
@@ -697,7 +691,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     seqs_over_renegade_cards = 0;
     for(a=0;a<LOCAL_STACKS_NUM;a++)
     {
-        col = fcs_state_get_col(*(ptr_state_key), a);
+        col = fcs_state_get_col(ptr_state->s, a);
         cards_num = fcs_col_len(col);
 
         if (cards_num == 0)
@@ -732,7 +726,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     num_cards_in_founds = 0;
     for(a=0;a<(LOCAL_DECKS_NUM<<2);a++)
     {
-        num_cards_in_founds += fcs_foundation_value((*ptr_state_key), a);
+        num_cards_in_founds += fcs_foundation_value((ptr_state->s), a);
     }
 
     ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT];
@@ -740,7 +734,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     num_vacant_freecells = 0;
     for(a=0;a<LOCAL_FREECELLS_NUM;a++)
     {
-        if (fcs_freecell_card_num((*ptr_state_key),a) == 0)
+        if (fcs_freecell_card_num((ptr_state->s),a) == 0)
         {
             num_vacant_freecells++;
         }
@@ -776,9 +770,9 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     ret += (temp * befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE]);
 
-    if (ptr_state_val->depth <= 20000)
+    if (ptr_state->info.depth <= 20000)
     {
-        ret += ((20000 - ptr_state_val->depth)/20000.0) * befs_weights[FCS_BEFS_WEIGHT_DEPTH];
+        ret += ((20000 - ptr_state->info.depth)/20000.0) * befs_weights[FCS_BEFS_WEIGHT_DEPTH];
     }
 
     TRACE0("Before return");
@@ -877,7 +871,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 {
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
 
-    fcs_state_extra_info_t * ptr_orig_state_val = instance->state_copy_ptr_val;
+    fcs_state_keyval_pair_t * ptr_orig_state = instance->state_copy_ptr;
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
@@ -891,7 +885,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
         initialize_befs_rater(
             soft_thread,
-            ptr_orig_state_val
+            ptr_orig_state
             );
     }
     else
@@ -923,7 +917,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         soft_thread->method_specific.befs.tests_list_end = next_test;
     }
 
-    soft_thread->first_state_to_check_val = ptr_orig_state_val;  
+    soft_thread->first_state_to_check = ptr_orig_state;  
 
     return;
 }
@@ -979,8 +973,7 @@ int fc_solve_befs_or_bfs_do_solve(
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
 
-    fcs_state_t * ptr_state_key;
-    fcs_state_extra_info_t * ptr_state_val, * ptr_new_state_val;
+    fcs_state_keyval_pair_t * ptr_state, * ptr_new_state;
     fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
     fcs_states_linked_list_item_t * save_item;
     int a;
@@ -1017,7 +1010,7 @@ int fc_solve_befs_or_bfs_do_solve(
     tests_list = soft_thread->method_specific.befs.tests_list;
     tests_list_end = soft_thread->method_specific.befs.tests_list_end;
 
-    ptr_state_val = soft_thread->first_state_to_check_val;
+    ptr_state = soft_thread->first_state_to_check;
 
     method = soft_thread->method;
     if (method == FCS_METHOD_A_STAR)
@@ -1036,7 +1029,7 @@ int fc_solve_befs_or_bfs_do_solve(
 
     /* Continue as long as there are states in the queue or
        priority queue. */
-    while ( ptr_state_val != NULL)
+    while ( ptr_state != NULL)
     {
         TRACE0("Start of loop");
 
@@ -1045,7 +1038,7 @@ int fc_solve_befs_or_bfs_do_solve(
 #endif
 
         {
-             register int temp_visited = ptr_state_val->visited;
+             register int temp_visited = ptr_state->info.visited;
 
             /*
              * If this is an optimization scan and the state being checked is 
@@ -1065,7 +1058,7 @@ int fc_solve_befs_or_bfs_do_solve(
                     (
                         (temp_visited & FCS_VISITED_DEAD_END)
                             ||
-                        (is_scan_visited(ptr_state_val, soft_thread_id))
+                        (is_scan_visited(ptr_state, soft_thread_id))
                     )
                 )
             {
@@ -1075,12 +1068,11 @@ int fc_solve_befs_or_bfs_do_solve(
 
         TRACE0("Counting cells");
 
-        ptr_state_key = ptr_state_val->key;
         /* Count the free-cells */
         num_vacant_freecells = 0;
         for(a=0;a<LOCAL_FREECELLS_NUM;a++)
         {
-            if (fcs_freecell_card_num((*ptr_state_key), a) == 0)
+            if (fcs_freecell_card_num(ptr_state->s, a) == 0)
             {
                 num_vacant_freecells++;
             }
@@ -1100,7 +1092,7 @@ int fc_solve_befs_or_bfs_do_solve(
 
         if (check_if_limits_exceeded())
         {
-            soft_thread->first_state_to_check_val = ptr_state_val;
+            soft_thread->first_state_to_check = ptr_state;
 
             TRACE0("myreturn - FCS_STATE_SUSPEND_PROCESS");
             error_code = FCS_STATE_SUSPEND_PROCESS;
@@ -1116,12 +1108,12 @@ int fc_solve_befs_or_bfs_do_solve(
             instance->debug_iter_output_func(
                     (void*)instance->debug_iter_output_context,
                     instance->num_times,
-                    ptr_state_val->depth,
+                    ptr_state->info.depth,
                     (void*)instance,
-                    ptr_state_val,
-                    ((ptr_state_val->parent_val == NULL) ?
+                    ptr_state,
+                    ((ptr_state->info.parent == NULL) ?
                         0 :
-                        ptr_state_val->parent_val->visited_iter
+                        ptr_state->info.parent->info.visited_iter
                     )
                     );
         }
@@ -1129,7 +1121,7 @@ int fc_solve_befs_or_bfs_do_solve(
 
         if ((num_vacant_stacks == LOCAL_STACKS_NUM) && (num_vacant_freecells == LOCAL_FREECELLS_NUM))
         {
-            instance->final_state_val = ptr_state_val;
+            instance->final_state = ptr_state;
 
             BUMP_NUM_TIMES();
 
@@ -1138,7 +1130,7 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
         calculate_real_depth(
-            ptr_state_val
+            ptr_state
         );
 
         soft_thread->num_vacant_freecells = num_vacant_freecells;
@@ -1163,14 +1155,14 @@ int fc_solve_befs_or_bfs_do_solve(
         {
             (*next_test)(
                 soft_thread,
-                ptr_state_val,
+                ptr_state,
                 &derived
             );
         }
 
         if (is_a_complete_scan)
         {
-            ptr_state_val->visited |= FCS_VISITED_ALL_TESTS_DONE;
+            ptr_state->info.visited |= FCS_VISITED_ALL_TESTS_DONE;
         }
 
         /* Increase the number of iterations by one .
@@ -1183,16 +1175,16 @@ int fc_solve_befs_or_bfs_do_solve(
 
         for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
         {
-            ptr_new_state_val = derived.states[derived_index].state_ptr;
+            ptr_new_state = derived.states[derived_index].state_ptr;
 
             if (method == FCS_METHOD_A_STAR)
             {
                 fc_solve_PQueuePush(
                     scan_specific.pqueue,
-                    ptr_new_state_val,
+                    ptr_new_state,
                     befs_rate_state(
                         soft_thread,
-                        ptr_new_state_val
+                        ptr_new_state
                         )
                     );
             }
@@ -1207,7 +1199,7 @@ int fc_solve_befs_or_bfs_do_solve(
                         malloc(sizeof(*last_item_next))
                     );
 
-                scan_specific.brfs.queue_last_item->s = ptr_new_state_val;
+                scan_specific.brfs.queue_last_item->s = ptr_new_state;
                 last_item_next->next = NULL;
                 scan_specific.brfs.queue_last_item = last_item_next;
             }
@@ -1215,12 +1207,12 @@ int fc_solve_befs_or_bfs_do_solve(
 
         if (method == FCS_METHOD_OPTIMIZE)
         {
-            ptr_state_val->visited |= FCS_VISITED_IN_OPTIMIZED_PATH;
+            ptr_state->info.visited |= FCS_VISITED_IN_OPTIMIZED_PATH;
         }
         else
         {
             set_scan_visited(
-                    ptr_state_val,
+                    ptr_state,
                     soft_thread_id
                     );
 
@@ -1229,13 +1221,13 @@ int fc_solve_befs_or_bfs_do_solve(
                 if (is_a_complete_scan)
                 {
                     mark_as_dead_end(
-                            ptr_state_val
-                            );
+                        ptr_state
+                    );
                 }
             }
         }
 
-        ptr_state_val->visited_iter = instance->num_times-1;
+        ptr_state->info.visited_iter = instance->num_times-1;
 
 label_next_state:
         TRACE0("Label next state");
@@ -1251,7 +1243,7 @@ label_next_state:
             /* It is an BeFS scan */
             fc_solve_PQueuePop(
                 scan_specific.pqueue,
-                &ptr_state_val
+                &ptr_state
                 );
         }
         else
@@ -1259,13 +1251,13 @@ label_next_state:
             save_item = scan_specific.brfs.queue->next;
             if (save_item != scan_specific.brfs.queue_last_item)
             {
-                ptr_state_val = save_item->s;
+                ptr_state = save_item->s;
                 scan_specific.brfs.queue->next = save_item->next;
                 free(save_item);
             }
             else
             {
-                ptr_state_val = NULL;
+                ptr_state = NULL;
             }
         }
     }
@@ -1301,7 +1293,7 @@ my_return_label:
  */
 extern char * fc_solve_get_the_positions_by_rank_data(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val
+        fcs_state_keyval_pair_t* ptr_state
         )
 {
     char * * positions_by_rank_location;
@@ -1333,13 +1325,10 @@ extern char * fc_solve_get_the_positions_by_rank_data(
         fc_solve_instance_t * instance;
         DECLARE_GAME_PARAMS();
 #endif
-        fcs_state_t * ptr_state_key;
 
 #ifndef FCS_FREECELL_ONLY
         int sequences_are_built_by;
 #endif
-
-        ptr_state_key = ptr_state_val->key;
 
 #if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
         instance = soft_thread->hard_thread->instance;
@@ -1379,7 +1368,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
                     int top_card_idx;
                     fcs_card_t dest_card;
 
-                    dest_col = fcs_state_get_col(*(ptr_state_key), ds);
+                    dest_col = fcs_state_get_col(ptr_state->s, ds);
                     top_card_idx = fcs_col_len(dest_col);
 
                     if (unlikely((top_card_idx--) == 0))
@@ -1446,53 +1435,49 @@ extern char * fc_solve_get_the_positions_by_rank_data(
  * */
 int fc_solve_sfs_check_state_begin(
     fc_solve_hard_thread_t * hard_thread,
-    fcs_state_t * * out_ptr_new_state_key,
-    fcs_state_extra_info_t * * out_ptr_new_state_val,
-    fcs_state_extra_info_t * ptr_state_val,
+    fcs_state_keyval_pair_t * *  out_ptr_new_state,
+    fcs_state_keyval_pair_t * ptr_state,
     fcs_move_stack_t * moves
     )
 {
-    fcs_state_extra_info_t * ptr_new_state_val;
+    fcs_state_keyval_pair_t * ptr_new_state;
 
-    ptr_new_state_val =
+    ptr_new_state =
         fcs_state_ia_alloc_into_var(
             &(hard_thread->allocator)
         );
 
-    *(out_ptr_new_state_key) = ptr_new_state_val->key;
     fcs_duplicate_state(
-            (*(out_ptr_new_state_key)),
-            ptr_new_state_val,
-            ptr_state_val->key, 
-            ptr_state_val
+            ptr_new_state,
+            ptr_state
     );
     /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.
      * */
-    ptr_new_state_val->parent_val = ptr_state_val;
-    ptr_new_state_val->moves_to_parent = moves;
+    ptr_new_state->info.parent = ptr_state;
+    ptr_new_state->info.moves_to_parent = moves;
     /* Make sure depth is consistent with the game graph.
      * I.e: the depth of every newly discovered state is derived from
      * the state from which it was discovered. */
-    ptr_new_state_val->depth = ptr_new_state_val->depth + 1;
+    ptr_new_state->info.depth = ptr_new_state->info.depth + 1;
     /* Mark this state as a state that was not yet visited */
-    ptr_new_state_val->visited = 0;
+    ptr_new_state->info.visited = 0;
     /* It's a newly created state which does not have children yet. */
-    ptr_new_state_val->num_active_children = 0;
-    memset(ptr_new_state_val->scan_visited, '\0',
-        sizeof(ptr_new_state_val->scan_visited)
+    ptr_new_state->info.num_active_children = 0;
+    memset(ptr_new_state->info.scan_visited, '\0',
+        sizeof(ptr_new_state->info.scan_visited)
         );
     fcs_move_stack_reset(moves);
 
-    *out_ptr_new_state_val = ptr_new_state_val;
+    *out_ptr_new_state = ptr_new_state;
 
     return 0;
 }
 
 void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_state_extra_info_t * ptr_state_val,
-    fcs_state_extra_info_t * ptr_new_state_val,
+    fcs_state_keyval_pair_t * ptr_state,
+    fcs_state_keyval_pair_t * ptr_new_state,
     int state_context_value,
     fcs_move_stack_t * moves,
     fcs_derived_states_list_t * derived_states_list
@@ -1503,7 +1488,7 @@ void fc_solve_sfs_check_state_end(
     fc_solve_instance_t * instance;
     fcs_runtime_flags_t calc_real_depth;
     fcs_runtime_flags_t scans_synergy;
-    fcs_state_extra_info_t * existing_state_val;
+    fcs_state_keyval_pair_t * existing_state;
 
     temp_move = fc_solve_empty_move;
 
@@ -1522,12 +1507,12 @@ void fc_solve_sfs_check_state_end(
 
     if (! fc_solve_check_and_add_state(
         hard_thread,
-        ptr_new_state_val,
-        &existing_state_val
+        ptr_new_state,
+        &existing_state
         ))
     {
         fcs_compact_alloc_release(&(hard_thread->allocator));
-        calculate_real_depth(existing_state_val);
+        calculate_real_depth(existing_state);
         /* Re-parent the existing state to this one.
          *
          * What it means is that if the depth of the state if it
@@ -1535,29 +1520,29 @@ void fc_solve_sfs_check_state_end(
          * already have, then re-assign its parent to this state.
          * */
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
-           (existing_state_val->depth > ptr_state_val->depth+1))
+           (existing_state->info.depth > ptr_state->info.depth+1))
         {
             /* Make a copy of "moves" because "moves" will be destroyed */
-            existing_state_val->moves_to_parent =
+            existing_state->info.moves_to_parent =
                 fc_solve_move_stack_compact_allocate(
                     hard_thread, moves
                     );
-            if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))
+            if (!(existing_state->info.visited & FCS_VISITED_DEAD_END))
             {
-                if ((--existing_state_val->parent_val->num_active_children) == 0)
+                if ((--existing_state->info.parent->info.num_active_children) == 0)
                 {
                     mark_as_dead_end(
-                        existing_state_val->parent_val
+                        existing_state->info.parent
                         );
                 }
-                ptr_state_val->num_active_children++;
+                ptr_state->info.num_active_children++;
             }
-            existing_state_val->parent_val = ptr_state_val;
-            existing_state_val->depth = ptr_state_val->depth + 1;
+            existing_state->info.parent = ptr_state;
+            existing_state->info.depth = ptr_state->info.depth + 1;
         }
         fc_solve_derived_states_list_add_state(
             derived_states_list,
-            existing_state_val,
+            existing_state,
             state_context_value
         );
     }
@@ -1565,7 +1550,7 @@ void fc_solve_sfs_check_state_end(
     {
         fc_solve_derived_states_list_add_state(
             derived_states_list,
-            ptr_new_state_val,
+            ptr_new_state,
             state_context_value
         );
     }

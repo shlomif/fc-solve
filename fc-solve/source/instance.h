@@ -114,7 +114,7 @@ extern "C" {
  * */
 struct fcs_states_linked_list_item_struct
 {
-    fcs_state_extra_info_t * s;
+    fcs_state_keyval_pair_t * s;
     struct fcs_states_linked_list_item_struct * next;
 };
 
@@ -147,7 +147,7 @@ struct fc_solve_soft_thread_struct;
 
 typedef void (*fc_solve_solve_for_state_test_t)(
         struct fc_solve_soft_thread_struct *,
-        fcs_state_extra_info_t *,
+        fcs_state_keyval_pair_t *,
         fcs_derived_states_list_t *
         );
 
@@ -404,7 +404,7 @@ typedef struct
         int iter_num,
         int depth,
         void * instance,
-        fcs_state_extra_info_t * state_val,
+        fcs_state_keyval_pair_t * state_val,
         int parent_iter_num
         );
     void * debug_iter_output_context;
@@ -499,12 +499,12 @@ typedef struct
     fcs_runtime_flags_t runtime_flags;
 
     /* This is a place-holder for the initial state */
-    fcs_state_extra_info_t * state_copy_ptr_val;
+    fcs_state_keyval_pair_t * state_copy_ptr;
 
     /* This is the final state that the scan recommends to the
      * interface
      * */
-    fcs_state_extra_info_t * final_state_val;
+    fcs_state_keyval_pair_t * final_state;
 
     /*
      * This is the number of states in the state collection.
@@ -662,7 +662,7 @@ struct fc_solve_hard_thread_struct
 
 typedef struct
 {
-    fcs_state_extra_info_t * state_val;
+    fcs_state_keyval_pair_t * state;
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
     int tests_list_index;
@@ -843,7 +843,7 @@ struct fc_solve_soft_thread_struct
      * The first state to be checked by the scan. It is a kind of bootstrap
      * for the algorithm.
      * */
-    fcs_state_extra_info_t * first_state_to_check_val;
+    fcs_state_keyval_pair_t * first_state_to_check;
 
 
     fcs_runtime_flags_t runtime_flags;
@@ -904,7 +904,7 @@ extern void fc_solve_finish_instance(
 
 extern void fc_solve_start_instance_process_with_board(
     fc_solve_instance_t * instance,
-    fcs_state_extra_info_t * init_state_val
+    fcs_state_keyval_pair_t * init_state_val
     );
 
 extern int fc_solve_resume_instance(

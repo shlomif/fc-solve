@@ -54,8 +54,6 @@ struct fc_solve_hash_symlink_item_struct
 {
     /* A pointer to the data structure that is to be collected */
     void * key;
-    /* A pointer to the value associated with the key */
-    void * val;
     /* We also store the hash value corresponding to this key for faster
        comparisons */
     fc_solve_hash_value_t hash_value;
@@ -135,9 +133,7 @@ fc_solve_hash_init(
 extern fcs_bool_t fc_solve_hash_insert(
     fc_solve_hash_t * hash,
     void * key,
-    void * val,
     void * * existing_key,
-    void * * existing_val,
     fc_solve_hash_value_t hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     , fc_solve_hash_value_t secondary_hash_value

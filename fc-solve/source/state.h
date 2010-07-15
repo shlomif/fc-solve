@@ -54,8 +54,8 @@ extern "C" {
 #define MAX_NUM_SCANS_BUCKETS 1
 #define MAX_NUM_SCANS (MAX_NUM_SCANS_BUCKETS * (sizeof(int)*8))
 
-#define is_scan_visited(ptr_state_val, scan_id) (ptr_state_val->scan_visited[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] & (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))))
-#define set_scan_visited(ptr_state_val, scan_id) { ptr_state_val->scan_visited[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] |= (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))); }
+#define is_scan_visited(ptr_state, scan_id) (ptr_state->info.scan_visited[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] & (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))))
+#define set_scan_visited(ptr_state, scan_id) { ptr_state->info.scan_visited[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] |= (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))); }
 
 
 #ifdef DEBUG_STATES
@@ -262,22 +262,22 @@ typedef struct fcs_struct_state_t fcs_state_t;
     ((state).talon[pos])
 #endif
 
-#define fcs_copy_stack(state_key, state_val, idx, buffer) \
+#define fcs_copy_stack(state_struct, idx, buffer) \
     {     \
-        if (! ((state_val).stacks_copy_on_write_flags & (1 << idx)))        \
+        if (! ((state_struct).info.stacks_copy_on_write_flags & (1 << idx)))        \
         {          \
             fcs_cards_column_t copy_stack_col; \
                                     \
-            (state_val).stacks_copy_on_write_flags |= (1 << idx);       \
-            copy_stack_col = fcs_state_get_col(state_key, idx); \
+            (state_struct).info.stacks_copy_on_write_flags |= (1 << idx);       \
+            copy_stack_col = fcs_state_get_col(((state_struct).s), idx); \
             memcpy(&buffer[idx << 7], copy_stack_col, fcs_col_len(copy_stack_col)+1); \
-            fcs_state_get_col(state_key, idx) = &buffer[idx << 7];     \
+            fcs_state_get_col((state_struct.s), idx) = &buffer[idx << 7];     \
         }     \
     }
 
-#define fcs_duplicate_state_extra(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val)  \
+#define fcs_duplicate_state_extra(ptr_dest, ptr_src)  \
     {   \
-        (ptr_dest_val)->stacks_copy_on_write_flags = 0; \
+        (ptr_dest)->info.stacks_copy_on_write_flags = 0; \
     }
 
 typedef char fcs_locs_t;
@@ -352,17 +352,15 @@ typedef char fcs_locs_t;
 #define fcs_col_push_col_card(dest_col, src_col, card_idx) \
     fcs_col_push_card((dest_col), fcs_col_get_card((src_col), (card_idx)))
 
-#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
+#define fcs_duplicate_state(ptr_dest, ptr_src) \
     { \
-    *(ptr_dest_key) = *(ptr_src_key); \
-    *(ptr_dest_val) = *(ptr_src_val); \
-    (ptr_dest_val)->key = ptr_dest_key; \
-    fcs_duplicate_state_extra(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val);   \
+    *(ptr_dest) = *(ptr_src); \
+    fcs_duplicate_state_extra(ptr_dest, ptr_src);   \
     }
 
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
 
-#define fcs_duplicate_state_extra(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
+#define fcs_duplicate_state_extra(ptr_dest, ptr_src) \
     {} 
 
 #define fcs_copy_stack(state_key, state_val, idx, buffer) {}
@@ -414,12 +412,13 @@ typedef char fcs_locs_t;
 
 #endif
 
+struct fcs_state_keyval_pair_struct;
+
 struct fcs_state_extra_info_struct
 {
     fcs_locs_t stack_locs[MAX_NUM_STACKS];
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
-    fcs_state_t * key;
-    struct fcs_state_extra_info_struct * parent_val;
+    struct fcs_state_keyval_pair_struct * parent;
     fcs_move_stack_t * moves_to_parent;
     int depth;
     /*
@@ -461,11 +460,13 @@ struct fcs_state_extra_info_struct
 
 typedef struct fcs_state_extra_info_struct fcs_state_extra_info_t;
 
-typedef struct
+struct fcs_state_keyval_pair_struct
 {
     fcs_state_t s;
     fcs_state_extra_info_t info;
-} fcs_state_keyval_pair_t;
+} fcs_state_keyval_pair_struct;
+
+typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
 
 typedef struct {
     fcs_state_t * key;
@@ -506,7 +507,7 @@ extern fcs_card_t fc_solve_empty_card;
 
 
 extern void fc_solve_canonize_state(
-    fcs_state_extra_info_t * state_val,
+    fcs_state_keyval_pair_t * state,
     int freecells_num,
     int stacks_num
     );
@@ -530,7 +531,6 @@ static GCC_INLINE int fc_solve_state_compare(const void * s1, const void * s2)
 extern int fc_solve_state_compare_equal(const void * s1, const void * s2);
 #endif
 extern int fc_solve_state_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
-extern int fc_solve_state_extra_info_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
 
 #else
 extern int fc_solve_state_compare_indirect(const void * s1, const void * s2);
@@ -600,8 +600,7 @@ extern int fc_solve_u2p_card_number(const char * string);
 extern int fc_solve_u2p_suit(const char * deck);
 
 static GCC_INLINE void fc_solve_state_init(
-    fcs_state_t * state_key,
-    fcs_state_extra_info_t * state_val,
+    fcs_state_keyval_pair_t * state,
     int stacks_num
 #ifdef INDIRECT_STACK_STATES
     ,char * indirect_stacks_buffer
@@ -609,38 +608,41 @@ static GCC_INLINE void fc_solve_state_init(
     )
 {
     int i;
+    
 
-    memset(state_key, 0, sizeof(*state_key));
+    memset(&(state->s), 0, sizeof(state->s));
 
-    for(i=0;i<MAX_NUM_STACKS;i++)
     {
-        state_val->stack_locs[i] = (char)i;
+        fcs_locs_t * stack_locs = state->info.stack_locs;
+        for(i=0;i<MAX_NUM_STACKS;i++)
+        {
+            stack_locs[i] = (fcs_locs_t)i;
+        }
     }
 #ifdef INDIRECT_STACK_STATES
     for(i=0;i<stacks_num;i++)
     {
-        state_key->stacks[i] = &indirect_stacks_buffer[i << 7];
-        memset(state_key->stacks[i], '\0', MAX_NUM_DECKS*52+1);
+        state->s.stacks[i] = &indirect_stacks_buffer[i << 7];
+        memset(state->s.stacks[i], '\0', MAX_NUM_DECKS*52+1);
     }
     for(;i<MAX_NUM_STACKS;i++)
     {
-        state_key->stacks[i] = NULL;
+        state->s.stacks[i] = NULL;
     }
 #endif
     for(i=0;i<MAX_NUM_FREECELLS;i++)
     {
-        state_val->fc_locs[i] = (char)i;
+        state->info.fc_locs[i] = (char)i;
     }
-    state_val->key = state_key;
-    state_val->parent_val = NULL;
-    state_val->moves_to_parent = NULL;
-    state_val->depth = 0;
-    state_val->visited = 0;
-    state_val->visited_iter = 0;
-    state_val->num_active_children = 0;
-    memset(state_val->scan_visited, '\0', sizeof(state_val->scan_visited));
+    state->info.parent = NULL;
+    state->info.moves_to_parent = NULL;
+    state->info.depth = 0;
+    state->info.visited = 0;
+    state->info.visited_iter = 0;
+    state->info.num_active_children = 0;
+    memset(state->info.scan_visited, '\0', sizeof(state->info.scan_visited));
 #ifdef INDIRECT_STACK_STATES
-    state_val->stacks_copy_on_write_flags = 0;
+    state->info.stacks_copy_on_write_flags = 0;
 #endif
 }
 
@@ -659,8 +661,7 @@ static const char * const fc_solve_num_redeals_prefixes[] = { "Num-Redeals:", "R
 
 static GCC_INLINE int fc_solve_initial_user_state_to_c(
     const char * string,
-    fcs_state_t * out_state_key,
-    fcs_state_extra_info_t * out_state_val,
+    fcs_state_keyval_pair_t * out_state,
     int freecells_num,
     int stacks_num,
     int decks_num
@@ -684,8 +685,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
     int decks_index[4];
 
     fc_solve_state_init(
-        out_state_key,
-        out_state_val,
+        out_state,
         stacks_num
 #ifdef INDIRECT_STACK_STATES
         , indirect_stacks_buffer
@@ -695,7 +695,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
 
     first_line = 1;
 
-#define ret (*out_state_key)
+#define ret (out_state->s)
 /* Handle the end of string - shouldn't happen */
 #define handle_eos() \
     { \
@@ -1006,7 +1006,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
 #undef handle_eos
 
 extern char * fc_solve_state_as_string(
-    fcs_state_extra_info_t * state_val,
+    fcs_state_keyval_pair_t * state_pair,
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -1025,7 +1025,7 @@ enum
 };
 
 static GCC_INLINE int fc_solve_check_state_validity(
-    fcs_state_extra_info_t * state_val,
+    fcs_state_keyval_pair_t * state_pair,
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -1042,7 +1042,7 @@ static GCC_INLINE int fc_solve_check_state_validity(
     fcs_cards_column_t col;
     fcs_card_t card;
 
-    state = state_val->key;
+    state = &(state_pair->s);
 
     /* Initialize all cards to 0 */
     for(d=0;d<4;d++)

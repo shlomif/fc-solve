@@ -63,7 +63,7 @@ char fc_solve_simple_simon_nothing;
 
 void fc_solve_sfs_simple_simon_move_sequence_to_founds(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -156,7 +156,7 @@ void fc_solve_sfs_simple_simon_move_sequence_to_founds(
 
 void fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -284,7 +284,7 @@ void fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
 
 void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -398,7 +398,7 @@ void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
 
 void fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -683,7 +683,7 @@ void fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_abov
 
 void fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -928,7 +928,7 @@ void fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_paren
 
 void fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1256,7 +1256,7 @@ void fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_
 
 void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1505,7 +1505,7 @@ void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_so
 
 void fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {
@@ -1790,7 +1790,7 @@ void fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
 
 void fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
         fc_solve_soft_thread_t * soft_thread,
-        fcs_state_extra_info_t * ptr_state_val,
+        fcs_state_keyval_pair_t * ptr_state,
         fcs_derived_states_list_t * derived_states_list
         )
 {

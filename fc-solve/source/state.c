@@ -81,7 +81,7 @@ static int fcs_talon_compare_with_context(const void * p1, const void * p2, fcs_
 
 #ifdef DEBUG_STATES
 void fc_solve_canonize_state(
-    fcs_state_extra_info_t * state_val,
+    fcs_state_keyval_pair_t * state,
     int freecells_num,
     int stacks_num)
 {
@@ -90,8 +90,6 @@ void fc_solve_canonize_state(
     fc_stack_t temp_stack;
     fcs_card_t temp_freecell;
     int temp_loc;
-
-    fcs_state_t * state_key = state_val->key;
 
     /* Insertion-sort the stacks */
     for(b=1;b<stacks_num;b++)
@@ -211,7 +209,7 @@ void fc_solve_canonize_state(
 }
 #elif defined(INDIRECT_STACK_STATES)
 void fc_solve_canonize_state(
-    fcs_state_extra_info_t * state_val,
+    fcs_state_keyval_pair_t * state,
     int freecells_num,
     int stacks_num)
 {
@@ -219,8 +217,6 @@ void fc_solve_canonize_state(
     fcs_card_t * temp_stack;
     fcs_card_t temp_freecell;
     char temp_loc;
-
-    fcs_state_t * state_key = state_val->key;
 
     /* Insertion-sort the stacks */
     for(b=1;b<stacks_num;b++)
@@ -231,20 +227,20 @@ void fc_solve_canonize_state(
             (
                 fc_solve_stack_compare_for_comparison
                 (
-                    (state_key->stacks[c]),
-                    (state_key->stacks[c-1])
+                    (state->s.stacks[c]),
+                    (state->s.stacks[c-1])
                 )
                 < 0
             )
         )
         {
-            temp_stack = state_key->stacks[c];
-            state_key->stacks[c] = state_key->stacks[c-1];
-            state_key->stacks[c-1] = temp_stack;
+            temp_stack = state->s.stacks[c];
+            state->s.stacks[c] = state->s.stacks[c-1];
+            state->s.stacks[c-1] = temp_stack;
 
-            temp_loc = state_val->stack_locs[c];
-            state_val->stack_locs[c] = state_val->stack_locs[c-1];
-            state_val->stack_locs[c-1] = temp_loc;
+            temp_loc = state->info.stack_locs[c];
+            state->info.stack_locs[c] = state->info.stack_locs[c-1];
+            state->info.stack_locs[c-1] = temp_loc;
 
             c--;
         }
@@ -258,18 +254,18 @@ void fc_solve_canonize_state(
         while(
             (c>0)     &&
             (fc_solve_card_compare(
-                &(state_key->freecells[c]),
-                &(state_key->freecells[c-1])
+                &(state->s.freecells[c]),
+                &(state->s.freecells[c-1])
                 ) < 0)
             )
         {
-            temp_freecell = state_key->freecells[c];
-            state_key->freecells[c] = state_key->freecells[c-1];
-            state_key->freecells[c-1] = temp_freecell;
+            temp_freecell = state->s.freecells[c];
+            state->s.freecells[c] = state->s.freecells[c-1];
+            state->s.freecells[c-1] = temp_freecell;
 
-            temp_loc = state_val->fc_locs[c];
-            state_val->fc_locs[c] = state_val->fc_locs[c-1];
-            state_val->fc_locs[c-1] = temp_loc;
+            temp_loc = state->info.fc_locs[c];
+            state->info.fc_locs[c] = state->info.fc_locs[c-1];
+            state->info.fc_locs[c-1] = temp_loc;
 
             c--;
         }
@@ -296,19 +292,6 @@ int fc_solve_state_compare_with_context(
     return memcmp(s1,s2,sizeof(fcs_state_t));
 }
 
-int fc_solve_state_extra_info_compare_with_context(
-    const void * s1,
-    const void * s2,
-    fcs_compare_context_t context GCC_UNUSED
-    )
-{
-    return
-        memcmp(
-            (((fcs_state_extra_info_t *)s1)->key),
-            (((fcs_state_extra_info_t *)s2)->key),
-            sizeof(fcs_state_t)
-        );
-}
 #else
 
 int fc_solve_state_compare_indirect(const void * s1, const void * s2)
@@ -324,7 +307,7 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 #endif
 
 char * fc_solve_state_as_string(
-    fcs_state_extra_info_t * state_val,
+    fcs_state_keyval_pair_t * state_pair,
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -349,7 +332,7 @@ char * fc_solve_state_as_string(
     int stack_locs[MAX_NUM_STACKS];
     int freecell_locs[MAX_NUM_FREECELLS];
 
-    state = state_val->key;
+    state = &(state_pair->s);
 
     if (canonized_order_output)
     {
@@ -366,11 +349,11 @@ char * fc_solve_state_as_string(
     {
         for(a=0;a<stacks_num;a++)
         {
-            stack_locs[(int)(state_val->stack_locs[a])] = a;
+            stack_locs[(int)(state_pair->info.stack_locs[a])] = a;
         }
         for(a=0;a<freecells_num;a++)
         {
-            freecell_locs[(int)(state_val->fc_locs[a])] = a;
+            freecell_locs[(int)(state_pair->info.fc_locs[a])] = a;
         }
     }
 

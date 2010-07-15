@@ -77,13 +77,12 @@ static GCC_INLINE ub4 perl_hash_function(
         if (condition_expr)     \
         {      \
             fcs_compact_alloc_release(stacks_allocator);    \
-            new_state_key->stacks[i] = cached_stack;       \
+            new_state->s.stacks[i] = cached_stack;       \
         }
 
 static void GCC_INLINE fc_solve_cache_stacks(
         fc_solve_hard_thread_t * hard_thread,
-        fcs_state_t * new_state_key,
-        fcs_state_extra_info_t * new_state_val
+        fcs_state_keyval_pair_t * new_state
         )
 {
     int i;
@@ -112,17 +111,17 @@ static void GCC_INLINE fc_solve_cache_stacks(
          * If the stack is not a copy - it is already cached so skip
          * to the next stack
          * */
-        if (! (new_state_val->stacks_copy_on_write_flags & (1 << i)))
+        if (! (new_state->info.stacks_copy_on_write_flags & (1 << i)))
         {
             continue;
         }
 
-        column = fcs_state_get_col(*new_state_key, i);
+        column = fcs_state_get_col(new_state->s, i);
         col_len = (fcs_col_len(column)+1);
 
         new_ptr = (char*)fcs_compact_alloc_ptr(stacks_allocator, col_len);
         memcpy(new_ptr, column, col_len);
-        new_state_key->stacks[i] = new_ptr;
+        new_state->s.stacks[i] = new_ptr;
 
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -151,18 +150,14 @@ static void GCC_INLINE fc_solve_cache_stacks(
 #endif
 
         {
-            void * dummy;
-
-            column = fcs_state_get_col(*new_state_key, i);
+            column = fcs_state_get_col(new_state->s, i);
 
             replace_with_cached(fc_solve_hash_insert(
                 &(instance->stacks_hash),
                 column,
-                column,
                 &cached_stack,
-                &dummy,
                 perl_hash_function(
-                    (ub1 *)new_state_key->stacks[i],
+                    (ub1 *)new_state->s.stacks[i],
                     col_len
                     )
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -346,20 +341,20 @@ guint fc_solve_hash_function(gconstpointer key)
 static GCC_INLINE void on_state_new(
     fc_solve_instance_t * instance,
     fc_solve_hard_thread_t * hard_thread,
-    fcs_state_extra_info_t * new_state_val
+    fcs_state_keyval_pair_t * new_state
 )
 {
-    register fcs_state_extra_info_t * parent_state_val;
+    register fcs_state_keyval_pair_t * parent_state;
 
     /* The new state was not found in the cache, and it was already inserted */
-    if (likely(parent_state_val = new_state_val->parent_val))
+    if (likely(parent_state = new_state->info.parent))
     {
-        parent_state_val->num_active_children++;
+        parent_state->info.num_active_children++;
         /* If parent_val is defined, so is moves_to_parent */
-        new_state_val->moves_to_parent =
+        new_state->info.moves_to_parent =
             fc_solve_move_stack_compact_allocate(
                 hard_thread,
-                new_state_val->moves_to_parent
+                new_state->info.moves_to_parent
             );
     }
     instance->num_states_in_collection++;
@@ -369,8 +364,8 @@ static GCC_INLINE void on_state_new(
 
 GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t * hard_thread,
-    fcs_state_extra_info_t * new_state_val,
-    fcs_state_extra_info_t * * existing_state_val
+    fcs_state_keyval_pair_t * new_state,
+    fcs_state_keyval_pair_t * * existing_state
     )
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
@@ -383,7 +378,6 @@ GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
     fcs_bool_t found;
 #endif
     fc_solve_instance_t * instance = hard_thread->instance;
-    fcs_state_t * new_state_key = new_state_val->key;
 
     /* #if'ing out because it doesn't belong here. */
 #if 0
@@ -395,9 +389,9 @@ GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
 #endif
 
 
-    fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val);
+    fc_solve_cache_stacks(hard_thread, new_state);
 
-    fc_solve_canonize_state(new_state_val,
+    fc_solve_canonize_state(new_state,
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM
             );
@@ -432,28 +426,26 @@ GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
     }
 #endif
     {
-        void * existing_key_void, * existing_val_void;
+        void * existing_void;
         if (fc_solve_hash_insert(
         &(instance->hash),
-        new_state_key,
-        new_state_val,
-        &existing_key_void,
-        &existing_val_void,
+        new_state,
+        &existing_void,
         perl_hash_function(
-            (ub1 *)new_state_key,
-            sizeof(*new_state_key)
+            (ub1 *)&(new_state->s),
+            sizeof(new_state->s)
             )
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         , hash_value_int
 #endif
         ))
         {
-            *existing_state_val = existing_val_void;
+            *existing_state = existing_void;
             return FALSE;
         }
         else
         {
-            on_state_new(instance, hard_thread, new_state_val);
+            on_state_new(instance, hard_thread, new_state);
             return TRUE;
         }
     }
