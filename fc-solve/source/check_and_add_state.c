@@ -362,7 +362,7 @@ static GCC_INLINE void on_state_new(
     return;
 }
 
-GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
+fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t * hard_thread,
     fcs_state_keyval_pair_t * new_state,
     fcs_state_keyval_pair_t * * existing_state
