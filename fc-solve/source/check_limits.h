@@ -32,6 +32,11 @@
 extern "C" {
 #endif
 
+#define check_num_states_in_collection(instance) \
+    ((instance)->num_states_in_collection >=       \
+            (instance)->effective_max_num_states_in_collection)
+
+
 /*
  * This macro checks if we need to terminate from running this soft
  * thread and return to the soft thread manager with an
@@ -45,8 +50,7 @@ extern "C" {
             ||                                                        \
         (hard_thread->num_times >= hard_thread->max_num_times)        \
             ||                                                        \
-        (instance->num_states_in_collection >=                        \
-            instance->effective_max_num_states_in_collection)         \
+        check_num_states_in_collection(instance)\
     )
 
 #ifdef __cplusplus
