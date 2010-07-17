@@ -85,6 +85,63 @@ void fc_solve_increase_dfs_max_depth(
     soft_thread->method_specific.soft_dfs.dfs_max_depth = new_dfs_max_depth;
 }
 
+/* TODO - move to fcs_hash.c / fcs_hash .h */
+static void fc_solve_hash_foreach(
+    fc_solve_hash_t * hash,
+    fcs_bool_t (*should_delete_ptr)(void * key, void * context),
+    void * context
+    )
+{
+    int i;
+    fc_solve_hash_symlink_item_t * * item;
+    fc_solve_hash_symlink_item_t * next_item;
+
+    for(i=0;i<hash->size;i++)
+    {
+        item = &(hash->entries[i].first_item);
+        while ((*item) != NULL)
+        {
+            if (should_delete_ptr((*item)->key, context))
+            {
+                next_item = (*item)->next;
+                /* Garbage collect (*item). TODO : actually make use of the
+                 * items. */
+                (*item)->next = hash->list_of_vacant_items;
+                hash->list_of_vacant_items = (*item);
+                /* Skip the item in the chain. */
+                (*item) = next_item;
+            }
+            else
+            {
+                item = &((*item)->next);
+            }
+        }
+    }
+}
+
+#define FCS_IS_STATE_DEAD_END(ptr_state) \
+    ((ptr_state)->info.visited & FCS_VISITED_DEAD_END)
+
+fcs_bool_t free_states_should_delete(void * key, void * context)
+{
+    fc_solve_instance_t * instance = (fc_solve_instance_t *)context;
+    fcs_state_keyval_pair_t * ptr_state = (fcs_state_keyval_pair_t *)key;
+
+    if (FCS_IS_STATE_DEAD_END(ptr_state))
+    {
+        ptr_state->next = instance->list_of_vacant_states;
+        instance->list_of_vacant_states = ptr_state;
+
+        instance->num_states_in_collection--;
+
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
 static void free_states(fc_solve_instance_t * instance)
 {
     /* First of all, let's make sure the soft_threads will no longer
@@ -125,7 +182,7 @@ static void free_states(fc_solve_instance_t * instance)
                             derived_state_idx_idx++
                         )
                         {
-                            if ((soft_dfs_info->derived_states_list.states[soft_dfs_info->derived_states_random_indexes[derived_state_idx_idx]]).state_ptr->info.visited & FCS_VISITED_DEAD_END)
+                            if (FCS_IS_STATE_DEAD_END(soft_dfs_info->derived_states_list.states[soft_dfs_info->derived_states_random_indexes[derived_state_idx_idx]].state_ptr))
                             {
                                 memmove(
                                     soft_dfs_info->derived_states_random_indexes + derived_state_idx_idx+1,
@@ -146,7 +203,13 @@ static void free_states(fc_solve_instance_t * instance)
             }
         }
     }
-    
+
+    /* Now let's recycle the states. */
+    fc_solve_hash_foreach(
+        &(instance->hash),
+        free_states_should_delete,
+        ((void *)instance)
+    );
 }
 
 /*
@@ -1515,11 +1578,23 @@ int fc_solve_sfs_check_state_begin(
     )
 {
     fcs_state_keyval_pair_t * ptr_new_state;
+    fc_solve_instance_t * instance;
 
-    ptr_new_state =
-        fcs_state_ia_alloc_into_var(
-            &(hard_thread->allocator)
-        );
+    instance = hard_thread->instance;
+
+    if ((hard_thread->allocated_from_list = 
+        (instance->list_of_vacant_states != NULL)))
+    {
+        ptr_new_state = instance->list_of_vacant_states;
+        instance->list_of_vacant_states = instance->list_of_vacant_states->next;
+    }
+    else
+    {
+        ptr_new_state =
+            fcs_state_ia_alloc_into_var(
+                &(hard_thread->allocator)
+            );
+    }
 
     fcs_duplicate_state(
             ptr_new_state,
@@ -1585,7 +1660,15 @@ void fc_solve_sfs_check_state_end(
         &existing_state
         ))
     {
-        fcs_compact_alloc_release(&(hard_thread->allocator));
+        if (hard_thread->allocated_from_list)
+        {
+            ptr_new_state->next = instance->list_of_vacant_states;
+            instance->list_of_vacant_states = ptr_new_state;
+        }
+        else
+        {
+            fcs_compact_alloc_release(&(hard_thread->allocator));
+        }
         calculate_real_depth(existing_state);
         /* Re-parent the existing state to this one.
          *

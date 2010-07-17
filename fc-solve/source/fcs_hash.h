@@ -79,6 +79,9 @@ typedef struct
 {
     /* The vector of the hash table itself */
     fc_solve_hash_symlink_t * entries;
+    /* The list of vacant items as freed by the garbage collector. Use
+     * if before allocating more. */
+    fc_solve_hash_symlink_item_t * list_of_vacant_items;
     /* A comparison function that can be used for comparing two keys
        in the collection */
 #ifdef FCS_INLINED_HASH_COMPARISON
@@ -104,6 +107,7 @@ typedef struct
     int max_num_elems_before_resize;
 
     fcs_compact_allocator_t allocator;
+
 } fc_solve_hash_t;
 
 

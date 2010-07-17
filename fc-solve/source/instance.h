@@ -460,6 +460,7 @@ typedef struct
 #endif
 #endif
 
+    fcs_state_keyval_pair_t * list_of_vacant_states;
     /*
      * Storing using Berkeley DB is not operational for some reason so
      * pay no attention to it for the while
@@ -654,6 +655,7 @@ struct fc_solve_hard_thread_struct
     int prelude_idx;
     fcs_prelude_item_t * prelude;
 
+    fcs_bool_t allocated_from_list;
 };
 
 

@@ -457,6 +457,9 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->instance_tests_order.num = 0;
     instance->instance_tests_order.tests = NULL;
+    
+    instance->list_of_vacant_states = NULL;
+
 
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 

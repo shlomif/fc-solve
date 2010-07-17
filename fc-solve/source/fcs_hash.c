@@ -84,6 +84,8 @@ void fc_solve_hash_init(
         sizeof(fc_solve_hash_symlink_t) * size
         );
 
+    hash->list_of_vacant_items = NULL;
+
 #ifdef FCS_INLINED_HASH_COMPARISON
     hash->hash_type = hash_type;
 #else
@@ -183,8 +185,18 @@ fcs_bool_t fc_solve_hash_insert(
         item_placeholder = &(last_item->next);
     }
 
+    if (hash->list_of_vacant_items)
+    {
+        hash->list_of_vacant_items = (item = hash->list_of_vacant_items)->next;
+    }
+    else
+    {
+        item = fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item));
+    }
+
+    *(item_placeholder) = item;
+
     /* Put the new element at the end of the list */
-    item = *(item_placeholder) = fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item));
     /* Do an in-order insertion. */
     item->key = key;
     item->hash_value = hash_value;
