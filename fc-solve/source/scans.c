@@ -52,29 +52,34 @@
 #include "likely.h"
 #include "bool.h"
 
+#define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    int new_dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth + 16;
-    int d;
+    int new_dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth + SOFT_DFS_DEPTH_GROW_BY;
+    fcs_soft_dfs_stack_item_t * soft_dfs_info, * end_soft_dfs_info;
 
     soft_thread->method_specific.soft_dfs.soft_dfs_info = realloc(
         soft_thread->method_specific.soft_dfs.soft_dfs_info,
         sizeof(soft_thread->method_specific.soft_dfs.soft_dfs_info[0])*new_dfs_max_depth
         );
 
-    for(d=soft_thread->method_specific.soft_dfs.dfs_max_depth ; d<new_dfs_max_depth; d++)
+    soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info +
+        soft_thread->method_specific.soft_dfs.dfs_max_depth;
+
+    end_soft_dfs_info = soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY;
+    for(; soft_dfs_info < end_soft_dfs_info ; soft_dfs_info++)
     {
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].state = NULL;
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].tests_list_index = 0;
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].test_index = 0;
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].current_state_index = 0;
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].derived_states_list.num_states = 0;
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].derived_states_list.states = NULL;
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].derived_states_random_indexes = NULL;
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].derived_states_random_indexes_max_size = 0;
-        soft_thread->method_specific.soft_dfs.soft_dfs_info[d].positions_by_rank = NULL;
+        soft_dfs_info->state = NULL;
+        soft_dfs_info->tests_list_index = 0;
+        soft_dfs_info->test_index = 0;
+        soft_dfs_info->current_state_index = 0;
+        soft_dfs_info->derived_states_list.num_states = 0;
+        soft_dfs_info->derived_states_list.states = NULL;
+        soft_dfs_info->derived_states_random_indexes = NULL;
+        soft_dfs_info->derived_states_random_indexes_max_size = 0;
+        soft_dfs_info->positions_by_rank = NULL;
     }
 
     soft_thread->method_specific.soft_dfs.dfs_max_depth = new_dfs_max_depth;
