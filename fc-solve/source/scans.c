@@ -110,6 +110,8 @@ static void fc_solve_hash_foreach(
                 hash->list_of_vacant_items = (*item);
                 /* Skip the item in the chain. */
                 (*item) = next_item;
+
+                hash->num_elems--;
             }
             else
             {
