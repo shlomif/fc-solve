@@ -361,18 +361,18 @@ class Board:
 
     def add_freecell(self, card):
         if not self.with_freecells:
-            raise "Layout does not have freecells!"
+            raise AttributeError("Layout does not have freecells!")
         self.freecells.append(card)
 
     def add_talon(self, card):
         if not self.with_talon:
-            raise "Layout does not have a talon!"
+            raise AttributeError("Layout does not have a talon!")
 
         self.talon.append(card)
 
     def put_into_founds(self, card):
         if not self.with_foundations:
-            raise "Layout does not have foundations!"
+            raise AttributeError("Layout does not have foundations!")
 
         if ((self.foundations[card.suit].rank+1) == card.rank):
             self.foundations[card.suit] = card
@@ -471,7 +471,7 @@ class Game:
         game_class = self.lookup()
 
         if not game_class:
-            raise "Unknown game type " + self.game_id + "\n"
+            raise ValueError("Unknown game type " + self.game_id + "\n")
 
         self.deal()
 
@@ -731,7 +731,7 @@ def shlomif_main(args):
             pysol_fc_deals = 1
             args.pop(0)
         else:
-            raise "Unknown flag " + args[1] + "!"
+            raise ValueError("Unknown flag " + args[1] + "!")
 
     game_num = long(args[1])
     if (len(args) >= 3):
