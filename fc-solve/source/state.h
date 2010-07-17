@@ -462,8 +462,15 @@ typedef struct fcs_state_extra_info_struct fcs_state_extra_info_t;
 
 struct fcs_state_keyval_pair_struct
 {
-    fcs_state_t s;
-    fcs_state_extra_info_t info;
+    union
+    {
+        struct
+        {
+            fcs_state_t s;
+            fcs_state_extra_info_t info;
+        };
+        struct fcs_state_keyval_pair_struct * next;
+    };
 } fcs_state_keyval_pair_struct;
 
 typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
