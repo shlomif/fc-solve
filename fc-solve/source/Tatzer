@@ -29,6 +29,7 @@ my $without_flipping = 0;
 my $with_context_var = 1;
 my $max_bench_threads_num = 4;
 my $pack_size;
+my $link_to_static = 0;
 
 sub set_both
 {
@@ -47,7 +48,7 @@ set_hash();
 
 my %themes =
 (
-    tt => [qw(-r --fc-only --notest-suite)],
+    tt => [qw(-r --fc-only --notest-suite --static)],
     bench => [qw(-l tt --omit-frame)],
     p4b => [qw(-l bench --arch=pentium4)],
     x64b => [qw(-l bench --arch=barcelona)],
@@ -137,6 +138,7 @@ GetOptions(
     'with-ctx-var!' => \$with_context_var,
     'max-bench-threads-num=i' => \$max_bench_threads_num,
     'pack-size=i' => \$pack_size,
+    'static!' => \$link_to_static,
 ) or
     die "Wrong options";
 
@@ -186,6 +188,10 @@ my @cmd= ("cmake",
         ? "-DFCS_WITH_CONTEXT_VARIABLE=1"
         : "-DFCS_WITH_CONTEXT_VARIABLE="
     ),
+    ($link_to_static
+        ? ("-DFCS_LINK_TO_STATIC=1")
+        : ("-DFCS_LINK_TO_STATIC=")
+    )
 );
 
 print(join(" ", @cmd), "\n");
