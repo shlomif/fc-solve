@@ -85,6 +85,70 @@ void fc_solve_increase_dfs_max_depth(
     soft_thread->method_specific.soft_dfs.dfs_max_depth = new_dfs_max_depth;
 }
 
+static void free_states(fc_solve_instance_t * instance)
+{
+    /* First of all, let's make sure the soft_threads will no longer
+     * traverse to the freed states that are currently dead end.
+     * */
+
+    HT_LOOP_DECLARE_VARS();
+
+    HT_LOOP_START()
+    {
+        ST_LOOP_DECLARE_VARS();
+
+        ST_LOOP_START()
+        {
+            switch (soft_thread->method)
+            {
+                case FCS_METHOD_SOFT_DFS:
+                case FCS_METHOD_HARD_DFS:
+                case FCS_METHOD_RANDOM_DFS:
+                {
+                    fcs_soft_dfs_stack_item_t * soft_dfs_info, 
+                        * end_soft_dfs_info;
+                    
+                    soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info;
+
+                    end_soft_dfs_info = soft_dfs_info + soft_thread->method_specific.soft_dfs.depth;
+
+                    for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
+                    {
+                        int derived_state_idx_idx;
+
+                        derived_state_idx_idx = soft_dfs_info->current_state_index+1;
+
+                        for(;
+                                derived_state_idx_idx <
+                                   soft_dfs_info->derived_states_list.num_states
+                            ;
+                            derived_state_idx_idx++
+                        )
+                        {
+                            if ((soft_dfs_info->derived_states_list.states[soft_dfs_info->derived_states_random_indexes[derived_state_idx_idx]]).state_ptr->info.visited & FCS_VISITED_DEAD_END)
+                            {
+                                memmove(
+                                    soft_dfs_info->derived_states_random_indexes + derived_state_idx_idx+1,
+                                    soft_dfs_info->derived_states_random_indexes + derived_state_idx_idx,
+                                    (--(soft_dfs_info->derived_states_list.num_states) - derived_state_idx_idx)
+                                );
+                            }
+                        }
+                    }
+                }
+                break;
+
+                default:
+                {
+                    /* TODO : Implement for the BeFS/BrFS scans. */
+                }
+                break;
+            }
+        }
+    }
+    
+}
+
 /*
     fc_solve_soft_dfs_do_solve is the event loop of the
     Random-DFS scan. DFS which is recursive in nature is handled here
@@ -551,6 +615,11 @@ int fc_solve_soft_dfs_do_solve(
                     calculate_real_depth(
                         ptr_state
                     );
+
+                    if (check_num_states_in_collection(instance))
+                    {
+                        free_states(instance);
+                    }
 
                     if (check_if_limits_exceeded())
                     {
