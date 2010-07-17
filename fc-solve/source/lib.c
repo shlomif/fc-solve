@@ -1030,8 +1030,12 @@ int DLLEXPORT freecell_solver_user_resume_solution(
              * First - check if we exceeded our limit. If so - we must terminate
              * and return now.
              * */
-            if ((user->current_iterations_limit >= 0) &&
-                (user->iterations_board_started_at >= user->current_iterations_limit))
+            if (((user->current_iterations_limit >= 0) &&
+                (user->iterations_board_started_at >=
+                    user->current_iterations_limit)) ||
+                (user->fc_solve_obj->num_states_in_collection >=
+                    user->fc_solve_obj->effective_max_num_states_in_collection)
+            )
             {
                 break;
             }
