@@ -11,6 +11,12 @@ Pressing
 
 * Add some command line examples to +USAGE.txt+ .
 
+* Restore the old -mss flag behaviour and create a new trim-max-stored-states
+flag where the new behaviour happens. max_stores_states should always increase,
+and trim_max_stored_states should decrease if states were removed.
+
+* Also add the dead-ends trimming from the BeFS scan.
+
 Non-pressing
 ------------
 
