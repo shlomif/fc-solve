@@ -357,6 +357,8 @@ static GCC_INLINE void on_state_new(
                 new_state->info.moves_to_parent
             );
     }
+
+    instance->active_num_states_in_collection++;
     instance->num_states_in_collection++;
 
     return;

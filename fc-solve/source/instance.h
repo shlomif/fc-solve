@@ -515,7 +515,7 @@ typedef struct
      *
      * It gives a rough estimate of the memory occupied by the instance.
      * */
-    int num_states_in_collection;
+    int active_num_states_in_collection, num_states_in_collection;
 
     /*
      * A limit to the above.

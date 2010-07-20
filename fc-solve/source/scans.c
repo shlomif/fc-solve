@@ -134,7 +134,7 @@ fcs_bool_t free_states_should_delete(void * key, void * context)
         ptr_state->next = instance->list_of_vacant_states;
         instance->list_of_vacant_states = ptr_state;
 
-        instance->num_states_in_collection--;
+        instance->active_num_states_in_collection--;
 
         return TRUE;
     }

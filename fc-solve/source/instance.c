@@ -448,12 +448,15 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->num_times = 0;
 
     instance->num_states_in_collection = 0;
+    instance->active_num_states_in_collection = 0;
 
     instance->max_num_times = -1;
     instance->effective_max_num_times = INT_MAX;
     instance->max_depth = -1;
     instance->max_num_states_in_collection = -1;
     instance->effective_max_num_states_in_collection = INT_MAX;
+    instance->trim_states_in_collection_from = -1;
+    instance->effective_trim_states_in_collection_from = LONG_MAX;
 
     instance->instance_tests_order.num = 0;
     instance->instance_tests_order.tests = NULL;

@@ -33,8 +33,8 @@ extern "C" {
 #endif
 
 #define check_num_states_in_collection(instance) \
-    ((instance)->num_states_in_collection >=       \
-            (instance)->effective_max_num_states_in_collection)
+    ((instance)->active_num_states_in_collection >=       \
+            (instance)->effective_trim_states_in_collection_from)
 
 
 /*
@@ -50,7 +50,8 @@ extern "C" {
             ||                                                        \
         (hard_thread->num_times >= hard_thread->max_num_times)        \
             ||                                                        \
-        check_num_states_in_collection(instance)\
+        (instance->num_states_in_collection >=   \
+            instance->effective_max_num_states_in_collection) \
     )
 
 #ifdef __cplusplus
