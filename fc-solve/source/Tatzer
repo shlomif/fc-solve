@@ -48,10 +48,13 @@ set_hash();
 
 my %themes =
 (
-    tt => [qw(-r --fc-only --notest-suite --static)],
+    tt => [qw(-r --notest-suite --static)],
     bench => [qw(-l tt --omit-frame)],
-    p4b => [qw(-l bench --arch=pentium4)],
-    x64b => [qw(-l bench --arch=barcelona)],
+    fc_bench => [qw(-l bench --fc-only)],
+    p4b => [qw(-l fc_bench --arch=pentium4)],
+    x64b => [qw(-l fc_bench --arch=barcelona)],
+    p4bb => [qw(-l bench --arch=pentium4)],
+    x64bb => [qw(-l bench --arch=barcelona)],    
 );
 
 my @new_argv = @ARGV;
