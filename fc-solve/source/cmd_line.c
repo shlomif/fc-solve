@@ -707,10 +707,28 @@ break;
 break;
 
 case 't':
+{ switch(*(p++)) {
+case 'e':
 {
-if (!strncmp(p, "ests-order", 10)) {
-p += 10;
+if (!strncmp(p, "sts-order", 9)) {
+p += 9;
 opt = FCS_OPT_TESTS_ORDER;
+
+}
+}
+
+break;
+
+case 'r':
+{
+if (!strncmp(p, "im-max-stored-states", 20)) {
+p += 20;
+opt = FCS_OPT_TRIM_MAX_STORED_STATES;
+
+}
+}
+
+break;
 
 }
 }
@@ -936,10 +954,29 @@ break;
 break;
 
 case 't':
+{ switch(*(p++)) {
+case 'm':
 {
-if (!strncmp(p, "o", 1)) {
-p += 1;
+if (!strncmp(p, "ss", 2)) {
+p += 2;
+opt = FCS_OPT_TRIM_MAX_STORED_STATES;
+
+}
+}
+
+break;
+
+case 'o':
+
+{
+if (*p == '\0')
+{
+
 opt = FCS_OPT_TESTS_ORDER;
+}
+}
+
+break;
 
 }
 }
@@ -1342,6 +1379,16 @@ break;
             );
         }
         break;
+
+        case FCS_OPT_TRIM_MAX_STORED_STATES: /* STRINGS=-tmss|--trim-max-stored-states; */
+        {
+            PROCESS_OPT_ARG() ;
+
+            freecell_solver_set_stored_states_trimming_limit(
+                instance,
+                atol((*arg))
+            );
+        }
 
         case FCS_OPT_NEXT_INSTANCE: /* STRINGS=-ni|--next-instance; */
         {

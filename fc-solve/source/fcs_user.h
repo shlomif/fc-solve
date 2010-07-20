@@ -224,6 +224,11 @@ DLLEXPORT extern void freecell_solver_user_limit_num_states_in_collection(
     int max_num_states
     );
 
+DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
+    void * user_instance,
+    long max_num_states
+    );
+
 DLLEXPORT extern int freecell_solver_user_next_soft_thread(
     void * user_instance
     );

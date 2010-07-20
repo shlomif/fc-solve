@@ -377,6 +377,8 @@ typedef struct
      * */
     int max_depth;
     int max_num_times;
+    long trim_states_in_collection_from;
+
     /* 
      * Like max_num_times only defaults to MAX_INT if below zero so it will
      * work without checking if it's zero.
@@ -384,6 +386,7 @@ typedef struct
      * Normally should be used instead.
      * */
     int effective_max_num_times, effective_max_num_states_in_collection;
+    long effective_trim_states_in_collection_from;
 
     /*
      * The debug_iter_output variables provide a programmer programmable way

@@ -383,6 +383,12 @@ Limits the number of the states stored by the program in the computer's
 memory. This differs from the maximal number of iterations in the sense, that
 it is possible that a stored state was not checked yet.
 
+-tmss [num] , --trim-max-stored-states [num]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This also limits the number of trimmed stored states, but this time will
+try to trim them once the limit has been reached (which is time consuming
+and may cause states to be traversed again in the future).
 
 -to [Test's Order] , --tests-order [Test's Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

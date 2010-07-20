@@ -1872,6 +1872,31 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
     return;
 }
 
+DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
+    void * api_instance,
+    long max_num_states
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t*)api_instance;
+
+    if (max_num_states < 0)
+    {
+        user->fc_solve_obj->trim_states_in_collection_from = -1;
+        user->fc_solve_obj->effective_trim_states_in_collection_from = LONG_MAX;
+    }
+    else
+    {
+        user->fc_solve_obj->effective_trim_states_in_collection_from =
+            user->fc_solve_obj->trim_states_in_collection_from =
+            max_num_states;
+    }
+
+    return;
+
+}
+
 int DLLEXPORT freecell_solver_user_next_soft_thread(
     void * api_instance
     )
