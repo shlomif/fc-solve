@@ -17,9 +17,6 @@ and trim_max_stored_states should decrease if states were removed.
 
 * Also add the dead-ends trimming from the BeFS scan.
 
-* Add a quick way to get rid of --fc-only from +./Tatzer -l p4b+ / 
-+./Tatzer -l x64b+ .
-
 Non-pressing
 ------------
 

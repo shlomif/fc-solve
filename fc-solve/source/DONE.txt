@@ -94,3 +94,6 @@ ints.
 +./freecell-solver-range-parallel-solve 1 100 1 -mi 1+ displays 
 "Unsolved Board" instead of "Intractable Board".
 
+* Add a quick way to get rid of --fc-only from +./Tatzer -l p4b+ / 
++./Tatzer -l x64b+ .
+
