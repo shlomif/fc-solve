@@ -17,6 +17,9 @@ and trim_max_stored_states should decrease if states were removed.
 
 * Also add the dead-ends trimming from the BeFS scan.
 
+* Add a quick way to get rid of --fc-only from +./Tatzer -l p4b+ / 
++./Tatzer -l x64b+ .
+
 Non-pressing
 ------------
 
@@ -84,6 +87,8 @@ and try to contruct good heuristics out of them.
 * Play with writing a memory-re-cycling Soft-DFS scan: if a sub-tree was
 marked as a dead-end, then its states might be able to be placed on a linked
 list of states that can be reused.
+
+* Add a FCS_2FC_FREECELL_ONLY macro for quickly solving 2 freecell games.
 
 Long-term
 ---------
