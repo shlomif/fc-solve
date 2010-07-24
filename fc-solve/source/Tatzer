@@ -30,6 +30,7 @@ my $with_context_var = 1;
 my $max_bench_threads_num = 4;
 my $pack_size;
 my $link_to_static = 0;
+my $hard_coded_num_freecells;
 
 sub set_both
 {
@@ -142,6 +143,7 @@ GetOptions(
     'max-bench-threads-num=i' => \$max_bench_threads_num,
     'pack-size=i' => \$pack_size,
     'static!' => \$link_to_static,
+    'nfc=i' => \$hard_coded_num_freecells,
 ) or
     die "Wrong options";
 
@@ -194,7 +196,11 @@ my @cmd= ("cmake",
     ($link_to_static
         ? ("-DFCS_LINK_TO_STATIC=1")
         : ("-DFCS_LINK_TO_STATIC=")
-    )
+    ),
+    (defined($hard_coded_num_freecells)
+        ? ("-DFCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY=$hard_coded_num_freecells")
+        : ()
+    ),
 );
 
 print(join(" ", @cmd), "\n");

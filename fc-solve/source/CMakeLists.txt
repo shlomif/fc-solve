@@ -126,6 +126,7 @@ SET (FCS_DISABLE_SIMPLE_SIMON "" CACHE BOOL "Exclude being able to solve Simple 
 SET (FCS_WITHOUT_CARD_FLIPPING "" CACHE BOOL "Exclude the flipping of cards from the binary.")
 SET (FCS_WITH_TEST_SUITE "" CACHE BOOL "Also build and run the test suite.")
 SET (FCS_LINK_TO_STATIC "" CACHE BOOL "Link to the static library.")
+SET (FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY "4" CACHE STRING "The hard-coded number of freecells (4, 2, etc.). Usually ignored")
 
 SET (FCS_ENABLE_SECONDARY_HASH_VALUE "" 
     CACHE BOOL 

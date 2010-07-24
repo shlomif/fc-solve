@@ -102,13 +102,19 @@ extern "C" {
  *  */
 #cmakedefine FCS_USE_COMPACT_MOVE_TOKENS
 
+#cmakedefine FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY ${FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY}
+
+#ifndef FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY
+#define FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY 4
+#endif
+
 /*
  * The maximal number of Freecells. For efficiency's sake it should be a
  * multiple of 4.
  * */
 
 #ifdef FCS_FREECELL_ONLY
-#define HARD_CODED_NUM_FREECELLS 4
+#define HARD_CODED_NUM_FREECELLS FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY 
 #define HARD_CODED_NUM_STACKS 8
 #define HARD_CODED_NUM_DECKS 1
 #ifndef FCS_DISABLE_SIMPLE_SIMON
