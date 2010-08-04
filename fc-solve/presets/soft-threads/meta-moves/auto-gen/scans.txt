@@ -22,3 +22,4 @@
 25	--method random-dfs -seed 500 -to 0123456789 -dto 36,[01][23456789]
 26	--method a-star -asw 5,4,0,0,0
 27	--method random-dfs -seed 37 -to [0123]456789 -dto 30,[342]0156789
+28	--method a-star -to 01234675 -asw 40,2,40,0,40
