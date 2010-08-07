@@ -1490,3 +1490,17 @@ Threaded:
 
 86.7596380710602s
 86.7012050151825s
+
+========================================================================
+
+r3073 ; trunk
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 
+--read-from-file 4,foss-nessy-with-pruning.bash"
+2.6.35-desktop-1mnb
+ssh (while not running X-Windows).
+gcc-4.5.0 with "-flto".
+Using sudo_renice.
+
+Threaded:
+
+83.1141219139099s
