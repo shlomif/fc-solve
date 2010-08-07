@@ -2439,8 +2439,16 @@ void fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     return;
 }
 
+#ifdef HARD_CODED_NUM_DECKS
+#define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(ptr_new_state, card)
+#else
+#define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(instance, ptr_new_state, card)
+#endif
+
 static GCC_INLINE fcs_bool_t calc_foundation_to_put_card_on(
+#ifndef HARD_CODED_NUM_DECKS
         fc_solve_instance_t * instance,
+#endif
         fcs_state_keyval_pair_t * ptr_state,
         fcs_card_t card
         )
@@ -2518,7 +2526,7 @@ int fc_solve_sfs_raymond_prune(
                 /* Get the top card in the stack */
                 card = fcs_col_get_card(col, cards_num-1);
 
-                if ((dest_foundation = calc_foundation_to_put_card_on(instance, ptr_new_state, card)) >= 0)
+                if ((dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON()) >= 0)
                 {
                     /* We can safely move it. */
                     num_cards_moved++;
@@ -2549,12 +2557,7 @@ int fc_solve_sfs_raymond_prune(
             card = fcs_freecell_card(new_state, fc);
             if (fcs_card_card_num(card) != 0)
             {
-                if ((dest_foundation =
-                    calc_foundation_to_put_card_on(
-                        instance, ptr_new_state, card
-                    )
-                    ) >= 0
-                )
+                if ((dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON()) >= 0)
                 {
                     num_cards_moved++;
 
