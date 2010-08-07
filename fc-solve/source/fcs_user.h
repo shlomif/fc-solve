@@ -339,6 +339,12 @@ DLLEXPORT extern int freecell_solver_user_set_depth_tests_order(
     char * * error_string
     );
 
+DLLEXPORT extern int freecell_solver_user_set_pruning(
+    void * user_instance,
+    const char * pruning,
+    char * * error_string
+    );
+
 #ifdef __cplusplus
 }
 #endif

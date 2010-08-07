@@ -627,9 +627,11 @@ opt = FCS_OPT_SCANS_SYNERGY;
 break;
 
 case 'e':
+{ switch(*(p++)) {
+case 'q':
 {
-if (!strncmp(p, "quence", 6)) {
-p += 6;
+if (!strncmp(p, "uence", 5)) {
+p += 5;
 { switch(*(p++)) {
 case '-':
 {
@@ -655,6 +657,22 @@ break;
 
 }
 }
+
+}
+}
+
+break;
+
+case 't':
+{
+if (!strncmp(p, "-pruning", 8)) {
+p += 8;
+opt = FCS_OPT_SET_PRUNING;
+
+}
+}
+
+break;
 
 }
 }
@@ -932,6 +950,18 @@ if (!strncmp(p, "ed", 2)) {
 p += 2;
 opt = FCS_OPT_SEED;
 
+}
+}
+
+break;
+
+case 'p':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_SET_PRUNING;
 }
 }
 
@@ -1791,6 +1821,36 @@ break;
 
                     RET_ERROR_IN_ARG() ;
                 }
+            }
+        }
+        break;
+
+        case FCS_OPT_SET_PRUNING: /* STRINGS=-sp|--set-pruning; */
+        {
+            int ret;
+            char * fcs_user_errstr;
+
+            PROCESS_OPT_ARG() ;
+
+            ret = freecell_solver_user_set_pruning(
+                    instance,
+                    (*arg),
+                    &fcs_user_errstr
+                    );
+
+            if (ret != 0)
+            {
+                char * errstr = malloc(strlen(fcs_user_errstr)+500);
+                sprintf(
+                    errstr,
+                    "Error in the optimization scan's tests' order!\n%s\n",
+                    fcs_user_errstr
+                    );
+                free(fcs_user_errstr);
+
+                *error_string = errstr;
+
+                RET_ERROR_IN_ARG() ;
             }
         }
         break;

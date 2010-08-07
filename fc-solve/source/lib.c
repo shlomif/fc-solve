@@ -2097,7 +2097,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     fcs_user_t * user;
     int ret;
 
-    user = (fcs_user_t*)api_instance;
+    user = (fcs_user_t *)api_instance;
 
     if (user->fc_solve_obj->opt_tests_order.tests)
     {
@@ -2120,6 +2120,22 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     }
 
     return ret;
+}
+
+
+int DLLEXPORT extern freecell_solver_user_set_pruning(
+    void * api_instance,
+    const char * pruning,
+    char * * error_string
+    )
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t *)api_instance;
+
+    user->soft_thread->enable_pruning = TRUE;
+
+    return 0;
 }
 
 void DLLEXPORT freecell_solver_user_set_reparent_states(

@@ -397,6 +397,8 @@ static GCC_INLINE void init_soft_thread(
     fc_solve_reset_soft_thread(soft_thread);
 
     soft_thread->name = NULL;
+
+    soft_thread->enable_pruning = FALSE;
 }
 
 void fc_solve_instance__init_hard_thread(

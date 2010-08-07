@@ -875,6 +875,12 @@ struct fc_solve_soft_thread_struct
      * */
     char * name;
 
+    /* 
+     * Whether pruning should be done.
+     * This variable is temporary - there should be a better pruning
+     * abstraction with several optional prunes.
+     * */
+    fcs_bool_t enable_pruning;
 };
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
