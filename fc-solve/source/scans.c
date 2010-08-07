@@ -544,8 +544,21 @@ int fc_solve_soft_dfs_do_solve(
                     {
                         the_soft_dfs_info->tests_list_index =
                             THE_TESTS_LIST.num_lists;
-                        derived_states_list->num_states = 1;
-                        derived_states_list->states[0].state_ptr = derived;
+                        fc_solve_derived_states_list_add_state(
+                            derived_states_list,
+                            derived,
+                            0
+                        );
+                        if (the_soft_dfs_info->derived_states_random_indexes_max_size < 1)
+                        {
+                            the_soft_dfs_info->derived_states_random_indexes_max_size = 1;
+                    the_soft_dfs_info->derived_states_random_indexes =
+                        realloc(
+                            the_soft_dfs_info->derived_states_random_indexes,
+                            sizeof(the_soft_dfs_info->derived_states_random_indexes[0]) * the_soft_dfs_info->derived_states_random_indexes_max_size
+                            );
+                        }
+
                         the_soft_dfs_info->derived_states_random_indexes[0] = 0;
                     }
                 }
