@@ -2439,15 +2439,156 @@ void fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     return;
 }
 
+static GCC_INLINE fcs_bool_t calc_foundation_to_put_card_on(
+        fc_solve_instance_t * instance,
+        fcs_state_keyval_pair_t * ptr_state,
+        fcs_card_t card
+        )
+{
+    int deck;
+
+    for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
+    {
+        if (fcs_foundation_value(state, (deck<<2)+fcs_card_suit(card)) == fcs_card_card_num(card) - 1)
+        {
+            int other_deck_idx;
+
+            for (other_deck_idx = 0 ; other_deck_idx < (INSTANCE_DECKS_NUM << 2) ; other_deck_idx++)
+            {
+                if (fcs_foundation_value(state, other_deck_idx)
+                        < fcs_card_card_num(card) - 2 -
+                        ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
+                   )
+                {
+                    break;
+                }
+            }
+            if (other_deck_idx == (INSTANCE_DECKS_NUM << 2))
+            {
+                return (deck<<2)+fcs_card_suit(card);
+            }
+        }
+    }
+    return -1;
+}
+
 int fc_solve_sfs_raymond_prune(
     fc_solve_soft_thread_t * soft_thread,
     fcs_state_keyval_pair_t * ptr_state,
     fcs_state_keyval_pair_t * * ptr_ptr_next_state
 )
 {
-    *ptr_ptr_next_state = NULL;
+    tests_declare_accessors()
+    int stack_idx, fc;
+    fcs_cards_column_t col;
+    int cards_num;
+    int dest_foundation;
+    int num_cards_moved, num_total_cards_moved;
+    fcs_derived_states_list_t derived_states_list_struct;
+    fcs_card_t card;
+#ifndef HARD_CODED_NUM_STACKS
+    DECLARE_GAME_PARAMS();
+#endif
 
-    return PRUNE_RET_NOT_FOUND;
+    fcs_internal_move_t temp_move;
+
+    tests_define_accessors();
+
+
+#ifndef HARD_CODED_NUM_STACKS
+    SET_GAME_PARAMS();
+#endif
+
+    derived_states_list_struct.states = NULL;
+    derived_states_list_struct.num_states = 0;
+
+    temp_move = fc_solve_empty_move;
+
+    sfs_check_state_begin();
+
+    num_total_cards_moved = 0;
+    do {
+        num_cards_moved = 0;
+        for( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+        {
+            col = fcs_state_get_col(new_state, stack_idx);
+            cards_num = fcs_col_len(col);
+            if (cards_num)
+            {
+                /* Get the top card in the stack */
+                card = fcs_col_get_card(col, cards_num-1);
+
+                if ((dest_foundation = calc_foundation_to_put_card_on(instance, ptr_new_state, card)) >= 0)
+                {
+                    /* We can safely move it. */
+                    num_cards_moved++;
+
+                    my_copy_stack(stack_idx);
+                    {
+                        fcs_cards_column_t new_temp_col;
+                        new_temp_col = fcs_state_get_col(new_state, stack_idx);
+                        fcs_col_pop_top(new_temp_col);
+                    }
+
+                    fcs_increment_foundation(new_state, dest_foundation);
+
+                    fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
+                    fcs_int_move_set_src_stack(temp_move,stack_idx);
+                    fcs_int_move_set_foundation(temp_move,dest_foundation);
+
+                    fcs_move_stack_push(moves, temp_move);
+
+                    fcs_flip_top_card(stack_idx);
+                }
+            }
+        }
+
+        /* Now check the same for the free cells */
+        for( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
+        {
+            card = fcs_freecell_card(new_state, fc);
+            if (fcs_card_card_num(card) != 0)
+            {
+                if ((dest_foundation =
+                    calc_foundation_to_put_card_on(
+                        instance, ptr_new_state, card
+                    )
+                    ) >= 0
+                )
+                {
+                    num_cards_moved++;
+
+                    /* We can put it there */
+
+                    fcs_empty_freecell(new_state, fc);
+
+                    fcs_increment_foundation(new_state, dest_foundation);
+
+                    fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
+                    fcs_int_move_set_src_freecell(temp_move,fc);
+                    fcs_int_move_set_foundation(temp_move,dest_foundation);
+
+                    fcs_move_stack_push(moves, temp_move);
+                }
+            }
+        }
+        num_total_cards_moved += num_cards_moved;
+    } while (num_cards_moved);
+ 
+#define derived_states_list (&derived_states_list_struct)
+    sfs_check_state_end();
+#undef derived_states_list
+
+    if (num_total_cards_moved)
+    {
+        *ptr_ptr_next_state = derived_states_list_struct.states[0].state_ptr;
+        return PRUNE_RET_FOLLOW_STATE;
+    }
+    else
+    {
+        *ptr_ptr_next_state = NULL;
+        return PRUNE_RET_NOT_FOUND;
+    }
 }
 
 #undef state
