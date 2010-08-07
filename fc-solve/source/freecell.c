@@ -2439,6 +2439,17 @@ void fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
     return;
 }
 
+int fc_solve_sfs_raymond_prune(
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_state_keyval_pair_t * ptr_state,
+    fcs_state_keyval_pair_t * * ptr_ptr_next_state
+)
+{
+    *ptr_ptr_next_state = NULL;
+
+    return PRUNE_RET_NOT_FOUND;
+}
+
 #undef state
 #undef new_state
 

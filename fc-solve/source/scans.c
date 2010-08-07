@@ -338,6 +338,7 @@ int fc_solve_soft_dfs_do_solve(
     fcs_rand_t * rand_gen;
     fcs_bool_t local_to_randomize = FALSE;
     int * depth_ptr;
+    fcs_bool_t enable_pruning;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -347,6 +348,8 @@ int fc_solve_soft_dfs_do_solve(
     the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth]);
 
     dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
+    enable_pruning = soft_thread->enable_pruning;
+
     ptr_state = the_soft_dfs_info->state;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
     
@@ -529,6 +532,23 @@ int fc_solve_soft_dfs_do_solve(
                 soft_thread->num_vacant_stacks =
                     the_soft_dfs_info->num_vacant_stacks =
                     num_vacant_stacks;
+
+                /* Perform the pruning. */
+                if (enable_pruning)
+                {
+                    fcs_state_keyval_pair_t * derived;
+                    if (fc_solve_sfs_raymond_prune(
+                        soft_thread, ptr_state, &derived
+                        ) == PRUNE_RET_FOLLOW_STATE
+                    )
+                    {
+                        the_soft_dfs_info->tests_list_index =
+                            THE_TESTS_LIST.num_lists;
+                        derived_states_list->num_states = 1;
+                        derived_states_list->states[0].state_ptr = derived;
+                        the_soft_dfs_info->derived_states_random_indexes[0] = 0;
+                    }
+                }
             }
 
             TRACE0("After iter_handler");

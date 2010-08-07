@@ -130,6 +130,18 @@ extern void fc_solve_sfs_atomic_move_freecell_card_to_empty_stack(
         fcs_derived_states_list_t * derived_states_list
         );
 
+enum PRUNE_RET
+{
+    PRUNE_RET_NOT_FOUND,
+    PRUNE_RET_FOLLOW_STATE
+};
+
+extern int fc_solve_sfs_raymond_prune(
+        fc_solve_soft_thread_t * soft_thread,
+        fcs_state_keyval_pair_t * ptr_state,
+        fcs_state_keyval_pair_t * * ptr_ptr_next_state
+        );
+
 extern void fc_solve_sfs_yukon_do_nothing(
         fc_solve_soft_thread_t * soft_thread,
         fcs_state_keyval_pair_t * ptr_state,
