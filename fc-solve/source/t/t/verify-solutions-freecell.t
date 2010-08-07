@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -273,6 +273,23 @@ verify_solution_test(
         ),
     },
     "Checking the 2-freecells '-seed 236' preset."
+);
+
+
+# TEST
+verify_solution_test({
+        deal => 24, 
+        theme => ["--set-pruning", "Run:tofounds"],
+    },
+    "Solving Deal #24 with set-pruning run-to-founds",
+);
+
+# TEST
+verify_solution_test({
+        deal => 1, 
+        theme => ["--set-pruning", "Run:tofounds"],
+    },
+    "Solving Deal #1 with set-pruning run-to-founds",
 );
 
 =head1 COPYRIGHT AND LICENSE
