@@ -1151,6 +1151,7 @@ int fc_solve_befs_or_bfs_do_solve(
     int a;
     fcs_derived_states_list_t derived;
     int derived_index;
+    fcs_bool_t enable_pruning;
 
     int method;
 
@@ -1183,6 +1184,7 @@ int fc_solve_befs_or_bfs_do_solve(
     tests_list_end = soft_thread->method_specific.befs.tests_list_end;
 
     ptr_state = soft_thread->first_state_to_check;
+    enable_pruning = soft_thread->enable_pruning;
 
     method = soft_thread->method;
     if (method == FCS_METHOD_A_STAR)
@@ -1315,6 +1317,20 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
         TRACE0("perform_tests");
+
+        if (enable_pruning)
+        {
+            fcs_state_keyval_pair_t * derived;
+
+            if (fc_solve_sfs_raymond_prune(
+                    soft_thread, ptr_state, &derived
+                ) == PRUNE_RET_FOLLOW_STATE
+            )
+            {
+                ptr_state = derived;
+            }
+        }
+
         /* 
          * Do all the tests at one go, because that is the way it should be
          * done for BFS and BeFS.
