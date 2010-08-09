@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -95,6 +95,14 @@ test_using_valgrind(
 test_using_valgrind(
     [qw(1 2 1 --flares-plan), q(Run:500@foo)],
     qq{"range-parallel-solve --flares-plan Run:500\@foo" does not crash.}
+);
+
+# TEST
+test_using_valgrind(
+    [qw(1 2 1 --total-iterations-limit 1000 --method soft-dfs
+        -to 0123456789 -sp r:tf)
+    ],
+    qq{"range-parallel-solve -sp r:tf" does not leak.}
 );
 
 =head1 COPYRIGHT AND LICENSE

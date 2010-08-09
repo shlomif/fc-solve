@@ -2582,15 +2582,23 @@ int fc_solve_sfs_raymond_prune(
     sfs_check_state_end();
 #undef derived_states_list
 
-    if (num_total_cards_moved)
     {
-        *ptr_ptr_next_state = derived_states_list_struct.states[0].state_ptr;
-        return PRUNE_RET_FOLLOW_STATE;
-    }
-    else
-    {
-        *ptr_ptr_next_state = NULL;
-        return PRUNE_RET_NOT_FOUND;
+        register int ret_code; 
+
+        if (num_total_cards_moved)
+        {
+            *ptr_ptr_next_state = derived_states_list_struct.states[0].state_ptr;
+            ret_code = PRUNE_RET_FOLLOW_STATE;
+        }
+        else
+        {
+            *ptr_ptr_next_state = NULL;
+            ret_code = PRUNE_RET_NOT_FOUND;
+        }
+        
+        free(derived_states_list_struct.states);
+
+        return ret_code;
     }
 }
 
