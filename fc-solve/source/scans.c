@@ -1240,6 +1240,20 @@ int fc_solve_befs_or_bfs_do_solve(
             }
         }
 
+        TRACE0("Pruning");        
+        if (enable_pruning)
+        {
+            fcs_state_keyval_pair_t * derived;
+
+            if (fc_solve_sfs_raymond_prune(
+                    soft_thread, ptr_state, &derived
+                ) == PRUNE_RET_FOLLOW_STATE
+            )
+            {
+                ptr_state = derived;
+            }
+        }
+
         TRACE0("Counting cells");
 
         /* Count the free-cells */
@@ -1317,19 +1331,6 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
         TRACE0("perform_tests");
-
-        if (enable_pruning)
-        {
-            fcs_state_keyval_pair_t * derived;
-
-            if (fc_solve_sfs_raymond_prune(
-                    soft_thread, ptr_state, &derived
-                ) == PRUNE_RET_FOLLOW_STATE
-            )
-            {
-                ptr_state = derived;
-            }
-        }
 
         /* 
          * Do all the tests at one go, because that is the way it should be

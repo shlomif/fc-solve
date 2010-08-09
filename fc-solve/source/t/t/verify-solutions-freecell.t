@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 25;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -290,6 +290,14 @@ verify_solution_test({
         theme => ["--set-pruning", "Run:tofounds"],
     },
     "Solving Deal #1 with set-pruning run-to-founds",
+);
+
+# TEST
+verify_solution_test({
+        deal => 1, 
+        theme => ["--method", "a-star", "--set-pruning", "r:tf"],
+    },
+    "Solving Deal #1 with --method a-star and set-pruning run-to-founds",
 );
 
 =head1 COPYRIGHT AND LICENSE
