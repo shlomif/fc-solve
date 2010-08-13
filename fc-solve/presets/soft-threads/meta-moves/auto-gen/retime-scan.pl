@@ -36,6 +36,7 @@ if ($opt eq "--gen-bat")
 }
 else
 {
+    unlink("data/$id.data.bin");
     MyInput::time_scan(\%params);
 }
 
