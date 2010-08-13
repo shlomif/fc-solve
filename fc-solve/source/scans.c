@@ -1211,6 +1211,28 @@ int fc_solve_befs_or_bfs_do_solve(
         dump_pqueue(soft_thread, "loop_start", scan_specific.pqueue);
 #endif
 
+        /*
+         * If we do the pruning after checking for being visited, then
+         * there's a risk of inconsistent result when being interrupted 
+         * because we check once for the pruned state (after the scan
+         * was suspended) and another time for the uninterrupted state.
+         * 
+         * Therefore, we prune before checking for the visited flags.
+         * */
+        TRACE0("Pruning");
+        if (enable_pruning)
+        {
+            fcs_state_keyval_pair_t * derived;
+
+            if (fc_solve_sfs_raymond_prune(
+                    soft_thread, ptr_state, &derived
+                ) == PRUNE_RET_FOLLOW_STATE
+            )
+            {
+                ptr_state = derived;
+            }
+        }
+
         {
              register int temp_visited = ptr_state->info.visited;
 
@@ -1237,20 +1259,6 @@ int fc_solve_befs_or_bfs_do_solve(
                 )
             {
                 goto label_next_state;
-            }
-        }
-
-        TRACE0("Pruning");        
-        if (enable_pruning)
-        {
-            fcs_state_keyval_pair_t * derived;
-
-            if (fc_solve_sfs_raymond_prune(
-                    soft_thread, ptr_state, &derived
-                ) == PRUNE_RET_FOLLOW_STATE
-            )
-            {
-                ptr_state = derived;
             }
         }
 
