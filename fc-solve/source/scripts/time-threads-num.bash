@@ -31,7 +31,7 @@ shift
 OUT_DIR="${OUT_DIR:-.}"
 ARGS="${ARGS:--l gi}"
 
-strip * > /dev/null 2>&1
+# strip * > /dev/null 2>&1
 
 mkdir -p "$OUT_DIR/DUMPS"
 
