@@ -109,6 +109,11 @@ GetOptions(
         glob("t/$tests_glob")
         ;
 
+    if (! $ENV{FCS_TEST_BUILD})
+    {
+        @tests = grep { !/build-process/ } @tests;
+    }
+
     {
         # local $ENV{FCS_PATH} = dirname(which("fc-solve"));
         print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
