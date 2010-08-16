@@ -2587,7 +2587,20 @@ int fc_solve_sfs_raymond_prune(
 
         if (num_total_cards_moved)
         {
-            *ptr_ptr_next_state = derived_states_list_struct.states[0].state_ptr;
+            register fcs_state_keyval_pair_t * ptr_next_state;
+
+            *ptr_ptr_next_state
+                = ptr_next_state
+                = derived_states_list_struct.states[0].state_ptr;
+
+            /* 
+             * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
+             * hurt if it's already there, and if it's a state that was
+             * found by other means, we still shouldn't prune it, because
+             * it is already "prune-perfect".
+             * */
+            ptr_next_state->info.visited |= FCS_VISITED_GENERATED_BY_PRUNING;
+
             ret_code = PRUNE_RET_FOLLOW_STATE;
         }
         else

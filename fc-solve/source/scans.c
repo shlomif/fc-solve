@@ -313,6 +313,15 @@ static void free_states(fc_solve_instance_t * instance)
     hard_thread->num_times++; \
 }
 
+#define SHOULD_STATE_BE_PRUNED(enable_pruning, ptr_state) \
+    ( \
+        enable_pruning && \
+        (! (ptr_state->info.visited & \
+            FCS_VISITED_GENERATED_BY_PRUNING \
+            ) \
+        ) \
+    )
+
 int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -534,7 +543,7 @@ int fc_solve_soft_dfs_do_solve(
                     num_vacant_stacks;
 
                 /* Perform the pruning. */
-                if (enable_pruning)
+                if (SHOULD_STATE_BE_PRUNED(enable_pruning, ptr_state))
                 {
                     fcs_state_keyval_pair_t * derived;
                     if (fc_solve_sfs_raymond_prune(
@@ -1220,7 +1229,7 @@ int fc_solve_befs_or_bfs_do_solve(
          * Therefore, we prune before checking for the visited flags.
          * */
         TRACE0("Pruning");
-        if (enable_pruning)
+        if (SHOULD_STATE_BE_PRUNED(enable_pruning, ptr_state))
         {
             fcs_state_keyval_pair_t * derived;
 
