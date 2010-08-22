@@ -9,6 +9,8 @@ use List::Util qw(min);
 
 use Shlomif::FCS::CalcMetaScan;
 
+use Text::Table;
+
 use MyInput;
 
 my $with_len = 0;
@@ -62,6 +64,8 @@ continue
 
 # Flair is our temporary name for these independently evaluated instances
 # print join(" \\\n--next-flair ", map { "--flair-id $_->{id} --flair-quota $_->{quota} $_->{cmd_line}" } @results);
+if (0) 
+{
 print 
 (
     join(" \\\n-nf ", map { "--flare-name $_->{id} $_->{cmd_line} -opt" } @results),
@@ -69,6 +73,7 @@ print
     join(",", map { "Run:$_->{quota}\@$_->{id}" } @results),
     "'\n",
 );
+}
 
 {
     my $x = $data->slice(":,:,2")->clump(1..2);
@@ -78,7 +83,21 @@ print
     my $histograms =
         $x->xchg(0,1)->qsorti()->xchg(0,1)->histogram(1,0,scalar(@results));
 
-    print $histograms;
+    # print $histograms;
+
+    my $sep = \'|';
+    my $major_sep = \'||';
+    my $tb = Text::Table->new($sep,  "Place", $major_sep, (map { $_->id(), $sep,} @{$input_obj->selected_scans()}));
+
+    foreach my $idx (0 .. $#{$input_obj->selected_scans()})
+    {
+        $tb->load([$idx+1, $histograms->slice(":,$idx")->list()]);
+    }
+
+    my $rule = $tb->rule('-', '+');
+
+    print $rule, $tb->title, $rule, 
+        map { $_, $rule, } $tb->body();
 
 =begin Foo
     print map { $results[$_]->{id} . ": " . $histogram[$_] . "\n" }
