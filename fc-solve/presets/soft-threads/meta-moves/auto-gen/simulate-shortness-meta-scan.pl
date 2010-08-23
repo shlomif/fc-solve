@@ -92,10 +92,7 @@ continue
         {
             my ($iters_quota, $scan_id) = ($1, $2);
             
-            my $scan_index =
-                first { $input_obj->selected_scans->[$_]->id() eq $scan_id }
-                (0 .. $#{$input_obj->selected_scans()})
-                ;
+            my $scan_index = $input_obj->get_scan_index_by_id($scan_id);
 
             my $iters_vec = $data->slice(":,($scan_index),(0)");
             my $sol_len_vec = $data->slice(":,($scan_index),(1)");

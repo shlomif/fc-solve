@@ -9,18 +9,27 @@ my $opt = (($ARGV[0] eq "--gen-bat") ? shift : "");
 
 my $id = shift(@ARGV);
 
-my $prev_scans = MyInput::get_prev_scans();
+my $start_board = 1;
+my $num_boards = 32_000;
 
-my @results;
-if ((@results = (grep { $_->{'id'} eq $id } @$prev_scans)) != 1)
+my $input_obj = MyInput->new(
+    {
+        start_board => $start_board,
+        num_boards => $num_boards,
+    }
+);
+
+my $index;
+
+if (!defined($index = $input_obj->get_scan_index_by_id($id)))
 {
-    die "Cannot find scans or too many of them.";
+    die "Cannot find scan of scan ID $id";
 }
 
 my %params =
 (
     id => $id,
-    argv => [split /\s+/, $results[0]->{'cmd_line'}]
+    argv => [split /\s+/, $input_obj->scan_cmd_line_by_index($index)],
 );
 
 if (exists($ENV{FC_NUM}))
@@ -37,7 +46,5 @@ if ($opt eq "--gen-bat")
 else
 {
     unlink("data/$id.data.bin");
-    MyInput::time_scan(\%params);
+    $input_obj->time_scan(\%params);
 }
-
-# system("$ENV{'HOME'}/apps/alert/finish-cue");

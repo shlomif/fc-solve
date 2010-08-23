@@ -17,6 +17,7 @@ __PACKAGE__->mk_acc_ref(
         start_board
         num_boards
         selected_scans
+        _scans_ids_to_indexes_map
     )],
 );
 
@@ -294,6 +295,14 @@ sub _suitable_scans_list
     ];
 }
 
+sub _selected_scans_indexes
+{
+    my $self = shift;
+
+    return (0 .. $#{$self->selected_scans});
+}
+
+
 sub _calc_selected_scan_list
 {
     my $self = shift;
@@ -305,7 +314,27 @@ sub _calc_selected_scan_list
         )
     );
 
+    $self->_scans_ids_to_indexes_map(
+        {
+            map { $self->selected_scans->[$_]->id() => $_ } 
+            $self->_selected_scans_indexes()
+        }
+    );
+
     return;
+}
+
+=head2 $input->get_scan_index_by_id($id)
+
+Returns the scan index by its ID.
+
+=cut
+
+sub get_scan_index_by_id
+{
+    my ($self, $id) = @_;
+
+    return $self->_scans_ids_to_indexes_map->{$id};
 }
 
 sub get_next_id
@@ -365,7 +394,7 @@ sub get_scan_cmd_line
 
 sub time_scan
 {
-    my $args = shift;
+    my ($self, $args) = @_;
 
     my $min_board = $args->{'min'} || 1;
     my $max_board = $args->{'max'} || 32_000;
@@ -395,6 +424,50 @@ sub time_scan
     close($from_cmd);
     close($fcs_out);
     close($fc_pro_out);
+}
+
+=head2 $input_obj->scan_cmd_line_by_index($index)
+
+Looks up the scan's command line by its index.
+
+=cut
+
+sub scan_cmd_line_by_index
+{
+    my ($self, $index) = @_;
+
+    return $self->selected_scans->[$index]->cmd_line();
+}
+
+
+=head2 $input_obj->scan_id_by_index($index)
+
+Looks up the scan's ID by its index.
+
+=cut
+
+sub scan_id_by_index
+{
+    my ($self, $index) = @_;
+
+    return $self->selected_scans->[$index]->id();
+}
+
+=head2 my $index = $input_obj->get_scan_index_by_its_cmd_line($cmd_line)
+
+Finds if there's a scan with the identical command line of $cmd_line .
+
+=cut
+
+sub get_scan_index_by_its_cmd_line
+{
+    my ($self, $cmd_line) = @_;
+
+    return
+    (
+        first { $self->selected_scans->[$_]->cmd_line() eq $cmd_line }
+        $self->_selected_scans_indexes()
+    );
 }
 
 1;
