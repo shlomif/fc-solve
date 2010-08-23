@@ -11,6 +11,10 @@ use Shlomif::FCS::CalcMetaScan;
 
 use MyInput;
 
+use IO::Handle;
+
+STDOUT->autoflush(1);
+
 my $preset;
 
 GetOptions(
@@ -93,13 +97,11 @@ continue
                 (0 .. $#{$input_obj->selected_scans()})
                 ;
 
-            my $iters_vec = $data->slice(":,$scan_index,0");
-            my $sol_len_vec = $data->slice(":,$scan_index,1");
+            my $iters_vec = $data->slice(":,($scan_index),(0)");
+            my $sol_len_vec = $data->slice(":,($scan_index),(1)");
 
             my $which_solved =
-                $iters_vec->where(
-                    ($iters_vec > 0 ) & ($iters_vec < $iters_quota)
-                );
+                ( ($iters_vec > 0 ) & ($iters_vec < $iters_quota) )->which();
 
             my $num_solved = $which_solved->nelem();
 
