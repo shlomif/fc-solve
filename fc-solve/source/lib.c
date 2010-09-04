@@ -2133,7 +2133,20 @@ int DLLEXPORT extern freecell_solver_user_set_pruning(
 
     user = (fcs_user_t *)api_instance;
 
-    user->soft_thread->enable_pruning = TRUE;
+    if (!strcmp(pruning, "r:tf"))
+    {
+        user->soft_thread->enable_pruning = TRUE;
+    }
+    else if (pruning[0] == '\0')
+    {
+        user->soft_thread->enable_pruning = FALSE;
+    }
+    else
+    {
+        *error_string = strdup("Unknown pruning value - must be \"r:tf\" or empty.");
+
+        return 1;
+    }
 
     return 0;
 }

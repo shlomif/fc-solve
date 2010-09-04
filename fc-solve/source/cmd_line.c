@@ -1843,7 +1843,7 @@ break;
                 char * errstr = malloc(strlen(fcs_user_errstr)+500);
                 sprintf(
                     errstr,
-                    "Error in the optimization scan's tests' order!\n%s\n",
+                    "Error in the optimization scan's pruning!\n%s\n",
                     fcs_user_errstr
                     );
                 free(fcs_user_errstr);

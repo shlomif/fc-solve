@@ -279,7 +279,7 @@ verify_solution_test(
 # TEST
 verify_solution_test({
         deal => 24, 
-        theme => ["--set-pruning", "Run:tofounds"],
+        theme => ["--set-pruning", "r:tf"],
     },
     "Solving Deal #24 with set-pruning run-to-founds",
 );
@@ -287,7 +287,7 @@ verify_solution_test({
 # TEST
 verify_solution_test({
         deal => 1, 
-        theme => ["--set-pruning", "Run:tofounds"],
+        theme => ["--set-pruning", "r:tf"],
     },
     "Solving Deal #1 with set-pruning run-to-founds",
 );
