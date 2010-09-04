@@ -534,6 +534,14 @@ Specifies a seed to be used by Freecell Solver's internal random number
 generator. This seed may alter the behaviour and speed of the +random-dfs+
 scan.
 
+--set-pruning [Pruning] , -sp [Pruning]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This option sets the pruning algorithm for the soft thread. Current valid
+values are only the empty string (+""+) for no pruning and +r:tf+ (short
+for "Run: to foundations") for Horne's rule. See:
+
+http://tech.groups.yahoo.com/group/fc-solve-discuss/message/214
 
 -opt , --optimize-solution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
