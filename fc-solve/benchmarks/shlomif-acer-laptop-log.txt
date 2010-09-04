@@ -81,8 +81,16 @@ https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves
 ARGS="--worker-step 16 -l fn" bash scripts/time-threads-num.bash 2 4
 r3055
 ./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+-
 (With -flto and -fwhole-program).
 32.8415179252625s
 
 ------------------------------
 
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3154
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+
+31.2516779899597s
