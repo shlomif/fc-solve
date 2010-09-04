@@ -5,6 +5,7 @@ INSTALL(
         "children-playing-ball.sh"
         "cool-jives.sh"
         "crooked-nose.sh"
+        "enlightened-ostrich.sh"
         "fools-gold.sh"
         "foss-nessy.sh"
         "gooey-unknown-thing.sh"

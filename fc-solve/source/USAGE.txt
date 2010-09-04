@@ -760,6 +760,9 @@ second on a Pentium 4 2.4GHz).
 |+cool-jives+                  |a meta-moves preset
 |+crooked-nose+                |an atomic-moves preset (guarantees an 
             accurate verdict)
+|+enlightened-ostrich+         |a meta-moves preset (that depends on Freecell
+Solver 3.4.0 and above) that yields solutions faster on average than
++foss-nessy+.
 |+fools-gold+                  |an atomic-moves preset
 |+foss-nessy+                  |a meta-moves preset (that depends on Freecell
 Solver 3.2.0 and above) that yields solutions faster on average than 
