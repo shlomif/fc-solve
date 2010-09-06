@@ -106,6 +106,13 @@ GetOptions(
         }
         return;
     },
+    'rwd' => sub {
+        my ($opt, $val) = @_;
+
+        $build_type = "RelWithDebInfo";
+
+        return;
+    },
     'c|cols=s' => \$stack_storage,
     'p|pos=s' => \$state_storage,
     'libavl2-p=s' => \$state_storage_libavl2_tree,
