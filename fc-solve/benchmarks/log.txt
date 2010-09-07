@@ -1546,3 +1546,17 @@ Using sudo_renice.
 Threaded:
 
 79.658075094223s
+
+========================================================================
+
+
+r3153 ; trunk
+./Tatzer -l p4b --without-flip ; after strip ; ARGS="--worker-step 16 -l eo"
+2.6.35.4-desktop-1mnb
+ssh (while not running X-Windows).
+gcc-4.5.0 with "-flto and -fwhole-program".
+google-perftools-1.6
+Using sudo_renice.
+
+79.5340600013733s
+
