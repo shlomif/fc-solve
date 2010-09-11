@@ -121,6 +121,9 @@ SET (MAX_NUM_BENCHMARK_THREADS 4 CACHE STRING "Maximal Number of Threads to Use 
 SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_INTERNAL_HASH" CACHE STRING "The State Storage Type")
 SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack Storage Type")
 
+SET (FCS_WHICH_COLUMNS_GOOGLE_HASH "FCS_WHICH_COLUMNS_GOOGLE_HASH__SPARSE" CACHE STRING "The Columns' Google Hash Type")
+SET (FCS_WHICH_STATES_GOOGLE_HASH "FCS_WHICH_STATES_GOOGLE_HASH__SPARSE" CACHE STRING "The States/Positions' Google Hash Type")
+
 SET (FCS_FREECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell (not recommended)")
 SET (FCS_DISABLE_SIMPLE_SIMON "" CACHE BOOL "Exclude being able to solve Simple Simon from the Binary (not recommended)")
 SET (FCS_WITHOUT_CARD_FLIPPING "" CACHE BOOL "Exclude the flipping of cards from the binary.")

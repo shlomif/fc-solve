@@ -24,7 +24,7 @@ my $tests_glob = "*.{exe,py,t}";
 
 GetOptions(
     '--glob=s' => \$tests_glob,
-);
+) or die "--glob='tests_glob'";
 
 {
     local $ENV{FCS_PATH} = Cwd::getcwd();

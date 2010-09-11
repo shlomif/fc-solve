@@ -28,12 +28,23 @@
 
 #include "google_hash.h"
 
+#if ((FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE) || (FCS_WHICH_COLUMNS_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__DENSE))
 #include <google/dense_hash_set>
+#endif
+
+#if ((FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__SPARSE) || (FCS_WHICH_COLUMNS_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__SPARSE))
+#include <google/sparse_hash_set>
+#endif
 
 #include "state.h"
 
+#if ((FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE) || (FCS_WHICH_COLUMNS_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__DENSE))
 using google::dense_hash_set;      // namespace where class lives by default
+#endif
 
+#if ((FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__SPARSE) || (FCS_WHICH_COLUMNS_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__SPARSE))
+using google::sparse_hash_set;      // namespace where class lives by default
+#endif
 
 typedef  unsigned long  int  ub4;   /* unsigned 4-byte quantities */
 typedef  unsigned       char ub1;
@@ -74,13 +85,19 @@ struct state_hash
   }
 };
 
+#if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__SPARSE)
+typedef sparse_hash_set<char*, state_hash, state_equality> StatesGoogleHash;
+#else
 typedef dense_hash_set<char*, state_hash, state_equality> StatesGoogleHash;
+#endif
 
 extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
 {
     StatesGoogleHash * ret = new StatesGoogleHash;
 
+#if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE)
     ret->set_empty_key(NULL);
+#endif
 
     return (fcs_states_google_hash_handle_t)(ret);
 }
@@ -164,13 +181,19 @@ struct column_hash
   }
 };
 
+#if (FCS_WHICH_COLUMNS_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__SPARSE)
+typedef sparse_hash_set<char*, column_hash, column_equality> ColumnsGoogleHash;
+#else
 typedef dense_hash_set<char*, column_hash, column_equality> ColumnsGoogleHash;
+#endif
 
 extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
 {
     ColumnsGoogleHash * ret = new ColumnsGoogleHash;
 
+#if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__DENSE)
     ret->set_empty_key(NULL);
+#endif
 
     return (fcs_columns_google_hash_handle_t)(ret);
 }
