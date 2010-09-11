@@ -211,7 +211,8 @@ my @cmd= ("cmake",
 );
 
 print(join(" ", @cmd), "\n");
-exec(@cmd);
+my $exit_code = system(@cmd);
+exit($exit_code);
 
 =head1 COPYRIGHT AND LICENSE
 
