@@ -28,11 +28,11 @@
 
 #include "google_hash.h"
 
-#include <google/dense_hash_map>
+#include <google/dense_hash_set>
 
 #include "state.h"
 
-using google::dense_hash_map;      // namespace where class lives by default
+using google::dense_hash_set;      // namespace where class lives by default
 
 
 typedef  unsigned long  int  ub4;   /* unsigned 4-byte quantities */
@@ -74,7 +74,7 @@ struct state_hash
   }
 };
 
-typedef dense_hash_map<char*, char *, state_hash, state_equality> StatesGoogleHash;
+typedef dense_hash_set<char*, state_hash, state_equality> StatesGoogleHash;
 
 extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
 {
@@ -95,26 +95,22 @@ extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
 extern "C" fcs_bool_t fc_solve_states_google_hash_insert(
     fcs_states_google_hash_handle_t void_hash,
     void * key,
-    void * val,
-    void * * existing_key,
-    void * * existing_val)
+    void * * existing_key)
 {
     StatesGoogleHash * hash = (StatesGoogleHash *)void_hash;
     std::pair<StatesGoogleHash::iterator, bool> result =
-        hash->insert(std::make_pair((char *)key, (char *)val))
+        hash->insert((char *)key)
         ;
 
     /* If an insertion took place. */
     if (result.second)
     {
         *existing_key = NULL;
-        *existing_val = NULL;
         return FALSE;
     }
     else
     {
-        *existing_key = (*(result.first)).first;
-        *existing_val = (*(result.first)).second;
+        *existing_key = (*(result.first));
 
         return TRUE;
     }
@@ -129,6 +125,23 @@ extern "C" void fc_solve_states_google_hash_free(
     delete hash;
 
     return;
+}
+
+extern void fc_solve_states_google_hash_foreach(
+    fcs_states_google_hash_handle_t void_hash,
+    fcs_bool_t (*should_delete_ptr)(void * key, void * context),
+    void * context
+    )
+{
+    StatesGoogleHash * hash = (StatesGoogleHash *)void_hash;
+
+    for(StatesGoogleHash::iterator it =  hash->begin(); it != hash->end(); ++it)
+    {
+        if (should_delete_ptr(*(it), context))
+        {
+            hash->erase(it);
+        }
+    }
 }
 
 #endif
@@ -151,7 +164,7 @@ struct column_hash
   }
 };
 
-typedef dense_hash_map<char*, char *, column_hash, column_equality> ColumnsGoogleHash;
+typedef dense_hash_set<char*, column_hash, column_equality> ColumnsGoogleHash;
 
 extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
 {
@@ -172,26 +185,22 @@ extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
 extern "C" fcs_bool_t fc_solve_columns_google_hash_insert(
     fcs_columns_google_hash_handle_t void_hash,
     void * key,
-    void * val,
-    void * * existing_key,
-    void * * existing_val)
+    void * * existing_key)
 {
     ColumnsGoogleHash * hash = (ColumnsGoogleHash *)void_hash;
     std::pair<ColumnsGoogleHash::iterator, bool> result =
-        hash->insert(std::make_pair((char *)key, (char *)val))
+        hash->insert((char *)key)
         ;
 
     /* If an insertion took place. */
     if (result.second)
     {
         *existing_key = NULL;
-        *existing_val = NULL;
         return FALSE;
     }
     else
     {
-        *existing_key = (*(result.first)).first;
-        *existing_val = (*(result.first)).second;
+        *existing_key = (*(result.first));
 
         return TRUE;
     }

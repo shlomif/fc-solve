@@ -85,42 +85,6 @@ void fc_solve_increase_dfs_max_depth(
     soft_thread->method_specific.soft_dfs.dfs_max_depth = new_dfs_max_depth;
 }
 
-/* TODO - move to fcs_hash.c / fcs_hash .h */
-static void fc_solve_hash_foreach(
-    fc_solve_hash_t * hash,
-    fcs_bool_t (*should_delete_ptr)(void * key, void * context),
-    void * context
-    )
-{
-    int i;
-    fc_solve_hash_symlink_item_t * * item;
-    fc_solve_hash_symlink_item_t * next_item;
-
-    for(i=0;i<hash->size;i++)
-    {
-        item = &(hash->entries[i].first_item);
-        while ((*item) != NULL)
-        {
-            if (should_delete_ptr((*item)->key, context))
-            {
-                next_item = (*item)->next;
-                /* Garbage collect (*item). TODO : actually make use of the
-                 * items. */
-                (*item)->next = hash->list_of_vacant_items;
-                hash->list_of_vacant_items = (*item);
-                /* Skip the item in the chain. */
-                (*item) = next_item;
-
-                hash->num_elems--;
-            }
-            else
-            {
-                item = &((*item)->next);
-            }
-        }
-    }
-}
-
 #define FCS_IS_STATE_DEAD_END(ptr_state) \
     ((ptr_state)->info.visited & FCS_VISITED_DEAD_END)
 
@@ -206,12 +170,21 @@ static void free_states(fc_solve_instance_t * instance)
         }
     }
 
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     /* Now let's recycle the states. */
     fc_solve_hash_foreach(
         &(instance->hash),
         free_states_should_delete,
         ((void *)instance)
     );
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+    /* Now let's recycle the states. */
+    fc_solve_states_google_hash_foreach(
+        instance->hash,
+        free_states_should_delete,
+        ((void *)instance)
+    );
+#endif
 }
 
 /*

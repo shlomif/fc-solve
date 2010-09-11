@@ -155,6 +155,41 @@ static GCC_INLINE void fc_solve_hash_free(
     free(hash->entries);
 }
 
+static GCC_INLINE void fc_solve_hash_foreach(
+    fc_solve_hash_t * hash,
+    fcs_bool_t (*should_delete_ptr)(void * key, void * context),
+    void * context
+    )
+{
+    int i;
+    fc_solve_hash_symlink_item_t * * item;
+    fc_solve_hash_symlink_item_t * next_item;
+
+    for(i=0;i<hash->size;i++)
+    {
+        item = &(hash->entries[i].first_item);
+        while ((*item) != NULL)
+        {
+            if (should_delete_ptr((*item)->key, context))
+            {
+                next_item = (*item)->next;
+                /* Garbage collect (*item). TODO : actually make use of the
+                 * items. */
+                (*item)->next = hash->list_of_vacant_items;
+                hash->list_of_vacant_items = (*item);
+                /* Skip the item in the chain. */
+                (*item) = next_item;
+
+                hash->num_elems--;
+            }
+            else
+            {
+                item = &((*item)->next);
+            }
+        }
+    }
+}
+
 #ifdef __cplusplus
 }
 #endif

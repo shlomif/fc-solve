@@ -169,17 +169,13 @@ static void GCC_INLINE fc_solve_cache_stacks(
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
         {
-            void * dummy;
-
-            column = fcs_state_get_col(*new_state_key, i);
+            column = fcs_state_get_col(new_state->s, i);
 
             replace_with_cached(
                 fc_solve_columns_google_hash_insert(
                     instance->stacks_hash,
                     column,
-                    column,
-                    &cached_stack,
-                    &dummy
+                    &cached_stack
                 )
             );
         }
@@ -453,19 +449,23 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     {
-        void * existing_key_void, * existing_val_void;
+        void * existing_void;
 
-        is_state_new = (fc_solve_states_google_hash_insert(
+        /*  TODO : check if this condition should be negated. */
+        if (fc_solve_states_google_hash_insert(
             instance->hash,
-            new_state_key,
-            new_state_val,
-            &existing_key_void,
-            &existing_val_void
-            ) == 0);
-
-        if (! is_state_new)
+            new_state,
+            &(existing_void)
+            )
+        )
         {
-            *existing_state_val = existing_val_void;
+            *existing_state = existing_void;
+            return FALSE;
+        }
+        else
+        {
+            on_state_new(instance, hard_thread, new_state);
+            return TRUE;
         }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)

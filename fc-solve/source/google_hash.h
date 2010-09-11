@@ -53,11 +53,16 @@ extern fcs_states_google_hash_handle_t fc_solve_states_google_hash_new();
 extern fcs_bool_t fc_solve_states_google_hash_insert(
     fcs_states_google_hash_handle_t hash,
     void * key,
-    void * val,
-    void * * existing_key,
-    void * * existing_val);
+    void * * existing_key
+    );
 
 void fc_solve_states_google_hash_free(fcs_states_google_hash_handle_t hash);
+
+extern void fc_solve_states_google_hash_foreach(
+    fcs_states_google_hash_handle_t hash,
+    fcs_bool_t (*should_delete_ptr)(void * key, void * context),
+    void * context
+    );
 
 #endif
 
@@ -77,9 +82,8 @@ extern fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new();
 extern fcs_bool_t fc_solve_columns_google_hash_insert(
     fcs_columns_google_hash_handle_t hash,
     void * key,
-    void * val,
-    void * * existing_key,
-    void * * existing_val);
+    void * * existing_key
+    );
 
 void fc_solve_columns_google_hash_free(fcs_columns_google_hash_handle_t hash);
 

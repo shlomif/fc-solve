@@ -123,6 +123,7 @@ GetOptions(
     'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
+    'dense' => sub { return set_both("GOOGLE_DENSE_HASH"); },
     'fc-only' => \$freecell_only,
     'static' => \$build_static_lib,
     'states-type=s' => \$states_type,
