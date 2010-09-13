@@ -56,6 +56,6 @@ for NUM in $(seq "$MIN" "$MAX") ; do
         --iters-update-on 10000000 \
         --num-workers "$NUM" \
         $ARGS \
-        > "$(printf "$OUT_DIR/DUMPS/dump%.3i" "$NUM")"
+        | tee "$(printf "$OUT_DIR/DUMPS/dump%.3i" "$NUM")"
 done
 
