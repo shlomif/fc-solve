@@ -64,16 +64,16 @@ else
 endif
 
 ifeq ($(GCC_COMPAT),1)
-	CREATE_SHARED = $(CC) $(CFLAGS) -shared
+	CREATE_SHARED = $(CC) $(CFLAGS) -shared -fwhole-program
 	END_SHARED = $(END_LFLAGS) 
 	ifeq ($(DEBUG),1)
 		CFLAGS += -g
 	else ifeq ($(OPT_FOR_SIZE),1)
 		CFLAGS += -Os -fvisibility=hidden
 	else ifeq ($(OPT_AND_DEBUG),1)
-		CFLAGS += -g -O2 -march=pentium4 -flto
+		CFLAGS += -g -O2 -march=native -flto
 	else
-		CFLAGS += -O3 -march=pentium4 -fomit-frame-pointer -flto
+		CFLAGS += -O3 -march=native -fomit-frame-pointer -flto
 	endif
 endif
 
@@ -96,7 +96,7 @@ ifneq ($(WITHOUT_CARD_FLIPS),0)
 endif
 
 
-LFLAGS := $(CFLAGS)
+LFLAGS := $(CFLAGS) -fwhole-program
 END_LFLAGS := -lm
 
 # Toggle for profiling information.
@@ -144,7 +144,6 @@ OBJECTS :=                     \
           check_and_add_state.o \
           card.o              \
           cmd_line.o          \
-          fcs_dm.o            \
           fcs_hash.o          \
           freecell.o          \
           instance.o          \
@@ -175,7 +174,10 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 %.o: %.c
 	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
 
-libfcs.a: $(OBJECTS)
+STATIC_LIB_BASE = fcs
+STATIC_LIB = lib$(STATIC_LIB_BASE).a
+
+$(STATIC_LIB): $(OBJECTS)
 	ar r $@ $(OBJECTS)
 	ranlib $@
 
@@ -193,20 +195,20 @@ endif
 
 LIB_LINK_PRE += -L.
 # LIB_LINK_POST := -lfreecell-solver
-LIB_LINK_POST := -lfcs
+LIB_LINK_POST := -l$(STATIC_LIB_BASE)
 
-fc-solve: main.o libfcs.a
+fc-solve: main.o $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
-freecell-solver-range-parallel-solve: test_multi_parallel.o $(FCS_SHARED_LIB)
+freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
-freecell-solver-multi-thread-solve: threaded_range_solver.o $(FCS_SHARED_LIB)
+freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) -ltcmalloc
 
 FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o
 
-freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(FCS_SHARED_LIB)
+freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FC_PRO_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
 
 clean:
