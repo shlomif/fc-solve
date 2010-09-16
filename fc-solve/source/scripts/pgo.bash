@@ -33,5 +33,5 @@ else
 fi
     
 make -f Makefile.gnu FREECELL_ONLY=1 \
-    CFLAGS="-DFCS_FREECELL_ONLY=1 -O3 -Wall -march=pentium4 -fomit-frame-pointer $pgo_flags -fPIC" \
-    COMPILER=icc
+    EXTRA_CFLAGS="$pgo_flags" \
+    COMPILER="$compiler"
