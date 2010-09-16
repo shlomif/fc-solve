@@ -94,3 +94,16 @@ r3154
 sudo_renice.
 
 31.2516779899597s
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3182
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+
+28.617828130722s
+
+
