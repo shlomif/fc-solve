@@ -151,6 +151,11 @@ SET (FCS_USE_COMPACT_MOVE_TOKENS ""
     "Use more compact tokens for moves internally (makes things slower)"
 )
 
+SET (FCS_AVOID_TCMALLOC "" 
+    CACHE BOOL 
+    "Avoid linking against Google's tcmalloc"
+)
+
 SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
 
 SET (CPU_ARCH "" CACHE STRING "A specific CPU architecture to pass to gcc")
@@ -417,18 +422,20 @@ SET(LIBTCMALLOC_LIB_LIST)
 
 IF (NOT CMAKE_BUILD_TYPE STREQUAL debug)
 
-    # Optionally link against Google's TCMalloc if it's available:
-    # http://goog-perftools.sourceforge.net/
-    # This gives better performance for the threaded programs.
-    FIND_LIBRARY(LIBTCMALLOC_LIB tcmalloc)
+    IF (NOT FCS_AVOID_TCMALLOC)
+        # Optionally link against Google's TCMalloc if it's available:
+        # http://goog-perftools.sourceforge.net/
+        # This gives better performance for the threaded programs.
+        FIND_LIBRARY(LIBTCMALLOC_LIB tcmalloc)
 
-    IF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
-        # Do nothing.
-    ELSE(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
-        # Cancelling for now to see if it helps with the valgrind problem.
-        # TODO : restore
-        SET(LIBTCMALLOC_LIB_LIST ${LIBTCMALLOC_LIB})
-    ENDIF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
+        IF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
+            # Do nothing.
+        ELSE(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
+            # Cancelling for now to see if it helps with the valgrind problem.
+            # TODO : restore
+            SET(LIBTCMALLOC_LIB_LIST ${LIBTCMALLOC_LIB})
+        ENDIF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
+    ENDIF (NOT FCS_AVOID_TCMALLOC)
     
 ENDIF (NOT CMAKE_BUILD_TYPE STREQUAL debug)
 
