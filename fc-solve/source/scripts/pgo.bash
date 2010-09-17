@@ -8,6 +8,7 @@ mode="$1"
 shift
 
 pgo_flags=""
+make_vars=()
 
 if test "$mode" = "use" ; then
     if test "$compiler" = "gcc" ; then
@@ -18,6 +19,7 @@ if test "$mode" = "use" ; then
         echo "Unknown compiler '$compiler'!" 1>&2
         exit -1
     fi
+    make_vars=(OPT_AND_DEBUG=0 DEBUG=0)
 elif test "$mode" = "gen" ; then
     if test "$compiler" = "gcc" ; then
         pgo_flags="-fprofile-generate"
@@ -34,4 +36,5 @@ fi
     
 make -f Makefile.gnu FREECELL_ONLY=1 \
     EXTRA_CFLAGS="$pgo_flags" \
-    COMPILER="$compiler"
+    COMPILER="$compiler" \
+    $make_vars
