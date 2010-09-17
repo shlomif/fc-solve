@@ -41,10 +41,6 @@
 #include "fcs_dm.h"
 #include "instance.h"
 
-#ifdef INDIRECT_STACK_STATES
-#include "fcs_hash.h"
-#endif
-
 #include "move_stack_compact_alloc.h"
 #include "inline.h"
 #include "likely.h"
@@ -254,7 +250,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
 
 #else /* #ifdef INDIRECT_STACK_STATES */
 
-#define fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val) \
+#define fc_solve_cache_stacks(hard_thread, new_state_key) \
     {}
 
 #endif

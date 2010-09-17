@@ -144,7 +144,7 @@ void fc_solve_canonize_state(
 #elif defined(COMPACT_STATES)
 
 void fc_solve_canonize_state(
-    fcs_state_extra_info_t * state_val,
+    fcs_state_keyval_pair_t * state,
     int freecells_num,
     int stacks_num)
 {
@@ -154,7 +154,11 @@ void fc_solve_canonize_state(
     fcs_card_t temp_freecell;
     char temp_loc;
 
-    fcs_state_t * state_key = state_val->key;
+    fcs_state_t * state_key;
+    fcs_state_extra_info_t * state_val;
+
+    state_key = &(state->s);
+    state_val = &(state->info);
 
     /* Insertion-sort the stacks */
 

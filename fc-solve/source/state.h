@@ -363,7 +363,7 @@ typedef char fcs_locs_t;
 #define fcs_duplicate_state_extra(ptr_dest, ptr_src) \
     {} 
 
-#define fcs_copy_stack(state_key, state_val, idx, buffer) {}
+#define fcs_copy_stack(state_struct, idx, buffer) {}
 
 #endif
 

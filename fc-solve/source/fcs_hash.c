@@ -149,7 +149,11 @@ fcs_bool_t fc_solve_hash_insert(
 #define MY_HASH_CONTEXT_VAR
 #endif
 
-#ifdef FCS_INLINED_HASH_COMPARISON
+#ifdef COMPACT_STATES
+
+#define MY_HASH_COMPARE() (fc_solve_state_compare(item->key, key))
+
+#elif defined(FCS_INLINED_HASH_COMPARISON)
 #define MY_HASH_COMPARE() (!(hash_type == FCS_INLINED_HASH__COLUMNS \
                 ? fc_solve_stack_compare_for_comparison(item->key, key) \
                 : fc_solve_state_compare(item->key, key) \
