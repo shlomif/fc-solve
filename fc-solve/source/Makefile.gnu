@@ -75,6 +75,7 @@ ifeq ($(GCC_COMPAT),1)
 	else
 		CFLAGS += -O3 -march=native -fomit-frame-pointer -flto
 	endif
+	CFLAGS += -fPIC
 endif
 
 END_SHARED += -ltcmalloc
