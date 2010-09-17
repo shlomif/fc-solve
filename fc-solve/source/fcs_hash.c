@@ -149,18 +149,31 @@ fcs_bool_t fc_solve_hash_insert(
 #define MY_HASH_CONTEXT_VAR
 #endif
 
-#ifdef COMPACT_STATES
+/* 
+ * MY_HASH_COMPARE_PROTO() returns -1/0/+1 depending on the compared
+ * states order. We need to negate it for the desired condition of equality.
+ * */
+#define MY_HASH_COMPARE() (! MY_HASH_COMPARE_PROTO())
 
-#define MY_HASH_COMPARE() (!fc_solve_state_compare(item->key, key))
+/* Define MY_HASH_COMPARE_PROTO() */
+#if !defined(INDIRECT_STACK_STATES)
+
+#define MY_HASH_COMPARE_PROTO() (fc_solve_state_compare(item->key, key))
 
 #elif defined(FCS_INLINED_HASH_COMPARISON)
-#define MY_HASH_COMPARE() (!(hash_type == FCS_INLINED_HASH__COLUMNS \
-                ? fc_solve_stack_compare_for_comparison(item->key, key) \
-                : fc_solve_state_compare(item->key, key) \
-                ))
+
+#define MY_HASH_COMPARE_PROTO() \
+        ((hash_type == FCS_INLINED_HASH__COLUMNS) \
+            ? fc_solve_stack_compare_for_comparison(item->key, key) \
+            : fc_solve_state_compare(item->key, key) \
+        )
+
 #else
-#define MY_HASH_COMPARE() (!(hash->compare_function(item->key, key MY_HASH_CONTEXT_VAR)))
+
+#define MY_HASH_COMPARE_PROTO() (hash->compare_function(item->key, key MY_HASH_CONTEXT_VAR))
+
 #endif
+/* End of MY_HASH_COMPARE_PROTO() */
 
         while (item != NULL)
         {
