@@ -475,7 +475,7 @@ struct fcs_state_keyval_pair_struct
         };
         struct fcs_state_keyval_pair_struct * next;
     };
-} fcs_state_keyval_pair_struct;
+};
 
 typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
 
