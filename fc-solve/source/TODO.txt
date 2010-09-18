@@ -20,6 +20,10 @@ and trim_max_stored_states should decrease if states were removed.
 Non-pressing
 ------------
 
+* Write a program to summarise an fc-solve invocation, giving the verdict,
+validity, number of moves in the solution, number of iterations, and stored
+states. It should be a wrapper for the fc-solve command line.
+
 * With the +fc-solve+ command line program: add a flag to trigger different
 notice on having reached +FCS_SUSPEND_PROCESS+.
 
