@@ -618,8 +618,8 @@ This argument sets the name used to identify the current soft thread. This name
 can later be used to construct the prelude (see below).
 
 
---prelude [i1@st1{,i2@st2{,i3@st3...}}]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--prelude [\i1@st1{,\i2@st2{,\i3@st3...}}]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets the prelude for the hard thread. At the beginning of the search, the
 hard thread plays a static sequence of iterations at each of the soft threads
