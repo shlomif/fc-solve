@@ -19,10 +19,10 @@ my $prev_scans = MyInput->new(
     }
 );
 
-if (my $index = $input_obj->get_scan_index_by_its_cmd_line($cmd_line))
+if (my $index = $prev_scans->get_scan_index_by_its_cmd_line($scan))
 {
     die "The scan already exists with the ID "
-        . $input_obj->scan_id_by_index($index)
+        . $prev_scans->scan_id_by_index($index)
         . "\n";
 }
 
@@ -44,11 +44,13 @@ if (exists($ENV{FC_NUM}))
 
 if ($opt eq "--gen-bat")
 {
-    open O, ">run_scan_$id.bat";
-    print O join(" ", @{MyInput::get_scan_cmd_line(\%params)}), "\n\r";
-    close(O);
+    open my $out, ">", "run_scan_$id.bat"
+        or die "Could not open run_scan_$id.bat for writing";
+
+    print {$out} join(" ", @{$prev_scans->get_scan_cmd_line(\%params)}), "\n\r";
+    close($out);
 }
 else
 {
-    $input_obj->time_scan(\%params);
+    $prev_scans->time_scan(\%params);
 }

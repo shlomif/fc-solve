@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use File::Path;
+use List::Util ();
 
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
@@ -465,7 +466,7 @@ sub get_scan_index_by_its_cmd_line
 
     return
     (
-        first { $self->selected_scans->[$_]->cmd_line() eq $cmd_line }
+        List::Util::first { $self->selected_scans->[$_]->cmd_line() eq $cmd_line }
         $self->_selected_scans_indexes()
     );
 }
