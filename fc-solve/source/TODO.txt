@@ -87,6 +87,23 @@ list of states that can be reused.
 
 * Add a FCS_2FC_FREECELL_ONLY macro for quickly solving 2 freecell games.
 
+* PySolFC Deal No. 48007594292403677907 :
+
+--------------------------------------------------------
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve -l cpb -sam | grep ^Move | wc -l
+106
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 01234675 -asw 300,1500,0,2,50000 -sam | grep ^Move | wc -l
+105
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 01234675 -asw 40,2,40,0,40 -sam | grep ^Move | wc -l
+121
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 0123467589 -asw 300,1500,0,2,50000 -sam | grep ^Move | wc -l
+100
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 0123467589 -asw 300,1500,0,2,40000 -sam | grep ^Move | wc -l
+106
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 0123467589 -asw 300,1500,0,2,60000 -sam | grep ^Move | wc -l
+91
+--------------------------------------------------------
+
 Long-term
 ---------
 
