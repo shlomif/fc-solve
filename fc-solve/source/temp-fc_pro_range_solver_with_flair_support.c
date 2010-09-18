@@ -476,6 +476,10 @@ int main(int argc, char * argv[])
     else
     {
         binary_output.file = NULL;
+        binary_output.buffer
+            = binary_output.ptr
+            = binary_output.buffer_end
+            = NULL;
     }
 
     user.num_flairs = 0;

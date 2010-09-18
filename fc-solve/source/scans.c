@@ -1149,13 +1149,9 @@ int fc_solve_befs_or_bfs_do_solve(
     int soft_thread_id = soft_thread->id;
     fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
 
-    union {
-        struct {
-            fcs_states_linked_list_item_t * queue;
-            fcs_states_linked_list_item_t * queue_last_item;
-        } brfs;
-        PQUEUE * pqueue;
-    } scan_specific;
+    fcs_states_linked_list_item_t * queue = NULL;
+    fcs_states_linked_list_item_t * queue_last_item = NULL;
+    PQUEUE * pqueue = NULL;
 
     int error_code;
 
@@ -1169,14 +1165,15 @@ int fc_solve_befs_or_bfs_do_solve(
     enable_pruning = soft_thread->enable_pruning;
 
     method = soft_thread->method;
+
     if (method == FCS_METHOD_A_STAR)
     {
-        scan_specific.pqueue = &(soft_thread->method_specific.befs.meth.befs.pqueue);
+        pqueue = &(soft_thread->method_specific.befs.meth.befs.pqueue);
     }
     else
     {
-        scan_specific.brfs.queue = my_brfs_queue;
-        scan_specific.brfs.queue_last_item = my_brfs_queue_last_item;
+        queue = my_brfs_queue;
+        queue_last_item = my_brfs_queue_last_item;
     }
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
@@ -1359,7 +1356,7 @@ int fc_solve_befs_or_bfs_do_solve(
             if (method == FCS_METHOD_A_STAR)
             {
                 fc_solve_PQueuePush(
-                    scan_specific.pqueue,
+                    pqueue,
                     ptr_new_state,
                     befs_rate_state(
                         soft_thread,
@@ -1373,14 +1370,14 @@ int fc_solve_befs_or_bfs_do_solve(
                 fcs_states_linked_list_item_t * last_item_next;
 
                 last_item_next =
-                    scan_specific.brfs.queue_last_item->next = 
+                    queue_last_item->next = 
                     ((fcs_states_linked_list_item_t*)
                         malloc(sizeof(*last_item_next))
                     );
 
-                scan_specific.brfs.queue_last_item->s = ptr_new_state;
+                queue_last_item->s = ptr_new_state;
                 last_item_next->next = NULL;
-                scan_specific.brfs.queue_last_item = last_item_next;
+                queue_last_item = last_item_next;
             }
         }
 
@@ -1421,17 +1418,17 @@ label_next_state:
 #endif
             /* It is an BeFS scan */
             fc_solve_PQueuePop(
-                scan_specific.pqueue,
+                pqueue,
                 &ptr_state
                 );
         }
         else
         {
-            save_item = scan_specific.brfs.queue->next;
-            if (save_item != scan_specific.brfs.queue_last_item)
+            save_item = queue->next;
+            if (save_item != queue_last_item)
             {
                 ptr_state = save_item->s;
-                scan_specific.brfs.queue->next = save_item->next;
+                queue->next = save_item->next;
                 free(save_item);
             }
             else
@@ -1452,7 +1449,7 @@ my_return_label:
 
     if (method != FCS_METHOD_A_STAR)
     {
-        my_brfs_queue_last_item = scan_specific.brfs.queue_last_item;
+        my_brfs_queue_last_item = queue_last_item;
     }
 
     if (soft_thread->method_specific.befs.befs_positions_by_rank)
