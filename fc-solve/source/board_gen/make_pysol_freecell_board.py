@@ -73,6 +73,10 @@ class PysolRandom:
     ORIGIN_SELECTED = 3         # manually entered
     ORIGIN_NEXT_GAME = 4        # "Next game number"
 
+    DEALS_PYSOL = 0
+    DEALS_PYSOLFC = 1
+    DEALS_MS = 2
+
     def __init__(self, seed=None):
         if seed is None:
             seed = self._getRandomSeed()
@@ -410,8 +414,8 @@ def flip_card(card_str, flip):
         return card_str
 
 
-def shuffle(orig_cards, game_num, is_pysol_fc_deals):
-    if game_num <= 32000:
+def shuffle(orig_cards, game_num, which_deals):
+    if ((game_num <= 32000) or which_deals == PysolRandom.DEALS_MS):
         r = LCRandom31()
         r.setSeed(game_num)
         fcards = []
@@ -423,7 +427,7 @@ def shuffle(orig_cards, game_num, is_pysol_fc_deals):
         r.shuffle(orig_cards)
     else:
         r = 0
-        if (is_pysol_fc_deals):
+        if (which_deals == PysolRandom.DEALS_PYSOLFC):
             r = MTRandom()
         else:
             r = LCRandom64()
@@ -453,7 +457,7 @@ class Game:
                 "black_hole" : None,
         }
 
-    def __init__(self, game_id, game_num, is_pysol_fc_deals, print_ts):
+    def __init__(self, game_id, game_num, which_deals, print_ts):
         mymap = {}
         for k in self.REVERSE_MAP.keys():
             if self.REVERSE_MAP[k] is None:
@@ -465,7 +469,7 @@ class Game:
         self.game_id = game_id
         self.game_num = game_num
         self.print_ts = print_ts
-        self.is_pysol_fc_deals = is_pysol_fc_deals
+        self.which_deals = which_deals
 
     def print_layout(self):
         game_class = self.lookup()
@@ -494,7 +498,7 @@ class Game:
     def deal(self):
         orig_cards = createCards(self.get_num_decks(), self.print_ts)
 
-        orig_cards = shuffle(orig_cards, self.game_num, self.is_pysol_fc_deals)
+        orig_cards = shuffle(orig_cards, self.game_num, self.which_deals)
 
         cards = orig_cards
         cards.reverse()
@@ -722,13 +726,16 @@ class Game:
 
 def shlomif_main(args):
     print_ts = 0
-    pysol_fc_deals = 0
+    which_deals = PysolRandom.DEALS_PYSOL
     while args[1][0] == '-':
         if (args[1] == "-t"):
             print_ts = 1
             args.pop(0)
         elif ((args[1] == "--pysolfc") or (args[1] == "-F")):
-            pysol_fc_deals = 1
+            which_deals = PysolRandom.DEALS_PYSOLFC
+            args.pop(0)
+        elif ((args[1] == "--ms") or (args[1] == "-M")):
+            which_deals = PysolRandom.DEALS_MS
             args.pop(0)
         else:
             raise ValueError("Unknown flag " + args[1] + "!")
@@ -739,7 +746,7 @@ def shlomif_main(args):
     else:
         which_game = "freecell"
 
-    game = Game(which_game, game_num, pysol_fc_deals, print_ts)
+    game = Game(which_game, game_num, which_deals, print_ts)
     game.print_layout();
 
 if __name__ == "__main__":

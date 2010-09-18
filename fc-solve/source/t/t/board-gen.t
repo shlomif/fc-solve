@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 25;
 use Test::Differences;
 
 {
@@ -558,6 +558,50 @@ EOF
         $got,
         $expected,
         "PySolFC 45508856405861261758 black_hole",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py --ms -t 100000`;
+
+    my $expected = <<"EOF";
+5C 6S JC 2D 2C 8S 3C
+QS 7S 9C QD JD 9D AS
+8C TH 3H 4C TS 2H QC
+AD 7C JS QH 5D 6D 4H
+7D 4S KD 7H 5S 3D
+TD 4D TC 6H 8D 2S
+KC AH JH 8H KH 6C
+3S AC 9H KS 5H 9S
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "make_pysol --ms board No. 100 - the FC-Pro board.",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py -M -t 100000`;
+
+    my $expected = <<"EOF";
+5C 6S JC 2D 2C 8S 3C
+QS 7S 9C QD JD 9D AS
+8C TH 3H 4C TS 2H QC
+AD 7C JS QH 5D 6D 4H
+7D 4S KD 7H 5S 3D
+TD 4D TC 6H 8D 2S
+KC AH JH 8H KH 6C
+3S AC 9H KS 5H 9S
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "make_pysol -M board No. 100 - the FC-Pro board.",
     );
 }
 
