@@ -26,16 +26,21 @@ In practice, however, the entire state will be stored like this:
 +
 2. First the four (or eight) foundations (* 4 bits each) - total 2 bytes each.
 +
-3. The number of original cards left in each of the column * 8 bits each - 
-total 8 bytes each for Freecell.
-* In the future, maybe encode each column in as many bits as the column needs
-initially. For example if it only had 7 initial cards, then use 3 bits.
+3. The number of original cards left in each of the columns * their bit log. -
+for an initial Freecell deal that would be 4*4+3*4 = 28 bits (or 4.5 bytes).
 +
 4. The number of cards in the sequence - 4 bits each. For Freecell it will use
 4 bytes.
 +
-5. The top cards for all the columns that are zero - 6 bits each. For Freecell
-it will be at most 6 bytes.
+5. The top cards for all the columns that are zero - 6 bits each. For
+Freecell it will be at most 6 bytes.
 +
-6. The suits of the cards in the sequences as the sequences are ordered from
-start to finish - 2 bits each. 
+6. The cards in the freecells - 6 bits * 4 = 24 bits = 3 bytes.
++
+7. The suits of the cards in the sequences as the sequences are ordered from
+start to finish - 2 bits each. (note - for Freecell, we only have to store 1
+bit each).
+
+Upper limit (excluding 1): 16 bits + 28 bits + 32 bits + 48 bits + 24 bits +
+52 bits = 200 bits = 25 bytes.
+
