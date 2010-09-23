@@ -58,21 +58,13 @@ apply the patch, and invoke pysol from that directory.
 
 <h2>Notes</h2>
 
-# Placed at 2009-07-09
-# Remove/renew at 2010-07-09
-<define-tag linkstar_ad>
-Taking this into consideration, the Freecell solver may not be applicable to <a
-href="http://www.pokerstars.com/de/">online poker</a> influenced games or
-anything of similar description.
-</define-tag>
-
 <p>
 The current integration still leaves a lot to be desired. I haven't yet
 enabled the use of Freecell Solver for Der Katzenschwanz and Die Schlange
 , as well as all the pseudo-Freecell games like Cruel, Good Measure, 
 or Streets and Alleys. The latter may require translating moves
 to single-card moves, as Freecell Solver may move the cards one sequence at
-a time. <linkstar_ad /> Plus, Simple Simon cannot work because Freecell Solver
+a time. Plus, Simple Simon cannot work because Freecell Solver
 also moves non-homogenous sequences as one, so it was not enabled at the
 moment.
 </p>
