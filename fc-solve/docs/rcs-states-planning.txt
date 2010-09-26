@@ -1,0 +1,64 @@
+We need to design an LRU Cache. Operations:
+
+1. Retrieve the state key by its extra_info/value.
+
+The value contains a pointer to the parent and a move. The key lookup
+will be done recursively by looking up the key of the parent state and
+calculating the moves backward from it.
+
+Now, once too many keys have been stored in the cache, we start removing the
+least recently used (LRU) key. How to do that?
+
+We will keep an upgoing counter of when the key was used most recently.
+If counter[s1] > counter[s2] then s1 is fresher than s2 and s2 should be
+pruned earlier.
+
+Data structures
+---------------
+
+--------------
+typedef struct 
+{
+    fcs_state_extra_info_t * extra_info_ptr;
+    fcs_state_t key;
+    cache_priority_t priority;
+} cache_key_info_t;
+
+--------------
+
+* A counter +new_priority+.
+* An associative array, +extra_info_ptrs_to_structs+, mapping the pointers of 
+the values to a +cache_key_info+.
+** If the value does not exist there, it should be recalculated.
+* A balanced binary tree, +lru_priorities_to_structs+, mapping the LRU counter 
+values to the the same +cache_key_info+.
+* A linked list +list_of_prev_cache_key_infos+ of +cache_key_info+ s for
+recycling.
+
+To look-up a key from a value:
+
+1. If it exists in +extra_info_ptrs_to_structs+ then:
+    1. Keep track of its key,
+    2. Remove it from +lru_priorities_to_structs+ .
+    3. Give it a new priority from the incrementing counter.
+    4. Assign the new priority to the struct
+    5. Insert it again with the new priority (to the top).
+
+2. If it does not exist:
+    1. Calculate its key from its parent state (pseudo-recursively, with the 
+    same algorithm).
+    2. Assign it the freshest priority from +new_priority+.
+    3. Allocate a new +cache_key_info_t+ , possibly from 
+    +list_of_prev_cache_key_infos+.
+    4. Assign it +new_priority+, calculate its +key+ and place the 
+    +extra_info_ptr+ there.
+    5. Insert the < +cache_key_info.extra_info_ptr+ => +&cache_key_info+ > 
+    pair into +extra_info_ptrs_to_structs+.
+    6. Insert the < +cache_key_info.priority+ => +&cache_key_info+ > pair into
+    +lru_priorities_to_structs+. 
+    7. If there are too many elements in the cache then:
+        1. Extract and remove the lowest priority member of 
+        +lru_priorities_to_structs+ (the leftmost value).
+        2. Remove 
+        +extra_info_ptrs_to_structs[extra_info_ptr]+ 
+        3. Insert the struct to the head of +list_of_prev_cache_key_infos+.
