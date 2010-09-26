@@ -1,3 +1,22 @@
 <define-tag share_this_button>
 <script type="text/javascript" src="http://w.sharethis.com/button/sharethis.js#publisher=8ea86932-e0be-4dc7-968a-19bfb8033845&amp;type=website&amp;post_services=facebook%2Cmyspace%2Cdigg%2Cdelicious%2Cybuzz%2Ctwitter%2Cstumbleupon%2Creddit%2Ctechnorati%2Cmixx%2Cblogger%2Cwordpress%2Ctypepad%2Cgoogle_bmarks%2Cwindows_live%2Cfark%2Cbus_exchange%2Cpropeller%2Cnewsvine%2Clinkedin%2Clivejournal%2Cslashdot%2Cyahoo_bmarks%2Cxanga"></script>
+<script src="http://slashdot.org/slashdot-it.js" type="text/javascript"></script>
+</define-tag>
+
+<define-tag share_this_button>
+# This is the addtoany.com button.
+<p>
+<a href="http://www.addtoany.com/share_save?linkurl=<: use CGI; use URI::Escape; print CGI::escapeHTML(uri_escape(MyNavData::get_hosts()->{$nav_bar->current_host()}->{'base_url'} . $nav_bar->path_info()));:>&amp;linkname="><img src="$(ROOT)/images/share_save_171_16.png" width="171" height="16" class="bless" alt="Share/Bookmark" /></a>
+</p>
+# <script src="http://slashdot.org/slashdot-it.js" type="text/javascript"></script>
+</define-tag>
+
+<define-tag digg_button_removed>
+<script src="http://digg.com/tools/diggthis.js" type="text/javascript"></script>
+</define-tag>
+
+<define-tag news_sites_buttons>
+<div class="news_buttons"> 
+<script type="text/javascript" src="http://reddit.com/button.js?t=2"></script>
+</div>
 </define-tag>

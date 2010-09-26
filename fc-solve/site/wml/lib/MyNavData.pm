@@ -133,4 +133,9 @@ sub get_params
         );
 }
 
+sub get_hosts
+{
+    return $hosts;
+}
+
 1;
