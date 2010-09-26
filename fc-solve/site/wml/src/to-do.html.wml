@@ -236,7 +236,7 @@ board layout to distinguish between similar states.
 </p>
 
 <p>
-Your mission, should you chose to accept it, is to tweak the code, so it would
+Your mission, should you choose to accept it, is to tweak the code, so it would
 be possible to remove the board layouts themselves and get by with the moves
 alone. Note that the code at the moment, is completely unsuitable for this,
 and would have to be re-vamped. Also note that I believe one would still need 
