@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 20;
 
 use lib './t/lib';
 
@@ -153,6 +153,16 @@ verify_solution_test({id => "freecell24with_empty_soft_thread_name", deal => 1,
         theme => ["-to", "013[2456789]", "-nst", "-l" ,"by",],
     },
     "Solving Deal #24 with an empty soft thread name"
+);
+
+# TEST
+verify_solution_test(
+    {
+        id => "freecell1941",
+        deal => 1941,
+        theme => ["-l", "gi", "--cache-limit", "2000"],
+    },
+    "Verifying 1941 with --cache-limit set to a different value",
 );
 
 # Store the changes at the end so they won't get lost.

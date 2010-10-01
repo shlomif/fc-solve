@@ -32,6 +32,7 @@ my $pack_size;
 my $link_to_static = 0;
 my $hard_coded_num_freecells;
 my $avoid_tcmalloc = 0;
+my $rcs_states = 0;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -149,6 +150,10 @@ GetOptions(
     'fc-only' => \$freecell_only,
     'static' => \$build_static_lib,
     'states-type=s' => \$states_type,
+    'rcs!' => sub {
+        $rcs_states = 1;
+        $states_type = "COMPACT_STATES";
+    },
     'profile' => sub {
         my ($opt, $val) = @_;
         if ($val) 
@@ -204,6 +209,7 @@ my @cmd= ("cmake",
     ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
     ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
+    ($rcs_states ? ("-DFCS_ENABLE_RCS_STATES=1") : ()),
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
     (defined($pack_size) ? ("-DFCS_IA_PACK_SIZE=$pack_size") : ()),

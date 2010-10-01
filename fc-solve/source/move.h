@@ -89,7 +89,10 @@ static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(fcs_move_stack_t * stack, f
 }
 
 void fc_solve_apply_move(
-        fcs_state_keyval_pair_t * state_val,
+#ifdef FCS_RCS_STATES
+        fcs_state_t * state_key,
+#endif
+        fcs_collectible_state_t * state_val,
         fcs_internal_move_t move,
         int freecells_num,
         int stacks_num,
@@ -126,7 +129,10 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
 
 static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
-    fcs_state_keyval_pair_t * init_state,
+#ifdef FCS_RCS_STATES
+    fcs_state_t * init_state_key,
+#endif
+    fcs_collectible_state_t * init_state,
     int freecells_num,
     int stacks_num,
     int decks_num
@@ -134,7 +140,11 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 {
     fcs_move_stack_t temp_moves;
     fcs_internal_move_t in_move, out_move;
-    fcs_state_keyval_pair_t dynamic_state;
+#ifdef FCS_RCS_STATES
+    fcs_state_t dynamic_state_key;
+#endif
+    fcs_collectible_state_t dynamic_state;
+
 #ifdef INDIRECT_STACK_STATES
     char buffer[MAX_NUM_STACKS << 7];
     int i;
@@ -145,7 +155,13 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_init(temp_moves);
 
     fcs_duplicate_state(
+#ifdef FCS_RCS_STATES
+            &(dynamic_state_key),
+#endif
             &(dynamic_state),
+#ifdef FCS_RCS_STATES
+            init_state_key,
+#endif
             init_state
             );
 #ifdef INDIRECT_STACK_STATES
@@ -162,6 +178,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             ) == 0)
     {
         fc_solve_apply_move(
+#ifdef FCS_RCS_STATES
+            &dynamic_state_key,
+#endif
             &dynamic_state,
             in_move,
             freecells_num,
@@ -181,7 +200,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
                 (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
                 )
             {
-                fcs_int_move_set_src_stack(out_move,dynamic_state.info.stack_locs[(int)fcs_int_move_get_src_stack(in_move)]);
+                fcs_int_move_set_src_stack(out_move, (FCS_S_STACK_LOCS(&dynamic_state))[(int)fcs_int_move_get_src_stack(in_move)]);
             }
 
             if (
@@ -189,7 +208,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
                 (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FREECELL) ||
                 (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION))
             {
-                fcs_int_move_set_src_freecell(out_move,dynamic_state.info.fc_locs[(int)fcs_int_move_get_src_freecell(in_move)]);
+                fcs_int_move_set_src_freecell(out_move, (FCS_S_FC_LOCS(&dynamic_state))[(int)fcs_int_move_get_src_freecell(in_move)]);
             }
 
             if (
@@ -197,7 +216,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
                 (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_STACK)
                 )
             {
-                fcs_int_move_set_dest_stack(out_move,dynamic_state.info.stack_locs[(int)fcs_int_move_get_dest_stack(in_move)]);
+                fcs_int_move_set_dest_stack(out_move, (FCS_S_STACK_LOCS(&dynamic_state))[(int)fcs_int_move_get_dest_stack(in_move)]);
             }
 
             if (
@@ -205,7 +224,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
                 (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_FREECELL_TO_FREECELL)
                 )
             {
-                fcs_int_move_set_dest_freecell(out_move,dynamic_state.info.fc_locs[(int)fcs_int_move_get_dest_freecell(in_move)]);
+                fcs_int_move_set_dest_freecell(out_move, FCS_S_FC_LOCS(&dynamic_state)[(int)fcs_int_move_get_dest_freecell(in_move)]);
             }
 
             if ((fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
@@ -258,7 +277,7 @@ static GCC_INLINE char * fc_solve_move_to_string(fcs_move_t move, int standard_n
 
 
 typedef struct {
-    fcs_state_keyval_pair_t * state_ptr;
+    fcs_collectible_state_t * state_ptr;
     union 
     {
         void * ptr;
@@ -277,7 +296,7 @@ typedef struct
 
 extern void fc_solve_derived_states_list_add_state(
         fcs_derived_states_list_t * list,
-        fcs_state_keyval_pair_t * state_val,
+        fcs_collectible_state_t * state_val,
         int context
         );
 

@@ -519,8 +519,14 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
      * with one another. */
     STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY); 
 
+#define DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE 10000
+    instance->rcs_states_cache.max_num_elements_in_cache
+        = DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE;
+
     return instance;
 }
+
+#undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
 
 static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t * hard_thread)
 {
@@ -712,6 +718,23 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
         }
     }
+    
+#ifdef FCS_RCS_STATES
+    {
+        fcs_lru_cache_t * cache = &(instance->rcs_states_cache);
+        
+        cache->states_values_to_keys_map = ((Pvoid_t) NULL);
+        fc_solve_compact_allocator_init(
+            &(cache->states_values_to_keys_allocator)
+        );
+        cache->lowest_pri = NULL;
+        cache->highest_pri = NULL;
+        cache->recycle_bin = NULL;
+        cache->count_elements_in_cache = 0;
+    }
+
+#endif
+
 }
 
 /* These are all stack comparison functions to be used for the stacks
@@ -790,7 +813,7 @@ static void trace_solution(
     /*
         Trace the solution.
     */
-    fcs_state_keyval_pair_t * s1;
+    fcs_collectible_state_t * s1;
     int move_idx;
     fcs_move_stack_t * stack;
     fcs_internal_move_t * moves;
@@ -808,13 +831,13 @@ static void trace_solution(
 
     solution_moves_ptr = &(instance->solution_moves);
     /* Retrace the step from the current state to its parents */
-    while (s1->info.parent != NULL)
+    while (FCS_S_PARENT(s1) != NULL)
     {
         /* Mark the state as part of the non-optimized solution */
-        s1->info.visited |= FCS_VISITED_IN_SOLUTION_PATH;
+        FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
         /* Duplicate the move stack */
         {
-            stack = s1->info.moves_to_parent;
+            stack = FCS_S_MOVES_TO_PARENT(s1);
             moves = stack->moves;
             for(move_idx=stack->num_moves-1;move_idx>=0;move_idx--)
             {
@@ -824,10 +847,10 @@ static void trace_solution(
         /* Duplicate the state to a freshly malloced memory */
 
         /* Move to the parent state */
-        s1 = s1->info.parent;
+        s1 = FCS_S_PARENT(s1);
     }
     /* There's one more state than there are move stacks */
-    s1->info.visited |= FCS_VISITED_IN_SOLUTION_PATH;
+    FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
 }
 
 
@@ -929,13 +952,25 @@ void fc_solve_start_instance_process_with_board(
 
     /* Allocate the first state and initialize it to init_state */
     state_copy_ptr = 
-        fcs_state_ia_alloc_into_var(
-            &(instance->hard_threads[0].allocator)
+        (fcs_state_keyval_pair_t *)
+        fcs_compact_alloc_ptr(
+            &(instance->hard_threads[0].allocator),
+            sizeof(*state_copy_ptr)
         );
 
+#ifdef FCS_RCS_STATES
+    fcs_duplicate_state(
+        &(state_copy_ptr->s),
+        &(state_copy_ptr->info),
+        &(init_state->s),
+        &(init_state->info)            
+        
+        );
+#else
     fcs_duplicate_state(state_copy_ptr,
             init_state
             );
+#endif
 
     {
         int i;
@@ -991,6 +1026,9 @@ void fc_solve_start_instance_process_with_board(
 #endif
 #endif
        );
+#ifdef FCS_RCS_STATES
+     instance->hash.instance = instance;
+#endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
      instance->hash = fc_solve_states_google_hash_new();
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
@@ -1078,12 +1116,24 @@ void fc_solve_start_instance_process_with_board(
 #endif
 
     {
+#ifdef FCS_RCS_STATES
+        fcs_collectible_state_t * no_use_val;
+        fcs_state_t * no_use_key;
+#else
         fcs_state_keyval_pair_t * no_use;
+#endif
 
         fc_solve_check_and_add_state(
             instance->hard_threads,
+#ifdef FCS_RCS_STATES
+            &(state_copy_ptr->s),
+            &(state_copy_ptr->info),
+            &no_use_key,
+            &no_use_val
+#else
             state_copy_ptr,
             &no_use
+#endif
             );
 
     }
@@ -1147,7 +1197,11 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
     fc_solve_increase_dfs_max_depth(soft_thread);
 
+#ifdef FCS_RCS_STATES
+    soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state = &(ptr_orig_state->info);
+#else
     soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state = ptr_orig_state;
+#endif
     fc_solve_rand_init(
             &(soft_thread->method_specific.soft_dfs.rand_gen), 
             soft_thread->method_specific.soft_dfs.rand_seed
@@ -1669,6 +1723,17 @@ void fc_solve_finish_instance(
     instance->db->close(instance->db,0);
 #endif
 
+#ifdef FCS_RCS_STATES
+    {
+        Word_t Rc_word;
+        JLFA(Rc_word, 
+            instance->rcs_states_cache.states_values_to_keys_map
+        );
+        fc_solve_compact_allocator_finish(
+            &(instance->rcs_states_cache.states_values_to_keys_allocator)
+        );
+    }
+#endif
 
     clean_soft_dfs(instance);
 }

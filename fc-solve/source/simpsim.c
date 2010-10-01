@@ -61,11 +61,7 @@ char fc_solve_simple_simon_nothing;
     )
 
 
-void fc_solve_sfs_simple_simon_move_sequence_to_founds(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        )
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
     tests_declare_accessors()
 
@@ -154,11 +150,7 @@ void fc_solve_sfs_simple_simon_move_sequence_to_founds(
 }
 
 
-void fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        )
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 {
     tests_declare_accessors()
 
@@ -282,11 +274,7 @@ void fc_solve_sfs_simple_simon_move_sequence_to_true_parent(
     return;
 }
 
-void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        )
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent)
 {
     tests_declare_accessors()
 
@@ -396,11 +384,7 @@ void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent(
     return;
 }
 
-void fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        )
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above)
 {
     tests_declare_accessors()
 
@@ -681,11 +665,7 @@ void fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_abov
     return;
 }
 
-void fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        )
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent)
 {
     tests_declare_accessors()
 
@@ -926,11 +906,7 @@ void fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_paren
     return;
 }
 
-void fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        )
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above)
 {
     tests_declare_accessors()
 
@@ -1254,11 +1230,7 @@ void fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_
     return;
 }
 
-void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        )
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above)
 {
     tests_declare_accessors()
 
@@ -1503,11 +1475,7 @@ void fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_so
     return;
 }
 
-void fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        )
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack)
 {
     tests_declare_accessors()
 
@@ -1788,11 +1756,7 @@ void fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack(
     return;
 }
 
-void fc_solve_sfs_simple_simon_move_sequence_to_false_parent(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        )
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 {
     tests_declare_accessors();
 

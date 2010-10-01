@@ -75,6 +75,8 @@ typedef struct
     fc_solve_hash_symlink_item_t * first_item;
 } fc_solve_hash_symlink_t;
 
+struct fc_solve_instance_struct;
+
 typedef struct
 {
     /* The vector of the hash table itself */
@@ -107,7 +109,9 @@ typedef struct
     int max_num_elems_before_resize;
 
     fcs_compact_allocator_t allocator;
-
+#ifdef FCS_RCS_STATES
+    struct fc_solve_instance_struct * instance;
+#endif
 } fc_solve_hash_t;
 
 
@@ -137,6 +141,9 @@ fc_solve_hash_init(
 extern fcs_bool_t fc_solve_hash_insert(
     fc_solve_hash_t * hash,
     void * key,
+#ifdef FCS_RCS_STATES
+    void * key_id,
+#endif
     void * * existing_key,
     fc_solve_hash_value_t hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE

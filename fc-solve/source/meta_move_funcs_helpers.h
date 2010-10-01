@@ -69,16 +69,40 @@ extern "C" {
 /*
  *  These are some macros to make it easier for the programmer.
  * */
+#ifdef FCS_RCS_STATES
+#define ptr_state_key (key_ptr_state_key)
+#define ptr_state_val (val_ptr_state_val)
+#define state_key (*key_ptr_state_key)
+#define state_val (*val_ptr_state_val)
+#define new_state (my_new_out_state_key)
+#define new_state_key (my_new_out_state_key)
+#define new_state_val (*ptr_new_state)
+#define ptr_new_state_key (&new_state_key)
+#define ptr_new_state_val (ptr_new_state)
+
+#else
 #define ptr_state_key (&(ptr_state->s))
 #define ptr_state_val (&(ptr_state->info))
 #define state_key (ptr_state->s)
-#define state  (state_key)
 #define state_val (ptr_state->info)
 #define new_state (ptr_new_state->s)
 #define new_state_key (ptr_new_state->s)
 #define new_state_val (ptr_new_state->info)
+#endif
 
+#define state  (state_key)
 
+#ifdef FCS_RCS_STATES
+#define sfs_check_state_begin()                                     \
+    {         \
+        fc_solve_sfs_check_state_begin(hard_thread,  \
+                &my_new_out_state_key,                   \
+                &ptr_new_state,                      \
+                ptr_state_key,                   \
+                ptr_state_val,                           \
+                moves);                              \
+    }
+#else
 #define sfs_check_state_begin()                                     \
     {         \
         fc_solve_sfs_check_state_begin(hard_thread,  \
@@ -86,12 +110,19 @@ extern "C" {
                 ptr_state,                           \
                 moves);                              \
     }
+#endif
 
-
+#ifdef FCS_RCS_STATES
+#define sfs_check_state_end() \
+    { \
+        fc_solve_sfs_check_state_end(soft_thread, ptr_state_key, ptr_state_val, ptr_new_state_key, ptr_new_state_val, state_context_value, moves, derived_states_list); \
+    }
+#else
 #define sfs_check_state_end() \
     { \
         fc_solve_sfs_check_state_end(soft_thread, ptr_state, ptr_new_state, state_context_value, moves, derived_states_list); \
     }
+#endif
 
 /*
     This macro checks if the top card in the stack is a flipped card
@@ -123,7 +154,13 @@ extern "C" {
 #endif
 
 static GCC_INLINE void fc_solve_move_sequence_function(
-        fcs_state_keyval_pair_t * new_state_ptr,
+#ifdef FCS_RCS_STATES
+        fcs_state_t * new_state_ptr_key,
+#define STATE_KEY() (*new_state_ptr_key)
+#else
+#define STATE_KEY() (new_state_ptr->s)
+#endif
+        fcs_collectible_state_t * new_state_ptr,
         fcs_move_stack_t * moves,
         int dest_idx,
         int source_idx,
@@ -135,8 +172,8 @@ static GCC_INLINE void fc_solve_move_sequence_function(
     fcs_cards_column_t new_src_col, new_dest_col;
     fcs_internal_move_t temp_move;
 
-    new_src_col = fcs_state_get_col(new_state_ptr->s, source_idx);
-    new_dest_col = fcs_state_get_col(new_state_ptr->s, dest_idx);
+    new_src_col = fcs_state_get_col(STATE_KEY(), source_idx);
+    new_dest_col = fcs_state_get_col(STATE_KEY(), dest_idx);
 
     for ( i = start ; i <= end ; i++)
     {
@@ -155,6 +192,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
     fcs_move_stack_push(moves, temp_move);
 }
+#undef STATE_KEY
 
 /*
  * dest is the destination stack
@@ -163,10 +201,17 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  * end is the end height
  * a is the iterator
  * */
+#ifdef FCS_RCS_STATES
+#define fcs_move_sequence(dest_idx, source_idx, start_idx, end_idx) \
+    {   \
+        fc_solve_move_sequence_function(ptr_new_state_key, ptr_new_state_val, moves, dest_idx, source_idx, start_idx, end_idx); \
+    }
+#else
 #define fcs_move_sequence(dest_idx, source_idx, start_idx, end_idx) \
     {   \
         fc_solve_move_sequence_function(ptr_new_state, moves, dest_idx, source_idx, start_idx, end_idx); \
     }
+#endif
 
 #ifdef FCS_FREECELL_ONLY
 #define tests_declare_accessors_freecell_only()
@@ -185,12 +230,20 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  * This macro declares a few access variables that are used in all
  * the tests.
  * */
-#define tests_declare_accessors_no_stacks()         \
-    tests_declare_accessors_freecell_only()                    \
+#define tests_declare_accessors_no_stacks()             \
+    tests_declare_accessors_rcs_states()                \
+    tests_declare_accessors_freecell_only()             \
     fc_solve_hard_thread_t * hard_thread;               \
-    fcs_state_keyval_pair_t * ptr_new_state; \
+    fcs_collectible_state_t * ptr_new_state; \
     fcs_move_stack_t * moves;                                  \
     int state_context_value                                  \
+
+#ifdef FCS_RCS_STATES
+#define tests_declare_accessors_rcs_states() \
+    fcs_state_t my_new_out_state_key;
+#else
+#define tests_declare_accessors_rcs_states()
+#endif
 
 #define tests_declare_accessors() \
     tests_declare_accessors_no_stacks();           \

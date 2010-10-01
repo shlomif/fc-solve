@@ -345,6 +345,11 @@ DLLEXPORT extern int freecell_solver_user_set_pruning(
     char * * error_string
     );
 
+DLLEXPORT extern int freecell_solver_user_set_cache_limit(
+    void * user_instance,
+    long limit
+    );
+
 #ifdef __cplusplus
 }
 #endif

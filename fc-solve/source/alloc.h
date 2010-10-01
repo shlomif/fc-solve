@@ -82,13 +82,13 @@ static GCC_INLINE void * fcs_compact_alloc_ptr(fcs_compact_allocator_t * allocat
 
 extern void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator);
 
-static GCC_INLINE fcs_state_keyval_pair_t * fcs_state_ia_alloc_into_var(fcs_compact_allocator_t * allocator)
+static GCC_INLINE fcs_collectible_state_t * fcs_state_ia_alloc_into_var(fcs_compact_allocator_t * allocator)
 {
     {
-        register fcs_state_keyval_pair_t * ret_helper;
+        register fcs_collectible_state_t * ret_helper;
 
         ret_helper =
-            (fcs_state_keyval_pair_t *) 
+            (fcs_collectible_state_t *) 
             fcs_compact_alloc_ptr(allocator, 
                 sizeof(*ret_helper)
             );

@@ -39,6 +39,8 @@ extern "C" {
 #cmakedefine COMPACT_STATES
 #cmakedefine INDIRECT_STACK_STATES
 
+#cmakedefine FCS_RCS_STATES
+
 #cmakedefine CARD_DEBUG_PRES
 
 /*
@@ -214,6 +216,10 @@ extern "C" {
 
 #define FCS_WHICH_COLUMNS_GOOGLE_HASH ${FCS_WHICH_COLUMNS_GOOGLE_HASH}
 #define FCS_WHICH_STATES_GOOGLE_HASH ${FCS_WHICH_STATES_GOOGLE_HASH}
+
+#if defined(FCS_RCS_STATES) && (!defined(COMPACT_STATES) )
+#error FCS_RCS_STATES requires COMPACT_STATES
+#endif
 
 #ifdef __cplusplus
 }

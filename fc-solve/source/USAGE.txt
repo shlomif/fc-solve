@@ -711,6 +711,15 @@ Using checkpoints one can yield a possibly sub-optimal (as far as solution
 length is concerned) solution that will still solve faster than letting all
 the flares run.
 
+--cache-limit [cache limit]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is a numeric limit to the LRU cache which only matters if Freecell
+Solver was compiled with +FCS_RCS_STATES+ enabled. This value should be
+a positive integer and the higher it is, the more quickly it is likely
+that Freecell Solver will run, but it will also consume more memory. (The
+entire point of +FCS_RCS_STATES+ is to conserve memory).
+
 Meta-Options
 ------------
 

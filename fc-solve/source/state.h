@@ -54,8 +54,8 @@ extern "C" {
 #define MAX_NUM_SCANS_BUCKETS 1
 #define MAX_NUM_SCANS (MAX_NUM_SCANS_BUCKETS * (sizeof(int)*8))
 
-#define is_scan_visited(ptr_state, scan_id) (ptr_state->info.scan_visited[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] & (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))))
-#define set_scan_visited(ptr_state, scan_id) { ptr_state->info.scan_visited[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] |= (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))); }
+#define is_scan_visited(ptr_state, scan_id) ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] & (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))))
+#define set_scan_visited(ptr_state, scan_id) { (FCS_S_SCAN_VISITED(ptr_state))[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] |= (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))); }
 
 
 #ifdef DEBUG_STATES
@@ -352,11 +352,20 @@ typedef char fcs_locs_t;
 #define fcs_col_push_col_card(dest_col, src_col, card_idx) \
     fcs_col_push_card((dest_col), fcs_col_get_card((src_col), (card_idx)))
 
+#ifdef FCS_RCS_STATES
+#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
+    { \
+    *(ptr_dest_key) = *(ptr_src_key); \
+    *(ptr_dest_val) = *(ptr_src_val); \
+    fcs_duplicate_state_extra(ptr_dest, ptr_src);   \
+    }
+#else
 #define fcs_duplicate_state(ptr_dest, ptr_src) \
     { \
     *(ptr_dest) = *(ptr_src); \
     fcs_duplicate_state_extra(ptr_dest, ptr_src);   \
     }
+#endif
 
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
 
@@ -414,11 +423,16 @@ typedef char fcs_locs_t;
 
 struct fcs_state_keyval_pair_struct;
 
+
 struct fcs_state_extra_info_struct
 {
     fcs_locs_t stack_locs[MAX_NUM_STACKS];
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
+#ifdef FCS_RCS_STATES
+    struct fcs_state_extra_info_struct * parent;
+#else
     struct fcs_state_keyval_pair_struct * parent;
+#endif
     fcs_move_stack_t * moves_to_parent;
     int depth;
     /*
@@ -479,6 +493,35 @@ struct fcs_state_keyval_pair_struct
 
 typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
 
+/* 
+ * This type is the struct that is collectible inside the hash.
+ *
+ * In FCS_RCS_STATES we only collect the extra_info's and the state themselves
+ * are kept in an LRU cache because they can be calculated from the
+ * extra_infos and the original state by applying the moves.
+ *
+ * */
+#ifdef FCS_RCS_STATES
+typedef fcs_state_extra_info_t fcs_collectible_state_t;
+#define FCS_S_ACCESSOR(s, field) ((s)->field)
+#define FCS_S_NEXT(s) FCS_S_ACCESSOR(s, parent)
+#else
+typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
+#define FCS_S_ACCESSOR(s, field) (((s)->info).field)
+#define FCS_S_NEXT(s) ((s)->next)
+#endif
+
+#define FCS_S_PARENT(s) FCS_S_ACCESSOR(s, parent)
+#define FCS_S_NUM_ACTIVE_CHILDREN(s) FCS_S_ACCESSOR(s, num_active_children)
+#define FCS_S_MOVES_TO_PARENT(s) FCS_S_ACCESSOR(s, moves_to_parent)
+#define FCS_S_VISITED(s) FCS_S_ACCESSOR(s, visited)
+#define FCS_S_STACK_LOCS(s) FCS_S_ACCESSOR(s, stack_locs)
+#define FCS_S_FC_LOCS(s) FCS_S_ACCESSOR(s, fc_locs)
+#define FCS_S_DEPTH(s) FCS_S_ACCESSOR(s, depth)
+#define FCS_S_VISITED_ITER(s) FCS_S_ACCESSOR(s, visited_iter)
+#define FCS_S_SCAN_VISITED(s) FCS_S_ACCESSOR(s, scan_visited)
+
+
 typedef struct {
     fcs_state_t * key;
     fcs_state_extra_info_t * val;
@@ -516,9 +559,11 @@ extern fcs_card_t fc_solve_empty_card;
     ((state).talon[(int)((fcs_klondike_talon_stack_pos(state)--)+1)] = fc_solve_empty_card)
 #endif
 
-
 extern void fc_solve_canonize_state(
-    fcs_state_keyval_pair_t * state,
+#ifdef FCS_RCS_STATES
+    fcs_state_t * state_key,
+#endif
+    fcs_collectible_state_t * state,
     int freecells_num,
     int stacks_num
     );
@@ -1017,7 +1062,10 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
 #undef handle_eos
 
 extern char * fc_solve_state_as_string(
-    fcs_state_keyval_pair_t * state_pair,
+#ifdef FCS_RCS_STATES
+    fcs_state_t * key,
+#endif
+    fcs_collectible_state_t * state_pair,
     int freecells_num,
     int stacks_num,
     int decks_num,

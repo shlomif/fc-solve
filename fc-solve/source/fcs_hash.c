@@ -45,6 +45,9 @@
 
 #include "state.h"
 
+#ifdef FCS_RCS_STATES
+#include "instance.h"
+#endif 
 static void GCC_INLINE fc_solve_hash_rehash(fc_solve_hash_t * hash);
 
 
@@ -107,6 +110,9 @@ void fc_solve_hash_init(
 fcs_bool_t fc_solve_hash_insert(
     fc_solve_hash_t * hash,
     void * key,
+#ifdef FCS_RCS_STATES
+    void * key_id,
+#endif
     void * * existing_key,
     fc_solve_hash_value_t hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -156,7 +162,11 @@ fcs_bool_t fc_solve_hash_insert(
 #define MY_HASH_COMPARE() (! MY_HASH_COMPARE_PROTO())
 
 /* Define MY_HASH_COMPARE_PROTO() */
-#if !defined(INDIRECT_STACK_STATES)
+#if defined(FCS_RCS_STATES)
+
+#define MY_HASH_COMPARE_PROTO() (fc_solve_state_compare(key_id, fc_solve_lookup_state_key_from_val(hash->instance, item->key)))
+
+#elif !defined(INDIRECT_STACK_STATES)
 
 #define MY_HASH_COMPARE_PROTO() (fc_solve_state_compare(item->key, key))
 

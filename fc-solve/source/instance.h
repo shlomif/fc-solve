@@ -68,7 +68,7 @@ extern "C" {
 
 #endif
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY))
+#if defined(FCS_RCS_STATES) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY))
 
 #include <Judy.h>
 
@@ -109,7 +109,7 @@ extern "C" {
  * */
 struct fcs_states_linked_list_item_struct
 {
-    fcs_state_keyval_pair_t * s;
+    fcs_collectible_state_t * s;
     struct fcs_states_linked_list_item_struct * next;
 };
 
@@ -140,9 +140,13 @@ enum
 struct fc_solve_hard_thread_struct;
 struct fc_solve_soft_thread_struct;
 
+
 typedef void (*fc_solve_solve_for_state_test_t)(
         struct fc_solve_soft_thread_struct *,
-        fcs_state_keyval_pair_t *,
+#ifdef FCS_RCS_STATES
+        fcs_state_t *,
+#endif
+        fcs_collectible_state_t *,
         fcs_derived_states_list_t *
         );
 
@@ -333,7 +337,34 @@ enum
     FCS_RUNTIME_SCANS_SYNERGY  = (1 << 6),
 };
 
+#ifdef FCS_RCS_STATES
+struct fcs_cache_key_info_struct
+{
+    fcs_collectible_state_t * val_ptr;
+    fcs_state_t key;
+    /* lower_pri and higher_pri form a doubly linked list. 
+     *
+     * pri == priority.
+     * */
+    struct fcs_cache_key_info_struct * lower_pri, * higher_pri;
+};
+
+typedef struct fcs_cache_key_info_struct fcs_cache_key_info_t;
+
 typedef struct
+{
+    Pvoid_t states_values_to_keys_map;
+    fcs_compact_allocator_t states_values_to_keys_allocator;
+    long count_elements_in_cache, max_num_elements_in_cache;
+
+    fcs_cache_key_info_t * lowest_pri, * highest_pri;
+
+    fcs_cache_key_info_t * recycle_bin;
+} fcs_lru_cache_t;
+
+#endif
+
+struct fc_solve_instance_struct
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     /* The sort-margin */
@@ -402,7 +433,10 @@ typedef struct
         int iter_num,
         int depth,
         void * instance,
-        fcs_state_keyval_pair_t * state_val,
+#ifdef FCS_RCS_STATES 
+        fcs_state_t * state_key,
+#endif
+        fcs_collectible_state_t * state_val,
         int parent_iter_num
         );
     void * debug_iter_output_context;
@@ -458,7 +492,7 @@ typedef struct
 #endif
 #endif
 
-    fcs_state_keyval_pair_t * list_of_vacant_states;
+    fcs_collectible_state_t * list_of_vacant_states;
     /*
      * Storing using Berkeley DB is not operational for some reason so
      * pay no attention to it for the while
@@ -503,7 +537,7 @@ typedef struct
     /* This is the final state that the scan recommends to the
      * interface
      * */
-    fcs_state_keyval_pair_t * final_state;
+    fcs_collectible_state_t * final_state;
 
     /*
      * This is the number of states in the state collection.
@@ -553,7 +587,13 @@ typedef struct
      * The tests order for the optimization scan as specified by the user.
      * */
     fcs_tests_order_t opt_tests_order;
-} fc_solve_instance_t;
+
+#ifdef FCS_RCS_STATES
+    fcs_lru_cache_t rcs_states_cache;
+#endif
+};
+
+typedef struct fc_solve_instance_struct fc_solve_instance_t;
 
 
 
@@ -662,7 +702,7 @@ struct fc_solve_hard_thread_struct
 
 typedef struct
 {
-    fcs_state_keyval_pair_t * state;
+    fcs_collectible_state_t * state;
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
     int tests_list_index;
@@ -678,7 +718,7 @@ enum
 {
 
     /*
-     * A flag that indicates if this soft thread have already been
+     * A flag that indicates if this soft thread has already been
      * initialized.
      * */
     FCS_SOFT_THREAD_INITIALIZED = (1 << 0),
@@ -843,7 +883,7 @@ struct fc_solve_soft_thread_struct
      * The first state to be checked by the scan. It is a kind of bootstrap
      * for the algorithm.
      * */
-    fcs_state_keyval_pair_t * first_state_to_check;
+    fcs_collectible_state_t * first_state_to_check;
 
 
     fcs_runtime_flags_t runtime_flags;
@@ -1137,6 +1177,31 @@ static GCC_INLINE void fc_solve_recycle_instance(
 }
 
 extern const double fc_solve_default_befs_weights[5];
+
+
+#ifdef FCS_RCS_STATES
+fcs_state_t * fc_solve_lookup_state_key_from_val(
+        fc_solve_instance_t * instance,
+        fcs_collectible_state_t * ptr_state_val
+        );
+#endif
+
+#ifdef FCS_RCS_STATES
+#define DECLARE_MOVE_FUNCTION(name) \
+extern void name( \
+        fc_solve_soft_thread_t * soft_thread, \
+        fcs_state_t * key_ptr_state_key, \
+        fcs_collectible_state_t * val_ptr_state_val,  \
+        fcs_derived_states_list_t * derived_states_list \
+)
+#else
+#define DECLARE_MOVE_FUNCTION(name) \
+extern void name( \
+        fc_solve_soft_thread_t * soft_thread, \
+        fcs_state_keyval_pair_t * ptr_state, \
+        fcs_derived_states_list_t * derived_states_list \
+        )
+#endif
 
 #ifdef __cplusplus
 }

@@ -241,12 +241,38 @@ opt = FCS_OPT_BEFS_WEIGHTS;
 break;
 
 case 'c':
+
 {
-if (!strncmp(p, "alc-real-depth", 14)) {
-p += 14;
+if (*(p++) == 'a')
+{
+{ switch(*(p++)) {
+case 'c':
+{
+if (!strncmp(p, "he-limit", 8)) {
+p += 8;
+opt = FCS_OPT_CACHE_LIMIT;
+
+}
+}
+
+break;
+
+case 'l':
+{
+if (!strncmp(p, "c-real-depth", 12)) {
+p += 12;
 opt = FCS_OPT_CALC_REAL_DEPTH;
 
 }
+}
+
+break;
+
+}
+}
+
+}
+
 }
 
 break;
@@ -1854,6 +1880,18 @@ break;
             }
         }
         break;
+
+        case FCS_OPT_CACHE_LIMIT: /* STRINGS=--cache-limit; */
+        {
+            PROCESS_OPT_ARG() ;
+
+            freecell_solver_user_set_cache_limit(
+                instance,
+                atol(*arg)
+            );
+        }
+        break;
+        
 
         }
         /* OPT-PARSE-END */

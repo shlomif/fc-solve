@@ -61,7 +61,7 @@ typedef int pq_rating_t;
 
 typedef struct
 {
-    fcs_state_keyval_pair_t * val;
+    fcs_collectible_state_t * val;
     pq_rating_t rating;
 } pq_element_t;
 
@@ -113,7 +113,7 @@ static void GCC_INLINE fc_solve_PQueueFree( PQUEUE *pq )
 
 static GCC_INLINE void fc_solve_PQueuePush(
         PQUEUE *pq,
-        fcs_state_keyval_pair_t * val,
+        fcs_collectible_state_t * val,
         pq_rating_t r
         )
 {
@@ -176,7 +176,7 @@ static GCC_INLINE void fc_solve_PQueuePush(
 
 static GCC_INLINE void fc_solve_PQueuePop(
     PQUEUE *pq,
-    fcs_state_keyval_pair_t * * val)
+    fcs_collectible_state_t * * val)
 {
     int i;
     int child;
