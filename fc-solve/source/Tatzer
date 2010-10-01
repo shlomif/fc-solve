@@ -90,7 +90,7 @@ foreach my $rec (
     # Memory conserving theme - for freecell only
     $themes{$id.'m'} = [qw(-l fc_reduce_mem -l), $id];
     # Generalised Memory conserving theme - not only for freecell
-    $themes{$id.'m'} = [qw(-l reduce_mem -l), $id];
+    $themes{$id.'mm'} = [qw(-l reduce_mem -l), $id];
 }
 
 my @new_argv = @ARGV;
