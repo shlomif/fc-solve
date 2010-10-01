@@ -79,15 +79,29 @@ extern "C" {
  * */
 #cmakedefine FCS_WITHOUT_CARD_FLIPPING
 
+    
 /* 
- * This flag is not such a good idea because it seems to slow things
- * down. See:
+ * This macro disables the flipping card logic. The flipping card logic
+ * was an experimental feature that aimed to give Freecell Solver the
+ * ability to solve Gypsy and Klondike-like games. In practice, this
+ * didn't happen due to other technical difficulties.
+ * */
+/* 
+ * This flag used to slow things down a little:
  *
  * http://tech.groups.yahoo.com/group/fc-solve-discuss/message/941
  *
- * Enable at your own risk.
+ * However, now it seems that it makes the program a little faster, as it
+ * should, so you should enable it.
  * */
-#cmakedefine FCS_ENABLE_SECONDARY_HASH_VALUE
+#cmakedefine FCS_WITHOUT_CARD_FLIPPING
+
+/* 
+ * Get rid of the visited_iter counter on each state's extra_info. It is
+ * used a little for debugging, but otherwise is not needed for the run-time
+ * operation.
+ * */
+#cmakedefine FCS_WITHOUT_VISITED_ITER
 
 /*  
  * This flag controls a hash behaviour. It seems to improve things somewhat.

@@ -453,10 +453,12 @@ struct fcs_state_extra_info_struct
      * for it.
      * */
     int visited;
+#ifndef FCS_WITHOUT_VISITED_ITER
     /*
      * The iteration in which this state was marked as visited
      * */
     int visited_iter;
+#endif
     /*
      * This is the number of direct children of this state which were not
      * yet declared as dead ends. Once this counter reaches zero, this
@@ -518,9 +520,11 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 #define FCS_S_STACK_LOCS(s) FCS_S_ACCESSOR(s, stack_locs)
 #define FCS_S_FC_LOCS(s) FCS_S_ACCESSOR(s, fc_locs)
 #define FCS_S_DEPTH(s) FCS_S_ACCESSOR(s, depth)
-#define FCS_S_VISITED_ITER(s) FCS_S_ACCESSOR(s, visited_iter)
 #define FCS_S_SCAN_VISITED(s) FCS_S_ACCESSOR(s, scan_visited)
 
+#ifndef FCS_WITHOUT_VISITED_ITER
+#define FCS_S_VISITED_ITER(s) FCS_S_ACCESSOR(s, visited_iter)
+#endif
 
 typedef struct {
     fcs_state_t * key;
@@ -694,7 +698,9 @@ static GCC_INLINE void fc_solve_state_init(
     state->info.moves_to_parent = NULL;
     state->info.depth = 0;
     state->info.visited = 0;
+#ifndef FCS_WITHOUT_VISITED_ITER
     state->info.visited_iter = 0;
+#endif
     state->info.num_active_children = 0;
     memset(state->info.scan_visited, '\0', sizeof(state->info.scan_visited));
 #ifdef INDIRECT_STACK_STATES

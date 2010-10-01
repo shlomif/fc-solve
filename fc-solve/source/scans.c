@@ -699,10 +699,14 @@ int fc_solve_soft_dfs_do_solve(
                         &(state_key),
 #endif
                         ptr_state,
+#ifdef FCS_WITHOUT_VISITED_ITER
+                        0
+#else
                         ((soft_thread->method_specific.soft_dfs.depth == 0) ?
                             0 :
                             FCS_S_VISITED_ITER(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth-1].state)
                         )
+#endif
                         );
                 }
 
@@ -918,7 +922,9 @@ int fc_solve_soft_dfs_do_solve(
                         soft_thread_id
                     );
 
+#ifndef FCS_WITHOUT_VISITED_ITER
                     FCS_S_VISITED_ITER(single_derived_state) = instance->num_times;
+#endif
 
                     /*
                         I'm using current_state_indexes[depth]-1 because we already
@@ -1591,10 +1597,14 @@ int fc_solve_befs_or_bfs_do_solve(
                     (&state_key),
 #endif
                     ptr_state,
+#ifdef FCS_WITHOUT_VISITED_ITER
+                    0
+#else
                     ((FCS_S_PARENT(ptr_state) == NULL) ?
                         0 :
                         FCS_S_VISITED_ITER(FCS_S_PARENT(ptr_state))
                     )
+#endif
                     );
         }
 
@@ -1714,7 +1724,9 @@ int fc_solve_befs_or_bfs_do_solve(
             }
         }
 
+#ifndef FCS_WITHOUT_VISITED_ITER
         FCS_S_VISITED_ITER(ptr_state) = instance->num_times-1;
+#endif
 
 label_next_state:
         TRACE0("Label next state");

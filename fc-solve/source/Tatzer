@@ -26,6 +26,7 @@ my $no_simple_simon = 0;
 my $state_storage_libavl2_tree;
 my $stack_storage_libavl2_tree;
 my $without_flipping = 1;
+my $without_visited_iter = 1;
 my $with_context_var = 1;
 my $max_bench_threads_num = 4;
 my $pack_size;
@@ -67,7 +68,9 @@ my %themes =
 (
     tt => [qw(-r --notest-suite --static)],
     bench => [qw(-l tt --omit-frame)],
-    fc_bench => [qw(-l bench --fc-only)],
+    fc_bench => [
+        qw(-l bench --fc-only --without-flipping --without-visited-iter)
+    ],
     p4b => [qw(-l fc_bench --arch=pentium4)],
     x64b => [qw(-l fc_bench --arch=barcelona)],
     p4bb => [qw(-l bench --arch=pentium4)],
@@ -174,6 +177,7 @@ GetOptions(
     'omit-frame!' => \$omit_frame,
     'disable-simple-simon!' => \$no_simple_simon,
     'without-flip!' => \$without_flipping,
+    'without-visited-iter!' => \$without_visited_iter,
     'with-ctx-var!' => \$with_context_var,
     'max-bench-threads-num=i' => \$max_bench_threads_num,
     'pack-size=i' => \$pack_size,
@@ -206,6 +210,7 @@ my @cmd= ("cmake",
     ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
     ($no_simple_simon ? ("-DFCS_DISABLE_SIMPLE_SIMON=1") : ()),
     ($without_flipping ? ("-DFCS_WITHOUT_CARD_FLIPPING=1") : ()),
+    ($without_visited_iter ? ("-DFCS_WITHOUT_VISITED_ITER=1") : ()),
     ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
     ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
