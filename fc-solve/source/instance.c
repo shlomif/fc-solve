@@ -520,8 +520,10 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY); 
 
 #define DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE 10000
+#ifdef FCS_RCS_STATES
     instance->rcs_states_cache.max_num_elements_in_cache
         = DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE;
+#endif
 
     return instance;
 }
