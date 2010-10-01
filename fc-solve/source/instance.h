@@ -201,8 +201,6 @@ typedef struct
     fcs_by_depth_tests_order_t * by_depth_tests;
 } fcs_by_depth_tests_order_array_t;
 
-typedef unsigned char fcs_game_limit_t;
-
 typedef struct {
     /*
      * The number of Freecells, Stacks and Foundations present in the game.
