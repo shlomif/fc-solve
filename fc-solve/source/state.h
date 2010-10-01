@@ -457,12 +457,6 @@ struct fcs_state_extra_info_struct
     int visited_iter;
 #endif
 
-    /*
-     * This is the number of direct children of this state which were not
-     * yet declared as dead ends. Once this counter reaches zero, this
-     * state too is declared as a dead end.
-     * */
-    int num_active_children;
 
     /*
      * This is a vector of flags - one for each scan. Each indicates whether
@@ -476,6 +470,16 @@ struct fcs_state_extra_info_struct
      * */
     int stacks_copy_on_write_flags;
 #endif
+    
+    /*
+     * This is the number of direct children of this state which were not
+     * yet declared as dead ends. Once this counter reaches zero, this
+     * state too is declared as a dead end.
+     *
+     * It was converted to an unsigned short , because it is extremely
+     * unlikely that a state will have more than 64K active children.
+     * */
+    unsigned short num_active_children;
 
     fcs_locs_t stack_locs[MAX_NUM_STACKS];
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
