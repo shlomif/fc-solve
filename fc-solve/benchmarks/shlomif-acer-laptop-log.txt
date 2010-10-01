@@ -115,7 +115,22 @@ With Profile Guided Optimisation (PGO).
 (With -flto and -fwhole-program).
 sudo_renice.
 -O3
+    
+    Highlight: profile guided-optimisations.
 
 28.4376409053802s
 28.2177538871765s
 
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3239
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+    
+    Highlight: --without-visited-iter and --without-depth-field (while using PGO).
+
+27.4554669857025s

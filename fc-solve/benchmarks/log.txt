@@ -1576,3 +1576,40 @@ Using sudo_renice.
 
 75.2142510414124s
 
+========================================================================
+
+r3239 ; trunk
+ARGS="--worker-step 16 -l eo"
+2.6.35.6-desktop-1mnb
+virtual console
+gcc-4.5.0 with "-flto and -fwhole-program".
+google-perftools-1.6
+Using sudo_renice.
+./Tatzer -l p4b --without-visited-iter --without-depth-field
+(No PGO)
+
+    Highlight: without-visited-iter and without-depth-field
+
+76.7451930046082s
+
+========================================================================
+
+
+bash scripts/pgo.bash gcc total
+r3239 ; trunk
+ARGS="--worker-step 16 -l eo"
+2.6.35.6-desktop-1mnb
+virtual console
+gcc-4.5.0 with "-flto and -fwhole-program".
+google-perftools-1.6
+Using sudo_renice.
+./Tatzer -l p4b --without-visited-iter --without-depth-field
+
+    Highlight: without-visited-iter and without-depth-field and with PGO
+
+75.9085710048676s (lower than the previous PGO - I wonder why.)
+
+========================================================================
+
+
+
