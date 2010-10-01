@@ -42,14 +42,11 @@ void fc_solve_compact_allocator_init(
     fcs_compact_allocator_t * allocator
     )
 {
-    allocator->packs = (char * *)malloc(sizeof(allocator->packs[0]) * IA_STATE_PACKS_GROW_BY);
-    allocator->num_packs = 1;
-    allocator->max_ptr =
-        (allocator->ptr =
-        allocator->rollback_ptr =
-        allocator->packs[0] =
-        malloc(ALLOCED_SIZE))
-            + ALLOCED_SIZE;
+    allocator->packs = NULL;
+    allocator->num_packs = 0;
+    allocator->max_num_packs = 1;
+
+    fc_solve_compact_allocator_extend(allocator);
     return;
 }
 
@@ -58,21 +55,36 @@ void fc_solve_compact_allocator_extend(
         )
 {
     /* Allocate a new pack */
-    if (! ((++allocator->num_packs) & (IA_STATE_PACKS_GROW_BY-1)))
+    if ((++allocator->num_packs) == allocator->max_num_packs)
     {
+        int i;
+
         allocator->packs = (char * *)realloc(
             allocator->packs,
             sizeof(allocator->packs[0]) * 
-                ((allocator->num_packs) + IA_STATE_PACKS_GROW_BY)
+                (allocator->max_num_packs += IA_STATE_PACKS_GROW_BY)
         );
+        allocator->packs[allocator->num_packs-1] = 
+            malloc(ALLOCED_SIZE);
+
+        for ( i = allocator->num_packs ; i < allocator->max_num_packs ; i++)
+        {
+            allocator->packs[i] = NULL;
+        }
+    }
+    else
+    {
+        if (! allocator->packs[allocator->num_packs - 1])
+        {
+            allocator->packs[allocator->num_packs - 1] = malloc(ALLOCED_SIZE);
+        }
     }
 
     allocator->max_ptr =
-        (allocator->ptr =
-        allocator->rollback_ptr =
-        allocator->packs[allocator->num_packs-1] =
-        malloc(ALLOCED_SIZE))
-            + ALLOCED_SIZE;
+        (allocator->ptr
+         = allocator->rollback_ptr
+         = allocator->packs[allocator->num_packs - 1] 
+        ) + ALLOCED_SIZE;
 }
 
 
@@ -80,7 +92,7 @@ void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator)
 {
     char * * curr_pack, * * packs_end;
 
-    packs_end = (curr_pack = allocator->packs) + allocator->num_packs;
+    packs_end = (curr_pack = allocator->packs) + allocator->max_num_packs;
 
     for ( ; curr_pack < packs_end ; curr_pack++)
     {

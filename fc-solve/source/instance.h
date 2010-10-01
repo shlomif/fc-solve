@@ -1054,7 +1054,7 @@ static GCC_INLINE void fc_solve_free_bfs_queue(fc_solve_soft_thread_t * soft_thr
 #undef my_brfs_queue
 #undef my_brfs_queue_last_item
 
-/* This is the commmon code from alloc_hard_thread() and 
+/* This is the commmon code from fc_solve_instance__init_hard_thread() and 
  * recycle_hard_thread() */
 static GCC_INLINE void fc_solve_reset_hard_thread(
     fc_solve_hard_thread_t * hard_thread
@@ -1064,7 +1064,6 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
     hard_thread->ht_max_num_times = hard_thread->num_times_step;
     hard_thread->max_num_times = INT_MAX;
     hard_thread->num_soft_threads_finished = 0;
-    fc_solve_compact_allocator_init(&(hard_thread->allocator));
 }
 
 static GCC_INLINE void fc_solve_reset_soft_thread(
@@ -1121,6 +1120,7 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
     ST_LOOP_DECLARE_VARS();
 
     fc_solve_reset_hard_thread(hard_thread);
+    fc_solve_compact_allocator_recycle(&(hard_thread->allocator));
 
     ST_LOOP_START()
     {

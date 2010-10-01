@@ -41,7 +41,7 @@ extern "C"
 typedef struct
 {
     char * * packs;
-    int num_packs;
+    int num_packs, max_num_packs;
     char * max_ptr;
     char * ptr;
     char * rollback_ptr;
@@ -95,6 +95,16 @@ static GCC_INLINE fcs_collectible_state_t * fcs_state_ia_alloc_into_var(fcs_comp
 
         return ret_helper;
     }
+}
+
+static GCC_INLINE void fc_solve_compact_allocator_recycle(fcs_compact_allocator_t * allocator)
+{
+    allocator->num_packs = 0;
+
+    /* Now num_packs will be 1 and a max_ptr and ptr will be set. */
+    fc_solve_compact_allocator_extend(allocator);
+
+    return;
 }
 
 #ifdef __cplusplus
