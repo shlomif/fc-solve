@@ -1415,6 +1415,17 @@ static void dump_pqueue (
 #endif
 #endif
 
+#ifdef FCS_WITHOUT_DEPTH_FIELD
+static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
+{
+    register int ret = 0;
+    while ((ptr_state = FCS_S_PARENT(ptr_state)) != NULL)
+    {
+        ret++;
+    }
+    return ret;
+}
+#endif
 int fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -1604,7 +1615,7 @@ int fc_solve_befs_or_bfs_do_solve(
                     (void*)instance->debug_iter_output_context,
                     instance->num_times,
 #ifdef FCS_WITHOUT_DEPTH_FIELD
-                    0,
+                    calc_depth(ptr_state),
 #else
                     FCS_S_DEPTH(ptr_state),
 #endif
