@@ -987,7 +987,9 @@ void fc_solve_start_instance_process_with_board(
     }
 
     /* Initialize the state to be a base state for the game tree */
+#ifndef FCS_WITHOUT_DEPTH_FIELD
     state_copy_ptr->info.depth = 0;
+#endif
     state_copy_ptr->info.moves_to_parent = NULL;
     state_copy_ptr->info.visited = 0;
     state_copy_ptr->info.parent = NULL;

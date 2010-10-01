@@ -531,7 +531,9 @@ int fc_solve_soft_dfs_do_solve(
 #endif
     int dfs_max_depth, by_depth_max_depth, by_depth_min_depth;
 
+#ifndef FCS_WITHOUT_DEPTH_FIELD
     fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+#endif
     fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
     fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
@@ -563,9 +565,11 @@ int fc_solve_soft_dfs_do_solve(
 
     rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
     
+#ifndef FCS_WITHOUT_DEPTH_FIELD
     calculate_real_depth(
         ptr_state
     );
+#endif
 
     by_depth_units = soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units;
 
@@ -953,9 +957,11 @@ int fc_solve_soft_dfs_do_solve(
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     derived_states_list->num_states = 0;
 
+#ifndef FCS_WITHOUT_DEPTH_FIELD
                     calculate_real_depth(
                         ptr_state
                     );
+#endif
 
                     if (check_num_states_in_collection(instance))
                     {
@@ -1198,10 +1204,14 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     ret += (temp * befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE]);
 
+#ifdef FCS_WITHOUT_DEPTH_FIELD
+    ret += befs_weights[FCS_BEFS_WEIGHT_DEPTH];
+#else
     if (FCS_S_DEPTH(ptr_state) <= 20000)
     {
         ret += ((20000 - FCS_S_DEPTH(ptr_state))/20000.0) * befs_weights[FCS_BEFS_WEIGHT_DEPTH];
     }
+#endif
 
     TRACE0("Before return");
 
@@ -1432,7 +1442,9 @@ int fc_solve_befs_or_bfs_do_solve(
     fc_solve_solve_for_state_test_t * tests_list, * tests_list_end;
     fc_solve_solve_for_state_test_t * next_test;
 
+#ifndef FCS_WITHOUT_DEPTH_FIELD
     fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+#endif
     fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
     int soft_thread_id = soft_thread->id;
     fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
@@ -1591,7 +1603,11 @@ int fc_solve_befs_or_bfs_do_solve(
             instance->debug_iter_output_func(
                     (void*)instance->debug_iter_output_context,
                     instance->num_times,
+#ifdef FCS_WITHOUT_DEPTH_FIELD
+                    0,
+#else
                     FCS_S_DEPTH(ptr_state),
+#endif
                     (void*)instance,
 #ifdef FCS_RCS_STATES
                     (&state_key),
@@ -1619,9 +1635,11 @@ int fc_solve_befs_or_bfs_do_solve(
             goto my_return_label;
         }
 
+#ifndef FCS_WITHOUT_DEPTH_FIELD
         calculate_real_depth(
             ptr_state
         );
+#endif
 
         soft_thread->num_vacant_freecells = num_vacant_freecells;
         soft_thread->num_vacant_stacks = num_vacant_stacks;
@@ -1992,7 +2010,9 @@ int fc_solve_sfs_check_state_begin(
     /* Make sure depth is consistent with the game graph.
      * I.e: the depth of every newly discovered state is derived from
      * the state from which it was discovered. */
+#ifndef FCS_WITHOUT_DEPTH_FIELD
     (FCS_S_DEPTH(ptr_new_state))++;
+#endif
     /* Mark this state as a state that was not yet visited */
     FCS_S_VISITED(ptr_new_state) = 0;
     /* It's a newly created state which does not have children yet. */
@@ -2070,6 +2090,7 @@ extern void fc_solve_sfs_check_state_end(
         {
             fcs_compact_alloc_release(&(hard_thread->allocator));
         }
+#ifndef FCS_WITHOUT_DEPTH_FIELD
         calculate_real_depth(existing_state);
         /* Re-parent the existing state to this one.
          *
@@ -2098,6 +2119,7 @@ extern void fc_solve_sfs_check_state_end(
             FCS_S_PARENT(existing_state) = ptr_state;
             FCS_S_DEPTH(existing_state) = FCS_S_DEPTH(ptr_state) + 1;
         }
+#endif
         fc_solve_derived_states_list_add_state(
             derived_states_list,
             existing_state,

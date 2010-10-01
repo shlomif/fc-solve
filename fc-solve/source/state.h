@@ -434,7 +434,9 @@ struct fcs_state_extra_info_struct
     struct fcs_state_keyval_pair_struct * parent;
 #endif
     fcs_move_stack_t * moves_to_parent;
+#ifndef FCS_WITHOUT_DEPTH_FIELD
     int depth;
+#endif
     /*
      * This field contains global, scan-independant flags, which are used
      * from the FCS_VISITED_* enum below.
@@ -519,8 +521,12 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 #define FCS_S_VISITED(s) FCS_S_ACCESSOR(s, visited)
 #define FCS_S_STACK_LOCS(s) FCS_S_ACCESSOR(s, stack_locs)
 #define FCS_S_FC_LOCS(s) FCS_S_ACCESSOR(s, fc_locs)
-#define FCS_S_DEPTH(s) FCS_S_ACCESSOR(s, depth)
+
 #define FCS_S_SCAN_VISITED(s) FCS_S_ACCESSOR(s, scan_visited)
+
+#ifndef FCS_WITHOUT_DEPTH_FIELD
+#define FCS_S_DEPTH(s) FCS_S_ACCESSOR(s, depth)
+#endif
 
 #ifndef FCS_WITHOUT_VISITED_ITER
 #define FCS_S_VISITED_ITER(s) FCS_S_ACCESSOR(s, visited_iter)
@@ -696,7 +702,9 @@ static GCC_INLINE void fc_solve_state_init(
     }
     state->info.parent = NULL;
     state->info.moves_to_parent = NULL;
+#ifndef FCS_WITHOUT_DEPTH_FIELD
     state->info.depth = 0;
+#endif
     state->info.visited = 0;
 #ifndef FCS_WITHOUT_VISITED_ITER
     state->info.visited_iter = 0;

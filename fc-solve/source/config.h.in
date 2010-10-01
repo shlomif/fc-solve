@@ -102,6 +102,13 @@ extern "C" {
  * operation.
  * */
 #cmakedefine FCS_WITHOUT_VISITED_ITER
+    
+/* 
+ * Get rid of the "depth" field on each state's extra_info. It is
+ * used a little, but otherwise is not needed for the run-time
+ * operation.
+ * */
+#cmakedefine FCS_WITHOUT_DEPTH_FIELD
 
 /*  
  * This flag controls a hash behaviour. It seems to improve things somewhat.
