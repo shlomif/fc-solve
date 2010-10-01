@@ -25,7 +25,7 @@ my $omit_frame;
 my $no_simple_simon = 0;
 my $state_storage_libavl2_tree;
 my $stack_storage_libavl2_tree;
-my $without_flipping = 0;
+my $without_flipping = 1;
 my $with_context_var = 1;
 my $max_bench_threads_num = 4;
 my $pack_size;
