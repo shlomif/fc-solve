@@ -69,8 +69,8 @@ my %themes =
 (
     tt => [qw(-r --notest-suite --static)],
     bench => [qw(-l tt --omit-frame --without-flip --without-visited-iter)],
-    fc_bench => [ qw(-l bench --fc-only) ],
-    reduce_mem => [ qw(-l bench --rcs --without-depth-field) ],
+    fc_bench => [ qw(-l bench --fc-only --without-depth-field) ],
+    reduce_mem => [ qw(-l bench --rcs) ],
     fc_reduce_mem => [ qw(-l fc_bench --rcs) ],
 );
 
