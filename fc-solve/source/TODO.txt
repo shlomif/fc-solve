@@ -20,6 +20,13 @@ and trim_max_stored_states should decrease if states were removed.
 Non-pressing
 ------------
 
+* Implement the compact_allocators recycling in the remaining places in
+the code.
+** Already implemented for the hard_thread->allocator.
+
+* Add an option to convert the stack_locs and fc_locs to a
+MAX_NUM_STACKS-factorial permutation that can be stored compactly.
+
 * Write a program to summarise an fc-solve invocation, giving the verdict,
 validity, number of moves in the solution, number of iterations, and stored
 states. It should be a wrapper for the fc-solve command line.
