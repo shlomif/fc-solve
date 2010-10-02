@@ -27,6 +27,9 @@ the code.
 * Add an option to convert the stack_locs and fc_locs to a
 MAX_NUM_STACKS-factorial permutation that can be stored compactly.
 
+* Adapt more fcs_collectible_state_t * storage backends for FCS_RCS_STATES.
+(libavl2 comes to mind.)
+
 * Write a program to summarise an fc-solve invocation, giving the verdict,
 validity, number of moves in the solution, number of iterations, and stored
 states. It should be a wrapper for the fc-solve command line.
