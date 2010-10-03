@@ -567,11 +567,18 @@ fcs_bool_t fc_solve_check_and_add_state(
     is_state_new = ((*existing_state_val) == new_state_val);
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
-
-    *existing_state_val = (fcs_state_extra_info_t *)
-        fcs_libavl2_states_tree_insert(instance->tree, new_state_val);
-    is_state_new = ((*existing_state_val) == NULL);
-
+    if ((*existing_state = (fcs_collectible_state_t *)
+        fcs_libavl2_states_tree_insert(instance->tree, &(new_state->s)))
+            == NULL
+       )
+    {
+        on_state_new(instance, hard_thread, new_state);
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     *existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
     if ((is_state_new = (*existing_state_val == NULL)))

@@ -1005,7 +1005,7 @@ void fc_solve_start_instance_process_with_board(
             NULL
             );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
-    instance->tree = fcs_libavl2_states_tree_create(fc_solve_state_extra_info_compare_with_context, NULL, NULL);
+    instance->tree = fcs_libavl2_states_tree_create(fc_solve_state_compare_with_context, NULL, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     instance->tree = g_tree_new(fc_solve_state_compare);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
