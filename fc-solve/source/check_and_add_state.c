@@ -567,8 +567,11 @@ fcs_bool_t fc_solve_check_and_add_state(
     is_state_new = ((*existing_state_val) == new_state_val);
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
+    instance->tree_new_state_key = new_state_key;
+    instance->tree_new_state = new_state;
+    
     if ((*existing_state = (fcs_collectible_state_t *)
-        fcs_libavl2_states_tree_insert(instance->tree, &(new_state->s)))
+        fcs_libavl2_states_tree_insert(instance->tree, new_state))
             == NULL
        )
     {

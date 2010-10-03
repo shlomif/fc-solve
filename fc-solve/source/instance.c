@@ -940,6 +940,33 @@ static GCC_INLINE int fc_solve_optimize_solution(
             );
 }
 
+#ifdef FCS_RCS_STATES
+
+static GCC_INLINE fcs_state_t * rcs_states_get_state(
+    fc_solve_instance_t * instance,
+    fcs_collectible_state_t * state)
+{
+    return
+        (
+         (state == instance->tree_new_state)
+         ? instance->tree_new_state_key
+         : fc_solve_lookup_state_key_from_val(
+             instance,
+             state
+             )
+        );
+
+}
+static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b, void * param)
+{
+    fc_solve_instance_t * instance = (fc_solve_instance_t *)param;
+
+    return fc_solve_state_compare(
+        rcs_states_get_state(instance, (fcs_collectible_state_t *)void_a),
+        rcs_states_get_state(instance, (fcs_collectible_state_t *)void_b)
+    );
+}
+#endif
 
 /*
     This function associates a board with an fc_solve_instance_t and
@@ -1005,7 +1032,17 @@ void fc_solve_start_instance_process_with_board(
             NULL
             );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
+
+#ifdef FCS_RCS_STATES
+    instance->tree = fcs_libavl2_states_tree_create(
+            fc_solve_rcs_states_compare,
+            instance,
+            NULL
+            );
+#else
     instance->tree = fcs_libavl2_states_tree_create(fc_solve_state_compare_with_context, NULL, NULL);
+#endif
+
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     instance->tree = g_tree_new(fc_solve_state_compare);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)

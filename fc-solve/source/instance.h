@@ -588,6 +588,12 @@ struct fc_solve_instance_struct
 
 #ifdef FCS_RCS_STATES
     fcs_lru_cache_t rcs_states_cache;
+
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
+    fcs_state_t * tree_new_state_key;
+    fcs_collectible_state_t * tree_new_state;
+#endif
+
 #endif
 };
 
