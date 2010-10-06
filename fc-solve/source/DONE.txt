@@ -97,3 +97,14 @@ ints.
 * Add a quick way to get rid of --fc-only from +./Tatzer -l p4b+ / 
 +./Tatzer -l x64b+ .
 
+* Add compact allocation for the Breadth-first-search (BrFS/BFS) queue
+items.
+** With recycling.
+
+* Adapt more fcs_collectible_state_t * storage backends for FCS_RCS_STATES.
+(libavl2 comes to mind.)
+
+* Write a program to summarise an fc-solve invocation, giving the verdict,
+validity, number of moves in the solution, number of iterations, and stored
+states. It should be a wrapper for the fc-solve command line.
+    - done: +scripts/summarize-fc-solve+ .
