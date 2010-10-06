@@ -129,6 +129,15 @@ shlomif:~$ make_pysol_freecell_board.py -F -t 91151234961275807905 | ~/apps/test
 However this scan generates takes too much time for most boards (over 100K 
 iterations).
 
+* PySolFC deal No. 03620802041832966472:
+
+-------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -t -F 03620802041832966472  | ./scripts/summarize-fc-solve -- --method a-star -to 0123467589 -asw 300,1500,99,2,65000 
+Verdict: Solved ; Iters: 156 ; Length: 87
+-------------------------------------------------------
+
+** I solved it at length 87.
+
 Long-term
 ---------
 
