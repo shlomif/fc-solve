@@ -168,6 +168,7 @@ SET (LIBAVL2_SOURCE_DIR "/usr/src/avl-2.0.3" CACHE STRING "The location of the l
 
 SET (FCS_WITHOUT_VISITED_ITER "" CACHE BOOL "Disable the visited_iter counter in each state (somewhat useful for debugging, otherwise not needed.)")
 SET (FCS_WITHOUT_DEPTH_FIELD "" CACHE BOOL "Disable the depth field in each state (not absolutely necessary.)")
+SET (FCS_WITHOUT_LOCS_FIELDS "" CACHE BOOL "Disable the columns and freecells permutations fields in each state (they are not absolutely necessary.)")
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")

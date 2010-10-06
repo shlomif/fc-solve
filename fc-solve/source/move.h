@@ -93,6 +93,9 @@ void fc_solve_apply_move(
         fcs_state_t * state_key,
 #endif
         fcs_collectible_state_t * state_val,
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+        fcs_state_locs_struct_t * locs,
+#endif
         fcs_internal_move_t move,
         int freecells_num,
         int stacks_num,
@@ -133,6 +136,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_state_t * init_state_key,
 #endif
     fcs_collectible_state_t * init_state,
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    fcs_state_locs_struct_t * locs,
+#endif
     int freecells_num,
     int stacks_num,
     int decks_num
@@ -148,6 +154,10 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #ifdef INDIRECT_STACK_STATES
     char buffer[MAX_NUM_STACKS << 7];
     int i;
+#endif
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+#define FCS_S_FC_LOCS(s) (locs->fc_locs)
+#define FCS_S_STACK_LOCS(s) (locs->stack_locs)
 #endif
 
     out_move = fc_solve_empty_move;
@@ -182,6 +192,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             &dynamic_state_key,
 #endif
             &dynamic_state,
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+            locs,
+#endif
             in_move,
             freecells_num,
             stacks_num,

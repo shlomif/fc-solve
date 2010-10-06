@@ -481,8 +481,15 @@ struct fcs_state_extra_info_struct
      * */
     unsigned short num_active_children;
 
+#ifndef FCS_WITHOUT_LOCS_FIELDS
+    /*
+     * These contain the location of the original stacks and freecells
+     * in the permutation of them. They are sorted by the canonization
+     * function.
+     * */
     fcs_locs_t stack_locs[MAX_NUM_STACKS];
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
+#endif
 
     /*
      * This field contains global, scan-independant flags, which are used
@@ -504,6 +511,19 @@ struct fcs_state_extra_info_struct
     fcs_game_limit_t visited;
     
 };
+
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+typedef struct
+{
+    /*
+     * These contain the location of the original stacks and freecells
+     * in the permutation of them. They are sorted by the canonization
+     * function.
+     * */
+    fcs_locs_t stack_locs[MAX_NUM_STACKS];
+    fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
+} fcs_state_locs_struct_t;
+#endif
 
 typedef struct fcs_state_extra_info_struct fcs_state_extra_info_t;
 
@@ -544,8 +564,11 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 #define FCS_S_NUM_ACTIVE_CHILDREN(s) FCS_S_ACCESSOR(s, num_active_children)
 #define FCS_S_MOVES_TO_PARENT(s) FCS_S_ACCESSOR(s, moves_to_parent)
 #define FCS_S_VISITED(s) FCS_S_ACCESSOR(s, visited)
+
+#ifndef FCS_WITHOUT_LOCS_FIELDS
 #define FCS_S_STACK_LOCS(s) FCS_S_ACCESSOR(s, stack_locs)
 #define FCS_S_FC_LOCS(s) FCS_S_ACCESSOR(s, fc_locs)
+#endif
 
 #define FCS_S_SCAN_VISITED(s) FCS_S_ACCESSOR(s, scan_visited)
 
@@ -560,6 +583,9 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 typedef struct {
     fcs_state_t * key;
     fcs_state_extra_info_t * val;
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    fcs_state_locs_struct_t locs;
+#endif
 } fcs_standalone_state_ptrs_t;
 
 extern fcs_card_t fc_solve_empty_card;
@@ -602,6 +628,19 @@ extern void fc_solve_canonize_state(
     int freecells_num,
     int stacks_num
     );
+
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+void fc_solve_canonize_state_with_locs(
+#ifdef FCS_RCS_STATES
+    fcs_state_t * state_key,
+    fcs_collectible_state_t * state_val,
+#else
+    fcs_collectible_state_t * state,
+#endif
+    fcs_state_locs_struct_t * locs,
+    int freecells_num,
+    int stacks_num);
+#endif
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 
@@ -698,18 +737,22 @@ static GCC_INLINE void fc_solve_state_init(
 #endif
     )
 {
+#ifndef FCS_WITHOUT_CARD_FLIPPING
     int i;
+#endif
     
 
     memset(&(state->s), 0, sizeof(state->s));
 
+#ifndef FCS_WITHOUT_LOCS_FIELDS
     {
         fcs_locs_t * stack_locs = state->info.stack_locs;
-        for(i=0;i<MAX_NUM_STACKS;i++)
+        for ( i=0 ; i<MAX_NUM_STACKS ; i++)
         {
             stack_locs[i] = (fcs_locs_t)i;
         }
     }
+#endif
 #ifdef INDIRECT_STACK_STATES
     for(i=0;i<stacks_num;i++)
     {
@@ -721,10 +764,12 @@ static GCC_INLINE void fc_solve_state_init(
         state->s.stacks[i] = NULL;
     }
 #endif
-    for(i=0;i<MAX_NUM_FREECELLS;i++)
+#ifndef FCS_WITHOUT_LOCS_FIELDS
+    for ( i=0 ; i<MAX_NUM_FREECELLS ; i++)
     {
         state->info.fc_locs[i] = (char)i;
     }
+#endif
     state->info.parent = NULL;
     state->info.moves_to_parent = NULL;
 #ifndef FCS_WITHOUT_DEPTH_FIELD
@@ -1105,6 +1150,9 @@ extern char * fc_solve_state_as_string(
     fcs_state_t * key,
 #endif
     fcs_collectible_state_t * state_pair,
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    fcs_state_locs_struct_t * state_locs,
+#endif
     int freecells_num,
     int stacks_num,
     int decks_num,

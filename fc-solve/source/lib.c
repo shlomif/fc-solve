@@ -123,6 +123,11 @@ typedef struct
     fc_solve_instance_t * fc_solve_obj;
     fcs_state_keyval_pair_t state;
     fcs_state_keyval_pair_t running_state;
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    fcs_state_locs_struct_t state_locs;
+    fcs_state_locs_struct_t trace_solution_state_locs;
+    fcs_state_locs_struct_t initial_state_locs;
+#endif
     int ret_code;
     fcs_bool_t all_instances_were_suspended;
     int state_validity_ret;
@@ -913,6 +918,20 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 return user->ret_code;
             }
 
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+            {
+                int i;
+                for ( i=0 ; i<MAX_NUM_STACKS ; i++)
+                {
+                    user->initial_state_locs.stack_locs[i] = (fcs_locs_t)i;
+                }
+                for ( i=0 ; i<MAX_NUM_FREECELLS ; i++)
+                {
+                    user->initial_state_locs.fc_locs[i] = (fcs_locs_t)i;
+                }
+            }
+            user->state_locs = user->initial_state_locs;
+#endif
 
             /* running_state is a normalized state. So I'm duplicating
              * state to it before state is canonized
@@ -929,16 +948,31 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 #endif
                 );
 
-            fc_solve_canonize_state(
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+#endif
+
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+            fc_solve_canonize_state_with_locs
+#else
+            fc_solve_canonize_state
+#endif
+                (
 #ifdef FCS_RCS_STATES
                 &(user->state.s),
                 &(user->state.info),
 #else
                 &(user->state),
 #endif
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+                &(user->state_locs),
+#endif
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM
                 );
+
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+            user->trace_solution_state_locs = user->state_locs;
+#endif
 
             fc_solve_init_instance(user->fc_solve_obj);
 
@@ -1025,10 +1059,17 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 #else
                 &(user->state),
 #endif
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+                &(user->trace_solution_state_locs),
+#endif
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM
                 );
+
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+            user->trace_solution_state_locs = user->state_locs;
+#endif
 
             if (instance_item->minimal_solution_flare_idx < 0)
             {
@@ -1131,6 +1172,9 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 #else
                     &(user->running_state),
 #endif
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+                    NULL,
+#endif
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
                     internal_move,
 #else
@@ -1173,6 +1217,9 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
                 &(user->running_state.info),
 #else
                 &(user->running_state),
+#endif
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+                &(user->initial_state_locs),
 #endif
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
@@ -1744,6 +1791,19 @@ static void iter_handler_wrapper(
 #ifdef FCS_RCS_STATES
     state_raw.key = ptr_state_key;
     state_raw.val = ptr_state_val;
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    {
+        int i;
+        for ( i=0 ; i<MAX_NUM_STACKS ; i++)
+        {
+            state_raw.locs.stack_locs[i] = (fcs_locs_t)i;
+        }
+        for ( i=0 ; i<MAX_NUM_FREECELLS ; i++)
+        {
+            state_raw.locs.fc_locs[i] = (fcs_locs_t)i;
+        }
+    }
+#endif
 #endif
 
 #ifdef DEBUG
@@ -1863,10 +1923,13 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
     return
         fc_solve_state_as_string(
 #ifdef FCS_RCS_STATES
-    ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
-    ((fcs_standalone_state_ptrs_t *)ptr_state_void)->val,
+            ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
+            ((fcs_standalone_state_ptrs_t *)ptr_state_void)->val,
 #else
-        ((fcs_state_keyval_pair_t *)ptr_state_void),
+            ((fcs_state_keyval_pair_t *)ptr_state_void),
+#endif
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+            &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs),
 #endif
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM,

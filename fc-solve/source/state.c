@@ -157,7 +157,9 @@ void fc_solve_canonize_state(
 
     char temp_stack[(MAX_NUM_CARDS_IN_A_STACK+1)];
     fcs_card_t temp_freecell;
+#ifndef FCS_WITHOUT_LOCS_FIELDS
     char temp_loc;
+#endif
 
 #ifndef FCS_RCS_STATES
     fcs_state_t * state_key;
@@ -183,9 +185,11 @@ void fc_solve_canonize_state(
             memcpy(state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1), state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1), (MAX_NUM_CARDS_IN_A_STACK+1));
             memcpy(state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1), temp_stack, (MAX_NUM_CARDS_IN_A_STACK+1));
 
+#ifndef FCS_WITHOUT_LOCS_FIELDS
             temp_loc = state_val->stack_locs[c];
             state_val->stack_locs[c] = state_val->stack_locs[c-1];
             state_val->stack_locs[c-1] = temp_loc;
+#endif
 
             c--;
         }
@@ -209,14 +213,96 @@ void fc_solve_canonize_state(
             state_key->data[FCS_FREECELLS_OFFSET+c] = state_key->data[FCS_FREECELLS_OFFSET+c-1];
             state_key->data[FCS_FREECELLS_OFFSET+c-1] = temp_freecell;
 
+#ifndef FCS_WITHOUT_LOCS_FIELDS
             temp_loc = state_val->fc_locs[c];
             state_val->fc_locs[c] = state_val->fc_locs[c-1];
             state_val->fc_locs[c-1] = temp_loc;
+#endif
 
             c--;
         }
     }
 }
+
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+
+void fc_solve_canonize_state_with_locs(
+#ifdef FCS_RCS_STATES
+    fcs_state_t * state_key,
+    fcs_collectible_state_t * state_val,
+#else
+    fcs_collectible_state_t * state,
+#endif
+    fcs_state_locs_struct_t * locs,
+    int freecells_num,
+    int stacks_num)
+{
+    int b,c;
+
+    char temp_stack[(MAX_NUM_CARDS_IN_A_STACK+1)];
+    fcs_card_t temp_freecell;
+    fcs_locs_t temp_loc;
+
+#ifndef FCS_RCS_STATES
+    fcs_state_t * state_key;
+    fcs_state_extra_info_t * state_val;
+
+    state_key = &(state->s);
+    state_val = &(state->info);
+#endif
+    /* Insertion-sort the stacks */
+
+    for(b=1;b<stacks_num;b++)
+    {
+        c = b;
+        while(
+            (c>0)    &&
+            (fcs_stack_compare(
+                state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1),
+                state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1)
+                ) < 0)
+            )
+        {
+            memcpy(temp_stack, state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1), (MAX_NUM_CARDS_IN_A_STACK+1));
+            memcpy(state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1), state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1), (MAX_NUM_CARDS_IN_A_STACK+1));
+            memcpy(state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1), temp_stack, (MAX_NUM_CARDS_IN_A_STACK+1));
+
+            temp_loc = locs->stack_locs[c];
+            locs->stack_locs[c] = locs->stack_locs[c-1];
+            locs->stack_locs[c-1] = temp_loc;
+
+            c--;
+        }
+    }
+
+    /* Insertion-sort the freecells */
+
+    for(b=1;b<freecells_num;b++)
+    {
+        c = b;
+
+        while(
+            (c>0)    &&
+            (fc_solve_card_compare(
+                state_key->data+FCS_FREECELLS_OFFSET+c,
+                state_key->data+FCS_FREECELLS_OFFSET+c-1
+                ) < 0)
+            )
+        {
+            temp_freecell = (state_key->data[FCS_FREECELLS_OFFSET+c]);
+            state_key->data[FCS_FREECELLS_OFFSET+c] = state_key->data[FCS_FREECELLS_OFFSET+c-1];
+            state_key->data[FCS_FREECELLS_OFFSET+c-1] = temp_freecell;
+
+            temp_loc = locs->fc_locs[c];
+            locs->fc_locs[c] = locs->fc_locs[c-1];
+            locs->fc_locs[c-1] = temp_loc;
+
+            c--;
+        }
+    }
+}
+#endif
+
 #elif defined(INDIRECT_STACK_STATES)
 void fc_solve_canonize_state(
     fcs_collectible_state_t * state,
@@ -321,6 +407,11 @@ char * fc_solve_state_as_string(
     fcs_state_t * state,
 #endif
     fcs_collectible_state_t * state_val,
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    fcs_state_locs_struct_t * state_locs,
+#define FCS_S_STACK_LOCS(s) (state_locs->stack_locs)
+#define FCS_S_FC_LOCS(s) (state_locs->fc_locs)
+#endif
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -566,3 +657,9 @@ char * fc_solve_state_as_string(
 
     return fc_solve_append_string_finalize(&app_str_struct);
 }
+
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+#undef FCS_S_FC_LOCS
+#undef FCS_S_STACK_LOCS
+#endif
+

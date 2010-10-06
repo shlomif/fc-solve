@@ -418,6 +418,9 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             fc_solve_apply_move(
                 &(new_cache_state->key),
                 &(temp_new_state_val),
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+                NULL,
+#endif
                 stack_ptr_this_state_val->moves_to_parent->moves[i],
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
