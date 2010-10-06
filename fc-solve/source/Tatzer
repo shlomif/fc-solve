@@ -30,6 +30,7 @@ my $without_visited_iter = 0;
 my $without_depth_field = 0;
 my $without_locs_fields = 0;
 my $with_context_var = 1;
+my $with_compact_moves = 0;
 my $max_bench_threads_num = 4;
 my $pack_size;
 my $link_to_static = 0;
@@ -70,9 +71,9 @@ my %themes =
 (
     tt => [qw(-r --notest-suite --static)],
     bench => [qw(-l tt --omit-frame --without-flip --without-visited-iter)],
-    fc_bench => [ qw(-l bench --fc-only --without-depth-field --without-locs-fields) ],
+    fc_bench => [ qw(-l bench --fc-only --without-depth-field ) ],
     reduce_mem => [ qw(-l bench --rcs) ],
-    fc_reduce_mem => [ qw(-l fc_bench --rcs) ],
+    fc_reduce_mem => [ qw(-l fc_bench --rcs --without-locs-fields --with-compact-moves) ],
 );
 
 foreach my $rec (
@@ -197,6 +198,7 @@ GetOptions(
     'without-visited-iter!' => \$without_visited_iter,
     'without-depth-field!' => \$without_depth_field,
     'without-locs-fields!' => \$without_locs_fields,
+    'with-compact-moves!' => \$with_compact_moves,
     'with-ctx-var!' => \$with_context_var,
     'max-bench-threads-num=i' => \$max_bench_threads_num,
     'pack-size=i' => \$pack_size,
@@ -232,6 +234,7 @@ my @cmd= ("cmake",
     ($without_visited_iter ? ("-DFCS_WITHOUT_VISITED_ITER=1") : ()),
     ($without_depth_field ? ("-DFCS_WITHOUT_DEPTH_FIELD=1") : ()),
     ($without_locs_fields ? ("-DFCS_WITHOUT_LOCS_FIELDS=1") : ()),
+    ($with_compact_moves ? ("-DFCS_USE_COMPACT_MOVE_TOKENS=1") : ()),
     ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
     ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
