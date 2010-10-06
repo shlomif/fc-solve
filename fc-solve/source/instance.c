@@ -940,6 +940,8 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
 #ifdef FCS_RCS_STATES
 
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
+
 static GCC_INLINE fcs_state_t * rcs_states_get_state(
     fc_solve_instance_t * instance,
     fcs_collectible_state_t * state)
@@ -955,6 +957,7 @@ static GCC_INLINE fcs_state_t * rcs_states_get_state(
         );
 
 }
+
 static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b, void * param)
 {
     fc_solve_instance_t * instance = (fc_solve_instance_t *)param;
@@ -964,6 +967,9 @@ static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b,
         rcs_states_get_state(instance, (fcs_collectible_state_t *)void_b)
     );
 }
+
+#endif
+
 #endif
 
 /*
