@@ -863,6 +863,12 @@ struct fc_solve_soft_thread_struct
                      * it, thus making it a queue.
                      * */
                     fcs_states_linked_list_item_t * bfs_queue_last_item;
+                    /*
+                     * A linked list of items that were freed from 
+                     * the queue and should be reused before allocating new
+                     * items.
+                     * */
+                    fcs_states_linked_list_item_t * recycle_bin;
                 } brfs;
                 struct
                 {
@@ -1039,27 +1045,6 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     return &(ret->soft_threads[0]);
 }
 
-#define my_brfs_queue (soft_thread->method_specific.befs.meth.brfs.bfs_queue)
-#define my_brfs_queue_last_item \
-    (soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item)
-
-static GCC_INLINE void fc_solve_free_bfs_queue(fc_solve_soft_thread_t * soft_thread)
-{
-    /* Free the BFS linked list */
-    fcs_states_linked_list_item_t * item, * next_item;
-    item = my_brfs_queue;
-    while (item != NULL)
-    {
-        next_item = item->next;
-        free(item);
-        item = next_item;
-    }
-    my_brfs_queue = my_brfs_queue_last_item = NULL;
-}
-
-#undef my_brfs_queue
-#undef my_brfs_queue_last_item
-
 /* This is the commmon code from fc_solve_instance__init_hard_thread() and 
  * recycle_hard_thread() */
 static GCC_INLINE void fc_solve_reset_hard_thread(
@@ -1130,24 +1115,11 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
     ST_LOOP_START()
     {
-        switch (soft_thread->method)
+        if (soft_thread->method == FCS_METHOD_A_STAR)
         {
-            case FCS_METHOD_A_STAR:
-                /* Free the priority queue. It will be reallocated by
-                 * fc_solve_soft_thread_init_befs_or_bfs() .
-                 * */
-                fc_solve_PQueueFree(
-                    &(soft_thread->method_specific.befs.meth.befs.pqueue)
-                );
-                
-                break;
-
-            case FCS_METHOD_BFS:
-            case FCS_METHOD_OPTIMIZE:
-                /* Reset the BFS Queue (also used for the optimization scan. */
-                fc_solve_free_bfs_queue(soft_thread);
-                break;
-
+            fc_solve_PQueueFree(
+                &(soft_thread->method_specific.befs.meth.befs.pqueue)
+            );
         }
 
         fc_solve_reset_soft_thread(soft_thread);

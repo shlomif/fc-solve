@@ -195,15 +195,13 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     fcs_bool_t is_scan_befs_or_bfs = FALSE;
     switch (soft_thread->method)
     {
-        case FCS_METHOD_BFS:
-        case FCS_METHOD_OPTIMIZE:
-            fc_solve_free_bfs_queue(soft_thread);
-            is_scan_befs_or_bfs = TRUE;
-            break;
         case FCS_METHOD_A_STAR:
             fc_solve_PQueueFree(
                     &(soft_thread->method_specific.befs.meth.befs.pqueue)
             );
+            /* Fall-through. */
+        case FCS_METHOD_BFS:
+        case FCS_METHOD_OPTIMIZE:
             is_scan_befs_or_bfs = TRUE;
             break;
     }

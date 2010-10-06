@@ -1261,23 +1261,33 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #define my_brfs_queue (soft_thread->method_specific.befs.meth.brfs.bfs_queue)
 #define my_brfs_queue_last_item \
     (soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item)
+#define my_brfs_recycle_bin (soft_thread->method_specific.befs.meth.brfs.recycle_bin)
+
+#define NEW_BRFS_QUEUE_ITEM() \
+    ((fcs_states_linked_list_item_t *) \
+    fcs_compact_alloc_ptr( \
+        &(hard_thread->allocator), \
+        sizeof(fcs_states_linked_list_item_t) \
+    ));
 
 static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * soft_thread)
 {
+    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
+
     /* Initialize the BFS queue. We have one dummy element at the beginning
        in order to make operations simpler. */
     my_brfs_queue = 
-        (fcs_states_linked_list_item_t*)malloc(
-            sizeof(fcs_states_linked_list_item_t)
-        );
+        NEW_BRFS_QUEUE_ITEM();
 
     my_brfs_queue_last_item = 
         my_brfs_queue->next =
-        (fcs_states_linked_list_item_t*)
-        malloc(sizeof(fcs_states_linked_list_item_t))
-        ;
+        NEW_BRFS_QUEUE_ITEM();
 
     my_brfs_queue_last_item->next = NULL;
+
+    my_brfs_recycle_bin = NULL;
+
+    return;
 }
 
 
@@ -1719,11 +1729,17 @@ int fc_solve_befs_or_bfs_do_solve(
                 /* Enqueue the new state. */
                 fcs_states_linked_list_item_t * last_item_next;
 
-                last_item_next =
-                    queue_last_item->next = 
-                    ((fcs_states_linked_list_item_t*)
-                        malloc(sizeof(*last_item_next))
-                    );
+                if (my_brfs_recycle_bin)
+                {
+                    last_item_next = my_brfs_recycle_bin;
+                    my_brfs_recycle_bin = my_brfs_recycle_bin->next;
+                }
+                else
+                {
+                    last_item_next = NEW_BRFS_QUEUE_ITEM();
+                }
+
+                queue_last_item->next = last_item_next;
 
                 queue_last_item->s = ptr_new_state;
                 last_item_next->next = NULL;
@@ -1781,7 +1797,8 @@ label_next_state:
             {
                 ptr_state = save_item->s;
                 queue->next = save_item->next;
-                free(save_item);
+                save_item->next = my_brfs_recycle_bin;
+                my_brfs_recycle_bin = save_item;
             }
             else
             {
