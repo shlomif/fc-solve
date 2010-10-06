@@ -583,6 +583,7 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 typedef struct {
     fcs_state_t * key;
     fcs_state_extra_info_t * val;
+    fcs_collectible_state_t * s;
 #ifdef FCS_WITHOUT_LOCS_FIELDS
     fcs_state_locs_struct_t locs;
 #endif

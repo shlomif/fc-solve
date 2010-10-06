@@ -1782,15 +1782,15 @@ static void iter_handler_wrapper(
     )
 {
     fcs_user_t * user;
-#ifdef FCS_RCS_STATES
     fcs_standalone_state_ptrs_t state_raw;
-#endif
 
     user = (fcs_user_t *)api_instance;
 
+    state_raw.s = ptr_state_val;
 #ifdef FCS_RCS_STATES
     state_raw.key = ptr_state_key;
     state_raw.val = ptr_state_val;
+#endif
 #ifdef FCS_WITHOUT_LOCS_FIELDS
     {
         int i;
@@ -1803,7 +1803,6 @@ static void iter_handler_wrapper(
             state_raw.locs.fc_locs[i] = (fcs_locs_t)i;
         }
     }
-#endif
 #endif
 
 #ifdef DEBUG
@@ -1840,11 +1839,7 @@ myend:
         api_instance,
         iter_num,
         depth,
-#ifdef FCS_RCS_STATES
         (void *)&state_raw,
-#else
-        (void *)ptr_state_val,
-#endif
         parent_iter_num,
         user->iter_handler_context
         );
@@ -1926,7 +1921,7 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
             ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
             ((fcs_standalone_state_ptrs_t *)ptr_state_void)->val,
 #else
-            ((fcs_state_keyval_pair_t *)ptr_state_void),
+            ((fcs_standalone_state_ptrs_t *)ptr_state_void)->s,
 #endif
 #ifdef FCS_WITHOUT_LOCS_FIELDS
             &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs),

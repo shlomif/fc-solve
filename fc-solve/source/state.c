@@ -141,7 +141,21 @@ void fc_solve_canonize_state(
     }
 }
 
-#elif defined(COMPACT_STATES)
+#elif defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
+
+#ifdef COMPACT_STATES
+#define DECLARE_TEMP_STACK() char temp_stack[(MAX_NUM_CARDS_IN_A_STACK+1)]
+#define STACK_COMPARE(a,b) (fcs_stack_compare((a),(b)))
+#define GET_STACK(c) (state_key->data+(c)*(MAX_NUM_CARDS_IN_A_STACK+1))
+#define COPY_STACK(d,s) (memcpy(d, s, (MAX_NUM_CARDS_IN_A_STACK+1)))
+#define GET_FREECELL(c) (state_key->data[FCS_FREECELLS_OFFSET+(c)]) 
+#elif defined(INDIRECT_STACK_STATES) 
+#define DECLARE_TEMP_STACK() fcs_card_t * temp_stack 
+#define STACK_COMPARE(a,b) (fc_solve_stack_compare_for_comparison((a),(b)))
+#define GET_STACK(c) (state->s.stacks[c])
+#define COPY_STACK(d,s) (d = s)
+#define GET_FREECELL(c) (state->s.freecells[(c)]) 
+#endif
 
 void fc_solve_canonize_state(
 #ifdef FCS_RCS_STATES
@@ -155,8 +169,9 @@ void fc_solve_canonize_state(
 {
     int b,c;
 
-    char temp_stack[(MAX_NUM_CARDS_IN_A_STACK+1)];
+    DECLARE_TEMP_STACK();   
     fcs_card_t temp_freecell;
+
 #ifndef FCS_WITHOUT_LOCS_FIELDS
     char temp_loc;
 #endif
@@ -175,15 +190,17 @@ void fc_solve_canonize_state(
         c = b;
         while(
             (c>0)    &&
-            (fcs_stack_compare(
-                state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1),
-                state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1)
-                ) < 0)
+            ((STACK_COMPARE(
+                       GET_STACK(c),
+                       GET_STACK(c-1)
+                          )
+                ) < 0
             )
+        )
         {
-            memcpy(temp_stack, state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1), (MAX_NUM_CARDS_IN_A_STACK+1));
-            memcpy(state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1), state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1), (MAX_NUM_CARDS_IN_A_STACK+1));
-            memcpy(state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1), temp_stack, (MAX_NUM_CARDS_IN_A_STACK+1));
+            COPY_STACK(temp_stack, GET_STACK(c));
+            COPY_STACK(GET_STACK(c), GET_STACK(c-1));
+            COPY_STACK(GET_STACK(c-1), temp_stack);
 
 #ifndef FCS_WITHOUT_LOCS_FIELDS
             temp_loc = state_val->stack_locs[c];
@@ -203,15 +220,16 @@ void fc_solve_canonize_state(
 
         while(
             (c>0)    &&
-            (fc_solve_card_compare(
-                state_key->data+FCS_FREECELLS_OFFSET+c,
-                state_key->data+FCS_FREECELLS_OFFSET+c-1
-                ) < 0)
+            ((fc_solve_card_compare(
+                &(GET_FREECELL(c)),
+                &(GET_FREECELL(c-1))
             )
+            ) < 0)
+        )
         {
-            temp_freecell = (state_key->data[FCS_FREECELLS_OFFSET+c]);
-            state_key->data[FCS_FREECELLS_OFFSET+c] = state_key->data[FCS_FREECELLS_OFFSET+c-1];
-            state_key->data[FCS_FREECELLS_OFFSET+c-1] = temp_freecell;
+            temp_freecell = GET_FREECELL(c);
+            GET_FREECELL(c) = GET_FREECELL(c-1);
+            GET_FREECELL(c-1) = temp_freecell;
 
 #ifndef FCS_WITHOUT_LOCS_FIELDS
             temp_loc = state_val->fc_locs[c];
@@ -239,7 +257,7 @@ void fc_solve_canonize_state_with_locs(
 {
     int b,c;
 
-    char temp_stack[(MAX_NUM_CARDS_IN_A_STACK+1)];
+    DECLARE_TEMP_STACK();
     fcs_card_t temp_freecell;
     fcs_locs_t temp_loc;
 
@@ -257,15 +275,17 @@ void fc_solve_canonize_state_with_locs(
         c = b;
         while(
             (c>0)    &&
-            (fcs_stack_compare(
-                state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1),
-                state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1)
-                ) < 0)
+            ((STACK_COMPARE(
+                       GET_STACK(c),
+                       GET_STACK(c-1)
+                          )
+                ) < 0
             )
+        )
         {
-            memcpy(temp_stack, state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1), (MAX_NUM_CARDS_IN_A_STACK+1));
-            memcpy(state_key->data+c*(MAX_NUM_CARDS_IN_A_STACK+1), state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1), (MAX_NUM_CARDS_IN_A_STACK+1));
-            memcpy(state_key->data+(c-1)*(MAX_NUM_CARDS_IN_A_STACK+1), temp_stack, (MAX_NUM_CARDS_IN_A_STACK+1));
+            COPY_STACK(temp_stack, GET_STACK(c));
+            COPY_STACK(GET_STACK(c), GET_STACK(c-1));
+            COPY_STACK(GET_STACK(c-1), temp_stack);
 
             temp_loc = locs->stack_locs[c];
             locs->stack_locs[c] = locs->stack_locs[c-1];
@@ -283,15 +303,16 @@ void fc_solve_canonize_state_with_locs(
 
         while(
             (c>0)    &&
-            (fc_solve_card_compare(
-                state_key->data+FCS_FREECELLS_OFFSET+c,
-                state_key->data+FCS_FREECELLS_OFFSET+c-1
-                ) < 0)
+            ((fc_solve_card_compare(
+                &(GET_FREECELL(c)),
+                &(GET_FREECELL(c-1))
             )
+            ) < 0)
+        )
         {
-            temp_freecell = (state_key->data[FCS_FREECELLS_OFFSET+c]);
-            state_key->data[FCS_FREECELLS_OFFSET+c] = state_key->data[FCS_FREECELLS_OFFSET+c-1];
-            state_key->data[FCS_FREECELLS_OFFSET+c-1] = temp_freecell;
+            temp_freecell = GET_FREECELL(c);
+            GET_FREECELL(c) = GET_FREECELL(c-1);
+            GET_FREECELL(c-1) = temp_freecell;
 
             temp_loc = locs->fc_locs[c];
             locs->fc_locs[c] = locs->fc_locs[c-1];
@@ -303,70 +324,7 @@ void fc_solve_canonize_state_with_locs(
 }
 #endif
 
-#elif defined(INDIRECT_STACK_STATES)
-void fc_solve_canonize_state(
-    fcs_collectible_state_t * state,
-    int freecells_num,
-    int stacks_num)
-{
-    int b,c;
-    fcs_card_t * temp_stack;
-    fcs_card_t temp_freecell;
-    char temp_loc;
-
-    /* Insertion-sort the stacks */
-    for(b=1;b<stacks_num;b++)
-    {
-        c = b;
-        while(
-            (c>0) &&
-            (
-                fc_solve_stack_compare_for_comparison
-                (
-                    (state->s.stacks[c]),
-                    (state->s.stacks[c-1])
-                )
-                < 0
-            )
-        )
-        {
-            temp_stack = state->s.stacks[c];
-            state->s.stacks[c] = state->s.stacks[c-1];
-            state->s.stacks[c-1] = temp_stack;
-
-            temp_loc = state->info.stack_locs[c];
-            state->info.stack_locs[c] = state->info.stack_locs[c-1];
-            state->info.stack_locs[c-1] = temp_loc;
-
-            c--;
-        }
-    }
-
-    /* Insertion sort the freecells */
-
-    for(b=1;b<freecells_num;b++)
-    {
-        c = b;
-        while(
-            (c>0)     &&
-            (fc_solve_card_compare(
-                &(state->s.freecells[c]),
-                &(state->s.freecells[c-1])
-                ) < 0)
-            )
-        {
-            temp_freecell = state->s.freecells[c];
-            state->s.freecells[c] = state->s.freecells[c-1];
-            state->s.freecells[c-1] = temp_freecell;
-
-            temp_loc = state->info.fc_locs[c];
-            state->info.fc_locs[c] = state->info.fc_locs[c-1];
-            state->info.fc_locs[c-1] = temp_loc;
-
-            c--;
-        }
-    }
-}
+#elif 0
 
 #endif
 
