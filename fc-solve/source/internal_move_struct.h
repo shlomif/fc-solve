@@ -96,7 +96,7 @@ typedef fcs_move_t fcs_internal_move_t;
 typedef struct
 {
     fcs_internal_move_t * moves;
-    int num_moves;
+    unsigned short num_moves;
 } fcs_move_stack_t;
 
 #ifdef __cplusplus
