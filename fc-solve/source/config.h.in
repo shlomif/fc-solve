@@ -71,16 +71,7 @@ extern "C" {
 
 #cmakedefine FCS_DISABLE_SIMPLE_SIMON
 
-/* 
- * This macro disables the flipping card logic. The flipping card logic
- * was an experimental feature that aimed to give Freecell Solver the
- * ability to solve Gypsy and Klondike-like games. In practice, this
- * didn't happen due to other technical difficulties.
- * */
-#cmakedefine FCS_WITHOUT_CARD_FLIPPING
-
-    
-/* 
+/*
  * This macro disables the flipping card logic. The flipping card logic
  * was an experimental feature that aimed to give Freecell Solver the
  * ability to solve Gypsy and Klondike-like games. In practice, this
