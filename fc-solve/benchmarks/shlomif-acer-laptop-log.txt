@@ -135,3 +135,34 @@ sudo_renice.
 
 27.4554669857025s
 27.4270040988922s
+
+------------------------------
+
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3239
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+    
+    Highlight: --without-visited-iter and --without-depth-field (while using PGO).
+
+27.4554669857025s
+27.4270040988922s
+
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3242
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+    
+    Highlight: the recycling of the allocators.
+
+27.3198730945587s
