@@ -11,11 +11,11 @@ pgo_flags=""
 make_vars=()
 
 if test "$mode" = "total" ; then
-    make -f Makefile.gnu clean && \
+    make -r -f Makefile.gnu clean && \
     bash scripts/pgo.bash "$compiler" "gen" &&\
     rm -f *.gcda && \
     sudo_renice ./freecell-solver-range-parallel-solve 1 32000 4000 -l eo && \
-    make -f Makefile.gnu clean && \
+    make -r -f Makefile.gnu clean && \
     bash scripts/pgo.bash "$compiler" "use"
     exit 0
 elif test "$mode" = "use" ; then
@@ -42,7 +42,7 @@ else
     exit -1
 fi
     
-make -f Makefile.gnu FREECELL_ONLY=1 \
+make -r -f Makefile.gnu FREECELL_ONLY=1 \
     EXTRA_CFLAGS="$pgo_flags" \
     COMPILER="$compiler" \
     $make_vars
