@@ -1594,7 +1594,6 @@ Using sudo_renice.
 
 ========================================================================
 
-
 bash scripts/pgo.bash gcc total
 r3239 ; trunk
 ARGS="--worker-step 16 -l eo"
@@ -1611,5 +1610,18 @@ Using sudo_renice.
 
 ========================================================================
 
+bash scripts/pgo.bash gcc total
+r3239 ; trunk
+ARGS="--worker-step 16 -l eo"
+2.6.35.6-desktop-1mnb
+virtual console
+gcc-4.5.0 with "-flto and -fwhole-program".
+google-perftools-1.6
+Using sudo_renice.
+./Tatzer -l p4b --without-locs-field
 
+    Highlight: without-locs-field and after the hard-disk cleanup.
 
+74.6558539867401s
+
+========================================================================
