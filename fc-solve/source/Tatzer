@@ -71,9 +71,15 @@ my %themes =
 (
     tt => [qw(-r --notest-suite --static)],
     bench => [qw(-l tt --omit-frame --without-flip --without-visited-iter)],
-    fc_bench => [ qw(-l bench --fc-only --without-depth-field ) ],
-    reduce_mem => [ qw(-l bench --rcs) ],
-    fc_reduce_mem => [ qw(-l fc_bench --rcs --without-locs-fields --with-compact-moves) ],
+    fc_bench => [qw(
+        -l bench --fc-only --without-depth-field --without-locs-fields
+        ) 
+    ],
+    mem_reduction_settings => [qw(
+        --rcs --without-locs-fields --with-compact-moves --without-depth-field
+    )],
+    reduce_mem => [ qw(-l bench -l mem_reduction_settings) ],
+    fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings) ],
 );
 
 foreach my $rec (
