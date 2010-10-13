@@ -76,7 +76,7 @@ print
 }
 
 {
-    my $x = $data->slice(":,:,2")->clump(1..2);
+    my $x = $data->slice(":,:,1")->clump(1..2);
 
     $x = ($x >= 0) * $x + ($x < 0) * PDL->ones($x->dims()) * 100_000;
 
