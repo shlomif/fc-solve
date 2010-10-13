@@ -80,8 +80,12 @@ print
 
     $x = ($x >= 0) * $x + ($x < 0) * PDL->ones($x->dims()) * 100_000;
 
-    my $histograms =
-        $x->xchg(0,1)->qsorti()->xchg(0,1)->histogram(1,0,scalar(@results));
+    my $z = $x->xchg(0,1);
+    
+    my $s = $z->qsort();
+
+    #my $histograms =
+    #    $x->xchg(0,1)->qsorti()->xchg(0,1)->histogram(1,0,scalar(@results));
 
     # print $histograms;
 
@@ -89,9 +93,23 @@ print
     my $major_sep = \'||';
     my $tb = Text::Table->new($sep,  "Place", $major_sep, (map { $_->id(), $sep,} @{$input_obj->selected_scans()}));
 
-    foreach my $idx (0 .. $#{$input_obj->selected_scans()})
+    my $num_scans = @{$input_obj->selected_scans()};
+
+    my $get_place = sub {
+        my ($idx) = @_;
+        return ($s->slice("$idx,:")->clump(0,1)->dummy(0, $num_scans) == $z);
+    };
+
+    foreach my $idx (0 .. $num_scans - 1)
     {
-        $tb->load([$idx+1, $histograms->slice(":,$idx")->list()]);
+        # $tb->load([$idx+1, $histograms->slice(":,$idx")->list()]);
+        $tb->load([$idx+1,
+                (($idx == 0)
+                    ? $get_place->($idx)
+                    : ( $get_place->($idx) & (~ $get_place->($idx-1)) ) 
+                )->xchg(0,1)->sumover()->list()
+            ]
+        );
     }
 
     my $rule = $tb->rule('-', '+');
