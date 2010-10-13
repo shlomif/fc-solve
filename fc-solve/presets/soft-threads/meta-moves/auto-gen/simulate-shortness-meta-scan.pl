@@ -94,6 +94,11 @@ continue
             
             my $scan_index = $input_obj->get_scan_index_by_id($scan_id);
 
+            if (!defined ($scan_index))
+            {
+                die "Unknown Scan ID: '$scan_id'";
+            }
+            
             my $iters_vec = $data->slice(":,($scan_index),(0)");
             my $sol_len_vec = $data->slice(":,($scan_index),(1)");
 
