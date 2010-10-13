@@ -26,8 +26,6 @@ if (!defined($preset))
     die "You must specify a preset using --preset or -p";
 }
 
-my @guessed_quotas = ((350) x 300);
-
 my @final_quotas;
 
 my $start_board = 1;
