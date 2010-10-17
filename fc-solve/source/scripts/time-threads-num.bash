@@ -33,7 +33,8 @@ ARGS="${ARGS:--l gi}"
 
 # strip * > /dev/null 2>&1
 
-mkdir -p "$OUT_DIR/DUMPS"
+DUMPS_DIR="$OUT_DIR/$(date +"DUMPS-%s")"
+mkdir -p "$DUMPS_DIR"
 
 p_dir="__p"
 if ! test -e "$p_dir" ; then
@@ -47,8 +48,9 @@ export FREECELL_SOLVER_PRESETRC="$(ls $(pwd)/"$p_dir"/presetrc)"
 
 if $RUN_SERIAL ; then
     echo "Testing Serial Run"
-    ./freecell-solver-range-parallel-solve 1 32000 500 $ARGS > "$OUT_DIR"/dump
+    ./freecell-solver-range-parallel-solve 1 32000 500 $ARGS > "$DUMPS_DIR"/dump
 fi
+
 
 for NUM in $(seq "$MIN" "$MAX") ; do
     echo "Testing $NUM"
@@ -56,6 +58,6 @@ for NUM in $(seq "$MIN" "$MAX") ; do
         --iters-update-on 10000000 \
         --num-workers "$NUM" \
         $ARGS \
-        | tee "$(printf "$OUT_DIR/DUMPS/dump%.3i" "$NUM")"
+        | tee "$(printf "%s/dump%.3i" "$DUMPS_DIR" "$NUM")"
 done
 
