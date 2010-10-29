@@ -108,3 +108,7 @@ items.
 validity, number of moves in the solution, number of iterations, and stored
 states. It should be a wrapper for the fc-solve command line.
     - done: +scripts/summarize-fc-solve+ .
+    
+* Restore the old -mss flag behaviour and create a new trim-max-stored-states
+flag where the new behaviour happens. max_stored_states should always increase,
+and trim_max_stored_states should decrease if states were removed.
