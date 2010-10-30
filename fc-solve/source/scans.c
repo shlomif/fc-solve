@@ -162,11 +162,40 @@ static void free_states(fc_solve_instance_t * instance)
                 }
                 break;
 
-                default:
+                case FCS_METHOD_A_STAR:
                 {
-                    /* TODO : Implement for the BeFS/BrFS scans. */
+                    PQUEUE new_pq;
+                    int i, CurrentSize;
+                    pq_element_t * Elements;
+
+                    fc_solve_PQueueInitialise(
+                        &(new_pq),
+                        1024
+                    );
+
+                    CurrentSize = soft_thread->method_specific.befs.meth.befs.pqueue.CurrentSize;
+                    Elements = soft_thread->method_specific.befs.meth.befs.pqueue.Elements;
+
+                    for (i = PQ_FIRST_ENTRY ; i <= CurrentSize ; i++)
+                    {
+                        if (! FCS_IS_STATE_DEAD_END(Elements[i].val))
+                        {
+                            fc_solve_PQueuePush(
+                                &new_pq,
+                                Elements[i].val,
+                                Elements[i].rating
+                            );
+                        }
+                    }
+
+                    fc_solve_PQueueFree(
+                        &(soft_thread->method_specific.befs.meth.befs.pqueue)
+                    );
+
+                    soft_thread->method_specific.befs.meth.befs.pqueue = new_pq;
                 }
                 break;
+                /* TODO : Implement for the BrFS/Optimize scans. */
             }
         }
     }
