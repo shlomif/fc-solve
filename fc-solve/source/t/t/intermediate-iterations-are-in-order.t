@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -40,6 +40,15 @@ sub assert_directly_ascending_iters
     my $variant = $args->{variant}  || "freecell";
     my $is_custom = ($variant eq "custom");
     my $variant_s = $is_custom ? "" : "-g $variant";
+
+    my $scan_id;
+    my $scan_id_max_iter = -1;
+    if ($args->{scan_ids})
+    {
+        my $rec = $args->{scan_ids}->[0];
+        $scan_id = $rec->{id};
+        $scan_id_max_iter = $rec->{count} - 1;
+    }
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
@@ -86,6 +95,22 @@ sub assert_directly_ascending_iters
                 if (!$verdict)
                 {
                     last LINE_LOOP;
+                }
+            }
+            elsif ($line =~ m{\AScan: (\S+)\z})
+            {
+                my $id = $1;
+                if (defined($scan_id))
+                {
+                    if ($last_iter <= $scan_id_max_iter)
+                    {
+                        if ($id ne $scan_id)
+                        {
+                            $verdict = 0;
+                            $diag .= "Wrong scan '$id' instead of '$scan_id' in iteration $last_iter";
+                            last LINE_LOOP;
+                        }
+                    }
                 }
             }
             elsif ($line =~ m{\ATotal number of states checked is (\d+)\.\z})
@@ -168,6 +193,21 @@ assert_directly_ascending_iters(
 # TEST
 assert_directly_ascending_iters({deal => 24, theme => ["--method", "a-star",],}
     , "Verifying the trace of deal #24 with BeFS");
+
+# TEST
+assert_directly_ascending_iters(
+    {
+        deal => 24,
+        theme => 
+        [
+            qw(--method soft-dfs --st-name dfs -nst --method a-star 
+            --st-name befs --trim-max-stored-states 1000000 
+            --prelude), '99@befs,10@dfs,1000@befs'
+        ],
+        'scan_ids' => [{id => "befs", count => 99}],
+    },
+    "Verifying that with a prelude and trim-max-stored-states, the first scan to run is the one specified in the prelude.",
+);
 
 =head1 COPYRIGHT AND LICENSE
 

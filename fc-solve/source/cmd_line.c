@@ -1445,6 +1445,7 @@ break;
                 atol((*arg))
             );
         }
+        break;
 
         case FCS_OPT_NEXT_INSTANCE: /* STRINGS=-ni|--next-instance; */
         {
