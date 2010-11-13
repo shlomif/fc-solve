@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * instance.c - instance/hard_thread/soft_thread functions for 
+ * instance.c - instance/hard_thread/soft_thread functions for
  * Freecell Solver.
  */
 
@@ -96,8 +96,8 @@ static GCC_INLINE void normalize_befs_weights(
     sum = 0;
 #define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
     for (
-        weight_idx = 0 
-            ; 
+        weight_idx = 0
+            ;
         weight_idx < (sizeof(my_befs_weights)/sizeof(my_befs_weights[0]))
             ;
         weight_idx++
@@ -174,7 +174,7 @@ static void free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t * soft_t
     int depth_idx;
 
     for (depth_idx = 0 ;
-         depth_idx < soft_thread->by_depth_tests_order.num ; 
+         depth_idx < soft_thread->by_depth_tests_order.num ;
          depth_idx++)
     {
         free (soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order.tests);
@@ -226,7 +226,7 @@ static GCC_INLINE void accumulate_tests_order(
     fcs_tests_order_t * st_tests_order;
 
     st_tests_order = &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order);
-    
+
     for ( i=0 ; i < st_tests_order->num ; i++)
     {
         *tests_order |= (1 << (st_tests_order->tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK));
@@ -250,7 +250,7 @@ static GCC_INLINE void determine_scan_completeness(
     {
         tests_order |= (1 << (st_tests_order->tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK));
     }
-    STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN, 
+    STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
         (tests_order == *(int *)global_tests_order)
     );
 }
@@ -294,13 +294,13 @@ static void foreach_soft_thread(
             switch (callback_choice)
             {
                 case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
-                    soft_thread_clean_soft_dfs( 
+                    soft_thread_clean_soft_dfs(
                         soft_thread
                     );
                     break;
 
                 case FOREACH_SOFT_THREAD_FREE_INSTANCE:
-                    free_instance_soft_thread_callback( 
+                    free_instance_soft_thread_callback(
                         soft_thread
                     );
                     break;
@@ -346,7 +346,7 @@ static GCC_INLINE void init_soft_thread(
     soft_thread->method_specific.soft_dfs.dfs_max_depth = 0;
 
     soft_thread->by_depth_tests_order.num = 1;
-    soft_thread->by_depth_tests_order.by_depth_tests = 
+    soft_thread->by_depth_tests_order.by_depth_tests =
         malloc(sizeof(soft_thread->by_depth_tests_order.by_depth_tests[0]));
 
     soft_thread->by_depth_tests_order.by_depth_tests[0].max_depth = INT_MAX;
@@ -377,13 +377,13 @@ static GCC_INLINE void init_soft_thread(
         fc_solve_apply_tests_order(soft_thread, "[01][23456789]", &no_use);
     }
 #else
-    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num = 
+    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num =
         soft_thread->hard_thread->instance->instance_tests_order.num;
-    /* Bound the maximal number up to the next product of 
-     * TESTS_ORDER_GROW_BY . 
+    /* Bound the maximal number up to the next product of
+     * TESTS_ORDER_GROW_BY .
      * */
     soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests =
-        malloc(sizeof(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests[0]) * 
+        malloc(sizeof(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests[0]) *
             ((soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
         );
     memcpy(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests,
@@ -461,7 +461,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     instance->instance_tests_order.num = 0;
     instance->instance_tests_order.tests = NULL;
-    
+
     instance->list_of_vacant_states = NULL;
 
 
@@ -504,7 +504,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->solution_moves.moves = NULL;
 
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH);
- 
+
     instance->optimization_thread = NULL;
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 
@@ -516,7 +516,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 
     /* Make the 1 the default, because otherwise scans will not cooperate
      * with one another. */
-    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY); 
+    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
 #define DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE 10000
 #ifdef FCS_RCS_STATES
@@ -682,8 +682,8 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
     {
         int total_tests = 0;
         foreach_soft_thread(
-            instance, 
-            FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER, 
+            instance,
+            FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER,
             &total_tests
         );
         foreach_soft_thread(
@@ -719,11 +719,11 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
         }
     }
-    
+
 #ifdef FCS_RCS_STATES
     {
         fcs_lru_cache_t * cache = &(instance->rcs_states_cache);
-        
+
         cache->states_values_to_keys_map = ((Pvoid_t) NULL);
         fc_solve_compact_allocator_init(
             &(cache->states_values_to_keys_allocator)
@@ -860,9 +860,9 @@ static GCC_INLINE fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
     fcs_tests_order_t ret;
 
     ret.num = orig->num;
-    
-    ret.tests = 
-        malloc(sizeof(ret.tests[0]) * 
+
+    ret.tests =
+        malloc(sizeof(ret.tests[0]) *
             ((ret.num & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
         );
     memcpy(ret.tests, orig->tests, sizeof(ret.tests[0]) * ret.num);
@@ -885,7 +885,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     if (! instance->optimization_thread)
     {
-        instance->optimization_thread = 
+        instance->optimization_thread =
             optimization_thread =
             malloc(sizeof(*optimization_thread));
 
@@ -907,7 +907,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
         }
 
         soft_thread->by_depth_tests_order.num = 1;
-        soft_thread->by_depth_tests_order.by_depth_tests = 
+        soft_thread->by_depth_tests_order.by_depth_tests =
             malloc(sizeof(soft_thread->by_depth_tests_order.by_depth_tests[0]));
 
         soft_thread->by_depth_tests_order.by_depth_tests[0].max_depth = INT_MAX;
@@ -931,7 +931,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
 
     STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
-   
+
     return
         fc_solve_befs_or_bfs_do_solve(
             soft_thread
@@ -974,7 +974,7 @@ static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b,
 
 /*
     This function associates a board with an fc_solve_instance_t and
-    does other initialisations. After it, you must call 
+    does other initialisations. After it, you must call
     fc_solve_resume_instance() repeatedly.
   */
 void fc_solve_start_instance_process_with_board(
@@ -985,7 +985,7 @@ void fc_solve_start_instance_process_with_board(
     fcs_state_keyval_pair_t * state_copy_ptr;
 
     /* Allocate the first state and initialize it to init_state */
-    state_copy_ptr = 
+    state_copy_ptr =
         (fcs_state_keyval_pair_t *)
         fcs_compact_alloc_ptr(
             &(instance->hard_threads[0].allocator),
@@ -997,8 +997,8 @@ void fc_solve_start_instance_process_with_board(
         &(state_copy_ptr->s),
         &(state_copy_ptr->info),
         &(init_state->s),
-        &(init_state->info)            
-        
+        &(init_state->info)
+
         );
 #else
     fcs_duplicate_state(state_copy_ptr,
@@ -1249,7 +1249,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state = ptr_orig_state;
 #endif
     fc_solve_rand_init(
-            &(soft_thread->method_specific.soft_dfs.rand_gen), 
+            &(soft_thread->method_specific.soft_dfs.rand_gen),
             soft_thread->method_specific.soft_dfs.rand_seed
     );
 
@@ -1258,12 +1258,12 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
         fcs_tests_list_of_lists * tests_list_of_lists;
         fc_solve_solve_for_state_test_t * tests_list, * next_test;
         fcs_tests_list_t * tests_list_struct_ptr;
-        fcs_tests_by_depth_array_t * arr_ptr; 
+        fcs_tests_by_depth_array_t * arr_ptr;
 
         int tests_order_num;
         int * tests_order_tests;
         int start_i;
-        fcs_bool_t master_to_randomize = 
+        fcs_bool_t master_to_randomize =
             (soft_thread->method == FCS_METHOD_RANDOM_DFS)
             ;
         fcs_bool_t do_first_iteration;
@@ -1277,11 +1277,11 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                 * (arr_ptr->num_units = soft_thread->by_depth_tests_order.num)
             );
 
-        by_depth_tests_order = 
+        by_depth_tests_order =
             soft_thread->by_depth_tests_order.by_depth_tests;
 
         for (depth_idx = 0 ;
-            depth_idx < soft_thread->by_depth_tests_order.num ; 
+            depth_idx < soft_thread->by_depth_tests_order.num ;
             depth_idx++)
         {
             arr_ptr->by_depth_units[depth_idx].max_depth =
@@ -1322,7 +1322,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                           )
                          )
                         )
-                        ; 
+                        ;
                         i++)
                 {
                     do_first_iteration = FALSE;
@@ -1332,7 +1332,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                         ];
                 }
 
-                        tests_list_struct_ptr = 
+                        tests_list_struct_ptr =
                             &(tests_list_of_lists->lists[tests_list_of_lists->num_lists++])
                             ;
 
@@ -1343,9 +1343,9 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                                     * (tests_list_struct_ptr->num_tests = i-start_i)
                                   );
 
-                        tests_list_struct_ptr->to_randomize = 
-                            master_to_randomize && 
-                            (i > start_i) && 
+                        tests_list_struct_ptr->to_randomize =
+                            master_to_randomize &&
+                            (i > start_i) &&
                             (tests_order_tests[ i-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
                             ;
 
@@ -1355,7 +1355,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             tests_list_of_lists->lists =
                 realloc(
                         tests_list_of_lists->lists,
-                        sizeof(tests_list_of_lists->lists[0]) * 
+                        sizeof(tests_list_of_lists->lists[0]) *
                         tests_list_of_lists->num_lists
                        );
 
@@ -1519,7 +1519,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
              * then we may still need to continue running the other threads
              * which may have blocked some positions / states in the graph.
              * */
-            if (STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN) && 
+            if (STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN) &&
                     (! STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY))
                )
             {
@@ -1543,7 +1543,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                     (
                         (instance->num_times >= instance->effective_max_num_times)
                     ) ||
-                    (instance->num_states_in_collection >= 
+                    (instance->num_states_in_collection >=
                         instance->effective_max_num_states_in_collection
                     )
                 )
@@ -1749,7 +1749,7 @@ void fc_solve_finish_instance(
 #ifdef FCS_RCS_STATES
     {
         Word_t Rc_word;
-        JLFA(Rc_word, 
+        JLFA(Rc_word,
             instance->rcs_states_cache.states_values_to_keys_map
         );
         fc_solve_compact_allocator_finish(
@@ -1766,7 +1766,7 @@ fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     )
 {
     fc_solve_soft_thread_t * ret;
-    
+
     /* Make sure we are not exceeding the maximal number of soft threads
      * for an instance. */
     if (hard_thread->instance->next_soft_thread_id == MAX_NUM_SCANS)
@@ -1777,7 +1777,7 @@ fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     hard_thread->soft_threads = realloc(hard_thread->soft_threads, sizeof(hard_thread->soft_threads[0])*(hard_thread->num_soft_threads+1));
 
     init_soft_thread(
-            hard_thread, 
+            hard_thread,
             (ret = &(hard_thread->soft_threads[hard_thread->num_soft_threads]))
             );
 

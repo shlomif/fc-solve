@@ -47,7 +47,7 @@
 
 #ifdef FCS_RCS_STATES
 #include "instance.h"
-#endif 
+#endif
 static void GCC_INLINE fc_solve_hash_rehash(fc_solve_hash_t * hash);
 
 
@@ -68,7 +68,7 @@ void fc_solve_hash_init(
     )
 {
     int size;
-    /* Find a size that's a power of 2 that's just greater than 
+    /* Find a size that's a power of 2 that's just greater than
      * the wanted_size. */
     size = 256;
     while (size < wanted_size)
@@ -155,7 +155,7 @@ fcs_bool_t fc_solve_hash_insert(
 #define MY_HASH_CONTEXT_VAR
 #endif
 
-/* 
+/*
  * MY_HASH_COMPARE_PROTO() returns -1/0/+1 depending on the compared
  * states order. We need to negate it for the desired condition of equality.
  * */

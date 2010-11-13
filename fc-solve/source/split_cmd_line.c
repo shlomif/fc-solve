@@ -68,7 +68,7 @@ static GCC_INLINE void add_to_last_arg(args_man_t * manager, char c)
     {
         char * new_last_arg;
 
-        new_last_arg = realloc(manager->last_arg, 
+        new_last_arg = realloc(manager->last_arg,
             manager->last_arg_end-manager->last_arg+1024
         );
         manager->last_arg_ptr += new_last_arg - manager->last_arg;

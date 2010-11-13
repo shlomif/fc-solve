@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- *  forking_range_solver.c - a range solver that solves different boards in 
+ *  forking_range_solver.c - a range solver that solves different boards in
  *  several UNIX processes.
  *
  *  See also:
@@ -268,7 +268,7 @@ int worker_func(int idx, worker_t w, void * instance)
     while(1)
     {
         response.num_iters = 0;
-        
+
         read(w.parent_to_child_pipe[READ_FD], &request, sizeof(request));
 
         if (request.board_num == -1)
@@ -316,14 +316,14 @@ int worker_func(int idx, worker_t w, void * instance)
             else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
             {
                 const char * error_string;
-                
+
                 error_string =
                     freecell_solver_user_get_last_error_string(instance);
 
                 fprintf(stderr, "Flares Plan: %s\n", error_string);
 
                 continue;
-            }            
+            }
             else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
             {
 #ifndef WIN32
@@ -471,7 +471,7 @@ int main(int argc, char * argv[])
         );
 #endif
     fflush(stdout);
-    
+
     user.instance = freecell_solver_user_alloc();
 
     parser_ret =
@@ -528,8 +528,8 @@ int main(int argc, char * argv[])
             fprintf(stderr, "P->C Pipe for worker No. %i failed! Exiting.\n", idx);
             exit(-1);
         }
-        
-        
+
+
         fork_ret = fork();
 
         if (fork_ret == -1)

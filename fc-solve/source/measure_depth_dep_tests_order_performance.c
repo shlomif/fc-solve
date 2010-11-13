@@ -217,7 +217,7 @@ int main(int argc, char * argv[])
         fprintf(stderr, "--scan1-to not specified!\n");
         exit(-1);
     }
-    
+
     if (!scan2_to)
     {
         fprintf(stderr, "--scan2-to not specified!\n");
@@ -250,7 +250,7 @@ int main(int argc, char * argv[])
 
     output_fh = fopen(output_filename, "wt");
 
-    for (min_depth_for_scan2 = 0; min_depth_for_scan2 < max_var_depth_to_check ; 
+    for (min_depth_for_scan2 = 0; min_depth_for_scan2 < max_var_depth_to_check ;
             min_depth_for_scan2++)
     {
         user.instance = freecell_solver_user_alloc();
@@ -269,7 +269,7 @@ int main(int argc, char * argv[])
                 &arg
             );
         }
-        
+
         if (freecell_solver_user_set_depth_tests_order(
             user.instance,
             0,
@@ -309,13 +309,13 @@ int main(int argc, char * argv[])
 
 #ifndef WIN32
                 gettimeofday(
-                    &(results[board_num - start_board].start_tv), 
+                    &(results[board_num - start_board].start_tv),
                     &tz
                 );
 #else
                 _ftime(&(results[board_num - start_board].start_tb));
 #endif
-            
+
             results[board_num-start_board].verdict = ret =
                 freecell_solver_user_solve_board(
                     user.instance,
@@ -324,14 +324,14 @@ int main(int argc, char * argv[])
 
 #ifndef WIN32
                 gettimeofday(
-                    &(results[board_num - start_board].end_tv), 
+                    &(results[board_num - start_board].end_tv),
                     &tz
                 );
 #else
                 _ftime(&(results[board_num - start_board].end_tb));
 #endif
 
-            total_num_iters += 
+            total_num_iters +=
                 (results[board_num - start_board].num_iters
                     = freecell_solver_user_get_num_times(user.instance)
                 );
@@ -342,7 +342,7 @@ int main(int argc, char * argv[])
         freecell_solver_user_free(user.instance);
 
         printf("Reached depth %d\n", min_depth_for_scan2);
-        
+
         fprintf(output_fh, "Depth == %d\n\n", min_depth_for_scan2);
         for(board_num=start_board;board_num<=end_board;board_num++)
         {

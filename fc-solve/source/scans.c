@@ -129,9 +129,9 @@ static void free_states(fc_solve_instance_t * instance)
                 case FCS_METHOD_HARD_DFS:
                 case FCS_METHOD_RANDOM_DFS:
                 {
-                    fcs_soft_dfs_stack_item_t * soft_dfs_info, 
+                    fcs_soft_dfs_stack_item_t * soft_dfs_info,
                         * end_soft_dfs_info;
-                    
+
                     soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info;
 
                     end_soft_dfs_info = soft_dfs_info + soft_thread->method_specific.soft_dfs.depth;
@@ -354,7 +354,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
     parents_stack_max_len = 16;
 
     parents_stack = malloc(sizeof(parents_stack[0]) * parents_stack_max_len);
-    
+
     parents_stack[0].state_val = orig_ptr_state_val;
 
     while (1)
@@ -408,7 +408,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             }
             else
             {
-                parents_stack[parents_stack_len].state_val = 
+                parents_stack[parents_stack_len].state_val =
                     FCS_S_PARENT(parents_stack[parents_stack_len-1].state_val);
                 if (++parents_stack_len == parents_stack_max_len)
                 {
@@ -427,7 +427,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
     {
         fcs_collectible_state_t temp_new_state_val;
         int i;
-        
+
         new_cache_state = parents_stack[parents_stack_len-1].new_cache_state;
 
         fcs_collectible_state_t * stack_ptr_this_state_val =
@@ -441,7 +441,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
         );
 
         for (i = 0 ;
-            i < stack_ptr_this_state_val->moves_to_parent->num_moves 
+            i < stack_ptr_this_state_val->moves_to_parent->num_moves
             ; i++)
         {
             fc_solve_apply_move(
@@ -512,7 +512,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
     {
         long count = cache->count_elements_in_cache;
         long limit = cache->max_num_elements_in_cache;
-        
+
         while (count > limit)
         {
             int Rc_int;
@@ -590,13 +590,13 @@ int fc_solve_soft_dfs_do_solve(
 
     ptr_state = the_soft_dfs_info->state;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
-    
+
 #ifdef FCS_RCS_STATES
     ASSIGN_STATE_KEY();
 #endif
 
     rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
-    
+
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     calculate_real_depth(
         ptr_state
@@ -626,7 +626,7 @@ int fc_solve_soft_dfs_do_solve(
             curr_by_depth_unit = by_depth_units
                 ;
             (
-                DEPTH()           
+                DEPTH()
                 >= GET_DEPTH(curr_by_depth_unit)
             )
                 ;
@@ -689,7 +689,7 @@ int fc_solve_soft_dfs_do_solve(
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
                     ptr_state = the_soft_dfs_info->state;
- 
+
 #ifdef FCS_RCS_STATES
                     ASSIGN_STATE_KEY();
 #endif
@@ -772,7 +772,7 @@ int fc_solve_soft_dfs_do_solve(
                     (num_vacant_freecells  == LOCAL_FREECELLS_NUM)))
                 {
                     instance->final_state = ptr_state;
-                    
+
                     BUMP_NUM_TIMES();
 
                     TRACE0("Returning FCS_STATE_WAS_SOLVED");
@@ -799,11 +799,11 @@ int fc_solve_soft_dfs_do_solve(
 #endif
 
                     if (fc_solve_sfs_raymond_prune(
-                        soft_thread, 
+                        soft_thread,
 #ifdef FCS_RCS_STATES
                         &(state_key),
 #endif
-                        ptr_state, 
+                        ptr_state,
 #ifdef FCS_RCS_STATES
                         &derived_key,
 #endif
@@ -857,7 +857,7 @@ int fc_solve_soft_dfs_do_solve(
                     );
 
                 /* Move the counter to the next test */
-                if ((++the_soft_dfs_info->test_index) == 
+                if ((++the_soft_dfs_info->test_index) ==
                         THE_TESTS_LIST.lists[
                             the_soft_dfs_info->tests_list_index
                         ].num_tests
@@ -980,7 +980,7 @@ int fc_solve_soft_dfs_do_solve(
 #ifdef FCS_RCS_STATES
                     ASSIGN_STATE_KEY();
 #endif
-                    
+
 
                     the_soft_dfs_info->tests_list_index = 0;
                     the_soft_dfs_info->test_index = 0;
@@ -1042,7 +1042,7 @@ static GCC_INLINE int update_col_cards_under_sequences(
     int c;
     fcs_card_t this_card, prev_card;
 #ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by = 
+    int sequences_are_built_by =
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(soft_thread->hard_thread->instance)
         ;
 #endif
@@ -1308,10 +1308,10 @@ static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * so
 
     /* Initialize the BFS queue. We have one dummy element at the beginning
        in order to make operations simpler. */
-    my_brfs_queue = 
+    my_brfs_queue =
         NEW_BRFS_QUEUE_ITEM();
 
-    my_brfs_queue_last_item = 
+    my_brfs_queue_last_item =
         my_brfs_queue->next =
         NEW_BRFS_QUEUE_ITEM();
 
@@ -1392,7 +1392,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         int i;
 
         tests_order_tests = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests;
-        
+
         tests_order_num = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num;
 
         tests_list = malloc(sizeof(tests_list[0]) * tests_order_num);
@@ -1408,7 +1408,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         soft_thread->method_specific.befs.tests_list_end = next_test;
     }
 
-    soft_thread->first_state_to_check = ptr_orig_state;  
+    soft_thread->first_state_to_check = ptr_orig_state;
 
     return;
 }
@@ -1436,7 +1436,7 @@ static void dump_pqueue (
     for (i = PQ_FIRST_ENTRY ; i < pq->CurrentSize ; i++)
     {
         printf("Rating[%d] = %d\nState[%d] = <<<\n", i, pq->Elements[i].rating, i);
-        s = fc_solve_state_as_string(pq->Elements[i].val, 
+        s = fc_solve_state_as_string(pq->Elements[i].val,
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM,
@@ -1542,17 +1542,17 @@ int fc_solve_befs_or_bfs_do_solve(
 #ifdef FCS_RCS_STATES
         ASSIGN_STATE_KEY();
 #endif
-        
+
 #ifdef DEBUG
         dump_pqueue(soft_thread, "loop_start", scan_specific.pqueue);
 #endif
 
         /*
          * If we do the pruning after checking for being visited, then
-         * there's a risk of inconsistent result when being interrupted 
+         * there's a risk of inconsistent result when being interrupted
          * because we check once for the pruned state (after the scan
          * was suspended) and another time for the uninterrupted state.
-         * 
+         *
          * Therefore, we prune before checking for the visited flags.
          * */
         TRACE0("Pruning");
@@ -1577,11 +1577,11 @@ int fc_solve_befs_or_bfs_do_solve(
             )
             {
                 ptr_state = derived;
- 
+
 #ifdef FCS_RCS_STATES
                 ASSIGN_STATE_KEY();
 #endif
-                
+
             }
         }
 
@@ -1589,7 +1589,7 @@ int fc_solve_befs_or_bfs_do_solve(
              register int temp_visited = FCS_S_VISITED(ptr_state);
 
             /*
-             * If this is an optimization scan and the state being checked is 
+             * If this is an optimization scan and the state being checked is
              * not in the original solution path - move on to the next state
              * */
             /*
@@ -1705,7 +1705,7 @@ int fc_solve_befs_or_bfs_do_solve(
 
         TRACE0("perform_tests");
 
-        /* 
+        /*
          * Do all the tests at one go, because that is the way it should be
          * done for BFS and BeFS.
         */
@@ -2016,7 +2016,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 #undef state_key
 #endif
 
-/* 
+/*
  * These functions are used by the move functions in freecell.c and
  * simpsim.c.
  * */
@@ -2024,7 +2024,7 @@ int fc_solve_sfs_check_state_begin(
     fc_solve_hard_thread_t * hard_thread,
 #ifdef FCS_RCS_STATES
     fcs_state_t * out_new_state_key,
-#endif    
+#endif
     fcs_collectible_state_t * *  out_ptr_new_state,
 #ifdef FCS_RCS_STATES
     fcs_state_t * ptr_state_key,
@@ -2038,7 +2038,7 @@ int fc_solve_sfs_check_state_begin(
 
     instance = hard_thread->instance;
 
-    if ((hard_thread->allocated_from_list = 
+    if ((hard_thread->allocated_from_list =
         (instance->list_of_vacant_states != NULL)))
     {
         ptr_new_state = instance->list_of_vacant_states;

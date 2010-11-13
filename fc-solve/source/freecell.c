@@ -135,7 +135,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 }
 
 static GCC_INLINE void sort_derived_states(
-        fcs_derived_states_list_t * derived_states_list, 
+        fcs_derived_states_list_t * derived_states_list,
         int initial_derived_states_num_states
         )
 {
@@ -260,7 +260,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 #ifdef INDIRECT_STACK_STATES
     indirect_stacks_buffer = soft_thread->hard_thread->indirect_stacks_buffer;
 #endif
-    
+
 
     {
         int dest_fc_idx;
@@ -277,7 +277,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
                     return ret;
                 }
             }
-            
+
             /* Find a vacant freecell */
             for( ; dest_fc_idx < LOCAL_FREECELLS_NUM ; dest_fc_idx++)
             {
@@ -299,7 +299,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             fcs_col_pop_card(new_from_which_col, top_card);
 
             fcs_put_card_in_freecell(
-                new_state, 
+                new_state,
                 dest_fc_idx,
                 top_card
             );
@@ -344,7 +344,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
                     return ret;
                 }
             }
-            
+
             /*  Find a vacant stack */
             for( ; put_cards_in_col_idx < LOCAL_STACKS_NUM ; put_cards_in_col_idx++)
             {
@@ -402,7 +402,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             ptr_state \
         )
 #endif
-   
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 {
     tests_declare_accessors()
@@ -456,8 +456,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
          * */
         if (
                 /* The Cell should not be empty. */
-                (fcs_card_card_num(src_card) != 0) 
-                && 
+                (fcs_card_card_num(src_card) != 0)
+                &&
                 /* We cannot put a king anywhere. */
                 (fcs_card_card_num(src_card) != 13)
             )
@@ -588,7 +588,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                         fcs_int_move_set_dest_stack(temp_move,ds);
                         fcs_move_stack_push(moves, temp_move);
 
-                        /* 
+                        /*
                          * This is to preserve the order that the
                          * initial (non-optimized) version of the
                          * function used - for backwards-compatibility
@@ -606,7 +606,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     }
 
     sort_derived_states(derived_states_list, initial_derived_states_num_states);
-  
+
     return;
 }
 
@@ -767,7 +767,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
             card = fcs_col_get_card(col, c);
 
-            /* Do not move cards that are already found above a suitable 
+            /* Do not move cards that are already found above a suitable
              * parent */
             /* TODO : is this code safe for variants that are not Freecell? */
             a = 1;
@@ -1055,7 +1055,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
                     fcs_flip_top_card(stack_idx);
 
-                    /* 
+                    /*
                      * This is to preserve the order that the
                      * initial (non-optimized) version of the
                      * function used - for backwards-compatibility
@@ -1412,8 +1412,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
 
-        /* 
-         * If there's only one card in the column, then it won't be above a 
+        /*
+         * If there's only one card in the column, then it won't be above a
          * parent, so there's no sense in moving it.
          *
          * If there are no cards in the column, then there's nothing to do
@@ -1487,10 +1487,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                    the source to the destination. */
 
                 /* Don't move if there's a sequence of cards in the
-                 * destination. 
+                 * destination.
                  * */
                 if ((dc + 1 < dest_cards_num)
-                        && 
+                        &&
                     fcs_is_parent_card(
                         fcs_col_get_card(dest_col, dc+1),
                         dest_card
@@ -1523,7 +1523,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                             num_vacant_freecells - freecells_to_fill,
                             num_vacant_stacks - freestacks_to_fill
                             )
-                            >= 
+                            >=
                         cards_num - c
                        )
                     ))
@@ -1721,7 +1721,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
 #endif
                     if (fcs_is_parent_card(card, dest_card))
                     {
-                        
+
                         /* We can move it there - now let's check to see
                          * if it is already above a suitable parent. */
                         if ((c == 0) ||
@@ -1954,9 +1954,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_get_card_from_klondike_talon)
             if (fcs_is_parent_card(card_to_check, top_card))
             {
                 fcs_cards_column_t new_s_col;
-                /* 
+                /*
                  * We have a card in the talon that we can move
-                 * to the column, so let's move it 
+                 * to the column, so let's move it
                  * */
                 sfs_check_state_begin()
 
@@ -2132,7 +2132,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 
                 if (fcs_col_len(dest_col) > 0)
                 {
-                    dest_card = fcs_col_get_card(dest_col, 
+                    dest_card = fcs_col_get_card(dest_col,
                             fcs_col_len(dest_col)-1);
                     if (fcs_is_parent_card(card, dest_card))
                     {
@@ -2395,7 +2395,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 }
 
 #ifdef FCS_RCS_STATES
-#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() ptr_new_state_key, ptr_new_state_val 
+#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() ptr_new_state_key, ptr_new_state_val
 #else
 #define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() ptr_new_state
 #endif
@@ -2453,7 +2453,7 @@ extern int fc_solve_sfs_raymond_prune(
 #endif
         fcs_collectible_state_t * val_ptr_state_val,
 #ifdef FCS_RCS_STATES
-        fcs_state_t * ptr_next_state_key,       
+        fcs_state_t * ptr_next_state_key,
 #endif
         fcs_collectible_state_t * * ptr_ptr_next_state
         )
@@ -2552,13 +2552,13 @@ extern int fc_solve_sfs_raymond_prune(
         }
         num_total_cards_moved += num_cards_moved;
     } while (num_cards_moved);
- 
+
 #define derived_states_list (&derived_states_list_struct)
     sfs_check_state_end();
 #undef derived_states_list
 
     {
-        register int ret_code; 
+        register int ret_code;
 
         if (num_total_cards_moved)
         {
@@ -2568,7 +2568,7 @@ extern int fc_solve_sfs_raymond_prune(
                 = ptr_next_state
                 = derived_states_list_struct.states[0].state_ptr;
 
-            /* 
+            /*
              * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
              * hurt if it's already there, and if it's a state that was
              * found by other means, we still shouldn't prune it, because
@@ -2583,7 +2583,7 @@ extern int fc_solve_sfs_raymond_prune(
             *ptr_ptr_next_state = NULL;
             ret_code = PRUNE_RET_NOT_FOUND;
         }
-        
+
         free(derived_states_list_struct.states);
 
         return ret_code;

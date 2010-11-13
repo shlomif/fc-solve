@@ -1095,7 +1095,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                                                 (fcs_col_get_card(col, end_of_junk+1)) :
                                                 (fcs_col_get_card(dest_col, seq_points[false_seq_index]))
                                         )
-                                    )   
+                                    )
                                     ;
 
                                     int the_num_true_seqs =
@@ -1786,7 +1786,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
-#endif    
+#endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for(stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)

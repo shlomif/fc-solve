@@ -42,8 +42,8 @@ extern "C" {
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
 typedef struct
 {
-    /*  TODO : Change to log_2 ( 
-     *      max(MAX_NUM_FREECELLS, MAX_NUM_STACKS, MAX_NUM_DECKS * 4) 
+    /*  TODO : Change to log_2 (
+     *      max(MAX_NUM_FREECELLS, MAX_NUM_STACKS, MAX_NUM_DECKS * 4)
      *  ) */
     unsigned int type : 4;
     unsigned int src : 4;

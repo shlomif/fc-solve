@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * cmd_line.c - the Freecell Solver command line arguments-like parsing 
+ * cmd_line.c - the Freecell Solver command line arguments-like parsing
  * routines. Useful for more easily configuring a Freecell Solver instance.
  */
 
@@ -53,7 +53,7 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
     FILE * f = NULL;
     char * opened_files_dir = NULL;
     int read_next_preset = 0;
-   
+
 
     {
         register int idx = 0;
@@ -1362,7 +1362,7 @@ break;
 
                 /* Initialize all the Best Frist Search weights at first
                  * to 0 so
-                 * we won't have partial initialization. 
+                 * we won't have partial initialization.
                  * */
                 for (a=0 ; a<5 ; a++)
                 {
@@ -1372,7 +1372,7 @@ break;
                         0
                         );
                 }
-                
+
                 for (a=0 ; a<5 ; a++)
                 {
                     while ((*start_num > '9') && (*start_num < '0') && (*start_num != '\0'))
@@ -1833,7 +1833,7 @@ break;
                         (*arg),
                         &fcs_user_errstr
                         );
-                
+
                 if (ret != 0)
                 {
                     char * errstr = malloc(strlen(fcs_user_errstr)+500);
@@ -1892,7 +1892,7 @@ break;
             );
         }
         break;
-        
+
 
         }
         /* OPT-PARSE-END */

@@ -98,7 +98,7 @@ void fc_solve_apply_move(
             {
                 fcs_col_push_col_card(
                     dest_col,
-                    col, 
+                    col,
                     fcs_col_len(col) - fcs_int_move_get_num_cards_in_seq(move)+i
                 );
             }
@@ -134,7 +134,7 @@ void fc_solve_apply_move(
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         {
             col = fcs_state_get_col(
-                *state_key, 
+                *state_key,
                 fcs_int_move_get_src_stack(move)
                 );
             fcs_col_pop_top(col);
@@ -223,7 +223,7 @@ enum STANDARD_NOTATION_TYPE
 
 char * fc_solve_move_to_string_w_state(
         fcs_state_keyval_pair_t * state,
-        int freecells_num GCC_UNUSED, 
+        int freecells_num GCC_UNUSED,
         int stacks_num GCC_UNUSED,
         int decks_num GCC_UNUSED,
         fcs_move_t move,
@@ -390,7 +390,7 @@ void fc_solve_derived_states_list_add_state(
        )
     {
         (list)->states = realloc(
-            (list)->states, 
+            (list)->states,
             (
                 sizeof((list)->states[0])
                 * (list->num_states

@@ -148,13 +148,13 @@ void fc_solve_canonize_state(
 #define STACK_COMPARE(a,b) (fcs_stack_compare((a),(b)))
 #define GET_STACK(c) (state_key->data+(c)*(MAX_NUM_CARDS_IN_A_STACK+1))
 #define COPY_STACK(d,s) (memcpy(d, s, (MAX_NUM_CARDS_IN_A_STACK+1)))
-#define GET_FREECELL(c) (state_key->data[FCS_FREECELLS_OFFSET+(c)]) 
-#elif defined(INDIRECT_STACK_STATES) 
-#define DECLARE_TEMP_STACK() fcs_card_t * temp_stack 
+#define GET_FREECELL(c) (state_key->data[FCS_FREECELLS_OFFSET+(c)])
+#elif defined(INDIRECT_STACK_STATES)
+#define DECLARE_TEMP_STACK() fcs_card_t * temp_stack
 #define STACK_COMPARE(a,b) (fc_solve_stack_compare_for_comparison((a),(b)))
 #define GET_STACK(c) (state->s.stacks[c])
 #define COPY_STACK(d,s) (d = s)
-#define GET_FREECELL(c) (state->s.freecells[(c)]) 
+#define GET_FREECELL(c) (state->s.freecells[(c)])
 #endif
 
 void fc_solve_canonize_state(
@@ -169,7 +169,7 @@ void fc_solve_canonize_state(
 {
     int b,c;
 
-    DECLARE_TEMP_STACK();   
+    DECLARE_TEMP_STACK();
     fcs_card_t temp_freecell;
 
 #ifndef FCS_WITHOUT_LOCS_FIELDS

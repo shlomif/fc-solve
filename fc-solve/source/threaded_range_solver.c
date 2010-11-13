@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- *  threaded_range_solver.c - a range solver that solves different boards in 
+ *  threaded_range_solver.c - a range solver that solves different boards in
  *  several POSIX threads.
  *
  *  See also:
@@ -260,9 +260,9 @@ static void * worker_thread(void * void_context)
     struct timezone tz;
 #else
     struct _timeb tb;
-#endif    
+#endif
     long total_num_iters_temp = 0;
-    /* 52 cards of 3 chars (suit+rank+whitespace) each, 
+    /* 52 cards of 3 chars (suit+rank+whitespace) each,
      * plus 8 newlines, plus one '\0' terminator*/
     fcs_state_string_t state_string;
 
@@ -359,7 +359,7 @@ static void * worker_thread(void * void_context)
             else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
             {
                 const char * error_string;
-                
+
                 error_string =
                     freecell_solver_user_get_last_error_string(user.instance);
 
@@ -567,8 +567,8 @@ int main(int argc, char * argv[])
         );
         if (check)
         {
-            fprintf(stderr, 
-                "Worker Thread No. %d Initialization failed!\n", 
+            fprintf(stderr,
+                "Worker Thread No. %d Initialization failed!\n",
                 idx
             );
             exit(-1);

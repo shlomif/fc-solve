@@ -29,7 +29,7 @@
 #ifndef FC_SOLVE__SPLIT_CMD_LINE_H
 #define FC_SOLVE__SPLIT_CMD_LINE_H
 
-typedef struct 
+typedef struct
 {
     int argc;
     char * * argv;

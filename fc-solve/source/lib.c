@@ -43,7 +43,7 @@
 #include "bool.h"
 
 /* A flare is an alternative scan algorithm to be tried. All flares in
- * a single instance are being evaluated and then one picks the shortest 
+ * a single instance are being evaluated and then one picks the shortest
  * solution out of all of them. (see fc-solve/docs/flares-functional-spec.txt )
  * */
 
@@ -69,7 +69,7 @@ typedef struct
     int count_iters;
 } flares_plan_item;
 
-typedef struct 
+typedef struct
 {
     int num_flares;
     fcs_flare_item_t * flares;
@@ -80,13 +80,13 @@ typedef struct
     int all_plan_items_finished_so_far;
     char * flares_plan_string;
     /*
-     * The default flares_plan_compiled is "False", which means that the 
+     * The default flares_plan_compiled is "False", which means that the
      * flares_plan_string was set and needs to be processed. Once
      * the compile function is called, it is set to "True" and it is set
      * to "False" if the flares_plan_string is set to a different value.
      *
-     * Upon starting to run, one checks if flares_plan_compiled is false 
-     * and if so, compiles the flares plan, and sets the flares_plan_compiled 
+     * Upon starting to run, one checks if flares_plan_compiled is false
+     * and if so, compiles the flares plan, and sets the flares_plan_compiled
      * string to true.
      */
     int flares_plan_compiled;
@@ -319,7 +319,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     user = (fcs_user_t *)api_instance;
 
     instance_item = &(user->instances_list[user->current_instance_idx]);
-    
+
     *error_string = NULL;
 
     if (min_depth < 0)
@@ -390,7 +390,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
             (user->soft_thread->by_depth_tests_order.num = depth_idx+1) *
             sizeof(user->soft_thread->by_depth_tests_order.by_depth_tests[0])
         );
-    
+
     return ret_code;
 }
 
@@ -426,7 +426,7 @@ static fcs_bool_t string_starts_with(
 
     return
         (
-         (check_len == strlen(prefix)) 
+         (check_len == strlen(prefix))
             && (!strncmp(str, prefix, check_len))
         )
         ;
@@ -440,7 +440,7 @@ static GCC_INLINE int add_to_plan(
     )
 {
     int next_item;
-    
+
     next_item = instance_item->num_plan_items;
 
     instance_item->plan =
@@ -448,7 +448,7 @@ static GCC_INLINE int add_to_plan(
             instance_item->plan,
             sizeof(instance_item->plan[0]) * ++(instance_item->num_plan_items)
             );
-    
+
     instance_item->plan[next_item].type = mytype;
     instance_item->plan[next_item].flare_idx = flare_idx;
     instance_item->plan[next_item].count_iters = count_iters;
@@ -499,7 +499,7 @@ static int user_compile_all_flares_plans(
     {
         fcs_instance_item_t * instance_item;
 
-        *instance_list_index = user_inst_idx; 
+        *instance_list_index = user_inst_idx;
 
         instance_item = &(user->instances_list[user_inst_idx]);
 
@@ -507,7 +507,7 @@ static int user_compile_all_flares_plans(
         {
             continue;
         }
-        
+
         /* If the plan string is NULL or empty, then set the plan
          * to run only the first flare indefinitely. (And then have
          * an implicit checkpoint for good measure.) */
@@ -570,14 +570,14 @@ static int user_compile_all_flares_plans(
                     /* It's a Run item - handle it. */
                     cmd_end++;
                     count_iters = atoi(cmd_end);
-                    
+
                     at_sign = cmd_end;
 
                     while ((*at_sign) && isdigit(*at_sign))
                     {
                         at_sign++;
                     }
-                    
+
                     if (*at_sign != '@')
                     {
                         *error_string = strdup("Could not find a \"@\" directly after the digits after the 'Run:' command.");
@@ -586,14 +586,14 @@ static int user_compile_all_flares_plans(
                     }
                     after_at_sign = at_sign+1;
 
-                    /* 
+                    /*
                      * Position item_end at the end of item (designated by ",")
                      * or alternatively the end of the string.
                      * */
                     item_end = strchr(after_at_sign, ',');
                     if (!item_end)
                     {
-                        item_end = after_at_sign+strlen(after_at_sign); 
+                        item_end = after_at_sign+strlen(after_at_sign);
                     }
 
                     found_flare = 0;
@@ -601,7 +601,7 @@ static int user_compile_all_flares_plans(
                     {
                         fcs_flare_item_t * flare;
                         flare = &(instance_item->flares[flare_idx]);
-                        
+
                         if (! flare->name)
                         {
                             continue;
@@ -658,7 +658,7 @@ static int user_compile_all_flares_plans(
                     {
                         fcs_flare_item_t * flare;
                         flare = &(instance_item->flares[flare_idx]);
-                        
+
                         if (! flare->name)
                         {
                             continue;
@@ -724,7 +724,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
     user->state_string_copy = strdup(state_as_string);
 
     user->current_instance_idx = 0;
-    
+
     ret_code =
         user_compile_all_flares_plans(
             user,
@@ -735,7 +735,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
     if (ret_code != FCS_COMPILE_FLARES_RET_OK)
     {
         user->error_string = error_string;
-     
+
         return FCS_STATE_FLARES_PLAN_ERROR;
     }
 
@@ -762,7 +762,7 @@ static void recycle_instance(
         {
             fc_solve_recycle_instance(flare->obj);
             /*
-             * We have to initialize init_num_times to 0 here, because it may 
+             * We have to initialize init_num_times to 0 here, because it may
              * not get initialized again, and now the num_times of the instance
              * is equal to 0.
              * */
@@ -776,7 +776,7 @@ static void recycle_instance(
             fcs_move_stack_static_destroy(flare->obj->solution_moves);
             flare->obj->solution_moves.moves = NULL;
         }
-        
+
     }
 
     instance_item->current_plan_item_idx = 0;
@@ -809,7 +809,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         fcs_flare_item_t * flare;
         int flare_idx;
         int solve_start = 0;
-        
+
         flares_plan_item * current_plan_item;
         int flare_iters_quota;
 
@@ -821,10 +821,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 instance_item->num_plan_items
            )
         {
-            /* 
+            /*
              * If all the plan items finished so far, it means this instance
              * cannot be reused, because it will always yield a cannot
-             * be found result. So instead of looping infinitely, 
+             * be found result. So instead of looping infinitely,
              * move to the next instance, or exit. */
             if (instance_item->all_plan_items_finished_so_far)
             {
@@ -841,15 +841,15 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         }
 
         current_plan_item = &(instance_item->plan[instance_item->current_plan_item_idx++]);
-        
-       
+
+
         if (current_plan_item->type == FLARES_PLAN_CHECKPOINT)
         {
             if (instance_item->minimal_solution_flare_idx >= 0)
             {
                 user->fc_solve_obj = instance_item->flares[instance_item->minimal_solution_flare_idx].obj;
                 ret = user->ret_code = FCS_STATE_WAS_SOLVED;
-                
+
                 break;
             }
             else
@@ -1015,8 +1015,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             }
             else
             {
-                user->fc_solve_obj->max_num_times = 
-                    user->fc_solve_obj->effective_max_num_times = 
+                user->fc_solve_obj->max_num_times =
+                    user->fc_solve_obj->effective_max_num_times =
                     (user->fc_solve_obj->num_times + mymin - user->iterations_board_started_at);
             }
         }
@@ -1044,10 +1044,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-            fc_solve_instance_t * instance = 
+            fc_solve_instance_t * instance =
                 user->fc_solve_obj;
 #endif
-            /* 
+            /*
              * TODO : maybe only normalize the final moves' stack in
              * order to speed things up.
              * */
@@ -1119,7 +1119,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         }
     }
 
-    return 
+    return
     (
         user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret
     );
@@ -1136,7 +1136,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 
     {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-        fc_solve_instance_t * instance = 
+        fc_solve_instance_t * instance =
             user->fc_solve_obj;
 #endif
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
@@ -1576,8 +1576,8 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
 #endif
 
     user = (fcs_user_t *)api_instance;
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))    
-    instance = 
+#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
+    instance =
         user->fc_solve_obj;
 #endif
 
@@ -1672,7 +1672,7 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
     {
         return 1;
     }
-    
+
     user->common_preset.game_params.game_flags &= (~0x3);
     user->common_preset.game_params.game_flags |= sequences_are_built_by;
 
@@ -1831,7 +1831,7 @@ static void iter_handler_wrapper(
                 }
             }
         }
-                
+
     }
 myend:
 #endif
@@ -1863,7 +1863,7 @@ void set_debug_iter_output_func_to_val(
 {
     FLARES_LOOP_DECLARE_VARS();
     FLARES_LOOP_START()
-       flare->obj->debug_iter_output_func = value; 
+       flare->obj->debug_iter_output_func = value;
     FLARES_LOOP_END()
 }
 
@@ -1891,7 +1891,7 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
 }
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-#define HARD_CODED_UNUSED 
+#define HARD_CODED_UNUSED
 #else
 #define HARD_CODED_UNUSED GCC_UNUSED
 #endif
@@ -1911,7 +1911,7 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     user = (fcs_user_t *)api_instance;
-    instance = 
+    instance =
         user->fc_solve_obj;
 #endif
 
@@ -1945,7 +1945,7 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
     user = (fcs_user_t *)api_instance;
 
     fc_solve_rand_init(
-            &(user->soft_thread->method_specific.soft_dfs.rand_gen), 
+            &(user->soft_thread->method_specific.soft_dfs.rand_gen),
             (user->soft_thread->method_specific.soft_dfs.rand_seed = seed)
             );
 }
@@ -1976,7 +1976,7 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
     else
     {
         user->fc_solve_obj->effective_max_num_states_in_collection =
-            user->fc_solve_obj->max_num_states_in_collection = 
+            user->fc_solve_obj->max_num_states_in_collection =
                 max_num_states;
     }
 
@@ -2297,7 +2297,7 @@ int DLLEXPORT freecell_solver_user_next_instance(
 static int user_next_flare(fcs_user_t * user)
 {
     fcs_instance_item_t * instance_item;
-    fcs_flare_item_t * flare;    
+    fcs_flare_item_t * flare;
 
     instance_item = &(user->instances_list[user->current_instance_idx]);
 
@@ -2309,7 +2309,7 @@ static int user_next_flare(fcs_user_t * user)
 
     flare = &(instance_item->flares[instance_item->num_flares-1]);
     instance_item->limit = flare->limit = -1;
-    
+
     user->fc_solve_obj = flare->obj = fc_solve_alloc_instance();
 
     /*
@@ -2406,7 +2406,7 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
 
     user = (fcs_user_t *)api_instance;
 
-    instance = 
+    instance =
         user->fc_solve_obj;
 
     hard_thread = &(instance->hard_threads[instance->ht_idx]);
@@ -2505,7 +2505,7 @@ const DLLEXPORT char * fc_solve_user_INTERNAL_get_flares_plan_item_type(
             return "CP";
             break;
         default:
-            fprintf(stderr, "%s\n", 
+            fprintf(stderr, "%s\n",
                     "Unknown flares plan item type. Something is Wrong on the Internet."
                    );
             exit(-1);

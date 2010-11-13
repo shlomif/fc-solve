@@ -70,7 +70,7 @@ struct fc_solve_hash_symlink_item_struct
 
 typedef struct fc_solve_hash_symlink_item_struct fc_solve_hash_symlink_item_t;
 
-typedef struct 
+typedef struct
 {
     fc_solve_hash_symlink_item_t * first_item;
 } fc_solve_hash_symlink_t;

@@ -84,7 +84,7 @@ extern int fc_solve_sfs_raymond_prune(
 #endif
         fcs_collectible_state_t * ptr_state,
 #ifdef FCS_RCS_STATES
-        fcs_state_t * ptr_next_state_key,       
+        fcs_state_t * ptr_next_state_key,
 #endif
         fcs_collectible_state_t * * ptr_ptr_next_state
         );
@@ -104,7 +104,7 @@ extern void fc_solve_sfs_yukon_move_kings_to_empty_stack(
         fcs_derived_states_list_t * derived_states_list
         );
 #endif
-        
+
 #ifdef FCS_WITH_TALONS
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_deal_gypsy_talon);

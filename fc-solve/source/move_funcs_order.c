@@ -98,7 +98,7 @@ int fc_solve_apply_tests_order(
         }
 
         test_name[0] = string[a];
-        tests_order->tests[test_index++] = 
+        tests_order->tests[test_index++] =
         (
             (fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM)
             | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0)

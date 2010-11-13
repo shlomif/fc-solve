@@ -25,7 +25,7 @@
  * test_multi_parallel.c - the Freecell Solver range solver.
  *
  * Also see:
- *  - fc_pro_range_solver.c - range solver that can count the moves in 
+ *  - fc_pro_range_solver.c - range solver that can count the moves in
  *  the solution and display the FC-Pro ones.
  *  - threaded_range_solver.c - solve different boards in several POSIX
  *  threads.
@@ -505,7 +505,7 @@ int main(int argc, char * argv[])
         else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
         {
             const char * error_string;
-            
+
             error_string =
                 freecell_solver_user_get_last_error_string(user.instance);
 

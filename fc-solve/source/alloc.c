@@ -61,10 +61,10 @@ void fc_solve_compact_allocator_extend(
 
         allocator->packs = (char * *)realloc(
             allocator->packs,
-            sizeof(allocator->packs[0]) * 
+            sizeof(allocator->packs[0]) *
                 (allocator->max_num_packs += IA_STATE_PACKS_GROW_BY)
         );
-        allocator->packs[allocator->num_packs-1] = 
+        allocator->packs[allocator->num_packs-1] =
             malloc(ALLOCED_SIZE);
 
         for ( i = allocator->num_packs ; i < allocator->max_num_packs ; i++)
@@ -83,7 +83,7 @@ void fc_solve_compact_allocator_extend(
     allocator->max_ptr =
         (allocator->ptr
          = allocator->rollback_ptr
-         = allocator->packs[allocator->num_packs - 1] 
+         = allocator->packs[allocator->num_packs - 1]
         ) + ALLOCED_SIZE;
 }
 

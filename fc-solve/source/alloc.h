@@ -88,8 +88,8 @@ static GCC_INLINE fcs_collectible_state_t * fcs_state_ia_alloc_into_var(fcs_comp
         register fcs_collectible_state_t * ret_helper;
 
         ret_helper =
-            (fcs_collectible_state_t *) 
-            fcs_compact_alloc_ptr(allocator, 
+            (fcs_collectible_state_t *)
+            fcs_compact_alloc_ptr(allocator,
                 sizeof(*ret_helper)
             );
 

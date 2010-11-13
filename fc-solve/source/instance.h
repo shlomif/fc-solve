@@ -252,15 +252,15 @@ typedef struct {
 #endif
 
 #ifndef FCS_FREECELL_ONLY
-    /* sequences_are_built_by - (bits 0:1) - what two adjacent cards in the 
+    /* sequences_are_built_by - (bits 0:1) - what two adjacent cards in the
      * same sequence can be.
      *
-     * empty_stacks_fill (bits 2:3) - with what cards can empty stacks be 
+     * empty_stacks_fill (bits 2:3) - with what cards can empty stacks be
      * filled with.
      *
-     * unlimited_sequence_move - (bit 4) - whether an entire sequence can be 
-     * moved from one place to the other regardless of the number of 
-     * unoccupied Freecells there are. 
+     * unlimited_sequence_move - (bit 4) - whether an entire sequence can be
+     * moved from one place to the other regardless of the number of
+     * unoccupied Freecells there are.
      * */
     fcs_game_limit_t game_flags;
 
@@ -300,7 +300,7 @@ enum
     /* A flag that indicates whether to optimize the solution path
        at the end of the scan */
     FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = (1 << 0),
-    /* 
+    /*
      * Specifies that we are now running the optimization thread.
      * */
     FCS_RUNTIME_IN_OPTIMIZATION_THREAD = (1 << 1),
@@ -318,8 +318,8 @@ enum
      * states their encounter to a lower depth in the depth tree
      *
      * _proto is the one inputted by the user.
-     * _real is calculated based on other factors such as whether the 
-     * scan method is FCS_METHOD_OPTIMIZE. 
+     * _real is calculated based on other factors such as whether the
+     * scan method is FCS_METHOD_OPTIMIZE.
      * */
     FCS_RUNTIME_TO_REPARENT_STATES_PROTO = (1 << 4),
     FCS_RUNTIME_TO_REPARENT_STATES_REAL  = (1 << 5),
@@ -340,7 +340,7 @@ struct fcs_cache_key_info_struct
 {
     fcs_collectible_state_t * val_ptr;
     fcs_state_t key;
-    /* lower_pri and higher_pri form a doubly linked list. 
+    /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.
      * */
@@ -403,7 +403,7 @@ struct fc_solve_instance_struct
     int max_num_times;
     long trim_states_in_collection_from;
 
-    /* 
+    /*
      * Like max_num_times only defaults to MAX_INT if below zero so it will
      * work without checking if it's zero.
      *
@@ -431,7 +431,7 @@ struct fc_solve_instance_struct
         int iter_num,
         int depth,
         void * instance,
-#ifdef FCS_RCS_STATES 
+#ifdef FCS_RCS_STATES
         fcs_state_t * state_key,
 #endif
         fcs_collectible_state_t * state_val,
@@ -802,8 +802,8 @@ struct fc_solve_soft_thread_struct
             /*
              * These are stacks used by the Soft-DFS for various uses.
              *
-             * states_to_check - an array of states to be checked next. Not 
-             * all of them will be checked because it is possible that future 
+             * states_to_check - an array of states to be checked next. Not
+             * all of them will be checked because it is possible that future
              * states already visited them.
              *
              * states_to_check_move_stacks - an array of move stacks that
@@ -818,7 +818,7 @@ struct fc_solve_soft_thread_struct
              * performed. FCS performs each test separately, so
              * states_to_check and friends will not be overpopulated.
              *
-             * num_vacant_stacks - the number of unoccpied stacks that 
+             * num_vacant_stacks - the number of unoccpied stacks that
              * correspond
              * to solution_states.
              *
@@ -841,7 +841,7 @@ struct fc_solve_soft_thread_struct
              * */
             int rand_seed;
 
-            /* 
+            /*
              * The tests to be performed in a preprocessed form.
              * */
             fcs_tests_by_depth_array_t tests_by_depth_array;
@@ -859,12 +859,12 @@ struct fc_solve_soft_thread_struct
                      * */
                     fcs_states_linked_list_item_t * bfs_queue;
                     /*
-                     * The last item in the linked list, so new items can be added at 
+                     * The last item in the linked list, so new items can be added at
                      * it, thus making it a queue.
                      * */
                     fcs_states_linked_list_item_t * bfs_queue_last_item;
                     /*
-                     * A linked list of items that were freed from 
+                     * A linked list of items that were freed from
                      * the queue and should be reused before allocating new
                      * items.
                      * */
@@ -873,7 +873,7 @@ struct fc_solve_soft_thread_struct
                 struct
                 {
                     /*
-                     * The priority queue of the BeFS scan 
+                     * The priority queue of the BeFS scan
                      * */
                     PQUEUE pqueue;
                     double initial_cards_under_sequences_value;
@@ -898,13 +898,13 @@ struct fc_solve_soft_thread_struct
 
     fcs_runtime_flags_t runtime_flags;
 
-    /* 
+    /*
      * The number of vacant stacks in the current state - is read from
      * the test functions in freecell.c .
      * */
      fcs_game_limit_t num_vacant_stacks;
 
-    /* 
+    /*
      * The number of vacant freecells in the current state - is read
      * from the test functions in freecell.c .
      * */
@@ -920,7 +920,7 @@ struct fc_solve_soft_thread_struct
      * */
     char * name;
 
-    /* 
+    /*
      * Whether pruning should be done.
      * This variable is temporary - there should be a better pruning
      * abstraction with several optional prunes.
@@ -986,7 +986,7 @@ static GCC_INLINE void fc_solve_unresume_instance(
 }
 
 
-static GCC_INLINE fc_solve_soft_thread_t * 
+static GCC_INLINE fc_solve_soft_thread_t *
     fc_solve_instance_get_first_soft_thread(
         fc_solve_instance_t * instance
         )
@@ -1045,7 +1045,7 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     return &(ret->soft_threads[0]);
 }
 
-/* This is the commmon code from fc_solve_instance__init_hard_thread() and 
+/* This is the commmon code from fc_solve_instance__init_hard_thread() and
  * recycle_hard_thread() */
 static GCC_INLINE void fc_solve_reset_hard_thread(
     fc_solve_hard_thread_t * hard_thread
@@ -1090,8 +1090,8 @@ static GCC_INLINE void fc_solve_release_tests_list(
                 int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
                 int i;
 
-                for (i=0 ; 
-                    i < num_lists ; 
+                for (i=0 ;
+                    i < num_lists ;
                     i++)
                 {
                     free (lists[i].tests);

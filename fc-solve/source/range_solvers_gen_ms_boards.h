@@ -63,7 +63,7 @@ static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
 {
     s[0] = card_to_string_values[VALUE(card)];
     s[1] = card_to_string_suits[SUIT(card)];
-    
+
     if (not_append_ws)
     {
         return &(s[2]);

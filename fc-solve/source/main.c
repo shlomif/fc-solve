@@ -25,7 +25,7 @@
  * main.c - the main() and related functions of the fc-solve command line
  * executable.
  *
- * It is documented in the documents "README", "USAGE", etc. in the 
+ * It is documented in the documents "README", "USAGE", etc. in the
  * Freecell Solver distribution from http://fc-solve.berlios.de/ .
  */
 #include <string.h>
@@ -96,7 +96,7 @@ static void my_iter_handler(
     fprintf(stdout, "Stored-States: %i\n",
         freecell_solver_user_get_num_states_in_collection(user_instance)
         );
-    fprintf(stdout, "Scan: %s\n", 
+    fprintf(stdout, "Scan: %s\n",
         freecell_solver_user_get_current_soft_thread_name(user_instance)
         );
     if (context->display_parent_iter_num)
@@ -503,12 +503,12 @@ static int cmd_line_callback(
         arg++;
         if (arg == argc)
         {
-            return FCS_CMD_LINE_STOP;        
+            return FCS_CMD_LINE_STOP;
         }
         *num_to_skip = 2;
         dc->output_filename = (const char *)argv[arg];
         return FCS_CMD_LINE_SKIP;
-    }    
+    }
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
     {
         dc->display_10_as_t = TRUE;
@@ -773,7 +773,7 @@ int main(int argc, char * argv[])
     else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
     {
         const char * error_string;
-        
+
         error_string = freecell_solver_user_get_last_error_string(instance);
 
         printf("Flares Plan: %s\n", error_string);
@@ -787,7 +787,7 @@ int main(int argc, char * argv[])
             output_fh = fopen(debug_context.output_filename, "wt");
             if (! output_fh)
             {
-                fprintf(stderr, 
+                fprintf(stderr,
                         "Could not open output file '%s' for writing!",
                         debug_context.output_filename
                        );

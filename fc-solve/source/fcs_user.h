@@ -321,7 +321,7 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
     void * user_instance
     );
 
-/* 
+/*
  * This error string should be strdup()'ed or something if one wishes
  * to reuse it. Otherwise, it is constant.
  * */
@@ -329,7 +329,7 @@ DLLEXPORT const char * freecell_solver_user_get_last_error_string(
     void * api_instance
     );
 
-/* 
+/*
  * This sets the tests_order from min_depth onwards.
  * */
 DLLEXPORT extern int freecell_solver_user_set_depth_tests_order(

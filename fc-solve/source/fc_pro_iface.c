@@ -41,7 +41,7 @@ char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
 
     buffer[0] = '\0';
     s_end = buffer;
-    
+
     for(a=0;a<4;a++)
     {
         if (pos->foundations[a] != 0)
@@ -59,7 +59,7 @@ char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
                 suit_to_string(a, temp[0]);
                 rank_to_string(pos->foundations[a], temp[1]);
                 s_end += sprintf(
-                    s_end, 
+                    s_end,
                     " %s-%s", temp[0], temp[1]
                     );
             }
@@ -86,13 +86,13 @@ char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
     {
         for(a=0;a<pos->tableau[stack].count;a++)
         {
-            s_end += 
+            s_end +=
                 sprintf(
-                    s_end, 
-                    "%s%s", 
+                    s_end,
+                    "%s%s",
                     ((a == 0)? "" : " "),
                     card_to_string(pos->tableau[stack].cards[a], temp[0])
-                );                                
+                );
         }
         *s_end = '\n';
         s_end++;
@@ -114,7 +114,7 @@ char * moves_processed_render_move(fcs_extended_move_t move, char * string)
         case FCS_MOVE_TYPE_STACK_TO_STACK:
                 if (move.to_empty_stack && (fcs_move_get_num_cards_in_seq(move.move) > 1))
                 {
-                    sprintf(string, "%i%iv%x", 
+                    sprintf(string, "%i%iv%x",
                         1+fcs_move_get_src_stack(move.move),
                         1+fcs_move_get_dest_stack(move.move),
                         fcs_move_get_num_cards_in_seq(move.move)
@@ -122,7 +122,7 @@ char * moves_processed_render_move(fcs_extended_move_t move, char * string)
                 }
                 else
                 {
-                    sprintf(string, "%i%i", 
+                    sprintf(string, "%i%i",
                         1+fcs_move_get_src_stack(move.move),
                         1+fcs_move_get_dest_stack(move.move)
                         );
@@ -130,7 +130,7 @@ char * moves_processed_render_move(fcs_extended_move_t move, char * string)
         break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
-                sprintf(string, "%c%i", 
+                sprintf(string, "%c%i",
                     ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
                     1+fcs_move_get_dest_stack(move.move)
                     );
@@ -156,7 +156,7 @@ char * moves_processed_render_move(fcs_extended_move_t move, char * string)
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
                 sprintf(string, "%ih", 1+fcs_move_get_src_stack(move.move));
         break;
-        
+
 
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
                 sprintf(string, "%ch", ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))));
@@ -186,7 +186,7 @@ static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended
                     * (moves->num_moves + MOVES_PROCESSED_GROW_BY)
                 )
             );
-    }    
+    }
     moves->moves[moves->num_moves-1] = new_move;
 }
 
@@ -200,7 +200,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
     fcs_move_t move, out_move;
 
     pos = *orig;
-    
+
     num_back_end_moves = freecell_solver_user_get_moves_left(instance);
 
     ret = malloc(sizeof(*ret));
@@ -210,13 +210,13 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
 
     for(i=0;i<8;i++)
     {
-        virtual_stack_len[i] = orig->tableau[i].count;        
+        virtual_stack_len[i] = orig->tableau[i].count;
     }
     for(i=0;i<num_freecells;i++)
     {
         virtual_freecell_len[i] = (orig->hold[i] != 0) ? 1 : 0;
     }
-    
+
     for(move_idx=0; move_idx < num_back_end_moves ; move_idx ++)
     {
 #if 0
@@ -230,8 +230,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
 #endif
 
 
-        /* 
-         * Move safe cards to the foundations 
+        /*
+         * Move safe cards to the foundations
          * */
         while (1)
         {
@@ -278,12 +278,12 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                 }
             }
 #endif
-            
+
             for(i=0;i<8;i++)
             {
                 int rank, suit;
                 Card card;
-                
+
                 if (pos.tableau[i].count > 0)
                 {
                     card = pos.tableau[i].cards[pos.tableau[i].count-1];
@@ -291,7 +291,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                     suit = card >> 4;
                     /* Check if we can safely move it */
                     if ((pos.foundations[suit^0x1] >= rank-2) &&
-                        (pos.foundations[suit^0x1^0x2] >= rank-2) && 
+                        (pos.foundations[suit^0x1^0x2] >= rank-2) &&
                         (pos.foundations[suit^0x2] >= rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
@@ -299,7 +299,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                         pos.tableau[i].count--;
 
                         /* An Automove. */
-                        
+
                         break;
                     }
                 }
@@ -320,7 +320,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                     suit = card >> 4;
                     /* Check if we can safely move it */
                     if ((pos.foundations[suit^0x1] >= rank-2) &&
-                        (pos.foundations[suit^0x1^0x2] >= rank-2) && 
+                        (pos.foundations[suit^0x1^0x2] >= rank-2) &&
                         (pos.foundations[suit^0x2] >= rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
@@ -329,8 +329,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
 
                         /* We've just done an auto-move */
                         break;
-                    }                        
-                    
+                    }
+
                 }
             }
             if ((i == 8) && (j == num_freecells))
@@ -361,7 +361,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                                 ext_move.move = move;
                                 /* Stub value to settle gcc. Isn't used. */
                                 ext_move.to_empty_stack = 0;
-                                                            
+
                                 moves_processed_add_new_move(ret, ext_move);
                             }
                         }
@@ -418,7 +418,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                             }
                             pos.tableau[dest].cards[pos.tableau[dest].count++] = pos.hold[src];
                             pos.hold[src] = 0;
-                        }                        
+                        }
                         virtual_freecell_len[src] = 0;
                         virtual_stack_len[dest]++;
                     }
@@ -455,7 +455,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                case FCS_MOVE_TYPE_STACK_TO_STACK:
                     {
                         int num_cards, virt_num_cards;
-                        
+
                         src = fcs_move_get_src_stack(move);
                         dest = fcs_move_get_dest_stack(move);
                         num_cards = fcs_move_get_num_cards_in_seq(move);
@@ -487,16 +487,16 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                             {
                                 pos.tableau[dest].cards[pos.tableau[dest].count+i] = pos.tableau[src].cards[pos.tableau[src].count-num_cards+i];
                             }
-                            pos.tableau[dest].count = 
+                            pos.tableau[dest].count =
                                 (uchar)(pos.tableau[dest].count+num_cards);
-                            pos.tableau[src].count = 
+                            pos.tableau[src].count =
                                 (uchar)(pos.tableau[src].count - num_cards);
                             virtual_stack_len[dest] += num_cards;
                             virtual_stack_len[src] -= num_cards;
                         }
                     }
                     break;
-                
+
             }
         }
     }

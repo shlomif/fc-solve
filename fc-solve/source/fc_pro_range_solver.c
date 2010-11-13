@@ -72,7 +72,7 @@ static GCC_INLINE void fc_pro_get_board(long gamenumber, Position * pos)
         card = deck[j];
         suit = SUIT(card);
         pos->tableau[col].cards[pos->tableau[col].count++]
-            = (Card)((VALUE(card)+1) 
+            = (Card)((VALUE(card)+1)
             + (((suit == 3) ? suit : ((suit+1)%3))<<4))
             ;
         deck[j] = deck[--wLeft];

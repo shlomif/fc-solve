@@ -98,7 +98,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
     fcs_cards_column_t column;
     register int col_len;
     fcs_compact_allocator_t * stacks_allocator;
-    
+
     stacks_allocator = &(hard_thread->allocator);
 
     for(i=0 ; i < LOCAL_STACKS_NUM ; i++)
@@ -527,7 +527,7 @@ fcs_bool_t fc_solve_check_and_add_state(
             {
                 /* The sort margin is full, let's combine it with the main array */
 
-                instance->indirect_prev_states = 
+                instance->indirect_prev_states =
                     realloc(
                         instance->indirect_prev_states,
                         sizeof(instance->indirect_prev_states[0])
@@ -569,7 +569,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
     instance->tree_new_state_key = new_state_key;
     instance->tree_new_state = new_state;
-    
+
     if ((*existing_state = (fcs_collectible_state_t *)
         fcs_libavl2_states_tree_insert(instance->tree, new_state))
             == NULL
@@ -597,7 +597,7 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-    *existing_state_val = g_hash_table_lookup(instance->hash, 
+    *existing_state_val = g_hash_table_lookup(instance->hash,
             (gpointer)new_state_key);
     if ((is_state_new = (*existing_state_val == NULL)))
     {

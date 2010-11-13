@@ -291,7 +291,7 @@ static GCC_INLINE char * fc_solve_move_to_string(fcs_move_t move, int standard_n
 
 typedef struct {
     fcs_collectible_state_t * state_ptr;
-    union 
+    union
     {
         void * ptr;
         int i;
@@ -299,7 +299,7 @@ typedef struct {
     } context;
 } fcs_derived_states_list_item_t;
 
-typedef struct 
+typedef struct
 {
     int num_states;
     fcs_derived_states_list_item_t * states;

@@ -60,7 +60,7 @@ enum
 
 #define MAKE_GAME_PARAMS(fc, s, d, sbb, sm, esf) \
     { fc, s, d, (sbb | (esf << 2) | (sm << 4))}
-static const fcs_preset_t fcs_presets[16] = 
+static const fcs_preset_t fcs_presets[16] =
 {
     {
         FCS_PRESET_BAKERS_DOZEN,
@@ -475,16 +475,16 @@ int fc_solve_apply_preset_by_ptr(
 
                 /* Check every test */
 
-                by_depth_tests_order = 
+                by_depth_tests_order =
                     soft_thread->by_depth_tests_order.by_depth_tests;
 
                 for (depth_idx = 0 ;
-                    depth_idx < soft_thread->by_depth_tests_order.num ; 
+                    depth_idx < soft_thread->by_depth_tests_order.num ;
                     depth_idx++)
                 {
                     tests_order_tests = by_depth_tests_order[depth_idx].tests_order.tests;
                     tests_order_num = by_depth_tests_order[depth_idx].tests_order.num;
- 
+
                 for(num_valid_tests=0;num_valid_tests < tests_order_num; num_valid_tests++)
                 {
                     for(s = preset.allowed_tests;*s != '\0';s++)

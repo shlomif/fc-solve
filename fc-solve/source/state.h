@@ -370,7 +370,7 @@ typedef char fcs_locs_t;
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
 
 #define fcs_duplicate_state_extra(ptr_dest, ptr_src) \
-    {} 
+    {}
 
 #define fcs_copy_stack(state_struct, idx, buffer) {}
 
@@ -387,7 +387,7 @@ typedef char fcs_locs_t;
     (fcs_card_set_flipped(fcs_col_get_card((col), (c)), 0))
 #endif
 
-/* These are macros that are common to COMPACT_STATES and 
+/* These are macros that are common to COMPACT_STATES and
  * INDIRECT_STACK_STATES */
 #if defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
 
@@ -426,13 +426,13 @@ typedef unsigned char fcs_game_limit_t;
 
 struct fcs_state_keyval_pair_struct;
 
-/* 
+/*
  * NOTE: the order of elements here is intended to reduce framgmentation
  * and memory consumption. Namely:
  *
  * 1. Pointers come first.
  *
- * 2. ints (32-bit on most platform) come next. 
+ * 2. ints (32-bit on most platform) come next.
  *
  * 3. chars come next.
  *
@@ -470,7 +470,7 @@ struct fcs_state_extra_info_struct
      * */
     int stacks_copy_on_write_flags;
 #endif
-    
+
     /*
      * This is the number of direct children of this state which were not
      * yet declared as dead ends. Once this counter reaches zero, this
@@ -509,7 +509,7 @@ struct fcs_state_extra_info_struct
      * for it.
      * */
     fcs_game_limit_t visited;
-    
+
 };
 
 #ifdef FCS_WITHOUT_LOCS_FIELDS
@@ -542,7 +542,7 @@ struct fcs_state_keyval_pair_struct
 
 typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
 
-/* 
+/*
  * This type is the struct that is collectible inside the hash.
  *
  * In FCS_RCS_STATES we only collect the extra_info's and the state themselves
@@ -741,7 +741,7 @@ static GCC_INLINE void fc_solve_state_init(
 #if ((!defined(FCS_WITHOUT_CARD_FLIPPING)) || defined(INDIRECT_STACK_STATES))
     int i;
 #endif
-    
+
 
     memset(&(state->s), 0, sizeof(state->s));
 
@@ -1269,7 +1269,7 @@ static GCC_INLINE int fc_solve_check_state_validity(
                 *misplaced_card = fc_solve_empty_card;
                 fcs_card_set_suit(*misplaced_card, d);
                 fcs_card_set_num(*misplaced_card, c);
-                return ((cards[d][c] < decks_num) 
+                return ((cards[d][c] < decks_num)
                     ? FCS_STATE_VALIDITY__MISSING_CARD
                     : FCS_STATE_VALIDITY__EXTRA_CARD
                     )

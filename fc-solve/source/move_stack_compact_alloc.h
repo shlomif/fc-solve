@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * move_stack_compact_alloc.h - A header file for a (possibly inline) function 
+ * move_stack_compact_alloc.h - A header file for a (possibly inline) function
  * that compactly allocates a move stack.
  *
  */
@@ -40,10 +40,10 @@ static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(fc_sol
     fcs_move_stack_t * new_move_stack_to_parent;
     fcs_internal_move_t * new_moves_to_parent;
 
-    ptr = 
+    ptr =
         (char*)fcs_compact_alloc_ptr(
             &(hard_thread->allocator),
-            (sizeof(fcs_move_stack_t) + 
+            (sizeof(fcs_move_stack_t) +
              sizeof(fcs_move_t)*old_move_stack_to_parent->num_moves
             )
         );

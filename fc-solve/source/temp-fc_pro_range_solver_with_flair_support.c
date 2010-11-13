@@ -22,13 +22,13 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * temp-fc_pro_range_solver_with_flair_support.c - the FC-Pro range 
- * solver. Solves a range of boards and displays the moves counts and 
+ * temp-fc_pro_range_solver_with_flair_support.c - the FC-Pro range
+ * solver. Solves a range of boards and displays the moves counts and
  * the number of moves in their solution.
  *
  * This program was meant to be a temporary support in order
- * to experiment with "flairs" (working names) which are instances 
- * of the solvers that are all being ran to solve the board, one 
+ * to experiment with "flairs" (working names) which are instances
+ * of the solvers that are all being ran to solve the board, one
  * after the other and then the shortest solution is chosen to be
  * displayed.
  */
@@ -77,7 +77,7 @@ static GCC_INLINE void fc_pro_get_board(long gamenumber, Position * pos)
         card = deck[j];
         suit = SUIT(card);
         pos->tableau[col].cards[pos->tableau[col].count++]
-            = (Card)((VALUE(card)+1) 
+            = (Card)((VALUE(card)+1)
             + (((suit == 3) ? suit : ((suit+1)%3))<<4))
             ;
         deck[j] = deck[--wLeft];
@@ -310,7 +310,7 @@ static fcs_flair_t * next_flair(pack_item_t * user)
     fcs_flair_t * ret;
     user->flairs = realloc(user->flairs, sizeof(user->flairs[0]) * ++(user->num_flairs));
     ret = &(user->flairs[user->num_flairs-1]);
-    
+
     ret->instance = freecell_solver_user_alloc();
     ret->quota = 0;
     ret->id = NULL;
@@ -484,7 +484,7 @@ int main(int argc, char * argv[])
 
     user.num_flairs = 0;
     user.flairs = NULL;
-    
+
     /* To settle gcc. */
     last_flair = NULL;
 
@@ -581,7 +581,7 @@ int main(int argc, char * argv[])
         FLAIR_LOOP()
         {
             freecell_solver_user_limit_iterations(
-                    flair->instance, 
+                    flair->instance,
                     flair->quota
                     );
         }
@@ -599,7 +599,7 @@ int main(int argc, char * argv[])
 
             if (ret == FCS_STATE_SUSPEND_PROCESS)
             {
-                /* 
+                /*
                  * Do nothing - this board could not be solved by
                  * this flair - move on to the next.
                  * */
@@ -657,7 +657,7 @@ int main(int argc, char * argv[])
                     if (freecell_solver_user_get_moves_left(
                             flair->instance
                         )
-                            < 
+                            <
                         freecell_solver_user_get_moves_left(
                             good_flair->instance
                         )
@@ -668,7 +668,7 @@ int main(int argc, char * argv[])
                 }
             }
         }
-        
+
         flair = good_flair;
         if (good_flair)
         {
