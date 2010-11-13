@@ -85,7 +85,7 @@ SET(CPACK_PACKAGE_EXECUTABLES
 
 ### This is to set the RPATH correctly, so when installed under a prefix
 ### the executables will find the libraries.
-### 
+###
 ### See:
 ###
 ### http://www.cmake.org/Wiki/CMake_RPATH_handling
@@ -97,7 +97,7 @@ SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
 
 # when building, don't use the install RPATH already
 # (but later on when installing)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
 # the RPATH to be used when installing
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -107,7 +107,7 @@ SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 
-SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING 
+SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
     "States Type ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES'). No need to usually change.")
 SET (FCS_ENABLE_RCS_STATES CACHE BOOL "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
 SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
@@ -132,28 +132,23 @@ SET (FCS_WITH_TEST_SUITE "" CACHE BOOL "Also build and run the test suite.")
 SET (FCS_LINK_TO_STATIC "" CACHE BOOL "Link to the static library.")
 SET (FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY "4" CACHE STRING "The hard-coded number of freecells (4, 2, etc.). Usually ignored")
 
-SET (FCS_ENABLE_SECONDARY_HASH_VALUE "" 
-    CACHE BOOL 
+SET (FCS_ENABLE_SECONDARY_HASH_VALUE ""
+    CACHE BOOL
     "Enable the secondary hash value calculation and track-keeping. Seems to slow things down."
 )
 
-SET (FCS_WITH_CONTEXT_VARIABLE "1" 
-    CACHE BOOL 
+SET (FCS_WITH_CONTEXT_VARIABLE "1"
+    CACHE BOOL
     "Enable the context (extra void *) as passed to the comparison functions, etc."
 )
 
-SET (FCS_INLINED_HASH_COMPARISON "1" 
-    CACHE BOOL 
-    "Inline the hash comparisons."
-)
-
-SET (FCS_USE_COMPACT_MOVE_TOKENS "" 
-    CACHE BOOL 
+SET (FCS_INLINED_HASH_COMPARISON "1"
+    CACHE BOOL
     "Use more compact tokens for moves internally (makes things slower)"
 )
 
-SET (FCS_AVOID_TCMALLOC "" 
-    CACHE BOOL 
+SET (FCS_AVOID_TCMALLOC ""
+    CACHE BOOL
     "Avoid linking against Google's tcmalloc"
 )
 
@@ -195,9 +190,9 @@ IF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES"))
     # FCS_STACK_STORAGE in this case is irrelevant and should be ignored.
     SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_NULL")
 ENDIF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES"))
-    
+
 # Add the fcs_hash.c if (and only if) it is being used.
-# 
+#
 IF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INTERNAL_HASH") OR
     (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_INTERNAL_HASH"))
 
@@ -206,9 +201,9 @@ IF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INTERNAL_HASH") OR
 ENDIF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INTERNAL_HASH") OR
     (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_INTERNAL_HASH"))
 
-    
+
 # Add the google_hash.cpp if (and only if) it is being used.
-# 
+#
 IF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_GOOGLE_DENSE_HASH") OR
     (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_GOOGLE_DENSE_HASH"))
 
@@ -218,7 +213,7 @@ ENDIF ((${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_GOOGLE_DENSE_HASH") OR
     (${FCS_STACK_STORAGE} STREQUAL "FCS_STACK_STORAGE_GOOGLE_DENSE_HASH"))
 
 # Add fcs_dm.c if (and only if) it is being used.
-# 
+#
 IF (${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INDIRECT")
     LIST(APPEND FREECELL_SOLVER_LIB_MODULES fcs_dm.c)
 ENDIF (${FCS_STATE_STORAGE} STREQUAL "FCS_STATE_STORAGE_INDIRECT")
@@ -307,11 +302,11 @@ IF (LIBAVL2_TREE_TYPES)
     FOREACH (TREE_TYPE ${LIBAVL2_TREE_TYPES})
         SET (C_FN "${TREE_TYPE}.c")
         SET (H_FN "${TREE_TYPE}.h")
-        CONFIGURE_FILE ("${LIBAVL2_SOURCE_DIR}/${C_FN}" 
+        CONFIGURE_FILE ("${LIBAVL2_SOURCE_DIR}/${C_FN}"
             "${LIBAVL2_COPIED_MODULES_DIR}/${C_FN}"
             COPYONLY
         )
-        CONFIGURE_FILE ("${LIBAVL2_SOURCE_DIR}/${H_FN}" 
+        CONFIGURE_FILE ("${LIBAVL2_SOURCE_DIR}/${H_FN}"
             "${LIBAVL2_COPIED_MODULES_DIR}/${H_FN}"
             COPYONLY
         )
@@ -350,7 +345,7 @@ ADD_SUBDIRECTORY ("t")
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-SET(COMPILER_FLAGS_TO_CHECK 
+SET(COMPILER_FLAGS_TO_CHECK
     "-Wall" "-Werror=implicit-function-declaration" "-fvisibility=hidden"
 )
 
@@ -410,7 +405,7 @@ IF (BUILD_STATIC_LIBRARY)
     LIST (APPEND FREECELL_SOLVER_LIBS "freecell-solver-static")
 
     SET_TARGET_PROPERTIES(
-        freecell-solver-static 
+        freecell-solver-static
         PROPERTIES OUTPUT_NAME "freecell-solver"
     )
     SET_TARGET_PROPERTIES(
@@ -452,7 +447,7 @@ IF (NOT CMAKE_BUILD_TYPE STREQUAL debug)
             SET(LIBTCMALLOC_LIB_LIST ${LIBTCMALLOC_LIB})
         ENDIF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
     ENDIF (NOT FCS_AVOID_TCMALLOC)
-    
+
 ENDIF (NOT CMAKE_BUILD_TYPE STREQUAL debug)
 
 SET(FREECELL_SOLVER_EXECUTABLES )
@@ -510,7 +505,7 @@ SET (MY_LIBS_LINK_FLAGS ${MY_LIBS_LINK_FLAGS})
 IF (MY_LIBS_LINK_FLAGS)
     STRING (REPLACE ";" " "  MY_LIBS_LINK_FLAGS_STRING "${MY_LIBS_LINK_FLAGS}")
     SET_TARGET_PROPERTIES(
-        ${FREECELL_SOLVER_LIBS} 
+        ${FREECELL_SOLVER_LIBS}
         PROPERTIES LINK_FLAGS "${MY_LIBS_LINK_FLAGS_STRING}"
     )
 ENDIF (MY_LIBS_LINK_FLAGS)
@@ -518,7 +513,7 @@ ENDIF (MY_LIBS_LINK_FLAGS)
 IF (MY_EXES_LINK_FLAGS)
     STRING (REPLACE ";" " "  MY_EXES_LINK_FLAGS_STRING "${MY_EXES_LINK_FLAGS}")
     SET_TARGET_PROPERTIES(
-        ${FREECELL_SOLVER_EXECUTABLES} 
+        ${FREECELL_SOLVER_EXECUTABLES}
         PROPERTIES LINK_FLAGS "${MY_EXES_LINK_FLAGS_STRING}"
     )
 ENDIF (MY_EXES_LINK_FLAGS)
@@ -590,7 +585,7 @@ INSTALL(
 )
 
 IF (WIN32 AND NOT UNIX)
-    # This is so on Windows, the .dll's will be installed in the bin/ 
+    # This is so on Windows, the .dll's will be installed in the bin/
     # directory as well where the Freecell Solver command-line utilities
     # will be able to find them.
 
@@ -637,7 +632,7 @@ INSTALL(
 INSTALL(
     FILES
         "${CMAKE_CURRENT_BINARY_DIR}/lib${CPACK_PACKAGE_NAME}.pc"
-    DESTINATION 
+    DESTINATION
         "lib/pkgconfig"
 )
 
@@ -672,8 +667,8 @@ ADD_CUSTOM_TARGET(
 
 FIND_PACKAGE(Asciidoc)
 
-SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt" 
-    "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" 
+SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt"
+    "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt"
 )
 
 SET (docs_to_install)
@@ -695,10 +690,10 @@ IF(ASCIIDOC_FOUND)
         SET(_docbook_out "${CMAKE_CURRENT_SOURCE_DIR}/${_file_we}.xml")
         # MESSAGE(STATUS "_in == <<${_in}>> _html_out == <<${_html_out}>>")
 
-        # -a toc 
+        # -a toc
         ADD_CUSTOM_COMMAND(
             OUTPUT "${_html_out}"
-            COMMAND ${ASCIIDOC_EXECUTABLE} 
+            COMMAND ${ASCIIDOC_EXECUTABLE}
                 -o ${_html_out} "${_full_file}"
             DEPENDS "${_full_file}"
             COMMENT "Asciidoc ${_in}"
@@ -707,7 +702,7 @@ IF(ASCIIDOC_FOUND)
 
         ADD_CUSTOM_COMMAND(
             OUTPUT "${_docbook_out}"
-            COMMAND ${ASCIIDOC_EXECUTABLE} 
+            COMMAND ${ASCIIDOC_EXECUTABLE}
                 --backend=docbook -o ${_docbook_out} "${_full_file}"
             DEPENDS "${_full_file}"
             COMMENT "Asciidoc->DocBook ${_in}"
@@ -730,7 +725,7 @@ IF(ASCIIDOC_FOUND)
             DEPENDS "${_file_we}.txt"
             COMMENT "copy AsciiDoc to non-\".txt\" file"
         )
-    
+
         ADD_CUSTOM_TARGET(${target} ALL echo -n
             DEPENDS "${_html_out}" "${_docbook_out}" "${_file_we}"
         )
@@ -752,7 +747,7 @@ IF(ASCIIDOC_FOUND)
 ENDIF(ASCIIDOC_FOUND)
 
 IF (FCS_WITH_TEST_SUITE)
-    
+
     ADD_CUSTOM_TARGET(
         "test"
         "perl" "run-tests.pl"
