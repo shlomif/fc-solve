@@ -11,9 +11,6 @@ use Term::ANSIColor;
 use Games::Solitaire::Verify::Solution;
 use Data::Dumper;
 
-GetOptions(
-);
-
 my @fcs_args = @ARGV;
 
 my $args_quoted = shell_quote(@fcs_args);

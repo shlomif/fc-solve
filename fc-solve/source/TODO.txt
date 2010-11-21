@@ -130,6 +130,15 @@ Verdict: Solved ; Iters: 156 ; Length: 87
 
 ** I solved it at length 87.
 
+* PySolFC deal No. 54369539487824719321:
+
+-------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 54369539487824719321 | ./scripts/summarize-fc-solve --method a-star -to 0123456789 -asw 3000,100,60,0,500
+Verdict: Solved ; Iters: 1325 ; Length: 115
+-------------------------------------------------------
+
+** Shlomi Fish solved it in under 110 moves.
+
 Long-term
 ---------
 
