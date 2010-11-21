@@ -99,10 +99,13 @@ it is less programmer-friendly.
 
 <li>
 <p>
-<a href="http://www.geocities.com/jheyesjones/astar.html">The A* scan</a> -
+<a href="http://www.heyes-jones.com/astar.html">The A* scan</a> -
 a states graph scan that uses a priority queue for determining which state
-to go to next. This page contains some source code, but the explanation
-is also very good.
+to go to next. The page contains some source code, but the explanation
+is also very good. Note that in Freecell Solver, we ended up implementing
+a 
+<a href="http://en.wikipedia.org/wiki/Best-first_search">Best-first search</a>
+instead due to a misunderstanding.
 </p>
 </li>
 
