@@ -1,3 +1,7 @@
+body
+{
+    background-color: white;
+}
 a:visited 
 { 
     /* Konqi 3.4.x on Mandriva 2006 sets its to magenta, which doesn't 
