@@ -30,7 +30,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/_CPack_Packages/"
     "/CMakeFiles/"
     "/.deps/"
-    "${base_with_ver}(-Source|-Linux)/"
+    "${base_with_ver}(-Source|-Linux)?/"
     "${base_with_ver}.tar\\\\.(gz|bz2|Z|lzma|xz)$"
     "\\\\.o$"
     "~$"
@@ -582,6 +582,7 @@ CONFIGURE_FILE(
 INSTALL(
     TARGETS ${FREECELL_SOLVER_LIBS}
     LIBRARY DESTINATION "lib${LIB_SUFFIX}"
+    ARCHIVE DESTINATION "lib${LIB_SUFFIX}"
 )
 
 IF (WIN32 AND NOT UNIX)
