@@ -81,12 +81,12 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 %postun -p /sbin/ldconfig
 
 %files -n libfreecell-solver0
-/usr/lib/libfreecell-solver.so*
+%{_libdir}/libfreecell-solver.so*
 /usr/share/freecell-solver/presetrc
 /usr/share/freecell-solver/presets/*
 
 %files -n libfreecell-solver0-static
-/usr/lib/libfreecell-solver.a
+%{_libdir}/libfreecell-solver.a
 
 %files
 %defattr(-,root,root)
@@ -105,7 +105,7 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 %defattr(-,root,root)
 /usr/include/freecell-solver/*.h
 /usr/bin/freecell-solver-config
-/usr/lib/pkgconfig/*.pc
+%{_libdir}/pkgconfig/*.pc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
