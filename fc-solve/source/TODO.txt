@@ -25,6 +25,9 @@ c
 Non-pressing
 ------------
 
+* Get rid of pushing an +FCS_MOVE_TYPE_CANONIZE+ move into each to-parent
+moves stack and instead apply it upon recalculating the derived state.
+
 * Implement the compact_allocators recycling in the remaining places in
 the code.
 ** Already implemented for the hard_thread->allocator.
