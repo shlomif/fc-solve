@@ -12,6 +12,15 @@ Pressing
 * Add some command line examples to +USAGE.txt+ .
 
 * Also add the dead-ends trimming to the BeFS scan.
+** Investigate the following crash:
+
+--------------------------------------------------------
+set args --method soft-dfs --st-name 'dfs' -nst --method a-star --st-name 'befs' --trim-max-stored-states 100 --prelude '200@befs,100@dfs,1000@befs,500000@dfs' -s -i -p -t -sam 1941.board
+b main
+r
+b scans.c:1958 if (top_card_idx >= 7+12)
+c
+--------------------------------------------------------
 
 Non-pressing
 ------------
@@ -123,19 +132,20 @@ iterations).
 
 * PySolFC deal No. 03620802041832966472:
 
--------------------------------------------------------
+--------------------------------------------------------
 shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -t -F 03620802041832966472  | ./scripts/summarize-fc-solve -- --method a-star -to 0123467589 -asw 300,1500,99,2,65000 
 Verdict: Solved ; Iters: 156 ; Length: 87
--------------------------------------------------------
+--------------------------------------------------------
+
 
 ** I solved it at length 87.
 
 * PySolFC deal No. 54369539487824719321:
 
--------------------------------------------------------
+--------------------------------------------------------
 shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 54369539487824719321 | ./scripts/summarize-fc-solve --method a-star -to 0123456789 -asw 3000,100,60,0,500
 Verdict: Solved ; Iters: 1325 ; Length: 115
--------------------------------------------------------
+--------------------------------------------------------
 
 ** Shlomi Fish solved it in under 110 moves.
 
