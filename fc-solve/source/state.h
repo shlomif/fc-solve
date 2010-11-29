@@ -738,7 +738,7 @@ static GCC_INLINE void fc_solve_state_init(
 #endif
     )
 {
-#if ((!defined(FCS_WITHOUT_CARD_FLIPPING)) || defined(INDIRECT_STACK_STATES))
+#if ((!defined(FCS_WITHOUT_CARD_FLIPPING)) || (!defined(FCS_WITHOUT_LOCS_FIELDS)) || defined(INDIRECT_STACK_STATES))
     int i;
 #endif
 
