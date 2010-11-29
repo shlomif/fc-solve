@@ -440,6 +440,9 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             parents_stack[parents_stack_len].state_val
         );
 
+        /* 
+         * TODO : Optimize the multiple dereferencing of the pointers.
+         * */
         for (i = 0 ;
             i < stack_ptr_this_state_val->moves_to_parent->num_moves
             ; i++)
@@ -456,7 +459,16 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
                 INSTANCE_DECKS_NUM
             );
         }
-
+        /* The state->parent_state moves stack has an implicit canonize
+         * suffix move. */
+        fc_solve_canonize_state(
+#ifdef FCS_RCS_STATES
+            &(new_cache_state->key),
+#endif
+            &(temp_new_state_val),
+            INSTANCE_FREECELLS_NUM,
+            INSTANCE_STACKS_NUM
+        );
 
         /* Promote new_cache_state to the head of the priority list. */
         if (! cache->lowest_pri)
@@ -2087,7 +2099,6 @@ int fc_solve_sfs_check_state_begin(
     return 0;
 }
 
-
 extern void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * soft_thread,
 #ifdef FCS_RCS_STATES
@@ -2121,13 +2132,6 @@ extern void fc_solve_sfs_check_state_end(
 
     calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
     scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
-
-    /* The last move in a move stack should be FCS_MOVE_TYPE_CANONIZE
-     * because it indicates that the order of the stacks and freecells
-     * need to be recalculated
-     * */
-    fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_CANONIZE);
-    fcs_move_stack_push(moves, temp_move);
 
     if (! fc_solve_check_and_add_state(
         hard_thread,

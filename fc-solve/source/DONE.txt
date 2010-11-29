@@ -112,3 +112,8 @@ states. It should be a wrapper for the fc-solve command line.
 * Restore the old -mss flag behaviour and create a new trim-max-stored-states
 flag where the new behaviour happens. max_stored_states should always increase,
 and trim_max_stored_states should decrease if states were removed.
+
+* Get rid of pushing an +FCS_MOVE_TYPE_CANONIZE+ move into each
++moves_to_parent+ moves stack and instead apply it upon recalculating
+the derived state.
+

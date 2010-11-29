@@ -820,6 +820,9 @@ static void trace_solution(
     fcs_internal_move_t * moves;
     fcs_move_stack_t * solution_moves_ptr;
 
+    fcs_move_t canonize_move = fc_solve_empty_move;
+    fcs_int_move_set_type(canonize_move, FCS_MOVE_TYPE_CANONIZE);
+
     if (instance->solution_moves.moves != NULL)
     {
         fcs_move_stack_static_destroy(instance->solution_moves);
@@ -836,8 +839,14 @@ static void trace_solution(
     {
         /* Mark the state as part of the non-optimized solution */
         FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
-        /* Duplicate the move stack */
+
+        /* Each state->parent_state stack has an implicit CANONIZE
+         * move. */
+        fcs_move_stack_push(solution_moves_ptr, canonize_move);
+
+        /* Merge the move stack */
         {
+
             stack = FCS_S_MOVES_TO_PARENT(s1);
             moves = stack->moves;
             for(move_idx=stack->num_moves-1;move_idx>=0;move_idx--)
