@@ -75,8 +75,10 @@ void fc_solve_hash_init(
     hash->num_elems = 0;
 
     /* Allocate a table of size entries */
-    hash->entries = (fc_solve_hash_symlink_t *)malloc(
-        sizeof(fc_solve_hash_symlink_t) * HASH_WANTED_SIZE
+    /* Initialize all the cells of the hash table to NULL, which indicate
+       that the end of each chain is right at the start. */
+    hash->entries = (fc_solve_hash_symlink_t *)calloc(
+        HASH_WANTED_SIZE, sizeof(hash->entries[0])
         );
 
     hash->list_of_vacant_items = NULL;
@@ -89,10 +91,6 @@ void fc_solve_hash_init(
     hash->context = context;
 #endif
 #endif
-
-    /* Initialize all the cells of the hash table to NULL, which indicate
-       that the cork of the linked list is right at the start */
-    memset(hash->entries, 0, sizeof(fc_solve_hash_symlink_t)*HASH_WANTED_SIZE);
 
     fc_solve_compact_allocator_init(&(hash->allocator));
 
@@ -254,7 +252,7 @@ static void GCC_INLINE fc_solve_hash_rehash(
     new_size = old_size << 1;
     new_size_bitmask = new_size - 1;
 
-    new_entries = calloc(new_size, sizeof(fc_solve_hash_symlink_t));
+    new_entries = calloc(new_size, sizeof(new_entries[0]));
 
     /* Copy the items to the new hash while not allocating them again */
     for(i=0;i<old_size;i++)
