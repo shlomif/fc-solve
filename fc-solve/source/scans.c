@@ -426,7 +426,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
     for (parents_stack_len--; parents_stack_len > 0; parents_stack_len--)
     {
         fcs_collectible_state_t temp_new_state_val;
-        int i;
+        fcs_internal_move_t * next_move, * moves_end;
 
         new_cache_state = parents_stack[parents_stack_len-1].new_cache_state;
 
@@ -440,12 +440,16 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             parents_stack[parents_stack_len].state_val
         );
 
-        /* 
-         * TODO : Optimize the multiple dereferencing of the pointers.
-         * */
-        for (i = 0 ;
-            i < stack_ptr_this_state_val->moves_to_parent->num_moves
-            ; i++)
+        moves_end = 
+        (
+            (next_move = stack_ptr_this_state_val->moves_to_parent->moves)
+            + 
+            stack_ptr_this_state_val->moves_to_parent->num_moves
+        );
+
+        for ( ;
+            next_move < moves_end
+            ; next_move++)
         {
             fc_solve_apply_move(
                 &(new_cache_state->key),
@@ -453,7 +457,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 #ifdef FCS_WITHOUT_LOCS_FIELDS
                 NULL,
 #endif
-                stack_ptr_this_state_val->moves_to_parent->moves[i],
+                (*next_move),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM
