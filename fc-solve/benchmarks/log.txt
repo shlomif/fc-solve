@@ -1625,3 +1625,35 @@ Using sudo_renice.
 74.6558539867401s
 
 ========================================================================
+
+bash scripts/pgo.bash gcc total
+r3297 ; trunk
+ARGS="--worker-step 16 -l eo"
+2.6.36.1-desktop-1mnb
+virtual console
+gcc-4.5.1 with "-flto and -fwhole-program".
+google-perftools-1.6
+Using sudo_renice.
+./Tatzer -l p4b
+
+    Highlight: the FCS_MOVE_TYPE_CANONIZE move elimination.
+
+74.270339012146s
+
+========================================================================
+
+bash scripts/pgo.bash gcc total
+r3297 ; trunk
+ARGS="--worker-step 16 -l eo"
+2.6.36.1-desktop-1mnb
+virtual console
+gcc-4.5.1 with "-flto and -fwhole-program".
+google-perftools-1.6 compiled with gcc-4.5.1.
+Using sudo_renice.
+./Tatzer -l p4b
+
+    Highlight: perftools compiled with gcc-4.5.1.
+
+74.0230569839478s
+
+========================================================================
