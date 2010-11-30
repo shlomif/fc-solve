@@ -4,7 +4,7 @@
     Do not edit by hand!!!
 */
 
-#include "move_funcs_maps.h"
+#include "instance.h"
 #include "freecell.h"
 #include "simpsim.h"
 

@@ -37,7 +37,6 @@ extern "C" {
 #include <string.h>
 
 #include "instance.h"
-#include "move_funcs_maps.h"
 
 #include "inline.h"
 

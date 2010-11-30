@@ -29,7 +29,6 @@
 #define BUILDING_DLL 1
 
 #include "move_funcs_order.h"
-#include "move_funcs_maps.h"
 
 #include "bool.h"
 

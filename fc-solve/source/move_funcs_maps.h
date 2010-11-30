@@ -9,7 +9,6 @@
 #define FC_SOLVE__MOVE_FUNCS_MAPS_H
 
 #include "config.h"
-#include "scans.h"
 
 #define FCS_TESTS_NUM 24
 

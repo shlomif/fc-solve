@@ -36,16 +36,6 @@ extern "C" {
 #include "config.h"
 #include "instance.h"
 
-extern int fc_solve_soft_dfs_do_solve(fc_solve_soft_thread_t * soft_thread);
-
-extern void fc_solve_soft_thread_init_befs_or_bfs(
-    fc_solve_soft_thread_t * soft_thread
-    );
-
-extern int fc_solve_befs_or_bfs_do_solve(
-    fc_solve_soft_thread_t * soft_thread
-    );
-
 /* We need 2 chars per card - one for the column_idx and one
  * for the card_idx.
  *
@@ -90,10 +80,6 @@ extern void fc_solve_sfs_check_state_end(
     int state_context_value,
     fcs_move_stack_t * moves,
     fcs_derived_states_list_t * derived_states_list
-    );
-
-extern void fc_solve_increase_dfs_max_depth(
-    fc_solve_soft_thread_t * soft_thread
     );
 
 #ifdef __cplusplus

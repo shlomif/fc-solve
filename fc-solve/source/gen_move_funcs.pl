@@ -160,7 +160,6 @@ print NUM <<"EOF" ;
 #define FC_SOLVE__MOVE_FUNCS_MAPS_H
 
 #include "config.h"
-#include "scans.h"
 
 #define FCS_TESTS_NUM $fcs_tests_num
 
@@ -204,7 +203,7 @@ print TESTS <<"EOF" ;
     Do not edit by hand!!!
 */
 
-#include "move_funcs_maps.h"
+#include "instance.h"
 #include "freecell.h"
 #include "simpsim.h"
 
