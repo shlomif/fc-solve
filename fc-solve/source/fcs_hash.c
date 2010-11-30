@@ -54,7 +54,6 @@ static void GCC_INLINE fc_solve_hash_rehash(fc_solve_hash_t * hash);
 
 void fc_solve_hash_init(
     fc_solve_hash_t * hash,
-    fc_solve_hash_value_t wanted_size,
 #ifdef FCS_INLINED_HASH_COMPARISON
     enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
@@ -67,24 +66,17 @@ void fc_solve_hash_init(
 #endif
     )
 {
-    int size;
-    /* Find a size that's a power of 2 that's just greater than
-     * the wanted_size. */
-    size = 256;
-    while (size < wanted_size)
-    {
-        size <<= 1;
-    }
+#define HASH_WANTED_SIZE 2048
 
-    hash->size = size;
-    hash->size_bitmask = size-1;
-    hash->max_num_elems_before_resize = (size << 1);
+    hash->size = HASH_WANTED_SIZE;
+    hash->size_bitmask = HASH_WANTED_SIZE-1;
+    hash->max_num_elems_before_resize = (HASH_WANTED_SIZE << 1);
 
     hash->num_elems = 0;
 
     /* Allocate a table of size entries */
     hash->entries = (fc_solve_hash_symlink_t *)malloc(
-        sizeof(fc_solve_hash_symlink_t) * size
+        sizeof(fc_solve_hash_symlink_t) * HASH_WANTED_SIZE
         );
 
     hash->list_of_vacant_items = NULL;
@@ -100,7 +92,7 @@ void fc_solve_hash_init(
 
     /* Initialize all the cells of the hash table to NULL, which indicate
        that the cork of the linked list is right at the start */
-    memset(hash->entries, 0, sizeof(fc_solve_hash_symlink_t)*size);
+    memset(hash->entries, 0, sizeof(fc_solve_hash_symlink_t)*HASH_WANTED_SIZE);
 
     fc_solve_compact_allocator_init(&(hash->allocator));
 

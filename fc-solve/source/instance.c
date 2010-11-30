@@ -1068,7 +1068,6 @@ void fc_solve_start_instance_process_with_board(
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
      fc_solve_hash_init(
             &(instance->hash),
-            2048,
 #ifdef FCS_INLINED_HASH_COMPARISON
             FCS_INLINED_HASH__STATES
 #else
@@ -1102,7 +1101,6 @@ void fc_solve_start_instance_process_with_board(
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
     fc_solve_hash_init(
             &(instance->stacks_hash ),
-            2048,
 #ifdef FCS_INLINED_HASH_COMPARISON
             FCS_INLINED_HASH__COLUMNS
 #else
@@ -1148,7 +1146,6 @@ void fc_solve_start_instance_process_with_board(
     if (instance->talon_type == FCS_TALON_KLONDIKE)
     {
         instance->talons_hash = fc_solve_hash_init(
-            512,
             fcs_talon_compare_with_context,
             NULL
             );

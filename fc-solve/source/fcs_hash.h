@@ -118,7 +118,6 @@ typedef struct
 extern void
 fc_solve_hash_init(
     fc_solve_hash_t * hash,
-    fc_solve_hash_value_t wanted_size,
 #ifdef FCS_INLINED_HASH_COMPARISON
     enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
