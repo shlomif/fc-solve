@@ -1697,6 +1697,15 @@ static GCC_INLINE void fc_solve_recycle_instance(
 
     fc_solve_finish_instance(instance);
 
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+    fc_solve_hash_recycle(&(instance->hash));
+#endif
+#ifdef INDIRECT_STACK_STATES
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
+    fc_solve_hash_recycle(&(instance->stacks_hash));
+#endif
+#endif
+
     instance->num_times = 0;
 
     instance->num_hard_threads_finished = 0;
