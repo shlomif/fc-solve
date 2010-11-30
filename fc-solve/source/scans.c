@@ -347,6 +347,13 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
     cache_parents_stack_item_t * parents_stack;
     int parents_stack_len, parents_stack_max_len;
     fcs_cache_key_info_t * new_cache_state;
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    DECLARE_GAME_PARAMS();
+#endif
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+    SET_GAME_PARAMS();
+#endif
 
     cache = &(instance->rcs_states_cache);
 
@@ -458,9 +465,9 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
                 NULL,
 #endif
                 (*next_move),
-                INSTANCE_FREECELLS_NUM,
-                INSTANCE_STACKS_NUM,
-                INSTANCE_DECKS_NUM
+                LOCAL_FREECELLS_NUM,
+                LOCAL_STACKS_NUM,
+                LOCAL_DECKS_NUM
             );
         }
         /* The state->parent_state moves stack has an implicit canonize
@@ -470,8 +477,8 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             &(new_cache_state->key),
 #endif
             &(temp_new_state_val),
-            INSTANCE_FREECELLS_NUM,
-            INSTANCE_STACKS_NUM
+            LOCAL_FREECELLS_NUM,
+            LOCAL_STACKS_NUM
         );
 
         /* Promote new_cache_state to the head of the priority list. */
