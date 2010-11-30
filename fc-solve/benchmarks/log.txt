@@ -1657,3 +1657,21 @@ Using sudo_renice.
 74.0230569839478s
 
 ========================================================================
+
+bash scripts/pgo.bash gcc total
+r3301 ; trunk
+ARGS="--worker-step 16 -l eo"
+2.6.36.1-desktop-1mnb
+virtual console
+gcc-4.5.1 with "-flto and -fwhole-program".
+google-perftools-1.6 compiled with gcc-4.5.1.
+Using sudo_renice.
+./Tatzer -l p4b
+
+    Highlight: small hash optimisations in r3300 and r3301.
+
+73.9090831279755s
+
+========================================================================
+
+
