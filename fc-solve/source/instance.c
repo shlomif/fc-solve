@@ -52,6 +52,7 @@
 #include "preset.h"
 #include "unused.h"
 #include "check_and_add_state.h"
+#include "move_funcs_order.h"
 
 #include "inline.h"
 #include "likely.h"
