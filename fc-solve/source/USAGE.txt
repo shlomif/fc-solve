@@ -781,6 +781,9 @@ Solver 3.2.0 and above) that yields solutions faster on average than
             the outcome solution's length.
 |+hello-world+                 |a meta-moves preset
 |+john-galt-line+              |a meta-moves preset
+|+maliciously-obscure+         |a meta-moves and flare-based preset that tends
+to yield very short solutions (even in comparison to +children-playing-ball+
+) but is slow.
 |+rin-tin-tin+                 |a meta-moves preset
 |+sand-stone+                  |an atomic-moves preset that aims to
             minimise the outcome solution's length.

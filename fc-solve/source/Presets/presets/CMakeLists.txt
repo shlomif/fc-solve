@@ -11,6 +11,7 @@ INSTALL(
         "gooey-unknown-thing.sh"
         "hello-world.sh"
         "john_galt_line-500.sh"
+        "maliciously-obscure.sh"
         "rin-tin-tin.sh"
         "sand-stone.sh"
         "sentient-pearls.sh"
