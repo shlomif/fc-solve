@@ -4,6 +4,73 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.4.0: (02-Dec-2010)
+----------------------------
+
+1. Compiling without card flipping on by default now (finally it makes
+the code a little faster instead of slower.)
+
+2. Added the +--set-pruning+ / +-sp+ flag to turn on pruning. This sets the
+Horne play prune of moving cards that can no longer be used to build other
+cards upon to the foundations.
+
+3. New preset +-l enlightened-ostrich+ / +-l eo+ based on it, which is
+significantly faster than +-l foss-nessy+. Amadiro, who helped me with the
+Black Hole Solitaire solver picked the name.
+
+4. New preset +-l maliciously-obscure+ / +-l mo+ for short solutions.
+
+5. There's now an option to set a different hard-coded freecells' num at
+compile-time.
+
+6. Add an experimental flag of "--trim-max-stored-states". Currently may
+crash the solver. (See the +Known_Bugs.txt+ file).
+
+7. Added support for -fwhole-program and static linking the Freecell Solver
+executables. This yielded another speed boost.
+
+8. Forward ported hte Google Dense Hash / Google Sparse Hash support for
+the positions and columns.
+
+9. Forward ported COMPACT_STATES.
+
+10. Add the +--ms+ / +-M+ flags to +make_pysol_freecell_board.py+ to generate 
+MS Deals even for the higher numbers (> 32,000 which are not used for that in
+PySol and PySol FC).
+
+11. Add a compile-time option to use RCS-like states storage:
+http://fc-solve.berlios.de/to-do.html#rcs_state_storage - this conserves
+a lot of RAM.
+
+12. Add a flag to get rid of visited_iter.
+
+13. Add FCS_WITHOUT_DEPTH_FIELD to get rid of depth if fcs_state_extra_info_t.
+
+14. Convert num_active_children to an unsigned short.
+
+15. Forward ported the FCS_STATE_STORAGE_LIBAVL2_TREE to the new fc-solve and
+the FCS_RCS_STATES. It seems to scale much better for FCS_RCS_STATES than
+FCS_STATE_STORAGE_INTERNAL_HASH.
+
+16. Converted the allocation of the BrFS queue items to alloc.{c,h} . This
+wastes less memory.
+
+17. Implement FCS_WITHOUT_LOCS_FIELDS . This removes the fc_locs / stack_locs
+from the extra_info's to conserve more space. It also makes solving faster.
+
+18. Reduced the size of num_moves in move_stack_t.
+
+19. Add support for the internal compact moves to the Tatzer script.
+
+20. Added /trunk/fc-solve/scripts/automatic-build-for-982-2fc-solving/Makefile
+which automatically builds and runs fc-solve for solving the two-freecell MS
+deal No. 982.
+
+21. Updated the cmake configuration to use lib${LIB_SUFFIX} so it can be
+built on some 64-bit systems.
+
+22. Many small optimisations.
+
 Version 3.2.0: (14-Jul-2010)
 ----------------------------
 
