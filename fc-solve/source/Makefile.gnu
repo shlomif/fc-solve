@@ -24,9 +24,19 @@ CFLAGS := -Wall
 GCC_COMPAT := 
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp 
 
+ARCH := $(shell uname -i)
+
+ifeq ($(ARCH),i386)
+	MACHINE_OPT := -O2
+else
+	MACHINE_OPT := -O3
+endif
+
+
 ifeq ($(COMPILER),gcc)
 	CC = gcc
 	GCC_COMPAT := 1
+	CFLAGS += -Werror=implicit-function-declaration
 else ifeq ($(COMPILER),icc)
 	CC = icc
 	GCC_COMPAT := 1
@@ -73,13 +83,12 @@ ifeq ($(GCC_COMPAT),1)
 	else ifeq ($(OPT_AND_DEBUG),1)
 		CFLAGS += -g -O2 -march=native -flto
 	else
-		CFLAGS += -O3 -march=native -fomit-frame-pointer -flto
+		CFLAGS += $(MACHINE_OPT) -march=native -fomit-frame-pointer -flto
 	endif
 	CFLAGS += -fPIC
 endif
 
 END_SHARED += -ltcmalloc
-
 ifneq ($(WITH_TRACES),0)
 	CFLAGS += -DDEBUG
 endif
