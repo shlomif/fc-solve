@@ -1,0 +1,3846 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	
+<!-- Mirrored from worldofsolitaire.com/ by HTTrack Website Copier/3.x [XR&CO'2008], Tue, 11 Aug 2009 23:02:23 GMT -->
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta name="description" content="Free web based Solitaire games that do not require Flash nor Java. 49 variations of solitaire and growing!">
+		
+		<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+		
+		
+		<link rel="stylesheet" type="text/css" href="combined5025.css?v=1246711122">
+		
+		<link rel="stylesheet" type="text/css" href="solitaire.css">
+		
+		<!--[if IE]>
+			<link rel="stylesheet" type="text/css" href="solitaire-IE.css">
+		<![endif]-->
+		
+		<!--[if IE 6]>
+			<link rel="stylesheet" type="text/css" href="solitaire-IE6.css">
+		<![endif]-->
+		
+		<!-- Looking for the un-obfuscated code? Check out http://worldofsolitaire.com/index-dev.html -->
+		<script type="text/javascript" src="combined5025.js?v=1246711122"></script>
+		<!-- Looking for the un-obfuscated code? Check out http://worldofsolitaire.com/index-dev.html -->
+
+	
+		
+
+
+
+		
+		
+
+
+			
+		<script type="text/javascript">
+			var SOLITAIRE = new Solitaire();
+			
+			YAHOO.util.Event.onDOMReady(function() { SOLITAIRE.init(); }); 
+		</script>
+		
+		<title>World of Solitaire</title>
+	</head>
+	<body>
+		<div id="menuBar">
+			<span class="menuBarItem">Solitaire</span>
+			<span class="menuBarItem">Decks</span>
+			<span class="menuBarItem">Background</span>
+			<span class="menuBarItem">Options</span>
+			<span id="timerContainer">
+				<span id="timerValue">0:00</span>
+			</span>
+			<span id="scoreContainer">
+				<span id="scoreLabel">Score:</span>
+				<span id="scoreValue">0</span>
+			</span>
+			<span id="movesContainer">
+				<span id="movesValue">0</span>
+				<span id="movesLabel">moves</span>
+			</span>
+		</div>
+		<div id="playspace"></div>
+		<div id="usernameInfo">
+			<span id="usernameInfoValue"></span>
+			<span id="usernameInfoLogoutLink" style="display: none;">[logout]</span>
+			<span id="usernameInfoLoginLink">[login]</span>
+			<span id="usernameInfoRegisterLink">[register]</span>
+		</div>
+		<div><img id="helpIcon" src="images/help.png" title="" alt="Help" width="32" height="32"></div>
+		<div id="helpSpace"></div>
+		<div id="helpSpaceResizer"></div>
+		<div id="rightAdHideLinkContainer" style="visibility: hidden;">
+			<span id="rightAdHideLink" class="link">Hide these ads</span>
+		</div>
+		<div id="rightAdContainer">
+			<script type="text/javascript"><!--
+			google_ad_client = "pub-1131416622726904";
+			/* worldofsolitaire right 120x600, created 5/19/09 */
+			google_ad_slot = "2464309302";
+			google_ad_width = 120;
+			google_ad_height = 600;
+			//-->
+			</script>
+			<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>
+		</div>
+		<div id="menuSolitaire" class="menu">
+			<table>
+				<tbody>
+					<tr>
+						<td class="menuBottomBorder" id="menuSolitaireDealAgain">Deal New Cards</td>
+					</tr>
+					<tr>
+						<td class="menuBottomBorder" id="menuSolitaireChooseGame">Select Game...</td>
+					</tr>
+					<tr>
+						<td class="menuBottomBorder" id="menuSolitaireUndoMove">Undo Move</td>
+					</tr>
+					<tr>
+						<td class="menuBottomBorder" id="menuSolitaireViewStatistics">View Statistics...</td>
+					</tr>
+					<tr>
+						<td id="menuSolitaireAbout">About World of Solitaire...</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="menuDecks" class="menu">
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td style="border-bottom: 1px solid white; border-right: 1px solid white;">
+							<img src="decks/paris/preview.png" title="" alt="Paris Deck Preview" width="158" height="123" class="deckPreviewImage"><br>
+							<input type="image" name="optionDeck" value="paris" id="deckparis" src="images/radio.png">
+							<label for="deckparis">Paris</label>
+						</td>
+						<td style="border-bottom: 1px solid white; border-right: 1px solid white;">
+							<img src="decks/ornamental/preview.png" title="" alt="Ornamental Deck Preview" width="158" height="107" class="deckPreviewImage"><br>
+							<input type="image" name="optionDeck" value="ornamental" id="deckornamental" src="images/radio.png">
+							<label for="deckornamental">Ornamental</label>
+						</td>
+						<td style="border-bottom: 1px solid white;">
+							<img src="decks/anglo/preview.png" title="" alt="Anglo-American Preview" width="158" height="107" class="deckPreviewImage"><br>
+							<input type="image" name="optionDeck" value="anglo" id="deckanglo" src="images/radio.png">
+							<label for="deckanglo">Anglo-American</label>
+						</td>
+					</tr>
+					<tr>
+						<td style="border-bottom: 1px solid white; border-right: 1px solid white;">
+							<img src="decks/dondorf/preview.png" title="" alt="Dondorf Deck Preview" width="158" height="123" class="deckPreviewImage"><br>
+							<input type="image" name="optionDeck" value="dondorf" id="deckdondorf" src="images/radio.png">
+							<label for="deckdondorf">Dondorf</label>
+						</td>
+						<td id="menuDeckView" style="border-bottom: 1px solid white; border-right: 1px solid white; vertical-align: middle; font-size: 184%;" colspan="2">
+							See More Decks...<br>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="menuBackground" class="menu">
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td colspan="3" style="border-bottom: 1px solid white; -moz-user-select: text;">
+							<input type="image" name="optionBackground" value="url" id="backgroundurl" src="images/radio.png">
+							<label for="backgroundurl">Custom: </label>
+							<input type="text" name="backgroundURLInputName" id="backgroundURLInput" value="http://">
+						</td>
+					</tr>
+					<tr>
+						<td style="border-bottom: 1px solid white; border-right: 1px solid white;">
+							<img src="textures/preview_woodpanel.jpg" title="" alt="Wood Panel Background Preview" width="158" height="123" class="backgroundPreviewImage"><br>
+							<input type="image" name="optionBackground" value="textures/woodpanel.jpg" id="backgroundwoodpanel" src="images/radio.png">
+							<label for="backgroundwoodpanel">Wood Panel</label>
+						</td>
+						<td style="border-bottom: 1px solid white; border-right: 1px solid white;">
+							<img src="textures/preview_rock.jpg" title="" alt="Rock Background Preview" width="158" height="123" class="backgroundPreviewImage"><br>
+							<input type="image" name="optionBackground" value="textures/rock.jpg" id="backgroundrock" src="images/radio.png">
+							<label for="backgroundrock">Rock</label>
+						</td>
+						<td style="border-bottom: 1px solid white;">
+							<img src="textures/preview_tile.jpg" title="" alt="Tile Background Preview" width="158" height="123" class="backgroundPreviewImage"><br>
+							<input type="image" name="optionBackground" value="textures/tile.jpg" id="backgroundtile" src="images/radio.png">
+							<label for="backgroundtile">Tile</label>
+						</td>
+					</tr>
+					<tr>
+						<td style="border-right: 1px solid white;">
+							<img src="textures/preview_greenfelt.jpg" title="" alt="Green Felt Background Preview" width="158" height="123" class="backgroundPreviewImage"><br>
+							<input type="image" name="optionBackground" value="textures/greenfelt.jpg" id="backgroundgreenfelt" src="images/radio.png">
+							<label for="backgroundgreenfelt">Green Felt</label>
+						</td>
+						<td colspan="2"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>		
+		<div id="menuOptions" class="menu">
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td>
+							<input type="image" name="optionCardSize" value="best" id="optionCardSizeBest" src="images/radio.png">
+							<label for="optionCardSizeBest">Best Looking Cards</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="menuBottomBorder">
+							<input type="image" name="optionCardSize" value="largest" id="optionCardSizeLargest" src="images/radio.png">
+							<label for="optionCardSizeLargest">Largest Sized Cards</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="image" name="optionAnimateCards" value="true" id="optionAnimateCardsCheckbox" src="images/checkbox.png">
+							<label for="optionAnimateCardsCheckbox">Animate Cards</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="menuBottomBorder">
+							<input type="image" name="optionAnimateDeal" value="true" id="optionAnimateDealCheckbox" src="images/checkbox.png">
+							<label for="optionAnimateDealCheckbox">Animate Deal</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="menuBottomBorder">
+							<div>Animation Speed</div>
+							<div class="optionAnimateSpeedLeftLabel">Slow</div>
+							<div id="optionAnimateSpeedContainer">
+								<div id="optionAnimateSpeedBackground"><p class="minHeightIEFix"></p></div>
+								<div id="optionAnimateSpeedThumbContainer" ><img title="" alt="Animation Speed Slider" src="images/horizontalSliderThumb.png" width="31" height="19"></div> 
+							</div>
+							<div class="optionAnimateSpeedRightLabel">Fast</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="image" name="optionAutoPlay" value="obvious" id="optionAutoPlayObvious" src="images/radio.png">
+							<label for="optionAutoPlayObvious">Auto Play Obvious</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="image" name="optionAutoPlay" value="won" id="optionAutoPlayWon" src="images/radio.png">
+							<label for="optionAutoPlayWon">Auto Play When Won</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="menuBottomBorder">
+							<input type="image" name="optionAutoPlay" value="off" id="optionAutoPlayOff" src="images/radio.png">
+							<label for="optionAutoPlayOff">Do Not Auto Play</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="menuBottomBorder">
+							<input type="image" name="optionAutoFlip" value="true" id="optionAutoFlipCheckbox" src="images/checkbox.png">
+							<label for="optionAutoFlipCheckbox">Auto Flip Cards</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="image" name="optionShowTimer" value="true" id="optionShowTimerCheckbox" src="images/checkbox.png">
+							<label for="optionShowTimerCheckbox">Show Timer</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="image" name="optionShowScore" value="true" id="optionShowScoreCheckbox" src="images/checkbox.png">
+							<label for="optionShowScoreCheckbox">Show Score</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="menuBottomBorder">
+							<input type="image" name="optionShowMoves" value="true" id="optionShowMovesCheckbox" src="images/checkbox.png">
+							<label for="optionShowMovesCheckbox">Show Moves Made</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="image" name="optionMenuRequiresClick" value="true" id="optionMenuRequiresClickCheckbox" src="images/checkbox.png">
+							<label for="optionMenuRequiresClickCheckbox">Menu Requires Click to Activate</label>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="about" class="dialogBox">
+			<div class="hd">About World of Solitaire</div>
+			<div class="bd">
+				World of Solitaire is primarily the work of one person, me.<br>
+				I created it so others could have fun playing it. I also did it for the 'challenge' of creating it.<br>
+				If anyone has any comments, questions, ideas or bugs please e-mail me: <a href="mailto: robert@cosmicrealms.com">robert@cosmicrealms.com</a><br>
+				The JavaScript code is under a BSD style license.<br>
+				<br>
+				<fieldset><legend>Offline Version</legend>
+				An 'Offline' version of World of Solitaire is now available for download.<br>
+				<br>
+				The offline version includes all the features of the online version except<br>
+				that it only has four decks and no statistics are recorded or available for viewing.<br>
+				It is also missing the following games: Royal Parade and all the Easthaven versions.<br>
+				<br>
+				You can download the offline version here: <a href="http://worldofsolitaire.com/WorldOfSolitaireOffline.zip">World of Solitaire - Offline.zip</a> (275MB)<br></fieldset>
+				<fieldset><legend>Thanks</legend>
+				Although I created World of Solitaire myself, it would not have been possible without:<br>
+				<br>
+					<table>
+						<tr>
+							<td><ul><li>Yahoo UI Library</li></ul></td>
+							<td>This <a href="http://developer.yahoo.com/yui/">awesome javascript library</a> powers the animations, dragging, dialogs, trees and more.</td>
+						</tr>
+						<tr>
+							<td><ul><li>PlotKit</li></ul></td>
+							<td>The cool charts in the Statistics dialog are made possible with <a href="http://www.liquidx.net/plotkit/">PlotKit</a></td>
+						</tr>
+						<tr>
+							<td><ul><li>KDE, Gnome, Others</li></ul></td>
+							<td><a href="http://www.rahga.com/ggsvg/">Dondorf and Paris</a>, <a href="http://nicubunu.ro/cards/">Ornamental</a> (Nicu), <a href="http://oxygen-icons.org/">Oxygen</a> (KDE), <a href="http://www.gnome.org/projects/gnome-games/">Anglo-American</a> (Aike Reyer)<br>
+							<a href="http://hollybell.deviantart.com/">Majestic</a>, <a href="http://meomeoow.deviantart.com/">Animals</a></td>
+						</tr>
+						<tr>
+							<td><ul><li>IRC</li></ul></td>
+							<td>BIG Thanks to: _kw, aav and _spec on #gamedev on Efnet</td>
+						</tr>
+						<tr>
+							<td><ul><li>Peter Vel</li></ul></td>
+							<td>Peter came up with the idea and concept code for the winning 'explosion' animation.</td>
+						</tr>
+						<tr>
+							<td><ul><li>Meister Q</li></ul></td>
+							<td>His '<a href="http://www.debian-art.org/content/show.php?content=46238">MurrinaBlackBlue</a>' theme is used for the checkboxes, radio buttons and sliders.</td>
+						</tr>
+						<tr>
+							<td><ul><li>Tango Icon Gallery</li></ul></td>
+							<td>The favorite/bookmark icon, refresh and stop card graphics are from <a href="http://tango.freedesktop.org/Tango_Icon_Gallery">here</a></td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+			<div class="ft"></div>
+		</div>		
+		<div id="statusPanel">
+			<div class="hd" id="statusPanelHeader">Please Wait</div>
+			<div class="bd">
+				<div id="statusPanelBarContainer">
+					<div id="statusPanelBar">&nbsp;</div>
+					<div id="statusPanelBarPercent"></div>
+				</div>
+				<div id="statusPanelInfiniteBarContainer" style="display: none;">
+					<img src="images/infiniteBar.gif" title="" alt="Infinite Progress Bar" id="infiniteProgressBarImage" width="220" height="19">
+				</div>
+				<div id="statusPanelBarText"></div>
+ 			</div>
+			<div class="ft"></div>
+		</div>
+		<div id="gameChooser" class="dialogBox">
+			<div class="hd" id="gameChooserHeader">Select a Solitaire Game</div>
+			<div class="bd" id="gameChooserBody">
+				<div id="gameChooserContents">
+					<div id="gameChooserLeft">
+						<div id="gameChooserTree"></div>
+						<div>
+							<ul id="gameChooserList">
+								<li>Games - Recently Played
+									<ul id="gameChooserListRecentlyPlayed"><li>&nbsp;</li></ul>
+								</li>
+								<li>Games - by Time
+									<ul>
+										<li>Short (4 minutes or less)
+											<ul>
+												<li title="AcesUp">Aces Up</li>
+												<li title="Clock">Clock</li>
+												<li title="Golf">Golf</li>
+												<li title="GolfRelaxed">Golf Relaxed</li>
+												<li title="KlondikeTurn3">Klondike (Turn Three)</li>
+												<li title="Pyramid">Pyramid</li>
+												<li title="PyramidEasy">Pyramid Easy</li>
+												<li title="PyramidRelaxed">Pyramid Relaxed</li>
+												<li title="PyramidRelaxedEasy">Pyramid Relaxed Easy</li>
+												<li title="RussianSolitaire">Russian Solitaire</li>
+												<li title="TriPeaks">Tri Peaks</li>
+												<li title="TriPeaksStrict">Tri Peaks Strict</li>
+											</ul>
+										</li>
+										<li>Medium (4 to 9 minutes)
+											<ul>
+												<li title="BakersGame">Baker's Game</li>
+												<li title="BakersGameKingsOnly">Baker's Game (Kings Only)</li>
+												<li title="BearRiver">Bear River</li>
+												<li title="Canfield">Canfield</li>
+												<li title="CastlesInSpain">Castles in Spain</li>
+												<li title="Cruel">Cruel</li>
+												<li title="CruelTraditionalRedeal">Cruel (Traditional Redeal)</li>
+												<li title="Easthaven">Easthaven</li>
+												<li title="EasthavenKingsOnly">Easthaven (Kings Only)</li>
+												<li title="EightOff">Eight Off</li>
+												<li title="FlowerGarden">Flower Garden</li>
+												<li title="FreeCell">FreeCell</li>
+												<li title="KlondikeTurn1">Klondike (Turn One)</li>
+												<li title="LaBelleLucie">La Belle Lucie</li>
+												<li title="SeahavenTowers">Seahaven Towers</li>
+												<li title="Scorpion">Scorpion</li>
+												<li title="SpanishPatience">Spanish Patience</li>
+												<li title="ThreeShufflesAndADraw">Three Shuffles and a Draw</li>
+												<li title="Trefoil">Trefoil</li>
+												<li title="TrefoilAndADraw">Trefoil and a Draw</li>
+												<li title="Yukon">Yukon</li>
+											</ul>
+										</li>
+										<li>Long (9 minutes or longer)
+											<ul>
+												<li title="BakersDozen">Baker's Dozen</li>
+												<li title="DoubleEasthaven">Double Easthaven</li>
+												<li title="DoubleEasthavenKingsOnly">Double Easthaven (Kings Only)</li>
+												<li title="DoubleKlondikeTurn1">Double Klondike (Turn One)</li>
+												<li title="DoubleKlondikeTurn3">Double Klondike (Turn Three)</li>
+												<li title="FortyThieves">Forty Thieves</li>
+												<li title="Montana">Montana</li>
+												<li title="RoyalParade">Royal Parade</li>
+												<li title="Spider">Spider</li>
+												<li title="Spider1Suit">Spider (1 Suit)</li>
+												<li title="Spider2Suits">Spider (2 Suits)</li>
+												<li title="Sultan">Sultan</li>
+												<li title="TripleEasthaven">Triple Easthaven</li>
+												<li title="TripleEasthavenKingsOnly">Triple Easthaven (Kings Only)</li>
+												<li title="TripleKlondikeTurn1">Triple Klondike (Turn One)</li>
+												<li title="TripleKlondikeTurn3">Triple Klondike (Turn Three)</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>Games - by Difficulty
+									<ul>
+										<li>Easy (More than 15% of hands are won)
+											<ul>
+												<li title="BakersDozen">Baker's Dozen</li>
+												<li title="BearRiver">Bear River</li>
+												<li title="CastlesInSpain">Castles in Spain</li>
+												<li title="DoubleEasthaven">Double Easthaven</li>
+												<li title="DoubleKlondikeTurn1">Double Klondike (Turn One)</li>
+												<li title="DoubleKlondikeTurn3">Double Klondike (Turn Three)</li>
+												<li title="Easthaven">Easthaven</li>
+												<li title="EightOff">Eight Off</li>
+												<li title="FreeCell">FreeCell</li>
+												<li title="GolfRelaxed">Golf Relaxed</li>
+												<li title="KlondikeTurn1">Klondike (Turn One)</li>
+												<li title="PyramidRelaxedEasy">Pyramid Relaxed Easy</li>
+												<li title="SeahavenTowers">Seahaven Towers</li>
+												<li title="SpanishPatience">Spanish Patience</li>
+												<li title="Spider1Suit">Spider (1 Suit)</li>
+												<li title="Sultan">Sultan</li>
+												<li title="TrefoilAndADraw">Trefoil and a Draw</li>
+												<li title="TriPeaks">Tri Peaks</li>
+												<li title="TriPeaksStrict">Tri Peaks Strict</li>
+												<li title="TripleEasthaven">Triple Easthaven</li>
+												<li title="TripleEasthavenKingsOnly">Triple Easthaven (Kings Only)</li>
+												<li title="TripleKlondikeTurn1">Triple Klondike (Turn One)</li>
+												<li title="TripleKlondikeTurn3">Triple Klondike (Turn Three)</li>
+											</ul>
+										</li>
+										<li>Medium (5% to 15% of hands are won)
+											<ul>
+												<li title="BakersGame">Baker's Game</li>
+												<li title="Canfield">Canfield</li>	
+												<li title="Clock">Clock</li>					
+												<li title="CruelTraditionalRedeal">Cruel (Traditional Redeal)</li>
+												<li title="DoubleEasthavenKingsOnly">Double Easthaven (Kings Only)</li>
+												<li title="EasthavenKingsOnly">Easthaven (Kings Only)</li>
+												<li title="FlowerGarden">Flower Garden</li>						
+												<li title="KlondikeTurn3">Klondike (Turn Three)</li>
+												<li title="LaBelleLucie">La Belle Lucie</li>
+												<li title="Montana">Montana</li>
+												<li title="PyramidEasy">Pyramid Easy</li>
+												<li title="Spider2Suits">Spider (2 Suits)</li>
+												<li title="ThreeShufflesAndADraw">Three Shuffles and a Draw</li>
+												<li title="Trefoil">Trefoil</li>
+												<li title="Yukon">Yukon</li>
+											</ul>
+										</li>
+										<li>Hard (Less than 5% of hands are won)
+											<ul>
+												<li title="AcesUp">Aces Up</li>
+												<li title="BakersGameKingsOnly">Baker's Game (Kings Only)</li>
+												<li title="Cruel">Cruel</li>
+												<li title="FortyThieves">Forty Thieves</li>												
+												<li title="Golf">Golf</li>
+												<li title="Pyramid">Pyramid</li>
+												<li title="PyramidRelaxed">Pyramid Relaxed</li>
+												<li title="RoyalParade">Royal Parade</li>
+												<li title="RussianSolitaire">Russian Solitaire</li>
+												<li title="Scorpion">Scorpion</li>
+												<li title="Spider">Spider</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>Games - by Skill
+									<ul>
+										<li>Low
+											<ul>
+												<li title="Canfield">Canfield</li>
+												<li title="Clock">Clock</li>
+												<li title="CastlesInSpain">Castles in Spain</li>
+												<li title="Golf">Golf</li>
+												<li title="GolfRelaxed">Golf Relaxed</li>
+												<li title="PyramidRelaxedEasy">Pyramid Relaxed Easy</li>
+												<li title="Sultan">Sultan</li>
+												<li title="TriPeaks">Tri Peaks</li>
+												<li title="TriPeaksStrict">Tri Peaks Strict</li>
+											</ul>
+										</li>
+										<li>Medium
+											<ul>
+												<li title="AcesUp">Aces Up</li>
+												<li title="BearRiver">Bear River</li>
+												<li title="Cruel">Cruel</li>
+												<li title="CruelTraditionalRedeal">Cruel (Traditional Redeal)</li>
+												<li title="DoubleEasthaven">Double Easthaven</li>
+												<li title="DoubleEasthavenKingsOnly">Double Easthaven (Kings Only)</li>
+												<li title="DoubleKlondikeTurn1">Double Klondike (Turn One)</li>
+												<li title="DoubleKlondikeTurn3">Double Klondike (Turn Three)</li>
+												<li title="Easthaven">Easthaven</li>
+												<li title="EasthavenKingsOnly">Easthaven (Kings Only)</li>
+												<li title="KlondikeTurn1">Klondike (Turn One)</li>
+												<li title="KlondikeTurn3">Klondike (Turn Three)</li>
+												<li title="Montana">Montana</li>
+												<li title="Pyramid">Pyramid</li>
+												<li title="PyramidEasy">Pyramid Easy</li>
+												<li title="PyramidRelaxed">Pyramid Relaxed</li>
+												<li title="Spider1Suit">Spider (1 Suit)</li>
+												<li title="Spider2Suits">Spider (2 Suits)</li>
+												<li title="TripleEasthaven">Triple Easthaven</li>
+												<li title="TripleEasthavenKingsOnly">Triple Easthaven (Kings Only)</li>
+												<li title="TripleKlondikeTurn1">Triple Klondike (Turn One)</li>
+												<li title="TripleKlondikeTurn3">Triple Klondike (Turn Three)</li>
+											</ul>
+										</li>
+										<li>High
+											<ul>
+												<li title="BakersDozen">Baker's Dozen</li>
+												<li title="BakersGame">Baker's Game</li>
+												<li title="BakersGameKingsOnly">Baker's Game (Kings Only)</li>
+												<li title="EightOff">Eight Off</li>
+												<li title="FortyThieves">Forty Thieves</li>
+												<li title="FlowerGarden">Flower Garden</li>
+												<li title="FreeCell">FreeCell</li>
+												<li title="LaBelleLucie">La Belle Lucie</li>
+												<li title="RoyalParade">Royal Parade</li>
+												<li title="RussianSolitaire">Russian Solitaire</li>
+												<li title="SeahavenTowers">Seahaven Towers</li>
+												<li title="SpanishPatience">Spanish Patience</li>
+												<li title="Scorpion">Scorpion</li>
+												<li title="Spider">Spider</li>
+												<li title="ThreeShufflesAndADraw">Three Shuffles and a Draw</li>
+												<li title="Trefoil">Trefoil</li>
+												<li title="TrefoilAndADraw">Trefoil and a Draw</li>
+												<li title="Yukon">Yukon</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>Games - by Type
+									<ul>
+										<li>Baker's Dozen
+											<ul>
+												<li title="BakersDozen">Baker's Dozen</li>
+												<li title="CastlesInSpain">Castles in Spain</li>
+												<li title="SpanishPatience">Spanish Patience</li>
+											</ul>
+										</li>
+										<li>Canfield
+											<ul>
+												<li title="Canfield">Canfield</li>						
+											</ul>
+										</li>
+										<li>Clock
+											<ul>
+												<li title="Clock">Clock</li>						
+											</ul>
+										</li>
+										<li>Fan
+											<ul>
+												<li title="BearRiver">Bear River</li>
+												<li title="LaBelleLucie">La Belle Lucie</li>
+												<li title="ThreeShufflesAndADraw">Three Shuffles and a Draw</li>
+												<li title="Trefoil">Trefoil</li>
+												<li title="TrefoilAndADraw">Trefoil and a Draw</li>
+											</ul>
+										</li>
+										<li>Flower Garden
+											<ul>
+												<li title="FlowerGarden">Flower Garden</li>
+											</ul>
+										</li>
+										<li>Forty Thieves
+											<ul>
+												<li title="Cruel">Cruel</li>
+												<li title="CruelTraditionalRedeal">Cruel (Traditional Redeal)</li>
+												<li title="FortyThieves">Forty Thieves</li>
+											</ul>
+										</li>
+										<li>FreeCell
+											<ul>
+												<li title="BakersGame">Baker's Game</li>
+												<li title="BakersGameKingsOnly">Baker's Game (Kings Only)</li>
+												<li title="EightOff">Eight Off</li>
+												<li title="FreeCell">FreeCell</li>
+												<li title="SeahavenTowers">Seahaven Towers</li>
+											</ul>
+										</li>
+										<li>Golf
+											<ul>
+												<li title="Golf">Golf</li>
+												<li title="GolfRelaxed">Golf Relaxed</li>
+												<li title="TriPeaks">Tri Peaks</li>
+												<li title="TriPeaksStrict">Tri Peaks Strict</li>
+											</ul>
+										</li>
+										<li>Klondike
+											<ul>
+												<li title="DoubleEasthaven">Double Easthaven</li>
+												<li title="DoubleEasthavenKingsOnly">Double Easthaven (Kings Only)</li>
+												<li title="DoubleKlondikeTurn1">Double Klondike (Turn One)</li>
+												<li title="DoubleKlondikeTurn3">Double Klondike (Turn Three)</li>
+												<li title="Easthaven">Easthaven</li>
+												<li title="EasthavenKingsOnly">Easthaven (Kings Only)</li>
+												<li title="KlondikeTurn1">Klondike (Turn One)</li>
+												<li title="KlondikeTurn3">Klondike (Turn Three)</li>
+												<li title="TripleEasthaven">Triple Easthaven</li>
+												<li title="TripleEasthavenKingsOnly">Triple Easthaven (Kings Only)</li>
+												<li title="TripleKlondikeTurn1">Triple Klondike (Turn One)</li>
+												<li title="TripleKlondikeTurn3">Triple Klondike (Turn Three)</li>
+											</ul>
+										</li>
+										<li>Montana
+											<ul>
+												<li title="Montana">Montana</li>
+											</ul>
+										</li>
+										<li>Other
+											<ul>
+												<li title="AcesUp">Aces Up</li>
+												<li title="RoyalParade">Royal Parade</li>
+												<li title="Sultan">Sultan</li>
+											</ul>
+										</li>
+										<li>Pairing
+											<ul>
+												<li title="Pyramid">Pyramid</li>
+												<li title="PyramidEasy">Pyramid Easy</li>
+												<li title="PyramidRelaxed">Pyramid Relaxed</li>
+												<li title="PyramidRelaxedEasy">Pyramid Relaxed Easy</li>
+											</ul>
+										</li>
+										<li>Spider
+											<ul>
+												<li title="Scorpion">Scorpion</li>
+												<li title="Spider">Spider</li>
+												<li title="Spider1Suit">Spider (1 Suit)</li>
+												<li title="Spider2Suits">Spider (2 Suits)</li>
+											</ul>
+										</li>
+										<li>Yukon
+											<ul>
+												<li title="RussianSolitaire">Russian Solitaire</li>
+												<li title="Yukon">Yukon</li>
+											</ul>
+										</li>
+									</ul>
+								</li>								
+								<li>Games - Alphabetical
+									<ul>
+										<li title="AcesUp">Aces Up</li>
+										<li title="BakersDozen">Baker's Dozen</li>
+										<li title="BakersGame">Baker's Game</li>
+										<li title="BakersGameKingsOnly">Baker's Game (Kings Only)</li>
+										<li title="BearRiver">Bear River</li>
+										<li title="Canfield">Canfield</li>
+										<li title="CastlesInSpain">Castles in Spain</li>
+										<li title="Clock">Clock</li>
+										<li title="Cruel">Cruel</li>
+										<li title="CruelTraditionalRedeal">Cruel (Traditional Redeal)</li>
+										<li title="DoubleEasthaven">Double Easthaven</li>
+										<li title="DoubleEasthavenKingsOnly">Double Easthaven (Kings Only)</li>
+										<li title="DoubleKlondikeTurn1">Double Klondike (Turn One)</li>
+										<li title="DoubleKlondikeTurn3">Double Klondike (Turn Three)</li>
+										<li title="Easthaven">Easthaven</li>
+										<li title="EasthavenKingsOnly">Easthaven (Kings Only)</li>
+										<li title="EightOff">Eight Off</li>
+										<li title="FlowerGarden">Flower Garden</li>
+										<li title="FortyThieves">Forty Thieves</li>
+										<li title="FreeCell">FreeCell</li>
+										<li title="Golf">Golf</li>
+										<li title="GolfRelaxed">Golf Relaxed</li>
+										<li title="KlondikeTurn1">Klondike (Turn One)</li>
+										<li title="KlondikeTurn3">Klondike (Turn Three)</li>
+										<li title="LaBelleLucie">La Belle Lucie</li>
+										<li title="Montana">Montana</li>
+										<li title="Pyramid">Pyramid</li>
+										<li title="PyramidEasy">Pyramid Easy</li>
+										<li title="PyramidRelaxed">Pyramid Relaxed</li>
+										<li title="PyramidRelaxedEasy">Pyramid Relaxed Easy</li>
+										<li title="RoyalParade">Royal Parade</li>
+										<li title="RussianSolitaire">Russian Solitaire</li>
+										<li title="SeahavenTowers">Seahaven Towers</li>
+										<li title="Scorpion">Scorpion</li>
+										<li title="SpanishPatience">Spanish Patience</li>
+										<li title="Spider">Spider</li>
+										<li title="Spider1Suit">Spider (1 Suit)</li>
+										<li title="Spider2Suits">Spider (2 Suits)</li>
+										<li title="Sultan">Sultan</li>
+										<li title="ThreeShufflesAndADraw">Three Shuffles and a Draw</li>
+										<li title="Trefoil">Trefoil</li>
+										<li title="TrefoilAndADraw">Trefoil and a Draw</li>
+										<li title="TriPeaks">Tri Peaks</li>
+										<li title="TriPeaksStrict">Tri Peaks Strict</li>
+										<li title="TripleEasthaven">Triple Easthaven</li>
+										<li title="TripleEasthavenKingsOnly">Triple Easthaven (Kings Only)</li>
+										<li title="TripleKlondikeTurn1">Triple Klondike (Turn One)</li>
+										<li title="TripleKlondikeTurn3">Triple Klondike (Turn Three)</li>
+										<li title="Yukon">Yukon</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div id="gameChooserRight">
+						<div id="gameChooserRightTop">
+							<img src="games/previews/AcesUp.png" width="400" height="79" title="" alt="Aces Up Preview" id="gameChooserRightTopAcesUp" class="gamePreviewImage">
+							<img src="games/previews/BakersDozen.png" width="221" height="200" title="" alt="Baker's Dozen Preview" id="gameChooserRightTopBakersDozen" class="gamePreviewImage">
+							<img src="games/previews/FreeCell.png" width="400" height="193" title="" alt="Bakers's Game Preview" id="gameChooserRightTopBakersGame" class="gamePreviewImage">
+							<img src="games/previews/FreeCell.png" width="400" height="193" title="" alt="Baker's Game (Kings Only) Preview" id="gameChooserRightTopBakersGameKingsOnly" class="gamePreviewImage">
+							<img src="games/previews/BearRiver.png" width="311" height="200" title="" alt="Bear River Preview" id="gameChooserRightTopBearRiver" class="gamePreviewImage">
+							<img src="games/previews/Canfield.png" width="328" height="200" title="" alt="Canfield Preview" id="gameChooserRightTopCanfield" class="gamePreviewImage">
+							<img src="games/previews/CastlesInSpain.png" width="221" height="200" title="" alt="Castles in Spain Preview" id="gameChooserRightTopCastlesInSpain" class="gamePreviewImage">
+							<img src="games/previews/Clock.png" width="170" height="200" title="" alt="Clock Preview" id="gameChooserRightTopClock" class="gamePreviewImage">
+							<img src="games/previews/Cruel.png" width="271" height="200" title="" alt="Cruel Preview" id="gameChooserRightTopCruel" class="gamePreviewImage">
+							<img src="games/previews/Cruel.png" width="271" height="200" title="" alt="Cruel (Traditional Redeal) Preview" id="gameChooserRightTopCruelTraditionalRedeal" class="gamePreviewImage">
+							<img src="games/previews/DoubleEasthaven.png" width="400" height="152" title="" alt="Double Easthaven Preview" id="gameChooserRightTopDoubleEasthaven" class="gamePreviewImage">
+							<img src="games/previews/DoubleEasthaven.png" width="400" height="152" title="" alt="Double Easthaven (Kings Only) Preview" id="gameChooserRightTopDoubleEasthavenKingsOnly" class="gamePreviewImage">
+							<img src="games/previews/DoubleKlondikeTurn1.png" width="400" height="172" title="" alt="Double Klondike (Turn One) Preview" id="gameChooserRightTopDoubleKlondikeTurn1" class="gamePreviewImage">
+							<img src="games/previews/DoubleKlondikeTurn3.png" width="400" height="172" title="" alt="Double Klondike (Turn Three) Preview" id="gameChooserRightTopDoubleKlondikeTurn3" class="gamePreviewImage">
+							<img src="games/previews/Easthaven.png" width="400" height="196" title="" alt="Easthaven Preview" id="gameChooserRightTopEasthaven" class="gamePreviewImage">
+							<img src="games/previews/Easthaven.png" width="400" height="196" title="" alt="Easthaven (Kings Only) Preview" id="gameChooserRightTopEasthavenKingsOnly" class="gamePreviewImage">
+							<img src="games/previews/EightOff.png" width="269" height="200" title="" alt="Eight Off Preview" id="gameChooserRightTopEightOff" class="gamePreviewImage">
+							<img src="games/previews/FlowerGarden.png" width="151" height="200" title="" alt="Flower Garden Preview" id="gameChooserRightTopFlowerGarden" class="gamePreviewImage">
+							<img src="games/previews/FortyThieves.png" width="400" height="143" title="" alt="Forty Thieves Preview" id="gameChooserRightTopFortyThieves" class="gamePreviewImage">
+							<img src="games/previews/FreeCell.png" width="400" height="193" title="" alt="FreeCell Preview" id="gameChooserRightTopFreeCell" class="gamePreviewImage">
+							<img src="games/previews/Golf.png" width="352" height="200" title="" alt="Golf Preview" id="gameChooserRightTopGolf" class="gamePreviewImage">
+							<img src="games/previews/Golf.png" width="352" height="200" title="" alt="Golf Relaxed Preview" id="gameChooserRightTopGolfRelaxed" class="gamePreviewImage">
+							<img src="games/previews/KlondikeTurn1.png" width="400" height="193" title="" alt="Klondike (Turn One) Preview" id="gameChooserRightTopKlondikeTurn1" class="gamePreviewImage">
+							<img src="games/previews/KlondikeTurn3.png" width="400" height="193" title="" alt="Klondike (Turn Three) Preview" id="gameChooserRightTopKlondikeTurn3" class="gamePreviewImage">
+							<img src="games/previews/LaBelleLucie.png" width="251" height="200" title="" alt="La Belle Lucie Preview" id="gameChooserRightTopLaBelleLucie" class="gamePreviewImage">
+							<img src="games/previews/Montana.png" width="368" height="200" title="" alt="Montana Preview" id="gameChooserRightTopMontana" class="gamePreviewImage">
+							<img src="games/previews/Pyramid.png" width="276" height="200" title="" alt="Pyramid Preview" id="gameChooserRightTopPyramid" class="gamePreviewImage">
+							<img src="games/previews/Pyramid.png" width="276" height="200" title="" alt="Pyramid Easy Preview" id="gameChooserRightTopPyramidEasy" class="gamePreviewImage">
+							<img src="games/previews/Pyramid.png" width="276" height="200" title="" alt="Pyramid Relaxed Preview" id="gameChooserRightTopPyramidRelaxed" class="gamePreviewImage">
+							<img src="games/previews/Pyramid.png" width="276" height="200" title="" alt="Pyramid Relaxed Easy Preview" id="gameChooserRightTopPyramidRelaxedEasy" class="gamePreviewImage">
+							<img src="games/previews/RoyalParade.png" width="262" height="200" title="" alt="Royal Parade" id="gameChooserRightTopRoyalParade" class="gamePreviewImage">
+							<img src="games/previews/Yukon.png" width="311" height="200" title="" alt="Russian Solitaire Preview" id="gameChooserRightTopRussianSolitaire" class="gamePreviewImage">
+							<img src="games/previews/SeahavenTowers.png" width="400" height="136" title="" alt="Seahaven Towers Preview" id="gameChooserRightTopSeahavenTowers" class="gamePreviewImage">
+							<img src="games/previews/Scorpion.png" width="320" height="200" title="" alt="Scorpion Preview" id="gameChooserRightTopScorpion" class="gamePreviewImage">
+							<img src="games/previews/SpanishPatience.png" width="221" height="200" title="" alt="Spanish Patience Preview" id="gameChooserRightTopSpanishPatience" class="gamePreviewImage">
+							<img src="games/previews/Spider.png" width="400" height="163" title="" alt="Spider Preview" id="gameChooserRightTopSpider" class="gamePreviewImage">
+							<img src="games/previews/Spider1Suit.png" width="400" height="163" title="" alt="Spider (1 Suit) Preview" id="gameChooserRightTopSpider1Suit" class="gamePreviewImage">
+							<img src="games/previews/Spider2Suits.png" width="400" height="163" title="" alt="Spider (2 Suits) Preview" id="gameChooserRightTopSpider2Suits" class="gamePreviewImage">
+							<img src="games/previews/Sultan.png" width="205" height="200" title="" alt="Sultan Preview" id="gameChooserRightTopSultan" class="gamePreviewImage">
+							<img src="games/previews/LaBelleLucie.png" width="251" height="200" title="" alt="Three Shuffles and a Draw Preview" id="gameChooserRightTopThreeShufflesAndADraw" class="gamePreviewImage">
+							<img src="games/previews/Trefoil.png" width="251" height="200" title="" alt="Trefoil Preview" id="gameChooserRightTopTrefoil" class="gamePreviewImage">
+							<img src="games/previews/Trefoil.png" width="251" height="200" title="" alt="Trefoil and a Draw Preview" id="gameChooserRightTopTrefoilAndADraw" class="gamePreviewImage">
+							<img src="games/previews/TriPeaks.png" width="400" height="231" title="" alt="Tri Peaks Preview" id="gameChooserRightTopTriPeaks" class="gamePreviewImage">
+							<img src="games/previews/TriPeaks.png" width="400" height="231" title="" alt="Tri Peaks Strict Preview" id="gameChooserRightTopTriPeaksStrict" class="gamePreviewImage">
+							<img src="games/previews/TripleEasthaven.png" width="400" height="102" title="" alt="Triple Easthaven Preview" id="gameChooserRightTopTripleEasthaven" class="gamePreviewImage">
+							<img src="games/previews/TripleEasthaven.png" width="400" height="102" title="" alt="Triple Easthaven (Kings Only) Preview" id="gameChooserRightTopTripleEasthavenKingsOnly" class="gamePreviewImage">
+							<img src="games/previews/TripleKlondikeTurn1.png" width="400" height="139" title="" alt="Triple Klondike (Turn One) Preview" id="gameChooserRightTopTripleKlondikeTurn1" class="gamePreviewImage">
+							<img src="games/previews/TripleKlondikeTurn3.png" width="400" height="139" title="" alt="Triple Klondike (Turn Three) Preview" id="gameChooserRightTopTripleKlondikeTurn3" class="gamePreviewImage">
+							<img src="games/previews/Yukon.png" width="311" height="200" title="" alt="Yukon Preview" id="gameChooserRightTopYukon" class="gamePreviewImage">
+						</div>
+						<div id="gameChooserRightMiddle">
+							<div id="gameChooserRightMiddleAcesUp">
+								<div class="helpRulesGameHeader">Aces Up</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Other</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards except the Aces to the Foundation</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li>Aces are High</li>
+										<li>Auto Play is not used for this game</li>
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>All played cards are moved here</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>If the top card is the same suit but of lower rank than the top card of another Tableau spot, then you may click it to move it to the Foundation</li>
+												<li>An empty spot may be filled with the top card from another Tableau spot</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleBakersDozen">
+								<div class="helpRulesGameHeader">Baker's Dozen</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Baker's Dozen</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may NOT be filled</li>
+												<li>All Kings are placed at the bottom during dealing</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleBakersGame">
+								<div class="helpRulesGameHeader">Baker's Game</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>FreeCell</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved so long as there are enough empty Cell spots available</li>
+												<li>An empty spot may be filled with any card or correctly ranked pile</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Cell</span>
+											<ul>
+												<li>Can only contain 1 card</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleBakersGameKingsOnly">
+								<div class="helpRulesGameHeader">Baker's Game (Kings Only)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>FreeCell</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved so long as there are enough empty Cell spots available</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Cell</span>
+											<ul>
+												<li>Can only contain 1 card</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleBearRiver">
+								<div class="helpRulesGameHeader">Bear River</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Fan</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit starting at the rank initially dealt to the first Foundation spot</li>
+												<li>An Ace may be played on the King of the same suit</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built up or down by rank and by suit</li>
+												<li>A King may be played on an Ace and an Ace may be played on a King</li>
+												<li>The top card may be moved</li>
+												<li>Maximum of 3 cards in pile</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Hole</span>
+											<ul>
+												<li>Built up or down by rank and by suit</li>
+												<li>A King may be played on an Ace and an Ace may be played on a King</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may be filled with any card. This only applies to the last column on the far right (Hole spots)</li>
+												<li>Maximum of 3 cards in pile</li>
+											</ul>
+										</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Credit</span><ul>
+										<li>Bear River is a Solitaire game by The Levin Family</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleCanfield">
+								<div class="helpRulesGameHeader">Canfield</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Canfield</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Low</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit starting at the rank initially dealt to the first Tableau spot</li>
+												<li>An Ace may be played on the King of the same suit</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>A King may be played on an Ace of an alternate color</li>
+												<li>The top card or a complete pile may be moved</li>
+												<li>An empty spot is automatically filled with a card from the Reserve</li>
+												<li>An empty spot may be filled with any card or pile when the Reserve is empty</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Reserve</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 3 cards to the Waste</li>
+												<li>Click when empty to turn face down and move all cards from the Waste to the Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleCastlesInSpain">
+								<div class="helpRulesGameHeader">Castles in Spain</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Baker's Dozen</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Low</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may be filled with any card</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleClock">
+								<div class="helpRulesGameHeader">Clock</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Clock</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Low</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li>Auto Play is not used for this game</li>
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Can receive cards with rank equal to the position this spot has on a clock face (Aces at the 1 position, Twos at the 2 position, etc.)</li>
+												<li>Kings go in the center</li>
+												<li>Once all four Kings are in the center, no more moves are possible</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>At the beginning of the game the top card in center spot may be turned up</li>
+												<li>During the game the top card may only be turned up when the last move made was to the matching Foundation spot</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleCruel">
+								<div class="helpRulesGameHeader">Cruel</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Forty Thieves</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+												<li>The Aces start the game here</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may NOT be filled</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to re-deal the cards in sets of 4. They are not reshuffled.</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>	
+							<div id="gameChooserRightMiddleCruelTraditionalRedeal">
+								<div class="helpRulesGameHeader">Cruel (Traditional Redeal)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Forty Thieves</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+												<li>The Aces start the game here</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may NOT be filled</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to re-deal the cards in sets of 4 using the traditional redealing method. They are not reshuffled.</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>	
+							<div id="gameChooserRightMiddleDoubleEasthaven">
+								<div class="helpRulesGameHeader">Double Easthaven</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with any card or correctly ranked pile</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddleDoubleEasthavenKingsOnly">
+								<div class="helpRulesGameHeader">Double Easthaven (Kings Only)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>														
+							<div id="gameChooserRightMiddleDoubleKlondikeTurn1">
+								<div class="helpRulesGameHeader">Double Klondike (Turn One)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to the Waste</li>
+												<li>Click when empty to turn face down and move all cards from the Waste to the Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddleDoubleKlondikeTurn3">
+								<div class="helpRulesGameHeader">Double Klondike (Turn Three)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 3 cards to the Waste</li>
+												<li>Click when empty to turn face down and move all cards from the Waste to the Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleEasthaven">
+								<div class="helpRulesGameHeader">Easthaven</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with any card or correctly ranked pile</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddleEasthavenKingsOnly">
+								<div class="helpRulesGameHeader">Easthaven (Kings Only)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>														
+							<div id="gameChooserRightMiddleEightOff">
+								<div class="helpRulesGameHeader">Eight Off</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>FreeCell</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved so long as there are enough empty Cell spots available</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Cell</span>
+											<ul>
+												<li>Can only contain 1 card</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleFlowerGarden">
+								<div class="helpRulesGameHeader">Flower Garden</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Flower Garden</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may be filled with any card</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Reserve</span>
+											<ul>
+												<li>Any single card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleFortyThieves">
+								<div class="helpRulesGameHeader">Forty Thieves</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Forty Thieves</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may be filled with any card</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to the Waste</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddleFreeCell">
+								<div class="helpRulesGameHeader">FreeCell</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>FreeCell</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved so long as there are enough empty Cell spots available</li>
+												<li>An empty spot may be filled with any card or correctly ranked pile</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Cell</span>
+											<ul>
+												<li>Can only contain 1 card</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleGolf">
+								<div class="helpRulesGameHeader">Golf</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Golf</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Low</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundation</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up or down by rank</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to the Foundation</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleGolfRelaxed">
+								<div class="helpRulesGameHeader">Golf Relaxed</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Golf</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Low</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundation</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up or down by rank</li>
+												<li>A King may be played on an Ace and an Ace may be played on a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to the Foundation</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleKlondikeTurn1">
+								<div class="helpRulesGameHeader">Klondike (Turn One)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to the Waste</li>
+												<li>Click when empty to turn face down and move all cards from the Waste to the Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddleKlondikeTurn3">
+								<div class="helpRulesGameHeader">Klondike (Turn Three)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 3 cards to the Waste</li>
+												<li>Click when empty to turn face down and move all cards from the Waste to the Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>				
+							<div id="gameChooserRightMiddleLaBelleLucie">
+								<div class="helpRulesGameHeader">La Belle Lucie</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Fan</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may NOT be filled</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to reshuffle all remaining cards in the Tableau</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>										
+							<div id="gameChooserRightMiddleMontana">
+								<div class="helpRulesGameHeader">Montana</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Montana</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Order cards left to right in suit from Two to King</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li>Aces are not used in this game</li>
+										<li>Auto Play is not used for this game</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>An empty spot may be filled with a card that is of the same suit and one rank higher than the card to the left</li>
+												<li>The top card may be moved</li>
+												<li>The far left spot may only be filled with a Two</li>
+												<li>No card may be placed in the spot to the right of a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to reshuffle and deal face up all cards not yet in order</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddlePyramid">
+								<div class="helpRulesGameHeader">Pyramid</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Pyramid</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundation</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>All matched cards are moved here</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Only exposed cards may be moved</li>
+												<li>Move a card onto another exposed card so that the ranks combine to equal 13</li>
+												<li>Kings are worth 13 and can be moved directly to the Foundation</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click the top face down card to turn it face up</li>
+												<li>The top face up card may be moved</li>
+												<li>Click the top face up card to move it to the Waste</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddlePyramidEasy">
+								<div class="helpRulesGameHeader">Pyramid Easy</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Pyramid</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundation</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>All matched cards are moved here</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Only exposed cards may be moved</li>
+												<li>Move a card onto another exposed card so that the ranks combine to equal 13</li>
+												<li>Kings are worth 13 and can be moved directly to the Foundation</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click the top face down card to turn it face up</li>
+												<li>The top face up card may be moved</li>
+												<li>Click the top face up card to move it to the Waste</li>
+												<li>Click when empty to turn face down and move all cards from the Waste to the Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddlePyramidRelaxed">
+								<div class="helpRulesGameHeader">Pyramid Relaxed</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Pyramid</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards from the Tableau to the Foundation</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>All matched cards are moved here</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Only exposed cards may be moved</li>
+												<li>Move a card onto another exposed card so that the ranks combine to equal 13</li>
+												<li>Kings are worth 13 and can be moved directly to the Foundation</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click the top face down card to turn it face up</li>
+												<li>The top face up card may be moved</li>
+												<li>Click the top face up card to move it to the Waste</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddlePyramidRelaxedEasy">
+								<div class="helpRulesGameHeader">Pyramid Relaxed Easy</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Pyramid</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Low</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards from the Tableau to the Foundation</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>All matched cards are moved here</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Only exposed cards may be moved</li>
+												<li>Move a card onto another exposed card so that the ranks combine to equal 13</li>
+												<li>Kings are worth 13 and can be moved directly to the Foundation</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click the top face down card to turn it face up</li>
+												<li>The top face up card may be moved</li>
+												<li>Click the top face up card to move it to the Waste</li>
+												<li>Click when empty to turn face down and move all cards from the Waste to the Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>					
+							<div id="gameChooserRightMiddleRoyalParade">
+								<div class="helpRulesGameHeader">Royal Parade</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Other</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>The first row spots are built up by suit and by threes in sequence: 2, 5, 8, J</li>
+												<li>The second row spots are built up by suit and by threes in sequence: 3, 6, 9, Q</li>
+												<li>The third row spots are built up by suit and by threes in sequence: 4, 7, 10, K</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may be filled with a 2, 3 or 4 in the first, second and third rows respectively</li>
+												<li>The game starts with a 2, 3 and 4 in the first spot of the first, second and third rows</li>
+												<li>Two cards may be 'swapped' so long as the swap would result in two correctly placed cards</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Reserve</span>
+											<ul>
+												<li>The top card may be moved</li>
+												<li>An empty spot may NOT be filled</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to each Reserve spot</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>Aces are to be moved here</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleRussianSolitaire">
+								<div class="helpRulesGameHeader">Russian Solitaire</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Yukon</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial face up piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>		
+							<div id="gameChooserRightMiddleScorpion">
+								<div class="helpRulesGameHeader">Scorpion</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Spider</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li>Auto Play is not used for this game</li>
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Automatically filled when a Tableau spot contains a pile ordered down by rank and by suit from King to Ace</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to to the first 3 Tableau spots</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>											
+							<div id="gameChooserRightMiddleSeahavenTowers">
+								<div class="helpRulesGameHeader">Seahaven Towers</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>FreeCell</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved so long as there are enough empty Cell spots available</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Cell</span>
+											<ul>
+												<li>Can only contain 1 card</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>			
+							<div id="gameChooserRightMiddleSpanishPatience">
+								<div class="helpRulesGameHeader">Spanish Patience</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Baker's Dozen</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may NOT be filled</li>
+												<li>All Kings are placed at the bottom during dealing</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddleSpider">
+								<div class="helpRulesGameHeader">Spider</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Hard</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Spider</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li>Auto Play is not used for this game</li>
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Automatically filled when a Tableau spot contains a pile ordered down by rank and by suit from King to Ace</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved so long as they share the same suit</li>
+												<li>An empty spot may be filled with any card or correctly ranked pile</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Can only be clicked on if no Tableau spots are empty</li>
+												<li>Click to turn face up and move 1 card to to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>									
+							<div id="gameChooserRightMiddleSpider1Suit">
+								<div class="helpRulesGameHeader">Spider (1 Suit)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Spider</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li>Auto Play is not used for this game</li>
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Automatically filled when a Tableau spot contains a pile ordered down by rank and by suit from King to Ace</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved so long as they share the same suit</li>
+												<li>An empty spot may be filled with any card or correctly ranked pile</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Can only be clicked on if no Tableau spots are empty</li>
+												<li>Click to turn face up and move 1 card to to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>									
+							<div id="gameChooserRightMiddleSpider2Suits">
+								<div class="helpRulesGameHeader">Spider (2 Suits)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Spider</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li>Auto Play is not used for this game</li>
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Automatically filled when a Tableau spot contains a pile ordered down by rank and by suit from King to Ace</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved so long as they share the same suit</li>
+												<li>An empty spot may be filled with any card or correctly ranked pile</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Can only be clicked on if no Tableau spots are empty</li>
+												<li>Click to turn face up and move 1 card to to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>									
+							<div id="gameChooserRightMiddleSultan">
+								<div class="helpRulesGameHeader">Sultan</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Sultan</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Low</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from King or Ace to Queen</li>
+												<li>An Ace may be played on the King of the same suit</li>
+												<li>Nothing may be played on the center Foundation spot</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Reserve</span>
+											<ul>
+												<li>Can only contain 1 card</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot is automatically filled with a card from the Waste or Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to to the Waste</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>													
+							<div id="gameChooserRightMiddleThreeShufflesAndADraw">
+								<div class="helpRulesGameHeader">Three Shuffles and a Draw</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Fan</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may NOT be filled</li>
+												<li>After 2 reshuffles, 1 card in any Tableau may be clicked on to be moved to the top. This can only be done once</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to reshuffle all remaining cards in the Tableau</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>										
+							<div id="gameChooserRightMiddleTrefoil">
+								<div class="helpRulesGameHeader">Trefoil</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Fan</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+												<li>Starts the game with the Aces</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may NOT be filled</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to reshuffle all remaining cards in the Tableau</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>										
+							<div id="gameChooserRightMiddleTrefoilAndADraw">
+								<div class="helpRulesGameHeader">Trefoil and a Draw</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>2</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Fan</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+												<li>Starts the game with the Aces</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by suit</li>
+												<li>The top card may be moved</li>
+												<li>An empty spot may NOT be filled</li>
+												<li>After 2 reshuffles, 1 card in any Tableau may be clicked on to be moved to the top. This can only be done once</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to reshuffle all remaining cards in the Tableau</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>										
+							<div id="gameChooserRightMiddleTriPeaks">
+								<div class="helpRulesGameHeader">Tri Peaks</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Golf</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Low</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundation</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up or down by rank</li>
+												<li>A King may be played on an Ace and an Ace may be played on a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Only exposed cards may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to the Foundation</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>
+							<div id="gameChooserRightMiddleTriPeaksStrict">
+								<div class="helpRulesGameHeader">Tri Peaks Strict</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Short</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Golf</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Low</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundation</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up or down by rank</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Only exposed cards may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to the Foundation</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>		
+							<div id="gameChooserRightMiddleTripleEasthaven">
+								<div class="helpRulesGameHeader">Triple Easthaven</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>3</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with any card or correctly ranked pile</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddleTripleEasthavenKingsOnly">
+								<div class="helpRulesGameHeader">Triple Easthaven (Kings Only)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>3</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to each Tableau spot</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>														
+							<div id="gameChooserRightMiddleTripleKlondikeTurn1">
+								<div class="helpRulesGameHeader">Triple Klondike (Turn One)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>3</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 1 card to the Waste</li>
+												<li>Click when empty to turn face down and move all cards from the Waste to the Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>							
+							<div id="gameChooserRightMiddleTripleKlondikeTurn3">
+								<div class="helpRulesGameHeader">Triple Klondike (Turn Three)</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>3</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Long</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>Unlimited</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Easy</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Klondike</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>Medium</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial correctly ranked piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Stock</span>
+											<ul>
+												<li>Click to turn face up and move 3 cards to the Waste</li>
+												<li>Click when empty to turn face down and move all cards from the Waste to the Stock</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Waste</span>
+											<ul>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>					
+							<div id="gameChooserRightMiddleYukon">
+								<div class="helpRulesGameHeader">Yukon</div>
+								<ul>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Game Info</span><table class="helpRulesInfoTable">
+										<tr>
+											<td class="helpRulesInfoLeftKey">Decks:</td><td>1</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Time:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Redeals:</td><td>None</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Difficulty:</td><td>Medium</td>
+										</tr>
+										<tr>
+											<td class="helpRulesInfoLeftKey">Type:</td><td>Yukon</td><td class="helpRulesDivider">&nbsp;</td>
+											<td class="helpRulesInfoLeftKey">Skill:</td><td>High</td>
+										</tr>
+									</table></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Goal</span><ul>
+										<li>Move all the cards to the Foundations</li>
+									</ul></li>
+									<li class="helpRulesCategoryHeaderLine"><span class="helpRulesCategoryHeader">Details</span><ul class="helpRulesDetails">
+										<li><span class="helpRulesDetailsSpotHeader">Foundation</span>
+											<ul>
+												<li>Built up by rank and by suit from Ace to King</li>
+												<li>The top card may be moved</li>
+											</ul>
+										</li>
+										<li><span class="helpRulesDetailsSpotHeader">Tableau</span>
+											<ul>
+												<li>Built down by rank and by alternating color</li>
+												<li>The top card may be moved</li>
+												<li>Complete or partial face up piles may be moved</li>
+												<li>An empty spot may be filled with a King or a pile starting with a King</li>
+											</ul>
+										</li>
+									</ul></li>
+								</ul>
+							</div>													
+						</div>
+						<div id="gameChooserRightBottom">
+							<input type="button" name="gameChooserOKButtonName" value="Select Game" id="gameChooserOKButton">
+							<input type="button" name="gameChooserCancelButtonName" value="Cancel" id="gameChooserCancelButton">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ft"></div>
+		</div>
+		<div id="gameOver" class="dialogBox">
+			<div class="hd"></div>
+			<div class="bd">
+				<img src="images/youwin.png" id="gameOverYouWinImage" width="889" height="206" title="" alt="You Win">
+				<div id="gameOverButtonsContainer">
+					<input type="button" id="gameOverChooseGameButton" value="Choose Game">
+					<input type="button" id="gameOverDealAgainButton" value="Deal Again">
+					<input type="button" id="gameOverViewStatisticsButton" value="View Statistics">
+				</div>
+			</div>
+			<div class="ft"></div>
+		</div>
+		<div id="deckView" class="dialogBox">
+			<div class="hd" id="deckViewHeader">Decks</div>
+			<div class="bd" id="deckViewBody">
+				<div id="deckViewContents">
+					<div id="deckViewTabs" class="yui-navset">
+						<ul class="yui-nav" id="deckViewTabsContainer">
+							<li class="selected"><a href="#deckViewTabChoose"><em>Choose a Deck</em></a></li>
+						</ul>
+						<div class="yui-content" id="deckViewTabsContentContainer">
+							<div id="deckViewTabChoose" class="clearfix">
+								<div id="deckViewChooseLeft">
+									<div id="deckViewChooseTree"></div>
+									<div>
+										<ul id="deckViewChooseList">
+											<li>General
+												<ul>
+													<li title="anglo">Anglo-American</li>
+													<li title="animals">Animals</li>
+													<li title="dondorf">Dondorf's "Swiss Costumes"</li>
+													<li title="majestic">Majestic</li>
+													<li title="ornamental">Ornamental</li>
+													<li title="oxygen">Oxygen</li>
+													<li title="oxygenwhite">Oxygen - White</li>
+													<li title="paris">Paris</li>
+												</ul>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div id="deckViewChooseRight">	
+									<div id="deckViewChooseRightTop">
+										<span id="deckViewChooseShowDropdownLabel">Show:</span>
+										<select id="deckViewChooseShowDropdown">
+											<option value="11c,12d,13s,back" selected>Face Cards and Back</option>
+											<option value="11c,12c,13c,1c">Face Cards and Ace - Clubs</option>
+											<option value="11d,12d,13d,1d">Face Cards and Ace - Diamonds</option>
+											<option value="11h,12h,13h,1h">Face Cards and Ace - Hearts</option>
+											<option value="11s,12s,13s,1s">Face Cards and Ace - Spades</option>
+											<option value="rj,bj">Jokers</option>
+											<option value="11c,12c,13c,1c,11d,12d,13d,1d,11h,12h,13h,1h,11s,12s,13s,1s">All Face Cards and Aces</option>
+											<option value="1c,1d,1h,1s,2c,2d,2h,2s,3c,3d,3h,3s,4c,4d,4h,4s,5c,5d,5h,5s,6c,6d,6h,6s,7c,7d,7h,7s,8c,8d,8h,8s,9c,9d,9h,9s,10c,10d,10h,10s">Numbered Cards</option>
+											<option value="1c,1d,1h,1s,2c,2d,2h,2s,3c,3d,3h,3s,4c,4d,4h,4s,5c,5d,5h,5s,6c,6d,6h,6s,7c,7d,7h,7s,8c,8d,8h,8s,9c,9d,9h,9s,10c,10d,10h,10s,11c,11d,11h,11s,12c,12d,12h,12s,13c,13d,13h,13s,bj,rj,back">All Cards</option>
+										</select>
+									</div>
+									<div id="deckViewChooseRightMiddle">
+									</div>
+									<div id="deckViewChooseRightBottomLeft">
+										<span id="deckViewChooseArtistLabel">Artist:</span>
+										<span id="deckViewChooseArtistName"></span>
+										<span id="deckViewChooseArtistWebsite"></span>
+									</div>
+									<div id="deckViewChooseRightBottomRight">
+										<input type="button" name="deckViewChooseOKButtonName" value="Select Deck" id="deckViewChooseOKButton">
+										<input type="button" name="deckViewChooseCancelButtonName" value="Cancel" id="deckViewChooseCancelButton">
+									</div>
+								</div>
+							</div>
+							<div id="deckViewTabCreateDeck" class="clearfix">
+								<div id="deckViewCreateLeft">
+									<select id="deckViewCreateDecksSelect" multiple>
+										<option value="new" selected>(create new deck)</option>
+									</select>
+								</div>
+								<div id="deckViewCreateRight">
+									<table id="deckViewCreateFieldsTable">
+										<tr>
+											<td id="deckViewCreateDeckNameLabelContainer">
+												<label id="deckViewCreateDeckNameLabel" for="deckViewCreateDeckName">Deck Name: </label>
+											</td>
+											<td>
+												<input type="text" name="deckViewCreateDeckNameInput" id="deckViewCreateDeckName">
+												<input type="checkbox" name="deckViewCreateDeckPublicCheckbox" id="deckViewCreateDeckPublic" checked>
+												<label id="deckViewCreateDeckPublicLabel" for="deckViewCreateDeckPublic">Public</label>
+												<label id="deckViewCreateWhichCardLabel" for="deckViewCreateWhichCard">Card to Edit: </label>
+												<select id="deckViewCreateWhichCard">
+													<option value="11c" selected>Jack of Clubs</option>
+													<option value="11d">Jack of Diamonds</option>
+													<option value="11h">Jack of Hearts</option>
+													<option value="11s">Jack of Spades</option>
+													<option value="12c">Queen of Clubs</option>
+													<option value="12d">Queen of Diamonds</option>
+													<option value="12h">Queen of Hearts</option>
+													<option value="12s">Queen of Spades</option>
+													<option value="13c">King of Clubs</option>
+													<option value="13d">King of Diamonds</option>
+													<option value="13h">King of Hearts</option>
+													<option value="13s">King of Spades</option>
+													<option value="1c">Ace of Clubs</option>
+													<option value="1d">Ace of Diamonds</option>
+													<option value="1h">Ace of Hearts</option>
+													<option value="1s">Ace of Spades</option>
+													<option value="rj">Red Joker</option>
+													<option value="bj">Black Joker</option>
+													<option value="back">Back of Card</option>
+													<option value="2c">2 of Clubs</option>
+													<option value="2d">2 of Diamonds</option>
+													<option value="2h">2 of Hearts</option>
+													<option value="2s">2 of Spades</option>
+													<option value="3c">3 of Clubs</option>
+													<option value="3d">3 of Diamonds</option>
+													<option value="3h">3 of Hearts</option>
+													<option value="3s">3 of Spades</option>
+													<option value="4c">4 of Clubs</option>
+													<option value="4d">4 of Diamonds</option>
+													<option value="4h">4 of Hearts</option>
+													<option value="4s">4 of Spades</option>
+													<option value="5c">5 of Clubs</option>
+													<option value="5d">5 of Diamonds</option>
+													<option value="5h">5 of Hearts</option>
+													<option value="5s">5 of Spades</option>
+													<option value="6c">6 of Clubs</option>
+													<option value="6d">6 of Diamonds</option>
+													<option value="6h">6 of Hearts</option>
+													<option value="6s">6 of Spades</option>
+													<option value="7c">7 of Clubs</option>
+													<option value="7d">7 of Diamonds</option>
+													<option value="7h">7 of Hearts</option>
+													<option value="7s">7 of Spades</option>
+													<option value="8c">8 of Clubs</option>
+													<option value="8d">8 of Diamonds</option>
+													<option value="8h">8 of Hearts</option>
+													<option value="8s">8 of Spades</option>
+													<option value="9c">9 of Clubs</option>
+													<option value="9d">9 of Diamonds</option>
+													<option value="9h">9 of Hearts</option>
+													<option value="9s">9 of Spades</option>
+													<option value="10c">10 of Clubs</option>
+													<option value="10d">10 of Diamonds</option>
+													<option value="10h">10 of Hearts</option>
+													<option value="10s">10 of Spades</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<label id="deckViewCreateDeckArtistNameLabel" for="deckViewCreateDeckArtistName">Artist Name: </label>
+											</td>
+											<td>
+												<input type="text" name="deckViewCreateDeckArtistNameInput" id="deckViewCreateDeckArtistName">
+												<label id="deckViewCreateDeckArtistWebsiteLabel" for="deckViewCreateDeckArtistWebsite">Artist Website: </label>
+												<input type="text" name="deckViewCreateDeckArtistWebsiteInput" id="deckViewCreateDeckArtistWebsite">
+											</td>
+										</tr>
+										<tr>
+											<td id="deckViewCreateWhichImageLabelContainer">
+												<label id="deckViewCreateWhichImageLabel" for="deckViewCreateWhichImage">Card Image: </label>
+											</td>
+											<td style="width: 100%;">
+												<input type="text" name="deckViewCreateWhichImageInput" id="deckViewCreateWhichImage">
+											</td>
+										</tr>
+									</table>
+									<div id="deckViewCreateCardContainer">
+										<div id="deckViewCreateCardImageContainer"></div>
+										<div id="deckViewCreateCardImageScaleContainerWithLabels">
+											Size<br>100%
+											<div id="deckViewCreateCardImageScaleContainer">
+												<div id="deckViewCreateCardImageScaleBackground"></div>
+												<div id="deckViewCreateCardImageScaleThumbContainer"><img title="" alt="Image Size Slider" src="images/horizontalSliderThumb.png" width="31" height="19"></div>
+											</div>
+											0%
+										</div>
+									</div>
+									<div id="deckViewCreateButtonsContainer">
+										<input type="button" name="deckViewCreateSaveButtonName" value="Save Deck" id="deckViewCreateSaveButton">
+										<input type="button" name="deckViewCreateCancelButtonName" value="Cancel" id="deckViewCreateCancelButton">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ft"></div>
+		</div>
+		<div id="statisticsView" class="dialogBox">
+			<div class="hd">Statistics</div>
+			<div class="bd">
+				<div id="statisticsViewContents">
+					<div id="statisticsViewTabs" class="yui-navset">
+						<div id="statisticsViewGameDropdownContainer">
+							<span id="statisticsViewGameDropdownLabel">Game:</span>
+							<select id="statisticsViewGameDropdown">
+								<option value="" selected>All</option>
+								<option value="AcesUp">Aces Up</option>
+								<option value="BakersDozen">Baker's Dozen</option>
+								<option value="BakersGame">Baker's Game</option>
+								<option value="BakersGameKingsOnly">Baker's Game (Kings Only)</option>
+								<option value="BearRiver">Bear River</option>
+								<option value="Canfield">Canfield</option>
+								<option value="CastlesInSpain">Castles in Spain</option>
+								<option value="Clock">Clock</option>
+								<option value="Cruel">Cruel</option>
+								<option value="CruelTraditionalRedeal">Cruel (Traditional Redeal)</option>
+								<option value="DoubleEasthaven">Double Easthaven</option>
+								<option value="DoubleEasthavenKingsOnly">Double Easthaven (Kings Only)</option>
+								<option value="DoubleKlondikeTurn1">Double Klondike (Turn One)</option>
+								<option value="DoubleKlondikeTurn3">Double Klondike (Turn Three)</option>
+								<option value="Easthaven">Easthaven</option>
+								<option value="EasthavenKingsOnly">Easthaven (Kings Only)</option>
+								<option value="EightOff">Eight Off</option>
+								<option value="FlowerGarden">Flower Garden</option>
+								<option value="FreeCell">FreeCell</option>
+								<option value="FortyThieves">Forty Thieves</option>
+								<option value="Golf">Golf</option>
+								<option value="GolfRelaxed">Golf Relaxed</option>
+								<option value="KlondikeTurn1">Klondike (Turn One)</option>
+								<option value="KlondikeTurn3">Klondike (Turn Three)</option>
+								<option value="LaBelleLucie">La Belle Lucie</option>
+								<option value="Montana">Montana</option>
+								<option value="Pyramid">Pyramid</option>
+								<option value="PyramidEasy">Pyramid Easy</option>
+								<option value="PyramidRelaxed">Pyramid Relaxed</option>
+								<option value="PyramidRelaxedEasy">Pyramid Relaxed Easy</option>
+								<option value="RoyalParade">Royal Parade</option>
+								<option value="RussianSolitaire">Russian Solitaire</option>
+								<option value="SeahavenTowers">Seahaven Towers</option>
+								<option value="Scorpion">Scorpion</option>
+								<option value="SpanishPatience">Spanish Patience</option>
+								<option value="Spider">Spider</option>
+								<option value="Spider1Suit">Spider (1 Suit)</option>
+								<option value="Spider2Suits">Spider (2 Suits)</option>
+								<option value="Sultan">Sultan</option>
+								<option value="ThreeShufflesAndADraw">Three Shuffles and a Draw</option>
+								<option value="Trefoil">Trefoil</option>
+								<option value="TrefoilAndADraw">Trefoil and a Draw</option>
+								<option value="TriPeaks">Tri Peaks</option>
+								<option value="TriPeaksStrict">Tri Peaks Strict</option>
+								<option value="TripleEasthaven">Triple Easthaven</option>
+								<option value="TripleEasthavenKingsOnly">Triple Easthaven (Kings Only)</option>
+								<option value="TripleKlondikeTurn1">Triple Klondike (Turn One)</option>
+								<option value="TripleKlondikeTurn3">Triple Klondike (Turn Three)</option>
+								<option value="Yukon">Yukon</option>
+							</select>
+							<span id="statisticsViewInfoNote">Global and Leaderboard statistics are updated every 6 hours.<br>Local statistics are live.</span>
+						</div>
+						<ul class="yui-nav" id="statisticsViewTabsContainer">
+							<li class="selected"><a href="#statisticsViewTabLocalOverall"><em>Your Statistics</em></a></li>
+							<li><a href="#statisticsViewTabGlobalOverall"><em>Global Statistics</em></a></li>
+							<li><a href="#statisticsViewTabLeaderboard"><em>Leaderboards</em></a></li>
+						</ul>
+						<div class="yui-content" id="statisticsViewTabsContentContainer">
+							<div id="statisticsViewTabLocalOverall" class="clearfix">
+								<div class="statisticsViewTop">
+									<div class="statisticsViewTopLeft">
+										<fieldset class="statisticsViewPopularPie">
+											<legend>Most Played Games</legend>
+										</fieldset>
+									</div>
+									<div class="statisticsViewTopRight">
+										<fieldset class="statisticsViewInfo">
+											<legend>Stats</legend>
+										</fieldset>
+									</div>
+								</div>
+								<div class="statisticsViewBottom">
+									<fieldset class="statisticsViewTimeline">
+										<legend>Timeline - Hands Played</legend>
+									</fieldset>
+								</div>
+							</div> 
+							<div id="statisticsViewTabGlobalOverall" class="clearfix">
+								<div class="statisticsViewTop">
+									<div class="statisticsViewTopLeft">
+										<fieldset class="statisticsViewPopularPie">
+											<legend>Most Played Games</legend>
+										</fieldset>
+									</div>
+									<div class="statisticsViewTopRight">
+										<fieldset class="statisticsViewInfo">
+											<legend>Stats</legend>
+										</fieldset>
+									</div>
+								</div>
+								<div class="statisticsViewBottom">
+									<fieldset class="statisticsViewTimeline">
+										<legend>Timeline - Hands Played</legend>
+									</fieldset>
+								</div>
+							</div> 
+							<div id="statisticsViewTabLeaderboard" class="clearfix">
+								<div id="statisticsViewLeaderboardLeft">
+									<div id="statisticsViewLeaderboardLeftTop">
+										<fieldset class="statisticsViewLeaderboardShortestTime">
+											<legend>Shortest Time to Win</legend>
+										</fieldset>
+									</div>
+									<div id="statisticsViewLeaderboardLeftBottom">
+										<fieldset class="statisticsViewLeaderboardFewestMoves">
+											<legend>Fewest Moves to Win</legend>
+										</fieldset>
+									</div>
+								</div>
+								<div id="statisticsViewLeaderboardRight">
+									<div id="statisticsViewLeaderboardRightTop">
+										<fieldset class="statisticsViewLeaderboardHighestPercentageWon">
+											<legend>Highest Percentage Won</legend>
+										</fieldset>
+									</div>
+									<div id="statisticsViewLeaderboardRightBottom">
+										<fieldset class="statisticsViewLeaderboardTotalNumberWon">
+											<legend>Total Number Won</legend>
+										</fieldset>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ft"></div>
+		</div>
+		<div id="changeLog" class="dialogBox">
+			<div class="hd">Change Log</div>
+			<div class="bd">
+				<div id="changeLogContents">
+					[2009] May 22<br>
+					- Changed the number of wins required for the leaderboard back to 50. This is not final, I am trying to determine the best way to handle this.<br>
+					<br>
+					[2009] May 20<br>
+					- 250 wins are now required (was 50) to be in the highest percentage win leaderboards<br>
+					- You can now hide the ad by clicking the 'Hide these ads' link above the ad<br>
+					<br>
+					[2009] May 12<br>
+					- Loading the web page should be faster now<br>
+					- Fixed a typo in the rules for Yukon<br>
+					<br>
+					[2009] May 4<br>
+					- Minor changes to the Bear River rules and credits<br>
+					<br>
+					[2009] April 29<br>
+					- NEW GAME! Bear River has been implemented! (Bear River is a Solitaire game by The Levin Family)<br>
+					- 'Most Games Won' leaderboard now shows 25 entries again.<br>
+					<br>
+					[2009] April 28<br>
+					- Added 'Highest Percentage Won' leaderboard. Most often user requested feature :)<br>
+					- Added a 'ShareThis' link at the bottom to allow you to share World of Solitaire more easily<br>
+					<br>
+					[2009] April 24<br>
+					- Dealing a new hand should be much faster now when using Firefox<br>
+					<br>
+					[2009] April 19<br>
+					- Some minor text changes in the app<br>
+					<br>
+					[2008] September 9<br>
+					- Fixed a bug that caused cards to flicker when using Firefox 3<br>
+					- [Royal Parade] Fixed a bug that sometimes allowed non-aces to be placed on the Waste spot<br>
+					- [Canfield] Fixed a bug that prevented you from undo-ing after an auto-fill took place<br>
+					<br>
+					[2008] June 30<br>
+					- Fixed a bug that sometimes caused the cards to have a 'blue haze'<br>
+					<br>
+					[2008] June 27<br>
+					- NEW OPTION! 'Menu Requires Click to Activate' option is now available under the Options menu.<br>
+					-- When this option is checked then the menu will require you to click on it in order to activate it<br>
+					-- This will help to prevent accidental showing of the menu. This option was requested by many players.<br>
+					<br>
+					[2008] June 16<br>
+					- Fixed a bug where the 'Resizing Cards' progress bar would show continually over and over<br>
+					<br>
+					[2008] June 10<br>
+					- Fixed a bug where the cards would not automatically get bigger if you resized your browser window during dealing<br>
+					<br>
+					[2008] June 9<br>
+					- [Golf] Fixed an bug in the visuals when moving cards to the foundation<br>
+					- On the 'Deck: See More Decks' window when selecting a deck, the Artist's Name and Website link now appears below the card images<br>
+					<br>
+				    [2008] June 7<br>
+					- NEW GAME! Easthaven has been implemented!<br>
+					- NEW GAME! Easthaven (Kings Only) has been implemented!<br>
+					- NEW GAME! Double Easthaven has been implemented!<br>
+					- NEW GAME! Double Easthaven (Kings Only) has been implemented!<br>
+					- NEW GAME! Triple Easthaven has been implemented!<br>
+					- NEW GAME! Triple Easthaven (Kings Only) has been implemented!<br>
+				    - Added a 'Recently Played' folder to the Game Chooser. This shows the last 5 games you played.<br>
+				    - Moved the Alphabetical list of games in the Game Chooser lower down in order to show the other folder categories<br>
+					- Updated the 'Games - by Time' category to be more precise and updated the games info to match statistical info<br>
+					- Updated the 'Games - by Difficulty' category to be more precise and updated the games info to match statistical info<br>
+					- [Golf] Fixed a minor visual layout glitch<br>
+				    <br>
+					[2008] June 4<br>
+					- NEW GAME! Royal Parade has been implemented!<br>
+					<br>
+					[2008] May 15<br>
+					- There is now an 'Offline' version avaiable. Find it under the "Solitaire: About World of Solitaire..." menu<br>
+					<br>
+					[2008] April 24<br>
+					- Now if you move an Auto Played card, it won't try and auto play it again until you've made another move yourself.<br>
+					- Fixed a bug in Internet Explorer where the names of the cards would appear as tooltips on top of the card when holding your mouse over a card<br>
+					<br>
+					[2008] April 12<br>
+					- Cards are now centered horizontally. This makes things look better on widescreen monitors<br>
+					- Fixed an Internet Explorer 6.0 only bug that caused selecting different decks in the Decks window to not correctly show the card images<br>
+					<br>
+					[2008] March 30<br>
+					- The Deck menu has been changed!<br>
+					-- It now only shows the top 4 most used decks.<br>
+					-- There is a link to 'See More Decks...' that pops up a 'Deck' window.<br>
+					-- This window allows you to browse all decks, and see a preview of ALL the cards contained in that deck.<br>
+					-- These previews give you the ability to admire the decks in high detail<br>
+					- Larger sizes of existing decks have been added. Playing using a large computer screen should be much more enjoyable now :)<br> 
+					<br>
+					[2008] March 29<br>
+					- NEW GAME! Eight Off has been implemented!<br>
+					- NEW GAME! Baker's Game has been implemented!<br>
+					- NEW GAME! Baker's Game (Kings Only) has been implemented!<br>
+					<br>
+					[2008] March 23<br>
+					- NEW GAME! Russian Solitaire has been implemented!<br>
+					- NEW GAME! Double Klondike (Turn One) has been implemented!<br>
+					- NEW GAME! Double Klondike (Turn Three) has been implemented!<br>
+					- NEW GAME! Triple Klondike (Turn One) has been implemented!<br>
+					- NEW GAME! Triple Klondike (Turn Three) has been implemented!<br>
+					- Global statistics and Leaderboards are now updated every 5 minutes instead of every 10 minutes<br>
+					<br>
+					[2008] March 22<br>
+					- NEW GAME! Cruel (Traditional Redeal) has been implemented!<br>
+					- [Cruel] Fixed a bug that caused sort order to be incorrect after redealing<br>
+					- [Cruel] Fixed a bug that caused you not to be able to drag a card<br>
+					- I've enhanced the timeline graphs to be more accurate<br>
+					- Fixed a bug that was preventing the Leaderboards from filling<br>
+					- Fixed a bug that caused the ordering of the leaderbaords to slightly incorrect with records made on the same day<br>
+					<br>
+					[2008] March 16<br>
+					- NEW GAME! Cruel has been implemented!<br>
+					<br>
+					[2008] March 11<br>
+					- The Timeline graph in the Statistics is now working again! Nice and fast this time.<br>
+					<br>
+					[2008] March 5<br>
+					- Fixed the dates on the Leaderboard. They were wrong, they are now correct<br>
+					- [Spider] Fixed a bug where completed piles were not moved to the foundation if dealing 10 cards is what caused the pile to be completed<br>
+					<br>
+					[2008] March 1<br>
+					- Fixed a bug where after logging in if you won the game you were playing it would not record it correctly<br>
+					- Due to this bug fix, some users may notice the 'Number Won' for games of Free Cell and Klondike to be less than before, Sorry<br>
+					<br>
+					[2008] February 29<br>
+					- Fixed a bug that caused the base images to not show up in Internet Explorer 6 sometimes<br>
+					<br>
+					[2008] February 15<br>
+					- The leaderboards have been fixed!<br>
+					- The Shortest Time and Fewest Moves leader boards now only show 1 entry per user, their best entry<br>
+					- Global statistics now update every 10 minutes!<br>
+					<br>
+					[2008] February 14<br>
+					- The timeline statistics should now always be in the correct order<br>
+					<br>
+					[2008] February 13<br>
+					- When you Undo a move, it now only undoes the very last move and only one move<br>
+					- After you undo a move auto play won't make a move again until you yourself make a move first<br>
+					- Statistics viewing should be faster now<br>
+					<br>
+					[2008] January 27<br>
+					- Fixed some bugs that caused spacing between cards to be too small or too large<br>
+					<br>
+					[2008] January 26<br>
+					- NEW GAME! La Belle Lucie has been implemented!<br>
+					- NEW GAME! Three Shuffles and a Draw has been implemented!<br>
+					- NEW GAME! Trefoil has been implemented!<br>
+					- NEW GAME! Trefoil and a Draw has been implemented!<br>
+					<br>
+					[2008] January 25<br>
+					- [Tri Peaks] Fixed a bug that caused lower cards to not be movable even when uncovered<br>
+					<br>
+					[2008] January 24<br>
+					- NEW GAME! Tri Peaks has been implemented!<br>
+					- NEW GAME! Tri Peaks Strict has been implemented!<br>
+					- [Golf] [Golf Relaxed] You no longer need to clear the Stock to win, just the Tableau spots<br>
+					- [Sultan] Auto Play is now available<br>
+					- Undo Move now undos the last move that YOU made yourself. Any Auto Moves made since then are also undone<br>
+					- Auto Play does not activate now until you make a move yourself first<br>
+					- Fixed the spacing on the Timeline statistics so you can read the dates and the actual numbers on the left<br>
+					- If you haven't played or haven't won any hands, the statistics now show correctly and in a timely manner<br>
+					<br>
+					[2008] January 21<br>
+					- Finally tracked down a bug that caused cards to be messed up, usually resulting in Spider being unwinnable<br>
+					<br>
+					[2008] January 14<br>
+					- New Help feature! If you click on the blue question mark in the top right corner rules for the game you are playing will be shown<br>
+					- You can move your mouse over sections that have a magnifying glass to see those sections in the game higlighted for you<br>
+					- You can resize this help section by dragging the gray bar on the left side of the help<br>
+					- Click on the blue question mark again to dismiss the help<br>
+					<br>
+					[2008] January 12<br>
+					- Fixed a bug that could cause cards to become messed up when you undo moves<br>
+					<br>
+					[2008] January 9<br>
+					- NEW DECK!!! The 'Oxygen - White' deck has been added! Enjoy!<br>
+					<br>
+					[2008] January 4<br>
+					- World of Solitaire is now on a new server! Benefits of this include:<br>
+					-- Overall, things should be a bit speedier<br>
+					-- There should no longer be any problems with being unable to log in or statistics not being saved correctly<br>
+					-- Statistics should be a be more accurate<br>
+					-- Room for growth!<br>
+					<br>
+					[2007] December 15<br>
+					- Added a new statistic for the average time spent playing a game (Average Length). Renamed some of the other stats to fit better<br>
+					- Added another slice to the 'Most Played Games' statistics pie<br>
+					- Fixed a bug that caused Pyramid and several other games to be broken! SORRY!<br>
+					<br>
+					[2007] December 14<br>
+					- NEW GAME! Flower Garden has been implemented!<br>
+					- Added a 'Percentage' next to the 'Hands Won' and 'Hands Dealt' statistics in the Statistics window.<br>
+					- Fixed some bugs that caused some games (like Sultan) to not correctly begin when dealing a new hand.<br>
+					<br>
+					[2007] December 4<br>
+					- NEW GAME! Sultan has been implemented!<br>
+					<br>
+					[2007] November 29<br>
+					- [Clock] Fixed a bug that caused the center card to not be flippable when starting a new game of Clock<br>
+					<br>
+					[2007] November 26<br>
+					- Fixed a bug that caused selecting FreeCell or Seahaven Towers to actually start Clock instead<br>
+					<br>
+					[2007] November 25<br>
+					- NEW GAME! Clock has been implemented!<br>
+					<br>
+					[2007] November 5<br>
+					- NEW DECK!!! The 'Animals' deck has been added! Enjoy!<br>
+					- Loading of the game and choosing new decks should hopefully be faster<br>
+					<br>
+					[2007] September 24<br>
+					- Fixed a bug that caused the default options to sometimes override the options you have saved for your username<br>
+					<br>
+					[2007] September 21<br>
+					- [FreeCell] [Seahaven Towers] Fixed a bug that allowed you to drag a complete stack of cards to another even if it was out of order<br>
+					<br>
+					[2007] September 19<br>
+					- NEW GAME! Golf Relaxed has been implemented!<br>
+					- [FreeCell] [Seahaven Towers] Fixed two bugs that allowed you to drag a stack of cards to a Free Cell or on top of another stack<br>
+					<br>
+					[2007] September 17<br>
+					- [Baker's Dozen] If multiple kings appear in a stack they are now correctly placed on the bottom of the stack.<br>
+					<br>
+					[2007] September 16<br>
+					- [Canfield] Fixed a bug that prevented you from being able to redeal! Sorry!<br>
+					- [Aces Up] Fixed a bug allowing you to remove aces as if they were 'low'<br>
+					- [Pyramid] Fixed a bug where if you Undid the re-deal of cards you wouldn't get a redeal back<br>
+					- [Montana] When you undeal a Redeal click all the reshufled cards are now redealt and you get a redeal option again<br>
+					<br>
+					[2007] September 15<br>
+					- NEW DECK!!! The 'Majestic' deck has been added! Enjoy!<br>
+					- Base cards that are clickable (to redeal cards) now have a 'Redeal' icon<br>
+					- Base cards that are no longer clickable (but were once) now turn into a 'Stop' icon<br>
+					- Foundations that you build up upon now have a four suit pattern in the middle so you know what they are<br>
+					<br>
+					[2007] September 14<br>
+					- Your Options are now saved to your username automatically and loaded whenever and wherever you login.<br>
+					- Fixed a bug that caused the tooltips to appear underneath cards<br>
+					<br>
+					[2007] September 13<br>
+					- [Spider] [Scorpion] Fixed a bug preventing you from winning these games (incorrect number of foundations). Sorry about that.
+					<br>
+					[2007] September 12<br>
+					- NEW GAME! Scorpion has been implemented!<br>
+					- NEW GAME! Aces Up has been implemented!<br>
+					- Fixed a bug preventing games from being won<br>
+					- I hopefully have fixed some bugs in the Registration system<br>
+					<br>
+					[2007] September 11<br>
+					- The timer no longer stops when changing decks or resizing the screen mid-game<br>
+					- [Spider] You can no longer undo the deal one card at a time<br>
+					<br>
+					[2007] September 10<br>
+					- NEW GAME! Montana has been implemented!<br>
+					- Fixed a bug in the random number generator. Cards should be better randomized now.<br>  
+					<br>
+					[2007] September 9<br>
+					- A Leaderboard is now available in the Statistics window!<br>
+					- I created a blog for the site: <a href="http://worldofsolitaire.blogspot.com/">http://worldofsolitaire.blogspot.com/</a><br>
+					<br>
+					[2007] September 8<br>
+					- Several games should have nicer looking and larger cards when using the 'Best Looking Cards' option<br>
+					- [Seahaven Towers] Tweaked the game to correctly match the official Seahaven Towers rules:<br>
+					- [Seahaven Towers] The last two cards dealt are now dealt to the middle two free cells<br>
+					- [Seahaven Towers] You can no longer move a card from the cells to an empty spot unless it is a king<br>
+					- [Yukon] Fixed the documentation to match the way the game is implemented<br>
+					<br>
+					[2007] September 4<br>
+					- The site should load up faster now<br>
+					- When clicking the 'View Statistics' button on the 'You Win' screen, the statistics show for the game you just won<br>
+					<br>
+					[2007] September 2<br>
+					- Added new Green Felt background texture<br>
+					- The Ornamental deck now exposes a bit more of itself when stacked so you can read what suit cards underneath are<br>
+					- The pie charts shown for individual games now work<br>
+					<br>
+					[2007] September 1<br>
+					- I've implemented a work-around for the FireFox issues with showing the wrong card images for certain cards<br>
+					- [Spider] The 1 Suit and 2 Suit versions now choose random suits instead of always being the same one<br>
+					- Cards with different art on them are now supported. Right now this only affects the Dondorf deck<br>
+					- Fixed a bug that caused the 'You Win' screen to remain after starting a new game using the menu<br>
+					<br>
+					[2007] August 31<br>
+					- You can now change the background! Choose from two new patterns or enter your own web address to an image.<br>
+					<br>
+					[2007] August 30<br>
+					- [Spider] Fixed a bug that caused the cards to get messed up preventing you from winning<br>
+					- [Spider] Fixed a bug that could cause cards to be upside down if when dealing from the stock you complete a stack<br>
+					<br>
+					[2007] August 29<br>
+					- NEW GAME! Spider (2 Suits) has been implemented!<br>
+					- NEW GAME! Spider (1 Suit) has been implemented!<br>
+					- The Statistics can now be viewed per game!<br>
+					- [Spider] Fixed a bug that would not remove a set of 13 suited cards when it was supposed to<br>
+					- [Spider] Fixed a bug that allowed you to deal new cards when a tableau spot was empty<br>
+					- Fixed a bug allowing you to undo moves when you shouldn't have been able to<br>
+					<br>
+					[2007] August 26<br>
+					- NEW GAME! Baker's Dozen has been implemented!<br>
+					- NEW GAME! Spanish Patience has been implemented!<br>
+					- NEW GAME! Castles in Spain has been implemented!<br>
+					- Removed the 'Chance of Winning' game info. It was not accurate.<br>
+					- Added groupings by 'Skill' and 'Difficulty' to the game chooser<br>
+					- [Pyramid] Fixed a bug that caused the cards to behave oddly after undoing a move.<br>
+					- Fixed an Internet Explorer bug causing the Game Chooser to be messed up<br>
+					- Fixed an infinite loop in Internet Explorer when animation was disabled<br>
+					<br>
+					[2007] August 25<br>
+					- [FreeCell] [Seahaven Towers] You can now move one complete stack to another empty tableau.<br>
+					- [Yukon] Fixed a bug that caused stacks to be limited to 14 to 20 cards.<br>
+					- Fixed a bug in the Timeline graph. Correct values now appear.<br>
+					<br>
+					[2007] August 24<br>
+					- NEW GAME! Golf has been implemented!<br>
+					<br>
+					[2007] August 23<br>
+					- Improved the speed of loading the dialogs for the first time<br>
+					<br>
+					[2007] August 22<br>
+					- NEW GAME! Seahaven Towers has been implemented!<br>
+					- [FreeCell] Fixed a bug that allowed you to drop one more card than rules allow for on a blank spot<br>
+					<br>
+					[2007] August 20<br>
+					- You can now register an account in order to keep your statistics forever and play on multiple computers.<br>
+					[2007] Any stats you've already accumulated are safe and when you register they will stay with the Username you create.<br>
+					- You can now hit 'Escape' to exit out of dialog boxes<br>
+					- Changed the way I preloaded images (again). Should fix problems some folks had loading up the game<br>
+					<br>
+					[2007] August 19<br>
+					- The 'You Win!' screen has been enhanced<br>
+					- Added an 'Other' slice to the Statistic pies<br>
+					- Fixed Internet Explorer 6 bug that caused the new Statistics page to not show correctly<br>
+					- Fixed some minor graphical and layout glitches in IE6 and IE7<br>
+					<br>
+					[2007] August 18<br>
+					- The Statistics have been GREATLY enhanced. You should check them out under the Solitaire menu<br>
+					- Fixed a bug that caused the Timer to not reset between games<br>
+					<br>
+					[2007] August 17<br>
+					- NEW DECK! Anglo-American deck is now available!<br>
+					<br>
+					[2007] August 14<br>
+					- Improved performance when dealing with cards on stacks that have lots of cards underneath<br>
+					<br>
+					[2007] August 13<br>
+					- NEW GAME! Canfield has been implemented!<br>
+					- The 'Stack Count' and 'Card' mouse over labels are no longer bold. They also no longer vanish<br>
+					- Fixed some browser specific bugs (Safari, IE)<br>
+					- Added some code to enable in the future much nicer statistics<br>
+					<br>
+					[2007] August 12<br>
+					- Safari and Konqueror should now work okay again!<br>
+					- The 'Select Game' dialog has been improved.<br>
+					- Fixed bugs that caused the popup boxes to not show up<br>
+					<br>
+					[2007] August 11<br>
+					- Fixed a bug that caused undoing a stack move to reverse the direction of the cards<br>
+					- Changed the way images are preloaded. Hopefully this should fix bugs where you would see empty images, or the wrong cards<br>
+					<br>
+					[2007] August 10<br>
+					- [Yukon] [Forty Thieves] Both now turn over their initial cards faster<br>
+					<br>
+					[2007] August 9<br>
+					- Forty Thieves has been implemented!<br>
+					- [Yukon] Initial turning over of dealt cards is now faster<br>
+					- The web page should load up faster now.<br>
+					<br>
+					[2007] August 8<br>
+					- Yukon has been implemented!<br>
+					<br>
+					[2007] August 7<br>
+					- For the fifth time I have hopefully now fixed the bug causing certain cards to appear underneath others<br>
+					- [FreeCell] Fixed a bug that allowed you to drop a stack of cards on a free cell<br>
+					- [Spider] Removed the top base borders since you can't directly interact with them<br>
+					<br>
+					[2007] August 6<br>
+					- Hopefully I fixed a bug that could cause cards to mistakenly appear underneath others<br>
+					- [Klondike Turn Three] When you turn 3 cards over they flip over instantly now<br>
+					<br>
+					[2007] August 5<br>
+					- Added three new variations of Pyramid<br>
+					- Added 'Chance of Winning' stat to the Select Game game info<br>
+					- Fixed a bug that caused Pyramid to be unwinnable<br>
+					- Fixed a bug that caused certain options (such as auto flip and animation) to be turned off<br>
+					- Fixed a bug causing some cards to go underneath others when they should be on top<br>
+					- Fixed a bug caused when resizing after you've won<br>
+					- Fixed some minor graphical issues that only showed up in Internet Explorer 7<br>
+					<br>
+					[2007] August 4<br>
+					- Spider has been implemented!<br>
+					- Auto Play Everything has been removed as an option<br>
+					<br>
+					[2007] August 3<br>
+					- You can now undo moves! Find it under the Solitaire menu<br>
+					- FreeCell has been implemented! It hasn't been fully tested, please report bugs to me<br>
+					- There is now an 'About World of Solitaire' item in the Solitaire menu<br>
+					- A Stack Count and Card name is now shown in the bottom left corner when hovering over cards<br>
+					<br>
+					[2007] August 2<br>
+					- Timer doesn't start now until after you make a move<br>
+					- Bare bone statistics are now implemented and are also now showed after winning<br>
+					<br>
+					[2007] July 30<br>
+					- There is now an 'Animation Speed' slider available in the Options menu<br>
+					<br>
+					[2007] July 29<br>
+					- A timer, score and moves made counter is now available. Can turn on/off in the Options menu<br>
+					- The menu is now disabled during important operations (such as dealing)<br>
+					- The game no longer detects when no moves remain. It *may* return at a future date<br>
+					- Fixed some bugs dealing with when you were dragging cards that are involved in auto-plays<br>
+					<br>
+					[2007] July 28<br>
+					- Animations when interacting with cards should look nicer now<br>
+					- An 'Auto Play Everything' option has been added. It has the computer play everything automatically<br>
+					- The game now detects when no more moves are possible<br>
+					- A 'You Won!' or 'No Moves Left' window now appears after winning fireworks or after you've lost<br>
+					- Cards should be randomzied better now<br>
+					- Several bugs have been fixed and tweeks made<br>
+					<br>
+					[2007] July 25<br>
+					- Dealing and turning over cards should be quicker<br>
+					- The 'Select Game' window should now work correctly in IE6<br>
+					- Fixed a bug that prevented you from being able to win Pyramid<br>
+					- Fixed some other bugs<br>
+					<br>
+					[2007] July 24<br>
+					- Added a new game! Pyramid!<br>
+					- Changed the way cards are initially dealt and turned over to be friendlier to slower computers<br>
+					- The Select Game dialog has been enhanced and should work well now on all browsers (known bug in IE6)<br>
+					<br>
+					[2007] July 19<br>
+					- The winning animation is now speedier<br>
+					- Dragging cards around the screen should not be laggy anymore<br>
+					- Chosen Deck/Game/Options are now saved correctly in Safari too<br>
+					- Fixed some bugs<br>
+					<br>
+					[2007] July 18<br>
+					- The animation when you win is much cooler now. Big thanks to Peter Vel for coming up with it!<br>
+					- You can now choose additional Solitaire games! Choose 'Select Game' from the Solitaire menu.<br>
+					- Increased the empty space between the menu/left side and the playspace area<br>
+					- The menu will no longer activate while you are dragging a card<br>
+					- Fixed a bug where if you dealt a new game during the win animation your new game would be cleared accidentally<br>
+					- Fixed some other bugs<br>
+					<br>
+					[2007] July 17<br>
+					- The options and deck you choose are now saved and reloaded next time you come back to play<br>
+					- You can no longer drag a card outside of the playspace<br>
+					- [Klondike] The card animations when turning over 3 cards are now faster<br>
+					- Fixed a bug where cards could become out of place if multiple animations took place on the same card at once<br>
+					- Fixed a bug under Opera that allowed you to scroll the outside of the playspace by using the mousewheel<br>
+					<br>
+					[2007] July 16<br>
+					- Automatic Play options are now available under the Options menu<br>
+					<br>
+					[2007] July 15<br>
+					- You are now rewarded for winning! Enjoy!<br>
+					- Bug Fix: Your deck choice is no longer lost when choosing to deal new cards<br>
+					<br>
+					[2007] July 14<br>
+					- You can now start a new game by just choosing 'Deal New Cards' from the Solitaire menu<br>
+					- The menu has been redone. It looks nicer and now it works in Internet Explorer<br>
+					- New options to turn off animation for cards or just for dealing are now available under the Options menu<br>
+					<br>
+				    [2007] July 13<br>
+				    - There is now a 'Last Updated' timestamp in the bottom left corner<br>
+                    - A history of changes is now available by clicking (changes) in the bottom left corner<br>
+                    - Status dialogs no longer fade in or out when being shown, this is to speed things up<br>
+					<br>
+					[2007] July 12<br>
+					- A new deck has been added: 'Oxygen'<br>
+					<br>
+					[2007] July 11<br>
+					- Decreased how long it takes to load new card images. It should be MUCH faster now<br>
+					- A status bar now appears during the initial loading of the game<br>
+					<br>
+					[2007] July 10<br>
+					- [Klondike] You can now double click cards to automatically move cards to the foundations<br>
+					- An 'Auto Flip Cards' option is now available and enabled by default.<br>
+				</div>
+			</div>
+			<div class="ft"></div>
+		</div>
+		<div id="registerUser" class="dialogBox">
+			<div class="hd" id="registerUserHeader">Register User</div>
+			<div class="bd">
+				<table>
+					<tbody>
+						<tr>
+							<td class="registerUserLabel">Username:</td>
+							<td>
+								<input type="text" name="registerUserUsernameInput" id="registerUserUsername" maxlength="255">
+							</td>
+						</tr>
+						<tr>
+							<td class="registerUserLabel">Password:</td>
+							<td>
+								<input type="password" name="registerUserPasswordInput" id="registerUserPassword" maxlength="255">
+							</td>
+						</tr>
+						<tr>
+							<td class="registerUserLabel">Re-Type Password:</td>
+							<td>
+								<input type="password" name="registerUserPasswordVerifyInput" id="registerUserPasswordVerify" maxlength="255">
+							</td>
+						</tr>
+						<tr>
+							<td class="registerUserLabel">E-mail:</td>
+							<td>
+								<input type="text" name="registerUserEmailInput" id="registerUserEmail" maxlength="255">
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td id="registerUserErrors"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td id="registerUserServerErrors"></td>
+						</tr>
+						<tr>
+							<td colspan="2" style="text-align: center;">
+								<input type="button" name="registerUserSubmitButton" value="Register User" id="registerUserSubmit" disabled="disabled">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="ft"></div>
+		</div>		
+		<div id="loginUser" class="dialogBox">
+			<div class="hd" id="loginUserHeader">Login</div>
+			<div class="bd">
+				<table>
+					<tbody>
+						<tr>
+							<td class="loginUserLabel">Username:</td>
+							<td>
+								<input type="text" name="loginUserUsernameInput" id="loginUserUsername" maxlength="255">
+							</td>
+						</tr>
+						<tr>
+							<td class="loginUserLabel">Password:</td>
+							<td>
+								<input type="password" name="loginUserPasswordInput" id="loginUserPassword" maxlength="255">
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td id="loginUserErrors"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td id="loginUserServerErrors"></td>
+						</tr>
+						<tr>
+							<td colspan="2" style="text-align: center;">
+								<input type="button" name="loginUserSubmitButton" value="Login" id="loginUserSubmit" disabled="disabled">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="ft"></div>
+		</div>				
+		<div id="mouseOverInfo">
+			<table>
+				<tr>
+					<td class="mouseOverInfoLabel" id="mouseOverInfoStackCountLabel">Stack Count:</td>
+					<td class="mouseOverInfoValue" id="mouseOverInfoStackCount"></td>
+				</tr>
+				<tr>
+					<td class="mouseOverInfoLabel" id="mouseOverInfoCardLabel">Card:</td>
+					<td class="mouseOverInfoValue" id="mouseOverInfoCard"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="importantMessage"></div>
+		<div id="footerPlayLargerVersion"><a id="footerPlayLargerVersionLink" href="index.html">Play Larger Version</a></div>
+		<div id="footerPlayOnlineVersion"><a id="footerPlayOnlineVersionLink" href="index.html">Play Online Version</a></div>
+		<div id="footerBy">
+			<a href="http://worldofsolitaire.blogspot.com/">World of Solitaire Blog</a><br>
+			created by <a href="mailto:robert@cosmicrealms.com">robert@cosmicrealms.com</a><br>
+			Last Updated: Fri May 22 2009 (<span id="changeLogLink" class="link">change history</span>)
+		</div>
+		<div id="statisticsViewSizeCheck"></div>
+		<div id="addThisContainer"><a href="http://www.addthis.com/bookmark.php?v=20" onclick="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()"><img src="../s7.addthis.com/static/btn/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a></div>
+	</body>
+
+<!-- Mirrored from worldofsolitaire.com/ by HTTrack Website Copier/3.x [XR&CO'2008], Tue, 11 Aug 2009 23:02:24 GMT -->
+</html>

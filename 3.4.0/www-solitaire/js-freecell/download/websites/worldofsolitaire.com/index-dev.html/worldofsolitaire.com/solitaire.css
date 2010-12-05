@@ -1,0 +1,1232 @@
+html
+{
+	width: 100%;
+	height: 100%;	
+	overflow: hidden;
+}
+
+body
+{
+	background-image: url(textures/white.jpg);
+	background-repeat: repeat;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+}
+
+label
+{
+	margin-left: 5px;
+}
+
+fieldset
+{
+	border: 1px solid black;
+	padding: 0px 5px 0px 5px;
+	margin-bottom: 1.0em;
+}
+
+fieldset legend
+{
+	margin-left: 0.5em;
+	font-size: 134%;
+}
+
+.loadingImage
+{
+	padding-top: 5px;	
+}
+
+.clearfix:after
+{  
+	content: ".";  
+	display: block;  
+	clear: both;  
+	visibility: hidden;  
+	line-height: 0;  
+	height: 0;  
+}
+
+.clearfix
+{  
+	display: inline-block;  
+}  
+
+html[xmlns] .clearfix
+{  
+	display: block;  
+}  
+
+* html .clearfix
+{  
+	height: 1%;  
+}
+
+.link
+{
+	cursor: pointer;
+	color: #0000FF;
+}
+
+.minHeightIEFix
+{
+	line-height: 0px;
+}
+
+#playspace
+{
+	position: absolute;
+}
+
+.card
+{
+	position: absolute;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+}
+
+#addThisContainer
+{
+	position: absolute;
+	left: 45%;
+	bottom: 0.5em;	
+}
+
+#importantMessage
+{
+	display: none;
+	visibility: hidden;
+	position: absolute;
+	bottom: 5px;
+	width: 25%;
+	left: 35%;
+	color: red;
+	font-size: 120%;
+	font-weight: bold;
+	text-align: center;
+	background-color: black;
+	z-index: 200;
+}
+
+#footerBy
+{
+	position: absolute;
+	right: 10px;
+	bottom: 5px;
+	color: #FFFFFF;
+	text-align: right;
+}
+
+#footerPlayLargerVersion
+{
+	display: none;
+	position: absolute;
+	right: 10px;
+	bottom: 3.0em;
+	color: #FFFFFF;
+	text-align: right;	
+}
+
+#footerPlayOnlineVersion
+{
+	display: none;
+	position: absolute;
+	left: 45%;
+	bottom: 3.0em;
+	color: #FFFFFF;
+	text-align: right;
+}
+
+#backgroundURLInput
+{
+	width: 400px;
+}
+
+/* Help */
+#helpIcon
+{
+	position: absolute;
+	right: 0px;
+	top: 1.6em;
+	z-index: 601;
+	cursor: pointer;
+	visibility: hidden;
+}
+
+#helpSpace
+{
+	position: absolute;
+	right: 0px;
+	top: 1.6em;
+	z-index: 490;
+	visibility: hidden;
+	color: #000000;
+	background-color: #FFFFFF;
+	cursor: default;
+    -moz-opacity: 0.90;
+    opacity:.90;
+    filter: alpha(opacity=90);
+	padding: 0px 0px 14px 0px;
+	overflow: auto;
+}
+
+#helpSpaceResizer
+{
+	visibility: hidden;
+	width: 4px;
+	background-color: #444444;
+	cursor: e-resize;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 491;
+	padding: 0px 0px 0px 0px;
+}
+
+
+.helpRulesGameHeader
+{
+	text-align: center;
+	background-color: #3D77CB;
+	color: #FFFFFF;
+	padding: 10px 0px 10px 0px;
+	width: 100%;
+	font-weight: bold;
+}
+
+.helpRulesCategoryHeader
+{
+	font-weight: bold;
+	text-decoration: underline;
+	padding-left: 5px;
+}
+
+.helpRulesCategoryHeaderLine
+{
+	padding-top: 10px;
+}
+
+.helpRulesCategoryHeaderLine ul
+{
+	margin-left: 15px;
+}
+
+.helpRulesDivider
+{
+	width: 20px;
+}
+
+.helpRulesInfoLeftKey
+{
+	padding-right: 10px;
+	padding-left: 10px;
+	text-align: right;
+	white-space: nowrap;
+	font-weight: bold;
+}
+
+.helpRulesInfoTable
+{
+	margin-left: 10px;
+}
+
+.helpRulesInfoTable td
+{
+	vertical-align: top;
+}
+
+.helpRulesDetailsSpotHeader
+{
+	color: blue;
+}
+
+.helpRulesDetails li
+{
+	margin-top: 10px;
+}
+
+.helpRulesDetails li ul
+{
+	margin-left: 10px;
+}
+
+.helpRulesDetails li ul li
+{
+	text-decoration: none;
+	list-style-type: disc;
+	font-size: 90%;
+	padding: 0px;
+	margin: 2px 2px 2px 2.0em;
+}
+
+/* Username/Registration */
+#usernameInfo
+{
+	position: absolute;
+	top: 3px;
+	right: 10px;
+	color: #FFFFFF;
+	z-index: 601;
+}
+
+#usernameInfoValue
+{
+	padding-left: 5px;
+}
+
+#usernameInfoLoginLink, #usernameInfoRegisterLink, #usernameInfoLogoutLink
+{
+	padding-left: 20px;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.registerUserLabel
+{
+	font-weight: bold;
+	text-align: right;
+	padding: 1.0em 1.5em 1.0em 1.0em;
+}
+
+#registerUserUsername, #registerUserPassword, #registerUserPasswordVerify, #registerUserEmail
+{
+	width: 20.0em;
+	margin-right: 1.0em;
+}
+
+#registerUserErrors
+{
+	color: #FF0000;
+	height: 4.0em;
+}
+
+#registerUserServerErrors
+{
+	color: #FF0000;
+	height: 1.0em;
+}
+
+#registerUserSubmit
+{
+	margin-top: 1.0em;
+	padding: 0.2em 0.8em 0.2em 0.8em;
+}
+
+.loginUserLabel
+{
+	font-weight: bold;
+	text-align: right;
+	padding: 1.0em 1.5em 1.0em 1.0em;
+}
+
+#loginUserUsername, #loginUserPassword, #loginUserPasswordVerify, #loginUserEmail
+{
+	width: 20.0em;
+	margin-right: 1.0em;
+}
+
+#loginUserErrors
+{
+	color: #FF0000;
+	height: 4.0em;
+}
+
+#loginUserServerErrors
+{
+	color: #FF0000;
+	height: 1.0em;
+}
+
+#loginUserSubmit
+{
+	margin-top: 1.0em;
+	padding: 0.2em 0.8em 0.2em 0.8em;
+}
+
+/* Mouse Info Styles */
+#mouseOverInfo
+{
+	position: absolute;
+	bottom: 5px;
+	left: 10px;
+	color: #FFFFFF;
+	z-index: 900;
+}
+
+.mouseOverInfoLabel
+{
+	text-align: right;
+	padding-right: 5px;
+	white-space: nowrap;
+}
+
+.mouseOverInfoValue
+{
+	text-align: left;
+}
+
+/* DialogBox Styles */
+.dialogBox
+{
+	display: none;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: 1px solid #000000;
+}
+
+.dialogBox .hd
+{
+	border: 0px;
+}
+
+.dialogBox .bd
+{
+	border-top: 1px solid #000000;
+	padding: 3px 3px 3px 3px;
+}
+
+/* Change Log Styles */
+#changeLogContents
+{
+	overflow: auto;
+	font-family: monospace;	
+}
+
+/* Game Over Styles */
+#gameOver
+{
+	background-color: transparent;
+	border: 0px;
+}
+
+#gameOver .hd
+{
+	height: 0px;
+	padding: 0px;
+	background-color: transparent;
+}
+
+#gameOver .bd
+{
+	padding: 0px;
+	border: 0px;
+	text-align: center;
+}
+
+#gameOverButtonsContainer
+{
+	padding: 20px 40px 20px 40px;
+	text-align: center;
+}
+
+#gameOverButtonsContainer input
+{
+	font-size: 144%;
+	margin-top: 2.0em;
+	margin-right: 4.0em;
+	margin-left: 4.0em;
+	padding: 0.5em 1.0em 0.5em 1.0em;
+}
+
+/* About Box Styles */
+#about td
+{
+	vertical-align: top;
+	padding-bottom: 10px;
+}
+
+#about li
+{
+	font-weight: bold;
+	text-align: right;
+	padding-right: 10px;
+}
+
+#about div.bd
+{
+	padding: 1.0em;
+}
+
+/* Statistics View Styles */
+#statisticsViewSizeCheck
+{
+	position: absolute;
+	bottom: 0px;
+	right: 0px;	
+	font-size: 11px;
+	visibility: hidden;
+}
+
+#statisticsViewContents
+{
+	overflow: hidden;
+}
+
+#statisticsViewContents .yui-navset .yui-nav .selected a,
+#statisticsViewContents .yui-navset .yui-nav a:focus,
+#statisticsViewContents .yui-navset .yui-nav a:hover
+{
+	background-color: #3D77CB;
+}
+
+#statisticsViewContents .yui-navset .yui-nav li
+{
+	margin-right: 0.8em;
+}
+
+#statisticsViewContents .yui-navset .yui-content
+{
+	border-top: 5px solid #3D77CB;
+	background-color: #FFFFFF;
+}
+
+#statisticsViewGameDropdownLabel
+{
+	font-weight: bold;
+}
+
+#statisticsViewInfoNote
+{
+	position: absolute;
+	right: 0px;
+	text-align: right;
+}
+
+#statisticsViewGameDropdown
+{
+	margin: 5px 5px 5px 5px;
+}
+
+.statisticsViewTop
+{
+	height: 58%;
+	margin-bottom: 1%;
+}
+
+.statisticsViewTopLeft
+{
+	float: left;
+	width: 60%;
+	height: 100%;
+}
+
+.statisticsViewTopRight
+{
+	float: left;
+	width: 38%;
+	margin-left: 2%;
+	height: 100%;
+}
+
+.statisticsViewBottom
+{
+	height: 40%; 
+}
+
+#statisticsViewTabsContentContainer fieldset
+{
+	height: 99%;
+}
+
+.statisticsViewInfoTable
+{
+	margin: 1.0em;
+	font-size: 114%;
+}
+
+.statisticsViewInfoLabel
+{
+	text-align: right;
+	font-weight: bold;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+.statisticsViewInfoValue
+{
+	text-align: left;
+	font-weight: normal;
+	vertical-align: top;
+	padding-left: 1.0em;
+	padding-bottom: 1.0em;
+}
+
+#statisticsViewLeaderboardLeft
+{
+	float: left;
+	width: 51%;
+	height: 100%;
+}
+
+#statisticsViewLeaderboardRight
+{
+	float: left;
+	width: 46%;
+	margin-left: 3%;
+	height: 100%;
+}
+
+#statisticsViewLeaderboardLeftTop
+{
+	height: 49%;
+	margin-bottom: 1%;
+}
+
+#statisticsViewLeaderboardLeftBottom
+{
+	height: 49%;
+}
+
+#statisticsViewLeaderboardRightTop
+{
+	height: 49%;
+	margin-bottom: 1%;
+}
+
+#statisticsViewLeaderboardRightBottom
+{
+	height: 49%;
+}
+
+.statisticsViewLeaderboardTableContainer
+{
+	height: 100%;
+	width: 100%;
+	overflow: auto;	
+}
+
+.statisticsViewLeaderboardTable
+{
+	margin-top: 0.5em;
+	font-family: monospace;	
+	font-size: 114%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.statisticsViewLeaderboardTable th
+{
+	padding-left: 1.0em;
+	white-space: nowrap;	
+	font-weight: bold;
+	text-decoration: underline;
+	padding-bottom: 0.2em;
+	text-align: center;
+}
+
+.statisticsViewLeaderboardTable td
+{
+	padding-left: 1.5em;
+	white-space: nowrap;	
+}
+
+.statisticsViewLeaderboardTable .statisticsViewLeaderboardTableHeaderUser
+{
+	text-align: left;
+}
+
+.statisticsViewLeaderboardTable .statisticsViewLeaderboardTableNumber
+{
+	font-weight: bold;
+	text-align: right;
+	padding-left: 0.5em;
+}
+
+.statisticsViewLeaderboardTable .statisticsViewLeaderboardTableUser
+{
+	padding-left: 0.5em;
+}
+	
+.statisticsViewLeaderboardTable .statisticsViewLeaderboardTableValue
+{
+	text-align: right;
+	padding-left: 1.0em;
+}
+
+.statisticsViewLeaderboardHighestPercentageWonDisclosure
+{
+	text-align: center;
+	font-weight: bold;
+	padding-top: 0.5em;
+}
+
+/* Game Chooser Styles */
+#gameChooserContents
+{
+	overflow: auto;
+}
+
+#gameChooser a
+{
+	color: black;
+	padding: 2px;
+}
+
+#gameChooser .treeNonSelectedRow a
+{
+	color: black;
+	background-color: transparent;
+}
+
+#gameChooser .treeSelectedRow a
+{
+	color: white;
+	background-color: #0000AA;
+}
+
+#gameChooserLeft
+{
+	position: absolute;
+	margin-right: 70%;
+	width: 30%;
+	overflow: auto;
+}
+
+#gameChooserRight
+{
+	position: absolute;
+	width: 65%;
+	right: 5px;
+	overflow: hidden;
+}
+
+#gameChooserRightTop
+{
+	clear: both;
+	text-align: center;
+	padding-bottom: 5px;
+}
+
+#gameChooserRightMiddle
+{
+	overflow: auto;
+}
+
+#gameChooserRightBottom
+{
+	text-align: right;
+	position: static;
+	bottom: auto;
+	right: auto;
+}
+
+#gameChooserRightBottom input
+{
+	padding: 2px 7px 2px 7px;
+	margin-top: 10px;
+	margin-right: 15px;
+}
+
+/* Status Panel Styles */
+#statusPanel
+{
+	font-size: 85%;
+	display: none;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: 1px solid #000000;
+}
+
+#statusPanel .hd
+{
+	border: 0px;
+}
+
+#statusPanel .bd
+{
+	padding: 30px;
+	border-top: 1px solid #000000;
+}
+
+#statusPanelInfiniteBarContainer
+{
+	height: 1.3em;
+	text-align: center;
+}
+
+#statusPanelBarContainer
+{
+	height: 1.3em;
+	border: 1px solid #000000;	
+}
+
+#statusPanelBar
+{
+	background: #3D77CB;
+	height: 100%;
+	width: 0%;
+	float: left;
+}
+
+#statusPanelBarPercent
+{
+	height: 90%;
+	position: absolute;
+	clear: none;
+	margin: 1px 0px 0px 185px;
+}
+
+#statusPanelBarText
+{
+	margin: 3px 0px 0px 0px;
+}
+
+/* Menu Styles */
+#menuBar
+{
+	z-index: 600;
+	width: 100%;
+	color: #FFFFFF;
+	background-color: #000000;
+	cursor: default;
+	font-size: 122%;
+	font-weight: bold;
+	padding: 2px 0px 2px 0px;
+    -moz-opacity: 0.90;
+    opacity:.90;
+    filter: alpha(opacity=90);	
+}
+
+.menuBarItem
+{
+	border-right: 1px solid white;
+	padding: 0px 24px 0px 24px;
+}
+
+.menu
+{
+	z-index: 600;
+	color: #FFFFFF;
+	background-color: #000000;
+	font-size: 122%;
+	font-weight: bold;
+	display: none;
+	position: absolute;
+	border: 1px solid white;
+	cursor: default;
+	overflow: auto;
+    -moz-opacity: 0.90;
+    opacity:.90;
+    filter: alpha(opacity=90);	
+}
+
+.menu td
+{
+	text-align: left;
+	vertical-align: middle;
+	padding: 10px;
+}
+
+.menuItemShortcut
+{
+	padding-left: 60px;
+}
+
+#menuDecks td
+{
+	text-align: center;
+	vertical-align: bottom;
+}
+
+.menu td, .menu input, .menu label
+{
+	cursor: pointer;
+}
+
+.menuBottomBorder
+{
+	border-bottom: 1px solid white;
+}
+
+/* Options Menu */
+#optionAnimateSpeedContainer
+{
+	position: relative;
+	height: 15px;
+	width: 231px;
+	float: left;
+}
+
+#optionAnimateSpeedThumbContainer
+{
+	position: absolute;
+	left: 100px;
+	width: 31px;
+	height: 15px;
+}
+
+#optionAnimateSpeedBackground
+{
+	position: absolute;
+	top: 6px;
+	width: 229px;
+	height: 3px;
+	border: 1px solid #123458;
+	background-color: #0050a1;
+}
+
+.optionAnimateSpeedLeftLabel
+{
+	padding: 0px 5px 0px 15px;
+	float: left;
+}
+
+.optionAnimateSpeedRightLabel
+{
+	padding-left: 5px;
+	float: left;
+}
+
+/* Timer Styles */
+#timerContainer
+{
+	padding: 2px 0px 2px 3%;
+}
+
+#timerValue
+{
+}
+
+/* Score Styles */
+#scoreContainer
+{
+	padding: 2px 0px 2px 3%;
+}
+
+#scoreValue
+{
+	padding: 0px 0px 0px 0.5em;
+}
+
+/* Moves Made Styles */
+#movesContainer
+{
+	padding: 2px 0px 2px 3%;
+}
+
+#movesLabel
+{
+	padding: 0px 0px 0px 0.5em;
+}
+
+/* Statistics View Styles */
+#deckViewContents
+{
+	overflow: hidden;
+}
+
+#deckViewContents .yui-navset .yui-nav .selected a,
+#deckViewContents .yui-navset .yui-nav a:focus,
+#deckViewContents .yui-navset .yui-nav a:hover
+{
+	background-color: #3D77CB;
+}
+
+#deckViewContents .yui-navset .yui-nav li
+{
+	margin-right: 0.8em;
+}
+
+#deckViewContents .yui-navset .yui-content
+{
+	border-top: 5px solid #3D77CB;
+	background-color: #FFFFFF;
+}
+
+#deckViewChooseLeft a
+{
+	color: black;
+	padding: 2px;
+}
+
+#deckViewChooseLeft .treeNonSelectedRow a
+{
+	color: black;
+	background-color: transparent;
+}
+
+#deckViewChooseLeft .treeSelectedRow a
+{
+	color: white;
+	background-color: #0000AA;
+}
+
+#deckViewChooseLeft
+{
+	position: absolute;
+	margin-right: 70%;
+	width: 30%;
+	overflow: auto;
+}
+
+#deckViewChooseRight
+{
+	position: absolute;
+	width: 65%;
+	right: 5px;
+	overflow: hidden;
+}
+
+#deckViewChooseShowDropdownLabel
+{
+	font-weight: bold;
+}
+
+#deckViewChooseShowDropdown
+{
+	margin: 5px 5px 5px 5px;
+}
+
+#deckViewChooseRightTop
+{
+	clear: both;
+	text-align: center;
+	padding-bottom: 5px;
+	vertical-align: middle;
+}
+
+#deckViewChooseRightMiddle
+{
+	overflow: hidden;
+}
+
+#deckViewChooseRightBottomLeft
+{
+	text-align: left;
+	position: static;
+	bottom: auto;
+	left: auto;	
+	float: left;
+}
+
+#deckViewChooseArtistLabel
+{
+	font-weight: bold;
+	padding-right: 0.5em;
+}
+
+#deckViewChooseArtistName
+{
+}
+
+#deckViewChooseArtistWebsite
+{
+	margin-left: 2.0em;
+}
+
+#deckViewChooseRightBottomRight
+{
+	text-align: right;
+	position: static;
+	bottom: auto;
+	right: auto;
+}
+
+#deckViewChooseRightBottomRight input
+{
+	padding: 2px 7px 2px 7px;
+	margin-top: 10px;
+	margin-right: 15px;
+}
+
+#deckViewChooseCardsToShowTable
+{
+	width: 100%;
+	height: 100%;
+}
+
+#deckViewChooseCardsToShowTable td
+{
+	padding: 1px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#deckViewTabCreateDeck
+{
+	display: none;
+}
+
+#deckViewCreateLeft
+{
+	position: absolute;
+	margin-right: 80%;
+	width: 20%;
+	overflow: auto;
+}
+
+#deckViewCreateRight
+{
+	position: absolute;
+	width: 75%;
+	right: 5px;
+	overflow: hidden;
+}
+
+#deckViewCreateDecksSelect
+{
+	height: 100%;
+	width: 100%;
+}
+
+#deckViewCreateDeckNameLabel
+{
+	text-align: right;
+	font-weight: bold;
+	padding-right: 5px;
+}
+
+#deckViewCreateDeckArtistNameLabel
+{
+	text-align: right;
+	font-weight: bold;
+	padding-right: 5px;
+}
+
+#deckViewCreateDeckArtistWebsiteLabel
+{
+	text-align: right;
+	font-weight: bold;
+	padding-right: 5px;
+}
+
+#deckViewCreateWhichCardLabel
+{
+	font-weight: bold;
+	padding-right: 5px;
+}
+
+#deckViewCreateWhichImageLabelContainer
+{
+	text-align: right;
+	font-weight: bold;
+	padding-right: 5px;
+}
+
+#deckViewCreateWhichImage
+{
+	width: 100%;
+}
+
+#deckViewCreateCardContainer
+{
+	overflow: hidden;
+	text-align: center;
+	position: relative;
+}
+
+#deckViewCreateCardImageContainer
+{
+	position: absolute;
+	overflow: hidden;
+}
+
+#deckViewCreateCardTemplate
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 552;
+}
+
+#deckViewCreateCardImage
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+#deckViewCreateMaskImage
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 551;
+}
+
+#deckViewCreateDragArea
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 553;
+	cursor: pointer;
+	width: 100%;
+	height: 100%;
+}
+
+#deckViewCreateButtonsContainer
+{
+	text-align: right;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+#deckViewCreateButtonsContainer input
+{
+	padding: 2px 7px 2px 7px;
+	margin-top: 10px;
+	margin-right: 15px;
+}
+
+#deckViewCreateCardImageScaleContainerWithLabels
+{
+	position: absolute;
+	right: 0px;
+	line-height: normal;
+	text-align: center;	
+}
+
+#deckViewCreateCardImageScaleContainer
+{
+	position: relative;
+	height: 221px;
+	width: 35px;
+}
+
+#deckViewCreateCardImageScaleThumbContainer
+{
+	position: absolute;
+	top: 100px;
+	width: 31px;
+	height: 15px;
+	cursor: pointer;
+}
+
+#deckViewCreateCardImageScaleBackground
+{
+	position: absolute;
+	width: 3px;
+	left: 13px;
+	height: 219px;
+	border: 1px solid #123458;
+	background-color: #0050a1;
+}
+
+#deckViewCreateDeckNameLabelContainer,
+#deckViewCreateWhichImageLabelContainer
+{
+	white-space: nowrap;
+}
+
+/* Ad styles */
+#rightAdHideLinkContainer
+{
+	position: absolute;
+	right: 0;
+	top: 4.5em;
+	width: 120px;
+	text-align: center;
+}
+
+#rightAdContainer
+{
+	position: absolute;
+	right: 0;
+	z-index: 0;
+	width: 120px;
+	height: 600px;
+	top: 6.0em;
+}

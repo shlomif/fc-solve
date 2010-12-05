@@ -1,0 +1,14 @@
+Screencast of PySolFC ( http://pysolfc.sourceforge.net/ ) solving a deal of Freecell ( http://www.solitairelaboratory.com/fcfaq.html , http://en.wikipedia.org/wiki/FreeCell ) using Freecell Solver ( http://fc-solve.berlios.de ). The music in the background is the track "Function 5" from the album Lifeforce by Adam Singer ( http://www.agsinger.com/compositions/ )  - available under either CC-by or CC-by-nc.
+
+Other software and material used:
+
+* Mandriva Linux Cooker
+* KDE 4.3.x beta/RC.
+* recordmydesktop ( http://recordmydesktop.sourceforge.net/about.php )
+* avidemux ( http://fixounet.free.fr/avidemux/ )
+* http://www.kde-look.org/content/show.php/white+wave?content=97779 as the desktop background.
+
+Hope you enjoy this screencast and try out PySolFC and Freecell Solver.
+
+
+Tags: freecell, solver, pysol, pysolfc, PySolFC, adam, singer, screencast, solitaire, solving, fc-solve, 
