@@ -4,7 +4,7 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
-Version 3.4.0: (02-Dec-2010)
+Version 3.4.0: (05-Dec-2010)
 ----------------------------
 
 1. Compiling without card flipping on by default now (finally it makes
