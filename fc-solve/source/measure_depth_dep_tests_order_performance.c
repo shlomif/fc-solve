@@ -348,8 +348,13 @@ int main(int argc, char * argv[])
         {
             fprintf(output_fh, "board[%d].ret == %d\n", board_num, results[board_num-start_board].verdict);
             fprintf(output_fh, "board[%d].iters == %d\n", board_num, results[board_num-start_board].num_iters);
+#ifndef WIN32
             fprintf(output_fh, "board[%d].start = %li.%.6li\n", board_num, results[board_num-start_board].start_tv.tv_sec, results[board_num-start_board].start_tv.tv_usec);
             fprintf(output_fh, "board[%d].end = %li.%.6li\n", board_num, results[board_num-start_board].end_tv.tv_sec, results[board_num-start_board].end_tv.tv_usec);
+#else
+            fprintf(output_fh, "board[%d].start = %li.%.6li\n", board_num, results[board_num-start_board].start_tb.time, results[board_num-start_board].start_tb.millitm*1000);
+            fprintf(output_fh, "board[%d].end = %li.%.6li\n", board_num, results[board_num-start_board].end_tb.time, results[board_num-start_board].end_tb.millitm*1000);
+#endif
         }
         fflush(output_fh);
     }
