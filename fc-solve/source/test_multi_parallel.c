@@ -35,6 +35,7 @@
 #include <string.h>
 
 #include "portable_time.h"
+#include "portable_int64.h"
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
@@ -267,11 +268,7 @@ int main(int argc, char * argv[])
     fcs_portable_time_t mytime;
     int total_num_iters_temp = 0;
 
-#ifndef WIN32
-    long long total_num_iters = 0;
-#else
-    __int64 total_num_iters = 0;
-#endif
+    fcs_int64_t total_num_iters = 0;
     char * error_string;
     int parser_ret;
 
@@ -515,19 +512,17 @@ int main(int argc, char * argv[])
             total_num_iters_temp = 0;
 
             FCS_GET_TIME(mytime);
-            printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
+            printf(
+                (
+                 "Reached Board No. %i at %li.%.6li (total_num_iters="
+                 FCS_INT64_FORMAT ")\n"
+                ),
                 board_num,
                 FCS_TIME_GET_SEC(mytime),
                 FCS_TIME_GET_USEC(mytime),
                 total_num_iters
-                );
-#if WIN32
-#if 0
-                    "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
-#endif
-#endif
+            );
             fflush(stdout);
-
         }
 
 
