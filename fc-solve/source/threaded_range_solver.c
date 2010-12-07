@@ -504,18 +504,7 @@ int main(int argc, char * argv[])
         pthread_join(workers[idx], NULL);
     }
 
-    FCS_GET_TIME(mytime);
-
-    printf(
-        (
-         "Finished at %li.%.6li (total_num_iters="
-         FCS_INT64_FORMAT
-         ")\n"
-        ),
-        FCS_TIME_GET_SEC(mytime),
-        FCS_TIME_GET_USEC(mytime),
-        total_num_iters
-    );
+    FCS_PRINT_FINISHED(mytime, total_num_iters);
 
     free(workers);
 

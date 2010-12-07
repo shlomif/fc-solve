@@ -102,6 +102,18 @@ typedef struct
     total_num_iters \
     );
 
-
+#define FCS_PRINT_FINISHED(mytime, total_num_iters) \
+    FCS_GET_TIME(mytime); \
+ \
+    printf( \
+        ( \
+         "Finished at %li.%.6li (total_num_iters=" \
+         FCS_INT64_FORMAT \
+         ")\n" \
+        ), \
+        FCS_TIME_GET_SEC(mytime), \
+        FCS_TIME_GET_USEC(mytime), \
+        total_num_iters \
+    )
 
 #endif /* #ifndef FC_SOLVE__PORTABLE_TIME_H */
