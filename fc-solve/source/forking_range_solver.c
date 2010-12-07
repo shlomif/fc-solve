@@ -33,19 +33,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef WIN32
-#include <sys/time.h>
-#else
-#include <sys/types.h>
-#include <sys/timeb.h>
-#endif
+
+#include "portable_int64.h"
+#include "portable_time.h"
+
 #ifndef WIN32
 #include <unistd.h>
 #endif
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <unistd.h>
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
@@ -227,13 +224,7 @@ typedef struct {
 
 static int total_iterations_limit_per_board = -1;
 
-#ifndef WIN32
-typedef long long very_long_int_t;
-#else
-typedef __int64 very_long_int_t;
-#endif
-
-static very_long_int_t total_num_iters = 0;
+static fcs_int64_t total_num_iters = 0;
 
 #define READ_FD 0
 #define WRITE_FD 1
@@ -262,8 +253,7 @@ int worker_func(int idx, worker_t w, void * instance)
     response_t response;
     int ret;
     fcs_state_string_t state_string;
-    struct timeval tv;
-    struct timezone tz;
+    fcs_portable_time_t mytime;
 
     while(1)
     {
@@ -295,21 +285,7 @@ int worker_func(int idx, worker_t w, void * instance)
 
             if (ret == FCS_STATE_SUSPEND_PROCESS)
             {
-#ifndef WIN32
-                gettimeofday(&tv,&tz);
-                printf("Intractable Board No. %i at %li.%.6li\n",
-                    board_num,
-                    tv.tv_sec,
-                    tv.tv_usec
-                    );
-#else
-                _ftime(&tb);
-                printf("Intractable Board No. %i at %li.%.6i\n",
-                    board_num,
-                    tb.time,
-                    tb.millitm*1000
-                );
-#endif
+                FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
                 fflush(stdout);
                 print_int_wrapper(-1);
             }
@@ -326,21 +302,8 @@ int worker_func(int idx, worker_t w, void * instance)
             }
             else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
             {
-#ifndef WIN32
-                gettimeofday(&tv,&tz);
-                printf("Unsolved Board No. %i at %li.%.6li\n",
-                    board_num,
-                    tv.tv_sec,
-                    tv.tv_usec
-                    );
-#else
-                _ftime(&tb);
-                printf("Unsolved Board No. %i at %li.%.6i\n",
-                    board_num,
-                    tb.time,
-                    tb.millitm*1000
-                );
-#endif
+                FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
+                fflush(stdout);
                 print_int_wrapper(-2);
             }
             else
@@ -376,12 +339,7 @@ int main(int argc, char * argv[])
 {
     int stop_at;
     int parser_ret;
-#ifndef WIN32
-    struct timeval tv;
-    struct timezone tz;
-#else
-    struct _timeb tb;
-#endif
+    fcs_portable_time_t mytime;
 
     int num_workers = 3;
     worker_t * workers;
@@ -456,20 +414,7 @@ int main(int argc, char * argv[])
 
     start_from_arg = arg;
 
-    /* for(board_num=1;board_num<100000;board_num++) */
-#ifndef WIN32
-    gettimeofday(&tv,&tz);
-    printf("Started at %li.%.6li\n",
-        tv.tv_sec,
-        tv.tv_usec
-        );
-#else
-    _ftime(&tb);
-    printf("Started at %li.%.6i\n",
-        tb.time,
-        tb.millitm*1000
-        );
-#endif
+    FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
     user.instance = freecell_solver_user_alloc();
@@ -619,28 +564,11 @@ int main(int argc, char * argv[])
         {
             if (total_num_finished_boards >= next_milestone)
             {
-#ifndef WIN32
-                gettimeofday(&tv,&tz);
-                printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
+                FCS_PRINT_REACHED_BOARD(
+                    mytime,
                     next_milestone,
-                    tv.tv_sec,
-                    tv.tv_usec,
-                    total_num_iters
-                    );
-#else
-                _ftime(&tb);
-                printf(
-#ifdef __GNUC__
-                        "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
-#else
-                        "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
-#endif
-                    next_milestone,
-                    tb.time,
-                    tb.millitm*1000,
                     total_num_iters
                 );
-#endif
                 fflush(stdout);
 
                 next_milestone += stop_at;
@@ -688,26 +616,8 @@ int main(int argc, char * argv[])
             wait(&status);
         }
     }
-#ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Finished at %li.%.6li (total_num_iters=%lli)\n",
-                tv.tv_sec,
-                tv.tv_usec,
-                total_num_iters
-                );
-#else
-            _ftime(&tb);
-            printf(
-#ifdef __GNUC__
-                    "Finished at %li.%.6i (total_num_iters=%lli)\n",
-#else
-                    "Finshed at %li.%.6i (total_num_iters=%I64i)\n",
-#endif
-                tb.time,
-                tb.millitm*1000,
-                total_num_iters
-            );
-#endif
+
+    FCS_PRINT_FINISHED(mytime, total_num_iters);
 
     free(workers);
 
