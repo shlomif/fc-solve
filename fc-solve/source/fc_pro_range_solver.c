@@ -29,12 +29,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef WIN32
-#include <sys/time.h>
-#else
-#include <sys/types.h>
-#include <sys/timeb.h>
-#endif
+
+#include "portable_time.h"
+#include "portable_int64.h"
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
@@ -302,18 +299,11 @@ int main(int argc, char * argv[])
     int start_board, end_board, stop_at;
     char * buffer;
     char temp_str[10];
-#ifndef WIN32
-    struct timeval tv;
-    struct timezone tz;
-#else
-    struct _timeb tb;
-#endif
+    fcs_portable_time_t mytime;
+
     int total_num_iters_temp = 0;
-#ifndef WIN32
-    long long total_num_iters = 0;
-#else
-    __int64 total_num_iters = 0;
-#endif
+    fcs_int64_t total_num_iters = 0;
+
     char * error_string;
     int parser_ret;
 
@@ -371,20 +361,7 @@ int main(int argc, char * argv[])
 
 
 
-    /* for(board_num=1;board_num<100000;board_num++) */
-#ifndef WIN32
-    gettimeofday(&tv,&tz);
-    printf("Started at %li.%.6li\n",
-        tv.tv_sec,
-        tv.tv_usec
-        );
-#else
-    _ftime(&tb);
-    printf("Started at %li.%.6i\n",
-        tb.time,
-        tb.millitm*1000
-        );
-#endif
+    FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
     if (binary_output_filename)
@@ -524,42 +501,15 @@ int main(int argc, char * argv[])
 
         if (ret == FCS_STATE_SUSPEND_PROCESS)
         {
-#ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Intractable Board No. %i at %li.%.6li\n",
-                board_num,
-                tv.tv_sec,
-                tv.tv_usec
-                );
-#else
-            _ftime(&tb);
-            printf("Intractable Board No. %i at %li.%.6i\n",
-                board_num,
-                tb.time,
-                tb.millitm*1000
-            );
-#endif
+            FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
             fflush(stdout);
+
             print_int_wrapper(-1);
             printf("%s", "[[Num FCS Moves]]=-1\n[[Num FCPro Moves]]=-1\n");
         }
         else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
-#ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Unsolved Board No. %i at %li.%.6li\n",
-                board_num,
-                tv.tv_sec,
-                tv.tv_usec
-                );
-#else
-            _ftime(&tb);
-            printf("Unsolved Board No. %i at %li.%.6i\n",
-                board_num,
-                tb.time,
-                tb.millitm*1000
-            );
-#endif
+            FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
             print_int_wrapper(-2);
             printf("%s", "[[Num FCS Moves]]=-2\n[[Num FCPro Moves]]=-2\n");
         }
@@ -602,29 +552,11 @@ int main(int argc, char * argv[])
             total_num_iters += total_num_iters_temp;
             total_num_iters_temp = 0;
 
-
-#ifndef WIN32
-            gettimeofday(&tv,&tz);
-            printf("Reached Board No. %i at %li.%.6li (total_num_iters=%lli)\n",
+            FCS_PRINT_REACHED_BOARD(
+                mytime,
                 board_num,
-                tv.tv_sec,
-                tv.tv_usec,
-                total_num_iters
-                );
-#else
-            _ftime(&tb);
-            printf(
-#ifdef __GNUC__
-                    "Reached Board No. %i at %li.%.6i (total_num_iters=%lli)\n",
-#else
-                    "Reached Board No. %i at %li.%.6i (total_num_iters=%I64i)\n",
-#endif
-                board_num,
-                tb.time,
-                tb.millitm*1000,
                 total_num_iters
             );
-#endif
             fflush(stdout);
 
         }
