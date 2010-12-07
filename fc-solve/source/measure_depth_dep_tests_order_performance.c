@@ -28,12 +28,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef WIN32
-#include <sys/time.h>
-#else
-#include <sys/types.h>
-#include <sys/timeb.h>
-#endif
+#include "portable_time.h"
+#include "portable_int64.h"
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
@@ -82,11 +78,7 @@ static void print_help(void)
 
 typedef struct
 {
-#ifndef WIN32
-    struct timeval start_tv, end_tv;
-#else
-    struct _timeb start_tb, end_tb;
-#endif
+    fcs_portable_time_t start_time, end_time;
     int num_iters;
     int verdict;
 } result_t;
@@ -108,12 +100,8 @@ int main(int argc, char * argv[])
     int iters_limit = 100000;
     int max_var_depth_to_check = 100;
 
-#ifndef WIN32
-    struct timeval tv;
-    struct timezone tz;
-#else
-    struct _timeb tb;
-#endif
+    fcs_portable_time_t mytime;
+
     int total_num_iters = 0;
     char * error_string;
     char * scan1_to = NULL, * scan2_to = NULL;
@@ -230,20 +218,7 @@ int main(int argc, char * argv[])
         exit(-1);
     }
 
-    /* for(board_num=1;board_num<100000;board_num++) */
-#ifndef WIN32
-    gettimeofday(&tv,&tz);
-    printf("Started at %li.%.6li\n",
-        tv.tv_sec,
-        tv.tv_usec
-        );
-#else
-    _ftime(&tb);
-    printf("Started at %li.%.6i\n",
-        tb.time,
-        tb.millitm*1000
-        );
-#endif
+    FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
     results = malloc(sizeof(results[0]) * (end_board - start_board + 1));
@@ -307,14 +282,7 @@ int main(int argc, char * argv[])
                 iters_limit
             );
 
-#ifndef WIN32
-                gettimeofday(
-                    &(results[board_num - start_board].start_tv),
-                    &tz
-                );
-#else
-                _ftime(&(results[board_num - start_board].start_tb));
-#endif
+            FCS_GET_TIME(results[board_num - start_board].start_time);
 
             results[board_num-start_board].verdict = ret =
                 freecell_solver_user_solve_board(
@@ -322,14 +290,7 @@ int main(int argc, char * argv[])
                     state_string
                     );
 
-#ifndef WIN32
-                gettimeofday(
-                    &(results[board_num - start_board].end_tv),
-                    &tz
-                );
-#else
-                _ftime(&(results[board_num - start_board].end_tb));
-#endif
+            FCS_GET_TIME(results[board_num - start_board].end_time);
 
             total_num_iters +=
                 (results[board_num - start_board].num_iters
@@ -348,13 +309,14 @@ int main(int argc, char * argv[])
         {
             fprintf(output_fh, "board[%d].ret == %d\n", board_num, results[board_num-start_board].verdict);
             fprintf(output_fh, "board[%d].iters == %d\n", board_num, results[board_num-start_board].num_iters);
-#ifndef WIN32
-            fprintf(output_fh, "board[%d].start = %li.%.6li\n", board_num, results[board_num-start_board].start_tv.tv_sec, results[board_num-start_board].start_tv.tv_usec);
-            fprintf(output_fh, "board[%d].end = %li.%.6li\n", board_num, results[board_num-start_board].end_tv.tv_sec, results[board_num-start_board].end_tv.tv_usec);
-#else
-            fprintf(output_fh, "board[%d].start = %li.%.6li\n", board_num, results[board_num-start_board].start_tb.time, results[board_num-start_board].start_tb.millitm*1000);
-            fprintf(output_fh, "board[%d].end = %li.%.6li\n", board_num, results[board_num-start_board].end_tb.time, results[board_num-start_board].end_tb.millitm*1000);
-#endif
+
+#define FPRINTF_TIME(label, field) \
+            fprintf(output_fh, "board[%d].%s = %li.%.6li\n", board_num, label, FCS_TIME_GET_SEC(results[board_num-start_board].field),FCS_TIME_GET_USEC(results[board_num-start_board].field));
+
+            FPRINTF_TIME("start", start_time);
+            FPRINTF_TIME("end", end_time);
+
+#undef FPRINTF_TIME
         }
         fflush(output_fh);
     }
