@@ -470,11 +470,6 @@ FCS_ADD_EXEC(freecell-solver-range-parallel-solve test_multi_parallel.c)
 FCS_ADD_EXEC(freecell-solver-fc-pro-range-solve fc_pro_range_solver.c fc_pro_iface.c)
 FCS_ADD_EXEC_NO_INSTALL(measure-depth-dep-tests-order-perf measure_depth_dep_tests_order_performance.c)
 
-FCS_ADD_EXEC_NO_INSTALL(
-    temp-flair-solver temp-fc_pro_range_solver_with_flair_support.c
-    fc_pro_iface.c
-)
-
 IF (CMAKE_USE_PTHREADS_INIT)
     FCS_ADD_EXEC(freecell-solver-multi-thread-solve threaded_range_solver.c)
     TARGET_LINK_LIBRARIES(freecell-solver-multi-thread-solve "pthread")
