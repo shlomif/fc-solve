@@ -89,5 +89,19 @@ typedef struct
             FCS_TIME_GET_USEC(mytime) \
     )
 
+#define FCS_PRINT_REACHED_BOARD(mytime, board_num, total_num_iters) \
+    FCS_GET_TIME(mytime); \
+    printf( \
+    ( \
+     "Reached Board No. %i at %li.%.6li (total_num_iters=" \
+     FCS_INT64_FORMAT ")\n" \
+    ), \
+    board_num, \
+    FCS_TIME_GET_SEC(mytime), \
+    FCS_TIME_GET_USEC(mytime), \
+    total_num_iters \
+    );
+
+
 
 #endif /* #ifndef FC_SOLVE__PORTABLE_TIME_H */

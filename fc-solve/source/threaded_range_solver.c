@@ -368,18 +368,11 @@ static void * worker_thread(void * void_context)
                 pthread_mutex_unlock(&total_num_iters_lock);
                 total_num_iters_temp = 0;
 
-                FCS_GET_TIME(mytime);
-                printf(
-                    (
-                     "Reached Board No. %i at %li.%.6li (total_num_iters=" 
-                     FCS_INT64_FORMAT
-                     ")\n"
-                    ),
+                FCS_PRINT_REACHED_BOARD(
+                    mytime,
                     board_num,
-                    FCS_TIME_GET_SEC(mytime),
-                    FCS_TIME_GET_USEC(mytime),
                     total_num_iters_copy
-                    );
+                );
                 fflush(stdout);
             }
 
