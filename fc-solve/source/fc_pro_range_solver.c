@@ -301,7 +301,6 @@ int main(int argc, char * argv[])
     char temp_str[10];
     fcs_portable_time_t mytime;
 
-    int total_num_iters_temp = 0;
     fcs_int64_t total_num_iters = 0;
 
     char * error_string;
@@ -541,17 +540,10 @@ int main(int argc, char * argv[])
             printf("\n%s\n", "[[End]]");
         }
 
-        total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
-        if (total_num_iters_temp > 1000000)
-        {
-            total_num_iters += total_num_iters_temp;
-            total_num_iters_temp = 0;
-        }
+        total_num_iters += freecell_solver_user_get_num_times(user.instance);
+
         if (board_num % stop_at == 0)
         {
-            total_num_iters += total_num_iters_temp;
-            total_num_iters_temp = 0;
-
             FCS_PRINT_REACHED_BOARD(
                 mytime,
                 board_num,
