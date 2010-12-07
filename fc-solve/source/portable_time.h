@@ -66,4 +66,28 @@ typedef struct
 };
 #endif
 
+#define FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num) \
+    FCS_GET_TIME(mytime); \
+    printf("Intractable Board No. %i at %li.%.6li\n", \
+        board_num, \
+        FCS_TIME_GET_SEC(mytime), \
+        FCS_TIME_GET_USEC(mytime) \
+    )
+
+#define FCS_PRINT_UNSOLVED_BOARD(mytime, board_num) \
+    FCS_GET_TIME(mytime); \
+    printf("Unsolved Board No. %i at %li.%.6li\n", \
+            board_num, \
+            FCS_TIME_GET_SEC(mytime), \
+            FCS_TIME_GET_USEC(mytime) \
+    )
+
+#define FCS_PRINT_STARTED_AT(mytime) \
+    FCS_GET_TIME(mytime); \
+    printf("Started at %li.%.6li\n", \
+            FCS_TIME_GET_SEC(mytime), \
+            FCS_TIME_GET_USEC(mytime) \
+    )
+
+
 #endif /* #ifndef FC_SOLVE__PORTABLE_TIME_H */

@@ -324,12 +324,7 @@ static void * worker_thread(void * void_context)
 
             if (ret == FCS_STATE_SUSPEND_PROCESS)
             {
-                FCS_GET_TIME(mytime);
-                printf("Intractable Board No. %i at %li.%.6li\n",
-                    board_num,
-                    FCS_TIME_GET_SEC(mytime),
-                    FCS_TIME_GET_USEC(mytime)
-                    );
+                FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
                 fflush(stdout);
                 print_int_wrapper(-1);
             }
@@ -346,12 +341,8 @@ static void * worker_thread(void * void_context)
             }
             else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
             {
-                FCS_GET_TIME(mytime);
-                printf("Unsolved Board No. %i at %li.%.6li\n",
-                    board_num,
-                    FCS_TIME_GET_SEC(mytime),
-                    FCS_TIME_GET_USEC(mytime)
-                    );
+                FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
+
                 print_int_wrapper(-2);
             }
             else
@@ -486,12 +477,7 @@ int main(int argc, char * argv[])
 
     start_from_arg = arg;
 
-    /* for(board_num=1;board_num<100000;board_num++) */
-    FCS_GET_TIME(mytime);
-    printf("Started at %li.%.6li\n",
-            FCS_TIME_GET_SEC(mytime),
-            FCS_TIME_GET_USEC(mytime)
-          );
+    FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
     context.argc = argc;
