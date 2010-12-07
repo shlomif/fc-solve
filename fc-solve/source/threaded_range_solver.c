@@ -43,6 +43,8 @@
 #include <unistd.h>
 #endif
 
+#include "portable_int64.h"
+
 #include "fcs_user.h"
 #include "fcs_cl.h"
 #include "unused.h"
@@ -234,13 +236,7 @@ typedef struct {
 
 int total_iterations_limit_per_board = -1;
 
-#ifndef WIN32
-typedef long long very_long_int_t;
-#else
-typedef __int64 very_long_int_t;
-#endif
-
-very_long_int_t total_num_iters = 0;
+fcs_int64_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
 static void * worker_thread(void * void_context)
@@ -402,7 +398,7 @@ static void * worker_thread(void * void_context)
 
             if (board_num % stop_at == 0)
             {
-                very_long_int_t total_num_iters_copy;
+                fcs_int64_t total_num_iters_copy;
 
                 pthread_mutex_lock(&total_num_iters_lock);
                 total_num_iters_copy = (total_num_iters += total_num_iters_temp);
