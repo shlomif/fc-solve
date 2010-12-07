@@ -7,9 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* Finish the conversion of the range solvers/etc. to +portable_int64.h+ and
-+portable_time.h+ .
-
 * Make sure the total_num_iters is only a 64-bit integer without an 
 intermediate 32-bit one - it just adds clutter to the code and is a premature
 optimisation (and may be a de-optimisation).

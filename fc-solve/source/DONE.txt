@@ -117,3 +117,6 @@ and trim_max_stored_states should decrease if states were removed.
 +moves_to_parent+ moves stack and instead apply it upon recalculating
 the derived state.
 
+* Finish the conversion of the range solvers/etc. to +portable_int64.h+ and
++portable_time.h+ .
+
