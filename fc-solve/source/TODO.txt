@@ -29,6 +29,11 @@ c
 Non-pressing
 ------------
 
+* Add a BSD-licence-styled balanced binary tree implementation in the Freecell
+Solver sources and have it use it for both stuff in the +--rcs+ option (and
+possibly others)
+** Kazlib's Red-Black tree looks like a good candidate.
+
 * Further refactor the range solvers.
 
 * Implement the compact_allocators recycling in the remaining places in
