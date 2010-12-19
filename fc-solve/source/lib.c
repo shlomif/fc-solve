@@ -1143,7 +1143,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         {
             int ret;
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
-            fcs_internal_move_t internal_move;
+            fcs_internal_move_t internal_move = fc_solve_empty_move;
 #endif
 
             ret = fc_solve_move_stack_pop(
