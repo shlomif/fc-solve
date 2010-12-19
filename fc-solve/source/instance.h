@@ -68,14 +68,14 @@ extern "C" {
 
 #endif
 
-#if defined(FCS_RCS_STATES) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY))
+#if ((defined(FCS_RCS_STATES) && (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)))
 
 #include <Judy.h>
 
 #endif
 
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)||(FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH))
 
 #include "fcs_hash.h"
 
@@ -90,6 +90,12 @@ extern "C" {
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
 
 #include "google_hash.h"
+
+#endif
+
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE) || (defined(FCS_RCS_STATES) && (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)))
+
+#include "kaz_tree.h"
 
 #endif
 
@@ -353,7 +359,13 @@ typedef struct fcs_cache_key_info_struct fcs_cache_key_info_t;
 
 typedef struct
 {
+#if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     Pvoid_t states_values_to_keys_map;
+#elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
+    dict_t * kaz_tree;
+#else
+#error unknown FCS_RCS_CACHE_STORAGE
+#endif
     fcs_compact_allocator_t states_values_to_keys_allocator;
     long count_elements_in_cache, max_num_elements_in_cache;
 
@@ -454,6 +466,8 @@ struct fc_solve_instance_struct
     fcs_libavl2_states_tree_table_t * tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     GTree * tree;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
+    dict_t * tree;
 #endif
 
     /*
@@ -591,7 +605,7 @@ struct fc_solve_instance_struct
 #ifdef FCS_RCS_STATES
     fcs_lru_cache_t rcs_states_cache;
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
     fcs_state_t * tree_new_state_key;
     fcs_collectible_state_t * tree_new_state;
 #endif
@@ -1730,6 +1744,11 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
         fc_solve_instance_t * instance,
         fcs_collectible_state_t * ptr_state_val
         );
+
+extern int fc_solve_compare_lru_cache_keys(
+    const void * void_a, const void * void_b, void * param
+);
+
 #endif
 
 #ifdef FCS_RCS_STATES

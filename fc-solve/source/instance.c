@@ -778,7 +778,14 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
     {
         fcs_lru_cache_t * cache = &(instance->rcs_states_cache);
 
+#if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
         cache->states_values_to_keys_map = ((Pvoid_t) NULL);
+#elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
+        cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys, NULL);
+#else
+#error Unknown FCS_RCS_CACHE_STORAGE
+#endif
+
         fc_solve_compact_allocator_init(
             &(cache->states_values_to_keys_allocator)
         );
@@ -919,7 +926,7 @@ extern void fc_solve_trace_solution(
 
 #ifdef FCS_RCS_STATES
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
 
 static GCC_INLINE fcs_state_t * rcs_states_get_state(
     fc_solve_instance_t * instance,
@@ -1026,6 +1033,16 @@ void fc_solve_start_instance_process_with_board(
     instance->tree = fcs_libavl2_states_tree_create(fc_solve_state_compare_with_context, NULL, NULL);
 #endif
 
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
+
+#ifdef FCS_RCS_STATES
+    instance->tree = fc_solve_kaz_tree_create(
+            fc_solve_rcs_states_compare, instance
+            );
+#else
+    instance->tree = fc_solve_kaz_tree_create(fc_solve_state_compare_with_context, NULL);
+#endif
+
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     instance->tree = g_tree_new(fc_solve_state_compare);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
@@ -1042,7 +1059,7 @@ void fc_solve_start_instance_process_with_board(
 
     instance->indirect_prev_states = NULL;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    /* Do nothing because it is freed elsewhere. */
+    /* Do nothing because it is allocated elsewhere. */
 #else
 #error not defined
 #endif
@@ -1176,6 +1193,9 @@ void fc_solve_finish_instance(
     rbdestroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_states_tree_destroy(instance->tree, NULL);
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
+    fc_solve_kaz_tree_free_nodes(instance->tree);
+    fc_solve_kaz_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     g_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
@@ -1236,15 +1256,25 @@ void fc_solve_finish_instance(
 #endif
 
 #ifdef FCS_RCS_STATES
+
+#if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     {
         Word_t Rc_word;
         JLFA(Rc_word,
             instance->rcs_states_cache.states_values_to_keys_map
         );
-        fc_solve_compact_allocator_finish(
-            &(instance->rcs_states_cache.states_values_to_keys_allocator)
-        );
     }
+#elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
+    fc_solve_kaz_tree_free_nodes(instance->rcs_states_cache.kaz_tree);
+    fc_solve_kaz_tree_destroy(instance->rcs_states_cache.kaz_tree);
+#else
+#error Unknown FCS_RCS_CACHE_STORAGE
+#endif
+
+    fc_solve_compact_allocator_finish(
+        &(instance->rcs_states_cache.states_values_to_keys_allocator)
+    );
+
 #endif
 
     clean_soft_dfs(instance);

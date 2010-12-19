@@ -14,6 +14,7 @@ use Getopt::Long;
 my $build_type = "debug";
 my $stack_storage;
 my $state_storage;
+my $rcs_cache_storage;
 my $prefix = "/usr";
 my $freecell_only = 0;
 my $secondary_hash_value = 0;
@@ -55,6 +56,7 @@ sub set_hash
 }
 
 set_hash();
+$rcs_cache_storage = "KAZ_TREE";
 
 sub _google_set_both
 {
@@ -158,6 +160,8 @@ GetOptions(
     },
     'c|cols=s' => \$stack_storage,
     'p|pos=s' => \$state_storage,
+    'rcs-cache-storage=s' => \$rcs_cache_storage,
+    'kazlib' => sub { $state_storage = "KAZ_TREE"; $rcs_cache_storage = "KAZ_TREE",},
     'libavl2-p=s' => \$state_storage_libavl2_tree,
     'libavl2-c=s' => \$stack_storage_libavl2_tree,
     'prefix=s' => \$prefix,
@@ -230,6 +234,7 @@ unlink("CMakeCache.txt");
 my @cmd= ("cmake",
     "-DCMAKE_BUILD_TYPE=$build_type",
     "-DFCS_STATE_STORAGE=FCS_STATE_STORAGE_$state_storage",
+    "-DFCS_RCS_CACHE_STORAGE=FCS_RCS_CACHE_STORAGE_$rcs_cache_storage",
     "-DMAX_NUM_BENCHMARK_THREADS=$max_bench_threads_num",
     "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
     "-DCMAKE_INSTALL_PREFIX=$prefix",
@@ -247,6 +252,7 @@ my @cmd= ("cmake",
     ($rcs_states ? ("-DFCS_ENABLE_RCS_STATES=1") : ()),
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
+
     (defined($pack_size) ? ("-DFCS_IA_PACK_SIZE=$pack_size") : ()),
     ($test_suite ? ("-DFCS_WITH_TEST_SUITE=1") : ()),
     (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
