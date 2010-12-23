@@ -342,12 +342,19 @@ typedef struct {
     fcs_collectible_state_t * state_val;
 } cache_parents_stack_item_t;
 
+typedef const char * fcs_lru_side_t;
 extern int fc_solve_compare_lru_cache_keys(
     const void * void_a, const void * void_b, void * context
 )
 {
-#define GET_PARAM(p) ((unsigned long)((const fcs_cache_key_info_t *)(p))->val_ptr)
-    return GET_PARAM(void_a) - GET_PARAM(void_b);
+#define GET_PARAM(p) ((fcs_lru_side_t)(((const fcs_cache_key_info_t *)(p))->val_ptr))
+    fcs_lru_side_t a, b;
+
+    a = GET_PARAM(void_a);
+    b = GET_PARAM(void_b);
+
+    return ((a > b) ? 1 : (a < b) ? (-1) : 0);
+#undef GET_PARAM
 }
 
 #define NEXT_CACHE_STATE(s) ((s)->lower_pri)
