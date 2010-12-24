@@ -342,7 +342,11 @@ typedef struct {
     fcs_collectible_state_t * state_val;
 } cache_parents_stack_item_t;
 
+/* TODO : Unit-test this function as it had had a bug beforehand 
+ * because fcs_lru_side_t had been an unsigned long.
+ * */
 typedef const char * fcs_lru_side_t;
+
 extern int fc_solve_compare_lru_cache_keys(
     const void * void_a, const void * void_b, void * context
 )

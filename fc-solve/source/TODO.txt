@@ -29,6 +29,8 @@ c
 Non-pressing
 ------------
 
+* Unit-test +fc_solve_compare_lru_cache_keys+ in +scans.c+.
+
 * Add a BSD-licence-styled balanced binary tree implementation in the Freecell
 Solver sources and have it use it for both stuff in the +--rcs+ option (and
 possibly others)
