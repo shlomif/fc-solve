@@ -168,3 +168,19 @@ class FC_Solve:
         ok (want_num == got_num,
             name + " - max_depth_of_depth_idx_is for" + str(depth_idx) + ".")
 
+    def solve_board(self, board):
+        return self.fcs.freecell_solver_user_solve_board(
+                self.user,
+                (c_char_p)(board)
+        )
+
+    def resume_solution(self):
+        return self.fcs.freecell_solver_user_resume_solution(self.user)
+
+    def limit_iterations(self, max_iters):
+        self.fcs.freecell_solver_user_limit_iterations(
+            self.user, 
+            (c_int)(max_iters)
+        )
+        return
+

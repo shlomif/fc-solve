@@ -1098,6 +1098,12 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                     user->fc_solve_obj->effective_max_num_states_in_collection)
             )
             {
+                /* 
+                 * Bug fix:
+                 * We need to resume from the last flare in case we exceed
+                 * the board iterations limit.
+                 * */
+                instance_item->current_plan_item_idx--;
                 break;
             }
 
