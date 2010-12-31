@@ -14,7 +14,7 @@ build: $(BUILD_STAMP)
 
 $(BUILD_STAMP): $(DOWNLOAD_STAMP)
 	cd source && \
-	./Tatzer -l x64m --prefix=$(HOME)/opt/fc-solve --nfc=2 --kazlib
+	./Tatzer -l x64m --prefix=$(HOME)/opt/fc-solve --nfc=2 --kazlib --tracemem
 	cd source && make
 	cd source && make install
 	if ! test -e $@ ; then > $@ ; fi
