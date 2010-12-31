@@ -37,6 +37,11 @@
 #include "unused.h"
 #include "bool.h"
 
+#ifdef FCS_TRACE_MEM
+#include "portable_time.h"
+#include <unistd.h>
+#include <sys/types.h>
+#endif
 enum STANDARD_NOTATION_TYPE
 {
     STANDARD_NOTATION_NO,
@@ -753,6 +758,78 @@ int main(int argc, char * argv[])
             ret = freecell_solver_user_resume_solution(instance);
         }
     }
+#elif defined(FCS_TRACE_MEM)
+    {
+#define STEP 100000
+        int limit = STEP;
+        char stat_fn[1024], foo_str[1024];
+        fcs_portable_time_t mytime;
+        FILE * stat;
+        long long int rss;
+        unsigned long long unsigned_foo;
+
+        snprintf(stat_fn, sizeof(stat_fn), "/proc/%ld/stat", (long)(getpid()));
+
+        freecell_solver_user_limit_iterations(instance, limit);
+        ret = freecell_solver_user_solve_board(instance, user_state);
+        while (ret == FCS_STATE_SUSPEND_PROCESS)
+        {
+            FCS_GET_TIME(mytime);
+            
+            /* This was taken from:
+             *
+             * http://www.brokestream.com/procstat.html
+             * */
+            stat = fopen(stat_fn, "r");
+#define readone(foo) (fscanf(stat, "%lld ", &rss))
+#define readstr(foo) (fscanf(stat, "%1000s ", foo_str))
+#define readchar(foo) (fscanf(stat, "%c ", foo_str))
+#define readunsigned(foo) (fscanf(stat, "%llu ", &unsigned_foo))
+            readone(&pid);
+            readstr(tcomm);
+            readchar(&state);
+            readone(&ppid);
+            readone(&pgid);
+            readone(&sid);
+            readone(&tty_nr);
+            readone(&tty_pgrp);
+            readone(&flags);
+            readone(&min_flt);
+            readone(&cmin_flt);
+            readone(&maj_flt);
+            readone(&cmaj_flt);
+            readone(&utime);
+            readone(&stimev);
+            readone(&cutime);
+            readone(&cstime);
+            readone(&priority);
+            readone(&nicev);
+            readone(&num_threads);
+            readone(&it_real_value);
+            readunsigned(&start_time);
+            readone(&vsize);
+            readone(&rss);
+#undef readone
+#undef readunsigned
+#undef readchar
+#undef readstr
+
+            fclose(stat);
+
+            printf("Reached:\t%d\t%li.%.6li\t%lld\n",
+                    limit,
+                    FCS_TIME_GET_SEC(mytime),
+                    FCS_TIME_GET_USEC(mytime),
+                    rss
+                  );
+
+            fflush(stdout);
+            limit += STEP;
+            freecell_solver_user_limit_iterations(instance, limit);
+            ret = freecell_solver_user_resume_solution(instance);
+        }
+    }
+#undef STEP
 #else
     ret = freecell_solver_user_solve_board(instance, user_state);
 #endif

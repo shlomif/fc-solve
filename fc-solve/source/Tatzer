@@ -38,6 +38,7 @@ my $link_to_static = 0;
 my $hard_coded_num_freecells;
 my $avoid_tcmalloc = 0;
 my $rcs_states = 0;
+my $trace_mem = 0;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -215,6 +216,7 @@ GetOptions(
     'static!' => \$link_to_static,
     'nfc=i' => \$hard_coded_num_freecells,
     'avoid-tcmalloc!' => \$avoid_tcmalloc,
+    'tracemem!' => \$trace_mem,
 ) or
     die "Wrong options";
 
@@ -285,6 +287,7 @@ my @cmd= ("cmake",
         ? ("-DFCS_AVOID_TCMALLOC=1")
         : ()
     ),
+    ($trace_mem ? ("-DFCS_TRACE_MEM=1") : ()),
 );
 
 print(join(" ", @cmd), "\n");
