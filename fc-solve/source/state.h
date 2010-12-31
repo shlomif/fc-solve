@@ -51,11 +51,15 @@ extern "C" {
 #define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_INITIAL_CARDS_IN_A_STACK+12)
 #endif
 
-#define MAX_NUM_SCANS_BUCKETS 1
-#define MAX_NUM_SCANS (MAX_NUM_SCANS_BUCKETS * (sizeof(int)*8))
+#ifndef FCS_MAX_NUM_SCANS_BUCKETS
+#define FCS_MAX_NUM_SCANS_BUCKETS 4
+#endif
 
-#define is_scan_visited(ptr_state, scan_id) ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] & (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))))
-#define set_scan_visited(ptr_state, scan_id) { (FCS_S_SCAN_VISITED(ptr_state))[(scan_id)>>FCS_INT_BIT_SIZE_LOG2] |= (1 << ((scan_id)&((1<<(FCS_INT_BIT_SIZE_LOG2))-1))); }
+#define FCS_CHAR_BIT_SIZE_LOG2 3
+#define MAX_NUM_SCANS (FCS_MAX_NUM_SCANS_BUCKETS * (sizeof(unsigned char) * 8))
+
+#define is_scan_visited(ptr_state, scan_id) ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id)>>FCS_CHAR_BIT_SIZE_LOG2] & (1 << ((scan_id)&((1<<(FCS_CHAR_BIT_SIZE_LOG2))-1))))
+#define set_scan_visited(ptr_state, scan_id) { (FCS_S_SCAN_VISITED(ptr_state))[(scan_id)>>FCS_CHAR_BIT_SIZE_LOG2] |= (1 << ((scan_id)&((1<<(FCS_CHAR_BIT_SIZE_LOG2))-1))); }
 
 
 #ifdef DEBUG_STATES
@@ -457,20 +461,6 @@ struct fcs_state_extra_info_struct
     int visited_iter;
 #endif
 
-
-    /*
-     * This is a vector of flags - one for each scan. Each indicates whether
-     * its scan has already visited this state
-     * */
-    int scan_visited[MAX_NUM_SCANS_BUCKETS];
-
-#ifdef INDIRECT_STACK_STATES
-    /*
-     * A vector of flags that indicates which stacks were already copied.
-     * */
-    int stacks_copy_on_write_flags;
-#endif
-
     /*
      * This is the number of direct children of this state which were not
      * yet declared as dead ends. Once this counter reaches zero, this
@@ -481,15 +471,6 @@ struct fcs_state_extra_info_struct
      * */
     unsigned short num_active_children;
 
-#ifndef FCS_WITHOUT_LOCS_FIELDS
-    /*
-     * These contain the location of the original stacks and freecells
-     * in the permutation of them. They are sorted by the canonization
-     * function.
-     * */
-    fcs_locs_t stack_locs[MAX_NUM_STACKS];
-    fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
-#endif
 
     /*
      * This field contains global, scan-independant flags, which are used
@@ -510,6 +491,28 @@ struct fcs_state_extra_info_struct
      * */
     fcs_game_limit_t visited;
 
+
+    /*
+     * This is a vector of flags - one for each scan. Each indicates whether
+     * its scan has already visited this state
+     * */
+    unsigned char scan_visited[FCS_MAX_NUM_SCANS_BUCKETS];
+
+#ifdef INDIRECT_STACK_STATES
+    /*
+     * A vector of flags that indicates which stacks were already copied.
+     * */
+    int stacks_copy_on_write_flags;
+#endif
+#ifndef FCS_WITHOUT_LOCS_FIELDS
+    /*
+     * These contain the location of the original stacks and freecells
+     * in the permutation of them. They are sorted by the canonization
+     * function.
+     * */
+    fcs_locs_t stack_locs[MAX_NUM_STACKS];
+    fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
+#endif
 };
 
 #ifdef FCS_WITHOUT_LOCS_FIELDS

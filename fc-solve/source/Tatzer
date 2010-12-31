@@ -39,6 +39,7 @@ my $hard_coded_num_freecells;
 my $avoid_tcmalloc = 0;
 my $rcs_states = 0;
 my $trace_mem = 0;
+my $scan_buckets_num;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -82,7 +83,7 @@ my %themes =
         --rcs --without-locs-fields --with-compact-moves --without-depth-field
     )],
     reduce_mem => [ qw(-l bench -l mem_reduction_settings) ],
-    fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings) ],
+    fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=1) ],
 );
 
 foreach my $rec (
@@ -217,6 +218,7 @@ GetOptions(
     'nfc=i' => \$hard_coded_num_freecells,
     'avoid-tcmalloc!' => \$avoid_tcmalloc,
     'tracemem!' => \$trace_mem,
+    'scan-buckets-num=i' => \$scan_buckets_num,
 ) or
     die "Wrong options";
 
@@ -288,6 +290,7 @@ my @cmd= ("cmake",
         : ()
     ),
     ($trace_mem ? ("-DFCS_TRACE_MEM=1") : ()),
+    ($scan_buckets_num ? ("-DFCS_MAX_NUM_SCANS_BUCKETS=$scan_buckets_num") : ()),
 );
 
 print(join(" ", @cmd), "\n");

@@ -166,6 +166,7 @@ SET (FCS_WITHOUT_VISITED_ITER "" CACHE BOOL "Disable the visited_iter counter in
 SET (FCS_WITHOUT_DEPTH_FIELD "" CACHE BOOL "Disable the depth field in each state (not absolutely necessary.)")
 SET (FCS_WITHOUT_LOCS_FIELDS "" CACHE BOOL "Disable the columns and freecells permutations fields in each state (they are not absolutely necessary.)")
 SET (FCS_TRACE_MEM "" CACHE BOOL "Enable memory tracing in fc-solve.")
+SET (FCS_MAX_NUM_SCANS_BUCKETS "" CACHE STRING "The number of scan_visited buckets in fc-solve (safe to ignore).")
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")
@@ -394,6 +395,10 @@ ENDFOREACH(CFLAG_TO_CHECK)
 IF (FCS_TRACE_MEM)
     ADD_DEFINITIONS("-DFCS_TRACE_MEM=1")
 ENDIF (FCS_TRACE_MEM)
+
+IF (FCS_MAX_NUM_SCANS_BUCKETS)
+    ADD_DEFINITIONS("-DFCS_MAX_NUM_SCANS_BUCKETS=${FCS_MAX_NUM_SCANS_BUCKETS}")
+ENDIF (FCS_MAX_NUM_SCANS_BUCKETS)
 
 SET (MY_EXE_FLAGS)
 FOREACH (CFLAG_TO_CHECK "-fwhole-program")
