@@ -995,7 +995,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             int mymin, new_lim;
 
             limits[0] = local_limit();
-            limits[1] = parameterized_limit(user->current_iterations_limit);
+            limits[1] = user->current_iterations_limit;
             limits[2] = parameterized_limit(flare_iters_quota);
 
             mymin = limits[0];

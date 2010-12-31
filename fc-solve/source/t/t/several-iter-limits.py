@@ -7,7 +7,7 @@ from TAP.Simple import *
 # TEST:source "$^CURRENT_DIRNAME/lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
 
-plan(1)
+plan(2)
 
 def test_resume_solution():
     testname = "With RunIndef"
@@ -27,14 +27,22 @@ QC 9S 6H 9H 3S KS 3D
 AH 5S 6S AD 8H JD 
 7S 6C 7D 4D 8S 9D
 """)
+
+    iters_count_ok = 1
     
     while (ret == 5):
+        if (fcs.get_num_times() != limit):
+            iters_count_ok = 0
+
         limit += 10
         fcs.limit_iterations(limit)
         ret = fcs.resume_solution()
     
     # TEST
-    is_ok (ret, 0, "State was successfully solved.")
+    ok (ret == 0, "State was successfully solved.")
+
+    # TEST
+    ok (iters_count_ok == 1, "Iters count was OK throughout the solution.")
    
 def main():
 

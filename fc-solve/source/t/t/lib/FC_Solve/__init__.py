@@ -184,3 +184,8 @@ class FC_Solve:
         )
         return
 
+    def get_num_times(self):
+        return c_int(
+            self.fcs.freecell_solver_user_get_num_times(self.user)
+        ).value
+
