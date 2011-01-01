@@ -405,19 +405,6 @@ struct fc_solve_instance_struct
     fcs_move_stack_t solution_moves;
 
     /*
-     * Limits for the maximal depth and for the maximal number of checked
-     * states. max_num_times is useful because it enables the process to
-     * stop before it consumes too much memory.
-     *
-     * max_depth is quite dangerous because it blocks some intermediate moves
-     * and doesn't allow a program to fully reach its solution.
-     *
-     * */
-    int max_depth;
-    int max_num_times;
-    long trim_states_in_collection_from;
-
-    /*
      * Like max_num_times only defaults to MAX_INT if below zero so it will
      * work without checking if it's zero.
      *
@@ -611,6 +598,19 @@ struct fc_solve_instance_struct
 #endif
 
 #endif
+    /*
+     * Limits for the maximal depth and for the maximal number of checked
+     * states. max_num_times is useful because it enables the process to
+     * stop before it consumes too much memory.
+     *
+     * max_depth is quite dangerous because it blocks some intermediate moves
+     * and doesn't allow a program to fully reach its solution.
+     *
+     * */
+    int max_depth;
+    int max_num_times;
+    long trim_states_in_collection_from;
+
 };
 
 typedef struct fc_solve_instance_struct fc_solve_instance_t;
