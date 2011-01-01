@@ -140,3 +140,6 @@ for the mapping backend of the LRU cache in scans.c.
 * Add an +--ms+ / +-M+ flag to make_pysol_freecell_board.py to generate
 the Microsoft (or pseudo-Microsoft) deals even for deals larger than 32,000.
 
+* Optimize the Soft-DFS and Random-DFS tests_list implementation (direct
+pointers to test functions).
+ 
