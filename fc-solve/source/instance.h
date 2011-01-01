@@ -510,14 +510,6 @@ struct fc_solve_instance_struct
 
     fcs_runtime_flags_t runtime_flags;
 
-    /* This is a place-holder for the initial state */
-    fcs_state_keyval_pair_t * state_copy_ptr;
-
-    /* This is the final state that the scan recommends to the
-     * interface
-     * */
-    fcs_collectible_state_t * final_state;
-
     /*
      * This is the number of states in the state collection.
      *
@@ -533,10 +525,9 @@ struct fc_solve_instance_struct
     int num_hard_threads;
     struct fc_solve_hard_thread_struct * hard_threads;
     /*
-     * A persistent counters that os used to iterate over the
-     * threads one by one
+     * An iterator over the hard threads.
      * */
-    int ht_idx;
+    fc_solve_hard_thread_t * current_hard_thread;
 
     /*
      * This is the master tests order. It is used to initialize all
@@ -604,6 +595,15 @@ struct fc_solve_instance_struct
      * The next ID to allocate for a soft-thread.
      * */
     int next_soft_thread_id;
+
+    /* This is a place-holder for the initial state */
+    fcs_state_keyval_pair_t * state_copy_ptr;
+
+    /* This is the final state that the scan recommends to the
+     * interface
+     * */
+    fcs_collectible_state_t * final_state;
+
 
     /*
      * A move stack that contains the moves leading to the solution.
@@ -1462,6 +1462,11 @@ static GCC_INLINE int fc_solve_resume_instance(
     }
     else
     {
+        fc_solve_hard_thread_t * end_of_hard_threads = 
+            instance->hard_threads + instance->num_hard_threads
+            ;
+
+        hard_thread = instance->current_hard_thread;
         /*
          * instance->num_hard_threads_finished signals to us that
          * all the incomplete soft threads terminated. It is necessary
@@ -1477,12 +1482,13 @@ static GCC_INLINE int fc_solve_resume_instance(
              * 1. It is initialized before the first call to this function.
              * 2. It is reset to zero below.
              * */
-            for(;
-                instance->ht_idx < instance->num_hard_threads ;
-                    instance->ht_idx++)
+            for (
+                    ;
+                hard_thread < end_of_hard_threads
+                    ;
+                hard_thread++
+            )
             {
-                hard_thread = &(instance->hard_threads[instance->ht_idx]);
-
                 ret = run_hard_thread(hard_thread);
                 if ((ret == FCS_STATE_IS_NOT_SOLVEABLE) ||
                     (ret == FCS_STATE_WAS_SOLVED) ||
@@ -1502,16 +1508,11 @@ static GCC_INLINE int fc_solve_resume_instance(
                     goto end_of_hard_threads_loop;
                 }
             }
-            /*
-             * Avoid over-flow
-             * */
-            if (instance->ht_idx == instance->num_hard_threads)
-            {
-                instance->ht_idx = 0;
-            }
+            hard_thread = instance->hard_threads;
         }
 
         end_of_hard_threads_loop:
+        instance->current_hard_thread = hard_thread;
 
         /*
          * If all the incomplete scans finished, then terminate.

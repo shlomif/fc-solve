@@ -2415,7 +2415,7 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
     instance =
         user->fc_solve_obj;
 
-    hard_thread = &(instance->hard_threads[instance->ht_idx]);
+    hard_thread = instance->current_hard_thread;
 
     return hard_thread->soft_threads[hard_thread->st_idx].name;
 }

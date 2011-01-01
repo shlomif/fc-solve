@@ -1149,7 +1149,7 @@ void fc_solve_start_instance_process_with_board(
 
     }
 
-    instance->ht_idx = 0;
+    instance->current_hard_thread = instance->hard_threads;
     {
         HT_LOOP_DECLARE_VARS();
 
