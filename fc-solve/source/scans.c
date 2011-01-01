@@ -262,28 +262,34 @@ static void free_states(fc_solve_instance_t * instance)
  *
  * */
 
-#define calculate_real_depth(ptr_state_orig) \
-{                                                                  \
-    if (calc_real_depth)                                           \
-    {                                                              \
-        int this_real_depth = 0;                                   \
-        fcs_collectible_state_t * temp_state = ptr_state_orig; \
-        /* Count the number of states until the original state. */ \
-        while(temp_state != NULL)                                   \
-        {                                                          \
-            temp_state = FCS_S_PARENT(temp_state);             \
-            this_real_depth++;                                     \
-        }                                                          \
-        this_real_depth--;                                         \
-        temp_state = (ptr_state_orig);                      \
-        /* Assign the new depth throughout the path */             \
-        while (FCS_S_DEPTH(temp_state) != this_real_depth)            \
-        {                                                          \
-            FCS_S_DEPTH(temp_state) = this_real_depth;                \
-            this_real_depth--;                                     \
-            temp_state = FCS_S_PARENT(temp_state);             \
-        }                                                          \
-    }                                                              \
+/*
+#define calculate_real_depth(ptr_state_orig)
+*/
+
+static GCC_INLINE void calculate_real_depth(fcs_bool_t calc_real_depth, fcs_collectible_state_t * ptr_state_orig)
+{
+    if (calc_real_depth)
+    {
+        int this_real_depth = 0;
+        fcs_collectible_state_t * temp_state = ptr_state_orig;
+        /* Count the number of states until the original state. */
+        while(temp_state != NULL)
+        {
+            temp_state = FCS_S_PARENT(temp_state);
+            this_real_depth++;
+        }
+        this_real_depth--;
+        temp_state = (ptr_state_orig);
+        /* Assign the new depth throughout the path */
+        while (FCS_S_DEPTH(temp_state) != this_real_depth)
+        {
+            FCS_S_DEPTH(temp_state) = this_real_depth;
+            this_real_depth--;
+            temp_state = FCS_S_PARENT(temp_state);
+        }
+    }
+
+    return;
 }
 
 /*
@@ -696,9 +702,7 @@ int fc_solve_soft_dfs_do_solve(
     rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-    calculate_real_depth(
-        ptr_state
-    );
+    calculate_real_depth(calc_real_depth, ptr_state);
 #endif
 
     by_depth_units = soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units;
@@ -1088,9 +1092,7 @@ int fc_solve_soft_dfs_do_solve(
                     derived_states_list->num_states = 0;
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-                    calculate_real_depth(
-                        ptr_state
-                    );
+                    calculate_real_depth(calc_real_depth, ptr_state);
 #endif
 
                     if (check_num_states_in_collection(instance))
@@ -1787,9 +1789,7 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-        calculate_real_depth(
-            ptr_state
-        );
+        calculate_real_depth (calc_real_depth, ptr_state);
 #endif
 
         soft_thread->num_vacant_freecells = num_vacant_freecells;
@@ -2240,8 +2240,10 @@ extern void fc_solve_sfs_check_state_end(
         {
             fcs_compact_alloc_release(&(hard_thread->allocator));
         }
+
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-        calculate_real_depth(existing_state);
+        calculate_real_depth (calc_real_depth, existing_state);
+
         /* Re-parent the existing state to this one.
          *
          * What it means is that if the depth of the state if it
@@ -2269,12 +2271,15 @@ extern void fc_solve_sfs_check_state_end(
             FCS_S_PARENT(existing_state) = ptr_state;
             FCS_S_DEPTH(existing_state) = FCS_S_DEPTH(ptr_state) + 1;
         }
+
 #endif
+
         fc_solve_derived_states_list_add_state(
             derived_states_list,
             existing_state,
             state_context_value
         );
+
     }
     else
     {
