@@ -297,33 +297,35 @@ static GCC_INLINE void calculate_real_depth(fcs_bool_t calc_real_depth, fcs_coll
  * this information to its parent and ancestor states.
  * */
 
-#define mark_as_dead_end(ptr_state_input) \
-{      \
-    if (scans_synergy)      \
-    {        \
-        fcs_collectible_state_t * temp_state = (ptr_state_input); \
-        /* Mark as a dead end */        \
-        FCS_S_VISITED(temp_state)|= FCS_VISITED_DEAD_END; \
-        temp_state = FCS_S_PARENT(temp_state);          \
-        if (temp_state != NULL)                    \
-        {           \
-            /* Decrease the refcount of the state */    \
-            (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;   \
-            while((FCS_S_NUM_ACTIVE_CHILDREN(temp_state) == 0) && (FCS_S_VISITED(temp_state) & FCS_VISITED_ALL_TESTS_DONE))  \
-            {          \
-                /* Mark as dead end */        \
-                FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;  \
-                /* Go to its parent state */       \
-                temp_state = FCS_S_PARENT(temp_state);    \
-                if (temp_state == NULL)         \
-                {                \
-                    break;             \
-                }      \
-                /* Decrease the refcount */       \
-                (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;     \
-            }       \
-        }   \
-    }      \
+static void GCC_INLINE mark_as_dead_end(fcs_bool_t scans_synergy, fcs_collectible_state_t * ptr_state_input)
+{
+    if (scans_synergy)
+    {
+        fcs_collectible_state_t * temp_state = (ptr_state_input);
+        /* Mark as a dead end */
+        FCS_S_VISITED(temp_state)|= FCS_VISITED_DEAD_END;
+        temp_state = FCS_S_PARENT(temp_state);
+        if (temp_state != NULL)
+        {
+            /* Decrease the refcount of the state */
+            (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;
+            while((FCS_S_NUM_ACTIVE_CHILDREN(temp_state) == 0) && (FCS_S_VISITED(temp_state) & FCS_VISITED_ALL_TESTS_DONE))
+            {
+                /* Mark as dead end */
+                FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;
+                /* Go to its parent state */
+                temp_state = FCS_S_PARENT(temp_state);
+                if (temp_state == NULL)
+                {
+                    break;
+                }
+                /* Decrease the refcount */
+                (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;
+            }
+        }
+    }
+
+    return;
 }
 
 #define BUMP_NUM_TIMES() \
@@ -773,9 +775,7 @@ int fc_solve_soft_dfs_do_solve(
                 if (is_a_complete_scan)
                 {
                     FCS_S_VISITED(ptr_state) |= FCS_VISITED_ALL_TESTS_DONE;
-                    mark_as_dead_end(
-                        ptr_state
-                    );
+                    mark_as_dead_end (scans_synergy, ptr_state);
                 }
 
                 free(the_soft_dfs_info->positions_by_rank);
@@ -1886,9 +1886,7 @@ int fc_solve_befs_or_bfs_do_solve(
             {
                 if (is_a_complete_scan)
                 {
-                    mark_as_dead_end(
-                        ptr_state
-                    );
+                    mark_as_dead_end(scans_synergy, ptr_state);
                 }
             }
         }
@@ -2256,9 +2254,7 @@ extern void fc_solve_sfs_check_state_end(
             {
                 if ((--(FCS_S_NUM_ACTIVE_CHILDREN(FCS_S_PARENT(existing_state)))) == 0)
                 {
-                    mark_as_dead_end(
-                            FCS_S_PARENT(existing_state)
-                        );
+                    mark_as_dead_end(scans_synergy, FCS_S_PARENT(existing_state));
                 }
                 FCS_S_NUM_ACTIVE_CHILDREN(ptr_state)++;
             }
