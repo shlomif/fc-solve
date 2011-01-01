@@ -633,7 +633,6 @@ struct fc_solve_hard_thread_struct
 {
     fc_solve_instance_t * instance;
 
-    int num_soft_threads;
     struct fc_solve_soft_thread_struct * soft_threads;
 
     /*
@@ -645,7 +644,7 @@ struct fc_solve_hard_thread_struct
     int num_times;
 
     /*
-     * The maximal limit for this variable.
+     * The maximal limit for num_times.
      * */
     int max_num_times;
 
@@ -679,14 +678,6 @@ struct fc_solve_hard_thread_struct
      * The index for the soft-thread that is currently processed
      * */
     int st_idx;
-
-    /*
-     * A counter that determines how many of the soft threads that belong
-     * to this hard thread have already finished. If it becomes num_soft_threads
-     * this thread is skipped.
-     * */
-    int num_soft_threads_finished;
-
     /*
      * This is the mechanism used to allocate memory for stacks, states
      * and move stacks.
@@ -709,13 +700,21 @@ struct fc_solve_hard_thread_struct
     char indirect_stacks_buffer[1];
 #endif
 
-    char * prelude_as_string;
-
     int prelude_num_items;
     int prelude_idx;
     fcs_prelude_item_t * prelude;
 
     fcs_bool_t allocated_from_list;
+    int num_soft_threads;
+ 
+    /*
+     * A counter that determines how many of the soft threads that belong
+     * to this hard thread have already finished. If it becomes num_soft_threads
+     * this thread is skipped.
+     * */
+    int num_soft_threads_finished;
+
+   char * prelude_as_string;
 };
 
 
@@ -1155,6 +1154,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
     int num_times_started_at;
     int ret;
     fc_solve_instance_t * instance = hard_thread->instance;
+    int * st_idx_ptr = &(hard_thread->st_idx);
     /*
      * Again, making sure that not all of the soft_threads in this
      * hard thread are finished.
@@ -1163,7 +1163,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
     ret = FCS_STATE_SUSPEND_PROCESS;
     while(hard_thread->num_soft_threads_finished < hard_thread->num_soft_threads)
     {
-        soft_thread = &(hard_thread->soft_threads[hard_thread->st_idx]);
+        soft_thread = &(hard_thread->soft_threads[*st_idx_ptr]);
         /*
          * Move to the next thread if it's already finished
          * */
@@ -1183,18 +1183,17 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
             if ((hard_thread->prelude != NULL) &&    \
                 (hard_thread->prelude_idx < hard_thread->prelude_num_items))   \
             {      \
-                hard_thread->st_idx = hard_thread->prelude[hard_thread->prelude_idx].scan_idx; \
+                (*st_idx_ptr) = hard_thread->prelude[hard_thread->prelude_idx].scan_idx; \
                 hard_thread->num_times_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx].quota; \
                 hard_thread->prelude_idx++; \
             }    \
             else       \
             {       \
-                hard_thread->st_idx++;      \
-                if (hard_thread->st_idx == hard_thread->num_soft_threads)     \
+                if ((++(*st_idx_ptr)) == hard_thread->num_soft_threads)     \
                 {       \
-                    hard_thread->st_idx = 0;    \
+                    *(st_idx_ptr) = 0;  \
                 }      \
-                hard_thread->num_times_left_for_soft_thread = hard_thread->soft_threads[hard_thread->st_idx].num_times_step;  \
+                hard_thread->num_times_left_for_soft_thread = hard_thread->soft_threads[*st_idx_ptr].num_times_step;  \
             }
 
 
