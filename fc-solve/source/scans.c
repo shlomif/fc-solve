@@ -254,6 +254,7 @@ static void free_states(fc_solve_instance_t * instance)
 #define TRACE0(no_use) {}
 #endif
 
+#ifndef FCS_WITHOUT_DEPTH_FIELD
 /*
  * This macro traces the path of the state up to the original state,
  * and thus calculates its real depth.
@@ -261,10 +262,6 @@ static void free_states(fc_solve_instance_t * instance)
  * It then assigns the newly updated depth throughout the path.
  *
  * */
-
-/*
-#define calculate_real_depth(ptr_state_orig)
-*/
 
 static GCC_INLINE void calculate_real_depth(fcs_bool_t calc_real_depth, fcs_collectible_state_t * ptr_state_orig)
 {
@@ -291,6 +288,9 @@ static GCC_INLINE void calculate_real_depth(fcs_bool_t calc_real_depth, fcs_coll
 
     return;
 }
+#else
+#define calculate_real_depth(calc_real_depth, ptr_state_orig) {}
+#endif
 
 /*
  * This macro marks a state as a dead end, and afterwards propogates
@@ -701,9 +701,7 @@ int fc_solve_soft_dfs_do_solve(
 
     rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
 
-#ifndef FCS_WITHOUT_DEPTH_FIELD
     calculate_real_depth(calc_real_depth, ptr_state);
-#endif
 
     by_depth_units = soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units;
 
@@ -1091,9 +1089,7 @@ int fc_solve_soft_dfs_do_solve(
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     derived_states_list->num_states = 0;
 
-#ifndef FCS_WITHOUT_DEPTH_FIELD
                     calculate_real_depth(calc_real_depth, ptr_state);
-#endif
 
                     if (check_num_states_in_collection(instance))
                     {
@@ -1788,9 +1784,7 @@ int fc_solve_befs_or_bfs_do_solve(
             goto my_return_label;
         }
 
-#ifndef FCS_WITHOUT_DEPTH_FIELD
         calculate_real_depth (calc_real_depth, ptr_state);
-#endif
 
         soft_thread->num_vacant_freecells = num_vacant_freecells;
         soft_thread->num_vacant_stacks = num_vacant_stacks;
