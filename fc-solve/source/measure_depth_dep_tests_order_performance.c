@@ -102,7 +102,6 @@ int main(int argc, char * argv[])
 
     fcs_portable_time_t mytime;
 
-    int total_num_iters = 0;
     char * error_string;
     char * scan1_to = NULL, * scan2_to = NULL;
 
@@ -271,8 +270,6 @@ int main(int argc, char * argv[])
 
         ret = 0;
 
-        total_num_iters = 0;
-
         for(board_num=start_board;board_num<=end_board;board_num++)
         {
             get_board(board_num, state_string);
@@ -292,10 +289,8 @@ int main(int argc, char * argv[])
 
             FCS_GET_TIME(results[board_num - start_board].end_time);
 
-            total_num_iters +=
-                (results[board_num - start_board].num_iters
-                    = freecell_solver_user_get_num_times(user.instance)
-                );
+            results[board_num - start_board].num_iters
+                = freecell_solver_user_get_num_times(user.instance);
 
             freecell_solver_user_recycle(user.instance);
         }
