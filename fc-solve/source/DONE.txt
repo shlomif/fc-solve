@@ -120,3 +120,23 @@ the derived state.
 * Finish the conversion of the range solvers/etc. to +portable_int64.h+ and
 +portable_time.h+ .
 
+* Make sure the total_num_iters is only a 64-bit integer without an 
+intermediate 32-bit one - it just adds clutter to the code and is a premature
+optimisation (and may be a de-optimisation).
+
+* Add a BSD-licence-styled balanced binary tree implementation in the Freecell
+Solver sources and have it use it for both stuff in the +--rcs+ option (and
+possibly others)
+** Kazlib's Red-Black tree looks like a good candidate.
+
+* Implement the compact_allocators recycling in the remaining places in
+the code.
+** Already implemented for the hard_thread->allocator.
+
+* Add an option to use nedtries (a +size_t+ -based trie) instead of libJudy
+for the mapping backend of the LRU cache in scans.c.
+    - rejected because it reportedely performs badly for large data sets.
+
+* Add an +--ms+ / +-M+ flag to make_pysol_freecell_board.py to generate
+the Microsoft (or pseudo-Microsoft) deals even for deals larger than 32,000.
+
