@@ -685,19 +685,8 @@ int fc_solve_soft_dfs_do_solve(
     fcs_bool_t enable_pruning;
     int * instance_num_times_ptr, * hard_thread_num_times_ptr;
     int hard_thread_max_num_times;
-    void (*debug_iter_output_func)(
-        void * context,
-        int iter_num,
-        int depth,
-        void * instance,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * state_key,
-#endif
-        fcs_collectible_state_t * state_val,
-        int parent_iter_num
-        );
-
-    void * debug_iter_output_context;
+    fcs_instance_debug_iter_output_func_t debug_iter_output_func;
+    fcs_instance_debug_iter_output_context_t debug_iter_output_context;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -1641,20 +1630,9 @@ int fc_solve_befs_or_bfs_do_solve(
     int * instance_num_times_ptr, * hard_thread_num_times_ptr;
 
     int hard_thread_max_num_times;
-    void (*debug_iter_output_func)(
-        void * context,
-        int iter_num,
-        int depth,
-        void * instance,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * state_key,
-#endif
-        fcs_collectible_state_t * state_val,
-        int parent_iter_num
-        );
 
-    void * debug_iter_output_context;
-
+    fcs_instance_debug_iter_output_func_t debug_iter_output_func;
+    fcs_instance_debug_iter_output_context_t debug_iter_output_context;
 
     derived.num_states = 0;
     derived.states = NULL;

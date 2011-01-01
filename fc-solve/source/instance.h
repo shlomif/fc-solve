@@ -376,6 +376,21 @@ typedef struct
 
 #endif
 
+typedef void * fcs_instance_debug_iter_output_context_t;
+
+typedef void (*fcs_instance_debug_iter_output_func_t)(
+        fcs_instance_debug_iter_output_context_t,
+        int iter_num,
+        int depth,
+        void * instance,
+#ifdef FCS_RCS_STATES
+        fcs_state_t * state_key,
+#endif
+        fcs_collectible_state_t * state_val,
+        int parent_iter_num
+        );
+
+
 struct fc_solve_instance_struct
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
@@ -589,19 +604,8 @@ struct fc_solve_instance_struct
      *
      * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
      * */
-    void (*debug_iter_output_func)(
-        void * context,
-        int iter_num,
-        int depth,
-        void * instance,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * state_key,
-#endif
-        fcs_collectible_state_t * state_val,
-        int parent_iter_num
-        );
-
-    void * debug_iter_output_context;
+    fcs_instance_debug_iter_output_func_t debug_iter_output_func;
+    fcs_instance_debug_iter_output_context_t debug_iter_output_context;
 
     /*
      * A move stack that contains the moves leading to the solution.
