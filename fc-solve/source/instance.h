@@ -397,14 +397,6 @@ struct fc_solve_instance_struct
     int num_times;
 
     /*
-     * A move stack that contains the moves leading to the solution.
-     *
-     * It is created only after the solution was found by swallowing
-     * all the stacks of each depth.
-     * */
-    fcs_move_stack_t solution_moves;
-
-    /*
      * Like max_num_times only defaults to MAX_INT if below zero so it will
      * work without checking if it's zero.
      *
@@ -610,6 +602,14 @@ struct fc_solve_instance_struct
     int max_depth;
     int max_num_times;
     long trim_states_in_collection_from;
+
+    /*
+     * A move stack that contains the moves leading to the solution.
+     *
+     * It is created only after the solution was found by swallowing
+     * all the stacks of each depth.
+     * */
+    fcs_move_stack_t solution_moves;
 
 };
 
