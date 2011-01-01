@@ -407,6 +407,13 @@ struct fc_solve_instance_struct
     int num_indirect_prev_states;
 #endif
 
+    /*
+     * The parameters of the game - see the declaration of
+     * fcs_game_type_params_t .
+     *
+     * */
+    fcs_game_type_params_t game_params;
+
     /* The number of states that were checked by the solving algorithm.
      * Badly named, should be renamed to num_iters or num_checked_states */
     int num_times;
@@ -480,14 +487,6 @@ struct fc_solve_instance_struct
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
     DB * db;
 #endif
-
-    /*
-     * The parameters of the game - see the declaration of
-     * fcs_game_type_params_t .
-     *
-     * */
-    fcs_game_type_params_t game_params;
-
 #ifdef FCS_WITH_TALONS
     /*
      * The talon for Gypsy-like games. Since only the position changes from
@@ -533,12 +532,6 @@ struct fc_solve_instance_struct
 
     int num_hard_threads;
     struct fc_solve_hard_thread_struct * hard_threads;
-
-    /*
-     * The next ID to allocate for a soft-thread.
-     * */
-    int next_soft_thread_id;
-
     /*
      * A persistent counters that os used to iterate over the
      * threads one by one
@@ -606,6 +599,11 @@ struct fc_solve_instance_struct
      * */
     fcs_instance_debug_iter_output_func_t debug_iter_output_func;
     fcs_instance_debug_iter_output_context_t debug_iter_output_context;
+
+    /*
+     * The next ID to allocate for a soft-thread.
+     * */
+    int next_soft_thread_id;
 
     /*
      * A move stack that contains the moves leading to the solution.
