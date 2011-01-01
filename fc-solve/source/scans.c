@@ -331,7 +331,7 @@ static void GCC_INLINE mark_as_dead_end(fcs_bool_t scans_synergy, fcs_collectibl
 #define BUMP_NUM_TIMES() \
 {       \
     (*instance_num_times_ptr)++; \
-    hard_thread->num_times++; \
+    (*hard_thread_num_times_ptr)++; \
 }
 
 #define SHOULD_STATE_BE_PRUNED(enable_pruning, ptr_state) \
@@ -683,7 +683,8 @@ int fc_solve_soft_dfs_do_solve(
     fcs_bool_t local_to_randomize = FALSE;
     int * depth_ptr;
     fcs_bool_t enable_pruning;
-    int * instance_num_times_ptr;
+    int * instance_num_times_ptr, * hard_thread_num_times_ptr;
+    int hard_thread_max_num_times;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -723,6 +724,20 @@ int fc_solve_soft_dfs_do_solve(
     depth_ptr = &(soft_thread->method_specific.soft_dfs.depth);
 
     instance_num_times_ptr = &(instance->num_times);
+    hard_thread_num_times_ptr = &(hard_thread->num_times);
+
+#define CALC_HARD_THREAD_MAX_NUM_TIMES() \
+    hard_thread_max_num_times = min(hard_thread->ht_max_num_times, hard_thread->max_num_times); \
+                \
+    {           \
+        int lim = hard_thread->num_times       \
+            + (instance->effective_max_num_times - *(instance_num_times_ptr)) \
+            ; \
+              \
+        hard_thread_max_num_times = min(hard_thread_max_num_times, lim); \
+    }
+
+    CALC_HARD_THREAD_MAX_NUM_TIMES();
 
 #define DEPTH() (*depth_ptr)
 
@@ -1607,7 +1622,9 @@ int fc_solve_befs_or_bfs_do_solve(
 
     int error_code;
 
-    int * instance_num_times_ptr;
+    int * instance_num_times_ptr, * hard_thread_num_times_ptr;
+
+    int hard_thread_max_num_times;
 
     derived.num_states = 0;
     derived.states = NULL;
@@ -1620,6 +1637,7 @@ int fc_solve_befs_or_bfs_do_solve(
 
     method = soft_thread->method;
     instance_num_times_ptr = &(instance->num_times);
+    hard_thread_num_times_ptr = &(hard_thread->num_times);
 
     if (method == FCS_METHOD_A_STAR)
     {
@@ -1634,6 +1652,8 @@ int fc_solve_befs_or_bfs_do_solve(
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
+
+    CALC_HARD_THREAD_MAX_NUM_TIMES();
 
     /* Continue as long as there are states in the queue or
        priority queue. */

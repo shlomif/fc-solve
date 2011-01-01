@@ -43,13 +43,9 @@ extern "C" {
  * FCS_STATE_SUSPEND_PROCESS
  * */
 #define check_if_limits_exceeded()                                    \
-    (                                                                 \
-        ((*instance_num_times_ptr) >= instance->effective_max_num_times)    \
-            ||                                                        \
-        (hard_thread->num_times >= hard_thread->ht_max_num_times)     \
-            ||                                                        \
-        (hard_thread->num_times >= hard_thread->max_num_times)        \
-            ||                                                        \
+    (   \
+        ((*hard_thread_num_times_ptr) == hard_thread_max_num_times) \
+            || \
         (instance->num_states_in_collection >=   \
             instance->effective_max_num_states_in_collection) \
     )
