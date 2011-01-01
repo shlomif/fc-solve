@@ -330,7 +330,7 @@ static void GCC_INLINE mark_as_dead_end(fcs_bool_t scans_synergy, fcs_collectibl
 
 #define BUMP_NUM_TIMES() \
 {       \
-    instance->num_times++; \
+    (*instance_num_times_ptr)++; \
     hard_thread->num_times++; \
 }
 
@@ -683,6 +683,7 @@ int fc_solve_soft_dfs_do_solve(
     fcs_bool_t local_to_randomize = FALSE;
     int * depth_ptr;
     fcs_bool_t enable_pruning;
+    int * instance_num_times_ptr;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -720,6 +721,8 @@ int fc_solve_soft_dfs_do_solve(
     }
 
     depth_ptr = &(soft_thread->method_specific.soft_dfs.depth);
+
+    instance_num_times_ptr = &(instance->num_times);
 
 #define DEPTH() (*depth_ptr)
 
@@ -828,7 +831,7 @@ int fc_solve_soft_dfs_do_solve(
 #endif
                     instance->debug_iter_output_func(
                         (void*)instance->debug_iter_output_context,
-                        instance->num_times,
+                        *(instance_num_times_ptr),
                         soft_thread->method_specific.soft_dfs.depth,
                         (void*)instance,
 #ifdef FCS_RCS_STATES
@@ -1604,6 +1607,8 @@ int fc_solve_befs_or_bfs_do_solve(
 
     int error_code;
 
+    int * instance_num_times_ptr;
+
     derived.num_states = 0;
     derived.states = NULL;
 
@@ -1614,6 +1619,7 @@ int fc_solve_befs_or_bfs_do_solve(
     enable_pruning = soft_thread->enable_pruning;
 
     method = soft_thread->method;
+    instance_num_times_ptr = &(instance->num_times);
 
     if (method == FCS_METHOD_A_STAR)
     {
@@ -1751,7 +1757,7 @@ int fc_solve_befs_or_bfs_do_solve(
 #endif
             instance->debug_iter_output_func(
                     (void*)instance->debug_iter_output_context,
-                    instance->num_times,
+                    *(instance_num_times_ptr),
 #ifdef FCS_WITHOUT_DEPTH_FIELD
                     calc_depth(ptr_state),
 #else
@@ -1892,7 +1898,7 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
 #ifndef FCS_WITHOUT_VISITED_ITER
-        FCS_S_VISITED_ITER(ptr_state) = instance->num_times-1;
+        FCS_S_VISITED_ITER(ptr_state) = *(instance_num_times_ptr)-1;
 #endif
 
 label_next_state:

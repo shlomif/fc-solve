@@ -44,7 +44,7 @@ extern "C" {
  * */
 #define check_if_limits_exceeded()                                    \
     (                                                                 \
-        (instance->num_times >= instance->effective_max_num_times)    \
+        ((*instance_num_times_ptr) >= instance->effective_max_num_times)    \
             ||                                                        \
         (hard_thread->num_times >= hard_thread->ht_max_num_times)     \
             ||                                                        \
