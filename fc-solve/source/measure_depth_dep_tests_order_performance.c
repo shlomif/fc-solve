@@ -91,10 +91,9 @@ int main(int argc, char * argv[])
 {
     pack_item_t user;
     /* char buffer[2048]; */
-    int ret;
     int board_num;
     int start_board, end_board, stop_at;
-    result_t * results;
+    result_t * results, * curr_result;
     FILE * output_fh;
     int min_depth_for_scan2;
     int iters_limit = 100000;
@@ -268,9 +267,12 @@ int main(int argc, char * argv[])
         }
 
 
-        ret = 0;
-
-        for(board_num=start_board;board_num<=end_board;board_num++)
+        for (board_num=start_board, curr_result = results
+                ;
+             board_num<=end_board
+                ;
+             board_num++, curr_result++
+        )
         {
             get_board(board_num, state_string);
 
@@ -279,17 +281,17 @@ int main(int argc, char * argv[])
                 iters_limit
             );
 
-            FCS_GET_TIME(results[board_num - start_board].start_time);
+            FCS_GET_TIME(curr_result->start_time);
 
-            results[board_num-start_board].verdict = ret =
+            curr_result->verdict =
                 freecell_solver_user_solve_board(
                     user.instance,
                     state_string
                     );
 
-            FCS_GET_TIME(results[board_num - start_board].end_time);
+            FCS_GET_TIME(curr_result->end_time);
 
-            results[board_num - start_board].num_iters
+            curr_result->num_iters
                 = freecell_solver_user_get_num_times(user.instance);
 
             freecell_solver_user_recycle(user.instance);
@@ -300,13 +302,18 @@ int main(int argc, char * argv[])
         printf("Reached depth %d\n", min_depth_for_scan2);
 
         fprintf(output_fh, "Depth == %d\n\n", min_depth_for_scan2);
-        for(board_num=start_board;board_num<=end_board;board_num++)
+        for (board_num=start_board, curr_result = results
+                ;
+             board_num<=end_board
+                ;
+             board_num++, curr_result++
+        )
         {
-            fprintf(output_fh, "board[%d].ret == %d\n", board_num, results[board_num-start_board].verdict);
-            fprintf(output_fh, "board[%d].iters == %d\n", board_num, results[board_num-start_board].num_iters);
+            fprintf(output_fh, "board[%d].ret == %d\n", board_num, curr_result->verdict);
+            fprintf(output_fh, "board[%d].iters == %d\n", board_num, curr_result->num_iters);
 
 #define FPRINTF_TIME(label, field) \
-            fprintf(output_fh, "board[%d].%s = %li.%.6li\n", board_num, label, FCS_TIME_GET_SEC(results[board_num-start_board].field),FCS_TIME_GET_USEC(results[board_num-start_board].field));
+            fprintf(output_fh, "board[%d].%s = %li.%.6li\n", board_num, label, FCS_TIME_GET_SEC(curr_result->field),FCS_TIME_GET_USEC(curr_result->field));
 
             FPRINTF_TIME("start", start_time);
             FPRINTF_TIME("end", end_time);
