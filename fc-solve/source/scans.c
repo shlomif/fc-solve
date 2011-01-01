@@ -685,6 +685,19 @@ int fc_solve_soft_dfs_do_solve(
     fcs_bool_t enable_pruning;
     int * instance_num_times_ptr, * hard_thread_num_times_ptr;
     int hard_thread_max_num_times;
+    void (*debug_iter_output_func)(
+        void * context,
+        int iter_num,
+        int depth,
+        void * instance,
+#ifdef FCS_RCS_STATES
+        fcs_state_t * state_key,
+#endif
+        fcs_collectible_state_t * state_val,
+        int parent_iter_num
+        );
+
+    void * debug_iter_output_context;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -738,6 +751,9 @@ int fc_solve_soft_dfs_do_solve(
     }
 
     CALC_HARD_THREAD_MAX_NUM_TIMES();
+
+    debug_iter_output_func = instance->debug_iter_output_func;
+    debug_iter_output_context = instance->debug_iter_output_context;
 
 #define DEPTH() (*depth_ptr)
 
@@ -839,13 +855,13 @@ int fc_solve_soft_dfs_do_solve(
 
                 TRACE0("In iter_handler");
 
-                if (instance->debug_iter_output_func)
+                if (debug_iter_output_func)
                 {
 #ifdef DEBUG
                     printf("ST Name: %s\n", soft_thread->name);
 #endif
-                    instance->debug_iter_output_func(
-                        (void*)instance->debug_iter_output_context,
+                    debug_iter_output_func(
+                        debug_iter_output_context,
                         *(instance_num_times_ptr),
                         soft_thread->method_specific.soft_dfs.depth,
                         (void*)instance,
@@ -1625,6 +1641,20 @@ int fc_solve_befs_or_bfs_do_solve(
     int * instance_num_times_ptr, * hard_thread_num_times_ptr;
 
     int hard_thread_max_num_times;
+    void (*debug_iter_output_func)(
+        void * context,
+        int iter_num,
+        int depth,
+        void * instance,
+#ifdef FCS_RCS_STATES
+        fcs_state_t * state_key,
+#endif
+        fcs_collectible_state_t * state_val,
+        int parent_iter_num
+        );
+
+    void * debug_iter_output_context;
+
 
     derived.num_states = 0;
     derived.states = NULL;
@@ -1654,6 +1684,9 @@ int fc_solve_befs_or_bfs_do_solve(
 #endif
 
     CALC_HARD_THREAD_MAX_NUM_TIMES();
+
+    debug_iter_output_func = instance->debug_iter_output_func;
+    debug_iter_output_context = instance->debug_iter_output_context;
 
     /* Continue as long as there are states in the queue or
        priority queue. */
@@ -1770,13 +1803,13 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
         TRACE0("debug_iter_output");
-        if (instance->debug_iter_output_func)
+        if (debug_iter_output_func)
         {
 #ifdef DEBUG
             printf("ST Name: %s\n", soft_thread->name);
 #endif
-            instance->debug_iter_output_func(
-                    (void*)instance->debug_iter_output_context,
+            debug_iter_output_func(
+                    debug_iter_output_context,
                     *(instance_num_times_ptr),
 #ifdef FCS_WITHOUT_DEPTH_FIELD
                     calc_depth(ptr_state),

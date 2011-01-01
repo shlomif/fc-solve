@@ -404,34 +404,6 @@ struct fc_solve_instance_struct
      * */
     int effective_max_num_times, effective_max_num_states_in_collection;
     long effective_trim_states_in_collection_from;
-
-    /*
-     * The debug_iter_output variables provide a programmer programmable way
-     * to debug the algorithm while it is running. This works well for DFS
-     * and Soft-DFS scans but at present support for BeFS and BFS is not
-     * too good, as its hard to tell which state came from which parent state.
-     *
-     * debug_iter_output_func is a pointer to the function that performs the
-     * debugging. If NULL, this feature is not used.
-     *
-     * debug_iter_output_context is a user-specified context for it, that
-     * may include data that is not included in the instance structure.
-     *
-     * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
-     * */
-    void (*debug_iter_output_func)(
-        void * context,
-        int iter_num,
-        int depth,
-        void * instance,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * state_key,
-#endif
-        fcs_collectible_state_t * state_val,
-        int parent_iter_num
-        );
-    void * debug_iter_output_context;
-
     /*
      * tree is the balanced binary tree that is used to store and index
      * the checked states.
@@ -602,6 +574,34 @@ struct fc_solve_instance_struct
     int max_depth;
     int max_num_times;
     long trim_states_in_collection_from;
+
+    /*
+     * The debug_iter_output variables provide a programmer programmable way
+     * to debug the algorithm while it is running. This works well for DFS
+     * and Soft-DFS scans but at present support for BeFS and BFS is not
+     * too good, as its hard to tell which state came from which parent state.
+     *
+     * debug_iter_output_func is a pointer to the function that performs the
+     * debugging. If NULL, this feature is not used.
+     *
+     * debug_iter_output_context is a user-specified context for it, that
+     * may include data that is not included in the instance structure.
+     *
+     * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
+     * */
+    void (*debug_iter_output_func)(
+        void * context,
+        int iter_num,
+        int depth,
+        void * instance,
+#ifdef FCS_RCS_STATES
+        fcs_state_t * state_key,
+#endif
+        fcs_collectible_state_t * state_val,
+        int parent_iter_num
+        );
+
+    void * debug_iter_output_context;
 
     /*
      * A move stack that contains the moves leading to the solution.
