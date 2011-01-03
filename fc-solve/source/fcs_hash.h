@@ -150,18 +150,7 @@ extern fcs_bool_t fc_solve_hash_insert(
 #endif
     );
 
-static GCC_INLINE void fc_solve_hash_recycle(
-    fc_solve_hash_t * hash
-    )
-{
-    memset(hash->entries, '\0', sizeof(hash->entries[0]) * hash->size);
 
-    hash->list_of_vacant_items = NULL;
-    hash->num_elems = 0;
-    fc_solve_compact_allocator_recycle(&(hash->allocator));
-
-    return;
-}
 
 static GCC_INLINE void fc_solve_hash_free(
     fc_solve_hash_t * hash

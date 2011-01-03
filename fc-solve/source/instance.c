@@ -524,47 +524,6 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
         = DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE;
 #endif
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-     fc_solve_hash_init(
-            &(instance->hash),
-#ifdef FCS_INLINED_HASH_COMPARISON
-            FCS_INLINED_HASH__STATES
-#else
-#ifdef FCS_WITH_CONTEXT_VARIABLE
-            fc_solve_state_compare_with_context,
-
-            NULL
-#else
-            fc_solve_state_compare
-#endif
-#endif
-       );
-#ifdef FCS_RCS_STATES
-     instance->hash.instance = instance;
-#endif
-#endif
-
-#ifdef INDIRECT_STACK_STATES
-    /* Initialize the data structure that will manage the stack
-       collection */
-#if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
-    fc_solve_hash_init(
-            &(instance->stacks_hash ),
-#ifdef FCS_INLINED_HASH_COMPARISON
-            FCS_INLINED_HASH__COLUMNS
-#else
-#ifdef FCS_WITH_CONTEXT_VARIABLE
-            fcs_stack_compare_for_comparison_with_context,
-            NULL
-#else
-            fc_solve_stack_compare_for_comparison
-#endif
-#endif
-        );
-#endif
-
-#endif
-
     return instance;
 }
 
@@ -620,19 +579,6 @@ void fc_solve_free_instance(fc_solve_instance_t * instance)
     {
         free(instance->opt_tests_order.tests);
     }
-
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-     fc_solve_hash_free( &(instance->hash) );
-#endif
-
-#ifdef INDIRECT_STACK_STATES
-    /* Initialize the data structure that will manage the stack
-       collection */
-#if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
-    fc_solve_hash_free( &(instance->stacks_hash ) );
-#endif
-
-#endif
 
     free(instance);
 }
@@ -1052,6 +998,24 @@ void fc_solve_start_instance_process_with_board(
         fc_solve_hash_function,
         fc_solve_state_compare_equal
         );
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+     fc_solve_hash_init(
+            &(instance->hash),
+#ifdef FCS_INLINED_HASH_COMPARISON
+            FCS_INLINED_HASH__STATES
+#else
+#ifdef FCS_WITH_CONTEXT_VARIABLE
+            fc_solve_state_compare_with_context,
+
+            NULL
+#else
+            fc_solve_state_compare
+#endif
+#endif
+       );
+#ifdef FCS_RCS_STATES
+     instance->hash.instance = instance;
+#endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
      instance->hash = fc_solve_states_google_hash_new();
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
@@ -1069,7 +1033,21 @@ void fc_solve_start_instance_process_with_board(
 #ifdef INDIRECT_STACK_STATES
     /* Initialize the data structure that will manage the stack
        collection */
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
+#if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
+    fc_solve_hash_init(
+            &(instance->stacks_hash ),
+#ifdef FCS_INLINED_HASH_COMPARISON
+            FCS_INLINED_HASH__COLUMNS
+#else
+#ifdef FCS_WITH_CONTEXT_VARIABLE
+            fcs_stack_compare_for_comparison_with_context,
+            NULL
+#else
+            fc_solve_stack_compare_for_comparison
+#endif
+#endif
+        );
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     instance->stacks_tree = fcs_libavl2_stacks_tree_create(
             fcs_stack_compare_for_comparison_with_context,
             NULL,
@@ -1091,8 +1069,6 @@ void fc_solve_start_instance_process_with_board(
     instance->stacks_hash = fc_solve_columns_google_hash_new();
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     instance->stacks_judy_array = NULL;
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    /* Do nothing because it is handled elsewhere. */
 #else
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif
@@ -1206,10 +1182,7 @@ void fc_solve_finish_instance(
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    /* Do nothing because we recycle it.*/ 
-#if 0
     fc_solve_hash_free(&(instance->hash));
-#endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     fc_solve_states_google_hash_free(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
@@ -1227,10 +1200,7 @@ void fc_solve_finish_instance(
     in the process */
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    /* Do nothing because we recycle it. */
-#if 0
     fc_solve_hash_free(&(instance->stacks_hash));
-#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_stacks_tree_destroy(instance->stacks_tree, NULL);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
