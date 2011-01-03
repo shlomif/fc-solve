@@ -1674,4 +1674,18 @@ Using sudo_renice.
 
 ========================================================================
 
+bash scripts/pgo.bash gcc total
+r3500 ; trunk
+ARGS="--worker-step 16 -l eo"
+2.6.36.2-desktop-2mnb
+tmux from ssh (while not running X).
+gcc-4.5.1 with "-flto and -fwhole-program".
+google-perftools-1.6 compiled with gcc-4.5.1.
+Using sudo_renice.
+./Tatzer -l p4b
 
+    Highlight: state members reordering.
+
+73.6936609745026s
+
+========================================================================
