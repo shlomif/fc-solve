@@ -88,7 +88,13 @@ ifeq ($(GCC_COMPAT),1)
 	CFLAGS += -fPIC
 endif
 
-END_SHARED += -ltcmalloc
+# The malloc library should appear as early as possible in the link stage
+# per the instructions in the E-mail from Hoard malloc's Emery Berger.
+# TCMALLOC_LINK = -ltcmalloc
+TCMALLOC_LINK = -lhoard
+
+# END_SHARED += $(TCMALLOC_LINK)
+
 ifneq ($(WITH_TRACES),0)
 	CFLAGS += -DDEBUG
 endif
@@ -194,7 +200,7 @@ $(STATIC_LIB): $(OBJECTS)
 	ranlib $@
 
 $(FCS_SHARED_LIB): $(OBJECTS)
-	$(CREATE_SHARED) -o $@ $(OBJECTS) $(END_SHARED)
+	$(CREATE_SHARED) $(TCMALLOC_LINK) -o $@ $(OBJECTS) $(END_SHARED)
 	if ! test -e libfreecell-solver.so ; then \
 		ln -s $@ libfreecell-solver.so ; \
 	fi
@@ -216,7 +222,7 @@ freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) -ltcmalloc
+	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) 
 
 FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o
 
