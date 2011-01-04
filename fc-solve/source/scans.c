@@ -729,7 +729,7 @@ int fc_solve_soft_dfs_do_solve(
     hard_thread_num_times_ptr = &(hard_thread->num_times);
 
 #define CALC_HARD_THREAD_MAX_NUM_TIMES() \
-    hard_thread_max_num_times = min(hard_thread->ht_max_num_times, hard_thread->max_num_times); \
+    hard_thread_max_num_times = hard_thread->max_num_times; \
                 \
     {           \
         int lim = hard_thread->num_times       \

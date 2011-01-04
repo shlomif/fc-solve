@@ -648,12 +648,6 @@ struct fc_solve_hard_thread_struct
      * */
     int max_num_times;
 
-    /*
-     * The Hard-Thread's global limit for the number of iterations
-     * to process
-     * */
-    int ht_max_num_times;
-
     int num_times_step;
 
     /*
@@ -1334,12 +1328,6 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
         {
             return ret;
         }
-        else if ((ret == FCS_STATE_SUSPEND_PROCESS) &&
-            (hard_thread->num_times >= hard_thread->ht_max_num_times))
-        {
-            hard_thread->ht_max_num_times += hard_thread->num_times_step;
-            break;
-        }
     }
 
     return ret;
@@ -1425,7 +1413,6 @@ static GCC_INLINE int fc_solve_optimize_solution(
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
     optimization_thread->max_num_times = INT_MAX;
-    optimization_thread->ht_max_num_times = INT_MAX;
 
     fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
@@ -1629,7 +1616,6 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
     )
 {
     hard_thread->num_times = 0;
-    hard_thread->ht_max_num_times = hard_thread->num_times_step;
     hard_thread->max_num_times = INT_MAX;
     hard_thread->num_soft_threads_finished = 0;
 }
