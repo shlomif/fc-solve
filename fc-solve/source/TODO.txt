@@ -25,6 +25,10 @@ c
 Non-pressing
 ------------
 
+* Make sure that run_hard_thread runs the soft_thread up to the limit of the 
+instance->num_times or the soft_thread's upper bound instead of entering
+and exiting.
+
 * Unit-test +fc_solve_compare_lru_cache_keys+ in +scans.c+.
 
 * Add an option to convert the stack_locs and fc_locs to a
