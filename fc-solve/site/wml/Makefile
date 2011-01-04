@@ -19,7 +19,7 @@ HTMLS = $(D)/code-of-conduct/index.html $(D)/index.html $(D)/links.html $(D)/dow
 
 TTMLS = $(D)/style.css
 
-DOCS_PROTO = README USAGE TODO AUTHORS NEWS
+DOCS_PROTO = AUTHORS NEWS README TODO USAGE   
 ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
 DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
