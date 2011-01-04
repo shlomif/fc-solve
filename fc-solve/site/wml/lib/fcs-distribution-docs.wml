@@ -23,6 +23,7 @@
 <th>Description</th>
 </tr>
 <fcs_document fn="README" desc="The &quot;Readme&quot; File" />
+<fcs_document fn="INSTALL" desc="How to install Freecell Solver" />
 <fcs_document fn="NEWS" desc="The file containing what's new in every release." />
 <fcs_document fn="USAGE" desc="A detailed usage document" />
 <fcs_document fn="TODO" desc="The todo list" />
