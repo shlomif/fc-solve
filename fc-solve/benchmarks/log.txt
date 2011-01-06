@@ -1689,3 +1689,20 @@ Using sudo_renice.
 73.6936609745026s
 
 ========================================================================
+
+bash scripts/pgo.bash gcc total
+r3509 ; trunk
+ARGS="--worker-step 16 -l eo"
+2.6.37 (vanilla from kernel.org and a custom .config file).
+ssh (while not running X).
+gcc-4.5.1 with "-flto and -fwhole-program".
+google-perftools-1.6 compiled with gcc-4.5.1.
+Using sudo_renice.
+./Tatzer -l p4b
+
+    Highlight: vanilla 2.6.37 kernel.
+
+72.7685720920563s
+
+========================================================================
+
