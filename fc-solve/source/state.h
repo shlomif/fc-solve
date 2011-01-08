@@ -1374,4 +1374,25 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * v_s1, c
 
 #endif
 
+#if 0
+
+#include <assert.h>
+
+static void verify_state_sanity(
+        fcs_collectible_state_t * ptr_state
+        )
+{
+    int i;
+
+    for (i=0; i < 8 ; i++)
+    {
+        int l = fcs_col_len(fcs_state_get_col(ptr_state->s, i));
+        assert ((l >= 0) && (l <= 7+12));
+    }
+
+    return;
+}
+
+#endif
+
 #endif /* FC_SOLVE__STATE_H */

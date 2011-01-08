@@ -111,8 +111,62 @@ static fcs_bool_t free_states_should_delete(void * key, void * context)
 }
 #endif
 
+static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
+        fc_solve_soft_thread_t * soft_thread
+        )
+{
+    fcs_soft_dfs_stack_item_t * soft_dfs_info,
+                              * end_soft_dfs_info;
+
+    soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info;
+
+    end_soft_dfs_info =
+        soft_dfs_info + soft_thread->method_specific.soft_dfs.depth;
+
+    /* TODO: Refactor to use a temporary array instead
+     * of the excessive and ugly memmoves. */
+    for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
+    {
+        int derived_state_idx_idx;
+        int * rand_indexes;
+
+        derived_state_idx_idx = soft_dfs_info->current_state_index+1;
+        rand_indexes = soft_dfs_info->derived_states_random_indexes;
+
+        for(;
+                derived_state_idx_idx <
+                soft_dfs_info->derived_states_list.num_states
+                ;
+           )
+        {
+            if (FCS_IS_STATE_DEAD_END(soft_dfs_info->derived_states_list.states[rand_indexes[derived_state_idx_idx]].state_ptr))
+            {
+                memmove(
+                    rand_indexes + derived_state_idx_idx
+                        ,
+                    rand_indexes + derived_state_idx_idx + 1
+                        ,
+                    (sizeof(rand_indexes[0])
+                         *
+                     (--(soft_dfs_info->derived_states_list.num_states) - derived_state_idx_idx)
+                    )
+               );
+            }
+            else
+            {
+                derived_state_idx_idx++;
+            }
+        }
+    }
+
+    return;
+}
+
 static void free_states(fc_solve_instance_t * instance)
 {
+#ifdef DEBUG
+    printf("%s\n", "FREE_STATES HIT");
+#endif
 #if (! ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)))
     return;
 #else
@@ -134,36 +188,7 @@ static void free_states(fc_solve_instance_t * instance)
                 case FCS_METHOD_HARD_DFS:
                 case FCS_METHOD_RANDOM_DFS:
                 {
-                    fcs_soft_dfs_stack_item_t * soft_dfs_info,
-                        * end_soft_dfs_info;
-
-                    soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info;
-
-                    end_soft_dfs_info = soft_dfs_info + soft_thread->method_specific.soft_dfs.depth;
-
-                    for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
-                    {
-                        int derived_state_idx_idx;
-
-                        derived_state_idx_idx = soft_dfs_info->current_state_index+1;
-
-                        for(;
-                                derived_state_idx_idx <
-                                   soft_dfs_info->derived_states_list.num_states
-                            ;
-                            derived_state_idx_idx++
-                        )
-                        {
-                            if (FCS_IS_STATE_DEAD_END(soft_dfs_info->derived_states_list.states[soft_dfs_info->derived_states_random_indexes[derived_state_idx_idx]].state_ptr))
-                            {
-                                memmove(
-                                    soft_dfs_info->derived_states_random_indexes + derived_state_idx_idx+1,
-                                    soft_dfs_info->derived_states_random_indexes + derived_state_idx_idx,
-                                    (--(soft_dfs_info->derived_states_list.num_states) - derived_state_idx_idx)
-                                );
-                            }
-                        }
-                    }
+                    free_states_handle_soft_dfs_soft_thread(soft_thread);
                 }
                 break;
 
@@ -240,7 +265,7 @@ static void free_states(fc_solve_instance_t * instance)
         { \
             if (getenv("FCS_TRACE")) \
             { \
-            printf("%s. Depth=%d ; the_soft_Depth=%d ; Iters=%d ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
+            printf("%s. Depth=%d ; the_soft_Depth=%ld ; Iters=%d ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
                     message, \
                     soft_thread->method_specific.soft_dfs.depth, (the_soft_dfs_info-soft_thread->method_specific.soft_dfs.soft_dfs_info), \
                     instance->num_times, the_soft_dfs_info->test_index, \
@@ -813,6 +838,12 @@ int fc_solve_soft_dfs_do_solve(
 
                     ptr_state = the_soft_dfs_info->state;
 
+
+#ifdef DEBUG
+                    TRACE0("Verify Foo");
+                    verify_state_sanity(ptr_state);
+#endif
+
 #ifdef FCS_RCS_STATES
                     ASSIGN_STATE_KEY();
 #endif
@@ -967,6 +998,11 @@ int fc_solve_soft_dfs_do_solve(
             do
             {
 
+#ifdef DEBUG
+                TRACE0("Verify Bar");
+                verify_state_sanity(ptr_state);
+#endif
+
                 THE_TESTS_LIST.lists[
                     the_soft_dfs_info->tests_list_index
                     ].tests[the_soft_dfs_info->test_index]
@@ -1099,6 +1135,11 @@ int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info->state =
                         ptr_state =
                         single_derived_state;
+
+#ifdef DEBUG
+                    TRACE0("Verify Zap");
+                    verify_state_sanity(ptr_state);
+#endif
 
 #ifdef FCS_RCS_STATES
                     ASSIGN_STATE_KEY();
@@ -1532,7 +1573,6 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     return;
 }
 
-#define DEBUG
 #ifdef DEBUG
 #if 0
 static void dump_pqueue (
@@ -2008,6 +2048,16 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 #endif
 
     char * * positions_by_rank_location;
+
+#ifdef DEBUG
+    if (getenv("FCS_TRACE"))
+    {
+        printf("%s\n", "Verify Quux");
+        fflush(stdout);
+    }
+    verify_state_sanity(ptr_state);
+#endif
+
     switch(soft_thread->method)
     {
         case FCS_METHOD_SOFT_DFS:
