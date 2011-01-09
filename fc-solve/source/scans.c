@@ -162,6 +162,26 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
     return;
 }
 
+#ifdef DEBUG
+
+#include <assert.h>
+
+static void verify_state_sanity(
+        fcs_collectible_state_t * ptr_state
+        )
+{
+    int i;
+
+    for (i=0; i < 8 ; i++)
+    {
+        int l = fcs_col_len(fcs_state_get_col(ptr_state->s, i));
+        assert ((l >= 0) && (l <= 7+12));
+    }
+
+    return;
+}
+#endif
+
 static void free_states(fc_solve_instance_t * instance)
 {
 #ifdef DEBUG
