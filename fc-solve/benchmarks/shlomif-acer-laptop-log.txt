@@ -1,3 +1,4 @@
+# vim:ft=txt:
 * Mandriva Linux 2010.1.
 * Acer Aspire 5738DZG
 * x86-64.
