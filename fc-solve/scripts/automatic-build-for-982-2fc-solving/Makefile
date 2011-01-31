@@ -30,7 +30,7 @@ $(DOWNLOAD_STAMP): $(TRUNK_STAMP) $(LIBAVL2_STAMP)
 fcs_trunk: $(TRUNK_STAMP)
 
 $(TRUNK_STAMP):
-	svn co 'http://svn.berlios.de/svnroot/repos/fc-solve/trunk/fc-solve/source/'
+	svn co 'http://svn.berlios.de/svnroot/repos/fc-solve/fc-solve/trunk/fc-solve/source/'
 	if ! test -e $@ ; then > $@ ; fi
 
 
