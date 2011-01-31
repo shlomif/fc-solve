@@ -644,6 +644,7 @@ INSTALL(
         "fcs_enums.h"
         "fcs_move.h"
         "fcs_user.h"
+        "fcs_dllexport.h"
     DESTINATION
         "include/freecell-solver"
 )
