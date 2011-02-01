@@ -1,0 +1,131 @@
+#include '../template.wml'
+<latemp_subject "Freecell Solver's Code of Conduct and Diversity Statement" />
+
+<define-tag diversity_statement>
+<preserve short_desc proj_name />
+<set-var %attributes />
+<div class="diversity" id="diversity_statement">
+
+<h2 id="diversity">Diversity Statement</h2>
+
+<p>
+Based on the <a href="http://padre.perlide.org/code_of_conduct.html">Code 
+of Conduct of Padre</a>, which is in turn based on the
+<a href="http://www.dreamwidth.org/legal/diversity">Diversity Statement of 
+Dreamwidth</a> therefore This document is usable under a Creative Commons 3.0 
+<a href="http://creativecommons.org/licenses/by-sa/3.0/">BY-SA</a> license.
+</p>
+
+<p>
+Clichés are cheap. We've all heard services say they're committed to 
+"diversity" and "tolerance" without ever getting specific, so here's our 
+stance on it:
+</p>
+
+<p>
+<strong>We welcome you.</strong>
+</p>
+
+<p>
+We welcome people of any gender identity or expression, race, ethnicity, size, 
+age, nationality, sexual orientation, ability level, religion, culture, 
+subculture, and political opinion. We welcome activists, artists, bloggers, 
+crafters, dilettantes, musicians, photographers, readers, writers, ordinary 
+people, extraordinary people, and everyone in between. 
+</p>
+
+<p>
+We welcome people who want to change the world, people who want to help others 
+write code, people who want to make a good environment for themselves,
+people who want to make great art, and people who just need a break after work. 
+We welcome fans, geeks, nerds, and pixel-stained technopeasant wretches. 
+We welcome beginners who aren't sure what any of those terms refer to.
+</p>
+
+<p>
+We welcome you. You may carry a guitar or knitting needles or a sketchbook. 
+Conservative or liberal, libertarian or socialist - we believe it's possible 
+for people of all viewpoints and persuasions to come together, work on a 
+project together and learn from each other. We believe in the broad spectrum 
+of human experience. We believe that amazing things come when people from 
+different worlds and world-views approach each other to create a conversation.
+Or a <get-var short_desc />.
+</p>
+
+<p> 
+We get excited about creativity - from pro to amateur, from novels to
+haiku, from the artist who's been doing this for decades to the person who just
+picked up a sketchbook last week. We support maximum freedom of creative
+expression, within the few restrictions we need to keep in order to ensure
+others can enjoy the fruits of our labor. In order to keep the licence of
+<get-var proj_name /> free you must ensure that any contribution you make to the 
+<get-var proj_name /> project could be done legally and it is free from any 
+strings  attached especially by your employer or by your government. You 
+should never upload files to either the version control server or the 
+bug tracking system that cannot be legally redistributed from our
+server which is currently located in <get-var country />, or that requires a license
+incompatible with <get-var proj_name />'s Open Source license.
+</p>
+
+<p>
+We think accessibility for people with disabilities is a priority, 
+not an afterthought. We think neurodiversity is a feature, not a bug. 
+We believe in being inclusive, welcoming, and supportive of anyone who 
+comes to us with good faith and the desire to build a community and software.
+</p>
+<p>
+We have enough experience to know that we won't get any of this perfect 
+on the first try. But we have enough hope, energy, and idealism to want 
+to learn things we don't know now. We may not be able to satisfy everyone, 
+but we can certainly work to avoid offending anyone. And we promise that if 
+we get it wrong, we'll listen carefully and respectfully to you when you point 
+it out to us, and we'll do our best to make good on our mistakes. 
+</p>
+<p>
+We use our <get-var short_desc /> ourselves. We build it as we would like to 
+have a really good one but we also build it for the beginners and for people 
+who are too busy to get involved in the development itself.
+</p>
+<p>
+Come code with us.
+</p>
+</div>
+<restore short_desc proj_name />
+</define-tag>
+
+<diversity_statement 
+    short_desc="Solitaire solving framework"
+    proj_name="Freecell Solver"
+    server_country="Germany"
+    />
+
+# TODO : Add later.
+<define-tag code_of_conduct>
+<div class="conduct" id="class_of_conduct">
+<h2>Code of Conduct</h2>
+<p>
+Always be respectful to other people and their code. 
+That means that even if you know the person who wrote the code and even 
+if you don't emphasize whose code are you commenting on derogatory comments should never be made. 
+It can be very offensive to the person who wrote the code in the first place. 
+Others who just touched that part of the code might become defensive.
+Yet others, even those who have not yet contributed to our project can easily 
+run away as they don't want to hear or read such comments on their code. 
+Even if they themselves know that their code is bad.
+There are ways to comment on badly written code that is not offensive.
+</p>
+<p>
+Of course you can always comment on your own code that it is crappy as 
+long as it is clear to everyone that you are talking about your own code.
+</p>
+<p>
+When advocating Padre always be respectful of people's choices. 
+Padre is not the answer for everyone, and we're okay with that. 
+Telling your friends about all the reasons that Padre is awesome is okay, 
+but if it doesn't sound like their cup of tea to them, don't keep pushing 
+or be insulting; we want people to be just as comfortable not choosing Padre
+as they are choosing Padre. 
+</p>
+
+</div>
+</define-tag>

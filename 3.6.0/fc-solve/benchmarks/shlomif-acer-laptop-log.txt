@@ -1,0 +1,203 @@
+# vim:ft=txt:
+* Mandriva Linux 2010.1.
+* Acer Aspire 5738DZG
+* x86-64.
+* gcc-4.5.0.
+
+<<<<<<<<<<<<<<<
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Pentium(R) Dual-Core CPU       T4300  @ 2.10GHz
+stepping	: 10
+cpu MHz		: 2100.000
+cache size	: 1024 KB
+physical id	: 0
+siblings	: 2
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good aperfmperf pni dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm xsave lahf_lm
+bogomips	: 4189.34
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Pentium(R) Dual-Core CPU       T4300  @ 2.10GHz
+stepping	: 10
+cpu MHz		: 1200.000
+cache size	: 1024 KB
+physical id	: 0
+siblings	: 2
+core id		: 1
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good aperfmperf pni dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm xsave lahf_lm
+bogomips	: 4189.29
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+>>>>>>>>>>>>>>>>>>
+
+------------------------------
+
+the-iglu-cabal preset ; r2933 ; 
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
+
+34.8752400875092s
+
+------------------------------
+
+stuff.bash (with a -dto scan) ; r2933 
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
+
+33.5600700378418s
+
+------------------------------
+
+foss-nessy.bash (with two -dto scan) ; r2938 
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
+
+33.366259098053s
+
+------------------------------
+
+ARGS="--worker-step 16 -l fn" bash scripts/time-threads-num.bash 2 4
+r3055
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+-
+(With -flto and -fwhole-program).
+32.8415179252625s
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3154
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+
+31.2516779899597s
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3182
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+
+28.617828130722s
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3182
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+    
+    Highlight: profile guided-optimisations.
+
+28.4376409053802s
+28.2177538871765s
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3239
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+    
+    Highlight: --without-visited-iter and --without-depth-field (while using PGO).
+
+27.4554669857025s
+27.4270040988922s
+
+------------------------------
+
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3239
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+    
+    Highlight: --without-visited-iter and --without-depth-field (while using PGO).
+
+27.4554669857025s
+27.4270040988922s
+
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
+r3242
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/ 
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+    
+    Highlight: the recycling of the allocators.
+
+27.3198730945587s
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 2 (x4)
+r3674
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --prefix=/home/shlomif/apps/fc-solve/
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+gcc-4.5.0.
+lib64google-perftools0-1.5-1mdv2010.1
+
+    Highlight: Freecell Solver 3.4.0.
+
+27.3098809719086s
+27.3080508708954s
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 2 (x4)
+r3674
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --prefix=/home/shlomif/apps/fc-solve/
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+gcc-4.5.0.
+Vanilla kernel 2.6.37.
+lib64google-perftools0-1.5-1mdv2010.1
+
+    Highlight: Vanilla kernel 2.6.37.
+
+27.1974890232086s

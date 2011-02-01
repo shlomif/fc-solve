@@ -1,0 +1,326 @@
+#!/usr/bin/env perl
+
+# This is a script to configure the distribution. Its primary audience
+# are the core developers and halo developers, and not end-users. Please
+# see the INSTALL file for proper building instructions using cmake.
+#
+# "Tatzer" (Taf-Tzadik-Reish) is the Hebrew word for "configure!".
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+my $build_type = "debug";
+my $stack_storage;
+my $state_storage;
+my $rcs_cache_storage;
+my $prefix = "/usr";
+my $freecell_only = 0;
+my $secondary_hash_value = 0;
+my $build_static_lib = 0;
+my $states_type;
+my $test_suite = 1;
+my $cpu_arch;
+my $omit_frame;
+my $no_simple_simon = 0;
+my $state_storage_libavl2_tree;
+my $stack_storage_libavl2_tree;
+my $without_flipping = 1;
+my $without_visited_iter = 0;
+my $without_depth_field = 0;
+my $without_locs_fields = 0;
+my $with_context_var = 1;
+my $with_compact_moves = 0;
+my $max_bench_threads_num = 4;
+my $pack_size;
+my $link_to_static = 0;
+my $hard_coded_num_freecells;
+my $avoid_tcmalloc = 0;
+my $rcs_states = 0;
+my $trace_mem = 0;
+my $scan_buckets_num;
+
+my $google_stack_storage;
+my $google_state_storage;
+
+sub set_both
+{
+    my $val = shift;
+    $stack_storage = $state_storage = $val;
+
+    return;
+}
+
+sub set_hash
+{
+    return set_both("INTERNAL_HASH");
+}
+
+set_hash();
+$rcs_cache_storage = "KAZ_TREE";
+
+sub _google_set_both
+{
+    my $val = shift;
+
+    $google_state_storage = $google_stack_storage = $val;
+
+    return;
+}
+
+_google_set_both("SPARSE");
+
+my %themes =
+(
+    tt => [qw(-r --notest-suite --static)],
+    bench => [qw(-l tt --omit-frame --without-flip --without-visited-iter)],
+    fc_bench => [qw(
+        -l bench --fc-only --without-depth-field --without-locs-fields
+        ) 
+    ],
+    mem_reduction_settings => [qw(
+        --rcs --without-locs-fields --with-compact-moves --without-depth-field
+    )],
+    reduce_mem => [ qw(-l bench -l mem_reduction_settings) ],
+    fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=1) ],
+);
+
+foreach my $rec (
+    {id => "p4", a => "pentium4"},
+    {id => "x64", a => "barcelona"},
+)
+{
+    my $id = $rec->{id};
+    my $arch = $rec->{a};
+
+    $themes{$id} = ["--arch=$arch"];
+    # Benchmark for freecell only
+    $themes{$id.'b'} = [qw(-l fc_bench -l), $id];
+    # Generalised benchmark - not freecell-only - should pass the tests.
+    $themes{$id.'bb'} = [qw(-l bench -l), $id];
+    # Memory conserving theme - for freecell only
+    $themes{$id.'m'} = [qw(-l fc_reduce_mem -l), $id];
+    # Generalised Memory conserving theme - not only for freecell
+    $themes{$id.'mm'} = [qw(-l reduce_mem -l), $id];
+}
+
+my @new_argv = @ARGV;
+
+CALC_NEW_ARGV:
+for (my $idx = 0; $idx < @new_argv ; $idx++)
+{
+    if ($new_argv[$idx] =~ m{\A-l(.*)\z}ms)
+    {
+        my $start_idx = $idx;
+
+        my $param = $1 || $new_argv[++$idx];
+
+        if (! (my $cmd = $themes{$param}) )
+        {
+            die "Unknown -l argument $param!";
+        }
+        else
+        {
+            splice (@new_argv, $start_idx, $idx-$start_idx+1, @$cmd);
+        }
+        
+        $idx = $start_idx;
+        redo CALC_NEW_ARGV;
+    }
+}
+
+@ARGV = @new_argv;
+
+GetOptions(
+    'd|debug' => sub {
+        my ($opt, $val) = @_;
+        if ($val)
+        {
+            $build_type = "debug";
+        }
+        return;
+    },
+    'r|release' => sub {
+        my ($opt, $val) = @_;
+        if ($val) 
+        {
+            $build_type = "release";
+        } 
+        elsif ($build_type eq "release")
+        {
+            $build_type = "debug";
+        }
+        return;
+    },
+    'rwd' => sub {
+        my ($opt, $val) = @_;
+
+        $build_type = "RelWithDebInfo";
+
+        return;
+    },
+    'c|cols=s' => \$stack_storage,
+    'p|pos=s' => \$state_storage,
+    'rcs-cache-storage=s' => \$rcs_cache_storage,
+    'kazlib' => sub { $state_storage = "KAZ_TREE"; $rcs_cache_storage = "KAZ_TREE",},
+    'libavl2-p=s' => \$state_storage_libavl2_tree,
+    'libavl2-c=s' => \$stack_storage_libavl2_tree,
+    'prefix=s' => \$prefix,
+    'secondary!' => \$secondary_hash_value,
+    'test-suite!' => \$test_suite,
+    'judy' => sub { return set_both("JUDY"); },
+    'hash' => \&set_hash,
+    'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
+    'dense' => sub {
+        set_both("GOOGLE_DENSE_HASH");
+        _google_set_both("DENSE"); 
+    },
+    'sparse' => sub {
+        set_both("GOOGLE_DENSE_HASH"); 
+        _google_set_both("SPARSE"); 
+    },
+    'fc-only' => \$freecell_only,
+    'static' => \$build_static_lib,
+    'states-type=s' => \$states_type,
+    'rcs!' => sub {
+        $rcs_states = 1;
+        $states_type = "COMPACT_STATES";
+    },
+    'profile' => sub {
+        my ($opt, $val) = @_;
+        if ($val) 
+        {
+            $build_type = "profile";
+        } 
+        elsif ($build_type eq "profile")
+        {
+            $build_type = "debug";
+        }
+        return;
+    },
+    'minsize' => sub {
+        $build_type = "MinSizeRel";
+        return;
+    },
+    'arch=s' => \$cpu_arch,
+    'omit-frame!' => \$omit_frame,
+    'disable-simple-simon!' => \$no_simple_simon,
+    'without-flip!' => \$without_flipping,
+    'without-visited-iter!' => \$without_visited_iter,
+    'without-depth-field!' => \$without_depth_field,
+    'without-locs-fields!' => \$without_locs_fields,
+    'with-compact-moves!' => \$with_compact_moves,
+    'with-ctx-var!' => \$with_context_var,
+    'max-bench-threads-num=i' => \$max_bench_threads_num,
+    'pack-size=i' => \$pack_size,
+    'static!' => \$link_to_static,
+    'nfc=i' => \$hard_coded_num_freecells,
+    'avoid-tcmalloc!' => \$avoid_tcmalloc,
+    'tracemem!' => \$trace_mem,
+    'scan-buckets-num=i' => \$scan_buckets_num,
+) or
+    die "Wrong options";
+
+if ($state_storage_libavl2_tree)
+{
+    $state_storage = "LIBAVL2_TREE";
+}
+
+if ($stack_storage_libavl2_tree)
+{
+    $stack_storage = "LIBAVL2_TREE";
+}
+
+# This cache is sometimes causing problems.
+unlink("CMakeCache.txt");
+
+my @cmd= ("cmake",
+    "-DCMAKE_BUILD_TYPE=$build_type",
+    "-DFCS_STATE_STORAGE=FCS_STATE_STORAGE_$state_storage",
+    "-DFCS_RCS_CACHE_STORAGE=FCS_RCS_CACHE_STORAGE_$rcs_cache_storage",
+    "-DMAX_NUM_BENCHMARK_THREADS=$max_bench_threads_num",
+    "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
+    "-DCMAKE_INSTALL_PREFIX=$prefix",
+    "-DDATADIR=$prefix/share",
+    ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
+    ($no_simple_simon ? ("-DFCS_DISABLE_SIMPLE_SIMON=1") : ()),
+    ($without_flipping ? ("-DFCS_WITHOUT_CARD_FLIPPING=1") : ()),
+    ($without_visited_iter ? ("-DFCS_WITHOUT_VISITED_ITER=1") : ()),
+    ($without_depth_field ? ("-DFCS_WITHOUT_DEPTH_FIELD=1") : ()),
+    ($without_locs_fields ? ("-DFCS_WITHOUT_LOCS_FIELDS=1") : ()),
+    ($with_compact_moves ? ("-DFCS_USE_COMPACT_MOVE_TOKENS=1") : ()),
+    ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
+    ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
+    (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
+    ($rcs_states ? ("-DFCS_ENABLE_RCS_STATES=1") : ()),
+    "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
+    "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
+
+    (defined($pack_size) ? ("-DFCS_IA_PACK_SIZE=$pack_size") : ()),
+    ($test_suite ? ("-DFCS_WITH_TEST_SUITE=1") : ()),
+    (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
+    ($omit_frame ? "-DOPTIMIZATION_OMIT_FRAME_POINTER=1" : ()),
+    ($state_storage_libavl2_tree
+        ? "-DFCS_STATE_STORAGE_LIBAVL2_TREE_TYPE=$state_storage_libavl2_tree"
+        : ()
+    ),
+    ($stack_storage_libavl2_tree
+        ? "-DFCS_STACK_STORAGE_LIBAVL2_TREE_TYPE=$stack_storage_libavl2_tree"
+        : ()
+    ),
+    (exists($ENV{"LIBAVL2_SOURCE_DIR"})
+        ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
+        : ()
+    ),
+    ($with_context_var
+        ? "-DFCS_WITH_CONTEXT_VARIABLE=1"
+        : "-DFCS_WITH_CONTEXT_VARIABLE="
+    ),
+    ($link_to_static
+        ? ("-DFCS_LINK_TO_STATIC=1")
+        : ("-DFCS_LINK_TO_STATIC=")
+    ),
+    (defined($hard_coded_num_freecells)
+        ? ("-DFCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY=$hard_coded_num_freecells")
+        : ()
+    ),
+    ($avoid_tcmalloc
+        ? ("-DFCS_AVOID_TCMALLOC=1")
+        : ()
+    ),
+    ($trace_mem ? ("-DFCS_TRACE_MEM=1") : ()),
+    ($scan_buckets_num ? ("-DFCS_MAX_NUM_SCANS_BUCKETS=$scan_buckets_num") : ()),
+);
+
+print(join(" ", @cmd), "\n");
+my $exit_code = system(@cmd);
+exit($exit_code);
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2009 Shlomi Fish
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+=cut
+

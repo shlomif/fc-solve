@@ -1,0 +1,165 @@
+Index: check_and_add_state.c
+===================================================================
+--- check_and_add_state.c	(revision 3001)
++++ check_and_add_state.c	(working copy)
+@@ -343,30 +343,89 @@
+  *        5b. Add the new state and return TRUE.
+  * */
+ 
++#define UPDATE_INSTANCE() \
++{ \
++    instance->num_states_in_collection++; \
++}
++
+ static GCC_INLINE void on_state_new(
+     fc_solve_instance_t * instance,
+     fc_solve_hard_thread_t * hard_thread,
+     fcs_state_extra_info_t * new_state_val
+ )
+ {
+-    register fcs_state_extra_info_t * parent_state_val;
++    /* 
++     * The new state was not found in the cache, and it was already
++     * inserted. 
++     * */
++    /* 
++     * Since this is a brand-new state, then its ->parent_val and
++     * ->moves_to_parent fields must be defined.
++     * */
++    new_state_val->parent_val->num_active_children++;
+ 
+-    /* The new state was not found in the cache, and it was already inserted */
+-    if (likely(parent_state_val = new_state_val->parent_val))
+-    {
+-        parent_state_val->num_active_children++;
+-        /* If parent_val is defined, so is moves_to_parent */
+-        new_state_val->moves_to_parent =
+-            fc_solve_move_stack_compact_allocate(
+-                hard_thread,
+-                new_state_val->moves_to_parent
+-            );
+-    }
+-    instance->num_states_in_collection++;
++    new_state_val->moves_to_parent =
++        fc_solve_move_stack_compact_allocate(
++            hard_thread,
++            new_state_val->moves_to_parent
++        );
+ 
++    UPDATE_INSTANCE();
++
+     return;
+ }
+ 
++
++static GCC_INLINE void prelude(
++    fc_solve_instance_t * instance,
++    fc_solve_hard_thread_t * hard_thread,
++    fcs_state_t * new_state_key,
++    fcs_state_extra_info_t * new_state_val
++)
++{
++    fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val);
++
++    fc_solve_canonize_state(new_state_val,
++        INSTANCE_FREECELLS_NUM,
++        INSTANCE_STACKS_NUM
++        );
++
++    return;
++}
++
++extern void fc_solve_add_initial_state(
++    fc_solve_hard_thread_t * hard_thread,
++    fcs_state_extra_info_t * new_state_val
++    )
++{
++    fc_solve_instance_t * instance = hard_thread->instance;
++    fcs_state_t * new_state_key = new_state_val->key;
++    void * existing_key_void, * existing_val_void;
++
++    prelude(instance, hard_thread, new_state_key, new_state_val);
++
++    fc_solve_hash_insert(
++        &(instance->hash),
++        new_state_key,
++        new_state_val,
++        &existing_key_void,
++        &existing_val_void,
++        perl_hash_function(
++            (ub1 *)new_state_key,
++            sizeof(*new_state_key)
++            )
++#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
++        , hash_value_int
++#endif
++    );
++
++    UPDATE_INSTANCE();
++
++    return;
++}
++
++#undef UPDATE_INSTANCE
++
+ GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
+     fc_solve_soft_thread_t * soft_thread,
+     fcs_state_extra_info_t * new_state_val,
+@@ -395,14 +454,8 @@
+     }
+ #endif
+ 
++    prelude(instance, hard_thread, new_state_key, new_state_val);
+ 
+-    fc_solve_cache_stacks(hard_thread, new_state_key, new_state_val);
+-
+-    fc_solve_canonize_state(new_state_val,
+-            INSTANCE_FREECELLS_NUM,
+-            INSTANCE_STACKS_NUM
+-            );
+-
+ /*
+     The objective of this part of the code is:
+     1. To check if new_state_key / new_state_val is already in the prev_states
+Index: check_and_add_state.h
+===================================================================
+--- check_and_add_state.h	(revision 3001)
++++ check_and_add_state.h	(working copy)
+@@ -50,6 +50,11 @@
+     fcs_state_extra_info_t * * existing_state_val
+     );
+ 
++extern void fc_solve_add_initial_state(
++    fc_solve_hard_thread_t * hard_thread,
++    fcs_state_extra_info_t * new_state_val
++    );
++
+ #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
+ extern guint fc_solve_hash_function(gconstpointer key);
+ #endif
+Index: instance.c
+===================================================================
+--- instance.c	(revision 3001)
++++ instance.c	(working copy)
+@@ -1068,17 +1068,11 @@
+         );
+ #endif
+ 
+-    {
+-        fcs_state_extra_info_t * no_use_val;
++    fc_solve_add_initial_state(
++        instance->hard_threads,
++        state_copy_ptr_val
++        );
+ 
+-        fc_solve_check_and_add_state(
+-            &(instance->hard_threads[0].soft_threads[0]),
+-            state_copy_ptr_val,
+-            &no_use_val
+-            );
+-
+-    }
+-
+     instance->ht_idx = 0;
+     {
+         HT_LOOP_DECLARE_VARS();

@@ -1,0 +1,41 @@
+Solvable
+--------
+
+* By using the "tea-for-two" meta-moves preset: 25,143.
+
+* By using +-to 01ABCDE+ : 172.
+
+* By using +-l foss-nessy+ : 38.
+ 
+* By using the extended range (8,200,000 iterations) +-to 01ABCDE+ scan:
++grep -l '^This game is solv' *.sol  | wc -l+ yields: 14.
+
+* *Total:* 25,367.
+
+"Provably" unsolvable
+---------------------
+
+* Fully traversed in the atomic moves preset: 6,513.
+** Found using +grep -l '^I could not solve' *.sol | xargs grep -h '^Total number of states checked' | grep 1200000 | wc -l+.
+
+* Fully traversed in the extended-range atomic moves preset: 87.
+** Found using +grep -l '^I could not solve' *.sol | xargs grep -h '^Total number of states checked' | grep -v 8200000 | wc -l+.
+
+* Total: 6,600.
+
+Intractable
+-----------
+
+* After the atomic scan: 172.
+** Found using +grep -l '^I could not solve' *.sol | xargs grep -l '^Total number of states checked is 1200000\.' | wc -l+
+
+* After the foss-nessy scan: 134.
+
+* After the 8,200,000 range atomic scan:
+** Killed by the OOM Killer: 
++ls | perl -lne 'print if -z' | xargs ls -l | wc -l+ : 17.
+** Reached the iterations limit:
+** +grep -l '^I could not solve' *.sol | xargs grep -l '^Total number of states checked is 8200000\.' | wc -l+: 
+16.
+
+* Total: 33.

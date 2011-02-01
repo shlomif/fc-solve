@@ -1,0 +1,75 @@
+Jane wants to find short solutions for Freecell games using Freecell Solver.
+She gets the following statistics:
+
+------------------------------
+      | Default Soft-DFS          | --method a-star
+1     | Iters: 123 ; Length: 128  | Iters: 1355 ; Length: 126
+2     | Iters: 98 ; Length: 146   | Iters: 116 ; Length: 95
+3     | Iters: 125 ; Length: 116  | Iters: 83 ; Length: 92
+4     | Iters: 117 ; Length: 124  | Iters: 1263 ; Length: 111
+5     | Iters: 110 ; Length: 144  | Iters: 328 ; Length: 131
+6     | Iters: 403 ; Length: 177  | Iters: 13185 ; Length: 108
+7     | Iters: 1260 ; Length: 135 | Iters: 457 ; Length: 123
+8     | Iters: 70 ; Length: 99    | Iters: 175 ; Length: 109
+------------------------------
+
+She decides to run the BeFS (so-called "a-star") method for 1,500 iterations
+and the DFS one for 500 iterations, like so:
+
+------------------------------
+fc-solve \
+    # Default flare. \
+    --flare-name dfs
+    --next-flare  \
+    # BeFS flare \
+    --method a-star --flare-name befs \
+    # The Plan \
+    --flares-plan 'Run:500@dfs,Run:1500@befs'
+------------------------------
+
+This will run both the DFS and BeFS yielding the shortest solutions.
+So we get the "a-star" 126 moves-solution for board No. 1 and its 95
+moves-solution for board No. 2.
+
+On the other hand for this board:
+
+------------------------------
+Iters:403 ; Length: 177 | Iters: 13185 ; Length: 108
+------------------------------
+
+We cannot solve it using a-star in time (because 13,185 > 1,500) so Jane ends
+up with a 177-long solution. Oh well.
+
+Step 2: Check Points
+====================
+
+Check points can be specified using the "CP:" syntax and allow to stop the
+process in the middle after a solution was reached. There's one implicit
+checkpoint at the end of the process.
+
+So if we have:
+
+------------------------------
+fc-solve \
+    # Default flare. \
+    --flare-name dfs
+    --next-flare  \
+    # BeFS flare \
+    --method a-star --flare-name befs \
+    # Another BeFS flare \
+    --method a-star -asw '2,5,1,0,0' --flare-name funky \
+    # The Plan \
+    --flares-plan 'Run:500@dfs,Run:1500@befs,CP:,Run:10000@funky'
+------------------------------
+
+Then if we found any solution after 500 iterations of +dfs+ and 1,500
+iterations of befs, then the 10,000 iterations of +funky+ won't be run.
+
+Step 3: Looping
+===============
+
+If a solution is not found within the first running of +--flares-plan+,
+then it will loop the plan again and so forth until either a solution is 
+found or no more iterations are left.
+
+

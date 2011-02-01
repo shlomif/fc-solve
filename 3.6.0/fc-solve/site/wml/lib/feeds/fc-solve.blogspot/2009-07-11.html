@@ -1,0 +1,42 @@
+<!-- TITLE=Freecell Solver 2.34.0 was Released-->
+<p>
+<a href="http://fc-solve.berlios.de/">Freecell Solver</a> version 2.34.0
+has been released. It is available in the form of a source tarball from 
+<a href="http://fc-solve.berlios.de/download.html">the
+    download page</a>.
+</p>
+
+<p>
+Back in the abandoned 2.10.x branch a programmer called Michael Mann
+contributed a new 
+<a href="http://en.wikipedia.org/wiki/Simple_Simon_%28solitaire%29">Simple 
+    Simon</a> move function that allowed it to solve more games. In 2.34.0
+this move function was restored, and made optional. We now have a theme
+called "the-last-mohican" (or "tlm" for short), after the movie 
+<a href="http://en.wikipedia.org/wiki/The_Last_of_the_Mohicans_%281992_film%29">"The 
+    Last of the Mohicans"</a> by a different Michael Mann, which I have watched
+and enjoyed, that is capable of
+<a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1008">solving
+    over 90% of the first 5,000 PySol Simple Simon deals</a>. (Incidentally
+"The Last Mohican" is the direct translation of the book and movie's name
+in Hebrew). The solutions of the solver were verified to be correct using
+Games-Solitaire-Verify.
+</p>
+
+<p>
+Working on this theme uncovered a bug in the solver where the 
+<tt>--next-instance</tt> flag was removed by accident, and it is now fixed.
+</p>
+
+<p>
+Aside from that, there's now an improved atomic moves theme - 
+"toons-for-twenty-somethings", which can solve all of MS Freecell's 
+32,000 deals. It is still much slower than the meta-moves-based theme.
+</p>
+
+<p>
+There are also some other more minor changes, which can be found at the NEWS
+file in the distribution.
+</p><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/96099636168698788-6932796514840446789?l=fc-solve.blogspot.com' alt='' /></div>
+
+<p><a href="http://fc-solve.blogspot.com/2009/07/freecell-solver-2340-was-released.html">See comments and comment on this.</a></p>

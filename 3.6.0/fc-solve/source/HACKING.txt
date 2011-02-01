@@ -1,0 +1,232 @@
+Freecell Solver "Hacking"-Related Issues
+========================================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2009-08-14
+:Revision: $Id$
+
+Benchmarking a Freecell Solver Release
+--------------------------------------
+
+Requirements: perl-5.8.x or above, CMake, gcc, bash and a working
+pthreads-devel package.
+
+1. Download the Freecell Solver .tar.bz2 archive from 
+http://fc-solve.berlios.de/ .
+
+2. Unpack and cd to the freecell-solver-* directory.
+
+3. Run +./Tatzer -l tt --max-bench-threads-num=4+ , where 4 is the maximal
+number of threads you'd like to run which is a function of the number of
+processors/cores your computer has.
+
+4. Type +make+ to build everything.
+
+5. Type +make bench+.
+
+6. You can use +perl scripts/time-fcs.pl dump DUMPS/*+ and copy-and-paste the 
+results to the Freecell Solver developers with specifications of your computer 
+that are as detailed as possible.
+
+Getting the test suite up and running
+-------------------------------------
+
+These are instruction how to get the test suite up and running:
+
+1. Install the dependencies: Subversion, CMake (2.6.3 or later only), make,
+gcc, g\++, valgrind, perl5 (at least perl-5.8.9, perl-5.10.0 or above is
+recommended),  
++
++
+* On Debian: 
++
+--------------------
+apt-get install subversion cmake make gcc g++ valgrind perl
+--------------------
++
+* On Mandriva:
++
+-------------------
+urpmi subversion cmake make gcc g++ valgrind perl perl-devel
+-------------------
+
+2. Install the dependencies of the test suite:
++
+* Download +local::lib+ from http://search.cpan.org/dist/local-lib/
+and follow the instructions to set it up.
++
+* Restart bash (no need to restart the computer, just open a new terminal
+window).
++
+----------
+export PERL_MM_USE_DEFAULT=1
+perl -Mlocal::lib -MCPAN -e 'install Task::FreecellSolver::Testing'
+----------
+
+3. Install the development headers of 
+libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
++
+* On Mandriva:
++
+    # urpmi libtap-devel
++
+* On Debian:
++
+-------------------------------
+tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz 
+cd tap-1.01
+./configure --prefix="$HOME/apps/libtap"
+make CFLAGS+=-UHAVE_LIBPTHREAD
+make install
+# For gcc finding tap.h in the includes
+echo 'export CPATH="$HOME/apps/libtap/include:$CPATH"' >> ~/.bashrc
+# For CMake finding libtap.
+echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bashrc
+------------------------------
+
+4. Check out the latest Freecell Solver sources:
++
+-------------------
+svn co https://svn.berlios.de/svnroot/repos/fc-solve/trunk/
+-------------------
+
+5. +$ cd trunk/fc-solve/source/+
+
+6. Configure the Freecell Solver build
+
+	$ ./Tatzer
+
+7. Build Freecell Solver:
+
+	$ make
+
+8. Test Freecell Solver:
+
+	$ make test
+
+Style Guidelines
+----------------
+
+Freecell Solver uses its own style based on the preferences of its primary
+author (Shlomi Fish). Some guidelines for the style will be given here.
+
+4 Spaces for Indentation
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Freecell Solver source code should be kept free of horizontal
+tabs (\t, HT, \x09) and use spaces alone. Furthermore, there should be
+a 4 wide space indentation inside blocks:
+
+----------------
+if (COND())
+{
+    int i;
+
+    printf("%s\n", "COND() is successful!");
+
+    for (i=0 ; i < 10 ; i++)
+    {
+        ...
+    }
+}
+----------------
+
+Curly Braces Alignment
+~~~~~~~~~~~~~~~~~~~~~~
+
+The opening curly brace of an if-statement or a for-statement should be
+placed below the statement on the same level as the other line, and the
+inner block indented by 4 spaces. A good example can be found in the previous
+section. Here are some bad examples:
+
+----------------
+if ( COND() ) {
+    /* Bad because the opening brace is on the same line.
+}
+----------------
+
+----------------
+if ( COND() )
+    {
+    /* Bad because the left and right braces are indented along with 
+    the block. */
+    printf(....)
+    }
+----------------
+
+----------------
+/* GNU Style - fear and loathing. */
+if ( COND() )
+  {
+    printf(....)  
+  }
+----------------
+
+Comments should precede the lines performing the action
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Comments should come one line before the line that they explain:
+
+----------------
+/* Check if it can be moved to something on the same stack */
+for(dc=0;dc<c-1;dc++)
+{
+    .
+    .
+    .
+}
+----------------
+
++TODO: Fill in+
+
+Identifier Naming Conventions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here are some naming conventions for identifiers:
+
+1. Please do not use capital letters (including not +CamelCase+) - use
+all lowercase letters with words separated by underscores. Remember, C is 
+case sensitive.
+
+2. Note, however, that comments should be phrased in proper English, with
+proper Capitalization and distinction between uppercase and lowercase
+letters. So should the rest of the Freecell Solver internal and external
+documentation.
+
+3. Some commonly used abbreviations:
+
+----------------
+max - maximum
+num - numbers
+cols - columns
+dest - destination
+src - source
+ds - dest stack
+stack - usually the source stack
+ptr - pointer
+val - value
+c - the card index/position within the column
+befs - Best First Search (one of the types of searches used by Freecell Solver)
+a_star - also refers to "befs" from historical reasons (should be converted
+to "befs" in the non-external interface.)
+dfs - Depth-First Search (one of the types of searches used by Freecell Solver)
+----------------
+
+Don't comment-out - use #if 0 to temporarily remove code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Code should not be commented-out using gigantic +/* ... */+ comments. Instead,
+it should be out-blocked using +#if 0...#endif+.
+
+In Perl code, one can use the following POD paradigm to remove a block of
+code:
+
+----------------
+=begin Removed
+
+Removed code here.
+
+=end Removed
+
+=cut
+----------------
+
