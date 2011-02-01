@@ -7,7 +7,7 @@ Shlomi Fish <shlomif@cpan.org>
 Introduction
 ------------
 
-This is Freecell Solver version 3.4.x, a program that automatically
+This is Freecell Solver version 3.6.x, a program that automatically
 solves most layouts of Freecell, and similar Solitaire variants as
 well as those of Simple Simon.
 
