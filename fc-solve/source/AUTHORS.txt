@@ -96,9 +96,12 @@ http://commons.wikimedia.org/wiki/File:Stop_hand_nuvola.svg[The stop sign
 that we use on the download page], which is under the Creative Commons
 Attribution ShareAlike licence. Thanks!
 
-* David Stevenson - inspiring a documentation clarification for broken
+* *David Stevenson* - inspiring a documentation clarification for broken
 versions of CMake (e.g: cmake-2.6.2).
 
-* Jurij Bortnik ( http://freecellgamesolutions.com/ ) - reported some broken
+* *Jurij Bortnik* ( http://freecellgamesolutions.com/ ) - reported some broken
 links on the Freecell Solver homepage.
 
+* *Kaz Kylheku* ( http://www.kylheku.com/~kaz/ ) - author and originator of
+kazlib ( http://www.kylheku.com/~kaz/kazlib.html ) whose BSDLed balanced binary
+search tree is included in the Freecell Solver distribution.
