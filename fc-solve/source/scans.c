@@ -127,12 +127,10 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
     end_soft_dfs_info =
         soft_dfs_info + soft_thread->method_specific.soft_dfs.depth;
 
-    /* TODO: Refactor to use a temporary array instead
-     * of the excessive and ugly memmoves. */
     for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
         int derived_state_idx_idx;
-        int * rand_indexes;
+        int * rand_indexes, * dest_rand_indexes;
 
         /*
          * We start from current_state_index instead of current_state_index+1
@@ -141,31 +139,23 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
          * */
         derived_state_idx_idx = soft_dfs_info->current_state_index;
         rand_indexes = soft_dfs_info->derived_states_random_indexes;
+        dest_rand_indexes = rand_indexes + derived_state_idx_idx;
 
-        for(;
+        for(        
+                    ;
                 derived_state_idx_idx <
                 soft_dfs_info->derived_states_list.num_states
-                ;
+                    ;
+                derived_state_idx_idx++
            )
         {
-            if (FCS_IS_STATE_DEAD_END(soft_dfs_info->derived_states_list.states[rand_indexes[derived_state_idx_idx]].state_ptr))
+            if (! FCS_IS_STATE_DEAD_END(soft_dfs_info->derived_states_list.states[rand_indexes[derived_state_idx_idx]].state_ptr))
             {
-                memmove(
-                    rand_indexes + derived_state_idx_idx
-                        ,
-                    rand_indexes + derived_state_idx_idx + 1
-                        ,
-                    (sizeof(rand_indexes[0])
-                         *
-                     (--(soft_dfs_info->derived_states_list.num_states) - derived_state_idx_idx)
-                    )
-               );
-            }
-            else
-            {
-                derived_state_idx_idx++;
+                *(dest_rand_indexes++) = rand_indexes[derived_state_idx_idx];
             }
         }
+        soft_dfs_info->derived_states_list.num_states =
+            dest_rand_indexes - soft_dfs_info->derived_states_random_indexes;
     }
 
     return;
