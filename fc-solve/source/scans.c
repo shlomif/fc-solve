@@ -744,6 +744,25 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
     return num_vacant_freecells;
 }
 
+static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
+        fcs_game_limit_t stacks_num,
+        fcs_state_t * state_ptr
+        )
+{        
+    fcs_game_limit_t num_vacant_stacks = 0;
+    int i;
+
+    for ( i=0 ; i < stacks_num ; i++ )
+    {
+        if (fcs_col_len(fcs_state_get_col(*state_ptr, i)) == 0)
+        {
+            num_vacant_stacks++;
+        }
+    }
+
+    return num_vacant_stacks;
+}
+
 #define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, ptr_state))))
 
 int fc_solve_soft_dfs_do_solve(
@@ -972,17 +991,9 @@ int fc_solve_soft_dfs_do_solve(
 
                 num_vacant_freecells =
                     count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &the_state);
-
-                /* Count the number of unoccupied stacks */
-
-                num_vacant_stacks = 0;
-                for(i=0;i<LOCAL_STACKS_NUM;i++)
-                {
-                    if (fcs_col_len(fcs_state_get_col(the_state, i)) == 0)
-                    {
-                        num_vacant_stacks++;
-                    }
-                }
+                
+                num_vacant_stacks =
+                    count_num_vacant_stacks(LOCAL_STACKS_NUM, &the_state);
 
                 /* Check if we have reached the empty state */
                 if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
@@ -1916,17 +1927,8 @@ int fc_solve_befs_or_bfs_do_solve(
         num_vacant_freecells = 
             count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &the_state);
 
-        /* Count the number of unoccupied stacks */
-
-        num_vacant_stacks = 0;
-        for(a=0;a<LOCAL_STACKS_NUM;a++)
-        {
-            if (fcs_col_len(fcs_state_get_col(the_state, a)) == 0)
-            {
-                num_vacant_stacks++;
-            }
-        }
-
+        num_vacant_stacks =
+            count_num_vacant_stacks(LOCAL_STACKS_NUM, &the_state);
 
         if (check_if_limits_exceeded())
         {
