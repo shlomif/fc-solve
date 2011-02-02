@@ -766,8 +766,10 @@ int fc_solve_soft_dfs_do_solve(
     SET_GAME_PARAMS();
 #endif
 
+#define DEPTH() (*depth_ptr)
+    depth_ptr = &(soft_thread->method_specific.soft_dfs.depth);
 
-    the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth]);
+    the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[DEPTH()]);
 
     dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
     enable_pruning = soft_thread->enable_pruning;
@@ -797,7 +799,6 @@ int fc_solve_soft_dfs_do_solve(
         the_tests_list_ptr = &(curr_by_depth_unit->tests); \
     }
 
-    depth_ptr = &(soft_thread->method_specific.soft_dfs.depth);
 
     instance_num_times_ptr = &(instance->num_times);
     hard_thread_num_times_ptr = &(hard_thread->num_times);
@@ -818,7 +819,6 @@ int fc_solve_soft_dfs_do_solve(
     debug_iter_output_func = instance->debug_iter_output_func;
     debug_iter_output_context = instance->debug_iter_output_context;
 
-#define DEPTH() (*depth_ptr)
 
     {
         for (
@@ -933,7 +933,7 @@ int fc_solve_soft_dfs_do_solve(
                     debug_iter_output_func(
                         debug_iter_output_context,
                         *(instance_num_times_ptr),
-                        soft_thread->method_specific.soft_dfs.depth,
+                        DEPTH(),
                         (void*)instance,
 #ifdef FCS_RCS_STATES
                         &(state_key),
@@ -942,9 +942,9 @@ int fc_solve_soft_dfs_do_solve(
 #ifdef FCS_WITHOUT_VISITED_ITER
                         0
 #else
-                        ((soft_thread->method_specific.soft_dfs.depth == 0) ?
+                        ((DEPTH() == 0) ?
                             0 :
-                            FCS_S_VISITED_ITER(soft_thread->method_specific.soft_dfs.soft_dfs_info[soft_thread->method_specific.soft_dfs.depth-1].state)
+                            FCS_S_VISITED_ITER(soft_thread->method_specific.soft_dfs.soft_dfs_info[DEPTH()-1].state)
                         )
 #endif
                         );
