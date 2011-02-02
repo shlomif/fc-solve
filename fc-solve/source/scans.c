@@ -53,6 +53,10 @@
 #include "likely.h"
 #include "bool.h"
 
+#if 0
+#define DEBUG 1
+#endif
+
 #define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
@@ -130,7 +134,12 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
         int derived_state_idx_idx;
         int * rand_indexes;
 
-        derived_state_idx_idx = soft_dfs_info->current_state_index+1;
+        /*
+         * We start from current_state_index instead of current_state_index+1
+         * because that is the next state to be checked - it is referenced
+         * by current_state_index++ instead of ++current_state_index .
+         * */
+        derived_state_idx_idx = soft_dfs_info->current_state_index;
         rand_indexes = soft_dfs_info->derived_states_random_indexes;
 
         for(;
@@ -180,6 +189,36 @@ static void verify_state_sanity(
 
     return;
 }
+
+static void verify_soft_dfs_stack(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    int depth = 0, i, num_states;
+    for (depth = 0 ; depth < soft_thread->method_specific.soft_dfs.depth ; depth++)
+    {
+        fcs_soft_dfs_stack_item_t * soft_dfs_info;
+        int * rand_indexes;
+        
+        soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[depth]);
+        rand_indexes = soft_dfs_info->derived_states_random_indexes;
+
+        num_states = soft_dfs_info->derived_states_list.num_states;
+        
+        for ( i=soft_dfs_info->current_state_index ; i < num_states ; i++)
+        {
+            verify_state_sanity(soft_dfs_info->derived_states_list.states[rand_indexes[i]].state_ptr);
+        }
+    }
+
+    return;
+}
+
+#if 0
+#define VERIFY_SOFT_DFS_STACK(soft_thread) verify_soft_dfs_stack(soft_thread)
+#else
+#define VERIFY_SOFT_DFS_STACK(soft_thread) 
+#endif
 #endif
 
 static void free_states(fc_solve_instance_t * instance)
@@ -862,6 +901,7 @@ int fc_solve_soft_dfs_do_solve(
 #ifdef DEBUG
                     TRACE0("Verify Foo");
                     verify_state_sanity(ptr_state);
+                    VERIFY_SOFT_DFS_STACK(soft_thread);
 #endif
 
 #ifdef FCS_RCS_STATES
@@ -1021,6 +1061,7 @@ int fc_solve_soft_dfs_do_solve(
 #ifdef DEBUG
                 TRACE0("Verify Bar");
                 verify_state_sanity(ptr_state);
+                VERIFY_SOFT_DFS_STACK(soft_thread);
 #endif
 
                 THE_TESTS_LIST.lists[
@@ -1034,6 +1075,13 @@ int fc_solve_soft_dfs_do_solve(
                         ptr_state,
                         derived_states_list
                     );
+
+#ifdef DEBUG
+                TRACE0("Verify Glanko");
+                verify_state_sanity(ptr_state);
+                VERIFY_SOFT_DFS_STACK(soft_thread);
+#endif
+
 
                 /* Move the counter to the next test */
                 if ((++the_soft_dfs_info->test_index) ==
@@ -1068,6 +1116,13 @@ int fc_solve_soft_dfs_do_solve(
                 }
                 rand_array = the_soft_dfs_info->derived_states_random_indexes;
 
+#ifdef DEBUG
+                TRACE0("Verify Panter");
+                verify_state_sanity(ptr_state);
+                VERIFY_SOFT_DFS_STACK(soft_thread);
+#endif
+
+
                 for(a=0, ra_ptr = rand_array; a < num_states ; a++)
                 {
                     *(ra_ptr++) = a;
@@ -1098,6 +1153,12 @@ int fc_solve_soft_dfs_do_solve(
                 }
             }
 
+#ifdef DEBUG
+            TRACE0("Verify Rondora");
+            verify_state_sanity(ptr_state);
+            VERIFY_SOFT_DFS_STACK(soft_thread);
+#endif
+
             /* We just performed a test, so the index of the first state that
                ought to be checked in this depth is 0.
                */
@@ -1111,6 +1172,12 @@ int fc_solve_soft_dfs_do_solve(
             int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
             fcs_collectible_state_t * single_derived_state;
 
+#ifdef DEBUG
+            TRACE0("Verify Klondike");
+            verify_state_sanity(ptr_state);
+            VERIFY_SOFT_DFS_STACK(soft_thread);
+#endif
+
             while (the_soft_dfs_info->current_state_index <
                    num_states)
             {
@@ -1119,6 +1186,13 @@ int fc_solve_soft_dfs_do_solve(
                             the_soft_dfs_info->current_state_index++
                         ]
                     ].state_ptr;
+
+#ifdef DEBUG
+            TRACE0("Verify Seahaven");
+            verify_state_sanity(ptr_state);
+            verify_state_sanity(single_derived_state);
+            VERIFY_SOFT_DFS_STACK(soft_thread);
+#endif
 
                 if (
                     (! (FCS_S_VISITED(single_derived_state) &
@@ -1132,6 +1206,13 @@ int fc_solve_soft_dfs_do_solve(
                 {
                     BUMP_NUM_TIMES();
 
+#ifdef DEBUG
+                    TRACE0("Verify Gypsy");
+                    verify_state_sanity(single_derived_state);
+                    verify_state_sanity(ptr_state);
+                    VERIFY_SOFT_DFS_STACK(soft_thread);
+#endif
+
                     set_scan_visited(
                         single_derived_state,
                         soft_thread_id
@@ -1140,6 +1221,14 @@ int fc_solve_soft_dfs_do_solve(
 #ifndef FCS_WITHOUT_VISITED_ITER
                     FCS_S_VISITED_ITER(single_derived_state) = instance->num_times;
 #endif
+
+#ifdef DEBUG
+                    TRACE0("Verify Golf");
+                    verify_state_sanity(single_derived_state);
+                    verify_state_sanity(ptr_state);
+                    VERIFY_SOFT_DFS_STACK(soft_thread);
+#endif
+
 
                     /*
                         I'm using current_state_indexes[depth]-1 because we already
@@ -1158,7 +1247,9 @@ int fc_solve_soft_dfs_do_solve(
 
 #ifdef DEBUG
                     TRACE0("Verify Zap");
+                    verify_state_sanity(single_derived_state);
                     verify_state_sanity(ptr_state);
+                    VERIFY_SOFT_DFS_STACK(soft_thread);
 #endif
 
 #ifdef FCS_RCS_STATES
@@ -1177,7 +1268,17 @@ int fc_solve_soft_dfs_do_solve(
 
                     if (check_num_states_in_collection(instance))
                     {
+#ifdef DEBUG
+                        TRACE0("Verify Bakers_Game");
+                        VERIFY_SOFT_DFS_STACK(soft_thread);
+#endif
+
                         free_states(instance);
+#ifdef DEBUG
+                        TRACE0("Verify Penguin");
+                        VERIFY_SOFT_DFS_STACK(soft_thread);
+#endif
+
                     }
 
                     if (check_if_limits_exceeded())

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -13,17 +13,25 @@ use Games::Solitaire::Verify::Solution;
 
 sub test_using_valgrind
 {
-    my $cmd_line_args = shift;
+    my $args = shift;
     my $blurb = shift;
 
     my $log_fn = "valgrind.log";
+
+    if (ref($args) eq "ARRAY")
+    {
+        $args = { argv => $args, prog => "freecell-solver-range-parallel-solve", };
+    }
+
+    my $cmd_line_args = $args->{argv};
+    my $prog = $args->{prog};
 
     system(
         "valgrind",
         "--track-origins=yes",
         "--leak-check=yes",
         "--log-file=$log_fn",
-        $ENV{'FCS_PATH'} . "/freecell-solver-range-parallel-solve",
+        $ENV{'FCS_PATH'} . "/$prog",
         @$cmd_line_args,
     );
     
@@ -54,6 +62,18 @@ sub test_using_valgrind
         die "Valgrind failed";
     }
 }
+
+# TEST
+test_using_valgrind(
+    {prog=>"fc-solve",
+        argv => [
+            qw(--method soft-dfs --st-name dfs -nst --method a-star --st-name befs --trim-max-stored-states 100 --prelude) ,
+            '200@befs,100@dfs,1000@befs,500000@dfs',
+            qw(-s -i -p -t -sam -mi 3000), "$ENV{FCS_PATH}/1941.board",
+        ],
+    },
+    "Check the sanity of --trim-max-stored-states.",
+);
 
 # TEST
 test_using_valgrind(
