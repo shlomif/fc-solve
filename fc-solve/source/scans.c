@@ -129,33 +129,28 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 
     for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
-        int derived_state_idx_idx;
-        int * rand_indexes, * dest_rand_indexes;
+        int * rand_index_ptr, * dest_rand_index_ptr, * end_rand_index_ptr;
 
         /*
          * We start from current_state_index instead of current_state_index+1
          * because that is the next state to be checked - it is referenced
          * by current_state_index++ instead of ++current_state_index .
          * */
-        derived_state_idx_idx = soft_dfs_info->current_state_index;
-        rand_indexes = soft_dfs_info->derived_states_random_indexes;
-        dest_rand_indexes = rand_indexes + derived_state_idx_idx;
+        dest_rand_index_ptr = rand_index_ptr =
+            soft_dfs_info->derived_states_random_indexes
+            + soft_dfs_info->current_state_index
+            ;
+        end_rand_index_ptr = soft_dfs_info->derived_states_random_indexes + soft_dfs_info->derived_states_list.num_states;
 
-        for(        
-                    ;
-                derived_state_idx_idx <
-                soft_dfs_info->derived_states_list.num_states
-                    ;
-                derived_state_idx_idx++
-           )
+        for( ; rand_index_ptr < end_rand_index_ptr ; rand_index_ptr++ )
         {
-            if (! FCS_IS_STATE_DEAD_END(soft_dfs_info->derived_states_list.states[rand_indexes[derived_state_idx_idx]].state_ptr))
+            if (! FCS_IS_STATE_DEAD_END(soft_dfs_info->derived_states_list.states[*(rand_index_ptr)].state_ptr))
             {
-                *(dest_rand_indexes++) = rand_indexes[derived_state_idx_idx];
+                *(dest_rand_index_ptr++) = *(rand_index_ptr);
             }
         }
         soft_dfs_info->derived_states_list.num_states =
-            dest_rand_indexes - soft_dfs_info->derived_states_random_indexes;
+            dest_rand_index_ptr - soft_dfs_info->derived_states_random_indexes;
     }
 
     return;
