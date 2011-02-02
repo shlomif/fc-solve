@@ -175,6 +175,7 @@ static void verify_state_sanity(
     return;
 }
 
+#ifdef DEBUG_VERIFY_SOFT_DFS_STACK
 static void verify_soft_dfs_stack(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -198,12 +199,11 @@ static void verify_soft_dfs_stack(
 
     return;
 }
-
-#if 0
 #define VERIFY_SOFT_DFS_STACK(soft_thread) verify_soft_dfs_stack(soft_thread)
 #else
 #define VERIFY_SOFT_DFS_STACK(soft_thread) 
 #endif
+
 #endif
 
 static void free_states(fc_solve_instance_t * instance)

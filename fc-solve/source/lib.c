@@ -1811,36 +1811,6 @@ static void iter_handler_wrapper(
     }
 #endif
 
-#ifdef DEBUG
-    {
-        fc_solve_instance_t * instance = user->instance;
-        HT_LOOP_DECLARE_VARS();
-
-        HT_LOOP_START()
-        {
-            ST_LOOP_DECLARE_VARS();
-
-            ST_LOOP_START()
-            {
-                if (!strcmp(soft_thread->name, "11"))
-                {
-                    double * w =
-                        soft_thread->method_specific.befs
-                            .meth.befs.befs_weights
-                        ;
-
-                    printf("BeFS-Weights[\"11\"]=(%f,%f,%f,%f,%f)\n",
-                            w[0], w[1], w[2], w[3], w[4]
-                          );
-
-                    goto myend;
-                }
-            }
-        }
-
-    }
-myend:
-#endif
     user->iter_handler(
         api_instance,
         iter_num,
