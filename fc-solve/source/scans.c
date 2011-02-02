@@ -130,7 +130,9 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
     for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
         int * rand_index_ptr, * dest_rand_index_ptr, * end_rand_index_ptr;
+        fcs_derived_states_list_item_t * states;
 
+        states = soft_dfs_info->derived_states_list.states;
         /*
          * We start from current_state_index instead of current_state_index+1
          * because that is the next state to be checked - it is referenced
@@ -140,11 +142,14 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
             soft_dfs_info->derived_states_random_indexes
             + soft_dfs_info->current_state_index
             ;
-        end_rand_index_ptr = soft_dfs_info->derived_states_random_indexes + soft_dfs_info->derived_states_list.num_states;
+        end_rand_index_ptr =
+            soft_dfs_info->derived_states_random_indexes
+            + soft_dfs_info->derived_states_list.num_states
+            ;
 
         for( ; rand_index_ptr < end_rand_index_ptr ; rand_index_ptr++ )
         {
-            if (! FCS_IS_STATE_DEAD_END(soft_dfs_info->derived_states_list.states[*(rand_index_ptr)].state_ptr))
+            if (! FCS_IS_STATE_DEAD_END(states[*(rand_index_ptr)].state_ptr))
             {
                 *(dest_rand_index_ptr++) = *(rand_index_ptr);
             }
