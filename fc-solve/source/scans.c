@@ -724,6 +724,26 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
 #endif
 
+
+static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
+        fcs_game_limit_t freecells_num,
+        fcs_state_t * state_ptr
+        )
+{        
+    fcs_game_limit_t num_vacant_freecells = 0;
+    int i;
+
+    for(i=0;i<freecells_num;i++)
+    {
+        if (fcs_freecell_card_num(*state_ptr, i) == 0)
+        {
+            num_vacant_freecells++;
+        }
+    }
+
+    return num_vacant_freecells;
+}
+
 #define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, ptr_state))))
 
 int fc_solve_soft_dfs_do_solve(
@@ -950,15 +970,8 @@ int fc_solve_soft_dfs_do_solve(
                         );
                 }
 
-                /* Count the free-cells */
-                num_vacant_freecells = 0;
-                for(i=0;i<LOCAL_FREECELLS_NUM;i++)
-                {
-                    if (fcs_freecell_card_num(the_state, i) == 0)
-                    {
-                        num_vacant_freecells++;
-                    }
-                }
+                num_vacant_freecells =
+                    count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &the_state);
 
                 /* Count the number of unoccupied stacks */
 
@@ -1900,15 +1913,8 @@ int fc_solve_befs_or_bfs_do_solve(
 
         TRACE0("Counting cells");
 
-        /* Count the free-cells */
-        num_vacant_freecells = 0;
-        for(a=0;a<LOCAL_FREECELLS_NUM;a++)
-        {
-            if (fcs_freecell_card_num(the_state, a) == 0)
-            {
-                num_vacant_freecells++;
-            }
-        }
+        num_vacant_freecells = 
+            count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &the_state);
 
         /* Count the number of unoccupied stacks */
 
