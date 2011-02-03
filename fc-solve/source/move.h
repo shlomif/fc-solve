@@ -140,10 +140,12 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 {
     fcs_move_stack_t temp_moves;
     fcs_internal_move_t in_move, out_move;
+    fcs_pass_state_t dynamic_state;
+
 #ifdef FCS_RCS_STATES
-    fcs_state_t dynamic_state_key;
+    fcs_state_t s;
+    fcs_state_extra_info_t info;
 #endif
-    fcs_collectible_state_t dynamic_state;
 
 #ifdef INDIRECT_STACK_STATES
     char buffer[MAX_NUM_STACKS << 7];
@@ -154,15 +156,22 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
 #endif
 
+#ifdef FCS_RCS_STATES
+    dynamic_state.key = &s;
+    dynamic_state.val = &info;
+#endif
+
     out_move = fc_solve_empty_move;
 
     fcs_move_stack_init(temp_moves);
 
     fcs_duplicate_state(
 #ifdef FCS_RCS_STATES
-            &(dynamic_state_key),
-#endif
+            dynamic_state.key,
+            dynamic_state.val,
+#else
             &(dynamic_state),
+#endif
 #ifdef FCS_RCS_STATES
             init_state->key,
             init_state->val
@@ -183,19 +192,8 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             &in_move
             ) == 0)
     {
-#ifdef FCS_RCS_STATES
-        fcs_pass_state_t pass;
-
-        pass.key = &dynamic_state_key;
-        pass.val = &dynamic_state;
-#endif
-
         fc_solve_apply_move(
-#ifdef FCS_RCS_STATES
-            &pass,
-#else
             &dynamic_state,
-#endif
 #ifdef FCS_WITHOUT_LOCS_FIELDS
             locs,
 #endif
@@ -217,6 +215,10 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
                 (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
                 )
             {
+#ifdef FCS_RCS_STATES
+#undef FCS_S_ACCESSOR
+#define FCS_S_ACCESSOR(s, field) ((s)->val->field)
+#endif
                 fcs_int_move_set_src_stack(out_move, (FCS_S_STACK_LOCS(&dynamic_state))[(int)fcs_int_move_get_src_stack(in_move)]);
             }
 
@@ -262,6 +264,10 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
         }
     }
 
+#ifdef FCS_RCS_STATES
+#undef FCS_S_ACCESSOR
+#define FCS_S_ACCESSOR(s, field) ((s)->field)
+#endif
     /*
      * temp_moves contain the needed moves in reverse order. So let's use
      * swallow_stack to put them in the original in the correct order.
