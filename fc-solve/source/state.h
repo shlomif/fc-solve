@@ -356,21 +356,6 @@ typedef char fcs_locs_t;
 #define fcs_col_push_col_card(dest_col, src_col, card_idx) \
     fcs_col_push_card((dest_col), fcs_col_get_card((src_col), (card_idx)))
 
-#ifdef FCS_RCS_STATES
-#define fcs_duplicate_state(ptr_dest, ptr_src) \
-    { \
-    *((ptr_dest)->key) = *((ptr_src)->key); \
-    *((ptr_dest)->val) = *((ptr_src)->val); \
-    fcs_duplicate_state_extra(((ptr_dest)->val), ((ptr_src)->val));   \
-    }
-#else
-#define fcs_duplicate_state(ptr_dest, ptr_src) \
-    { \
-    *(ptr_dest) = *(ptr_src); \
-    fcs_duplicate_state_extra(ptr_dest, ptr_src);   \
-    }
-#endif
-
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
 
 #define fcs_duplicate_state_extra(ptr_dest, ptr_src) \
@@ -565,6 +550,13 @@ typedef struct {
 
 typedef fcs_pass_state_t fcs_lvalue_pass_state_t;
 
+#define fcs_duplicate_state(ptr_dest, ptr_src) \
+    { \
+    *((ptr_dest)->key) = *((ptr_src)->key); \
+    *((ptr_dest)->val) = *((ptr_src)->val); \
+    fcs_duplicate_state_extra(((ptr_dest)->val), ((ptr_src)->val));   \
+    }
+
 #else
 
 typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
@@ -575,6 +567,12 @@ typedef fcs_pass_state_t * fcs_lvalue_pass_state_t;
 
 #define FCS_S_ACCESSOR(s, field) (((s)->info).field)
 #define FCS_S_NEXT(s) ((s)->next)
+
+#define fcs_duplicate_state(ptr_dest, ptr_src) \
+    { \
+    *(ptr_dest) = *(ptr_src); \
+    fcs_duplicate_state_extra(ptr_dest, ptr_src);   \
+    }
 
 #endif
 
