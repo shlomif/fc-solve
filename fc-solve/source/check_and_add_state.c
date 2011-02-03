@@ -428,15 +428,17 @@ fcs_bool_t fc_solve_check_and_add_state(
         void * existing_void;
         if (fc_solve_hash_insert(
         &(instance->hash),
-        new_state,
 #ifdef FCS_RCS_STATES
-        new_state_key,
+        new_state->val,
+        new_state->key,
+#else
+        new_state,
 #endif
         &existing_void,
         perl_hash_function(
 #ifdef FCS_RCS_STATES
-            (ub1 *)(new_state_key),
-            sizeof(*new_state_key)
+            (ub1 *)(new_state->key),
+            sizeof(*(new_state->key))
 #else
             (ub1 *)&(new_state->s),
             sizeof(new_state->s)
@@ -447,7 +449,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 #endif
         ))
         {
-            *existing_state = existing_void;
+            existing_state->val = existing_void;
             return FALSE;
         }
         else
