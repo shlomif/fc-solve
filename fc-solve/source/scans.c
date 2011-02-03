@@ -1302,15 +1302,16 @@ static GCC_INLINE int update_col_cards_under_sequences(
 
 static GCC_INLINE void initialize_befs_rater(
     fc_solve_soft_thread_t * soft_thread,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * ptr_state_key,
-#define STATE() (*ptr_state_key)
-#else
-#define STATE() (ptr_state->s)
-#endif
-    fcs_collectible_state_t * ptr_state
-    )
+    fcs_pass_state_t * raw_pass_raw
+)
 {
+
+#ifdef FCS_RCS_STATES
+#define STATE() (*(raw_pass_raw->key))
+#else
+#define STATE() (raw_pass_raw->s)
+#endif
+
 #ifndef HARD_CODED_NUM_STACKS
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
@@ -1597,10 +1598,12 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     )
 {
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
-    fcs_collectible_state_t * ptr_orig_state;
 #ifdef FCS_RCS_STATES
-    ptr_orig_state = &(instance->state_copy_ptr->info);
+    fcs_pass_state_t pass;
+    pass.key = &(instance->state_copy_ptr->s);
+    pass.val = &(instance->state_copy_ptr->info); 
 #else
+    fcs_collectible_state_t * ptr_orig_state;
     ptr_orig_state = instance->state_copy_ptr;
 #endif
 
@@ -1617,9 +1620,10 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         initialize_befs_rater(
             soft_thread,
 #ifdef FCS_RCS_STATES
-            &(instance->state_copy_ptr->s),
-#endif
+            &(pass)
+#else
             ptr_orig_state
+#endif
             );
     }
     else
@@ -1651,7 +1655,11 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         soft_thread->method_specific.befs.tests_list_end = next_test;
     }
 
+#ifdef FCS_RCS_STATES
+    soft_thread->first_state_to_check = pass.val;
+#else
     soft_thread->first_state_to_check = ptr_orig_state;
+#endif
 
     return;
 }
