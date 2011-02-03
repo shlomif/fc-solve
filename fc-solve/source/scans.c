@@ -778,18 +778,14 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
 
 #define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
 #define STATE_TO_PASS() (&(pass))
+#define PTR_STATE (pass.val)
 
 #else
 
 #define ASSIGN_STATE_KEY() {}
 #define STATE_TO_PASS() (PTR_STATE)
-
-#endif
-
-#ifdef FCS_RCS_STATES
-#define PTR_STATE (pass.val)
-#else
 #define PTR_STATE (ptr_state_raw)
+
 #endif
 
 #define ASSIGN_ptr_state(my_value) (PTR_STATE = (my_value))
