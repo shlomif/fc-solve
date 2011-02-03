@@ -369,8 +369,10 @@ fcs_bool_t fc_solve_check_and_add_state(
 {
 #ifdef FCS_RCS_STATES
 #define existing_state_val (existing_state_raw->val)
+#define new_state_val      (new_state->val)
 #else
 #define existing_state_val (*existing_state_raw)
+#define new_state_val      (new_state)
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
@@ -572,17 +574,10 @@ fcs_bool_t fc_solve_check_and_add_state(
     instance->tree_new_state = new_state->val;
 #endif
 
-#ifdef FCS_RCS_STATES
     if ((existing_state_val = (fcs_state_extra_info_t *)
-        fc_solve_kaz_tree_alloc_insert(instance->tree, new_state->val))
+        fc_solve_kaz_tree_alloc_insert(instance->tree, new_state_val))
             == NULL
        )
-#else
-    if ((existing_state_val = (fcs_collectible_state_t *)
-        fc_solve_kaz_tree_alloc_insert(instance->tree, new_state))
-            == NULL
-       )
-#endif
     {
         on_state_new(instance, hard_thread, new_state);
         return TRUE;
