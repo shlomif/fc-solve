@@ -782,7 +782,11 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
     return num_vacant_stacks;
 }
 
+#ifdef FCS_RCS_STATES
 #define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, ptr_state))))
+#else
+#define ASSIGN_STATE_KEY() {}
+#endif
 
 int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
@@ -835,9 +839,7 @@ int fc_solve_soft_dfs_do_solve(
     ptr_state = the_soft_dfs_info->state;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
-#ifdef FCS_RCS_STATES
     ASSIGN_STATE_KEY();
-#endif
 
     rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
 
@@ -948,9 +950,7 @@ int fc_solve_soft_dfs_do_solve(
 
                     VERIFY_PTR_STATE_TRACE0("Verify Foo");
 
-#ifdef FCS_RCS_STATES
                     ASSIGN_STATE_KEY();
-#endif
 
                     soft_thread->num_vacant_freecells = the_soft_dfs_info->num_vacant_freecells;
                     soft_thread->num_vacant_stacks = the_soft_dfs_info->num_vacant_stacks;
@@ -1250,10 +1250,7 @@ int fc_solve_soft_dfs_do_solve(
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Zap");
 
-#ifdef FCS_RCS_STATES
                     ASSIGN_STATE_KEY();
-#endif
-
 
                     the_soft_dfs_info->tests_list_index = 0;
                     the_soft_dfs_info->test_index = 0;
@@ -1828,9 +1825,7 @@ int fc_solve_befs_or_bfs_do_solve(
     {
         TRACE0("Start of loop");
 
-#ifdef FCS_RCS_STATES
         ASSIGN_STATE_KEY();
-#endif
 
 #ifdef DEBUG
         dump_pqueue(soft_thread, "loop_start", scan_specific.pqueue);
@@ -1873,10 +1868,7 @@ int fc_solve_befs_or_bfs_do_solve(
             {
                 ptr_state = derived;
 
-#ifdef FCS_RCS_STATES
                 ASSIGN_STATE_KEY();
-#endif
-
             }
         }
 
