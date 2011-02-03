@@ -92,6 +92,12 @@ GetOptions(
         "ColorSummary ColorFileVerdicts AlternateInterpreters"
         ;
 
+    chdir("$FindBin::Bin");
+    if (system("make", "-s", "boards"))
+    {
+        die "make failed";
+    }
+
     chdir("$FindBin::Bin/t");
     if (system("make", "-s"))
     {
