@@ -850,6 +850,10 @@ int fc_solve_soft_dfs_do_solve(
     ptr_state = the_soft_dfs_info->state;
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
+#ifdef FCS_RCS_STATES
+    pass.val = ptr_state;
+#endif
+
     ASSIGN_STATE_KEY();
 
     rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
@@ -961,6 +965,9 @@ int fc_solve_soft_dfs_do_solve(
 
                     ptr_state = the_soft_dfs_info->state;
 
+#ifdef FCS_RCS_STATES
+                    pass.val = ptr_state;
+#endif
 
                     VERIFY_PTR_STATE_TRACE0("Verify Foo");
 
@@ -1002,10 +1009,7 @@ int fc_solve_soft_dfs_do_solve(
                         *(instance_num_times_ptr),
                         DEPTH(),
                         (void*)instance,
-#ifdef FCS_RCS_STATES
-                        &(state_key),
-#endif
-                        ptr_state,
+                        STATE_TO_PASS(),
 #ifdef FCS_WITHOUT_VISITED_ITER
                         0
 #else
@@ -1054,9 +1058,6 @@ int fc_solve_soft_dfs_do_solve(
                     fcs_state_t derived_key;
 #endif
 
-#ifdef FCS_RCS_STATES
-                    pass.val = ptr_state;
-#endif
                     if (fc_solve_sfs_raymond_prune(
                         soft_thread,
                         STATE_TO_PASS(),
@@ -1249,6 +1250,10 @@ int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info->state =
                         ptr_state =
                         single_derived_state;
+
+#ifdef FCS_RCS_STATES
+                    pass.val = ptr_state;
+#endif
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Zap");
 
@@ -1805,6 +1810,7 @@ int fc_solve_befs_or_bfs_do_solve(
 
 #ifdef FCS_RCS_STATES
     pass.key = &(state_key);
+    pass.val = ptr_state;
 #endif
 
     if (method == FCS_METHOD_A_STAR)
@@ -1869,6 +1875,10 @@ int fc_solve_befs_or_bfs_do_solve(
             )
             {
                 ptr_state = derived;
+
+#ifdef FCS_RCS_STATES
+                pass.val = ptr_state;
+#endif
 
                 ASSIGN_STATE_KEY();
             }
@@ -1935,10 +1945,7 @@ int fc_solve_befs_or_bfs_do_solve(
                     FCS_S_DEPTH(ptr_state),
 #endif
                     (void*)instance,
-#ifdef FCS_RCS_STATES
-                    (&state_key),
-#endif
-                    ptr_state,
+                    STATE_TO_PASS(),
 #ifdef FCS_WITHOUT_VISITED_ITER
                     0
 #else
@@ -2104,6 +2111,11 @@ label_next_state:
             {
                 ptr_state = NULL;
             }
+
+#ifdef FCS_RCS_STATES
+            pass.val = ptr_state;
+#endif
+
         }
     }
 

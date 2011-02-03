@@ -449,7 +449,11 @@ fcs_bool_t fc_solve_check_and_add_state(
 #endif
         ))
         {
+#ifdef FCS_RCS_STATES
             existing_state->val = existing_void;
+#else
+            *existing_state = existing_void;
+#endif
             return FALSE;
         }
         else

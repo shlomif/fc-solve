@@ -380,10 +380,7 @@ typedef void (*fcs_instance_debug_iter_output_func_t)(
         int iter_num,
         int depth,
         void * instance,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * state_key,
-#endif
-        fcs_collectible_state_t * state_val,
+        fcs_pass_state_t * state,
         int parent_iter_num
         );
 

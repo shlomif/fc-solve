@@ -155,10 +155,7 @@ static void iter_handler_wrapper(
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * ptr_state_key,
-#endif
-    fcs_collectible_state_t * ptr_state_val,
+    fcs_pass_state_t * ptr_state,
     int parent_iter_num
     );
 
@@ -1794,10 +1791,7 @@ static void iter_handler_wrapper(
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * ptr_state_key,
-#endif
-    fcs_collectible_state_t * ptr_state_val,
+    fcs_pass_state_t * ptr_state,
     int parent_iter_num
     )
 {
@@ -1806,10 +1800,11 @@ static void iter_handler_wrapper(
 
     user = (fcs_user_t *)api_instance;
 
-    state_raw.s = ptr_state_val;
 #ifdef FCS_RCS_STATES
-    state_raw.key = ptr_state_key;
-    state_raw.val = ptr_state_val;
+    state_raw.key = ptr_state->key;
+    state_raw.val = ptr_state->val;
+#else
+    state_raw.s = ptr_state;
 #endif
 #ifdef FCS_WITHOUT_LOCS_FIELDS
     {
@@ -1844,10 +1839,7 @@ void set_debug_iter_output_func_to_val(
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * ptr_state_key,
-#endif
-    fcs_collectible_state_t * ptr_state_val,
+    fcs_pass_state_t * ptr_state,
     int parent_iter_num
     ))
 {
