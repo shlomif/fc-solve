@@ -312,6 +312,8 @@ static void free_states(fc_solve_instance_t * instance)
 #define NEW_STATE_TO_PASS() (&(new_pass))
 #define PTR_STATE (pass.val)
 #define DECLARE_STATE() fcs_state_t state_key; fcs_pass_state_t pass
+#define DECLARE_NEW_STATE() fcs_pass_state_t new_pass
+#define ptr_new_state (new_pass.val)
 #define INITIALIZE_STATE() pass.key = &(state_key)
 
 #else
@@ -323,6 +325,7 @@ static void free_states(fc_solve_instance_t * instance)
 #define NEW_STATE_TO_PASS() (ptr_new_state)
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw
+#define DECLARE_NEW_STATE() fcs_collectible_state_t * ptr_new_state
 #define INITIALIZE_STATE() {}
 
 #endif
@@ -1716,7 +1719,7 @@ int fc_solve_befs_or_bfs_do_solve(
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
 
-    fcs_collectible_state_t * ptr_new_state;
+    DECLARE_NEW_STATE();
     DECLARE_STATE();
 
     fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
@@ -1957,13 +1960,12 @@ int fc_solve_befs_or_bfs_do_solve(
         for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
         {
 #ifdef FCS_RCS_STATES
-            fcs_pass_state_t new_pass;
-#endif
+            new_pass.key = 
+                fc_solve_lookup_state_key_from_val(instance,
+                        new_pass.val = derived.states[derived_index].state_ptr
+                );
+#else
             ptr_new_state = derived.states[derived_index].state_ptr;
-
-#ifdef FCS_RCS_STATES
-            new_pass.val = ptr_new_state;
-            new_pass.key = fc_solve_lookup_state_key_from_val(instance, ptr_new_state);
 #endif
 
             if (method == FCS_METHOD_A_STAR)
@@ -2258,7 +2260,7 @@ int fc_solve_sfs_check_state_begin(
 #else
 #define ptr_state raw_ptr_state_raw
 #endif
-    fcs_collectible_state_t * ptr_new_state;
+    fcs_collectible_state_t * raw_ptr_new_state;
     fc_solve_instance_t * instance;
 
     instance = hard_thread->instance;
@@ -2266,20 +2268,20 @@ int fc_solve_sfs_check_state_begin(
     if ((hard_thread->allocated_from_list =
         (instance->list_of_vacant_states != NULL)))
     {
-        ptr_new_state = instance->list_of_vacant_states;
+        raw_ptr_new_state = instance->list_of_vacant_states;
         instance->list_of_vacant_states = FCS_S_NEXT(instance->list_of_vacant_states);
     }
     else
     {
-        ptr_new_state =
+        raw_ptr_new_state =
             fcs_state_ia_alloc_into_var(
                 &(hard_thread->allocator)
             );
     }
 #ifdef FCS_RCS_STATES
-    out_new_state_out->val = ptr_new_state;
+    out_new_state_out->val = raw_ptr_new_state;
 #else
-    *out_new_state_out = ptr_new_state;
+    *out_new_state_out = raw_ptr_new_state;
 #endif
 
     fcs_duplicate_state( 
@@ -2292,27 +2294,27 @@ int fc_solve_sfs_check_state_begin(
     /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.
      * */
-    FCS_S_PARENT(ptr_new_state) = ptr_state;
-    FCS_S_MOVES_TO_PARENT(ptr_new_state) = moves;
+    FCS_S_PARENT(raw_ptr_new_state) = ptr_state;
+    FCS_S_MOVES_TO_PARENT(raw_ptr_new_state) = moves;
     /* Make sure depth is consistent with the game graph.
      * I.e: the depth of every newly discovered state is derived from
      * the state from which it was discovered. */
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-    (FCS_S_DEPTH(ptr_new_state))++;
+    (FCS_S_DEPTH(raw_ptr_new_state))++;
 #endif
     /* Mark this state as a state that was not yet visited */
-    FCS_S_VISITED(ptr_new_state) = 0;
+    FCS_S_VISITED(raw_ptr_new_state) = 0;
     /* It's a newly created state which does not have children yet. */
-    FCS_S_NUM_ACTIVE_CHILDREN(ptr_new_state) = 0;
-    memset(&(FCS_S_SCAN_VISITED(ptr_new_state)), '\0',
-        sizeof(FCS_S_SCAN_VISITED(ptr_new_state))
+    FCS_S_NUM_ACTIVE_CHILDREN(raw_ptr_new_state) = 0;
+    memset(&(FCS_S_SCAN_VISITED(raw_ptr_new_state)), '\0',
+       sizeof(FCS_S_SCAN_VISITED(raw_ptr_new_state))
         );
     fcs_move_stack_reset(moves);
 
 #ifdef FCS_RCS_STATES
-    out_new_state_out->val = ptr_new_state;
+    out_new_state_out->val = raw_ptr_new_state;
 #else
-    *out_new_state_out = ptr_new_state;
+    *out_new_state_out = raw_ptr_new_state;
 #endif
 
     return 0;
@@ -2336,10 +2338,10 @@ extern void fc_solve_sfs_check_state_end(
     fcs_lvalue_pass_state_t existing_state;
 
 #ifdef FCS_RCS_STATES
-#define ptr_new_state (raw_ptr_new_state_raw->val)
+#define ptr_new_state_foo (raw_ptr_new_state_raw->val)
 #define ptr_state (raw_ptr_state_raw->val)
 #else
-#define ptr_new_state (raw_ptr_new_state_raw)
+#define ptr_new_state_foo (raw_ptr_new_state_raw)
 #define ptr_state (raw_ptr_state_raw)
 #endif
 
@@ -2364,8 +2366,8 @@ extern void fc_solve_sfs_check_state_end(
 #endif
         if (hard_thread->allocated_from_list)
         {
-            FCS_S_NEXT(ptr_new_state) = instance->list_of_vacant_states;
-            instance->list_of_vacant_states = ptr_new_state;
+            FCS_S_NEXT(ptr_new_state_foo) = instance->list_of_vacant_states;
+            instance->list_of_vacant_states = ptr_new_state_foo;
         }
         else
         {
@@ -2414,7 +2416,7 @@ extern void fc_solve_sfs_check_state_end(
     {
         fc_solve_derived_states_list_add_state(
             derived_states_list,
-            ptr_new_state,
+            ptr_new_state_foo,
             state_context_value
         );
     }
