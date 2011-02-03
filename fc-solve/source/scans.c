@@ -311,6 +311,7 @@ static void free_states(fc_solve_instance_t * instance)
 #define STATE_TO_PASS() (&(pass))
 #define PTR_STATE (pass.val)
 #define DECLARE_STATE() fcs_state_t state_key; fcs_pass_state_t pass
+#define INITIALIZE_STATE() pass.key = &(state_key)
 
 #else
 
@@ -320,6 +321,7 @@ static void free_states(fc_solve_instance_t * instance)
 #define STATE_TO_PASS() (PTR_STATE)
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw
+#define INITIALIZE_STATE() {}
 
 #endif
 
@@ -873,9 +875,7 @@ int fc_solve_soft_dfs_do_solve(
     debug_iter_output_func = instance->debug_iter_output_func;
     debug_iter_output_context = instance->debug_iter_output_context;
 
-#ifdef FCS_RCS_STATES
-    pass.key = &(state_key);
-#endif
+    INITIALIZE_STATE();
 
     {
         for (
@@ -1776,9 +1776,7 @@ int fc_solve_befs_or_bfs_do_solve(
     instance_num_times_ptr = &(instance->num_times);
     hard_thread_num_times_ptr = &(hard_thread->num_times);
 
-#ifdef FCS_RCS_STATES
-    pass.key = &(state_key);
-#endif
+    INITIALIZE_STATE();
 
     if (method == FCS_METHOD_A_STAR)
     {
