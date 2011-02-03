@@ -370,9 +370,11 @@ fcs_bool_t fc_solve_check_and_add_state(
 #ifdef FCS_RCS_STATES
 #define existing_state_val (existing_state_raw->val)
 #define new_state_val      (new_state->val)
+#define new_state_key      (new_state->key)
 #else
 #define existing_state_val (*existing_state_raw)
 #define new_state_val      (new_state)
+#define new_state_key      (&(new_state->s))
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
@@ -444,13 +446,8 @@ fcs_bool_t fc_solve_check_and_add_state(
 #endif
         &existing_void,
         perl_hash_function(
-#ifdef FCS_RCS_STATES
-            (ub1 *)(new_state->key),
-            sizeof(*(new_state->key))
-#else
-            (ub1 *)&(new_state->s),
-            sizeof(new_state->s)
-#endif
+            (ub1 *)(new_state_key),
+            sizeof(*(new_state_key))
             )
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         , hash_value_int
