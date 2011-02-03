@@ -364,9 +364,15 @@ static GCC_INLINE void on_state_new(
 fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t * hard_thread,
     fcs_pass_state_t * new_state,
-    fcs_lvalue_pass_state_t * existing_state
+    fcs_lvalue_pass_state_t * existing_state_raw
     )
 {
+#ifdef FCS_RCS_STATES
+#define existing_state_val (existing_state_raw->val)
+#else
+#define existing_state_val (*existing_state_raw)
+#endif
+
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     SFO_hash_value_t hash_value_int;
@@ -449,11 +455,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 #endif
         ))
         {
-#ifdef FCS_RCS_STATES
-            existing_state->val = existing_void;
-#else
-            *existing_state = existing_void;
-#endif
+            existing_state_val = existing_void;
             return FALSE;
         }
         else
@@ -474,7 +476,7 @@ fcs_bool_t fc_solve_check_and_add_state(
             )
         )
         {
-            *existing_state = existing_void;
+            existing_state_val = existing_void;
             return FALSE;
         }
         else
@@ -504,7 +506,7 @@ fcs_bool_t fc_solve_check_and_add_state(
         if (found)
         {
             is_state_new = FALSE;
-            *existing_state_val = pos_ptr->val;
+            existing_state_val = pos_ptr->val;
         }
         else
         {
@@ -554,12 +556,12 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
     else
     {
-        *existing_state_val = pos_ptr->val;
+        existing_state_val = pos_ptr->val;
         is_state_new = FALSE;
     }
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-    *existing_state_val = (fcs_state_extra_info_t *)rbsearch(new_state_val,
+    existing_state_val = (fcs_state_extra_info_t *)rbsearch(new_state_val,
             instance->tree
             );
     is_state_new = ((*existing_state_val) == new_state_val);
@@ -571,12 +573,12 @@ fcs_bool_t fc_solve_check_and_add_state(
 #endif
 
 #ifdef FCS_RCS_STATES
-    if ((existing_state->val = (fcs_state_extra_info_t *)
+    if ((existing_state_val = (fcs_state_extra_info_t *)
         fc_solve_kaz_tree_alloc_insert(instance->tree, new_state->val))
             == NULL
        )
 #else
-    if ((*existing_state = (fcs_collectible_state_t *)
+    if ((existing_state_val = (fcs_collectible_state_t *)
         fc_solve_kaz_tree_alloc_insert(instance->tree, new_state))
             == NULL
        )
@@ -593,7 +595,7 @@ fcs_bool_t fc_solve_check_and_add_state(
     instance->tree_new_state_key = new_state_key;
     instance->tree_new_state = new_state;
 
-    if ((*existing_state = (fcs_collectible_state_t *)
+    if ((existing_state_val = (fcs_collectible_state_t *)
         fcs_libavl2_states_tree_insert(instance->tree, new_state))
             == NULL
        )
@@ -606,8 +608,8 @@ fcs_bool_t fc_solve_check_and_add_state(
         return FALSE;
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
-    *existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
-    if ((is_state_new = (*existing_state_val == NULL)))
+    existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
+    if ((is_state_new = (existing_state_val == NULL)))
     {
         /* The new state was not found. Let's insert it.
          * The value must be the same as the key, so g_tree_lookup()
@@ -620,9 +622,9 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-    *existing_state_val = g_hash_table_lookup(instance->hash,
+    existing_state_val = g_hash_table_lookup(instance->hash,
             (gpointer)new_state_key);
-    if ((is_state_new = (*existing_state_val == NULL)))
+    if ((is_state_new = (existing_state_val == NULL)))
     {
         /* The new state was not found. Let's insert it.
          * The value must be the same as the key, so g_tree_lookup()
@@ -672,12 +674,12 @@ fcs_bool_t fc_solve_check_and_add_state(
         if ((is_state_new = (*PValue == 0)))
         {
             /* A new state. */
-            *PValue = (PWord_t)(*existing_state_val = new_state_val);
+            *PValue = (PWord_t)(existing_state_val = new_state_val);
         }
         else
         {
             /* Already exists. */
-            *existing_state_val = (fcs_state_extra_info_t *)(*PValue);
+            existing_state_val = (fcs_state_extra_info_t *)(*PValue);
         }
     }
 #else
