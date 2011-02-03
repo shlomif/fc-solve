@@ -2426,13 +2426,10 @@ static GCC_INLINE fcs_bool_t calc_foundation_to_put_card_on(
 }
 
 extern int fc_solve_sfs_raymond_prune(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_pass_state_t * raw_ptr_state_raw,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * ptr_next_state_key,
-#endif
-        fcs_collectible_state_t * * ptr_ptr_next_state
-        )
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_pass_state_t * raw_ptr_state_raw,
+    fcs_collectible_state_t * * ptr_next_state_val
+)
 {
     tests_declare_accessors()
     int stack_idx, fc;
@@ -2537,7 +2534,7 @@ extern int fc_solve_sfs_raymond_prune(
         {
             register fcs_collectible_state_t * ptr_next_state;
 
-            *ptr_ptr_next_state
+            *ptr_next_state_val
                 = ptr_next_state
                 = derived_states_list_struct.states[0].state_ptr;
 
@@ -2553,7 +2550,7 @@ extern int fc_solve_sfs_raymond_prune(
         }
         else
         {
-            *ptr_ptr_next_state = NULL;
+            *ptr_next_state_val = NULL;
             ret_code = PRUNE_RET_NOT_FOUND;
         }
 

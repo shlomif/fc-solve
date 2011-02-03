@@ -1029,16 +1029,10 @@ int fc_solve_soft_dfs_do_solve(
                 if (SHOULD_STATE_BE_PRUNED(enable_pruning, PTR_STATE))
                 {
                     fcs_collectible_state_t * derived;
-#ifdef FCS_RCS_STATES
-                    fcs_state_t derived_key;
-#endif
 
                     if (fc_solve_sfs_raymond_prune(
                         soft_thread,
                         STATE_TO_PASS(),
-#ifdef FCS_RCS_STATES
-                        &derived_key,
-#endif
                         &derived
                         ) == PRUNE_RET_FOLLOW_STATE
                     )
@@ -1821,16 +1815,10 @@ int fc_solve_befs_or_bfs_do_solve(
         if (SHOULD_STATE_BE_PRUNED(enable_pruning, PTR_STATE))
         {
             fcs_collectible_state_t * derived;
-#ifdef FCS_RCS_STATES
-            fcs_state_t derived_key;
-#endif
 
             if (fc_solve_sfs_raymond_prune(
                     soft_thread,
                     STATE_TO_PASS(),
-#ifdef FCS_RCS_STATES
-                    &derived_key,
-#endif
                     &derived
                 ) == PRUNE_RET_FOLLOW_STATE
             )
