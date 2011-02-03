@@ -2311,12 +2311,6 @@ int fc_solve_sfs_check_state_begin(
         );
     fcs_move_stack_reset(moves);
 
-#ifdef FCS_RCS_STATES
-    out_new_state_out->val = raw_ptr_new_state;
-#else
-    *out_new_state_out = raw_ptr_new_state;
-#endif
-
     return 0;
 }
 #undef ptr_state
