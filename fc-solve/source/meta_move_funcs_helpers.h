@@ -100,13 +100,10 @@ extern "C" {
 #ifdef FCS_RCS_STATES
 #define sfs_check_state_begin()                                     \
     {         \
-        fcs_pass_state_t pass;  \
-        pass.key = ptr_state_key;  \
-        pass.val = ptr_state_val; \
         fc_solve_sfs_check_state_begin(hard_thread,  \
-                &my_new_out_state_key,                   \
+                &my_new_out_state_key,               \
                 &ptr_new_state,                      \
-                &pass,                               \
+                raw_ptr_state_raw,                   \
                 moves);                              \
     }
 #else
