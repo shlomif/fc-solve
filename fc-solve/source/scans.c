@@ -328,11 +328,9 @@ static void free_states(fc_solve_instance_t * instance)
 #define VERIFY_STATE_SANITY() verify_state_sanity(&the_state)
 
 #ifdef FCS_RCS_STATES
-#define VERIFY_DERIVED_STATE() \
-    {}
+#define VERIFY_DERIVED_STATE() {}
 #else
-#define VERIFY_DERIVED_STATE() \
-    verify_state_sanity(&(single_derived_state->s))
+#define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
 #endif
 
 #define VERIFY_PTR_STATE_TRACE0(string) \
@@ -788,6 +786,12 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
 
 #endif
 
+#ifdef FCS_RCS_STATES
+#define ASSIGN_ptr_state(my_value) (pass.val = ptr_state = (my_value))
+#else
+#define ASSIGN_ptr_state(my_value) (ptr_state = (my_value))
+#endif
+
 int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -837,7 +841,7 @@ int fc_solve_soft_dfs_do_solve(
     dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
     enable_pruning = soft_thread->enable_pruning;
 
-    ptr_state = the_soft_dfs_info->state;
+    ASSIGN_ptr_state (the_soft_dfs_info->state);
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
 #ifdef FCS_RCS_STATES
@@ -953,11 +957,7 @@ int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info--;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
-                    ptr_state = the_soft_dfs_info->state;
-
-#ifdef FCS_RCS_STATES
-                    pass.val = ptr_state;
-#endif
+                    ASSIGN_ptr_state(the_soft_dfs_info->state);
 
                     VERIFY_PTR_STATE_TRACE0("Verify Foo");
 
@@ -1238,12 +1238,7 @@ int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info++;
 
                     the_soft_dfs_info->state =
-                        ptr_state =
-                        single_derived_state;
-
-#ifdef FCS_RCS_STATES
-                    pass.val = ptr_state;
-#endif
+                        ASSIGN_ptr_state(single_derived_state);
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Zap");
 
@@ -1791,7 +1786,7 @@ int fc_solve_befs_or_bfs_do_solve(
     tests_list = soft_thread->method_specific.befs.tests_list;
     tests_list_end = soft_thread->method_specific.befs.tests_list_end;
 
-    ptr_state = soft_thread->first_state_to_check;
+    ASSIGN_ptr_state(soft_thread->first_state_to_check);
     enable_pruning = soft_thread->enable_pruning;
 
     method = soft_thread->method;
@@ -1800,7 +1795,6 @@ int fc_solve_befs_or_bfs_do_solve(
 
 #ifdef FCS_RCS_STATES
     pass.key = &(state_key);
-    pass.val = ptr_state;
 #endif
 
     if (method == FCS_METHOD_A_STAR)
@@ -1864,11 +1858,7 @@ int fc_solve_befs_or_bfs_do_solve(
                 ) == PRUNE_RET_FOLLOW_STATE
             )
             {
-                ptr_state = derived;
-
-#ifdef FCS_RCS_STATES
-                pass.val = ptr_state;
-#endif
+                ASSIGN_ptr_state(derived);
 
                 ASSIGN_STATE_KEY();
             }
@@ -1970,10 +1960,6 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
         TRACE0("perform_tests");
-
-#ifdef FCS_RCS_STATES
-        pass.val = ptr_state;
-#endif
 
         /*
          * Do all the tests at one go, because that is the way it should be
@@ -2086,26 +2072,25 @@ label_next_state:
                 pqueue,
                 &ptr_state
                 );
+
+#ifdef FCS_RCS_STATES
+            pass.val = ptr_state;
+#endif
         }
         else
         {
             save_item = queue->next;
             if (save_item != queue_last_item)
             {
-                ptr_state = save_item->s;
+                ASSIGN_ptr_state(save_item->s);
                 queue->next = save_item->next;
                 save_item->next = my_brfs_recycle_bin;
                 my_brfs_recycle_bin = save_item;
             }
             else
             {
-                ptr_state = NULL;
+                ASSIGN_ptr_state(NULL);
             }
-
-#ifdef FCS_RCS_STATES
-            pass.val = ptr_state;
-#endif
-
         }
     }
 
