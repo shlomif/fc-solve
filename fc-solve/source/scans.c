@@ -325,13 +325,7 @@ static void free_states(fc_solve_instance_t * instance)
             } \
         }
 
-#ifdef FCS_RCS_STATES
-#define VERIFY_STATE_SANITY() \
-    verify_state_sanity(&state_key)
-#else
-#define VERIFY_STATE_SANITY() \
-    verify_state_sanity(&(ptr_state->s))
-#endif
+#define VERIFY_STATE_SANITY() verify_state_sanity(&the_state)
 
 #ifdef FCS_RCS_STATES
 #define VERIFY_DERIVED_STATE() \
