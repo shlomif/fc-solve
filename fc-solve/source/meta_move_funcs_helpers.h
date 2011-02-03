@@ -70,6 +70,10 @@ extern "C" {
  *  These are some macros to make it easier for the programmer.
  * */
 #ifdef FCS_RCS_STATES
+
+#define key_ptr_state_key (raw_ptr_state_raw->key)
+#define val_ptr_state_val (raw_ptr_state_raw->val)
+
 #define ptr_state_key (key_ptr_state_key)
 #define ptr_state_val (val_ptr_state_val)
 #define state_key (*key_ptr_state_key)
@@ -81,6 +85,7 @@ extern "C" {
 #define ptr_new_state_val (ptr_new_state)
 
 #else
+#define ptr_state     (raw_ptr_state_raw)
 #define ptr_state_key (&(ptr_state->s))
 #define ptr_state_val (&(ptr_state->info))
 #define state_key (ptr_state->s)

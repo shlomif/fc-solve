@@ -79,10 +79,7 @@ enum PRUNE_RET
 
 extern int fc_solve_sfs_raymond_prune(
         fc_solve_soft_thread_t * soft_thread,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * ptr_state_key_ptr,
-#endif
-        fcs_collectible_state_t * ptr_state,
+        fcs_pass_state_t * raw_ptr_state_raw,
 #ifdef FCS_RCS_STATES
         fcs_state_t * ptr_next_state_key,
 #endif

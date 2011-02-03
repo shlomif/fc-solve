@@ -2395,10 +2395,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 }
 
 #ifdef FCS_RCS_STATES
-#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() ptr_new_state_key, ptr_new_state_val
+#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() ptr_new_state_key
 #else
-#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() ptr_new_state
+#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() (&(ptr_new_state->s))
 #endif
+
 
 #ifdef HARD_CODED_NUM_DECKS
 #define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS(), card)
@@ -2410,10 +2411,7 @@ static GCC_INLINE fcs_bool_t calc_foundation_to_put_card_on(
 #ifndef HARD_CODED_NUM_DECKS
         fc_solve_instance_t * instance,
 #endif
-#ifdef FCS_RCS_STATES
-        fcs_state_t * key_ptr_state_key,
-#endif
-        fcs_collectible_state_t * ptr_state,
+        fcs_state_t * my_ptr_state,
         fcs_card_t card
         )
 {
@@ -2421,13 +2419,13 @@ static GCC_INLINE fcs_bool_t calc_foundation_to_put_card_on(
 
     for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
     {
-        if (fcs_foundation_value(state, (deck<<2)+fcs_card_suit(card)) == fcs_card_card_num(card) - 1)
+        if (fcs_foundation_value(*my_ptr_state, (deck<<2)+fcs_card_suit(card)) == fcs_card_card_num(card) - 1)
         {
             int other_deck_idx;
 
             for (other_deck_idx = 0 ; other_deck_idx < (INSTANCE_DECKS_NUM << 2) ; other_deck_idx++)
             {
-                if (fcs_foundation_value(state, other_deck_idx)
+                if (fcs_foundation_value(*my_ptr_state, other_deck_idx)
                         < fcs_card_card_num(card) - 2 -
                         ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
                    )
@@ -2444,23 +2442,15 @@ static GCC_INLINE fcs_bool_t calc_foundation_to_put_card_on(
     return -1;
 }
 
-;
-
 extern int fc_solve_sfs_raymond_prune(
         fc_solve_soft_thread_t * soft_thread,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * key_ptr_state_key,
-#endif
-        fcs_collectible_state_t * val_ptr_state_val,
+        fcs_pass_state_t * raw_ptr_state_raw,
 #ifdef FCS_RCS_STATES
         fcs_state_t * ptr_next_state_key,
 #endif
         fcs_collectible_state_t * * ptr_ptr_next_state
         )
 {
-#ifndef FCS_RCS_STATES
-#define ptr_state val_ptr_state_val
-#endif
     tests_declare_accessors()
     int stack_idx, fc;
     fcs_cards_column_t col;

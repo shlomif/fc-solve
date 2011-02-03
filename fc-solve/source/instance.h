@@ -149,10 +149,7 @@ struct fc_solve_soft_thread_struct;
 
 typedef void (*fc_solve_solve_for_state_test_t)(
         struct fc_solve_soft_thread_struct *,
-#ifdef FCS_RCS_STATES
-        fcs_state_t *,
-#endif
-        fcs_collectible_state_t *,
+        fcs_pass_state_t *,
         fcs_derived_states_list_t *
         );
 
@@ -1730,22 +1727,12 @@ extern int fc_solve_compare_lru_cache_keys(
 
 #endif
 
-#ifdef FCS_RCS_STATES
 #define DECLARE_MOVE_FUNCTION(name) \
 extern void name( \
         fc_solve_soft_thread_t * soft_thread, \
-        fcs_state_t * key_ptr_state_key, \
-        fcs_collectible_state_t * val_ptr_state_val,  \
-        fcs_derived_states_list_t * derived_states_list \
-)
-#else
-#define DECLARE_MOVE_FUNCTION(name) \
-extern void name( \
-        fc_solve_soft_thread_t * soft_thread, \
-        fcs_state_keyval_pair_t * ptr_state, \
+        fcs_pass_state_t * raw_ptr_state_raw, \
         fcs_derived_states_list_t * derived_states_list \
         )
-#endif
 
 #ifdef __cplusplus
 }

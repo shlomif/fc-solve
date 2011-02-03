@@ -1038,14 +1038,20 @@ int fc_solve_soft_dfs_do_solve(
                     fcs_collectible_state_t * derived;
 #ifdef FCS_RCS_STATES
                     fcs_state_t derived_key;
+                    fcs_pass_state_t pass;
 #endif
 
+#ifdef FCS_RCS_STATES
+                    pass.key = &(state_key);
+                    pass.val = ptr_state;
+#endif
                     if (fc_solve_sfs_raymond_prune(
                         soft_thread,
 #ifdef FCS_RCS_STATES
-                        &(state_key),
-#endif
+                        &(pass),
+#else
                         ptr_state,
+#endif
 #ifdef FCS_RCS_STATES
                         &derived_key,
 #endif
@@ -1085,6 +1091,13 @@ int fc_solve_soft_dfs_do_solve(
                     ].to_randomize;
             do
             {
+#ifdef FCS_RCS_STATES
+                fcs_pass_state_t pass;
+
+                pass.key = &(state_key);
+                pass.val = ptr_state;
+#endif
+
                 VERIFY_PTR_STATE_TRACE0("Verify Bar");
 
                 THE_TESTS_LIST.lists[
@@ -1093,9 +1106,10 @@ int fc_solve_soft_dfs_do_solve(
                     (
                         soft_thread,
 #ifdef FCS_RCS_STATES
-                        &(state_key),
-#endif
+                        &pass,
+#else
                         ptr_state,
+#endif
                         derived_states_list
                     );
 
@@ -1769,6 +1783,10 @@ int fc_solve_befs_or_bfs_do_solve(
 
     int hard_thread_max_num_times;
 
+#ifdef FCS_RCS_STATES
+    fcs_pass_state_t pass;
+#endif
+
     fcs_instance_debug_iter_output_func_t debug_iter_output_func;
     fcs_instance_debug_iter_output_context_t debug_iter_output_context;
 
@@ -1818,6 +1836,11 @@ int fc_solve_befs_or_bfs_do_solve(
         dump_pqueue(soft_thread, "loop_start", scan_specific.pqueue);
 #endif
 
+#ifdef FCS_RCS_STATES
+            pass.key = &(state_key);
+            pass.val = ptr_state;
+#endif
+
         /*
          * If we do the pruning after checking for being visited, then
          * there's a risk of inconsistent result when being interrupted
@@ -1837,9 +1860,10 @@ int fc_solve_befs_or_bfs_do_solve(
             if (fc_solve_sfs_raymond_prune(
                     soft_thread,
 #ifdef FCS_RCS_STATES
-                    (&state_key),
-#endif
+                    &(pass),
+#else
                     ptr_state,
+#endif
 #ifdef FCS_RCS_STATES
                     &derived_key,
 #endif
@@ -1956,6 +1980,10 @@ int fc_solve_befs_or_bfs_do_solve(
 
         TRACE0("perform_tests");
 
+#ifdef FCS_RCS_STATES
+        pass.val = ptr_state;
+#endif
+
         /*
          * Do all the tests at one go, because that is the way it should be
          * done for BFS and BeFS.
@@ -1969,9 +1997,10 @@ int fc_solve_befs_or_bfs_do_solve(
             (*next_test)(
                 soft_thread,
 #ifdef FCS_RCS_STATES
-                &(state_key),
-#endif
+                &(pass),
+#else
                 ptr_state,
+#endif
                 &derived
             );
         }
