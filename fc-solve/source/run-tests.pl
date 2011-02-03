@@ -114,6 +114,11 @@ GetOptions(
         @tests = grep { !/build-process/ } @tests;
     }
 
+    if ($ENV{FCS_TEST_WITHOUT_VALGRIND})
+    {
+        @tests = grep { !/valgrind/ } @tests;
+    }
+
     {
         # local $ENV{FCS_PATH} = dirname(which("fc-solve"));
         print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
