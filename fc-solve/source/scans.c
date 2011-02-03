@@ -659,11 +659,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
         /* The state->parent_state moves stack has an implicit canonize
          * suffix move. */
         fc_solve_canonize_state(
-#ifdef FCS_RCS_STATES
             &(pass),
-#else
-            &(temp_new_state_val),
-#endif
             LOCAL_FREECELLS_NUM,
             LOCAL_STACKS_NUM
         );
