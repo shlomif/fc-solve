@@ -201,3 +201,22 @@ lib64google-perftools0-1.5-1mdv2010.1
     Highlight: Vanilla kernel 2.6.37.
 
 27.1974890232086s
+
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 2 (x4)
+r3736
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --prefix=/home/shlomif/apps/fc-solve/
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+kernel 2.6.36.2-desktop-2mnb
+gcc-4.5.2.
+lib64google-perftools0-1.5-1mdv2010.1
+
+    Highlight: gcc-4.5.2 (instead of 4.5.0) and many refactorings on the
+    trunk for FCS_RCS_STATES.
+
+27.2888829708099s
+
