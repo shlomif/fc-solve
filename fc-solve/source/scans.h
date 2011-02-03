@@ -60,10 +60,7 @@ extern int fc_solve_sfs_check_state_begin(
     fcs_state_t * out_new_state_key,
 #endif
     fcs_collectible_state_t * *  out_ptr_new_state,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * ptr_state_key_ptr,
-#endif
-    fcs_collectible_state_t * ptr_state_val,
+    fcs_pass_state_t * ptr_state,
     fcs_move_stack_t * moves
     );
 

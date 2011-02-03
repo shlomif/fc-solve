@@ -554,13 +554,24 @@ typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
  *
  * */
 #ifdef FCS_RCS_STATES
+
 typedef fcs_state_extra_info_t fcs_collectible_state_t;
+typedef struct {
+    fcs_state_t * key;
+    fcs_state_extra_info_t * val;
+} fcs_pass_state_t;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
 #define FCS_S_NEXT(s) FCS_S_ACCESSOR(s, parent)
+
 #else
+
 typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
+
+typedef fcs_collectible_state_t fcs_pass_state_t;
+
 #define FCS_S_ACCESSOR(s, field) (((s)->info).field)
 #define FCS_S_NEXT(s) ((s)->next)
+
 #endif
 
 #define FCS_S_PARENT(s) FCS_S_ACCESSOR(s, parent)

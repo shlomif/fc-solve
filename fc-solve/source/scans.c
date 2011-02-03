@@ -166,14 +166,14 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 #include <assert.h>
 
 static void verify_state_sanity(
-        fcs_collectible_state_t * ptr_state
+        fcs_state_t * ptr_state
         )
 {
     int i;
 
     for (i=0; i < 8 ; i++)
     {
-        int l = fcs_col_len(fcs_state_get_col(ptr_state->s, i));
+        int l = fcs_col_len(fcs_state_get_col(*(ptr_state), i));
         assert ((l >= 0) && (l <= 7+12));
     }
 
@@ -325,10 +325,26 @@ static void free_states(fc_solve_instance_t * instance)
             } \
         }
 
+#ifdef FCS_RCS_STATES
+#define VERIFY_STATE_SANITY() \
+    verify_state_sanity(&state_key)
+#else
+#define VERIFY_STATE_SANITY() \
+    verify_state_sanity(&(ptr_state->s))
+#endif
+
+#ifdef FCS_RCS_STATES
+#define VERIFY_DERIVED_STATE() \
+    {}
+#else
+#define VERIFY_DERIVED_STATE() \
+    verify_state_sanity(&(single_derived_state->s))
+#endif
+
 #define VERIFY_PTR_STATE_TRACE0(string) \
 { \
     TRACE0(string); \
-    verify_state_sanity(ptr_state); \
+    VERIFY_STATE_SANITY(); \
     VERIFY_SOFT_DFS_STACK(soft_thread); \
 }
 
@@ -336,8 +352,8 @@ static void free_states(fc_solve_instance_t * instance)
 #define VERIFY_PTR_STATE_AND_DERIVED_TRACE0(string) \
 { \
     TRACE0(string); \
-    verify_state_sanity(ptr_state); \
-    verify_state_sanity(single_derived_state); \
+    VERIFY_STATE_SANITY(); \
+    VERIFY_DERIVED_STATE(); \
     VERIFY_SOFT_DFS_STACK(soft_thread); \
 }
 
@@ -677,24 +693,6 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             cache->highest_pri = new_cache_state;
         }
     }
-
-#ifdef DEBUG
-    {
-        fcs_state_t * state = &(((fcs_cache_key_info_t * )(*PValue))->key);
-
-        int s=0;
-        for (s=0;s<INSTANCE_STACKS_NUM; s++)
-        {
-            fcs_cards_column_t col = fcs_state_get_col(*state, s);
-            int col_len = fcs_col_len(col);
-            int c;
-            for (c = col_len ; c < MAX_NUM_CARDS_IN_A_STACK ; c++)
-            {
-                assert (fcs_col_get_card(col, c) == 0);
-            }
-        }
-    }
-#endif
 
     free(parents_stack);
 
@@ -2139,7 +2137,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
         printf("%s\n", "Verify Quux");
         fflush(stdout);
     }
-    verify_state_sanity(ptr_state);
+    VERIFY_STATE_SANITY();
 #endif
 
     switch(soft_thread->method)
@@ -2287,13 +2285,15 @@ int fc_solve_sfs_check_state_begin(
     fcs_state_t * out_new_state_key,
 #endif
     fcs_collectible_state_t * *  out_ptr_new_state,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * ptr_state_key,
-#endif
-    fcs_collectible_state_t * ptr_state,
+    fcs_pass_state_t * ptr_state_raw,
     fcs_move_stack_t * moves
     )
 {
+#ifdef FCS_RCS_STATES
+#define ptr_state (ptr_state_raw->val)
+#else
+#define ptr_state ptr_state_raw
+#endif
     fcs_collectible_state_t * ptr_new_state;
     fc_solve_instance_t * instance;
 
@@ -2319,7 +2319,7 @@ int fc_solve_sfs_check_state_begin(
 #endif
             ptr_new_state,
 #ifdef FCS_RCS_STATES
-            ptr_state_key,
+            ptr_state_raw->key,
 #endif
             ptr_state
     );
@@ -2347,6 +2347,7 @@ int fc_solve_sfs_check_state_begin(
 
     return 0;
 }
+#undef ptr_state
 
 extern void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * soft_thread,
