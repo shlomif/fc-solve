@@ -1043,9 +1043,18 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
+#ifdef FCS_RCS_STATES
+            fcs_pass_state_t pass;
+#endif
+
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
             fc_solve_instance_t * instance =
                 user->fc_solve_obj;
+#endif
+
+#ifdef FCS_RCS_STATES
+            pass.key = &(user->state.s);
+            pass.val = &(user->state.info);
 #endif
             /*
              * TODO : maybe only normalize the final moves' stack in
@@ -1054,8 +1063,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             fc_solve_move_stack_normalize(
                 &(user->fc_solve_obj->solution_moves),
 #ifdef FCS_RCS_STATES
-                &(user->state.s),
-                &(user->state.info),
+                &(pass),
 #else
                 &(user->state),
 #endif

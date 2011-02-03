@@ -129,10 +129,7 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
 
 static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * init_state_key,
-#endif
-    fcs_collectible_state_t * init_state,
+    fcs_pass_state_t * init_state,
 #ifdef FCS_WITHOUT_LOCS_FIELDS
     fcs_state_locs_struct_t * locs,
 #endif
@@ -167,9 +164,11 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #endif
             &(dynamic_state),
 #ifdef FCS_RCS_STATES
-            init_state_key,
-#endif
+            init_state->key,
+            init_state->val
+#else
             init_state
+#endif
             );
 #ifdef INDIRECT_STACK_STATES
     for (i=0 ; i < stacks_num ; i++)
