@@ -309,6 +309,7 @@ static void free_states(fc_solve_instance_t * instance)
 #define VERIFY_DERIVED_STATE() {}
 #define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
 #define STATE_TO_PASS() (&(pass))
+#define NEW_STATE_TO_PASS() (&(new_pass))
 #define PTR_STATE (pass.val)
 #define DECLARE_STATE() fcs_state_t state_key; fcs_pass_state_t pass
 #define INITIALIZE_STATE() pass.key = &(state_key)
@@ -319,6 +320,7 @@ static void free_states(fc_solve_instance_t * instance)
 #define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
 #define ASSIGN_STATE_KEY() {}
 #define STATE_TO_PASS() (PTR_STATE)
+#define NEW_STATE_TO_PASS() (ptr_new_state)
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw
 #define INITIALIZE_STATE() {}
@@ -1969,14 +1971,7 @@ int fc_solve_befs_or_bfs_do_solve(
                 fc_solve_PQueuePush(
                     pqueue,
                     ptr_new_state,
-                    befs_rate_state(
-                        soft_thread,
-#ifdef FCS_RCS_STATES
-                        &new_pass
-#else
-                        ptr_new_state
-#endif
-                        )
+                    befs_rate_state( soft_thread, NEW_STATE_TO_PASS())
                     );
             }
             else
