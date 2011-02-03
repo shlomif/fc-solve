@@ -783,9 +783,15 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
 }
 
 #ifdef FCS_RCS_STATES
+
 #define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, ptr_state))))
+#define STATE_TO_PASS() (&(pass))
+
 #else
+
 #define ASSIGN_STATE_KEY() {}
+#define STATE_TO_PASS() (ptr_state)
+
 #endif
 
 int fc_solve_soft_dfs_do_solve(
@@ -1049,11 +1055,7 @@ int fc_solve_soft_dfs_do_solve(
 #endif
                     if (fc_solve_sfs_raymond_prune(
                         soft_thread,
-#ifdef FCS_RCS_STATES
-                        &(pass),
-#else
-                        ptr_state,
-#endif
+                        STATE_TO_PASS(),
 #ifdef FCS_RCS_STATES
                         &derived_key,
 #endif
@@ -1105,11 +1107,7 @@ int fc_solve_soft_dfs_do_solve(
                     ].tests[the_soft_dfs_info->test_index]
                     (
                         soft_thread,
-#ifdef FCS_RCS_STATES
-                        &pass,
-#else
-                        ptr_state,
-#endif
+                        STATE_TO_PASS(),
                         derived_states_list
                     );
 
@@ -1737,6 +1735,7 @@ static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
     return ret;
 }
 #endif
+
 int fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -1857,11 +1856,7 @@ int fc_solve_befs_or_bfs_do_solve(
 
             if (fc_solve_sfs_raymond_prune(
                     soft_thread,
-#ifdef FCS_RCS_STATES
-                    &(pass),
-#else
-                    ptr_state,
-#endif
+                    STATE_TO_PASS(),
 #ifdef FCS_RCS_STATES
                     &derived_key,
 #endif
@@ -1991,11 +1986,7 @@ int fc_solve_befs_or_bfs_do_solve(
         {
             (*next_test)(
                 soft_thread,
-#ifdef FCS_RCS_STATES
-                &(pass),
-#else
-                ptr_state,
-#endif
+                STATE_TO_PASS(),
                 &derived
             );
         }
