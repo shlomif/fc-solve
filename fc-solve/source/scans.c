@@ -2087,14 +2087,12 @@ my_return_label:
  * about the currently-evaluated state.
  */
 extern char * fc_solve_get_the_positions_by_rank_data(
-        fc_solve_soft_thread_t * soft_thread,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * ptr_state_key,
-#endif
-        fcs_collectible_state_t * ptr_state_raw
-        )
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_pass_state_t * ptr_state_raw
+)
 {
 #ifdef FCS_RCS_STATES
+#define ptr_state_key (ptr_state_raw->key)
 #define state_key (*ptr_state_key)
 #endif
 

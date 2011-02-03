@@ -385,22 +385,12 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 #endif
 }
 
-#ifdef FCS_RCS_STATES
 #define CALC_POSITIONS_BY_RANK() \
     positions_by_rank = \
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
-            ptr_state_key, \
-            ptr_state_val \
+            raw_ptr_state_raw \
         )
-#else
-#define CALC_POSITIONS_BY_RANK() \
-    positions_by_rank = \
-        fc_solve_get_the_positions_by_rank_data( \
-            soft_thread, \
-            ptr_state \
-        )
-#endif
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 {
