@@ -310,6 +310,7 @@ static void free_states(fc_solve_instance_t * instance)
 #define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
 #define STATE_TO_PASS() (&(pass))
 #define PTR_STATE (pass.val)
+#define DECLARE_STATE() fcs_state_t state_key; fcs_pass_state_t pass
 
 #else
 
@@ -318,7 +319,7 @@ static void free_states(fc_solve_instance_t * instance)
 #define ASSIGN_STATE_KEY() {}
 #define STATE_TO_PASS() (PTR_STATE)
 #define PTR_STATE (ptr_state_raw)
-
+#define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw
 
 #endif
 
@@ -790,12 +791,7 @@ int fc_solve_soft_dfs_do_solve(
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
 
-#ifdef FCS_RCS_STATES
-    fcs_state_t state_key;
-    fcs_pass_state_t pass;
-#else
-    fcs_collectible_state_t * ptr_state_raw;
-#endif
+    DECLARE_STATE();
 
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
@@ -1729,15 +1725,8 @@ int fc_solve_befs_or_bfs_do_solve(
     fc_solve_instance_t * instance = hard_thread->instance;
 
     fcs_collectible_state_t * ptr_new_state;
-#ifdef FCS_RCS_STATES
-    fcs_pass_state_t pass;
-#else
-    fcs_collectible_state_t * ptr_state_raw;
-#endif
+    DECLARE_STATE();
 
-#ifdef FCS_RCS_STATES
-    fcs_state_t state_key;
-#endif
     fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
     fcs_states_linked_list_item_t * save_item;
     fcs_derived_states_list_t derived;
