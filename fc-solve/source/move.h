@@ -165,20 +165,8 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 
     fcs_move_stack_init(temp_moves);
 
-    fcs_duplicate_state(
-#ifdef FCS_RCS_STATES
-            dynamic_state.key,
-            dynamic_state.val,
-#else
-            &(dynamic_state),
-#endif
-#ifdef FCS_RCS_STATES
-            init_state->key,
-            init_state->val
-#else
-            init_state
-#endif
-            );
+    fcs_duplicate_state( &(dynamic_state), init_state );
+
 #ifdef INDIRECT_STACK_STATES
     for (i=0 ; i < stacks_num ; i++)
     {

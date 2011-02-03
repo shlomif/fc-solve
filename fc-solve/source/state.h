@@ -357,11 +357,11 @@ typedef char fcs_locs_t;
     fcs_col_push_card((dest_col), fcs_col_get_card((src_col), (card_idx)))
 
 #ifdef FCS_RCS_STATES
-#define fcs_duplicate_state(ptr_dest_key, ptr_dest_val, ptr_src_key, ptr_src_val) \
+#define fcs_duplicate_state(ptr_dest, ptr_src) \
     { \
-    *(ptr_dest_key) = *(ptr_src_key); \
-    *(ptr_dest_val) = *(ptr_src_val); \
-    fcs_duplicate_state_extra(ptr_dest, ptr_src);   \
+    *((ptr_dest)->key) = *((ptr_src)->key); \
+    *((ptr_dest)->val) = *((ptr_src)->val); \
+    fcs_duplicate_state_extra(((ptr_dest)->val), ((ptr_src)->val));   \
     }
 #else
 #define fcs_duplicate_state(ptr_dest, ptr_src) \

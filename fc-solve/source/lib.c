@@ -933,20 +933,22 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->state_locs = user->initial_state_locs;
 #endif
 
-            /* running_state is a normalized state. So I'm duplicating
+            /* running_state is a normalized state. So We're duplicating
              * state to it before state is canonized
              * */
-            fcs_duplicate_state(
 #ifdef FCS_RCS_STATES
-                &(user->running_state.s),
-                &(user->running_state.info),
-                &(user->state.s),
-                &(user->state.info)
+            {
+                fcs_pass_state_t pass, state_pass;
+                pass.key = &(user->running_state.s);
+                pass.val = &(user->running_state.info);
+                state_pass.key = &(user->state.s);
+                state_pass.val = &(user->state.info);
+                
+                fcs_duplicate_state(&pass, &state_pass);
+            }
 #else
-                &(user->running_state),
-                &(user->state)
+            fcs_duplicate_state( &(user->running_state), &(user->state) );
 #endif
-                );
 
 #ifdef FCS_WITHOUT_LOCS_FIELDS
 #endif

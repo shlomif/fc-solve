@@ -615,6 +615,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
     for (parents_stack_len--; parents_stack_len > 0; parents_stack_len--)
     {
+        fcs_pass_state_t dest_pass, src_pass;
         fcs_collectible_state_t temp_new_state_val;
         fcs_internal_move_t * next_move, * moves_end;
 
@@ -623,12 +624,12 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
         fcs_collectible_state_t * stack_ptr_this_state_val =
             parents_stack[parents_stack_len-1].state_val;
 
-        fcs_duplicate_state(
-            &(new_cache_state->key),
-            &(temp_new_state_val),
-            &(parents_stack[parents_stack_len].new_cache_state->key),
-            parents_stack[parents_stack_len].state_val
-        );
+        dest_pass.key = &(new_cache_state->key);
+        dest_pass.val = &(temp_new_state_val);
+        src_pass.key = &(parents_stack[parents_stack_len].new_cache_state->key);
+        src_pass.val = parents_stack[parents_stack_len].state_val;
+
+        fcs_duplicate_state( &dest_pass, &src_pass);
 
         moves_end = 
         (
@@ -2309,6 +2310,7 @@ int fc_solve_sfs_check_state_begin(
     )
 {
 #ifdef FCS_RCS_STATES
+    fcs_pass_state_t out_pass;
 #define ptr_state (ptr_state_raw->val)
 #else
 #define ptr_state ptr_state_raw
@@ -2332,15 +2334,17 @@ int fc_solve_sfs_check_state_begin(
             );
     }
 
+#ifdef FCS_RCS_STATES
+    out_pass.key = out_new_state_key;
+    out_pass.val = ptr_new_state;
+#endif
     fcs_duplicate_state(
 #ifdef FCS_RCS_STATES
-            out_new_state_key,
-#endif
+            &(out_pass),
+#else
             ptr_new_state,
-#ifdef FCS_RCS_STATES
-            ptr_state_raw->key,
 #endif
-            ptr_state
+            ptr_state_raw
     );
     /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.

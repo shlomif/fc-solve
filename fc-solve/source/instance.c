@@ -925,17 +925,18 @@ void fc_solve_start_instance_process_with_board(
         );
 
 #ifdef FCS_RCS_STATES
-    fcs_duplicate_state(
-        &(state_copy_ptr->s),
-        &(state_copy_ptr->info),
-        &(init_state->s),
-        &(init_state->info)
+    {
+        fcs_pass_state_t pass_copy, pass_init;
 
-        );
+        pass_copy.key = &(state_copy_ptr->s);
+        pass_copy.val = &(state_copy_ptr->info);
+        pass_init.key = &(init_state->s);
+        pass_init.val = &(init_state->info);
+
+        fcs_duplicate_state( &(pass_copy), &(pass_init) );
+    }
 #else
-    fcs_duplicate_state(state_copy_ptr,
-            init_state
-            );
+    fcs_duplicate_state(state_copy_ptr, init_state);
 #endif
 
     {
