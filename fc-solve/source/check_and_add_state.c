@@ -180,7 +180,7 @@ static void GCC_INLINE fc_solve_cache_stacks(
         cached_stack =
             fcs_libavl2_stacks_tree_insert(
                 instance->stacks_tree,
-                new_state_key->stacks[i]
+                new_state->s.stacks[i]
             );
 
         replace_with_cached(cached_stack != NULL);
@@ -587,11 +587,13 @@ fcs_bool_t fc_solve_check_and_add_state(
         return FALSE;
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
-    instance->tree_new_state_key = new_state_key;
-    instance->tree_new_state = new_state;
+#ifdef FCS_RCS_STATES
+    instance->tree_new_state_key = new_state->key;
+    instance->tree_new_state = new_state->val;
+#endif
 
     if ((existing_state_val = (fcs_collectible_state_t *)
-        fcs_libavl2_states_tree_insert(instance->tree, new_state))
+        fcs_libavl2_states_tree_insert(instance->tree, new_state_val))
             == NULL
        )
     {
