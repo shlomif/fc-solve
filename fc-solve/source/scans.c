@@ -1307,10 +1307,14 @@ static GCC_INLINE void initialize_befs_rater(
 {
 
 #ifdef FCS_RCS_STATES
-#define STATE() (*(raw_pass_raw->key))
+#define pass (*raw_pass_raw)
+#define ptr_state_key (raw_pass_raw->key)
 #else
-#define STATE() (raw_pass_raw->s)
+#define ptr_state_key (&(raw_pass_raw->s))
+#define ptr_state_raw (raw_pass_raw)
 #endif
+
+#define state_key (*ptr_state_key)
 
 #ifndef HARD_CODED_NUM_STACKS
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
@@ -1323,11 +1327,10 @@ static GCC_INLINE void initialize_befs_rater(
     cards_under_sequences = 0;
     for(a=0;a<INSTANCE_STACKS_NUM;a++)
     {
-        update_col_cards_under_sequences(soft_thread, fcs_state_get_col(STATE(), a), &cards_under_sequences);
+        update_col_cards_under_sequences(soft_thread, fcs_state_get_col(state_key, a), &cards_under_sequences);
     }
     soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value = cards_under_sequences;
 }
-#undef STATE
 
 #undef TRACE0
 
@@ -1357,13 +1360,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     fcs_pass_state_t * raw_pass_raw
     )
 {
-#ifdef FCS_RCS_STATES
-#define pass (*raw_pass_raw)
-#define ptr_state_key (raw_pass_raw->key)
-#define state_key (*ptr_state_key)
-#else
-#define ptr_state_raw (raw_pass_raw)
-#endif
 
 #ifndef FCS_FREECELL_ONLY
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
