@@ -187,15 +187,7 @@ void fc_solve_apply_move(
             else
 #endif
             {
-            fc_solve_canonize_state(
-#ifdef FCS_RCS_STATES
-                state_key,
-                state->val,
-#else
-                state,
-#endif
-                freecells_num, stacks_num
-            );
+                fc_solve_canonize_state (state, freecells_num, stacks_num);
             }
         }
         break;

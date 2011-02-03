@@ -152,18 +152,13 @@ void fc_solve_canonize_state(
 #elif defined(INDIRECT_STACK_STATES)
 #define DECLARE_TEMP_STACK() fcs_card_t * temp_stack
 #define STACK_COMPARE(a,b) (fc_solve_stack_compare_for_comparison((a),(b)))
-#define GET_STACK(c) (state->s.stacks[c])
+#define GET_STACK(c) (state_key->stacks[c])
 #define COPY_STACK(d,s) (d = s)
-#define GET_FREECELL(c) (state->s.freecells[(c)])
+#define GET_FREECELL(c) (state_key->freecells[(c)])
 #endif
 
 void fc_solve_canonize_state(
-#ifdef FCS_RCS_STATES
-    fcs_state_t * state_key,
-    fcs_collectible_state_t * state_val,
-#else
-    fcs_collectible_state_t * state,
-#endif
+    fcs_pass_state_t * state_raw,
     int freecells_num,
     int stacks_num)
 {
@@ -176,12 +171,15 @@ void fc_solve_canonize_state(
     char temp_loc;
 #endif
 
-#ifndef FCS_RCS_STATES
+#ifdef FCS_RCS_STATES
+#define state_key (state_raw->key)
+#define state_val (state_raw->val)
+#else
     fcs_state_t * state_key;
     fcs_state_extra_info_t * state_val;
 
-    state_key = &(state->s);
-    state_val = &(state->info);
+    state_key = &(state_raw->s);
+    state_val = &(state_raw->info);
 #endif
     /* Insertion-sort the stacks */
 
@@ -241,6 +239,10 @@ void fc_solve_canonize_state(
         }
     }
 }
+#ifdef FCS_RCS_STATES
+#undef state_key
+#undef state_val
+#endif
 
 #ifdef FCS_WITHOUT_LOCS_FIELDS
 

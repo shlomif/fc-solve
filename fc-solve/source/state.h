@@ -563,11 +563,15 @@ typedef struct {
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
 #define FCS_S_NEXT(s) FCS_S_ACCESSOR(s, parent)
 
+typedef fcs_pass_state_t fcs_lvalue_pass_state_t;
+
 #else
 
 typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 
 typedef fcs_collectible_state_t fcs_pass_state_t;
+
+typedef fcs_pass_state_t * fcs_lvalue_pass_state_t;
 
 #define FCS_S_ACCESSOR(s, field) (((s)->info).field)
 #define FCS_S_NEXT(s) ((s)->next)
@@ -636,10 +640,7 @@ extern fcs_card_t fc_solve_empty_card;
 #endif
 
 extern void fc_solve_canonize_state(
-#ifdef FCS_RCS_STATES
-    fcs_state_t * state_key,
-#endif
-    fcs_collectible_state_t * state,
+    fcs_pass_state_t * state_raw,
     int freecells_num,
     int stacks_num
     );

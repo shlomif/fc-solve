@@ -333,11 +333,15 @@ guint fc_solve_hash_function(gconstpointer key)
 static GCC_INLINE void on_state_new(
     fc_solve_instance_t * instance,
     fc_solve_hard_thread_t * hard_thread,
-    fcs_collectible_state_t * new_state
+    fcs_pass_state_t * new_state_raw
 )
 {
     register fcs_collectible_state_t * parent_state;
-
+#ifdef FCS_RCS_STATES
+#define new_state (new_state_raw->val)
+#else
+#define new_state (new_state_raw)
+#endif
     /* The new state was not found in the cache, and it was already inserted */
     if (likely(parent_state = FCS_S_PARENT(new_state)))
     {
@@ -354,23 +358,14 @@ static GCC_INLINE void on_state_new(
     instance->num_states_in_collection++;
 
     return;
+#undef new_state
 }
 
-#ifdef FCS_RCS_STATES
 fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t * hard_thread,
-    fcs_state_t * new_state_key,
-    fcs_collectible_state_t * new_state,
-    fcs_state_t * * existing_state_key,
-    fcs_collectible_state_t * * existing_state
+    fcs_pass_state_t * new_state,
+    fcs_lvalue_pass_state_t * existing_state
     )
-#else
-fcs_bool_t fc_solve_check_and_add_state(
-    fc_solve_hard_thread_t * hard_thread,
-    fcs_collectible_state_t * new_state,
-    fcs_collectible_state_t * * existing_state
-    )
-#endif
 {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -395,9 +390,6 @@ fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_cache_stacks(hard_thread, new_state);
 
     fc_solve_canonize_state(
-#ifdef FCS_RCS_STATES
-            new_state_key,
-#endif
             new_state,
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM
@@ -568,14 +560,21 @@ fcs_bool_t fc_solve_check_and_add_state(
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
 #ifdef FCS_RCS_STATES
-    instance->tree_new_state_key = new_state_key;
-    instance->tree_new_state = new_state;
+    instance->tree_new_state_key = new_state->key;
+    instance->tree_new_state = new_state->val;
 #endif
 
+#ifdef FCS_RCS_STATES
+    if ((existing_state->val = (fcs_state_extra_info_t *)
+        fc_solve_kaz_tree_alloc_insert(instance->tree, new_state->val))
+            == NULL
+       )
+#else
     if ((*existing_state = (fcs_collectible_state_t *)
         fc_solve_kaz_tree_alloc_insert(instance->tree, new_state))
             == NULL
        )
+#endif
     {
         on_state_new(instance, hard_thread, new_state);
         return TRUE;

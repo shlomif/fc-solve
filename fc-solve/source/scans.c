@@ -615,7 +615,8 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
     for (parents_stack_len--; parents_stack_len > 0; parents_stack_len--)
     {
-        fcs_pass_state_t dest_pass, src_pass;
+        fcs_pass_state_t pass, src_pass;
+
         fcs_collectible_state_t temp_new_state_val;
         fcs_internal_move_t * next_move, * moves_end;
 
@@ -624,12 +625,12 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
         fcs_collectible_state_t * stack_ptr_this_state_val =
             parents_stack[parents_stack_len-1].state_val;
 
-        dest_pass.key = &(new_cache_state->key);
-        dest_pass.val = &(temp_new_state_val);
+        pass.key = &(new_cache_state->key);
+        pass.val = &(temp_new_state_val);
         src_pass.key = &(parents_stack[parents_stack_len].new_cache_state->key);
         src_pass.val = parents_stack[parents_stack_len].state_val;
 
-        fcs_duplicate_state( &dest_pass, &src_pass);
+        fcs_duplicate_state( &pass, &src_pass);
 
         moves_end = 
         (
@@ -638,14 +639,11 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             stack_ptr_this_state_val->moves_to_parent->num_moves
         );
 
+
         for ( ;
             next_move < moves_end
             ; next_move++)
         {
-            fcs_pass_state_t pass;
-
-            pass.key = &(new_cache_state->key);
-            pass.val = &(temp_new_state_val);
 
             fc_solve_apply_move(
                 &pass,
@@ -662,9 +660,10 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
          * suffix move. */
         fc_solve_canonize_state(
 #ifdef FCS_RCS_STATES
-            &(new_cache_state->key),
-#endif
+            &(pass),
+#else
             &(temp_new_state_val),
+#endif
             LOCAL_FREECELLS_NUM,
             LOCAL_STACKS_NUM
         );
@@ -2395,7 +2394,7 @@ extern void fc_solve_sfs_check_state_end(
     fcs_collectible_state_t * existing_state;
 
 #ifdef FCS_RCS_STATES
-    fcs_state_t * existing_state_key;
+    fcs_pass_state_t existing_pass, new_pass;
 #endif
 
     temp_move = fc_solve_empty_move;
@@ -2406,18 +2405,28 @@ extern void fc_solve_sfs_check_state_end(
     calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
     scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
+#ifdef FCS_RCS_STATES
+    new_pass.key = ptr_new_state_key;
+    new_pass.val = ptr_new_state;
+#endif
+
     if (! fc_solve_check_and_add_state(
         hard_thread,
 #ifdef FCS_RCS_STATES
-        ptr_new_state_key,
-#endif
+        &new_pass,
+#else
         ptr_new_state,
-#ifdef FCS_RCS_STATES
-        &existing_state_key,
 #endif
+#ifdef FCS_RCS_STATES
+        &existing_pass
+#else
         &existing_state
+#endif
         ))
     {
+#ifdef FCS_RCS_STATES
+        existing_state = existing_pass.val;
+#endif
         if (hard_thread->allocated_from_list)
         {
             FCS_S_NEXT(ptr_new_state) = instance->list_of_vacant_states;
