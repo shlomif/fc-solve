@@ -797,6 +797,7 @@ int fc_solve_soft_dfs_do_solve(
 
 #ifdef FCS_RCS_STATES
     fcs_state_t state_key;
+    fcs_pass_state_t pass;
 #endif
     fcs_collectible_state_t * ptr_state;
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
@@ -879,6 +880,9 @@ int fc_solve_soft_dfs_do_solve(
     debug_iter_output_func = instance->debug_iter_output_func;
     debug_iter_output_context = instance->debug_iter_output_context;
 
+#ifdef FCS_RCS_STATES
+    pass.key = &(state_key);
+#endif
 
     {
         for (
@@ -1038,11 +1042,9 @@ int fc_solve_soft_dfs_do_solve(
                     fcs_collectible_state_t * derived;
 #ifdef FCS_RCS_STATES
                     fcs_state_t derived_key;
-                    fcs_pass_state_t pass;
 #endif
 
 #ifdef FCS_RCS_STATES
-                    pass.key = &(state_key);
                     pass.val = ptr_state;
 #endif
                     if (fc_solve_sfs_raymond_prune(
@@ -1089,15 +1091,13 @@ int fc_solve_soft_dfs_do_solve(
                 local_to_randomize = THE_TESTS_LIST.lists[
                     the_soft_dfs_info->tests_list_index
                     ].to_randomize;
-            do
-            {
-#ifdef FCS_RCS_STATES
-                fcs_pass_state_t pass;
 
-                pass.key = &(state_key);
+#ifdef FCS_RCS_STATES
                 pass.val = ptr_state;
 #endif
 
+            do
+            {
                 VERIFY_PTR_STATE_TRACE0("Verify Bar");
 
                 THE_TESTS_LIST.lists[
@@ -1800,6 +1800,10 @@ int fc_solve_befs_or_bfs_do_solve(
     instance_num_times_ptr = &(instance->num_times);
     hard_thread_num_times_ptr = &(hard_thread->num_times);
 
+#ifdef FCS_RCS_STATES
+    pass.key = &(state_key);
+#endif
+
     if (method == FCS_METHOD_A_STAR)
     {
         pqueue = &(soft_thread->method_specific.befs.meth.befs.pqueue);
@@ -1832,7 +1836,6 @@ int fc_solve_befs_or_bfs_do_solve(
 #endif
 
 #ifdef FCS_RCS_STATES
-            pass.key = &(state_key);
             pass.val = ptr_state;
 #endif
 
