@@ -56,24 +56,15 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 
 extern int fc_solve_sfs_check_state_begin(
     fc_solve_hard_thread_t * hard_thread,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * out_new_state_key,
-#endif
-    fcs_collectible_state_t * *  out_ptr_new_state,
-    fcs_pass_state_t * ptr_state,
+    fcs_lvalue_pass_state_t * out_new_state_out,
+    fcs_pass_state_t * raw_state_raw,
     fcs_move_stack_t * moves
     );
 
 extern void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * soft_thread,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * ptr_state_key,
-#endif
-    fcs_collectible_state_t * ptr_state,
-#ifdef FCS_RCS_STATES
-    fcs_state_t * ptr_new_state_key,
-#endif
-    fcs_collectible_state_t * ptr_new_state,
+    fcs_pass_state_t * key_ptr_state_key,
+    fcs_pass_state_t * key_ptr_new_state_key,
     int state_context_value,
     fcs_move_stack_t * moves,
     fcs_derived_states_list_t * derived_states_list

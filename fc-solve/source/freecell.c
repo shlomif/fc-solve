@@ -217,16 +217,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
  */
 static GCC_INLINE int empty_two_cols_from_new_state(
         fc_solve_soft_thread_t * soft_thread,
-#ifdef FCS_RCS_STATES
-        fcs_state_t * key_ptr_new_state_key,
-#endif
-        fcs_collectible_state_t * ptr_new_state,
+        fcs_pass_state_t * ptr_new_state,
         fcs_move_stack_t * moves,
         const int cols_indexes[3],
         int nc1, int nc2
         )
 {
 #ifdef FCS_RCS_STATES
+#define key_ptr_new_state_key (ptr_new_state->key)
 #define my_new_out_state_key (*key_ptr_new_state_key)
 #endif
     int num_cards_to_move_from_columns[3];
@@ -382,6 +380,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
         }
     }
 #ifdef FCS_RCS_STATES
+#undef key_ptr_new_state_key
 #undef my_new_out_state_key
 #endif
 }
@@ -565,12 +564,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                         cols_indexes[1] = -1;
                         cols_indexes[2] = -1;
 
+#ifdef FCS_RCS_STATES
+#define NEW_STATE_BY_REF() (&ptr_new_state)
+#else
+#define NEW_STATE_BY_REF() (ptr_new_state)
+#endif
                         empty_two_cols_from_new_state(
                                 soft_thread,
-#ifdef FCS_RCS_STATES
-                                &(my_new_out_state_key),
-#endif
-                                ptr_new_state,
+                                NEW_STATE_BY_REF(),
                                 moves,
                                 cols_indexes,
                                 dest_cards_num - dc - 1,
@@ -684,10 +685,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 
                         empty_two_cols_from_new_state(
                             soft_thread,
-#ifdef FCS_RCS_STATES
-                                &(my_new_out_state_key),
-#endif
-                            ptr_new_state,
+                            NEW_STATE_BY_REF(),
                             moves,
                             cols_indexes,
                             cards_num-(c+1),
@@ -841,10 +839,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
                                 last_dest = empty_two_cols_from_new_state(
                                     soft_thread,
-#ifdef FCS_RCS_STATES
-                                &(my_new_out_state_key),
-#endif
-                                    ptr_new_state,
+                                    NEW_STATE_BY_REF(),
                                     moves,
                                     cols_indexes,
                                     /* We're moving one extra card */
@@ -856,10 +851,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
                                 empty_two_cols_from_new_state(
                                     soft_thread,
-#ifdef FCS_RCS_STATES
-                                    &(my_new_out_state_key),
-#endif
-                                    ptr_new_state,
+                                    NEW_STATE_BY_REF(),
                                     moves,
                                     cols_indexes,
                                     c - dc - 1,
@@ -1041,10 +1033,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
                     empty_two_cols_from_new_state(
                         soft_thread,
-#ifdef FCS_RCS_STATES
-                        &(my_new_out_state_key),
-#endif
-                        ptr_new_state,
+                        NEW_STATE_BY_REF(),
                         moves,
                         cols_indexes,
                         fcs_col_len(dest_col) - dc - 1,
@@ -1241,10 +1230,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 
                             empty_ret = empty_two_cols_from_new_state(
                                 soft_thread,
-#ifdef FCS_RCS_STATES
-                                &(my_new_out_state_key),
-#endif
-                                ptr_new_state,
+                                NEW_STATE_BY_REF(),
                                 moves,
                                 cols_indexes,
                                 freecells_to_fill + freestacks_to_fill,
@@ -1551,10 +1537,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
                     empty_two_cols_from_new_state(
                         soft_thread,
-#ifdef FCS_RCS_STATES
-                        &(my_new_out_state_key),
-#endif
-                        ptr_new_state,
+                        NEW_STATE_BY_REF(),
                         moves,
                         cols_indexes,
                         freestacks_to_fill + freecells_to_fill,

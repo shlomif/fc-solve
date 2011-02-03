@@ -98,28 +98,34 @@ extern "C" {
 #define state  (state_key)
 
 #ifdef FCS_RCS_STATES
+
 #define sfs_check_state_begin()                                     \
     {         \
+        ptr_new_state.key = &my_new_out_state_key; \
+        ptr_new_state.val = &my_new_out_state_val; \
         fc_solve_sfs_check_state_begin(hard_thread,  \
-                &my_new_out_state_key,               \
                 &ptr_new_state,                      \
                 raw_ptr_state_raw,                   \
                 moves);                              \
     }
+
+
 #else
+
 #define sfs_check_state_begin()                                     \
     {         \
         fc_solve_sfs_check_state_begin(hard_thread,  \
                 &ptr_new_state,                      \
-                ptr_state,                           \
+                raw_ptr_state_raw,                   \
                 moves);                              \
     }
+
 #endif
 
 #ifdef FCS_RCS_STATES
 #define sfs_check_state_end() \
     { \
-        fc_solve_sfs_check_state_end(soft_thread, ptr_state_key, ptr_state_val, ptr_new_state_key, ptr_new_state_val, state_context_value, moves, derived_states_list); \
+        fc_solve_sfs_check_state_end(soft_thread, raw_ptr_state_raw, &ptr_new_state, state_context_value, moves, derived_states_list); \
     }
 #else
 #define sfs_check_state_end() \
@@ -208,7 +214,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #ifdef FCS_RCS_STATES
 #define fcs_move_sequence(dest_idx, source_idx, start_idx, end_idx) \
     {   \
-        fc_solve_move_sequence_function(ptr_new_state_key, ptr_new_state_val, moves, dest_idx, source_idx, start_idx, end_idx); \
+        fc_solve_move_sequence_function(ptr_new_state_key, ptr_new_state.val, moves, dest_idx, source_idx, start_idx, end_idx); \
     }
 #else
 #define fcs_move_sequence(dest_idx, source_idx, start_idx, end_idx) \
@@ -238,13 +244,14 @@ static GCC_INLINE void fc_solve_move_sequence_function(
     tests_declare_accessors_rcs_states()                \
     tests_declare_accessors_freecell_only()             \
     fc_solve_hard_thread_t * hard_thread;               \
-    fcs_collectible_state_t * ptr_new_state; \
+    fcs_lvalue_pass_state_t ptr_new_state; \
     fcs_move_stack_t * moves;                                  \
     int state_context_value                                  \
 
 #ifdef FCS_RCS_STATES
 #define tests_declare_accessors_rcs_states() \
-    fcs_state_t my_new_out_state_key;
+    fcs_state_t my_new_out_state_key; \
+    fcs_state_extra_info_t my_new_out_state_val;
 #else
 #define tests_declare_accessors_rcs_states()
 #endif
