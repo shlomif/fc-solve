@@ -641,9 +641,13 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             next_move < moves_end
             ; next_move++)
         {
+            fcs_pass_state_t pass;
+
+            pass.key = &(new_cache_state->key);
+            pass.val = &(temp_new_state_val);
+
             fc_solve_apply_move(
-                &(new_cache_state->key),
-                &(temp_new_state_val),
+                &pass,
 #ifdef FCS_WITHOUT_LOCS_FIELDS
                 NULL,
 #endif

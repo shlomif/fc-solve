@@ -66,10 +66,7 @@ int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
  * This function performs a given move on a state
  */
 void fc_solve_apply_move(
-#ifdef FCS_RCS_STATES
-        fcs_state_t * state_key,
-#endif
-        fcs_collectible_state_t * state,
+        fcs_pass_state_t * state,
 #ifdef FCS_WITHOUT_LOCS_FIELDS
         fcs_state_locs_struct_t * locs,
 #endif
@@ -82,7 +79,9 @@ void fc_solve_apply_move(
     fcs_card_t card;
     fcs_cards_column_t col;
 
-#ifndef FCS_RCS_STATES
+#ifdef FCS_RCS_STATES
+#define state_key (state->key)
+#else
 #define state_key (&(state->s))
 #endif
     switch(fcs_int_move_get_type(move))
@@ -191,8 +190,10 @@ void fc_solve_apply_move(
             fc_solve_canonize_state(
 #ifdef FCS_RCS_STATES
                 state_key,
-#endif
+                state->val,
+#else
                 state,
+#endif
                 freecells_num, stacks_num
             );
             }
@@ -200,9 +201,7 @@ void fc_solve_apply_move(
         break;
 
     }
-#ifndef FCS_RCS_STATES
 #undef state_key
-#endif
 }
 
 static GCC_INLINE int convert_freecell_num(int fcn)

@@ -89,10 +89,7 @@ static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(fcs_move_stack_t * stack, f
 }
 
 void fc_solve_apply_move(
-#ifdef FCS_RCS_STATES
-        fcs_state_t * state_key,
-#endif
-        fcs_collectible_state_t * state_val,
+        fcs_pass_state_t * state_raw,
 #ifdef FCS_WITHOUT_LOCS_FIELDS
         fcs_state_locs_struct_t * locs,
 #endif
@@ -187,11 +184,19 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             &in_move
             ) == 0)
     {
+#ifdef FCS_RCS_STATES
+        fcs_pass_state_t pass;
+
+        pass.key = &dynamic_state_key;
+        pass.val = &dynamic_state;
+#endif
+
         fc_solve_apply_move(
 #ifdef FCS_RCS_STATES
-            &dynamic_state_key,
-#endif
+            &pass,
+#else
             &dynamic_state,
+#endif
 #ifdef FCS_WITHOUT_LOCS_FIELDS
             locs,
 #endif
