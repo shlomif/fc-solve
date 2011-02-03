@@ -1599,8 +1599,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     pass.key = &(instance->state_copy_ptr->s);
     pass.val = &(instance->state_copy_ptr->info); 
 #else
-    fcs_collectible_state_t * ptr_orig_state;
-    ptr_orig_state = instance->state_copy_ptr;
+    fcs_collectible_state_t * ptr_state_raw;
+    ptr_state_raw = instance->state_copy_ptr;
 #endif
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
@@ -1615,11 +1615,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
         initialize_befs_rater(
             soft_thread,
-#ifdef FCS_RCS_STATES
-            &(pass)
-#else
-            ptr_orig_state
-#endif
+            STATE_TO_PASS()
             );
     }
     else
@@ -1651,11 +1647,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         soft_thread->method_specific.befs.tests_list_end = next_test;
     }
 
-#ifdef FCS_RCS_STATES
-    soft_thread->first_state_to_check = pass.val;
-#else
-    soft_thread->first_state_to_check = ptr_orig_state;
-#endif
+    soft_thread->first_state_to_check = PTR_STATE;
 
     return;
 }
