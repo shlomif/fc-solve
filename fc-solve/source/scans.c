@@ -304,9 +304,22 @@ static void free_states(fc_solve_instance_t * instance)
     by using some dedicated stacks for the traversal.
   */
 #ifdef FCS_RCS_STATES
+
 #define the_state (state_key)
+#define VERIFY_DERIVED_STATE() {}
+#define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
+#define STATE_TO_PASS() (&(pass))
+#define PTR_STATE (pass.val)
+
 #else
+
 #define the_state (PTR_STATE->s)
+#define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
+#define ASSIGN_STATE_KEY() {}
+#define STATE_TO_PASS() (PTR_STATE)
+#define PTR_STATE (ptr_state_raw)
+
+
 #endif
 
 #ifdef DEBUG
@@ -326,12 +339,6 @@ static void free_states(fc_solve_instance_t * instance)
         }
 
 #define VERIFY_STATE_SANITY() verify_state_sanity(&the_state)
-
-#ifdef FCS_RCS_STATES
-#define VERIFY_DERIVED_STATE() {}
-#else
-#define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
-#endif
 
 #define VERIFY_PTR_STATE_TRACE0(string) \
 { \
@@ -773,20 +780,6 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
 
     return num_vacant_stacks;
 }
-
-#ifdef FCS_RCS_STATES
-
-#define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
-#define STATE_TO_PASS() (&(pass))
-#define PTR_STATE (pass.val)
-
-#else
-
-#define ASSIGN_STATE_KEY() {}
-#define STATE_TO_PASS() (PTR_STATE)
-#define PTR_STATE (ptr_state_raw)
-
-#endif
 
 #define ASSIGN_ptr_state(my_value) (PTR_STATE = (my_value))
 
