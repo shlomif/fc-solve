@@ -32,7 +32,7 @@ sub _slurp
 my $readme = _slurp("README.txt");
 my $usage = _slurp("USAGE.txt");
 
-$usage =~ s{\A[^\n]*?(^The programs *$)}{$1}ms;
+$usage =~ s{\A.*?(^The programs *$)}{$1}ms;
 
 my $manify_text = <<'EOF';
 :doctype: manpage
@@ -49,7 +49,7 @@ $readme =~ s/\AFreecell Solver Readme File\n(=+)\n/
 $readme =~ s/(:Revision[^\n]*\n)/$1$manify_text/ms;
 
 open my $out, ">", "fc-solve.txt";
-print {$out} $readme.$usage;
+print {$out} $readme, "\n\n", $usage;
 close($out);
 
 =head1 COPYRIGHT AND LICENSE
