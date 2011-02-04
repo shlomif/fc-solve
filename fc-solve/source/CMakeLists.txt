@@ -766,6 +766,29 @@ IF(ASCIIDOC_FOUND)
     ADD_CUSTOM_TARGET("${_master_pdf_target}" echo -n)
     ADD_DEPENDENCIES("${_master_pdf_target}" ${_pdf_targets})
 
+    SET (_out "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve-man-page-test.xml")
+    SET (_in "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve-man-page-test.txt")
+    
+    ADD_CUSTOM_COMMAND(
+        OUTPUT  "${_out}"
+        COMMAND ${ASCIIDOC_EXECUTABLE}
+        -d manpage --backend=docbook -o "${_out}" "${_in}"
+        DEPENDS "${_in}"
+        COMMENT "Asciidoc->DocBook ${_in}"
+        )
+
+    SET (_manpage "${CMAKE_CURRENT_SOURCE_DIR}/Freecell_Solver.6")
+    ADD_CUSTOM_COMMAND(
+        OUTPUT "${_manpage}"
+        COMMAND xsltproc  /etc/asciidoc/docbook-xsl/manpage.xsl 
+            "${_out}"
+        DEPENDS "${_out}"
+        COMMENT "Build man page ${_out}"
+    )
+
+    ADD_CUSTOM_TARGET("Freecell_Solver_man" echo -n
+        DEPENDS "${_manpage}"
+    )
 ENDIF(ASCIIDOC_FOUND)
 
 IF (FCS_WITH_TEST_SUITE)
