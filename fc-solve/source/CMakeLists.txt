@@ -621,6 +621,7 @@ INSTALL(
     DESTINATION "bin"
 )
 
+IF ()
 RUN_POD2MAN(
     "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.pod"
     "fc-solve.6"
@@ -628,6 +629,7 @@ RUN_POD2MAN(
     "Freecell Solver"
     "Freecell Solver ${VERSION}"
 )
+ENDIF ()
 
 INSTALL_MAN ("${CMAKE_CURRENT_BINARY_DIR}/fc-solve.6" 6)
 
@@ -702,7 +704,7 @@ ADD_CUSTOM_TARGET(
 FIND_PACKAGE(Asciidoc)
 
 SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt"
-    "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt"
+    "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" "fc-solve.txt"
 )
 
 SET (docs_to_install)
@@ -778,27 +780,17 @@ IF(ASCIIDOC_FOUND)
     ADD_CUSTOM_TARGET("${_master_pdf_target}" echo -n)
     ADD_DEPENDENCIES("${_master_pdf_target}" ${_pdf_targets})
 
-    SET (_out "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve-man-page-test.xml")
-    SET (_in "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve-man-page-test.txt")
-    
-    ADD_CUSTOM_COMMAND(
-        OUTPUT  "${_out}"
-        COMMAND ${ASCIIDOC_EXECUTABLE}
-        -d manpage --backend=docbook -o "${_out}" "${_in}"
-        DEPENDS "${_in}"
-        COMMENT "Asciidoc->DocBook ${_in}"
-        )
-
-    SET (_manpage "${CMAKE_CURRENT_SOURCE_DIR}/Freecell_Solver.6")
+    SET (_out "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.xml")
+    SET (_manpage "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.6")
     ADD_CUSTOM_COMMAND(
         OUTPUT "${_manpage}"
-        COMMAND xsltproc  /etc/asciidoc/docbook-xsl/manpage.xsl 
+        COMMAND xsltproc --nonet /etc/asciidoc/docbook-xsl/manpage.xsl 
             "${_out}"
         DEPENDS "${_out}"
         COMMENT "Build man page ${_out}"
     )
 
-    ADD_CUSTOM_TARGET("Freecell_Solver_man" echo -n
+    ADD_CUSTOM_TARGET("fc_solve_man" echo -n
         DEPENDS "${_manpage}"
     )
 ENDIF(ASCIIDOC_FOUND)
