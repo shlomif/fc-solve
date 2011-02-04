@@ -151,6 +151,8 @@ Verdict: Solved ; Iters: 615 ; Length: 77
 
 ** Shlomi Fish solved it in 77 moves.
 
+* Add the new Freecell Solver-copmatible game variants of PySolFC.
+
 Long-term
 ---------
 
