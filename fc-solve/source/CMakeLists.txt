@@ -736,10 +736,15 @@ IF(ASCIIDOC_FOUND)
             )
 
 
+        SET (TO_DOCBOOK_EXTRA_FLAGS )
+        IF ("${_file}" STREQUAL "fc-solve.txt")
+            LIST (APPEND TO_DOCBOOK_EXTRA_FLAGS "-d" "manpage")
+        ENDIF ("${_file}" STREQUAL "fc-solve.txt")
+
         ADD_CUSTOM_COMMAND(
             OUTPUT "${_docbook_out}"
             COMMAND ${ASCIIDOC_EXECUTABLE}
-                --backend=docbook -o ${_docbook_out} "${_full_file}"
+                --backend=docbook ${TO_DOCBOOK_EXTRA_FLAGS} -o ${_docbook_out} "${_full_file}"
             DEPENDS "${_full_file}"
             COMMENT "Asciidoc->DocBook ${_in}"
             )
@@ -790,7 +795,7 @@ IF(ASCIIDOC_FOUND)
         COMMENT "Build man page ${_out}"
     )
 
-    ADD_CUSTOM_TARGET("fc_solve_man" echo -n
+    ADD_CUSTOM_TARGET("fc_solve_man" ALL echo -n
         DEPENDS "${_manpage}"
     )
 ENDIF(ASCIIDOC_FOUND)
