@@ -687,6 +687,18 @@ ADD_CUSTOM_TARGET(
     DEPENDS ${BOARDS}
 )
 
+ADD_CUSTOM_COMMAND(
+    OUTPUT "fc-solve.txt"
+    COMMAND "perl"
+    ARGS "scripts/gen-man-page.pl"
+    DEPENDS "README.txt" "USAGE.txt"
+)
+
+ADD_CUSTOM_TARGET(
+    asciidoc_man_pages_base ALL
+    DEPENDS "fc-solve.txt"
+)
+
 FIND_PACKAGE(Asciidoc)
 
 SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt"
