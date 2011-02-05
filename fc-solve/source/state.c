@@ -58,27 +58,6 @@ static int fcs_stack_compare(const void * s1, const void * s2)
 }
 #endif
 
-#ifdef FCS_WITH_TALONS
-static int fcs_talon_compare_with_context(const void * p1, const void * p2, fcs_compare_context_t context)
-{
-    fcs_card_t * t1 = (fcs_card_t *)p1;
-    fcs_card_t * t2 = (fcs_card_t *)p2;
-
-    if (t1[0] < t2[0])
-    {
-        return -1;
-    }
-    else if (t1[0] > t2[0])
-    {
-        return 1;
-    }
-    else
-    {
-        return memcmp(t1,t2,t1[0]+1);
-    }
-}
-#endif
-
 #ifdef DEBUG_STATES
 void fc_solve_canonize_state(
     fcs_collectible_state_t * state,
