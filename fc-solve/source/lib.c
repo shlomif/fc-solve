@@ -887,9 +887,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM
-#ifdef FCS_WITH_TALONS
-                ,user->fc_solve_obj->talon_type
-#endif
 #ifdef INDIRECT_STACK_STATES
                 ,user->indirect_stacks_buffer
 #endif
@@ -907,9 +904,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM,
-#ifdef FCS_WITH_TALONS
-                FCS_TALON_NONE,
-#endif
                 &(user->state_validity_card));
 
             if (user->state_validity_ret != FCS_STATE_VALIDITY__OK)
