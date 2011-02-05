@@ -727,13 +727,17 @@ IF(ASCIIDOC_FOUND)
         # MESSAGE(STATUS "_in == <<${_in}>> _html_out == <<${_html_out}>>")
 
         # -a toc
-        ADD_CUSTOM_COMMAND(
-            OUTPUT "${_html_out}"
-            COMMAND ${ASCIIDOC_EXECUTABLE}
-                -o ${_html_out} "${_full_file}"
-            DEPENDS "${_full_file}"
-            COMMENT "Asciidoc ${_in}"
-            )
+        SET (htmls )
+        IF (NOT "${_file}" STREQUAL "fc-solve.txt")
+            ADD_CUSTOM_COMMAND(
+                OUTPUT "${_html_out}"
+                COMMAND ${ASCIIDOC_EXECUTABLE}
+                    -o ${_html_out} "${_full_file}"
+                DEPENDS "${_full_file}"
+                COMMENT "Asciidoc ${_in}"
+                )
+            LIST (APPEND htmls "${_html_out}")
+        ENDIF (NOT "${_file}" STREQUAL "fc-solve.txt")
 
 
         SET (TO_DOCBOOK_EXTRA_FLAGS )
@@ -768,7 +772,7 @@ IF(ASCIIDOC_FOUND)
         )
 
         ADD_CUSTOM_TARGET(${target} ALL echo -n
-            DEPENDS "${_html_out}" "${_docbook_out}" "${_file_we}"
+            DEPENDS ${htmls} "${_docbook_out}" "${_file_we}"
         )
 
         ADD_CUSTOM_TARGET(${_in}_pdf echo -n
