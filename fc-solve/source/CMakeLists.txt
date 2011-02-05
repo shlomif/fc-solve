@@ -820,6 +820,6 @@ ENDIF(FCS_WITH_TEST_SUITE)
 
 ADD_CUSTOM_TARGET(
     "bench" bash scripts/time-threads-num.bash -s 2 "${MAX_NUM_BENCHMARK_THREADS}"
-    COMMAND perl scripts/time-fcs.pl "DUMPS/*"
+    COMMAND perl scripts/time-fcs.pl "DUMPS-*/*"
 )
 
