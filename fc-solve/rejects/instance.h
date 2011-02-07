@@ -20,3 +20,23 @@ static GCC_INLINE void fc_solve_free_bfs_queue(fc_solve_soft_thread_t * soft_thr
 #undef my_brfs_queue
 #undef my_brfs_queue_last_item
 
+#ifdef FCS_WITH_TALONS
+    /*
+     * The talon for Gypsy-like games. Since only the position changes from
+     * state to state.
+     * We can keep it here.
+     *
+     * */
+    fcs_card_t * gypsy_talon;
+
+    /*
+     * The length of the Gypsy talon
+     * */
+    int gypsy_talon_len;
+
+    int talon_type;
+
+    /* The Klondike Talons' Cache */
+    fc_solve_hash_t * talons_hash;
+
+#endif

@@ -470,14 +470,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->opt_tests_order.num = 0;
     instance->opt_tests_order.tests = NULL;
 
-
-
-#ifdef FCS_WITH_TALONS
-    instance->talon_type = FCS_TALON_NONE;
-#endif
-
     instance->num_hard_threads = 0;
-
     instance->hard_threads = NULL;
 
 #ifndef FCS_FREECELL_ONLY
@@ -1076,19 +1069,6 @@ void fc_solve_start_instance_process_with_board(
 #endif
 
     /***********************************************/
-
-#ifdef FCS_WITH_TALONS
-    /* Initialize the Talon's Cache */
-    if (instance->talon_type == FCS_TALON_KLONDIKE)
-    {
-        instance->talons_hash = fc_solve_hash_init(
-            fcs_talon_compare_with_context,
-            NULL
-            );
-
-        fc_solve_cache_talon(instance, instance->state_copy_ptr_val);
-    }
-#endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
     /* Not working - ignore */

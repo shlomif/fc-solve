@@ -481,26 +481,6 @@ struct fc_solve_instance_struct
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
     DB * db;
 #endif
-#ifdef FCS_WITH_TALONS
-    /*
-     * The talon for Gypsy-like games. Since only the position changes from
-     * state to state.
-     * We can keep it here.
-     *
-     * */
-    fcs_card_t * gypsy_talon;
-
-    /*
-     * The length of the Gypsy talon
-     * */
-    int gypsy_talon_len;
-
-    int talon_type;
-
-    /* The Klondike Talons' Cache */
-    fc_solve_hash_t * talons_hash;
-
-#endif
 
     fcs_runtime_flags_t runtime_flags;
 

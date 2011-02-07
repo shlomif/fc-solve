@@ -99,14 +99,6 @@ extern void fc_solve_sfs_yukon_move_kings_to_empty_stack(
         );
 #endif
 
-#ifdef FCS_WITH_TALONS
-
-DECLARE_MOVE_FUNCTION(fc_solve_sfs_deal_gypsy_talon);
-
-DECLARE_MOVE_FUNCTION(fc_solve_sfs_get_card_from_klondike_talon);
-
-#endif
-
 #ifdef __cplusplus
 }
 #endif
