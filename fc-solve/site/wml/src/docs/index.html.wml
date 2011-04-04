@@ -111,7 +111,7 @@ best language to use for writing programs.
 Makes Software High-Quality?"</a></h3>
 
 <p>
-An essay inspired by a note a developer of a competing solver said on
+An essay inspired by a note which a developer of a competing solver said on
 the fc-solve-discuss mailing list, which also covers Freecell Solver at
 the end. See
 <a href="http://www.shlomifish.org/philosophy/computers/high-quality-software/rev2/">the second revision for the most up-to-date text</a>.
@@ -128,6 +128,21 @@ A blog entry in my use.perl.org blog about Freecell Solver and other things.
 
 <p>
 An essay about optimisation that gives some examples from Freecell Solver
-and elsewhere.
+and elsewhere. Also see 
+<a href="http://en.wikibooks.org/wiki/Optimizing_Code_for_Speed">a more 
+recent version</a> (and a publicly editable one) on the English Wikibooks. 
+</p>
+
+<h3 class="plain"><a href="http://www.shlomifish.org/philosophy/computers/open-source/foss-licences-wars/">FOSS Licences Wars</a></h3>
+
+<p>
+An essay about licences of free and operating source software (FOSS) that
+also mentions Freecell Solver as a case study. <b>Note:</b> some of it is
+disinforming or misinforming, and one should refer to 
+<a href="http://hamakor.org.il/pipermail/discussions/2009-August/000609.html">some 
+errata by Mikhael Goikhman</a> for some corrections, as well as 
+my 
+<a href="http://www.mail-archive.com/linux-il@cs.huji.ac.il/msg56378.html">"Why
+I prefer BSD-style licences"</a>.
 </p>
 
