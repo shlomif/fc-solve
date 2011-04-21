@@ -900,7 +900,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
     int stack_idx, c, dc, ds, initial_derived_states_num_states;
     fcs_card_t card, this_card, prev_card;
-    fcs_card_t dest_card;
     int freecells_to_fill, freestacks_to_fill;
     int num_cards_to_relocate;
     int seq_end;
@@ -912,8 +911,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     fcs_game_limit_t num_vacant_freecells;
     fcs_game_limit_t num_vacant_stacks;
     fcs_cards_column_t col, dest_col;
-
-    fcs_internal_move_t temp_move;
 
     tests_define_accessors();
     tests_define_seqs_built_by();
@@ -927,8 +924,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     initial_derived_states_num_states = derived_states_list->num_states;
-
-    temp_move = fc_solve_empty_move;
 
     CALC_POSITIONS_BY_RANK();
 
@@ -988,7 +983,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     continue;
                 }
                 dest_col = fcs_state_get_col(state, ds);
-                dest_card = fcs_col_get_card(dest_col, dc);
 
                 num_cards_to_relocate = fcs_col_len(dest_col) - dc - 1 + fcs_col_len(col) - seq_end - 1;
 
@@ -1070,8 +1064,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     fcs_game_limit_t num_vacant_stacks;
     fcs_cards_column_t col;
 
-    fcs_internal_move_t temp_move;
-
     tests_define_accessors();
     tests_define_empty_stacks_fill();
     tests_define_seqs_built_by();
@@ -1080,8 +1072,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     {
         return;
     }
-
-    temp_move = fc_solve_empty_move;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -1202,7 +1192,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                             )
                         )
                         {
-                            fcs_cards_column_t new_src_col;
                             int cols_indexes[3];
                             int empty_ret;
 
@@ -1211,8 +1200,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                             /* Fill the freecells with the top cards */
 
                             my_copy_stack(stack_idx);
-
-                            new_src_col = fcs_state_get_col(new_state, stack_idx);
 
                             cols_indexes[0] = stack_idx;
                             cols_indexes[1] = -1;
@@ -1355,8 +1342,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     fcs_cards_column_t col, dest_col;
     int initial_derived_states_num_states;
 
-    fcs_internal_move_t temp_move;
-
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     DECLARE_GAME_PARAMS();
 #endif
@@ -1368,8 +1353,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     tests_define_accessors();
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
-
-    temp_move = fc_solve_empty_move;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
@@ -1511,15 +1494,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
                 {
                     int cols_indexes[3];
-                    fcs_cards_column_t new_dest_col;
 
                     sfs_check_state_begin()
 
                     /* Fill the freecells with the top cards */
 
                     my_copy_stack(ds);
-
-                    new_dest_col = fcs_state_get_col(new_state, ds);
 
                     cols_indexes[0] = ds;
                     cols_indexes[1] = -1;
