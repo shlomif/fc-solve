@@ -107,7 +107,9 @@ print
 
     # my $major_sep = \'||';
     my $major_sep = \'║';
-    my $tb = Text::Table->new($sep,  "Place", $major_sep, (map { $_->{id}, $sep,} @results));
+    my $tb = Text::Table->new($sep,  " Place ", $major_sep,
+        (map { +(" $_->{id} ", $sep) } @results)
+    );
 
     my $num_scans = @results;
 
@@ -119,11 +121,12 @@ print
     foreach my $idx (0 .. $num_scans - 1)
     {
         # $tb->load([$idx+1, $histograms->slice(":,$idx")->list()]);
-        $tb->load([$idx+1,
+        $tb->load([map { " $_ " } ($idx+1,
                 (($idx == 0)
                     ? $get_place->($idx)
                     : ( $get_place->($idx) & (~ $get_place->($idx-1)) ) 
                 )->xchg(0,1)->sumover()->list()
+            )
             ]
         );
     }
@@ -157,6 +160,15 @@ print
         );
     };
 
+    my $start_rule = $make_rule->(
+        {
+            left => '┌',
+            main_left => '╥',
+            right => '┐',
+            middle => '┬',
+        }
+    );
+
     # my $rule = $tb->rule('-', '+');
     my $mid_rule = $make_rule->(
         {
@@ -167,8 +179,18 @@ print
         }
     );
 
-    print $mid_rule, $tb->title, $mid_rule, 
-        map { $_, $mid_rule, } $tb->body();
+    my $end_rule = $make_rule->(
+        {
+            left => '└',
+            main_left => '╨',
+            right => '┘',
+            middle => '┴',
+        }
+    );
+
+
+    print $start_rule, $tb->title,  
+        (map { $mid_rule, $_, } $tb->body()), $end_rule;
 
 =begin Foo
     print map { $results[$_]->{id} . ": " . $histogram[$_] . "\n" }
