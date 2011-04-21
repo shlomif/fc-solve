@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
     pack_item_t user;
     /* char buffer[2048]; */
     int board_num;
-    int start_board, end_board, stop_at;
+    int start_board, end_board;
     result_t * results, * curr_result;
     FILE * output_fh;
     int min_depth_for_scan2;
@@ -109,7 +109,7 @@ int main(int argc, char * argv[])
 
     int arg = 1, start_from_arg = -1, end_args = -1;
 
-    if (argc < 4)
+    if (argc < 3)
     {
         fprintf(stderr, "Not Enough Arguments!\n");
         print_help();
@@ -117,7 +117,6 @@ int main(int argc, char * argv[])
     }
     start_board = atoi(argv[arg++]);
     end_board = atoi(argv[arg++]);
-    stop_at = atoi(argv[arg++]);
 
     for (;arg < argc; arg++)
     {

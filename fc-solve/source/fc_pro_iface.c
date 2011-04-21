@@ -195,7 +195,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
     Position pos;
     moves_processed_t * ret;
     int virtual_stack_len[8];
+#ifndef NDEBUG
     int virtual_freecell_len[12];
+#endif
     int i, j, move_idx, num_back_end_moves;
     fcs_move_t move, out_move;
 
@@ -212,10 +214,12 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
     {
         virtual_stack_len[i] = orig->tableau[i].count;
     }
+#ifndef NDEBUG
     for(i=0;i<num_freecells;i++)
     {
         virtual_freecell_len[i] = (orig->hold[i] != 0) ? 1 : 0;
     }
+#endif
 
     for(move_idx=0; move_idx < num_back_end_moves ; move_idx ++)
     {
@@ -393,7 +397,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                             pos.foundations[pos.hold[src] >> 4]++;
                             pos.hold[src] = 0;
                         }
+#ifndef NDEBUG
                         virtual_freecell_len[src] = 0;
+#endif
                     }
                     break;
 
@@ -419,7 +425,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                             pos.tableau[dest].cards[pos.tableau[dest].count++] = pos.hold[src];
                             pos.hold[src] = 0;
                         }
+#ifndef NDEBUG
                         virtual_freecell_len[src] = 0;
+#endif
                         virtual_stack_len[dest]++;
                     }
                     break;
@@ -448,7 +456,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                             pos.hold[dest] = pos.tableau[src].cards[--pos.tableau[src].count];
                         }
                         virtual_stack_len[src]--;
+#ifndef NDEBUG
                         virtual_freecell_len[dest] = 1;
+#endif
                     }
                     break;
 

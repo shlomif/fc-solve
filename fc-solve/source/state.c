@@ -155,10 +155,14 @@ void fc_solve_canonize_state(
 #define state_val (state_raw->val)
 #else
     fcs_state_t * state_key;
+#ifndef FCS_WITHOUT_LOCS_FIELDS
     fcs_state_extra_info_t * state_val;
+#endif
 
     state_key = &(state_raw->s);
+#ifndef FCS_WITHOUT_LOCS_FIELDS
     state_val = &(state_raw->info);
+#endif
 #endif
     /* Insertion-sort the stacks */
 
@@ -244,10 +248,8 @@ void fc_solve_canonize_state_with_locs(
 
 #ifndef FCS_RCS_STATES
     fcs_state_t * state_key;
-    fcs_state_extra_info_t * state_val;
 
     state_key = &(state->s);
-    state_val = &(state->info);
 #endif
     /* Insertion-sort the stacks */
 

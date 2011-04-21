@@ -349,7 +349,7 @@ int main(int argc, char * argv[])
     char * error_string;
     pack_item_t user;
 
-    int arg = 1, start_from_arg, idx;
+    int arg = 1, idx;
 
     if (argc < 4)
     {
@@ -411,8 +411,6 @@ int main(int argc, char * argv[])
             break;
         }
     }
-
-    start_from_arg = arg;
 
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);

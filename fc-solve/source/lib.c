@@ -257,7 +257,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 
     FLARES_LOOP_START()
         status = fc_solve_apply_preset_by_ptr(
-            instance_item->flares[flare_idx].obj,
+            flare->obj,
             new_preset_ptr
             );
 
@@ -309,13 +309,10 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     )
 {
     fcs_user_t * user;
-    fcs_instance_item_t * instance_item;
     int depth_idx;
     int ret_code;
 
     user = (fcs_user_t *)api_instance;
-
-    instance_item = &(user->instances_list[user->current_instance_idx]);
 
     *error_string = NULL;
 
