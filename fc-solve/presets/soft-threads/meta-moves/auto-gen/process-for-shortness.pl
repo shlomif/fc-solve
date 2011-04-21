@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use utf8;
+
 use Getopt::Long;
 
 use List::Util qw(min);
@@ -14,6 +16,8 @@ use Text::Table;
 use MyInput;
 
 my $with_len = 0;
+
+binmode STDOUT, ':utf8';
 
 GetOptions(
     "l!" => \$with_len,
@@ -39,9 +43,17 @@ my $scan_index = 0;
 
 my $data = $input_obj->get_scans_lens_data();
 
+my $num_total_scans = @{$input_obj->selected_scans()};
 my @results;
+SELECTED_SCANS:
 foreach my $scan (@{$input_obj->selected_scans()})
 {
+    # TODO : Remove and refactor later.
+    if ($scan_index == 5)
+    {
+        last SELECTED_SCANS;
+    }
+
     my $scan_id = $scan->id();
     my $cmd_line = $scan->cmd_line();
 
@@ -89,15 +101,19 @@ print
 
     # print $histograms;
 
-    my $sep = \'|';
-    my $major_sep = \'||';
-    my $tb = Text::Table->new($sep,  "Place", $major_sep, (map { $_->id(), $sep,} @{$input_obj->selected_scans()}));
+    # my $sep = \'|';
+    my $sep = \'│';
 
-    my $num_scans = @{$input_obj->selected_scans()};
+
+    # my $major_sep = \'||';
+    my $major_sep = \'║';
+    my $tb = Text::Table->new($sep,  "Place", $major_sep, (map { $_->{id}, $sep,} @results));
+
+    my $num_scans = @results;
 
     my $get_place = sub {
         my ($idx) = @_;
-        return ($s->slice("$idx,:")->clump(0,1)->dummy(0, $num_scans) == $z);
+        return ($s->slice("$idx,:")->clump(0,1)->dummy(0, $num_total_scans) == $z);
     };
 
     foreach my $idx (0 .. $num_scans - 1)
@@ -112,10 +128,47 @@ print
         );
     }
 
-    my $rule = $tb->rule('-', '+');
+    my $make_rule = sub {
+        my ($args) = @_;
 
-    print $rule, $tb->title, $rule, 
-        map { $_, $rule, } $tb->body();
+        my $left = $args->{left};
+        my $right = $args->{right};
+        my $main_left = $args->{main_left};
+        my $middle = $args->{middle};
+
+        return $tb->rule(
+            sub {
+                my ($index, $len) = @_;
+
+                return ('─' x $len);
+            },
+            sub {
+                my ($index, $len) = @_;
+
+                my $char = 
+                (     ($index == 0) ? $left
+                    : ($index == 1) ? $main_left
+                    : ($index == $num_scans+1) ? $right
+                    : $middle
+                );
+
+                return $char x $len;
+            },
+        );
+    };
+
+    # my $rule = $tb->rule('-', '+');
+    my $mid_rule = $make_rule->(
+        {
+            left => '├',
+            main_left => '╫',
+            right => '┤',
+            middle => '┼',
+        }
+    );
+
+    print $mid_rule, $tb->title, $mid_rule, 
+        map { $_, $mid_rule, } $tb->body();
 
 =begin Foo
     print map { $results[$_]->{id} . ": " . $histogram[$_] . "\n" }
