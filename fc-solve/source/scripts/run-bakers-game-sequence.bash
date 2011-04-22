@@ -4,9 +4,9 @@ GAME="bakers_game"
 
 RESULTS_DIR="$GAME-results/"
 
-START="$1"
+START="${1//,/}"
 shift
-END="$1"
+END="${1//,/}"
 shift
 
 MAX_ITERS='10,000,000'
