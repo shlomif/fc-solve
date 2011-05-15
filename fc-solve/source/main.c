@@ -634,8 +634,6 @@ static freecell_solver_str_t known_parameters[] = {
     NULL
     };
 
-#define USER_STATE_SIZE 1024
-
 static void fc_solve_output_result_to_file(
     FILE * output_fh,
     void * instance,
@@ -768,6 +766,8 @@ static void fc_solve_output_result_to_file(
 
     return;
 }
+
+#define USER_STATE_SIZE 1024
 
 int main(int argc, char * argv[])
 {
