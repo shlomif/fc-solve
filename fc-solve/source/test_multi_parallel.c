@@ -169,6 +169,10 @@ static const char * known_parameters[] = {
     "-i", "--iter-output",
     "-s", "--state-output",
     "-p", "--parseable-output",
+    "-c", "--canonized-order-output",
+    "-sn", "--standard-notation",
+    "-snx", "--standard-notation-extended",
+    "-sam", "--display-states-and-moves",
     "-t", "--display-10-as-t",
     "-pi", "--display-parent-iter",
     NULL
@@ -274,6 +278,8 @@ int main(int argc, char * argv[])
     end_board = atoi(argv[arg++]);
     stop_at = atoi(argv[arg++]);
 
+    init_debug_context(&user.display_context);
+
     for (;arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--binary-output-to"))
@@ -308,7 +314,7 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
             solutions_directory = argv[arg];
-            solution_filename = malloc(strlen(solution_filename) + 1024);
+            solution_filename = malloc(strlen(solutions_directory) + 1024);
         }
         else
         {

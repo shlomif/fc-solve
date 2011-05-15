@@ -37,6 +37,13 @@ extern "C" {
 #include "inline.h"
 #include "bool.h"
 
+enum STANDARD_NOTATION_TYPE
+{
+    STANDARD_NOTATION_NO,
+    STANDARD_NOTATION_REGULAR,
+    STANDARD_NOTATION_EXTENDED
+};
+
 struct fc_solve_display_information_context_struct
 {
     fcs_bool_t debug_iter_state_output;
@@ -55,6 +62,23 @@ struct fc_solve_display_information_context_struct
 };
 
 typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
+
+static void init_debug_context(
+    fc_solve_display_information_context_t * dc
+    )
+{
+    dc->debug_iter_state_output = FALSE;
+    dc->parseable_output = FALSE;
+    dc->canonized_order_output = FALSE;
+    dc->display_10_as_t = FALSE;
+    dc->display_parent_iter_num = FALSE;
+    dc->display_moves = FALSE;
+    dc->display_states = TRUE;
+    dc->standard_notation = STANDARD_NOTATION_NO;
+    dc->output_filename = NULL;
+
+    return;
+}
 
 static GCC_INLINE void fc_solve_output_result_to_file(
     FILE * output_fh,
