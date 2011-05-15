@@ -260,6 +260,8 @@ int main(int argc, char * argv[])
     fcs_state_string_t state_string;
 
     binary_output_t binary_output;
+    const char * solutions_directory = NULL;
+    char * solution_filename = NULL;
 
     int arg = 1, start_from_arg;
     if (argc < 4)
@@ -295,6 +297,18 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
             total_iterations_limit_per_board = atoi(argv[arg]);
+        }
+        else if (!strcmp(argv[arg], "--solutions-directory"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--solutions-directory came without an argument!\n");
+                print_help();
+                exit(-1);
+            }
+            solutions_directory = argv[arg];
+            solution_filename = malloc(strlen(solution_filename) + 1024);
         }
         else
         {
@@ -459,6 +473,32 @@ int main(int argc, char * argv[])
         else
         {
             print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
+        }
+
+        if (solutions_directory)
+        {
+            FILE * output_fh;
+            sprintf(solution_filename, "%s%09d.sol", 
+                solutions_directory, board_num
+            );
+            
+            output_fh = fopen(solution_filename, "wt");
+
+            if (! output_fh)
+            {
+                fprintf(stderr,
+                        "Could not open output file '%s' for writing!",
+                        solution_filename
+                       );
+                return -1;
+            }
+
+            fc_solve_output_result_to_file(
+                output_fh, user.instance, ret, &user.display_context
+            );
+
+            fclose(output_fh);
+            output_fh = NULL;
         }
 
         total_num_iters += freecell_solver_user_get_num_times(user.instance);
