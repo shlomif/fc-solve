@@ -43,24 +43,7 @@
 #include "inline.h"
 #include "bool.h"
 #include "range_solvers_gen_ms_boards.h"
-
-struct fc_solve_display_information_context_struct
-{
-    fcs_bool_t debug_iter_state_output;
-    int freecells_num;
-    int stacks_num;
-    int decks_num;
-    fcs_bool_t parseable_output;
-    fcs_bool_t canonized_order_output;
-    fcs_bool_t display_10_as_t;
-    fcs_bool_t display_parent_iter_num;
-    fcs_bool_t debug_iter_output_on;
-    fcs_bool_t display_moves;
-    fcs_bool_t display_states;
-    int standard_notation;
-};
-
-typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
+#include "output_to_file.h"
 
 static void my_iter_handler(
     void * user_instance,
@@ -437,11 +420,7 @@ int main(int argc, char * argv[])
         return (-1);
     }
 
-
-
     ret = 0;
-
-
 
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
