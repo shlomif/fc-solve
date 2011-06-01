@@ -253,53 +253,54 @@ sub run
                 }
             }
 
-            {
-                open my $lock_fh, ">", $self->_summary_lock()
-                    or Carp::confess ("Cannot lock summary-lock - $!");
-
-                flock ($lock_fh, LOCK_EX) 
-                    or Carp::confess("Cannot lock summary lock - $!");
-
-                my $s = '';
-
-                $s .= sprintf("Range[%d->%d]: {{{", $min_idx, $max_idx);
-
-                foreach my $status (qw(solved unsolved))
-                {
-                    foreach my $what (qw(iters gen_states))
-                    {
-                        $s .= sprintf(" Moments['%s'/'%s'] = ", $status, $what);
-                        $s .= '[' 
-                            . join(',', 
-                                map { $_->bstr() } 
-                                (@{ $stats{$status}->{$what}->{moments} }) 
-                            )
-                            .  ']';
-
-                        $s .= ';';
-                    }
-                }
-
-                $s .= '}}}';
-
-                open my $summary_out_fh, ">>", $self->_summary_file()
-                    or Carp::confess("Cannot open summary out file for appending - $!");
-
-                print {$summary_out_fh} $s, "\n";
-
-                close ($summary_out_fh);
-
-                flock ($lock_fh, LOCK_UN);
-                    or Carp::confess("Cannot unlock summary lock - $!");
-
-                close ($lock_fh);
-            }
         }
         else
         {
             Carp::confess
                 "Cannot match format for iters/gen_states at $filename";
         }
+    }
+
+    {
+        open my $lock_fh, ">", $self->_summary_lock()
+            or Carp::confess ("Cannot lock summary-lock - $!");
+
+        flock ($lock_fh, LOCK_EX) 
+            or Carp::confess("Cannot lock summary lock - $!");
+
+        my $s = '';
+
+        $s .= sprintf("Range[%d->%d]: {{{", $min_idx, $max_idx);
+
+        foreach my $status (qw(solved unsolved))
+        {
+            foreach my $what (qw(iters gen_states))
+            {
+                $s .= sprintf(" Moments['%s'/'%s'] = ", $status, $what);
+                $s .= '[' 
+                    . join(',', 
+                        map { $_->bstr() } 
+                        (@{ $stats{$status}->{$what}->{moments} }) 
+                    )
+                    .  ']';
+
+                $s .= ';';
+            }
+        }
+
+        $s .= '}}}';
+
+        open my $summary_out_fh, ">>", $self->_summary_file()
+            or Carp::confess("Cannot open summary out file for appending - $!");
+
+        print {$summary_out_fh} $s, "\n";
+
+        close ($summary_out_fh);
+
+        flock ($lock_fh, LOCK_UN)
+            or Carp::confess("Cannot unlock summary lock - $!");
+
+        close ($lock_fh);
     }
     exit(0);
 }
