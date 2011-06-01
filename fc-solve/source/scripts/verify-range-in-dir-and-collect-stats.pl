@@ -233,7 +233,7 @@ sub run
 
         if (my ($iters) = ($contents =~ m{^Total number of states checked is (\d+)\.$}ms)
                 and
-            my ($gen_states) = ($contents =~ m{^Total number of states checked is (\d+)\.$}ms))
+            my ($gen_states) = ($contents =~ m{^This scan generated (\d+) states\.$}ms))
         {
             my $record = $stats{ $solved ? 'solved' : 'unsolved' };
             foreach my $to_add_rec (
