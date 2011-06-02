@@ -5,6 +5,8 @@ use warnings;
 
 use base 'Games::Solitaire::Verify::Base';
 
+use Data::Dumper qw(Dumper);
+
 use Getopt::Long qw(GetOptionsFromArray);
 
 use Games::Solitaire::Verify::VariantsMap;
