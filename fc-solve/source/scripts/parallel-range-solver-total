@@ -97,22 +97,105 @@ sub _update_sync_file
 
 my $mode;
 
+my $num_solving_processes;
+
 GetOptions(
     'mode=s' => \$mode,
+    'num-solvers=i' => \$num_solving_processes,
 ) or die "Cannot set GetOptions";
 
+if (!defined($num_solving_processes))
+{
+    die "Number of solving processes not specified.";
+}
+
 __PACKAGE__->can("_mode_$mode")->();
+
+sub _mode_queue
+{
+    my @queue;
+
+    # To be set by the solving process that encounters the max_idx.
+    my $num_finished = 0;
+
+    my $server = IO::Socket::UNIX->new(
+            Type => SOCK_STREAM(),
+            Local => $RANGE_TO_VERIFY_SOCKET_PATH,
+            Listen => 1,
+        );
+
+    my @order = qw(path min_idx max_idx);
+    while (my $client = $server->accept)
+    {
+        my $read_line = sub {
+            my $s = <$client>;
+            chomp($s);
+
+            return $s;
+        };
+
+        my $write = sub {
+            print {$client} map { "$_\n" } @_;
+
+            return;
+        };
+
+        my $cmd = $read_line->();
+
+        if ($cmd eq "GET_NEXT")
+        {
+            if (@queue)
+            {
+                my $item = shift(@queue);
+                $write->("DATA", @{$item}{@order});
+            }
+            elsif ($num_finished == $num_solving_processes)
+            {
+                $write->("FINISH");
+            }
+            else
+            {
+                $write->("WAIT");
+            }
+        }
+        elsif ($cmd eq "ENQ")
+        {
+            my @data;
+
+            foreach my $idx (0 .. $#order)
+            {
+                push @data, $read_line->();
+            }
+
+            push @queue, +{ map { $order[$_] => $data[$_] } (0 .. $#order) };
+        }
+        elsif ($cmd eq "FINISH")
+        {
+            $num_finished++;
+        }
+
+        close($client);
+    }
+}
+
 
 sub _mode_verify
 {
     my $continue = 1;
 
+    MAIN_LOOP:
     while ($continue)
     {
         my $sock = IO::Socket::UNIX->new(
             Type => SOCK_STREAM(),
             Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
         );
+
+        if (! $sock )
+        {
+            print "Nothing to listen to.\n";
+            last MAIN_LOOP;
+        }
 
         print {$sock} "GET_NEXT\n";
         $sock->flush;
