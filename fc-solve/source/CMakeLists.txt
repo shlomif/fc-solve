@@ -106,7 +106,6 @@ SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
 # which point to directories outside the build tree to the install RPATH
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-
 SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
     "States Type ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES'). No need to usually change.")
 SET (FCS_ENABLE_RCS_STATES CACHE BOOL "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
@@ -152,6 +151,8 @@ SET (FCS_AVOID_TCMALLOC ""
     CACHE BOOL
     "Avoid linking against Google's tcmalloc"
 )
+
+SET (FCS_BUILD_DOCS "" CACHE BOOL "Whether to build the documentation or not.")
 
 SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
 
@@ -700,7 +701,9 @@ ADD_CUSTOM_TARGET(
     DEPENDS "fc-solve.txt"
 )
 
-FIND_PACKAGE(Asciidoc)
+IF (FCS_BUILD_DOCS)
+    FIND_PACKAGE(Asciidoc)
+ENDIF (FCS_BUILD_DOCS)
 
 SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt"
     "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" "fc-solve.txt"
