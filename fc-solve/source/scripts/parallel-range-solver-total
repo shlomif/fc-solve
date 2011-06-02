@@ -10,6 +10,7 @@ use Carp;
 use IO::Socket::UNIX;
 use Fcntl qw(:flock);
 use File::Path qw(rmtree);
+use Data::Dumper;
 
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
@@ -68,7 +69,7 @@ my @VERIFY_RANGE_COMMAND_START =
 (
     $^X, "scripts/verify-range-in-dir-and-collect-stats.pl",
     '--summary-lock', $SUMMARY_LOCK_PATH,
-    '--summary_file', $SUMMARY_FILE_PATH,
+    '--summary-file', $SUMMARY_FILE_PATH,
     @preset,
 );
 
@@ -77,12 +78,12 @@ sub _update_sync_file
 {
     my $callback = shift;
 
-    my @lines = _getlines($SYNC_FILE_PATH);
+    my $lines = _getlines($SYNC_FILE_PATH);
 
     my %data;
 
     my @order = qw(NEXT_DEAL_IDX NEXT_ID CONTINUE);
-    @data{@order} = @lines;
+    @data{@order} = @$lines;
 
     $callback->(\%data);
 
@@ -121,7 +122,8 @@ sub _mode_queue_server
             Type => SOCK_STREAM(),
             Local => $RANGE_TO_VERIFY_SOCKET_PATH,
             Listen => 1,
-        );
+        )
+        or Carp::confess("Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!");
 
     my @order = qw(path min_idx max_idx);
     while (my $client = $server->accept)
@@ -174,6 +176,10 @@ sub _mode_queue_server
         }
 
         close($client);
+    }
+    continue
+    {
+        print "QUEUE == " . Dumper([\@queue]) . "\n\n";
     }
 }
 
