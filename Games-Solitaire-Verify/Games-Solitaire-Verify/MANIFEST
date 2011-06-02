@@ -19,6 +19,7 @@ Makefile.PL
 MANIFEST
 META.yml
 README
+script/tag-release.pl
 script/verify-solitaire-solution
 t/00-load.t
 t/01-base.t
