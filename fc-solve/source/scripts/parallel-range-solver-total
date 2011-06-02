@@ -66,6 +66,7 @@ my $conf_lines = eval { _getlines($GLOBAL_CONFIG_PATH) };
 if ($@)
 {
     _mode_setup();
+    exit(0);
 }
 
 my ($max_deal_idx, $preset_conf, $min_idx) = @$conf_lines;
