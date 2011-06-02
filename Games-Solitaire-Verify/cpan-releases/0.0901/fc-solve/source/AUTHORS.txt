@@ -1,0 +1,107 @@
+Freecell Solver's Authors and Contributors
+==========================================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2009-08-29
+:Revision: $Id$
+
+Freecell Solver's Authors and Contributors List
+-----------------------------------------------
+
+* *Shlomi Fish* ( http://www.shlomifish.org/ ) - doing most of the work on 
+Freecell Solver.
+
+* *Eric Warmenhoven* - sending a program that generates the board of GNOME 
+Freecell.
+
+* *Hai Huang* - noting several boards of Microsoft Freecell that could not be
+solved by Freecell Solver.
+
+* *Magnus Reftel* - noting the correct procedure for calculating how many 
+cards can be moved as a function of the free freecells and free stacks.
+
+* *Colin Plumb* - writing the MD5 code.
+
+* *Ron Rivest* - inventing the MD5 hashing algorithm.
+
+* *Jim Horne* - supplying the shuffling algorithm for 
+Microsoft Freecell/Freecell Pro.
+
+* *Tom Holroyd* - sending several Seahaven Towers games which Freecell Solver
+was unable to solve, thus making me improve the algorithm.
+
+* *Markus F. X. J. Oberhumer* - writing PySol on whose code the board generation
+program for it is based. Also, contributing some patches.
+
+* *Justin-Heyes Jones* - wrote a nice introduction to the A* algorithm, and 
+wrote the basis for the pqueue.c code.
+
+* *Stephan Kulow* - integrated Freecell Solver into the kpat Solitaire suite for
+KDE 2.1 and onwards; reported several bugs and memory leaks.
+
+* *Michael Keller* - Contributing some useful input about some minor features
+lacking and the Spades/Clubs mix-up.
+
+* *GeYong* - He created Freecell Tool, whose randomized scan provided 
+inspiration for the random-DFS scan of Freecell Solver.
+
+* *Adrian Ettlinger* - Integrating Freecell Solver into "Freecell Pro", and
+contributing some input.
+
+* *The perl 5.x Hackers* - I copied its hash function.
+
+* *Gergeley Kontra* - wrote a Vim script to align text which I used.
+
+* *Bob Jenkins* - wrote the lookup2 hash function, which was used as 
+the primary hash until reverted back to the perl 5.x hash.
+(check http://burtleburtle.net/bob/hash/)
+
+* *Tzafrir Cohen* - His "RPM" lecture provided help in creating the RPM
++.spec+ file and constructing RPMs (RPM Package Manager) for Freecell
+Solver.
+
+* *Yotam Rubin* - Preparing an initial Debian Package.
+
+* *Risko Gergely* - Maintaining the current Debian Package and contributing
+some patches to the CMake build system.
+
+* *Chris Moore* - Pointing to an out-of-date comment regarding the 
++MAX_NUM_CARDS_IN_A_STACK+ which I updated.
+
+* *Anonymous* (on http://xrl.us/h6ex ) - for pointing out the malloc.h and 
+leading double underscores problems.
+
+* *Con Radchenko* - supplying a small patch, and reporting a bug with
++--method dfs+, and supplying some other input. Integrated Freecell Solver
+into http://pysolfc.sourceforge.net/ .
+
+* *larrysan45* - reporting a problem with +--sequence-move unlimited+
+and +--empty-stacks-filled-by kings+, which resulted in a bug fix.
+
+* *Ido Kanner* ( http://ik.homelinux.org/ ) - reporting a segfault when running
+freecell-solver-2.28.0 on x86-64, and allowing us to diagnose it. 
+
+* *Gary Campbell* ( http://numin8r.us/ ) - participating in the mailing list
+and inspiring some past (and possibly future) work on optimising the
+length of the resultant solutions. He was given the honour of naming the
+"sand-stone" and "slick-rock" "-l" presets. Has his own solver for
+Freecell for DOS on his homepage.
+
+* *LECA Dimitri (Pythack)* ( http://pythack.com/ ) - tried to run the
+Freecell Solver test suite and benchmarks on Archlinux, reported some
+problems in the process. This in turn eventually made us simplify the process 
+and also uncovered some bugs in the dependencies.
+
+* http://commons.wikimedia.org/wiki/User:Stannered - created
+http://commons.wikimedia.org/wiki/File:Stop_hand_nuvola.svg[The stop sign
+that we use on the download page], which is under the Creative Commons
+Attribution ShareAlike licence. Thanks!
+
+* *David Stevenson* - inspiring a documentation clarification for broken
+versions of CMake (e.g: cmake-2.6.2).
+
+* *Jurij Bortnik* ( http://freecellgamesolutions.com/ ) - reported some broken
+links on the Freecell Solver homepage.
+
+* *Kaz Kylheku* ( http://www.kylheku.com/~kaz/ ) - author and originator of
+kazlib ( http://www.kylheku.com/~kaz/kazlib.html ) whose BSDLed balanced binary
+search tree is included in the Freecell Solver distribution.

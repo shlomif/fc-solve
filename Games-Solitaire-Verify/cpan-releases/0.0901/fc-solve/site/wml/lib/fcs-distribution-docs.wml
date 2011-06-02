@@ -1,0 +1,32 @@
+<define-tag fcs_document>
+<preserve fn desc />
+<set-var %attributes />
+<tr>
+<td>
+<a href="$(ROOT)/docs/distro/<get-var fn />.html"><get-var fn /></a>
+</td>
+<td>
+<a href="<get-var fn />">Plaintext</a>
+</td>
+<td>
+<ifeq "<get-var desc />" "" "<get-var fn />" "<get-var desc />" />
+</td>
+</tr>
+<restore fn desc />
+</define-tag>
+
+<define-tag fcs_distribution_documents>
+<table class="downloads" summary="Links on the left, short descriptions on the right">
+<tr>
+<th>HTML</th>
+<th>Plaintext</th>
+<th>Description</th>
+</tr>
+<fcs_document fn="README" desc="The &quot;Readme&quot; File" />
+<fcs_document fn="INSTALL" desc="How to install Freecell Solver" />
+<fcs_document fn="NEWS" desc="The file containing what's new in every release." />
+<fcs_document fn="USAGE" desc="A detailed usage document" />
+<fcs_document fn="TODO" desc="The todo list" />
+<fcs_document fn="AUTHORS" desc="List of authors and contributors" />
+</table>
+</define-tag>
