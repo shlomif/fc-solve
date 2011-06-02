@@ -53,12 +53,12 @@ my $FCS_PATH = $ENV{FCS_PATH};
 
 my $RANGE_TO_VERIFY_SOCKET_PATH = sprintf("%s/range-queue.sock", $FCS_PATH);
 
-my $GLOBAL_CONFIG_PATH = "$FCS_PATH/global-params.txt");
-my $SUMMARY_LOCK_PATH = "$FCS_PATH/summary.lock");
-my $SUMMARY_FILE_PATH = "$FCS_PATH/summary.txt");
-my $FAULT_FILE_PATH = "$FCS_PATH/FAULT.txt");
-my $SYNC_LOCK_PATH = "$FCS_PATH/sync.lock");
-my $SYNC_FILE_PATH = "$FCS_PATH/sync.txt");
+my $GLOBAL_CONFIG_PATH = "$FCS_PATH/global-params.txt";
+my $SUMMARY_LOCK_PATH = "$FCS_PATH/summary.lock";
+my $SUMMARY_FILE_PATH = "$FCS_PATH/summary.txt";
+my $FAULT_FILE_PATH = "$FCS_PATH/FAULT.txt";
+my $SYNC_LOCK_PATH = "$FCS_PATH/sync.lock";
+my $SYNC_FILE_PATH = "$FCS_PATH/sync.txt";
 
 my ($max_deal_idx, $preset_conf, $min_idx) = @{_getlines($GLOBAL_CONFIG_PATH)};
 
