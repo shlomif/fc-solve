@@ -1,0 +1,192 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+package main;
+
+use Getopt::Long;
+use Carp;
+use IO::Socket::UNIX;
+use Fcntl qw(:flock);
+
+use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
+
+sub _getlines
+{
+    my $filename = shift;
+
+    open my $in, "<", $filename
+        or die "Cannot open '$filename' for slurping - $!";
+
+    local $/;
+    my @l = <$in>;
+
+    close($in);
+
+    chomp(@l);
+
+    return \@l;
+}
+
+sub _slurp
+{
+    my $filename = shift;
+
+    open my $in, "<", $filename
+        or die "Cannot open '$filename' for slurping - $!";
+
+    local $/;
+    my $contents = <$in>;
+
+    close($in);
+
+    return $contents;
+}
+
+if (!defined($ENV{'FCS_PATH'}))
+{
+    Carp::confess("FCS_PATH is not defined.");
+}
+
+my $FCS_PATH = $ENV{FCS_PATH};
+
+my $RANGE_TO_VERIFY_SOCKET_PATH = sprintf("%s/range-queue.sock", $FCS_PATH);
+
+my $GLOBAL_CONFIG_PATH = "$FCS_PATH/global-params.txt");
+my $SUMMARY_LOCK_PATH = "$FCS_PATH/summary.lock");
+my $SUMMARY_FILE_PATH = "$FCS_PATH/summary.txt");
+my $FAULT_FILE_PATH = "$FCS_PATH/FAULT.txt");
+my $SYNC_LOCK_PATH = "$FCS_PATH/sync.lock");
+my $SYNC_FILE_PATH = "$FCS_PATH/sync.txt");
+
+my ($max_deal_idx, $preset_conf, $min_idx) = @{_getlines($GLOBAL_CONFIG_PATH)};
+
+my @preset = split(/\s+/, $preset_conf);
+
+my @VERIFY_RANGE_COMMAND_START =
+(
+    $^X, "scripts/verify-range-in-dir-and-collect-stats.pl",
+    '--summary-lock', $SUMMARY_LOCK_PATH,
+    '--summary_file', $SUMMARY_FILE_PATH,
+    @preset,
+);
+
+# The lock needs to be kept.
+sub _update_sync_file
+{
+    my $callback = shift;
+
+    my @lines = _getlines($SYNC_FILE_PATH);
+
+    my %data;
+
+    my @order = qw(NEXT_DEAL_IDX NEXT_ID CONTINUE);
+    @data{@order} = @lines;
+
+    $callback->(\%data);
+
+    open my $write_to_sync, '>', $SYNC_FILE_PATH
+        or Carp::confess("Cannot open sync file - $!");
+
+    print {$write_to_sync} map { $data{$_} , "\n" } @order;
+     
+    close ($write_to_sync);
+}
+my $mode;
+
+GetOptions(
+    'mode=s' => \$mode,
+) or die "Cannot set GetOptions";
+
+__PACKAGE__->can("_mode_$mode")->();
+
+sub _mode_verify
+{
+    my $continue = 1;
+    while ($continue)
+    {
+        my $sock = IO::Socket::UNIX->new(
+            Type => SOCK_STREAM(),
+            Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
+        );
+
+        print {$sock} "GET_NEXT\n";
+        $sock->flush;
+
+        my $read_line = sub {
+            my $s = <$sock>;
+            chomp($s);
+
+            return $s;
+        };
+
+        my $status = $read_line->();
+
+        if ($status eq "WAIT")
+        {
+            close($sock);
+            sleep(15);
+        }
+        elsif ($status eq "FINISH")
+        {
+            close($sock);
+            $continue = 0;
+        }
+        elsif ($status eq "DATA")
+        {
+            my $path_to_dir = $read_line->();
+            my $min_idx = $read_line->();
+            my $max_idx = $read_line->();
+            
+            close($sock);
+
+            my $exit_code;
+            trap
+            {
+                $exit_code = system(
+                    @VERIFY_RANGE_COMMAND_START,
+                    '--min-idx', $min_idx, '--max-idx', $max_idx,
+                    # Finally the path of the directory to process.
+                    $path_to_dir,
+                );
+            };
+
+            my $stderr = $trap->stderr;
+            my $stdout = $trap->stdout;
+
+            if ($exit_code != 0)
+            {
+                # Break on error.
+                {
+                    open my $lock_fh, ">", $SYNC_LOCK_PATH
+                        or Carp::confess ("Cannot lock summary-lock - $!");
+
+                    flock ($lock_fh, LOCK_EX) 
+                        or Carp::confess("Cannot lock summary lock - $!");
+
+                    open my $fault_fh, '>>', $FAULT_FILE_PATH
+                        or Carp::confess("Cannot open fault file - $!");
+
+                    print {$fault_fh} "\n\n\nSTDERR=\n<<<\n$stderr\n>>>\n\nSTDOUT=\n<<<\n$stdout\n>>>\n";
+                    close ($fault_fh);
+
+                    _update_sync_file(
+                        sub {
+                            my $data = shift;
+
+                            $data->{CONTINUE} = 0;
+
+                            return;
+                        }
+                    );
+
+                    close ($lock_fh);
+                }
+            }
+        }
+    }
+}
+
+1;
+
