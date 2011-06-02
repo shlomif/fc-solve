@@ -111,7 +111,7 @@ if (!defined($num_solving_processes))
 
 __PACKAGE__->can("_mode_$mode")->();
 
-sub _mode_queue
+sub _mode_queue_server
 {
     my @queue;
 
