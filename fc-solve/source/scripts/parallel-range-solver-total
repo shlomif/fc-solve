@@ -60,6 +60,11 @@ my $SUMMARY_FILE_PATH = "$FCS_PATH/summary.txt";
 my $FAULT_FILE_PATH = "$FCS_PATH/FAULT.txt";
 my $SYNC_LOCK_PATH = "$FCS_PATH/sync.lock";
 my $SYNC_FILE_PATH = "$FCS_PATH/sync.txt";
+my $RESULTS_DIRS_BASE_PATH = "$FCS_PATH/results";
+
+my $RANGE_SOLVER_EXE = "$FCS_PATH/freecell-solver-range-parallel-solve";
+
+my $SOLVER_STEP = 1;
 
 my $conf_lines = eval { _getlines($GLOBAL_CONFIG_PATH) };
 
@@ -147,6 +152,159 @@ sub _mode_setup
     );
 
     _write_file($SYNC_FILE_PATH, "$start_from\n1\n1\n");
+
+    if (!mkdir($RESULTS_DIRS_BASE_PATH))
+    {
+        Carp::confess("Unable to mkdir '$RESULTS_DIRS_BASE_PATH' - $!");
+    }
+
+    return;
+}
+
+my $NUM_SOLVER_DEALS_PER_BATCH = 50;
+
+sub _mode_solve
+{
+    my $continue = 1;
+
+    MAIN_LOOP:
+    while ($continue)
+    {
+        my $next_id;
+        my $start_deal_idx;
+        my $end_deal_idx;
+
+        _lock_sync(
+            sub {
+                _update_sync_file(
+                    sub {
+                        my $data = shift;
+
+                        if (! $data->{'CONTINUE'})
+                        {
+                            $continue = 0;
+                            return;
+                        }
+                        elsif ($data->{NEXT_DEAL_IDX} > $max_deal_idx)
+                        {
+                            $continue = 0;
+                            return;
+                        }
+                        else
+                        {
+                            $next_id = ($data->{NEXT_ID}++);
+                            $start_deal_idx = $data->{NEXT_DEAL_IDX};
+                            $end_deal_idx = $start_deal_idx + $NUM_SOLVER_DEALS_PER_BATCH;
+
+                            if ($end_deal_idx > $max_deal_idx)
+                            {
+                                $end_deal_idx = $max_deal_idx;
+                            }
+
+                            $data->{NEXT_DEAL_IDX} = $end_deal_idx+1;
+                            return;
+                        }
+                    },
+                )
+            };
+        );
+
+        if (! $continue)
+        {
+            last MAIN_LOOP;
+        }
+
+        my $dir_path = sprintf(
+            "%s/results-%09d", $RESULTS_DIRS_BASE_PATH, $next_id
+        );
+
+        if (!mkdir($dir_path))
+        {
+            my $err = $!;
+
+            # TODO : duplicate code from elsewhere.
+            _lock_sync(
+                sub {
+                    open my $fault_fh, '>>', $fault_file_path
+                        or carp::confess("cannot open fault file - $!");
+
+                    print {$fault_fh} "\n\n\nCannot mkdir '$dir_path' - '$err';\n";
+                    close ($fault_fh);
+
+                    _halt_process();
+                }
+            );
+
+            $continue = 0;
+            last MAIN_LOOP;
+        }
+
+        my $exit_code;
+
+        trap
+        {
+            $exit_code = system(
+                $RANGE_SOLVER_EXE, $start_deal_idx, $end_deal_idx, $SOLVER_STEP,
+                '--solutions-directory', $dir_path,
+                @preset,
+                '-p', '-t', '-sam',
+            );
+        };
+
+        my $stdout = $trap->stdout;
+        my $stderr = $trap->stderr;
+
+        if (!$exit_code)
+        {
+            # TODO : duplicate code from elsewhere.
+            _lock_sync(
+                sub {
+                    open my $fault_fh, '>>', $fault_file_path
+                        or carp::confess("cannot open fault file - $!");
+
+                    print {$fault_fh} "\n\n\n[Running the range parallel solver] stderr=\n<<<\n$stderr\n>>>\n\nstdout=\n<<<\n$stdout\n>>>\n";
+                    close ($fault_fh);
+
+                    _halt_process();
+                }
+            );
+
+            $continue = 0;
+            last MAIN_LOOP;
+        }
+
+        my $sock = IO::Socket::UNIX->new(
+            Type => SOCK_STREAM(),
+            Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
+        );
+
+        if (! $sock )
+        {
+            print "Nothing to listen to.\n";
+        }
+
+        print {$sock} "ENQ\n$dir_path\n$start_deal_idx\n$end_deal_idx\n";
+        $sock->flush;
+
+        close($sock);
+    }
+
+    my $sock = IO::Socket::UNIX->new(
+        Type => SOCK_STREAM(),
+        Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
+    );
+
+    if (! $sock )
+    {
+        print "Nothing to listen to.\n";
+    }
+
+    print {$sock} "FINISH\n";
+    $sock->flush;
+
+    close($sock);
+
+    return;
 }
 
 sub _mode_queue_server
@@ -221,6 +379,33 @@ sub _mode_queue_server
     }
 }
 
+sub _halt_process {
+    _update_sync_file(
+        sub {
+            my $data = shift;
+
+            $data->{CONTINUE} = 0;
+
+            return;
+        }
+    );
+
+    return;
+}
+
+sub _lock_sync {
+    my $callback = shift;
+
+    open my $lock_fh, ">", $SYNC_LOCK_PATH
+        or Carp::confess ("Cannot lock summary-lock - $!");
+
+    flock ($lock_fh, LOCK_EX) 
+        or Carp::confess("Cannot lock summary lock - $!");
+
+    $callback->();
+
+    close ($lock_fh);
+}
 
 sub _mode_verify
 {
@@ -286,32 +471,17 @@ sub _mode_verify
 
             if ($exit_code != 0)
             {
-                # Break on error.
-                {
-                    open my $lock_fh, ">", $SYNC_LOCK_PATH
-                        or Carp::confess ("Cannot lock summary-lock - $!");
+                _lock_sync(
+                    sub {
+                        open my $fault_fh, '>>', $fault_file_path
+                            or carp::confess("cannot open fault file - $!");
 
-                    flock ($lock_fh, LOCK_EX) 
-                        or Carp::confess("Cannot lock summary lock - $!");
+                        print {$fault_fh} "\n\n\nstderr=\n<<<\n$stderr\n>>>\n\nstdout=\n<<<\n$stdout\n>>>\n";
+                        close ($fault_fh);
 
-                    open my $fault_fh, '>>', $FAULT_FILE_PATH
-                        or Carp::confess("Cannot open fault file - $!");
-
-                    print {$fault_fh} "\n\n\nSTDERR=\n<<<\n$stderr\n>>>\n\nSTDOUT=\n<<<\n$stdout\n>>>\n";
-                    close ($fault_fh);
-
-                    _update_sync_file(
-                        sub {
-                            my $data = shift;
-
-                            $data->{CONTINUE} = 0;
-
-                            return;
-                        }
-                    );
-
-                    close ($lock_fh);
-                }
+                        _halt_process();
+                    }
+                );
             }
             else
             {
