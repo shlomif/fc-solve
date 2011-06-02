@@ -61,7 +61,14 @@ my $FAULT_FILE_PATH = "$FCS_PATH/FAULT.txt";
 my $SYNC_LOCK_PATH = "$FCS_PATH/sync.lock";
 my $SYNC_FILE_PATH = "$FCS_PATH/sync.txt";
 
-my ($max_deal_idx, $preset_conf, $min_idx) = @{_getlines($GLOBAL_CONFIG_PATH)};
+my $conf_lines = eval { _getlines($GLOBAL_CONFIG_PATH) };
+
+if ($@)
+{
+    _mode_setup();
+}
+
+my ($max_deal_idx, $preset_conf, $min_idx) = @$conf_lines;
 
 my @preset = split(/\s+/, $preset_conf);
 
@@ -110,6 +117,36 @@ if (!defined($num_solving_processes))
 }
 
 __PACKAGE__->can("_mode_$mode")->();
+
+sub _write_file
+{
+    my $filename = shift;
+
+    open my $out, '>', $filename
+        or Carp::confess("Cannot open '$filename' for writing - $!");
+
+    print {$out} @_;
+
+    close($out);
+
+    return;
+}
+
+sub _mode_setup
+{
+    foreach my $empty_fn ($SUMMARY_LOCK_PATH, $SYNC_LOCK_PATH, )
+    {
+        _write_file($empty_fn, '');
+    }
+
+    my $start_from = $ENV{FCS_MIN_DEAL_IDX};
+
+    _write_file($GLOBAL_CONFIG_PATH, 
+        "$ENV{FCS_MAX_DEAL_IDX}\n$ENV{FCS_PRESET_CONFIG}\n$start_from\n"
+    );
+
+    _write_file($SYNC_FILE_PATH, "$start_from\n1\n1\n");
+}
 
 sub _mode_queue_server
 {
