@@ -20,7 +20,6 @@ sub _getlines
     open my $in, "<", $filename
         or die "Cannot open '$filename' for slurping - $!";
 
-    local $/;
     my @l = <$in>;
 
     close($in);
