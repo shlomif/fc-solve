@@ -64,10 +64,6 @@ my $RESULTS_DIRS_BASE_PATH = "$FCS_PATH/results";
 
 my $RANGE_SOLVER_EXE = "$FCS_PATH/freecell-solver-range-parallel-solve";
 
-my $NUM_SOLVER_DEALS_PER_BATCH = 50;
-my $SOLVER_INCREMENT = $NUM_SOLVER_DEALS_PER_BATCH - 1;
-my $SOLVER_STEP = 1;
-
 my $conf_lines = eval { _getlines($GLOBAL_CONFIG_PATH) };
 
 if ($@)
@@ -76,7 +72,11 @@ if ($@)
     exit(0);
 }
 
-my ($max_deal_idx, $preset_conf, $min_idx) = @$conf_lines;
+my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVING_PROCESSES, 
+    $NUM_VERIFYING_PROCESSES, $NUM_SOLVER_DEALS_PER_BATCH) = @$conf_lines;
+
+my $SOLVER_INCREMENT = $NUM_SOLVER_DEALS_PER_BATCH - 1;
+my $SOLVER_STEP = 100;
 
 my @preset = split(/\s+/, $preset_conf);
 
@@ -112,24 +112,9 @@ sub _update_sync_file
 
 my $mode;
 
-my $num_solving_processes;
-my $num_verifying_processes;
-
 GetOptions(
     'mode=s' => \$mode,
-    'num-solvers=i' => \$num_solving_processes,
-    'num-verifiers=i' => \$num_verifying_processes,
 ) or die "Cannot set GetOptions";
-
-if (!defined($num_solving_processes))
-{
-    die "Number of solving processes not specified.";
-}
-
-if (!defined($num_verifying_processes))
-{
-    die "Number of verifying processes not specified.";
-}
 
 __PACKAGE__->can("_mode_$mode")->();
 
@@ -156,8 +141,9 @@ sub _mode_setup
 
     my $start_from = $ENV{FCS_MIN_DEAL_IDX};
 
+    my $deals_per_batch = $ENV{FCS_DEALS_PER_BATCH} || 1000;
     _write_file($GLOBAL_CONFIG_PATH, 
-        "$ENV{FCS_MAX_DEAL_IDX}\n$ENV{FCS_PRESET_CONFIG}\n$start_from\n"
+        "$ENV{FCS_MAX_DEAL_IDX}\n$ENV{FCS_PRESET_CONFIG}\n$start_from\n$ENV{FCS_NUM_SOLVERS}\n$ENV{FCS_NUM_VERIFIERS}\n$deals_per_batch\n"
     );
 
     _write_file($SYNC_FILE_PATH, "$start_from\n1\n1\n");
@@ -319,7 +305,7 @@ sub _mode_queue_server
 
     # To be set by the solving process that encounters the max_idx.
     my $num_finished = 0;
-    my $active_verifying_processes = $num_verifying_processes;
+    my $active_verifying_processes = $NUM_VERIFYING_PROCESSES;
 
     my $server = IO::Socket::UNIX->new(
             Type => SOCK_STREAM(),
@@ -354,7 +340,7 @@ sub _mode_queue_server
                 my $item = shift(@queue);
                 $write->("DATA", @{$item}{@order});
             }
-            elsif ($num_finished == $num_solving_processes)
+            elsif ($num_finished == $NUM_SOLVING_PROCESSES)
             {
                 $write->("FINISH");
                 $active_verifying_processes--;
