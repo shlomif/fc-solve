@@ -1984,4 +1984,4 @@ Freecells:
 
 This game is solveable.
 Total number of states checked is 1076.
-This scan generated 3071 states.
+This scan generated 1100 states.
