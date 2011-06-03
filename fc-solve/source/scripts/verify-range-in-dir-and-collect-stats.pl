@@ -185,7 +185,8 @@ sub run
     my $max_idx = $self->_max_idx;
 
     my $get_data_struct = sub {
-        return +{ moments => [map { Math::BigInt->new(0) } (0 .. $MAX_MOMENT)] };
+        return +{ 
+            moments => [map { Math::BigInt->new(0) } (0 .. $MAX_MOMENT)] };
     };
 
     my $get_for_solved = sub {
@@ -243,7 +244,8 @@ sub run
             {
                 my $n = $to_add_rec->{n};
 
-                my $sums = $record->{$to_add_rec->{id}}->{moments};
+                my $stats_rec = $record->{$to_add_rec->{id}};
+                my $sums = $stats_rec->{moments};
                 my $power = 1;
 
                 foreach my $moment (0.. $MAX_MOMENT)
@@ -251,8 +253,17 @@ sub run
                     $sums->[$moment] += $power;
                     $power *= $n;
                 }
-            }
 
+                if ((!exists($stats_rec->{min})) or $n < $stats_rec->{min})
+                {
+                    $stats_rec->{min} = $n;
+                }
+
+                if ((!exists($stats_rec->{max})) or $n > $stats_rec->{max})
+                {
+                    $stats_rec->{max} = $n;
+                }
+            }
         }
         else
         {
@@ -276,15 +287,20 @@ sub run
         {
             foreach my $what (qw(iters gen_states))
             {
-                $s .= sprintf(" Moments['%s'/'%s'] = ", $status, $what);
+                my $rec = $stats{$status}->{$what};
+                my $label = sprintf("['%s'/'%s']", $status, $what);
+                $s .= sprintf(" Moments%s = ", $label);
                 $s .= '[' 
                     . join(',', 
                         map { $_->bstr() } 
-                        (@{ $stats{$status}->{$what}->{moments} }) 
+                        (@{ $rec->{moments} }) 
                     )
                     .  ']';
 
                 $s .= ';';
+
+                $s .= sprintf(" Min%s = [%d];", $label, $rec->{min});
+                $s .= sprintf(" Max%s = [%d];", $label, $rec->{max});
             }
         }
 
