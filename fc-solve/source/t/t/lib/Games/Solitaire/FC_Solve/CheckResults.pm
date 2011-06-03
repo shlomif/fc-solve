@@ -125,6 +125,18 @@ sub verify_solution_test
 
     my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new();
 
+    if ($ENV{'FCS_DUMP_SOLS'})
+    {
+        open my $out, ">", "$id.SOLUTION.txt"
+            or die "Cannot open '$id.txt' for writing";
+
+        local $/;
+        print {$out} <$fc_solve_output>;
+
+        close($out);
+
+        return ok(1, $msg);
+    }
     if ($self->trim_stats)
     {
         $sha->add_processed_slurp(
