@@ -42,6 +42,11 @@
 #include "unused.h"
 #include "bool.h"
 
+typedef struct {
+    int num_times;
+    int num_states_in_collection;
+} fcs_stats_t;
+
 /* A flare is an alternative scan algorithm to be tried. All flares in
  * a single instance are being evaluated and then one picks the shortest
  * solution out of all of them. (see fc-solve/docs/flares-functional-spec.txt )
@@ -112,11 +117,11 @@ typedef struct
     /*
      * The number of iterations this board started at.
      * */
-    int iterations_board_started_at;
+    fcs_stats_t iterations_board_started_at;
     /*
      * The number of iterations that the current instance started solving from.
      * */
-    int init_num_times;
+    fcs_stats_t init_num_times;
     /*
      * A pointer to the currently active instance out of the sequence
      * */
@@ -209,7 +214,8 @@ static void user_initialize(
     user->current_iterations_limit = -1;
 
     user->state_string_copy = NULL;
-    user->iterations_board_started_at = 0;
+    user->iterations_board_started_at.num_times = 0;
+    user->iterations_board_started_at.num_states_in_collection = 0;
     user->all_instances_were_suspended = TRUE;
 
     user->error_string = NULL;
@@ -760,7 +766,8 @@ static void recycle_instance(
              * not get initialized again, and now the num_times of the instance
              * is equal to 0.
              * */
-            user->init_num_times = 0;
+            user->init_num_times.num_times = 0;
+            user->init_num_times.num_states_in_collection = 0;
 
             flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
         }
@@ -783,7 +790,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     void * api_instance
     )
 {
-    int init_num_times;
+    fcs_stats_t init_num_times;
     int run_for_first_iteration = 1;
     int ret;
     fcs_user_t * user;
@@ -969,7 +976,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         }
 
 #define parameterized_fixed_limit(increment) \
-    (user->iterations_board_started_at + increment)
+    (user->iterations_board_started_at.num_times + increment)
 #define parameterized_limit(increment) (((increment) < 0) ? (-1) : parameterized_fixed_limit(increment))
 #define local_limit()  \
         (instance_item->limit)
@@ -1006,11 +1013,12 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             {
                 user->fc_solve_obj->max_num_times =
                     user->fc_solve_obj->effective_max_num_times =
-                    (user->fc_solve_obj->num_times + mymin - user->iterations_board_started_at);
+                    (user->fc_solve_obj->num_times + mymin - user->iterations_board_started_at.num_times);
             }
         }
 
-        user->init_num_times = init_num_times = user->fc_solve_obj->num_times;
+        user->init_num_times.num_times = init_num_times.num_times = user->fc_solve_obj->num_times;
+        user->init_num_times.num_states_in_collection = init_num_times.num_states_in_collection = user->fc_solve_obj->num_states_in_collection;
 
         if (solve_start)
         {
@@ -1027,8 +1035,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->all_instances_were_suspended = FALSE;
         }
 
-        user->iterations_board_started_at += user->fc_solve_obj->num_times - init_num_times;
-        user->init_num_times = user->fc_solve_obj->num_times;
+        user->iterations_board_started_at.num_times += user->fc_solve_obj->num_times - init_num_times.num_times;
+        user->iterations_board_started_at.num_states_in_collection += user->fc_solve_obj->num_states_in_collection - init_num_times.num_states_in_collection;
+        user->init_num_times.num_times = user->fc_solve_obj->num_times;
+        user->init_num_times.num_states_in_collection = user->fc_solve_obj->num_states_in_collection;
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
@@ -1089,7 +1099,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
              * and return now.
              * */
             if (((user->current_iterations_limit >= 0) &&
-                (user->iterations_board_started_at >=
+                (user->iterations_board_started_at.num_times >=
                     user->current_iterations_limit)) ||
                 (user->fc_solve_obj->num_states_in_collection >=
                     user->fc_solve_obj->effective_max_num_states_in_collection)
@@ -1529,7 +1539,7 @@ int DLLEXPORT freecell_solver_user_get_num_times(void * api_instance)
 
     user = (fcs_user_t *)api_instance;
 
-    return user->iterations_board_started_at + user->fc_solve_obj->num_times - user->init_num_times;
+    return user->iterations_board_started_at.num_times + user->fc_solve_obj->num_times - user->init_num_times.num_times;
 }
 
 int DLLEXPORT freecell_solver_user_get_limit_iterations(void * api_instance)
@@ -1929,7 +1939,7 @@ int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * api_insta
 
     user = (fcs_user_t *)api_instance;
 
-    return user->fc_solve_obj->num_states_in_collection;
+    return user->iterations_board_started_at.num_states_in_collection + user->fc_solve_obj->num_states_in_collection - user->init_num_times.num_states_in_collection;
 }
 
 void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
@@ -2164,7 +2174,8 @@ void DLLEXPORT freecell_solver_user_recycle(
         recycle_instance(user, i);
     }
     user->current_iterations_limit = -1;
-    user->iterations_board_started_at = 0;
+    user->iterations_board_started_at.num_times = 0;
+    user->iterations_board_started_at.num_states_in_collection = 0;
     if (user->state_string_copy != NULL)
     {
         free(user->state_string_copy);

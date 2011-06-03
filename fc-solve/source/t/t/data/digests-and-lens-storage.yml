@@ -19,11 +19,11 @@ digests:
     hexdigest: 1ba0c0ce085e72be7f608ffb8fe44367382eb0bbbf06da6ab136473af5d8353a
     len: 32193
   freecell24_children_playing_ball:
-    hexdigest: 17e5f41853d059a0f7cab8bf14b85c85e0b95e5f8f5dbb2dc6f5add54f36abf6
-    len: 26819
+    hexdigest: 62576e3e9990f255c97a5e167c1052c768bb57218810869193ba34bae2af8b81
+    len: 26821
   freecell24_sentient_pearls:
-    hexdigest: 8e43f23cc1caf77cd1b428996d007688ba1811564b9bb1b40d16197eea875b70
-    len: 30094
+    hexdigest: b6ef4a6b354373fd432fc8d161c1156d02c76f68fb5b6435c0d6a6603d4df658
+    len: 30096
   freecell24empty:
     hexdigest: 31fc6e1191e6d3ac1ae5662c934c693f7a8e7031b80fd252f1bfb1548f011d76
     len: 32280
@@ -49,8 +49,8 @@ digests:
     hexdigest: eaa7d14865eb3fb6ace4e2ee5ded8d1a0697c3182e01dae7f5d6df20829cf5a5
     len: 22634
   simple_simon1with_next_instance:
-    hexdigest: 55a779c5e6fcdc4d7dc9d5a46f261353ea8e9e844560c25cbc27dd02ddee248b
-    len: 22635
+    hexdigest: 3f59f79ff85a1172bc4ccdbee9f2eef4d78304c9bd8337b11beda6c1ae6b7d89
+    len: 22636
   simple_simon24default:
     hexdigest: 6ebea55ab4149055b7c9d0b3e46a29092d45a1baa04da02565ff3dcde47a1d50
     len: 22216

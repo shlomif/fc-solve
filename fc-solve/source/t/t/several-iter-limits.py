@@ -7,7 +7,7 @@ from TAP.Simple import *
 # TEST:source "$^CURRENT_DIRNAME/lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
 
-plan(8)
+plan(11)
 
 def test_resume_solution():
     testname = "With RunIndef"
@@ -43,7 +43,7 @@ AH 5S 6S AD 8H JD
 
     # TEST
     ok (iters_count_ok == 1, "Iters count was OK throughout the solution.")
-   
+
 def test_num_states_in_collection_after_recycle():
     testname = "NumStatesInCol-After-Recycle"
 
@@ -93,12 +93,39 @@ AH 5S 6S AD 8H JD
     # TEST
     ok (fcs.get_num_states_in_col() == 191, "Num-states-in-collection after recycle.");
 
+def test_num_states_in_collection_after_unsolved():
+    testname = "NumStatesInCol-After-unsolved"
+
+    fcs = FC_Solve()
+
+    # TEST*$input_cmd_line
+    fcs.input_cmd_line("bakers_game", ['-g', 'bakers_game']);
+
+    # MS-Freeceel board No. 10
+    ret = fcs.solve_board(
+"""5S KD JC TS 9D KH 8D 
+5H 2S 9H 7H TD AD 6D 
+6H QD 6C TC AH 8S TH 
+6S 2D 7C QC QS 7D 3H 
+5D AS 7S KC 3D AC 
+4D 9C QH 4H 4C 5C 
+2H 3S 8H 9S JS 4S 
+JH JD 3C KS 2C 8C 
+""")
+
+    # TEST
+    ok (fcs.get_num_times() == 3436, "Get num times is OK.");
+
+    # TEST
+    ok (fcs.get_num_states_in_col() == 3436, "Num-states-in-collection is OK.");
+
 def main():
 
     test_resume_solution()
 
     test_num_states_in_collection_after_recycle()
 
+    test_num_states_in_collection_after_unsolved()
 #----------------------------------------------------------------------
 
 if __name__ == "__main__":
