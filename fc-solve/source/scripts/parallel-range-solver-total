@@ -132,6 +132,25 @@ sub _write_file
     return;
 }
 
+sub _break_on_fault
+{
+    my ($fault_string) = @_;
+
+    _lock_sync(
+        sub {
+            open my $fault_fh, '>>', $FAULT_FILE_PATH
+                or Carp::confess("cannot open fault file - $!");
+
+            print {$fault_fh} $fault_string;
+            close ($fault_fh);
+
+            _halt_process();
+        }
+    );
+
+    return;
+}
+
 sub _mode_setup
 {
     foreach my $empty_fn ($SUMMARY_LOCK_PATH, $SYNC_LOCK_PATH, )
@@ -218,18 +237,7 @@ sub _mode_solve
         {
             my $err = $!;
 
-            # TODO : duplicate code from elsewhere.
-            _lock_sync(
-                sub {
-                    open my $fault_fh, '>>', $FAULT_FILE_PATH
-                        or Carp::confess("cannot open fault file - $!");
-
-                    print {$fault_fh} "\n\n\nCannot mkdir '$dir_path' - '$err';\n";
-                    close ($fault_fh);
-
-                    _halt_process();
-                }
-            );
+            _break_on_fault( "\n\n\nCannot mkdir '$dir_path' - '$err';\n" );
 
             $continue = 0;
             last MAIN_LOOP;
@@ -252,17 +260,10 @@ sub _mode_solve
 
         if ($exit_code != 0)
         {
-            # TODO : duplicate code from elsewhere.
-            _lock_sync(
-                sub {
-                    open my $fault_fh, '>>', $FAULT_FILE_PATH
-                        or Carp::confess("cannot open fault file - $!");
-
-                    print {$fault_fh} "\n\n\n[Running the range parallel solver] stderr=\n<<<\n$stderr\n>>>\n\nstdout=\n<<<\n$stdout\n>>>\n";
-                    close ($fault_fh);
-
-                    _halt_process();
-                }
+            _break_on_fault(
+                "\n\n\n[Running the range parallel solver] "
+                . "stderr=\n<<<\n$stderr\n>>>\n\n"
+                . "stdout=\n<<<\n$stdout\n>>>\n"
             );
 
             $continue = 0;
@@ -466,16 +467,9 @@ sub _mode_verify
 
             if ($exit_code != 0)
             {
-                _lock_sync(
-                    sub {
-                        open my $fault_fh, '>>', $FAULT_FILE_PATH
-                            or Carp::confess("cannot open fault file - $!");
-
-                        print {$fault_fh} "\n\n\nstderr=\n<<<\n$stderr\n>>>\n\nstdout=\n<<<\n$stdout\n>>>\n";
-                        close ($fault_fh);
-
-                        _halt_process();
-                    }
+                _break_on_fault( 
+                    "\n\n\nstderr=\n<<<\n$stderr\n>>>\n\n"
+                    .  "stdout=\n<<<\n$stdout\n>>>\n"
                 );
             }
             else
