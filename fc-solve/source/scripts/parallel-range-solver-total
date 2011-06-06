@@ -57,6 +57,7 @@ my $RANGE_TO_VERIFY_SOCKET_PATH = sprintf("%s/range-queue.sock", $FCS_PATH);
 my $GLOBAL_CONFIG_PATH = "$FCS_PATH/global-params.txt";
 my $SUMMARY_LOCK_PATH = "$FCS_PATH/summary.lock";
 my $SUMMARY_FILE_PATH = "$FCS_PATH/summary.txt";
+my $STATS_FILE_PATH = "$FCS_PATH/summary.stats.perl-storable";
 my $FAULT_FILE_PATH = "$FCS_PATH/FAULT.txt";
 my $SYNC_LOCK_PATH = "$FCS_PATH/sync.lock";
 my $SYNC_FILE_PATH = "$FCS_PATH/sync.txt";
@@ -85,6 +86,7 @@ my @VERIFY_RANGE_COMMAND_START =
     $^X, "scripts/verify-range-in-dir-and-collect-stats.pl",
     '--summary-lock', $SUMMARY_LOCK_PATH,
     '--summary-file', $SUMMARY_FILE_PATH,
+    '--summary-stats-file', $STATS_FILE_PATH,
     @preset,
 );
 
