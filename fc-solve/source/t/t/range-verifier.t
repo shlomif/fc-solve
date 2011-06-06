@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Test::Differences;
 
 use Storable qw(retrieve);
@@ -83,9 +83,22 @@ EOF
     "Summary file for Baker's Game Range 1-10 is Proper.",
 );
 
+
+sub _statistics_are
+{
+    my ($data, $blurb) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    return eq_or_diff(
+        retrieve($stats_file),
+        $data,
+        $blurb,
+    );
+}
+
 # TEST
-eq_or_diff(
-    retrieve($stats_file),
+_statistics_are(
     {
         counts =>
         { 
@@ -103,7 +116,7 @@ eq_or_diff(
             },
         },
     },
-    "Statistics are OK.",
+    "1-10 Statistics are OK.",
 );
 
 # TEST
@@ -112,6 +125,28 @@ _test_range_verifier(
             sols_dir => "$data_dir/bakers-game-11-to-20",
         },
     "11-20 Script was run successfully.",
+);
+
+# TEST
+_statistics_are(
+     {
+        counts =>
+        { 
+            solved => 
+            { 
+                iters =>
+                {(map { $_ => 1 } (72, 73, 75, 90, 101, 145,150, 164,300, 312, 453, 468, 726,815,1076,1213)), 146 => 2, }, 
+                gen_states => {map { $_ => 1 } (96, 100, 106, 122, 147, 163, 177, 184, 187, 205, 321, 349, 500, 505, 790, 870, 1100, 1246)},
+                sol_lens => {(map { $_ => 1 } (95, 96,98,99, 104, 105, 109,112,113, 117, 122,124)), 119 => 2, 97 => 2, 100 => 2, }, 
+            }, 
+            unsolved =>
+            {
+                iters => { map { $_ => 1 } (1891,3436) },
+                gen_states => { map { $_ => 1 } (1891,3436) },
+            },
+        },
+    },
+    "1-20 Statistics are OK.",
 );
 
 # Clean up after everything.
