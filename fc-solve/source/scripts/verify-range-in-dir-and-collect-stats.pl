@@ -280,11 +280,11 @@ sub run
         if (! -e $self->_stats_file)
         {
             nstore(
-                { 
+                {
                     counts =>
                     { solved => 
                         { iters => {}, gen_states => {},
-                            sol_ens => {}, 
+                            sol_lens => {}, 
                         }, 
                         unsolved => {
                             iters => {},

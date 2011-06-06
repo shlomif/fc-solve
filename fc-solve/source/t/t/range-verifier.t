@@ -3,8 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Differences;
+
+use Storable qw(retrieve);
 
 my $data_dir = "./t/data/range-verifier/";
 
@@ -65,6 +67,29 @@ eq_or_diff(
 Solved Range: Start=1 ; End=10
 EOF
     "Summary file for Baker's Game Range 1-10 is Proper.",
+);
+
+# TEST
+eq_or_diff(
+    retrieve($stats_file),
+    {
+        counts =>
+        { 
+            solved => 
+            { 
+                iters =>
+                {map { $_ => 1 } (73,145,146,164,453,726,815,1076,1213)}, 
+                gen_states => {map { $_ => 1 } (106, 184, 187, 205, 500, 790, 870, 1100, 1246)},
+                sol_lens => {(map { $_ => 1 } (97,98,100,109,112,122,124)), 119 => 2}, 
+            }, 
+            unsolved =>
+            {
+                iters => {3436 => 1,},
+                gen_states => {3436 => 1,} 
+            },
+        },
+    },
+    "Statistics are OK.",
 );
 
 # Clean up after everything.
