@@ -9,10 +9,12 @@ use Test::Differences;
 my $data_dir = "./t/data/range-verifier/";
 
 my $summary_file = "$data_dir/summary.txt";
+my $stats_file = "$data_dir/summary.stats.perl-storable";
 
 sub delete_summary
 {
     unlink ($summary_file);
+    unlink ($stats_file);
 
     return;
 }
@@ -25,7 +27,7 @@ my $ranger_verifier = $ENV{'FCS_PATH'} . '/scripts/verify-range-in-dir-and-colle
 ok (!system(
         $^X, $ranger_verifier,
     '--summary-lock', "$data_dir/summary.lock",
-    '--summary-stats-file', "$data_dir/summary.stats.perl-storable",
+    '--summary-stats-file', $stats_file,
     '--summary-file', $summary_file,
     '-g', 'bakers_game',
     '--min-idx', '1', '--max-idx', '10',
