@@ -25,6 +25,7 @@ my $ranger_verifier = $ENV{'FCS_PATH'} . '/scripts/verify-range-in-dir-and-colle
 ok (!system(
         $^X, $ranger_verifier,
     '--summary-lock', "$data_dir/summary.lock",
+    '--summary-stats-file', "$data_dir/summary.stats.perl-storable",
     '--summary-file', $summary_file,
     '-g', 'bakers_game',
     '--min-idx', '1', '--max-idx', '10',
@@ -52,26 +53,14 @@ sub _mysplit
 {
     my $string = shift;
 
-    return [split(/;\s*/, $string, -1)];
+    return [split(/\n/, $string, -1)];
 }
 
 # TEST
 eq_or_diff(
     _mysplit(_slurp($summary_file)),
     _mysplit(<<'EOF'),
-Range[1->10]: {{{ Moments['solved'/'iters'] = [9,4811,4100221,4058458523,4268134909957,4648965759709931,5185500695222621461,5882844148227533651479]; 
-Min['solved'/'iters'] = [73];
-Max['solved'/'iters'] = [1213];
-Moments['solved'/'gen_states'] = [9,5188,4515602,4564551784,4903565758274,5451942758060008,6206095384941163202,7188433984991667343288]; 
-Min['solved'/'gen_states'] = [106];
-Max['solved'/'gen_states'] = [1246];
-Moments['unsolved'/'iters'] = [1,3436,11806096,40565745856,139383902761216,478923089887538176,1645579736853580000000,5654211975828900000000000]; 
-Min['unsolved'/'iters'] = [3436];
-Max['unsolved'/'iters'] = [3436];
-Moments['unsolved'/'gen_states'] = [1,3436,11806096,40565745856,139383902761216,478923089887538176,1645579736853580000000,5654211975828900000000000];
-Min['unsolved'/'gen_states'] = [3436];
-Max['unsolved'/'gen_states'] = [3436];
-}}}
+Solved Range: Start=1 ; End=10
 EOF
     "Summary file for Baker's Game Range 1-10 is Proper.",
 );

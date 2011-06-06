@@ -13,6 +13,7 @@ use Games::Solitaire::Verify::Solution;
 use List::Util qw(min max);
 
 use Math::BigInt lib => 'GMP';
+use Storable qw(nstore retrieve);
 
 use Fcntl qw(:flock);
 
@@ -28,6 +29,7 @@ __PACKAGE__->mk_acc_ref(
             _min_idx
             _solutions_dir
             _summary_file
+            _stats_file
             _summary_lock
             _variant_params
         )
@@ -44,7 +46,7 @@ sub _init
 
     my $variant_params = $variant_map->get_variant_by_id("freecell");
 
-    my ($min_idx, $max_idx, $summary_lock, $summary_file);
+    my ($min_idx, $max_idx, $summary_lock, $summary_file, $stats_file);
 
     GetOptionsFromArray(
         $argv,
@@ -52,6 +54,7 @@ sub _init
         'max-idx=i' => \$max_idx,
         'summary-lock=s' => \$summary_lock,
         'summary-file=s' => \$summary_file,
+        'summary-stats-file=s' => \$stats_file,
         'g|game|variant=s' => sub {
             my (undef, $game) = @_;
 
@@ -149,6 +152,10 @@ sub _init
     {
         Carp::confess ("summary-file was not supplied.");
     }
+    if (! $self->_stats_file($stats_file))
+    {
+        Carp::confess ("summary-stats-file was not supplied.");
+    }
     $self->_variant_params($variant_params);
 
     $self->_solutions_dir(shift(@$argv));
@@ -195,7 +202,8 @@ sub run
 
     my %stats =
     (
-        map { $_ => $get_for_solved->() } qw(solved unsolved),
+        solved => { map { $_ => +{} } qw(gen_states iters sol_lens) },
+        unsolved => { map { $_ => +{} } qw(gen_states iters) },
     );
 
     foreach my $idx ($min_idx .. $max_idx)
@@ -205,8 +213,12 @@ sub run
 
         my $solved = $contents =~ m{solveable};
 
+        my %current_data;
+
         if ($solved)
         {
+            $current_data{'sol_lens'} = () = ($contents =~ m{^====}gms);
+
             open my $text_fh, '<', \$contents;
             my $solution = Games::Solitaire::Verify::Solution->new(
                 {
@@ -236,39 +248,21 @@ sub run
                 and
             my ($gen_states) = ($contents =~ m{^This scan generated (\d+) states\.$}ms))
         {
-            my $record = $stats{ $solved ? 'solved' : 'unsolved' };
-            foreach my $to_add_rec (
-                { n => $iters, id => 'iters'},
-                { n => $gen_states, id => 'gen_states'}
-            )
-            {
-                my $n = $to_add_rec->{n};
-
-                my $stats_rec = $record->{$to_add_rec->{id}};
-                my $sums = $stats_rec->{moments};
-                my $power = 1;
-
-                foreach my $moment (0.. $MAX_MOMENT)
-                {
-                    $sums->[$moment] += $power;
-                    $power *= $n;
-                }
-
-                if ((!exists($stats_rec->{min})) or $n < $stats_rec->{min})
-                {
-                    $stats_rec->{min} = $n;
-                }
-
-                if ((!exists($stats_rec->{max})) or $n > $stats_rec->{max})
-                {
-                    $stats_rec->{max} = $n;
-                }
-            }
+            $current_data{'iters'} = $iters;
+            $current_data{'gen_states'} = $gen_states;
         }
         else
         {
             Carp::confess
                 "Cannot match format for iters/gen_states at $filename";
+        }
+
+        my $record = $stats{ $solved ? 'solved' : 'unsolved' };
+
+        # Collect the statistics
+        foreach my $key (keys(%current_data))
+        {
+            $record->{$key}->{$current_data{$key}}++;
         }
     }
 
@@ -279,37 +273,55 @@ sub run
         flock ($lock_fh, LOCK_EX) 
             or Carp::confess("Cannot lock summary lock - $!");
 
-        my $s = '';
+        my $log_string
+            = sprintf("Solved Range: Start=%d ; End=%d\n", $min_idx, $max_idx)
+            ;
 
-        $s .= sprintf("Range[%d->%d]: {{{", $min_idx, $max_idx);
+        if (! -e $self->_stats_file)
+        {
+            nstore(
+                { 
+                    counts =>
+                    { solved => 
+                        { iters => {}, gen_states => {},
+                            sol_ens => {}, 
+                        }, 
+                        unsolved => {
+                            iters => {},
+                            gen_states => {} 
+                        } 
+                    }  
+                }, 
+                $self->_stats_file
+            );
+        }
+
+        my $total_data = retrieve($self->_stats_file);
 
         foreach my $status (qw(solved unsolved))
         {
-            foreach my $what (qw(iters gen_states))
+            my $solved_rec = $stats{ $status };
+            my $out_solved_rec = $total_data->{'counts'}->{$status};
+
+            foreach my $type (keys(%$solved_rec))
             {
-                my $rec = $stats{$status}->{$what};
-                my $label = sprintf("['%s'/'%s']", $status, $what);
-                $s .= sprintf(" Moments%s = ", $label);
-                $s .= '[' 
-                    . join(',', 
-                        map { $_->bstr() } 
-                        (@{ $rec->{moments} }) 
-                    )
-                    .  ']';
+                my $local_counts_hash = $solved_rec->{$type};
+                my $out_counts_hash = $out_solved_rec->{$type};   
 
-                $s .= ';';
-
-                $s .= sprintf(" Min%s = [%d];", $label, $rec->{min});
-                $s .= sprintf(" Max%s = [%d];", $label, $rec->{max});
+                foreach my $datum (keys ( %{$local_counts_hash} ) )
+                {
+                    ($out_counts_hash->{$datum} ||= 0) 
+                        += $local_counts_hash->{$datum};
+                }
             }
         }
 
-        $s .= '}}}';
+        nstore($total_data, $self->_stats_file);
 
         open my $summary_out_fh, ">>", $self->_summary_file()
             or Carp::confess("Cannot open summary out file for appending - $!");
 
-        print {$summary_out_fh} $s, "\n";
+        print {$summary_out_fh} $log_string;
 
         close ($summary_out_fh);
 
