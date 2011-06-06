@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Test::Differences;
 
 use Storable qw(retrieve);
@@ -25,17 +25,31 @@ delete_summary();
 
 my $ranger_verifier = $ENV{'FCS_PATH'} . '/scripts/verify-range-in-dir-and-collect-stats.pl';
 
+sub _test_range_verifier
+{
+    my ($args, $blurb) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    return ok (!system(
+            $^X, $ranger_verifier,
+            '--summary-lock', "$data_dir/summary.lock",
+            '--summary-stats-file', $stats_file,
+            '--summary-file', $summary_file,
+            '-g', 'bakers_game',
+            '--min-idx', $args->{min}, '--max-idx', $args->{max},
+            $args->{sols_dir},
+        ),
+        $blurb,
+    );
+}
+
 # TEST
-ok (!system(
-        $^X, $ranger_verifier,
-    '--summary-lock', "$data_dir/summary.lock",
-    '--summary-stats-file', $stats_file,
-    '--summary-file', $summary_file,
-    '-g', 'bakers_game',
-    '--min-idx', '1', '--max-idx', '10',
-    "$data_dir/bakers-game-solutions-dir",
-    ),
-    "Script was run successfully.",
+_test_range_verifier(
+    { min => 1, max => 10, 
+            sols_dir => "$data_dir/bakers-game-solutions-dir",
+        },
+    "1-10 Script was run successfully.",
 );
 
 sub _slurp
@@ -90,6 +104,14 @@ eq_or_diff(
         },
     },
     "Statistics are OK.",
+);
+
+# TEST
+_test_range_verifier(
+    { min => 11, max => 20, 
+            sols_dir => "$data_dir/bakers-game-11-to-20",
+        },
+    "11-20 Script was run successfully.",
 );
 
 # Clean up after everything.
