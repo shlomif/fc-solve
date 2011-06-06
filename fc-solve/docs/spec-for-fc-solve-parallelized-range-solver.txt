@@ -1,0 +1,72 @@
+== Introduction ==
+
+This document describes a framework where several instances of custom [[Freecell Solver]] instances run in parallel (on a multi-processor machine/etc.) to solve a range of solitaire deals. 
+
+== Elements of the Framework ==
+
+=== Synchronisation file ===
+
+Inside "." with the name <tt>sync.txt</tt> and the empty file <tt>sync.lock</tt> to require mutual access. Contains these data:
+
+# <tt>$NEXT_DEAL_IDX</tt> - a positive integer.
+# <tt>$NEXT_ID</tt> - a positive integer and a counter.
+# <tt>$CONTINUE</tt> - a boolean that specifices whether to continue running the process.
+
+Upon reading one takes <tt>$NEXT_DEAL_IDX</tt> and assigns it as the start. It calculates the end (<tt>$NEXT_DEAL+IDX</tt> + 99,999) and put the next <tt>$NEXT_DEAL_IDX</tt> as <tt>$END</tt>+1. It reads <tt>$NEXT_ID</tt> and writes the incremented value ($OLD_NEXT_ID + 1).
+
+If an error occurred then <tt>$CONTINUE</tt> should be set to false and all the processes should immediately exit on the next time (after writing their final say).
+
+=== Global Parameters ===
+
+# <tt>$MAX_DEAL_IDX</tt> - a positive constant integer.
+# <tt>$PRESET_CONFIGURATION</tt> - an abstract settings "object" (for lack of a better word) that configures the game parameters. (to be defined).
+# <tt>$MIN_DEAL_IDX</tt> - used for initialisation, not needed later on.
+# <tt>$NUM_SOLVERS</tt> - the number of solver processes. Needed to see when to finish everything.
+# <tt>$NUM_VERIFIERS</tt> - the number of solver processes. Needed to see when to finish everything.
+# <tt>$NUM_SOLVER_DEALS_PER_BATCH</tt> - Number of deals to solve per batch of a solver.
+
+=== Solving Processes ===
+
+These processes get a chunk of ranges, solve them all, while:
+
+# Emitting the solutions into a sub-directory structure where they will be processed and verified to be correct by the verifier.
+# Making a request to the server of the queue of ranges to check (which keeps everything in RAM, with a log dump of the queue).
+# Repeat.
+
+=== Verifying Processes ===
+
+These processes verify the solutions emitted by the Solving processes, collect statistics and stop the process if an error occurred. Their process is:
+
+# Contact the queue server to extract an (ID,range) tuple to check.
+# Verify all the solutions. If one of them is erroneous, then lock <tt>sync.lock</tt>, append the erroneous board in <tt>FAULT.txt</tt>, and set <tt>$CONTINUE</tt> to FALSE.
+# Otherwise lock <tt>summary.lock</tt> and update the files below.
+
+==== summary.txt ====
+
+A log file - contains lines of the format <tt>Solved Range: Start=\d+ ; End=\d+\n</tt>.
+
+==== summary.stats.perl-storable ====
+
+This file contains a Storable dump of the entire data. After <tt>summary.lock</tt> is locked, then it is read, updated in memory and written to.
+
+The structure is:
+
+    { 
+         counts =>
+         {
+              solved =>
+              { 
+                  iters => { %COUNTS_HASH },
+                  gen_states => { %COUNTS_HASH },
+                  sol_lens => { %COUNTS_HASH },
+              },
+              unsolved =>
+              {
+                  iters => { %COUNTS_HASH },
+                  gen_states => { %COUNTS_HASH },
+              },
+         },
+    },
+
+<tt>%COUNTS_HASH</tt> maps each datum to the number of times it appeared. So for example, if there were 100 solutions with 230 iterations, and 50 ones with 2019 iterations, then <tt>%COUNTS_HASH</tt> would be <tt>( 230 => 100, 2019 => 50, )</tt>.
+
