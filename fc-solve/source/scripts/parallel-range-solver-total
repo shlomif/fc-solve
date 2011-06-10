@@ -96,6 +96,7 @@ sub get_solve_id
 
     return $self->read();
 }
+
 sub terminate_verify
 {
     my $self = shift;
@@ -104,6 +105,30 @@ sub terminate_verify
     $self->write("TERMINATE_VERIFY");
 
     $self->write($id);
+
+    return;
+}
+
+sub terminate_solve
+{
+    my $self = shift;
+    my $id = shift;
+
+    $self->write("TERMINATE_SOLVE");
+
+    $self->write($id);
+
+    return;
+}
+
+sub enqueue_range_to_verify
+{
+    my ($self, $dir_path, $start_deal_idx, $end_deal_idx) = @_;
+
+    foreach my $s ('ENQ', $dir_path, $start_deal_idx, $end_deal_idx)
+    {
+        $self->write($s);
+    }
 
     return;
 }
@@ -407,34 +432,14 @@ sub _mode_solve
             last MAIN_LOOP;
         }
 
-        my $sock = IO::Socket::UNIX->new(
-            Type => SOCK_STREAM(),
-            Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
+        _create_verify_conn()->enqueue_range_to_verify(
+            $dir_path, $start_deal_idx, $end_deal_idx
         );
-
-        if (! $sock )
-        {
-            _log("Nothing to listen to.\n");
-        }
-
-        print {$sock} "ENQ\n$dir_path\n$start_deal_idx\n$end_deal_idx\n";
-        $sock->flush;
-
-        close($sock);
     }
 
     _log("Terminating Solver ID=$solver_id\n");
 
-    my $sock = IO::Socket::UNIX->new(
-        Type => SOCK_STREAM(),
-        Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
-    )
-        or Carp::confess("Cannot connect to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!");
-
-    print {$sock} "TERMINATE_SOLVE\n$solver_id\n";
-    $sock->flush;
-
-    close($sock);
+    _create_verify_conn()->terminate_solve($solver_id);
 
     return;
 }
