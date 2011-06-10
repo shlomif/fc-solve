@@ -469,16 +469,12 @@ sub _mode_queue_server
 {
     my @queue;
 
-    # To be set by solving process that encounters the max_idx.
+    # The state variables of the verifiers and solvers.
     my %active_solvers;
-
-    # The active verifying processes.
     my %active_verifiers;
-
-    my $got_verifier = 0;
-
     my $next_verifier_id = 1;
     my $next_solver_id = 1;
+    my $got_verifier = 0;
 
     my $server = IO::Socket::UNIX->new(
             Type => SOCK_STREAM(),
