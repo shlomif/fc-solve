@@ -51,7 +51,7 @@ sub write
 
     my $message = shift;
 
-    print { $self->{sock} } "$message\n";
+    $self->{sock}->print("$message\n");
 
     $self->{sock}->flush;
 
