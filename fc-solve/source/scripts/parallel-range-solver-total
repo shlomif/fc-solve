@@ -695,7 +695,38 @@ sub _mode_queue_server
         return $active{$process_type}->remove($read_line->());
     };
 
-    my %commands;
+    my %commands =
+    (
+        'GET_NEXT' => sub {
+            if (@queue)
+            {
+                my $item = shift(@queue);
+                $write->("DATA", @{$item}{@order});
+            }
+            elsif (! $active_solvers->is_full)
+            {
+                $write->("FINISH");
+            }
+            else
+            {
+                $write->("WAIT");
+            }
+
+            return;
+        },
+        'ENQ' => sub {
+            my @data;
+
+            foreach my $idx (0 .. $#order)
+            {
+                push @data, $read_line->();
+            }
+
+            push @queue, +{ map { $order[$_] => $data[$_] } (0 .. $#order) };
+
+            return;
+        },
+    );
 
     foreach my $process_type (keys(%active))
     {
@@ -711,38 +742,12 @@ sub _mode_queue_server
     while ( $active_verifiers->is_active )
     {
         $client = $server->accept;
+
         my $cmd = $read_line->();
 
         if ( exists($commands{$cmd}) )
         {
             $commands{$cmd}->();
-        }
-        elsif ($cmd eq "GET_NEXT")
-        {
-            if (@queue)
-            {
-                my $item = shift(@queue);
-                $write->("DATA", @{$item}{@order});
-            }
-            elsif (! $active_solvers->is_full)
-            {
-                $write->("FINISH");
-            }
-            else
-            {
-                $write->("WAIT");
-            }
-        }
-        elsif ($cmd eq "ENQ")
-        {
-            my @data;
-
-            foreach my $idx (0 .. $#order)
-            {
-                push @data, $read_line->();
-            }
-
-            push @queue, +{ map { $order[$_] => $data[$_] } (0 .. $#order) };
         }
         else
         {
