@@ -97,13 +97,11 @@ sub get_solve_id
     return $self->read();
 }
 
-sub terminate_verify
+sub _terminate_cmd
 {
-    my $self = shift;
-    my $id = shift;
+    my ($self,$cmd, $id) = @_;
 
-    $self->write("TERMINATE_VERIFY");
-
+    $self->write($cmd);
     $self->write($id);
 
     return;
@@ -111,14 +109,16 @@ sub terminate_verify
 
 sub terminate_solve
 {
-    my $self = shift;
-    my $id = shift;
+    my ($self, $id) = @_;
 
-    $self->write("TERMINATE_SOLVE");
+    return $self->_terminate_cmd("TERMINATE_SOLVE", $id);
+}
 
-    $self->write($id);
+sub terminate_verify
+{
+    my ($self, $id) = @_;
 
-    return;
+    return $self->_terminate_cmd("TERMINATE_VERIFY", $id);
 }
 
 sub enqueue_range_to_verify
