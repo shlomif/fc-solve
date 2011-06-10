@@ -189,18 +189,25 @@ if (!defined($ENV{'FCS_PATH'}))
 
 my $FCS_PATH = $ENV{FCS_PATH};
 
-my $RANGE_TO_VERIFY_SOCKET_PATH = sprintf("%s/range-queue.sock", $FCS_PATH);
+sub _fcs_file
+{
+    my ($basename) = @_;
 
-my $GLOBAL_CONFIG_PATH = "$FCS_PATH/global-params.txt";
-my $SUMMARY_LOCK_PATH = "$FCS_PATH/summary.lock";
-my $SUMMARY_FILE_PATH = "$FCS_PATH/summary.txt";
-my $STATS_FILE_PATH = "$FCS_PATH/summary.stats.perl-storable";
-my $FAULT_FILE_PATH = "$FCS_PATH/FAULT.txt";
-my $SYNC_LOCK_PATH = "$FCS_PATH/sync.lock";
-my $SYNC_FILE_PATH = "$FCS_PATH/sync.txt";
-my $RESULTS_DIRS_BASE_PATH = "$FCS_PATH/results";
+    return "$FCS_PATH/$basename";
+}
 
-my $RANGE_SOLVER_EXE = "$FCS_PATH/freecell-solver-range-parallel-solve";
+my $RANGE_TO_VERIFY_SOCKET_PATH = _fcs_file('range-queue.sock');
+
+my $GLOBAL_CONFIG_PATH = _fcs_file('global-params.txt');
+my $SUMMARY_LOCK_PATH = _fcs_file('summary.lock');
+my $SUMMARY_FILE_PATH = _fcs_file('summary.txt');
+my $STATS_FILE_PATH = _fcs_file('summary.stats.perl-storable');
+my $FAULT_FILE_PATH = _fcs_file('FAULT.txt');
+my $SYNC_LOCK_PATH = _fcs_file('sync.lock');
+my $SYNC_FILE_PATH = _fcs_file('sync.txt');
+my $RESULTS_DIRS_BASE_PATH = _fcs_file('results');
+
+my $RANGE_SOLVER_EXE = _fcs_file('freecell-solver-range-parallel-solve');
 
 my $conf_lines = eval { _getlines($GLOBAL_CONFIG_PATH) };
 
