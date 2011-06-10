@@ -662,6 +662,13 @@ sub _mode_queue_server
 
         return;
     };
+    my $read_line = sub
+    {
+        my $s = <$client>;
+        chomp($s);
+
+        return $s;
+    };
 
     my $register_process = sub 
     {
@@ -674,19 +681,16 @@ sub _mode_queue_server
         return;
     };
 
+    my $remove_process = sub
+    {
+        my $process_type = shift;
+
+        return $active{$process_type}->remove($read_line->());
+    };
 
     while ( (!$active_verifiers->was_placed) || $active_verifiers->is_full )
     {
         $client = $server->accept;
-
-        my $read_line = sub
-        {
-            my $s = <$client>;
-            chomp($s);
-
-            return $s;
-        };
-
         my $cmd = $read_line->();
 
         if ($cmd eq "GET_VERIFY_ID")
@@ -696,10 +700,6 @@ sub _mode_queue_server
         elsif ($cmd eq "GET_SOLVE_ID")
         {
             $register_process->("solver");
-        }
-        elsif ($cmd eq "TERMINATE_VERIFY")
-        {
-            $active_verifiers->remove($read_line->());
         }
         elsif ($cmd eq "GET_NEXT")
         {
@@ -728,12 +728,21 @@ sub _mode_queue_server
 
             push @queue, +{ map { $order[$_] => $data[$_] } (0 .. $#order) };
         }
+        elsif ($cmd eq "TERMINATE_VERIFY")
+        {
+            $remove_process->("verifier");
+        }
         elsif ($cmd eq "TERMINATE_SOLVE")
         {
-            $active_solvers->remove($read_line->());
+            $remove_process->("solver");
+        }
+        else
+        {
+            Carp::confess ("Unknown command '$cmd'");
         }
 
         close($client);
+        undef($client);
     }
     continue
     {
