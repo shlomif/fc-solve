@@ -19,16 +19,12 @@ sub new
     return $self;
 }
 
-package VerifierConn;
+package FC_Solve::Socket;
 
 use strict;
 use warnings;
 
 our @ISA = (qw(Object));
-
-use Carp;
-
-use IO::Socket::UNIX;
 
 sub _client_sock
 {
@@ -41,6 +37,40 @@ sub _client_sock
 
     return $self->{_client_sock};
 }
+
+sub read_line
+{
+    my $self = shift;
+
+    my $line = $self->_client_sock->getline;
+    chomp($line);
+
+    return $line;
+}
+
+sub read_num_lines
+{
+    my ($self, $n) = @_;
+
+    my @lines;
+    foreach my $i (1 .. $n)
+    {
+        push @lines, $self->read_line;
+    }
+
+    return \@lines;
+}
+
+package VerifierConn;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(FC_Solve::Socket));
+
+use Carp;
+
+use IO::Socket::UNIX;
 
 sub _init
 {
@@ -75,16 +105,6 @@ sub write
     $self->_client_sock->flush;
 
     return;
-}
-
-sub read_line
-{
-    my $self = shift;
-
-    my $line = $self->_client_sock->getline;
-    chomp($line);
-
-    return $line;
 }
 
 sub DESTROY
@@ -180,7 +200,7 @@ package QueueServerSocket;
 use strict;
 use warnings;
 
-our @ISA = (qw(Object));
+our @ISA = (qw(FC_Solve::Socket));
 
 use Carp;
 
@@ -196,18 +216,6 @@ sub _server_sock
     }
 
     return $self->{_server_sock};
-}
-
-sub _client_sock
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_client_sock} = shift;
-    }
-
-    return $self->{_client_sock};
 }
 
 sub _init
@@ -263,30 +271,6 @@ sub write
 
     return;
 }
-
-sub read_line
-{
-    my $self = shift;
-
-    my $s = $self->_client_sock->getline();
-    chomp($s);
-
-    return $s;
-}
-
-sub read_num_lines
-{
-    my ($self, $n) = @_;
-
-    my @lines;
-    foreach my $i (1 .. $n)
-    {
-        push @lines, $self->read_line;
-    }
-
-    return \@lines;
-}
-
 package ProcessesRegistry;
 
 our @ISA = (qw(Object));
