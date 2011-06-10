@@ -356,19 +356,36 @@ sub _get_results_path
     return sprintf("%s/results-%09d", $RESULTS_DIRS_BASE_PATH, $id);
 }
 
+sub _make_results_path
+{
+    my $next_id = shift;
+
+    my $dir_path = _get_results_path($next_id);
+    if (!mkdir($dir_path))
+    {
+        _break_on_fault( "\n\n\nCannot mkdir '$dir_path' - '$!';\n" );
+
+        return;
+    }
+    else
+    {
+        return $dir_path;
+    }
+}
+
 sub _mode_solve
 {
-    my $continue = 1;
-
     my $solver_id = _create_verify_conn()->get_solve_id();
     _log("Starting Solver ID=$solver_id\n");
 
     MAIN_LOOP:
-    while ($continue)
+    while (1)
     {
         my $next_id;
         my $start_deal_idx;
         my $end_deal_idx;
+
+        my $stop = 0;
 
         _lock_and_update_sync_file(
             sub
@@ -377,12 +394,12 @@ sub _mode_solve
 
                 if (! $data->{'CONTINUE'})
                 {
-                    $continue = 0;
+                    $stop = 1;
                     return;
                 }
                 elsif ($data->{NEXT_DEAL_IDX} > $max_deal_idx)
                 {
-                    $continue = 0;
+                    $stop = 1;
                     return;
                 }
                 else
@@ -402,21 +419,16 @@ sub _mode_solve
             },
         );
 
-        if (! $continue)
+        if ($stop)
         {
             last MAIN_LOOP;
         }
 
-        my $dir_path = _get_results_path($next_id);
-        if (!mkdir($dir_path))
-        {
-            my $err = $!;
-
-            _break_on_fault( "\n\n\nCannot mkdir '$dir_path' - '$err';\n" );
-
-            $continue = 0;
+        my $dir_path = _make_results_path($next_id);
+        if (! defined($dir_path)) {
             last MAIN_LOOP;
         }
+
 
         my $exit_code;
 
@@ -443,7 +455,6 @@ sub _mode_solve
                 . "stdout=\n<<<\n$stdout\n>>>\n"
             );
 
-            $continue = 0;
             last MAIN_LOOP;
         }
 
