@@ -550,21 +550,29 @@ sub _write_file
     return;
 }
 
+sub _append_to_file
+{
+    my $filename = shift;
+
+    open my $out, '>>', $filename
+        or Carp::confess("Cannot open '$filename' for appending - $!");
+
+    print {$out} @_;
+
+    close($out);
+
+    return;
+}
+
 sub _break_on_fault
 {
     my ($fault_string) = @_;
 
     return _lock_sync(
-        sub
-        {
-            open my $fault_fh, '>>', $FAULT_FILE_PATH
-                or Carp::confess("cannot open fault file - $!");
-
-            print {$fault_fh} $fault_string;
-            close ($fault_fh);
-
+        sub {
+            _append_to_file($FAULT_FILE_PATH, $fault_string);
             _halt_process();
-        }
+        },
     );
 }
 
