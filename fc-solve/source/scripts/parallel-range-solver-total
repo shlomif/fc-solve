@@ -547,6 +547,38 @@ sub _make_results_path
     }
 }
 
+sub _return_next_solve_params
+{
+    my $data = shift;
+
+    if ((! $data->{'CONTINUE'}) or 
+        ($data->{NEXT_DEAL_IDX} > $max_deal_idx))
+    {
+        return {stop => 1};
+    }
+    else
+    {
+        my $next_id = ($data->{NEXT_ID}++);
+        my $start_deal_idx = $data->{NEXT_DEAL_IDX};
+        my $end_deal_idx = $start_deal_idx + $SOLVER_INCREMENT;
+
+        if ($end_deal_idx > $max_deal_idx)
+        {
+            $end_deal_idx = $max_deal_idx;
+        }
+
+        $data->{NEXT_DEAL_IDX} = $end_deal_idx+1;
+
+        return
+        {
+            stop => 0, 
+            next_id => $next_id, 
+            start_deal_idx => $start_deal_idx, 
+            end_deal_idx => $end_deal_idx
+        };
+    }
+}
+
 sub _mode_solve
 {
     my $solver_id = _create_verify_conn()->get_solve_id();
@@ -556,37 +588,7 @@ sub _mode_solve
     while (1)
     {
         my $sync_result = _lock_and_update_sync_file(
-            sub
-            {
-                my $data = shift;
-
-                if ((! $data->{'CONTINUE'}) or 
-                    ($data->{NEXT_DEAL_IDX} > $max_deal_idx))
-                {
-                    return {stop => 1};
-                }
-                else
-                {
-                    my $next_id = ($data->{NEXT_ID}++);
-                    my $start_deal_idx = $data->{NEXT_DEAL_IDX};
-                    my $end_deal_idx = $start_deal_idx + $SOLVER_INCREMENT;
-
-                    if ($end_deal_idx > $max_deal_idx)
-                    {
-                        $end_deal_idx = $max_deal_idx;
-                    }
-
-                    $data->{NEXT_DEAL_IDX} = $end_deal_idx+1;
-
-                    return
-                    {
-                        stop => 0, 
-                        next_id => $next_id, 
-                        start_deal_idx => $start_deal_idx, 
-                        end_deal_idx => $end_deal_idx
-                    };
-                }
-            },
+            \&_return_next_solve_params,
         );
 
         if ($sync_result->{stop})
