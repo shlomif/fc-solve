@@ -354,7 +354,6 @@ sub _mode_solve
     my $continue = 1;
 
     my $solver_id = _create_verify_conn()->get_solve_id();
-
     _log("Starting Solver ID=$solver_id\n");
 
     MAIN_LOOP:
@@ -450,7 +449,6 @@ sub _mode_solve
     }
 
     _log("Terminating Solver ID=$solver_id\n");
-
     _create_verify_conn()->terminate_solve($solver_id);
 
     return;
@@ -623,7 +621,6 @@ sub _mode_verify
     my $continue = 1;
 
     my $verifier_id = _create_verify_conn()->get_verify_id();
-
     _log("Starting Verifier ID=$verifier_id\n");
 
     MAIN_LOOP:
