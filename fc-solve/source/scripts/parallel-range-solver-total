@@ -105,7 +105,7 @@ sub get_verify_id
 {
     my $self = shift;
 
-    $self->write("GET_VERIFY_ID");
+    $self->write("GET_VERIFIER_ID");
 
     return $self->read();
 }
@@ -114,7 +114,7 @@ sub get_solve_id
 {
     my $self = shift;
 
-    $self->write("GET_SOLVE_ID");
+    $self->write("GET_SOLVER_ID");
 
     return $self->read();
 }
@@ -133,14 +133,14 @@ sub terminate_solve
 {
     my ($self, $id) = @_;
 
-    return $self->_terminate_cmd("TERMINATE_SOLVE", $id);
+    return $self->_terminate_cmd("TERMINATE_SOLVER", $id);
 }
 
 sub terminate_verify
 {
     my ($self, $id) = @_;
 
-    return $self->_terminate_cmd("TERMINATE_VERIFY", $id);
+    return $self->_terminate_cmd("TERMINATE_VERIFIER", $id);
 }
 
 sub enqueue_range_to_verify
@@ -688,18 +688,26 @@ sub _mode_queue_server
         return $active{$process_type}->remove($read_line->());
     };
 
+    my %commands;
+
+    foreach my $process_type (keys(%active))
+    {
+        my $uc = uc($process_type);
+        $commands{"GET_${uc}_ID"} = sub {
+            return $register_process->($process_type);
+        };
+        $commands{"TERMINATE_$uc"} = sub {
+            return $remove_process->($process_type);
+        };
+    }
+
     while ( (!$active_verifiers->was_placed) || $active_verifiers->is_full )
     {
         $client = $server->accept;
         my $cmd = $read_line->();
 
-        if ($cmd eq "GET_VERIFY_ID")
-        {
-            $register_process->("verifier");
-        }
-        elsif ($cmd eq "GET_SOLVE_ID")
-        {
-            $register_process->("solver");
+        if (exists($commands{$cmd})) {
+            $commands{$cmd}->();
         }
         elsif ($cmd eq "GET_NEXT")
         {
@@ -727,14 +735,6 @@ sub _mode_queue_server
             }
 
             push @queue, +{ map { $order[$_] => $data[$_] } (0 .. $#order) };
-        }
-        elsif ($cmd eq "TERMINATE_VERIFY")
-        {
-            $remove_process->("verifier");
-        }
-        elsif ($cmd eq "TERMINATE_SOLVE")
-        {
-            $remove_process->("solver");
         }
         else
         {
