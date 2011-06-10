@@ -757,8 +757,6 @@ sub _mode_queue_server
         ) . "]"
     };
 
-    my $client;
-
     my $register_process = sub 
     {
         my $process_type = shift;
@@ -823,7 +821,7 @@ sub _mode_queue_server
 
     while ( $active_verifiers->is_active )
     {
-        $client = $service->accept;
+        $service->accept;
 
         my $cmd = $service->read_line();
 
