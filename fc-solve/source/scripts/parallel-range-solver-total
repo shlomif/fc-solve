@@ -296,7 +296,8 @@ sub _break_on_fault
     my ($fault_string) = @_;
 
     _lock_sync(
-        sub {
+        sub
+        {
             open my $fault_fh, '>>', $FAULT_FILE_PATH
                 or Carp::confess("cannot open fault file - $!");
 
@@ -341,7 +342,8 @@ sub _lock_and_update_sync_file
     my $callback = shift;
 
     return _lock_sync(
-        sub { 
+        sub
+        { 
             return _update_sync_file( $callback ); 
         }
     );
@@ -478,7 +480,8 @@ sub _mode_queue_server
 
     my @order = qw(path min_idx max_idx);
 
-    my $queue_to_string = sub {
+    my $queue_to_string = sub
+    {
         return "[\n" . join('', 
             map { 
                 sprintf(qq/{Min=%d Max=%d Path='%s'}\n/, 
@@ -491,14 +494,16 @@ sub _mode_queue_server
     while ( (!$got_verifier) || %active_verifiers )
     {
         my $client = $server->accept;
-        my $read_line = sub {
+        my $read_line = sub
+        {
             my $s = <$client>;
             chomp($s);
 
             return $s;
         };
 
-        my $write = sub {
+        my $write = sub
+        {
             print {$client} map { "$_\n" } @_;
 
             return;
@@ -573,9 +578,11 @@ sub _mode_queue_server
     }
 }
 
-sub _halt_process {
+sub _halt_process
+{
     _update_sync_file(
-        sub {
+        sub
+        {
             my $data = shift;
 
             $data->{CONTINUE} = 0;
@@ -587,7 +594,8 @@ sub _halt_process {
     return;
 }
 
-sub _lock_sync {
+sub _lock_sync
+{
     my $callback = shift;
 
     open my $lock_fh, ">", $SYNC_LOCK_PATH
@@ -625,7 +633,8 @@ sub _mode_verify
 
         $conn->write("GET_NEXT");
 
-        my $read_line = sub {
+        my $read_line = sub
+        {
             return $conn->read;
         };
 
