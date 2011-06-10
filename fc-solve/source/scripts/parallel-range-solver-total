@@ -154,7 +154,7 @@ use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn )
 STDOUT->autoflush(1);
 STDERR->autoflush(1);
 
-sub _run_cmd_line
+sub _trap_cmd_line
 {
     my $cmd_line = shift;
 
@@ -166,6 +166,26 @@ sub _run_cmd_line
     };
 
     return ($exit_code, $trap->stdout(), $trap->stderr());
+}
+
+sub _run_cmd_line
+{
+    my $cmd_line = shift;
+
+    my ($exit_code, $stdout, $stderr) = _trap_cmd_line($cmd_line);
+
+    if ($exit_code != 0)
+    {
+        _break_on_fault(
+            "\n\n\nstderr=\n<<<\n$stderr\n>>>\n\n"
+            .  "stdout=\n<<<\n$stdout\n>>>\n"
+        );
+        return "ERROR";
+    }
+    else
+    {
+        return;
+    }
 }
 
 sub _getlines
@@ -442,24 +462,17 @@ sub _mode_solve
 
         _log("Solving ID=$solver_id Min=$start_deal_idx Max=$end_deal_idx\n");
 
-        my ($exit_code, $stdout, $stderr) = _run_cmd_line(
-            [
-                $RANGE_SOLVER_EXE,
-                $start_deal_idx, $end_deal_idx, $SOLVER_STEP,
-                '--solutions-directory', "$dir_path/",
-                @preset,
-                '-p', '-t', '-sam',
-            ]
-        );
-
-        if ($exit_code != 0)
-        {
-            _break_on_fault(
-                "\n\n\n[Running the range parallel solver] "
-                . "stderr=\n<<<\n$stderr\n>>>\n\n"
-                . "stdout=\n<<<\n$stdout\n>>>\n"
-            );
-
+        if (_run_cmd_line(
+                [
+                    $RANGE_SOLVER_EXE,
+                    $start_deal_idx, $end_deal_idx, $SOLVER_STEP,
+                    '--solutions-directory', "$dir_path/",
+                    @preset,
+                    '-p', '-t', '-sam',
+                ]
+            )
+        )
+        {   
             last MAIN_LOOP;
         }
 
@@ -673,27 +686,20 @@ sub _mode_verify
 
             _log("Verifying ID=$verifier_id Min=$min_idx Max=$max_idx\n");
 
-            my ($exit_code, $stdout, $stderr) = _run_cmd_line(
-                [
-                    @VERIFY_RANGE_COMMAND_START,
-                    '--min-idx', $min_idx, '--max-idx', $max_idx,
-                    # Finally the path of the directory to process.
-                    $path_to_dir,
-                ]
-            );
-
-            if ($exit_code != 0)
+            if (_run_cmd_line(
+                    [
+                        @VERIFY_RANGE_COMMAND_START,
+                        '--min-idx', $min_idx, '--max-idx', $max_idx,
+                        # Finally the path of the directory to process.
+                        $path_to_dir,
+                    ]
+                )
+            )
             {
-                _break_on_fault(
-                    "\n\n\nstderr=\n<<<\n$stderr\n>>>\n\n"
-                    .  "stdout=\n<<<\n$stdout\n>>>\n"
-                );
                 last MAIN_LOOP;
             }
-            else
-            {
-                rmtree( $path_to_dir, {});
-            }
+
+            rmtree( $path_to_dir, {});
         }
     }
 
