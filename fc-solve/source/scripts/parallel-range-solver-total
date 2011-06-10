@@ -755,24 +755,6 @@ sub _mode_queue_server
         ) . "]"
     };
 
-    my $register_process = sub 
-    {
-        my $process_type = shift;
-
-        my $id = $active{$process_type}->register;
-        $service->write($id);
-        _log("Queue manager registered $process_type $id\n");
-
-        return;
-    };
-
-    my $remove_process = sub
-    {
-        my $process_type = shift;
-
-        return $active{$process_type}->remove($service->read_line());
-    };
-
     my %commands =
     (
         'GET_NEXT' => sub {
@@ -806,11 +788,18 @@ sub _mode_queue_server
     foreach my $process_type (keys(%active))
     {
         my $uc = uc($process_type);
+
         $commands{"GET_${uc}_ID"} = sub {
-            return $register_process->($process_type);
+            my $id = $active{$process_type}->register;
+            $service->write($id);
+
+            _log("Queue manager registered $process_type $id\n");
+
+            return;
         };
+
         $commands{"TERMINATE_$uc"} = sub {
-            return $remove_process->($process_type);
+            return $active{$process_type}->remove($service->read_line());
         };
     }
 
