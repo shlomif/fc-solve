@@ -636,13 +636,11 @@ sub _create_verify_conn
 
 sub _mode_verify
 {
-    my $continue = 1;
-
     my $verifier_id = _create_verify_conn()->get_verify_id();
     _log("Starting Verifier ID=$verifier_id\n");
 
     MAIN_LOOP:
-    while ($continue)
+    while (1)
     {
         my $conn = _create_verify_conn();
 
@@ -663,7 +661,7 @@ sub _mode_verify
         elsif ($status eq "FINISH")
         {
             undef($conn);
-            $continue = 0;
+            last MAIN_LOOP;
         }
         elsif ($status eq "DATA")
         {
@@ -690,6 +688,7 @@ sub _mode_verify
                     "\n\n\nstderr=\n<<<\n$stderr\n>>>\n\n"
                     .  "stdout=\n<<<\n$stdout\n>>>\n"
                 );
+                last MAIN_LOOP;
             }
             else
             {
