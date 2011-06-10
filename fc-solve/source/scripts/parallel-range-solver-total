@@ -61,6 +61,16 @@ sub read_num_lines
     return \@lines;
 }
 
+sub write
+{
+    my $self = shift;
+
+    $self->_client_sock->print(map { "$_\n" } @_);
+    $self->_client_sock->flush;
+
+    return;
+}
+
 package VerifierConn;
 
 use strict;
@@ -90,19 +100,6 @@ sub _init
     }
 
     $self->_client_sock($sock);
-
-    return;
-}
-
-sub write
-{
-    my $self = shift;
-
-    my $message = shift;
-
-    $self->_client_sock->print("$message\n");
-
-    $self->_client_sock->flush;
 
     return;
 }
@@ -258,14 +255,7 @@ sub _disconnect_client
     return;
 }
 
-sub write
-{
-    my $self = shift;
 
-    $self->_client_sock->print(map { "$_\n" } @_);
-
-    return;
-}
 package ProcessesRegistry;
 
 our @ISA = (qw(Object));
