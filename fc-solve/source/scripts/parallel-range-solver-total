@@ -88,6 +88,14 @@ sub get_verify_id
     return $self->read();
 }
 
+sub get_solve_id
+{
+    my $self = shift;
+
+    $self->write("GET_SOLVE_ID");
+
+    return $self->read();
+}
 sub terminate_verify
 {
     my $self = shift;
@@ -180,7 +188,7 @@ if ($@)
 # my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVING_PROCESSES, 
 #     $NUM_VERIFYING_PROCESSES, $NUM_SOLVER_DEALS_PER_BATCH) = @$conf_lines;
 
-my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVING_PROCESSES, 
+my ($max_deal_idx, $preset_conf, $min_idx, undef,
      undef, $NUM_SOLVER_DEALS_PER_BATCH) = @$conf_lines;
 
 my $SOLVER_INCREMENT = $NUM_SOLVER_DEALS_PER_BATCH - 1;
@@ -298,6 +306,10 @@ sub _mode_solve
 {
     my $continue = 1;
 
+    my $solver_id = _create_verify_conn()->get_solve_id();
+
+    _log("Starting Solver ID=$solver_id\n");
+
     MAIN_LOOP:
     while ($continue)
     {
@@ -361,6 +373,8 @@ sub _mode_solve
 
         my $exit_code;
 
+        _log("Solving ID=$solver_id Min=$start_deal_idx Max=$end_deal_idx\n");
+
         trap
         {
             $exit_code = system(
@@ -402,13 +416,15 @@ sub _mode_solve
         close($sock);
     }
 
+    _log("Terminating Solver ID=$solver_id\n");
+
     my $sock = IO::Socket::UNIX->new(
         Type => SOCK_STREAM(),
         Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
     )
         or Carp::confess("Cannot connect to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!");
 
-    print {$sock} "FINISH\n";
+    print {$sock} "TERMINATE_SOLVE\n$solver_id\n";
     $sock->flush;
 
     close($sock);
@@ -420,8 +436,8 @@ sub _mode_queue_server
 {
     my @queue;
 
-    # To be set by the solving process that encounters the max_idx.
-    my $num_finished = 0;
+    # To be set by solving process that encounters the max_idx.
+    my %active_solvers;
 
     # The active verifying processes.
     my %active_verifiers;
@@ -429,6 +445,7 @@ sub _mode_queue_server
     my $got_verifier = 0;
 
     my $next_verifier_id = 1;
+    my $next_solver_id = 1;
 
     my $server = IO::Socket::UNIX->new(
             Type => SOCK_STREAM(),
@@ -466,6 +483,13 @@ sub _mode_queue_server
 
             $got_verifier = 1;
         }
+        elsif ($cmd eq "GET_SOLVE_ID")
+        {
+            my $solver_id = $next_solver_id++;
+
+            $write->($solver_id);
+            $active_solvers{$solver_id} = 1;
+        }
         elsif ($cmd eq "TERMINATE_VERIFY")
         {
             my $id = $read_line->();
@@ -479,7 +503,7 @@ sub _mode_queue_server
                 my $item = shift(@queue);
                 $write->("DATA", @{$item}{@order});
             }
-            elsif ($num_finished == $NUM_SOLVING_PROCESSES)
+            elsif (! %active_solvers)
             {
                 $write->("FINISH");
             }
@@ -499,9 +523,10 @@ sub _mode_queue_server
 
             push @queue, +{ map { $order[$_] => $data[$_] } (0 .. $#order) };
         }
-        elsif ($cmd eq "FINISH")
+        elsif ($cmd eq "TERMINATE_SOLVE")
         {
-            $num_finished++;
+            my $id = $read_line->();
+            delete($active_solvers{$id});
         }
 
         close($client);
