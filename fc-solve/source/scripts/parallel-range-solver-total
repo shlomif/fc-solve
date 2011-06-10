@@ -193,6 +193,13 @@ my @VERIFY_RANGE_COMMAND_START =
     @preset,
 );
 
+sub _log
+{
+    print @_;
+
+    return;
+}
+
 # The lock needs to be kept.
 sub _update_sync_file
 {
@@ -382,7 +389,7 @@ sub _mode_solve
 
         if (! $sock )
         {
-            print "Nothing to listen to.\n";
+            _log("Nothing to listen to.\n");
         }
 
         print {$sock} "ENQ\n$dir_path\n$start_deal_idx\n$end_deal_idx\n";
@@ -497,7 +504,7 @@ sub _mode_queue_server
     }
     continue
     {
-        print "QUEUE == " . Dumper([\@queue]) . "\n\n";
+        _log("QUEUE == " . Dumper([\@queue]) . "\n\n");
     }
 }
 
