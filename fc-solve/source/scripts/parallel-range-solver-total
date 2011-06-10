@@ -30,16 +30,16 @@ use Carp;
 
 use IO::Socket::UNIX;
 
-sub _sock
+sub _client_sock
 {
     my $self = shift;
 
     if (@_)
     {
-        $self->{_sock} = shift;
+        $self->{_client_sock} = shift;
     }
 
-    return $self->{_sock};
+    return $self->{_client_sock};
 }
 
 sub _init
@@ -59,7 +59,7 @@ sub _init
         Carp::confess("Cannot initialize connection - $!.\n");
     }
 
-    $self->_sock($sock);
+    $self->_client_sock($sock);
 
     return;
 }
@@ -70,9 +70,9 @@ sub write
 
     my $message = shift;
 
-    $self->_sock->print("$message\n");
+    $self->_client_sock->print("$message\n");
 
-    $self->_sock->flush;
+    $self->_client_sock->flush;
 
     return;
 }
@@ -81,7 +81,7 @@ sub read_line
 {
     my $self = shift;
 
-    my $line = $self->_sock->getline;
+    my $line = $self->_client_sock->getline;
     chomp($line);
 
     return $line;
@@ -91,11 +91,11 @@ sub DESTROY
 {
     my $self = shift;
 
-    if (defined ( $self->_sock) )
+    if (defined ( $self->_client_sock) )
     {
-        close($self->_sock);
+        close($self->_client_sock);
 
-        $self->_sock('');
+        $self->_client_sock('');
     }
 
     return;
