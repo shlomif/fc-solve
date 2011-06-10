@@ -579,6 +579,14 @@ sub _return_next_solve_params
     }
 }
 
+sub _calc_next_solve_params
+{
+    return
+        _lock_and_update_sync_file(
+            \&_return_next_solve_params,
+        );
+}
+
 sub _mode_solve
 {
     my $solver_id = _create_verify_conn()->get_solve_id();
@@ -587,10 +595,7 @@ sub _mode_solve
     MAIN_LOOP:
     while (1)
     {
-        my $sync_result = _lock_and_update_sync_file(
-            \&_return_next_solve_params,
-        );
-
+        my $sync_result = _calc_next_solve_params();
         if ($sync_result->{stop})
         {
             last MAIN_LOOP;
