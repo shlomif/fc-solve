@@ -766,14 +766,14 @@ sub _mode_queue_server
         { socket_path => $RANGE_TO_VERIFY_SOCKET_PATH }
     );
 
-    my @order = qw(path min_idx max_idx);
+    my @order = qw(path_to_dir min_idx max_idx);
 
     my $queue_to_string = sub
     {
         return "[\n" . join('', 
             map { 
                 sprintf(qq/{Min=%d Max=%d Path='%s'}\n/, 
-                    $_->{min_idx}, $_->{max_idx}, $_->{path}
+                    $_->{min_idx}, $_->{max_idx}, $_->{path_to_dir}
                     )
             } @queue
         ) . "]"
