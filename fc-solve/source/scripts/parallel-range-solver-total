@@ -536,11 +536,12 @@ GetOptions(
 
 __PACKAGE__->can("_mode_$mode")->();
 
-sub _write_file
+sub _write_to_file
 {
     my $filename = shift;
+    my $mode = shift;
 
-    open my $out, '>', $filename
+    open my $out, $mode, $filename
         or Carp::confess("Cannot open '$filename' for writing - $!");
 
     print {$out} @_;
@@ -550,18 +551,16 @@ sub _write_file
     return;
 }
 
+sub _write_file
+{
+    my $filename = shift;
+    return _write_to_file($filename, '>', @_);
+}
+
 sub _append_to_file
 {
     my $filename = shift;
-
-    open my $out, '>>', $filename
-        or Carp::confess("Cannot open '$filename' for appending - $!");
-
-    print {$out} @_;
-
-    close($out);
-
-    return;
+    return _write_to_file($filename, '>>', @_);
 }
 
 sub _break_on_fault
