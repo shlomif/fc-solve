@@ -867,21 +867,21 @@ sub _mode_queue_server
         },
     );
 
-    foreach my $process_type ($active->get_types)
+    foreach my $type ($active->get_types)
     {
-        my $uc = uc($process_type);
+        my $uc = uc($type);
 
         $commands{"GET_${uc}_ID"} = sub {
-            my $id = $active->register($process_type);
+            my $id = $active->register($type);
             $service->write($id);
 
-            _log("Queue manager registered $process_type $id\n");
+            _log("Queue manager registered $type $id\n");
 
             return;
         };
 
         $commands{"TERMINATE_$uc"} = sub {
-            return $active->remove($process_type, $service->read_line());
+            return $active->remove($type, $service->read_line());
         };
     }
 
