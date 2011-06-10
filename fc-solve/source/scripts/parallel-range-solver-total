@@ -628,6 +628,12 @@ sub _mode_queue_server
     my $active_solvers = ProcessesRegistry->new;
     my $active_verifiers = ProcessesRegistry->new;
 
+    my %active =
+    (
+        'solver' => $active_solvers,
+        'verifier' => $active_verifiers,
+    );
+
     my $server = IO::Socket::UNIX->new(
             Type => SOCK_STREAM(),
             Local => $RANGE_TO_VERIFY_SOCKET_PATH,
@@ -648,9 +654,31 @@ sub _mode_queue_server
         ) . "]"
     };
 
+    my $client;
+
+    my $write = sub
+    {
+        $client->print(map { "$_\n" } @_);
+
+        return;
+    };
+
+    my $register_process = sub 
+    {
+        my $process_type = shift;
+
+        my $id = $active{$process_type}->register;
+        $write->($id);
+        _log("Queue manager registered $process_type $id\n");
+
+        return;
+    };
+
+
     while ( (!$active_verifiers->was_placed) || $active_verifiers->is_full )
     {
-        my $client = $server->accept;
+        $client = $server->accept;
+
         my $read_line = sub
         {
             my $s = <$client>;
@@ -659,27 +687,15 @@ sub _mode_queue_server
             return $s;
         };
 
-        my $write = sub
-        {
-            print {$client} map { "$_\n" } @_;
-
-            return;
-        };
-
         my $cmd = $read_line->();
 
         if ($cmd eq "GET_VERIFY_ID")
         {
-            my $verifier_id = $active_verifiers->register;
-
-            $write->($verifier_id);
-            _log("Queue manager registered verifier $verifier_id\n");
+            $register_process->("verifier");
         }
         elsif ($cmd eq "GET_SOLVE_ID")
         {
-            my $solver_id = $active_solvers->register;
-            $write->($solver_id);
-            _log("Queue manager registered solver $solver_id\n");
+            $register_process->("solver");
         }
         elsif ($cmd eq "TERMINATE_VERIFY")
         {
