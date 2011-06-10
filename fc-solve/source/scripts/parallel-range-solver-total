@@ -301,6 +301,16 @@ sub _mode_setup
     return;
 }
 
+sub _lock_and_update_sync_file
+{
+    my $callback = shift;
+
+    return _lock_sync(
+        sub { 
+            return _update_sync_file( $callback ); 
+        }
+    );
+}
 
 sub _mode_solve
 {
@@ -317,39 +327,36 @@ sub _mode_solve
         my $start_deal_idx;
         my $end_deal_idx;
 
-        _lock_sync(
-            sub {
-                _update_sync_file(
-                    sub {
-                        my $data = shift;
+        _lock_and_update_sync_file(
+            sub
+            {
+                my $data = shift;
 
-                        if (! $data->{'CONTINUE'})
-                        {
-                            $continue = 0;
-                            return;
-                        }
-                        elsif ($data->{NEXT_DEAL_IDX} > $max_deal_idx)
-                        {
-                            $continue = 0;
-                            return;
-                        }
-                        else
-                        {
-                            $next_id = ($data->{NEXT_ID}++);
-                            $start_deal_idx = $data->{NEXT_DEAL_IDX};
-                            $end_deal_idx = $start_deal_idx + $SOLVER_INCREMENT;
+                if (! $data->{'CONTINUE'})
+                {
+                    $continue = 0;
+                    return;
+                }
+                elsif ($data->{NEXT_DEAL_IDX} > $max_deal_idx)
+                {
+                    $continue = 0;
+                    return;
+                }
+                else
+                {
+                    $next_id = ($data->{NEXT_ID}++);
+                    $start_deal_idx = $data->{NEXT_DEAL_IDX};
+                    $end_deal_idx = $start_deal_idx + $SOLVER_INCREMENT;
 
-                            if ($end_deal_idx > $max_deal_idx)
-                            {
-                                $end_deal_idx = $max_deal_idx;
-                            }
+                    if ($end_deal_idx > $max_deal_idx)
+                    {
+                        $end_deal_idx = $max_deal_idx;
+                    }
 
-                            $data->{NEXT_DEAL_IDX} = $end_deal_idx+1;
-                            return;
-                        }
-                    },
-                );
-            }
+                    $data->{NEXT_DEAL_IDX} = $end_deal_idx+1;
+                    return;
+                }
+            },
         );
 
         if (! $continue)
