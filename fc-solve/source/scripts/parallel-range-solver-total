@@ -468,6 +468,16 @@ sub _mode_queue_server
 
     my @order = qw(path min_idx max_idx);
 
+    my $queue_to_string = sub {
+        return "[\n" . join('', 
+            map { 
+                sprintf(qq/{Min=%d Max=%d Path='%s'}\n/, 
+                    $_->{min_idx}, $_->{max_idx}, $_->{path}
+                    )
+            } @queue
+        ) . "]"
+    };
+
     while ( (!$got_verifier) || %active_verifiers )
     {
         my $client = $server->accept;
@@ -545,7 +555,7 @@ sub _mode_queue_server
     }
     continue
     {
-        _log("QUEUE == " . Dumper([\@queue]) . "\n\n");
+        _log("QUEUE == " . $queue_to_string->() . "\n\n");
     }
 }
 
