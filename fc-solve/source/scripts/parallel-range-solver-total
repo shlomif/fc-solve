@@ -136,6 +136,26 @@ sub enqueue_range_to_verify
     return;
 }
 
+sub verify_get_next
+{
+    my $conn = shift;
+
+    $conn->write("GET_NEXT");
+
+    my %ret;
+    my $status = $conn->read;
+    if ($status eq "DATA")
+    {
+        $ret{'path_to_dir'} = $conn->read;
+        $ret{min_idx} = $conn->read;
+        $ret{max_idx} = $conn->read;
+    }
+
+    $ret{status} = $status;
+
+    return \%ret;
+}
+
 package main;
 
 use strict;
@@ -655,35 +675,22 @@ sub _mode_verify
     MAIN_LOOP:
     while (1)
     {
-        my $conn = _create_verify_conn();
-
-        $conn->write("GET_NEXT");
-
-        my $read_line = sub
-        {
-            return $conn->read;
-        };
-
-        my $status = $read_line->();
+        my $results = _create_verify_conn()->verify_get_next();
+        my $status = $results->{'status'};
 
         if ($status eq "WAIT")
         {
-            undef($conn);
             sleep(15);
         }
         elsif ($status eq "FINISH")
         {
-            undef($conn);
             last MAIN_LOOP;
         }
         elsif ($status eq "DATA")
         {
-            my $path_to_dir = $read_line->();
-            my $min_idx = $read_line->();
-            my $max_idx = $read_line->();
+            my ($path_to_dir, $min_idx, $max_idx) = 
+                @{$results}{qw(path_to_dir min_idx max_idx)};
             
-            undef($conn);
-
             _log("Verifying ID=$verifier_id Min=$min_idx Max=$max_idx\n");
 
             if (_run_cmd_line(
