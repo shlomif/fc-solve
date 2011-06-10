@@ -3,14 +3,10 @@
 use strict;
 use warnings;
 
-package VerifierConn;
+package Object;
 
 use strict;
 use warnings;
-
-use Carp;
-
-use IO::Socket::UNIX;
 
 sub new
 {
@@ -22,6 +18,17 @@ sub new
 
     return $self;
 }
+
+package VerifierConn;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(Object));
+
+use Carp;
+
+use IO::Socket::UNIX;
 
 sub _init
 {
@@ -154,6 +161,96 @@ sub verify_get_next
     $ret{status} = $status;
 
     return \%ret;
+}
+
+package ProcessesRegistry;
+
+our @ISA = (qw(Object));
+
+use strict;
+use warnings;
+
+sub _registry
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_registry} = shift;
+    }
+
+    return $self->{_registry};
+}
+
+sub _was_placed
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_was_placed} = shift;
+    }
+
+    return $self->{_was_placed};
+}
+
+sub _next_id
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_next_id} = shift;
+    }
+
+    return $self->{_next_id};
+}
+
+sub _init
+{
+    my $self = shift;
+
+    $self->_registry({});
+    $self->_was_placed(0);
+    $self->_next_id(1);
+
+    return;
+}
+
+sub register
+{
+    my ($self) = @_;
+
+    my $id = $self->_next_id;
+    $self->_next_id($id+1);
+
+    $self->_registry->{$id} = 1;
+    $self->_was_placed(1);
+
+    return $id;
+}
+
+sub is_full
+{
+    my $self = shift;
+
+    return scalar(keys(%{$self->_registry}));
+}
+
+sub remove
+{
+    my ($self, $id) = @_;
+
+    delete($self->_registry->{$id});
+
+    return;
+}
+
+sub was_placed
+{
+    my $self = shift;
+
+    return $self->_was_placed;
 }
 
 package main;
@@ -516,11 +613,8 @@ sub _mode_queue_server
     my @queue;
 
     # The state variables of the verifiers and solvers.
-    my %active_solvers;
-    my %active_verifiers;
-    my $next_verifier_id = 1;
-    my $next_solver_id = 1;
-    my $got_verifier = 0;
+    my $active_solvers = ProcessesRegistry->new;
+    my $active_verifiers = ProcessesRegistry->new;
 
     my $server = IO::Socket::UNIX->new(
             Type => SOCK_STREAM(),
@@ -542,7 +636,7 @@ sub _mode_queue_server
         ) . "]"
     };
 
-    while ( (!$got_verifier) || %active_verifiers )
+    while ( (!$active_verifiers->was_placed) || $active_verifiers->is_full )
     {
         my $client = $server->accept;
         my $read_line = sub
@@ -564,29 +658,20 @@ sub _mode_queue_server
 
         if ($cmd eq "GET_VERIFY_ID")
         {
-            my $verifier_id = $next_verifier_id++;
+            my $verifier_id = $active_verifiers->register;
 
             $write->($verifier_id);
-            $active_verifiers{$verifier_id} = 1;
-
             _log("Queue manager registered verifier $verifier_id\n");
-
-            $got_verifier = 1;
         }
         elsif ($cmd eq "GET_SOLVE_ID")
         {
-            my $solver_id = $next_solver_id++;
-
+            my $solver_id = $active_solvers->register;
             $write->($solver_id);
-            $active_solvers{$solver_id} = 1;
-
             _log("Queue manager registered solver $solver_id\n");
         }
         elsif ($cmd eq "TERMINATE_VERIFY")
         {
-            my $id = $read_line->();
-
-            delete($active_verifiers{$id});
+            $active_verifiers->remove($read_line->());
         }
         elsif ($cmd eq "GET_NEXT")
         {
@@ -595,7 +680,7 @@ sub _mode_queue_server
                 my $item = shift(@queue);
                 $write->("DATA", @{$item}{@order});
             }
-            elsif (! %active_solvers)
+            elsif (! $active_solvers->is_full)
             {
                 $write->("FINISH");
             }
@@ -617,8 +702,7 @@ sub _mode_queue_server
         }
         elsif ($cmd eq "TERMINATE_SOLVE")
         {
-            my $id = $read_line->();
-            delete($active_solvers{$id});
+            $active_solvers->remove($read_line->());
         }
 
         close($client);
