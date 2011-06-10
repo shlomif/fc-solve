@@ -255,6 +255,16 @@ sub write
     return;
 }
 
+sub read_line
+{
+    my $self = shift;
+
+    my $s = $self->_client_sock->getline();
+    chomp($s);
+
+    return $s;
+}
+
 package ProcessesRegistry;
 
 our @ISA = (qw(Object));
@@ -749,14 +759,6 @@ sub _mode_queue_server
 
     my $client;
 
-    my $read_line = sub
-    {
-        my $s = <$client>;
-        chomp($s);
-
-        return $s;
-    };
-
     my $register_process = sub 
     {
         my $process_type = shift;
@@ -772,7 +774,7 @@ sub _mode_queue_server
     {
         my $process_type = shift;
 
-        return $active{$process_type}->remove($read_line->());
+        return $active{$process_type}->remove($service->read_line());
     };
 
     my %commands =
@@ -799,7 +801,7 @@ sub _mode_queue_server
 
             foreach my $idx (0 .. $#order)
             {
-                push @data, $read_line->();
+                push @data, $service->read_line();
             }
 
             push @queue, +{ map { $order[$_] => $data[$_] } (0 .. $#order) };
@@ -823,7 +825,7 @@ sub _mode_queue_server
     {
         $client = $service->accept;
 
-        my $cmd = $read_line->();
+        my $cmd = $service->read_line();
 
         if ( exists($commands{$cmd}) )
         {
