@@ -175,6 +175,86 @@ sub verify_get_next
     return \%ret;
 }
 
+package QueueServerSocket;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(Object));
+
+use Carp;
+
+use IO::Socket::UNIX;
+
+sub _server_sock
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_server_sock} = shift;
+    }
+
+    return $self->{_server_sock};
+}
+
+sub _client_sock
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_client_sock} = shift;
+    }
+
+    return $self->{_client_sock};
+}
+
+sub _init
+{
+    my ($self,$args) = @_;
+
+    my $RANGE_TO_VERIFY_SOCKET_PATH = $args->{socket_path};
+
+    # TODO : Add error checking - consult some people.
+    my $server_sock = IO::Socket::UNIX->new(
+            Type => SOCK_STREAM(),
+            Local => $RANGE_TO_VERIFY_SOCKET_PATH,
+            Listen => 1,
+        )
+        or Carp::confess("Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!");
+
+    $self->_server_sock($server_sock);
+
+    return;
+}
+
+sub accept
+{
+    my $self = shift;
+
+    return $self->_client_sock($self->_server_sock->accept);
+}
+
+sub _disconnect_client
+{
+    my $self = shift;
+
+    $self->_client_sock->close();
+    $self->_client_sock('');
+
+    return;
+}
+
+sub write
+{
+    my $self = shift;
+
+    $self->_client_sock->print(map { "$_\n" } @_);
+
+    return;
+}
+
 package ProcessesRegistry;
 
 our @ISA = (qw(Object));
@@ -650,12 +730,9 @@ sub _mode_queue_server
         'verifier' => $active_verifiers,
     );
 
-    my $server = IO::Socket::UNIX->new(
-            Type => SOCK_STREAM(),
-            Local => $RANGE_TO_VERIFY_SOCKET_PATH,
-            Listen => 1,
-        )
-        or Carp::confess("Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!");
+    my $service = QueueServerSocket->new( 
+        { socket_path => $RANGE_TO_VERIFY_SOCKET_PATH }
+    );
 
     my @order = qw(path min_idx max_idx);
 
@@ -672,12 +749,6 @@ sub _mode_queue_server
 
     my $client;
 
-    my $write = sub
-    {
-        $client->print(map { "$_\n" } @_);
-
-        return;
-    };
     my $read_line = sub
     {
         my $s = <$client>;
@@ -691,7 +762,7 @@ sub _mode_queue_server
         my $process_type = shift;
 
         my $id = $active{$process_type}->register;
-        $write->($id);
+        $service->write($id);
         _log("Queue manager registered $process_type $id\n");
 
         return;
@@ -710,15 +781,15 @@ sub _mode_queue_server
             if (@queue)
             {
                 my $item = shift(@queue);
-                $write->("DATA", @{$item}{@order});
+                $service->write("DATA", @{$item}{@order});
             }
             elsif (! $active_solvers->is_full)
             {
-                $write->("FINISH");
+                $service->write("FINISH");
             }
             else
             {
-                $write->("WAIT");
+                $service->write("WAIT");
             }
 
             return;
@@ -750,7 +821,7 @@ sub _mode_queue_server
 
     while ( $active_verifiers->is_active )
     {
-        $client = $server->accept;
+        $client = $service->accept;
 
         my $cmd = $read_line->();
 
@@ -763,11 +834,10 @@ sub _mode_queue_server
             Carp::confess ("Unknown command '$cmd'");
         }
 
-        close($client);
-        undef($client);
     }
     continue
     {
+        $service->_disconnect_client;
         _log("QUEUE == " . $queue_to_string->() . "\n\n");
     }
 
