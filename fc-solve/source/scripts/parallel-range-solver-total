@@ -72,9 +72,12 @@ sub DESTROY
 {
     my $self = shift;
 
-    close($self->{sock});
+    if (defined ( $self->{sock}) )
+    {
+        close($self->{sock});
 
-    delete ($self->{sock});
+        delete ($self->{sock});
+    }
 
     return;
 }
