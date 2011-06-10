@@ -353,6 +353,95 @@ sub is_active
     return ((!$self->was_placed) || $self->is_full)
 }
 
+package QueueServerRegistry;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(Object));
+
+sub _active
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_active} = shift;
+    }
+
+    return $self->{_active};
+}
+
+sub _init
+{
+    my $self = shift;
+
+    $self->_active(
+        {
+            solver => ProcessesRegistry->new,
+            verifier => ProcessesRegistry->new
+        }
+    );
+
+    return;
+}
+
+sub get_types
+{
+    my $self = shift;
+
+    return keys(%{$self->_active});
+}
+
+sub _reg
+{
+    my ($self, $type) = @_;
+
+    return $self->_active->{$type}
+}
+
+sub _solvers
+{
+    my $self = shift;
+
+    return $self->reg('solver');
+}
+
+sub _verifiers
+{
+    my $self = shift;
+
+    return $self->_reg('verifier');
+}
+
+sub has_solvers
+{
+    my $self = shift;
+
+    return $self->_solvers->is_full;
+}
+
+sub register
+{
+    my ($self, $type) = @_;
+
+    return $self->_reg($type)->register;
+}
+
+sub remove
+{
+    my ($self, $type, $id) = @_;
+
+    return $self->_reg($type)->remove($id);
+}
+
+sub is_verifiers_active
+{
+    my $self = shift;
+
+    return $self->_verifiers->is_active;
+}
+
 package main;
 
 use strict;
@@ -731,14 +820,7 @@ sub _mode_queue_server
     my @queue;
 
     # The state variables of the verifiers and solvers.
-    my $active_solvers = ProcessesRegistry->new;
-    my $active_verifiers = ProcessesRegistry->new;
-
-    my %active =
-    (
-        'solver' => $active_solvers,
-        'verifier' => $active_verifiers,
-    );
+    my $active = QueueServerRegistry->new;
 
     my $service = QueueServerSocket->new( 
         { socket_path => $RANGE_TO_VERIFY_SOCKET_PATH }
@@ -763,7 +845,7 @@ sub _mode_queue_server
                 my $item = shift(@queue);
                 $service->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
             }
-            elsif (! $active_solvers->is_full)
+            elsif (! $active->has_solvers)
             {
                 $service->write("FINISH");
             }
@@ -785,12 +867,12 @@ sub _mode_queue_server
         },
     );
 
-    foreach my $process_type (keys(%active))
+    foreach my $process_type ($active->get_types)
     {
         my $uc = uc($process_type);
 
         $commands{"GET_${uc}_ID"} = sub {
-            my $id = $active{$process_type}->register;
+            my $id = $active->register($process_type);
             $service->write($id);
 
             _log("Queue manager registered $process_type $id\n");
@@ -799,11 +881,11 @@ sub _mode_queue_server
         };
 
         $commands{"TERMINATE_$uc"} = sub {
-            return $active{$process_type}->remove($service->read_line());
+            return $active->remove($process_type, $service->read_line());
         };
     }
 
-    while ( $active_verifiers->is_active )
+    while ( $active->is_verifiers_active )
     {
         my $cmd = $service->new_client;
 
