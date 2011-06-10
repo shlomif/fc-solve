@@ -182,15 +182,10 @@ sub verify_get_next
     $conn->write("GET_NEXT");
 
     my %ret;
-    my $status = $conn->read_line;
-    if ($status eq "DATA")
+    if (($ret{status} = $conn->read_line) eq "DATA")
     {
-        my @l;
-        push @l, $conn->read_line for 1 .. 3;
-        $ret{data} = \@l;
+        $ret{data} = $conn->read_num_lines(3);
     }
-
-    $ret{status} = $status;
 
     return \%ret;
 }
