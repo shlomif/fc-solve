@@ -510,6 +510,8 @@ sub _mode_queue_server
             $write->($verifier_id);
             $active_verifiers{$verifier_id} = 1;
 
+            _log("Queue manager registered verifier $verifier_id\n");
+
             $got_verifier = 1;
         }
         elsif ($cmd eq "GET_SOLVE_ID")
@@ -518,6 +520,8 @@ sub _mode_queue_server
 
             $write->($solver_id);
             $active_solvers{$solver_id} = 1;
+
+            _log("Queue manager registered solver $solver_id\n");
         }
         elsif ($cmd eq "TERMINATE_VERIFY")
         {
