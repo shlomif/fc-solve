@@ -713,7 +713,8 @@ sub _mode_queue_server
         $client = $server->accept;
         my $cmd = $read_line->();
 
-        if (exists($commands{$cmd})) {
+        if ( exists($commands{$cmd}) )
+        {
             $commands{$cmd}->();
         }
         elsif ($cmd eq "GET_NEXT")
