@@ -274,6 +274,19 @@ sub read_line
     return $s;
 }
 
+sub read_num_lines
+{
+    my ($self, $n) = @_;
+
+    my @lines;
+    foreach my $i (1 .. $n)
+    {
+        push @lines, $self->read_line;
+    }
+
+    return \@lines;
+}
+
 package ProcessesRegistry;
 
 our @ISA = (qw(Object));
@@ -804,14 +817,9 @@ sub _mode_queue_server
             return;
         },
         'ENQ' => sub {
-            my @data;
+            my $data = $service->read_num_lines(scalar(@order));
 
-            foreach my $idx (0 .. $#order)
-            {
-                push @data, $service->read_line();
-            }
-
-            push @queue, +{ map { $order[$_] => $data[$_] } (0 .. $#order) };
+            push @queue, +{ map { $order[$_] => $data->[$_] } (0 .. $#order) };
 
             return;
         },
