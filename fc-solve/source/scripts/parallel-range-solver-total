@@ -107,12 +107,16 @@ use warnings;
 
 use Getopt::Long;
 use Carp;
+use IO::Handle;
 use IO::Socket::UNIX;
 use Fcntl qw(:flock);
 use File::Path qw(rmtree);
 use Data::Dumper;
 
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
+
+STDOUT->autoflush(1);
+STDERR->autoflush(1);
 
 sub _getlines
 {
@@ -551,6 +555,8 @@ sub _mode_verify
 
     my $verifier_id = _create_verify_conn()->get_verify_id();
 
+    _log("Starting Verifier ID=$verifier_id\n");
+
     MAIN_LOOP:
     while ($continue)
     {
@@ -582,6 +588,8 @@ sub _mode_verify
             
             undef($conn);
 
+            _log("Verifying ID=$verifier_id Min=$min_idx Max=$max_idx\n");
+
             my $exit_code;
             trap
             {
@@ -598,7 +606,7 @@ sub _mode_verify
 
             if ($exit_code != 0)
             {
-                _break_on_fault( 
+                _break_on_fault(
                     "\n\n\nstderr=\n<<<\n$stderr\n>>>\n\n"
                     .  "stdout=\n<<<\n$stdout\n>>>\n"
                 );
@@ -610,6 +618,7 @@ sub _mode_verify
         }
     }
 
+    _log("Terminating Verifier ID=$verifier_id\n");
     _create_verify_conn()->terminate_verify($verifier_id);
 
     return;
