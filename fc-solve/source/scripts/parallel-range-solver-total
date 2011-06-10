@@ -627,6 +627,8 @@ sub _mode_queue_server
     {
         _log("QUEUE == " . $queue_to_string->() . "\n\n");
     }
+
+    return;
 }
 
 sub _halt_process
