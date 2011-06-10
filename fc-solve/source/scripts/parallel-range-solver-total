@@ -5,7 +5,12 @@ use warnings;
 
 package VerifierConn;
 
+use strict;
+use warnings;
+
 use Carp;
+
+use IO::Socket::UNIX;
 
 sub new
 {
@@ -96,6 +101,9 @@ sub terminate_verify
 }
 
 package main;
+
+use strict;
+use warnings;
 
 use Getopt::Long;
 use Carp;
