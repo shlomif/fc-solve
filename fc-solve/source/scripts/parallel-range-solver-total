@@ -265,6 +265,13 @@ sub was_placed
     return $self->_was_placed;
 }
 
+sub is_active
+{
+    my $self = shift;
+
+    return ((!$self->was_placed) || $self->is_full)
+}
+
 package main;
 
 use strict;
@@ -701,7 +708,7 @@ sub _mode_queue_server
         };
     }
 
-    while ( (!$active_verifiers->was_placed) || $active_verifiers->is_full )
+    while ( $active_verifiers->is_active )
     {
         $client = $server->accept;
         my $cmd = $read_line->();
