@@ -229,11 +229,20 @@ sub _init
     return;
 }
 
-sub accept
+sub _accept
 {
     my $self = shift;
 
     return $self->_client_sock($self->_server_sock->accept);
+}
+
+sub new_client
+{
+    my $self = shift;
+
+    $self->_accept;
+
+    return $self->read_line();
 }
 
 sub _disconnect_client
@@ -821,9 +830,7 @@ sub _mode_queue_server
 
     while ( $active_verifiers->is_active )
     {
-        $service->accept;
-
-        my $cmd = $service->read_line();
+        my $cmd = $service->new_client;
 
         if ( exists($commands{$cmd}) )
         {
