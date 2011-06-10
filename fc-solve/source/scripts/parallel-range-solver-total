@@ -165,9 +165,9 @@ sub verify_get_next
     my $status = $conn->read;
     if ($status eq "DATA")
     {
-        $ret{'path_to_dir'} = $conn->read;
-        $ret{min_idx} = $conn->read;
-        $ret{max_idx} = $conn->read;
+        my @l;
+        push @l, $conn->read for 1 .. 3;
+        $ret{data} = \@l;
     }
 
     $ret{status} = $status;
@@ -481,6 +481,8 @@ sub _fcs_file
     return "$FCS_PATH/$basename";
 }
 
+my @QUEUE_ITEM_FIELDS_ORDER = qw(path_to_dir min_idx max_idx);
+
 my $RANGE_TO_VERIFY_SOCKET_PATH = _fcs_file('range-queue.sock');
 
 my $GLOBAL_CONFIG_PATH = _fcs_file('global-params.txt');
@@ -766,8 +768,6 @@ sub _mode_queue_server
         { socket_path => $RANGE_TO_VERIFY_SOCKET_PATH }
     );
 
-    my @order = qw(path_to_dir min_idx max_idx);
-
     my $queue_to_string = sub
     {
         return "[\n" . join('', 
@@ -803,7 +803,7 @@ sub _mode_queue_server
             if (@queue)
             {
                 my $item = shift(@queue);
-                $service->write("DATA", @{$item}{@order});
+                $service->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
             }
             elsif (! $active_solvers->is_full)
             {
@@ -817,9 +817,11 @@ sub _mode_queue_server
             return;
         },
         'ENQ' => sub {
-            my $data = $service->read_num_lines(scalar(@order));
+            my $data = $service->read_num_lines(scalar(@QUEUE_ITEM_FIELDS_ORDER));
 
-            push @queue, +{ map { $order[$_] => $data->[$_] } (0 .. $#order) };
+            my %h;
+            @h{@QUEUE_ITEM_FIELDS_ORDER} = @$data;
+            push @queue, \%h;
 
             return;
         },
@@ -922,9 +924,8 @@ sub _mode_verify
         }
         elsif ($status eq "DATA")
         {
-            my ($path_to_dir, $min_idx, $max_idx) = 
-                @{$results}{qw(path_to_dir min_idx max_idx)};
-            
+            my ($path_to_dir, $min_idx, $max_idx) = @{$results->{data}};
+
             _log("Verifying ID=$verifier_id Min=$min_idx Max=$max_idx\n");
 
             if (_run_cmd_line(
