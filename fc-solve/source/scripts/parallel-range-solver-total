@@ -259,7 +259,7 @@ sub _update_sync_file
     my @order = qw(NEXT_DEAL_IDX NEXT_ID CONTINUE);
     @data{@order} = @$lines;
 
-    $callback->(\%data);
+    my $ret = $callback->(\%data);
 
     open my $write_to_sync, '>', $SYNC_FILE_PATH
         or Carp::confess("Cannot open sync file - $!");
@@ -267,6 +267,8 @@ sub _update_sync_file
     print {$write_to_sync} map { $data{$_} , "\n" } @order;
      
     close ($write_to_sync);
+
+    return $ret;
 }
 
 my $mode;
@@ -295,7 +297,7 @@ sub _break_on_fault
 {
     my ($fault_string) = @_;
 
-    _lock_sync(
+    return _lock_sync(
         sub
         {
             open my $fault_fh, '>>', $FAULT_FILE_PATH
@@ -307,8 +309,6 @@ sub _break_on_fault
             _halt_process();
         }
     );
-
-    return;
 }
 
 sub _mode_setup
@@ -385,22 +385,18 @@ sub _mode_solve
         my $start_deal_idx;
         my $end_deal_idx;
 
-        my $stop = 0;
-
-        _lock_and_update_sync_file(
+        my $stop = _lock_and_update_sync_file(
             sub
             {
                 my $data = shift;
 
                 if (! $data->{'CONTINUE'})
                 {
-                    $stop = 1;
-                    return;
+                    return 1;
                 }
                 elsif ($data->{NEXT_DEAL_IDX} > $max_deal_idx)
                 {
-                    $stop = 1;
-                    return;
+                    return 1;
                 }
                 else
                 {
@@ -617,9 +613,11 @@ sub _lock_sync
     flock ($lock_fh, LOCK_EX) 
         or Carp::confess("Cannot lock summary lock - $!");
 
-    $callback->();
+    my $ret = $callback->();
 
     close ($lock_fh);
+
+    return $ret;
 }
 
 sub _create_verify_conn
