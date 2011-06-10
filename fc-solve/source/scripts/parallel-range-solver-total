@@ -3,6 +3,98 @@
 use strict;
 use warnings;
 
+package VerifierConn;
+
+use Carp;
+
+sub new
+{
+    my $class = shift;
+
+    my $self = bless {}, $class;
+
+    $self->_init(@_);
+
+    return $self;
+}
+
+sub _init
+{
+    my ($self,$args) = @_;
+
+    my $RANGE_TO_VERIFY_SOCKET_PATH = $args->{socket_path};
+
+    # TODO : Add error checking - consult some people.
+    my $sock = IO::Socket::UNIX->new(
+            Type => SOCK_STREAM(),
+            Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
+        );
+
+    if (! $sock )
+    {
+        Carp::confess("Cannot initialize connection - $!.\n");
+    }
+
+    $self->{'sock'} = $sock;
+
+    return;
+}
+
+sub write
+{
+    my $self = shift;
+
+    my $message = shift;
+
+    print { $self->{sock} } "$message\n";
+
+    $self->{sock}->flush;
+
+    return;
+}
+
+sub read
+{
+    my $self = shift;
+
+    my $line = $self->{sock}->getline;
+    chomp($line);
+
+    return $line;
+}
+
+sub DESTROY
+{
+    my $self = shift;
+
+    close($self->{sock});
+
+    delete ($self->{sock});
+
+    return;
+}
+
+sub get_verify_id
+{
+    my $self = shift;
+
+    $self->write("GET_VERIFY_ID");
+
+    return $self->read();
+}
+
+sub terminate_verify
+{
+    my $self = shift;
+    my $id = shift;
+
+    $self->write("TERMINATE_VERIFY");
+
+    $self->write($id);
+
+    return;
+}
+
 package main;
 
 use Getopt::Long;
@@ -73,8 +165,11 @@ if ($@)
     exit(0);
 }
 
+# my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVING_PROCESSES, 
+#     $NUM_VERIFYING_PROCESSES, $NUM_SOLVER_DEALS_PER_BATCH) = @$conf_lines;
+
 my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVING_PROCESSES, 
-    $NUM_VERIFYING_PROCESSES, $NUM_SOLVER_DEALS_PER_BATCH) = @$conf_lines;
+     undef, $NUM_SOLVER_DEALS_PER_BATCH) = @$conf_lines;
 
 my $SOLVER_INCREMENT = $NUM_SOLVER_DEALS_PER_BATCH - 1;
 my $SOLVER_STEP = 100;
@@ -308,7 +403,13 @@ sub _mode_queue_server
 
     # To be set by the solving process that encounters the max_idx.
     my $num_finished = 0;
-    my $active_verifying_processes = $NUM_VERIFYING_PROCESSES;
+
+    # The active verifying processes.
+    my %active_verifiers;
+
+    my $got_verifier = 0;
+
+    my $next_verifier_id = 1;
 
     my $server = IO::Socket::UNIX->new(
             Type => SOCK_STREAM(),
@@ -318,7 +419,8 @@ sub _mode_queue_server
         or Carp::confess("Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!");
 
     my @order = qw(path min_idx max_idx);
-    while ( $active_verifying_processes )
+
+    while ( (!$got_verifier) || %active_verifiers )
     {
         my $client = $server->accept;
         my $read_line = sub {
@@ -336,7 +438,22 @@ sub _mode_queue_server
 
         my $cmd = $read_line->();
 
-        if ($cmd eq "GET_NEXT")
+        if ($cmd eq "GET_VERIFY_ID")
+        {
+            my $verifier_id = $next_verifier_id++;
+
+            $write->($verifier_id);
+            $active_verifiers{$verifier_id} = 1;
+
+            $got_verifier = 1;
+        }
+        elsif ($cmd eq "TERMINATE_VERIFY")
+        {
+            my $id = $read_line->();
+
+            delete($active_verifiers{$id});
+        }
+        elsif ($cmd eq "GET_NEXT")
         {
             if (@queue)
             {
@@ -346,7 +463,6 @@ sub _mode_queue_server
             elsif ($num_finished == $NUM_SOLVING_PROCESSES)
             {
                 $write->("FINISH");
-                $active_verifying_processes--;
             }
             else
             {
@@ -405,44 +521,42 @@ sub _lock_sync {
     close ($lock_fh);
 }
 
+sub _create_verify_conn
+{
+    return VerifierConn->new(
+        {
+            socket_path => $RANGE_TO_VERIFY_SOCKET_PATH,
+        }
+    );
+}
+
 sub _mode_verify
 {
     my $continue = 1;
 
+    my $verifier_id = _create_verify_conn()->get_verify_id();
+
     MAIN_LOOP:
     while ($continue)
     {
-        my $sock = IO::Socket::UNIX->new(
-            Type => SOCK_STREAM(),
-            Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
-        );
+        my $conn = _create_verify_conn();
 
-        if (! $sock )
-        {
-            print "Nothing to listen to.\n";
-            last MAIN_LOOP;
-        }
-
-        print {$sock} "GET_NEXT\n";
-        $sock->flush;
+        $conn->write("GET_NEXT");
 
         my $read_line = sub {
-            my $s = <$sock>;
-            chomp($s);
-
-            return $s;
+            return $conn->read;
         };
 
         my $status = $read_line->();
 
         if ($status eq "WAIT")
         {
-            close($sock);
+            undef($conn);
             sleep(15);
         }
         elsif ($status eq "FINISH")
         {
-            close($sock);
+            undef($conn);
             $continue = 0;
         }
         elsif ($status eq "DATA")
@@ -451,7 +565,7 @@ sub _mode_verify
             my $min_idx = $read_line->();
             my $max_idx = $read_line->();
             
-            close($sock);
+            undef($conn);
 
             my $exit_code;
             trap
@@ -480,6 +594,8 @@ sub _mode_verify
             }
         }
     }
+
+    _create_verify_conn()->terminate_verify($verifier_id);
 
     return;
 }
