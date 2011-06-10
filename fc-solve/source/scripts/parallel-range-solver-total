@@ -555,28 +555,21 @@ sub _mode_solve
     MAIN_LOOP:
     while (1)
     {
-        my $next_id;
-        my $start_deal_idx;
-        my $end_deal_idx;
-
-        my $stop = _lock_and_update_sync_file(
+        my $sync_result = _lock_and_update_sync_file(
             sub
             {
                 my $data = shift;
 
-                if (! $data->{'CONTINUE'})
+                if ((! $data->{'CONTINUE'}) or 
+                    ($data->{NEXT_DEAL_IDX} > $max_deal_idx))
                 {
-                    return 1;
-                }
-                elsif ($data->{NEXT_DEAL_IDX} > $max_deal_idx)
-                {
-                    return 1;
+                    return {stop => 1};
                 }
                 else
                 {
-                    $next_id = ($data->{NEXT_ID}++);
-                    $start_deal_idx = $data->{NEXT_DEAL_IDX};
-                    $end_deal_idx = $start_deal_idx + $SOLVER_INCREMENT;
+                    my $next_id = ($data->{NEXT_ID}++);
+                    my $start_deal_idx = $data->{NEXT_DEAL_IDX};
+                    my $end_deal_idx = $start_deal_idx + $SOLVER_INCREMENT;
 
                     if ($end_deal_idx > $max_deal_idx)
                     {
@@ -584,21 +577,30 @@ sub _mode_solve
                     }
 
                     $data->{NEXT_DEAL_IDX} = $end_deal_idx+1;
-                    return;
+
+                    return
+                    {
+                        stop => 0, 
+                        next_id => $next_id, 
+                        start_deal_idx => $start_deal_idx, 
+                        end_deal_idx => $end_deal_idx
+                    };
                 }
             },
         );
 
-        if ($stop)
+        if ($sync_result->{stop})
         {
             last MAIN_LOOP;
         }
+
+        my ($next_id, $start_deal_idx, $end_deal_idx) =
+            @{$sync_result}{qw(next_id start_deal_idx end_deal_idx)};
 
         my $dir_path = _make_results_path($next_id);
         if (! defined($dir_path)) {
             last MAIN_LOOP;
         }
-
 
         _log("Solving ID=$solver_id Min=$start_deal_idx Max=$end_deal_idx\n");
 
