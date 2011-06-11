@@ -610,6 +610,25 @@ sub new_client
     return $self->_service->new_client(@_);
 }
 
+sub _handle_get_next
+{
+    my $man = shift;
+    if (defined(my $item = $man->extract))
+    {
+        $man->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
+    }
+    elsif (! $man->_has_solvers)
+    {
+        $man->write("FINISH");
+    }
+    else
+    {
+        $man->write("WAIT");
+    }
+
+    return;
+}
+
 package main;
 
 use strict;
@@ -994,25 +1013,10 @@ sub _mode_queue_server
     my %commands =
     (
         'GET_NEXT' => sub {
-            if (defined(my $item = $man->extract))
-            {
-                $man->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
-            }
-            elsif (! $man->_has_solvers)
-            {
-                $man->write("FINISH");
-            }
-            else
-            {
-                $man->write("WAIT");
-            }
-
-            return;
+            return $man->_handle_get_next();
         },
         'ENQ' => sub {
-            $man->_enqueue_read_item();
-
-            return;
+            return $man->_enqueue_read_item();
         },
     );
 
