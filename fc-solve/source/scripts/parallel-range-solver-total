@@ -752,7 +752,7 @@ if ($@)
 # my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVING_PROCESSES, 
 #     $NUM_VERIFYING_PROCESSES, $NUM_SOLVER_DEALS_PER_BATCH) = @$conf_lines;
 
-my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVER_DEALS_PER_BATCH) =
+my ($max_deal_idx, $preset_conf, $solver_theme_conf, $min_idx, $NUM_SOLVER_DEALS_PER_BATCH) =
     @$conf_lines;
 
 
@@ -760,6 +760,7 @@ my $SOLVER_INCREMENT = $NUM_SOLVER_DEALS_PER_BATCH - 1;
 my $SOLVER_STEP = 100;
 
 my @preset = split(/\s+/, $preset_conf);
+my @solver_theme = split(/\s+/, $solver_theme_conf);
 
 my @VERIFY_RANGE_COMMAND_START =
 (
@@ -768,6 +769,11 @@ my @VERIFY_RANGE_COMMAND_START =
     '--summary-file', $SUMMARY_FILE_PATH,
     '--summary-stats-file', $STATS_FILE_PATH,
     @preset,
+);
+
+my @RANGE_SOLVER_COMMAND_END =
+(
+    @solver_theme, @preset, '-p', '-t', '-sam',
 );
 
 sub _log
@@ -863,6 +869,7 @@ sub _mode_setup
         (map { "$_\n" } (
             $ENV{FCS_MAX_DEAL_IDX},
             $ENV{FCS_PRESET_CONFIG},
+            $ENV{FCS_SOLVER_THEME_CONFIG},
             $start_from,
             $deals_per_batch,
         ))
@@ -985,8 +992,7 @@ sub _mode_solve
                     $RANGE_SOLVER_EXE,
                     $start_deal_idx, $end_deal_idx, $SOLVER_STEP,
                     '--solutions-directory', "$dir_path/",
-                    @preset,
-                    '-p', '-t', '-sam',
+                    @RANGE_SOLVER_COMMAND_END,
                 ]
             )
         )
