@@ -419,7 +419,7 @@ sub _solvers
 {
     my $self = shift;
 
-    return $self->reg('solver');
+    return $self->_reg('solver');
 }
 
 sub _verifiers
