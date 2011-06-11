@@ -516,26 +516,6 @@ sub _service
     return $self->{_service};
 }
 
-sub _cmd_map
-{
-    return
-    { 
-        GET_NEXT => '_handle_get_next',
-        ENQ => '_enqueue_read_item',
-        GET_ID_FOR_SOLVER => '_handle_get_id_for_SOLVER',
-        GET_ID_FOR_VERIFIER => '_handle_get_id_for_VERIFIER',
-        TERMINATE_SOLVER => '_terminate_for_SOLVER',
-        TERMINATE_VERIFIER => '_terminate_for_VERIFIER',
-    };
-}
-
-sub _lookup_cmd
-{
-    my ($self, $cmd) = @_;
-
-    return $self->_cmd_map->{$cmd};
-}
-
 sub _log
 {
     my $self = shift;
@@ -630,7 +610,7 @@ sub write
     return $self->_service->write(@_);
 }
 
-sub _enqueue_read_item
+sub _cmd_ENQ
 {
     my $self = shift;
 
@@ -651,7 +631,7 @@ sub new_client
     return $self->_service->new_client(@_);
 }
 
-sub _handle_get_next
+sub _cmd_GET_NEXT
 {
     my $man = shift;
     if (defined(my $item = $man->extract))
@@ -682,12 +662,12 @@ sub _handle_get_id
     return;
 }
 
-sub _handle_get_id_for_VERIFIER
+sub _cmd_GET_ID_FOR_VERIFIER
 {
     return shift->_handle_get_id('verifier');
 }
 
-sub _handle_get_id_for_SOLVER
+sub _cmd_GET_ID_FOR_SOLVER
 {
     return shift->_handle_get_id('solver');
 }
@@ -699,12 +679,12 @@ sub _terminate
     return $self->_remove($type, $self->read_line());
 }
 
-sub _terminate_for_VERIFIER
+sub _cmd_TERMINATE_VERIFIER
 {
     return shift->_terminate('verifier');
 }
 
-sub _terminate_for_SOLVER
+sub _cmd_TERMINATE_SOLVER
 {
     return shift->_terminate('solver');
 }
@@ -717,15 +697,9 @@ sub main_loop
     {
         my $cmd = $man->new_client;
 
-        if (defined( my $meth = $man->_lookup_cmd($cmd) ))
-        {
-            $man->$meth();
-        }
-        else
-        {
-            Carp::confess ("Unknown command '$cmd'");
-        }
+        my $meth = "_cmd_$cmd";
 
+        $man->$meth();
     }
     continue
     {
