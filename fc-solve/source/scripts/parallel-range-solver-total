@@ -122,7 +122,7 @@ sub get_verify_id
 {
     my $self = shift;
 
-    $self->write("GET_VERIFIER_ID");
+    $self->write("GET_ID_FOR_VERIFIER");
 
     return $self->read_line();
 }
@@ -131,7 +131,7 @@ sub get_solve_id
 {
     my $self = shift;
 
-    $self->write("GET_SOLVER_ID");
+    $self->write("GET_ID_FOR_SOLVER");
 
     return $self->read_line();
 }
@@ -871,7 +871,7 @@ sub _mode_queue_server
     {
         my $uc = uc($type);
 
-        $commands{"GET_${uc}_ID"} = sub {
+        $commands{"GET_ID_FOR_$uc"} = sub {
             my $id = $active->register($type);
             $service->write($id);
 
