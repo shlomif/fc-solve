@@ -262,8 +262,10 @@ sub _init
             Type => SOCK_STREAM(),
             Local => $RANGE_TO_VERIFY_SOCKET_PATH,
             Listen => 1,
-        )
-        or Carp::confess("Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!");
+        ) or 
+        Carp::confess(
+            "Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!"
+        );
 
     $self->_server_sock($server_sock);
 
@@ -638,7 +640,9 @@ use Fcntl qw(:flock);
 use File::Path qw(rmtree);
 use Data::Dumper;
 
-use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
+use Test::Trap qw( trap $trap 
+    :flow:stderr(systemsafe):stdout(systemsafe):warn 
+);
 
 STDOUT->autoflush(1);
 STDERR->autoflush(1);
@@ -856,8 +860,16 @@ sub _mode_setup
     my $start_from = $ENV{FCS_MIN_DEAL_IDX};
 
     my $deals_per_batch = $ENV{FCS_DEALS_PER_BATCH} || 1000;
-    _write_file($GLOBAL_CONFIG_PATH, 
-        "$ENV{FCS_MAX_DEAL_IDX}\n$ENV{FCS_PRESET_CONFIG}\n$start_from\n$ENV{FCS_NUM_SOLVERS}\n$ENV{FCS_NUM_VERIFIERS}\n$deals_per_batch\n"
+    _write_file(
+        $GLOBAL_CONFIG_PATH, 
+        (map { "$_\n" } (
+            $ENV{FCS_MAX_DEAL_IDX},
+            $ENV{FCS_PRESET_CONFIG},
+            $start_from,
+            $ENV{FCS_NUM_SOLVERS},
+            $ENV{FCS_NUM_VERIFIERS},
+            $deals_per_batch,
+        ))
     );
 
     _write_file($SYNC_FILE_PATH, "$start_from\n1\n1\n");
