@@ -516,6 +516,26 @@ sub _service
     return $self->{_service};
 }
 
+sub _cmd_map
+{
+    return
+    { 
+        GET_NEXT => '_handle_get_next',
+        ENQ => '_enqueue_read_item',
+        GET_ID_FOR_SOLVER => '_handle_get_id_for_SOLVER',
+        GET_ID_FOR_VERIFIER => '_handle_get_id_for_VERIFIER',
+        TERMINATE_SOLVER => '_terminate_for_SOLVER',
+        TERMINATE_VERIFIER => '_terminate_for_VERIFIER',
+    };
+}
+
+sub _lookup_cmd
+{
+    my ($self, $cmd) = @_;
+
+    return $self->_cmd_map->{$cmd};
+}
+
 sub _log
 {
     my $self = shift;
@@ -1070,21 +1090,11 @@ sub _mode_queue_server
 {
     my $man = QueueManager->new({log_cb => \&_log});
 
-    my %cmd_map =
-    (
-        GET_NEXT => '_handle_get_next',
-        ENQ => '_enqueue_read_item',
-        GET_ID_FOR_SOLVER => '_handle_get_id_for_SOLVER',
-        GET_ID_FOR_VERIFIER => '_handle_get_id_for_VERIFIER',
-        TERMINATE_SOLVER => '_terminate_for_SOLVER',
-        TERMINATE_VERIFIER => '_terminate_for_VERIFIER',
-    );
-
     while ( $man->_is_verifiers_active )
     {
         my $cmd = $man->new_client;
 
-        if ( defined( my $meth = $cmd_map{$cmd} ))
+        if (defined( my $meth = $man->_lookup_cmd($cmd) ))
         {
             $man->$meth();
         }
