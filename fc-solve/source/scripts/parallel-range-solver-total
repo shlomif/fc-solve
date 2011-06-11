@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 my @QUEUE_ITEM_FIELDS_ORDER = qw(path_to_dir min_idx max_idx);
+my $RANGE_TO_VERIFY_SOCKET_PATH;
 
 package Object;
 
@@ -87,8 +88,6 @@ use IO::Socket::UNIX;
 sub _init
 {
     my ($self,$args) = @_;
-
-    my $RANGE_TO_VERIFY_SOCKET_PATH = $args->{socket_path};
 
     # TODO : Add error checking - consult some people.
     my $sock = IO::Socket::UNIX->new(
@@ -216,8 +215,6 @@ sub _server_sock
 sub _init
 {
     my ($self,$args) = @_;
-
-    my $RANGE_TO_VERIFY_SOCKET_PATH = $args->{socket_path};
 
     # TODO : Add error checking - consult some people.
     my $server_sock = IO::Socket::UNIX->new(
@@ -670,7 +667,7 @@ sub _fcs_file
 }
 
 
-my $RANGE_TO_VERIFY_SOCKET_PATH = _fcs_file('range-queue.sock');
+$RANGE_TO_VERIFY_SOCKET_PATH = _fcs_file('range-queue.sock');
 
 my $GLOBAL_CONFIG_PATH = _fcs_file('global-params.txt');
 my $SUMMARY_LOCK_PATH = _fcs_file('summary.lock');
@@ -953,9 +950,7 @@ sub _mode_queue_server
 {
     my $man = QueueManager->new;
 
-    my $service = QueueServerSocket->new( 
-        { socket_path => $RANGE_TO_VERIFY_SOCKET_PATH }
-    );
+    my $service = QueueServerSocket->new;
 
     my %commands =
     (
@@ -1058,11 +1053,7 @@ sub _lock_sync
 
 sub _create_verify_conn
 {
-    return VerifierConn->new(
-        {
-            socket_path => $RANGE_TO_VERIFY_SOCKET_PATH,
-        }
-    );
+    return VerifierConn->new;
 }
 
 sub _mode_verify
