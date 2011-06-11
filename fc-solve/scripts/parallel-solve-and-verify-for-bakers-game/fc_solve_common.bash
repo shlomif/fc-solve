@@ -2,7 +2,8 @@
 export FCS_PATH="$HOME/fc-solve-bakers-game-range"
 max_deal_idx="10,000,000"
 export FCS_MAX_DEAL_IDX="${max_deal_idx//,/}"
-export FCS_PRESET_CONFIG="-ni -to 01ABCDEF -g bakers_game"
+export FCS_PRESET_CONFIG="-g bakers_game"
+export FCS_SOLVER_THEME_CONFIG="-ni -to 01ABCDEF"
 export FCS_MIN_DEAL_IDX="1" 
 export FCS_DEALS_PER_BATCH="1000"
 
