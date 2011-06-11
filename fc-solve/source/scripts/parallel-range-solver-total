@@ -492,6 +492,18 @@ sub _queue
     return $self->{_queue};
 }
 
+sub _service
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_service} = shift;
+    }
+
+    return $self->{_service};
+}
+
 sub _init
 {
     my $self = shift;
@@ -499,6 +511,7 @@ sub _init
     $self->_queue([]);
     # The state variables of the verifiers and solvers.
     $self->_active(QueueServerRegistry->new);
+    $self->_service(QueueServerSocket->new);
 
     return;
 }
@@ -567,6 +580,34 @@ sub _is_verifiers_active
     my $self = shift;
 
     return $self->_active->is_verifiers_active;
+}
+
+sub write
+{
+    my $self = shift;
+
+    return $self->_service->write(@_);
+}
+
+sub _enqueue_read_item
+{
+    my $self = shift;
+
+    return $self->add_item( $self->_service->read_queue_item );
+}
+
+sub read_line
+{
+    my $self = shift;
+
+    return $self->_service->read_line(@_);
+}
+
+sub new_client
+{
+    my $self = shift;
+
+    return $self->_service->new_client(@_);
 }
 
 package main;
@@ -950,28 +991,26 @@ sub _mode_queue_server
 {
     my $man = QueueManager->new;
 
-    my $service = QueueServerSocket->new;
-
     my %commands =
     (
         'GET_NEXT' => sub {
             if (defined(my $item = $man->extract))
             {
-                $service->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
+                $man->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
             }
             elsif (! $man->_has_solvers)
             {
-                $service->write("FINISH");
+                $man->write("FINISH");
             }
             else
             {
-                $service->write("WAIT");
+                $man->write("WAIT");
             }
 
             return;
         },
         'ENQ' => sub {
-            $man->add_item( $service->read_queue_item );
+            $man->_enqueue_read_item();
 
             return;
         },
@@ -983,7 +1022,7 @@ sub _mode_queue_server
 
         $commands{"GET_ID_FOR_$uc"} = sub {
             my $id = $man->_register($type);
-            $service->write($id);
+            $man->write($id);
 
             _log("Queue manager registered $type $id\n");
 
@@ -991,13 +1030,13 @@ sub _mode_queue_server
         };
 
         $commands{"TERMINATE_$uc"} = sub {
-            return $man->_remove($type, $service->read_line());
+            return $man->_remove($type, $man->read_line());
         };
     }
 
     while ( $man->_is_verifiers_active )
     {
-        my $cmd = $service->new_client;
+        my $cmd = $man->new_client;
 
         if ( exists($commands{$cmd}) )
         {
@@ -1011,7 +1050,7 @@ sub _mode_queue_server
     }
     continue
     {
-        $service->_disconnect_client;
+        $man->_service->_disconnect_client;
         _log("QUEUE == " . $man->display_queue . "\n\n");
     }
 
