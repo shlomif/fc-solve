@@ -816,6 +816,20 @@ sub _mode_solve
     return;
 }
 
+sub _display_queue
+{
+    my $queue = shift;
+
+    return 
+    "[\n" . join('', 
+        map { 
+        sprintf(qq/{Min=%d Max=%d Path='%s'}\n/, 
+        $_->{min_idx}, $_->{max_idx}, $_->{path_to_dir}
+        )
+        } @$queue
+    ) . "]";
+}
+
 sub _mode_queue_server
 {
     my @queue;
@@ -826,17 +840,6 @@ sub _mode_queue_server
     my $service = QueueServerSocket->new( 
         { socket_path => $RANGE_TO_VERIFY_SOCKET_PATH }
     );
-
-    my $queue_to_string = sub
-    {
-        return "[\n" . join('', 
-            map { 
-                sprintf(qq/{Min=%d Max=%d Path='%s'}\n/, 
-                    $_->{min_idx}, $_->{max_idx}, $_->{path_to_dir}
-                    )
-            } @queue
-        ) . "]"
-    };
 
     my %commands =
     (
@@ -903,7 +906,7 @@ sub _mode_queue_server
     continue
     {
         $service->_disconnect_client;
-        _log("QUEUE == " . $queue_to_string->() . "\n\n");
+        _log("QUEUE == " . _display_queue(\@queue) . "\n\n");
     }
 
     return;
