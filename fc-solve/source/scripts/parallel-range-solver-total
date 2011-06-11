@@ -1185,5 +1185,12 @@ sub _mode_verify
     return;
 }
 
+sub _mode_halt
+{
+    _break_on_fault('User request to stop using the "halt" command.');
+
+    return;
+}
+
 1;
 
