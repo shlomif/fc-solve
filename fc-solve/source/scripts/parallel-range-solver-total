@@ -30,17 +30,14 @@ sub make_accessors
     foreach my $method (@$methods)
     {
         *{$pkg."::".$method} =
-            do {
-                my $m = $method;
-                sub {
-                    my $self = shift;
+            sub {
+                my $self = shift;
 
-                    if (@_)
-                    {
-                        $self->{$m} = shift;
-                    }
-                    return $self->{$m};
-                };
+                if (@_)
+                {
+                    $self->{$method} = shift;
+                }
+                return $self->{$method};
             };
     }
 
