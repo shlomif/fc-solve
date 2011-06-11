@@ -73,6 +73,16 @@ sub make_delegates
     );
 }
 
+sub make_private_delegates
+{
+    my ($pkg, $slot, $methods) = @_;
+
+    return $pkg->make_delegates_generic(
+        $slot, 
+        +{ map { ('_'.$_) => $_ } @$methods }
+    );
+}
+
 package FC_Solve::Socket;
 
 use strict;
@@ -509,11 +519,8 @@ sub display_queue
     ) . "]";
 }
 
-__PACKAGE__->make_delegates('_active', 
-    [qw(
-        has_solvers register remove is_verifiers_active
-        )
-    ]
+__PACKAGE__->make_private_delegates('_active',
+    [qw(has_solvers register remove is_verifiers_active)]
 );
 
 __PACKAGE__->make_delegates('_service', [qw(write new_client)]);
@@ -539,7 +546,7 @@ sub _cmd_GET_NEXT
     {
         $man->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
     }
-    elsif (! $man->has_solvers)
+    elsif (! $man->_has_solvers)
     {
         $man->write("FINISH");
     }
@@ -555,7 +562,7 @@ sub _handle_get_id
 {
     my ($man, $type) = @_;
 
-    my $id = $man->register($type);
+    my $id = $man->_register($type);
     $man->write($id);
 
     $man->_log("Queue manager registered $type $id\n");
@@ -577,7 +584,7 @@ sub _terminate
 {
     my ($self, $type) = @_;
 
-    return $self->remove($type, $self->read_line());
+    return $self->_remove($type, $self->read_line());
 }
 
 sub _cmd_TERMINATE_VERIFIER
@@ -605,7 +612,7 @@ sub main_loop
 {
     my $man = shift;
 
-    while ( $man->is_verifiers_active )
+    while ( $man->_is_verifiers_active )
     {
         $man->_handle_client;
     }
