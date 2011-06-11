@@ -662,6 +662,33 @@ sub _handle_get_id
     return;
 }
 
+sub _handle_get_id_for_VERIFIER
+{
+    return shift->_handle_get_id('verifier');
+}
+
+sub _handle_get_id_for_SOLVER
+{
+    return shift->_handle_get_id('solver');
+}
+
+sub _terminate
+{
+    my ($self, $type) = @_;
+
+    return $self->_remove($type, $self->read_line());
+}
+
+sub _terminate_for_VERIFIER
+{
+    return shift->_terminate('verifier');
+}
+
+sub _terminate_for_SOLVER
+{
+    return shift->_terminate('solver');
+}
+
 package main;
 
 use strict;
@@ -1043,36 +1070,23 @@ sub _mode_queue_server
 {
     my $man = QueueManager->new({log_cb => \&_log});
 
-    my %commands =
+    my %cmd_map =
     (
-        'GET_NEXT' => sub {
-            return $man->_handle_get_next();
-        },
-        'ENQ' => sub {
-            return $man->_enqueue_read_item();
-        },
+        GET_NEXT => '_handle_get_next',
+        ENQ => '_enqueue_read_item',
+        GET_ID_FOR_SOLVER => '_handle_get_id_for_SOLVER',
+        GET_ID_FOR_VERIFIER => '_handle_get_id_for_VERIFIER',
+        TERMINATE_SOLVER => '_terminate_for_SOLVER',
+        TERMINATE_VERIFIER => '_terminate_for_VERIFIER',
     );
-
-    foreach my $type ($man->_get_types)
-    {
-        my $uc = uc($type);
-
-        $commands{"GET_ID_FOR_$uc"} = sub {
-            $man->_handle_get_id($type);
-        };
-
-        $commands{"TERMINATE_$uc"} = sub {
-            return $man->_remove($type, $man->read_line());
-        };
-    }
 
     while ( $man->_is_verifiers_active )
     {
         my $cmd = $man->new_client;
 
-        if ( exists($commands{$cmd}) )
+        if ( defined( my $meth = $cmd_map{$cmd} ))
         {
-            $commands{$cmd}->();
+            $man->$meth();
         }
         else
         {
