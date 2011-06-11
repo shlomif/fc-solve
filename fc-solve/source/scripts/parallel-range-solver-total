@@ -523,7 +523,7 @@ __PACKAGE__->make_private_delegates('_active',
     [qw(has_solvers register remove is_verifiers_active)]
 );
 
-__PACKAGE__->make_delegates('_service', [qw(write new_client)]);
+__PACKAGE__->make_private_delegates('_service', [qw(write new_client)]);
 
 sub _cmd_ENQ
 {
@@ -544,15 +544,15 @@ sub _cmd_GET_NEXT
     my $man = shift;
     if (defined(my $item = $man->extract))
     {
-        $man->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
+        $man->_write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
     }
     elsif (! $man->_has_solvers)
     {
-        $man->write("FINISH");
+        $man->_write("FINISH");
     }
     else
     {
-        $man->write("WAIT");
+        $man->_write("WAIT");
     }
 
     return;
@@ -563,7 +563,7 @@ sub _handle_get_id
     my ($man, $type) = @_;
 
     my $id = $man->_register($type);
-    $man->write($id);
+    $man->_write($id);
 
     $man->_log("Queue manager registered $type $id\n");
 
@@ -601,7 +601,7 @@ sub _handle_client
 {
     my $man = shift;
 
-    my $cmd = $man->new_client;
+    my $cmd = $man->_new_client;
 
     my $meth = "_cmd_$cmd";
 
