@@ -47,23 +47,30 @@ sub make_accessors
     return;
 }
 
-sub make_delegates
+sub make_delegates_generic
 {
     my ($pkg, $slot, $methods) = @_;
 
     no strict 'refs';
-    foreach my $method (@$methods)
+    while (my ($method, $map_to) = each(%$methods))
     {
         *{$pkg."::".$method} =
-            do {
-                my $m = $method;
-                sub {
-                    return shift->$slot()->$method(@_);
-                };
+            sub {
+                return shift->$slot()->$map_to(@_);
             };
     }
 
     return;
+}
+
+sub make_delegates
+{
+    my ($pkg, $slot, $methods) = @_;
+
+    return $pkg->make_delegates_generic(
+        $slot, 
+        +{ map { $_ => $_ } @$methods }
+    );
 }
 
 package FC_Solve::Socket;
