@@ -689,17 +689,24 @@ sub _cmd_TERMINATE_SOLVER
     return shift->_terminate('solver');
 }
 
+sub _handle_client
+{
+    my $man = shift;
+
+    my $cmd = $man->new_client;
+
+    my $meth = "_cmd_$cmd";
+
+    return $man->$meth();
+}
+
 sub main_loop
 {
     my $man = shift;
 
     while ( $man->_is_verifiers_active )
     {
-        my $cmd = $man->new_client;
-
-        my $meth = "_cmd_$cmd";
-
-        $man->$meth();
+        $man->_handle_client;
     }
     continue
     {
