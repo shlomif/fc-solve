@@ -502,47 +502,14 @@ sub display_queue
     ) . "]";
 }
 
-sub _has_solvers
-{
-    my $self = shift;
+__PACKAGE__->make_delegates('_active', 
+    [qw(
+        has_solvers register remove is_verifiers_active
+        )
+    ]
+);
 
-    return $self->_active->has_solvers;
-}
-
-sub _get_types
-{
-    my $self = shift;
-
-    return $self->_active->get_types;
-}
-
-sub _remove
-{
-    my ($self, $type, $id) = @_;
-
-    return $self->_active->remove($type, $id);
-}
-
-sub _register
-{
-    my ($self, $type) = @_;
-
-    return $self->_active->register($type);
-}
-
-sub _is_verifiers_active
-{
-    my $self = shift;
-
-    return $self->_active->is_verifiers_active;
-}
-
-sub write
-{
-    my $self = shift;
-
-    return $self->_service->write(@_);
-}
+__PACKAGE__->make_delegates('_service', [qw(write new_client)]);
 
 sub _cmd_ENQ
 {
@@ -558,13 +525,6 @@ sub read_line
     return $self->_service->read_line(@_);
 }
 
-sub new_client
-{
-    my $self = shift;
-
-    return $self->_service->new_client(@_);
-}
-
 sub _cmd_GET_NEXT
 {
     my $man = shift;
@@ -572,7 +532,7 @@ sub _cmd_GET_NEXT
     {
         $man->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
     }
-    elsif (! $man->_has_solvers)
+    elsif (! $man->has_solvers)
     {
         $man->write("FINISH");
     }
@@ -588,7 +548,7 @@ sub _handle_get_id
 {
     my ($man, $type) = @_;
 
-    my $id = $man->_register($type);
+    my $id = $man->register($type);
     $man->write($id);
 
     $man->_log("Queue manager registered $type $id\n");
@@ -610,7 +570,7 @@ sub _terminate
 {
     my ($self, $type) = @_;
 
-    return $self->_remove($type, $self->read_line());
+    return $self->remove($type, $self->read_line());
 }
 
 sub _cmd_TERMINATE_VERIFIER
@@ -638,7 +598,7 @@ sub main_loop
 {
     my $man = shift;
 
-    while ( $man->_is_verifiers_active )
+    while ( $man->is_verifiers_active )
     {
         $man->_handle_client;
     }
