@@ -118,22 +118,23 @@ sub DESTROY
     return;
 }
 
-sub get_verify_id
+sub _get_id
 {
-    my $self = shift;
+    my ($self, $cmd) = @_;
 
-    $self->write("GET_ID_FOR_VERIFIER");
+    $self->write($cmd);
 
     return $self->read_line();
 }
 
+sub get_verify_id
+{
+    return shift->_get_id("GET_ID_FOR_VERIFIER");
+}
+
 sub get_solve_id
 {
-    my $self = shift;
-
-    $self->write("GET_ID_FOR_SOLVER");
-
-    return $self->read_line();
+    return shift->_get_id("GET_ID_FOR_SOLVER");
 }
 
 sub _terminate_cmd
