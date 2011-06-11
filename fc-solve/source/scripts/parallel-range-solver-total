@@ -856,8 +856,8 @@ sub _mode_setup
     }
 
     my $start_from = $ENV{FCS_MIN_DEAL_IDX};
+    my $deals_per_batch = ($ENV{FCS_DEALS_PER_BATCH} || 1000);
 
-    my $deals_per_batch = $ENV{FCS_DEALS_PER_BATCH} || 1000;
     _write_file(
         $GLOBAL_CONFIG_PATH, 
         (map { "$_\n" } (
