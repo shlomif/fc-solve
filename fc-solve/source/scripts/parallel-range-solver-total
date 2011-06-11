@@ -22,6 +22,50 @@ sub new
     return $self;
 }
 
+sub make_accessors
+{
+    my ($pkg, $methods) = @_;
+
+    no strict 'refs';
+    foreach my $method (@$methods)
+    {
+        *{$pkg."::".$method} =
+            do {
+                my $m = $method;
+                sub {
+                    my $self = shift;
+
+                    if (@_)
+                    {
+                        $self->{$m} = shift;
+                    }
+                    return $self->{$m};
+                };
+            };
+    }
+
+    return;
+}
+
+sub make_delegates
+{
+    my ($pkg, $slot, $methods) = @_;
+
+    no strict 'refs';
+    foreach my $method (@$methods)
+    {
+        *{$pkg."::".$method} =
+            do {
+                my $m = $method;
+                sub {
+                    return shift->$slot()->$method(@_);
+                };
+            };
+    }
+
+    return;
+}
+
 package FC_Solve::Socket;
 
 use strict;
@@ -29,17 +73,7 @@ use warnings;
 
 our @ISA = (qw(Object));
 
-sub _client_sock
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_client_sock} = shift;
-    }
-
-    return $self->{_client_sock};
-}
+__PACKAGE__->make_accessors([qw(_client_sock)]);
 
 sub read_line
 {
@@ -200,17 +234,7 @@ use Carp;
 
 use IO::Socket::UNIX;
 
-sub _server_sock
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_server_sock} = shift;
-    }
-
-    return $self->{_server_sock};
-}
+__PACKAGE__->make_accessors([qw(_server_sock)]);
 
 sub _init
 {
@@ -282,41 +306,7 @@ our @ISA = (qw(Object));
 use strict;
 use warnings;
 
-sub _registry
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_registry} = shift;
-    }
-
-    return $self->{_registry};
-}
-
-sub _was_placed
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_was_placed} = shift;
-    }
-
-    return $self->{_was_placed};
-}
-
-sub _next_id
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_next_id} = shift;
-    }
-
-    return $self->{_next_id};
-}
+__PACKAGE__->make_accessors([qw(_registry _was_placed _next_id)]);
 
 sub _init
 {
@@ -379,17 +369,7 @@ use warnings;
 
 our @ISA = (qw(Object));
 
-sub _active
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_active} = shift;
-    }
-
-    return $self->{_active};
-}
+__PACKAGE__->make_accessors([qw(_active)]);
 
 sub _init
 {
@@ -468,53 +448,7 @@ use warnings;
 
 our @ISA = (qw(Object));
 
-sub _log_cb
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_log_cb} = shift;
-    }
-
-    return $self->{_log_cb};
-}
-
-sub _active
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_active} = shift;
-    }
-
-    return $self->{_active};
-}
-
-sub _queue
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_queue} = shift;
-    }
-
-    return $self->{_queue};
-}
-
-sub _service
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_service} = shift;
-    }
-
-    return $self->{_service};
-}
+__PACKAGE__->make_accessors([qw(_active _log_cb _queue _service)]);
 
 sub _log
 {
