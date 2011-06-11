@@ -32,6 +32,7 @@ __PACKAGE__->mk_acc_ref(
             _stats_file
             _summary_lock
             _variant_params
+            _should_verify
         )
     ]
 );
@@ -48,6 +49,8 @@ sub _init
 
     my ($min_idx, $max_idx, $summary_lock, $summary_file, $stats_file);
 
+    my $should_verify = 1;
+
     GetOptionsFromArray(
         $argv,
         'min-idx=i' => \$min_idx,
@@ -55,6 +58,7 @@ sub _init
         'summary-lock=s' => \$summary_lock,
         'summary-file=s' => \$summary_file,
         'summary-stats-file=s' => \$stats_file,
+        'verify!' => \$should_verify,
         'g|game|variant=s' => sub {
             my (undef, $game) = @_;
 
@@ -157,6 +161,7 @@ sub _init
         Carp::confess ("summary-stats-file was not supplied.");
     }
     $self->_variant_params($variant_params);
+    $self->_should_verify($should_verify);
 
     $self->_solutions_dir(shift(@$argv));
 
@@ -180,11 +185,39 @@ sub _slurp
 
 use Data::Dumper;
 
+sub _verify_contents
+{
+    my ($self, $filename, $contents) = @_;
+
+    my $variant_params = $self->_variant_params();
+    open my $text_fh, '<', \$contents;
+
+    my $solution = Games::Solitaire::Verify::Solution->new(
+        {
+            input_fh => $text_fh, 
+            variant => "custom",
+            variant_params => $variant_params,
+        },
+    );
+
+    my $verdict = $solution->verify();
+
+    # print "== $filename\n";
+    if ($verdict)
+    {
+        print STDERR Dumper($verdict);
+        print "Solution for $filename is Wrong.\n";
+        exit(-1);
+    }
+    close($text_fh);
+
+    return;
+}
+
 sub run
 {
     my $self = shift;
 
-    my $variant_params = $self->_variant_params();
 
     my $solutions_dir = $self->_solutions_dir;
 
@@ -218,30 +251,10 @@ sub run
         if ($solved)
         {
             $current_data{'sol_lens'} = () = ($contents =~ m{^====}gms);
-
-            open my $text_fh, '<', \$contents;
-            my $solution = Games::Solitaire::Verify::Solution->new(
-                {
-                    input_fh => $text_fh, 
-                    variant => "custom",
-                    variant_params => $variant_params,
-                },
-            );
-
-            my $verdict = $solution->verify();
-
-            # print "== $filename\n";
-            if (!$verdict)
+            if ($self->_should_verify)
             {
-                # print "Solution is OK.\n";
+                $self->_verify_contents($filename, $contents);
             }
-            else
-            {
-                print STDERR Dumper($verdict);
-                print "Solution for $filename is Wrong.\n";
-                exit(-1);
-            }
-            close($text_fh);
         }
 
         if (my ($iters) = ($contents =~ m{^Total number of states checked is (\d+)\.$}ms)
