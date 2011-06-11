@@ -265,6 +265,19 @@ sub read_enq_data
     return $self->read_num_lines(scalar(@QUEUE_ITEM_FIELDS_ORDER));
 }
 
+sub read_queue_item
+{
+    my $self = shift;
+
+    my %h;
+    foreach my $field (@QUEUE_ITEM_FIELDS_ORDER)
+    {
+        $h{$field} = $self->read_line;
+    }
+
+    return \%h;
+}
+
 package ProcessesRegistry;
 
 our @ISA = (qw(Object));
@@ -868,10 +881,7 @@ sub _mode_queue_server
             return;
         },
         'ENQ' => sub {
-            my %h;
-            @h{@QUEUE_ITEM_FIELDS_ORDER} = @{$service->read_enq_data};
-
-            push @queue, \%h;
+            push @queue, $service->read_queue_item;
 
             return;
         },
