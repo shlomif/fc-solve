@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+my @QUEUE_ITEM_FIELDS_ORDER = qw(path_to_dir min_idx max_idx);
+
 package Object;
 
 use strict;
@@ -256,6 +258,12 @@ sub _disconnect_client
     return;
 }
 
+sub read_enq_data
+{
+    my $self = shift;
+
+    return $self->read_num_lines(scalar(@QUEUE_ITEM_FIELDS_ORDER));
+}
 
 package ProcessesRegistry;
 
@@ -540,7 +548,6 @@ sub _fcs_file
     return "$FCS_PATH/$basename";
 }
 
-my @QUEUE_ITEM_FIELDS_ORDER = qw(path_to_dir min_idx max_idx);
 
 my $RANGE_TO_VERIFY_SOCKET_PATH = _fcs_file('range-queue.sock');
 
@@ -861,10 +868,9 @@ sub _mode_queue_server
             return;
         },
         'ENQ' => sub {
-            my $data = $service->read_num_lines(scalar(@QUEUE_ITEM_FIELDS_ORDER));
-
             my %h;
-            @h{@QUEUE_ITEM_FIELDS_ORDER} = @$data;
+            @h{@QUEUE_ITEM_FIELDS_ORDER} = @{$service->read_enq_data};
+
             push @queue, \%h;
 
             return;
