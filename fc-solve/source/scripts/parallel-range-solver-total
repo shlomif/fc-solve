@@ -471,6 +471,18 @@ use warnings;
 
 our @ISA = (qw(Object));
 
+sub _active
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_active} = shift;
+    }
+
+    return $self->{_active};
+}
+
 sub _queue
 {
     my $self = shift;
@@ -488,6 +500,8 @@ sub _init
     my $self = shift;
 
     $self->_queue([]);
+    # The state variables of the verifiers and solvers.
+    $self->_active(QueueServerRegistry->new);
 
     return;
 }
@@ -521,6 +535,41 @@ sub display_queue
         )
         } @{$self->_queue}
     ) . "]";
+}
+
+sub _has_solvers
+{
+    my $self = shift;
+
+    return $self->_active->has_solvers;
+}
+
+sub _get_types
+{
+    my $self = shift;
+
+    return $self->_active->get_types;
+}
+
+sub _remove
+{
+    my ($self, $type, $id) = @_;
+
+    return $self->_active->remove($type, $id);
+}
+
+sub _register
+{
+    my ($self, $type) = @_;
+
+    return $self->_active->register($type);
+}
+
+sub _is_verifiers_active
+{
+    my $self = shift;
+
+    return $self->_active->is_verifiers_active;
 }
 
 package main;
@@ -904,9 +953,6 @@ sub _mode_queue_server
 {
     my $man = QueueManager->new;
 
-    # The state variables of the verifiers and solvers.
-    my $active = QueueServerRegistry->new;
-
     my $service = QueueServerSocket->new( 
         { socket_path => $RANGE_TO_VERIFY_SOCKET_PATH }
     );
@@ -918,7 +964,7 @@ sub _mode_queue_server
             {
                 $service->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
             }
-            elsif (! $active->has_solvers)
+            elsif (! $man->_has_solvers)
             {
                 $service->write("FINISH");
             }
@@ -936,12 +982,12 @@ sub _mode_queue_server
         },
     );
 
-    foreach my $type ($active->get_types)
+    foreach my $type ($man->_get_types)
     {
         my $uc = uc($type);
 
         $commands{"GET_ID_FOR_$uc"} = sub {
-            my $id = $active->register($type);
+            my $id = $man->_register($type);
             $service->write($id);
 
             _log("Queue manager registered $type $id\n");
@@ -950,11 +996,11 @@ sub _mode_queue_server
         };
 
         $commands{"TERMINATE_$uc"} = sub {
-            return $active->remove($type, $service->read_line());
+            return $man->_remove($type, $service->read_line());
         };
     }
 
-    while ( $active->is_verifiers_active )
+    while ( $man->_is_verifiers_active )
     {
         my $cmd = $service->new_client;
 
