@@ -709,6 +709,33 @@ sub _terminate_for_SOLVER
     return shift->_terminate('solver');
 }
 
+sub main_loop
+{
+    my $man = shift;
+
+    while ( $man->_is_verifiers_active )
+    {
+        my $cmd = $man->new_client;
+
+        if (defined( my $meth = $man->_lookup_cmd($cmd) ))
+        {
+            $man->$meth();
+        }
+        else
+        {
+            Carp::confess ("Unknown command '$cmd'");
+        }
+
+    }
+    continue
+    {
+        $man->_service->_disconnect_client;
+        $man->_log("QUEUE == " . $man->display_queue . "\n\n");
+    }
+
+    return;
+}
+
 package main;
 
 use strict;
@@ -1088,29 +1115,7 @@ sub _display_queue
 
 sub _mode_queue_server
 {
-    my $man = QueueManager->new({log_cb => \&_log});
-
-    while ( $man->_is_verifiers_active )
-    {
-        my $cmd = $man->new_client;
-
-        if (defined( my $meth = $man->_lookup_cmd($cmd) ))
-        {
-            $man->$meth();
-        }
-        else
-        {
-            Carp::confess ("Unknown command '$cmd'");
-        }
-
-    }
-    continue
-    {
-        $man->_service->_disconnect_client;
-        _log("QUEUE == " . $man->display_queue . "\n\n");
-    }
-
-    return;
+    return QueueManager->new({log_cb => \&_log})->main_loop;
 }
 
 sub _halt_process
