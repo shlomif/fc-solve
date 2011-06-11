@@ -464,6 +464,65 @@ sub is_verifiers_active
     return $self->_verifiers->is_active;
 }
 
+package QueueManager;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(Object));
+
+sub _queue
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_queue} = shift;
+    }
+
+    return $self->{_queue};
+}
+
+sub _init
+{
+    my $self = shift;
+
+    $self->_queue([]);
+
+    return;
+}
+
+sub extract
+{
+    my $self = shift;
+
+    return shift(@{$self->_queue});
+}
+
+sub add_item
+{
+    my $self = shift;
+    my $item = shift;
+
+    push @{$self->_queue}, $item;
+
+    return;
+}
+
+sub display_queue
+{
+    my $self = shift;
+
+    return 
+    "[\n" . join('', 
+        map { 
+        sprintf(qq/{Min=%d Max=%d Path='%s'}\n/, 
+        $_->{min_idx}, $_->{max_idx}, $_->{path_to_dir}
+        )
+        } @{$self->_queue}
+    ) . "]";
+}
+
 package main;
 
 use strict;
@@ -839,20 +898,11 @@ sub _mode_solve
 sub _display_queue
 {
     my $queue = shift;
-
-    return 
-    "[\n" . join('', 
-        map { 
-        sprintf(qq/{Min=%d Max=%d Path='%s'}\n/, 
-        $_->{min_idx}, $_->{max_idx}, $_->{path_to_dir}
-        )
-        } @$queue
-    ) . "]";
 }
 
 sub _mode_queue_server
 {
-    my @queue;
+    my $man = QueueManager->new;
 
     # The state variables of the verifiers and solvers.
     my $active = QueueServerRegistry->new;
@@ -864,9 +914,8 @@ sub _mode_queue_server
     my %commands =
     (
         'GET_NEXT' => sub {
-            if (@queue)
+            if (defined(my $item = $man->extract))
             {
-                my $item = shift(@queue);
                 $service->write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
             }
             elsif (! $active->has_solvers)
@@ -881,7 +930,7 @@ sub _mode_queue_server
             return;
         },
         'ENQ' => sub {
-            push @queue, $service->read_queue_item;
+            $man->add_item( $service->read_queue_item );
 
             return;
         },
@@ -922,7 +971,7 @@ sub _mode_queue_server
     continue
     {
         $service->_disconnect_client;
-        _log("QUEUE == " . _display_queue(\@queue) . "\n\n");
+        _log("QUEUE == " . $man->display_queue . "\n\n");
     }
 
     return;
