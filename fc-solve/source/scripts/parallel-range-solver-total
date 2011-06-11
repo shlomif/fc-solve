@@ -850,9 +850,9 @@ sub _break_on_fault
 
 sub _mode_setup
 {
-    foreach my $empty_fn ($SUMMARY_LOCK_PATH, $SYNC_LOCK_PATH, )
+    foreach my $empty_file_path ($SUMMARY_LOCK_PATH, $SYNC_LOCK_PATH, )
     {
-        _write_file($empty_fn, '');
+        _write_file($empty_file_path, '');
     }
 
     my $start_from = $ENV{FCS_MIN_DEAL_IDX};
