@@ -31,8 +31,10 @@ foreach my $status (qw(solved unsolved))
         my $p = sub {
             my ($desc, $stat) = @_;
 
-            printf ("%-10s%-20s == %20s\n", $desc, $id, 
-                $formatter->format_number($stat, 6));
+            print sprintf(
+                "%-10s%-20s == %20s\n", 
+                    $desc, $id, $formatter->format_number($stat, 6)
+            );
 
             return;
         };
@@ -42,11 +44,20 @@ foreach my $status (qw(solved unsolved))
         my $sq_sum = sum(map { $_ * $_ * $data->{$_} } keys(%$data));
         my $mean = $sum/$n;
 
+        my @elems = sort { $a <=> $b } map { ($_) x $data->{$_} } keys(%$data);
+        my $median =
+        (
+            (@elems % 2 == 0)
+            ? (($elems[@elems/2-1]+$elems[@elems/2]) / 2)
+            : $elems[(@elems-1)/2]
+        );
+
         $p->("Count", $n);
         $p->("Max", max(keys(%$data)));
         $p->("Min", min(keys(%$data)));
         $p->("Mean", $mean);
         $p->("StdDev", sqrt($sq_sum/($n-1) - ($n/($n-1))*($mean ** 2)));
+        $p->("Median", $median);
         print "\n";
     }
 }
