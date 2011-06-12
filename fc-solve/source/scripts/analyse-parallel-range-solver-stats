@@ -46,7 +46,7 @@ foreach my $status (qw(solved unsolved))
         $p->("Max", max(keys(%$data)));
         $p->("Min", min(keys(%$data)));
         $p->("Mean", $mean);
-        $p->("StdDev", sqrt($sq_sum/$n - ($mean ** 2)));
+        $p->("StdDev", sqrt($sq_sum/($n-1) - ($n/($n-1))*($mean ** 2)));
         print "\n";
     }
 }
