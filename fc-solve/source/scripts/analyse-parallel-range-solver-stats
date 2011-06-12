@@ -25,9 +25,17 @@ foreach my $status (qw(solved unsolved))
         my $id = "$status/$field";
         my $data = $main_data->{counts}->{$status}->{$field};
 
-        print "Count $id == ", sum(values(%$data)), "\n";
-        print "Max $id == ", max(keys(%$data)), "\n";
-        print "Min $id == ", min(keys(%$data)), "\n";
+        my $p = sub {
+            my ($desc, $stat) = @_;
+
+            print "$desc $id == ", $stat, "\n";
+
+            return;
+        };
+
+        $p->("Count", sum(values(%$data)));
+        $p->("Max", max(keys(%$data)));
+        $p->("Min",min(keys(%$data)));
     }
 }
 =head1 COPYRIGHT & LICENSE
