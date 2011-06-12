@@ -37,9 +37,17 @@ foreach my $status (qw(solved unsolved))
             return;
         };
 
-        $p->("Count", sum(values(%$data)));
+        my $n = sum(values(%$data));
+        my $sum = sum(map { $_ * $data->{$_} } keys(%$data));
+        my $sq_sum = sum(map { $_ * $_ * $data->{$_} } keys(%$data));
+        my $mean = $sum/$n;
+
+        $p->("Count", $n);
         $p->("Max", max(keys(%$data)));
-        $p->("Min",min(keys(%$data)));
+        $p->("Min", min(keys(%$data)));
+        $p->("Mean", $mean);
+        $p->("StdDev", sqrt($sq_sum/$n - ($mean ** 2)));
+        print "\n";
     }
 }
 =head1 COPYRIGHT & LICENSE
