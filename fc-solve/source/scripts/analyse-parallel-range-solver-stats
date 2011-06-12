@@ -4,6 +4,9 @@ use strict;
 use warnings;
 
 use Getopt::Long;
+use Number::Format;
+
+my $formatter = Number::Format->new;
 
 use Storable qw(retrieve);
 use List::Util qw(max min sum);
@@ -28,7 +31,8 @@ foreach my $status (qw(solved unsolved))
         my $p = sub {
             my ($desc, $stat) = @_;
 
-            print "$desc $id == ", $stat, "\n";
+            printf ("%-10s%-20s == %20s\n", $desc, $id, 
+                $formatter->format_number($stat, 6));
 
             return;
         };
