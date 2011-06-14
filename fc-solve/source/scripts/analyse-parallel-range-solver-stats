@@ -4,13 +4,14 @@ use strict;
 use warnings;
 
 use Getopt::Long;
+use IO::Handle;
 use Number::Format;
-
-my $formatter = Number::Format->new;
-
 use Storable qw(retrieve);
 use List::Util qw(max min sum);
 
+STDOUT->autoflush(1);
+
+my $formatter = Number::Format->new;
 my $input_file;
 
 GetOptions(
