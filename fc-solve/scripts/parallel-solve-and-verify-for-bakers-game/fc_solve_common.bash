@@ -1,5 +1,5 @@
 #!/bin/bash
-export FCS_PATH="$HOME/fc-solve-bakers-game-range"
+export FCS_PATH="/tmp/fc-solve-bakers-game-range"
 max_deal_idx="10,000,000"
 export FCS_MAX_DEAL_IDX="${max_deal_idx//,/}"
 export FCS_PRESET_CONFIG="-g bakers_game"
