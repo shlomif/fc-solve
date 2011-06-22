@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 37;
 use Games::Solitaire::Verify::Card;
 
 {
@@ -201,4 +201,12 @@ use Games::Solitaire::Verify::Card;
 
     # TEST
     is ($card->id(), 4, "ID of the card is 4");
+
+    my $copy = $card->clone();
+
+    # TEST
+    ok ($copy, "QC with ID was cloned.");
+
+    # TEST
+    is ($copy->id(), 4, "ID of the copy is the same.");
 }
