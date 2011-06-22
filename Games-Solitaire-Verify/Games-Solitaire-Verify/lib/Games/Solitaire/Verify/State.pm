@@ -92,7 +92,14 @@ sub _assign_freecells_from_string
     return;
 }
 
-sub _add_column
+=head2 $self->add_column($columns)
+
+Adds a new column of cards that should be an
+L<Games::Solitaire::Verify::Column> object.
+
+=cut
+
+sub add_column
 {
     my ($self, $col) = @_;
 
@@ -150,7 +157,7 @@ sub _from_string
         }
         my $column_str = $1;
 
-        $self->_add_column(
+        $self->add_column(
             Games::Solitaire::Verify::Column->new(
                 {
                     string => $column_str,
@@ -381,7 +388,7 @@ sub clone
 
     foreach my $idx (0 .. ($self->num_columns()-1))
     {
-        $copy->_add_column(
+        $copy->add_column(
             $self->get_column($idx)->clone()
         );
     }

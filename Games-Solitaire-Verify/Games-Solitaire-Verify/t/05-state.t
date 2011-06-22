@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 23;
 use Games::Solitaire::Verify::State;
 
 {
@@ -268,4 +268,39 @@ EOF
         "Games::Solitaire::Verify::Exception::Parse::State::Column",
         "Thrown a parse-column-prefix error",
     );
+}
+
+{
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            variant => "freecell",
+        }
+    );
+
+    my $column = Games::Solitaire::Verify::Column->new(
+        {
+            cards =>
+            [
+                Games::Solitaire::Verify::Card->new(
+                    {
+                        string => "KH",
+                        id => 1,
+                        data => { key => 'Foo', },
+                    },
+                ),
+                Games::Solitaire::Verify::Card->new(
+                    {
+                        string => "QS",
+                        id => 2,
+                        data => { key => 'Bar', },
+                    }
+                ),
+            ],
+        },
+    );
+
+    $board->add_column($column);
+
+    # TEST
+    is ($board->get_column(0)->pos(0)->id(), 1, "First card has ID '1'");
 }
