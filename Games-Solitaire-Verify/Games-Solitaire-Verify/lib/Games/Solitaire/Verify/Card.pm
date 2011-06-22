@@ -21,6 +21,7 @@ use base 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception;
 
 __PACKAGE__->mk_acc_ref([qw(
+    id
     rank
     suit
     _game
@@ -34,6 +35,7 @@ __PACKAGE__->mk_acc_ref([qw(
     my $queen_of_hearts = Games::Solitaire::Verify::Card->new(
         {
             string => "QH",
+            id => 4,
         },
     );
 
@@ -157,6 +159,8 @@ sub _from_string
             error => "unknown suit",
         );
     }
+
+    return;
 }
 
 sub _init
@@ -165,12 +169,20 @@ sub _init
 
     if (exists($args->{string}))
     {
-        return $self->_from_string($args->{string});
+        $self->_from_string($args->{string});
+    }
+
+    if (exists($args->{id}))
+    {
+        $self->id($args->{id});
     }
 
     return;
 }
 
+=head2 $card->id()
+
+A simple identifier that identifies the card. Should be a string.
 
 =head2 $card->rank()
 

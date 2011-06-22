@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 34;
+use Test::More tests => 35;
 use Games::Solitaire::Verify::Card;
 
 {
@@ -191,3 +191,14 @@ use Games::Solitaire::Verify::Card;
     }
 }
 
+{
+    my $card = Games::Solitaire::Verify::Card->new(
+        {
+            string => "QC",
+            id => 4,
+        },
+    );
+
+    # TEST
+    is ($card->id(), 4, "ID of the card is 4");
+}
