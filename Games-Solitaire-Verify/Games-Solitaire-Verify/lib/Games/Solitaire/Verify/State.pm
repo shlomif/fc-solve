@@ -72,15 +72,28 @@ __PACKAGE__->mk_acc_ref([qw(
 
 =head1 FUNCTIONS
 
+=head2 $self->set_freecells($freecells)
+
+Sets the freecells' object, which should be a 
+L<Games::Solitaire::Verify::Freecells> object.
+
 =cut
 
+sub set_freecells
+{
+    my ($self,$freecells) = @_;
+
+    $self->_freecells($freecells);
+
+    return;
+}
 
 sub _assign_freecells_from_string
 {
     my $self = shift;
     my $string = shift;
 
-    $self->_freecells(
+    $self->set_freecells(
         Games::Solitaire::Verify::Freecells->new(
             {
                 count => $self->num_freecells(),

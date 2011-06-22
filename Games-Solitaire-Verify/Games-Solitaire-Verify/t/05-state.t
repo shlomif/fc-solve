@@ -334,8 +334,13 @@ EOF
         ),
     );
 
-    # TODO : create a public method.
-    $board->_assign_freecells_from_string('Freecells:' . (' 'x(4*4)));
+    my $freecells = Games::Solitaire::Verify::Freecells->new(
+        {
+            count => 4,
+        }
+    );
+
+    $board->set_freecells($freecells);
 
     my $copy = $board->clone();
 

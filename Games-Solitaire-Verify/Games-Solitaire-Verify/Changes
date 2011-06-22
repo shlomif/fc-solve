@@ -8,6 +8,7 @@ Revision history for Games-Solitaire-Verify
         - lib/Games/Solitaire/Verify/State.pm :
             - Add the add_column method.
             - Add the set_foundations() method.
+            - Add the set_freecells() method.
 
 0.0901  Thu Jun  2 21:24:24 IDT 2011
         - Now importing Dumper from Data::Dumper properly.
