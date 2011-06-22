@@ -167,6 +167,8 @@ sub _init
     {
         return $self->_from_string($args->{string});
     }
+
+    return;
 }
 
 
