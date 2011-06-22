@@ -186,7 +186,7 @@ A simple identifier that identifies the card. Should be a string.
 
 =head2 $card->rank()
 
-Returns the rank of the card as an integer. Ace is 1, 2-10 are 2-20;
+Returns the rank of the card as an integer. Ace is 1, 2-10 are 2-10;
 J is 11, Q is 12 and K is 13.
 
 =head2 $card->suit()
