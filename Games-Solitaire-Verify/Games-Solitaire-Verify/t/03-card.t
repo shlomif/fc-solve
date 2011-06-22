@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 37;
+use Test::More tests => 41;
 use Games::Solitaire::Verify::Card;
 
 {
@@ -209,4 +209,32 @@ use Games::Solitaire::Verify::Card;
 
     # TEST
     is ($copy->id(), 4, "ID of the copy is the same.");
+}
+
+{
+    my $card = Games::Solitaire::Verify::Card->new(
+        {
+            string => "5H",
+            id => 79,
+            data => { key => 'Foo', },
+        },
+    );
+
+    # TEST
+    is ($card->id(), 79, "ID of card with id and data is OK.");
+
+    # TEST
+    is_deeply(
+        $card->data(),
+        { key => 'Foo', },
+        'Data is OK.',
+    );
+
+    my $copy = $card->clone();
+
+    # TEST
+    ok ($copy, '5H with id 79 was cloned.');
+
+    # TEST
+    is ($copy->id(), 79, "ID of the copy is the same.");
 }

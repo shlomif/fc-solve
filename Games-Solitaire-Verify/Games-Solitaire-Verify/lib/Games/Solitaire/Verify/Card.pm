@@ -21,6 +21,7 @@ use base 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception;
 
 __PACKAGE__->mk_acc_ref([qw(
+    data
     id
     rank
     suit
@@ -36,6 +37,7 @@ __PACKAGE__->mk_acc_ref([qw(
         {
             string => "QH",
             id => 4,
+            data => { %DATA },
         },
     );
 
@@ -177,8 +179,17 @@ sub _init
         $self->id($args->{id});
     }
 
+    if (exists($args->{data}))
+    {
+        $self->data($args->{data});
+    }
+
     return;
 }
+
+=head2 $card->data()
+
+Arbitrary data that is associated with the card. Can hold any scalar.
 
 =head2 $card->id()
 
