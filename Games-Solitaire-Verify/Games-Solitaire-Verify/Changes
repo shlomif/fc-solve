@@ -1,6 +1,10 @@
 Revision history for Games-Solitaire-Verify
 
         - Add the script/tag-release.pl to tag a release in Subversion.
+        - Add script/bump-version-number.pl .
+        - lib/Games/Solitaire/Verify/Card.pm :
+            - Add the id() slot.
+            - Add the data() slot.
 
 0.0901  Thu Jun  2 21:24:24 IDT 2011
         - Now importing Dumper from Data::Dumper properly.
