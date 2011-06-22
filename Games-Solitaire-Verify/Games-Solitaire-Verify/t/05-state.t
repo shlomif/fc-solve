@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 25;
 use Games::Solitaire::Verify::State;
 
 {
@@ -303,4 +303,14 @@ EOF
 
     # TEST
     is ($board->get_column(0)->pos(0)->id(), 1, "First card has ID '1'");
+
+    # TEST
+    is_deeply(
+        $board->get_column(0)->pos(0)->data(),
+        { key => 'Foo', },
+        "First card has right data()",
+    );
+
+    # TEST
+    is ($board->get_column(0)->pos(1)->id(), 2, "Second card has ID '2'");
 }
