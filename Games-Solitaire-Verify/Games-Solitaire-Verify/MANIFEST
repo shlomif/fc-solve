@@ -19,6 +19,7 @@ Makefile.PL
 MANIFEST
 META.yml
 README
+script/bump-version-number.pl
 script/tag-release.pl
 script/verify-solitaire-solution
 t/00-load.t
