@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More tests => 27;
 use Games::Solitaire::Verify::State;
 
 {
@@ -313,4 +313,39 @@ EOF
 
     # TEST
     is ($board->get_column(0)->pos(1)->id(), 2, "Second card has ID '2'");
+
+    foreach my $idx (1 .. (8-1))
+    {
+        $board->add_column(
+            Games::Solitaire::Verify::Column->new(
+                {
+                    cards => [],
+                }
+            )
+        );
+    }
+
+    $board->set_foundations(
+        Games::Solitaire::Verify::Foundations->new(
+            {
+                num_decks => $board->num_decks(),
+                string => 'Foundations: H-A C-A D-0 S-0',
+            },
+        ),
+    );
+
+    # TODO : create a public method.
+    $board->_assign_freecells_from_string('Freecells:' . (' 'x(4*4)));
+
+    my $copy = $board->clone();
+
+    # TEST
+    is ($copy->get_column(0)->pos(0)->id(), 1, "First card in copy has ID '1'");
+
+    # TEST
+    is_deeply (
+        $copy->get_column(0)->pos(0)->data(),
+        { key => 'Foo' }, 
+        "First card in copy has right data."
+    );
 }

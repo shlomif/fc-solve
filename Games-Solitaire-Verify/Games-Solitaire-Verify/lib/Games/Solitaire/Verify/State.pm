@@ -108,6 +108,22 @@ sub add_column
     return;
 }
 
+=head2 $self->set_foundations($foundations);
+
+Sets the foundations to a value. Should be isa
+L<Games::Solitaire::Verify::Foundations> .
+
+=cut
+
+sub set_foundations
+{
+    my ($self,$foundations) = @_;
+
+    $self->_foundations($foundations);
+
+    return;
+}
+
 sub _get_suits_seq
 {
     my $class = shift;
@@ -129,10 +145,10 @@ sub _from_string
     }
     my $founds_s = $1;
 
-    $self->_foundations(
+    $self->set_foundations(
         Games::Solitaire::Verify::Foundations->new(
             {
-               num_decks => $self->num_decks(),
+                num_decks => $self->num_decks(),
                 string => $founds_s,
             }
         )
@@ -393,7 +409,7 @@ sub clone
         );
     }
 
-    $copy->_foundations(
+    $copy->set_foundations(
         $self->_foundations()->clone()
     );
 
