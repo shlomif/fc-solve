@@ -229,6 +229,7 @@ sub clone
 
     my $new_card = Games::Solitaire::Verify::Card->new();
 
+    $new_card->data($self->data());
     $new_card->id($self->id());
     $new_card->suit($self->suit());
     $new_card->rank($self->rank());
