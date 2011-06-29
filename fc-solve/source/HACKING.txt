@@ -10,7 +10,7 @@ Benchmarking a Freecell Solver Release
 Requirements: perl-5.8.x or above, CMake, gcc, bash and a working
 pthreads-devel package.
 
-1. Download the Freecell Solver .tar.bz2 archive from 
+1. Download the Freecell Solver .tar.bz2 archive from
 http://fc-solve.berlios.de/ .
 
 2. Unpack and cd to the freecell-solver-* directory.
@@ -23,8 +23,8 @@ processors/cores your computer has.
 
 5. Type +make bench+.
 
-6. You can use +perl scripts/time-fcs.pl dump DUMPS/*+ and copy-and-paste the 
-results to the Freecell Solver developers with specifications of your computer 
+6. You can use +perl scripts/time-fcs.pl dump DUMPS/*+ and copy-and-paste the
+results to the Freecell Solver developers with specifications of your computer
 that are as detailed as possible.
 
 Getting the test suite up and running
@@ -34,10 +34,10 @@ These are instruction how to get the test suite up and running:
 
 1. Install the dependencies: Subversion, CMake (2.6.3 or later only), make,
 gcc, g\++, valgrind, perl5 (at least perl-5.8.9, perl-5.10.0 or above is
-recommended),  
+recommended),
 +
 +
-* On Debian: 
+* On Debian:
 +
 --------------------
 apt-get install subversion cmake make gcc g++ valgrind perl
@@ -62,7 +62,7 @@ export PERL_MM_USE_DEFAULT=1
 perl -Mlocal::lib -MCPAN -e 'install Task::FreecellSolver::Testing'
 ----------
 
-3. Install the development headers of 
+3. Install the development headers of
 libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
 +
 * On Mandriva:
@@ -72,7 +72,7 @@ libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
 * On Debian:
 +
 -------------------------------
-tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz 
+tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz
 cd tap-1.01
 ./configure --prefix="$HOME/apps/libtap"
 make CFLAGS+=-UHAVE_LIBPTHREAD
@@ -147,7 +147,7 @@ if ( COND() ) {
 ----------------
 if ( COND() )
     {
-    /* Bad because the left and right braces are indented along with 
+    /* Bad because the left and right braces are indented along with
     the block. */
     printf(....)
     }
@@ -157,7 +157,7 @@ if ( COND() )
 /* GNU Style - fear and loathing. */
 if ( COND() )
   {
-    printf(....)  
+    printf(....)
   }
 ----------------
 
@@ -184,7 +184,7 @@ Identifier Naming Conventions
 Here are some naming conventions for identifiers:
 
 1. Please do not use capital letters (including not +CamelCase+) - use
-all lowercase letters with words separated by underscores. Remember, C is 
+all lowercase letters with words separated by underscores. Remember, C is
 case sensitive.
 
 2. Note, however, that comments should be phrased in proper English, with
