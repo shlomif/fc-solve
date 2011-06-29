@@ -152,7 +152,7 @@ SET (FCS_AVOID_TCMALLOC ""
     "Avoid linking against Google's tcmalloc"
 )
 
-SET (FCS_BUILD_DOCS "" CACHE BOOL "Whether to build the documentation or not.")
+SET (FCS_BUILD_DOCS "1" CACHE BOOL "Whether to build the documentation or not.")
 
 SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
 
