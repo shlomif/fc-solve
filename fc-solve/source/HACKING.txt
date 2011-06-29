@@ -178,6 +178,35 @@ for(dc=0;dc<c-1;dc++)
 
 +TODO: Fill in+
 
+One line clauses should be avoided
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One should avoid one-line clauses inside the clauses of +if+, +else+,
++elsif+, +while+, etc. Instead one should wrap the single statements inside
+blocks. This is to avoid common errors with extraneous semicolons:
+
+----------------
+/* Bad: */
+if (COND())
+    printf ("%s\n", "Success!");
+
+/* Good: */
+if (COND())
+{
+    printf ("%s\n", "Success!");
+}
+
+/* Bad: */
+while (COND())
+    printf("%s\n", "I'm still running.");
+
+/* Good: */
+while (COND())
+{
+    printf("%s\n", "I'm still running.");
+}
+----------------
+
 Identifier Naming Conventions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
