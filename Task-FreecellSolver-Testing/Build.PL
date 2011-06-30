@@ -8,6 +8,7 @@ my $builder = Module::Build->new(
     dist_author         => q{Shlomi Fish <shlomif@iglu.org.il>},
     dist_version_from   => 'lib/Task/FreecellSolver/Testing.pm',
     requires => {
+        "Env::Path" => 0,
         "Games::Solitaire::Verify" => 0,
         "String::ShellQuote" => 0,
         "Task::Test::Run::AllPlugins" => 0,

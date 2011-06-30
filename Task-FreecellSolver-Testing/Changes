@@ -1,5 +1,7 @@
 Revision history for Task-FreecellSolver-Testing
 
-0.01    Mon Jul 27 15:27:06 IDT 2009
+        - Add Env::Path .
+
+0.0.1   Mon Jul 27 15:27:06 IDT 2009
         First version, released on an unsuspecting world.
         Corresponds to Freecell Solver 2.34.0.
