@@ -6,7 +6,7 @@ Group: Amusement/Games
 Source: http://download.berlios.de/fc-solve/freecell-solver-%{version}.tar.bz2
 Buildroot: %{_tmppath}/freecell-solver-root
 URL: http://fc-solve.berlios.de/
-Requires: libfreecell-solver0 = %{PACKAGE_VERSION}
+Requires: libfreecell-solver0 = %{version}
 Summary: The Freecell Solver Executable
 BuildRequires: cmake
 
@@ -31,7 +31,7 @@ This package is mandatory for the Freecell Solver executable too.
 %package -n libfreecell-solver0-devel
 Summary: The Freecell Solver development tools for solving Freecell games
 Group: Amusement/Games
-Requires: libfreecell-solver0 = %{PACKAGE_VERSION}
+Requires: libfreecell-solver0 = %{version}
 
 %description -n libfreecell-solver0-devel
 Freecell Solver is a library for automatically solving boards of Freecell and
@@ -44,7 +44,7 @@ Freecell Solver from within your programs.
 %package -n libfreecell-solver0-static
 Summary: The Freecell Solver static libraries
 Group: Amusement/Games
-Requires: libfreecell-solver0 = %{PACKAGE_VERSION}
+Requires: libfreecell-solver0 = %{version}
 
 %description -n libfreecell-solver0-static
 Freecell Solver is a library for automatically solving boards of Freecell and
