@@ -1,6 +1,7 @@
 Revision history for Task-FreecellSolver-Testing
 
-        - Add Env::Path .
+        - Add Env::Path , List::MoreUtils, Test::More, Storable, Digest::SHA
+        and some core modules.
 
 0.0.1   Mon Jul 27 15:27:06 IDT 2009
         First version, released on an unsuspecting world.
