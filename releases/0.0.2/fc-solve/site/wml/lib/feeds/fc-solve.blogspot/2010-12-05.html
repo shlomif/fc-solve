@@ -1,0 +1,46 @@
+<!-- TITLE=Freecell Solver 3.4.0 was Released-->
+<p>
+<a href="http://fc-solve.berlios.de/">Freecell Solver</a> version 3.4.0
+has been released. It is available in the form of a source tarball from 
+<a href="http://fc-solve.berlios.de/download.html">the
+    download page</a>.
+</p>
+
+<p>
+In this release, we've added the <tt>--set-pruning</tt> flag to turn on
+the Horne's play prune, which improves performance. There are two new presets
+- <tt>-l enlightened-ostrich</tt> (or <tt>-l eo</tt> for short), which makes
+use of <tt>--set-pruning</tt> and is the fastest preset yet, and 
+<tt>-l maliciously-obscure</tt> (<tt>-l mo</tt>) which is slow but generates 
+especially short solutions.
+</p>
+
+<p>
+We added a compile-time option to use 
+<a href="http://fc-solve.berlios.de/to-do.html#rcs_state_storage">RCS-like
+    states storage</a> which conserves a lot of RAM and allowed Freecell
+Solver to scale to over 200 million positions on an x86-64 machine with
+64 GB of RAM (which was utilised for that courtesy of Amadiro's university).
+There are many other major and minor speed and memory optimisations in this
+release.
+</p>
+
+<p>
+The <tt>--ms</tt> and <tt>-M</tt> flags were added to
+the <tt>make_pysol_freecell_board.py</tt> program, to generate Microsoft
+deals even for numbers higher than 32,000, which are different in
+PySol and PySolFC. Furthermore, the CMake configuration was updated to
+use "lib${LIB_SUFFIX}", so it can be built on some 64-bit systems.
+</p>
+
+<p>
+Finally, there's an experimental <tt>--trim-max-stored-states</tt> which
+currently may crash the solver, but we decided to release it despite this fact.
+</p>
+
+<p>
+All of these changes prove to be a huge step forward for Freecell Solver making
+this release its best release yet.
+</p><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/96099636168698788-562580764436514693?l=fc-solve.blogspot.com' alt='' /></div>
+
+<p><a href="http://fc-solve.blogspot.com/2010/12/freecell-solver-340-was-released.html">See comments and comment on this.</a></p>

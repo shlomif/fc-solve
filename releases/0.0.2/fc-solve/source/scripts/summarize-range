@@ -1,0 +1,7 @@
+#!/bin/bash
+for I in `seq 1 8` ; do
+    printf "%-6s| %-25s | %-30s\n" \
+        "$I" \
+        "$(./board_gen/pi-make-microsoft-freecell-board -t "$I" | ./scripts/summarize-fc-solve)" \
+        "$(./board_gen/pi-make-microsoft-freecell-board -t "$I" | ./scripts/summarize-fc-solve -- --method a-star)"
+done

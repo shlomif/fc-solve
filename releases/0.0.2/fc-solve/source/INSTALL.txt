@@ -1,0 +1,82 @@
+INSTALL file for Freecell Solver
+================================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2009-08-29
+:Revision: $Id$
+
+Quick and Dirty Compilation
+---------------------------
+
+Freecell Solver was converted to use CMake ( http://www.cmake.org/ ) 
+starting from version 2.12.0. You'll need to install CMake version 2.6.3
+or later from your distribution's repository or from its source
+distribution. *NOTE*: CMake 2.6.2 (that ships with some releases of Ubuntu)
+won't work due to a regression bug so please don't report any errors with
+it.
+
+Next, run:
+
+    cmake-gui .         # For the GUI configuration applet
+
+Or:
+
+    ccmake .            # For the Curses-based configuration applet
+
+With a fallback to:
+
+    cmake .             # Non-interactive application.
+
+This will build and install the "freecell-solver" shared library,
+and "fc-solve" which is the Freecell Solver executable for you.
+
+It will also build and install the board generation program. More 
+information about them can be found in the "board_gen" sub-directory of
+this distribution.
+
+Changing the Maximal number of Freecells or Stacks or Cards per Stack
+---------------------------------------------------------------------
+
+The following parameters to the cmake" script which accept an argument
+control the hard-coded parameters of the Freecell Solver executables:
+
+* "-DMAX_NUM_FREECELLS:STRING=$NUM" - The maximal number of freecells
+
+* "-DMAX_NUM_STACKS:STRING=$NUM" - The maximal number of stacks (columns)
+
+* "-DMAX_NUM_INITIAL_CARDS_IN_A_STACK:STRING=$NUM" - The maximal number of 
+initial cards per stack.
+
+Notice that it's very important to set the maximal number of initial cards
+per stack, or else it's possible that a stack will eventually overflow.
+
+#"Compact" States#
+------------------
+
+In Compact States, the contents of the card stacks are stored inside the 
+states, rather than in a central collection (where the states contain only
+pointers). Despite their name, they actually consume more memory than Indirect
+Stack States which are the default.
+
+Compact states used to be faster than Indirect Stack States, but now it
+seems indirect stack states are at least slightly faster even for games
+whose stacks are not very long. If you still would wish to enable it,
+*TODO : FILL IN*.
+
+Installing under Win32
+----------------------
+
+Consult the CMake documentation for generating a Visual C++ , MinGW32
+etc. compatible makefile or project.
+
+Testing
+-------
+
+To test Freecell Solver, you need to:
+
+1. Configure it.
+
+2. Run "make install".
+
+3. Type "ctest -V" (or "make test" just for the verdict).
+
+Please report any errors to me ( http://www.shlomifish.org/me/contact-me/ ).

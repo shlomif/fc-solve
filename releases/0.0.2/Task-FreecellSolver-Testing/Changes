@@ -1,0 +1,9 @@
+Revision history for Task-FreecellSolver-Testing
+
+0.0.2   Thu Jun 30 16:52:19 IDT 2011
+        - Add Env::Path , List::MoreUtils, Test::More, Storable, Digest::SHA
+        and some core modules.
+
+0.0.1   Mon Jul 27 15:27:06 IDT 2009
+        First version, released on an unsuspecting world.
+        Corresponds to Freecell Solver 2.34.0.
