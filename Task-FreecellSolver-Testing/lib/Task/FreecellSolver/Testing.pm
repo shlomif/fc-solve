@@ -10,18 +10,28 @@ Freecell Solver test suite.
 
 =head1 VERSION
 
-Version 0.0.1
+Version 0.0.2
 
 =cut
 
-our $VERSION = '0.0.1';
+our $VERSION = '0.0.2';
 
 # Load the dependencies so we'll be sure they are installed.
+use Carp;
+use Data::Dumper;
+use Digest::SHA;
+use Env::Path;
+use File::Path;
+use File::Spec;
 use Games::Solitaire::Verify;
+use IPC::Open2;
+use Storable;
 use String::ShellQuote;
 use Task::Test::Run::AllPlugins;
 use Template;
 use Test::Differences;
+use Test::Differences;
+use Test::More;
 use YAML::XS;
 
 =head1 SYNOPSIS
