@@ -631,7 +631,8 @@ RUN_POD2MAN(
 )
 ENDIF ()
 
-INSTALL_MAN ("${CMAKE_CURRENT_BINARY_DIR}/fc-solve.6" 6)
+SET (fc_solve_manpage "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.6")
+INSTALL_MAN ("${fc_solve_manpage}" 6)
 
 INSTALL(
     FILES
@@ -799,7 +800,7 @@ IF(ASCIIDOC_FOUND)
     ADD_DEPENDENCIES("${_master_pdf_target}" ${_pdf_targets})
 
     SET (_out "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.xml")
-    SET (_manpage "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.6")
+    SET (_manpage "${fc_solve_manpage}")
     ADD_CUSTOM_COMMAND(
         OUTPUT "${_manpage}"
         COMMAND xsltproc --nonet /etc/asciidoc/docbook-xsl/manpage.xsl 
