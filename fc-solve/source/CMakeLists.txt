@@ -689,11 +689,18 @@ ADD_CUSTOM_TARGET(
     DEPENDS ${BOARDS}
 )
 
+SET (_readme "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
+SET (_usage  "${CMAKE_CURRENT_SOURCE_DIR}/USAGE.txt")
+SET (_fc_solve_txt "fc-solve.txt")
+
 ADD_CUSTOM_COMMAND(
-    OUTPUT "fc-solve.txt"
+    OUTPUT "${_fc_solve_txt}"
     COMMAND "perl"
-    ARGS "scripts/gen-man-page.pl"
-    DEPENDS "README.txt" "USAGE.txt"
+    ARGS "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-man-page.pl"
+        "--readme" "${_readme}"
+        "--usage" "${_usage}"
+        "--output" "${_fc_solve_txt}"
+    DEPENDS "${_readme}" "${_usage}"
 )
 
 ADD_CUSTOM_TARGET(

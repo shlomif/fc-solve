@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use Getopt::Long;
+
 =head1 NAME
 
 gen-man-page.pl
@@ -29,8 +31,17 @@ sub _slurp
     return $contents;
 }
 
-my $readme = _slurp("README.txt");
-my $usage = _slurp("USAGE.txt");
+my ($readme_path, $usage_path, $out_path);
+
+GetOptions(
+    'readme=s' => \$readme_path,
+    'usage=s' => \$usage_path,
+    'output=s' => \$out_path,
+)
+    or die "Cannot process arguments.";
+
+my $readme = _slurp($readme_path);
+my $usage = _slurp($usage_path);
 
 $usage =~ s{\A.*?(^The programs *$)}{$1}ms;
 
@@ -48,7 +59,7 @@ $readme =~ s/\AFreecell Solver Readme File\n(=+)\n/
     $man_title . "\n" . '=' x length($man_title) . "\n"/ge;
 $readme =~ s/(:Revision[^\n]*\n)/$1$manify_text/ms;
 
-open my $out, ">", "fc-solve.txt";
+open my $out, '>', $out_path;
 print {$out} $readme, "\n\n", $usage;
 close($out);
 
