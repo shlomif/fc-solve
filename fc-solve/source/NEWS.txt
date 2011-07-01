@@ -14,7 +14,7 @@ of libfreecell-solver in third-party programs, so previously including
 2. Add the +--tracemem+ compile-time option for tracing the amount of RAM
 and time used by Freecell Solver as a function of the iterations count.
 
-3. Bug fix for incrementall increasing the limits.
+3. Bug fix for incrementally increasing the limits.
 
 4. Add a modified version of kazlib's balanced binary search tree to the 
 distribution so one will be available built-in. It can be used for both
