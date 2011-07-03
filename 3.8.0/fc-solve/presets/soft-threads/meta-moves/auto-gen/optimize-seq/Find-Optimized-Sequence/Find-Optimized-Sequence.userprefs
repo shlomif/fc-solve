@@ -1,0 +1,40 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" ctype="Workspace" />
+  <MonoDevelop.Ide.DebuggingService>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Find-Optimized-Sequence/find_opt.cs" ctype="Workbench">
+    <Files>
+      <File FileName="Find-Optimized-Sequence/find_opt.cs" Line="448" Column="6" />
+      <File FileName="Find-Optimized-Sequence/Main.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Find-Optimized-Sequence" expanded="True">
+            <Node name="find_opt.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Find-Optimized-Sequence ctype="Properties">
+    <MonoDevelop.Ide.CustomExecutionModes ctype="CustomExecutionModes">
+      <Data Name="sample_run" Id="540f5f1d-2410-4851-8d8e-e74a0dc18851" ModeId="Default">
+        <CommandData>
+          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
+            <Value Arguments="test_process_sample_run" ctype="CustomArgsExecutionModeData">
+              <EnvironmentVariables />
+            </Value>
+          </Item>
+          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
+            <Value ctype="MonoExecutionParameters" />
+          </Item>
+        </CommandData>
+      </Data>
+    </MonoDevelop.Ide.CustomExecutionModes>
+  </MonoDevelop.Ide.ItemProperties.Find-Optimized-Sequence>
+</Properties>

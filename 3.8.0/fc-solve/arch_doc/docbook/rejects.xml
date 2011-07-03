@@ -1,0 +1,162 @@
+                    <listitem>
+                        <para>
+                            <filename>fcs_isa.c</filename>/<filename>fcs_isa.h</filename> - 
+                            Short for Indirect State Allocation, this module 
+                            allocated vectors of states, each one is of constant 
+                            size.
+                        </para>
+                    </listitem>
+        <section id="scm_maintaining_a_list_of_modules">
+            <title>Maintaining a list of Modules</title>
+            <para>
+                The script <filename>gen_makefile.pl</filename> maintains a 
+                list of modules and headers across all makefiles that are 
+                distributed as part of Freecell Solver.
+            </para>
+            <para>
+                Notice that the Win32 makefile is generated from a hard-coded
+                template, while the other makefiles are read and modified by it.
+            </para>
+        </section>
+
+        If a development version is present, it is checked out of the CVS,
+        packed into an archive, and placed on the site with a link in the
+        downloads page.
+
+        
+            <para>
+                The site generation process also generates a zip archive of the 
+                latest stable version so it can be used to automatically 
+                compile the Win32 binary.            
+            </para>
+
+        <section id="scm_freecell_solver_config">
+            <title>freecell-solver-config</title>
+            <para>
+                The autoconf process creates a freecell-solver-config program that
+                can be used as an aid in programs wishing to compile and link
+                against &fcs;. It is generated from freecell-solver-config.in by
+                the configure script and is installed system-wide.            
+            </para>
+        </section>
+
+        <section id="scm_win32_binary">
+            <title>The Win32 Binary</title>
+            <para>
+                The Win32 binary is compiled by a batch file placed on the site 
+                and found in the CVS in the location 
+                <ulink url="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/fc-solve/fc-solve/site/wml/src/win32_build/bootstrap/build.bat">/fc-solve/site/wml/src/win32_build/bootstrap/built.bat</ulink>
+            </para>
+            <para>
+                This script should be placed on a Windows NT 4.0 and above 
+                computer that has the Microsoft Visual Studio environment 
+                installed. It should be placed in a directory containing only it 
+                and the curl.exe executable from 
+                <ulink url="http://fc-solve.berlios.de/win32_build/">the same location</ulink>.
+            </para>
+
+            <para>
+                What it does is the following:
+            </para>
+
+            <para>
+                <orderedlist>                
+                    <listitem>
+                        <para>
+                            Download zip.exe and unzip.exe from the static sub-directory.
+                        </para>
+                    </listitem>
+
+                    <listitem>
+                        <para>
+                            Download fcs.zip from the dynamic sub-directory.
+                        </para>
+                    </listitem>
+                    
+                    <listitem>
+                        <para>
+                            Unpack fcs.zip.
+                        </para>
+                    </listitem>
+                   
+                    <listitem>
+                        <para>
+                            Determine its version number and record it in a 
+                            variable.
+                        </para>
+                    </listitem>
+
+                    <listitem>
+                        <para>
+
+                            Compile Freecell Solver.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Place the relevant files in a directory structure by 
+                            copying them.
+                        </para>
+                    </listitem>               
+                    <listitem>
+                        <para>
+                            Create a zip archive of them.
+                        </para>
+                    </listitem>          
+                </orderedlist>
+            </para>        
+        </section>
+                <varlistentry>
+                    <term>Packs</term>
+                    <listitem>
+                        <para>
+
+                            See <link 
+                                linkend="term_state_packs">State Packs</link>.
+
+                        </para>
+                    </listitem>
+                </varlistentry>
+        
+                <varlistentry id="term_state_packs">
+                    <term>State Packs</term>
+                    <listitem>
+                        <para>
+                            An allocation of states. Each state pack is a buffer in
+                            memory, that contain an array of states. Each buffer
+                            remains at a constant memory location, but more buffers
+                            are allocated as necessary. The implementation of State
+                            packs reside in the files
+                            <filename>fcs_isa.c</filename> and
+                            <filename>fcs_isa.h</filename>.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Secondary Hash Value</term>
+                    <listitem>
+                        <para>
+
+                            A hash value that is calculated for every state
+                            that is not used to determine the location of the
+                            element in the hash table, but that is used for
+                            comparison.  That is done in order to avoid
+                            needlessly comparing two different states with the
+                            same hash value.
+
+                        </para>
+                        <para>
+
+                            Freecell Solver uses a 32-bit primary hash value.
+                            As such it is susceptible to the birthday paradox
+                            starting at about 2<superscript>16</superscript>. A
+                            secondary hash value with extra 32-bits ensures a
+                            collision of both hash values will only happen at
+                            around 2<superscript>32</superscript> states, which
+                            is much more states than most 32-bit systems can
+                            handle.
+
+                        </para>
+                    </listitem>
+                </varlistentry>
+

@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+use String::ShellQuote;
+use IO::All;
+use Term::ANSIColor;
+use Games::Solitaire::Verify::Solution;
+use Data::Dumper;
+
+my @fcs_args = @ARGV;
+
+my $args_quoted = shell_quote(@fcs_args);
+my $fcs_output = `fc-solve -p -t -sam $args_quoted`;
+
+my $is_solvable = (($fcs_output =~ m{^This game is solveable}ms) ? 1 : 0);
+my $unsolved = (($fcs_output =~ m{^I could not solve}ms) ? 1 : 0);
+
+if (! ($is_solvable xor $unsolved))
+{
+    die "Game is both unsolvable and solver or neithed!";
+}
+
+if ($is_solvable)
+{
+    open my $input_fh, "<", (\$fcs_output)
+        or die "Cannnot open fcs_output.";
+    my $solution = Games::Solitaire::Verify::Solution->new(
+        {
+            input_fh => $input_fh,
+            variant => "freecell",
+        },
+    );
+
+    my $verdict = $solution->verify();
+
+    close($input_fh);
+
+    if ($verdict)
+    {
+        die "Invalid solution!";
+        diag("Verdict == " . Dumper($verdict));
+    }
+}
+
+my ($num_iters) = ($fcs_output =~ m{^Total number of states checked is (\d+)\.$}ms);
+my $sol_len = () = ($fcs_output =~ m{^Move}msg);
+
+print "Verdict: " . ($is_solvable ? "Solved" : "Unsolved") . 
+    " ; Iters: $num_iters ; Length: $sol_len\n";

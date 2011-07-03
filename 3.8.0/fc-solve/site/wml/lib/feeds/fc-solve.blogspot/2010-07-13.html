@@ -1,0 +1,182 @@
+<!-- TITLE=Solvability Statistics of Two Freecell Games-->
+<!-- Tags: freecell, solver, solving, two, deals, layouts, solvability, statistics
+-->
+
+<p>
+While the default 
+<a href="http://en.wikipedia.org/wiki/FreeCell_%28Windows%29">Windows 
+implementation of Freecell</a> only supports playing Freecell with four initial
+freecells, it can be played with any number of them. In order to make the
+game more challenging, some people are playing it with a fewer number of
+freecells.
+</p>
+
+<p>
+As of today,
+<a href="http://www.solitairelaboratory.com/fcfaq.html">the Freecell FAQ</a>
+says that "With two freecells, there are at least 24,161 solvable deals [in
+the Microsoft 32,000 deals].". However, at the course of researching those
+layouts using <a href="http://fc-solve.berlios.de/">Freecell Solver</a> 
+(after constructing a solver configuration optimised for solving two-freecell 
+deals), we have found out that more deals can be provably solved.
+</p>
+
+<p>
+Below one can find the report about the solvability of 2-freecell deals. The 
+executive summary is that:
+</p>
+
+<ol>
+<li>
+25,367 deals were successfully solved.
+</li>
+
+<li>
+6,600 deals are provably unsolvable.
+</li>
+
+<li>
+The other 33 deals are "intractable" - meaning my computer ran out of 
+resources trying to solve them (I limited the range of iterations to 
+8,200,000, but some of them were killed by the "out-of-memory" daemon 
+earlier).
+</li>
+
+</ol>
+
+<p><b>Solvable</b></p>
+
+<ul>
+<li>
+<p>
+By using the "tea-for-two" meta-moves preset: 25,143.
+</p>
+</li>
+<li>
+<p>
+By using <tt>-to 01ABCDE</tt> : 172.
+</p>
+</li>
+<li>
+<p>
+By using <tt>-l foss-nessy</tt> : 38.
+</p>
+</li>
+<li>
+<p>
+By using the extended range (8,200,000 iterations) <tt>-to 01ABCDE</tt> scan:
+<tt>grep -l '^This game is solv' *.sol  | wc -l</tt> yields: 14.
+</p>
+</li>
+<li>
+<p>
+<strong>Total:</strong> 25,367.
+</p>
+</li>
+</ul>
+
+<p><b>Definitely unsolvable</b></p>
+
+<ul>
+<li>
+<p>
+Fully traversed in the atomic moves preset: 6,513.
+</p>
+</li>
+<li>
+<p>
+Found using <tt>grep -l '^I could not solve' *.sol | xargs grep -h 
+'^Total number of states checked' | grep 1200000 | wc -l</tt>.
+</p>
+</li>
+<li>
+<p>
+Fully traversed in the extended-range atomic moves preset: 87.
+</p>
+</li>
+<li>
+<p>
+Found using <tt>grep -l '^I could not solve' *.sol | xargs grep -h '^Total number of states checked' | grep -v 8200000 | wc -l</tt>.
+</p>
+</li>
+<li>
+<p>
+Total: 6,600.
+</p>
+</li>
+</ul>
+
+<p><b>Intractable</b></p>
+
+<ul>
+<li>
+<p>
+After the atomic scan: 172.
+</p>
+</li>
+<li>
+<p>
+Found using <tt>grep -l '^I could not solve' *.sol | xargs grep -l '^Total number of states checked is 1200000\.' | wc -l</tt>
+</p>
+</li>
+<li>
+<p>
+After the foss-nessy scan: 134.
+</p>
+</li>
+<li>
+<p>
+After the 8,200,000 range atomic scan:
+</p>
+</li>
+<li>
+<p>
+Killed by the Out-of-memory Killer:
+<tt>ls | perl -lne 'print if -z' | xargs ls -l | wc -l</tt> : 17.
+</p>
+</li>
+<li>
+<p>
+Reached the iterations limit:
+</p>
+</li>
+<li>
+<p>
+<tt>grep -l '^I could not solve' *.sol | xargs grep -l '^Total number of states checked is 8200000\.' | wc -l</tt>:
+16.
+</p>
+</li>
+<li>
+<p>
+Total: 33.
+</p>
+</li>
+</ul>
+
+<p><b>Conclusion and Future Directions</b></p>
+
+<p>
+The 33 deals that we could not determine whether they were unsolvable or not
+are: 891, 982, 3129, 5435, 6090, 7214, 7728, 9034, 11266, 12038, 12064, 13659,
+13705, 14262, 14445, 14790, 15804, 15957, 16322, 16462, 17184, 17684, 17760,
+17880, 18446, 19671, 19678, 20792, 21779, 26124, 27799, 28188, 29577. We would
+appreciate any further insights about whether they can be solved or not
+and one option would be to use Freecell solver to solve them on a 64-bit
+machine with more memory available than what I have.
+</p>
+
+<p>
+In the future, we'd like to work on the 
+<a href="http://fc-solve.berlios.de/to-do.html#orig_calc_states">"States
+calculated from the original"</a> feature which should reduce 
+memory consumption considerably, especially on 64-bit architectures. After
+reading the report of <a href="http://kevin.atkinson.dhs.org/freecell/">Kevin
+Atkinson's and Shari Holstege's solver</a> it seems that we can also
+save space by re-using old positions that have been determined
+to be dead-ends, so we'd like to explore that. We'd also
+like to explore using an on-disk storage to store the states / positions 
+such as <a href="http://1978th.net/tokyocabinet/">Tokyo Cabinet</a>. That or we
+can try adding a bigger swap partition.
+</p><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/96099636168698788-8613246077246361132?l=fc-solve.blogspot.com' alt='' /></div>
+
+<p><a href="http://fc-solve.blogspot.com/2010/07/solvability-statistics-of-two-freecell.html">See comments and comment on this.</a></p>

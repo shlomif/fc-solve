@@ -1,0 +1,1149 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my @QUEUE_ITEM_FIELDS_ORDER = qw(path_to_dir min_idx max_idx);
+my $RANGE_TO_VERIFY_SOCKET_PATH;
+
+package Object;
+
+use strict;
+use warnings;
+
+sub new
+{
+    my $class = shift;
+
+    my $self = bless {}, $class;
+
+    $self->_init(@_);
+
+    return $self;
+}
+
+sub make_accessors
+{
+    my ($pkg, $methods) = @_;
+
+    no strict 'refs';
+    foreach my $method (@$methods)
+    {
+        *{$pkg."::".$method} =
+            sub {
+                my $self = shift;
+
+                if (@_)
+                {
+                    $self->{$method} = shift;
+                }
+                return $self->{$method};
+            };
+    }
+
+    return;
+}
+
+sub make_delegates_generic
+{
+    my ($pkg, $slot, $methods) = @_;
+
+    no strict 'refs';
+    while (my ($method, $map_to) = each(%$methods))
+    {
+        *{$pkg."::".$method} =
+            sub {
+                return shift->$slot()->$map_to(@_);
+            };
+    }
+
+    return;
+}
+
+sub make_delegates
+{
+    my ($pkg, $slot, $methods) = @_;
+
+    return $pkg->make_delegates_generic(
+        $slot, 
+        +{ map { $_ => $_ } @$methods }
+    );
+}
+
+sub make_private_delegates
+{
+    my ($pkg, $slot, $methods) = @_;
+
+    return $pkg->make_delegates_generic(
+        $slot, 
+        +{ map { ('_'.$_) => $_ } @$methods }
+    );
+}
+
+package FC_Solve::Socket;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(Object));
+
+__PACKAGE__->make_accessors([qw(_client_sock)]);
+
+sub read_line
+{
+    my $self = shift;
+
+    my $line = $self->_client_sock->getline;
+    chomp($line);
+
+    return $line;
+}
+
+sub read_num_lines
+{
+    my ($self, $n) = @_;
+
+    my @lines;
+    foreach my $i (1 .. $n)
+    {
+        push @lines, $self->read_line;
+    }
+
+    return \@lines;
+}
+
+sub write
+{
+    my $self = shift;
+
+    $self->_client_sock->print(map { "$_\n" } @_);
+    $self->_client_sock->flush;
+
+    return;
+}
+
+package VerifierConn;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(FC_Solve::Socket));
+
+use Carp;
+
+use IO::Socket::UNIX;
+
+sub _init
+{
+    my ($self,$args) = @_;
+
+    # TODO : Add error checking - consult some people.
+    my $sock = IO::Socket::UNIX->new(
+            Type => SOCK_STREAM(),
+            Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
+        );
+
+    if (! $sock )
+    {
+        Carp::confess("Cannot initialize connection - $!.\n");
+    }
+
+    $self->_client_sock($sock);
+
+    return;
+}
+
+sub DESTROY
+{
+    my $self = shift;
+
+    if (defined ( $self->_client_sock) )
+    {
+        close($self->_client_sock);
+
+        $self->_client_sock('');
+    }
+
+    return;
+}
+
+sub _get_id
+{
+    my ($self, $cmd) = @_;
+
+    $self->write($cmd);
+
+    return $self->read_line();
+}
+
+sub get_verify_id
+{
+    return shift->_get_id("GET_ID_FOR_VERIFIER");
+}
+
+sub get_solve_id
+{
+    return shift->_get_id("GET_ID_FOR_SOLVER");
+}
+
+sub _terminate_cmd
+{
+    my ($self,$cmd, $id) = @_;
+
+    $self->write($cmd);
+    $self->write($id);
+
+    return;
+}
+
+sub terminate_solve
+{
+    my ($self, $id) = @_;
+
+    return $self->_terminate_cmd("TERMINATE_SOLVER", $id);
+}
+
+sub terminate_verify
+{
+    my ($self, $id) = @_;
+
+    return $self->_terminate_cmd("TERMINATE_VERIFIER", $id);
+}
+
+sub enqueue_range_to_verify
+{
+    my ($self, $dir_path, $start_deal_idx, $end_deal_idx) = @_;
+
+    foreach my $s ('ENQ', $dir_path, $start_deal_idx, $end_deal_idx)
+    {
+        $self->write($s);
+    }
+
+    return;
+}
+
+sub verify_get_next
+{
+    my $conn = shift;
+
+    $conn->write("GET_NEXT");
+
+    my %ret;
+    if (($ret{status} = $conn->read_line) eq "DATA")
+    {
+        $ret{data} = $conn->read_num_lines(3);
+    }
+
+    return \%ret;
+}
+
+package QueueServerSocket;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(FC_Solve::Socket));
+
+use Carp;
+
+use IO::Socket::UNIX;
+
+__PACKAGE__->make_accessors([qw(_server_sock)]);
+
+sub _init
+{
+    my ($self,$args) = @_;
+
+    # TODO : Add error checking - consult some people.
+    my $server_sock = IO::Socket::UNIX->new(
+            Type => SOCK_STREAM(),
+            Local => $RANGE_TO_VERIFY_SOCKET_PATH,
+            Listen => 1,
+        ) or 
+        Carp::confess(
+            "Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!"
+        );
+
+    $self->_server_sock($server_sock);
+
+    return;
+}
+
+sub _accept
+{
+    my $self = shift;
+
+    return $self->_client_sock($self->_server_sock->accept);
+}
+
+sub new_client
+{
+    my $self = shift;
+
+    $self->_accept;
+
+    return $self->read_line();
+}
+
+sub _disconnect_client
+{
+    my $self = shift;
+
+    $self->_client_sock->close();
+    $self->_client_sock('');
+
+    return;
+}
+
+sub read_enq_data
+{
+    my $self = shift;
+
+    return $self->read_num_lines(scalar(@QUEUE_ITEM_FIELDS_ORDER));
+}
+
+sub read_queue_item
+{
+    my $self = shift;
+
+    my %h;
+    foreach my $field (@QUEUE_ITEM_FIELDS_ORDER)
+    {
+        $h{$field} = $self->read_line;
+    }
+
+    return \%h;
+}
+
+package ProcessesRegistry;
+
+our @ISA = (qw(Object));
+
+use strict;
+use warnings;
+
+__PACKAGE__->make_accessors([qw(_registry _was_placed _next_id)]);
+
+sub _init
+{
+    my $self = shift;
+
+    $self->_registry({});
+    $self->_was_placed(0);
+    $self->_next_id(1);
+
+    return;
+}
+
+sub register
+{
+    my ($self) = @_;
+
+    my $id = $self->_next_id;
+    $self->_next_id($id+1);
+
+    $self->_registry->{$id} = 1;
+    $self->_was_placed(1);
+
+    return $id;
+}
+
+sub is_full
+{
+    my $self = shift;
+
+    return scalar(keys(%{$self->_registry}));
+}
+
+sub remove
+{
+    my ($self, $id) = @_;
+
+    delete($self->_registry->{$id});
+
+    return;
+}
+
+sub was_placed
+{
+    my $self = shift;
+
+    return $self->_was_placed;
+}
+
+sub is_active
+{
+    my $self = shift;
+
+    return ((!$self->was_placed) || $self->is_full)
+}
+
+package QueueServerRegistry;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(Object));
+
+__PACKAGE__->make_accessors([qw(_active)]);
+
+sub _init
+{
+    my $self = shift;
+
+    $self->_active(
+        {
+            solver => ProcessesRegistry->new,
+            verifier => ProcessesRegistry->new
+        }
+    );
+
+    return;
+}
+
+sub get_types
+{
+    my $self = shift;
+
+    return keys(%{$self->_active});
+}
+
+sub _reg
+{
+    my ($self, $type) = @_;
+
+    return $self->_active->{$type}
+}
+
+sub _solvers
+{
+    my $self = shift;
+
+    return $self->_reg('solver');
+}
+
+sub _verifiers
+{
+    my $self = shift;
+
+    return $self->_reg('verifier');
+}
+
+sub has_solvers
+{
+    my $self = shift;
+
+    return $self->_solvers->is_full;
+}
+
+sub register
+{
+    my ($self, $type) = @_;
+
+    return $self->_reg($type)->register;
+}
+
+sub remove
+{
+    my ($self, $type, $id) = @_;
+
+    return $self->_reg($type)->remove($id);
+}
+
+sub is_verifiers_active
+{
+    my $self = shift;
+
+    return $self->_verifiers->is_active;
+}
+
+package QueueManager;
+
+use strict;
+use warnings;
+
+our @ISA = (qw(Object));
+
+__PACKAGE__->make_accessors([qw(_active _log_cb _queue _service)]);
+
+sub _log
+{
+    my $self = shift;
+
+    return $self->_log_cb->(@_);
+}
+
+sub _init
+{
+    my $self = shift;
+    my $args = shift;
+
+    $self->_queue([]);
+    # The state variables of the verifiers and solvers.
+    $self->_active(QueueServerRegistry->new);
+    $self->_service(QueueServerSocket->new);
+    $self->_log_cb($args->{log_cb});
+
+    return;
+}
+
+sub extract
+{
+    my $self = shift;
+
+    return shift(@{$self->_queue});
+}
+
+sub add_item
+{
+    my $self = shift;
+    my $item = shift;
+
+    push @{$self->_queue}, $item;
+
+    return;
+}
+
+sub display_queue
+{
+    my $self = shift;
+
+    return 
+    "[\n" . join('', 
+        map { 
+        sprintf(qq/{Min=%d Max=%d Path='%s'}\n/, 
+        $_->{min_idx}, $_->{max_idx}, $_->{path_to_dir}
+        )
+        } @{$self->_queue}
+    ) . "]";
+}
+
+__PACKAGE__->make_private_delegates('_active',
+    [qw(has_solvers register remove is_verifiers_active)]
+);
+
+__PACKAGE__->make_private_delegates('_service', [qw(write new_client)]);
+
+sub _cmd_ENQ
+{
+    my $self = shift;
+
+    return $self->add_item( $self->_service->read_queue_item );
+}
+
+sub read_line
+{
+    my $self = shift;
+
+    return $self->_service->read_line(@_);
+}
+
+sub _cmd_GET_NEXT
+{
+    my $man = shift;
+    if (defined(my $item = $man->extract))
+    {
+        $man->_write("DATA", @{$item}{@QUEUE_ITEM_FIELDS_ORDER});
+    }
+    elsif (! $man->_has_solvers)
+    {
+        $man->_write("FINISH");
+    }
+    else
+    {
+        $man->_write("WAIT");
+    }
+
+    return;
+}
+
+sub _handle_get_id
+{
+    my ($man, $type) = @_;
+
+    my $id = $man->_register($type);
+    $man->_write($id);
+
+    $man->_log("Queue manager registered $type $id\n");
+
+    return;
+}
+
+sub _cmd_GET_ID_FOR_VERIFIER
+{
+    return shift->_handle_get_id('verifier');
+}
+
+sub _cmd_GET_ID_FOR_SOLVER
+{
+    return shift->_handle_get_id('solver');
+}
+
+sub _terminate
+{
+    my ($self, $type) = @_;
+
+    return $self->_remove($type, $self->read_line());
+}
+
+sub _cmd_TERMINATE_VERIFIER
+{
+    return shift->_terminate('verifier');
+}
+
+sub _cmd_TERMINATE_SOLVER
+{
+    return shift->_terminate('solver');
+}
+
+sub _handle_client
+{
+    my $man = shift;
+
+    my $cmd = $man->_new_client;
+
+    my $meth = "_cmd_$cmd";
+
+    return $man->$meth();
+}
+
+sub main_loop
+{
+    my $man = shift;
+
+    while ( $man->_is_verifiers_active )
+    {
+        $man->_handle_client;
+    }
+    continue
+    {
+        $man->_service->_disconnect_client;
+        $man->_log("QUEUE == " . $man->display_queue . "\n\n");
+    }
+
+    return;
+}
+
+package main;
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Carp;
+use IO::Handle;
+use IO::Socket::UNIX;
+use Fcntl qw(:flock);
+use File::Path qw(rmtree);
+use Data::Dumper;
+
+use Test::Trap qw( trap $trap 
+    :flow:stderr(systemsafe):stdout(systemsafe):warn 
+);
+
+STDOUT->autoflush(1);
+STDERR->autoflush(1);
+
+sub _trap_cmd_line
+{
+    my $cmd_line = shift;
+
+    my $exit_code;
+
+    trap
+    {
+        $exit_code = system(@$cmd_line);
+    };
+
+    return ($exit_code, $trap->stdout(), $trap->stderr());
+}
+
+sub _run_cmd_line
+{
+    my $cmd_line = shift;
+
+    my ($exit_code, $stdout, $stderr) = _trap_cmd_line($cmd_line);
+
+    if ($exit_code != 0)
+    {
+        _break_on_fault(
+            "\n\n\nstderr=\n<<<\n$stderr\n>>>\n\n"
+            .  "stdout=\n<<<\n$stdout\n>>>\n"
+        );
+        return "ERROR";
+    }
+    else
+    {
+        return;
+    }
+}
+
+sub _getlines
+{
+    my $filename = shift;
+
+    open my $in, "<", $filename
+        or die "Cannot open '$filename' for slurping - $!";
+
+    my @l = <$in>;
+
+    close($in);
+
+    chomp(@l);
+
+    return \@l;
+}
+
+sub _slurp
+{
+    my $filename = shift;
+
+    open my $in, "<", $filename
+        or die "Cannot open '$filename' for slurping - $!";
+
+    local $/;
+    my $contents = <$in>;
+
+    close($in);
+
+    return $contents;
+}
+
+if (!defined($ENV{'FCS_PATH'}))
+{
+    Carp::confess("FCS_PATH is not defined.");
+}
+
+my $FCS_PATH = $ENV{FCS_PATH};
+
+sub _fcs_file
+{
+    my ($basename) = @_;
+
+    return "$FCS_PATH/$basename";
+}
+
+
+$RANGE_TO_VERIFY_SOCKET_PATH = _fcs_file('range-queue.sock');
+
+my $GLOBAL_CONFIG_PATH = _fcs_file('global-params.txt');
+my $SUMMARY_LOCK_PATH = _fcs_file('summary.lock');
+my $SUMMARY_FILE_PATH = _fcs_file('summary.txt');
+my $STATS_FILE_PATH = _fcs_file('summary.stats.perl-storable');
+my $FAULT_FILE_PATH = _fcs_file('FAULT.txt');
+my $SYNC_LOCK_PATH = _fcs_file('sync.lock');
+my $SYNC_FILE_PATH = _fcs_file('sync.txt');
+my $RESULTS_DIRS_BASE_PATH = _fcs_file('results');
+
+my $RANGE_SOLVER_EXE = _fcs_file('freecell-solver-range-parallel-solve');
+
+my $conf_lines = eval { _getlines($GLOBAL_CONFIG_PATH) };
+
+# Number of seconds for verifiers to wait before querying the queue manager
+# again.
+my $NUM_SECONDS_FOR_VERIFIERS_TO_WAIT = 15;
+
+if ($@)
+{
+    _mode_setup();
+    exit(0);
+}
+
+# my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVING_PROCESSES, 
+#     $NUM_VERIFYING_PROCESSES, $NUM_SOLVER_DEALS_PER_BATCH) = @$conf_lines;
+
+my ($max_deal_idx, $preset_conf, $solver_theme_conf, $should_verify, $min_idx, $NUM_SOLVER_DEALS_PER_BATCH) =
+    @$conf_lines;
+
+
+my $SOLVER_INCREMENT = $NUM_SOLVER_DEALS_PER_BATCH - 1;
+my $SOLVER_STEP = 100;
+
+my @preset = split(/\s+/, $preset_conf);
+my @solver_theme = split(/\s+/, $solver_theme_conf);
+
+my @VERIFY_RANGE_COMMAND_START =
+(
+    $^X, "scripts/verify-range-in-dir-and-collect-stats.pl",
+    '--summary-lock', $SUMMARY_LOCK_PATH,
+    '--summary-file', $SUMMARY_FILE_PATH,
+    '--summary-stats-file', $STATS_FILE_PATH,
+    ($should_verify ? ('--verify') : ('--noverify')),
+    @preset,
+);
+
+my @RANGE_SOLVER_COMMAND_END =
+(
+    @solver_theme, @preset, '-p', '-t', '-sam',
+);
+
+sub _log
+{
+    print @_;
+
+    return;
+}
+
+# The lock needs to be kept.
+sub _update_sync_file
+{
+    my $callback = shift;
+
+    my $lines = _getlines($SYNC_FILE_PATH);
+
+    my %data;
+
+    my @order = qw(NEXT_DEAL_IDX NEXT_ID CONTINUE);
+    @data{@order} = @$lines;
+
+    my $ret = $callback->(\%data);
+
+    open my $write_to_sync, '>', $SYNC_FILE_PATH
+        or Carp::confess("Cannot open sync file - $!");
+
+    print {$write_to_sync} map { $data{$_} , "\n" } @order;
+     
+    close ($write_to_sync);
+
+    return $ret;
+}
+
+my $mode;
+
+GetOptions(
+    'mode=s' => \$mode,
+) or die "Cannot set GetOptions";
+
+__PACKAGE__->can("_mode_$mode")->();
+
+sub _write_to_file
+{
+    my $filename = shift;
+    my $mode = shift;
+
+    open my $out, $mode, $filename
+        or Carp::confess("Cannot open '$filename' for writing - $!");
+
+    print {$out} @_;
+
+    close($out);
+
+    return;
+}
+
+sub _write_file
+{
+    my $filename = shift;
+    return _write_to_file($filename, '>', @_);
+}
+
+sub _append_to_file
+{
+    my $filename = shift;
+    return _write_to_file($filename, '>>', @_);
+}
+
+sub _break_on_fault
+{
+    my ($fault_string) = @_;
+
+    return _lock_sync(
+        sub {
+            _append_to_file($FAULT_FILE_PATH, $fault_string);
+            _halt_process();
+        },
+    );
+}
+
+sub _mode_setup
+{
+    foreach my $empty_file_path ($SUMMARY_LOCK_PATH, $SYNC_LOCK_PATH, )
+    {
+        _write_file($empty_file_path, '');
+    }
+
+    my $start_from = $ENV{FCS_MIN_DEAL_IDX};
+    my $deals_per_batch = ($ENV{FCS_DEALS_PER_BATCH} || 1000);
+
+    _write_file(
+        $GLOBAL_CONFIG_PATH, 
+        (map { "$_\n" } (
+            $ENV{FCS_MAX_DEAL_IDX},
+            $ENV{FCS_PRESET_CONFIG},
+            $ENV{FCS_SOLVER_THEME_CONFIG},
+            ($ENV{FCS_SHOULD_VERIFY} ? 1 : 0),
+            $start_from,
+            $deals_per_batch,
+        ))
+    );
+
+    _write_file($SYNC_FILE_PATH, "$start_from\n1\n1\n");
+
+    rmtree($RESULTS_DIRS_BASE_PATH, {});
+
+    if (!mkdir($RESULTS_DIRS_BASE_PATH))
+    {
+        Carp::confess("Unable to mkdir '$RESULTS_DIRS_BASE_PATH' - $!");
+    }
+
+    return;
+}
+
+sub _lock_and_update_sync_file
+{
+    my $callback = shift;
+
+    return _lock_sync(
+        sub
+        { 
+            return _update_sync_file( $callback ); 
+        }
+    );
+}
+
+sub _get_results_path
+{
+    my $id = shift;
+
+    return sprintf("%s/results-%09d", $RESULTS_DIRS_BASE_PATH, $id);
+}
+
+sub _make_results_path
+{
+    my $next_id = shift;
+
+    my $dir_path = _get_results_path($next_id);
+    if (!mkdir($dir_path))
+    {
+        _break_on_fault( "\n\n\nCannot mkdir '$dir_path' - '$!';\n" );
+
+        return;
+    }
+    else
+    {
+        return $dir_path;
+    }
+}
+
+sub _return_next_solve_params
+{
+    my $data = shift;
+
+    if ((! $data->{'CONTINUE'}) or 
+        ($data->{NEXT_DEAL_IDX} > $max_deal_idx))
+    {
+        return {stop => 1};
+    }
+    else
+    {
+        my $next_id = ($data->{NEXT_ID}++);
+        my $start_deal_idx = $data->{NEXT_DEAL_IDX};
+        my $end_deal_idx = $start_deal_idx + $SOLVER_INCREMENT;
+
+        if ($end_deal_idx > $max_deal_idx)
+        {
+            $end_deal_idx = $max_deal_idx;
+        }
+
+        $data->{NEXT_DEAL_IDX} = $end_deal_idx+1;
+
+        return
+        {
+            stop => 0, 
+            next_id => $next_id, 
+            start_deal_idx => $start_deal_idx, 
+            end_deal_idx => $end_deal_idx
+        };
+    }
+}
+
+sub _calc_next_solve_params
+{
+    return
+        _lock_and_update_sync_file(
+            \&_return_next_solve_params,
+        );
+}
+
+sub _mode_solve
+{
+    my $solver_id = _create_verify_conn()->get_solve_id();
+    _log("Starting Solver ID=$solver_id\n");
+
+    MAIN_LOOP:
+    while (1)
+    {
+        my $sync_result = _calc_next_solve_params();
+        if ($sync_result->{stop})
+        {
+            last MAIN_LOOP;
+        }
+
+        my ($next_id, $start_deal_idx, $end_deal_idx) =
+            @{$sync_result}{qw(next_id start_deal_idx end_deal_idx)};
+
+        my $dir_path = _make_results_path($next_id);
+        if (! defined($dir_path)) {
+            last MAIN_LOOP;
+        }
+
+        _log("Solving ID=$solver_id Min=$start_deal_idx Max=$end_deal_idx\n");
+
+        if (_run_cmd_line(
+                [
+                    $RANGE_SOLVER_EXE,
+                    $start_deal_idx, $end_deal_idx, $SOLVER_STEP,
+                    '--solutions-directory', "$dir_path/",
+                    @RANGE_SOLVER_COMMAND_END,
+                ]
+            )
+        )
+        {   
+            last MAIN_LOOP;
+        }
+
+        _create_verify_conn()->enqueue_range_to_verify(
+            $dir_path, $start_deal_idx, $end_deal_idx
+        );
+    }
+
+    _log("Terminating Solver ID=$solver_id\n");
+    _create_verify_conn()->terminate_solve($solver_id);
+
+    return;
+}
+
+sub _display_queue
+{
+    my $queue = shift;
+}
+
+sub _mode_queue_server
+{
+    return QueueManager->new({log_cb => \&_log})->main_loop;
+}
+
+sub _halt_process
+{
+    _update_sync_file(
+        sub
+        {
+            my $data = shift;
+
+            $data->{CONTINUE} = 0;
+
+            return;
+        }
+    );
+
+    return;
+}
+
+sub _lock_sync
+{
+    my $callback = shift;
+
+    open my $lock_fh, ">", $SYNC_LOCK_PATH
+        or Carp::confess ("Cannot lock summary-lock - $!");
+
+    flock ($lock_fh, LOCK_EX) 
+        or Carp::confess("Cannot lock summary lock - $!");
+
+    my $ret = $callback->();
+
+    close ($lock_fh);
+
+    return $ret;
+}
+
+sub _create_verify_conn
+{
+    return VerifierConn->new;
+}
+
+sub _mode_verify
+{
+    my $verifier_id = _create_verify_conn()->get_verify_id();
+    _log("Starting Verifier ID=$verifier_id\n");
+
+    MAIN_LOOP:
+    while (1)
+    {
+        my $results = _create_verify_conn()->verify_get_next();
+        my $status = $results->{'status'};
+
+        if ($status eq "WAIT")
+        {
+            sleep($NUM_SECONDS_FOR_VERIFIERS_TO_WAIT);
+        }
+        elsif ($status eq "FINISH")
+        {
+            last MAIN_LOOP;
+        }
+        elsif ($status eq "DATA")
+        {
+            my ($path_to_dir, $min_idx, $max_idx) = @{$results->{data}};
+
+            _log("Verifying ID=$verifier_id Min=$min_idx Max=$max_idx\n");
+
+            if (_run_cmd_line(
+                    [
+                        @VERIFY_RANGE_COMMAND_START,
+                        '--min-idx', $min_idx, '--max-idx', $max_idx,
+                        # Finally the path of the directory to process.
+                        $path_to_dir,
+                    ]
+                )
+            )
+            {
+                last MAIN_LOOP;
+            }
+
+            rmtree( $path_to_dir, {});
+        }
+    }
+
+    _log("Terminating Verifier ID=$verifier_id\n");
+    _create_verify_conn()->terminate_verify($verifier_id);
+
+    return;
+}
+
+sub _mode_halt
+{
+    _break_on_fault('User request to stop using the "halt" command.');
+
+    return;
+}
+
+1;
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2011 by Shlomi Fish
+
+This program is distributed under the MIT (X11) License:
+L<http://www.opensource.org/licenses/mit-license.php>
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+=cut
