@@ -143,3 +143,23 @@ the Microsoft (or pseudo-Microsoft) deals even for deals larger than 32,000.
 * Optimize the Soft-DFS and Random-DFS tests_list implementation (direct
 pointers to test functions).
  
+* Refactor +scripts/parallel-range-solver-total+ - extract the section
+marked as TODO .
+
+* Make sure it also keeps track of min/max of the counts.
+
+* Create a meaningful man-page from +README.xml+ / +USAGE.xml+ etc.
+
+* Add some command line examples to +USAGE.txt+ .
+
+* Also add the dead-ends trimming to the BeFS scan.
+** Investigate the following crash:
+
+--------------------------------------------------------
+set args --method soft-dfs --st-name 'dfs' -nst --method a-star --st-name 'befs' --trim-max-stored-states 100 --prelude '200@befs,100@dfs,1000@befs,500000@dfs' -s -i -p -t -sam 1941.board
+b main
+r
+b scans.c:1958 if (top_card_idx >= 7+12)
+c
+--------------------------------------------------------
+

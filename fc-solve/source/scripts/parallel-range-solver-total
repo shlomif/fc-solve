@@ -137,7 +137,6 @@ sub _init
 {
     my ($self,$args) = @_;
 
-    # TODO : Add error checking - consult some people.
     my $sock = IO::Socket::UNIX->new(
             Type => SOCK_STREAM(),
             Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
@@ -254,7 +253,6 @@ sub _init
 {
     my ($self,$args) = @_;
 
-    # TODO : Add error checking - consult some people.
     my $server_sock = IO::Socket::UNIX->new(
             Type => SOCK_STREAM(),
             Local => $RANGE_TO_VERIFY_SOCKET_PATH,
