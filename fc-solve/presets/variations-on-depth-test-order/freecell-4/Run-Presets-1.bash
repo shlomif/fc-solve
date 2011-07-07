@@ -37,3 +37,5 @@ _preset "15step" \
 _preset "scan23" --method soft-dfs -to 0123456789 -dto 19,0126394875
 
 _preset "01234567" -to 01234567
+
+_preset "0123456" -to 0123456
