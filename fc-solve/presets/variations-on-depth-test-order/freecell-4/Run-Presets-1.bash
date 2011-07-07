@@ -39,3 +39,5 @@ _preset "scan23" --method soft-dfs -to 0123456789 -dto 19,0126394875
 _preset "01234567" -to 01234567
 
 _preset "0123456" -to 0123456
+
+_preset "flamingo" -to 01234567 -dto 30,0123876594
