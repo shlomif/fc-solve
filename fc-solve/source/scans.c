@@ -337,7 +337,8 @@ static void free_states(fc_solve_instance_t * instance)
             { \
             printf("%s. Depth=%d ; the_soft_Depth=%ld ; Iters=%d ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
                     message, \
-                    soft_thread->method_specific.soft_dfs.depth, (the_soft_dfs_info-soft_thread->method_specific.soft_dfs.soft_dfs_info), \
+                    soft_thread->method_specific.soft_dfs.depth, \
+                    (long int)(the_soft_dfs_info-soft_thread->method_specific.soft_dfs.soft_dfs_info), \
                     instance->num_times, the_soft_dfs_info->test_index, \
                     the_soft_dfs_info->current_state_index, \
                     (derived_states_list ? derived_states_list->num_states : -1) \
