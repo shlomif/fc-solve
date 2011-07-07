@@ -19,6 +19,8 @@ function _preset()
 
 _preset "default"
 
+_preset "eightl" -to 01847296 -dto 12,014765 -dto 20,0167854 -dto 40,01236874
+
 _preset "10step" \
     -to 01234567 \
     -dto 10,0187465 \
