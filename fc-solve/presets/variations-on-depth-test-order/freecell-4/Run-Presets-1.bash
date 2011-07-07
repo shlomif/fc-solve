@@ -49,6 +49,8 @@ _preset "14step" \
     -dto 14,0187465 \
     -dto 28,0134587
 
+_preset "14_24step" -to 01234567  -dto 14,0187465  -dto 24,0134587
+
 _preset "scan23" --method soft-dfs -to 0123456789 -dto 19,0126394875
 
 _preset "01234567" -to 01234567
