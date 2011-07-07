@@ -41,3 +41,4 @@ _preset "01234567" -to 01234567
 _preset "0123456" -to 0123456
 
 _preset "flamingo" -to 01234567 -dto 30,0123876594
+_preset "flamingo100" -to 01234567 -dto 100,0123876594
