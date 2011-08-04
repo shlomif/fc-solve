@@ -84,6 +84,7 @@ sub verify_solution_test
 
     my $id = $args->{id};
 
+    my $board = $args->{board};
     my $deal = $args->{deal};
     my $msdeals = $args->{msdeals};
     my $output_file = $args->{output_file};
@@ -106,7 +107,14 @@ sub verify_solution_test
                 ? "pi-make-microsoft-freecell-board $deal | " 
                 : "make_pysol_freecell_board.py $deal $variant | "
         ) . $fc_solve_exe . " ";
+
     my $cl_suffix = "-g $variant " . shell_quote(@$theme) . " -p -t -sam";
+
+    if (defined($board))
+    {
+        $cl_prefix = $fc_solve_exe;
+        $cl_suffix .= " " . shell_quote($board);
+    }
 
     if (! $output_file)
     {

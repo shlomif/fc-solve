@@ -878,7 +878,9 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
                 str++;
                 while (*str == '-')
                     str++;
-                c = fc_solve_u2p_card_number(str);
+                /* Workaround for fc_solve_u2p_card_number's willingness
+                 * to designate the string '0' as 10. */
+                c = ((str[0] == '0') ? 0 : fc_solve_u2p_card_number(str));
                 while (
                         (*str != ' ') &&
                         (*str != '\t') &&

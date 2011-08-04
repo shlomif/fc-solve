@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
-
+use Test::More tests => 21;
+use File::Spec;
 use lib './t/lib';
 
 use Games::Solitaire::FC_Solve::CheckResults;
@@ -165,6 +165,20 @@ verify_solution_test(
     "Verifying 1941 with --cache-limit set to a different value",
 );
 
+# 
+# We discovered that Freecell Solver did not properly handle the foundations
+# with 0's like "H-0" , "S-0", etc. This is as opposed to what exists in the
+# README.txt file.
+#
+# This test aims to fix it.
+
+# TEST
+verify_solution_test({id => "freecell24_board_with_founds_0", deal => 24, 
+        board => File::Spec->catfile(
+            File::Spec->curdir(), 't', 'data', 'sample-boards', 
+            'ms24-with-founds-0.txt'
+        )
+    }, "Properly handle foundations like H-0 S-0 etc.");
 # Store the changes at the end so they won't get lost.
 $verifier->end();
 
