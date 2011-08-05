@@ -712,9 +712,9 @@ static GCC_INLINE void fc_solve_state_init(
 #endif
 }
 
-static const char * const fc_solve_freecells_prefixes[] = { "FC:", "Freecells:", "Freecell:", ""};
+static const char * const fc_solve_freecells_prefixes[] = { "FC:", "Freecells:", "Freecell:", NULL};
 
-static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:", "Founds:", "Foundations:", "Foundation:", "Found:", ""};
+static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:", "Founds:", "Foundations:", "Foundation:", "Found:", NULL};
 #ifdef WIN32
 #define strncasecmp(a,b,c) (strnicmp((a),(b),(c)))
 #endif
@@ -736,9 +736,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
     fcs_cards_column_t col;
     int first_line;
 
-    int prefix_found;
-    const char * const * prefixes;
-    int i;
+    const char * const * prefix;
     int decks_index[4];
 
     fc_solve_state_init(
@@ -774,21 +772,19 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
             }
             str++;
         }
-        first_line = 0;
 
-        prefixes = fc_solve_freecells_prefixes;
-        prefix_found = 0;
-        for(i=0;prefixes[i][0] != '\0'; i++)
+        first_line = 0;
+        
+        for (prefix = fc_solve_freecells_prefixes ; (*prefix) ; prefix++)
         {
-            if (!strncasecmp(str, prefixes[i], strlen(prefixes[i])))
+            if (!strncasecmp(str, (*prefix), strlen(*prefix)))
             {
-                prefix_found = 1;
-                str += strlen(prefixes[i]);
+                str += strlen(*prefix);
                 break;
             }
         }
 
-        if (prefix_found)
+        if (*prefix)
         {
             for(c=0;c<freecells_num;c++)
             {
@@ -843,19 +839,16 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c(
             continue;
         }
 
-        prefixes = fc_solve_foundations_prefixes;
-        prefix_found = 0;
-        for(i=0;prefixes[i][0] != '\0'; i++)
+        for(prefix = fc_solve_foundations_prefixes ; (*prefix) ; prefix++)
         {
-            if (!strncasecmp(str, prefixes[i], strlen(prefixes[i])))
+            if (!strncasecmp(str, (*prefix), strlen(*prefix)))
             {
-                prefix_found = 1;
-                str += strlen(prefixes[i]);
+                str += strlen(*prefix);
                 break;
             }
         }
 
-        if (prefix_found)
+        if (*prefix)
         {
             int d;
 
