@@ -453,6 +453,15 @@ Open source under the restrictive GPLv3 licence.
 </p>
 </li>
 
+<li>
+<p>
+<a href="http://www.solitairey.com/">Solitairey online patience game</a> - contains
+a Freecell solver written in JavaScript. The
+<a href="https://github.com/pharrington/Solitairey">source code</a> for it is
+available on github, under a non-specified licence.
+</p>
+</li>
+
 </ul>
 
 <h2 id="reviews">Reviews of Freecell Solver</h2>
