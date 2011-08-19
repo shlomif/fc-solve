@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More tests => 26;
 use Test::Differences;
 
 {
@@ -602,6 +602,34 @@ EOF
         $got,
         $expected,
         "make_pysol -M board No. 100 - the FC-Pro board.",
+    );
+}
+
+{
+    my $got = `python ../board_gen/make_pysol_freecell_board.py --pysolfc -t 2 all_in_a_row`;
+
+    my $expected = <<"EOF";
+Foundations: -
+QD 6D KS 2H
+QC 2D 7C 3H
+KC 9C 6S AD
+3C TD 4H 7H
+4C JC AC 3D
+2C 8C 8H 5H
+KD 6C AH 8D
+5C 8S 9S KH
+4D 4S TC 7D
+JD 5D 2S 5S
+JS QH 3S TH
+6H 7S TS JH
+QS 9D 9H AS
+EOF
+
+    # TEST
+    eq_or_diff (
+        $got,
+        $expected,
+        "PySolFC black_hole 2",
     );
 }
 

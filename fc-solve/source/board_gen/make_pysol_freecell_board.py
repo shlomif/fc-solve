@@ -455,6 +455,7 @@ class Game:
                 "beleaguered_castle" : [ "beleaguered_castle", "streets_and_alleys", "citadel" ],
                 "fan" : None,
                 "black_hole" : None,
+                "all_in_a_row" : None,
         }
 
     def __init__(self, game_id, game_num, which_deals, print_ts):
@@ -669,6 +670,11 @@ class Game:
         ret = scards + cards
         return ret
 
+    def _shuffleHookMoveToTop(self, cards, func, ncards=999999):
+        # move cards to top of the Talon (i.e. last cards to be dealt)
+        cards, scards = self._shuffleHookMoveSorter(cards, func, ncards)
+        return cards + scards
+
     def black_hole(game):
         game.board = Board(17)
 
@@ -678,6 +684,14 @@ class Game:
         game.cyclical_deal(52-1, 17)
 
         print "Foundations: AS"
+
+    def all_in_a_row(game):
+        game.board = Board(13)
+
+        # move Ace to bottom of the Talon (i.e. last cards to be dealt)
+        game.cards = game._shuffleHookMoveToTop(game.cards, lambda c: (c.id == 13, c.suit), 1)
+        game.cyclical_deal(52, 13)
+        print "Foundations: -"
 
     def beleaguered_castle(game):
         aces_up = game.game_id in ("beleaguered_castle", "citadel")
