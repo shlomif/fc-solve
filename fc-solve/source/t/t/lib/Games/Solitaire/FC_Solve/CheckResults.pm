@@ -5,18 +5,18 @@ use warnings;
 
 use YAML::XS qw(DumpFile LoadFile);
 
-use base 'Class::Accessor';
+use base 'Games::Solitaire::Verify::Base';
 use String::ShellQuote;
 use Carp;
 
 use Test::More;
 use Games::Solitaire::FC_Solve::ShaAndLen;
 
-__PACKAGE__->mk_accessors(qw(
+__PACKAGE__->mk_acc_ref([qw(
     digests_storage_fn
     digests_storage
     trim_stats
-    ));
+    )]);
 
 sub new
 {

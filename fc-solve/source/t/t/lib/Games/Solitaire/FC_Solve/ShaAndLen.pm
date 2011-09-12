@@ -5,12 +5,12 @@ use warnings;
 
 use Digest::SHA;
 
-use base 'Class::Accessor';
+use base 'Games::Solitaire::Verify::Base';
 
-__PACKAGE__->mk_accessors(qw(
+__PACKAGE__->mk_acc_ref([qw(
     _len
     _hasher
-    ));
+    )]);
 
 sub new
 {
