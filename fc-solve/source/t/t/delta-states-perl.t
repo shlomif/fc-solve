@@ -59,7 +59,7 @@ EOF
     );
 
     # TEST
-    ok ($delta);
+    ok ($delta, 'Object was initialized correctly.');
 }
 
 =head1 COPYRIGHT AND LICENSE
