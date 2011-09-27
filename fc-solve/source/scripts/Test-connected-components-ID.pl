@@ -15,6 +15,9 @@ my $two_fc_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_
 
 $two_fc_variant->num_freecells(2);
 
+my %components = ();
+my %states_to_components = ();
+
 while (my $line = <$dump_fh>)
 {
     if (($line =~ m{^Foundations}) .. ($line !~ /\S/))
@@ -82,5 +85,23 @@ while (my $line = <$dump_fh>)
         }
 
         my $component_id = $found_str . ';' . join(',', @columns_non_free_lens);
+
+        if (exists($states_to_components{$state_str}))
+        {
+            if ($states_to_components{$state_str} ne $component_id)
+            {
+                die "MisMATCH! <<<$state_str>>> ; <<<$component_id>>> ; <<<$states_to_components>>>";
+            }
+        }
+        elsif (exists($components{$component_id}))
+        {
+            die "Two component IDs with different components - <<<$component_id>>>!";
+        }
+        else
+        {
+            $components{$component_id} = 1;
+            # Do a BrFS scan on the fully connected component.
+
+        }
     }
 }
