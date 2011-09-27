@@ -3,11 +3,12 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
 use File::Spec;
+use Test::Differences;
 
 use Games::Solitaire::Verify::Solution;
 
@@ -55,6 +56,15 @@ sub set_derived
     return;
 }
 
+my @suits = (qw(H C D S));
+
+sub get_foundations_bits
+{
+    my ($self) = @_;
+
+    return [map { [4 => $self->_derived_state->get_foundation_value($_, 0)] } @suits];
+}
+
 package main;
 
 {
@@ -94,6 +104,19 @@ Freecells:  8D  QD
 : 4C 4D 5S 2S JS 8H
 EOF
         }
+    );
+
+    # TEST
+    eq_or_diff(
+        $delta->get_foundations_bits(),
+        # Given as an array reference of $num_bits => $bits array refs.
+        [
+            [4 => 0,], # Hearts
+            [4 => 2,], # Clubs
+            [4 => 1,], # Diamonds
+            [4 => 0,], # Spades
+        ],
+        'get_foundations_bits works',
     );
 }
 
