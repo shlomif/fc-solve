@@ -15,9 +15,25 @@ package FCS::DeltaStater;
 
 use base 'Games::Solitaire::Verify::Base';
 
+my $two_fc_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
+
+$two_fc_variant->num_freecells(2);
+
+__PACKAGE__->mk_acc_ref([qw(_init_state)]);
+
 sub _init
 {
     my ($self, $args) = @_;
+
+    $self->_init_state(
+        Games::Solitaire::Verify::State->new(
+            {
+                string => $args->{init_state_str},
+                variant => 'custom',
+                variant_params => $two_fc_variant,
+            },
+        )
+    );
 
     return;
 }
