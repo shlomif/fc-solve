@@ -19,7 +19,7 @@ my $two_fc_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_
 
 $two_fc_variant->num_freecells(2);
 
-__PACKAGE__->mk_acc_ref([qw(_init_state)]);
+__PACKAGE__->mk_acc_ref([qw(_derived_state _init_state)]);
 
 sub _init
 {
@@ -38,9 +38,27 @@ sub _init
     return;
 }
 
+sub set_derived
+{
+    my ($self, $args) = @_;
+
+    $self->_derived_state(
+        Games::Solitaire::Verify::State->new(
+            {
+                string => $args->{state_str},
+                variant => 'custom',
+                variant_params => $two_fc_variant,
+            }
+        )
+    );
+
+    return;
+}
+
 package main;
 
 {
+    # MS Freecell No. 982 Initial state.
     my $delta = FCS::DeltaStater->new(
         {
             init_state_str => <<'EOF'
@@ -60,6 +78,23 @@ EOF
 
     # TEST
     ok ($delta, 'Object was initialized correctly.');
+
+    $delta->set_derived(
+        {
+            state_str => <<'EOF'
+Foundations: H-0 C-2 D-A S-0 
+Freecells:  8D  QD
+: 6D 3C 3H KD 8C 5C
+: TC 9C 9H 8S
+: 2H 2D 3S 5D 9D QS KS QH JC
+: 6S TD QC KH AS AH 7C 6H
+: KC 4H TH 7S
+: 9S
+: 7H 7D JD JH TS 6C 5H 4S 3D
+: 4C 4D 5S 2S JS 8H
+EOF
+        }
+    );
 }
 
 =head1 COPYRIGHT AND LICENSE
