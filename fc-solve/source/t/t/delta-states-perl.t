@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -129,6 +129,18 @@ sub _get_suit_bit
     return (($suit eq 'H' || $suit eq 'C') ? 0 : 1);
 }
 
+my %suit_to_idx = do { 
+    my $s = Games::Solitaire::Verify::Card->get_suits_seq();
+    (map { $s->[$_] => $_ } (0 .. $#$s)) ; 
+};
+
+sub _get_card_bitmask
+{
+    my ($self, $card) = @_;
+
+    return ($card->rank() | ($suit_to_idx{$card->suit()} << 4));
+}
+
 sub get_column_encoding
 {
     my ($self, $col_idx) = @_;
@@ -142,13 +154,22 @@ sub get_column_encoding
     my $col_len = $col->len();
     my $num_derived_cards = $col_len - $num_orig_cards;
 
+    my $num_cards_in_seq = $num_derived_cards;
+    my @init_card;
+    if (($num_orig_cards == 0) && $num_derived_cards)
+    {
+        @init_card = ([6 => $self->_get_card_bitmask($col->pos(0))]);
+        $num_cards_in_seq--;
+    }
+
     return
     [ 
         [$self->_columns_initial_lens->[$col_idx] => $num_orig_cards], 
         [4 => $num_derived_cards ],
+        @init_card,
         (
             map { [1 => $self->_get_suit_bit($col->pos($_))] }
-            ($col_len - $num_derived_cards .. $col_len - 1)
+            ($col_len - $num_cards_in_seq .. $col_len - 1)
         ),
     ];
 }
@@ -229,6 +250,18 @@ EOF
         ],
         'get_column_lengths_bits() works',
     );
+    # TEST
+    eq_or_diff(
+        $delta->get_column_encoding(5),
+        [
+            [ 3 => 0 ], # Orig len.
+            [ 4 => 1 ], # Derived len. 
+            [ 6 => (9 | (3 << 4)) ], # 9S
+        ],
+        'get_column_lengths_bits() works',
+    );
+
+    # TEST
 }
 
 =head1 COPYRIGHT AND LICENSE
