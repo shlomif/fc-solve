@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -262,6 +262,15 @@ EOF
     );
 
     # TEST
+    eq_or_diff(
+        $delta->get_column_encoding(1),
+        [
+            [ 3 => 3 ], # Orig len.
+            [ 4 => 1 ], # Derived len.
+            $DS, # 8S
+        ],
+        'column No. 1',
+    );
 }
 
 =head1 COPYRIGHT AND LICENSE
