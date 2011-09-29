@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -20,7 +20,40 @@ my $two_fc_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_
 
 $two_fc_variant->num_freecells(2);
 
-__PACKAGE__->mk_acc_ref([qw(_derived_state _init_state)]);
+__PACKAGE__->mk_acc_ref([qw(_derived_state _init_state _columns_initial_lens)]);
+
+sub _get_column_orig_num_cards
+{
+    my ($self, $state, $col_idx) = @_;
+
+    my $col = $state->get_column($col_idx);
+    my $num_cards = $col->len();
+
+    CALC_NUM_CARDS:
+    while ($num_cards >= 2)
+    {
+        my $child_card = $col->pos($num_cards - 1);
+        my $parent_card = $col->pos($num_cards - 2);
+        if (!
+            (($child_card->rank()+1 == $parent_card->rank())
+                && ($child_card->color() ne $parent_card->color()))
+        )
+        {
+            last CALC_NUM_CARDS;
+        }
+    }
+    continue
+    {
+        $num_cards--;
+    }
+
+    if ($num_cards == 1)
+    {
+        $num_cards = 0;
+    }
+
+    return $num_cards;
+}
 
 sub _init
 {
@@ -35,6 +68,28 @@ sub _init
             },
         )
     );
+
+    my $init_state = $self->_init_state;
+
+    my @columns_initial_bit_lens;
+
+    foreach my $col_idx (0 .. $init_state->num_columns() - 1)
+    {
+        my $num_cards = $self->_get_column_orig_num_cards($init_state, $col_idx);
+
+        my $bitmask = 1;
+        my $num_bits = 0;
+
+        while ($bitmask <= $num_cards)
+        {
+            $num_bits++;
+            $bitmask <<= 1;
+        }
+
+        push @columns_initial_bit_lens, $num_bits;
+    }
+
+    $self->_columns_initial_lens(\@columns_initial_bit_lens);
 
     return;
 }
@@ -63,6 +118,23 @@ sub get_foundations_bits
     my ($self) = @_;
 
     return [map { [4 => $self->_derived_state->get_foundation_value($_, 0)] } @suits];
+}
+
+sub get_column_encoding
+{
+    my ($self, $col_idx) = @_;
+
+    my $derived = $self->_derived_state();
+
+    my $col = $derived->get_column($col_idx);
+
+    my $num_orig_cards = $self->_get_column_orig_num_cards($derived, $col_idx);
+
+    return
+    [ 
+        [$self->_columns_initial_lens->[$col_idx] => $num_orig_cards], 
+        [4 => ($col->len() - $num_orig_cards) ],
+    ];
 }
 
 package main;
@@ -117,6 +189,16 @@ EOF
             [4 => 0,], # Spades
         ],
         'get_foundations_bits works',
+    );
+
+    # TEST
+    eq_or_diff(
+        $delta->get_column_encoding(0),
+        [
+            [ 3 => 6 ], # Orig len.
+            [ 4 => 0 ], # Derived len. 
+        ],
+        'get_column_lengths_bits() works',
     );
 }
 
