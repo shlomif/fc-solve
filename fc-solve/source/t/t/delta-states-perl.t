@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -120,6 +120,15 @@ sub get_foundations_bits
     return [map { [4 => $self->_derived_state->get_foundation_value($_, 0)] } @suits];
 }
 
+sub _get_suit_bit
+{
+    my ($self, $card) = @_;
+
+    my $suit = $card->suit();
+
+    return (($suit eq 'H' || $suit eq 'C') ? 0 : 1);
+}
+
 sub get_column_encoding
 {
     my ($self, $col_idx) = @_;
@@ -130,10 +139,17 @@ sub get_column_encoding
 
     my $num_orig_cards = $self->_get_column_orig_num_cards($derived, $col_idx);
 
+    my $col_len = $col->len();
+    my $num_derived_cards = $col_len - $num_orig_cards;
+
     return
     [ 
         [$self->_columns_initial_lens->[$col_idx] => $num_orig_cards], 
-        [4 => ($col->len() - $num_orig_cards) ],
+        [4 => $num_derived_cards ],
+        (
+            map { [1 => $self->_get_suit_bit($col->pos($_))] }
+            ($col_len - $num_derived_cards .. $col_len - 1)
+        ),
     ];
 }
 
@@ -197,6 +213,19 @@ EOF
         [
             [ 3 => 6 ], # Orig len.
             [ 4 => 0 ], # Derived len. 
+        ],
+        'get_column_lengths_bits() works',
+    );
+
+    my $HC = [ 1 => 0, ];
+    my $DS = [ 1 => 1, ];
+    # TEST
+    eq_or_diff(
+        $delta->get_column_encoding(1),
+        [
+            [ 3 => 3 ], # Orig len.
+            [ 4 => 1 ], # Derived len. 
+            $DS, # 8S
         ],
         'get_column_lengths_bits() works',
     );
