@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -113,6 +113,8 @@ sub set_derived
 
 my @suits = (qw(H C D S));
 
+# NOTE : Not used because it can be calculated from the freecells and the 
+# columns.
 sub get_foundations_bits
 {
     my ($self) = @_;
@@ -171,6 +173,20 @@ sub get_column_encoding
             map { [1 => $self->_get_suit_bit($col->pos($_))] }
             ($col_len - $num_cards_in_seq .. $col_len - 1)
         ),
+    ];
+}
+
+sub get_freecells_encoding
+{
+    my ($self) = @_;
+
+    my $derived = $self->_derived_state();
+
+    return [
+        map {
+            my $card = $derived->get_freecell($_);
+            [ 6 => (defined($card) ? $self->_get_card_bitmask($card) : 0) ]
+        } (0 .. $derived->num_freecells()-1)
     ];
 }
 
@@ -270,6 +286,16 @@ EOF
             $DS, # 8S
         ],
         'column No. 1',
+    );
+
+    # TEST
+    eq_or_diff(
+        $delta->get_freecells_encoding(),
+        [
+            [ 6 => (8 | (2 << 4)) ],  # 8D
+            [ 6 => (12 | (2 << 4)) ], # QD
+        ],
+        'Freecells',
     );
 }
 
