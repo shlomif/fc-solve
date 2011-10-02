@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 9;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -11,6 +11,58 @@ use File::Spec;
 use Test::Differences;
 
 use Games::Solitaire::Verify::Solution;
+
+package BitWriter;
+
+use base 'Games::Solitaire::Verify::Base';
+
+__PACKAGE__->mk_acc_ref([qw(_bits_ref _bit_idx)]);
+
+sub _init
+{
+    my $self = shift;
+
+    $self->_bits_ref(\(my $s = ''));
+
+    $self->_bit_idx(0);
+
+    return;
+}
+
+sub _next_idx
+{
+    my $self = shift;
+
+    my $ret = $self->_bit_idx;
+
+    $self->_bit_idx($ret+1);
+
+    return $ret;
+}
+
+sub write
+{
+    my ($self, $len, $data) = @_;
+
+    while ($len)
+    {
+        vec(${$self->_bits_ref()}, $self->_next_idx(), 1) = ($data & 0b1);
+    }
+    continue
+    {
+        $len--;
+        $data >>= 1;
+    }
+
+    return;
+}
+
+sub get_bits
+{
+    my $self = shift;
+
+    return ${$self->_bits_ref()};
+}
 
 package FCS::DeltaStater;
 
@@ -296,6 +348,23 @@ EOF
             [ 6 => (12 | (2 << 4)) ], # QD
         ],
         'Freecells',
+    );
+}
+
+{
+    my $bit_writer = BitWriter->new;
+
+    # TEST
+    ok ($bit_writer, 'Init bit_writer');
+
+    $bit_writer->write(4 => 5);
+    $bit_writer->write(2 => 1);
+
+    # TEST
+    eq_or_diff(
+        $bit_writer->get_bits(),
+        chr(5 | (1 << 4)),
+        "write() test",
     );
 }
 
