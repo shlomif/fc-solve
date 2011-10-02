@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 12;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -62,6 +62,53 @@ sub get_bits
     my $self = shift;
 
     return ${$self->_bits_ref()};
+}
+
+package BitReader;
+
+use base 'Games::Solitaire::Verify::Base';
+
+__PACKAGE__->mk_acc_ref([qw(bits _bit_idx)]);
+
+sub _init
+{
+    my $self = shift;
+    my $args = shift;
+
+    $self->bits($args->{bits});
+
+    $self->_bit_idx(0);
+
+    return;
+}
+
+sub _next_idx
+{
+    my $self = shift;
+
+    my $ret = $self->_bit_idx;
+
+    $self->_bit_idx($ret+1);
+
+    return $ret;
+}
+
+sub read 
+{
+    my ($self, $len) = @_;
+
+    my $idx = 0;
+    my $ret = 0;
+    while ($idx < $len)
+    {
+        $ret |= (vec($self->bits(), $self->_next_idx(), 1) << $idx);
+    }
+    continue
+    {
+        $idx++;
+    }
+
+    return $ret;
 }
 
 package FCS::DeltaStater;
@@ -366,6 +413,19 @@ EOF
         chr(5 | (1 << 4)),
         "write() test",
     );
+}
+
+{
+    my $bit_reader = BitReader->new({ bits => chr(3 | (4 << 3))});
+
+    # TEST
+    ok ($bit_reader, 'Init bit_reader');
+    
+    # TEST
+    is ($bit_reader->read(3), 3, 'bit_reader->read(3)');
+
+    # TEST
+    is ($bit_reader->read(4), 4, 'bit_reader->read(4)');
 }
 
 =head1 COPYRIGHT AND LICENSE
