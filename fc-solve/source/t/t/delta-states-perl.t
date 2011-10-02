@@ -301,7 +301,7 @@ EOF
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2008 Shlomi Fish
+Copyright (c) 2011 Shlomi Fish
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
