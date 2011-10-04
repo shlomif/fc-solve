@@ -314,6 +314,27 @@ sub decode
 
     my %foundations = (map { $_ => 14 } @suits);
 
+    my $process_card = sub {
+        my $card = shift;
+
+        if ($card->rank() < $foundations{$card->suit()})
+        {
+            $foundations{$card->suit()} = $card->rank();
+        }
+
+        return $card;
+    };
+
+    my $process_card_bits = sub {
+        my $card_bits = shift;
+
+        my $card = Games::Solitaire::Verify::Card->new;
+        $card->rank($card_bits & ((1 << 4)-1));
+        $card->suit($suits[$card_bits >> 4]);
+
+        return $process_card->($card);
+    };
+
     my $num_freecells = $self->_init_state->num_freecells();
     # Read the Freecells.
     my $freecells = Games::Solitaire::Verify::Freecells->new({count => $num_freecells});
@@ -324,18 +345,63 @@ sub decode
 
         if ($card_bits != 0)
         {
-            my $card = Games::Solitaire::Verify::Card->new;
-            $card->rank($card_bits & ((1 << 4)-1));
-            $card->suit($suits[$card_bits >> 4]);
-
-            if ($card->rank() < $foundations{$card->suit()})
-            {
-                $foundations{$card->suit()} = $card->rank();
-            }
-
-            $freecells->assign($freecell_idx, $card);
+            $freecells->assign($freecell_idx, $process_card_bits->($card_bits));
         }
     }
+
+    my @columns;
+
+    foreach my $col_idx (0 .. $self->_init_state->num_columns - 1)
+    {
+        my $col = Games::Solitaire::Verify::Column->new;
+        
+        my $num_orig_cards = $bit_reader->read($self->_columns_initial_lens->[$col_idx]);
+        
+        my $orig_col = $self->_init_state->get_column($col_idx);
+        foreach my $i (0 .. $num_orig_cards-1)
+        {
+            $col->push(
+                $process_card->(
+                    $orig_col->pos($i)->clone()
+                ),
+            );
+        }
+
+        my $num_derived_cards = $bit_reader->read(4);
+        my $num_cards_in_seq = $num_derived_cards;
+
+        if (($num_orig_cards == 0) && $num_derived_cards)
+        {
+            my $card_bits = $bit_reader->read(6);
+            $col->push($process_card_bits->($card_bits));
+            $num_cards_in_seq--;
+        }
+
+        if ($num_cards_in_seq)
+        {
+            my $last_card = $col->pos(-1);
+            for my $i (0 .. $num_cards_in_seq - 1)
+            {
+                my $new_card = Games::Solitaire::Verify::Card->new;
+                my $suit_bit = $bit_reader->read(1);
+
+                $new_card->rank($last_card->rank()-1);
+                $new_card->suit(
+                    $suits[
+                    (($suit_bit << 1) | ($last_card->color eq "red" ? 1 : 0))
+                    ]
+                );
+
+                $col->push(
+                    $process_card->($last_card = $new_card)
+                );
+            }
+        }
+        
+        push @columns, $col;
+    }
+
+    # my $foundations_obj = 
 }
 
 package main;
