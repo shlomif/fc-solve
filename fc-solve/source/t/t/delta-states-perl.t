@@ -401,7 +401,35 @@ sub decode
         push @columns, $col;
     }
 
-    # my $foundations_obj = 
+    my $foundations_obj = Games::Solitaire::Verify::Foundations->new(
+        {
+            num_decks => 1,
+        },
+    );
+
+    foreach my $found (keys(%foundations))
+    {
+        $foundations_obj->assign($found, 0, $foundations{$found}-1);
+    }
+
+    my $state =
+        Games::Solitaire::Verify::State->new(
+            {
+                variant => 'custom',
+                variant_params => $two_fc_variant,
+            }
+        );
+
+    foreach my $col (@columns)
+    {
+        $state->add_column($col);
+    }
+
+    $state->set_freecells($freecells);
+
+    $state->set_foundations($foundations_obj);
+
+    return $state;
 }
 
 package main;
