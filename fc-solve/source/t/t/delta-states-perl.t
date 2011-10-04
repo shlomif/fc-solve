@@ -306,6 +306,38 @@ sub encode
     return $bit_writer->get_bits();
 }
 
+sub decode
+{
+    my ($self, $bits) = @_;
+
+    my $bit_reader = BitReader->new({ bits => $bits });
+
+    my %foundations = (map { $_ => 14 } @suits);
+
+    my $num_freecells = $self->_init_state->num_freecells();
+    # Read the Freecells.
+    my $freecells = Games::Solitaire::Verify::Freecells->new({count => $num_freecells});
+
+    foreach my $freecell_idx (0 .. $num_freecells - 1)
+    {
+        my $card_bits = $bit_reader->read(6);
+
+        if ($card_bits != 0)
+        {
+            my $card = Games::Solitaire::Verify::Card->new;
+            $card->rank($card_bits & ((1 << 4)-1));
+            $card->suit($suits[$card_bits >> 4]);
+
+            if ($card->rank() < $foundations{$card->suit()})
+            {
+                $foundations{$card->suit()} = $card->rank();
+            }
+
+            $freecells->assign($freecell_idx, $card);
+        }
+    }
+}
+
 package main;
 
 {
