@@ -289,6 +289,23 @@ sub get_freecells_encoding
     ];
 }
 
+sub encode
+{
+    my ($self) = @_;
+
+    my $bit_writer = BitWriter->new;
+
+    foreach my $bit_spec (
+        @{$self->get_freecells_encoding()},
+        (map { @{$self->get_column_encoding($_)} } (0 .. $self->_derived_state->num_columns - 1)),
+    )
+    {
+        $bit_writer->write( $bit_spec->[0] => $bit_spec->[1] );
+    }
+
+    return $bit_writer->get_bits();
+}
+
 package main;
 
 {
