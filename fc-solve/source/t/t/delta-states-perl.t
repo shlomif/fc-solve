@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 14;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -353,7 +353,7 @@ sub decode
 
     foreach my $col_idx (0 .. $self->_init_state->num_columns - 1)
     {
-        my $col = Games::Solitaire::Verify::Column->new;
+        my $col = Games::Solitaire::Verify::Column->new({cards => []});
         
         my $num_orig_cards = $bit_reader->read($self->_columns_initial_lens->[$col_idx]);
         
@@ -569,6 +569,64 @@ EOF
 
     # TEST
     is ($bit_reader->read(4), 4, 'bit_reader->read(4)');
+}
+
+{
+    # MS Freecell No. 982 Initial state.
+    my $delta = FCS::DeltaStater->new(
+        {
+            init_state_str => <<'EOF'
+Foundations: H-0 C-0 D-A S-0 
+Freecells:        
+: 6D 3C 3H KD 8C 5C
+: TC 9C 9H 4S JC 6H 5H
+: 2H 2D 3S 5D 9D QS KS
+: 6S TD QC KH AS AH 7C
+: KC 4H TH 7S 2C 9S
+: AC QD 8D QH 3D 8S
+: 7H 7D JD JH TS 6C
+: 4C 4D 5S 2S JS 8H
+EOF
+        }
+    );
+
+    # TEST
+    ok ($delta, 'Object was initialized correctly.');
+
+    $delta->set_derived(
+        {
+            state_str => <<'EOF'
+Foundations: H-0 C-2 D-A S-0 
+Freecells:  8D  QD
+: 6D 3C 3H KD 8C 5C
+: TC 9C 9H 8S
+: 2H 2D 3S 5D 9D QS KS QH JC
+: 6S TD QC KH AS AH 7C 6H
+: KC 4H TH 7S
+: 9S
+: 7H 7D JD JH TS 6C 5H 4S 3D
+: 4C 4D 5S 2S JS 8H
+EOF
+        }
+    );
+
+    # TEST
+    eq_or_diff(
+        scalar($delta->decode($delta->encode())->to_string()),
+        <<'EOF',
+Foundations: H-0 C-2 D-A S-0 
+Freecells:  8D  QD
+: 6D 3C 3H KD 8C 5C
+: TC 9C 9H 8S
+: 2H 2D 3S 5D 9D QS KS QH JC
+: 6S TD QC KH AS AH 7C 6H
+: KC 4H TH 7S
+: 9S
+: 7H 7D JD JH TS 6C 5H 4S 3D
+: 4C 4D 5S 2S JS 8H
+EOF
+        'decode() works.',
+    );
 }
 
 =head1 COPYRIGHT AND LICENSE
