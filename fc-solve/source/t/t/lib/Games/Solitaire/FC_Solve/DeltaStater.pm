@@ -236,7 +236,11 @@ sub _get_card_bitmask
     return ($card->rank() | ($suit_to_idx{$card->suit()} << 4));
 }
 
-sub get_column_encoding
+my $COL_TYPE_EMPTY = 0;
+my $COL_TYPE_ENTIRELY_NON_ORIG = 1;
+my $COL_TYPE_HAS_ORIG = 2;
+
+sub _get_column_encoding_composite
 {
     my ($self, $col_idx) = @_;
 
@@ -258,15 +262,30 @@ sub get_column_encoding
     }
 
     return
-    [ 
-        [$self->_columns_initial_lens->[$col_idx] => $num_orig_cards], 
-        [4 => $num_derived_cards ],
-        @init_card,
-        (
-            map { [1 => $self->_get_suit_bit($col->pos($_))] }
-            ($col_len - $num_cards_in_seq .. $col_len - 1)
+    {
+        type => (
+              ($col_len == 0) ? $COL_TYPE_EMPTY
+            : $num_orig_cards ? $COL_TYPE_HAS_ORIG
+            :                   $COL_TYPE_ENTIRELY_NON_ORIG
         ),
-    ];
+        enc =>
+        [
+            [$self->_columns_initial_lens->[$col_idx] => $num_orig_cards], 
+            [4 => $num_derived_cards ],
+            @init_card,
+            (
+                map { [1 => $self->_get_suit_bit($col->pos($_))] }
+                ($col_len - $num_cards_in_seq .. $col_len - 1)
+            ),
+        ],
+    };
+}
+
+sub get_column_encoding
+{
+    my ($self, $col_idx) = @_;
+
+    return $self->_get_column_encoding_composite($col_idx)->{enc};
 }
 
 sub get_freecells_encoding
