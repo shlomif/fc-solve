@@ -306,7 +306,6 @@ sub encode_composite
 {
     my ($self) = @_;
 
-    my $bit_writer = BitWriter->new;
 
     my @cols_indexes = (0 .. $self->_derived_state->num_columns - 1);
     my @cols = (map { $self->_get_column_encoding_composite($_) } @cols_indexes);
@@ -385,6 +384,7 @@ sub encode_composite
         }
     }
 
+    my $bit_writer = BitWriter->new;
     foreach my $bit_spec (
         @{$self->get_freecells_encoding()},
         (map { @{$_->{enc}} } @cols[@cols_indexes]),
