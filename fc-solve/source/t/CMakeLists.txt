@@ -65,7 +65,7 @@ IF (FCS_WITH_TEST_SUITE)
     SET_SOURCE_FILES_PROPERTIES (
         "bit-reader-and-writer-test.c"
         PROPERTIES 
-            OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
+            OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../bit_rw.h"
             GENERATED "1"
     )
 

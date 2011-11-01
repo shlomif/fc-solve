@@ -29,7 +29,7 @@
 #include <stdio.h>
 
 #include <tap.h>
-#include "../delta_states.c"
+#include "../bit_rw.h"
 
 int main_tests()
 {
