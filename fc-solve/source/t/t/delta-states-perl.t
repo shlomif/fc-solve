@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 17;
+use Test::More tests => 18;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -288,6 +288,42 @@ Freecells:  KS  TD
 EOF
         'encode_composite() test No. 2.',
     );
+
+    $delta->set_derived(
+        {
+            state_str => <<'EOF'
+Foundations: H-0 C-0 D-0 S-2 
+Freecells:  TD  4C
+: 8S
+: 5H QH 3C AC 3H 4H 3S 2H
+: QC 9S 6H 9H 8C 7D 6C 5D 4S 3D 2C
+: 5C 4D
+: 2D KD QS JH TC 9D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: KS QD JC TH 9C 8D 7S 6D
+EOF
+        }
+    );
+
+    # TEST
+    eq_or_diff(
+        scalar($delta->decode($delta->encode_composite())->to_string()),
+        <<'EOF',
+Foundations: H-0 C-0 D-0 S-2 
+Freecells:  TD  4C
+: 5C 4D
+: 5H QH 3C AC 3H 4H 3S 2H
+: QC 9S 6H 9H 8C 7D 6C 5D 4S 3D 2C
+: 8S
+: 2D KD QS JH TC 9D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: KS QD JC TH 9C 8D 7S 6D
+EOF
+        'encode_composite() test No. 2.',
+    );
+
 }
 
 =head1 COPYRIGHT AND LICENSE
