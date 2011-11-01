@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -208,6 +208,24 @@ Freecells:  8D  QD
 : 4C 4D 5S 2S JS 8H
 EOF
         'decode() works.',
+    );
+
+    # TEST
+    eq_or_diff(
+        scalar($delta->decode($delta->encode_composite())->to_string()),
+        <<'EOF',
+Foundations: H-0 C-2 D-A S-0 
+Freecells:  8D  QD
+: 6D 3C 3H KD 8C 5C
+: TC 9C 9H 8S
+: 2H 2D 3S 5D 9D QS KS QH JC
+: 6S TD QC KH AS AH 7C 6H
+: KC 4H TH 7S
+: 9S
+: 7H 7D JD JH TS 6C 5H 4S 3D
+: 4C 4D 5S 2S JS 8H
+EOF
+        'encode_composite() test No. 1.',
     );
 }
 
