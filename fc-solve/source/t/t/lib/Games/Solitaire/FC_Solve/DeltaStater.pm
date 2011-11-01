@@ -302,6 +302,100 @@ sub get_freecells_encoding
     ];
 }
 
+sub encode_composite
+{
+    my ($self) = @_;
+
+    my $bit_writer = BitWriter->new;
+
+    my @cols_indexes = (0 .. $self->_derived_state->num_columns - 1);
+    my @cols = (map { $self->_get_column_encoding_composite($_) } @cols_indexes);
+
+    {
+        my $non_orig_idx = 0;
+
+        # Move the empty columns to the front, but only within the 
+        # entirely_non_orig
+        # That's because the orig columns should be preserved in their own
+        # place.
+        MOVE_EMPTIES_LOOP:
+        while (1)
+        {
+            NON_ORIG_IDX_LOOP:
+            while ($non_orig_idx < @cols)
+            {
+                if ($cols[$non_orig_idx]->{type} eq $COL_TYPE_ENTIRELY_NON_ORIG)
+                {
+                    last NON_ORIG_IDX_LOOP;
+                }
+            }
+            continue
+            {
+                $non_orig_idx++;
+            }
+
+            if ($non_orig_idx == @cols)
+            {
+                last MOVE_EMPTIES_LOOP;
+            }
+
+            my $empty_idx = $non_orig_idx+1;
+            EMPTY_IDX_LOOP:
+            while ($empty_idx < @cols)
+            {
+                if ($cols[$empty_idx]->{type} eq $COL_TYPE_EMPTY)
+                {
+                    last EMPTY_IDX_LOOP;
+                }
+            }
+            continue
+            {
+                $empty_idx++;
+            }
+            if ($empty_idx == @cols)
+            {
+                last MOVE_EMPTIES_LOOP;
+            }
+            @cols_indexes[$non_orig_idx, $empty_idx] =
+                @cols_indexes[$empty_idx, $non_orig_idx];
+        }
+    }
+
+    {
+        my @new_non_orig_cols_indexes = 
+            (grep { $cols[$_]->{type} eq $COL_TYPE_ENTIRELY_NON_ORIG }
+                @cols_indexes
+            );
+
+        my $get_sort_val = sub {
+            my ($i) = @_;
+            return $self->_get_card_bitmask(
+                $self->_derived_state()->get_column($i)->pos(0)
+            );
+        };
+        my @sorted = (sort { $get_sort_val->($a) <=> $get_sort_val->($b) }
+            @new_non_orig_cols_indexes);
+
+        foreach my $idx_idx (0 .. $#cols_indexes)
+        {
+            if ($cols[$cols_indexes[$idx_idx]]->{type} eq $COL_TYPE_ENTIRELY_NON_ORIG)
+            {
+                $cols_indexes[$idx_idx] = shift(@sorted);
+            }
+        }
+    }
+
+    foreach my $bit_spec (
+        @{$self->get_freecells_encoding()},
+        (map { @{$_->{enc}} } @cols[@cols_indexes]),
+    )
+    {
+        $bit_writer->write( $bit_spec->[0] => $bit_spec->[1] );
+    }
+
+    return $bit_writer->get_bits();
+}
+
 sub encode
 {
     my ($self) = @_;
