@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 15;
+use Test::More tests => 17;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -226,6 +226,67 @@ Freecells:  8D  QD
 : 4C 4D 5S 2S JS 8H
 EOF
         'encode_composite() test No. 1.',
+    );
+}
+
+# More encode_composite tests - this time from the output of:
+# pi-make-microsoft-freecell-board -t 24 | ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
+
+{
+    my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
+        {
+            init_state_str => <<'EOF'
+Foundations: H-0 C-0 D-0 S-0 
+Freecells:        
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D AS
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S 9D
+EOF
+        }
+    );
+
+    # TEST
+    ok ($delta, 'Object was initialized correctly.');
+
+    $delta->set_derived(
+        {
+            state_str => <<'EOF'
+Foundations: H-0 C-0 D-0 S-4 
+Freecells:  KS  TD
+: 2C
+: 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S
+: QC 9S 6H 9H 8C 7D 6C 5D 4C 3D
+: 
+: 2D KD QS JH TC 9D 8S
+: 7H JS KH TS KC 7C 6D 5C 4D
+: AH 5S 6S AD 8H JD
+: 2H
+
+EOF
+        }
+    );
+
+    # TEST
+    eq_or_diff(
+        scalar($delta->decode($delta->encode_composite())->to_string()),
+        <<'EOF',
+Foundations: H-0 C-0 D-0 S-4 
+Freecells:  KS  TD
+: 
+: 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S
+: QC 9S 6H 9H 8C 7D 6C 5D 4C 3D
+: 2H
+: 2D KD QS JH TC 9D 8S
+: 7H JS KH TS KC 7C 6D 5C 4D
+: AH 5S 6S AD 8H JD
+: 2C
+EOF
+        'encode_composite() test No. 2.',
     );
 }
 

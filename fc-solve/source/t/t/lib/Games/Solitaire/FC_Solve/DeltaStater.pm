@@ -351,12 +351,14 @@ sub encode_composite
             {
                 $empty_idx++;
             }
+
             if ($empty_idx == @cols)
             {
                 last MOVE_EMPTIES_LOOP;
             }
             @cols_indexes[$non_orig_idx, $empty_idx] =
                 @cols_indexes[$empty_idx, $non_orig_idx];
+            $non_orig_idx++;
         }
     }
 
