@@ -53,6 +53,22 @@ IF (FCS_WITH_TEST_SUITE)
             GENERATED "1"
     )
 
+    SET (EXE_FILE "t/bit-reader-and-writer-test.exe")
+
+    ADD_EXECUTABLE(
+        "${EXE_FILE}"
+        "bit-reader-and-writer-test.c"
+    )
+
+    TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB})
+
+    SET_SOURCE_FILES_PROPERTIES (
+        "bit-reader-and-writer-test.c"
+        PROPERTIES 
+            OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
+            GENERATED "1"
+    )
+
     # SET_SOURCE_FILES_PROPERTIES (
     #    "card-test-parse.c"
     #    "card-test-render.c"

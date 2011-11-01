@@ -45,17 +45,18 @@
 #define NUM_BITS_IN_BYTES 8
 
 typedef int fc_solve_bit_data_t;
+typedef unsigned char fcs_uchar_t;
 
 typedef struct 
 {
-    char * current;
+    fcs_uchar_t * current;
     int bit_in_char_idx;
-    char * start;
+    fcs_uchar_t * start;
 } fc_solve_bit_writer;
 
-static void GCC_INLINE fc_solve_bit_writer_init(fc_solve_bit_writer * writer, char * start)
+static void GCC_INLINE fc_solve_bit_writer_init(fc_solve_bit_writer * writer, fcs_uchar_t * start)
 {
-    writer->start = writer->current = start;
+    *(writer->start = writer->current = start) = 0;
     writer->bit_in_char_idx = 0;
 }
 
@@ -64,7 +65,7 @@ static void GCC_INLINE fc_solve_bit_writer_write(fc_solve_bit_writer * writer, i
     for (;len;len--,(data>>=1))
     {
         *(writer->current) |= ((data & 0x1) << (writer->bit_in_char_idx++));
-        if (writer->bit_in_char_idx == (NUM_BITS_IN_BYTES - 1))
+        if (writer->bit_in_char_idx == NUM_BITS_IN_BYTES)
         {
             *(++writer->current) = 0;
             writer->bit_in_char_idx = 0;
@@ -74,13 +75,13 @@ static void GCC_INLINE fc_solve_bit_writer_write(fc_solve_bit_writer * writer, i
 
 typedef struct 
 {
-    const char * current;
+    const fcs_uchar_t * current;
     int bit_in_char_idx;
-    const char * start;
+    const fcs_uchar_t * start;
 } fc_solve_bit_reader;
 
 
-static void GCC_INLINE fc_solve_bit_reader_init(fc_solve_bit_reader * reader, const char * start)
+static void GCC_INLINE fc_solve_bit_reader_init(fc_solve_bit_reader * reader, const fcs_uchar_t * start)
 {
     reader->start = reader->current = start;
     reader->bit_in_char_idx = 0;
@@ -99,7 +100,7 @@ static GCC_INLINE fc_solve_bit_data_t  fc_solve_bit_reader_read(fc_solve_bit_rea
                 << idx
         );
 
-        if (reader->bit_in_char_idx == (NUM_BITS_IN_BYTES - 1))
+        if (reader->bit_in_char_idx == NUM_BITS_IN_BYTES)
         {
             reader->current++;
             reader->bit_in_char_idx = 0;
