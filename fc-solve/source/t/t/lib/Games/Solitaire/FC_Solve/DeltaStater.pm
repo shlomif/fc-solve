@@ -116,9 +116,8 @@ __PACKAGE__->mk_acc_ref([qw(_derived_state _init_state _columns_initial_lens)]);
 
 sub _get_column_orig_num_cards
 {
-    my ($self, $state, $col_idx) = @_;
+    my ($self, $col) = @_;
 
-    my $col = $state->get_column($col_idx);
     my $num_cards = $col->len();
 
     CALC_NUM_CARDS:
@@ -167,7 +166,9 @@ sub _init
 
     foreach my $col_idx (0 .. $init_state->num_columns() - 1)
     {
-        my $num_cards = $self->_get_column_orig_num_cards($init_state, $col_idx);
+        my $num_cards = $self->_get_column_orig_num_cards(
+            $init_state->get_column($col_idx)
+        );
 
         my $bitmask = 1;
         my $num_bits = 0;
@@ -243,7 +244,7 @@ sub get_column_encoding
 
     my $col = $derived->get_column($col_idx);
 
-    my $num_orig_cards = $self->_get_column_orig_num_cards($derived, $col_idx);
+    my $num_orig_cards = $self->_get_column_orig_num_cards($col);
 
     my $col_len = $col->len();
     my $num_derived_cards = $col_len - $num_orig_cards;
