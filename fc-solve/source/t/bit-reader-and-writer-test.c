@@ -35,7 +35,7 @@ int main_tests()
 {
     {
         unsigned char buffer[10];
-        fc_solve_bit_writer writer;
+        fc_solve_bit_writer_t writer;
 
         fc_solve_bit_writer_init(&writer, buffer);
 
@@ -57,7 +57,7 @@ int main_tests()
         ok (buffer[1] == 3, "Extra byte write works.");
 
         {
-            fc_solve_bit_reader reader;
+            fc_solve_bit_reader_t reader;
 
             fc_solve_bit_reader_init(&reader, buffer);
 
