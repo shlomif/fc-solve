@@ -104,13 +104,21 @@ int main_tests()
                 "3 original cards."
            );
 
+        /* A matching card. */
+        fcs_col_push_card(col, make_card(3, 2));
+        /* TEST
+         * */
+        ok (fc_solve_get_column_orig_num_cards(&delta, col) == 3,
+                "3 original cards, with one card on top."
+           );
+
     }
     return 0;
 }
 
 int main(int argc, char * argv[])
 {
-    plan_tests(4);
+    plan_tests(5);
     main_tests();
     return exit_status();
 }
