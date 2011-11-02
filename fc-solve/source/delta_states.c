@@ -35,3 +35,40 @@
 #include <stdio.h>
 
 #include "bit_rw.h"
+#include "state.h"
+
+typedef struct
+{
+#ifndef FCS_FREECELL_ONLY
+    int sequences_are_built_by;
+#endif
+} fc_solve_delta_stater_t;
+
+int fc_solve_get_column_orig_num_cards(
+        fc_solve_delta_stater_t * self, 
+        fcs_cards_column_t col    
+        )
+{
+    int num_cards;
+#ifndef FCS_FREECELL_ONLY
+    int sequences_are_built_by;
+#endif
+
+
+#ifndef FCS_FREECELL_ONLY
+    sequences_are_built_by = self->sequences_are_built_by;
+#endif
+    for (num_cards = fcs_col_len(col); num_cards >= 2; num_cards--)
+    {
+        fcs_card_t child_card = fcs_col_get_card(col, num_cards-1);
+        fcs_card_t parent_card = fcs_col_get_card(col, num_cards-2);
+
+        if (!fcs_is_parent_card(child_card, parent_card))
+        {
+            break;
+        }
+    }
+
+    return ((num_cards >= 2) ? num_cards : 0);
+}
+
