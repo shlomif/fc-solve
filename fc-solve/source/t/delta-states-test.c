@@ -88,13 +88,20 @@ int main_tests()
         ok (fc_solve_get_column_orig_num_cards(&delta, col) == 0,
                 "Column with a single card has zero orig cards."
            );
+
+        fcs_col_push_card(col, make_card(12, 1));
+        /* TEST
+         * */
+        ok (fc_solve_get_column_orig_num_cards(&delta, col) == 0,
+                "Column with a seq of 2 cards has zero orig cards."
+           );
     }
     return 0;
 }
 
 int main(int argc, char * argv[])
 {
-    plan_tests(2);
+    plan_tests(3);
     main_tests();
     return exit_status();
 }
