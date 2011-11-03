@@ -26,7 +26,7 @@
  * executable.
  *
  * It is documented in the documents "README", "USAGE", etc. in the
- * Freecell Solver distribution from http://fc-solve.berlios.de/ .
+ * Freecell Solver distribution from http://fc-solve.shlomifish.org/ .
  */
 #include <string.h>
 #include <stdio.h>
@@ -320,7 +320,7 @@ help_screen_t help_screens[] = {
 "\n"
 "\n"
 "Freecell Solver was written by Shlomi Fish.\n"
-"Homepage: http://fc-solve.berlios.de/\n"
+"Homepage: http://fc-solve.shlomifish.org/\n"
 "Send comments and suggestions to http://www.shlomifish.org/me/contact-me/\n"
 },
 {

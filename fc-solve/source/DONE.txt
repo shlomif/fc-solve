@@ -3,7 +3,7 @@
 * Change fc_solve_rand_alloc() away from malloc() into handling a pointer
 to a rand_struct.
 
-* Put the rest of the news (from http://fc-solve.berlios.de/ ) inside the
+* Put the rest of the news (from http://fc-solve.shlomifish.org/ ) inside the
 NEWS file.
 
 * Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 

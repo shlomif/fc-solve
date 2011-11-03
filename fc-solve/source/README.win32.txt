@@ -26,7 +26,7 @@ so much memory in your computer - it will still run fine)
 
 Freecell Solver's homepage is at the following URL:
 
-http://fc-solve.berlios.de/
+http://fc-solve.shlomifish.org/
 
 Enjoy!
 

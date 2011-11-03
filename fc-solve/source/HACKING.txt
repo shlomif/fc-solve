@@ -11,7 +11,7 @@ Requirements: perl-5.8.x or above, CMake, gcc, bash and a working
 pthreads-devel package.
 
 1. Download the Freecell Solver .tar.bz2 archive from
-http://fc-solve.berlios.de/ .
+http://fc-solve.shlomifish.org/ .
 
 2. Unpack and cd to the freecell-solver-* directory.
 
@@ -86,7 +86,7 @@ echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bas
 4. Check out the latest Freecell Solver sources:
 +
 -------------------
-svn co https://svn.berlios.de/svnroot/repos/fc-solve/trunk/
+svn co https://fc-solve.googlecode.com/svn/fc-solve/trunk/
 -------------------
 
 5. +$ cd trunk/fc-solve/source/+

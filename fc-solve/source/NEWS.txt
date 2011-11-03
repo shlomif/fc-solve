@@ -88,7 +88,7 @@ MS Deals even for the higher numbers (> 32,000 which are not used for that in
 PySol and PySol FC).
 
 11. Add a compile-time option to use RCS-like states storage:
-http://fc-solve.berlios.de/to-do.html#rcs_state_storage - this conserves
+http://fc-solve.shlomifish.org/to-do.html#rcs_state_storage - this conserves
 a lot of RAM.
 
 12. Add a flag to get rid of visited_iter.
@@ -681,7 +681,7 @@ static order of quotas at the beginning of the scan for the participating
 soft threads. It makes constructing faster solving presets easier, especially
 after utilising this code:
 +
-http://svn.berlios.de/viewcvs/fc-solve/trunk/fc-solve/presets/
+http://code.google.com/p/fc-solve/source/browse/#svn%2Ffc-solve%2Ftrunk%2Ffc-solve%2Fpresets
 +
 Also see the "--st-name" option.
 

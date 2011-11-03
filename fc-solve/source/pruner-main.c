@@ -22,11 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * main.c - the main() and related functions of the fc-solve command line
- * executable.
- *
- * It is documented in the documents "README", "USAGE", etc. in the
- * Freecell Solver distribution from http://fc-solve.berlios.de/ .
+ * pruner-main.c : pruning solver.
  */
 #include <string.h>
 #include <stdio.h>
