@@ -110,9 +110,12 @@ int main_tests()
 #define DECKS_NUM 1
     {
         fc_solve_delta_stater_t * delta;
-        fcs_state_keyval_pair_t init_state;
+        fcs_state_keyval_pair_t init_state, derived_state;
         char indirect_stacks_buffer[STACKS_NUM << 7];
+        char derived_indirect_stacks_buffer[STACKS_NUM << 7];
 
+        /* MS Freecell No. 982 Initial state.
+         * */
         fc_solve_initial_user_state_to_c(
                 ("Foundations: H-0 C-0 D-A S-0\n"
                 "6D 3C 3H KD 8C 5C\n"
@@ -145,6 +148,51 @@ int main_tests()
          *  */
         ok (delta, "Delta was created.");
 
+        fc_solve_initial_user_state_to_c(
+                (
+                 "Foundations: H-0 C-2 D-A S-0 \n"
+                 "Freecells:  8D  QD\n"
+                 "6D 3C 3H KD 8C 5C\n"
+                 "TC 9C 9H 8S\n"
+                 "2H 2D 3S 5D 9D QS KS QH JC\n"
+                 "6S TD QC KH AS AH 7C 6H\n"
+                 "KC 4H TH 7S\n"
+                 "9S\n"
+                 "7H 7D JD JH TS 6C 5H 4S 3D\n"
+                 "4C 4D 5S 2S JS 8H\n"
+                ) ,
+                &derived_state,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , derived_indirect_stacks_buffer
+#endif
+        );
+
+        fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
+
+        {
+            fc_solve_column_encoding_composite_t enc;
+            fc_solve_get_column_encoding_composite(delta, 0, &enc);
+
+            /* TEST
+             * */
+            ok (enc.enc[0] == 
+                    (6  /* 3 bits of orig len. */
+                     | (0 << 3) /*  4 bits of derived len. */
+                    )
+                    , "fc_solve_get_column_encoding_composite() test 1 - byte 0"
+            );
+
+            /* TEST
+             */
+            ok (enc.end == enc.enc, "Only 7 bits.");
+
+            /* TEST
+             * */
+            ok (enc.bit_in_char_idx == 7, "Only 7 bits (2).");
+        }
         fc_solve_delta_stater_free (delta);
     }
     return 0;
@@ -152,7 +200,7 @@ int main_tests()
 
 int main(int argc, char * argv[])
 {
-    plan_tests(6);
+    plan_tests(9);
     main_tests();
     return exit_status();
 }
