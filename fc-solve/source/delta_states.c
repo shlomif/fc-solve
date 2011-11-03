@@ -121,3 +121,8 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
 
     return self;
 }
+
+static void fc_solve_delta_stater_free(fc_solve_delta_stater_t * self)
+{
+    free(self);
+}
