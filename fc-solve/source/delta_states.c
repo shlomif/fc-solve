@@ -131,3 +131,85 @@ static GCC_INLINE void fc_solve_delta_stater_set_derived(fc_solve_delta_stater_t
 {
     self->_derived_state = state;
 }
+
+#define GET_SUIT_BIT(card) (( (fcs_card_suit(card)) & 0x2 ) >> 1 )
+
+enum COL_TYPE
+{
+    COL_TYPE_EMPTY,
+    COL_TYPE_ENTIRELY_NON_ORIG,
+    COL_TYPE_HAS_ORIG
+};
+
+typedef struct
+{
+    int type;
+    fcs_uchar_t enc[4];
+    fcs_uchar_t * end;
+    int bit_in_char_idx;
+} fc_solve_column_encoding_composite_t;
+
+static void fc_solve_get_column_encoding_composite(
+        fc_solve_delta_stater_t * self,
+        int col_idx,
+        fc_solve_column_encoding_composite_t * ret
+        )
+{
+    fcs_state_t * derived;
+    fcs_cards_column_t col;
+    int num_orig_cards;
+    int col_len;
+    int num_derived_cards;
+    int num_cards_in_seq;
+    fcs_card_t init_card;
+    fc_solve_bit_writer_t bit_w;
+    int i;
+    
+    derived = self->_derived_state;
+    col = fcs_state_get_col(*derived, col_idx);
+
+    num_orig_cards = fc_solve_get_column_orig_num_cards(self, col);
+    col_len = fcs_col_len(col);
+    num_derived_cards = col_len - num_orig_cards;
+    
+    num_cards_in_seq = num_derived_cards;
+    init_card = fc_solve_empty_card;
+
+    if ((num_orig_cards == 0) && num_derived_cards)
+    {
+        init_card = fcs_col_get_card(col, 0);
+        num_cards_in_seq--;
+    }
+
+    /* Prepare the encoding. */
+    fc_solve_bit_writer_init(&bit_w, ret->enc);
+
+    fc_solve_bit_writer_write(&bit_w, 
+            self->_columns_initial_lens[col_idx], num_orig_cards
+            );
+
+    fc_solve_bit_writer_write(&bit_w, 4, num_derived_cards);
+
+    if (!(init_card == fc_solve_empty_card))
+    {
+        fc_solve_bit_writer_write(&bit_w, 6, init_card);
+    }
+
+    for (i=col_len-num_cards_in_seq ; i<col_len; i++)
+    {
+        fc_solve_bit_writer_write(&bit_w,
+                1, GET_SUIT_BIT(fcs_col_get_card(col, i))
+        );
+    }
+    
+    ret->end = bit_w.current;
+    ret->bit_in_char_idx = bit_w.bit_in_char_idx;
+
+    /* Calculate the type. */
+    ret->type = 
+    (
+          (col_len == 0) ? COL_TYPE_EMPTY 
+        : num_orig_cards ? COL_TYPE_HAS_ORIG
+        :                  COL_TYPE_ENTIRELY_NON_ORIG
+    );
+}
