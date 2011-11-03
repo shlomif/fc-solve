@@ -7,8 +7,8 @@
 <a href="%0">%0</a>
 </define-tag>
 
-<define-tag link_to_berlios_file>
-<a href="http://download.berlios.de/fc-solve/%0">%0</a>
+<define-tag link_to_download_file>
+<a href="$(ROOT)/downloads/fc-solve/%0">%0</a>
 </define-tag>
 
 <define-tag download_stop>
@@ -43,7 +43,7 @@ large number of Solitaire variants.
 <tr>
 <td>
 # <a href="http://www.shlomifish.org/Files/files/code/fcs/freecell-solver-2.32.1.tar.bz2">freecell-solver-2.32.1.tar.bz2</a>
-<link_to_berlios_file "freecell-solver-3.8.0.tar.bz2" />
+<link_to_download_file "freecell-solver-3.8.0.tar.bz2" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
@@ -52,7 +52,7 @@ Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
 
 <tr>
 <td>
-<link_to_berlios_file "freecell-solver-3.4.0-win32.exe" />
+<link_to_download_file "freecell-solver-3.4.0-win32.exe" />
 </td>
 <td>
 Win32 Binaries. Download the .exe and it will set up an interactive installer.
@@ -78,7 +78,7 @@ A link to an "apt"-able Debian Package in the Debian pool of packages.
 
 <tr>
 <td>
-<link_to_berlios_file "freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz" />
+<link_to_download_file "freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz" />
 </td>
 <td>
 The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_VERSION)"; my @vers = split(/\./, $a); $vers[1]++; $vers[2] = '0'; print join(".", @vers); }:>. 
@@ -97,7 +97,7 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 <ul>
 
 <li>
-<link_to_berlios_file "patsolve-shlomif-3.0.3.tar.bz2" />
+<link_to_download_file "patsolve-shlomif-3.0.3.tar.bz2" />
 </li>
 
 <li>
@@ -150,7 +150,7 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 <define-tag ver>
 <tr>
 <td>
-<a href="http://download.berlios.de/fc-solve/freecell-solver-%0.%1.tar.<get-var download_suffix />">Version %0.%1</a>
+<a href="$(ROOT)/downloads/fc-solve/freecell-solver-%0.%1.tar.<get-var download_suffix />">Version %0.%1</a>
 </td>
 </tr>
 </define-tag>
