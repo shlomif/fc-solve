@@ -193,6 +193,32 @@ int main_tests()
              * */
             ok (enc.bit_in_char_idx == 7, "Only 7 bits (2).");
         }
+
+        {
+            fc_solve_column_encoding_composite_t enc;
+            fc_solve_get_column_encoding_composite(delta, 1, &enc);
+
+#define SUIT_HC 0
+#define SUIT_DS 1
+            /* TEST
+             * */
+            ok (enc.enc[0] ==
+                    (3  /* 3 bits of orig len. */
+                     | (1 << 3) /*  4 bits of derived len. */
+                     | (SUIT_DS << (3+4)) /* 1 bit of suit. */
+                    )
+                    , "fc_solve_get_column_encoding_composite() test 2 - byte 0"
+            );
+
+            /* TEST
+             */
+            ok (enc.end == enc.enc+1, "8 bits.");
+
+            /* TEST
+             * */
+            ok (enc.bit_in_char_idx == 0, "8 bits (2).");
+        }
+
         fc_solve_delta_stater_free (delta);
     }
     return 0;
@@ -200,7 +226,7 @@ int main_tests()
 
 int main(int argc, char * argv[])
 {
-    plan_tests(9);
+    plan_tests(12);
     main_tests();
     return exit_status();
 }
