@@ -42,9 +42,13 @@ typedef struct
 #ifndef FCS_FREECELL_ONLY
     int sequences_are_built_by;
 #endif
+    int num_freecells;
+    int num_columns;
+    fcs_state_t * _init_state;
+    int _columns_initial_lens[MAX_NUM_STACKS];
 } fc_solve_delta_stater_t;
 
-int fc_solve_get_column_orig_num_cards(
+static int fc_solve_get_column_orig_num_cards(
         fc_solve_delta_stater_t * self, 
         fcs_cards_column_t col    
         )
@@ -72,3 +76,48 @@ int fc_solve_get_column_orig_num_cards(
     return ((num_cards >= 2) ? num_cards : 0);
 }
 
+static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
+        fcs_state_t * init_state,
+        int num_columns,
+        int num_freecells
+#ifndef FCS_FREECELL_ONLY
+        , int sequences_are_built_by
+#endif
+        )
+{
+    fc_solve_delta_stater_t * self;
+    int col_idx;
+    int * initial_len_ptr;
+
+    self = malloc(sizeof(*self));
+
+#ifndef FCS_FREECELL_ONLY
+    self->sequences_are_built_by = sequences_are_built_by;
+#endif
+
+    self->num_columns = num_columns;
+    self->num_freecells = num_freecells;
+
+    self->_init_state = init_state;
+
+    initial_len_ptr = self->_columns_initial_lens;
+    for (col_idx = 0 ; col_idx < num_columns; col_idx++)
+    {
+        int num_cards, bitmask, num_bits;
+
+        num_cards = fc_solve_get_column_orig_num_cards(self, fcs_state_get_col(*init_state, col_idx));
+
+        bitmask = 1;
+        num_bits = 0;
+
+        while (bitmask <= num_cards)
+        {
+            num_bits++;
+            bitmask <<= 1;
+        }
+
+        *(initial_len_ptr++) = num_bits;
+    }
+
+    return self;
+}
