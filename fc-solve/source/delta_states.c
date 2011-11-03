@@ -44,7 +44,7 @@ typedef struct
 #endif
     int num_freecells;
     int num_columns;
-    fcs_state_t * _init_state;
+    fcs_state_t * _init_state, * _derived_state;
     int _columns_initial_lens[MAX_NUM_STACKS];
 } fc_solve_delta_stater_t;
 
@@ -125,4 +125,9 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
 static void fc_solve_delta_stater_free(fc_solve_delta_stater_t * self)
 {
     free(self);
+}
+
+static GCC_INLINE void fc_solve_delta_stater_set_derived(fc_solve_delta_stater_t * self, fcs_state_t * state)
+{
+    self->_derived_state = state;
 }
