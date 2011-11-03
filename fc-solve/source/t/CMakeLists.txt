@@ -81,7 +81,8 @@ IF (FCS_WITH_TEST_SUITE)
     SET_SOURCE_FILES_PROPERTIES (
         "delta-states-test.c"
         PROPERTIES
-            OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
+            OBJECT_DEPENDS
+                "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
             GENERATED "1"
     )
 

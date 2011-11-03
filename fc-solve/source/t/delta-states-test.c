@@ -29,17 +29,8 @@
 #include <stdio.h>
 
 #include <tap.h>
+#include "../card.c"
 #include "../delta_states.c"
-
-#ifdef DEBUG_STATES
-
-fcs_card_t fc_solve_empty_card = {0,0};
-
-#elif defined(COMPACT_STATES) || defined (INDIRECT_STACK_STATES)
-
-fcs_card_t fc_solve_empty_card = (fcs_card_t)0;
-
-#endif
 
 static fcs_card_t make_card(int rank, int suit)
 {
@@ -113,12 +104,55 @@ int main_tests()
            );
 
     }
+
+#define FREECELLS_NUM 2
+#define STACKS_NUM 8
+#define DECKS_NUM 1
+    {
+        fc_solve_delta_stater_t * delta;
+        fcs_state_keyval_pair_t init_state;
+        char indirect_stacks_buffer[STACKS_NUM << 7];
+
+        fc_solve_initial_user_state_to_c(
+                ("Foundations: H-0 C-0 D-A S-0\n"
+                "6D 3C 3H KD 8C 5C\n"
+                "TC 9C 9H 4S JC 6H 5H\n"
+                "2H 2D 3S 5D 9D QS KS\n"
+                "6S TD QC KH AS AH 7C\n"
+                "KC 4H TH 7S 2C 9S\n"
+                "AC QD 8D QH 3D 8S\n"
+                "7H 7D JD JH TS 6C\n"
+                "4C 4D 5S 2S JS 8H\n"),
+                &init_state,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , indirect_stacks_buffer
+#endif
+        );
+
+        delta = fc_solve_delta_stater_alloc(
+                &init_state.s,
+                STACKS_NUM,
+                FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+                );
+
+        /* TEST
+         *  */
+        ok (delta, "Delta was created.");
+
+        fc_solve_delta_stater_free (delta);
+    }
     return 0;
 }
 
 int main(int argc, char * argv[])
 {
-    plan_tests(5);
+    plan_tests(6);
     main_tests();
     return exit_status();
 }
