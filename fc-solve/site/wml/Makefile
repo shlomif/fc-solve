@@ -3,7 +3,7 @@ WITH_DEVEL_VERSION = 1
 
 DEVEL_VER_USE_CACHE = 1
 
-RSYNC = rsync --progress --verbose --rsh=ssh -r
+RSYNC = rsync --progress --verbose --rsh=ssh -a --inplace
 
 D = ./dest
 WML_FLAGS = -DBERLIOS=BERLIOS
@@ -83,7 +83,7 @@ $(INDEXES) :: $(D)/%/index.html : src/% gen_index.pl
 	perl gen_index.pl $< $@
 
 upload: all
-	cd $(D) && $(RSYNC) * shlomif@shell.berlios.de:/home/groups/fc-solve/htdocs/
+	$(RSYNC) $(D)/ hostgator:domains/fc-solve/public_html
 
 upload_temp: all
-	cd $(D) && $(RSYNC) -a --inplace * $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp/
+	$(RSYNC) $(D)/ $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
