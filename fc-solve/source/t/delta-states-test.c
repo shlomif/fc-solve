@@ -194,12 +194,13 @@ int main_tests()
             ok (enc.bit_in_char_idx == 7, "Only 7 bits (2).");
         }
 
+#define SUIT_HC 0
+#define SUIT_DS 1
+
         {
             fc_solve_column_encoding_composite_t enc;
             fc_solve_get_column_encoding_composite(delta, 1, &enc);
 
-#define SUIT_HC 0
-#define SUIT_DS 1
             /* TEST
              * */
             ok (enc.enc[0] ==
@@ -219,6 +220,41 @@ int main_tests()
             ok (enc.bit_in_char_idx == 0, "8 bits (2).");
         }
 
+        {
+            fc_solve_column_encoding_composite_t enc;
+            int card_9S;
+
+            fc_solve_get_column_encoding_composite(delta, 5, &enc);
+
+            card_9S = (9 | (3 << 4));
+
+            /* TEST
+             * */
+            ok (enc.enc[0] ==
+                    (0  /* 3 bits of orig len. */
+                     | (1 << 3) /*  4 bits of derived len. */
+                     | ((card_9S&0x1) << (3+4)) /* 1 bit of init_card. */
+                    )
+                    , "fc_solve_get_column_encoding_composite() col 5 - byte 0"
+            );
+
+            /* TEST
+             * */
+            ok ((enc.enc[1] ==
+                    (card_9S >> 1) /* Remaining 5 bits of card. */
+                )
+                , "fc_solve_get_column_encoding_composite() col 5 - byte 1"
+            );
+
+            /* TEST
+             */
+            ok (enc.end == enc.enc+1, "3+4+7 bits.");
+
+            /* TEST
+             * */
+            ok (enc.bit_in_char_idx == (3+4+6-8), "3+4+7 bits (2).");
+        }
+
         fc_solve_delta_stater_free (delta);
     }
     return 0;
@@ -226,7 +262,7 @@ int main_tests()
 
 int main(int argc, char * argv[])
 {
-    plan_tests(12);
+    plan_tests(16);
     main_tests();
     return exit_status();
 }
