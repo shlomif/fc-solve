@@ -445,6 +445,50 @@ int main_tests()
             ),
             "encode_composite + decode test No. 2 (deal #24)"
         );
+
+        fc_solve_initial_user_state_to_c(
+                (
+"Foundations: H-0 C-0 D-0 S-2 \n"
+"Freecells:  TD  4C\n"
+"8S\n"
+"5H QH 3C AC 3H 4H 3S 2H\n"
+"QC 9S 6H 9H 8C 7D 6C 5D 4S 3D 2C\n"
+"5C 4D\n"
+"2D KD QS JH TC 9D\n"
+"7H JS KH TS KC 7C\n"
+"AH 5S 6S AD 8H JD\n"
+"KS QD JC TH 9C 8D 7S 6D\n"
+                ) ,
+                &derived_state,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , derived_indirect_stacks_buffer
+#endif
+        );
+
+        fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
+
+        /* TEST
+         * */
+        test_encode_and_decode(
+            delta,
+            (
+"Foundations: H-0 C-0 D-0 S-2 \n"
+"Freecells:  4C  TD\n"
+": 5C 4D\n"
+": 5H QH 3C AC 3H 4H 3S 2H\n"
+": QC 9S 6H 9H 8C 7D 6C 5D 4S 3D 2C\n"
+": 8S\n"
+": 2D KD QS JH TC 9D\n"
+": 7H JS KH TS KC 7C\n"
+": AH 5S 6S AD 8H JD\n"
+": KS QD JC TH 9C 8D 7S 6D\n"
+            ),
+            "encode_composite + decode test No. 3 (deal #24)"
+        );
+
     }
 
     return 0;
@@ -452,7 +496,7 @@ int main_tests()
 
 int main(int argc, char * argv[])
 {
-    plan_tests(21);
+    plan_tests(22);
     main_tests();
     return exit_status();
 }
