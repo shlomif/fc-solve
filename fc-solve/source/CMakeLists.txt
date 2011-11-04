@@ -179,7 +179,7 @@ IF (FCS_ENABLE_RCS_STATES)
     SET (FCS_RCS_STATES 1)
 ENDIF (FCS_ENABLE_RCS_STATES)
 
-SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c card.c check_and_add_state.c cmd_line.c delta_states.c freecell.c instance.c lib.c move.c move_funcs_maps.c move_funcs_order.c preset.c scans.c simpsim.c split_cmd_line.c state.c)
+SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c card.c check_and_add_state.c cmd_line.c freecell.c instance.c lib.c move.c move_funcs_maps.c move_funcs_order.c preset.c scans.c simpsim.c split_cmd_line.c state.c)
 
 IF (FCS_FREECELL_ONLY)
     LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES preset.c)
