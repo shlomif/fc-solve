@@ -54,6 +54,54 @@ static fcs_card_t make_card(int rank, int suit)
 typedef char ind_buf_t[MAX_NUM_STACKS << 7];
 #endif
 
+static int test_encode_and_decode(fc_solve_delta_stater_t * delta, const char * expected_str, const char * blurb)
+{
+    int verdict;
+    fcs_state_keyval_pair_t new_derived_state;
+#ifdef INDIRECT_STACK_STATES
+    ind_buf_t new_derived_indirect_stacks_buffer;
+#endif
+    fcs_uchar_t enc_state[24];
+    fc_solve_bit_writer_t bit_w;
+    fc_solve_bit_reader_t bit_r;
+    char * as_str;
+
+    fc_solve_state_init(&new_derived_state, STACKS_NUM
+#ifdef INDIRECT_STACK_STATES
+        , new_derived_indirect_stacks_buffer
+#endif
+        );
+
+    fc_solve_bit_writer_init(&bit_w, enc_state);
+    fc_solve_delta_stater_encode_composite(delta, &bit_w);
+    
+    fc_solve_bit_reader_init(&bit_r, enc_state);
+    fc_solve_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
+
+    as_str =
+        fc_solve_state_as_string(
+            &new_derived_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            1,
+            0,
+            1
+            );
+
+    if (!(verdict = ok(!strcmp(as_str, expected_str), blurb)))
+    {
+        diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n",
+                as_str,
+                expected_str
+            );
+    }
+
+    free(as_str);
+
+    return verdict;
+}
+
 int main_tests()
 {
     {
@@ -290,16 +338,10 @@ int main_tests()
 
         }
 
-        {
-            fcs_state_keyval_pair_t new_derived_state;
-#ifdef INDIRECT_STACK_STATES
-            ind_buf_t new_derived_indirect_stacks_buffer;
-#endif
-            fcs_uchar_t enc_state[24];
-            fc_solve_bit_writer_t bit_w;
-            fc_solve_bit_reader_t bit_r;
-            char * as_str;
-            const char * expected_str = 
+        /* TEST
+         * */
+        test_encode_and_decode(
+            delta,
             (
 "Foundations: H-0 C-2 D-A S-0 \n"
 "Freecells:  8D  QD\n"
@@ -311,43 +353,9 @@ int main_tests()
 ": 9S\n"
 ": 7H 7D JD JH TS 6C 5H 4S 3D\n"
 ": 4C 4D 5S 2S JS 8H\n"
-            );
-
-            fc_solve_state_init(&new_derived_state, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , new_derived_indirect_stacks_buffer
-#endif
-                );
-
-            fc_solve_bit_writer_init(&bit_w, enc_state);
-            fc_solve_delta_stater_encode_composite(delta, &bit_w);
-            
-            fc_solve_bit_reader_init(&bit_r, enc_state);
-            fc_solve_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
-
-            as_str =
-                fc_solve_state_as_string(
-                    &new_derived_state,
-                    FREECELLS_NUM,
-                    STACKS_NUM,
-                    DECKS_NUM,
-                    1,
-                    0,
-                    1
-                    );
-
-            /* TEST
-             * */
-            if (!ok(!strcmp(as_str, expected_str), "encode_composite + decode test"))
-            {
-                diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n",
-                        as_str,
-                        expected_str
-                    );
-            }
-
-            free(as_str);
-        }
+            ),
+            "encode_composite + decode test"
+        );
 
         fc_solve_delta_stater_free (delta);
     }
@@ -419,16 +427,10 @@ int main_tests()
 
         fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
 
-        {
-            fcs_state_keyval_pair_t new_derived_state;
-#ifdef INDIRECT_STACK_STATES
-            ind_buf_t new_derived_indirect_stacks_buffer;
-#endif
-            fcs_uchar_t enc_state[24];
-            fc_solve_bit_writer_t bit_w;
-            fc_solve_bit_reader_t bit_r;
-            char * as_str;
-            const char * expected_str = 
+        /* TEST
+         * */
+        test_encode_and_decode(
+            delta,
             (
 "Foundations: H-0 C-0 D-0 S-4 \n"
 "Freecells:  TD  KS\n"
@@ -440,43 +442,9 @@ int main_tests()
 ": 7H JS KH TS KC 7C 6D 5C 4D\n"
 ": AH 5S 6S AD 8H JD\n"
 ": 2C\n"
-            );
-
-            fc_solve_state_init(&new_derived_state, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , new_derived_indirect_stacks_buffer
-#endif
-                );
-
-            fc_solve_bit_writer_init(&bit_w, enc_state);
-            fc_solve_delta_stater_encode_composite(delta, &bit_w);
-            
-            fc_solve_bit_reader_init(&bit_r, enc_state);
-            fc_solve_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
-
-            as_str =
-                fc_solve_state_as_string(
-                    &new_derived_state,
-                    FREECELLS_NUM,
-                    STACKS_NUM,
-                    DECKS_NUM,
-                    1,
-                    0,
-                    1
-                    );
-
-            /* TEST
-             * */
-            if (!ok(!strcmp(as_str, expected_str), "encode_composite + decode test No. 2 (deal #24)"))
-            {
-                diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n",
-                        as_str,
-                        expected_str
-                    );
-            }
-
-            free(as_str);
-        }
+            ),
+            "encode_composite + decode test No. 2 (deal #24)"
+        );
     }
 
     return 0;
