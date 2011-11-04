@@ -389,3 +389,113 @@ static void fc_solve_delta_stater_encode_composite(
         fc_solve_bit_writer_write(bit_w, col_enc->bit_in_char_idx, (*enc));
     }
 }
+
+/* ret must be an empty state. */
+static void fc_solve_delta_stater_decode(
+        fc_solve_delta_stater_t * self,
+        fc_solve_bit_reader_t * bit_r,
+        fcs_state_t * ret
+        )
+{
+    int foundations[4];
+    int i, col_idx;
+    int num_freecells;
+    int num_columns;
+    int * _columns_initial_lens;
+    fcs_state_t * _init_state;
+
+    for (i = 0 ; i < 4; i++)
+    {
+        foundations[i] = 14;
+    }
+
+#define PROCESS_CARD(card) { if (fcs_card_card_num(card) < foundations[fcs_card_suit(card)]) { foundations[fcs_card_suit(card)] = fcs_card_card_num(card); } }
+
+    num_freecells = self->num_freecells;
+    /* Read the Freecells. */
+    
+    for ( i=0 ; i < num_freecells ; i++)
+    {
+        fcs_card_t card;
+
+        card = (fcs_card_t)fc_solve_bit_reader_read(bit_r, 6);
+        if (!(card == fc_solve_empty_card))
+        {
+            PROCESS_CARD(card);
+        }
+        fcs_put_card_in_freecell(*ret, i, card);
+    }
+
+    num_columns = self->num_columns;
+    _columns_initial_lens = self->_columns_initial_lens;
+    _init_state = self->_init_state;
+
+    for (col_idx = 0; col_idx < num_columns ; num_columns++)
+    {
+        fcs_cards_column_t col, orig_col;
+        int num_orig_cards;
+        int num_derived_cards;
+        int num_cards_in_seq;
+
+        col = fcs_state_get_col(*ret, col_idx);
+        num_orig_cards = fc_solve_bit_reader_read(bit_r, _columns_initial_lens[col_idx]);
+
+        orig_col = fcs_state_get_col(*_init_state, col_idx);
+
+        for (i = 0 ; i < num_orig_cards ; i++)
+        {
+            fcs_card_t card;
+
+            card = fcs_col_get_card(orig_col, i);
+            PROCESS_CARD(card);
+            fcs_col_push_card(col, card);
+        }
+
+        num_cards_in_seq = num_derived_cards =
+            fc_solve_bit_reader_read(bit_r, 4);
+
+        if ((num_orig_cards == 0) && num_derived_cards)
+        {
+            fcs_card_t card;
+
+            card = (fcs_card_t)fc_solve_bit_reader_read(bit_r, 6);
+            PROCESS_CARD(card);
+            fcs_col_push_card(col, card);
+            
+            num_cards_in_seq--;
+        }
+
+        if (num_cards_in_seq)
+        {
+            fcs_card_t last_card;
+
+            last_card = fcs_col_get_card(col, fcs_col_len(col)-1);
+
+            for ( i=0 ; i < num_cards_in_seq -1 ; i++)
+            {
+                fcs_card_t new_card;
+                int suit_bit;
+
+                new_card = fc_solve_empty_card;
+                suit_bit = fc_solve_bit_reader_read(bit_r, 1);
+
+                fcs_card_set_num(new_card, fcs_card_card_num(last_card)-1);
+                fcs_card_set_suit(new_card, 
+                    ((suit_bit << 1) | 
+                        ((fcs_card_suit(last_card) & 0x1) ^ 0x1)
+                    )
+                );
+
+                PROCESS_CARD(new_card);
+                fcs_col_push_card(col, new_card);
+
+                last_card = new_card;
+            }
+        }
+    }
+
+    for (i = 0 ; i < 4 ; i++)
+    {
+        fcs_set_foundation(*ret, i, foundations[i]-1);
+    }
+}
