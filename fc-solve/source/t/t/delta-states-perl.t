@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 18;
+use Test::More tests => 17;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -99,17 +99,6 @@ EOF
             [ 6 => (9 | (3 << 4)) ], # 9S
         ],
         'get_column_lengths_bits() works',
-    );
-
-    # TEST
-    eq_or_diff(
-        $delta->get_column_encoding(1),
-        [
-            [ 3 => 3 ], # Orig len.
-            [ 4 => 1 ], # Derived len.
-            $DS, # 8S
-        ],
-        'column No. 1',
     );
 
     # TEST
