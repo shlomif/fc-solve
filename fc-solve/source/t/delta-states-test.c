@@ -46,7 +46,14 @@ static fcs_card_t make_card(int rank, int suit)
     return card;
 }
 
+#define FREECELLS_NUM 2
 #define STACKS_NUM 8
+#define DECKS_NUM 1
+
+#ifdef INDIRECT_STACK_STATES
+typedef char ind_buf_t[MAX_NUM_STACKS << 7];
+#endif
+
 int main_tests()
 {
     {
@@ -54,7 +61,7 @@ int main_tests()
         fc_solve_delta_stater_t delta;
 
 #ifdef INDIRECT_STACK_STATES
-        char indirect_stacks_buffer[STACKS_NUM << 7];
+        ind_buf_t indirect_stacks_buffer;
 #endif
         fcs_cards_column_t col;
 
@@ -107,14 +114,12 @@ int main_tests()
 
     }
 
-#define FREECELLS_NUM 2
-#define STACKS_NUM 8
-#define DECKS_NUM 1
     {
         fc_solve_delta_stater_t * delta;
         fcs_state_keyval_pair_t init_state, derived_state;
-        char indirect_stacks_buffer[STACKS_NUM << 7];
-        char derived_indirect_stacks_buffer[STACKS_NUM << 7];
+#ifdef INDIRECT_STACK_STATES
+        ind_buf_t indirect_stacks_buffer, derived_indirect_stacks_buffer;
+#endif
 
         /* MS Freecell No. 982 Initial state.
          * */
@@ -287,7 +292,9 @@ int main_tests()
 
         {
             fcs_state_keyval_pair_t new_derived_state;
-            char new_derived_indirect_stacks_buffer[STACKS_NUM << 7];
+#ifdef INDIRECT_STACK_STATES
+            ind_buf_t new_derived_indirect_stacks_buffer;
+#endif
             fcs_uchar_t enc_state[24];
             fc_solve_bit_writer_t bit_w;
             fc_solve_bit_reader_t bit_r;
