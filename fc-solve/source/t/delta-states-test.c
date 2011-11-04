@@ -489,6 +489,7 @@ int main_tests()
             "encode_composite + decode test No. 3 (deal #24)"
         );
 
+        fc_solve_delta_stater_free (delta);
     }
 
     return 0;
