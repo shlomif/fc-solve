@@ -11,6 +11,8 @@ Pressing
 because the columns can be rearranged.
     - or think about it.
 
+* Make fcs_stack_copmare GCC_INLINE.
+
 Non-pressing
 ------------
 
