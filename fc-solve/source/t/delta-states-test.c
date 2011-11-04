@@ -255,6 +255,34 @@ int main_tests()
             ok (enc.bit_in_char_idx == (3+4+6-8), "3+4+7 bits (2).");
         }
 
+        {
+            fc_solve_bit_writer_t bit_w;
+            fc_solve_bit_reader_t bit_r;
+            fcs_uchar_t enc[10];
+
+            fc_solve_bit_writer_init(&bit_w, enc);
+            fc_solve_bit_reader_init(&bit_r, enc);
+
+            fc_solve_get_freecells_encoding(delta, &bit_w);
+
+            /* TEST
+             * */
+            ok (fc_solve_bit_reader_read(&bit_r, 6) == (8 | (2 << 4)), /* 8D */
+                    "First freecell is 8D.");
+
+            /* TEST
+             * */
+            ok (fc_solve_bit_reader_read(&bit_r, 6) == (12 | (2 << 4)), /* QD */
+                    "Second freecell is QD.");
+
+            /* TEST
+             * */
+            ok (bit_r.current == bit_w.current && 
+                    (bit_r.bit_in_char_idx == bit_w.bit_in_char_idx),
+                    "Reached the end of the encoding.");
+
+        }
+
         fc_solve_delta_stater_free (delta);
     }
     return 0;
@@ -262,7 +290,7 @@ int main_tests()
 
 int main(int argc, char * argv[])
 {
-    plan_tests(16);
+    plan_tests(19);
     main_tests();
     return exit_status();
 }
