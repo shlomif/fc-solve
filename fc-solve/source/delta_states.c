@@ -430,7 +430,7 @@ static void fc_solve_delta_stater_decode(
     _columns_initial_lens = self->_columns_initial_lens;
     _init_state = self->_init_state;
 
-    for (col_idx = 0; col_idx < num_columns ; num_columns++)
+    for (col_idx = 0; col_idx < num_columns ; col_idx++)
     {
         fcs_cards_column_t col, orig_col;
         int num_orig_cards;
@@ -471,7 +471,7 @@ static void fc_solve_delta_stater_decode(
 
             last_card = fcs_col_get_card(col, fcs_col_len(col)-1);
 
-            for ( i=0 ; i < num_cards_in_seq -1 ; i++)
+            for ( i = 0 ; i < num_cards_in_seq ; i++)
             {
                 fcs_card_t new_card;
                 int suit_bit;

@@ -30,6 +30,8 @@
 
 #include <tap.h>
 #include "../card.c"
+#include "../app_str.c"
+#include "../state.c"
 #include "../delta_states.c"
 
 static fcs_card_t make_card(int rank, int suit)
@@ -283,6 +285,63 @@ int main_tests()
 
         }
 
+        {
+            fcs_state_keyval_pair_t new_derived_state;
+            char new_derived_indirect_stacks_buffer[STACKS_NUM << 7];
+            fcs_uchar_t enc_state[24];
+            fc_solve_bit_writer_t bit_w;
+            fc_solve_bit_reader_t bit_r;
+            char * as_str;
+            const char * expected_str = 
+            (
+"Foundations: H-0 C-2 D-A S-0 \n"
+"Freecells:  8D  QD\n"
+": 6D 3C 3H KD 8C 5C\n"
+": TC 9C 9H 8S\n"
+": 2H 2D 3S 5D 9D QS KS QH JC\n"
+": 6S TD QC KH AS AH 7C 6H\n"
+": KC 4H TH 7S\n"
+": 9S\n"
+": 7H 7D JD JH TS 6C 5H 4S 3D\n"
+": 4C 4D 5S 2S JS 8H\n"
+            );
+
+            fc_solve_state_init(&new_derived_state, STACKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , new_derived_indirect_stacks_buffer
+#endif
+                );
+
+            fc_solve_bit_writer_init(&bit_w, enc_state);
+            fc_solve_delta_stater_encode_composite(delta, &bit_w);
+            
+            fc_solve_bit_reader_init(&bit_r, enc_state);
+            fc_solve_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
+
+            as_str =
+                fc_solve_state_as_string(
+                    &new_derived_state,
+                    FREECELLS_NUM,
+                    STACKS_NUM,
+                    DECKS_NUM,
+                    1,
+                    0,
+                    1
+                    );
+
+            /* TEST
+             * */
+            if (!ok(!strcmp(as_str, expected_str), "encode_composite + decode test"))
+            {
+                diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n",
+                        as_str,
+                        expected_str
+                    );
+            }
+
+            free(as_str);
+        }
+
         fc_solve_delta_stater_free (delta);
     }
     return 0;
@@ -290,7 +349,7 @@ int main_tests()
 
 int main(int argc, char * argv[])
 {
-    plan_tests(19);
+    plan_tests(20);
     main_tests();
     return exit_status();
 }
