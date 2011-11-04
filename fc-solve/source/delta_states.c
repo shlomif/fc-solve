@@ -132,7 +132,6 @@ static GCC_INLINE void fc_solve_delta_stater_set_derived(fc_solve_delta_stater_t
     self->_derived_state = state;
 }
 
-#define GET_SUIT_BIT(card) (( (fcs_card_suit(card)) & 0x2 ) >> 1 )
 
 enum COL_TYPE
 {
@@ -197,9 +196,13 @@ static void fc_solve_get_column_encoding_composite(
 
     for (i=col_len-num_cards_in_seq ; i<col_len; i++)
     {
+#define GET_SUIT_BIT(card) (( (fcs_card_suit(card)) & 0x2 ) >> 1 )
+
         fc_solve_bit_writer_write(&bit_w,
                 1, GET_SUIT_BIT(fcs_col_get_card(col, i))
         );
+
+#undef GET_SUIT_BIT
     }
     
     ret->end = bit_w.current;
@@ -349,12 +352,18 @@ static void fc_solve_delta_stater_encode_composite(
                 min_idx = i;
                 for (j=i+1; j < new_non_orig_cols_indexes_count; j++)
                 {
+
 #define COMP_BY(idx) (fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0))
 #define COMP_BY_IDX(idx) (COMP_BY(new_non_orig_cols_indexes[idx]))
+
                     if (COMP_BY_IDX(j) < COMP_BY_IDX(min_idx))
                     {
                         min_idx = j;
                     }
+
+#undef COMP_BY_IDX
+#undef COMP_BY
+
                 }
 
                 swap_int = new_non_orig_cols_indexes[min_idx];
@@ -498,4 +507,6 @@ static void fc_solve_delta_stater_decode(
     {
         fcs_set_foundation(*ret, i, foundations[i]-1);
     }
+
+#undef PROCESS_CARD
 }
