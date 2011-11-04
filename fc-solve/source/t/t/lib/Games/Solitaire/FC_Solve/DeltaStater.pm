@@ -363,7 +363,7 @@ sub encode_composite
     }
 
     {
-        my @new_non_orig_cols_indexes = 
+        my @new_non_orig_cols_indexes =
             (grep { $cols[$_]->{type} eq $COL_TYPE_ENTIRELY_NON_ORIG }
                 @cols_indexes
             );

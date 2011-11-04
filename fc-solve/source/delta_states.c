@@ -257,3 +257,135 @@ static void fc_solve_get_freecells_encoding(
     }
 }
 
+static void fc_solve_delta_stater_encode_composite(
+        fc_solve_delta_stater_t * self,
+        fc_solve_bit_writer_t * bit_w
+        )
+{
+    int cols_indexes[MAX_NUM_STACKS];
+    fc_solve_column_encoding_composite_t cols[MAX_NUM_STACKS];
+    fcs_state_t * derived;
+    int i, swap_int;
+    int num_columns;
+
+    derived = self->_derived_state;
+
+    num_columns = self->num_columns;
+    for ( i=0 ; i < num_columns ; i++)
+    {
+        cols_indexes[i] = i;
+        fc_solve_get_column_encoding_composite(self, i, &(cols[i]));
+    }
+
+    {
+        int non_orig_idx = 0;
+
+        /* 
+         * Move the empty columns to the front, but only within the
+         * entirely_non_orig
+         * That's because the orig columns should be preserved in their own
+         * place.
+         * */
+        while (1)
+        {
+            for ( ; non_orig_idx < num_columns ; non_orig_idx++)
+            {
+                if (cols[non_orig_idx].type == COL_TYPE_ENTIRELY_NON_ORIG)
+                {
+                    break;
+                }
+            }
+
+            if (non_orig_idx == num_columns)
+            {
+                break;
+            }
+
+            {
+                int empty_idx;
+                
+                for (empty_idx = non_orig_idx+1; empty_idx < num_columns ; empty_idx++)
+                {
+                    if (cols[empty_idx].type == COL_TYPE_EMPTY)
+                    {
+                        break;
+                    }
+                }
+
+                if (empty_idx == num_columns)
+                {
+                    break;
+                }
+
+                swap_int = cols_indexes[non_orig_idx];
+                cols_indexes[non_orig_idx] = cols_indexes[empty_idx];
+                cols_indexes[empty_idx] = swap_int;
+
+                non_orig_idx++;
+            }
+        }
+    }
+
+    {
+        int new_non_orig_cols_indexes[MAX_NUM_STACKS];
+        int new_non_orig_cols_indexes_count;
+
+        /* Filter the new_non_orig_cols_indexes */
+        for (new_non_orig_cols_indexes_count = 0, i=0; i < num_columns ; i++)
+        {
+            if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
+            {
+                new_non_orig_cols_indexes[new_non_orig_cols_indexes_count++] =
+                    cols_indexes[i];
+            }
+        }
+
+        /* Sort the new_non_orig_cols_indexes_count using selection-sort. */
+        {
+            int j, min_idx;
+
+            for (i=0 ; i < new_non_orig_cols_indexes_count-1 ; i++)
+            {
+                min_idx = i;
+                for (j=i+1; j < new_non_orig_cols_indexes_count; j++)
+                {
+#define COMP_BY(idx) (fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0))
+#define COMP_BY_IDX(idx) (COMP_BY(new_non_orig_cols_indexes[idx]))
+                    if (COMP_BY_IDX(j) < COMP_BY_IDX(min_idx))
+                    {
+                        min_idx = j;
+                    }
+                }
+
+                swap_int = new_non_orig_cols_indexes[min_idx];
+                new_non_orig_cols_indexes[min_idx] = new_non_orig_cols_indexes[i];
+                new_non_orig_cols_indexes[i] = swap_int;
+            }
+        }
+
+        {
+            int sorted_idx;
+            for ( i=0 , sorted_idx = 0; i < num_columns ; i++)
+            {
+                if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
+                {
+                    cols_indexes[i] = new_non_orig_cols_indexes[sorted_idx++];
+                }
+            }
+        }
+    }
+
+    fc_solve_get_freecells_encoding(self, bit_w);
+    for ( i=0 ; i < num_columns ; i++)
+    {
+        fc_solve_column_encoding_composite_t * col_enc;
+        fcs_uchar_t * enc;
+
+        col_enc = (cols + cols_indexes[i]);
+        for (enc = col_enc->enc ; enc < col_enc->end ; enc++)
+        {
+            fc_solve_bit_writer_write(bit_w, NUM_BITS_IN_BYTES, (*enc));
+        }
+        fc_solve_bit_writer_write(bit_w, col_enc->bit_in_char_idx, (*enc));
+    }
+}
