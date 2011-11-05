@@ -45,7 +45,7 @@ typedef struct
     int num_freecells;
     int num_columns;
     fcs_state_t * _init_state, * _derived_state;
-    int _columns_initial_lens[MAX_NUM_STACKS];
+    int bits_per_orig_cards_in_column;
 } fc_solve_delta_stater_t;
 
 static int fc_solve_get_column_orig_num_cards(
@@ -88,6 +88,7 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
     fc_solve_delta_stater_t * self;
     int col_idx;
     int * initial_len_ptr;
+    int max_num_cards;
 
     self = malloc(sizeof(*self));
 
@@ -100,23 +101,32 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
 
     self->_init_state = init_state;
 
-    initial_len_ptr = self->_columns_initial_lens;
+    max_num_cards = 0;
     for (col_idx = 0 ; col_idx < num_columns; col_idx++)
     {
-        int num_cards, bitmask, num_bits;
+        int num_cards;
 
         num_cards = fc_solve_get_column_orig_num_cards(self, fcs_state_get_col(*init_state, col_idx));
+
+        if (num_cards > max_num_cards)
+        {
+            max_num_cards = num_cards;
+        }
+    }
+
+    {
+        int bitmask, num_bits;
 
         bitmask = 1;
         num_bits = 0;
 
-        while (bitmask <= num_cards)
+        while (bitmask <= max_num_cards)
         {
             num_bits++;
             bitmask <<= 1;
         }
 
-        *(initial_len_ptr++) = num_bits;
+        self->bits_per_orig_cards_in_column = num_bits;
     }
 
     return self;
@@ -184,7 +194,7 @@ static void fc_solve_get_column_encoding_composite(
     fc_solve_bit_writer_init(&bit_w, ret->enc);
 
     fc_solve_bit_writer_write(&bit_w, 
-            self->_columns_initial_lens[col_idx], num_orig_cards
+            self->bits_per_orig_cards_in_column, num_orig_cards
             );
 
     fc_solve_bit_writer_write(&bit_w, 4, num_derived_cards);
@@ -410,8 +420,8 @@ static void fc_solve_delta_stater_decode(
     int i, col_idx;
     int num_freecells;
     int num_columns;
-    int * _columns_initial_lens;
     fcs_state_t * _init_state;
+    int bits_per_orig_cards_in_column;
 
     for (i = 0 ; i < 4; i++)
     {
@@ -421,6 +431,8 @@ static void fc_solve_delta_stater_decode(
 #define PROCESS_CARD(card) { if (fcs_card_card_num(card) < foundations[fcs_card_suit(card)]) { foundations[fcs_card_suit(card)] = fcs_card_card_num(card); } }
 
     num_freecells = self->num_freecells;
+    bits_per_orig_cards_in_column = self->bits_per_orig_cards_in_column;
+
     /* Read the Freecells. */
     
     for ( i=0 ; i < num_freecells ; i++)
@@ -436,7 +448,6 @@ static void fc_solve_delta_stater_decode(
     }
 
     num_columns = self->num_columns;
-    _columns_initial_lens = self->_columns_initial_lens;
     _init_state = self->_init_state;
 
     for (col_idx = 0; col_idx < num_columns ; col_idx++)
@@ -447,7 +458,7 @@ static void fc_solve_delta_stater_decode(
         int num_cards_in_seq;
 
         col = fcs_state_get_col(*ret, col_idx);
-        num_orig_cards = fc_solve_bit_reader_read(bit_r, _columns_initial_lens[col_idx]);
+        num_orig_cards = fc_solve_bit_reader_read(bit_r, bits_per_orig_cards_in_column);
 
         orig_col = fcs_state_get_col(*_init_state, col_idx);
 
