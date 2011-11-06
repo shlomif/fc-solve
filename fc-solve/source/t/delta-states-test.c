@@ -29,6 +29,8 @@
 #include <stdio.h>
 
 #include <tap.h>
+
+#define FCS_COMPILE_DEBUG_FUNCTIONS
 #include "../card.c"
 #include "../app_str.c"
 #include "../state.c"
@@ -492,12 +494,63 @@ int main_tests()
         fc_solve_delta_stater_free (delta);
     }
 
+    {
+        char * s;
+
+        s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+                (
+                 "Foundations: H-0 C-0 D-0 S-0 \n"
+                 "Freecells:        \n"
+                 ": 4C 2C 9C 8C QS 4S 2H\n"
+                 ": 5H QH 3C AC 3H 4H QD\n"
+                 ": QC 9S 6H 9H 3S KS 3D\n"
+                 ": 5D 2S JC 5C JH 6D AS\n"
+                 ": 2D KD TH TC TD 8D\n"
+                 ": 7H JS KH TS KC 7C\n"
+                 ": AH 5S 6S AD 8H JD\n"
+                 ": 7S 6C 7D 4D 8S 9D\n"
+                ),
+                (
+                 "Foundations: H-0 C-0 D-0 S-4 \n"
+                 "Freecells:  KS  TD\n"
+                 ": 2C\n"
+                 ": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
+                 ": QC 9S 6H 9H 8C 7D 6C 5D 4C 3D\n"
+                 ": \n"
+                 ": 2D KD QS JH TC 9D 8S\n"
+                 ": 7H JS KH TS KC 7C 6D 5C 4D\n"
+                 ": AH 5S 6S AD 8H JD\n"
+                 ": 2H\n"
+                )
+        );
+
+        /* TEST
+         * */
+        ok (!strcmp(s, 
+            (
+"Foundations: H-0 C-0 D-0 S-4 \n"
+"Freecells:  TD  KS\n"
+": \n"
+": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
+": QC 9S 6H 9H 8C 7D 6C 5D 4C 3D\n"
+": 2H\n"
+": 2D KD QS JH TC 9D 8S\n"
+": 7H JS KH TS KC 7C 6D 5C 4D\n"
+": AH 5S 6S AD 8H JD\n"
+": 2C\n"
+            )
+            ),
+            "Good string after encode_composite+decode."
+        );
+
+        free(s);
+    }
     return 0;
 }
 
 int main(int argc, char * argv[])
 {
-    plan_tests(22);
+    plan_tests(23);
     main_tests();
     return exit_status();
 }

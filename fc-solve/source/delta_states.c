@@ -525,7 +525,7 @@ static void fc_solve_delta_stater_decode(
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
-char * prepare_state_str(const char * proto)
+static char * prepare_state_str(const char * proto)
 {
     char * ret;
 
@@ -581,8 +581,8 @@ char * DLLEXPORT fc_solve_user_INTERNAL_delta_states_enc_and_dec(
                   new_derived_indirect_stacks_buffer;
 #endif
 
-    init_state_s = prepare_state_str(init_state_s);
-    derived_state_s = prepare_state_str(derived_state_s);
+    init_state_s = prepare_state_str(init_state_str_proto);
+    derived_state_s = prepare_state_str(derived_state_str_proto);
 
     fc_solve_initial_user_state_to_c(
             init_state_s,
@@ -609,11 +609,13 @@ char * DLLEXPORT fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     delta = fc_solve_delta_stater_alloc(
             &(init_state.s),
             STACKS_NUM,
-            FREECELLS_NUM,
+            FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
             , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
             );
+
+    fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
 
     fc_solve_state_init(&new_derived_state, STACKS_NUM
 #ifdef INDIRECT_STACK_STATES
