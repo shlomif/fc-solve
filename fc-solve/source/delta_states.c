@@ -34,6 +34,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "fcs_dllexport.h"
 #include "bit_rw.h"
 #include "state.h"
 
@@ -521,3 +522,132 @@ static void fc_solve_delta_stater_decode(
 
 #undef PROCESS_CARD
 }
+
+#ifdef FCS_COMPILE_DEBUG_FUNCTIONS
+
+char * prepare_state_str(const char * proto)
+{
+    char * ret;
+
+    ret = strdup(proto);
+
+    /* Process the string in-place to make it available as input
+     * to fc-solve again. 
+     * */
+
+    {
+        char * s, * d;
+        char c;
+        s = d = ret;
+
+        while ((c = *(d++) = *(s++)))
+        {
+            if ((c == '\n') && (s[0] == ':') && (s[1] = ' '))
+            {
+                s += 2;
+            }
+        }
+    }
+
+    return ret;
+}
+
+#ifdef INDIRECT_STACK_STATES
+typedef char dll_ind_buf_t[MAX_NUM_STACKS << 7];
+#endif
+
+#define STACKS_NUM 8
+#define FREECELLS_NUM 2
+#define DECKS_NUM 1
+
+/*
+ * The char * returned is malloc()ed and should be free()ed.
+ */
+char * DLLEXPORT fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+        const char * init_state_str_proto,
+        const char * derived_state_str_proto
+        )
+{
+    char * init_state_s, * derived_state_s;
+    fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
+    fc_solve_delta_stater_t * delta;
+    fcs_uchar_t enc_state[24];
+    fc_solve_bit_writer_t bit_w;
+    fc_solve_bit_reader_t bit_r;
+    char * new_derived_as_str;
+
+#ifdef INDIRECT_STACK_STATES
+    dll_ind_buf_t indirect_stacks_buffer, derived_stacks_buffer, 
+                  new_derived_indirect_stacks_buffer;
+#endif
+
+    init_state_s = prepare_state_str(init_state_s);
+    derived_state_s = prepare_state_str(derived_state_s);
+
+    fc_solve_initial_user_state_to_c(
+            init_state_s,
+            &init_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+            , indirect_stacks_buffer
+#endif
+            );
+
+    fc_solve_initial_user_state_to_c(
+            derived_state_s,
+            &derived_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+            , derived_stacks_buffer
+#endif
+            );
+
+    delta = fc_solve_delta_stater_alloc(
+            &(init_state.s),
+            STACKS_NUM,
+            FREECELLS_NUM,
+#ifndef FCS_FREECELL_ONLY
+            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+            );
+
+    fc_solve_state_init(&new_derived_state, STACKS_NUM
+#ifdef INDIRECT_STACK_STATES
+        , new_derived_indirect_stacks_buffer
+#endif
+        );
+
+    fc_solve_bit_writer_init(&bit_w, enc_state);
+    fc_solve_delta_stater_encode_composite(delta, &bit_w);
+    
+    fc_solve_bit_reader_init(&bit_r, enc_state);
+    fc_solve_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
+
+    new_derived_as_str =
+        fc_solve_state_as_string(
+            &new_derived_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            1,
+            0,
+            1
+            );
+
+    free(init_state_s);
+    free(derived_state_s);
+
+    fc_solve_delta_stater_free (delta);
+
+    return new_derived_as_str;
+}
+
+#undef STACKS_NUM
+#undef FREECELLS_NUM
+#undef DECKS_NUM
+
+#endif
