@@ -2173,7 +2173,13 @@ void DLLEXPORT freecell_solver_user_recycle(
     {
         recycle_instance(user, i);
     }
+    /*
+     * Removing because we are still interested to keep the current iterations
+     * limit.
+     * */
+#if 0
     user->current_iterations_limit = -1;
+#endif
     user->iterations_board_started_at.num_times = 0;
     user->iterations_board_started_at.num_states_in_collection = 0;
     if (user->state_string_copy != NULL)

@@ -258,6 +258,7 @@ int main(int argc, char * argv[])
     char * error_string;
     int parser_ret;
 
+    fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     int total_iterations_limit_per_board = -1;
 
     char * binary_output_filename = NULL;
@@ -302,6 +303,7 @@ int main(int argc, char * argv[])
                 print_help();
                 exit(-1);
             }
+            was_total_iterations_limit_per_board_set = TRUE;
             total_iterations_limit_per_board = atoi(argv[arg]);
         }
         else if (!strcmp(argv[arg], "--solutions-directory"))
@@ -446,7 +448,10 @@ int main(int argc, char * argv[])
     {
         get_board(board_num, state_string);
 
-        freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
+        if (was_total_iterations_limit_per_board_set)
+        {
+            freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
+        }
 
         ret =
             freecell_solver_user_solve_board(

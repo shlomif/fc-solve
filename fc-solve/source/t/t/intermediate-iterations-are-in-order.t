@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -49,6 +49,8 @@ sub assert_directly_ascending_iters
         $scan_id = $rec->{id};
         $scan_id_max_iter = $rec->{count} - 1;
     }
+
+    my $expected_iters_count = $args->{iters_count};
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
@@ -132,6 +134,14 @@ sub assert_directly_ascending_iters
                 $diag = "iters_count == $iters_count while last_iter == $last_iter\n" 
                 . "It should be iters_count == last_iter+1";
             }
+            elsif (
+                   defined($expected_iters_count)
+                && ($iters_count != $expected_iters_count)
+            )
+            {
+                $verdict = 0;
+                $diag = "iters_count == $iters_count while we want exactly $expected_iters_count iterations.";
+            }
         }
     }
 
@@ -207,6 +217,17 @@ assert_directly_ascending_iters(
         'scan_ids' => [{id => "befs", count => 99}],
     },
     "Verifying that with a prelude and trim-max-stored-states, the first scan to run is the one specified in the prelude.",
+);
+
+
+# TEST
+assert_directly_ascending_iters(
+    {
+        deal => 24,
+        theme => ["-mi", "50", "-ni"],
+        iters_count => 50,
+    },
+    "-mi or --max-iters should affect all instances."
 );
 
 =head1 COPYRIGHT AND LICENSE

@@ -1079,7 +1079,7 @@ break;
         {
             PROCESS_OPT_ARG() ;
 
-            freecell_solver_user_limit_current_instance_iterations(instance, atoi((*arg)));
+            freecell_solver_user_limit_iterations(instance, atoi((*arg)));
         }
         break;
 
