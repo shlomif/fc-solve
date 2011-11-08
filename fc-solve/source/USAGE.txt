@@ -361,7 +361,7 @@ $ fc-solve -g freecell --sequences-are-built-by rank --sequence-move unlimited
 5. Solving Algorithm Options
 ----------------------------
 
--mi [Iterations num] , --max-iters [Itearations num]
+-mi [Iterations num] , --max-iters [Iterations num]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This parameter limits the maximal number of states to check. This will
