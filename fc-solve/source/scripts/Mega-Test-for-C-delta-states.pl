@@ -4,27 +4,25 @@ use strict;
 use warnings;
 
 use Config;
-use FindBin;
+use Cwd;
 
-BEGIN {
-    print "Foo ==", 
-    LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
-    "\n";
-}
 use Inline (
     C => 'DATA',
     CLEAN_AFTER_BUILD => 0,
-    LIBS => "-L$FindBin::Bin -lfcs_delta_states_test",
+    LIBS => "-L" . Cwd::getcwd() . " -lfcs_delta_states_test",
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
+use IO::Handle;
 use lib './t/t/lib';
 use Games::Solitaire::FC_Solve::DeltaStater;
 
-open my $dump_fh, '<', '24.dump'
-    or die "Cannot open 24.dump for reading - $!";
+STDOUT->autoflush(1);
+my $filename = '24.dump';
+open my $dump_fh, '<', $filename
+    or die "Cannot open $filename for reading - $!";
 
 my $line_idx = 0;
 sub read_state
@@ -54,11 +52,68 @@ my $init_state_str = read_state();
 
 my %encoded_counts;
 
+my $num_freecells = 2;
+
+my $two_fc_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
+
+$two_fc_variant->num_freecells($num_freecells);
+
+my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
+    {
+        init_state_str => $init_state_str,
+    }
+);
+
+my $get_bitmask = sub {
+    my $card = shift;
+    if (!defined($card))
+    {
+        return 0;
+    }
+    else
+    {
+        return $delta->_get_card_bitmask($card);
+    }
+};
+
+my $sort_by = sub {
+    my ($idx) = @_;
+    return $get_bitmask->($delta->_derived_state->get_freecell($idx));
+};
+
+my $count = 0;
+
 while (my $state = read_state())
 {
-    my $got_state = enc_and_dec($init_state_str, $state); 
+    my $got_state = enc_and_dec($init_state_str, $state);
 
-    print "From <<$state>> we got <<$got_state>>\n";
+    $delta->set_derived({ state_str => $state, });
+
+    my $expected_state =  $delta->_derived_state->clone();
+
+    my $cols_indexes = $delta->_composite_get_cols_and_indexes()->{cols_indexes};
+    my @fc_indexes = sort { $sort_by->($a) <=> $sort_by->($b) } (0 .. $num_freecells-1);
+
+    $expected_state->set_foundations($delta->_derived_state->_foundations->clone());
+    foreach my $i (0 .. $#fc_indexes)
+    {
+        $expected_state->set_freecell($i, $delta->_derived_state->get_freecell($fc_indexes[$i]));
+    }
+    $expected_state->_columns([]);
+    foreach my $i (0 .. $#$cols_indexes)
+    {
+        $expected_state->add_column($delta->_derived_state->get_column($cols_indexes->[$i]));
+    }
+
+    my $expected_str = $expected_state->to_string();
+
+    # print "From <<$state>> we got <<$got_state>>\n";
+    if ($expected_str ne $got_state)
+    {
+        die "State was wrongly encoded+decoded: File=<<$filename>>\nState=<<\n$state\n>> ; Got_state=<<\n$got_state\n>> ; expected_str=<<\n$expected_str\n>>!";
+    }
+    $count++;
+    print "\rProcessed: $count";
 }
 __DATA__
 __C__
