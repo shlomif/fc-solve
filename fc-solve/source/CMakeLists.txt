@@ -837,5 +837,5 @@ ADD_CUSTOM_TARGET(
 # The delta-states testing library
 ADD_LIBRARY(fcs_delta_states_test
     SHARED
-    card.c state.c delta_states.c
+    app_str.c card.c state.c delta_states.c
 )

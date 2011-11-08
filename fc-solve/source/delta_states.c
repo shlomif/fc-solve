@@ -562,7 +562,7 @@ typedef char dll_ind_buf_t[MAX_NUM_STACKS << 7];
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */
-char * DLLEXPORT fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
         const char * init_state_str_proto,
         const char * derived_state_str_proto
         )
