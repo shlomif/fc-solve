@@ -1,0 +1,93 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use IO::Handle;
+use Number::Format;
+use Storable qw(retrieve);
+use List::Util qw(max min sum);
+
+STDOUT->autoflush(1);
+
+my $formatter = Number::Format->new;
+my $input_file;
+
+GetOptions(
+    'i|input=s' => \$input_file,
+) or die "Cannot get options.";
+
+my $main_data = retrieve($input_file);
+
+foreach my $status (qw(solved unsolved))
+{
+    foreach my $field (qw(gen_states iters),
+        ($status eq 'solved' ? 'sol_lens' : ())
+    )
+    {
+        my $id = "$status/$field";
+        my $data = $main_data->{counts}->{$status}->{$field};
+
+        my $p = sub {
+            my ($desc, $stat) = @_;
+
+            print sprintf(
+                "%-10s%-20s == %20s\n", 
+                    $desc, $id, $formatter->format_number($stat, 6)
+            );
+
+            return;
+        };
+
+        my $n = sum(values(%$data));
+        my $sum = sum(map { $_ * $data->{$_} } keys(%$data));
+        my $sq_sum = sum(map { $_ * $_ * $data->{$_} } keys(%$data));
+        my $mean = $sum/$n;
+
+        my @elems = sort { $a <=> $b } map { ($_) x $data->{$_} } keys(%$data);
+        my $median =
+        (
+            (@elems % 2 == 0)
+            ? (($elems[@elems/2-1]+$elems[@elems/2]) / 2)
+            : $elems[(@elems-1)/2]
+        );
+
+        $p->("Count", $n);
+        $p->("Max", max(keys(%$data)));
+        $p->("Min", min(keys(%$data)));
+        $p->("Mean", $mean);
+        $p->("StdDev", sqrt($sq_sum/($n-1) - ($n/($n-1))*($mean ** 2)));
+        $p->("Median", $median);
+        print "\n";
+    }
+}
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2011 by Shlomi Fish
+
+This program is distributed under the MIT (X11) License:
+L<http://www.opensource.org/licenses/mit-license.php>
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+=cut

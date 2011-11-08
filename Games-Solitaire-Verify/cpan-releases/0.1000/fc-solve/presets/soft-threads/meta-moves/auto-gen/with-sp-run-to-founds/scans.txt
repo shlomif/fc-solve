@@ -1,0 +1,27 @@
+1	--method soft-dfs -to 0123456789 -sp r:tf
+2	--method soft-dfs -to 0123467 -sp r:tf
+3	--method random-dfs -seed 2 -to 0[01][23456789] -sp r:tf
+4	--method random-dfs -seed 1 -to 0[0123456789] -sp r:tf
+5	--method random-dfs -seed 3 -to 0[01][23467] -sp r:tf
+6	--method a-star -sp r:tf
+7	--method a-star -to 0123467 -sp r:tf
+8	--method random-dfs -seed 4 -to 0[0123467] -sp r:tf
+9	--method random-dfs -to [01][23456789] -seed 8 -sp r:tf
+10	--method a-star -asw 0.2,0.8,0,0,0 -sp r:tf
+11	--method random-dfs -to [01][23456789] -seed 268 -sp r:tf
+12	--method random-dfs -to [0123456789] -seed 142 -sp r:tf
+13	--method a-star -asw 0.2,0.3,0.5,0,0 -sp r:tf
+14	--method random-dfs -to [01][23456789] -seed 5 -sp r:tf
+15	--method a-star -to 0123467 -asw 0.5,0,0.3,0,0 -sp r:tf
+16	--method soft-dfs -to 0126394875 -sp r:tf
+17	--method random-dfs -seed 105 -sp r:tf
+18	--method a-star -asw 0.5,0,0.5,0,0 -sp r:tf
+19	--method soft-dfs -to 013[2456789] -sp r:tf
+20	--method soft-dfs -to 0123456789 -dto 19,0126394875 -sp r:tf
+21	--method random-dfs -to 0123467 -dto 16,0[123467] -sp r:tf
+22	--method random-dfs -seed 500 -to 0123456789 -dto 36,[01][23456789] -sp r:tf
+23	--method a-star -asw 5,4,0,0,0 -sp r:tf
+24	--method random-dfs -seed 37 -to [0123]456789 -dto 30,[342]0156789 -sp r:tf
+25	--method a-star -to 01234675 -asw 40,2,40,0,40 -sp r:tf
+26	--method a-star -to 01234675 -asw 300,1500,0,2,50000 -sp r:tf
+27	--method soft-dfs -to 01234567 -dto 13,0187465 -dto 26,0134587 -sp r:tf

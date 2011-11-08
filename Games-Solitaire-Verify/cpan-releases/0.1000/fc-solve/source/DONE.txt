@@ -1,0 +1,165 @@
+* Add fcs_flip_top_card() to the things that are not done in FCS_FREECELL_ONLY.
+
+* Change fc_solve_rand_alloc() away from malloc() into handling a pointer
+to a rand_struct.
+
+* Put the rest of the news (from http://fc-solve.shlomifish.org/ ) inside the
+NEWS file.
+
+* Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 
+sfs_check_state_end() ) to functions, and see if it actually makes it faster.
+
+* Write automated tests for split_cmd_line.c . 
+
+* Make sure that "rpmbuild -tb freecell-solver....tar.bz2" works.
+Right now, it only works if the .tar.gz is present.
+
+* Experiment with getting rid of pointer to functions in the hash comparison
+functions. They may incur a large run-time overhead. (inspired by Linux
+kernel patterns from LWN.net).
+
+* s/may be/maybe/ in +README.win32.txt+ .
+
+* Update the "long solutions" help screen of fc-solve with the new presets.
+
+* Deal with the inability to "make package_source" inside an unpacked
+.../freecell-solver-x.y.z/ directory.
+
+* Make sure that we can build Freecell Solver inside a ./build directory
+without relying on asciidoc.
+
+* Abstract away the hash changes for the columns-vs-states hash.
+** Create an enum for choosing which one.
+
+* Investigate +pi-make-microsoft-freecell-board 254076 | fc-solve -l by+ -
+it should be solvable.
+
+* Convert the +char * []+ arrays in the fcs_cl.h etc. to 
++const char * []+ (arrays of constant strings). Its use is a relic of 
++char * argv[]+ being non-const and having them as constant will bring many
+advantages.
+
+* Check that AsciiDoc is not required for preparing an .rpm (using a
+test script.)
+
+* Handle the case where the instance->hard_threads are re-allocated and
+the pointers from the soft_threads to them are not updated.
+
+* Add a +-o+ option to fc-solve to output to a different file than stdout.
+
+* Flares: make sure the empty/null plan generates a run-indef followed by
+a checkpoint instead of just a run-indef.
+** Correct the tests.
+
+* Extract the common functionality out of both copies of the "initialise
+new instance_item copies in +lib.c+ .
+** Also the flares.
+
+* Implement Gary Campbell's FCELL.COM's methodology of trying several
+atomic scans in different instances (with bounded quotas) and picking the 
+shortest solution out of them all. Slow, but will produce highly short 
+solutions.
+** Called Flares - we've started to implement them and should continue.
+** See the Flares functional spec under ../docs
+
+* Update fc-solve and friends to handle the "wrong-flares-plan" compilation
+problem.
+
+* Change "A*" in the code's comments to BeFS.
+
+* Normalise the +_free()+ and +_finish()+ methods in regards to the previous
+commits of the A* functionality.
+
+* Implement Soft-DFS and Random-DFS as pointers to test functions, similar
+to what was done in the BeFS/BFS scan. Currently there is this code there:
+
+----------------
+fc_solve_sfs_tests[tests_order_tests[
+                        the_soft_dfs_info->test_index
+                    ] & FCS_TEST_ORDER_NO_FLAGS_MASK]
+----------------
+
+* Convert some of the documentation to Perl-POD or DocBook.
+** Converted to AsciiDoc, which can generate DocBook.
+
+* Find a way to update the ChangeLog from the svn.
+** Rejected per advice of http://producingoss.com/[Producing Open Source
+Software]
+
+* Convert the boolean values in the C code to a specialised boolean typedef
+called +fcs_bool_t+, just so readers can tell they are booleans instead of
+ints.
+
+* Deal with the fact that:
++./freecell-solver-range-parallel-solve 1 100 1 -mi 1+ displays 
+"Unsolved Board" instead of "Intractable Board".
+
+* Add a quick way to get rid of --fc-only from +./Tatzer -l p4b+ / 
++./Tatzer -l x64b+ .
+
+* Add compact allocation for the Breadth-first-search (BrFS/BFS) queue
+items.
+** With recycling.
+
+* Adapt more fcs_collectible_state_t * storage backends for FCS_RCS_STATES.
+(libavl2 comes to mind.)
+
+* Write a program to summarise an fc-solve invocation, giving the verdict,
+validity, number of moves in the solution, number of iterations, and stored
+states. It should be a wrapper for the fc-solve command line.
+    - done: +scripts/summarize-fc-solve+ .
+    
+* Restore the old -mss flag behaviour and create a new trim-max-stored-states
+flag where the new behaviour happens. max_stored_states should always increase,
+and trim_max_stored_states should decrease if states were removed.
+
+* Get rid of pushing an +FCS_MOVE_TYPE_CANONIZE+ move into each
++moves_to_parent+ moves stack and instead apply it upon recalculating
+the derived state.
+
+* Finish the conversion of the range solvers/etc. to +portable_int64.h+ and
++portable_time.h+ .
+
+* Make sure the total_num_iters is only a 64-bit integer without an 
+intermediate 32-bit one - it just adds clutter to the code and is a premature
+optimisation (and may be a de-optimisation).
+
+* Add a BSD-licence-styled balanced binary tree implementation in the Freecell
+Solver sources and have it use it for both stuff in the +--rcs+ option (and
+possibly others)
+** Kazlib's Red-Black tree looks like a good candidate.
+
+* Implement the compact_allocators recycling in the remaining places in
+the code.
+** Already implemented for the hard_thread->allocator.
+
+* Add an option to use nedtries (a +size_t+ -based trie) instead of libJudy
+for the mapping backend of the LRU cache in scans.c.
+    - rejected because it reportedely performs badly for large data sets.
+
+* Add an +--ms+ / +-M+ flag to make_pysol_freecell_board.py to generate
+the Microsoft (or pseudo-Microsoft) deals even for deals larger than 32,000.
+
+* Optimize the Soft-DFS and Random-DFS tests_list implementation (direct
+pointers to test functions).
+ 
+* Refactor +scripts/parallel-range-solver-total+ - extract the section
+marked as TODO .
+
+* Make sure it also keeps track of min/max of the counts.
+
+* Create a meaningful man-page from +README.xml+ / +USAGE.xml+ etc.
+
+* Add some command line examples to +USAGE.txt+ .
+
+* Also add the dead-ends trimming to the BeFS scan.
+** Investigate the following crash:
+
+--------------------------------------------------------
+set args --method soft-dfs --st-name 'dfs' -nst --method a-star --st-name 'befs' --trim-max-stored-states 100 --prelude '200@befs,100@dfs,1000@befs,500000@dfs' -s -i -p -t -sam 1941.board
+b main
+r
+b scans.c:1958 if (top_card_idx >= 7+12)
+c
+--------------------------------------------------------
+

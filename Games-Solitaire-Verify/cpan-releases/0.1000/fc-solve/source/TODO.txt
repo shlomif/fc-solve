@@ -1,0 +1,195 @@
+Freecell Solver's To-do list
+============================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2009-08-14
+:Revision: $Id$
+
+Pressing
+--------
+
+* The cols_bit_mask_lengths in delta_states.c should be only the maximum,
+because the columns can be rearranged.
+    - or think about it.
+
+* Make fcs_stack_copmare GCC_INLINE.
+
+Non-pressing
+------------
+
+* Make sure that run_hard_thread runs the soft_thread up to the limit of the 
+instance->num_times or the soft_thread's upper bound instead of entering
+and exiting.
+
+* Unit-test +fc_solve_compare_lru_cache_keys+ in +scans.c+.
+
+* Add an option to convert the stack_locs and fc_locs to a
+MAX_NUM_STACKS-factorial permutation that can be stored compactly.
+
+* With the +fc-solve+ command line program: add a flag to trigger different
+notice on having reached +FCS_SUSPEND_PROCESS+.
+
+* Experiment with using "selection sort" instead of "insertion sort" when
+sorting small data sets (columns, freecells, derived states, etc.).
+
+* Divide the scan type variable into two variables: super-scan 
+(DFS vs BeFS/BFS/Opt) and sub-scan (random_dfs, soft_dfs, etc.), to facilitate 
+multiplexing them.
+
+* If +-opt+ is specified for the flare, then make sure that if the flares
+loop stop it when it's doing the optimization scan, then the optimization scan
+goes on until it ends.
+** Not sure about it.
+
+* Inline fc_solve_free_instance().
+
+* Experiment with making fcs_move_t a bit-field with half-octets/etc. for
+the various fields.
+** Make sure that the amount required can fit there using CMake and a log2
+function.
+
+* Play with moving commonly accessed struct elements to the start of
+the struct to fit within the processor's cache line. Like the Linux kernel 
+where the most important elements are at the first 32 bytes of the struct.
+
+* See about getting rid of the unused context variable where appropriate.
+
+* Investigate a way to have positions_by_rank also index according to the
+suit, and to traverse only the possible parents or children based on the
+suit.
+
+* Do the test for +SUSPEND_PROCESS+ (+check_if_limits_exceeded()+ ) in only 
+one place. There isn't a need for it to be done in several places.
+
+* Experiment with using a union in the soft_thread to unify common elements
+that are used only by one of the scans.
+
+* Move the trunk, branches, tags, etc. to under /fc-solve. (?)
+
+* Re-organize the source code to be more sensibly organized.
+
+* Experiment with using bit members for cards:
+** http://en.wikipedia.org/wiki/Bit_field
+
+* Abstract away the move of a single card from one column to another
+in freecell.c.
+
+* Interactive mode? Continue a scan that reached its limit.
+
+* Investigate ways to perform more pointer arithematics and 
+(ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
+
+* In the states handling, there's still some room for pointer arithmetics.
+
+* Implement more of Kevin Atkinson's Common Lisp solver's atomic move types,
+and try to contruct good heuristics out of them.
+
+* Play with writing a memory-re-cycling Soft-DFS scan: if a sub-tree was
+marked as a dead-end, then its states might be able to be placed on a linked
+list of states that can be reused.
+
+* Add a FCS_2FC_FREECELL_ONLY macro for quickly solving 2 freecell games.
+
+* PySolFC Deal No. 48007594292403677907 :
+
+--------------------------------------------------------
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve -l cpb -sam | grep ^Move | wc -l
+106
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 01234675 -asw 300,1500,0,2,50000 -sam | grep ^Move | wc -l
+105
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 01234675 -asw 40,2,40,0,40 -sam | grep ^Move | wc -l
+121
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 0123467589 -asw 300,1500,0,2,50000 -sam | grep ^Move | wc -l
+100
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 0123467589 -asw 300,1500,0,2,40000 -sam | grep ^Move | wc -l
+106
+shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --method a-star -to 0123467589 -asw 300,1500,0,2,60000 -sam | grep ^Move | wc -l
+91
+--------------------------------------------------------
+
+--------------------------------------------------------
+shlomif:~$ make_pysol_freecell_board.py -F -t 91151234961275807905 | ~/apps/test/fcs/bin/fc-solve  -p -t -sam --method a-star -to 0123467589 -asw 300,1000,0,2,90000 | grep ^Move | wc -l
+84
+-------------------------------------------------------
+
+However this scan generates takes too much time for most boards (over 100K 
+iterations).
+
+* PySolFC deal No. 03620802041832966472:
+
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -t -F 03620802041832966472  | ./scripts/summarize-fc-solve -- --method a-star -to 0123467589 -asw 300,1500,99,2,65000 
+Verdict: Solved ; Iters: 156 ; Length: 87
+--------------------------------------------------------
+
+
+** I solved it at length 87.
+
+* PySolFC deal No. 54369539487824719321:
+
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 54369539487824719321 | ./scripts/summarize-fc-solve --method a-star -to 0123456789 -asw 3000,100,60,0,500
+Verdict: Solved ; Iters: 1325 ; Length: 115
+--------------------------------------------------------
+
+** Shlomi Fish solved it in under 110 moves.
+
+* PySolFC deal 96166640969002647853:
+
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 96166640969002647853 | ./scripts/summarize-fc-solve --method a-star -to 0123467589 -asw 370,0,0,2,90000
+Verdict: Solved ; Iters: 615 ; Length: 77
+--------------------------------------------------------
+
+** Shlomi Fish solved it in 77 moves.
+
+* Add the new Freecell Solver-copmatible game variants of PySolFC.
+
+Long-term
+---------
+
+* Code a generic tests grouping.
+
+* Integrate the patsolve's prioritization and mixed BFS/DFS scan.
+
+* Update the architecture document.
+
+* Make a super-strict parsable-output without all the quirks of
+-p -t (see Games-Solitaire-Verify for why).
+
+* Write a multi-threaded version.
+
+* Port to Java (?)
+
+* Add a switch to ask the user if he wants to continue and enter a bigger 
+iterations limit.
+
+* Check for unmalloced data and if so gracefully exit.
+
+* Experiment with a delta-based state storage.
+
+* Add a way to build the various libavl2 trees to be used as 
+positions/columns collections.
+
+* Adapt the scans based on the parameters of the initial board.
++
+** Try to find a correlation between various parameters of the initial board 
+(such as those calculated in the A* scan or the number of steps required to
+sort the cards in each column by rank), and the performance of various scans 
+and then:
++
+1. Calculate the initial parameters on startup.
++
+2. See what would be a good meta-scan based on them.
++
+3. Use it.
+
+To be considered
+----------------
+
+* Make the code https://sourceforge.net/projects/splint/[splint]-clean.
+
+* Write a multi-process client/server program.
+
+* Add a limit to stacks number (in the case of Indirect Stack States),
+number of states that are stored anywhere, etc.
+

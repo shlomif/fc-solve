@@ -1,0 +1,212 @@
+Index: state.c
+===================================================================
+--- state.c	(revision 4096)
++++ state.c	(working copy)
+@@ -141,7 +141,7 @@
+     int freecells_num,
+     int stacks_num)
+ {
+-    int b,c;
++    int b,c, min;
+ 
+     DECLARE_TEMP_STACK();
+     fcs_card_t temp_freecell;
+@@ -164,61 +164,59 @@
+     state_val = &(state_raw->info);
+ #endif
+ #endif
+-    /* Insertion-sort the stacks */
++    /* Selection-sort the stacks */
+ 
+-    for(b=1;b<stacks_num;b++)
++    for ( b=0 ; b < stacks_num-1 ; b++)
+     {
+-        c = b;
+-        while(
+-            (c>0)    &&
+-            ((STACK_COMPARE(
+-                       GET_STACK(c),
+-                       GET_STACK(c-1)
+-                          )
+-                ) < 0
+-            )
+-        )
++        min=b;
++        for (c=b+1; c < stacks_num ; c++)
+         {
+-            COPY_STACK(temp_stack, GET_STACK(c));
+-            COPY_STACK(GET_STACK(c), GET_STACK(c-1));
+-            COPY_STACK(GET_STACK(c-1), temp_stack);
++            if (STACK_COMPARE(GET_STACK(c), GET_STACK(min)) < 0)
++            {
++                min = c;
++            }
++        }
++        if (min != b)
++        {
++            COPY_STACK(temp_stack, GET_STACK(min));
++            COPY_STACK(GET_STACK(min), GET_STACK(b));
++            COPY_STACK(GET_STACK(b), temp_stack);
+ 
+ #ifndef FCS_WITHOUT_LOCS_FIELDS
+-            temp_loc = state_val->stack_locs[c];
+-            state_val->stack_locs[c] = state_val->stack_locs[c-1];
+-            state_val->stack_locs[c-1] = temp_loc;
++            temp_loc = state_val->stack_locs[min];
++            state_val->stack_locs[min] = state_val->stack_locs[b];
++            state_val->stack_locs[b] = temp_loc;
+ #endif
+ 
+-            c--;
+         }
+     }
+ 
+-    /* Insertion-sort the freecells */
++    /* Selection-sort the freecells */
+ 
+-    for(b=1;b<freecells_num;b++)
++    for (b=0 ; b<freecells_num-1 ; b++)
+     {
+-        c = b;
++        min = b;
+ 
+-        while(
+-            (c>0)    &&
+-            ((fc_solve_card_compare(
+-                &(GET_FREECELL(c)),
+-                &(GET_FREECELL(c-1))
+-            )
+-            ) < 0)
+-        )
++        for (c=b+1; c < freecells_num ; c++)
+         {
+-            temp_freecell = GET_FREECELL(c);
+-            GET_FREECELL(c) = GET_FREECELL(c-1);
+-            GET_FREECELL(c-1) = temp_freecell;
++            if (fc_solve_card_compare(&(GET_FREECELL(c)),
++                        &(GET_FREECELL(min))) < 0)
++            {
++                min = c;
++            }
++        }
++        if (min != b)
++        {
++            temp_freecell = GET_FREECELL(min);
++            GET_FREECELL(min) = GET_FREECELL(b);
++            GET_FREECELL(b) = temp_freecell;
+ 
+ #ifndef FCS_WITHOUT_LOCS_FIELDS
+-            temp_loc = state_val->fc_locs[c];
+-            state_val->fc_locs[c] = state_val->fc_locs[c-1];
+-            state_val->fc_locs[c-1] = temp_loc;
++            temp_loc = state_val->fc_locs[min];
++            state_val->fc_locs[min] = state_val->fc_locs[b];
++            state_val->fc_locs[b] = temp_loc;
+ #endif
+ 
+-            c--;
+         }
+     }
+ }
+@@ -240,7 +238,7 @@
+     int freecells_num,
+     int stacks_num)
+ {
+-    int b,c;
++    int b, c, min;
+ 
+     DECLARE_TEMP_STACK();
+     fcs_card_t temp_freecell;
+@@ -251,57 +249,54 @@
+ 
+     state_key = &(state->s);
+ #endif
+-    /* Insertion-sort the stacks */
++    /* Selection-sort the stacks */
+ 
+-    for(b=1;b<stacks_num;b++)
++    for ( b=0 ; b < stacks_num-1 ; b++)
+     {
+-        c = b;
+-        while(
+-            (c>0)    &&
+-            ((STACK_COMPARE(
+-                       GET_STACK(c),
+-                       GET_STACK(c-1)
+-                          )
+-                ) < 0
+-            )
+-        )
++        min=b;
++        for (c=b+1; c < stacks_num ; c++)
+         {
+-            COPY_STACK(temp_stack, GET_STACK(c));
+-            COPY_STACK(GET_STACK(c), GET_STACK(c-1));
+-            COPY_STACK(GET_STACK(c-1), temp_stack);
++            if (STACK_COMPARE(GET_STACK(c), GET_STACK(min)) < 0)
++            {
++                min = c;
++            }
++        }
++        if (min != b)
++        {
++            COPY_STACK(temp_stack, GET_STACK(min));
++            COPY_STACK(GET_STACK(min), GET_STACK(b));
++            COPY_STACK(GET_STACK(b), temp_stack);
+ 
+-            temp_loc = locs->stack_locs[c];
+-            locs->stack_locs[c] = locs->stack_locs[c-1];
+-            locs->stack_locs[c-1] = temp_loc;
++            temp_loc = locs->stack_locs[min];
++            locs->stack_locs[min] = locs->stack_locs[b];
++            locs->stack_locs[b] = temp_loc;
+ 
+-            c--;
+         }
+     }
+ 
+-    /* Insertion-sort the freecells */
++    /* Selection-sort the freecells */
+ 
+-    for(b=1;b<freecells_num;b++)
++    for (b=0 ; b<freecells_num-1 ; b++)
+     {
+-        c = b;
++        min = b;
+ 
+-        while(
+-            (c>0)    &&
+-            ((fc_solve_card_compare(
+-                &(GET_FREECELL(c)),
+-                &(GET_FREECELL(c-1))
+-            )
+-            ) < 0)
+-        )
++        for (c=b+1; c < freecells_num ; c++)
+         {
+-            temp_freecell = GET_FREECELL(c);
+-            GET_FREECELL(c) = GET_FREECELL(c-1);
+-            GET_FREECELL(c-1) = temp_freecell;
++            if (fc_solve_card_compare(&(GET_FREECELL(c)),
++                        &(GET_FREECELL(min))) < 0)
++            {
++                min = c;
++            }
++        }
++        if (min != b)
++        {
++            temp_freecell = GET_FREECELL(min);
++            GET_FREECELL(min) = GET_FREECELL(b);
++            GET_FREECELL(b) = temp_freecell;
+ 
+-            temp_loc = locs->fc_locs[c];
+-            locs->fc_locs[c] = locs->fc_locs[c-1];
+-            locs->fc_locs[c-1] = temp_loc;
+-
+-            c--;
++            temp_loc = locs->fc_locs[min];
++            locs->fc_locs[min] = locs->fc_locs[b];
++            locs->fc_locs[b] = temp_loc;
+         }
+     }
+ }

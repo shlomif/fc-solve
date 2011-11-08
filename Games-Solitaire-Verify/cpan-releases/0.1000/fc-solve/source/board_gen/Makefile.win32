@@ -1,0 +1,30 @@
+
+CC = cl
+OFLAGS = /W3 /O2 /Og /DWIN32
+
+TARGETS = make-gnome-freecell-board.exe make-aisleriot-freecell-board.exe \
+          make-microsoft-freecell-board.exe pi-make-microsoft-freecell-board.exe
+
+UNBUILT_TARGETS = make-pysol-freecell-board.exe
+
+all: $(TARGETS)
+
+all2: $(TARGETS) $(UNBUILT_TARGETS)
+
+make-gnome-freecell-board.exe: make_gnome_freecell_board.c
+	$(CC) $(OFLAGS) /Fe$@ make_gnome_freecell_board.c
+
+make-aisleriot-freecell-board.exe: make_aisleriot_freecell_board.c
+	$(CC) $(OFLAGS) /Fe$@ make_aisleriot_freecell_board.c
+
+make-microsoft-freecell-board.exe: make_microsoft_freecell_board.c
+	$(CC) $(OFLAGS) /Fe$@ make_microsoft_freecell_board.c
+
+pi-make-microsoft-freecell-board.exe: pi_make_microsoft_freecell_board.c
+	$(CC) $(OFLAGS) /Fe$@ pi_make_microsoft_freecell_board.c
+
+make-pysol-freecell-board.exe: make_pysol_freecell_board.c
+	$(CC) $(OFLAGS) /Fe$@ make_pysol_freecell_board.c
+
+clean:
+	rm -f $(TARGETS) $(UNBUILT_TARGETS)
