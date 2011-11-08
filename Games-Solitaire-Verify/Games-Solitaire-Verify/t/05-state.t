@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 30;
+use Test::More tests => 31;
 use Games::Solitaire::Verify::State;
 
 {
@@ -453,3 +453,39 @@ EOF
         'Data of Cloned Freecell #2',
     );
 }
+
+{
+    my $num_freecells = 2;
+
+    my $string = <<'EOF';
+Foundations: H-6 C-A D-A S-4 
+Freecells:  3D  JH
+: 4C 2C 9C 8C QS JD
+: KS QH 9H
+: QC 9S 8H
+: 5C 4D 3C
+: 2D KD TH TC TD 8D 7C 6D 5S
+: 7H JS KH TS KC QD JC
+: 9D 8S
+: 7S 6C 7D 6S 5D
+EOF
+    my $two_fc_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
+
+    $two_fc_variant->num_freecells($num_freecells);
+
+    my $board =
+        Games::Solitaire::Verify::State->new(
+            {
+                string => $string,
+                variant => 'custom',
+                variant_params => $two_fc_variant,
+            },
+        );
+
+    # TEST
+    is ($board->clone->to_string(),
+        $string,
+        "State clone works with a custom variant_params."
+    );
+}
+

@@ -56,7 +56,7 @@ __PACKAGE__->mk_acc_ref([qw(
     : 7S 6C 7D 6S 5D
     EOF
 
-    # Initialise a column
+    # Initialise a board
     my $board = Games::Solitaire::Verify::State->new(
         {
             string => $board,
@@ -409,9 +409,14 @@ sub clone
 {
     my $self = shift;
 
+    my $variant = $self->_variant;
     my $copy = Games::Solitaire::Verify::State->new(
         {
-            variant => $self->_variant(),
+            variant => $variant,
+            (($variant eq "custom")
+                ? (variant_params => $self->_variant_params()) 
+                : ()
+            ),
         }
     );
 
