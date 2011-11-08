@@ -574,6 +574,10 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fc_solve_bit_writer_t bit_w;
     fc_solve_bit_reader_t bit_r;
     char * new_derived_as_str;
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    fcs_state_locs_struct_t locs;
+    int i;
+#endif
 
 #ifdef INDIRECT_STACK_STATES
     dll_ind_buf_t indirect_stacks_buffer, derived_stacks_buffer, 
@@ -628,9 +632,22 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fc_solve_bit_reader_init(&bit_r, enc_state);
     fc_solve_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
 
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    for (i=0 ; i < MAX_NUM_STACKS ; i++)
+    {
+        locs.stack_locs[i] = i;
+    }
+    for (i=0 ; i < MAX_NUM_FREECELLS ; i++)
+    {
+        locs.fc_locs[i] = i;
+    }
+#endif
     new_derived_as_str =
         fc_solve_state_as_string(
             &new_derived_state,
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+            &locs,
+#endif
             FREECELLS_NUM,
             STACKS_NUM,
             DECKS_NUM,
