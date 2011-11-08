@@ -31,8 +31,8 @@ my $builder = Test::Run::Builder->new(
     {
         resources =>
         {
-            repository => "http://svn.berlios.de/svnroot/repos/fc-solve/trunk/Games-Solitaire-Verify/",
-            homepage => "http://fc-solve.berlios.de/verify-code/",
+            repository => "http://fc-solve.googlecode.com/svn/fc-solve/trunk/Games-Solitaire-Verify/Games-Solitaire-Verify",
+            homepage => "http://fc-solve.shlomifish.org/verify-code/",
             MailingList => "http://tech.groups.yahoo.com/group/fc-solve-discuss/",
         },
         keywords =>
