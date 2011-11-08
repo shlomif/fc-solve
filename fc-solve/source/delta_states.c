@@ -88,7 +88,6 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
 {
     fc_solve_delta_stater_t * self;
     int col_idx;
-    int * initial_len_ptr;
     int max_num_cards;
 
     self = malloc(sizeof(*self));
