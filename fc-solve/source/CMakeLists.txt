@@ -834,3 +834,8 @@ ADD_CUSTOM_TARGET(
     COMMAND perl scripts/time-fcs.pl "DUMPS-*/*"
 )
 
+# The delta-states testing library
+ADD_LIBRARY(fcs_delta_states_test
+    SHARED
+    card.c state.c delta_states.c
+)
