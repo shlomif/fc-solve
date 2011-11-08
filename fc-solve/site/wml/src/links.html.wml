@@ -462,6 +462,14 @@ available on github, under the open source FreeBSD licence.
 </p>
 </li>
 
+<li>
+<p>
+<a href="https://github.com/ShootMe/KlondikeSolver">ShootMe's 
+Klondike Solver</a> - a solver for Klondike Solitaire (known as the “Solitaire”
+game from Windows) written in C++ and available under the permissive
+MIT/X11 Licence.
+</p>
+</li>
 </ul>
 
 <h2 id="reviews">Reviews of Freecell Solver</h2>
