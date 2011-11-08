@@ -302,10 +302,9 @@ sub get_freecells_encoding
     ];
 }
 
-sub encode_composite
+sub _composite_get_cols_and_indexes
 {
     my ($self) = @_;
-
 
     my @cols_indexes = (0 .. $self->_derived_state->num_columns - 1);
     my @cols = (map { $self->_get_column_encoding_composite($_) } @cols_indexes);
@@ -386,10 +385,22 @@ sub encode_composite
         }
     }
 
+    return { cols => \@cols, cols_indexes => \@cols_indexes };
+}
+
+sub encode_composite
+{
+    my ($self) = @_;
+
+    my $cols_struct = $self->_composite_get_cols_and_indexes;
+
+    my $cols = $cols_struct->{cols};
+    my $cols_indexes = $cols_struct->{cols_indexes};
+
     my $bit_writer = BitWriter->new;
     foreach my $bit_spec (
         @{$self->get_freecells_encoding()},
-        (map { @{$_->{enc}} } @cols[@cols_indexes]),
+        (map { @{$_->{enc}} } @{$cols}[@{$cols_indexes}]),
     )
     {
         $bit_writer->write( $bit_spec->[0] => $bit_spec->[1] );
