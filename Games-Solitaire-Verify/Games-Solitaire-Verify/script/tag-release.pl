@@ -16,7 +16,7 @@ if (!defined ($version))
     die "Version is undefined!";
 }
 
-my $mini_repos_base = 'https://svn.berlios.de/svnroot/repos/fc-solve/fc-solve';
+my $mini_repos_base = 'https://fc-solve.googlecode.com/svn/fc-solve';
 
 my $mod_name = "Games-Solitaire-Verify";
 my @cmd = (
