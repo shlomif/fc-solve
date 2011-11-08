@@ -14,7 +14,7 @@ Version 0.0101
 
 =cut
 
-our $VERSION = '0.0901';
+our $VERSION = '0.1000';
 
 use base 'Games::Solitaire::Verify::Base';
 

@@ -1,5 +1,6 @@
 Revision history for Games-Solitaire-Verify
 
+0.1000  Tue Nov  8 20:07:13 IST 2011
         - Add the script/tag-release.pl to tag a release in Subversion.
         - Add script/bump-version-number.pl .
         - lib/Games/Solitaire/Verify/Card.pm :
