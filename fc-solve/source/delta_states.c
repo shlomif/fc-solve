@@ -353,33 +353,28 @@ static void fc_solve_delta_stater_encode_composite(
             }
         }
 
-        /* Sort the new_non_orig_cols_indexes_count using selection-sort. */
+        /* Sort the new_non_orig_cols_indexes_count using insertion-sort. */
         {
-            int j, min_idx;
+            int c;
 
-            for (i=0 ; i < new_non_orig_cols_indexes_count-1 ; i++)
-            {
-                min_idx = i;
-                for (j=i+1; j < new_non_orig_cols_indexes_count; j++)
-                {
-
+#define b i
 #define COMP_BY(idx) (fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0))
-#define COMP_BY_IDX(idx) (COMP_BY(new_non_orig_cols_indexes[idx]))
+#define ITEM_IDX(idx) (new_non_orig_cols_indexes[idx])
+#define COMP_BY_IDX(idx) (COMP_BY(ITEM_IDX(idx)))
 
-                    if (COMP_BY_IDX(j) < COMP_BY_IDX(min_idx))
-                    {
-                        min_idx = j;
-                    }
-
-#undef COMP_BY_IDX
-#undef COMP_BY
-
+            for (b=1 ; b < new_non_orig_cols_indexes_count ; b++)
+            {
+                for (c = b; (c>0) && (COMP_BY_IDX(c-1) > COMP_BY_IDX(c)) ; c--)
+                {
+                    swap_int = ITEM_IDX(c);
+                    ITEM_IDX(c) = ITEM_IDX(c-1);
+                    ITEM_IDX(c-1) = swap_int;
                 }
-
-                swap_int = new_non_orig_cols_indexes[min_idx];
-                new_non_orig_cols_indexes[min_idx] = new_non_orig_cols_indexes[i];
-                new_non_orig_cols_indexes[i] = swap_int;
             }
+#undef COMP_BY_IDX
+#undef ITEM_IDX
+#undef COMP_BY
+#undef b
         }
 
         {
