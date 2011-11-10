@@ -20,6 +20,8 @@ most looked-up elements (without parents).
 DBM. After $PRE_CACHE_SIZE elements are placed there, it will be emptied into
 the DBM in one transaction.
 
+    [ Note : $LRU_CACHE_SIZE == $PRE_CACHE_SIZE + $CACHES_DELTA ]
+
 5. Several solving threads. What each thread does is:
 
     1. Lock the queue's mutex.
@@ -49,8 +51,8 @@ the DBM in one transaction.
         it in the QUEUE.
 
     8. If the PRE_CACHE is full, then offload it to the DBM.
-        - TODO : shouldn't we put the PRE_CACHE contents in the LRU cache as 
-        well?
+        also put all the PRE_CACHE contents in the LRU cache as 
+        well. Being promoted to the start.
 
     9. Unlock the positions' storage lock.
 
