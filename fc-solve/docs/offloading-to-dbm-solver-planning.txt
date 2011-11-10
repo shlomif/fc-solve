@@ -1,0 +1,57 @@
+We will write a solver that will offload some of the states in the collection
+to a DBM store on the hard disk (e.g: Google's LevelDB, Berkeley DB, or Tokyo
+Cabinet.). The solver will make extensive use of "delta_states.c" for 
+conserving memory and hard-disk space.
+
+The solver will consist of these components:
+
+1. A BrFS queue (or a similar data-structure for graph traversal.).
+
+2. A DBM that contains a mapping of the encoded orig state -> 
+{ encoded parent state, move from parent state}. The move can take 8-bits
+because it's a one card move of any one of the freecells/top-of-columns (2+8 in
+total) to a freecell/top-of-column/foundation (2+8+4) where each take 4 bits
+or less.
+
+3. An LRU cache for the DBM that will store a cache of $LRU_CACHE_SIZE of the 
+most looked-up elements (without parents).
+
+4. A lookup table that will store the positions before they are placed in the 
+DBM. After $PRE_CACHE_SIZE elements are placed there, it will be emptied into
+the DBM in one transaction.
+
+5. Several solving threads. What each thread does is:
+
+    1. Lock the queue's mutex.
+
+    2. Extract an item from the queue.
+
+    3. Unlock the queue's mutex.
+
+    4. Calculate all the child positions of the queue.
+        - one also needs to do the Horne's play prune of automatically moving
+        cards to the foundations.
+        - make sure the move is also recorded.
+
+    5. Encode them all using "delta_states.c".
+
+    6. Lock the positions' storage lock.
+
+    7. For each encoded child position:
+        - Check if it's in the LRU cache:
+            - if it is, then promote it and move to the next child pos.
+        - If it's not, check if it's in the PRE_CACHE.
+            - if it is, then move to the next child pos.
+        - If it's not there as well, look it up in the DBM.
+            - if it is there, then add it to the top of the LRU cache,
+            and move to the next child pos.
+        - If it's not there, then add it to the PRE_CACHE, and put
+        it in the QUEUE.
+
+    8. If the PRE_CACHE is full, then offload it to the DBM.
+        - TODO : shouldn't we put the PRE_CACHE contents in the LRU cache as 
+        well?
+
+    9. Unlock the positions' storage lock.
+
+    10. Repeat.
