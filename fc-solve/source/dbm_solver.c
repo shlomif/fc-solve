@@ -113,6 +113,53 @@ static fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, unsigned char * 
     }
 }
 
+static void cache_insert(fcs_lru_cache_t * cache, unsigned char * key)
+{
+    fcs_cache_key_info_t * cache_key;
+    dict_t * kaz_tree;
+
+    kaz_tree = cache->kaz_tree;
+
+    if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
+    {
+        fc_solve_kaz_tree_delete_free(
+            kaz_tree,
+            fc_solve_kaz_tree_lookup(
+                kaz_tree, (cache_key = cache->lowest_pri)
+                )
+            );
+            
+        cache->lowest_pri = cache->lowest_pri->higher_pri;
+        cache->lowest_pri->lower_pri = NULL;
+    }
+    else
+    {
+        cache_key =
+            fcs_compact_alloc_ptr(
+                &(cache->states_values_to_keys_allocator),
+                sizeof(*cache_key)
+            );
+        cache->count_elements_in_cache++;
+    }
+
+    memcpy(cache_key->key, key, sizeof(cache_key->key));
+
+    if (cache->highest_pri)
+    {
+        cache_key->lower_pri = cache->highest_pri;
+        cache->highest_pri->higher_pri = cache_key;
+        cache->highest_pri = cache_key;
+    }
+    else
+    {
+        cache->highest_pri = cache->lowest_pri = cache_key;
+        cache_key->higher_pri = cache_key->lower_pri = NULL;
+    }
+
+    fc_solve_kaz_tree_alloc_insert(kaz_tree, cache_key);
+
+}
+
 /* Temporary main() function to make gcc happy. */
 int main(int argc, char * argv[])
 {
