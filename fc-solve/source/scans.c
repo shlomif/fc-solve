@@ -689,11 +689,18 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
                 new_cache_state->higher_pri->lower_pri =
                     new_cache_state->lower_pri;
             }
+
             if (new_cache_state->lower_pri)
             {
                 new_cache_state->lower_pri->higher_pri =
                     new_cache_state->higher_pri;
             }
+            /* Bug fix: make sure that ->lowest_pri is always valid. */
+            else if (new_cache_state->higher_pri)
+            {
+                cache->lowest_pri = new_cache_state->higher_pri;
+            }
+
             /* Now promote it to be the highest. */
             cache->highest_pri->higher_pri = new_cache_state;
             new_cache_state->lower_pri = cache->highest_pri;

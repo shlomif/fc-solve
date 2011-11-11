@@ -82,7 +82,12 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, const char * 
 
     as_str =
         fc_solve_state_as_string(
+#ifdef FCS_RCS_STATES
+            &(new_derived_state.s),
+            &(new_derived_state.info),
+#else
             &new_derived_state,
+#endif
             FREECELLS_NUM,
             STACKS_NUM,
             DECKS_NUM,

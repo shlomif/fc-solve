@@ -92,11 +92,18 @@ static fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, unsigned char * 
             existing->higher_pri->lower_pri =
                 existing->lower_pri;
         }
+
         if (existing->lower_pri)
         {
             existing->lower_pri->higher_pri =
                 existing->higher_pri;
         }
+        /* Bug fix: make sure that ->lowest_pri is always valid. */
+        else if (existing->higher_pri)
+        {
+            cache->lowest_pri = existing->higher_pri;
+        }
+
         cache->highest_pri->higher_pri = existing;
         existing->lower_pri = cache->highest_pri;
         existing->higher_pri = NULL;
