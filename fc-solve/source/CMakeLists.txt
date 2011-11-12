@@ -109,6 +109,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
     "States Type ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES'). No need to usually change.")
 SET (FCS_ENABLE_RCS_STATES CACHE BOOL "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
+SET (FCS_ENABLE_DBM_SOLVER CACHE BOOL "Whether to build the DBM solver")
 SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
 SET (FCS_IA_PACK_SIZE 64 CACHE STRING "Size of a single pack in kilo-bytes.")
 SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
@@ -162,6 +163,8 @@ SET (OPTIMIZATION_OMIT_FRAME_POINTER "" CACHE STRING "Use -fomit-frame-pointer w
 SET (FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE "avl" CACHE STRING "The libavl2 tree type used for the state storage. Ignored if not set to libavl2")
 SET (FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE "avl" CACHE STRING "The libavl2 tree type used for the stack storage. Ignored if not set to libavl2")
 SET (LIBAVL2_SOURCE_DIR "/usr/src/avl-2.0.3" CACHE STRING "The location of the libavl2 source tree (from which files are copied)")
+
+SET (LEVELDB_SOURCE_DIR "/home/shlomif/Download/unpack/prog/leveldb/leveldb" CACHE STRING "The location of the LevelDB sources.")
 
 SET (FCS_WITHOUT_VISITED_ITER "" CACHE BOOL "Disable the visited_iter counter in each state (somewhat useful for debugging, otherwise not needed.)")
 SET (FCS_WITHOUT_DEPTH_FIELD "" CACHE BOOL "Disable the depth field in each state (not absolutely necessary.)")
@@ -496,7 +499,14 @@ FCS_ADD_EXEC(freecell-solver-fc-pro-range-solve fc_pro_range_solver.c fc_pro_ifa
 FCS_ADD_EXEC_NO_INSTALL(measure-depth-dep-tests-order-perf measure_depth_dep_tests_order_performance.c)
 FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 
-ADD_EXECUTABLE(dbm_fc_solver alloc.c dbm_solver.c kaz_tree.c)
+IF (FCS_ENABLE_DBM_SOLVER)
+    INCLUDE_DIRECTORIES(BEFORE "${LEVELDB_SOURCE_DIR}/include")
+    LINK_DIRECTORIES("${LEVELDB_SOURCE_DIR}")
+    ADD_EXECUTABLE(dbm_fc_solver
+        alloc.c dbm_leveldb.cpp dbm_solver.c kaz_tree.c
+    )
+    TARGET_LINK_LIBRARIES(dbm_fc_solver "leveldb" "pthread")
+ENDIF (FCS_ENABLE_DBM_SOLVER)
 
 IF (CMAKE_USE_PTHREADS_INIT)
     FCS_ADD_EXEC(freecell-solver-multi-thread-solve threaded_range_solver.c)
