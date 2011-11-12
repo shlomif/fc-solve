@@ -47,8 +47,8 @@ the DBM in one transaction.
         - If it's not there as well, look it up in the DBM.
             - if it is there, then add it to the top of the LRU cache,
             and move to the next child pos.
-        - If it's not there, then add it to the PRE_CACHE, and put
-        it in the QUEUE.
+        - If it's not there, then add it to the PRE_CACHE, lock the QUEUE
+        mutex, put it in the QUEUE, and unlock the QUEUE mutex.
 
     8. If the PRE_CACHE is full, then offload it to the DBM.
         also put all the PRE_CACHE contents in the LRU cache as 
