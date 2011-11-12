@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
 
 #include "config.h"
 
@@ -106,6 +107,7 @@ static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, unsigned char * key
     else
     {
         cache_key =
+            (fcs_cache_key_info_t *)
             fcs_compact_alloc_ptr(
                 &(cache->states_values_to_keys_allocator),
                 sizeof(*cache_key)
@@ -226,6 +228,98 @@ static void GCC_INLINE pre_cache_offload_and_reset(
     fc_solve_kaz_tree_destroy(pre_cache->kaz_tree);
     fc_solve_compact_allocator_finish(&(pre_cache->kv_allocator));
     pre_cache_init(pre_cache);
+}
+
+struct fcs_dbm_queue_item_struct
+{
+    fcs_encoded_state_buffer_t key;
+    struct fcs_dbm_queue_item_struct * next;
+};
+
+typedef struct fcs_dbm_queue_item_struct fcs_dbm_queue_item_t;
+
+static const pthread_mutex_t initial_mutex_constant =
+    PTHREAD_MUTEX_INITIALIZER
+    ;
+
+typedef struct {
+    fcs_pre_cache_t * pre_cache;
+    fcs_dbm_store_t store;
+    fcs_lru_cache_t * cache;
+
+    /* The queue */
+    
+    /* TODO : initialize with initial_mutex_constant. */
+    pthread_mutex_t queue_lock;
+    /* TODO : initialize the allocator. */
+    fcs_compact_allocator_t queue_allocator;
+    /* TODO : offload the queue to the hard disk. */
+    fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
+} fcs_dbm_solver_instance_t;
+
+static void GCC_INLINE instance_check_key(
+    fcs_dbm_solver_instance_t * instance,
+    unsigned char * key,
+    unsigned char * parent_and_move
+)
+{
+    fcs_lru_cache_t * cache;
+    fcs_pre_cache_t * pre_cache;
+
+    cache = instance->cache;
+    pre_cache = instance->pre_cache;
+
+    if (cache_does_key_exist(cache, key))
+    {
+        return;
+    }
+    else if (pre_cache_does_key_exist(pre_cache, key))
+    {
+        return;
+    }
+    else if (fc_solve_dbm_store_does_key_exist(instance->store, key))
+    {
+        cache_insert(cache, key);
+        return;
+    }
+    else
+    {
+        fcs_dbm_queue_item_t * new_item;
+
+        pre_cache_insert(pre_cache, key, parent_and_move);
+
+        /* Now insert it into the queue. */
+
+        pthread_mutex_lock(&instance->queue_lock);
+        
+        if (instance->queue_recycle_bin)
+        {
+            instance->queue_recycle_bin = 
+            (new_item = instance->queue_recycle_bin)->next;
+        }
+        else
+        {
+            new_item =
+                (fcs_dbm_queue_item_t *)
+                fcs_compact_alloc_ptr(
+                    &(instance->queue_allocator),
+                    sizeof(*new_item)
+                );
+        }
+
+        memcpy(new_item->key, key, sizeof(new_item->key));
+        new_item->next = NULL;
+
+        if (instance->queue_tail)
+        {
+            instance->queue_tail = instance->queue_tail->next = new_item;
+        }
+        else
+        {
+            instance->queue_head = instance->queue_tail = new_item;
+        }
+        pthread_mutex_unlock(&instance->queue_lock);
+    }
 }
 
 /* Temporary main() function to make gcc happy. */
