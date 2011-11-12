@@ -496,7 +496,7 @@ void * instance_run_solver_thread(void * void_arg)
 
         fc_solve_state_init(&state, STACKS_NUM
 #ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
+            , indirect_stacks_buffer
 #endif
         );
 
