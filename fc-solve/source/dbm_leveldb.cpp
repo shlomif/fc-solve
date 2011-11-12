@@ -69,3 +69,7 @@ extern "C" void fc_solve_dbm_store_offload_pre_cache(
 #undef WRITE
 }
 
+extern "C" void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
+{
+    delete ((leveldb::DB *)store);
+}

@@ -74,6 +74,8 @@ void fc_solve_dbm_store_offload_pre_cache(
     fcs_pre_cache_t * pre_cache
 );
 
+void fc_solve_dbm_store_destroy(fcs_dbm_store_t store);
+
 #ifdef __cplusplus
 }
 #endif
