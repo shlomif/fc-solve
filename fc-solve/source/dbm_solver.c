@@ -243,19 +243,41 @@ static const pthread_mutex_t initial_mutex_constant =
     ;
 
 typedef struct {
-    fcs_pre_cache_t * pre_cache;
+    fcs_pre_cache_t pre_cache;
     fcs_dbm_store_t store;
-    fcs_lru_cache_t * cache;
+    fcs_lru_cache_t cache;
 
+    long pre_cache_max_count;
     /* The queue */
     
-    /* TODO : initialize with initial_mutex_constant. */
     pthread_mutex_t queue_lock;
     /* TODO : initialize the allocator. */
     fcs_compact_allocator_t queue_allocator;
     /* TODO : offload the queue to the hard disk. */
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
 } fcs_dbm_solver_instance_t;
+
+static void GCC_INLINE instance_init(
+    fcs_dbm_solver_instance_t * instance,
+    long pre_cache_max_count,
+    long caches_delta,
+    const char * dbm_store_path
+)
+{
+    instance->queue_lock = initial_mutex_constant;
+    fc_solve_compact_allocator_init(
+        &(instance->queue_allocator)
+    );
+    instance->queue_head =
+        instance->queue_tail =
+        instance->queue_recycle_bin =
+        NULL;
+
+    pre_cache_init (&(instance->pre_cache));
+    instance->pre_cache_max_count = pre_cache_max_count;
+    cache_init (&(instance->cache), pre_cache_max_count+caches_delta);
+    fc_solve_dbm_store_init(&(instance->store), dbm_store_path);
+}
 
 static void GCC_INLINE instance_check_key(
     fcs_dbm_solver_instance_t * instance,
@@ -266,8 +288,8 @@ static void GCC_INLINE instance_check_key(
     fcs_lru_cache_t * cache;
     fcs_pre_cache_t * pre_cache;
 
-    cache = instance->cache;
-    pre_cache = instance->pre_cache;
+    cache = &(instance->cache);
+    pre_cache = &(instance->pre_cache);
 
     if (cache_does_key_exist(cache, key))
     {
