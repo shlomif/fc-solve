@@ -440,7 +440,8 @@ void * instance_run_solver_thread(void * void_arg)
     fcs_dbm_solver_instance_t * instance;
     fcs_dbm_queue_item_t * item, * prev_item;
     int queue_num_extracted_and_processed;
-    fcs_derived_state_t * derived_list, * derived_list_recycle_bin;
+    fcs_derived_state_t * derived_list, * derived_list_recycle_bin, 
+                        * derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
@@ -448,6 +449,7 @@ void * instance_run_solver_thread(void * void_arg)
     dll_ind_buf_t indirect_stacks_buffer;
 #endif
     fc_solve_bit_reader_t bit_r;
+    fc_solve_bit_writer_t bit_w;
 
     arg = (thread_arg_t *)void_arg;
     thread = arg->thread;
@@ -458,6 +460,7 @@ void * instance_run_solver_thread(void * void_arg)
 
     fc_solve_compact_allocator_init(&(derived_list_allocator));
     derived_list_recycle_bin = NULL;
+    derived_list = NULL;
 
     while (1)
     {
@@ -490,7 +493,6 @@ void * instance_run_solver_thread(void * void_arg)
             break;
         }
 
-        derived_list = NULL;
 
         fc_solve_bit_reader_init(&bit_r, item->key + 1);
 
@@ -506,7 +508,41 @@ void * instance_run_solver_thread(void * void_arg)
             &(state.s)
         );
 
-        /* End of loop */
+        /* TODO : calculate all the derived states.
+         * */
+
+        /* END TODO . */
+        
+        /* Encode all the states. */
+        for (derived_iter = derived_list; 
+                derived_iter ; 
+                derived_iter = derived_iter->next
+        )
+        {
+            memset(derived_iter->key, '\0', sizeof(derived_iter->key));
+            fc_solve_bit_writer_init(&bit_w, derived_iter->key+1);
+            fc_solve_delta_stater_set_derived(
+                delta_stater, &(derived_iter->state.s)
+            );
+            fc_solve_delta_stater_encode_composite(delta_stater, &bit_w);
+            derived_iter->key[0] =
+                bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
+                ;
+        }
+
+        instance_check_multiple_keys(instance, derived_list);
+
+        /* Now recycle the derived_list */
+        while (derived_list)
+        {
+#define derived_list_next derived_iter
+            derived_list_next = derived_list->next;
+            derived_list->next = derived_list_recycle_bin;
+            derived_list_recycle_bin = derived_list;
+            derived_list = derived_list_next;
+#undef derived_list_next
+        }
+        /* End of main thread loop */
         prev_item = item;
     }
 
