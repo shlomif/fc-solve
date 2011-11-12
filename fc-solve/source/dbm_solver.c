@@ -267,7 +267,6 @@ typedef struct {
     /* The queue */
     
     pthread_mutex_t queue_lock;
-    /* TODO : initialize the allocator. */
     fcs_compact_allocator_t queue_allocator;
     /* TODO : offload the queue to the hard disk. */
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
