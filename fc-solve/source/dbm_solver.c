@@ -9,6 +9,10 @@
 
 #include "dbm_solver.h"
 
+#include "delta_states.c"
+
+#define STACKS_NUM 8
+
 /* TODO: make sure the key is '\0'-padded. */
 static int fc_solve_compare_lru_cache_keys(
     const void * void_a, const void * void_b, void * context
@@ -268,6 +272,7 @@ typedef struct {
     
     pthread_mutex_t queue_lock;
     fcs_compact_allocator_t queue_allocator;
+    int queue_num_extracted_and_processed;
     /* TODO : offload the queue to the hard disk. */
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
 } fcs_dbm_solver_instance_t;
@@ -285,6 +290,7 @@ static void GCC_INLINE instance_init(
     fc_solve_compact_allocator_init(
         &(instance->queue_allocator)
     );
+    instance->queue_num_extracted_and_processed = 0;
     instance->queue_head =
         instance->queue_tail =
         instance->queue_recycle_bin =
@@ -381,10 +387,13 @@ static void GCC_INLINE instance_check_key(
 
 struct fcs_derived_state_struct
 {
-    fcs_state_t state;
+    fcs_state_keyval_pair_t state;
     fcs_encoded_state_buffer_t key;
     fcs_encoded_state_buffer_t parent_and_move;
     struct fcs_derived_state_struct * next;
+#ifdef INDIRECT_STACK_STATES
+    dll_ind_buf_t indirect_stacks_buffer;
+#endif
 };
 
 typedef struct fcs_derived_state_struct fcs_derived_state_t;
@@ -413,6 +422,97 @@ static void GCC_INLINE instance_check_multiple_keys(
         );
     }
     pthread_mutex_unlock(&(instance->storage_lock));
+}
+
+typedef struct {
+    fcs_dbm_solver_instance_t * instance;
+    fc_solve_delta_stater_t * delta_stater;
+} fcs_dbm_solver_thread_t;
+
+typedef struct {
+    fcs_dbm_solver_thread_t * thread;
+} thread_arg_t;
+
+void * instance_run_solver_thread(void * void_arg)
+{
+    thread_arg_t * arg;
+    fcs_dbm_solver_thread_t * thread;
+    fcs_dbm_solver_instance_t * instance;
+    fcs_dbm_queue_item_t * item, * prev_item;
+    int queue_num_extracted_and_processed;
+    fcs_derived_state_t * derived_list, * derived_list_recycle_bin;
+    fcs_compact_allocator_t derived_list_allocator;
+    fc_solve_delta_stater_t * delta_stater;
+    fcs_state_keyval_pair_t state;
+#ifdef INDIRECT_STACK_STATES
+    dll_ind_buf_t indirect_stacks_buffer;
+#endif
+    fc_solve_bit_reader_t bit_r;
+
+    arg = (thread_arg_t *)void_arg;
+    thread = arg->thread;
+    instance = thread->instance;
+    delta_stater = thread->delta_stater;
+
+    prev_item = NULL;
+
+    fc_solve_compact_allocator_init(&(derived_list_allocator));
+    derived_list_recycle_bin = NULL;
+
+    while (1)
+    {
+        /* First of all extract an item. */
+        pthread_mutex_lock(&instance->queue_lock);
+
+        if (prev_item)
+        {
+            instance->queue_num_extracted_and_processed--;
+            prev_item->next = instance->queue_recycle_bin;
+            instance->queue_recycle_bin = prev_item;
+        }
+
+        if ((item = instance->queue_head))
+        {
+            if (!(instance->queue_head = item->next))
+            {
+                instance->queue_tail = NULL;
+            }
+            instance->queue_num_extracted_and_processed++;
+        }
+
+        queue_num_extracted_and_processed =
+            instance->queue_num_extracted_and_processed;
+
+        pthread_mutex_unlock(&instance->queue_lock);
+
+        if (! queue_num_extracted_and_processed)
+        {
+            break;
+        }
+
+        derived_list = NULL;
+
+        fc_solve_bit_reader_init(&bit_r, item->key + 1);
+
+        fc_solve_state_init(&state, STACKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , indirect_stacks_buffer
+#endif
+        );
+
+        fc_solve_delta_stater_decode(
+            delta_stater,
+            &bit_r,
+            &(state.s)
+        );
+
+        /* End of loop */
+        prev_item = item;
+    }
+
+    fc_solve_compact_allocator_finish(&(derived_list_allocator));
+
+    return NULL;
 }
 
 /* Temporary main() function to make gcc happy. */

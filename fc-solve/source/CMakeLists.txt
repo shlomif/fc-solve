@@ -503,7 +503,7 @@ IF (FCS_ENABLE_DBM_SOLVER)
     INCLUDE_DIRECTORIES(BEFORE "${LEVELDB_SOURCE_DIR}/include")
     LINK_DIRECTORIES("${LEVELDB_SOURCE_DIR}")
     ADD_EXECUTABLE(dbm_fc_solver
-        alloc.c dbm_leveldb.cpp dbm_solver.c kaz_tree.c
+        alloc.c app_str.c card.c dbm_leveldb.cpp dbm_solver.c kaz_tree.c state.c
     )
     TARGET_LINK_LIBRARIES(dbm_fc_solver "leveldb" "pthread")
 ENDIF (FCS_ENABLE_DBM_SOLVER)
