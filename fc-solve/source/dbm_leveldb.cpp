@@ -22,8 +22,6 @@ extern "C" fcs_bool_t fc_solve_dbm_store_does_key_exist(
     leveldb::Slice key((const char *)(key_raw+1),key_raw[0]);
     std::string value;
 
-    leveldb::Status s =
-        ((leveldb::DB *)store)->Get(leveldb::ReadOptions(), key, &value);
-
-    return s.ok();
+    return
+        ((leveldb::DB *)store)->Get(leveldb::ReadOptions(), key, &value).ok();
 }
