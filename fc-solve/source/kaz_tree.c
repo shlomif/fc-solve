@@ -172,7 +172,7 @@ static int verify_bintree(dict_t *dict)
 {
     dnode_t *first, *next;
 
-    first = dict_first(dict);
+    first = fc_solve_kaz_tree_first(dict);
 
     if (dict->dupes) {
         while (first && (next = dict_next(dict, first))) {
@@ -1103,13 +1103,7 @@ void fc_solve_kaz_tree_delete_free(dict_t *dict, dnode_t *node)
 #endif
 }
 
-#ifdef NO_FC_SOLVE
-/*
- * Return the node with the lowest (leftmost) key. If the dictionary is empty
- * (that is, dict_isempty(dict) returns 1) a null pointer is returned.
- */
-
-dnode_t *dict_first(dict_t *dict)
+dnode_t *fc_solve_kaz_tree_first(dict_t *dict)
 {
     dnode_t *nil = dict_nil(dict), *root = dict_root(dict), *left;
 
@@ -1119,6 +1113,13 @@ dnode_t *dict_first(dict_t *dict)
 
     return (root == nil) ? NULL : root;
 }
+
+#ifdef NO_FC_SOLVE
+/*
+ * Return the node with the lowest (leftmost) key. If the dictionary is empty
+ * (that is, dict_isempty(dict) returns 1) a null pointer is returned.
+ */
+
 
 /*
  * Return the node with the highest (rightmost) key. If the dictionary is empty
@@ -1289,7 +1290,7 @@ int dnode_is_in_a_dict(dnode_t *dnode)
 #ifdef NO_FC_SOLVE
 void dict_process(dict_t *dict, void *context, dnode_process_t function)
 {
-    dnode_t *node = dict_first(dict), *next;
+    dnode_t *node = fc_solve_kaz_tree_first(dict), *next;
 
     while (node != NULL) {
         /* check for callback function deleting */
@@ -1426,7 +1427,7 @@ void dict_load_end(dict_load_t *load)
 void dict_merge(dict_t *dest, dict_t *source)
 {
     dict_load_t load;
-    dnode_t *leftnode = dict_first(dest), *rightnode = dict_first(source);
+    dnode_t *leftnode = fc_solve_kaz_tree_first(dest), *rightnode = fc_solve_kaz_tree_first(source);
 
     assert (dict_similar(dest, source));
 
@@ -1742,7 +1743,7 @@ int main(void)
                 printf("%lu\n", (unsigned long) dict_count(d));
                 break;
             case 't':
-                for (dn = dict_first(d); dn; dn = dict_next(d, dn)) {
+                for (dn = fc_solve_kaz_tree_first(d); dn; dn = dict_next(d, dn)) {
                     printf("%s\t%s\n", (char *) dnode_getkey(dn),
                             (char *) dnode_get(dn));
                 }

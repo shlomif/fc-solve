@@ -69,6 +69,11 @@ fcs_bool_t fc_solve_dbm_store_does_key_exist(
     const unsigned char * key_raw
 );
 
+void fc_solve_dbm_store_offload_pre_cache(
+    fcs_dbm_store_t store,
+    fcs_pre_cache_t * pre_cache
+);
+
 #ifdef __cplusplus
 }
 #endif

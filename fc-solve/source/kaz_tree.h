@@ -152,9 +152,9 @@ extern const void * fc_solve_kaz_tree_alloc_insert(dict_t *, const void *);
 extern void fc_solve_kaz_tree_delete_free(dict_t *, dnode_t *);
 extern dnode_t *fc_solve_kaz_tree_lookup(dict_t *, const void *);
 
+extern dnode_t *fc_solve_kaz_tree_first(dict_t *);
 extern dnode_t *fc_solve_kaz_tree_next(dict_t *, dnode_t *);
 #ifdef NO_FC_SOLVE 
-extern dnode_t *dict_first(dict_t *);
 extern dnode_t *dict_last(dict_t *);
 extern dnode_t *dict_prev(dict_t *, dnode_t *);
 extern dictcount_t dict_count(dict_t *);
