@@ -2,9 +2,9 @@
 #include "config.h"
 
 #include "inline.h"
+#include "bool.h"
 
 #include "kaz_tree.h"
-#include "bool.h"
 
 typedef unsigned char fcs_encoded_state_buffer_t[24];
 
