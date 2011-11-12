@@ -198,6 +198,7 @@ extern void dict_merge(dict_t *, dict_t *);
 #ifdef __cplusplus
 }
 
+#if 0
 #include <functional>
 
 namespace kazlib
@@ -559,6 +560,8 @@ namespace kazlib
         }
     };
 }
+
+#endif
 
 #endif
 

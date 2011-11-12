@@ -61,6 +61,14 @@ typedef struct {
     long count_elements;
 } fcs_pre_cache_t;
 
+typedef void * fcs_dbm_store_t;
+void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path);
+
+fcs_bool_t fc_solve_dbm_store_does_key_exist(
+    fcs_dbm_store_t store,
+    const unsigned char * key_raw
+);
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,7 +1,7 @@
 #include <cassert>
 #include "leveldb/db.h"
 
-#include "dbm_leveldb.h"
+#include "dbm_solver.h"
 
 extern "C" void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 {
