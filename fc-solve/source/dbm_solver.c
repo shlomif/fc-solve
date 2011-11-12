@@ -191,6 +191,43 @@ static void GCC_INLINE pre_cache_insert(
     pre_cache->count_elements++;
 }
 
+static void GCC_INLINE cache_populate_from_pre_cache(
+    fcs_lru_cache_t * cache,
+    fcs_pre_cache_t * pre_cache
+)
+{
+    dnode_t * node;
+    dict_t * kaz_tree;
+
+    kaz_tree = pre_cache->kaz_tree;
+
+    for (node = fc_solve_kaz_tree_first(kaz_tree);
+            node ;
+            node = fc_solve_kaz_tree_next(kaz_tree, node)
+            )
+    {
+        cache_insert(
+            cache, 
+            ((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->key
+        );
+    }
+}
+
+static void GCC_INLINE pre_cache_offload_and_reset(
+    fcs_pre_cache_t * pre_cache,
+    fcs_dbm_store_t store,
+    fcs_lru_cache_t * cache
+)
+{
+    fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
+    cache_populate_from_pre_cache(cache, pre_cache);
+
+    /* Now reset the pre_cache. */
+    fc_solve_kaz_tree_destroy(pre_cache->kaz_tree);
+    fc_solve_compact_allocator_finish(&(pre_cache->kv_allocator));
+    pre_cache_init(pre_cache);
+}
+
 /* Temporary main() function to make gcc happy. */
 int main(int argc, char * argv[])
 {
