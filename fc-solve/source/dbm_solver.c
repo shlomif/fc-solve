@@ -39,6 +39,12 @@ static void GCC_INLINE cache_init(fcs_lru_cache_t * cache, long max_num_elements
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
+static void GCC_INLINE cache_destroy(fcs_lru_cache_t * cache)
+{
+    fc_solve_kaz_tree_destroy(cache->kaz_tree);
+    fc_solve_compact_allocator_finish(&(cache->states_values_to_keys_allocator));
+}
+
 static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, unsigned char * key)
 {
     fcs_cache_key_info_t to_check;
@@ -215,7 +221,7 @@ static void GCC_INLINE cache_populate_from_pre_cache(
     }
 }
 
-static void GCC_INLINE pre_cache_offload_and_reset(
+static void GCC_INLINE pre_cache_offload_and_destroy(
     fcs_pre_cache_t * pre_cache,
     fcs_dbm_store_t store,
     fcs_lru_cache_t * cache
@@ -227,6 +233,15 @@ static void GCC_INLINE pre_cache_offload_and_reset(
     /* Now reset the pre_cache. */
     fc_solve_kaz_tree_destroy(pre_cache->kaz_tree);
     fc_solve_compact_allocator_finish(&(pre_cache->kv_allocator));
+}
+
+static void GCC_INLINE pre_cache_offload_and_reset(
+    fcs_pre_cache_t * pre_cache,
+    fcs_dbm_store_t store,
+    fcs_lru_cache_t * cache
+)
+{
+    pre_cache_offload_and_destroy(pre_cache, store, cache);
     pre_cache_init(pre_cache);
 }
 
@@ -277,6 +292,24 @@ static void GCC_INLINE instance_init(
     instance->pre_cache_max_count = pre_cache_max_count;
     cache_init (&(instance->cache), pre_cache_max_count+caches_delta);
     fc_solve_dbm_store_init(&(instance->store), dbm_store_path);
+}
+
+static void GCC_INLINE instance_destroy(
+    fcs_dbm_solver_instance_t * instance
+    )
+{
+    /* TODO : store what's left on the queue on the hard-disk. */
+    fc_solve_compact_allocator_finish(&(instance->queue_allocator));
+
+    pre_cache_offload_and_destroy(
+        &(instance->pre_cache),
+        instance->store,
+        &(instance->cache)
+    );
+
+    cache_destroy(&(instance->cache));
+
+    fc_solve_dbm_store_destroy(instance->store);
 }
 
 static void GCC_INLINE instance_check_key(
