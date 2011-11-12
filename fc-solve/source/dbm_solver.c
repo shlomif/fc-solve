@@ -258,6 +258,7 @@ static const pthread_mutex_t initial_mutex_constant =
     ;
 
 typedef struct {
+    pthread_mutex_t storage_lock;
     fcs_pre_cache_t pre_cache;
     fcs_dbm_store_t store;
     fcs_lru_cache_t cache;
@@ -280,6 +281,8 @@ static void GCC_INLINE instance_init(
 )
 {
     instance->queue_lock = initial_mutex_constant;
+    instance->storage_lock = initial_mutex_constant;
+
     fc_solve_compact_allocator_init(
         &(instance->queue_allocator)
     );
@@ -375,6 +378,42 @@ static void GCC_INLINE instance_check_key(
         }
         pthread_mutex_unlock(&instance->queue_lock);
     }
+}
+
+struct fcs_derived_state_struct
+{
+    fcs_state_t state;
+    fcs_encoded_state_buffer_t key;
+    fcs_encoded_state_buffer_t parent_and_move;
+    struct fcs_derived_state_struct * next;
+};
+
+typedef struct fcs_derived_state_struct fcs_derived_state_t;
+
+static void GCC_INLINE instance_check_multiple_keys(
+    fcs_dbm_solver_instance_t * instance,
+    fcs_derived_state_t * list
+)
+{
+    /* Small optimization in case the list is empty. */
+    if (!list)
+    {
+        return;
+    }
+    pthread_mutex_lock(&(instance->storage_lock));
+    for (; list ; list = list->next)
+    {
+        instance_check_key(instance, list->key, list->parent_and_move);
+    }
+    if (instance->pre_cache.count_elements >= instance->pre_cache_max_count)
+    {
+        pre_cache_offload_and_reset(
+            &(instance->pre_cache),
+            instance->store,
+            &(instance->cache)
+        );
+    }
+    pthread_mutex_unlock(&(instance->storage_lock));
 }
 
 /* Temporary main() function to make gcc happy. */
