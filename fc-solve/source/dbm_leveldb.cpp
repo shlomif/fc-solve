@@ -28,7 +28,7 @@ extern "C" fcs_bool_t fc_solve_dbm_store_does_key_exist(
 }
 
 #define MAX_ITEMS_IN_TRANSACTION 10000
-void fc_solve_dbm_store_offload_pre_cache(
+extern "C" void fc_solve_dbm_store_offload_pre_cache(
     fcs_dbm_store_t store,
     fcs_pre_cache_t * pre_cache
 )
