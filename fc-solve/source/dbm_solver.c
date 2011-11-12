@@ -67,7 +67,7 @@ static void GCC_INLINE cache_init(fcs_lru_cache_t * cache, long max_num_elements
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, unsigned char * key)
+static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, unsigned char * key)
 {
     fcs_cache_key_info_t to_check;
     dnode_t * node;
@@ -113,7 +113,7 @@ static fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, unsigned char * 
     }
 }
 
-static void cache_insert(fcs_lru_cache_t * cache, unsigned char * key)
+static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, unsigned char * key)
 {
     fcs_cache_key_info_t * cache_key;
     dict_t * kaz_tree;
@@ -158,6 +158,84 @@ static void cache_insert(fcs_lru_cache_t * cache, unsigned char * key)
 
     fc_solve_kaz_tree_alloc_insert(kaz_tree, cache_key);
 
+}
+
+union fcs_pre_cache_key_val_pair_struct
+{
+    struct {
+        fcs_encoded_state_buffer_t key;
+        fcs_encoded_state_buffer_t parent_and_move;
+    };
+    union fcs_pre_cache_key_val_pair_struct * next;
+};
+
+typedef union fcs_pre_cache_key_val_pair_struct fcs_pre_cache_key_val_pair_t;
+
+typedef struct {
+    dict_t * kaz_tree;
+    fcs_compact_allocator_t kv_allocator;
+    fcs_pre_cache_key_val_pair_t * kv_recycle_bin;
+    long count_elements;
+} fcs_pre_cache_t;
+
+static int fc_solve_compare_pre_cache_keys(
+    const void * void_a, const void * void_b, void * context
+)
+{
+#define GET_PARAM(p) ((((const fcs_pre_cache_key_val_pair_t *)(p))->key))
+    return memcmp(GET_PARAM(void_a), GET_PARAM(void_b), sizeof(GET_PARAM(void_a)));
+#undef GET_PARAM
+}
+
+static void GCC_INLINE pre_cache_init(fcs_pre_cache_t * pre_cache_ptr)
+{
+    pre_cache_ptr->kaz_tree =
+        fc_solve_kaz_tree_create(fc_solve_compare_pre_cache_keys, NULL);
+
+    fc_solve_compact_allocator_init(&(pre_cache_ptr->kv_allocator));
+    pre_cache_ptr->kv_recycle_bin = NULL;
+    pre_cache_ptr->count_elements = 0;
+}
+
+static fcs_bool_t GCC_INLINE pre_cache_does_key_exist(
+    fcs_pre_cache_t * pre_cache,
+    unsigned char * key
+    )
+{
+    fcs_pre_cache_key_val_pair_t to_check;
+
+    memcpy(to_check.key, key, sizeof(to_check.key));
+
+    return (fc_solve_kaz_tree_lookup(pre_cache->kaz_tree, &to_check) != NULL);
+}
+
+static void GCC_INLINE pre_cache_insert(
+    fcs_pre_cache_t * pre_cache,
+    unsigned char * key,
+    unsigned char * parent_and_move
+    )
+{
+    fcs_pre_cache_key_val_pair_t * to_insert;
+
+    if (pre_cache->kv_recycle_bin)
+    {
+        pre_cache->kv_recycle_bin =
+            (to_insert = pre_cache->kv_recycle_bin)->next;
+    }
+    else
+    {
+        to_insert =
+            fcs_compact_alloc_ptr(
+                &(pre_cache->kv_allocator),
+                sizeof(*to_insert)
+            );
+    }
+    memcpy(to_insert->key, key, sizeof(to_insert->key));
+    memcpy(to_insert->parent_and_move, parent_and_move, 
+            sizeof(to_insert->parent_and_move));
+
+    fc_solve_kaz_tree_alloc_insert(pre_cache->kaz_tree, to_insert);
+    pre_cache->count_elements++;
 }
 
 /* Temporary main() function to make gcc happy. */
