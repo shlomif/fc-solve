@@ -837,11 +837,9 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                 {
                     fcs_cards_column_t new_dest_col;
-                    new_dest_col = fcs_state_get_col(new_state, ds);
-
-                    fcs_empty_freecell(new_state, fc_idx);
-
+                    new_dest_col = fcs_state_get_col(new_state, empty_stack_idx);
                     fcs_col_push_card(new_dest_col, card);
+                    fcs_empty_freecell(new_state, fc_idx);
                 }
 
                 COMMIT_NEW_STATE(
@@ -1076,7 +1074,7 @@ int main(int argc, char * argv[])
     dbm_store_path = "./fc_solve_dbm_store";
     num_threads = 2;
 
-    for (;arg < argc; arg++)
+    for (arg=1;arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--pre-cache-max-count"))
         {
@@ -1139,9 +1137,14 @@ int main(int argc, char * argv[])
         }
     }
 
-    if (arg != argc-1)
+    if (arg < argc-1)
     {
         fprintf (stderr, "%s\n", "Junk arguments!");
+        exit(-1);
+    }
+    else if (arg == argc)
+    {
+        fprintf (stderr, "%s\n", "No board specified.");
         exit(-1);
     }
 
