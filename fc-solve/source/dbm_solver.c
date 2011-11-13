@@ -445,6 +445,23 @@ typedef struct {
 #define FREECELL2MOVE(idx) (idx+8)
 #define FOUND2MOVE(idx) ((idx)+8+4)
 
+#ifdef INDIRECT_STACK_STATES
+
+#define COPY_INDIRECT_COLS() \
+{ \
+    for (copy_col_idx=0;copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++) \
+    { \
+        copy_stack_col = fcs_state_get_col((ptr_new_state->state.s), copy_col_idx); \
+        memcpy(&ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7], copy_stack_col, fcs_col_len(copy_stack_col)+1); \
+   } \
+}
+
+#else
+
+#define COPY_INDIRECT_COLS() {}
+
+#endif
+
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_state_keyval_pair_t * init_state_kv_ptr,
     fcs_encoded_state_buffer_t * key,
@@ -516,13 +533,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                         init_state_kv_ptr
                     );
 
-#ifdef INDIRECT_STACK_STATES
-                    for (copy_col_idx=0;copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++)
-                    {
-                        copy_stack_col = fcs_state_get_col((ptr_new_state->state.s), copy_col_idx);
-                        memcpy(&ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7], copy_stack_col, fcs_col_len(copy_stack_col)+1);
-                    }
-#endif
+                    COPY_INDIRECT_COLS()
 
                     {
                         fcs_cards_column_t new_temp_col;
@@ -583,13 +594,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                         init_state_kv_ptr
                     );
 
-#ifdef INDIRECT_STACK_STATES
-                    for (copy_col_idx=0;copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++)
-                    {
-                        copy_stack_col = fcs_state_get_col((ptr_new_state->state.s), copy_col_idx);
-                        memcpy(&ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7], copy_stack_col, fcs_col_len(copy_stack_col)+1);
-                    }
-#endif
+                    COPY_INDIRECT_COLS()
 
                     fcs_empty_freecell(new_state, fc_idx);
 
