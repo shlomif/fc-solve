@@ -514,8 +514,8 @@ void * instance_run_solver_thread(void * void_arg)
         /* END TODO . */
         
         /* Encode all the states. */
-        for (derived_iter = derived_list; 
-                derived_iter ; 
+        for (derived_iter = derived_list;
+                derived_iter ;
                 derived_iter = derived_iter->next
         )
         {
