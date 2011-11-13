@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "config.h"
 
@@ -962,6 +963,15 @@ void * instance_run_solver_thread(void * void_arg)
             break;
         }
 
+        if (! item)
+        {
+            /* Sleep until more items become available in the
+             * queue. */
+            usleep(5000);
+        }
+        else
+        {
+        /* Handle item. */
         fc_solve_bit_reader_init(&bit_r, item->key + 1);
 
         fc_solve_state_init(&state, STACKS_NUM
@@ -1020,6 +1030,8 @@ void * instance_run_solver_thread(void * void_arg)
             derived_list_recycle_bin = derived_list;
             derived_list = derived_list_next;
 #undef derived_list_next
+        }
+        /* End handle item. */
         }
         /* End of main thread loop */
         prev_item = item;
