@@ -658,6 +658,44 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         }
     }
 
+    /* Move freecell card on top of a parent */
+    for (fc_idx=0 ; fc_idx < LOCAL_FREECELLS_NUM ; fc_idx++)
+    {
+        card = fcs_freecell_card(the_state, fc_idx);
+        if (fcs_card_card_num(card) != 0)
+        {
+            for (ds=0;ds<LOCAL_STACKS_NUM;ds++)
+            {
+                dest_col = fcs_state_get_col(the_state, ds);
+
+                if (fcs_col_len(dest_col) > 0)
+                {
+                    dest_card = fcs_col_get_card(dest_col,
+                            fcs_col_len(dest_col)-1);
+                    if (fcs_is_parent_card(card, dest_card))
+                    {
+                        /* Let's move it */
+                        BEGIN_NEW_STATE()
+
+                        {
+                            fcs_cards_column_t new_dest_col;
+
+                            new_dest_col = fcs_state_get_col(new_state, ds);
+
+                            fcs_col_push_card(new_dest_col, card);
+
+                            fcs_empty_freecell(new_state, fc_idx);
+                        }
+                        
+                        COMMIT_NEW_STATE(
+                            FREECELL2MOVE(fc_idx), COL2MOVE(ds)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     if (empty_stack_idx >= 0)
     {
         /* Stack Card to Empty Stack */
@@ -665,7 +703,10 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         {
             col = fcs_state_get_col(the_state, stack_idx);
             cards_num = fcs_col_len(col);
-            if (cards_num > 0)
+            /* Bug fix: if there's only one card in a column, there's no 
+             * point moving it to a new empty column.
+             * */
+            if (cards_num > 1)
             {
                 card = fcs_col_get_card(col, cards_num-1);
                 /* Let's move it */
