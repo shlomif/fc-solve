@@ -1342,7 +1342,9 @@ int main(int argc, char * argv[])
 #ifdef INDIRECT_STACK_STATES
         dll_ind_buf_t indirect_stacks_buffer;
 #endif
-
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+        fcs_state_locs_struct_t locs;
+#endif
         printf ("%s\n", "Success!");
         /* Now trace the solution */
 #define GROW_BY 100
@@ -1373,6 +1375,16 @@ int main(int argc, char * argv[])
                     ));
             }
         }
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+        for (i=0 ; i < MAX_NUM_STACKS ; i++)
+        {
+            locs.stack_locs[i] = i;
+        }
+        for (i=0 ; i < MAX_NUM_FREECELLS ; i++)
+        {
+            locs.fc_locs[i] = i;
+        }
+#endif
         for (i = trace_num-1 ; i >= 0; i--)
         {
             fc_solve_state_init(&state, STACKS_NUM
@@ -1399,6 +1411,9 @@ int main(int argc, char * argv[])
                         &(state.info),
 #else
                         &state,
+#endif
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+                        &locs,
 #endif
                         FREECELLS_NUM,
                         STACKS_NUM,

@@ -34,7 +34,9 @@
  *
  * Also see "man assert".
  * */
+#ifndef NDEBUG
 #define NDEBUG
+#endif
 
 #include <stdlib.h>
 #include <stddef.h>
