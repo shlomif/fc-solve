@@ -484,7 +484,8 @@ typedef struct {
     for (copy_col_idx=0;copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++) \
     { \
         copy_stack_col = fcs_state_get_col((ptr_new_state->state.s), copy_col_idx); \
-        memcpy(&ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7], copy_stack_col, fcs_col_len(copy_stack_col)+1); \
+        memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]), copy_stack_col, fcs_col_len(copy_stack_col)+1); \
+        fcs_state_get_col((ptr_new_state->state.s), copy_col_idx) = &(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]); \
    } \
 }
 
@@ -530,7 +531,7 @@ typedef struct {
           ); \
     ptr_new_state->parent_and_move[ \
         ptr_new_state->parent_and_move[0]+1 \
-        ] = MAKE_MOVE(src, dest); \
+        ] = MAKE_MOVE((src), (dest)); \
  \
     /* Finally, enqueue the new state. */ \
     ptr_new_state->next = (*derived_list); \
@@ -1381,7 +1382,7 @@ int main(int argc, char * argv[])
             );
             if (i > 0)
             {
-                move = trace[i-1][1+trace[i-1][0]];
+                move = trace[i][1+trace[i][0]];
             }
 
             state_as_str =
