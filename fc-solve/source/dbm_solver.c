@@ -12,6 +12,8 @@
 #include "delta_states.c"
 
 #define STACKS_NUM 8
+#define LOCAL_STACKS_NUM STACKS_NUM
+#define INSTANCE_DECKS_NUM 1
 
 /* TODO: make sure the key is '\0'-padded. */
 static int fc_solve_compare_lru_cache_keys(
@@ -435,17 +437,103 @@ typedef struct {
     fcs_dbm_solver_thread_t * thread;
 } thread_arg_t;
 
+#define MAKE_MOVE(src, dest) ((src) | (dest) << 4)
+#define COL2MOVE(idx) (idx)
+#define FREECELL2MOVE(idx) (idx+8)
+#define FOUND2MOVE(idx) ((idx)+8+4)
+
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
-    fcs_state_keyval_pair_t * state,
+    fcs_state_keyval_pair_t * init_state_kv_ptr,
     fcs_encoded_state_buffer_t * key,
     fcs_derived_state_t * * derived_list,
     fcs_derived_state_t * * derived_list_recycle_bin,
     fcs_compact_allocator_t * derived_list_allocator
 )
 {
+    fcs_derived_state_t * ptr_new_state; 
+    int stack_idx, copy_col_idx, cards_num;
+    fcs_cards_column_t col, copy_stack_col;
+    fcs_card_t card;
+    int deck, suit;
+
     /* TODO : the actual calculation. */
+
+#define the_state (init_state_kv_ptr->s)
+#define new_state (ptr_new_state->state.s)
+    /* Move top stack cards to foundations. */
+    for( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+    {
+        col = fcs_state_get_col(the_state, stack_idx);
+        cards_num = fcs_col_len(col);
+        if (cards_num)
+        {
+            /* Get the top card in the stack */
+            card = fcs_col_get_card(col, cards_num-1);
+            suit = fcs_card_suit(card);
+            for (deck=0 ; deck < INSTANCE_DECKS_NUM ; deck++)
+            {
+
+                if (fcs_foundation_value(the_state, deck*4+suit) == fcs_card_card_num(card) - 1)
+                {
+                    /* We can put it there */
+                    if (*derived_list_recycle_bin)
+                    {
+                        (*derived_list_recycle_bin) =
+                            (ptr_new_state = 
+                                (*derived_list_recycle_bin)
+                            )->next;
+                    }
+                    else
+                    {
+                        ptr_new_state =
+                            (fcs_derived_state_t *)
+                            fcs_compact_alloc_ptr(
+                                derived_list_allocator,
+                                sizeof(*ptr_new_state)
+                            );
+                    }
+                    fcs_duplicate_state( 
+                        &(ptr_new_state->state),
+                        init_state_kv_ptr
+                    );
+
+#ifdef INDIRECT_STACK_STATES
+                    for (copy_col_idx=0;copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++)
+                    {
+                        copy_stack_col = fcs_state_get_col((ptr_new_state->state.s), copy_col_idx);
+                        memcpy(&ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7], copy_stack_col, fcs_col_len(copy_stack_col)+1);
+                    }
+#endif
+
+                    {
+                        fcs_cards_column_t new_temp_col;
+                        new_temp_col = fcs_state_get_col(new_state, stack_idx);
+                        fcs_col_pop_top(new_temp_col);
+                    }
+
+                    fcs_increment_foundation(new_state, deck*4+suit);
+
+                    memcpy(
+                        ptr_new_state->parent_and_move,
+                        key,
+                        sizeof(ptr_new_state->parent_and_move)
+                    );
+                    ptr_new_state->parent_and_move[
+                        ptr_new_state->parent_and_move[0]+1
+                    ] = MAKE_MOVE(COL2MOVE(stack_idx), FOUND2MOVE(suit));
+
+                    /* Finally, enqueue the new state. */
+                    ptr_new_state->next = (*derived_list);
+                    (*derived_list) = ptr_new_state;
+                }
+            }
+        }
+    }
     return FALSE;
 }
+
+#undef the_state
+#undef new_state
 
 void * instance_run_solver_thread(void * void_arg)
 {
