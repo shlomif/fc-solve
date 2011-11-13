@@ -271,12 +271,13 @@ typedef struct {
     /* The queue */
     
     pthread_mutex_t queue_lock;
+    fcs_bool_t queue_solution_was_found;
+    fcs_encoded_state_buffer_t queue_solution;
     fcs_compact_allocator_t queue_allocator;
     int queue_num_extracted_and_processed;
     /* TODO : offload the queue to the hard disk. */
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
 } fcs_dbm_solver_instance_t;
-
 static void GCC_INLINE instance_init(
     fcs_dbm_solver_instance_t * instance,
     long pre_cache_max_count,
@@ -290,6 +291,7 @@ static void GCC_INLINE instance_init(
     fc_solve_compact_allocator_init(
         &(instance->queue_allocator)
     );
+    instance->queue_solution_was_found = FALSE;
     instance->queue_num_extracted_and_processed = 0;
     instance->queue_head =
         instance->queue_tail =
@@ -433,9 +435,22 @@ typedef struct {
     fcs_dbm_solver_thread_t * thread;
 } thread_arg_t;
 
+static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
+    fcs_state_keyval_pair_t * state,
+    fcs_encoded_state_buffer_t * key,
+    fcs_derived_state_t * * derived_list,
+    fcs_derived_state_t * * derived_list_recycle_bin,
+    fcs_compact_allocator_t * derived_list_allocator
+)
+{
+    /* TODO : the actual calculation. */
+    return FALSE;
+}
+
 void * instance_run_solver_thread(void * void_arg)
 {
     thread_arg_t * arg;
+    fcs_bool_t queue_solution_was_found;
     fcs_dbm_solver_thread_t * thread;
     fcs_dbm_solver_instance_t * instance;
     fcs_dbm_queue_item_t * item, * prev_item;
@@ -474,25 +489,26 @@ void * instance_run_solver_thread(void * void_arg)
             instance->queue_recycle_bin = prev_item;
         }
 
-        if ((item = instance->queue_head))
+        if (! (queue_solution_was_found = instance->queue_solution_was_found))
         {
-            if (!(instance->queue_head = item->next))
+            if ((item = instance->queue_head))
             {
-                instance->queue_tail = NULL;
+                if (!(instance->queue_head = item->next))
+                {
+                    instance->queue_tail = NULL;
+                }
+                instance->queue_num_extracted_and_processed++;
             }
-            instance->queue_num_extracted_and_processed++;
+
+            queue_num_extracted_and_processed =
+                instance->queue_num_extracted_and_processed;
         }
-
-        queue_num_extracted_and_processed =
-            instance->queue_num_extracted_and_processed;
-
         pthread_mutex_unlock(&instance->queue_lock);
 
-        if (! queue_num_extracted_and_processed)
+        if (queue_solution_was_found || (! queue_num_extracted_and_processed))
         {
             break;
         }
-
 
         fc_solve_bit_reader_init(&bit_r, item->key + 1);
 
@@ -508,11 +524,22 @@ void * instance_run_solver_thread(void * void_arg)
             &(state.s)
         );
 
-        /* TODO : calculate all the derived states.
-         * */
+        if (instance_solver_thread_calc_derived_states(
+            &state,
+            &(item->key),
+            &derived_list,
+            &derived_list_recycle_bin,
+            &derived_list_allocator
+        ))
+        {
+            pthread_mutex_lock(&instance->queue_lock);
+            instance->queue_solution_was_found = TRUE;
+            memcpy(&(instance->queue_solution), &(item->key),
+                   sizeof(instance->queue_solution));
+            pthread_mutex_unlock(&instance->queue_lock);
+            break;
+        }
 
-        /* END TODO . */
-        
         /* Encode all the states. */
         for (derived_iter = derived_list;
                 derived_iter ;
