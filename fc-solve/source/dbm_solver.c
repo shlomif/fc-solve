@@ -1131,7 +1131,7 @@ int main(int argc, char * argv[])
     fc_solve_delta_stater_t * delta;
     fcs_state_keyval_pair_t init_state;
 #ifdef INDIRECT_STACK_STATES
-    dll_ind_buf_t indirect_stacks_buffer;
+    dll_ind_buf_t init_indirect_stacks_buffer;
 #endif
     fc_solve_bit_writer_t bit_w;
 
@@ -1234,7 +1234,7 @@ int main(int argc, char * argv[])
         STACKS_NUM,
         DECKS_NUM
 #ifdef INDIRECT_STACK_STATES
-        , indirect_stacks_buffer
+        , init_indirect_stacks_buffer
 #endif
     );
 
@@ -1333,14 +1333,15 @@ int main(int argc, char * argv[])
         unsigned char move;
         char * state_as_str;
         char move_buffer[500];
+        dll_ind_buf_t indirect_stacks_buffer;
 
         printf ("%s\n", "Success!");
         /* Now trace the solution */
 #define GROW_BY 100
         trace_num = 0;
         trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
-        memcpy(trace[trace_num++], instance.queue_solution,
-               sizeof(trace[trace_num++]));
+        memcpy(trace[trace_num], instance.queue_solution,
+               sizeof(trace[0]));
         while (trace[trace_num][0])
         {
             memset(key, '\0', sizeof(key));
@@ -1380,7 +1381,7 @@ int main(int argc, char * argv[])
             );
             if (i > 0)
             {
-                move = trace[i-1][trace[i-1][0]];
+                move = trace[i-1][1+trace[i-1][0]];
             }
 
             state_as_str =
@@ -1399,7 +1400,7 @@ int main(int argc, char * argv[])
                         1
                 );
 
-            printf("--------\n%s\n==%s\n",
+            printf("--------\n%s\n==\n%s\n",
                     state_as_str,
                     (i > 0 )
                         ? move_to_string(move, move_buffer)
