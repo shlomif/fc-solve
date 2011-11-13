@@ -506,6 +506,95 @@ typedef struct {
  \
 }
 
+static GCC_INLINE int calc_foundation_to_put_card_on(
+        fcs_state_t * my_ptr_state,
+        fcs_card_t card
+        )
+{
+    int deck;
+
+    for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
+    {
+        if (fcs_foundation_value(*my_ptr_state, (deck<<2)+fcs_card_suit(card)) == fcs_card_card_num(card) - 1)
+        {
+            int other_deck_idx;
+
+            for (other_deck_idx = 0 ; other_deck_idx < (INSTANCE_DECKS_NUM << 2) ; other_deck_idx++)
+            {
+                if (fcs_foundation_value(*my_ptr_state, other_deck_idx)
+                        < fcs_card_card_num(card) - 2 -
+                        ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
+                   )
+                {
+                    break;
+                }
+            }
+            if (other_deck_idx == (INSTANCE_DECKS_NUM << 2))
+            {
+                return (deck<<2)+fcs_card_suit(card);
+            }
+        }
+    }
+    return -1;
+}
+
+static GCC_INLINE void horne_prune(
+    fcs_state_keyval_pair_t * init_state_kv_ptr
+)
+{
+    int stack_idx, fc;
+    fcs_cards_column_t col;
+    int cards_num;
+    int dest_foundation;
+    int num_cards_moved;
+    fcs_card_t card;
+
+#define the_state (init_state_kv_ptr->s)
+    do {
+        num_cards_moved = 0;
+        for( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+        {
+            col = fcs_state_get_col(the_state, stack_idx);
+            cards_num = fcs_col_len(col);
+            if (cards_num)
+            {
+                /* Get the top card in the stack */
+                card = fcs_col_get_card(col, cards_num-1);
+
+                if ((dest_foundation = 
+                    calc_foundation_to_put_card_on(&the_state, card)) >= 0)
+                {
+                    /* We can safely move it. */
+                    num_cards_moved++;
+
+                    fcs_col_pop_top(col);
+
+                    fcs_increment_foundation(the_state, dest_foundation);
+                }
+            }
+        }
+
+        /* Now check the same for the free cells */
+        for( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
+        {
+            card = fcs_freecell_card(the_state, fc);
+            if (fcs_card_card_num(card) != 0)
+            {
+                if ((dest_foundation = 
+                    calc_foundation_to_put_card_on(&the_state, card)) >= 0)
+                {
+                    num_cards_moved++;
+
+                    /* We can put it there */
+
+                    fcs_empty_freecell(the_state, fc);
+                    fcs_increment_foundation(the_state, dest_foundation);
+                }
+            }
+        }
+    } while (num_cards_moved);
+}
+
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_state_keyval_pair_t * init_state_kv_ptr,
     fcs_encoded_state_buffer_t * key,
@@ -790,6 +879,20 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         }
     }
 #undef fc_idx
+
+    /* Perform Horne's Prune on all the states. */
+    {
+        fcs_derived_state_t * derived_iter;
+
+        for (derived_iter = (*derived_list);
+            derived_iter ;
+            derived_iter = derived_iter->next
+        )
+        {
+            horne_prune(&(derived_iter->state));
+        }
+    }
+
     return FALSE;
 }
 

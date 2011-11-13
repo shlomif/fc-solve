@@ -2178,7 +2178,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 #define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(instance, CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS(), card)
 #endif
 
-static GCC_INLINE fcs_bool_t calc_foundation_to_put_card_on(
+static GCC_INLINE int calc_foundation_to_put_card_on(
 #ifndef HARD_CODED_NUM_DECKS
         fc_solve_instance_t * instance,
 #endif
