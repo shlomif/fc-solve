@@ -16,6 +16,7 @@
 #define LOCAL_STACKS_NUM STACKS_NUM
 #define INSTANCE_DECKS_NUM 1
 #define LOCAL_FREECELLS_NUM 2
+#define FREECELLS_NUM LOCAL_FREECELLS_NUM
 #define DECKS_NUM INSTANCE_DECKS_NUM
 #define RANK_KING 13
 
@@ -1043,10 +1044,223 @@ void * instance_run_solver_thread(void * void_arg)
     return NULL;
 }
 
+typedef struct {
+    fcs_dbm_solver_thread_t thread;
+    thread_arg_t arg;
+    pthread_t id;
+} main_thread_item_t;
+
+#define USER_STATE_SIZE 2000
+
 /* Temporary main() function to make gcc happy. */
 int main(int argc, char * argv[])
 {
-    printf("%s\n", "Hello");
+    fcs_dbm_solver_instance_t instance;
+    long pre_cache_max_count;
+    long caches_delta;
+    const char * dbm_store_path;
+    int num_threads;
+    int arg;
+    const char * filename;
+    FILE * fh;
+    char user_state[USER_STATE_SIZE];
+    fc_solve_delta_stater_t * delta;
+    fcs_state_keyval_pair_t init_state;
+#ifdef INDIRECT_STACK_STATES
+    dll_ind_buf_t indirect_stacks_buffer;
+#endif
+    fc_solve_bit_writer_t bit_w;
+
+    pre_cache_max_count = 1000000;
+    caches_delta = 1000000;
+    dbm_store_path = "./fc_solve_dbm_store";
+    num_threads = 2;
+
+    for (;arg < argc; arg++)
+    {
+        if (!strcmp(argv[arg], "--pre-cache-max-count"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--pre-cache-max-count came without an argument!\n");
+                exit(-1);
+            }
+            pre_cache_max_count = atol(argv[arg]);
+            if (pre_cache_max_count < 1000)
+            {
+                fprintf(stderr, "--pre-cache-max-count must be at least 1,000.\n");
+                exit(-1);
+            }
+        }
+        else if (!strcmp(argv[arg], "--caches-delta"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--caches-delta came without an argument!\n");
+                exit(-1);
+            }
+            caches_delta = atol(argv[arg]);
+            if (caches_delta < 1000)
+            {
+                fprintf(stderr, "--caches-delta must be at least 1,000.\n");
+                exit(-1);
+            }
+        }
+        else if (!strcmp(argv[arg], "--num-threads"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--num-threads came without an argument!\n");
+                exit(-1);
+            }
+            num_threads = atoi(argv[arg]);
+            if (num_threads < 1)
+            {
+                fprintf(stderr, "--num-threads must be at least 1.\n");
+                exit(-1);
+            }
+        }
+        else if (!strcmp(argv[arg], "--dbm-store-path"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--dbm-store-path came without an argument.\n");
+                exit(-1);
+            }
+            dbm_store_path = argv[arg];
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    if (arg != argc-1)
+    {
+        fprintf (stderr, "%s\n", "Junk arguments!");
+        exit(-1);
+    }
+
+    filename = argv[arg];
+
+    instance_init(&instance, pre_cache_max_count, caches_delta, dbm_store_path);
+    fh = fopen(filename, "r");
+    if (fh == NULL)
+    {
+        fprintf (stderr, "Could not open file '%s' for input.\n", filename);
+        exit(-1);
+    }
+    memset(user_state, '\0', sizeof(user_state));
+    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE-1, fh);
+    fclose(fh);
+
+    fc_solve_initial_user_state_to_c(
+        user_state,
+        &init_state,
+        FREECELLS_NUM,
+        STACKS_NUM,
+        DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+        , indirect_stacks_buffer
+#endif
+    );
+
+    delta = fc_solve_delta_stater_alloc(
+            &init_state.s,
+            STACKS_NUM,
+            FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+    );
+
+    fc_solve_delta_stater_set_derived(delta, &(init_state.s));
+    
+    {
+        fcs_dbm_queue_item_t * first_item;
+        fcs_encoded_state_buffer_t parent_and_move;
+
+        first_item =
+            (fcs_dbm_queue_item_t *)
+                fcs_compact_alloc_ptr(
+                    &(instance.queue_allocator),
+                    sizeof(*first_item)
+                );
+
+        first_item->next = NULL;
+        memset(first_item->key, '\0', sizeof(first_item->key));
+
+        fc_solve_bit_writer_init(&bit_w, first_item->key+1);
+        fc_solve_delta_stater_encode_composite(delta, &bit_w);
+        first_item->key[0] =
+            bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
+            ;
+
+        /* The NULL parent and move for indicating this is the initial
+         * state. */
+        memset(parent_and_move, '\0', sizeof(parent_and_move));
+
+        pre_cache_insert(&(instance.pre_cache), first_item->key, parent_and_move);
+        instance.queue_head = instance.queue_tail = first_item;
+    }
+    {
+        int i, check;
+        main_thread_item_t * threads;
+
+        threads = malloc(sizeof(threads[0]) * num_threads);
+
+        for (i=0; i < num_threads ; i++)
+        {
+            threads[i].thread.instance = &(instance);
+            threads[i].thread.delta_stater =
+                fc_solve_delta_stater_alloc(
+                    &(init_state.s),
+                    STACKS_NUM,
+                    FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+                    , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+                );
+            threads[i].arg.thread = &(threads[i].thread);
+            check = pthread_create(
+                &(threads[i].id),
+                NULL,
+                instance_run_solver_thread,
+                &(threads[i].arg)
+            );
+
+            if (check)
+            {
+                fprintf(stderr,
+                        "Worker Thread No. %d Initialization failed!\n",
+                        i
+                       );
+                exit(-1);
+            }
+        }
+
+        for (i=0; i < num_threads ; i++)
+        {
+            pthread_join(threads[i].id, NULL);
+            fc_solve_delta_stater_free(threads[i].thread.delta_stater);
+        }
+        free(threads);
+    }
+
+    if (instance.queue_solution_was_found)
+    {
+        printf ("%s\n", "Success!");
+    }
+    else
+    {
+        printf ("%s\n", "Could not solve successfully.");
+    }
+    
+    instance_destroy(&instance);
 
     return 0;
 }
