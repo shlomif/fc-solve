@@ -284,6 +284,7 @@ typedef struct {
     /* TODO : offload the queue to the hard disk. */
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
 } fcs_dbm_solver_instance_t;
+
 static void GCC_INLINE instance_init(
     fcs_dbm_solver_instance_t * instance,
     long pre_cache_max_count,
