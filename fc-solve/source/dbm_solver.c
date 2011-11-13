@@ -462,6 +462,50 @@ typedef struct {
 
 #endif
 
+#define BEGIN_NEW_STATE() \
+{ \
+    if (*derived_list_recycle_bin) \
+    {  \
+        (*derived_list_recycle_bin) = \
+        (ptr_new_state =  \
+         (*derived_list_recycle_bin) \
+        )->next; \
+    } \
+    else \
+    { \
+        ptr_new_state = \
+        (fcs_derived_state_t *) \
+        fcs_compact_alloc_ptr( \
+                derived_list_allocator, \
+                sizeof(*ptr_new_state) \
+                ); \
+    } \
+    fcs_duplicate_state(  \
+        &(ptr_new_state->state), \
+        init_state_kv_ptr \
+    ); \
+        \
+    COPY_INDIRECT_COLS() \
+}
+
+#define COMMIT_NEW_STATE(src, dest) \
+{ \
+ \
+    memcpy( \
+            ptr_new_state->parent_and_move, \
+            key, \
+            sizeof(ptr_new_state->parent_and_move) \
+          ); \
+    ptr_new_state->parent_and_move[ \
+        ptr_new_state->parent_and_move[0]+1 \
+        ] = MAKE_MOVE(src, dest); \
+ \
+    /* Finally, enqueue the new state. */ \
+    ptr_new_state->next = (*derived_list); \
+    (*derived_list) = ptr_new_state; \
+ \
+}
+
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_state_keyval_pair_t * init_state_kv_ptr,
     fcs_encoded_state_buffer_t * key,
@@ -512,28 +556,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                 if (fcs_foundation_value(the_state, deck*4+suit) == fcs_card_card_num(card) - 1)
                 {
                     /* We can put it there */
-                    if (*derived_list_recycle_bin)
-                    {
-                        (*derived_list_recycle_bin) =
-                            (ptr_new_state = 
-                                (*derived_list_recycle_bin)
-                            )->next;
-                    }
-                    else
-                    {
-                        ptr_new_state =
-                            (fcs_derived_state_t *)
-                            fcs_compact_alloc_ptr(
-                                derived_list_allocator,
-                                sizeof(*ptr_new_state)
-                            );
-                    }
-                    fcs_duplicate_state( 
-                        &(ptr_new_state->state),
-                        init_state_kv_ptr
-                    );
-
-                    COPY_INDIRECT_COLS()
+                    BEGIN_NEW_STATE()
 
                     {
                         fcs_cards_column_t new_temp_col;
@@ -543,18 +566,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                     fcs_increment_foundation(new_state, deck*4+suit);
 
-                    memcpy(
-                        ptr_new_state->parent_and_move,
-                        key,
-                        sizeof(ptr_new_state->parent_and_move)
-                    );
-                    ptr_new_state->parent_and_move[
-                        ptr_new_state->parent_and_move[0]+1
-                    ] = MAKE_MOVE(COL2MOVE(stack_idx), FOUND2MOVE(suit));
-
-                    /* Finally, enqueue the new state. */
-                    ptr_new_state->next = (*derived_list);
-                    (*derived_list) = ptr_new_state;
+                    COMMIT_NEW_STATE(COL2MOVE(stack_idx), FOUND2MOVE(suit))
                 }
             }
         }
@@ -572,46 +584,16 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
             {
                 if (fcs_foundation_value(the_state, deck*4+suit) == fcs_card_card_num(card) - 1)
                 {
+                    BEGIN_NEW_STATE()
+
                     /* We can put it there */
-                    if (*derived_list_recycle_bin)
-                    {
-                        (*derived_list_recycle_bin) =
-                            (ptr_new_state = 
-                                (*derived_list_recycle_bin)
-                            )->next;
-                    }
-                    else
-                    {
-                        ptr_new_state =
-                            (fcs_derived_state_t *)
-                            fcs_compact_alloc_ptr(
-                                derived_list_allocator,
-                                sizeof(*ptr_new_state)
-                            );
-                    }
-                    fcs_duplicate_state( 
-                        &(ptr_new_state->state),
-                        init_state_kv_ptr
-                    );
-
-                    COPY_INDIRECT_COLS()
-
                     fcs_empty_freecell(new_state, fc_idx);
 
                     fcs_increment_foundation(new_state, deck*4+suit);
 
-                    memcpy(
-                        ptr_new_state->parent_and_move,
-                        key,
-                        sizeof(ptr_new_state->parent_and_move)
-                    );
-                    ptr_new_state->parent_and_move[
-                        ptr_new_state->parent_and_move[0]+1
-                    ] = MAKE_MOVE(FREECELL2MOVE(fc_idx), FOUND2MOVE(suit));
-
-                    /* Finally, enqueue the new state. */
-                    ptr_new_state->next = (*derived_list);
-                    (*derived_list) = ptr_new_state;
+                    COMMIT_NEW_STATE(
+                        FREECELL2MOVE(fc_idx), FOUND2MOVE(suit)
+                    )
                 }
             }
         }
