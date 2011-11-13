@@ -515,12 +515,14 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 )
 {
     fcs_derived_state_t * ptr_new_state; 
-    int stack_idx, copy_col_idx, cards_num;
-    fcs_cards_column_t col, copy_stack_col;
-    fcs_card_t card;
+    int stack_idx, copy_col_idx, cards_num, ds;
+    fcs_cards_column_t col, copy_stack_col, dest_col;
+    fcs_card_t card, dest_card;
     int deck, suit;
+    int sequences_are_built_by;
 
     /* TODO : the actual calculation. */
+    sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
 
 #define the_state (init_state_kv_ptr->s)
 #define new_state (ptr_new_state->state.s)
@@ -594,6 +596,53 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                     COMMIT_NEW_STATE(
                         FREECELL2MOVE(fc_idx), FOUND2MOVE(suit)
                     )
+                }
+            }
+        }
+    }
+
+    /* Move stack on top of a parent */
+    for (stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    {
+        col = fcs_state_get_col(the_state, stack_idx);
+        cards_num = fcs_col_len(col);
+        if (cards_num > 0)
+        {
+            card = fcs_col_get_card(col, cards_num-1);
+
+            for (ds=0;ds<LOCAL_STACKS_NUM;ds++)
+            {
+                if (ds == stack_idx)
+                {
+                    continue;
+                }
+
+                dest_col = fcs_state_get_col(the_state, ds);
+
+                if (fcs_col_len(dest_col) > 0)
+                {
+                    dest_card = fcs_col_get_card(dest_col,
+                            fcs_col_len(dest_col)-1);
+                    if (fcs_is_parent_card(card, dest_card))
+                    {
+                        /* Let's move it */
+                        BEGIN_NEW_STATE()
+
+                        {
+                            fcs_cards_column_t new_src_col;
+                            fcs_cards_column_t new_dest_col;
+
+                            new_src_col = fcs_state_get_col(new_state, stack_idx);
+                            new_dest_col = fcs_state_get_col(new_state, ds);
+
+                            fcs_col_pop_top(new_src_col);
+                            fcs_col_push_card(new_dest_col, card);
+                        }
+                        
+                        COMMIT_NEW_STATE(
+                            COL2MOVE(stack_idx), COL2MOVE(ds)
+                        )
+                    }
                 }
             }
         }
