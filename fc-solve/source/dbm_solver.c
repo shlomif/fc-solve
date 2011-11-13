@@ -637,8 +637,12 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 )
 {
     fcs_derived_state_t * ptr_new_state; 
-    int stack_idx, copy_col_idx, cards_num, ds;
-    fcs_cards_column_t col, copy_stack_col, dest_col;
+    int stack_idx, cards_num, ds;
+    fcs_cards_column_t col, dest_col;
+#ifdef INDIRECT_STACK_STATES
+    fcs_cards_column_t copy_stack_col;
+    int copy_col_idx;
+#endif
     fcs_card_t card, dest_card;
     int deck, suit;
     int sequences_are_built_by;
@@ -954,7 +958,8 @@ void * instance_run_solver_thread(void * void_arg)
     instance = thread->instance;
     delta_stater = thread->delta_stater;
 
-    prev_item = NULL;
+    prev_item = item = NULL;
+    queue_num_extracted_and_processed = 0;
 
     fc_solve_compact_allocator_init(&(derived_list_allocator));
     derived_list_recycle_bin = NULL;
@@ -1334,7 +1339,9 @@ int main(int argc, char * argv[])
         unsigned char move;
         char * state_as_str;
         char move_buffer[500];
+#ifdef INDIRECT_STACK_STATES
         dll_ind_buf_t indirect_stacks_buffer;
+#endif
 
         printf ("%s\n", "Success!");
         /* Now trace the solution */
