@@ -2,6 +2,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <assert.h>
 
 #include "config.h"
 
@@ -179,6 +180,34 @@ static fcs_bool_t GCC_INLINE pre_cache_does_key_exist(
     memcpy(to_check.key, key, sizeof(to_check.key));
 
     return (fc_solve_kaz_tree_lookup(pre_cache->kaz_tree, &to_check) != NULL);
+}
+
+static fcs_bool_t GCC_INLINE pre_cache_lookup_parent_and_move(
+    fcs_pre_cache_t * pre_cache,
+    unsigned char * key,
+    unsigned char * parent_and_move
+    )
+{
+    fcs_pre_cache_key_val_pair_t to_check;
+    dnode_t * node;
+
+    memcpy(to_check.key, key, sizeof(to_check.key));
+
+    node = fc_solve_kaz_tree_lookup(pre_cache->kaz_tree, &to_check);
+
+    if (node)
+    {
+        memcpy(
+            parent_and_move,
+            ((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->parent_and_move,
+            sizeof(fcs_encoded_state_buffer_t)
+        );
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
 }
 
 static void GCC_INLINE pre_cache_insert(
@@ -1050,6 +1079,43 @@ typedef struct {
 
 #define USER_STATE_SIZE 2000
 
+const char * move_to_string(unsigned char move, char * move_buffer)
+{
+    int iter, inspect;
+    char * s;
+
+    s = move_buffer;
+
+    for (iter=0 ; iter < 2 ; iter++)
+    {
+        inspect = (move & 0xF);
+        move >>= 4;
+        
+        if (inspect < 8)
+        {
+            s += sprintf(s, "Column %d", inspect);
+        }
+        else
+        {
+            inspect -= 8;
+            if (inspect < 4)
+            {
+                s += sprintf(s, "Freecell %d", inspect);
+            }
+            else
+            {
+                inspect -= 4;
+                s += sprintf(s, "Foundation %d", inspect);
+            }
+        }
+        if (iter == 0)
+        {
+            s += sprintf(s, "%s", " -> ");
+        }
+    }
+    
+    return move_buffer;
+}
 /* Temporary main() function to make gcc happy. */
 int main(int argc, char * argv[])
 {
@@ -1258,7 +1324,91 @@ int main(int argc, char * argv[])
 
     if (instance.queue_solution_was_found)
     {
+        fcs_encoded_state_buffer_t * trace;
+        fcs_encoded_state_buffer_t key;
+        int trace_num, trace_max_num;
+        int i;
+        fcs_state_keyval_pair_t state;
+        fc_solve_bit_reader_t bit_r;
+        unsigned char move;
+        char * state_as_str;
+        char move_buffer[500];
+
         printf ("%s\n", "Success!");
+        /* Now trace the solution */
+#define GROW_BY 100
+        trace_num = 0;
+        trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
+        memcpy(trace[trace_num++], instance.queue_solution,
+               sizeof(trace[trace_num++]));
+        while (trace[trace_num][0])
+        {
+            memset(key, '\0', sizeof(key));
+            /* Omit the move. */
+            memcpy(key, trace[trace_num], trace[trace_num][0]+1);
+
+            if ((++trace_num) == trace_max_num)
+            {
+                trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
+            }
+            if (! pre_cache_lookup_parent_and_move(
+                &(instance.pre_cache),
+                key,
+                trace[trace_num]
+                ))
+            {
+                assert(fc_solve_dbm_store_lookup_parent_and_move(
+                    instance.store,
+                    key,
+                    trace[trace_num]
+                    ));
+            }
+        }
+        for (i = trace_num-1 ; i >= 0; i--)
+        {
+            fc_solve_state_init(&state, STACKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , indirect_stacks_buffer
+#endif
+            );
+
+            fc_solve_bit_reader_init(&bit_r, &(trace[i][1]));
+            fc_solve_delta_stater_decode(
+                delta,
+                &bit_r,
+                &(state.s)
+            );
+            if (i > 0)
+            {
+                move = trace[i-1][trace[i-1][0]];
+            }
+
+            state_as_str =
+                fc_solve_state_as_string(
+#ifdef FCS_RCS_STATES
+                        &(state.s),
+                        &(state.info),
+#else
+                        &state,
+#endif
+                        FREECELLS_NUM,
+                        STACKS_NUM,
+                        DECKS_NUM,
+                        1,
+                        0,
+                        1
+                );
+
+            printf("--------\n%s\n==%s\n",
+                    state_as_str,
+                    (i > 0 )
+                        ? move_to_string(move, move_buffer)
+                        : "END"
+                  );
+
+            free(state_as_str);
+        }
+        free (trace);
     }
     else
     {

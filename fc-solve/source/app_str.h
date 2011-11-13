@@ -46,17 +46,16 @@ typedef struct
     int max_size;
 } fc_solve_append_string_t;
 
-#define GROW_BY 4000
+#define FC_SOLVE_APPEND_STRING_GROW_BY 4000
 #define FC_SOLVE_APPEND_STRING_MARGIN_SIZE 500
 
 static GCC_INLINE void fc_solve_append_string_init(fc_solve_append_string_t * app_str)
 {
-    app_str->max_size = GROW_BY;
+    app_str->max_size = FC_SOLVE_APPEND_STRING_GROW_BY;
     app_str->end_of_buffer = app_str->buffer = malloc(app_str->max_size);
 
     return;
 }
-
 
 static GCC_INLINE char * fc_solve_append_string_finalize(
     fc_solve_append_string_t * app_str

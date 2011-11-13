@@ -51,7 +51,7 @@ void fc_solve_append_string_sprintf(
     if (app_str->buffer + app_str->max_size - app_str->end_of_buffer < FC_SOLVE_APPEND_STRING_MARGIN_SIZE)
     {
         char * old_buffer = app_str->buffer;
-        app_str->max_size += GROW_BY;
+        app_str->max_size += FC_SOLVE_APPEND_STRING_GROW_BY;
         app_str->buffer = realloc(app_str->buffer, app_str->max_size);
         /*
          * Adjust end_of_buffer to the new buffer start

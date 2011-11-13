@@ -27,6 +27,34 @@ extern "C" fcs_bool_t fc_solve_dbm_store_does_key_exist(
         ((leveldb::DB *)store)->Get(leveldb::ReadOptions(), key, &value).ok();
 }
 
+fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
+    fcs_dbm_store_t store,
+    const unsigned char * key_raw,
+    unsigned char * parent_and_move
+    )
+{
+    leveldb::Slice key((const char *)(key_raw+1),key_raw[0]);
+    std::string value;
+
+    leveldb::Status status =
+        ((leveldb::DB *)store)->Get(leveldb::ReadOptions(), key, &value);
+
+    if (status.ok())
+    {
+        memcpy(
+            parent_and_move+1,
+            value.data()+1,
+            (parent_and_move[0] = value.length()-1)+1
+        );
+
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
 #define MAX_ITEMS_IN_TRANSACTION 10000
 extern "C" void fc_solve_dbm_store_offload_pre_cache(
     fcs_dbm_store_t store,
