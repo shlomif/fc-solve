@@ -520,6 +520,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_card_t card, dest_card;
     int deck, suit;
     int sequences_are_built_by;
+    int empty_fc_idx = -1;
+    int empty_stack_idx = -1;
 
     /* TODO : the actual calculation. */
     sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
@@ -572,6 +574,10 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                 }
             }
         }
+        else
+        {
+            empty_stack_idx = stack_idx;
+        }
     }
 
 #define fc_idx stack_idx
@@ -599,9 +605,13 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                 }
             }
         }
+        else
+        {
+            empty_fc_idx = fc_idx;
+        }
     }
 
-    /* Move stack on top of a parent */
+    /* Move stack card on top of a parent */
     for (stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
         col = fcs_state_get_col(the_state, stack_idx);
@@ -647,8 +657,98 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
             }
         }
     }
-#undef fc_idx
 
+    if (empty_stack_idx >= 0)
+    {
+        /* Stack Card to Empty Stack */
+        for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+        {
+            col = fcs_state_get_col(the_state, stack_idx);
+            cards_num = fcs_col_len(col);
+            if (cards_num > 0)
+            {
+                card = fcs_col_get_card(col, cards_num-1);
+                /* Let's move it */
+                {
+                    BEGIN_NEW_STATE()
+
+                    {
+                        fcs_cards_column_t new_src_col;
+                        fcs_cards_column_t empty_stack_col;
+
+                        new_src_col = fcs_state_get_col(new_state, stack_idx);
+
+                        fcs_col_pop_top(new_src_col);
+
+                        empty_stack_col = fcs_state_get_col(new_state, empty_stack_idx);
+                        fcs_col_push_card(empty_stack_col, card);
+                    }
+                    COMMIT_NEW_STATE(
+                        COL2MOVE(stack_idx), COL2MOVE(empty_stack_idx)
+                    )
+                }
+            }
+        }
+
+        /* Freecell card -> Empty Stack. */
+        for (fc_idx=0;fc_idx<LOCAL_FREECELLS_NUM;fc_idx++)
+        {
+            card = fcs_freecell_card(the_state, fc_idx);
+            if (fcs_card_card_num(card) == 0)
+            {
+                continue;
+            }
+
+            {
+                BEGIN_NEW_STATE()
+
+                {
+                    fcs_cards_column_t new_dest_col;
+                    new_dest_col = fcs_state_get_col(new_state, ds);
+
+                    fcs_empty_freecell(new_state, fc_idx);
+
+                    fcs_col_push_card(new_dest_col, card);
+                }
+
+                COMMIT_NEW_STATE(
+                    FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx)
+                );
+            }
+        }
+    }
+
+    if (empty_fc_idx >= 0)
+    {
+        /* Stack Card to Empty Freecell */
+        for (stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+        {
+            col = fcs_state_get_col(the_state, stack_idx);
+            cards_num = fcs_col_len(col);
+            if (cards_num > 0)
+            {
+                card = fcs_col_get_card(col, cards_num-1);
+                /* Let's move it */
+                {
+                    BEGIN_NEW_STATE()
+
+                    {
+                        fcs_cards_column_t new_src_col;
+
+                        new_src_col = fcs_state_get_col(new_state, stack_idx);
+
+                        fcs_col_pop_top(new_src_col);
+
+                        fcs_put_card_in_freecell(new_state, empty_fc_idx, card);
+                    }
+                    COMMIT_NEW_STATE(
+                        COL2MOVE(stack_idx), FREECELL2MOVE(empty_fc_idx)
+                    )
+                }
+            }
+        }
+    }
+#undef fc_idx
     return FALSE;
 }
 
