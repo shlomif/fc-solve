@@ -92,6 +92,8 @@ static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, unsig
         else if (existing->higher_pri)
         {
             cache->lowest_pri = existing->higher_pri;
+            /* Bug fix: keep the chain intact. */
+            existing->higher_pri->lower_pri = NULL;
         }
 
         cache->highest_pri->higher_pri = existing;
@@ -138,6 +140,7 @@ static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, unsigned char * key
     if (cache->highest_pri)
     {
         cache_key->lower_pri = cache->highest_pri;
+        cache_key->higher_pri = NULL;
         cache->highest_pri->higher_pri = cache_key;
         cache->highest_pri = cache_key;
     }
