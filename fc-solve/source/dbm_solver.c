@@ -1172,12 +1172,14 @@ int main(int argc, char * argv[])
 #endif
     );
 
+    horne_prune(&init_state);
+
     delta = fc_solve_delta_stater_alloc(
             &init_state.s,
             STACKS_NUM,
             FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
     );
 
