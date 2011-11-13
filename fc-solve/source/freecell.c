@@ -1822,7 +1822,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     {
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
-        if (cards_num > 0)
+        /* Bug fix: if there's only one card in a column, there's no 
+         * point moving it to a new empty column.
+         * */
+        if (cards_num > 1)
         {
             card = fcs_col_get_card(col, cards_num-1);
             if (tests__is_filled_by_kings_only() &&
