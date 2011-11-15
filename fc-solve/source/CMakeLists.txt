@@ -110,6 +110,7 @@ SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
     "States Type ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES'). No need to usually change.")
 SET (FCS_ENABLE_RCS_STATES CACHE BOOL "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
 SET (FCS_ENABLE_DBM_SOLVER CACHE BOOL "Whether to build the DBM solver")
+SET (FCS_DBM_BACKEND "bdb" CACHE STRING "Type of DBM backend.")
 SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
 SET (FCS_IA_PACK_SIZE 64 CACHE STRING "Size of a single pack in kilo-bytes.")
 SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
@@ -500,12 +501,22 @@ FCS_ADD_EXEC_NO_INSTALL(measure-depth-dep-tests-order-perf measure_depth_dep_tes
 FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 
 IF (FCS_ENABLE_DBM_SOLVER)
-    INCLUDE_DIRECTORIES(BEFORE "${LEVELDB_SOURCE_DIR}/include")
-    LINK_DIRECTORIES("${LEVELDB_SOURCE_DIR}")
+    SET (DBM_BACKEND_MODULES )
+    SET (DBM_LIBS "pthread")
+    IF (FCS_DBM_BACKEND STREQUAL "bdb")
+        LIST(APPEND DBM_BACKEND_MODULES "dbm_bdb.c")
+        LIST (INSERT DBM_LIBS 0 "db-4")
+    ELSE (FCS_DBM_BACKEND STREQUAL "bdb")
+        LIST(APPEND DBM_BACKEND_MODULES "dbm_leveldb.cpp")
+        INCLUDE_DIRECTORIES(BEFORE "${LEVELDB_SOURCE_DIR}/include")
+        LINK_DIRECTORIES("${LEVELDB_SOURCE_DIR}")
+        LIST (INSERT DBM_LIBS 0 "leveldb")
+    ENDIF (FCS_DBM_BACKEND STREQUAL "bdb")
     ADD_EXECUTABLE(dbm_fc_solver
-        alloc.c app_str.c card.c dbm_leveldb.cpp dbm_solver.c kaz_tree.c state.c
+        alloc.c app_str.c card.c dbm_solver.c kaz_tree.c state.c
+        ${DBM_BACKEND_MODULES}
     )
-    TARGET_LINK_LIBRARIES(dbm_fc_solver "leveldb" "pthread")
+    TARGET_LINK_LIBRARIES(dbm_fc_solver ${DBM_LIBS}) 
 ENDIF (FCS_ENABLE_DBM_SOLVER)
 
 IF (CMAKE_USE_PTHREADS_INIT)
