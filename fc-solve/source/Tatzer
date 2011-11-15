@@ -41,7 +41,7 @@ my $rcs_states = 0;
 my $trace_mem = 0;
 my $scan_buckets_num;
 my $build_docs = 1;
-my $with_dbm_solver = 0;
+my $with_dbm_solver;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -219,7 +219,7 @@ GetOptions(
     'static!' => \$link_to_static,
     'nfc=i' => \$hard_coded_num_freecells,
     'avoid-tcmalloc!' => \$avoid_tcmalloc,
-    'dbm!' => \$with_dbm_solver,
+    'dbm=s' => \$with_dbm_solver,
     'tracemem!' => \$trace_mem,
     'scan-buckets-num=i' => \$scan_buckets_num,
     'build-docs!' => \$build_docs,
@@ -298,7 +298,10 @@ my @cmd= ("cmake",
     ($trace_mem ? ("-DFCS_TRACE_MEM=1") : ()),
     ($scan_buckets_num ? ("-DFCS_MAX_NUM_SCANS_BUCKETS=$scan_buckets_num") : ()),
     ($build_docs ? () : ("-DFCS_BUILD_DOCS=")),
-    ($with_dbm_solver ? ("-DFCS_ENABLE_DBM_SOLVER=1") : ()),
+    ($with_dbm_solver
+        ? ("-DFCS_ENABLE_DBM_SOLVER=1", "-DFCS_DBM_BACKEND=$with_dbm_solver",)
+        : ()
+    ),
 );
 
 print(join(" ", @cmd), "\n");

@@ -308,6 +308,7 @@ typedef struct {
     /* The queue */
     
     pthread_mutex_t queue_lock;
+    long count_num_processed;
     fcs_bool_t queue_solution_was_found;
     fcs_encoded_state_buffer_t queue_solution;
     fcs_compact_allocator_t queue_allocator;
@@ -331,6 +332,7 @@ static void GCC_INLINE instance_init(
     );
     instance->queue_solution_was_found = FALSE;
     instance->queue_num_extracted_and_processed = 0;
+    instance->count_num_processed = 0;
     instance->queue_head =
         instance->queue_tail =
         instance->queue_recycle_bin =
@@ -987,6 +989,10 @@ void * instance_run_solver_thread(void * void_arg)
                     instance->queue_tail = NULL;
                 }
                 instance->queue_num_extracted_and_processed++;
+                if (++instance->count_num_processed % 100000 == 0)
+                {
+                    printf ("Reached %ld.\n", instance->count_num_processed);
+                }
             }
 
             queue_num_extracted_and_processed =
