@@ -992,6 +992,7 @@ void * instance_run_solver_thread(void * void_arg)
                 if (++instance->count_num_processed % 100000 == 0)
                 {
                     printf ("Reached %ld.\n", instance->count_num_processed);
+                    fflush(stdout);
                 }
             }
 
