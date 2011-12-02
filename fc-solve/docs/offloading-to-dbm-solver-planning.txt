@@ -30,7 +30,7 @@ the DBM in one transaction.
 
     3. Unlock the queue's mutex.
 
-    4. Calculate all the child positions of the queue.
+    4. Calculate all the child positions of the queue's item.
         - one also needs to do the Horne's play prune of automatically moving
         cards to the foundations.
         - make sure the move is also recorded.
