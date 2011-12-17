@@ -243,7 +243,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
                 fcs_int_move_set_foundation(out_move,fcs_int_move_get_foundation(in_move));
             }
 
-            if ((fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_STACK))
+            if (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_STACK_TO_STACK)
             {
                 fcs_int_move_set_num_cards_in_seq(out_move,fcs_int_move_get_num_cards_in_seq(in_move));
             }

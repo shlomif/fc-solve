@@ -96,7 +96,7 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, const char * 
             1
             );
 
-    if (!(verdict = ok(!strcmp(as_str, expected_str), blurb)))
+    if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
     {
         diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n",
                 as_str,

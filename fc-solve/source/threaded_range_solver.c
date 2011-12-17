@@ -277,17 +277,13 @@ static void * worker_thread(void * void_context)
         fprintf(stderr, "Unknown option: %s", argv[arg]);
         goto ret_label;
     }
-    else if (
-        (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-            )
+    else if (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
     {
         fprintf(stderr, "The command line parameter \"%s\" requires an argument"
                 " and was not supplied with one.\n", argv[arg]);
         goto ret_label;
     }
-    else if (
-        (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-        )
+    else if (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
     {
         if (error_string != NULL)
         {

@@ -587,7 +587,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                                         }
                                     }
 
-                                    if ((clear_junk_dest_stack == -1))
+                                    if (clear_junk_dest_stack == -1)
                                     {
                                         break;
                                     }
@@ -848,7 +848,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                                     }
                                 }
 
-                                if ((clear_junk_dest_stack == -1))
+                                if (clear_junk_dest_stack == -1)
                                 {
                                     break;
                                 }
@@ -1162,7 +1162,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                                         }
                                     }
 
-                                    if ((clear_junk_dest_stack == -1))
+                                    if (clear_junk_dest_stack == -1)
                                     {
                                         break;
                                     }
@@ -1413,7 +1413,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                                         clear_junk_dest_stack = -1;
                                     }
 
-                                    if ((clear_junk_dest_stack == -1))
+                                    if (clear_junk_dest_stack == -1)
                                     {
                                         break;
                                     }
@@ -1696,7 +1696,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                                 }
                             }
 
-                            if ((clear_junk_dest_stack == -1))
+                            if (clear_junk_dest_stack == -1)
                             {
                                 break;
                             }
