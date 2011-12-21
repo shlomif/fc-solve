@@ -378,7 +378,9 @@ IF (OPTIMIZATION_OMIT_FRAME_POINTER)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-fomit-frame-pointer")
 ENDIF(OPTIMIZATION_OMIT_FRAME_POINTER)
 
+SET (IS_DEBUG)
 IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
+    SET (IS_DEBUG 1)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DDEBUG=1")
 ENDIF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
@@ -857,8 +859,10 @@ ADD_CUSTOM_TARGET(
     COMMAND perl scripts/time-fcs.pl "DUMPS-*/*"
 )
 
-# The delta-states testing library
-ADD_LIBRARY(fcs_delta_states_test
-    SHARED
-    app_str.c card.c state.c delta_states.c
-)
+IF (IS_DEBUG)
+    # The delta-states testing library
+    ADD_LIBRARY(fcs_delta_states_test
+        SHARED
+        app_str.c card.c state.c delta_states.c
+    )
+ENDIF (IS_DEBUG)
