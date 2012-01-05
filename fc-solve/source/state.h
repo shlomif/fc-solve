@@ -1072,11 +1072,18 @@ enum
 #define min(a,b) ((a)<(b)?(a):(b))
 #endif
 
+extern signed char fc_solve_card_compare_lookup[256];
+
 static GCC_INLINE int fc_solve_card_compare(
         const fcs_card_t * c1,
         const fcs_card_t * c2
         )
 {
+    return fc_solve_card_compare_lookup[(int)*c1]
+            -
+           fc_solve_card_compare_lookup[(int)*c2]
+           ;
+#if 0 
     if (fcs_card_card_num(*c1) > fcs_card_card_num(*c2))
     {
         return 1;
@@ -1100,6 +1107,7 @@ static GCC_INLINE int fc_solve_card_compare(
             return 0;
         }
     }
+#endif
 }
 
 #if defined(INDIRECT_STACK_STATES)
