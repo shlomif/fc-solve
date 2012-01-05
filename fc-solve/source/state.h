@@ -1072,18 +1072,23 @@ enum
 #define min(a,b) ((a)<(b)?(a):(b))
 #endif
 
+#define FCS_WITH_CARD_COMPARE_LOOKUP
+
+#ifdef FCS_WITH_CARD_COMPARE_LOOKUP
 extern signed char fc_solve_card_compare_lookup[256];
+#endif
 
 static GCC_INLINE int fc_solve_card_compare(
         const fcs_card_t * c1,
         const fcs_card_t * c2
         )
 {
+#ifdef FCS_WITH_CARD_COMPARE_LOOKUP
     return fc_solve_card_compare_lookup[(int)*c1]
             -
            fc_solve_card_compare_lookup[(int)*c2]
            ;
-#if 0 
+#else 
     if (fcs_card_card_num(*c1) > fcs_card_card_num(*c2))
     {
         return 1;
