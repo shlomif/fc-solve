@@ -383,6 +383,8 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     SET (IS_DEBUG 1)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DDEBUG=1")
+
+    # LIST(APPEND COMPILER_FLAGS_TO_CHECK "-std=c99" "-Wall" "-W" "-Wformat-nonliteral" "-Wcast-align" "-Wpointer-arith" "-Wbad-function-cast" "-Wmissing-prototypes" "-Wstrict-prototypes" "-Wmissing-declarations" "-Winline" "-Wundef" "-Wnested-externs" "-Wcast-qual" "-Wshadow" "-Wwrite-strings" "-Wunused" "-Wfloat-equal" "-pedantic" "-Wbad-function-cast"  "-Wmissing-declarations" "-Wmissing-prototypes"  "-Wnested-externs"  "-Wold-style-definition" "-Wstrict-prototypes" "-Wdeclaration-after-statement")
 ENDIF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
 
 IF (CMAKE_BUILD_TYPE STREQUAL release)
