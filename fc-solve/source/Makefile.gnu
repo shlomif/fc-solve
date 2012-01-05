@@ -6,7 +6,7 @@ DISABLE_SIMPLE_SIMON := 0
 WITHOUT_CARD_FLIPS := 0
 WITH_LIBRB = 0
 OPT_FOR_SIZE = 0
-OPT_AND_DEBUG = 1
+OPT_AND_DEBUG = 0
 
 COMPILER = gcc
 # COMPILER = icc
@@ -119,8 +119,12 @@ END_LFLAGS := -lm
 
 # Toggle for profiling information.
 ifneq ($(PROFILE),0)
-	END_OFLAGS := -pg
-	END_LFLAGS := -pg -lc_p -lm_p -static-libgcc
+	ifeq ($(PROFILE),2)
+		END_LFLAGS := -lm -lprofiler
+	else
+		END_OFLAGS := -pg
+		END_LFLAGS := -pg -lc_p -lm_p -static-libgcc
+	endif
 endif
 
 ifneq ($(WITH_LIBRB),0)
