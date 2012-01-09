@@ -159,3 +159,30 @@ Without PGO.
 11.7670531272888s  (vs. 12.241s).
 
 Highlight: the card lookup table.
+
+---------------------------------------------------------
+
+r4237 (trunk).
+Without PGO.
+
+11.762326002121s
+
+Highlight: google-perftools-1.9.1-1.mga2.src.rpm
+
+---------------------------------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 4 4 (x4)
+r4237
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --prefix=/home/shlomif/apps/fcs
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+kernel 3.1.4-desktop-2.mga2
+gcc-4.6.2-1.mga2
+lib64google-perftools0-1.9.1-1.mga2
+
+11.2739100456238s
+
+Highlights: perftools-1.9.1 and the card lookup table.
+
