@@ -285,12 +285,11 @@ int main_tests()
 
         {
             fc_solve_column_encoding_composite_t enc;
-            int card_9S;
+            fcs_card_t card_9S;
 
             fc_solve_get_column_encoding_composite(delta, 5, &enc);
 
-            card_9S = (9 | (3 << 4));
-
+            card_9S = make_card(9, 3);
             /* TEST
              * */
             ok (enc.enc[0] ==
@@ -330,12 +329,12 @@ int main_tests()
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&bit_r, 6) == (8 | (2 << 4)), /* 8D */
+            ok (fc_solve_bit_reader_read(&bit_r, 6) == make_card(8, 2),/* 8D */
                     "First freecell is 8D.");
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&bit_r, 6) == (12 | (2 << 4)), /* QD */
+            ok (fc_solve_bit_reader_read(&bit_r, 6) == make_card(12, 2), /* QD */
                     "Second freecell is QD.");
 
             /* TEST

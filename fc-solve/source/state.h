@@ -334,10 +334,10 @@ typedef char fcs_locs_t;
     ((col)[(card_idx)+1])
 
 #define fcs_card_card_num(card) \
-    ( (card) & 0x0F )
+    ( (card) >> 2 )
 
 #define fcs_card_suit(card) \
-    ( ((card) >> 4) & 0x03 )
+    ( (card) & 0x03 )
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_card_get_flipped(card) \
@@ -345,10 +345,10 @@ typedef char fcs_locs_t;
 #endif
 
 #define fcs_card_set_num(card, num) \
-    (card) = ((fcs_card_t)(((card)&0xF0)|(num)));
+    (card) = ((fcs_card_t)(((card)&0x03)|((num)<<2)));
 
 #define fcs_card_set_suit(card, suit) \
-    (card) = ((fcs_card_t)(((card)&0x4F)|((suit)<<4)));
+    (card) = ((fcs_card_t)(((card)&0xFC)|(suit)));
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_card_set_flipped(card, flipped) \
@@ -1084,10 +1084,7 @@ static GCC_INLINE int fc_solve_card_compare(
         )
 {
 #ifdef FCS_WITH_CARD_COMPARE_LOOKUP
-    return fc_solve_card_compare_lookup[(int)*c1]
-            -
-           fc_solve_card_compare_lookup[(int)*c2]
-           ;
+    return (*c1)-(*c2);
 #else 
     if (fcs_card_card_num(*c1) > fcs_card_card_num(*c2))
     {
