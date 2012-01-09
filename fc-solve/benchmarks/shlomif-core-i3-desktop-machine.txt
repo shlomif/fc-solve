@@ -152,3 +152,10 @@ lib64google-perftools0-1.8.3-2.mga2
 11.6888659000397s
 
 ---------------------------------------------------------
+
+r4233 (trunk).
+Without PGO.
+
+11.7670531272888s  (vs. 12.241s).
+
+Highlight: the card lookup table.
