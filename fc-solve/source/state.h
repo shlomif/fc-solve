@@ -1140,6 +1140,7 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * v_s1, c
      * fcs_stack_compare_for_stack_sort, and with the one card comparison
      * of the other state representation mechanisms.
      * */
+    /* For some reason this code is faster than s1[0]-s2[0] */
     if (s1[0] < s2[0])
     {
         return -1;
