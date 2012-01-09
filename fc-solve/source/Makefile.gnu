@@ -165,7 +165,6 @@ OBJECTS :=                     \
           app_str.o           \
           check_and_add_state.o \
           card.o              \
-          card_compare_lookups.o \
           cmd_line.o          \
           fcs_hash.o          \
           freecell.o          \

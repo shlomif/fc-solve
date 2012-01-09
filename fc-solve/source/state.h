@@ -1074,10 +1074,6 @@ enum
 
 #define FCS_WITH_CARD_COMPARE_LOOKUP
 
-#ifdef FCS_WITH_CARD_COMPARE_LOOKUP
-extern signed char fc_solve_card_compare_lookup[256];
-#endif
-
 static GCC_INLINE int fc_solve_card_compare(
         const fcs_card_t * c1,
         const fcs_card_t * c2
