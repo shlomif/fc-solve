@@ -1538,11 +1538,11 @@ static GCC_INLINE fc_solve_soft_thread_t *
 }
 
 extern fc_solve_soft_thread_t * fc_solve_new_soft_thread(
-    fc_solve_hard_thread_t * hard_thread
+    fc_solve_hard_thread_t * const hard_thread
     );
 
 static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
-    fc_solve_instance_t * instance
+    fc_solve_instance_t * const instance
     )
 {
     fc_solve_hard_thread_t * ret;
@@ -1586,7 +1586,7 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
 /* This is the commmon code from fc_solve_instance__init_hard_thread() and
  * recycle_hard_thread() */
 static GCC_INLINE void fc_solve_reset_hard_thread(
-    fc_solve_hard_thread_t * hard_thread
+    fc_solve_hard_thread_t * const hard_thread
     )
 {
     hard_thread->num_times = 0;
@@ -1595,7 +1595,7 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
 }
 
 static GCC_INLINE void fc_solve_reset_soft_thread(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
     )
 {
     STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED);
@@ -1603,8 +1603,8 @@ static GCC_INLINE void fc_solve_reset_soft_thread(
 }
 
 static GCC_INLINE void fc_solve_release_tests_list(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_bool_t is_scan_befs_or_bfs
+    fc_solve_soft_thread_t * const soft_thread,
+    const fcs_bool_t is_scan_befs_or_bfs
 )
 {
     if (is_scan_befs_or_bfs)
@@ -1642,7 +1642,7 @@ static GCC_INLINE void fc_solve_release_tests_list(
 }
 
 static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
-    fc_solve_hard_thread_t * hard_thread
+    fc_solve_hard_thread_t * const hard_thread
     )
 {
     ST_LOOP_DECLARE_VARS();
@@ -1666,7 +1666,7 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 }
 
 static GCC_INLINE void fc_solve_recycle_instance(
-    fc_solve_instance_t * instance
+    fc_solve_instance_t * const instance
         )
 {
     int ht_idx;
