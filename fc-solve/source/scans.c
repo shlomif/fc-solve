@@ -2255,10 +2255,10 @@ extern char * fc_solve_get_the_positions_by_rank_data(
  * simpsim.c.
  * */
 int fc_solve_sfs_check_state_begin(
-    fc_solve_hard_thread_t * hard_thread,
-    fcs_lvalue_pass_state_t * out_new_state_out,
-    fcs_pass_state_t * raw_ptr_state_raw,
-    fcs_move_stack_t * moves
+    fc_solve_hard_thread_t * const hard_thread,
+    fcs_lvalue_pass_state_t * const out_new_state_out,
+    fcs_pass_state_t * const raw_ptr_state_raw,
+    fcs_move_stack_t * const moves
     )
 {
 #ifdef FCS_RCS_STATES
@@ -2267,9 +2267,7 @@ int fc_solve_sfs_check_state_begin(
 #define ptr_state raw_ptr_state_raw
 #endif
     fcs_collectible_state_t * raw_ptr_new_state;
-    fc_solve_instance_t * instance;
-
-    instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = hard_thread->instance;
 
     if ((hard_thread->allocated_from_list =
         (instance->list_of_vacant_states != NULL)))
@@ -2322,19 +2320,21 @@ int fc_solve_sfs_check_state_begin(
 #undef ptr_state
 
 extern void fc_solve_sfs_check_state_end(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_pass_state_t * raw_ptr_state_raw,
-    fcs_pass_state_t * raw_ptr_new_state_raw,
-    int state_context_value,
-    fcs_move_stack_t * moves,
-    fcs_derived_states_list_t * derived_states_list
+    fc_solve_soft_thread_t * const soft_thread,
+    fcs_pass_state_t * const raw_ptr_state_raw,
+    fcs_pass_state_t * const raw_ptr_new_state_raw,
+    const int state_context_value,
+    fcs_move_stack_t * const moves,
+    fcs_derived_states_list_t * const derived_states_list
     )
 {
-    fc_solve_hard_thread_t * hard_thread;
-    fc_solve_instance_t * instance;
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * const instance = hard_thread->instance;
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-    fcs_runtime_flags_t calc_real_depth;
-    fcs_runtime_flags_t scans_synergy;
+    const fcs_runtime_flags_t calc_real_depth
+        = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    const fcs_runtime_flags_t scans_synergy
+        = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
     fcs_lvalue_pass_state_t existing_state;
 
@@ -2344,14 +2344,6 @@ extern void fc_solve_sfs_check_state_end(
 #else
 #define ptr_new_state_foo (raw_ptr_new_state_raw)
 #define ptr_state (raw_ptr_state_raw)
-#endif
-
-    hard_thread = soft_thread->hard_thread;
-    instance = hard_thread->instance;
-
-#ifndef FCS_WITHOUT_DEPTH_FIELD
-    calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
-    scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
 
     if (! fc_solve_check_and_add_state(
