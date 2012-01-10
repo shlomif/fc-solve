@@ -898,8 +898,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     tests_declare_empty_stacks_fill()
 
 
-    int stack_idx, c, dc, ds, initial_derived_states_num_states;
-    fcs_card_t card, this_card, prev_card;
+    int stack_idx, c, initial_derived_states_num_states;
+    fcs_card_t card;
     int freecells_to_fill, freestacks_to_fill;
     int num_cards_to_relocate;
     int seq_end;
@@ -908,9 +908,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 #endif
     char * positions_by_rank;
     char * pos_idx_to_check, * last_pos_idx;
-    fcs_game_limit_t num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks;
-    fcs_cards_column_t col, dest_col;
+    const fcs_game_limit_t num_vacant_freecells
+        = soft_thread->num_vacant_freecells;
+    const fcs_game_limit_t num_vacant_stacks
+         = soft_thread->num_vacant_stacks;
 
     tests_define_accessors();
     tests_define_seqs_built_by();
@@ -919,9 +920,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
 #endif
-
-    num_vacant_freecells = soft_thread->num_vacant_freecells;
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     initial_derived_states_num_states = derived_states_list->num_states;
 
@@ -933,15 +931,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
     for (stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
+        const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
 
         for (c=0 ; c<fcs_col_len(col) ; c=seq_end+1)
         {
             /* Check if there is a sequence here. */
             for(seq_end=c ; seq_end<fcs_col_len(col)-1 ; seq_end++)
             {
-                this_card = fcs_col_get_card(col, seq_end+1);
-                prev_card = fcs_col_get_card(col, seq_end);
+                const fcs_card_t this_card = fcs_col_get_card(col, seq_end+1);
+                const fcs_card_t prev_card = fcs_col_get_card(col, seq_end);
 
                 if (fcs_is_parent_card(this_card,prev_card))
                 {
@@ -972,17 +970,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
             FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
-                if ((ds = pos_idx_to_check[0]) == -1)
-                {
-                    continue;
-                }
-                dc = pos_idx_to_check[1];
+                const int ds = pos_idx_to_check[0];
 
-                if (ds == stack_idx)
+                if ((ds >= 0) && (ds != stack_idx))
                 {
-                    continue;
-                }
-                dest_col = fcs_state_get_col(state, ds);
+                const int dc = pos_idx_to_check[1];
+                const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
 
                 num_cards_to_relocate = fcs_col_len(dest_col) - dc - 1 + fcs_col_len(col) - seq_end - 1;
 
@@ -1037,6 +1030,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     state_context_value = ((((((stack_idx << 8) | c) << 8) | ds) << 8) | dc);
 
                     sfs_check_state_end()
+                }
                 }
             }
         }
