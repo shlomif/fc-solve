@@ -1075,8 +1075,8 @@ enum
 #define FCS_WITH_CARD_COMPARE_LOOKUP
 
 static GCC_INLINE int fc_solve_card_compare(
-        const fcs_card_t * c1,
-        const fcs_card_t * c2
+        const fcs_card_t * const c1,
+        const fcs_card_t * const c2
         )
 {
 #ifdef FCS_WITH_CARD_COMPARE_LOOKUP
