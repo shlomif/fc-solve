@@ -1706,9 +1706,9 @@ extern int fc_solve_compare_lru_cache_keys(
 
 #define DECLARE_MOVE_FUNCTION(name) \
 extern void name( \
-        fc_solve_soft_thread_t * soft_thread, \
-        fcs_pass_state_t * raw_ptr_state_raw, \
-        fcs_derived_states_list_t * derived_states_list \
+        fc_solve_soft_thread_t * const soft_thread, \
+        fcs_pass_state_t * const raw_ptr_state_raw, \
+        fcs_derived_states_list_t * const derived_states_list \
         )
 
 #ifdef __cplusplus
