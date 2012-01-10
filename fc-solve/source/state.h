@@ -1114,17 +1114,17 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * v_s1, c
     const fcs_card_t * s1 = (const fcs_card_t *)v_s1;
     const fcs_card_t * s2 = (const fcs_card_t *)v_s2;
 
-    int min_len;
-    int a, ret;
-
-    min_len = min(s1[0], s2[0]);
-
-    for(a=0;a<min_len;a++)
+    const int min_len = min(s1[0], s2[0]);
     {
-        ret = fc_solve_card_compare(s1+a+1,s2+a+1);
-        if (ret != 0)
+        int a, ret;
+
+        for(a=0;a<min_len;a++)
         {
-            return ret;
+            ret = fc_solve_card_compare(s1+a+1,s2+a+1);
+            if (ret != 0)
+            {
+                return ret;
+            }
         }
     }
     /*
