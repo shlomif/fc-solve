@@ -1109,10 +1109,10 @@ static GCC_INLINE int fc_solve_card_compare(
 }
 
 #if defined(INDIRECT_STACK_STATES)
-static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * v_s1, const void * v_s2)
+static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * const v_s1, const void * const v_s2)
 {
-    const fcs_card_t * s1 = (const fcs_card_t *)v_s1;
-    const fcs_card_t * s2 = (const fcs_card_t *)v_s2;
+    const fcs_card_t * const s1 = (const fcs_card_t * const)v_s1;
+    const fcs_card_t * const s2 = (const fcs_card_t * const)v_s2;
 
     const int min_len = min(s1[0], s2[0]);
     {
