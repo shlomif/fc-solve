@@ -1,0 +1,27 @@
+<h1>Freecell Solver 3.10.0 was Released</h1>
+
+<!-- Tags: freecell, solver, solving, release, version, bugs, fixes, code, cleanup, optimizations
+-->
+
+<p>
+<a href="http://fc-solve.berlios.de/">Freecell Solver</a> version 3.10.0
+has been released. It is available in the form of a source tarball from
+<a href="http://fc-solve.berlios.de/download.html">the
+    download page</a>.
+</p>
+
+<p>
+This release fixes two bugs - one with the <tt>--max-iters</tt> affecting
+only the last instance, and one with reading foundations with <tt>0</tt>,
+and implements many small optimisations and cleanups. It also adds some
+experimental code with the so-called <tt>delta-states</tt>, where states
+are compactly encoded based on the original state. This functionality is not
+available in the main solver yet, but it powers the experimental
+on-disk-key/value-databases-based solver, which end up not scaling very well
+during testing.
+</p>
+
+<p>
+Enjoy!
+</p>
+
