@@ -4,6 +4,30 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.10.0: (15-Jan-2012)
+-----------------------------
+
+1. Convert the references to the web-site and repository away from berlios.de,
+as it was announced it will become offline.
+
+2. Bug fix: correct the handling of foundations with values 0 (e.g: +H-0+,
++S-0+ ).
+
+3. Bug fix: made the +-mi+/+--max-iters+ flag global for all instances.
+Previously, it affected only the last one.
+
+4. Add an experimental +delta_states.c+ implementation and 
++dbm_solver.c+ that uses it to drive a Freecell Solver scan with an on-disk
+database (currently Google LevelDB and Berkeley DB are supported). So far
+it seems that with a limited cache size, this does not scale too well.
+
+5. Add the experimental +pruner-main.c+ (not installed by default).
+
+6. Add support for generating "all_in_a_row" deals to 
++make_pysol_freecll_board.py+ .
+
+7. Many small optimizations and cleanups.
+
 Version 3.8.0: (01-Jul-2011)
 ----------------------------
 
