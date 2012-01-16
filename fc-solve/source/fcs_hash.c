@@ -113,11 +113,11 @@ fcs_bool_t fc_solve_hash_insert(
     fc_solve_hash_symlink_t * list;
     fc_solve_hash_symlink_item_t * item, * last_item;
     fc_solve_hash_symlink_item_t * * item_placeholder;
-#ifdef FCS_INLINED_HASH_COMPARISON
+#if defined(FCS_INLINED_HASH_COMPARISON) && defined(INDIRECT_STACK_STATES)
     enum FCS_INLINED_HASH_DATA_TYPE hash_type;
 #endif
 
-#ifdef FCS_INLINED_HASH_COMPARISON
+#if defined(FCS_INLINED_HASH_COMPARISON) && defined(INDIRECT_STACK_STATES)
     hash_type = hash->hash_type;
 #endif
     /* Get the index of the appropriate chain in the hash table */

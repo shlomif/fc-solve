@@ -256,9 +256,16 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #define tests_declare_accessors_rcs_states()
 #endif
 
+#ifdef INDIRECT_STACK_STATES
+#define tests_declare_indirect_stack_states_accessors() \
+    char * indirect_stacks_buffer;
+#else
+#define tests_declare_indirect_stack_states_accessors()
+#endif
+
 #define tests_declare_accessors() \
     tests_declare_accessors_no_stacks();           \
-    char * indirect_stacks_buffer;                             \
+    tests_declare_indirect_stack_states_accessors()
 
 #ifdef FCS_FREECELL_ONLY
 
@@ -297,9 +304,16 @@ static GCC_INLINE void fc_solve_move_sequence_function(
     state_context_value = 0;                                      \
     tests_define_accessors_freecell_only()
 
+#ifdef INDIRECT_STACK_STATES
+#define tests_define_indirect_stack_states_accessors() \
+    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+#else
+#define tests_define_indirect_stack_states_accessors()
+#endif
+
 #define tests_define_accessors()  \
     tests_define_accessors_no_stacks();       \
-    indirect_stacks_buffer = hard_thread->indirect_stacks_buffer; \
+    tests_define_indirect_stack_states_accessors()
 
 #ifdef FCS_FREECELL_ONLY
 

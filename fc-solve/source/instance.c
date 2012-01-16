@@ -932,6 +932,7 @@ void fc_solve_start_instance_process_with_board(
     fcs_duplicate_state(state_copy_ptr, init_state);
 #endif
 
+#ifdef INDIRECT_STACK_STATES
     {
         int i;
         char * buffer;
@@ -943,6 +944,7 @@ void fc_solve_start_instance_process_with_board(
             fcs_copy_stack((*state_copy_ptr), i, buffer);
         }
     }
+#endif
 
     /* Initialize the state to be a base state for the game tree */
 #ifndef FCS_WITHOUT_DEPTH_FIELD
