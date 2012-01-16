@@ -13,11 +13,7 @@
  * for that instead of a pointer.
  * */
 
-typedef struct
-{
-    dict_t * kaz_tree;
-    fcs_compact_allocator_t allocator;
-} dbm_t;
+typedef dict_t dbm_t;
 
 /* TODO: make sure the key is '\0'-padded. */
 static int compare_records(
@@ -31,17 +27,7 @@ static int compare_records(
 
 void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 {
-    dbm_t * db;
-    db = malloc(sizeof(*db));
-
-    db->kaz_tree =
-        fc_solve_kaz_tree_create(compare_records, NULL);
-
-    fc_solve_compact_allocator_init(
-        &(db->allocator)
-    );
-
-    *store = (fcs_dbm_store_t)db;
+    *store = (fcs_dbm_store_t)fc_solve_kaz_tree_create(compare_records, NULL);
     return;
 }
 
@@ -54,14 +40,11 @@ fcs_bool_t fc_solve_dbm_store_insert_key_value(
     unsigned char * parent_and_move
 )
 {
-    dbm_t * db;
     fcs_dbm_record_t to_check;
-
-    db = (dbm_t *)store;
 
     memcpy(to_check.key, key, sizeof(to_check.key));
     memcpy(to_check.parent_and_move, parent_and_move, sizeof(to_check.parent_and_move));
-    return (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
+    return (fc_solve_kaz_tree_alloc_insert((dbm_t *)store, to_check) == NULL);
 }
 
 fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
@@ -75,7 +58,7 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
     fcs_dbm_record_t to_check;
     memcpy(to_check.key, key, sizeof(to_check.key));
 
-    node = fc_solve_kaz_tree_lookup(((dbm_t *)store)->kaz_tree, to_check);
+    node = fc_solve_kaz_tree_lookup(((dbm_t *)store), to_check);
 
     if (! node)
     {
@@ -94,10 +77,5 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
 
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
 {
-    dbm_t * db;
-    db = (dbm_t *)store;
-
-    fc_solve_kaz_tree_destroy( db->kaz_tree );
-    fc_solve_compact_allocator_finish( &(db->allocator) );
-    free(db);
+    fc_solve_kaz_tree_destroy( (dbm_t *)store);
 }
