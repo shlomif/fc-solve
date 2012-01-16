@@ -699,12 +699,16 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 #endif
     fcs_card_t card, dest_card;
     int deck, suit;
+#ifndef FCS_FREECELL_ONLY
+    /* needed by the macros. */
     int sequences_are_built_by;
+#endif
     int empty_fc_idx = -1;
     int empty_stack_idx = -1;
 
-    /* TODO : the actual calculation. */
+#ifndef FCS_FREECELL_ONLY
     sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
+#endif
 
 #define the_state (init_state_kv_ptr->s)
 #define new_state (ptr_new_state->state.s)
