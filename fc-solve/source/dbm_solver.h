@@ -12,8 +12,6 @@ extern "C"
 #include "inline.h"
 #include "kaz_tree.h"
 
-#define FCS_DBM_WITHOUT_CACHES 1
-
 typedef unsigned char fcs_encoded_state_buffer_t[24];
 
 #ifndef FCS_DBM_WITHOUT_CACHES
