@@ -51,6 +51,7 @@
 #define DECKS_NUM INSTANCE_DECKS_NUM
 #define RANK_KING 13
 
+#ifndef FCS_DBM_WITHOUT_CACHES
 /* TODO: make sure the key is '\0'-padded. */
 static int fc_solve_compare_lru_cache_keys(
     const void * void_a, const void * void_b, void * context
@@ -316,6 +317,8 @@ static void GCC_INLINE pre_cache_offload_and_reset(
     pre_cache_init(pre_cache);
 }
 
+#endif /* FCS_DBM_WITHOUT_CACHES */
+
 struct fcs_dbm_queue_item_struct
 {
     fcs_encoded_state_buffer_t key;
@@ -330,9 +333,11 @@ static const pthread_mutex_t initial_mutex_constant =
 
 typedef struct {
     pthread_mutex_t storage_lock;
+#ifndef FCS_DBM_WITHOUT_CACHES
     fcs_pre_cache_t pre_cache;
-    fcs_dbm_store_t store;
     fcs_lru_cache_t cache;
+#endif
+    fcs_dbm_store_t store;
 
     long pre_cache_max_count;
     /* The queue */
@@ -368,9 +373,11 @@ static void GCC_INLINE instance_init(
         instance->queue_recycle_bin =
         NULL;
 
+#ifndef FCS_DBM_WITHOUT_CACHES
     pre_cache_init (&(instance->pre_cache));
     instance->pre_cache_max_count = pre_cache_max_count;
     cache_init (&(instance->cache), pre_cache_max_count+caches_delta);
+#endif
     fc_solve_dbm_store_init(&(instance->store), dbm_store_path);
 }
 
@@ -381,6 +388,7 @@ static void GCC_INLINE instance_destroy(
     /* TODO : store what's left on the queue on the hard-disk. */
     fc_solve_compact_allocator_finish(&(instance->queue_allocator));
 
+#ifndef FCS_DBM_WITHOUT_CACHES
     pre_cache_offload_and_destroy(
         &(instance->pre_cache),
         instance->store,
@@ -388,6 +396,7 @@ static void GCC_INLINE instance_destroy(
     );
 
     cache_destroy(&(instance->cache));
+#endif
 
     fc_solve_dbm_store_destroy(instance->store);
 }
@@ -398,6 +407,7 @@ static void GCC_INLINE instance_check_key(
     unsigned char * parent_and_move
 )
 {
+#ifndef FCS_DBM_WITHOUT_CACHES
     fcs_lru_cache_t * cache;
     fcs_pre_cache_t * pre_cache;
 
@@ -418,10 +428,15 @@ static void GCC_INLINE instance_check_key(
         return;
     }
     else
+#else
+    if (fc_solve_dbm_store_insert_key_value(instance->store, key, parent_and_move))
+#endif
     {
         fcs_dbm_queue_item_t * new_item;
 
+#ifndef FCS_DBM_WITHOUT_CACHES
         pre_cache_insert(pre_cache, key, parent_and_move);
+#endif
 
         /* Now insert it into the queue. */
 
@@ -485,6 +500,7 @@ static void GCC_INLINE instance_check_multiple_keys(
     {
         instance_check_key(instance, list->key, list->parent_and_move);
     }
+#ifndef FCS_DBM_WITHOUT_CACHES
     if (instance->pre_cache.count_elements >= instance->pre_cache_max_count)
     {
         pre_cache_offload_and_reset(
@@ -493,6 +509,7 @@ static void GCC_INLINE instance_check_multiple_keys(
             &(instance->cache)
         );
     }
+#endif
     pthread_mutex_unlock(&(instance->storage_lock));
 }
 
@@ -1319,7 +1336,11 @@ int main(int argc, char * argv[])
          * state. */
         memset(parent_and_move, '\0', sizeof(parent_and_move));
 
+#ifndef FCS_DBM_WITHOUT_CACHES
         pre_cache_insert(&(instance.pre_cache), first_item->key, parent_and_move);
+#else
+        fc_solve_dbm_store_insert_key_value(instance.store, first_item->key, parent_and_move);
+#endif
         instance.queue_head = instance.queue_tail = first_item;
     }
     {
@@ -1400,18 +1421,22 @@ int main(int argc, char * argv[])
             {
                 trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
             }
+#ifndef FCS_DBM_WITHOUT_CACHES
             if (! pre_cache_lookup_parent_and_move(
                 &(instance.pre_cache),
                 key,
                 trace[trace_num]
                 ))
             {
+#endif
                 assert(fc_solve_dbm_store_lookup_parent_and_move(
                     instance.store,
                     key,
                     trace[trace_num]
                     ));
+#ifndef FCS_DBM_WITHOUT_CACHES
             }
+#endif
         }
 #ifdef FCS_WITHOUT_LOCS_FIELDS
         for (i=0 ; i < MAX_NUM_STACKS ; i++)

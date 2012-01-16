@@ -12,8 +12,11 @@ extern "C"
 #include "inline.h"
 #include "kaz_tree.h"
 
+#define FCS_DBM_WITHOUT_CACHES 1
+
 typedef unsigned char fcs_encoded_state_buffer_t[24];
 
+#ifndef FCS_DBM_WITHOUT_CACHES
 struct fcs_cache_key_info_struct
 {
     fcs_encoded_state_buffer_t key;
@@ -60,6 +63,7 @@ typedef struct {
     fcs_pre_cache_key_val_pair_t * kv_recycle_bin;
     long count_elements;
 } fcs_pre_cache_t;
+#endif
 
 typedef void * fcs_dbm_store_t;
 void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path);
@@ -75,10 +79,18 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
     unsigned char * parent_and_move
     );
 
+fcs_bool_t fc_solve_dbm_store_insert_key_value(
+    fcs_dbm_store_t store,
+    const unsigned char * key,
+    unsigned char * parent_and_move
+    );
+
+#ifndef FCS_DBM_WITHOUT_CACHES
 void fc_solve_dbm_store_offload_pre_cache(
     fcs_dbm_store_t store,
     fcs_pre_cache_t * pre_cache
 );
+#endif
 
 void fc_solve_dbm_store_destroy(fcs_dbm_store_t store);
 
