@@ -350,6 +350,7 @@ typedef struct {
     int queue_num_extracted_and_processed;
     /* TODO : offload the queue to the hard disk. */
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
+    long num_states_in_collection;
 } fcs_dbm_solver_instance_t;
 
 static void GCC_INLINE instance_init(
@@ -367,6 +368,7 @@ static void GCC_INLINE instance_init(
     );
     instance->queue_solution_was_found = FALSE;
     instance->queue_num_extracted_and_processed = 0;
+    instance->num_states_in_collection = 0;
     instance->count_num_processed = 0;
     instance->queue_head =
         instance->queue_tail =
@@ -441,6 +443,8 @@ static void GCC_INLINE instance_check_key(
         /* Now insert it into the queue. */
 
         pthread_mutex_lock(&instance->queue_lock);
+
+        instance->num_states_in_collection++;
         
         if (instance->queue_recycle_bin)
         {
@@ -1038,7 +1042,7 @@ void * instance_run_solver_thread(void * void_arg)
                 instance->queue_num_extracted_and_processed++;
                 if (++instance->count_num_processed % 100000 == 0)
                 {
-                    printf ("Reached %ld.\n", instance->count_num_processed);
+                    printf ("Reached %ld ; States-in-collection: %ld\n", instance->count_num_processed, instance->num_states_in_collection);
                     fflush(stdout);
                 }
             }
@@ -1177,7 +1181,7 @@ const char * move_to_string(unsigned char move, char * move_buffer)
     
     return move_buffer;
 }
-/* Temporary main() function to make gcc happy. */
+
 int main(int argc, char * argv[])
 {
     fcs_dbm_solver_instance_t instance;
@@ -1341,6 +1345,7 @@ int main(int argc, char * argv[])
 #else
         fc_solve_dbm_store_insert_key_value(instance.store, first_item->key, parent_and_move);
 #endif
+        instance.num_states_in_collection++;
         instance.queue_head = instance.queue_tail = first_item;
     }
     {
