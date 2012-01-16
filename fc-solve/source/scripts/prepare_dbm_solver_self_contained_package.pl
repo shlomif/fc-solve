@@ -6,7 +6,8 @@ use warnings;
 use IO::All;
 use File::Path;
 
-mkpath("Amadiro");
+my $dest_dir = 'dbm_fcs_for_amadiro';
+mkpath("$dest_dir");
 
 system(qq{./Tatzer -l x64b --nfc=2 --states-type=COMPACT_STATES --dbm=kaztree});
 my @modules = ('alloc.o', 'app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o');
@@ -18,16 +19,16 @@ foreach my $fn ('alloc.c', 'app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
     'delta_states.c', 'fcs_dllexport.h', 'bit_rw.h', 'fcs_enums.h', 'unused.h',
 )
 {
-    io($fn) > io("Amadiro/$fn");
+    io($fn) > io("$dest_dir/$fn");
 
 }
 
 my $deal_idx = 982;
-system(qq{python board_gen/make_pysol_freecell_board.py -t --ms $deal_idx > Amadiro/$deal_idx.board});
+system(qq{python board_gen/make_pysol_freecell_board.py -t --ms $deal_idx > $dest_dir/$deal_idx.board});
 
 @modules = sort { $a cmp $b } @modules;
 
-io("Amadiro/Makefile")->print(<<"EOF");
+io("$dest_dir/Makefile")->print(<<"EOF");
 TARGET = dbm_fc_solver
 DEAL_IDX = $deal_idx
 BOARD = \$(DEAL_IDX).board
