@@ -64,7 +64,6 @@
 #define right dict_right
 #define parent dict_parent
 #define color dict_color
-#define key dict_key
 #define data dict_data
 
 #define nilnode dict_nilnode
@@ -568,7 +567,7 @@ int dict_similar(const dict_t *left, const dict_t *right)
  * located node is returned.
  */
 
-dnode_t *fc_solve_kaz_tree_lookup(dict_t *dict, const void *key)
+dnode_t *fc_solve_kaz_tree_lookup(dict_t *dict, dict_key_t key)
 {
     dnode_t *root = dict_root(dict);
     dnode_t *nil = dict_nil(dict);
@@ -580,7 +579,12 @@ dnode_t *fc_solve_kaz_tree_lookup(dict_t *dict, const void *key)
     /* simple binary search adapted for trees that contain duplicate keys */
 
     while (root != nil) {
-        result = dict->compare(key, root->key, dict->context);
+#ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
+        result = memcmp(&(key.key), &(root->dict_key.key), sizeof(key.key));
+#else
+        result = dict->compare(key, root->dict_key, dict->context);
+#endif
+
         if (result < 0)
             root = root->left;
         else if (result > 0)
@@ -742,13 +746,13 @@ dnode_t *dict_strict_upper_bound(dict_t *dict, const void *key)
  * function returns true).
  */
 
-const void * fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, const void *key)
+dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, dict_key_t key)
 {
     dnode_t *where = dict_root(dict), *nil = dict_nil(dict);
     dnode_t *parent = nil, *uncle, *grandpa;
     int result = -1;
 
-    node->key = key;
+    node->dict_key = key;
 
     assert (!dict_isfull(dict));
     assert (!dict_contains(dict, node));
@@ -758,7 +762,11 @@ const void * fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, const void *k
 
     while (where != nil) {
         parent = where;
-        result = dict->compare(key, where->key, dict->context);
+#ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
+        result = memcmp(&(key.key), &(where->dict_key.key), sizeof(key.key));
+#else
+        result = dict->compare(key, where->dict_key, dict->context);
+#endif
 
         /* We are remming it out because instead of duplicating the key
          * we return the existing key. -- Shlomi Fish, fc-solve.
@@ -769,7 +777,11 @@ const void * fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, const void *k
 #endif
         if (result == 0)
         {
+#ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
+            return &(where->dict_key);
+#else
             return where->dict_key;
+#endif
         }
         else if (result < 0)
         {
@@ -1049,14 +1061,14 @@ static GCC_INLINE dnode_t *dnode_init(dnode_t *dnode)
  */
 
 #ifdef NO_FC_SOLVE
-const void * fc_solve_kaz_tree_alloc_insert(dict_t *dict, const void *key, void *data)
+const dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, const void *key, void *data)
 #else
-const void * fc_solve_kaz_tree_alloc_insert(dict_t *dict, const void *key)
+const dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, dict_key_t key)
 #endif
 {
     dnode_t * from_bin;
     dnode_t * node;
-    const void * ret;
+    dict_ret_key_t ret;
     fcs_compact_allocator_t * allocator;
 
 

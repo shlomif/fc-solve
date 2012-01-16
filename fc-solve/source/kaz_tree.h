@@ -55,6 +55,18 @@ typedef unsigned long dictcount_t;
 
 typedef enum { dnode_red, dnode_black } dnode_color_t;
 
+/*
+ * This is set by dbm_kaztree.c to conserve space when used in the delta-states
+ * nodes.
+ */
+#ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
+typedef fcs_dbm_record_t dict_key_t;
+typedef dict_key_t * dict_ret_key_t;
+#else
+typedef const void * dict_key_t;
+typedef dict_key_t dict_ret_key_t;
+#endif
+
 #define DNODE_NEXT(node) ((node)->dict_left)
 
 typedef struct dnode_t {
@@ -63,7 +75,7 @@ typedef struct dnode_t {
     struct dnode_t *dict_right;
     struct dnode_t *dict_parent;
     dnode_color_t dict_color;
-    const void *dict_key;
+    dict_key_t dict_key;
 #ifdef NO_FC_SOLVE
     void *dict_data;
 #endif
@@ -144,13 +156,13 @@ extern dnode_t *dict_upper_bound(dict_t *, const void *);
 extern dnode_t *dict_strict_lower_bound(dict_t *, const void *);
 extern dnode_t *dict_strict_upper_bound(dict_t *, const void *);
 #endif
-extern const void * fc_solve_kaz_tree_insert(dict_t *, dnode_t *, const void *);
+extern dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *, dnode_t *, dict_key_t);
 #ifdef NO_FC_SOLVE
 extern dnode_t *fc_solve_kaz_tree_delete(dict_t *, dnode_t *);
 #endif
-extern const void * fc_solve_kaz_tree_alloc_insert(dict_t *, const void *);
+extern const dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *, dict_key_t);
 extern void fc_solve_kaz_tree_delete_free(dict_t *, dnode_t *);
-extern dnode_t *fc_solve_kaz_tree_lookup(dict_t *, const void *);
+extern dnode_t *fc_solve_kaz_tree_lookup(dict_t *, dict_key_t);
 
 extern dnode_t *fc_solve_kaz_tree_first(dict_t *);
 extern dnode_t *fc_solve_kaz_tree_next(dict_t *, dnode_t *);
@@ -171,7 +183,7 @@ extern dnode_t *dnode_create(void *);
 extern dnode_t *dnode_init(dnode_t *, void *);
 extern void dnode_destroy(dnode_t *);
 extern void *dnode_get(dnode_t *);
-extern const void *dnode_getkey(dnode_t *);
+extern dict_key_t *dnode_getkey(dnode_t *);
 extern void dnode_put(dnode_t *, void *);
 #endif
 #ifdef NO_FC_SOLVE

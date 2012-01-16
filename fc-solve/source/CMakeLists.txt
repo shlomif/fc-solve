@@ -508,19 +508,19 @@ IF (FCS_ENABLE_DBM_SOLVER)
     SET (DBM_BACKEND_MODULES )
     SET (DBM_LIBS "pthread")
     IF (FCS_DBM_BACKEND STREQUAL "bdb")
-        LIST(APPEND DBM_BACKEND_MODULES "dbm_bdb.c")
+        LIST(APPEND DBM_BACKEND_MODULES "dbm_bdb.c" "kaz_tree.c")
         LIST (INSERT DBM_LIBS 0 "db-4")
     ELSEIF (FCS_DBM_BACKEND STREQUAL "kaztree")
         LIST(APPEND DBM_BACKEND_MODULES "dbm_kaztree.c")
         ADD_DEFINITIONS("-DFCS_DBM_WITHOUT_CACHES=1")
     ELSE (FCS_DBM_BACKEND STREQUAL "bdb")
-        LIST(APPEND DBM_BACKEND_MODULES "dbm_leveldb.cpp")
+        LIST(APPEND DBM_BACKEND_MODULES "dbm_leveldb.cpp" "kaz_tree.c")
         INCLUDE_DIRECTORIES(BEFORE "${LEVELDB_SOURCE_DIR}/include")
         LINK_DIRECTORIES("${LEVELDB_SOURCE_DIR}")
         LIST (INSERT DBM_LIBS 0 "leveldb")
     ENDIF (FCS_DBM_BACKEND STREQUAL "bdb")
     ADD_EXECUTABLE(dbm_fc_solver
-        alloc.c app_str.c card.c dbm_solver.c kaz_tree.c state.c
+        alloc.c app_str.c card.c dbm_solver.c state.c
         ${DBM_BACKEND_MODULES}
     )
     TARGET_LINK_LIBRARIES(dbm_fc_solver ${DBM_LIBS}) 

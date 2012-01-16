@@ -12,7 +12,7 @@ extern "C"
 #include "inline.h"
 #include "kaz_tree.h"
 
-typedef unsigned char fcs_encoded_state_buffer_t[24];
+#include "dbm_solver_key.h"
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 struct fcs_cache_key_info_struct
