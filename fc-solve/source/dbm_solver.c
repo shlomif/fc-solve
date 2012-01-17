@@ -34,6 +34,16 @@
 #include <unistd.h>
 #include <assert.h>
 
+/* 
+ * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
+ * to improve CPU utilisations of the various worker threads and possibly
+ * overall performance.
+ * #define FCS_DBM_USE_RWLOCK 1 */
+
+#ifdef FCS_DBM_USE_RWLOCK
+#include <pthread/rwlock_fcfs.h>
+#endif
+
 #include "config.h"
 
 #include "bool.h"
@@ -331,8 +341,22 @@ static const pthread_mutex_t initial_mutex_constant =
     PTHREAD_MUTEX_INITIALIZER
     ;
 
+#ifdef FCS_DBM_USE_RWLOCK
+typedef pthread_rwlock_fcfs_t * fcs_lock_t;
+#define FCS_LOCK(lock) pthread_rwlock_fcfs_gain_write(lock)
+#define FCS_UNLOCK(lock) pthread_rwlock_fcfs_release(lock)
+#define FCS_INIT_LOCK(lock) ((lock) = pthread_rwlock_fcfs_alloc())
+#define FCS_DESTROY_LOCK(lock) pthread_rwlock_fcfs_destroy(lock)
+#else
+typedef pthread_mutex_t fcs_lock_t;
+#define FCS_LOCK(lock) pthread_mutex_lock(&(lock))
+#define FCS_UNLOCK(lock) pthread_mutex_unlock(&(lock))
+#define FCS_INIT_LOCK(lock) ((lock) = initial_mutex_constant)
+#define FCS_DESTROY_LOCK(lock) {}
+#endif
+
 typedef struct {
-    pthread_mutex_t storage_lock;
+    fcs_lock_t storage_lock;
 #ifndef FCS_DBM_WITHOUT_CACHES
     fcs_pre_cache_t pre_cache;
     fcs_lru_cache_t cache;
@@ -342,7 +366,7 @@ typedef struct {
     long pre_cache_max_count;
     /* The queue */
     
-    pthread_mutex_t queue_lock;
+    fcs_lock_t queue_lock;
     long count_num_processed;
     fcs_bool_t queue_solution_was_found;
     fcs_encoded_state_buffer_t queue_solution;
@@ -360,8 +384,8 @@ static void GCC_INLINE instance_init(
     const char * dbm_store_path
 )
 {
-    instance->queue_lock = initial_mutex_constant;
-    instance->storage_lock = initial_mutex_constant;
+    FCS_INIT_LOCK(instance->queue_lock);
+    FCS_INIT_LOCK(instance->storage_lock);
 
     fc_solve_compact_allocator_init(
         &(instance->queue_allocator)
@@ -401,6 +425,9 @@ static void GCC_INLINE instance_destroy(
 #endif
 
     fc_solve_dbm_store_destroy(instance->store);
+
+    FCS_DESTROY_LOCK(instance->queue_lock);
+    FCS_DESTROY_LOCK(instance->storage_lock);
 }
 
 static void GCC_INLINE instance_check_key(
@@ -442,7 +469,7 @@ static void GCC_INLINE instance_check_key(
 
         /* Now insert it into the queue. */
 
-        pthread_mutex_lock(&instance->queue_lock);
+        FCS_LOCK(instance->queue_lock);
 
         instance->num_states_in_collection++;
         
@@ -472,7 +499,7 @@ static void GCC_INLINE instance_check_key(
         {
             instance->queue_head = instance->queue_tail = new_item;
         }
-        pthread_mutex_unlock(&instance->queue_lock);
+        FCS_UNLOCK(instance->queue_lock);
     }
 }
 
@@ -499,7 +526,7 @@ static void GCC_INLINE instance_check_multiple_keys(
     {
         return;
     }
-    pthread_mutex_lock(&(instance->storage_lock));
+    FCS_LOCK(instance->storage_lock);
     for (; list ; list = list->next)
     {
         instance_check_key(instance, list->key, list->parent_and_move);
@@ -514,7 +541,7 @@ static void GCC_INLINE instance_check_multiple_keys(
         );
     }
 #endif
-    pthread_mutex_unlock(&(instance->storage_lock));
+    FCS_UNLOCK(instance->storage_lock);
 }
 
 typedef struct {
@@ -1026,7 +1053,7 @@ void * instance_run_solver_thread(void * void_arg)
     while (1)
     {
         /* First of all extract an item. */
-        pthread_mutex_lock(&instance->queue_lock);
+        FCS_LOCK(instance->queue_lock);
 
         if (prev_item)
         {
@@ -1054,7 +1081,7 @@ void * instance_run_solver_thread(void * void_arg)
             queue_num_extracted_and_processed =
                 instance->queue_num_extracted_and_processed;
         }
-        pthread_mutex_unlock(&instance->queue_lock);
+        FCS_UNLOCK(instance->queue_lock);
 
         if (queue_solution_was_found || (! queue_num_extracted_and_processed))
         {
@@ -1092,11 +1119,11 @@ void * instance_run_solver_thread(void * void_arg)
             &derived_list_allocator
         ))
         {
-            pthread_mutex_lock(&instance->queue_lock);
+            FCS_LOCK(instance->queue_lock);
             instance->queue_solution_was_found = TRUE;
             memcpy(&(instance->queue_solution), &(item->key),
                    sizeof(instance->queue_solution));
-            pthread_mutex_unlock(&instance->queue_lock);
+            FCS_UNLOCK(instance->queue_lock);
             break;
         }
 

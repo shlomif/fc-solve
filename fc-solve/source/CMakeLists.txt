@@ -506,7 +506,11 @@ FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 
 IF (FCS_ENABLE_DBM_SOLVER)
     SET (DBM_BACKEND_MODULES )
-    SET (DBM_LIBS "pthread")
+    SET (DBM_LIBS "pthread" "pthread_rwlock_fcfs")
+    # LINK_DIRECTORIES("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads")
+    # INCLUDE_DIRECTORIES("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads")
+    ADD_DEFINITIONS("-DFCS_DBM_USE_RWLOCK=1")
+
     IF (FCS_DBM_BACKEND STREQUAL "bdb")
         LIST(APPEND DBM_BACKEND_MODULES "dbm_bdb.c" "kaz_tree.c")
         LIST (INSERT DBM_LIBS 0 "db-4")
@@ -523,7 +527,7 @@ IF (FCS_ENABLE_DBM_SOLVER)
         alloc.c app_str.c card.c dbm_solver.c state.c
         ${DBM_BACKEND_MODULES}
     )
-    TARGET_LINK_LIBRARIES(dbm_fc_solver ${DBM_LIBS}) 
+    TARGET_LINK_LIBRARIES(dbm_fc_solver ${DBM_LIBS})
 ENDIF (FCS_ENABLE_DBM_SOLVER)
 
 IF (CMAKE_USE_PTHREADS_INIT)
