@@ -18,6 +18,7 @@ foreach my $fn ('alloc.c', 'app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
     'dbm_solver.h', 'kaz_tree.c', 'kaz_tree.h', 'dbm_solver_key.h',
     'fcs_move.h', 'inline.h', 'bool.h', 'internal_move_struct.h', 'app_str.h',
     'delta_states.c', 'fcs_dllexport.h', 'bit_rw.h', 'fcs_enums.h', 'unused.h',
+    'portable_time.h',
 )
 {
     io($fn) > io("$dest_dir/$fn");
@@ -28,15 +29,34 @@ foreach my $fn ('rwlock.c', 'queue.c', 'pthread/rwlock_fcfs.h', 'pthread/rwlock_
     io("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads/$fn") > io("$dest_dir/$fn")
 }
 
-my $deal_idx = 982;
-system(qq{python board_gen/make_pysol_freecell_board.py -t --ms $deal_idx > $dest_dir/$deal_idx.board});
+my @deals = (
+    5435,
+    6090,
+    7728,
+    9034,
+    11266,
+    13705,
+    17760,
+    17880,
+    18446,
+    19671,
+    28188,
+);
+
+# my $deal_idx = 982;
+foreach my $deal_idx (@deals)
+{
+    system(qq{python board_gen/make_pysol_freecell_board.py -t --ms $deal_idx > $dest_dir/$deal_idx.board});
+}
 
 @modules = sort { $a cmp $b } @modules;
 
 io("$dest_dir/Makefile")->print(<<"EOF");
 TARGET = dbm_fc_solver
-DEAL_IDX = $deal_idx
-BOARD = \$(DEAL_IDX).board
+DEALS = @deals
+
+DEALS_DUMPS = \$(patsubst %,%.dump,\$(DEALS))
+THREADS = 12
 
 CFLAGS = -O3 -march=native -fomit-frame-pointer -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_RWLOCK=1 -I.
 MODULES = @modules
@@ -49,7 +69,12 @@ all: \$(TARGET)
 \$(MODULES): %.o: %.c
 \tgcc -c \$(CFLAGS) -o \$\@ \$<
 
-run: all 
-\t./\$(TARGET) --num-threads 64 \$(BOARD) | tee \$(DEAL_IDX).dump
+run: \$(DEALS_DUMPS)
+
+\$(DEALS_DUMPS): %.dump: all
+\t./\$(TARGET) --num-threads \$(THREADS) \$(patsubst %.dump,%.board,\$\@) | tee \$\@
+
+%.show:
+\t\@echo "\$* = \$(\$*)"
 EOF
 
