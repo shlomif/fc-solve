@@ -48,6 +48,7 @@
 
 #include "bool.h"
 #include "inline.h"
+#include "portable_time.h"
 
 #include "dbm_solver.h"
 
@@ -1073,7 +1074,15 @@ void * instance_run_solver_thread(void * void_arg)
                 instance->queue_num_extracted_and_processed++;
                 if (++instance->count_num_processed % 100000 == 0)
                 {
-                    printf ("Reached %ld ; States-in-collection: %ld\n", instance->count_num_processed, instance->num_states_in_collection);
+                    fcs_portable_time_t mytime;
+                    FCS_GET_TIME(mytime);
+
+                    printf ("Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n",
+                        instance->count_num_processed,
+                        instance->num_states_in_collection,
+                        FCS_TIME_GET_SEC(mytime),
+                        FCS_TIME_GET_USEC(mytime)
+                    );
                     fflush(stdout);
                 }
             }
