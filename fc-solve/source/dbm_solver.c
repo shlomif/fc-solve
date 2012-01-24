@@ -715,7 +715,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_encoded_state_buffer_t * key,
     fcs_derived_state_t * * derived_list,
     fcs_derived_state_t * * derived_list_recycle_bin,
-    fcs_compact_allocator_t * derived_list_allocator
+    fcs_compact_allocator_t * derived_list_allocator,
+    const fcs_bool_t perform_horne_prune
 )
 {
     fcs_derived_state_t * ptr_new_state; 
@@ -1002,6 +1003,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 #undef fc_idx
 
     /* Perform Horne's Prune on all the states. */
+    if (perform_horne_prune)
     {
         fcs_derived_state_t * derived_iter;
 
@@ -1125,7 +1127,8 @@ void * instance_run_solver_thread(void * void_arg)
             &(item->key),
             &derived_list,
             &derived_list_recycle_bin,
-            &derived_list_allocator
+            &derived_list_allocator,
+            TRUE
         ))
         {
             FCS_LOCK(instance->queue_lock);
