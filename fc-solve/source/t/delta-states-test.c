@@ -49,10 +49,6 @@ static fcs_card_t make_card(int rank, int suit)
     return card;
 }
 
-#define FREECELLS_NUM 2
-#define STACKS_NUM 8
-#define DECKS_NUM 1
-
 #ifdef INDIRECT_STACK_STATES
 typedef char ind_buf_t[MAX_NUM_STACKS << 7];
 #endif

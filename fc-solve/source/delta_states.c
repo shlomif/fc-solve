@@ -38,6 +38,10 @@
 #include "bit_rw.h"
 #include "state.h"
 
+#ifdef FCS_COMPILE_DEBUG_FUNCTIONS
+#include "dbm_common.h"
+#endif
+
 typedef struct
 {
 #ifndef FCS_FREECELL_ONLY
@@ -550,10 +554,6 @@ static char * prepare_state_str(const char * proto)
 typedef char dll_ind_buf_t[MAX_NUM_STACKS << 7];
 #endif
 
-#define STACKS_NUM 8
-#define FREECELLS_NUM 2
-#define DECKS_NUM 1
-
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */
@@ -663,9 +663,5 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 
     return new_derived_as_str;
 }
-
-#undef STACKS_NUM
-#undef FREECELLS_NUM
-#undef DECKS_NUM
 
 #endif
