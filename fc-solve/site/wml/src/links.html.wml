@@ -44,6 +44,7 @@ development of Freecell Solver.
 </p>
 </li>
 
+<define-tag old_berlios_stuff>
 <li>
 <p>
 <a href="http://developer.berlios.de/project/?group_id=66">BerliOS' Project
@@ -59,6 +60,24 @@ repository</a> and other goodies.
 - allows one to browse the repository online with convenience. See also
 <a href="http://userscripts.org/scripts/show/35046">this GreaseMonkey script
 to provide links back to the Subversion repository's URLs</a>
+</p>
+</li>
+</define-tag>
+
+<li>
+<p>
+<a href="http://code.google.com/p/fc-solve/">Google Code Project Page</a> - 
+contains instructions for 
+<a href="http://code.google.com/p/fc-solve/source/checkout">checking out the 
+source from its Subversion repository</a>, a currently underused issue tracker,
+and other goodies.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://code.google.com/p/fc-solve/source/browse/">Source
+Code Browser</a> - a browser for the source code.
 </p>
 </li>
 </ul>
