@@ -53,4 +53,20 @@ The solver's state:
 
 struct
 {
+    struct prev_depth_FCCs
+    {
+        int fcc_depth_idx;
+        List<fcs_fully_connected_component_t> to_scan_queue;
+    };
+    struct next_depth_FCCs
+    {
+        int fcc_depth_idx;
+        Map{min_by_sorting => Bool Exists} DoesExists;
+        List<fcs_fully_connected_component_t> queue;
+        /* Optionally: */
+        LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache;
+    };
 } fcs_fcc_solver_state_t
+
+The algorithm:
+
