@@ -101,4 +101,6 @@ startpoints (the positions in the graph that followed an irreversible move).
 
 #. prev_depth_FCCs.to_scan_queue ← next_depth_FCCs.queue;
 
-
+#. next_depth_FCCs.DoesExists = new empty one ; 
+next_depth_FCCs.queue = new empty one ; 
+next_depth_FCCs.Cache = new empty one ; 
