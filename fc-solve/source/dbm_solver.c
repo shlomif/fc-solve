@@ -510,6 +510,7 @@ struct fcs_derived_state_struct
     fcs_encoded_state_buffer_t key;
     fcs_encoded_state_buffer_t parent_and_move;
     struct fcs_derived_state_struct * next;
+    fcs_bool_t is_reversible_move;
 #ifdef INDIRECT_STACK_STATES
     dll_ind_buf_t indirect_stacks_buffer;
 #endif
@@ -603,7 +604,7 @@ typedef struct {
     COPY_INDIRECT_COLS() \
 }
 
-#define COMMIT_NEW_STATE(src, dest) \
+#define COMMIT_NEW_STATE(src, dest, is_reversible) \
 { \
  \
     memcpy( \
@@ -615,6 +616,7 @@ typedef struct {
         ptr_new_state->parent_and_move[0]+1 \
         ] = MAKE_MOVE((src), (dest)); \
  \
+    ptr_new_state->is_reversible_move = (is_reversible); \
     /* Finally, enqueue the new state. */ \
     ptr_new_state->next = (*derived_list); \
     (*derived_list) = ptr_new_state; \
@@ -783,7 +785,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                     fcs_increment_foundation(new_state, deck*4+suit);
 
-                    COMMIT_NEW_STATE(COL2MOVE(stack_idx), FOUND2MOVE(suit))
+                    COMMIT_NEW_STATE(COL2MOVE(stack_idx), FOUND2MOVE(suit), FALSE)
                 }
             }
         }
@@ -813,7 +815,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                     fcs_increment_foundation(new_state, deck*4+suit);
 
                     COMMIT_NEW_STATE(
-                        FREECELL2MOVE(fc_idx), FOUND2MOVE(suit)
+                        FREECELL2MOVE(fc_idx), FOUND2MOVE(suit), FALSE
                     )
                 }
             }
@@ -861,9 +863,16 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                             fcs_col_pop_top(new_src_col);
                             fcs_col_push_card(new_dest_col, card);
                         }
-                        
+#define FROM_COL_IS_REVERSIBLE_MOVE() \
+                        ((cards_num <= 1) ? TRUE \
+                             : fcs_is_parent_card(card, fcs_col_get_card( \
+                                     col, cards_num-2) \
+                               ) \
+                        )
+
                         COMMIT_NEW_STATE(
-                            COL2MOVE(stack_idx), COL2MOVE(ds)
+                            COL2MOVE(stack_idx), COL2MOVE(ds),
+                            FROM_COL_IS_REVERSIBLE_MOVE()   
                         )
                     }
                 }
@@ -901,7 +910,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                         }
                         
                         COMMIT_NEW_STATE(
-                            FREECELL2MOVE(fc_idx), COL2MOVE(ds)
+                            FREECELL2MOVE(fc_idx), COL2MOVE(ds),
+                            TRUE
                         )
                     }
                 }
@@ -938,7 +948,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                         fcs_col_push_card(empty_stack_col, card);
                     }
                     COMMIT_NEW_STATE(
-                        COL2MOVE(stack_idx), COL2MOVE(empty_stack_idx)
+                        COL2MOVE(stack_idx), COL2MOVE(empty_stack_idx),
+                        FROM_COL_IS_REVERSIBLE_MOVE()
                     )
                 }
             }
@@ -964,7 +975,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                 }
 
                 COMMIT_NEW_STATE(
-                    FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx)
+                    FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx),
+                    TRUE
                 );
             }
         }
@@ -994,7 +1006,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                         fcs_put_card_in_freecell(new_state, empty_fc_idx, card);
                     }
                     COMMIT_NEW_STATE(
-                        COL2MOVE(stack_idx), FREECELL2MOVE(empty_fc_idx)
+                        COL2MOVE(stack_idx), FREECELL2MOVE(empty_fc_idx),
+                        FROM_COL_IS_REVERSIBLE_MOVE()
                     )
                 }
             }
@@ -1019,6 +1032,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     return FALSE;
 }
 
+#undef FROM_COL_IS_REVERSIBLE_MOVE
 #undef the_state
 #undef new_state
 
