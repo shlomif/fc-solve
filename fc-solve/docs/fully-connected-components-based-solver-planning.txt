@@ -1,0 +1,56 @@
+Irreversible moves:
+-------------------
+
+1. Moving a card from a freecell/column to the foundations.
+
+2. Moving a card from an incompatible parent (by initial layout) to a different
+freecell/column.
+
+Reversible moves:
+-----------------
+
+All the rest.
+
+Analysis of the game graph:
+---------------------------
+
+The game graph is a DAG (directed acyclic graph) of
+fully-connected components (FCCs),
+where the fully-connected components are composed of reversible moves and 
+the edges between fully-connected components are irreversible moves.
+
+Furthermore, in order to reach FCC we need to perform all the relevant 
+irreversible moves that yielded it. As a result, one needs the same amount of
+irreversible moves to reach a certain FCC so they can be sorted according to
+their depth, which is measured by the number of irreversible moves.
+
+Note that the depth of an FCC cannot exceed 52*2 which is the maximal number
+of irreversible moves.
+
+Represnting a Fully-connected Component:
+----------------------------------------
+
+typedef struct
+{
+    /* The minimal state in the fully-connected component, according to
+    the lexical sorting of the encoded state keys. This is used to identify
+    it and avoid collisions and re-processing. 
+    */
+    fcs_encoded_state_buffer_t min_by_sorting;
+    /* The minimal state by absolute depth (including that of
+    reversible moves). Not absolutely minimal, because the first
+    $depth-1 FCC that reaches it, wins the jackpot.
+    */
+    fcs_encoded_state_buffer_t min_by_absolute_depth;
+    /* Moves to the min_by_absolute_depth from the initial state. 
+    (accumlative).
+    */
+    MOVE_STACK_T moves_to_min_by_absolute_depth;
+} fcs_fully_connected_component_t;
+
+The solver's state:
+-------------------
+
+struct
+{
+} fcs_fcc_solver_state_t
