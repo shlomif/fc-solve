@@ -66,7 +66,39 @@ struct
         /* Optionally: */
         LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache;
     };
-} fcs_fcc_solver_state_t
+} fcs_fcc_solver_state_t;
 
 The algorithm:
+
+#. FOREACH <prev_depth_FCCs.to_scan_queue >
+
+#. Perform a BrFS from min_by_absolute_depth to find all the next FCC
+startpoints (the positions in the graph that followed an irreversible move).
+
+#. For each of these startpoints:
+
+    #. Perform a BrFS scan to find the new FCC min_by_sorting (the scan will
+    be only on reversible moves).
+    
+    #. ==> This is done while performing a lookup+insert for each state on
+    next_depth_FCCs.Cache, and stopping if it's there.
+
+    #. If it does not exist in next_depth_FCCs.DoesExists, add the new 
+    min_by_sorting and min_by_absolute_depth (the start point) append a new FCC 
+    to next_depth_FCCs.queue.
+
+    #. If it does, halt the search for this startpoint.
+
+#. END FOREACH <prev_depth_FCCs.to_scan_queue>
+
+#. Free next_depth_FCCs.DoesExists , next_depth_FCCs.Cache.
+
+#. Free prev_depth_FCCs.to_scan_queue.
+
+#. prev_depth_FCCs.fcs_depth_idx = next_depth_FCCs.fcs_depth_idx
+
+#. next_depth_FCCs.fcs_depth_idx++;
+
+#. prev_depth_FCCs.to_scan_queue ← next_depth_FCCs.queue;
+
 
