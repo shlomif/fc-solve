@@ -57,6 +57,14 @@ struct fcs_derived_state_struct
 #endif
 };
 
+typedef struct 
+{
+    char * state_string;
+    unsigned char move;
+    fcs_bool_t is_reversible_move;
+} fcs_derived_state_debug_t;
+
+
 typedef struct fcs_derived_state_struct fcs_derived_state_t;
 
 #define MAKE_MOVE(src, dest) ((src) | (dest) << 4)

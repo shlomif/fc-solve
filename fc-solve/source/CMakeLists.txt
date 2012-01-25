@@ -874,4 +874,8 @@ IF (IS_DEBUG)
         SHARED
         app_str.c card.c state.c delta_states.c
     )
+    ADD_LIBRARY(fcs_dbm_calc_derived_test
+        SHARED
+        app_str.c card.c state.c dbm_calc_derived_test.c
+    )
 ENDIF (IS_DEBUG)
