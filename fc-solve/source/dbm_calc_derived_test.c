@@ -108,15 +108,13 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fcs_compact_allocator_t allocator;
     fc_solve_compact_allocator_init( &allocator );
 
-    assert(
-        instance_solver_thread_calc_derived_states(
-            &init_state,
-            &enc_state,
-            &derived_list,
-            &derived_list_recycle_bin,
-            &allocator,
-            perform_horne_prune
-        )
+    instance_solver_thread_calc_derived_states(
+        &init_state,
+        &enc_state,
+        &derived_list,
+        &derived_list_recycle_bin,
+        &allocator,
+        perform_horne_prune
     );
 
     int states_count = 0;

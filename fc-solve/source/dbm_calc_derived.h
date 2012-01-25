@@ -42,8 +42,10 @@ extern "C"
 #include "alloc.h"
 #include "fcs_enums.h"
 
+#include "fcs_dllexport.h"
 #include "dbm_common.h"
 #include "dbm_solver_key.h"
+#include "dbm_calc_derived_iface.h"
 
 struct fcs_derived_state_struct
 {
@@ -56,14 +58,6 @@ struct fcs_derived_state_struct
     dll_ind_buf_t indirect_stacks_buffer;
 #endif
 };
-
-typedef struct 
-{
-    char * state_string;
-    unsigned char move;
-    fcs_bool_t is_reversible_move;
-} fcs_derived_state_debug_t;
-
 
 typedef struct fcs_derived_state_struct fcs_derived_state_t;
 
