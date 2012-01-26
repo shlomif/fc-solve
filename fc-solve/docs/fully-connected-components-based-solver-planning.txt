@@ -104,3 +104,25 @@ startpoints (the positions in the graph that followed an irreversible move).
 #. next_depth_FCCs.DoesExists = new empty one ; 
 next_depth_FCCs.queue = new empty one ; 
 next_depth_FCCs.Cache = new empty one ; 
+
+Addendum: Handling Horne's Prune
+--------------------------------
+
+We can handle Horne's prune by counting the number of cards that were moved
+to the foundations and thus getting the new accumlative FCC-depth, in addition
+to the existing move. We perform the prunes only on the startpoints that emerge
+from a non-reversible move. The new FCCs will be placed into the array of the
+FCCs-by-depth. 
+
+As a result, the new state looks like so:
+
+struct FCC
+{
+    /* These two gets recycled (and their memory reclaimed by the heap) when we ascend
+       to a new depth. */
+    List<fcs_fully_connected_component_t> queue;
+    Map{min_by_sorting => Bool Exists} DoesExists;
+} FCCs_by_depth[52 * 2];
+
+/* Optionally exists: no need to reset when we ascend to a new depth. */
+LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache;
