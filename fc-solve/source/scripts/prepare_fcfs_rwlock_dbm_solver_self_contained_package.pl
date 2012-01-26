@@ -18,7 +18,8 @@ foreach my $fn ('alloc.c', 'app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
     'dbm_solver.h', 'kaz_tree.c', 'kaz_tree.h', 'dbm_solver_key.h',
     'fcs_move.h', 'inline.h', 'bool.h', 'internal_move_struct.h', 'app_str.h',
     'delta_states.c', 'fcs_dllexport.h', 'bit_rw.h', 'fcs_enums.h', 'unused.h',
-    'portable_time.h',
+    'portable_time.h', 'dbm_calc_derived.h', 'dbm_calc_derived_iface.h',
+    'dbm_common.h',
 )
 {
     io($fn) > io("$dest_dir/$fn");
@@ -30,17 +31,26 @@ foreach my $fn ('rwlock.c', 'queue.c', 'pthread/rwlock_fcfs.h', 'pthread/rwlock_
 }
 
 my @deals = (
+    3129,
     5435,
     6090,
     7728,
     9034,
     11266,
+    12038,
+    12064,
     13705,
+    14790,
+    15804,
     17760,
     17880,
     18446,
     19671,
+    20792,
+    21779,
+    26124,
     28188,
+    29577,
 );
 
 # my $deal_idx = 982;
