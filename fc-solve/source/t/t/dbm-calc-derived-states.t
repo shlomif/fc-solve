@@ -215,7 +215,7 @@ sub is_dest
 
 package main;
 
-use Test::More tests => 4;
+use Test::More tests => 8;
 
 my $TRUE = 1;
 my $FALSE = 0;
@@ -265,5 +265,57 @@ EOF
 
         # TEST
         $results->is_dest({ type => 'freecell', idx => 1, }, '9D to freecell is to freecell No. 1');
+    }
+}
+
+{
+    my $freecell_24_middle_layout = <<'EOF';
+Foundations: H-Q C-8 D-8 S-Q 
+Freecells:  KD    
+: KH QC JD TC 9D
+: KC
+: 
+: KS QD JC TD 9C
+: 
+: 
+: 
+: 
+EOF
+
+    my $fc_24 = DerivedStatesList->new(
+        { 
+            start => $freecell_24_middle_layout,
+            perform_horne_prune => 0,
+        }
+    );
+
+    {
+        my $results = $fc_24->find_by_string(<<'EOF'
+Foundations: H-Q C-8 D-8 S-Q 
+Freecells:        
+: KH QC JD TC 9D
+: KC
+: 
+: KS QD JC TD 9C
+: 
+: 
+: 
+: KD
+EOF
+        );
+
+        # TEST
+        $results->has_one('KD from Freecell has exactly one result');
+
+        # TEST
+        $results->is_reversible($TRUE, 'KD from Freecell is reversible');
+
+        # TEST
+        $results->is_src({ type => 'freecell', idx => 0, }, 
+            'from freecell 0');
+
+        # TEST
+        $results->is_dest({ type => 'stack', idx => 7, }, 
+            'to stack No. 7');
     }
 }
