@@ -19,7 +19,7 @@ typedef struct
     fcs_bool_t is_reversible_move;
 } DerivedState;
 
-SV* get_derived_states_list(char * init_state_s, char * key_state_s, int perform_horne_prune) {
+SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
         AV * results;
         DerivedState* s;
         int count, i;
@@ -27,7 +27,6 @@ SV* get_derived_states_list(char * init_state_s, char * key_state_s, int perform
         
         fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             init_state_s,
-            key_state_s,
             &count,
             &derived_states,
             perform_horne_prune
@@ -83,18 +82,15 @@ EOF
 
 package main;
 
+use IO::All;
+
+my ($start_fn, $perform_horne_prune) = @ARGV;
+
 # MS Freecell Board No. 24.
 my $derived_states_list = DerivedState::get_derived_states_list(
-    ((<<'EOF') x 2) , 0);
-4C 2C 9C 8C QS 4S 2H 
-5H QH 3C AC 3H 4H QD 
-QC 9S 6H 9H 3S KS 3D 
-5D 2S JC 5C JH 6D AS 
-2D KD TH TC TD 8D 
-7H JS KH TS KC 7C 
-AH 5S 6S AD 8H JD 
-7S 6C 7D 4D 8S 9D 
-EOF
+    scalar(io($start_fn)->slurp),
+    $perform_horne_prune
+);
 
 foreach my $obj (@$derived_states_list)
 {

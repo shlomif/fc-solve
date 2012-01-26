@@ -19,7 +19,7 @@ typedef struct
     fcs_bool_t is_reversible_move;
 } DerivedState;
 
-SV* get_derived_states_list(char * init_state_s, char * key_state_s, int perform_horne_prune) {
+SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
         AV * results;
         DerivedState* s;
         int count, i;
@@ -27,7 +27,6 @@ SV* get_derived_states_list(char * init_state_s, char * key_state_s, int perform
         
         fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             init_state_s,
-            key_state_s,
             &count,
             &derived_states,
             perform_horne_prune
@@ -97,7 +96,7 @@ sub _init
 
     $self->states(
         DerivedState::get_derived_states_list(
-            @{$args}{qw(init start perform_horne_prune)}
+            @{$args}{qw(start perform_horne_prune)}
         )
     );
 
@@ -235,7 +234,6 @@ EOF
 
     my $fc_24_init = DerivedStatesList->new(
         { 
-            init => $freecell_24_initial_layout_s,
             start => $freecell_24_initial_layout_s,
             perform_horne_prune => 0,
         }

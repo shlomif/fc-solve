@@ -44,14 +44,13 @@
  */
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         const char * init_state_str_proto,
-        const char * key_state_str_proto,
         int * num_out_derived_states,
         fcs_derived_state_debug_t * * out_derived_states,
         const fcs_bool_t perform_horne_prune
         )
 {
-    char * init_state_s, * key_state_s;
-    fcs_state_keyval_pair_t init_state, key_state;
+    char * init_state_s;
+    fcs_state_keyval_pair_t init_state;
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
     fc_solve_bit_writer_t bit_w;
@@ -61,11 +60,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 #endif
 
 #ifdef INDIRECT_STACK_STATES
-    dll_ind_buf_t indirect_stacks_buffer, key_stacks_buffer;
+    dll_ind_buf_t indirect_stacks_buffer;
 #endif
 
     init_state_s = prepare_state_str(init_state_str_proto);
-    key_state_s = prepare_state_str(key_state_str_proto);
 
     fc_solve_initial_user_state_to_c(
             init_state_s,
@@ -78,17 +76,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 #endif
             );
 
-    fc_solve_initial_user_state_to_c(
-            key_state_s,
-            &key_state,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , key_stacks_buffer
-#endif
-            );
-
     delta = fc_solve_delta_stater_alloc(
             &(init_state.s),
             STACKS_NUM,
@@ -98,7 +85,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 #endif
             );
 
-    fc_solve_delta_stater_set_derived(delta, &(key_state.s));
+    fc_solve_delta_stater_set_derived(delta, &(init_state.s));
 
     fc_solve_bit_writer_init(&bit_w, enc_state);
     fc_solve_delta_stater_encode_composite(delta, &bit_w);
@@ -177,7 +164,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     assert(idx == states_count);
 
     free(init_state_s);
-    free(key_state_s);
     fc_solve_compact_allocator_finish(&allocator);
 
     fc_solve_delta_stater_free (delta);
