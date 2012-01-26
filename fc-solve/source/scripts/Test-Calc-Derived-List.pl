@@ -45,7 +45,7 @@ SV* get_derived_states_list(char * init_state_s, char * key_state_s, int perform
             s->state_string = savepv(iter->state_string);
             free(iter->state_string);
             s->move = iter->move;
-            s->is_reversible_move = iter->move;
+            s->is_reversible_move = iter->is_reversible_move;
 
             sv_setiv(obj, (IV)s);
             SvREADONLY_on(obj);
@@ -98,7 +98,7 @@ EOF
 
 foreach my $obj (@$derived_states_list)
 {
-    print $obj->get_state_string(), "\n\n\n";
+    printf ("<<<%s>>>\nReversible: %d\nMove: %.2x\n\n-------------\n\n", $obj->get_state_string(), $obj->get_is_reversible_move(), $obj->get_move());
 }
 
 __DATA__
