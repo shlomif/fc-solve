@@ -57,6 +57,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/t/card-test-(parse|render)\\\\.c$"
     "/Testing/"
     "ids-whitelist\\\\.txt"
+    "/_Inline/"
 )
 
 IF(WIN32 AND NOT UNIX)
