@@ -126,3 +126,44 @@ struct FCC
 
 /* Optionally exists: no need to reset when we ascend to a new depth. */
 LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache;
+
+BrFS function prototype:
+------------------------
+
+We need to perform a Breadth-first-search (BrFS) on the FCCs with two variations:
+
+<QUOTE>
+#. Perform a BrFS from min_by_absolute_depth to find all the next FCC
+startpoints (the positions in the graph that followed an irreversible move).
+
+    #. Perform a BrFS scan to find the new FCC min_by_sorting (the scan will
+    be only on reversible moves).
+</QUOTE>
+
+As a result, the new BrFS function prototype will look like this:
+
+int
+perform_FCC_brfs(
+    /* The first state in the game, from which all states are encoded. */
+    fcs_state_t * init_state,
+    /* The start state. */
+    fcs_encoded_state_buffer_t * start_state,
+    /* The moves leading up to the state. */
+    int count_start_state_moves,
+    unsigned char * start_state_moves,
+    /* Type of scan. */
+    enum { FIND_FCC_START_POINTS, FIND_MIN_BY_SORTING } type,
+    /* [Output]: FCC start points. */
+    LinkedList<struct { 
+        fcs_encoded_state_buffer_t *,
+        moves
+    }> fcc_start_points,
+    /* [Output]: Is the min_by_sorting new */
+    fcs_bool_t * is_min_by_sorting_new,
+    /* [Output]: The min_by_sorting */
+    fcs_encoded_state_buffer_t * min_by_sorting,
+    /* [Input/Output]: The next_depth_FCCs.DoesExists */
+    Map{min_by_sorting => Bool Exists} DoesExists,
+    /* [Input/Output]: The LRU */
+    LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache,
+);
