@@ -758,6 +758,24 @@ static void perform_FCC_brfs(
 )
 {
     /* TODO : Add the NULL asserts. */
+#ifndef NDEBUG
+    if (scan_type == FIND_FCC_START_POINTS)
+    {
+        assert(fcc_start_points);
+        assert(! is_min_by_sorting_new);
+        assert(! min_by_sorting);
+        assert(! does_min_by_sorting_exist);
+        assert(! does_state_exist_in_any_FCC_cache);
+    }
+    else
+    {
+        assert(! fcc_start_points);
+        assert(is_min_by_sorting_new);
+        assert(min_by_sorting);
+        assert(does_min_by_sorting_exist);
+        assert(does_state_exist_in_any_FCC_cache);
+    }
+#endif
 }
 
 typedef struct {
