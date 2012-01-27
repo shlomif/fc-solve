@@ -87,8 +87,11 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     fc_solve_delta_stater_set_derived(delta, &(init_state.s));
 
-    fc_solve_bit_writer_init(&bit_w, enc_state);
+    fc_solve_bit_writer_init(&bit_w, enc_state+1);
     fc_solve_delta_stater_encode_composite(delta, &bit_w);
+    enc_state[0] =
+        bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
+        ;
 
     fcs_derived_state_t * derived_list = NULL;
     fcs_derived_state_t * derived_list_recycle_bin = NULL;

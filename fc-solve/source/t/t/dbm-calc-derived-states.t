@@ -215,7 +215,7 @@ sub is_dest
 
 package main;
 
-use Test::More tests => 8;
+use Test::More tests => 12;
 
 my $TRUE = 1;
 my $FALSE = 0;
@@ -317,5 +317,60 @@ EOF
         # TEST
         $results->is_dest({ type => 'stack', idx => 7, }, 
             'to stack No. 7');
+    }
+}
+
+# Check that to-empty-stack moves are reversible dependening on the
+# originating item
+{
+    my $freecell_24_middle_layout = <<'EOF';
+Foundations: H-0 C-0 D-0 S-2 
+Freecells:  JH  8D
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD JC TD
+: QC 9S 6H 9H 3S KS 3D
+: 
+: 2D KD TH
+: 7H JS KH TS KC 7C 6D 5C 4D
+: AH 5S 6S AD 8H JD TC 9D 8S 7D
+: 7S 6C 5D
+EOF
+
+    my $fc_24 = DerivedStatesList->new(
+        { 
+            start => $freecell_24_middle_layout,
+            perform_horne_prune => 0,
+        }
+    );
+
+    {
+        my $results = $fc_24->find_by_string(<<'EOF'
+Foundations: H-0 C-0 D-0 S-2 
+Freecells:  JH  8D
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD JC
+: QC 9S 6H 9H 3S KS 3D
+: TD
+: 2D KD TH
+: 7H JS KH TS KC 7C 6D 5C 4D
+: AH 5S 6S AD 8H JD TC 9D 8S 7D
+: 7S 6C 5D
+EOF
+        );
+
+        my $blurb_base = "Moving from parent to empty";
+        # TEST
+        $results->has_one("$blurb_base has one");
+
+        # TEST
+        $results->is_reversible($TRUE, "$blurb_base is reversible");
+
+        # TEST
+        $results->is_src({ type => 'stack', idx => 1, }, 
+            "$blurb_base - from stack No. 1");
+
+        # TEST
+        $results->is_dest({ type => 'stack', idx => 3, }, 
+            "$blurb_base - to stack No. 3");
     }
 }
