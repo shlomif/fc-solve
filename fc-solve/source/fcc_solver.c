@@ -757,7 +757,6 @@ static void perform_FCC_brfs(
     fcs_lru_cache_t * does_state_exist_in_any_FCC_cache
 )
 {
-    /* TODO : Add the NULL asserts. */
 #ifndef NDEBUG
     if (scan_type == FIND_FCC_START_POINTS)
     {
