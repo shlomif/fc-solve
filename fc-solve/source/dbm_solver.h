@@ -66,6 +66,18 @@ void fc_solve_dbm_store_offload_pre_cache(
 
 void fc_solve_dbm_store_destroy(fcs_dbm_store_t store);
 
+typedef unsigned char fcs_fcc_move_t;
+
+struct fcs_dbm_queue_item_struct
+{
+    fcs_encoded_state_buffer_t key;
+    int count_moves;
+    fcs_fcc_move_t * moves;
+    struct fcs_dbm_queue_item_struct * next;
+};
+
+typedef struct fcs_dbm_queue_item_struct fcs_dbm_queue_item_t;
+
 #ifdef __cplusplus
 }
 #endif

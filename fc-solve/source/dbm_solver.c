@@ -56,6 +56,7 @@
 
 #include "dbm_common.h"
 #include "dbm_solver.h"
+#include "dbm_cache.h"
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 /* TODO: make sure the key is '\0'-padded. */
@@ -94,100 +95,6 @@ static void GCC_INLINE cache_destroy(fcs_lru_cache_t * cache)
     fc_solve_compact_allocator_finish(&(cache->states_values_to_keys_allocator));
 }
 
-static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, fcs_encoded_state_buffer_t * key)
-{
-    fcs_cache_key_info_t to_check;
-    dnode_t * node;
-
-    to_check.key = *key;
-
-    node = fc_solve_kaz_tree_lookup(cache->kaz_tree, &to_check);
-
-    if (! node)
-    {
-        return FALSE;
-    }
-    else
-    {
-        /* First - promote this key to the top of the cache. */
-        fcs_cache_key_info_t * existing;
-
-        existing = (fcs_cache_key_info_t *)(node->dict_key);
-
-        if (existing->higher_pri)
-        {
-            existing->higher_pri->lower_pri =
-                existing->lower_pri;
-            if (existing->lower_pri)
-            {
-                existing->lower_pri->higher_pri =
-                    existing->higher_pri;
-            }
-            else
-            {
-                cache->lowest_pri = existing->higher_pri;
-                /* Bug fix: keep the chain intact. */
-                existing->higher_pri->lower_pri = NULL;
-            }
-            cache->highest_pri->higher_pri = existing;
-            existing->lower_pri = cache->highest_pri;
-            cache->highest_pri = existing;
-            existing->higher_pri = NULL;
-        }
-
-
-        return TRUE;
-    }
-}
-
-static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, const fcs_encoded_state_buffer_t * key)
-{
-    fcs_cache_key_info_t * cache_key;
-    dict_t * kaz_tree;
-
-    kaz_tree = cache->kaz_tree;
-
-    if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
-    {
-        fc_solve_kaz_tree_delete_free(
-            kaz_tree,
-            fc_solve_kaz_tree_lookup(
-                kaz_tree, (cache_key = cache->lowest_pri)
-                )
-            );
-            
-        cache->lowest_pri = cache->lowest_pri->higher_pri;
-        cache->lowest_pri->lower_pri = NULL;
-    }
-    else
-    {
-        cache_key =
-            (fcs_cache_key_info_t *)
-            fcs_compact_alloc_ptr(
-                &(cache->states_values_to_keys_allocator),
-                sizeof(*cache_key)
-            );
-        cache->count_elements_in_cache++;
-    }
-
-    cache_key->key = *key;
-
-    if (cache->highest_pri)
-    {
-        cache_key->lower_pri = cache->highest_pri;
-        cache_key->higher_pri = NULL;
-        cache->highest_pri->higher_pri = cache_key;
-        cache->highest_pri = cache_key;
-    }
-    else
-    {
-        cache->highest_pri = cache->lowest_pri = cache_key;
-        cache_key->higher_pri = cache_key->lower_pri = NULL;
-    }
-
-    fc_solve_kaz_tree_alloc_insert(kaz_tree, cache_key);
-
-}
 
 static int fc_solve_compare_pre_cache_keys(
     const void * void_a, const void * void_b, void * context
@@ -320,15 +227,6 @@ static void GCC_INLINE pre_cache_offload_and_reset(
 }
 
 #endif /* FCS_DBM_WITHOUT_CACHES */
-
-struct fcs_dbm_queue_item_struct
-{
-    fcs_encoded_state_buffer_t key;
-    struct fcs_dbm_queue_item_struct * next;
-};
-
-typedef struct fcs_dbm_queue_item_struct fcs_dbm_queue_item_t;
-
 static const pthread_mutex_t initial_mutex_constant =
     PTHREAD_MUTEX_INITIALIZER
     ;
