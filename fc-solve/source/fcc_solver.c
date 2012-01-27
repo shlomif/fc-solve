@@ -833,33 +833,6 @@ static void perform_FCC_brfs(
             queue_tail = NULL;
         }
 
-        /* Calculate the derived list. */
-        derived_list = NULL;
-
-        /* Handle item. */
-        fc_solve_bit_reader_init(&bit_r, extracted_item->key + 1);
-
-        fc_solve_state_init(&state, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , indirect_stacks_buffer
-#endif
-        );
-
-        fc_solve_delta_stater_decode(
-            delta_stater,
-            &bit_r,
-            &(state.s)
-        );
-
-        instance_solver_thread_calc_derived_states(
-            &state,
-            &(extracted_item->key),
-            &derived_list,
-            &derived_list_recycle_bin,
-            &derived_list_allocator,
-            TRUE
-        );
-
         /* Handle the min_by_sorting scan. */
         if (scan_type == FIND_MIN_BY_SORTING)
         {
@@ -889,6 +862,33 @@ static void perform_FCC_brfs(
                 }
             }
         }
+        /* Calculate the derived list. */
+        derived_list = NULL;
+
+        /* Handle item. */
+        fc_solve_bit_reader_init(&bit_r, extracted_item->key + 1);
+
+        fc_solve_state_init(&state, STACKS_NUM
+#ifdef INDIRECT_STACK_STATES
+            , indirect_stacks_buffer
+#endif
+        );
+
+        fc_solve_delta_stater_decode(
+            delta_stater,
+            &bit_r,
+            &(state.s)
+        );
+
+        instance_solver_thread_calc_derived_states(
+            &state,
+            &(extracted_item->key),
+            &derived_list,
+            &derived_list_recycle_bin,
+            &derived_list_allocator,
+            TRUE
+        );
+
 
         /* Allocate a spare 'new_item'. */
         if (queue_recycle_bin)
