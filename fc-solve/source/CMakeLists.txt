@@ -35,7 +35,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "\\\\.o$"
     "~$"
     "/board_gen/(pi-make-microsoft-freecell-board|make-microsoft-freecell-board|make-gnome-freecell-board|make-aisleriot-freecell-board)$"
-    "/(dbm_fc_solver|fc-solve|fc-solve-pruner|freecell-solver-range-parallel-solve|freecell-solver-fc-pro-range-solve|freecell-solver-multi-thread-solve|freecell-solver-fork-solve|measure-depth-dep-tests-order-perf)$"
+    "/(dbm_fc_solver|fcc_fc_solver|fc-solve|fc-solve-pruner|freecell-solver-range-parallel-solve|freecell-solver-fc-pro-range-solve|freecell-solver-multi-thread-solve|freecell-solver-fork-solve|measure-depth-dep-tests-order-perf)$"
     "/lib(fcs|freecell-solver)\\\\.(a|la)$"
     "\\\\.so(\\\\.[0-9]+)*$"
     "/\\\\.svn/"
@@ -528,7 +528,12 @@ IF (FCS_ENABLE_DBM_SOLVER)
         alloc.c app_str.c card.c dbm_solver.c state.c
         ${DBM_BACKEND_MODULES}
     )
+    ADD_EXECUTABLE(fcc_fc_solver
+        alloc.c app_str.c card.c fcc_solver.c state.c
+        ${DBM_BACKEND_MODULES}
+    )
     TARGET_LINK_LIBRARIES(dbm_fc_solver ${DBM_LIBS})
+    TARGET_LINK_LIBRARIES(fcc_fc_solver ${DBM_LIBS})
 ENDIF (FCS_ENABLE_DBM_SOLVER)
 
 IF (CMAKE_USE_PTHREADS_INIT)
