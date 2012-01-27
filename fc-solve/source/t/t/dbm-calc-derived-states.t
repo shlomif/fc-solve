@@ -215,7 +215,7 @@ sub is_dest
 
 package main;
 
-use Test::More tests => 16;
+use Test::More tests => 20;
 
 my $TRUE = 1;
 my $FALSE = 0;
@@ -265,6 +265,38 @@ EOF
 
         # TEST
         $results->is_dest({ type => 'freecell', idx => 1, }, '9D to freecell is to freecell No. 1');
+    }
+
+    # Check move from stack to foundations
+    {
+        my $results = $fc_24_init->find_by_string(<<'EOF'
+Foundations: H-0 C-0 D-0 S-A 
+Freecells:        
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S 9D
+EOF
+        );
+
+        my $blurb_base = "Stack->Foundations Move";
+        # TEST
+        $results->has_one("$blurb_base has one.");
+
+        # TEST
+        $results->is_reversible($FALSE, "$blurb_base is not reversible.");
+
+        # TEST
+        $results->is_src({ type => 'stack', idx => 3, }, 
+                "$blurb_base src");
+
+        # TEST
+        $results->is_dest({ type => 'found', idx => 3, }, 
+                "$blurb_base dest");
     }
 }
 
