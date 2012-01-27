@@ -11,7 +11,7 @@ extern "C"
 #include "bool.h"
 #include "inline.h"
 
-typedef unsigned char fcs_encoded_state_buffer_t[24];
+typedef struct { unsigned char s[24]; } fcs_encoded_state_buffer_t;
 
 typedef struct
 {

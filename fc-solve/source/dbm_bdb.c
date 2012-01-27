@@ -137,13 +137,13 @@ extern void fc_solve_dbm_store_offload_pre_cache(
     {
         kv = (fcs_pre_cache_key_val_pair_t *)(node->dict_key);
 
-        db->key.data = kv->key+1;
-        db->key.size = kv->key[0];
+        db->key.data = kv->key.s+1;
+        db->key.size = kv->key.s[0];
         /* We add 1 to the parent and move's length because it includes the 
          * trailing one-char move.
          * */
-        db->data.data = kv->parent_and_move+1;
-        db->data.size = kv->parent_and_move[0]+1;
+        db->data.data = kv->parent_and_move.s+1;
+        db->data.size = kv->parent_and_move.s[0]+1;
         if ((ret = dbp->put(dbp, NULL, &(db->key), &(db->data), 0)) != 0)
         {
             dbp->err(dbp, ret, "DB->put");

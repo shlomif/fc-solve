@@ -87,9 +87,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     fc_solve_delta_stater_set_derived(delta, &(init_state.s));
 
-    fc_solve_bit_writer_init(&bit_w, enc_state+1);
+    fc_solve_bit_writer_init(&bit_w, enc_state.s+1);
     fc_solve_delta_stater_encode_composite(delta, &bit_w);
-    enc_state[0] =
+    enc_state.s[0] =
         bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
         ;
 
@@ -158,7 +158,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             0,
             1
             );
-        debug_ret[idx].move = iter->parent_and_move[iter->parent_and_move[0]+1];
+        debug_ret[idx].move = iter->parent_and_move.s[iter->parent_and_move.s[0]+1];
         debug_ret[idx].is_reversible_move = iter->is_reversible_move;
         idx++;
         iter = iter->next;

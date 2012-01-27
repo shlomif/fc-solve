@@ -67,7 +67,7 @@ static int fc_solve_compare_lru_cache_keys(
 )
 {
 #define GET_PARAM(p) ((((const fcs_cache_key_info_t *)(p))->key))
-    return memcmp(GET_PARAM(void_a), GET_PARAM(void_b), sizeof(GET_PARAM(void_a)));
+    return memcmp(&(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
 
@@ -97,12 +97,12 @@ static void GCC_INLINE cache_destroy(fcs_lru_cache_t * cache)
     fc_solve_compact_allocator_finish(&(cache->states_values_to_keys_allocator));
 }
 
-static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, unsigned char * key)
+static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, fcs_encoded_state_buffer_t * key)
 {
     fcs_cache_key_info_t to_check;
     dnode_t * node;
 
-    memcpy(to_check.key, key, sizeof(to_check.key));
+    to_check.key = *key;
 
     node = fc_solve_kaz_tree_lookup(cache->kaz_tree, &to_check);
 
@@ -143,7 +143,7 @@ static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, unsig
     }
 }
 
-static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, unsigned char * key)
+static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, fcs_encoded_state_buffer_t * key)
 {
     fcs_cache_key_info_t * cache_key;
     dict_t * kaz_tree;
@@ -173,7 +173,7 @@ static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, unsigned char * key
         cache->count_elements_in_cache++;
     }
 
-    memcpy(cache_key->key, key, sizeof(cache_key->key));
+    cache_key->key = *key;
 
     if (cache->highest_pri)
     {
@@ -193,12 +193,13 @@ static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, unsigned char * key
 }
 
 #ifndef FCS_DBM_WITHOUT_CACHES
+
 static int fc_solve_compare_pre_cache_keys(
     const void * void_a, const void * void_b, void * context
 )
 {
 #define GET_PARAM(p) ((((const fcs_pre_cache_key_val_pair_t *)(p))->key))
-    return memcmp(GET_PARAM(void_a), GET_PARAM(void_b), sizeof(GET_PARAM(void_a)));
+    return memcmp(&(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
 
@@ -214,36 +215,33 @@ static void GCC_INLINE pre_cache_init(fcs_pre_cache_t * pre_cache_ptr)
 
 static fcs_bool_t GCC_INLINE pre_cache_does_key_exist(
     fcs_pre_cache_t * pre_cache,
-    unsigned char * key
+    fcs_encoded_state_buffer_t * key
     )
 {
     fcs_pre_cache_key_val_pair_t to_check;
 
-    memcpy(to_check.key, key, sizeof(to_check.key));
+    to_check.key = *key;
 
     return (fc_solve_kaz_tree_lookup(pre_cache->kaz_tree, &to_check) != NULL);
 }
 
 static fcs_bool_t GCC_INLINE pre_cache_lookup_parent_and_move(
     fcs_pre_cache_t * pre_cache,
-    unsigned char * key,
-    unsigned char * parent_and_move
+    fcs_encoded_state_buffer_t * key,
+    fcs_encoded_state_buffer_t * parent_and_move
     )
 {
     fcs_pre_cache_key_val_pair_t to_check;
     dnode_t * node;
 
-    memcpy(to_check.key, key, sizeof(to_check.key));
+    to_check.key = *key;
 
     node = fc_solve_kaz_tree_lookup(pre_cache->kaz_tree, &to_check);
 
     if (node)
     {
-        memcpy(
-            parent_and_move,
-            ((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->parent_and_move,
-            sizeof(fcs_encoded_state_buffer_t)
-        );
+        *parent_and_move = 
+            ((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->parent_and_move;
         return TRUE;
     }
     else
@@ -254,8 +252,8 @@ static fcs_bool_t GCC_INLINE pre_cache_lookup_parent_and_move(
 
 static void GCC_INLINE pre_cache_insert(
     fcs_pre_cache_t * pre_cache,
-    unsigned char * key,
-    unsigned char * parent_and_move
+    fcs_encoded_state_buffer_t * key,
+    fcs_encoded_state_buffer_t * parent_and_move
     )
 {
     fcs_pre_cache_key_val_pair_t * to_insert;
@@ -273,9 +271,8 @@ static void GCC_INLINE pre_cache_insert(
                 sizeof(*to_insert)
             );
     }
-    memcpy(to_insert->key, key, sizeof(to_insert->key));
-    memcpy(to_insert->parent_and_move, parent_and_move, 
-            sizeof(to_insert->parent_and_move));
+    to_insert->key = *key;
+    to_insert->parent_and_move = *parent_and_move;
 
     fc_solve_kaz_tree_alloc_insert(pre_cache->kaz_tree, to_insert);
     pre_cache->count_elements++;
@@ -298,7 +295,7 @@ static void GCC_INLINE cache_populate_from_pre_cache(
     {
         cache_insert(
             cache, 
-            ((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->key
+            &(((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->key)
         );
     }
 }
@@ -436,8 +433,8 @@ static void GCC_INLINE instance_destroy(
 
 static void GCC_INLINE instance_check_key(
     fcs_dbm_solver_instance_t * instance,
-    unsigned char * key,
-    unsigned char * parent_and_move
+    fcs_encoded_state_buffer_t * key,
+    fcs_encoded_state_buffer_t * parent_and_move
 )
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -455,7 +452,7 @@ static void GCC_INLINE instance_check_key(
     {
         return;
     }
-    else if (fc_solve_dbm_store_does_key_exist(instance->store, key))
+    else if (fc_solve_dbm_store_does_key_exist(instance->store, key->s))
     {
         cache_insert(cache, key);
         return;
@@ -492,7 +489,7 @@ static void GCC_INLINE instance_check_key(
                 );
         }
 
-        memcpy(new_item->key, key, sizeof(new_item->key));
+        new_item->key = (*key);
         new_item->next = NULL;
 
         if (instance->queue_tail)
@@ -520,7 +517,7 @@ static void GCC_INLINE instance_check_multiple_keys(
     FCS_LOCK(instance->storage_lock);
     for (; list ; list = list->next)
     {
-        instance_check_key(instance, list->key, list->parent_and_move);
+        instance_check_key(instance, &(list->key), &(list->parent_and_move));
     }
 #ifndef FCS_DBM_WITHOUT_CACHES
     if (instance->pre_cache.count_elements >= instance->pre_cache_max_count)
@@ -630,7 +627,7 @@ void * instance_run_solver_thread(void * void_arg)
         else
         {
         /* Handle item. */
-        fc_solve_bit_reader_init(&bit_r, item->key + 1);
+        fc_solve_bit_reader_init(&bit_r, item->key.s + 1);
 
         fc_solve_state_init(&state, STACKS_NUM
 #ifdef INDIRECT_STACK_STATES
@@ -667,13 +664,13 @@ void * instance_run_solver_thread(void * void_arg)
                 derived_iter = derived_iter->next
         )
         {
-            memset(derived_iter->key, '\0', sizeof(derived_iter->key));
-            fc_solve_bit_writer_init(&bit_w, derived_iter->key+1);
+            memset(&(derived_iter->key), '\0', sizeof(derived_iter->key));
+            fc_solve_bit_writer_init(&bit_w, derived_iter->key.s+1);
             fc_solve_delta_stater_set_derived(
                 delta_stater, &(derived_iter->state.s)
             );
             fc_solve_delta_stater_encode_composite(delta_stater, &bit_w);
-            derived_iter->key[0] =
+            derived_iter->key.s[0] =
                 bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
                 ;
         }
@@ -818,7 +815,7 @@ static void perform_FCC_brfs(
             sizeof(*new_item)
         );
 
-    memcpy(new_item->key, start_state, sizeof(new_item->key));
+    new_item->key = start_state;
     new_item->next = NULL;
 
     queue_head = queue_tail = new_item;
@@ -838,7 +835,7 @@ static void perform_FCC_brfs(
         {
             if (cache_does_key_exist(
                 does_state_exist_in_any_FCC_cache, 
-                extracted_item->key
+                &(extracted_item->key)
             ))
             {
                 *is_min_by_sorting_new = FALSE;
@@ -846,19 +843,19 @@ static void perform_FCC_brfs(
             }
             else
             {
-                cache_insert(does_state_exist_in_any_FCC_cache, extracted_item->key);
+                cache_insert(does_state_exist_in_any_FCC_cache, &(extracted_item->key));
             }
 
             if (! running_min_was_assigned)
             {
                 running_min_was_assigned = TRUE;
-                memcpy(running_min, extracted_item->key, sizeof(running_min));
+                running_min = extracted_item->key;
             }
             else
             {
-                if (memcmp(extracted_item->key, running_min, sizeof(running_min)) < 0)
+                if (memcmp(&(extracted_item->key), &running_min, sizeof(running_min)) < 0)
                 {
-                    memcpy(running_min, extracted_item->key, sizeof(running_min));
+                    running_min = extracted_item->key;
                 }
             }
         }
@@ -866,7 +863,7 @@ static void perform_FCC_brfs(
         derived_list = NULL;
 
         /* Handle item. */
-        fc_solve_bit_reader_init(&bit_r, extracted_item->key + 1);
+        fc_solve_bit_reader_init(&bit_r, extracted_item->key.s + 1);
 
         fc_solve_state_init(&state, STACKS_NUM
 #ifdef INDIRECT_STACK_STATES
@@ -919,13 +916,13 @@ static void perform_FCC_brfs(
 
                 right_tree = (is_reversible ? traversed_states : found_new_start_points);
 
-                memset(new_item->key, '\0', sizeof(new_item->key));
-                fc_solve_bit_writer_init(&bit_w, new_item->key+1);
+                memset(&(new_item->key), '\0', sizeof(new_item->key));
+                fc_solve_bit_writer_init(&bit_w, new_item->key.s+1);
                 fc_solve_delta_stater_set_derived(
                         delta_stater, &(derived_iter->state.s)
                         );
                 fc_solve_delta_stater_encode_composite(delta_stater, &bit_w);
-                new_item->key[0] =
+                new_item->key.s[0] =
                     bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
                     ;
                 if (! fc_solve_kaz_tree_lookup(
@@ -949,8 +946,8 @@ static void perform_FCC_brfs(
                                 );
                         memcpy(moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
                         moves[extracted_item->count_moves]
-                            = derived_iter->parent_and_move[
-                            derived_iter->parent_and_move[0]
+                            = derived_iter->parent_and_move.s[
+                            derived_iter->parent_and_move.s[0]
                             ];
 
                         if (is_reversible)
@@ -975,11 +972,7 @@ static void perform_FCC_brfs(
                                         sizeof (*new_start_point)
                                     );
                             }
-                            memcpy(
-                                new_start_point->enc_state,
-                                new_item->key,
-                                sizeof(new_item->key)
-                            );
+                            new_start_point->enc_state = new_item->key;
                             new_start_point->count_moves = count_moves;
                             new_start_point->moves = moves;
                         }
@@ -1034,9 +1027,15 @@ static void perform_FCC_brfs(
 
     if (scan_type == FIND_MIN_BY_SORTING)
     {
-        if ((*is_min_by_sorting_new = (!fc_solve_kaz_tree_lookup(does_min_by_sorting_exist, running_min))))
+        if ((*is_min_by_sorting_new =
+            (!fc_solve_kaz_tree_lookup(
+                does_min_by_sorting_exist,
+                &(running_min))
+             )
+            )
+        )
         {
-            memcpy((*min_by_sorting), running_min, sizeof(running_min));
+            *min_by_sorting = running_min;
         }
     }
 
@@ -1239,22 +1238,22 @@ int main(int argc, char * argv[])
                 );
 
         first_item->next = NULL;
-        memset(first_item->key, '\0', sizeof(first_item->key));
+        memset(&(first_item->key), '\0', sizeof(first_item->key));
 
-        fc_solve_bit_writer_init(&bit_w, first_item->key+1);
+        fc_solve_bit_writer_init(&bit_w, first_item->key.s+1);
         fc_solve_delta_stater_encode_composite(delta, &bit_w);
-        first_item->key[0] =
+        first_item->key.s[0] =
             bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
             ;
 
         /* The NULL parent and move for indicating this is the initial
          * state. */
-        memset(parent_and_move, '\0', sizeof(parent_and_move));
+        memset(&(parent_and_move), '\0', sizeof(parent_and_move));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-        pre_cache_insert(&(instance.pre_cache), first_item->key, parent_and_move);
+        pre_cache_insert(&(instance.pre_cache), &(first_item->key), &(parent_and_move));
 #else
-        fc_solve_dbm_store_insert_key_value(instance.store, first_item->key, parent_and_move);
+        fc_solve_dbm_store_insert_key_value(instance.store, &(first_item->key), &(parent_and_move));
 #endif
         instance.num_states_in_collection++;
         instance.queue_head = instance.queue_tail = first_item;
@@ -1325,13 +1324,13 @@ int main(int argc, char * argv[])
 #define GROW_BY 100
         trace_num = 0;
         trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
-        memcpy(trace[trace_num], instance.queue_solution,
-               sizeof(trace[0]));
-        while (trace[trace_num][0])
+        trace[trace_num] = instance.queue_solution;
+
+        while (trace[trace_num].s[0])
         {
-            memset(key, '\0', sizeof(key));
+            memset(&(key), '\0', sizeof(key));
             /* Omit the move. */
-            memcpy(key, trace[trace_num], trace[trace_num][0]+1);
+            key = trace[trace_num];
 
             if ((++trace_num) == trace_max_num)
             {
@@ -1340,15 +1339,15 @@ int main(int argc, char * argv[])
 #ifndef FCS_DBM_WITHOUT_CACHES
             if (! pre_cache_lookup_parent_and_move(
                 &(instance.pre_cache),
-                key,
-                trace[trace_num]
+                &key,
+                &(trace[trace_num])
                 ))
             {
 #endif
                 assert(fc_solve_dbm_store_lookup_parent_and_move(
                     instance.store,
-                    key,
-                    trace[trace_num]
+                    key.s,
+                    trace[trace_num].s
                     ));
 #ifndef FCS_DBM_WITHOUT_CACHES
             }
@@ -1372,7 +1371,7 @@ int main(int argc, char * argv[])
 #endif
             );
 
-            fc_solve_bit_reader_init(&bit_r, &(trace[i][1]));
+            fc_solve_bit_reader_init(&bit_r, &(trace[i].s[1]));
             fc_solve_delta_stater_decode(
                 delta,
                 &bit_r,
@@ -1380,7 +1379,7 @@ int main(int argc, char * argv[])
             );
             if (i > 0)
             {
-                move = trace[i][1+trace[i][0]];
+                move = trace[i].s[1+trace[i].s[0]];
             }
 
             state_as_str =
