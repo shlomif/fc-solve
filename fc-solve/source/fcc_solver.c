@@ -722,6 +722,16 @@ typedef struct {
     fcs_FCC_start_point_t * recycle_bin;
 } fcs_FCC_start_points_list_t;
 
+/* TODO: make sure the key is '\0'-padded. */
+static int fc_solve_compare_encoded_states(
+    const void * void_a, const void * void_b, void * context
+)
+{
+#define GET_PARAM(p) ((fcs_encoded_state_buffer_t *)p)
+    return memcmp(GET_PARAM(void_a), GET_PARAM(void_b), sizeof(*(GET_PARAM(void_a))));
+#undef GET_PARAM
+}
+
 static void perform_FCC_brfs(
     /* The first state in the game, from which all states are encoded. */
     fcs_state_keyval_pair_t * init_state,
@@ -807,6 +817,9 @@ static void perform_FCC_brfs(
         , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
     );
+
+    traversed_states = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+    found_new_start_points = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
 
     new_item =
         (fcs_dbm_queue_item_t *)
@@ -1044,6 +1057,8 @@ free_resources:
     fc_solve_compact_allocator_finish(&(queue_allocator));
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
     fc_solve_delta_stater_free(delta_stater);
+    fc_solve_kaz_tree_destroy(traversed_states);
+    fc_solve_kaz_tree_destroy(found_new_start_points);
 }
 
 typedef struct {
