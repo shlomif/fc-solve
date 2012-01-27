@@ -215,7 +215,7 @@ sub is_dest
 
 package main;
 
-use Test::More tests => 20;
+use Test::More tests => 24;
 
 my $TRUE = 1;
 my $FALSE = 0;
@@ -437,3 +437,57 @@ EOF
             "$blurb_base - to stack No. 3");
     }
 }
+
+# Checking move from freecell to foundation
+{
+    my $freecell_24_middle_layout = <<'EOF';
+Freecells: AS
+4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
+EOF
+
+    my $fc_24 = DerivedStatesList->new(
+        { 
+            start => $freecell_24_middle_layout,
+            perform_horne_prune => 0,
+        }
+    );
+
+    {
+        my $results = $fc_24->find_by_string(<<'EOF'
+Foundations: H-0 C-0 D-0 S-A 
+Freecells:        
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S 9D
+EOF
+        );
+
+        my $blurb_base = "Moving from freecell to foundation";
+        # TEST
+        $results->has_one("$blurb_base has one");
+
+        # TEST
+        $results->is_reversible($FALSE, "$blurb_base is not reversible");
+
+        # TEST
+        $results->is_src({ type => 'freecell', idx => 0, },
+            "$blurb_base - src");
+
+        # TEST
+        $results->is_dest({ type => 'found', idx => 3, },
+            "$blurb_base - dest");
+    }
+}
+
