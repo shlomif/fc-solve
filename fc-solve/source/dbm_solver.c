@@ -971,9 +971,9 @@ int main(int argc, char * argv[])
 
         while (trace[trace_num].s[0])
         {
-            memset(&(key), '\0', sizeof(key));
             /* Omit the move. */
             key = trace[trace_num];
+            key.s[key.s[0]+1] = '\0';
 
             if ((++trace_num) == trace_max_num)
             {
