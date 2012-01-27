@@ -329,9 +329,13 @@ static void GCC_INLINE pre_cache_offload_and_reset(
 
 #endif /* FCS_DBM_WITHOUT_CACHES */
 
+typedef unsigned char fcs_fcc_move_t;
+
 struct fcs_dbm_queue_item_struct
 {
     fcs_encoded_state_buffer_t key;
+    int count_moves;
+    fcs_fcc_move_t * moves;
     struct fcs_dbm_queue_item_struct * next;
 };
 
@@ -703,12 +707,11 @@ enum FCC_brfs_scan_type
     FIND_MIN_BY_SORTING
 };
 
-typedef unsigned char fcs_fcc_move_t;
 
 struct fcs_FCC_start_point_struct
 {
     fcs_encoded_state_buffer_t enc_state;
-    int moves_count;
+    int count_moves;
     /* Dynamically allocated. */
     fcs_fcc_move_t * moves;
     struct fcs_FCC_start_point_struct * next;
@@ -726,7 +729,7 @@ static void perform_FCC_brfs(
     /* The first state in the game, from which all states are encoded. */
     fcs_state_keyval_pair_t * init_state,
     /* The start state. */
-    fcs_encoded_state_buffer_t * start_state,
+    fcs_encoded_state_buffer_t start_state,
     /* The moves leading up to the state. */
     const int count_start_state_moves,
     const fcs_fcc_move_t * const start_state_moves,
@@ -757,6 +760,15 @@ static void perform_FCC_brfs(
     fcs_lru_cache_t * does_state_exist_in_any_FCC_cache
 )
 {
+    fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin, * new_item, * extracted_item;
+    fcs_compact_allocator_t queue_allocator, derived_list_allocator;
+    fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
+                        * derived_iter, * next_derived_iter;
+    dict_t * traversed_states, * found_new_start_points;
+    fc_solve_bit_writer_t bit_w;
+    fc_solve_delta_stater_t * delta_stater;
+
+    /* Some sanity checks. */
 #ifndef NDEBUG
     if (scan_type == FIND_FCC_START_POINTS)
     {
@@ -775,6 +787,192 @@ static void perform_FCC_brfs(
         assert(does_state_exist_in_any_FCC_cache);
     }
 #endif
+
+    /* Initialize the queue_allocator. */
+    fc_solve_compact_allocator_init( &(queue_allocator) );
+    fc_solve_compact_allocator_init( &(derived_list_allocator) );
+    queue_recycle_bin = NULL;
+
+    /* TODO : maybe pass delta_stater as an argument  */
+    delta_stater = fc_solve_delta_stater_alloc(
+        &(init_state->s),
+        STACKS_NUM,
+        FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+        , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+    );
+
+    new_item =
+        (fcs_dbm_queue_item_t *)
+        fcs_compact_alloc_ptr(
+            &(queue_allocator),
+            sizeof(*new_item)
+        );
+
+    memcpy(new_item->key, start_state, sizeof(new_item->key));
+    new_item->next = NULL;
+
+    queue_head = queue_tail = new_item;
+
+    derived_list_recycle_bin = NULL;
+
+    /* Extract an item from the queue. */
+    while ((extracted_item = queue_head))
+    {
+        if (! (queue_head = extracted_item->next) )
+        {
+            queue_tail = NULL;
+        }
+
+        /* TODO: calculate the derived list. */
+        derived_list = NULL;
+
+        /* TODO: handle the min_by_sorting scan. */
+
+        if (queue_recycle_bin)
+        {
+            new_item = queue_recycle_bin;
+            queue_recycle_bin = queue_recycle_bin->next;
+        }
+        else
+        {
+            new_item =
+                (fcs_dbm_queue_item_t *)
+                fcs_compact_alloc_ptr(
+                    &(queue_allocator),
+                    sizeof(*new_item)
+                );
+        }
+
+        /* Enqueue the new elements to the queue. */
+        for (derived_iter = derived_list;
+                derived_iter ;
+                derived_iter = next_derived_iter
+        )
+        {
+            fcs_bool_t is_reversible = derived_iter->is_reversible_move;
+            if (is_reversible || (scan_type == FIND_FCC_START_POINTS))
+            {
+                dict_t * right_tree;
+
+                right_tree = (is_reversible ? traversed_states : found_new_start_points);
+
+                memset(new_item->key, '\0', sizeof(new_item->key));
+                fc_solve_bit_writer_init(&bit_w, new_item->key+1);
+                fc_solve_delta_stater_set_derived(
+                        delta_stater, &(derived_iter->state.s)
+                        );
+                fc_solve_delta_stater_encode_composite(delta_stater, &bit_w);
+                new_item->key[0] =
+                    bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
+                    ;
+                if (! fc_solve_kaz_tree_lookup(
+                    right_tree,
+                    &(new_item->key)
+                    )
+                )
+                {
+                    fc_solve_kaz_tree_alloc_insert(
+                        right_tree,
+                        &(new_item->key)
+                    );
+                    if (scan_type == FIND_FCC_START_POINTS)
+                    {
+                        int count_moves;
+                        fcs_fcc_move_t * moves;
+                        /* Fill in the moves. */
+                        moves = malloc(
+                                sizeof(new_item->moves[0])
+                                * (count_moves = (extracted_item->count_moves + 1))
+                                );
+                        memcpy(moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
+                        moves[extracted_item->count_moves]
+                            = derived_iter->parent_and_move[
+                            derived_iter->parent_and_move[0]
+                            ];
+
+                        if (is_reversible)
+                        {
+                            new_item->moves = moves;
+                            new_item->count_moves = count_moves;
+                        }
+                        else
+                        {
+                            fcs_FCC_start_point_t * new_start_point;
+                            /* Enqueue the new FCC start point. */
+                            if (fcc_start_points->recycle_bin)
+                            {
+                                new_start_point = fcc_start_points->recycle_bin;
+                                fcc_start_points->recycle_bin = fcc_start_points->recycle_bin->next;
+                            }
+                            else
+                            {
+                                new_start_point = (fcs_FCC_start_point_t *)
+                                    fcs_compact_alloc_ptr(
+                                        &(fcc_start_points->allocator),
+                                        sizeof (*new_start_point)
+                                    );
+                            }
+                            memcpy(
+                                new_start_point->enc_state,
+                                new_item->key,
+                                sizeof(new_item->key)
+                            );
+                            new_start_point->count_moves = count_moves;
+                            new_start_point->moves = moves;
+                        }
+                    }
+
+                    if (is_reversible)
+                    {
+                        /* Enqueue the item in the queue. */
+                        new_item->next = NULL;
+                        if (queue_tail)
+                        {
+                            queue_tail = queue_tail->next = new_item;
+                        }
+                        else
+                        {
+                            queue_head = queue_tail = new_item;
+                        }
+                    }
+                    /* Allocate a new new_item */
+                    if (queue_recycle_bin)
+                    {
+                        new_item = queue_recycle_bin;
+                        queue_recycle_bin = queue_recycle_bin->next;
+                    }
+                    else
+                    {
+                        new_item =
+                            (fcs_dbm_queue_item_t *)
+                            fcs_compact_alloc_ptr(
+                                &(queue_allocator),
+                                sizeof(*new_item)
+                            );
+                    }
+                }
+            }
+            /* Recycle derived_iter.  */
+            next_derived_iter = derived_iter->next;
+            derived_iter->next = derived_list_recycle_bin;
+            derived_list_recycle_bin = derived_iter;
+        }
+
+        /* We always hold one new_item spare, so let's recycle i now. */
+        new_item->next = queue_recycle_bin;
+        queue_recycle_bin = new_item;
+
+        /* Clean up the extracted_item's resources. We no longer need them
+         * because we are interested only in those of the derived items.
+         * */
+        free(extracted_item->moves);
+        extracted_item->moves = NULL;
+    }
+
+    fc_solve_compact_allocator_finish(&(queue_allocator));
+    fc_solve_compact_allocator_finish(&(derived_list_allocator));
 }
 
 typedef struct {
@@ -796,7 +994,7 @@ const char * move_to_string(unsigned char move, char * move_buffer)
     {
         inspect = (move & 0xF);
         move >>= 4;
-        
+
         if (inspect < 8)
         {
             s += sprintf(s, "Column %d", inspect);
@@ -819,7 +1017,7 @@ const char * move_to_string(unsigned char move, char * move_buffer)
             s += sprintf(s, "%s", " -> ");
         }
     }
-    
+
     return move_buffer;
 }
 
