@@ -765,8 +765,16 @@ static void perform_FCC_brfs(
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
                         * derived_iter, * next_derived_iter;
     dict_t * traversed_states, * found_new_start_points;
+    fc_solve_bit_reader_t bit_r;
     fc_solve_bit_writer_t bit_w;
     fc_solve_delta_stater_t * delta_stater;
+    fcs_state_keyval_pair_t state;
+    fcs_bool_t running_min_was_assigned = FALSE;
+    fcs_encoded_state_buffer_t running_min;
+
+#ifdef INDIRECT_STACK_STATES
+    dll_ind_buf_t indirect_stacks_buffer;
+#endif
 
     /* Some sanity checks. */
 #ifndef NDEBUG
@@ -825,11 +833,64 @@ static void perform_FCC_brfs(
             queue_tail = NULL;
         }
 
-        /* TODO: calculate the derived list. */
+        /* Calculate the derived list. */
         derived_list = NULL;
 
-        /* TODO: handle the min_by_sorting scan. */
+        /* Handle item. */
+        fc_solve_bit_reader_init(&bit_r, extracted_item->key + 1);
 
+        fc_solve_state_init(&state, STACKS_NUM
+#ifdef INDIRECT_STACK_STATES
+            , indirect_stacks_buffer
+#endif
+        );
+
+        fc_solve_delta_stater_decode(
+            delta_stater,
+            &bit_r,
+            &(state.s)
+        );
+
+        instance_solver_thread_calc_derived_states(
+            &state,
+            &(extracted_item->key),
+            &derived_list,
+            &derived_list_recycle_bin,
+            &derived_list_allocator,
+            TRUE
+        );
+
+        /* Handle the min_by_sorting scan. */
+        if (scan_type == FIND_MIN_BY_SORTING)
+        {
+            if (cache_does_key_exist(
+                does_state_exist_in_any_FCC_cache, 
+                extracted_item->key
+            ))
+            {
+                *is_min_by_sorting_new = FALSE;
+                goto free_resources;
+            }
+            else
+            {
+                cache_insert(does_state_exist_in_any_FCC_cache, extracted_item->key);
+            }
+
+            if (! running_min_was_assigned)
+            {
+                running_min_was_assigned = TRUE;
+                memcpy(running_min, extracted_item->key, sizeof(running_min));
+            }
+            else
+            {
+                if (memcmp(extracted_item->key, running_min, sizeof(running_min)) < 0)
+                {
+                    memcpy(running_min, extracted_item->key, sizeof(running_min));
+                }
+            }
+        }
+
+        /* Allocate a spare 'new_item'. */
         if (queue_recycle_bin)
         {
             new_item = queue_recycle_bin;
@@ -971,8 +1032,19 @@ static void perform_FCC_brfs(
         extracted_item->moves = NULL;
     }
 
+    if (scan_type == FIND_MIN_BY_SORTING)
+    {
+        if ((*is_min_by_sorting_new = (!fc_solve_kaz_tree_lookup(does_min_by_sorting_exist, running_min))))
+        {
+            memcpy((*min_by_sorting), running_min, sizeof(running_min));
+        }
+    }
+
+    /* Free the allocated resources. */
+free_resources:
     fc_solve_compact_allocator_finish(&(queue_allocator));
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
+    fc_solve_delta_stater_free(delta_stater);
 }
 
 typedef struct {
