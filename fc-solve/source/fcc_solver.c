@@ -737,11 +737,13 @@ static void perform_FCC_brfs(
     fcs_state_keyval_pair_t * init_state,
     /* The start state. */
     fcs_encoded_state_buffer_t start_state,
-    /* The moves leading up to the state. */
-    const int count_start_state_moves,
-    const fcs_fcc_move_t * const start_state_moves,
     /* Type of scan. */
     enum FCC_brfs_scan_type scan_type,
+    /* The moves leading up to the state. 
+     * Used only when scan_type is FIND_FCC_START_POINTS .
+     * */
+    const int count_start_state_moves,
+    const fcs_fcc_move_t * const start_state_moves,
     /* [Output]: FCC start points. 
      * Will be NULL if scan_type is not FIND_FCC_START_POINTS
      * */
@@ -951,14 +953,32 @@ static void perform_FCC_brfs(
                     if (scan_type == FIND_FCC_START_POINTS)
                     {
                         int count_moves;
-                        fcs_fcc_move_t * moves;
+                        fcs_fcc_move_t * moves, * end_moves;
+
+                        count_moves = (extracted_item->count_moves + 1);
+
+                        if (! is_reversible)
+                        {
+                            count_moves += count_start_state_moves;
+                        }
+
                         /* Fill in the moves. */
                         moves = malloc(
-                                sizeof(new_item->moves[0])
-                                * (count_moves = (extracted_item->count_moves + 1))
-                                );
-                        memcpy(moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
-                        moves[extracted_item->count_moves]
+                            sizeof(new_item->moves[0]) * count_moves
+                        );
+
+                        if (is_reversible)
+                        {
+                            end_moves = moves;
+                        }
+                        else
+                        {
+                            memcpy(moves, start_state_moves, count_start_state_moves);
+                            end_moves = moves + count_start_state_moves;
+                        }
+
+                        memcpy(end_moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
+                        end_moves[extracted_item->count_moves]
                             = derived_iter->parent_and_move.s[
                             derived_iter->parent_and_move.s[0]
                             ];
