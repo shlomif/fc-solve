@@ -170,6 +170,8 @@ static void perform_FCC_brfs(
 
     new_item->key = start_state;
     new_item->next = NULL;
+    new_item->count_moves = 0;
+    new_item->moves = NULL;
 
     queue_head = queue_tail = new_item;
 
