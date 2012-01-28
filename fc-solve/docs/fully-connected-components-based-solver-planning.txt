@@ -57,11 +57,12 @@ struct
     {
         int fcc_depth_idx;
         List<fcs_fully_connected_component_t> to_scan_queue;
+        Map{min_by_sorting => Bool Exists} DoesMinBySortingExists;
     };
     struct next_depth_FCCs
     {
         int fcc_depth_idx;
-        Map{min_by_sorting => Bool Exists} DoesExists;
+        Map{min_by_sorting => Bool Exists} DoesMinByAbsoluteDepthExists;
         List<fcs_fully_connected_component_t> queue;
         /* Optionally: */
         LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache;
@@ -71,23 +72,25 @@ struct
 The algorithm:
 
 #. FOREACH <prev_depth_FCCs.to_scan_queue >
+For each of these startpoints:
 
-#. Perform a BrFS from min_by_absolute_depth to find all the next FCC
-startpoints (the positions in the graph that followed an irreversible move).
+    #. Perform a BrFS scan starting from min_by_absolute_depth to find the new
+    FCC min_by_sorting (the scan will be only on reversible moves), *AND* the
+    next FCC startpoints (the positions in the graph that followed an irreversible move).
 
-#. For each of these startpoints:
-
-    #. Perform a BrFS scan to find the new FCC min_by_sorting (the scan will
-    be only on reversible moves).
-    
     #. ==> This is done while performing a lookup+insert for each state on
     next_depth_FCCs.Cache, and stopping if it's there.
 
-    #. If it does not exist in next_depth_FCCs.DoesExists, add the new 
-    min_by_sorting and min_by_absolute_depth (the start point) append a new FCC 
-    to next_depth_FCCs.queue.
+    #. If min_by_sorting exists in prev_depth_FCCs.DoesMinBySortingExists,
+    then halt the search and move to the next <prev_depth_FCCs.to_scan_queue >.
 
-    #. If it does, halt the search for this startpoint.
+    #. FOREACH <fully_connected_component->NextStartPoints()>
+
+        #. If it does not exist in next_depth_FCCs.DoesMinBySortingExists, add
+        the new min_by_absolute_depth (the start point) and append a
+        new FCC to next_depth_FCCs.queue.
+
+    #. ENDFOREACH <fully_connected_component->NextStartPoints()>
 
 #. END FOREACH <prev_depth_FCCs.to_scan_queue>
 
@@ -101,8 +104,10 @@ startpoints (the positions in the graph that followed an irreversible move).
 
 #. prev_depth_FCCs.to_scan_queue ← next_depth_FCCs.queue;
 
-#. next_depth_FCCs.DoesExists = new empty one ; 
-next_depth_FCCs.queue = new empty one ; 
+#. prev_depth_FCCs.DoesMinBySortingExists ← new empty one.
+
+#. next_depth_FCCs.DoesMinByAbsoluteDepthExists = new empty one ; 
+next_depth_FCCs.queue = new empty one ;
 next_depth_FCCs.Cache = new empty one ; 
 
 Addendum: Handling Horne's Prune
