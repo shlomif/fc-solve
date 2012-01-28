@@ -641,7 +641,6 @@ int main(int argc, char * argv[])
 #ifdef INDIRECT_STACK_STATES
     dll_ind_buf_t init_indirect_stacks_buffer;
 #endif
-    fc_solve_bit_writer_t bit_w;
 
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
@@ -757,8 +756,6 @@ int main(int argc, char * argv[])
 #endif
     );
 
-    fc_solve_delta_stater_set_derived(delta, &(init_state.s));
-    
     {
         fcs_dbm_queue_item_t * first_item;
         fcs_encoded_state_buffer_t parent_and_move;
@@ -773,11 +770,7 @@ int main(int argc, char * argv[])
         first_item->next = NULL;
         memset(&(first_item->key), '\0', sizeof(first_item->key));
 
-        fc_solve_bit_writer_init(&bit_w, first_item->key.s+1);
-        fc_solve_delta_stater_encode_composite(delta, &bit_w);
-        first_item->key.s[0] =
-            bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
-            ;
+        fc_solve_delta_stater_encode_into_buffer(delta, &(init_state), first_item->key.s);
 
         /* The NULL parent and move for indicating this is the initial
          * state. */

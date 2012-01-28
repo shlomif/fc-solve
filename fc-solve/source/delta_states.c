@@ -552,6 +552,21 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
 #define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr) 
 #endif
 
+static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
+    fc_solve_delta_stater_t * delta_stater,
+    fcs_state_keyval_pair_t * state,
+    unsigned char * out_enc_state
+)
+{
+    fc_solve_bit_writer_t bit_w;
+    fc_solve_bit_writer_init(&bit_w, out_enc_state+1);
+    fc_solve_delta_stater_set_derived(delta_stater, &(state->s));
+    fc_solve_delta_stater_encode_composite(delta_stater, &bit_w);
+    out_enc_state[0] =
+        bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
+        ;
+}
+
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
 static char * prepare_state_str(const char * proto)
