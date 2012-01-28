@@ -47,6 +47,9 @@ extern "C"
 #include "dbm_solver_key.h"
 #include "dbm_calc_derived_iface.h"
 #include "dbm_cache.h"
+#include "fcc_brfs_test.h"
+#include "dbm_solver.h"
+#include "dbm_calc_derived.h"
 
 enum FCC_brfs_scan_type
 {

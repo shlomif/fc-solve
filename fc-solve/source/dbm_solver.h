@@ -14,6 +14,9 @@ extern "C"
 
 #include "dbm_solver_key.h"
 
+/* We need it for the typedef of fcs_fcc_move_t. */
+#include "fcc_brfs_test.h"
+
 #ifndef FCS_DBM_WITHOUT_CACHES
 
 #include "dbm_lru_cache.h"
@@ -65,8 +68,6 @@ void fc_solve_dbm_store_offload_pre_cache(
 #endif
 
 void fc_solve_dbm_store_destroy(fcs_dbm_store_t store);
-
-typedef unsigned char fcs_fcc_move_t;
 
 struct fcs_dbm_queue_item_struct
 {

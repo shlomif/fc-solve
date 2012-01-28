@@ -6,6 +6,8 @@ extern "C"
 {
 #endif
 
+#include "kaz_tree.h"
+
 struct fcs_cache_key_info_struct
 {
     fcs_encoded_state_buffer_t key;
