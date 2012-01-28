@@ -183,6 +183,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     fc_solve_delta_stater_free (delta);
     fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
+    fc_solve_kaz_tree_destroy(does_min_by_sorting_exist);
     cache_destroy(&does_state_exist_in_any_FCC_cache);
 
     return 0;
