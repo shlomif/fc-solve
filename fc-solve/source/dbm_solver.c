@@ -842,7 +842,6 @@ int main(int argc, char * argv[])
         int trace_num, trace_max_num;
         int i;
         fcs_state_keyval_pair_t state;
-        fc_solve_bit_reader_t bit_r;
         unsigned char move;
         char * state_as_str;
         char move_buffer[500];
@@ -896,19 +895,13 @@ int main(int argc, char * argv[])
             locs.fc_locs[i] = i;
         }
 #endif
-        for (i = trace_num-1 ; i >= 0; i--)
+        for (i = trace_num-1 ; i >= 0 ; i--)
         {
-            fc_solve_state_init(&state, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
-#endif
-            );
-
-            fc_solve_bit_reader_init(&bit_r, &(trace[i].s[1]));
-            fc_solve_delta_stater_decode(
+            fc_solve_delta_stater_decode_into_state(
                 delta,
-                &bit_r,
-                &(state.s)
+                trace[i].s,
+                &state,
+                indirect_stacks_buffer
             );
             if (i > 0)
             {
