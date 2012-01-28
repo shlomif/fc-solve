@@ -126,7 +126,6 @@ static void perform_FCC_brfs(
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
                         * derived_iter, * next_derived_iter;
     dict_t * traversed_states, * found_new_start_points;
-    fc_solve_bit_reader_t bit_r;
     fc_solve_bit_writer_t bit_w;
     fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
@@ -230,18 +229,11 @@ static void perform_FCC_brfs(
         derived_list = NULL;
 
         /* Handle item. */
-        fc_solve_bit_reader_init(&bit_r, extracted_item->key.s + 1);
-
-        fc_solve_state_init(&state, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , indirect_stacks_buffer
-#endif
-        );
-
-        fc_solve_delta_stater_decode(
+        fc_solve_delta_stater_decode_into_state(
             delta_stater,
-            &bit_r,
-            &(state.s)
+            extracted_item->key.s,
+            &(state),
+            indirect_stacks_buffer
         );
 
         instance_solver_thread_calc_derived_states(

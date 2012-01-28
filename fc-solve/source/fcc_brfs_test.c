@@ -141,18 +141,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     iter = start_points_list.list;
     for (i = 0; i < states_count ; i++)
     {
-        fcs_state_keyval_pair_t state;
-        fc_solve_state_init(&state, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , indirect_stacks_buffer
-#endif
-        );
-        fc_solve_bit_reader_t bit_r;
         ret[i].count_moves = iter->count_moves;
         ret[i].moves = iter->moves;
-
-        fc_solve_bit_reader_init(&bit_r, &(iter->enc_state.s[1]));
-        fc_solve_delta_stater_decode(delta, &bit_r, &(state.s));
+        fcs_state_keyval_pair_t state;
+        fc_solve_delta_stater_decode_into_state(delta, iter->enc_state.s, &(state), indirect_stacks_buffer);
         ret[i].state_as_string =
         fc_solve_state_as_string(
 #ifdef FCS_RCS_STATES
