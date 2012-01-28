@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * move.h - main header file for the Freecell Solver library.
+ * fcs_user.h - main header file for the Freecell Solver library.
  *
  */
 #ifndef FC_SOLVE__FCS_USER_H

@@ -22,8 +22,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * dbm_calc_derived_iface.h - the public interface to dbm_calc_derived.h
+ * fcc_brfs_test.h - the test interface declarations of fcc_brfs.h and
+ * fcc_brfs_test.c . 
  *
+ * This file is also included by the production code.
  */
 #ifndef FC_SOLVE_FCC_BRFS_TEST_H
 #define FC_SOLVE_FCC_BRFS_TEST_H

@@ -22,8 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * fcs_cl.h - the Freecell Solver command line arguments-like parsing routines.
- * Useful for more easily configuring a Freecell Solver instance.
+ * portable_int64.h - the Freecell Solver (mostly) portable 64-bit int
+ * typedefs.
  */
 #ifndef FC_SOLVE__PORTABLE_INT64_H
 #define FC_SOLVE__PORTABLE_INT64_H

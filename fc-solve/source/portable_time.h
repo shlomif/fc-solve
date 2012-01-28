@@ -22,8 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * fcs_cl.h - the Freecell Solver command line arguments-like parsing routines.
- * Useful for more easily configuring a Freecell Solver instance.
+ * portable_time.h - the Freecell Solver (mostly) portable time handling
+ * routines. Works on Win32 and UNIX-like systems.
  */
 #ifndef FC_SOLVE__PORTABLE_TIME_H
 #define FC_SOLVE__PORTABLE_TIME_H

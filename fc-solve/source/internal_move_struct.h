@@ -22,9 +22,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * fcs_move.h - header file for the move structure and enums of
- * Freecell Solver. This file is common to the main code and to the
- * library headers.
+ * internal_move_struct.h - header file for the internal move structure 
+ * of Freecell Solver.
+ *
+ * This file is not exposed to the outside.
  *
  */
 

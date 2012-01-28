@@ -22,10 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * delta_states.c - "delta states" are an encoding of states, where the
- * states are encoded and decoded based on a compact delta from the original
- * state.
- *
+ * dbm_calc_derived_test.c - testing interface for dbm_calc_derived.h .
+ * This is compiled into a shared library and then loaded by Inline::C,
+ * ctypes, etc.
  */
 
 #define BUILDING_DLL 1

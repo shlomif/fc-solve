@@ -22,8 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * fcs.h - header file of the preset management functions for Freecell Solver.
+ * preset.h - header file of the preset management functions for Freecell Solver.
  *
+ * This header is internal to Freecell Solver.
  */
 
 #ifndef FC_SOLVE__PRESET_H
