@@ -329,7 +329,7 @@ static void perform_FCC_brfs(
                         memcpy(end_moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
                         end_moves[extracted_item->count_moves]
                             = derived_iter->parent_and_move.s[
-                            derived_iter->parent_and_move.s[0]
+                            derived_iter->parent_and_move.s[0]+1
                             ];
 
                         if (is_reversible)
