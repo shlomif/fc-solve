@@ -59,7 +59,9 @@ char* get_state_string(SV* obj) {
 }
 
 SV* get_moves(SV* obj) {
-    return sv_mortalcopy(((FccStartPoint*)SvIV(SvRV(obj)))->moves);
+    SV * ret = newSV(0);
+    SvSetSV(ret, (((FccStartPoint*)SvIV(SvRV(obj)))->moves));
+    return ret;
 }
 
 void DESTROY(SV* obj) {
@@ -93,9 +95,10 @@ foreach my $obj (@$derived_states_list)
 {
     print sprintf("<<<%s>>>\nLeading Moves: %s\n\n-------------\n\n",
         $obj->get_state_string(),
-        (map { sprintf("%.2x", ord($_)) } split//, $obj->get_moves()),
+        (map { sprintf("{%.2x}", ord($_)) } split//, $obj->get_moves()),
     );
 }
 
+print "[[[END]]]\n";
 __DATA__
 __C__
