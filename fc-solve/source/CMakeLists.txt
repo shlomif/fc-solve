@@ -886,6 +886,6 @@ IF (IS_DEBUG)
     )
     ADD_LIBRARY(fcs_fcc_brfs_test
         SHARED
-        alloc.c app_str.c card.c state.c fcc_brfs_test.c
+        alloc.c app_str.c card.c state.c fcc_brfs_test.c kaz_tree.c
     )
 ENDIF (IS_DEBUG)
