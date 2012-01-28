@@ -446,7 +446,6 @@ void * instance_run_solver_thread(void * void_arg)
 #ifdef INDIRECT_STACK_STATES
     dll_ind_buf_t indirect_stacks_buffer;
 #endif
-    fc_solve_bit_reader_t bit_r;
     fc_solve_bit_writer_t bit_w;
 
     arg = (thread_arg_t *)void_arg;
@@ -516,18 +515,13 @@ void * instance_run_solver_thread(void * void_arg)
         else
         {
         /* Handle item. */
-        fc_solve_bit_reader_init(&bit_r, item->key.s + 1);
-
-        fc_solve_state_init(&state, STACKS_NUM
+        fc_solve_delta_stater_decode_into_state(
+            delta_stater,
+            item->key.s,
+            &state
 #ifdef INDIRECT_STACK_STATES
             , indirect_stacks_buffer
 #endif
-        );
-
-        fc_solve_delta_stater_decode(
-            delta_stater,
-            &bit_r,
-            &(state.s)
         );
 
         if (instance_solver_thread_calc_derived_states(
