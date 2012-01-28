@@ -1,0 +1,110 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Config;
+use Cwd;
+
+package FccStartPoint;
+
+use Inline (
+    C => <<'EOF',
+#include "fcc_brfs_test.h"
+
+typedef struct 
+{
+    char * state_as_string;
+    SV * moves;
+} FccStartPoint;
+
+SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
+    AV * results;
+    FccStartPoint* s;
+    int count, i;
+    fcs_FCC_start_point_result_t * fcc_start_points, * iter;
+
+    STRLEN count_start_moves = SvLEN(moves_prefix);
+    
+    fc_solve_user_INTERNAL_find_fcc_start_points(
+        init_state_s,
+        (int)count_start_moves,
+        SvPVbyte(moves_prefix, count_start_moves),
+        &fcc_start_points
+    );
+    results = (AV *)sv_2mortal((SV *)newAV());
+    
+    for (iter = fcc_start_points ; (*iter).count_moves ; iter++)
+    {
+        SV*      obj_ref = newSViv(0);
+        SV*      obj = newSVrv(obj_ref, "FccStartPoint");
+
+        New(42, s, 1, FccStartPoint);
+
+        s->state_as_string = savepv(iter->state_as_string);
+        free(iter->state_as_string);
+        s->moves = newSVpvn(iter->moves, iter->count_moves);
+        free(iter->moves);
+
+        sv_setiv(obj, (IV)s);
+        SvREADONLY_on(obj);
+        av_push(results, obj_ref);
+    }
+    free(fcc_start_points);
+    return newRV((SV *)results);
+}
+
+char* get_state_string(SV* obj) {
+    return ((FccStartPoint*)SvIV(SvRV(obj)))->state_as_string;
+}
+
+SV* get_moves(SV* obj) {
+    SV * ret = newSV(0);
+    SvSetSV(ret, (((FccStartPoint*)SvIV(SvRV(obj)))->moves));
+    return ret;
+}
+
+void DESTROY(SV* obj) {
+  FccStartPoint* s = (FccStartPoint*)SvIV(SvRV(obj));
+  Safefree(s->state_as_string);
+  sv_free(s->moves);
+  Safefree(s);
+}
+EOF
+    CLEAN_AFTER_BUILD => 0,
+    INC => "-I" . $ENV{FCS_PATH},
+    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
+    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
+    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
+    # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
+);
+
+package main;
+
+use Test::More tests => 1;
+
+use List::MoreUtils qw(uniq);
+
+{
+    # MS Freecell Board No. 24.
+    my $derived_states_list = FccStartPoint::find_fcc_start_points(
+        <<'EOF',
+4C 2C 9C 8C QS 4S 2H 
+5H QH 3C AC 3H 4H QD 
+QC 9S 6H 9H 3S KS 3D 
+5D 2S JC 5C JH 6D AS 
+2D KD TH TC TD 8D 
+7H JS KH TS KC 7C 
+AH 5S 6S AD 8H JD 
+7S 6C 7D 4D 8S 9D 
+EOF
+        ''
+    );
+
+    # TEST
+    is (
+        scalar(uniq map { $_->get_state_string() } @$derived_states_list),
+        scalar(@$derived_states_list),
+        'The states are unique',
+    );
+}
