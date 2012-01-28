@@ -521,7 +521,7 @@ static void fc_solve_delta_stater_decode(
 #undef PROCESS_CARD
 }
 
-static GCC_INLINE void fc_solve_delta_stater_decode_into_state(
+static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
         fc_solve_delta_stater_t * delta_stater,
         const fcs_uchar_t * const enc_state,
         fcs_state_keyval_pair_t * ret
@@ -545,6 +545,12 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state(
         &(ret->s)
     );
 }
+
+#ifdef INDIRECT_STACK_STATES
+#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) 
+#else
+#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr) 
+#endif
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 

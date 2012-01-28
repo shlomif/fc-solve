@@ -518,10 +518,8 @@ void * instance_run_solver_thread(void * void_arg)
         fc_solve_delta_stater_decode_into_state(
             delta_stater,
             item->key.s,
-            &state
-#ifdef INDIRECT_STACK_STATES
-            , indirect_stacks_buffer
-#endif
+            &state,
+            indirect_stacks_buffer
         );
 
         if (instance_solver_thread_calc_derived_states(
