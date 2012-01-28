@@ -133,7 +133,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     fcs_FCC_start_point_result_t * ret;
 
-    ret = malloc(sizeof(ret[0]) * (states_count+1));
+    *out_fcc_start_points = ret = malloc(sizeof(ret[0]) * (states_count+1));
 
     ret[states_count].count_moves = 0;
 
