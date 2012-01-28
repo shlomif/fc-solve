@@ -81,7 +81,7 @@ EOF
 
 package main;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use List::MoreUtils qw(uniq);
 
@@ -104,6 +104,13 @@ EOF
     # TEST
     is (
         scalar(uniq map { $_->get_state_string() } @$derived_states_list),
+        scalar(@$derived_states_list),
+        'The states are unique',
+    );
+
+    # TEST
+    is (
+        scalar(uniq map { $_->get_moves() } @$derived_states_list),
         scalar(@$derived_states_list),
         'The states are unique',
     );
