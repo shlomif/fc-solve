@@ -22,18 +22,18 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
-    pqueue.h - header file for the priority queue implementation.
-
-    Originally written by Justin-Heyes Jones
-    Modified by Shlomi Fish, 2000
-
-    This file is available under either the MIT/X11 license (see above)
-    or the public domain.
-
-    Check out Justin-Heyes Jones' A* page from which this code has
-    originated:
-
-        http://www.heyes-jones.com/astar.html
+ * pqueue.h - header file for the priority queue implementation.
+ *
+ * Originally written by Justin-Heyes Jones
+ * Modified by Shlomi Fish, 2000
+ *
+ * This file is available under either the MIT/X11 license (see above)
+ * or the public domain.
+ *
+ * Check out Justin-Heyes Jones' A* page from which this code has
+ * originated:
+ *
+ * http://www.heyes-jones.com/astar.html
 */
 
 #ifndef FC_SOLVE__PQUEUE_H

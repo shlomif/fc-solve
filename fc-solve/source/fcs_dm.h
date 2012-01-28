@@ -22,11 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
-    fcs_dm.h - Header file for Freecell Solver's Data Management
-    routines.
-
-    For more information consult fcs_dm.c.
-
+ * fcs_dm.h - Header file for Freecell Solver's Data Management routines.
+ *
+ * For more information consult fcs_dm.c.
  */
 
 #ifndef FC_SOLVE__FCS_DATA_H

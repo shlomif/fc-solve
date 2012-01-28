@@ -22,8 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
-    fcs_dm.c - Freecell Solver's data management routines.
-
+ * fcs_dm.c - Freecell Solver's data management routines.
+ *
+ * Mostly no longer used in production settings.
  */
 
 #define BUILDING_DLL 1
