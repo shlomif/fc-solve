@@ -126,7 +126,6 @@ static void perform_FCC_brfs(
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
                         * derived_iter, * next_derived_iter;
     dict_t * traversed_states, * found_new_start_points;
-    fc_solve_bit_writer_t bit_w;
     fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
@@ -276,14 +275,11 @@ static void perform_FCC_brfs(
                 right_tree = (is_reversible ? traversed_states : found_new_start_points);
 
                 memset(&(new_item->key), '\0', sizeof(new_item->key));
-                fc_solve_bit_writer_init(&bit_w, new_item->key.s+1);
-                fc_solve_delta_stater_set_derived(
-                        delta_stater, &(derived_iter->state.s)
-                        );
-                fc_solve_delta_stater_encode_composite(delta_stater, &bit_w);
-                new_item->key.s[0] =
-                    bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
-                    ;
+                fc_solve_delta_stater_encode_into_buffer(
+                    delta_stater,
+                    &(derived_iter->state),
+                    new_item->key.s
+                );
                 if (! fc_solve_kaz_tree_lookup(
                     right_tree,
                     &(new_item->key)

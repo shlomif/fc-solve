@@ -53,7 +53,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fcs_state_keyval_pair_t init_state;
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
-    fc_solve_bit_writer_t bit_w;
 #ifdef FCS_WITHOUT_LOCS_FIELDS
     fcs_state_locs_struct_t locs;
     int i;
@@ -85,13 +84,11 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 #endif
             );
 
-    fc_solve_delta_stater_set_derived(delta, &(init_state.s));
-
-    fc_solve_bit_writer_init(&bit_w, enc_state.s+1);
-    fc_solve_delta_stater_encode_composite(delta, &bit_w);
-    enc_state.s[0] =
-        bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
-        ;
+    fc_solve_delta_stater_encode_into_buffer(
+        delta,
+        &(init_state),
+        enc_state.s
+        );
 
     fcs_derived_state_t * derived_list = NULL;
     fcs_derived_state_t * derived_list_recycle_bin = NULL;

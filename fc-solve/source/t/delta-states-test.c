@@ -53,7 +53,7 @@ static fcs_card_t make_card(int rank, int suit)
 typedef char ind_buf_t[MAX_NUM_STACKS << 7];
 #endif
 
-static int test_encode_and_decode(fc_solve_delta_stater_t * delta, const char * expected_str, const char * blurb)
+static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
 {
     int verdict;
     fcs_state_keyval_pair_t new_derived_state;
@@ -61,12 +61,14 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, const char * 
     ind_buf_t new_derived_indirect_stacks_buffer;
 #endif
     fcs_uchar_t enc_state[24];
-    fc_solve_bit_writer_t bit_w;
     char * as_str;
 
-    fc_solve_bit_writer_init(&bit_w, enc_state+1);
-    fc_solve_delta_stater_encode_composite(delta, &bit_w);
-    
+    fc_solve_delta_stater_encode_into_buffer(
+        delta,
+        state,
+        enc_state
+    );
+
     fc_solve_delta_stater_decode_into_state(
         delta,
         enc_state, 
@@ -342,6 +344,7 @@ int main_tests()
          * */
         test_encode_and_decode(
             delta,
+            &derived_state,
             (
 "Foundations: H-0 C-2 D-A S-0 \n"
 "Freecells:  8D  QD\n"
@@ -425,12 +428,11 @@ int main_tests()
 #endif
         );
 
-        fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
-
         /* TEST
          * */
         test_encode_and_decode(
             delta,
+            &derived_state,
             (
 "Foundations: H-0 C-0 D-0 S-4 \n"
 "Freecells:  TD  KS\n"
@@ -468,12 +470,11 @@ int main_tests()
 #endif
         );
 
-        fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
-
         /* TEST
          * */
         test_encode_and_decode(
             delta,
+            &derived_state,
             (
 "Foundations: H-0 C-0 D-0 S-2 \n"
 "Freecells:  4C  TD\n"

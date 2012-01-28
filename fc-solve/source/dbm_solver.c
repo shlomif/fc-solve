@@ -446,7 +446,6 @@ void * instance_run_solver_thread(void * void_arg)
 #ifdef INDIRECT_STACK_STATES
     dll_ind_buf_t indirect_stacks_buffer;
 #endif
-    fc_solve_bit_writer_t bit_w;
 
     arg = (thread_arg_t *)void_arg;
     thread = arg->thread;
@@ -546,14 +545,11 @@ void * instance_run_solver_thread(void * void_arg)
         )
         {
             memset(&(derived_iter->key), '\0', sizeof(derived_iter->key));
-            fc_solve_bit_writer_init(&bit_w, derived_iter->key.s+1);
-            fc_solve_delta_stater_set_derived(
-                delta_stater, &(derived_iter->state.s)
+            fc_solve_delta_stater_encode_into_buffer(
+                delta_stater,
+                &(derived_iter->state),
+                derived_iter->key.s
             );
-            fc_solve_delta_stater_encode_composite(delta_stater, &bit_w);
-            derived_iter->key.s[0] =
-                bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
-                ;
         }
 
         instance_check_multiple_keys(instance, derived_list);
