@@ -256,121 +256,119 @@ static void perform_FCC_brfs(
         )
         {
             fcs_bool_t is_reversible = derived_iter->is_reversible_move;
-            if (is_reversible)
-            {
-                dict_t * right_tree;
+            dict_t * right_tree;
 
-                right_tree =
-                    (is_reversible
-                     ? traversed_states
-                     : do_next_fcc_start_points_exist
-                    );
-
-                memset(&(new_item->key), '\0', sizeof(new_item->key));
-                fc_solve_delta_stater_encode_into_buffer(
-                    delta_stater,
-                    &(derived_iter->state),
-                    new_item->key.s
+            right_tree =
+                (is_reversible
+                 ? traversed_states
+                 : do_next_fcc_start_points_exist
                 );
-                if (! fc_solve_kaz_tree_lookup(
+
+            memset(&(new_item->key), '\0', sizeof(new_item->key));
+            fc_solve_delta_stater_encode_into_buffer(
+                delta_stater,
+                &(derived_iter->state),
+                new_item->key.s
+            );
+            if (! fc_solve_kaz_tree_lookup(
+                right_tree,
+                &(new_item->key)
+                )
+            )
+            {
+                int count_moves;
+                fcs_fcc_move_t * moves, * end_moves;
+
+                fc_solve_kaz_tree_alloc_insert(
                     right_tree,
                     &(new_item->key)
-                    )
-                )
+                );
+
+                count_moves = (extracted_item->count_moves + 1);
+
+                if (! is_reversible)
                 {
-                    int count_moves;
-                    fcs_fcc_move_t * moves, * end_moves;
+                    count_moves += count_start_state_moves;
+                }
 
-                    fc_solve_kaz_tree_alloc_insert(
-                        right_tree,
-                        &(new_item->key)
-                    );
+                /* Fill in the moves. */
+                moves = malloc(
+                    sizeof(new_item->moves[0]) * count_moves
+                );
 
-                    count_moves = (extracted_item->count_moves + 1);
+                if (is_reversible)
+                {
+                    end_moves = moves;
+                }
+                else
+                {
+                    memcpy(moves, start_state_moves, count_start_state_moves);
+                    end_moves = moves + count_start_state_moves;
+                }
 
-                    if (! is_reversible)
+                memcpy(end_moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
+                end_moves[extracted_item->count_moves]
+                    = derived_iter->parent_and_move.s[
+                    derived_iter->parent_and_move.s[0]+1
+                    ];
+
+                if (is_reversible)
+                {
+                    new_item->moves = moves;
+                    new_item->count_moves = count_moves;
+                }
+                else
+                {
+                    fcs_FCC_start_point_t * new_start_point;
+                    /* Enqueue the new FCC start point. */
+                    if (fcc_start_points->recycle_bin)
                     {
-                        count_moves += count_start_state_moves;
-                    }
-
-                    /* Fill in the moves. */
-                    moves = malloc(
-                        sizeof(new_item->moves[0]) * count_moves
-                    );
-
-                    if (is_reversible)
-                    {
-                        end_moves = moves;
-                    }
-                    else
-                    {
-                        memcpy(moves, start_state_moves, count_start_state_moves);
-                        end_moves = moves + count_start_state_moves;
-                    }
-
-                    memcpy(end_moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
-                    end_moves[extracted_item->count_moves]
-                        = derived_iter->parent_and_move.s[
-                        derived_iter->parent_and_move.s[0]+1
-                        ];
-
-                    if (is_reversible)
-                    {
-                        new_item->moves = moves;
-                        new_item->count_moves = count_moves;
+                        new_start_point = fcc_start_points->recycle_bin;
+                        fcc_start_points->recycle_bin = fcc_start_points->recycle_bin->next;
                     }
                     else
                     {
-                        fcs_FCC_start_point_t * new_start_point;
-                        /* Enqueue the new FCC start point. */
-                        if (fcc_start_points->recycle_bin)
-                        {
-                            new_start_point = fcc_start_points->recycle_bin;
-                            fcc_start_points->recycle_bin = fcc_start_points->recycle_bin->next;
-                        }
-                        else
-                        {
-                            new_start_point = (fcs_FCC_start_point_t *)
-                                fcs_compact_alloc_ptr(
-                                    &(fcc_start_points->allocator),
-                                    sizeof (*new_start_point)
-                                );
-                        }
-                        new_start_point->enc_state = new_item->key;
-                        new_start_point->count_moves = count_moves;
-                        new_start_point->moves = moves;
-                    }
-
-                    if (is_reversible)
-                    {
-                        /* Enqueue the item in the queue. */
-                        new_item->next = NULL;
-                        if (queue_tail)
-                        {
-                            queue_tail = queue_tail->next = new_item;
-                        }
-                        else
-                        {
-                            queue_head = queue_tail = new_item;
-                        }
-                    }
-                    /* Allocate a new new_item */
-                    if (queue_recycle_bin)
-                    {
-                        new_item = queue_recycle_bin;
-                        queue_recycle_bin = queue_recycle_bin->next;
-                    }
-                    else
-                    {
-                        new_item =
-                            (fcs_dbm_queue_item_t *)
+                        new_start_point = (fcs_FCC_start_point_t *)
                             fcs_compact_alloc_ptr(
-                                &(queue_allocator),
-                                sizeof(*new_item)
+                                &(fcc_start_points->allocator),
+                                sizeof (*new_start_point)
                             );
                     }
+                    new_start_point->enc_state = new_item->key;
+                    new_start_point->count_moves = count_moves;
+                    new_start_point->moves = moves;
+                }
+
+                if (is_reversible)
+                {
+                    /* Enqueue the item in the queue. */
+                    new_item->next = NULL;
+                    if (queue_tail)
+                    {
+                        queue_tail = queue_tail->next = new_item;
+                    }
+                    else
+                    {
+                        queue_head = queue_tail = new_item;
+                    }
+                }
+                /* Allocate a new new_item */
+                if (queue_recycle_bin)
+                {
+                    new_item = queue_recycle_bin;
+                    queue_recycle_bin = queue_recycle_bin->next;
+                }
+                else
+                {
+                    new_item =
+                        (fcs_dbm_queue_item_t *)
+                        fcs_compact_alloc_ptr(
+                            &(queue_allocator),
+                            sizeof(*new_item)
+                        );
                 }
             }
+
             /* Recycle derived_iter.  */
             next_derived_iter = derived_iter->next;
             derived_iter->next = derived_list_recycle_bin;
