@@ -62,20 +62,17 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, const char * 
 #endif
     fcs_uchar_t enc_state[24];
     fc_solve_bit_writer_t bit_w;
-    fc_solve_bit_reader_t bit_r;
     char * as_str;
 
-    fc_solve_state_init(&new_derived_state, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-        , new_derived_indirect_stacks_buffer
-#endif
-        );
-
-    fc_solve_bit_writer_init(&bit_w, enc_state);
+    fc_solve_bit_writer_init(&bit_w, enc_state+1);
     fc_solve_delta_stater_encode_composite(delta, &bit_w);
     
-    fc_solve_bit_reader_init(&bit_r, enc_state);
-    fc_solve_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
+    fc_solve_delta_stater_decode_into_state(
+        delta,
+        enc_state, 
+        &(new_derived_state),
+        new_derived_indirect_stacks_buffer
+    );
 
     as_str =
         fc_solve_state_as_string(
