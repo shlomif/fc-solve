@@ -93,17 +93,31 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     start_points_list.recycle_bin = NULL;
     fc_solve_compact_allocator_init(&(start_points_list.allocator));
 
+    dict_t * do_next_fcc_start_points_exist =
+        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+
+    dict_t * does_min_by_sorting_exist =
+        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+
+    fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
+
+    const int max_num_elements_in_cache = 1000;
+    cache_init(&does_state_exist_in_any_FCC_cache, max_num_elements_in_cache);
+
+    fcs_bool_t is_min_by_sorting_new;
+    fcs_encoded_state_buffer_t min_by_sorting;
+
     perform_FCC_brfs(
         &(init_state),
         enc_state,
-        FIND_FCC_START_POINTS,
         count_start_state_moves,
         start_state_moves,
         &(start_points_list),
-        NULL,
-        NULL,
-        NULL,
-        NULL
+        do_next_fcc_start_points_exist,
+        &is_min_by_sorting_new,
+        &min_by_sorting,
+        does_min_by_sorting_exist,
+        &does_state_exist_in_any_FCC_cache
     );
 
     int states_count = 0;
@@ -168,6 +182,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
 
     fc_solve_delta_stater_free (delta);
+    fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
+    cache_destroy(&does_state_exist_in_any_FCC_cache);
 
     return 0;
 }

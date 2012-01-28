@@ -89,34 +89,30 @@ static void perform_FCC_brfs(
     fcs_state_keyval_pair_t * init_state,
     /* The start state. */
     fcs_encoded_state_buffer_t start_state,
-    /* Type of scan. */
-    enum FCC_brfs_scan_type scan_type,
     /* The moves leading up to the state. 
-     * Used only when scan_type is FIND_FCC_START_POINTS .
      * */
     const int count_start_state_moves,
     const fcs_fcc_move_t * const start_state_moves,
     /* [Output]: FCC start points. 
-     * Will be NULL if scan_type is not FIND_FCC_START_POINTS
      * */
     fcs_FCC_start_points_list_t * fcc_start_points,
+    /* [Input/Output]: make sure the fcc_start_points don't repeat themselves,
+     * in the same FCC-based-depth.
+     * */
+    dict_t * do_next_fcc_start_points_exist,
     /* [Output]: Is the min_by_sorting new.
-     * Will be NULL if scan_type is not FIND_MIN_BY_SORTING
      * */
     fcs_bool_t * is_min_by_sorting_new,
     /* [Output]: The min_by_sorting.
-     * Will be NULL if scan_type is not FIND_MIN_BY_SORTING
      * */
     fcs_encoded_state_buffer_t * min_by_sorting,
     /* [Input/Output]: The ${next}_depth_FCCs.DoesExist
      * (for the right depth based on the current depth and pruning.)
      * Of type Map{min_by_sorting => Bool Exists} DoesExist.
-     * Will be NULL if scan_type is not FIND_MIN_BY_SORTING
     */
     dict_t * does_min_by_sorting_exist,
-    /* [Input/Output]: The LRU.
+    /* [Input/Output]: The LRU cache.
      * Of type <<LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache>>
-     * Will be NULL if scan_type is not FIND_MIN_BY_SORTING
      * */
     fcs_lru_cache_t * does_state_exist_in_any_FCC_cache
 )
@@ -125,7 +121,7 @@ static void perform_FCC_brfs(
     fcs_compact_allocator_t queue_allocator, derived_list_allocator;
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
                         * derived_iter, * next_derived_iter;
-    dict_t * traversed_states, * found_new_start_points;
+    dict_t * traversed_states;
     fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
@@ -137,22 +133,12 @@ static void perform_FCC_brfs(
 
     /* Some sanity checks. */
 #ifndef NDEBUG
-    if (scan_type == FIND_FCC_START_POINTS)
-    {
-        assert(fcc_start_points);
-        assert(! is_min_by_sorting_new);
-        assert(! min_by_sorting);
-        assert(! does_min_by_sorting_exist);
-        assert(! does_state_exist_in_any_FCC_cache);
-    }
-    else
-    {
-        assert(! fcc_start_points);
-        assert(is_min_by_sorting_new);
-        assert(min_by_sorting);
-        assert(does_min_by_sorting_exist);
-        assert(does_state_exist_in_any_FCC_cache);
-    }
+    assert(fcc_start_points);
+    assert(do_next_fcc_start_points_exist);
+    assert(is_min_by_sorting_new);
+    assert(min_by_sorting);
+    assert(does_min_by_sorting_exist);
+    assert(does_state_exist_in_any_FCC_cache);
 #endif
 
     /* Initialize the queue_allocator. */
@@ -171,7 +157,9 @@ static void perform_FCC_brfs(
     );
 
     traversed_states = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+#if 0
     found_new_start_points = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+#endif
 
     new_item =
         (fcs_dbm_queue_item_t *)
@@ -196,34 +184,32 @@ static void perform_FCC_brfs(
         }
 
         /* Handle the min_by_sorting scan. */
-        if (scan_type == FIND_MIN_BY_SORTING)
+        if (cache_does_key_exist(
+            does_state_exist_in_any_FCC_cache, 
+            &(extracted_item->key)
+        ))
         {
-            if (cache_does_key_exist(
-                does_state_exist_in_any_FCC_cache, 
-                &(extracted_item->key)
-            ))
-            {
-                *is_min_by_sorting_new = FALSE;
-                goto free_resources;
-            }
-            else
-            {
-                cache_insert(does_state_exist_in_any_FCC_cache, &(extracted_item->key));
-            }
+            *is_min_by_sorting_new = FALSE;
+            goto free_resources;
+        }
+        else
+        {
+            cache_insert(does_state_exist_in_any_FCC_cache, &(extracted_item->key));
+        }
 
-            if (! running_min_was_assigned)
+        if (! running_min_was_assigned)
+        {
+            running_min_was_assigned = TRUE;
+            running_min = extracted_item->key;
+        }
+        else
+        {
+            if (memcmp(&(extracted_item->key), &running_min, sizeof(running_min)) < 0)
             {
-                running_min_was_assigned = TRUE;
                 running_min = extracted_item->key;
             }
-            else
-            {
-                if (memcmp(&(extracted_item->key), &running_min, sizeof(running_min)) < 0)
-                {
-                    running_min = extracted_item->key;
-                }
-            }
         }
+
         /* Calculate the derived list. */
         derived_list = NULL;
 
@@ -268,11 +254,15 @@ static void perform_FCC_brfs(
         )
         {
             fcs_bool_t is_reversible = derived_iter->is_reversible_move;
-            if (is_reversible || (scan_type == FIND_FCC_START_POINTS))
+            if (is_reversible)
             {
                 dict_t * right_tree;
 
-                right_tree = (is_reversible ? traversed_states : found_new_start_points);
+                right_tree =
+                    (is_reversible
+                     ? traversed_states
+                     : do_next_fcc_start_points_exist
+                    );
 
                 memset(&(new_item->key), '\0', sizeof(new_item->key));
                 fc_solve_delta_stater_encode_into_buffer(
@@ -286,69 +276,67 @@ static void perform_FCC_brfs(
                     )
                 )
                 {
+                    int count_moves;
+                    fcs_fcc_move_t * moves, * end_moves;
+
                     fc_solve_kaz_tree_alloc_insert(
                         right_tree,
                         &(new_item->key)
                     );
-                    if (scan_type == FIND_FCC_START_POINTS)
+
+                    count_moves = (extracted_item->count_moves + 1);
+
+                    if (! is_reversible)
                     {
-                        int count_moves;
-                        fcs_fcc_move_t * moves, * end_moves;
+                        count_moves += count_start_state_moves;
+                    }
 
-                        count_moves = (extracted_item->count_moves + 1);
+                    /* Fill in the moves. */
+                    moves = malloc(
+                        sizeof(new_item->moves[0]) * count_moves
+                    );
 
-                        if (! is_reversible)
+                    if (is_reversible)
+                    {
+                        end_moves = moves;
+                    }
+                    else
+                    {
+                        memcpy(moves, start_state_moves, count_start_state_moves);
+                        end_moves = moves + count_start_state_moves;
+                    }
+
+                    memcpy(end_moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
+                    end_moves[extracted_item->count_moves]
+                        = derived_iter->parent_and_move.s[
+                        derived_iter->parent_and_move.s[0]+1
+                        ];
+
+                    if (is_reversible)
+                    {
+                        new_item->moves = moves;
+                        new_item->count_moves = count_moves;
+                    }
+                    else
+                    {
+                        fcs_FCC_start_point_t * new_start_point;
+                        /* Enqueue the new FCC start point. */
+                        if (fcc_start_points->recycle_bin)
                         {
-                            count_moves += count_start_state_moves;
-                        }
-
-                        /* Fill in the moves. */
-                        moves = malloc(
-                            sizeof(new_item->moves[0]) * count_moves
-                        );
-
-                        if (is_reversible)
-                        {
-                            end_moves = moves;
+                            new_start_point = fcc_start_points->recycle_bin;
+                            fcc_start_points->recycle_bin = fcc_start_points->recycle_bin->next;
                         }
                         else
                         {
-                            memcpy(moves, start_state_moves, count_start_state_moves);
-                            end_moves = moves + count_start_state_moves;
+                            new_start_point = (fcs_FCC_start_point_t *)
+                                fcs_compact_alloc_ptr(
+                                    &(fcc_start_points->allocator),
+                                    sizeof (*new_start_point)
+                                );
                         }
-
-                        memcpy(end_moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
-                        end_moves[extracted_item->count_moves]
-                            = derived_iter->parent_and_move.s[
-                            derived_iter->parent_and_move.s[0]+1
-                            ];
-
-                        if (is_reversible)
-                        {
-                            new_item->moves = moves;
-                            new_item->count_moves = count_moves;
-                        }
-                        else
-                        {
-                            fcs_FCC_start_point_t * new_start_point;
-                            /* Enqueue the new FCC start point. */
-                            if (fcc_start_points->recycle_bin)
-                            {
-                                new_start_point = fcc_start_points->recycle_bin;
-                                fcc_start_points->recycle_bin = fcc_start_points->recycle_bin->next;
-                            }
-                            else
-                            {
-                                new_start_point = (fcs_FCC_start_point_t *)
-                                    fcs_compact_alloc_ptr(
-                                        &(fcc_start_points->allocator),
-                                        sizeof (*new_start_point)
-                                    );
-                            }
-                            new_start_point->enc_state = new_item->key;
-                            new_start_point->count_moves = count_moves;
-                            new_start_point->moves = moves;
-                        }
+                        new_start_point->enc_state = new_item->key;
+                        new_start_point->count_moves = count_moves;
+                        new_start_point->moves = moves;
                     }
 
                     if (is_reversible)
@@ -398,18 +386,15 @@ static void perform_FCC_brfs(
         extracted_item->moves = NULL;
     }
 
-    if (scan_type == FIND_MIN_BY_SORTING)
-    {
-        if ((*is_min_by_sorting_new =
-            (!fc_solve_kaz_tree_lookup(
-                does_min_by_sorting_exist,
-                &(running_min))
-             )
-            )
+    if ((*is_min_by_sorting_new =
+        (!fc_solve_kaz_tree_lookup(
+            does_min_by_sorting_exist,
+            &(running_min))
+         )
         )
-        {
-            *min_by_sorting = running_min;
-        }
+    )
+    {
+        *min_by_sorting = running_min;
     }
 
     /* Free the allocated resources. */
@@ -418,7 +403,9 @@ free_resources:
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
     fc_solve_delta_stater_free(delta_stater);
     fc_solve_kaz_tree_destroy(traversed_states);
+#if 0
     fc_solve_kaz_tree_destroy(found_new_start_points);
+#endif
 }
 
 #ifdef __cplusplus
