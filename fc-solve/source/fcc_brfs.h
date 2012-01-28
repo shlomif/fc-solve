@@ -337,6 +337,12 @@ static void perform_FCC_brfs(
                     new_start_point->enc_state = new_item->key;
                     new_start_point->count_moves = count_moves;
                     new_start_point->moves = moves;
+
+                    /* 
+                     * Enqueue the new start point - it won't work without it,
+                     * retardo! */
+                    new_start_point->next = fcc_start_points->list;
+                    fcc_start_points->list = new_start_point;
                 }
 
                 if (is_reversible)
