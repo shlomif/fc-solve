@@ -87,7 +87,7 @@ use List::MoreUtils qw(any uniq);
 
 {
     # MS Freecell Board No. 24.
-    my $derived_states_list = FccStartPoint::find_fcc_start_points(
+    my $fcc_start_points_list = FccStartPoint::find_fcc_start_points(
         <<'EOF',
 4C 2C 9C 8C QS 4S 2H 
 5H QH 3C AC 3H 4H QD 
@@ -103,15 +103,15 @@ EOF
 
     # TEST
     is (
-        scalar(uniq map { $_->get_state_string() } @$derived_states_list),
-        scalar(@$derived_states_list),
+        scalar(uniq map { $_->get_state_string() } @$fcc_start_points_list),
+        scalar(@$fcc_start_points_list),
         'The states are unique',
     );
 
     # TEST
     is (
-        scalar(uniq map { $_->get_moves() } @$derived_states_list),
-        scalar(@$derived_states_list),
+        scalar(uniq map { $_->get_moves() } @$fcc_start_points_list),
+        scalar(@$fcc_start_points_list),
         'The states are unique',
     );
 }
@@ -119,7 +119,7 @@ EOF
 # Testing the horne's prune is not applied.
 {
     # MS Freecell Board No. 24 - middle board.
-    my $derived_states_list = FccStartPoint::find_fcc_start_points(
+    my $fcc_start_points_list = FccStartPoint::find_fcc_start_points(
         <<'EOF',
 Foundations: H-Q C-8 D-5 S-Q 
 Freecells:  KD  7D
@@ -137,21 +137,21 @@ EOF
 
     # TEST
     is (
-        scalar(uniq map { $_->get_state_string() } @$derived_states_list),
-        scalar(@$derived_states_list),
+        scalar(uniq map { $_->get_state_string() } @$fcc_start_points_list),
+        scalar(@$fcc_start_points_list),
         'The states are unique',
     );
 
     # TEST
     is (
-        scalar(uniq map { $_->get_moves() } @$derived_states_list),
-        scalar(@$derived_states_list),
+        scalar(uniq map { $_->get_moves() } @$fcc_start_points_list),
+        scalar(@$fcc_start_points_list),
         'The states are unique',
     );
 
     # TEST
     ok (
-        (any { $_->get_state_string() =~ m/^: 8D$/ms } @$derived_states_list),
+        (any { $_->get_state_string() =~ m/^: 8D$/ms } @$fcc_start_points_list),
         "Horne prune did not take effect (found intermediate state)"
     );
 }
