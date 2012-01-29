@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use lib './t/lib';
+
 use Config;
 use Cwd;
 
@@ -81,7 +83,7 @@ EOF
 
 package FccStartPointsList;
 
-use base 'Games::Solitaire::Verify::Base';
+use base 'Games::Solitaire::FC_Solve::SingleMoveSearch';
 
 use List::MoreUtils qw(any uniq);
 
@@ -134,7 +136,7 @@ sub sanity_check
 
 package main;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use List::MoreUtils qw(any uniq none);
 
@@ -188,9 +190,12 @@ EOF
         "Horne prune did not take effect (found intermediate state)"
     );
 
-    # TEST
-    ok (
-        (none { $_->get_state_string() eq <<'EOF' } @{$obj->states()}),
+    my $canonize_state_sub = sub { 
+        my ($state) = @_;
+        return join '', sort { $a cmp $b } split/^/, $state;
+    };
+
+    my $canonized_state = $canonize_state_sub->(<<'EOF');
 Foundations: H-Q C-8 D-5 S-Q 
 Freecells:  KD  7D
 : KH QC JD TC 9D
@@ -202,6 +207,31 @@ Freecells:  KD  7D
 : 8D
 : 6D
 EOF
+
+    # TEST
+    ok (
+        (none { 
+            $canonize_state_sub->($_->get_state_string())
+                eq 
+            $canonized_state
+        } 
+            @{$obj->states()}
+        ),
         "Intermediate states in the FCC are not placed in the list of start points.",
+    );
+
+    my $half_move_spec = $obj->compile_move_spec(
+        { type => 'stack', idx => 3, },
+    );
+
+    # TEST
+    ok (
+        (none
+            {
+                (length($_->get_moves()) == 1) && 
+                vec($_->get_moves(), 0, 4) == $half_move_spec,
+            }
+        ),
+        "No intermediate states - moves",
     );
 }

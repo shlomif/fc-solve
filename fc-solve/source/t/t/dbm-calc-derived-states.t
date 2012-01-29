@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use lib './t/lib';
+
 use Config;
 use Cwd;
 
@@ -115,7 +117,7 @@ sub find_by_string
 
 package DerivedStatesSearch;
 
-use base 'Games::Solitaire::Verify::Base';
+use base 'Games::Solitaire::FC_Solve::SingleMoveSearch';
 
 use Test::More;
 
@@ -168,23 +170,7 @@ sub _move_half
 {
     my ($self, $which) = @_;
 
-    return (($self->_move() >> ($which * 4)) & 0xF);
-}
-
-sub _compile_move_spec
-{
-    my ($self, $move_spec) = @_;
-
-    my $t = $move_spec->{type};
-    my $idx = $move_spec->{idx};
-
-    return
-    (
-          ($t eq "stack") ? $idx
-        : ($t eq "freecell") ? ($idx+8)
-        : ($t eq "found") ? ($idx+8+4)
-        : (die "Unknown type '$t'")
-    )
+    return $self->calc_move_half($self->_move(), $which);
 }
 
 sub is_src
@@ -195,7 +181,7 @@ sub is_src
 
     return is (
         $self->_move_half(0),
-        $self->_compile_move_spec($src_spec),
+        $self->compile_move_spec($src_spec),
         $blurb
     );
 }
@@ -208,7 +194,7 @@ sub is_dest
 
     return is (
         $self->_move_half(1),
-        $self->_compile_move_spec($dest_spec),
+        $self->compile_move_spec($dest_spec),
         $blurb
     );
 }
