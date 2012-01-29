@@ -79,6 +79,59 @@ EOF
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
+package FccStartPointsList;
+
+use base 'Games::Solitaire::Verify::Base';
+
+use List::MoreUtils qw(any uniq);
+
+use Test::More;
+
+__PACKAGE__->mk_acc_ref([qw(
+    states
+    )]
+);
+
+sub _init
+{
+    my $self = shift;
+    my $args = shift;
+
+    my $moves_prefix = $args->{moves_prefix} || '';
+
+    $self->states(
+        FccStartPoint::find_fcc_start_points(
+            $args->{start}, $moves_prefix,
+        )
+    );
+
+    return;
+}
+
+# TEST:$sanity_check=0;
+sub sanity_check
+{
+    my ($self) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $fcc_start_points_list = $self->states();
+
+    # TEST:$sanity_check++;
+    is (
+        scalar(uniq map { $_->get_state_string() } @$fcc_start_points_list),
+        scalar(@$fcc_start_points_list),
+        'The states are unique',
+    );
+
+    # TEST:$sanity_check++;
+    is (
+        scalar(uniq map { $_->get_moves() } @$fcc_start_points_list),
+        scalar(@$fcc_start_points_list),
+        'The states are unique',
+    );
+}
+
 package main;
 
 use Test::More tests => 5;
@@ -87,8 +140,9 @@ use List::MoreUtils qw(any uniq);
 
 {
     # MS Freecell Board No. 24.
-    my $fcc_start_points_list = FccStartPoint::find_fcc_start_points(
-        <<'EOF',
+    my $obj = FccStartPointsList->new(
+        {
+            start => <<'EOF',
 4C 2C 9C 8C QS 4S 2H 
 5H QH 3C AC 3H 4H QD 
 QC 9S 6H 9H 3S KS 3D 
@@ -98,29 +152,19 @@ QC 9S 6H 9H 3S KS 3D
 AH 5S 6S AD 8H JD 
 7S 6C 7D 4D 8S 9D 
 EOF
-        ''
+        }
     );
 
-    # TEST
-    is (
-        scalar(uniq map { $_->get_state_string() } @$fcc_start_points_list),
-        scalar(@$fcc_start_points_list),
-        'The states are unique',
-    );
-
-    # TEST
-    is (
-        scalar(uniq map { $_->get_moves() } @$fcc_start_points_list),
-        scalar(@$fcc_start_points_list),
-        'The states are unique',
-    );
+    # TEST*$sanity_check
+    $obj->sanity_check();
 }
 
 # Testing the horne's prune is not applied.
 {
     # MS Freecell Board No. 24 - middle board.
-    my $fcc_start_points_list = FccStartPoint::find_fcc_start_points(
-        <<'EOF',
+    my $obj = FccStartPointsList->new(
+        {
+            start => <<'EOF',
 Foundations: H-Q C-8 D-5 S-Q 
 Freecells:  KD  7D
 : KH QC JD TC 9D
@@ -132,26 +176,15 @@ Freecells:  KD  7D
 : 
 : 6D
 EOF
-        ''
+        }
     );
 
-    # TEST
-    is (
-        scalar(uniq map { $_->get_state_string() } @$fcc_start_points_list),
-        scalar(@$fcc_start_points_list),
-        'The states are unique',
-    );
-
-    # TEST
-    is (
-        scalar(uniq map { $_->get_moves() } @$fcc_start_points_list),
-        scalar(@$fcc_start_points_list),
-        'The states are unique',
-    );
+    # TEST*$sanity_check
+    $obj->sanity_check();
 
     # TEST
     ok (
-        (any { $_->get_state_string() =~ m/^: 8D$/ms } @$fcc_start_points_list),
+        (any { $_->get_state_string() =~ m/^: 8D$/ms } @{$obj->states()}),
         "Horne prune did not take effect (found intermediate state)"
     );
 }
