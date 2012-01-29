@@ -134,9 +134,9 @@ sub sanity_check
 
 package main;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 
-use List::MoreUtils qw(any uniq);
+use List::MoreUtils qw(any uniq none);
 
 {
     # MS Freecell Board No. 24.
@@ -186,5 +186,22 @@ EOF
     ok (
         (any { $_->get_state_string() =~ m/^: 8D$/ms } @{$obj->states()}),
         "Horne prune did not take effect (found intermediate state)"
+    );
+
+    # TEST
+    ok (
+        (none { $_->get_state_string() eq <<'EOF' } @{$obj->states()}),
+Foundations: H-Q C-8 D-5 S-Q 
+Freecells:  KD  7D
+: KH QC JD TC 9D
+: KC
+: 
+: KS QD JC TD 9C
+: 
+: 
+: 8D
+: 6D
+EOF
+        "Intermediate states in the FCC are not placed in the list of start points.",
     );
 }
