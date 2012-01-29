@@ -229,7 +229,9 @@ static void perform_FCC_brfs(
             &derived_list,
             &derived_list_recycle_bin,
             &derived_list_allocator,
-            TRUE
+            /* Horne's Prune should be disabled because that interferes
+             * with the FCC-depth. */
+            FALSE
         );
 
 

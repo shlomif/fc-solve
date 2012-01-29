@@ -81,9 +81,9 @@ EOF
 
 package main;
 
-use Test::More tests => 2;
+use Test::More tests => 5;
 
-use List::MoreUtils qw(uniq);
+use List::MoreUtils qw(any uniq);
 
 {
     # MS Freecell Board No. 24.
@@ -113,5 +113,45 @@ EOF
         scalar(uniq map { $_->get_moves() } @$derived_states_list),
         scalar(@$derived_states_list),
         'The states are unique',
+    );
+}
+
+# Testing the horne's prune is not applied.
+{
+    # MS Freecell Board No. 24 - middle board.
+    my $derived_states_list = FccStartPoint::find_fcc_start_points(
+        <<'EOF',
+Foundations: H-Q C-8 D-5 S-Q 
+Freecells:  KD  7D
+: KH QC JD TC 9D
+: KC
+: 
+: KS QD JC TD 9C 8D
+: 
+: 
+: 
+: 6D
+EOF
+        ''
+    );
+
+    # TEST
+    is (
+        scalar(uniq map { $_->get_state_string() } @$derived_states_list),
+        scalar(@$derived_states_list),
+        'The states are unique',
+    );
+
+    # TEST
+    is (
+        scalar(uniq map { $_->get_moves() } @$derived_states_list),
+        scalar(@$derived_states_list),
+        'The states are unique',
+    );
+
+    # TEST
+    ok (
+        (any { $_->get_state_string() =~ m/^: 8D$/ms } @$derived_states_list),
+        "Horne prune did not take effect (found intermediate state)"
     );
 }
