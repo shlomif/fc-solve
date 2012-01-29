@@ -95,7 +95,7 @@ foreach my $obj (@$derived_states_list)
 {
     print sprintf("<<<%s>>>\nLeading Moves: %s\n\n-------------\n\n",
         do { my $s = $obj->get_state_string(); $s =~ s/\n/\\n/g; $s; },
-        (map { sprintf("{%.2x}", ord($_)) } split//, $obj->get_moves()),
+        (join '', map { sprintf("{%.2x}", ord($_)) } split//, $obj->get_moves()),
     );
 }
 
