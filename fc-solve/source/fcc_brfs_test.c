@@ -106,6 +106,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     fcs_bool_t is_min_by_sorting_new;
     fcs_encoded_state_buffer_t min_by_sorting;
+    long num_new_positions;
 
     perform_FCC_brfs(
         &(init_state),
@@ -117,7 +118,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         &is_min_by_sorting_new,
         &min_by_sorting,
         does_min_by_sorting_exist,
-        &does_state_exist_in_any_FCC_cache
+        &does_state_exist_in_any_FCC_cache,
+        &num_new_positions
     );
 
     int states_count = 0;

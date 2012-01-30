@@ -114,7 +114,12 @@ static void perform_FCC_brfs(
     /* [Input/Output]: The LRU cache.
      * Of type <<LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache>>
      * */
-    fcs_lru_cache_t * does_state_exist_in_any_FCC_cache
+    fcs_lru_cache_t * does_state_exist_in_any_FCC_cache,
+    /* [Output]: the number of new positions/states scanned in the FCC. If it's
+     * not new, this will be set to zero (0). It includes the initial position,
+     * but does not include the start points of the new FCC.
+     * */
+    long * out_num_new_positions
 )
 {
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin, * new_item, * extracted_item;
@@ -126,6 +131,7 @@ static void perform_FCC_brfs(
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min;
+    long num_new_positions;
 
 #ifdef INDIRECT_STACK_STATES
     dll_ind_buf_t indirect_stacks_buffer;
@@ -177,9 +183,12 @@ static void perform_FCC_brfs(
 
     derived_list_recycle_bin = NULL;
 
+    *out_num_new_positions = num_new_positions = 0;
+
     /* Extract an item from the queue. */
     while ((extracted_item = queue_head))
     {
+        num_new_positions++;
         if (! (queue_head = extracted_item->next) )
         {
             queue_tail = NULL;
@@ -407,6 +416,7 @@ static void perform_FCC_brfs(
     )
     {
         *min_by_sorting = running_min;
+        *out_num_new_positions = num_new_positions;
     }
 
     /* Free the allocated resources. */
