@@ -16,6 +16,10 @@ because the columns can be rearranged.
 * pi-make-microsoft-freecell-board 24 | ./fc-solve -p -t -s -i -sam -mi 50 -l eo -ni -l eo | grep Iteration | less 
 ** Does not limit the iterations for the second instance.
 
+* Implement the FCC-based solver (Fully-connected components):
+     - Test the out_num_positions_in_the_fcc.
+     - Add more tests for fcc_brfs more.
+
 Non-pressing
 ------------
 
