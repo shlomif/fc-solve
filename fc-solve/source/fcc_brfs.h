@@ -318,6 +318,17 @@ static void perform_FCC_brfs(
                 {
                     new_item->moves = moves;
                     new_item->count_moves = count_moves;
+
+                    /* Enqueue the item in the queue. */
+                    new_item->next = NULL;
+                    if (queue_tail)
+                    {
+                        queue_tail = queue_tail->next = new_item;
+                    }
+                    else
+                    {
+                        queue_head = queue_tail = new_item;
+                    }
                 }
                 else
                 {
@@ -347,20 +358,13 @@ static void perform_FCC_brfs(
                     fcc_start_points->list = new_start_point;
                 }
 
-                if (is_reversible)
-                {
-                    /* Enqueue the item in the queue. */
-                    new_item->next = NULL;
-                    if (queue_tail)
-                    {
-                        queue_tail = queue_tail->next = new_item;
-                    }
-                    else
-                    {
-                        queue_head = queue_tail = new_item;
-                    }
-                }
-                /* Allocate a new new_item */
+                /* 
+                 * Allocate a new new_item.
+                 *
+                 * Note: we need to allocate it for both reversibles
+                 * and non-reversible moves because pointers to their keys are
+                 * kept inside the dict_t-s.
+                 * */
                 if (queue_recycle_bin)
                 {
                     new_item = queue_recycle_bin;
