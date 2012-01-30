@@ -163,3 +163,9 @@ b scans.c:1958 if (top_card_idx >= 7+12)
 c
 --------------------------------------------------------
 
+* The cols_bit_mask_lengths in delta_states.c should be only the maximum,
+because the columns can be rearranged.
+    - or think about it.
+
+* Make fcs_stack_compare GCC_INLINE.
+

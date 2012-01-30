@@ -7,12 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* The cols_bit_mask_lengths in delta_states.c should be only the maximum,
-because the columns can be rearranged.
-    - or think about it.
-
-* Make fcs_stack_compare GCC_INLINE.
-
 * pi-make-microsoft-freecell-board 24 | ./fc-solve -p -t -s -i -sam -mi 50 -l eo -ni -l eo | grep Iteration | less 
 ** Does not limit the iterations for the second instance.
 

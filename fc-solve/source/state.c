@@ -41,7 +41,7 @@
 #include "inline.h"
 
 #ifdef DEBUG_STATES
-static int fcs_stack_compare(const void * s1, const void * s2)
+static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 {
     fcs_card_t card1 = ((const fc_stack_t *)s1)->cards[0];
     fcs_card_t card2 = ((const fc_stack_t *)s2)->cards[0];
@@ -49,7 +49,7 @@ static int fcs_stack_compare(const void * s1, const void * s2)
     return fc_solve_card_compare(&card1, &card2);
 }
 #elif defined(COMPACT_STATES)
-static int fcs_stack_compare(const void * s1, const void * s2)
+static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 {
     fcs_card_t card1 = ((fcs_card_t*)s1)[1];
     fcs_card_t card2 = ((fcs_card_t*)s2)[1];
