@@ -46,6 +46,7 @@ extern "C"
 #include "dbm_common.h"
 #include "dbm_solver_key.h"
 #include "dbm_calc_derived_iface.h"
+#include "indirect_buffer.h"
 
 struct fcs_derived_state_struct
 {

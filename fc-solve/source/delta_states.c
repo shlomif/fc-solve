@@ -37,6 +37,7 @@
 #include "fcs_dllexport.h"
 #include "bit_rw.h"
 #include "state.h"
+#include "indirect_buffer.h"
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 #include "dbm_common.h"
@@ -526,7 +527,7 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
         const fcs_uchar_t * const enc_state,
         fcs_state_keyval_pair_t * ret
 #ifdef INDIRECT_STACK_STATES
-        , dll_ind_buf_t * indirect_stacks_buffer
+        , dll_ind_buf_t indirect_stacks_buffer
 #endif
         )
 {
@@ -595,10 +596,6 @@ static char * prepare_state_str(const char * proto)
 
     return ret;
 }
-
-#ifdef INDIRECT_STACK_STATES
-typedef char dll_ind_buf_t[MAX_NUM_STACKS << 7];
-#endif
 
 /*
  * The char * returned is malloc()ed and should be free()ed.
