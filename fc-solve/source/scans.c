@@ -96,8 +96,8 @@ void fc_solve_increase_dfs_max_depth(
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH))
 static fcs_bool_t free_states_should_delete(void * key, void * context)
 {
-    fc_solve_instance_t * instance = (fc_solve_instance_t *)context;
-    fcs_collectible_state_t * ptr_state = (fcs_collectible_state_t *)key;
+    fc_solve_instance_t * const instance = (fc_solve_instance_t * const)context;
+    fcs_collectible_state_t * const ptr_state = (fcs_collectible_state_t * const)key;
 
     if (FCS_IS_STATE_DEAD_END(ptr_state))
     {
@@ -119,20 +119,16 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
         fc_solve_soft_thread_t * soft_thread
         )
 {
-    fcs_soft_dfs_stack_item_t * soft_dfs_info,
-                              * end_soft_dfs_info;
-
-    soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info;
-
-    end_soft_dfs_info =
+    fcs_soft_dfs_stack_item_t * soft_dfs_info =
+        soft_thread->method_specific.soft_dfs.soft_dfs_info;
+    fcs_soft_dfs_stack_item_t * const end_soft_dfs_info =
         soft_dfs_info + soft_thread->method_specific.soft_dfs.depth;
 
     for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
         int * rand_index_ptr, * dest_rand_index_ptr, * end_rand_index_ptr;
-        fcs_derived_states_list_item_t * states;
-
-        states = soft_dfs_info->derived_states_list.states;
+        fcs_derived_states_list_item_t * const states =
+            soft_dfs_info->derived_states_list.states;
         /*
          * We start from current_state_index instead of current_state_index+1
          * because that is the next state to be checked - it is referenced
@@ -800,11 +796,11 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
 #define ASSIGN_ptr_state(my_value) (PTR_STATE = (my_value))
 
 int fc_solve_soft_dfs_do_solve(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
     )
 {
-    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * const instance = hard_thread->instance;
 
     DECLARE_STATE();
 
