@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use lib './t/t/lib';
+
 use Config;
 use Cwd;
 
@@ -16,6 +18,7 @@ typedef struct
 {
     char * state_as_string;
     SV * moves;
+    long num_new_positions;
 } FccStartPoint;
 
 SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
@@ -23,6 +26,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
     FccStartPoint* s;
     int count, i;
     fcs_FCC_start_point_result_t * fcc_start_points, * iter;
+    long num_new_positions;
 
     STRLEN count_start_moves = SvLEN(moves_prefix);
     
@@ -30,7 +34,8 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         init_state_s,
         (int)count_start_moves,
         SvPVbyte(moves_prefix, count_start_moves),
-        &fcc_start_points
+        &fcc_start_points,
+        &num_new_positions
     );
     results = (AV *)sv_2mortal((SV *)newAV());
     
@@ -45,6 +50,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         free(iter->state_as_string);
         s->moves = newSVpvn(iter->moves, iter->count_moves);
         free(iter->moves);
+        s->num_new_positions = num_new_positions;
 
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
@@ -64,6 +70,10 @@ SV* get_moves(SV* obj) {
     return ret;
 }
 
+long get_num_new_positions(SV* obj) {
+    return ((FccStartPoint*)SvIV(SvRV(obj)))->num_new_positions;
+}
+
 void DESTROY(SV* obj) {
   FccStartPoint* s = (FccStartPoint*)SvIV(SvRV(obj));
   Safefree(s->state_as_string);
@@ -72,12 +82,72 @@ void DESTROY(SV* obj) {
 }
 EOF
     CLEAN_AFTER_BUILD => 0,
-    INC => "-I" . Cwd::getcwd(),
-    LIBS => "-L" . Cwd::getcwd() . " -lfcs_fcc_brfs_test",
+    INC => "-I" . $ENV{FCS_PATH},
+    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
+
+package FccStartPointsList;
+
+use base 'Games::Solitaire::FC_Solve::SingleMoveSearch';
+
+use List::MoreUtils qw(any uniq);
+
+use Test::More;
+
+__PACKAGE__->mk_acc_ref([qw(
+    states
+    )]
+);
+
+sub _init
+{
+    my $self = shift;
+    my $args = shift;
+
+    my $moves_prefix = $args->{moves_prefix} || '';
+
+    $self->states(
+        FccStartPoint::find_fcc_start_points(
+            $args->{start}, $moves_prefix,
+        )
+    );
+
+    return;
+}
+
+# TEST:$sanity_check=0;
+sub sanity_check
+{
+    my ($self) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $fcc_start_points_list = $self->states();
+
+    # TEST:$sanity_check++;
+    is (
+        scalar(uniq map { $_->get_state_string() } @$fcc_start_points_list),
+        scalar(@$fcc_start_points_list),
+        'The states are unique',
+    );
+
+    # TEST:$sanity_check++;
+    is (
+        scalar(uniq map { $_->get_moves() } @$fcc_start_points_list),
+        scalar(@$fcc_start_points_list),
+        'The states are unique',
+    );
+}
+
+sub get_num_new_positions 
+{
+    my $self = shift;
+
+    return $self->states->[0]->get_num_new_positions;
+}
 
 package main;
 

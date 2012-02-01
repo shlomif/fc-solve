@@ -311,6 +311,7 @@ sub _composite_get_cols_and_indexes
 
     {
         my $non_orig_idx = 0;
+        my $empty_idx = 0;
 
         # Move the empty columns to the front, but only within the 
         # entirely_non_orig
@@ -337,7 +338,6 @@ sub _composite_get_cols_and_indexes
                 last MOVE_EMPTIES_LOOP;
             }
 
-            my $empty_idx = $non_orig_idx+1;
             EMPTY_IDX_LOOP:
             while ($empty_idx < @cols)
             {
@@ -358,6 +358,7 @@ sub _composite_get_cols_and_indexes
             @cols_indexes[$non_orig_idx, $empty_idx] =
                 @cols_indexes[$empty_idx, $non_orig_idx];
             $non_orig_idx++;
+            $empty_idx++;
         }
     }
 

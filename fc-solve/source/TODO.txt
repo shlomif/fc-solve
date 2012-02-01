@@ -7,6 +7,9 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
+* Fix the bug in commit No. 4345 also in the C code. Apply the patch and test
+the FCC derived states list.
+
 * Implement the FCC-based solver (Fully-connected components):
      - Test the out_num_positions_in_the_fcc.
      - Add more tests for fcc_brfs more.
