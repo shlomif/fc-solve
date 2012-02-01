@@ -9,6 +9,32 @@ Pressing
 
 * Fix the bug in commit No. 4345 also in the C code. Apply the patch and test
 the FCC derived states list.
+    - Done, but found that these two states are not equivalent whether in
+    Perl or in C - another bug.
+
+Foundations: H-K C-K D-J S-Q 
+Freecells:  QD  KD
+: KS
+: 
+: 
+: 
+: 
+: 
+: 
+:
+
+and:
+
+Foundations: H-K C-K D-J S-Q 
+Freecells:  QD  KD
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: KS
 
 * Implement the FCC-based solver (Fully-connected components):
      - Test the out_num_positions_in_the_fcc.

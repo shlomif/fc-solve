@@ -544,12 +544,121 @@ int main_tests()
 
         free(s);
     }
+
+/* Make sure encode_composite avoids permutations of empty columns
+ * and completely-non-original states.
+ */
+    {
+        fc_solve_delta_stater_t * delta;
+        fcs_state_keyval_pair_t init_state, derived_state;
+
+#ifdef INDIRECT_STACK_STATES
+        ind_buf_t indirect_stacks_buffer, derived_indirect_stacks_buffer;
+#endif
+
+        fc_solve_initial_user_state_to_c(
+("Foundations: H-K C-K D-J S-Q\n"
+ "Freecells:  KD\n"
+ "\n"
+ "\n"
+ "KS QD\n"
+ "\n"
+ "\n"
+ "\n"
+ "\n"
+ "\n"
+ ),
+                &init_state,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , indirect_stacks_buffer
+#endif
+        );
+
+        delta = fc_solve_delta_stater_alloc(
+                &init_state.s,
+                STACKS_NUM,
+                FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+                );
+
+        fc_solve_initial_user_state_to_c(
+ ("Foundations: H-K C-K D-J S-Q\n"
+ "Freecells:  KD\n"
+ "\n"
+ "\n"
+ "\n"
+ "\n"
+ "KS\n"
+ "\n"
+ "\n"
+ "\n"
+ ),
+                &derived_state,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , derived_indirect_stacks_buffer
+#endif
+        );
+
+        fcs_uchar_t first_enc_state[24];
+        memset(first_enc_state, '\0', sizeof(first_enc_state));
+        fc_solve_delta_stater_encode_into_buffer(
+            delta,
+            &derived_state,
+            first_enc_state
+            );
+
+        fc_solve_initial_user_state_to_c(
+ ("Foundations: H-K C-K D-J S-Q\n"
+ "Freecells:  KD\n"
+ "\n"
+ "\n"
+ "\n"
+ "\n"
+ "\n"
+ "\n"
+ "\n"
+ "KS\n"
+ ),
+                &derived_state,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , derived_indirect_stacks_buffer
+#endif
+        );
+
+        fcs_uchar_t second_enc_state[24];
+        memset(second_enc_state, '\0', sizeof(second_enc_state));
+        fc_solve_delta_stater_encode_into_buffer(
+            delta,
+            &derived_state,
+            second_enc_state
+            );
+
+        /* TEST
+         * */
+        ok (
+            (!memcmp(first_enc_state, second_enc_state, sizeof(first_enc_state))),
+            "Make sure encode_composite avoids permutations of empty columns and completely-non-original states."
+         );
+
+        fc_solve_delta_stater_free (delta);
+    }
     return 0;
 }
 
 int main(int argc, char * argv[])
 {
-    plan_tests(23);
+    plan_tests(24);
     main_tests();
     return exit_status();
 }
