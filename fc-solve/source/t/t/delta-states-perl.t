@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -382,6 +382,78 @@ EOF
         $first_state,
         $second_state,
         "Make sure encode_composite avoids permutations of empty columns and completely-non-original states.",
+    );
+}
+
+# Make sure encode_composite avoids permutations of empty columns
+# and completely-non-original states.
+#
+# Another edge-case.
+{
+    my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
+        {
+            init_state_str => <<'EOF',
+Foundations: H-K C-K D-J S-Q 
+Freecells:  KD    
+: 
+: 
+: 
+: KS QD
+: 
+: 
+: 
+: 
+EOF
+        },
+    );
+
+    $delta->set_derived(
+        {
+            state_str => <<'EOF',
+Foundations: H-K C-K D-J S-Q 
+Freecells:  QD  KD
+: KS
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+EOF
+        },
+    );
+
+    my $calc_enc_state = sub {
+        return join '', unpack("H*", $delta->encode_composite());
+    };
+
+    my $first_state = $calc_enc_state->();
+
+    $delta->set_derived(
+        {
+            state_str => <<'EOF',
+Foundations: H-K C-K D-J S-Q 
+Freecells:  QD  KD
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: KS
+EOF
+        }
+    );
+
+    my $second_state = $calc_enc_state->();
+
+    # TEST
+    is (
+        $first_state,
+        $second_state,
+        "encode_composite avoids permutations - #2",
     );
 }
 
