@@ -18,6 +18,7 @@ typedef struct
 {
     char * state_as_string;
     SV * moves;
+    long num_new_positions;
 } FccStartPoint;
 
 SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
@@ -25,6 +26,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
     FccStartPoint* s;
     int count, i;
     fcs_FCC_start_point_result_t * fcc_start_points, * iter;
+    long num_new_positions;
 
     STRLEN count_start_moves = SvLEN(moves_prefix);
     
@@ -32,7 +34,8 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         init_state_s,
         (int)count_start_moves,
         SvPVbyte(moves_prefix, count_start_moves),
-        &fcc_start_points
+        &fcc_start_points,
+        &num_new_positions
     );
     results = (AV *)sv_2mortal((SV *)newAV());
     
@@ -47,6 +50,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         free(iter->state_as_string);
         s->moves = newSVpvn(iter->moves, iter->count_moves);
         free(iter->moves);
+        s->num_new_positions = num_new_positions;
 
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
@@ -64,6 +68,10 @@ SV* get_moves(SV* obj) {
     SV * ret = newSV(0);
     SvSetSV(ret, (((FccStartPoint*)SvIV(SvRV(obj)))->moves));
     return ret;
+}
+
+long get_num_new_positions(SV* obj) {
+    return ((FccStartPoint*)SvIV(SvRV(obj)))->num_new_positions;
 }
 
 void DESTROY(SV* obj) {
@@ -132,6 +140,13 @@ sub sanity_check
         scalar(@$fcc_start_points_list),
         'The states are unique',
     );
+}
+
+sub get_num_new_positions 
+{
+    my $self = shift;
+
+    return $self->states->[0]->get_num_new_positions;
 }
 
 package main;
