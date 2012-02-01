@@ -172,3 +172,32 @@ because the columns can be rearranged.
 * pi-make-microsoft-freecell-board 24 | ./fc-solve -p -t -s -i -sam -mi 50 -l eo -ni -l eo | grep Iteration | less 
 ** Does not limit the iterations for the second instance.
 
+* Fix the bug in commit No. 4345 also in the C code. Apply the patch and test
+the FCC derived states list.
+    - Done, but found that these two states are not equivalent whether in
+    Perl or in C - another bug.
+
+Foundations: H-K C-K D-J S-Q 
+Freecells:  QD  KD
+: KS
+: 
+: 
+: 
+: 
+: 
+: 
+:
+
+and:
+
+Foundations: H-K C-K D-J S-Q 
+Freecells:  QD  KD
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: KS
+

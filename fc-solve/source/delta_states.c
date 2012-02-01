@@ -297,7 +297,7 @@ static void fc_solve_delta_stater_encode_composite(
 
     {
         int non_orig_idx = 0;
-        int empty_idx = 0;
+        int empty_idx = num_columns-1;
 
         /* 
          * Move the empty columns to the front, but only within the
@@ -320,7 +320,7 @@ static void fc_solve_delta_stater_encode_composite(
                 break;
             }
 
-            for (; empty_idx < num_columns ; empty_idx++)
+            for (; empty_idx >= 0 ; empty_idx--)
             {
                 if (cols[empty_idx].type == COL_TYPE_EMPTY)
                 {
@@ -328,7 +328,7 @@ static void fc_solve_delta_stater_encode_composite(
                 }
             }
 
-            if (empty_idx == num_columns)
+            if ((empty_idx < 0) || (empty_idx < non_orig_idx))
             {
                 break;
             }
@@ -338,7 +338,7 @@ static void fc_solve_delta_stater_encode_composite(
             cols_indexes[empty_idx] = swap_int;
 
             non_orig_idx++;
-            empty_idx++;
+            empty_idx--;
         }
     }
 
