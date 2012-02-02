@@ -13,17 +13,21 @@ use File::Path;
 use Getopt::Long;
 use Env::Path;
 
+# Whether to use prove instead of runprove.
+my $use_prove = 0;
+
 sub run_tests
 {
     my $tests = shift;
 
-    exec("runprove", @$tests);
+    exec(($use_prove ? 'prove' : 'runprove'), @$tests);
 }
 
 my $tests_glob = "*.{exe,py,t}";
 
 GetOptions(
     '--glob=s' => \$tests_glob,
+    '--prove!' => \$use_prove,
 ) or die "--glob='tests_glob'";
 
 {
