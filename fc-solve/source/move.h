@@ -42,6 +42,7 @@ extern "C" {
 
 #include "state.h"
 #include "internal_move_struct.h"
+#include "indirect_buffer.h"
 
 #include "inline.h"
 #include "bool.h"
@@ -147,10 +148,11 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_state_extra_info_t info;
 #endif
 
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 #ifdef INDIRECT_STACK_STATES
-    char buffer[MAX_NUM_STACKS << 7];
     int i;
 #endif
+
 #ifdef FCS_WITHOUT_LOCS_FIELDS
 #define FCS_S_FC_LOCS(s) (locs->fc_locs)
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
@@ -170,7 +172,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #ifdef INDIRECT_STACK_STATES
     for (i=0 ; i < stacks_num ; i++)
     {
-        fcs_copy_stack(dynamic_state, i, buffer);
+        fcs_copy_stack(dynamic_state, i, indirect_stacks_buffer);
     }
 #endif
 

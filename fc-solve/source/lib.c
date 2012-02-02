@@ -41,6 +41,7 @@
 
 #include "unused.h"
 #include "bool.h"
+#include "indirect_buffer.h"
 
 typedef struct {
     int num_times;
@@ -142,9 +143,7 @@ typedef struct
 
     fc_solve_soft_thread_t * soft_thread;
 
-#ifdef INDIRECT_STACK_STATES
-    char indirect_stacks_buffer[MAX_NUM_STACKS << 7];
-#endif
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
     char * state_string_copy;
 
 #ifndef FCS_FREECELL_ONLY
