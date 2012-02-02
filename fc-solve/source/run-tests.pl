@@ -15,12 +15,23 @@ use Env::Path;
 
 # Whether to use prove instead of runprove.
 my $use_prove = 0;
+my $num_jobs = $ENV{TEST_JOBS};
+
+sub _is_parallized
+{
+    return ($use_prove && $num_jobs);
+}
+
+sub _calc_prove
+{
+    return ['prove', (defined($num_jobs) ? sprintf("-j%d", $num_jobs) : ())];
+}
 
 sub run_tests
 {
     my $tests = shift;
 
-    exec(($use_prove ? 'prove' : 'runprove'), @$tests);
+    exec(($use_prove ? @{_calc_prove()} : 'runprove'), @$tests);
 }
 
 my $tests_glob = "*.{exe,py,t}";
@@ -28,6 +39,7 @@ my $tests_glob = "*.{exe,py,t}";
 GetOptions(
     '--glob=s' => \$tests_glob,
     '--prove!' => \$use_prove,
+    '--jobs|j=n' => \$num_jobs,
 ) or die "--glob='tests_glob'";
 
 {
@@ -112,7 +124,11 @@ GetOptions(
     my @tests =
         sort
         { 
-            (($a =~ /valgrind/) <=> ($b =~ /valgrind/))
+            (
+                (($a =~ /valgrind/) <=> ($b =~ /valgrind/))
+                    *
+                (_is_parallized() ? -1 : 1)
+            )
                 ||
             ($a cmp $b)
         }
