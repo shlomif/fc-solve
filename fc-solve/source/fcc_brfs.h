@@ -185,6 +185,11 @@ static void perform_FCC_brfs(
 
     *out_num_new_positions = num_new_positions = 0;
 
+    fc_solve_kaz_tree_alloc_insert(
+        traversed_states,
+        &(new_item->key)
+    );
+
     /* Extract an item from the queue. */
     while ((extracted_item = queue_head))
     {

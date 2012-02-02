@@ -83,6 +83,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 #endif
             );
 
+    memset(&(enc_state), '\0', sizeof(enc_state));
+
     fc_solve_delta_stater_encode_into_buffer(
         delta,
         &(init_state),

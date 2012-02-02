@@ -151,7 +151,7 @@ sub get_num_new_positions
 
 package main;
 
-use Test::More tests => 7;
+use Test::More tests => 10;
 
 use List::MoreUtils qw(any uniq none);
 
@@ -248,5 +248,46 @@ EOF
             }
         ),
         "No intermediate states - moves",
+    );
+}
+
+{
+    # MS Freecell Board No. 24 - middle board.
+    my $obj = FccStartPointsList->new(
+        {
+            start => <<'EOF',
+Foundations: H-K C-K D-J S-Q 
+Freecells:  KD    
+: 
+: 
+: 
+: KS QD
+: 
+: 
+: 
+: 
+EOF
+        }
+    );
+
+    # TEST*$sanity_check
+    $obj->sanity_check();
+
+    # TEST
+    is (
+        $obj->get_num_new_positions(),
+        (
+            # count when QD is above KS.
+            1 + # Original
+            1 + # KD on stack.
+            # Now all cards must be on separate cells.
+            # 2 Cards are in the freecell - one on a stack.
+            3 +
+            # 3 cards are on the stacks separately.
+            1 +
+            # 1 Card is in the freecell
+            3
+        ),
+        "Checking get_num_new_positions for close-to-final state.",
     );
 }
