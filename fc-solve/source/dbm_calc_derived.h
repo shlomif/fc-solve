@@ -55,9 +55,7 @@ struct fcs_derived_state_struct
     fcs_encoded_state_buffer_t parent_and_move;
     struct fcs_derived_state_struct * next;
     fcs_bool_t is_reversible_move;
-#ifdef INDIRECT_STACK_STATES
-    dll_ind_buf_t indirect_stacks_buffer;
-#endif
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 };
 
 typedef struct fcs_derived_state_struct fcs_derived_state_t;

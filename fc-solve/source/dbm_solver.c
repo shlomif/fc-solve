@@ -407,9 +407,7 @@ void * instance_run_solver_thread(void * void_arg)
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
-#ifdef INDIRECT_STACK_STATES
-    dll_ind_buf_t indirect_stacks_buffer;
-#endif
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     arg = (thread_arg_t *)void_arg;
     thread = arg->thread;
@@ -598,9 +596,7 @@ int main(int argc, char * argv[])
     char user_state[USER_STATE_SIZE];
     fc_solve_delta_stater_t * delta;
     fcs_state_keyval_pair_t init_state;
-#ifdef INDIRECT_STACK_STATES
-    dll_ind_buf_t init_indirect_stacks_buffer;
-#endif
+    DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
 
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
@@ -798,9 +794,7 @@ int main(int argc, char * argv[])
         unsigned char move;
         char * state_as_str;
         char move_buffer[500];
-#ifdef INDIRECT_STACK_STATES
-        dll_ind_buf_t indirect_stacks_buffer;
-#endif
+        DECLARE_IND_BUF_T(indirect_stacks_buffer)
 #ifdef FCS_WITHOUT_LOCS_FIELDS
         fcs_state_locs_struct_t locs;
 #endif

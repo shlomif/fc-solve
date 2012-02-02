@@ -133,9 +133,7 @@ static void perform_FCC_brfs(
     fcs_encoded_state_buffer_t running_min;
     long num_new_positions;
 
-#ifdef INDIRECT_STACK_STATES
-    dll_ind_buf_t indirect_stacks_buffer;
-#endif
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     /* Some sanity checks. */
 #ifndef NDEBUG

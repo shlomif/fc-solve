@@ -57,9 +57,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     int i;
 #endif
 
-#ifdef INDIRECT_STACK_STATES
-    dll_ind_buf_t indirect_stacks_buffer;
-#endif
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     init_state_s = prepare_state_str(init_state_str_proto);
 

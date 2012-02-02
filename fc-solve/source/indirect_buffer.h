@@ -32,6 +32,11 @@
 
 #ifdef INDIRECT_STACK_STATES
 typedef char dll_ind_buf_t[MAX_NUM_STACKS << 7];
+#define DECLARE_IND_BUF_T(ident) dll_ind_buf_t ident;
+#define IND_BUF_T_PARAM(ident) , dll_ind_buf_t ident
+#else
+#define DECLARE_IND_BUF_T(ident)
+#define IND_BUF_T_PARAM(ident)
 #endif
 
 #endif

@@ -524,9 +524,7 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
         fc_solve_delta_stater_t * delta_stater,
         const fcs_uchar_t * const enc_state,
         fcs_state_keyval_pair_t * ret
-#ifdef INDIRECT_STACK_STATES
-        , dll_ind_buf_t indirect_stacks_buffer
-#endif
+        IND_BUF_T_PARAM(indirect_stacks_buffer)
         )
 {
     fc_solve_bit_reader_t bit_r;
@@ -615,10 +613,9 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     int i;
 #endif
 
-#ifdef INDIRECT_STACK_STATES
-    dll_ind_buf_t indirect_stacks_buffer, derived_stacks_buffer, 
-                  new_derived_indirect_stacks_buffer;
-#endif
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+    DECLARE_IND_BUF_T(derived_stacks_buffer)
+    DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
 
     init_state_s = prepare_state_str(init_state_str_proto);
     derived_state_s = prepare_state_str(derived_state_str_proto);
