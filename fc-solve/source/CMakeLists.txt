@@ -507,10 +507,14 @@ FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 
 IF (FCS_ENABLE_DBM_SOLVER)
     SET (DBM_BACKEND_MODULES )
-    SET (DBM_LIBS "pthread" "pthread_rwlock_fcfs")
+    SET (DBM_LIBS "pthread")
     # LINK_DIRECTORIES("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads")
     # INCLUDE_DIRECTORIES("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads")
-    ADD_DEFINITIONS("-DFCS_DBM_USE_RWLOCK=1")
+
+    IF (FCS_DBM_USE_RWLOCK)
+        LIST(APPEND DBM_LIBS "pthread_rwlock_fcfs")
+        ADD_DEFINITIONS("-DFCS_DBM_USE_RWLOCK=1")
+    ENDIF (FCS_DBM_USE_RWLOCK)
 
     IF (FCS_DBM_BACKEND STREQUAL "bdb")
         LIST(APPEND DBM_BACKEND_MODULES "dbm_bdb.c" "kaz_tree.c")
