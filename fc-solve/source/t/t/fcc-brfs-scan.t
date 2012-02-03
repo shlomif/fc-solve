@@ -226,7 +226,7 @@ sub get_num_new_positions
 
 package main;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use List::MoreUtils qw(any uniq none);
 
@@ -438,5 +438,60 @@ EOF
             }
         )),
         'Testing that it returns FALSE if state is in the cache.',
+    );
+}
+
+{
+    my $init_state_s = <<'EOF';
+4C 2C 9C 8C QS 4S 2H 
+5H QH 3C AC 3H 4H QD 
+QC 9S 6H 9H 3S KS 3D 
+5D 2S JC 5C JH 6D AS 
+2D KD TH TC TD 8D 
+7H JS KH TS KC 7C 
+AH 5S 6S AD 8H JD 
+7S 6C 7D 4D 8S 9D 
+EOF
+
+    my $start_state_s = <<'EOF';
+Foundations: H-Q C-8 D-5 S-Q 
+Freecells:  KD  7D
+: KH QC JD TC 9D
+: KC
+: 
+: KS QD JC TD 9C 8D
+: 
+: 
+: 
+: 6D
+EOF
+
+    # The minimal state in the FCC as determined by gdb.
+    my $min_state_s = <<'EOF';
+Foundations: H-Q C-8 D-5 S-Q 
+Freecells:  6D  KH
+: 
+: 
+: 
+: 
+: 7D
+: KC
+: KD QC JD TC 9D
+: KS QD JC TD 9C 8D
+EOF
+
+    # TEST
+    ok (
+        (!FccIsNew::is_fcc_new_named_args(
+            {
+                init_state => $init_state_s,
+                start_state => $start_state_s,
+                min_states => [$min_state_s],
+                # No states in the cache, because we are not interested in
+                # testing it.
+                states_in_cache => [],
+            }
+        )),
+        'Min state present returns FALSE.',
     );
 }
