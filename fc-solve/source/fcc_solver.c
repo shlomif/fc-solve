@@ -261,179 +261,21 @@ typedef pthread_mutex_t fcs_lock_t;
 
 typedef struct {
     fcs_fcc_solver_state solver_state;
-    fcs_lock_t storage_lock;
-#ifndef FCS_DBM_WITHOUT_CACHES
-    fcs_pre_cache_t pre_cache;
-    fcs_lru_cache_t cache;
-#endif
-    fcs_dbm_store_t store;
-
-    long pre_cache_max_count;
-    /* The queue */
-    
-    fcs_lock_t queue_lock;
     long count_num_processed;
-    fcs_bool_t queue_solution_was_found;
-    fcs_encoded_state_buffer_t queue_solution;
-    fcs_compact_allocator_t queue_allocator;
-    int queue_num_extracted_and_processed;
-    /* TODO : offload the queue to the hard disk. */
-    fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
-    long num_states_in_collection;
 } fcs_dbm_solver_instance_t;
 
 static void GCC_INLINE instance_init(
-    fcs_dbm_solver_instance_t * instance,
-    long pre_cache_max_count,
-    long caches_delta,
-    const char * dbm_store_path
+    fcs_dbm_solver_instance_t * instance
 )
 {
-    FCS_INIT_LOCK(instance->queue_lock);
-    FCS_INIT_LOCK(instance->storage_lock);
-
-    fc_solve_compact_allocator_init(
-        &(instance->queue_allocator)
-    );
-    instance->queue_solution_was_found = FALSE;
-    instance->queue_num_extracted_and_processed = 0;
-    instance->num_states_in_collection = 0;
     instance->count_num_processed = 0;
-    instance->queue_head =
-        instance->queue_tail =
-        instance->queue_recycle_bin =
-        NULL;
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-    pre_cache_init (&(instance->pre_cache));
-    instance->pre_cache_max_count = pre_cache_max_count;
-    cache_init (&(instance->cache), pre_cache_max_count+caches_delta);
-#endif
-    fc_solve_dbm_store_init(&(instance->store), dbm_store_path);
 }
 
 static void GCC_INLINE instance_destroy(
     fcs_dbm_solver_instance_t * instance
     )
 {
-    /* TODO : store what's left on the queue on the hard-disk. */
-    fc_solve_compact_allocator_finish(&(instance->queue_allocator));
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-    pre_cache_offload_and_destroy(
-        &(instance->pre_cache),
-        instance->store,
-        &(instance->cache)
-    );
-
-    cache_destroy(&(instance->cache));
-#endif
-
-    fc_solve_dbm_store_destroy(instance->store);
-
-    FCS_DESTROY_LOCK(instance->queue_lock);
-    FCS_DESTROY_LOCK(instance->storage_lock);
-}
-
-static void GCC_INLINE instance_check_key(
-    fcs_dbm_solver_instance_t * instance,
-    fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent_and_move
-)
-{
-#ifndef FCS_DBM_WITHOUT_CACHES
-    fcs_lru_cache_t * cache;
-    fcs_pre_cache_t * pre_cache;
-
-    cache = &(instance->cache);
-    pre_cache = &(instance->pre_cache);
-
-    if (cache_does_key_exist(cache, key))
-    {
-        return;
-    }
-    else if (pre_cache_does_key_exist(pre_cache, key))
-    {
-        return;
-    }
-    else if (fc_solve_dbm_store_does_key_exist(instance->store, key->s))
-    {
-        cache_insert(cache, key);
-        return;
-    }
-    else
-#else
-    if (fc_solve_dbm_store_insert_key_value(instance->store, key, parent_and_move))
-#endif
-    {
-        fcs_dbm_queue_item_t * new_item;
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-        pre_cache_insert(pre_cache, key, parent_and_move);
-#endif
-
-        /* Now insert it into the queue. */
-
-        FCS_LOCK(instance->queue_lock);
-
-        instance->num_states_in_collection++;
-        
-        if (instance->queue_recycle_bin)
-        {
-            instance->queue_recycle_bin = 
-            (new_item = instance->queue_recycle_bin)->next;
-        }
-        else
-        {
-            new_item =
-                (fcs_dbm_queue_item_t *)
-                fcs_compact_alloc_ptr(
-                    &(instance->queue_allocator),
-                    sizeof(*new_item)
-                );
-        }
-
-        new_item->key = (*key);
-        new_item->next = NULL;
-
-        if (instance->queue_tail)
-        {
-            instance->queue_tail = instance->queue_tail->next = new_item;
-        }
-        else
-        {
-            instance->queue_head = instance->queue_tail = new_item;
-        }
-        FCS_UNLOCK(instance->queue_lock);
-    }
-}
-
-static void GCC_INLINE instance_check_multiple_keys(
-    fcs_dbm_solver_instance_t * instance,
-    fcs_derived_state_t * list
-)
-{
-    /* Small optimization in case the list is empty. */
-    if (!list)
-    {
-        return;
-    }
-    FCS_LOCK(instance->storage_lock);
-    for (; list ; list = list->next)
-    {
-        instance_check_key(instance, &(list->key), &(list->parent_and_move));
-    }
-#ifndef FCS_DBM_WITHOUT_CACHES
-    if (instance->pre_cache.count_elements >= instance->pre_cache_max_count)
-    {
-        pre_cache_offload_and_reset(
-            &(instance->pre_cache),
-            instance->store,
-            &(instance->cache)
-        );
-    }
-#endif
-    FCS_UNLOCK(instance->storage_lock);
+    return;
 }
 
 typedef struct {
@@ -564,6 +406,8 @@ int instance_run_solver(
     fcc->count_moves_to_min_by_absolute_depth = 0;
     fcc->moves_to_min_by_absolute_depth = NULL;
     fcc->next = NULL;
+
+    instance->count_num_processed++;
 
     ret = FCC_IMPOSSIBLE;
     ret_moves = NULL;
@@ -986,23 +830,22 @@ int main(int argc, char * argv[])
 {
     /* Temporarily #if'ed away until we finish working on instance_run_solver
      * */
-#if 0
     fcs_dbm_solver_instance_t instance;
     long pre_cache_max_count;
     long caches_delta;
-    const char * dbm_store_path;
     int num_threads;
     int arg;
     const char * filename;
     FILE * fh;
     char user_state[USER_STATE_SIZE];
-    fc_solve_delta_stater_t * delta;
     fcs_state_keyval_pair_t init_state;
+    int ret_count_moves;
+    fcs_fcc_move_t * ret_moves;
+    int ret_code;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
 
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
-    dbm_store_path = "./fc_solve_dbm_store";
     num_threads = 2;
 
     for (arg=1;arg < argc; arg++)
@@ -1052,16 +895,6 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
         }
-        else if (!strcmp(argv[arg], "--dbm-store-path"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--dbm-store-path came without an argument.\n");
-                exit(-1);
-            }
-            dbm_store_path = argv[arg];
-        }
         else
         {
             break;
@@ -1081,7 +914,7 @@ int main(int argc, char * argv[])
 
     filename = argv[arg];
 
-    instance_init(&instance, pre_cache_max_count, caches_delta, dbm_store_path);
+    instance_init(&instance);
     fh = fopen(filename, "r");
     if (fh == NULL)
     {
@@ -1103,198 +936,33 @@ int main(int argc, char * argv[])
 #endif
     );
 
-    horne_prune(&init_state);
+    horne_prune(&init_state, NULL, NULL);
 
-    delta = fc_solve_delta_stater_alloc(
-            &init_state.s,
-            STACKS_NUM,
-            FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
+    ret_code = instance_run_solver(
+        &instance,
+        caches_delta,
+        &init_state,
+        &ret_count_moves,
+        &ret_moves
     );
 
+    if (ret_code == FCC_SOLVED)
     {
-        fcs_dbm_queue_item_t * first_item;
-        fcs_encoded_state_buffer_t parent_and_move;
-
-        first_item =
-            (fcs_dbm_queue_item_t *)
-                fcs_compact_alloc_ptr(
-                    &(instance.queue_allocator),
-                    sizeof(*first_item)
-                );
-
-        first_item->next = NULL;
-        fcs_init_encoded_state(&(first_item->key));
-        fc_solve_delta_stater_encode_into_buffer(
-            delta,
-            &(init_state),
-            first_item->key.s
-        );
-
-        /* The NULL parent and move for indicating this is the initial
-         * state. */
-        fcs_init_encoded_state(&(parent_and_move));
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-        pre_cache_insert(&(instance.pre_cache), &(first_item->key), &(parent_and_move));
-#else
-        fc_solve_dbm_store_insert_key_value(instance.store, &(first_item->key), &(parent_and_move));
-#endif
-        instance.num_states_in_collection++;
-        instance.queue_head = instance.queue_tail = first_item;
-    }
-    {
-        int i, check;
-        main_thread_item_t * threads;
-
-        threads = malloc(sizeof(threads[0]) * num_threads);
-
-        for (i=0; i < num_threads ; i++)
-        {
-            threads[i].thread.instance = &(instance);
-            threads[i].thread.delta_stater =
-                fc_solve_delta_stater_alloc(
-                    &(init_state.s),
-                    STACKS_NUM,
-                    FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-                    , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
-                );
-            threads[i].arg.thread = &(threads[i].thread);
-            check = pthread_create(
-                &(threads[i].id),
-                NULL,
-                instance_run_solver_thread,
-                &(threads[i].arg)
-            );
-
-            if (check)
-            {
-                fprintf(stderr,
-                        "Worker Thread No. %d Initialization failed!\n",
-                        i
-                       );
-                exit(-1);
-            }
-        }
-
-        for (i=0; i < num_threads ; i++)
-        {
-            pthread_join(threads[i].id, NULL);
-            fc_solve_delta_stater_free(threads[i].thread.delta_stater);
-        }
-        free(threads);
-    }
-
-    if (instance.queue_solution_was_found)
-    {
-        fcs_encoded_state_buffer_t * trace;
-        fcs_encoded_state_buffer_t key;
-        int trace_num, trace_max_num;
         int i;
-        fcs_state_keyval_pair_t state;
-        unsigned char move;
-        char * state_as_str;
         char move_buffer[500];
-        DECLARE_IND_BUF_T(indirect_stacks_buffer)
 #ifdef FCS_WITHOUT_LOCS_FIELDS
         fcs_state_locs_struct_t locs;
 #endif
         printf ("%s\n", "Success!");
         /* Now trace the solution */
-#define GROW_BY 100
-        trace_num = 0;
-        trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
-        trace[trace_num] = instance.queue_solution;
-
-        while (trace[trace_num].s[0])
+        for (i = 0 ; i < ret_count_moves ; i++)
         {
-            /* Omit the move. */
-            key = trace[trace_num];
-            key.s[key.s[0]+1] = '\0';
-
-            if ((++trace_num) == trace_max_num)
-            {
-                trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
-            }
-#ifndef FCS_DBM_WITHOUT_CACHES
-            if (! pre_cache_lookup_parent_and_move(
-                &(instance.pre_cache),
-                &key,
-                &(trace[trace_num])
-                ))
-            {
-#endif
-                assert(fc_solve_dbm_store_lookup_parent_and_move(
-                    instance.store,
-                    key.s,
-                    trace[trace_num].s
-                    ));
-#ifndef FCS_DBM_WITHOUT_CACHES
-            }
-#endif
+            printf("==\n%s\n",
+                   move_to_string(ret_moves[i], move_buffer)
+           );
         }
-#ifdef FCS_WITHOUT_LOCS_FIELDS
-        for (i=0 ; i < MAX_NUM_STACKS ; i++)
-        {
-            locs.stack_locs[i] = i;
-        }
-        for (i=0 ; i < MAX_NUM_FREECELLS ; i++)
-        {
-            locs.fc_locs[i] = i;
-        }
-#endif
-        for (i = trace_num-1 ; i >= 0; i--)
-        {
-            fc_solve_state_init(&state, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
-#endif
-            );
-
-            fc_solve_delta_stater_decode_into_state(
-                delta,
-                trace[i].s,
-                &(state),
-                indirect_stacks_buffer
-            );
-            if (i > 0)
-            {
-                move = trace[i].s[1+trace[i].s[0]];
-            }
-
-            state_as_str =
-                fc_solve_state_as_string(
-#ifdef FCS_RCS_STATES
-                        &(state.s),
-                        &(state.info),
-#else
-                        &state,
-#endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
-                        &locs,
-#endif
-                        FREECELLS_NUM,
-                        STACKS_NUM,
-                        DECKS_NUM,
-                        1,
-                        0,
-                        1
-                );
-
-            printf("--------\n%s\n==\n%s\n",
-                    state_as_str,
-                    (i > 0 )
-                        ? move_to_string(move, move_buffer)
-                        : "END"
-                  );
-
-            free(state_as_str);
-        }
-        free (trace);
+        printf ("==\nEND\n");
+        free(ret_moves);
     }
     else
     {
@@ -1302,7 +970,6 @@ int main(int argc, char * argv[])
     }
     
     instance_destroy(&instance);
-#endif
 
     return 0;
 }
