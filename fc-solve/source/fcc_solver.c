@@ -325,6 +325,9 @@ int instance_run_solver(
             next_start_points_list.recycle_bin = NULL;
             fc_solve_compact_allocator_init(&(next_start_points_list.allocator));
 
+            printf ("Before perform_FCC_brfs\n");
+            fflush(stdout);
+
             /* Now scan the new fcc */
             perform_FCC_brfs(
                 init_state,
@@ -339,8 +342,15 @@ int instance_run_solver(
                 cache,
                 &num_new_positions
             );
+            printf ("After perform_FCC_brfs\n");
+            fflush(stdout);
 
-            instance->count_num_processed += num_new_positions;
+            if (num_new_positions)
+            {
+                instance->count_num_processed += num_new_positions;
+                printf("Reached %li positions\n", instance->count_num_processed);
+            }
+
             if (is_fcc_new)
             {
                 fcs_encoded_state_buffer_t * min_by_sorting_copy_ptr;

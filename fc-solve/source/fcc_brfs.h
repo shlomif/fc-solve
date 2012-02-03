@@ -235,6 +235,31 @@ static void perform_FCC_brfs(
             indirect_stacks_buffer
         );
 
+#if 0
+        char * state_as_str =
+                fc_solve_state_as_string(
+#ifdef FCS_RCS_STATES
+                        &(state.s),
+                        &(state.info),
+#else
+                        &state,
+#endif
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+                        &locs,
+#endif
+                        FREECELLS_NUM,
+                        STACKS_NUM,
+                        DECKS_NUM,
+                        1,
+                        0,
+                        1
+                );
+
+        printf("Checking = <<<\n%s\n>>>\n", state_as_str);
+        
+        free(state_as_str);
+#endif
+
         instance_solver_thread_calc_derived_states(
             &state,
             &(extracted_item->key),
