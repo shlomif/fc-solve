@@ -157,6 +157,13 @@ EOF
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
+sub is_fcc_new_named_args
+{
+    my ($args) = @_;
+
+    return is_fcc_new(@{$args}{qw(init_state start_state min_states states_in_cache)});
+}
+
 package FccStartPointsList;
 
 use base 'Games::Solitaire::FC_Solve::SingleMoveSearch';
@@ -219,7 +226,7 @@ sub get_num_new_positions
 
 package main;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 use List::MoreUtils qw(any uniq none);
 
@@ -394,5 +401,18 @@ EOF
     ok (
         FccIsNew::is_fcc_new($init_state_s, $start_state_s, \@min_states, \@states_in_cache),
         'State with empty cache and min_states is new',
+    );
+
+    # TEST
+    ok (
+        FccIsNew::is_fcc_new_named_args(
+            {
+                init_state => $init_state_s,
+                start_state => $start_state_s,
+                min_states => \@min_states,
+                states_in_cache => \@states_in_cache,
+            }
+        ),
+        'Meta-test for FccIsNew::is_fcc_named_args()',
     );
 }
