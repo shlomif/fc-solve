@@ -226,7 +226,7 @@ sub get_num_new_positions
 
 package main;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use List::MoreUtils qw(any uniq none);
 
@@ -414,5 +414,29 @@ EOF
             }
         ),
         'Meta-test for FccIsNew::is_fcc_named_args()',
+    );
+
+    # TEST
+    ok (
+        (!FccIsNew::is_fcc_new_named_args(
+            {
+                init_state => $init_state_s,
+                start_state => $start_state_s,
+                min_states => [],
+                states_in_cache => [<<'EOF'],
+Foundations: H-K C-K D-J S-Q 
+Freecells:  KD    
+: 
+: 
+: QD
+: KS
+: 
+: 
+: 
+: 
+EOF
+            }
+        )),
+        'Testing that it returns FALSE if state is in the cache.',
     );
 }

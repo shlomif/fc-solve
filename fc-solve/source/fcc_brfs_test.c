@@ -308,6 +308,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
                     &(temp_allocator),
                     sizeof (*min_enc_state)
                     );
+            memset(min_enc_state, '\0', sizeof(*min_enc_state));
 
             fc_solve_delta_stater_encode_into_buffer(
                 delta,
@@ -357,6 +358,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
                     &(temp_allocator),
                     sizeof (*min_enc_state)
                     );
+            memset(min_enc_state, '\0', sizeof(*min_enc_state));
 
             fc_solve_delta_stater_encode_into_buffer(
                 delta,
