@@ -234,9 +234,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         fcs_bool_t * out_is_fcc_new
         )
 {
-    char * init_state_s, * start_state_s;
+    char * init_state_s;
     fcs_state_keyval_pair_t init_state;
-    fcs_state_keyval_pair_t start_state;
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
     fcs_encoded_state_buffer_t start_enc_state;
@@ -246,10 +245,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 #endif
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-    DECLARE_IND_BUF_T(start_indirect_stacks_buffer)
 
     init_state_s = prepare_state_str(init_state_str_proto);
-    start_state_s = prepare_state_str(start_state_str_proto);
 
     fc_solve_initial_user_state_to_c(
             init_state_s,
@@ -259,17 +256,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
             DECKS_NUM
 #ifdef INDIRECT_STACK_STATES
             , indirect_stacks_buffer
-#endif
-            );
-
-    fc_solve_initial_user_state_to_c(
-            start_state_s,
-            &start_state,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , start_indirect_stacks_buffer
 #endif
             );
 
@@ -283,7 +269,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
             );
 
     memset(&(enc_state), '\0', sizeof(enc_state));
-    memset(&(start_enc_state), '\0', sizeof(start_enc_state));
 
     fc_solve_delta_stater_encode_into_buffer(
         delta,
@@ -291,10 +276,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         enc_state.s
     );
 
-    fc_solve_delta_stater_encode_into_buffer(
+    fc_solve_state_string_to_enc(
         delta,
-        &(start_state),
-        start_enc_state.s
+        start_state_str_proto,
+        &(start_enc_state)
     );
 
     fcs_FCC_start_points_list_t start_points_list;
@@ -382,7 +367,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         &num_new_positions_temp
     );
 
-    free(start_state_s);
     free(init_state_s);
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
     fc_solve_compact_allocator_finish(&(temp_allocator));
