@@ -292,10 +292,25 @@ static void perform_FCC_brfs(
             {
                 int count_moves;
                 fcs_fcc_move_t * moves, * end_moves;
+                fcs_encoded_state_buffer_t * key_to_add;
+
+
+                if (is_reversible)
+                {
+                    key_to_add = &(new_item->key);
+                }
+                {
+                    key_to_add = 
+                        fcs_compact_alloc_ptr(
+                            &(right_tree->dict_allocator),
+                            sizeof(*key_to_add)
+                        );
+                    *key_to_add = new_item->key;
+                }
 
                 fc_solve_kaz_tree_alloc_insert(
                     right_tree,
-                    &(new_item->key)
+                    key_to_add
                 );
 
                 count_moves = (extracted_item->count_moves + 1);

@@ -232,8 +232,8 @@ static GCC_INLINE int horne_prune(
     
     if (count_moves_so_far && count_moves)
     {
-        moves = realloc(moves, sizeof(moves[0]) * ((*count_moves) + count_moves_so_far));
-        memcpy(moves+(*count_moves), additional_moves, sizeof(additional_moves[0]) * count_moves_so_far);
+        (*moves) = realloc((*moves), sizeof((*moves)[0]) * ((*count_moves) + count_moves_so_far));
+        memcpy((*moves)+(*count_moves), additional_moves, sizeof(additional_moves[0]) * count_moves_so_far);
         (*count_moves) += count_moves_so_far;
     }
     
