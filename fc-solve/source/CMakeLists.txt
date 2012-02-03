@@ -533,8 +533,7 @@ IF (FCS_ENABLE_DBM_SOLVER)
         ${DBM_BACKEND_MODULES}
     )
     ADD_EXECUTABLE(fcc_fc_solver
-        alloc.c app_str.c card.c fcc_solver.c state.c
-        ${DBM_BACKEND_MODULES}
+        alloc.c app_str.c card.c fcc_solver.c state.c kaz_tree.c
     )
     TARGET_LINK_LIBRARIES(dbm_fc_solver ${DBM_LIBS})
     TARGET_LINK_LIBRARIES(fcc_fc_solver ${DBM_LIBS})
