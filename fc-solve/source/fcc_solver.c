@@ -196,6 +196,51 @@ static void GCC_INLINE pre_cache_offload_and_reset(
 
 #endif /* FCS_DBM_WITHOUT_CACHES */
 
+struct fcs_fully_connected_component_struct
+{
+    /* The minimal state in the fully-connected component, according to
+    the lexical sorting of the encoded state keys. This is used to identify
+    it and avoid collisions and re-processing. 
+    */
+    fcs_encoded_state_buffer_t min_by_sorting;
+    /* The minimal state by absolute depth (including that of
+    reversible moves). Not absolutely minimal, because the first
+    $depth-1 FCC that reaches it, wins the jackpot.
+    */
+    fcs_encoded_state_buffer_t min_by_absolute_depth;
+    /* Moves to the min_by_absolute_depth from the initial state. 
+    (accumlative).
+    */
+    int count_moves_to_min_by_absolute_depth;
+    fcs_fcc_move_t * moves_to_min_by_absolute_depth;
+    struct fcs_fully_connected_component_struct * next;
+};
+
+typedef struct fcs_fully_connected_component_struct fcs_fully_connected_component_t;
+
+typedef struct {
+    /* All of these get recycled (and their memory reclaimed by the heap)
+     * when we ascend to a new depth. */
+    fcs_fully_connected_component_t * queue;
+    fcs_fully_connected_component_t * queue_recycle_bin;
+    fcs_compact_allocator_t queue_allocator;
+    dict_t * does_min_by_sorting_exist;
+    dict_t * does_min_by_absolute_depth_exist;
+} fcs_fcc_collection_by_depth;
+
+#define FCC_DEPTH (RANK_KING * 4 * 2)
+typedef struct {
+    int curr_depth;
+    long max_num_elements_in_cache;
+    fcs_fcc_collection_by_depth FCCs_by_depth[FCC_DEPTH];
+    /* No need to reset when we ascend to a new depth. 
+     * TODO : make sure the pointers to the encoded states 
+     * inside the cache are always valid.
+     * TODO : might be easier to reset during every ascension.
+     * */
+    fcs_lru_cache_t cache;
+} fcs_fcc_solver_state;
+
 static const pthread_mutex_t initial_mutex_constant =
     PTHREAD_MUTEX_INITIALIZER
     ;
@@ -215,6 +260,7 @@ typedef pthread_mutex_t fcs_lock_t;
 #endif
 
 typedef struct {
+    fcs_fcc_solver_state solver_state;
     fcs_lock_t storage_lock;
 #ifndef FCS_DBM_WITHOUT_CACHES
     fcs_pre_cache_t pre_cache;
@@ -390,50 +436,6 @@ static void GCC_INLINE instance_check_multiple_keys(
     FCS_UNLOCK(instance->storage_lock);
 }
 
-struct fcs_fully_connected_component_struct
-{
-    /* The minimal state in the fully-connected component, according to
-    the lexical sorting of the encoded state keys. This is used to identify
-    it and avoid collisions and re-processing. 
-    */
-    fcs_encoded_state_buffer_t min_by_sorting;
-    /* The minimal state by absolute depth (including that of
-    reversible moves). Not absolutely minimal, because the first
-    $depth-1 FCC that reaches it, wins the jackpot.
-    */
-    fcs_encoded_state_buffer_t min_by_absolute_depth;
-    /* Moves to the min_by_absolute_depth from the initial state. 
-    (accumlative).
-    */
-    int count_moves_to_min_by_absolute_depth;
-    fcs_fcc_move_t * moves_to_min_by_absolute_depth;
-    struct fcs_fully_connected_component_struct * next;
-};
-
-typedef struct fcs_fully_connected_component_struct fcs_fully_connected_component_t;
-
-typedef struct {
-    /* All of these get recycled (and their memory reclaimed by the heap)
-     * when we ascend to a new depth. */
-    fcs_fully_connected_component_t * queue;
-    fcs_fully_connected_component_t * queue_recycle_bin;
-    fcs_compact_allocator_t queue_allocator;
-    dict_t * does_min_by_sorting_exist;
-} fcs_fcc_collection_by_depth;
-
-#define FCC_DEPTH (RANK_KING * 4 * 2)
-typedef struct {
-    int curr_depth;
-    long max_num_elements_in_cache;
-    fcs_fcc_collection_by_depth FCCs_by_depth[FCC_DEPTH];
-    /* No need to reset when we ascend to a new depth. 
-     * TODO : make sure the pointers to the encoded states 
-     * inside the cache are always valid.
-     * TODO : might be easier to reset during every ascension.
-     * */
-    fcs_lru_cache_t cache;
-} fcs_fcc_solver_state;
-
 typedef struct {
     fcs_dbm_solver_instance_t * instance;
     fc_solve_delta_stater_t * delta_stater;
@@ -466,6 +468,8 @@ static GCC_INLINE void init_solver_state(
         fc_solve_compact_allocator_init( &(fcc->queue_allocator) );
         fcc->does_min_by_sorting_exist
             = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+        fcc->does_min_by_absolute_depth_exist
+            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
     }
 }
 
@@ -480,6 +484,11 @@ static GCC_INLINE void solver_state__free_dcc_depth(
     {
         fc_solve_kaz_tree_destroy(fcc->does_min_by_sorting_exist);
         fcc->does_min_by_sorting_exist = NULL;
+    }
+    if (fcc->does_min_by_absolute_depth_exist)
+    {
+        fc_solve_kaz_tree_destroy(fcc->does_min_by_absolute_depth_exist);
+        fcc->does_min_by_absolute_depth_exist = NULL;
     }
     fc_solve_compact_allocator_finish(&(fcc->queue_allocator));
 }
@@ -497,6 +506,126 @@ static GCC_INLINE void solver_state_free(
     cache_destroy(&(solver_state->cache));
 }
 
+enum STATUS
+{
+    FCC_SOLVED = 0,
+    FCC_IMPOSSIBLE
+};
+
+int instance_run_solver(
+    fcs_dbm_solver_instance_t * instance, 
+    long max_num_elements_in_cache,
+    fcs_state_keyval_pair_t * init_state
+
+)
+{
+    fc_solve_delta_stater_t * delta;
+    fcs_encoded_state_buffer_t init_state_enc;
+    fcs_fcc_solver_state * solver_state;
+    fcs_fcc_collection_by_depth * fcc_stage;
+    fcs_fully_connected_component_t * fcc;
+    int curr_depth;
+    fcs_lru_cache_t * cache;
+    int ret;
+
+    /* Initialize the state. */
+    solver_state = &(instance->solver_state);
+    init_solver_state(solver_state, max_num_elements_in_cache);
+    cache = &(solver_state->cache);
+
+    /* Initialize local variables. */
+    delta = fc_solve_delta_stater_alloc(
+        &(init_state->s),
+        STACKS_NUM,
+        FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+    );
+
+    fc_solve_delta_stater_encode_into_buffer(
+        delta, init_state, init_state_enc.s
+    );
+
+    /* Bootstrap FCC depth 0 with the initial state. */
+    fcc_stage = &(solver_state->FCCs_by_depth[0]);
+    fcc_stage->queue = fcc =
+        fcs_compact_alloc_ptr(
+            &(fcc_stage->queue_allocator),
+            sizeof(*(fcc_stage->queue))
+        );
+
+    fcc->min_by_absolute_depth = init_state_enc;
+    fcc->count_moves_to_min_by_absolute_depth = 0;
+    fcc->moves_to_min_by_absolute_depth = NULL;
+    fcc->next = NULL;
+
+    /* Now: iterate over the depths and generate new states. */
+    for (curr_depth=0 
+         ; 
+         curr_depth < FCC_DEPTH 
+         ; 
+         solver_state->curr_depth = ++curr_depth,
+         fcc_stage++
+         )
+    {
+        dict_t * do_next_fcc_start_points_exist;
+
+        do_next_fcc_start_points_exist
+            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+        while (fcc_stage->queue)
+        {
+            fcs_FCC_start_points_list_t next_start_points_list;
+            fcs_bool_t is_fcc_new;
+            fcs_encoded_state_buffer_t min_by_sorting;
+            long num_new_positions;
+
+            fcc_stage->queue = ((fcc = fcc_stage->queue)->next);
+
+            next_start_points_list.list = NULL;
+            next_start_points_list.recycle_bin = NULL;
+            fc_solve_compact_allocator_init(&(next_start_points_list.allocator));
+
+            /* Now scan the new fcc */
+            perform_FCC_brfs(
+                init_state,
+                fcc->min_by_absolute_depth,
+                fcc->count_moves_to_min_by_absolute_depth,
+                fcc->moves_to_min_by_absolute_depth,
+                &next_start_points_list,
+                do_next_fcc_start_points_exist,
+                &is_fcc_new,
+                &min_by_sorting,
+                fcc_stage->does_min_by_sorting_exist,
+                cache,
+                &num_new_positions
+            );
+
+            /* TODO: do what needs to be done with the output values
+             * of perform_FCC_brfs . 
+             * */
+
+            /* Free fcc's resources. */
+            free (fcc->moves_to_min_by_absolute_depth);
+            fcc->moves_to_min_by_absolute_depth = NULL;
+            fcc->count_moves_to_min_by_absolute_depth = 0;
+
+            /* -> Put it in the queue's recycle bin. */
+            fcc->next = fcc_stage->queue_recycle_bin;
+            fcc_stage->queue_recycle_bin = fcc;
+        }
+        /* TODO: implement the ascension to the next FCC depth. */
+        fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
+    }
+
+    ret = FCC_IMPOSSIBLE;
+
+free_resources:
+    fc_solve_delta_stater_free(delta);
+    return ret;
+}
+
+#if 0
 void * instance_run_solver_thread(void * void_arg)
 {
     thread_arg_t * arg;
@@ -639,6 +768,7 @@ void * instance_run_solver_thread(void * void_arg)
 
     return NULL;
 }
+#endif
 
 
 typedef struct {
@@ -689,6 +819,9 @@ const char * move_to_string(unsigned char move, char * move_buffer)
 
 int main(int argc, char * argv[])
 {
+    /* Temporarily #if'ed away until we finish working on instance_run_solver
+     * */
+#if 0
     fcs_dbm_solver_instance_t instance;
     long pre_cache_max_count;
     long caches_delta;
@@ -1004,6 +1137,7 @@ int main(int argc, char * argv[])
     }
     
     instance_destroy(&instance);
+#endif
 
     return 0;
 }
