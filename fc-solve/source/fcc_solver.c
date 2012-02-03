@@ -518,6 +518,12 @@ int instance_run_solver(
          * */
         cache_destroy(cache);
         cache_init (cache, max_num_elements_in_cache);
+        /*
+         * A trace for keeping track of the solver's progress.
+         * TODO : make it optional/abstract and add more traces.
+         */
+        printf ("Finished checking FCC-depth %d\n", curr_depth);
+        fflush (stdout);
     }
 
 free_resources:
