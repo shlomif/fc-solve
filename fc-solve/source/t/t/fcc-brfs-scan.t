@@ -89,6 +89,74 @@ EOF
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
+package FccIsNew;
+
+use Inline (
+    C => <<'EOF',
+#include "fcc_brfs_test.h"
+
+typedef char * * string_list_t;
+
+static string_list_t av_to_char_p_p(AV * av)
+{
+    string_list_t ret;
+    int i, len;
+    
+    len = av_len(av)+1;
+    ret = malloc(sizeof(ret[0]) * (len+1));
+
+    for (i = 0; i < len ; i++)
+    {
+        SV * * item;
+        item = av_fetch(av, i, FALSE);
+
+        assert(item);
+        ret[i] = strdup(SvPVbyte_nolen((*item)));
+    }
+    ret[i] = NULL;
+
+    return ret;
+}
+
+static void free_char_p_p(string_list_t p)
+{
+    string_list_t p_iter = p;
+    while ((*p_iter))
+    {
+        free(*p_iter);
+        p_iter++;
+    }
+    free(p);
+}
+
+int is_fcc_new(char * init_state_s, char * start_state_s, AV * min_states_av, AV * states_in_cache_av) {
+    fcs_bool_t ret;
+    string_list_t min_states = av_to_char_p_p(min_states_av);
+    string_list_t states_in_cache = av_to_char_p_p(states_in_cache_av);
+
+    fc_solve_user_INTERNAL_is_fcc_new(
+        init_state_s,
+        start_state_s,
+        min_states,
+        states_in_cache,
+        &ret
+    );
+
+    free_char_p_p(min_states);
+    free_char_p_p(states_in_cache);
+
+    return ret;
+}
+
+EOF
+    CLEAN_AFTER_BUILD => 0,
+    INC => "-I" . $ENV{FCS_PATH},
+    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
+    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
+    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
+    # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
+);
+
 package FccStartPointsList;
 
 use base 'Games::Solitaire::FC_Solve::SingleMoveSearch';
@@ -151,7 +219,7 @@ sub get_num_new_positions
 
 package main;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 use List::MoreUtils qw(any uniq none);
 
@@ -289,5 +357,42 @@ EOF
             3
         ),
         "Checking get_num_new_positions for close-to-final state.",
+    );
+}
+
+{
+    my $init_state_s = <<'EOF';
+4C 2C 9C 8C QS 4S 2H 
+5H QH 3C AC 3H 4H QD 
+QC 9S 6H 9H 3S KS 3D 
+5D 2S JC 5C JH 6D AS 
+2D KD TH TC TD 8D 
+7H JS KH TS KC 7C 
+AH 5S 6S AD 8H JD 
+7S 6C 7D 4D 8S 9D 
+EOF
+
+    my $start_state_s = <<'EOF';
+Foundations: H-K C-K D-J S-Q 
+Freecells:  KD    
+: 
+: 
+: 
+: KS QD
+: 
+: 
+: 
+: 
+EOF
+
+    # Empty.
+    my @min_states;
+
+    # Empty;
+    my @states_in_cache;
+    # TEST
+    ok (
+        FccIsNew::is_fcc_new($init_state_s, $start_state_s, \@min_states, \@states_in_cache),
+        'State with empty cache and min_states is new',
     );
 }
