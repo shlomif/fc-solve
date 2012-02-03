@@ -1209,12 +1209,6 @@ dnode_t *dict_prev(dict_t *dict, dnode_t *curr)
 }
 #endif
 
-#ifdef NO_FC_SOLVE
-void dict_allow_dupes(dict_t *dict)
-{
-    dict->dupes = 1;
-}
-#endif
 
 #undef dict_count
 #undef dict_isempty
@@ -1224,6 +1218,11 @@ void dict_allow_dupes(dict_t *dict)
 #undef dnode_getkey
 
 #ifdef NO_FC_SOLVE
+void dict_allow_dupes(dict_t *dict)
+{
+    dict->dupes = 1;
+}
+
 dictcount_t dict_count(dict_t *dict)
 {
     return dict->nodecount;
@@ -1238,16 +1237,12 @@ int dict_isfull(dict_t *dict)
 {
     return dict->nodecount == dict->maxcount;
 }
-#endif
 
-#ifdef NO_FC_SOLVE
 int dict_contains(dict_t *dict, dnode_t *node)
 {
     return verify_dict_has_node(dict_nil(dict), dict_root(dict), node);
 }
-#endif
 
-#ifdef NO_FC_SOLVE
 static dnode_t *dnode_alloc(void *context)
 {
     return (dnode_t *) malloc(sizeof *dnode_alloc(NULL));
@@ -1257,9 +1252,7 @@ static void dnode_free(dnode_t *node, void *context)
 {
     free(node);
 }
-#endif
 
-#ifdef NO_FC_SOLVE
 dnode_t *dnode_create(void *data)
 {
     dnode_t *dnode = (dnode_t *) malloc(sizeof *dnode);
@@ -1292,16 +1285,12 @@ void dnode_put(dnode_t *dnode, void *data)
 {
     dnode->data = data;
 }
-#endif
 
-#ifdef NO_FC_SOLVE
 int dnode_is_in_a_dict(dnode_t *dnode)
 {
     return (dnode->parent && dnode->left && dnode->right);
 }
-#endif
 
-#ifdef NO_FC_SOLVE
 void dict_process(dict_t *dict, void *context, dnode_process_t function)
 {
     dnode_t *node = fc_solve_kaz_tree_first(dict), *next;
