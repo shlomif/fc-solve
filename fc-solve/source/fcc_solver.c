@@ -423,8 +423,14 @@ typedef struct {
 
 #define FCC_DEPTH (RANK_KING * 4 * 2)
 typedef struct {
+    int curr_depth;
+    long max_num_elements_in_cache;
     fcs_fcc_collection_by_depth FCCs_by_depth[FCC_DEPTH];
-    /* No need to reset when we ascend to a new depth. */
+    /* No need to reset when we ascend to a new depth. 
+     * TODO : make sure the pointers to the encoded states 
+     * inside the cache are always valid.
+     * TODO : might be easier to reset during every ascension.
+     * */
     fcs_lru_cache_t cache;
 } fcs_fcc_solver_state;
 
@@ -444,6 +450,9 @@ static GCC_INLINE void init_solver_state(
 {
     int i;
 
+    solver_state->curr_depth = 0;
+    solver_state->max_num_elements_in_cache = max_num_elements_in_cache;
+
     cache_init (
         &(solver_state->cache),
         max_num_elements_in_cache
@@ -458,6 +467,34 @@ static GCC_INLINE void init_solver_state(
         fcc->does_min_by_sorting_exist
             = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
     }
+}
+
+static GCC_INLINE void solver_state__free_dcc_depth(
+    fcs_fcc_solver_state * solver_state,
+    int depth
+    )
+{
+    fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[depth]);
+
+    if (fcc->does_min_by_sorting_exist)
+    {
+        fc_solve_kaz_tree_destroy(fcc->does_min_by_sorting_exist);
+        fcc->does_min_by_sorting_exist = NULL;
+    }
+    fc_solve_compact_allocator_finish(&(fcc->queue_allocator));
+}
+
+static GCC_INLINE void solver_state_free(
+    fcs_fcc_solver_state * solver_state
+)
+{
+    int depth = solver_state->curr_depth + 1;
+    for (; depth < FCC_DEPTH ; depth++)
+    {
+        solver_state__free_dcc_depth(solver_state, depth);
+    }
+    solver_state->curr_depth = depth;
+    cache_destroy(&(solver_state->cache));
 }
 
 void * instance_run_solver_thread(void * void_arg)
