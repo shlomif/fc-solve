@@ -337,7 +337,7 @@ int instance_run_solver(
                     sizeof(*min_by_sorting_copy_ptr)
                     );
 
-                memcpy(min_by_sorting_copy_ptr, &min_by_sorting, sizeof(*min_by_sorting_copy_ptr));
+                *min_by_sorting_copy_ptr = min_by_sorting;
 
                 fc_solve_kaz_tree_alloc_insert(
                     fcc_stage->does_min_by_sorting_exist,
