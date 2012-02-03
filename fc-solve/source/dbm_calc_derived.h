@@ -177,7 +177,7 @@ static GCC_INLINE int horne_prune(
     int num_cards_moved;
     fcs_card_t card;
     /*  */
-    fcs_fcc_move_t additional_moves[RANK_KING * 4];
+    fcs_fcc_move_t additional_moves[RANK_KING * 4 * DECKS_NUM];
     int count_moves_so_far = 0;
 
 #define the_state (init_state_kv_ptr->s)

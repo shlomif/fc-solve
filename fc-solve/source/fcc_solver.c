@@ -228,7 +228,7 @@ typedef struct {
     dict_t * does_min_by_absolute_depth_exist;
 } fcs_fcc_collection_by_depth;
 
-#define FCC_DEPTH (RANK_KING * 4 * 2)
+#define FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
 typedef struct {
     int curr_depth;
     long max_num_elements_in_cache;
@@ -515,8 +515,9 @@ enum STATUS
 int instance_run_solver(
     fcs_dbm_solver_instance_t * instance, 
     long max_num_elements_in_cache,
-    fcs_state_keyval_pair_t * init_state
-
+    fcs_state_keyval_pair_t * init_state,
+    int * out_count_moves,
+    fcs_fcc_move_t * * out_moves
 )
 {
     fc_solve_delta_stater_t * delta;
@@ -527,6 +528,8 @@ int instance_run_solver(
     int curr_depth;
     fcs_lru_cache_t * cache;
     int ret;
+    fcs_fcc_move_t * ret_moves;
+    int ret_count_moves;
 
     /* Initialize the state. */
     solver_state = &(instance->solver_state);
@@ -541,7 +544,7 @@ int instance_run_solver(
         STACKS_NUM,
         FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+        , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
     );
 
@@ -562,10 +565,14 @@ int instance_run_solver(
     fcc->moves_to_min_by_absolute_depth = NULL;
     fcc->next = NULL;
 
+    ret = FCC_IMPOSSIBLE;
+    ret_moves = NULL;
+    ret_count_moves = 0;
+
     /* Now: iterate over the depths and generate new states. */
     for (curr_depth=0 
          ; 
-         curr_depth < FCC_DEPTH 
+         (ret == FCC_IMPOSSIBLE) && (curr_depth < FCC_DEPTH )
          ; 
          solver_state->curr_depth = ++curr_depth,
          fcc_stage++
@@ -659,6 +666,38 @@ int instance_run_solver(
                     /* TODO : check that it's the final state. If
                      * so, do the cleanup and return the solution.
                      * */
+                    {
+#define SUIT_LIMIT ( DECKS_NUM * 4 )
+                        int suit;
+
+                        for (suit = 0 ; suit < SUIT_LIMIT ; suit++)
+                        {
+                            if (fcs_foundation_value(state.s, suit) < RANK_KING)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (suit == SUIT_LIMIT)
+                        {
+                            fcs_FCC_start_point_t * more_start_point_iter;
+                            /* State is solved! Yay! Cleanup and return. */
+                            ret = FCC_SOLVED;
+                            
+                            for(
+                                more_start_point_iter = start_point_iter->next;
+                                more_start_point_iter;
+                                more_start_point_iter = more_start_point_iter->next
+                               )
+                            {
+                                free (more_start_point_iter->moves);
+                            }
+                            ret_moves = start_point_iter->moves;
+                            ret_count_moves = start_point_iter->count_moves;
+                            break;
+                        }
+                    }
+#undef SUIT_LIMIT
 
                     fcs_init_encoded_state(&(enc_state));
                     fc_solve_delta_stater_encode_into_buffer(
@@ -735,10 +774,12 @@ int instance_run_solver(
         fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
     }
 
-    ret = FCC_IMPOSSIBLE;
-
-free_resources:
+    solver_state_free(solver_state);
     fc_solve_delta_stater_free(delta);
+
+    *out_moves = ret_moves;
+    *out_count_moves = ret_count_moves;
+
     return ret;
 }
 
