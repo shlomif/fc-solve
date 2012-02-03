@@ -450,9 +450,7 @@ void dict_init_like(dict_t *dict, const dict_t *orig)
 
     assert (dict_similar(dict, orig));
 }
-#endif
 
-#ifdef NO_FC_SOLVE
 /*
  * Initialize with allocator
  */
@@ -478,9 +476,7 @@ extern dict_t *dict_init_alloc(dict_t *dict, dictcount_t maxcount,
 #endif
     return dict;
 }
-#endif
 
-#ifdef NO_FC_SOLVE
 /*
  * Remove all nodes from the dictionary (without freeing them in any way).
  */
@@ -496,10 +492,8 @@ static void dict_clear(dict_t *dict)
     assert (dict->nilnode.color == dnode_black);
 }
 
-#endif
 
 
-#ifdef NO_FC_SOLVE
 /*
  * Verify the integrity of the dictionary structure.  This is provided for
  * debugging purposes, and should be placed in assert statements.   Just because
@@ -531,9 +525,7 @@ int dict_verify(dict_t *dict)
         return 0;
     return 1;
 }
-#endif
 
-#ifdef NO_FC_SOLVE
 /*
  * Determine whether two dictionaries are similar: have the same comparison and
  * allocator functions, and same status as to whether duplicates are allowed.
