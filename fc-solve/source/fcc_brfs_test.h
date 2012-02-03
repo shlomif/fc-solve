@@ -55,6 +55,16 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         long * out_num_new_positions
         );
 
+DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
+        const char * init_state_str_proto,
+        const char * start_state_str_proto,
+        /* NULL-terminated */
+        const char * * min_states,
+        /* NULL-terminated */
+        const char * * states_in_cache,
+        fcs_bool_t * out_is_fcc_new
+        );
+
 #ifdef __cplusplus
 }
 #endif

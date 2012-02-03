@@ -190,3 +190,210 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     return 0;
 }
+
+DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
+        const char * init_state_str_proto,
+        const char * start_state_str_proto,
+        /* NULL-terminated */
+        const char * * min_states,
+        /* NULL-terminated */
+        const char * * states_in_cache,
+        fcs_bool_t * out_is_fcc_new
+        )
+{
+    char * init_state_s, * start_state_s;
+    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair_t start_state;
+    fc_solve_delta_stater_t * delta;
+    fcs_encoded_state_buffer_t enc_state;
+    fcs_encoded_state_buffer_t start_enc_state;
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    fcs_state_locs_struct_t locs;
+    int i;
+#endif
+
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+    DECLARE_IND_BUF_T(start_indirect_stacks_buffer)
+
+    init_state_s = prepare_state_str(init_state_str_proto);
+    start_state_s = prepare_state_str(start_state_str_proto);
+
+    fc_solve_initial_user_state_to_c(
+            init_state_s,
+            &init_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+            , indirect_stacks_buffer
+#endif
+            );
+
+    fc_solve_initial_user_state_to_c(
+            start_state_s,
+            &start_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+            , start_indirect_stacks_buffer
+#endif
+            );
+
+    delta = fc_solve_delta_stater_alloc(
+            &(init_state.s),
+            STACKS_NUM,
+            FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+            );
+
+    memset(&(enc_state), '\0', sizeof(enc_state));
+    memset(&(start_enc_state), '\0', sizeof(start_enc_state));
+
+    fc_solve_delta_stater_encode_into_buffer(
+        delta,
+        &(init_state),
+        enc_state.s
+    );
+
+    fc_solve_delta_stater_encode_into_buffer(
+        delta,
+        &(start_state),
+        start_enc_state.s
+    );
+
+    fcs_FCC_start_points_list_t start_points_list;
+    start_points_list.list = NULL;
+    start_points_list.recycle_bin = NULL;
+    fc_solve_compact_allocator_init(&(start_points_list.allocator));
+
+    dict_t * do_next_fcc_start_points_exist =
+        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+
+    dict_t * does_min_by_sorting_exist =
+        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+
+    fcs_compact_allocator_t temp_allocator;
+    fc_solve_compact_allocator_init(&(temp_allocator));
+
+    /* Populate does_min_by_sorting_exist from min_states */
+    {
+        const char * * min_states_iter = min_states;
+
+        for (; *(min_states_iter) ; min_states_iter++)
+        {
+            fcs_state_keyval_pair_t min_state;
+            DECLARE_IND_BUF_T(min_state_buffer)
+            
+            char * min_state_s = prepare_state_str(*(min_states_iter));
+
+            fc_solve_initial_user_state_to_c(
+                min_state_s,
+                &min_state,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , min_state_buffer
+#endif
+            );
+
+            free(min_state_s);
+
+            fcs_encoded_state_buffer_t * min_enc_state;
+            min_enc_state = (fcs_encoded_state_buffer_t *)
+                fcs_compact_alloc_ptr(
+                    &(temp_allocator),
+                    sizeof (*min_enc_state)
+                    );
+
+            fc_solve_delta_stater_encode_into_buffer(
+                delta,
+                &(min_state),
+                min_enc_state->s
+                );
+
+            fc_solve_kaz_tree_alloc_insert(
+                does_min_by_sorting_exist,
+                min_enc_state
+            );
+        }
+    }
+
+    const int max_num_elements_in_cache = 1000000;
+
+    fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
+    cache_init(&does_state_exist_in_any_FCC_cache, max_num_elements_in_cache);
+
+    /* Populate does_state_exist_in_any_FCC_cache from states_in_cache */
+    {
+        const char * * min_states_iter = states_in_cache;
+
+        for (; *(min_states_iter) ; min_states_iter++)
+        {
+            fcs_state_keyval_pair_t min_state;
+            DECLARE_IND_BUF_T(min_state_buffer)
+
+            char * min_state_s = prepare_state_str(*(min_states_iter));
+
+            fc_solve_initial_user_state_to_c(
+                min_state_s,
+                &min_state,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+                , min_state_buffer
+#endif
+            );
+
+            free(min_state_s);
+
+            fcs_encoded_state_buffer_t * min_enc_state;
+            min_enc_state = (fcs_encoded_state_buffer_t *)
+                fcs_compact_alloc_ptr(
+                    &(temp_allocator),
+                    sizeof (*min_enc_state)
+                    );
+
+            fc_solve_delta_stater_encode_into_buffer(
+                delta,
+                &(min_state),
+                min_enc_state->s
+                );
+
+            cache_insert (&does_state_exist_in_any_FCC_cache, min_enc_state);
+        }
+    }
+
+    fcs_encoded_state_buffer_t min_by_sorting;
+    long num_new_positions_temp;
+
+    perform_FCC_brfs(
+        &(init_state),
+        start_enc_state,
+        0,
+        NULL,
+        &(start_points_list),
+        do_next_fcc_start_points_exist,
+        out_is_fcc_new,
+        &min_by_sorting,
+        does_min_by_sorting_exist,
+        &does_state_exist_in_any_FCC_cache,
+        &num_new_positions_temp
+    );
+
+    free(start_state_s);
+    free(init_state_s);
+    fc_solve_compact_allocator_finish(&(start_points_list.allocator));
+    fc_solve_compact_allocator_finish(&(temp_allocator));
+
+    fc_solve_delta_stater_free (delta);
+    fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
+    fc_solve_kaz_tree_destroy(does_min_by_sorting_exist);
+    cache_destroy(&does_state_exist_in_any_FCC_cache);
+
+    return 0;
+}
