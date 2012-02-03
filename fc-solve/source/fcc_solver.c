@@ -770,8 +770,15 @@ int instance_run_solver(
             fcc->next = fcc_stage->queue_recycle_bin;
             fcc_stage->queue_recycle_bin = fcc;
         }
-        /* TODO: implement the ascension to the next FCC depth. */
+
+        /* Now ascend to the next FCC depth. */
         fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
+        solver_state__free_dcc_depth(solver_state, curr_depth);
+        /* -> Refresh the cache, because it may hold pointers that are
+         * out-of-date.
+         * */
+        cache_destroy(cache);
+        cache_init (cache, max_num_elements_in_cache);
     }
 
     solver_state_free(solver_state);
