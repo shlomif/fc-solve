@@ -533,6 +533,8 @@ int instance_run_solver(
     init_solver_state(solver_state, max_num_elements_in_cache);
     cache = &(solver_state->cache);
 
+    instance->count_num_processed = 0;
+
     /* Initialize local variables. */
     delta = fc_solve_delta_stater_alloc(
         &(init_state->s),
@@ -601,9 +603,124 @@ int instance_run_solver(
                 &num_new_positions
             );
 
-            /* TODO: do what needs to be done with the output values
-             * of perform_FCC_brfs . 
-             * */
+            instance->count_num_processed += num_new_positions;
+            if (is_fcc_new)
+            {
+                fcs_encoded_state_buffer_t * min_by_sorting_copy_ptr;
+                fcs_FCC_start_point_t * start_point_iter;
+
+                /* First of all, add min_by_sorting to 
+                 * fcc_stage->does_min_by_sorting_exist, so it won't be
+                 * traversed again. We need to allocate a new copy because
+                 * min_by_sorting is a temporary variable and the tree
+                 * holds pointers.
+                 * */
+                min_by_sorting_copy_ptr = fcs_compact_alloc_ptr(
+                    &(fcc_stage->does_min_by_sorting_exist->dict_allocator),
+                    sizeof(*min_by_sorting_copy_ptr)
+                    );
+
+                memcpy(min_by_sorting_copy_ptr, &min_by_sorting, sizeof(*min_by_sorting_copy_ptr));
+
+                fc_solve_kaz_tree_alloc_insert(
+                    fcc_stage->does_min_by_sorting_exist,
+                    min_by_sorting_copy_ptr
+                );
+
+                /* Now: iterate over the next_start_points_list . */
+                for (start_point_iter = next_start_points_list.list
+                        ;
+                     start_point_iter
+                        ;
+                     start_point_iter = start_point_iter->next
+                    )
+                {
+                    int num_additional_moves;
+                    fcs_state_keyval_pair_t state;
+                    int start_point_new_FCC_depth;
+                    fcs_encoded_state_buffer_t enc_state;
+                    fcs_fcc_collection_by_depth * next_fcc_stage;
+
+                    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+
+                    fc_solve_delta_stater_decode_into_state(
+                        delta,
+                        start_point_iter->enc_state.s,
+                        &(state),
+                        indirect_stacks_buffer
+                    );
+                    /* Perform Horne's Prune on the position to see where it ends up at. */
+                    num_additional_moves =
+                        horne_prune(
+                            &state,
+                            &(start_point_iter->count_moves),
+                            &(start_point_iter->moves)
+                        );
+                    /* TODO : check that it's the final state. If
+                     * so, do the cleanup and return the solution.
+                     * */
+
+                    fcs_init_encoded_state(&(enc_state));
+                    fc_solve_delta_stater_encode_into_buffer(
+                        delta,
+                        &(state),
+                        enc_state.s
+                    );
+                    
+                    next_fcc_stage = &(solver_state->FCCs_by_depth[
+                        start_point_new_FCC_depth =
+                            curr_depth + 1 + num_additional_moves
+                    ]);
+                    
+                    if (!
+                        fc_solve_kaz_tree_lookup(
+                            next_fcc_stage->does_min_by_absolute_depth_exist,
+                            &enc_state
+                        )
+                       )
+                    {
+                        fcs_fully_connected_component_t * next_fcc;
+                        fc_solve_kaz_tree_alloc_insert(
+                            next_fcc_stage->does_min_by_absolute_depth_exist,
+                            &enc_state
+                        );
+                        if (next_fcc_stage->queue_recycle_bin)
+                        {
+                            fcs_fully_connected_component_t * temp_fcc;
+                            temp_fcc = next_fcc_stage->queue_recycle_bin->next;
+                            next_fcc_stage->queue_recycle_bin->next = 
+                                next_fcc_stage->queue;
+                            next_fcc_stage->queue = next_fcc_stage->queue_recycle_bin;
+                            next_fcc_stage->queue_recycle_bin = temp_fcc;
+                        }
+                        else
+                        {
+                            fcs_fully_connected_component_t * temp_fcc;
+                            temp_fcc =
+                                fcs_compact_alloc_ptr(
+                                    &(next_fcc_stage->queue_allocator),
+                                    sizeof(*(next_fcc_stage->queue))
+                                );
+                            temp_fcc->next = next_fcc_stage->queue;
+                            next_fcc_stage->queue = temp_fcc;
+                        }
+                        next_fcc = next_fcc_stage->queue;
+
+                        next_fcc->min_by_absolute_depth = enc_state;
+                        next_fcc->count_moves_to_min_by_absolute_depth = 
+                            start_point_iter->count_moves;
+                        next_fcc->moves_to_min_by_absolute_depth = 
+                            start_point_iter->moves;
+                    }
+                    else
+                    {
+                        free(start_point_iter->moves);
+                    }
+                }
+            }
+
+            /* Free the next_start_points_list */
+            fc_solve_compact_allocator_finish(&(next_start_points_list.allocator));
 
             /* Free fcc's resources. */
             free (fcc->moves_to_min_by_absolute_depth);

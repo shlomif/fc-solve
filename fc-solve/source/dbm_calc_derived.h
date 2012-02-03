@@ -34,6 +34,8 @@ extern "C"
 {
 #endif
 
+#include <stdlib.h>
+
 #include "config.h"
 
 #include "bool.h"
@@ -47,6 +49,7 @@ extern "C"
 #include "dbm_solver_key.h"
 #include "dbm_calc_derived_iface.h"
 #include "indirect_buffer.h"
+#include "fcc_brfs_test.h"
 
 struct fcs_derived_state_struct
 {
@@ -160,8 +163,11 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
     return -1;
 }
 
-static GCC_INLINE void horne_prune(
-    fcs_state_keyval_pair_t * init_state_kv_ptr
+/* Returns the additional number of cards moved to the foundation  */
+static GCC_INLINE int horne_prune(
+    fcs_state_keyval_pair_t * init_state_kv_ptr,
+    int * count_moves,
+    fcs_fcc_move_t * * moves
 )
 {
     int stack_idx, fc;
@@ -170,6 +176,9 @@ static GCC_INLINE void horne_prune(
     int dest_foundation;
     int num_cards_moved;
     fcs_card_t card;
+    /*  */
+    fcs_fcc_move_t additional_moves[RANK_KING * 4];
+    int count_moves_so_far = 0;
 
 #define the_state (init_state_kv_ptr->s)
     do {
@@ -192,6 +201,9 @@ static GCC_INLINE void horne_prune(
                     fcs_col_pop_top(col);
 
                     fcs_increment_foundation(the_state, dest_foundation);
+
+                    additional_moves[count_moves_so_far++]
+                        = MAKE_MOVE(COL2MOVE(stack_idx), FOUND2MOVE(dest_foundation));
                 }
             }
         }
@@ -211,10 +223,21 @@ static GCC_INLINE void horne_prune(
 
                     fcs_empty_freecell(the_state, fc);
                     fcs_increment_foundation(the_state, dest_foundation);
+                    additional_moves[count_moves_so_far++]
+                        = MAKE_MOVE(COL2MOVE(fc), FOUND2MOVE(dest_foundation));
                 }
             }
         }
     } while (num_cards_moved);
+    
+    if (count_moves_so_far && count_moves)
+    {
+        moves = realloc(moves, sizeof(moves[0]) * ((*count_moves) + count_moves_so_far));
+        memcpy(moves+(*count_moves), additional_moves, sizeof(additional_moves[0]) * count_moves_so_far);
+        (*count_moves) += count_moves_so_far;
+    }
+    
+    return count_moves_so_far;
 }
 
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
@@ -530,7 +553,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
             derived_iter = derived_iter->next
         )
         {
-            horne_prune(&(derived_iter->state));
+            horne_prune(&(derived_iter->state), NULL, NULL);
         }
     }
 

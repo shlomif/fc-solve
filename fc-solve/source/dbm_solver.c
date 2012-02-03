@@ -701,7 +701,7 @@ int main(int argc, char * argv[])
 #endif
     );
 
-    horne_prune(&init_state);
+    horne_prune(&init_state, NULL, NULL);
 
     delta = fc_solve_delta_stater_alloc(
             &init_state.s,
