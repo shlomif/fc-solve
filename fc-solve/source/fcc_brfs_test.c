@@ -37,6 +37,39 @@
 #include "fcc_brfs.h"
 #include "fcc_brfs_test.h"
 
+static void fc_solve_state_string_to_enc(
+    fc_solve_delta_stater_t * delta,
+    const char * state_s_proto,
+    fcs_encoded_state_buffer_t * enc_state
+)
+{
+    fcs_state_keyval_pair_t state;
+    DECLARE_IND_BUF_T(state_buffer)
+
+    char * state_s = prepare_state_str(state_s_proto);
+
+    fc_solve_initial_user_state_to_c(
+        state_s,
+        &state,
+        FREECELLS_NUM,
+        STACKS_NUM,
+        DECKS_NUM
+#ifdef INDIRECT_STACK_STATES
+        , state_buffer
+#endif
+        );
+
+    memset(enc_state, '\0', sizeof(*enc_state));
+
+    fc_solve_delta_stater_encode_into_buffer(
+        delta,
+        &(state),
+        enc_state->s
+    );
+
+    free(state_s);
+}
+                                        
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */
@@ -334,37 +367,18 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
         for (; *(min_states_iter) ; min_states_iter++)
         {
-            fcs_state_keyval_pair_t min_state;
-            DECLARE_IND_BUF_T(min_state_buffer)
-
-            char * min_state_s = prepare_state_str(*(min_states_iter));
-
-            fc_solve_initial_user_state_to_c(
-                min_state_s,
-                &min_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , min_state_buffer
-#endif
-            );
-
-            free(min_state_s);
-
             fcs_encoded_state_buffer_t * min_enc_state;
             min_enc_state = (fcs_encoded_state_buffer_t *)
                 fcs_compact_alloc_ptr(
                     &(temp_allocator),
                     sizeof (*min_enc_state)
                     );
-            memset(min_enc_state, '\0', sizeof(*min_enc_state));
 
-            fc_solve_delta_stater_encode_into_buffer(
+            fc_solve_state_string_to_enc(
                 delta,
-                &(min_state),
-                min_enc_state->s
-                );
+                *(min_states_iter),
+                min_enc_state
+            );
 
             cache_insert (&does_state_exist_in_any_FCC_cache, min_enc_state);
         }
