@@ -260,6 +260,30 @@ int instance_run_solver(
         delta, init_state, init_state_enc.s
     );
 
+    ret = FCC_IMPOSSIBLE;
+    ret_moves = NULL;
+    ret_count_moves = 0;
+
+    {
+#define SUIT_LIMIT ( DECKS_NUM * 4 )
+        int suit;
+
+        for (suit = 0 ; suit < SUIT_LIMIT ; suit++)
+        {
+            if (fcs_foundation_value(init_state->s, suit) < RANK_KING)
+            {
+                break;
+            }
+        }
+
+        if (suit == SUIT_LIMIT)
+        {
+            ret = FCC_SOLVED;
+            goto free_resources;
+        }
+    }
+#undef SUIT_LIMIT
+
     /* Bootstrap FCC depth 0 with the initial state. */
     fcc_stage = &(solver_state->FCCs_by_depth[0]);
     fcc_stage->queue = fcc =
@@ -274,10 +298,6 @@ int instance_run_solver(
     fcc->next = NULL;
 
     instance->count_num_processed++;
-
-    ret = FCC_IMPOSSIBLE;
-    ret_moves = NULL;
-    ret_count_moves = 0;
 
     /* Now: iterate over the depths and generate new states. */
     for (curr_depth=0 
@@ -500,6 +520,7 @@ int instance_run_solver(
         cache_init (cache, max_num_elements_in_cache);
     }
 
+free_resources:
     solver_state_free(solver_state);
     fc_solve_delta_stater_free(delta);
 
