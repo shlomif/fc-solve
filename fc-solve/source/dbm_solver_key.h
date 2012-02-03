@@ -6,6 +6,8 @@ extern "C"
 {
 #endif
 
+#include <string.h>
+
 #include "config.h"
 
 #include "bool.h"

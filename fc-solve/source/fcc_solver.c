@@ -390,6 +390,44 @@ static void GCC_INLINE instance_check_multiple_keys(
     FCS_UNLOCK(instance->storage_lock);
 }
 
+struct fcs_fully_connected_component_struct
+{
+    /* The minimal state in the fully-connected component, according to
+    the lexical sorting of the encoded state keys. This is used to identify
+    it and avoid collisions and re-processing. 
+    */
+    fcs_encoded_state_buffer_t min_by_sorting;
+    /* The minimal state by absolute depth (including that of
+    reversible moves). Not absolutely minimal, because the first
+    $depth-1 FCC that reaches it, wins the jackpot.
+    */
+    fcs_encoded_state_buffer_t min_by_absolute_depth;
+    /* Moves to the min_by_absolute_depth from the initial state. 
+    (accumlative).
+    */
+    int count_moves_to_min_by_absolute_depth;
+    fcs_fcc_move_t * moves_to_min_by_absolute_depth;
+    struct fcs_fully_connected_component_struct * next;
+};
+
+typedef struct fcs_fully_connected_component_struct fcs_fully_connected_component_t;
+
+typedef struct {
+    /* All of these get recycled (and their memory reclaimed by the heap)
+     * when we ascend to a new depth. */
+    fcs_fully_connected_component_t * queue;
+    fcs_fully_connected_component_t * queue_recycle_bin;
+    fcs_compact_allocator_t queue_allocator;
+    dict_t * does_min_by_sorting_exist;
+} fcs_fcc_collection_by_depth;
+
+#define FCC_DEPTH (RANK_KING * 4 * 2)
+typedef struct {
+    fcs_fcc_collection_by_depth FCCs_by_depth[FCC_DEPTH];
+    /* No need to reset when we ascend to a new depth. */
+    fcs_lru_cache_t cache;
+} fcs_fcc_solver_state;
+
 typedef struct {
     fcs_dbm_solver_instance_t * instance;
     fc_solve_delta_stater_t * delta_stater;
@@ -398,6 +436,29 @@ typedef struct {
 typedef struct {
     fcs_dbm_solver_thread_t * thread;
 } thread_arg_t;
+
+static GCC_INLINE void init_solver_state(
+    fcs_fcc_solver_state * solver_state,
+    long max_num_elements_in_cache
+    )
+{
+    int i;
+
+    cache_init (
+        &(solver_state->cache),
+        max_num_elements_in_cache
+    );
+    
+    for (i = 0 ; i < FCC_DEPTH ; i++)
+    {
+        fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[i]);
+        fcc->queue = NULL;
+        fcc->queue_recycle_bin = NULL;
+        fc_solve_compact_allocator_init( &(fcc->queue_allocator) );
+        fcc->does_min_by_sorting_exist
+            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+    }
+}
 
 void * instance_run_solver_thread(void * void_arg)
 {
