@@ -429,10 +429,19 @@ int instance_run_solver(
                        )
                     {
                         fcs_fully_connected_component_t * next_fcc;
+                        fcs_encoded_state_buffer_t * enc_state_copy_ptr;
+
+                        enc_state_copy_ptr = fcs_compact_alloc_ptr(
+                            &(next_fcc_stage->does_min_by_absolute_depth_exist->dict_allocator),
+                            sizeof(*enc_state_copy_ptr)
+                            );
+                        *enc_state_copy_ptr = enc_state;
+
                         fc_solve_kaz_tree_alloc_insert(
                             next_fcc_stage->does_min_by_absolute_depth_exist,
-                            &enc_state
+                            enc_state_copy_ptr
                         );
+
                         if (next_fcc_stage->queue_recycle_bin)
                         {
                             fcs_fully_connected_component_t * temp_fcc;
