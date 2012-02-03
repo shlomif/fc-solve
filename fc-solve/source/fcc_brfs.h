@@ -278,7 +278,7 @@ static void perform_FCC_brfs(
                  : do_next_fcc_start_points_exist
                 );
 
-            memset(&(new_item->key), '\0', sizeof(new_item->key));
+            fcs_init_encoded_state(&(new_item->key));
             fc_solve_delta_stater_encode_into_buffer(
                 delta_stater,
                 &(derived_iter->state),

@@ -506,7 +506,7 @@ void * instance_run_solver_thread(void * void_arg)
                 derived_iter = derived_iter->next
         )
         {
-            memset(&(derived_iter->key), '\0', sizeof(derived_iter->key));
+            fcs_init_encoded_state(&(derived_iter->key));
             fc_solve_delta_stater_encode_into_buffer(
                 delta_stater,
                 &(derived_iter->state),
@@ -724,13 +724,13 @@ int main(int argc, char * argv[])
                 );
 
         first_item->next = NULL;
-        memset(&(first_item->key), '\0', sizeof(first_item->key));
+        fcs_init_encoded_state(&(first_item->key));
 
         fc_solve_delta_stater_encode_into_buffer(delta, &(init_state), first_item->key.s);
 
         /* The NULL parent and move for indicating this is the initial
          * state. */
-        memset(&(parent_and_move), '\0', sizeof(parent_and_move));
+        fcs_init_encoded_state(&(parent_and_move));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
         pre_cache_insert(&(instance.pre_cache), &(first_item->key), &parent_and_move);

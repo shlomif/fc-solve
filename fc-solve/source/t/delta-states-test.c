@@ -36,6 +36,7 @@
 #include "../app_str.c"
 #include "../state.c"
 #include "../delta_states.c"
+#include "../dbm_solver_key.h"
 
 static fcs_card_t make_card(int rank, int suit)
 {
@@ -607,12 +608,13 @@ int main_tests()
 #endif
         );
 
-        fcs_uchar_t first_enc_state[24];
-        memset(first_enc_state, '\0', sizeof(first_enc_state));
+        fcs_encoded_state_buffer_t first_enc_state;
+        fcs_init_encoded_state(&first_enc_state);
+
         fc_solve_delta_stater_encode_into_buffer(
             delta,
             &derived_state,
-            first_enc_state
+            first_enc_state.s
             );
 
         fc_solve_initial_user_state_to_c(
@@ -636,18 +638,19 @@ int main_tests()
 #endif
         );
 
-        fcs_uchar_t second_enc_state[24];
-        memset(second_enc_state, '\0', sizeof(second_enc_state));
+        fcs_encoded_state_buffer_t second_enc_state;
+        fcs_init_encoded_state(&second_enc_state);
+
         fc_solve_delta_stater_encode_into_buffer(
             delta,
             &derived_state,
-            second_enc_state
+            second_enc_state.s
             );
 
         /* TEST
          * */
         ok (
-            (!memcmp(first_enc_state, second_enc_state, sizeof(first_enc_state))),
+            (!memcmp(first_enc_state.s, second_enc_state.s, sizeof(first_enc_state))),
             "Make sure encode_composite avoids permutations of empty columns and completely-non-original states."
          );
 
@@ -717,12 +720,12 @@ int main_tests()
 #endif
         );
 
-        fcs_uchar_t first_enc_state[24];
-        memset(first_enc_state, '\0', sizeof(first_enc_state));
+        fcs_encoded_state_buffer_t first_enc_state;
+        fcs_init_encoded_state(&first_enc_state);
         fc_solve_delta_stater_encode_into_buffer(
             delta,
             &derived_state,
-            first_enc_state
+            first_enc_state.s
             );
 
         fc_solve_initial_user_state_to_c(
@@ -746,18 +749,18 @@ int main_tests()
 #endif
         );
 
-        fcs_uchar_t second_enc_state[24];
-        memset(second_enc_state, '\0', sizeof(second_enc_state));
+        fcs_encoded_state_buffer_t second_enc_state;
+        fcs_init_encoded_state(&second_enc_state);
         fc_solve_delta_stater_encode_into_buffer(
             delta,
             &derived_state,
-            second_enc_state
+            second_enc_state.s
             );
 
         /* TEST
          * */
         ok (
-            (!memcmp(first_enc_state, second_enc_state, sizeof(first_enc_state))),
+            (!memcmp(&first_enc_state, &second_enc_state, sizeof(first_enc_state))),
             "encode_composite unique encoding No. 2"
          );
 

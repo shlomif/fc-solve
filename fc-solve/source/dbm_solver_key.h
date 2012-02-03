@@ -19,6 +19,11 @@ typedef struct
     fcs_encoded_state_buffer_t parent_and_move;
 } fcs_dbm_record_t;
 
+static void GCC_INLINE fcs_init_encoded_state(fcs_encoded_state_buffer_t * enc_state)
+{
+    memset(enc_state, '\0', sizeof(*enc_state));
+}
+
 #ifdef __cplusplus
 }
 #endif
