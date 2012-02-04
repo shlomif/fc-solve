@@ -66,7 +66,7 @@ all: \$(TARGET)
 run: \$(DEALS_DUMPS)
 
 \$(DEALS_DUMPS): %.dump: all
-\t./\$(TARGET) --caches-delta \$(CACHE_SIZE) \$(patsubst %.dump,%.board,\$\@) | tee \$\@
+\t./\$(TARGET) --caches-delta \$(CACHE_SIZE) \$(patsubst %.dump,%.board,\$\@) > \$\@
 
 %.show:
 \t\@echo "\$* = \$(\$*)"
