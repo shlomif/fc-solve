@@ -238,6 +238,7 @@ static GCC_INLINE void instance_time_printf(
     fflush(fh);
 }
 
+#define STEP 100000
 int instance_run_solver(
     fcs_dbm_solver_instance_t * instance, 
     long max_num_elements_in_cache,
@@ -256,6 +257,7 @@ int instance_run_solver(
     int ret;
     fcs_fcc_move_t * ret_moves;
     int ret_count_moves;
+    long next_count_num_processed_landmark = STEP;
 
     /* Initialize the state. */
     solver_state = &(instance->solver_state);
@@ -327,6 +329,7 @@ int instance_run_solver(
          )
     {
         dict_t * do_next_fcc_start_points_exist;
+        long num_FCCs_processed_for_depth = 0;
 
         do_next_fcc_start_points_exist
             = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
@@ -343,7 +346,9 @@ int instance_run_solver(
             next_start_points_list.recycle_bin = NULL;
             fc_solve_compact_allocator_init(&(next_start_points_list.allocator));
 
+#if 0
             instance_time_printf (instance, "Before perform_FCC_brfs\n");
+#endif
 
             /* Now scan the new fcc */
             perform_FCC_brfs(
@@ -359,15 +364,30 @@ int instance_run_solver(
                 cache,
                 &num_new_positions
             );
+#if 0
             instance_time_printf (instance, "After perform_FCC_brfs\n");
+#endif
+
+            if (++num_FCCs_processed_for_depth % 10000 == 0)
+            {
+                instance_time_printf(
+                    instance, 
+                    "Processed %ld FCCs for depth %d\n", 
+                    num_FCCs_processed_for_depth, curr_depth
+                );
+            }
 
             if (num_new_positions)
             {
-                instance->count_num_processed += num_new_positions;
-                instance_time_printf(
-                    instance,
-                    "Reached %li positions\n",instance->count_num_processed
-                );
+                if ((instance->count_num_processed += num_new_positions) >= next_count_num_processed_landmark)
+                {
+                    instance_time_printf(
+                        instance,
+                        "Reached %li positions\n", instance->count_num_processed
+                    );
+                    next_count_num_processed_landmark = instance->count_num_processed;
+                    next_count_num_processed_landmark += (STEP - (next_count_num_processed_landmark % STEP));
+                }
             }
 
             if (is_fcc_new)
@@ -551,7 +571,7 @@ int instance_run_solver(
          * A trace for keeping track of the solver's progress.
          * TODO : make it optional/abstract and add more traces.
          */
-        instance_time_printf (instance, "Finished checking FCC-depth %d\n", curr_depth);
+        instance_time_printf (instance, "Finished checking FCC-depth %d (Total processed FCCs for depth - %ld)\n", curr_depth, num_FCCs_processed_for_depth);
     }
 
 free_resources:
