@@ -880,9 +880,6 @@ int main(int argc, char * argv[])
     {
         int i;
         char move_buffer[500];
-#ifdef FCS_WITHOUT_LOCS_FIELDS
-        fcs_state_locs_struct_t locs;
-#endif
         printf ("%s\n", "Success!");
         /* Now trace the solution */
         for (i = 0 ; i < ret_count_moves ; i++)
