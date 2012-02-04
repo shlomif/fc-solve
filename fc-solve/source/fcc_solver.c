@@ -220,6 +220,24 @@ enum STATUS
     FCC_IMPOSSIBLE
 };
 
+static GCC_INLINE void instance_time_printf(
+    fcs_dbm_solver_instance_t * instance,
+    const char * format,
+    ...
+)
+{
+    fcs_portable_time_t mytime;
+    va_list ap;
+    FILE * fh = stdout;
+
+    FCS_GET_TIME(mytime);
+    fprintf(fh, "[T=%li.%.6li] ", FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime));
+    va_start (ap, format);
+    vfprintf(fh, format, ap);
+    va_end(ap);
+    fflush(fh);
+}
+
 int instance_run_solver(
     fcs_dbm_solver_instance_t * instance, 
     long max_num_elements_in_cache,
@@ -325,8 +343,7 @@ int instance_run_solver(
             next_start_points_list.recycle_bin = NULL;
             fc_solve_compact_allocator_init(&(next_start_points_list.allocator));
 
-            printf ("Before perform_FCC_brfs\n");
-            fflush(stdout);
+            instance_time_printf (instance, "Before perform_FCC_brfs\n");
 
             /* Now scan the new fcc */
             perform_FCC_brfs(
@@ -342,13 +359,15 @@ int instance_run_solver(
                 cache,
                 &num_new_positions
             );
-            printf ("After perform_FCC_brfs\n");
-            fflush(stdout);
+            instance_time_printf (instance, "After perform_FCC_brfs\n");
 
             if (num_new_positions)
             {
                 instance->count_num_processed += num_new_positions;
-                printf("Reached %li positions\n", instance->count_num_processed);
+                instance_time_printf(
+                    instance,
+                    "Reached %li positions\n",instance->count_num_processed
+                );
             }
 
             if (is_fcc_new)
@@ -532,8 +551,7 @@ int instance_run_solver(
          * A trace for keeping track of the solver's progress.
          * TODO : make it optional/abstract and add more traces.
          */
-        printf ("Finished checking FCC-depth %d\n", curr_depth);
-        fflush (stdout);
+        instance_time_printf (instance, "Finished checking FCC-depth %d\n", curr_depth);
     }
 
 free_resources:
