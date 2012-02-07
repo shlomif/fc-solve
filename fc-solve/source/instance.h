@@ -95,7 +95,7 @@ extern "C" {
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE) || (defined(FCS_RCS_STATES) && (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)))
 
-#include "kaz_tree.h"
+#include "generic_tree.h"
 
 #endif
 

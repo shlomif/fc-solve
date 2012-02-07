@@ -35,6 +35,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <assert.h>
+#include <limits.h>
 
 /* 
  * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
@@ -519,7 +520,7 @@ int instance_run_solver(
                     ]);
                     
                     if (!
-                        fc_solve_kaz_tree_lookup(
+                        fc_solve_kaz_tree_lookup_value(
                             next_fcc_stage->does_min_by_absolute_depth_exist,
                             &enc_state
                         )

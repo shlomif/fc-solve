@@ -10,7 +10,7 @@ extern "C"
 
 #include "bool.h"
 #include "inline.h"
-#include "kaz_tree.h"
+#include "generic_tree.h"
 
 #include "dbm_solver_key.h"
 

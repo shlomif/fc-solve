@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "dbm_solver.h"
-#include "kaz_tree.h"
+#include "generic_tree.h"
 
 /*
  * TODO : We waste too much space and fragment it storing the
@@ -81,21 +81,21 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
     unsigned char * parent_and_move
     )
 {
-    dnode_t * node;
+    dict_key_t existing;
 
     record_t to_check;
     to_check.key = *(fcs_encoded_state_buffer_t *)key;
 
-    node = fc_solve_kaz_tree_lookup(((dbm_t *)store)->kaz_tree, &to_check);
+    existing = fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &to_check);
 
-    if (! node)
+    if (! existing)
     {
         return FALSE;
     }
     else
     {
         *(fcs_encoded_state_buffer_t *)parent_and_move
-            = ((record_t *)(node->dict_key))->parent_and_move;
+            = ((record_t *)existing)->parent_and_move;
         return TRUE;
     }
 }

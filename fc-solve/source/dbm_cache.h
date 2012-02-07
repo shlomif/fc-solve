@@ -86,13 +86,13 @@ static void GCC_INLINE cache_init(fcs_lru_cache_t * cache, long max_num_elements
 static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, fcs_encoded_state_buffer_t * key)
 {
     fcs_cache_key_info_t to_check;
-    dnode_t * node;
+    dict_key_t existing_key;
 
     to_check.key = *key;
 
-    node = fc_solve_kaz_tree_lookup(cache->kaz_tree, &to_check);
+    existing_key = fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
 
-    if (! node)
+    if (! existing_key)
     {
         return FALSE;
     }
@@ -101,7 +101,7 @@ static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, fcs_e
         /* First - promote this key to the top of the cache. */
         fcs_cache_key_info_t * existing;
 
-        existing = (fcs_cache_key_info_t *)(node->dict_key);
+        existing = (fcs_cache_key_info_t *)existing_key;
 
         if (existing->higher_pri)
         {
@@ -138,13 +138,8 @@ static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, const fcs_encoded_s
 
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
     {
-        fc_solve_kaz_tree_delete_free(
-            kaz_tree,
-            fc_solve_kaz_tree_lookup(
-                kaz_tree, (cache_key = cache->lowest_pri)
-                )
-            );
-            
+        fc_solve_kaz_tree_delete_by_value(kaz_tree, (cache_key = cache->lowest_pri));
+
         cache->lowest_pri = cache->lowest_pri->higher_pri;
         cache->lowest_pri->lower_pri = NULL;
     }

@@ -112,6 +112,7 @@ SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
 SET (FCS_ENABLE_RCS_STATES CACHE BOOL "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
 SET (FCS_ENABLE_DBM_SOLVER CACHE BOOL "Whether to build the DBM solver")
 SET (FCS_DBM_BACKEND "bdb" CACHE STRING "Type of DBM backend.")
+SET (FCS_DBM_TREE_BACKEND "libavl2" CACHE STRING "Type of DBM tree backend.")
 SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
 SET (FCS_IA_PACK_SIZE 64 CACHE STRING "Size of a single pack in kilo-bytes.")
 SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
@@ -516,25 +517,34 @@ IF (FCS_ENABLE_DBM_SOLVER)
         ADD_DEFINITIONS("-DFCS_DBM_USE_RWLOCK=1")
     ENDIF (FCS_DBM_USE_RWLOCK)
 
+    IF (FCS_DBM_TREE_BACKEND STREQUAL "libavl2")
+        SET (BIN_TREE_MODULE "libavl/avl.c")
+        ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1")
+    ELSE (FCS_DBM_TREE_BACKEND STREQUAL "libavl2")
+        SET (BIN_TREE_MODULE "kaz_tree.c")
+    ENDIF (FCS_DBM_TREE_BACKEND STREQUAL "libavl2")
+
     IF (FCS_DBM_BACKEND STREQUAL "bdb")
-        LIST(APPEND DBM_BACKEND_MODULES "dbm_bdb.c" "kaz_tree.c")
+        LIST(APPEND DBM_BACKEND_MODULES "dbm_bdb.c" ${BIN_TREE_MODULE})
         LIST (INSERT DBM_LIBS 0 "db-4")
     ELSEIF (FCS_DBM_BACKEND STREQUAL "kaztree")
-        LIST(APPEND DBM_BACKEND_MODULES "dbm_kaztree.c" "kaz_tree.c")
+        LIST(APPEND DBM_BACKEND_MODULES "dbm_kaztree.c" ${BIN_TREE_MODULE})
         ADD_DEFINITIONS("-DFCS_DBM_WITHOUT_CACHES=1")
     ELSE (FCS_DBM_BACKEND STREQUAL "bdb")
-        LIST(APPEND DBM_BACKEND_MODULES "dbm_leveldb.cpp" "kaz_tree.c")
+        LIST(APPEND DBM_BACKEND_MODULES "dbm_leveldb.cpp" ${BIN_TREE_MODULE})
         INCLUDE_DIRECTORIES(BEFORE "${LEVELDB_SOURCE_DIR}/include")
         LINK_DIRECTORIES("${LEVELDB_SOURCE_DIR}")
         LIST (INSERT DBM_LIBS 0 "leveldb")
     ENDIF (FCS_DBM_BACKEND STREQUAL "bdb")
+
     ADD_EXECUTABLE(dbm_fc_solver
         alloc.c app_str.c card.c dbm_solver.c state.c
         ${DBM_BACKEND_MODULES}
     )
     ADD_EXECUTABLE(fcc_fc_solver
-        alloc.c app_str.c card.c fcc_solver.c state.c kaz_tree.c
+        alloc.c app_str.c card.c fcc_solver.c state.c ${BIN_TREE_MODULE}
     )
+    INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/libavl")
     TARGET_LINK_LIBRARIES(dbm_fc_solver ${DBM_LIBS})
     TARGET_LINK_LIBRARIES(fcc_fc_solver ${DBM_LIBS})
 ENDIF (FCS_ENABLE_DBM_SOLVER)
@@ -889,6 +899,6 @@ IF (IS_DEBUG)
     )
     ADD_LIBRARY(fcs_fcc_brfs_test
         SHARED
-        alloc.c app_str.c card.c state.c fcc_brfs_test.c kaz_tree.c
+        alloc.c app_str.c card.c state.c fcc_brfs_test.c ${BIN_TREE_MODULE}
     )
 ENDIF (IS_DEBUG)

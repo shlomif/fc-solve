@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#include "kaz_tree.h"
+#include "generic_tree.h"
 
 struct fcs_cache_key_info_struct
 {

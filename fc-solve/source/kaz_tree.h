@@ -163,6 +163,7 @@ extern dnode_t *fc_solve_kaz_tree_delete(dict_t *, dnode_t *);
 extern const dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *, dict_key_t);
 extern void fc_solve_kaz_tree_delete_free(dict_t *, dnode_t *);
 extern dnode_t *fc_solve_kaz_tree_lookup(dict_t *, dict_key_t);
+dict_key_t fc_solve_kaz_tree_lookup_value(dict_t *dict, dict_key_t key);
 
 extern dnode_t *fc_solve_kaz_tree_first(dict_t *);
 extern dnode_t *fc_solve_kaz_tree_next(dict_t *, dnode_t *);

@@ -309,7 +309,7 @@ static void perform_FCC_brfs(
                 &(derived_iter->state),
                 new_item->key.s
             );
-            if (! fc_solve_kaz_tree_lookup(
+            if (! fc_solve_kaz_tree_lookup_value(
                 right_tree,
                 &(new_item->key)
                 )
@@ -451,7 +451,7 @@ static void perform_FCC_brfs(
     }
 
     if ((*is_min_by_sorting_new =
-        (!fc_solve_kaz_tree_lookup(
+        (!fc_solve_kaz_tree_lookup_value(
             does_min_by_sorting_exist,
             &(running_min))
          )

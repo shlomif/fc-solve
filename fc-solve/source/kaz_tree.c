@@ -552,6 +552,15 @@ int dict_similar(const dict_t *left, const dict_t *right)
 }
 #endif
 
+dict_key_t fc_solve_kaz_tree_lookup_value(dict_t *dict, dict_key_t key)
+{
+    dnode_t *dn;
+
+    dn = fc_solve_kaz_tree_lookup(dict, key);
+
+    return (dn ? dn->dict_key : NULL);
+}
+
 /*
  * Locate a node in the dictionary having the given key.
  * If the node is not found, a null a pointer is returned (rather than
