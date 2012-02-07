@@ -243,7 +243,7 @@ enum STATUS
 {
     FCC_SOLVED = 0,
     FCC_IMPOSSIBLE,
-    FCS_INTERRUPTED
+    FCC_INTERRUPTED
 };
 
 static GCC_INLINE void instance_time_printf(
@@ -421,7 +421,7 @@ int instance_run_solver(
                     if (instance->count_num_processed >=
                         instance->max_processed_positions_count)
                     {
-                        ret = FCS_INTERRUPTED;
+                        ret = FCC_INTERRUPTED;
                             
                         goto fcc_loop_cleanup;
                     }
@@ -963,9 +963,17 @@ int main(int argc, char * argv[])
         printf ("==\nEND\n");
         free(ret_moves);
     }
-    else
+    else if (ret_code == FCC_IMPOSSIBLE)
     {
         printf ("%s\n", "Could not solve successfully.");
+    }
+    else if (ret_code == FCC_INTERRUPTED)
+    {
+        printf ("%s\n", "Interrupted run after limit reached.");
+    }
+    else
+    {
+        printf ("%s\n", "Unknown return code. ERROR.");
     }
     
     instance_destroy(&instance);
