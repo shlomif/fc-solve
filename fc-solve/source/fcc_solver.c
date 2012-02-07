@@ -190,26 +190,48 @@ static GCC_INLINE void solver_state__free_dcc_depth(
     )
 {
     fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[depth]);
+    fcs_fully_connected_component_t * iter;
 
-    if (fcc->does_min_by_sorting_exist)
+    if (! fcc->does_min_by_sorting_exist)
+    {
+        return;
+    }
+    else
     {
         fc_solve_kaz_tree_destroy(fcc->does_min_by_sorting_exist);
         fcc->does_min_by_sorting_exist = NULL;
     }
+    /* We need to iterate over the queue before we dellocate its
+     * memory by freeing the compact_allocator.
+     * */
+    for(
+        iter = fcc->queue;
+        iter;
+        iter = iter->next
+       )
+    {
+        if (iter->moves_to_min_by_absolute_depth)
+        {
+            free(iter->moves_to_min_by_absolute_depth);
+            iter->moves_to_min_by_absolute_depth = NULL;
+        }
+    }
+    fcc->queue = NULL;
     if (fcc->does_min_by_absolute_depth_exist)
     {
         fc_solve_kaz_tree_destroy(fcc->does_min_by_absolute_depth_exist);
         fcc->does_min_by_absolute_depth_exist = NULL;
     }
     fc_solve_compact_allocator_finish(&(fcc->queue_allocator));
+
 }
 
 static GCC_INLINE void solver_state_free(
     fcs_fcc_solver_state * solver_state
 )
 {
-    int depth = solver_state->curr_depth + 1;
-    for (; depth < FCC_DEPTH ; depth++)
+    int depth;
+    for (depth = 0; depth < FCC_DEPTH ; depth++)
     {
         solver_state__free_dcc_depth(solver_state, depth);
     }
@@ -243,6 +265,7 @@ static GCC_INLINE void instance_time_printf(
 }
 
 #define STEP 100000
+
 int instance_run_solver(
     fcs_dbm_solver_instance_t * instance, 
     long max_num_elements_in_cache,
@@ -337,8 +360,9 @@ int instance_run_solver(
 
         do_next_fcc_start_points_exist
             = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
-        while (fcc_stage->queue)
+        while ((ret == FCC_IMPOSSIBLE) && fcc_stage->queue)
         {
+            fcs_FCC_start_point_t * start_point_iter;
             fcs_FCC_start_points_list_t next_start_points_list;
             fcs_bool_t is_fcc_new;
             fcs_encoded_state_buffer_t min_by_sorting;
@@ -368,6 +392,9 @@ int instance_run_solver(
                 cache,
                 &num_new_positions
             );
+
+            start_point_iter = next_start_points_list.list;
+
 #if 0
             instance_time_printf (instance, "After perform_FCC_brfs\n");
 #endif
@@ -394,21 +421,9 @@ int instance_run_solver(
                     if (instance->count_num_processed >=
                         instance->max_processed_positions_count)
                     {
-                        fcs_FCC_start_point_t * more_start_point_iter;
-                        /* State is solved! Yay! Cleanup and return. */
                         ret = FCS_INTERRUPTED;
-                        
-
-                        for(
-                            more_start_point_iter = next_start_points_list.list;
-                            more_start_point_iter;
-                            more_start_point_iter = more_start_point_iter->next
-                           )
-                        {
-                            free (more_start_point_iter->moves);
-                        }
-
-                        break;
+                            
+                        goto fcc_loop_cleanup;
                     }
                 }
             }
@@ -416,7 +431,6 @@ int instance_run_solver(
             if (is_fcc_new)
             {
                 fcs_encoded_state_buffer_t * min_by_sorting_copy_ptr;
-                fcs_FCC_start_point_t * start_point_iter;
 
                 /* First of all, add min_by_sorting to 
                  * fcc_stage->does_min_by_sorting_exist, so it won't be
@@ -437,7 +451,7 @@ int instance_run_solver(
                 );
 
                 /* Now: iterate over the next_start_points_list . */
-                for (start_point_iter = next_start_points_list.list
+                for (
                         ;
                      start_point_iter
                         ;
@@ -482,21 +496,12 @@ int instance_run_solver(
 
                         if (suit == SUIT_LIMIT)
                         {
-                            fcs_FCC_start_point_t * more_start_point_iter;
                             /* State is solved! Yay! Cleanup and return. */
                             ret = FCC_SOLVED;
-                            
-                            for(
-                                more_start_point_iter = start_point_iter->next;
-                                more_start_point_iter;
-                                more_start_point_iter = more_start_point_iter->next
-                               )
-                            {
-                                free (more_start_point_iter->moves);
-                            }
                             ret_moves = start_point_iter->moves;
                             ret_count_moves = start_point_iter->count_moves;
-                            break;
+
+                            goto fcc_loop_cleanup;
                         }
                     }
 #undef SUIT_LIMIT
@@ -566,6 +571,19 @@ int instance_run_solver(
                     {
                         free(start_point_iter->moves);
                     }
+                }
+            }
+
+fcc_loop_cleanup:
+            {
+                fcs_FCC_start_point_t * more_start_point_iter;
+                for(
+                    more_start_point_iter = start_point_iter;
+                    more_start_point_iter;
+                    more_start_point_iter = more_start_point_iter->next
+                   )
+                {
+                    free (more_start_point_iter->moves);
                 }
             }
 
