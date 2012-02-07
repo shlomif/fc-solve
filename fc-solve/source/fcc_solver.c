@@ -128,13 +128,16 @@ typedef pthread_mutex_t fcs_lock_t;
 typedef struct {
     fcs_fcc_solver_state solver_state;
     long count_num_processed;
+    long max_processed_positions_count;
 } fcs_dbm_solver_instance_t;
 
 static void GCC_INLINE instance_init(
-    fcs_dbm_solver_instance_t * instance
+    fcs_dbm_solver_instance_t * instance,
+    long max_processed_positions_count
 )
 {
     instance->count_num_processed = 0;
+    instance->max_processed_positions_count = max_processed_positions_count;
 }
 
 static void GCC_INLINE instance_destroy(
@@ -217,7 +220,8 @@ static GCC_INLINE void solver_state_free(
 enum STATUS
 {
     FCC_SOLVED = 0,
-    FCC_IMPOSSIBLE
+    FCC_IMPOSSIBLE,
+    FCS_INTERRUPTED
 };
 
 static GCC_INLINE void instance_time_printf(
@@ -387,6 +391,25 @@ int instance_run_solver(
                     );
                     next_count_num_processed_landmark = instance->count_num_processed;
                     next_count_num_processed_landmark += (STEP - (next_count_num_processed_landmark % STEP));
+                    if (instance->count_num_processed >=
+                        instance->max_processed_positions_count)
+                    {
+                        fcs_FCC_start_point_t * more_start_point_iter;
+                        /* State is solved! Yay! Cleanup and return. */
+                        ret = FCS_INTERRUPTED;
+                        
+
+                        for(
+                            more_start_point_iter = next_start_points_list.list;
+                            more_start_point_iter;
+                            more_start_point_iter = more_start_point_iter->next
+                           )
+                        {
+                            free (more_start_point_iter->moves);
+                        }
+
+                        break;
+                    }
                 }
             }
 
@@ -783,6 +806,7 @@ int main(int argc, char * argv[])
     fcs_dbm_solver_instance_t instance;
     long pre_cache_max_count;
     long caches_delta;
+    long max_processed_positions_count = LONG_MAX;
     int num_threads;
     int arg;
     const char * filename;
@@ -830,6 +854,16 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
         }
+        else if (!strcmp(argv[arg], "--max-iters"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--max-iters came without an argument!\n");
+                exit(-1);
+            }
+            max_processed_positions_count = atol(argv[arg]);
+        }
         else if (!strcmp(argv[arg], "--num-threads"))
         {
             arg++;
@@ -864,7 +898,7 @@ int main(int argc, char * argv[])
 
     filename = argv[arg];
 
-    instance_init(&instance);
+    instance_init(&instance, max_processed_positions_count);
     fh = fopen(filename, "r");
     if (fh == NULL)
     {
