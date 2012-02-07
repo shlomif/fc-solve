@@ -123,7 +123,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     );
 
     fcs_FCC_start_points_list_t start_points_list;
-    start_points_list.list = NULL;
     start_points_list.recycle_bin = NULL;
     fc_solve_compact_allocator_init(&(start_points_list.allocator));
 
@@ -157,13 +156,15 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     int states_count = 0;
     fcs_FCC_start_point_t * iter;
+    struct avl_traverser trav;
 
-    iter = start_points_list.list;
+    avl_t_init (&trav, do_next_fcc_start_points_exist);
+    iter = avl_t_first(&trav, do_next_fcc_start_points_exist);
 
     while (iter)
     {
         states_count++;
-        iter = iter->next;
+        iter = avl_t_next(&trav);
     }
 
     fcs_FCC_start_point_result_t * ret;
@@ -184,7 +185,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         locs.fc_locs[i] = i;
     }
 #endif
-    iter = start_points_list.list;
+    avl_t_init (&trav, do_next_fcc_start_points_exist);
+    iter = avl_t_first(&trav, do_next_fcc_start_points_exist);
     for (i = 0; i < states_count ; i++)
     {
         ret[i].count_moves = iter->count_moves;
@@ -210,7 +212,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
             1
             );
 
-        iter = iter->next;
+        iter = avl_t_next(&trav);
     }
 
     free(init_state_s);
@@ -283,7 +285,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     );
 
     fcs_FCC_start_points_list_t start_points_list;
-    start_points_list.list = NULL;
     start_points_list.recycle_bin = NULL;
     fc_solve_compact_allocator_init(&(start_points_list.allocator));
 
