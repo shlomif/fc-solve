@@ -222,3 +222,19 @@ lib64google-perftools0-1.5-1mdv2010.1
 27.2825539112091s
 27.2650990486145s
 
+------------------------------
+
+ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 2 (x4)
+r4393
+With Profile Guided Optimisation (PGO).
+./Tatzer -l x64b --prefix=/home/shlomif/apps/fc-solve/
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+kernel 3.2.5 (vanilla)
+gcc-4.6.2-1.mga2
+lib64google-perftools0-1.9.1-1.mga2
+
+    Highlight: gcc-4.6.2, optimisations on the trunk and vanilla kernel.
+
+26.254595041275s
