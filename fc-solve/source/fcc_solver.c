@@ -78,8 +78,7 @@ struct fcs_fully_connected_component_struct
     /* Moves to the min_by_absolute_depth from the initial state. 
     (accumlative).
     */
-    int count_moves_to_min_by_absolute_depth;
-    fcs_fcc_move_t * moves_to_min_by_absolute_depth;
+    fcs_fcc_moves_seq_t moves_seq_to_min_by_absolute_depth;
     struct fcs_fully_connected_component_struct * next;
 };
 
@@ -220,10 +219,10 @@ static GCC_INLINE void solver_state__free_dcc_depth(
         iter = iter->next
        )
     {
-        if (iter->moves_to_min_by_absolute_depth)
+        if (iter->moves_seq_to_min_by_absolute_depth.moves)
         {
-            free(iter->moves_to_min_by_absolute_depth);
-            iter->moves_to_min_by_absolute_depth = NULL;
+            free(iter->moves_seq_to_min_by_absolute_depth.moves);
+            iter->moves_seq_to_min_by_absolute_depth.moves = NULL;
         }
     }
     fcc->queue = NULL;
@@ -359,8 +358,8 @@ int instance_run_solver(
         );
 
     fcc->min_by_absolute_depth = init_state_enc;
-    fcc->count_moves_to_min_by_absolute_depth = 0;
-    fcc->moves_to_min_by_absolute_depth = NULL;
+    fcc->moves_seq_to_min_by_absolute_depth.count= 0;
+    fcc->moves_seq_to_min_by_absolute_depth.moves = NULL;
     fcc->next = NULL;
 
     instance->count_num_processed++;
@@ -403,8 +402,7 @@ int instance_run_solver(
             perform_FCC_brfs(
                 init_state,
                 fcc->min_by_absolute_depth,
-                fcc->count_moves_to_min_by_absolute_depth,
-                fcc->moves_to_min_by_absolute_depth,
+                &(fcc->moves_seq_to_min_by_absolute_depth),
                 &next_start_points_list,
                 do_next_fcc_start_points_exist,
                 &is_fcc_new,
@@ -480,9 +478,9 @@ int instance_run_solver(
             }
 fcc_loop_cleanup:
             /* Free fcc's resources. */
-            free (fcc->moves_to_min_by_absolute_depth);
-            fcc->moves_to_min_by_absolute_depth = NULL;
-            fcc->count_moves_to_min_by_absolute_depth = 0;
+            free (fcc->moves_seq_to_min_by_absolute_depth.moves);
+            fcc->moves_seq_to_min_by_absolute_depth.moves = NULL;
+            fcc->moves_seq_to_min_by_absolute_depth.count = 0;
 
             /* -> Put it in the queue's recycle bin. */
             fcc->next = fcc_stage->queue_recycle_bin;
@@ -611,12 +609,8 @@ fcc_loop_cleanup:
                     next_fcc = next_fcc_stage->queue;
 
                     next_fcc->min_by_absolute_depth = enc_state;
-                    /* TODO : convert count_moves_to_min_by_absolute_depth to
-                     * fcs_fcc_moves_seq_t */
-                    next_fcc->count_moves_to_min_by_absolute_depth = 
-                        start_point_iter->moves_seq.count;
-                    next_fcc->moves_to_min_by_absolute_depth = 
-                        start_point_iter->moves_seq.moves;
+                    next_fcc->moves_seq_to_min_by_absolute_depth = 
+                        start_point_iter->moves_seq;
                 }
                 else
                 {

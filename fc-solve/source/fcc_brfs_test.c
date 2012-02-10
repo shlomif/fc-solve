@@ -75,8 +75,7 @@ static void fc_solve_state_string_to_enc(
  */
 DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         const char * init_state_str_proto,
-        const int count_start_state_moves,
-        const fcs_fcc_move_t * const start_state_moves,
+        const fcs_fcc_moves_seq_t * const start_state_moves_seq,
         fcs_FCC_start_point_result_t * * out_fcc_start_points,
         long * out_num_new_positions
         )
@@ -145,8 +144,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     perform_FCC_brfs(
         &(init_state),
         enc_state,
-        count_start_state_moves,
-        start_state_moves,
+        start_state_moves_seq,
         &(start_points_list),
         do_next_fcc_start_points_exist,
         &is_min_by_sorting_new,
@@ -359,12 +357,15 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
     fcs_encoded_state_buffer_t min_by_sorting;
     long num_new_positions_temp;
+    fcs_fcc_moves_seq_t init_moves_seq;
+
+    init_moves_seq.moves = NULL;
+    init_moves_seq.count = 0;
 
     perform_FCC_brfs(
         &(init_state),
         start_enc_state,
-        0,
-        NULL,
+        &init_moves_seq,
         &(start_points_list),
         do_next_fcc_start_points_exist,
         out_is_fcc_new,

@@ -53,8 +53,7 @@ typedef struct
 
 DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         const char * init_state_str_proto,
-        const int count_start_state_moves,
-        const fcs_fcc_move_t * const start_state_moves,
+        const fcs_fcc_moves_seq_t * const start_state_moves_seq,
         fcs_FCC_start_point_result_t * * out_fcc_start_points,
         long * out_num_new_positions
         );

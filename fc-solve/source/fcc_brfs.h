@@ -91,8 +91,7 @@ static void perform_FCC_brfs(
     fcs_encoded_state_buffer_t start_state,
     /* The moves leading up to the state. 
      * */
-    const int count_start_state_moves,
-    const fcs_fcc_move_t * const start_state_moves,
+    const fcs_fcc_moves_seq_t * const start_state_moves_seq,
 #if 1
     /* [Output]: FCC start points. 
      * */
@@ -137,6 +136,8 @@ static void perform_FCC_brfs(
     fcs_bool_t running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min;
     long num_new_positions;
+    int count_start_state_moves = start_state_moves_seq->count;
+    const fcs_fcc_move_t * const start_state_moves = start_state_moves_seq->moves;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
