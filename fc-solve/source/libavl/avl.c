@@ -714,6 +714,7 @@ avl_t_replace (struct avl_traverser *trav, void *new)
   return old;
 }
 
+#if 0
 /* Destroys |new| with |avl_destroy (new, destroy)|,
    first setting right links of nodes in |stack| within |new|
    to null pointers to avoid touching uninitialized data. */
@@ -727,6 +728,7 @@ copy_error_recovery (struct avl_node **stack, int height,
     stack[height - 1]->avl_link[1] = NULL;
   avl_destroy (new, destroy);
 }
+#endif
 
 #if 0
 /* Copies |org| to a newly created tree, which is returned.

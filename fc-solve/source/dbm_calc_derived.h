@@ -41,7 +41,7 @@ extern "C"
 #include "bool.h"
 #include "inline.h"
 #include "state.h"
-#include "alloc.h"
+#include "meta_alloc.h"
 #include "fcs_enums.h"
 
 #include "fcs_dllexport.h"

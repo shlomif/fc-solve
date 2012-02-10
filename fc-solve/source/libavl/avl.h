@@ -24,7 +24,7 @@
 #define AVL_H 1
 
 #include <stddef.h>
-#include "alloc.h"
+#include "meta_alloc.h"
 
 /* Function types. */
 typedef int avl_comparison_func (const void *avl_a, const void *avl_b,
