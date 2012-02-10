@@ -63,9 +63,7 @@ union fcs_FCC_start_point_struct
     struct
     {
         fcs_encoded_state_buffer_t enc_state;
-        int count_moves;
-        /* Dynamically allocated. */
-        fcs_fcc_move_t * moves;
+        fcs_fcc_moves_seq_t moves_seq;
     };
     union fcs_FCC_start_point_struct * recycle_bin_next;
 };
@@ -411,8 +409,8 @@ static void perform_FCC_brfs(
                             );
                     }
                     new_start_point->enc_state = new_item->key;
-                    new_start_point->count_moves = count_moves;
-                    new_start_point->moves = moves;
+                    new_start_point->moves_seq.count = count_moves;
+                    new_start_point->moves_seq.moves = moves;
 
                     /* 
                      * Enqueue the new start point into right_tree (which

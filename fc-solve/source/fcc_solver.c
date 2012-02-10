@@ -518,11 +518,12 @@ fcc_loop_cleanup:
                         indirect_stacks_buffer
                         );
                 /* Perform Horne's Prune on the position to see where it ends up at. */
+                /*  TODO : convert horne_prune to fcs_fcc_moves_seq_t . */
                 num_additional_moves =
                     horne_prune(
                         &state,
-                        &(start_point_iter->count_moves),
-                        &(start_point_iter->moves)
+                        &(start_point_iter->moves_seq.count),
+                        &(start_point_iter->moves_seq.moves)
                         );
                 /* TODO : check that it's the final state. If
                  * so, do the cleanup and return the solution.
@@ -543,13 +544,12 @@ fcc_loop_cleanup:
                     {
                         /* State is solved! Yay! Cleanup and return. */
                         ret = FCC_SOLVED;
-                        ret_moves_seq.moves = start_point_iter->moves;
-                        ret_moves_seq.count = start_point_iter->count_moves;
+                        ret_moves_seq = start_point_iter->moves_seq;
                         /* Invalidate the existing ones so they won't be
                          * freed by accident.
                          * */
-                        start_point_iter->moves = NULL;
-                        start_point_iter->count_moves = -1;
+                        start_point_iter->moves_seq.moves = NULL;
+                        start_point_iter->moves_seq.count = -1;
 
                         goto second_stage_cleanup;
                     }
@@ -612,17 +612,19 @@ fcc_loop_cleanup:
                     next_fcc = next_fcc_stage->queue;
 
                     next_fcc->min_by_absolute_depth = enc_state;
+                    /* TODO : convert count_moves_to_min_by_absolute_depth to
+                     * fcs_fcc_moves_seq_t */
                     next_fcc->count_moves_to_min_by_absolute_depth = 
-                        start_point_iter->count_moves;
+                        start_point_iter->moves_seq.count;
                     next_fcc->moves_to_min_by_absolute_depth = 
-                        start_point_iter->moves;
+                        start_point_iter->moves_seq.moves;
                 }
                 else
                 {
-                    free(start_point_iter->moves);
+                    free(start_point_iter->moves_seq.moves);
                 }
-                start_point_iter->moves = NULL;
-                start_point_iter->count_moves = -1;
+                start_point_iter->moves_seq.moves = NULL;
+                start_point_iter->moves_seq.count = -1;
             }
         }
 
@@ -635,7 +637,7 @@ second_stage_cleanup:
                 more_start_point_iter = avl_t_next(&trav)
                )
             {
-                free (more_start_point_iter->moves);
+                free (more_start_point_iter->moves_seq.moves);
             }
         }
 
