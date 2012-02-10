@@ -14,6 +14,7 @@ encode_state all in one.
      - Test the out_num_positions_in_the_fcc.
      - Add more tests for fcc_brfs more.
 
+* Check for thread-safety of the meta_allocator construct in +dbm_fc_solver.c+.
 
 Non-pressing
 ------------
