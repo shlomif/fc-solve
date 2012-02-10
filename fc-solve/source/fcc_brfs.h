@@ -180,8 +180,8 @@ static void perform_FCC_brfs(
 
     new_item->key = start_state;
     new_item->next = NULL;
-    new_item->count_moves = 0;
-    new_item->moves = NULL;
+    new_item->moves_seq.count = 0;
+    new_item->moves_seq.moves = NULL;
 
     queue_head = queue_tail = new_item;
 
@@ -333,7 +333,7 @@ static void perform_FCC_brfs(
                 int count_moves;
                 fcs_fcc_move_t * moves, * end_moves;
 
-                count_moves = (extracted_item->count_moves + 1);
+                count_moves = (extracted_item->moves_seq.count + 1);
 
                 if (! is_reversible)
                 {
@@ -342,7 +342,7 @@ static void perform_FCC_brfs(
 
                 /* Fill in the moves. */
                 moves = malloc(
-                    sizeof(new_item->moves[0]) * count_moves
+                    sizeof(new_item->moves_seq.moves[0]) * count_moves
                 );
 
                 if (is_reversible)
@@ -355,8 +355,8 @@ static void perform_FCC_brfs(
                     end_moves = moves + count_start_state_moves;
                 }
 
-                memcpy(end_moves, extracted_item->moves, extracted_item->count_moves * sizeof(new_item->moves[0]));
-                end_moves[extracted_item->count_moves]
+                memcpy(end_moves, extracted_item->moves_seq.moves, extracted_item->moves_seq.count * sizeof(new_item->moves_seq.moves[0]));
+                end_moves[extracted_item->moves_seq.count]
                     = derived_iter->parent_and_move.s[
                     derived_iter->parent_and_move.s[0]+1
                     ];
@@ -377,8 +377,8 @@ static void perform_FCC_brfs(
                         key_to_add
                         );
 
-                    new_item->moves = moves;
-                    new_item->count_moves = count_moves;
+                    new_item->moves_seq.count = count_moves;
+                    new_item->moves_seq.moves = moves;
 
                     /* Enqueue the item in the queue. */
                     new_item->next = NULL;
@@ -460,8 +460,8 @@ static void perform_FCC_brfs(
         /* Clean up the extracted_item's resources. We no longer need them
          * because we are interested only in those of the derived items.
          * */
-        free(extracted_item->moves);
-        extracted_item->moves = NULL;
+        free(extracted_item->moves_seq.moves);
+        extracted_item->moves_seq.moves = NULL;
     }
 
     if ((*is_min_by_sorting_new =
