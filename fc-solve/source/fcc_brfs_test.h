@@ -47,9 +47,7 @@ typedef struct {
 
 typedef struct 
 {
-    /* TODO : change to fcs_fcc_moves_seq_t. */
-    int count_moves;
-    fcs_fcc_move_t * moves;
+    fcs_fcc_moves_seq_t moves_seq;
     char * state_as_string;
 } fcs_FCC_start_point_result_t;
 

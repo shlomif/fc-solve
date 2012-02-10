@@ -174,7 +174,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     *out_fcc_start_points = ret = malloc(sizeof(ret[0]) * (states_count+1));
 
-    ret[states_count].count_moves = 0;
+    ret[states_count].moves_seq.count = 0;
 
     int i;
 
@@ -192,8 +192,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     iter = avl_t_first(&trav, do_next_fcc_start_points_exist);
     for (i = 0; i < states_count ; i++)
     {
-        ret[i].count_moves = iter->count_moves;
-        ret[i].moves = iter->moves;
+        /*  TODO: convert iter to fcs_fcc_moves_seq_t . */
+        ret[i].moves_seq.count = iter->count_moves;
+        ret[i].moves_seq.moves = iter->moves;
         fcs_state_keyval_pair_t state;
         fc_solve_delta_stater_decode_into_state(delta, iter->enc_state.s, &(state), indirect_stacks_buffer);
         ret[i].state_as_string =

@@ -298,11 +298,10 @@ int instance_run_solver(
     int curr_depth;
     fcs_lru_cache_t * cache;
     int ret;
-    fcs_fcc_move_t * ret_moves;
-    int ret_count_moves;
     long next_count_num_processed_landmark = STEP;
     fcs_meta_compact_allocator_t * meta_alloc;
     long FCCs_per_depth_milestone_step;
+    fcs_fcc_moves_seq_t ret_moves_seq;
 
     fc_solve_meta_compact_allocator_init(meta_alloc = &(instance->meta_alloc));
     /* Initialize the state. */
@@ -328,8 +327,8 @@ int instance_run_solver(
     );
 
     ret = FCC_IMPOSSIBLE;
-    ret_moves = NULL;
-    ret_count_moves = 0;
+    ret_moves_seq.count = 0;
+    ret_moves_seq.moves = NULL;
 
     {
 #define SUIT_LIMIT ( DECKS_NUM * 4 )
@@ -544,8 +543,8 @@ fcc_loop_cleanup:
                     {
                         /* State is solved! Yay! Cleanup and return. */
                         ret = FCC_SOLVED;
-                        ret_moves = start_point_iter->moves;
-                        ret_count_moves = start_point_iter->count_moves;
+                        ret_moves_seq.moves = start_point_iter->moves;
+                        ret_moves_seq.count = start_point_iter->count_moves;
                         /* Invalidate the existing ones so they won't be
                          * freed by accident.
                          * */
@@ -664,9 +663,7 @@ free_resources:
     fc_solve_delta_stater_free(delta);
     fc_solve_meta_compact_allocator_finish(meta_alloc);
 
-    /* TODO: change ret_moves and ret_count_moves to fcs_fcc_moves_seq_t */
-    out_moves_seq->count = ret_count_moves;
-    out_moves_seq->moves = ret_moves;
+    *(out_moves_seq) = ret_moves_seq;
 
     return ret;
 }
