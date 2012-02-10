@@ -40,8 +40,14 @@ extern "C"
 
 typedef unsigned char fcs_fcc_move_t;
 
+typedef struct {
+    int count;
+    fcs_fcc_move_t * moves;
+} fcs_fcc_moves_seq_t;
+
 typedef struct 
 {
+    /* TODO : change to fcs_fcc_moves_seq_t. */
     int count_moves;
     fcs_fcc_move_t * moves;
     char * state_as_string;

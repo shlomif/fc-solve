@@ -287,8 +287,7 @@ int instance_run_solver(
     fcs_dbm_solver_instance_t * instance,
     long max_num_elements_in_cache,
     fcs_state_keyval_pair_t * init_state,
-    int * out_count_moves,
-    fcs_fcc_move_t * * out_moves
+    fcs_fcc_moves_seq_t * out_moves_seq
 )
 {
     fc_solve_delta_stater_t * delta;
@@ -665,8 +664,9 @@ free_resources:
     fc_solve_delta_stater_free(delta);
     fc_solve_meta_compact_allocator_finish(meta_alloc);
 
-    *out_moves = ret_moves;
-    *out_count_moves = ret_count_moves;
+    /* TODO: change ret_moves and ret_count_moves to fcs_fcc_moves_seq_t */
+    out_moves_seq->count = ret_count_moves;
+    out_moves_seq->moves = ret_moves;
 
     return ret;
 }
@@ -878,9 +878,8 @@ int main(int argc, char * argv[])
     FILE * fh;
     char user_state[USER_STATE_SIZE];
     fcs_state_keyval_pair_t init_state;
-    int ret_count_moves;
+    fcs_fcc_moves_seq_t ret_moves_seq;
     long FCCs_per_depth_milestone_step;
-    fcs_fcc_move_t * ret_moves;
     int ret_code;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
 
@@ -1018,8 +1017,7 @@ int main(int argc, char * argv[])
         &instance,
         caches_delta,
         &init_state,
-        &ret_count_moves,
-        &ret_moves
+        &ret_moves_seq
     );
 
     if (ret_code == FCC_SOLVED)
@@ -1028,14 +1026,15 @@ int main(int argc, char * argv[])
         char move_buffer[500];
         printf ("%s\n", "Success!");
         /* Now trace the solution */
-        for (i = 0 ; i < ret_count_moves ; i++)
+        for (i = 0 ; i < ret_moves_seq.count ; i++)
         {
             printf("==\n%s\n",
-                   move_to_string(ret_moves[i], move_buffer)
+                   move_to_string(ret_moves_seq.moves[i], move_buffer)
            );
         }
         printf ("==\nEND\n");
-        free(ret_moves);
+        free (ret_moves_seq.moves);
+        ret_moves_seq.moves = NULL;
     }
     else if (ret_code == FCC_IMPOSSIBLE)
     {
