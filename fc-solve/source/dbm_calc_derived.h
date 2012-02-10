@@ -166,8 +166,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 /* Returns the additional number of cards moved to the foundation  */
 static GCC_INLINE int horne_prune(
     fcs_state_keyval_pair_t * init_state_kv_ptr,
-    int * count_moves,
-    fcs_fcc_move_t * * moves
+    fcs_fcc_moves_seq_t * moves_seq
 )
 {
     int stack_idx, fc;
@@ -230,11 +229,11 @@ static GCC_INLINE int horne_prune(
         }
     } while (num_cards_moved);
     
-    if (count_moves_so_far && count_moves)
+    if (count_moves_so_far && moves_seq)
     {
-        (*moves) = realloc((*moves), sizeof((*moves)[0]) * ((*count_moves) + count_moves_so_far));
-        memcpy((*moves)+(*count_moves), additional_moves, sizeof(additional_moves[0]) * count_moves_so_far);
-        (*count_moves) += count_moves_so_far;
+        moves_seq->moves = realloc(moves_seq->moves, sizeof(moves_seq->moves[0]) * (moves_seq->count + count_moves_so_far));
+        memcpy((moves_seq->moves)+(moves_seq->count), additional_moves, sizeof(additional_moves[0]) * count_moves_so_far);
+        moves_seq->count += count_moves_so_far;
     }
     
     return count_moves_so_far;
@@ -553,7 +552,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
             derived_iter = derived_iter->next
         )
         {
-            horne_prune(&(derived_iter->state), NULL, NULL);
+            horne_prune(&(derived_iter->state), NULL);
         }
     }
 

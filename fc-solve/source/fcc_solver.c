@@ -522,8 +522,7 @@ fcc_loop_cleanup:
                 num_additional_moves =
                     horne_prune(
                         &state,
-                        &(start_point_iter->moves_seq.count),
-                        &(start_point_iter->moves_seq.moves)
+                        &(start_point_iter->moves_seq)
                         );
                 /* TODO : check that it's the final state. If
                  * so, do the cleanup and return the solution.
@@ -877,7 +876,7 @@ int main(int argc, char * argv[])
     FILE * fh;
     char user_state[USER_STATE_SIZE];
     fcs_state_keyval_pair_t init_state;
-    fcs_fcc_moves_seq_t ret_moves_seq;
+    fcs_fcc_moves_seq_t ret_moves_seq, init_moves_seq;
     long FCCs_per_depth_milestone_step;
     int ret_code;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
@@ -1010,7 +1009,9 @@ int main(int argc, char * argv[])
 #endif
     );
 
-    horne_prune(&init_state, NULL, NULL);
+    init_moves_seq.moves = NULL;
+    init_moves_seq.count = 0;
+    horne_prune(&init_state, &init_moves_seq);
 
     ret_code = instance_run_solver(
         &instance,
@@ -1025,6 +1026,12 @@ int main(int argc, char * argv[])
         char move_buffer[500];
         printf ("%s\n", "Success!");
         /* Now trace the solution */
+        for (i = 0 ; i < init_moves_seq.count ; i++)
+        {
+            printf("==\n%s\n",
+                   move_to_string(init_moves_seq.moves[i], move_buffer)
+           );
+        }
         for (i = 0 ; i < ret_moves_seq.count ; i++)
         {
             printf("==\n%s\n",
@@ -1048,6 +1055,9 @@ int main(int argc, char * argv[])
         printf ("%s\n", "Unknown return code. ERROR.");
     }
     
+    free (init_moves_seq.moves);
+    init_moves_seq.moves = NULL;
+
     instance_destroy(&instance);
 
     return 0;
