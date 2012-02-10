@@ -20,6 +20,7 @@ typedef struct
 typedef struct
 {
     dict_t * kaz_tree;
+    fcs_meta_compact_allocator_t meta_alloc;
     fcs_compact_allocator_t allocator;
 } dbm_t;
 
@@ -38,11 +39,15 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
     dbm_t * db;
     db = malloc(sizeof(*db));
 
+    fc_solve_meta_compact_allocator_init(
+        &(db->meta_alloc)
+    );
+
     db->kaz_tree =
-        fc_solve_kaz_tree_create(compare_records, NULL);
+        fc_solve_kaz_tree_create(compare_records, NULL, &(db->meta_alloc));
 
     fc_solve_compact_allocator_init(
-        &(db->allocator)
+        &(db->allocator), &(db->meta_alloc)
     );
 
     *store = (fcs_dbm_store_t)db;
@@ -107,5 +112,6 @@ extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
 
     fc_solve_kaz_tree_destroy( db->kaz_tree );
     fc_solve_compact_allocator_finish( &(db->allocator) );
+    fc_solve_meta_compact_allocator_finish( &(db->meta_alloc) );
     free(db);
 }

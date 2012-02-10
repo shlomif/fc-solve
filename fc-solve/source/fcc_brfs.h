@@ -123,7 +123,10 @@ static void perform_FCC_brfs(
      * not new, this will be set to zero (0). It includes the initial position,
      * but does not include the start points of the new FCC.
      * */
-    long * out_num_new_positions
+    long * out_num_new_positions,
+    /* [Input/Output]: The meta allocator - needed to allocate and free
+     * the compact allocators. */
+    fcs_meta_compact_allocator_t * meta_alloc
 )
 {
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin, * new_item, * extracted_item;
@@ -150,8 +153,8 @@ static void perform_FCC_brfs(
 #endif
 
     /* Initialize the queue_allocator. */
-    fc_solve_compact_allocator_init( &(queue_allocator) );
-    fc_solve_compact_allocator_init( &(derived_list_allocator) );
+    fc_solve_compact_allocator_init( &(queue_allocator), meta_alloc );
+    fc_solve_compact_allocator_init( &(derived_list_allocator), meta_alloc );
     queue_recycle_bin = NULL;
 
     /* TODO : maybe pass delta_stater as an argument  */
@@ -164,7 +167,7 @@ static void perform_FCC_brfs(
 #endif
     );
 
-    traversed_states = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+    traversed_states = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
 #if 0
     found_new_start_points = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
 #endif

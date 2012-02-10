@@ -42,14 +42,33 @@ extern "C"
 
 typedef struct
 {
+    char * recycle_bin;
+} fcs_meta_compact_allocator_t;
+
+typedef struct
+{
     char * old_list;
     char * max_ptr;
     char * ptr;
     char * rollback_ptr;
+    fcs_meta_compact_allocator_t * meta;
 } fcs_compact_allocator_t;
 
-extern void
-    fc_solve_compact_allocator_init(fcs_compact_allocator_t * allocator);
+static GCC_INLINE void fc_solve_meta_compact_allocator_init(
+    fcs_meta_compact_allocator_t * meta
+    )
+{
+    meta->recycle_bin = NULL;
+}
+
+extern void fc_solve_meta_compact_allocator_finish(
+    fcs_meta_compact_allocator_t * meta_allocator
+    );
+
+extern void fc_solve_compact_allocator_init(
+    fcs_compact_allocator_t * allocator,
+    fcs_meta_compact_allocator_t * meta_allocator
+    );
 
 extern void fc_solve_compact_allocator_extend(
     fcs_compact_allocator_t * allocator

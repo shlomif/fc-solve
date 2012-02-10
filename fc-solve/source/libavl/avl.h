@@ -86,7 +86,7 @@ struct avl_traverser
   };
 
 /* Table functions. */
-struct avl_table *avl_create (avl_comparison_func *, void *);
+struct avl_table *avl_create (avl_comparison_func *, void *, fcs_meta_compact_allocator_t *);
 struct avl_table *avl_copy (const struct avl_table *, avl_copy_func *,
                             avl_item_func *);
 void avl_destroy (struct avl_table *, avl_item_func *);

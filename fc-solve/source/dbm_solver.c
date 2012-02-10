@@ -224,6 +224,7 @@ typedef struct {
     long count_num_processed;
     fcs_bool_t queue_solution_was_found;
     fcs_encoded_state_buffer_t queue_solution;
+    fcs_meta_compact_allocator_t meta_alloc;
     fcs_compact_allocator_t queue_allocator;
     int queue_num_extracted_and_processed;
     /* TODO : offload the queue to the hard disk. */
@@ -241,8 +242,11 @@ static void GCC_INLINE instance_init(
     FCS_INIT_LOCK(instance->queue_lock);
     FCS_INIT_LOCK(instance->storage_lock);
 
+    fc_solve_meta_compact_allocator_init(
+        &(instance->meta_alloc)
+    );
     fc_solve_compact_allocator_init(
-        &(instance->queue_allocator)
+        &(instance->queue_allocator), &(instance->meta_alloc)
     );
     instance->queue_solution_was_found = FALSE;
     instance->queue_num_extracted_and_processed = 0;
@@ -417,7 +421,7 @@ void * instance_run_solver_thread(void * void_arg)
     prev_item = item = NULL;
     queue_num_extracted_and_processed = 0;
 
-    fc_solve_compact_allocator_init(&(derived_list_allocator));
+    fc_solve_compact_allocator_init(&(derived_list_allocator), &(instance->meta_alloc));
     derived_list_recycle_bin = NULL;
     derived_list = NULL;
 

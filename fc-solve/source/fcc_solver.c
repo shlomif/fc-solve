@@ -131,6 +131,7 @@ typedef struct {
     long count_num_processed;
     long max_processed_positions_count;
     long positions_milestone_step;
+    fcs_meta_compact_allocator_t meta_alloc;
 } fcs_dbm_solver_instance_t;
 
 static void GCC_INLINE instance_init(
@@ -162,7 +163,8 @@ typedef struct {
 
 static GCC_INLINE void init_solver_state(
     fcs_fcc_solver_state * solver_state,
-    long max_num_elements_in_cache
+    long max_num_elements_in_cache,
+    fcs_meta_compact_allocator_t * meta_alloc
     )
 {
     int i;
@@ -172,7 +174,8 @@ static GCC_INLINE void init_solver_state(
 
     cache_init (
         &(solver_state->cache),
-        max_num_elements_in_cache
+        max_num_elements_in_cache,
+        meta_alloc
     );
     
     for (i = 0 ; i < FCC_DEPTH ; i++)
@@ -180,11 +183,11 @@ static GCC_INLINE void init_solver_state(
         fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[i]);
         fcc->queue = NULL;
         fcc->queue_recycle_bin = NULL;
-        fc_solve_compact_allocator_init( &(fcc->queue_allocator) );
+        fc_solve_compact_allocator_init( &(fcc->queue_allocator), meta_alloc );
         fcc->does_min_by_sorting_exist
-            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
         fcc->does_min_by_absolute_depth_exist
-            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
+            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
     }
 }
 
@@ -278,7 +281,7 @@ static GCC_INLINE int fc_solve_compare_fcs_FCC_start_points(const void * a, cons
 }
 
 int instance_run_solver(
-    fcs_dbm_solver_instance_t * instance, 
+    fcs_dbm_solver_instance_t * instance,
     long max_num_elements_in_cache,
     fcs_state_keyval_pair_t * init_state,
     int * out_count_moves,
@@ -296,10 +299,12 @@ int instance_run_solver(
     fcs_fcc_move_t * ret_moves;
     int ret_count_moves;
     long next_count_num_processed_landmark = STEP;
+    fcs_meta_compact_allocator_t * meta_alloc;
 
+    fc_solve_meta_compact_allocator_init(meta_alloc = &(instance->meta_alloc));
     /* Initialize the state. */
     solver_state = &(instance->solver_state);
-    init_solver_state(solver_state, max_num_elements_in_cache);
+    init_solver_state(solver_state, max_num_elements_in_cache, &(instance->meta_alloc));
     cache = &(solver_state->cache);
 
     instance->count_num_processed = 0;
@@ -375,10 +380,10 @@ int instance_run_solver(
 
 
         next_start_points_list.recycle_bin = NULL;
-        fc_solve_compact_allocator_init(&(next_start_points_list.allocator));
+        fc_solve_compact_allocator_init(&(next_start_points_list.allocator), meta_alloc);
 
         do_next_fcc_start_points_exist
-            = fc_solve_kaz_tree_create(fc_solve_compare_fcs_FCC_start_points, NULL);
+            = fc_solve_kaz_tree_create(fc_solve_compare_fcs_FCC_start_points, NULL, meta_alloc);
         while ((ret == FCC_IMPOSSIBLE) && fcc_stage->queue)
         {
             fcs_bool_t is_fcc_new;
@@ -403,7 +408,8 @@ int instance_run_solver(
                 &min_by_sorting,
                 fcc_stage->does_min_by_sorting_exist,
                 cache,
-                &num_new_positions
+                &num_new_positions,
+                meta_alloc
             );
 
 #if 0
@@ -638,7 +644,7 @@ second_stage_cleanup:
          * out-of-date.
          * */
         cache_destroy(cache);
-        cache_init (cache, max_num_elements_in_cache);
+        cache_init (cache, max_num_elements_in_cache, meta_alloc);
         /*
          * A trace for keeping track of the solver's progress.
          * TODO : make it optional/abstract and add more traces.
@@ -649,6 +655,7 @@ second_stage_cleanup:
 free_resources:
     solver_state_free(solver_state);
     fc_solve_delta_stater_free(delta);
+    fc_solve_meta_compact_allocator_finish(meta_alloc);
 
     *out_moves = ret_moves;
     *out_count_moves = ret_count_moves;

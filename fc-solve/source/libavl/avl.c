@@ -33,7 +33,7 @@
    and memory allocator |allocator|.
    Returns |NULL| if memory allocation failed. */
 struct avl_table *
-avl_create (avl_comparison_func *compare, void *param)
+avl_create (avl_comparison_func *compare, void *param, fcs_meta_compact_allocator_t * meta_alloc)
 {
   struct avl_table *tree;
 
@@ -46,7 +46,7 @@ avl_create (avl_comparison_func *compare, void *param)
   tree->avl_root = NULL;
   tree->avl_compare = compare;
   tree->avl_param = param;
-  fc_solve_compact_allocator_init(&(tree->avl_allocator));
+  fc_solve_compact_allocator_init(&(tree->avl_allocator), meta_alloc);
   tree->avl_recycle_bin = NULL;
   tree->avl_count = 0;
   tree->avl_generation = 0;
