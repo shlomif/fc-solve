@@ -20,7 +20,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -Wall
+CFLAGS := -Wall -DFCS_DBM_USE_LIBAVL=1 -I./libavl/ -I.
 GCC_COMPAT := 
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp 
 
@@ -232,6 +232,11 @@ FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o
 
 freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FC_PRO_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
+
+FCC_SOLVER_OBJS = fcc_solver.o libavl/avl.o app_str.o card.o meta_alloc.o state.o
+
+fcc_fc_solver: $(FCC_SOLVER_OBJS)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FCC_SOLVER_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
 
 clean:
 	rm -f *.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*
