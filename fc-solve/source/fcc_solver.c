@@ -131,18 +131,21 @@ typedef struct {
     long count_num_processed;
     long max_processed_positions_count;
     long positions_milestone_step;
+    long FCCs_per_depth_milestone_step;
     fcs_meta_compact_allocator_t meta_alloc;
 } fcs_dbm_solver_instance_t;
 
 static void GCC_INLINE instance_init(
     fcs_dbm_solver_instance_t * instance,
     long max_processed_positions_count,
-    long positions_milestone_step
+    long positions_milestone_step,
+    long FCCs_per_depth_milestone_step
 )
 {
     instance->count_num_processed = 0;
     instance->max_processed_positions_count = max_processed_positions_count;
     instance->positions_milestone_step = positions_milestone_step;
+    instance->FCCs_per_depth_milestone_step = FCCs_per_depth_milestone_step;
 }
 
 static void GCC_INLINE instance_destroy(
@@ -300,6 +303,7 @@ int instance_run_solver(
     int ret_count_moves;
     long next_count_num_processed_landmark = STEP;
     fcs_meta_compact_allocator_t * meta_alloc;
+    long FCCs_per_depth_milestone_step;
 
     fc_solve_meta_compact_allocator_init(meta_alloc = &(instance->meta_alloc));
     /* Initialize the state. */
@@ -308,6 +312,7 @@ int instance_run_solver(
     cache = &(solver_state->cache);
 
     instance->count_num_processed = 0;
+    FCCs_per_depth_milestone_step = instance->FCCs_per_depth_milestone_step;
 
     /* Initialize local variables. */
     delta = fc_solve_delta_stater_alloc(
@@ -416,7 +421,10 @@ int instance_run_solver(
             instance_time_printf (instance, "After perform_FCC_brfs\n");
 #endif
 
-            if (++num_FCCs_processed_for_depth % 10000 == 0)
+            if (( (++num_FCCs_processed_for_depth) 
+                % FCCs_per_depth_milestone_step ) 
+                    == 0
+            )
             {
                 instance_time_printf(
                     instance, 
@@ -871,6 +879,7 @@ int main(int argc, char * argv[])
     char user_state[USER_STATE_SIZE];
     fcs_state_keyval_pair_t init_state;
     int ret_count_moves;
+    long FCCs_per_depth_milestone_step;
     fcs_fcc_move_t * ret_moves;
     int ret_code;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
@@ -878,6 +887,7 @@ int main(int argc, char * argv[])
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
     num_threads = 2;
+    FCCs_per_depth_milestone_step = 10000;
 
     for (arg=1;arg < argc; arg++)
     {
@@ -931,6 +941,16 @@ int main(int argc, char * argv[])
             }
             positions_milestone_step = atol(argv[arg]);
         }
+        else if (!strcmp(argv[arg], "--fccs-milestone-step"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--fcc-milestone-step came without an argument!\n");
+                exit(-1);
+            }
+            FCCs_per_depth_milestone_step = atol(argv[arg]);
+        }
         else if (!strcmp(argv[arg], "--num-threads"))
         {
             arg++;
@@ -965,7 +985,12 @@ int main(int argc, char * argv[])
 
     filename = argv[arg];
 
-    instance_init(&instance, max_processed_positions_count, positions_milestone_step);
+    instance_init(
+        &instance,
+        max_processed_positions_count,
+        positions_milestone_step,
+        FCCs_per_depth_milestone_step
+        );
     fh = fopen(filename, "r");
     if (fh == NULL)
     {
