@@ -144,6 +144,20 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 
 </table>
 
+<h2 id="results-and-data">Results and Data</h2>
+
+<table class="downloads" summary="Results and Data. Left column is the file to download with the link. Right column is the description">
+<tr>
+<td>
+<a href="$(ROOT)/downloads/dbm-fc-solver/dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz">dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz</a>
+</td>
+<td>
+See <a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1099">the
+message titled “[Better Version] Final Report for the 2-Frecells-based ‘DBM’ 
+Freecell Solver”</a>.
+</td>
+</tr>
+</table>
 
 <h2 id="older-stable">Older Versions</h2>
 
