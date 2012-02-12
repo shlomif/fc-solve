@@ -86,7 +86,7 @@ For each of these startpoints:
 
     #. FOREACH <fully_connected_component->NextStartPoints()>
 
-        #. If it does not exist in next_depth_FCCs.DoesMinBySortingExists, add
+        #. If it does not exist in next_depth_FCCs.DoesMinByAbsoluteDepthExists, add
         the new min_by_absolute_depth (the start point) and append a
         new FCC to next_depth_FCCs.queue.
 
