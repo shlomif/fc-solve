@@ -324,6 +324,7 @@ int instance_run_solver(
 #endif
     );
 
+    fcs_init_encoded_state(&(init_state_enc));
     fc_solve_delta_stater_encode_into_buffer(
         delta, init_state, init_state_enc.s
     );
