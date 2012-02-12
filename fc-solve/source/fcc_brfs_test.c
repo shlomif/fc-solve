@@ -75,7 +75,8 @@ static void fc_solve_state_string_to_enc(
  */
 DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         const char * init_state_str_proto,
-        const fcs_fcc_moves_seq_t * const start_state_moves_seq,
+        const int start_state_moves_count,
+        const fcs_fcc_move_t * const start_state_moves,
         fcs_FCC_start_point_result_t * * out_fcc_start_points,
         long * out_num_new_positions
         )
@@ -141,10 +142,36 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_bool_t is_min_by_sorting_new;
     fcs_encoded_state_buffer_t min_by_sorting;
 
+    fcs_compact_allocator_t moves_list_compact_alloc;
+    fc_solve_compact_allocator_init(&(moves_list_compact_alloc), &(meta_alloc));
+
+    fcs_fcc_moves_seq_allocator_t moves_list_allocator;
+    moves_list_allocator.recycle_bin = NULL;
+    moves_list_allocator.allocator = &(moves_list_compact_alloc);
+
+    fcs_fcc_moves_seq_t start_state_moves_seq;
+    start_state_moves_seq.count = start_state_moves_count;
+    start_state_moves_seq.moves_list = NULL;
+    {
+        fcs_fcc_moves_list_item_t * * iter = &(start_state_moves_seq.moves_list);
+        int i;
+        for ( i=0 ; i < start_state_moves_count ; )
+        {
+            if (i % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+            {
+                *(iter) = fc_solve_fcc_alloc_moves_list_item(&moves_list_allocator);
+            }
+            (*iter)->data.s[i % FCS_FCC_NUM_MOVES_IN_ITEM] = start_state_moves[i];
+            if ((++i) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+            {
+                iter = &((*iter)->next);
+            }
+        }
+    }
     perform_FCC_brfs(
         &(init_state),
         enc_state,
-        start_state_moves_seq,
+        &start_state_moves_seq,
         &(start_points_list),
         do_next_fcc_start_points_exist,
         &is_min_by_sorting_new,
@@ -152,6 +179,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         does_min_by_sorting_exist,
         &does_state_exist_in_any_FCC_cache,
         out_num_new_positions,
+        &moves_list_allocator,
         &meta_alloc
     );
 
@@ -172,7 +200,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     *out_fcc_start_points = ret = malloc(sizeof(ret[0]) * (states_count+1));
 
-    ret[states_count].moves_seq.count = 0;
+    ret[states_count].count = 0;
 
     int i;
 
@@ -190,7 +218,20 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     iter = avl_t_first(&trav, do_next_fcc_start_points_exist);
     for (i = 0; i < states_count ; i++)
     {
-        ret[i].moves_seq = iter->moves_seq;
+        ret[i].count = iter->moves_seq.count;
+        ret[i].moves = malloc(sizeof(ret[i].moves[0]) * ret[i].count);
+        {
+            int moves_idx;
+            fcs_fcc_moves_list_item_t * moves_iter = iter->moves_seq.moves_list;
+            for (moves_idx = 0 ; moves_idx < ret[i].count ; )
+            {
+                ret[i].moves[moves_idx] = moves_iter->data.s[moves_idx % FCS_FCC_NUM_MOVES_IN_ITEM];
+                if ((++moves_idx) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+                {
+                    moves_iter = moves_iter->next;
+                }
+            }
+        }
         fcs_state_keyval_pair_t state;
         fc_solve_delta_stater_decode_into_state(delta, iter->enc_state.s, &(state), indirect_stacks_buffer);
         ret[i].state_as_string =
@@ -217,6 +258,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     free(init_state_s);
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
+    fc_solve_compact_allocator_finish(&(moves_list_compact_alloc));
 
     fc_solve_delta_stater_free (delta);
     fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
@@ -301,6 +343,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     fcs_compact_allocator_t temp_allocator;
     fc_solve_compact_allocator_init(&(temp_allocator), &meta_alloc);
 
+    fcs_fcc_moves_seq_allocator_t moves_list_allocator;
+    moves_list_allocator.recycle_bin = NULL;
+    moves_list_allocator.allocator = &(temp_allocator);
+
     /* Populate does_min_by_sorting_exist from min_states */
     {
         const char * * min_states_iter = min_states;
@@ -359,7 +405,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     long num_new_positions_temp;
     fcs_fcc_moves_seq_t init_moves_seq;
 
-    init_moves_seq.moves = NULL;
+    init_moves_seq.moves_list = NULL;
     init_moves_seq.count = 0;
 
     perform_FCC_brfs(
@@ -373,6 +419,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         does_min_by_sorting_exist,
         &does_state_exist_in_any_FCC_cache,
         &num_new_positions_temp,
+        &moves_list_allocator,
         &meta_alloc
     );
 

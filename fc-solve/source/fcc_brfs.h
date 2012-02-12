@@ -84,6 +84,32 @@ static int fc_solve_compare_encoded_states(
 #undef GET_PARAM
 }
 
+static GCC_INLINE void fc_solve_fcc_release_moves_seq(
+    fcs_fcc_moves_seq_t * moves_seq,
+    fcs_fcc_moves_seq_allocator_t * moves_list_allocator
+    )
+{
+    fcs_fcc_moves_list_item_t * iter = moves_seq->moves_list;
+    fcs_fcc_moves_list_item_t * iter_next;
+
+    if (iter)
+    {
+        for(
+            iter_next = iter->next
+            ;
+            iter_next
+            ;
+            iter = iter_next, iter_next = iter_next->next
+           )
+        {
+            iter->next = moves_list_allocator->recycle_bin;
+            moves_list_allocator->recycle_bin = iter;
+        }
+    }
+    moves_seq->moves_list = NULL;
+    moves_seq->count = -1;
+}
+
 static void perform_FCC_brfs(
     /* The first state in the game, from which all states are encoded. */
     fcs_state_keyval_pair_t * init_state,
@@ -121,6 +147,8 @@ static void perform_FCC_brfs(
      * but does not include the start points of the new FCC.
      * */
     long * out_num_new_positions,
+    /* [Input/Output]: the list allocator. */
+    fcs_fcc_moves_seq_allocator_t * moves_list_allocator,
     /* [Input/Output]: The meta allocator - needed to allocate and free
      * the compact allocators. */
     fcs_meta_compact_allocator_t * meta_alloc
@@ -137,7 +165,7 @@ static void perform_FCC_brfs(
     fcs_encoded_state_buffer_t running_min;
     long num_new_positions;
     int count_start_state_moves = start_state_moves_seq->count;
-    const fcs_fcc_move_t * const start_state_moves = start_state_moves_seq->moves;
+    const fcs_fcc_moves_list_item_t * const start_state_moves_item = start_state_moves_seq->moves_list;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -181,7 +209,7 @@ static void perform_FCC_brfs(
     new_item->key = start_state;
     new_item->next = NULL;
     new_item->moves_seq.count = 0;
-    new_item->moves_seq.moves = NULL;
+    new_item->moves_seq.moves_list = NULL;
 
     queue_head = queue_tail = new_item;
 
@@ -330,34 +358,86 @@ static void perform_FCC_brfs(
                 )
             )
             {
-                int count_moves;
-                fcs_fcc_move_t * moves, * end_moves;
+                fcs_fcc_moves_list_item_t * moves_list, * * end_moves_iter;
+                int pos_in_moves;
 
-                count_moves = (extracted_item->moves_seq.count + 1);
+                /* Fill in the moves. */
+                end_moves_iter = &(moves_list);
+                pos_in_moves = 0;
 
                 if (! is_reversible)
                 {
-                    count_moves += count_start_state_moves;
+                    /*
+                     * TODO : optimise the loop so the data will be copied
+                     * in one go by jumps of FCS_FCC_NUM_MOVES_IN_ITEM
+                     * */
+                    fcs_fcc_moves_list_item_t const * start_iter =
+                        start_state_moves_item;
+                    for(
+                        ;
+                        pos_in_moves < count_start_state_moves
+                        ;
+                       )
+                    {
+                        if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+                        {
+                            (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
+                        }
+                        (*end_moves_iter)->data.s[
+                            pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM
+                            ] = start_iter->data.s[
+                            pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM
+                            ];
+                        if ((++pos_in_moves) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+                        {
+                            end_moves_iter = &((*end_moves_iter)->next);
+                            start_iter = start_iter->next;
+                        }
+                    }
+                    end_moves_iter = end_moves_iter;
                 }
 
-                /* Fill in the moves. */
-                moves = malloc(
-                    sizeof(new_item->moves_seq.moves[0]) * count_moves
-                );
-
-                if (is_reversible)
                 {
-                    end_moves = moves;
-                }
-                else
-                {
-                    memcpy(moves, start_state_moves, count_start_state_moves);
-                    end_moves = moves + count_start_state_moves;
+                    int copy_from_idx;
+                    fcs_fcc_moves_list_item_t const * copy_from_iter =
+                        extracted_item->moves_seq.moves_list;
+
+                    for(
+                        copy_from_idx = 0
+                        ;
+                        copy_from_idx < extracted_item->moves_seq.count
+                        ;
+                       )
+                    {
+                        if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+                        {
+                            (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
+                        }
+                        (*end_moves_iter)->data.s[
+                            pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM
+                            ] = copy_from_iter->data.s[
+                            copy_from_idx % FCS_FCC_NUM_MOVES_IN_ITEM
+                            ];
+                        if ((++pos_in_moves) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+                        {
+                            end_moves_iter = &((*end_moves_iter)->next);
+                        }
+                        if ((++copy_from_idx) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+                        {
+                            copy_from_iter = copy_from_iter->next;
+                        }
+                    }
                 }
 
-                memcpy(end_moves, extracted_item->moves_seq.moves, extracted_item->moves_seq.count * sizeof(new_item->moves_seq.moves[0]));
-                end_moves[extracted_item->moves_seq.count]
-                    = derived_iter->parent_and_move.s[
+                /* Append the remaining moves. */
+                if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+                {
+                    (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
+                }
+                (*end_moves_iter)->data.s[
+                    (pos_in_moves++) % FCS_FCC_NUM_MOVES_IN_ITEM
+                ] = 
+                    derived_iter->parent_and_move.s[
                     derived_iter->parent_and_move.s[0]+1
                     ];
 
@@ -377,8 +457,8 @@ static void perform_FCC_brfs(
                         key_to_add
                         );
 
-                    new_item->moves_seq.count = count_moves;
-                    new_item->moves_seq.moves = moves;
+                    new_item->moves_seq.count = pos_in_moves;
+                    new_item->moves_seq.moves_list = moves_list;
 
                     /* Enqueue the item in the queue. */
                     new_item->next = NULL;
@@ -410,8 +490,8 @@ static void perform_FCC_brfs(
                             );
                     }
                     new_start_point->enc_state = new_item->key;
-                    new_start_point->moves_seq.count = count_moves;
-                    new_start_point->moves_seq.moves = moves;
+                    new_start_point->moves_seq.count = pos_in_moves;
+                    new_start_point->moves_seq.moves_list = moves_list;
 
                     /* 
                      * Enqueue the new start point into right_tree (which
@@ -460,8 +540,10 @@ static void perform_FCC_brfs(
         /* Clean up the extracted_item's resources. We no longer need them
          * because we are interested only in those of the derived items.
          * */
-        free(extracted_item->moves_seq.moves);
-        extracted_item->moves_seq.moves = NULL;
+        fc_solve_fcc_release_moves_seq(
+            &(extracted_item->moves_seq), 
+            moves_list_allocator
+        );
     }
 
     if ((*is_min_by_sorting_new =

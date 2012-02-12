@@ -31,18 +31,16 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
 
     STRLEN count_start_moves = SvLEN(moves_prefix);
 
-    start_moves.count = (int)count_start_moves;
-    start_moves.moves = SvPVbyte(moves_prefix, count_start_moves);
-    
     fc_solve_user_INTERNAL_find_fcc_start_points(
         init_state_s,
-        &start_moves,
+        (int)count_start_moves,
+        SvPVbyte(moves_prefix, count_start_moves),
         &fcc_start_points,
         &num_new_positions
     );
     results = (AV *)sv_2mortal((SV *)newAV());
     
-    for (iter = fcc_start_points ; (*iter).moves_seq.count ; iter++)
+    for (iter = fcc_start_points ; iter->count ; iter++)
     {
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FccStartPoint");
@@ -51,8 +49,8 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
 
         s->state_as_string = savepv(iter->state_as_string);
         free(iter->state_as_string);
-        s->moves = newSVpvn(iter->moves_seq.moves, iter->moves_seq.count);
-        free(iter->moves_seq.moves);
+        s->moves = newSVpvn(iter->moves, iter->count);
+        free(iter->moves);
         s->num_new_positions = num_new_positions;
 
         sv_setiv(obj, (IV)s);

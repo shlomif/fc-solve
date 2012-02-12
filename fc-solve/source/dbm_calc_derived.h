@@ -163,10 +163,39 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
     return -1;
 }
 
+typedef struct {
+    fcs_fcc_moves_list_item_t * recycle_bin;
+    fcs_compact_allocator_t * allocator;
+} fcs_fcc_moves_seq_allocator_t;
+
+static GCC_INLINE fcs_fcc_moves_list_item_t * fc_solve_fcc_alloc_moves_list_item(
+    fcs_fcc_moves_seq_allocator_t * allocator
+)
+{
+    fcs_fcc_moves_list_item_t * new_item;
+
+    if (allocator->recycle_bin)
+    {
+        allocator->recycle_bin = (new_item = allocator->recycle_bin)->next;
+    }
+    else
+    {
+        new_item = (fcs_fcc_moves_list_item_t *)
+            fcs_compact_alloc_ptr(
+                allocator->allocator,
+                sizeof(*new_item)
+                );
+    }
+    new_item->next = NULL;
+
+    return new_item;
+}
+
 /* Returns the additional number of cards moved to the foundation  */
 static GCC_INLINE int horne_prune(
     fcs_state_keyval_pair_t * init_state_kv_ptr,
-    fcs_fcc_moves_seq_t * moves_seq
+    fcs_fcc_moves_seq_t * moves_seq,
+    fcs_fcc_moves_seq_allocator_t * allocator
 )
 {
     int stack_idx, fc;
@@ -229,10 +258,53 @@ static GCC_INLINE int horne_prune(
         }
     } while (num_cards_moved);
     
+    /* modify moves_seq in-place. */
     if (count_moves_so_far && moves_seq)
     {
-        moves_seq->moves = realloc(moves_seq->moves, sizeof(moves_seq->moves[0]) * (moves_seq->count + count_moves_so_far));
-        memcpy((moves_seq->moves)+(moves_seq->count), additional_moves, sizeof(additional_moves[0]) * count_moves_so_far);
+        fcs_fcc_moves_list_item_t * * iter;
+        int pos, count, pos_moves_so_far;
+        
+        iter = &(moves_seq->moves_list);
+
+        /* Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
+         * to point at the place to either write the new moves or alternatively
+         * (on parity) on the pointer to allocate a new list_item for the
+         * moves.
+         * 
+         * If count is 0, then we should move 0.
+         * If count is 1, then we should move 0.
+         * .
+         * .
+         * .
+         * If count is 7, then we should move 0.
+         * If count is 8, then we should move 1 time.
+         *
+         * to sum up we need to move count / FCS_FCC_NUM_MOVES_IN_ITEM .
+         * 
+         * */
+        count = moves_seq->count;
+        for (pos = 0 ;
+             pos <= count - FCS_FCC_NUM_MOVES_IN_ITEM ;
+             pos += FCS_FCC_NUM_MOVES_IN_ITEM
+        )
+        {
+            iter = &((*iter)->next);
+        }
+
+        for (pos_moves_so_far = 0 ;
+             pos_moves_so_far < count_moves_so_far ;
+             pos_moves_so_far++)
+        {
+            if (pos % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+            {
+                (*iter) = fc_solve_fcc_alloc_moves_list_item(allocator);
+            }
+            (*iter)->data.s[pos % FCS_FCC_NUM_MOVES_IN_ITEM] = additional_moves[pos_moves_so_far];
+            if ((++pos) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+            {
+                iter = &((*iter)->next);
+            }
+        }
         moves_seq->count += count_moves_so_far;
     }
     
@@ -552,7 +624,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
             derived_iter = derived_iter->next
         )
         {
-            horne_prune(&(derived_iter->state), NULL);
+            horne_prune(&(derived_iter->state), NULL, NULL);
         }
     }
 

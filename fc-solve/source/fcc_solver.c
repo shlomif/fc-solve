@@ -131,7 +131,6 @@ typedef struct {
     long max_processed_positions_count;
     long positions_milestone_step;
     long FCCs_per_depth_milestone_step;
-    fcs_meta_compact_allocator_t meta_alloc;
 } fcs_dbm_solver_instance_t;
 
 static void GCC_INLINE instance_init(
@@ -195,7 +194,8 @@ static GCC_INLINE void init_solver_state(
 
 static GCC_INLINE void solver_state__free_dcc_depth(
     fcs_fcc_solver_state * solver_state,
-    int depth
+    int depth,
+    fcs_fcc_moves_seq_allocator_t * moves_list_allocator
     )
 {
     fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[depth]);
@@ -219,10 +219,12 @@ static GCC_INLINE void solver_state__free_dcc_depth(
         iter = iter->next
        )
     {
-        if (iter->moves_seq_to_min_by_absolute_depth.moves)
+        if (iter->moves_seq_to_min_by_absolute_depth.moves_list)
         {
-            free(iter->moves_seq_to_min_by_absolute_depth.moves);
-            iter->moves_seq_to_min_by_absolute_depth.moves = NULL;
+            fc_solve_fcc_release_moves_seq(
+                &(iter->moves_seq_to_min_by_absolute_depth),
+                moves_list_allocator
+            );
         }
     }
     fcc->queue = NULL;
@@ -236,13 +238,14 @@ static GCC_INLINE void solver_state__free_dcc_depth(
 }
 
 static GCC_INLINE void solver_state_free(
-    fcs_fcc_solver_state * solver_state
+    fcs_fcc_solver_state * solver_state,
+    fcs_fcc_moves_seq_allocator_t * moves_list_allocator
 )
 {
     int depth;
     for (depth = 0; depth < FCC_DEPTH ; depth++)
     {
-        solver_state__free_dcc_depth(solver_state, depth);
+        solver_state__free_dcc_depth(solver_state, depth, moves_list_allocator);
     }
     solver_state->curr_depth = depth;
     cache_destroy(&(solver_state->cache));
@@ -286,7 +289,9 @@ int instance_run_solver(
     fcs_dbm_solver_instance_t * instance,
     long max_num_elements_in_cache,
     fcs_state_keyval_pair_t * init_state,
-    fcs_fcc_moves_seq_t * out_moves_seq
+    fcs_fcc_moves_seq_t * out_moves_seq,
+    fcs_fcc_moves_seq_allocator_t * moves_list_allocator,
+    fcs_meta_compact_allocator_t * meta_alloc
 )
 {
     fc_solve_delta_stater_t * delta;
@@ -298,14 +303,12 @@ int instance_run_solver(
     fcs_lru_cache_t * cache;
     int ret;
     long next_count_num_processed_landmark = STEP;
-    fcs_meta_compact_allocator_t * meta_alloc;
     long FCCs_per_depth_milestone_step;
     fcs_fcc_moves_seq_t ret_moves_seq;
 
-    fc_solve_meta_compact_allocator_init(meta_alloc = &(instance->meta_alloc));
     /* Initialize the state. */
     solver_state = &(instance->solver_state);
-    init_solver_state(solver_state, max_num_elements_in_cache, &(instance->meta_alloc));
+    init_solver_state(solver_state, max_num_elements_in_cache, meta_alloc);
     cache = &(solver_state->cache);
 
     instance->count_num_processed = 0;
@@ -327,7 +330,7 @@ int instance_run_solver(
 
     ret = FCC_IMPOSSIBLE;
     ret_moves_seq.count = 0;
-    ret_moves_seq.moves = NULL;
+    ret_moves_seq.moves_list = NULL;
 
     {
 #define SUIT_LIMIT ( DECKS_NUM * 4 )
@@ -359,7 +362,7 @@ int instance_run_solver(
 
     fcc->min_by_absolute_depth = init_state_enc;
     fcc->moves_seq_to_min_by_absolute_depth.count= 0;
-    fcc->moves_seq_to_min_by_absolute_depth.moves = NULL;
+    fcc->moves_seq_to_min_by_absolute_depth.moves_list = NULL;
     fcc->next = NULL;
 
     instance->count_num_processed++;
@@ -410,6 +413,7 @@ int instance_run_solver(
                 fcc_stage->does_min_by_sorting_exist,
                 cache,
                 &num_new_positions,
+                moves_list_allocator,
                 meta_alloc
             );
 
@@ -478,9 +482,10 @@ int instance_run_solver(
             }
 fcc_loop_cleanup:
             /* Free fcc's resources. */
-            free (fcc->moves_seq_to_min_by_absolute_depth.moves);
-            fcc->moves_seq_to_min_by_absolute_depth.moves = NULL;
-            fcc->moves_seq_to_min_by_absolute_depth.count = 0;
+            fc_solve_fcc_release_moves_seq(
+                &(fcc->moves_seq_to_min_by_absolute_depth),
+                moves_list_allocator
+            );
 
             /* -> Put it in the queue's recycle bin. */
             fcc->next = fcc_stage->queue_recycle_bin;
@@ -520,7 +525,8 @@ fcc_loop_cleanup:
                 num_additional_moves =
                     horne_prune(
                         &state,
-                        &(start_point_iter->moves_seq)
+                        &(start_point_iter->moves_seq),
+                        moves_list_allocator
                         );
                 /* TODO : check that it's the final state. If
                  * so, do the cleanup and return the solution.
@@ -545,7 +551,7 @@ fcc_loop_cleanup:
                         /* Invalidate the existing ones so they won't be
                          * freed by accident.
                          * */
-                        start_point_iter->moves_seq.moves = NULL;
+                        start_point_iter->moves_seq.moves_list = NULL;
                         start_point_iter->moves_seq.count = -1;
 
                         goto second_stage_cleanup;
@@ -614,10 +620,11 @@ fcc_loop_cleanup:
                 }
                 else
                 {
-                    free(start_point_iter->moves_seq.moves);
+                    fc_solve_fcc_release_moves_seq(
+                        &(start_point_iter->moves_seq),
+                        moves_list_allocator
+                    );
                 }
-                start_point_iter->moves_seq.moves = NULL;
-                start_point_iter->moves_seq.count = -1;
             }
         }
 
@@ -630,7 +637,10 @@ second_stage_cleanup:
                 more_start_point_iter = avl_t_next(&trav)
                )
             {
-                free (more_start_point_iter->moves_seq.moves);
+                fc_solve_fcc_release_moves_seq(
+                    &(more_start_point_iter->moves_seq),
+                    moves_list_allocator
+                );
             }
         }
 
@@ -640,7 +650,7 @@ second_stage_cleanup:
 
         /* Now ascend to the next FCC depth. */
         fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
-        solver_state__free_dcc_depth(solver_state, curr_depth);
+        solver_state__free_dcc_depth(solver_state, curr_depth, moves_list_allocator);
         /* -> Refresh the cache, because it may hold pointers that are
          * out-of-date.
          * */
@@ -654,9 +664,8 @@ second_stage_cleanup:
     }
 
 free_resources:
-    solver_state_free(solver_state);
+    solver_state_free(solver_state, moves_list_allocator);
     fc_solve_delta_stater_free(delta);
-    fc_solve_meta_compact_allocator_finish(meta_alloc);
 
     *(out_moves_seq) = ret_moves_seq;
 
@@ -727,6 +736,9 @@ int main(int argc, char * argv[])
     fcs_fcc_moves_seq_t ret_moves_seq, init_moves_seq;
     long FCCs_per_depth_milestone_step;
     int ret_code;
+    fcs_fcc_moves_seq_allocator_t moves_list_allocator;
+    fcs_compact_allocator_t moves_list_compact_alloc;
+    fcs_meta_compact_allocator_t meta_alloc;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
 
     pre_cache_max_count = 1000000;
@@ -857,38 +869,60 @@ int main(int argc, char * argv[])
 #endif
     );
 
-    init_moves_seq.moves = NULL;
+    fc_solve_meta_compact_allocator_init(&meta_alloc);
+    fc_solve_compact_allocator_init(&(moves_list_compact_alloc), &(meta_alloc));
+    moves_list_allocator.recycle_bin = NULL;
+    moves_list_allocator.allocator = &(moves_list_compact_alloc);
+    init_moves_seq.moves_list = NULL;
     init_moves_seq.count = 0;
-    horne_prune(&init_state, &init_moves_seq);
+    horne_prune(&init_state, &init_moves_seq, &moves_list_allocator);
 
     ret_code = instance_run_solver(
         &instance,
         caches_delta,
         &init_state,
-        &ret_moves_seq
+        &ret_moves_seq,
+        &moves_list_allocator,
+        &meta_alloc
     );
 
     if (ret_code == FCC_SOLVED)
     {
         int i;
         char move_buffer[500];
+        const fcs_fcc_moves_list_item_t * iter;
+
         printf ("%s\n", "Success!");
         /* Now trace the solution */
-        for (i = 0 ; i < init_moves_seq.count ; i++)
+        iter = init_moves_seq.moves_list;
+        for (i = 0 ; i < init_moves_seq.count ;)
         {
             printf("==\n%s\n",
-                   move_to_string(init_moves_seq.moves[i], move_buffer)
-           );
+                   move_to_string(
+                       iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM], 
+                       move_buffer
+                   )
+            );
+            if ((++i) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+            {
+                iter = iter->next;
+            }
         }
-        for (i = 0 ; i < ret_moves_seq.count ; i++)
+        iter = ret_moves_seq.moves_list;
+        for (i = 0 ; i < ret_moves_seq.count ;)
         {
-            printf("==\n%s\n",
-                   move_to_string(ret_moves_seq.moves[i], move_buffer)
-           );
+             printf("==\n%s\n",
+                   move_to_string(
+                       iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM], 
+                       move_buffer
+                   )
+            );
+            if ((++i) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+            {
+                iter = iter->next;
+            }
         }
         printf ("==\nEND\n");
-        free (ret_moves_seq.moves);
-        ret_moves_seq.moves = NULL;
     }
     else if (ret_code == FCC_IMPOSSIBLE)
     {
@@ -903,10 +937,10 @@ int main(int argc, char * argv[])
         printf ("%s\n", "Unknown return code. ERROR.");
     }
     
-    free (init_moves_seq.moves);
-    init_moves_seq.moves = NULL;
-
     instance_destroy(&instance);
+
+    fc_solve_compact_allocator_finish(&moves_list_compact_alloc);
+    fc_solve_meta_compact_allocator_finish(&meta_alloc);
 
     return 0;
 }
