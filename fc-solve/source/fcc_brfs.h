@@ -347,7 +347,7 @@ static void perform_FCC_brfs(
 
             if (! is_reversible)
             {
-                check_for_existing.enc_state = new_item->key;    
+                check_for_existing.enc_state = new_item->key;
             }
 
             if (! fc_solve_kaz_tree_lookup_value(
@@ -533,7 +533,7 @@ static void perform_FCC_brfs(
             derived_list_recycle_bin = derived_iter;
         }
 
-        /* We always hold one new_item spare, so let's recycle i now. */
+        /* We always hold one new_item spare, so let's recycle it now. */
         new_item->next = queue_recycle_bin;
         queue_recycle_bin = new_item;
 
