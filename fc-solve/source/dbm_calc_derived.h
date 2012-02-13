@@ -291,6 +291,8 @@ static GCC_INLINE int horne_prune(
             iter = &((*iter)->next);
         }
 
+        pos = count;
+
         for (pos_moves_so_far = 0 ;
              pos_moves_so_far < count_moves_so_far ;
              pos_moves_so_far++)
