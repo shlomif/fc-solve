@@ -6,6 +6,13 @@ use warnings;
 use IO::All;
 use File::Path;
 
+use Getopt::Long;
+
+my $to_upload = 0;
+GetOptions(
+    '--upload!' => \$to_upload,
+);
+
 my $dest_dir = 'fcc_solver_binary_for_amadiro';
 mkpath("$dest_dir");
 
@@ -48,3 +55,14 @@ run: \$(DEALS_DUMPS)
 \t\@echo "\$* = \$(\$*)"
 EOF
 
+if ($to_upload)
+{
+    my $arc_name = "$dest_dir.tar.bz2";
+    if (system('tar', '-cjvf', $arc_name, $dest_dir))
+    {
+        die "tar failed!";
+    }
+    system("rsync", "-a", "-v", "--progress", "--inplace", $arc_name, 
+        "hostgator:public_html/Files/files/code/"
+    );
+}
