@@ -893,7 +893,7 @@ int main(int argc, char * argv[])
         char move_buffer[500];
         const fcs_fcc_moves_list_item_t * iter;
 
-        printf ("%s\n", "Success!");
+        printf ("VERDICT: %s\n", "Success!");
         /* Now trace the solution */
         iter = init_moves_seq.moves_list;
         for (i = 0 ; i < init_moves_seq.count ;)
@@ -927,17 +927,22 @@ int main(int argc, char * argv[])
     }
     else if (ret_code == FCC_IMPOSSIBLE)
     {
-        printf ("%s\n", "Could not solve successfully.");
+        printf ("VERDICT: %s\n", "Could not solve successfully.");
     }
     else if (ret_code == FCC_INTERRUPTED)
     {
-        printf ("%s\n", "Interrupted run after limit reached.");
+        printf ("VERDICT: %s\n", "Interrupted run after limit reached.");
     }
     else
     {
-        printf ("%s\n", "Unknown return code. ERROR.");
+        printf ("VERDICT: %s\n", "Unknown return code. ERROR.");
     }
     
+    instance_time_printf(
+        &instance,
+        "{FINAL} Reached %li positions in total.\n", instance.count_num_processed
+        );
+
     instance_destroy(&instance);
 
     fc_solve_compact_allocator_finish(&moves_list_compact_alloc);
