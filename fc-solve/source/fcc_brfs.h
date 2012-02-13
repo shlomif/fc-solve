@@ -105,6 +105,11 @@ static GCC_INLINE void fc_solve_fcc_release_moves_seq(
             iter->next = moves_list_allocator->recycle_bin;
             moves_list_allocator->recycle_bin = iter;
         }
+        /* Fix for a leak - iter is still defined, and needs
+         * to be recycled. 
+         * */
+        iter->next = moves_list_allocator->recycle_bin;
+        moves_list_allocator->recycle_bin = iter;
     }
     moves_seq->moves_list = NULL;
     moves_seq->count = -1;
