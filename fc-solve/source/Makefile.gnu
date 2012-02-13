@@ -80,7 +80,7 @@ ifeq ($(GCC_COMPAT),1)
 	ifeq ($(NATIVE_ARCH),1)
 		MARCH_FLAG := -march=native
 	else
-		MARCH_FLAG := -march=generic
+		MARCH_FLAG := -mtune=generic
 	endif
 	ifeq ($(DEBUG),1)
 		CFLAGS += -g
@@ -242,10 +242,10 @@ freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
 FCC_SOLVER_OBJS = fcc_solver.o libavl/avl.o app_str.o card.o meta_alloc.o state.o
 
 fcc_fc_solver: $(FCC_SOLVER_OBJS)
-	$(CC) -static $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FCC_SOLVER_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
+	$(CC) -static $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FCC_SOLVER_OBJS) $(END_LFLAGS)
 
 clean:
-	rm -f *.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*
+	rm -f *.o libavl/*.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*
 
 endif
 
