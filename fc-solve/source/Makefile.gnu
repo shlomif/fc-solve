@@ -7,6 +7,7 @@ WITHOUT_CARD_FLIPS := 0
 WITH_LIBRB = 0
 OPT_FOR_SIZE = 0
 OPT_AND_DEBUG = 0
+NATIVE_ARCH = 1
 
 COMPILER = gcc
 # COMPILER = icc
@@ -75,15 +76,20 @@ endif
 
 ifeq ($(GCC_COMPAT),1)
 	CREATE_SHARED = $(CC) $(CFLAGS) -shared -fwhole-program
-	END_SHARED = $(END_LFLAGS) 
+	END_SHARED = $(END_LFLAGS)
+	ifeq ($(NATIVE_ARCH),1)
+		MARCH_FLAG := -march=native
+	else
+		MARCH_FLAG := -march=generic
+	endif
 	ifeq ($(DEBUG),1)
 		CFLAGS += -g
 	else ifeq ($(OPT_FOR_SIZE),1)
 		CFLAGS += -Os -fvisibility=hidden
 	else ifeq ($(OPT_AND_DEBUG),1)
-		CFLAGS += -g -O2 -march=native -flto
+		CFLAGS += -g -O2 $(MARCH_FLAG) -flto
 	else
-		CFLAGS += $(MACHINE_OPT) -march=native -fomit-frame-pointer -flto
+		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -fomit-frame-pointer -flto
 	endif
 	CFLAGS += -fPIC
 endif
@@ -236,7 +242,7 @@ freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
 FCC_SOLVER_OBJS = fcc_solver.o libavl/avl.o app_str.o card.o meta_alloc.o state.o
 
 fcc_fc_solver: $(FCC_SOLVER_OBJS)
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FCC_SOLVER_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
+	$(CC) -static $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FCC_SOLVER_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
 
 clean:
 	rm -f *.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*
