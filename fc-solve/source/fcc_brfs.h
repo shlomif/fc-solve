@@ -394,7 +394,6 @@ static void perform_FCC_brfs(
                             start_iter = start_iter->next;
                         }
                     }
-                    end_moves_iter = end_moves_iter;
                 }
 
                 {
