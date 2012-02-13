@@ -724,7 +724,6 @@ int main(int argc, char * argv[])
     /* Temporarily #if'ed away until we finish working on instance_run_solver
      * */
     fcs_dbm_solver_instance_t instance;
-    long pre_cache_max_count;
     long caches_delta;
     long max_processed_positions_count = LONG_MAX;
     long positions_milestone_step = 100000;
@@ -742,29 +741,13 @@ int main(int argc, char * argv[])
     fcs_meta_compact_allocator_t meta_alloc;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
 
-    pre_cache_max_count = 1000000;
     caches_delta = 1000000;
     num_threads = 2;
     FCCs_per_depth_milestone_step = 10000;
 
     for (arg=1;arg < argc; arg++)
     {
-        if (!strcmp(argv[arg], "--pre-cache-max-count"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--pre-cache-max-count came without an argument!\n");
-                exit(-1);
-            }
-            pre_cache_max_count = atol(argv[arg]);
-            if (pre_cache_max_count < 1000)
-            {
-                fprintf(stderr, "--pre-cache-max-count must be at least 1,000.\n");
-                exit(-1);
-            }
-        }
-        else if (!strcmp(argv[arg], "--caches-delta"))
+        if (!strcmp(argv[arg], "--caches-delta"))
         {
             arg++;
             if (arg == argc)
