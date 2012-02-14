@@ -6,12 +6,20 @@ use warnings;
 use IO::All;
 use File::Path;
 
+use Getopt::Long;
+
+my $to_upload = 0;
+GetOptions(
+    '--upload!' => \$to_upload,
+);
+
 my $dest_dir = 'fcc_solver_for_amadiro';
 mkpath("$dest_dir");
 mkpath("$dest_dir/pthread");
+mkpath("$dest_dir/libavl");
 
 system(qq{./Tatzer -l x64b --nfc=2 --states-type=COMPACT_STATES --dbm=kaztree});
-my @modules = ('alloc.o', 'app_str.o', 'card.o', 'fcc_solver.o', 'state.o', 'kaz_tree.o', 'rwlock.o', 'queue.o',);
+my @modules = ('app_str.o', 'card.o', 'fcc_solver.o', 'state.o', 'kaz_tree.o', 'rwlock.o', 'queue.o', 'meta_alloc.o', 'libavl/avl.o', );
 
 foreach my $fn ('alloc.c', 'app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
     'dbm_kaztree.c', 'alloc.h', 'card.h', 'config.h', 'state.h',
@@ -20,7 +28,8 @@ foreach my $fn ('alloc.c', 'app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
     'delta_states.c', 'fcs_dllexport.h', 'bit_rw.h', 'fcs_enums.h', 'unused.h',
     'portable_time.h', 'dbm_calc_derived.h', 'dbm_calc_derived_iface.h',
     'dbm_common.h', 'fcc_solver.c', 'indirect_buffer.h', 'fcc_brfs_test.h',
-    'fcc_brfs.h', 'dbm_lru_cache.h', 'dbm_cache.h',
+    'fcc_brfs.h', 'dbm_lru_cache.h', 'dbm_cache.h', 'meta_alloc.h',
+    'meta_alloc.c', 'libavl/avl.c',, 'libavl/avl.h', 'generic_tree.h',
 )
 {
     io($fn) > io("$dest_dir/$fn");
@@ -52,7 +61,7 @@ DEALS_DUMPS = \$(patsubst %,%.dump,\$(DEALS))
 THREADS = 12
 CACHE_SIZE = $cache_size
 
-CFLAGS = -O3 -march=native -fomit-frame-pointer -DFCS_DBM_WITHOUT_CACHES=1 -I.
+CFLAGS = -O3 -march=native -fomit-frame-pointer -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -I. -I./libavl/
 MODULES = @modules
 
 all: \$(TARGET)
@@ -72,3 +81,14 @@ run: \$(DEALS_DUMPS)
 \t\@echo "\$* = \$(\$*)"
 EOF
 
+if ($to_upload)
+{
+    my $arc_name = "$dest_dir.tar.bz2";
+    if (system('tar', '-cjvf', $arc_name, $dest_dir))
+    {
+        die "tar failed!";
+    }
+    system("rsync", "-a", "-v", "--progress", "--inplace", $arc_name, 
+        "hostgator:public_html/Files/files/code/"
+    );
+}
