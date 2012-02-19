@@ -59,12 +59,10 @@ static void fc_solve_state_string_to_enc(
 #endif
         );
 
-    fcs_init_encoded_state(enc_state);
-
-    fc_solve_delta_stater_encode_into_buffer(
+    fcs_init_and_encode_state(
         delta,
         &(state),
-        enc_state->s
+        enc_state
     );
 
     free(state_s);
@@ -114,12 +112,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 #endif
             );
 
-    fcs_init_encoded_state(&enc_state);
-
-    fc_solve_delta_stater_encode_into_buffer(
+    fcs_init_and_encode_state(
         delta,
         &(init_state),
-        enc_state.s
+        &enc_state
     );
 
     fcs_meta_compact_allocator_t meta_alloc;
@@ -313,12 +309,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 #endif
             );
 
-    fcs_init_encoded_state(&enc_state);
-
-    fc_solve_delta_stater_encode_into_buffer(
+    fcs_init_and_encode_state(
         delta,
         &(init_state),
-        enc_state.s
+        &enc_state
     );
 
     fc_solve_state_string_to_enc(

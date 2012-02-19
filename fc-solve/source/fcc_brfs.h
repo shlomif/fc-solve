@@ -343,11 +343,10 @@ static void perform_FCC_brfs(
                  : do_next_fcc_start_points_exist
                 );
 
-            fcs_init_encoded_state(&(new_item->key));
-            fc_solve_delta_stater_encode_into_buffer(
+            fcs_init_and_encode_state(
                 delta_stater,
                 &(derived_iter->state),
-                new_item->key.s
+                &(new_item->key)
             );
 
             if (! is_reversible)

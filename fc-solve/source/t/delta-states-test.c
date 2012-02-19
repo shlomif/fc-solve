@@ -609,12 +609,11 @@ int main_tests()
         );
 
         fcs_encoded_state_buffer_t first_enc_state;
-        fcs_init_encoded_state(&first_enc_state);
 
-        fc_solve_delta_stater_encode_into_buffer(
+        fcs_init_and_encode_state(
             delta,
             &derived_state,
-            first_enc_state.s
+            &first_enc_state
             );
 
         fc_solve_initial_user_state_to_c(
@@ -639,12 +638,11 @@ int main_tests()
         );
 
         fcs_encoded_state_buffer_t second_enc_state;
-        fcs_init_encoded_state(&second_enc_state);
 
-        fc_solve_delta_stater_encode_into_buffer(
+        fcs_init_and_encode_state(
             delta,
             &derived_state,
-            second_enc_state.s
+            &second_enc_state
             );
 
         /* TEST
@@ -721,11 +719,10 @@ int main_tests()
         );
 
         fcs_encoded_state_buffer_t first_enc_state;
-        fcs_init_encoded_state(&first_enc_state);
-        fc_solve_delta_stater_encode_into_buffer(
+        fcs_init_and_encode_state(
             delta,
             &derived_state,
-            first_enc_state.s
+            &first_enc_state
             );
 
         fc_solve_initial_user_state_to_c(
@@ -750,11 +747,10 @@ int main_tests()
         );
 
         fcs_encoded_state_buffer_t second_enc_state;
-        fcs_init_encoded_state(&second_enc_state);
-        fc_solve_delta_stater_encode_into_buffer(
+        fcs_init_and_encode_state(
             delta,
             &derived_state,
-            second_enc_state.s
+            &second_enc_state
             );
 
         /* TEST

@@ -81,11 +81,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 #endif
             );
 
-    fcs_init_encoded_state(&enc_state);
-    fc_solve_delta_stater_encode_into_buffer(
+    fcs_init_and_encode_state(
         delta,
         &(init_state),
-        enc_state.s
+        &enc_state
         );
 
     fcs_derived_state_t * derived_list = NULL;

@@ -324,9 +324,8 @@ int instance_run_solver(
 #endif
     );
 
-    fcs_init_encoded_state(&(init_state_enc));
-    fc_solve_delta_stater_encode_into_buffer(
-        delta, init_state, init_state_enc.s
+    fcs_init_and_encode_state(
+        delta, init_state, &init_state_enc
     );
 
     ret = FCC_IMPOSSIBLE;
@@ -560,11 +559,10 @@ fcc_loop_cleanup:
                 }
 #undef SUIT_LIMIT
 
-                fcs_init_encoded_state(&(enc_state));
-                fc_solve_delta_stater_encode_into_buffer(
+                fcs_init_and_encode_state(
                     delta,
                     &(state),
-                    enc_state.s
+                    &enc_state
                     );
 
                 next_fcc_stage = &(solver_state->FCCs_by_depth[

@@ -38,21 +38,11 @@
 #include "bit_rw.h"
 #include "state.h"
 #include "indirect_buffer.h"
+#include "delta_states.h"
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 #include "dbm_common.h"
 #endif
-
-typedef struct
-{
-#ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by;
-#endif
-    int num_freecells;
-    int num_columns;
-    fcs_state_t * _init_state, * _derived_state;
-    int bits_per_orig_cards_in_column;
-} fc_solve_delta_stater_t;
 
 static int fc_solve_get_column_orig_num_cards(
         fc_solve_delta_stater_t * self, 

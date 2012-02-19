@@ -510,11 +510,10 @@ void * instance_run_solver_thread(void * void_arg)
                 derived_iter = derived_iter->next
         )
         {
-            fcs_init_encoded_state(&(derived_iter->key));
-            fc_solve_delta_stater_encode_into_buffer(
+            fcs_init_and_encode_state(
                 delta_stater,
                 &(derived_iter->state),
-                derived_iter->key.s
+                &(derived_iter->key)
             );
         }
 
@@ -728,9 +727,8 @@ int main(int argc, char * argv[])
                 );
 
         first_item->next = NULL;
-        fcs_init_encoded_state(&(first_item->key));
 
-        fc_solve_delta_stater_encode_into_buffer(delta, &(init_state), first_item->key.s);
+        fcs_init_and_encode_state(delta, &(init_state), &(first_item->key));
 
         /* The NULL parent and move for indicating this is the initial
          * state. */
