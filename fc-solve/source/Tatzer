@@ -236,6 +236,11 @@ if ($stack_storage_libavl2_tree)
     $stack_storage = "LIBAVL2_TREE";
 }
 
+if ($build_type eq "debug")
+{
+    $with_dbm_solver ||= 'kaztree';
+}
+
 # This cache is sometimes causing problems.
 unlink("CMakeCache.txt");
 
