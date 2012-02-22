@@ -698,10 +698,8 @@ int main(int argc, char * argv[])
         &init_state,
         FREECELLS_NUM,
         STACKS_NUM,
-        DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-        , init_indirect_stacks_buffer
-#endif
+        DECKS_NUM,
+        init_indirect_stacks_buffer
     );
 
     horne_prune(&init_state, NULL, NULL);

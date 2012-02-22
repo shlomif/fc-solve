@@ -889,10 +889,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 &(user->state),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
-                INSTANCE_DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                ,user->indirect_stacks_buffer
-#endif
+                INSTANCE_DECKS_NUM,
+                user->indirect_stacks_buffer
                 );
 
             if (status != FCS_USER_STATE_TO_C__SUCCESS)

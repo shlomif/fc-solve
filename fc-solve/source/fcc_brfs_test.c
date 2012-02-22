@@ -53,10 +53,8 @@ static void fc_solve_state_string_to_enc(
         &state,
         FREECELLS_NUM,
         STACKS_NUM,
-        DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-        , state_buffer
-#endif
+        DECKS_NUM,
+        state_buffer
         );
 
     fcs_init_and_encode_state(
@@ -97,10 +95,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
             &init_state,
             FREECELLS_NUM,
             STACKS_NUM,
-            DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , indirect_stacks_buffer
-#endif
+            DECKS_NUM,
+            indirect_stacks_buffer
             );
 
     delta = fc_solve_delta_stater_alloc(
@@ -287,10 +283,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
             &init_state,
             FREECELLS_NUM,
             STACKS_NUM,
-            DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , indirect_stacks_buffer
-#endif
+            DECKS_NUM,
+            indirect_stacks_buffer
             );
 
     delta = fc_solve_delta_stater_alloc(

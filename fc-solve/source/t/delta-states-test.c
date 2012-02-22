@@ -176,22 +176,20 @@ int main_tests()
         /* MS Freecell No. 982 Initial state.
          * */
         fc_solve_initial_user_state_to_c(
-                ("Foundations: H-0 C-0 D-A S-0\n"
-                "6D 3C 3H KD 8C 5C\n"
-                "TC 9C 9H 4S JC 6H 5H\n"
-                "2H 2D 3S 5D 9D QS KS\n"
-                "6S TD QC KH AS AH 7C\n"
-                "KC 4H TH 7S 2C 9S\n"
-                "AC QD 8D QH 3D 8S\n"
-                "7H 7D JD JH TS 6C\n"
-                "4C 4D 5S 2S JS 8H\n"),
-                &init_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
-#endif
+            ("Foundations: H-0 C-0 D-A S-0\n"
+            "6D 3C 3H KD 8C 5C\n"
+            "TC 9C 9H 4S JC 6H 5H\n"
+            "2H 2D 3S 5D 9D QS KS\n"
+            "6S TD QC KH AS AH 7C\n"
+            "KC 4H TH 7S 2C 9S\n"
+            "AC QD 8D QH 3D 8S\n"
+            "7H 7D JD JH TS 6C\n"
+            "4C 4D 5S 2S JS 8H\n"),
+            &init_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            indirect_stacks_buffer
         );
 
         delta = fc_solve_delta_stater_alloc(
@@ -223,10 +221,8 @@ int main_tests()
                 &derived_state,
                 FREECELLS_NUM,
                 STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , derived_indirect_stacks_buffer
-#endif
+                DECKS_NUM,
+                derived_indirect_stacks_buffer
         );
 
         fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
@@ -389,13 +385,11 @@ int main_tests()
 "7H JS KH TS KC 7C\n"
 "AH 5S 6S AD 8H JD\n"
 "7S 6C 7D 4D 8S 9D\n"),
-                &init_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
-#endif
+            &init_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            indirect_stacks_buffer
         );
 
         delta = fc_solve_delta_stater_alloc(
@@ -408,7 +402,7 @@ int main_tests()
                 );
 
         fc_solve_initial_user_state_to_c(
-                (
+            (
 "Foundations: H-0 C-0 D-0 S-4 \n"
 "Freecells:  KS  TD\n"
 "2C\n"
@@ -419,14 +413,12 @@ int main_tests()
 "7H JS KH TS KC 7C 6D 5C 4D\n"
 "AH 5S 6S AD 8H JD\n"
 "2H\n"
-                ) ,
-                &derived_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , derived_indirect_stacks_buffer
-#endif
+            ) ,
+            &derived_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            derived_indirect_stacks_buffer
         );
 
         /* TEST
@@ -450,7 +442,7 @@ int main_tests()
         );
 
         fc_solve_initial_user_state_to_c(
-                (
+            (
 "Foundations: H-0 C-0 D-0 S-2 \n"
 "Freecells:  TD  4C\n"
 "8S\n"
@@ -461,14 +453,12 @@ int main_tests()
 "7H JS KH TS KC 7C\n"
 "AH 5S 6S AD 8H JD\n"
 "KS QD JC TH 9C 8D 7S 6D\n"
-                ) ,
-                &derived_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , derived_indirect_stacks_buffer
-#endif
+            ) ,
+            &derived_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            derived_indirect_stacks_buffer
         );
 
         /* TEST
@@ -569,13 +559,11 @@ int main_tests()
  "\n"
  "\n"
  ),
-                &init_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
-#endif
+            &init_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            indirect_stacks_buffer
         );
 
         delta = fc_solve_delta_stater_alloc(
@@ -599,13 +587,11 @@ int main_tests()
  "\n"
  "\n"
  ),
-                &derived_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , derived_indirect_stacks_buffer
-#endif
+            &derived_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            derived_indirect_stacks_buffer
         );
 
         fcs_encoded_state_buffer_t first_enc_state;
@@ -628,13 +614,11 @@ int main_tests()
  "\n"
  "KS\n"
  ),
-                &derived_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , derived_indirect_stacks_buffer
-#endif
+            &derived_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            derived_indirect_stacks_buffer
         );
 
         fcs_encoded_state_buffer_t second_enc_state;
@@ -679,13 +663,11 @@ int main_tests()
  "\n"
  "\n"
  ),
-                &init_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
-#endif
+            &init_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            indirect_stacks_buffer
         );
 
         delta = fc_solve_delta_stater_alloc(
@@ -709,13 +691,11 @@ int main_tests()
  "\n"
  "KS\n"
  ),
-                &derived_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , derived_indirect_stacks_buffer
-#endif
+            &derived_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            derived_indirect_stacks_buffer
         );
 
         fcs_encoded_state_buffer_t first_enc_state;
@@ -737,13 +717,11 @@ int main_tests()
  "\n"
  "\n"
  ),
-                &derived_state,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , derived_indirect_stacks_buffer
-#endif
+            &derived_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            derived_indirect_stacks_buffer
         );
 
         fcs_encoded_state_buffer_t second_enc_state;

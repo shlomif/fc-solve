@@ -44,6 +44,7 @@ extern "C" {
 #include "card.h"
 
 #include "internal_move_struct.h"
+#include "indirect_buffer.h"
 
 #if MAX_NUM_INITIAL_CARDS_IN_A_STACK+12>(MAX_NUM_DECKS*52)
 #define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_DECKS*52)
@@ -719,15 +720,21 @@ static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:",
 #define strncasecmp(a,b,c) (strnicmp((a),(b),(c)))
 #endif
 
-static GCC_INLINE int fc_solve_initial_user_state_to_c(
+#ifdef INDIRECT_STACK_STATES
+#define fc_solve_initial_user_state_to_c(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer) \
+    fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer) 
+#else
+#define fc_solve_initial_user_state_to_c(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer) \
+    fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num) 
+#endif
+
+static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
     const char * string,
     fcs_state_keyval_pair_t * out_state,
     int freecells_num,
     int stacks_num,
     int decks_num
-#ifdef INDIRECT_STACK_STATES
-    , char * indirect_stacks_buffer
-#endif
+    IND_BUF_T_PARAM(indirect_stacks_buffer)
     )
 {
     int s,c;

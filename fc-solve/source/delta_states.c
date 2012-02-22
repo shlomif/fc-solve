@@ -615,10 +615,8 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
             &init_state,
             FREECELLS_NUM,
             STACKS_NUM,
-            DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , indirect_stacks_buffer
-#endif
+            DECKS_NUM,
+            indirect_stacks_buffer
             );
 
     fc_solve_initial_user_state_to_c(
@@ -626,10 +624,8 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
             &derived_state,
             FREECELLS_NUM,
             STACKS_NUM,
-            DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , derived_stacks_buffer
-#endif
+            DECKS_NUM,
+            derived_stacks_buffer
             );
 
     delta = fc_solve_delta_stater_alloc(

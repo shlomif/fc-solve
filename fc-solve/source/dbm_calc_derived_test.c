@@ -66,10 +66,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             &init_state,
             FREECELLS_NUM,
             STACKS_NUM,
-            DECKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , indirect_stacks_buffer
-#endif
+            DECKS_NUM,
+            indirect_stacks_buffer
             );
 
     delta = fc_solve_delta_stater_alloc(
