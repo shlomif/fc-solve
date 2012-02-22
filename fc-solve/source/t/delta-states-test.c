@@ -37,6 +37,7 @@
 #include "../state.c"
 #include "../delta_states.c"
 #include "../dbm_solver_key.h"
+#include "../indirect_buffer.h"
 
 static fcs_card_t make_card(int rank, int suit)
 {
@@ -50,19 +51,13 @@ static fcs_card_t make_card(int rank, int suit)
     return card;
 }
 
-#ifdef INDIRECT_STACK_STATES
-typedef char ind_buf_t[MAX_NUM_STACKS << 7];
-#endif
-
 static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
 {
     int verdict;
     fcs_state_keyval_pair_t new_derived_state;
-#ifdef INDIRECT_STACK_STATES
-    ind_buf_t new_derived_indirect_stacks_buffer;
-#endif
     fcs_uchar_t enc_state[24];
     char * as_str;
+    DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
 
     fc_solve_delta_stater_encode_into_buffer(
         delta,
@@ -112,10 +107,8 @@ int main_tests()
         fcs_state_keyval_pair_t s;
         fc_solve_delta_stater_t delta;
 
-#ifdef INDIRECT_STACK_STATES
-        ind_buf_t indirect_stacks_buffer;
-#endif
         fcs_cards_column_t col;
+        DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
 #ifndef FCS_FREECELL_ONLY
         delta.sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
@@ -169,9 +162,8 @@ int main_tests()
     {
         fc_solve_delta_stater_t * delta;
         fcs_state_keyval_pair_t init_state, derived_state;
-#ifdef INDIRECT_STACK_STATES
-        ind_buf_t indirect_stacks_buffer, derived_indirect_stacks_buffer;
-#endif
+        DECLARE_IND_BUF_T(indirect_stacks_buffer)
+        DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
         /* MS Freecell No. 982 Initial state.
          * */
@@ -368,9 +360,8 @@ int main_tests()
         fc_solve_delta_stater_t * delta;
         fcs_state_keyval_pair_t init_state, derived_state;
 
-#ifdef INDIRECT_STACK_STATES
-        ind_buf_t indirect_stacks_buffer, derived_indirect_stacks_buffer;
-#endif
+        DECLARE_IND_BUF_T(indirect_stacks_buffer)
+        DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
         /* MS Freecell No. 24 Initial state.
          * */
@@ -543,9 +534,8 @@ int main_tests()
         fc_solve_delta_stater_t * delta;
         fcs_state_keyval_pair_t init_state, derived_state;
 
-#ifdef INDIRECT_STACK_STATES
-        ind_buf_t indirect_stacks_buffer, derived_indirect_stacks_buffer;
-#endif
+        DECLARE_IND_BUF_T(indirect_stacks_buffer)
+        DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
         fc_solve_initial_user_state_to_c(
 ("Foundations: H-K C-K D-J S-Q\n"
@@ -647,10 +637,8 @@ int main_tests()
         fc_solve_delta_stater_t * delta;
         fcs_state_keyval_pair_t init_state, derived_state;
 
-#ifdef INDIRECT_STACK_STATES
-        ind_buf_t indirect_stacks_buffer, derived_indirect_stacks_buffer;
-#endif
-
+        DECLARE_IND_BUF_T(indirect_stacks_buffer)
+        DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
         fc_solve_initial_user_state_to_c(
 ("Foundations: H-K C-K D-J S-Q\n"
  "Freecells:  KD\n"
