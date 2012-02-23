@@ -36,6 +36,7 @@
 #include <unistd.h>
 #include <assert.h>
 #include <limits.h>
+#include <signal.h>
 
 /* 
  * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
@@ -132,6 +133,8 @@ typedef struct {
     long FCCs_per_depth_milestone_step;
     long positions_milestone_step;
     FILE * out_fh;
+    long num_FCCs_processed_for_depth;
+    long num_unique_FCCs_for_depth;
 } fcs_dbm_solver_instance_t;
 
 static void GCC_INLINE instance_init(
@@ -281,6 +284,18 @@ static GCC_INLINE void instance_time_printf(
 
 #define STEP (instance->positions_milestone_step)
 
+static GCC_INLINE void instance_print_processed_FCCs(
+    fcs_dbm_solver_instance_t * instance
+    )
+{
+    instance_time_printf(
+        instance,
+        "Processed %ld FCCs (%ld unique) for depth %d\n",
+        instance->num_FCCs_processed_for_depth, instance->num_unique_FCCs_for_depth,
+        instance->solver_state.curr_depth
+    );
+}
+
 int instance_run_solver(
     fcs_dbm_solver_instance_t * instance,
     long max_num_elements_in_cache,
@@ -373,7 +388,8 @@ int instance_run_solver(
          )
     {
         dict_t * do_next_fcc_start_points_exist;
-        long num_FCCs_processed_for_depth = 0, num_unique_FCCs_for_depth = 0;
+        instance->num_FCCs_processed_for_depth = 0;
+        instance->num_unique_FCCs_for_depth = 0;
 
         do_next_fcc_start_points_exist
             = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
@@ -418,17 +434,12 @@ int instance_run_solver(
             instance_time_printf (instance, "After perform_FCC_brfs\n");
 #endif
 
-            if (( (++num_FCCs_processed_for_depth) 
+            if (( (++instance->num_FCCs_processed_for_depth) 
                 % FCCs_per_depth_milestone_step ) 
                     == 0
             )
             {
-                instance_time_printf(
-                    instance, 
-                    "Processed %ld FCCs (%ld unique) for depth %d\n", 
-                    num_FCCs_processed_for_depth, num_unique_FCCs_for_depth,
-                    curr_depth
-                );
+                instance_print_processed_FCCs(instance);
             }
 
             if (num_new_positions)
@@ -455,7 +466,7 @@ int instance_run_solver(
             {
                 fcs_encoded_state_buffer_t * min_by_sorting_copy_ptr;
 
-                num_unique_FCCs_for_depth++;
+                instance->num_unique_FCCs_for_depth++;
 
                 /* First of all, add min_by_sorting to 
                  * fcc_stage->does_min_by_sorting_exist, so it won't be
@@ -651,7 +662,7 @@ fcc_loop_cleanup:
          * A trace for keeping track of the solver's progress.
          * TODO : make it optional/abstract and add more traces.
          */
-        instance_time_printf (instance, "Finished checking FCC-depth %d (Total processed FCCs for depth - %ld)\n", curr_depth, num_FCCs_processed_for_depth);
+        instance_time_printf (instance, "Finished checking FCC-depth %d (Total processed FCCs for depth - %ld)\n", curr_depth, instance->num_FCCs_processed_for_depth);
     }
 
 free_resources:
@@ -709,6 +720,13 @@ const char * move_to_string(unsigned char move, char * move_buffer)
     return move_buffer;
 }
 
+static fcs_dbm_solver_instance_t * global_instance_ptr;
+
+static void command_signal_handler(int signal_num GCC_UNUSED)
+{
+    instance_print_processed_FCCs( global_instance_ptr );
+}
+
 int main(int argc, char * argv[])
 {
     /* Temporarily #if'ed away until we finish working on instance_run_solver
@@ -735,6 +753,7 @@ int main(int argc, char * argv[])
     caches_delta = 1000000;
     num_threads = 2;
     FCCs_per_depth_milestone_step = 10000;
+    global_instance_ptr = &instance;
 
     for (arg=1;arg < argc; arg++)
     {
@@ -873,6 +892,10 @@ int main(int argc, char * argv[])
     init_moves_seq.moves_list = NULL;
     init_moves_seq.count = 0;
     horne_prune(&init_state, &init_moves_seq, &moves_list_allocator);
+
+#ifndef WIN32
+    signal(SIGUSR1, command_signal_handler);
+#endif
 
     ret_code = instance_run_solver(
         &instance,
