@@ -129,11 +129,9 @@ typedef struct
     fc_solve_instance_t * fc_solve_obj;
     fcs_state_keyval_pair_t state;
     fcs_state_keyval_pair_t running_state;
-#ifdef FCS_WITHOUT_LOCS_FIELDS
     fcs_state_locs_struct_t state_locs;
     fcs_state_locs_struct_t trace_solution_state_locs;
     fcs_state_locs_struct_t initial_state_locs;
-#endif
     int ret_code;
     fcs_bool_t all_instances_were_suspended;
     int state_validity_ret;
@@ -913,7 +911,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 return user->ret_code;
             }
 
-#ifdef FCS_WITHOUT_LOCS_FIELDS
             {
                 int i;
                 for ( i=0 ; i<MAX_NUM_STACKS ; i++)
@@ -926,7 +923,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 }
             }
             user->state_locs = user->initial_state_locs;
-#endif
 
             /* running_state is a normalized state. So We're duplicating
              * state to it before state state_pass is canonized
@@ -945,27 +941,19 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             fcs_duplicate_state( &(user->running_state), &(user->state) );
 #endif
 
-#ifdef FCS_WITHOUT_LOCS_FIELDS
             fc_solve_canonize_state_with_locs
-#else
-            fc_solve_canonize_state
-#endif
                 (
 #ifdef FCS_RCS_STATES
                  &state_pass,
 #else
                 &(user->state),
 #endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
                 &(user->state_locs),
-#endif
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM
                 );
 
-#ifdef FCS_WITHOUT_LOCS_FIELDS
             user->trace_solution_state_locs = user->state_locs;
-#endif
 
             fc_solve_init_instance(user->fc_solve_obj);
 
@@ -1063,17 +1051,13 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 #else
                 &(user->state),
 #endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
                 &(user->trace_solution_state_locs),
-#endif
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM
                 );
 
-#ifdef FCS_WITHOUT_LOCS_FIELDS
             user->trace_solution_state_locs = user->state_locs;
-#endif
 
             if (instance_item->minimal_solution_flare_idx < 0)
             {
@@ -1187,9 +1171,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 #else
                     &(user->running_state),
 #endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
                     NULL,
-#endif
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
                     internal_move,
 #else
@@ -1233,9 +1215,7 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
 #else
                 &(user->running_state),
 #endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
                 &(user->initial_state_locs),
-#endif
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
                 INSTANCE_DECKS_NUM,
@@ -1804,7 +1784,6 @@ static void iter_handler_wrapper(
 #else
     state_raw.s = ptr_state;
 #endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
     {
         int i;
         for ( i=0 ; i<MAX_NUM_STACKS ; i++)
@@ -1816,7 +1795,6 @@ static void iter_handler_wrapper(
             state_raw.locs.fc_locs[i] = (fcs_locs_t)i;
         }
     }
-#endif
 
     user->iter_handler(
         api_instance,
@@ -1903,9 +1881,7 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
 #else
             ((fcs_standalone_state_ptrs_t *)ptr_state_void)->s,
 #endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
             &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs),
-#endif
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM,
             INSTANCE_DECKS_NUM,

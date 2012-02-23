@@ -795,9 +795,8 @@ int main(int argc, char * argv[])
         char * state_as_str;
         char move_buffer[500];
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
-#ifdef FCS_WITHOUT_LOCS_FIELDS
         fcs_state_locs_struct_t locs;
-#endif
+
         printf ("%s\n", "Success!");
         /* Now trace the solution */
 #define GROW_BY 100
@@ -832,7 +831,7 @@ int main(int argc, char * argv[])
             }
 #endif
         }
-#ifdef FCS_WITHOUT_LOCS_FIELDS
+
         for (i=0 ; i < MAX_NUM_STACKS ; i++)
         {
             locs.stack_locs[i] = i;
@@ -841,7 +840,7 @@ int main(int argc, char * argv[])
         {
             locs.fc_locs[i] = i;
         }
-#endif
+
         for (i = trace_num-1 ; i >= 0 ; i--)
         {
             fc_solve_delta_stater_decode_into_state(
@@ -863,9 +862,7 @@ int main(int argc, char * argv[])
 #else
                         &state,
 #endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
                         &locs,
-#endif
                         FREECELLS_NUM,
                         STACKS_NUM,
                         DECKS_NUM,

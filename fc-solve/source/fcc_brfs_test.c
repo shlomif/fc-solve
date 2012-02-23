@@ -81,9 +81,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_state_keyval_pair_t init_state;
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
-#ifdef FCS_WITHOUT_LOCS_FIELDS
     fcs_state_locs_struct_t locs;
-#endif
     int i;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -193,7 +191,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     ret[states_count].count = 0;
 
-#ifdef FCS_WITHOUT_LOCS_FIELDS
     for (i=0 ; i < MAX_NUM_STACKS ; i++)
     {
         locs.stack_locs[i] = i;
@@ -202,7 +199,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     {
         locs.fc_locs[i] = i;
     }
-#endif
+
     avl_t_init (&trav, do_next_fcc_start_points_exist);
     iter = avl_t_first(&trav, do_next_fcc_start_points_exist);
     for (i = 0; i < states_count ; i++)
@@ -231,9 +228,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 #else
             &(state),
 #endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
             &locs,
-#endif
             FREECELLS_NUM,
             STACKS_NUM,
             DECKS_NUM,

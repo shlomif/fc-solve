@@ -146,23 +146,13 @@ void fc_solve_canonize_state(
     DECLARE_TEMP_STACK();
     fcs_card_t temp_freecell;
 
-#ifndef FCS_WITHOUT_LOCS_FIELDS
-    char temp_loc;
-#endif
-
 #ifdef FCS_RCS_STATES
 #define state_key (state_raw->key)
 #define state_val (state_raw->val)
 #else
     fcs_state_t * state_key;
-#ifndef FCS_WITHOUT_LOCS_FIELDS
-    fcs_state_extra_info_t * state_val;
-#endif
 
     state_key = &(state_raw->s);
-#ifndef FCS_WITHOUT_LOCS_FIELDS
-    state_val = &(state_raw->info);
-#endif
 #endif
     /* Insertion-sort the stacks */
 
@@ -182,12 +172,6 @@ void fc_solve_canonize_state(
             COPY_STACK(temp_stack, GET_STACK(c));
             COPY_STACK(GET_STACK(c), GET_STACK(c-1));
             COPY_STACK(GET_STACK(c-1), temp_stack);
-
-#ifndef FCS_WITHOUT_LOCS_FIELDS
-            temp_loc = state_val->stack_locs[c];
-            state_val->stack_locs[c] = state_val->stack_locs[c-1];
-            state_val->stack_locs[c-1] = temp_loc;
-#endif
 
             c--;
         }
@@ -212,12 +196,6 @@ void fc_solve_canonize_state(
             GET_FREECELL(c) = GET_FREECELL(c-1);
             GET_FREECELL(c-1) = temp_freecell;
 
-#ifndef FCS_WITHOUT_LOCS_FIELDS
-            temp_loc = state_val->fc_locs[c];
-            state_val->fc_locs[c] = state_val->fc_locs[c-1];
-            state_val->fc_locs[c-1] = temp_loc;
-#endif
-
             c--;
         }
     }
@@ -227,7 +205,6 @@ void fc_solve_canonize_state(
 #undef state_val
 #endif
 
-#ifdef FCS_WITHOUT_LOCS_FIELDS
 
 void fc_solve_canonize_state_with_locs(
 #ifdef FCS_RCS_STATES
@@ -305,7 +282,6 @@ void fc_solve_canonize_state_with_locs(
         }
     }
 }
-#endif
 
 #elif 0
 
@@ -348,11 +324,9 @@ char * fc_solve_state_as_string(
     fcs_state_t * state,
 #endif
     fcs_collectible_state_t * state_val,
-#ifdef FCS_WITHOUT_LOCS_FIELDS
     fcs_state_locs_struct_t * state_locs,
 #define FCS_S_STACK_LOCS(s) (state_locs->stack_locs)
 #define FCS_S_FC_LOCS(s) (state_locs->fc_locs)
-#endif
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -599,8 +573,6 @@ char * fc_solve_state_as_string(
     return fc_solve_append_string_finalize(&app_str_struct);
 }
 
-#ifdef FCS_WITHOUT_LOCS_FIELDS
 #undef FCS_S_FC_LOCS
 #undef FCS_S_STACK_LOCS
-#endif
 

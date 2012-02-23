@@ -171,7 +171,7 @@ SET (LEVELDB_SOURCE_DIR "/home/shlomif/Download/unpack/prog/leveldb/leveldb" CAC
 
 SET (FCS_WITHOUT_VISITED_ITER "" CACHE BOOL "Disable the visited_iter counter in each state (somewhat useful for debugging, otherwise not needed.)")
 SET (FCS_WITHOUT_DEPTH_FIELD "" CACHE BOOL "Disable the depth field in each state (not absolutely necessary.)")
-SET (FCS_WITHOUT_LOCS_FIELDS "" CACHE BOOL "Disable the columns and freecells permutations fields in each state (they are not absolutely necessary.)")
+SET (FCS_WITHOUT_LOCS_FIELDS "" CACHE BOOL "Does not do anything (kept for backwards-compatibility)")
 SET (FCS_TRACE_MEM "" CACHE BOOL "Enable memory tracing in fc-solve.")
 SET (FCS_MAX_NUM_SCANS_BUCKETS "" CACHE STRING "The number of scan_visited buckets in fc-solve (safe to ignore).")
 

@@ -67,9 +67,7 @@ int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
  */
 void fc_solve_apply_move(
         fcs_pass_state_t * state,
-#ifdef FCS_WITHOUT_LOCS_FIELDS
         fcs_state_locs_struct_t * locs,
-#endif
         fcs_internal_move_t move,
         int freecells_num,
         int stacks_num,
@@ -172,7 +170,6 @@ void fc_solve_apply_move(
 
         case FCS_MOVE_TYPE_CANONIZE:
         {
-#ifdef FCS_WITHOUT_LOCS_FIELDS
             if (locs)
             {
                 fc_solve_canonize_state_with_locs(
@@ -185,7 +182,6 @@ void fc_solve_apply_move(
             );
             }
             else
-#endif
             {
                 fc_solve_canonize_state (state, freecells_num, stacks_num);
             }

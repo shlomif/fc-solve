@@ -651,9 +651,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
             fc_solve_apply_move(
                 &pass,
-#ifdef FCS_WITHOUT_LOCS_FIELDS
                 NULL,
-#endif
                 (*next_move),
                 LOCAL_FREECELLS_NUM,
                 LOCAL_STACKS_NUM,

@@ -283,9 +283,7 @@ static void perform_FCC_brfs(
 #else
                         &state,
 #endif
-#ifdef FCS_WITHOUT_LOCS_FIELDS
                         &locs,
-#endif
                         FREECELLS_NUM,
                         STACKS_NUM,
                         DECKS_NUM,

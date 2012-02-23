@@ -101,12 +101,6 @@ extern "C" {
  * */
 #cmakedefine FCS_WITHOUT_DEPTH_FIELD
 
-/*
- * Get rid of the stack_locs and fc_locs fields in each state's extra_info.
- * This can be used to save more RAM.
- * */
-#cmakedefine FCS_WITHOUT_LOCS_FIELDS
-
 /*  
  * This flag controls a hash behaviour. It seems to improve things somewhat.
  * */
