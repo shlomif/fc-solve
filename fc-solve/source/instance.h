@@ -42,6 +42,7 @@ extern "C" {
 #include "inline.h"
 #include "unused.h"
 
+#include "indirect_buffer.h"
 #include "rand.h"
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE))
@@ -663,7 +664,7 @@ struct fc_solve_hard_thread_struct
      * This is a buffer used to temporarily store the stacks of the duplicated
      * state.
      * */
-    char indirect_stacks_buffer[MAX_NUM_STACKS << 7];
+    dll_ind_buf_t indirect_stacks_buffer;
 #else
     char indirect_stacks_buffer[1];
 #endif
