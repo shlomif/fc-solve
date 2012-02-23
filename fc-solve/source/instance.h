@@ -665,8 +665,6 @@ struct fc_solve_hard_thread_struct
      * state.
      * */
     dll_ind_buf_t indirect_stacks_buffer;
-#else
-    char indirect_stacks_buffer[1];
 #endif
 
     int prelude_num_items;
