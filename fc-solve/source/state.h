@@ -656,12 +656,18 @@ extern int fc_solve_u2p_card_number(const char * string);
  * */
 extern int fc_solve_u2p_suit(const char * deck);
 
-static GCC_INLINE void fc_solve_state_init(
+#ifdef INDIRECT_STACK_STATES
+#define fc_solve_state_init(state, stacks_num, indirect_stacks_buffer) \
+    fc_solve_state_init_proto(state, stacks_num, indirect_stacks_buffer)
+#else
+#define fc_solve_state_init(state, stacks_num, indirect_stacks_buffer) \
+    fc_solve_state_init_proto(state, stacks_num)
+#endif
+
+static GCC_INLINE void fc_solve_state_init_proto(
     fcs_state_keyval_pair_t * state,
     int stacks_num
-#ifdef INDIRECT_STACK_STATES
-    ,char * indirect_stacks_buffer
-#endif
+    IND_BUF_T_PARAM(indirect_stacks_buffer)
     )
 {
 #if ((!defined(FCS_WITHOUT_CARD_FLIPPING)) || (!defined(FCS_WITHOUT_LOCS_FIELDS)) || defined(INDIRECT_STACK_STATES))
@@ -748,10 +754,8 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
 
     fc_solve_state_init(
         out_state,
-        stacks_num
-#ifdef INDIRECT_STACK_STATES
-        , indirect_stacks_buffer
-#endif
+        stacks_num,
+        indirect_stacks_buffer
         );
     str = string;
 

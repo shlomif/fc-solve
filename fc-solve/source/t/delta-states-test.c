@@ -113,11 +113,7 @@ int main_tests()
 #ifndef FCS_FREECELL_ONLY
         delta.sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
 #endif
-        fc_solve_state_init(&s, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
-#endif
-                );
+        fc_solve_state_init(&s, STACKS_NUM, indirect_stacks_buffer);
 
         col = fcs_state_get_col(s.s, 0);
 

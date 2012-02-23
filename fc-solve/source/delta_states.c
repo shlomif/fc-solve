@@ -520,11 +520,11 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
     fc_solve_bit_reader_t bit_r;
     fc_solve_bit_reader_init(&bit_r, enc_state+1);
 
-    fc_solve_state_init(ret, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-            , indirect_stacks_buffer
-#endif
-        );
+    fc_solve_state_init(
+        ret,
+        STACKS_NUM, 
+        indirect_stacks_buffer
+    );
 
     fc_solve_delta_stater_decode(
         delta_stater,
@@ -639,11 +639,11 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 
     fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
 
-    fc_solve_state_init(&new_derived_state, STACKS_NUM
-#ifdef INDIRECT_STACK_STATES
-        , new_derived_indirect_stacks_buffer
-#endif
-        );
+    fc_solve_state_init(
+        &new_derived_state,
+        STACKS_NUM,
+        new_derived_indirect_stacks_buffer
+    );
 
     fc_solve_bit_writer_init(&bit_w, enc_state);
     fc_solve_delta_stater_encode_composite(delta, &bit_w);
