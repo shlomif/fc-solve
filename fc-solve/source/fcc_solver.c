@@ -131,19 +131,22 @@ typedef struct {
     long max_processed_positions_count;
     long FCCs_per_depth_milestone_step;
     long positions_milestone_step;
+    FILE * out_fh;
 } fcs_dbm_solver_instance_t;
 
 static void GCC_INLINE instance_init(
     fcs_dbm_solver_instance_t * instance,
     long max_processed_positions_count,
     long positions_milestone_step,
-    long FCCs_per_depth_milestone_step
+    long FCCs_per_depth_milestone_step,
+    FILE * out_fh
 )
 {
     instance->count_num_processed = 0;
     instance->max_processed_positions_count = max_processed_positions_count;
     instance->positions_milestone_step = positions_milestone_step;
     instance->FCCs_per_depth_milestone_step = FCCs_per_depth_milestone_step;
+    instance->out_fh = out_fh;
 }
 
 static void GCC_INLINE instance_destroy(
@@ -266,7 +269,7 @@ static GCC_INLINE void instance_time_printf(
 {
     fcs_portable_time_t mytime;
     va_list ap;
-    FILE * fh = stdout;
+    FILE * fh = instance->out_fh;
 
     FCS_GET_TIME(mytime);
     fprintf(fh, "[T=%li.%.6li] ", FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime));
@@ -717,7 +720,8 @@ int main(int argc, char * argv[])
     int num_threads;
     int arg;
     const char * filename;
-    FILE * fh;
+    const char * out_filename = NULL;
+    FILE * fh, * out_fh;
     char user_state[USER_STATE_SIZE];
     fcs_state_keyval_pair_t init_state;
     fcs_fcc_moves_seq_t ret_moves_seq, init_moves_seq;
@@ -748,6 +752,16 @@ int main(int argc, char * argv[])
                 fprintf(stderr, "--caches-delta must be at least 1,000.\n");
                 exit(-1);
             }
+        }
+        else if (!strcmp(argv[arg], "-o"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "-o requires an argument!\n");
+                exit(-1);
+            }
+            out_filename = argv[arg];
         }
         else if (!strcmp(argv[arg], "--max-iters"))
         {
@@ -813,12 +827,26 @@ int main(int argc, char * argv[])
 
     filename = argv[arg];
 
+    if (out_filename)
+    {
+        if (!(out_fh = fopen(out_filename, "wt")))
+        {
+            fprintf(stderr, "Cannot open '%s' for writing.", out_filename);
+            exit(-1);
+        }
+    }
+    else
+    {
+        out_fh = stdout;
+    }
+
     instance_init(
         &instance,
         max_processed_positions_count,
         positions_milestone_step,
-        FCCs_per_depth_milestone_step
-        );
+        FCCs_per_depth_milestone_step,
+        out_fh
+    );
     fh = fopen(filename, "r");
     if (fh == NULL)
     {
@@ -861,12 +889,12 @@ int main(int argc, char * argv[])
         char move_buffer[500];
         const fcs_fcc_moves_list_item_t * iter;
 
-        printf ("VERDICT: %s\n", "Success!");
+        fprintf (out_fh, "VERDICT: %s\n", "Success!");
         /* Now trace the solution */
         iter = init_moves_seq.moves_list;
         for (i = 0 ; i < init_moves_seq.count ;)
         {
-            printf("==\n%s\n",
+            fprintf(out_fh, "==\n%s\n",
                    move_to_string(
                        iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM], 
                        move_buffer
@@ -880,7 +908,7 @@ int main(int argc, char * argv[])
         iter = ret_moves_seq.moves_list;
         for (i = 0 ; i < ret_moves_seq.count ;)
         {
-             printf("==\n%s\n",
+             fprintf(out_fh, "==\n%s\n",
                    move_to_string(
                        iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM], 
                        move_buffer
@@ -891,19 +919,19 @@ int main(int argc, char * argv[])
                 iter = iter->next;
             }
         }
-        printf ("==\nEND\n");
+        fprintf (out_fh, "==\nEND\n");
     }
     else if (ret_code == FCC_IMPOSSIBLE)
     {
-        printf ("VERDICT: %s\n", "Could not solve successfully.");
+        fprintf (out_fh, "VERDICT: %s\n", "Could not solve successfully.");
     }
     else if (ret_code == FCC_INTERRUPTED)
     {
-        printf ("VERDICT: %s\n", "Interrupted run after limit reached.");
+        fprintf (out_fh, "VERDICT: %s\n", "Interrupted run after limit reached.");
     }
     else
     {
-        printf ("VERDICT: %s\n", "Unknown return code. ERROR.");
+        fprintf (out_fh, "VERDICT: %s\n", "Unknown return code. ERROR.");
     }
     
     instance_time_printf(
@@ -915,6 +943,8 @@ int main(int argc, char * argv[])
 
     fc_solve_compact_allocator_finish(&moves_list_compact_alloc);
     fc_solve_meta_compact_allocator_finish(&meta_alloc);
+
+    fclose(out_fh);
 
     return 0;
 }
