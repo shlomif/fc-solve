@@ -370,7 +370,7 @@ int instance_run_solver(
          )
     {
         dict_t * do_next_fcc_start_points_exist;
-        long num_FCCs_processed_for_depth = 0;
+        long num_FCCs_processed_for_depth = 0, num_unique_FCCs_for_depth = 0;
 
         do_next_fcc_start_points_exist
             = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
@@ -422,8 +422,9 @@ int instance_run_solver(
             {
                 instance_time_printf(
                     instance, 
-                    "Processed %ld FCCs for depth %d\n", 
-                    num_FCCs_processed_for_depth, curr_depth
+                    "Processed %ld FCCs (%ld unique) for depth %d\n", 
+                    num_FCCs_processed_for_depth, num_unique_FCCs_for_depth,
+                    curr_depth
                 );
             }
 
@@ -450,6 +451,8 @@ int instance_run_solver(
             if (is_fcc_new)
             {
                 fcs_encoded_state_buffer_t * min_by_sorting_copy_ptr;
+
+                num_unique_FCCs_for_depth++;
 
                 /* First of all, add min_by_sorting to 
                  * fcc_stage->does_min_by_sorting_exist, so it won't be
