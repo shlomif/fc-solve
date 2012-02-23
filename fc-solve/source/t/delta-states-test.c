@@ -58,7 +58,23 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_key
     fcs_uchar_t enc_state[24];
     char * as_str;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    fcs_state_locs_struct_t locs;
+#endif
 
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+    {
+        int i;
+        for ( i=0 ; i<MAX_NUM_STACKS ; i++)
+        {
+            locs.stack_locs[i] = (fcs_locs_t)i;
+        }
+        for ( i=0 ; i<MAX_NUM_FREECELLS ; i++)
+        {
+            locs.fc_locs[i] = (fcs_locs_t)i;
+        }
+    }
+#endif
     fc_solve_delta_stater_encode_into_buffer(
         delta,
         state,
@@ -79,6 +95,9 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_key
             &(new_derived_state.info),
 #else
             &new_derived_state,
+#endif
+#ifdef FCS_WITHOUT_LOCS_FIELDS
+            &locs,
 #endif
             FREECELLS_NUM,
             STACKS_NUM,
