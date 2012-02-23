@@ -30,6 +30,7 @@ foreach my $fn ('alloc.c', 'app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
     'dbm_common.h', 'fcc_solver.c', 'indirect_buffer.h', 'fcc_brfs_test.h',
     'fcc_brfs.h', 'dbm_lru_cache.h', 'dbm_cache.h', 'meta_alloc.h',
     'meta_alloc.c', 'libavl/avl.c',, 'libavl/avl.h', 'generic_tree.h',
+    'delta_states.h',
 )
 {
     io($fn) > io("$dest_dir/$fn");
@@ -75,7 +76,7 @@ all: \$(TARGET)
 run: \$(DEALS_DUMPS)
 
 \$(DEALS_DUMPS): %.dump: all
-\t./\$(TARGET) --caches-delta \$(CACHE_SIZE) \$(patsubst %.dump,%.board,\$\@) > \$\@
+\t./\$(TARGET) --caches-delta \$(CACHE_SIZE) -o \$\@ \$(patsubst %.dump,%.board,\$\@)
 
 %.show:
 \t\@echo "\$* = \$(\$*)"
@@ -83,7 +84,7 @@ EOF
 
 if ($to_upload)
 {
-    my $arc_name = "$dest_dir.tar.bz2";
+    my $arc_name = "$dest_dir-trunk-r4442.tar.bz2";
     if (system('tar', '-cjvf', $arc_name, $dest_dir))
     {
         die "tar failed!";
