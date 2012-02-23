@@ -142,6 +142,7 @@ static void GCC_INLINE instance_init(
 {
     instance->count_num_processed = 0;
     instance->max_processed_positions_count = max_processed_positions_count;
+    instance->positions_milestone_step = positions_milestone_step;
     instance->FCCs_per_depth_milestone_step = FCCs_per_depth_milestone_step;
 }
 
