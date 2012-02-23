@@ -129,8 +129,8 @@ typedef struct {
     fcs_fcc_solver_state solver_state;
     long count_num_processed;
     long max_processed_positions_count;
-    long positions_milestone_step;
     long FCCs_per_depth_milestone_step;
+    long positions_milestone_step;
 } fcs_dbm_solver_instance_t;
 
 static void GCC_INLINE instance_init(
@@ -142,7 +142,6 @@ static void GCC_INLINE instance_init(
 {
     instance->count_num_processed = 0;
     instance->max_processed_positions_count = max_processed_positions_count;
-    instance->positions_milestone_step = positions_milestone_step;
     instance->FCCs_per_depth_milestone_step = FCCs_per_depth_milestone_step;
 }
 
@@ -278,13 +277,6 @@ static GCC_INLINE void instance_time_printf(
 
 #define STEP (instance->positions_milestone_step)
 
-static GCC_INLINE int fc_solve_compare_fcs_FCC_start_points(const void * a, const void * b, void * context)
-{
-#define DEREF(x) (&(((fcs_FCC_start_point_t *)(x))->enc_state))
-    return fc_solve_compare_encoded_states(DEREF(a), DEREF(b), context);
-#undef DEREF
-}
-
 int instance_run_solver(
     fcs_dbm_solver_instance_t * instance,
     long max_num_elements_in_cache,
@@ -377,25 +369,24 @@ int instance_run_solver(
          )
     {
         dict_t * do_next_fcc_start_points_exist;
-        fcs_FCC_start_points_list_t next_start_points_list;
-        long num_FCCs_processed_for_depth = 0, num_unique_FCCs_for_depth = 0;
-        struct avl_traverser trav;
-        fcs_FCC_start_point_t * start_point_iter;
-        fcs_FCC_start_point_t * more_start_point_iter;
-
-
-        next_start_points_list.recycle_bin = NULL;
-        fc_solve_compact_allocator_init(&(next_start_points_list.allocator), meta_alloc);
+        long num_FCCs_processed_for_depth = 0;
 
         do_next_fcc_start_points_exist
-            = fc_solve_kaz_tree_create(fc_solve_compare_fcs_FCC_start_points, NULL, meta_alloc);
+            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
+
         while ((ret == FCC_IMPOSSIBLE) && fcc_stage->queue)
         {
+            fcs_FCC_start_point_t * start_point_iter;
+            fcs_FCC_start_points_list_t next_start_points_list;
             fcs_bool_t is_fcc_new;
             fcs_encoded_state_buffer_t min_by_sorting;
             long num_new_positions;
 
             fcc_stage->queue = ((fcc = fcc_stage->queue)->next);
+
+            next_start_points_list.list = NULL;
+            next_start_points_list.recycle_bin = NULL;
+            fc_solve_compact_allocator_init(&(next_start_points_list.allocator), meta_alloc);
 
 #if 0
             instance_time_printf (instance, "Before perform_FCC_brfs\n");
@@ -417,6 +408,8 @@ int instance_run_solver(
                 meta_alloc
             );
 
+            start_point_iter = next_start_points_list.list;
+
 #if 0
             instance_time_printf (instance, "After perform_FCC_brfs\n");
 #endif
@@ -428,8 +421,8 @@ int instance_run_solver(
             {
                 instance_time_printf(
                     instance, 
-                    "Processed %ld FCCs (%ld unique) for depth %d\n", 
-                    num_FCCs_processed_for_depth, num_unique_FCCs_for_depth, curr_depth
+                    "Processed %ld FCCs for depth %d\n", 
+                    num_FCCs_processed_for_depth, curr_depth
                 );
             }
 
@@ -447,10 +440,7 @@ int instance_run_solver(
                         instance->max_processed_positions_count)
                     {
                         ret = FCC_INTERRUPTED;
-
-                        avl_t_init(&trav, do_next_fcc_start_points_exist);
-                        more_start_point_iter = avl_t_first(&trav, do_next_fcc_start_points_exist);
-
+                            
                         goto fcc_loop_cleanup;
                     }
                 }
@@ -459,8 +449,6 @@ int instance_run_solver(
             if (is_fcc_new)
             {
                 fcs_encoded_state_buffer_t * min_by_sorting_copy_ptr;
-                
-                num_unique_FCCs_for_depth++;
 
                 /* First of all, add min_by_sorting to 
                  * fcc_stage->does_min_by_sorting_exist, so it won't be
@@ -480,30 +468,19 @@ int instance_run_solver(
                     min_by_sorting_copy_ptr
                 );
             }
-fcc_loop_cleanup:
+
             /* Free fcc's resources. */
             fc_solve_fcc_release_moves_seq(
                 &(fcc->moves_seq_to_min_by_absolute_depth),
                 moves_list_allocator
             );
 
-            /* -> Put it in the queue's recycle bin. */
-            fcc->next = fcc_stage->queue_recycle_bin;
-            fcc_stage->queue_recycle_bin = fcc;
-        }
-
-        avl_t_init(&trav, do_next_fcc_start_points_exist);
-        start_point_iter =
-            (fcs_FCC_start_point_t *)avl_t_first(&trav, do_next_fcc_start_points_exist);
-
-        if (ret == FCC_IMPOSSIBLE)
-        {
             /* Now: iterate over the next_start_points_list . */
             for (
-                ;
-                start_point_iter
-                ;
-                start_point_iter = avl_t_next(&trav)
+                    ;
+                 start_point_iter
+                    ;
+                 start_point_iter = start_point_iter->next
                 )
             {
                 int num_additional_moves;
@@ -514,12 +491,12 @@ fcc_loop_cleanup:
 
                 DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-                    fc_solve_delta_stater_decode_into_state(
-                        delta,
-                        start_point_iter->enc_state.s,
-                        &(state),
-                        indirect_stacks_buffer
-                        );
+                fc_solve_delta_stater_decode_into_state(
+                    delta,
+                    start_point_iter->enc_state.s,
+                    &(state),
+                    indirect_stacks_buffer
+                );
                 /* Perform Horne's Prune on the position to see where it ends up at. */
                 /*  TODO : convert horne_prune to fcs_fcc_moves_seq_t . */
                 num_additional_moves =
@@ -543,19 +520,18 @@ fcc_loop_cleanup:
                         }
                     }
 
-                    if (suit == SUIT_LIMIT)
-                    {
-                        /* State is solved! Yay! Cleanup and return. */
-                        ret = FCC_SOLVED;
-                        ret_moves_seq = start_point_iter->moves_seq;
-                        /* Invalidate the existing ones so they won't be
-                         * freed by accident.
-                         * */
-                        start_point_iter->moves_seq.moves_list = NULL;
-                        start_point_iter->moves_seq.count = -1;
+                if (suit == SUIT_LIMIT)
+                {
+                    /* State is solved! Yay! Cleanup and return. */
+                    ret = FCC_SOLVED;
+                    ret_moves_seq = start_point_iter->moves_seq;
+                    /* Invalidate the existing ones so they won't be
+                     * freed by accident.
+                     * */
+                    start_point_iter->moves_seq.moves_list = NULL;
+                    start_point_iter->moves_seq.count = -1;
 
-                        goto second_stage_cleanup;
-                    }
+                    goto fcc_loop_cleanup;
                 }
 #undef SUIT_LIMIT
 
@@ -564,88 +540,97 @@ fcc_loop_cleanup:
                     &(state),
                     &enc_state
                     );
-
-                next_fcc_stage = &(solver_state->FCCs_by_depth[
-                                   start_point_new_FCC_depth =
-                                   curr_depth + 1 + num_additional_moves
-                                   ]);
-
-                if (!
-                    fc_solve_kaz_tree_lookup_value(
-                        next_fcc_stage->does_min_by_absolute_depth_exist,
-                        &enc_state
+                    
+                    next_fcc_stage = &(solver_state->FCCs_by_depth[
+                        start_point_new_FCC_depth =
+                            curr_depth + 1 + num_additional_moves
+                    ]);
+                    
+                    if (!
+                        fc_solve_kaz_tree_lookup_value(
+                            next_fcc_stage->does_min_by_absolute_depth_exist,
+                            &enc_state
                         )
-                   )
-                {
-                    fcs_fully_connected_component_t * next_fcc;
-                    fcs_encoded_state_buffer_t * enc_state_copy_ptr;
-
-                    enc_state_copy_ptr = fcs_compact_alloc_ptr(
-                        &(next_fcc_stage->does_min_by_absolute_depth_exist->dict_allocator),
-                        sizeof(*enc_state_copy_ptr)
-                        );
-                    *enc_state_copy_ptr = enc_state;
-
-                    fc_solve_kaz_tree_alloc_insert(
-                        next_fcc_stage->does_min_by_absolute_depth_exist,
-                        enc_state_copy_ptr
-                        );
-
-                    if (next_fcc_stage->queue_recycle_bin)
+                       )
                     {
-                        fcs_fully_connected_component_t * temp_fcc;
-                        temp_fcc = next_fcc_stage->queue_recycle_bin->next;
-                        next_fcc_stage->queue_recycle_bin->next = 
-                            next_fcc_stage->queue;
-                        next_fcc_stage->queue = next_fcc_stage->queue_recycle_bin;
-                        next_fcc_stage->queue_recycle_bin = temp_fcc;
+                        fcs_fully_connected_component_t * next_fcc;
+                        fcs_encoded_state_buffer_t * enc_state_copy_ptr;
+
+                        enc_state_copy_ptr = fcs_compact_alloc_ptr(
+                            &(next_fcc_stage->does_min_by_absolute_depth_exist->dict_allocator),
+                            sizeof(*enc_state_copy_ptr)
+                            );
+                        *enc_state_copy_ptr = enc_state;
+
+                        fc_solve_kaz_tree_alloc_insert(
+                            next_fcc_stage->does_min_by_absolute_depth_exist,
+                            enc_state_copy_ptr
+                        );
+
+                        if (next_fcc_stage->queue_recycle_bin)
+                        {
+                            fcs_fully_connected_component_t * temp_fcc;
+                            temp_fcc = next_fcc_stage->queue_recycle_bin->next;
+                            next_fcc_stage->queue_recycle_bin->next = 
+                                next_fcc_stage->queue;
+                            next_fcc_stage->queue = next_fcc_stage->queue_recycle_bin;
+                            next_fcc_stage->queue_recycle_bin = temp_fcc;
+                        }
+                        else
+                        {
+                            fcs_fully_connected_component_t * temp_fcc;
+                            temp_fcc =
+                                fcs_compact_alloc_ptr(
+                                    &(next_fcc_stage->queue_allocator),
+                                    sizeof(*(next_fcc_stage->queue))
+                                );
+                            temp_fcc->next = next_fcc_stage->queue;
+                            next_fcc_stage->queue = temp_fcc;
+                        }
+                        next_fcc = next_fcc_stage->queue;
+
+                        next_fcc->min_by_absolute_depth = enc_state;
+                        next_fcc->moves_seq_to_min_by_absolute_depth = start_point_iter->moves_seq;
                     }
                     else
                     {
-                        fcs_fully_connected_component_t * temp_fcc;
-                        temp_fcc =
-                            fcs_compact_alloc_ptr(
-                                &(next_fcc_stage->queue_allocator),
-                                sizeof(*(next_fcc_stage->queue))
-                                );
-                        temp_fcc->next = next_fcc_stage->queue;
-                        next_fcc_stage->queue = temp_fcc;
+                        fc_solve_fcc_release_moves_seq(
+                            &(start_point_iter->moves_seq),
+                            moves_list_allocator
+                        );
                     }
-                    next_fcc = next_fcc_stage->queue;
-
-                    next_fcc->min_by_absolute_depth = enc_state;
-                    next_fcc->moves_seq_to_min_by_absolute_depth = 
-                        start_point_iter->moves_seq;
                 }
-                else
+            }
+
+fcc_loop_cleanup:
+            {
+                fcs_FCC_start_point_t * more_start_point_iter;
+                for(
+                    more_start_point_iter = start_point_iter;
+                    more_start_point_iter;
+                    more_start_point_iter = more_start_point_iter->next
+                   )
                 {
                     fc_solve_fcc_release_moves_seq(
-                        &(start_point_iter->moves_seq),
+                        &(more_start_point_iter->moves_seq),
                         moves_list_allocator
-                    );
+                        );
                 }
             }
+
+            /* Free the next_start_points_list */
+            fc_solve_compact_allocator_finish(&(next_start_points_list.allocator));
+
+            /* Free fcc's resources. */
+            fc_solve_fcc_release_moves_seq(
+                &(fcc->moves_seq_to_min_by_absolute_depth),
+                moves_list_allocator
+            );
+
+            /* -> Put it in the queue's recycle bin. */
+            fcc->next = fcc_stage->queue_recycle_bin;
+            fcc_stage->queue_recycle_bin = fcc;
         }
-
-second_stage_cleanup:
-        more_start_point_iter = start_point_iter;
-        {
-            for(
-                ;
-                more_start_point_iter;
-                more_start_point_iter = avl_t_next(&trav)
-               )
-            {
-                fc_solve_fcc_release_moves_seq(
-                    &(more_start_point_iter->moves_seq),
-                    moves_list_allocator
-                );
-            }
-        }
-
-        /* Free the next_start_points_list */
-        fc_solve_compact_allocator_finish(&(next_start_points_list.allocator));
-
 
         /* Now ascend to the next FCC depth. */
         fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
@@ -659,7 +644,7 @@ second_stage_cleanup:
          * A trace for keeping track of the solver's progress.
          * TODO : make it optional/abstract and add more traces.
          */
-        instance_time_printf (instance, "Finished checking FCC-depth %d (Total processed FCCs for depth - %ld ; unique FCCs - %ld)\n", curr_depth, num_FCCs_processed_for_depth, num_unique_FCCs_for_depth);
+        instance_time_printf (instance, "Finished checking FCC-depth %d (Total processed FCCs for depth - %ld)\n", curr_depth, num_FCCs_processed_for_depth);
     }
 
 free_resources:

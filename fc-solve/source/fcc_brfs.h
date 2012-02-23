@@ -58,19 +58,17 @@ enum FCC_brfs_scan_type
 };
 
 
-union fcs_FCC_start_point_struct
+struct fcs_FCC_start_point_struct
 {
-    struct
-    {
-        fcs_encoded_state_buffer_t enc_state;
-        fcs_fcc_moves_seq_t moves_seq;
-    };
-    union fcs_FCC_start_point_struct * recycle_bin_next;
+    fcs_encoded_state_buffer_t enc_state;
+    fcs_fcc_moves_seq_t moves_seq;
+    struct fcs_FCC_start_point_struct * next;
 };
 
-typedef union fcs_FCC_start_point_struct fcs_FCC_start_point_t;
+typedef struct fcs_FCC_start_point_struct fcs_FCC_start_point_t;
 
 typedef struct {
+    fcs_FCC_start_point_t * list;
     fcs_compact_allocator_t allocator;
     fcs_FCC_start_point_t * recycle_bin;
 } fcs_FCC_start_points_list_t;
@@ -123,11 +121,9 @@ static void perform_FCC_brfs(
     /* The moves leading up to the state. 
      * */
     const fcs_fcc_moves_seq_t * const start_state_moves_seq,
-#if 1
     /* [Output]: FCC start points. 
      * */
     fcs_FCC_start_points_list_t * fcc_start_points,
-#endif
     /* [Input/Output]: make sure the fcc_start_points don't repeat themselves,
      * in the same FCC-based-depth.
      * */
@@ -333,7 +329,6 @@ static void perform_FCC_brfs(
         {
             fcs_bool_t is_reversible = derived_iter->is_reversible_move;
             dict_t * right_tree;
-            fcs_FCC_start_point_t check_for_existing;
 
             right_tree =
                 (is_reversible
@@ -347,21 +342,27 @@ static void perform_FCC_brfs(
                 &(new_item->key)
             );
 
-            if (! is_reversible)
-            {
-                check_for_existing.enc_state = new_item->key;
-            }
-
             if (! fc_solve_kaz_tree_lookup_value(
                 right_tree,
-                (is_reversible
-                 ? ((void *)(&(new_item->key)))
-                 : ((void *)(&check_for_existing)))
+                &(new_item->key)
                 )
             )
             {
                 fcs_fcc_moves_list_item_t * moves_list, * * end_moves_iter;
                 int pos_in_moves;
+                fcs_encoded_state_buffer_t * key_to_add;
+
+                key_to_add = 
+                    fcs_compact_alloc_ptr(
+                        &(right_tree->dict_allocator),
+                        sizeof(*key_to_add)
+                    );
+                *key_to_add = new_item->key;
+
+                fc_solve_kaz_tree_alloc_insert(
+                    right_tree,
+                    key_to_add
+                );
 
                 /* Fill in the moves. */
                 end_moves_iter = &(moves_list);
@@ -443,21 +444,7 @@ static void perform_FCC_brfs(
                     ];
 
                 if (is_reversible)
-                {                    
-                    fcs_encoded_state_buffer_t * key_to_add;
-
-                    key_to_add = 
-                        fcs_compact_alloc_ptr(
-                            &(right_tree->dict_allocator),
-                            sizeof(*key_to_add)
-                            );
-                    *key_to_add = new_item->key;
-
-                    fc_solve_kaz_tree_alloc_insert(
-                        right_tree,
-                        key_to_add
-                        );
-
+                {
                     new_item->moves_seq.count = pos_in_moves;
                     new_item->moves_seq.moves_list = moves_list;
 
@@ -478,9 +465,8 @@ static void perform_FCC_brfs(
                     /* Enqueue the new FCC start point. */
                     if (fcc_start_points->recycle_bin)
                     {
-                        fcc_start_points->recycle_bin = 
-                            (new_start_point = fcc_start_points->recycle_bin)
-                            ->recycle_bin_next;
+                        new_start_point = fcc_start_points->recycle_bin;
+                        fcc_start_points->recycle_bin = fcc_start_points->recycle_bin->next;
                     }
                     else
                     {
@@ -495,14 +481,10 @@ static void perform_FCC_brfs(
                     new_start_point->moves_seq.moves_list = moves_list;
 
                     /* 
-                     * Enqueue the new start point into right_tree (which
-                     * is "do_next_fcc_start_points_exist" in that case.
-                     *
-                     * It won't work without it retardo! */
-                    fc_solve_kaz_tree_alloc_insert(
-                        right_tree,
-                        new_start_point
-                        );
+                     * Enqueue the new start point - it won't work without it,
+                     * retardo! */
+                    new_start_point->next = fcc_start_points->list;
+                    fcc_start_points->list = new_start_point;
                 }
 
                 /* 
