@@ -911,17 +911,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 return user->ret_code;
             }
 
-            {
-                int i;
-                for ( i=0 ; i<MAX_NUM_STACKS ; i++)
-                {
-                    user->initial_state_locs.stack_locs[i] = (fcs_locs_t)i;
-                }
-                for ( i=0 ; i<MAX_NUM_FREECELLS ; i++)
-                {
-                    user->initial_state_locs.fc_locs[i] = (fcs_locs_t)i;
-                }
-            }
+            fc_solve_init_locs(&(user->initial_state_locs));
             user->state_locs = user->initial_state_locs;
 
             /* running_state is a normalized state. So We're duplicating
@@ -1784,17 +1774,7 @@ static void iter_handler_wrapper(
 #else
     state_raw.s = ptr_state;
 #endif
-    {
-        int i;
-        for ( i=0 ; i<MAX_NUM_STACKS ; i++)
-        {
-            state_raw.locs.stack_locs[i] = (fcs_locs_t)i;
-        }
-        for ( i=0 ; i<MAX_NUM_FREECELLS ; i++)
-        {
-            state_raw.locs.fc_locs[i] = (fcs_locs_t)i;
-        }
-    }
+    fc_solve_init_locs(&(state_raw.locs));
 
     user->iter_handler(
         api_instance,

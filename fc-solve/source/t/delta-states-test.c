@@ -60,17 +60,7 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_key
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
 
-    {
-        int i;
-        for ( i=0 ; i<MAX_NUM_STACKS ; i++)
-        {
-            locs.stack_locs[i] = (fcs_locs_t)i;
-        }
-        for ( i=0 ; i<MAX_NUM_FREECELLS ; i++)
-        {
-            locs.fc_locs[i] = (fcs_locs_t)i;
-        }
-    }
+    fc_solve_init_locs(&locs);
 
     fc_solve_delta_stater_encode_into_buffer(
         delta,

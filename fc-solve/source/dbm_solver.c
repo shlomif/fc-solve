@@ -832,14 +832,7 @@ int main(int argc, char * argv[])
 #endif
         }
 
-        for (i=0 ; i < MAX_NUM_STACKS ; i++)
-        {
-            locs.stack_locs[i] = i;
-        }
-        for (i=0 ; i < MAX_NUM_FREECELLS ; i++)
-        {
-            locs.fc_locs[i] = i;
-        }
+        fc_solve_init_locs(&locs);
 
         for (i = trace_num-1 ; i >= 0 ; i--)
         {

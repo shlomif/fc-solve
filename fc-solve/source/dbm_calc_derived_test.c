@@ -53,7 +53,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
     fcs_state_locs_struct_t locs;
-    int i;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -118,14 +117,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     *(out_derived_states) = debug_ret;
 
-    for (i=0 ; i < MAX_NUM_STACKS ; i++)
-    {
-        locs.stack_locs[i] = i;
-    }
-    for (i=0 ; i < MAX_NUM_FREECELLS ; i++)
-    {
-        locs.fc_locs[i] = i;
-    }
+    fc_solve_init_locs(&locs);
+
     int idx = 0;
     iter = derived_list;
     while (iter)

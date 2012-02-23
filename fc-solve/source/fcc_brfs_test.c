@@ -191,14 +191,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     ret[states_count].count = 0;
 
-    for (i=0 ; i < MAX_NUM_STACKS ; i++)
-    {
-        locs.stack_locs[i] = i;
-    }
-    for (i=0 ; i < MAX_NUM_FREECELLS ; i++)
-    {
-        locs.fc_locs[i] = i;
-    }
+    fc_solve_init_locs(&locs);
 
     avl_t_init (&trav, do_next_fcc_start_points_exist);
     iter = avl_t_first(&trav, do_next_fcc_start_points_exist);

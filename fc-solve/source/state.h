@@ -450,6 +450,19 @@ typedef struct
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
 } fcs_state_locs_struct_t;
 
+static GCC_INLINE void fc_solve_init_locs(fcs_state_locs_struct_t * locs)
+{
+    int i;
+    for ( i=0 ; i<MAX_NUM_STACKS ; i++)
+    {
+        locs->stack_locs[i] = (fcs_locs_t)i;
+    }
+    for ( i=0 ; i<MAX_NUM_FREECELLS ; i++)
+    {
+        locs->fc_locs[i] = (fcs_locs_t)i;
+    }
+}
+                                         
 typedef struct fcs_state_extra_info_struct fcs_state_extra_info_t;
 
 struct fcs_state_keyval_pair_struct
