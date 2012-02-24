@@ -2250,16 +2250,12 @@ extern char * fc_solve_get_the_positions_by_rank_data(
  * */
 int fc_solve_sfs_check_state_begin(
     fc_solve_hard_thread_t * const hard_thread,
-    fcs_lvalue_pass_state_t * const out_new_state_out,
-    fcs_pass_state_t * const raw_ptr_state_raw,
+    fcs_kv_state_t * const out_new_state_out,
+    fcs_kv_state_t * const raw_ptr_state_raw,
     fcs_move_stack_t * const moves
     )
 {
-#ifdef FCS_RCS_STATES
 #define ptr_state (raw_ptr_state_raw->val)
-#else
-#define ptr_state raw_ptr_state_raw
-#endif
     fcs_collectible_state_t * raw_ptr_new_state;
     fc_solve_instance_t * const instance = hard_thread->instance;
 
@@ -2279,20 +2275,26 @@ int fc_solve_sfs_check_state_begin(
 #ifdef FCS_RCS_STATES
     out_new_state_out->val = raw_ptr_new_state;
 #else
-    *out_new_state_out = raw_ptr_new_state;
+    out_new_state_out->key = &(raw_ptr_new_state->s);
+    out_new_state_out->val = &(raw_ptr_new_state->info);
 #endif
 
-    fcs_duplicate_state( 
+    fcs_duplicate_kv_state( 
+        out_new_state_out, 
+        raw_ptr_state_raw
+    );
 #ifdef FCS_RCS_STATES
-            out_new_state_out, 
+#define COLLECTIBLE_STATE_PTR(kv_ptr) kv_ptr
+#define INFO_STATE_PTR(kv_ptr) kv_ptr->val
 #else
-            (*out_new_state_out),
+/* TODO : That's very hacky - get rid of it. */
+#define COLLECTIBLE_STATE_PTR(kv_ptr) ((fcs_state_keyval_pair_t *)(kv_ptr->key))
+#define INFO_STATE_PTR(kv_ptr) COLLECTIBLE_STATE_PTR(kv_ptr)
 #endif
-            raw_ptr_state_raw );
     /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.
      * */
-    FCS_S_PARENT(raw_ptr_new_state) = ptr_state;
+    FCS_S_PARENT(raw_ptr_new_state) = INFO_STATE_PTR(raw_ptr_state_raw);
     FCS_S_MOVES_TO_PARENT(raw_ptr_new_state) = moves;
     /* Make sure depth is consistent with the game graph.
      * I.e: the depth of every newly discovered state is derived from
@@ -2316,7 +2318,7 @@ int fc_solve_sfs_check_state_begin(
 extern void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * const soft_thread,
     fcs_pass_state_t * const raw_ptr_state_raw,
-    fcs_pass_state_t * const raw_ptr_new_state_raw,
+    fcs_kv_state_t * const raw_ptr_new_state_raw,
     const int state_context_value,
     fcs_move_stack_t * const moves,
     fcs_derived_states_list_t * const derived_states_list
@@ -2332,17 +2334,16 @@ extern void fc_solve_sfs_check_state_end(
 #endif
     fcs_lvalue_pass_state_t existing_state;
 
-#ifdef FCS_RCS_STATES
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
+#ifdef FCS_RCS_STATES
 #define ptr_state (raw_ptr_state_raw->val)
 #else
-#define ptr_new_state_foo (raw_ptr_new_state_raw)
 #define ptr_state (raw_ptr_state_raw)
 #endif
 
     if (! fc_solve_check_and_add_state(
         hard_thread,
-        raw_ptr_new_state_raw,
+        COLLECTIBLE_STATE_PTR(raw_ptr_new_state_raw),
         &existing_state
         ))
     {
@@ -2353,8 +2354,8 @@ extern void fc_solve_sfs_check_state_end(
 #endif
         if (hard_thread->allocated_from_list)
         {
-            FCS_S_NEXT(ptr_new_state_foo) = instance->list_of_vacant_states;
-            instance->list_of_vacant_states = ptr_new_state_foo;
+            ptr_new_state_foo->parent = instance->list_of_vacant_states;
+            instance->list_of_vacant_states = INFO_STATE_PTR(raw_ptr_new_state_raw);
         }
         else
         {
@@ -2403,7 +2404,7 @@ extern void fc_solve_sfs_check_state_end(
     {
         fc_solve_derived_states_list_add_state(
             derived_states_list,
-            ptr_new_state_foo,
+            INFO_STATE_PTR(raw_ptr_new_state_raw),
             state_context_value
         );
     }

@@ -2152,12 +2152,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     return;
 }
 
-#ifdef FCS_RCS_STATES
-#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() ptr_new_state_key
-#else
-#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() (&(ptr_new_state->s))
-#endif
-
+#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() (pass_new_state.key)
 
 #ifdef HARD_CODED_NUM_DECKS
 #define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS(), card)

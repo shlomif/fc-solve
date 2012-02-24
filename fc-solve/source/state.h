@@ -231,6 +231,10 @@ typedef struct fcs_struct_state_t fcs_state_t;
     {   \
         (ptr_dest)->info.stacks_copy_on_write_flags = 0; \
     }
+#define fcs_duplicate_kv_state_extra(ptr_dest, ptr_src) \
+{ \
+    ptr_dest->stacks_copy_on_write_flags = 0; \
+}
 
 typedef char fcs_locs_t;
 
@@ -307,6 +311,9 @@ typedef char fcs_locs_t;
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
 
 #define fcs_duplicate_state_extra(ptr_dest, ptr_src) \
+    {}
+
+#define fcs_duplicate_kv_state_extra(ptr_dest, ptr_src) \
     {}
 
 #define fcs_copy_stack(state_key, state_val, idx, buffer) {}
@@ -498,7 +505,6 @@ typedef struct {
 typedef fcs_kv_state_t fcs_pass_state_t;
 typedef fcs_state_extra_info_t fcs_collectible_state_t;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
-#define FCS_S_NEXT(s) FCS_S_ACCESSOR(s, parent)
 
 typedef fcs_pass_state_t fcs_lvalue_pass_state_t;
 
@@ -509,6 +515,8 @@ typedef fcs_pass_state_t fcs_lvalue_pass_state_t;
     fcs_duplicate_state_extra(((ptr_dest)->val), ((ptr_src)->val));   \
     }
 
+#define fcs_duplicate_kv_state(x,y) fcs_duplicate_state(x,y)
+
 #else
 
 typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
@@ -518,7 +526,6 @@ typedef fcs_collectible_state_t fcs_pass_state_t;
 typedef fcs_pass_state_t * fcs_lvalue_pass_state_t;
 
 #define FCS_S_ACCESSOR(s, field) (((s)->info).field)
-#define FCS_S_NEXT(s) ((s)->next)
 
 #define fcs_duplicate_state(ptr_dest, ptr_src) \
     { \
@@ -526,8 +533,16 @@ typedef fcs_pass_state_t * fcs_lvalue_pass_state_t;
     fcs_duplicate_state_extra(ptr_dest, ptr_src);   \
     }
 
+
+#define fcs_duplicate_kv_state(ptr_dest, ptr_src) \
+    { \
+    *((ptr_dest)->key) = *((ptr_src)->key); \
+    *((ptr_dest)->val) = *((ptr_src)->val); \
+    fcs_duplicate_kv_state_extra(((ptr_dest)->val), ((ptr_src)->val));   \
+    }
 #endif
 
+#define FCS_S_NEXT(s) FCS_S_ACCESSOR(s, parent)
 #define FCS_S_PARENT(s) FCS_S_ACCESSOR(s, parent)
 #define FCS_S_NUM_ACTIVE_CHILDREN(s) FCS_S_ACCESSOR(s, num_active_children)
 #define FCS_S_MOVES_TO_PARENT(s) FCS_S_ACCESSOR(s, moves_to_parent)
