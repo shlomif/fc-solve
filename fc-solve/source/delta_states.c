@@ -554,6 +554,21 @@ static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
         ;
 }
 
+static void GCC_INLINE fcs_init_and_encode_state(
+    fc_solve_delta_stater_t * delta_stater,
+    fcs_state_keyval_pair_t * state,
+    fcs_encoded_state_buffer_t * enc_state
+)
+{
+    fcs_init_encoded_state(enc_state);
+
+    fc_solve_delta_stater_encode_into_buffer(
+        delta_stater,
+        state,
+        enc_state->s
+    );
+}
+
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
 static char * prepare_state_str(const char * proto)

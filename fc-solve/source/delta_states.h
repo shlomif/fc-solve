@@ -37,6 +37,14 @@ extern "C" {
 #include "config.h"
 #include "state.h"
 
+typedef struct { unsigned char s[24]; } fcs_encoded_state_buffer_t;
+
+typedef struct
+{
+    fcs_encoded_state_buffer_t key;
+    fcs_encoded_state_buffer_t parent_and_move;
+} fcs_dbm_record_t;
+
 typedef struct
 {
 #ifndef FCS_FREECELL_ONLY
@@ -48,11 +56,10 @@ typedef struct
     int bits_per_orig_cards_in_column;
 } fc_solve_delta_stater_t;
 
-static void fc_solve_delta_stater_encode_into_buffer(
-    fc_solve_delta_stater_t * delta_stater,
-    fcs_state_keyval_pair_t * state,
-    unsigned char * out_enc_state
-);
+static void GCC_INLINE fcs_init_encoded_state(fcs_encoded_state_buffer_t * enc_state)
+{
+    memset(enc_state, '\0', sizeof(*enc_state));
+}
 
 #ifdef __cplusplus
 }
