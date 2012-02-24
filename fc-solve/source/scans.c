@@ -1494,12 +1494,11 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 }
 #ifdef FCS_RCS_STATES
 #undef pass
-#undef ptr_state_key
 #undef state_key
 #else
 #undef ptr_state_raw
 #endif
-
+#undef ptr_state_key
 
 #ifdef FCS_FREECELL_ONLY
 #undef unlimited_sequence_move
@@ -2090,13 +2089,13 @@ my_return_label:
  */
 extern char * fc_solve_get_the_positions_by_rank_data(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_pass_state_t * ptr_state_raw
+    fcs_kv_state_t * ptr_state_raw
 )
 {
-#ifdef FCS_RCS_STATES
 #define ptr_state_key (ptr_state_raw->key)
 #define state_key (*ptr_state_key)
-#endif
+#undef the_state
+#define the_state state_key
 
     char * * positions_by_rank_location;
 
@@ -2240,9 +2239,8 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 
     return *positions_by_rank_location;
 }
-#ifdef FCS_RCS_STATES
 #undef state_key
-#endif
+#undef ptr_state_key
 
 /*
  * These functions are used by the move functions in freecell.c and
