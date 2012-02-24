@@ -32,6 +32,9 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include "config.h"
+#undef FCS_RCS_STATES
+
 #include "fcs_dllexport.h"
 #include "delta_states.c"
 #include "fcc_brfs.h"

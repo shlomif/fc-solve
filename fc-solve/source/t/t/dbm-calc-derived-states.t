@@ -3,6 +3,20 @@
 use strict;
 use warnings;
 
+use Test::More;
+
+BEGIN
+{
+    if (-f "$ENV{FCS_PATH}/libfcs_dbm_calc_derived_test.so")
+    {
+        plan tests => 24;
+    }
+    else
+    {
+        plan skip_all => "Test object shared object not found - incompatible.";
+    }
+}
+
 use lib './t/lib';
 
 use Config;
@@ -201,7 +215,7 @@ sub is_dest
 
 package main;
 
-use Test::More tests => 24;
+use Test::More;
 
 my $TRUE = 1;
 my $FALSE = 0;

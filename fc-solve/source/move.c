@@ -173,17 +173,22 @@ void fc_solve_apply_move(
             if (locs)
             {
                 fc_solve_canonize_state_with_locs(
-#ifdef FCS_RCS_STATES
-                state_key,
-#endif
-                state,
-                locs,
-                freecells_num, stacks_num
-            );
+                    state,
+                    locs,
+                    freecells_num, stacks_num
+                );
             }
             else
             {
-                fc_solve_canonize_state (state, freecells_num, stacks_num);
+#ifdef FCS_RCS_STATES
+#define PASS_ME state
+#else
+                fcs_kv_state_t pass;
+                pass.key = &(state->s);
+                pass.val = &(state->info);
+#define PASS_ME (&(pass))
+#endif
+                fc_solve_canonize_state (PASS_ME, freecells_num, stacks_num);
             }
         }
         break;

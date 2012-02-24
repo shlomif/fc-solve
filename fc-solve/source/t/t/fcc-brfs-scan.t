@@ -3,6 +3,19 @@
 use strict;
 use warnings;
 
+use Test::More;
+
+BEGIN
+{
+    if (-f "$ENV{FCS_PATH}/libfcs_fcc_brfs_test.so")
+    {
+        plan tests => 14;
+    }
+    else
+    {
+        plan skip_all => "Test object shared object not found - incompatible.";
+    }
+}
 use lib './t/lib';
 
 use Config;
@@ -227,7 +240,6 @@ sub get_num_new_positions
 
 package main;
 
-use Test::More tests => 14;
 
 use List::MoreUtils qw(any uniq none);
 

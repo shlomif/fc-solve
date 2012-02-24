@@ -362,11 +362,22 @@ fcs_bool_t fc_solve_check_and_add_state(
 
     fc_solve_cache_stacks(hard_thread, new_state);
 
-    fc_solve_canonize_state(
-            new_state,
+    {
+#ifdef FCS_RCS_STATES
+#define PASS_ME new_state
+#else
+        fcs_kv_state_t pass;
+        pass.key = &(new_state->s);
+        pass.val = &(new_state->info);
+#define PASS_ME (&(pass))
+#endif
+        fc_solve_canonize_state(
+            PASS_ME,
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM
             );
+
+    }
 
 /*
     The objective of this part of the code is:

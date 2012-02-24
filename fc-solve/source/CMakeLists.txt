@@ -893,18 +893,20 @@ ADD_CUSTOM_TARGET(
 )
 
 IF (IS_DEBUG)
-    # The delta-states testing library
-    ADD_LIBRARY(fcs_delta_states_test
-        SHARED
-        app_str.c card.c state.c delta_states.c
-    )
-    ADD_LIBRARY(fcs_dbm_calc_derived_test
-        SHARED
-        ${DBM_FCC_COMMON}
-        dbm_calc_derived_test.c
-    )
-    ADD_LIBRARY(fcs_fcc_brfs_test
-        SHARED
-        ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
-    )
+    IF (NOT FCS_ENABLE_RCS_STATES)
+        # The delta-states testing library
+        ADD_LIBRARY(fcs_delta_states_test
+            SHARED
+            app_str.c card.c state.c delta_states.c
+        )
+        ADD_LIBRARY(fcs_dbm_calc_derived_test
+            SHARED
+            ${DBM_FCC_COMMON}
+            dbm_calc_derived_test.c
+        )
+        ADD_LIBRARY(fcs_fcc_brfs_test
+            SHARED
+            ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
+        )
+    ENDIF (NOT FCS_ENABLE_RCS_STATES)
 ENDIF (IS_DEBUG)

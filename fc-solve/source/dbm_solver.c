@@ -46,6 +46,8 @@
 
 #include "config.h"
 
+#undef FCS_RCS_STATES
+
 #include "bool.h"
 #include "inline.h"
 #include "portable_time.h"
