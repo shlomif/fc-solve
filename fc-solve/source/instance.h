@@ -150,7 +150,7 @@ struct fc_solve_soft_thread_struct;
 
 typedef void (*fc_solve_solve_for_state_test_t)(
         struct fc_solve_soft_thread_struct *,
-        fcs_pass_state_t *,
+        fcs_kv_state_t *,
         fcs_derived_states_list_t *
         );
 
@@ -1706,7 +1706,7 @@ extern int fc_solve_compare_lru_cache_keys(
 #define DECLARE_MOVE_FUNCTION(name) \
 extern void name( \
         fc_solve_soft_thread_t * const soft_thread, \
-        fcs_pass_state_t * const raw_ptr_state_raw, \
+        fcs_kv_state_t * const raw_ptr_state_raw, \
         fcs_derived_states_list_t * const derived_states_list \
         )
 

@@ -316,7 +316,7 @@ static void free_states(fc_solve_instance_t * instance)
 
 #define the_state (PTR_STATE->s)
 #define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
-#define ASSIGN_STATE_KEY() {}
+#define ASSIGN_STATE_KEY() {pass_state.key = &(the_state); pass_state.val = &(PTR_STATE->info);}
 #define STATE_TO_PASS() (PTR_STATE)
 #define NEW_STATE_TO_PASS() (ptr_new_state)
 #define PTR_STATE (ptr_state_raw)
@@ -826,6 +826,9 @@ int fc_solve_soft_dfs_do_solve(
     int hard_thread_max_num_times;
     fcs_instance_debug_iter_output_func_t debug_iter_output_func;
     fcs_instance_debug_iter_output_context_t debug_iter_output_context;
+#ifndef FCS_RCS_STATES
+    fcs_kv_state_t pass_state;
+#endif
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -1037,9 +1040,14 @@ int fc_solve_soft_dfs_do_solve(
                 {
                     fcs_collectible_state_t * derived;
 
+#ifdef FCS_RCS_STATES
+#define STATE_TO_PASS_TO_TESTS() STATE_TO_PASS()
+#else
+#define STATE_TO_PASS_TO_TESTS() (&pass_state)
+#endif
                     if (fc_solve_sfs_raymond_prune(
                         soft_thread,
-                        STATE_TO_PASS(),
+                        STATE_TO_PASS_TO_TESTS(),
                         &derived
                         ) == PRUNE_RET_FOLLOW_STATE
                     )
@@ -1084,7 +1092,7 @@ int fc_solve_soft_dfs_do_solve(
                     ].tests[the_soft_dfs_info->test_index]
                     (
                         soft_thread,
-                        STATE_TO_PASS(),
+                        STATE_TO_PASS_TO_TESTS(),
                         derived_states_list
                     );
 
@@ -1728,6 +1736,9 @@ int fc_solve_befs_or_bfs_do_solve(
     fcs_derived_states_list_t derived;
     int derived_index;
     fcs_bool_t enable_pruning;
+#ifndef FCS_RCS_STATES
+    fcs_kv_state_t pass_state;
+#endif
 
     int method;
 
@@ -1820,7 +1831,7 @@ int fc_solve_befs_or_bfs_do_solve(
 
             if (fc_solve_sfs_raymond_prune(
                     soft_thread,
-                    STATE_TO_PASS(),
+                    STATE_TO_PASS_TO_TESTS(),
                     &derived
                 ) == PRUNE_RET_FOLLOW_STATE
             )
@@ -1940,7 +1951,7 @@ int fc_solve_befs_or_bfs_do_solve(
         {
             (*next_test)(
                 soft_thread,
-                STATE_TO_PASS(),
+                STATE_TO_PASS_TO_TESTS(),
                 &derived
             );
         }
