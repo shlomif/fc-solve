@@ -2338,11 +2338,4 @@ extern int fc_solve_sfs_raymond_prune(
 
         return ret_code;
     }
-#ifndef FCS_RCS_STATES
-#undef ptr_state
-#endif
 }
-
-#undef state
-#undef new_state
-
