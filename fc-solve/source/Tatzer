@@ -9,6 +9,7 @@
 use strict;
 use warnings;
 
+use File::Path qw(rmtree);
 use Getopt::Long;
 
 my $build_type = "debug";
@@ -241,6 +242,7 @@ if ($build_type eq "debug")
 
 # This cache is sometimes causing problems.
 unlink("CMakeCache.txt");
+rmtree(['_Inline', 't/_Inline']);
 
 my @cmd= ("cmake",
     "-DCMAKE_BUILD_TYPE=$build_type",
