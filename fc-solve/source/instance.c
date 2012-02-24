@@ -941,7 +941,7 @@ void fc_solve_start_instance_process_with_board(
 
         for ( i=0 ; i < INSTANCE_STACKS_NUM ; i++ )
         {
-            fcs_copy_stack((*state_copy_ptr), i, buffer);
+            fcs_copy_stack(state_copy_ptr->s, state_copy_ptr->info, i, buffer);
         }
     }
 #endif

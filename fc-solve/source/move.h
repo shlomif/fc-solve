@@ -166,7 +166,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #ifdef INDIRECT_STACK_STATES
     for (i=0 ; i < stacks_num ; i++)
     {
-        fcs_copy_stack(dynamic_state, i, indirect_stacks_buffer);
+        fcs_copy_stack(dynamic_state.s, dynamic_state.info, i, indirect_stacks_buffer);
     }
 #endif
 

@@ -118,6 +118,7 @@ extern "C" {
                 &ptr_new_state,                      \
                 raw_ptr_state_raw,                   \
                 moves);                              \
+        tests_define_accessors_rcs_states(); \
     }
 
 #endif
@@ -252,8 +253,15 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #define tests_declare_accessors_rcs_states() \
     fcs_state_t my_new_out_state_key; \
     fcs_state_extra_info_t my_new_out_state_val;
+#define tests_define_accessors_rcs_states() {}
 #else
-#define tests_declare_accessors_rcs_states()
+#define tests_declare_accessors_rcs_states() \
+    fcs_kv_state_t pass_new_state;
+#define tests_define_accessors_rcs_states() \
+{ \
+    pass_new_state.key = &(new_state_key); \
+    pass_new_state.val = &(new_state_val); \
+}
 #endif
 
 #ifdef INDIRECT_STACK_STATES
@@ -302,7 +310,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
     hard_thread = soft_thread->hard_thread;                       \
     moves = &(hard_thread->reusable_move_stack);                     \
     state_context_value = 0;                                      \
-    tests_define_accessors_freecell_only()
+    tests_define_accessors_freecell_only();
 
 #ifdef INDIRECT_STACK_STATES
 #define tests_define_indirect_stack_states_accessors() \
@@ -313,7 +321,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #define tests_define_accessors()  \
     tests_define_accessors_no_stacks();       \
-    tests_define_indirect_stack_states_accessors()
+    tests_define_indirect_stack_states_accessors();
 
 #ifdef FCS_FREECELL_ONLY
 
@@ -333,7 +341,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #endif
 
-#define my_copy_stack(idx) fcs_copy_stack((*ptr_new_state), idx, indirect_stacks_buffer);
+#define my_copy_stack(idx) fcs_copy_stack(new_state_key, new_state_val, idx, indirect_stacks_buffer);
 
 #ifdef __cplusplus
 }

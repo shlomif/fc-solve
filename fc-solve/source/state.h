@@ -214,16 +214,16 @@ typedef struct fcs_struct_state_t fcs_state_t;
     ( (state).foundations[(d)] )
 
 
-#define fcs_copy_stack(state_struct, idx, buffer) \
+#define fcs_copy_stack(state_key, state_val, idx, buffer) \
     {     \
-        if (! ((state_struct).info.stacks_copy_on_write_flags & (1 << idx)))        \
+        if (! ((state_val).stacks_copy_on_write_flags & (1 << idx)))        \
         {          \
             fcs_cards_column_t copy_stack_col; \
                                     \
-            (state_struct).info.stacks_copy_on_write_flags |= (1 << idx);       \
-            copy_stack_col = fcs_state_get_col(((state_struct).s), idx); \
+            (state_val).stacks_copy_on_write_flags |= (1 << idx);       \
+            copy_stack_col = fcs_state_get_col((state_key), idx); \
             memcpy(&buffer[idx << 7], copy_stack_col, fcs_col_len(copy_stack_col)+1); \
-            fcs_state_get_col((state_struct.s), idx) = &buffer[idx << 7];     \
+            fcs_state_get_col((state_key), idx) = &buffer[idx << 7];     \
         }     \
     }
 
@@ -309,7 +309,7 @@ typedef char fcs_locs_t;
 #define fcs_duplicate_state_extra(ptr_dest, ptr_src) \
     {}
 
-#define fcs_copy_stack(state_struct, idx, buffer) {}
+#define fcs_copy_stack(state_key, state_val, idx, buffer) {}
 
 #endif
 

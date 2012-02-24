@@ -216,17 +216,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
  * into freeeclls and empty columns
  */
 static GCC_INLINE int empty_two_cols_from_new_state(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_pass_state_t * ptr_new_state,
-        fcs_move_stack_t * moves,
-        const int cols_indexes[3],
-        int nc1, int nc2
-        )
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_kv_state_t * kv_ptr_new_state,
+    fcs_move_stack_t * moves,
+    const int cols_indexes[3],
+    int nc1, int nc2
+)
 {
-#ifdef FCS_RCS_STATES
-#define key_ptr_new_state_key (ptr_new_state->key)
+#define key_ptr_new_state_key (kv_ptr_new_state->key)
 #define my_new_out_state_key (*key_ptr_new_state_key)
-#endif
+#define temp_new_state_key (*key_ptr_new_state_key)
     int num_cards_to_move_from_columns[3];
     const int * col_idx;
     int * col_num_cards;
@@ -280,7 +279,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             for( ; dest_fc_idx < LOCAL_FREECELLS_NUM ; dest_fc_idx++)
             {
                 if (fcs_freecell_card_num(
-                            new_state, dest_fc_idx
+                        temp_new_state_key, dest_fc_idx
                     ) == 0)
                 {
                     break;
@@ -292,12 +291,12 @@ static GCC_INLINE int empty_two_cols_from_new_state(
                 break;
             }
 
-            new_from_which_col = fcs_state_get_col(new_state, *col_idx);
+            new_from_which_col = fcs_state_get_col(temp_new_state_key, *col_idx);
 
             fcs_col_pop_card(new_from_which_col, top_card);
 
             fcs_put_card_in_freecell(
-                new_state,
+                temp_new_state_key,
                 dest_fc_idx,
                 top_card
             );
@@ -347,7 +346,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             for( ; put_cards_in_col_idx < LOCAL_STACKS_NUM ; put_cards_in_col_idx++)
             {
                 if (fcs_col_len(
-                    fcs_state_get_col(new_state, put_cards_in_col_idx)
+                    fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx)
                     ) == 0)
                 {
                     break;
@@ -356,11 +355,11 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 
             assert(put_cards_in_col_idx < LOCAL_STACKS_NUM );
 
-            my_copy_stack(put_cards_in_col_idx);
+            fcs_copy_stack(temp_new_state_key, *(kv_ptr_new_state->val), put_cards_in_col_idx, indirect_stacks_buffer);
 
-            new_b_col = fcs_state_get_col(new_state, put_cards_in_col_idx);
+            new_b_col = fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx);
 
-            new_from_which_col = fcs_state_get_col(new_state, *col_idx);
+            new_from_which_col = fcs_state_get_col(temp_new_state_key, *col_idx);
 
             fcs_col_pop_card(new_from_which_col, top_card);
             fcs_col_push_card(new_b_col, top_card);
@@ -379,10 +378,9 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             put_cards_in_col_idx++;
         }
     }
-#ifdef FCS_RCS_STATES
 #undef key_ptr_new_state_key
 #undef my_new_out_state_key
-#endif
+#define temp_new_state_key (*key_ptr_new_state_key)
 }
 
 #define CALC_POSITIONS_BY_RANK() \
@@ -557,7 +555,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 #ifdef FCS_RCS_STATES
 #define NEW_STATE_BY_REF() (&ptr_new_state)
 #else
-#define NEW_STATE_BY_REF() (ptr_new_state)
+#define NEW_STATE_BY_REF() (&pass_new_state)
 #endif
                         empty_two_cols_from_new_state(
                                 soft_thread,
