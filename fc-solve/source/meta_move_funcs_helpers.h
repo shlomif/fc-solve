@@ -77,20 +77,9 @@ extern "C" {
 #define ptr_state_val (val_ptr_state_val)
 #define state_key (*key_ptr_state_key)
 #define state_val (*val_ptr_state_val)
-
-#ifdef FCS_RCS_STATES
-
-#define new_state (my_new_out_state_key)
-#define new_state_key (my_new_out_state_key)
-#define new_state_val (*ptr_new_state)
-#define ptr_new_state_key (&new_state_key)
-#define ptr_new_state_val (ptr_new_state)
-
-#else
 #define new_state_key (*(pass_new_state.key))
 #define new_state new_state_key
 #define new_state_val (*(pass_new_state.val))
-#endif
 
 #define NEW_STATE_BY_REF() (&pass_new_state)
 #define state  (state_key)
