@@ -60,7 +60,7 @@ extern int fc_solve_sfs_check_state_begin(
 
 extern void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * const soft_thread,
-    fcs_pass_state_t * const key_ptr_state_key,
+    fcs_kv_state_t * const key_ptr_state_key,
     fcs_kv_state_t * const key_ptr_new_state_key,
     const int state_context_value,
     fcs_move_stack_t * const moves,

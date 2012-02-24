@@ -2317,7 +2317,7 @@ int fc_solve_sfs_check_state_begin(
 
 extern void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * const soft_thread,
-    fcs_pass_state_t * const raw_ptr_state_raw,
+    fcs_kv_state_t * const raw_ptr_state_raw,
     fcs_kv_state_t * const raw_ptr_new_state_raw,
     const int state_context_value,
     fcs_move_stack_t * const moves,
@@ -2335,11 +2335,7 @@ extern void fc_solve_sfs_check_state_end(
     fcs_lvalue_pass_state_t existing_state;
 
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
-#ifdef FCS_RCS_STATES
 #define ptr_state (raw_ptr_state_raw->val)
-#else
-#define ptr_state (raw_ptr_state_raw)
-#endif
 
     if (! fc_solve_check_and_add_state(
         hard_thread,
@@ -2372,7 +2368,7 @@ extern void fc_solve_sfs_check_state_end(
          * already have, then re-assign its parent to this state.
          * */
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
-           (FCS_S_DEPTH(existing_state_val) > FCS_S_DEPTH(ptr_state)+1))
+           (FCS_S_DEPTH(existing_state_val) > ptr_state->depth+1))
         {
             /* Make a copy of "moves" because "moves" will be destroyed */
             FCS_S_MOVES_TO_PARENT(existing_state_val) =
@@ -2385,10 +2381,10 @@ extern void fc_solve_sfs_check_state_end(
                 {
                     mark_as_dead_end(scans_synergy, FCS_S_PARENT(existing_state_val));
                 }
-                FCS_S_NUM_ACTIVE_CHILDREN(ptr_state)++;
+                ptr_state->num_active_children++;
             }
-            FCS_S_PARENT(existing_state_val) = ptr_state;
-            FCS_S_DEPTH(existing_state_val) = FCS_S_DEPTH(ptr_state) + 1;
+            FCS_S_PARENT(existing_state_val) = INFO_STATE_PTR(raw_ptr_state_raw);
+            FCS_S_DEPTH(existing_state_val) = ptr_state->depth + 1;
         }
 
 #endif

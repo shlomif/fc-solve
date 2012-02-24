@@ -116,9 +116,6 @@ extern "C" {
 
 #define sfs_check_state_begin()                                     \
     {         \
-        fcs_kv_state_t pass_state; \
-        pass_state.key = ptr_state_key; \
-        pass_state.val = ptr_state_val; \
         fc_solve_sfs_check_state_begin(hard_thread,   \
                 &pass_new_state,                      \
                 &pass_state,                          \
@@ -135,7 +132,7 @@ extern "C" {
 #else
 #define sfs_check_state_end() \
     { \
-        fc_solve_sfs_check_state_end(soft_thread, ptr_state, &pass_new_state, state_context_value, moves, derived_states_list); \
+        fc_solve_sfs_check_state_end(soft_thread, &pass_state, &pass_new_state, state_context_value, moves, derived_states_list); \
     }
 #endif
 
@@ -248,11 +245,12 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #define tests_define_accessors_rcs_states() {}
 #else
-#define tests_declare_accessors_rcs_states() {}
+#define tests_declare_accessors_rcs_states() \
+        fcs_kv_state_t pass_state;
 #define tests_define_accessors_rcs_states() \
 { \
-    pass_new_state.key = &(new_state_key); \
-    pass_new_state.val = &(new_state_val); \
+    pass_state.key = ptr_state_key; \
+    pass_state.val = ptr_state_val; \
 }
 #endif
 
@@ -302,7 +300,8 @@ static GCC_INLINE void fc_solve_move_sequence_function(
     hard_thread = soft_thread->hard_thread;                       \
     moves = &(hard_thread->reusable_move_stack);                     \
     state_context_value = 0;                                      \
-    tests_define_accessors_freecell_only();
+    tests_define_accessors_freecell_only();   \
+    tests_define_accessors_rcs_states();
 
 #ifdef INDIRECT_STACK_STATES
 #define tests_define_indirect_stack_states_accessors() \
