@@ -559,11 +559,7 @@ extern void fc_solve_canonize_state(
     );
 
 void fc_solve_canonize_state_with_locs(
-#ifdef FCS_RCS_STATES
-    fcs_pass_state_t * state,
-#else
-    fcs_collectible_state_t * state,
-#endif
+    fcs_kv_state_t * state,
     fcs_state_locs_struct_t * locs,
     int freecells_num,
     int stacks_num);

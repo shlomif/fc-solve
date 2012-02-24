@@ -874,9 +874,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         if (flare->ret_code == FCS_STATE_NOT_BEGAN_YET)
         {
             int status;
-#ifdef FCS_RCS_STATES
-            fcs_pass_state_t state_pass;
-#endif
+            fcs_kv_state_t state_pass;
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
             fc_solve_instance_t * instance = user->fc_solve_obj;
@@ -914,6 +912,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             fc_solve_init_locs(&(user->initial_state_locs));
             user->state_locs = user->initial_state_locs;
 
+            state_pass.key = &(user->state.s);
+            state_pass.val = &(user->state.info);
             /* running_state is a normalized state. So We're duplicating
              * state to it before state state_pass is canonized
              * */
@@ -922,8 +922,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 fcs_pass_state_t pass;
                 pass.key = &(user->running_state.s);
                 pass.val = &(user->running_state.info);
-                state_pass.key = &(user->state.s);
-                state_pass.val = &(user->state.info);
                 
                 fcs_duplicate_state(&pass, &state_pass);
             }
@@ -933,11 +931,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             fc_solve_canonize_state_with_locs
                 (
-#ifdef FCS_RCS_STATES
                  &state_pass,
-#else
-                &(user->state),
-#endif
                 &(user->state_locs),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM

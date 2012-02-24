@@ -197,13 +197,9 @@ void fc_solve_canonize_state(
 
 
 void fc_solve_canonize_state_with_locs(
-#ifdef FCS_RCS_STATES
-    fcs_pass_state_t * state,
+    fcs_kv_state_t * state,
 #define state_key (state->key)
 #define state_val (state->val)
-#else
-    fcs_collectible_state_t * state,
-#endif
     fcs_state_locs_struct_t * locs,
     int freecells_num,
     int stacks_num)
@@ -214,11 +210,6 @@ void fc_solve_canonize_state_with_locs(
     fcs_card_t temp_freecell;
     fcs_locs_t temp_loc;
 
-#ifndef FCS_RCS_STATES
-    fcs_state_t * state_key;
-
-    state_key = &(state->s);
-#endif
     /* Insertion-sort the stacks */
 
     for(b=1;b<stacks_num;b++)
@@ -273,10 +264,8 @@ void fc_solve_canonize_state_with_locs(
         }
     }
 }
-#ifdef FCS_RCS_STATES
 #undef state_key
 #undef state_val
-#endif
 
 #elif 0
 
