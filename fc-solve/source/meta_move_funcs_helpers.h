@@ -83,6 +83,7 @@ extern "C" {
 #define new_state_val (*ptr_new_state)
 #define ptr_new_state_key (&new_state_key)
 #define ptr_new_state_val (ptr_new_state)
+#define NEW_STATE_BY_REF() (&ptr_new_state)
 
 #else
 #define ptr_state     (raw_ptr_state_raw)
@@ -93,6 +94,7 @@ extern "C" {
 #define new_state (ptr_new_state->s)
 #define new_state_key (ptr_new_state->s)
 #define new_state_val (ptr_new_state->info)
+#define NEW_STATE_BY_REF() (&pass_new_state)
 #endif
 
 #define state  (state_key)

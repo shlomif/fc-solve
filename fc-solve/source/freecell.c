@@ -552,11 +552,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                         cols_indexes[1] = -1;
                         cols_indexes[2] = -1;
 
-#ifdef FCS_RCS_STATES
-#define NEW_STATE_BY_REF() (&ptr_new_state)
-#else
-#define NEW_STATE_BY_REF() (&pass_new_state)
-#endif
                         empty_two_cols_from_new_state(
                                 soft_thread,
                                 NEW_STATE_BY_REF(),
