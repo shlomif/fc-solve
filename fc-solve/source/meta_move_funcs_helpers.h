@@ -85,54 +85,28 @@ extern "C" {
 #define new_state_val (*ptr_new_state)
 #define ptr_new_state_key (&new_state_key)
 #define ptr_new_state_val (ptr_new_state)
-#define ptr_pass_state (raw_ptr_state_raw)
 
 #else
 #define new_state_key (*(pass_new_state.key))
 #define new_state new_state_key
 #define new_state_val (*(pass_new_state.val))
-#define ptr_pass_state (&pass_state)
 #endif
 
 #define NEW_STATE_BY_REF() (&pass_new_state)
 #define state  (state_key)
 
-#ifdef FCS_RCS_STATES
-
 #define sfs_check_state_begin()                                     \
     {         \
-        pass_new_state.key = &my_new_out_state_key; \
-        pass_new_state.val = &my_new_out_state_val; \
         fc_solve_sfs_check_state_begin(hard_thread,  \
                 &pass_new_state,                      \
                 raw_ptr_state_raw,                   \
                 moves);                              \
     }
 
-
-#else
-
-#define sfs_check_state_begin()                                     \
-    {         \
-        fc_solve_sfs_check_state_begin(hard_thread,   \
-                &pass_new_state,                      \
-                &pass_state,                          \
-                moves);                               \
-    }
-
-#endif
-
-#ifdef FCS_RCS_STATES
 #define sfs_check_state_end() \
     { \
         fc_solve_sfs_check_state_end(soft_thread, raw_ptr_state_raw, &pass_new_state, state_context_value, moves, derived_states_list); \
     }
-#else
-#define sfs_check_state_end() \
-    { \
-        fc_solve_sfs_check_state_end(soft_thread, &pass_state, &pass_new_state, state_context_value, moves, derived_states_list); \
-    }
-#endif
 
 /*
     This macro checks if the top card in the stack is a flipped card
@@ -238,18 +212,16 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #ifdef FCS_RCS_STATES
 #define tests_declare_accessors_rcs_states() \
-    fcs_state_t my_new_out_state_key; \
-    fcs_state_extra_info_t my_new_out_state_val; \
+    fcs_state_t my_new_out_state_key;
 
-#define tests_define_accessors_rcs_states() {}
-#else
-#define tests_declare_accessors_rcs_states() \
-        fcs_kv_state_t pass_state;
 #define tests_define_accessors_rcs_states() \
 { \
-    pass_state.key = ptr_state_key; \
-    pass_state.val = ptr_state_val; \
+    pass_new_state.key = &my_new_out_state_key; \
 }
+
+#else
+#define tests_declare_accessors_rcs_states()
+#define tests_define_accessors_rcs_states() {}
 #endif
 
 #ifdef INDIRECT_STACK_STATES
