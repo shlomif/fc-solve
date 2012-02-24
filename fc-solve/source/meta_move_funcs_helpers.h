@@ -80,7 +80,6 @@ extern "C" {
 #define new_state_key (*(pass_new_state.key))
 #define new_state new_state_key
 #define new_state_val (*(pass_new_state.val))
-
 #define NEW_STATE_BY_REF() (&pass_new_state)
 #define state  (state_key)
 
