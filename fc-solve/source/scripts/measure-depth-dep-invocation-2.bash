@@ -10,7 +10,7 @@ end_board="2000"
 # to1="[01][23456789]"
 # to2="0123456789"
 
-p1="$start_board $end_board 1 --args-start --method random-dfs -sp r:tf --args-end"
+p1="$start_board $end_board --args-start --method random-dfs -sp r:tf --args-end"
 to1="0123467"
 to2="0[123467]"
 
