@@ -53,7 +53,7 @@ foreach my $scan (@scans)
     $scan->{r} = \@scan_recs;
 }
 
-my @duration_quotas = (map { 0.001 } (1 .. 20_000));
+my @duration_quotas = (map { 0.0001 } (1 .. 20_000));
 
 my $num_boards_solved = 0;
 
@@ -105,7 +105,7 @@ while (any { any { $_->[$STATUS_IDX] } @{$_->{r}} } @scans)
     push @prelude, { iters => $iters_count, scan => $max_scan->{id}, time_delta => $time_delta,};
     
     my @unsolved_indexes = grep { !($recs->[$_]->[$STATUS_IDX] &&
-    ($recs->[$_]->[$TIME_DELTA_IDX] < $quota)); } keys(@$recs);
+    ($recs->[$_]->[$ITERS_IDX] <= $iters_count )); } keys(@$recs);
 
     $num_boards_solved += (@$recs - @unsolved_indexes);
 
@@ -136,10 +136,12 @@ sub _map_all_but_last
 
 my %s_cmds = (map { split(/\t/,$_) } (io("scans.txt")->chomp->getlines()));
 
+my $prelude_s = join(",", map { sprintf('%d@%s', $_->{iters}, $_->{scan}) } @prelude);
+
+1 while ($prelude_s =~ s{(\d+)\@([^,]+),(\d+)\@\2}{($1 + $3) . '@' . $2}e);
+
 io->file("test.scan")->print(
     "freecell-solver-range-parallel-solve 1 32000 1 \\\n" .
     (join "", map { "$_\\\n" } @{_map_all_but_last (sub { "$_-nst " }, [map { sprintf("    %s -step 500 --st-name %s " , $s_cmds{$_}, $_) } map { $_->{id} } @scans])}) .
-    "     --prelude \"" . 
-        join(",", map { sprintf('%d@%s', $_->{iters}, $_->{scan}) } @prelude)
-    . "\"\n"
+    "     --prelude \"$prelude_s\"\n"
 );
