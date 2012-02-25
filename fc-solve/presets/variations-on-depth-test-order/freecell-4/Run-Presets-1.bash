@@ -9,12 +9,22 @@ function _preset()
     shift
 
     d="data/$name++--$max_board--$max_iters.dump"
-    echo "Preset $name == $@"
+    if test -z "$PARSE" ; then
+        echo "Preset $name == $@"
+    fi
     if ! test -e "$d" ; then
         freecell-solver-range-parallel-solve 1 "$max_board" 1 "$@" --max-iters "$max_iters" \
-        | tee "$d"
+        > "$d"
+        # | tee "$d"
     fi
-    echo "   Unsolved = $(grep -cP '^Unsolved' "$d") ; Iters = $(tail -1 "$d" | perl -ne 'print $1 if m{total_num_iters=(\d+)}')"
+    unsolved_boards_count="$(grep -cP '^Unsolved' "$d")"
+    iters_count="$(tail -1 "$d" | perl -ne 'print $1 if m{total_num_iters=(\d+)}')"
+    wallclock_time="$(perl -e 'use IO::All; sub get_time { my ($s) = @_; $s =~ m/at (\d+\.\d+)/; return $1 } my @lines= io->file(shift(@ARGV))->getlines(); print get_time($lines[-1])-get_time($lines[0]);' "$d")"
+    if test -z "$PARSE" ; then
+        echo "   Unsolved = $unsolved_boards_count  ; Iters = $iters_count ; Wallclock Time = $wallclock_time "
+    else
+        echo -e "$name\t$wallclock_time\t$unsolved_boards_count\t$iters_count"
+    fi
 }
 
 _preset "default"
@@ -66,6 +76,7 @@ _preset "0123456" -to 0123456
 
 _preset "flamingo" -to 01234567 -dto 30,0123876594
 _preset "flamingo100" -to 01234567 -dto 100,0123876594
+_preset "flamingo65" -to 01234567 -dto 65,0123876594
 
 _preset "qlad"  -to 01234567  -dto 13,0187465  -dto 26,0134587 -dto 35,819435
 _preset "encad"  -to 01234567  -dto 13,0187465  -dto 26,0134587 -dto 35,0123456789
