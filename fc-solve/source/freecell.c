@@ -2152,10 +2152,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     return;
 }
 
-#define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(instance, pass_new_state.key, card)
+#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() pass_new_state.key, card
+
+#ifdef HARD_CODED_NUM_DECKS
+#define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS())
+#else
+#define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(instance, CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS())
+#endif
 
 static GCC_INLINE int calc_foundation_to_put_card_on(
-    fc_solve_instance_t * instance GCC_UNUSED,
+#ifndef HARD_CODED_NUM_DECKS
+    fc_solve_instance_t * instance,
+#endif
     fcs_state_t * my_ptr_state,
     fcs_card_t card
 )
