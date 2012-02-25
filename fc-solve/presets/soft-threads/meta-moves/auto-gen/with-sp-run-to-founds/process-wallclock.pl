@@ -5,8 +5,8 @@ use warnings;
 
 use IO::All;
 use List::Util qw(max);
-use List::MoreUtils qw();
-use List::UtilsBy qw(max_by);
+use List::MoreUtils qw(any);
+use List::UtilsBy qw(max_by min_by);
 
 my $start_scan = 1;
 my $end_scan = 27;
@@ -53,25 +53,26 @@ foreach my $scan (@scans)
     $scan->{r} = \@scan_recs;
 }
 
-my @duration_quotas = (map { 0.001 } (1 .. 1000));
+my @duration_quotas = (map { 0.001 } (1 .. 20_000));
 
 my $num_boards_solved = 0;
 
 my $quota = 0;
 my @prelude;
 QUOTAS:
-while ($num_boards_solved < $max_num_solvable_boards)
+while (any { any { $_->[$STATUS_IDX] } @{$_->{r}} } @scans)
 {
+    print "Solved $num_boards_solved\n";
     $quota += shift(@duration_quotas);
 
     my @max_scans =
-        max_by { scalar grep { 
+        max_by { $_->{max} = scalar grep { 
             $_->[$STATUS_IDX] && ($_->[$TIME_DELTA_IDX] < $quota) 
             } @{$_->{r}} 
         } @scans;
 
     my $max_scan;
-    if (! @max_scans)
+    if ((! @max_scans) || (! $max_scans[0]->{max}))
     {
         next QUOTAS;
     }
@@ -103,8 +104,10 @@ while ($num_boards_solved < $max_num_solvable_boards)
 
     push @prelude, { iters => $iters_count, scan => $max_scan->{id}, time_delta => $time_delta,};
     
-    my @unsolved_indexes = grep { !($recs->[$_]->[$STATUS_IDX] && 
+    my @unsolved_indexes = grep { !($recs->[$_]->[$STATUS_IDX] &&
     ($recs->[$_]->[$TIME_DELTA_IDX] < $quota)); } keys(@$recs);
+
+    $num_boards_solved += (@$recs - @unsolved_indexes);
 
     # Get rid of the old records.
     foreach my $scan (@scans)
@@ -120,6 +123,16 @@ while ($num_boards_solved < $max_num_solvable_boards)
         $rec->[$ITERS_IDX] -= $iters_count;
         $rec->[$TIME_DELTA_IDX] -= $time_delta;
     }
+
+    $quota = 0;
 }
 
+my %s_cmds = (map { split(/\t/,$_) } (io("scans.txt")->chomp->getlines()));
 
+io->file("test.scan")->print(
+    "freecell-solver-range-parallel-solve 1 32000 1 \\" .
+    (join '', map { sprintf("%s -step 500 --st-name %s \\\n" , $s_cmds{$_}, $_) } map { $_->{id} } @scans) .
+    "--prelude \"" . 
+        join(",", map { sprintf('%d@%s', $_->{iters}, $_->{scan}) } @prelude)
+    . "\"\n"
+);
