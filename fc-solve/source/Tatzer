@@ -243,6 +243,7 @@ if ($build_type eq "debug")
 # This cache is sometimes causing problems.
 unlink("CMakeCache.txt");
 rmtree(['_Inline', 't/_Inline']);
+unlink(glob("*.so"));
 
 my @cmd= ("cmake",
     "-DCMAKE_BUILD_TYPE=$build_type",
