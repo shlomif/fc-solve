@@ -296,24 +296,19 @@ guint fc_solve_hash_function(gconstpointer key)
 static GCC_INLINE void on_state_new(
     fc_solve_instance_t * instance,
     fc_solve_hard_thread_t * hard_thread,
-    fcs_pass_state_t * new_state_raw
+    fcs_state_extra_info_t * new_state_info
 )
 {
     register fcs_collectible_state_t * parent_state;
-#ifdef FCS_RCS_STATES
-#define new_state (new_state_raw->val)
-#else
-#define new_state (new_state_raw)
-#endif
     /* The new state was not found in the cache, and it was already inserted */
-    if (likely(parent_state = FCS_S_PARENT(new_state)))
+    if (likely(parent_state = new_state_info->parent))
     {
         (FCS_S_NUM_ACTIVE_CHILDREN(parent_state))++;
         /* If parent_val is defined, so is moves_to_parent */
-        FCS_S_MOVES_TO_PARENT(new_state) =
+        new_state_info->moves_to_parent =
             fc_solve_move_stack_compact_allocate(
                 hard_thread,
-                FCS_S_MOVES_TO_PARENT(new_state)
+                new_state_info->moves_to_parent
             );
     }
 
@@ -321,7 +316,6 @@ static GCC_INLINE void on_state_new(
     instance->num_states_in_collection++;
 
     return;
-#undef new_state
 }
 
 fcs_bool_t fc_solve_check_and_add_state(
@@ -334,11 +328,14 @@ fcs_bool_t fc_solve_check_and_add_state(
 #define existing_state_val (existing_state_raw->val)
 #define new_state_val      (new_state->val)
 #define new_state_key      (new_state->key)
+#define new_state_info     new_state_val
 #else
 #define existing_state_val (*existing_state_raw)
 #define new_state_val      (new_state)
 #define new_state_key      (&(new_state->s))
+#define new_state_info     (&(new_state->info))
 #endif
+#define ON_STATE_NEW() on_state_new(instance, hard_thread, new_state_info);
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -433,7 +430,7 @@ fcs_bool_t fc_solve_check_and_add_state(
         }
         else
         {
-            on_state_new(instance, hard_thread, new_state);
+            ON_STATE_NEW();
             return TRUE;
         }
     }
@@ -454,7 +451,7 @@ fcs_bool_t fc_solve_check_and_add_state(
         }
         else
         {
-            on_state_new(instance, hard_thread, new_state);
+            ON_STATE_NEW();
             return TRUE;
         }
     }
@@ -550,7 +547,7 @@ fcs_bool_t fc_solve_check_and_add_state(
             == NULL
        )
     {
-        on_state_new(instance, hard_thread, new_state);
+        ON_STATE_NEW();
         return TRUE;
     }
     else
@@ -568,7 +565,7 @@ fcs_bool_t fc_solve_check_and_add_state(
             == NULL
        )
     {
-        on_state_new(instance, hard_thread, new_state);
+        ON_STATE_NEW();
         return TRUE;
     }
     else
