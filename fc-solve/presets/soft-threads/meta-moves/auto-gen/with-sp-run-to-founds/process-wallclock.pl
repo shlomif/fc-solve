@@ -127,12 +127,19 @@ while (any { any { $_->[$STATUS_IDX] } @{$_->{r}} } @scans)
     $quota = 0;
 }
 
+sub _map_all_but_last
+{
+    my ($cb, $arr_ref) = (@_);
+
+    return [ (map {$cb->($_)} @$arr_ref[0 .. $#$arr_ref-1]), $arr_ref->[-1] ];
+}
+
 my %s_cmds = (map { split(/\t/,$_) } (io("scans.txt")->chomp->getlines()));
 
 io->file("test.scan")->print(
-    "freecell-solver-range-parallel-solve 1 32000 1 \\" .
-    (join '', map { sprintf("%s -step 500 --st-name %s \\\n" , $s_cmds{$_}, $_) } map { $_->{id} } @scans) .
-    "--prelude \"" . 
+    "freecell-solver-range-parallel-solve 1 32000 1 \\\n" .
+    (join "", map { "$_\\\n" } @{_map_all_but_last (sub { "$_-nst " }, [map { sprintf("    %s -step 500 --st-name %s " , $s_cmds{$_}, $_) } map { $_->{id} } @scans])}) .
+    "     --prelude \"" . 
         join(",", map { sprintf('%d@%s', $_->{iters}, $_->{scan}) } @prelude)
     . "\"\n"
 );
