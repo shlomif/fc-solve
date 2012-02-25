@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use IO::All;
-use List::Util qw();
+use List::Util qw(max);
 use List::MoreUtils qw();
 use List::UtilsBy qw(max_by);
 
@@ -58,13 +58,17 @@ my @duration_quotas = (map { 0.001 } (1 .. 1000));
 my $num_boards_solved = 0;
 
 my $quota = 0;
+my @prelude;
 QUOTAS:
 while ($num_boards_solved < $max_num_solvable_boards)
 {
     $quota += shift(@duration_quotas);
 
     my @max_scans =
-        max_by { scalar grep { $_->[$STATUS_IDX] && ($_->[$TIME_DELTA_IDX] < $quota) } @{$_->{r}} } @scans;
+        max_by { scalar grep { 
+            $_->[$STATUS_IDX] && ($_->[$TIME_DELTA_IDX] < $quota) 
+            } @{$_->{r}} 
+        } @scans;
 
     my $max_scan;
     if (! @max_scans)
@@ -78,7 +82,44 @@ while ($num_boards_solved < $max_num_solvable_boards)
     else
     {
         # Tie breaker.
-        $max_scan = min_by { max_by { $_->[$STATUS_IDX] ? $_->[$TIME_DELTA_IDX] : 0; } @{$_->{r}} } @max_scans;
+        $max_scan = min_by { 
+            max(map { $_->[$STATUS_IDX] ? $_->[$TIME_DELTA_IDX] : 0; } 
+            @{$_->{r}})
+        } @max_scans;
+    }
+
+    my $recs = $max_scan->{r};
+    my $iters_count = 
+        max(map { $_->[$ITERS_IDX] } grep { 
+            $_->[$STATUS_IDX] && ($_->[$TIME_DELTA_IDX] < $quota) 
+            } @{$recs}
+        );
+    my $time_delta = 
+        max(map { $_->[$TIME_DELTA_IDX] } grep { 
+            $_->[$STATUS_IDX] && ($_->[$TIME_DELTA_IDX] < $quota) 
+            } @{$recs}
+        );
+
+
+    push @prelude, { iters => $iters_count, scan => $max_scan->{id}, time_delta => $time_delta,};
+    
+    my @unsolved_indexes = grep { !($recs->[$_]->[$STATUS_IDX] && 
+    ($recs->[$_]->[$TIME_DELTA_IDX] < $quota)); } keys(@$recs);
+
+    # Get rid of the old records.
+    foreach my $scan (@scans)
+    {
+        my @r = @{$scan->{r}};
+        $scan->{r} = [@r[@unsolved_indexes]];
+    }
+
+    # Now update the current scan (we can no longer use $recs because it
+    # was replaced.
+    foreach my $rec (@{ $max_scan->{r} })
+    {
+        $rec->[$ITERS_IDX] -= $iters_count;
+        $rec->[$TIME_DELTA_IDX] -= $time_delta;
     }
 }
+
 
