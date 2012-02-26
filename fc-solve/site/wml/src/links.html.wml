@@ -441,10 +441,12 @@ I am unable to compile it because I lack the libraries that he used.
 
 <li>
 <p>
-<a href="http://download.cnet.com/FreeCell-Solver/3000-18522_4-54671.html">GUI 
-FreeCell Solver 1.0rc5 for Mac OS X 10.2 by JCP Software</a> - it's hard
-to know which solving library it uses and whether it is original. The
-web-site is short on details.
+<a href="http://download.cnet.com/FreeCell-Solver/3000-18522_4-54671.html">GUI
+FreeCell Solver 1.0rc5 for Mac OS X 10.2 by JCP Software</a> - an
+original solver written in C++ (with a GUI). The web-site is short on details,
+but I was contacted about it by the author who informed me that he has made the
+<a href="http://www.assembla.com/code/fcsolve-mac/subversion/nodes">source</a>
+available as open-source software under the GPLv3.
 </p>
 </li>
 
