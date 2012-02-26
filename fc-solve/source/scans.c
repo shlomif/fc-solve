@@ -307,29 +307,24 @@ static void free_states(fc_solve_instance_t * instance)
 #define INITIALIZE_STATE() pass.key = &(state_key)
 #define the_state (state_key)
 #define VERIFY_DERIVED_STATE() {}
-#define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
+#define FCS_ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
 #define PTR_STATE (pass.val)
 #define DECLARE_STATE() fcs_state_t state_key; fcs_kv_state_t pass
 #define DECLARE_NEW_STATE() fcs_kv_state_t new_pass
 #define ptr_new_state (new_pass.val)
 
-#define ASSIGN_ptr_state(my_value) (PTR_STATE = (my_value))
 #else
 
 #define INITIALIZE_STATE() {}
 #define the_state (PTR_STATE->s)
 #define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
-/* TODO : Try to see about merging ASSIGN_STATE_KEY() with 
- * ASSIGN_ptr_state() .
- *
- * */
-#define ASSIGN_STATE_KEY() {}
+#define FCS_ASSIGN_STATE_KEY() { pass.key = &(the_state); pass.val = &(PTR_STATE->info); }
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw; fcs_kv_state_t pass
 #define DECLARE_NEW_STATE() fcs_collectible_state_t * ptr_new_state; fcs_kv_state_t new_pass
-#define ASSIGN_ptr_state(my_value) { if ((PTR_STATE = (my_value))) { pass.key = &(the_state); pass.val = &(PTR_STATE->info); } }
-
 #endif
+
+#define ASSIGN_ptr_state(my_value) { if ((PTR_STATE = my_value)) { FCS_ASSIGN_STATE_KEY(); } }
 
 #ifdef DEBUG
 #define TRACE0(message) \
@@ -846,8 +841,6 @@ int fc_solve_soft_dfs_do_solve(
     ASSIGN_ptr_state (the_soft_dfs_info->state);
     derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
-    ASSIGN_STATE_KEY();
-
     rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
 
     calculate_real_depth(calc_real_depth, PTR_STATE);
@@ -956,8 +949,6 @@ int fc_solve_soft_dfs_do_solve(
                     ASSIGN_ptr_state(the_soft_dfs_info->state);
 
                     VERIFY_PTR_STATE_TRACE0("Verify Foo");
-
-                    ASSIGN_STATE_KEY();
 
                     soft_thread->num_vacant_freecells = the_soft_dfs_info->num_vacant_freecells;
                     soft_thread->num_vacant_stacks = the_soft_dfs_info->num_vacant_stacks;
@@ -1228,8 +1219,6 @@ int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info->state = PTR_STATE;
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Zap");
-
-                    ASSIGN_STATE_KEY();
 
                     the_soft_dfs_info->tests_list_index = 0;
                     the_soft_dfs_info->test_index = 0;
@@ -1801,8 +1790,6 @@ int fc_solve_befs_or_bfs_do_solve(
     {
         TRACE0("Start of loop");
 
-        ASSIGN_STATE_KEY();
-
 #ifdef DEBUG
         dump_pqueue(soft_thread, "loop_start", scan_specific.pqueue);
 #endif
@@ -1828,8 +1815,6 @@ int fc_solve_befs_or_bfs_do_solve(
             )
             {
                 ASSIGN_ptr_state(derived);
-
-                ASSIGN_STATE_KEY();
             }
         }
 
