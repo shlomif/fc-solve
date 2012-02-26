@@ -319,11 +319,20 @@ static void free_states(fc_solve_instance_t * instance)
 #define INITIALIZE_STATE() {}
 #define the_state (PTR_STATE->s)
 #define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
-#define ASSIGN_STATE_KEY() {pass_state.key = &(the_state); pass_state.val = &(PTR_STATE->info);}
+/* TODO : Try to see about merging ASSIGN_STATE_KEY() with 
+ * ASSIGN_ptr_state() .
+ *
+ * NOTE: emptying ASSIGN_STATE_KEY() for non-FCS_RCS_STATES breaks the 
+ * Best-First-Search scan for some reason.
+ *
+ * TODO : investigate why.
+ *
+ * */
+#define ASSIGN_STATE_KEY() { pass.key = &(the_state); pass.val = &(PTR_STATE->info); }
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw; fcs_kv_state_t pass
 #define DECLARE_NEW_STATE() fcs_collectible_state_t * ptr_new_state; fcs_kv_state_t new_pass
-#define ASSIGN_ptr_state(my_value) { PTR_STATE = (my_value); pass.key = &(the_state); pass.val = &(PTR_STATE->info); }
+#define ASSIGN_ptr_state(my_value) { if ((PTR_STATE = (my_value))) { ASSIGN_STATE_KEY(); } }
 
 #endif
 
@@ -826,9 +835,6 @@ int fc_solve_soft_dfs_do_solve(
     int hard_thread_max_num_times;
     fcs_instance_debug_iter_output_func_t debug_iter_output_func;
     fcs_instance_debug_iter_output_context_t debug_iter_output_context;
-#ifndef FCS_RCS_STATES
-    fcs_kv_state_t pass_state;
-#endif
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -1040,11 +1046,7 @@ int fc_solve_soft_dfs_do_solve(
                 {
                     fcs_collectible_state_t * derived;
 
-#ifdef FCS_RCS_STATES
 #define STATE_TO_PASS_TO_TESTS() STATE_TO_PASS()
-#else
-#define STATE_TO_PASS_TO_TESTS() (&pass_state)
-#endif
                     if (fc_solve_sfs_raymond_prune(
                         soft_thread,
                         STATE_TO_PASS_TO_TESTS(),
@@ -1733,9 +1735,6 @@ int fc_solve_befs_or_bfs_do_solve(
     fcs_derived_states_list_t derived;
     int derived_index;
     fcs_bool_t enable_pruning;
-#ifndef FCS_RCS_STATES
-    fcs_kv_state_t pass_state;
-#endif
 
     int method;
 
