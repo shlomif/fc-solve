@@ -322,17 +322,12 @@ static void free_states(fc_solve_instance_t * instance)
 /* TODO : Try to see about merging ASSIGN_STATE_KEY() with 
  * ASSIGN_ptr_state() .
  *
- * NOTE: emptying ASSIGN_STATE_KEY() for non-FCS_RCS_STATES breaks the 
- * Best-First-Search scan for some reason.
- *
- * TODO : investigate why.
- *
  * */
-#define ASSIGN_STATE_KEY() { pass.key = &(the_state); pass.val = &(PTR_STATE->info); }
+#define ASSIGN_STATE_KEY() {}
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw; fcs_kv_state_t pass
 #define DECLARE_NEW_STATE() fcs_collectible_state_t * ptr_new_state; fcs_kv_state_t new_pass
-#define ASSIGN_ptr_state(my_value) { if ((PTR_STATE = (my_value))) { ASSIGN_STATE_KEY(); } }
+#define ASSIGN_ptr_state(my_value) { if ((PTR_STATE = (my_value))) { pass.key = &(the_state); pass.val = &(PTR_STATE->info); } }
 
 #endif
 
@@ -2040,15 +2035,17 @@ label_next_state:
         */
         if (method == FCS_METHOD_A_STAR)
         {
-
+            fcs_collectible_state_t * new_ptr_state;
 #ifdef DEBUG
             dump_pqueue(soft_thread, "before_pop", scan_specific.pqueue);
 #endif
             /* It is an BeFS scan */
             fc_solve_PQueuePop(
                 pqueue,
-                &(PTR_STATE)
+                &(new_ptr_state)
                 );
+
+            ASSIGN_ptr_state(new_ptr_state);
         }
         else
         {
