@@ -105,6 +105,8 @@ foreach my $rec (
     $themes{$id.'m'} = [qw(-l fc_reduce_mem -l), $id];
     # Generalised Memory conserving theme - not only for freecell
     $themes{$id.'mm'} = [qw(-l reduce_mem -l), $id];
+    # Testing theme - aims to run the tests quickly
+    $themes{$id.'t'} = ['-l', $id.'bb', '--rwd', '--dbm=kaztree', '--test-suite',];
 }
 
 my @new_argv = @ARGV;
