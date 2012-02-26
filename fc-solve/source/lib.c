@@ -1788,7 +1788,8 @@ static void iter_handler_wrapper(
     state_raw.key = ptr_state->key;
     state_raw.val = ptr_state->val;
 #else
-    state_raw.s = ptr_state;
+    state_raw.key = &(ptr_state->s);
+    state_raw.val = &(ptr_state->info);
 #endif
     fc_solve_init_locs(&(state_raw.locs));
 
@@ -1875,7 +1876,7 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
             ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
             ((fcs_standalone_state_ptrs_t *)ptr_state_void)->val,
 #else
-            ((fcs_standalone_state_ptrs_t *)ptr_state_void)->s,
+            (fcs_collectible_state_t *)((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
 #endif
             &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs),
             INSTANCE_FREECELLS_NUM,
