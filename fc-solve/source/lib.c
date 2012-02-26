@@ -157,7 +157,7 @@ static void iter_handler_wrapper(
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
-    fcs_pass_state_t * ptr_state,
+    fcs_kv_state_t * ptr_state,
     int parent_iter_num
     );
 
@@ -1771,7 +1771,7 @@ static void iter_handler_wrapper(
     int iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
-    fcs_pass_state_t * ptr_state,
+    fcs_kv_state_t * ptr_state,
     int parent_iter_num
     )
 {
@@ -1780,20 +1780,15 @@ static void iter_handler_wrapper(
 
     user = (fcs_user_t *)api_instance;
 
-#ifdef FCS_RCS_STATES
     state_raw.key = ptr_state->key;
     state_raw.val = ptr_state->val;
-#else
-    state_raw.key = &(ptr_state->s);
-    state_raw.val = &(ptr_state->info);
-#endif
     fc_solve_init_locs(&(state_raw.locs));
 
     user->iter_handler(
         api_instance,
         iter_num,
         depth,
-        (void *)&state_raw,
+        (void *)(&state_raw),
         parent_iter_num,
         user->iter_handler_context
         );
@@ -1803,14 +1798,8 @@ static void iter_handler_wrapper(
 
 void set_debug_iter_output_func_to_val(
     fcs_user_t * user,
-        void (*value)(
-    void * api_instance,
-    int iter_num,
-    int depth,
-    void * lp_instance GCC_UNUSED,
-    fcs_pass_state_t * ptr_state,
-    int parent_iter_num
-    ))
+    fcs_instance_debug_iter_output_func_t value
+)
 {
     FLARES_LOOP_DECLARE_VARS();
     FLARES_LOOP_START()

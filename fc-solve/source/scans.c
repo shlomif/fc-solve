@@ -299,30 +299,31 @@ static void free_states(fc_solve_instance_t * instance)
     without procedural recursion
     by using some dedicated stacks for the traversal.
   */
+#define STATE_TO_PASS() (&(pass))
+#define NEW_STATE_TO_PASS() (&(new_pass))
+
 #ifdef FCS_RCS_STATES
 
+#define INITIALIZE_STATE() pass.key = &(state_key)
 #define the_state (state_key)
 #define VERIFY_DERIVED_STATE() {}
 #define ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
-#define STATE_TO_PASS() (&(pass))
-#define NEW_STATE_TO_PASS() (&(new_pass))
 #define PTR_STATE (pass.val)
-#define DECLARE_STATE() fcs_state_t state_key; fcs_pass_state_t pass
-#define DECLARE_NEW_STATE() fcs_pass_state_t new_pass
+#define DECLARE_STATE() fcs_state_t state_key; fcs_kv_state_t pass
+#define DECLARE_NEW_STATE() fcs_kv_state_t new_pass
 #define ptr_new_state (new_pass.val)
-#define INITIALIZE_STATE() pass.key = &(state_key)
 
+#define ASSIGN_ptr_state(my_value) (PTR_STATE = (my_value))
 #else
 
+#define INITIALIZE_STATE() {}
 #define the_state (PTR_STATE->s)
 #define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
 #define ASSIGN_STATE_KEY() {pass_state.key = &(the_state); pass_state.val = &(PTR_STATE->info);}
-#define STATE_TO_PASS() (PTR_STATE)
-#define NEW_STATE_TO_PASS() (ptr_new_state)
 #define PTR_STATE (ptr_state_raw)
-#define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw
-#define DECLARE_NEW_STATE() fcs_collectible_state_t * ptr_new_state
-#define INITIALIZE_STATE() {}
+#define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw; fcs_kv_state_t pass
+#define DECLARE_NEW_STATE() fcs_collectible_state_t * ptr_new_state; fcs_kv_state_t new_pass
+#define ASSIGN_ptr_state(my_value) { PTR_STATE = (my_value); pass.key = &(the_state); pass.val = &(PTR_STATE->info); }
 
 #endif
 
@@ -791,7 +792,6 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
     return num_vacant_stacks;
 }
 
-#define ASSIGN_ptr_state(my_value) (PTR_STATE = (my_value))
 
 int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * const soft_thread
@@ -1227,8 +1227,8 @@ int fc_solve_soft_dfs_do_solve(
                     }
                     the_soft_dfs_info++;
 
-                    the_soft_dfs_info->state =
-                        ASSIGN_ptr_state(single_derived_state);
+                    ASSIGN_ptr_state(single_derived_state);
+                    the_soft_dfs_info->state = PTR_STATE;
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Zap");
 
@@ -1317,17 +1317,12 @@ static GCC_INLINE int update_col_cards_under_sequences(
 
 static GCC_INLINE void initialize_befs_rater(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_pass_state_t * raw_pass_raw
+    fcs_kv_state_t * raw_pass_raw
 )
 {
 
-#ifdef FCS_RCS_STATES
 #define pass (*raw_pass_raw)
 #define ptr_state_key (raw_pass_raw->key)
-#else
-#define ptr_state_key (&(raw_pass_raw->s))
-#define ptr_state_raw (raw_pass_raw)
-#endif
 
 #define state_key (*ptr_state_key)
 
@@ -1372,14 +1367,14 @@ static GCC_INLINE void initialize_befs_rater(
 
 static GCC_INLINE pq_rating_t befs_rate_state(
     fc_solve_soft_thread_t * soft_thread,
-    fcs_pass_state_t * raw_pass_raw
+    fcs_kv_state_t * raw_pass_raw
     )
 {
-
 #ifndef FCS_FREECELL_ONLY
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * instance = hard_thread->instance;
 #endif
+    fcs_state_t * state = raw_pass_raw->key;
 
     double ret=0;
     int a, c, cards_num, num_cards_in_founds;
@@ -1408,7 +1403,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     seqs_over_renegade_cards = 0;
     for(a=0;a<LOCAL_STACKS_NUM;a++)
     {
-        col = fcs_state_get_col(the_state, a);
+        col = fcs_state_get_col(*state, a);
         cards_num = fcs_col_len(col);
 
         if (cards_num == 0)
@@ -1443,7 +1438,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     num_cards_in_founds = 0;
     for(a=0;a<(LOCAL_DECKS_NUM<<2);a++)
     {
-        num_cards_in_founds += fcs_foundation_value((the_state), a);
+        num_cards_in_founds += fcs_foundation_value((*state), a);
     }
 
     ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT];
@@ -1451,7 +1446,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     num_vacant_freecells = 0;
     for(a=0;a<LOCAL_FREECELLS_NUM;a++)
     {
-        if (fcs_freecell_card_num((the_state),a) == 0)
+        if (fcs_freecell_card_num((*state),a) == 0)
         {
             num_vacant_freecells++;
         }
@@ -1490,9 +1485,12 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #ifdef FCS_WITHOUT_DEPTH_FIELD
     ret += befs_weights[FCS_BEFS_WEIGHT_DEPTH];
 #else
-    if (FCS_S_DEPTH(PTR_STATE) <= 20000)
     {
-        ret += ((20000 - FCS_S_DEPTH(PTR_STATE))/20000.0) * befs_weights[FCS_BEFS_WEIGHT_DEPTH];
+        int depth = raw_pass_raw->val->depth;
+        if (depth <= 20000)
+        {
+            ret += ((20000 - depth)/20000.0) * befs_weights[FCS_BEFS_WEIGHT_DEPTH];
+        }
     }
 #endif
 
@@ -1500,8 +1498,8 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     return (int)(ret*INT_MAX);
 }
-#ifdef FCS_RCS_STATES
 #undef pass
+#ifdef FCS_RCS_STATES
 #undef state_key
 #else
 #undef ptr_state_raw
@@ -1608,14 +1606,13 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     )
 {
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
-#ifdef FCS_RCS_STATES
-    fcs_pass_state_t pass;
+#ifndef FCS_RCS_STATES
+    fcs_collectible_state_t * ptr_state_raw = instance->state_copy_ptr;
+#endif
+    fcs_kv_state_t pass;
+
     pass.key = &(instance->state_copy_ptr->s);
     pass.val = &(instance->state_copy_ptr->info); 
-#else
-    fcs_collectible_state_t * ptr_state_raw;
-    ptr_state_raw = instance->state_copy_ptr;
-#endif
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
@@ -1978,6 +1975,8 @@ int fc_solve_befs_or_bfs_do_solve(
                 );
 #else
             ptr_new_state = derived.states[derived_index].state_ptr;
+            new_pass.key = &(ptr_new_state->s);
+            new_pass.val = &(ptr_new_state->info);
 #endif
 
             if (method == FCS_METHOD_A_STAR)

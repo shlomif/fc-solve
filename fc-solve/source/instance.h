@@ -381,7 +381,7 @@ typedef void (*fcs_instance_debug_iter_output_func_t)(
         int iter_num,
         int depth,
         void * instance,
-        fcs_pass_state_t * state,
+        fcs_kv_state_t * state,
         int parent_iter_num
         );
 
