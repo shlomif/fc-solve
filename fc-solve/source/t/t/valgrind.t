@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -62,6 +62,18 @@ sub test_using_valgrind
         die "Valgrind failed";
     }
 }
+
+# TEST
+test_using_valgrind(
+    {prog => "fc-solve",
+        argv => [
+            '--read-from-file', '4,t/data/presets/crashy-preset-1.preset', 
+            qw(-s -i -p -t -sam),
+            "$ENV{FCS_PATH}/24.board",
+        ],
+    },
+    "Check the sanity of crashy-preset-1 which over-rides the soft-thread several times.",
+);
 
 # TEST
 test_using_valgrind(

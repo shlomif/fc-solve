@@ -381,6 +381,15 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
             error_string
             );
 
+    {
+        int further_depth_idx;
+        for (further_depth_idx = depth_idx+1; further_depth_idx < user->soft_thread->by_depth_tests_order.num ; further_depth_idx++)
+        {
+            free(user->soft_thread->by_depth_tests_order.by_depth_tests[further_depth_idx].tests_order.tests);
+            user->soft_thread->by_depth_tests_order.by_depth_tests[further_depth_idx].tests_order.tests = NULL;
+        }
+    }
+
     user->soft_thread->by_depth_tests_order.by_depth_tests =
         realloc(
             user->soft_thread->by_depth_tests_order.by_depth_tests,
@@ -1311,6 +1320,19 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 
     switch (method)
     {
+        case FCS_METHOD_RANDOM_DFS:
+        case FCS_METHOD_SOFT_DFS:
+        case FCS_METHOD_HARD_DFS:
+        {
+            user->soft_thread->method_specific.soft_dfs.dfs_max_depth
+                = user->soft_thread->method_specific.soft_dfs.depth
+                = user->soft_thread->method_specific.soft_dfs.tests_by_depth_array.num_units
+                = 0;
+            user->soft_thread->method_specific.soft_dfs.rand_seed = 24;
+            user->soft_thread->method_specific.soft_dfs.soft_dfs_info = NULL;
+            user->soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units = NULL;
+        }
+        break;
         case FCS_METHOD_A_STAR:
         {
             double * my_befs_weights;

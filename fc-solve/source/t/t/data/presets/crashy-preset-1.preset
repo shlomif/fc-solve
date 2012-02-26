@@ -1,0 +1,29 @@
+freecell-solver-range-parallel-solve 1 32000 1 \
+    --method soft-dfs -to 0123456789 -sp r:tf -step 500 --st-name 1 \
+    --method soft-dfs -to 0123467 -sp r:tf -step 500 --st-name 2 \
+    --method random-dfs -seed 2 -to 0[01][23456789] -sp r:tf -step 500 --st-name 3 \
+    --method random-dfs -seed 1 -to 0[0123456789] -sp r:tf -step 500 --st-name 4 \
+    --method random-dfs -seed 3 -to 0[01][23467] -sp r:tf -step 500 --st-name 5 \
+    --method a-star -sp r:tf -step 500 --st-name 6 \
+    --method a-star -to 0123467 -sp r:tf -step 500 --st-name 7 \
+    --method random-dfs -seed 4 -to 0[0123467] -sp r:tf -step 500 --st-name 8 \
+    --method random-dfs -to [01][23456789] -seed 8 -sp r:tf -step 500 --st-name 9 \
+    --method a-star -asw 0.2,0.8,0,0,0 -sp r:tf -step 500 --st-name 10 \
+    --method random-dfs -to [01][23456789] -seed 268 -sp r:tf -step 500 --st-name 11 \
+    --method random-dfs -to [0123456789] -seed 142 -sp r:tf -step 500 --st-name 12 \
+    --method a-star -asw 0.2,0.3,0.5,0,0 -sp r:tf -step 500 --st-name 13 \
+    --method random-dfs -to [01][23456789] -seed 5 -sp r:tf -step 500 --st-name 14 \
+    --method a-star -to 0123467 -asw 0.5,0,0.3,0,0 -sp r:tf -step 500 --st-name 15 \
+    --method soft-dfs -to 0126394875 -sp r:tf -step 500 --st-name 16 \
+    --method random-dfs -seed 105 -sp r:tf -step 500 --st-name 17 \
+    --method a-star -asw 0.5,0,0.5,0,0 -sp r:tf -step 500 --st-name 18 \
+    --method soft-dfs -to 013[2456789] -sp r:tf -step 500 --st-name 19 \
+    --method soft-dfs -to 0123456789 -dto 19,0126394875 -sp r:tf -step 500 --st-name 20 \
+    --method random-dfs -to 0123467 -dto 16,0[123467] -sp r:tf -step 500 --st-name 21 \
+    --method random-dfs -seed 500 -to 0123456789 -dto 36,[01][23456789] -sp r:tf -step 500 --st-name 22 \
+    --method a-star -asw 5,4,0,0,0 -sp r:tf -step 500 --st-name 23 \
+    --method random-dfs -seed 37 -to [0123]456789 -dto 30,[342]0156789 -sp r:tf -step 500 --st-name 24 \
+    --method a-star -to 01234675 -asw 40,2,40,0,40 -sp r:tf -step 500 --st-name 25 \
+    --method a-star -to 01234675 -asw 300,1500,0,2,50000 -sp r:tf -step 500 --st-name 26 \
+    --method soft-dfs -to 01234567 -dto 13,0187465 -dto 26,0134587 -sp r:tf -step 500 --st-name 27 \
+     --prelude "273@21,272@8,241@5,282@21,270@5,232@8,226@21,186@24,275@8,218@5,328@8,204@27,221@27,175@27,180@27,302@5,155@5,139@21,361@21,279@21,203@21,171@24,177@8,107@8,72@27,289@5,266@8,115@5,247@5,201@8,177@19,274@8,-110@8,346@8,99@5,182@19,122@11,130@11,-72@21,557@21,21@21,18@21,434@21,143@5,183@5,-6@5,321@5,60@19,59@24,-186@21,435@21,323@21,99@5,342@5,99@2,165@19,215@19,116@3,70@15,94@15,94@15,5@15,127@20,235@4,145@25,252@11,-41@21,487@21,45@21,344@15,222@15,304@27,346@27,2@27,251@22,231@3,351@27,652@5,-152@21,494@11,548@11,732@8,997@9,1062@12,5015@11"
