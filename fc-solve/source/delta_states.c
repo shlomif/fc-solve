@@ -667,12 +667,8 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 
     new_derived_as_str =
         fc_solve_state_as_string(
-#ifdef FCS_RCS_STATES
             &(new_derived_state.s),
             &(new_derived_state.info),
-#else
-            &new_derived_state,
-#endif
             &locs,
             FREECELLS_NUM,
             STACKS_NUM,

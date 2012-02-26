@@ -851,12 +851,8 @@ int main(int argc, char * argv[])
 
             state_as_str =
                 fc_solve_state_as_string(
-#ifdef FCS_RCS_STATES
                         &(state.s),
                         &(state.info),
-#else
-                        &state,
-#endif
                         &locs,
                         FREECELLS_NUM,
                         STACKS_NUM,

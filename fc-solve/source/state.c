@@ -304,10 +304,8 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 #endif
 
 char * fc_solve_state_as_string(
-#ifdef FCS_RCS_STATES
     fcs_state_t * state,
-#endif
-    fcs_collectible_state_t * state_val,
+    fcs_state_extra_info_t * state_val,
     fcs_state_locs_struct_t * state_locs,
 #define FCS_S_STACK_LOCS(s) (state_locs->stack_locs)
 #define FCS_S_FC_LOCS(s) (state_locs->fc_locs)
@@ -319,9 +317,6 @@ char * fc_solve_state_as_string(
     fcs_bool_t display_10_as_t
     )
 {
-#ifndef FCS_RCS_STATES
-    fcs_state_t * state;
-#endif
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
     int a, b;
     fcs_bool_t card_num_is_null;
@@ -336,10 +331,6 @@ char * fc_solve_state_as_string(
 
     int stack_locs[MAX_NUM_STACKS];
     int freecell_locs[MAX_NUM_FREECELLS];
-
-#ifndef FCS_RCS_STATES
-    state = &(state_val->s);
-#endif
 
     if (canonized_order_output)
     {

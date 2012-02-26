@@ -216,12 +216,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         fc_solve_delta_stater_decode_into_state(delta, iter->enc_state.s, &(state), indirect_stacks_buffer);
         ret[i].state_as_string =
         fc_solve_state_as_string(
-#ifdef FCS_RCS_STATES
             &(state.s),
             &(state.info),
-#else
-            &(state),
-#endif
             &locs,
             FREECELLS_NUM,
             STACKS_NUM,

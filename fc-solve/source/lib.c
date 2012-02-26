@@ -1202,12 +1202,8 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
 
         return
             fc_solve_state_as_string(
-#ifdef FCS_RCS_STATES
                 &(user->running_state.s),
                 &(user->running_state.info),
-#else
-                &(user->running_state),
-#endif
                 &(user->initial_state_locs),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM,
@@ -1872,12 +1868,8 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
 
     return
         fc_solve_state_as_string(
-#ifdef FCS_RCS_STATES
             ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
             ((fcs_standalone_state_ptrs_t *)ptr_state_void)->val,
-#else
-            (fcs_collectible_state_t *)((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
-#endif
             &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs),
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM,

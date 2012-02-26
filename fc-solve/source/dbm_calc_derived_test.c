@@ -128,12 +128,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     {
         debug_ret[idx].state_string = 
         fc_solve_state_as_string(
-#ifdef FCS_RCS_STATES
             &(iter->state.s),
             &(iter->state.info),
-#else
-            &(iter->state),
-#endif
             &locs,
             FREECELLS_NUM,
             STACKS_NUM,
