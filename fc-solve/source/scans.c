@@ -2322,7 +2322,7 @@ extern void fc_solve_sfs_check_state_end(
     const fcs_runtime_flags_t scans_synergy
         = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
-    fcs_lvalue_pass_state_t existing_state;
+    fcs_kv_state_t existing_state;
 
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
 #define ptr_state (raw_ptr_state_raw->val)
@@ -2333,11 +2333,7 @@ extern void fc_solve_sfs_check_state_end(
         &existing_state
         ))
     {
-#ifdef FCS_RCS_STATES
 #define existing_state_val (existing_state.val)
-#else
-#define existing_state_val existing_state
-#endif
         if (hard_thread->allocated_from_list)
         {
             ptr_new_state_foo->parent = instance->list_of_vacant_states;
@@ -2349,7 +2345,7 @@ extern void fc_solve_sfs_check_state_end(
         }
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-        calculate_real_depth (calc_real_depth, existing_state_val);
+        calculate_real_depth (calc_real_depth, FCS_STATE_kv_to_collectible(&existing_state));
 
         /* Re-parent the existing state to this one.
          *
@@ -2358,30 +2354,30 @@ extern void fc_solve_sfs_check_state_end(
          * already have, then re-assign its parent to this state.
          * */
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
-           (FCS_S_DEPTH(existing_state_val) > ptr_state->depth+1))
+           (existing_state_val->depth > ptr_state->depth+1))
         {
             /* Make a copy of "moves" because "moves" will be destroyed */
-            FCS_S_MOVES_TO_PARENT(existing_state_val) =
+            existing_state_val->moves_to_parent =
                 fc_solve_move_stack_compact_allocate(
                     hard_thread, moves
                     );
-            if (!(FCS_S_VISITED(existing_state_val) & FCS_VISITED_DEAD_END))
+            if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))
             {
-                if ((--(FCS_S_NUM_ACTIVE_CHILDREN(FCS_S_PARENT(existing_state_val)))) == 0)
+                if ((--(FCS_S_NUM_ACTIVE_CHILDREN(existing_state_val->parent))) == 0)
                 {
-                    mark_as_dead_end(scans_synergy, FCS_S_PARENT(existing_state_val));
+                    mark_as_dead_end(scans_synergy, existing_state_val->parent);
                 }
                 ptr_state->num_active_children++;
             }
-            FCS_S_PARENT(existing_state_val) = INFO_STATE_PTR(raw_ptr_state_raw);
-            FCS_S_DEPTH(existing_state_val) = ptr_state->depth + 1;
+            existing_state_val->parent = INFO_STATE_PTR(raw_ptr_state_raw);
+            existing_state_val->depth = ptr_state->depth + 1;
         }
 
 #endif
 
         fc_solve_derived_states_list_add_state(
             derived_states_list,
-            existing_state_val,
+            FCS_STATE_kv_to_collectible(&existing_state),
             state_context_value
         );
 

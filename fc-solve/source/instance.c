@@ -1086,7 +1086,7 @@ void fc_solve_start_instance_process_with_board(
 #endif
 
     {
-        fcs_lvalue_pass_state_t no_use;
+        fcs_kv_state_t no_use;
 #ifdef FCS_RCS_STATES
         fcs_pass_state_t pass;
 
