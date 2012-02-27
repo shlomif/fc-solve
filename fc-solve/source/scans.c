@@ -2274,12 +2274,10 @@ int fc_solve_sfs_check_state_begin(
         raw_ptr_state_raw
     );
 #ifdef FCS_RCS_STATES
-#define COLLECTIBLE_STATE_PTR(kv_ptr) kv_ptr
-#define INFO_STATE_PTR(kv_ptr) kv_ptr->val
+#define INFO_STATE_PTR(kv_ptr) ((kv_ptr)->val)
 #else
 /* TODO : That's very hacky - get rid of it. */
-#define COLLECTIBLE_STATE_PTR(kv_ptr) ((fcs_state_keyval_pair_t *)(kv_ptr->key))
-#define INFO_STATE_PTR(kv_ptr) COLLECTIBLE_STATE_PTR(kv_ptr)
+#define INFO_STATE_PTR(kv_ptr) ((fcs_state_keyval_pair_t *)((kv_ptr)->key))
 #endif
     /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.
@@ -2329,7 +2327,7 @@ extern void fc_solve_sfs_check_state_end(
 
     if (! fc_solve_check_and_add_state(
         hard_thread,
-        COLLECTIBLE_STATE_PTR(raw_ptr_new_state_raw),
+        raw_ptr_new_state_raw,
         &existing_state
         ))
     {

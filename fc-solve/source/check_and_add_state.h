@@ -47,7 +47,7 @@ extern "C" {
 
 GCC_INLINE fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t * hard_thread,
-    fcs_pass_state_t * new_state_val,
+    fcs_kv_state_t * new_state_val,
     fcs_kv_state_t * existing_state_val
     );
 

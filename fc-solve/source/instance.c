@@ -1083,20 +1083,14 @@ void fc_solve_start_instance_process_with_board(
 
     {
         fcs_kv_state_t no_use;
-#ifdef FCS_RCS_STATES
-        fcs_pass_state_t pass;
+        fcs_kv_state_t pass;
 
         pass.key = &(state_copy_ptr->s);
         pass.val = &(state_copy_ptr->info);
-#endif
 
         fc_solve_check_and_add_state(
             instance->hard_threads,
-#ifdef FCS_RCS_STATES
             &pass,
-#else
-            state_copy_ptr,
-#endif
             &no_use
             );
 
