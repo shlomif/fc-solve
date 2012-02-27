@@ -1578,14 +1578,17 @@ static GCC_INLINE void normalize_befs_weights(
     }
 }
 
+#ifdef FCS_RCS_STATES
+#define FCS_STATE_keyval_pair_to_collectible(s) (&((s)->info))
+#else
+#define FCS_STATE_keyval_pair_to_collectible(s) (s)
+#endif
+
 void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * soft_thread
     )
 {
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
-#ifndef FCS_RCS_STATES
-    fcs_collectible_state_t * ptr_state_raw = instance->state_copy_ptr;
-#endif
     fcs_kv_state_t pass;
 
     pass.key = &(instance->state_copy_ptr->s);
@@ -1635,7 +1638,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         soft_thread->method_specific.befs.tests_list_end = next_test;
     }
 
-    soft_thread->first_state_to_check = PTR_STATE;
+    soft_thread->first_state_to_check =
+        FCS_STATE_keyval_pair_to_collectible(instance->state_copy_ptr);
 
     return;
 }
