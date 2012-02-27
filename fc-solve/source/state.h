@@ -502,7 +502,6 @@ typedef struct {
  * */
 #ifdef FCS_RCS_STATES
 
-typedef fcs_kv_state_t fcs_pass_state_t;
 typedef fcs_state_extra_info_t fcs_collectible_state_t;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
 
@@ -531,8 +530,6 @@ FCS_STATE_collectible_to_kv(fcs_collectible_state_t * s)
 #else
 
 typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
-
-typedef fcs_collectible_state_t fcs_pass_state_t;
 
 #define FCS_S_ACCESSOR(s, field) (((s)->info).field)
 

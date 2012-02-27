@@ -614,7 +614,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
     for (parents_stack_len--; parents_stack_len > 0; parents_stack_len--)
     {
-        fcs_pass_state_t pass, src_pass;
+        fcs_kv_state_t pass, src_pass;
 
         fcs_collectible_state_t temp_new_state_val;
         fcs_internal_move_t * next_move, * moves_end;
