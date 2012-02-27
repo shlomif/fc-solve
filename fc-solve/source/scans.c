@@ -365,8 +365,8 @@ static void free_states(fc_solve_instance_t * instance)
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
 /*
- * This macro traces the path of the state up to the original state,
- * and thus calculates its real depth.
+ * The calculate_real_depth() inline function traces the path of the state up 
+ * to the original state, and thus calculates its real depth.
  *
  * It then assigns the newly updated depth throughout the path.
  *
@@ -402,8 +402,9 @@ static GCC_INLINE void calculate_real_depth(fcs_bool_t calc_real_depth, fcs_coll
 #endif
 
 /*
- * This macro marks a state as a dead end, and afterwards propogates
- * this information to its parent and ancestor states.
+ * The mark_as_dead_end() inline function marks a state as a dead end, and 
+ * afterwards propogates this information to its parent and ancestor states.
+ *
  * */
 
 static void GCC_INLINE mark_as_dead_end(fcs_bool_t scans_synergy, fcs_collectible_state_t * ptr_state_input)
@@ -1495,15 +1496,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #undef unlimited_sequence_move
 #endif
 
-/*
-    fc_solve_befs_or_bfs_do_solve() is the main event
-    loop of the BeFS And BFS scans. It is quite simple as all it does is
-    extract elements out of the queue or priority queue and run all the test
-    of them.
-
-    It goes on in this fashion until the final state was reached or
-    there are no more states in the queue.
-*/
 
 #undef TRACE0
 
@@ -1703,6 +1695,15 @@ static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
 }
 #endif
 
+/*
+ *  fc_solve_befs_or_bfs_do_solve() is the main event
+ *  loop of the BeFS And BFS scans. It is quite simple as all it does is
+ *  extract elements out of the queue or priority queue and run all the test
+ *  of them.
+ *
+ *  It goes on in this fashion until the final state was reached or
+ *  there are no more states in the queue.
+*/
 int fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -2074,8 +2075,11 @@ my_return_label:
 #undef myreturn
 
 /*
- * Calculate, cache and return the positions_by_rank meta-data
+ * fc_solve_get_the_positions_by_rank_data() :
+ *
+ * calculate, cache and return the positions_by_rank meta-data
  * about the currently-evaluated state.
+ *
  */
 extern char * fc_solve_get_the_positions_by_rank_data(
     fc_solve_soft_thread_t * soft_thread,
