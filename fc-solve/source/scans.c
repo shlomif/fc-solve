@@ -1578,12 +1578,6 @@ static GCC_INLINE void normalize_befs_weights(
     }
 }
 
-#ifdef FCS_RCS_STATES
-#define FCS_STATE_keyval_pair_to_collectible(s) (&((s)->info))
-#else
-#define FCS_STATE_keyval_pair_to_collectible(s) (s)
-#endif
-
 void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * soft_thread
     )
