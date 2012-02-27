@@ -506,8 +506,6 @@ typedef fcs_kv_state_t fcs_pass_state_t;
 typedef fcs_state_extra_info_t fcs_collectible_state_t;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
 
-typedef fcs_pass_state_t fcs_lvalue_pass_state_t;
-
 #define fcs_duplicate_state(ptr_dest, ptr_src) \
     { \
     *((ptr_dest)->key) = *((ptr_src)->key); \
@@ -534,8 +532,6 @@ FCS_STATE_collectible_to_kv(fcs_collectible_state_t * s)
 typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 
 typedef fcs_collectible_state_t fcs_pass_state_t;
-
-typedef fcs_pass_state_t * fcs_lvalue_pass_state_t;
 
 #define FCS_S_ACCESSOR(s, field) (((s)->info).field)
 
