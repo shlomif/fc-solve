@@ -318,25 +318,6 @@ static GCC_INLINE void on_state_new(
     return;
 }
 
-#ifdef FCS_RCS_STATES
-static GCC_INLINE fcs_kv_state_t 
-FCS_STATE_collectible_to_kv(fcs_collectible_state_t * s)
-{
-    fcs_kv_state_t ret;
-    ret.key = NULL;
-    ret.val = s;
-    return ret;
-}
-#else
-static GCC_INLINE fcs_kv_state_t 
-FCS_STATE_collectible_to_kv(fcs_collectible_state_t * s)
-{
-    fcs_kv_state_t ret;
-    ret.key = &(s->s);
-    ret.val = &(s->info);
-    return ret;
-}
-#endif
 fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t * hard_thread,
     fcs_pass_state_t * new_state,
