@@ -90,12 +90,12 @@ static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(fcs_move_stack_t * stack, f
 }
 
 void fc_solve_apply_move(
-        fcs_pass_state_t * state_raw,
-        fcs_state_locs_struct_t * locs,
-        fcs_internal_move_t move,
-        int freecells_num,
-        int stacks_num,
-        int decks_num
+    fcs_kv_state_t * state_raw,
+    fcs_state_locs_struct_t * locs,
+    fcs_internal_move_t move,
+    int freecells_num,
+    int stacks_num,
+    int decks_num
 );
 
 
@@ -172,7 +172,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             ) == 0)
     {
         fc_solve_apply_move(
-            FCS_STATE_kv_to_pass(&dynamic_state),
+            &dynamic_state,
             locs,
             in_move,
             freecells_num,

@@ -66,22 +66,18 @@ int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
  * This function performs a given move on a state
  */
 void fc_solve_apply_move(
-        fcs_pass_state_t * state,
-        fcs_state_locs_struct_t * locs,
-        fcs_internal_move_t move,
-        int freecells_num,
-        int stacks_num,
-        int decks_num GCC_UNUSED
-        )
+    fcs_kv_state_t * state,
+    fcs_state_locs_struct_t * locs,
+    fcs_internal_move_t move,
+    int freecells_num,
+    int stacks_num,
+    int decks_num GCC_UNUSED
+)
 {
     fcs_card_t card;
     fcs_cards_column_t col;
 
-#ifdef FCS_RCS_STATES
 #define state_key (state->key)
-#else
-#define state_key (&(state->s))
-#endif
     switch(fcs_int_move_get_type(move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
@@ -170,25 +166,17 @@ void fc_solve_apply_move(
 
         case FCS_MOVE_TYPE_CANONIZE:
         {
-#ifdef FCS_RCS_STATES
-#define PASS_ME state
-#else
-            fcs_kv_state_t pass;
-            pass.key = &(state->s);
-            pass.val = &(state->info);
-#define PASS_ME (&(pass))
-#endif
             if (locs)
             {
                 fc_solve_canonize_state_with_locs(
-                    PASS_ME,
+                    state,
                     locs,
                     freecells_num, stacks_num
                 );
             }
             else
             {
-                fc_solve_canonize_state (PASS_ME, freecells_num, stacks_num);
+                fc_solve_canonize_state (state, freecells_num, stacks_num);
             }
         }
         break;

@@ -1140,18 +1140,12 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 
             if (ret == 0)
             {
-#ifdef FCS_RCS_STATES
-                fcs_pass_state_t pass;
+                fcs_kv_state_t pass;
                 pass.key = &(user->running_state.s);
                 pass.val = &(user->running_state.info);
-#endif
 
                 fc_solve_apply_move(
-#ifdef FCS_RCS_STATES
                     &(pass),
-#else
-                    &(user->running_state),
-#endif
                     NULL,
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
                     internal_move,
