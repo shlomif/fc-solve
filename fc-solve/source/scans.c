@@ -293,12 +293,6 @@ static void free_states(fc_solve_instance_t * instance)
 #endif
 }
 
-/*
-    fc_solve_soft_dfs_do_solve is the event loop of the
-    Random-DFS scan. DFS which is recursive in nature is handled here
-    without procedural recursion
-    by using some dedicated stacks for the traversal.
-  */
 #define STATE_TO_PASS() (&(pass))
 #define NEW_STATE_TO_PASS() (&(new_pass))
 
@@ -792,6 +786,12 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
 }
 
 
+/*
+ * fc_solve_soft_dfs_do_solve() is the event loop of the
+ * Random-DFS scan. DFS which is recursive in nature is handled here
+ * without procedural recursion by using some dedicated stacks for
+ * the traversal.
+ */
 int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t * const soft_thread
     )
