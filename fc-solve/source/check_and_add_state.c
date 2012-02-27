@@ -73,7 +73,7 @@ static GCC_INLINE ub4 perl_hash_function(
         if (condition_expr)     \
         {      \
             fcs_compact_alloc_release(stacks_allocator);    \
-            new_state->key->stacks[i] = cached_stack;       \
+            new_state_key->stacks[i] = cached_stack;       \
         }
 
 /* TODO : We access new_state->key and new_state->info too many times 
@@ -100,6 +100,8 @@ static void GCC_INLINE fc_solve_cache_stacks(
     fcs_cards_column_t column;
     register int col_len;
     fcs_compact_allocator_t * stacks_allocator;
+    register fcs_state_t * new_state_key = new_state->key;
+    register fcs_state_extra_info_t * new_state_info = new_state->val;
 
     stacks_allocator = &(hard_thread->allocator);
 
@@ -109,17 +111,17 @@ static void GCC_INLINE fc_solve_cache_stacks(
          * If the stack is not a copy - it is already cached so skip
          * to the next stack
          * */
-        if (! (new_state->val->stacks_copy_on_write_flags & (1 << i)))
+        if (! (new_state_info->stacks_copy_on_write_flags & (1 << i)))
         {
             continue;
         }
 
-        column = fcs_state_get_col(*(new_state->key), i);
+        column = fcs_state_get_col(*(new_state_key), i);
         col_len = (fcs_col_len(column)+1);
 
         new_ptr = (char*)fcs_compact_alloc_ptr(stacks_allocator, col_len);
         memcpy(new_ptr, column, col_len);
-        new_state->key->stacks[i] = new_ptr;
+        new_state_key->stacks[i] = new_ptr;
 
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -148,14 +150,14 @@ static void GCC_INLINE fc_solve_cache_stacks(
 #endif
 
         {
-            column = fcs_state_get_col(*(new_state->key), i);
+            column = fcs_state_get_col(*(new_state_key), i);
 
             replace_with_cached(fc_solve_hash_insert(
                 &(instance->stacks_hash),
                 column,
                 &cached_stack,
                 perl_hash_function(
-                    (ub1 *)new_state->key->stacks[i],
+                    (ub1 *)new_state_key->stacks[i],
                     col_len
                     )
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -326,17 +328,14 @@ fcs_bool_t fc_solve_check_and_add_state(
     fcs_kv_state_t * existing_state_raw
     )
 {
+/* TODO : these accessor macros are probably out-of-date and won't work with 
+ * some of the less commonly tested data storage backends. They should be
+ * tested and updated.
+ * */   
 #define existing_state_val (existing_state_raw->val)
 #define new_state_val      (new_state->val)
 #define new_state_key      (new_state->key)
 #define new_state_info     new_state_val
-
-#if 0
-#define existing_state_val (*existing_state_raw)
-#define new_state_val      (new_state)
-#define new_state_key      (&(new_state->s))
-#define new_state_info     (&(new_state->info))
-#endif
 
 #define ON_STATE_NEW() on_state_new(instance, hard_thread, new_state_info);
 
