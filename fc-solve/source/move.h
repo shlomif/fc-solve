@@ -128,7 +128,7 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
 
 static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_t * moves,
-    fcs_pass_state_t * init_state,
+    fcs_kv_state_t * init_state,
     fcs_state_locs_struct_t * locs,
     int freecells_num,
     int stacks_num,
@@ -137,12 +137,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 {
     fcs_move_stack_t temp_moves;
     fcs_internal_move_t in_move, out_move;
-    fcs_pass_state_t dynamic_state;
+    fcs_kv_state_t dynamic_state;
 
-#ifdef FCS_RCS_STATES
-    fcs_state_t s;
-    fcs_state_extra_info_t info;
-#endif
+    fcs_state_keyval_pair_t s_and_info;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 #ifdef INDIRECT_STACK_STATES
@@ -152,21 +149,19 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #define FCS_S_FC_LOCS(s) (locs->fc_locs)
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
 
-#ifdef FCS_RCS_STATES
-    dynamic_state.key = &s;
-    dynamic_state.val = &info;
-#endif
+    dynamic_state.key = &(s_and_info.s);
+    dynamic_state.val = &(s_and_info.info);
 
     out_move = fc_solve_empty_move;
 
     fcs_move_stack_init(temp_moves);
 
-    fcs_duplicate_state( &(dynamic_state), init_state );
+    fcs_duplicate_kv_state( &(dynamic_state), init_state );
 
 #ifdef INDIRECT_STACK_STATES
     for (i=0 ; i < stacks_num ; i++)
     {
-        fcs_copy_stack(dynamic_state.s, dynamic_state.info, i, indirect_stacks_buffer);
+        fcs_copy_stack(*(dynamic_state.key), *(dynamic_state.val), i, indirect_stacks_buffer);
     }
 #endif
 
@@ -177,7 +172,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             ) == 0)
     {
         fc_solve_apply_move(
-            &dynamic_state,
+            FCS_STATE_kv_to_pass(&dynamic_state),
             locs,
             in_move,
             freecells_num,
