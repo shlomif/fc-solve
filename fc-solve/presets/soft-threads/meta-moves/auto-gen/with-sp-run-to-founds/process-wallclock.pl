@@ -53,7 +53,7 @@ foreach my $scan (@scans)
     $scan->{r} = \@scan_recs;
 }
 
-my @duration_quotas = (map { 0.0001 } (1 .. 20_000));
+my @duration_quotas = (map { 0.0005 } (1 .. 20_000));
 
 my $num_boards_solved = 0;
 
