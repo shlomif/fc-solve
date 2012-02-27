@@ -76,8 +76,9 @@ static GCC_INLINE ub4 perl_hash_function(
             new_state_key->stacks[i] = cached_stack;       \
         }
 
-/* TODO : We access new_state->key and new_state->info too many times 
- * explicitly. They should be assigned to variables. */
+/* TODO : Maybe define an accesor for new_state_key->stacks (also see the
+ * replaced_with_cached macro above.
+ * */
 static void GCC_INLINE fc_solve_cache_stacks(
         fc_solve_hard_thread_t * hard_thread,
         fcs_kv_state_t * new_state
