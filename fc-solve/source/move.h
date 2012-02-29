@@ -192,10 +192,6 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
                 (fcs_int_move_get_type(in_move) == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
                 )
             {
-#ifdef FCS_RCS_STATES
-#undef FCS_S_ACCESSOR
-#define FCS_S_ACCESSOR(s, field) ((s)->val->field)
-#endif
                 fcs_int_move_set_src_stack(out_move, (FCS_S_STACK_LOCS(&dynamic_state))[(int)fcs_int_move_get_src_stack(in_move)]);
             }
 
@@ -241,10 +237,6 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
         }
     }
 
-#ifdef FCS_RCS_STATES
-#undef FCS_S_ACCESSOR
-#define FCS_S_ACCESSOR(s, field) ((s)->field)
-#endif
     /*
      * temp_moves contain the needed moves in reverse order. So let's use
      * swallow_stack to put them in the original in the correct order.
