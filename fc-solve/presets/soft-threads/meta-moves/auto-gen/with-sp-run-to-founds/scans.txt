@@ -25,3 +25,4 @@
 25	--method a-star -to 01234675 -asw 40,2,40,0,40 -sp r:tf
 26	--method a-star -to 01234675 -asw 300,1500,0,2,50000 -sp r:tf
 27	--method soft-dfs -to 01234567 -dto 13,0187465 -dto 26,0134587 -sp r:tf
+28	-to 01234567 -dto 72,0123876594 -sp r:tf
