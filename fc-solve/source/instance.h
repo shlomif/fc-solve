@@ -985,11 +985,9 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
     fc_solve_increase_dfs_max_depth(soft_thread);
 
-#ifdef FCS_RCS_STATES
-    soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state = &(ptr_orig_state->info);
-#else
-    soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state = ptr_orig_state;
-#endif
+    soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state
+        = FCS_STATE_keyval_pair_to_collectible(ptr_orig_state);
+
     fc_solve_rand_init(
             &(soft_thread->method_specific.soft_dfs.rand_gen),
             soft_thread->method_specific.soft_dfs.rand_seed
