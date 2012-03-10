@@ -16,6 +16,34 @@ use Games::Solitaire::FC_Solve::DeltaStater;
 
 package main;
 
+my $RANK_J = 11;
+my $RANK_Q = 12;
+my $RANK_K = 13;
+
+{
+my @suits = (qw(H C D S));
+my %suit_to_idx = do { 
+    my $s = Games::Solitaire::Verify::Card->get_suits_seq();
+    (map { $s->[$_] => $_ } (0 .. $#$s)) ; 
+};
+
+sub _card_to_bin
+{
+    my ($args) = @_;
+
+    my $suit = $args->{suit};
+    my $rank = $args->{rank};
+
+    if (!exists($suit_to_idx{$suit}))
+    {
+        die "Unknown suit '$suit'.";
+    }
+    return ($suit_to_idx{$suit} | ($rank << 2));
+}
+
+}
+
+
 {
     # MS Freecell No. 982 Initial state.
     my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
@@ -96,7 +124,7 @@ EOF
         [
             [ 3 => 0 ], # Orig len.
             [ 4 => 1 ], # Derived len. 
-            [ 6 => (9 | (3 << 4)) ], # 9S
+            [ 6 => _card_to_bin({suit => 'S', rank => 9,}) ], # 9S
         ],
         'get_column_lengths_bits() works',
     );
@@ -105,8 +133,8 @@ EOF
     eq_or_diff(
         $delta->get_freecells_encoding(),
         [
-            [ 6 => (8 | (2 << 4)) ],  # 8D
-            [ 6 => (12 | (2 << 4)) ], # QD
+            [ 6 => _card_to_bin({suit => 'D', rank => 8}), ],  # 8D
+            [ 6 => _card_to_bin({suit => 'D', rank => $RANK_Q}), ], # QD
         ],
         'Freecells',
     );

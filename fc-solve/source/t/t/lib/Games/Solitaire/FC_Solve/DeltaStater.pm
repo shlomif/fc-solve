@@ -233,7 +233,7 @@ sub _get_card_bitmask
 {
     my ($self, $card) = @_;
 
-    return ($card->rank() | ($suit_to_idx{$card->suit()} << 4));
+    return ($suit_to_idx{$card->suit()} | ($card->rank() << 2));
 }
 
 my $COL_TYPE_EMPTY = 0;
@@ -451,8 +451,8 @@ sub decode
         my $card_bits = shift;
 
         my $card = Games::Solitaire::Verify::Card->new;
-        $card->rank($card_bits & ((1 << 4)-1));
-        $card->suit($suits[$card_bits >> 4]);
+        $card->rank($card_bits >> 2);
+        $card->suit($suits[$card_bits & ((1 << 2)-1)]);
 
         return $process_card->($card);
     };
