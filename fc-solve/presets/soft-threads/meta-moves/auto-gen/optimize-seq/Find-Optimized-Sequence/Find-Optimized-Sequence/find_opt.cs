@@ -107,11 +107,11 @@ class Input
         blacklist = new List<int>();
         StreamReader f = new StreamReader(data_file_path("scans-black-list.txt"));
 
-         string line;
+        string line;
 
         while ((line = f.ReadLine()) != null)
         {
-              blacklist.Add(Convert.ToInt32(line));
+            blacklist.Add(Convert.ToInt32(line));
         }
     }
 
