@@ -22,44 +22,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * move.h - header file for the move and move stacks functions of
- * Freecell Solver
+ * delta_states_iface.h - some public interface functions for delta_state.c
+ * (without all the baggage).
  *
  */
 
-#ifndef FC_SOLVE__DELTA_STATES_H
-#define FC_SOLVE__DELTA_STATES_H
+#ifndef FC_SOLVE__DELTA_STATES_IFACE_H
+#define FC_SOLVE__DELTA_STATES_IFACE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "config.h"
-#include "state.h"
-
-typedef struct { unsigned char s[24]; } fcs_encoded_state_buffer_t;
-
-typedef struct
-{
-    fcs_encoded_state_buffer_t key;
-    fcs_encoded_state_buffer_t parent_and_move;
-} fcs_dbm_record_t;
-
-typedef struct
-{
-#ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by;
-#endif
-    int num_freecells;
-    int num_columns;
-    fcs_state_t * _init_state, * _derived_state;
-    int bits_per_orig_cards_in_column;
-} fc_solve_delta_stater_t;
-
-static GCC_INLINE void fcs_init_encoded_state(fcs_encoded_state_buffer_t * enc_state)
-{
-    memset(enc_state, '\0', sizeof(*enc_state));
-}
 
 extern char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
         const char * init_state_str_proto,
@@ -70,4 +43,4 @@ extern char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 }
 #endif
 
-#endif  /* FC_SOLVE__DELTA_STATES_H */
+#endif  /* FC_SOLVE__DELTA_STATES_IFACE_H */

@@ -10,6 +10,7 @@ use Inline (
     C => 'DATA',
     CLEAN_AFTER_BUILD => 0,
     LIBS => "-L" . Cwd::getcwd() . " -lfcs_delta_states_test",
+    CCFLAGS => "-I" . Cwd::getcwd(),
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
@@ -136,10 +137,7 @@ for my $deal_idx (1 .. 32_000)
 __DATA__
 __C__
 
-extern char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-    const char * init_state_str_proto,
-    const char * derived_state_str_proto
-    );
+#include "delta_states_iface.h"
 
 SV* enc_and_dec(char * init_state_s, char * derived_state_s) {
     SV * ret;

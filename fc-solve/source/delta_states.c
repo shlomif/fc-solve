@@ -38,6 +38,8 @@
 #include "bit_rw.h"
 #include "state.h"
 #include "indirect_buffer.h"
+
+#include "delta_states_iface.h"
 #include "delta_states.h"
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
