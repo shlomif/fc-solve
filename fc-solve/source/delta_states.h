@@ -56,7 +56,7 @@ typedef struct
     int bits_per_orig_cards_in_column;
 } fc_solve_delta_stater_t;
 
-static void GCC_INLINE fcs_init_encoded_state(fcs_encoded_state_buffer_t * enc_state)
+static GCC_INLINE void fcs_init_encoded_state(fcs_encoded_state_buffer_t * enc_state)
 {
     memset(enc_state, '\0', sizeof(*enc_state));
 }

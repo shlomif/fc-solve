@@ -48,7 +48,7 @@
 #ifdef FCS_RCS_STATES
 #include "instance.h"
 #endif
-static void GCC_INLINE fc_solve_hash_rehash(fc_solve_hash_t * hash);
+static GCC_INLINE void fc_solve_hash_rehash(fc_solve_hash_t * hash);
 
 
 
@@ -237,7 +237,7 @@ fcs_bool_t fc_solve_hash_insert(
     hash table, allowing for smaller chains, and faster lookup.
 
   */
-static void GCC_INLINE fc_solve_hash_rehash(
+static GCC_INLINE void fc_solve_hash_rehash(
     fc_solve_hash_t * hash
     )
 {

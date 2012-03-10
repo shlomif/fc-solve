@@ -407,7 +407,7 @@ static GCC_INLINE void calculate_real_depth(fcs_bool_t calc_real_depth, fcs_coll
  *
  * */
 
-static void GCC_INLINE mark_as_dead_end(fcs_bool_t scans_synergy, fcs_collectible_state_t * ptr_state_input)
+static GCC_INLINE void mark_as_dead_end(fcs_bool_t scans_synergy, fcs_collectible_state_t * ptr_state_input)
 {
     if (scans_synergy)
     {
@@ -1531,7 +1531,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         sizeof(fcs_states_linked_list_item_t) \
     ));
 
-static void GCC_INLINE fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * soft_thread)
+static GCC_INLINE void fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * soft_thread)
 {
     fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
 

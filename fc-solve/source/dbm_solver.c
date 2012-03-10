@@ -234,7 +234,7 @@ typedef struct {
     long num_states_in_collection;
 } fcs_dbm_solver_instance_t;
 
-static void GCC_INLINE instance_init(
+static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * instance,
     long pre_cache_max_count,
     long caches_delta,
@@ -267,7 +267,7 @@ static void GCC_INLINE instance_init(
     fc_solve_dbm_store_init(&(instance->store), dbm_store_path);
 }
 
-static void GCC_INLINE instance_destroy(
+static GCC_INLINE void instance_destroy(
     fcs_dbm_solver_instance_t * instance
     )
 {
@@ -290,7 +290,7 @@ static void GCC_INLINE instance_destroy(
     FCS_DESTROY_LOCK(instance->storage_lock);
 }
 
-static void GCC_INLINE instance_check_key(
+static GCC_INLINE void instance_check_key(
     fcs_dbm_solver_instance_t * instance,
     fcs_encoded_state_buffer_t * key,
     fcs_encoded_state_buffer_t * parent_and_move
@@ -363,7 +363,7 @@ static void GCC_INLINE instance_check_key(
     }
 }
 
-static void GCC_INLINE instance_check_multiple_keys(
+static GCC_INLINE void instance_check_multiple_keys(
     fcs_dbm_solver_instance_t * instance,
     fcs_derived_state_t * list
 )

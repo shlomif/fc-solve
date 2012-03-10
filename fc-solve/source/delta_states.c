@@ -554,7 +554,7 @@ static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
         ;
 }
 
-static void GCC_INLINE fcs_init_and_encode_state(
+static GCC_INLINE void fcs_init_and_encode_state(
     fc_solve_delta_stater_t * delta_stater,
     fcs_state_keyval_pair_t * state,
     fcs_encoded_state_buffer_t * enc_state

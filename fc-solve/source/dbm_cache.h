@@ -57,13 +57,13 @@ static int fc_solve_compare_lru_cache_keys(
 #undef GET_PARAM
 }
 
-static void GCC_INLINE cache_destroy(fcs_lru_cache_t * cache)
+static GCC_INLINE void cache_destroy(fcs_lru_cache_t * cache)
 {
     fc_solve_kaz_tree_destroy(cache->kaz_tree);
     fc_solve_compact_allocator_finish(&(cache->states_values_to_keys_allocator));
 }
 
-static void GCC_INLINE cache_init(fcs_lru_cache_t * cache, long max_num_elements_in_cache, fcs_meta_compact_allocator_t * meta_alloc)
+static GCC_INLINE void cache_init(fcs_lru_cache_t * cache, long max_num_elements_in_cache, fcs_meta_compact_allocator_t * meta_alloc)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     cache->states_values_to_keys_map = ((Pvoid_t) NULL);
@@ -83,7 +83,7 @@ static void GCC_INLINE cache_init(fcs_lru_cache_t * cache, long max_num_elements
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, fcs_encoded_state_buffer_t * key)
+static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, fcs_encoded_state_buffer_t * key)
 {
     fcs_cache_key_info_t to_check;
     dict_key_t existing_key;
@@ -129,7 +129,7 @@ static fcs_bool_t GCC_INLINE cache_does_key_exist(fcs_lru_cache_t * cache, fcs_e
     }
 }
 
-static void GCC_INLINE cache_insert(fcs_lru_cache_t * cache, const fcs_encoded_state_buffer_t * key)
+static GCC_INLINE void cache_insert(fcs_lru_cache_t * cache, const fcs_encoded_state_buffer_t * key)
 {
     fcs_cache_key_info_t * cache_key;
     dict_t * kaz_tree;

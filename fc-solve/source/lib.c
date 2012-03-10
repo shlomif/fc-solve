@@ -2157,7 +2157,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 }
 
 
-int DLLEXPORT extern freecell_solver_user_set_pruning(
+extern int DLLEXPORT freecell_solver_user_set_pruning(
     void * api_instance,
     const char * pruning,
     char * * error_string

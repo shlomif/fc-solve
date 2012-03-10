@@ -138,7 +138,7 @@ typedef struct {
     long num_unique_FCCs_for_depth;
 } fcs_dbm_solver_instance_t;
 
-static void GCC_INLINE instance_init(
+static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * instance,
     long max_processed_positions_count,
     long positions_milestone_step,
@@ -153,7 +153,7 @@ static void GCC_INLINE instance_init(
     instance->out_fh = out_fh;
 }
 
-static void GCC_INLINE instance_destroy(
+static GCC_INLINE void instance_destroy(
     fcs_dbm_solver_instance_t * instance
     )
 {
