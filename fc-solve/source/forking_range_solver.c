@@ -246,7 +246,7 @@ typedef struct
     int num_finished_boards;
 } response_t;
 
-int worker_func(int idx, worker_t w, void * instance)
+static int worker_func(int idx, worker_t w, void * instance)
 {
     /* I'm one of the slaves */
     request_t request;

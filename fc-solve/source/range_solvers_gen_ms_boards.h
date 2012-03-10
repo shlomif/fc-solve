@@ -76,6 +76,18 @@ static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
 }
 
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
+/* This is to settle gcc's -Wmissing-prototypes which complains about missing 
+ * prototypes for "extern" subroutines.
+ *
+ * It is not critical that it would be in the same place because the only thing
+ * that uses this function is Python's ctypes (in the test files under t/t/ )
+ * which does not process the 
+ * included C code. In the future, we may have an external API in which case
+ * we'll devise a header for this routine.
+ * 
+ * */
+void DLLEXPORT fc_solve_get_board(long gamenumber, char * ret);
+
 extern void DLLEXPORT fc_solve_get_board(long gamenumber, char * ret)
 #else
 static GCC_INLINE void get_board(long gamenumber, char * ret)

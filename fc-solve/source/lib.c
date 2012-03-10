@@ -38,6 +38,7 @@
 #include "preset.h"
 #include "fcs_user.h"
 #include "move_funcs_order.h"
+#include "fcs_user_internal.h"
 
 #include "unused.h"
 #include "bool.h"
@@ -1778,7 +1779,7 @@ static void iter_handler_wrapper(
     return;
 }
 
-void set_debug_iter_output_func_to_val(
+static void set_debug_iter_output_func_to_val(
     fcs_user_t * user,
     fcs_instance_debug_iter_output_func_t value
 )

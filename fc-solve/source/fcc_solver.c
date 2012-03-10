@@ -297,7 +297,7 @@ static GCC_INLINE void instance_print_processed_FCCs(
     );
 }
 
-int instance_run_solver(
+static int instance_run_solver(
     fcs_dbm_solver_instance_t * instance,
     long max_num_elements_in_cache,
     fcs_state_keyval_pair_t * init_state,
@@ -683,7 +683,7 @@ typedef struct {
 
 #define USER_STATE_SIZE 2000
 
-const char * move_to_string(unsigned char move, char * move_buffer)
+static const char * move_to_string(unsigned char move, char * move_buffer)
 {
     int iter, inspect;
     char * s;

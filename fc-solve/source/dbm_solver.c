@@ -400,7 +400,7 @@ typedef struct {
     fcs_dbm_solver_thread_t * thread;
 } thread_arg_t;
 
-void * instance_run_solver_thread(void * void_arg)
+static void * instance_run_solver_thread(void * void_arg)
 {
     thread_arg_t * arg;
     fcs_bool_t queue_solution_was_found;
@@ -550,7 +550,7 @@ typedef struct {
 
 #define USER_STATE_SIZE 2000
 
-const char * move_to_string(unsigned char move, char * move_buffer)
+static const char * move_to_string(unsigned char move, char * move_buffer)
 {
     int iter, inspect;
     char * s;
