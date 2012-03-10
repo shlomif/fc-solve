@@ -798,6 +798,9 @@ games as well).
 solutions on average than +blue-yonder+.
 |+the-last-mohican+            |a preset for solving Simple Simon. Yields
             less false negatives than the default one, but might be slower. 
+|+three-eighty+                |a meta-moves preset (that depends on Freecell
+Solver 3.4.0 and above) that yields solutions faster on average than
++enlightened-ostrich+.
 |+toons-for-twenty-somethings+ |an atomic-moves preset that solves
             more boards efficiently than "fools-gold".
 |+yellow-brick-road+           |a meta-moves preset

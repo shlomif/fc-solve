@@ -14,7 +14,7 @@ if test "$mode" = "total" ; then
     make -r -f Makefile.gnu clean && \
     bash scripts/pgo.bash "$compiler" "gen" &&\
     rm -f *.gcda && \
-    sudo_renice ./freecell-solver-range-parallel-solve 1 32000 4000 -l eo && \
+    sudo_renice ./freecell-solver-range-parallel-solve 1 32000 4000 -l te && \
     make -r -f Makefile.gnu clean && \
     bash scripts/pgo.bash "$compiler" "use"
     exit 0

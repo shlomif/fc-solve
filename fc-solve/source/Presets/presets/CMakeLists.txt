@@ -17,6 +17,7 @@ INSTALL(
         "sentient-pearls.sh"
         "tea-for-two.sh"
         "the-iglu-cabal.sh"
+        "three-eighty.sh"
         "toons-for-twenty-somethings.sh"
         "yellow-brick-road.sh"
     DESTINATION
