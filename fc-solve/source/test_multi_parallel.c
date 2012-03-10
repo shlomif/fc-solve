@@ -408,7 +408,7 @@ int main(int argc, char * argv[])
         freecell_solver_user_cmd_line_parse_args(
             user.instance,
             argc,
-            (freecell_solver_str_t *)argv,
+            (freecell_solver_str_t *)(void *)argv,
             arg,
             known_parameters,
             cmd_line_callback,
@@ -463,12 +463,12 @@ int main(int argc, char * argv[])
         }
         else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
         {
-            const char * error_string;
+            const char * flares_error_string;
 
-            error_string =
+            flares_error_string =
                 freecell_solver_user_get_last_error_string(user.instance);
 
-            printf("Flares Plan: %s\n", error_string);
+            printf("Flares Plan: %s\n", flares_error_string);
 
             break;
         }

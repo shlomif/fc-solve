@@ -1803,16 +1803,16 @@ int fc_solve_befs_or_bfs_do_solve(
         TRACE0("Pruning");
         if (SHOULD_STATE_BE_PRUNED(enable_pruning, PTR_STATE))
         {
-            fcs_collectible_state_t * derived;
+            fcs_collectible_state_t * after_pruning_state;
 
             if (fc_solve_sfs_raymond_prune(
                     soft_thread,
                     STATE_TO_PASS(),
-                    &derived
+                    &after_pruning_state
                 ) == PRUNE_RET_FOLLOW_STATE
             )
             {
-                ASSIGN_ptr_state(derived);
+                ASSIGN_ptr_state(after_pruning_state);
             }
         }
 

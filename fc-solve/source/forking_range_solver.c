@@ -421,7 +421,7 @@ int main(int argc, char * argv[])
         freecell_solver_user_cmd_line_parse_args(
             user.instance,
             argc,
-            (freecell_solver_str_t *)argv,
+            (freecell_solver_str_t *)(void *)argv,
             arg,
             known_parameters,
             cmd_line_callback,

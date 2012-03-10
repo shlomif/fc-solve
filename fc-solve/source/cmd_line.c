@@ -57,9 +57,9 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
 
     {
         register int idx = 0;
-        presetrc_pathes[idx++] = (const char * *)&env_var_presetrc;
-        presetrc_pathes[idx++] = (const char * *)&home_dir_presetrc;
-        presetrc_pathes[idx++] = (const char * *)&global_presetrc;
+        presetrc_pathes[idx++] = (const char * *)(void *)&env_var_presetrc;
+        presetrc_pathes[idx++] = (const char * *)(void *)&home_dir_presetrc;
+        presetrc_pathes[idx++] = (const char * *)(void *)&global_presetrc;
         presetrc_pathes[idx++] = &user_preset_dir;
         presetrc_pathes[idx++] = NULL;
     }
@@ -1722,7 +1722,7 @@ break;
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         args_man->argc - num_file_args_to_skip,
-                        (freecell_solver_str_t *)(args_man->argv + num_file_args_to_skip),
+                        (freecell_solver_str_t *)(void *)(args_man->argv + num_file_args_to_skip),
                         0,
                         known_parameters,
                         callback,
@@ -1774,7 +1774,7 @@ break;
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         preset_args->argc,
-                        (freecell_solver_str_t *)preset_args->argv,
+                        (freecell_solver_str_t *)(void *)(preset_args->argv),
                         0,
                         known_parameters,
                         callback,

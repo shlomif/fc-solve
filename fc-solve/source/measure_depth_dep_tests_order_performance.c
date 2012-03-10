@@ -232,7 +232,7 @@ int main(int argc, char * argv[])
             freecell_solver_user_cmd_line_parse_args(
                 user.instance,
                 end_args,
-                (freecell_solver_str_t *)argv,
+                (freecell_solver_str_t *)(void *)argv,
                 start_from_arg,
                 known_parameters,
                 NULL,

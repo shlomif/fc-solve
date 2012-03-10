@@ -1707,7 +1707,7 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
 
 int DLLEXPORT freecell_solver_user_set_a_star_weight(
     void * api_instance,
-    int index,
+    int my_index,
     double weight
     )
 {
@@ -1716,7 +1716,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
     user = (fcs_user_t *)api_instance;
 
 #define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
-    if ((index < 0) || (index >= (sizeof(user->my_befs_weights)/sizeof(user->my_befs_weights[0]))))
+    if ((my_index < 0) || (my_index >= (sizeof(user->my_befs_weights)/sizeof(user->my_befs_weights[0]))))
     {
         return 1;
     }
@@ -1725,7 +1725,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
         return 2;
     }
 
-    user->my_befs_weights[index] = weight;
+    user->my_befs_weights[my_index] = weight;
 
     return 0;
 
@@ -1735,7 +1735,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
     void * api_instance,
-    int index
+    int my_index
     )
 {
     fcs_user_t * user;
@@ -1744,7 +1744,7 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 
 #define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
 
-    return user->my_befs_weights[index];
+    return user->my_befs_weights[my_index];
 }
 
 #endif

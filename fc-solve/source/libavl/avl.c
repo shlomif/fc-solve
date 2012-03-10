@@ -239,6 +239,7 @@ avl_delete (struct avl_table *tree, const void *item)
 
   struct avl_node *p;   /* Traverses tree to find node to delete. */
   int cmp;              /* Result of comparison between |item| and |p|. */
+  void * ret;
 
   assert (tree != NULL && item != NULL);
 
@@ -256,7 +257,7 @@ avl_delete (struct avl_table *tree, const void *item)
       if (p == NULL)
         return NULL;
     }
-  item = p->avl_data;
+  ret = p->avl_data;
 
   if (p->avl_link[1] == NULL)
     pa[k - 1]->avl_link[da[k - 1]] = p->avl_link[0];
@@ -399,7 +400,7 @@ avl_delete (struct avl_table *tree, const void *item)
 
   tree->avl_count--;
   tree->avl_generation++;
-  return (void *) item;
+  return ret;
 }
 
 /* Refreshes the stack of parent pointers in |trav|

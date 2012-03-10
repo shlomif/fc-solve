@@ -89,7 +89,7 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
     dict_key_t existing;
 
     record_t to_check;
-    to_check.key = *(fcs_encoded_state_buffer_t *)key;
+    to_check.key = *(const fcs_encoded_state_buffer_t *)key;
 
     existing = fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &to_check);
 

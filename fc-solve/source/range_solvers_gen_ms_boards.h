@@ -40,10 +40,10 @@ extern "C" {
 
 typedef long microsoft_rand_t;
 
-static GCC_INLINE int microsoft_rand_rand(microsoft_rand_t * rand)
+static GCC_INLINE int microsoft_rand_rand(microsoft_rand_t * my_rand)
 {
-    *rand= ((*rand) * 214013 + 2531011);
-    return ((*rand) >> 16) & 0x7fff;
+    *my_rand= ((*my_rand) * 214013 + 2531011);
+    return ((*my_rand) >> 16) & 0x7fff;
 }
 
 typedef int CARD;

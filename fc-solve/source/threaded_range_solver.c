@@ -263,7 +263,7 @@ static void * worker_thread(void * void_context)
         freecell_solver_user_cmd_line_parse_args(
             user.instance,
             context->argc,
-            (const char * *)argv,
+            (const char * *)(void *)argv,
             arg,
             known_parameters,
             cmd_line_callback,
@@ -326,12 +326,12 @@ static void * worker_thread(void * void_context)
             }
             else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
             {
-                const char * error_string;
+                const char * flares_error_string;
 
-                error_string =
+                flares_error_string =
                     freecell_solver_user_get_last_error_string(user.instance);
 
-                fprintf(stderr, "Flares Plan: %s\n", error_string);
+                fprintf(stderr, "Flares Plan: %s\n", flares_error_string);
 
                 goto theme_error;
             }

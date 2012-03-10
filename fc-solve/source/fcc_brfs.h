@@ -77,7 +77,7 @@ static int fc_solve_compare_encoded_states(
     const void * void_a, const void * void_b, void * context
 )
 {
-#define GET_PARAM(p) ((fcs_encoded_state_buffer_t *)p)
+#define GET_PARAM(p) ((const fcs_encoded_state_buffer_t *)p)
     return memcmp(GET_PARAM(void_a), GET_PARAM(void_b), sizeof(*(GET_PARAM(void_a))));
 #undef GET_PARAM
 }
