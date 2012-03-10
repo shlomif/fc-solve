@@ -208,11 +208,15 @@ sub _get_lines_of_scan_defs
 
 sub _scan_def_line_mapping
 {
-    my $self = shift;
+    my ($self, $lines_aref) = @_;
 
-    return $self->_map_all_but_last(sub { 
-            "$_[0] " . ($self->_is_flares() ? "-nf" : "-nst") 
-        }, shift
+    return $self->_map_all_but_last(
+        sub
+        {
+            my ($line) = @_;
+            return $line . ' ' . ($self->_is_flares() ? "-nf" : "-nst");
+        },
+        $lines_aref,
     );
 }
 
