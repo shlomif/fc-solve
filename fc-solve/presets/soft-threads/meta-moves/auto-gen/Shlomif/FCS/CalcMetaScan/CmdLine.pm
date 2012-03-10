@@ -17,6 +17,7 @@ use Carp;
 
 __PACKAGE__->mk_acc_ref(
     [qw(
+    _add_horne_prune
     _arbitrator
     _chosen_scans
     _input_obj
@@ -50,6 +51,7 @@ sub _init
     my $optimize_for = "speed";
     my $offset_quotas = 0;
     my $simulate_to = undef;
+    my $_add_horne_prune = 0;
 
     GetOptions(
         "o|output=s" => \$output_filename,
@@ -62,6 +64,7 @@ sub _init
         "offset-quotas" => \$offset_quotas,
         "opt-for=s" => \$optimize_for,
         "simulate-to=s" => \$simulate_to,
+        "sprtf" => \$_add_horne_prune,
     ) or exit(1);
 
     $self->_start_board($_start_board);
@@ -75,6 +78,7 @@ sub _init
     $self->_offset_quotas($offset_quotas);
     $self->_simulate_to($simulate_to);
     $self->_is_flares(0);
+    $self->_add_horne_prune($_add_horne_prune);
 
     $self->_input_obj(
         MyInput->new(
@@ -214,9 +218,24 @@ sub _scan_def_line_mapping
         sub
         {
             my ($line) = @_;
+
             return $line . ' ' . ($self->_is_flares() ? "-nf" : "-nst");
         },
-        $lines_aref,
+        [
+            map
+            { 
+                my $line = $_;
+                # Add the -sp r:tf flag to each scan if specified - it enhances
+                # performance, but timing the scans with it makes the total
+                # scan sub-optimal.
+                if ($self->_add_horne_prune())
+                {
+                    $line =~ s/( --st-name)/ -sp r:tf$1/;
+                }
+                $line;
+            }
+            @$lines_aref
+        ],
     );
 }
 
