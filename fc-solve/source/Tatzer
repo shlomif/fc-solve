@@ -91,6 +91,8 @@ my %themes =
 foreach my $rec (
     {id => "p4", a => "pentium4"},
     {id => "x64", a => "barcelona"},
+    {id => "c2", a => "core2",},
+    {id => "ci7", a => "corei7-avx",}
 )
 {
     my $id = $rec->{id};
