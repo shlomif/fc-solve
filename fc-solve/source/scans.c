@@ -209,6 +209,8 @@ static void verify_soft_dfs_stack(
 
 static void free_states(fc_solve_instance_t * instance)
 {
+    HT_LOOP_DECLARE_VARS();
+
 #ifdef DEBUG
     printf("%s\n", "FREE_STATES HIT");
 #endif
@@ -219,7 +221,6 @@ static void free_states(fc_solve_instance_t * instance)
      * traverse to the freed states that are currently dead end.
      * */
 
-    HT_LOOP_DECLARE_VARS();
 
     HT_LOOP_START()
     {

@@ -471,7 +471,7 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-h")) || (!strcmp(argv[arg], "--help")))
     {
-        char * help_key;
+        const char * help_key;
 
         help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");
         if (help_key == NULL)

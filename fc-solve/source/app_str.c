@@ -36,7 +36,7 @@
 
 void fc_solve_append_string_sprintf(
     fc_solve_append_string_t * app_str,
-    char * format,
+    const char * format,
     ...
     )
 {

@@ -387,9 +387,28 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DDEBUG=1")
 
     # LIST(APPEND COMPILER_FLAGS_TO_CHECK "-std=c99" "-Wall" "-W" "-Wformat-nonliteral" "-Wcast-align" "-Wpointer-arith" "-Wbad-function-cast" "-Wmissing-prototypes" "-Wstrict-prototypes" "-Wmissing-declarations" "-Winline" "-Wundef" "-Wnested-externs" "-Wcast-qual" "-Wshadow" "-Wwrite-strings" "-Wunused" "-Wfloat-equal" "-pedantic" "-Wbad-function-cast"  "-Wmissing-declarations" "-Wmissing-prototypes"  "-Wnested-externs"  "-Wold-style-definition" "-Wstrict-prototypes" "-Wdeclaration-after-statement")
-    # LIST(APPEND COMPILER_FLAGS_TO_CHECK "-Wall" "-W" "-Wformat-nonliteral" "-Wcast-align" "-Wpointer-arith" "-Wbad-function-cast" "-Wmissing-prototypes" "-Wstrict-prototypes" "-Wmissing-declarations" "-Winline" "-Wundef" "-Wnested-externs" "-Wcast-qual" "-Wshadow" "-Wwrite-strings" "-Wunused" "-Wfloat-equal" "-Wbad-function-cast"  "-Wmissing-declarations" "-Wmissing-prototypes"  "-Wnested-externs"  "-Wold-style-definition" "-Wstrict-prototypes" "-Wdeclaration-after-statement")
+    # LIST(APPEND COMPILER_FLAGS_TO_CHECK "-Wall" "-W" "-Wformat-nonliteral" "-Wcast-align" "-Wpointer-arith" "-Wbad-function-cast" "-Wmissing-prototypes" "-Wstrict-prototypes" "-Wmissing-declarations" "-Winline" "-Wundef" "-Wnested-externs" "-Wcast-qual" "-Wshadow" "-Wwrite-strings" "-Wunused" "-Wfloat-equal")
     IF (${CMAKE_COMPILER_IS_GNUCC})
-        ADD_DEFINITIONS("-Wold-style-declaration" "-Wmissing-prototypes" "-Wformat-nonliteral" "-Wcast-align" "-Wpointer-arith" "-Wbad-function-cast" "-Wmissing-prototypes" "-Wstrict-prototypes" "-Wmissing-declarations" "-Winline" "-Wundef" "-Wnested-externs" "-Wcast-qual" "-Wshadow")
+        ADD_DEFINITIONS(
+"-Wold-style-declaration"
+"-Wmissing-prototypes"
+"-Wformat-nonliteral"
+"-Wcast-align"
+"-Wpointer-arith"
+"-Wbad-function-cast"
+"-Wstrict-prototypes"
+"-Wmissing-declarations"
+"-Winline"
+"-Wundef"
+"-Wnested-externs"
+"-Wcast-qual"
+"-Wshadow"
+"-Wwrite-strings"
+"-Wunused"
+"-Wfloat-equal"
+"-Wold-style-definition"
+"-Wdeclaration-after-statement"
+)
     ENDIF (${CMAKE_COMPILER_IS_GNUCC})
 ENDIF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
 

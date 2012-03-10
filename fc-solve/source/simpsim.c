@@ -1758,7 +1758,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 {
-    tests_declare_accessors();
+    tests_declare_accessors()
 
     /*
      * stack - the source stack index

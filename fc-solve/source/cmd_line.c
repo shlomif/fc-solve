@@ -45,7 +45,8 @@
 static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_man, char * * opened_files_dir_to_assign, const char * user_preset_dir)
 {
     int ret_code = 1;
-    char * home_dir_presetrc = NULL, * global_presetrc = NULL, * env_var_presetrc = NULL;
+    char * home_dir_presetrc = NULL, * env_var_presetrc = NULL;
+    const char * global_presetrc = NULL;
     const char * path;
     const char * * presetrc_pathes[5];
     int path_idx;
@@ -59,7 +60,7 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
         register int idx = 0;
         presetrc_pathes[idx++] = (const char * *)(void *)&env_var_presetrc;
         presetrc_pathes[idx++] = (const char * *)(void *)&home_dir_presetrc;
-        presetrc_pathes[idx++] = (const char * *)(void *)&global_presetrc;
+        presetrc_pathes[idx++] = (const char * *)&global_presetrc;
         presetrc_pathes[idx++] = &user_preset_dir;
         presetrc_pathes[idx++] = NULL;
     }
