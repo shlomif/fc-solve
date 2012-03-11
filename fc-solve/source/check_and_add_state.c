@@ -421,7 +421,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 #endif
         ))
         {
-            *existing_state_raw = FCS_STATE_collectible_to_kv(existing_void);
+            FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
             return FALSE;
         }
         else

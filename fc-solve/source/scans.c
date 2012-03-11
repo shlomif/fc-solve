@@ -2256,13 +2256,8 @@ int fc_solve_sfs_check_state_begin(
                 &(hard_thread->allocator)
             );
     }
-#ifdef FCS_RCS_STATES
-    out_new_state_out->val = raw_ptr_new_state;
-#else
-    out_new_state_out->key = &(raw_ptr_new_state->s);
-    out_new_state_out->val = &(raw_ptr_new_state->info);
-#endif
 
+    FCS_STATE_collectible_to_kv(out_new_state_out, raw_ptr_new_state);
     fcs_duplicate_kv_state( 
         out_new_state_out, 
         raw_ptr_state_raw
