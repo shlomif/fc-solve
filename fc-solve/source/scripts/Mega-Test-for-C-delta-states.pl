@@ -28,8 +28,13 @@ sub test_freecell_deal
 {
     my ($deal_idx) = @_;
 
+    # We cannot use the "-s" and "-i" flags here any longer, because the state
+    # canonization (which is now compulsory after the locations functionality
+    # was removed) re-orders the positions of the stacks in the boards in the 
+    # run-time display, which causes the encoding and decoding to not operate
+    # properly.
     open my $dump_fh, 
-    "./board_gen/pi-make-microsoft-freecell-board -t $deal_idx | ./fc-solve --freecells-num 2 -p -t -s -i -sam -l eo -mi $MAX_ITERS -ni -l fools-gold |"
+    "./board_gen/pi-make-microsoft-freecell-board -t $deal_idx | ./fc-solve --freecells-num 2 -p -t -sam -l eo -mi $MAX_ITERS -ni -l fools-gold |"
         or die "Cannot open $deal_idx for reading - $!";
 
     my $line_idx = 0;
@@ -57,6 +62,12 @@ sub test_freecell_deal
     };
 
     my $init_state_str = $read_state->();
+
+    # Solution is empty - we cannot continue
+    if (!defined($init_state_str))
+    {
+        return;
+    }
 
     my %encoded_counts;
 
