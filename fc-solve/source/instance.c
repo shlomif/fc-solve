@@ -895,6 +895,14 @@ static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b,
 
 #endif
 
+#define STATE_STORAGE_TREE_COMPARE() fc_solve_rcs_states_compare
+#define STATE_STORAGE_TREE_CONTEXT() instance
+
+#else
+
+#define STATE_STORAGE_TREE_COMPARE() fc_solve_state_compare_with_context
+#define STATE_STORAGE_TREE_CONTEXT() NULL
+
 #endif
 
 /*
@@ -961,25 +969,16 @@ void fc_solve_start_instance_process_with_board(
             );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
 
-#ifdef FCS_RCS_STATES
     instance->tree = fcs_libavl2_states_tree_create(
-            fc_solve_rcs_states_compare,
-            instance,
+            STATE_STORAGE_TREE_COMPARE(),
+            STATE_STORAGE_TREE_CONTEXT(),
             NULL
             );
-#else
-    instance->tree = fcs_libavl2_states_tree_create(fc_solve_state_compare_with_context, NULL, NULL);
-#endif
-
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
 
-#ifdef FCS_RCS_STATES
     instance->tree = fc_solve_kaz_tree_create(
-            fc_solve_rcs_states_compare, instance
+            STATE_STORAGE_TREE_COMPARE(), STATE_STORAGE_TREE_CONTEXT()
             );
-#else
-    instance->tree = fc_solve_kaz_tree_create(fc_solve_state_compare_with_context, NULL);
-#endif
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     instance->tree = g_tree_new(fc_solve_state_compare);
