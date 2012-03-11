@@ -538,8 +538,16 @@ fcs_bool_t fc_solve_check_and_add_state(
     instance->tree_new_state = new_state->val;
 #endif
 
-    if ((existing_state_val = (fcs_state_extra_info_t *)
-        fc_solve_kaz_tree_alloc_insert(instance->tree, new_state_val))
+    {
+        void * existing_void;
+    if ((existing_void = 
+        fc_solve_kaz_tree_alloc_insert(instance->tree, 
+#ifdef FCS_RCS_STATES
+                                       new_state_val
+#else
+                                       FCS_STATE_kv_to_collectible(new_state)
+#endif
+                                       ))
             == NULL
        )
     {
@@ -548,7 +556,9 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
     else
     {
+        FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
         return FALSE;
+    }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
 #ifdef FCS_RCS_STATES
