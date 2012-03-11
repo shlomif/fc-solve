@@ -1484,9 +1484,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     return (int)(ret*INT_MAX);
 }
 #undef pass
-#ifndef FCS_RCS_STATES
-#undef ptr_state_raw
-#endif
 #undef ptr_state_key
 
 #ifdef FCS_FREECELL_ONLY
