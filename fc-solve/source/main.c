@@ -405,6 +405,7 @@ static int cmd_line_callback(
     void * context
     )
 {
+    /* TODO: Put argv[arg] in a variable. */
     fc_solve_display_information_context_t * dc;
     *num_to_skip = 0;
 
@@ -502,6 +503,10 @@ static int cmd_line_callback(
     {
         dc->display_parent_iter_num = TRUE;
     }
+    else if ((!strcmp(argv[arg], "-sel")) || (!strcmp(argv[arg], "--show-exceeded-limits")))
+    {
+        dc->show_exceeded_limits = TRUE;
+    }
     else if ((!strcmp(argv[arg], "--reset")))
     {
         init_debug_context(dc);
@@ -589,6 +594,7 @@ static freecell_solver_str_t known_parameters[] = {
     "-snx", "--standard-notation-extended",
     "-sam", "--display-states-and-moves",
     "-pi", "--display-parent-iter",
+    "-sel", "--show-exceeded-limits",
     "-o", "--output",
     "--reset",
     "--version",

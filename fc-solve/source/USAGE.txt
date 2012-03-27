@@ -253,6 +253,19 @@ Will put the solution to the file in 2405.board in the file
 $ fc-solve --output 2405.solution.txt 2405.board
 ----------------------
 
+-sel , --show-exceeded-limits
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This option will display a different status message ("Iterations count
+exceeded.") instead of "I could not solve this game." in case the iterations
+count was exceeded. This is recommended because the "I could not solve this
+game." message can also mean that the entire game graph was fully traversed
+(within the limitations of the specified moves' types) and so no solution
+is possible.
+
+This option is not the default, to retain compatibility with previous versions
+of Freecell Solver and was added in version 3.12.0 of fc-solve.
+
 Game Variants Options
 ---------------------
 

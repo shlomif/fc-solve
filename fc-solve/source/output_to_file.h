@@ -57,6 +57,7 @@ struct fc_solve_display_information_context_struct
     fcs_bool_t debug_iter_output_on;
     fcs_bool_t display_moves;
     fcs_bool_t display_states;
+    fcs_bool_t show_exceeded_limits;
     int standard_notation;
     const char * output_filename;
 };
@@ -76,6 +77,7 @@ static void init_debug_context(
     dc->display_states = TRUE;
     dc->standard_notation = STANDARD_NOTATION_NO;
     dc->output_filename = NULL;
+    dc->show_exceeded_limits = FALSE;
 
     return;
 }
@@ -191,6 +193,10 @@ static GCC_INLINE void fc_solve_output_result_to_file(
         }
 
         fprintf(output_fh, "This game is solveable.\n");
+    }
+    else if (debug_context.show_exceeded_limits && (ret == FCS_STATE_SUSPEND_PROCESS))
+    {
+        fprintf(output_fh, "Iterations count exceeded.\n");
     }
     else
     {
