@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -69,6 +69,22 @@ sub trap_board
             Total\ number\ of\ states\ checked\ is\ 10\.\n
         /msx,
         "Checking that --show-exceeded-limits is working properly.",
+    );
+}
+
+{
+    my $fc_solve_output = trap_board({ deal => 1941, theme => ['-sel', '--max-iters', '10'], });
+
+    my $output_text = join('', @{$fc_solve_output->{out_lines}});
+
+    # TEST
+    like(
+        $output_text,
+        qr/
+            ^Iterations\ count\ exceeded\.\n
+            Total\ number\ of\ states\ checked\ is\ 10\.\n
+        /msx,
+        "Checking that '-sel' (shortened option) is working properly.",
     );
 }
 
