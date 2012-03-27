@@ -1,0 +1,26 @@
+Motivation:
+-----------
+
+This document will describe how we are planning to add support for delta
+states (current "delta_states.c" in the Freecell Solver distribution) to
+the main libfreecell-solver library, and how it will be implemented.
+
+---------------
+
+Encoded states will be stored instead of the currently decoded states in:
+
+1. The states collection (the hash or tree used to store all traversed or
+encountered states) - handled by check_and_add_state.c
+
+2. In the Random-DFS stack, the Breadth-First-Search queue, and the 
+Best-First-Search priority queue.
+
+The data type of a possibly encoded state will be fcs_stored_state_t which
+will be an encoded state for FCS_DELTA_STATES and an unencoded state if
+FCS_DELTA_STATES is off.
+
+We will define two macros/inline-functions:
+
+fcs_state_stored_to_expanded
+fcs_state_expanded_to_stored
+
