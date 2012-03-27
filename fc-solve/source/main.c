@@ -405,13 +405,17 @@ static int cmd_line_callback(
     void * context
     )
 {
-    /* TODO: Put argv[arg] in a variable. */
+    /* TODO: extract a macro IS_ARG("string") for (!strcmp(arg_str, "string"))
+     * */
     fc_solve_display_information_context_t * dc;
+    const char * arg_str;
+
     *num_to_skip = 0;
 
     dc = (fc_solve_display_information_context_t * )context;
+    arg_str = argv[arg];
 
-    if (!strcmp(argv[arg], "--version"))
+    if (!strcmp(arg_str, "--version"))
     {
         printf(
             "fc-solve\nlibfreecell-solver version %s\n",
@@ -420,7 +424,7 @@ static int cmd_line_callback(
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
-    else if ((!strcmp(argv[arg], "-h")) || (!strcmp(argv[arg], "--help")))
+    else if ((!strcmp(arg_str, "-h")) || (!strcmp(arg_str, "--help")))
     {
         const char * help_key;
 
@@ -433,13 +437,13 @@ static int cmd_line_callback(
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
-    else if (!strncmp(argv[arg], "--help-", 7))
+    else if (!strncmp(arg_str, "--help-", 7))
     {
-        print_help_string(argv[arg]+7);
+        print_help_string(arg_str+7);
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
-    else if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
+    else if ((!strcmp(arg_str, "-i")) || (!strcmp(arg_str, "--iter-output")))
     {
 #define set_iter_handler() \
         freecell_solver_user_set_iter_handler(   \
@@ -451,21 +455,21 @@ static int cmd_line_callback(
 
         set_iter_handler();
     }
-    else if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
+    else if ((!strcmp(arg_str, "-s")) || (!strcmp(arg_str, "--state-output")))
     {
         set_iter_handler();
         dc->debug_iter_state_output = TRUE;
 #undef set_iter_handler
     }
-    else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
+    else if ((!strcmp(arg_str, "-p")) || (!strcmp(arg_str, "--parseable-output")))
     {
         dc->parseable_output = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-c")) || (!strcmp(argv[arg], "--canonized-order-output")))
+    else if ((!strcmp(arg_str, "-c")) || (!strcmp(arg_str, "--canonized-order-output")))
     {
         dc->canonized_order_output = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-o")) || (!strcmp(argv[arg], "--output")))
+    else if ((!strcmp(arg_str, "-o")) || (!strcmp(arg_str, "--output")))
     {
         arg++;
         if (arg == argc)
@@ -476,38 +480,38 @@ static int cmd_line_callback(
         dc->output_filename = (const char *)argv[arg];
         return FCS_CMD_LINE_SKIP;
     }
-    else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
+    else if ((!strcmp(arg_str, "-t")) || (!strcmp(arg_str, "--display-10-as-t")))
     {
         dc->display_10_as_t = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-m")) || (!strcmp(argv[arg], "--display-moves")))
+    else if ((!strcmp(arg_str, "-m")) || (!strcmp(arg_str, "--display-moves")))
     {
         dc->display_moves = TRUE;
         dc->display_states = FALSE;
     }
-    else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
+    else if ((!strcmp(arg_str, "-sn")) || (!strcmp(arg_str, "--standard-notation")))
     {
         dc->standard_notation = STANDARD_NOTATION_REGULAR;
 
     }
-    else if ((!strcmp(argv[arg], "-snx")) || (!strcmp(argv[arg], "--standard-notation-extended")))
+    else if ((!strcmp(arg_str, "-snx")) || (!strcmp(arg_str, "--standard-notation-extended")))
     {
         dc->standard_notation = STANDARD_NOTATION_EXTENDED;
     }
-    else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
+    else if ((!strcmp(arg_str, "-sam")) || (!strcmp(arg_str, "--display-states-and-moves")))
     {
         dc->display_moves = TRUE;
         dc->display_states = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-pi")) || (!strcmp(argv[arg], "--display-parent-iter")))
+    else if ((!strcmp(arg_str, "-pi")) || (!strcmp(arg_str, "--display-parent-iter")))
     {
         dc->display_parent_iter_num = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-sel")) || (!strcmp(argv[arg], "--show-exceeded-limits")))
+    else if ((!strcmp(arg_str, "-sel")) || (!strcmp(arg_str, "--show-exceeded-limits")))
     {
         dc->show_exceeded_limits = TRUE;
     }
-    else if ((!strcmp(argv[arg], "--reset")))
+    else if ((!strcmp(arg_str, "--reset")))
     {
         init_debug_context(dc);
         freecell_solver_user_set_iter_handler(
@@ -520,7 +524,7 @@ static int cmd_line_callback(
     }
     else
     {
-        printf("Unimplemented option - \"%s\"!", argv[arg]);
+        printf("Unimplemented option - \"%s\"!", arg_str);
         exit(-1);
     }
     *num_to_skip = 1;
