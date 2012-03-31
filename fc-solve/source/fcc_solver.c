@@ -402,6 +402,7 @@ static int instance_run_solver(
             fcs_bool_t is_fcc_new;
             fcs_encoded_state_buffer_t min_by_sorting;
             long num_new_positions;
+            add_start_point_context_t add_start_point_context;
 
             fcc_stage->queue = ((fcc = fcc_stage->queue)->next);
 
@@ -413,13 +414,17 @@ static int instance_run_solver(
             instance_time_printf (instance, "Before perform_FCC_brfs\n");
 #endif
 
+            add_start_point_context.do_next_fcc_start_points_exist = do_next_fcc_start_points_exist;
+            add_start_point_context.next_start_points_list = &next_start_points_list;
+            add_start_point_context.moves_list_allocator = moves_list_allocator;
+
             /* Now scan the new fcc */
             perform_FCC_brfs(
                 init_state,
                 fcc->min_by_absolute_depth,
                 &(fcc->moves_seq_to_min_by_absolute_depth),
-                &next_start_points_list,
-                do_next_fcc_start_points_exist,
+                fc_solve_add_start_point_in_mem,
+                &add_start_point_context,
                 &is_fcc_new,
                 &min_by_sorting,
                 fcc_stage->does_min_by_sorting_exist,

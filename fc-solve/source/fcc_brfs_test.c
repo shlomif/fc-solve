@@ -99,6 +99,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     int states_count = 0;
     fcs_FCC_start_point_t * iter;
     fcs_FCC_start_point_result_t * ret;
+    add_start_point_context_t add_start_point_context;
 
     fcs_compact_allocator_t moves_list_compact_alloc;
 
@@ -165,12 +166,17 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
             }
         }
     }
+
+    add_start_point_context.do_next_fcc_start_points_exist = do_next_fcc_start_points_exist;
+    add_start_point_context.next_start_points_list = &start_points_list;
+    add_start_point_context.moves_list_allocator = &moves_list_allocator;
+
     perform_FCC_brfs(
         &(init_state),
         enc_state,
         &start_state_moves_seq,
-        &(start_points_list),
-        do_next_fcc_start_points_exist,
+        fc_solve_add_start_point_in_mem,
+        &add_start_point_context,
         &is_min_by_sorting_new,
         &min_by_sorting,
         does_min_by_sorting_exist,
@@ -269,7 +275,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     fcs_encoded_state_buffer_t min_by_sorting;
     long num_new_positions_temp;
     fcs_fcc_moves_seq_t init_moves_seq;
-
+    add_start_point_context_t add_start_point_context;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -377,12 +383,15 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     init_moves_seq.moves_list = NULL;
     init_moves_seq.count = 0;
 
+    add_start_point_context.do_next_fcc_start_points_exist = do_next_fcc_start_points_exist;
+    add_start_point_context.next_start_points_list = &start_points_list;
+    add_start_point_context.moves_list_allocator = &moves_list_allocator;
     perform_FCC_brfs(
         &(init_state),
         start_enc_state,
         &init_moves_seq,
-        &(start_points_list),
-        do_next_fcc_start_points_exist,
+        fc_solve_add_start_point_in_mem,
+        &add_start_point_context,
         out_is_fcc_new,
         &min_by_sorting,
         does_min_by_sorting_exist,
