@@ -7,6 +7,13 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
+* Investigate why 
++./dbm_fc_solver <(pi-make-microsoft-freecell-board -t 12064)+
+finished after +Reached 3000000 ; States-in-collection: 3018329+ now
+and not after +Reached 11600000 ; States-in-collection: 11617536+ in
+r4339 when http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1097
+was reported.
+
 * FCC-Solver: also output the final iterations count, right before
 the main function exits.
 
