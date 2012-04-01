@@ -223,7 +223,7 @@ typedef struct {
     /* The queue */
     
     fcs_lock_t queue_lock;
-    long count_num_processed;
+    long count_num_processed, count_of_items_in_queue;
     fcs_bool_t queue_solution_was_found;
     fcs_encoded_state_buffer_t queue_solution;
     fcs_meta_compact_allocator_t meta_alloc;
@@ -254,6 +254,7 @@ static GCC_INLINE void instance_init(
     instance->queue_num_extracted_and_processed = 0;
     instance->num_states_in_collection = 0;
     instance->count_num_processed = 0;
+    instance->count_of_items_in_queue = 0;
     instance->queue_head =
         instance->queue_tail =
         instance->queue_recycle_bin =
@@ -359,6 +360,7 @@ static GCC_INLINE void instance_check_key(
         {
             instance->queue_head = instance->queue_tail = new_item;
         }
+        instance->count_of_items_in_queue++;
         FCS_UNLOCK(instance->queue_lock);
     }
 }
@@ -447,6 +449,7 @@ static void * instance_run_solver_thread(void * void_arg)
                 {
                     instance->queue_tail = NULL;
                 }
+                instance->count_of_items_in_queue--;
                 instance->queue_num_extracted_and_processed++;
                 if (++instance->count_num_processed % 100000 == 0)
                 {
@@ -741,6 +744,7 @@ int main(int argc, char * argv[])
 #endif
         instance.num_states_in_collection++;
         instance.queue_head = instance.queue_tail = first_item;
+        instance.count_of_items_in_queue++;
     }
     {
         int i, check;
