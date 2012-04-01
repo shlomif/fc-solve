@@ -415,6 +415,9 @@ static void * instance_run_solver_thread(void * void_arg)
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
+#ifdef DEBUG_OUT
+    fcs_state_locs_struct_t locs;
+#endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     arg = (thread_arg_t *)void_arg;
@@ -429,6 +432,9 @@ static void * instance_run_solver_thread(void * void_arg)
     derived_list_recycle_bin = NULL;
     derived_list = NULL;
 
+#ifdef DEBUG_OUT
+    fc_solve_init_locs(&locs);
+#endif
     while (1)
     {
         /* First of all extract an item. */
@@ -491,6 +497,27 @@ static void * instance_run_solver_thread(void * void_arg)
             &state,
             indirect_stacks_buffer
         );
+
+        /* A section for debugging. */
+#ifdef DEBUG_OUT
+        {
+            char * state_str;
+            state_str = fc_solve_state_as_string(
+                &(state.s),
+                &(state.info),
+                &locs,
+                2,
+                8,
+                1,
+                1,
+                0,
+                1
+            );
+
+            printf("<<<\n%s>>>\n", state_str);
+            free(state_str);
+        }
+#endif
 
         if (instance_solver_thread_calc_derived_states(
             &state,
