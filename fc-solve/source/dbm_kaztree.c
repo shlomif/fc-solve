@@ -5,17 +5,7 @@
 #include "dbm_solver.h"
 #include "generic_tree.h"
 
-/*
- * TODO : We waste too much space and fragment it storing the
- * key/parent_move separatley from the dnode_t. We should use a struct
- * for that instead of a pointer.
- * */
-typedef struct
-{
-    fcs_encoded_state_buffer_t key;
-    fcs_encoded_state_buffer_t parent_and_move;
-} record_t;
-
+#include "dbm_kaztree_compare.h"
 
 typedef struct
 {
@@ -23,16 +13,6 @@ typedef struct
     fcs_meta_compact_allocator_t meta_alloc;
     fcs_compact_allocator_t allocator;
 } dbm_t;
-
-/* TODO: make sure the key is '\0'-padded. */
-static int compare_records(
-    const void * void_a, const void * void_b, void * context
-)
-{
-#define GET_PARAM(p) (&(((const record_t *)(p))->key))
-    return memcmp(GET_PARAM(void_a), GET_PARAM(void_b), sizeof(GET_PARAM(void_a)));
-#undef GET_PARAM
-}
 
 void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 {
