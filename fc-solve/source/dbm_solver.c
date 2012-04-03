@@ -33,6 +33,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <assert.h>
+#include <limits.h>
 
 /* 
  * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
@@ -224,6 +225,7 @@ typedef struct {
     
     fcs_lock_t queue_lock;
     long count_num_processed, count_of_items_in_queue;
+    long max_count_of_items_in_queue;
     fcs_bool_t queue_solution_was_found;
     fcs_encoded_state_buffer_t queue_solution;
     fcs_meta_compact_allocator_t meta_alloc;
@@ -238,7 +240,8 @@ static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * instance,
     long pre_cache_max_count,
     long caches_delta,
-    const char * dbm_store_path
+    const char * dbm_store_path,
+    long max_count_of_items_in_queue
 )
 {
     FCS_INIT_LOCK(instance->queue_lock);
@@ -255,6 +258,7 @@ static GCC_INLINE void instance_init(
     instance->num_states_in_collection = 0;
     instance->count_num_processed = 0;
     instance->count_of_items_in_queue = 0;
+    instance->max_count_of_items_in_queue = max_count_of_items_in_queue;
     instance->queue_head =
         instance->queue_tail =
         instance->queue_recycle_bin =
@@ -623,6 +627,7 @@ int main(int argc, char * argv[])
     fcs_dbm_solver_instance_t instance;
     long pre_cache_max_count;
     long caches_delta;
+    long max_count_of_items_in_queue = LONG_MAX;
     const char * dbm_store_path;
     int num_threads;
     int arg;
@@ -695,6 +700,16 @@ int main(int argc, char * argv[])
             }
             dbm_store_path = argv[arg];
         }
+        else if (!strcmp(argv[arg], "--max-count-of-items-in-queue"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--max-count-of-items-in-queue came without an argument.\n");
+                exit(-1);
+            }
+            max_count_of_items_in_queue = atol(argv[arg]);
+        }
         else
         {
             break;
@@ -714,7 +729,8 @@ int main(int argc, char * argv[])
 
     filename = argv[arg];
 
-    instance_init(&instance, pre_cache_max_count, caches_delta, dbm_store_path);
+    instance_init(&instance, pre_cache_max_count, caches_delta, 
+                  dbm_store_path, max_count_of_items_in_queue);
     fh = fopen(filename, "r");
     if (fh == NULL)
     {
