@@ -227,6 +227,7 @@ typedef struct {
     long count_num_processed, count_of_items_in_queue;
     long max_count_of_items_in_queue;
     fcs_bool_t queue_solution_was_found;
+    fcs_bool_t queue_should_terminate;
     fcs_encoded_state_buffer_t queue_solution;
     fcs_meta_compact_allocator_t meta_alloc;
     fcs_compact_allocator_t queue_allocator;
@@ -254,6 +255,7 @@ static GCC_INLINE void instance_init(
         &(instance->queue_allocator), &(instance->meta_alloc)
     );
     instance->queue_solution_was_found = FALSE;
+    instance->queue_should_terminate = FALSE;
     instance->queue_num_extracted_and_processed = 0;
     instance->num_states_in_collection = 0;
     instance->count_num_processed = 0;
@@ -409,7 +411,7 @@ typedef struct {
 static void * instance_run_solver_thread(void * void_arg)
 {
     thread_arg_t * arg;
-    fcs_bool_t queue_solution_was_found;
+    fcs_bool_t queue_should_terminate;
     fcs_dbm_solver_thread_t * thread;
     fcs_dbm_solver_instance_t * instance;
     fcs_dbm_queue_item_t * item, * prev_item;
@@ -451,9 +453,16 @@ static void * instance_run_solver_thread(void * void_arg)
             instance->queue_recycle_bin = prev_item;
         }
 
-        if (! (queue_solution_was_found = instance->queue_solution_was_found))
+        if (! (queue_should_terminate = instance->queue_should_terminate))
         {
-            if ((item = instance->queue_head))
+            if (instance->count_of_items_in_queue >= instance->max_count_of_items_in_queue)
+            {
+                instance->queue_should_terminate = queue_should_terminate = TRUE;
+                /* TODO :
+                 * Implement dumping the queue to the output filehandle.
+                 * */
+            }
+            else if ((item = instance->queue_head))
             {
                 if (!(instance->queue_head = item->next))
                 {
@@ -481,7 +490,7 @@ static void * instance_run_solver_thread(void * void_arg)
         }
         FCS_UNLOCK(instance->queue_lock);
 
-        if (queue_solution_was_found || (! queue_num_extracted_and_processed))
+        if (queue_should_terminate || (! queue_num_extracted_and_processed))
         {
             break;
         }
@@ -533,6 +542,7 @@ static void * instance_run_solver_thread(void * void_arg)
         ))
         {
             FCS_LOCK(instance->queue_lock);
+            instance->queue_should_terminate = TRUE;
             instance->queue_solution_was_found = TRUE;
             memcpy(&(instance->queue_solution), &(item->key),
                    sizeof(instance->queue_solution));
@@ -919,6 +929,10 @@ int main(int argc, char * argv[])
             free(state_as_str);
         }
         free (trace);
+    }
+    else if (instance.queue_should_terminate)
+    {
+        printf ("%s\n", "Intractable.");
     }
     else
     {
