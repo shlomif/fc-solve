@@ -963,12 +963,31 @@ int main(int argc, char * argv[])
                 )
             {
                 int i;
+                int trace_num;
+                fcs_encoded_state_buffer_t * trace;
+
                 for (i=0; i < item->key.s[0] ; i++)
                 {
                     printf("%.2X", (int)item->key.s[1 + i]);
                 }
+
                 printf ("%s", ";");
+
+                calc_trace(&instance, &(item->key), &trace, &trace_num);
+
+                /*
+                 * We stop at 1 because the deepest state does not contain
+                 * a move (as it is the ultimate state).
+                 * */
+#define PENULTIMATE_DEPTH 1
+                for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
+                {
+                    printf("%.2X,", trace[i].s[1+trace[i].s[0]]);
+                }
+                free(trace);
                 printf ("\n");
+
+#undef PENULTIMATE_DEPTH
             }
         }
     }
