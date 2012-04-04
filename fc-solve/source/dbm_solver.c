@@ -632,6 +632,57 @@ static const char * move_to_string(unsigned char move, char * move_buffer)
     return move_buffer;
 }
 
+static void calc_trace(
+    fcs_dbm_solver_instance_t * instance,
+    fcs_encoded_state_buffer_t * ptr_initial_key,
+    fcs_encoded_state_buffer_t * * ptr_trace,
+    int * ptr_trace_num
+    )
+{
+    int trace_num;
+    int trace_max_num;
+    fcs_encoded_state_buffer_t * trace;
+    fcs_encoded_state_buffer_t key;
+
+#define GROW_BY 100
+    trace_num = 0;
+    trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
+    trace[trace_num] = *ptr_initial_key;
+
+    while (trace[trace_num].s[0])
+    {
+        /* Omit the move. */
+        key = trace[trace_num];
+        key.s[key.s[0]+1] = '\0';
+
+        if ((++trace_num) == trace_max_num)
+        {
+            trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
+        }
+#ifndef FCS_DBM_WITHOUT_CACHES
+        if (! pre_cache_lookup_parent_and_move(
+            &(instance->pre_cache),
+            &key,
+            &(trace[trace_num])
+            ))
+        {
+#endif
+            assert(fc_solve_dbm_store_lookup_parent_and_move(
+                instance->store,
+                key.s,
+                trace[trace_num].s
+                ));
+#ifndef FCS_DBM_WITHOUT_CACHES
+        }
+#endif
+    }
+#undef GROW_BY
+    *ptr_trace_num = trace_num;
+    *ptr_trace = trace;
+
+    return;
+}
+
 int main(int argc, char * argv[])
 {
     fcs_dbm_solver_instance_t instance;
@@ -846,8 +897,7 @@ int main(int argc, char * argv[])
     if (instance.queue_solution_was_found)
     {
         fcs_encoded_state_buffer_t * trace;
-        fcs_encoded_state_buffer_t key;
-        int trace_num, trace_max_num;
+        int trace_num;
         int i;
         fcs_state_keyval_pair_t state;
         unsigned char move;
@@ -858,38 +908,8 @@ int main(int argc, char * argv[])
 
         printf ("%s\n", "Success!");
         /* Now trace the solution */
-#define GROW_BY 100
-        trace_num = 0;
-        trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
-        trace[trace_num] = instance.queue_solution;
 
-        while (trace[trace_num].s[0])
-        {
-            /* Omit the move. */
-            key = trace[trace_num];
-            key.s[key.s[0]+1] = '\0';
-
-            if ((++trace_num) == trace_max_num)
-            {
-                trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
-            }
-#ifndef FCS_DBM_WITHOUT_CACHES
-            if (! pre_cache_lookup_parent_and_move(
-                &(instance.pre_cache),
-                &key,
-                &(trace[trace_num])
-                ))
-            {
-#endif
-                assert(fc_solve_dbm_store_lookup_parent_and_move(
-                    instance.store,
-                    key.s,
-                    trace[trace_num].s
-                    ));
-#ifndef FCS_DBM_WITHOUT_CACHES
-            }
-#endif
-        }
+        calc_trace(&instance, &(instance.queue_solution), &trace, &trace_num);
 
         fc_solve_init_locs(&locs);
 
