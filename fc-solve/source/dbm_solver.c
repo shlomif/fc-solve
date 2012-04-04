@@ -293,6 +293,10 @@ static GCC_INLINE void instance_destroy(
 
     fc_solve_dbm_store_destroy(instance->store);
 
+    fc_solve_meta_compact_allocator_finish(
+        &(instance->meta_alloc)
+    );
+
     FCS_DESTROY_LOCK(instance->queue_lock);
     FCS_DESTROY_LOCK(instance->storage_lock);
 }
@@ -997,6 +1001,9 @@ int main(int argc, char * argv[])
     }
     
     instance_destroy(&instance);
+
+    fc_solve_delta_stater_free(delta);
+    delta = NULL;
 
     return 0;
 }
