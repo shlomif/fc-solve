@@ -33,6 +33,9 @@ that are compactly allocated by a +meta_alloc.h+.
 
 * Check for thread-safety of the meta_allocator construct in +dbm_fc_solver.c+.
 
+* Try to convert the core libfreecell-solver code to meta_alloc and see if
+it makes a difference in speed.
+
 Non-pressing
 ------------
 
