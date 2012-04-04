@@ -933,6 +933,24 @@ int main(int argc, char * argv[])
     else if (instance.queue_should_terminate)
     {
         printf ("%s\n", "Intractable.");
+        {
+            fcs_dbm_queue_item_t * item;
+
+            for (
+                item = instance.queue_head ;
+                item ;
+                item = item->next
+                )
+            {
+                int i;
+                for (i=0; i < item->key.s[0] ; i++)
+                {
+                    printf("%.2X", (int)item->key.s[1 + i]);
+                }
+                printf ("%s", ";");
+                printf ("\n");
+            }
+        }
     }
     else
     {
