@@ -23,9 +23,9 @@
  */
 /*
  * dbm_solver.c - a specialised solver that offloads the states' collection
- * to an on-disk DBM database such as Berkeley DB or Google's LevelDB. In the
- * future, may be adapted to be completely in-memory. It makes use of 
- * delta_states.c for a very compact storage.
+ * to an on-disk DBM database such as Berkeley DB or Google's LevelDB. Has
+ * been adapted to be completely in-memory. It makes use of delta_states.c
+ * for a very compact storage.
  *
  */
 #include <stdio.h>
