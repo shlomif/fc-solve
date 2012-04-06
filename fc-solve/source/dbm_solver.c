@@ -254,6 +254,7 @@ typedef struct {
     /* TODO : offload the queue to the hard disk. */
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
     long num_states_in_collection;
+    FILE * out_fh;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(
@@ -262,11 +263,14 @@ static GCC_INLINE void instance_init(
     long caches_delta,
     const char * dbm_store_path,
     long max_count_of_items_in_queue,
-    long iters_delta_limit
+    long iters_delta_limit,
+    FILE * out_fh
 )
 {
     FCS_INIT_LOCK(instance->queue_lock);
     FCS_INIT_LOCK(instance->storage_lock);
+
+    instance->out_fh = out_fh;
 
     fc_solve_meta_compact_allocator_init(
         &(instance->meta_alloc)
@@ -454,6 +458,7 @@ static void * instance_run_solver_thread(void * void_arg)
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
+    FILE * out_fh;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
 #endif
@@ -470,6 +475,7 @@ static void * instance_run_solver_thread(void * void_arg)
     fc_solve_compact_allocator_init(&(derived_list_allocator), &(instance->meta_alloc));
     derived_list_recycle_bin = NULL;
     derived_list = NULL;
+    out_fh = instance->out_fh;
 
 #ifdef DEBUG_OUT
     fc_solve_init_locs(&locs);
@@ -508,13 +514,13 @@ static void * instance_run_solver_thread(void * void_arg)
                     fcs_portable_time_t mytime;
                     FCS_GET_TIME(mytime);
 
-                    printf ("Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n",
+                    fprintf (out_fh, "Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n",
                         instance->count_num_processed,
                         instance->num_states_in_collection,
                         FCS_TIME_GET_SEC(mytime),
                         FCS_TIME_GET_USEC(mytime)
                     );
-                    fflush(stdout);
+                    fflush(out_fh);
                 }
                 if (instance->count_num_processed >=
                     instance->max_count_num_processed)
@@ -567,7 +573,8 @@ static void * instance_run_solver_thread(void * void_arg)
                 1
             );
 
-            printf("<<<\n%s>>>\n", state_str);
+            fprintf(out_fh, "<<<\n%s>>>\n", state_str);
+            fflush(out_fh);
             free(state_str);
         }
 #endif
@@ -733,8 +740,8 @@ int main(int argc, char * argv[])
     const char * dbm_store_path;
     int num_threads;
     int arg;
-    const char * filename;
-    FILE * fh;
+    const char * filename = NULL, * out_filename = NULL;
+    FILE * fh = NULL, * out_fh = NULL;
     char user_state[USER_STATE_SIZE];
     fc_solve_delta_stater_t * delta;
     fcs_state_keyval_pair_t init_state;
@@ -822,6 +829,16 @@ int main(int argc, char * argv[])
             }
             iters_delta_limit = atol(argv[arg]);
         }
+        else if (!strcmp(argv[arg], "-o"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "-o came without an argument.\n");
+                exit(-1);
+            }
+            out_filename = argv[arg];
+        }
         else
         {
             break;
@@ -839,11 +856,26 @@ int main(int argc, char * argv[])
         exit(-1);
     }
 
+    if (out_filename)
+    {
+        out_fh = fopen(out_filename, "wt");
+        if (! out_fh)
+        {
+            fprintf (stderr, "Cannot open '%s' for output.\n",
+                     "out_filename");
+            exit(-1);
+        }
+    }
+    else
+    {
+        out_fh = stdout;
+    }
+
     filename = argv[arg];
 
     instance_init(&instance, pre_cache_max_count, caches_delta, 
                   dbm_store_path, max_count_of_items_in_queue,
-                  iters_delta_limit);
+                  iters_delta_limit, out_fh);
     fh = fopen(filename, "r");
     if (fh == NULL)
     {
@@ -958,7 +990,8 @@ int main(int argc, char * argv[])
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         fcs_state_locs_struct_t locs;
 
-        printf ("%s\n", "Success!");
+        fprintf (out_fh, "%s\n", "Success!");
+        fflush (out_fh);
         /* Now trace the solution */
 
         calc_trace(&instance, &(instance.queue_solution), &trace, &trace_num);
@@ -991,12 +1024,13 @@ int main(int argc, char * argv[])
                         1
                 );
 
-            printf("--------\n%s\n==\n%s\n",
+            fprintf(out_fh, "--------\n%s\n==\n%s\n",
                     state_as_str,
                     (i > 0 )
                         ? move_to_string(move, move_buffer)
                         : "END"
                   );
+            fflush (out_fh);
 
             free(state_as_str);
         }
@@ -1004,7 +1038,8 @@ int main(int argc, char * argv[])
     }
     else if (instance.should_terminate != DONT_TERMINATE)
     {
-        printf ("%s\n", "Intractable.");
+        fprintf (out_fh, "%s\n", "Intractable.");
+        fflush (out_fh);
         if (instance.should_terminate == QUEUE_TERMINATE)
         {
             fcs_dbm_queue_item_t * item;
@@ -1021,10 +1056,11 @@ int main(int argc, char * argv[])
 
                 for (i=0; i < item->key.s[0] ; i++)
                 {
-                    printf("%.2X", (int)item->key.s[1 + i]);
+                    fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
                 }
 
-                printf ("%s", ";");
+                fprintf (out_fh, "%s", ";");
+                fflush(out_fh);
 
                 calc_trace(&instance, &(item->key), &trace, &trace_num);
 
@@ -1035,28 +1071,35 @@ int main(int argc, char * argv[])
 #define PENULTIMATE_DEPTH 1
                 for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
                 {
-                    printf("%.2X,", trace[i].s[1+trace[i].s[0]]);
+                    fprintf(out_fh, "%.2X,", trace[i].s[1+trace[i].s[0]]);
                 }
                 free(trace);
-                printf ("\n");
+                fprintf (out_fh, "\n");
+                fflush(out_fh);
 
 #undef PENULTIMATE_DEPTH
             }
         }
         else if (instance.should_terminate == MAX_ITERS_TERMINATE)
         {
-            printf("Reached Max-or-more iterations of %ld.\n", instance.max_count_num_processed);
+            fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n", instance.max_count_num_processed);
         }
     }
     else
     {
-        printf ("%s\n", "Could not solve successfully.");
+        fprintf (out_fh, "%s\n", "Could not solve successfully.");
     }
     
     instance_destroy(&instance);
 
     fc_solve_delta_stater_free(delta);
     delta = NULL;
+
+    if (out_filename)
+    {
+        fclose(out_fh);
+        out_fh = NULL;
+    }
 
     return 0;
 }
