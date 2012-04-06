@@ -35,6 +35,11 @@
 #include <assert.h>
 #include <limits.h>
 
+/*
+ * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
+ */
+#define FCS_DBM_SINGLE_THREAD 1
+
 /* 
  * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
  * to improve CPU utilisations of the various worker threads and possibly
@@ -198,7 +203,13 @@ static const pthread_mutex_t initial_mutex_constant =
     PTHREAD_MUTEX_INITIALIZER
     ;
 
-#ifdef FCS_DBM_USE_RWLOCK
+#ifdef FCS_DBM_SINGLE_THREAD
+typedef fcs_bool_t fcs_lock_t;
+#define FCS_LOCK(lock) {}
+#define FCS_UNLOCK(lock) {}
+#define FCS_INIT_LOCK(lock) {}
+#define FCS_DESTROY_LOCK(lock) {}
+#elif defined(FCS_DBM_USE_RWLOCK)
 typedef pthread_rwlock_fcfs_t * fcs_lock_t;
 #define FCS_LOCK(lock) pthread_rwlock_fcfs_gain_write(lock)
 #define FCS_UNLOCK(lock) pthread_rwlock_fcfs_release(lock)
