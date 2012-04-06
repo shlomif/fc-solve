@@ -745,8 +745,9 @@ int main(int argc, char * argv[])
     FILE * fh = NULL, * out_fh = NULL, * intermediate_in_fh = NULL;
     char user_state[USER_STATE_SIZE];
     fc_solve_delta_stater_t * delta;
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair_t init_state, running_state;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
+    DECLARE_IND_BUF_T(running_indirect_stacks_buffer)
 
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
@@ -933,29 +934,214 @@ int main(int argc, char * argv[])
         fcs_dbm_queue_item_t * first_item;
         fcs_encoded_state_buffer_t parent_and_move;
 
-        first_item =
-            (fcs_dbm_queue_item_t *)
+        if (intermediate_in_fh)
+        {
+            char * line = NULL;
+            size_t line_size = 0;
+            fcs_bool_t found_line = FALSE;
+            long line_num = 1;
+
+            while (getline(&line, &line_size, intermediate_in_fh) >= 0)
+            {
+                if (strchr(line, ';') != NULL)
+                {
+                    found_line = TRUE;
+                    break;
+                }
+                line_num++;
+            }
+
+            if (found_line)
+            {
+                char * s_ptr;
+                fcs_encoded_state_buffer_t final_stack_encoded_state;
+                int hex_digits;
+                fcs_kv_state_t kv_init, kv_running;
+                fcs_encoded_state_buffer_t running_parent_and_move, running_key;
+
+                fcs_init_encoded_state(&(final_stack_encoded_state));
+
+                s_ptr = line;
+
+                while (*(s_ptr) != ';')
+                {
+                    if (sscanf(s_ptr, "%2X", &hex_digits) != 1)
+                    {
+                        fprintf (
+                            stderr,
+                            "Error in reading state in line %ld of the --intermediate-input",
+                            line_num
+                            );
+                        exit(-1);
+                    }
+                    final_stack_encoded_state.s[
+                        ++final_stack_encoded_state.s[0]
+                        ] = (unsigned char)hex_digits;
+                    s_ptr += 2;
+                }
+
+                /* Skip the ';'. */
+                s_ptr++;
+
+                kv_init.key = &(init_state.s);
+                kv_init.val = &(init_state.info);
+                kv_running.key = &(running_state.s);
+                kv_running.val = &(running_state.info);
+                fcs_duplicate_kv_state(&kv_running, &kv_init);
+
+                /* The NULL parent and move for indicating this is the initial
+                 * state. */
+                fcs_init_and_encode_state(delta, &(running_state), &running_key);
+                fcs_init_encoded_state(&(running_parent_and_move));
+
+#ifndef FCS_DBM_WITHOUT_CACHES
+                pre_cache_insert(&(instance.pre_cache), &(running_key), &running_parent_and_move);
+#else
+                fc_solve_dbm_store_insert_key_value(instance.store, &(running_key), &running_parent_and_move);
+#endif
+                instance.num_states_in_collection++;
+
+                running_parent_and_move = running_key;
+
+                while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
+                {
+                    int src, dest;
+                    fcs_card_t src_card;
+
+                    s_ptr += 3;
+                    /* Apply the move. */
+                    src = (hex_digits & 0xF);
+                    dest = ((hex_digits >> 4) & 0xF);
+
+#define the_state (running_state.s)
+                    /* Extract the card from the source. */
+                    if (src < 8)
+                    {
+                        fcs_cards_column_t src_col;
+                        src_col = fcs_state_get_col(the_state, src);
+                        src_card = fcs_col_get_card(src_col, fcs_col_len(src_col)-1);
+                        fcs_col_pop_top(src_col);
+                    }
+                    else
+                    {
+                        src -= 8;
+                        if (src < 4)
+                        {
+                            src_card = fcs_freecell_card(the_state, src);
+                            fcs_empty_freecell(the_state, src);
+                        }
+                        else
+                        {
+                            fprintf(stderr,
+                                    "Error in reading state in line %ld of the --intermediate-input - source cannot be a foundation.",
+                                    line_num
+                                   );
+                            exit(-1);
+                        }
+                    }
+                    /* Apply src_card to dest. */
+                    if (dest < 8)
+                    {
+                        fcs_cards_column_t dest_col;
+                        dest_col = fcs_state_get_col(the_state, dest);
+
+                        fcs_col_push_card(dest_col, src_card);
+                    }
+                    else
+                    {
+                        dest -= 8;
+                        if (dest < 4)
+                        {
+                            fcs_put_card_in_freecell(the_state, dest, src_card);
+                        }
+                        else
+                        {
+                            dest -= 4;
+                            fcs_increment_foundation(the_state, dest);
+                        }
+                    }
+#undef the_state
+                    horne_prune(&running_state, NULL, NULL);
+
+                    fcs_init_and_encode_state(delta, &(running_state),
+                                              &(running_key));
+
+                    running_parent_and_move.s[
+                        running_parent_and_move.s[0]+1
+                        ] = (unsigned char)hex_digits;
+
+#ifndef FCS_DBM_WITHOUT_CACHES
+                    pre_cache_insert(&(instance.pre_cache), &(running_key), &running_parent_and_move);
+#else
+                    fc_solve_dbm_store_insert_key_value(instance.store, &(running_key), &running_parent_and_move);
+#endif
+                    instance.num_states_in_collection++;
+                    running_parent_and_move = running_key;
+
+                    /* We need to do the round-trip from encoding back
+                     * to decoding, because the order can change after
+                     * the encoding.
+                     * */
+                    fc_solve_delta_stater_decode_into_state(
+                        delta,
+                        running_key.s,
+                        &running_state,
+                        running_indirect_stacks_buffer
+                    );
+                }
+
+                if (memcmp(&running_key, &final_stack_encoded_state,
+                           sizeof(running_key)) != 0)
+                {
+                    fprintf(stderr,
+                            "Error in reading state in line %ld of the --intermediate-input - final state does not match that with all states applied.\n",
+                            line_num
+                           );
+                    exit(-1);
+                }
+                first_item =
+                    (fcs_dbm_queue_item_t *)
+                    fcs_compact_alloc_ptr(
+                        &(instance.queue_allocator),
+                        sizeof(*first_item)
+                        );
+
+                first_item->next = NULL;
+                first_item->key = running_key;
+
+                instance.queue_head = instance.queue_tail = first_item;
+                instance.count_of_items_in_queue++;
+            }
+
+            free(line);
+            line = NULL;
+        }
+        else
+        {
+            first_item =
+                (fcs_dbm_queue_item_t *)
                 fcs_compact_alloc_ptr(
                     &(instance.queue_allocator),
                     sizeof(*first_item)
-                );
+                    );
 
-        first_item->next = NULL;
+            first_item->next = NULL;
 
-        fcs_init_and_encode_state(delta, &(init_state), &(first_item->key));
+            fcs_init_and_encode_state(delta, &(init_state), &(first_item->key));
 
-        /* The NULL parent and move for indicating this is the initial
-         * state. */
-        fcs_init_encoded_state(&(parent_and_move));
+            /* The NULL parent and move for indicating this is the initial
+             * state. */
+            fcs_init_encoded_state(&(parent_and_move));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-        pre_cache_insert(&(instance.pre_cache), &(first_item->key), &parent_and_move);
+            pre_cache_insert(&(instance.pre_cache), &(first_item->key), &parent_and_move);
 #else
-        fc_solve_dbm_store_insert_key_value(instance.store, &(first_item->key), &(parent_and_move));
+            fc_solve_dbm_store_insert_key_value(instance.store, &(first_item->key), &(parent_and_move));
 #endif
-        instance.num_states_in_collection++;
-        instance.queue_head = instance.queue_tail = first_item;
-        instance.count_of_items_in_queue++;
+            instance.num_states_in_collection++;
+            instance.queue_head = instance.queue_tail = first_item;
+            instance.count_of_items_in_queue++;
+        }
     }
     {
         int i, check;
