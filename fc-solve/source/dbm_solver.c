@@ -740,8 +740,9 @@ int main(int argc, char * argv[])
     const char * dbm_store_path;
     int num_threads;
     int arg;
-    const char * filename = NULL, * out_filename = NULL;
-    FILE * fh = NULL, * out_fh = NULL;
+    const char * filename = NULL, * out_filename = NULL, 
+          * intermediate_input_filename = NULL;
+    FILE * fh = NULL, * out_fh = NULL, * intermediate_in_fh = NULL;
     char user_state[USER_STATE_SIZE];
     fc_solve_delta_stater_t * delta;
     fcs_state_keyval_pair_t init_state;
@@ -839,6 +840,16 @@ int main(int argc, char * argv[])
             }
             out_filename = argv[arg];
         }
+        else if (!strcmp(argv[arg], "--intermediate-input"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--intermediate-input came without an argument.\n");
+                exit(-1);
+            }
+            intermediate_input_filename = argv[arg];
+        }
         else
         {
             break;
@@ -905,6 +916,18 @@ int main(int argc, char * argv[])
             , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
     );
+
+    if (intermediate_input_filename)
+    {
+        intermediate_in_fh = fopen(intermediate_input_filename, "rt");
+        if (! intermediate_in_fh)
+        {
+            fprintf (stderr,
+                     "Could not open file '%s' as --intermediate-input-filename.\n",
+                     intermediate_input_filename);
+            exit(-1);
+        }
+    }
 
     {
         fcs_dbm_queue_item_t * first_item;
@@ -1099,6 +1122,12 @@ int main(int argc, char * argv[])
     {
         fclose(out_fh);
         out_fh = NULL;
+    }
+
+    if (intermediate_in_fh)
+    {
+        fclose(intermediate_in_fh);
+        intermediate_in_fh = NULL;
     }
 
     return 0;
