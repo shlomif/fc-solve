@@ -1216,134 +1216,132 @@ int main(int argc, char * argv[])
         }
     }
 
+    if (intermediate_in_fh)
     {
-        if (intermediate_in_fh)
+        char * line = NULL;
+        size_t line_size = 0;
+        fcs_bool_t found_line = FALSE;
+        long line_num = 1;
+
+        while (getline(&line, &line_size, intermediate_in_fh) >= 0)
         {
-            char * line = NULL;
-            size_t line_size = 0;
-            fcs_bool_t found_line = FALSE;
-            long line_num = 1;
-
-            while (getline(&line, &line_size, intermediate_in_fh) >= 0)
+            if (strchr(line, ';') != NULL)
             {
-                if (strchr(line, ';') != NULL)
-                {
-                    found_line = TRUE;
-                    break;
-                }
-                line_num++;
+                found_line = TRUE;
+                break;
             }
-
-            if (found_line)
-            {
-
-                {
-                    fcs_dbm_solver_instance_t limit_instance;
-
-                    instance_init(
-                        &limit_instance, pre_cache_max_count, caches_delta,
-                        dbm_store_path, LONG_MAX,
-                        iters_delta_limit, out_fh
-                    );
-
-                    populate_instance_with_intermediate_input_line(
-                        &limit_instance,
-                        delta,
-                        &init_state,
-                        line,
-                        line_num
-                    );
-
-                    instance_run_all_threads(
-                        &limit_instance, &init_state, num_threads
-                    );
-
-                    if (limit_instance.queue_solution_was_found)
-                    {
-                        trace_solution(&limit_instance, out_fh, delta);
-                    }
-                    else if (limit_instance.should_terminate == MAX_ITERS_TERMINATE)
-                    {
-                        fprintf(
-                            out_fh, 
-                            "Reached Max-or-more iterations of %ld in intermediate-input line No. %ld.\n", 
-                            limit_instance.max_count_num_processed,
-                            line_num
-                        );
-                    }
-                    else if (limit_instance.should_terminate == DONT_TERMINATE)
-                    {
-                        fprintf(
-                            out_fh,
-                            "Pruning due to unsolvability in intermediate-input line No. %ld\n",
-                            line_num
-                        );
-                        skip_queue_output = TRUE;
-                    }
-
-                    instance_destroy(&limit_instance);
-
-                }
-
-                if (!skip_queue_output)
-                {
-                    instance_init(&instance, pre_cache_max_count, caches_delta,
-                                  dbm_store_path, max_count_of_items_in_queue,
-                                  -1, out_fh);
-
-                    populate_instance_with_intermediate_input_line(
-                        &instance,
-                        delta,
-                        &init_state,
-                        line,
-                        line_num
-                    );
-
-                    instance_run_all_threads(
-                        &instance, &init_state, num_threads
-                    );
-
-                }
-            }
-
-            free(line);
-            line = NULL;
+            line_num++;
         }
-        else
+
+        if (found_line)
         {
-            fcs_dbm_queue_item_t * first_item;
-            fcs_encoded_state_buffer_t parent_and_move;
 
-            instance_init(&instance, pre_cache_max_count, caches_delta, 
-                          dbm_store_path, max_count_of_items_in_queue,
-                          iters_delta_limit, out_fh);
+            {
+                fcs_dbm_solver_instance_t limit_instance;
 
-            first_item =
-                (fcs_dbm_queue_item_t *)
-                fcs_compact_alloc_ptr(
-                    &(instance.queue_allocator),
-                    sizeof(*first_item)
+                instance_init(
+                    &limit_instance, pre_cache_max_count, caches_delta,
+                    dbm_store_path, LONG_MAX,
+                    iters_delta_limit, out_fh
+                );
+
+                populate_instance_with_intermediate_input_line(
+                    &limit_instance,
+                    delta,
+                    &init_state,
+                    line,
+                    line_num
+                );
+
+                instance_run_all_threads(
+                    &limit_instance, &init_state, num_threads
+                );
+
+                if (limit_instance.queue_solution_was_found)
+                {
+                    trace_solution(&limit_instance, out_fh, delta);
+                }
+                else if (limit_instance.should_terminate == MAX_ITERS_TERMINATE)
+                {
+                    fprintf(
+                        out_fh, 
+                        "Reached Max-or-more iterations of %ld in intermediate-input line No. %ld.\n", 
+                        limit_instance.max_count_num_processed,
+                        line_num
                     );
+                }
+                else if (limit_instance.should_terminate == DONT_TERMINATE)
+                {
+                    fprintf(
+                        out_fh,
+                        "Pruning due to unsolvability in intermediate-input line No. %ld\n",
+                        line_num
+                    );
+                    skip_queue_output = TRUE;
+                }
 
-            first_item->next = NULL;
+                instance_destroy(&limit_instance);
 
-            fcs_init_and_encode_state(delta, &(init_state), &(first_item->key));
+            }
 
-            /* The NULL parent and move for indicating this is the initial
-             * state. */
-            fcs_init_encoded_state(&(parent_and_move));
+            if (!skip_queue_output)
+            {
+                instance_init(&instance, pre_cache_max_count, caches_delta,
+                              dbm_store_path, max_count_of_items_in_queue,
+                              -1, out_fh);
+
+                populate_instance_with_intermediate_input_line(
+                    &instance,
+                    delta,
+                    &init_state,
+                    line,
+                    line_num
+                );
+
+                instance_run_all_threads(
+                    &instance, &init_state, num_threads
+                );
+
+            }
+        }
+
+        free(line);
+        line = NULL;
+    }
+    else
+    {
+        fcs_dbm_queue_item_t * first_item;
+        fcs_encoded_state_buffer_t parent_and_move;
+
+        instance_init(&instance, pre_cache_max_count, caches_delta, 
+                      dbm_store_path, max_count_of_items_in_queue,
+                      iters_delta_limit, out_fh);
+
+        first_item =
+            (fcs_dbm_queue_item_t *)
+            fcs_compact_alloc_ptr(
+                &(instance.queue_allocator),
+                sizeof(*first_item)
+                );
+
+        first_item->next = NULL;
+
+        fcs_init_and_encode_state(delta, &(init_state), &(first_item->key));
+
+        /* The NULL parent and move for indicating this is the initial
+         * state. */
+        fcs_init_encoded_state(&(parent_and_move));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-            pre_cache_insert(&(instance.pre_cache), &(first_item->key), &parent_and_move);
+        pre_cache_insert(&(instance.pre_cache), &(first_item->key), &parent_and_move);
 #else
-            fc_solve_dbm_store_insert_key_value(instance.store, &(first_item->key), &(parent_and_move));
+        fc_solve_dbm_store_insert_key_value(instance.store, &(first_item->key), &(parent_and_move));
 #endif
-            instance.num_states_in_collection++;
-            instance.queue_head = instance.queue_tail = first_item;
-            instance.count_of_items_in_queue++;
+        instance.num_states_in_collection++;
+        instance.queue_head = instance.queue_tail = first_item;
+        instance.count_of_items_in_queue++;
 
-            instance_run_all_threads(&instance, &init_state, num_threads);
-        }
+        instance_run_all_threads(&instance, &init_state, num_threads);
     }
 
     if (!skip_queue_output)
