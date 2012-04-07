@@ -902,7 +902,58 @@ static void populate_instance_with_intermediate_input_line(
 
     return;
 }
-    
+
+static void instance_run_all_threads(
+    fcs_dbm_solver_instance_t * instance,
+    fcs_state_keyval_pair_t * init_state,
+    int num_threads)
+{
+    int i, check;
+    main_thread_item_t * threads;
+
+    threads = malloc(sizeof(threads[0]) * num_threads);
+
+    for (i=0; i < num_threads ; i++)
+    {
+        threads[i].thread.instance = instance;
+        threads[i].thread.delta_stater =
+            fc_solve_delta_stater_alloc(
+                &(init_state->s),
+                STACKS_NUM,
+                FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+            );
+        threads[i].arg.thread = &(threads[i].thread);
+        check = pthread_create(
+            &(threads[i].id),
+            NULL,
+            instance_run_solver_thread,
+            &(threads[i].arg)
+        );
+
+        if (check)
+        {
+            fprintf(stderr,
+                    "Worker Thread No. %d Initialization failed!\n",
+                    i
+                   );
+            exit(-1);
+        }
+    }
+
+    for (i=0; i < num_threads ; i++)
+    {
+        pthread_join(threads[i].id, NULL);
+        fc_solve_delta_stater_free(threads[i].thread.delta_stater);
+    }
+    free(threads);
+
+    return;
+}
+
+
 int main(int argc, char * argv[])
 {
     fcs_dbm_solver_instance_t instance;
@@ -1164,49 +1215,8 @@ int main(int argc, char * argv[])
             instance.count_of_items_in_queue++;
         }
     }
-    {
-        int i, check;
-        main_thread_item_t * threads;
 
-        threads = malloc(sizeof(threads[0]) * num_threads);
-
-        for (i=0; i < num_threads ; i++)
-        {
-            threads[i].thread.instance = &(instance);
-            threads[i].thread.delta_stater =
-                fc_solve_delta_stater_alloc(
-                    &(init_state.s),
-                    STACKS_NUM,
-                    FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-                    , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
-                );
-            threads[i].arg.thread = &(threads[i].thread);
-            check = pthread_create(
-                &(threads[i].id),
-                NULL,
-                instance_run_solver_thread,
-                &(threads[i].arg)
-            );
-
-            if (check)
-            {
-                fprintf(stderr,
-                        "Worker Thread No. %d Initialization failed!\n",
-                        i
-                       );
-                exit(-1);
-            }
-        }
-
-        for (i=0; i < num_threads ; i++)
-        {
-            pthread_join(threads[i].id, NULL);
-            fc_solve_delta_stater_free(threads[i].thread.delta_stater);
-        }
-        free(threads);
-    }
+    instance_run_all_threads(&instance, &init_state, num_threads);
 
     if (instance.queue_solution_was_found)
     {
