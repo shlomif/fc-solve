@@ -1019,15 +1019,18 @@ static void trace_solution(
     free (trace);
 }
 
-static void handle_and_destroy_instance_solution(
+/* Returns if the process should terminate. */
+static fcs_bool_t handle_and_destroy_instance_solution(
     fcs_dbm_solver_instance_t * instance,
     FILE * out_fh,
     fc_solve_delta_stater_t * delta
 )
 {
+    fcs_bool_t ret = FALSE;
     if (instance->queue_solution_was_found)
     {
         trace_solution(instance, out_fh, delta);
+        ret = TRUE;
     }
     else if (instance->should_terminate != DONT_TERMINATE)
     {
@@ -1084,6 +1087,8 @@ static void handle_and_destroy_instance_solution(
     }
 
     instance_destroy(instance);
+
+    return ret;
 }
 
 int main(int argc, char * argv[])
@@ -1288,6 +1293,7 @@ int main(int argc, char * argv[])
         char * line = NULL;
         size_t line_size = 0;
         long line_num = 0;
+        fcs_bool_t queue_solution_was_found = FALSE;
 
         do 
         {
@@ -1330,6 +1336,8 @@ int main(int argc, char * argv[])
                     if (limit_instance.queue_solution_was_found)
                     {
                         trace_solution(&limit_instance, out_fh, delta);
+                        skip_queue_output = TRUE;
+                        queue_solution_was_found = TRUE;
                     }
                     else if (limit_instance.should_terminate == MAX_ITERS_TERMINATE)
                     {
@@ -1374,14 +1382,17 @@ int main(int argc, char * argv[])
                         &queue_instance, &init_state, num_threads
                         );
 
-                    handle_and_destroy_instance_solution(
+                    if (handle_and_destroy_instance_solution(
                         &queue_instance,
                         out_fh,
                         delta
-                    );
+                    ))
+                    {
+                        queue_solution_was_found = TRUE;
+                    }
                 }
             }
-        } while (found_line);
+        } while (found_line && (!queue_solution_was_found));
 
         free(line);
         line = NULL;
