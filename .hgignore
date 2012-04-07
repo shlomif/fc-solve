@@ -65,6 +65,7 @@ fc-solve/source/libfcs_dbm_calc_derived_test.so
 fc-solve/source/libfcs_delta_states_test.so
 fc-solve/source/libfcs_fcc_brfs_test.so
 fc-solve/source/libfcs_gen_ms_freecell_boards.so
+fc-solve/source/libfreecell-solver.a
 fc-solve/source/libfreecell-solver.pc
 fc-solve/source/libfreecell-solver.so
 fc-solve/source/libfreecell-solver.so.0
