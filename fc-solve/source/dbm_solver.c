@@ -1103,9 +1103,6 @@ int main(int argc, char * argv[])
     }
 
     {
-        fcs_dbm_queue_item_t * first_item;
-        fcs_encoded_state_buffer_t parent_and_move;
-
         if (intermediate_in_fh)
         {
             char * line = NULL;
@@ -1139,6 +1136,9 @@ int main(int argc, char * argv[])
         }
         else
         {
+            fcs_dbm_queue_item_t * first_item;
+            fcs_encoded_state_buffer_t parent_and_move;
+
             first_item =
                 (fcs_dbm_queue_item_t *)
                 fcs_compact_alloc_ptr(
