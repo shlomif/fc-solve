@@ -747,6 +747,9 @@ static void populate_instance_with_intermediate_input_line(
     fcs_dbm_queue_item_t * first_item;
     DECLARE_IND_BUF_T(running_indirect_stacks_buffer)
 
+    fc_solve_state_init(
+        &running_state, STACKS_NUM, running_indirect_stacks_buffer
+    );
     fcs_init_encoded_state(&(final_stack_encoded_state));
 
     s_ptr = line;
@@ -953,6 +956,68 @@ static void instance_run_all_threads(
     return;
 }
 
+static void trace_solution(
+    fcs_dbm_solver_instance_t * instance,
+    FILE * out_fh,
+    fc_solve_delta_stater_t * delta
+)
+{
+    fcs_encoded_state_buffer_t * trace;
+    int trace_num;
+    int i;
+    fcs_state_keyval_pair_t state;
+    unsigned char move;
+    char * state_as_str;
+    char move_buffer[500];
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+        fcs_state_locs_struct_t locs;
+
+    fprintf (out_fh, "%s\n", "Success!");
+    fflush (out_fh);
+    /* Now trace the solution */
+
+    calc_trace(instance, &(instance->queue_solution), &trace, &trace_num);
+
+    fc_solve_init_locs(&locs);
+
+    for (i = trace_num-1 ; i >= 0 ; i--)
+    {
+        fc_solve_delta_stater_decode_into_state(
+            delta,
+            trace[i].s,
+            &state,
+            indirect_stacks_buffer
+            );
+        if (i > 0)
+        {
+            move = trace[i].s[1+trace[i].s[0]];
+        }
+
+        state_as_str =
+            fc_solve_state_as_string(
+                &(state.s),
+                &(state.info),
+                &locs,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM,
+                1,
+                0,
+                1
+                );
+
+        fprintf(out_fh, "--------\n%s\n==\n%s\n",
+                state_as_str,
+                (i > 0 )
+                ? move_to_string(move, move_buffer)
+                : "END"
+               );
+        fflush (out_fh);
+
+        free(state_as_str);
+    }
+    free (trace);
+}
 
 int main(int argc, char * argv[])
 {
@@ -970,6 +1035,7 @@ int main(int argc, char * argv[])
     char user_state[USER_STATE_SIZE];
     fc_solve_delta_stater_t * delta;
     fcs_state_keyval_pair_t init_state;
+    fcs_bool_t skip_queue_output = FALSE;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
 
     pre_cache_max_count = 1000000;
@@ -1108,9 +1174,6 @@ int main(int argc, char * argv[])
 
     filename = argv[arg];
 
-    instance_init(&instance, pre_cache_max_count, caches_delta, 
-                  dbm_store_path, max_count_of_items_in_queue,
-                  iters_delta_limit, out_fh);
     fh = fopen(filename, "r");
     if (fh == NULL)
     {
@@ -1173,13 +1236,74 @@ int main(int argc, char * argv[])
 
             if (found_line)
             {
-                populate_instance_with_intermediate_input_line(
-                    &instance,
-                    delta,
-                    &init_state,
-                    line,
-                    line_num
-                );
+
+                {
+                    fcs_dbm_solver_instance_t limit_instance;
+
+                    instance_init(
+                        &limit_instance, pre_cache_max_count, caches_delta,
+                        dbm_store_path, LONG_MAX,
+                        iters_delta_limit, out_fh
+                    );
+
+                    populate_instance_with_intermediate_input_line(
+                        &limit_instance,
+                        delta,
+                        &init_state,
+                        line,
+                        line_num
+                    );
+
+                    instance_run_all_threads(
+                        &limit_instance, &init_state, num_threads
+                    );
+
+                    if (limit_instance.queue_solution_was_found)
+                    {
+                        trace_solution(&limit_instance, out_fh, delta);
+                    }
+                    else if (limit_instance.should_terminate == MAX_ITERS_TERMINATE)
+                    {
+                        fprintf(
+                            out_fh, 
+                            "Reached Max-or-more iterations of %ld in intermediate-input line No. %ld.\n", 
+                            limit_instance.max_count_num_processed,
+                            line_num
+                        );
+                    }
+                    else if (limit_instance.should_terminate == DONT_TERMINATE)
+                    {
+                        fprintf(
+                            out_fh,
+                            "Pruning due to unsolvability in intermediate-input line No. %ld\n",
+                            line_num
+                        );
+                        skip_queue_output = TRUE;
+                    }
+
+                    instance_destroy(&limit_instance);
+
+                }
+
+                if (!skip_queue_output)
+                {
+                    instance_init(&instance, pre_cache_max_count, caches_delta,
+                                  dbm_store_path, max_count_of_items_in_queue,
+                                  -1, out_fh);
+
+                    populate_instance_with_intermediate_input_line(
+                        &instance,
+                        delta,
+                        &init_state,
+                        line,
+                        line_num
+                    );
+
+                    instance_run_all_threads(
+                        &instance, &init_state, num_threads
+                    );
+
+                }
             }
 
             free(line);
@@ -1189,6 +1313,10 @@ int main(int argc, char * argv[])
         {
             fcs_dbm_queue_item_t * first_item;
             fcs_encoded_state_buffer_t parent_and_move;
+
+            instance_init(&instance, pre_cache_max_count, caches_delta, 
+                          dbm_store_path, max_count_of_items_in_queue,
+                          iters_delta_limit, out_fh);
 
             first_item =
                 (fcs_dbm_queue_item_t *)
@@ -1213,124 +1341,73 @@ int main(int argc, char * argv[])
             instance.num_states_in_collection++;
             instance.queue_head = instance.queue_tail = first_item;
             instance.count_of_items_in_queue++;
+
+            instance_run_all_threads(&instance, &init_state, num_threads);
         }
     }
 
-    instance_run_all_threads(&instance, &init_state, num_threads);
-
-    if (instance.queue_solution_was_found)
+    if (!skip_queue_output)
     {
-        fcs_encoded_state_buffer_t * trace;
-        int trace_num;
-        int i;
-        fcs_state_keyval_pair_t state;
-        unsigned char move;
-        char * state_as_str;
-        char move_buffer[500];
-        DECLARE_IND_BUF_T(indirect_stacks_buffer)
-        fcs_state_locs_struct_t locs;
-
-        fprintf (out_fh, "%s\n", "Success!");
-        fflush (out_fh);
-        /* Now trace the solution */
-
-        calc_trace(&instance, &(instance.queue_solution), &trace, &trace_num);
-
-        fc_solve_init_locs(&locs);
-
-        for (i = trace_num-1 ; i >= 0 ; i--)
+        if (instance.queue_solution_was_found)
         {
-            fc_solve_delta_stater_decode_into_state(
-                delta,
-                trace[i].s,
-                &state,
-                indirect_stacks_buffer
-            );
-            if (i > 0)
-            {
-                move = trace[i].s[1+trace[i].s[0]];
-            }
-
-            state_as_str =
-                fc_solve_state_as_string(
-                        &(state.s),
-                        &(state.info),
-                        &locs,
-                        FREECELLS_NUM,
-                        STACKS_NUM,
-                        DECKS_NUM,
-                        1,
-                        0,
-                        1
-                );
-
-            fprintf(out_fh, "--------\n%s\n==\n%s\n",
-                    state_as_str,
-                    (i > 0 )
-                        ? move_to_string(move, move_buffer)
-                        : "END"
-                  );
+            trace_solution(&instance, out_fh, delta);
+        }
+        else if (instance.should_terminate != DONT_TERMINATE)
+        {
+            fprintf (out_fh, "%s\n", "Intractable.");
             fflush (out_fh);
-
-            free(state_as_str);
-        }
-        free (trace);
-    }
-    else if (instance.should_terminate != DONT_TERMINATE)
-    {
-        fprintf (out_fh, "%s\n", "Intractable.");
-        fflush (out_fh);
-        if (instance.should_terminate == QUEUE_TERMINATE)
-        {
-            fcs_dbm_queue_item_t * item;
-
-            for (
-                item = instance.queue_head ;
-                item ;
-                item = item->next
-                )
+            if (instance.should_terminate == QUEUE_TERMINATE)
             {
-                int i;
-                int trace_num;
-                fcs_encoded_state_buffer_t * trace;
+                fcs_dbm_queue_item_t * item;
 
-                for (i=0; i < item->key.s[0] ; i++)
+                for (
+                    item = instance.queue_head ;
+                    item ;
+                    item = item->next
+                    )
                 {
-                    fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
-                }
+                    int i;
+                    int trace_num;
+                    fcs_encoded_state_buffer_t * trace;
 
-                fprintf (out_fh, "%s", ";");
-                fflush(out_fh);
+                    for (i=0; i < item->key.s[0] ; i++)
+                    {
+                        fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
+                    }
 
-                calc_trace(&instance, &(item->key), &trace, &trace_num);
+                    fprintf (out_fh, "%s", ";");
+                    fflush(out_fh);
 
-                /*
-                 * We stop at 1 because the deepest state does not contain
-                 * a move (as it is the ultimate state).
-                 * */
+                    calc_trace(&instance, &(item->key), &trace, &trace_num);
+
+                    /*
+                     * We stop at 1 because the deepest state does not contain
+                     * a move (as it is the ultimate state).
+                     * */
 #define PENULTIMATE_DEPTH 1
-                for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
-                {
-                    fprintf(out_fh, "%.2X,", trace[i].s[1+trace[i].s[0]]);
-                }
-                free(trace);
-                fprintf (out_fh, "\n");
-                fflush(out_fh);
+                    for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
+                    {
+                        fprintf(out_fh, "%.2X,", trace[i].s[1+trace[i].s[0]]);
+                    }
+                    free(trace);
+                    fprintf (out_fh, "\n");
+                    fflush(out_fh);
 
 #undef PENULTIMATE_DEPTH
+                }
+            }
+            else if (instance.should_terminate == MAX_ITERS_TERMINATE)
+            {
+                fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n", instance.max_count_num_processed);
             }
         }
-        else if (instance.should_terminate == MAX_ITERS_TERMINATE)
+        else
         {
-            fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n", instance.max_count_num_processed);
+            fprintf (out_fh, "%s\n", "Could not solve successfully.");
         }
+        
+        instance_destroy(&instance);
     }
-    else
-    {
-        fprintf (out_fh, "%s\n", "Could not solve successfully.");
-    }
-    
-    instance_destroy(&instance);
 
     fc_solve_delta_stater_free(delta);
     delta = NULL;
