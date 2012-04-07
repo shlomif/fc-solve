@@ -1019,9 +1019,75 @@ static void trace_solution(
     free (trace);
 }
 
+static void handle_and_destroy_instance_solution(
+    fcs_dbm_solver_instance_t * instance,
+    FILE * out_fh,
+    fc_solve_delta_stater_t * delta
+)
+{
+    if (instance->queue_solution_was_found)
+    {
+        trace_solution(instance, out_fh, delta);
+    }
+    else if (instance->should_terminate != DONT_TERMINATE)
+    {
+        fprintf (out_fh, "%s\n", "Intractable.");
+        fflush (out_fh);
+        if (instance->should_terminate == QUEUE_TERMINATE)
+        {
+            fcs_dbm_queue_item_t * item;
+
+            for (
+                item = instance->queue_head ;
+                item ;
+                item = item->next
+                )
+            {
+                int i;
+                int trace_num;
+                fcs_encoded_state_buffer_t * trace;
+
+                for (i=0; i < item->key.s[0] ; i++)
+                {
+                    fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
+                }
+
+                fprintf (out_fh, "%s", ";");
+                fflush(out_fh);
+
+                calc_trace(instance, &(item->key), &trace, &trace_num);
+
+                /*
+                 * We stop at 1 because the deepest state does not contain
+                 * a move (as it is the ultimate state).
+                 * */
+#define PENULTIMATE_DEPTH 1
+                for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
+                {
+                    fprintf(out_fh, "%.2X,", trace[i].s[1+trace[i].s[0]]);
+                }
+                free(trace);
+                fprintf (out_fh, "\n");
+                fflush(out_fh);
+
+#undef PENULTIMATE_DEPTH
+            }
+        }
+        else if (instance->should_terminate == MAX_ITERS_TERMINATE)
+        {
+            fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n", instance->max_count_num_processed);
+        }
+    }
+    else
+    {
+        fprintf (out_fh, "%s\n", "Could not solve successfully.");
+    }
+
+    instance_destroy(instance);
+}
+
 int main(int argc, char * argv[])
 {
-    fcs_dbm_solver_instance_t instance;
     long pre_cache_max_count;
     long caches_delta;
     long max_count_of_items_in_queue = LONG_MAX;
@@ -1218,98 +1284,110 @@ int main(int argc, char * argv[])
 
     if (intermediate_in_fh)
     {
+        fcs_bool_t found_line;
         char * line = NULL;
         size_t line_size = 0;
-        fcs_bool_t found_line = FALSE;
-        long line_num = 1;
+        long line_num = 0;
 
-        while (getline(&line, &line_size, intermediate_in_fh) >= 0)
+        do 
         {
-            if (strchr(line, ';') != NULL)
-            {
-                found_line = TRUE;
-                break;
-            }
             line_num++;
-        }
-
-        if (found_line)
-        {
-
+            found_line = FALSE;
+            while (getline(&line, &line_size, intermediate_in_fh) >= 0)
             {
-                fcs_dbm_solver_instance_t limit_instance;
-
-                instance_init(
-                    &limit_instance, pre_cache_max_count, caches_delta,
-                    dbm_store_path, LONG_MAX,
-                    iters_delta_limit, out_fh
-                );
-
-                populate_instance_with_intermediate_input_line(
-                    &limit_instance,
-                    delta,
-                    &init_state,
-                    line,
-                    line_num
-                );
-
-                instance_run_all_threads(
-                    &limit_instance, &init_state, num_threads
-                );
-
-                if (limit_instance.queue_solution_was_found)
+                if (strchr(line, ';') != NULL)
                 {
-                    trace_solution(&limit_instance, out_fh, delta);
+                    found_line = TRUE;
+                    break;
                 }
-                else if (limit_instance.should_terminate == MAX_ITERS_TERMINATE)
+                line_num++;
+            }
+
+            if (found_line)
+            {
+                skip_queue_output = FALSE;
                 {
-                    fprintf(
-                        out_fh, 
-                        "Reached Max-or-more iterations of %ld in intermediate-input line No. %ld.\n", 
-                        limit_instance.max_count_num_processed,
+                    fcs_dbm_solver_instance_t limit_instance;
+
+                    instance_init(
+                        &limit_instance, pre_cache_max_count, caches_delta,
+                        dbm_store_path, LONG_MAX,
+                        iters_delta_limit, out_fh
+                        );
+
+                    populate_instance_with_intermediate_input_line(
+                        &limit_instance,
+                        delta,
+                        &init_state,
+                        line,
                         line_num
-                    );
+                        );
+
+                    instance_run_all_threads(
+                        &limit_instance, &init_state, num_threads
+                        );
+
+                    if (limit_instance.queue_solution_was_found)
+                    {
+                        trace_solution(&limit_instance, out_fh, delta);
+                    }
+                    else if (limit_instance.should_terminate == MAX_ITERS_TERMINATE)
+                    {
+                        fprintf(
+                            out_fh, 
+                            "Reached Max-or-more iterations of %ld in intermediate-input line No. %ld.\n", 
+                            limit_instance.max_count_num_processed,
+                            line_num
+                            );
+                    }
+                    else if (limit_instance.should_terminate == DONT_TERMINATE)
+                    {
+                        fprintf(
+                            out_fh,
+                            "Pruning due to unsolvability in intermediate-input line No. %ld\n",
+                            line_num
+                            );
+                        skip_queue_output = TRUE;
+                    }
+
+                    instance_destroy(&limit_instance);
+
                 }
-                else if (limit_instance.should_terminate == DONT_TERMINATE)
+
+                if (!skip_queue_output)
                 {
-                    fprintf(
+                    fcs_dbm_solver_instance_t queue_instance;
+                    instance_init(&queue_instance, pre_cache_max_count, caches_delta,
+                                  dbm_store_path, max_count_of_items_in_queue,
+                                  -1, out_fh);
+
+                    populate_instance_with_intermediate_input_line(
+                        &queue_instance,
+                        delta,
+                        &init_state,
+                        line,
+                        line_num
+                        );
+
+                    instance_run_all_threads(
+                        &queue_instance, &init_state, num_threads
+                        );
+
+                    handle_and_destroy_instance_solution(
+                        &queue_instance,
                         out_fh,
-                        "Pruning due to unsolvability in intermediate-input line No. %ld\n",
-                        line_num
+                        delta
                     );
-                    skip_queue_output = TRUE;
                 }
-
-                instance_destroy(&limit_instance);
-
             }
-
-            if (!skip_queue_output)
-            {
-                instance_init(&instance, pre_cache_max_count, caches_delta,
-                              dbm_store_path, max_count_of_items_in_queue,
-                              -1, out_fh);
-
-                populate_instance_with_intermediate_input_line(
-                    &instance,
-                    delta,
-                    &init_state,
-                    line,
-                    line_num
-                );
-
-                instance_run_all_threads(
-                    &instance, &init_state, num_threads
-                );
-
-            }
-        }
+        } while (found_line);
 
         free(line);
         line = NULL;
     }
     else
     {
+        fcs_dbm_solver_instance_t instance;
         fcs_dbm_queue_item_t * first_item;
         fcs_encoded_state_buffer_t parent_and_move;
 
@@ -1342,69 +1420,7 @@ int main(int argc, char * argv[])
         instance.count_of_items_in_queue++;
 
         instance_run_all_threads(&instance, &init_state, num_threads);
-    }
-
-    if (!skip_queue_output)
-    {
-        if (instance.queue_solution_was_found)
-        {
-            trace_solution(&instance, out_fh, delta);
-        }
-        else if (instance.should_terminate != DONT_TERMINATE)
-        {
-            fprintf (out_fh, "%s\n", "Intractable.");
-            fflush (out_fh);
-            if (instance.should_terminate == QUEUE_TERMINATE)
-            {
-                fcs_dbm_queue_item_t * item;
-
-                for (
-                    item = instance.queue_head ;
-                    item ;
-                    item = item->next
-                    )
-                {
-                    int i;
-                    int trace_num;
-                    fcs_encoded_state_buffer_t * trace;
-
-                    for (i=0; i < item->key.s[0] ; i++)
-                    {
-                        fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
-                    }
-
-                    fprintf (out_fh, "%s", ";");
-                    fflush(out_fh);
-
-                    calc_trace(&instance, &(item->key), &trace, &trace_num);
-
-                    /*
-                     * We stop at 1 because the deepest state does not contain
-                     * a move (as it is the ultimate state).
-                     * */
-#define PENULTIMATE_DEPTH 1
-                    for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
-                    {
-                        fprintf(out_fh, "%.2X,", trace[i].s[1+trace[i].s[0]]);
-                    }
-                    free(trace);
-                    fprintf (out_fh, "\n");
-                    fflush(out_fh);
-
-#undef PENULTIMATE_DEPTH
-                }
-            }
-            else if (instance.should_terminate == MAX_ITERS_TERMINATE)
-            {
-                fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n", instance.max_count_num_processed);
-            }
-        }
-        else
-        {
-            fprintf (out_fh, "%s\n", "Could not solve successfully.");
-        }
-        
-        instance_destroy(&instance);
+        handle_and_destroy_instance_solution(&instance, out_fh, delta);
     }
 
     fc_solve_delta_stater_free(delta);
