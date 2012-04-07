@@ -754,7 +754,7 @@ static void populate_instance_with_intermediate_input_line(
 
     s_ptr = line;
 
-    while (*(s_ptr) != ';')
+    while (*(s_ptr) != '|')
     {
         if (sscanf(s_ptr, "%2X", &hex_digits) != 1)
         {
@@ -771,7 +771,7 @@ static void populate_instance_with_intermediate_input_line(
         s_ptr += 2;
     }
 
-    /* Skip the ';'. */
+    /* Skip the '|'. */
     s_ptr++;
 
     kv_init.key = &(init_state_ptr->s);
@@ -1052,7 +1052,7 @@ static void handle_and_destroy_instance_solution(
                     fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
                 }
 
-                fprintf (out_fh, "%s", ";");
+                fprintf (out_fh, "%s", "|");
                 fflush(out_fh);
 
                 calc_trace(instance, &(item->key), &trace, &trace_num);
@@ -1295,7 +1295,7 @@ int main(int argc, char * argv[])
             found_line = FALSE;
             while (getline(&line, &line_size, intermediate_in_fh) >= 0)
             {
-                if (strchr(line, ';') != NULL)
+                if (strchr(line, '|') != NULL)
                 {
                     found_line = TRUE;
                     break;
