@@ -1357,6 +1357,7 @@ int main(int argc, char * argv[])
                 if (!skip_queue_output)
                 {
                     fcs_dbm_solver_instance_t queue_instance;
+
                     instance_init(&queue_instance, pre_cache_max_count, caches_delta,
                                   dbm_store_path, max_count_of_items_in_queue,
                                   -1, out_fh);
