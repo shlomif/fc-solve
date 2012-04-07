@@ -265,7 +265,7 @@ enum STATUS
     FCC_INTERRUPTED
 };
 
-static GCC_INLINE void instance_time_printf(
+static void instance_time_printf(
     fcs_dbm_solver_instance_t * instance,
     const char * format,
     ...
