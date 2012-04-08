@@ -4,7 +4,7 @@
 deal_idx=982
 
 # Some preferences
-delta_limit="1,000,000"
+delta_limit="40,000,000"
 count_items_in_queue="5,000"
 
 board="$deal_idx.board"

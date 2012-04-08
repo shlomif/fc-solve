@@ -509,7 +509,7 @@ static void * instance_run_solver_thread(void * void_arg)
                 }
                 instance->count_of_items_in_queue--;
                 instance->queue_num_extracted_and_processed++;
-                if (++instance->count_num_processed % 100000 == 0)
+                if (++instance->count_num_processed % 2000000 == 0)
                 {
                     fcs_portable_time_t mytime;
                     FCS_GET_TIME(mytime);
@@ -1097,6 +1097,7 @@ int main(int argc, char * argv[])
     long caches_delta;
     long max_count_of_items_in_queue = LONG_MAX;
     long iters_delta_limit = -1;
+    long start_line = 1;
     const char * dbm_store_path;
     int num_threads;
     int arg;
@@ -1181,6 +1182,16 @@ int main(int argc, char * argv[])
             }
             max_count_of_items_in_queue = atol(argv[arg]);
         }
+        else if (!strcmp(argv[arg], "--start-line"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--start-line came without an argument.\n");
+                exit(-1);
+            }
+            start_line = atol(argv[arg]);
+        }
         else if (!strcmp(argv[arg], "--iters-delta-limit"))
         {
             arg++;
@@ -1230,7 +1241,7 @@ int main(int argc, char * argv[])
 
     if (out_filename)
     {
-        out_fh = fopen(out_filename, "wt");
+        out_fh = fopen(out_filename, "at");
         if (! out_fh)
         {
             fprintf (stderr, "Cannot open '%s' for output.\n",
@@ -1311,6 +1322,10 @@ int main(int argc, char * argv[])
 
             if (found_line)
             {
+                if (line_num < start_line)
+                {
+                    continue;
+                }
                 skip_queue_output = FALSE;
                 {
                     fcs_dbm_solver_instance_t limit_instance;
