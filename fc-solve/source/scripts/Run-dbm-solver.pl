@@ -27,6 +27,8 @@ exec(
     # "--dbm-store-path", (Cwd::getcwd() . "/" . "dbm_store.bdb"),
     "--pre-cache-max-count", 1_000_000,
     "--caches-delta", 1_000_000,
-    "--num-threads", 2,
+    # Very important to only have one thread because we nullified the locking
+    # checks (using an #ifdef).
+    "--num-threads", 1,
     $filename
 );
