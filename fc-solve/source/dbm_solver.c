@@ -77,17 +77,17 @@ static int fc_solve_compare_pre_cache_keys(
 #undef GET_PARAM
 }
 
-static void GCC_INLINE pre_cache_init(fcs_pre_cache_t * pre_cache_ptr)
+static GCC_INLINE void pre_cache_init(fcs_pre_cache_t * pre_cache_ptr, fcs_meta_compact_allocator_t * meta_alloc)
 {
     pre_cache_ptr->kaz_tree =
-        fc_solve_kaz_tree_create(fc_solve_compare_pre_cache_keys, NULL);
+        fc_solve_kaz_tree_create(fc_solve_compare_pre_cache_keys, NULL, meta_alloc);
 
-    fc_solve_compact_allocator_init(&(pre_cache_ptr->kv_allocator));
+    fc_solve_compact_allocator_init(&(pre_cache_ptr->kv_allocator), meta_alloc);
     pre_cache_ptr->kv_recycle_bin = NULL;
     pre_cache_ptr->count_elements = 0;
 }
 
-static fcs_bool_t GCC_INLINE pre_cache_does_key_exist(
+static GCC_INLINE fcs_bool_t pre_cache_does_key_exist(
     fcs_pre_cache_t * pre_cache,
     fcs_encoded_state_buffer_t * key
     )
@@ -96,26 +96,26 @@ static fcs_bool_t GCC_INLINE pre_cache_does_key_exist(
 
     to_check.key = *key;
 
-    return (fc_solve_kaz_tree_lookup(pre_cache->kaz_tree, &to_check) != NULL);
+    return (fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check) != NULL);
 }
 
-static fcs_bool_t GCC_INLINE pre_cache_lookup_parent_and_move(
+static GCC_INLINE fcs_bool_t pre_cache_lookup_parent_and_move(
     fcs_pre_cache_t * pre_cache,
     fcs_encoded_state_buffer_t * key,
     fcs_encoded_state_buffer_t * parent_and_move
     )
 {
     fcs_pre_cache_key_val_pair_t to_check;
-    dnode_t * node;
+    dict_key_t found_key;
 
     to_check.key = *key;
 
-    node = fc_solve_kaz_tree_lookup(pre_cache->kaz_tree, &to_check);
+    found_key = fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check);
 
-    if (node)
+    if (found_key)
     {
-        *parent_and_move = 
-            ((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->parent_and_move;
+        *parent_and_move =
+            ((fcs_pre_cache_key_val_pair_t *)(found_key))->parent_and_move;
         return TRUE;
     }
     else
@@ -124,7 +124,7 @@ static fcs_bool_t GCC_INLINE pre_cache_lookup_parent_and_move(
     }
 }
 
-static void GCC_INLINE pre_cache_insert(
+static GCC_INLINE void pre_cache_insert(
     fcs_pre_cache_t * pre_cache,
     fcs_encoded_state_buffer_t * key,
     fcs_encoded_state_buffer_t * parent_and_move
@@ -152,11 +152,33 @@ static void GCC_INLINE pre_cache_insert(
     pre_cache->count_elements++;
 }
 
-static void GCC_INLINE cache_populate_from_pre_cache(
+static GCC_INLINE void cache_populate_from_pre_cache(
     fcs_lru_cache_t * cache,
     fcs_pre_cache_t * pre_cache
 )
 {
+#ifdef FCS_DBM_USE_LIBAVL
+    dict_t * kaz_tree;
+    struct avl_traverser trav;
+    dict_key_t item;
+
+    kaz_tree = pre_cache->kaz_tree;
+    avl_t_init(&trav, kaz_tree);
+
+    for (
+        item = avl_t_first(&trav, kaz_tree)
+            ;
+        item 
+            ;
+        item = avl_t_next(&trav)
+        )
+    {
+        cache_insert(
+            cache, 
+            &(((fcs_pre_cache_key_val_pair_t *)(item))->key)
+        );
+    }
+#else
     dnode_t * node;
     dict_t * kaz_tree;
 
@@ -172,9 +194,10 @@ static void GCC_INLINE cache_populate_from_pre_cache(
             &(((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->key)
         );
     }
+#endif
 }
 
-static void GCC_INLINE pre_cache_offload_and_destroy(
+static GCC_INLINE void pre_cache_offload_and_destroy(
     fcs_pre_cache_t * pre_cache,
     fcs_dbm_store_t store,
     fcs_lru_cache_t * cache
@@ -188,14 +211,15 @@ static void GCC_INLINE pre_cache_offload_and_destroy(
     fc_solve_compact_allocator_finish(&(pre_cache->kv_allocator));
 }
 
-static void GCC_INLINE pre_cache_offload_and_reset(
+static GCC_INLINE void pre_cache_offload_and_reset(
     fcs_pre_cache_t * pre_cache,
     fcs_dbm_store_t store,
-    fcs_lru_cache_t * cache
+    fcs_lru_cache_t * cache,
+    fcs_meta_compact_allocator_t * meta_alloc
 )
 {
     pre_cache_offload_and_destroy(pre_cache, store, cache);
-    pre_cache_init(pre_cache);
+    pre_cache_init(pre_cache, meta_alloc);
 }
 
 #endif /* FCS_DBM_WITHOUT_CACHES */
@@ -300,9 +324,9 @@ static GCC_INLINE void instance_init(
         NULL;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-    pre_cache_init (&(instance->pre_cache));
+    pre_cache_init (&(instance->pre_cache), &(instance->meta_alloc));
     instance->pre_cache_max_count = pre_cache_max_count;
-    cache_init (&(instance->cache), pre_cache_max_count+caches_delta);
+    cache_init (&(instance->cache), pre_cache_max_count+caches_delta, &(instance->meta_alloc));
 #endif
     fc_solve_dbm_store_init(&(instance->store), dbm_store_path);
 }
@@ -429,7 +453,8 @@ static GCC_INLINE void instance_check_multiple_keys(
         pre_cache_offload_and_reset(
             &(instance->pre_cache),
             instance->store,
-            &(instance->cache)
+            &(instance->cache),
+            &(instance->meta_alloc)
         );
     }
 #endif
@@ -509,7 +534,7 @@ static void * instance_run_solver_thread(void * void_arg)
                 }
                 instance->count_of_items_in_queue--;
                 instance->queue_num_extracted_and_processed++;
-                if (++instance->count_num_processed % 2000000 == 0)
+                if (++instance->count_num_processed % 100000 == 0)
                 {
                     fcs_portable_time_t mytime;
                     FCS_GET_TIME(mytime);

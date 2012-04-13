@@ -49,7 +49,7 @@ typedef void * dict_key_t;
 #include "inline.h"
 #include "kaz_tree.h"
 
-static void GCC_INLINE fc_solve_kaz_tree_delete_by_value(
+static GCC_INLINE void fc_solve_kaz_tree_delete_by_value(
     dict_t * kaz_tree,
     dict_key_t value
 )
