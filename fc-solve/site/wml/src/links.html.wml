@@ -69,7 +69,7 @@ to provide links back to the Subversion repository's URLs</a>
 <a href="http://code.google.com/p/fc-solve/">Google Code Project Page</a> - 
 contains instructions for 
 <a href="http://code.google.com/p/fc-solve/source/checkout">checking out the 
-source from its Subversion repository</a>, a currently underused issue tracker,
+source from its Mercurial repository</a>, a currently underused issue tracker,
 and other goodies.
 </p>
 </li>
