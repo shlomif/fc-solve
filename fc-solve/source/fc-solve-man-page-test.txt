@@ -26,7 +26,7 @@ provide a graphical user-interface (GUI) and are primarily meant to be used
 by Solitaire researchers and software developers. If you're looking for a
 suitable GUI based on Freecell Solver, see our links at:
 
-http://fc-solve.berlios.de/links.html#front_ends
+http://fc-solve.shlomifish.org/links.html#front_ends
 
 I hope you'll enjoy using Freecell Solver, and make the best of it.
 

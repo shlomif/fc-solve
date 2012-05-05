@@ -55,4 +55,4 @@ I am aware of several other implementations of Freecell for Windows
 using different Freecell solvers. Links to them can be
 found in the links section of the Freecell Solver homepage:
 
-http://fc-solve.berlios.de/links.html#other_solvers
+http://fc-solve.shlomifish.org/links.html#other_solvers

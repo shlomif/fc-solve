@@ -6,7 +6,7 @@ includedir=${prefix}/include
 Name:  Freecell Solver
 Description: Library for Solving Freecell and Similar Solitaire Games.
 Version: @VERSION@
-URL: http://fc-solve.berlios.de/
+URL: http://fc-solve.shlomifish.org/
 Libs: -L${libdir} -lfreecell-solver
 Libs.private: -lm
 Cflags: -I${includedir}/freecell-solver/
