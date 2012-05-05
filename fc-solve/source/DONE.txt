@@ -201,3 +201,30 @@ Freecells:  QD  KD
 : 
 : KS
 
+* Investigate why 
++./dbm_fc_solver <(pi-make-microsoft-freecell-board -t 12064)+
+finished after +Reached 3000000 ; States-in-collection: 3018329+ now
+and not after +Reached 11600000 ; States-in-collection: 11617536+ in
+r4339 when http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1097
+was reported.
+    - I don't recall the exact specifics, but there were some code breakups
+    and some compilation flags that did not play nice.
+
+* FCC-Solver: also output the final iterations count, right before
+the main function exits.
+
+* Extract a function to do the prepare_state_s + initial_user_state_to_c + 
+encode_state all in one.
+** It is fc_solve_user_INTERNAL_delta_states_enc_and_dec .
+
+* Implement the FCC-based solver (Fully-connected components):
+     - Test the out_num_positions_in_the_fcc.
+     - Add more tests for fcc_brfs.
+
+* Convert the +moves+ field of +fcs_fcc_moves_seq_t+ in +fcc_brfs_test.h+ to
+a linked list of structs of 8 (number configurable) bytes and a next pointer 
+that are compactly allocated by a +meta_alloc.h+.
+
+* Consider converting more linked lists+binary trees combinations in 
++fcc_solver.c+ into only binary trees.
+
