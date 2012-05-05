@@ -812,13 +812,14 @@ IF(ASCIIDOC_FOUND)
         GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
         SET(_in "${_file_we}")
         SET(_html_out "${CMAKE_CURRENT_SOURCE_DIR}/${_file_we}.html")
-        SET(_full_file "${CMAKE_CURRENT_SOURCE_DIR}/${_file}")
+        SET(_full_file "${CMAKE_CURRENT_BINARY_DIR}/${_file}")
         SET(_docbook_out "${CMAKE_CURRENT_SOURCE_DIR}/${_file_we}.xml")
         # MESSAGE(STATUS "_in == <<${_in}>> _html_out == <<${_html_out}>>")
 
         # -a toc
         SET (htmls )
         IF (NOT "${_file}" STREQUAL "fc-solve.txt")
+            SET(_full_file "${CMAKE_CURRENT_SOURCE_DIR}/${_file}")
             ADD_CUSTOM_COMMAND(
                 OUTPUT "${_html_out}"
                 COMMAND ${ASCIIDOC_EXECUTABLE}
