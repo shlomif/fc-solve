@@ -920,14 +920,16 @@ IF (IS_DEBUG)
             SHARED
             app_str.c card.c state.c delta_states.c
         )
-        ADD_LIBRARY(fcs_dbm_calc_derived_test
-            SHARED
-            ${DBM_FCC_COMMON}
-            dbm_calc_derived_test.c
-        )
-        ADD_LIBRARY(fcs_fcc_brfs_test
-            SHARED
-            ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
-        )
+        IF (FCS_ENABLE_DBM_SOLVER)
+            ADD_LIBRARY(fcs_dbm_calc_derived_test
+                SHARED
+                ${DBM_FCC_COMMON}
+                dbm_calc_derived_test.c
+            )
+            ADD_LIBRARY(fcs_fcc_brfs_test
+                SHARED
+                ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
+            )
+        ENDIF (FCS_ENABLE_DBM_SOLVER)
     ENDIF (NOT FCS_ENABLE_RCS_STATES)
 ENDIF (IS_DEBUG)
