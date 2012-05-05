@@ -86,7 +86,7 @@ echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bas
 4. Check out the latest Freecell Solver sources:
 +
 -------------------
-svn co https://fc-solve.googlecode.com/svn/fc-solve/trunk/
+svn co https://code.google.com/p/fc-solve/ trunk
 -------------------
 
 5. +$ cd trunk/fc-solve/source/+
