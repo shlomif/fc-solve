@@ -39,6 +39,15 @@ it makes a difference in speed.
 Non-pressing
 ------------
 
+* Create a more compact queue for +dbm_solver.c+ which has a header of the
+next pointer to the item, some integers for start and finish within
+the queue, as well as a vector/array of items that are extracted. Then the
+segment is recycled as a whole.
+** Possibly offload the queue segments to the hard disk.
+
+* Adapt the new balanced binary tree to store entire encoded_keys instead of
+pointers (to save space).
+
 * Make sure that run_hard_thread runs the soft_thread up to the limit of the 
 instance->num_times or the soft_thread's upper bound instead of entering
 and exiting.
