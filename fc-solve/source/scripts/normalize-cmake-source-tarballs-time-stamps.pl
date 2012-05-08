@@ -80,10 +80,10 @@ while (my $r = $ffo->next_obj())
         next FILES;
     }
 
-    my @components = $r->dir_components();
-    shift(@components);
+    my $components = $r->full_components();
+    shift(@$components);
 
-    my $source_fn = File::Spec->catfile($source_dir_abs, @components);
+    my $source_fn = File::Spec->catfile($source_dir_abs, @$components);
     if (my $st = stat($source_fn) )
     {
         utime ($st->atime(), $st->mtime(), $r->path());
