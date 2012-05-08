@@ -9,6 +9,7 @@ use File::Temp qw( tempdir );
 use List::Util qw( first );
 use File::Spec;
 use File::stat;
+use Cwd qw ( getcwd );
 
 my $version;
 my $package_base;
@@ -61,6 +62,8 @@ my $preferred_tarball = ((first { /\.gz\z/ } @tarballs) || $tarballs[0]);
 
 my $tempdir = tempdir ( DIR => $source_dir, CLEANUP => 1);
 
+my $orig_dir = getcwd();
+
 my $source_dir_abs = File::Spec->rel2abs($source_dir);
 
 chdir($tempdir);
@@ -104,3 +107,5 @@ foreach my $tarball (@tarballs)
         $arc_dir);
 }
 print "Finished!\n";
+
+chdir ($orig_dir);
