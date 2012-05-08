@@ -69,7 +69,7 @@ my $source_dir_abs = File::Spec->rel2abs($source_dir);
 chdir($tempdir);
 
 print "Unpacking the source tarball.\n";
-system("tar", "-xvf", File::Spec->catfile($source_dir_abs, $preferred_tarball));
+system("tar", "-xf", File::Spec->catfile($source_dir_abs, $preferred_tarball));
 
 print "Applying the original timestamps to the files.\n";
 
@@ -103,7 +103,7 @@ if (!defined($arc_dir))
 print "Repackaging.\n";
 foreach my $tarball (@tarballs)
 {
-    system("tar", "-cavf", File::Spec->catfile($source_dir_abs, $tarball),
+    system("tar", "-caf", File::Spec->catfile($source_dir_abs, $tarball),
         $arc_dir);
 }
 print "Finished!\n";
