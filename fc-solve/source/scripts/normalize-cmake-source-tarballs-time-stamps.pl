@@ -8,6 +8,7 @@ use File::Find::Object;
 use File::Temp qw( tempdir );
 use List::Util qw( first );
 use File::Spec;
+use File::stat;
 
 my $version;
 my $package_base;
@@ -49,7 +50,7 @@ sub get_dir_entries
 }
 
 my @tarballs = grep { /\A\Q$package_base\E-\Q$version\E\.tar\.\w+\z/ } 
-    @{get_dir_entries($source_dir_abs)};
+    @{get_dir_entries($source_dir)};
 
 if (! @tarballs)
 {
