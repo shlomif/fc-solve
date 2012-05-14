@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 19;
 
 use File::Spec;
 
@@ -74,7 +74,19 @@ sub run_queue_tests
         is ($queue->get_num_items_in_queue(), 2, "$blurb_base - 2 items in queue (after one extracted.");
 
         # TEST:$c++
-        is ($queue->get_num_extracted(), 1, "$blurb_base - no items extracted.");
+        is ($queue->get_num_extracted(), 1, "$blurb_base - 1 item was extracted.");
+
+        # TEST:$c++
+        is (scalar($queue->extract()), 200, "$blurb_base - Extracted 1 from queue.");
+
+        # TEST:$c++;
+        is ($queue->get_num_inserted(), 3, "$blurb_base - 3 Items were inserted so far.");
+
+        # TEST:$c++;
+        is ($queue->get_num_items_in_queue(), 1, "$blurb_base - 1 items in queue (after two extracted.)");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 2, "$blurb_base - 2 items were extracted.");
 
     }
 }
