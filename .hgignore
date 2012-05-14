@@ -76,6 +76,7 @@ fc-solve/source/man/cmake_install.cmake
 fc-solve/source/man/freecell-solver-range-parallel-solve.6
 fc-solve/source/measure-depth-dep-tests-order-perf
 fc-solve/source/prefix.h
+fc-solve/source/tags
 fc-solve/source/t/CMakeFiles
 fc-solve/source/t/Makefile
 fc-solve/source/t/Presets/presetrc

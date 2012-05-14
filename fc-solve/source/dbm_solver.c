@@ -38,7 +38,9 @@
 /*
  * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
  */
+#if 0
 #define FCS_DBM_SINGLE_THREAD 1
+#endif
 
 /* 
  * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
