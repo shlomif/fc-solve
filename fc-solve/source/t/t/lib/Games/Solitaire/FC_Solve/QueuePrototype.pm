@@ -10,6 +10,7 @@ __PACKAGE__->mk_acc_ref([qw(
         _offload_dir_path
         _num_inserted
         _num_items_in_queue
+        _num_extracted
         _temp_q
         )]);
 
@@ -36,6 +37,8 @@ sub _init
 
     $self->_num_inserted(0);
     $self->_num_items_in_queue(0);
+    $self->_num_extracted(0);
+
     $self->_temp_q([]);
 
     return;
@@ -77,8 +80,16 @@ sub extract
     }
 
     $self->_num_items_in_queue($self->_num_items_in_queue() - 1);
+    $self->_num_extracted($self->_num_extracted() + 1);
 
     return shift(@{$self->_temp_q});
+}
+
+sub get_num_extracted
+{
+    my $self = shift;
+
+    return $self->_num_extracted();
 }
 
 1;
