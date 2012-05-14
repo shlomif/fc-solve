@@ -12,7 +12,9 @@ use File::Path qw(mkpath);
 use lib './t/lib';
 use Games::Solitaire::FC_Solve::QueuePrototype;
 
-my $queue_offload_dir_path = File::Spec->catdir(File::Spec->curdir(), "queue-offload-dir");
+my $queue_offload_dir_path = File::Spec->catdir(
+    File::Spec->curdir(), "queue-offload-dir"
+);
 mkpath($queue_offload_dir_path);
 
 # TEST:$c=0;
