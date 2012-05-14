@@ -110,3 +110,5 @@ fc-solve/source/t/t/card-test-parse.exe
 fc-solve/source/t/t/card-test-render.exe
 fc-solve/source/t/t/dbm-kaztree-compare-records-test.exe
 fc-solve/source/t/t/delta-states-test.exe
+fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-len-proc
+fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-proc
