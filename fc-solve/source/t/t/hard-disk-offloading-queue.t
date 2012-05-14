@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1025;
+use Test::More tests => 1131;
 
 use File::Spec;
 
@@ -137,6 +137,40 @@ sub run_queue_tests
 
         # TEST:$c++
         is ($queue->get_num_extracted(), 1_000, "$blurb_base - 1,000 items were extracted in total.");
+
+        # Now let's add more items after the queue is empty.
+
+        # TEST:$num_items=100;
+        foreach my $item_idx (1 .. 100)
+        {
+            $queue->insert($map_idx_to_item->($item_idx));
+        }
+
+        # TEST:$c++;
+        is ($queue->get_num_inserted(), 1_100, "$blurb_base - 1,100 items were inserted");
+
+        # TEST:$c++;
+        is ($queue->get_num_items_in_queue(), 100, "$blurb_base - 100 items in queue.");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 1_000, "$blurb_base - 1,000 items were extracted in total.");
+
+        foreach my $item_idx (1 .. 100)
+        {
+            # TEST:$c=$c+$num_items;
+            is (scalar( $queue->extract() ), $map_idx_to_item->($item_idx),
+                "$blurb_base - Testing the extraction of item no. $item_idx"
+            );
+        }
+
+        # TEST:$c++;
+        is ($queue->get_num_inserted(), 1_100, "$blurb_base - 1,100 items were inserted");
+
+        # TEST:$c++;
+        is ($queue->get_num_items_in_queue(), 0, "$blurb_base - 100 items in queue.");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 1_100, "$blurb_base - 1,100 items were extracted in total.");
 
     }
 
