@@ -92,4 +92,118 @@ sub get_num_extracted
     return $self->_num_extracted();
 }
 
+package Games::Solitaire::FC_Solve::QueuePrototype::Page;
+
+use strict;
+use warnings;
+
+use Storable qw(nstore retrieve);
+
+use base 'Games::Solitaire::Verify::Base';
+
+__PACKAGE__->mk_acc_ref([qw(
+        _num_items_per_page
+        _page_index
+        _write_to_idx
+        _read_from_idx
+        _data
+        )]);
+
+sub _init
+{
+    my $self = shift;
+    my $args = shift;
+
+    $self->_num_items_per_page($args->{num_items_per_page});
+    $self->_page_index($args->{page_index});
+
+    $self->_write_to_idx(0);
+    $self->_read_from_idx(0);
+
+    $self->_data([(undef) x $self->_num_items_per_page()]);
+
+    return;
+}
+
+sub can_extract
+{
+    my $self = shift;
+
+    return $self->_read_from_idx < $self->_write_to_idx;
+}
+
+sub extract
+{
+    my $self = shift;
+
+    my $read_from_idx = $self->_read_from_idx();
+    $self->_read_from_idx( $read_from_idx + 1);
+
+    return $self->_data->[$read_from_idx];
+}
+
+sub can_insert
+{
+    my $self = shift;
+
+    return ($self->_write_to_idx < $self->_num_items_per_page);
+}
+
+sub insert
+{
+    my ($self, $item) = @_;
+
+    my $write_to_idx = $self->_write_to_idx;
+
+    $self->_data->[$write_to_idx] = $item;
+
+    $self->_write_to_idx($write_to_idx + 1);
+
+    return;
+}
+
+sub get_page_index
+{
+    my $self = shift;
+
+    return $self->_page_index;
+}
+
+sub _calc_filename
+{
+    my ($self, $offload_dir_path) = @_;
+
+    return File::Spec->catfile($offload_dir_path, 
+        sprintf("fcs_queue_%020X.page", $self->get_page_index())
+    );
+}
+
+sub read_from_disk
+{
+    my ($class, $args, $offload_dir_path) = @_;
+
+    my $self = $class->new($args);
+
+    my $page_filename =$self->_calc_filename($offload_dir_path);
+
+    $self->_data( retrieve( $page_filename ));
+
+    unlink($page_filename);
+
+    return $self;
+}
+
+sub offload
+{
+    my $self = shift;
+    my $offload_dir_path = shift;
+
+    my $page_filename = $self->_calc_filename($offload_dir_path);
+
+    nstore($self->_data(), $page_filename);
+
+    return;
+}
+
 1;
+
