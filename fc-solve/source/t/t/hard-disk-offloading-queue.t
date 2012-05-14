@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 12;
 
 use File::Spec;
 
@@ -57,6 +57,17 @@ sub run_queue_tests
         is ($queue->get_num_inserted(), 3, "3 item.");
         # TEST:$c++
         is ($queue->get_num_items_in_queue(), 3, "3 items in queue.");
+
+        # TEST:$c++
+        is (scalar($queue->extract()), 1, "Extracted 1 from queue.");
+
+        # TEST:$c++;
+        is ($queue->get_num_inserted(), 3, "3 Items were inserted so far.");
+
+        # TEST:$c++;
+        is ($queue->get_num_items_in_queue(), 2, "2 items in queue (after one extracted.");
+
+        # TODO : Add get_num_extracted().
     }
 }
 # TEST:$run_queue_tests=$c;
