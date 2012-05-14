@@ -58,14 +58,10 @@ sub insert
 {
     my ($self, $item) = @_;
 
-    if ($self->_write_to_page->can_insert())
+    if (! $self->_write_to_page->can_insert())
     {
-        $self->_write_to_page->insert($item);
-    }
-    else
-    {
-        if ($self->_read_from_page->get_page_index !=
-            $self->_write_to_page->get_page_index)
+        my $write_to_page_idx = $self->_write_to_page->get_page_index;
+        if ($self->_read_from_page->get_page_index != $write_to_page_idx)
         {
             $self->_write_to_page->offload($self->_offload_dir_path);
             # TODO : Recycle this page in the C code.
@@ -77,11 +73,13 @@ sub insert
                 {
                     num_items_per_page => $self->_num_items_per_page(),
                     page_index => 
-                    ($self->_write_to_page->get_page_index + 1),
+                    ($write_to_page_idx + 1),
                 }
             )
         );
     }
+
+    $self->_write_to_page->insert($item);
 
     $self->_num_inserted($self->_num_inserted() + 1);
     $self->_num_items_in_queue($self->_num_items_in_queue() + 1);
@@ -116,10 +114,10 @@ sub extract
 
     if (! $self->_read_from_page->can_extract())
     {
-        my $new_read_page_idx = $self->_read_from_page->page_index + 1;
+        my $new_read_page_idx = $self->_read_from_page->get_page_index + 1;
         # Cannot really happen due to the _num_items_in_queue check.
         # if ($self->_read_from_page->page_index == $self->_write_to_page->page_index)
-        if ($new_read_page_idx == $self->_write_to_page->page_index)
+        if ($new_read_page_idx == $self->_write_to_page->get_page_index)
         {
             # TODO : put the tail page in recycling.
             $self->_read_from_page( $self->_write_to_page() );
@@ -247,6 +245,10 @@ sub read_from_disk
     my $page_filename =$self->_calc_filename($offload_dir_path);
 
     $self->_data( retrieve( $page_filename ));
+    # We need to set this limit because it's a read-only page that we
+    # retrieve from the disk and otherwise ->can_extract() will return
+    # false for most items.
+    $self->_write_to_idx( $self->_num_items_per_page() );
 
     unlink($page_filename);
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 1025;
 
 use File::Spec;
 
@@ -101,6 +101,43 @@ sub run_queue_tests
 
         # TEST:$c++
         is ($queue->get_num_extracted(), 2, "$blurb_base - 2 items were extracted.");
+    }
+
+    {
+        my $queue = Games::Solitaire::FC_Solve::QueuePrototype->new(
+            {
+                num_items_per_page => 10,
+                offload_dir_path => $queue_offload_dir_path,
+            }
+        );
+
+        my $map_idx_to_item = sub { my ($idx) = @_; return $idx * 3 + 1; };
+
+        # TEST:$num_items=1000;
+        foreach my $item_idx (1 .. 1_000)
+        {
+            $queue->insert($map_idx_to_item->($item_idx));
+        }
+
+        foreach my $item_idx (1 .. 1_000)
+        {
+            # TEST:$c=$c+$num_items;
+            is (scalar( $queue->extract() ), $map_idx_to_item->($item_idx),
+                "$blurb_base - Testing the extraction of item no. $item_idx"
+            );
+        }
+
+        # Now let's test the final statistics.
+
+        # TEST:$c++;
+        is ($queue->get_num_inserted(), 1_000, "$blurb_base - 1,000 items were inserted");
+
+        # TEST:$c++;
+        is ($queue->get_num_items_in_queue(), 0, "$blurb_base - 0 items in queue.");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 1_000, "$blurb_base - 1,000 items were extracted in total.");
+
     }
 
     return;
