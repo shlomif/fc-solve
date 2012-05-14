@@ -264,7 +264,7 @@ game." message can also mean that the entire game graph was fully traversed
 is possible.
 
 This option is not the default, to retain compatibility with previous versions
-of Freecell Solver and was added in version 3.12.0 of fc-solve.
+of Freecell Solver, and was added in version 3.12.0 of fc-solve.
 
 Game Variants Options
 ---------------------
