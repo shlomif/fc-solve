@@ -71,6 +71,11 @@ sub extract
 {
     my $self = shift;
 
+    if ($self->_num_items_in_queue() == 0)
+    {
+        return;
+    }
+
     $self->_num_items_in_queue($self->_num_items_in_queue() - 1);
 
     return shift(@{$self->_temp_q});
