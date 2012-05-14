@@ -11,7 +11,8 @@ __PACKAGE__->mk_acc_ref([qw(
         _num_inserted
         _num_items_in_queue
         _num_extracted
-        _temp_q
+        _write_to_page
+        _read_from_page
         )]);
 
 sub _init
@@ -39,7 +40,16 @@ sub _init
     $self->_num_items_in_queue(0);
     $self->_num_extracted(0);
 
-    $self->_temp_q([]);
+    $self->_write_to_page(
+        Games::Solitaire::FC_Solve::QueuePrototype::Page->new(
+            {
+                num_items_per_page => $self->_num_items_per_page(),
+                page_index => 0,
+            }
+        )
+    );
+
+    $self->_read_from_page( $self->_write_to_page() );
 
     return;
 }
@@ -48,7 +58,30 @@ sub insert
 {
     my ($self, $item) = @_;
 
-    push @{$self->_temp_q}, $item;
+    if ($self->_write_to_page->can_insert())
+    {
+        $self->_write_to_page->insert($item);
+    }
+    else
+    {
+        if ($self->_read_from_page->get_page_index !=
+            $self->_write_to_page->get_page_index)
+        {
+            $self->_write_to_page->offload($self->_offload_dir_path);
+            # TODO : Recycle this page in the C code.
+            $self->_write_to_page(undef());
+        }
+
+        $self->_write_to_page(
+            Games::Solitaire::FC_Solve::QueuePrototype::Page->new(
+                {
+                    num_items_per_page => $self->_num_items_per_page(),
+                    page_index => 
+                    ($self->_write_to_page->get_page_index + 1),
+                }
+            )
+        );
+    }
 
     $self->_num_inserted($self->_num_inserted() + 1);
     $self->_num_items_in_queue($self->_num_items_in_queue() + 1);
@@ -79,10 +112,37 @@ sub extract
         return;
     }
 
+    my $return_item;
+
+    if (! $self->_read_from_page->can_extract())
+    {
+        my $new_read_page_idx = $self->_read_from_page->page_index + 1;
+        # Cannot really happen due to the _num_items_in_queue check.
+        # if ($self->_read_from_page->page_index == $self->_write_to_page->page_index)
+        if ($new_read_page_idx == $self->_write_to_page->page_index)
+        {
+            # TODO : put the tail page in recycling.
+            $self->_read_from_page( $self->_write_to_page() );
+        }
+        else
+        {
+            # TODO : put the tail page in recycling.
+            $self->_read_from_page(
+                Games::Solitaire::FC_Solve::QueuePrototype::Page->read_from_disk(
+                    {
+                        num_items_per_page => $self->_num_items_per_page(),
+                        page_index => $new_read_page_idx,
+                    },
+                    $self->_offload_dir_path(),
+                )
+            );
+        }
+    }
+
     $self->_num_items_in_queue($self->_num_items_in_queue() - 1);
     $self->_num_extracted($self->_num_extracted() + 1);
 
-    return shift(@{$self->_temp_q});
+    return $self->_read_from_page->extract();
 }
 
 sub get_num_extracted
