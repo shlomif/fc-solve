@@ -5,7 +5,12 @@ use warnings;
 
 use base 'Games::Solitaire::Verify::Base';
 
-__PACKAGE__->mk_acc_ref([qw(_num_items_per_page _offload_dir_path)]);
+__PACKAGE__->mk_acc_ref([qw(
+        _num_items_per_page
+        _offload_dir_path
+        _num_inserted
+        _num_items_in_queue
+        )]);
 
 sub _init
 {
@@ -28,7 +33,34 @@ sub _init
     }
     $self->_offload_dir_path($offload_dir_path);
 
+    $self->_num_inserted(0);
+    $self->_num_items_in_queue(0);
+
     return;
+}
+
+sub insert
+{
+    my ($self, $item) = @_;
+
+    $self->_num_inserted($self->_num_inserted() + 1);
+    $self->_num_items_in_queue($self->_num_items_in_queue() + 1);
+
+    return;
+}
+
+sub get_num_inserted
+{
+    my $self = shift;
+
+    return $self->_num_inserted;
+}
+
+sub get_num_items_in_queue
+{
+    my $self = shift;
+
+    return $self->_num_items_in_queue();
 }
 
 1;

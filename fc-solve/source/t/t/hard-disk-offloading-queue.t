@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 9;
 
 use File::Spec;
 
@@ -32,7 +32,31 @@ sub run_queue_tests
 
         # TEST:$c++;
         ok ($queue, "$blurb_base - Queue was initialized.");
+
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 0, "No items were inserted yet.");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 0, "No items in queue.");
+
+        $queue->insert(1);
         
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 1, "1 item.");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 1, "1 items in queue.");
+
+        $queue->insert(200);
+        
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 2, "2 item.");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 2, "2 items in queue.");
+
+        $queue->insert(33);
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 3, "3 item.");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 3, "3 items in queue.");
     }
 }
 # TEST:$run_queue_tests=$c;
