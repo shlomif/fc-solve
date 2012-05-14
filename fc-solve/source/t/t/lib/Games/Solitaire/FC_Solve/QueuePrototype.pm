@@ -12,6 +12,7 @@ __PACKAGE__->mk_acc_ref([qw(
         _num_items_in_queue
         _num_extracted
         _write_to_page
+        _backup_write_to_page
         _read_from_page
         )]);
 
@@ -49,6 +50,16 @@ sub _init
         )
     );
 
+    $self->_backup_write_to_page(
+        Games::Solitaire::FC_Solve::QueuePrototype::Page->new(
+            {
+                num_items_per_page => $self->_num_items_per_page(),
+                page_index => 0,
+            }
+        )
+    );
+
+
     $self->_read_from_page( $self->_write_to_page() );
 
     return;
@@ -60,23 +71,20 @@ sub insert
 
     if (! $self->_write_to_page->can_insert())
     {
-        my $write_to_page_idx = $self->_write_to_page->get_page_index;
-        if ($self->_read_from_page->get_page_index != $write_to_page_idx)
+        if ($self->_read_from_page->get_page_index != $self->_write_to_page->get_page_index)
         {
             $self->_write_to_page->offload($self->_offload_dir_path);
-            # TODO : Recycle this page in the C code.
-            $self->_write_to_page(undef());
+            $self->_write_to_page->bump;
         }
-
-        $self->_write_to_page(
-            Games::Solitaire::FC_Solve::QueuePrototype::Page->new(
-                {
-                    num_items_per_page => $self->_num_items_per_page(),
-                    page_index => 
-                    ($write_to_page_idx + 1),
-                }
-            )
-        );
+        else
+        {
+            $self->_write_to_page(
+                $self->_backup_write_to_page(),
+            );
+            $self->_write_to_page->_recycle;
+            $self->_write_to_page->_page_index($self->_read_from_page->get_page_index + 1);
+            $self->_backup_write_to_page(undef());
+        }
     }
 
     $self->_write_to_page->insert($item);
@@ -114,25 +122,17 @@ sub extract
 
     if (! $self->_read_from_page->can_extract())
     {
-        my $new_read_page_idx = $self->_read_from_page->get_page_index + 1;
         # Cannot really happen due to the _num_items_in_queue check.
         # if ($self->_read_from_page->page_index == $self->_write_to_page->page_index)
-        if ($new_read_page_idx == $self->_write_to_page->get_page_index)
+        if ($self->_read_from_page->get_page_index + 1 == $self->_write_to_page->get_page_index)
         {
-            # TODO : put the tail page in recycling.
+            $self->_backup_write_to_page( $self->_read_from_page );
             $self->_read_from_page( $self->_write_to_page() );
         }
         else
         {
-            # TODO : put the tail page in recycling.
-            $self->_read_from_page(
-                Games::Solitaire::FC_Solve::QueuePrototype::Page->read_from_disk(
-                    {
-                        num_items_per_page => $self->_num_items_per_page(),
-                        page_index => $new_read_page_idx,
-                    },
-                    $self->_offload_dir_path(),
-                )
+            $self->_read_from_page->read_next_from_disk(
+                $self->_offload_dir_path(),
             );
         }
     }
@@ -167,6 +167,18 @@ __PACKAGE__->mk_acc_ref([qw(
         _data
         )]);
 
+sub _recycle
+{
+    my $self = shift;
+
+    $self->_write_to_idx(0);
+    $self->_read_from_idx(0);
+
+    $self->_data([(undef) x $self->_num_items_per_page()]);
+
+    return;
+}
+
 sub _init
 {
     my $self = shift;
@@ -175,10 +187,7 @@ sub _init
     $self->_num_items_per_page($args->{num_items_per_page});
     $self->_page_index($args->{page_index});
 
-    $self->_write_to_idx(0);
-    $self->_read_from_idx(0);
-
-    $self->_data([(undef) x $self->_num_items_per_page()]);
+    $self->_recycle;
 
     return;
 }
@@ -236,13 +245,13 @@ sub _calc_filename
     );
 }
 
-sub read_from_disk
+sub read_next_from_disk
 {
-    my ($class, $args, $offload_dir_path) = @_;
+    my ($self, $offload_dir_path) = @_;
 
-    my $self = $class->new($args);
+    $self->bump;
 
-    my $page_filename =$self->_calc_filename($offload_dir_path);
+    my $page_filename = $self->_calc_filename($offload_dir_path);
 
     $self->_data( retrieve( $page_filename ));
     # We need to set this limit because it's a read-only page that we
@@ -263,6 +272,17 @@ sub offload
     my $page_filename = $self->_calc_filename($offload_dir_path);
 
     nstore($self->_data(), $page_filename);
+
+    return;
+}
+
+sub bump
+{
+    my $self = shift;
+
+    $self->_page_index($self->_page_index + 1);
+
+    $self->_recycle;
 
     return;
 }
