@@ -93,5 +93,3 @@ sub get_num_extracted
 }
 
 1;
-
-
