@@ -999,7 +999,7 @@ static void populate_instance_with_intermediate_input_line(
         fcs_init_and_encode_state(delta, &(running_state),
                                   &(running_key));
 
-        FCS_PARENT_AND_MOVE__GET_MOVE(running_key) = move;
+        FCS_PARENT_AND_MOVE__GET_MOVE(running_parent_and_move) = move;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
