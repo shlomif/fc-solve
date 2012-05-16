@@ -63,7 +63,7 @@ struct fcs_derived_state_struct
 
 typedef struct fcs_derived_state_struct fcs_derived_state_t;
 
-#define MAKE_MOVE(src, dest) ((src) | (dest) << 4)
+#define MAKE_MOVE(src, dest) ((src) | ((dest) << 4))
 #define COL2MOVE(idx) (idx)
 #define FREECELL2MOVE(idx) (idx+8)
 #define FOUND2MOVE(idx) ((idx)+8+4)

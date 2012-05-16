@@ -6,6 +6,7 @@ deal_idx=982
 # Some preferences
 delta_limit="40,000,000"
 count_items_in_queue="5,000"
+cache_size="40,000,000"
 
 board="$deal_idx.board"
 
@@ -15,13 +16,17 @@ fi
 
 let iter=0
 
+cache_size="${cache_size//,/}"
+pre_cache_dummy_size="1000"
+caches_delta="$(($cache_size - $pre_cache_dummy_size))"
+
 while true; do
 
     intermediate_output="out-$deal_idx-$iter.txt"
     intermediate_output_processed="out-$deal_idx-$iter-proc.txt"
     get_proc=''
 
-    if ! test -e "$intermediate_output_processed" ; then
+    if test \( \! -e "$intermediate_output_processed" \) -o \( $iter -eq 0 \) ; then
 
         if test $iter -gt 0 ; then
             get_proc="--intermediate-input $previous_intermediate_input"
@@ -30,6 +35,8 @@ while true; do
             $get_proc \
             --iters-delta-limit "${delta_limit//,/}" \
             --max-count-of-items-in-queue "${count_items_in_queue//,/}" \
+            --pre-cache-max-count "$pre_cache_dummy_size" \
+            --caches-delta "$caches_delta" \
             --num-threads 1 \
             982.board ; then
             echo "Error in iter $iter!" 1>2
