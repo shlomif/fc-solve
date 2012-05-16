@@ -344,10 +344,38 @@ static GCC_INLINE void instance_init(
 #endif
 }
 
+static GCC_INLINE void instance_dealloc_queue_moves_to_key(
+    fcs_dbm_solver_instance_t * instance
+)
+{
+    int i;
+#define NUM_CHAINS_TO_RELEASE 2
+    fcs_dbm_queue_item_t * to_release[NUM_CHAINS_TO_RELEASE];
+
+    to_release[0] = instance->queue_recycle_bin;
+    to_release[1] = instance->queue_head;
+
+    for (i=0 ; i < NUM_CHAINS_TO_RELEASE ; i++)
+    {
+        fcs_dbm_queue_item_t * item;
+
+        for (item = to_release[i] ; 
+             item ; 
+             item = item->next)
+        {
+            free(item->moves_to_key);
+            item->moves_to_key = NULL;
+        }
+    }
+#undef NUM_CHAINS_TO_RELEASE
+}
+
 static GCC_INLINE void instance_recycle(
     fcs_dbm_solver_instance_t * instance
     )
 {
+    
+    instance_dealloc_queue_moves_to_key(instance);
     /* TODO : store what's left on the queue on the hard-disk. */
     fc_solve_compact_allocator_finish(&(instance->queue_allocator));
     fc_solve_compact_allocator_init(
@@ -369,6 +397,7 @@ static GCC_INLINE void instance_destroy(
     fcs_dbm_solver_instance_t * instance
     )
 {
+    instance_dealloc_queue_moves_to_key(instance);
     /* TODO : store what's left on the queue on the hard-disk. */
     fc_solve_compact_allocator_finish(&(instance->queue_allocator));
 
@@ -470,16 +499,20 @@ static GCC_INLINE void instance_check_key(
                     &(instance->queue_allocator),
                     sizeof(*new_item)
                 );
+#ifdef FCS_DBM_CACHE_ONLY
             new_item->moves_to_key = NULL;
+#endif
         }
 
         new_item->key = (*key);
         new_item->next = NULL;
+#ifdef FCS_DBM_CACHE_ONLY
         new_item->moves_to_key = realloc(
             new_item->moves_to_key, 
             strlen((const char *)cache_key->moves_to_key)+1
             );
         strcpy((char *)new_item->moves_to_key, (const char *)cache_key->moves_to_key);
+#endif
 
         if (instance->queue_tail)
         {

@@ -79,6 +79,7 @@ static GCC_INLINE void cache_destroy(fcs_lru_cache_t * cache)
                 cache_key->moves_to_key = NULL;
             }
         }
+#undef NUM_CHAINS_TO_RELEASE
     }
     fc_solve_kaz_tree_destroy(cache->kaz_tree);
     fc_solve_compact_allocator_finish(&(cache->states_values_to_keys_allocator));
