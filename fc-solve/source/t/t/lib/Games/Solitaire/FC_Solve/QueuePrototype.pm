@@ -11,9 +11,9 @@ __PACKAGE__->mk_acc_ref([qw(
         _num_inserted
         _num_items_in_queue
         _num_extracted
-        _write_to_page
-        _backup_write_to_page
-        _read_from_page
+        _page_to_write_to
+        _page_for_backup
+        _page_to_read_from
         )]);
 
 sub _init
@@ -41,7 +41,7 @@ sub _init
     $self->_num_items_in_queue(0);
     $self->_num_extracted(0);
 
-    $self->_write_to_page(
+    $self->_page_to_write_to(
         Games::Solitaire::FC_Solve::QueuePrototype::Page->new(
             {
                 num_items_per_page => $self->_num_items_per_page(),
@@ -50,7 +50,7 @@ sub _init
         )
     );
 
-    $self->_backup_write_to_page(
+    $self->_page_for_backup(
         Games::Solitaire::FC_Solve::QueuePrototype::Page->new(
             {
                 num_items_per_page => $self->_num_items_per_page(),
@@ -60,7 +60,7 @@ sub _init
     );
 
 
-    $self->_read_from_page( $self->_write_to_page() );
+    $self->_page_to_read_from( $self->_page_to_write_to() );
 
     return;
 }
@@ -69,25 +69,25 @@ sub insert
 {
     my ($self, $item) = @_;
 
-    if (! $self->_write_to_page->can_insert())
+    if (! $self->_page_to_write_to->can_insert())
     {
-        if ($self->_read_from_page->get_page_index != $self->_write_to_page->get_page_index)
+        if ($self->_page_to_read_from->get_page_index != $self->_page_to_write_to->get_page_index)
         {
-            $self->_write_to_page->offload($self->_offload_dir_path);
-            $self->_write_to_page->bump;
+            $self->_page_to_write_to->offload($self->_offload_dir_path);
+            $self->_page_to_write_to->bump;
         }
         else
         {
-            $self->_write_to_page(
-                $self->_backup_write_to_page(),
+            $self->_page_to_write_to(
+                $self->_page_for_backup(),
             );
-            $self->_write_to_page->_recycle;
-            $self->_write_to_page->_page_index($self->_read_from_page->get_page_index + 1);
-            $self->_backup_write_to_page(undef());
+            $self->_page_to_write_to->_recycle;
+            $self->_page_to_write_to->_page_index($self->_page_to_read_from->get_page_index + 1);
+            $self->_page_for_backup(undef());
         }
     }
 
-    $self->_write_to_page->insert($item);
+    $self->_page_to_write_to->insert($item);
 
     $self->_num_inserted($self->_num_inserted() + 1);
     $self->_num_items_in_queue($self->_num_items_in_queue() + 1);
@@ -120,18 +120,18 @@ sub extract
 
     my $return_item;
 
-    if (! $self->_read_from_page->can_extract())
+    if (! $self->_page_to_read_from->can_extract())
     {
         # Cannot really happen due to the _num_items_in_queue check.
-        # if ($self->_read_from_page->page_index == $self->_write_to_page->page_index)
-        if ($self->_read_from_page->get_page_index + 1 == $self->_write_to_page->get_page_index)
+        # if ($self->_page_to_read_from->page_index == $self->_page_to_write_to->page_index)
+        if ($self->_page_to_read_from->get_page_index + 1 == $self->_page_to_write_to->get_page_index)
         {
-            $self->_backup_write_to_page( $self->_read_from_page );
-            $self->_read_from_page( $self->_write_to_page() );
+            $self->_page_for_backup( $self->_page_to_read_from );
+            $self->_page_to_read_from( $self->_page_to_write_to() );
         }
         else
         {
-            $self->_read_from_page->read_next_from_disk(
+            $self->_page_to_read_from->read_next_from_disk(
                 $self->_offload_dir_path(),
             );
         }
@@ -140,7 +140,7 @@ sub extract
     $self->_num_items_in_queue($self->_num_items_in_queue() - 1);
     $self->_num_extracted($self->_num_extracted() + 1);
 
-    return $self->_read_from_page->extract();
+    return $self->_page_to_read_from->extract();
 }
 
 sub get_num_extracted
