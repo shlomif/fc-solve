@@ -81,8 +81,7 @@ sub insert
             $self->_page_to_write_to(
                 $self->_page_for_backup(),
             );
-            $self->_page_to_write_to->_recycle;
-            $self->_page_to_write_to->_page_index($self->_page_to_read_from->get_page_index + 1);
+            $self->_page_to_write_to->start_after($self->_page_to_read_from);
             $self->_page_for_backup(undef());
         }
     }
@@ -276,15 +275,22 @@ sub offload
     return;
 }
 
-sub bump
-{
-    my $self = shift;
+sub start_after
+{    
+    my ($self, $other_page )= @_;
 
-    $self->_page_index($self->_page_index + 1);
+    $self->_page_index($other_page->get_page_index + 1);
 
     $self->_recycle;
 
     return;
+}
+
+sub bump
+{
+    my $self = shift;
+
+    return $self->start_after($self);
 }
 
 1;
