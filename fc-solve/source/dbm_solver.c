@@ -879,6 +879,7 @@ static void populate_instance_with_intermediate_input_line(
     fcs_state_keyval_pair_t running_state;
     fcs_dbm_queue_item_t * first_item;
     fcs_fcc_move_t * running_moves;
+    fcs_fcc_move_t move;
     DECLARE_IND_BUF_T(running_indirect_stacks_buffer)
 
     fc_solve_state_init(
@@ -939,9 +940,11 @@ static void populate_instance_with_intermediate_input_line(
         fcs_card_t src_card;
 
         s_ptr += 3;
+
+        move = (fcs_fcc_move_t)hex_digits;
         /* Apply the move. */
-        src = (hex_digits & 0xF);
-        dest = ((hex_digits >> 4) & 0xF);
+        src = (move & 0xF);
+        dest = ((move >> 4) & 0xF);
 
 #define the_state (running_state.s)
         /* Extract the card from the source. */
@@ -996,13 +999,13 @@ static void populate_instance_with_intermediate_input_line(
         fcs_init_and_encode_state(delta, &(running_state),
                                   &(running_key));
 
-        FCS_PARENT_AND_MOVE__GET_MOVE(running_key) = (unsigned char)hex_digits;
+        FCS_PARENT_AND_MOVE__GET_MOVE(running_key) = move;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent_and_move);
 #else
-        running_moves = (cache_insert(&(instance->cache), &(running_key), running_moves, FCS_PARENT_AND_MOVE__GET_MOVE(running_parent_and_move)))->moves_to_key;
+        running_moves = (cache_insert(&(instance->cache), &(running_key), running_moves, move))->moves_to_key;
 #endif
 #else
         fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent_and_move);
