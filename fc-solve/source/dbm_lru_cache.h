@@ -10,7 +10,7 @@ extern "C"
 
 struct fcs_cache_key_info_struct
 {
-    fcs_encoded_state_buffer_t key;
+    fcs_encoded_state_buffer_t key, parent_and_move;
     /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.

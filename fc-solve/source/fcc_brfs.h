@@ -256,7 +256,7 @@ static void perform_FCC_brfs(
         }
         else
         {
-            cache_insert(does_state_exist_in_any_FCC_cache, &(extracted_item->key));
+            cache_insert(does_state_exist_in_any_FCC_cache, &(extracted_item->key), &(extracted_item->key));
         }
 
         if (! running_min_was_assigned)

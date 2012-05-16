@@ -129,7 +129,7 @@ static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, fcs_e
     }
 }
 
-static GCC_INLINE void cache_insert(fcs_lru_cache_t * cache, const fcs_encoded_state_buffer_t * key)
+static GCC_INLINE void cache_insert(fcs_lru_cache_t * cache, const fcs_encoded_state_buffer_t * key, const fcs_encoded_state_buffer_t * parent_and_move)
 {
     fcs_cache_key_info_t * cache_key;
     dict_t * kaz_tree;
@@ -155,6 +155,7 @@ static GCC_INLINE void cache_insert(fcs_lru_cache_t * cache, const fcs_encoded_s
     }
 
     cache_key->key = *key;
+    cache_key->parent_and_move = *parent_and_move;
 
     if (cache->highest_pri)
     {

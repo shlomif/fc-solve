@@ -38,7 +38,7 @@
 /*
  * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
  */
-#if 0
+#if 1
 #define FCS_DBM_SINGLE_THREAD 1
 #endif
 
@@ -154,6 +154,7 @@ static GCC_INLINE void pre_cache_insert(
     pre_cache->count_elements++;
 }
 
+#ifndef FCS_DBM_CACHE_ONLY
 static GCC_INLINE void cache_populate_from_pre_cache(
     fcs_lru_cache_t * cache,
     fcs_pre_cache_t * pre_cache
@@ -224,6 +225,8 @@ static GCC_INLINE void pre_cache_offload_and_reset(
     pre_cache_init(pre_cache, meta_alloc);
 }
 
+#endif
+
 #endif /* FCS_DBM_WITHOUT_CACHES */
 static const pthread_mutex_t initial_mutex_constant =
     PTHREAD_MUTEX_INITIALIZER
@@ -260,10 +263,14 @@ enum TERMINATE_REASON
 typedef struct {
     fcs_lock_t storage_lock;
 #ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
     fcs_pre_cache_t pre_cache;
+#endif
     fcs_lru_cache_t cache;
 #endif
+#ifndef FCS_DBM_CACHE_ONLY
     fcs_dbm_store_t store;
+#endif
 
     long pre_cache_max_count;
     /* The queue */
@@ -326,11 +333,36 @@ static GCC_INLINE void instance_init(
         NULL;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
     pre_cache_init (&(instance->pre_cache), &(instance->meta_alloc));
+#endif
     instance->pre_cache_max_count = pre_cache_max_count;
     cache_init (&(instance->cache), pre_cache_max_count+caches_delta, &(instance->meta_alloc));
 #endif
+#ifndef FCS_DBM_CACHE_ONLY
     fc_solve_dbm_store_init(&(instance->store), dbm_store_path);
+#endif
+}
+
+static GCC_INLINE void instance_recycle(
+    fcs_dbm_solver_instance_t * instance
+    )
+{
+    /* TODO : store what's left on the queue on the hard-disk. */
+    fc_solve_compact_allocator_finish(&(instance->queue_allocator));
+    fc_solve_compact_allocator_init(
+        &(instance->queue_allocator), &(instance->meta_alloc)
+    );
+
+    instance->should_terminate = DONT_TERMINATE;
+    instance->queue_num_extracted_and_processed = 0;
+    instance->num_states_in_collection = 0;
+    instance->count_num_processed = 0;
+    instance->count_of_items_in_queue = 0;
+    instance->queue_head =
+        instance->queue_tail =
+        instance->queue_recycle_bin =
+        NULL;
 }
 
 static GCC_INLINE void instance_destroy(
@@ -341,16 +373,21 @@ static GCC_INLINE void instance_destroy(
     fc_solve_compact_allocator_finish(&(instance->queue_allocator));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
+
+#ifndef FCS_DBM_CACHE_ONLY
     pre_cache_offload_and_destroy(
         &(instance->pre_cache),
         instance->store,
         &(instance->cache)
     );
+#endif
 
     cache_destroy(&(instance->cache));
 #endif
 
+#ifndef FCS_DBM_CACHE_ONLY
     fc_solve_dbm_store_destroy(instance->store);
+#endif
 
     fc_solve_meta_compact_allocator_finish(
         &(instance->meta_alloc)
@@ -368,24 +405,32 @@ static GCC_INLINE void instance_check_key(
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
     fcs_lru_cache_t * cache;
+#ifndef FCS_DBM_CACHE_ONLY
     fcs_pre_cache_t * pre_cache;
+#endif
 
     cache = &(instance->cache);
+#ifndef FCS_DBM_CACHE_ONLY
     pre_cache = &(instance->pre_cache);
+#endif
 
     if (cache_does_key_exist(cache, key))
     {
         return;
     }
+#ifndef FCS_DBM_CACHE_ONLY
     else if (pre_cache_does_key_exist(pre_cache, key))
     {
         return;
     }
+#endif
+#ifndef FCS_DBM_CACHE_ONLY
     else if (fc_solve_dbm_store_does_key_exist(instance->store, key->s))
     {
         cache_insert(cache, key);
         return;
     }
+#endif
     else
 #else
     if (fc_solve_dbm_store_insert_key_value(instance->store, key, parent_and_move))
@@ -394,7 +439,11 @@ static GCC_INLINE void instance_check_key(
         fcs_dbm_queue_item_t * new_item;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(pre_cache, key, parent_and_move);
+#else
+        cache_insert(cache, key, parent_and_move);
+#endif
 #endif
 
         /* Now insert it into the queue. */
@@ -450,6 +499,7 @@ static GCC_INLINE void instance_check_multiple_keys(
         instance_check_key(instance, &(list->key), &(list->parent_and_move));
     }
 #ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
     if (instance->pre_cache.count_elements >= instance->pre_cache_max_count)
     {
         pre_cache_offload_and_reset(
@@ -459,6 +509,7 @@ static GCC_INLINE void instance_check_multiple_keys(
             &(instance->meta_alloc)
         );
     }
+#endif
 #endif
     FCS_UNLOCK(instance->storage_lock);
 }
@@ -733,20 +784,20 @@ static void calc_trace(
         {
             trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
         }
+#ifndef FCS_DBM_CACHE_ONLY
 #ifndef FCS_DBM_WITHOUT_CACHES
         if (! pre_cache_lookup_parent_and_move(
             &(instance->pre_cache),
             &key,
             &(trace[trace_num])
             ))
-        {
 #endif
+        {
             assert(fc_solve_dbm_store_lookup_parent_and_move(
                 instance->store,
                 key.s,
                 trace[trace_num].s
                 ));
-#ifndef FCS_DBM_WITHOUT_CACHES
         }
 #endif
     }
@@ -813,7 +864,11 @@ static void populate_instance_with_intermediate_input_line(
     fcs_init_encoded_state(&(running_parent_and_move));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
     pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent_and_move);
+#else
+    cache_insert(&(instance->cache), &(running_key), &running_parent_and_move);
+#endif
 #else
     fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent_and_move);
 #endif
@@ -889,7 +944,11 @@ static void populate_instance_with_intermediate_input_line(
             ] = (unsigned char)hex_digits;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent_and_move);
+#else
+        cache_insert(&(instance->cache), &(running_key), &running_parent_and_move);
+#endif
 #else
         fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent_and_move);
 #endif
@@ -1332,6 +1391,18 @@ int main(int argc, char * argv[])
         size_t line_size = 0;
         long line_num = 0;
         fcs_bool_t queue_solution_was_found = FALSE;
+        fcs_dbm_solver_instance_t queue_instance;
+        fcs_dbm_solver_instance_t limit_instance;
+
+        instance_init(&queue_instance, pre_cache_max_count, caches_delta,
+                      dbm_store_path, max_count_of_items_in_queue,
+                      -1, out_fh);
+
+        instance_init(
+            &limit_instance, pre_cache_max_count, caches_delta,
+            dbm_store_path, LONG_MAX,
+            iters_delta_limit, out_fh
+            );
 
         do 
         {
@@ -1355,14 +1426,6 @@ int main(int argc, char * argv[])
                 }
                 skip_queue_output = FALSE;
                 {
-                    fcs_dbm_solver_instance_t limit_instance;
-
-                    instance_init(
-                        &limit_instance, pre_cache_max_count, caches_delta,
-                        dbm_store_path, LONG_MAX,
-                        iters_delta_limit, out_fh
-                        );
-
                     populate_instance_with_intermediate_input_line(
                         &limit_instance,
                         delta,
@@ -1371,8 +1434,13 @@ int main(int argc, char * argv[])
                         line_num
                         );
 
+#ifdef FCS_DBM_SINGLE_THREAD
+#define NUM_THREADS() 1
+#else
+#define NUM_THREADS() num_threads
+#endif
                     instance_run_all_threads(
-                        &limit_instance, &init_state, num_threads
+                        &limit_instance, &init_state, NUM_THREADS()
                         );
 
                     if (limit_instance.queue_solution_was_found)
@@ -1399,19 +1467,10 @@ int main(int argc, char * argv[])
                             );
                         skip_queue_output = TRUE;
                     }
-
-                    instance_destroy(&limit_instance);
-
                 }
 
                 if (!skip_queue_output)
                 {
-                    fcs_dbm_solver_instance_t queue_instance;
-
-                    instance_init(&queue_instance, pre_cache_max_count, caches_delta,
-                                  dbm_store_path, max_count_of_items_in_queue,
-                                  -1, out_fh);
-
                     populate_instance_with_intermediate_input_line(
                         &queue_instance,
                         delta,
@@ -1421,7 +1480,7 @@ int main(int argc, char * argv[])
                         );
 
                     instance_run_all_threads(
-                        &queue_instance, &init_state, num_threads
+                        &queue_instance, &init_state, NUM_THREADS()
                         );
 
                     if (handle_and_destroy_instance_solution(
@@ -1434,7 +1493,23 @@ int main(int argc, char * argv[])
                     }
                 }
             }
+
+            if (!queue_solution_was_found)
+            {
+                /*
+                 * This recycles the instances by keeping the cache,
+                 * but making sure that the statistics and the queue are reset.
+                 * */
+                instance_recycle(&limit_instance);
+                instance_recycle(&queue_instance);
+            }
         } while (found_line && (!queue_solution_was_found));
+
+        instance_destroy(&limit_instance);
+        if (! queue_solution_was_found)
+        {
+            instance_destroy(&queue_instance);
+        }
 
         free(line);
         line = NULL;
@@ -1465,7 +1540,11 @@ int main(int argc, char * argv[])
         fcs_init_encoded_state(&(parent_and_move));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(&(instance.pre_cache), &(first_item->key), &parent_and_move);
+#else
+        cache_insert(&(instance.cache), &(first_item->key), &parent_and_move);
+#endif
 #else
         fc_solve_dbm_store_insert_key_value(instance.store, &(first_item->key), &(parent_and_move));
 #endif
@@ -1473,7 +1552,7 @@ int main(int argc, char * argv[])
         instance.queue_head = instance.queue_tail = first_item;
         instance.count_of_items_in_queue++;
 
-        instance_run_all_threads(&instance, &init_state, num_threads);
+        instance_run_all_threads(&instance, &init_state, NUM_THREADS());
         handle_and_destroy_instance_solution(&instance, out_fh, delta);
     }
 

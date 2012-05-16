@@ -376,7 +376,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
                 min_enc_state
             );
 
-            cache_insert (&does_state_exist_in_any_FCC_cache, min_enc_state);
+            cache_insert (&does_state_exist_in_any_FCC_cache, min_enc_state, min_enc_state);
         }
     }
 
