@@ -39,6 +39,12 @@ extern "C" {
 
 typedef struct { unsigned char s[24]; } fcs_encoded_state_buffer_t;
 
+#define FCS_PARENT_AND_MOVE__GET_MOVE(parent_and_move) \
+    ((parent_and_move).s[ \
+        (parent_and_move).s[0] + 1 \
+        ] \
+    )
+
 typedef struct
 {
     fcs_encoded_state_buffer_t key;

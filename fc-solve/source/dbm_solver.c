@@ -401,6 +401,9 @@ static GCC_INLINE void instance_check_key(
     fcs_dbm_solver_instance_t * instance,
     fcs_encoded_state_buffer_t * key,
     fcs_encoded_state_buffer_t * parent_and_move
+#ifdef FCS_DBM_CACHE_ONLY
+    , const fcs_fcc_move_t * moves_to_parent
+#endif
 )
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -437,12 +440,14 @@ static GCC_INLINE void instance_check_key(
 #endif
     {
         fcs_dbm_queue_item_t * new_item;
+        fcs_cache_key_info_t * cache_key;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(pre_cache, key, parent_and_move);
 #else
-        cache_insert(cache, key, parent_and_move);
+        cache_key = cache_insert(cache, key, moves_to_parent, 
+                     FCS_PARENT_AND_MOVE__GET_MOVE(*parent_and_move));
 #endif
 #endif
 
@@ -465,10 +470,16 @@ static GCC_INLINE void instance_check_key(
                     &(instance->queue_allocator),
                     sizeof(*new_item)
                 );
+            new_item->moves_to_key = NULL;
         }
 
         new_item->key = (*key);
         new_item->next = NULL;
+        new_item->moves_to_key = realloc(
+            new_item->moves_to_key, 
+            strlen((const char *)cache_key->moves_to_key)+1
+            );
+        strcpy((char *)new_item->moves_to_key, (const char *)cache_key->moves_to_key);
 
         if (instance->queue_tail)
         {
@@ -486,6 +497,9 @@ static GCC_INLINE void instance_check_key(
 static GCC_INLINE void instance_check_multiple_keys(
     fcs_dbm_solver_instance_t * instance,
     fcs_derived_state_t * list
+#ifdef FCS_DBM_CACHE_ONLY
+    , const fcs_fcc_move_t * moves_to_parent
+#endif
 )
 {
     /* Small optimization in case the list is empty. */
@@ -496,7 +510,11 @@ static GCC_INLINE void instance_check_multiple_keys(
     FCS_LOCK(instance->storage_lock);
     for (; list ; list = list->next)
     {
-        instance_check_key(instance, &(list->key), &(list->parent_and_move));
+        instance_check_key(instance, &(list->key), &(list->parent_and_move)
+#ifdef FCS_DBM_CACHE_ONLY
+            , moves_to_parent
+#endif
+        );
     }
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
@@ -688,7 +706,11 @@ static void * instance_run_solver_thread(void * void_arg)
             );
         }
 
-        instance_check_multiple_keys(instance, derived_list);
+        instance_check_multiple_keys(instance, derived_list
+#ifdef FCS_DBM_CACHE_ONLY
+            , item->moves_to_key
+#endif
+        );
 
         /* Now recycle the derived_list */
         while (derived_list)
@@ -778,7 +800,7 @@ static void calc_trace(
     {
         /* Omit the move. */
         key = trace[trace_num];
-        key.s[key.s[0]+1] = '\0';
+        FCS_PARENT_AND_MOVE__GET_MOVE(key) = '\0';
 
         if ((++trace_num) == trace_max_num)
         {
@@ -823,6 +845,7 @@ static void populate_instance_with_intermediate_input_line(
     fcs_encoded_state_buffer_t running_parent_and_move, running_key;
     fcs_state_keyval_pair_t running_state;
     fcs_dbm_queue_item_t * first_item;
+    fcs_fcc_move_t * running_moves;
     DECLARE_IND_BUF_T(running_indirect_stacks_buffer)
 
     fc_solve_state_init(
@@ -863,11 +886,12 @@ static void populate_instance_with_intermediate_input_line(
     fcs_init_and_encode_state(delta, &(running_state), &running_key);
     fcs_init_encoded_state(&(running_parent_and_move));
 
+    running_moves = NULL;
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
     pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent_and_move);
 #else
-    cache_insert(&(instance->cache), &(running_key), &running_parent_and_move);
+    cache_insert(&(instance->cache), &(running_key), running_moves, '\0');
 #endif
 #else
     fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent_and_move);
@@ -939,15 +963,13 @@ static void populate_instance_with_intermediate_input_line(
         fcs_init_and_encode_state(delta, &(running_state),
                                   &(running_key));
 
-        running_parent_and_move.s[
-            running_parent_and_move.s[0]+1
-            ] = (unsigned char)hex_digits;
+        FCS_PARENT_AND_MOVE__GET_MOVE(running_key) = (unsigned char)hex_digits;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent_and_move);
 #else
-        cache_insert(&(instance->cache), &(running_key), &running_parent_and_move);
+        running_moves = (cache_insert(&(instance->cache), &(running_key), running_moves, FCS_PARENT_AND_MOVE__GET_MOVE(running_parent_and_move)))->moves_to_key;
 #endif
 #else
         fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent_and_move);
@@ -1543,7 +1565,7 @@ int main(int argc, char * argv[])
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(&(instance.pre_cache), &(first_item->key), &parent_and_move);
 #else
-        cache_insert(&(instance.cache), &(first_item->key), &parent_and_move);
+        cache_insert(&(instance.cache), &(first_item->key), NULL, '\0');
 #endif
 #else
         fc_solve_dbm_store_insert_key_value(instance.store, &(first_item->key), &(parent_and_move));

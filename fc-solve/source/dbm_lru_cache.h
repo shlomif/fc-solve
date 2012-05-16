@@ -7,10 +7,12 @@ extern "C"
 #endif
 
 #include "generic_tree.h"
+#include "fcc_brfs_test.h"
 
 struct fcs_cache_key_info_struct
 {
-    fcs_encoded_state_buffer_t key, parent_and_move;
+    fcs_encoded_state_buffer_t key;
+    fcs_fcc_move_t * moves_to_key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.
@@ -34,6 +36,7 @@ typedef struct
 
     fcs_cache_key_info_t * lowest_pri, * highest_pri;
 
+#define RECYCLE_BIN_NEXT(el) ((el)->higher_pri)
     fcs_cache_key_info_t * recycle_bin;
 } fcs_lru_cache_t;
 
