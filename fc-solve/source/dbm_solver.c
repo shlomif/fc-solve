@@ -1240,6 +1240,39 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 #endif
                 fprintf (out_fh, "\n");
                 fflush(out_fh);
+#ifdef DEBUG_OUT
+                {
+                    char * state_str;
+                    fcs_state_keyval_pair_t state;
+                    fcs_state_locs_struct_t locs;
+                    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+
+                    fc_solve_init_locs(&locs);
+
+                    fc_solve_delta_stater_decode_into_state(
+                        delta,
+                        item->key.s,
+                        &state,
+                        indirect_stacks_buffer
+                        );
+
+                    state_str = fc_solve_state_as_string(
+                        &(state.s),
+                        &(state.info),
+                        &locs,
+                        2,
+                        8,
+                        1,
+                        1,
+                        0,
+                        1
+                    );
+
+                    fprintf(out_fh, "<<<\n%s>>>\n", state_str);
+                    fflush(out_fh);
+                    free(state_str);
+                }
+#endif
             }
         }
         else if (instance->should_terminate == MAX_ITERS_TERMINATE)
