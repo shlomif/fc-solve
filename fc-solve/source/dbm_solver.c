@@ -1197,8 +1197,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 )
             {
                 int i;
-                int trace_num;
-                fcs_encoded_state_buffer_t * trace;
 
                 for (i=0; i < item->key.s[0] ; i++)
                 {
@@ -1208,22 +1206,40 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 fprintf (out_fh, "%s", "|");
                 fflush(out_fh);
 
-                calc_trace(instance, &(item->key), &trace, &trace_num);
-
-                /*
-                 * We stop at 1 because the deepest state does not contain
-                 * a move (as it is the ultimate state).
-                 * */
-#define PENULTIMATE_DEPTH 1
-                for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
+#ifdef FCS_DBM_CACHE_ONLY
                 {
-                    fprintf(out_fh, "%.2X,", trace[i].s[1+trace[i].s[0]]);
+                    fcs_fcc_move_t * move_ptr;
+                    if ((move_ptr = item->moves_to_key))
+                    {
+                        while (*(move_ptr))
+                        {
+                            fprintf(out_fh, "%.2X,", *(move_ptr));
+                            move_ptr++;
+                        }
+                    }
                 }
-                free(trace);
+#else
+                {
+                    int trace_num;
+                    fcs_encoded_state_buffer_t * trace;
+
+                    calc_trace(instance, &(item->key), &trace, &trace_num);
+
+                    /*
+                     * We stop at 1 because the deepest state does not contain
+                     * a move (as it is the ultimate state).
+                     * */
+#define PENULTIMATE_DEPTH 1
+                    for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
+                    {
+                        fprintf(out_fh, "%.2X,", FCS_PARENT_AND_MOVE__GET_MOVE(trace[i]));
+                    }
+#undef PENULTIMATE_DEPTH
+                    free(trace);
+                }
+#endif
                 fprintf (out_fh, "\n");
                 fflush(out_fh);
-
-#undef PENULTIMATE_DEPTH
             }
         }
         else if (instance->should_terminate == MAX_ITERS_TERMINATE)
