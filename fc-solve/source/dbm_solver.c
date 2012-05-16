@@ -1040,6 +1040,15 @@ static void populate_instance_with_intermediate_input_line(
 
     first_item->next = NULL;
     first_item->key = running_key;
+    if (running_moves)
+    {
+        first_item->moves_to_key = malloc(strlen((const char *)running_moves)+1);
+        strcpy((char *)first_item->moves_to_key, (const char *)running_moves);
+    }
+    else
+    {
+        first_item->moves_to_key = NULL;
+    }
 
     instance->queue_head = instance->queue_tail = first_item;
     instance->count_of_items_in_queue++;
@@ -1587,6 +1596,7 @@ int main(int argc, char * argv[])
                 );
 
         first_item->next = NULL;
+        first_item->moves_to_key = NULL;
 
         fcs_init_and_encode_state(delta, &(init_state), &(first_item->key));
 
