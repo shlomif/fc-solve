@@ -201,6 +201,81 @@ static GCC_INLINE void fcs_offloading_queue_page__offload(
     fclose(f);
 }
 
+typedef struct
+{
+    int num_items_per_page;
+    const char * offload_dir_path;
+    long num_inserted, num_items_in_queue, num_extracted;
+    /*
+     * page_to_write_to, page_for_backup and page_to_read_from always
+     * point to the two "pages" below, but they can be swapped and 
+     * page_for_backup may be NULL.
+     */
+    fcs_offloading_queue_page_t * page_to_write_to, * page_for_backup,
+                                * page_to_read_from;
+    fcs_offloading_queue_page_t pages[2];
+} fcs_offloading_queue_t;
+
+static GCC_INLINE void fcs_offloading_queue__init(
+    fcs_offloading_queue_t * queue,
+    int num_items_per_page,
+    const char * offload_dir_path
+    )
+{
+    queue->num_items_per_page = num_items_per_page;
+    queue->offload_dir_path = offload_dir_path;
+    queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
+
+    fcs_offloading_queue_page__init(&(queue->pages[0]), num_items_per_page, 0);
+    fcs_offloading_queue_page__init(&(queue->pages[1]), num_items_per_page, 0);
+
+    queue->page_to_read_from = queue->page_to_write_to = &(queue->pages[0]);
+    queue->page_for_backup = &(queue->pages[1]);
+}
+
+static GCC_INLINE void fcs_offloading_queue__destroy(
+    fcs_offloading_queue_t * queue
+    )
+{
+    fcs_offloading_queue_page__destroy(&(queue->pages[0]));
+    fcs_offloading_queue_page__destroy(&(queue->pages[1]));
+}
+
+static GCC_INLINE void fcs_offloading_queue__insert(
+    fcs_offloading_queue_t * queue,
+    fcs_encoded_state_buffer_t * item
+)
+{
+    if (! fcs_offloading_queue_page__can_insert(queue->page_to_write_to))
+    {
+        if (queue->page_to_read_from->page_index != queue->page_to_write_to->page_index)
+        {
+            fcs_offloading_queue_page__offload(
+                queue->page_to_write_to,
+                queue->offload_dir_path
+            );
+            fcs_offloading_queue_page__bump(queue->page_to_write_to);
+        }
+        else
+        {
+            queue->page_to_write_to = queue->page_for_backup;
+            fcs_offloading_queue_page__start_after(
+                queue->page_to_write_to,
+                queue->page_to_read_from
+            );
+            queue->page_for_backup = NULL;
+        }
+    }
+
+    fcs_offloading_queue_page__insert(
+        queue->page_to_write_to,
+        item
+    );
+
+    queue->num_inserted++;
+    queue->num_items_in_queue++;
+}
+
 #ifdef __cplusplus
 }
 #endif
