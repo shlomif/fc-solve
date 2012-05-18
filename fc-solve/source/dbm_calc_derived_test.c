@@ -138,7 +138,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             0,
             1
             );
-        debug_ret[idx].move = iter->parent_and_move.s[iter->parent_and_move.s[0]+1];
+        debug_ret[idx].move = FCS_PARENT_AND_MOVE__GET_MOVE(iter->parent_and_move);
         debug_ret[idx].is_reversible_move = iter->is_reversible_move;
         idx++;
         iter = iter->next;
