@@ -260,7 +260,7 @@ sub read_next_from_disk
 
     unlink($page_filename);
 
-    return $self;
+    return;
 }
 
 sub offload

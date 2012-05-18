@@ -43,7 +43,7 @@
 #include "offloading_queue.h"
 
 /* TODO : Remove later. */
-void foo()
+void foo(void)
 {
     printf("%s\n", "H");
 

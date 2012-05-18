@@ -34,6 +34,9 @@ extern "C" {
 #endif
 
 #include <string.h>
+#include <limits.h>
+#include <stdio.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "state.h"
@@ -136,6 +139,48 @@ static GCC_INLINE const char * fcs_offloading_queue_page__calc_filename(
     sprintf(buffer, "%s/fcs_queue_%020lX.page", offload_dir_path, page->page_index);
 
     return buffer;
+}
+
+static GCC_INLINE void fcs_offloading_queue_page__start_after(
+    fcs_offloading_queue_page_t * page,
+    fcs_offloading_queue_page_t * other_page
+    )
+{
+    page->page_index = other_page->page_index+1;
+    fcs_offloading_queue_page__recycle(page);
+}
+
+static GCC_INLINE void fcs_offloading_queue_page__bump(
+    fcs_offloading_queue_page_t * page
+)
+{
+    fcs_offloading_queue_page__start_after(page, page);
+}
+
+static GCC_INLINE void fcs_offloading_queue_page__read_next_from_disk(
+    fcs_offloading_queue_page_t * page,
+    const char * offload_dir_path
+    )
+{
+    FILE * f;
+    char page_filename[PATH_MAX+1];
+    
+    fcs_offloading_queue_page__bump(page);
+
+    fcs_offloading_queue_page__calc_filename(page, page_filename, offload_dir_path);
+    
+    f = fopen(page_filename, "rb");
+    fread( page->data, sizeof(fcs_encoded_state_buffer_t),
+           page->num_items_per_page, f
+    );
+
+    /* We need to set this limit because it's a read-only page that we
+     * retrieve from the disk and otherwise ->can_extract() will return
+     * false for most items.
+     * */
+    page->write_to_idx = page->num_items_per_page;
+
+    unlink(page_filename);
 }
 
 #ifdef __cplusplus
