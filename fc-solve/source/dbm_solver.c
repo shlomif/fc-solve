@@ -879,6 +879,7 @@ static void populate_instance_with_intermediate_input_line(
     fcs_state_keyval_pair_t running_state;
     fcs_dbm_queue_item_t * first_item;
     fcs_fcc_move_t * running_moves;
+    fcs_fcc_move_t move;
     DECLARE_IND_BUF_T(running_indirect_stacks_buffer)
 
     fc_solve_state_init(
@@ -939,9 +940,11 @@ static void populate_instance_with_intermediate_input_line(
         fcs_card_t src_card;
 
         s_ptr += 3;
+
+        move = (fcs_fcc_move_t)hex_digits;
         /* Apply the move. */
-        src = (hex_digits & 0xF);
-        dest = ((hex_digits >> 4) & 0xF);
+        src = (move & 0xF);
+        dest = ((move >> 4) & 0xF);
 
 #define the_state (running_state.s)
         /* Extract the card from the source. */
@@ -996,13 +999,13 @@ static void populate_instance_with_intermediate_input_line(
         fcs_init_and_encode_state(delta, &(running_state),
                                   &(running_key));
 
-        FCS_PARENT_AND_MOVE__GET_MOVE(running_key) = (unsigned char)hex_digits;
+        FCS_PARENT_AND_MOVE__GET_MOVE(running_parent_and_move) = move;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent_and_move);
 #else
-        running_moves = (cache_insert(&(instance->cache), &(running_key), running_moves, FCS_PARENT_AND_MOVE__GET_MOVE(running_parent_and_move)))->moves_to_key;
+        running_moves = (cache_insert(&(instance->cache), &(running_key), running_moves, move))->moves_to_key;
 #endif
 #else
         fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent_and_move);
@@ -1040,6 +1043,15 @@ static void populate_instance_with_intermediate_input_line(
 
     first_item->next = NULL;
     first_item->key = running_key;
+    if (running_moves)
+    {
+        first_item->moves_to_key = malloc(strlen((const char *)running_moves)+1);
+        strcpy((char *)first_item->moves_to_key, (const char *)running_moves);
+    }
+    else
+    {
+        first_item->moves_to_key = NULL;
+    }
 
     instance->queue_head = instance->queue_tail = first_item;
     instance->count_of_items_in_queue++;
@@ -1188,8 +1200,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 )
             {
                 int i;
-                int trace_num;
-                fcs_encoded_state_buffer_t * trace;
 
                 for (i=0; i < item->key.s[0] ; i++)
                 {
@@ -1199,22 +1209,73 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 fprintf (out_fh, "%s", "|");
                 fflush(out_fh);
 
-                calc_trace(instance, &(item->key), &trace, &trace_num);
-
-                /*
-                 * We stop at 1 because the deepest state does not contain
-                 * a move (as it is the ultimate state).
-                 * */
-#define PENULTIMATE_DEPTH 1
-                for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
+#ifdef FCS_DBM_CACHE_ONLY
                 {
-                    fprintf(out_fh, "%.2X,", trace[i].s[1+trace[i].s[0]]);
+                    fcs_fcc_move_t * move_ptr;
+                    if ((move_ptr = item->moves_to_key))
+                    {
+                        while (*(move_ptr))
+                        {
+                            fprintf(out_fh, "%.2X,", *(move_ptr));
+                            move_ptr++;
+                        }
+                    }
                 }
-                free(trace);
+#else
+                {
+                    int trace_num;
+                    fcs_encoded_state_buffer_t * trace;
+
+                    calc_trace(instance, &(item->key), &trace, &trace_num);
+
+                    /*
+                     * We stop at 1 because the deepest state does not contain
+                     * a move (as it is the ultimate state).
+                     * */
+#define PENULTIMATE_DEPTH 1
+                    for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
+                    {
+                        fprintf(out_fh, "%.2X,", FCS_PARENT_AND_MOVE__GET_MOVE(trace[i]));
+                    }
+#undef PENULTIMATE_DEPTH
+                    free(trace);
+                }
+#endif
                 fprintf (out_fh, "\n");
                 fflush(out_fh);
+#ifdef DEBUG_OUT
+                {
+                    char * state_str;
+                    fcs_state_keyval_pair_t state;
+                    fcs_state_locs_struct_t locs;
+                    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-#undef PENULTIMATE_DEPTH
+                    fc_solve_init_locs(&locs);
+
+                    fc_solve_delta_stater_decode_into_state(
+                        delta,
+                        item->key.s,
+                        &state,
+                        indirect_stacks_buffer
+                        );
+
+                    state_str = fc_solve_state_as_string(
+                        &(state.s),
+                        &(state.info),
+                        &locs,
+                        2,
+                        8,
+                        1,
+                        1,
+                        0,
+                        1
+                    );
+
+                    fprintf(out_fh, "<<<\n%s>>>\n", state_str);
+                    fflush(out_fh);
+                    free(state_str);
+                }
+#endif
             }
         }
         else if (instance->should_terminate == MAX_ITERS_TERMINATE)
@@ -1587,6 +1648,7 @@ int main(int argc, char * argv[])
                 );
 
         first_item->next = NULL;
+        first_item->moves_to_key = NULL;
 
         fcs_init_and_encode_state(delta, &(init_state), &(first_item->key));
 

@@ -182,9 +182,9 @@ static GCC_INLINE fcs_cache_key_info_t * cache_insert(fcs_lru_cache_t * cache, c
     {
         size_t len;
         fcs_fcc_move_t * moves;
-        len = strlen((const char *)moves_to_parent) + 1;
-        cache_key->moves_to_key = moves = realloc(cache_key->moves_to_key, len+1);
-        memcpy(moves, moves_to_parent, len-1);
+        len = strlen((const char *)moves_to_parent);
+        cache_key->moves_to_key = moves = realloc(cache_key->moves_to_key, len+1+1);
+        memcpy(moves, moves_to_parent, len);
         moves[len] = final_move;
         moves[len+1] = '\0';
     }
