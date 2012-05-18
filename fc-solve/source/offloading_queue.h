@@ -194,7 +194,7 @@ static GCC_INLINE void fcs_offloading_queue_page__offload(
     
     fcs_offloading_queue_page__calc_filename(page, page_filename, offload_dir_path);
     
-    f = fopen(page_filename, "rb");
+    f = fopen(page_filename, "wb");
     fwrite( page->data, sizeof(fcs_encoded_state_buffer_t),
            page->num_items_per_page, f
     );

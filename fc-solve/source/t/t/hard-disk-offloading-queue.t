@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1131;
+use Test::More tests => 2262;
 
 use File::Spec;
 
@@ -11,6 +11,7 @@ use File::Path qw(mkpath);
 
 use lib './t/lib';
 use Games::Solitaire::FC_Solve::QueuePrototype;
+use Games::Solitaire::FC_Solve::QueueInC;
 
 my $queue_offload_dir_path = File::Spec->catdir(
     File::Spec->curdir(), "queue-offload-dir"
@@ -20,10 +21,10 @@ mkpath($queue_offload_dir_path);
 # TEST:$c=0;
 sub run_queue_tests
 {
-    my ($blurb_base) = @_;
+    my ($blurb_base, $class_name) = @_;
 
     {
-        my $queue = Games::Solitaire::FC_Solve::QueuePrototype->new(
+        my $queue = $class_name->new(
             {
                 num_items_per_page => 10,
                 offload_dir_path => $queue_offload_dir_path,
@@ -104,7 +105,7 @@ sub run_queue_tests
     }
 
     {
-        my $queue = Games::Solitaire::FC_Solve::QueuePrototype->new(
+        my $queue = $class_name->new(
             {
                 num_items_per_page => 10,
                 offload_dir_path => $queue_offload_dir_path,
@@ -179,4 +180,6 @@ sub run_queue_tests
 # TEST:$run_queue_tests=$c;
 
 # TEST*$run_queue_tests
-run_queue_tests('Perl queue');
+run_queue_tests('Perl queue', 'Games::Solitaire::FC_Solve::QueuePrototype');
+# TEST*$run_queue_tests
+run_queue_tests('C queue', 'Games::Solitaire::FC_Solve::QueueInC');

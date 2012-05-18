@@ -62,6 +62,7 @@ fc-solve/source/freecell-solver-multi-thread-solve
 fc-solve/source/freecell-solver-range-parallel-solve
 fc-solve/source/freecell-solver.spec
 fc-solve/source/libfcs_dbm_calc_derived_test.so
+fc-solve/source/libfcs_offloading_queue_test.so
 fc-solve/source/libfcs_delta_states_test.so
 fc-solve/source/libfcs_fcc_brfs_test.so
 fc-solve/source/libfcs_gen_ms_freecell_boards.so
