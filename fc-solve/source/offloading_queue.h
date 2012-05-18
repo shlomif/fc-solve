@@ -119,7 +119,7 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue_page__can_insert(
 
 static GCC_INLINE void fcs_offloading_queue_page__insert(
     fcs_offloading_queue_page_t * page,
-    fcs_encoded_state_buffer_t * in_item
+    const fcs_encoded_state_buffer_t const * in_item
     )
 {
     int write_to_idx = ((page->write_to_idx)++);
@@ -243,7 +243,7 @@ static GCC_INLINE void fcs_offloading_queue__destroy(
 
 static GCC_INLINE void fcs_offloading_queue__insert(
     fcs_offloading_queue_t * queue,
-    fcs_encoded_state_buffer_t * item
+    const fcs_encoded_state_buffer_t const * item
 )
 {
     if (! fcs_offloading_queue_page__can_insert(queue->page_to_write_to))
