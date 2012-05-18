@@ -276,6 +276,47 @@ static GCC_INLINE void fcs_offloading_queue__insert(
     queue->num_items_in_queue++;
 }
 
+static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
+    fcs_offloading_queue_t * queue,
+    fcs_encoded_state_buffer_t * return_item
+)
+{
+    if (queue->num_items_in_queue == 0)
+    {
+        return FALSE;
+    }
+
+    if (! fcs_offloading_queue_page__can_extract(queue->page_to_read_from))
+    {
+        /* Cannot really happen due to the num_items_in_queue check.
+         * 
+        if (queue->_page_to_read_from->page_index == queue->_page_to_write_to->page_index)
+        */
+        if (queue->page_to_read_from->page_index + 1 == queue->page_to_write_to->page_index)
+        {
+            queue->page_for_backup = queue->page_to_read_from;
+            queue->page_to_read_from = queue->page_to_write_to;
+        }
+        else
+        {
+            fcs_offloading_queue_page__read_next_from_disk(
+                queue->page_to_read_from,
+                queue->offload_dir_path
+            );
+        }
+    }
+
+    queue->num_items_in_queue--;
+    queue->num_extracted++;
+
+    fcs_offloading_queue_page__extract(
+        queue->page_to_read_from,
+        return_item
+    );
+
+    return TRUE;
+}
+
 #ifdef __cplusplus
 }
 #endif
