@@ -28,6 +28,7 @@ use File::Path qw( mkpath );
 use Data::Dump qw(dd);
 
 use Games::Solitaire::FC_Solve::QueuePrototype;
+use Games::Solitaire::FC_Solve::QueueInC;
 
 my ($items_per_page, $data_seed, $interval_seed) = @ARGV;
 
@@ -40,7 +41,10 @@ my $queue_offload_dir_path = File::Spec->catdir(
 );
 mkpath($queue_offload_dir_path);
 
-my $queue = Games::Solitaire::FC_Solve::QueuePrototype->new(
+my $class = $ENV{'USE_C'} ? 'Games::Solitaire::FC_Solve::QueueInC' :
+    'Games::Solitaire::FC_Solve::QueuePrototype';
+
+my $queue = $class->new(
     {
         num_items_per_page => $items_per_page,
         offload_dir_path => $queue_offload_dir_path,
