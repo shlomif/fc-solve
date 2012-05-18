@@ -173,6 +173,7 @@ static GCC_INLINE void fcs_offloading_queue_page__read_next_from_disk(
     fread( page->data, sizeof(fcs_encoded_state_buffer_t),
            page->num_items_per_page, f
     );
+    fclose(f);
 
     /* We need to set this limit because it's a read-only page that we
      * retrieve from the disk and otherwise ->can_extract() will return
@@ -181,6 +182,23 @@ static GCC_INLINE void fcs_offloading_queue_page__read_next_from_disk(
     page->write_to_idx = page->num_items_per_page;
 
     unlink(page_filename);
+}
+
+static GCC_INLINE void fcs_offloading_queue_page__offload(
+    fcs_offloading_queue_page_t * page,
+    const char * offload_dir_path
+    )
+{
+    FILE * f;
+    char page_filename[PATH_MAX+1];
+    
+    fcs_offloading_queue_page__calc_filename(page, page_filename, offload_dir_path);
+    
+    f = fopen(page_filename, "rb");
+    fwrite( page->data, sizeof(fcs_encoded_state_buffer_t),
+           page->num_items_per_page, f
+    );
+    fclose(f);
 }
 
 #ifdef __cplusplus
