@@ -37,7 +37,7 @@ my $output_gen = RandGen->new(seed => $data_seed);
 my $interval_gen = RandGen->new(seed => $interval_seed);
 
 my $queue_offload_dir_path = File::Spec->catdir(
-    File::Spec->curdir(), "queue-offload-dir"
+    $ENV{TMPDIR}, "queue-offload-dir"
 );
 mkpath($queue_offload_dir_path);
 

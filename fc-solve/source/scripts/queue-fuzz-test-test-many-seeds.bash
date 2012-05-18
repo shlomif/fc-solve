@@ -1,7 +1,7 @@
 #!/bin/bash
 export USE_C="1"
 export FCS_PATH="$(pwd)"
-let items_per_page=2
+let items_per_page=20
 let data_seed=500
 while true ; do
     for seed in `seq 1 20`; do
