@@ -721,6 +721,13 @@ static void * instance_run_solver_thread(void * void_arg)
                         FCS_TIME_GET_SEC(mytime),
                         FCS_TIME_GET_USEC(mytime)
                     );
+#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
+                    fprintf (out_fh, ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n", 
+                             instance->queue.num_inserted,
+                             instance->queue.num_items_in_queue,
+                             instance->queue.num_extracted
+                             );
+#endif
                     fflush(out_fh);
                 }
                 if (instance->count_num_processed >=
