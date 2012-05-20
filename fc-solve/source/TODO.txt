@@ -7,6 +7,13 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
+* Compress the data in the offloading queue frames by storing only the 
+pointers instead of the whole +fcs_encoded_state_buffer_t+.
+
+* Shove the signed char of the balance of libavl/avl.c into the
+last char of the key_and_move_to_parent’s +fcs_encoded_state_buffer_t+. It
+probably wastes some space due to struct alignment/parity.
+
 * Check for thread-safety of the meta_allocator construct in +dbm_fc_solver.c+.
 
 * Try to convert the core libfreecell-solver code to meta_alloc and see if
