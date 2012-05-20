@@ -39,14 +39,20 @@ int main_tests()
         int pos_idx;
         int all_good = TRUE;
 
-        for (pos_idx = 0 ; pos_idx < sizeof( fcs_encoded_state_buffer_t ) ; pos_idx++)
+        for (pos_idx = 1 ; pos_idx < sizeof( fcs_encoded_state_buffer_t ) ; pos_idx++)
         {
             fcs_dbm_record_t rec_a, rec_b;
 
             memset(&rec_a, '\0', sizeof(rec_a));
             memset(&rec_b, '\0', sizeof(rec_a));
 
+#ifdef FCS_DBM_RECORD_POINTER_REPR
+            rec_a.key_and_move_to_parent.s[0] = sizeof(rec_a.key_and_move_to_parent)-1;
+            rec_a.key_and_move_to_parent.s[pos_idx] = '\x01';
+#else
+            rec_a.key.s[0] = sizeof(rec_a.key)-1;
             rec_a.key.s[pos_idx] = '\x01';
+#endif
             
             if (! (compare_records(&rec_a, &rec_b, NULL) > 0))
             {

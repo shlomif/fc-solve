@@ -44,6 +44,32 @@ extern "C"
  * */
 
 /* TODO: make sure the key is '\0'-padded. */
+#ifdef FCS_DBM_RECORD_POINTER_REPR
+static int compare_records(
+    const void * void_a, const void * void_b, void * context
+)
+{
+    const fcs_encoded_state_buffer_t * a, * b;
+
+#define GET_PARAM(p) (&(((const fcs_dbm_record_t *)(p))->key_and_move_to_parent))
+    a = GET_PARAM(void_a);
+    b = GET_PARAM(void_b);
+#undef GET_PARAM
+    
+    if (a->s[0] < b->s[0])
+    {
+        return -1;
+    }
+    else if (a->s[0] > b->s[0])
+    {
+        return 1;
+    }
+    else
+    {
+        return memcmp(a->s, b->s, a->s[0]+1);
+    }
+}
+#else
 static int compare_records(
     const void * void_a, const void * void_b, void * context
 )
@@ -52,6 +78,7 @@ static int compare_records(
     return memcmp(&(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
+#endif
 
 #ifdef __cplusplus
 }

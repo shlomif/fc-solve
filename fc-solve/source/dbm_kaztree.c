@@ -62,8 +62,16 @@ fcs_bool_t fc_solve_dbm_store_insert_key_value(
     to_check = (fcs_dbm_record_t *)fcs_compact_alloc_ptr(&(db->allocator), sizeof(*to_check));
 #endif
 
+#ifdef FCS_DBM_RECORD_POINTER_REPR
+    to_check->key_and_move_to_parent = *key;
+    FCS_PARENT_AND_MOVE__GET_MOVE(to_check->key_and_move_to_parent) = 
+        FCS_PARENT_AND_MOVE__GET_MOVE(*parent_and_move);
+    to_check->parent = *parent_and_move;
+    FCS_PARENT_AND_MOVE__GET_MOVE(to_check->parent) = '\0';
+#else
     to_check->key = *key;
     to_check->parent_and_move = *parent_and_move;
+#endif
     ret = (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
     
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
@@ -84,7 +92,11 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
     dict_key_t existing;
 
     fcs_dbm_record_t to_check;
+#ifdef FCS_DBM_RECORD_POINTER_REPR
+    to_check.key_and_move_to_parent = *(const fcs_encoded_state_buffer_t *)key;
+#else
     to_check.key = *(const fcs_encoded_state_buffer_t *)key;
+#endif
 
     existing = fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &to_check);
 
@@ -94,8 +106,14 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
     }
     else
     {
+#ifdef FCS_DBM_RECORD_POINTER_REPR
+        *(fcs_encoded_state_buffer_t *)parent_and_move
+            = ((fcs_dbm_record_t *)existing)->parent;
+        FCS_PARENT_AND_MOVE__GET_MOVE(*(fcs_encoded_state_buffer_t *)parent_and_move) = FCS_PARENT_AND_MOVE__GET_MOVE(((fcs_dbm_record_t *)existing)->key_and_move_to_parent);
+#else
         *(fcs_encoded_state_buffer_t *)parent_and_move
             = ((fcs_dbm_record_t *)existing)->parent_and_move;
+#endif
         return TRUE;
     }
 }

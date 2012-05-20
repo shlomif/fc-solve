@@ -45,10 +45,17 @@ typedef struct { unsigned char s[24]; } fcs_encoded_state_buffer_t;
         ] \
     )
 
+#define FCS_DBM_RECORD_POINTER_REPR 1
+
 typedef struct
 {
+#ifdef FCS_DBM_RECORD_POINTER_REPR
+    fcs_encoded_state_buffer_t key_and_move_to_parent;
+    fcs_encoded_state_buffer_t parent;
+#else
     fcs_encoded_state_buffer_t key;
     fcs_encoded_state_buffer_t parent_and_move;
+#endif
 } fcs_dbm_record_t;
 
 typedef struct
