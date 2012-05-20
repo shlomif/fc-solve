@@ -930,10 +930,6 @@ IF (IS_DEBUG)
             SHARED
             app_str.c card.c state.c delta_states.c
         )
-        ADD_LIBRARY(fcs_offloading_queue_test
-            SHARED
-            offloading_queue.c offloading_queue_test.c
-        )
         IF (FCS_ENABLE_DBM_SOLVER)
             ADD_LIBRARY(fcs_dbm_calc_derived_test
                 SHARED
