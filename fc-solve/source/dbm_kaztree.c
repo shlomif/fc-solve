@@ -66,8 +66,12 @@ fcs_bool_t fc_solve_dbm_store_insert_key_value(
     to_check->key_and_move_to_parent = *key;
     FCS_PARENT_AND_MOVE__GET_MOVE(to_check->key_and_move_to_parent) = 
         FCS_PARENT_AND_MOVE__GET_MOVE(*parent_and_move);
-    to_check->parent = *parent_and_move;
-    FCS_PARENT_AND_MOVE__GET_MOVE(to_check->parent) = '\0';
+    {
+        fcs_dbm_record_t parent_to_check;
+
+        parent_to_check.key_and_move_to_parent = *parent_and_move;
+        to_check->parent_ptr = (fcs_dbm_record_t *)fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &parent_to_check);
+    }
 #else
     to_check->key = *key;
     to_check->parent_and_move = *parent_and_move;
@@ -108,7 +112,7 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
     {
 #ifdef FCS_DBM_RECORD_POINTER_REPR
         *(fcs_encoded_state_buffer_t *)parent_and_move
-            = ((fcs_dbm_record_t *)existing)->parent;
+            = ((fcs_dbm_record_t *)existing)->parent_ptr->key_and_move_to_parent;
         FCS_PARENT_AND_MOVE__GET_MOVE(*(fcs_encoded_state_buffer_t *)parent_and_move) = FCS_PARENT_AND_MOVE__GET_MOVE(((fcs_dbm_record_t *)existing)->key_and_move_to_parent);
 #else
         *(fcs_encoded_state_buffer_t *)parent_and_move
