@@ -633,6 +633,30 @@ typedef struct {
     fcs_dbm_solver_thread_t * thread;
 } thread_arg_t;
 
+static void instance_print_stats(
+    fcs_dbm_solver_instance_t * instance,
+    FILE * out_fh
+    )
+{
+    fcs_portable_time_t mytime;
+    FCS_GET_TIME(mytime);
+
+    fprintf (out_fh, "Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n",
+             instance->count_num_processed,
+             instance->num_states_in_collection,
+             FCS_TIME_GET_SEC(mytime),
+             FCS_TIME_GET_USEC(mytime)
+            );
+#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
+    fprintf (out_fh, ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n", 
+             instance->queue.num_inserted,
+             instance->queue.num_items_in_queue,
+             instance->queue.num_extracted
+            );
+#endif
+    fflush(out_fh);
+}
+
 static void * instance_run_solver_thread(void * void_arg)
 {
     thread_arg_t * arg;
@@ -712,23 +736,7 @@ static void * instance_run_solver_thread(void * void_arg)
                 instance->queue_num_extracted_and_processed++;
                 if (++instance->count_num_processed % 100000 == 0)
                 {
-                    fcs_portable_time_t mytime;
-                    FCS_GET_TIME(mytime);
-
-                    fprintf (out_fh, "Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n",
-                        instance->count_num_processed,
-                        instance->num_states_in_collection,
-                        FCS_TIME_GET_SEC(mytime),
-                        FCS_TIME_GET_USEC(mytime)
-                    );
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-                    fprintf (out_fh, ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n", 
-                             instance->queue.num_inserted,
-                             instance->queue.num_items_in_queue,
-                             instance->queue.num_extracted
-                             );
-#endif
-                    fflush(out_fh);
+                    instance_print_stats(instance, out_fh);
                 }
                 if (instance->count_num_processed >=
                     instance->max_count_num_processed)
@@ -1274,6 +1282,9 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 )
 {
     fcs_bool_t ret = FALSE;
+
+    instance_print_stats(instance, out_fh);
+
     if (instance->queue_solution_was_found)
     {
         trace_solution(instance, out_fh, delta);
