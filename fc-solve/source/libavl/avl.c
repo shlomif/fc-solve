@@ -105,7 +105,7 @@ avl_probe (struct avl_table *tree, void *item)
       if (cmp == 0)
         return &p->avl_data;
 
-      if (p->avl_balance != 0)
+      if (NODEPTR_GET_BALANCE(p) != 0)
         z = q, y = p, k = 0;
       da[k++] = dir = cmp > 0;
     }
@@ -127,68 +127,68 @@ avl_probe (struct avl_table *tree, void *item)
   tree->avl_count++;
   NODE_ASSIGN_DATA_PTR(n, item);
   n->avl_link[0] = n->avl_link[1] = NULL;
-  n->avl_balance = 0;
+  NODEPTR_GET_BALANCE(n) = 0;
   if (y == NULL)
     return &n->avl_data;
 
   for (p = y, k = 0; p != n; p = p->avl_link[da[k]], k++)
     if (da[k] == 0)
-      p->avl_balance--;
+      NODEPTR_GET_BALANCE(p)--;
     else
-      p->avl_balance++;
+      NODEPTR_GET_BALANCE(p)++;
 
-  if (y->avl_balance == -2)
+  if (NODEPTR_GET_BALANCE(y) == -2)
     {
       struct avl_node *x = y->avl_link[0];
-      if (x->avl_balance == -1)
+      if (NODEPTR_GET_BALANCE(x) == -1)
         {
           w = x;
           y->avl_link[0] = x->avl_link[1];
           x->avl_link[1] = y;
-          x->avl_balance = y->avl_balance = 0;
+          NODEPTR_GET_BALANCE(x) = NODEPTR_GET_BALANCE(y) = 0;
         }
       else
         {
-          assert (x->avl_balance == +1);
+          assert (NODEPTR_GET_BALANCE(x) == +1);
           w = x->avl_link[1];
           x->avl_link[1] = w->avl_link[0];
           w->avl_link[0] = x;
           y->avl_link[0] = w->avl_link[1];
           w->avl_link[1] = y;
-          if (w->avl_balance == -1)
-            x->avl_balance = 0, y->avl_balance = +1;
-          else if (w->avl_balance == 0)
-            x->avl_balance = y->avl_balance = 0;
-          else /* |w->avl_balance == +1| */
-            x->avl_balance = -1, y->avl_balance = 0;
-          w->avl_balance = 0;
+          if (NODEPTR_GET_BALANCE(w) == -1)
+            NODEPTR_GET_BALANCE(x) = 0, NODEPTR_GET_BALANCE(y) = +1;
+          else if (NODEPTR_GET_BALANCE(w) == 0)
+            NODEPTR_GET_BALANCE(x) = NODEPTR_GET_BALANCE(y) = 0;
+          else /* |NODEPTR_GET_BALANCE(w) == +1| */
+            NODEPTR_GET_BALANCE(x) = -1, NODEPTR_GET_BALANCE(y) = 0;
+          NODEPTR_GET_BALANCE(w) = 0;
         }
     }
-  else if (y->avl_balance == +2)
+  else if (NODEPTR_GET_BALANCE(y) == +2)
     {
       struct avl_node *x = y->avl_link[1];
-      if (x->avl_balance == +1)
+      if (NODEPTR_GET_BALANCE(x) == +1)
         {
           w = x;
           y->avl_link[1] = x->avl_link[0];
           x->avl_link[0] = y;
-          x->avl_balance = y->avl_balance = 0;
+          NODEPTR_GET_BALANCE(x) = NODEPTR_GET_BALANCE(y) = 0;
         }
       else
         {
-          assert (x->avl_balance == -1);
+          assert (NODEPTR_GET_BALANCE(x) == -1);
           w = x->avl_link[0];
           x->avl_link[0] = w->avl_link[1];
           w->avl_link[1] = x;
           y->avl_link[1] = w->avl_link[0];
           w->avl_link[0] = y;
-          if (w->avl_balance == +1)
-            x->avl_balance = 0, y->avl_balance = -1;
-          else if (w->avl_balance == 0)
-            x->avl_balance = y->avl_balance = 0;
-          else /* |w->avl_balance == -1| */
-            x->avl_balance = +1, y->avl_balance = 0;
-          w->avl_balance = 0;
+          if (NODEPTR_GET_BALANCE(w) == +1)
+            NODEPTR_GET_BALANCE(x) = 0, NODEPTR_GET_BALANCE(y) = -1;
+          else if (NODEPTR_GET_BALANCE(w) == 0)
+            NODEPTR_GET_BALANCE(x) = NODEPTR_GET_BALANCE(y) = 0;
+          else /* |NODEPTR_GET_BALANCE(w) == -1| */
+            NODEPTR_GET_BALANCE(x) = +1, NODEPTR_GET_BALANCE(y) = 0;
+          NODEPTR_GET_BALANCE(w) = 0;
         }
     }
   else
@@ -268,7 +268,7 @@ avl_delete (struct avl_table *tree, const void *item)
       if (r->avl_link[0] == NULL)
         {
           r->avl_link[0] = p->avl_link[0];
-          r->avl_balance = p->avl_balance;
+          NODEPTR_GET_BALANCE(r) = NODEPTR_GET_BALANCE(p);
           pa[k - 1]->avl_link[da[k - 1]] = r;
           da[k] = 1;
           pa[k++] = r;
@@ -292,7 +292,7 @@ avl_delete (struct avl_table *tree, const void *item)
           s->avl_link[0] = p->avl_link[0];
           r->avl_link[0] = s->avl_link[1];
           s->avl_link[1] = p->avl_link[1];
-          s->avl_balance = p->avl_balance;
+          NODEPTR_GET_BALANCE(s) = NODEPTR_GET_BALANCE(p);
 
           pa[j - 1]->avl_link[da[j - 1]] = s;
           da[j] = 1;
@@ -315,28 +315,28 @@ avl_delete (struct avl_table *tree, const void *item)
 
       if (da[k] == 0)
         {
-          y->avl_balance++;
-          if (y->avl_balance == +1)
+          NODEPTR_GET_BALANCE(y)++;
+          if (NODEPTR_GET_BALANCE(y) == +1)
             break;
-          else if (y->avl_balance == +2)
+          else if (NODEPTR_GET_BALANCE(y) == +2)
             {
               struct avl_node *x = y->avl_link[1];
-              if (x->avl_balance == -1)
+              if (NODEPTR_GET_BALANCE(x) == -1)
                 {
                   struct avl_node *w;
-                  assert (x->avl_balance == -1);
+                  assert (NODEPTR_GET_BALANCE(x) == -1);
                   w = x->avl_link[0];
                   x->avl_link[0] = w->avl_link[1];
                   w->avl_link[1] = x;
                   y->avl_link[1] = w->avl_link[0];
                   w->avl_link[0] = y;
-                  if (w->avl_balance == +1)
-                    x->avl_balance = 0, y->avl_balance = -1;
-                  else if (w->avl_balance == 0)
-                    x->avl_balance = y->avl_balance = 0;
-                  else /* |w->avl_balance == -1| */
-                    x->avl_balance = +1, y->avl_balance = 0;
-                  w->avl_balance = 0;
+                  if (NODEPTR_GET_BALANCE(w) == +1)
+                    NODEPTR_GET_BALANCE(x) = 0, NODEPTR_GET_BALANCE(y) = -1;
+                  else if (NODEPTR_GET_BALANCE(w) == 0)
+                    NODEPTR_GET_BALANCE(x) = NODEPTR_GET_BALANCE(y) = 0;
+                  else /* |NODEPTR_GET_BALANCE(w) == -1| */
+                    NODEPTR_GET_BALANCE(x) = +1, NODEPTR_GET_BALANCE(y) = 0;
+                  NODEPTR_GET_BALANCE(w) = 0;
                   pa[k - 1]->avl_link[da[k - 1]] = w;
                 }
               else
@@ -344,41 +344,41 @@ avl_delete (struct avl_table *tree, const void *item)
                   y->avl_link[1] = x->avl_link[0];
                   x->avl_link[0] = y;
                   pa[k - 1]->avl_link[da[k - 1]] = x;
-                  if (x->avl_balance == 0)
+                  if (NODEPTR_GET_BALANCE(x) == 0)
                     {
-                      x->avl_balance = -1;
-                      y->avl_balance = +1;
+                      NODEPTR_GET_BALANCE(x) = -1;
+                      NODEPTR_GET_BALANCE(y) = +1;
                       break;
                     }
                   else
-                    x->avl_balance = y->avl_balance = 0;
+                    NODEPTR_GET_BALANCE(x) = NODEPTR_GET_BALANCE(y) = 0;
                 }
             }
         }
       else
         {
-          y->avl_balance--;
-          if (y->avl_balance == -1)
+          NODEPTR_GET_BALANCE(y)--;
+          if (NODEPTR_GET_BALANCE(y) == -1)
             break;
-          else if (y->avl_balance == -2)
+          else if (NODEPTR_GET_BALANCE(y) == -2)
             {
               struct avl_node *x = y->avl_link[0];
-              if (x->avl_balance == +1)
+              if (NODEPTR_GET_BALANCE(x) == +1)
                 {
                   struct avl_node *w;
-                  assert (x->avl_balance == +1);
+                  assert (NODEPTR_GET_BALANCE(x) == +1);
                   w = x->avl_link[1];
                   x->avl_link[1] = w->avl_link[0];
                   w->avl_link[0] = x;
                   y->avl_link[0] = w->avl_link[1];
                   w->avl_link[1] = y;
-                  if (w->avl_balance == -1)
-                    x->avl_balance = 0, y->avl_balance = +1;
-                  else if (w->avl_balance == 0)
-                    x->avl_balance = y->avl_balance = 0;
-                  else /* |w->avl_balance == +1| */
-                    x->avl_balance = -1, y->avl_balance = 0;
-                  w->avl_balance = 0;
+                  if (NODEPTR_GET_BALANCE(w) == -1)
+                    NODEPTR_GET_BALANCE(x) = 0, NODEPTR_GET_BALANCE(y) = +1;
+                  else if (NODEPTR_GET_BALANCE(w) == 0)
+                    NODEPTR_GET_BALANCE(x) = NODEPTR_GET_BALANCE(y) = 0;
+                  else /* |NODEPTR_GET_BALANCE(w) == +1| */
+                    NODEPTR_GET_BALANCE(x) = -1, NODEPTR_GET_BALANCE(y) = 0;
+                  NODEPTR_GET_BALANCE(w) = 0;
                   pa[k - 1]->avl_link[da[k - 1]] = w;
                 }
               else
@@ -386,14 +386,14 @@ avl_delete (struct avl_table *tree, const void *item)
                   y->avl_link[0] = x->avl_link[1];
                   x->avl_link[1] = y;
                   pa[k - 1]->avl_link[da[k - 1]] = x;
-                  if (x->avl_balance == 0)
+                  if (NODEPTR_GET_BALANCE(x) == 0)
                     {
-                      x->avl_balance = +1;
-                      y->avl_balance = -1;
+                      NODEPTR_GET_BALANCE(x) = +1;
+                      NODEPTR_GET_BALANCE(y) = -1;
                       break;
                     }
                   else
-                    x->avl_balance = y->avl_balance = 0;
+                    NODEPTR_GET_BALANCE(x) = NODEPTR_GET_BALANCE(y) = 0;
                 }
             }
         }
@@ -793,7 +793,7 @@ avl_copy (const struct avl_table *org, avl_copy_func *copy,
 
       for (;;)
         {
-          y->avl_balance = x->avl_balance;
+          NODEPTR_GET_BALANCE(y) = NODEPTR_GET_BALANCE(x);
           if (copy == NULL)
             y->avl_data = x->avl_data;
           else

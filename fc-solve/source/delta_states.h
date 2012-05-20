@@ -37,7 +37,8 @@ extern "C" {
 #include "config.h"
 #include "state.h"
 
-typedef struct { unsigned char s[24]; } fcs_encoded_state_buffer_t;
+#define FCS_ENCODED_STATE_COUNT_CHARS 24
+typedef struct { unsigned char s[FCS_ENCODED_STATE_COUNT_CHARS]; } fcs_encoded_state_buffer_t;
 
 #define FCS_PARENT_AND_MOVE__GET_MOVE(parent_and_move) \
     ((parent_and_move).s[ \

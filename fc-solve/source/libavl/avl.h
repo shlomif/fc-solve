@@ -86,12 +86,21 @@ struct avl_table
     unsigned long avl_generation;       /* Generation number. */
   };
 
+#ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
+#define NODE_GET_BALANCE(node) (*(signed char *)(&(node.avl_data.key_and_move_to_parent.s[FCS_ENCODED_STATE_COUNT_CHARS-1])))
+#else
+#define NODE_GET_BALANCE(node) ((node).avl_balance)
+#endif
+#define NODEPTR_GET_BALANCE(p) (NODE_GET_BALANCE((*(p))))
+
 /* An AVL tree node. */
 struct avl_node
   {
     struct avl_node *avl_link[2];  /* Subtrees. */
     avl_key_t avl_data;                /* Pointer to data. */
+#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     signed char avl_balance;       /* Balance factor. */
+#endif
   };
 
 /* AVL traverser structure. */
