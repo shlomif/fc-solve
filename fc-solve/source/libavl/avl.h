@@ -26,6 +26,10 @@
 #include <stddef.h>
 #include "meta_alloc.h"
 
+#ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
+#include "delta_states.h"
+#endif
+
 /* Function types. */
 typedef int avl_comparison_func (const void *avl_a, const void *avl_b,
                                  void *avl_param);
@@ -54,6 +58,22 @@ void avl_free (struct libavl_allocator *, void *);
 #define AVL_MAX_HEIGHT 92
 #endif
 
+#ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
+typedef fcs_dbm_record_t avl_key_t;
+#define AVL_KEY_PTR_PTR(p) (p)
+#define NODE_DATA_PTR(p) (&((p)->avl_data))
+#define NODE_ASSIGN_DATA_PTR(node_p, ptr) (((node_p)->avl_data) = *(fcs_dbm_record_t *)ptr)
+#define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = *(fcs_dbm_record_t *)ptr)
+#define AVL_KEY_EQUAL_TO_PTR(key, ptr) (!memcmp(&(key), (ptr), sizeof(key)))
+#else
+typedef void * avl_key_t;
+#define AVL_KEY_PTR_PTR(p) (*(p))
+#define NODE_DATA_PTR(p) ((p)->avl_data)
+#define NODE_ASSIGN_DATA_PTR(node_p, ptr) (((node_p)->avl_data) = ptr)
+#define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = ptr)
+#define AVL_KEY_EQUAL_TO_PTR(key, ptr) ((key) == (ptr))
+#endif
+
 /* Tree data structure. */
 struct avl_table
   {
@@ -70,7 +90,7 @@ struct avl_table
 struct avl_node
   {
     struct avl_node *avl_link[2];  /* Subtrees. */
-    void *avl_data;                /* Pointer to data. */
+    avl_key_t avl_data;                /* Pointer to data. */
     signed char avl_balance;       /* Balance factor. */
   };
 
@@ -90,7 +110,7 @@ struct avl_table *avl_create (avl_comparison_func *, void *, fcs_meta_compact_al
 struct avl_table *avl_copy (const struct avl_table *, avl_copy_func *,
                             avl_item_func *);
 void avl_destroy (struct avl_table *, avl_item_func *);
-void **avl_probe (struct avl_table *, void *);
+avl_key_t * avl_probe (struct avl_table *, void *);
 void *avl_insert (struct avl_table *, void *);
 void *avl_replace (struct avl_table *, void *);
 void *avl_delete (struct avl_table *, const void *);

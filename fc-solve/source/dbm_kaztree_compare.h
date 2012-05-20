@@ -22,8 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * dbm_kaztree_compare.h - contains the comparison routine and record_t
- * definition of dbm_kaztree.c. Should only be included by it and programs
+ * dbm_kaztree_compare.h - contains the comparison routine. The record_t
+ * definition can be found in delta_states.h.
+ * Intended for dbm_kaztree.c. Should only be included by it and programs
  * that test it.
  */
 #ifndef FC_SOLVE_DBM_KAZTREE_COMPARE_H
@@ -41,18 +42,13 @@ extern "C"
  * key/parent_move separatley from the dnode_t. We should use a struct
  * for that instead of a pointer.
  * */
-typedef struct
-{
-    fcs_encoded_state_buffer_t key;
-    fcs_encoded_state_buffer_t parent_and_move;
-} record_t;
 
 /* TODO: make sure the key is '\0'-padded. */
 static int compare_records(
     const void * void_a, const void * void_b, void * context
 )
 {
-#define GET_PARAM(p) (((const record_t *)(p))->key)
+#define GET_PARAM(p) (((const fcs_dbm_record_t *)(p))->key)
     return memcmp(&(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
