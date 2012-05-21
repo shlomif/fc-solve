@@ -28,9 +28,9 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path) {
 #define QUEUE_PTR() (&(((QueueInC*)SvIV(SvRV(obj)))->q))
 #
 void insert(SV* obj, int item_i) {
-    fcs_encoded_state_buffer_t item;
+    fcs_offloading_queue_item_t item;
 
-    sprintf(item.s, "%d", item_i);
+    item = (fcs_offloading_queue_item_t)item_i;
     fcs_offloading_queue__insert(
         QUEUE_PTR(), &item);
 
@@ -39,14 +39,14 @@ void insert(SV* obj, int item_i) {
 
 SV* extract(SV* obj) {
     fcs_bool_t is_valid;
-    fcs_encoded_state_buffer_t item;
+    fcs_offloading_queue_item_t item;
     SV *ret;
 
     is_valid = fcs_offloading_queue__extract(QUEUE_PTR(), &item);
 
     if (is_valid)
     {
-        ret = newSViv(atoi(item.s));
+        ret = newSViv((int)item);
     }
     else
     {
