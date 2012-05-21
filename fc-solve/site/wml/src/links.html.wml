@@ -207,6 +207,37 @@ to other formats such as PDFs, or UNIX man pages. We use it for
 </p>
 </li>
 
+<li>
+<p>
+<a href="http://mingw-w64.sourceforge.net/">MinGW-w64</a> - a port of the
+GNU build tool-chain (including GCC) to Windows 32-bit and Windows 64-bit.
+Used for preparing Microsoft Windows packages.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://dwimperl.com/">DWIM Perl for Windows</a> - a comprehensive
+and open-source distribution of Perl 5 for Windows. Based on <a href="http://strawberryperl.com/">Strawberry Perl</a>.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://python.net/crew/theller/ctypes/">ctypes</a> - an advanced
+foreign function interface (FFI) for Python. Used for automated testing.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://metacpan.org/module/Inline::C">Inline::C</a> - Inline::C
+allows one to write Perl subrourtines in C. Freecell Solver uses it
+for automated testing and for wrapping some of the internal and external C
+APIs.
+</p>
+</li>
+
 </ul>
 
 <h2 id="front_ends">Programs that use Freecell Solver</h2>
