@@ -46,8 +46,10 @@ extern "C" {
 #include "delta_states.h"
 
 #if 0
-typedef struct { unsigned char s[24]; } fcs_encoded_state_buffer_t;
+typedef struct { unsigned char s[24]; } fcs_offloading_queue_item_t;
 #endif
+
+typedef const unsigned char * fcs_offloading_queue_item_t;
 
 typedef struct
 {
@@ -76,7 +78,7 @@ static GCC_INLINE void fcs_offloading_queue_page__init(
     page->page_index = page_index;
 
     page->data = malloc(
-        sizeof(fcs_encoded_state_buffer_t) * num_items_per_page
+        sizeof(fcs_offloading_queue_item_t) * num_items_per_page
     );
     fcs_offloading_queue_page__recycle(page);
 
@@ -100,14 +102,14 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue_page__can_extract(
 
 static GCC_INLINE void fcs_offloading_queue_page__extract(
     fcs_offloading_queue_page_t * page,
-    fcs_encoded_state_buffer_t * out_item
+    fcs_offloading_queue_item_t * out_item
 )
 {
     int read_from_idx;
 
     read_from_idx = ((page->read_from_idx)++);
     
-    memcpy(out_item, page->data + sizeof(fcs_encoded_state_buffer_t) * read_from_idx, sizeof(fcs_encoded_state_buffer_t));
+    memcpy(out_item, page->data + sizeof(fcs_offloading_queue_item_t) * read_from_idx, sizeof(fcs_offloading_queue_item_t));
 }
 
 static GCC_INLINE fcs_bool_t fcs_offloading_queue_page__can_insert(
@@ -119,13 +121,13 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue_page__can_insert(
 
 static GCC_INLINE void fcs_offloading_queue_page__insert(
     fcs_offloading_queue_page_t * page,
-    const fcs_encoded_state_buffer_t const * in_item
+    const fcs_offloading_queue_item_t const * in_item
     )
 {
     int write_to_idx = ((page->write_to_idx)++);
 
     memcpy( 
-        page->data+write_to_idx * sizeof(fcs_encoded_state_buffer_t),
+        page->data+write_to_idx * sizeof(fcs_offloading_queue_item_t),
         in_item,
         sizeof(*in_item)
     );
@@ -170,7 +172,7 @@ static GCC_INLINE void fcs_offloading_queue_page__read_next_from_disk(
     fcs_offloading_queue_page__calc_filename(page, page_filename, offload_dir_path);
     
     f = fopen(page_filename, "rb");
-    fread( page->data, sizeof(fcs_encoded_state_buffer_t),
+    fread( page->data, sizeof(fcs_offloading_queue_item_t),
            page->num_items_per_page, f
     );
     fclose(f);
@@ -195,7 +197,7 @@ static GCC_INLINE void fcs_offloading_queue_page__offload(
     fcs_offloading_queue_page__calc_filename(page, page_filename, offload_dir_path);
     
     f = fopen(page_filename, "wb");
-    fwrite( page->data, sizeof(fcs_encoded_state_buffer_t),
+    fwrite( page->data, sizeof(fcs_offloading_queue_item_t),
            page->num_items_per_page, f
     );
     fclose(f);
@@ -243,7 +245,7 @@ static GCC_INLINE void fcs_offloading_queue__destroy(
 
 static GCC_INLINE void fcs_offloading_queue__insert(
     fcs_offloading_queue_t * queue,
-    const fcs_encoded_state_buffer_t const * item
+    const fcs_offloading_queue_item_t * item
 )
 {
     if (! fcs_offloading_queue_page__can_insert(queue->page_to_write_to))
@@ -278,7 +280,7 @@ static GCC_INLINE void fcs_offloading_queue__insert(
 
 static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
     fcs_offloading_queue_t * queue,
-    fcs_encoded_state_buffer_t * return_item
+    fcs_offloading_queue_item_t * return_item
 )
 {
     if (queue->num_items_in_queue == 0)

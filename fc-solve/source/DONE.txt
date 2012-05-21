@@ -232,3 +232,6 @@ that are compactly allocated by a +meta_alloc.h+.
 last char of the key_and_move_to_parent’s +fcs_encoded_state_buffer_t+. It
 probably wastes some space due to struct alignment/parity.
 
+* Compress the data in the offloading queue frames by storing only the 
+pointers instead of the whole +fcs_encoded_state_buffer_t+.
+

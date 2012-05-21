@@ -41,7 +41,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 /* 
  * Returns TRUE if the key was added (it didn't already exist.)
  * */
-fcs_bool_t fc_solve_dbm_store_insert_key_value(
+const unsigned char * fc_solve_dbm_store_insert_key_value(
     fcs_dbm_store_t store,
     const fcs_encoded_state_buffer_t * key,
     fcs_encoded_state_buffer_t * parent_and_move
@@ -84,7 +84,14 @@ fcs_bool_t fc_solve_dbm_store_insert_key_value(
         fcs_compact_alloc_release(&(db->allocator));
     }
 #endif
-    return ret;
+    if (ret)
+    {
+        return (unsigned char *)&(((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(db->kaz_tree, to_check)))->key_and_move_to_parent);
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
