@@ -1,0 +1,57 @@
+=encoding utf8
+
+=head1 The Freecell Solver Repository Root README
+
+L<Freecell Solver|http://fc-solve.shlomifish.org/> is an open source
+(distributed under the MIT/X11 licence) library, written in C, for attempting
+to solve several variants of card Solitaire/Patience, including 
+L<Freecell|http://en.wikipedia.org/wiki/FreeCell> , 
+L<Baker’s Game|http://en.wikipedia.org/wiki/Baker%27s_Game> ,
+L<Seahaven Towers|http://en.wikipedia.org/wiki/Seahaven_Towers_%28solitaire%29>
+, and 
+L<Simple Simon|http://en.wikipedia.org/wiki/Simple_Simon_%28solitaire> .
+Also contained are several command-line programs that use it, and the original 
+project also span some other code for testing and for support.
+
+=head1 Repository structure
+
+=head2 fc-solve/source/
+
+This contains the source of the solver itself. One can use CMake to build it.
+
+=head2 Games-Solitaire-Verify/Games-Solitaire-Verify
+
+This is the Games-Solitaire-Verify CPAN module. For more information see:
+
+L<https://metacpan.org/release/Games-Solitaire-Verify>
+
+=head2 Task-FreecellSolver-Testing
+
+This is a CPAN module for installing the various test dependencies that
+are found on CPAN.
+
+=head2 fc-solve/arch_doc
+
+The Freecell Solver Architecture Document. Somewhat out-of-date, but may
+be studied for general enlightenment.
+
+=head2 fc-solve/presets
+
+Some code that is used in order to calculate the built-in command-line
+presets, like “-l good-intentions” or “-l maliciously-obscure”. Not very
+documented. This code is written in parts in Perl, Bash and Mono.NET.
+
+=head2 fc-solve/rejects
+
+Contains code that is no longer used.
+
+=head2 fc-solve/docs
+
+Contains various documents that are not part of the main source distribution.
+Mostly specifications and planning documents.
+
+=head2 fc-solve/benchmarks
+
+Logs of various benchmarks of the code.
+
+=cut
