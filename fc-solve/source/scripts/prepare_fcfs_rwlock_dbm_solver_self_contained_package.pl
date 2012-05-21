@@ -12,7 +12,8 @@ mkpath("$dest_dir/libavl");
 mkpath("$dest_dir/pthread");
 
 system(qq{./Tatzer -l x64b --nfc=2 --states-type=COMPACT_STATES --dbm=kaztree});
-my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'rwlock.o', 'queue.o', 'libavl/avl.o', 'meta_alloc.o',);
+# my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'rwlock.o', 'queue.o', 'libavl/avl.o', 'meta_alloc.o',);
+my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'libavl/avl.o', 'meta_alloc.o',);
 
 foreach my $fn ('app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
     'dbm_kaztree.c', 'card.h', 'config.h', 'state.h',
