@@ -6,7 +6,14 @@ use warnings;
 use IO::All;
 use File::Path;
 
-my $dest_dir = 'dbm_fcs_for_amadiro';
+use Getopt::Long;
+
+my $flto = 0;
+GetOptions(
+    'flto!' => \$flto,
+) or die "No arguments";
+
+my $dest_dir = $flto ? 'dbm_fcs_for_subanark' : 'dbm_fcs_for_amadiro';
 mkpath("$dest_dir");
 mkpath("$dest_dir/libavl");
 mkpath("$dest_dir/pthread");
@@ -48,6 +55,8 @@ foreach my $deal_idx (@deals)
 
 @modules = sort { $a cmp $b } @modules;
 
+my $more_cflags = $flto ? " -flto " : '';
+
 io("$dest_dir/Makefile")->print(<<"EOF");
 TARGET = dbm_fc_solver
 DEALS = @deals
@@ -58,7 +67,7 @@ OFFLOAD_DIR_PATH_STAMP = \$(OFFLOAD_DIR_PATH)/stamp
 DEALS_DUMPS = \$(patsubst %,%.dump,\$(DEALS))
 THREADS = 12
 
-CFLAGS = -O3 -march=native -fomit-frame-pointer -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_RWLOCK=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I. -I./libavl
+CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_RWLOCK=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I. -I./libavl
 MODULES = @modules
 
 all: \$(TARGET) \$(OFFLOAD_DIR_PATH_STAMP)
