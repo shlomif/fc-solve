@@ -994,7 +994,7 @@ static void populate_instance_with_intermediate_input_line(
     fcs_encoded_state_buffer_t running_parent_and_move, running_key;
     fcs_state_keyval_pair_t running_state;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-    fcs_offloading_queue_item_t token;
+    fcs_offloading_queue_item_t token = NULL;
 #else
     fcs_dbm_queue_item_t * first_item;
 #endif
