@@ -1,0 +1,43 @@
+CC = gcc
+PROG_BASE = dbm_fc_solver
+COMMON_CFLAGS = -DFCS_DBM_USE_LIBAVL=1 -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I./libavl -I. -Wall -Werror=implicit-function-declaration
+
+LFLAGS = -lpthread
+
+REL_CFLAGS = $(COMMON_CFLAGS) -DNDEBUG
+DEB_CFLAGS = $(COMMON_CFLAGS) -DNDEBUG -g
+
+REL_BIN = release/$(PROG_BASE) 
+DEB_BIN = debug/$(PROG_BASE)
+
+all: $(STAMPS) $(REL_BIN) $(DEB_BIN)
+
+VERS = release debug
+DERIVED_DIRS = $(VERS) $(patsubst %,%/libavl,$(VERS))
+STAMPS = $(patsubst %,%/stamp,$(DERIVED_DIRS))
+
+$(STAMPS):
+	mkdir -p $(DERIVED_DIRS)
+	touch $(STAMPS)
+
+OBJECTS_BASE = app_str card dbm_solver state dbm_kaztree libavl/avl meta_alloc
+
+OBJECTS = $(patsubst %,%.o,$(OBJECTS_BASE))
+
+REL_OBJECTS = $(patsubst %,release/%,$(OBJECTS))
+DEB_OBJECTS = $(patsubst %,debug/%,$(OBJECTS))
+
+$(REL_OBJECTS): release/%.o: %.c $(STAMPS)
+	$(CC) -c $(REL_CFLAGS) -o $@ $<
+
+$(DEB_OBJECTS): debug/%.o: %.c $(STAMPS)
+	$(CC) -c $(DEB_CFLAGS) -o $@ $<
+
+$(REL_BIN): $(REL_OBJECTS)
+	$(CC) -o $@ $(REL_CFLAGS) $(REL_OBJECTS) $(LFLAGS)
+
+$(DEB_BIN): $(DEB_OBJECTS)
+	$(CC) -o $@ $(DEB_CFLAGS) $(DEB_OBJECTS) $(LFLAGS)
+
+%.show:
+	@echo "$* = $($*)"
