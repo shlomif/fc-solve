@@ -832,8 +832,7 @@ static void * instance_run_solver_thread(void * void_arg)
             FCS_LOCK(instance->queue_lock);
             instance->should_terminate = SOLUTION_FOUND_TERMINATE;
             instance->queue_solution_was_found = TRUE;
-            memcpy(&(instance->queue_solution), &(item->key),
-                   sizeof(instance->queue_solution));
+            instance->queue_solution = item->key;
             FCS_UNLOCK(instance->queue_lock);
             break;
         }
@@ -964,11 +963,15 @@ static void calc_trace(
             ))
 #endif
         {
-            assert(fc_solve_dbm_store_lookup_parent_and_move(
+            if (!fc_solve_dbm_store_lookup_parent_and_move(
                 instance->store,
                 key.s,
                 trace[trace_num].s
-                ));
+                ))
+            {
+                fprintf(stderr, "Trace problem in trace No. %d. Exiting\n", trace_num);
+                exit(-1);
+            }
         }
 #endif
     }
