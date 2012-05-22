@@ -9,11 +9,26 @@ use File::Path;
 use Getopt::Long;
 
 my $flto = 0;
+
+my $who;
+
 GetOptions(
     'flto!' => \$flto,
+    'who=s' => \$who,
 ) or die "No arguments";
 
-my $dest_dir = $flto ? 'dbm_fcs_for_subanark' : 'dbm_fcs_for_amadiro';
+if (!defined($who))
+{
+    die "Unknown who.";
+}
+
+my $subanark = 0;
+if ($who eq 'subanark')
+{
+    $flto = 1;
+    $subanark = 1;
+}
+my $dest_dir = $subanark ? 'dbm_fcs_for_subanark' : 'dbm_fcs_for_amadiro';
 mkpath("$dest_dir");
 mkpath("$dest_dir/libavl");
 mkpath("$dest_dir/pthread");
@@ -56,12 +71,13 @@ foreach my $deal_idx (@deals)
 @modules = sort { $a cmp $b } @modules;
 
 my $more_cflags = $flto ? " -flto " : '';
+my $offload_dir = $subanark ? './foo' : '/tmp/fc-solve-dbm-queue-offload-dir';
 
 io("$dest_dir/Makefile")->print(<<"EOF");
 TARGET = dbm_fc_solver
 DEALS = @deals
 
-OFFLOAD_DIR_PATH = /tmp/fc-solve-dbm-queue-offload-dir
+OFFLOAD_DIR_PATH = $offload
 OFFLOAD_DIR_PATH_STAMP = \$(OFFLOAD_DIR_PATH)/stamp
 
 DEALS_DUMPS = \$(patsubst %,%.dump,\$(DEALS))
