@@ -118,9 +118,18 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
     else
     {
 #ifdef FCS_DBM_RECORD_POINTER_REPR
-        *(fcs_encoded_state_buffer_t *)parent_and_move
-            = ((fcs_dbm_record_t *)existing)->parent_ptr->key_and_move_to_parent;
-        FCS_PARENT_AND_MOVE__GET_MOVE(*(fcs_encoded_state_buffer_t *)parent_and_move) = FCS_PARENT_AND_MOVE__GET_MOVE(((fcs_dbm_record_t *)existing)->key_and_move_to_parent);
+        fcs_dbm_record_t * p = (((fcs_dbm_record_t *)existing)->parent_ptr);
+
+        if (p)
+        {
+            *(fcs_encoded_state_buffer_t *)parent_and_move
+                = p->key_and_move_to_parent;
+            FCS_PARENT_AND_MOVE__GET_MOVE(*(fcs_encoded_state_buffer_t *)parent_and_move) = FCS_PARENT_AND_MOVE__GET_MOVE(((fcs_dbm_record_t *)existing)->key_and_move_to_parent);
+        }
+        else
+        {
+            fcs_init_encoded_state((fcs_encoded_state_buffer_t *)parent_and_move);
+        }
 #else
         *(fcs_encoded_state_buffer_t *)parent_and_move
             = ((fcs_dbm_record_t *)existing)->parent_and_move;
