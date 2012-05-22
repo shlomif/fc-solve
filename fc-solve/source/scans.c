@@ -159,8 +159,6 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 
 #ifdef DEBUG
 
-#include <assert.h>
-
 static void verify_state_sanity(
         fcs_state_t * ptr_state
         )

@@ -34,7 +34,6 @@
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
-#include <assert.h>
 #include <limits.h>
 #include <signal.h>
 

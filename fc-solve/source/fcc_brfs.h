@@ -34,6 +34,7 @@ extern "C"
 {
 #endif
 
+#include <assert.h>
 #include "config.h"
 
 #include "bool.h"
