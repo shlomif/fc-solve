@@ -10,7 +10,7 @@ WML_FLAGS = -DBERLIOS=BERLIOS
 
 #D = /home/httpd/html/ip-noise
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js downloads/*/*.tar.xz))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js downloads/*/*.xz))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
