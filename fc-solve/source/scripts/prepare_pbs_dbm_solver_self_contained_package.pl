@@ -10,7 +10,7 @@ use Getopt::Long;
 
 my $flto = 0;
 
-my $who;
+my $who = 'subanark';
 
 GetOptions(
     'flto!' => \$flto,
@@ -79,14 +79,10 @@ foreach my $deal_idx (@deals)
 @modules = sort { $a cmp $b } @modules;
 
 my $more_cflags = $flto ? " -flto " : '';
-my $offload_dir = $subanark ? './foo' : '/tmp/fc-solve-dbm-queue-offload-dir';
 
 io("$dest_dir/Makefile")->print(<<"EOF");
 TARGET = dbm_fc_solver
 DEALS = @deals
-
-OFFLOAD_DIR_PATH = $offload
-OFFLOAD_DIR_PATH_STAMP = \$(OFFLOAD_DIR_PATH)/stamp
 
 DEALS_DUMPS = \$(patsubst %,%.dump,\$(DEALS))
 DEALS_BOARDS = \$(patsubst %,%.board,\$(DEALS))
@@ -96,11 +92,7 @@ THREADS = 12
 CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_RWLOCK=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I. -I./libavl
 MODULES = @modules
 
-all: \$(TARGET) \$(OFFLOAD_DIR_PATH_STAMP) jobs
-
-\$(OFFLOAD_DIR_PATH_STAMP):
-\tmkdir -p \$(OFFLOAD_DIR_PATH)
-\ttouch \$\@
+all: \$(TARGET) jobs
 
 \$(TARGET): \$(MODULES)
 \tgcc -static \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -lm -lpthread
@@ -119,13 +111,8 @@ $(JOBS_STAMP):
 \$(JOBS): %: \$(JOBS_STAMP) \$(RESULT)
     bash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
 
-run: \$(DEALS_DUMPS)
-
-\$(DEALS_DUMPS): %.dump: all
-\t./\$(TARGET) --num-threads \$(THREADS) --offload-dir-path \$(OFFLOAD_DIR_PATH) \$(patsubst %.dump,%.board,\$\@) | tee \$\@ \$\@.backup
-
 %.show:
 \t\@echo "\$* = \$(\$*)"
 EOF
 
-system("tar" "-cavf", "$dest_dir.tar.gz", "$dest_dir/");
+system("tar", "-cavf", "$dest_dir.tar.gz", "$dest_dir/");
