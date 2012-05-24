@@ -92,7 +92,10 @@ THREADS = 12
 CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_RWLOCK=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I. -I./libavl
 MODULES = @modules
 
-all: \$(TARGET) jobs
+JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))
+JOBS_STAMP = jobs/STAMP
+
+all: \$(TARGET) \$(JOBS)
 
 \$(TARGET): \$(MODULES)
 \tgcc -static \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -lm -lpthread
@@ -101,15 +104,12 @@ all: \$(TARGET) jobs
 \$(MODULES): %.o: %.c
 \tgcc -c \$(CFLAGS) -o \$\@ \$<
 
-JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))
-JOBS_STAMP = jobs/STAMP
-
-$(JOBS_STAMP):
-    mkdir -p jobs
-    touch \$\@
+\$(JOBS_STAMP):
+\tmkdir -p jobs
+\ttouch \$\@
 
 \$(JOBS): %: \$(JOBS_STAMP) \$(RESULT)
-    bash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
+\tbash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
 
 %.show:
 \t\@echo "\$* = \$(\$*)"
