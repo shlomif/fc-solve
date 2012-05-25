@@ -1338,7 +1338,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     )
 {
     fc_solve_soft_thread_t * soft_thread;
-    fc_solve_hard_thread_t * optimization_thread;
+    fc_solve_hard_thread_t * old_hard_thread, * optimization_thread;
 
     STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL);
 
@@ -1350,13 +1350,20 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
         fc_solve_instance__init_hard_thread(instance, optimization_thread);
 
+        old_hard_thread = instance->current_hard_thread;
+
+        soft_thread = optimization_thread->soft_threads;
+
+        /* Copy enable_pruning from the thread that reached the solution,
+         * because otherwise -opt in conjunction with -sp r:tf will fail.
+         * */
+        soft_thread->enable_pruning = old_hard_thread->soft_threads[old_hard_thread->st_idx].enable_pruning;
     }
     else
     {
         optimization_thread = instance->optimization_thread;
+        soft_thread = optimization_thread->soft_threads;
     }
-
-    soft_thread = optimization_thread->soft_threads;
 
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {

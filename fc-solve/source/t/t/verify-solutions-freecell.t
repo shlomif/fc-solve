@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 26;
+use Test::More tests => 27;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -131,6 +131,11 @@ verify_solution_test({deal => 200, variant => "eight_off", theme => [],},
 # TEST
 verify_solution_test({deal => 24, theme => ["-opt"],},
     "-opt should work."
+);
+
+# TEST
+verify_solution_test({deal => 24, theme => ["-opt", "-sp", "r:tf",],},
+    "-opt in conjunction with --set-pruning r:tf should work."
 );
 
 # TEST
