@@ -15,6 +15,14 @@ it makes a difference in speed.
 Non-pressing
 ------------
 
+* Trap one of the UNIX signals in fc-solve to quit prematurely with a valid
+footer of "Iterations limit reached"/etc.
+
+* Create a displayer for fc-solve's solutions which will allow seeing where a card
+was moved from (using a colored →) and where it was placed.
+** Adapt it to dbm_fc_solve's solutions.
+** Create a GUI version.
+
 * Create a more compact queue for +dbm_solver.c+ which has a header of the
 next pointer to the item, some integers for start and finish within
 the queue, as well as a vector/array of items that are extracted. Then the
