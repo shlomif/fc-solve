@@ -63,11 +63,42 @@ for my $fn ("prepare_pbs_deal.bash")
     io("./scripts/$fn") > io("$dest_dir/$fn")
 }
 
+=begin old
+
 my @deals = (  
     33668,
     34152,
     41701,
     48819
+);
+
+=end old
+
+=cut
+
+my @deals = (
+    50553,
+    51401,
+    56187,
+    65362,
+    69644,
+    72350,
+    73654,
+    74402,
+    77294,
+    78318,
+    84269,
+    84481,
+    85382,
+    89078,
+    90074,
+    90249,
+    90298,
+    91463,
+    93324,
+    94419,
+    95991,
+    99250,
 );
 
 # my $deal_idx = 982;
@@ -82,7 +113,7 @@ my $more_cflags = $flto ? " -flto " : '';
 
 if (0)
 {
-    $more_clfags .= ' -DFCS_DBM_USE_RWLOCK=1 ';
+    $more_cflags .= ' -DFCS_DBM_USE_RWLOCK=1 ';
 }
 
 io("$dest_dir/Makefile")->print(<<"EOF");
@@ -114,7 +145,7 @@ all: \$(TARGET) \$(JOBS)
 \ttouch \$\@
 
 \$(JOBS): %: \$(JOBS_STAMP) \$(RESULT)
-\tbash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
+\tTHREADS="\$(THREADS)" bash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
 
 %.show:
 \t\@echo "\$* = \$(\$*)"
