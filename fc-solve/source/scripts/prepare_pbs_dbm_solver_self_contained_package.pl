@@ -10,7 +10,7 @@ use Getopt::Long;
 
 my $flto = 0;
 
-my $who = 'subanark';
+my $who = 'sub';
 
 GetOptions(
     'flto!' => \$flto,
@@ -22,13 +22,12 @@ if (!defined($who))
     die "Unknown who.";
 }
 
-my $subanark = 1;
-if ($who eq 'subanark')
+my $sub = 1;
+if ($sub)
 {
     $flto = 1;
-    $subanark = 1;
 }
-my $dest_dir = $subanark ? 'dbm_fcs_for_subanark' : 'dbm_fcs_for_amadiro';
+my $dest_dir = $sub ? 'dbm_fcs_for_sub' : 'dbm_fcs_for_amadiro';
 mkpath("$dest_dir");
 mkpath("$dest_dir/libavl");
 mkpath("$dest_dir/pthread");
