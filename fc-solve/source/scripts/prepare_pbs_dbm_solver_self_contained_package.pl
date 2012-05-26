@@ -80,6 +80,11 @@ foreach my $deal_idx (@deals)
 
 my $more_cflags = $flto ? " -flto " : '';
 
+if (0)
+{
+    $more_clfags .= ' -DFCS_DBM_USE_RWLOCK=1 ';
+}
+
 io("$dest_dir/Makefile")->print(<<"EOF");
 TARGET = dbm_fc_solver
 DEALS = @deals
@@ -89,7 +94,7 @@ DEALS_BOARDS = \$(patsubst %,%.board,\$(DEALS))
 
 THREADS = 12
 
-CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_RWLOCK=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I. -I./libavl
+CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I. -I./libavl
 MODULES = @modules
 
 JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))
