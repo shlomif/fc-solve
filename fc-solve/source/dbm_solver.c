@@ -38,7 +38,7 @@
 /*
  * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
  */
-#if 1
+#if 0
 #define FCS_DBM_SINGLE_THREAD 1
 #endif
 
