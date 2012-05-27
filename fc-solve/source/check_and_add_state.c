@@ -566,7 +566,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 
     {
         void * existing_void;
-    if ((existing_void = (fcs_collectible_state_t *)
+    if ((existing_void =
         fcs_libavl2_states_tree_insert(instance->tree, FCS_STATE_kv_to_collectible(new_state)))
             == NULL
        )
