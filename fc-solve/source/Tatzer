@@ -284,7 +284,7 @@ my @cmd= ("cmake",
     ),
     # Specifying a -D variable explicitly if it's not used gives a warning,
     # so we need to check that it is used.
-    (($state_storage_libavl2_tree && $stack_storage_libavl2_tree && exists($ENV{"LIBAVL2_SOURCE_DIR"}))
+    ((($state_storage_libavl2_tree || $stack_storage_libavl2_tree) && exists($ENV{"LIBAVL2_SOURCE_DIR"}))
         ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
         : ()
     ),
