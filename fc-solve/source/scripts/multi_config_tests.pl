@@ -133,16 +133,26 @@ use warnings;
 
 local *run_cmd = \&Games::Solitaire::FC_Solve::Test::Trap::Obj::run_cmd;
 
+sub run_tests
+{
+    my ($blurb_base, $args) = @_;
+
+    my $tatzer_args = $args->{'tatzer_args'};
+
+    run_cmd("$blurb_base Tatzer", {cmd => ['./Tatzer', @$tatzer_args]});
+    run_cmd("$blurb_base make", {cmd => [qw(make -j2)]});
+    run_cmd("$blurb_base make", {cmd => [$^X, "run-tests.pl"]});
+
+    return;
+}
+
 run_cmd('git checkout', {cmd => [qw(git checkout master)],});
 run_cmd('git pull', {cmd => [qw(git pull --ff-only origin master)],});
 
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
-#
 
-run_cmd("Default Tatzer", {cmd => [qw(./Tatzer)]});
-run_cmd("Default make", {cmd => [qw(make -j2)]});
-run_cmd("Default make", {cmd => [$^X, "run-tests.pl"]});
+run_tests("Default", { tatzer_args => [] });
 
 exit(0);
 
