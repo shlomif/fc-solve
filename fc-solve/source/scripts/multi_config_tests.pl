@@ -171,6 +171,14 @@ run_tests("libavl2 with COMPACT_STATES and --rcs",
     }
 );
 
+run_tests("libavl2 with INDIRECT_STATES",
+    {
+        tatzer_args =>
+        [qw(-l x64t --libavl2-p=prb)]
+    }
+);
+
+
 exit(0);
 
 =head1 COPYRIGHT & LICENSE
