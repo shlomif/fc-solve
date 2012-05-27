@@ -138,8 +138,13 @@ run_cmd('git pull', {cmd => [qw(git pull --ff-only origin master)],});
 
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
+#
 
-1;
+run_cmd("Default Tatzer", {cmd => [qw(./Tatzer)]});
+run_cmd("Default make", {cmd => [qw(make -j2)]});
+run_cmd("Default make", {cmd => [$^X, "run-tests.pl"]});
+
+exit(0);
 
 =head1 COPYRIGHT & LICENSE
 
