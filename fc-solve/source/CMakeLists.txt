@@ -386,6 +386,9 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DDEBUG=1")
 
+    # Removed these flags because they emitted spurious warnings, which were of 
+    # no use to us:
+    # "-Winline"
     IF (${CMAKE_COMPILER_IS_GNUCC})
         ADD_DEFINITIONS(
             "-Wold-style-declaration"
@@ -396,7 +399,6 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
             "-Wbad-function-cast"
             "-Wstrict-prototypes"
             "-Wmissing-declarations"
-            "-Winline"
             "-Wundef"
             "-Wnested-externs"
             "-Wcast-qual"
