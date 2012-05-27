@@ -153,6 +153,7 @@ run_cmd('git pull', {cmd => [qw(git pull --ff-only origin master)],});
 # run_cmd('false', {cmd => [qw(false)],});
 
 run_tests("Default", { tatzer_args => [] });
+run_tests("--rcs", { tatzer_args => [qw(--rcs)] });
 
 exit(0);
 
