@@ -566,8 +566,10 @@ fcs_bool_t fc_solve_check_and_add_state(
     instance->tree_new_state = new_state->val;
 #endif
 
-    if ((existing_state_val = (fcs_collectible_state_t *)
-        fcs_libavl2_states_tree_insert(instance->tree, new_state_val))
+    {
+        void * existing_void;
+    if ((existing_void = (fcs_collectible_state_t *)
+        fcs_libavl2_states_tree_insert(instance->tree, FCS_STATE_kv_to_collectible(new_state)))
             == NULL
        )
     {
@@ -576,7 +578,9 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
     else
     {
+        FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
         return FALSE;
+    }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
