@@ -207,14 +207,15 @@ static void verify_soft_dfs_stack(
 
 static void free_states(fc_solve_instance_t * instance)
 {
-    HT_LOOP_DECLARE_VARS();
-
 #ifdef DEBUG
     printf("%s\n", "FREE_STATES HIT");
 #endif
 #if (! ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)))
     return;
 #else
+    {
+    HT_LOOP_DECLARE_VARS();
+
     /* First of all, let's make sure the soft_threads will no longer
      * traverse to the freed states that are currently dead end.
      * */
@@ -289,6 +290,7 @@ static void free_states(fc_solve_instance_t * instance)
         ((void *)instance)
     );
 #endif
+    }
 #endif
 }
 
