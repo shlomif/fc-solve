@@ -335,11 +335,9 @@ fcs_bool_t fc_solve_check_and_add_state(
  * tested and updated.
  * */   
 #define existing_state_val (existing_state_raw->val)
-#define new_state_val      (new_state->val)
 #define new_state_key      (new_state->key)
-#define new_state_info     new_state_val
 
-#define ON_STATE_NEW() on_state_new(instance, hard_thread, new_state_info);
+#define ON_STATE_NEW() on_state_new(instance, hard_thread, new_state->val);
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
