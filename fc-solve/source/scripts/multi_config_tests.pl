@@ -146,6 +146,8 @@ sub run_tests
     return;
 }
 
+local $ENV{LIBAVL2_SOURCE_DIR} = "$ENV{HOME}/Download/unpack/prog/c/avl-2.0.3/";
+
 run_cmd('git checkout', {cmd => [qw(git checkout master)],});
 run_cmd('git pull', {cmd => [qw(git pull --ff-only origin master)],});
 
@@ -154,6 +156,13 @@ run_cmd('git pull', {cmd => [qw(git pull --ff-only origin master)],});
 
 run_tests("Default", { tatzer_args => [] });
 run_tests("--rcs", { tatzer_args => [qw(--rcs)] });
+
+run_tests("libavl2 with COMPACT_STATES",
+    {
+        tatzer_args =>
+        [qw(-l x64t --states-type=COMPACT_STATES --libavl2-p=prb)]
+    }
+);
 
 exit(0);
 
