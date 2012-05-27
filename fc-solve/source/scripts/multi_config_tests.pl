@@ -139,9 +139,9 @@ sub run_tests
 
     my $tatzer_args = $args->{'tatzer_args'};
 
-    run_cmd("$blurb_base Tatzer", {cmd => ['./Tatzer', @$tatzer_args]});
-    run_cmd("$blurb_base make", {cmd => [qw(make -j2)]});
-    run_cmd("$blurb_base make", {cmd => [$^X, "run-tests.pl"]});
+    run_cmd("$blurb_base : Tatzer", {cmd => ['./Tatzer', @$tatzer_args]});
+    run_cmd("$blurb_base : make", {cmd => [qw(make -j2)]});
+    run_cmd("$blurb_base : make", {cmd => [$^X, "run-tests.pl"]});
 
     return;
 }
