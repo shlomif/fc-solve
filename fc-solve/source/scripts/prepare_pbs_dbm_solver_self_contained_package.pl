@@ -122,7 +122,7 @@ DEALS = @deals
 DEALS_DUMPS = \$(patsubst %,%.dump,\$(DEALS))
 DEALS_BOARDS = \$(patsubst %,%.board,\$(DEALS))
 
-THREADS = 12
+THREADS = 16
 
 CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I. -I./libavl
 MODULES = @modules
