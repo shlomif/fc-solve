@@ -164,6 +164,13 @@ run_tests("libavl2 with COMPACT_STATES",
     }
 );
 
+run_tests("libavl2 with COMPACT_STATES and --rcs",
+    {
+        tatzer_args =>
+        [qw(-l x64t --states-type=COMPACT_STATES --libavl2-p=prb --rcs)]
+    }
+);
+
 exit(0);
 
 =head1 COPYRIGHT & LICENSE
