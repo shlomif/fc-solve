@@ -29,8 +29,8 @@ Microsoft Freecell/Freecell Pro.
 * *Tom Holroyd* - sending several Seahaven Towers games which Freecell Solver
 was unable to solve, thus making me improve the algorithm.
 
-* *Markus F. X. J. Oberhumer* - writing PySol on whose code the board generation
-program for it is based. Also, contributing some patches.
+* *Markus F. X. J. Oberhumer* - writing PySol, on whose code I based the board
+generation program for it. He also contributed some patches.
 
 * *Justin-Heyes Jones* - wrote a nice introduction to the A* algorithm, and 
 wrote the basis for the pqueue.c code.
