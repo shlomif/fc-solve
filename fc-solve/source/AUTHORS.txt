@@ -105,3 +105,8 @@ links on the Freecell Solver homepage.
 * *Kaz Kylheku* ( http://www.kylheku.com/~kaz/ ) - author and originator of
 kazlib ( http://www.kylheku.com/~kaz/kazlib.html ) whose BSDLed balanced binary
 search tree is included in the Freecell Solver distribution.
+
+* *Don Woods* ( http://www.icynic.com/~don/ ) - wrote an early Freecell
+solver ( http://fc-solve.shlomifish.org/don_woods.html ), whose source code
+inspired the early “delta states” algorithm, which is currently used by the 
+dbm_fc_solver.
