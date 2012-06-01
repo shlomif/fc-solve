@@ -1,3 +1,5 @@
+fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-len-proc
+fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-proc
 fc-solve/site/wml/dest
 fc-solve/source/1941.board
 fc-solve/source/24.board
@@ -39,8 +41,8 @@ fc-solve/source/USAGE.html
 fc-solve/source/USAGE.xml
 fc-solve/source/board_gen/CMakeFiles
 fc-solve/source/board_gen/Makefile
-fc-solve/source/board_gen/cmake_install.cmake
 fc-solve/source/board_gen/Makefile
+fc-solve/source/board_gen/cmake_install.cmake
 fc-solve/source/board_gen/fc-solve-board_gen.6
 fc-solve/source/board_gen/make-aisleriot-freecell-board
 fc-solve/source/board_gen/make-gnome-freecell-board
@@ -62,10 +64,10 @@ fc-solve/source/freecell-solver-multi-thread-solve
 fc-solve/source/freecell-solver-range-parallel-solve
 fc-solve/source/freecell-solver.spec
 fc-solve/source/libfcs_dbm_calc_derived_test.so
-fc-solve/source/libfcs_offloading_queue_test.so
 fc-solve/source/libfcs_delta_states_test.so
 fc-solve/source/libfcs_fcc_brfs_test.so
 fc-solve/source/libfcs_gen_ms_freecell_boards.so
+fc-solve/source/libfcs_offloading_queue_test.so
 fc-solve/source/libfreecell-solver.a
 fc-solve/source/libfreecell-solver.pc
 fc-solve/source/libfreecell-solver.so
@@ -77,7 +79,6 @@ fc-solve/source/man/cmake_install.cmake
 fc-solve/source/man/freecell-solver-range-parallel-solve.6
 fc-solve/source/measure-depth-dep-tests-order-perf
 fc-solve/source/prefix.h
-fc-solve/source/tags
 fc-solve/source/t/CMakeFiles
 fc-solve/source/t/Makefile
 fc-solve/source/t/Presets/presetrc
@@ -111,5 +112,4 @@ fc-solve/source/t/t/card-test-parse.exe
 fc-solve/source/t/t/card-test-render.exe
 fc-solve/source/t/t/dbm-kaztree-compare-records-test.exe
 fc-solve/source/t/t/delta-states-test.exe
-fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-len-proc
-fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-proc
+fc-solve/source/tags
