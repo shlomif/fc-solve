@@ -34,23 +34,37 @@ sub print_tsv_line_generic
 }
 
 print_tsv_line_generic(sub { my ($hash_ref, $key) = @_; return $key }, {});
+
+my $is_finished = 0;
+
+my $LOG2_BASER = 1/log(2);
+
 LINES:
 while(my $l = <>)
 {
     chomp($l);
-    if ($l eq 'instance_run_all_threads start'
-            or $l eq 'instance_run_solver_thread start')
+    if (my ($func, $stage) = $l =~ m{\A(instance_run_all_threads|instance_run_solver_thread|handle_and_destroy_instance_solution) (start|end)\z})
+    {
+        if ($func eq 'handle_and_destroy_instance_solution'
+                and $stage eq 'start')
+        {
+            $is_finished = 1;
+        }
+        next LINES;
+    }
+    elsif ($l eq 'Could not solve successfully.')
     {
         next LINES;
     }
 
+
     if (not (($reached, $in_collection, $time) = $l =~ 
             m{\AReached (\d+) ; States-in-collection: (\d+) ; Time: (\d+\.\d+)\z}))
     {
-        die "Wrong syntax in line $line_idx Line is <<$l>>.\n";
+        die "Wrong syntax in line $line_idx Line is <<$l>>.";
     }
     
-    if ($last_reached + 100_000 != $reached)
+    if (($last_reached + 100_000 != $reached) && (!$is_finished))
     {
         die "Reached on line $line_idx is wrong.";
     }
@@ -64,7 +78,7 @@ while(my $l = <>)
     my $expected_queue_l = ">>>Queue Stats: inserted=$in_collection items_in_queue=$in_queue extracted=$reached";
     if ($queue_l ne $expected_queue_l)
     {
-        die "Wrong queue line on line No. $line_idx . Expected: <<<$expected_queue_l>>> - Got: <<<$queue_l>>>\n";
+        die "Wrong queue line on line No. $line_idx . Expected: <<<$expected_queue_l>>> - Got: <<<$queue_l>>>";
     }
 
     $ratio = $in_queue / $in_collection;
@@ -73,7 +87,7 @@ while(my $l = <>)
     {
         my $time_delta = $time-$last_time;
         my $time_delta_by_in_coll = $time_delta/($in_collection-$last_in_collection);
-        my $ratio_log = log($ratio)/log(2);
+        my $ratio_log = $ratio ? (log($ratio)*$LOG2_BASER) : 0;
 
         print_tsv_line_generic(
             sub { my ($hash_ref, $key) = @_; return $hash_ref->{$key} },
