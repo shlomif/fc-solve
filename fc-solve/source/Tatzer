@@ -42,6 +42,7 @@ my $trace_mem = 0;
 my $scan_buckets_num;
 my $build_docs = 1;
 my $with_dbm_solver;
+my $max_num_stacks;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -226,6 +227,7 @@ GetOptions(
     'tracemem!' => \$trace_mem,
     'scan-buckets-num=i' => \$scan_buckets_num,
     'build-docs!' => \$build_docs,
+    'num-stacks=i' => \$max_num_stacks,
 ) or
     die "Wrong options";
 
@@ -257,6 +259,7 @@ my @cmd= ("cmake",
     "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
     "-DCMAKE_INSTALL_PREFIX=$prefix",
     "-DDATADIR=$prefix/share",
+    (defined($max_num_stacks) ? ("-DMAX_NUM_STACKS=$max_num_stacks") : ()),
     ($freecell_only ? ("-DFCS_FREECELL_ONLY=1") : ()),
     ($no_simple_simon ? ("-DFCS_DISABLE_SIMPLE_SIMON=1") : ()),
     ($without_flipping ? ("-DFCS_WITHOUT_CARD_FLIPPING=1") : ()),
