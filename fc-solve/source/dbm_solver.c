@@ -937,36 +937,34 @@ static void calc_trace(
     int trace_num;
     int trace_max_num;
     fcs_encoded_state_buffer_t * trace;
-    fcs_encoded_state_buffer_t key;
+    fcs_encoded_state_buffer_t * key_ptr;
 
 #define GROW_BY 100
     trace_num = 0;
     trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
     trace[trace_num] = *ptr_initial_key;
 
+    key_ptr = trace;
     while (trace[trace_num].s[0])
     {
-        /* Omit the move. */
-        key = trace[trace_num];
-        FCS_PARENT_AND_MOVE__GET_MOVE(key) = '\0';
-
         if ((++trace_num) == trace_max_num)
         {
             trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
+            key_ptr = &(trace[trace_num-1]);
         }
 #ifndef FCS_DBM_CACHE_ONLY
 #ifndef FCS_DBM_WITHOUT_CACHES
         if (! pre_cache_lookup_parent_and_move(
             &(instance->pre_cache),
-            &key,
-            &(trace[trace_num])
+            key_ptr,
+            (key_ptr+1)
             ))
 #endif
         {
             if (!fc_solve_dbm_store_lookup_parent_and_move(
                 instance->store,
-                key.s,
-                trace[trace_num].s
+                key_ptr->s,
+                key_ptr[1].s
                 ))
             {
                 fprintf(stderr, "Trace problem in trace No. %d. Exiting\n", trace_num);
@@ -974,6 +972,7 @@ static void calc_trace(
             }
         }
 #endif
+        key_ptr++;
     }
 #undef GROW_BY
     *ptr_trace_num = trace_num;
