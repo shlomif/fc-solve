@@ -24,6 +24,7 @@
 #define AVL_H 1
 
 #include <stddef.h>
+#include <stdint.h>
 #include "meta_alloc.h"
 
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
@@ -86,23 +87,21 @@ struct avl_table
     unsigned long avl_generation;       /* Generation number. */
   };
 
-#ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
-#define NODE_GET_BALANCE(node) (*(signed char *)(&(node.avl_data.key.s[FCS_ENCODED_STATE_COUNT_CHARS-1])))
-#else
-#define NODE_GET_BALANCE(node) ((node).avl_balance)
-#endif
-#define NODEPTR_GET_BALANCE(p) (NODE_GET_BALANCE((*(p))))
 
 /* An AVL tree node. */
 struct avl_node
   {
-    struct avl_node *avl_link[2];  /* Subtrees. */
+    uintptr_t avl_mylink[2];  /* Subtrees. */
     avl_key_t avl_data;                /* Pointer to data. */
-#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
+#if 0
     signed char avl_balance;       /* Balance factor. */
 #endif
   };
-
+#define L(node, i) (avl_process_link(node->avl_mylink[i]))
+#define SET_L(node, i, val) (avl_set_link(node, i, val))
+#define NODEPTR_GET_BALANCE(p) avl_get_balance(p)
+#define NODE_GET_BALANCE(node) NODEPTR_GET_BALANCE(*(p))
+#define NODEPTR_SET_BALANCE(p, b) avl_set_balance((p), (b))
 /* AVL traverser structure. */
 struct avl_traverser
   {
