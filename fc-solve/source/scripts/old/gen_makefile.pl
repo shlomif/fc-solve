@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 
 use strict;
+use warnings;
+use autodie;
 
 sub min
 {
@@ -101,90 +103,104 @@ print "\n";
 print "clean:\n";
 print "\tdel *.obj *.exe *.lib *.dll *.exp\n";
 
-open I, "<Makefile.am";
-open O, ">Makefile.am.new";
-while (<I>)
+sub my_edit_file
 {
-    if (/^libfreecell_solver_la_SOURCES *=/)
-    {
-        print O "libfreecell_solver_la_SOURCES = " . join(" ", (map { "$_.c" } @objects)) . "\n";
-    }
-    elsif (/^#<<<HEADERS\.START/)
-    {
-        while(! /^#>>>HEADERS\.END/)
-        {
-            $_ = <I>;
-        }
-        print O "#<<<HEADERS.START\n";
-        my @headers_no_gen = map { (ref($_) eq "HASH") ? $_->{'name'} : $_ } (grep { (ref($_) eq "HASH") ? (! $_->{'gen'}) : 1 } @headers_proto);
-        for my $i (0 .. ((int(scalar(@headers_no_gen)/5)+((scalar(@headers_no_gen)%5) > 0))-1))
-        {
-            print O "EXTRA_DIST += " . join(" ", map { "$_.h" } @headers_no_gen[($i*5) .. min($i*5+4, $#headers_no_gen)]) . "\n";
-        }
-        print O "#>>>HEADERS.END\n";
-    }
-    else
-    {
-        print O $_;
-    }
-}
-close(O);
-close(I);
-rename("Makefile.am.new", "Makefile.am");
+    my ($filename, $sub_ref) = @_;
 
-open I, "<Makefile.gnu";
-open O, ">Makefile.gnu.new";
-while(<I>)
-{
-    if (/^#<<<OBJECTS\.START/)
-    {
-        while(! /^#>>>OBJECTS\.END/)
-        {
-            $_ = <I>;
-        }
-        print O "#<<<OBJECTS.START\n";
-        print O "OBJECTS = " . (" " x 20) . "\\\n";
-        print O join("", (map { sprintf((" " x 10) . "%-20s\\\n", ($_.".o")) } @objects));
-        print O "\n";
-        print O "#>>>OBJECTS.END\n";
-    }
-    else
-    {
-        print O $_;
-    }
-}
-close(O);
-close(I);
-rename("Makefile.gnu.new", "Makefile.gnu");
+    local $_;
+    my $new_fn = "$filename.new";
+    open my $in_fh, '<', $filename;
+    open my $out_fh, '>', $new_fn;
 
-open I, "<Makefile.lite";
-open O, ">Makefile.lite.new";
-while(<I>)
-{
-    if (/^INCLUDES *=/)
+    while (<$in_fh>)
     {
-        print O "INCLUDES = " . join(" ", (map { "$_.h" } @headers)) . "\n";
+        $sub_ref->($in_fh, $out_fh, $_);
     }
-    elsif (/^#<<<OBJECTS\.START/)
-    {
-        while(! /^#>>>OBJECTS\.END/)
-        {
-            $_ = <I>;
-        }
-        my @ext_objects = (@objects, "main");
-        print O "#<<<OBJECTS.START\n";
-        print O join("\n\n", (map { "$_.o: $_.c \$(INCLUDES)\n\t\$(CC) -c \$(OFLAGS) -o \$@ \$<" } @ext_objects));
-        print O "\n\nOBJECTS = " . join(" ", (map { "$_.o" } @ext_objects)) . "\n";
-        print O "#>>>OBJECTS.END\n";
-    }
-    else
-    {
-        print O $_;
-    }
+    close ($in_fh);
+    close ($out_fh);
+
+    rename ($new_fn, $filename);
 }
-close(O);
-close(I);
-rename("Makefile.lite.new", "Makefile.lite");
+
+my_edit_file('Makefile.am',
+    sub {
+        my ($in_fh, $out_fh) = @_;
+        if (/^libfreecell_solver_la_SOURCES *=/)
+        {
+            print {$out_fh} "libfreecell_solver_la_SOURCES = " . join(" ", (map { "$_.c" } @objects)) . "\n";
+        }
+        elsif (/^#<<<HEADERS\.START/)
+        {
+            while(! /^#>>>HEADERS\.END/)
+            {
+                $_ = <$in_fh>;
+            }
+            print {$out_fh} "#<<<HEADERS.START\n";
+            my @headers_no_gen = map { (ref($_) eq "HASH") ? $_->{'name'} : $_ } (grep { (ref($_) eq "HASH") ? (! $_->{'gen'}) : 1 } @headers_proto);
+            for my $i (0 .. ((int(scalar(@headers_no_gen)/5)+((scalar(@headers_no_gen)%5) > 0))-1))
+            {
+                print {$out_fh} "EXTRA_DIST += " . join(" ", map { "$_.h" } @headers_no_gen[($i*5) .. min($i*5+4, $#headers_no_gen)]) . "\n";
+            }
+            print {$out_fh} "#>>>HEADERS.END\n";
+        }
+        else
+        {
+            print {$out_fh} $_;
+        }
+
+        return;
+    }
+);
+
+my_edit_file('Makefile.gnu',
+    sub {
+        my ($in_fh, $out_fh) = @_;
+        if (/^#<<<OBJECTS\.START/)
+        {
+            while(! /^#>>>OBJECTS\.END/)
+            {
+                $_ = <$in_fh>;
+            }
+            print {$out_fh} "#<<<OBJECTS.START\n";
+            print {$out_fh} "OBJECTS = " . (" " x 20) . "\\\n";
+            print {$out_fh} join("", (map { sprintf((" " x 10) . "%-20s\\\n", ($_.".o")) } @objects));
+            print {$out_fh} "\n";
+            print {$out_fh} "#>>>OBJECTS.END\n";
+        }
+        else
+        {
+            print {$out_fh} $_;
+        }
+
+        return;
+    }
+);
+
+my_edit_file('Makefile.lite',
+    sub {
+        my ($in_fh, $out_fh) = @_;
+        if (/^INCLUDES *=/)
+        {
+            print {$out_fh} "INCLUDES = " . join(" ", (map { "$_.h" } @headers)) . "\n";
+        }
+        elsif (/^#<<<OBJECTS\.START/)
+        {
+            while(! /^#>>>OBJECTS\.END/)
+            {
+                $_ = <$in_fh>;
+            }
+            my @ext_objects = (@objects, "main");
+            print {$out_fh} "#<<<OBJECTS.START\n";
+            print {$out_fh} join("\n\n", (map { "$_.o: $_.c \$(INCLUDES)\n\t\$(CC) -c \$(OFLAGS) -o \$@ \$<" } @ext_objects));
+            print {$out_fh} "\n\nOBJECTS = " . join(" ", (map { "$_.o" } @ext_objects)) . "\n";
+            print {$out_fh} "#>>>OBJECTS.END\n";
+        }
+        else
+        {
+            print {$out_fh} $_;
+        }
+    }
+);
 
 
 

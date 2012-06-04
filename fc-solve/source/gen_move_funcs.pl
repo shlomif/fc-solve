@@ -147,8 +147,10 @@ for(my $i=0;$i<scalar(@tests);$i++)
 my $fcs_tests_num = scalar(@tests);
 my $fcs_aliases_num = scalar(keys(%aliases));
 
-open NUM, ">move_funcs_maps.h";
-print NUM <<"EOF" ;
+my $num_filename = 'move_funcs_maps.h';
+open my $num_fh, '>', $num_filename
+    or die "Cannot open '$num_filename' for writing - $!"
+print {$num_fh} <<"EOF" ;
 
 /*
     This file is generated from gen_move_funcs.pl.
@@ -177,7 +179,7 @@ extern fcs_test_aliases_mapping_t fc_solve_sfs_tests_aliases[FCS_TESTS_ALIASES_N
 #endif
 EOF
 ;
-close(NUM);
+close($num_fh);
 
 sub func_name
 {
@@ -195,8 +197,10 @@ sub func_name
 
 my $tests_string = join(",\n", (map { "    " . func_name($_->{'function'}) } @tests));
 my $aliases_string = join(",\n", (map { "    { \"$_\", " . $declared_tests{$aliases{$_}} . " }" } (sort { $a cmp $b } keys(%aliases))));
-open TESTS, ">move_funcs_maps.c";
-print TESTS <<"EOF" ;
+my $tests_filename = 'move_funcs_maps.c';
+open my $tests_fh, '>', $tests_filename
+    or die "Cannot open '$tests_filename' for writing - $!";
+print {$tests_fh} <<"EOF" ;
 /*
     This file is generated from gen_move_funcs.pl.
 
@@ -226,6 +230,6 @@ $aliases_string
 EOF
 ;
 
-close(TESTS);
+close ($tests_fh);
 
 

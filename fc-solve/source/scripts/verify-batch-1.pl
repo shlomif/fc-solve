@@ -1,3 +1,8 @@
+package main;
+
+use strict;
+use warnings;
+
 package Games::Solitaire::Verify::App::CmdLine;
 
 use strict;

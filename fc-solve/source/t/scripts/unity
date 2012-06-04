@@ -1,2 +1,6 @@
 #!/usr/bin/perl
+
+use strict;
+use warnings;
+
 exec { $ARGV[0] } @ARGV;
