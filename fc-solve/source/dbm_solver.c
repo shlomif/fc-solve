@@ -1276,6 +1276,7 @@ static unsigned char get_move_from_parent_to_child(
     fcs_encoded_state_buffer_t child)
 {
     unsigned char move_to_return;
+    fcs_encoded_state_buffer_t got_child;
     fcs_state_keyval_pair_t parent_state;
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
                         * derived_iter;
@@ -1310,12 +1311,11 @@ static unsigned char get_move_from_parent_to_child(
         fcs_init_and_encode_state(
             delta,
             &(derived_iter->state),
-            &(derived_iter->key)
+            &got_child
         );
 
-        if (compare_enc_states(&(derived_iter->key), &child) == 0)
+        if (compare_enc_states(&got_child, &child) == 0)
         {
-            move_to_return = derived_iter->move;
             break;
         }
     }
@@ -1325,6 +1325,7 @@ static unsigned char get_move_from_parent_to_child(
         fprintf(stderr, "%s\n", "Failed to find move. Terminating.");
         exit(-1);
     }
+    move_to_return = derived_iter->move;
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
 
