@@ -1250,6 +1250,87 @@ static void instance_run_all_threads(
     return;
 }
 
+static int compare_enc_states(
+    const fcs_encoded_state_buffer_t * a, const fcs_encoded_state_buffer_t * b
+)
+{
+    if (a->s[0] < b->s[0])
+    {
+        return -1;
+    }
+    else if (a->s[0] > b->s[0])
+    {
+        return 1;
+    }
+    else
+    {
+        return memcmp(a->s, b->s, a->s[0]+1);
+    }
+}
+
+
+static unsigned char get_move_from_parent_to_child(
+    fcs_dbm_solver_instance_t * instance,
+    fc_solve_delta_stater_t * delta,
+    fcs_encoded_state_buffer_t parent,
+    fcs_encoded_state_buffer_t child)
+{
+    unsigned char move_to_return;
+    fcs_state_keyval_pair_t parent_state;
+    fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
+                        * derived_iter;
+    fcs_compact_allocator_t derived_list_allocator;
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+
+    fc_solve_compact_allocator_init(&(derived_list_allocator), &(instance->meta_alloc));
+    fc_solve_delta_stater_decode_into_state(
+        delta,
+        parent.s,
+        &parent_state,
+        indirect_stacks_buffer
+        );
+
+    derived_list = NULL;
+    derived_list_recycle_bin = NULL;
+
+    instance_solver_thread_calc_derived_states(
+        &parent_state,
+        &parent,
+        &derived_list,
+        &derived_list_recycle_bin,
+        &derived_list_allocator,
+        TRUE
+    );
+
+    for (derived_iter = derived_list;
+            derived_iter ;
+            derived_iter = derived_iter->next
+    )
+    {
+        fcs_init_and_encode_state(
+            delta,
+            &(derived_iter->state),
+            &(derived_iter->key)
+        );
+
+        if (compare_enc_states(&(derived_iter->key), &child) == 0)
+        {
+            move_to_return = FCS_PARENT_AND_MOVE__GET_MOVE(derived_iter->parent_and_move);
+            break;
+        }
+    }
+
+    if (! derived_iter)
+    {
+        fprintf(stderr, "%s\n", "Failed to find move. Terminating.");
+        exit(-1);
+    }
+
+    fc_solve_compact_allocator_finish(&(derived_list_allocator));
+
+    return move_to_return;
+}
+
 static void trace_solution(
     fcs_dbm_solver_instance_t * instance,
     FILE * out_fh,
@@ -1284,7 +1365,12 @@ static void trace_solution(
             );
         if (i > 0)
         {
-            move = FCS_PARENT_AND_MOVE__GET_MOVE(trace[i]);
+            move = get_move_from_parent_to_child(
+                instance,
+                delta,
+                trace[i],
+                trace[i-1]
+            );
         }
 
         state_as_str =
