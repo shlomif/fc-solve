@@ -115,11 +115,7 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
 #define COMMIT_NEW_STATE(src, dest, is_reversible) \
 { \
  \
-    memcpy( \
-            &(ptr_new_state->parent_and_move), \
-            key, \
-            sizeof(ptr_new_state->parent_and_move) \
-          ); \
+    ptr_new_state->parent_and_move = *(key); \
     FCS_PARENT_AND_MOVE__GET_MOVE(ptr_new_state->parent_and_move) = MAKE_MOVE((src), (dest)); \
  \
     ptr_new_state->is_reversible_move = (is_reversible); \
