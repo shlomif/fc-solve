@@ -486,7 +486,8 @@ static GCC_INLINE void instance_destroy(
 static GCC_INLINE void instance_check_key(
     fcs_dbm_solver_instance_t * instance,
     fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent_and_move
+    fcs_encoded_state_buffer_t * parent,
+    unsigned char move
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
 #endif
@@ -525,7 +526,7 @@ static GCC_INLINE void instance_check_key(
 #endif
     else
 #else
-    if ((token = fc_solve_dbm_store_insert_key_value(instance->store, key, parent_and_move)))
+    if ((token = fc_solve_dbm_store_insert_key_value(instance->store, key, parent)))
 #endif
     {
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -539,8 +540,7 @@ static GCC_INLINE void instance_check_key(
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(pre_cache, key, parent_and_move);
 #else
-        cache_key = cache_insert(cache, key, moves_to_parent,
-                     FCS_PARENT_AND_MOVE__GET_MOVE(*parent_and_move));
+        cache_key = cache_insert(cache, key, moves_to_parent, move);
 #endif
 #endif
 
@@ -614,7 +614,7 @@ static GCC_INLINE void instance_check_multiple_keys(
     FCS_LOCK(instance->storage_lock);
     for (; list ; list = list->next)
     {
-        instance_check_key(instance, &(list->key), &(list->parent)
+        instance_check_key(instance, &(list->key), &(list->parent), list->move
 #ifdef FCS_DBM_CACHE_ONLY
             , moves_to_parent
 #endif
@@ -993,7 +993,7 @@ static void populate_instance_with_intermediate_input_line(
     fcs_encoded_state_buffer_t final_stack_encoded_state;
     int hex_digits;
     fcs_kv_state_t kv_init, kv_running;
-    fcs_encoded_state_buffer_t running_parent_and_move, running_key;
+    fcs_encoded_state_buffer_t running_parent, running_key;
     fcs_state_keyval_pair_t running_state;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fcs_offloading_queue_item_t token = NULL;
@@ -1042,23 +1042,23 @@ static void populate_instance_with_intermediate_input_line(
     /* The NULL parent and move for indicating this is the initial
      * state. */
     fcs_init_and_encode_state(delta, &(running_state), &running_key);
-    fcs_init_encoded_state(&(running_parent_and_move));
+    fcs_init_encoded_state(&(running_parent));
 
 #ifdef FCS_DBM_CACHE_ONLY
     running_moves = NULL;
 #endif
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent_and_move);
+    pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent);
 #else
     cache_insert(&(instance->cache), &(running_key), running_moves, '\0');
 #endif
 #else
-    fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent_and_move);
+    fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent);
 #endif
     instance->num_states_in_collection++;
 
-    running_parent_and_move = running_key;
+    running_parent = running_key;
 
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
     {
@@ -1125,19 +1125,17 @@ static void populate_instance_with_intermediate_input_line(
         fcs_init_and_encode_state(delta, &(running_state),
                                   &(running_key));
 
-        FCS_PARENT_AND_MOVE__GET_MOVE(running_parent_and_move) = move;
-
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent_and_move);
+        pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent);
 #else
         running_moves = (cache_insert(&(instance->cache), &(running_key), running_moves, move))->moves_to_key;
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent_and_move);
+        token = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent);
 #endif
         instance->num_states_in_collection++;
-        running_parent_and_move = running_key;
+        running_parent = running_key;
 
         /* We need to do the round-trip from encoding back
          * to decoding, because the order can change after
@@ -1485,7 +1483,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 #define PENULTIMATE_DEPTH 1
                     for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
                     {
-                        fprintf(out_fh, "%.2X,", FCS_PARENT_AND_MOVE__GET_MOVE(trace[i]));
+                        fprintf(out_fh, "%.2X,", get_move_from_parent_to_child(instance, delta, trace[i], trace[i-1]));
                     }
 #undef PENULTIMATE_DEPTH
                     free(trace);
