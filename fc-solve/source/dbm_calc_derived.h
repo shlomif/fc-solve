@@ -120,9 +120,7 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
             key, \
             sizeof(ptr_new_state->parent_and_move) \
           ); \
-    ptr_new_state->parent_and_move.s[ \
-        ptr_new_state->parent_and_move.s[0]+1 \
-        ] = MAKE_MOVE((src), (dest)); \
+    FCS_PARENT_AND_MOVE__GET_MOVE(ptr_new_state->parent_and_move) = MAKE_MOVE((src), (dest)); \
  \
     ptr_new_state->is_reversible_move = (is_reversible); \
     /* Finally, enqueue the new state. */ \
