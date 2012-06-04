@@ -50,7 +50,7 @@ typedef struct { unsigned char s[FCS_ENCODED_STATE_COUNT_CHARS]; } fcs_encoded_s
 
 struct fcs_dbm_record_struct
 {
-    fcs_encoded_state_buffer_t key_and_move_to_parent;
+    fcs_encoded_state_buffer_t key;
     struct fcs_dbm_record_struct * parent_ptr;
 };
 
@@ -61,7 +61,7 @@ typedef struct fcs_dbm_record_struct fcs_dbm_record_t;
 typedef struct
 {
     fcs_encoded_state_buffer_t key;
-    fcs_encoded_state_buffer_t parent_and_move;
+    fcs_encoded_state_buffer_t parent;
 } fcs_dbm_record_t;
 
 #endif

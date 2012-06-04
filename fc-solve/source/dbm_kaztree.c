@@ -44,7 +44,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 const unsigned char * fc_solve_dbm_store_insert_key_value(
     fcs_dbm_store_t store,
     const fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent_and_move
+    fcs_encoded_state_buffer_t * parent
 )
 {
     dbm_t * db;
@@ -63,18 +63,16 @@ const unsigned char * fc_solve_dbm_store_insert_key_value(
 #endif
 
 #ifdef FCS_DBM_RECORD_POINTER_REPR
-    to_check->key_and_move_to_parent = *key;
-    FCS_PARENT_AND_MOVE__GET_MOVE(to_check->key_and_move_to_parent) =
-        FCS_PARENT_AND_MOVE__GET_MOVE(*parent_and_move);
+    to_check->key = *key;
     {
         fcs_dbm_record_t parent_to_check;
 
-        parent_to_check.key_and_move_to_parent = *parent_and_move;
+        parent_to_check.key = *parent;
         to_check->parent_ptr = (fcs_dbm_record_t *)fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &parent_to_check);
     }
 #else
     to_check->key = *key;
-    to_check->parent_and_move = *parent_and_move;
+    to_check->parent = *parent;
 #endif
     ret = (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
 
@@ -86,7 +84,7 @@ const unsigned char * fc_solve_dbm_store_insert_key_value(
 #endif
     if (ret)
     {
-        return (unsigned char *)&(((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(db->kaz_tree, to_check)))->key_and_move_to_parent);
+        return (unsigned char *)&(((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(db->kaz_tree, to_check)))->key);
     }
     else
     {
@@ -94,20 +92,16 @@ const unsigned char * fc_solve_dbm_store_insert_key_value(
     }
 }
 
-fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
+fcs_bool_t fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store_t store,
     const unsigned char * key,
-    unsigned char * parent_and_move
+    unsigned char * parent
     )
 {
     dict_key_t existing;
 
     fcs_dbm_record_t to_check;
-#ifdef FCS_DBM_RECORD_POINTER_REPR
-    to_check.key_and_move_to_parent = *(const fcs_encoded_state_buffer_t *)key;
-#else
     to_check.key = *(const fcs_encoded_state_buffer_t *)key;
-#endif
 
     existing = fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &to_check);
 
@@ -122,17 +116,16 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
 
         if (p)
         {
-            *(fcs_encoded_state_buffer_t *)parent_and_move
-                = p->key_and_move_to_parent;
-            FCS_PARENT_AND_MOVE__GET_MOVE(*(fcs_encoded_state_buffer_t *)parent_and_move) = FCS_PARENT_AND_MOVE__GET_MOVE(((fcs_dbm_record_t *)existing)->key_and_move_to_parent);
+            *(fcs_encoded_state_buffer_t *)parent
+                = p->key;
         }
         else
         {
-            fcs_init_encoded_state((fcs_encoded_state_buffer_t *)parent_and_move);
+            fcs_init_encoded_state((fcs_encoded_state_buffer_t *)parent);
         }
 #else
-        *(fcs_encoded_state_buffer_t *)parent_and_move
-            = ((fcs_dbm_record_t *)existing)->parent_and_move;
+        *(fcs_encoded_state_buffer_t *)parent
+            = ((fcs_dbm_record_t *)existing)->parent;
 #endif
         return TRUE;
     }

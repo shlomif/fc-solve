@@ -78,10 +78,10 @@ fcs_bool_t fc_solve_dbm_store_does_key_exist(
     }
 }
 
-fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
+fcs_bool_t fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store_t store,
     const unsigned char * key_raw,
-    unsigned char * parent_and_move
+    unsigned char * parent
 )
 {
     dbm_t * db;
@@ -90,12 +90,12 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
     db = (dbm_t *)store;
     db->key.data = (unsigned char *)key_raw+1;
     db->key.size = key_raw[0];
-    db->data.data = parent_and_move+1;
+    db->data.data = parent+1;
     db->data.size = sizeof(fcs_encoded_state_buffer_t)-1;
 
     if ((ret = db->dbp->get(db->dbp, NULL, &(db->key), &(db->data), 0)) == 0)
     {
-        parent_and_move[0] = db->data.size-1;
+        parent[0] = db->data.size-1;
         return TRUE;
     }
     else if (ret == DB_NOTFOUND)
@@ -139,11 +139,8 @@ extern void fc_solve_dbm_store_offload_pre_cache(
 
         db->key.data = kv->key.s+1;
         db->key.size = kv->key.s[0];
-        /* We add 1 to the parent and move's length because it includes the
-         * trailing one-char move.
-         * */
-        db->data.data = kv->parent_and_move.s+1;
-        db->data.size = kv->parent_and_move.s[0]+1;
+        db->data.data = kv->parent.s+1;
+        db->data.size = kv->parent.s[0];
         if ((ret = dbp->put(dbp, NULL, &(db->key), &(db->data), 0)) != 0)
         {
             dbp->err(dbp, ret, "DB->put");

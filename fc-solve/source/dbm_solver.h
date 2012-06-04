@@ -25,7 +25,7 @@ union fcs_pre_cache_key_val_pair_struct
 {
     struct {
         fcs_encoded_state_buffer_t key;
-        fcs_encoded_state_buffer_t parent_and_move;
+        fcs_encoded_state_buffer_t parent;
     };
     union fcs_pre_cache_key_val_pair_struct * next;
 };
@@ -48,16 +48,16 @@ fcs_bool_t fc_solve_dbm_store_does_key_exist(
     const unsigned char * key_raw
 );
 
-fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(
+fcs_bool_t fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store_t store,
     const unsigned char * key,
-    unsigned char * parent_and_move
+    unsigned char * parent
     );
 
 const unsigned char * fc_solve_dbm_store_insert_key_value(
     fcs_dbm_store_t store,
     const fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent_and_move
+    fcs_encoded_state_buffer_t * parent
     );
 
 #ifndef FCS_DBM_WITHOUT_CACHES

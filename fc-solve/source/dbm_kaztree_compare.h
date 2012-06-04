@@ -37,12 +37,6 @@ extern "C"
 
 #include "delta_states.h"
 
-/*
- * TODO : We waste too much space and fragment it storing the
- * key/parent_move separatley from the dnode_t. We should use a struct
- * for that instead of a pointer.
- * */
-
 /* TODO: make sure the key is '\0'-padded. */
 #ifdef FCS_DBM_RECORD_POINTER_REPR
 static int compare_records(
@@ -51,7 +45,7 @@ static int compare_records(
 {
     const fcs_encoded_state_buffer_t * a, * b;
 
-#define GET_PARAM(p) (&(((const fcs_dbm_record_t *)(p))->key_and_move_to_parent))
+#define GET_PARAM(p) (&(((const fcs_dbm_record_t *)(p))->key))
     a = GET_PARAM(void_a);
     b = GET_PARAM(void_b);
 #undef GET_PARAM

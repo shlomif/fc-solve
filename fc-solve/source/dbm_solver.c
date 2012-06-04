@@ -129,10 +129,10 @@ static GCC_INLINE fcs_bool_t pre_cache_does_key_exist(
     return (fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check) != NULL);
 }
 
-static GCC_INLINE fcs_bool_t pre_cache_lookup_parent_and_move(
+static GCC_INLINE fcs_bool_t pre_cache_lookup_parent(
     fcs_pre_cache_t * pre_cache,
     fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent_and_move
+    fcs_encoded_state_buffer_t * parent
     )
 {
     fcs_pre_cache_key_val_pair_t to_check;
@@ -144,8 +144,8 @@ static GCC_INLINE fcs_bool_t pre_cache_lookup_parent_and_move(
 
     if (found_key)
     {
-        *parent_and_move =
-            ((fcs_pre_cache_key_val_pair_t *)(found_key))->parent_and_move;
+        *parent =
+            ((fcs_pre_cache_key_val_pair_t *)(found_key))->parent;
         return TRUE;
     }
     else
@@ -157,7 +157,7 @@ static GCC_INLINE fcs_bool_t pre_cache_lookup_parent_and_move(
 static GCC_INLINE void pre_cache_insert(
     fcs_pre_cache_t * pre_cache,
     fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent_and_move
+    fcs_encoded_state_buffer_t * parent
     )
 {
     fcs_pre_cache_key_val_pair_t * to_insert;
@@ -176,7 +176,7 @@ static GCC_INLINE void pre_cache_insert(
             );
     }
     to_insert->key = *key;
-    to_insert->parent_and_move = *parent_and_move;
+    to_insert->parent = *parent;
 
     fc_solve_kaz_tree_alloc_insert(pre_cache->kaz_tree, to_insert);
     pre_cache->count_elements++;
@@ -538,7 +538,7 @@ static GCC_INLINE void instance_check_key(
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(pre_cache, key, parent_and_move);
+        pre_cache_insert(pre_cache, key, parent);
 #else
         cache_key = cache_insert(cache, key, moves_to_parent, move);
 #endif
@@ -954,14 +954,14 @@ static void calc_trace(
         }
 #ifndef FCS_DBM_CACHE_ONLY
 #ifndef FCS_DBM_WITHOUT_CACHES
-        if (! pre_cache_lookup_parent_and_move(
+        if (! pre_cache_lookup_parent(
             &(instance->pre_cache),
             key_ptr,
             (key_ptr+1)
             ))
 #endif
         {
-            if (!fc_solve_dbm_store_lookup_parent_and_move(
+            if (!fc_solve_dbm_store_lookup_parent(
                 instance->store,
                 key_ptr->s,
                 key_ptr[1].s
@@ -1907,7 +1907,7 @@ int main(int argc, char * argv[])
 #define KEY_PTR() &(first_item->key)
 #endif
 
-        fcs_encoded_state_buffer_t parent_and_move;
+        fcs_encoded_state_buffer_t parent;
 
         instance_init(&instance, pre_cache_max_count, caches_delta,
                       dbm_store_path, max_count_of_items_in_queue,
@@ -1932,16 +1932,16 @@ int main(int argc, char * argv[])
 
         /* The NULL parent and move for indicating this is the initial
          * state. */
-        fcs_init_encoded_state(&(parent_and_move));
+        fcs_init_encoded_state(&(parent));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_and_move);
+        pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent);
 #else
         cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance.store, KEY_PTR(), &(parent_and_move));
+        token = fc_solve_dbm_store_insert_key_value(instance.store, KEY_PTR(), &(parent));
 #endif
 
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE

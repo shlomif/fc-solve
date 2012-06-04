@@ -87,7 +87,7 @@ struct avl_table
   };
 
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
-#define NODE_GET_BALANCE(node) (*(signed char *)(&(node.avl_data.key_and_move_to_parent.s[FCS_ENCODED_STATE_COUNT_CHARS-1])))
+#define NODE_GET_BALANCE(node) (*(signed char *)(&(node.avl_data.key.s[FCS_ENCODED_STATE_COUNT_CHARS-1])))
 #else
 #define NODE_GET_BALANCE(node) ((node).avl_balance)
 #endif
