@@ -1284,7 +1284,7 @@ static void trace_solution(
             );
         if (i > 0)
         {
-            move = trace[i].s[1+trace[i].s[0]];
+            move = FCS_PARENT_AND_MOVE__GET_MOVE(trace[i]);
         }
 
         state_as_str =
