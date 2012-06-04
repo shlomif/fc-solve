@@ -46,7 +46,7 @@ sub _test_range_verifier
 
 # TEST
 _test_range_verifier(
-    { min => 1, max => 10, 
+    { min => 1, max => 10,
             sols_dir => "$data_dir/bakers-game-solutions-dir",
         },
     "1-10 Script was run successfully.",
@@ -101,18 +101,18 @@ sub _statistics_are
 _statistics_are(
     {
         counts =>
-        { 
-            solved => 
-            { 
+        {
+            solved =>
+            {
                 iters =>
-                {map { $_ => 1 } (73,145,146,164,453,726,815,1076,1213)}, 
+                {map { $_ => 1 } (73,145,146,164,453,726,815,1076,1213)},
                 gen_states => {map { $_ => 1 } (106, 184, 187, 205, 500, 790, 870, 1100, 1246)},
-                sol_lens => {(map { $_ => 1 } (97,98,100,109,112,122,124)), 119 => 2}, 
-            }, 
+                sol_lens => {(map { $_ => 1 } (97,98,100,109,112,122,124)), 119 => 2},
+            },
             unsolved =>
             {
                 iters => {3436 => 1,},
-                gen_states => {3436 => 1,} 
+                gen_states => {3436 => 1,}
             },
         },
     },
@@ -121,7 +121,7 @@ _statistics_are(
 
 # TEST
 _test_range_verifier(
-    { min => 11, max => 20, 
+    { min => 11, max => 20,
             sols_dir => "$data_dir/bakers-game-11-to-20",
         },
     "11-20 Script was run successfully.",
@@ -131,14 +131,14 @@ _test_range_verifier(
 _statistics_are(
      {
         counts =>
-        { 
-            solved => 
-            { 
+        {
+            solved =>
+            {
                 iters =>
-                {(map { $_ => 1 } (72, 73, 75, 90, 101, 145,150, 164,300, 312, 453, 468, 726,815,1076,1213)), 146 => 2, }, 
+                {(map { $_ => 1 } (72, 73, 75, 90, 101, 145,150, 164,300, 312, 453, 468, 726,815,1076,1213)), 146 => 2, },
                 gen_states => {map { $_ => 1 } (96, 100, 106, 122, 147, 163, 177, 184, 187, 205, 321, 349, 500, 505, 790, 870, 1100, 1246)},
-                sol_lens => {(map { $_ => 1 } (95, 96,98,99, 104, 105, 109,112,113, 117, 122,124)), 119 => 2, 97 => 2, 100 => 2, }, 
-            }, 
+                sol_lens => {(map { $_ => 1 } (95, 96,98,99, 104, 105, 109,112,113, 117, 122,124)), 119 => 2, 97 => 2, 100 => 2, },
+            },
             unsolved =>
             {
                 iters => { map { $_ => 1 } (1891,3436) },

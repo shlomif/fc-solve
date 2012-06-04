@@ -41,7 +41,7 @@ else
     echo "Unknown mode '$mode'!" 1>&2
     exit -1
 fi
-    
+
 make -r -f Makefile.gnu FREECELL_ONLY=1 \
     EXTRA_CFLAGS="$pgo_flags" \
     COMPILER="$compiler" \

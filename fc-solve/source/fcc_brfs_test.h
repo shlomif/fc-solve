@@ -23,7 +23,7 @@
  */
 /*
  * fcc_brfs_test.h - the test interface declarations of fcc_brfs.h and
- * fcc_brfs_test.c . 
+ * fcc_brfs_test.c .
  *
  * This file is also included by the production code.
  */
@@ -58,7 +58,7 @@ typedef struct {
     fcs_fcc_moves_list_item_t * moves_list;
 } fcs_fcc_moves_seq_t;
 
-typedef struct 
+typedef struct
 {
     int count;
     fcs_fcc_move_t * moves;

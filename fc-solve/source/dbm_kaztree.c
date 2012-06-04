@@ -38,7 +38,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
     return;
 }
 
-/* 
+/*
  * Returns TRUE if the key was added (it didn't already exist.)
  * */
 const unsigned char * fc_solve_dbm_store_insert_key_value(
@@ -64,7 +64,7 @@ const unsigned char * fc_solve_dbm_store_insert_key_value(
 
 #ifdef FCS_DBM_RECORD_POINTER_REPR
     to_check->key_and_move_to_parent = *key;
-    FCS_PARENT_AND_MOVE__GET_MOVE(to_check->key_and_move_to_parent) = 
+    FCS_PARENT_AND_MOVE__GET_MOVE(to_check->key_and_move_to_parent) =
         FCS_PARENT_AND_MOVE__GET_MOVE(*parent_and_move);
     {
         fcs_dbm_record_t parent_to_check;
@@ -77,7 +77,7 @@ const unsigned char * fc_solve_dbm_store_insert_key_value(
     to_check->parent_and_move = *parent_and_move;
 #endif
     ret = (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
-    
+
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     if (! ret)
     {

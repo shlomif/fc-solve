@@ -43,8 +43,8 @@ sub verify_solution_test
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
     open my $fc_solve_output,
-        ($msdeals ? 
-            "pi-make-microsoft-freecell-board $deal | " : 
+        ($msdeals ?
+            "pi-make-microsoft-freecell-board $deal | " :
             ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ")
         ) .
         "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
@@ -241,7 +241,7 @@ verify_solution_test(
         theme => [qw(--freecells-num 2 -to '[012][347]' --method random-dfs -seed 33)],
         variant => "custom",
         msdeals => 1,
-        variant_params => 
+        variant_params =>
         Games::Solitaire::Verify::VariantParams->new(
             {
                 'num_decks' => 1,
@@ -265,7 +265,7 @@ verify_solution_test(
         theme => [qw(--freecells-num 2 -to '[012][347]' --method random-dfs -seed 236)],
         variant => "custom",
         msdeals => 1,
-        variant_params => 
+        variant_params =>
         Games::Solitaire::Verify::VariantParams->new(
             {
                 'num_decks' => 1,
@@ -283,7 +283,7 @@ verify_solution_test(
 
 # TEST
 verify_solution_test({
-        deal => 24, 
+        deal => 24,
         theme => ["--set-pruning", "r:tf"],
     },
     "Solving Deal #24 with set-pruning run-to-founds",
@@ -291,7 +291,7 @@ verify_solution_test({
 
 # TEST
 verify_solution_test({
-        deal => 1, 
+        deal => 1,
         theme => ["--set-pruning", "r:tf"],
     },
     "Solving Deal #1 with set-pruning run-to-founds",
@@ -299,7 +299,7 @@ verify_solution_test({
 
 # TEST
 verify_solution_test({
-        deal => 1, 
+        deal => 1,
         theme => ["--method", "a-star", "--set-pruning", "r:tf"],
     },
     "Solving Deal #1 with --method a-star and set-pruning run-to-founds",

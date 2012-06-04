@@ -7,6 +7,6 @@ end
 
 File.open("card_compare_lookups.c", "w") do |fh|
     fh.puts("/* WARNING! This file is generated from gen_card_compare_table.rb */");
-    fh.puts("signed char fc_solve_card_compare_lookup[256] = { " + 
+    fh.puts("signed char fc_solve_card_compare_lookup[256] = { " +
             values.map{ |i| i.to_s() }.join(',') + "};")
 end

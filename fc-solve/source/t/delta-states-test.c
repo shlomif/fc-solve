@@ -70,7 +70,7 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_key
 
     fc_solve_delta_stater_decode_into_state(
         delta,
-        enc_state, 
+        enc_state,
         &(new_derived_state),
         new_derived_indirect_stacks_buffer
     );
@@ -221,7 +221,7 @@ int main_tests()
 
             /* TEST
              * */
-            ok (enc.enc[0] == 
+            ok (enc.enc[0] ==
                     (6  /* 3 bits of orig len. */
                      | (0 << 3) /*  4 bits of derived len. */
                     )
@@ -319,7 +319,7 @@ int main_tests()
 
             /* TEST
              * */
-            ok (bit_r.current == bit_w.current && 
+            ok (bit_r.current == bit_w.current &&
                     (bit_r.bit_in_char_idx == bit_w.bit_in_char_idx),
                     "Reached the end of the encoding.");
 
@@ -503,7 +503,7 @@ int main_tests()
 
         /* TEST
          * */
-        ok (!strcmp(s, 
+        ok (!strcmp(s,
             (
 "Foundations: H-0 C-0 D-0 S-4 \n"
 "Freecells:  TD  KS\n"

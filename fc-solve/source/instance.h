@@ -673,7 +673,7 @@ struct fc_solve_hard_thread_struct
 
     fcs_bool_t allocated_from_list;
     int num_soft_threads;
- 
+
     /*
      * A counter that determines how many of the soft threads that belong
      * to this hard thread have already finished. If it becomes num_soft_threads
@@ -1426,7 +1426,7 @@ static GCC_INLINE int fc_solve_resume_instance(
     }
     else
     {
-        fc_solve_hard_thread_t * end_of_hard_threads = 
+        fc_solve_hard_thread_t * end_of_hard_threads =
             instance->hard_threads + instance->num_hard_threads
             ;
 

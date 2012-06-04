@@ -231,9 +231,9 @@ sub preset_to_string
     @vars{qw(preset fc s d sbb sm esf tests_order allowed_tests)} = @lines;
 
     my $ret;
-    
+
     $c_template->process(\$c_template_input, \%vars, \$ret);
-    
+
     $ret =~ s{\s+\z}{}ms;
 
     return $ret;

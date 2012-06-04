@@ -13,7 +13,7 @@ ARGV.each do |fn|
     File.open(fn, "r") do |file|
         line_num = 1
         while (l = file.gets)
-            l.gsub!(/\/\*.*?\*\//m, ""); 
+            l.gsub!(/\/\*.*?\*\//m, "");
             l.gsub!(/(?:"([^\\]|\\.)*?")|(?:'[^'']+?')/m, " ");
             if (m = /\A(.*?)((?:\/\*)|\z)/m.match(l))
                 before = m[1]
@@ -34,7 +34,7 @@ ARGV.each do |fn|
                         redo
                     end
                 else
-                    line_num += 1                
+                    line_num += 1
                 end
             end
         end

@@ -2,7 +2,7 @@
 
 # What this script does is shorten the fc_solve_.* identifiers in the
 # *.c and *.h files to be very short (while still starting with "fc_solve_").
-# It was meant as an experiment to see how well it reduces the size of the 
+# It was meant as an experiment to see how well it reduces the size of the
 # generated libraries considerably.
 #
 # The savings are:

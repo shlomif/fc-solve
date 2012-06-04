@@ -12,7 +12,7 @@ use Inline (
     C => <<'EOF',
 #include "dbm_calc_derived_iface.h"
 
-typedef struct 
+typedef struct
 {
     char * state_string;
     unsigned char move;
@@ -24,7 +24,7 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
         DerivedState* s;
         int count, i;
         fcs_derived_state_debug_t * derived_states, * iter;
-        
+
         fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             init_state_s,
             &count,
@@ -75,8 +75,8 @@ EOF
     CLEAN_AFTER_BUILD => 0,
     INC => "-I" . Cwd::getcwd(),
     LIBS => "-L" . Cwd::getcwd() . " -lfcs_dbm_calc_derived_test",
-    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
-    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
+    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
+    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 

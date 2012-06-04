@@ -19,7 +19,7 @@ def measure_size(preset)
 end
 
 def config_and_measure(preset, args)
-    config(args)   
+    config(args)
     system("make clean");
     system("make");
     measure_size(preset)
@@ -36,13 +36,13 @@ config("--nowith-context-var");
 
 mk_gnu_and_measure("gcc-Os", "FREECELL_ONLY=0 DISABLE_SIMPLE_SIMON=0")
 mk_gnu_and_measure("gcc-Os-fc-only", "FREECELL_ONLY=1")
-mk_gnu_and_measure("gcc-Os-no-simple-simon", 
+mk_gnu_and_measure("gcc-Os-no-simple-simon",
                    "FREECELL_ONLY=0 DISABLE_SIMPLE_SIMON=1"
                   )
-mk_gnu_and_measure("gcc-Os-fc-only-no-flips", 
+mk_gnu_and_measure("gcc-Os-fc-only-no-flips",
                    "FREECELL_ONLY=1 WITHOUT_CARD_FLIPS=1"
                   )
-mk_gnu_and_measure("gcc-Os-fc-only-no-flips-no-ctx", 
+mk_gnu_and_measure("gcc-Os-fc-only-no-flips-no-ctx",
                    "FREECELL_ONLY=1 WITHOUT_CARD_FLIPS=1 WITHOUT_CONTEXT_VAR=1"
                   )
 
@@ -50,9 +50,9 @@ config_and_measure("default", "")
 config_and_measure("release", "-r")
 config_and_measure("r-fc-only", "-r --fc-only")
 config_and_measure("r-no-simple-simon", "-r --disable-simple-simon")
-config_and_measure("r-fc-only-arch-omit-frame", 
+config_and_measure("r-fc-only-arch-omit-frame",
                    "-r --fc-only --omit-frame --arch=pentium4"
-                  )                  
+                  )
 config_and_measure("r-fc-only-omit-frame",
                    "-r --fc-only --omit-frame"
                   )

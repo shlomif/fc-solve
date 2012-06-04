@@ -7,9 +7,9 @@ use Statistics::Descriptive;
 
 my $num_fields = 2;
 
-my @stats = 
-    (map 
-        { Statistics::Descriptive::Full->new(); } 
+my @stats =
+    (map
+        { Statistics::Descriptive::Full->new(); }
         (1 .. $num_fields)
     );
 

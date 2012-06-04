@@ -24,7 +24,7 @@
 /*
  * meta_alloc.c - the Freecell Solver compact allocator based on the
  * meta-allocator concept that is used to collect the pages allocated by
- * the standard allocator after it is destroyed and to recycle them. 
+ * the standard allocator after it is destroyed and to recycle them.
  *
  * Also see alloc.c.
  */
@@ -69,7 +69,7 @@ static GCC_INLINE char * meta_request_new_buffer(
         return malloc(ALLOCED_SIZE);
     }
 }
-    
+
 void fc_solve_compact_allocator_extend(
     fcs_compact_allocator_t * allocator
         )
@@ -113,7 +113,7 @@ void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator)
 
     meta = allocator->meta;
 
-    /* Enqueue all the allocated buffers in the meta allocator for re-use. 
+    /* Enqueue all the allocated buffers in the meta allocator for re-use.
      * */
     for (
         iter = allocator->old_list, iter_next = OLD_LIST_NEXT(iter)

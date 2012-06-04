@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * dbm_cache.h - contains the implementation of the DBM solver cache routines. 
+ * dbm_cache.h - contains the implementation of the DBM solver cache routines.
  *
  */
 #ifndef FC_SOLVE_DBM_CACHE_H
@@ -71,8 +71,8 @@ static GCC_INLINE void cache_destroy(fcs_lru_cache_t * cache)
         {
             fcs_cache_key_info_t * cache_key;
 
-            for (cache_key = to_release[i] ; 
-                 cache_key ; 
+            for (cache_key = to_release[i] ;
+                 cache_key ;
                  cache_key = RECYCLE_BIN_NEXT(cache_key))
             {
                 free(cache_key->moves_to_key);

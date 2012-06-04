@@ -80,7 +80,7 @@ my %themes =
     bench => [qw(-l tt --omit-frame --without-flip --without-visited-iter)],
     fc_bench => [qw(
         -l bench --fc-only --without-depth-field
-        ) 
+        )
     ],
     mem_reduction_settings => [qw(
         --rcs --with-compact-moves --without-depth-field
@@ -131,7 +131,7 @@ for (my $idx = 0; $idx < @new_argv ; $idx++)
         {
             splice (@new_argv, $start_idx, $idx-$start_idx+1, @$cmd);
         }
-        
+
         $idx = $start_idx;
         redo CALC_NEW_ARGV;
     }
@@ -150,10 +150,10 @@ GetOptions(
     },
     'r|release' => sub {
         my ($opt, $val) = @_;
-        if ($val) 
+        if ($val)
         {
             $build_type = "release";
-        } 
+        }
         elsif ($build_type eq "release")
         {
             $build_type = "debug";
@@ -181,11 +181,11 @@ GetOptions(
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
     'dense' => sub {
         set_both("GOOGLE_DENSE_HASH");
-        _google_set_both("DENSE"); 
+        _google_set_both("DENSE");
     },
     'sparse' => sub {
-        set_both("GOOGLE_DENSE_HASH"); 
-        _google_set_both("SPARSE"); 
+        set_both("GOOGLE_DENSE_HASH");
+        _google_set_both("SPARSE");
     },
     'fc-only' => \$freecell_only,
     'static' => \$build_static_lib,
@@ -196,10 +196,10 @@ GetOptions(
     },
     'profile' => sub {
         my ($opt, $val) = @_;
-        if ($val) 
+        if ($val)
         {
             $build_type = "profile";
-        } 
+        }
         elsif ($build_type eq "profile")
         {
             $build_type = "debug";

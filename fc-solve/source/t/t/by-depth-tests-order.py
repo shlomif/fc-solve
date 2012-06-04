@@ -15,7 +15,7 @@ def test_1():
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
-    fcs.input_cmd_line("dto 1", 
+    fcs.input_cmd_line("dto 1",
         ["-to", "0123456789",
             "-dto", "1,0132456789",
         ]
@@ -34,7 +34,7 @@ def test_2():
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
-    fcs.input_cmd_line("dto 1", 
+    fcs.input_cmd_line("dto 1",
         ["-to", "0123456789",
             "-dto", "1,0132456789",
             "-dto", "50,056234",

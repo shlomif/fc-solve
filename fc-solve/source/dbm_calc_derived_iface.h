@@ -36,7 +36,7 @@ extern "C"
 #include "fcs_dllexport.h"
 #include "bool.h"
 
-typedef struct 
+typedef struct
 {
     char * state_string;
     unsigned char move;

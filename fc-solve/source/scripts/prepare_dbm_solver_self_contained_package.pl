@@ -44,7 +44,7 @@ all: \$(TARGET)
 \$(MODULES): %.o: %.c
 \tgcc -c \$(CFLAGS) -o \$\@ \$<
 
-run: all 
+run: all
 \t./\$(TARGET) --num-threads 64 \$(BOARD) | tee \$(DEAL_IDX).dump
 EOF
 

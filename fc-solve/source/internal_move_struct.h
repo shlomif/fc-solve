@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * internal_move_struct.h - header file for the internal move structure 
+ * internal_move_struct.h - header file for the internal move structure
  * of Freecell Solver.
  *
  * This file is not exposed to the outside.

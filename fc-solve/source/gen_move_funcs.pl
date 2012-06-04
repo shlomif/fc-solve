@@ -67,7 +67,7 @@ my @tests =
     {
         'function' => "atomic_move_freecell_card_to_empty_stack",
         'aliases' => [ qw(E) ],
-    },    
+    },
     {
         'function' => "simple_simon_move_sequence_to_founds",
         'aliases' => [ qw(a) ],

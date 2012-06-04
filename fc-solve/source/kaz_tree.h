@@ -105,7 +105,7 @@ typedef struct dict_t {
     dnode_free_t dict_freenode;
 #else
     fcs_compact_allocator_t dict_allocator;
-    dnode_t * dict_recycle_bin; 
+    dnode_t * dict_recycle_bin;
 #endif
     void *dict_context;
 #ifdef NO_FC_SOLVE
@@ -167,7 +167,7 @@ dict_key_t fc_solve_kaz_tree_lookup_value(dict_t *dict, dict_key_t key);
 
 extern dnode_t *fc_solve_kaz_tree_first(dict_t *);
 extern dnode_t *fc_solve_kaz_tree_next(dict_t *, dnode_t *);
-#ifdef NO_FC_SOLVE 
+#ifdef NO_FC_SOLVE
 extern dnode_t *dict_last(dict_t *);
 extern dnode_t *dict_prev(dict_t *, dnode_t *);
 extern dictcount_t dict_count(dict_t *);

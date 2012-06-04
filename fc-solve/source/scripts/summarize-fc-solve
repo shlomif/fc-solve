@@ -49,5 +49,5 @@ if ($is_solvable)
 my ($num_iters) = ($fcs_output =~ m{^Total number of states checked is (\d+)\.$}ms);
 my $sol_len = () = ($fcs_output =~ m{^Move}msg);
 
-print "Verdict: " . ($is_solvable ? "Solved" : "Unsolved") . 
+print "Verdict: " . ($is_solvable ? "Solved" : "Unsolved") .
     " ; Iters: $num_iters ; Length: $sol_len\n";

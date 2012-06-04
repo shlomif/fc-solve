@@ -86,7 +86,7 @@ sub _next_idx
     return $ret;
 }
 
-sub read 
+sub read
 {
     my ($self, $len) = @_;
 
@@ -206,7 +206,7 @@ sub set_derived
 
 my @suits = (qw(H C D S));
 
-# NOTE : Not used because it can be calculated from the freecells and the 
+# NOTE : Not used because it can be calculated from the freecells and the
 # columns.
 sub get_foundations_bits
 {
@@ -224,9 +224,9 @@ sub _get_suit_bit
     return (($suit eq 'H' || $suit eq 'C') ? 0 : 1);
 }
 
-my %suit_to_idx = do { 
+my %suit_to_idx = do {
     my $s = Games::Solitaire::Verify::Card->get_suits_seq();
-    (map { $s->[$_] => $_ } (0 .. $#$s)) ; 
+    (map { $s->[$_] => $_ } (0 .. $#$s)) ;
 };
 
 sub _get_card_bitmask
@@ -270,7 +270,7 @@ sub _get_column_encoding_composite
         ),
         enc =>
         [
-            [$self->_columns_initial_lens->[$col_idx] => $num_orig_cards], 
+            [$self->_columns_initial_lens->[$col_idx] => $num_orig_cards],
             [4 => $num_derived_cards ],
             @init_card,
             (
@@ -313,7 +313,7 @@ sub _composite_get_cols_and_indexes
         my $non_orig_idx = 0;
         my $empty_idx = $#cols;
 
-        # Move the empty columns to the front, but only within the 
+        # Move the empty columns to the front, but only within the
         # entirely_non_orig
         # That's because the orig columns should be preserved in their own
         # place.
@@ -355,7 +355,7 @@ sub _composite_get_cols_and_indexes
             {
                 last MOVE_EMPTIES_LOOP;
             }
-            
+
             @cols_indexes[$non_orig_idx, $empty_idx] =
                 @cols_indexes[$empty_idx, $non_orig_idx];
             $non_orig_idx++;
@@ -476,9 +476,9 @@ sub decode
     foreach my $col_idx (0 .. $self->_init_state->num_columns - 1)
     {
         my $col = Games::Solitaire::Verify::Column->new({cards => []});
-        
+
         my $num_orig_cards = $bit_reader->read($self->_columns_initial_lens->[$col_idx]);
-        
+
         my $orig_col = $self->_init_state->get_column($col_idx);
         foreach my $i (0 .. $num_orig_cards-1)
         {
@@ -519,7 +519,7 @@ sub decode
                 );
             }
         }
-        
+
         push @columns, $col;
     }
 

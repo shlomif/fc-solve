@@ -58,12 +58,12 @@ while(my $l = <>)
     }
 
 
-    if (not (($reached, $in_collection, $time) = $l =~ 
+    if (not (($reached, $in_collection, $time) = $l =~
             m{\AReached (\d+) ; States-in-collection: (\d+) ; Time: (\d+\.\d+)\z}))
     {
         die "Wrong syntax in line $line_idx Line is <<$l>>.";
     }
-    
+
     if (($last_reached + 100_000 != $reached) && (!$is_finished))
     {
         die "Reached on line $line_idx is wrong.";

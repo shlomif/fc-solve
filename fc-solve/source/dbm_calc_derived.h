@@ -220,7 +220,7 @@ static GCC_INLINE int horne_prune(
                 /* Get the top card in the stack */
                 card = fcs_col_get_card(col, cards_num-1);
 
-                if ((dest_foundation = 
+                if ((dest_foundation =
                     calc_foundation_to_put_card_on(&the_state, card)) >= 0)
                 {
                     /* We can safely move it. */
@@ -242,7 +242,7 @@ static GCC_INLINE int horne_prune(
             card = fcs_freecell_card(the_state, fc);
             if (fcs_card_card_num(card) != 0)
             {
-                if ((dest_foundation = 
+                if ((dest_foundation =
                     calc_foundation_to_put_card_on(&the_state, card)) >= 0)
                 {
                     num_cards_moved++;
@@ -257,20 +257,20 @@ static GCC_INLINE int horne_prune(
             }
         }
     } while (num_cards_moved);
-    
+
     /* modify moves_seq in-place. */
     if (count_moves_so_far && moves_seq)
     {
         fcs_fcc_moves_list_item_t * * iter;
         int pos, count, pos_moves_so_far;
-        
+
         iter = &(moves_seq->moves_list);
 
         /* Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
          * to point at the place to either write the new moves or alternatively
          * (on parity) on the pointer to allocate a new list_item for the
          * moves.
-         * 
+         *
          * If count is 0, then we should move 0.
          * If count is 1, then we should move 0.
          * .
@@ -280,7 +280,7 @@ static GCC_INLINE int horne_prune(
          * If count is 8, then we should move 1 time.
          *
          * to sum up we need to move count / FCS_FCC_NUM_MOVES_IN_ITEM .
-         * 
+         *
          * */
         count = moves_seq->count;
         for (pos = 0 ;
@@ -309,7 +309,7 @@ static GCC_INLINE int horne_prune(
         }
         moves_seq->count += count_moves_so_far;
     }
-    
+
     return count_moves_so_far;
 }
 
@@ -322,7 +322,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     const fcs_bool_t perform_horne_prune
 )
 {
-    fcs_derived_state_t * ptr_new_state; 
+    fcs_derived_state_t * ptr_new_state;
     int stack_idx, cards_num, ds;
     fcs_cards_column_t col, dest_col;
 #ifdef INDIRECT_STACK_STATES
@@ -473,7 +473,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                         COMMIT_NEW_STATE(
                             COL2MOVE(stack_idx), COL2MOVE(ds),
-                            FROM_COL_IS_REVERSIBLE_MOVE()   
+                            FROM_COL_IS_REVERSIBLE_MOVE()
                         )
                     }
                 }
@@ -509,7 +509,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                             fcs_empty_freecell(new_state, fc_idx);
                         }
-                        
+
                         COMMIT_NEW_STATE(
                             FREECELL2MOVE(fc_idx), COL2MOVE(ds),
                             TRUE
@@ -527,7 +527,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         {
             col = fcs_state_get_col(the_state, stack_idx);
             cards_num = fcs_col_len(col);
-            /* Bug fix: if there's only one card in a column, there's no 
+            /* Bug fix: if there's only one card in a column, there's no
              * point moving it to a new empty column.
              * */
             if (cards_num > 1)

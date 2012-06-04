@@ -44,7 +44,7 @@ while (my $state = read_state())
             init_state_str => $init_state_str,
         }
     );
-    
+
     $delta->set_derived(
         {
             state_str => $state,

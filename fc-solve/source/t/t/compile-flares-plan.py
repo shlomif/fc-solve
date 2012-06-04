@@ -50,7 +50,7 @@ def test_two_runs():
 
     name = "Two Run's"
     # TEST*$input_cmd_line
-    fcs.input_cmd_line("Input Flares", 
+    fcs.input_cmd_line("Input Flares",
         ["--flare-name", "dfs", "-nf",
          "--flare-name", "befs", "--method", "a-star"])
 
@@ -70,13 +70,13 @@ def test_two_runs():
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(name + " No. 2", 2);
 
-def test_with_checkpoints():    
+def test_with_checkpoints():
     testname = "With checkpoints"
 
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
-    fcs.input_cmd_line("Input Flares", 
+    fcs.input_cmd_line("Input Flares",
         ["--flare-name", "dfs", "-nf",
          "--flare-name", "befs", "--method", "a-star", "-nf",
          "--flare-name", "foo", "--method", "a-star",
@@ -99,10 +99,10 @@ def test_with_checkpoints():
 
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(("%s No. 2" % (testname)), 2);
-    
+
     # TEST*$flare_plan_item_is_run
     fcs.flare_plan_item_is_run(("%s No. 3" % (testname)), 3, 1, 1000);
-    
+
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(("%s No. 4" % (testname)), 4);
 
@@ -114,7 +114,7 @@ def test_with_checkpoints_and_explicit_checkpoint():
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
-    fcs.input_cmd_line("Input Flares", 
+    fcs.input_cmd_line("Input Flares",
         ["--flare-name", "dfs", "-nf",
          "--flare-name", "befs", "--method", "a-star", "-nf",
          "--flare-name", "foo", "--method", "a-star",
@@ -138,10 +138,10 @@ def test_with_checkpoints_and_explicit_checkpoint():
 
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(("%s No. 2" % (testname)), 2);
-    
+
     # TEST*$flare_plan_item_is_run
     fcs.flare_plan_item_is_run(("%s No. 3" % (testname)), 3, 1, 1000);
-    
+
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(("%s No. 4" % (testname)), 4);
 
@@ -154,7 +154,7 @@ def test_with_run_indef():
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
-    fcs.input_cmd_line("Input Flares", 
+    fcs.input_cmd_line("Input Flares",
         ["--flare-name", "dfs", "-nf",
          "--flare-name", "befs", "--method", "a-star", "-nf",
          "--flare-name", "foo", "--method", "a-star",
@@ -177,10 +177,10 @@ def test_with_run_indef():
 
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(("%s No. 2" % (testname)), 2);
-    
+
     # TEST*$flare_plan_item_is_run_indef
     fcs.flare_plan_item_is_run_indef(("%s No. 3" % (testname)), 3, 1);
-    
+
     # TEST*$flare_plan_item_is_checkpoint
     fcs.flare_plan_item_is_checkpoint(("%s No. 4" % (testname)), 4);
 

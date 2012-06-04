@@ -44,7 +44,7 @@ DEALS_DUMPS = \$(patsubst %,%.dump,\$(DEALS))
 THREADS = 12
 CACHE_SIZE = $cache_size
 
-all: 
+all:
 
 run: \$(DEALS_DUMPS)
 
@@ -62,7 +62,7 @@ if ($to_upload)
     {
         die "tar failed!";
     }
-    system("rsync", "-a", "-v", "--progress", "--inplace", $arc_name, 
+    system("rsync", "-a", "-v", "--progress", "--inplace", $arc_name,
         "hostgator:public_html/Files/files/code/"
     );
 }

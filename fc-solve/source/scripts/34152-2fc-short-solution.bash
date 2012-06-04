@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# What this script does is generate a relatively short solution for 
-# 34152-mid.board derived from the two-freecell #341,52 board which the 
+# What this script does is generate a relatively short solution for
+# 34152-mid.board derived from the two-freecell #341,52 board which the
 # solver had difficulty solving.
 
 function myfunc()

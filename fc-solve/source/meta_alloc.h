@@ -24,7 +24,7 @@
 /*
  * meta_alloc.h - the Freecell Solver compact allocator based on the
  * meta-allocator concept that is used to collect the pages allocated by
- * the standard allocator after it is destroyed and to recycle them. 
+ * the standard allocator after it is destroyed and to recycle them.
  *
  * Also see alloc.h.
  */

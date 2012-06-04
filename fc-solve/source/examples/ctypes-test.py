@@ -9,7 +9,7 @@ def main(argv):
 
     board = file(argv.pop(0)).read()
 
-    fcs.freecell_solver_user_solve_board(user, 
+    fcs.freecell_solver_user_solve_board(user,
         c_char_p(
            board
         )

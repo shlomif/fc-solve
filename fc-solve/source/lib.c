@@ -931,7 +931,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 fcs_kv_state_t pass;
                 pass.key = &(user->running_state.s);
                 pass.val = &(user->running_state.info);
-                
+
                 fcs_duplicate_kv_state(&pass, &state_pass);
             }
 
@@ -1068,8 +1068,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                     user->fc_solve_obj->effective_max_num_states_in_collection)
             )
             {
-                /* 
-                 * Bug fix:
+                /* Bug fix:
                  * We need to resume from the last flare in case we exceed
                  * the board iterations limit.
                  * */

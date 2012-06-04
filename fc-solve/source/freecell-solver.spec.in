@@ -1,6 +1,6 @@
 Name: freecell-solver
 Version: @VERSION@
-Release: 1 
+Release: 1
 License: MIT
 Group: Amusement/Games
 Source: http://fc-solve.shlomifish.org/downloads/fc-solve/freecell-solver-%{version}.tar.bz2
@@ -35,10 +35,10 @@ Requires: libfreecell-solver0 = %{version}
 
 %description -n libfreecell-solver0-devel
 Freecell Solver is a library for automatically solving boards of Freecell and
-similar variants of card Solitaire. This package contains the header files and 
+similar variants of card Solitaire. This package contains the header files and
 static libraries necessary for developing programs using Freecell Solver.
 
-You should install it if you are a game developer who would like to use 
+You should install it if you are a game developer who would like to use
 Freecell Solver from within your programs.
 
 %package -n libfreecell-solver0-static
@@ -55,7 +55,7 @@ It is not generally required.
 %prep
 %setup
 # This is a hack that is meant to make sure the README of the board
-# generation programs resides inside the board_gen sub-dir of the 
+# generation programs resides inside the board_gen sub-dir of the
 # documentation directory.
 cd board_gen
 mkdir doc

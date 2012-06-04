@@ -6,7 +6,7 @@ use warnings;
 =head1 digests-without-stat.t
 
 This test script aims to verify that scripts yield a good result of SHA-256
-digests and lengths while stripping away the lines of the statistics. This is 
+digests and lengths while stripping away the lines of the statistics. This is
 useful for pre-testing desirable solutions while avoiding the issue of the
 statistics like the number of states checked and the number of stored states.
 
@@ -36,7 +36,7 @@ sub verify_solution_test
 
 # 24 is my lucky number. (Shlomif)
 # TEST
-verify_solution_test({id => "freecell_default24", deal => 24, theme => [],}, 
+verify_solution_test({id => "freecell_default24", deal => 24, theme => [],},
     "Verifying the solution of deal #24");
 
 # TEST
@@ -106,10 +106,11 @@ verify_solution_test(
         theme => [
             # This is to avoid warnings on commas in qw(...)
         grep { /\S/ } split(/\s+/, <<'EOF')
-            
+
 --method a-star -asw 0.2,0.8,0,0,0 -step 500 --st-name 11 --flare-name 11 -nf
 --method a-star -to 0123467 -asw 0.5,0,0.3,0,0 -step 500 --st-name 18 --flare-name 18 -nf
 --flares-plan Run:200@18,Run:200@11,Run:200@18
+
 EOF
 
         ],

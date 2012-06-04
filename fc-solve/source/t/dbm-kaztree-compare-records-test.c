@@ -53,7 +53,7 @@ int main_tests()
             rec_a.key.s[0] = sizeof(rec_a.key)-1;
             rec_a.key.s[pos_idx] = '\x01';
 #endif
-            
+
             if (! (compare_records(&rec_a, &rec_b, NULL) > 0))
             {
                 diag("compare_records(rec_a, rec_b) returned a wrong value for position %d.\n", pos_idx);

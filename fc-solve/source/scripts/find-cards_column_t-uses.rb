@@ -26,8 +26,8 @@ Dir["*.c"].each do |fn|
                     end
                 end
             else
-                l.scan(/\w+/).each do |id| 
-                    if (r = active_ids[id]) then 
+                l.scan(/\w+/).each do |id|
+                    if (r = active_ids[id]) then
                         r["occur"].push({"line_num" => line_num, "string" => l})
                     end
                 end

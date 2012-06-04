@@ -14,7 +14,7 @@ set -x
 script_dirname="$(dirname $BASH_SOURCE[-1])"
 source "$script_dirname/fc_solve_common.bash"
 
-rsync -a -v --progress --exclude='**/.svn/**' "$script_dirname/../.." "$FCS_PATH" 
+rsync -a -v --progress --exclude='**/.svn/**' "$script_dirname/../.." "$FCS_PATH"
 
 # if ! test -e "$FCS_PATH" ; then
 #     svn export "$FCS_SOURCE_URL" "$FCS_PATH" && \

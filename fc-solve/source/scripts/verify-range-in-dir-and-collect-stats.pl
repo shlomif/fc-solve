@@ -90,21 +90,21 @@ sub _init
         'sequences-are-built-by=s' => sub {
             my (undef, $val) = @_;
 
-            my %seqs_build_by = 
+            my %seqs_build_by =
             (
-                (map { $_ => $_ } 
+                (map { $_ => $_ }
                     (qw(alt_color suit rank))
                 ),
                 "alternate_color" => "alt_color",
             );
-            
+
             my $proc_val = $seqs_build_by{$val};
 
             if (! defined($proc_val))
             {
                 die "Unknown sequences-are-built-by '$val'!";
             }
-            
+
             $variant_params->seqs_build_by($proc_val);
         },
         'empty-stacks-filled-by=s' => sub {
@@ -117,7 +117,7 @@ sub _init
             {
                 die "Unknown empty stacks filled by '$val'!";
             }
-            
+
             $variant_params->empty_stacks_filled_by($val);
         },
         'sequence-move=s' => sub {
@@ -140,7 +140,7 @@ sub _init
         push @$argv, "-";
     }
 
-    if (! $self->_min_idx($min_idx) ) 
+    if (! $self->_min_idx($min_idx) )
     {
         Carp::confess ("min-idx was not supplied.");
     }
@@ -194,7 +194,7 @@ sub _verify_contents
 
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $text_fh, 
+            input_fh => $text_fh,
             variant => "custom",
             variant_params => $variant_params,
         },
@@ -225,7 +225,7 @@ sub run
     my $max_idx = $self->_max_idx;
 
     my $get_data_struct = sub {
-        return +{ 
+        return +{
             moments => [map { Math::BigInt->new(0) } (0 .. $MAX_MOMENT)] };
     };
 
@@ -283,7 +283,7 @@ sub run
         open my $lock_fh, ">", $self->_summary_lock()
             or Carp::confess ("Cannot lock summary-lock - $!");
 
-        flock ($lock_fh, LOCK_EX) 
+        flock ($lock_fh, LOCK_EX)
             or Carp::confess("Cannot lock summary lock - $!");
 
         my $log_string
@@ -295,16 +295,16 @@ sub run
             nstore(
                 {
                     counts =>
-                    { solved => 
+                    { solved =>
                         { iters => {}, gen_states => {},
-                            sol_lens => {}, 
-                        }, 
+                            sol_lens => {},
+                        },
                         unsolved => {
                             iters => {},
-                            gen_states => {} 
-                        } 
-                    }  
-                }, 
+                            gen_states => {}
+                        }
+                    }
+                },
                 $self->_stats_file
             );
         }
@@ -319,11 +319,11 @@ sub run
             foreach my $type (keys(%$solved_rec))
             {
                 my $local_counts_hash = $solved_rec->{$type};
-                my $out_counts_hash = $out_solved_rec->{$type};   
+                my $out_counts_hash = $out_solved_rec->{$type};
 
                 foreach my $datum (keys ( %{$local_counts_hash} ) )
                 {
-                    ($out_counts_hash->{$datum} ||= 0) 
+                    ($out_counts_hash->{$datum} ||= 0)
                         += $local_counts_hash->{$datum};
                 }
             }
@@ -365,7 +365,7 @@ command line app for verifying the solutions of Solitaire games.
 
 =head1 DESCRIPTION
 
-This is a module implementing a standalone command line app for verifying the 
+This is a module implementing a standalone command line app for verifying the
 solutions of Solitaire games.
 
 =head1 EXPORTS

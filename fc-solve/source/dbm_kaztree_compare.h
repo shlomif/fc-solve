@@ -55,7 +55,7 @@ static int compare_records(
     a = GET_PARAM(void_a);
     b = GET_PARAM(void_b);
 #undef GET_PARAM
-    
+
     if (a->s[0] < b->s[0])
     {
         return -1;

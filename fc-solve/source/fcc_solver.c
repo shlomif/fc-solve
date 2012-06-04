@@ -37,7 +37,7 @@
 #include <limits.h>
 #include <signal.h>
 
-/* 
+/*
  * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
  * to improve CPU utilisations of the various worker threads and possibly
  * overall performance.
@@ -68,7 +68,7 @@ struct fcs_fully_connected_component_struct
 {
     /* The minimal state in the fully-connected component, according to
     the lexical sorting of the encoded state keys. This is used to identify
-    it and avoid collisions and re-processing. 
+    it and avoid collisions and re-processing.
     */
     fcs_encoded_state_buffer_t min_by_sorting;
     /* The minimal state by absolute depth (including that of
@@ -76,7 +76,7 @@ struct fcs_fully_connected_component_struct
     $depth-1 FCC that reaches it, wins the jackpot.
     */
     fcs_encoded_state_buffer_t min_by_absolute_depth;
-    /* Moves to the min_by_absolute_depth from the initial state. 
+    /* Moves to the min_by_absolute_depth from the initial state.
     (accumlative).
     */
     fcs_fcc_moves_seq_t moves_seq_to_min_by_absolute_depth;
@@ -100,8 +100,8 @@ typedef struct {
     int curr_depth;
     long max_num_elements_in_cache;
     fcs_fcc_collection_by_depth FCCs_by_depth[FCC_DEPTH];
-    /* No need to reset when we ascend to a new depth. 
-     * TODO : make sure the pointers to the encoded states 
+    /* No need to reset when we ascend to a new depth.
+     * TODO : make sure the pointers to the encoded states
      * inside the cache are always valid.
      * TODO : might be easier to reset during every ascension.
      * */
@@ -184,7 +184,7 @@ static GCC_INLINE void init_solver_state(
         max_num_elements_in_cache,
         meta_alloc
     );
-    
+
     for (i = 0 ; i < FCC_DEPTH ; i++)
     {
         fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[i]);
@@ -379,10 +379,10 @@ static int instance_run_solver(
     instance->count_num_processed++;
 
     /* Now: iterate over the depths and generate new states. */
-    for (curr_depth=0 
-         ; 
+    for (curr_depth=0
+         ;
          (ret == FCC_IMPOSSIBLE) && (curr_depth < FCC_DEPTH )
-         ; 
+         ;
          solver_state->curr_depth = ++curr_depth,
          fcc_stage++
          )
@@ -439,8 +439,8 @@ static int instance_run_solver(
             instance_time_printf (instance, "After perform_FCC_brfs\n");
 #endif
 
-            if (( (++instance->num_FCCs_processed_for_depth) 
-                % FCCs_per_depth_milestone_step ) 
+            if (( (++instance->num_FCCs_processed_for_depth)
+                % FCCs_per_depth_milestone_step )
                     == 0
             )
             {
@@ -461,7 +461,7 @@ static int instance_run_solver(
                         instance->max_processed_positions_count)
                     {
                         ret = FCC_INTERRUPTED;
-                            
+
                         goto fcc_loop_cleanup;
                     }
                 }
@@ -473,7 +473,7 @@ static int instance_run_solver(
 
                 instance->num_unique_FCCs_for_depth++;
 
-                /* First of all, add min_by_sorting to 
+                /* First of all, add min_by_sorting to
                  * fcc_stage->does_min_by_sorting_exist, so it won't be
                  * traversed again. We need to allocate a new copy because
                  * min_by_sorting is a temporary variable and the tree
@@ -563,12 +563,12 @@ static int instance_run_solver(
                     &(state),
                     &enc_state
                     );
-                    
+
                     next_fcc_stage = &(solver_state->FCCs_by_depth[
                         start_point_new_FCC_depth =
                             curr_depth + 1 + num_additional_moves
                     ]);
-                    
+
                     if (!
                         fc_solve_kaz_tree_lookup_value(
                             next_fcc_stage->does_min_by_absolute_depth_exist,
@@ -594,7 +594,7 @@ static int instance_run_solver(
                         {
                             fcs_fully_connected_component_t * temp_fcc;
                             temp_fcc = next_fcc_stage->queue_recycle_bin->next;
-                            next_fcc_stage->queue_recycle_bin->next = 
+                            next_fcc_stage->queue_recycle_bin->next =
                                 next_fcc_stage->queue;
                             next_fcc_stage->queue = next_fcc_stage->queue_recycle_bin;
                             next_fcc_stage->queue_recycle_bin = temp_fcc;
@@ -924,7 +924,7 @@ int main(int argc, char * argv[])
         {
             fprintf(out_fh, "==\n%s\n",
                    move_to_string(
-                       iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM], 
+                       iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM],
                        move_buffer
                    )
             );
@@ -938,7 +938,7 @@ int main(int argc, char * argv[])
         {
              fprintf(out_fh, "==\n%s\n",
                    move_to_string(
-                       iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM], 
+                       iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM],
                        move_buffer
                    )
             );
@@ -961,7 +961,7 @@ int main(int argc, char * argv[])
     {
         fprintf (out_fh, "VERDICT: %s\n", "Unknown return code. ERROR.");
     }
-    
+
     instance_time_printf(
         &instance,
         "{FINAL} Reached %li positions in total.\n", instance.count_num_processed

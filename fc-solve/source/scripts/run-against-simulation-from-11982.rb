@@ -21,7 +21,7 @@ while (out_line = fcs_output.readline()) do
     exp_line = expected_iters.readline()
     exp_line.chomp!
     # puts "{{#{out_line}}}->{{#{exp_line}}}"
-    
+
     if exp_line =~ /:(\d+)\z/
         total_iters += $1.to_i
     else
@@ -34,5 +34,5 @@ while (out_line = fcs_output.readline()) do
         end
     else
         raise "Incorrect output format at line '#{out_line}'"
-    end      
+    end
 end

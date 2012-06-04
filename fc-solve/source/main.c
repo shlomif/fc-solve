@@ -745,7 +745,7 @@ int main(int argc, char * argv[])
         while (ret == FCS_STATE_SUSPEND_PROCESS)
         {
             FCS_GET_TIME(mytime);
-            
+
             /* This was taken from:
              *
              * http://www.brokestream.com/procstat.html

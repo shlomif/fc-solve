@@ -469,7 +469,7 @@ static GCC_INLINE void fc_solve_init_locs(fcs_state_locs_struct_t * locs)
         locs->fc_locs[i] = (fcs_locs_t)i;
     }
 }
-                                         
+
 typedef struct fcs_state_extra_info_struct fcs_state_extra_info_t;
 
 struct fcs_state_keyval_pair_struct
@@ -733,10 +733,10 @@ static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:",
 
 #ifdef INDIRECT_STACK_STATES
 #define fc_solve_initial_user_state_to_c(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer) \
-    fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer) 
+    fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer)
 #else
 #define fc_solve_initial_user_state_to_c(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer) \
-    fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num) 
+    fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num)
 #endif
 
 static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
@@ -790,7 +790,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
         }
 
         first_line = 0;
-        
+
         for (prefix = fc_solve_freecells_prefixes ; (*prefix) ; prefix++)
         {
             if (!strncasecmp(str, (*prefix), strlen(*prefix)))
@@ -1093,7 +1093,7 @@ static GCC_INLINE int fc_solve_card_compare(
 {
 #ifdef FCS_WITH_CARD_COMPARE_LOOKUP
     return (*c1)-(*c2);
-#else 
+#else
     if (fcs_card_card_num(*c1) > fcs_card_card_num(*c2))
     {
         return 1;

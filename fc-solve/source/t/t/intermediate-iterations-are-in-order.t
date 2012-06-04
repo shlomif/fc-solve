@@ -54,7 +54,7 @@ sub assert_directly_ascending_iters
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
-    my $fc_solve_cmd_line = 
+    my $fc_solve_cmd_line =
     (
         ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ") .
         "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -s -i -p -t -sam " .
@@ -131,7 +131,7 @@ sub assert_directly_ascending_iters
             elsif ($iters_count != $last_iter+1)
             {
                 $verdict = 0;
-                $diag = "iters_count == $iters_count while last_iter == $last_iter\n" 
+                $diag = "iters_count == $iters_count while last_iter == $last_iter\n"
                 . "It should be iters_count == last_iter+1";
             }
             elsif (
@@ -208,10 +208,10 @@ assert_directly_ascending_iters({deal => 24, theme => ["--method", "a-star",],}
 assert_directly_ascending_iters(
     {
         deal => 24,
-        theme => 
+        theme =>
         [
-            qw(--method soft-dfs --st-name dfs -nst --method a-star 
-            --st-name befs --trim-max-stored-states 1000000 
+            qw(--method soft-dfs --st-name dfs -nst --method a-star
+            --st-name befs --trim-max-stored-states 1000000
             --prelude), '99@befs,10@dfs,1000@befs'
         ],
         'scan_ids' => [{id => "befs", count => 99}],

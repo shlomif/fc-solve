@@ -36,7 +36,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
     *store = (fcs_dbm_store_t)db;
     return;
 
-    err: 
+    err:
     if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
     {
         ret = t_ret;
@@ -130,8 +130,8 @@ extern void fc_solve_dbm_store_offload_pre_cache(
     kaz_tree = pre_cache->kaz_tree;
     dbp = db->dbp;
 
-    for (node = fc_solve_kaz_tree_first(kaz_tree); 
-            node ; 
+    for (node = fc_solve_kaz_tree_first(kaz_tree);
+            node ;
             node = fc_solve_kaz_tree_next(kaz_tree, node)
             )
     {
@@ -139,7 +139,7 @@ extern void fc_solve_dbm_store_offload_pre_cache(
 
         db->key.data = kv->key.s+1;
         db->key.size = kv->key.s[0];
-        /* We add 1 to the parent and move's length because it includes the 
+        /* We add 1 to the parent and move's length because it includes the
          * trailing one-char move.
          * */
         db->data.data = kv->parent_and_move.s+1;
@@ -147,7 +147,7 @@ extern void fc_solve_dbm_store_offload_pre_cache(
         if ((ret = dbp->put(dbp, NULL, &(db->key), &(db->data), 0)) != 0)
         {
             dbp->err(dbp, ret, "DB->put");
-            if ((t_ret = dbp->close(dbp, 0)) != 0 && ret == 0) 
+            if ((t_ret = dbp->close(dbp, 0)) != 0 && ret == 0)
             {
                 ret = t_ret;
             }

@@ -24,10 +24,10 @@ use Cwd;
 package FccStartPoint;
 
 use Inline (
-    C => <<'EOF',
+    C => <<"EOF",
 #include "fcc_brfs_test.h"
 
-typedef struct 
+typedef struct
 {
     char * state_as_string;
     SV * moves;
@@ -52,7 +52,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         &num_new_positions
     );
     results = (AV *)sv_2mortal((SV *)newAV());
-    
+
     for (iter = fcc_start_points ; iter->count ; iter++)
     {
         SV*      obj_ref = newSViv(0);
@@ -98,15 +98,15 @@ EOF
     CLEAN_AFTER_BUILD => 0,
     INC => "-I" . $ENV{FCS_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
-    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
-    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
+    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
+    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
 package FccIsNew;
 
 use Inline (
-    C => <<'EOF',
+    C => <<"EOF",
 #include "fcc_brfs_test.h"
 
 typedef char * * string_list_t;
@@ -115,7 +115,7 @@ static string_list_t av_to_char_p_p(AV * av)
 {
     string_list_t ret;
     int i, len;
-    
+
     len = av_len(av)+1;
     ret = malloc(sizeof(ret[0]) * (len+1));
 
@@ -166,8 +166,8 @@ EOF
     CLEAN_AFTER_BUILD => 0,
     INC => "-I" . $ENV{FCS_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
-    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
-    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
+    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
+    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
@@ -231,7 +231,7 @@ sub sanity_check
     );
 }
 
-sub get_num_new_positions 
+sub get_num_new_positions
 {
     my $self = shift;
 
@@ -240,22 +240,22 @@ sub get_num_new_positions
 
 package main;
 
-
+my $WS = ' ';
 use List::MoreUtils qw(any uniq none);
 
 {
     # MS Freecell Board No. 24.
     my $obj = FccStartPointsList->new(
         {
-            start => <<'EOF',
-4C 2C 9C 8C QS 4S 2H 
-5H QH 3C AC 3H 4H QD 
-QC 9S 6H 9H 3S KS 3D 
-5D 2S JC 5C JH 6D AS 
-2D KD TH TC TD 8D 
-7H JS KH TS KC 7C 
-AH 5S 6S AD 8H JD 
-7S 6C 7D 4D 8S 9D 
+            start => <<"EOF",
+4C 2C 9C 8C QS 4S 2H$WS
+5H QH 3C AC 3H 4H QD$WS
+QC 9S 6H 9H 3S KS 3D$WS
+5D 2S JC 5C JH 6D AS$WS
+2D KD TH TC TD 8D$WS
+7H JS KH TS KC 7C$WS
+AH 5S 6S AD 8H JD$WS
+7S 6C 7D 4D 8S 9D$WS
 EOF
         }
     );
@@ -269,16 +269,16 @@ EOF
     # MS Freecell Board No. 24 - middle board.
     my $obj = FccStartPointsList->new(
         {
-            start => <<'EOF',
-Foundations: H-Q C-8 D-5 S-Q 
+            start => <<"EOF",
+Foundations: H-Q C-8 D-5 S-Q$WS
 Freecells:  KD  7D
 : KH QC JD TC 9D
 : KC
-: 
+:$WS
 : KS QD JC TD 9C 8D
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
 : 6D
 EOF
         }
@@ -293,31 +293,31 @@ EOF
         "Horne prune did not take effect (found intermediate state)"
     );
 
-    my $canonize_state_sub = sub { 
+    my $canonize_state_sub = sub {
         my ($state) = @_;
         return join '', sort { $a cmp $b } split/^/, $state;
     };
 
-    my $canonized_state = $canonize_state_sub->(<<'EOF');
-Foundations: H-Q C-8 D-5 S-Q 
+    my $canonized_state = $canonize_state_sub->(<<"EOF");
+Foundations: H-Q C-8 D-5 S-Q$WS
 Freecells:  KD  7D
 : KH QC JD TC 9D
 : KC
-: 
+:$WS
 : KS QD JC TD 9C
-: 
-: 
+:$WS
+:$WS
 : 8D
 : 6D
 EOF
 
     # TEST
     ok (
-        (none { 
+        (none {
             $canonize_state_sub->($_->get_state_string())
-                eq 
+                eq
             $canonized_state
-        } 
+        }
             @{$obj->states()}
         ),
         "Intermediate states in the FCC are not placed in the list of start points.",
@@ -331,7 +331,7 @@ EOF
     ok (
         (none
             {
-                (length($_->get_moves()) == 1) && 
+                (length($_->get_moves()) == 1) &&
                 vec($_->get_moves(), 0, 4) == $half_move_spec,
             }
         ),
@@ -343,17 +343,17 @@ EOF
     # MS Freecell Board No. 24 - middle board.
     my $obj = FccStartPointsList->new(
         {
-            start => <<'EOF',
-Foundations: H-K C-K D-J S-Q 
-Freecells:  KD    
-: 
-: 
-: 
+            start => <<"EOF",
+Foundations: H-K C-K D-J S-Q$WS
+Freecells:  KD$WS$WS$WS$WS
+:$WS
+:$WS
+:$WS
 : KS QD
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
 EOF
         }
     );
@@ -381,28 +381,28 @@ EOF
 }
 
 {
-    my $init_state_s = <<'EOF';
-4C 2C 9C 8C QS 4S 2H 
-5H QH 3C AC 3H 4H QD 
-QC 9S 6H 9H 3S KS 3D 
-5D 2S JC 5C JH 6D AS 
-2D KD TH TC TD 8D 
-7H JS KH TS KC 7C 
-AH 5S 6S AD 8H JD 
-7S 6C 7D 4D 8S 9D 
+    my $init_state_s = <<"EOF";
+4C 2C 9C 8C QS 4S 2H$WS
+5H QH 3C AC 3H 4H QD$WS
+QC 9S 6H 9H 3S KS 3D$WS
+5D 2S JC 5C JH 6D AS$WS
+2D KD TH TC TD 8D$WS
+7H JS KH TS KC 7C$WS
+AH 5S 6S AD 8H JD$WS
+7S 6C 7D 4D 8S 9D$WS
 EOF
 
-    my $start_state_s = <<'EOF';
-Foundations: H-K C-K D-J S-Q 
-Freecells:  KD    
-: 
-: 
-: 
+    my $start_state_s = <<"EOF";
+Foundations: H-K C-K D-J S-Q$WS
+Freecells:  KD$WS$WS$WS$WS
+:$WS
+:$WS
+:$WS
 : KS QD
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
 EOF
 
     # Empty.
@@ -436,17 +436,17 @@ EOF
                 init_state => $init_state_s,
                 start_state => $start_state_s,
                 min_states => [],
-                states_in_cache => [<<'EOF'],
-Foundations: H-K C-K D-J S-Q 
-Freecells:  KD    
-: 
-: 
+                states_in_cache => [<<"EOF"],
+Foundations: H-K C-K D-J S-Q$WS
+Freecells:  KD$WS$WS$WS$WS
+:$WS
+:$WS
 : QD
 : KS
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
 EOF
             }
         )),
@@ -455,38 +455,38 @@ EOF
 }
 
 {
-    my $init_state_s = <<'EOF';
-4C 2C 9C 8C QS 4S 2H 
-5H QH 3C AC 3H 4H QD 
-QC 9S 6H 9H 3S KS 3D 
-5D 2S JC 5C JH 6D AS 
-2D KD TH TC TD 8D 
-7H JS KH TS KC 7C 
-AH 5S 6S AD 8H JD 
-7S 6C 7D 4D 8S 9D 
+    my $init_state_s = <<"EOF";
+4C 2C 9C 8C QS 4S 2H$WS
+5H QH 3C AC 3H 4H QD$WS
+QC 9S 6H 9H 3S KS 3D$WS
+5D 2S JC 5C JH 6D AS$WS
+2D KD TH TC TD 8D$WS
+7H JS KH TS KC 7C$WS
+AH 5S 6S AD 8H JD$WS
+7S 6C 7D 4D 8S 9D$WS
 EOF
 
-    my $start_state_s = <<'EOF';
-Foundations: H-Q C-8 D-5 S-Q 
+    my $start_state_s = <<"EOF";
+Foundations: H-Q C-8 D-5 S-Q$WS
 Freecells:  KD  7D
 : KH QC JD TC 9D
 : KC
-: 
+:$WS
 : KS QD JC TD 9C 8D
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
 : 6D
 EOF
 
     # The minimal state in the FCC as determined by gdb.
-    my $min_state_s = <<'EOF';
-Foundations: H-Q C-8 D-5 S-Q 
+    my $min_state_s = <<"EOF";
+Foundations: H-Q C-8 D-5 S-Q$WS
 Freecells:  6D  KH
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
 : 7D
 : KC
 : KD QC JD TC 9D

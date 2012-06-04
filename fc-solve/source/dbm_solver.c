@@ -42,7 +42,7 @@
 #define FCS_DBM_SINGLE_THREAD 1
 #endif
 
-/* 
+/*
  * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
  * to improve CPU utilisations of the various worker threads and possibly
  * overall performance.
@@ -199,13 +199,13 @@ static GCC_INLINE void cache_populate_from_pre_cache(
     for (
         item = avl_t_first(&trav, kaz_tree)
             ;
-        item 
+        item
             ;
         item = avl_t_next(&trav)
         )
     {
         cache_insert(
-            cache, 
+            cache,
             &(((fcs_pre_cache_key_val_pair_t *)(item))->key),
             NULL,
             '\0'
@@ -223,7 +223,7 @@ static GCC_INLINE void cache_populate_from_pre_cache(
             )
     {
         cache_insert(
-            cache, 
+            cache,
             &(((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->key)
         );
     }
@@ -304,7 +304,7 @@ typedef struct {
 
     long pre_cache_max_count;
     /* The queue */
-    
+
     fcs_lock_t queue_lock;
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
     long max_count_of_items_in_queue;
@@ -404,8 +404,8 @@ static GCC_INLINE void instance_dealloc_queue_moves_to_key(
     {
         fcs_dbm_queue_item_t * item;
 
-        for (item = to_release[i] ; 
-             item ; 
+        for (item = to_release[i] ;
+             item ;
              item = item->next)
         {
             free(item->moves_to_key);
@@ -420,7 +420,7 @@ static GCC_INLINE void instance_recycle(
     fcs_dbm_solver_instance_t * instance
     )
 {
-    
+
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fcs_offloading_queue__destroy(&(instance->queue));
     fcs_offloading_queue__init(&(instance->queue), NUM_ITEMS_PER_PAGE, instance->offload_dir_path);
@@ -539,7 +539,7 @@ static GCC_INLINE void instance_check_key(
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(pre_cache, key, parent_and_move);
 #else
-        cache_key = cache_insert(cache, key, moves_to_parent, 
+        cache_key = cache_insert(cache, key, moves_to_parent,
                      FCS_PARENT_AND_MOVE__GET_MOVE(*parent_and_move));
 #endif
 #endif
@@ -558,7 +558,7 @@ static GCC_INLINE void instance_check_key(
 #else
         if (instance->queue_recycle_bin)
         {
-            instance->queue_recycle_bin = 
+            instance->queue_recycle_bin =
             (new_item = instance->queue_recycle_bin)->next;
         }
         else
@@ -578,7 +578,7 @@ static GCC_INLINE void instance_check_key(
         new_item->next = NULL;
 #ifdef FCS_DBM_CACHE_ONLY
         new_item->moves_to_key = realloc(
-            new_item->moves_to_key, 
+            new_item->moves_to_key,
             strlen((const char *)cache_key->moves_to_key)+1
             );
         strcpy((char *)new_item->moves_to_key, (const char *)cache_key->moves_to_key);
@@ -660,7 +660,7 @@ static void instance_print_stats(
              FCS_TIME_GET_USEC(mytime)
             );
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-    fprintf (out_fh, ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n", 
+    fprintf (out_fh, ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n",
              instance->queue.num_inserted,
              instance->queue.num_items_in_queue,
              instance->queue.num_extracted
@@ -680,7 +680,7 @@ static void * instance_run_solver_thread(void * void_arg)
 #endif
     fcs_dbm_queue_item_t * item, * prev_item;
     int queue_num_extracted_and_processed;
-    fcs_derived_state_t * derived_list, * derived_list_recycle_bin, 
+    fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
                         * derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_delta_stater_t * delta_stater;
@@ -900,7 +900,7 @@ static const char * move_to_string(unsigned char move, char * move_buffer)
     {
         inspect = (move & 0xF);
         move >>= 4;
-        
+
         if (inspect < 8)
         {
             s += sprintf(s, "Column %d", inspect);
@@ -923,7 +923,7 @@ static const char * move_to_string(unsigned char move, char * move_buffer)
             s += sprintf(s, "%s", " -> ");
         }
     }
-    
+
     return move_buffer;
 }
 
@@ -989,7 +989,7 @@ static void populate_instance_with_intermediate_input_line(
     char * line,
     long line_num
     )
-{                
+{
     char * s_ptr;
     fcs_encoded_state_buffer_t final_stack_encoded_state;
     int hex_digits;
@@ -1471,7 +1471,7 @@ int main(int argc, char * argv[])
     const char * dbm_store_path;
     int num_threads;
     int arg;
-    const char * filename = NULL, * out_filename = NULL, 
+    const char * filename = NULL, * out_filename = NULL,
           * intermediate_input_filename = NULL, * offload_dir_path = NULL;
     FILE * fh = NULL, * out_fh = NULL, * intermediate_in_fh = NULL;
     char user_state[USER_STATE_SIZE];
@@ -1702,7 +1702,7 @@ int main(int argc, char * argv[])
             iters_delta_limit, offload_dir_path, out_fh
             );
 
-        do 
+        do
         {
             line_num++;
             found_line = FALSE;
@@ -1750,8 +1750,8 @@ int main(int argc, char * argv[])
                     else if (limit_instance.should_terminate == MAX_ITERS_TERMINATE)
                     {
                         fprintf(
-                            out_fh, 
-                            "Reached Max-or-more iterations of %ld in intermediate-input line No. %ld.\n", 
+                            out_fh,
+                            "Reached Max-or-more iterations of %ld in intermediate-input line No. %ld.\n",
                             limit_instance.max_count_num_processed,
                             line_num
                             );
@@ -1825,7 +1825,7 @@ int main(int argc, char * argv[])
 
         fcs_encoded_state_buffer_t parent_and_move;
 
-        instance_init(&instance, pre_cache_max_count, caches_delta, 
+        instance_init(&instance, pre_cache_max_count, caches_delta,
                       dbm_store_path, max_count_of_items_in_queue,
                       iters_delta_limit, offload_dir_path, out_fh);
 

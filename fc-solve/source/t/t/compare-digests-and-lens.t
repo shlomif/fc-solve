@@ -112,7 +112,7 @@ verify_solution_test(
 # TEST
 verify_solution_test(
     {
-        id => "simple_simon1with_next_instance", 
+        id => "simple_simon1with_next_instance",
         deal => 1,
         variant => "simple_simon",
         theme => ["-to", "abcdefgh", "--next-instance", "-to", "abcdefghi",],
@@ -123,32 +123,32 @@ verify_solution_test(
 # TEST
 verify_solution_test(
     {
-        id => "freecell254076_l_by", 
+        id => "freecell254076_l_by",
         deal => 254076,
         msdeals => 1,
         theme => ["-l", "by", "--scans-synergy", "dead-end-marks"],
-    }, 
+    },
     "Freecell MS 254,076 while using -l by with dead-end-marks"
 );
 
 # TEST
-verify_solution_test({id => "freecell24", deal => 24, 
-        output_file => "24.solution.txt",}, 
+verify_solution_test({id => "freecell24", deal => 24,
+        output_file => "24.solution.txt",},
     "Verifying the solution of deal No. 24 with -o");
 
 # TEST
-verify_solution_test({id => "freecell24_children_playing_ball", deal => 24, 
-        theme => ["-l", "children-playing-ball"],}, 
+verify_solution_test({id => "freecell24_children_playing_ball", deal => 24,
+        theme => ["-l", "children-playing-ball"],},
     "Verifying the solution of deal No. 24 with -l cpb");
 
 # TEST
-verify_solution_test({id => "freecell24_sentient_pearls", deal => 24, 
-        theme => ["-l", "sentient-pearls"],}, 
+verify_solution_test({id => "freecell24_sentient_pearls", deal => 24,
+        theme => ["-l", "sentient-pearls"],},
     "Verifying the solution of deal No. 24 with -l sp");
 
 
 # TEST
-verify_solution_test({id => "freecell24with_empty_soft_thread_name", deal => 1, 
+verify_solution_test({id => "freecell24with_empty_soft_thread_name", deal => 1,
         # theme => ["-l", "by"],
         theme => ["-to", "013[2456789]", "-nst", "-l" ,"by",],
     },
@@ -165,7 +165,7 @@ verify_solution_test(
     "Verifying 1941 with --cache-limit set to a different value",
 );
 
-# 
+#
 # We discovered that Freecell Solver did not properly handle the foundations
 # with 0's like "H-0" , "S-0", etc. This is as opposed to what exists in the
 # README.txt file.
@@ -173,9 +173,9 @@ verify_solution_test(
 # This test aims to fix it.
 
 # TEST
-verify_solution_test({id => "freecell24_board_with_founds_0", deal => 24, 
+verify_solution_test({id => "freecell24_board_with_founds_0", deal => 24,
         board => File::Spec->catfile(
-            File::Spec->curdir(), 't', 'data', 'sample-boards', 
+            File::Spec->curdir(), 't', 'data', 'sample-boards',
             'ms24-with-founds-0.txt'
         )
     }, "Properly handle foundations like H-0 S-0 etc.");

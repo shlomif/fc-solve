@@ -14,7 +14,7 @@ use Inline (
     C => <<'EOF',
 #include "fcc_brfs_test.h"
 
-typedef struct 
+typedef struct
 {
     char * state_as_string;
     SV * moves;
@@ -29,7 +29,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
     long num_new_positions;
 
     STRLEN count_start_moves = SvLEN(moves_prefix);
-    
+
     fc_solve_user_INTERNAL_find_fcc_start_points(
         init_state_s,
         (int)count_start_moves,
@@ -38,7 +38,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         &num_new_positions
     );
     results = (AV *)sv_2mortal((SV *)newAV());
-    
+
     for (iter = fcc_start_points ; (*iter).count_moves ; iter++)
     {
         SV*      obj_ref = newSViv(0);
@@ -84,8 +84,8 @@ EOF
     CLEAN_AFTER_BUILD => 0,
     INC => "-I" . $ENV{FCS_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
-    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
-    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
+    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
+    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
@@ -142,7 +142,7 @@ sub sanity_check
     );
 }
 
-sub get_num_new_positions 
+sub get_num_new_positions
 {
     my $self = shift;
 

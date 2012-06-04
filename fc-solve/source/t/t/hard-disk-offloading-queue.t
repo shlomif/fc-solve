@@ -43,14 +43,14 @@ sub run_queue_tests
         is ($queue->get_num_extracted(), 0, "$blurb_base - no items extracted.");
 
         $queue->insert(1);
-        
+
         # TEST:$c++
         is ($queue->get_num_inserted(), 1, "$blurb_base - 1 item.");
         # TEST:$c++
         is ($queue->get_num_items_in_queue(), 1, "$blurb_base - 1 items in queue.");
 
         $queue->insert(200);
-        
+
         # TEST:$c++
         is ($queue->get_num_inserted(), 2, "$blurb_base - 2 item.");
         # TEST:$c++

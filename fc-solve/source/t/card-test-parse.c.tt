@@ -7,25 +7,25 @@
 
 int main_tests()
 {
-[% SET num_tests = 0 %]
+[%- SET num_tests = 0 -%]
 [% FOREACH suit = suits %]
 [% FOREACH card_num = card_nums %]
 [% FOREACH t = [0,1] %]
-[% SET t_key = t ? "t" : "non_t" %]
-[% SET card_string = ('"'
+[%- SET t_key = t ? "t" : "non_t" -%]
+[%- SET card_string = ('"'
             _   card_num.value.${t_key}
             _   suit.value
-            _   '"') %]
+            _   '"') -%]
     {
         fcs_card_t mycard;
 
         mycard = fc_solve_card_user2perl([% card_string %]);
         /* TEST */
-        [% SET num_tests = num_tests + 1 %]
+        [%- SET num_tests = num_tests + 1 -%]
         ok (fcs_card_suit(mycard) == [% suit.idx %],
             "Parsing the suit of card " [% card_string %]);
         /* TEST */
-        [% SET num_tests = num_tests + 1 %]
+        [%- SET num_tests = num_tests + 1 -%]
         ok (fcs_card_card_num(mycard) == [% card_num.idx %],
             "Parsing the rank of card " [% card_string %]);
     }

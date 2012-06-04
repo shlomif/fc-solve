@@ -330,10 +330,11 @@ fcs_bool_t fc_solve_check_and_add_state(
     fcs_kv_state_t * existing_state_raw
     )
 {
-/* TODO : these accessor macros are probably out-of-date and won't work with 
+/*
+ * TODO : these accessor macros are probably out-of-date and won't work with
  * some of the less commonly tested data storage backends. They should be
  * tested and updated.
- * */   
+ * */
 #define existing_state_val (existing_state_raw->val)
 #define new_state_key      (new_state->key)
 
@@ -538,8 +539,8 @@ fcs_bool_t fc_solve_check_and_add_state(
 
     {
         void * existing_void;
-    if ((existing_void = 
-        fc_solve_kaz_tree_alloc_insert(instance->tree, 
+    if ((existing_void =
+        fc_solve_kaz_tree_alloc_insert(instance->tree,
 #ifdef FCS_RCS_STATES
                                        new_state_val
 #else

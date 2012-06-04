@@ -7,7 +7,7 @@ use Inline (
     C => <<'EOF',
 #include "offloading_queue.h"
 
-typedef struct 
+typedef struct
 {
     fcs_offloading_queue_t q;
 } QueueInC;

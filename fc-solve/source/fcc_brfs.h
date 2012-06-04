@@ -105,7 +105,7 @@ static GCC_INLINE void fc_solve_fcc_release_moves_seq(
             moves_list_allocator->recycle_bin = iter;
         }
         /* Fix for a leak - iter is still defined, and needs
-         * to be recycled. 
+         * to be recycled.
          * */
         iter->next = moves_list_allocator->recycle_bin;
         moves_list_allocator->recycle_bin = iter;
@@ -119,11 +119,11 @@ static void perform_FCC_brfs(
     fcs_state_keyval_pair_t * init_state,
     /* The start state. */
     fcs_encoded_state_buffer_t start_state,
-    /* The moves leading up to the state. 
+    /* The moves leading up to the state.
      * */
     const fcs_fcc_moves_seq_t * const start_state_moves_seq,
 #if 0
-    /* [Output]: FCC start points. 
+    /* [Output]: FCC start points.
      * */
     fcs_FCC_start_points_list_t * fcc_start_points,
     /* [Input/Output]: make sure the fcc_start_points don't repeat themselves,
@@ -248,7 +248,7 @@ static void perform_FCC_brfs(
 
         /* Handle the min_by_sorting scan. */
         if (cache_does_key_exist(
-            does_state_exist_in_any_FCC_cache, 
+            does_state_exist_in_any_FCC_cache,
             &(extracted_item->key)
         ))
         {
@@ -303,7 +303,7 @@ static void perform_FCC_brfs(
                 );
 
         printf("Checking = <<<\n%s\n>>>\n", state_as_str);
-        
+
         free(state_as_str);
 #endif
 
@@ -343,7 +343,7 @@ static void perform_FCC_brfs(
         {
             fcs_bool_t is_reversible = derived_iter->is_reversible_move;
             unsigned char extra_move;
-            
+
 
             fcs_init_and_encode_state(
                 delta_stater,
@@ -354,7 +354,7 @@ static void perform_FCC_brfs(
             extra_move =
                 FCS_PARENT_AND_MOVE__GET_MOVE(derived_iter->parent_and_move);
 
-            if (! 
+            if (!
                 (
                     is_reversible
                     ?  (fc_solve_kaz_tree_lookup_value(
@@ -375,7 +375,7 @@ static void perform_FCC_brfs(
                 int pos_in_moves;
                 fcs_encoded_state_buffer_t * key_to_add;
 
-                key_to_add = 
+                key_to_add =
                     fcs_compact_alloc_ptr(
                         &(traversed_states->dict_allocator),
                         sizeof(*key_to_add)
@@ -425,7 +425,7 @@ static void perform_FCC_brfs(
                             copy_from_iter = copy_from_iter->next;
                         }
                     }
-                
+
                     /* Append the remaining moves. */
                     if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
                     {
@@ -450,7 +450,7 @@ static void perform_FCC_brfs(
                     }
                 }
 
-                /* 
+                /*
                  * Allocate a new new_item.
                  *
                  * Note: we need to allocate it for both reversibles
@@ -487,7 +487,7 @@ static void perform_FCC_brfs(
          * because we are interested only in those of the derived items.
          * */
         fc_solve_fcc_release_moves_seq(
-            &(extracted_item->moves_seq), 
+            &(extracted_item->moves_seq),
             moves_list_allocator
         );
     }
@@ -554,7 +554,7 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
         return TRUE;
     }
 
-    key_to_add = 
+    key_to_add =
         fcs_compact_alloc_ptr(
             &(tree->dict_allocator),
             sizeof(*key_to_add)
@@ -649,7 +649,7 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
     new_start_point->moves_seq.count = pos_in_moves;
     new_start_point->moves_seq.moves_list = moves_list;
 
-    /* 
+    /*
      * Enqueue the new start point - it won't work without it,
      * retardo! */
     new_start_point->next = fcc_start_points->list;

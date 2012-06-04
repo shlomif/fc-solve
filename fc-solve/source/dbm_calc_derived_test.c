@@ -126,7 +126,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     iter = derived_list;
     while (iter)
     {
-        debug_ret[idx].state_string = 
+        debug_ret[idx].state_string =
         fc_solve_state_as_string(
             &(iter->state.s),
             &(iter->state.info),

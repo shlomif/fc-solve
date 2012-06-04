@@ -22,11 +22,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * t/out-split-cmd-line.c - helper for testing the split_cmd_line.c module. 
+ * t/out-split-cmd-line.c - helper for testing the split_cmd_line.c module.
  *
  * What this program does is accept sh-like input on STDIN and on STDOUT
  * output the parsed / splitted output in a well-formed format.
- * 
+ *
  * The format is <<$DELIM\n[TEXT]\n$DELIM\n . $DELIM is guaranteed not to
  * appear anywhere in [TEXT].
  *

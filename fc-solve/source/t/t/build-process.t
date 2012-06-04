@@ -34,8 +34,8 @@ sub test_cmd
 
     if (!ok (!$sys_ret, $blurb))
     {
-        Carp::confess("Command [" . 
-            join(" ", (map { qq/"$_"/ } @cmd)) . 
+        Carp::confess("Command [" .
+            join(" ", (map { qq/"$_"/ } @cmd)) .
                 "] failed! $!."
             );
     }
@@ -72,7 +72,7 @@ sub test_cmd
     chdir($base);
 
     # TEST
-    test_cmd(["cmake", "."], 
+    test_cmd(["cmake", "."],
         "CMaking in the unpacked dir"
     );
 
@@ -96,7 +96,7 @@ sub test_cmd
     );
 
     # TEST
-    ok (scalar(-f 
+    ok (scalar(-f
             File::Spec->catfile(
                 File::Spec->curdir(), $base, "HACKING.txt"
             )
@@ -140,7 +140,7 @@ EOF
         unlink("$tar_arc.gz");
 
         # TEST
-        ok (scalar(-e $arc_name), 
+        ok (scalar(-e $arc_name),
             "Archive exists."
         );
 
@@ -165,7 +165,7 @@ EOF
             "Archive does not contain libfreecell-solver.a");
 
         # TEST
-        test_cmd ("rpmbuild -tb $arc_name 2>/dev/null", 
+        test_cmd ("rpmbuild -tb $arc_name 2>/dev/null",
             "rpmbuild -tb is successful."
         );
     }

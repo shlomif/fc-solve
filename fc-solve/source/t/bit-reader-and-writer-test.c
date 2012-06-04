@@ -66,7 +66,7 @@ int main_tests()
             ok (fc_solve_bit_reader_read(&reader, 4) == 5,
                     "reader 1");
 
-            /* TEST 
+            /* TEST
              * */
             ok (fc_solve_bit_reader_read(&reader, 2) == 1,
                     "reader 2");
@@ -77,7 +77,7 @@ int main_tests()
                     "reader 3");
         }
     }
- 
+
     return 0;
 }
 

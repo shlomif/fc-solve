@@ -39,7 +39,7 @@ if (!defined($source_dir))
 sub get_dir_entries
 {
     my $dirname = shift;
-    
+
     opendir my $dh, $dirname
         or die "Cannot opendir '$dirname'! - $!";
 
@@ -50,7 +50,7 @@ sub get_dir_entries
     return \@ret;
 }
 
-my @tarballs = grep { /\A\Q$package_base\E-\Q$version\E\.tar\.\w+\z/ } 
+my @tarballs = grep { /\A\Q$package_base\E-\Q$version\E\.tar\.\w+\z/ }
     @{get_dir_entries($source_dir)};
 
 if (! @tarballs)

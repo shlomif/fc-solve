@@ -11,8 +11,8 @@ use Inline (
     CLEAN_AFTER_BUILD => 0,
     LIBS => "-L" . Cwd::getcwd() . " -lfcs_delta_states_test",
     CCFLAGS => "-I" . Cwd::getcwd(),
-    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
-    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
+    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
+    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
@@ -30,10 +30,10 @@ sub test_freecell_deal
 
     # We cannot use the "-s" and "-i" flags here any longer, because the state
     # canonization (which is now compulsory after the locations functionality
-    # was removed) re-orders the positions of the stacks in the boards in the 
+    # was removed) re-orders the positions of the stacks in the boards in the
     # run-time display, which causes the encoding and decoding to not operate
     # properly.
-    open my $dump_fh, 
+    open my $dump_fh,
     "./board_gen/pi-make-microsoft-freecell-board -t $deal_idx | ./fc-solve --freecells-num 2 -p -t -sam -l eo -mi $MAX_ITERS -ni -l fools-gold |"
         or die "Cannot open $deal_idx for reading - $!";
 

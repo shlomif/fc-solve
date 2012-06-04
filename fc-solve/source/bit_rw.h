@@ -40,7 +40,7 @@
 typedef int fc_solve_bit_data_t;
 typedef unsigned char fcs_uchar_t;
 
-typedef struct 
+typedef struct
 {
     fcs_uchar_t * current;
     int bit_in_char_idx;
@@ -66,7 +66,7 @@ static GCC_INLINE void fc_solve_bit_writer_write(fc_solve_bit_writer_t * writer,
     }
 }
 
-typedef struct 
+typedef struct
 {
     const fcs_uchar_t * current;
     int bit_in_char_idx;
@@ -89,7 +89,7 @@ static GCC_INLINE fc_solve_bit_data_t  fc_solve_bit_reader_read(fc_solve_bit_rea
     {
         ret |=
         (
-            ((*(reader->current) >> (reader->bit_in_char_idx++)) & 0x1) 
+            ((*(reader->current) >> (reader->bit_in_char_idx++)) & 0x1)
                 << idx
         );
 

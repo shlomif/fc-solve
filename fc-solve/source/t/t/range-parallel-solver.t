@@ -18,7 +18,7 @@ ok (!system($range_solver, "1", "2", "1", "-opt"), "Range solver with -opt was s
 # This checks against it.
 
 # TEST
-ok (!system($range_solver, "1", "64", "1", "-l", "cool-jives", "-opt"), 
+ok (!system($range_solver, "1", "64", "1", "-l", "cool-jives", "-opt"),
     "Range solver with -opt and a large number of boards was succesful."
 );
 

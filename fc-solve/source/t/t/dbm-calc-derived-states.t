@@ -25,10 +25,10 @@ use Cwd;
 package DerivedState;
 
 use Inline (
-    C => <<'EOF',
+    C => <<"EOF",
 #include "dbm_calc_derived_iface.h"
 
-typedef struct 
+typedef struct
 {
     char * state_string;
     unsigned char move;
@@ -40,7 +40,7 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
         DerivedState* s;
         int count, i;
         fcs_derived_state_debug_t * derived_states, * iter;
-        
+
         fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             init_state_s,
             &count,
@@ -91,8 +91,8 @@ EOF
     CLEAN_AFTER_BUILD => 0,
     INC => "-I" . $ENV{FCS_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_dbm_calc_derived_test",
-    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test", 
-    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test", 
+    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
+    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
@@ -167,7 +167,7 @@ sub is_reversible
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     return is(
-        (!!$self->states->[0]->get_is_reversible_move()), 
+        (!!$self->states->[0]->get_is_reversible_move()),
         (!!$is_reversible),
         $blurb
     );
@@ -215,33 +215,35 @@ sub is_dest
 
 package main;
 
+my $WS = ' ';
+
 use Test::More;
 
 my $TRUE = 1;
 my $FALSE = 0;
 
 {
-    my $freecell_24_initial_layout_s = <<'EOF';
-4C 2C 9C 8C QS 4S 2H 
-5H QH 3C AC 3H 4H QD 
-QC 9S 6H 9H 3S KS 3D 
-5D 2S JC 5C JH 6D AS 
-2D KD TH TC TD 8D 
-7H JS KH TS KC 7C 
-AH 5S 6S AD 8H JD 
-7S 6C 7D 4D 8S 9D 
+    my $freecell_24_initial_layout_s = <<"EOF";
+4C 2C 9C 8C QS 4S 2H$WS
+5H QH 3C AC 3H 4H QD$WS
+QC 9S 6H 9H 3S KS 3D$WS
+5D 2S JC 5C JH 6D AS$WS
+2D KD TH TC TD 8D$WS
+7H JS KH TS KC 7C$WS
+AH 5S 6S AD 8H JD$WS
+7S 6C 7D 4D 8S 9D$WS
 EOF
 
     my $fc_24_init = DerivedStatesList->new(
-        { 
+        {
             start => $freecell_24_initial_layout_s,
             perform_horne_prune => 0,
         }
     );
 
     {
-        my $results = $fc_24_init->find_by_string(<<'EOF'
-Foundations: H-0 C-0 D-0 S-0 
+        my $results = $fc_24_init->find_by_string(<<"EOF"
+Foundations: H-0 C-0 D-0 S-0$WS
 Freecells:      9D
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
@@ -269,9 +271,9 @@ EOF
 
     # Check move from stack to foundations
     {
-        my $results = $fc_24_init->find_by_string(<<'EOF'
-Foundations: H-0 C-0 D-0 S-A 
-Freecells:        
+        my $results = $fc_24_init->find_by_string(<<"EOF"
+Foundations: H-0 C-0 D-0 S-A$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -291,47 +293,47 @@ EOF
         $results->is_reversible($FALSE, "$blurb_base is not reversible.");
 
         # TEST
-        $results->is_src({ type => 'stack', idx => 3, }, 
+        $results->is_src({ type => 'stack', idx => 3, },
                 "$blurb_base src");
 
         # TEST
-        $results->is_dest({ type => 'found', idx => 3, }, 
+        $results->is_dest({ type => 'found', idx => 3, },
                 "$blurb_base dest");
     }
 }
 
 {
-    my $freecell_24_middle_layout = <<'EOF';
-Foundations: H-Q C-8 D-8 S-Q 
-Freecells:  KD    
+    my $freecell_24_middle_layout = <<"EOF";
+Foundations: H-Q C-8 D-8 S-Q$WS
+Freecells:  KD$WS$WS$WS$WS
 : KH QC JD TC 9D
 : KC
-: 
+:$WS
 : KS QD JC TD 9C
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
 EOF
 
     my $fc_24 = DerivedStatesList->new(
-        { 
+        {
             start => $freecell_24_middle_layout,
             perform_horne_prune => 0,
         }
     );
 
     {
-        my $results = $fc_24->find_by_string(<<'EOF'
-Foundations: H-Q C-8 D-8 S-Q 
-Freecells:        
+        my $results = $fc_24->find_by_string(<<"EOF"
+Foundations: H-Q C-8 D-8 S-Q$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
 : KH QC JD TC 9D
 : KC
-: 
+:$WS
 : KS QD JC TD 9C
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
 : KD
 EOF
         );
@@ -343,11 +345,11 @@ EOF
         $results->is_reversible($TRUE, 'KD from Freecell is reversible');
 
         # TEST
-        $results->is_src({ type => 'freecell', idx => 0, }, 
+        $results->is_src({ type => 'freecell', idx => 0, },
             'from freecell 0');
 
         # TEST
-        $results->is_dest({ type => 'stack', idx => 7, }, 
+        $results->is_dest({ type => 'stack', idx => 7, },
             'to stack No. 7');
     }
 }
@@ -355,13 +357,13 @@ EOF
 # Check that to-empty-stack moves are reversible dependening on the
 # originating item
 {
-    my $freecell_24_middle_layout = <<'EOF';
-Foundations: H-0 C-0 D-0 S-2 
+    my $freecell_24_middle_layout = <<"EOF";
+Foundations: H-0 C-0 D-0 S-2$WS
 Freecells:  JH  8D
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD JC TD
 : QC 9S 6H 9H 3S KS 3D
-: 
+:$WS
 : 2D KD TH
 : 7H JS KH TS KC 7C 6D 5C 4D
 : AH 5S 6S AD 8H JD TC 9D 8S 7D
@@ -369,15 +371,15 @@ Freecells:  JH  8D
 EOF
 
     my $fc_24 = DerivedStatesList->new(
-        { 
+        {
             start => $freecell_24_middle_layout,
             perform_horne_prune => 0,
         }
     );
 
     {
-        my $results = $fc_24->find_by_string(<<'EOF'
-Foundations: H-0 C-0 D-0 S-2 
+        my $results = $fc_24->find_by_string(<<"EOF"
+Foundations: H-0 C-0 D-0 S-2$WS
 Freecells:  JH  8D
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD JC
@@ -398,17 +400,17 @@ EOF
         $results->is_reversible($TRUE, "$blurb_base is reversible");
 
         # TEST
-        $results->is_src({ type => 'stack', idx => 1, }, 
+        $results->is_src({ type => 'stack', idx => 1, },
             "$blurb_base - from stack No. 1");
 
         # TEST
-        $results->is_dest({ type => 'stack', idx => 3, }, 
+        $results->is_dest({ type => 'stack', idx => 3, },
             "$blurb_base - to stack No. 3");
     }
 
     {
-        my $results = $fc_24->find_by_string(<<'EOF'
-Foundations: H-0 C-0 D-0 S-2 
+        my $results = $fc_24->find_by_string(<<"EOF"
+Foundations: H-0 C-0 D-0 S-2$WS
 Freecells:  JH  8D
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD JC TD
@@ -429,18 +431,18 @@ EOF
         $results->is_reversible($FALSE, "$blurb_base is not reversible");
 
         # TEST
-        $results->is_src({ type => 'stack', idx => 2, }, 
+        $results->is_src({ type => 'stack', idx => 2, },
             "$blurb_base - from stack No. 1");
 
         # TEST
-        $results->is_dest({ type => 'stack', idx => 3, }, 
+        $results->is_dest({ type => 'stack', idx => 3, },
             "$blurb_base - to stack No. 3");
     }
 }
 
 # Checking move from freecell to foundation
 {
-    my $freecell_24_middle_layout = <<'EOF';
+    my $freecell_24_middle_layout = <<"EOF";
 Freecells: AS
 4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
@@ -453,16 +455,16 @@ AH 5S 6S AD 8H JD
 EOF
 
     my $fc_24 = DerivedStatesList->new(
-        { 
+        {
             start => $freecell_24_middle_layout,
             perform_horne_prune => 0,
         }
     );
 
     {
-        my $results = $fc_24->find_by_string(<<'EOF'
-Foundations: H-0 C-0 D-0 S-A 
-Freecells:        
+        my $results = $fc_24->find_by_string(<<"EOF"
+Foundations: H-0 C-0 D-0 S-A$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D

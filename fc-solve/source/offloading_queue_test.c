@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * offloading_queue_test.c - testing interface for offloading_queue.h 
+ * offloading_queue_test.c - testing interface for offloading_queue.h
  * and offloading_queue.c.
  * This is compiled into a shared library and then loaded by Inline::C,
  * ctypes, etc.

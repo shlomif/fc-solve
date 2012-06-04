@@ -16,15 +16,16 @@ use Games::Solitaire::FC_Solve::DeltaStater;
 
 package main;
 
+my $WS = ' ';
 my $RANK_J = 11;
 my $RANK_Q = 12;
 my $RANK_K = 13;
 
 {
 my @suits = (qw(H C D S));
-my %suit_to_idx = do { 
+my %suit_to_idx = do {
     my $s = Games::Solitaire::Verify::Card->get_suits_seq();
-    (map { $s->[$_] => $_ } (0 .. $#$s)) ; 
+    (map { $s->[$_] => $_ } (0 .. $#$s)) ;
 };
 
 sub _card_to_bin
@@ -48,9 +49,9 @@ sub _card_to_bin
     # MS Freecell No. 982 Initial state.
     my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
         {
-            init_state_str => <<'EOF'
-Foundations: H-0 C-0 D-A S-0 
-Freecells:        
+            init_state_str => <<"EOF"
+Foundations: H-0 C-0 D-A S-0$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 4S JC 6H 5H
 : 2H 2D 3S 5D 9D QS KS
@@ -68,8 +69,8 @@ EOF
 
     $delta->set_derived(
         {
-            state_str => <<'EOF'
-Foundations: H-0 C-2 D-A S-0 
+            state_str => <<"EOF"
+Foundations: H-0 C-2 D-A S-0$WS
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -101,7 +102,7 @@ EOF
         $delta->get_column_encoding(0),
         [
             [ 3 => 6 ], # Orig len.
-            [ 4 => 0 ], # Derived len. 
+            [ 4 => 0 ], # Derived len.
         ],
         'get_column_lengths_bits() works',
     );
@@ -113,7 +114,7 @@ EOF
         $delta->get_column_encoding(1),
         [
             [ 3 => 3 ], # Orig len.
-            [ 4 => 1 ], # Derived len. 
+            [ 4 => 1 ], # Derived len.
             $DS, # 8S
         ],
         'get_column_lengths_bits() works',
@@ -123,7 +124,7 @@ EOF
         $delta->get_column_encoding(5),
         [
             [ 3 => 0 ], # Orig len.
-            [ 4 => 1 ], # Derived len. 
+            [ 4 => 1 ], # Derived len.
             [ 6 => _card_to_bin({suit => 'S', rank => 9,}) ], # 9S
         ],
         'get_column_lengths_bits() works',
@@ -162,7 +163,7 @@ EOF
 
     # TEST
     ok ($bit_reader, 'Init bit_reader');
-    
+
     # TEST
     is ($bit_reader->read(3), 3, 'bit_reader->read(3)');
 
@@ -174,9 +175,9 @@ EOF
     # MS Freecell No. 982 Initial state.
     my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
         {
-            init_state_str => <<'EOF'
-Foundations: H-0 C-0 D-A S-0 
-Freecells:        
+            init_state_str => <<"EOF"
+Foundations: H-0 C-0 D-A S-0$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 4S JC 6H 5H
 : 2H 2D 3S 5D 9D QS KS
@@ -194,8 +195,8 @@ EOF
 
     $delta->set_derived(
         {
-            state_str => <<'EOF'
-Foundations: H-0 C-2 D-A S-0 
+            state_str => <<"EOF"
+Foundations: H-0 C-2 D-A S-0$WS
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -212,8 +213,8 @@ EOF
     # TEST
     eq_or_diff(
         scalar($delta->decode($delta->encode())->to_string()),
-        <<'EOF',
-Foundations: H-0 C-2 D-A S-0 
+        <<"EOF",
+Foundations: H-0 C-2 D-A S-0$WS
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -230,8 +231,8 @@ EOF
     # TEST
     eq_or_diff(
         scalar($delta->decode($delta->encode_composite())->to_string()),
-        <<'EOF',
-Foundations: H-0 C-2 D-A S-0 
+        <<"EOF",
+Foundations: H-0 C-2 D-A S-0$WS
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -252,9 +253,9 @@ EOF
 {
     my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
         {
-            init_state_str => <<'EOF'
-Foundations: H-0 C-0 D-0 S-0 
-Freecells:        
+            init_state_str => <<"EOF"
+Foundations: H-0 C-0 D-0 S-0$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -272,13 +273,13 @@ EOF
 
     $delta->set_derived(
         {
-            state_str => <<'EOF'
-Foundations: H-0 C-0 D-0 S-4 
+            state_str => <<"EOF"
+Foundations: H-0 C-0 D-0 S-4$WS
 Freecells:  KS  TD
 : 2C
 : 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S
 : QC 9S 6H 9H 8C 7D 6C 5D 4C 3D
-: 
+:$WS
 : 2D KD QS JH TC 9D 8S
 : 7H JS KH TS KC 7C 6D 5C 4D
 : AH 5S 6S AD 8H JD
@@ -291,10 +292,10 @@ EOF
     # TEST
     eq_or_diff(
         scalar($delta->decode($delta->encode_composite())->to_string()),
-        <<'EOF',
-Foundations: H-0 C-0 D-0 S-4 
+        <<"EOF",
+Foundations: H-0 C-0 D-0 S-4$WS
 Freecells:  KS  TD
-: 
+:$WS
 : 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S
 : QC 9S 6H 9H 8C 7D 6C 5D 4C 3D
 : 2H
@@ -308,8 +309,8 @@ EOF
 
     $delta->set_derived(
         {
-            state_str => <<'EOF'
-Foundations: H-0 C-0 D-0 S-2 
+            state_str => <<"EOF"
+Foundations: H-0 C-0 D-0 S-2$WS
 Freecells:  TD  4C
 : 8S
 : 5H QH 3C AC 3H 4H 3S 2H
@@ -326,8 +327,8 @@ EOF
     # TEST
     eq_or_diff(
         scalar($delta->decode($delta->encode_composite())->to_string()),
-        <<'EOF',
-Foundations: H-0 C-0 D-0 S-2 
+        <<"EOF",
+Foundations: H-0 C-0 D-0 S-2$WS
 Freecells:  TD  4C
 : 5C 4D
 : 5H QH 3C AC 3H 4H 3S 2H
@@ -348,34 +349,34 @@ EOF
 {
     my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
         {
-            init_state_str => <<'EOF',
-Foundations: H-K C-K D-J S-Q 
-Freecells:  KD    
-: 
-: 
-: 
+            init_state_str => <<"EOF",
+Foundations: H-K C-K D-J S-Q$WS
+Freecells:  KD$WS$WS$WS$WS
+:$WS
+:$WS
+:$WS
 : KS QD
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
 EOF
         },
     );
 
     $delta->set_derived(
         {
-            state_str => <<'EOF',
-Foundations: H-K C-K D-J S-Q 
+            state_str => <<"EOF",
+Foundations: H-K C-K D-J S-Q$WS
 Freecells:  QD  KD
-: 
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
 : KS
-: 
-: 
+:$WS
+:$WS
 EOF
         },
     );
@@ -388,16 +389,16 @@ EOF
 
     $delta->set_derived(
         {
-            state_str => <<'EOF',
-Foundations: H-K C-K D-J S-Q 
+            state_str => <<"EOF",
+Foundations: H-K C-K D-J S-Q$WS
 Freecells:  QD  KD
-: 
-: 
-: 
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
 : KS
 EOF
         }
@@ -420,34 +421,34 @@ EOF
 {
     my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
         {
-            init_state_str => <<'EOF',
-Foundations: H-K C-K D-J S-Q 
-Freecells:  KD    
-: 
-: 
-: 
+            init_state_str => <<"EOF",
+Foundations: H-K C-K D-J S-Q$WS
+Freecells:  KD$WS$WS$WS$WS
+:$WS
+:$WS
+:$WS
 : KS QD
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
 EOF
         },
     );
 
     $delta->set_derived(
         {
-            state_str => <<'EOF',
-Foundations: H-K C-K D-J S-Q 
+            state_str => <<"EOF",
+Foundations: H-K C-K D-J S-Q$WS
 Freecells:  QD  KD
 : KS
-: 
-: 
-: 
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
 EOF
         },
     );
@@ -460,16 +461,16 @@ EOF
 
     $delta->set_derived(
         {
-            state_str => <<'EOF',
-Foundations: H-K C-K D-J S-Q 
+            state_str => <<"EOF",
+Foundations: H-K C-K D-J S-Q$WS
 Freecells:  QD  KD
-: 
-: 
-: 
-: 
-: 
-: 
-: 
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
 : KS
 EOF
         }

@@ -323,15 +323,15 @@ static void safe_traverse(dict_t *dict, void (*func)(dnode_t *, void *))
         case from_parent:
             if (current->left != nil) {
                 next = current->left;
-            } else 
+            } else
         case from_left:
             if (current->right != nil) {
                 came_from = from_parent;
                 next = current->right;
-            } else 
+            } else
         case from_right:
             {
-                came_from = (current == current->parent->left) 
+                came_from = (current == current->parent->left)
                             ? from_left : from_right;
                 next = current->parent;
                 func(current, dict->context);
@@ -741,7 +741,7 @@ dnode_t *dict_strict_upper_bound(dict_t *dict, const void *key)
  *
  * If a matching key was found - return it. Else - return NULL to indicate
  * that the new key was added.
- * 
+ *
  * The behavior is undefined if the user attempts to insert into
  * a dictionary that is already full (for which the dict_isfull()
  * function returns true).

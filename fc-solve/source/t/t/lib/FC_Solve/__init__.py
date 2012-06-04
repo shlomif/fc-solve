@@ -59,7 +59,7 @@ class FC_Solve:
             if (top != int(top) + 0.0):
                 top = top + 1e-6
                 bottom = bottom - 1e-6
-                
+
             have = self.get_befs_weight(self.user, idx)
             # TEST:$test_befs=$test_befs+$num_befs_weights;
             if (not ok((bottom <= have) and (have <= top), \
@@ -85,7 +85,7 @@ class FC_Solve:
             byref(instance_list_index),
             byref(error_string)
         )
-        
+
         # TEST:$compile_flares_plan_ok++;
         ok(ret_code == 0,
                 name + " - returned success.")
@@ -104,14 +104,14 @@ class FC_Solve:
                 self.user
         )
 
-        ok (want_num_items == got_num_items, 
+        ok (want_num_items == got_num_items,
                 name + " - got_num_items.")
 
     # TEST:$flare_plan_item_is_run_indef=0;
     def flare_plan_item_is_run_indef(self, name, item_idx, flare_idx):
         get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
         get_plan_type.restype = c_char_p
-        
+
         # TEST:$flare_plan_item_is_run_indef++;
         ok (get_plan_type(self.user, item_idx) == "RunIndef",
                 name + " - right type")
@@ -126,7 +126,7 @@ class FC_Solve:
     def flare_plan_item_is_run(self, name, item_idx, flare_idx, iters_count):
         get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
         get_plan_type.restype = c_char_p
-        
+
         # TEST:$flare_plan_item_is_run++;
         ok (get_plan_type(self.user, item_idx) == "Run",
                 name + " - right type")
@@ -136,7 +136,7 @@ class FC_Solve:
         # TEST:$flare_plan_item_is_run++;
         ok (got_flare_idx == flare_idx,
                 name + " - matching flare_idx")
-        
+
         got_iters_count = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(self.user, item_idx);
 
         # TEST:$flare_plan_item_is_run++;
@@ -147,7 +147,7 @@ class FC_Solve:
     def flare_plan_item_is_checkpoint(self, name, item_idx):
         get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
         get_plan_type.restype = c_char_p
-        
+
         # TEST:$flare_plan_item_is_checkpoint++;
         ok (get_plan_type(self.user, item_idx) == "CP",
                 name + " - right type")
@@ -179,7 +179,7 @@ class FC_Solve:
 
     def limit_iterations(self, max_iters):
         self.fcs.freecell_solver_user_limit_iterations(
-            self.user, 
+            self.user,
             (c_int)(max_iters)
         )
         return

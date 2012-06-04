@@ -39,7 +39,7 @@ mkdir -p "$DUMPS_DIR"
 p_dir="__p"
 if ! test -e "$p_dir" ; then
     cp -R Presets "$p_dir"
-    
+
     P="$(cd "$p_dir"/presets && pwd)" \
         perl -lpi -e 's!\A(dir=).*\z!$1$ENV{P}/!ms' ./"$p_dir"/presetrc
 fi

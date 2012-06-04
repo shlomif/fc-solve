@@ -102,9 +102,9 @@ sub verify_solution_test
 
     my $fc_solve_output;
 
-    my $cl_prefix = 
-        ($msdeals 
-                ? "pi-make-microsoft-freecell-board $deal | " 
+    my $cl_prefix =
+        ($msdeals
+                ? "pi-make-microsoft-freecell-board $deal | "
                 : "make_pysol_freecell_board.py $deal $variant | "
         ) . $fc_solve_exe . " ";
 
@@ -148,7 +148,7 @@ sub verify_solution_test
     if ($self->trim_stats)
     {
         $sha->add_processed_slurp(
-            $fc_solve_output, 
+            $fc_solve_output,
             sub {
                 my $s = shift;
                 $s =~ s/^(This game is solveable\.\n).*/$1/ms;

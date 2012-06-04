@@ -108,7 +108,7 @@ static GCC_INLINE void fcs_offloading_queue_page__extract(
     int read_from_idx;
 
     read_from_idx = ((page->read_from_idx)++);
-    
+
     memcpy(out_item, page->data + sizeof(fcs_offloading_queue_item_t) * read_from_idx, sizeof(fcs_offloading_queue_item_t));
 }
 
@@ -126,7 +126,7 @@ static GCC_INLINE void fcs_offloading_queue_page__insert(
 {
     int write_to_idx = ((page->write_to_idx)++);
 
-    memcpy( 
+    memcpy(
         page->data+write_to_idx * sizeof(fcs_offloading_queue_item_t),
         in_item,
         sizeof(*in_item)
@@ -166,11 +166,11 @@ static GCC_INLINE void fcs_offloading_queue_page__read_next_from_disk(
 {
     FILE * f;
     char page_filename[PATH_MAX+1];
-    
+
     fcs_offloading_queue_page__bump(page);
 
     fcs_offloading_queue_page__calc_filename(page, page_filename, offload_dir_path);
-    
+
     f = fopen(page_filename, "rb");
     fread( page->data, sizeof(fcs_offloading_queue_item_t),
            page->num_items_per_page, f
@@ -193,9 +193,9 @@ static GCC_INLINE void fcs_offloading_queue_page__offload(
 {
     FILE * f;
     char page_filename[PATH_MAX+1];
-    
+
     fcs_offloading_queue_page__calc_filename(page, page_filename, offload_dir_path);
-    
+
     f = fopen(page_filename, "wb");
     fwrite( page->data, sizeof(fcs_offloading_queue_item_t),
            page->num_items_per_page, f
@@ -210,7 +210,7 @@ typedef struct
     long num_inserted, num_items_in_queue, num_extracted;
     /*
      * page_to_write_to, page_for_backup and page_to_read_from always
-     * point to the two "pages" below, but they can be swapped and 
+     * point to the two "pages" below, but they can be swapped and
      * page_for_backup may be NULL.
      */
     fcs_offloading_queue_page_t * page_to_write_to, * page_for_backup,
@@ -291,8 +291,9 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
     if (! fcs_offloading_queue_page__can_extract(queue->page_to_read_from))
     {
         /* Cannot really happen due to the num_items_in_queue check.
-         * 
-        if (queue->_page_to_read_from->page_index == queue->_page_to_write_to->page_index)
+         *
+         * if (queue->_page_to_read_from->page_index ==
+         *     queue->_page_to_write_to->page_index)
         */
         if (queue->page_to_read_from->page_index + 1 == queue->page_to_write_to->page_index)
         {

@@ -34,7 +34,7 @@ sub test_using_valgrind
         $ENV{'FCS_PATH'} . "/$prog",
         @$cmd_line_args,
     );
-    
+
     open my $read_from_valgrind, "<", $log_fn
         or die "Cannot open valgrind.log for reading";
     my $found_error_summary = 0;
@@ -67,7 +67,7 @@ sub test_using_valgrind
 test_using_valgrind(
     {prog => "fc-solve",
         argv => [
-            '--read-from-file', '4,t/data/presets/crashy-preset-1.preset', 
+            '--read-from-file', '4,t/data/presets/crashy-preset-1.preset',
             qw(-s -i -p -t -sam),
             "$ENV{FCS_PATH}/24.board",
         ],

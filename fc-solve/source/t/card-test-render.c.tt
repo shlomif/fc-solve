@@ -13,11 +13,11 @@ int main_tests()
 [% FOREACH suit = suits %]
 [% FOREACH card_num = card_nums %]
 [% FOREACH t = [0,1] %]
-[% SET t_key = t ? "t" : "non_t" %]
-[% SET card_string = ('"'
+[%- SET t_key = t ? "t" : "non_t" -%]
+[%- SET card_string = ('"'
             _   card_num.value.${t_key}
             _   suit.value
-            _   '"') %]
+            _   '"') -%]
     {
         fcs_card_t mycard;
         char * ret;
@@ -29,11 +29,11 @@ int main_tests()
 
         ret = fc_solve_card_perl2user(mycard, buffer, [% t %]);
         /* TEST */
-        [% SET num_tests = num_tests + 1 %]
+        [%- SET num_tests = num_tests + 1 -%]
         ok (ret == buffer,
            "Return value is the beginning of the buffer.");
         /* TEST */
-        [% SET num_tests = num_tests + 1 %]
+        [%- SET num_tests = num_tests + 1 -%]
         ok (!strcmp(buffer, [% card_string %]),
             "Trying to render " [% card_string %] " into a string");
     }

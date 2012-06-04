@@ -248,7 +248,7 @@ print {$enum_fh} <<'EOF';
  * arguments. Partially auto-generated.
  */
 EOF
-print {$enum_fh} "enum\n{\n", 
+print {$enum_fh} "enum\n{\n",
     (map { $ws . $_ . ",\n" } @enum[0..$#enum-1]),
     $ws . $enum[-1] . "\n",
     "};\n";

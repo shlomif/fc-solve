@@ -49,7 +49,7 @@ while (my $line = <$dump_fh>)
             }
         );
 
-        my $found_str = join(',', 
+        my $found_str = join(',',
             map { $board->get_foundation_value($_, 0) } (0 .. 3)
         );
 
@@ -58,7 +58,7 @@ while (my $line = <$dump_fh>)
         foreach my $col_idx (0 .. ($board->num_columns - 1))
         {
             my $col = $board->get_column($col_idx);
-            
+
             my $get_non_free_len = sub {
                 my $non_free_len = $col->len();
 
@@ -66,7 +66,7 @@ while (my $line = <$dump_fh>)
                 {
                     my $child = $col->pos($non_free_len-1);
                     my $parent = $col->pos($non_free_len-2);
-                    
+
                     if (not (($child->color() ne $parent->color())
                         &&
                         ($child->rank()+1 == $parent->rank())))

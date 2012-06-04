@@ -184,12 +184,12 @@ static void verify_soft_dfs_stack(
     {
         fcs_soft_dfs_stack_item_t * soft_dfs_info;
         int * rand_indexes;
-        
+
         soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[depth]);
         rand_indexes = soft_dfs_info->derived_states_random_indexes;
 
         num_states = soft_dfs_info->derived_states_list.num_states;
-        
+
         for ( i=soft_dfs_info->current_state_index ; i < num_states ; i++)
         {
             verify_state_sanity(soft_dfs_info->derived_states_list.states[rand_indexes[i]].state_ptr);
@@ -200,7 +200,7 @@ static void verify_soft_dfs_stack(
 }
 #define VERIFY_SOFT_DFS_STACK(soft_thread) verify_soft_dfs_stack(soft_thread)
 #else
-#define VERIFY_SOFT_DFS_STACK(soft_thread) 
+#define VERIFY_SOFT_DFS_STACK(soft_thread)
 #endif
 
 #endif
@@ -366,7 +366,7 @@ static void free_states(fc_solve_instance_t * instance)
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
 /*
- * The calculate_real_depth() inline function traces the path of the state up 
+ * The calculate_real_depth() inline function traces the path of the state up
  * to the original state, and thus calculates its real depth.
  *
  * It then assigns the newly updated depth throughout the path.
@@ -403,7 +403,7 @@ static GCC_INLINE void calculate_real_depth(fcs_bool_t calc_real_depth, fcs_coll
 #endif
 
 /*
- * The mark_as_dead_end() inline function marks a state as a dead end, and 
+ * The mark_as_dead_end() inline function marks a state as a dead end, and
  * afterwards propogates this information to its parent and ancestor states.
  *
  * */
@@ -461,7 +461,7 @@ typedef struct {
     fcs_collectible_state_t * state_val;
 } cache_parents_stack_item_t;
 
-/* TODO : Unit-test this function as it had had a bug beforehand 
+/* TODO : Unit-test this function as it had had a bug beforehand
  * because fcs_lru_side_t had been an unsigned long.
  * */
 typedef const char * fcs_lru_side_t;
@@ -632,10 +632,10 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
         fcs_duplicate_state( &pass, &src_pass);
 
-        moves_end = 
+        moves_end =
         (
             (next_move = stack_ptr_this_state_val->moves_to_parent->moves)
-            + 
+            +
             stack_ptr_this_state_val->moves_to_parent->num_moves
         );
 
@@ -753,7 +753,7 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
         fcs_game_limit_t freecells_num,
         fcs_state_t * state_ptr
         )
-{        
+{
     fcs_game_limit_t num_vacant_freecells = 0;
     int i;
 
@@ -772,7 +772,7 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
         fcs_game_limit_t stacks_num,
         fcs_state_t * state_ptr
         )
-{        
+{
     fcs_game_limit_t num_vacant_stacks = 0;
     int i;
 
@@ -1002,7 +1002,7 @@ int fc_solve_soft_dfs_do_solve(
 
                 num_vacant_freecells =
                     count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &the_state);
-                
+
                 num_vacant_stacks =
                     count_num_vacant_stacks(LOCAL_STACKS_NUM, &the_state);
 
@@ -1580,7 +1580,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     fcs_kv_state_t pass;
 
     pass.key = &(instance->state_copy_ptr->s);
-    pass.val = &(instance->state_copy_ptr->info); 
+    pass.val = &(instance->state_copy_ptr->info);
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
@@ -1841,7 +1841,7 @@ int fc_solve_befs_or_bfs_do_solve(
 
         TRACE0("Counting cells");
 
-        num_vacant_freecells = 
+        num_vacant_freecells =
             count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &the_state);
 
         num_vacant_stacks =
@@ -1940,7 +1940,7 @@ int fc_solve_befs_or_bfs_do_solve(
         for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
         {
 #ifdef FCS_RCS_STATES
-            new_pass.key = 
+            new_pass.key =
                 fc_solve_lookup_state_key_from_val(instance,
                         new_pass.val = derived.states[derived_index].state_ptr
                 );
@@ -2258,8 +2258,8 @@ int fc_solve_sfs_check_state_begin(
     }
 
     FCS_STATE_collectible_to_kv(out_new_state_out, raw_ptr_new_state);
-    fcs_duplicate_kv_state( 
-        out_new_state_out, 
+    fcs_duplicate_kv_state(
+        out_new_state_out,
         raw_ptr_state_raw
     );
 #ifdef FCS_RCS_STATES

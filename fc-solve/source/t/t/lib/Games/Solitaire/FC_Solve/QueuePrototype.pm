@@ -239,7 +239,7 @@ sub _calc_filename
 {
     my ($self, $offload_dir_path) = @_;
 
-    return File::Spec->catfile($offload_dir_path, 
+    return File::Spec->catfile($offload_dir_path,
         sprintf("fcs_queue_%020X.page", $self->get_page_index())
     );
 }
@@ -276,7 +276,7 @@ sub offload
 }
 
 sub start_after
-{    
+{
     my ($self, $other_page )= @_;
 
     $self->_page_index($other_page->get_page_index + 1);

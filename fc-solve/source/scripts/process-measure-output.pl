@@ -23,7 +23,7 @@ while (my $line = <ARGV>)
     elsif ($line =~ m{\Aboard\[\d+\]\.iters == (\d+)\z})
     {
         $depth_count++;
-        $depth_sum += $1;    
+        $depth_sum += $1;
     }
 }
 print "$depth " . ($depth_sum / $depth_count) . "\n";

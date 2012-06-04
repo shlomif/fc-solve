@@ -33,7 +33,7 @@ foreach my $status (qw(solved unsolved))
             my ($desc, $stat) = @_;
 
             print sprintf(
-                "%-10s%-20s == %20s\n", 
+                "%-10s%-20s == %20s\n",
                     $desc, $id, $formatter->format_number($stat, 6)
             );
 

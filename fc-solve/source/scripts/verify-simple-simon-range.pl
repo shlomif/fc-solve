@@ -37,7 +37,7 @@ while (!eof($dump))
 
     my $variant = "simple_simon";
     open my $fc_solve_output,
-        +("make_pysol_freecell_board.py $deal $variant | " . 
+        +("make_pysol_freecell_board.py $deal $variant | " .
         "./fc-solve -g $variant -p -t -sam $theme_s - |")
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 

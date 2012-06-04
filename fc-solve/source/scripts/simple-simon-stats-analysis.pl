@@ -69,7 +69,7 @@ foreach my $b (@buckets_ids)
     my $f = $bucket->frequency_distribution_ref(\@limits);
     foreach my $l (@limits)
     {
-        print "Up to $l: $f->{$l} (" 
+        print "Up to $l: $f->{$l} ("
             . sprintf("%.2f%%", $f->{$l}*100/$bucket->count())
             . ")\n"
             ;

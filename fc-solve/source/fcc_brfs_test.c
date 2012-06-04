@@ -67,7 +67,7 @@ static void fc_solve_state_string_to_enc(
 
     free(state_s);
 }
-                                        
+
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */

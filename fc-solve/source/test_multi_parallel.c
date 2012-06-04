@@ -485,10 +485,10 @@ int main(int argc, char * argv[])
         if (solutions_directory)
         {
             FILE * output_fh;
-            sprintf(solution_filename, "%s%09d.sol", 
+            sprintf(solution_filename, "%s%09d.sol",
                 solutions_directory, board_num
             );
-            
+
             output_fh = fopen(solution_filename, "wt");
 
             if (! output_fh)

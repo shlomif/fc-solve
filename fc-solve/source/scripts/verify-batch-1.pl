@@ -62,21 +62,21 @@ sub _init
         'sequences-are-built-by=s' => sub {
             my (undef, $val) = @_;
 
-            my %seqs_build_by = 
+            my %seqs_build_by =
             (
-                (map { $_ => $_ } 
+                (map { $_ => $_ }
                     (qw(alt_color suit rank))
                 ),
                 "alternate_color" => "alt_color",
             );
-            
+
             my $proc_val = $seqs_build_by{$val};
 
             if (! defined($proc_val))
             {
                 die "Unknown sequences-are-built-by '$val'!";
             }
-            
+
             $variant_params->seqs_build_by($proc_val);
         },
         'empty-stacks-filled-by=s' => sub {
@@ -89,7 +89,7 @@ sub _init
             {
                 die "Unknown empty stacks filled by '$val'!";
             }
-            
+
             $variant_params->empty_stacks_filled_by($val);
         },
         'sequence-move=s' => sub {
@@ -151,7 +151,7 @@ sub run
             open my $text_fh, '<', \$contents;
             my $solution = Games::Solitaire::Verify::Solution->new(
                 {
-                    input_fh => $text_fh, 
+                    input_fh => $text_fh,
                     variant => "custom",
                     variant_params => $variant_params,
                 },
@@ -195,7 +195,7 @@ command line app for verifying the solutions of Solitaire games.
 
 =head1 DESCRIPTION
 
-This is a module implementing a standalone command line app for verifying the 
+This is a module implementing a standalone command line app for verifying the
 solutions of Solitaire games.
 
 =head1 EXPORTS

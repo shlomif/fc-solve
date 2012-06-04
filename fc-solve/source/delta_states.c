@@ -47,8 +47,8 @@
 #endif
 
 static int fc_solve_get_column_orig_num_cards(
-        fc_solve_delta_stater_t * self, 
-        fcs_cards_column_t col    
+        fc_solve_delta_stater_t * self,
+        fcs_cards_column_t col
         )
 {
     int num_cards;
@@ -170,14 +170,14 @@ static void fc_solve_get_column_encoding_composite(
     fcs_card_t init_card;
     fc_solve_bit_writer_t bit_w;
     int i;
-    
+
     derived = self->_derived_state;
     col = fcs_state_get_col(*derived, col_idx);
 
     num_orig_cards = fc_solve_get_column_orig_num_cards(self, col);
     col_len = fcs_col_len(col);
     num_derived_cards = col_len - num_orig_cards;
-    
+
     num_cards_in_seq = num_derived_cards;
     init_card = fc_solve_empty_card;
 
@@ -190,7 +190,7 @@ static void fc_solve_get_column_encoding_composite(
     /* Prepare the encoding. */
     fc_solve_bit_writer_init(&bit_w, ret->enc);
 
-    fc_solve_bit_writer_write(&bit_w, 
+    fc_solve_bit_writer_write(&bit_w,
             self->bits_per_orig_cards_in_column, num_orig_cards
             );
 
@@ -211,7 +211,7 @@ static void fc_solve_get_column_encoding_composite(
 
 #undef GET_SUIT_BIT
     }
-    
+
     ret->end = bit_w.current;
     ret->bit_in_char_idx = bit_w.bit_in_char_idx;
 
@@ -291,7 +291,7 @@ static void fc_solve_delta_stater_encode_composite(
         int non_orig_idx = 0;
         int empty_idx = num_columns-1;
 
-        /* 
+        /*
          * Move the empty columns to the front, but only within the
          * entirely_non_orig
          * That's because the orig columns should be preserved in their own
@@ -424,7 +424,7 @@ static void fc_solve_delta_stater_decode(
     bits_per_orig_cards_in_column = self->bits_per_orig_cards_in_column;
 
     /* Read the Freecells. */
-    
+
     for ( i=0 ; i < num_freecells ; i++)
     {
         fcs_card_t card;
@@ -471,7 +471,7 @@ static void fc_solve_delta_stater_decode(
             card = (fcs_card_t)fc_solve_bit_reader_read(bit_r, 6);
             PROCESS_CARD(card);
             fcs_col_push_card(col, card);
-            
+
             num_cards_in_seq--;
         }
 
@@ -490,8 +490,8 @@ static void fc_solve_delta_stater_decode(
                 suit_bit = fc_solve_bit_reader_read(bit_r, 1);
 
                 fcs_card_set_num(new_card, fcs_card_card_num(last_card)-1);
-                fcs_card_set_suit(new_card, 
-                    ((suit_bit << 1) | 
+                fcs_card_set_suit(new_card,
+                    ((suit_bit << 1) |
                         ((fcs_card_suit(last_card) & 0x1) ^ 0x1)
                     )
                 );
@@ -524,7 +524,7 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
 
     fc_solve_state_init(
         ret,
-        STACKS_NUM, 
+        STACKS_NUM,
         indirect_stacks_buffer
     );
 
@@ -536,9 +536,9 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
 }
 
 #ifdef INDIRECT_STACK_STATES
-#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) 
+#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr, indirect_stacks_buffer)
 #else
-#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr) 
+#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr)
 #endif
 
 static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
@@ -580,7 +580,7 @@ static char * prepare_state_str(const char * proto)
     ret = strdup(proto);
 
     /* Process the string in-place to make it available as input
-     * to fc-solve again. 
+     * to fc-solve again.
      * */
 
     {
@@ -661,7 +661,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 
     fc_solve_bit_writer_init(&bit_w, enc_state);
     fc_solve_delta_stater_encode_composite(delta, &bit_w);
-    
+
     fc_solve_bit_reader_init(&bit_r, enc_state);
     fc_solve_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
 

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # The aim of this program is to run Freecell Solver’s test suite with
-# several different  build-time configurations of the solver, to make sure 
+# several different  build-time configurations of the solver, to make sure
 # they are all working fine.
 
 use strict;
@@ -32,7 +32,7 @@ __PACKAGE__->mk_acc_ref([@fields]);
 __PACKAGE__->mk_acc_ref(['blurb', 'cmd_line', ]);
 
 use Text::Sprintf::Named;
-    
+
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 sub _init
@@ -78,7 +78,7 @@ sub all_info
             map { "$_ ===\n{{{{{{\n%($_)s\n}}}}}}\n\n" }
             (@fields))
             }
-        )->format({args => { map { my $name = $_; 
+        )->format({args => { map { my $name = $_;
                         ($name => $self->_stringify_value($name)) }
                     @fields
                 }});

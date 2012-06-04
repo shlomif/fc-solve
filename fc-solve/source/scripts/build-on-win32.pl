@@ -10,7 +10,7 @@ sub run
 	my $cmd = shift;
 	if (system(@$cmd))
 	{
-		confess ("[@{$cmd}] failed! $! $?");		
+		confess ("[@{$cmd}] failed! $! $?");
 	}
 }
 

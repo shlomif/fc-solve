@@ -65,7 +65,7 @@ sub make_delegates
     my ($pkg, $slot, $methods) = @_;
 
     return $pkg->make_delegates_generic(
-        $slot, 
+        $slot,
         +{ map { $_ => $_ } @$methods }
     );
 }
@@ -75,7 +75,7 @@ sub make_private_delegates
     my ($pkg, $slot, $methods) = @_;
 
     return $pkg->make_delegates_generic(
-        $slot, 
+        $slot,
         +{ map { ('_'.$_) => $_ } @$methods }
     );
 }
@@ -257,7 +257,7 @@ sub _init
             Type => SOCK_STREAM(),
             Local => $RANGE_TO_VERIFY_SOCKET_PATH,
             Listen => 1,
-        ) or 
+        ) or
         Carp::confess(
             "Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!"
         );
@@ -506,10 +506,10 @@ sub display_queue
 {
     my $self = shift;
 
-    return 
-    "[\n" . join('', 
-        map { 
-        sprintf(qq/{Min=%d Max=%d Path='%s'}\n/, 
+    return
+    "[\n" . join('',
+        map {
+        sprintf(qq/{Min=%d Max=%d Path='%s'}\n/,
         $_->{min_idx}, $_->{max_idx}, $_->{path_to_dir}
         )
         } @{$self->_queue}
@@ -635,8 +635,8 @@ use Fcntl qw(:flock);
 use File::Path qw(rmtree);
 use Data::Dumper;
 
-use Test::Trap qw( trap $trap 
-    :flow:stderr(systemsafe):stdout(systemsafe):warn 
+use Test::Trap qw( trap $trap
+    :flow:stderr(systemsafe):stdout(systemsafe):warn
 );
 
 STDOUT->autoflush(1);
@@ -747,7 +747,7 @@ if ($@)
     exit(0);
 }
 
-# my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVING_PROCESSES, 
+# my ($max_deal_idx, $preset_conf, $min_idx, $NUM_SOLVING_PROCESSES,
 #     $NUM_VERIFYING_PROCESSES, $NUM_SOLVER_DEALS_PER_BATCH) = @$conf_lines;
 
 my ($max_deal_idx, $preset_conf, $solver_theme_conf, $should_verify, $min_idx, $NUM_SOLVER_DEALS_PER_BATCH) =
@@ -800,7 +800,7 @@ sub _update_sync_file
         or Carp::confess("Cannot open sync file - $!");
 
     print {$write_to_sync} map { $data{$_} , "\n" } @order;
-     
+
     close ($write_to_sync);
 
     return $ret;
@@ -864,7 +864,7 @@ sub _mode_setup
     my $deals_per_batch = ($ENV{FCS_DEALS_PER_BATCH} || 1000);
 
     _write_file(
-        $GLOBAL_CONFIG_PATH, 
+        $GLOBAL_CONFIG_PATH,
         (map { "$_\n" } (
             $ENV{FCS_MAX_DEAL_IDX},
             $ENV{FCS_PRESET_CONFIG},
@@ -893,8 +893,8 @@ sub _lock_and_update_sync_file
 
     return _lock_sync(
         sub
-        { 
-            return _update_sync_file( $callback ); 
+        {
+            return _update_sync_file( $callback );
         }
     );
 }
@@ -927,7 +927,7 @@ sub _return_next_solve_params
 {
     my $data = shift;
 
-    if ((! $data->{'CONTINUE'}) or 
+    if ((! $data->{'CONTINUE'}) or
         ($data->{NEXT_DEAL_IDX} > $max_deal_idx))
     {
         return {stop => 1};
@@ -947,9 +947,9 @@ sub _return_next_solve_params
 
         return
         {
-            stop => 0, 
-            next_id => $next_id, 
-            start_deal_idx => $start_deal_idx, 
+            stop => 0,
+            next_id => $next_id,
+            start_deal_idx => $start_deal_idx,
             end_deal_idx => $end_deal_idx
         };
     }
@@ -996,7 +996,7 @@ sub _mode_solve
                 ]
             )
         )
-        {   
+        {
             last MAIN_LOOP;
         }
 
@@ -1044,7 +1044,7 @@ sub _lock_sync
     open my $lock_fh, ">", $SYNC_LOCK_PATH
         or Carp::confess ("Cannot lock summary-lock - $!");
 
-    flock ($lock_fh, LOCK_EX) 
+    flock ($lock_fh, LOCK_EX)
         or Carp::confess("Cannot lock summary lock - $!");
 
     my $ret = $callback->();

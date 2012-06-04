@@ -18,18 +18,18 @@ def test_resume_solution():
     fcs.limit_iterations(limit)
 
     ret = fcs.solve_board(
-"""4C 2C 9C 8C QS 4S 2H 
-5H QH 3C AC 3H 4H QD 
-QC 9S 6H 9H 3S KS 3D 
-5D 2S JC 5C JH 6D AS 
-2D KD TH TC TD 8D 
-7H JS KH TS KC 7C 
-AH 5S 6S AD 8H JD 
+"""4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 """)
 
     iters_count_ok = 1
-    
+
     while (ret == 5):
         if (fcs.get_num_times() != limit):
             iters_count_ok = 0
@@ -37,7 +37,7 @@ AH 5S 6S AD 8H JD
         limit += 10
         fcs.limit_iterations(limit)
         ret = fcs.resume_solution()
-    
+
     # TEST
     ok (ret == 0, "State was successfully solved.")
 
@@ -51,13 +51,13 @@ def test_num_states_in_collection_after_recycle():
 
     # MS-Freeceel board No. 24.
     ret = fcs.solve_board(
-"""4C 2C 9C 8C QS 4S 2H 
-5H QH 3C AC 3H 4H QD 
-QC 9S 6H 9H 3S KS 3D 
-5D 2S JC 5C JH 6D AS 
-2D KD TH TC TD 8D 
-7H JS KH TS KC 7C 
-AH 5S 6S AD 8H JD 
+"""4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 """)
 
@@ -77,13 +77,13 @@ AH 5S 6S AD 8H JD
 
     # MS-Freeceel board No. 24.
     ret = fcs.solve_board(
-"""4C 2C 9C 8C QS 4S 2H 
-5H QH 3C AC 3H 4H QD 
-QC 9S 6H 9H 3S KS 3D 
-5D 2S JC 5C JH 6D AS 
-2D KD TH TC TD 8D 
-7H JS KH TS KC 7C 
-AH 5S 6S AD 8H JD 
+"""4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 """)
 
@@ -103,14 +103,14 @@ def test_num_states_in_collection_after_unsolved():
 
     # MS-Freeceel board No. 10
     ret = fcs.solve_board(
-"""5S KD JC TS 9D KH 8D 
-5H 2S 9H 7H TD AD 6D 
-6H QD 6C TC AH 8S TH 
-6S 2D 7C QC QS 7D 3H 
-5D AS 7S KC 3D AC 
-4D 9C QH 4H 4C 5C 
-2H 3S 8H 9S JS 4S 
-JH JD 3C KS 2C 8C 
+"""5S KD JC TS 9D KH 8D
+5H 2S 9H 7H TD AD 6D
+6H QD 6C TC AH 8S TH
+6S 2D 7C QC QS 7D 3H
+5D AS 7S KC 3D AC
+4D 9C QH 4H 4C 5C
+2H 3S 8H 9S JS 4S
+JH JD 3C KS 2C 8C
 """)
 
     # TEST

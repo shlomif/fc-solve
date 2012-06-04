@@ -57,10 +57,10 @@ class Builder(object):
     atexit.register(self._plan.__del__)
 
   def get_plan(self): return self._plan
- 
+
   def ok(self, is_ok, desc=None, skip=None, todo=None):
     self.get_plan().increment_counter()
-    if is_ok: report = "ok" 
+    if is_ok: report = "ok"
     else:     report = "not ok"
 
     sys.stdout.write("%s %u" % (report, self.current))

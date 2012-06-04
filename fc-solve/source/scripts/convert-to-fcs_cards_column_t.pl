@@ -10,14 +10,14 @@ while (<>)
     if (/\A {4}tests_define_accessors\(\);/)
     {
         last PREFIX_LOOP;
-    }    
+    }
     $prefix .= $_;
 }
 my $rest_of_func = $_;
 
 my $extra_var_declares = "";
 
-my %var_map = 
+my %var_map =
 (
     'state,stack_idx' => "col",
     'state,ds' => "dest_col",
@@ -42,7 +42,7 @@ while (<>)
             ;
         $rest_of_func .=
             "$inner_shift$len_var = fcs_cards_column_len($col_var);\n";
-        
+
         TO_END_OF_BLOCK:
         while (<>)
         {

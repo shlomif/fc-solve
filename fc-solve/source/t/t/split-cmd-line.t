@@ -33,7 +33,7 @@ sub check_split
             die "Invalid output from program.";
         }
         my $terminator = $1;
-        
+
         my $item = "";
         my $found_terminator = 0;
         while ($line = <$child_out>)
@@ -72,7 +72,7 @@ check_split(
 check_split(
     "one two three lom-prom-tom KuTler abruptChange Come-Together",
     [
-        "one", "two", "three", "lom-prom-tom", "KuTler", 
+        "one", "two", "three", "lom-prom-tom", "KuTler",
         "abruptChange", "Come-Together",
     ],
     "Simple barewords No. 2",
@@ -290,7 +290,7 @@ EOF
 # TEST
 check_split(
     <<'EOF',
-First Line   
+First Line
 Second Line
 "Third ""L-R"
 EOF
@@ -307,7 +307,7 @@ EOF
 # TEST
 check_split(
     <<'EOF',
-First Line   
+First Line
 Second Line                 # A comment
 "Third ""L-R"
 EOF
