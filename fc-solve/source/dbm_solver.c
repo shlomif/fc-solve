@@ -1264,7 +1264,7 @@ static void trace_solution(
     char * state_as_str;
     char move_buffer[500];
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-        fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct_t locs;
 
     fprintf (out_fh, "%s\n", "Success!");
     fflush (out_fh);
