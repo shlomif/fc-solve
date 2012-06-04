@@ -614,7 +614,7 @@ static GCC_INLINE void instance_check_multiple_keys(
     FCS_LOCK(instance->storage_lock);
     for (; list ; list = list->next)
     {
-        instance_check_key(instance, &(list->key), &(list->parent_and_move)
+        instance_check_key(instance, &(list->key), &(list->parent)
 #ifdef FCS_DBM_CACHE_ONLY
             , moves_to_parent
 #endif
@@ -1315,7 +1315,7 @@ static unsigned char get_move_from_parent_to_child(
 
         if (compare_enc_states(&(derived_iter->key), &child) == 0)
         {
-            move_to_return = FCS_PARENT_AND_MOVE__GET_MOVE(derived_iter->parent_and_move);
+            move_to_return = derived_iter->move;
             break;
         }
     }

@@ -351,8 +351,7 @@ static void perform_FCC_brfs(
                 &(new_item->key)
             );
 
-            extra_move =
-                FCS_PARENT_AND_MOVE__GET_MOVE(derived_iter->parent_and_move);
+            extra_move = derived_iter->move;
 
             if (!
                 (

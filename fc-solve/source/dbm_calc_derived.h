@@ -55,9 +55,10 @@ struct fcs_derived_state_struct
 {
     fcs_state_keyval_pair_t state;
     fcs_encoded_state_buffer_t key;
-    fcs_encoded_state_buffer_t parent_and_move;
+    fcs_encoded_state_buffer_t parent;
     struct fcs_derived_state_struct * next;
     fcs_bool_t is_reversible_move;
+    fcs_fcc_move_t move;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 };
 
@@ -115,8 +116,8 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
 #define COMMIT_NEW_STATE(src, dest, is_reversible) \
 { \
  \
-    ptr_new_state->parent_and_move = *(key); \
-    FCS_PARENT_AND_MOVE__GET_MOVE(ptr_new_state->parent_and_move) = MAKE_MOVE((src), (dest)); \
+    ptr_new_state->parent = *(key); \
+    ptr_new_state->move = MAKE_MOVE((src), (dest)); \
  \
     ptr_new_state->is_reversible_move = (is_reversible); \
     /* Finally, enqueue the new state. */ \
