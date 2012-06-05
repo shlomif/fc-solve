@@ -34,7 +34,7 @@ and report that the board was intractable.
 B<--binary-output-to> sets the filename into which to output the number
 of iterations it took to solve each board. This file can later be used with
 statistical preset optimizers such as those found in the Freecell Solver
-CVS repository.
+version control repository.
 
 =head1 SEE ALSO
 
