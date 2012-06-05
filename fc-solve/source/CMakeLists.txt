@@ -787,18 +787,18 @@ SET (_usage  "${CMAKE_CURRENT_SOURCE_DIR}/USAGE.txt")
 SET (_fc_solve_txt "fc-solve.txt")
 
 ADD_CUSTOM_COMMAND(
-    OUTPUT "${_fc_solve_txt}"
+    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/${_fc_solve_txt}"
     COMMAND "perl"
     ARGS "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-man-page.pl"
         "--readme" "${_readme}"
         "--usage" "${_usage}"
-        "--output" "${_fc_solve_txt}"
+        "--output" "${CMAKE_CURRENT_SOURCE_DIR}/${_fc_solve_txt}"
     DEPENDS "${_readme}" "${_usage}"
 )
 
 ADD_CUSTOM_TARGET(
     asciidoc_man_pages_base ALL
-    DEPENDS "fc-solve.txt"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${_fc_solve_txt}"
 )
 
 IF (FCS_BUILD_DOCS)
@@ -806,7 +806,7 @@ IF (FCS_BUILD_DOCS)
 ENDIF (FCS_BUILD_DOCS)
 
 SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt"
-    "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" "fc-solve.txt"
+    "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" "${_fc_solve_txt}"
 )
 
 SET (docs_to_install)
@@ -830,7 +830,7 @@ IF(ASCIIDOC_FOUND)
 
         # -a toc
         SET (htmls )
-        IF (NOT "${_file}" STREQUAL "fc-solve.txt")
+        IF (NOT "${_file}" STREQUAL "${_fc_solve_txt}")
             ADD_CUSTOM_COMMAND(
                 OUTPUT "${_html_out}"
                 COMMAND ${ASCIIDOC_EXECUTABLE}
@@ -839,13 +839,13 @@ IF(ASCIIDOC_FOUND)
                 COMMENT "Asciidoc ${_in}"
                 )
             LIST (APPEND htmls "${_html_out}")
-        ENDIF (NOT "${_file}" STREQUAL "fc-solve.txt")
+        ENDIF (NOT "${_file}" STREQUAL "${_fc_solve_txt}")
 
 
         SET (TO_DOCBOOK_EXTRA_FLAGS )
-        IF ("${_file}" STREQUAL "fc-solve.txt")
+        IF ("${_file}" STREQUAL "${_fc_solve_txt}")
             LIST (APPEND TO_DOCBOOK_EXTRA_FLAGS "-d" "manpage")
-        ENDIF ("${_file}" STREQUAL "fc-solve.txt")
+        ENDIF ("${_file}" STREQUAL "${_fc_solve_txt}")
 
         ADD_CUSTOM_COMMAND(
             OUTPUT "${_docbook_out}"
