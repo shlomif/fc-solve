@@ -866,10 +866,11 @@ IF(ASCIIDOC_FOUND)
             COMMENT "docmake to PDF"
         )
 
+        SET (_file_we_full "${CMAKE_CURRENT_SOURCE_DIR}/${_file_we}")
         ADD_CUSTOM_COMMAND(
-            OUTPUT ${_file_we}
-            COMMAND cp -f "${_full_file}" ${_file_we}
-            DEPENDS "${_file_we}.txt"
+            OUTPUT "${_file_we_full}"
+            COMMAND cp -f "${_full_file}" "${_file_we_full}"
+            DEPENDS "${_full_file}"
             COMMENT "copy AsciiDoc to non-\".txt\" file"
         )
 
