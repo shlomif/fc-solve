@@ -66,10 +66,15 @@ to provide links back to the Subversion repository's URLs</a>
 
 <li>
 <p>
+<a href="http://github.com/shlomif/fc-solve">Project Page on GitHub</a> - 
+contains the version control repository.
+</p>
+</li>
+
+<li>
+<p>
 <a href="http://code.google.com/p/fc-solve/">Google Code Project Page</a> - 
-contains instructions for 
-<a href="http://code.google.com/p/fc-solve/source/checkout">checking out the 
-source from its Mercurial repository</a>, a currently underused issue tracker,
+contains a currently underused issue tracker,
 and other goodies.
 </p>
 </li>
