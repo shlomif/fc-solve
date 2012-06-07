@@ -31,6 +31,8 @@ IF (FCS_WITH_TEST_SUITE)
 
     FIND_LIBRARY(LIBTAP_LIB tap)
 
+    INCLUDE_DIRECTORIES (BEFORE "${CMAKE_BINARY_DIR}")
+
     MY_ADD_EXE (
         "t/card-test-render.exe"
         "card-test-render.c"
@@ -43,7 +45,7 @@ IF (FCS_WITH_TEST_SUITE)
 
     ADD_EXECUTABLE(
         "out-split-cmd-line.exe"
-        "out-split-cmd-line.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/out-split-cmd-line.c"
     )
 
     SET_SOURCE_FILES_PROPERTIES (
@@ -53,11 +55,13 @@ IF (FCS_WITH_TEST_SUITE)
             GENERATED "1"
     )
 
+    FILE (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/t")
+
     SET (EXE_FILE "t/bit-reader-and-writer-test.exe")
 
     ADD_EXECUTABLE(
         "${EXE_FILE}"
-        "bit-reader-and-writer-test.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/bit-reader-and-writer-test.c"
     )
 
     TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB})
@@ -73,7 +77,7 @@ IF (FCS_WITH_TEST_SUITE)
 
     ADD_EXECUTABLE(
         "${EXE_FILE}"
-        "delta-states-test.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/delta-states-test.c"
     )
 
     TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB})

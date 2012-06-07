@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Template;
+use FindBin;
 
 sub card_num_normalize
 {
@@ -29,7 +30,7 @@ my @card_nums =  ("A", (2 .. 9),
 
 @card_nums = (map { card_num_normalize($_) } @card_nums);
 
-my $template = Template->new();
+my $template = Template->new({ ABSOLUTE => 1, },);
 
 sub indexify
 {
@@ -51,13 +52,13 @@ my $args =
 };
 
 $template->process(
-    "card-test-render.c.tt",
+    "$FindBin::Bin/card-test-render.c.tt",
     $args,
     "card-test-render.c",
 ) || die $template->error();
 
 $template->process(
-    "card-test-parse.c.tt",
+    "$FindBin::Bin/card-test-parse.c.tt",
     $args,
     "card-test-parse.c",
 ) || die $template->error();

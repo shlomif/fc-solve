@@ -445,6 +445,9 @@ FOREACH (CFLAG_TO_CHECK "-fwhole-program")
     ENDIF (${FLAG_EXISTS_VAR})
 ENDFOREACH(CFLAG_TO_CHECK)
 
+# So it can find the includes when building libavl.avl.h.
+INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
+
 # So it can find config.h
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 
