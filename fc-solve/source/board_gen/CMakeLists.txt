@@ -20,6 +20,25 @@ ADD_EXECUTABLE(
     pi_make_microsoft_freecell_board.c
 )
 
+SET (make_pysol "make_pysol_freecell_board.py")
+SET (_dest "${CMAKE_CURRENT_BINARY_DIR}/${make_pysol}")
+SET (_src  "${CMAKE_CURRENT_SOURCE_DIR}/${make_pysol}")
+
+# Adapted from:
+# http://stackoverflow.com/questions/697560/how-to-copy-directory-from-source-tree-to-binary-tree
+ADD_CUSTOM_COMMAND(
+    OUTPUT "${_dest}"
+    DEPENDS "${_src}"
+    COMMAND "${CMAKE_COMMAND}" "-E" "copy" "${_src}" "${_dest}"
+)
+
+ADD_CUSTOM_TARGET(
+    "${make_pysol}"
+    ALL DEPENDS "${_dest}"
+)
+
+SET (_make_py_dest "${_dest}")
+
 RUN_POD2MAN(
     "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve-board_gen.pod"
     "fc-solve-board_gen.6"
@@ -48,7 +67,7 @@ INSTALL(
 
 INSTALL(
     PROGRAMS
-        "make_pysol_freecell_board.py"
+        "${_make_py_dest}"
     DESTINATION
         "bin"
 )
