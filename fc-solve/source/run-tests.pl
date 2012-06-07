@@ -173,8 +173,8 @@ GetOptions(
     }
 
     {
-        # local $ENV{FCS_PATH} = dirname(which("fc-solve"));
         print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
+        print STDERR "FCS_SRC_PATH = $ENV{FCS_SRC_PATH}\n";
         run_tests(\@tests);
     }
 }
