@@ -139,6 +139,11 @@ for (my $idx = 0; $idx < @new_argv ; $idx++)
 
 @ARGV = @new_argv;
 
+if ($ENV{VERBOSE})
+{
+    print "<@ARGV>";
+}
+
 GetOptions(
     'd|debug' => sub {
         my ($opt, $val) = @_;
