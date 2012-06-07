@@ -897,8 +897,9 @@ IF(ASCIIDOC_FOUND)
 
     ADD_CUSTOM_COMMAND(
         OUTPUT "${_manpage}"
-        COMMAND xsltproc --nonet /etc/asciidoc/docbook-xsl/manpage.xsl 
-            "--output" "${_manpage}" "${_out}" 
+        COMMAND "xsltproc" "--output" "${_manpage}" 
+            "--nonet" "/etc/asciidoc/docbook-xsl/manpage.xsl"
+             "${_out}" 
         DEPENDS "${_out}"
         COMMENT "Build man page ${_out}"
     )
