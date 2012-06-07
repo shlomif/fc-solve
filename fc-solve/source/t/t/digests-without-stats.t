@@ -14,11 +14,18 @@ statistics like the number of states checked and the number of stored states.
 
 use Test::More tests => 6;
 
+use File::Basename qw( dirname );
+use File::Spec;
+
 use lib './t/lib';
 
 use Games::Solitaire::FC_Solve::CheckResults;
 
-my $digests_storage_fn = "./t/data/digests-and-lens-wo-stats-storage.yml";
+my $data_dir = File::Spec->catdir(
+    dirname( __FILE__), 'data'
+);
+
+my $digests_storage_fn = "$data_dir/digests-and-lens-wo-stats-storage.yml";
 
 my $verifier = Games::Solitaire::FC_Solve::CheckResults->new(
     {

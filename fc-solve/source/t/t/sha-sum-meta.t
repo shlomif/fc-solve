@@ -5,6 +5,9 @@ use warnings;
 
 use Test::More tests => 6;
 
+use File::Basename qw( dirname );
+use File::Spec;
+
 use lib './t/lib';
 
 use Games::Solitaire::FC_Solve::ShaAndLen;
@@ -45,7 +48,9 @@ use Games::Solitaire::FC_Solve::ShaAndLen;
 {
     my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new();
 
-    open my $in, "<", "./t/data/sample-solutions/fcs-freecell-24.txt";
+    my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data' );
+
+    open my $in, "<", "$data_dir/sample-solutions/fcs-freecell-24.txt";
     $sha->add_file($in);
     close($in);
 

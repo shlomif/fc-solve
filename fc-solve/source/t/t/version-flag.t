@@ -3,11 +3,17 @@
 use strict;
 use warnings;
 
+use autodie;
+
 use Test::More tests => 2;
 use String::ShellQuote;
 
+use File::Spec;
+use File::Basename qw( dirname );
+
 {
-    open my $good_ver_fh, "<", "../ver.txt";
+    open my $good_ver_fh, "<", File::Spec->catdir( dirname( __FILE__),
+        (( File::Spec->updir() ) x 2), "ver.txt");
     my $good_ver = <$good_ver_fh>;
     close($good_ver_fh);
     chomp($good_ver);

@@ -916,7 +916,7 @@ IF (FCS_WITH_TEST_SUITE)
 
     ADD_CUSTOM_TARGET(
         "test"
-        "perl" "run-tests.pl"
+        "perl" "${CMAKE_CURRENT_SOURCE_DIR}/run-tests.pl"
     )
 
     ADD_DEPENDENCIES(

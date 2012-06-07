@@ -6,12 +6,16 @@ use warnings;
 # use File::Which;
 # use File::Basename;
 use Cwd;
-use FindBin;
 use File::Spec;
 use File::Copy;
 use File::Path;
 use Getopt::Long;
 use Env::Path;
+use File::Basename qw(dirname);
+
+
+my $bindir = dirname( __FILE__ );
+my $abs_bindir = File::Spec->rel2abs($bindir);
 
 # Whether to use prove instead of runprove.
 my $use_prove = 0;
@@ -44,6 +48,7 @@ GetOptions(
 
 {
     local $ENV{FCS_PATH} = Cwd::getcwd();
+    local $ENV{FCS_SRC_PATH} = $abs_bindir;
 
     my $testing_preset_rc;
     {
@@ -51,7 +56,7 @@ GetOptions(
             File::Spec->curdir(), "t", "Presets"
         );
         my $preset_src = File::Spec->catfile(
-            File::Spec->curdir(), "Presets"
+            $abs_bindir, "Presets"
         );
         my $pset_files_dest = File::Spec->catdir($preset_dest, "presets");
         my $pset_files_src  = File::Spec->catdir($preset_src, "presets");
@@ -92,29 +97,51 @@ GetOptions(
     local $ENV{FREECELL_SOLVER_QUIET} = 1;
     Env::Path->PATH->Prepend(
         File::Spec->catdir(Cwd::getcwd(), "board_gen"),
-        File::Spec->catdir(Cwd::getcwd(), "t", "scripts"),
+        File::Spec->catdir($abs_bindir, "t", "scripts"),
     );
 
-    local $ENV{HARNESS_ALT_INTRP_FILE} =
+    Env::Path->CPATH->Prepend(
+        $abs_bindir,
+    );
+
+
+    foreach my $add_lib (Env::Path->PERL5LIB() , Env::Path->PYTHONPATH())
+    {
+        $add_lib->Append(
+            File::Spec->catdir($abs_bindir, "t", "t", "lib"),
+        );
+    }
+
+    my $get_config_fn = sub { 
+        my $basename = shift;
+
+        return
         File::Spec->rel2abs(
             File::Spec->catdir(
-                File::Spec->curdir(),
-                "t", "config", "alternate-interpreters.yml",
+                $bindir,
+                "t", "config", $basename
             ),
         )
         ;
+    };
+
+    local $ENV{HARNESS_ALT_INTRP_FILE} =
+        $get_config_fn->("alternate-interpreters.yml");
+
+    local $ENV{HARNESS_TRIM_FNS} =
+        $get_config_fn->("trim-filenames.yml");
 
     local $ENV{HARNESS_PLUGINS} =
+    # "ColorSummary ColorFileVerdicts AlternateInterpreters TrimDisplayedFilenames"
         "ColorSummary ColorFileVerdicts AlternateInterpreters"
         ;
 
-    chdir("$FindBin::Bin");
     if (system("make", "-s", "boards"))
     {
         die "make failed";
     }
 
-    chdir("$FindBin::Bin/t");
+    chdir("t");
     if (system("make", "-s"))
     {
         die "make failed";
@@ -132,7 +159,7 @@ GetOptions(
                 ||
             ($a cmp $b)
         }
-        glob("t/$tests_glob")
+        (glob("t/$tests_glob"), glob("$abs_bindir/t/t/$tests_glob"))
         ;
 
     if (! $ENV{FCS_TEST_BUILD})

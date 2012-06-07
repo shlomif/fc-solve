@@ -6,12 +6,16 @@ use warnings;
 use Test::More tests => 5;
 use Test::Differences;
 
+use File::Spec;
+use File::Basename qw( dirname );
+
 use Storable qw(retrieve);
 
-my $data_dir = "./t/data/range-verifier/";
+my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data');
+my $verifier_data_dir = File::Spec->catfile($data_dir, 'range-verifier');
 
-my $summary_file = "$data_dir/summary.txt";
-my $stats_file = "$data_dir/summary.stats.perl-storable";
+my $summary_file = "$verifier_data_dir/summary.txt";
+my $stats_file = "$verifier_data_dir/summary.stats.perl-storable";
 
 sub delete_summary
 {
@@ -23,7 +27,7 @@ sub delete_summary
 
 delete_summary();
 
-my $ranger_verifier = $ENV{'FCS_PATH'} . '/scripts/verify-range-in-dir-and-collect-stats.pl';
+my $ranger_verifier = $ENV{'FCS_SRC_PATH'} . '/scripts/verify-range-in-dir-and-collect-stats.pl';
 
 sub _test_range_verifier
 {
@@ -33,7 +37,7 @@ sub _test_range_verifier
 
     return ok (!system(
             $^X, $ranger_verifier,
-            '--summary-lock', "$data_dir/summary.lock",
+            '--summary-lock', "$verifier_data_dir/summary.lock",
             '--summary-stats-file', $stats_file,
             '--summary-file', $summary_file,
             '-g', 'bakers_game',
@@ -47,7 +51,7 @@ sub _test_range_verifier
 # TEST
 _test_range_verifier(
     { min => 1, max => 10,
-            sols_dir => "$data_dir/bakers-game-solutions-dir",
+            sols_dir => "$verifier_data_dir/bakers-game-solutions-dir",
         },
     "1-10 Script was run successfully.",
 );
@@ -122,7 +126,7 @@ _statistics_are(
 # TEST
 _test_range_verifier(
     { min => 11, max => 20,
-            sols_dir => "$data_dir/bakers-game-11-to-20",
+            sols_dir => "$verifier_data_dir/bakers-game-11-to-20",
         },
     "11-20 Script was run successfully.",
 );

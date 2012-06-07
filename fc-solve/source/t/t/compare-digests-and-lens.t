@@ -6,10 +6,15 @@ use warnings;
 use Test::More tests => 21;
 use File::Spec;
 use lib './t/lib';
+use File::Basename qw( dirname );
 
 use Games::Solitaire::FC_Solve::CheckResults;
 
-my $digests_storage_fn = "./t/data/digests-and-lens-storage.yml";
+my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data');
+
+my $digests_storage_fn = File::Spec->catfile(
+    $data_dir, 'digests-and-lens-storage.yml'
+);
 
 my $verifier = Games::Solitaire::FC_Solve::CheckResults->new(
     {
@@ -175,7 +180,7 @@ verify_solution_test(
 # TEST
 verify_solution_test({id => "freecell24_board_with_founds_0", deal => 24,
         board => File::Spec->catfile(
-            File::Spec->curdir(), 't', 'data', 'sample-boards',
+            $data_dir, 'sample-boards',
             'ms24-with-founds-0.txt'
         )
     }, "Properly handle foundations like H-0 S-0 etc.");

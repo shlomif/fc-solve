@@ -8,6 +8,7 @@ use Carp;
 use Data::Dumper;
 use String::ShellQuote;
 use File::Spec;
+use File::Basename qw( dirname );
 
 use Games::Solitaire::Verify::Solution;
 
@@ -138,14 +139,15 @@ verify_solution_test({deal => 24, theme => ["-opt", "-sp", "r:tf",],},
     "-opt in conjunction with --set-pruning r:tf should work."
 );
 
+my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data' );
+
+
 # TEST
 verify_solution_test(
     {
         board =>
         File::Spec->catfile(
-            File::Spec->curdir(),
-            "t",
-            "data",
+            $data_dir,
             "sample-boards",
             "larrysan-kings-only-0-freecells-unlimited-move.txt",
         ),
