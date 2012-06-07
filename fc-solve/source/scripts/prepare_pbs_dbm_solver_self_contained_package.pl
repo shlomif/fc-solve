@@ -13,6 +13,8 @@ my $flto = 0;
 my $who = 'sub';
 
 my $mem = 200;
+my $num_cpus = 4;
+
 GetOptions(
     'flto!' => \$flto,
     'who=s' => \$who,
@@ -29,7 +31,9 @@ my $sub = 1;
 if ($sub)
 {
     $flto = 1;
+    $num_cpus = 12;
 }
+
 my $dest_dir = $sub ? 'dbm_fcs_for_sub' : 'dbm_fcs_for_amadiro';
 mkpath("$dest_dir");
 mkpath("$dest_dir/libavl");
@@ -312,6 +316,7 @@ DEALS_BOARDS = \$(patsubst %,%.board,\$(DEALS))
 
 THREADS = 16
 MEM = $mem
+CPUS = $num_cpus
 
 CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I. -I./libavl
 MODULES = @modules
@@ -333,7 +338,7 @@ all: \$(TARGET) \$(JOBS)
 \ttouch \$\@
 
 \$(JOBS): %: \$(JOBS_STAMP) \$(RESULT)
-\tTHREADS="\$(THREADS)" MEM="\$(MEM)" bash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
+\tTHREADS="\$(THREADS)" MEM="\$(MEM)" CPUS="\$(CPUS)" bash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
 
 %.show:
 \t\@echo "\$* = \$(\$*)"

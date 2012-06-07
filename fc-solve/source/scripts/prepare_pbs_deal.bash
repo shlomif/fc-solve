@@ -15,7 +15,7 @@ base_dir='/home/dhingralab/artemus_harper/dbm_fcs_for_subanark'
 
 echo '#!/bin/bash' > "$output"
 echo "#PBS -N 2_fc_Freecell_deal_$deal" >> "$output"
-echo "#PBS -l walltime=120:00:00,mem=${MEM:-16}gb,nodes=1:ppn=16" >> "$output"
+echo "#PBS -l walltime=120:00:00,mem=${MEM:-16}gb,nodes=1:ppn=${CPUS:-4}" >> "$output"
 echo "#PBS -m abe" >> "$output"
 echo "#" >> "$output"
 echo  >> "$output"
