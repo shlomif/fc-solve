@@ -112,7 +112,7 @@ GetOptions(
         );
     }
 
-    my $get_config_fn = sub { 
+    my $get_config_fn = sub {
         my $basename = shift;
 
         return
