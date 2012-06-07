@@ -894,10 +894,11 @@ IF(ASCIIDOC_FOUND)
 
     SET (_out "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.xml")
     SET (_manpage "${fc_solve_manpage}")
+
     ADD_CUSTOM_COMMAND(
         OUTPUT "${_manpage}"
         COMMAND xsltproc --nonet /etc/asciidoc/docbook-xsl/manpage.xsl 
-            "${_out}"
+            "--output" "${_manpage}" "${_out}" 
         DEPENDS "${_out}"
         COMMENT "Build man page ${_out}"
     )
