@@ -67,7 +67,7 @@ sub test_using_valgrind
 test_using_valgrind(
     {prog => "fc-solve",
         argv => [
-            '--read-from-file', '4,t/data/presets/crashy-preset-1.preset',
+            '--read-from-file', "4,$ENV{FCS_SRC_PATH}/t/t/data/presets/crashy-preset-1.preset",
             qw(-s -i -p -t -sam),
             "$ENV{FCS_PATH}/24.board",
         ],
