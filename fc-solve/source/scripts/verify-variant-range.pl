@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use Getopt::Long;
 
@@ -16,10 +17,20 @@ GetOptions(
 );
 
 my $theme_s = "";
+
+if ($ENV{THEME})
+{
+    $theme_s = $ENV{THEME};
+}
+
 if (defined($theme))
 {
     $theme_s = shell_quote("-l", $theme);
 }
+
+my $variant = ($ENV{VARIANT} || "simple_simon");
+
+my $ms = ($ENV{MS} ? " --ms " : '');
 
 open my $dump, "<", "total_dump.txt";
 LINES_LOOP:
@@ -35,9 +46,8 @@ while (!eof($dump))
         next LINES_LOOP;
     }
 
-    my $variant = "simple_simon";
     open my $fc_solve_output,
-        +("make_pysol_freecell_board.py $deal $variant | " .
+        +("make_pysol_freecell_board.py $ms -t $deal $variant | " .
         "./fc-solve -g $variant -p -t -sam $theme_s - |")
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
