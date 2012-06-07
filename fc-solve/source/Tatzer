@@ -236,6 +236,18 @@ GetOptions(
 ) or
     die "Wrong options";
 
+my $path_to_source_dir;
+
+if (@ARGV)
+{
+    $path_to_source_dir = shift(@ARGV);
+
+    if (@ARGV)
+    {
+        die "Junk at the end of ARGV - <@ARGV>";
+    }
+}
+
 if ($state_storage_libavl2_tree)
 {
     $state_storage = "LIBAVL2_TREE";
@@ -320,6 +332,12 @@ my @cmd= ("cmake",
         : ()
     ),
 );
+
+
+if (defined ($path_to_source_dir))
+{
+    push @cmd, $path_to_source_dir;
+}
 
 print(join(" ", @cmd), "\n");
 my $exit_code = system(@cmd);
