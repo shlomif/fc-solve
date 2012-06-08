@@ -58,6 +58,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/Testing/"
     "ids-whitelist\\\\.txt"
     "/_Inline/"
+    "/(build|BUILD)/"
 )
 
 IF(WIN32 AND NOT UNIX)
