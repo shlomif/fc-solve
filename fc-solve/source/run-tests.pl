@@ -11,7 +11,7 @@ use File::Copy;
 use File::Path;
 use Getopt::Long;
 use Env::Path;
-use File::Basename qw(dirname);
+use File::Basename qw( basename dirname );
 
 
 my $bindir = dirname( __FILE__ );
@@ -156,6 +156,8 @@ GetOptions(
                     *
                 (_is_parallized() ? -1 : 1)
             )
+                ||
+            (basename($a) cmp basename($b))
                 ||
             ($a cmp $b)
         }
