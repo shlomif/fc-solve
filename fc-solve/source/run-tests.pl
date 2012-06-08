@@ -47,7 +47,8 @@ GetOptions(
 ) or die "--glob='tests_glob'";
 
 {
-    local $ENV{FCS_PATH} = Cwd::getcwd();
+    my $fcs_path = Cwd::getcwd();
+    local $ENV{FCS_PATH} = $fcs_path;
     local $ENV{FCS_SRC_PATH} = $abs_bindir;
 
     my $testing_preset_rc;
@@ -161,7 +162,13 @@ GetOptions(
                 ||
             ($a cmp $b)
         }
-        (glob("t/$tests_glob"), glob("$abs_bindir/t/t/$tests_glob"))
+        (glob("t/$tests_glob"),
+            (
+                ($fcs_path ne $abs_bindir)
+                ? (glob("$abs_bindir/t/t/$tests_glob"))
+                : ()
+            ),
+        )
         ;
 
     if (! $ENV{FCS_TEST_BUILD})
