@@ -130,9 +130,11 @@ GetOptions(
 
     local $ENV{HARNESS_TRIM_FNS} = 'keep:1';
 
-    local $ENV{HARNESS_PLUGINS} =
-        "ColorSummary ColorFileVerdicts AlternateInterpreters TrimDisplayedFilenames"
-        ;
+    local $ENV{HARNESS_PLUGINS} = join(' ', qw(
+        ColorSummary ColorFileVerdicts AlternateInterpreters
+        TrimDisplayedFilenames
+        )
+    );
 
     if (system("make", "-s", "boards"))
     {
