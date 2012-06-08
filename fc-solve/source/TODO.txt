@@ -15,6 +15,12 @@ it makes a difference in speed.
 Non-pressing
 ------------
 
+* Prune for variants whose empty columns cannot be filled at all: there is
+no point in moving the last card in a column to a parent on a different
+column, because then the column won't be able to be filled and will be left
+to disuse.
+** See for example: Baker’s Dozen.
+
 * Trap one of the UNIX signals in fc-solve to quit prematurely with a valid
 footer of "Iterations limit reached"/etc.
 
