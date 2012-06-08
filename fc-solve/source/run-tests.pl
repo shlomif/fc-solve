@@ -128,12 +128,10 @@ GetOptions(
     local $ENV{HARNESS_ALT_INTRP_FILE} =
         $get_config_fn->("alternate-interpreters.yml");
 
-    local $ENV{HARNESS_TRIM_FNS} =
-        $get_config_fn->("trim-filenames.yml");
+    local $ENV{HARNESS_TRIM_FNS} = 'keep:1';
 
     local $ENV{HARNESS_PLUGINS} =
-    # "ColorSummary ColorFileVerdicts AlternateInterpreters TrimDisplayedFilenames"
-        "ColorSummary ColorFileVerdicts AlternateInterpreters"
+        "ColorSummary ColorFileVerdicts AlternateInterpreters TrimDisplayedFilenames"
         ;
 
     if (system("make", "-s", "boards"))
