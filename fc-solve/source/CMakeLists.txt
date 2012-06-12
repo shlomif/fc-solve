@@ -772,7 +772,7 @@ MACRO(GEN_BOARD idx)
     ADD_CUSTOM_COMMAND(
         OUTPUT ${board}
         COMMAND "python"
-        ARGS "board_gen/make_pysol_freecell_board.py" ${idx} ">" ${board}
+        ARGS "${CMAKE_CURRENT_SOURCE_DIR}/board_gen/make_pysol_freecell_board.py" ${idx} ">" ${board}
     )
     SET(BOARDS ${BOARDS} ${board})
 ENDMACRO(GEN_BOARD idx)
