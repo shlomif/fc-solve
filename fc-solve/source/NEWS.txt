@@ -4,7 +4,7 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
-1. Add the +--show-exceeded-limits+ / +-sel+ flag that removes ambiguity
+1. Add the +--show-exceeded-limits+ / +-sel+ flag that removes some ambiguity
 in the output.
 
 2. Fix invoking the solver with +--set-pruning r:tf+ in conjunction
