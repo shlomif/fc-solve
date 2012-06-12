@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 22;
+use Test::More tests => 26;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -497,6 +497,26 @@ EOF
 
     # TEST
     is ($reader->read(1 << 4), 8+4, 'reader->read(1 << 4)');
+}
+
+{
+    my $reader = VariableBaseDigitsReader->new(
+        {
+            data => (24 + 8*52 + 7*11*52)
+        }
+    );
+
+    # TEST
+    ok ($reader, 'Init var_reader');
+
+    # TEST
+    is ($reader->read(52), 24, 'reader->read(24)');
+
+    # TEST
+    is ($reader->read(11), 8, 'reader->read(11)');
+
+    # TEST
+    is ($reader->read(10), 7, 'reader->read(10)');
 }
 
 =head1 COPYRIGHT AND LICENSE
