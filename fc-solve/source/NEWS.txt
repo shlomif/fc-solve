@@ -4,11 +4,32 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.12.0: (12-Jun-2012)
+-----------------------------
+
 1. Add the +--show-exceeded-limits+ / +-sel+ flag that removes some ambiguity
 in the output.
 
 2. Fix invoking the solver with +--set-pruning r:tf+ in conjunction
 with +-opt+.
+
+3. Add the +-l three-eighty+ preset.
+
+4. Many +dbm_solver.c+ improvements including the implementations of kaztree
+and libavl2-derived backends, several major reductions of the memory
+consumption, and many code cleanups and bug fixes.
+
+5. Add support for building and testing the distribution in an out-of-tree
+build (e.g: 
++mkdir build ; cd build ; cmake -DFCS_WITH_SUITE=1 .. ; make ; make test+
+).
+
+6. A new experimental +fcc_solver.c+ which aims to reduce memory consumption
+in exhaustive scans even further.
+
+7. Removed many #ifdefs from the code by creating common abstractions.
+
+8. Eliminate many GCC warnings with certain GCC compile flags. 
 
 Version 3.10.0: (15-Jan-2012)
 -----------------------------
