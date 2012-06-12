@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 26;
+use Test::More tests => 31;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -517,6 +517,35 @@ EOF
 
     # TEST
     is ($reader->read(10), 7, 'reader->read(10)');
+}
+
+{
+    my $writer = VariableBaseDigitsWriter->new;
+
+    # TEST
+    ok ($writer, 'Init var_writer');
+
+    $writer->write({ item => 24, base => 52, });
+    $writer->write({ item => 8, base => 11, });
+    $writer->write({ item => 7, base => 10, });
+
+    my $reader = VariableBaseDigitsReader->new(
+        {
+            data => $writer->get_data(),
+        }
+    );
+
+    # TEST
+    ok ($reader, 'Init var_reader');
+
+    # TEST
+    is ($reader->read(52), 24, 'writer-to-reader->read(24)');
+
+    # TEST
+    is ($reader->read(11), 8, 'writer-to-reader->read(11)');
+
+    # TEST
+    is ($reader->read(10), 7, 'writer-to-reader->read(10)');
 }
 
 =head1 COPYRIGHT AND LICENSE
