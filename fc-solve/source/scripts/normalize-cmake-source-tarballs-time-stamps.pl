@@ -14,11 +14,13 @@ use Cwd qw ( getcwd );
 my $version;
 my $package_base;
 my $source_dir;
+my $binary_dir;
 
 GetOptions(
     'version=s' => \$version,
     'package-base=s' => \$package_base,
     'source-dir=s' => \$source_dir,
+    'binary-dir=s' => \$binary_dir,
 ) or die "GetOptions() failed.";
 
 if (!defined($version))
@@ -36,6 +38,11 @@ if (!defined($source_dir))
     die "--source-dir not specified.";
 }
 
+if (!defined($binary_dir))
+{
+    die "--binary-dir not specified.";
+}
+
 sub get_dir_entries
 {
     my $dirname = shift;
@@ -51,7 +58,7 @@ sub get_dir_entries
 }
 
 my @tarballs = grep { /\A\Q$package_base\E-\Q$version\E\.tar\.\w+\z/ }
-    @{get_dir_entries($source_dir)};
+    @{get_dir_entries($binary_dir)};
 
 if (! @tarballs)
 {
@@ -65,11 +72,12 @@ my $tempdir = tempdir ( DIR => $source_dir, CLEANUP => 1);
 my $orig_dir = getcwd();
 
 my $source_dir_abs = File::Spec->rel2abs($source_dir);
+my $binary_dir_abs = File::Spec->rel2abs($binary_dir);
 
 chdir($tempdir);
 
 print "Unpacking the source tarball.\n";
-system("tar", "-xf", File::Spec->catfile($source_dir_abs, $preferred_tarball));
+system("tar", "-xf", File::Spec->catfile($binary_dir_abs, $preferred_tarball));
 
 print "Applying the original timestamps to the files.\n";
 
@@ -103,7 +111,7 @@ if (!defined($arc_dir))
 print "Repackaging.\n";
 foreach my $tarball (@tarballs)
 {
-    system("tar", "-caf", File::Spec->catfile($source_dir_abs, $tarball),
+    system("tar", "-caf", File::Spec->catfile($binary_dir_abs, $tarball),
         $arc_dir);
 }
 print "Finished!\n";

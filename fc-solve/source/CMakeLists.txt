@@ -961,5 +961,6 @@ ADD_CUSTOM_TARGET(
     "--version" "${VERSION}"
     "--package-base" "${CPACK_PACKAGE_NAME}"
     "--source-dir" "${CMAKE_CURRENT_SOURCE_DIR}"
+    "--binary-dir" "${CMAKE_CURRENT_BINARY_DIR}"
 )
 

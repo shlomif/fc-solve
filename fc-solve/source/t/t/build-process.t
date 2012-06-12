@@ -21,7 +21,7 @@ if (! $ENV{'FCS_TEST_BUILD'} )
 plan tests => 15;
 
 # Change directory to the Freecell Solver base distribution directory.
-chdir($ENV{"FCS_PATH"});
+chdir($ENV{"FCS_SRC_PATH"});
 
 sub test_cmd
 {
