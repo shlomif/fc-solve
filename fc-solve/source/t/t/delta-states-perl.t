@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 19;
+use Test::More tests => 22;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -484,6 +484,19 @@ EOF
         $second_state,
         "encode_composite avoids permutations - #2",
     );
+}
+
+{
+    my $reader = VariableBaseDigitsReader->new({ data => (3 | (12 << 3))});
+
+    # TEST
+    ok ($reader, 'Init var_reader');
+
+    # TEST
+    is ($reader->read(1 << 3), 3, 'reader->read(1 << 3)');
+
+    # TEST
+    is ($reader->read(1 << 4), 8+4, 'reader->read(1 << 4)');
 }
 
 =head1 COPYRIGHT AND LICENSE

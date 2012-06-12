@@ -104,6 +104,37 @@ sub read
     return $ret;
 }
 
+package VariableBaseDigitsReader;
+
+use base 'Games::Solitaire::Verify::Base';
+
+__PACKAGE__->mk_acc_ref([qw(_data)]);
+
+sub _init
+{
+    my $self = shift;
+    my $args = shift;
+
+    $self->_data($args->{data});
+
+    return;
+}
+
+sub read
+{
+    my ($self, $base) = @_;
+
+    my $data = $self->_data;
+
+    my $ret = $data % $base;
+
+    my $new_data = $data / $base;
+
+    $self->_data($new_data);
+
+    return $ret;
+}
+
 package Games::Solitaire::FC_Solve::DeltaStater;
 
 use base 'Games::Solitaire::Verify::Base';
