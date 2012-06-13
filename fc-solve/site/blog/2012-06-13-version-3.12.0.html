@@ -1,0 +1,53 @@
+<h1>Freecell Solver 3.12.0</h1>
+
+<!-- Tags: freecell, solver, solving, open source
+-->
+
+<p>
+<a href="http://fc-solve.shlomifish.org/">Freecell Solver</a> version 3.12.0
+has been released. It is available in the form of a source tarball from
+<a href="http://fc-solve.shlomifish.org/download.html">the
+    download page</a>.
+</p>
+
+<p>
+The first item to note is that the URL of its site changed from under
+*.berlios.de to
+<a href="http://fc-solve.shlomifish.org/">http://fc-solve.shlomifish.org/</a>,
+and that there is a redirect in place. Moreover, we have switched the version
+control system from one based on Subversion to a git repository which is 
+<a href="https://github.com/shlomif/fc-solve">currently hosted on GitHub</a>
+(though we may move it later).
+</p>
+
+<p>
+This release adds a new flag - <tt>--show-exceeded-limits</tt> or
+<tt>-sel</tt> for short, that removes some ambiguity in the output,
+and fixes a problem with starting the solver with <tt>--set-pruning r:tf</tt>
+in conjunction with <tt>-opt</tt>. A new preset - <tt>-l three-eighty</tt>
+(or <tt>-l te</tt> for short) has been added, which provides somewhat better 
+performance.
+</p>
+
+<p>
+The experiemntal <tt>dbm_fc_solver</tt> is now less experimental and can now 
+store the positions inside binary trees in memory, and its memory consumption
+has been greatly reduced since earlier versions. We also added another 
+experimental solver called <tt>fcc_fc_solver</tt> which aims to determine
+the solvability of a deal by analysing fully-connected-components (“FCCs”).
+</p>
+
+<p>
+We also added support for buildinga and testing the distribution in an
+out-of-tree build, and there are some cleanups to the code.
+</p>
+
+<p>
+More information about all these can be found in the
+<a href="http://fc-solve.shlomifish.org/docs/#distributed-docs">distributed
+    documents</a> of Freecell Solver.
+</p>
+
+<p>
+Enjoy!
+</p>
