@@ -293,6 +293,21 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #define my_copy_stack(idx) fcs_copy_stack(new_state_key, new_state_val, idx, indirect_stacks_buffer);
 
+/*
+ * This macro assists in implementing this prune:
+ *
+ * http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1121 :
+ *
+ * There is no point in moving the last card in a
+ * column to a parent on a different column, because then the column won't
+ * be able to be filled, and will be left to disuse. Furthermore, after
+ * moved to a parent, the card might block other cards that can be placed
+ * on the parent.
+ *
+ * TODO : implement it for FCS_ES_FILLED_BY_KINGS_ONLY
+ * */
+#define tests__should_not_empty_columns() tests__is_filled_by_none()
+
 #ifdef __cplusplus
 }
 #endif

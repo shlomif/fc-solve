@@ -943,6 +943,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 }
             }
 
+            if (tests__should_not_empty_columns())
+            {
+                if (c == 0)
+                {
+                    continue;
+                }
+            }
+
             /* Find a card which this card can be put on; */
 
             card = fcs_col_get_card(col, c);
@@ -1779,6 +1787,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
+    if (tests__is_filled_by_none())
+    {
+        return;
+    }
+
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     if (num_vacant_stacks == 0)
@@ -1800,10 +1813,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         }
     }
 
-    if (tests__is_filled_by_none())
-    {
-        return;
-    }
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
@@ -1854,8 +1863,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 {
+    int num_cards_in_col_threshold;
     tests_declare_accessors()
     tests_declare_seqs_built_by()
+    tests_declare_empty_stacks_fill()
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();
 #endif
@@ -1866,16 +1877,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 
     tests_define_accessors();
     tests_define_seqs_built_by();
+    tests_define_empty_stacks_fill();
 
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
 
+    num_cards_in_col_threshold = tests__should_not_empty_columns() ? 1 : 0;
+
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
-        if (cards_num > 0)
+        if (cards_num > num_cards_in_col_threshold)
         {
             card = fcs_col_get_card(col, cards_num-1);
 
@@ -1930,6 +1944,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 {
+    int num_cards_in_col_threshold;
+    tests_declare_empty_stacks_fill()
     tests_declare_accessors()
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
@@ -1943,6 +1959,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
     fcs_cards_column_t col;
 
     tests_define_accessors();
+    tests_define_empty_stacks_fill();
 
     temp_move = fc_solve_empty_move;
 
@@ -1956,6 +1973,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
     {
         return;
     }
+
+    num_cards_in_col_threshold = tests__should_not_empty_columns() ? 1 : 0;
 
     for(ds=0;ds<LOCAL_FREECELLS_NUM;ds++)
     {
@@ -1971,7 +1990,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
     {
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
-        if (cards_num > 0)
+        if (cards_num > num_cards_in_col_threshold)
         {
             card = fcs_col_get_card(col, cards_num-1);
 
@@ -2088,14 +2107,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
-
-    if (num_vacant_stacks == 0)
+    if (tests__is_filled_by_none())
     {
         return;
     }
 
-    if (tests__is_filled_by_none())
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
+
+    if (num_vacant_stacks == 0)
     {
         return;
     }
