@@ -41,6 +41,7 @@ extern "C" {
 #include <string.h>
 
 #include "inline.h"
+#include "bool.h"
 
 #include "instance.h"
 
@@ -227,11 +228,11 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #define tests_define_accessors_freecell_only() {}
 
-#define tests__is_filled_by_any_card() 1
+#define tests__is_filled_by_any_card() TRUE
 
-#define tests__is_filled_by_kings_only() 0
+#define tests__is_filled_by_kings_only() FALSE
 
-#define tests__is_filled_by_none() 0
+#define tests__is_filled_by_none() FALSE
 
 #else
 
