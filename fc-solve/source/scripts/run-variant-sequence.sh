@@ -27,6 +27,7 @@ seq "$start" "$end" |  \
     echo "${deal}:"
     ./board_gen/make_pysol_freecell_board.py $ms -t "$deal" "$variant" |
         ./fc-solve --game "$variant" $theme -sel -sam -p -t -mi "$max_iters" |
-        tail -3
+        tail -3 ;
+    date +"T=%s.%N"
 done) | tee -a total_dump.txt
 
