@@ -13,6 +13,23 @@ use Data::Dumper;
 
 my @fcs_args = @ARGV;
 
+my $variant = "freecell";
+my $candidate;
+
+FIND_VARIANT:
+foreach my $arg (reverse(@fcs_args))
+{
+    if ($arg eq "-g")
+    {
+        $variant = $candidate;
+        last FIND_VARIANT;
+    }
+    else
+    {
+        $candidate = $arg;
+    }
+}
+
 my $args_quoted = shell_quote(@fcs_args);
 my $fcs_output = `fc-solve -p -t -sam $args_quoted`;
 
@@ -31,7 +48,7 @@ if ($is_solvable)
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => $input_fh,
-            variant => "freecell",
+            variant => $variant,
         },
     );
 
@@ -41,8 +58,8 @@ if ($is_solvable)
 
     if ($verdict)
     {
+        # "Verdict == " . Dumper($verdict);
         die "Invalid solution!";
-        diag("Verdict == " . Dumper($verdict));
     }
 }
 
