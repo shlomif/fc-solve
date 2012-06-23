@@ -11,7 +11,7 @@ The programs
 Most command-line switches have two versions:
 
 * A short POSIX one which is a dash followed by a letter or a few. This option
-must come standalone and not clustered:  +-sam+ is not equivalent to 
+must come standalone and not clustered:  +-sam+ is not equivalent to
 specifying +-s+, +-a+ and +-m+.
 
 * A long switch which is two dashes followed by the command string. For
@@ -86,11 +86,11 @@ For example, here is a command line using +-p+ and +-t+:
 $ pi-make-microsoft-freecell-board 24 | fc-solve -p -t
 -=-=-=-=-=-=-=-=-=-=-=-
 
-Foundations: H-0 C-0 D-0 S-0 
-Freecells:                   
-: 4C 2C 9C 8C QS 4S 2H       
-: 5H QH 3C AC 3H 4H QD       
-: QC 9S 6H 9H 3S KS 3D       
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
 : 5D 2S JC 5C JH 6D AS
 : 2D KD TH TC TD 8D
 : 7H JS KH TS KC 7C
@@ -134,8 +134,8 @@ program with some effort on the programmer's part.
 For example:
 
 ----------------------
-$ pi-make-microsoft-freecell-board 24 | fc-solve -m | head -30                                                                     
--=-=-=-=-=-=-=-=-=-=-=-                                                         
+$ pi-make-microsoft-freecell-board 24 | fc-solve -m | head -30
+-=-=-=-=-=-=-=-=-=-=-=-
 
 Move a card from stack 3 to the foundations
 
@@ -156,7 +156,7 @@ move consists of two characters and there are ten moves in a line. Naturally,
 this option will only become apparent if the display moves is specified.
 (it does not implicitly specify it, though).
 
-For more information regarding standard notation refer to the following 
+For more information regarding standard notation refer to the following
 web-page:
 
 http://home.earthlink.net/~fomalhaut/freecell.html
@@ -166,45 +166,45 @@ http://home.earthlink.net/~fomalhaut/freecell.html
 
 This option is similar to the previous one, except that when a sequence
 move is made to an empty stack with more than one card in the sequence,
-the move will be followed with "v" and the number of cards moved in 
+the move will be followed with "v" and the number of cards moved in
 hexadecimal.
 
 -sam , --display-states-and-moves
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This option will display both the intermediate states and the moves that 
+This option will display both the intermediate states and the moves that
 are needed to move from one to another. The standard notation
 option applies to it to.
 
 --------------------------------
-$ pi-make-microsoft-freecell-board 24 | fc-solve -sam -p -t | head -50                                                             
--=-=-=-=-=-=-=-=-=-=-=-                                                         
+$ pi-make-microsoft-freecell-board 24 | fc-solve -sam -p -t | head -50
+-=-=-=-=-=-=-=-=-=-=-=-
 
-Foundations: H-0 C-0 D-0 S-0 
-Freecells:                   
-: 4C 2C 9C 8C QS 4S 2H       
-: 5H QH 3C AC 3H 4H QD       
-: QC 9S 6H 9H 3S KS 3D       
-: 5D 2S JC 5C JH 6D AS       
-: 2D KD TH TC TD 8D          
-: 7H JS KH TS KC 7C          
-: AH 5S 6S AD 8H JD          
-: 7S 6C 7D 4D 8S 9D          
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D AS
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S 9D
 
 
 ====================
 
 Move a card from stack 3 to the foundations
 
-Foundations: H-0 C-0 D-0 S-A 
-Freecells:                   
-: 4C 2C 9C 8C QS 4S 2H       
-: 5H QH 3C AC 3H 4H QD       
-: QC 9S 6H 9H 3S KS 3D       
-: 5D 2S JC 5C JH 6D          
-: 2D KD TH TC TD 8D          
-: 7H JS KH TS KC 7C          
-: AH 5S 6S AD 8H JD          
+Foundations: H-0 C-0 D-0 S-A
+Freecells:
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
 : 7S 6C 7D 4D 8S 9D
 
 
@@ -246,7 +246,7 @@ Outputs to a file instead of standard output. So for example:
 $ fc-solve -o 2405.solution.txt 2405.board
 ----------------------
 
-Will put the solution to the file in 2405.board in the file 
+Will put the solution to the file in 2405.board in the file
 +2405.solution.txt+ . This will also be done using:
 
 ----------------------
@@ -277,7 +277,7 @@ the program. Freecell Solver can use any number of freecells as long as
 it does not exceed its maximal number.
 
 This maximum is hard-coded into the program, and can be specified at
-compile-time by modifying the file +config.h+. See the file +INSTALL+ 
+compile-time by modifying the file +config.h+. See the file +INSTALL+
 (or alternatively +INSTALL.html+) for details.
 
 --stacks-num [Number of Stacks]
@@ -305,7 +305,7 @@ alternate colour or by rank regardless of suit.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This option specifies whether the sequence move is limited by the
-number of freecells or vacant stacks or not. 
+number of freecells or vacant stacks or not.
 
 
 --empty-stacks-filled-by {kings|none|all}
@@ -435,13 +435,13 @@ The tests along with their characters are:
 |'E' | move a freecell card to an empty stack.
 2+|Simple Simon Tests:
 |'a' | move a full sequence to the foundations.
-|'b' | move a sequence to a true parent of his. 
-|'c' | move a whole stack sequence to a false parent (in order to clear the stack) 
-|'d' | move a sequence to a true parent that has some cards above it. 
-|'e' | move a sequence with some cards above it to a true parent. 
-|'f' | move a sequence with a junk sequence above it to a true parent that 
-has some cards above it. 
-|'g' | move a whole stack sequence to a false parent which has some 
+|'b' | move a sequence to a true parent of his.
+|'c' | move a whole stack sequence to a false parent (in order to clear the stack)
+|'d' | move a sequence to a true parent that has some cards above it.
+|'e' | move a sequence with some cards above it to a true parent.
+|'f' | move a sequence with a junk sequence above it to a true parent that
+has some cards above it.
+|'g' | move a whole stack sequence to a false parent which has some
 cards above it.
 |'h' | move a sequence to a parent on the same stack.
 |'i' | move any sequence to a false parent (using it may make the solution
@@ -478,7 +478,7 @@ recommended that you set the minimal depth tests order in an increasing
 depth.
 
 It should be noted that the +-to+ or +--tests-order+ option above is
-equivalent to using this option with a minimal depth of 0. 
+equivalent to using this option with a minimal depth of 0.
 
 Here are some examples:
 
@@ -514,7 +514,7 @@ Starting from recent Freecell Solver versions there is no difference between
 recurse into randomly. Its behaviour will differ depending on the seed you
 supply to it.  (see the "-seed" option below.)
 
-BFS does not yield good results, and +a-star+ has a mixed behaviour, so for 
+BFS does not yield good results, and +a-star+ has a mixed behaviour, so for
 the time being I recommend using Soft-DFS or Andom-DFS.
 
 The Random-DFS scan processes every tests' random group, randomizes the
@@ -525,8 +525,8 @@ that do not belong to any group, are processed in a non-random manner.
 -asw [BeFS Weights] , --a-star-weight [BeFS Weights]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Specify weights for the +a-star+ (= "Best-First Search") scan, assuming it is 
-used. The parameter should be a comma-separated list of numbers, each one is 
+Specify weights for the +a-star+ (= "Best-First Search") scan, assuming it is
+used. The parameter should be a comma-separated list of numbers, each one is
 proportional to the weight of its corresponding test.
 
 The numbers are, in order:
@@ -575,7 +575,7 @@ used in all the normal scans.
 ~~~~~~~~~~~~~~~~~
 
 This option specifies that states that were encountered whose depth in the
-states graph can be improved should be reparented to the new parent. This 
+states graph can be improved should be reparented to the new parent. This
 option can possibly make solutions shorter.
 
 
@@ -612,8 +612,8 @@ myboard.txt.
 -step [Step] , --soft-thread-step [Step]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This option will set the number of iterations with which to run the 
-soft thread before switching to the next one. By specifying a larger 
+This option will set the number of iterations with which to run the
+soft thread before switching to the next one. By specifying a larger
 step, one can give a certain scan a longer run-time and a higher priority.
 
 -nht , --next-hard-thread
@@ -657,7 +657,7 @@ step number.
 Specifies the synergy between the various scans, or how much they cooperate
 between themselves. +none+ means they do not cooperate and only share
 the same memory resources. +dead-end-marks+ means they try to mark states
-that they have withdrawn from, and states whose all their derived states are 
+that they have withdrawn from, and states whose all their derived states are
 such, as "dead ends". This may or may not improve the speed of the solution.
 
 
@@ -694,7 +694,7 @@ are some examples:
 --flares-plan "RunIndef:FlareyFlare"
 ------------
 
-This plan will run the flare with the name +FlareyFlare+ indefinetely, until it 
+This plan will run the flare with the name +FlareyFlare+ indefinetely, until it
 terminates. Once a RunIndef action is encountered, the rest of the plan is
 ignored.
 
@@ -717,7 +717,7 @@ This runs the flares identified by +dfs+ and +befs+ and then see if a solution
 was reached ("CP:" stands for *"checkpoint"*), and if so yield it. If both
 flares did not reach a solution yet, or failed to solve the board, it will run
 the flare +funky+ for 10,000 iterations and yield its solution. And like the
-previous case, this solution will loop after it ended for as long as the 
+previous case, this solution will loop after it ended for as long as the
 no flare solved the board or the program did not run out of iterations.
 
 Using checkpoints one can yield a possibly sub-optimal (as far as solution
@@ -763,8 +763,8 @@ skip followed by a comma. (the default is 0)
 Reads the configuration specified by [preset] and configures the solver
 accordingly. A preset is a set of command line arguments to be analyzed
 in the place of this option. They are read from a set of presetrc files
-: one installed system-wide, the other at $HOME/.freecell-solver/presetrc 
-and the third at the path specified by the FREECELL_SOLVER_PRESETRC 
+: one installed system-wide, the other at $HOME/.freecell-solver/presetrc
+and the third at the path specified by the FREECELL_SOLVER_PRESETRC
 environment variable. You can add more presets at any of these places.
 (refer to http://groups.yahoo.com/group/fc-solve-discuss/message/403
 for information about their format)
@@ -780,14 +780,14 @@ quota optimization algorithm.
 to yield very short solution, but is very slow (solves only 3 boards per
 second on a Pentium 4 2.4GHz).
 |+cool-jives+                  |a meta-moves preset
-|+crooked-nose+                |an atomic-moves preset (guarantees an 
+|+crooked-nose+                |an atomic-moves preset (guarantees an
             accurate verdict)
 |+enlightened-ostrich+         |a meta-moves preset (that depends on Freecell
 Solver 3.4.0 and above) that yields solutions faster on average than
 +foss-nessy+.
 |+fools-gold+                  |an atomic-moves preset
 |+foss-nessy+                  |a meta-moves preset (that depends on Freecell
-Solver 3.2.0 and above) that yields solutions faster on average than 
+Solver 3.2.0 and above) that yields solutions faster on average than
 +the-iglu-cabal+.
 |+good-intentions+             |runs "cool-jives" and then "fools-gold"
 |+gooey-unknown-thing+         |a meta-moves preset that aims to minimise
@@ -804,13 +804,13 @@ to yield very short solutions (even in comparison to +children-playing-ball+
 |+sentient-pearls+             |a meta-moves and flares based preset with
 short solutions. Much faster than +children-playing-ball+ but yields less
 optimal solutions.
-|+tea-for-two+                 |a meta-moves preset optimized for 
+|+tea-for-two+                 |a meta-moves preset optimized for
 two-freecells' Freecell games (although it can work on other Freecell-like
 games as well).
 |+the-iglu-cabal+              |a meta-moves preset that yields faster
 solutions on average than +blue-yonder+.
 |+the-last-mohican+            |a preset for solving Simple Simon. Yields
-            less false negatives than the default one, but might be slower. 
+            less false negatives than the default one, but might be slower.
 |+three-eighty+                |a meta-moves preset (that depends on Freecell
 Solver 3.4.0 and above) that yields solutions faster on average than
 +enlightened-ostrich+.
@@ -839,10 +839,10 @@ slows it down a bit.
 -s , --state-output
 ~~~~~~~~~~~~~~~~~~~
 
-This option implies -i. If specified, this option outputs the cards and 
-formation of the board itself, for every state that is checked. 
-"fc-solve -s" yields a nice real-time display of the progress of 
-Freecell Solver, but you usually cannot make what is going on because 
+This option implies -i. If specified, this option outputs the cards and
+formation of the board itself, for every state that is checked.
+"fc-solve -s" yields a nice real-time display of the progress of
+Freecell Solver, but you usually cannot make what is going on because
 it is so fast.
 
 
