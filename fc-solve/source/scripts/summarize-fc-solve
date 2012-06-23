@@ -31,14 +31,17 @@ foreach my $arg (reverse(@fcs_args))
 }
 
 my $args_quoted = shell_quote(@fcs_args);
-my $fcs_output = `fc-solve -p -t -sam $args_quoted`;
+my $fcs_output = `fc-solve -p -t -sam -sel $args_quoted`;
 
 my $is_solvable = (($fcs_output =~ m{^This game is solveable}ms) ? 1 : 0);
 my $unsolved = (($fcs_output =~ m{^I could not solve}ms) ? 1 : 0);
+my $intractable = (($fcs_output =~ m{^Iterations count exceeded}ms) ? 1 : 0);
 
-if (! ($is_solvable xor $unsolved))
+my @true = (grep { $_ } ($is_solvable, $unsolved, $intractable));
+
+if (! (@true == 1))
 {
-    die "Game is both unsolvable and solver or neithed!";
+    die "Game is more than one of solved, unsolvable or intractable!";
 }
 
 if ($is_solvable)
@@ -66,5 +69,9 @@ if ($is_solvable)
 my ($num_iters) = ($fcs_output =~ m{^Total number of states checked is (\d+)\.$}ms);
 my $sol_len = () = ($fcs_output =~ m{^Move}msg);
 
-print "Verdict: " . ($is_solvable ? "Solved" : "Unsolved") .
+print "Verdict: " .
+    ($is_solvable ? "Solved"
+        : $intractable ? "Intractable"
+        : "Unsolved"
+    ) .
     " ; Iters: $num_iters ; Length: $sol_len\n";
