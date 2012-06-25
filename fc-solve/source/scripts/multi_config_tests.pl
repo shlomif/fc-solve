@@ -178,6 +178,19 @@ run_tests("libavl2 with INDIRECT_STATES",
     }
 );
 
+run_tests("without-depth-field",
+    {
+        tatzer_args =>
+        [qw(--without-depth-field)],
+    }
+);
+
+run_tests("without-depth-field and rcs",
+    {
+        tatzer_args =>
+        [qw(--without-depth-field --rcs)],
+    }
+);
 
 exit(0);
 
