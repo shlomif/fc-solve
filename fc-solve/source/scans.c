@@ -71,6 +71,9 @@ static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
 #define calc_depth(ptr_state) (FCS_S_DEPTH(ptr_state))
 #endif
 
+#define kv_calc_depth(ptr_state) (calc_depth(FCS_STATE_kv_to_collectible(ptr_state)))
+
+
 #define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
@@ -1484,7 +1487,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     {
         int depth;
 
-        depth = calc_depth(FCS_STATE_kv_to_collectible(raw_pass_raw));
+        depth = kv_calc_depth(raw_pass_raw);
 
         if (depth <= 20000)
         {
@@ -2340,7 +2343,7 @@ extern void fc_solve_sfs_check_state_end(
          * already have, then re-assign its parent to this state.
          * */
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
-           (calc_depth(FCS_STATE_kv_to_collectible(&existing_state)) > calc_depth(FCS_STATE_kv_to_collectible(raw_ptr_state_raw))+1)
+           (kv_calc_depth(&existing_state) > kv_calc_depth(raw_ptr_state_raw)+1)
         )
         {
             /* Make a copy of "moves" because "moves" will be destroyed */
