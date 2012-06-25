@@ -15,6 +15,8 @@ use warnings;
 use Carp;
 use Data::Dumper;
 
+use Term::ANSIColor qw(colored);
+
 use parent 'Games::Solitaire::Verify::Base';
 
 my @fields = qw(
@@ -89,9 +91,12 @@ sub emit_all
     my $self = shift;
 
     print "Error with @{[$self->blurb()]} executing [@{$self->cmd_line()}].\n";
-    print($self->all_info());
+    print ($self->all_info());
 
-    Carp::confess("Error.");
+    Carp::cluck("Error.");
+    print colored("Error!", ($ENV{'HARNESS_SUMMARY_COL_FAIL'} || 'bold red')),
+        "\n";
+    exit(-1);
 }
 
 =head2 my $got = Test::Run::Trap::Obj->trap_run({class => $class, args => \@args, run_func => $func})
@@ -133,6 +138,8 @@ use warnings;
 
 use Cwd;
 use File::Path qw(rmtree);
+
+use Term::ANSIColor qw(colored);
 
 local *run_cmd = \&Games::Solitaire::FC_Solve::Test::Trap::Obj::run_cmd;
 
@@ -203,6 +210,10 @@ run_tests("without-depth-field and rcs",
         [qw(--without-depth-field --rcs)],
     }
 );
+
+print colored("All tests successful.",
+        ($ENV{'HARNESS_SUMMARY_COL_SUC'} || 'bold green')
+    ), "\n";
 
 exit(0);
 
