@@ -131,6 +131,9 @@ package main;
 use strict;
 use warnings;
 
+use Cwd;
+use File::Path qw(rmtree);
+
 local *run_cmd = \&Games::Solitaire::FC_Solve::Test::Trap::Obj::run_cmd;
 
 sub run_tests
@@ -139,9 +142,18 @@ sub run_tests
 
     my $tatzer_args = $args->{'tatzer_args'};
 
-    run_cmd("$blurb_base : Tatzer", {cmd => ['./Tatzer', @$tatzer_args]});
+    my $cwd = getcwd();
+    my $build_path = 'build';
+
+    mkdir($build_path);
+    chdir($build_path);
+
+    run_cmd("$blurb_base : Tatzer", {cmd => ['../Tatzer', @$tatzer_args, '..']});
     run_cmd("$blurb_base : make", {cmd => [qw(make -j2)]});
-    run_cmd("$blurb_base : make", {cmd => [$^X, "run-tests.pl"]});
+    run_cmd("$blurb_base : test", {cmd => [$^X, "$cwd/run-tests.pl"]});
+
+    chdir($cwd);
+    rmtree($build_path, 0, 1);
 
     return;
 }
