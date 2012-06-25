@@ -57,6 +57,20 @@
 #define DEBUG 1
 #endif
 
+#ifdef FCS_WITHOUT_DEPTH_FIELD
+static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
+{
+    register int ret = 0;
+    while ((ptr_state = FCS_S_PARENT(ptr_state)) != NULL)
+    {
+        ret++;
+    }
+    return ret;
+}
+#else
+#define calc_depth(ptr_state) (FCS_S_DEPTH(ptr_state))
+#endif
+
 #define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
@@ -1467,17 +1481,16 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     ret += (temp * befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE]);
 
-#ifdef FCS_WITHOUT_DEPTH_FIELD
-    ret += befs_weights[FCS_BEFS_WEIGHT_DEPTH];
-#else
     {
-        int depth = raw_pass_raw->val->depth;
+        int depth;
+
+        depth = calc_depth(FCS_STATE_kv_to_collectible(raw_pass_raw));
+
         if (depth <= 20000)
         {
             ret += ((20000 - depth)/20000.0) * befs_weights[FCS_BEFS_WEIGHT_DEPTH];
         }
     }
-#endif
 
     TRACE0("Before return");
 
@@ -1675,17 +1688,6 @@ static void dump_pqueue (
 #endif
 #endif
 
-#ifdef FCS_WITHOUT_DEPTH_FIELD
-static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
-{
-    register int ret = 0;
-    while ((ptr_state = FCS_S_PARENT(ptr_state)) != NULL)
-    {
-        ret++;
-    }
-    return ret;
-}
-#endif
 
 /*
  *  fc_solve_befs_or_bfs_do_solve() is the main event
@@ -1865,11 +1867,7 @@ int fc_solve_befs_or_bfs_do_solve(
             debug_iter_output_func(
                     debug_iter_output_context,
                     *(instance_num_times_ptr),
-#ifdef FCS_WITHOUT_DEPTH_FIELD
                     calc_depth(PTR_STATE),
-#else
-                    FCS_S_DEPTH(PTR_STATE),
-#endif
                     (void*)instance,
                     STATE_TO_PASS(),
 #ifdef FCS_WITHOUT_VISITED_ITER
@@ -2306,9 +2304,9 @@ extern void fc_solve_sfs_check_state_end(
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_runtime_flags_t calc_real_depth
         = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+#endif
     const fcs_runtime_flags_t scans_synergy
         = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
-#endif
     fcs_kv_state_t existing_state;
 
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
@@ -2333,6 +2331,7 @@ extern void fc_solve_sfs_check_state_end(
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
         calculate_real_depth (calc_real_depth, FCS_STATE_kv_to_collectible(&existing_state));
+#endif
 
         /* Re-parent the existing state to this one.
          *
@@ -2341,7 +2340,8 @@ extern void fc_solve_sfs_check_state_end(
          * already have, then re-assign its parent to this state.
          * */
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
-           (existing_state_val->depth > ptr_state->depth+1))
+           (calc_depth(FCS_STATE_kv_to_collectible(&existing_state)) > calc_depth(FCS_STATE_kv_to_collectible(raw_ptr_state_raw))+1)
+        )
         {
             /* Make a copy of "moves" because "moves" will be destroyed */
             existing_state_val->moves_to_parent =
@@ -2357,10 +2357,11 @@ extern void fc_solve_sfs_check_state_end(
                 ptr_state->num_active_children++;
             }
             existing_state_val->parent = INFO_STATE_PTR(raw_ptr_state_raw);
+#ifndef FCS_WITHOUT_DEPTH_FIELD
             existing_state_val->depth = ptr_state->depth + 1;
+#endif
         }
 
-#endif
 
         fc_solve_derived_states_list_add_state(
             derived_states_list,

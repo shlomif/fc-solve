@@ -7,12 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* See why +../Tatzer --num-stacks=13 --without-depth-field ..+ does not solve
-the board
-whereas +../Tatzer --num-stacks=13 ..+ does for
-+./fc-solve -l mo -g bakers_dozen -sp r:tf -sam -s -i -p -t -sel -mi 500000 bakers_dozen-154.board+ .
-The board is the output of +make_pysol_freecell_board.py -t 154 bakers_dozen+ .
-
 * Check for thread-safety of the meta_allocator construct in +dbm_fc_solver.c+.
 
 * Try to convert the core libfreecell-solver code to meta_alloc and see if

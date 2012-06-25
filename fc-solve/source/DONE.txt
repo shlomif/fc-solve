@@ -235,3 +235,9 @@ probably wastes some space due to struct alignment/parity.
 * Compress the data in the offloading queue frames by storing only the 
 pointers instead of the whole +fcs_encoded_state_buffer_t+.
 
+* See why +../Tatzer --num-stacks=13 --without-depth-field ..+ does not solve
+the board
+whereas +../Tatzer --num-stacks=13 ..+ does for
++./fc-solve -l mo -g bakers_dozen -sp r:tf -sam -s -i -p -t -sel -mi 500000 bakers_dozen-154.board+ .
+The board is the output of +make_pysol_freecell_board.py -t 154 bakers_dozen+ .
+
