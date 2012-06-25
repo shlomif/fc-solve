@@ -586,6 +586,10 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
     command_num = 0;
 }
 
+static void abort_signal_handler(int signal_num GCC_UNUSED)
+{
+    freecell_solver_user_limit_iterations(current_instance, 0);
+}
 
 static freecell_solver_str_t known_parameters[] = {
     "-h", "--help",
@@ -714,6 +718,7 @@ int main(int argc, char * argv[])
 #ifndef WIN32
     signal(SIGUSR1, command_signal_handler);
     signal(SIGUSR2, select_signal_handler);
+    signal(SIGABRT, abort_signal_handler);
 #endif
 
 #if 0

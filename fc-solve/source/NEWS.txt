@@ -8,6 +8,10 @@ Shlomi Fish <shlomif@cpan.org>
 the library behave the same as without it. This also affected the behaviour of
 +./fc-solve -l mo+ with attempting to solve Baker’s Dozen deals.
 
+2. On UNIX platforms, +fc-solve+ now exits gracefully with the message
+“Iterations count exceeded.”, upon receiving a SIGABRT signal. Can be
+triggered by executing +pkill -ABRT fc-solve+.
+
 Version 3.12.0: (12-Jun-2012)
 -----------------------------
 
