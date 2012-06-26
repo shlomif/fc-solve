@@ -6,10 +6,10 @@ to a rand_struct.
 * Put the rest of the news (from http://fc-solve.shlomifish.org/ ) inside the
 NEWS file.
 
-* Try to convert the macro-mania in tests.h (sfs_check_state_begin() / 
+* Try to convert the macro-mania in tests.h (sfs_check_state_begin() /
 sfs_check_state_end() ) to functions, and see if it actually makes it faster.
 
-* Write automated tests for split_cmd_line.c . 
+* Write automated tests for split_cmd_line.c .
 
 * Make sure that "rpmbuild -tb freecell-solver....tar.bz2" works.
 Right now, it only works if the .tar.gz is present.
@@ -34,8 +34,8 @@ without relying on asciidoc.
 * Investigate +pi-make-microsoft-freecell-board 254076 | fc-solve -l by+ -
 it should be solvable.
 
-* Convert the +char * []+ arrays in the fcs_cl.h etc. to 
-+const char * []+ (arrays of constant strings). Its use is a relic of 
+* Convert the +char * []+ arrays in the fcs_cl.h etc. to
++const char * []+ (arrays of constant strings). Its use is a relic of
 +char * argv[]+ being non-const and having them as constant will bring many
 advantages.
 
@@ -56,8 +56,8 @@ new instance_item copies in +lib.c+ .
 ** Also the flares.
 
 * Implement Gary Campbell's FCELL.COM's methodology of trying several
-atomic scans in different instances (with bounded quotas) and picking the 
-shortest solution out of them all. Slow, but will produce highly short 
+atomic scans in different instances (with bounded quotas) and picking the
+shortest solution out of them all. Slow, but will produce highly short
 solutions.
 ** Called Flares - we've started to implement them and should continue.
 ** See the Flares functional spec under ../docs
@@ -91,10 +91,10 @@ called +fcs_bool_t+, just so readers can tell they are booleans instead of
 ints.
 
 * Deal with the fact that:
-+./freecell-solver-range-parallel-solve 1 100 1 -mi 1+ displays 
++./freecell-solver-range-parallel-solve 1 100 1 -mi 1+ displays
 "Unsolved Board" instead of "Intractable Board".
 
-* Add a quick way to get rid of --fc-only from +./Tatzer -l p4b+ / 
+* Add a quick way to get rid of --fc-only from +./Tatzer -l p4b+ /
 +./Tatzer -l x64b+ .
 
 * Add compact allocation for the Breadth-first-search (BrFS/BFS) queue
@@ -108,7 +108,7 @@ items.
 validity, number of moves in the solution, number of iterations, and stored
 states. It should be a wrapper for the fc-solve command line.
     - done: +scripts/summarize-fc-solve+ .
-    
+
 * Restore the old -mss flag behaviour and create a new trim-max-stored-states
 flag where the new behaviour happens. max_stored_states should always increase,
 and trim_max_stored_states should decrease if states were removed.
@@ -120,7 +120,7 @@ the derived state.
 * Finish the conversion of the range solvers/etc. to +portable_int64.h+ and
 +portable_time.h+ .
 
-* Make sure the total_num_iters is only a 64-bit integer without an 
+* Make sure the total_num_iters is only a 64-bit integer without an
 intermediate 32-bit one - it just adds clutter to the code and is a premature
 optimisation (and may be a de-optimisation).
 
@@ -142,7 +142,7 @@ the Microsoft (or pseudo-Microsoft) deals even for deals larger than 32,000.
 
 * Optimize the Soft-DFS and Random-DFS tests_list implementation (direct
 pointers to test functions).
- 
+
 * Refactor +scripts/parallel-range-solver-total+ - extract the section
 marked as TODO .
 
@@ -169,7 +169,7 @@ because the columns can be rearranged.
 
 * Make fcs_stack_compare GCC_INLINE.
 
-* pi-make-microsoft-freecell-board 24 | ./fc-solve -p -t -s -i -sam -mi 50 -l eo -ni -l eo | grep Iteration | less 
+* pi-make-microsoft-freecell-board 24 | ./fc-solve -p -t -s -i -sam -mi 50 -l eo -ni -l eo | grep Iteration | less
 ** Does not limit the iterations for the second instance.
 
 * Fix the bug in commit No. 4345 also in the C code. Apply the patch and test
@@ -177,31 +177,31 @@ the FCC derived states list.
     - Done, but found that these two states are not equivalent whether in
     Perl or in C - another bug.
 
-Foundations: H-K C-K D-J S-Q 
+Foundations: H-K C-K D-J S-Q
 Freecells:  QD  KD
 : KS
-: 
-: 
-: 
-: 
-: 
-: 
+:
+:
+:
+:
+:
+:
 :
 
 and:
 
-Foundations: H-K C-K D-J S-Q 
+Foundations: H-K C-K D-J S-Q
 Freecells:  QD  KD
-: 
-: 
-: 
-: 
-: 
-: 
-: 
+:
+:
+:
+:
+:
+:
+:
 : KS
 
-* Investigate why 
+* Investigate why
 +./dbm_fc_solver <(pi-make-microsoft-freecell-board -t 12064)+
 finished after +Reached 3000000 ; States-in-collection: 3018329+ now
 and not after +Reached 11600000 ; States-in-collection: 11617536+ in
@@ -213,7 +213,7 @@ was reported.
 * FCC-Solver: also output the final iterations count, right before
 the main function exits.
 
-* Extract a function to do the prepare_state_s + initial_user_state_to_c + 
+* Extract a function to do the prepare_state_s + initial_user_state_to_c +
 encode_state all in one.
 ** It is fc_solve_user_INTERNAL_delta_states_enc_and_dec .
 
@@ -222,17 +222,17 @@ encode_state all in one.
      - Add more tests for fcc_brfs.
 
 * Convert the +moves+ field of +fcs_fcc_moves_seq_t+ in +fcc_brfs_test.h+ to
-a linked list of structs of 8 (number configurable) bytes and a next pointer 
+a linked list of structs of 8 (number configurable) bytes and a next pointer
 that are compactly allocated by a +meta_alloc.h+.
 
-* Consider converting more linked lists+binary trees combinations in 
+* Consider converting more linked lists+binary trees combinations in
 +fcc_solver.c+ into only binary trees.
 
 * Shove the signed char of the balance of libavl/avl.c into the
 last char of the key_and_move_to_parent’s +fcs_encoded_state_buffer_t+. It
 probably wastes some space due to struct alignment/parity.
 
-* Compress the data in the offloading queue frames by storing only the 
+* Compress the data in the offloading queue frames by storing only the
 pointers instead of the whole +fcs_encoded_state_buffer_t+.
 
 * See why +../Tatzer --num-stacks=13 --without-depth-field ..+ does not solve
