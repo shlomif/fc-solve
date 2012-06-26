@@ -1,3 +1,15 @@
+NOTE:
+-----
+
+This is the *old* change log of Freecell Solver, in which its history
+of changes was recorded, before we migrated to using version control systems,
+for which maintaining a separate change log file was no longer necessary.
+
+If you are interested in the recent history of changes, see the version
+control’s "log" command.
+
+======================================================
+
 From 2.5.5 to 2.5.7:
 --------------------
 
