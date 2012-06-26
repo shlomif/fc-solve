@@ -28,7 +28,7 @@ and libavl2-derived backends, several major reductions of the memory
 consumption, and many code cleanups and bug fixes.
 
 5. Add support for building and testing the distribution in an out-of-tree
-build (e.g: 
+build (e.g:
 +mkdir build ; cd build ; cmake -DFCS_WITH_SUITE=1 .. ; make ; make test+
 ).
 
@@ -37,7 +37,7 @@ in exhaustive scans even further.
 
 7. Removed many #ifdefs from the code by creating common abstractions.
 
-8. Eliminate many GCC warnings with certain GCC compile flags. 
+8. Eliminate many GCC warnings with certain GCC compile flags.
 
 Version 3.10.0: (15-Jan-2012)
 -----------------------------
@@ -51,14 +51,14 @@ as it was announced it will become offline.
 3. Bug fix: made the +-mi+/+--max-iters+ flag global for all instances.
 Previously, it affected only the last one.
 
-4. Add an experimental +delta_states.c+ implementation and 
+4. Add an experimental +delta_states.c+ implementation and
 +dbm_solver.c+ that uses it to drive a Freecell Solver scan with an on-disk
 database (currently Google LevelDB and Berkeley DB are supported). So far
 it seems that with a limited cache size, this does not scale too well.
 
 5. Add the experimental +pruner-main.c+ (not installed by default).
 
-6. Add support for generating "all_in_a_row" deals to 
+6. Add support for generating "all_in_a_row" deals to
 +make_pysol_freecll_board.py+ .
 
 7. Many small optimizations and cleanups.
@@ -83,7 +83,7 @@ parallel by splitting them into chunks.
 
 7. Add +-DFCS_BUILD_DOCS=+ to CMake to avoid building documentation.
 
-8. Add a way to dump the valid outputs in 
+8. Add a way to dump the valid outputs in
 +t/t/lib/Games/Solitaire/FC_Solve/CheckResults.pm+ to files.
 
 9. Add an environment flag to filter out the valgrind test when running
@@ -103,7 +103,7 @@ and time used by Freecell Solver as a function of the iterations count.
 
 3. Bug fix for incrementally increasing the limits.
 
-4. Add a modified version of kazlib's balanced binary search tree to the 
+4. Add a modified version of kazlib's balanced binary search tree to the
 distribution so one will be available built-in. It can be used for both
 the states' storage and for the --rcs LRU cache.
 
@@ -142,7 +142,7 @@ the positions and columns.
 
 9. Forward ported COMPACT_STATES.
 
-10. Add the +--ms+ / +-M+ flags to +make_pysol_freecell_board.py+ to generate 
+10. Add the +--ms+ / +-M+ flags to +make_pysol_freecell_board.py+ to generate
 MS Deals even for the higher numbers (> 32,000 which are not used for that in
 PySol and PySol FC).
 
@@ -231,27 +231,27 @@ Version 2.42.0: (27-March-2010)
 
 1. Add the +-o+ / +--output+ flag to +fc-solve+ to output to a file.
 
-2. Now installing the new executables ( freecell-solver-fc-pro-range-solve , 
-freecell-solver-multi-thread-solve , freecell-solver-range-parallel-solve , 
+2. Now installing the new executables ( freecell-solver-fc-pro-range-solve ,
+freecell-solver-multi-thread-solve , freecell-solver-range-parallel-solve ,
 etc.) by default.
 
 3. Bug fix: added a missing break after a case in cmd_line.c.
 
 4. Fixed the Makefile's "pdfs" target.
 
-5. Converted many +char *+ data types in the interface to 
+5. Converted many +char *+ data types in the interface to
 +freecell_solver_string_t+, which can be +const char *+. The default is
 +const char *+.
 
 6. +pqueue.h+ was converted to the MIT/X11 license, with the permission of its
 author. Freecell Solver is now fullly MIT/X11.
 
-7. Fixed a Best-First-Search recycling memory leak that was reported by 
+7. Fixed a Best-First-Search recycling memory leak that was reported by
 valgrind.
 
-8. Bug fix: now continuing a solution if a is_a_complete_scan thread terminates 
-with the scans synergy set to +dead-end-marks+. This was done to avoid states 
-reported as falsely unsolvable such as MS 254,076 with +-l by+. 
+8. Bug fix: now continuing a solution if a is_a_complete_scan thread terminates
+with the scans synergy set to +dead-end-marks+. This was done to avoid states
+reported as falsely unsolvable such as MS 254,076 with +-l by+.
 
 9. Added a forking range solver - not installed by default. See:
 http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1038 . Sometimes
@@ -267,7 +267,7 @@ Version 2.40.0: (27-Jan-2010)
 1. make_pysol_freecell_board.py now has support for "Black Hole" dealing. See:
 http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/ .
 
-2. Added the "Scan:" header to indicate the current scan / soft-thread 
+2. Added the "Scan:" header to indicate the current scan / soft-thread
 when using the -s -i flags.
 
 3. *Security*: Fixed a string overflow bug in +cmd_line.c+ with the +-asw+
@@ -276,7 +276,7 @@ characters ('\0') to after the string specifying the command line argument.
 +
 Now unspecified +-asw+ are set to 0.
 
-4. Fixed an off-by-1 iterations count report when a board was found to be 
+4. Fixed an off-by-1 iterations count report when a board was found to be
 solvable.
 
 5. iter_handler is now applied globally across all instances.
@@ -304,7 +304,7 @@ for generating PySolFC deals.
 Version 2.36.0: (27-Nov-2009)
 -----------------------------
 
-1. Converted the +README+ / +USAGE+ / +NEWS+ etc. files to 
+1. Converted the +README+ / +USAGE+ / +NEWS+ etc. files to
 http://www.methods.co.nz/asciidoc/[AsciiDoc] . The sources are in .txt
 and they are copied to their non-.txt files. The PDF build is still a bit
 broken due to a strange CMake problem.
@@ -362,7 +362,7 @@ Microsoft Visual C++.
 
 2. Normalised the DLLEXPORT modifiers.
 
-3. Some fixes to the CMake build system: 
+3. Some fixes to the CMake build system:
     - CHECK_C_COMPILER_FLAG now uses a different variable for each flag,
     since the variable was cached.
     - tcmalloc is now truly optional.
@@ -385,7 +385,7 @@ scripts/find-ids.rb for finding uncommonly occuring identifiers.
 
 4. Converted many macros to inline functions.
 
-5. Now calculating the bit-width of the 'int' data type in the CMake version. 
+5. Now calculating the bit-width of the 'int' data type in the CMake version.
 There's a fallback logic for it in config.h.
 
 6. Extracted empty_two_cols_from_new_state() in freecell.c.
@@ -405,7 +405,7 @@ There's a fallback logic for it in config.h.
 
 13. Added the support for DLLEXPORT to not export fc_solve_* from the DLL.
 This reduces the size of the .so / .dll considerably.
-    
+
     - Added -fvisibility=hidden to the build.
 
 14. Got rid of using preset.c for FCS_FREECELL_ONLY.
@@ -417,7 +417,7 @@ Version 2.30.0: (07-Jun-2009)
 to minimize the resultant solutions' length.
 
 2. The Freecell Solver states storage and columns storage can now be
-made to use any of the trees provided by libavl2 
+made to use any of the trees provided by libavl2
 ( http://www.stanford.edu/~blp/avl/ ) . The results seem to be somewhat
 slower than libJudy and much slower than our own custom hash.
 
@@ -454,7 +454,7 @@ definitions to different files, and did a lot of overhaul.
 11. Added scripts/verify-simple-simon-range.pl and
 scripts/simple-simon-stats-analysis.pl .
 
-12. Added a regression test for verifying the validity of a 
+12. Added a regression test for verifying the validity of a
 Simple Simon solution.
 
 13. Fixed Makefile.gnu to propagate CFLAGS to CREATE_SHARED.
@@ -492,7 +492,7 @@ compiler.
 7. Created an fcs_cards_column_t type and converted the internals to use it.
 
 8. Added the threaded range solver - freecell-solver-multi-thread-solve .
-It performs better than the serial one on my machine.  It is built only if 
+It performs better than the serial one on my machine.  It is built only if
 pthreads (POSIX threads) is found.
 
 9. Add the HACKING file with some information on benchmarking.
@@ -501,8 +501,8 @@ pthreads (POSIX threads) is found.
 to Autoconf's "./configure ; make ; make install" won't use it.
 
 11. Got rid of all the max_num_$something in the dynamically-growing
-arrays because num_$something is enough to tell where the limit is and grow it 
-if necessary. There's now a lot of bit-fiddling logic to grow the 
+arrays because num_$something is enough to tell where the limit is and grow it
+if necessary. There's now a lot of bit-fiddling logic to grow the
 dynamically-growing arrays when necessary.
 
 12. Added support for adding the gcc -fomit-frame-pointer and -march=$CPU_ARCH
@@ -562,7 +562,7 @@ considerably.
 sources. So far, they seem significantly slower than the native code compiled
 using gcc-4.3.2.
 
-3. Implemented "cmake -DCMAKE_BUILD_TYPE=profile" . Can be activated using 
+3. Implemented "cmake -DCMAKE_BUILD_TYPE=profile" . Can be activated using
 "./configure --profile"
 
 4. Now build (but not installing) freecell-solver-fc-pro-range-solve , which
@@ -573,7 +573,7 @@ in standard notation.
 5. Fixed some bugs (crashes, leaks, etc.) when running -opt on a range
 of boards (or recycling instances with -opt in general).
 
-6. Some CMake / Build system cleanups and improvements. Among them, trimmed 
+6. Some CMake / Build system cleanups and improvements. Among them, trimmed
 the distribution from unnecessary files.
 
 Version 2.22.0 (31-Mar-2009)
@@ -585,10 +585,10 @@ Version 2.22.0 (31-Mar-2009)
         (e.g: mkdir build ; cd build ; cmake ..)
     - Now also building a static library by default. There's a cmake option
     to trigger it off.
-    - Thanks to RISKO Gergely (the maintainer of the Freecell Solver Debian 
+    - Thanks to RISKO Gergely (the maintainer of the Freecell Solver Debian
     package) for a contributed patch.
 
-2. Fixed the rpmbuild -tb process on Mandriva Linux Cooker (and 
+2. Fixed the rpmbuild -tb process on Mandriva Linux Cooker (and
 possibly other systems).
 
 3. Removed some old, unnecessary and/or no-longer-working files.
@@ -617,7 +617,7 @@ some false leads.
 4. Fixed the --prefix flag in ./configure to be treated as a string instead
 of a boolean.
 
-5. Fixed the running of the executables under a specified PREFIX 
+5. Fixed the running of the executables under a specified PREFIX
 ( http://www.cmake.org/Wiki/CMake_RPATH_handling )
 
 6. Minor changes to "README", "INSTALL" and "USAGE".
@@ -627,11 +627,11 @@ Version 2.18.0 (19-Mar-2009)
 
 1. Added the FCS_FREECELL_ONLY compile-time flag to hard-code the settings
 for Freecell and thus allow faster run-time. On a Pentium 4-2.4GHz machine
-running Mandriva Linux Cooker, this allows to solve the Microsoft 32,000 in 
-194.56353 seconds ( 164 deals / second ) instead of 
+running Mandriva Linux Cooker, this allows to solve the Microsoft 32,000 in
+194.56353 seconds ( 164 deals / second ) instead of
 228.84 seconds for the generic version ( 140 deals / second ).
 
-2. Fixed using libredblack ( http://libredblack.sourceforge.net/ ) for states 
+2. Fixed using libredblack ( http://libredblack.sourceforge.net/ ) for states
 and stacks storage. (Compile-time options)
 
 3. Added an option to use libJudy ( http://judy.sourceforge.net/ ) for states
@@ -648,11 +648,11 @@ than the internal hash.
 
 8. Now documenting the --version flag in USAGE.
 
-9. Added an experimental ./configure convenience script (written in 
-Perl) to run CMake using some configuration options. NOTE: Please don't 
+9. Added an experimental ./configure convenience script (written in
+Perl) to run CMake using some configuration options. NOTE: Please don't
 use it to build packages.
 
-10. Added "scripts/time-fcs.pl" to help time a 
+10. Added "scripts/time-fcs.pl" to help time a
 freecell-solver-range-parallel-solve dump.
 
 11. Got rid of the hard_dfs() scan. It is still accepted as an argument, but
@@ -677,12 +677,12 @@ Version 2.14.0 (25-Jan-2009)
 ----------------------------
 
 1. Fixed the compilation with profiling information in Makefile.gnu (should be
-of concern only to developers). 
+of concern only to developers).
 
 2. Optimized move_stack_cards_to_different_stacks, yielding a substantial
 speed increase.
 
-3. Converted the identifiers from starting with freecell_solver_ to 
+3. Converted the identifiers from starting with freecell_solver_ to
 starting with fc_solve_ , which is shorter and saner.
 +
 freecell_solver_user_ is still used in the API in order to not break
@@ -698,7 +698,7 @@ run properly after a raw unpacking.
 Version 2.12.0 ( 10-Dec-2008)
 -----------------------------
 
-1. A New Configuration and build system based on CMake 
+1. A New Configuration and build system based on CMake
 ( http://www.cmake.org/ ) which results in faster configurations
 and builds, and a much reduced archive size.
 
@@ -714,7 +714,7 @@ how to run them.
 Version 2.8.0 ( 28-Sep-2002 )
 -----------------------------
 
-1. Better documentation and help screens. See: 
+1. Better documentation and help screens. See:
 +
 http://freshmeat.net/articles/time-to-rethink-your-help-flag
 
@@ -722,7 +722,7 @@ http://freshmeat.net/articles/time-to-rethink-your-help-flag
 
 3. An option to read paramters from files. See "--read-from-file" in USAGE.
 
-4. Finally, it is now possible to run one instance of the solver after the 
+4. Finally, it is now possible to run one instance of the solver after the
 other in case the other one has returned a negative verdict. This is useful
 for example to run an atomic moves preset after a meta-moves one, as the
 latter cannot guarantee an accurate false verdict.
@@ -735,7 +735,7 @@ using atomic moves guarantees that there will be no false negatives, but
 is slower than the Meta-moves-based presets. (At least for now). It also
 yields less interesting solutions.
 
-2. There is now a "--prelude" switch (see USAGE) that allows running a 
+2. There is now a "--prelude" switch (see USAGE) that allows running a
 static order of quotas at the beginning of the scan for the participating
 soft threads. It makes constructing faster solving presets easier, especially
 after utilising this code:
@@ -745,7 +745,7 @@ http://code.google.com/p/fc-solve/source/browse/#svn%2Ffc-solve%2Ftrunk%2Ffc-sol
 Also see the "--st-name" option.
 
 3. The PySol "Fan" game preset was added to make_pysol_freecell_board.py and
-to Freecell Solver itself. Note that the game is played with 18 
+to Freecell Solver itself. Note that the game is played with 18
 columns/stacks , so Freecell Solver will usually need to be recompiled.
 
 4. Several other command line options:
@@ -766,7 +766,7 @@ COMPACT_STATES.
 Version 2.4.0 ( 29-Mar-2002 )
 -----------------------------
 
-1. Now several scans are to operate on the same states' collection. This is 
+1. Now several scans are to operate on the same states' collection. This is
 done using a mechanism called "soft threads", which is switched in user-land
 and does not require system multi-threading. In the file "USAGE" see:
 +
@@ -786,7 +786,7 @@ generators:
 +
     - make-gnome-freecell-board
     - make_pysol_freecell_board.py
-    - make-aisleriot-freecell-board 
+    - make-aisleriot-freecell-board
     - pi-make-microsoft-freecell-board
 
 3. Moved more declarations of functions to header files (ending with .h)
@@ -807,7 +807,7 @@ systems by running rpmbuild -ta on the archive.
 Version 2.0.0 ( 19-Dec-2001 )
 -----------------------------
 
-1. Added some presets for the PySol games "Beleaguered Castle", "Citadel" 
+1. Added some presets for the PySol games "Beleaguered Castle", "Citadel"
 and "Streets and Alleys".
 
 2. Re-factoring of the scans code to make it simpler.
@@ -864,7 +864,7 @@ introduced).
 4. A New Breadth-First-Search (BFS or BrFS) scan was introduced. It's not
 very practical.
 
-The choice between all those scans can be specified at run-time using 
+The choice between all those scans can be specified at run-time using
 command-line arguments.
 
 Version 1.2.0 ( 21-Dec-2000 )
@@ -890,8 +890,8 @@ suspending a solution process and resuming it from its last position.
 Version 0.10.0 ( 09-Oct-2000 )
 ------------------------------
 
-1. Support was added for several Solitaire variants besides Freecell, such as 
-Forecell, Seahaven Towers and Eight Off. 
+1. Support was added for several Solitaire variants besides Freecell, such as
+Forecell, Seahaven Towers and Eight Off.
 
 2. It now can emits the moves themselves, instead of just the intermediate
 solutiosn.
@@ -901,15 +901,15 @@ solutiosn.
 Version 0.8.0 ( 28-Aug-2000 )
 -----------------------------
 
-1. Some bug-fixes. 
+1. Some bug-fixes.
 
 2. Support for a variable number of freecells, columns, and cards per column.
 
 3. Board generators for Microsoft Freecell, Freecell Pro and PySol.
 
 4. An option to use the balanced binary tree implementations of libavl
-( http://adtinfo.org/ ), glib ( http://en.wikipedia.org/wiki/GLib ), or 
-libredblack ( http://libredblack.sourceforge.net/ ). Using them makes 
+( http://adtinfo.org/ ), glib ( http://en.wikipedia.org/wiki/GLib ), or
+libredblack ( http://libredblack.sourceforge.net/ ). Using them makes
 Freecell Solver about 33% faster.
 
 5. Support for using "T" instead of "10" in board input/output.
@@ -925,10 +925,10 @@ it could not solve previously.
 2. The order of the stacks and freecells is preserved throughout the
 solutions.
 
-3. There is now in abilitiy to limit to a certain number of iterations (so 
+3. There is now in abilitiy to limit to a certain number of iterations (so
 Freecell Solver will stop before it consumes too much memory)
 
-4. Specify the order of the movements that will be tested. Usually, a test 
+4. Specify the order of the movements that will be tested. Usually, a test
 order can be found that will solve a given board really quickly.
 
 Version 0.4 ( 06-Jun-2000 )
