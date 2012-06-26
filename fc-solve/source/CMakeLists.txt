@@ -387,7 +387,7 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DDEBUG=1")
 
-    # Removed these flags because they emitted spurious warnings, which were of 
+    # Removed these flags because they emitted spurious warnings, which were of
     # no use to us:
     # "-Winline"
     IF (${CMAKE_COMPILER_IS_GNUCC})
@@ -551,7 +551,7 @@ IF (FCS_ENABLE_DBM_SOLVER)
     IF (FCS_DBM_TREE_BACKEND STREQUAL "libavl2")
         SET (BIN_TREE_MODULE "libavl/avl.c")
         ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1")
-        LIST (APPEND DBM_DEFINITIONS "FCS_LIBAVL_STORE_WHOLE_KEYS=1" 
+        LIST (APPEND DBM_DEFINITIONS "FCS_LIBAVL_STORE_WHOLE_KEYS=1"
             "FCS_DBM_RECORD_POINTER_REPR=1")
     ELSE (FCS_DBM_TREE_BACKEND STREQUAL "kaztree")
         SET (BIN_TREE_MODULE "kaz_tree.c")
@@ -901,9 +901,9 @@ IF(ASCIIDOC_FOUND)
 
     ADD_CUSTOM_COMMAND(
         OUTPUT "${_manpage}"
-        COMMAND "xsltproc" "--output" "${_manpage}" 
+        COMMAND "xsltproc" "--output" "${_manpage}"
             "--nonet" "/etc/asciidoc/docbook-xsl/manpage.xsl"
-             "${_out}" 
+             "${_out}"
         DEPENDS "${_out}"
         COMMENT "Build man page ${_out}"
     )
