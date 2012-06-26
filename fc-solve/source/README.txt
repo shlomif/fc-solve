@@ -11,8 +11,8 @@ This is Freecell Solver version 3.12.x, a program that automatically
 solves most layouts of Freecell, and similar Solitaire variants as
 well as those of Simple Simon.
 
-Freecell Solver is distributed under the MIT/X11 License 
-( http://en.wikipedia.org/wiki/MIT_License ), a free, permissive, 
+Freecell Solver is distributed under the MIT/X11 License
+( http://en.wikipedia.org/wiki/MIT_License ), a free, permissive,
 public-domain like, open-source license.
 
 Note that the Freecell Solver source and Win32 binary distributions *do not*
@@ -47,7 +47,7 @@ and terminated with a newline character( it's important that the last stack
 will also be terminated with a newline !). The cards in the line are ordered
 from the bottom-most card in the left to the topmost card in the right.
 
-A card string contains the card number (or rank) followed by the card deck. 
+A card string contains the card number (or rank) followed by the card deck.
 The card number is one of: +A,1,2,3,4,5,6,7,8,9,10,J,Q,K+. Alterantively
 +T+ can be used instead of +10+. The card deck is one of:  +H,S,D,C+ (standing
 for Hearts, Spades, Diamonds and Clubs respectively).
@@ -98,7 +98,7 @@ Founds: H-5 C-A S-0 D-K
 -----------------------
 
 Hence, the deck ID followed by a dash followed by the card number in the
-foundation. A suit that is not present will be assumed to be 0. Again, if 
+foundation. A suit that is not present will be assumed to be 0. Again, if
 there's more than one then the previous lines will be overriden.
 
 
@@ -110,17 +110,17 @@ The program will process the board and try to solve it. If it succeeds it
 will output the states from the initial board to its final solution to the
 standard output. If it fails, it will notify it.
 
-For information about the various command-line switches that Freecell 
+For information about the various command-line switches that Freecell
 Solver accepts, read the +USAGE.txt+ file in this directory.
 
-To solve Simple Simon boards append +--game simple_simon+ right after 
+To solve Simple Simon boards append +--game simple_simon+ right after
 the "fc-solve" program name.
 
 The board generation programs
 -----------------------------
 
 Several programs which can generate the initial boards of various Freecell
-implementations can be found in the "board_gen/" sub-directory. Read the 
+implementations can be found in the "board_gen/" sub-directory. Read the
 +README.txt+ file there for details on how they can be compiled and used.
 
 In any case, they can save you the time of inputting the board yourself.
