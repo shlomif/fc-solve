@@ -38,7 +38,7 @@ segment is recycled as a whole.
 * Adapt the new balanced binary tree to store entire encoded_keys instead of
 pointers (to save space).
 
-* Make sure that run_hard_thread runs the soft_thread up to the limit of the 
+* Make sure that run_hard_thread runs the soft_thread up to the limit of the
 instance->num_times or the soft_thread's upper bound instead of entering
 and exiting.
 
@@ -53,8 +53,8 @@ notice on having reached +FCS_SUSPEND_PROCESS+.
 * Experiment with using "selection sort" instead of "insertion sort" when
 sorting small data sets (columns, freecells, derived states, etc.).
 
-* Divide the scan type variable into two variables: super-scan 
-(DFS vs BeFS/BFS/Opt) and sub-scan (random_dfs, soft_dfs, etc.), to facilitate 
+* Divide the scan type variable into two variables: super-scan
+(DFS vs BeFS/BFS/Opt) and sub-scan (random_dfs, soft_dfs, etc.), to facilitate
 multiplexing them.
 
 * If +-opt+ is specified for the flare, then make sure that if the flares
@@ -70,7 +70,7 @@ the various fields.
 function.
 
 * Play with moving commonly accessed struct elements to the start of
-the struct to fit within the processor's cache line. Like the Linux kernel 
+the struct to fit within the processor's cache line. Like the Linux kernel
 where the most important elements are at the first 32 bytes of the struct.
 
 * See about getting rid of the unused context variable where appropriate.
@@ -79,7 +79,7 @@ where the most important elements are at the first 32 bytes of the struct.
 suit, and to traverse only the possible parents or children based on the
 suit.
 
-* Do the test for +SUSPEND_PROCESS+ (+check_if_limits_exceeded()+ ) in only 
+* Do the test for +SUSPEND_PROCESS+ (+check_if_limits_exceeded()+ ) in only
 one place. There isn't a need for it to be done in several places.
 
 * Experiment with using a union in the soft_thread to unify common elements
@@ -97,7 +97,7 @@ in freecell.c.
 
 * Interactive mode? Continue a scan that reached its limit.
 
-* Investigate ways to perform more pointer arithematics and 
+* Investigate ways to perform more pointer arithematics and
 (ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
 
 * In the states handling, there's still some room for pointer arithmetics.
@@ -133,13 +133,13 @@ shlomif:~$ make_pysol_freecell_board.py -F -t 91151234961275807905 | ~/apps/test
 84
 -------------------------------------------------------
 
-However this scan generates takes too much time for most boards (over 100K 
+However this scan generates takes too much time for most boards (over 100K
 iterations).
 
 * PySolFC deal No. 03620802041832966472:
 
 --------------------------------------------------------
-shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -t -F 03620802041832966472  | ./scripts/summarize-fc-solve -- --method a-star -to 0123467589 -asw 300,1500,99,2,65000 
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -t -F 03620802041832966472  | ./scripts/summarize-fc-solve -- --method a-star -to 0123467589 -asw 300,1500,99,2,65000
 Verdict: Solved ; Iters: 156 ; Length: 87
 --------------------------------------------------------
 
@@ -182,21 +182,21 @@ Long-term
 
 * Port to Java (?)
 
-* Add a switch to ask the user if he wants to continue and enter a bigger 
+* Add a switch to ask the user if he wants to continue and enter a bigger
 iterations limit.
 
 * Check for unmalloced data and if so gracefully exit.
 
 * Experiment with a delta-based state storage.
 
-* Add a way to build the various libavl2 trees to be used as 
+* Add a way to build the various libavl2 trees to be used as
 positions/columns collections.
 
 * Adapt the scans based on the parameters of the initial board.
 +
-** Try to find a correlation between various parameters of the initial board 
+** Try to find a correlation between various parameters of the initial board
 (such as those calculated in the A* scan or the number of steps required to
-sort the cards in each column by rank), and the performance of various scans 
+sort the cards in each column by rank), and the performance of various scans
 and then:
 +
 1. Calculate the initial parameters on startup.
