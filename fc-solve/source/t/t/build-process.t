@@ -12,6 +12,7 @@ use List::MoreUtils qw(none);
 use Cwd;
 use File::Path;
 use Env::Path;
+use File::Temp qw/ tempdir /;
 
 if (! $ENV{'FCS_TEST_BUILD'} )
 {
@@ -21,7 +22,7 @@ if (! $ENV{'FCS_TEST_BUILD'} )
 plan tests => 15;
 
 # Change directory to the Freecell Solver base distribution directory.
-chdir($ENV{"FCS_SRC_PATH"});
+my $src_path = $ENV{"FCS_SRC_PATH"};
 
 sub test_cmd
 {
@@ -42,13 +43,17 @@ sub test_cmd
 }
 
 {
+    my $temp_dir = tempdir( CLEANUP => 1 );
+    my $before_temp_cwd = Cwd::getcwd();
+
+    chdir($temp_dir);
     # TEST
-    test_cmd(["cmake", "."], "cmake succeeded");
+    test_cmd(["cmake", $src_path], "cmake succeeded");
 
     # TEST
     test_cmd(["make", "dist"], "make dist is successful");
 
-    open my $ver_fh, "<", "ver.txt";
+    open my $ver_fh, "<", File::Spec->catfile($src_path, "ver.txt");
     my $version = <$ver_fh>;
     close($ver_fh);
     chomp($version);
@@ -71,8 +76,10 @@ sub test_cmd
 
     chdir($base);
 
+    mkdir ("build");
+    chdir ("build");
     # TEST
-    test_cmd(["cmake", "."],
+    test_cmd(["cmake", ".."],
         "CMaking in the unpacked dir"
     );
 
@@ -100,15 +107,15 @@ sub test_cmd
             File::Spec->catfile(
                 File::Spec->curdir(), $base, "HACKING.txt"
             )
-        ), "CMakeLists.txt exists",
+        ), "HACKING.txt exists",
     );
 
     chdir($orig_cwd);
 
     my $failing_asciidoc_dir = File::Spec->catdir($orig_cwd, "asciidoc-fail");
     rmtree($failing_asciidoc_dir);
-
     mkpath($failing_asciidoc_dir);
+
     my $asciidoc_bin = File::Spec->catfile($failing_asciidoc_dir, "asciidoc");
 
     {
@@ -171,6 +178,8 @@ EOF
     }
 
     rmtree($failing_asciidoc_dir);
+
+    chdir ($before_temp_cwd);
 }
 
 =head1 COPYRIGHT AND LICENSE
