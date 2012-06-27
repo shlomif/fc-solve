@@ -5,6 +5,9 @@ use warnings;
 
 use IO::All;
 use File::Path;
+use File::Temp qw / tempdir /;
+use File::Spec;
+use Cwd qw / getcwd /;
 
 use Getopt::Long;
 
@@ -37,17 +40,29 @@ if ($sub)
     $mem = 127;
 }
 
-my $dest_dir = $sub ? 'dbm_fcs_for_sub' : 'dbm_fcs_for_amadiro';
+my $temp_dir = tempdir( CLEANUP => 1 );
+my $dest_dir_base = $sub ? 'dbm_fcs_for_sub' : 'dbm_fcs_for_amadiro';
+my $dest_dir = File::Spec->catdir($temp_dir, $dest_dir_base);
+my $build_dir = File::Spec->catdir($temp_dir, 'build');
+
+my $src_path = getcwd();
+
 mkpath("$dest_dir");
 mkpath("$dest_dir/libavl");
 mkpath("$dest_dir/pthread");
+mkpath($build_dir);
 
-system(qq{./Tatzer -l x64b --nfc=2 --states-type=COMPACT_STATES --dbm=kaztree});
+chdir ($build_dir);
+system(File::Spec->catdir($src_path, "Tatzer"),
+    qw{-l x64b --nfc=2 --states-type=COMPACT_STATES --dbm=kaztree},
+    $src_path
+);
+
 # my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'rwlock.o', 'queue.o', 'libavl/avl.o', 'meta_alloc.o',);
 my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'libavl/avl.o', 'meta_alloc.o',);
 
 foreach my $fn ('app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
-    'dbm_kaztree.c', 'card.h', 'config.h', 'state.h',
+    'dbm_kaztree.c', 'card.h', 'state.h',
     'dbm_solver.h', 'kaz_tree.h', 'dbm_solver_key.h',
     'fcs_move.h', 'inline.h', 'bool.h', 'internal_move_struct.h', 'app_str.h',
     'delta_states.c', 'delta_states.h', 'fcs_dllexport.h', 'bit_rw.h',
@@ -59,7 +74,12 @@ foreach my $fn ('app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
     'dbm_cache.h', 'dbm_lru_cache.h',
 )
 {
-    io($fn) > io("$dest_dir/$fn");
+    io("$src_path/$fn") > io("$dest_dir/$fn");
+}
+
+foreach my $fn ('config.h')
+{
+    io("./$fn") > io("$dest_dir/$fn");
 }
 
 foreach my $fn ('rwlock.c', 'queue.c', 'pthread/rwlock_fcfs.h', 'pthread/rwlock_fcfs_queue.h')
@@ -69,7 +89,7 @@ foreach my $fn ('rwlock.c', 'queue.c', 'pthread/rwlock_fcfs.h', 'pthread/rwlock_
 
 for my $fn ("prepare_pbs_deal.bash")
 {
-    io("./scripts/$fn") > io("$dest_dir/$fn")
+    io("$src_path/scripts/$fn") > io("$dest_dir/$fn")
 }
 
 =begin old
@@ -182,7 +202,7 @@ my @deals = (
 # my $deal_idx = 982;
 foreach my $deal_idx (@deals)
 {
-    system(qq{python board_gen/make_pysol_freecell_board.py -t --ms $deal_idx > $dest_dir/$deal_idx.board});
+    system(qq{python $src_path/board_gen/make_pysol_freecell_board.py -t --ms $deal_idx > $dest_dir/$deal_idx.board});
 }
 
 @modules = sort { $a cmp $b } @modules;
@@ -231,4 +251,6 @@ all: \$(TARGET) \$(JOBS)
 \t\@echo "\$* = \$(\$*)"
 EOF
 
-system("tar", "-cavf", "$dest_dir.tar.gz", "$dest_dir/");
+chdir($temp_dir);
+system("tar", "-cavf", "$src_path/$dest_dir_base.tar.gz", "$dest_dir_base/");
+chdir($src_path);
