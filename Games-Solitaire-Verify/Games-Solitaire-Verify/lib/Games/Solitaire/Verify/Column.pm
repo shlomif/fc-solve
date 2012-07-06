@@ -135,7 +135,7 @@ sub pos
     return $self->_cards->[$idx];
 }
 
-=head2 $columnt->top()
+=head2 $column->top()
 
 Returns the top card.
 
