@@ -1,0 +1,11 @@
+If we take a certain ranks of cards and see how the cards below it are present,
+then the following configuarations are possible:
+
+Rank = r | S=0 | S=1 | S=2 | S=3 |
+
+            4! (All Rank = r-1 cards are above their ancestors, no card is
+                in original place.)
+            4*4*3*2 (Only one card is in its original place).
+            nCr(4,2) * 4*3 Two cards are in their original place.
+            4 * 4 - Three cards are in their original place
+            1 - All four cards are in their original place.
