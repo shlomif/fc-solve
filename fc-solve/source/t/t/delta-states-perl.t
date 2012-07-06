@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 31;
+use Test::More tests => 33;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -13,6 +13,7 @@ use File::Spec;
 use Test::Differences;
 
 use Games::Solitaire::FC_Solve::DeltaStater;
+use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 
 package main;
 
@@ -546,6 +547,49 @@ EOF
 
     # TEST
     is ($reader->read(10), 7, 'writer-to-reader->read(10)');
+}
+
+{
+    # MS Freecell No. 982 Initial state.
+    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+        {
+            init_state_str => <<"EOF"
+Foundations: H-0 C-0 D-A S-0$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+: 6D 3C 3H KD 8C 5C
+: TC 9C 9H 4S JC 6H 5H
+: 2H 2D 3S 5D 9D QS KS
+: 6S TD QC KH AS AH 7C
+: KC 4H TH 7S 2C 9S
+: AC QD 8D QH 3D 8S
+: 7H 7D JD JH TS 6C
+: 4C 4D 5S 2S JS 8H
+EOF
+        }
+    );
+
+    # TEST
+    ok ($delta, 'Object was initialized correctly.');
+
+    $delta->set_derived(
+        {
+            state_str => <<"EOF"
+Foundations: H-0 C-2 D-A S-0$WS
+Freecells:  8D  QD
+: 6D 3C 3H KD 8C 5C
+: TC 9C 9H 8S
+: 2H 2D 3S 5D 9D QS KS QH JC
+: 6S TD QC KH AS AH 7C 6H
+: KC 4H TH 7S
+: 9S
+: 7H 7D JD JH TS 6C 5H 4S 3D
+: 4C 4D 5S 2S JS 8H
+EOF
+        }
+    );
+
+    # TEST
+    ok ($delta->encode_composite(), "->encode_composite runs fine.");
 }
 
 =head1 COPYRIGHT AND LICENSE

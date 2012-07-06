@@ -87,11 +87,11 @@ sub get_option
     return $self->_options->[$idx];
 }
 
-sub set_option
+sub _set_option
 {
     my ($self,$idx, $val) = @_;
 
-    if (($val != $TRUE) or ($val != $IMPOSSIBLE))
+    if (($val != $TRUE) && ($val != $IMPOSSIBLE))
     {
         Carp::confess "Must be true or impossible.";
     }
@@ -165,7 +165,7 @@ sub mark_as_true
     {
         if ($self->get_option($idx) == $UNKNOWN)
         {
-            $self->set_option($idx, $IMPOSSIBLE);
+            $self->_set_option($idx, $IMPOSSIBLE);
         }
     }
 
@@ -185,11 +185,14 @@ my $OPT_PARENT_SUIT_MOD_IS_0 = 3;
 my $OPT_PARENT_SUIT_MOD_IS_1 = 4;
 my $NUM_OPTS = 5;
 
-my @suits = (qw(H C D S));
-my %suit_to_idx = do {
+my (@suits, %suit_to_idx);
+
+{
     my $s = Games::Solitaire::Verify::Card->get_suits_seq();
-    (map { $s->[$_] => $_ } (0 .. $#$s)) ;
-};
+    @suits = @{$s};
+
+    %suit_to_idx = (map { $s->[$_] => $_ } (0 .. $#$s));
+}
 
 sub encode_composite
 {
@@ -204,6 +207,8 @@ sub encode_composite
 
     my $options_by_suit_rank = sub {
         my ($suit, $rank) = @_;
+
+        # Carp::cluck("Suit == $suit ; Rank == $rank");
         return $card_states[$suit * $RANK_KING + $rank-1];
     };
 
@@ -267,7 +272,7 @@ sub encode_composite
 
         if ($col_len > 0)
         {
-            my $top_card = $col->top();
+            my $top_card = $col->pos(0);
 
             if ($top_card->rank() != 1)
             {
