@@ -226,7 +226,7 @@ sub encode_composite
     # We encode the foundations separately so set the card value as don't care.
     foreach my $suit_idx (0 .. $#suits)
     {
-        my $rank = $self->_derived_state->get_foundation_value($suits[$suit_idx], 0);
+        my $rank = $derived->get_foundation_value($suits[$suit_idx], 0);
 
         $writer->write({base => 14, item => $rank });
 
