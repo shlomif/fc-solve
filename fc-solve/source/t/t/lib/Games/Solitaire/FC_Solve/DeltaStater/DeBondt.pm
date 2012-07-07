@@ -9,6 +9,8 @@ use Carp;
 
 use Games::Solitaire::Verify::Solution;
 use Games::Solitaire::FC_Solve::DeltaStater::OptionsStruct;
+use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader;
+use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter;
 
 =head1 ALGORITHM
 
@@ -195,7 +197,9 @@ sub encode_composite
 
     $self->_initialize_card_states($NUM_OPTS);
 
-    my $writer = VariableBaseDigitsWriter->new;
+    my $writer =
+        Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter
+        ->new;
 
     # We encode the foundations separately so set the card value as don't care.
     foreach my $suit_idx (0 .. $#suits)
@@ -363,7 +367,9 @@ sub decode
 {
     my ($self, $bits) = @_;
 
-    my $reader = VariableBaseDigitsReader->new({data => $bits});
+    my $reader =
+        Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader
+        ->new({data => $bits});
 
     $self->_initialize_card_states($NUM_OPTS_FOR_READ);
 

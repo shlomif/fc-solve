@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+package Games::Solitaire::FC_Solve::DeltaStater;
 
 use strict;
 use warnings;
@@ -8,92 +8,6 @@ use Games::Solitaire::Verify::Solution;
 use Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
 use Games::Solitaire::FC_Solve::DeltaStater::BitReader;
 
-package VariableBaseDigitsReader;
-
-use base 'Games::Solitaire::Verify::Base';
-
-__PACKAGE__->mk_acc_ref([qw(_data)]);
-
-sub _init
-{
-    my $self = shift;
-    my $args = shift;
-
-    $self->_data($args->{data});
-
-    return;
-}
-
-sub read
-{
-    my ($self, $base) = @_;
-
-    my $data = $self->_data;
-
-    my $ret = $data % $base;
-
-    my $new_data = $data / $base;
-
-    $self->_data($new_data);
-
-    return $ret;
-}
-
-package VariableBaseDigitsWriter;
-
-use base 'Games::Solitaire::Verify::Base';
-
-use Math::BigInt try => 'GMP';
-
-use Carp ();
-
-__PACKAGE__->mk_acc_ref([qw(_data _multiplier)]);
-
-sub _init
-{
-    my $self = shift;
-
-    $self->_data( Math::BigInt->new(0) );
-    $self->_multiplier( Math::BigInt->new(1) );
-
-    return;
-}
-
-sub write
-{
-    my ($self, $args) = @_;
-
-    my $base = $args->{base};
-    my $item = $args->{item};
-
-    if ($item < 0)
-    {
-        Carp::confess ("Item '$item' cannot be less than 0.");
-    }
-    elsif ($item >= $base)
-    {
-        Carp::confess ("Base '$base' must be greater than item '$item'");
-    }
-
-    $self->_data(
-        $self->_data() + $self->_multiplier() * $item
-    );
-
-    $self->_multiplier(
-        $self->_multiplier() * $base
-    );
-
-    return;
-}
-
-sub get_data
-{
-    my $self = shift;
-
-    return $self->_data()->copy();
-}
-
-package Games::Solitaire::FC_Solve::DeltaStater;
 
 use base 'Games::Solitaire::Verify::Base';
 

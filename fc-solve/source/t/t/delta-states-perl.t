@@ -16,6 +16,8 @@ use Games::Solitaire::FC_Solve::DeltaStater;
 use Games::Solitaire::FC_Solve::DeltaStater::BitReader;
 use Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
 use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
+use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader;
+use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter;
 
 package main;
 
@@ -490,7 +492,9 @@ EOF
 }
 
 {
-    my $reader = VariableBaseDigitsReader->new({ data => (3 | (12 << 3))});
+    my $reader =
+    Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader
+        ->new({ data => (3 | (12 << 3))});
 
     # TEST
     ok ($reader, 'Init var_reader');
@@ -503,7 +507,9 @@ EOF
 }
 
 {
-    my $reader = VariableBaseDigitsReader->new(
+    my $reader =
+    Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader
+        ->new(
         {
             data => (24 + 8*52 + 7*11*52)
         }
@@ -523,7 +529,8 @@ EOF
 }
 
 {
-    my $writer = VariableBaseDigitsWriter->new;
+    my $writer =
+    Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter->new;
 
     # TEST
     ok ($writer, 'Init var_writer');
@@ -532,7 +539,9 @@ EOF
     $writer->write({ item => 8, base => 11, });
     $writer->write({ item => 7, base => 10, });
 
-    my $reader = VariableBaseDigitsReader->new(
+    my $reader =
+    Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader
+    ->new(
         {
             data => $writer->get_data(),
         }
