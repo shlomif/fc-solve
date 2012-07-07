@@ -223,6 +223,14 @@ sub _free_card_states
     return;
 }
 
+sub _opt_by_suit_rank
+{
+    my ($self, $suit, $rank) = @_;
+
+    # Carp::cluck("Suit == $suit ; Rank == $rank");
+    return $self->_card_states->[$suit * $RANK_KING + $rank-1];
+}
+
 sub encode_composite
 {
     my ($self) = @_;
@@ -231,17 +239,10 @@ sub encode_composite
 
     $self->_initialize_card_states($NUM_OPTS);
 
-    my $options_by_suit_rank = sub {
-        my ($suit, $rank) = @_;
-
-        # Carp::cluck("Suit == $suit ; Rank == $rank");
-        return $self->_card_states->[$suit * $RANK_KING + $rank-1];
-    };
-
     my $get_card_opts = sub {
         my ($card) = @_;
 
-        return $options_by_suit_rank->(
+        return $self->_opt_by_suit_rank(
             $suit_to_idx{$card->suit()},
             $card->rank(),
         );
@@ -262,7 +263,7 @@ sub encode_composite
 
         foreach my $rank (1 .. $max_rank)
         {
-            $options_by_suit_rank->($suit_idx, $rank)->mark_as_true($OPT_DONT_CARE);
+            $self->_opt_by_suit_rank($suit_idx, $rank)->mark_as_true($OPT_DONT_CARE);
         }
 
         if ($max_rank != $RANK_KING)
@@ -272,7 +273,7 @@ sub encode_composite
                 $OPT_PARENT_SUIT_MOD_IS_1,
             )
             {
-                $options_by_suit_rank->($suit_idx, $RANK_KING)->mark_as_impossible(
+                $self->_opt_by_suit_rank($suit_idx, $RANK_KING)->mark_as_impossible(
                     $opt
                 );
             }
@@ -348,7 +349,7 @@ sub encode_composite
     {
         foreach my $suit_idx (0 .. $#suits)
         {
-            my $opt = $options_by_suit_rank->($suit_idx, $rank)->get_verdict();
+            my $opt = $self->_opt_by_suit_rank($suit_idx, $rank)->get_verdict();
 
             my $base = (($rank == $RANK_KING) ? $NUM_KING_OPTS : $NUM_OPTS);
             if ($opt < 0)
@@ -383,17 +384,10 @@ sub decode
 
     $self->_initialize_card_states($NUM_OPTS_FOR_READ);
 
-    my $options_by_suit_rank = sub {
-        my ($suit, $rank) = @_;
-
-        # Carp::cluck("Suit == $suit ; Rank == $rank");
-        return $self->_card_states->[$suit * $RANK_KING + $rank-1];
-    };
-
     my $get_card_opts = sub {
         my ($card) = @_;
 
-        return $options_by_suit_rank->(
+        return $self->_opt_by_suit_rank(
             $suit_to_idx{$card->suit()},
             $card->rank(),
         );
@@ -411,7 +405,7 @@ sub decode
 
         foreach my $rank (1 .. $foundation_rank)
         {
-            $options_by_suit_rank->($suit_idx, $rank)->mark_as_true($OPT_IN_FOUNDATION);
+            $self->_opt_by_suit_rank($suit_idx, $rank)->mark_as_true($OPT_IN_FOUNDATION);
         }
 
         $foundations_obj->assign($suits[$suit_idx], 0, $foundation_rank);
