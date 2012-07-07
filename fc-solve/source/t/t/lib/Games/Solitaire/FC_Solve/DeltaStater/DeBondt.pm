@@ -289,6 +289,8 @@ sub _calc_child_card_option
     my ($self, $parent_card, $child_card) = @_;
 
     if (
+        ($child_card->rank() != 1)
+            and
         (($child_card->rank()+1 == $parent_card->rank())
             && ($child_card->color() ne $parent_card->color()))
     )
@@ -501,6 +503,12 @@ sub decode
         $foundations_obj->assign($suits[$suit_idx], 0, $foundation_rank);
     }
 
+    my $is_in_foundations = sub {
+        my ($card) = @_;
+
+        return ($card->rank() <= $foundations_obj->value($card->suit(), 0));
+    };
+
     my $init_state = $self->_init_state;
 
     my $num_freecells = $init_state->num_freecells();
@@ -513,17 +521,29 @@ sub decode
         map {
             my $card = $init_state->get_column($_)->pos(0);
 
-            (defined($card)) ? ( $card->as_string() => 1 ) : ()
+            (defined($card)) ? ( $card->to_string() => 1 ) : ()
        } (0 .. $init_state->num_columns() - 1)
     );
 
-    foreach my $rank (2 .. $RANK_KING)
+    foreach my $rank (1 .. $RANK_KING)
     {
+        READ_SUITS:
         foreach my $suit_idx (0 .. $#suits)
         {
-            my $base = (($rank == $RANK_KING) ? $NUM_KING_OPTS : $NUM_OPTS);
             my $existing_opt = $self->_get_suit_rank_verdict($suit_idx, $rank);
 
+            if ($rank == 1)
+            {
+                if ($existing_opt < 0)
+                {
+                    $self->_mark_suit_rank_as_true(
+                        $suit_idx, $rank, $OPT_ORIG_POS
+                    );
+                }
+                next READ_SUITS;
+            }
+
+            my $base = (($rank == $RANK_KING) ? $NUM_KING_OPTS : $NUM_OPTS);
             my $item_opt = $reader->read($base);
 
             if ($existing_opt < 0)
@@ -541,7 +561,7 @@ sub decode
                 }
                 elsif ($item_opt == $OPT_TOPMOST)
                 {
-                    if (!exists($orig_top_most_cards{$card->as_string}))
+                    if (!exists($orig_top_most_cards{$card->to_string}))
                     {
                         push @new_top_most_cards, $card;
                     }
@@ -559,7 +579,9 @@ sub decode
 
         my $top_card = $orig_col->pos(0);
 
-        if (!defined($top_card))
+        my $top_opt = $self->_get_card_verdict($top_card);
+
+        if (!defined($top_card) or ($top_opt != $OPT_TOPMOST))
         {
             if (@new_top_most_cards)
             {
@@ -581,8 +603,17 @@ sub decode
             {
                 my $child_card = $orig_col->pos($pos);
 
-                if ($self->_get_card_verdict($child_card) ==
-                    $self->_calc_child_card_option($parent_card, $child_card))
+                if (
+                    (!$is_in_foundations->($child_card))
+                        and
+                    (
+                        $self->_get_card_verdict($child_card)
+                            ==
+                        $self->_calc_child_card_option(
+                            $parent_card, $child_card
+                        )
+                    )
+                )
                 {
                     $col->push($child_card);
                     $parent_card = $child_card;
@@ -599,8 +630,26 @@ sub decode
         push @columns, $col;
     }
 
-    return;
+    my $state =
+        Games::Solitaire::Verify::State->new(
+            {
+                variant => 'custom',
+                variant_params => $self->_get_two_fc_variant(),
+            }
+        );
+
+    foreach my $col (@columns)
+    {
+        $state->add_column($col);
+    }
+
+    $state->set_freecells($freecells);
+
+    $state->set_foundations($foundations_obj);
+
+    return $state;
 }
+
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2012 by Shlomi Fish

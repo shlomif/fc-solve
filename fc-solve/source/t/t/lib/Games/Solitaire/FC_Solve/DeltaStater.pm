@@ -197,6 +197,11 @@ my $two_fc_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_
 
 $two_fc_variant->num_freecells(2);
 
+sub _get_two_fc_variant
+{
+    return $two_fc_variant;
+}
+
 __PACKAGE__->mk_acc_ref([qw(_derived_state _init_state _columns_initial_lens)]);
 
 sub _get_column_orig_num_cards
