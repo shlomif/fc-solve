@@ -922,7 +922,7 @@ IF (FCS_WITH_TEST_SUITE)
 
     ADD_DEPENDENCIES(
         "test"
-        "default_target"
+        "all"
     )
 
 ENDIF(FCS_WITH_TEST_SUITE)
