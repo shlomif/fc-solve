@@ -100,3 +100,10 @@ fc-solve/source/t/t/card-test-render.exe
 fc-solve/source/t/t/dbm-kaztree-compare-records-test.exe
 fc-solve/source/t/t/delta-states-test.exe
 fc-solve/source/tags
+Games-Solitaire-Verify/Games-Solitaire-Verify/Build
+Games-Solitaire-Verify/Games-Solitaire-Verify/META.json
+Games-Solitaire-Verify/Games-Solitaire-Verify/META.yml
+Games-Solitaire-Verify/Games-Solitaire-Verify/MYMETA.json
+Games-Solitaire-Verify/Games-Solitaire-Verify/MYMETA.yml
+Games-Solitaire-Verify/Games-Solitaire-Verify/_build
+Games-Solitaire-Verify/Games-Solitaire-Verify/blib
