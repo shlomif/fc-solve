@@ -3,11 +3,12 @@ package Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 use strict;
 use warnings;
 
-use Games::Solitaire::Verify::Solution;
-
 use base 'Games::Solitaire::FC_Solve::DeltaStater';
 
 use Carp;
+
+use Games::Solitaire::Verify::Solution;
+use Games::Solitaire::FC_Solve::DeltaStater::OptionsStruct;
 
 =head1 ALGORITHM
 
@@ -53,127 +54,6 @@ case) from each of the bases and get:
 
 =cut
 
-package OptionsStruct;
-
-use base 'Games::Solitaire::Verify::Base';
-
-my $UNKNOWN = 0;
-my $IMPOSSIBLE = 1;
-my $TRUE = 2;
-
-use List::MoreUtils qw(firstidx);
-
-__PACKAGE__->mk_acc_ref([qw(_options _which_option _num_unknowns)]);
-
-sub _init
-{
-    my ($self, $args) = @_;
-
-    my $count = $args->{count};
-
-    $self->_options([($UNKNOWN) x $count]);
-
-    $self->_which_option(-1);
-
-    $self->_num_unknowns($count);
-
-    return;
-}
-
-sub get_option
-{
-    my ($self,$idx) = @_;
-
-    return $self->_options->[$idx];
-}
-
-sub _set_option
-{
-    my ($self,$idx, $val) = @_;
-
-    if (($val != $TRUE) && ($val != $IMPOSSIBLE))
-    {
-        Carp::confess "Must be true or impossible.";
-    }
-
-    if ($self->get_option($idx) != $UNKNOWN)
-    {
-        Carp::confess "Option was already set.";
-    }
-
-    $self->_options->[$idx] = $val;
-}
-
-sub get_verdict
-{
-    my ($self) = @_;
-
-    return $self->_which_option;
-}
-
-sub mark_as_impossible
-{
-    my $self = shift;
-    my $idx = shift;
-
-    if ($self->_which_option() >= 0)
-    {
-        Carp::confess "Already decided!";
-    }
-
-    if ($self->get_option($idx) != $UNKNOWN)
-    {
-        Carp::confess "Already set.";
-    }
-
-    $self->_set_option($idx, $IMPOSSIBLE);
-    $self->_num_unknowns($self->_num_unknowns() -1);
-
-    if ($self->_num_unknowns() == 1)
-    {
-        $self->_which_option(
-            firstidx { $self->get_option($_) == $UNKNOWN }
-            (0 .. $#{$self->_options()})
-        );
-        $self->_set_option($self->_which_option(), $TRUE);
-        $self->_num_unknowns(0);
-    }
-
-    return;
-}
-
-sub mark_as_true
-{
-    my $self = shift;
-    my $option_idx = shift;
-
-    if ($self->_which_option() >= 0)
-    {
-        Carp::confess "Already decided!";
-    }
-
-    if ($self->get_option($option_idx) != $UNKNOWN)
-    {
-        Carp::confess "Already set.";
-    }
-
-    $self->_set_option($option_idx, $TRUE);
-    $self->_which_option($option_idx);
-    $self->_num_unknowns(0);
-
-    foreach my $idx (0 .. $#{$self->_options})
-    {
-        if ($self->get_option($idx) == $UNKNOWN)
-        {
-            $self->_set_option($idx, $IMPOSSIBLE);
-        }
-    }
-
-    return;
-}
-
-package Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
-
 __PACKAGE__->mk_acc_ref([qw(_card_states)]);
 
 my $RANK_KING = 13;
@@ -206,7 +86,11 @@ sub _initialize_card_states
     $self->_card_states(
         [
             map
-            { OptionsStruct->new({count => $num_opts, }); }
+            {
+                Games::Solitaire::FC_Solve::DeltaStater::OptionsStruct->new(
+                    {count => $num_opts, }
+                );
+            }
             (0 .. $RANK_KING * 4)
         ]
     );
