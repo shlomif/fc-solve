@@ -231,6 +231,15 @@ sub _opt_by_suit_rank
     return $self->_card_states->[$suit * $RANK_KING + $rank-1];
 }
 
+sub _mark_suit_rank_as_true
+{
+    my ($self, $suit, $rank, $opt) = @_;
+
+    $self->_opt_by_suit_rank($suit, $rank)->mark_as_true($opt);
+
+    return;
+}
+
 sub _opt_by_card
 {
     my ($self, $card) = @_;
@@ -293,8 +302,11 @@ sub encode_composite
 
         foreach my $rank (1 .. $max_rank)
         {
-            $self->_opt_by_suit_rank($suit_idx, $rank)->mark_as_true($OPT_DONT_CARE);
+            $self->_mark_suit_rank_as_true($suit_idx, $rank, $OPT_DONT_CARE);
         }
+
+=begin foo
+        # Removing because it is probably not needed.
 
         if ($max_rank != $RANK_KING)
         {
@@ -308,6 +320,10 @@ sub encode_composite
                 );
             }
         }
+=end foo
+
+=cut
+
     }
 
     foreach my $fc_idx (0 .. $derived->num_freecells - 1)
@@ -414,7 +430,9 @@ sub decode
 
         foreach my $rank (1 .. $foundation_rank)
         {
-            $self->_opt_by_suit_rank($suit_idx, $rank)->mark_as_true($OPT_IN_FOUNDATION);
+            $self->_mark_suit_rank_as_true(
+                $suit_idx, $rank, $OPT_IN_FOUNDATION
+            );
         }
 
         $foundations_obj->assign($suits[$suit_idx], 0, $foundation_rank);
