@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use autodie;
+
 # use File::Which;
 # use File::Basename;
 use Cwd;
@@ -62,8 +64,7 @@ GetOptions(
         my $pset_files_dest = File::Spec->catdir($preset_dest, "presets");
         my $pset_files_src  = File::Spec->catdir($preset_src, "presets");
         mkpath($pset_files_dest);
-        opendir my $d, $pset_files_src
-            or die "Cannot open $pset_files_src";
+        opendir (my $d, $pset_files_src);
         while (defined(my $f = readdir($d)))
         {
             if ($f =~ m{\.sh\z})
@@ -82,7 +83,7 @@ GetOptions(
 
         $testing_preset_rc = File::Spec->rel2abs(File::Spec->catfile($preset_dest, "presetrc"));
 
-        open my $in, "<", File::Spec->catfile($preset_src, "presetrc");
+        open my $in, "<", File::Spec->catfile($fcs_path, "Presets", "presetrc");
         open my $out, ">", $testing_preset_rc;
         while (my $line = <$in>)
         {
