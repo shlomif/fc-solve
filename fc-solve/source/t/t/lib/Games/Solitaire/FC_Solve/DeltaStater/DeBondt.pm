@@ -241,6 +241,35 @@ sub _opt_by_card
     );
 }
 
+sub _mark_opt_as_true
+{
+    my ($self, $card, $opt) = @_;
+
+    $self->_opt_by_card($card)->mark_as_true($opt);
+
+    return;
+}
+
+sub _calc_child_card_option
+{
+    my ($self, $parent_card, $child_card) = @_;
+
+    if (
+        (($child_card->rank()+1 == $parent_card->rank())
+            && ($child_card->color() ne $parent_card->color()))
+    )
+    {
+        return $self->_get_suit_bit($parent_card)
+            ? $OPT_PARENT_SUIT_MOD_IS_1
+            : $OPT_PARENT_SUIT_MOD_IS_0
+            ;
+    }
+    else
+    {
+        return $OPT_ORIG_POS;
+    }
+}
+
 sub encode_composite
 {
     my ($self) = @_;
@@ -287,7 +316,7 @@ sub encode_composite
 
         if (defined($card))
         {
-            $self->_opt_by_card($card)->mark_as_true($OPT_FREECELL);
+            $self->_mark_opt_as_true($card, $OPT_FREECELL);
         }
     }
 
@@ -304,7 +333,7 @@ sub encode_composite
 
             if ($top_card->rank() != 1)
             {
-                $self->_opt_by_card($top_card)->mark_as_true($OPT_TOPMOST);
+                $self->_mark_opt_as_true($top_card, $OPT_TOPMOST);
             }
 
             my $parent_card = $top_card;
@@ -315,24 +344,12 @@ sub encode_composite
 
                 if ($child_card->rank() != 1)
                 {
-                    my $opts = $self->_opt_by_card($child_card);
-                    if (
-                        (($child_card->rank()+1 == $parent_card->rank())
-                            && ($child_card->color() ne $parent_card->color()))
-                    )
-                    {
-                        $opts->mark_as_true(
-                            $self->_get_suit_bit($parent_card)
-                            ? $OPT_PARENT_SUIT_MOD_IS_1
-                            : $OPT_PARENT_SUIT_MOD_IS_0
-                        );
-                    }
-                    else
-                    {
-                        $opts->mark_as_true(
-                            $OPT_ORIG_POS
-                        );
-                    }
+                    $self->_mark_opt_as_true(
+                        $child_card,
+                        $self->_calc_child_card_option(
+                            $parent_card, $child_card
+                        )
+                    );
                 }
 
                 $parent_card = $child_card;
