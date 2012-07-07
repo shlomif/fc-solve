@@ -175,6 +175,7 @@ sub mark_as_true
 package Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 
 my $RANK_KING = 13;
+my $FOUNDATION_BASE = $RANK_KING+1;
 
 my $OPT_TOPMOST = 0;
 my $OPT_DONT_CARE = $OPT_TOPMOST;
@@ -184,6 +185,8 @@ my $NUM_KING_OPTS = 3;
 my $OPT_PARENT_SUIT_MOD_IS_0 = 3;
 my $OPT_PARENT_SUIT_MOD_IS_1 = 4;
 my $NUM_OPTS = 5;
+my $OPT_IN_FOUNDATION = 5;
+my $NUM_OPTS_FOR_READ = 6;
 
 my (@suits, %suit_to_idx);
 
@@ -228,7 +231,7 @@ sub encode_composite
     {
         my $rank = $derived->get_foundation_value($suits[$suit_idx], 0);
 
-        $writer->write({base => 14, item => $rank });
+        $writer->write({base => $FOUNDATION_BASE, item => $rank });
 
         # The Aces are always hard-wired, so always mark them.
         #
@@ -347,6 +350,53 @@ sub encode_composite
     return $writer->get_data();
 }
 
+sub decode
+{
+    my ($self, $bits) = @_;
+
+    my $reader = VariableBaseDigitsReader->new({data => $bits});
+
+    my @card_states = (map
+        { OptionsStruct->new({count => $NUM_OPTS_FOR_READ }); }
+        (0 .. $RANK_KING * 4)
+    );
+
+    my $options_by_suit_rank = sub {
+        my ($suit, $rank) = @_;
+
+        # Carp::cluck("Suit == $suit ; Rank == $rank");
+        return $card_states[$suit * $RANK_KING + $rank-1];
+    };
+
+    my $get_card_opts = sub {
+        my ($card) = @_;
+
+        return $options_by_suit_rank->(
+            $suit_to_idx{$card->suit()},
+            $card->rank(),
+        );
+    };
+
+    my $foundations_obj = Games::Solitaire::Verify::Foundations->new(
+        {
+            num_decks => 1,
+        },
+    );
+
+    foreach my $suit_idx (0 .. $#suits)
+    {
+        my $foundation_rank = $reader->read($FOUNDATION_BASE);
+
+        foreach my $rank (1 .. $foundation_rank)
+        {
+            $options_by_suit_rank->($suit_idx, $rank)->mark_as_true($OPT_IN_FOUNDATION);
+        }
+
+        $foundations_obj->assign($suits[$suit_idx], 0, $foundation_rank);
+    }
+
+    return;
+}
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2012 by Shlomi Fish
