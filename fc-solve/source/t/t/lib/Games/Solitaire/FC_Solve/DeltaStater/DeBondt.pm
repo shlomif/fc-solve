@@ -240,6 +240,13 @@ sub _mark_suit_rank_as_true
     return;
 }
 
+sub _get_suit_rank_verdict
+{
+    my ($self, $suit, $rank) = @_;
+
+    return $self->_opt_by_suit_rank($suit, $rank)->get_verdict;
+}
+
 sub _opt_by_card
 {
     my ($self, $card) = @_;
@@ -383,7 +390,7 @@ sub encode_composite
     {
         foreach my $suit_idx (0 .. $#suits)
         {
-            my $opt = $self->_opt_by_suit_rank($suit_idx, $rank)->get_verdict();
+            my $opt = $self->_get_suit_rank_verdict($suit_idx, $rank);
 
             my $base = (($rank == $RANK_KING) ? $NUM_KING_OPTS : $NUM_OPTS);
             if ($opt < 0)
