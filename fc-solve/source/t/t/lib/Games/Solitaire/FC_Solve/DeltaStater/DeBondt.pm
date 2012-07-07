@@ -266,6 +266,24 @@ sub _mark_opt_as_true
     return;
 }
 
+sub _get_card_verdict
+{
+    my ($self, $card) = @_;
+
+    return $self->_opt_by_card($card)->get_verdict;
+}
+
+sub _wanted_suit_bit_opt
+{
+    my ($self, $parent_card) = @_;
+
+    return
+        $self->_get_suit_bit($parent_card)
+        ? $OPT_PARENT_SUIT_MOD_IS_1
+        : $OPT_PARENT_SUIT_MOD_IS_0
+    ;
+}
+
 sub _calc_child_card_option
 {
     my ($self, $parent_card, $child_card) = @_;
@@ -275,10 +293,7 @@ sub _calc_child_card_option
             && ($child_card->color() ne $parent_card->color()))
     )
     {
-        return $self->_get_suit_bit($parent_card)
-            ? $OPT_PARENT_SUIT_MOD_IS_1
-            : $OPT_PARENT_SUIT_MOD_IS_0
-            ;
+        return $self->_wanted_suit_bit_opt($parent_card);
     }
     else
     {
@@ -417,6 +432,47 @@ sub encode_composite
     return $writer->get_data();
 }
 
+sub _fill_column_with_descendant_cards
+{
+    my ($self, $col) = @_;
+
+    my $parent_card = $col->top;
+
+    while (defined($parent_card))
+    {
+        my $child_card;
+
+        my $wanted_opt = $self->_wanted_suit_bit_opt($parent_card);
+
+        SEEK_CHILD_CARD:
+        foreach my $suit (
+            $parent_card->color() eq "red" ? (qw(C S))
+            : qw(H D)
+        )
+        {
+            my $candidate_card = Games::Solitaire::Verify::Card->new;
+            $candidate_card->rank($parent_card->rank() - 1);
+            $candidate_card->suit($suit);
+
+            my $opt = $self->_get_card_verdict($candidate_card);
+
+            if ($opt == $wanted_opt)
+            {
+                $child_card = $candidate_card;
+                last SEEK_CHILD_CARD;
+            }
+        }
+
+        if (defined($child_card))
+        {
+            $col->push($child_card);
+        }
+        $parent_card = $child_card;
+    }
+
+    return;
+}
+
 sub decode
 {
     my ($self, $bits) = @_;
@@ -443,6 +499,104 @@ sub decode
         }
 
         $foundations_obj->assign($suits[$suit_idx], 0, $foundation_rank);
+    }
+
+    my $init_state = $self->_init_state;
+
+    my $num_freecells = $init_state->num_freecells();
+    my $freecells = Games::Solitaire::Verify::Freecells->new({count => $num_freecells});
+    my $next_freecell_idx = 0;
+
+    my @new_top_most_cards;
+
+    my %orig_top_most_cards = (
+        map {
+            my $card = $init_state->get_column($_)->pos(0);
+
+            (defined($card)) ? ( $card->as_string() => 1 ) : ()
+       } (0 .. $init_state->num_columns() - 1)
+    );
+
+    foreach my $rank (2 .. $RANK_KING)
+    {
+        foreach my $suit_idx (0 .. $#suits)
+        {
+            my $base = (($rank == $RANK_KING) ? $NUM_KING_OPTS : $NUM_OPTS);
+            my $existing_opt = $self->_get_suit_rank_verdict($suit_idx, $rank);
+
+            my $item_opt = $reader->read($base);
+
+            if ($existing_opt < 0)
+            {
+                $self->_mark_suit_rank_as_true(
+                    $suit_idx, $rank, $item_opt
+                );
+
+                my $card = Games::Solitaire::Verify::Card->new;
+                $card->rank($rank);
+                $card->suit($suits[$suit_idx]);
+                if ($item_opt == $OPT_FREECELL)
+                {
+                    $freecells->assign(($next_freecell_idx++), $card);
+                }
+                elsif ($item_opt == $OPT_TOPMOST)
+                {
+                    if (!exists($orig_top_most_cards{$card->as_string}))
+                    {
+                        push @new_top_most_cards, $card;
+                    }
+                }
+            }
+        }
+    }
+
+    my @columns;
+    foreach my $col_idx (0 .. $self->_init_state->num_columns - 1)
+    {
+        my $col = Games::Solitaire::Verify::Column->new({cards => []});
+
+        my $orig_col = $init_state->get_column($col_idx);
+
+        my $top_card = $orig_col->pos(0);
+
+        if (!defined($top_card))
+        {
+            if (@new_top_most_cards)
+            {
+                my $new_top_card = shift(@new_top_most_cards);
+                $col->push($new_top_card);
+
+                $self->_fill_column_with_descendant_cards(
+                    $col,
+                );
+            }
+        }
+        else
+        {
+            $col->push($top_card);
+
+            my $parent_card = $top_card;
+            GO_OVER_EXISTING_CARDS:
+            foreach my $pos (1 .. $orig_col->len() - 1)
+            {
+                my $child_card = $orig_col->pos($pos);
+
+                if ($self->_get_card_verdict($child_card) ==
+                    $self->_calc_child_card_option($parent_card, $child_card))
+                {
+                    $col->push($child_card);
+                    $parent_card = $child_card;
+                }
+                else
+                {
+                    last GO_OVER_EXISTING_CARDS;
+                }
+            }
+
+            $self->_fill_column_with_descendant_cards($col);
+        }
+
+        push @columns, $col;
     }
 
     return;
