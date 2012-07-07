@@ -231,6 +231,16 @@ sub _opt_by_suit_rank
     return $self->_card_states->[$suit * $RANK_KING + $rank-1];
 }
 
+sub _opt_by_card
+{
+    my ($self, $card) = @_;
+
+    return $self->_opt_by_suit_rank(
+        $suit_to_idx{$card->suit()},
+        $card->rank(),
+    );
+}
+
 sub encode_composite
 {
     my ($self) = @_;
@@ -238,15 +248,6 @@ sub encode_composite
     my $derived = $self->_derived_state;
 
     $self->_initialize_card_states($NUM_OPTS);
-
-    my $get_card_opts = sub {
-        my ($card) = @_;
-
-        return $self->_opt_by_suit_rank(
-            $suit_to_idx{$card->suit()},
-            $card->rank(),
-        );
-    };
 
     my $writer = VariableBaseDigitsWriter->new;
 
@@ -286,7 +287,7 @@ sub encode_composite
 
         if (defined($card))
         {
-            $get_card_opts->($card)->mark_as_true($OPT_FREECELL);
+            $self->_opt_by_card($card)->mark_as_true($OPT_FREECELL);
         }
     }
 
@@ -303,7 +304,7 @@ sub encode_composite
 
             if ($top_card->rank() != 1)
             {
-                $get_card_opts->($top_card)->mark_as_true($OPT_TOPMOST);
+                $self->_opt_by_card($top_card)->mark_as_true($OPT_TOPMOST);
             }
 
             my $parent_card = $top_card;
@@ -314,7 +315,7 @@ sub encode_composite
 
                 if ($child_card->rank() != 1)
                 {
-                    my $opts = $get_card_opts->($child_card);
+                    my $opts = $self->_opt_by_card($child_card);
                     if (
                         (($child_card->rank()+1 == $parent_card->rank())
                             && ($child_card->color() ne $parent_card->color()))
@@ -383,15 +384,6 @@ sub decode
     my $reader = VariableBaseDigitsReader->new({data => $bits});
 
     $self->_initialize_card_states($NUM_OPTS_FOR_READ);
-
-    my $get_card_opts = sub {
-        my ($card) = @_;
-
-        return $self->_opt_by_suit_rank(
-            $suit_to_idx{$card->suit()},
-            $card->rank(),
-        );
-    };
 
     my $foundations_obj = Games::Solitaire::Verify::Foundations->new(
         {
