@@ -13,6 +13,8 @@ use File::Spec;
 use Test::Differences;
 
 use Games::Solitaire::FC_Solve::DeltaStater;
+use Games::Solitaire::FC_Solve::DeltaStater::BitReader;
+use Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
 use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 
 package main;
@@ -143,7 +145,7 @@ EOF
 }
 
 {
-    my $bit_writer = BitWriter->new;
+    my $bit_writer = Games::Solitaire::FC_Solve::DeltaStater::BitWriter->new;
 
     # TEST
     ok ($bit_writer, 'Init bit_writer');
@@ -160,7 +162,7 @@ EOF
 }
 
 {
-    my $bit_reader = BitReader->new({ bits => chr(3 | (4 << 3))});
+    my $bit_reader = Games::Solitaire::FC_Solve::DeltaStater::BitReader->new({ bits => chr(3 | (4 << 3))});
 
     # TEST
     ok ($bit_reader, 'Init bit_reader');

@@ -5,7 +5,8 @@ use warnings;
 
 use Games::Solitaire::Verify::Solution;
 
-package BitWriter;
+use Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
+use Games::Solitaire::FC_Solve::DeltaStater::BitReader;
 
 use base 'Games::Solitaire::Verify::Base';
 
@@ -55,53 +56,6 @@ sub get_bits
     my $self = shift;
 
     return ${$self->_bits_ref()};
-}
-
-package BitReader;
-
-use base 'Games::Solitaire::Verify::Base';
-
-__PACKAGE__->mk_acc_ref([qw(bits _bit_idx)]);
-
-sub _init
-{
-    my $self = shift;
-    my $args = shift;
-
-    $self->bits($args->{bits});
-
-    $self->_bit_idx(0);
-
-    return;
-}
-
-sub _next_idx
-{
-    my $self = shift;
-
-    my $ret = $self->_bit_idx;
-
-    $self->_bit_idx($ret+1);
-
-    return $ret;
-}
-
-sub read
-{
-    my ($self, $len) = @_;
-
-    my $idx = 0;
-    my $ret = 0;
-    while ($idx < $len)
-    {
-        $ret |= (vec($self->bits(), $self->_next_idx(), 1) << $idx);
-    }
-    continue
-    {
-        $idx++;
-    }
-
-    return $ret;
 }
 
 package VariableBaseDigitsReader;
@@ -489,7 +443,7 @@ sub encode_composite
     my $cols = $cols_struct->{cols};
     my $cols_indexes = $cols_struct->{cols_indexes};
 
-    my $bit_writer = BitWriter->new;
+    my $bit_writer = Games::Solitaire::FC_Solve::DeltaStater::BitWriter->new;
     foreach my $bit_spec (
         @{$self->get_freecells_encoding()},
         (map { @{$_->{enc}} } @{$cols}[@{$cols_indexes}]),
@@ -505,7 +459,7 @@ sub encode
 {
     my ($self) = @_;
 
-    my $bit_writer = BitWriter->new;
+    my $bit_writer = Games::Solitaire::FC_Solve::DeltaStater::BitWriter->new;
 
     foreach my $bit_spec (
         @{$self->get_freecells_encoding()},
@@ -522,7 +476,7 @@ sub decode
 {
     my ($self, $bits) = @_;
 
-    my $bit_reader = BitReader->new({ bits => $bits });
+    my $bit_reader = Games::Solitaire::FC_Solve::DeltaStater::BitReader->new({ bits => $bits });
 
     my %foundations = (map { $_ => 14 } @suits);
 
