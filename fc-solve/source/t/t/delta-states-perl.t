@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 34;
+use Test::More tests => 36;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -607,6 +607,42 @@ Freecells:  8D  QD
 : 4C 4D 5S 2S JS 8H
 EOF
         'DeBondt encode_composite()+decode() test No. 1.',
+    );
+}
+
+{
+
+    my $init_state = <<"EOF";
+Foundations: H-0 C-0 D-A S-0$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+: AH 5C 3S TD 5S 2H 9S
+: 8S AS 5D 7S QH TC
+: 2D 9C KC JD 8C TH 7C
+: QS KH 3H 7H 9D 6D TS
+: 4C 4D KD 8H KS 6H
+: 9H 2C 5H JH QD 6C
+: 2S 3C 6S JC 4H QC
+: 3D 4S 8D 7D AC JS
+EOF
+
+    # MS Freecell No. 5 Initial state. - chosen because it has
+    # an Ace at the topmost position in the stack.
+    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+        {
+            init_state_str => $init_state,
+        }
+    );
+
+    # TEST
+    ok ($delta, 'Object was initialized correctly.');
+
+    $delta->set_derived({ state_str => $init_state, });
+
+    # TEST
+    eq_or_diff(
+        scalar($delta->decode($delta->encode_composite())->to_string()),
+        $init_state,
+        'DeBondt encode_composite()+decode() test for leading Aces',
     );
 }
 

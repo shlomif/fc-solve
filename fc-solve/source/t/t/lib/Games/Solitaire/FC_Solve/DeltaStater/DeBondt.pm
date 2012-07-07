@@ -465,7 +465,9 @@ sub decode
 
         my $top_opt = $self->_get_card_verdict($top_card);
 
-        if (!defined($top_card) or ($top_opt != $OPT_TOPMOST))
+        if (!defined($top_card) or
+            (! (($top_opt == $OPT_TOPMOST) || ($top_opt == $OPT_ORIG_POS)))
+        )
         {
             if (@new_top_most_cards)
             {
