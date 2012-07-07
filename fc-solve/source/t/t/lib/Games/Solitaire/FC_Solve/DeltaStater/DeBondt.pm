@@ -174,6 +174,8 @@ sub mark_as_true
 
 package Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 
+__PACKAGE__->mk_acc_ref([qw(_card_states)]);
+
 my $RANK_KING = 13;
 my $FOUNDATION_BASE = $RANK_KING+1;
 
@@ -197,22 +199,43 @@ my (@suits, %suit_to_idx);
     %suit_to_idx = (map { $s->[$_] => $_ } (0 .. $#$s));
 }
 
+sub _initialize_card_states
+{
+    my ($self,$num_opts) = @_;
+
+    $self->_card_states(
+        [
+            map
+            { OptionsStruct->new({count => $num_opts, }); }
+            (0 .. $RANK_KING * 4)
+        ]
+    );
+
+    return;
+}
+
+sub _free_card_states
+{
+    my $self = shift;
+
+    $self->_card_states(undef());
+
+    return;
+}
+
 sub encode_composite
 {
     my ($self) = @_;
 
     my $derived = $self->_derived_state;
 
-    my @card_states = (map
-        { OptionsStruct->new({count => $NUM_OPTS }); }
-        (0 .. $RANK_KING * 4)
-    );
+    $self->_initialize_card_states($NUM_OPTS);
 
     my $options_by_suit_rank = sub {
         my ($suit, $rank) = @_;
 
         # Carp::cluck("Suit == $suit ; Rank == $rank");
-        return $card_states[$suit * $RANK_KING + $rank-1];
+        return $self->_card_states->[$suit * $RANK_KING + $rank-1];
     };
 
     my $get_card_opts = sub {
@@ -347,6 +370,8 @@ sub encode_composite
         }
     }
 
+    $self->_free_card_states;
+
     return $writer->get_data();
 }
 
@@ -356,16 +381,13 @@ sub decode
 
     my $reader = VariableBaseDigitsReader->new({data => $bits});
 
-    my @card_states = (map
-        { OptionsStruct->new({count => $NUM_OPTS_FOR_READ }); }
-        (0 .. $RANK_KING * 4)
-    );
+    $self->_initialize_card_states($NUM_OPTS_FOR_READ);
 
     my $options_by_suit_rank = sub {
         my ($suit, $rank) = @_;
 
         # Carp::cluck("Suit == $suit ; Rank == $rank");
-        return $card_states[$suit * $RANK_KING + $rank-1];
+        return $self->_card_states->[$suit * $RANK_KING + $rank-1];
     };
 
     my $get_card_opts = sub {
