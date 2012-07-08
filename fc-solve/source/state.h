@@ -912,6 +912,13 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
             continue;
         }
 
+        /* Handle columns that start with an initial colon, so we can
+         * input states from -p -t mid-play. */
+        if ((*str) == ':')
+        {
+            str++;
+        }
+
         col = fcs_state_get_col(ret, s);
         for(c=0 ; c < MAX_NUM_CARDS_IN_A_STACK ; c++)
         {

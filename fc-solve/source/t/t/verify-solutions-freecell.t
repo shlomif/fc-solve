@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 28;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -141,14 +141,32 @@ verify_solution_test({deal => 24, theme => ["-opt", "-sp", "r:tf",],},
 
 my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data' );
 
+sub _path_to_board
+{
+    my $fn = shift;
+
+    return
+        File::Spec->catfile(
+            $data_dir,
+            "sample-boards",
+            $fn
+        );
+}
 
 # TEST
 verify_solution_test(
     {
-        board =>
-        File::Spec->catfile(
-            $data_dir,
-            "sample-boards",
+        board => _path_to_board(
+            "24-mid-with-colons.board",
+        ),
+    },
+    "Accepting a board with leading colons as directly input from the -p -t solution",
+);
+
+# TEST
+verify_solution_test(
+    {
+        board => _path_to_board(
             "larrysan-kings-only-0-freecells-unlimited-move.txt",
         ),
         theme => [qw(--freecells-num 0 --empty-stacks-filled-by kings --sequence-move unlimited)],

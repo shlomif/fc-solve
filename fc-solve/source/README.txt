@@ -78,6 +78,10 @@ KD JH 5H 7D 9H KC 9D
 AD KH 6C 2H 3D 2S
 -----------------------
 
+Starting from Freecell Solver 3.14.x, a stack can also start with a leading
+colon (":"). This is to allow input from states as output by Freecell Solver
+using the -p option.
+
 You can specify the contents of the freecells by prefixing the line with
 "FC:". For example:
 

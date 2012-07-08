@@ -12,6 +12,10 @@ the library behave the same as without it. This also affected the behaviour of
 “Iterations count exceeded.”, upon receiving a SIGABRT signal. Can be
 triggered by executing +pkill -ABRT fc-solve+.
 
+3. The game states’ input routines now accepts regular columns that start with
+a leading colon (":"). As a result, one can input the states as output from
+the solver with the +-p+ and +-t+ flags directly there.
+
 Version 3.12.0: (12-Jun-2012)
 -----------------------------
 
