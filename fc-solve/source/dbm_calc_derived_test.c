@@ -154,3 +154,50 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     return 0;
 }
+
+/*
+ * The char * returned is malloc()ed and should be free()ed.
+ */
+DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
+        const char * init_state_str_proto,
+        char * * ret_state_s
+        )
+{
+    char * init_state_s;
+    fcs_state_keyval_pair_t init_state;
+    fcs_state_locs_struct_t locs;
+    int prune_ret;
+
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+
+    fc_solve_init_locs(&locs);
+
+    init_state_s = prepare_state_str(init_state_str_proto);
+
+    fc_solve_initial_user_state_to_c(
+            init_state_s,
+            &init_state,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            indirect_stacks_buffer
+            );
+
+    free(init_state_s);
+
+    prune_ret = horne_prune(&init_state, NULL, NULL);
+    *ret_state_s =
+        fc_solve_state_as_string(
+            &(init_state.s),
+            &(init_state.info),
+            &locs,
+            FREECELLS_NUM,
+            STACKS_NUM,
+            DECKS_NUM,
+            1,
+            0,
+            1
+            );
+
+    return prune_ret;
+}

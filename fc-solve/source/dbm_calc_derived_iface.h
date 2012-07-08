@@ -50,6 +50,14 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         const fcs_bool_t perform_horne_prune
         );
 
+/*
+ * The char * returned is malloc()ed and should be free()ed.
+ */
+DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
+        const char * init_state_str_proto,
+        char * * ret_state_s
+        );
+
 #ifdef __cplusplus
 }
 #endif

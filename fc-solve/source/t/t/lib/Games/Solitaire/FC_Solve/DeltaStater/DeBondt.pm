@@ -402,8 +402,7 @@ sub decode
     my $init_state = $self->_init_state;
 
     my $num_freecells = $init_state->num_freecells();
-    my $freecells = Games::Solitaire::Verify::Freecells->new({count => $num_freecells});
-    my $next_freecell_idx = 0;
+    my @freecell_cards;
 
     my @new_top_most_cards;
 
@@ -447,7 +446,7 @@ sub decode
                 $card->suit($suits[$suit_idx]);
                 if ($item_opt == $OPT_FREECELL)
                 {
-                    $freecells->assign(($next_freecell_idx++), $card);
+                    push @freecell_cards, $card;
                 }
                 elsif ($item_opt == $OPT_TOPMOST)
                 {
@@ -457,6 +456,39 @@ sub decode
                     }
                 }
             }
+        }
+    }
+
+    my $freecells = Games::Solitaire::Verify::Freecells->new({count => $num_freecells});
+
+    my $get_bitmask = sub {
+        my $card = shift;
+        if (!defined($card))
+        {
+            return 0;
+        }
+        else
+        {
+            return $self->_get_card_bitmask($card);
+        }
+    };
+
+    push @freecell_cards, ((undef) x ($num_freecells - @freecell_cards));
+
+    @freecell_cards =
+        sort { $get_bitmask->($a) <=> $get_bitmask->($b) }
+        @freecell_cards;
+
+    @new_top_most_cards =
+        reverse
+        sort { $get_bitmask->($a) <=> $get_bitmask->($b) }
+        @new_top_most_cards;
+
+    foreach my $fc_idx (0 .. $#freecell_cards)
+    {
+        if (defined($freecell_cards[$fc_idx]))
+        {
+            $freecells->assign($fc_idx, $freecell_cards[$fc_idx]);
         }
     }
 
