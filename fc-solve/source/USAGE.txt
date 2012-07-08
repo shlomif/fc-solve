@@ -853,6 +853,10 @@ If you are working on a UNIX or a similar system then you can set some
 run-time options in "fc-solve" by sending it some signal
 combinations.
 
+If you send the fc-solve a single ABRT signal, then fc-solve will terminate
+the scan prematurely, and report that the iterations’s limit has been
+exceeded.
+
 If you send the signal USR1, without sending any other signals before
 that, then +fc-solve+ will output the present number of
 iterations. This method is a good way to monitor an instance that takes
