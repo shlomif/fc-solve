@@ -9,8 +9,8 @@ use Cwd;
 use Inline (
     C => 'DATA',
     CLEAN_AFTER_BUILD => 0,
-    LIBS => "-L" . Cwd::getcwd() . " -lfcs_delta_states_test",
-    CCFLAGS => "-I" . Cwd::getcwd(),
+    INC => ["-I$ENV{FCS_PATH}", "-I$ENV{FCS_SRC_PATH}",],
+    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_delta_states_test -lfcs_dbm_calc_derived_test",
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
@@ -19,10 +19,39 @@ use Inline (
 use IO::Handle;
 use lib './t/t/lib';
 use Games::Solitaire::FC_Solve::DeltaStater;
+use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 
 STDOUT->autoflush(1);
 
 my $MAX_ITERS = 1000;
+
+sub perl_debondt_enc_and_dec
+{
+    my ($init_state_str, $state) = @_;
+
+    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+        {
+            init_state_str => $init_state_str,
+        }
+    );
+
+    $delta->set_derived({state_str => $state,});
+
+    return $delta->decode($delta->encode_composite())->to_string();
+}
+
+my $which_encoding = ($ENV{FCS_ENC} || '');
+
+my $is_debondt = ($which_encoding eq 'd');
+
+sub _debondt_normalize
+{
+    my $s = shift;
+    return $is_debondt
+        ? join('', sort { $a cmp $b } split(/^/, $s))
+        : $s
+        ;
+}
 
 sub test_freecell_deal
 {
@@ -34,7 +63,7 @@ sub test_freecell_deal
     # run-time display, which causes the encoding and decoding to not operate
     # properly.
     open my $dump_fh,
-    "./board_gen/pi-make-microsoft-freecell-board -t $deal_idx | ./fc-solve --freecells-num 2 -p -t -sam -l eo -mi $MAX_ITERS -ni -l fools-gold |"
+    "./board_gen/pi-make-microsoft-freecell-board -t $deal_idx | ./fc-solve --freecells-num 2 -p -t -sam -l three-eighty -mi $MAX_ITERS |"
         or die "Cannot open $deal_idx for reading - $!";
 
     my $line_idx = 0;
@@ -77,7 +106,9 @@ sub test_freecell_deal
 
     $two_fc_variant->num_freecells($num_freecells);
 
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
+    my $delta_class = $is_debondt ? 'Games::Solitaire::FC_Solve::DeltaStater::DeBondt' :
+        'Games::Solitaire::FC_Solve::DeltaStater';
+    my $delta = $delta_class->new(
         {
             init_state_str => $init_state_str,
         }
@@ -104,7 +135,17 @@ sub test_freecell_deal
 
     while (my $state = $read_state->())
     {
-        my $got_state = enc_and_dec($init_state_str, $state);
+        my $got_state;
+
+        if ($is_debondt)
+        {
+            $state = horne_prune($state);
+            $got_state = perl_debondt_enc_and_dec($init_state_str, $state);
+        }
+        else
+        {
+            $got_state = enc_and_dec($init_state_str, $state);
+        }
 
         $delta->set_derived({ state_str => $state, });
 
@@ -127,7 +168,7 @@ sub test_freecell_deal
         my $expected_str = $expected_state->to_string();
 
         # print "From <<$state>> we got <<$got_state>>\n";
-        if ($expected_str ne $got_state)
+        if (_debondt_normalize($expected_str) ne _debondt_normalize($got_state))
         {
             die "State was wrongly encoded+decoded: Deal=<<$deal_idx>>\nState=<<\n$state\n>> ; Got_state=<<\n$got_state\n>> ; expected_str=<<\n$expected_str\n>>!";
         }
@@ -154,6 +195,17 @@ SV* enc_and_dec(char * init_state_s, char * derived_state_s) {
     SV * ret;
     char * s;
     s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(init_state_s, derived_state_s);
+
+    ret = newSVpv(s, 0);
+    free(s);
+    return ret;
+}
+
+SV* horne_prune(char * init_state_s) {
+    SV * ret;
+    char * s;
+    int count_moves;
+    count_moves = fc_solve_user_INTERNAL_perform_horne_prune(init_state_s, &s);
 
     ret = newSVpv(s, 0);
     free(s);
