@@ -24,6 +24,7 @@ use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 STDOUT->autoflush(1);
 
 my $MAX_ITERS = 1000;
+my $max_num_bits = 0;
 
 sub perl_debondt_enc_and_dec
 {
@@ -37,7 +38,22 @@ sub perl_debondt_enc_and_dec
 
     $delta->set_derived({state_str => $state,});
 
-    return $delta->decode($delta->encode_composite())->to_string();
+    my $token = $delta->encode_composite();
+
+    if ($token->as_bin() =~ /\A0b0*(1[01]+)\z/)
+    {
+        my $num_bits = length($1);
+        if ($num_bits > $max_num_bits)
+        {
+            $max_num_bits = $num_bits;
+        }
+    }
+    else
+    {
+        die "Token is wrong: " . $token->as_bin() . "!";
+    }
+
+    return $delta->decode($token)->to_string();
 }
 
 my $which_encoding = ($ENV{FCS_ENC} || '');
@@ -173,7 +189,7 @@ sub test_freecell_deal
             die "State was wrongly encoded+decoded: Deal=<<$deal_idx>>\nState=<<\n$state\n>> ; Got_state=<<\n$got_state\n>> ; expected_str=<<\n$expected_str\n>>!";
         }
         $count++;
-        print "\rDeal: $deal_idx ; Processed: $count";
+        printf "\r%-70s", "Deal: $deal_idx ; Processed: $count ; MaxBits: $max_num_bits";
     }
 
     close($dump_fh);
