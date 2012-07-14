@@ -51,8 +51,6 @@ static GCC_INLINE void fc_solve_var_base_writer_write(
     int base, int item
 )
 {
-    mpz_t product;
-
     assert(item >= 0);
     assert(item < base);
 

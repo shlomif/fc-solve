@@ -42,6 +42,7 @@
 
 #include "delta_states_iface.h"
 #include "delta_states.h"
+#include "delta_states_debondt.h"
 
 #include "var_base_reader.h"
 #include "var_base_writer.h"
@@ -50,7 +51,7 @@
 #include "dbm_common.h"
 #endif
 
-#define FOUNDATION_BASE (RANK_KING + 1);
+#define FOUNDATION_BASE (RANK_KING + 1)
 
 enum
 {
@@ -61,6 +62,7 @@ enum
     NUM_KING_OPTS = 3,
     OPT_PARENT_SUIT_MOD_IS_0 = 3,
     OPT_PARENT_SUIT_MOD_IS_1 = 4,
+    NUM_OPTS = 5,
     OPT_IN_FOUNDATION = 5,
     NUM_OPTS_FOR_READ = 6
 };
@@ -74,9 +76,7 @@ static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
 #endif
         )
 {
-    fc_solve_debondt_delta_stater_alloc * self;
-    int col_idx;
-    int max_num_cards;
+    fc_solve_debondt_delta_stater_t * self;
 
     self = malloc(sizeof(*self));
 
@@ -88,34 +88,6 @@ static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
     self->num_freecells = num_freecells;
 
     self->_init_state = init_state;
-
-    max_num_cards = 0;
-    for (col_idx = 0 ; col_idx < num_columns; col_idx++)
-    {
-        int num_cards;
-
-        num_cards = fc_solve_get_column_orig_num_cards(self, fcs_state_get_col(*init_state, col_idx));
-
-        if (num_cards > max_num_cards)
-        {
-            max_num_cards = num_cards;
-        }
-    }
-
-    {
-        int bitmask, num_bits;
-
-        bitmask = 1;
-        num_bits = 0;
-
-        while (bitmask <= max_num_cards)
-        {
-            num_bits++;
-            bitmask <<= 1;
-        }
-
-        self->bits_per_orig_cards_in_column = num_bits;
-    }
 
     return self;
 }
@@ -133,7 +105,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__init_card_states(
     }
 }
 
-static void fc_solve_debondt_delta_stater_free(fc_solve_debondt_delta_stater_free * self)
+static void fc_solve_debondt_delta_stater_free(fc_solve_debondt_delta_stater_t * self)
 {
     free(self);
 }
@@ -154,7 +126,13 @@ static GCC_INLINE int wanted_suit_bit_opt(fcs_card_t parent_card)
     ;
 }
 
-static GCC_INLINE int calc_child_card_option(fcs_card_t parent_card, fcs_card_t child_card)
+static GCC_INLINE int calc_child_card_option(
+    fcs_card_t parent_card,
+    fcs_card_t child_card
+#ifndef FCS_FREECELL_ONLY
+    , int sequences_are_built_by
+#endif
+    )
 {
     if (
         (fcs_card_card_num(child_card) != 1)
@@ -249,7 +227,11 @@ static void fc_solve_debondt_delta_stater_encode_composite(
                     if (fcs_card_card_num(child_card) != 1)
                     {
                         self->card_states[CARD_POS(child_card)] =
-                            calc_child_card_option(parent_card, child_card)
+                            calc_child_card_option(parent_card, child_card
+#ifndef FCS_FREECELL_ONLY
+                                                   , self->sequences_are_built_by
+#endif
+                                                   )
                             ;
                     }
 
@@ -287,6 +269,245 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     }
 }
 
+static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
+        fc_solve_debondt_delta_stater_t * self,
+        fcs_cards_column_t * col
+)
+{
+    fcs_card_t parent_card = fcs_col_get_card(*col, fcs_col_len(*col)-1);
+
+    while (fcs_card_card_num(parent_card))
+    {
+        fcs_card_t child_card, candidate_card;
+        int wanted_opt;
+        int suit;
+
+        wanted_opt = wanted_suit_bit_opt(parent_card);
+
+        candidate_card = fc_solve_empty_card;
+        child_card = fc_solve_empty_card;
+        fcs_card_set_num(candidate_card, fcs_card_card_num(parent_card) - 1);
+        for (suit = (GET_SUIT_BIT(parent_card)^0x1);
+             suit < NUM_SUITS;
+             suit++
+            )
+        {
+            int opt;
+            fcs_card_set_suit(candidate_card, suit);
+
+            opt = self->card_states[CARD_POS(candidate_card)];
+
+            if (opt == wanted_opt)
+            {
+                child_card = candidate_card;
+                break;
+            }
+        }
+
+        if (fcs_card_card_num(child_card))
+        {
+            fcs_col_push_card(*col, child_card);
+        }
+        parent_card = child_card;
+    }
+}
+
+static void fc_solve_debondt_delta_stater_decode(
+        fc_solve_debondt_delta_stater_t * self,
+        fcs_var_base_reader_t * reader,
+        fcs_state_t * ret
+        )
+{
+    fcs_state_t * init_state;
+    int num_freecells;
+    unsigned char orig_top_most_cards[4 * RANK_KING];
+    int next_freecell_idx = 0;
+    int next_new_top_most_cards = 0;
+    fcs_card_t new_top_most_cards[MAX_NUM_STACKS];
+
+    fc_solve_debondt_delta_stater__init_card_states(self);
+
+    {
+        int suit_idx, rank;
+
+        for (suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
+        {
+            int foundation_rank =
+                fc_solve_var_base_reader_read(reader, FOUNDATION_BASE);
+
+            for (rank = 1 ; rank <= foundation_rank ; rank++)
+            {
+                self->card_states[STATE_POS(suit_idx, rank)] = OPT_IN_FOUNDATION;
+            }
+
+            fcs_set_foundation(*ret, suit_idx, foundation_rank);
+        }
+    }
+
+#define IS_IN_FOUNDATIONS(card) (fcs_card_card_num(card) <= \
+                                 fcs_foundation_value(*ret, fcs_card_suit(card)))
+
+
+    init_state = self->_init_state;
+    num_freecells = self->num_freecells;
+
+    memset( orig_top_most_cards, '\0', sizeof(orig_top_most_cards));
+    {
+        int col_idx;
+        for (col_idx = 0; col_idx < self->num_columns; col_idx++)
+        {
+            fcs_card_t card;
+            fcs_cards_column_t col;
+
+            col = fcs_state_get_col(*init_state, col_idx);
+
+            if (fcs_col_len(col))
+            {
+                card = fcs_col_get_card(col, 0);
+                orig_top_most_cards[CARD_POS(card)] = 1;
+            }
+        }
+    }
+
+    {
+        int rank;
+        for (rank = 1 ; rank <= RANK_KING ; rank++)
+        {
+            int suit_idx;
+            for (suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
+            {
+                int existing_opt;
+
+                existing_opt = self->card_states[STATE_POS(suit_idx, rank)];
+
+                if (rank == 1)
+                {
+                    if (existing_opt < 0)
+                    {
+                        self->card_states[STATE_POS(suit_idx, rank)] = OPT_ORIG_POS;
+                    }
+                }
+                else
+                {
+                    int base, item_opt;
+
+                    base = ((rank == RANK_KING) ? NUM_KING_OPTS : NUM_OPTS);
+                    item_opt = fc_solve_var_base_reader_read(reader, base);
+
+                    if (existing_opt < 0)
+                    {
+                        fcs_card_t card;
+
+                        self->card_states[STATE_POS(suit_idx, rank)] = item_opt;
+
+                        card = fc_solve_empty_card;
+                        fcs_card_set_num(card, rank);
+                        fcs_card_set_suit(card, suit_idx);
+                        if (item_opt == OPT_FREECELL)
+                        {
+                            fcs_put_card_in_freecell(*ret, next_freecell_idx, card);
+                            next_freecell_idx++;
+                        }
+                        else if (item_opt == OPT_TOPMOST)
+                        {
+                            if (!orig_top_most_cards[CARD_POS(card)])
+                            {
+                                new_top_most_cards[next_new_top_most_cards++] = card;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (; next_freecell_idx < num_freecells; next_freecell_idx++)
+    {
+        fcs_empty_freecell(*ret, next_freecell_idx);
+    }
+
+    {
+        int col_idx;
+
+        for (col_idx = 0; col_idx < self->num_columns; col_idx++)
+        {
+            fcs_cards_column_t col, orig_col;
+            fcs_card_t top_card;
+            int top_opt;
+
+            col = fcs_state_get_col(*ret, col_idx);
+            orig_col = fcs_state_get_col(*init_state, col_idx);
+
+            if (fcs_col_len(orig_col))
+            {
+                top_card = fcs_col_get_card(orig_col, 0);
+                top_opt = self->card_states[CARD_POS(top_card)];
+            }
+            else
+            {
+                top_card = fc_solve_empty_card;
+            }
+
+            if ((fcs_card_card_num(top_card) == 0)
+                ||
+                (! ((top_opt == OPT_TOPMOST) || (top_opt == OPT_ORIG_POS))))
+            {
+                if (next_new_top_most_cards >= 0)
+                {
+                    fcs_card_t new_top_card = new_top_most_cards[--next_new_top_most_cards];
+                    fcs_col_push_card(col, new_top_card);
+
+                    fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
+                        self, &col);
+                }
+            }
+            else
+            {
+                fcs_card_t parent_card;
+                int pos;
+
+                fcs_col_push_card(col, top_card);
+
+                parent_card = top_card;
+
+                for (pos = 1; pos < fcs_col_len(orig_col); pos++)
+                {
+                    fcs_card_t child_card;
+
+                    child_card = fcs_col_get_card(orig_col, pos);
+
+                    if (
+                        (! IS_IN_FOUNDATIONS(child_card))
+                            &&
+                        (
+                            self->card_states[CARD_POS(child_card)]
+                                ==
+                            calc_child_card_option(
+                                parent_card, child_card
+#ifndef FCS_FREECELL_ONLY
+                               , self->sequences_are_built_by
+#endif
+                            )
+                        )
+                    )
+                    {
+                        fcs_col_push_card(col, child_card);
+                        parent_card = child_card;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
+                    self, &col);
+            }
+        }
+    }
+#undef IS_IN_FOUNDATIONS
+}
+
 static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
         fc_solve_debondt_delta_stater_t * delta_stater,
         const fcs_uchar_t * const enc_state,
@@ -294,8 +515,9 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
         IND_BUF_T_PARAM(indirect_stacks_buffer)
         )
 {
-    fc_solve_bit_reader_t bit_r;
-    fc_solve_bit_reader_init(&bit_r, enc_state+1);
+    fcs_var_base_reader_t r;
+
+    fc_solve_var_base_reader_init(&r, enc_state, sizeof(enc_state));
 
     fc_solve_state_init(
         ret,
@@ -305,9 +527,10 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
 
     fc_solve_debondt_delta_stater_decode(
         delta_stater,
-        &bit_r,
+        &r,
         &(ret->s)
     );
+    fc_solve_var_base_reader_release(&r);
 }
 
 #ifdef INDIRECT_STACK_STATES
@@ -322,13 +545,12 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
     unsigned char * out_enc_state
 )
 {
-    fc_solve_bit_writer_t bit_w;
-    fc_solve_bit_writer_init(&bit_w, out_enc_state+1);
+    fcs_var_base_writer_t w;
+    fc_solve_var_base_writer_init(&w);
     fc_solve_debondt_delta_stater_set_derived(delta_stater, &(state->s));
-    fc_solve_debondt_delta_stater_encode_composite(delta_stater, &bit_w);
-    out_enc_state[0] =
-        bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0)
-        ;
+    fc_solve_debondt_delta_stater_encode_composite(delta_stater, &w);
+    fc_solve_var_base_writer_get_data(&w, out_enc_state);
+    fc_solve_var_base_writer_release(&w);
 }
 
 static GCC_INLINE void fcs_init_and_encode_state(
@@ -387,8 +609,8 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
     fc_solve_debondt_delta_stater_t * delta;
     fcs_uchar_t enc_state[24];
-    fc_solve_bit_writer_t bit_w;
-    fc_solve_bit_reader_t bit_r;
+    fcs_var_base_writer_t w;
+    fcs_var_base_reader_t r;
     char * new_derived_as_str;
     fcs_state_locs_struct_t locs;
 
@@ -434,11 +656,12 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
         new_derived_indirect_stacks_buffer
     );
 
-    fc_solve_bit_writer_init(&bit_w, enc_state);
-    fc_solve_debondt_delta_stater_encode_composite(delta, &bit_w);
+    fc_solve_var_base_writer_init(&w);
+    fc_solve_debondt_delta_stater_encode_composite(delta, &w);
+    fc_solve_var_base_writer_get_data(&w, enc_state);
 
-    fc_solve_bit_reader_init(&bit_r, enc_state);
-    fc_solve_debondt_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
+    fc_solve_var_base_reader_init(&r, enc_state, sizeof(enc_state));
+    fc_solve_debondt_delta_stater_decode(delta, &r, &(new_derived_state.s));
 
     fc_solve_init_locs(&locs);
 
@@ -459,6 +682,9 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     free(derived_state_s);
 
     fc_solve_debondt_delta_stater_free (delta);
+
+    fc_solve_var_base_reader_release(&r);
+    fc_solve_var_base_writer_release(&w);
 
     return new_derived_as_str;
 }

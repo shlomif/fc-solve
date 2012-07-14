@@ -939,6 +939,11 @@ IF (IS_DEBUG)
             SHARED
             app_str.c card.c state.c delta_states.c
         )
+        # The DeBondt delta-states testing library
+        ADD_LIBRARY(fcs_debondt_delta_states_test
+            SHARED
+            app_str.c card.c state.c delta_states_debondt.c
+        )
         IF (FCS_ENABLE_DBM_SOLVER)
             ADD_LIBRARY(fcs_dbm_calc_derived_test
                 SHARED

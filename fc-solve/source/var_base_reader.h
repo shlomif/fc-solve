@@ -41,7 +41,7 @@ typedef struct
 
 static GCC_INLINE void fc_solve_var_base_reader_init(
     fcs_var_base_reader_t * s,
-    unsigned char * data,
+    const unsigned char * data,
     size_t data_len
     )
 {
