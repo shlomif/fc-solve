@@ -16,10 +16,10 @@ use Games::Solitaire::FC_Solve::DeltaStater;
 use Games::Solitaire::FC_Solve::DeltaStater::BitReader;
 use Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
 use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
-use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader;
-use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader::XS;
-use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter;
-use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter::XS;
+use FC_Solve::VarBaseDigitsReader;
+use FC_Solve::VarBaseDigitsReader::XS;
+use FC_Solve::VarBaseDigitsWriter;
+use FC_Solve::VarBaseDigitsWriter::XS;
 
 package main;
 
@@ -495,7 +495,7 @@ EOF
 
 {
     my $reader =
-    Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader
+    FC_Solve::VarBaseDigitsReader
         ->new({ data => (3 | (12 << 3))});
 
     # TEST
@@ -510,7 +510,7 @@ EOF
 
 {
     my $reader =
-    Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader
+    FC_Solve::VarBaseDigitsReader
         ->new(
         {
             data => (24 + 8*52 + 7*11*52)
@@ -535,13 +535,13 @@ foreach my $classes_rec
 (
     {
         type => 'perl',
-        w => 'Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter',
-        r => 'Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader',
+        w => 'FC_Solve::VarBaseDigitsWriter',
+        r => 'FC_Solve::VarBaseDigitsReader',
     },
     {
         type => 'XS',
-        w => 'Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter::XS',
-        r => 'Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader::XS',
+        w => 'FC_Solve::VarBaseDigitsWriter::XS',
+        r => 'FC_Solve::VarBaseDigitsReader::XS',
     },
 )
 {

@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter;
+package FC_Solve::VarBaseDigitsWriter;
 
 use strict;
 use warnings;

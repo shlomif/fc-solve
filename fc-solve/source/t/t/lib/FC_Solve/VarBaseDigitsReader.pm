@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader;
+package FC_Solve::VarBaseDigitsReader;
 
 use strict;
 use warnings;

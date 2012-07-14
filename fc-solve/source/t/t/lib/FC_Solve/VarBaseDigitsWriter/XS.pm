@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter::XS;
+package FC_Solve::VarBaseDigitsWriter::XS;
 
 use strict;
 use warnings;
@@ -16,7 +16,7 @@ typedef struct
 SV* _proto_new() {
         fcs_var_base_writer_t * s;
         SV*      obj_ref = newSViv(0);
-        SV*      obj = newSVrv(obj_ref, "Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter::XS");
+        SV*      obj = newSVrv(obj_ref, "FC_Solve::VarBaseDigitsWriter::XS");
 
         New(42, s, 1, fcs_var_base_writer_t);
 
@@ -71,7 +71,7 @@ void DESTROY(SV* obj) {
 }
 
 EOF
-    NAME => "Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter::XS",
+    NAME => "FC_Solve::VarBaseDigitsWriter::XS",
     CLEAN_AFTER_BUILD => 0,
     INC => "-I" . $ENV{FCS_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . ' -lgmp',
@@ -81,8 +81,7 @@ EOF
 sub new
 {
     my $class = shift;
-    return
-Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter::XS::_proto_new();
+    return FC_Solve::VarBaseDigitsWriter::XS::_proto_new();
 }
 
 sub write

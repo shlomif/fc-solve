@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader::XS;
+package FC_Solve::VarBaseDigitsReader::XS;
 
 use strict;
 use warnings;
@@ -17,7 +17,7 @@ SV* _proto_new(SV * data_proto) {
         unsigned char * data;
         STRLEN data_len;
         SV*      obj_ref = newSViv(0);
-        SV*      obj = newSVrv(obj_ref, "Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader::XS");
+        SV*      obj = newSVrv(obj_ref, "FC_Solve::VarBaseDigitsReader::XS");
 
         New(42, s, 1, fcs_var_base_reader_t);
 
@@ -59,7 +59,7 @@ void DESTROY(SV* obj) {
 }
 
 EOF
-    NAME => "Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader::XS",
+    NAME => "FC_Solve::VarBaseDigitsReader::XS",
     CLEAN_AFTER_BUILD => 0,
     INC => "-I" . $ENV{FCS_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . ' -lgmp',
@@ -70,8 +70,7 @@ sub new
 {
     my $class = shift;
     my $args = shift;
-    return
-Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader::XS::_proto_new($args->{data});
+    return FC_Solve::VarBaseDigitsReader::XS::_proto_new($args->{data});
 }
 
 sub read
