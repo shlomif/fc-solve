@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 36;
+use Test::More tests => 41;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -17,7 +17,9 @@ use Games::Solitaire::FC_Solve::DeltaStater::BitReader;
 use Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
 use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader;
+use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader::XS;
 use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter;
+use Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter::XS;
 
 package main;
 
@@ -528,36 +530,49 @@ EOF
     is ($reader->read(10), 7, 'reader->read(10)');
 }
 
+# TEST:$c=2;
+foreach my $classes_rec
+(
+    {
+        type => 'perl',
+        w => 'Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter',
+        r => 'Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader',
+    },
+    {
+        type => 'XS',
+        w => 'Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter::XS',
+        r => 'Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader::XS',
+    },
+)
 {
-    my $writer =
-    Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsWriter->new;
+    my $type = $classes_rec->{type};
+    my $writer = $classes_rec->{w}->new;
 
-    # TEST
-    ok ($writer, 'Init var_writer');
+    # TEST*$c
+    ok ($writer, "Init var_writer - $type");
 
     $writer->write({ item => 24, base => 52, });
     $writer->write({ item => 8, base => 11, });
     $writer->write({ item => 7, base => 10, });
 
     my $reader =
-    Games::Solitaire::FC_Solve::DeltaStater::VariableBaseDigitsReader
-    ->new(
+    $classes_rec->{r}->new(
         {
             data => $writer->get_data(),
         }
     );
 
-    # TEST
-    ok ($reader, 'Init var_reader');
+    # TEST*$c
+    ok ($reader, "Init var_reader - $type");
 
-    # TEST
-    is ($reader->read(52), 24, 'writer-to-reader->read(24)');
+    # TEST*$c
+    is ($reader->read(52), 24, "writer-to-reader->read(24) - $type");
 
-    # TEST
-    is ($reader->read(11), 8, 'writer-to-reader->read(11)');
+    # TEST*$c
+    is ($reader->read(11), 8, "writer-to-reader->read(11) - $type");
 
-    # TEST
-    is ($reader->read(10), 7, 'writer-to-reader->read(10)');
+    # TEST*$c
+    is ($reader->read(10), 7, "writer-to-reader->read(10) - $type");
 }
 
 {
