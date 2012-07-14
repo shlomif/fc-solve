@@ -36,6 +36,7 @@
 #include "../app_str.c"
 #include "../state.c"
 #include "../delta_states.c"
+#include "../delta_states_debondt.c"
 #include "../dbm_solver_key.h"
 #include "../indirect_buffer.h"
 

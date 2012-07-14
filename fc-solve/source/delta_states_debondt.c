@@ -553,7 +553,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
     fc_solve_var_base_writer_release(&w);
 }
 
-static GCC_INLINE void fcs_init_and_encode_state(
+static GCC_INLINE void fcs_debondt_init_and_encode_state(
     fc_solve_debondt_delta_stater_t * delta_stater,
     fcs_state_keyval_pair_t * state,
     fcs_encoded_state_buffer_t * enc_state
@@ -570,7 +570,7 @@ static GCC_INLINE void fcs_init_and_encode_state(
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
-static char * prepare_state_str(const char * proto)
+static char * debondt_prepare_state_str(const char * proto)
 {
     char * ret;
 
@@ -600,7 +600,7 @@ static char * prepare_state_str(const char * proto)
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */
-DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
         const char * init_state_str_proto,
         const char * derived_state_str_proto
         )
@@ -618,8 +618,8 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     DECLARE_IND_BUF_T(derived_stacks_buffer)
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
 
-    init_state_s = prepare_state_str(init_state_str_proto);
-    derived_state_s = prepare_state_str(derived_state_str_proto);
+    init_state_s = debondt_prepare_state_str(init_state_str_proto);
+    derived_state_s = debondt_prepare_state_str(derived_state_str_proto);
 
     fc_solve_initial_user_state_to_c(
             init_state_s,
