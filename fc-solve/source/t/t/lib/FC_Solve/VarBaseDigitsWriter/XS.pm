@@ -5,13 +5,7 @@ use warnings;
 
 use Inline (
     C => <<'EOF',
-#include "gmp.h"
-
-typedef struct
-{
-    mpz_t data;
-    mpz_t multiplier;
-} fcs_var_base_writer_t;
+#include "var_base_writer.h"
 
 SV* _proto_new() {
         fcs_var_base_writer_t * s;
@@ -19,9 +13,7 @@ SV* _proto_new() {
         SV*      obj = newSVrv(obj_ref, "FC_Solve::VarBaseDigitsWriter::XS");
 
         New(42, s, 1, fcs_var_base_writer_t);
-
-        mpz_init_set_ui(s->data, 0);
-        mpz_init_set_ui(s->multiplier, 1);
+        fc_solve_var_base_writer_init(s);
 
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
@@ -32,21 +24,9 @@ SV* _proto_new() {
 
 void _proto_write(SV* obj, int base, int item) {
     fcs_var_base_writer_t * w;
-    mpz_t product;
-
     w = DEREF();
 
-    assert(item >= 0);
-    assert(item < base);
-
-    mpz_addmul_ui(w->data, w->multiplier, ((unsigned long)item));
-
-    mpz_init(product);
-    mpz_mul_ui(product, w->multiplier, ((unsigned long)base));
-    mpz_set(w->multiplier, product);
-    mpz_clear(product);
-
-    return;
+    fc_solve_var_base_writer_write(w, base, item);
 }
 
 SV * _proto_get_data(SV* obj) {
@@ -56,7 +36,7 @@ SV * _proto_get_data(SV* obj) {
 
     fcs_var_base_writer_t * w = DEREF();
 
-    mpz_export(exported, &count, 1, sizeof(exported[0]), 0, 0, w->data);
+    count = fc_solve_var_base_writer_get_data(w, exported);
 
     ret = newSVpvn(exported, count);
 
@@ -65,8 +45,7 @@ SV * _proto_get_data(SV* obj) {
 
 void DESTROY(SV* obj) {
   fcs_var_base_writer_t * s = DEREF();
-  mpz_clear(s->data);
-  mpz_clear(s->multiplier);
+  fc_solve_var_base_writer_release(s);
   Safefree(s);
 }
 
