@@ -189,7 +189,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
             if (fcs_card_card_num(card) != 0)
             {
-                self->card_states[CARD_POS(card)] = OPT_DONT_CARE;
+                self->card_states[CARD_POS(card)] = OPT_FREECELL;
             }
         }
     }
@@ -213,7 +213,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
                 if (fcs_card_card_num(top_card) != 1)
                 {
-                    self->card_states[CARD_POS(top_card)] = OPT_DONT_CARE;
+                    self->card_states[CARD_POS(top_card)] = OPT_TOPMOST;
                 }
 
                 parent_card= top_card;
@@ -287,9 +287,9 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
         candidate_card = fc_solve_empty_card;
         child_card = fc_solve_empty_card;
         fcs_card_set_num(candidate_card, fcs_card_card_num(parent_card) - 1);
-        for (suit = (GET_SUIT_BIT(parent_card)^0x1);
-             suit < NUM_SUITS;
-             suit++
+        for (suit = ((fcs_card_suit(parent_card)&(0x1))^0x1) ;
+             suit < NUM_SUITS ;
+             suit += 2
             )
         {
             int opt;
@@ -517,7 +517,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
 {
     fcs_var_base_reader_t r;
 
-    fc_solve_var_base_reader_init(&r, enc_state, sizeof(enc_state));
+    fc_solve_var_base_reader_init(&r, enc_state, sizeof(fcs_encoded_state_buffer_t));
 
     fc_solve_state_init(
         ret,

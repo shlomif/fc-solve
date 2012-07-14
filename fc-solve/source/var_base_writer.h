@@ -64,10 +64,19 @@ static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
     unsigned char * exported
 )
 {
-    size_t count;
+    size_t count = 0;
+    mpz_t r;
 
-    mpz_export(exported, &count, 1, sizeof(exported[0]), 0, 0, w->data);
+    mpz_init(r);
 
+#define NUM_BITS 8
+    while (mpz_cmp_ui(w->data, 0) != 0)
+    {
+        mpz_fdiv_r_2exp(r, w->data, NUM_BITS);
+        mpz_fdiv_q_2exp(w->data, w->data, NUM_BITS);
+        exported[count++] = (unsigned char)mpz_get_ui(r);
+    }
+    mpz_clear(r);
     return count;
 }
 

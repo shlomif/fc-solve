@@ -91,6 +91,14 @@ IF (FCS_WITH_TEST_SUITE)
             GENERATED "1"
     )
 
+    SET_SOURCE_FILES_PROPERTIES (
+        "delta-states-test.c"
+        PROPERTIES
+            OBJECT_DEPENDS
+                "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states_debondt.c"
+            GENERATED "1"
+    )
+
     SET (EXE_FILE "t/dbm-kaztree-compare-records-test.exe")
 
     ADD_EXECUTABLE(

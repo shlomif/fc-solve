@@ -45,8 +45,20 @@ static GCC_INLINE void fc_solve_var_base_reader_init(
     size_t data_len
     )
 {
-    mpz_init(s->data);
-    mpz_import(s->data, data_len, 1, sizeof(data[0]), 0, 0, data);
+    size_t count;
+    mpz_t temp;
+    mp_bitcnt_t shift = 0;
+
+    mpz_init_set_ui(s->data, 0);
+    mpz_init(temp);
+#define NUM_BITS 8
+    for (count = 0; count < data_len ; count++, shift += NUM_BITS)
+    {
+        mpz_set_ui(temp, (unsigned long)data[count]);
+        mpz_mul_2exp(temp, temp, shift);
+        mpz_add(s->data, s->data, temp);
+    }
+    mpz_clear(temp);
 }
 
 static GCC_INLINE int fc_solve_var_base_reader_read(
