@@ -5,12 +5,7 @@ use warnings;
 
 use Inline (
     C => <<'EOF',
-#include "gmp.h"
-
-typedef struct
-{
-    mpz_t data;
-} fcs_var_base_reader_t;
+#include "var_base_reader.h"
 
 SV* _proto_new(SV * data_proto) {
         fcs_var_base_reader_t * s;
@@ -22,8 +17,7 @@ SV* _proto_new(SV * data_proto) {
         New(42, s, 1, fcs_var_base_reader_t);
 
         data = (unsigned char *)sv_2pvbyte(data_proto, &data_len);
-        mpz_init(s->data);
-        mpz_import(s->data, data_len, 1, sizeof(data[0]), 0, 0, data);
+        fc_solve_var_base_reader_init(s, data, data_len);
 
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
@@ -33,28 +27,12 @@ SV* _proto_new(SV * data_proto) {
 #define DEREF() ((fcs_var_base_reader_t *)SvIV(SvRV(obj)))
 
 int _var_base_reader__read(SV* obj, int base) {
-    fcs_var_base_reader_t * reader;
-    mpz_t q, r;
-    int ret;
-
-    reader = DEREF();
-
-    mpz_init(q);
-    mpz_init(r);
-    mpz_fdiv_qr_ui(q, r, reader->data, (unsigned long)base);
-
-    ret = (int)mpz_get_ui(r);
-    mpz_clear(r);
-
-    mpz_set(reader->data, q);
-    mpz_clear(q);
-
-    return ret;
+    return fc_solve_var_base_reader_read(DEREF(), base);
 }
 
 void DESTROY(SV* obj) {
     fcs_var_base_reader_t * s = DEREF();
-    mpz_clear(s->data);
+    fc_solve_var_base_reader_release(s);
     Safefree(s);
 }
 
