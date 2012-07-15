@@ -21,6 +21,8 @@ use lib './t/t/lib';
 use Games::Solitaire::FC_Solve::DeltaStater;
 use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 
+use Parallel::ForkManager;
+
 STDOUT->autoflush(1);
 
 my $MAX_ITERS = 1000;
@@ -211,10 +213,19 @@ sub test_freecell_deal
     return;
 }
 
+my $pm = Parallel::ForkManager->new(4);
+DEALS:
 for my $deal_idx (1 .. 32_000)
 {
+    if ($pm->start())
+    {
+        next DEALS;
+    }
     test_freecell_deal($deal_idx);
+
+    $pm->finish;
 }
+$pm->wait_all_children;
 
 __DATA__
 __C__
