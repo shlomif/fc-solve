@@ -17,7 +17,8 @@ SV* _proto_new(SV * data_proto) {
         New(42, s, 1, fcs_var_base_reader_t);
 
         data = (unsigned char *)sv_2pvbyte(data_proto, &data_len);
-        fc_solve_var_base_reader_init(s, data, data_len);
+        fc_solve_var_base_reader_init(s);
+        fc_solve_var_base_reader_start(s, data, data_len);
 
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);

@@ -14,6 +14,7 @@ SV* _proto_new() {
 
         New(42, s, 1, fcs_var_base_writer_t);
         fc_solve_var_base_writer_init(s);
+        fc_solve_var_base_writer_start(s);
 
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);

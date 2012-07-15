@@ -37,6 +37,8 @@ extern "C" {
 #include "state.h"
 
 #include "delta_states.h"
+#include "var_base_writer.h"
+#include "var_base_reader.h"
 
 #define RANK_KING 13
 
@@ -50,6 +52,8 @@ typedef struct
     fcs_state_t * _init_state, * _derived_state;
     int bits_per_orig_cards_in_column;
     int card_states[4 * RANK_KING];
+    fcs_var_base_reader_t r;
+    fcs_var_base_writer_t w;
 } fc_solve_debondt_delta_stater_t;
 
 extern char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
