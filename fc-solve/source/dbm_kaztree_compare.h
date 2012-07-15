@@ -38,7 +38,7 @@ extern "C"
 #include "delta_states.h"
 
 /* TODO: make sure the key is '\0'-padded. */
-#ifdef FCS_DBM_RECORD_POINTER_REPR
+#if defined(FCS_DBM_RECORD_POINTER_REPR) && (!defined(FCS_DEBONDT_DELTA_STATES))
 static int compare_records(
     const void * void_a, const void * void_b, void * context
 )

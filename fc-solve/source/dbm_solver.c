@@ -62,7 +62,11 @@
 
 #include "dbm_calc_derived.h"
 
+#ifdef FCS_DEBONDT_DELTA_STATES
+#include "delta_states_debondt.c"
+#else
 #include "delta_states.c"
+#endif
 
 #include "dbm_common.h"
 #include "dbm_solver.h"
@@ -635,6 +639,18 @@ static GCC_INLINE void instance_check_multiple_keys(
 #endif
     FCS_UNLOCK(instance->storage_lock);
 }
+
+#ifdef FCS_DEBONDT_DELTA_STATES
+#define fc_solve_delta_stater_t fc_solve_debondt_delta_stater_t
+#define fc_solve_delta_stater_decode_into_state(a,b,c,d) fc_solve_debondt_delta_stater_decode_into_state(a,b,c,d)
+#define fcs_init_and_encode_state(a,b,c) fcs_debondt_init_and_encode_state(a,b,c)
+#ifdef FCS_FREECELL_ONLY
+#define fc_solve_delta_stater_alloc(a,b,c) fc_solve_debondt_delta_stater_alloc(a,b,c)
+#else
+#define fc_solve_delta_stater_alloc(a,b,c,d) fc_solve_debondt_delta_stater_alloc(a,b,c,d)
+#endif
+#define fc_solve_delta_stater_free(a) fc_solve_debondt_delta_stater_free(a)
+#endif
 
 typedef struct {
     fcs_dbm_solver_instance_t * instance;

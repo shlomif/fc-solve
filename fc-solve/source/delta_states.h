@@ -37,7 +37,12 @@ extern "C" {
 #include "config.h"
 #include "state.h"
 
+#ifdef FCS_DEBONDT_DELTA_STATES
+#define FCS_ENCODED_STATE_COUNT_CHARS 16
+#else
 #define FCS_ENCODED_STATE_COUNT_CHARS 24
+#endif
+
 typedef struct { unsigned char s[FCS_ENCODED_STATE_COUNT_CHARS]; } fcs_encoded_state_buffer_t;
 
 #define FCS_PARENT_AND_MOVE__GET_MOVE(parent_and_move) \

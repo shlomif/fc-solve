@@ -452,6 +452,7 @@ static void fc_solve_debondt_delta_stater_decode(
             else
             {
                 top_card = fc_solve_empty_card;
+                top_opt = OPT_DONT_CARE;
             }
 
             if ((fcs_card_card_num(top_card) == 0)
