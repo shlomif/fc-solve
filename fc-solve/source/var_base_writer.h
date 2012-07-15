@@ -38,12 +38,15 @@ typedef struct
 {
     mpz_t data;
     mpz_t multiplier;
+    /* To avoid memory fragmentation, we keep those here and re use them. */
+    mpz_t r;
 } fcs_var_base_writer_t;
 
 static GCC_INLINE void fc_solve_var_base_writer_init(fcs_var_base_writer_t * s)
 {
     mpz_init_set_ui(s->data, 0);
     mpz_init_set_ui(s->multiplier, 1);
+    mpz_init(s->r);
 }
 
 static GCC_INLINE void fc_solve_var_base_writer_write(
@@ -65,18 +68,15 @@ static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
 )
 {
     size_t count = 0;
-    mpz_t r;
-
-    mpz_init(r);
 
 #define NUM_BITS 8
     while (mpz_cmp_ui(w->data, 0) != 0)
     {
-        mpz_fdiv_r_2exp(r, w->data, NUM_BITS);
+        mpz_fdiv_r_2exp(w->r, w->data, NUM_BITS);
         mpz_fdiv_q_2exp(w->data, w->data, NUM_BITS);
-        exported[count++] = (unsigned char)mpz_get_ui(r);
+        exported[count++] = (unsigned char)mpz_get_ui(w->r);
     }
-    mpz_clear(r);
+
     return count;
 }
 
@@ -86,6 +86,7 @@ static GCC_INLINE void fc_solve_var_base_writer_release(
 {
     mpz_clear(w->data);
     mpz_clear(w->multiplier);
+    mpz_clear(w->r);
 }
 
 #endif /* FC_SOLVE__VAR_BASE_WRITER_H */
