@@ -5,7 +5,7 @@
 
 #include "../card.c"
 
-int main_tests()
+static int main_tests(void)
 {
     char buffer[1024];
 
