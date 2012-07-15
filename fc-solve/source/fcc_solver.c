@@ -56,7 +56,7 @@
 
 #include "dbm_calc_derived.h"
 
-#include "delta_states.c"
+#include "delta_states_any.h"
 
 #include "dbm_common.h"
 #include "dbm_solver.h"

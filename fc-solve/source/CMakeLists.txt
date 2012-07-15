@@ -365,7 +365,6 @@ INCLUDE(FindThreads)
 ADD_SUBDIRECTORY ("board_gen")
 ADD_SUBDIRECTORY ("man")
 ADD_SUBDIRECTORY ("Presets")
-ADD_SUBDIRECTORY ("t")
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
@@ -535,9 +534,11 @@ FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 
 SET (DBM_FCC_COMMON app_str.c card.c meta_alloc.c state.c)
 
+SET (DEBONDT_DELTA_STATES )
 IF (FCS_ENABLE_DBM_SOLVER)
     FIND_LIBRARY(LIBGMP_LIB gmp)
     ADD_DEFINITIONS("-DFCS_DEBONDT_DELTA_STATES=1")
+    SET (DEBONDT_DELTA_STATES 1)
 
     SET (DBM_BACKEND_MODULES )
     SET (DBM_LIBS "pthread")
@@ -953,10 +954,12 @@ IF (IS_DEBUG)
                 ${DBM_FCC_COMMON}
                 dbm_calc_derived_test.c
             )
+            TARGET_LINK_LIBRARIES(fcs_dbm_calc_derived_test ${LIBGMP_LIB})
             ADD_LIBRARY(fcs_fcc_brfs_test
                 SHARED
                 ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
             )
+            TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
         ENDIF (FCS_ENABLE_DBM_SOLVER)
     ENDIF (NOT FCS_ENABLE_RCS_STATES)
 ENDIF (IS_DEBUG)
@@ -972,3 +975,4 @@ ADD_CUSTOM_TARGET(
     "--binary-dir" "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
+ADD_SUBDIRECTORY ("t")

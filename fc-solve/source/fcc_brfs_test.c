@@ -35,7 +35,7 @@
 #undef FCS_RCS_STATES
 
 #include "fcs_dllexport.h"
-#include "delta_states.c"
+#include "delta_states_any.h"
 #include "fcc_brfs.h"
 #include "fcc_brfs_test.h"
 
@@ -48,10 +48,8 @@ static void fc_solve_state_string_to_enc(
     fcs_state_keyval_pair_t state;
     DECLARE_IND_BUF_T(state_buffer)
 
-    char * state_s = prepare_state_str(state_s_proto);
-
     fc_solve_initial_user_state_to_c(
-        state_s,
+        state_s_proto,
         &state,
         FREECELLS_NUM,
         STACKS_NUM,
@@ -64,8 +62,6 @@ static void fc_solve_state_string_to_enc(
         &(state),
         enc_state
     );
-
-    free(state_s);
 }
 
 /*
@@ -79,7 +75,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         long * out_num_new_positions
         )
 {
-    char * init_state_s;
     fcs_state_keyval_pair_t init_state;
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
@@ -104,10 +99,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    init_state_s = prepare_state_str(init_state_str_proto);
-
     fc_solve_initial_user_state_to_c(
-            init_state_s,
+            init_state_str_proto,
             &init_state,
             FREECELLS_NUM,
             STACKS_NUM,
@@ -203,6 +196,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     for (i = 0; i < states_count ; i++)
     {
         fcs_state_keyval_pair_t state;
+        DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
 
         ret[i].count = iter->moves_seq.count;
         ret[i].moves = malloc(sizeof(ret[i].moves[0]) * ret[i].count);
@@ -218,7 +212,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
                 }
             }
         }
-        fc_solve_delta_stater_decode_into_state(delta, iter->enc_state.s, &(state), indirect_stacks_buffer);
+        fc_solve_delta_stater_decode_into_state(delta, iter->enc_state.s, &(state), state_indirect_stacks_buffer);
         ret[i].state_as_string =
         fc_solve_state_as_string(
             &(state.s),
@@ -235,7 +229,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         iter = iter->next;
     }
 
-    free(init_state_s);
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
     fc_solve_compact_allocator_finish(&(moves_list_compact_alloc));
 
@@ -258,7 +251,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         fcs_bool_t * out_is_fcc_new
         )
 {
-    char * init_state_s;
     fcs_state_keyval_pair_t init_state;
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
@@ -278,10 +270,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    init_state_s = prepare_state_str(init_state_str_proto);
-
     fc_solve_initial_user_state_to_c(
-            init_state_s,
+            init_state_str_proto,
             &init_state,
             FREECELLS_NUM,
             STACKS_NUM,
@@ -400,7 +390,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         &meta_alloc
     );
 
-    free(init_state_s);
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
     fc_solve_compact_allocator_finish(&(temp_allocator));
 

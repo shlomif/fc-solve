@@ -38,7 +38,7 @@
 #undef FCS_RCS_STATES
 
 #include "fcs_dllexport.h"
-#include "delta_states.c"
+#include "delta_states_any.h"
 #include "dbm_calc_derived.h"
 
 /*
@@ -51,7 +51,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         const fcs_bool_t perform_horne_prune
         )
 {
-    char * init_state_s;
     fcs_state_keyval_pair_t init_state;
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
@@ -67,10 +66,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    init_state_s = prepare_state_str(init_state_str_proto);
-
     fc_solve_initial_user_state_to_c(
-            init_state_s,
+            init_state_str_proto,
             &init_state,
             FREECELLS_NUM,
             STACKS_NUM,
@@ -146,7 +143,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     assert(idx == states_count);
 
-    free(init_state_s);
     fc_solve_compact_allocator_finish(&allocator);
     fc_solve_meta_compact_allocator_finish( &meta_alloc );
 
@@ -163,7 +159,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
         char * * ret_state_s
         )
 {
-    char * init_state_s;
     fcs_state_keyval_pair_t init_state;
     fcs_state_locs_struct_t locs;
     int prune_ret;
@@ -172,18 +167,14 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
 
     fc_solve_init_locs(&locs);
 
-    init_state_s = prepare_state_str(init_state_str_proto);
-
     fc_solve_initial_user_state_to_c(
-            init_state_s,
+            init_state_str_proto,
             &init_state,
             FREECELLS_NUM,
             STACKS_NUM,
             DECKS_NUM,
             indirect_stacks_buffer
             );
-
-    free(init_state_s);
 
     prune_ret = horne_prune(&init_state, NULL, NULL);
     *ret_state_s =

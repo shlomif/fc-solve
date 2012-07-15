@@ -9,7 +9,7 @@ BEGIN
 {
     if (-f "$ENV{FCS_PATH}/libfcs_fcc_brfs_test.so")
     {
-        plan tests => 14;
+        plan tests => 13;
     }
     else
     {
@@ -454,6 +454,9 @@ EOF
     );
 }
 
+# Disabling because the minimal state is different on the DeBondt and
+# the regular delta_states.c encodings.
+if (0)
 {
     my $init_state_s = <<"EOF";
 4C 2C 9C 8C QS 4S 2H$WS
@@ -493,7 +496,7 @@ Freecells:  6D  KH
 : KS QD JC TD 9C 8D
 EOF
 
-    # TEST
+    ## CANCELLED TEST
     ok (
         (!FccIsNew::is_fcc_new_named_args(
             {

@@ -13,7 +13,7 @@ MACRO(MY_ADD_EXE EXE_FILE C_FILE)
 
     SET_SOURCE_FILES_PROPERTIES (
         "${C_FILE}"
-        PROPERTIES 
+        PROPERTIES
             OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../card.c"
             GENERATED "1"
     )
@@ -51,7 +51,7 @@ IF (FCS_WITH_TEST_SUITE)
 
     SET_SOURCE_FILES_PROPERTIES (
         "out-split-cmd-line.c"
-        PROPERTIES 
+        PROPERTIES
             OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../split_cmd_line.c"
             GENERATED "1"
     )
@@ -69,35 +69,49 @@ IF (FCS_WITH_TEST_SUITE)
 
     SET_SOURCE_FILES_PROPERTIES (
         "bit-reader-and-writer-test.c"
-        PROPERTIES 
+        PROPERTIES
             OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../bit_rw.h"
             GENERATED "1"
     )
 
-    SET (EXE_FILE "t/delta-states-test.exe")
+    IF (DEBONDT_DELTA_STATES)
 
-    ADD_EXECUTABLE(
-        "${EXE_FILE}"
-        "${CMAKE_CURRENT_SOURCE_DIR}/delta-states-test.c"
-    )
+        SET (EXE_FILE "t/delta-states-debondt-test.exe")
 
-    TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB} ${LIBGMP_LIB})
+        ADD_EXECUTABLE(
+            "${EXE_FILE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/debondt-delta-states-test.c"
+        )
 
-    SET_SOURCE_FILES_PROPERTIES (
-        "delta-states-test.c"
-        PROPERTIES
-            OBJECT_DEPENDS
-                "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
-            GENERATED "1"
-    )
+        TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB} ${LIBGMP_LIB})
 
-    SET_SOURCE_FILES_PROPERTIES (
-        "delta-states-test.c"
-        PROPERTIES
-            OBJECT_DEPENDS
-                "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states_debondt.c"
-            GENERATED "1"
-    )
+        SET_SOURCE_FILES_PROPERTIES (
+            "delta-states-test.c"
+            PROPERTIES
+                OBJECT_DEPENDS
+                    "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states_debondt.c"
+                GENERATED "1"
+        )
+
+    ELSE (DEBONDT_DELTA_STATES)
+
+        SET (EXE_FILE "t/delta-states-test.exe")
+
+        ADD_EXECUTABLE(
+            "${EXE_FILE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/delta-states-test.c"
+        )
+
+        TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB} ${LIBGMP_LIB})
+
+        SET_SOURCE_FILES_PROPERTIES (
+            "delta-states-test.c"
+            PROPERTIES
+                OBJECT_DEPENDS
+                    "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
+                GENERATED "1"
+        )
+    ENDIF (DEBONDT_DELTA_STATES)
 
     SET (EXE_FILE "t/dbm-kaztree-compare-records-test.exe")
 
@@ -106,7 +120,7 @@ IF (FCS_WITH_TEST_SUITE)
         "dbm-kaztree-compare-records-test.c"
     )
 
-    # This is a kind-of-temporary kludge to make 
+    # This is a kind-of-temporary kludge to make
     # "dbm-kaztree-compare-records-test.c" build.
     ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1"
         "-I${CMAKE_CURRENT_SOURCE_DIR}/.."

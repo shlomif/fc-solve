@@ -36,7 +36,6 @@
 #include "../app_str.c"
 #include "../state.c"
 #include "../delta_states.c"
-#include "../delta_states_debondt.c"
 #include "../dbm_solver_key.h"
 #include "../indirect_buffer.h"
 
@@ -72,56 +71,6 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_key
     fc_solve_delta_stater_decode_into_state(
         delta,
         enc_state,
-        &(new_derived_state),
-        new_derived_indirect_stacks_buffer
-    );
-
-    as_str =
-        fc_solve_state_as_string(
-            &(new_derived_state.s),
-            &(new_derived_state.info),
-            &locs,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM,
-            1,
-            0,
-            1
-            );
-
-    if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
-    {
-        diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n",
-                as_str,
-                expected_str
-            );
-    }
-
-    free(as_str);
-
-    return verdict;
-}
-
-static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
-{
-    int verdict;
-    fcs_state_keyval_pair_t new_derived_state;
-    fcs_encoded_state_buffer_t enc_state;
-    char * as_str;
-    DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
-    fcs_state_locs_struct_t locs;
-
-    fc_solve_init_locs(&locs);
-
-    fcs_debondt_init_and_encode_state(
-        delta,
-        state,
-        &enc_state
-    );
-
-    fc_solve_debondt_delta_stater_decode_into_state(
-        delta,
-        (unsigned char *)&enc_state,
         &(new_derived_state),
         new_derived_indirect_stacks_buffer
     );
@@ -208,7 +157,6 @@ int main_tests()
 
     {
         fc_solve_delta_stater_t * delta;
-        fc_solve_debondt_delta_stater_t * db_delta;
         fcs_state_keyval_pair_t init_state, derived_state;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
@@ -241,22 +189,9 @@ int main_tests()
 #endif
                 );
 
-        db_delta = fc_solve_debondt_delta_stater_alloc(
-                &init_state.s,
-                STACKS_NUM,
-                FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
-                );
-
         /* TEST
          *  */
         ok (delta, "Delta was created.");
-
-        /* TEST
-         *  */
-        ok (db_delta, "Debondt-Delta was created.");
 
         fc_solve_initial_user_state_to_c(
                 (
@@ -279,7 +214,6 @@ int main_tests()
         );
 
         fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
-        fc_solve_debondt_delta_stater_set_derived(db_delta, &(derived_state.s));
 
         {
             fc_solve_column_encoding_composite_t enc;
@@ -411,27 +345,7 @@ int main_tests()
             "encode_composite + decode test"
         );
 
-        /* TEST
-         * */
-        debondt_test_encode_and_decode(
-            db_delta,
-            &derived_state,
-            (
-"Foundations: H-0 C-2 D-A S-0 \n"
-"Freecells:  8D  QD\n"
-": 6D 3C 3H KD 8C 5C\n"
-": TC 9C 9H 8S\n"
-": 2H 2D 3S 5D 9D QS KS QH JC\n"
-": 6S TD QC KH AS AH 7C 6H\n"
-": KC 4H TH 7S\n"
-": 9S\n"
-": 7H 7D JD JH TS 6C 5H 4S 3D\n"
-": 4C 4D 5S 2S JS 8H\n"
-            ),
-            "DeBondt: encode_composite + decode test"
-        );
         fc_solve_delta_stater_free (delta);
-        fc_solve_debondt_delta_stater_free (db_delta);
     }
 
 /* More encode_composite tests - this time from the output of:
@@ -440,7 +354,6 @@ int main_tests()
  */
     {
         fc_solve_delta_stater_t * delta;
-        fc_solve_debondt_delta_stater_t * db_delta;
         fcs_state_keyval_pair_t init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -467,15 +380,6 @@ int main_tests()
         );
 
         delta = fc_solve_delta_stater_alloc(
-                &init_state.s,
-                STACKS_NUM,
-                FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
-                );
-
-        db_delta = fc_solve_debondt_delta_stater_alloc(
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -524,27 +428,6 @@ int main_tests()
             "encode_composite + decode test No. 2 (deal #24)"
         );
 
-        /* TEST
-         * */
-        debondt_test_encode_and_decode(
-            db_delta,
-            &derived_state,
-            (
-"Foundations: H-0 C-0 D-0 S-4 \n"
-"Freecells:  TD  KS\n"
-": 2C\n"
-": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
-": QC 9S 6H 9H 8C 7D 6C 5D 4C 3D\n"
-": 2H\n"
-": 2D KD QS JH TC 9D 8S\n"
-": 7H JS KH TS KC 7C 6D 5C 4D\n"
-": AH 5S 6S AD 8H JD\n"
-": \n"
-            ),
-            "DeBonodt: encode_composite + decode test No. 2 (deal #24)"
-        );
-
-
         fc_solve_initial_user_state_to_c(
             (
 "Foundations: H-0 C-0 D-0 S-2 \n"
@@ -586,7 +469,6 @@ int main_tests()
         );
 
         fc_solve_delta_stater_free (delta);
-        fc_solve_debondt_delta_stater_free (db_delta);
     }
 
     {
