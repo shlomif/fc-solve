@@ -31,7 +31,7 @@
 #include <tap.h>
 #include "../bit_rw.h"
 
-int main_tests()
+static int main_tests(void)
 {
     {
         unsigned char buffer[10];
