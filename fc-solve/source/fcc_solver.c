@@ -296,6 +296,16 @@ static GCC_INLINE void instance_print_processed_FCCs(
     );
 }
 
+static GCC_INLINE void instance_print_reached(
+    fcs_dbm_solver_instance_t * instance
+    )
+{
+    instance_time_printf(
+        instance,
+        "Reached %li positions\n", instance->count_num_processed
+        );
+}
+
 static int instance_run_solver(
     fcs_dbm_solver_instance_t * instance,
     long max_num_elements_in_cache,
@@ -451,10 +461,7 @@ static int instance_run_solver(
             {
                 if ((instance->count_num_processed += num_new_positions) >= next_count_num_processed_landmark)
                 {
-                    instance_time_printf(
-                        instance,
-                        "Reached %li positions\n", instance->count_num_processed
-                    );
+                    instance_print_reached(instance);
                     next_count_num_processed_landmark = instance->count_num_processed;
                     next_count_num_processed_landmark += (STEP - (next_count_num_processed_landmark % STEP));
                     if (instance->count_num_processed >=
@@ -730,6 +737,7 @@ static fcs_dbm_solver_instance_t * global_instance_ptr;
 static void command_signal_handler(int signal_num GCC_UNUSED)
 {
     instance_print_processed_FCCs( global_instance_ptr );
+    instance_print_reached( global_instance_ptr );
 }
 
 int main(int argc, char * argv[])
