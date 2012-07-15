@@ -66,23 +66,23 @@ to provide links back to the Subversion repository's URLs</a>
 
 <li>
 <p>
-<a href="http://github.com/shlomif/fc-solve">Project Page on GitHub</a> -
-contains the version control repository.
+<a href="http://bitbucket.org/shlomif/fc-solve">Project Page on BitBucket</a> -
+contains the version control repository (based on Git), a bug/issue tracker,
+and other resources.
 </p>
 </li>
 
 <li>
 <p>
 <a href="http://code.google.com/p/fc-solve/">Google Code Project Page</a> -
-contains a currently underused issue tracker,
-and other goodies.
+contains the old Subversion respository.
 </p>
 </li>
 
 <li>
 <p>
-<a href="http://code.google.com/p/fc-solve/source/browse/">Source
-Code Browser</a> - a browser for the source code.
+<a href="http://bitbucket.org/shlomif/fc-solve/src">Source Code Browser</a> -
+a browser for the source code.
 </p>
 </li>
 </ul>
