@@ -247,29 +247,24 @@ static void perform_FCC_brfs(
         }
 
         /* Handle the min_by_sorting scan. */
-        if (cache_does_key_exist(
-            does_state_exist_in_any_FCC_cache,
-            &(extracted_item->key)
-        ))
-        {
-            *is_min_by_sorting_new = FALSE;
-            goto free_resources;
-        }
-        else
-        {
-            cache_insert(does_state_exist_in_any_FCC_cache, &(extracted_item->key), NULL, '\0');
-        }
-
-        if (! running_min_was_assigned)
+        if ((! running_min_was_assigned) ||
+            (memcmp(&(extracted_item->key), &running_min,
+                    sizeof(running_min)) < 0)
+        )
         {
             running_min_was_assigned = TRUE;
             running_min = extracted_item->key;
-        }
-        else
-        {
-            if (memcmp(&(extracted_item->key), &running_min, sizeof(running_min)) < 0)
+            if (cache_does_key_exist(
+                    does_state_exist_in_any_FCC_cache,
+                    &(running_min)
+                    ))
             {
-                running_min = extracted_item->key;
+                *is_min_by_sorting_new = FALSE;
+                goto free_resources;
+            }
+            else
+            {
+                cache_insert(does_state_exist_in_any_FCC_cache, &(running_min), NULL, '\0');
             }
         }
 

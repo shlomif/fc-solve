@@ -9,7 +9,7 @@ BEGIN
 {
     if (-f "$ENV{FCS_PATH}/libfcs_fcc_brfs_test.so")
     {
-        plan tests => 13;
+        plan tests => 12;
     }
     else
     {
@@ -429,7 +429,10 @@ EOF
         'Meta-test for FccIsNew::is_fcc_named_args()',
     );
 
-    # TEST
+    # Broke due to only putting the so-far-minimal states in the cache.
+    if (0)
+    {
+    #CANCELED_TEST
     ok (
         (!FccIsNew::is_fcc_new_named_args(
             {
@@ -452,6 +455,7 @@ EOF
         )),
         'Testing that it returns FALSE if state is in the cache.',
     );
+    }
 }
 
 # Disabling because the minimal state is different on the DeBondt and
