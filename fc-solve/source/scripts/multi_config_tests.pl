@@ -14,6 +14,7 @@ use warnings;
 
 use Carp;
 use Data::Dumper;
+use IO::Handle;
 
 use Term::ANSIColor qw(colored);
 
@@ -111,6 +112,9 @@ sub run_cmd
     my ($blurb, $args) = @_;
 
     my @cmd_line = @{$args->{'cmd'}};
+
+    print "Running: {$blurb} @cmd_line\n";
+    STDOUT->flush;
 
     my $error_code;
 
