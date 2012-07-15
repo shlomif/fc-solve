@@ -10,7 +10,7 @@ use Inline (
     C => 'DATA',
     CLEAN_AFTER_BUILD => 0,
     INC => ["-I$ENV{FCS_PATH}", "-I$ENV{FCS_SRC_PATH}",],
-    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_delta_states_test -lfcs_dbm_calc_derived_test",
+    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_delta_states_test -lfcs_debondt_delta_states_test -lfcs_dbm_calc_derived_test -lgmp",
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
@@ -58,7 +58,9 @@ sub perl_debondt_enc_and_dec
 
 my $which_encoding = ($ENV{FCS_ENC} || '');
 
-my $is_debondt = ($which_encoding eq 'd');
+my $is_c_debondt = ($which_encoding eq 'Cd');
+my $is_debondt = ($is_c_debondt or $which_encoding eq 'd');
+
 
 sub _debondt_normalize
 {
@@ -156,7 +158,9 @@ sub test_freecell_deal
         if ($is_debondt)
         {
             $state = horne_prune($state);
-            $got_state = perl_debondt_enc_and_dec($init_state_str, $state);
+            $got_state = $is_c_debondt
+                ? debondt_enc_and_dec($init_state_str, $state)
+                : perl_debondt_enc_and_dec($init_state_str, $state);
         }
         else
         {
@@ -169,6 +173,16 @@ sub test_freecell_deal
 
         my $cols_indexes = $delta->_composite_get_cols_and_indexes()->{cols_indexes};
         my @fc_indexes = sort { $sort_by->($a) <=> $sort_by->($b) } (0 .. $num_freecells-1);
+
+        if ($is_c_debondt)
+        {
+            # @fc_indexes = reverse(@fc_indexes);
+            @fc_indexes =
+            (
+                (grep { $sort_by->($_) } @fc_indexes),
+                (grep { !$sort_by->($_) } @fc_indexes),
+            );
+        }
 
         $expected_state->set_foundations($delta->_derived_state->_foundations->clone());
         foreach my $i (0 .. $#fc_indexes)
@@ -206,11 +220,22 @@ __DATA__
 __C__
 
 #include "delta_states_iface.h"
+#include "debondt_delta_states_iface.h"
 
 SV* enc_and_dec(char * init_state_s, char * derived_state_s) {
     SV * ret;
     char * s;
     s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(init_state_s, derived_state_s);
+
+    ret = newSVpv(s, 0);
+    free(s);
+    return ret;
+}
+
+SV* debondt_enc_and_dec(char * init_state_s, char * derived_state_s) {
+    SV * ret;
+    char * s;
+    s = fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(init_state_s, derived_state_s);
 
     ret = newSVpv(s, 0);
     free(s);

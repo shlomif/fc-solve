@@ -43,6 +43,7 @@
 #include "delta_states_iface.h"
 #include "delta_states.h"
 #include "delta_states_debondt.h"
+#include "debondt_delta_states_iface.h"
 
 #include "var_base_reader.h"
 #include "var_base_writer.h"
@@ -656,6 +657,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
 
     fc_solve_var_base_writer_start(&(delta->w));
     fc_solve_debondt_delta_stater_encode_composite(delta, &(delta->w));
+    memset(enc_state, '\0', sizeof(enc_state));
     fc_solve_var_base_writer_get_data(&(delta->w), enc_state);
 
     fc_solve_var_base_reader_start(&(delta->r), enc_state, sizeof(enc_state));
