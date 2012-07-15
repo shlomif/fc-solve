@@ -66,7 +66,7 @@ typedef int CARD;
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
 
-char * card_to_string(char * s, CARD card, int not_append_ws, int print_ts)
+static char * card_to_string(char * s, CARD card, int not_append_ws, int print_ts)
 {
     int suit = SUIT(card);
     int v = VALUE(card)+1;

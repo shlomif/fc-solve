@@ -50,7 +50,7 @@ struct microsoft_rand_struct
 
 typedef struct microsoft_rand_struct microsoft_rand_t;
 
-microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
+static microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
 {
     microsoft_rand_t * ret;
 
@@ -60,12 +60,12 @@ microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
     return ret;
 }
 
-void microsoft_rand_free(microsoft_rand_t * rand)
+static void microsoft_rand_free(microsoft_rand_t * rand)
 {
     free(rand);
 }
 
-int microsoft_rand_rand(microsoft_rand_t * rand)
+static int microsoft_rand_rand(microsoft_rand_t * rand)
 {
     rand->seed = (rand->seed * 214013 + 2531011);
     return (rand->seed >> 16) & 0x7fff;
@@ -91,7 +91,7 @@ typedef int CARD;
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
 
-char * card_to_string(char * s, CARD card, int not_append_ws, int print_ts)
+static char * card_to_string(char * s, CARD card, int not_append_ws, int print_ts)
 {
     int suit = SUIT(card);
     int v = VALUE(card)+1;

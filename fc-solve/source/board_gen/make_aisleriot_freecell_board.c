@@ -49,9 +49,9 @@
 #define srandom(a) (srand(a))
 #endif
 
-int deck[52];
+static int deck[52];
 
-void make_standard_deck(int start_value)
+static void make_standard_deck(int start_value)
 {
     int suit, value, card_num;
     card_num = 0;
@@ -65,7 +65,7 @@ void make_standard_deck(int start_value)
     }
 }
 
-void shuffle_deck(int len)
+static void shuffle_deck(int len)
 {
     int ref1, ref2;
     int temp_card;
@@ -79,7 +79,7 @@ void shuffle_deck(int len)
     }
 }
 
-char * card_to_string(char * s, int card, int not_append_ws, int print_ts)
+static char * card_to_string(char * s, int card, int not_append_ws, int print_ts)
 {
     int suit = get_suit(card);
     int v = get_value(card);

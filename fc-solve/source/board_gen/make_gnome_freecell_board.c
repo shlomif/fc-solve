@@ -22,49 +22,7 @@
 #include <string.h>
 #include <time.h>
 
-int  *deck_shuffle();
-char *num_to_card (char *, int, int, int);
-
-int main(int argc, char **argv) {
-    char output[8][30];
-    char card_string[10];
-    int *deck;
-    int  i;
-    int print_ts = 0;
-    int arg;
-
-    if (argc == 1) {
-        srand(time(NULL));
-    } else {
-        arg = 1;
-        if (!strcmp(argv[arg], "-t"))
-        {
-            print_ts = 1;
-            arg++;
-        }
-        srand(atoi(argv[arg]));
-    }
-
-    deck = deck_shuffle();
-
-    for (i = 0; i < 8; i++) {
-        output[i][0] = '\0';
-    }
-
-    for (i = 0; i < 52; i++) {
-        strcat(output[i % 8], num_to_card(card_string, deck[i], (i>=52-8), print_ts));
-    }
-
-    for (i = 0; i < 8; i++) {
-        printf("%s\n", output[i]);
-    }
-
-    free(deck);
-
-    return 0;
-}
-
-int *deck_shuffle() {
+static int *deck_shuffle(void) {
     int *deck;
     int *deck_temp;
     int  index;
@@ -99,7 +57,7 @@ int *deck_shuffle() {
     return deck;
 }
 
-char *num_to_card(char * card, int num, int not_append_ws, int print_ts) {
+static char *num_to_card(char * card, int num, int not_append_ws, int print_ts) {
 
     if (num % 13 == 9) {
         if (print_ts)
@@ -145,4 +103,43 @@ char *num_to_card(char * card, int num, int not_append_ws, int print_ts) {
     }
 
     return card;
+}
+
+int main(int argc, char **argv) {
+    char output[8][30];
+    char card_string[10];
+    int *deck;
+    int  i;
+    int print_ts = 0;
+    int arg;
+
+    if (argc == 1) {
+        srand(time(NULL));
+    } else {
+        arg = 1;
+        if (!strcmp(argv[arg], "-t"))
+        {
+            print_ts = 1;
+            arg++;
+        }
+        srand(atoi(argv[arg]));
+    }
+
+    deck = deck_shuffle();
+
+    for (i = 0; i < 8; i++) {
+        output[i][0] = '\0';
+    }
+
+    for (i = 0; i < 52; i++) {
+        strcat(output[i % 8], num_to_card(card_string, deck[i], (i>=52-8), print_ts));
+    }
+
+    for (i = 0; i < 8; i++) {
+        printf("%s\n", output[i]);
+    }
+
+    free(deck);
+
+    return 0;
 }

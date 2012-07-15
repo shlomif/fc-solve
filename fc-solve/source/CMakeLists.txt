@@ -362,9 +362,6 @@ include(CheckFunctionExists)
 INCLUDE(CheckCCompilerFlag)
 INCLUDE(FindThreads)
 
-ADD_SUBDIRECTORY ("board_gen")
-ADD_SUBDIRECTORY ("man")
-ADD_SUBDIRECTORY ("Presets")
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
@@ -980,3 +977,6 @@ ADD_CUSTOM_TARGET(
 )
 
 ADD_SUBDIRECTORY ("t")
+ADD_SUBDIRECTORY ("board_gen")
+ADD_SUBDIRECTORY ("man")
+ADD_SUBDIRECTORY ("Presets")
