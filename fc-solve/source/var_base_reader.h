@@ -37,6 +37,9 @@
 typedef struct
 {
     mpz_t data;
+    /* To avoid memory fragmentation, we keep those here and re use them. */
+    mpz_t data_byte_offset;
+    mpz_t r;
 } fcs_var_base_reader_t;
 
 static GCC_INLINE void fc_solve_var_base_reader_init(
@@ -46,35 +49,28 @@ static GCC_INLINE void fc_solve_var_base_reader_init(
     )
 {
     size_t count;
-    mpz_t temp;
     mp_bitcnt_t shift = 0;
 
     mpz_init_set_ui(s->data, 0);
-    mpz_init(temp);
+    mpz_init(s->data_byte_offset);
 #define NUM_BITS 8
     for (count = 0; count < data_len ; count++, shift += NUM_BITS)
     {
-        mpz_set_ui(temp, (unsigned long)data[count]);
-        mpz_mul_2exp(temp, temp, shift);
-        mpz_add(s->data, s->data, temp);
+        mpz_set_ui(s->data_byte_offset, (unsigned long)data[count]);
+        mpz_mul_2exp(s->data_byte_offset, s->data_byte_offset, shift);
+        mpz_add(s->data, s->data, s->data_byte_offset);
     }
-    mpz_clear(temp);
+    mpz_init(s->r);
+    mpz_clear(s->data_byte_offset);
 }
 
 static GCC_INLINE int fc_solve_var_base_reader_read(
     fcs_var_base_reader_t * reader, int base
 )
 {
-    mpz_t r;
-    int ret;
+    mpz_fdiv_qr_ui(reader->data, reader->r, reader->data, (unsigned long)base);
 
-    mpz_init(r);
-    mpz_fdiv_qr_ui(reader->data, r, reader->data, (unsigned long)base);
-
-    ret = (int)mpz_get_ui(r);
-    mpz_clear(r);
-
-    return ret;
+    return (int)mpz_get_ui(reader->r);
 }
 
 static GCC_INLINE void fc_solve_var_base_reader_release(
@@ -82,6 +78,7 @@ static GCC_INLINE void fc_solve_var_base_reader_release(
 )
 {
     mpz_clear(s->data);
+    mpz_clear(s->r);
 }
 
 #endif /* FC_SOLVE__VAR_BASE_READER_H */
