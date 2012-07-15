@@ -37,7 +37,7 @@ if ($sub)
     $flto = 1;
     # $num_cpus = 12;
     $num_cpus = $num_threads = 4;
-    $mem = 400;
+    $mem = 500;
 }
 
 my $temp_dir = tempdir( CLEANUP => 1 );
