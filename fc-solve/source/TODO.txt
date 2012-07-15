@@ -15,6 +15,9 @@ of the line (for easier input).
 * Try to convert the core libfreecell-solver code to meta_alloc and see if
 it makes a difference in speed.
 
+* Create a small macro to test if a card is empty. There are a lot of places
+in the code with +if ((fcs_card_card_num(top_card) == 0))+ / etc.
+
 Non-pressing
 ------------
 
