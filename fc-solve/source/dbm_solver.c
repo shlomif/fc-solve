@@ -1263,6 +1263,17 @@ static void instance_run_all_threads(
     return;
 }
 
+#ifdef FCS_DEBONDT_DELTA_STATES
+
+static int compare_enc_states(
+    const fcs_encoded_state_buffer_t * a, const fcs_encoded_state_buffer_t * b
+)
+{
+    return memcmp(a,b, sizeof(*a));
+}
+
+#else
+
 static int compare_enc_states(
     const fcs_encoded_state_buffer_t * a, const fcs_encoded_state_buffer_t * b
 )
@@ -1280,6 +1291,8 @@ static int compare_enc_states(
         return memcmp(a->s, b->s, a->s[0]+1);
     }
 }
+
+#endif
 
 
 static unsigned char get_move_from_parent_to_child(
