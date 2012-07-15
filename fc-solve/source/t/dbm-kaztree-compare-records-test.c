@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * A test for the delta states routines.
+ * A test for the DBM kaztree compare records.
  */
 
 #include <string.h>
@@ -30,10 +30,13 @@
 
 #include <tap.h>
 
+#ifndef FCS_COMPILE_DEBUG_FUNCTIONS
 #define FCS_COMPILE_DEBUG_FUNCTIONS
+#endif
+
 #include "../dbm_kaztree_compare.h"
 
-int main_tests()
+static int main_tests(void)
 {
     {
         int pos_idx;
