@@ -12,9 +12,9 @@ Freecell Solver Resources on the Net.
 <li>
 <p>
 <a href="http://groups.yahoo.com/group/fc-solve-discuss/">Freecell Solver's
-Mailing-List</a> - a mailing-list dedicated to discussing the usage 
-and development of Freecell Solver and general techniques for solving 
-card solitaire games. Hosted by 
+Mailing-List</a> - a mailing-list dedicated to discussing the usage
+and development of Freecell Solver and general techniques for solving
+card solitaire games. Hosted by
 <a href="http://groups.yahoo.com/">YahooGroups</a>.
 </p>
 </li>
@@ -28,7 +28,7 @@ dedicated to Freecell Solver, solving Freecell and other related issues.
 
 <li>
 <p>
-<a href="http://freshmeat.net/projects/freecellsolver/">Freshmeat.net's 
+<a href="http://freshmeat.net/projects/freecellsolver/">Freshmeat.net's
 App-Index Record</a>
 - the record for Freecell Solver at Freshmeat. You can find there a version
 history, a Freshmeat internal hit count, and other useful information.
@@ -66,14 +66,14 @@ to provide links back to the Subversion repository's URLs</a>
 
 <li>
 <p>
-<a href="http://github.com/shlomif/fc-solve">Project Page on GitHub</a> - 
+<a href="http://github.com/shlomif/fc-solve">Project Page on GitHub</a> -
 contains the version control repository.
 </p>
 </li>
 
 <li>
 <p>
-<a href="http://code.google.com/p/fc-solve/">Google Code Project Page</a> - 
+<a href="http://code.google.com/p/fc-solve/">Google Code Project Page</a> -
 contains a currently underused issue tracker,
 and other goodies.
 </p>
@@ -97,7 +97,7 @@ Technologies used by Freecell Solver or that aided in its development.
 <li>
 <p>
 <a href="http://www.msu.edu/user/pfaffben/avl/">libavl</a> - a very nice
-library which contains optimized C implementations of an AVL and Red-Black 
+library which contains optimized C implementations of an AVL and Red-Black
 binary trees. It used to be GPLed but is now LGPLed, which means it can be
 used in open-source and proprietary code.
 </p>
@@ -113,10 +113,10 @@ compile on Win32. LGPL, so can be used by a code of any license.
 
 <li>
 <p>
-<a href="http://www.gtk.org/">glib</a> - a C library used by gtk+, which 
-can also be used separately (as is the case with Freecell Solver). Contains 
+<a href="http://www.gtk.org/">glib</a> - a C library used by gtk+, which
+can also be used separately (as is the case with Freecell Solver). Contains
 implementations of a hash, and an unoptimized balanced binary tree. Both
-are slower than libavl/libredblack or the internal hash implmentation, and 
+are slower than libavl/libredblack or the internal hash implmentation, and
 it is less programmer-friendly.
 </p>
 </li>
@@ -127,7 +127,7 @@ it is less programmer-friendly.
 a states graph scan that uses a priority queue for determining which state
 to go to next. The page contains some source code, but the explanation
 is also very good. Note that in Freecell Solver, we ended up implementing
-a 
+a
 <a href="http://en.wikipedia.org/wiki/Best-first_search">Best-first search</a>
 instead due to a misunderstanding.
 </p>
@@ -135,7 +135,7 @@ instead due to a misunderstanding.
 
 <li>
 <p>
-<a href="http://dmalloc.com/">The dmalloc malloc debugging library</a> - 
+<a href="http://dmalloc.com/">The dmalloc malloc debugging library</a> -
 a library to trace memory leaks. Freecell Solver used to have some of those
 in various stages of its development, and this library helped to remove
 them. It has a rather awkward output, and I had to use a debugger
@@ -149,7 +149,7 @@ superceded by <a href="#valgrind">Valgrind</a>.
 <a href="http://www.cmake.org/">CMake</a> - a cross-platform, open-source
 build system, which is used by Freecell Solver to portably build
 dynamically-linked libraries and facilitate the build process on different
-operating systems. It replaced 
+operating systems. It replaced
 <a href="http://www.shlomifish.org/open-source/anti/autohell/">GNU Autoconf, Automake and
 Libtool</a>, which predate CMake and have gained popularity lacking any
 good competition, but are more error-prone and slow.
@@ -158,7 +158,7 @@ good competition, but are more error-prone and slow.
 
 <li id="valgrind">
 <p>
-<a href="http://developer.kde.org/~sewardj/">Valgrind</a> - a sophisticated 
+<a href="http://developer.kde.org/~sewardj/">Valgrind</a> - a sophisticated
 memory debugger for x86-linux. Helped trace a few hard-to-catch bugs in
 Freecell Solver.
 </p>
@@ -166,7 +166,7 @@ Freecell Solver.
 
 <li>
 <p>
-<a href="http://www.vim.org/">Vim - Vi Improved</a> - an excellent 
+<a href="http://www.vim.org/">Vim - Vi Improved</a> - an excellent
 cross-platform text editor with many powerful features.
 </p>
 </li>
@@ -194,8 +194,8 @@ solutions' verification code</a>.
 
 <li>
 <p>
-<a href="http://www.gnu.org/software/gdb/">GDB, the GNU Debugger</a> - 
-a powerful, cross-platform, scriptable, and open-source command-line 
+<a href="http://www.gnu.org/software/gdb/">GDB, the GNU Debugger</a> -
+a powerful, cross-platform, scriptable, and open-source command-line
 debugger for binary programs (C, C++, Assembly, etc.). Made debugging and
 fixing many hard-to-catch bugs much easier.
 </p>
@@ -206,7 +206,7 @@ fixing many hard-to-catch bugs much easier.
 <a href="http://www.methods.co.nz/asciidoc/">AsciiDoc</a> - a lightweight
 markup language (with open-source converters) that allows to write plain-text
 and convert it to XHTML, to
-<a href="http://www.docbook.org/">DocBook/XML</a>, and subsequently 
+<a href="http://www.docbook.org/">DocBook/XML</a>, and subsequently
 to other formats such as PDFs, or UNIX man pages. We use it for
 <a href="$(ROOT)/docs/#distributed-docs">the distributed documentation</a>.
 </p>
@@ -251,8 +251,8 @@ APIs.
 <li>
 <p>
 <a href="http://www.kde.org/kdegames/">kpat</a> - a Solitaire suite for
-the <a href="http://www.kde.org/">KDE</a> desktop for UNIXes. 
-Uses Freecell Solver to solve its Freecell boards, starting of the 
+the <a href="http://www.kde.org/">KDE</a> desktop for UNIXes.
+Uses Freecell Solver to solve its Freecell boards, starting of the
 version that was shipped with KDE 2.1.
 </p>
 </li>
@@ -267,7 +267,7 @@ Direct-X Freecell Implementation for Windows. Shareware.
 <li id="freecell-pro">
 <p>
 <a href="http://www.rrhistorical.com/rrdata/Fcpro65/">FreeCell Pro</a> - a
-free Freecell implementation for Windows with many professional features. 
+free Freecell implementation for Windows with many professional features.
 Integrated Tom Holroyd's Patsolve, and the original Don Woods' solver
 as well as my own. <a href="don_woods.html">Source code</a> is available.
 </p>
@@ -295,7 +295,7 @@ you want their E-mail address, either go to their homepage or send me an E-mail.
 
 <li>
 <p>
-<a href="http://people.kde.org/stephan.html">Stephan Kulow</a> - 
+<a href="http://people.kde.org/stephan.html">Stephan Kulow</a> -
 as the maintainer of kpat for a brief period, he contributed bug fixes,
 memory leaks reports, and general commentary to Freecell Solver. Stephan and
 I still hold discussions about FCS in the mailing-list or in private.
@@ -311,11 +311,11 @@ and he allowed me to incorporate his binary heap code into Freecell Solver.
 
 <li>
 <p>
-<a href="http://www.oberhumer.com/mfx/">Markus FXJ Oberhumer</a> - 
-contributed some bug-fixes and bug-reports 
-to Freecell Solver. He is the author of 
+<a href="http://www.oberhumer.com/mfx/">Markus FXJ Oberhumer</a> -
+contributed some bug-fixes and bug-reports
+to Freecell Solver. He is the author of
 <a href="http://pysolfc.sourceforge.net/">PySol</a>,
-a very nice Solitaire suite which is written in Python. I used its 
+a very nice Solitaire suite which is written in Python. I used its
 code to write a script that automatically generates its initial boards.
 </p>
 </li>
@@ -323,7 +323,7 @@ code to write a script that automatically generates its initial boards.
 <li>
 <p>
 <a href="http://members.tripod.com/professor_tom/">Dr. Tom Holroyd</a> -
-author of Patsolve and someone whom I discussed Freecell solving with 
+author of Patsolve and someone whom I discussed Freecell solving with
 for many E-mail transactions. He inspired or encouraged many features
 in Freecell Solver.
 </p>
@@ -332,7 +332,7 @@ in Freecell Solver.
 <li>
 <p>
 <a href="http://www.shlomifish.org/open-source/interviews/adrian-ettlinger.html">Interview with Adrian Ettlinger</a> -
-an interview with Adrian Ettlinger, the maintainer of 
+an interview with Adrian Ettlinger, the maintainer of
 <a href="freecell-pro">FreeCell Pro</a>, who
 helped in adapting it to make use of Freecell Solver. Adrian also
 maintains <a href="http://www.rrhistorical.com/rrdata/">a page about the
@@ -364,7 +364,7 @@ I established the mailing-list.
 <a href="http://www.solitairelaboratory.com/fcpro.html">Freecell Pro</a> -
 a Freecell implementation for Win32 that contains the solver by
 <a href="http://www.icynic.com/~don/">Don Woods</a>.
-Very fast and relatively accurate solving. The <a href="don_woods.html">Source 
+Very fast and relatively accurate solving. The <a href="don_woods.html">Source
 code</a> is available.
 </p>
 </li>
@@ -372,7 +372,7 @@ code</a> is available.
 <li>
 <p>
 <a href="http://www.ensicaen.ismra.fr/~delvare/devel/gfreecell/gfreecell.html">
-Gfreecell</a> - 
+Gfreecell</a> -
 an implementation of Freecell for Gtk+ with its own solver.
 Source code is available, but it's in French. <tt>%-)</tt>
 </p>
@@ -399,7 +399,7 @@ available.
 
 <li>
 <p>
-<a href="http://www.winsite.com/bin/Info?500000006158">autofree</a> - 
+<a href="http://www.winsite.com/bin/Info?500000006158">autofree</a> -
 A freeware program by Lingyun Tuo that automatically solves Freecell.
 </p>
 </li>
@@ -416,8 +416,8 @@ Freecell games. Source code is available and is explained in detail.
 <p>
 <a href="http://www.williamtp.com/cv.html">William Tunstall-Pedoe's
 Solver</a> - he mentions he wrote one in his C.V., which contains other
-interesting artificial intelligence musings. The source code and the binary 
-are not available for free download online and may or may not be available 
+interesting artificial intelligence musings. The source code and the binary
+are not available for free download online and may or may not be available
 upon request.
 </p>
 </li>
@@ -442,14 +442,14 @@ course project and contains a final report.
 <p>
 <a href="<doxygen:url />">C++ Port of Freecell Solver by Michael Mann</a> -
 Michael Mann ported FCS to C++ and used
-<a href="http://www.doxygen.org/">doxygen</a> to cross-reference and 
+<a href="http://www.doxygen.org/">doxygen</a> to cross-reference and
 document the code. Covers version 2.2.x of the program.
 </p>
 </li>
 
 <li>
 <p>
-<a href="http://members.socket.net/~dominic1976/">Dominic Veit's Freecell 
+<a href="http://members.socket.net/~dominic1976/">Dominic Veit's Freecell
 Solver</a> - a solver written in Java that does not use back-tracking and is
 still able to win 85% of the games.
 </p>
@@ -457,7 +457,7 @@ still able to win 85% of the games.
 
 <li>
 <p>
-<a href="http://www.numin8r.us/programs/">Gary Campbell's FCELL.COM</a> - 
+<a href="http://www.numin8r.us/programs/">Gary Campbell's FCELL.COM</a> -
 a solver for Freecell written in x86 assembler for DOS and compatible
 environments. Reportedly very fast and uses some interesting techniques.
 See <a href="http://groups.yahoo.com/group/fc-solve-discuss/messages/685">some
@@ -489,14 +489,14 @@ available as open-source software under the GPLv3.
 <li>
 <p>
 <a href="http://broadcast.oreilly.com/2009/01/january-column-graph-algorithm.html">Algorithm to Solve FreeCell Solitaire Games</a> - George T. Heineman's
-step-by-step tutorial on O'Reilly-Net about how to construct a solver for 
+step-by-step tutorial on O'Reilly-Net about how to construct a solver for
 Freecell in Java.
 </p>
 </li>
 
 <li>
 <p>
-<a href="http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/">Solver 
+<a href="http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/">Solver
 for "Black Hole" Solitaire</a> - a solver for the solitaire "Black Hole" in
 Perl 5 by the same author as Freecell Solver.
 </p>
@@ -504,7 +504,7 @@ Perl 5 by the same author as Freecell Solver.
 
 <li>
 <p>
-<a href="https://sourceforge.net/projects/freecelljsolver/">FreeCell 
+<a href="https://sourceforge.net/projects/freecelljsolver/">FreeCell
 Java Solver</a> - a solver for Freecell written in Java on Sourceforge.net.
 Open source under the restrictive GPLv3 licence.
 </p>
@@ -521,7 +521,7 @@ available on github, under the open source FreeBSD licence.
 
 <li>
 <p>
-<a href="https://github.com/ShootMe/KlondikeSolver">ShootMe's 
+<a href="https://github.com/ShootMe/KlondikeSolver">ShootMe's
 Klondike Solver</a> - a solver for Klondike Solitaire (known as the “Solitaire”
 game from Windows) written in C++ and available under the permissive
 MIT/X11 Licence.
@@ -547,7 +547,7 @@ Review in the Freecell FAQ</a>
 
 <li>
 <p>
-<a href="http://seniorcitizen.blogspot.com/2001_11_25_archive.html#7474819">Senior Citizen</a> - 
+<a href="http://seniorcitizen.blogspot.com/2001_11_25_archive.html#7474819">Senior Citizen</a> -
 quite amusing, IMO.
 </p>
 </li>
@@ -596,7 +596,7 @@ instances are solvable.
 
 <li>
 <p>
-<a href="http://en.wikipedia.org/wiki/FreeCell">"FreeCell" on 
+<a href="http://en.wikipedia.org/wiki/FreeCell">"FreeCell" on
 the Wikipedia</a>.
 </p>
 </li>
@@ -608,7 +608,7 @@ the Wikipedia</a>.
 contains solutions to the first 1 million Microsoft deals. The first 32,000
 require JavaScript to be viewed, but those above 32,000 can be read using
 a form submission. The solver that generated these solution does not appear
-to be available. 
+to be available.
 </p>
 
 <p>
