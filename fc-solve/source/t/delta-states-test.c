@@ -539,7 +539,7 @@ int main_tests()
 ": 2D KD QS JH TC 9D 8S\n"
 ": 7H JS KH TS KC 7C 6D 5C 4D\n"
 ": AH 5S 6S AD 8H JD\n"
-":   \n"
+": \n"
             ),
             "DeBonodt: encode_composite + decode test No. 2 (deal #24)"
         );

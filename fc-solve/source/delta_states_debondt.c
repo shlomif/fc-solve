@@ -457,7 +457,7 @@ static void fc_solve_debondt_delta_stater_decode(
                 ||
                 (! ((top_opt == OPT_TOPMOST) || (top_opt == OPT_ORIG_POS))))
             {
-                if (next_new_top_most_cards >= 0)
+                if (next_new_top_most_cards > 0)
                 {
                     fcs_card_t new_top_card = new_top_most_cards[--next_new_top_most_cards];
                     fcs_col_push_card(col, new_top_card);
