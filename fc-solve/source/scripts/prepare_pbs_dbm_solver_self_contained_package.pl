@@ -37,7 +37,7 @@ if ($sub)
     $flto = 1;
     # $num_cpus = 12;
     $num_cpus = $num_threads = 4;
-    $mem = 127;
+    $mem = 400;
 }
 
 my $temp_dir = tempdir( CLEANUP => 1 );
@@ -72,6 +72,9 @@ foreach my $fn ('app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
     'indirect_buffer.h', 'generic_tree.h', 'meta_alloc.h', 'meta_alloc.c',
     'fcc_brfs_test.h','dbm_kaztree_compare.h', 'delta_states_iface.h',
     'dbm_cache.h', 'dbm_lru_cache.h',
+    'delta_states_debondt.c', 'delta_states_any.h', 'delta_states_debondt.h',
+    'debondt_delta_states_iface.h',
+    'var_base_reader.h', 'var_base_writer.h',
 )
 {
     io("$src_path/$fn") > io("$dest_dir/$fn");
@@ -159,8 +162,6 @@ my @deals = (
     397251,
 );
 
-=cut
-
 my @deals = (
     142720,
     146457,
@@ -199,6 +200,14 @@ my @deals = (
     397251,
 );
 
+=end old
+
+=cut
+
+my @deals = (
+    384243,
+);
+
 # my $deal_idx = 982;
 foreach my $deal_idx (@deals)
 {
@@ -225,7 +234,7 @@ THREADS = $num_threads
 MEM = $mem
 CPUS = $num_cpus
 
-CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -I. -I./libavl
+CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I. -I./libavl
 MODULES = @modules
 
 JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))
@@ -234,7 +243,7 @@ JOBS_STAMP = jobs/STAMP
 all: \$(TARGET) \$(JOBS)
 
 \$(TARGET): \$(MODULES)
-\tgcc -static \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -lm -lpthread
+\tgcc \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -lgmp -Bstatic -lm -lpthread
 \tstrip \$\@
 
 \$(MODULES): %.o: %.c
