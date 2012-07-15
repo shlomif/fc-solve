@@ -588,12 +588,14 @@ IF (FCS_ENABLE_DBM_SOLVER)
     INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/libavl")
 
     FOREACH (TGT "dbm_fc_solver" "fcc_fc_solver")
-        SET_TARGET_PROPERTIES("${TGT}"
-            PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
-        )
         TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB})
     ENDFOREACH (TGT)
 
+    # We cannot set it on fcc_fc_solver because it relies on cache_insert
+    # which uses a tree with a different item type.
+    SET_TARGET_PROPERTIES("dbm_fc_solver"
+        PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
+    )
 ENDIF (FCS_ENABLE_DBM_SOLVER)
 
 IF (CMAKE_USE_PTHREADS_INIT)
