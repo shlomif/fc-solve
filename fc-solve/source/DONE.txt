@@ -308,3 +308,6 @@ multiplexing them.
 
 * See about getting rid of the unused context variable where appropriate.
 
+* Add a way to build the various libavl2 trees to be used as
+positions/columns collections.
+

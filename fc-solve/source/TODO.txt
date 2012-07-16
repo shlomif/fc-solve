@@ -140,9 +140,6 @@ iterations limit.
 
 * Experiment with a delta-based state storage.
 
-* Add a way to build the various libavl2 trees to be used as
-positions/columns collections.
-
 * Adapt the scans based on the parameters of the initial board.
 +
 ** Try to find a correlation between various parameters of the initial board
