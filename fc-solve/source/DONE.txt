@@ -296,3 +296,9 @@ sort is faster).
 
 * Inline fc_solve_free_instance().
 
+* Experiment with making fcs_move_t a bit-field with half-octets/etc. for
+the various fields.
+** Make sure that the amount required can fit there using CMake and a log2
+function.
+** Done in +internal_move_struct.h+.
+
