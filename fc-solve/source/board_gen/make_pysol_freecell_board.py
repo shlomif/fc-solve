@@ -614,7 +614,6 @@ class Game:
     def klondike(game):
         num_cols = 7
         game.board = Board(num_cols, with_talon=True)
-        card_num = 0
 
         for r in range(1,num_cols):
             for s in range(num_cols-r):
