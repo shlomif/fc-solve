@@ -10,6 +10,11 @@ Pressing
 Non-pressing
 ------------
 
+* Remove "ST-Name:" from the debug output - we already have "Scan:".
+
+* Implement long/64-bit/intptr_t limits to the number of states/etc. to make
+the code more 64-bit-enabled.
+
 * Create a displayer for fc-solve's solutions which will allow seeing where a card
 was moved from (using a colored →) and where it was placed.
 ** Adapt it to dbm_fc_solve's solutions.
@@ -56,9 +61,6 @@ where the most important elements are at the first 32 bytes of the struct.
 * Investigate a way to have positions_by_rank also index according to the
 suit, and to traverse only the possible parents or children based on the
 suit.
-
-* Do the test for +SUSPEND_PROCESS+ (+check_if_limits_exceeded()+ ) in only
-one place. There isn't a need for it to be done in several places.
 
 * Experiment with using a union in the soft_thread to unify common elements
 that are used only by one of the scans.

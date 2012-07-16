@@ -273,3 +273,6 @@ segment is recycled as a whole.
 * Adapt the new balanced binary tree to store entire encoded_keys instead of
 pointers (to save space).
 
+* Do the test for +SUSPEND_PROCESS+ (+check_if_limits_exceeded()+ ) in only
+one place. There isn't a need for it to be done in several places.
+
