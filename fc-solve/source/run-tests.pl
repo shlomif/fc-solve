@@ -138,15 +138,27 @@ GetOptions(
         )
     );
 
-    if (system("make", "-s", "boards"))
+    my $is_ninja = (-e "build.ninja");
+    if ($is_ninja)
     {
-        die "make failed";
+        system("ninja", "boards");
+    }
+    else
+    {
+        if (system("make", "-s", "boards"))
+        {
+            die "make failed";
+        }
     }
 
     chdir("t");
-    if (system("make", "-s"))
+
+    if (! $is_ninja)
     {
-        die "make failed";
+        if (system("make", "-s"))
+        {
+            die "make failed";
+        }
     }
 
     # Put the valgrind test last because it takes a long time.

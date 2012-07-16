@@ -33,7 +33,7 @@ ADD_CUSTOM_COMMAND(
 )
 
 ADD_CUSTOM_TARGET(
-    "${make_pysol}"
+    "make_pysol_board"
     ALL DEPENDS "${_dest}"
 )
 
