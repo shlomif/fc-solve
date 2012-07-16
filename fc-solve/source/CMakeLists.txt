@@ -750,6 +750,7 @@ INSTALL(
         "fcs_cl.h"
         "fcs_dllexport.h"
         "fcs_enums.h"
+        "fcs_limit.h"
         "fcs_move.h"
         "fcs_user.h"
     DESTINATION
