@@ -6,7 +6,7 @@ use warnings;
 use Template;
 use FindBin;
 
-sub card_num_normalize
+sub rank_normalize
 {
     my $arg = shift;
 
@@ -21,14 +21,14 @@ sub card_num_normalize
 }
 
 my @suits = (qw(H C D S));
-my @card_nums =  ("A", (2 .. 9),
+my @ranks =  ("A", (2 .. 9),
     {
         't' => "T",
         'non_t' => "10",
     },
     , "J", "Q", "K");
 
-@card_nums = (map { card_num_normalize($_) } @card_nums);
+@ranks = (map { rank_normalize($_) } @ranks);
 
 my $template = Template->new({ ABSOLUTE => 1, },);
 
@@ -48,7 +48,7 @@ sub indexify
 my $args =
 {
     'suits' => indexify(0, \@suits),
-    'card_nums' => indexify(1, \@card_nums),
+    'ranks' => indexify(1, \@ranks),
 };
 
 $template->process(

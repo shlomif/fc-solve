@@ -9,11 +9,11 @@ static int main_tests(void)
 {
 [%- SET num_tests = 0 -%]
 [% FOREACH suit = suits %]
-[% FOREACH card_num = card_nums %]
+[% FOREACH rank = ranks %]
 [% FOREACH t = [0,1] %]
 [%- SET t_key = t ? "t" : "non_t" -%]
 [%- SET card_string = ('"'
-            _   card_num.value.${t_key}
+            _   rank.value.${t_key}
             _   suit.value
             _   '"') -%]
     {
@@ -26,7 +26,7 @@ static int main_tests(void)
             "Parsing the suit of card " [% card_string %]);
         /* TEST */
         [%- SET num_tests = num_tests + 1 -%]
-        ok (fcs_card_rank(mycard) == [% card_num.idx %],
+        ok (fcs_card_rank(mycard) == [% rank.idx %],
             "Parsing the rank of card " [% card_string %]);
     }
 [% END %]
