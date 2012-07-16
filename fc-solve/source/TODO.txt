@@ -10,28 +10,11 @@ Pressing
 Non-pressing
 ------------
 
-* Prune for variants whose empty columns cannot be filled at all: there is
-no point in moving the last card in a column to a parent on a different
-column, because then the column won't be able to be filled and will be left
-to disuse.
-** See for example: Baker’s Dozen.
-
-* Trap one of the UNIX signals in fc-solve to quit prematurely with a valid
-footer of "Iterations limit reached"/etc.
-
 * Create a displayer for fc-solve's solutions which will allow seeing where a card
 was moved from (using a colored →) and where it was placed.
 ** Adapt it to dbm_fc_solve's solutions.
 ** Create a GUI version.
-
-* Create a more compact queue for +dbm_solver.c+ which has a header of the
-next pointer to the item, some integers for start and finish within
-the queue, as well as a vector/array of items that are extracted. Then the
-segment is recycled as a whole.
-** Possibly offload the queue segments to the hard disk.
-
-* Adapt the new balanced binary tree to store entire encoded_keys instead of
-pointers (to save space).
+** Add the ability to expand moves to atomic, single-card, moves.
 
 * Make sure that run_hard_thread runs the soft_thread up to the limit of the
 instance->num_times or the soft_thread's upper bound instead of entering
