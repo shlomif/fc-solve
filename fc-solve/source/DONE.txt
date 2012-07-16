@@ -276,3 +276,5 @@ pointers (to save space).
 * Do the test for +SUSPEND_PROCESS+ (+check_if_limits_exceeded()+ ) in only
 one place. There isn't a need for it to be done in several places.
 
+* Remove "ST-Name:" from the debug output - we already have "Scan:".
+
