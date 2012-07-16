@@ -320,3 +320,6 @@ that are used only by one of the scans.
 
 * Move the trunk, branches, tags, etc. to under /fc-solve. (?)
 
+* Experiment with using bit members for cards:
+** http://en.wikipedia.org/wiki/Bit_field
+
