@@ -247,3 +247,11 @@ in the code with +if ((fcs_card_card_num(top_card) == 0))+ / etc.
 * Rename the occurences of fcs_card_card_num()/etc. to fcs_card_rank() which
 is more standard terminology.
 
+* Make the state input accept columns that start with a ":" at the beginning
+of the line (for easier input).
+
+* Try to convert the core libfreecell-solver code to meta_alloc and see if
+it makes a difference in speed (rejected).
+
+* Check for thread-safety of the meta_allocator construct in +dbm_fc_solver.c+.
+

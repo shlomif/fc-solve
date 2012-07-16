@@ -7,14 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* Make the state input accept columns that start with a ":" at the beginning
-of the line (for easier input).
-
-* Check for thread-safety of the meta_allocator construct in +dbm_fc_solver.c+.
-
-* Try to convert the core libfreecell-solver code to meta_alloc and see if
-it makes a difference in speed.
-
 Non-pressing
 ------------
 
