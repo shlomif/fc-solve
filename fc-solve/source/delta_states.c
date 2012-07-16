@@ -418,7 +418,7 @@ static void fc_solve_delta_stater_decode(
         foundations[i] = 14;
     }
 
-#define PROCESS_CARD(card) { if (fcs_card_card_num(card) < foundations[fcs_card_suit(card)]) { foundations[fcs_card_suit(card)] = fcs_card_card_num(card); } }
+#define PROCESS_CARD(card) { if (fcs_card_rank(card) < foundations[fcs_card_suit(card)]) { foundations[fcs_card_suit(card)] = fcs_card_rank(card); } }
 
     num_freecells = self->num_freecells;
     bits_per_orig_cards_in_column = self->bits_per_orig_cards_in_column;
@@ -489,7 +489,7 @@ static void fc_solve_delta_stater_decode(
                 new_card = fc_solve_empty_card;
                 suit_bit = fc_solve_bit_reader_read(bit_r, 1);
 
-                fcs_card_set_num(new_card, fcs_card_card_num(last_card)-1);
+                fcs_card_set_num(new_card, fcs_card_rank(last_card)-1);
                 fcs_card_set_suit(new_card,
                     ((suit_bit << 1) |
                         ((fcs_card_suit(last_card) & 0x1) ^ 0x1)

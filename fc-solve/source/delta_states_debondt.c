@@ -141,7 +141,7 @@ static GCC_INLINE int calc_child_card_option(
     )
 {
     if (
-        (fcs_card_card_num(child_card) != 1)
+        (fcs_card_rank(child_card) != 1)
             &&
         (fcs_is_parent_card(child_card, parent_card))
     )
@@ -179,7 +179,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
             for (r = 1 ; r <= max_rank ; r++)
             {
 #define STATE_POS(suit_idx, rank) (rank - 1 + suit_idx * RANK_KING)
-#define CARD_POS(card) (STATE_POS((fcs_card_suit(card)), (fcs_card_card_num(card))))
+#define CARD_POS(card) (STATE_POS((fcs_card_suit(card)), (fcs_card_rank(card))))
                 self->card_states[STATE_POS(suit_idx, r)] = OPT_DONT_CARE;
             }
         }
@@ -217,7 +217,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
                 top_card = fcs_col_get_card(col, 0);
 
-                if (fcs_card_card_num(top_card) != 1)
+                if (fcs_card_rank(top_card) != 1)
                 {
                     self->card_states[CARD_POS(top_card)] = OPT_TOPMOST;
                 }
@@ -230,7 +230,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
                     child_card = fcs_col_get_card(col, child_idx);
 
-                    if (fcs_card_card_num(child_card) != 1)
+                    if (fcs_card_rank(child_card) != 1)
                     {
                         self->card_states[CARD_POS(child_card)] =
                             calc_child_card_option(parent_card, child_card
@@ -282,7 +282,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
 {
     fcs_card_t parent_card = fcs_col_get_card(*col, fcs_col_len(*col)-1);
 
-    while (fcs_card_card_num(parent_card))
+    while (fcs_card_rank(parent_card))
     {
         fcs_card_t child_card, candidate_card;
         int wanted_opt;
@@ -292,7 +292,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
 
         candidate_card = fc_solve_empty_card;
         child_card = fc_solve_empty_card;
-        fcs_card_set_num(candidate_card, fcs_card_card_num(parent_card) - 1);
+        fcs_card_set_num(candidate_card, fcs_card_rank(parent_card) - 1);
         for (suit = ((fcs_card_suit(parent_card)&(0x1))^0x1) ;
              suit < NUM_SUITS ;
              suit += 2
@@ -310,7 +310,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
             }
         }
 
-        if (fcs_card_card_num(child_card))
+        if (fcs_card_rank(child_card))
         {
             fcs_col_push_card(*col, child_card);
         }
@@ -350,7 +350,7 @@ static void fc_solve_debondt_delta_stater_decode(
         }
     }
 
-#define IS_IN_FOUNDATIONS(card) (fcs_card_card_num(card) <= \
+#define IS_IN_FOUNDATIONS(card) (fcs_card_rank(card) <= \
                                  fcs_foundation_value(*ret, fcs_card_suit(card)))
 
 

@@ -135,14 +135,14 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 
     for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
     {
-        if (fcs_foundation_value(*my_ptr_state, (deck<<2)+fcs_card_suit(card)) == fcs_card_card_num(card) - 1)
+        if (fcs_foundation_value(*my_ptr_state, (deck<<2)+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
         {
             int other_deck_idx;
 
             for (other_deck_idx = 0 ; other_deck_idx < (INSTANCE_DECKS_NUM << 2) ; other_deck_idx++)
             {
                 if (fcs_foundation_value(*my_ptr_state, other_deck_idx)
-                        < fcs_card_card_num(card) - 2 -
+                        < fcs_card_rank(card) - 2 -
                         ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
                    )
                 {
@@ -368,7 +368,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
             for (deck=0 ; deck < INSTANCE_DECKS_NUM ; deck++)
             {
 
-                if (fcs_foundation_value(the_state, deck*4+suit) == fcs_card_card_num(card) - 1)
+                if (fcs_foundation_value(the_state, deck*4+suit) == fcs_card_rank(card) - 1)
                 {
                     /* We can put it there */
                     BEGIN_NEW_STATE()
@@ -401,7 +401,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         {
             for(deck=0;deck<INSTANCE_DECKS_NUM;deck++)
             {
-                if (fcs_foundation_value(the_state, deck*4+suit) == fcs_card_card_num(card) - 1)
+                if (fcs_foundation_value(the_state, deck*4+suit) == fcs_card_rank(card) - 1)
                 {
                     BEGIN_NEW_STATE()
 

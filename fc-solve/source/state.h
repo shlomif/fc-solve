@@ -101,7 +101,7 @@ typedef int fcs_locs_t;
 #define fcs_col_get_card(col, c) \
     ((col)->cards[(c)] )
 
-#define fcs_card_card_num(card) \
+#define fcs_card_rank(card) \
     ( (card).card_num )
 
 #define fcs_card_suit(card) \
@@ -256,14 +256,14 @@ typedef char fcs_locs_t;
 #ifdef FCS_FREECELL_ONLY
 
 #define fcs_is_parent_card(child, parent) \
-    ((fcs_card_card_num(child)+1 == fcs_card_card_num(parent)) && \
+    ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) && \
             ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1)) \
     )
 
 #else
 
 #define fcs_is_parent_card(child, parent) \
-    ((fcs_card_card_num(child)+1 == fcs_card_card_num(parent)) && \
+    ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) && \
     ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ?   \
         1 :                                                          \
         ((sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ?   \
@@ -275,10 +275,10 @@ typedef char fcs_locs_t;
 #endif
 
 #define fcs_col_get_card_num(col, card_idx) \
-    fcs_card_card_num(fcs_col_get_card((col), (card_idx)))
+    fcs_card_rank(fcs_col_get_card((col), (card_idx)))
 
 #define fcs_freecell_card_num(state, f) \
-    ( fcs_card_card_num(fcs_freecell_card((state),(f))) )
+    ( fcs_card_rank(fcs_freecell_card((state),(f))) )
 
 #define fcs_freecell_card_suit(state, f) \
     ( fcs_card_suit(fcs_freecell_card((state),(f))) )
@@ -308,8 +308,8 @@ typedef char fcs_locs_t;
 #define fcs_col_push_col_card(dest_col, src_col, card_idx) \
     fcs_col_push_card((dest_col), fcs_col_get_card((src_col), (card_idx)))
 
-#define fcs_card_is_empty(card) (fcs_card_card_num(card) == 0)
-#define fcs_card_is_valid(card) (fcs_card_card_num(card) != 0)
+#define fcs_card_is_empty(card) (fcs_card_rank(card) == 0)
+#define fcs_card_is_valid(card) (fcs_card_rank(card) != 0)
 #define fcs_freecell_is_empty(state, idx) (fcs_card_is_empty(fcs_freecell_card(state, idx)))
 
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
@@ -345,7 +345,7 @@ typedef char fcs_locs_t;
 #define fcs_col_get_card(col, card_idx) \
     ((col)[(card_idx)+1])
 
-#define fcs_card_card_num(card) \
+#define fcs_card_rank(card) \
     ( (card) >> 2 )
 
 #define fcs_card_suit(card) \
@@ -1030,7 +1030,7 @@ static GCC_INLINE int fc_solve_check_state_validity(
         {
             cards
                 [fcs_card_suit(card)]
-                [fcs_card_card_num(card)] ++;
+                [fcs_card_rank(card)] ++;
         }
     }
 
@@ -1049,7 +1049,7 @@ static GCC_INLINE int fc_solve_check_state_validity(
             }
             cards
                 [fcs_card_suit(card)]
-                [fcs_card_card_num(card)] ++;
+                [fcs_card_rank(card)] ++;
 
         }
     }
@@ -1106,11 +1106,11 @@ static GCC_INLINE int fc_solve_card_compare(
 #ifdef FCS_WITH_CARD_COMPARE_LOOKUP
     return (*c1)-(*c2);
 #else
-    if (fcs_card_card_num(*c1) > fcs_card_card_num(*c2))
+    if (fcs_card_rank(*c1) > fcs_card_rank(*c2))
     {
         return 1;
     }
-    else if (fcs_card_card_num(*c1) < fcs_card_card_num(*c2))
+    else if (fcs_card_rank(*c1) < fcs_card_rank(*c2))
     {
         return -1;
     }

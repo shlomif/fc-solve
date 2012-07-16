@@ -2202,7 +2202,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 #define ASSIGN_PTR(dest_stack, dest_col) \
                                 ptr = &positions_by_rank[ \
                                     (FCS_POS_BY_RANK_WIDTH * \
-                                     (fcs_card_card_num(dest_card)-1) \
+                                     (fcs_card_rank(dest_card)-1) \
                                     ) \
                                     + \
                                     (fcs_card_suit(dest_card)<<1) \

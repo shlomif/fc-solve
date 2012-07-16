@@ -288,7 +288,7 @@ char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
 #endif
 
     fc_solve_p2u_card_number(
-        fcs_card_card_num(card),
+        fcs_card_rank(card),
         str,
         &card_num_is_null,
         t

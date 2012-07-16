@@ -49,7 +49,7 @@ char fc_solve_simple_simon_nothing;
 #include "meta_move_funcs_helpers.h"
 
 #define fcs_is_ss_false_parent(parent, child) \
-    (fcs_card_card_num(parent) == fcs_card_card_num(child)+1)
+    (fcs_card_rank(parent) == fcs_card_rank(child)+1)
 
 #define fcs_suit_is_ss_true_parent(parent_suit, child_suit) \
     ((parent_suit) == (child_suit))
@@ -206,7 +206,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
             /* Loop on the cards in the stack and try to look for a true
              * parent on top one of the stacks */
             card = fcs_col_get_card(col, cards_num-1);
-            card_num = fcs_card_card_num(card);
+            card_num = fcs_card_rank(card);
             suit = fcs_card_suit(card);
             num_true_seqs = 1;
 
@@ -226,7 +226,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
                     {
                         dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
                         if ((fcs_card_suit(dest_card) == suit) &&
-                            (fcs_card_card_num(dest_card) == (card_num+1))
+                            (fcs_card_rank(dest_card) == (card_num+1))
                            )
                         {
                             /* This is a suitable parent - let's check if we
@@ -257,7 +257,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 
                 card = fcs_col_get_card(col, h);
                 /* If this is no longer a sequence - move to the next stack */
-                if (fcs_card_card_num(card) != card_num+1)
+                if (fcs_card_rank(card) != card_num+1)
                 {
                     break;
                 }
@@ -265,7 +265,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
                 {
                     num_true_seqs++;
                 }
-                card_num = fcs_card_card_num(card);
+                card_num = fcs_card_rank(card);
                 suit = fcs_card_suit(card);
             }
         }
@@ -320,7 +320,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         if (cards_num > 0)
         {
             card = fcs_col_get_card(col, cards_num-1);
-            card_num = fcs_card_card_num(card);
+            card_num = fcs_card_rank(card);
             suit = fcs_card_suit(card);
             num_true_seqs = 1;
 
@@ -329,7 +329,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
             {
                 card = fcs_col_get_card(col, h);
                 /* If this is no longer a sequence - move to the next stack */
-                if (fcs_card_card_num(card) != card_num+1)
+                if (fcs_card_rank(card) != card_num+1)
                 {
                     break;
                 }
@@ -337,7 +337,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 {
                     num_true_seqs++;
                 }
-                card_num = fcs_card_card_num(card);
+                card_num = fcs_card_rank(card);
                 suit = fcs_card_suit(card);
             }
             /* This means that the loop exited prematurely and the stack does
@@ -451,7 +451,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
         if (cards_num > 0)
         {
             card = fcs_col_get_card(col, cards_num-1);
-            card_num = fcs_card_card_num(card);
+            card_num = fcs_card_rank(card);
             suit = fcs_card_suit(card);
 
             num_true_seqs = 1;
@@ -474,7 +474,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                         {
                             dest_card = fcs_col_get_card(dest_col, dc);
                             if ((fcs_card_suit(dest_card) == suit) &&
-                                (fcs_card_card_num(dest_card) == (card_num+1))
+                                (fcs_card_rank(dest_card) == (card_num+1))
                                )
                             {
                                 /* This is a suitable parent - let's check if there's a sequence above it. */
@@ -656,7 +656,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                 {
                     num_true_seqs++;
                 }
-                card_num = fcs_card_card_num(card);
+                card_num = fcs_card_rank(card);
                 suit = fcs_card_suit(card);
             }
         }
@@ -709,7 +709,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
                 card = fcs_col_get_card(col, src_card_height);
                 suit = fcs_card_suit(card);
-                card_num = fcs_card_card_num(card);
+                card_num = fcs_card_rank(card);
 
                 num_true_seqs = 1;
 
@@ -770,7 +770,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                     {
                         dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
                         if ((fcs_card_suit(dest_card) == suit) &&
-                            (fcs_card_card_num(dest_card) == (card_num+1))
+                            (fcs_card_rank(dest_card) == (card_num+1))
                            )
                         {
                         /* This is a suitable parent - let's check if we
@@ -973,7 +973,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
         if (cards_num > 0)
         {
             card = fcs_col_get_card(col, cards_num-1);
-            card_num = fcs_card_card_num(card);
+            card_num = fcs_card_rank(card);
             suit = fcs_card_suit(card);
             num_src_junk_true_seqs = 1;
 
@@ -985,7 +985,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                     break;
                 }
                 card = fcs_col_get_card(col, h);
-                if (fcs_card_card_num(card) != card_num+1)
+                if (fcs_card_rank(card) != card_num+1)
                 {
                     break;
                 }
@@ -993,7 +993,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 {
                     num_src_junk_true_seqs++;
                 }
-                card_num = fcs_card_card_num(card);
+                card_num = fcs_card_rank(card);
                 suit = fcs_card_suit(card);
             }
 
@@ -1009,7 +1009,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                         break;
                     }
                     card = fcs_col_get_card(col, h);
-                    if (fcs_card_card_num(card) != card_num+1)
+                    if (fcs_card_rank(card) != card_num+1)
                     {
                         break;
                     }
@@ -1017,11 +1017,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                     {
                         num_true_seqs++;
                     }
-                    card_num = fcs_card_card_num(card);
+                    card_num = fcs_card_rank(card);
                     suit = fcs_card_suit(card);
                 }
 
-                card_num = fcs_card_card_num(card);
+                card_num = fcs_card_rank(card);
                 suit = fcs_card_suit(card);
 
                 for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
@@ -1043,7 +1043,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                         {
                             dest_card = fcs_col_get_card(dest_col, dc);
                             if ((fcs_card_suit(dest_card) == suit) &&
-                                (fcs_card_card_num(dest_card) == (card_num+1))
+                                (fcs_card_rank(dest_card) == (card_num+1))
                                )
                             {
                                 /* This is a suitable parent - let's check if there's a sequence above it. */
@@ -1295,7 +1295,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         if (cards_num > 0)
         {
             card = fcs_col_get_card(col, cards_num-1);
-            card_num = fcs_card_card_num(card);
+            card_num = fcs_card_rank(card);
             suit = fcs_card_suit(card);
             num_true_seqs = 1;
 
@@ -1306,7 +1306,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                     break;
                 }
                 card = fcs_col_get_card(col, h);
-                if (fcs_card_card_num(card) != card_num+1)
+                if (fcs_card_rank(card) != card_num+1)
                 {
                     break;
                 }
@@ -1314,7 +1314,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 {
                     num_true_seqs++;
                 }
-                card_num = fcs_card_card_num(card);
+                card_num = fcs_card_rank(card);
                 suit = fcs_card_suit(card);
             }
             if (h == -1)
@@ -1329,7 +1329,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                         {
                             dest_card = fcs_col_get_card(dest_col, dc);
                             if (
-                                (fcs_card_card_num(dest_card) == (card_num+1))
+                                (fcs_card_rank(dest_card) == (card_num+1))
                                )
                             {
                                 /* This is a suitable parent - let's check if there's a sequence above it. */

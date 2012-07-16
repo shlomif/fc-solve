@@ -99,7 +99,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
             card = fcs_col_get_card(col, cards_num-1);
             for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
             {
-                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_card_num(card) - 1)
+                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
                 {
                     /* We can put it there */
 
@@ -187,7 +187,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
         {
             for(deck=0;deck<INSTANCE_DECKS_NUM;deck++)
             {
-                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_card_num(card) - 1)
+                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
                 {
                     /* We can put it there */
                     sfs_check_state_begin()
@@ -446,7 +446,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                 fcs_card_is_valid(src_card)
                 &&
                 /* We cannot put a king anywhere. */
-                (fcs_card_card_num(src_card) != 13)
+                (fcs_card_rank(src_card) != 13)
             )
         {
 
@@ -479,7 +479,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card) \
             pos_idx_to_check = &positions_by_rank[ \
-                (FCS_POS_BY_RANK_WIDTH * (fcs_card_card_num(src_card))) \
+                (FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card))) \
             ]; \
                  \
             for (last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH, \
@@ -641,7 +641,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
             card = fcs_col_get_card(col, c);
             for(deck=0;deck<INSTANCE_DECKS_NUM;deck++)
             {
-                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_card_num(card)-1)
+                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_rank(card)-1)
                 {
                     /* The card is foundation-able. Now let's check if we
                      * can move the cards above it to the freecells and
@@ -755,7 +755,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
             if (c != 0)
             {
                 prev_card = fcs_col_get_card(col, c-1);
-                if ((fcs_card_card_num(prev_card) == fcs_card_card_num(card)+1) &&
+                if ((fcs_card_rank(prev_card) == fcs_card_rank(card)+1) &&
                     ((fcs_card_suit(prev_card) & 0x1) != (fcs_card_suit(card) & 0x1)))
                 {
                    a = 0;
@@ -964,7 +964,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 #endif
 
             /* Skip if it's a King - nothing to put it on. */
-            if (unlikely(fcs_card_card_num(card) == 13))
+            if (unlikely(fcs_card_rank(card) == 13))
             {
                 continue;
             }
@@ -1292,7 +1292,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
             card = fcs_freecell_card(state, fc);
             if (
                 (tests__is_filled_by_kings_only())
-                ? (fcs_card_card_num(card) == 13)
+                ? (fcs_card_rank(card) == 13)
                 : fcs_card_is_valid(card)
                )
             {
@@ -1750,7 +1750,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
                 break;
             }
 #endif
-            if (fcs_card_card_num(card) == 13)
+            if (fcs_card_rank(card) == 13)
             {
                 /* It's a King - so let's move it */
                 sfs_check_state_begin();
@@ -1825,7 +1825,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         {
             card = fcs_col_get_card(col, cards_num-1);
             if (tests__is_filled_by_kings_only() &&
-                (fcs_card_card_num(card) != 13))
+                (fcs_card_rank(card) != 13))
             {
                 continue;
             }
@@ -2139,7 +2139,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         }
 
         if (tests__is_filled_by_kings_only() &&
-            (fcs_card_card_num(card) != 13))
+            (fcs_card_rank(card) != 13))
         {
             continue;
         }
@@ -2191,14 +2191,14 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 
     for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
     {
-        if (fcs_foundation_value(*my_ptr_state, (deck<<2)+fcs_card_suit(card)) == fcs_card_card_num(card) - 1)
+        if (fcs_foundation_value(*my_ptr_state, (deck<<2)+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
         {
             int other_deck_idx;
 
             for (other_deck_idx = 0 ; other_deck_idx < (INSTANCE_DECKS_NUM << 2) ; other_deck_idx++)
             {
                 if (fcs_foundation_value(*my_ptr_state, other_deck_idx)
-                        < fcs_card_card_num(card) - 2 -
+                        < fcs_card_rank(card) - 2 -
                         ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
                    )
                 {
