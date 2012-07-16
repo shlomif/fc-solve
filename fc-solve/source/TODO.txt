@@ -25,20 +25,9 @@ loop stop it when it's doing the optimization scan, then the optimization scan
 goes on until it ends.
 ** Not sure about it.
 
-* Play with moving commonly accessed struct elements to the start of
-the struct to fit within the processor's cache line. Like the Linux kernel
-where the most important elements are at the first 32 bytes of the struct.
-
 * Investigate a way to have positions_by_rank also index according to the
 suit, and to traverse only the possible parents or children based on the
 suit.
-
-* Experiment with using a union in the soft_thread to unify common elements
-that are used only by one of the scans.
-
-* Move the trunk, branches, tags, etc. to under /fc-solve. (?)
-
-* Re-organize the source code to be more sensibly organized.
 
 * Experiment with using bit members for cards:
 ** http://en.wikipedia.org/wiki/Bit_field

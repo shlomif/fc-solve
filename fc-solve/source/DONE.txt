@@ -311,3 +311,12 @@ multiplexing them.
 * Add a way to build the various libavl2 trees to be used as
 positions/columns collections.
 
+* Play with moving commonly accessed struct elements to the start of
+the struct to fit within the processor's cache line. Like the Linux kernel
+where the most important elements are at the first 32 bytes of the struct.
+
+* Experiment with using a union in the soft_thread to unify common elements
+that are used only by one of the scans.
+
+* Move the trunk, branches, tags, etc. to under /fc-solve. (?)
+
