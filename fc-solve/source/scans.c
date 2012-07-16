@@ -997,9 +997,6 @@ int fc_solve_soft_dfs_do_solve(
 
                 if (debug_iter_output_func)
                 {
-#ifdef DEBUG
-                    printf("ST Name: %s\n", soft_thread->name);
-#endif
                     debug_iter_output_func(
                         debug_iter_output_context,
                         *(instance_num_times_ptr),
@@ -1864,9 +1861,6 @@ int fc_solve_befs_or_bfs_do_solve(
         TRACE0("debug_iter_output");
         if (debug_iter_output_func)
         {
-#ifdef DEBUG
-            printf("ST Name: %s\n", soft_thread->name);
-#endif
             debug_iter_output_func(
                     debug_iter_output_context,
                     *(instance_num_times_ptr),
