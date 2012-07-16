@@ -57,7 +57,7 @@ static GCC_INLINE void fc_solve_var_base_reader_start(
     )
 {
     size_t count;
-    mp_bitcnt_t shift_count = 0;
+    unsigned long shift_count = 0;
 
     mpz_set_ui(s->data, 0);
 #define NUM_BITS 8
