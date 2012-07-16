@@ -319,7 +319,7 @@ char * fc_solve_state_as_string(
 {
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
     int a, b;
-    fcs_bool_t card_num_is_null;
+    fcs_bool_t rank_is_null;
     int max_num_cards, s, card_num;
     fcs_cards_column_t col;
     int col_len;
@@ -360,7 +360,7 @@ char * fc_solve_state_as_string(
         fc_solve_p2u_rank(
             fcs_foundation_value(*state, a),
             decks[a],
-            &card_num_is_null,
+            &rank_is_null,
             display_10_as_t
 #ifndef FCS_WITHOUT_CARD_FLIPPING
             ,0
