@@ -323,3 +323,7 @@ that are used only by one of the scans.
 * Experiment with using bit members for cards:
 ** http://en.wikipedia.org/wiki/Bit_field
 
+* Abstract away the move of a single card from one column to another
+in freecell.c.
+** [ Rejected. Does not appear to be a real need. ]
+
