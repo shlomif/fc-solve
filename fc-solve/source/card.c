@@ -51,7 +51,7 @@ fcs_card_t fc_solve_empty_card = (fcs_card_t)0;
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.
  * */
-int fc_solve_u2p_card_number(const char * string)
+int fc_solve_u2p_rank(const char * string)
 {
     while (1)
     {
@@ -70,7 +70,7 @@ int fc_solve_u2p_card_number(const char * string)
             case 'K':
                 return 13;
             case '1':
-                return (*(string+1) == '0')?10:1;
+                return (string[1] == '0')?10:1;
             case 'T':
             case '0':
                 return 10;
@@ -154,7 +154,7 @@ fcs_card_t fc_solve_card_user2perl(const char * str)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
 #endif
-    fcs_card_set_num(card, fc_solve_u2p_card_number(str));
+    fcs_card_set_num(card, fc_solve_u2p_rank(str));
     fcs_card_set_suit(card, fc_solve_u2p_suit(str));
 
     return card;
@@ -182,19 +182,19 @@ static char card_map_3_T[14][4] = { " ", "A", "2", "3", "4", "5", "6", "7", "8",
 #endif
 
 /*
- * Converts a card_number from its internal representation to a string.
+ * Converts a rank from its internal representation to a string.
  *
- * num - the card number
+ * rank_idx - the card number
  * str - the string to output to.
- * card_num_is_null - a pointer to a bool that indicates whether
+ * rank_is_null - a pointer to a bool that indicates whether
  *      the card number is out of range or equal to zero
  * t - whether 10 should be printed as T or not.
  * flipped - whether the card is face down
  * */
-char * fc_solve_p2u_card_number(
-    int num,
+char * fc_solve_p2u_rank(
+    int rank_idx,
     char * str,
-    fcs_bool_t * card_num_is_null,
+    fcs_bool_t * rank_is_null,
     fcs_bool_t t
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     , fcs_bool_t flipped
@@ -211,20 +211,20 @@ char * fc_solve_p2u_card_number(
     if (flipped)
     {
         strncpy(str, "*", 2);
-        *card_num_is_null = FALSE;
+        *rank_is_null = FALSE;
     }
     else
 #endif
     {
-        if ((num >= 0) && (num <= 13))
+        if ((rank_idx >= 0) && (rank_idx <= 13))
         {
-            strncpy(str, card_map_3[num], strlen(card_map_3[num])+1);
-            *card_num_is_null = (num == 0);
+            strcpy(str, card_map_3[rank_idx]);
+            *rank_is_null = (rank_idx == 0);
         }
         else
         {
             strncpy(str, card_map_3[0], strlen(card_map_3[0])+1);
-            *card_num_is_null = TRUE;
+            *rank_is_null = TRUE;
         }
     }
     return str;
@@ -287,7 +287,7 @@ char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
     }
 #endif
 
-    fc_solve_p2u_card_number(
+    fc_solve_p2u_rank(
         fcs_card_rank(card),
         str,
         &card_num_is_null,

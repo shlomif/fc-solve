@@ -51,16 +51,15 @@
 
 static int deck[52];
 
-static void make_standard_deck(int start_value)
+static void make_standard_deck(int start_rank)
 {
-    int suit, value, card_num;
-    card_num = 0;
-    for(suit=0;suit<4;suit++)
+    int suit, rank, card_idx;
+    card_idx = 0;
+    for (suit=0;suit<4;suit++)
     {
-        for(value=start_value;value<=13;value++)
+        for (rank=start_rank;rank<=13;rank++)
         {
-            deck[card_num] = make_card(value,suit);
-            card_num++;
+            deck[card_idx++] = make_card(rank,suit);
         }
     }
 }
@@ -146,7 +145,7 @@ int main(int argc, char * argv[])
 {
     char output[10][30], freecells[30];
     char card_string[10];
-    int i, j, card_num;
+    int i, j, card_idx;
     int which_game = 0;
     int print_ts = 0;
     int arg;
@@ -219,20 +218,19 @@ int main(int argc, char * argv[])
         {
             output[i][0] = '\0';
         }
-        card_num = 0;
+        card_idx = 0;
         for(i = 0 ; i < 7 ; i++)
         {
             for(j = i ; j < 7 ; j++)
             {
-                strcat(output[j], card_to_string(card_string, deck[card_num], (j == i), print_ts));
-                card_num++;
+                strcat(output[j], card_to_string(card_string, deck[card_idx++], (j == i), print_ts));
             }
         }
 
         printf("%s", "Talon: ");
-        for( ; card_num < 52; card_num++)
+        for( ; card_idx < 52; card_idx++)
         {
-            printf("%s", card_to_string( card_string, deck[card_num], (card_num == 52-1), print_ts));
+            printf("%s", card_to_string( card_string, deck[card_idx], (card_idx == 52-1), print_ts));
         }
         printf("\n");
 

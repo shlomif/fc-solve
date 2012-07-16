@@ -357,7 +357,7 @@ char * fc_solve_state_as_string(
 
     for(a=0;a<decks_num*4;a++)
     {
-        fc_solve_p2u_card_number(
+        fc_solve_p2u_rank(
             fcs_foundation_value(*state, a),
             decks[a],
             &card_num_is_null,

@@ -646,18 +646,18 @@ extern char * fc_solve_card_perl2user(
     );
 
 /*
- * Converts a card_number from its internal representation to a string.
+ * Converts a rank from its internal representation to a string.
  *
- * num - the card number
+ * rank_idx - the rank
  * str - the string to output to.
- * card_num_is_null - a pointer to a bool that indicates whether
+ * rank_is_null - a pointer to a bool that indicates whether
  *      the card number is out of range or equal to zero
  * t - whether 10 should be printed as T or not.
  * */
-extern char * fc_solve_p2u_card_number(
-    int num,
+extern char * fc_solve_p2u_rank(
+    int rank_idx,
     char * str,
-    int * card_num_is_null,
+    fcs_bool_t * rank_is_null,
     int t
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     , int flipped
@@ -669,7 +669,7 @@ extern char * fc_solve_p2u_card_number(
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.
  * */
-extern int fc_solve_u2p_card_number(const char * string);
+extern int fc_solve_u2p_rank(const char * string);
 
 /*
  * This function converts a string containing a suit letter (that is
@@ -893,7 +893,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
                     str++;
                 /* Workaround for fc_solve_u2p_card_number's willingness
                  * to designate the string '0' as 10. */
-                c = ((str[0] == '0') ? 0 : fc_solve_u2p_card_number(str));
+                c = ((str[0] == '0') ? 0 : fc_solve_u2p_rank(str));
                 while (
                         (*str != ' ') &&
                         (*str != '\t') &&
