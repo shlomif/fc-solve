@@ -278,3 +278,20 @@ one place. There isn't a need for it to be done in several places.
 
 * Remove "ST-Name:" from the debug output - we already have "Scan:".
 
+* Make sure that run_hard_thread runs the soft_thread up to the limit of the
+instance->num_times or the soft_thread's upper bound instead of entering
+and exiting.
+
+* Add an option to convert the stack_locs and fc_locs to a
+MAX_NUM_STACKS-factorial permutation that can be stored compactly. (superseded
+by the fc_locs/stack_locs elimination).
+
+* With the +fc-solve+ command line program: add a flag to trigger different
+notice on having reached +FCS_SUSPEND_PROCESS+. (Implemented as
++--show-extended-limits+ .)
+
+* Experiment with using "selection sort" instead of "insertion sort" when
+sorting small data sets (columns, freecells, derived states, etc.). (Insertion
+sort is faster).
+
+
