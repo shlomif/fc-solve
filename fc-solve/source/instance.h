@@ -41,6 +41,7 @@ extern "C" {
 
 #include "inline.h"
 #include "unused.h"
+#include "fcs_limit.h"
 
 #include "indirect_buffer.h"
 #include "rand.h"
@@ -365,7 +366,7 @@ typedef struct
 #error unknown FCS_RCS_CACHE_STORAGE
 #endif
     fcs_compact_allocator_t states_values_to_keys_allocator;
-    long count_elements_in_cache, max_num_elements_in_cache;
+    fcs_int_limit_t count_elements_in_cache, max_num_elements_in_cache;
 
     fcs_cache_key_info_t * lowest_pri, * highest_pri;
 
@@ -378,11 +379,11 @@ typedef void * fcs_instance_debug_iter_output_context_t;
 
 typedef void (*fcs_instance_debug_iter_output_func_t)(
         fcs_instance_debug_iter_output_context_t,
-        int iter_num,
+        fcs_int_limit_t iter_num,
         int depth,
         void * instance,
         fcs_kv_state_t * state,
-        int parent_iter_num
+        fcs_int_limit_t parent_iter_num
         );
 
 
@@ -399,7 +400,7 @@ struct fc_solve_instance_struct
      * size is calculated based on the number.
      * */
     fcs_standalone_state_ptrs_t * indirect_prev_states;
-    int num_indirect_prev_states;
+    fcs_int_limit_t num_indirect_prev_states;
 #endif
 
     /*
@@ -411,7 +412,7 @@ struct fc_solve_instance_struct
 
     /* The number of states that were checked by the solving algorithm.
      * Badly named, should be renamed to num_iters or num_checked_states */
-    int num_times;
+    fcs_int_limit_t num_times;
 
     /*
      * Like max_num_times only defaults to MAX_INT if below zero so it will
@@ -419,8 +420,8 @@ struct fc_solve_instance_struct
      *
      * Normally should be used instead.
      * */
-    int effective_max_num_times, effective_max_num_states_in_collection;
-    long effective_trim_states_in_collection_from;
+    fcs_int_limit_t effective_max_num_times, effective_max_num_states_in_collection;
+    fcs_int_limit_t effective_trim_states_in_collection_from;
     /*
      * tree is the balanced binary tree that is used to store and index
      * the checked states.
@@ -490,12 +491,12 @@ struct fc_solve_instance_struct
      *
      * It gives a rough estimate of the memory occupied by the instance.
      * */
-    int active_num_states_in_collection, num_states_in_collection;
+    fcs_int_limit_t active_num_states_in_collection, num_states_in_collection;
 
     /*
      * A limit to the above.
      * */
-    int max_num_states_in_collection;
+    fcs_int_limit_t max_num_states_in_collection;
 
     int num_hard_threads;
     struct fc_solve_hard_thread_struct * hard_threads;
@@ -546,8 +547,8 @@ struct fc_solve_instance_struct
      *
      * */
     int max_depth;
-    int max_num_times;
-    long trim_states_in_collection_from;
+    fcs_int_limit_t max_num_times;
+    fcs_int_limit_t trim_states_in_collection_from;
 
     /*
      * The debug_iter_output variables provide a programmer programmable way
@@ -616,21 +617,21 @@ struct fc_solve_hard_thread_struct
      *
      * Thus, the soft thread switching should be done based on this variable
      * */
-    int num_times;
+    fcs_int_limit_t num_times;
 
     /*
      * The maximal limit for num_times.
      * */
-    int max_num_times;
+    fcs_int_limit_t max_num_times;
 
-    int num_times_step;
+    fcs_int_limit_t num_times_step;
 
     /*
      * This is the number of iterations that still have to be done for
      * soft_threads[st_idx]. It is reset to (st_idx+1)->num_times_step
      * when st_idx is incremented.
      * */
-    int num_times_left_for_soft_thread;
+    fcs_int_limit_t num_times_left_for_soft_thread;
 
     /*
      * These variables are used to compute the MD5 checksum of a state
@@ -667,7 +668,7 @@ struct fc_solve_hard_thread_struct
     dll_ind_buf_t indirect_stacks_buffer;
 #endif
 
-    int prelude_num_items;
+    fcs_int_limit_t prelude_num_items;
     int prelude_idx;
     fcs_prelude_item_t * prelude;
 
@@ -1116,7 +1117,7 @@ extern void fc_solve_soft_thread_init_befs_or_bfs(
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 {
     fc_solve_soft_thread_t * soft_thread;
-    int num_times_started_at;
+    fcs_int_limit_t num_times_started_at;
     int ret;
     fc_solve_instance_t * instance = hard_thread->instance;
     int * st_idx_ptr = &(hard_thread->st_idx);

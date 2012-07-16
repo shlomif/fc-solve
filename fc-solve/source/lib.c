@@ -45,8 +45,8 @@
 #include "indirect_buffer.h"
 
 typedef struct {
-    int num_times;
-    int num_states_in_collection;
+    fcs_int_limit_t num_times;
+    fcs_int_limit_t num_states_in_collection;
 } fcs_stats_t;
 
 /* A flare is an alternative scan algorithm to be tried. All flares in
@@ -115,7 +115,7 @@ typedef struct
      * The global (sequence-wide) limit of the iterations. Used
      * by limit_iterations() and friends
      * */
-    int current_iterations_limit;
+    fcs_int_limit_t current_iterations_limit;
     /*
      * The number of iterations this board started at.
      * */
@@ -155,11 +155,11 @@ typedef struct
 
 static void iter_handler_wrapper(
     void * api_instance,
-    int iter_num,
+    fcs_int_limit_t iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
     fcs_kv_state_t * ptr_state,
-    int parent_iter_num
+    fcs_int_limit_t parent_iter_num
     );
 
 #define FLARES_LOOP_DECLARE_VARS() \
@@ -277,9 +277,9 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 #endif
 }
 
-void DLLEXPORT freecell_solver_user_limit_iterations(
+void DLLEXPORT freecell_solver_user_limit_iterations_long(
     void * api_instance,
-    int max_iters
+    fcs_int_limit_t max_iters
     )
 {
     fcs_user_t * user;
@@ -287,6 +287,14 @@ void DLLEXPORT freecell_solver_user_limit_iterations(
     user = (fcs_user_t*)api_instance;
 
     user->current_iterations_limit = max_iters;
+}
+
+void DLLEXPORT freecell_solver_user_limit_iterations(
+    void * api_instance,
+    int max_iters
+    )
+{
+    return freecell_solver_user_limit_iterations_long(api_instance, (fcs_int_limit_t)max_iters);
 }
 
 void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
@@ -961,9 +969,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 #endif
 
         {
-            int limits[NUM_ITERS_LIMITS];
+            fcs_int_limit_t limits[NUM_ITERS_LIMITS];
             int limit_idx;
-            int mymin, new_lim;
+            fcs_int_limit_t mymin, new_lim;
 
             limits[0] = local_limit();
             limits[1] = user->current_iterations_limit;
@@ -982,7 +990,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             if (mymin < 0)
             {
                 user->fc_solve_obj->max_num_times = -1;
-                user->fc_solve_obj->effective_max_num_times = INT_MAX;
+                user->fc_solve_obj->effective_max_num_times = FCS_INT_LIMIT_MAX;
             }
             else
             {
@@ -1494,13 +1502,20 @@ int DLLEXPORT freecell_solver_user_set_game(
     return 0;
 }
 
-int DLLEXPORT freecell_solver_user_get_num_times(void * api_instance)
+fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
+    void * user_instance
+    )
 {
     fcs_user_t * user;
 
-    user = (fcs_user_t *)api_instance;
+    user = (fcs_user_t *)user_instance;
 
     return user->iterations_board_started_at.num_times + user->fc_solve_obj->num_times - user->init_num_times.num_times;
+}
+
+int DLLEXPORT freecell_solver_user_get_num_times(void * api_instance)
+{
+    return (int)freecell_solver_user_get_num_times_long(api_instance);
 }
 
 int DLLEXPORT freecell_solver_user_get_limit_iterations(void * api_instance)
@@ -1750,11 +1765,11 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 
 static void iter_handler_wrapper(
     void * api_instance,
-    int iter_num,
+    fcs_int_limit_t iter_num,
     int depth,
     void * lp_instance GCC_UNUSED,
     fcs_kv_state_t * ptr_state,
-    int parent_iter_num
+    fcs_int_limit_t parent_iter_num
     )
 {
     fcs_user_t * user;
@@ -1866,7 +1881,7 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
             );
 }
 
-int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * api_instance)
+fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_states_in_collection_long(void * api_instance)
 {
     fcs_user_t * user;
 
@@ -1875,9 +1890,14 @@ int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * api_insta
     return user->iterations_board_started_at.num_states_in_collection + user->fc_solve_obj->num_states_in_collection - user->init_num_times.num_states_in_collection;
 }
 
-void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
+int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * api_instance)
+{
+    return (int)freecell_solver_user_get_num_states_in_collection_long(api_instance);
+}
+
+void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
     void * api_instance,
-    int max_num_states
+    fcs_int_limit_t max_num_states
     )
 {
     fcs_user_t * user;
@@ -1887,7 +1907,8 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
     if (max_num_states < 0)
     {
         user->fc_solve_obj->max_num_states_in_collection = -1;
-        user->fc_solve_obj->effective_max_num_states_in_collection = INT_MAX;
+        user->fc_solve_obj->effective_max_num_states_in_collection
+            = FCS_INT_LIMIT_MAX;
     }
     else
     {
@@ -1897,6 +1918,14 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
     }
 
     return;
+}
+
+void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
+    void * api_instance,
+    int max_num_states
+    )
+{
+    return freecell_solver_user_limit_num_states_in_collection_long(api_instance, (fcs_int_limit_t)max_num_states);
 }
 
 DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(

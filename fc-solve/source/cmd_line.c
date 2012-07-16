@@ -1080,7 +1080,7 @@ break;
         {
             PROCESS_OPT_ARG() ;
 
-            freecell_solver_user_limit_iterations(instance, atoi((*arg)));
+            freecell_solver_user_limit_iterations_long(instance, atol((*arg)));
         }
         break;
 
@@ -1430,9 +1430,9 @@ break;
         {
             PROCESS_OPT_ARG() ;
 
-            freecell_solver_user_limit_num_states_in_collection(
+            freecell_solver_user_limit_num_states_in_collection_long(
                 instance,
-                atoi((*arg))
+                atol((*arg))
             );
         }
         break;

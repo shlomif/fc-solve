@@ -343,11 +343,12 @@ static void free_states(fc_solve_instance_t * instance)
         { \
             if (getenv("FCS_TRACE")) \
             { \
-            printf("%s. Depth=%d ; the_soft_Depth=%ld ; Iters=%d ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
+            printf("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
                     message, \
-                    soft_thread->method_specific.soft_dfs.depth, \
+                    (long int)soft_thread->method_specific.soft_dfs.depth, \
                     (long int)(the_soft_dfs_info-soft_thread->method_specific.soft_dfs.soft_dfs_info), \
-                    instance->num_times, the_soft_dfs_info->test_index, \
+                    (long int)(instance->num_times), \
+                    the_soft_dfs_info->test_index, \
                     the_soft_dfs_info->current_state_index, \
                     (derived_states_list ? derived_states_list->num_states : -1) \
                     );  \
@@ -840,8 +841,8 @@ int fc_solve_soft_dfs_do_solve(
     fcs_bool_t local_to_randomize = FALSE;
     int * depth_ptr;
     fcs_bool_t enable_pruning;
-    int * instance_num_times_ptr, * hard_thread_num_times_ptr;
-    int hard_thread_max_num_times;
+    fcs_int_limit_t * instance_num_times_ptr, * hard_thread_num_times_ptr;
+    fcs_int_limit_t hard_thread_max_num_times;
     fcs_instance_debug_iter_output_func_t debug_iter_output_func;
     fcs_instance_debug_iter_output_context_t debug_iter_output_context;
 
@@ -886,7 +887,7 @@ int fc_solve_soft_dfs_do_solve(
     hard_thread_max_num_times = hard_thread->max_num_times; \
                 \
     {           \
-        int lim = hard_thread->num_times       \
+        fcs_int_limit_t lim = hard_thread->num_times       \
             + (instance->effective_max_num_times - *(instance_num_times_ptr)) \
             ; \
               \
@@ -1512,9 +1513,9 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         { \
             if (getenv("FCS_TRACE")) \
             { \
-            printf("BestFS - %s ; Iters=%d.\n", \
+            printf("BestFS - %s ; Iters=%ld.\n", \
                     message, \
-                    instance->num_times \
+                    (long)(instance->num_times) \
                     );  \
             fflush(stdout); \
             } \
@@ -1736,9 +1737,9 @@ int fc_solve_befs_or_bfs_do_solve(
 
     int error_code;
 
-    int * instance_num_times_ptr, * hard_thread_num_times_ptr;
+    fcs_int_limit_t * instance_num_times_ptr, * hard_thread_num_times_ptr;
 
-    int hard_thread_max_num_times;
+    fcs_int_limit_t hard_thread_max_num_times;
 
 
     fcs_instance_debug_iter_output_func_t debug_iter_output_func;

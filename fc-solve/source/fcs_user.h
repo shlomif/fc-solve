@@ -31,6 +31,7 @@
 #include "fcs_dllexport.h"
 #include "fcs_enums.h"
 #include "fcs_move.h"
+#include "fcs_limit.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,6 +48,11 @@ DLLEXPORT extern void * freecell_solver_user_alloc(void);
 DLLEXPORT extern int freecell_solver_user_apply_preset(
     void * instance,
     const char * preset_name
+    );
+
+DLLEXPORT extern void freecell_solver_user_limit_iterations_long(
+    void * user_instance,
+    fcs_int_limit_t max_iters
     );
 
 DLLEXPORT extern void freecell_solver_user_limit_iterations(
@@ -94,7 +100,16 @@ DLLEXPORT extern void freecell_solver_user_set_solving_method(
     int method
     );
 
+DLLEXPORT extern fcs_int_limit_t freecell_solver_user_get_num_times_long(
+    void * user_instance
+    );
+
 DLLEXPORT extern int freecell_solver_user_get_num_times(
+    void * user_instance
+    );
+
+
+DLLEXPORT extern fcs_int_limit_t freecell_solver_user_get_limit_iterations_long(
     void * user_instance
     );
 
@@ -215,8 +230,15 @@ DLLEXPORT extern void freecell_solver_user_set_random_seed(
     int seed
     );
 
+DLLEXPORT fcs_int_limit_t freecell_solver_user_get_num_states_in_collection_long(void * user_instance);
+
 DLLEXPORT extern int freecell_solver_user_get_num_states_in_collection(
     void * user_instance
+    );
+
+DLLEXPORT extern void freecell_solver_user_limit_num_states_in_collection_long(
+    void * user_instance,
+    fcs_int_limit_t max_num_states
     );
 
 DLLEXPORT extern void freecell_solver_user_limit_num_states_in_collection(
