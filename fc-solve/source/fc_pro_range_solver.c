@@ -306,7 +306,7 @@ int main(int argc, char * argv[])
     char * error_string;
     int parser_ret;
 
-    int total_iterations_limit_per_board = -1;
+    fcs_int_limit_t total_iterations_limit_per_board = -1;
 
     char * binary_output_filename = NULL;
 
@@ -348,7 +348,7 @@ int main(int argc, char * argv[])
                 print_help();
                 exit(-1);
             }
-            total_iterations_limit_per_board = atoi(argv[arg]);
+            total_iterations_limit_per_board = atol(argv[arg]);
         }
         else
         {
@@ -384,7 +384,7 @@ int main(int argc, char * argv[])
 
             print_int_wrapper(start_board);
             print_int_wrapper(end_board);
-            print_int_wrapper(total_iterations_limit_per_board);
+            print_int_wrapper(((int)total_iterations_limit_per_board));
         }
         else
         {
@@ -401,7 +401,11 @@ int main(int argc, char * argv[])
             }
             read_int_wrapper(start_board);
             read_int_wrapper(end_board);
-            read_int_wrapper(total_iterations_limit_per_board);
+            {
+                int val;
+                read_int_wrapper(val);
+                total_iterations_limit_per_board = (fcs_int_limit_t)val;
+            }
 
             fseek(in, 0, SEEK_END);
             file_len = ftell(in);
@@ -483,7 +487,7 @@ int main(int argc, char * argv[])
         printf("%s\n", buffer);
 #endif
 
-        freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
+        freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
 
         ret =
             freecell_solver_user_solve_board(
@@ -513,7 +517,7 @@ int main(int argc, char * argv[])
             moves_processed_t * fc_pro_moves;
             fcs_extended_move_t move;
 
-            print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
+            print_int_wrapper((int)freecell_solver_user_get_num_times_long(user.instance));
             printf("[[Num FCS Moves]]=%d\n",
                     freecell_solver_user_get_moves_left(user.instance)
                   );
@@ -536,7 +540,7 @@ int main(int argc, char * argv[])
             printf("\n%s\n", "[[End]]");
         }
 
-        total_num_iters += freecell_solver_user_get_num_times(user.instance);
+        total_num_iters += freecell_solver_user_get_num_times_long(user.instance);
 
         if (board_num % stop_at == 0)
         {

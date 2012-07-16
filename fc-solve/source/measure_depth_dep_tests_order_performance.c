@@ -79,7 +79,7 @@ static void print_help(void)
 typedef struct
 {
     fcs_portable_time_t start_time, end_time;
-    int num_iters;
+    fcs_int_limit_t num_iters;
     int verdict;
 } result_t;
 
@@ -96,7 +96,7 @@ int main(int argc, char * argv[])
     result_t * results, * curr_result;
     FILE * output_fh;
     int min_depth_for_scan2;
-    int iters_limit = 100000;
+    fcs_int_limit_t iters_limit = 100000;
     int max_var_depth_to_check = 100;
 
     fcs_portable_time_t mytime;
@@ -177,7 +177,7 @@ int main(int argc, char * argv[])
                 print_help();
                 exit(-1);
             }
-            iters_limit = atoi(argv[arg]);
+            iters_limit = (fcs_int_limit_t)atol(argv[arg]);
         }
         else if (!strcmp(argv[arg], "--max-var-depth"))
         {
@@ -275,7 +275,7 @@ int main(int argc, char * argv[])
         {
             get_board(board_num, state_string);
 
-            freecell_solver_user_limit_iterations(
+            freecell_solver_user_limit_iterations_long(
                 user.instance,
                 iters_limit
             );
@@ -291,7 +291,7 @@ int main(int argc, char * argv[])
             FCS_GET_TIME(curr_result->end_time);
 
             curr_result->num_iters
-                = freecell_solver_user_get_num_times(user.instance);
+                = freecell_solver_user_get_num_times_long(user.instance);
 
             freecell_solver_user_recycle(user.instance);
         }
@@ -309,7 +309,7 @@ int main(int argc, char * argv[])
         )
         {
             fprintf(output_fh, "board[%d].ret == %d\n", board_num, curr_result->verdict);
-            fprintf(output_fh, "board[%d].iters == %d\n", board_num, curr_result->num_iters);
+            fprintf(output_fh, "board[%d].iters == %ld\n", board_num, (long)curr_result->num_iters);
 
 #define FPRINTF_TIME(label, field) \
             fprintf(output_fh, "board[%d].%s = %li.%.6li\n", board_num, label, FCS_TIME_GET_SEC(curr_result->field),FCS_TIME_GET_USEC(curr_result->field));

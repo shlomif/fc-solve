@@ -55,8 +55,8 @@ static void my_iter_handler(
 
     fprintf(stdout, "Iteration: %i\n", iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
-    fprintf(stdout, "Stored-States: %i\n",
-        freecell_solver_user_get_num_states_in_collection(user_instance)
+    fprintf(stdout, "Stored-States: %li\n",
+        (long)freecell_solver_user_get_num_states_in_collection_long(user_instance)
         );
     fprintf(stdout, "Scan: %s\n",
         freecell_solver_user_get_current_soft_thread_name(user_instance)
@@ -108,7 +108,7 @@ static void my_iter_handler(
 
             freecell_solver_user_set_num_freecells(pruner, 2);
             freecell_solver_user_set_tests_order(pruner, "01ABCDE", &error_string);
-            freecell_solver_user_limit_iterations(pruner, 128*1024);
+            freecell_solver_user_limit_iterations_long(pruner, 128*1024);
 
             ret = freecell_solver_user_solve_board(pruner, state_string);
             if (ret == FCS_STATE_SUSPEND_PROCESS)
@@ -591,8 +591,8 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
     {
         fprintf(
             stderr,
-            "The number of iterations is %i\n",
-            freecell_solver_user_get_num_times(current_instance)
+            "The number of iterations is %li\n",
+            (long)freecell_solver_user_get_num_times_long(current_instance)
             );
     }
     else if (command_num == 1)
@@ -755,20 +755,20 @@ int main(int argc, char * argv[])
 
 #if 0
     {
-        int limit = 500;
-        freecell_solver_user_limit_iterations(instance, limit);
+        fcs_int_limit_t limit = 500;
+        freecell_solver_user_limit_iterations_long(instance, limit);
         ret = freecell_solver_user_solve_board(instance, user_state);
         while (ret == FCS_STATE_SUSPEND_PROCESS)
         {
             limit += 500;
-            freecell_solver_user_limit_iterations(instance, limit);
+            freecell_solver_user_limit_iterations_long(instance, limit);
             ret = freecell_solver_user_resume_solution(instance);
         }
     }
 #elif defined(FCS_TRACE_MEM)
     {
 #define STEP 100000
-        int limit = STEP;
+        fcs_int_limit_t limit = STEP;
         char stat_fn[1024], foo_str[1024];
         fcs_portable_time_t mytime;
         FILE * stat;
@@ -777,7 +777,7 @@ int main(int argc, char * argv[])
 
         snprintf(stat_fn, sizeof(stat_fn), "/proc/%ld/stat", (long)(getpid()));
 
-        freecell_solver_user_limit_iterations(instance, limit);
+        freecell_solver_user_limit_iterations_long(instance, limit);
         ret = freecell_solver_user_solve_board(instance, user_state);
         while (ret == FCS_STATE_SUSPEND_PROCESS)
         {
@@ -832,7 +832,7 @@ int main(int argc, char * argv[])
 
             fflush(stdout);
             limit += STEP;
-            freecell_solver_user_limit_iterations(instance, limit);
+            freecell_solver_user_limit_iterations_long(instance, limit);
             ret = freecell_solver_user_resume_solution(instance);
         }
     }

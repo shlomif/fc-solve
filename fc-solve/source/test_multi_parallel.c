@@ -161,10 +161,6 @@ static int cmd_line_callback(
     return FCS_CMD_LINE_SKIP;
 }
 
-#if 0
-#define total_iterations_limit_per_board 100000
-#endif
-
 static const char * known_parameters[] = {
     "-i", "--iter-output",
     "-s", "--state-output",
@@ -259,7 +255,7 @@ int main(int argc, char * argv[])
     int parser_ret;
 
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
-    int total_iterations_limit_per_board = -1;
+    fcs_int_limit_t total_iterations_limit_per_board = -1;
 
     char * binary_output_filename = NULL;
     fcs_state_string_t state_string;
@@ -304,7 +300,7 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
             was_total_iterations_limit_per_board_set = TRUE;
-            total_iterations_limit_per_board = atoi(argv[arg]);
+            total_iterations_limit_per_board = (fcs_int_limit_t)atol(argv[arg]);
         }
         else if (!strcmp(argv[arg], "--solutions-directory"))
         {
@@ -350,7 +346,7 @@ int main(int argc, char * argv[])
 
             print_int_wrapper(start_board);
             print_int_wrapper(end_board);
-            print_int_wrapper(total_iterations_limit_per_board);
+            print_int_wrapper((int)total_iterations_limit_per_board);
         }
         else
         {
@@ -367,7 +363,11 @@ int main(int argc, char * argv[])
             }
             read_int_wrapper(start_board);
             read_int_wrapper(end_board);
-            read_int_wrapper(total_iterations_limit_per_board);
+            {
+                int val;
+                read_int_wrapper(val);
+                total_iterations_limit_per_board = val;
+            }
 
             fseek(in, 0, SEEK_END);
             file_len = ftell(in);
@@ -446,7 +446,7 @@ int main(int argc, char * argv[])
 
         if (was_total_iterations_limit_per_board_set)
         {
-            freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
+            freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
         }
 
         ret =
@@ -479,7 +479,7 @@ int main(int argc, char * argv[])
         }
         else
         {
-            print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
+            print_int_wrapper((int)freecell_solver_user_get_num_times_long(user.instance));
         }
 
         if (solutions_directory)
@@ -508,7 +508,7 @@ int main(int argc, char * argv[])
             output_fh = NULL;
         }
 
-        total_num_iters += freecell_solver_user_get_num_times(user.instance);
+        total_num_iters += freecell_solver_user_get_num_times_long(user.instance);
 
         if (board_num % stop_at == 0)
         {

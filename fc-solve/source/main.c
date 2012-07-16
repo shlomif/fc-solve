@@ -59,8 +59,8 @@ static void my_iter_handler(
 
     fprintf(stdout, "Iteration: %i\n", iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
-    fprintf(stdout, "Stored-States: %i\n",
-        freecell_solver_user_get_num_states_in_collection(user_instance)
+    fprintf(stdout, "Stored-States: %li\n",
+        freecell_solver_user_get_num_states_in_collection_long(user_instance)
         );
     fprintf(stdout, "Scan: %s\n",
         freecell_solver_user_get_current_soft_thread_name(user_instance)
@@ -553,8 +553,8 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
     {
         fprintf(
             stderr,
-            "The number of iterations is %i\n",
-            freecell_solver_user_get_num_times(current_instance)
+            "The number of iterations is %li\n",
+            freecell_solver_user_get_num_times_long(current_instance)
             );
     }
     else if (command_num == 1)
@@ -723,13 +723,13 @@ int main(int argc, char * argv[])
 
 #if 0
     {
-        int limit = 500;
-        freecell_solver_user_limit_iterations(instance, limit);
+        fcs_int_limit_t limit = 500;
+        freecell_solver_user_limit_iterations_long(instance, limit);
         ret = freecell_solver_user_solve_board(instance, user_state);
         while (ret == FCS_STATE_SUSPEND_PROCESS)
         {
             limit += 500;
-            freecell_solver_user_limit_iterations(instance, limit);
+            freecell_solver_user_limit_iterations_long(instance, limit);
             ret = freecell_solver_user_resume_solution(instance);
         }
     }

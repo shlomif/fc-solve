@@ -195,8 +195,6 @@ static const char * known_parameters[] = {
 
 #define BINARY_OUTPUT_NUM_INTS 16
 
-#define print_int_wrapper(i) { }
-
 static void print_help(void)
 {
     printf("\n%s",
@@ -222,7 +220,7 @@ typedef struct {
     int stop_at;
 } context_t;
 
-static int total_iterations_limit_per_board = -1;
+static fcs_int_limit_t total_iterations_limit_per_board = -1;
 
 static fcs_int64_t total_num_iters = 0;
 
@@ -242,7 +240,7 @@ typedef struct
 
 typedef struct
 {
-    int num_iters;
+    fcs_int_limit_t num_iters;
     int num_finished_boards;
 } response_t;
 
@@ -275,7 +273,7 @@ static int worker_func(int idx, worker_t w, void * instance)
         {
             get_board(board_num, state_string);
 
-            freecell_solver_user_limit_iterations(instance, total_iterations_limit_per_board);
+            freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
 
             ret =
                 freecell_solver_user_solve_board(
@@ -287,7 +285,6 @@ static int worker_func(int idx, worker_t w, void * instance)
             {
                 FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
                 fflush(stdout);
-                print_int_wrapper(-1);
             }
             else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
             {
@@ -304,14 +301,9 @@ static int worker_func(int idx, worker_t w, void * instance)
             {
                 FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
                 fflush(stdout);
-                print_int_wrapper(-2);
-            }
-            else
-            {
-                print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
             }
 
-            total_num_iters_temp += freecell_solver_user_get_num_times(instance);
+            total_num_iters_temp += freecell_solver_user_get_num_times_long(instance);
 
             /*  TODO : implement at the master. */
 #if 0
@@ -372,7 +364,7 @@ int main(int argc, char * argv[])
                 print_help();
                 exit(-1);
             }
-            total_iterations_limit_per_board = atoi(argv[arg]);
+            total_iterations_limit_per_board = (fcs_int_limit_t)atol(argv[arg]);
         }
         else if (!strcmp(argv[arg], "--num-workers"))
         {

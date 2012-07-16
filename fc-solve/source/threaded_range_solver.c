@@ -192,8 +192,6 @@ static const char * known_parameters[] = {
 
 #define BINARY_OUTPUT_NUM_INTS 16
 
-#define print_int_wrapper(i) { }
-
 static void print_help(void)
 {
     printf("\n%s",
@@ -229,7 +227,7 @@ typedef struct {
     int stop_at;
 } context_t;
 
-int total_iterations_limit_per_board = -1;
+fcs_int_limit_t total_iterations_limit_per_board = -1;
 
 fcs_int64_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
@@ -247,7 +245,7 @@ static void * worker_thread(void * void_context)
     int quota_end;
     int stop_at;
     fcs_portable_time_t mytime;
-    long total_num_iters_temp = 0;
+    fcs_int_limit_t total_num_iters_temp = 0;
     /* 52 cards of 3 chars (suit+rank+whitespace) each,
      * plus 8 newlines, plus one '\0' terminator*/
     fcs_state_string_t state_string;
@@ -310,7 +308,7 @@ static void * worker_thread(void * void_context)
         {
             get_board(board_num, state_string);
 
-            freecell_solver_user_limit_iterations(user.instance, total_iterations_limit_per_board);
+            freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
 
             ret =
                 freecell_solver_user_solve_board(
@@ -322,7 +320,6 @@ static void * worker_thread(void * void_context)
             {
                 FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
                 fflush(stdout);
-                print_int_wrapper(-1);
             }
             else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
             {
@@ -339,14 +336,9 @@ static void * worker_thread(void * void_context)
             {
                 FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
 
-                print_int_wrapper(-2);
-            }
-            else
-            {
-                print_int_wrapper(freecell_solver_user_get_num_times(user.instance));
             }
 
-            total_num_iters_temp += freecell_solver_user_get_num_times(user.instance);
+            total_num_iters_temp += freecell_solver_user_get_num_times_long(user.instance);
             if (total_num_iters_temp >= update_total_num_iters_threshold)
             {
                 pthread_mutex_lock(&total_num_iters_lock);
@@ -423,7 +415,7 @@ int main(int argc, char * argv[])
                 print_help();
                 exit(-1);
             }
-            total_iterations_limit_per_board = atoi(argv[arg]);
+            total_iterations_limit_per_board = atol(argv[arg]);
         }
         else if (!strcmp(argv[arg], "--num-workers"))
         {
