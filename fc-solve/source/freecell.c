@@ -278,7 +278,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             /* Find a vacant freecell */
             for( ; dest_fc_idx < LOCAL_FREECELLS_NUM ; dest_fc_idx++)
             {
-                if (fcs_freecell_card_num(
+                if (fcs_freecell_rank(
                         temp_new_state_key, dest_fc_idx
                     ) == 0)
                 {
@@ -1100,7 +1100,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                     }
                 }
 
-                if ((fcs_col_get_card_num(col, c) != 13) &&
+                if ((fcs_col_get_rank(col, c) != 13) &&
                     (tests__is_filled_by_kings_only()))
                 {
                     continue;
@@ -1118,7 +1118,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                     if (
                         (c > 0) &&
                         ((tests__is_filled_by_kings_only()) ?
-                            (fcs_col_get_card_num(col, c) == 13) :
+                            (fcs_col_get_rank(col, c) == 13) :
                             1
                         )
                        )
@@ -1181,7 +1181,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                         }
                         if ((seq_start <= seq_end) &&
                             ((tests__is_filled_by_kings_only()) ?
-                                (fcs_col_get_card_num(col, seq_start)
+                                (fcs_col_get_rank(col, seq_start)
                                     == 13) :
                                 1
                             )

@@ -647,7 +647,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                     break;
                 }
                 /* If this is no longer a sequence - move to the next stack */
-                if (fcs_col_get_card_num(col, h) != card_num+1)
+                if (fcs_col_get_rank(col, h) != card_num+1)
                 {
                     break;
                 }

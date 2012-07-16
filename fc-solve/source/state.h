@@ -67,7 +67,7 @@ extern "C" {
 
 typedef struct
 {
-    short card_num;
+    short rank;
     char suit;
     char flags;
 } fcs_card_t;
@@ -102,7 +102,7 @@ typedef int fcs_locs_t;
     ((col)->cards[(c)] )
 
 #define fcs_card_rank(card) \
-    ( (card).card_num )
+    ( (card).rank )
 
 #define fcs_card_suit(card) \
     ((int)( (card).suit ))
@@ -122,7 +122,7 @@ typedef int fcs_locs_t;
     (card).suit = (d)
 
 #define fcs_card_set_num(card, num) \
-    (card).card_num = (num)
+    (card).rank = (num)
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_card_set_flipped(card, flipped) \
@@ -274,10 +274,10 @@ typedef char fcs_locs_t;
 
 #endif
 
-#define fcs_col_get_card_num(col, card_idx) \
+#define fcs_col_get_rank(col, card_idx) \
     fcs_card_rank(fcs_col_get_card((col), (card_idx)))
 
-#define fcs_freecell_card_num(state, f) \
+#define fcs_freecell_rank(state, f) \
     ( fcs_card_rank(fcs_freecell_card((state),(f))) )
 
 #define fcs_freecell_card_suit(state, f) \
