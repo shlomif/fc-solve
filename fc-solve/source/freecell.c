@@ -183,7 +183,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
     for( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
     {
         card = fcs_freecell_card(state, fc);
-        if (fcs_card_card_num(card) != 0)
+        if (fcs_card_is_valid(card))
         {
             for(deck=0;deck<INSTANCE_DECKS_NUM;deck++)
             {
@@ -443,7 +443,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
          * */
         if (
                 /* The Cell should not be empty. */
-                (fcs_card_card_num(src_card) != 0)
+                fcs_card_is_valid(src_card)
                 &&
                 /* We cannot put a king anywhere. */
                 (fcs_card_card_num(src_card) != 13)
@@ -1291,9 +1291,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
         {
             card = fcs_freecell_card(state, fc);
             if (
-                (tests__is_filled_by_kings_only()) ?
-                    (fcs_card_card_num(card) == 13) :
-                    (fcs_card_card_num(card) != 0)
+                (tests__is_filled_by_kings_only())
+                ? (fcs_card_card_num(card) == 13)
+                : fcs_card_is_valid(card)
                )
             {
                 fcs_cards_column_t new_src_col;
@@ -1587,7 +1587,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
                     /* Find a vacant freecell */
                     for(b=0; b<LOCAL_FREECELLS_NUM; b++)
                     {
-                        if (fcs_freecell_card_num(new_state, b) == 0)
+                        if (fcs_freecell_is_empty(new_state, b))
                         {
                             break;
                         }
@@ -1978,7 +1978,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 
     for(ds=0;ds<LOCAL_FREECELLS_NUM;ds++)
     {
-        if (fcs_freecell_card_num(state, ds) == 0)
+        if (fcs_freecell_is_empty(state, ds))
         {
             break;
         }
@@ -2044,7 +2044,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
     for(fc=0;fc<LOCAL_FREECELLS_NUM;fc++)
     {
         card = fcs_freecell_card(state, fc);
-        if (fcs_card_card_num(card) == 0)
+        if (fcs_card_is_empty(card))
         {
             continue;
         }
@@ -2133,7 +2133,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     for(fc=0;fc<LOCAL_FREECELLS_NUM;fc++)
     {
         card = fcs_freecell_card(state, fc);
-        if (fcs_card_card_num(card) == 0)
+        if (fcs_card_is_empty(card))
         {
             continue;
         }
@@ -2289,7 +2289,7 @@ extern int fc_solve_sfs_raymond_prune(
         for( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
         {
             card = fcs_freecell_card(new_state, fc);
-            if (fcs_card_card_num(card) != 0)
+            if (fcs_card_is_valid(card))
             {
                 if ((dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON()) >= 0)
                 {

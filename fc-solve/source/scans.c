@@ -776,7 +776,7 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
 
     for(i=0;i<freecells_num;i++)
     {
-        if (fcs_freecell_card_num(*state_ptr, i) == 0)
+        if (fcs_freecell_is_empty(*state_ptr, i))
         {
             num_vacant_freecells++;
         }
@@ -1448,7 +1448,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     num_vacant_freecells = 0;
     for(a=0;a<LOCAL_FREECELLS_NUM;a++)
     {
-        if (fcs_freecell_card_num((*state),a) == 0)
+        if (fcs_freecell_is_empty((*state),a))
         {
             num_vacant_freecells++;
         }

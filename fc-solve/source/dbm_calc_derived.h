@@ -235,7 +235,7 @@ static GCC_INLINE int horne_prune(
         for( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
         {
             card = fcs_freecell_card(the_state, fc);
-            if (fcs_card_card_num(card) != 0)
+            if (fcs_card_is_valid(card))
             {
                 if ((dest_foundation =
                     calc_foundation_to_put_card_on(&the_state, card)) >= 0)
@@ -397,7 +397,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     {
         card = fcs_freecell_card(the_state, fc_idx);
         suit = fcs_card_suit(card);
-        if (fcs_card_card_num(card) != 0)
+        if (fcs_card_is_valid(card))
         {
             for(deck=0;deck<INSTANCE_DECKS_NUM;deck++)
             {
@@ -480,7 +480,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     for (fc_idx=0 ; fc_idx < LOCAL_FREECELLS_NUM ; fc_idx++)
     {
         card = fcs_freecell_card(the_state, fc_idx);
-        if (fcs_card_card_num(card) != 0)
+        if (fcs_card_is_valid(card))
         {
             for (ds=0;ds<LOCAL_STACKS_NUM;ds++)
             {
@@ -555,7 +555,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         for (fc_idx=0;fc_idx<LOCAL_FREECELLS_NUM;fc_idx++)
         {
             card = fcs_freecell_card(the_state, fc_idx);
-            if (fcs_card_card_num(card) == 0)
+            if (fcs_card_is_empty(card))
             {
                 continue;
             }

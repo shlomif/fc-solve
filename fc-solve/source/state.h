@@ -308,6 +308,10 @@ typedef char fcs_locs_t;
 #define fcs_col_push_col_card(dest_col, src_col, card_idx) \
     fcs_col_push_card((dest_col), fcs_col_get_card((src_col), (card_idx)))
 
+#define fcs_card_is_empty(card) (fcs_card_card_num(card) == 0)
+#define fcs_card_is_valid(card) (fcs_card_card_num(card) != 0)
+#define fcs_freecell_is_empty(state, idx) (fcs_card_is_empty(fcs_freecell_card(state, idx)))
+
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
 
 #define fcs_duplicate_state_extra(ptr_dest, ptr_src) \
@@ -1021,11 +1025,12 @@ static GCC_INLINE int fc_solve_check_state_validity(
     /* Mark the cards in the freecells */
     for(f=0;f<freecells_num;f++)
     {
-        if (fcs_freecell_card_num(*state, f) != 0)
+        card = fcs_freecell_card(*state, f);
+        if (fcs_card_is_valid(card))
         {
             cards
-                [fcs_freecell_card_suit(*state, f)]
-                [fcs_freecell_card_num(*state, f)] ++;
+                [fcs_card_suit(card)]
+                [fcs_card_card_num(card)] ++;
         }
     }
 
@@ -1037,7 +1042,7 @@ static GCC_INLINE int fc_solve_check_state_validity(
         for(c=0;c<col_len;c++)
         {
             card = fcs_col_get_card(col,c);
-            if (fcs_card_card_num(card) == 0)
+            if (fcs_card_is_empty(card))
             {
                 *misplaced_card = fc_solve_empty_card;
                 return FCS_STATE_VALIDITY__EMPTY_SLOT;

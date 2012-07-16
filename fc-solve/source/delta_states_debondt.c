@@ -193,7 +193,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
             card = fcs_freecell_card(*derived, fc_idx);
 
-            if (fcs_card_card_num(card) != 0)
+            if (fcs_card_is_valid(card))
             {
                 self->card_states[CARD_POS(card)] = OPT_FREECELL;
             }
@@ -455,7 +455,7 @@ static void fc_solve_debondt_delta_stater_decode(
                 top_opt = OPT_DONT_CARE;
             }
 
-            if ((fcs_card_card_num(top_card) == 0)
+            if (fcs_card_is_empty(top_card)
                 ||
                 (! ((top_opt == OPT_TOPMOST) || (top_opt == OPT_ORIG_POS))))
             {
