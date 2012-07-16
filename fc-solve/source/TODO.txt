@@ -14,8 +14,8 @@ Non-pressing
 the code more 64-bit-enabled.
 ** Implement a 64-bit-ready callback.
 
-* Create a displayer for fc-solve's solutions which will allow seeing where a card
-was moved from (using a colored →) and where it was placed.
+* Create a displayer for fc-solve's solutions which will allow seeing where a
+card was moved from (using a colored →) and where it was placed.
 ** Adapt it to dbm_fc_solve's solutions.
 ** Create a GUI version.
 ** Add the ability to expand moves to atomic, single-card, moves.
