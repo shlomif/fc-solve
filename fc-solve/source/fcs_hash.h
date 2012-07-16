@@ -39,6 +39,7 @@ extern "C" {
 
 #include "inline.h"
 #include "bool.h"
+#include "fcs_limit.h"
 
 #ifdef FCS_INLINED_HASH_COMPARISON
 enum FCS_INLINED_HASH_DATA_TYPE
@@ -104,9 +105,9 @@ typedef struct
     /* A bit mask that extract the lowest bits out of the hash value */
     int size_bitmask;
     /* The number of elements stored inside the hash */
-    int num_elems;
+    fcs_int_limit_t num_elems;
 
-    int max_num_elems_before_resize;
+    fcs_int_limit_t max_num_elems_before_resize;
 
     fcs_compact_allocator_t allocator;
 #ifdef FCS_RCS_STATES

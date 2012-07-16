@@ -222,7 +222,7 @@ fcs_bool_t fc_solve_hash_insert(
 #endif
     item->next = NULL;
 
-    if ((++hash->num_elems) > hash->max_num_elems_before_resize)
+    if ((++(hash->num_elems)) > hash->max_num_elems_before_resize)
     {
         fc_solve_hash_rehash(hash);
     }
@@ -250,6 +250,14 @@ static GCC_INLINE void fc_solve_hash_rehash(
     old_size = hash->size;
 
     new_size = old_size << 1;
+
+    /* Check for overflow. */
+    if (new_size < old_size)
+    {
+        hash->max_num_elems_before_resize = FCS_INT_LIMIT_MAX;
+        return;
+    }
+
     new_size_bitmask = new_size - 1;
 
     new_entries = calloc(new_size, sizeof(new_entries[0]));
