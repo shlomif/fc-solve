@@ -748,6 +748,14 @@ typedef struct {
     fcs_tests_by_depth_unit_t * by_depth_units;
 } fcs_tests_by_depth_array_t;
 
+enum FCS_SUPER_METHOD_TYPE
+{
+    FCS_SUPER_METHOD_DFS,
+    FCS_SUPER_METHOD_BEFS_BRFS,
+};
+
+typedef enum FCS_SUPER_METHOD_TYPE fcs_super_method_type_t;
+
 struct fc_solve_soft_thread_struct
 {
     fc_solve_hard_thread_t * hard_thread;
@@ -770,11 +778,14 @@ struct fc_solve_soft_thread_struct
 
 
     /*
-     * The method (i.e: DFS, Soft-DFS, BFS or BeFS) that is used by this
+     * The method (i.e: Soft-DFS, Random-DFS, BFS or BeFS) that is used by this
      * instance.
      *
      * */
     int method;
+
+    /* The super-method type - can be  */
+    fcs_super_method_type_t super_method_type;
 
     union
     {
@@ -917,9 +928,7 @@ struct fc_solve_soft_thread_struct
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
 #define FC_SOLVE_IS_DFS(soft_thread) \
-    ((soft_thread->method == FCS_METHOD_SOFT_DFS) ||  \
-     (soft_thread->method == FCS_METHOD_RANDOM_DFS) \
-    )
+    ((soft_thread)->super_method_type == FCS_SUPER_METHOD_DFS)
 
 /*
  * An enum that specifies the meaning of each BeFS weight.
@@ -1187,11 +1196,9 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
          * that will abstract a scan. But it's not critical since
          * I don't support user-defined scans.
          * */
-        switch(soft_thread->method)
+        switch(soft_thread->super_method_type)
         {
-            case FCS_METHOD_SOFT_DFS:
-            case FCS_METHOD_HARD_DFS:
-            case FCS_METHOD_RANDOM_DFS:
+            case FCS_SUPER_METHOD_DFS:
 
             if (! STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED))
             {
@@ -1203,9 +1210,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 
             break;
 
-            case FCS_METHOD_BFS:
-            case FCS_METHOD_A_STAR:
-            case FCS_METHOD_OPTIMIZE:
+            case FCS_SUPER_METHOD_BEFS_BRFS:
 
             if (! STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED))
             {
@@ -1380,6 +1385,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     }
 
     soft_thread->method = FCS_METHOD_OPTIMIZE;
+    soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
 
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
 

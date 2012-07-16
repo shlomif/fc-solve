@@ -244,51 +244,43 @@ static void free_states(fc_solve_instance_t * instance)
 
         ST_LOOP_START()
         {
-            switch (soft_thread->method)
+            if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
             {
-                case FCS_METHOD_SOFT_DFS:
-                case FCS_METHOD_HARD_DFS:
-                case FCS_METHOD_RANDOM_DFS:
-                {
-                    free_states_handle_soft_dfs_soft_thread(soft_thread);
-                }
-                break;
-
-                case FCS_METHOD_A_STAR:
-                {
-                    PQUEUE new_pq;
-                    int i, CurrentSize;
-                    pq_element_t * Elements;
-
-                    fc_solve_PQueueInitialise(
-                        &(new_pq),
-                        1024
-                    );
-
-                    CurrentSize = soft_thread->method_specific.befs.meth.befs.pqueue.CurrentSize;
-                    Elements = soft_thread->method_specific.befs.meth.befs.pqueue.Elements;
-
-                    for (i = PQ_FIRST_ENTRY ; i <= CurrentSize ; i++)
-                    {
-                        if (! FCS_IS_STATE_DEAD_END(Elements[i].val))
-                        {
-                            fc_solve_PQueuePush(
-                                &new_pq,
-                                Elements[i].val,
-                                Elements[i].rating
-                            );
-                        }
-                    }
-
-                    fc_solve_PQueueFree(
-                        &(soft_thread->method_specific.befs.meth.befs.pqueue)
-                    );
-
-                    soft_thread->method_specific.befs.meth.befs.pqueue = new_pq;
-                }
-                break;
-                /* TODO : Implement for the BrFS/Optimize scans. */
+                free_states_handle_soft_dfs_soft_thread(soft_thread);
             }
+            else if (soft_thread->method == FCS_METHOD_A_STAR)
+            {
+                PQUEUE new_pq;
+                int i, CurrentSize;
+                pq_element_t * Elements;
+
+                fc_solve_PQueueInitialise(
+                    &(new_pq),
+                    1024
+                );
+
+                CurrentSize = soft_thread->method_specific.befs.meth.befs.pqueue.CurrentSize;
+                Elements = soft_thread->method_specific.befs.meth.befs.pqueue.Elements;
+
+                for (i = PQ_FIRST_ENTRY ; i <= CurrentSize ; i++)
+                {
+                    if (! FCS_IS_STATE_DEAD_END(Elements[i].val))
+                    {
+                        fc_solve_PQueuePush(
+                            &new_pq,
+                            Elements[i].val,
+                            Elements[i].rating
+                        );
+                    }
+                }
+
+                fc_solve_PQueueFree(
+                    &(soft_thread->method_specific.befs.meth.befs.pqueue)
+                );
+
+                soft_thread->method_specific.befs.meth.befs.pqueue = new_pq;
+            }
+            /* TODO : Implement for the BrFS/Optimize scans. */
         }
     }
 

@@ -354,6 +354,7 @@ static GCC_INLINE void init_soft_thread(
 
     /* The default solving method */
     soft_thread->method = FCS_METHOD_SOFT_DFS;
+    soft_thread->super_method_type = FCS_SUPER_METHOD_DFS;
 
     soft_thread->method_specific.befs.befs_positions_by_rank = NULL;
 

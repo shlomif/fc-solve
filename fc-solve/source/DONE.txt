@@ -302,3 +302,7 @@ the various fields.
 function.
 ** Done in +internal_move_struct.h+.
 
+* Divide the scan type variable into two variables: super-scan
+(DFS vs BeFS/BFS/Opt) and sub-scan (random_dfs, soft_dfs, etc.), to facilitate
+multiplexing them.
+

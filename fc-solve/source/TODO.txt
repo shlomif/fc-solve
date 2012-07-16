@@ -20,10 +20,6 @@ was moved from (using a colored →) and where it was placed.
 ** Create a GUI version.
 ** Add the ability to expand moves to atomic, single-card, moves.
 
-* Divide the scan type variable into two variables: super-scan
-(DFS vs BeFS/BFS/Opt) and sub-scan (random_dfs, soft_dfs, etc.), to facilitate
-multiplexing them.
-
 * If +-opt+ is specified for the flare, then make sure that if the flares
 loop stop it when it's doing the optimization scan, then the optimization scan
 goes on until it ends.

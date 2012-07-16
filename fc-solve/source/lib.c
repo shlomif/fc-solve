@@ -1302,14 +1302,19 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 
     user = (fcs_user_t *)api_instance;
 
-    user->soft_thread->method = method;
+    user->soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
 
-    switch (method)
+    if (method == FCS_METHOD_HARD_DFS)
+    {
+        method = FCS_METHOD_SOFT_DFS;
+    }
+
+    switch ((user->soft_thread->method = method))
     {
         case FCS_METHOD_RANDOM_DFS:
         case FCS_METHOD_SOFT_DFS:
-        case FCS_METHOD_HARD_DFS:
         {
+            user->soft_thread->super_method_type = FCS_SUPER_METHOD_DFS;
             user->soft_thread->method_specific.soft_dfs.dfs_max_depth
                 = user->soft_thread->method_specific.soft_dfs.depth
                 = user->soft_thread->method_specific.soft_dfs.tests_by_depth_array.num_units
