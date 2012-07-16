@@ -42,6 +42,7 @@ extern "C" {
 #include "inline.h"
 #include "unused.h"
 #include "fcs_limit.h"
+#include "likely.h"
 
 #include "indirect_buffer.h"
 #include "rand.h"
@@ -935,10 +936,6 @@ extern void fc_solve_init_instance(
     fc_solve_instance_t * instance
     );
 
-extern void fc_solve_free_instance(
-    fc_solve_instance_t * instance
-    );
-
 extern void fc_solve_finish_instance(
     fc_solve_instance_t * instance
     );
@@ -1708,6 +1705,72 @@ extern int fc_solve_compare_lru_cache_keys(
 );
 
 #endif
+
+enum
+{
+    FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS,
+    FOREACH_SOFT_THREAD_FREE_INSTANCE,
+    FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER,
+    FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS
+};
+extern void fc_solve_foreach_soft_thread(
+    fc_solve_instance_t * instance,
+    int callback_choice,
+    void * context
+);
+
+static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t * hard_thread)
+{
+    if (likely(hard_thread->prelude_as_string))
+    {
+        free (hard_thread->prelude_as_string);
+    }
+    if (likely(hard_thread->prelude))
+    {
+        free (hard_thread->prelude);
+    }
+    fcs_move_stack_static_destroy(hard_thread->reusable_move_stack);
+
+    free(hard_thread->soft_threads);
+
+    if (likely(hard_thread->allocator.packs))
+    {
+        fc_solve_compact_allocator_finish(&(hard_thread->allocator));
+        hard_thread->allocator.packs = NULL;
+    }
+}
+/*
+    This function is the last function that should be called in the
+    sequence of operations on instance, and it is meant for de-allocating
+    whatever memory was allocated by alloc_instance().
+  */
+static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * instance)
+{
+    HT_LOOP_DECLARE_VARS();
+
+    fc_solve_foreach_soft_thread(instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
+
+    HT_LOOP_START()
+    {
+        free_instance_hard_thread_callback(hard_thread);
+    }
+
+    free(instance->hard_threads);
+    if (instance->optimization_thread)
+    {
+        free_instance_hard_thread_callback(instance->optimization_thread);
+        free(instance->optimization_thread);
+    }
+
+    free(instance->instance_tests_order.tests);
+
+    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
+    {
+        free(instance->opt_tests_order.tests);
+    }
+
+    free(instance);
+}
 
 #define DECLARE_MOVE_FUNCTION(name) \
 extern void name( \

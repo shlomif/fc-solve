@@ -294,4 +294,5 @@ notice on having reached +FCS_SUSPEND_PROCESS+. (Implemented as
 sorting small data sets (columns, freecells, derived states, etc.). (Insertion
 sort is faster).
 
+* Inline fc_solve_free_instance().
 

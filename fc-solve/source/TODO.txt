@@ -28,8 +28,6 @@ loop stop it when it's doing the optimization scan, then the optimization scan
 goes on until it ends.
 ** Not sure about it.
 
-* Inline fc_solve_free_instance().
-
 * Experiment with making fcs_move_t a bit-field with half-octets/etc. for
 the various fields.
 ** Make sure that the amount required can fit there using CMake and a log2
