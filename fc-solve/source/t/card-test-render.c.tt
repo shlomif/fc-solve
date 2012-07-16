@@ -25,7 +25,7 @@ static int main_tests(void)
         mycard = fc_solve_empty_card;
 
         fcs_card_set_suit(mycard, [% suit.idx %]);
-        fcs_card_set_num(mycard, [% rank.idx %]);
+        fcs_card_set_rank(mycard, [% rank.idx %]);
 
         ret = fc_solve_card_perl2user(mycard, buffer, [% t %]);
         /* TEST */

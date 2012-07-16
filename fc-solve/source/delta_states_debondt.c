@@ -292,7 +292,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
 
         candidate_card = fc_solve_empty_card;
         child_card = fc_solve_empty_card;
-        fcs_card_set_num(candidate_card, fcs_card_rank(parent_card) - 1);
+        fcs_card_set_rank(candidate_card, fcs_card_rank(parent_card) - 1);
         for (suit = ((fcs_card_suit(parent_card)&(0x1))^0x1) ;
              suit < NUM_SUITS ;
              suit += 2
@@ -407,7 +407,7 @@ static void fc_solve_debondt_delta_stater_decode(
                         self->card_states[STATE_POS(suit_idx, rank)] = item_opt;
 
                         card = fc_solve_empty_card;
-                        fcs_card_set_num(card, rank);
+                        fcs_card_set_rank(card, rank);
                         fcs_card_set_suit(card, suit_idx);
                         if (item_opt == OPT_FREECELL)
                         {

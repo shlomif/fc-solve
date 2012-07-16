@@ -121,7 +121,7 @@ typedef int fcs_locs_t;
 #define fcs_card_set_suit(card, d) \
     (card).suit = (d)
 
-#define fcs_card_set_num(card, num) \
+#define fcs_card_set_rank(card, num) \
     (card).rank = (num)
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
@@ -356,7 +356,7 @@ typedef char fcs_locs_t;
     ( (card) >> 6 )
 #endif
 
-#define fcs_card_set_num(card, num) \
+#define fcs_card_set_rank(card, num) \
     (card) = ((fcs_card_t)(((card)&0x03)|((num)<<2)));
 
 #define fcs_card_set_suit(card, suit) \
@@ -1064,7 +1064,7 @@ static GCC_INLINE int fc_solve_check_state_validity(
             {
                 *misplaced_card = fc_solve_empty_card;
                 fcs_card_set_suit(*misplaced_card, d);
-                fcs_card_set_num(*misplaced_card, c);
+                fcs_card_set_rank(*misplaced_card, c);
                 return ((cards[d][c] < decks_num)
                     ? FCS_STATE_VALIDITY__MISSING_CARD
                     : FCS_STATE_VALIDITY__EXTRA_CARD

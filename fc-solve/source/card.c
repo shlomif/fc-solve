@@ -154,7 +154,7 @@ fcs_card_t fc_solve_card_user2perl(const char * str)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
 #endif
-    fcs_card_set_num(card, fc_solve_u2p_rank(str));
+    fcs_card_set_rank(card, fc_solve_u2p_rank(str));
     fcs_card_set_suit(card, fc_solve_u2p_suit(str));
 
     return card;

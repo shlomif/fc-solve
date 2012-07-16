@@ -45,7 +45,7 @@ static fcs_card_t make_card(int rank, int suit)
 
     card = fc_solve_empty_card;
 
-    fcs_card_set_num(card, rank);
+    fcs_card_set_rank(card, rank);
     fcs_card_set_suit(card, suit);
 
     return card;
