@@ -320,7 +320,7 @@ char * fc_solve_state_as_string(
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
     int a, b;
     fcs_bool_t rank_is_null;
-    int max_num_cards, s, card_num;
+    int max_num_cards, s, card_idx;
     fcs_cards_column_t col;
     int col_len;
 
@@ -455,13 +455,13 @@ char * fc_solve_state_as_string(
             }
         }
 
-        for(card_num=0;card_num<max_num_cards;card_num++)
+        for (card_idx = 0 ; card_idx < max_num_cards ; card_idx++)
         {
             for(s = 0; s<stacks_num; s++)
             {
                 col = fcs_state_get_col(*state, stack_locs[s]);
                 col_len = fcs_col_len(col);
-                if (card_num >= col_len)
+                if (card_idx >= col_len)
                 {
                     fc_solve_append_string_sprintf(
                         app_str,
@@ -474,7 +474,7 @@ char * fc_solve_state_as_string(
                         app_str,
                         "%3s ",
                         fc_solve_card_perl2user(
-                            fcs_col_get_card(col, card_num),
+                            fcs_col_get_card(col, card_idx),
                             stack_card_str,
                             display_10_as_t
                             )
@@ -528,15 +528,15 @@ char * fc_solve_state_as_string(
             col_len = fcs_col_len(col);
             fc_solve_append_string_sprintf(app_str, "%s", ": ");
 
-            for(card_num=0;card_num<col_len;card_num++)
+            for (card_idx = 0 ; card_idx < col_len ; card_idx++)
             {
                 fc_solve_card_perl2user(
-                    fcs_col_get_card(col, card_num),
+                    fcs_col_get_card(col, card_idx),
                     stack_card_str,
                     display_10_as_t
                 );
                 fc_solve_append_string_sprintf(app_str, "%s", stack_card_str);
-                if (card_num < col_len-1)
+                if (card_idx < col_len-1)
                 {
                     fc_solve_append_string_sprintf(app_str, "%s", " ");
                 }

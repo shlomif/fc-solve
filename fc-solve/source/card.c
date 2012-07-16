@@ -237,7 +237,7 @@ char * fc_solve_p2u_rank(
 static GCC_INLINE char * fc_solve_p2u_suit(
         int suit,
         char * str,
-        fcs_bool_t card_num_is_null
+        fcs_bool_t rank_is_null
 #ifndef FCS_WITHOUT_CARD_FLIPPING
         , fcs_bool_t flipped
 #endif
@@ -252,7 +252,7 @@ static GCC_INLINE char * fc_solve_p2u_suit(
 #endif
     if (suit == 0)
     {
-        if (card_num_is_null)
+        if (rank_is_null)
 #ifdef CARD_DEBUG_PRES
             strncpy(str, "*", 2);
 #else
@@ -278,7 +278,7 @@ static GCC_INLINE char * fc_solve_p2u_suit(
  * */
 char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
 {
-    fcs_bool_t card_num_is_null;
+    fcs_bool_t rank_is_null;
 #ifdef CARD_DEBUG_PRES
     if (fcs_card_get_flipped(card))
     {
@@ -290,7 +290,7 @@ char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
     fc_solve_p2u_rank(
         fcs_card_rank(card),
         str,
-        &card_num_is_null,
+        &rank_is_null,
         t
 #ifndef FCS_WITHOUT_CARD_FLIPPING
         ,
@@ -298,14 +298,14 @@ char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
 #endif
         );
     /*
-     * Notice that if card_num_is_null is found to be true
+     * Notice that if rank_is_null is found to be true
      * it will affect the output of the suit too.
      *
      * */
     fc_solve_p2u_suit(
         fcs_card_suit(card),
         str+strlen(str),
-        card_num_is_null
+        rank_is_null
 #ifndef FCS_WITHOUT_CARD_FLIPPING
         ,
         fcs_card_get_flipped(card)
