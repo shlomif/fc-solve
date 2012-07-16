@@ -29,8 +29,6 @@ goes on until it ends.
 the struct to fit within the processor's cache line. Like the Linux kernel
 where the most important elements are at the first 32 bytes of the struct.
 
-* See about getting rid of the unused context variable where appropriate.
-
 * Investigate a way to have positions_by_rank also index according to the
 suit, and to traverse only the possible parents or children based on the
 suit.

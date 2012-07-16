@@ -306,3 +306,5 @@ function.
 (DFS vs BeFS/BFS/Opt) and sub-scan (random_dfs, soft_dfs, etc.), to facilitate
 multiplexing them.
 
+* See about getting rid of the unused context variable where appropriate.
+
