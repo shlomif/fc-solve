@@ -37,6 +37,7 @@ extern "C" {
 #include "config.h"
 
 #include "fcs_move.h"
+#include "fcs_limit.h"
 
 #include "inline.h"
 #include "bool.h"
@@ -402,7 +403,7 @@ struct fcs_state_extra_info_struct
     /*
      * The iteration in which this state was marked as visited
      * */
-    int visited_iter;
+    fcs_int_limit_t visited_iter;
 #endif
 
     /*
