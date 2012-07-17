@@ -146,6 +146,7 @@ FCS_SHARED_LIB = libfreecell-solver.so.0
 TARGETS = fc-solve $(FCS_SHARED_LIB) \
           freecell-solver-range-parallel-solve \
           freecell-solver-multi-thread-solve \
+          freecell-solver-fork-solve \
           freecell-solver-fc-pro-range-solve
 
 ifeq ($(EXIT),1)
@@ -232,6 +233,9 @@ freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
+	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
+
+freecell-solver-fork-solve: forking_range_solver.o $(STATIC_LIB)
 	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
 
 FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o
