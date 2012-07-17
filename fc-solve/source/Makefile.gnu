@@ -22,8 +22,8 @@ ifeq ($(FREECELL_ONLY),1)
 endif
 
 CFLAGS := -Wall -DFCS_DBM_USE_LIBAVL=1 -I./libavl/ -I.
-GCC_COMPAT := 
-INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp 
+GCC_COMPAT :=
+INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
 ARCH := $(shell uname -i)
 
@@ -55,8 +55,8 @@ else ifeq ($(COMPILER),sun)
 else ifeq ($(COMPILER),lcc)
 	CC = lcc
 	GCC_COMPAT := 1
-else ifeq ($(COMPILER),pcc)	
-	CC = pcc 
+else ifeq ($(COMPILER),pcc)
+	CC = pcc
 	GCC_COMPAT := 1
 	CFLAGS += -I /usr/include/linux -I /usr/lib/gcc/i586-manbo-linux-gnu/4.3.2/include/
 else ifeq ($(COMPILER),tcc)
@@ -69,7 +69,7 @@ else ifeq ($(COMPILER),tendra)
 		CFLAGS += -g
 	endif
 	CREATE_SHARED = ld -shared
-	END_SHARED := 	
+	END_SHARED :=
 else
 	CC = error
 endif
@@ -117,7 +117,7 @@ ifneq ($(WITHOUT_CARD_FLIPS),0)
 	CFLAGS += -DFCS_WITHOUT_CARD_FLIPPING=1
 endif
 
-EXTRA_CFLAGS = 
+EXTRA_CFLAGS =
 CFLAGS += $(EXTRA_CFLAGS)
 
 LFLAGS := $(CFLAGS) -fwhole-program
@@ -218,7 +218,7 @@ $(FCS_SHARED_LIB): $(OBJECTS)
 ifeq ($(COMPILER),tcc)
     LIB_LINK_PRE :=
 else
-    LIB_LINK_PRE := -Wl,-rpath,. 
+    LIB_LINK_PRE := -Wl,-rpath,.
 endif
 
 LIB_LINK_PRE += -L.
@@ -232,7 +232,7 @@ freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
-	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) 
+	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
 
 FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o
 
