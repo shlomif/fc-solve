@@ -60,15 +60,15 @@ static microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
     return ret;
 }
 
-static void microsoft_rand_free(microsoft_rand_t * rand)
+static void microsoft_rand_free(microsoft_rand_t * my_rand_gen)
 {
-    free(rand);
+    free(my_rand_gen);
 }
 
-static int microsoft_rand_rand(microsoft_rand_t * rand)
+static int microsoft_rand_rand(microsoft_rand_t * my_rand_gen)
 {
-    rand->seed = (rand->seed * 214013 + 2531011);
-    return (rand->seed >> 16) & 0x7fff;
+    my_rand_gen->seed = (my_rand_gen->seed * 214013 + 2531011);
+    return (my_rand_gen->seed >> 16) & 0x7fff;
 }
 
 typedef int CARD;
@@ -153,7 +153,7 @@ int main(int argc, char * argv[])
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
     int gamenumber;
-    microsoft_rand_t * rand;
+    microsoft_rand_t * my_rand_gen;
     int print_ts = 0;
     int arg;
 
@@ -177,10 +177,10 @@ int main(int argc, char * argv[])
     for (i = 0; i < 52; i++)      /* put unique card in each deck loc. */
         deck[i] = i;
 
-    rand = microsoft_rand_alloc(gamenumber); /* gamenumber is seed for rand() */
+    my_rand_gen = microsoft_rand_alloc(gamenumber); /* gamenumber is seed for my_rand_gen() */
     for (i = 0; i < 52; i++)
     {
-        j = microsoft_rand_rand(rand) % wLeft;
+        j = microsoft_rand_rand(my_rand_gen) % wLeft;
         card[(i%8)+1][i/8] = deck[j];
         deck[j] = deck[--wLeft];
     }
@@ -208,6 +208,6 @@ int main(int argc, char * argv[])
         }
     }
 
-    microsoft_rand_free(rand);
+    microsoft_rand_free(my_rand_gen);
     return 0;
 }
