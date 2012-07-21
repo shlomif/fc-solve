@@ -70,21 +70,21 @@ typedef struct fc_solve_display_information_context_struct fc_solve_display_info
 
 static void my_iter_handler(
     void * user_instance,
-    int iter_num,
+    fcs_int_limit_t iter_num,
     int depth,
     void * ptr_state,
-    int parent_iter_num,
+    fcs_int_limit_t parent_iter_num,
     void * lp_context
     )
 {
     fc_solve_display_information_context_t * context;
     context = (fc_solve_display_information_context_t*)lp_context;
 
-    fprintf(stdout, "Iteration: %i\n", iter_num);
+    fprintf(stdout, "Iteration: %li\n", (long)iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
     if (context->display_parent_iter_num)
     {
-        fprintf(stdout, "Parent Iteration: %i\n", parent_iter_num);
+        fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
     }
     fprintf(stdout, "\n");
 
@@ -133,7 +133,7 @@ static int cmd_line_callback(
 
     if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
     {
-        freecell_solver_user_set_iter_handler(
+        freecell_solver_user_set_iter_handler_long(
             instance,
             my_iter_handler,
             dc

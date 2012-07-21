@@ -43,17 +43,17 @@
 
 static void my_iter_handler(
     void * user_instance,
-    int iter_num,
+    fcs_int_limit_t iter_num,
     int depth,
     void * ptr_state,
-    int parent_iter_num,
+    fcs_int_limit_t parent_iter_num,
     void * lp_context
     )
 {
     fc_solve_display_information_context_t * context;
     context = (fc_solve_display_information_context_t*)lp_context;
 
-    fprintf(stdout, "Iteration: %i\n", iter_num);
+    fprintf(stdout, "Iteration: %li\n", (long)iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
     fprintf(stdout, "Stored-States: %li\n",
         (long)freecell_solver_user_get_num_states_in_collection_long(user_instance)
@@ -63,7 +63,7 @@ static void my_iter_handler(
         );
     if (context->display_parent_iter_num)
     {
-        fprintf(stdout, "Parent Iteration: %i\n", parent_iter_num);
+        fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
     }
     fprintf(stdout, "\n");
 
@@ -491,7 +491,7 @@ static int cmd_line_callback(
     else if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
     {
 #define set_iter_handler() \
-        freecell_solver_user_set_iter_handler(   \
+        freecell_solver_user_set_iter_handler_long(   \
             instance,   \
             my_iter_handler,   \
             dc    \
@@ -555,7 +555,7 @@ static int cmd_line_callback(
     else if ((!strcmp(argv[arg], "--reset")))
     {
         init_debug_context(dc);
-        freecell_solver_user_set_iter_handler(
+        freecell_solver_user_set_iter_handler_long(
             instance,
             NULL,
             NULL
@@ -599,7 +599,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
     {
         if (debug_iter_output_on)
         {
-            freecell_solver_user_set_iter_handler(
+            freecell_solver_user_set_iter_handler_long(
                 current_instance,
                 NULL,
                 NULL
@@ -608,7 +608,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
         }
         else
         {
-            freecell_solver_user_set_iter_handler(
+            freecell_solver_user_set_iter_handler_long(
                 current_instance,
                 my_iter_handler,
                 dc
