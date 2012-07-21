@@ -210,9 +210,25 @@ typedef void (*freecell_solver_user_iter_handler_t)
      void * context
      );
 
+typedef void (*freecell_solver_user_long_iter_handler_t)
+    (
+     void * user_instance,
+     fcs_int_limit_t iter_num,
+     int depth,
+     void * ptr_state,
+     fcs_int_limit_t parent_iter_num,
+     void * context
+     );
+
 DLLEXPORT extern void freecell_solver_user_set_iter_handler(
     void * user_instance,
     freecell_solver_user_iter_handler_t iter_handler,
+    void * iter_handler_context
+    );
+
+DLLEXPORT extern void freecell_solver_user_set_iter_handler_long(
+    void * user_instance,
+    freecell_solver_user_long_iter_handler_t iter_handler,
     void * iter_handler_context
     );
 

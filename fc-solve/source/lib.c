@@ -138,6 +138,7 @@ typedef struct
     int state_validity_ret;
     fcs_card_t state_validity_card;
     freecell_solver_user_iter_handler_t iter_handler;
+    freecell_solver_user_long_iter_handler_t long_iter_handler;
     void * iter_handler_context;
 
     fc_solve_soft_thread_t * soft_thread;
@@ -208,6 +209,7 @@ static void user_initialize(
 
     user->instances_list = NULL;
     user->num_instances = 0;
+    user->long_iter_handler = NULL;
     user->iter_handler = NULL;
     user->current_iterations_limit = -1;
 
@@ -1786,16 +1788,25 @@ static void iter_handler_wrapper(
     state_raw.val = ptr_state->val;
     fc_solve_init_locs(&(state_raw.locs));
 
-    user->iter_handler(
-        api_instance,
-        iter_num,
-        depth,
-        (void *)(&state_raw),
-        parent_iter_num,
-        user->iter_handler_context
-        );
+#define CALL(func_ptr) (func_ptr) \
+    ( \
+      api_instance, \
+      iter_num, \
+      depth, \
+      (void *)&state_raw, \
+      parent_iter_num, \
+      user->iter_handler_context \
+    )
 
-    return;
+    if (user->long_iter_handler)
+    {
+        CALL(user->long_iter_handler);
+    }
+    else
+    {
+        CALL(user->iter_handler);
+    }
+#undef CALL
 }
 
 static void set_debug_iter_output_func_to_val(
@@ -1809,8 +1820,10 @@ static void set_debug_iter_output_func_to_val(
     FLARES_LOOP_END()
 }
 
-void DLLEXPORT freecell_solver_user_set_iter_handler(
+
+static void set_any_iter_handler(
     void * api_instance,
+    freecell_solver_user_long_iter_handler_t long_iter_handler,
     freecell_solver_user_iter_handler_t iter_handler,
     void * iter_handler_context
     )
@@ -1819,17 +1832,38 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
 
     user = (fcs_user_t *)api_instance;
 
+    user->long_iter_handler = long_iter_handler;
     user->iter_handler = iter_handler;
 
-    if (iter_handler == NULL)
-    {
-        set_debug_iter_output_func_to_val(user, NULL);
-    }
-    else
+    if (iter_handler || long_iter_handler)
     {
         user->iter_handler_context = iter_handler_context;
         set_debug_iter_output_func_to_val(user, iter_handler_wrapper);
     }
+    else
+    {
+        set_debug_iter_output_func_to_val(user, NULL);
+    }
+}
+
+void DLLEXPORT freecell_solver_user_set_iter_handler_long(
+    void * api_instance,
+    freecell_solver_user_long_iter_handler_t long_iter_handler,
+    void * iter_handler_context
+    )
+{
+    return set_any_iter_handler(api_instance, long_iter_handler, NULL, iter_handler_context);
+}
+
+
+
+void DLLEXPORT freecell_solver_user_set_iter_handler(
+    void * api_instance,
+    freecell_solver_user_iter_handler_t iter_handler,
+    void * iter_handler_context
+    )
+{
+    return set_any_iter_handler(api_instance, NULL, iter_handler, iter_handler_context);
 }
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
@@ -2284,7 +2318,10 @@ static int user_next_flare(fcs_user_t * user)
         FCS_STATE_NOT_BEGAN_YET;
 
     flare->obj->debug_iter_output_func =
-        (user->iter_handler ? iter_handler_wrapper : NULL);
+        ((user->iter_handler || user->long_iter_handler)
+         ? iter_handler_wrapper
+         : NULL
+        );
     flare->obj->debug_iter_output_context = user;
 
     flare->name = NULL;
