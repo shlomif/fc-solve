@@ -327,3 +327,7 @@ that are used only by one of the scans.
 in freecell.c.
 ** [ Rejected. Does not appear to be a real need. ]
 
+* Implement long/64-bit/intptr_t limits to the number of states/etc. to make
+the code more 64-bit-enabled.
+** Implement a 64-bit-ready callback.
+

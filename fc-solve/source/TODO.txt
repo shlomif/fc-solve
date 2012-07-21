@@ -10,10 +10,6 @@ Pressing
 Non-pressing
 ------------
 
-* Implement long/64-bit/intptr_t limits to the number of states/etc. to make
-the code more 64-bit-enabled.
-** Implement a 64-bit-ready callback.
-
 * Create a displayer for fc-solve's solutions which will allow seeing where a
 card was moved from (using a colored →) and where it was placed.
 ** Adapt it to dbm_fc_solve's solutions.
