@@ -116,6 +116,11 @@ iterations limit.
 * Check for unmalloced data and if so gracefully exit.
 
 * Experiment with a delta-based state storage.
+    - see delta_states_debondt.c - port it to the main libfreecell-solver.
+    - see: http://fc-solve.shlomifish.org/to-do.html#orig_calc_states .
+
+* Make the dbm_fc_solver not dependent on http://gmplib.org/ by implementing
+our own big ints.
 
 * Adapt the scans based on the parameters of the initial board.
 +
