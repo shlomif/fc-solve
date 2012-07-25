@@ -41,7 +41,7 @@ sub _slurp
 
     open my $in, "<", $filename
         or die "Could not open $filename";
-    
+
     binmode $in;
     local $/;
     my $content = <$in>;
@@ -103,7 +103,7 @@ sub _get_scans_data_helper
 
     my $scans_data = $self->_gen_initial_scans_tensor();
     my $scans_lens_data = $self->_gen_initial_scans_tensor([3]);
-        
+
     my $scan_idx = 0;
 
     my $data_dir = ".data-proc";
@@ -122,16 +122,16 @@ sub _get_scans_data_helper
             {
                 my $data_s = _slurp($scan->data_file_path());
                 my @array = unpack("l*", $data_s);
-                if (($array[$HEADER_START_BOARD_IDX] != 1) || 
-                    ($array[$HEADER_NUM_BOARDS] < $self->num_boards) || 
+                if (($array[$HEADER_START_BOARD_IDX] != 1) ||
+                    ($array[$HEADER_NUM_BOARDS] < $self->num_boards) ||
                     ($array[$HEADER_ITERATIONS_LIMIT] != 100000)
                    )
                 {
                     die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
                 }
-                
+
                 my $c = pdl(\@array);
-                
+
                 writefraw($c, $dest_path);
             }
         }
@@ -153,7 +153,7 @@ sub _get_scans_data_helper
                 my $data_s = _slurp($src);
 
                 my @iters = unpack("l*", $data_s);
-                if (($iters[0] != 1) || ($iters[1] < $self->num_boards()) 
+                if (($iters[0] != 1) || ($iters[1] < $self->num_boards())
                     || ($iters[2] != 100000)
                 )
                 {
@@ -164,7 +164,7 @@ sub _get_scans_data_helper
                 splice @iters, 0, $NUM_NUMBERS_IN_HEADER;
 
                 my $c = pdl(
-                    [\@iters, 
+                    [\@iters,
                     $self->_read_text_ints_file(
                         "data/" . $scan->id() . ".fcs.moves.txt"
                     ),
@@ -173,7 +173,7 @@ sub _get_scans_data_helper
                     ),
                     ]
                 );
-                
+
                 writefraw($c, $dest);
             }
         }
@@ -225,9 +225,9 @@ sub _filter_scans_based_on_black_list_ids
     my %black_list = (map { /(\d+)/?($1 => 1) : () } @$black_list_ids);
 
     return
-        [grep 
+        [grep
             {
-                !exists($black_list{$_->id()}) 
+                !exists($black_list{$_->id()})
             }
             @$scans
         ];
@@ -241,7 +241,7 @@ sub _is_scan_suitable
     return
     (
         scalar(@stat)
-            && 
+            &&
         ($stat[7] >= 12 + ($self->num_boards() + $self->start_board() -1) * 4)
     );
 }
@@ -258,9 +258,9 @@ sub _get_all_scans_list_from_file
     {
         chomp($line);
         my ($id, $cmd_line) = split(/\t/, $line);
-        push @scans, 
-            Shlomif::FCS::CalcMetaScan::Structs::Scan->new( 
-                id => $id, 
+        push @scans,
+            Shlomif::FCS::CalcMetaScan::Structs::Scan->new(
+                id => $id,
                 cmd_line => $cmd_line
             );
     }
@@ -272,7 +272,7 @@ sub _get_all_scans_list_from_file
 sub _black_list_ids_list
 {
     my $self = shift;
-    
+
     open my $black_list_fh, "<", "scans-black-list.txt"
         or die "Could not open 'scans-black-list.txt'! $!.";
     my @black_list_ids = <$black_list_fh>;
@@ -317,7 +317,7 @@ sub _calc_selected_scan_list
 
     $self->_scans_ids_to_indexes_map(
         {
-            map { $self->selected_scans->[$_]->id() => $_ } 
+            map { $self->selected_scans->[$_]->id() => $_ }
             $self->_selected_scans_indexes()
         }
     );
@@ -376,17 +376,17 @@ sub get_scan_cmd_line
     my $max_board = $args->{'max'} || 32_000;
     my $id = $args->{'id'};
     my $argv = $args->{'argv'};
-    my @fc_num = 
+    my @fc_num =
         (exists($args->{'freecells_num'})
-            ?  ("--freecells-num" , $args->{'freecells_num'}) 
+            ?  ("--freecells-num" , $args->{'freecells_num'})
             : ()
         );
 
     return
     [
-        qw(freecell-solver-fc-pro-range-solve), 
+        qw(freecell-solver-fc-pro-range-solve),
         $min_board, $max_board, "20",
-        qw(--total-iterations-limit 100000 --binary-output-to), 
+        qw(--total-iterations-limit 100000 --binary-output-to),
         "data/$id.data.bin",
         @$argv,
         @fc_num,
