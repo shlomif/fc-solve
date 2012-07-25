@@ -298,6 +298,7 @@ int main(int argc, char * argv[])
     int board_num;
     int start_board, end_board, stop_at;
     char * buffer;
+    const char * variant = "freecell";
     char temp_str[10];
     fcs_portable_time_t mytime;
 
@@ -305,6 +306,7 @@ int main(int argc, char * argv[])
 
     char * error_string;
     int parser_ret;
+    fcs_bool_t variant_is_freecell;
 
     fcs_int_limit_t total_iterations_limit_per_board = -1;
 
@@ -328,7 +330,25 @@ int main(int argc, char * argv[])
 
     for (;arg < argc; arg++)
     {
-        if (!strcmp(argv[arg], "--binary-output-to"))
+        if (!strcmp(argv[arg], "--variant"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--variant came without an argument!\n");
+                print_help();
+                exit(-1);
+            }
+            variant = argv[arg];
+
+            if (strlen(variant) > 50)
+            {
+                fprintf(stderr, "--variant's argument is too long!\n");
+                print_help();
+                exit(-1);
+            }
+        }
+        else if (!strcmp(argv[arg], "--binary-output-to"))
         {
             arg++;
             if (arg == argc)
@@ -476,13 +496,36 @@ int main(int argc, char * argv[])
         return (-1);
     }
 
+    variant_is_freecell = (!strcmp(variant, "freecell"));
+    freecell_solver_user_apply_preset(user.instance, variant);
+
     ret = 0;
 
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
-        fc_pro_get_board(board_num, &pos);
+        if (variant_is_freecell)
+        {
+            fc_pro_get_board(board_num, &pos);
 
-        buffer = fc_solve_fc_pro_position_to_string(&pos, 4);
+            buffer = fc_solve_fc_pro_position_to_string(&pos, 4);
+        }
+        else
+        {
+            FILE * from_make_pysol;
+            char command[1000];
+#define BUF_SIZE 2000
+            buffer = calloc(BUF_SIZE, sizeof(buffer[0]));
+
+            sprintf(command, "make_pysol_freecell_board.py -F -t %d %s",
+                    board_num,
+                    variant
+                   );
+
+            from_make_pysol = popen(command, "r");
+            fread(buffer, sizeof(buffer[0]), BUF_SIZE-1, from_make_pysol);
+            pclose(from_make_pysol);
+#undef BUF_SIZE
+        }
 #if 0
         printf("%s\n", buffer);
 #endif
@@ -496,7 +539,6 @@ int main(int argc, char * argv[])
                 );
 
         free(buffer);
-
 
         if (ret == FCS_STATE_SUSPEND_PROCESS)
         {
@@ -516,27 +558,37 @@ int main(int argc, char * argv[])
         {
             moves_processed_t * fc_pro_moves;
             fcs_extended_move_t move;
+            int num_moves;
 
             print_int_wrapper((int)freecell_solver_user_get_num_times_long(user.instance));
             printf("[[Num FCS Moves]]=%d\n",
-                    freecell_solver_user_get_moves_left(user.instance)
+                    (num_moves =
+                     freecell_solver_user_get_moves_left(user.instance)
+                    )
                   );
 
-            fc_pro_moves = moves_processed_gen(&pos, 4, user.instance);
-
-            printf("[[Num FCPro Moves]]=%d\n[[Start]]\n",
-                    moves_processed_get_moves_left(fc_pro_moves)
-                  );
-
-            len = 0;
-            while (! moves_processed_get_next_move(fc_pro_moves, &move))
+            if (variant_is_freecell)
             {
-                moves_processed_render_move(move, temp_str);
-                printf("%s%c", temp_str,
-                        ((((++len) % 10) == 0) ? '\n' : ' ')
-                    );
+                fc_pro_moves = moves_processed_gen(&pos, 4, user.instance);
+
+                printf("[[Num FCPro Moves]]=%d\n[[Start]]\n",
+                       moves_processed_get_moves_left(fc_pro_moves)
+                      );
+
+                len = 0;
+                while (! moves_processed_get_next_move(fc_pro_moves, &move))
+                {
+                    moves_processed_render_move(move, temp_str);
+                    printf("%s%c", temp_str,
+                           ((((++len) % 10) == 0) ? '\n' : ' ')
+                          );
+                }
+                moves_processed_free(fc_pro_moves);
             }
-            moves_processed_free(fc_pro_moves);
+            else
+            {
+                printf("[[Num FCPro Moves]]=%d\n[[Start]]\n", num_moves);
+            }
             printf("\n%s\n", "[[End]]");
         }
 
@@ -552,7 +604,6 @@ int main(int argc, char * argv[])
             fflush(stdout);
 
         }
-
 
         freecell_solver_user_recycle(user.instance);
     }
