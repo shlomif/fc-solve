@@ -16,6 +16,11 @@ card was moved from (using a colored →) and where it was placed.
 ** Create a GUI version.
 ** Add the ability to expand moves to atomic, single-card, moves.
 
+* [dbm_fc_solver]: create a different positions collection and queue for
+every depth of non-reversible moves, and recycle the depths that were fully
+traversed. This is similar to the FCC-fc-solver (FCC == fully connected
+components), but without the costly FCC analysis.
+
 * If +-opt+ is specified for the flare, then make sure that if the flares
 loop stop it when it's doing the optimization scan, then the optimization scan
 goes on until it ends.
