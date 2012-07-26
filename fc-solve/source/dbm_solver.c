@@ -312,7 +312,6 @@ typedef struct {
     fcs_encoded_state_buffer_t queue_solution;
     fcs_meta_compact_allocator_t meta_alloc;
     int queue_num_extracted_and_processed;
-    /* TODO : offload the queue to the hard disk. */
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fcs_offloading_queue_t queue;
     const char * offload_dir_path;
