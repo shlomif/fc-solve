@@ -3,11 +3,12 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
 use File::Spec;
+use File::Temp qw( tempdir );
 
 sub trap_board
 {
@@ -56,6 +57,33 @@ sub trap_board
     return { out_lines => \@lines };
 }
 
+sub trap_dbm
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $args = shift;
+
+    my $board_fn = $args->{board_fn};
+
+    my $dbm_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/dbm_fc_solver");
+
+    my $temp_dir = tempdir (CLEANUP => 1);
+
+    open my $fc_solve_output,
+        "$dbm_solve_exe " . shell_quote(
+            "--offload-dir-path", $temp_dir, "--num-threads", 1,
+            $board_fn
+        ) .
+        " |"
+        or Carp::confess "Error! Could not open the fc-solve pipeline";
+
+    my @lines = <$fc_solve_output>;
+
+    close($fc_solve_output);
+
+    return { out_lines => \@lines };
+}
+
 {
     my $fc_solve_output = trap_board({ deal => 1941, theme => ['--show-exceeded-limits', '--max-iters', '10'], });
 
@@ -85,6 +113,130 @@ sub trap_board
             Total\ number\ of\ states\ checked\ is\ 10\.\n
         /msx,
         "Checking that '-sel' (shortened option) is working properly.",
+    );
+}
+
+{
+
+    my $WS = ' ';
+    my $needle = <<"EOF";
+Success!
+--------
+Foundations: H-T C-8 D-A S-J$WS
+Freecells:  7D$WS$WS$WS$WS
+: KH QC JD
+: KC QH
+: 3D
+: KS QD JC TD 9C 8D
+: 2D KD QS JH TC 9D
+: 5D
+: 4D
+: 6D
+
+==
+Column 4 -> Freecell 1
+--------
+Foundations: H-T C-8 D-A S-J$WS
+Freecells:  7D  9D
+: KH QC JD
+: KC QH
+: 3D
+: KS QD JC TD 9C 8D
+: 2D KD QS JH TC
+: 5D
+: 4D
+: 6D
+
+==
+Column 4 -> Column 0
+--------
+Foundations: H-T C-8 D-A S-J$WS
+Freecells:  7D  9D
+: KH QC JD TC
+: KC QH
+: 3D
+: KS QD JC TD 9C 8D
+: 2D KD QS JH
+: 5D
+: 4D
+: 6D
+
+==
+Freecell 1 -> Column 0
+--------
+Foundations: H-T C-8 D-A S-J$WS
+Freecells:  7D$WS$WS$WS$WS
+: KH QC JD TC 9D
+: KC QH
+: 3D
+: KS QD JC TD 9C 8D
+: 2D KD QS JH
+: 5D
+: 4D
+: 6D
+
+==
+Column 4 -> Foundation 0
+--------
+Foundations: H-J C-8 D-A S-J$WS
+Freecells:  7D$WS$WS$WS$WS
+: KH QC JD TC 9D
+: KC QH
+: 3D
+: KS QD JC TD 9C 8D
+: 2D KD QS
+: 5D
+: 4D
+: 6D
+
+==
+Column 4 -> Foundation 3
+--------
+Foundations: H-J C-8 D-A S-Q$WS
+Freecells:  7D$WS$WS$WS$WS
+: KH QC JD TC 9D
+: KC QH
+: 3D
+: KS QD JC TD 9C 8D
+: 2D KD
+: 5D
+: 4D
+: 6D
+
+==
+Column 4 -> Freecell 1
+--------
+Foundations: H-K C-K D-K S-K$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+
+==
+END
+EOF
+
+    my $dbm_output = trap_dbm(
+        {
+            board_fn =>
+                File::Spec->catfile(
+                    $ENV{FCS_SRC_PATH}, 't', 't', 'data',
+                    'sample-boards', '2freecells-24-mid-with-colons.board'
+                ),
+        }
+    );
+
+    my $output_text = join('', @{$dbm_output->{out_lines}});
+
+    # TEST
+    ok (
+        (index( $output_text, $needle) >= 0),
+        "dbm_fc_solver invocation contains the solution's output."
     );
 }
 
