@@ -309,7 +309,12 @@ typedef struct {
     long max_count_of_items_in_queue;
     fcs_bool_t queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
+#ifdef FCS_DBM_WITHOUT_CACHES
+    fcs_dbm_record_t * queue_solution_ptr;
+    fcs_dbm_record_t physical_queue_solution;
+#else
     fcs_encoded_state_buffer_t queue_solution;
+#endif
     fcs_meta_compact_allocator_t meta_alloc;
     int queue_num_extracted_and_processed;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -322,6 +327,7 @@ typedef struct {
 #endif
     long num_states_in_collection;
     FILE * out_fh;
+    fcs_encoded_state_buffer_t parent_state_enc;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(
@@ -484,7 +490,7 @@ static GCC_INLINE void instance_destroy(
 static GCC_INLINE void instance_check_key(
     fcs_dbm_solver_instance_t * instance,
     fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent,
+    fcs_dbm_record_t * parent,
     unsigned char move
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
@@ -612,7 +618,7 @@ static GCC_INLINE void instance_check_multiple_keys(
     FCS_LOCK(instance->storage_lock);
     for (; list ; list = list->next)
     {
-        instance_check_key(instance, &(list->key), &(list->parent), list->move
+        instance_check_key(instance, &(list->key), list->parent, list->move
 #ifdef FCS_DBM_CACHE_ONLY
             , moves_to_parent
 #endif
@@ -687,6 +693,9 @@ static void * instance_run_solver_thread(void * void_arg)
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
 #endif
+#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
+            fcs_dbm_record_t * token;
+#endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     arg = (thread_arg_t *)void_arg;
@@ -724,9 +733,6 @@ static void * instance_run_solver_thread(void * void_arg)
 
         if ((should_terminate = instance->should_terminate) == DONT_TERMINATE)
         {
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-            fcs_dbm_record_t * token;
-#endif
             if (instance->count_of_items_in_queue >= instance->max_count_of_items_in_queue)
             {
                 instance->should_terminate = should_terminate = QUEUE_TERMINATE;
@@ -821,6 +827,7 @@ static void * instance_run_solver_thread(void * void_arg)
         if (instance_solver_thread_calc_derived_states(
             &state,
             &(item->key),
+            token,
             &derived_list,
             &derived_list_recycle_bin,
             &derived_list_allocator,
@@ -830,7 +837,11 @@ static void * instance_run_solver_thread(void * void_arg)
             FCS_LOCK(instance->queue_lock);
             instance->should_terminate = SOLUTION_FOUND_TERMINATE;
             instance->queue_solution_was_found = TRUE;
+#ifdef FCS_DBM_WITHOUT_CACHES
+            instance->queue_solution_ptr = token;
+#else
             instance->queue_solution = item->key;
+#endif
             FCS_UNLOCK(instance->queue_lock);
             break;
         }
@@ -927,7 +938,7 @@ static const char * move_to_string(unsigned char move, char * move_buffer)
 
 static void calc_trace(
     fcs_dbm_solver_instance_t * instance,
-    fcs_encoded_state_buffer_t * ptr_initial_key,
+    fcs_dbm_record_t * ptr_initial_record,
     fcs_encoded_state_buffer_t * * ptr_trace,
     int * ptr_trace_num
     )
@@ -936,20 +947,26 @@ static void calc_trace(
     int trace_max_num;
     fcs_encoded_state_buffer_t * trace;
     fcs_encoded_state_buffer_t * key_ptr;
+    fcs_dbm_record_t * record;
 
 #define GROW_BY 100
     trace_num = 0;
     trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
-    trace[trace_num] = *ptr_initial_key;
-
     key_ptr = trace;
-    while (trace[trace_num].s[0])
+    record = ptr_initial_record;
+
+    while (record)
     {
+#if 1
+        *(key_ptr) = record->key;
         if ((++trace_num) == trace_max_num)
         {
             trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
             key_ptr = &(trace[trace_num-1]);
         }
+        record = fcs_dbm_record_get_parent_ptr(record);
+        key_ptr++;
+#else
 #ifndef FCS_DBM_CACHE_ONLY
 #ifndef FCS_DBM_WITHOUT_CACHES
         if (! pre_cache_lookup_parent(
@@ -970,7 +987,7 @@ static void calc_trace(
             }
         }
 #endif
-        key_ptr++;
+#endif
     }
 #undef GROW_BY
     *ptr_trace_num = trace_num;
@@ -984,14 +1001,16 @@ static void populate_instance_with_intermediate_input_line(
     fc_solve_delta_stater_t * delta,
     fcs_state_keyval_pair_t * init_state_ptr,
     char * line,
-    long line_num
+    long line_num,
+    fcs_encoded_state_buffer_t * parent_state_enc
     )
 {
     char * s_ptr;
     fcs_encoded_state_buffer_t final_stack_encoded_state;
     int hex_digits;
     fcs_kv_state_t kv_init, kv_running;
-    fcs_encoded_state_buffer_t running_parent, running_key;
+    fcs_encoded_state_buffer_t running_key;
+    fcs_dbm_record_t * running_parent;
     fcs_state_keyval_pair_t running_state;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fcs_dbm_record_t * token = NULL;
@@ -1008,6 +1027,7 @@ static void populate_instance_with_intermediate_input_line(
         &running_state, STACKS_NUM, running_indirect_stacks_buffer
     );
     fcs_init_encoded_state(&(final_stack_encoded_state));
+    *parent_state_enc = final_stack_encoded_state;
 
     s_ptr = line;
 
@@ -1040,7 +1060,7 @@ static void populate_instance_with_intermediate_input_line(
     /* The NULL parent and move for indicating this is the initial
      * state. */
     fcs_init_and_encode_state(delta, &(running_state), &running_key);
-    fcs_init_encoded_state(&(running_parent));
+    running_parent = NULL;
 
 #ifdef FCS_DBM_CACHE_ONLY
     running_moves = NULL;
@@ -1052,11 +1072,9 @@ static void populate_instance_with_intermediate_input_line(
     cache_insert(&(instance->cache), &(running_key), running_moves, '\0');
 #endif
 #else
-    fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent);
+    running_parent = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), running_parent);
 #endif
     instance->num_states_in_collection++;
-
-    running_parent = running_key;
 
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
     {
@@ -1130,10 +1148,9 @@ static void populate_instance_with_intermediate_input_line(
         running_moves = (cache_insert(&(instance->cache), &(running_key), running_moves, move))->moves_to_key;
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), &running_parent);
+        token = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), running_parent);
 #endif
         instance->num_states_in_collection++;
-        running_parent = running_key;
 
         /* We need to do the round-trip from encoding back
          * to decoding, because the order can change after
@@ -1187,6 +1204,7 @@ static void populate_instance_with_intermediate_input_line(
 static void instance_run_all_threads(
     fcs_dbm_solver_instance_t * instance,
     fcs_state_keyval_pair_t * init_state,
+    fcs_encoded_state_buffer_t * parent_state_enc,
     int num_threads)
 {
     int i, check;
@@ -1196,6 +1214,7 @@ static void instance_run_all_threads(
     FILE * out_fh = instance->out_fh;
 #endif
 
+    instance->parent_state_enc = *parent_state_enc;
     threads = malloc(sizeof(threads[0]) * num_threads);
 
 #ifdef T
@@ -1305,6 +1324,7 @@ static unsigned char get_move_from_parent_to_child(
     instance_solver_thread_calc_derived_states(
         &parent_state,
         &parent,
+        NULL,
         &derived_list,
         &derived_list_recycle_bin,
         &derived_list_allocator,
@@ -1360,7 +1380,7 @@ static void trace_solution(
     fflush (out_fh);
     /* Now trace the solution */
 
-    calc_trace(instance, &(instance->queue_solution), &trace, &trace_num);
+    calc_trace(instance, instance->queue_solution_ptr, &trace, &trace_num);
 
     fc_solve_init_locs(&locs);
 
@@ -1417,7 +1437,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 {
     fcs_bool_t ret = FALSE;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-    fcs_offloading_queue_item_t token;
+    fcs_dbm_record_t * token;
 #endif
 
 #ifdef T
@@ -1446,7 +1466,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 #endif
 
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-            while (fcs_offloading_queue__extract(&(instance->queue), &token))
+            while (fcs_offloading_queue__extract(&(instance->queue), (fcs_offloading_queue_item_t *)(&token)))
 #else
             for (
                 item = instance->queue_head ;
@@ -1457,7 +1477,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
             {
                 int i;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-                physical_item.key = *(const fcs_encoded_state_buffer_t *)token;
+                physical_item.key = token->key;
 #endif
 
                 for (i=0; i < item->key.s[0] ; i++)
@@ -1485,7 +1505,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                     int trace_num;
                     fcs_encoded_state_buffer_t * trace;
 
-                    calc_trace(instance, &(item->key), &trace, &trace_num);
+                    calc_trace(instance, token, &trace, &trace_num);
 
                     /*
                      * We stop at 1 because the deepest state does not contain
@@ -1819,12 +1839,14 @@ int main(int argc, char * argv[])
                 }
                 skip_queue_output = FALSE;
                 {
+                    fcs_encoded_state_buffer_t parent_state_enc;
                     populate_instance_with_intermediate_input_line(
                         &limit_instance,
                         delta,
                         &init_state,
                         line,
-                        line_num
+                        line_num,
+                        &parent_state_enc
                         );
 
 #ifdef FCS_DBM_SINGLE_THREAD
@@ -1833,7 +1855,7 @@ int main(int argc, char * argv[])
 #define NUM_THREADS() num_threads
 #endif
                     instance_run_all_threads(
-                        &limit_instance, &init_state, NUM_THREADS()
+                        &limit_instance, &init_state, &parent_state_enc, NUM_THREADS()
                         );
 
                     if (limit_instance.queue_solution_was_found)
@@ -1864,16 +1886,18 @@ int main(int argc, char * argv[])
 
                 if (!skip_queue_output)
                 {
+                    fcs_encoded_state_buffer_t parent_state_enc;
                     populate_instance_with_intermediate_input_line(
                         &queue_instance,
                         delta,
                         &init_state,
                         line,
-                        line_num
+                        line_num,
+                        &parent_state_enc
                         );
 
                     instance_run_all_threads(
-                        &queue_instance, &init_state, NUM_THREADS()
+                        &queue_instance, &init_state, &parent_state_enc, NUM_THREADS()
                         );
 
                     if (handle_and_destroy_instance_solution(
@@ -1925,7 +1949,7 @@ int main(int argc, char * argv[])
                       iters_delta_limit, offload_dir_path, out_fh);
 
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-    key_ptr = &(instance.first_key);
+        key_ptr = &(instance.first_key);
 #else
         first_item =
             (fcs_dbm_queue_item_t *)
@@ -1938,8 +1962,6 @@ int main(int argc, char * argv[])
         first_item->moves_to_key = NULL;
 #endif
         fcs_init_and_encode_state(delta, &(init_state), KEY_PTR());
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-#endif
 
         /* The NULL parent and move for indicating this is the initial
          * state. */
@@ -1952,7 +1974,7 @@ int main(int argc, char * argv[])
         cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance.store, KEY_PTR(), &(parent));
+        token = fc_solve_dbm_store_insert_key_value(instance.store, KEY_PTR(), NULL);
 #endif
 
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -1963,7 +1985,7 @@ int main(int argc, char * argv[])
         instance.num_states_in_collection++;
         instance.count_of_items_in_queue++;
 
-        instance_run_all_threads(&instance, &init_state, NUM_THREADS());
+        instance_run_all_threads(&instance, &init_state, &parent, NUM_THREADS());
         handle_and_destroy_instance_solution(&instance, out_fh, delta);
     }
 

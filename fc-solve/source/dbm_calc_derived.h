@@ -55,7 +55,7 @@ struct fcs_derived_state_struct
 {
     fcs_state_keyval_pair_t state;
     fcs_encoded_state_buffer_t key;
-    fcs_encoded_state_buffer_t parent;
+    fcs_dbm_record_t * parent;
     struct fcs_derived_state_struct * next;
     fcs_bool_t is_reversible_move;
     fcs_fcc_move_t move;
@@ -117,7 +117,7 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
 #define COMMIT_NEW_STATE(src, dest, is_reversible) \
 { \
  \
-    ptr_new_state->parent = *(key); \
+    ptr_new_state->parent = parent_ptr; \
     ptr_new_state->move = MAKE_MOVE((src), (dest)); \
  \
     ptr_new_state->is_reversible_move = (is_reversible); \
@@ -312,6 +312,7 @@ static GCC_INLINE int horne_prune(
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_state_keyval_pair_t * init_state_kv_ptr,
     fcs_encoded_state_buffer_t * key,
+    fcs_dbm_record_t * parent_ptr,
     fcs_derived_state_t * * derived_list,
     fcs_derived_state_t * * derived_list_recycle_bin,
     fcs_compact_allocator_t * derived_list_allocator,

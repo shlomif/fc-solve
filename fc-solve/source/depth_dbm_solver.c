@@ -529,7 +529,7 @@ static GCC_INLINE void instance_check_key(
     fcs_dbm_solver_instance_t * instance,
     int key_depth,
     fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent,
+    fcs_dbm_record_t * parent,
     unsigned char move
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
@@ -671,7 +671,7 @@ static GCC_INLINE void instance_check_multiple_keys(
         coll = &(instance->colls_by_depth[key_depth]);
 
         FCS_LOCK(coll->storage_lock);
-        instance_check_key(instance, key_depth, &(list->key), &(list->parent), list->move
+        instance_check_key(instance, key_depth, &(list->key), list->parent, list->move
 #ifdef FCS_DBM_CACHE_ONLY
             , moves_to_parent
 #endif
@@ -887,6 +887,7 @@ static void * instance_run_solver_thread(void * void_arg)
         if (instance_solver_thread_calc_derived_states(
             &state,
             &(item->key),
+            token,
             &derived_list,
             &derived_list_recycle_bin,
             &derived_list_allocator,
@@ -1195,6 +1196,7 @@ static unsigned char get_move_from_parent_to_child(
     instance_solver_thread_calc_derived_states(
         &parent_state,
         &parent,
+        NULL,
         &derived_list,
         &derived_list_recycle_bin,
         &derived_list_allocator,
@@ -1849,7 +1851,7 @@ int main(int argc, char * argv[])
         cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance.colls_by_depth[0].store, KEY_PTR(), &(parent));
+        token = fc_solve_dbm_store_insert_key_value(instance.colls_by_depth[0].store, KEY_PTR(), NULL);
 #endif
 
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE

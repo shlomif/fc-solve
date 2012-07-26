@@ -64,7 +64,7 @@ static GCC_INLINE fcs_dbm_record_t * fcs_dbm_record_get_parent_ptr(
     )
 {
     return (fcs_dbm_record_t *)(rec->parent_and_refcount &
-        (~(0xFF << (sizeof(rec->parent_and_refcount) - 1)))
+        (~(((uintptr_t)0xFF) << ((sizeof(rec->parent_and_refcount) - 1)*8)))
     );
 }
 

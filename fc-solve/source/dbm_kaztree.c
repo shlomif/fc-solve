@@ -44,7 +44,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
     fcs_dbm_store_t store,
     const fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent
+    fcs_dbm_record_t * parent
 )
 {
     dbm_t * db;
@@ -64,12 +64,7 @@ fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
 
 #ifdef FCS_DBM_RECORD_POINTER_REPR
     to_check->key = *key;
-    {
-        fcs_dbm_record_t parent_to_check;
-
-        parent_to_check.key = *parent;
-        fcs_dbm_record_set_parent_ptr(to_check, (fcs_dbm_record_t *)fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &parent_to_check));
-    }
+    fcs_dbm_record_set_parent_ptr(to_check, parent);
 #else
     to_check->key = *key;
     to_check->parent = *parent;
