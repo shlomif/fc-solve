@@ -68,7 +68,7 @@ const unsigned char * fc_solve_dbm_store_insert_key_value(
         fcs_dbm_record_t parent_to_check;
 
         parent_to_check.key = *parent;
-        to_check->parent_ptr = (fcs_dbm_record_t *)fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &parent_to_check);
+        fcs_dbm_record_set_parent_ptr(to_check, (fcs_dbm_record_t *)fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &parent_to_check));
     }
 #else
     to_check->key = *key;
@@ -112,7 +112,7 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
     else
     {
 #ifdef FCS_DBM_RECORD_POINTER_REPR
-        fcs_dbm_record_t * p = (((fcs_dbm_record_t *)existing)->parent_ptr);
+        fcs_dbm_record_t * p = fcs_dbm_record_get_parent_ptr((fcs_dbm_record_t *)existing);
 
         if (p)
         {

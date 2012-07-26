@@ -53,13 +53,28 @@ typedef struct { unsigned char s[FCS_ENCODED_STATE_COUNT_CHARS]; } fcs_encoded_s
 
 #ifdef FCS_DBM_RECORD_POINTER_REPR
 
-struct fcs_dbm_record_struct
+typedef struct
 {
     fcs_encoded_state_buffer_t key;
-    struct fcs_dbm_record_struct * parent_ptr;
-};
+    uintptr_t parent_and_refcount;
+} fcs_dbm_record_t;
 
-typedef struct fcs_dbm_record_struct fcs_dbm_record_t;
+static GCC_INLINE fcs_dbm_record_t * fcs_dbm_record_get_parent_ptr(
+    fcs_dbm_record_t * rec
+    )
+{
+    return (fcs_dbm_record_t *)(rec->parent_and_refcount &
+        (~(0xFF << (sizeof(rec->parent_and_refcount) - 1)))
+    );
+}
+
+static GCC_INLINE void fcs_dbm_record_set_parent_ptr(
+    fcs_dbm_record_t * rec,
+    fcs_dbm_record_t * parent_ptr
+    )
+{
+    rec->parent_and_refcount = ((uintptr_t)parent_ptr);
+}
 
 #else
 
