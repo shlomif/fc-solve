@@ -41,6 +41,10 @@ if (exists($ENV{FC_NUM}))
 {
     $params{freecells_num} = $ENV{FC_NUM};
 }
+if (exists($ENV{FC_VARIANT}))
+{
+    $params{variant} = $ENV{FC_VARIANT};
+}
 
 if ($opt eq "--gen-bat")
 {
