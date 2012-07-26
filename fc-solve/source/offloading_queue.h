@@ -54,7 +54,7 @@ typedef const unsigned char * fcs_offloading_queue_item_t;
 typedef struct
 {
     int num_items_per_page;
-    long page_index;
+    long page_index, queue_id;
     int write_to_idx;
     int read_from_idx;
     unsigned char * data;
@@ -71,11 +71,13 @@ static GCC_INLINE void fcs_offloading_queue_page__recycle(
 static GCC_INLINE void fcs_offloading_queue_page__init(
     fcs_offloading_queue_page_t * page,
     int num_items_per_page,
-    long page_index
+    long page_index,
+    long queue_id
     )
 {
     page->num_items_per_page = num_items_per_page;
     page->page_index = page_index;
+    page->queue_id = queue_id;
 
     page->data = malloc(
         sizeof(fcs_offloading_queue_item_t) * num_items_per_page
@@ -138,7 +140,7 @@ static GCC_INLINE const char * fcs_offloading_queue_page__calc_filename(
     char * buffer,
     const char * offload_dir_path)
 {
-    sprintf(buffer, "%s/fcs_queue_%020lX.page", offload_dir_path, page->page_index);
+    sprintf(buffer, "%s/fcs_queue%lXq_%020lX.page", offload_dir_path, page->queue_id, page->page_index);
 
     return buffer;
 }
@@ -208,6 +210,7 @@ typedef struct
     int num_items_per_page;
     const char * offload_dir_path;
     long num_inserted, num_items_in_queue, num_extracted;
+    long id;
     /*
      * page_to_write_to, page_for_backup and page_to_read_from always
      * point to the two "pages" below, but they can be swapped and
@@ -221,15 +224,17 @@ typedef struct
 static GCC_INLINE void fcs_offloading_queue__init(
     fcs_offloading_queue_t * queue,
     int num_items_per_page,
-    const char * offload_dir_path
+    const char * offload_dir_path,
+    long id
     )
 {
     queue->num_items_per_page = num_items_per_page;
     queue->offload_dir_path = offload_dir_path;
     queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
+    queue->id = id;
 
-    fcs_offloading_queue_page__init(&(queue->pages[0]), num_items_per_page, 0);
-    fcs_offloading_queue_page__init(&(queue->pages[1]), num_items_per_page, 0);
+    fcs_offloading_queue_page__init(&(queue->pages[0]), num_items_per_page, 0, queue->id);
+    fcs_offloading_queue_page__init(&(queue->pages[1]), num_items_per_page, 0, queue->id);
 
     queue->page_to_read_from = queue->page_to_write_to = &(queue->pages[0]);
     queue->page_for_backup = &(queue->pages[1]);

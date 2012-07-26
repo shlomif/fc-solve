@@ -41,7 +41,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 /*
  * Returns TRUE if the key was added (it didn't already exist.)
  * */
-const unsigned char * fc_solve_dbm_store_insert_key_value(
+fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
     fcs_dbm_store_t store,
     const fcs_encoded_state_buffer_t * key,
     fcs_encoded_state_buffer_t * parent
@@ -84,7 +84,7 @@ const unsigned char * fc_solve_dbm_store_insert_key_value(
 #endif
     if (ret)
     {
-        return (unsigned char *)&(((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(db->kaz_tree, to_check)))->key);
+        return ((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(db->kaz_tree, to_check)));
     }
     else
     {

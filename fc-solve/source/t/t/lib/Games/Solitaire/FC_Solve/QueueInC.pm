@@ -19,7 +19,7 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path) {
 
         New(42, s, 1, QueueInC);
 
-        fcs_offloading_queue__init(&(s->q), num_items_per_page, strdup(offload_dir_path));
+        fcs_offloading_queue__init(&(s->q), num_items_per_page, strdup(offload_dir_path), 0);
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
         return obj_ref;

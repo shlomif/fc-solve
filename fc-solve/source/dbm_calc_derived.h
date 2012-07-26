@@ -59,6 +59,7 @@ struct fcs_derived_state_struct
     struct fcs_derived_state_struct * next;
     fcs_bool_t is_reversible_move;
     fcs_fcc_move_t move;
+    int num_non_reversible_moves;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 };
 
@@ -621,7 +622,22 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
             derived_iter = derived_iter->next
         )
         {
-            horne_prune(&(derived_iter->state), NULL, NULL);
+            derived_iter->num_non_reversible_moves =
+                (derived_iter->is_reversible_move ? 0 : 1)
+                + horne_prune(&(derived_iter->state), NULL, NULL);
+        }
+    }
+    else
+    {
+        fcs_derived_state_t * derived_iter;
+
+        for (derived_iter = (*derived_list);
+            derived_iter ;
+            derived_iter = derived_iter->next
+        )
+        {
+            derived_iter->num_non_reversible_moves =
+                (derived_iter->is_reversible_move ? 0 : 1);
         }
     }
 
