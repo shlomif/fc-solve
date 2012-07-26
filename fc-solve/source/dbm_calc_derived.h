@@ -207,7 +207,7 @@ static GCC_INLINE int horne_prune(
 #define the_state (init_state_kv_ptr->s)
     do {
         num_cards_moved = 0;
-        for( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+        for ( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++ )
         {
             col = fcs_state_get_col(the_state, stack_idx);
             cards_num = fcs_col_len(col);
@@ -233,7 +233,7 @@ static GCC_INLINE int horne_prune(
         }
 
         /* Now check the same for the free cells */
-        for( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
+        for ( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
         {
             card = fcs_freecell_card(the_state, fc);
             if (fcs_card_is_valid(card))
@@ -613,32 +613,27 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     }
 #undef fc_idx
 
-    /* Perform Horne's Prune on all the states. */
-    if (perform_horne_prune)
+    /* Perform Horne's Prune on all the states,
+     * or just set their num irreversible moves counts.
+     * */
     {
         fcs_derived_state_t * derived_iter;
 
         for (derived_iter = (*derived_list);
-            derived_iter ;
-            derived_iter = derived_iter->next
-        )
+             derived_iter ;
+             derived_iter = derived_iter->next
+            )
         {
             derived_iter->num_non_reversible_moves =
+            (
                 (derived_iter->is_reversible_move ? 0 : 1)
-                + horne_prune(&(derived_iter->state), NULL, NULL);
-        }
-    }
-    else
-    {
-        fcs_derived_state_t * derived_iter;
-
-        for (derived_iter = (*derived_list);
-            derived_iter ;
-            derived_iter = derived_iter->next
-        )
-        {
-            derived_iter->num_non_reversible_moves =
-                (derived_iter->is_reversible_move ? 0 : 1);
+                +
+                (
+                    perform_horne_prune
+                    ? horne_prune(&(derived_iter->state), NULL, NULL)
+                    : 0
+                )
+            );
         }
     }
 
