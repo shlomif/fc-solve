@@ -3,11 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
 use File::Spec;
+use File::Temp qw( tempdir );
+
 
 use Games::Solitaire::Verify::Solution;
 
@@ -63,6 +65,23 @@ sub test_using_valgrind
     }
 }
 
+{
+    my $temp_dir = tempdir (CLEANUP => 1);
+    # TEST
+    test_using_valgrind(
+        {
+            prog => "dbm_fc_solver",
+            argv =>
+            [
+                '--offload-dir-path', $temp_dir,
+                File::Spec->catfile(
+                    $ENV{FCS_SRC_PATH}, 't', 't', 'data',
+                    'sample-boards', '2freecells-24-mid-with-colons.board'
+                ),
+            ],
+        },
+    );
+}
 # TEST
 test_using_valgrind(
     {prog => "fc-solve",
