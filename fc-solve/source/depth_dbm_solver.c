@@ -489,7 +489,7 @@ static GCC_INLINE void instance_destroy(
     int depth;
     fcs_dbm_collection_by_depth_t * coll;
 
-    for (depth = instance->curr_depth ; depth < FCC_DEPTH ; depth++)
+    for (depth = 0 ; depth < FCC_DEPTH ; depth++)
     {
         coll = &(instance->colls_by_depth[depth]);
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
