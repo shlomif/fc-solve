@@ -9,7 +9,7 @@ BEGIN
 {
     if (-f "$ENV{FCS_PATH}/libfcs_dbm_calc_derived_test.so")
     {
-        plan tests => 28;
+        plan tests => 30;
     }
     else
     {
@@ -35,6 +35,23 @@ typedef struct
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
 } DerivedState;
+
+SV * perl_perform_horne_prune(char * init_state_s) {
+    AV * results;
+    char * ret_state_s;
+    int ret_count;
+
+    results = (AV *)sv_2mortal((SV *)newAV());
+
+    ret_count = fc_solve_user_INTERNAL_perform_horne_prune(init_state_s, &ret_state_s);
+
+    av_push(results, newSViv(ret_count));
+    av_push(results, newSVpv(ret_state_s, 0));
+
+    free(ret_state_s);
+
+    return newRV((SV *)results);
+}
 
 SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
         AV * results;
@@ -563,4 +580,45 @@ EOF
         # TEST
         $results->is_dest({ type => 'found', idx => 0, }, "Foundation.")
     }
+}
+
+{
+    my $ret = DerivedState::perl_perform_horne_prune(
+        <<"EOF",
+Foundations: H-A C-0 D-0 S-0
+4C 2C 9C 8C QS 3H 4S
+5H QH 3C AC 4H QD 2H
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
+EOF
+
+    );
+
+    # TEST
+    is (
+        $ret->[0],
+        4,
+        "4 irreversible pseudo-moves",
+    );
+
+    # TEST
+    is (
+        $ret->[1],
+        <<"EOF"
+Foundations: H-2 C-0 D-0 S-A$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+: 4C 2C 9C 8C QS 3H 4S
+: 5H QH 3C AC 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S 9D
+EOF
+    );
 }

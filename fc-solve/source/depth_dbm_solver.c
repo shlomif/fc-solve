@@ -677,7 +677,7 @@ static GCC_INLINE void instance_check_key(
                 1
                 );
 
-#if 0
+#if 1
             fprintf(instance->out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
             fflush(instance->out_fh);
 #endif

@@ -190,7 +190,14 @@ static GCC_INLINE fcs_fcc_moves_list_item_t * fc_solve_fcc_alloc_moves_list_item
     return new_item;
 }
 
-/* Returns the additional number of cards moved to the foundation  */
+#define FROM_COL_IS_REVERSIBLE_MOVE() \
+                        ((cards_num <= 1) ? TRUE \
+                             : fcs_is_parent_card(card, fcs_col_get_card( \
+                                     col, cards_num-2) \
+                               ) \
+                        )
+
+/* Returns the number of amortized irreversible moves performed. */
 static GCC_INLINE int horne_prune(
     fcs_state_keyval_pair_t * init_state_kv_ptr,
     fcs_fcc_moves_seq_t * moves_seq,
@@ -203,9 +210,18 @@ static GCC_INLINE int horne_prune(
     int dest_foundation;
     int num_cards_moved;
     fcs_card_t card;
+#ifndef FCS_FREECELL_ONLY
+    /* needed by the macros. */
+    int sequences_are_built_by;
+#endif
     /*  */
     fcs_fcc_move_t additional_moves[RANK_KING * 4 * DECKS_NUM];
     int count_moves_so_far = 0;
+    int count_additional_irrev_moves = 0;
+
+#ifndef FCS_FREECELL_ONLY
+    sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
+#endif
 
 #define the_state (init_state_kv_ptr->s)
     do {
@@ -222,6 +238,10 @@ static GCC_INLINE int horne_prune(
                 if ((dest_foundation =
                     calc_foundation_to_put_card_on(&the_state, card)) >= 0)
                 {
+                    if (! FROM_COL_IS_REVERSIBLE_MOVE())
+                    {
+                        count_additional_irrev_moves++;
+                    }
                     /* We can safely move it. */
                     num_cards_moved++;
 
@@ -309,7 +329,7 @@ static GCC_INLINE int horne_prune(
         moves_seq->count += count_moves_so_far;
     }
 
-    return count_moves_so_far;
+    return count_moves_so_far + count_additional_irrev_moves;
 }
 
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
@@ -386,12 +406,6 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                     fcs_increment_foundation(new_state, deck*4+suit);
 
-#define FROM_COL_IS_REVERSIBLE_MOVE() \
-                        ((cards_num <= 1) ? TRUE \
-                             : fcs_is_parent_card(card, fcs_col_get_card( \
-                                     col, cards_num-2) \
-                               ) \
-                        )
 
                     COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx), FOUND2MOVE(suit), (FROM_COL_IS_REVERSIBLE_MOVE() ? 1 : 2))
                 }
