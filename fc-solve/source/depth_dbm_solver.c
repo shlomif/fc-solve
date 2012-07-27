@@ -38,6 +38,9 @@
 #include <assert.h>
 #include <limits.h>
 
+#define DEBUG_FOO
+
+
 /*
  * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
  */
@@ -101,6 +104,10 @@
             fprintf(out_fh, my_format, arg1); \
             fflush(out_fh); \
         }
+#endif
+
+#ifdef DEBUG_FOO
+fc_solve_delta_stater_t * global_delta_stater;
 #endif
 
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -642,6 +649,41 @@ static GCC_INLINE void instance_check_key(
 
                 FCS_LOCK(instance->global_lock);
                 instance->count_of_items_in_queue++;
+#ifdef DEBUG_FOO
+        {
+            char * state_str;
+            fcs_state_keyval_pair_t state;
+            fcs_state_locs_struct_t locs;
+            DECLARE_IND_BUF_T(indirect_stacks_buffer)
+
+            fc_solve_init_locs(&locs);
+            /* Handle item. */
+            fc_solve_delta_stater_decode_into_state(
+                global_delta_stater,
+                token->key.s,
+                &state,
+                indirect_stacks_buffer
+            );
+
+            state_str = fc_solve_state_as_string(
+                &(state.s),
+                &(state.info),
+                &locs,
+                2,
+                8,
+                1,
+                1,
+                0,
+                1
+                );
+
+#if 0
+            fprintf(instance->out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
+            fflush(instance->out_fh);
+#endif
+            free(state_str);
+        }
+#endif
                 instance->num_states_in_collection++;
                 FCS_UNLOCK(instance->global_lock);
             }
@@ -666,7 +708,7 @@ static GCC_INLINE void instance_check_multiple_keys(
         int key_depth;
         fcs_dbm_collection_by_depth_t * coll;
 
-        key_depth = instance->curr_depth + list->num_non_reversible_moves;
+        key_depth = instance->curr_depth + list->num_non_reversible_moves_including_prune;
 
         coll = &(instance->colls_by_depth[key_depth]);
 
@@ -1086,6 +1128,9 @@ static void instance_run_all_threads(
                 , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
             );
+#ifdef DEBUG_FOO
+        global_delta_stater = threads[i].thread.delta_stater;
+#endif
         threads[i].arg.thread = &(threads[i].thread);
     }
 

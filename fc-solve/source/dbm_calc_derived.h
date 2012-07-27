@@ -57,9 +57,9 @@ struct fcs_derived_state_struct
     fcs_encoded_state_buffer_t key;
     fcs_dbm_record_t * parent;
     struct fcs_derived_state_struct * next;
-    fcs_bool_t is_reversible_move;
+    int core_irreversible_moves_count;
     fcs_fcc_move_t move;
-    int num_non_reversible_moves;
+    int num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 };
 
@@ -114,18 +114,21 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
     COPY_INDIRECT_COLS() \
 }
 
-#define COMMIT_NEW_STATE(src, dest, is_reversible) \
+#define COMMIT_NEW_STATE_WITH_COUNT(src, dest, count) \
 { \
  \
     ptr_new_state->parent = parent_ptr; \
     ptr_new_state->move = MAKE_MOVE((src), (dest)); \
  \
-    ptr_new_state->is_reversible_move = (is_reversible); \
+    ptr_new_state->core_irreversible_moves_count = (count); \
     /* Finally, enqueue the new state. */ \
     ptr_new_state->next = (*derived_list); \
     (*derived_list) = ptr_new_state; \
  \
 }
+
+#define COMMIT_NEW_STATE(src, dest, is_reversible) \
+    COMMIT_NEW_STATE_WITH_COUNT(src, dest, ((is_reversible) ? 0 : 1))
 
 static GCC_INLINE int calc_foundation_to_put_card_on(
         fcs_state_t * my_ptr_state,
@@ -383,7 +386,14 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                     fcs_increment_foundation(new_state, deck*4+suit);
 
-                    COMMIT_NEW_STATE(COL2MOVE(stack_idx), FOUND2MOVE(suit), FALSE)
+#define FROM_COL_IS_REVERSIBLE_MOVE() \
+                        ((cards_num <= 1) ? TRUE \
+                             : fcs_is_parent_card(card, fcs_col_get_card( \
+                                     col, cards_num-2) \
+                               ) \
+                        )
+
+                    COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx), FOUND2MOVE(suit), (FROM_COL_IS_REVERSIBLE_MOVE() ? 1 : 2))
                 }
             }
         }
@@ -461,12 +471,6 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                             fcs_col_pop_top(new_src_col);
                             fcs_col_push_card(new_dest_col, card);
                         }
-#define FROM_COL_IS_REVERSIBLE_MOVE() \
-                        ((cards_num <= 1) ? TRUE \
-                             : fcs_is_parent_card(card, fcs_col_get_card( \
-                                     col, cards_num-2) \
-                               ) \
-                        )
 
                         COMMIT_NEW_STATE(
                             COL2MOVE(stack_idx), COL2MOVE(ds),
@@ -624,9 +628,9 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
              derived_iter = derived_iter->next
             )
         {
-            derived_iter->num_non_reversible_moves =
+            derived_iter->num_non_reversible_moves_including_prune =
             (
-                (derived_iter->is_reversible_move ? 0 : 1)
+                derived_iter->core_irreversible_moves_count
                 +
                 (
                     perform_horne_prune

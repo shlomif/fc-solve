@@ -9,7 +9,7 @@ BEGIN
 {
     if (-f "$ENV{FCS_PATH}/libfcs_dbm_calc_derived_test.so")
     {
-        plan tests => 24;
+        plan tests => 28;
     }
     else
     {
@@ -32,7 +32,8 @@ typedef struct
 {
     char * state_string;
     unsigned char move;
-    fcs_bool_t is_reversible_move;
+    int core_irreversible_moves_count;
+    int num_non_reversible_moves_including_prune;
 } DerivedState;
 
 SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
@@ -60,7 +61,8 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
             s->state_string = savepv(iter->state_string);
             free(iter->state_string);
             s->move = iter->move;
-            s->is_reversible_move = iter->is_reversible_move;
+            s->core_irreversible_moves_count = iter->core_irreversible_moves_count;
+            s->num_non_reversible_moves_including_prune = iter->num_non_reversible_moves_including_prune;
 
             sv_setiv(obj, (IV)s);
             SvREADONLY_on(obj);
@@ -78,8 +80,12 @@ int get_move(SV* obj) {
     return (((DerivedState*)SvIV(SvRV(obj)))->move + (int)0);
 }
 
-int get_is_reversible_move(SV* obj) {
-  return ((DerivedState*)SvIV(SvRV(obj)))->is_reversible_move;
+int get_core_irreversible_moves_count(SV* obj) {
+  return ((DerivedState*)SvIV(SvRV(obj)))->core_irreversible_moves_count;
+}
+
+int get_num_non_reversible_moves_including_prune(SV* obj) {
+  return ((DerivedState*)SvIV(SvRV(obj)))->num_non_reversible_moves_including_prune;
 }
 
 void DESTROY(SV* obj) {
@@ -89,7 +95,7 @@ void DESTROY(SV* obj) {
 }
 EOF
     CLEAN_AFTER_BUILD => 0,
-    INC => "-I" . $ENV{FCS_PATH},
+    INC => ["-I" . $ENV{FCS_PATH}, "-I" . $ENV{FCS_SRC_PATH}, ],
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_dbm_calc_derived_test",
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
@@ -161,13 +167,26 @@ sub has_one
     return is( scalar(@{$self->states()}), 1, $blurb);
 }
 
-sub is_reversible
+sub count_irreversible_moves_is
 {
-    my ($self,$is_reversible, $blurb) = @_;
+    my ($self, $exp_count, $blurb) = @_;
+
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     return is(
-        (!!$self->states->[0]->get_is_reversible_move()),
+        ($self->states->[0]->get_core_irreversible_moves_count()),
+        ($exp_count),
+        $blurb
+    );
+}
+
+sub is_reversible
+{
+    my ($self, $is_reversible, $blurb) = @_;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    return is(
+        (!$self->states->[0]->get_core_irreversible_moves_count()),
         (!!$is_reversible),
         $blurb
     );
@@ -493,3 +512,55 @@ EOF
     }
 }
 
+{
+    my $freecell_24ish_layout = <<"EOF";
+Foundations: H-2 C-0 D-0 S-0$WS
+4C 2C 9C 8C QS 4S$WS
+5H QH 3C AC 4H QD 3H$WS
+QC 9S 6H 9H 3S KS 3D$WS
+5D 2S JC 5C JH 6D AS$WS
+2D KD TH TC TD 8D$WS
+7H JS KH TS KC 7C$WS
+5S 6S AD 8H JD$WS
+7S 6C 7D 4D 8S 9D$WS
+EOF
+
+    my $fc = DerivedStatesList->new(
+        {
+            start => $freecell_24ish_layout,
+            perform_horne_prune => 0,
+        }
+    );
+
+    {
+        my $results = $fc->find_by_string(<<"EOF"
+Foundations: H-3 C-0 D-0 S-0$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+: 4C 2C 9C 8C QS 4S
+: 5H QH 3C AC 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D AS
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S 9D
+EOF
+        );
+
+        # TEST
+        $results->has_one('3H to foundation has one result.');
+
+        # TEST
+        $results->count_irreversible_moves_is(2,
+            '2H to foundation is two irreversible moves because' .
+            ' it was not lying on a parent.'
+        );
+
+        # TEST
+        $results->is_src({ type => 'stack', idx => 1, },
+            'From stack #1');
+
+        # TEST
+        $results->is_dest({ type => 'found', idx => 0, }, "Foundation.")
+    }
+}

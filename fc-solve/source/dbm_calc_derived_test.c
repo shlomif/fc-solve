@@ -137,7 +137,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             1
             );
         debug_ret[idx].move = iter->move;
-        debug_ret[idx].is_reversible_move = iter->is_reversible_move;
+        debug_ret[idx].core_irreversible_moves_count
+            = iter->core_irreversible_moves_count;
+        debug_ret[idx].num_non_reversible_moves_including_prune
+            = iter->num_non_reversible_moves_including_prune;
         idx++;
         iter = iter->next;
     }

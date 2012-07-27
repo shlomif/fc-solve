@@ -337,7 +337,7 @@ static void perform_FCC_brfs(
                 derived_iter = next_derived_iter
         )
         {
-            fcs_bool_t is_reversible = derived_iter->is_reversible_move;
+            fcs_bool_t is_reversible = (derived_iter->core_irreversible_moves_count == 0);
             unsigned char extra_move;
 
 

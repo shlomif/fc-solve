@@ -40,7 +40,8 @@ typedef struct
 {
     char * state_string;
     unsigned char move;
-    fcs_bool_t is_reversible_move;
+    int core_irreversible_moves_count;
+    int num_non_reversible_moves_including_prune;
 } fcs_derived_state_debug_t;
 
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
