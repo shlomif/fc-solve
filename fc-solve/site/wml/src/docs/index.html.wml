@@ -12,8 +12,8 @@
 <h3 class="plain"><a href="<arch:doc:url />">Architecture Document</a></h3>
 
 <p>
-The Freecell Solver Architecture Document. Contains coding conventions, 
-overview of the code and the modules, some terminology and some techniques 
+The Freecell Solver Architecture Document. Contains coding conventions,
+overview of the code and the modules, some terminology and some techniques
 that one is bound to encounter when dealing with the code.
 </p>
 
@@ -21,7 +21,7 @@ that one is bound to encounter when dealing with the code.
 
 <p>
 Michael Mann has ported Freecell Solver to C++ and used Doxygen to prepare a
-hypertext reference to the code. This is compatible with version 2.2.x of 
+hypertext reference to the code. This is compatible with version 2.2.x of
 Freecell Solver.
 </p>
 
@@ -51,31 +51,31 @@ people who may be interested in contributing to it.
 the Wall</a></h3>
 
 <p>
-Some reflections on the evolution of Freecell Solver and my interaction with 
+Some reflections on the evolution of Freecell Solver and my interaction with
 its users and contributors written
 after reading Eric Raymond's
-seminal 
-<a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">"The 
-Cathedral and the Bazaar"</a> document. What I did very much the 
+seminal
+<a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">"The
+Cathedral and the Bazaar"</a> document. What I did very much the
 same, (mostly without thinking too much about it), what I did differently, and what happened. Slightly out-of-date.
 </p>
 
 <h3 class="plain"><a href="$(ROOT)/book.html">Freecell Solver - Evolution of a C Program - The Book</a></h3>
 
 <p>
-A book I'd like to write and publish online about the evolution of the code 
-and to lesser extent my interaction with its users, contributors and 
-co-developers. Since I did not find a suitable publisher yet, I have kept the 
-book offline and only send it to a privately-controlled mailing list. I also 
+A book I'd like to write and publish online about the evolution of the code
+and to lesser extent my interaction with its users, contributors and
+co-developers. Since I did not find a suitable publisher yet, I have kept the
+book offline and only send it to a privately-controlled mailing list. I also
 only started to write it, and it is largely vapourware.
 </p>
 
 <p>
-This book will focus about various ANSI C and game AI techniques and the 
-semantics of using them. It should be a good discussion of interesting 
+This book will focus about various ANSI C and game AI techniques and the
+semantics of using them. It should be a good discussion of interesting
 algorithms and data structures, and how to optimize C code and program
 code in general. It will require no or little knowledge of Freecell games
-AI or algorithms and data structures, but good knowledge of ANSI C will be 
+AI or algorithms and data structures, but good knowledge of ANSI C will be
 expected.
 </p>
 
@@ -83,11 +83,11 @@ expected.
 But like I said, it's still vapourware. ;-)
 </p>
 
-<h3 class="plain"><a href="http://freshmeat.net/articles/view/519/">Freshmeat 
+<h3 class="plain"><a href="http://freecode.com/articles/time-to-rethink-your-help-flag">Freecode
 Editorial: Time to Rethink your Help Flag?</a></h3>
 
 <p>
-A Freshmeat editorial I wrote about what I had planned to do with the 
+A Freecode editorial I wrote about what I had planned to do with the
 exteremely long help display that Freecell Solver used to have.
 </p>
 
@@ -96,7 +96,7 @@ exteremely long help display that Freecell Solver used to have.
 <p>
 This is an E-mail message I sent to <a href="http://www.catb.org/~esr/">Eric
 S. Raymond</a> in regards to his <a href="http://www.catb.org/~esr/writings/taoup/">"The Art of UNIX Programming"</a> book. In it I mention some interesting
-Freecell Solver techniques similar (but not identical) to examples that he 
+Freecell Solver techniques similar (but not identical) to examples that he
 gave in the book.
 </p>
 
@@ -107,7 +107,7 @@ An essay that tries to explain why the C language is still sometimes the
 best language to use for writing programs.
 </p>
 
-<h3 class="plain"><a href="http://www.shlomifish.org/philosophy/computers/high-quality-software/">"What 
+<h3 class="plain"><a href="http://www.shlomifish.org/philosophy/computers/high-quality-software/">"What
 Makes Software High-Quality?"</a></h3>
 
 <p>
@@ -128,9 +128,9 @@ A blog entry in my use.perl.org blog about Freecell Solver and other things.
 
 <p>
 An essay about optimisation that gives some examples from Freecell Solver
-and elsewhere. Also see 
-<a href="http://en.wikibooks.org/wiki/Optimizing_Code_for_Speed">a more 
-recent version</a> (and a publicly editable one) on the English Wikibooks. 
+and elsewhere. Also see
+<a href="http://en.wikibooks.org/wiki/Optimizing_Code_for_Speed">a more
+recent version</a> (and a publicly editable one) on the English Wikibooks.
 </p>
 
 <h3 class="plain"><a href="http://www.shlomifish.org/philosophy/computers/open-source/foss-licences-wars/">FOSS Licences Wars</a></h3>
@@ -138,10 +138,10 @@ recent version</a> (and a publicly editable one) on the English Wikibooks.
 <p>
 An essay about licences of free and operating source software (FOSS) that
 also mentions Freecell Solver as a case study. <b>Note:</b> some of it is
-disinforming or misinforming, and one should refer to 
-<a href="http://hamakor.org.il/pipermail/discussions/2009-August/000609.html">some 
-errata by Mikhael Goikhman</a> for some corrections, as well as 
-my 
+disinforming or misinforming, and one should refer to
+<a href="http://hamakor.org.il/pipermail/discussions/2009-August/000609.html">some
+errata by Mikhael Goikhman</a> for some corrections, as well as
+my
 <a href="http://www.mail-archive.com/linux-il@cs.huji.ac.il/msg56378.html">"Why
 I prefer BSD-style licences"</a>.
 </p>
