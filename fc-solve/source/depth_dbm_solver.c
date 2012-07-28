@@ -307,7 +307,6 @@ enum TERMINATE_REASON
 #define FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
 typedef struct
 {
-    fcs_lock_t storage_lock;
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
     fcs_pre_cache_t pre_cache;
@@ -329,6 +328,7 @@ typedef struct
 typedef struct
 {
     fcs_lock_t global_lock;
+    fcs_lock_t storage_lock;
     const char * offload_dir_path;
     int curr_depth;
     fcs_dbm_collection_by_depth_t colls_by_depth[FCC_DEPTH];
@@ -397,11 +397,11 @@ static GCC_INLINE void instance_init(
         instance->queue_recycle_bin =
         NULL;
 #endif
+    FCS_INIT_LOCK(instance->storage_lock);
     for (depth = 0 ; depth < FCC_DEPTH ; depth++)
     {
         coll = &(instance->colls_by_depth[depth]);
         FCS_INIT_LOCK(coll->queue_lock);
-        FCS_INIT_LOCK(coll->storage_lock);
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
 #define NUM_ITEMS_PER_PAGE (128 * 1024)
         fcs_offloading_queue__init(&(coll->queue), NUM_ITEMS_PER_PAGE, offload_dir_path, depth);
@@ -524,8 +524,8 @@ static GCC_INLINE void instance_destroy(
         fc_solve_dbm_store_destroy(coll->store);
 #endif
         FCS_DESTROY_LOCK(coll->queue_lock);
-        FCS_DESTROY_LOCK(coll->storage_lock);
     }
+    FCS_DESTROY_LOCK(instance->storage_lock);
 
     fc_solve_meta_compact_allocator_finish(
         &(instance->meta_alloc)
@@ -703,23 +703,20 @@ static GCC_INLINE void instance_check_multiple_keys(
     {
         return;
     }
+    FCS_LOCK(instance->storage_lock);
     for (; list ; list = list->next)
     {
-        int key_depth;
-        fcs_dbm_collection_by_depth_t * coll;
-
-        key_depth = instance->curr_depth + list->num_non_reversible_moves_including_prune;
-
-        coll = &(instance->colls_by_depth[key_depth]);
-
-        FCS_LOCK(coll->storage_lock);
-        instance_check_key(instance, key_depth, &(list->key), list->parent, list->move
+        instance_check_key(
+            instance,
+            ( instance->curr_depth +
+              list->num_non_reversible_moves_including_prune),
+            &(list->key), list->parent, list->move
 #ifdef FCS_DBM_CACHE_ONLY
             , moves_to_parent
 #endif
         );
-        FCS_UNLOCK(coll->storage_lock);
     }
+    FCS_UNLOCK(instance->storage_lock);
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
     if (instance->pre_cache.count_elements >= instance->pre_cache_max_count)
