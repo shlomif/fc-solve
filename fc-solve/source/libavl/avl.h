@@ -76,9 +76,22 @@ typedef void * avl_key_t;
 #endif
 
 /* Tree data structure. */
+#define avl_root avl_proto_root.avl_mylink[0]
+#define TREE_AVL_ROOT(tree) ((struct avl_node *)((tree)->avl_root))
+#define SET_TREE_AVL_ROOT(tree, val) ((tree)->avl_root = (uintptr_t)val)
+/* An AVL tree node. */
+struct avl_node
+  {
+    avl_key_t avl_data;                /* Pointer to data. */
+    uintptr_t avl_mylink[2];  /* Subtrees. */
+#if 0
+    signed char avl_balance;       /* Balance factor. */
+#endif
+  };
+
 struct avl_table
   {
-    struct avl_node *avl_root;          /* Tree's root. */
+    struct avl_node avl_proto_root;     /* Tree's root. */
     avl_comparison_func *avl_compare;   /* Comparison function. */
     void *avl_param;                    /* Extra argument to |avl_compare|. */
     fcs_compact_allocator_t avl_allocator;
@@ -87,16 +100,6 @@ struct avl_table
     unsigned long avl_generation;       /* Generation number. */
   };
 
-
-/* An AVL tree node. */
-struct avl_node
-  {
-    uintptr_t avl_mylink[2];  /* Subtrees. */
-    avl_key_t avl_data;                /* Pointer to data. */
-#if 0
-    signed char avl_balance;       /* Balance factor. */
-#endif
-  };
 #define L(node, i) (avl_process_link(node->avl_mylink[i]))
 #define SET_L(node, i, val) (avl_set_link(node, i, val))
 #define NODEPTR_GET_BALANCE(p) avl_get_balance(p)
@@ -139,5 +142,16 @@ void *avl_t_next (struct avl_traverser *);
 void *avl_t_prev (struct avl_traverser *);
 void *avl_t_cur (struct avl_traverser *);
 void *avl_t_replace (struct avl_traverser *, void *);
+
+static GCC_INLINE int avl_get_decommissioned_flag(struct avl_node * node)
+{
+    return ((signed char)(node->avl_mylink[1] & 0x1));
+}
+
+static GCC_INLINE void avl_set_decommissioned_flag(struct avl_node * node, int decommissioned_flag)
+{
+    node->avl_mylink[1] &= (~0x1);
+    node->avl_mylink[1] |= (decommissioned_flag ? 0x1 : 0x0);
+}
 
 #endif /* avl.h */

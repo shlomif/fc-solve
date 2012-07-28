@@ -89,7 +89,7 @@ avl_create (avl_comparison_func *compare, void *param, fcs_meta_compact_allocato
   if (tree == NULL)
     return NULL;
 
-  tree->avl_root = NULL;
+  SET_TREE_AVL_ROOT(tree, NULL);
   tree->avl_compare = compare;
   tree->avl_param = param;
   fc_solve_compact_allocator_init(&(tree->avl_allocator), meta_alloc);
@@ -108,7 +108,7 @@ avl_find (const struct avl_table *tree, const void *item)
   struct avl_node *p;
 
   assert (tree != NULL && item != NULL);
-  for (p = tree->avl_root; p != NULL; )
+  for (p = TREE_AVL_ROOT(tree); p != NULL; )
     {
       int cmp = tree->avl_compare (item, NODE_DATA_PTR(p), tree->avl_param);
 
@@ -141,8 +141,8 @@ avl_probe (struct avl_table *tree, void *item)
 
   assert (tree != NULL && item != NULL);
 
-  z = (struct avl_node *) &tree->avl_root;
-  y = tree->avl_root;
+  z = (struct avl_node *)&(tree->avl_proto_root);
+  y = TREE_AVL_ROOT(tree);
   dir = 0;
   for (q = z, p = y; p != NULL; q = p, p = L(p, dir))
     {
@@ -308,7 +308,7 @@ avl_delete (struct avl_table *tree, const void *item)
   assert (tree != NULL && item != NULL);
 
   k = 0;
-  p = (struct avl_node *) &tree->avl_root;
+  p = (struct avl_node *) &tree->avl_proto_root;
   for (cmp = -1; cmp != 0;
        cmp = tree->avl_compare (item, NODE_DATA_PTR(p), tree->avl_param))
     {
@@ -503,7 +503,7 @@ trav_refresh (struct avl_traverser *trav)
       struct avl_node *i;
 
       trav->avl_height = 0;
-      for (i = trav->avl_table->avl_root; i != node; )
+      for (i = TREE_AVL_ROOT(trav->avl_table); i != node; )
         {
           assert (trav->avl_height < AVL_MAX_HEIGHT);
           assert (i != NULL);
@@ -539,7 +539,7 @@ avl_t_first (struct avl_traverser *trav, struct avl_table *tree)
   trav->avl_height = 0;
   trav->avl_generation = tree->avl_generation;
 
-  x = tree->avl_root;
+  x = TREE_AVL_ROOT(tree);
   if (x != NULL)
     while (L(x, 0) != NULL)
       {
@@ -566,7 +566,7 @@ avl_t_last (struct avl_traverser *trav, struct avl_table *tree)
   trav->avl_height = 0;
   trav->avl_generation = tree->avl_generation;
 
-  x = tree->avl_root;
+  x = TREE_AVL_ROOT(tree);
   if (x != NULL)
     while (L(x, 1) != NULL)
       {
@@ -593,7 +593,7 @@ avl_t_find (struct avl_traverser *trav, struct avl_table *tree, void *item)
   trav->avl_table = tree;
   trav->avl_height = 0;
   trav->avl_generation = tree->avl_generation;
-  for (p = tree->avl_root; p != NULL; p = q)
+  for (p = TREE_AVL_ROOT(tree); p != NULL; p = q)
     {
       int cmp = tree->avl_compare (item, NODE_DATA_PTR(p), tree->avl_param);
 
@@ -843,8 +843,8 @@ avl_copy (const struct avl_table *org, avl_copy_func *copy,
   if (new->avl_count == 0)
     return new;
 
-  x = (const struct avl_node *) &org->avl_root;
-  y = (struct avl_node *) &new->avl_root;
+  x = (const struct avl_node *) &TREE_AVL_ROOT(org);
+  y = (struct avl_node *) &TREE_AVL_ROOT(new);
   for (;;)
     {
       while (L(x, 0) != NULL)
@@ -856,7 +856,7 @@ avl_copy (const struct avl_table *org, avl_copy_func *copy,
                                            sizeof *L(y, 0));
           if (L(y, 0) == NULL)
             {
-              if (y != (struct avl_node *) &new->avl_root)
+              if (y != (struct avl_node *) &TREE_AVL_ROOT(new))
                 {
                   y->avl_data = NULL;
                   SET_L(y, 1, (NULL));
@@ -928,7 +928,7 @@ avl_destroy (struct avl_table *tree, avl_item_func *destroy)
 
   if (destroy != NULL)
   {
-      for (p = tree->avl_root; p != NULL; p = q)
+      for (p = TREE_AVL_ROOT(tree); p != NULL; p = q)
           if (L(p, 0) == NULL)
           {
               q = L(p, 1);
