@@ -733,7 +733,7 @@ static void * instance_run_solver_thread(void * void_arg)
     fcs_state_locs_struct_t locs;
 #endif
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-            fcs_dbm_record_t * token;
+    fcs_dbm_record_t * token;
 #endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
