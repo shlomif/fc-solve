@@ -106,6 +106,7 @@ typedef struct {
      * TODO : might be easier to reset during every ascension.
      * */
     fcs_lru_cache_t cache;
+    void * tree_recycle_bin;
 } fcs_fcc_solver_state;
 
 static const pthread_mutex_t initial_mutex_constant =
@@ -185,6 +186,8 @@ static GCC_INLINE void init_solver_state(
         meta_alloc
     );
 
+    solver_state->tree_recycle_bin = NULL;
+
     for (i = 0 ; i < FCC_DEPTH ; i++)
     {
         fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[i]);
@@ -192,9 +195,9 @@ static GCC_INLINE void init_solver_state(
         fcc->queue_recycle_bin = NULL;
         fc_solve_compact_allocator_init( &(fcc->queue_allocator), meta_alloc );
         fcc->does_min_by_sorting_exist
-            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
+            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc, &(solver_state->tree_recycle_bin));
         fcc->does_min_by_absolute_depth_exist
-            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
+            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc, &(solver_state->tree_recycle_bin));
     }
 }
 
@@ -402,7 +405,7 @@ static int instance_run_solver(
         instance->num_unique_FCCs_for_depth = 0;
 
         do_next_fcc_start_points_exist
-            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
+            = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc, &(solver_state->tree_recycle_bin));
 
         while ((ret == FCC_IMPOSSIBLE) && fcc_stage->queue)
         {

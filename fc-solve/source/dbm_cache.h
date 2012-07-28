@@ -90,7 +90,8 @@ static GCC_INLINE void cache_init(fcs_lru_cache_t * cache, long max_num_elements
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     cache->states_values_to_keys_map = ((Pvoid_t) NULL);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
-    cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys, NULL, meta_alloc);
+    cache->tree_recycle_bin = NULL;
+    cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys, NULL, meta_alloc, &(cache->tree_recycle_bin));
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif

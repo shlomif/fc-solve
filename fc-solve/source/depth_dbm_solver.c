@@ -328,6 +328,7 @@ typedef struct
 typedef struct
 {
     fcs_lock_t global_lock;
+    void * tree_recycle_bin;
     fcs_lock_t storage_lock;
     const char * offload_dir_path;
     int curr_depth;
@@ -397,6 +398,8 @@ static GCC_INLINE void instance_init(
         instance->queue_recycle_bin =
         NULL;
 #endif
+    instance->tree_recycle_bin = NULL;
+
     FCS_INIT_LOCK(instance->storage_lock);
     for (depth = 0 ; depth < FCC_DEPTH ; depth++)
     {
@@ -418,7 +421,7 @@ static GCC_INLINE void instance_init(
         cache_init (&(coll->cache), pre_cache_max_count+caches_delta, &(coll->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-        fc_solve_dbm_store_init(&(coll->store), dbm_store_path);
+        fc_solve_dbm_store_init(&(coll->store), dbm_store_path, &(instance->tree_recycle_bin));
 #endif
     }
 

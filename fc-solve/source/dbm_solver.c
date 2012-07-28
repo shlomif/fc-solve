@@ -334,6 +334,7 @@ typedef struct {
     long num_states_in_collection;
     FILE * out_fh;
     fcs_encoded_state_buffer_t parent_state_enc;
+    void * tree_recycle_bin;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(
@@ -394,7 +395,8 @@ static GCC_INLINE void instance_init(
     cache_init (&(instance->cache), pre_cache_max_count+caches_delta, &(instance->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-    fc_solve_dbm_store_init(&(instance->store), dbm_store_path);
+    instance->tree_recycle_bin = NULL;
+    fc_solve_dbm_store_init(&(instance->store), dbm_store_path, &(instance->tree_recycle_bin));
 #endif
 }
 

@@ -94,6 +94,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_FCC_start_point_t * iter;
     fcs_FCC_start_point_result_t * ret;
     add_start_point_context_t add_start_point_context;
+    void * tree_recycle_bin = NULL;
 
     fcs_compact_allocator_t moves_list_compact_alloc;
 
@@ -129,10 +130,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_compact_allocator_init(&(start_points_list.allocator), &meta_alloc);
 
     do_next_fcc_start_points_exist =
-        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, &meta_alloc);
+        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, &meta_alloc, &tree_recycle_bin);
 
     does_min_by_sorting_exist =
-        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, &meta_alloc);
+        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, &meta_alloc, &tree_recycle_bin);
 
     cache_init(&does_state_exist_in_any_FCC_cache, max_num_elements_in_cache, &meta_alloc);
 
@@ -267,6 +268,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     long num_new_positions_temp;
     fcs_fcc_moves_seq_t init_moves_seq;
     add_start_point_context_t add_start_point_context;
+    void * tree_recycle_bin = NULL;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -308,10 +310,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     fc_solve_compact_allocator_init(&(start_points_list.allocator), &meta_alloc);
 
     do_next_fcc_start_points_exist =
-        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, &meta_alloc);
+        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, &meta_alloc, &tree_recycle_bin);
 
     does_min_by_sorting_exist =
-        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, &meta_alloc);
+        fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, &meta_alloc, &tree_recycle_bin);
 
     fc_solve_compact_allocator_init(&(temp_allocator), &meta_alloc);
 

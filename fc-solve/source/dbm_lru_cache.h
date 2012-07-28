@@ -38,6 +38,7 @@ typedef struct
 
 #define RECYCLE_BIN_NEXT(el) ((el)->higher_pri)
     fcs_cache_key_info_t * recycle_bin;
+    void * tree_recycle_bin;
 } fcs_lru_cache_t;
 
 #ifdef __cplusplus

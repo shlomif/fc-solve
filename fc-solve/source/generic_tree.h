@@ -39,7 +39,7 @@
 typedef struct avl_table dict_t;
 typedef void * dict_key_t;
 #define fc_solve_kaz_tree_destroy(tree) avl_destroy(tree, NULL)
-#define fc_solve_kaz_tree_create(comparator, context, meta) avl_create(comparator, context, meta)
+#define fc_solve_kaz_tree_create(comparator, context, meta, recycle_bin_ptr) avl_create(comparator, context, meta, recycle_bin_ptr)
 #define fc_solve_kaz_tree_lookup_value(tree, value) avl_find(tree, value)
 #define fc_solve_kaz_tree_delete_by_value(tree, value) avl_delete(tree, value)
 #define fc_solve_kaz_tree_alloc_insert(tree, value) avl_insert(tree, value)

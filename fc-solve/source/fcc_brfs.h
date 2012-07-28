@@ -171,6 +171,7 @@ static void perform_FCC_brfs(
     fcs_meta_compact_allocator_t * meta_alloc
 )
 {
+    void * tree_recycle_bin = NULL;
     fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin, * new_item, * extracted_item;
     fcs_compact_allocator_t queue_allocator, derived_list_allocator;
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
@@ -209,7 +210,7 @@ static void perform_FCC_brfs(
 #endif
     );
 
-    traversed_states = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc);
+    traversed_states = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc, &tree_recycle_bin);
 #if 0
     found_new_start_points = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
 #endif

@@ -79,7 +79,7 @@ static GCC_INLINE void avl_decrement_balance(struct avl_node * node)
    and memory allocator |allocator|.
    Returns |NULL| if memory allocation failed. */
 struct avl_table *
-avl_create (avl_comparison_func *compare, void *param, fcs_meta_compact_allocator_t * meta_alloc)
+avl_create (avl_comparison_func *compare, void *param, fcs_meta_compact_allocator_t * meta_alloc, void * * common_recycle_bin)
 {
   struct avl_table *tree;
 
@@ -93,7 +93,7 @@ avl_create (avl_comparison_func *compare, void *param, fcs_meta_compact_allocato
   tree->avl_compare = compare;
   tree->avl_param = param;
   fc_solve_compact_allocator_init(&(tree->avl_allocator), meta_alloc);
-  tree->avl_recycle_bin = NULL;
+  tree->avl_recycle_bin = (struct avl_node * *)common_recycle_bin;
   tree->avl_count = 0;
   tree->avl_generation = 0;
 
@@ -155,9 +155,9 @@ avl_probe (struct avl_table *tree, void *item)
       da[k++] = dir = cmp > 0;
     }
 
-  if ((n = tree->avl_recycle_bin) != NULL)
+  if ((n = *(tree->avl_recycle_bin)) != NULL)
   {
-      tree->avl_recycle_bin = NEXT(n);
+      *(tree->avl_recycle_bin) = NEXT(n);
   }
   else
   {
@@ -367,8 +367,8 @@ avl_delete (struct avl_table *tree, const void *item)
 #if 0
   tree->avl_alloc->libavl_free (tree->avl_alloc, p);
 #else
-  SET_NEXT(p, tree->avl_recycle_bin);
-  tree->avl_recycle_bin = p;
+  SET_NEXT(p, *(tree->avl_recycle_bin));
+  *(tree->avl_recycle_bin) = p;
 #endif
 
   assert (k > 0);
