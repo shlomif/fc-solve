@@ -75,6 +75,8 @@ typedef void * avl_key_t;
 #define AVL_KEY_EQUAL_TO_PTR(key, ptr) ((key) == (ptr))
 #endif
 
+#define AVL_NEXT(p) (*((struct avl_node * *)(NODE_DATA_PTR(p))))
+#define AVL_SET_NEXT(p, val) (AVL_NEXT(p) = (val))
 /* Tree data structure. */
 #define avl_root avl_proto_root.avl_mylink[0]
 #define TREE_AVL_ROOT(tree) ((struct avl_node *)((tree)->avl_root))
