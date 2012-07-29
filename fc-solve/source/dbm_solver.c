@@ -35,7 +35,9 @@
 #include <assert.h>
 #include <limits.h>
 
+#if 0
 #define DEBUG_FOO
+#endif
 
 /*
  * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
@@ -1262,6 +1264,18 @@ static void instance_run_all_threads(
     TRACE0("instance_run_all_threads start");
 #endif
 
+#ifdef DEBUG_FOO
+    global_delta_stater =
+            fc_solve_delta_stater_alloc(
+                &(init_state->s),
+                STACKS_NUM,
+                FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+            );
+#endif
+
     for (i=0; i < num_threads ; i++)
     {
         threads[i].thread.instance = instance;
@@ -1274,9 +1288,6 @@ static void instance_run_all_threads(
                 , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
             );
-#ifdef DEBUG_FOO
-        global_delta_stater = threads[i].thread.delta_stater;
-#endif
         threads[i].arg.thread = &(threads[i].thread);
         check = pthread_create(
             &(threads[i].id),
