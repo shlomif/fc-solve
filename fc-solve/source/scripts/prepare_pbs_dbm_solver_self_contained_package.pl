@@ -36,7 +36,7 @@ if ($sub)
 {
     $flto = 1;
     # $num_cpus = 12;
-    $num_cpus = $num_threads = 4;
+    $num_cpus = $num_threads = 24;
     $mem = 500;
 }
 
