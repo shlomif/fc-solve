@@ -79,6 +79,11 @@ fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
 #endif
     if (ret)
     {
+        if (parent)
+        {
+            fcs_dbm_record_increment_refcount(parent);
+        }
+
         return ((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(db->kaz_tree, to_check)));
     }
     else
