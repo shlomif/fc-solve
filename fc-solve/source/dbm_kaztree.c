@@ -38,6 +38,13 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path, void * 
     return;
 }
 
+dict_t * fc_solve_dbm_store_get_dict(
+    fcs_dbm_store_t store
+    )
+{
+    return (((dbm_t *)store)->kaz_tree);
+}
+
 /*
  * Returns TRUE if the key was added (it didn't already exist.)
  * */
