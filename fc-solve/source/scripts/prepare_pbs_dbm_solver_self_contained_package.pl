@@ -18,6 +18,7 @@ my $who = 'sub';
 my $mem = 200;
 my $num_cpus = 4;
 my $num_threads = $num_cpus;
+my $num_hours = 120;
 
 GetOptions(
     'flto!' => \$flto,
@@ -38,6 +39,7 @@ if ($sub)
     # $num_cpus = 12;
     $num_cpus = $num_threads = 24;
     $mem = 500;
+    $num_hours = 700;
 }
 
 my $temp_dir = tempdir( CLEANUP => 1 );
@@ -233,6 +235,7 @@ DEALS_BOARDS = \$(patsubst %,%.board,\$(DEALS))
 THREADS = $num_threads
 MEM = $mem
 CPUS = $num_cpus
+HOURS = $num_hours
 
 CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I. -I./libavl
 MODULES = @modules
@@ -254,7 +257,7 @@ all: \$(TARGET) \$(JOBS)
 \ttouch \$\@
 
 \$(JOBS): %: \$(JOBS_STAMP) \$(RESULT)
-\tTHREADS="\$(THREADS)" MEM="\$(MEM)" CPUS="\$(CPUS)" bash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
+\tTHREADS="\$(THREADS)" MEM="\$(MEM)" CPUS="\$(CPUS)" HOURS="\$(HOURS)" bash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
 
 %.show:
 \t\@echo "\$* = \$(\$*)"
