@@ -165,6 +165,8 @@ avl_probe (struct avl_table *tree, void *item)
           &(tree->avl_allocator), sizeof(*n)
           );
   }
+  avl_set_decommissioned_flag(n, 0);
+
   SET_L(q, dir, n);
   if (n == NULL)
     return NULL;
