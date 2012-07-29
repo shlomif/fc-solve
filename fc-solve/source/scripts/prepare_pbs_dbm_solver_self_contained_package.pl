@@ -61,9 +61,9 @@ system(File::Spec->catdir($src_path, "Tatzer"),
 );
 
 # my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'rwlock.o', 'queue.o', 'libavl/avl.o', 'meta_alloc.o',);
-my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'libavl/avl.o', 'meta_alloc.o',);
+my @modules = ('app_str.o', 'card.o', 'depth_dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'libavl/avl.o', 'meta_alloc.o',);
 
-foreach my $fn ('app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
+foreach my $fn ('app_str.c', 'card.c', 'depth_dbm_solver.c', 'state.c',
     'dbm_kaztree.c', 'card.h', 'state.h',
     'dbm_solver.h', 'kaz_tree.h', 'dbm_solver_key.h',
     'fcs_move.h', 'inline.h', 'bool.h', 'internal_move_struct.h', 'app_str.h',
