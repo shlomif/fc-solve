@@ -67,7 +67,6 @@ static GCC_INLINE void avl_decrement_balance(struct avl_node * node)
     avl_set_balance(node, avl_get_balance(node)-1);
 }
 
-#define AVL_SET_NEXT(p, val) (AVL_NEXT(p) = (val))
 #define NODEPTR_SET_BALANCE(p, b) avl_set_balance((p), (b))
 #define NODEPTR_INC_BALANCE(p) avl_increment_balance(p)
 #define NODEPTR_DEC_BALANCE(p) avl_decrement_balance(p)
