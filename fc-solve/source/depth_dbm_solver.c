@@ -1250,6 +1250,9 @@ static void instance_run_all_threads(
     for (i=0; i < num_threads ; i++)
     {
         fc_solve_delta_stater_free(threads[i].thread.delta_stater);
+        fc_solve_meta_compact_allocator_finish(
+            &(threads[i].thread.thread_meta_alloc)
+        );
     }
 
     free(threads);
