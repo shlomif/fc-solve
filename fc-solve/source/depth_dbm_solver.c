@@ -1166,6 +1166,10 @@ static void instance_run_all_threads(
 #ifdef T
         TRACE1("Finished running threads for curr_depth=%d\n", instance->curr_depth);
 #endif
+        if (instance->queue_solution_was_found)
+        {
+            break;
+        }
         /* Now that we are about to ascend to a new depth, let's mark-and-sweep
          * the old states, some of which are no longer of interest.
          * */
