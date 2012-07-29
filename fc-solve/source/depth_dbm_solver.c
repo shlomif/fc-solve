@@ -347,7 +347,7 @@ typedef struct
     fcs_encoded_state_buffer_t queue_solution;
 
 #endif
-    fcs_meta_compact_allocator_t meta_alloc;
+    fcs_meta_compact_allocator_t instance_meta_alloc;
     int queue_num_extracted_and_processed;
     long num_states_in_collection;
     FILE * out_fh;
@@ -375,7 +375,7 @@ static GCC_INLINE void instance_init(
     instance->out_fh = out_fh;
 
     fc_solve_meta_compact_allocator_init(
-        &(instance->meta_alloc)
+        &(instance->instance_meta_alloc)
     );
     instance->queue_solution_was_found = FALSE;
     instance->should_terminate = DONT_TERMINATE;
@@ -532,7 +532,7 @@ static GCC_INLINE void instance_destroy(
     FCS_DESTROY_LOCK(instance->storage_lock);
 
     fc_solve_meta_compact_allocator_finish(
-        &(instance->meta_alloc)
+        &(instance->instance_meta_alloc)
     );
 }
 
@@ -654,39 +654,39 @@ static GCC_INLINE void instance_check_key(
                 FCS_LOCK(instance->global_lock);
                 instance->count_of_items_in_queue++;
 #ifdef DEBUG_FOO
-        {
-            char * state_str;
-            fcs_state_keyval_pair_t state;
-            fcs_state_locs_struct_t locs;
-            DECLARE_IND_BUF_T(indirect_stacks_buffer)
+                {
+                    char * state_str;
+                    fcs_state_keyval_pair_t state;
+                    fcs_state_locs_struct_t locs;
+                    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-            fc_solve_init_locs(&locs);
-            /* Handle item. */
-            fc_solve_delta_stater_decode_into_state(
-                global_delta_stater,
-                token->key.s,
-                &state,
-                indirect_stacks_buffer
-            );
+                    fc_solve_init_locs(&locs);
+                    /* Handle item. */
+                    fc_solve_delta_stater_decode_into_state(
+                        global_delta_stater,
+                        token->key.s,
+                        &state,
+                        indirect_stacks_buffer
+                    );
 
-            state_str = fc_solve_state_as_string(
-                &(state.s),
-                &(state.info),
-                &locs,
-                2,
-                8,
-                1,
-                1,
-                0,
-                1
-                );
+                    state_str = fc_solve_state_as_string(
+                        &(state.s),
+                        &(state.info),
+                        &locs,
+                        2,
+                        8,
+                        1,
+                        1,
+                        0,
+                        1
+                        );
 
 #if 1
-            fprintf(instance->out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
-            fflush(instance->out_fh);
+                    fprintf(instance->out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
+                    fflush(instance->out_fh);
 #endif
-            free(state_str);
-        }
+                    free(state_str);
+                }
 #endif
                 instance->num_states_in_collection++;
                 FCS_UNLOCK(instance->global_lock);
@@ -739,6 +739,7 @@ static GCC_INLINE void instance_check_multiple_keys(
 typedef struct {
     fcs_dbm_solver_instance_t * instance;
     fc_solve_delta_stater_t * delta_stater;
+    fcs_meta_compact_allocator_t thread_meta_alloc;
 } fcs_dbm_solver_thread_t;
 
 typedef struct {
@@ -803,7 +804,7 @@ static void * instance_run_solver_thread(void * void_arg)
     prev_item = item = NULL;
     queue_num_extracted_and_processed = 0;
 
-    fc_solve_compact_allocator_init(&(derived_list_allocator), &(instance->meta_alloc));
+    fc_solve_compact_allocator_init(&(derived_list_allocator), &(thread->thread_meta_alloc));
     derived_list_recycle_bin = NULL;
     derived_list = NULL;
     out_fh = instance->out_fh;
@@ -1117,6 +1118,17 @@ static void instance_run_all_threads(
     TRACE0("instance_run_all_threads start");
 #endif
 
+#ifdef DEBUG_FOO
+    global_delta_stater =
+            fc_solve_delta_stater_alloc(
+                &(init_state->s),
+                STACKS_NUM,
+                FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+            );
+#endif
     for (i=0; i < num_threads ; i++)
     {
         threads[i].thread.instance = instance;
@@ -1129,9 +1141,10 @@ static void instance_run_all_threads(
                 , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
             );
-#ifdef DEBUG_FOO
-        global_delta_stater = threads[i].thread.delta_stater;
-#endif
+
+        fc_solve_meta_compact_allocator_init(
+            &(threads[i].thread.thread_meta_alloc)
+        );
         threads[i].arg.thread = &(threads[i].thread);
     }
 
@@ -1293,7 +1306,7 @@ static unsigned char get_move_from_parent_to_child(
     fcs_compact_allocator_t derived_list_allocator;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    fc_solve_compact_allocator_init(&(derived_list_allocator), &(instance->meta_alloc));
+    fc_solve_compact_allocator_init(&(derived_list_allocator), &(instance->instance_meta_alloc));
     fc_solve_delta_stater_decode_into_state(
         delta,
         parent.s,
