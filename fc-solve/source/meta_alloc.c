@@ -92,7 +92,7 @@ void fc_solve_meta_compact_allocator_finish(fcs_meta_compact_allocator_t * meta_
     char * iter, * iter_next;
 
     for (
-        iter = meta_allocator->recycle_bin, iter_next = OLD_LIST_NEXT(iter)
+        iter = meta_allocator->recycle_bin, iter_next = iter ? OLD_LIST_NEXT(iter) : NULL
             ;
         iter_next
             ;

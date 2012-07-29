@@ -347,7 +347,6 @@ typedef struct
     fcs_encoded_state_buffer_t queue_solution;
 
 #endif
-    fcs_meta_compact_allocator_t instance_meta_alloc;
     int queue_num_extracted_and_processed;
     long num_states_in_collection;
     FILE * out_fh;
@@ -374,9 +373,6 @@ static GCC_INLINE void instance_init(
 
     instance->out_fh = out_fh;
 
-    fc_solve_meta_compact_allocator_init(
-        &(instance->instance_meta_alloc)
-    );
     instance->queue_solution_was_found = FALSE;
     instance->should_terminate = DONT_TERMINATE;
     instance->queue_num_extracted_and_processed = 0;
@@ -530,10 +526,6 @@ static GCC_INLINE void instance_destroy(
         FCS_DESTROY_LOCK(coll->queue_lock);
     }
     FCS_DESTROY_LOCK(instance->storage_lock);
-
-    fc_solve_meta_compact_allocator_finish(
-        &(instance->instance_meta_alloc)
-    );
 }
 
 static GCC_INLINE void instance_check_key(
@@ -1307,9 +1299,11 @@ static unsigned char get_move_from_parent_to_child(
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
                         * derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
+    fcs_meta_compact_allocator_t meta_alloc;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    fc_solve_compact_allocator_init(&(derived_list_allocator), &(instance->instance_meta_alloc));
+    fc_solve_meta_compact_allocator_init(&meta_alloc);
+    fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
     fc_solve_delta_stater_decode_into_state(
         delta,
         parent.s,
@@ -1355,6 +1349,7 @@ static unsigned char get_move_from_parent_to_child(
     move_to_return = derived_iter->move;
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
+    fc_solve_meta_compact_allocator_finish(&meta_alloc);
 
     return move_to_return;
 }
