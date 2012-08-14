@@ -31,64 +31,8 @@
  * http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1135
  *
  */
-#include <stdio.h>
-#include <string.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <assert.h>
-#include <limits.h>
 
-#if 0
-#define DEBUG_FOO
-#endif
-
-/*
- * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
- */
-#if 0
-#define FCS_DBM_SINGLE_THREAD 1
-#endif
-
-
-#include "config.h"
-
-#undef FCS_RCS_STATES
-
-#include "bool.h"
-#include "inline.h"
-#include "portable_time.h"
-#include "lock.h"
-
-#include "dbm_calc_derived.h"
-#include "delta_states_any.h"
-
-#include "dbm_common.h"
-#include "dbm_solver.h"
-#include "dbm_cache.h"
-
-#define FCS_DBM_USE_OFFLOADING_QUEUE
-
-#include "offloading_queue.h"
-
-
-
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-
-#if (!defined(FCS_DBM_WITHOUT_CACHES))
-#error FCS_DBM_USE_OFFLOADING_QUEUE requires FCS_DBM_WITHOUT_CACHES
-#endif
-
-#if (defined(FCS_DBM_CACHE_ONLY))
-#error FCS_DBM_USE_OFFLOADING_QUEUE is not compatible with FCS_DBM_CACHE_ONLY
-#endif
-
-#endif
-
-#include "dbm_trace.h"
-
-#ifdef DEBUG_FOO
-fc_solve_delta_stater_t * global_delta_stater;
-#endif
+#include "dbm_solver_head.h"
 
 typedef struct
 {
