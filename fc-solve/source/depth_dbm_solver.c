@@ -91,42 +91,6 @@ fc_solve_delta_stater_t * global_delta_stater;
 #endif
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-static GCC_INLINE fcs_bool_t pre_cache_does_key_exist(
-    fcs_pre_cache_t * pre_cache,
-    fcs_encoded_state_buffer_t * key
-    )
-{
-    fcs_pre_cache_key_val_pair_t to_check;
-
-    to_check.key = *key;
-
-    return (fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check) != NULL);
-}
-
-static GCC_INLINE fcs_bool_t pre_cache_lookup_parent(
-    fcs_pre_cache_t * pre_cache,
-    fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent
-    )
-{
-    fcs_pre_cache_key_val_pair_t to_check;
-    dict_key_t found_key;
-
-    to_check.key = *key;
-
-    found_key = fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check);
-
-    if (found_key)
-    {
-        *parent =
-            ((fcs_pre_cache_key_val_pair_t *)(found_key))->parent;
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
-}
 
 #ifndef FCS_DBM_CACHE_ONLY
 static GCC_INLINE void cache_populate_from_pre_cache(
