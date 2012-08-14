@@ -148,34 +148,6 @@ static GCC_INLINE fcs_bool_t pre_cache_lookup_parent(
     }
 }
 
-static GCC_INLINE void pre_cache_insert(
-    fcs_pre_cache_t * pre_cache,
-    fcs_encoded_state_buffer_t * key,
-    fcs_encoded_state_buffer_t * parent
-    )
-{
-    fcs_pre_cache_key_val_pair_t * to_insert;
-
-    if (pre_cache->kv_recycle_bin)
-    {
-        pre_cache->kv_recycle_bin =
-            (to_insert = pre_cache->kv_recycle_bin)->next;
-    }
-    else
-    {
-        to_insert =
-            fcs_compact_alloc_ptr(
-                &(pre_cache->kv_allocator),
-                sizeof(*to_insert)
-            );
-    }
-    to_insert->key = *key;
-    to_insert->parent = *parent;
-
-    fc_solve_kaz_tree_alloc_insert(pre_cache->kaz_tree, to_insert);
-    pre_cache->count_elements++;
-}
-
 #ifndef FCS_DBM_CACHE_ONLY
 static GCC_INLINE void cache_populate_from_pre_cache(
     fcs_lru_cache_t * cache,
