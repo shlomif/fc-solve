@@ -80,18 +80,7 @@
 
 #endif
 
-
-
-
-#define T
-
-#ifdef T
-#define TRACE0(message) \
-        { \
-            fprintf(out_fh, "%s\n", message); \
-            fflush(out_fh); \
-        }
-#endif
+#include "dbm_trace.h"
 
 #ifdef DEBUG_FOO
 fc_solve_delta_stater_t * global_delta_stater;
@@ -621,9 +610,7 @@ static void * instance_run_solver_thread(void * void_arg)
     derived_list = NULL;
     out_fh = instance->out_fh;
 
-#ifdef T
     TRACE0("instance_run_solver_thread start");
-#endif
 #ifdef DEBUG_OUT
     fc_solve_init_locs(&locs);
 #endif
@@ -778,9 +765,7 @@ static void * instance_run_solver_thread(void * void_arg)
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
 
-#ifdef T
     TRACE0("instance_run_solver_thread end");
-#endif
 
     return NULL;
 }
@@ -1086,9 +1071,7 @@ static void instance_run_all_threads(
     instance->parent_state_enc = *parent_state_enc;
     threads = malloc(sizeof(threads[0]) * num_threads);
 
-#ifdef T
     TRACE0("instance_run_all_threads start");
-#endif
 
 #ifdef DEBUG_FOO
     global_delta_stater =
@@ -1139,9 +1122,7 @@ static void instance_run_all_threads(
     }
     free(threads);
 
-#ifdef T
     TRACE0("instance_run_all_threads end");
-#endif
     return;
 }
 
@@ -1319,9 +1300,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     fcs_bool_t ret = FALSE;
     fcs_dbm_record_t * token;
 
-#ifdef T
     TRACE0("handle_and_destroy_instance_solution start");
-#endif
     instance_print_stats(instance, out_fh);
 
     if (instance->queue_solution_was_found)
@@ -1432,9 +1411,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
         fprintf (out_fh, "%s\n", "Could not solve successfully.");
     }
 
-#ifdef T
     TRACE0("handle_and_destroy_instance_solution end");
-#endif
 
     instance_destroy(instance);
 

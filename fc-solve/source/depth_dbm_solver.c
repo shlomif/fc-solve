@@ -84,22 +84,7 @@
 
 #endif
 
-
-
-#define T
-
-#ifdef T
-#define TRACE0(message) \
-        { \
-            fprintf(out_fh, "%s\n", message); \
-            fflush(out_fh); \
-        }
-#define TRACE1(my_format, arg1) \
-        { \
-            fprintf(out_fh, my_format, arg1); \
-            fflush(out_fh); \
-        }
-#endif
+#include "dbm_trace.h"
 
 #ifdef DEBUG_FOO
 fc_solve_delta_stater_t * global_delta_stater;
@@ -674,9 +659,7 @@ static void * instance_run_solver_thread(void * void_arg)
     derived_list = NULL;
     out_fh = instance->out_fh;
 
-#ifdef T
     TRACE0("instance_run_solver_thread start");
-#endif
 #ifdef DEBUG_OUT
     fc_solve_init_locs(&locs);
 #endif
@@ -835,9 +818,7 @@ static void * instance_run_solver_thread(void * void_arg)
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
 
-#ifdef T
     TRACE0("instance_run_solver_thread end");
-#endif
 
     return NULL;
 }
@@ -962,9 +943,7 @@ static void instance_run_all_threads(
 
     threads = malloc(sizeof(threads[0]) * num_threads);
 
-#ifdef T
     TRACE0("instance_run_all_threads start");
-#endif
 
 #ifdef DEBUG_FOO
     global_delta_stater =
@@ -998,9 +977,7 @@ static void instance_run_all_threads(
 
     while (instance->curr_depth < FCC_DEPTH)
     {
-#ifdef T
-    TRACE1("Running threads for curr_depth=%d\n", instance->curr_depth);
-#endif
+        TRACE1("Running threads for curr_depth=%d\n", instance->curr_depth);
         for (i=0; i < num_threads ; i++)
         {
             check = pthread_create(
@@ -1024,9 +1001,7 @@ static void instance_run_all_threads(
         {
             pthread_join(threads[i].id, NULL);
         }
-#ifdef T
         TRACE1("Finished running threads for curr_depth=%d\n", instance->curr_depth);
-#endif
         if (instance->queue_solution_was_found)
         {
             break;
@@ -1042,9 +1017,7 @@ static void instance_run_all_threads(
             struct avl_node * * tree_recycle_bin;
             size_t items_count, idx;
 
-#ifdef T
             TRACE1("Start mark-and-sweep cleanup for curr_depth=%d\n", instance->curr_depth);
-#endif
             tree_recycle_bin =
             (
                 (struct avl_node * *)(&(instance->tree_recycle_bin))
@@ -1088,9 +1061,7 @@ static void instance_run_all_threads(
                             ((long)idx), ((long)items_count));
                 }
             }
-#ifdef T
             TRACE1("Finish mark-and-sweep cleanup for curr_depth=%d\n", instance->curr_depth);
-#endif
         }
         instance->curr_depth++;
     }
@@ -1105,9 +1076,7 @@ static void instance_run_all_threads(
 
     free(threads);
 
-#ifdef T
     TRACE0("instance_run_all_threads end");
-#endif
     return;
 }
 
@@ -1287,9 +1256,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 {
     fcs_bool_t ret = FALSE;
 
-#ifdef T
     TRACE0("handle_and_destroy_instance_solution start");
-#endif
     instance_print_stats(instance, out_fh);
 
     if (instance->queue_solution_was_found)
@@ -1314,9 +1281,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
         fprintf (out_fh, "%s\n", "Could not solve successfully.");
     }
 
-#ifdef T
     TRACE0("handle_and_destroy_instance_solution end");
-#endif
 
     instance_destroy(instance);
 
