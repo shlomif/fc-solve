@@ -68,9 +68,9 @@
 
 #define FCS_DBM_USE_OFFLOADING_QUEUE
 
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
 #include "offloading_queue.h"
-#endif
+
+
 
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
 
@@ -83,6 +83,8 @@
 #endif
 
 #endif
+
+
 
 #define T
 
@@ -287,12 +289,8 @@ typedef struct
     fcs_dbm_store_t store;
 #endif
     fcs_lock_t queue_lock;
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
+    fcs_meta_compact_allocator_t queue_meta_alloc;
     fcs_offloading_queue_t queue;
-#else
-    fcs_compact_allocator_t queue_allocator;
-    fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin;
-#endif
 } fcs_dbm_collection_by_depth_t;
 
 typedef struct
@@ -369,10 +367,12 @@ static GCC_INLINE void instance_init(
 #define NUM_ITEMS_PER_PAGE (128 * 1024)
         fcs_offloading_queue__init(&(coll->queue), NUM_ITEMS_PER_PAGE, offload_dir_path, depth);
 #else
-        fc_solve_compact_allocator_init(
-            &(coll->queue_allocator), &(instance->meta_alloc)
+        fc_solve_meta_compact_allocator_init(
+            &(coll->queue_meta_alloc)
         );
+        fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
 #endif
+
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_init (&(coll->pre_cache), &(coll->meta_alloc));
@@ -387,34 +387,6 @@ static GCC_INLINE void instance_init(
 
 }
 
-#ifndef FCS_DBM_USE_OFFLOADING_QUEUE
-static GCC_INLINE void instance_dealloc_queue_moves_to_key(
-    fcs_dbm_solver_instance_t * instance
-)
-{
-    int i;
-#define NUM_CHAINS_TO_RELEASE 2
-    fcs_dbm_queue_item_t * to_release[NUM_CHAINS_TO_RELEASE];
-
-    to_release[0] = instance->queue_recycle_bin;
-    to_release[1] = instance->queue_head;
-
-    for (i=0 ; i < NUM_CHAINS_TO_RELEASE ; i++)
-    {
-        fcs_dbm_queue_item_t * item;
-
-        for (item = to_release[i] ;
-             item ;
-             item = item->next)
-        {
-            free(item->moves_to_key);
-            item->moves_to_key = NULL;
-        }
-    }
-#undef NUM_CHAINS_TO_RELEASE
-}
-#endif
-
 static GCC_INLINE void instance_recycle(
     fcs_dbm_solver_instance_t * instance
     )
@@ -426,22 +398,11 @@ static GCC_INLINE void instance_recycle(
          fcs_dbm_collection_by_depth_t * coll;
 
          coll = &(instance->colls_by_depth[depth]);
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
          fcs_offloading_queue__destroy(&(coll->queue));
+#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
          fcs_offloading_queue__init(&(coll->queue), NUM_ITEMS_PER_PAGE, instance->offload_dir_path, depth);
 #else
-         instance_dealloc_queue_moves_to_key(instance);
-         /* TODO : store what's left on the queue on the hard-disk. */
-         fc_solve_compact_allocator_finish(&(coll->queue_allocator));
-         fc_solve_compact_allocator_init(
-             &(coll->queue_allocator), &(coll->meta_alloc)
-             );
-#endif
-#ifndef FCS_DBM_USE_OFFLOADING_QUEUE
-    coll->queue_head =
-        coll->queue_tail =
-        coll->queue_recycle_bin =
-        NULL;
+         fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
 #endif
      }
 
@@ -462,12 +423,9 @@ static GCC_INLINE void instance_destroy(
     for (depth = 0 ; depth < FCC_DEPTH ; depth++)
     {
         coll = &(instance->colls_by_depth[depth]);
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
         fcs_offloading_queue__destroy(&(coll->queue));
-#else
-        instance_dealloc_queue_moves_to_key(coll);
-        /* TODO : store what's left on the queue on the hard-disk. */
-        fc_solve_compact_allocator_finish(&(coll->queue_allocator));
+#ifndef FCS_DBM_USE_OFFLOADING_QUEUE
+        fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
 #endif
 
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -541,9 +499,6 @@ static GCC_INLINE void instance_check_key(
             if ((token = fc_solve_dbm_store_insert_key_value(coll->store, key, parent)))
 #endif
             {
-#ifndef FCS_DBM_USE_OFFLOADING_QUEUE
-                fcs_dbm_queue_item_t * new_item;
-#endif
 #ifdef FCS_DBM_CACHE_ONLY
                 fcs_cache_key_info_t * cache_key;
 #endif
@@ -559,51 +514,10 @@ static GCC_INLINE void instance_check_key(
                 /* Now insert it into the queue. */
 
                 FCS_LOCK(coll->queue_lock);
-
-
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
                 fcs_offloading_queue__insert(
                     &(coll->queue),
                     (const fcs_offloading_queue_item_t *)(&token)
                     );
-#else
-                if (instance->queue_recycle_bin)
-                {
-                    instance->queue_recycle_bin =
-                        (new_item = instance->queue_recycle_bin)->next;
-                }
-                else
-                {
-                    new_item =
-                        (fcs_dbm_queue_item_t *)
-                        fcs_compact_alloc_ptr(
-                            &(instance->queue_allocator),
-                            sizeof(*new_item)
-                            );
-#ifdef FCS_DBM_CACHE_ONLY
-                    new_item->moves_to_key = NULL;
-#endif
-                }
-
-                new_item->key = (*key);
-                new_item->next = NULL;
-#ifdef FCS_DBM_CACHE_ONLY
-                new_item->moves_to_key = realloc(
-                    new_item->moves_to_key,
-                    strlen((const char *)cache_key->moves_to_key)+1
-                    );
-                strcpy((char *)new_item->moves_to_key, (const char *)cache_key->moves_to_key);
-#endif
-
-                if (coll->queue_tail)
-                {
-                    coll->queue_tail = coll->queue_tail->next = new_item;
-                }
-                else
-                {
-                    coll->queue_head = coll->queue_tail = new_item;
-                }
-#endif
                 FCS_UNLOCK(coll->queue_lock);
 
                 FCS_LOCK(instance->global_lock);
@@ -715,13 +629,11 @@ static void instance_print_stats(
              FCS_TIME_GET_SEC(mytime),
              FCS_TIME_GET_USEC(mytime)
             );
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fprintf (out_fh, ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n",
              instance->num_states_in_collection,
              instance->num_states_in_collection - instance->count_num_processed,
              instance->count_num_processed
             );
-#endif
     fflush(out_fh);
 }
 
@@ -734,10 +646,8 @@ static void * instance_run_solver_thread(void * void_arg)
     enum TERMINATE_REASON should_terminate;
     fcs_dbm_solver_thread_t * thread;
     fcs_dbm_solver_instance_t * instance;
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fcs_dbm_queue_item_t physical_item;
     fcs_dbm_record_t * token;
-#endif
     fcs_dbm_queue_item_t * item, * prev_item;
     int queue_num_extracted_and_processed;
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
@@ -784,10 +694,6 @@ static void * instance_run_solver_thread(void * void_arg)
             FCS_LOCK(instance->global_lock);
             instance->queue_num_extracted_and_processed--;
             FCS_UNLOCK(instance->global_lock);
-#ifndef FCS_DBM_USE_OFFLOADING_QUEUE
-            prev_item->next = coll->queue_recycle_bin;
-            coll->queue_recycle_bin = prev_item;
-#endif
         }
 
         if ((should_terminate = instance->should_terminate) == DONT_TERMINATE)
@@ -799,21 +705,10 @@ static void * instance_run_solver_thread(void * void_arg)
                  * Implement dumping the queue to the output filehandle.
                  * */
             }
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
             else if (fcs_offloading_queue__extract(&(coll->queue), (fcs_offloading_queue_item_t *)(&token)))
-#else
-            else if ((item = coll->queue_head))
-#endif
             {
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
                 physical_item.key = token->key;
                 item = &physical_item;
-#else
-                if (!(instance->queue_head = item->next))
-                {
-                    instance->queue_tail = NULL;
-                }
-#endif
                 instance->count_of_items_in_queue--;
                 instance->queue_num_extracted_and_processed++;
                 if (++instance->count_num_processed % 100000 == 0)
@@ -826,12 +721,10 @@ static void * instance_run_solver_thread(void * void_arg)
                     instance->should_terminate = should_terminate = MAX_ITERS_TERMINATE;
                 }
             }
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
             else
             {
                 item = NULL;
             }
-#endif
 
             queue_num_extracted_and_processed =
                 instance->queue_num_extracted_and_processed;
@@ -1447,9 +1340,7 @@ int main(int argc, char * argv[])
     FILE * fh = NULL, * out_fh = NULL, * intermediate_in_fh = NULL;
     char user_state[USER_STATE_SIZE];
     fc_solve_delta_stater_t * delta;
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fcs_dbm_record_t * token;
-#endif
 
     fcs_state_keyval_pair_t init_state;
 #if 0
@@ -1652,13 +1543,8 @@ int main(int argc, char * argv[])
 #endif
     {
         fcs_dbm_solver_instance_t instance;
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
         fcs_encoded_state_buffer_t * key_ptr;
 #define KEY_PTR() (key_ptr)
-#else
-        fcs_dbm_queue_item_t * first_item;
-#define KEY_PTR() &(first_item->key)
-#endif
 
         fcs_encoded_state_buffer_t parent;
 
@@ -1666,22 +1552,8 @@ int main(int argc, char * argv[])
                       dbm_store_path, max_count_of_items_in_queue,
                       iters_delta_limit, offload_dir_path, out_fh);
 
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-    key_ptr = &(instance.first_key);
-#else
-        first_item =
-            (fcs_dbm_queue_item_t *)
-            fcs_compact_alloc_ptr(
-                &(instance.queue_allocator),
-                sizeof(*first_item)
-                );
-
-        first_item->next = NULL;
-        first_item->moves_to_key = NULL;
-#endif
+        key_ptr = &(instance.first_key);
         fcs_init_and_encode_state(delta, &(init_state), KEY_PTR());
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-#endif
 
         /* The NULL parent and move for indicating this is the initial
          * state. */
@@ -1697,12 +1569,8 @@ int main(int argc, char * argv[])
         token = fc_solve_dbm_store_insert_key_value(instance.colls_by_depth[0].store, KEY_PTR(), NULL);
 #endif
 
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
         fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
             (const fcs_offloading_queue_item_t *)(&token));
-#else
-        instance.queue_head = instance.queue_tail = first_item;
-#endif
         instance.num_states_in_collection++;
         instance.count_of_items_in_queue++;
 
