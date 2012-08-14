@@ -90,13 +90,6 @@
 fc_solve_delta_stater_t * global_delta_stater;
 #endif
 
-enum TERMINATE_REASON
-{
-    DONT_TERMINATE = 0,
-    QUEUE_TERMINATE,
-    MAX_ITERS_TERMINATE,
-    SOLUTION_FOUND_TERMINATE
-};
 
 #define FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
 typedef struct

@@ -86,14 +86,6 @@
 fc_solve_delta_stater_t * global_delta_stater;
 #endif
 
-enum TERMINATE_REASON
-{
-    DONT_TERMINATE = 0,
-    QUEUE_TERMINATE,
-    MAX_ITERS_TERMINATE,
-    SOLUTION_FOUND_TERMINATE
-};
-
 typedef struct {
     fcs_lock_t storage_lock;
 #ifndef FCS_DBM_WITHOUT_CACHES

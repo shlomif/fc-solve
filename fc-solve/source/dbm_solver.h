@@ -86,6 +86,14 @@ struct fcs_dbm_queue_item_struct
 
 typedef struct fcs_dbm_queue_item_struct fcs_dbm_queue_item_t;
 
+enum TERMINATE_REASON
+{
+    DONT_TERMINATE = 0,
+    QUEUE_TERMINATE,
+    MAX_ITERS_TERMINATE,
+    SOLUTION_FOUND_TERMINATE
+};
+
 #ifdef __cplusplus
 }
 #endif
