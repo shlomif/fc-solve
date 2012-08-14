@@ -88,25 +88,6 @@ fc_solve_delta_stater_t * global_delta_stater;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 
-static int fc_solve_compare_pre_cache_keys(
-    const void * void_a, const void * void_b, void * context
-)
-{
-#define GET_PARAM(p) ((((const fcs_pre_cache_key_val_pair_t *)(p))->key))
-    return memcmp(&(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
-#undef GET_PARAM
-}
-
-static GCC_INLINE void pre_cache_init(fcs_pre_cache_t * pre_cache_ptr, fcs_meta_compact_allocator_t * meta_alloc)
-{
-    pre_cache_ptr->kaz_tree =
-        fc_solve_kaz_tree_create(fc_solve_compare_pre_cache_keys, NULL, meta_alloc);
-
-    fc_solve_compact_allocator_init(&(pre_cache_ptr->kv_allocator), meta_alloc);
-    pre_cache_ptr->kv_recycle_bin = NULL;
-    pre_cache_ptr->count_elements = 0;
-}
-
 static GCC_INLINE fcs_bool_t pre_cache_does_key_exist(
     fcs_pre_cache_t * pre_cache,
     fcs_encoded_state_buffer_t * key
