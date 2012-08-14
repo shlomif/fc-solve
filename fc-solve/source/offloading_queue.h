@@ -43,11 +43,116 @@ extern "C" {
 #include "inline.h"
 #include "bool.h"
 
-#if 0
-typedef struct { unsigned char s[24]; } fcs_offloading_queue_item_t;
-#endif
-
 typedef const unsigned char * fcs_offloading_queue_item_t;
+#if !defined(FCS_DBM_USE_OFFLOADING_QUEUE)
+
+struct fcs_Q_item_wrapper_struct
+{
+    fcs_offloading_queue_item_t datum;
+    struct fcs_Q_item_wrapper_struct * next;
+};
+
+typedef struct fcs_Q_item_wrapper_struct fcs_Q_item_wrapper_t;
+
+typedef struct
+{
+    fcs_compact_allocator_t queue_allocator;
+    fcs_Q_item_wrapper_t * queue_head, * queue_tail, * queue_recycle_bin;
+    long num_inserted, num_items_in_queue, num_extracted;
+} fcs_offloading_queue_t;
+
+static GCC_INLINE void fcs_offloading_queue__init(
+    fcs_offloading_queue_t * queue,
+    fcs_meta_compact_allocator_t * meta_alloc
+    )
+{
+    fc_solve_compact_allocator_init(
+        &(queue->queue_allocator), meta_alloc
+    );
+
+    queue->queue_head = queue->queue_tail = queue->queue_recycle_bin = NULL;
+    queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
+
+    return;
+}
+
+static GCC_INLINE void fcs_offloading_queue__destroy(
+    fcs_offloading_queue_t * queue
+    )
+{
+    fc_solve_compact_allocator_finish(&(queue->queue_allocator));
+}
+
+static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
+    fcs_offloading_queue_t * queue,
+    fcs_offloading_queue_item_t * return_item
+)
+{
+    fcs_Q_item_wrapper_t * item = queue->queue_head;
+
+    if (! item)
+    {
+        return FALSE;
+    }
+
+    *return_item = item->datum;
+
+    if (! ( queue->queue_head = item->next ) )
+    {
+        queue->queue_tail = NULL;
+    }
+
+    item->next = queue->queue_recycle_bin;
+    queue->queue_recycle_bin = item;
+
+    queue->num_items_in_queue--;
+    queue->num_extracted++;
+
+    return TRUE;
+}
+
+static GCC_INLINE void fcs_offloading_queue__insert(
+    fcs_offloading_queue_t * queue,
+    const fcs_offloading_queue_item_t * datum
+)
+{
+    fcs_Q_item_wrapper_t * new_item;
+
+    if (queue->queue_recycle_bin)
+    {
+        queue->queue_recycle_bin =
+            (new_item = queue->queue_recycle_bin)->next;
+    }
+    else
+    {
+        new_item =
+            (fcs_Q_item_wrapper_t *)
+            fcs_compact_alloc_ptr(
+                &(queue->queue_allocator),
+                sizeof(*new_item)
+                );
+    }
+    new_item->datum = *datum;
+    new_item->next = NULL;
+
+    if (queue->queue_tail)
+    {
+        queue->queue_tail = queue->queue_tail->next = new_item;
+    }
+    else
+    {
+        queue->queue_head = queue->queue_tail = new_item;
+    }
+
+    queue->num_inserted++;
+    queue->num_items_in_queue++;
+
+    return;
+}
+
+/* Implement the standard in-memory queue as a linked list. */
+#else
+
 
 typedef struct
 {
@@ -322,6 +427,8 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
 
     return TRUE;
 }
+
+#endif
 
 #ifdef __cplusplus
 }
