@@ -37,17 +37,8 @@
 #include <limits.h>
 #include <signal.h>
 
-/*
- * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
- * to improve CPU utilisations of the various worker threads and possibly
- * overall performance.
- * #define FCS_DBM_USE_RWLOCK 1 */
-
-#ifdef FCS_DBM_USE_RWLOCK
-#include <pthread/rwlock_fcfs.h>
-#endif
-
 #include "config.h"
+
 #undef FCS_RCS_STATES
 
 #include "bool.h"
@@ -108,24 +99,6 @@ typedef struct {
     fcs_lru_cache_t cache;
     void * tree_recycle_bin;
 } fcs_fcc_solver_state;
-
-static const pthread_mutex_t initial_mutex_constant =
-    PTHREAD_MUTEX_INITIALIZER
-    ;
-
-#ifdef FCS_DBM_USE_RWLOCK
-typedef pthread_rwlock_fcfs_t * fcs_lock_t;
-#define FCS_LOCK(lock) pthread_rwlock_fcfs_gain_write(lock)
-#define FCS_UNLOCK(lock) pthread_rwlock_fcfs_release(lock)
-#define FCS_INIT_LOCK(lock) ((lock) = pthread_rwlock_fcfs_alloc())
-#define FCS_DESTROY_LOCK(lock) pthread_rwlock_fcfs_destroy(lock)
-#else
-typedef pthread_mutex_t fcs_lock_t;
-#define FCS_LOCK(lock) pthread_mutex_lock(&(lock))
-#define FCS_UNLOCK(lock) pthread_mutex_unlock(&(lock))
-#define FCS_INIT_LOCK(lock) ((lock) = initial_mutex_constant)
-#define FCS_DESTROY_LOCK(lock) {}
-#endif
 
 typedef struct {
     fcs_fcc_solver_state solver_state;
