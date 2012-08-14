@@ -358,12 +358,6 @@ static GCC_INLINE void instance_init(
     }
     instance->count_of_items_in_queue = 0;
     instance->max_count_of_items_in_queue = max_count_of_items_in_queue;
-#ifndef FCS_DBM_USE_OFFLOADING_QUEUE
-    instance->queue_head =
-        instance->queue_tail =
-        instance->queue_recycle_bin =
-        NULL;
-#endif
     instance->tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
@@ -1416,108 +1410,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
         fflush (out_fh);
         if (instance->should_terminate == QUEUE_TERMINATE)
         {
-#if 0
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-            fcs_dbm_queue_item_t physical_item;
-#endif
-            fcs_dbm_queue_item_t * item;
-
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-            item = &physical_item;
-#endif
-
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-            while (fcs_offloading_queue__extract(&(instance->queue), &token))
-#else
-            for (
-                item = instance->queue_head ;
-                item ;
-                item = item->next
-                )
-#endif
-            {
-                int i;
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-                physical_item.key = *(const fcs_encoded_state_buffer_t *)token;
-#endif
-
-                for (i=0; i < item->key.s[0] ; i++)
-                {
-                    fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
-                }
-
-                fprintf (out_fh, "%s", "|");
-                fflush(out_fh);
-
-#ifdef FCS_DBM_CACHE_ONLY
-                {
-                    fcs_fcc_move_t * move_ptr;
-                    if ((move_ptr = item->moves_to_key))
-                    {
-                        while (*(move_ptr))
-                        {
-                            fprintf(out_fh, "%.2X,", *(move_ptr));
-                            move_ptr++;
-                        }
-                    }
-                }
-#else
-                {
-                    int trace_num;
-                    fcs_encoded_state_buffer_t * trace;
-
-                    calc_trace(instance, &(item->key), &trace, &trace_num);
-
-                    /*
-                     * We stop at 1 because the deepest state does not contain
-                     * a move (as it is the ultimate state).
-                     * */
-#define PENULTIMATE_DEPTH 1
-                    for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
-                    {
-                        fprintf(out_fh, "%.2X,", get_move_from_parent_to_child(instance, delta, trace[i], trace[i-1]));
-                    }
-#undef PENULTIMATE_DEPTH
-                    free(trace);
-                }
-#endif
-                fprintf (out_fh, "\n");
-                fflush(out_fh);
-#ifdef DEBUG_OUT
-                {
-                    char * state_str;
-                    fcs_state_keyval_pair_t state;
-                    fcs_state_locs_struct_t locs;
-                    DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
-                    fc_solve_init_locs(&locs);
-
-                    fc_solve_delta_stater_decode_into_state(
-                        delta,
-                        item->key.s,
-                        &state,
-                        indirect_stacks_buffer
-                        );
-
-                    state_str = fc_solve_state_as_string(
-                        &(state.s),
-                        &(state.info),
-                        &locs,
-                        2,
-                        8,
-                        1,
-                        1,
-                        0,
-                        1
-                    );
-
-                    fprintf(out_fh, "<<<\n%s>>>\n", state_str);
-                    fflush(out_fh);
-                    free(state_str);
-                }
-#endif
-            }
-#endif
         }
         else if (instance->should_terminate == MAX_ITERS_TERMINATE)
         {
@@ -1637,18 +1529,6 @@ int main(int argc, char * argv[])
             }
             max_count_of_items_in_queue = atol(argv[arg]);
         }
-#if 0
-        else if (!strcmp(argv[arg], "--start-line"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--start-line came without an argument.\n");
-                exit(-1);
-            }
-            start_line = atol(argv[arg]);
-        }
-#endif
         else if (!strcmp(argv[arg], "--iters-delta-limit"))
         {
             arg++;
@@ -1769,134 +1649,6 @@ int main(int argc, char * argv[])
 #define NUM_THREADS() 1
 #else
 #define NUM_THREADS() num_threads
-#endif
-#if 0
-    if (intermediate_in_fh)
-    {
-        fcs_bool_t found_line;
-        char * line = NULL;
-        size_t line_size = 0;
-        long line_num = 0;
-        fcs_bool_t queue_solution_was_found = FALSE;
-        fcs_dbm_solver_instance_t queue_instance;
-        fcs_dbm_solver_instance_t limit_instance;
-
-        instance_init(&queue_instance, pre_cache_max_count, caches_delta,
-                      dbm_store_path, max_count_of_items_in_queue,
-                      -1, offload_dir_path, out_fh);
-
-        instance_init(
-            &limit_instance, pre_cache_max_count, caches_delta,
-            dbm_store_path, LONG_MAX,
-            iters_delta_limit, offload_dir_path, out_fh
-            );
-
-        do
-        {
-            line_num++;
-            found_line = FALSE;
-            while (getline(&line, &line_size, intermediate_in_fh) >= 0)
-            {
-                if (strchr(line, '|') != NULL)
-                {
-                    found_line = TRUE;
-                    break;
-                }
-                line_num++;
-            }
-
-            if (found_line)
-            {
-                if (line_num < start_line)
-                {
-                    continue;
-                }
-                skip_queue_output = FALSE;
-                {
-                    populate_instance_with_intermediate_input_line(
-                        &limit_instance,
-                        delta,
-                        &init_state,
-                        line,
-                        line_num
-                        );
-
-                    instance_run_all_threads(
-                        &limit_instance, &init_state, NUM_THREADS()
-                        );
-
-                    if (limit_instance.queue_solution_was_found)
-                    {
-                        trace_solution(&limit_instance, out_fh, delta);
-                        skip_queue_output = TRUE;
-                        queue_solution_was_found = TRUE;
-                    }
-                    else if (limit_instance.should_terminate == MAX_ITERS_TERMINATE)
-                    {
-                        fprintf(
-                            out_fh,
-                            "Reached Max-or-more iterations of %ld in intermediate-input line No. %ld.\n",
-                            limit_instance.max_count_num_processed,
-                            line_num
-                            );
-                    }
-                    else if (limit_instance.should_terminate == DONT_TERMINATE)
-                    {
-                        fprintf(
-                            out_fh,
-                            "Pruning due to unsolvability in intermediate-input line No. %ld\n",
-                            line_num
-                            );
-                        skip_queue_output = TRUE;
-                    }
-                }
-
-                if (!skip_queue_output)
-                {
-                    populate_instance_with_intermediate_input_line(
-                        &queue_instance,
-                        delta,
-                        &init_state,
-                        line,
-                        line_num
-                        );
-
-                    instance_run_all_threads(
-                        &queue_instance, &init_state, NUM_THREADS()
-                        );
-
-                    if (handle_and_destroy_instance_solution(
-                        &queue_instance,
-                        out_fh,
-                        delta
-                    ))
-                    {
-                        queue_solution_was_found = TRUE;
-                    }
-                }
-            }
-
-            if (!queue_solution_was_found)
-            {
-                /*
-                 * This recycles the instances by keeping the cache,
-                 * but making sure that the statistics and the queue are reset.
-                 * */
-                instance_recycle(&limit_instance);
-                instance_recycle(&queue_instance);
-            }
-        } while (found_line && (!queue_solution_was_found));
-
-        instance_destroy(&limit_instance);
-        if (! queue_solution_was_found)
-        {
-            instance_destroy(&queue_instance);
-        }
-
-        free(line);
-        line = NULL;
-    }
-    else
 #endif
     {
         fcs_dbm_solver_instance_t instance;
