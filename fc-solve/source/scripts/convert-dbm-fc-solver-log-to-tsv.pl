@@ -56,6 +56,14 @@ while(my $l = <>)
     {
         next LINES;
     }
+    elsif ($l =~ m{\A(?:Running threads for|Finished running threads for|Start mark-and-sweep cleanup for|Finish mark-and-sweep cleanup for) curr_depth=\d+\z})
+    {
+        next LINES;
+    }
+    elsif ($l =~ m{\AMark\+Sweep Progress - \d+/\d+\z})
+    {
+        next LINES;
+    }
 
 
     if (not (($reached, $in_collection, $time) = $l =~
@@ -76,7 +84,7 @@ while(my $l = <>)
     $in_queue = $in_collection-$reached;
 
     my $expected_queue_l = ">>>Queue Stats: inserted=$in_collection items_in_queue=$in_queue extracted=$reached";
-    if ($queue_l ne $expected_queue_l)
+    if (0) # if ($queue_l ne $expected_queue_l)
     {
         die "Wrong queue line on line No. $line_idx . Expected: <<<$expected_queue_l>>> - Got: <<<$queue_l>>>";
     }
