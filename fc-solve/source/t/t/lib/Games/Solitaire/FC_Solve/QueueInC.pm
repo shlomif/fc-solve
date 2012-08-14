@@ -5,6 +5,8 @@ use warnings;
 
 use Inline (
     C => <<'EOF',
+#define FCS_DBM_USE_OFFLOADING_QUEUE
+
 #include "offloading_queue.h"
 
 typedef struct
