@@ -43,8 +43,6 @@ extern "C" {
 #include "inline.h"
 #include "bool.h"
 
-#include "delta_states.h"
-
 #if 0
 typedef struct { unsigned char s[24]; } fcs_offloading_queue_item_t;
 #endif
