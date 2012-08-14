@@ -554,27 +554,7 @@ typedef struct {
     fcs_dbm_solver_thread_t * thread;
 } thread_arg_t;
 
-static void instance_print_stats(
-    fcs_dbm_solver_instance_t * instance,
-    FILE * out_fh
-    )
-{
-    fcs_portable_time_t mytime;
-    FCS_GET_TIME(mytime);
-
-    fprintf (out_fh, "Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n",
-             instance->count_num_processed,
-             instance->num_states_in_collection,
-             FCS_TIME_GET_SEC(mytime),
-             FCS_TIME_GET_USEC(mytime)
-            );
-    fprintf (out_fh, ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n",
-             instance->queue.num_inserted,
-             instance->queue.num_items_in_queue,
-             instance->queue.num_extracted
-            );
-    fflush(out_fh);
-}
+#include "dbm_procs.h"
 
 static void * instance_run_solver_thread(void * void_arg)
 {
