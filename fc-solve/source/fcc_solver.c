@@ -86,11 +86,10 @@ typedef struct {
     dict_t * does_min_by_absolute_depth_exist;
 } fcs_fcc_collection_by_depth;
 
-#define FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
 typedef struct {
     int curr_depth;
     long max_num_elements_in_cache;
-    fcs_fcc_collection_by_depth FCCs_by_depth[FCC_DEPTH];
+    fcs_fcc_collection_by_depth FCCs_by_depth[MAX_FCC_DEPTH];
     /* No need to reset when we ascend to a new depth.
      * TODO : make sure the pointers to the encoded states
      * inside the cache are always valid.
@@ -161,7 +160,7 @@ static GCC_INLINE void init_solver_state(
 
     solver_state->tree_recycle_bin = NULL;
 
-    for (i = 0 ; i < FCC_DEPTH ; i++)
+    for (i = 0 ; i < MAX_FCC_DEPTH ; i++)
     {
         fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[i]);
         fcc->queue = NULL;
@@ -225,7 +224,7 @@ static GCC_INLINE void solver_state_free(
 )
 {
     int depth;
-    for (depth = 0; depth < FCC_DEPTH ; depth++)
+    for (depth = 0; depth < MAX_FCC_DEPTH ; depth++)
     {
         solver_state__free_dcc_depth(solver_state, depth, moves_list_allocator);
     }
@@ -367,7 +366,7 @@ static int instance_run_solver(
     /* Now: iterate over the depths and generate new states. */
     for (curr_depth=0
          ;
-         (ret == FCC_IMPOSSIBLE) && (curr_depth < FCC_DEPTH )
+         (ret == FCC_IMPOSSIBLE) && (curr_depth < MAX_FCC_DEPTH )
          ;
          solver_state->curr_depth = ++curr_depth,
          fcc_stage++

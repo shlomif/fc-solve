@@ -94,6 +94,8 @@ enum TERMINATE_REASON
     SOLUTION_FOUND_TERMINATE
 };
 
+#define MAX_FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
+
 #ifdef __cplusplus
 }
 #endif

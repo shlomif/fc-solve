@@ -90,8 +90,6 @@
 fc_solve_delta_stater_t * global_delta_stater;
 #endif
 
-
-#define FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
 typedef struct
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -115,7 +113,7 @@ typedef struct
     fcs_lock_t storage_lock;
     const char * offload_dir_path;
     int curr_depth;
-    fcs_dbm_collection_by_depth_t colls_by_depth[FCC_DEPTH];
+    fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
     long pre_cache_max_count;
     /* The queue */
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
@@ -174,7 +172,7 @@ static GCC_INLINE void instance_init(
     instance->tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
-    for (depth = 0 ; depth < FCC_DEPTH ; depth++)
+    for (depth = 0 ; depth < MAX_FCC_DEPTH ; depth++)
     {
         coll = &(instance->colls_by_depth[depth]);
         FCS_INIT_LOCK(coll->queue_lock);
@@ -208,7 +206,7 @@ static GCC_INLINE void instance_recycle(
 {
      int depth;
 
-     for (depth = instance->curr_depth ; depth < FCC_DEPTH ; depth++)
+     for (depth = instance->curr_depth ; depth < MAX_FCC_DEPTH ; depth++)
      {
          fcs_dbm_collection_by_depth_t * coll;
 
@@ -235,7 +233,7 @@ static GCC_INLINE void instance_destroy(
     int depth;
     fcs_dbm_collection_by_depth_t * coll;
 
-    for (depth = 0 ; depth < FCC_DEPTH ; depth++)
+    for (depth = 0 ; depth < MAX_FCC_DEPTH ; depth++)
     {
         coll = &(instance->colls_by_depth[depth]);
         fcs_offloading_queue__destroy(&(coll->queue));
@@ -785,7 +783,7 @@ static void instance_run_all_threads(
         threads[i].arg.thread = &(threads[i].thread);
     }
 
-    while (instance->curr_depth < FCC_DEPTH)
+    while (instance->curr_depth < MAX_FCC_DEPTH)
     {
         TRACE1("Running threads for curr_depth=%d\n", instance->curr_depth);
         for (i=0; i < num_threads ; i++)
