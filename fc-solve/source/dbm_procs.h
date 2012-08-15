@@ -262,6 +262,45 @@ static void instance_print_stats(
     fflush(out_fh);
 }
 
+static void calc_trace(
+    fcs_dbm_solver_instance_t * instance,
+    fcs_dbm_record_t * ptr_initial_record,
+    fcs_encoded_state_buffer_t * * ptr_trace,
+    int * ptr_trace_num
+    )
+{
+    int trace_num;
+    int trace_max_num;
+    fcs_encoded_state_buffer_t * trace;
+    fcs_encoded_state_buffer_t * key_ptr;
+    fcs_dbm_record_t * record;
+
+#define GROW_BY 100
+    trace_num = 0;
+    trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
+    key_ptr = trace;
+    record = ptr_initial_record;
+
+    while (record)
+    {
+#if 1
+        *(key_ptr) = record->key;
+        if ((++trace_num) == trace_max_num)
+        {
+            trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
+            key_ptr = &(trace[trace_num-1]);
+        }
+        record = fcs_dbm_record_get_parent_ptr(record);
+        key_ptr++;
+#endif
+    }
+#undef GROW_BY
+    *ptr_trace_num = trace_num;
+    *ptr_trace = trace;
+
+    return;
+}
+
 #ifdef __cplusplus
 }
 #endif

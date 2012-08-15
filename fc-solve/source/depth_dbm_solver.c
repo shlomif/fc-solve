@@ -582,66 +582,6 @@ static const char * move_to_string(unsigned char move, char * move_buffer)
     return move_buffer;
 }
 
-static void calc_trace(
-    fcs_dbm_solver_instance_t * instance,
-    fcs_dbm_record_t * ptr_initial_record,
-    fcs_encoded_state_buffer_t * * ptr_trace,
-    int * ptr_trace_num
-    )
-{
-    int trace_num;
-    int trace_max_num;
-    fcs_encoded_state_buffer_t * trace;
-    fcs_encoded_state_buffer_t * key_ptr;
-    fcs_dbm_record_t * record;
-
-#define GROW_BY 100
-    trace_num = 0;
-    trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
-    key_ptr = trace;
-    record = ptr_initial_record;
-
-    while (record)
-    {
-#if 1
-        *(key_ptr) = record->key;
-        if ((++trace_num) == trace_max_num)
-        {
-            trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
-            key_ptr = &(trace[trace_num-1]);
-        }
-        record = fcs_dbm_record_get_parent_ptr(record);
-        key_ptr++;
-#else
-#ifndef FCS_DBM_CACHE_ONLY
-#ifndef FCS_DBM_WITHOUT_CACHES
-        if (! pre_cache_lookup_parent(
-            &(instance->pre_cache),
-            key_ptr,
-            (key_ptr+1)
-            ))
-#endif
-        {
-            if (!fc_solve_dbm_store_lookup_parent(
-                instance->store,
-                key_ptr->s,
-                key_ptr[1].s
-                ))
-            {
-                fprintf(stderr, "Trace problem in trace No. %d. Exiting\n", trace_num);
-                exit(-1);
-            }
-        }
-#endif
-#endif
-    }
-#undef GROW_BY
-    *ptr_trace_num = trace_num;
-    *ptr_trace = trace;
-
-    return;
-}
-
 static void instance_run_all_threads(
     fcs_dbm_solver_instance_t * instance,
     fcs_state_keyval_pair_t * init_state,
