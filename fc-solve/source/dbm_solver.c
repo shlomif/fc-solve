@@ -67,7 +67,6 @@ typedef struct
     fcs_encoded_state_buffer_t first_key;
     long num_states_in_collection;
     FILE * out_fh;
-    fcs_encoded_state_buffer_t parent_state_enc;
     void * tree_recycle_bin;
 } fcs_dbm_solver_instance_t;
 
@@ -718,7 +717,6 @@ static void populate_instance_with_intermediate_input_line(
 static void instance_run_all_threads(
     fcs_dbm_solver_instance_t * instance,
     fcs_state_keyval_pair_t * init_state,
-    fcs_encoded_state_buffer_t * parent_state_enc,
     int num_threads)
 {
     int i, check;
@@ -728,7 +726,6 @@ static void instance_run_all_threads(
     FILE * out_fh = instance->out_fh;
 #endif
 
-    instance->parent_state_enc = *parent_state_enc;
     threads = malloc(sizeof(threads[0]) * num_threads);
 
     TRACE0("instance_run_all_threads start");
@@ -1350,7 +1347,7 @@ int main(int argc, char * argv[])
                         );
 
                     instance_run_all_threads(
-                        &limit_instance, &init_state, &parent_state_enc, NUM_THREADS()
+                        &limit_instance, &init_state, NUM_THREADS()
                         );
 
                     if (limit_instance.queue_solution_was_found)
@@ -1392,7 +1389,7 @@ int main(int argc, char * argv[])
                         );
 
                     instance_run_all_threads(
-                        &queue_instance, &init_state, &parent_state_enc, NUM_THREADS()
+                        &queue_instance, &init_state, NUM_THREADS()
                         );
 
                     if (handle_and_destroy_instance_solution(
@@ -1442,8 +1439,7 @@ int main(int argc, char * argv[])
         fcs_init_and_encode_state(delta, &(init_state), KEY_PTR());
 
         /* The NULL parent_state_enc and move for indicating this is the
-         * initial
-         * state. */
+         * initial state. */
         fcs_init_encoded_state(&(parent_state_enc));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -1460,7 +1456,7 @@ int main(int argc, char * argv[])
         instance.num_states_in_collection++;
         instance.count_of_items_in_queue++;
 
-        instance_run_all_threads(&instance, &init_state, &parent_state_enc, NUM_THREADS());
+        instance_run_all_threads(&instance, &init_state, NUM_THREADS());
         handle_and_destroy_instance_solution(&instance, out_fh, delta);
     }
 
