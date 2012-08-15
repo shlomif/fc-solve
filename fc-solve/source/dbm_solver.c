@@ -1349,11 +1349,6 @@ int main(int argc, char * argv[])
                         &parent_state_enc
                         );
 
-#ifdef FCS_DBM_SINGLE_THREAD
-#define NUM_THREADS() 1
-#else
-#define NUM_THREADS() num_threads
-#endif
                     instance_run_all_threads(
                         &limit_instance, &init_state, &parent_state_enc, NUM_THREADS()
                         );

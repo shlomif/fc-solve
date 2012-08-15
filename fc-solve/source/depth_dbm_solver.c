@@ -1154,11 +1154,6 @@ int main(int argc, char * argv[])
         }
     }
 
-#ifdef FCS_DBM_SINGLE_THREAD
-#define NUM_THREADS() 1
-#else
-#define NUM_THREADS() num_threads
-#endif
     {
         fcs_dbm_solver_instance_t instance;
         fcs_encoded_state_buffer_t * key_ptr;

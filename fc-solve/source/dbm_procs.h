@@ -301,6 +301,12 @@ static void calc_trace(
     return;
 }
 
+#ifdef FCS_DBM_SINGLE_THREAD
+#define NUM_THREADS() 1
+#else
+#define NUM_THREADS() num_threads
+#endif
+
 #ifdef __cplusplus
 }
 #endif
