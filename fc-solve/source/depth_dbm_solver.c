@@ -954,8 +954,8 @@ int main(int argc, char * argv[])
     int num_threads;
     int arg;
     const char * filename = NULL, * out_filename = NULL,
-          * intermediate_input_filename = NULL, * offload_dir_path = NULL;
-    FILE * fh = NULL, * out_fh = NULL, * intermediate_in_fh = NULL;
+          * offload_dir_path = NULL;
+    FILE * fh = NULL, * out_fh = NULL;
     char user_state[USER_STATE_SIZE];
     fc_solve_delta_stater_t * delta;
     fcs_dbm_record_t * token;
@@ -1058,16 +1058,6 @@ int main(int argc, char * argv[])
             }
             out_filename = argv[arg];
         }
-        else if (!strcmp(argv[arg], "--intermediate-input"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--intermediate-input came without an argument.\n");
-                exit(-1);
-            }
-            intermediate_input_filename = argv[arg];
-        }
         else if (!strcmp(argv[arg], "--offload-dir-path"))
         {
             arg++;
@@ -1142,18 +1132,6 @@ int main(int argc, char * argv[])
 #endif
     );
 
-    if (intermediate_input_filename)
-    {
-        intermediate_in_fh = fopen(intermediate_input_filename, "rt");
-        if (! intermediate_in_fh)
-        {
-            fprintf (stderr,
-                     "Could not open file '%s' as --intermediate-input-filename.\n",
-                     intermediate_input_filename);
-            exit(-1);
-        }
-    }
-
     {
         fcs_dbm_solver_instance_t instance;
         fcs_encoded_state_buffer_t * key_ptr;
@@ -1198,12 +1176,6 @@ int main(int argc, char * argv[])
     {
         fclose(out_fh);
         out_fh = NULL;
-    }
-
-    if (intermediate_in_fh)
-    {
-        fclose(intermediate_in_fh);
-        intermediate_in_fh = NULL;
     }
 
     return 0;
