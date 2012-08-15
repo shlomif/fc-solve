@@ -287,9 +287,7 @@ static GCC_INLINE void instance_check_key(
                 instance->count_of_items_in_queue++;
                 instance->num_states_in_collection++;
 
-#ifdef DEBUG_FOO
                 instance_debug_out_state(instance, &(token->key));
-#endif
 
                 FCS_UNLOCK(instance->global_lock);
             }

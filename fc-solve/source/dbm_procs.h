@@ -311,6 +311,8 @@ static GCC_INLINE void instance_debug_out_state(
     free(state_str);
 }
 
+#else
+#define instance_debug_out_state(instance, key) {}
 #endif
 
 static void calc_trace(
