@@ -1437,7 +1437,7 @@ int main(int argc, char * argv[])
         fcs_encoded_state_buffer_t * key_ptr;
 #define KEY_PTR() (key_ptr)
 
-        fcs_encoded_state_buffer_t parent;
+        fcs_encoded_state_buffer_t parent_state_enc;
 
         instance_init(&instance, pre_cache_max_count, caches_delta,
                       dbm_store_path, max_count_of_items_in_queue,
@@ -1446,13 +1446,14 @@ int main(int argc, char * argv[])
         key_ptr = &(instance.first_key);
         fcs_init_and_encode_state(delta, &(init_state), KEY_PTR());
 
-        /* The NULL parent and move for indicating this is the initial
+        /* The NULL parent_state_enc and move for indicating this is the
+         * initial
          * state. */
-        fcs_init_encoded_state(&(parent));
+        fcs_init_encoded_state(&(parent_state_enc));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent);
+        pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_state_enc);
 #else
         cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
 #endif
@@ -1464,7 +1465,7 @@ int main(int argc, char * argv[])
         instance.num_states_in_collection++;
         instance.count_of_items_in_queue++;
 
-        instance_run_all_threads(&instance, &init_state, &parent, NUM_THREADS());
+        instance_run_all_threads(&instance, &init_state, &parent_state_enc, NUM_THREADS());
         handle_and_destroy_instance_solution(&instance, out_fh, delta);
     }
 
