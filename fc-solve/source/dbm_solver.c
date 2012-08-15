@@ -246,7 +246,7 @@ static GCC_INLINE void instance_check_key(
         instance->num_states_in_collection++;
 
 #ifdef DEBUG_FOO
-        instance_debug_out_state(instance, &(token.key));
+        instance_debug_out_state(instance, &(token->key));
 #endif
 
         fcs_offloading_queue__insert(
@@ -752,6 +752,10 @@ static void instance_run_all_threads(
         fc_solve_delta_stater_free(threads[i].thread.delta_stater);
     }
     free(threads);
+
+#ifdef DEBUG_FOO
+    fc_solve_delta_stater_free(global_delta_stater);
+#endif
 
     TRACE0("instance_run_all_threads end");
     return;
