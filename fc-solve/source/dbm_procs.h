@@ -199,6 +199,47 @@ static GCC_INLINE void pre_cache_offload_and_reset(
 
 #endif /* FCS_DBM_WITHOUT_CACHES */
 
+static GCC_INLINE void instance_check_multiple_keys(
+    fcs_dbm_solver_instance_t * instance,
+    fcs_derived_state_t * list
+#ifdef FCS_DBM_CACHE_ONLY
+    , const fcs_fcc_move_t * moves_to_parent
+#endif
+)
+{
+    /* Small optimization in case the list is empty. */
+    if (!list)
+    {
+        return;
+    }
+    FCS_LOCK(instance->storage_lock);
+    for (; list ; list = list->next)
+    {
+        instance_check_key(
+            instance,
+            CHECK_KEY_CALC_DEPTH(),
+            &(list->key), list->parent, list->move
+#ifdef FCS_DBM_CACHE_ONLY
+            , moves_to_parent
+#endif
+        );
+    }
+#ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
+    if (instance->pre_cache.count_elements >= instance->pre_cache_max_count)
+    {
+        pre_cache_offload_and_reset(
+            &(instance->pre_cache),
+            instance->store,
+            &(instance->cache),
+            &(instance->meta_alloc)
+        );
+    }
+#endif
+#endif
+    FCS_UNLOCK(instance->storage_lock);
+}
+
 static void instance_print_stats(
     fcs_dbm_solver_instance_t * instance,
     FILE * out_fh
