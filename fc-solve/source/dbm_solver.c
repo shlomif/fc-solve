@@ -175,6 +175,10 @@ static GCC_INLINE void instance_destroy(
     FCS_DESTROY_LOCK(instance->storage_lock);
 }
 
+#define CHECK_KEY_CALC_DEPTH() 0
+
+#include "dbm_procs.h"
+
 static GCC_INLINE void instance_check_key(
     fcs_dbm_solver_instance_t * instance,
     int key_depth,
@@ -237,41 +241,13 @@ static GCC_INLINE void instance_check_key(
         /* Now insert it into the queue. */
 
         FCS_LOCK(instance->queue_lock);
-#ifdef DEBUG_FOO
-        {
-            char * state_str;
-            fcs_state_keyval_pair_t state;
-            fcs_state_locs_struct_t locs;
-            DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-            fc_solve_init_locs(&locs);
-            /* Handle item. */
-            fc_solve_delta_stater_decode_into_state(
-                global_delta_stater,
-                token->key.s,
-                &state,
-                indirect_stacks_buffer
-            );
-
-            state_str = fc_solve_state_as_string(
-                &(state.s),
-                &(state.info),
-                &locs,
-                2,
-                8,
-                1,
-                1,
-                0,
-                1
-                );
-
-            fprintf(instance->out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
-            fflush(instance->out_fh);
-            free(state_str);
-        }
-#endif
-
+        instance->count_of_items_in_queue++;
         instance->num_states_in_collection++;
+
+#ifdef DEBUG_FOO
+        instance_debug_out_state(instance, &(token.key));
+#endif
 
         fcs_offloading_queue__insert(
             &(instance->queue),
@@ -282,7 +258,6 @@ static GCC_INLINE void instance_check_key(
     }
 }
 
-#define CHECK_KEY_CALC_DEPTH() 0
 
 typedef struct {
     fcs_dbm_solver_instance_t * instance;
@@ -293,7 +268,6 @@ typedef struct {
     fcs_dbm_solver_thread_t * thread;
 } thread_arg_t;
 
-#include "dbm_procs.h"
 
 static void * instance_run_solver_thread(void * void_arg)
 {

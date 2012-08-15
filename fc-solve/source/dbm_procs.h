@@ -199,6 +199,17 @@ static GCC_INLINE void pre_cache_offload_and_reset(
 
 #endif /* FCS_DBM_WITHOUT_CACHES */
 
+static GCC_INLINE void instance_check_key(
+    fcs_dbm_solver_instance_t * instance,
+    int key_depth,
+    fcs_encoded_state_buffer_t * key,
+    fcs_dbm_record_t * parent,
+    unsigned char move
+#ifdef FCS_DBM_CACHE_ONLY
+    , const fcs_fcc_move_t * moves_to_parent
+#endif
+);
+
 static GCC_INLINE void instance_check_multiple_keys(
     fcs_dbm_solver_instance_t * instance,
     fcs_derived_state_t * list
@@ -261,6 +272,46 @@ static void instance_print_stats(
             );
     fflush(out_fh);
 }
+
+#ifdef DEBUG_FOO
+
+static GCC_INLINE void instance_debug_out_state(
+    fcs_dbm_solver_instance_t * instance,
+    fcs_encoded_state_buffer_t * enc_state
+)
+{
+    char * state_str;
+    fcs_state_keyval_pair_t state;
+    fcs_state_locs_struct_t locs;
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+
+    fc_solve_init_locs(&locs);
+    /* Handle item. */
+    fc_solve_delta_stater_decode_into_state(
+        global_delta_stater,
+        enc_state->s,
+        &state,
+        indirect_stacks_buffer
+    );
+
+    state_str = fc_solve_state_as_string(
+        &(state.s),
+        &(state.info),
+        &locs,
+        2,
+        8,
+        1,
+        1,
+        0,
+        1
+        );
+
+    fprintf(instance->out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
+    fflush(instance->out_fh);
+    free(state_str);
+}
+
+#endif
 
 static void calc_trace(
     fcs_dbm_solver_instance_t * instance,
