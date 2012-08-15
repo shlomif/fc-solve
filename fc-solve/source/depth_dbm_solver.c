@@ -346,7 +346,6 @@ static GCC_INLINE void instance_check_multiple_keys(
 #endif
         );
     }
-    FCS_UNLOCK(instance->storage_lock);
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
     if (instance->pre_cache.count_elements >= instance->pre_cache_max_count)
@@ -360,6 +359,7 @@ static GCC_INLINE void instance_check_multiple_keys(
     }
 #endif
 #endif
+    FCS_UNLOCK(instance->storage_lock);
 }
 
 typedef struct {
