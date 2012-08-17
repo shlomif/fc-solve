@@ -33,6 +33,8 @@ if (!defined($who))
 
 my $sub = 1;
 
+my $depth_dbm = 0;
+
 if ($sub)
 {
     $flto = 1;
@@ -60,12 +62,14 @@ system(File::Spec->catdir($src_path, "Tatzer"),
     $src_path
 );
 
-# my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'rwlock.o', 'queue.o', 'libavl/avl.o', 'meta_alloc.o',);
-my @modules = ('app_str.o', 'card.o', 'depth_dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'libavl/avl.o', 'meta_alloc.o',);
+my $main_base = $depth_dbm ? "depth_dbm_solver" : "dbm_solver";
 
-foreach my $fn ('app_str.c', 'card.c', 'depth_dbm_solver.c', 'state.c',
-    'dbm_kaztree.c', 'card.h', 'state.h',
-    'dbm_solver.h', 'kaz_tree.h', 'dbm_solver_key.h',
+# my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'rwlock.o', 'queue.o', 'libavl/avl.o', 'meta_alloc.o',);
+my @modules = ('app_str.o', 'card.o', "$main_base.o", 'state.o', 'dbm_kaztree.o', 'libavl/avl.o', 'meta_alloc.o',);
+
+foreach my $fn ('app_str.c', 'card.c', "$main_base.c", 'state.c',
+    'dbm_kaztree.c', 'card.h', 'state.h', 'lock.h',
+    'dbm_solver.h', 'dbm_solver_head.h', 'kaz_tree.h', 'dbm_solver_key.h',
     'fcs_move.h', 'inline.h', 'bool.h', 'internal_move_struct.h', 'app_str.h',
     'delta_states.c', 'delta_states.h', 'fcs_dllexport.h', 'bit_rw.h',
     'fcs_enums.h', 'unused.h', 'fcs_limit.h',
@@ -73,7 +77,7 @@ foreach my $fn ('app_str.c', 'card.c', 'depth_dbm_solver.c', 'state.c',
     'dbm_common.h', 'libavl/avl.c', 'libavl/avl.h', 'offloading_queue.h',
     'indirect_buffer.h', 'generic_tree.h', 'meta_alloc.h', 'meta_alloc.c',
     'fcc_brfs_test.h','dbm_kaztree_compare.h', 'delta_states_iface.h',
-    'dbm_cache.h', 'dbm_lru_cache.h',
+    'dbm_cache.h', 'dbm_lru_cache.h', 'dbm_trace.h', 'dbm_procs.h',
     'delta_states_debondt.c', 'delta_states_any.h', 'delta_states_debondt.h',
     'debondt_delta_states_iface.h',
     'var_base_reader.h', 'var_base_writer.h',
