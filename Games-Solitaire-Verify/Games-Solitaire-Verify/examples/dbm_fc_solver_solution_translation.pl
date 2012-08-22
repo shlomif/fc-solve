@@ -257,10 +257,12 @@ sub run
             last MOVES;
         }
 
-        my @rev_cols_indexes;
-        @rev_cols_indexes[@cols_indexes] = (0 .. $#cols_indexes);
-        my @rev_fc_indexes;
-        @rev_fc_indexes[@fc_indexes] = (0 .. $#fc_indexes);
+        # I thought I needed them, but I did not eventually.
+        #
+        # my @rev_cols_indexes;
+        # @rev_cols_indexes[@cols_indexes] = (0 .. $#cols_indexes);
+        # my @rev_fc_indexes;
+        # @rev_fc_indexes[@fc_indexes] = (0 .. $#fc_indexes);
 
         my ($src, $dest);
         my $dest_move;
