@@ -224,14 +224,17 @@ sub run
             {
                 my $other_deck_idx;
 
-                for $other_deck_idx (0 .. ($running_state->num_decks() << 2) - 1)
+                for $other_deck_idx (0 ..
+                    (($running_state->num_decks() << 2) - 1)
+                )
                 {
                     if ($running_state->get_foundation_value(
                             $card->get_suits_seq->[$other_deck_idx % 4],
                             ($other_deck_idx >> 2),
                         ) < $card->rank() - 2 -
-                        (($card->color_for_suit($other_deck_idx % 4)
-                            eq $card->color()) ? 1 : 0)
+                        (($card->color_for_suit(
+                            $card->get_suits_seq->[$other_deck_idx % 4]
+                        ) eq $card->color()) ? 1 : 0)
                     )
                     {
                         next DECKS_LOOP;
@@ -360,6 +363,11 @@ sub run
 
         my %old_cols_map;
         my %old_fc_map;
+        my %non_assigned_cols =
+            (map { $_ => 1 } (0 .. $running_state->num_columns() - 1));
+
+        my %non_assigned_fcs =
+            (map { $_ => 1 } (0 .. $running_state->num_freecells() - 1));
 
         foreach my $idx (0 .. ($running_state->num_columns() - 1))
         {
@@ -374,13 +382,28 @@ sub run
             my $col = $new_state->get_column($idx);
             my $card = $col->len ? $col->pos(0)->to_string() : '';
             # TODO: Fix edge cases.
-            $new_cols_indexes[$idx] = $cols_indexes[shift(
-                @{
-                    $old_cols_map{
-                        $card
-                    }
-                }
-            )];
+            my $aref = $old_cols_map{$card};
+
+            if ((!defined($aref)) or (! @$aref))
+            {
+                $aref = $old_cols_map{''};
+            }
+            my $i = shift(@$aref);
+
+            if (defined($i))
+            {
+                $new_cols_indexes[$idx] = $i;
+                delete($non_assigned_cols{$i});
+            }
+        }
+
+        my @non_assigned_cols_list = sort { $a <=> $b } keys(%non_assigned_cols);
+        foreach my $col_idx (@new_cols_indexes)
+        {
+            if (!defined($col_idx))
+            {
+                $col_idx = shift(@non_assigned_cols_list);
+            }
         }
 
         foreach my $idx (0 .. ($running_state->num_freecells() - 1))
@@ -393,17 +416,33 @@ sub run
 
         foreach my $idx (0 .. ($running_state->num_freecells() - 1))
         {
-            my $card_obj = $running_state->get_freecell($idx);
+            my $card_obj = $new_state->get_freecell($idx);
             my $card = defined($card_obj) ? $card_obj->to_string() : '';
             # TODO : Fix edge cases.
 
             my $aref = $old_fc_map{$card};
 
-            if (! @$aref)
+            if ((!defined($aref)) or (! @$aref))
             {
                 $aref = $old_fc_map{''};
             }
-            $new_fc_indexes[$idx] = $fc_indexes[shift(@$aref)];
+
+            my $i = shift(@$aref);
+            if (defined($i))
+            {
+                $new_fc_indexes[$idx] = $i;
+                delete($non_assigned_fcs{$i});
+            }
+        }
+
+        my @non_assigned_fcs_list = sort { $a <=> $b } keys(%non_assigned_fcs);
+
+        foreach my $fc_idx (@new_fc_indexes)
+        {
+            if (!defined ($fc_idx))
+            {
+                $fc_idx = shift(@non_assigned_fcs_list);
+            }
         }
 
         my $verify_state =
@@ -420,6 +459,7 @@ sub run
                 $running_state->get_column($new_cols_indexes[$idx])->clone()
             );
         }
+
         $verify_state->set_freecells(
             Games::Solitaire::Verify::Freecells->new(
                 {
