@@ -331,3 +331,8 @@ in freecell.c.
 the code more 64-bit-enabled.
 ** Implement a 64-bit-ready callback.
 
+* Translate the solution output of dbm_fc_solver / depth_dbm_fc_solver to
+fc-solve for validation.
+** Done: see +scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl+ .
+
+

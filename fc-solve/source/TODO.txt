@@ -10,9 +10,6 @@ Pressing
 Non-pressing
 ------------
 
-* Translate the solution output of dbm_fc_solver / depth_dbm_fc_solver to
-fc-solve for validation.
-
 * Create a displayer for fc-solve's solutions which will allow seeing where a
 card was moved from (using a colored →) and where it was placed.
 ** Adapt it to dbm_fc_solve's solutions.
