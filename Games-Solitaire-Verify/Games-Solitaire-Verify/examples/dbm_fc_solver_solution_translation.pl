@@ -264,27 +264,31 @@ sub run
 
         my ($src, $dest);
         my $dest_move;
+
+        my @tentative_fc_indexes = @fc_indexes;
+        my @tentative_cols_indexes = @cols_indexes;
         if (($src, $dest) = $move_line =~ m{\AColumn (\d+) -> Freecell (\d+)\z})
         {
-            $dest_move = "Move a card from stack $rev_cols_indexes[$src] to freecell $rev_fc_indexes[$dest]";
+            $dest_move = "Move a card from stack $tentative_cols_indexes[$src] to freecell $tentative_fc_indexes[$dest]";
         }
         elsif (($src, $dest) = $move_line =~ m{\AColumn (\d+) -> Column (\d+)\z})
         {
-            $dest_move = "Move 1 cards from stack $rev_cols_indexes[$src] to stack $rev_cols_indexes[$dest]";
+            $dest_move = "Move 1 cards from stack $tentative_cols_indexes[$src] to stack $tentative_cols_indexes[$dest]";
         }
         elsif (($src, $dest) = $move_line =~ m{\AFreecell (\d+) -> Column (\d+)\z})
         {
-            $dest_move = "Move a card from freecell $rev_fc_indexes[$src] to stack $rev_cols_indexes[$dest]";
+            $dest_move = "Move a card from freecell $tentative_fc_indexes[$src] to stack $tentative_cols_indexes[$dest]";
         }
         elsif (($src) = $move_line =~ m{\AColumn (\d+) -> Foundation \d+\z})
         {
-            $dest_move = "Move a card from stack $rev_cols_indexes[$src] to the foundations";
+            $dest_move = "Move a card from stack $tentative_cols_indexes[$src] to the foundations";
         }
         elsif (($src) = $move_line =~ m{\AFreecell (\d+) -> Foundation \d+\z})
         {
-            $dest_move = "Move a card from freeecell $rev_fc_indexes[$src] to the foundations";
+            $dest_move = "Move a card from freeecell $tentative_fc_indexes[$src] to the foundations";
         }
         print "$dest_move\n\n";
+
 
         $running_state->verify_and_perform_move(
             Games::Solitaire::Verify::Move->new(
@@ -390,9 +394,9 @@ sub run
             }
             my $i = shift(@$aref);
 
+            $new_cols_indexes[$idx] = $i;
             if (defined($i))
             {
-                $new_cols_indexes[$idx] = $i;
                 delete($non_assigned_cols{$i});
             }
         }
@@ -428,9 +432,9 @@ sub run
             }
 
             my $i = shift(@$aref);
+            $new_fc_indexes[$idx] = $i;
             if (defined($i))
             {
-                $new_fc_indexes[$idx] = $i;
                 delete($non_assigned_fcs{$i});
             }
         }
