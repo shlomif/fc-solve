@@ -217,7 +217,7 @@ sub color
     return $self->color_for_suit($self->suit());
 }
 
-=head2 $self->color_for_suit($suit)
+=head2 $card->color_for_suit($suit)
 
 Get the color of the suit $suit (which may be different than the card's suit).
 
@@ -229,6 +229,7 @@ sub color_for_suit
 
     return $suits_map{$suit}->{'color'};
 }
+
 =head2 my $copy = $card->clone();
 
 Clones the card into a new copy.
