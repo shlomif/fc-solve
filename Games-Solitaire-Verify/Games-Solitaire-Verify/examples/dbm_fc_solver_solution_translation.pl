@@ -287,6 +287,24 @@ sub run
 
         # Now do the horne's prune.
         my $num_moved = 1; # Always iterate at least once.
+
+        my $perform_prune_move = sub {
+            my $prune_move = shift;
+
+            $num_moved++;
+
+            $running_state->verify_and_perform_move(
+                Games::Solitaire::Verify::Move->new(
+                    {
+                        fcs_string => $prune_move,
+                        game => $self->_variant(),
+                    }
+                )
+            );
+            print "$prune_move\n\n";
+            $out_running_state->();
+        };
+
         while ($num_moved)
         {
             $num_moved = 0;
@@ -301,18 +319,9 @@ sub run
 
                     if (defined($f))
                     {
-                        $num_moved++;
-                        my $prune_move = "Move a card from stack $idx to the foundations";
-                        $running_state->verify_and_perform_move(
-                            Games::Solitaire::Verify::Move->new(
-                                {
-                                    fcs_string => $prune_move,
-                                    game => $self->_variant(),
-                                }
-                            )
+                        $perform_prune_move->(
+                            "Move a card from stack $idx to the foundations"
                         );
-                        print "$dest_move\n\n";
-                        $out_running_state->();
                     }
                 }
             }
@@ -327,18 +336,9 @@ sub run
 
                     if (defined($f))
                     {
-                        $num_moved++;
-                        my $prune_move = "Move a card from freecell $idx to the foundations";
-                        $running_state->verify_and_perform_move(
-                            Games::Solitaire::Verify::Move->new(
-                                {
-                                    fcs_string => $prune_move,
-                                    game => $self->_variant(),
-                                }
-                            )
+                        $perform_prune_move->(
+                            "Move a card from freecell $idx to the foundations"
                         );
-                        print "$dest_move\n\n";
-                        $out_running_state->();
                     }
                 }
             }
