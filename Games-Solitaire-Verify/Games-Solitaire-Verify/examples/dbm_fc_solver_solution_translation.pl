@@ -197,6 +197,14 @@ sub run
     my @cols_indexes = (0 .. ($running_state->num_columns() - 1));
     my @fc_indexes = (0 .. ($running_state->num_freecells() - 1));
 
+    print "-=-=-=-=-=-=-=-=-=-=-=-\n\n";
+
+    my $out_running_state = sub {
+        print $running_state->as_string();
+        print "\n\n====================\n\n";
+    };
+
+    $out_running_state->();
     MOVES:
     while (my $move_line = <$fh>)
     {
@@ -213,9 +221,37 @@ sub run
         @rev_fc_indexes[@fc_indexes] = (0 .. $#fc_indexes);
 
         my ($src, $dest);
-        if (($src, $dest) = $move_line =~ m{\AColumn (\d+) -> Freecell (\d+)})
+        my $dest_move;
+        if (($src, $dest) = $move_line =~ m{\AColumn (\d+) -> Freecell (\d+)\z})
         {
+            $dest_move = "Move a card from stack $rev_cols_indexes[$src] to freecell $rev_fc_indexes[$dest]";
         }
+        elsif (($src, $dest) = $move_line =~ m{\AColumn (\d+) -> Column (\d+)\z})
+        {
+            $dest_move = "Move 1 cards from stack $rev_cols_indexes[$src] to stack $rev_cols_indexes[$dest]";
+        }
+        elsif (($src, $dest) = $move_line =~ m{\AFreecell (\d+) -> Column (\d+)\z})
+        {
+            $dest_move = "Move a card from freecell $rev_fc_indexes[$src] to stack $rev_cols_indexes[$dest]";
+        }
+        elsif (($src) = $move_line =~ m{\AColumn (\d+) -> Foundation \d+\z})
+        {
+            $dest_move = "Move a card from stack $rev_cols_indexes[$src] to the foundations";
+        }
+        elsif (($src) = $move_line =~ m{\AFreecell (\d+) -> Foundation \d+\z})
+        {
+            $dest_move = "Move a card from stack $rev_fc_indexes[$src] to the foundations";
+        }
+        print "$dest_move\n\n";
+
+        $running_state->verify_and_perform_move(
+            Games::Solitaire::Verify::Move->new(
+                {
+                    fcs_string => $dest_move,
+                    game => $self->_variant(),
+                },
+            );
+        );
 
         my $new_state = $read_next_state->();
 
@@ -270,6 +306,45 @@ sub run
             )];
         }
 
+        my $verify_state =
+            Games::Solitaire::Verify::State->new(
+                {
+                    variant => 'custom',
+                    variant_params => $self->_variant_params(),
+                }
+            );
+
+        foreach my $idx (0 .. ($running_state->num_columns() - 1))
+        {
+            $verify_state->add_column(
+                $running_state->get_column($new_cols_indexes[$idx])->clone()
+            );
+        }
+
+        foreach my $idx (0 .. ($running_state->num_freecells() - 1))
+        {
+            my $card_obj = $running_state->get_freecell($new_fc_indexes[$idx]);
+
+            if (defined($card_obj))
+            {
+                $verify_state->set_freecell($idx, $card_obj->clone());
+            }
+        }
+
+        $verify_state->set_foundations($running_state->_foundations->clone());
+
+        {
+            my $v_s = $verify_state->as_string();
+            my $n_s = $new_state->as_string();
+            if ($v_s ne $n_s)
+            {
+                die "States mismatch <<$v_s>> vs. <<$n_s>>";
+            }
+        }
+        $out_running_state->();
+
+        @cols_indexes = @new_cols_indexes;
+        @fc_indexes = @new_fc_indexes;
     }
 
     close($fh);
