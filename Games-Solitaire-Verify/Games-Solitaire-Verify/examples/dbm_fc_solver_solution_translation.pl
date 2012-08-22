@@ -207,12 +207,68 @@ sub run
             last MOVES;
         }
 
+        my @rev_cols_indexes;
+        @rev_cols_indexes[@cols_indexes] = (0 .. $#cols_indexes);
+        my @rev_fc_indexes;
+        @rev_fc_indexes[@fc_indexes] = (0 .. $#fc_indexes);
+
         my ($src, $dest);
         if (($src, $dest) = $move_line =~ m{\AColumn (\d+) -> Freecell (\d+)})
         {
-
         }
 
+        my $new_state = $read_next_state->();
+
+        # Calculate the new indexes.
+        my @new_cols_indexes;
+        my @new_fc_indexes;
+
+        my %old_cols_map;
+        my %old_fc_map;
+
+        foreach my $idx (0 .. ($running_state->num_columns() - 1))
+        {
+            my $col = $running_state->get_column($idx);
+            my $card = $col->len ? $col->pos(0)->as_string() : '';
+
+            push @{$old_cols_map{$card}}, $idx;
+        }
+
+        foreach my $idx (0 .. ($running_state->num_columns() - 1))
+        {
+            my $col = $new_state->get_column($idx);
+            my $card = $col->len ? $col->pos(0)->as_string() : '';
+            # TODO: Fix edge cases.
+            $new_cols_indexes[$idx] = $cols_indexes[shift(
+                @{
+                    $old_cols_map{
+                        $card
+                    }
+                }
+            )];
+        }
+
+        foreach my $idx (0 .. ($running_state->num_freecells() - 1))
+        {
+            my $card_obj = $running_state->get_freecell();
+            my $card = defined($card_obj) ? $card_obj->as_string() : '';
+
+            push @{$old_fc_map{$card}}, $idx;
+        }
+
+        foreach my $idx (0 .. ($running_state->num_freecells() - 1))
+        {
+            my $card_obj = $running_state->get_freecell();
+            my $card = defined($card_obj) ? $card_obj->as_string() : '';
+            # TODO : Fix edge cases.
+            $new_fc_indexes[$idx] = $fc_indexes[shift(
+                @{
+                    $old_cols_map{
+                        $card
+                    }
+                }
+            )];
+        }
 
     }
 
