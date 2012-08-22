@@ -287,7 +287,7 @@ sub run
         }
         elsif (($src) = $move_line =~ m{\AFreecell (\d+) -> Foundation \d+\z})
         {
-            $dest_move = "Move a card from freeecell $tentative_fc_indexes[$src] to the foundations";
+            $dest_move = "Move a card from freecell $tentative_fc_indexes[$src] to the foundations";
         }
         print "$dest_move\n\n";
 
