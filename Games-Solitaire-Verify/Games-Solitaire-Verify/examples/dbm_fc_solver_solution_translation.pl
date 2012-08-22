@@ -5,6 +5,8 @@ use warnings;
 
 package Games::Solitaire::Verify::App::From_DBM_FC_Solver;
 
+use List::MoreUtils qw(all);
+
 __PACKAGE__->mk_acc_ref(
     [
         qw(
@@ -204,6 +206,35 @@ sub run
         print "\n\n====================\n\n";
     };
 
+    my $calc_foundation_to_put_card_on = sub {
+        my $card = shift;
+
+        DECKS_LOOP:
+        for my $deck (0 .. $running_state->num_decks() - 1)
+        {
+            if ($running_state->get_foundation_value($card->suit(), $deck) ==
+                $card->rank() - 1)
+            {
+                my $other_deck_idx;
+
+                for $other_deck_idx (0 .. ($running_state->num_decks() << 2) - 1)
+                {
+                    if ($running_state->get_foundation_value(
+                            $card->get_suits_seq->[$other_card_idx % 4],
+                            ($other_deck_idx >> 2),
+                        ) < $card->rank() - 2 -
+                        ($card->color_for_suit($other_deck_idx % 4)
+                        eq $card->color())
+                    {
+                        next DECKS_LOOP;
+                    }
+                }
+                return [$card->suit(), $deck];
+            }
+        }
+        return;
+    };
+
     $out_running_state->();
     MOVES:
     while (my $move_line = <$fh>)
@@ -240,7 +271,7 @@ sub run
         }
         elsif (($src) = $move_line =~ m{\AFreecell (\d+) -> Foundation \d+\z})
         {
-            $dest_move = "Move a card from stack $rev_fc_indexes[$src] to the foundations";
+            $dest_move = "Move a card from freeecell $rev_fc_indexes[$src] to the foundations";
         }
         print "$dest_move\n\n";
 
@@ -252,6 +283,66 @@ sub run
                 },
             );
         );
+        $out_running_state->();
+
+        # Now do the horne's prune.
+        my $num_moved = 1; # Always iterate at least once.
+        while ($num_moved)
+        {
+            $num_moved = 0;
+            foreach my $idx (0 .. ($running_state->num_columns()-1) )
+            {
+                my $col = $running_state->get_column($idx);
+
+                if ($col->len())
+                {
+                    my $card = $col->top();
+                    my $f = $calc_foundation_to_put_card_on($card);
+
+                    if (defined($f))
+                    {
+                        $num_moved++;
+                        my $prune_move = "Move a card from stack $idx to the foundations";
+                        $running_state->verify_and_perform_move(
+                            Games::Solitaire::Verify::Move->new(
+                                {
+                                    fcs_string => $prune_move,
+                                    game => $self->_variant(),
+                                }
+                            )
+                        );
+                        print "$dest_move\n\n";
+                        $out_running_state->();
+                    }
+                }
+            }
+
+            foreach my $idx (0 .. ($running_state->num_freecells() - 1))
+            {
+                my $card = $running_state->get_freecell($idx);
+
+                if (defined($card))
+                {
+                    my $f = $calc_foundation_to_put_card_on($card);
+
+                    if (defined($f))
+                    {
+                        $num_moved++;
+                        my $prune_move = "Move a card from freecell $idx to the foundations";
+                        $running_state->verify_and_perform_move(
+                            Games::Solitaire::Verify::Move->new(
+                                {
+                                    fcs_string => $prune_move,
+                                    game => $self->_variant(),
+                                }
+                            )
+                        );
+                        print "$dest_move\n\n";
+                        $out_running_state->();
+                    }
+                }
+            }
+        }
 
         my $new_state = $read_next_state->();
 
@@ -341,7 +432,6 @@ sub run
                 die "States mismatch <<$v_s>> vs. <<$n_s>>";
             }
         }
-        $out_running_state->();
 
         @cols_indexes = @new_cols_indexes;
         @fc_indexes = @new_fc_indexes;
