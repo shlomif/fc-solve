@@ -5,7 +5,14 @@ use warnings;
 
 package Games::Solitaire::Verify::App::From_DBM_FC_Solver;
 
-use List::MoreUtils qw(all);
+use base 'Games::Solitaire::Verify::Base';
+
+use Games::Solitaire::Verify::VariantsMap;
+use Games::Solitaire::Verify::Solution;
+use Games::Solitaire::Verify::State;
+use Games::Solitaire::Verify::Move;
+
+use Getopt::Long qw(GetOptionsFromArray);
 
 __PACKAGE__->mk_acc_ref(
     [
@@ -220,11 +227,12 @@ sub run
                 for $other_deck_idx (0 .. ($running_state->num_decks() << 2) - 1)
                 {
                     if ($running_state->get_foundation_value(
-                            $card->get_suits_seq->[$other_card_idx % 4],
+                            $card->get_suits_seq->[$other_deck_idx % 4],
                             ($other_deck_idx >> 2),
                         ) < $card->rank() - 2 -
-                        ($card->color_for_suit($other_deck_idx % 4)
-                        eq $card->color())
+                        (($card->color_for_suit($other_deck_idx % 4)
+                            eq $card->color()) ? 1 : 0)
+                    )
                     {
                         next DECKS_LOOP;
                     }
@@ -281,7 +289,7 @@ sub run
                     fcs_string => $dest_move,
                     game => $self->_variant(),
                 },
-            );
+            )
         );
         $out_running_state->();
 
@@ -315,7 +323,7 @@ sub run
                 if ($col->len())
                 {
                     my $card = $col->top();
-                    my $f = $calc_foundation_to_put_card_on($card);
+                    my $f = $calc_foundation_to_put_card_on->($card);
 
                     if (defined($f))
                     {
@@ -332,7 +340,7 @@ sub run
 
                 if (defined($card))
                 {
-                    my $f = $calc_foundation_to_put_card_on($card);
+                    my $f = $calc_foundation_to_put_card_on->($card);
 
                     if (defined($f))
                     {
