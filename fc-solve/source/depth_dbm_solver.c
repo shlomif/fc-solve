@@ -61,7 +61,6 @@ typedef struct
     long pre_cache_max_count;
     /* The queue */
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
-    long max_count_of_items_in_queue;
     fcs_bool_t queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
 #ifdef FCS_DBM_WITHOUT_CACHES
@@ -82,7 +81,6 @@ static GCC_INLINE void instance_init(
     long pre_cache_max_count,
     long caches_delta,
     const char * dbm_store_path,
-    long max_count_of_items_in_queue,
     long iters_delta_limit,
     const char * offload_dir_path,
     FILE * out_fh
@@ -112,7 +110,6 @@ static GCC_INLINE void instance_init(
         instance->max_count_num_processed = LONG_MAX;
     }
     instance->count_of_items_in_queue = 0;
-    instance->max_count_of_items_in_queue = max_count_of_items_in_queue;
     instance->tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
@@ -365,14 +362,7 @@ static void * instance_run_solver_thread(void * void_arg)
 
         if ((should_terminate = instance->should_terminate) == DONT_TERMINATE)
         {
-            if (instance->count_of_items_in_queue >= instance->max_count_of_items_in_queue)
-            {
-                instance->should_terminate = should_terminate = QUEUE_TERMINATE;
-                /* TODO :
-                 * Implement dumping the queue to the output filehandle.
-                 * */
-            }
-            else if (fcs_offloading_queue__extract(&(coll->queue), (fcs_offloading_queue_item_t *)(&token)))
+            if (fcs_offloading_queue__extract(&(coll->queue), (fcs_offloading_queue_item_t *)(&token)))
             {
                 physical_item.key = token->key;
                 item = &physical_item;
@@ -896,10 +886,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     {
         fprintf (out_fh, "%s\n", "Intractable.");
         fflush (out_fh);
-        if (instance->should_terminate == QUEUE_TERMINATE)
-        {
-        }
-        else if (instance->should_terminate == MAX_ITERS_TERMINATE)
+        if (instance->should_terminate == MAX_ITERS_TERMINATE)
         {
             fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n", instance->max_count_num_processed);
         }
@@ -920,7 +907,6 @@ int main(int argc, char * argv[])
 {
     long pre_cache_max_count;
     long caches_delta;
-    long max_count_of_items_in_queue = LONG_MAX;
     long iters_delta_limit = -1;
 #if 0
     long start_line = 1;
@@ -1002,16 +988,6 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
             dbm_store_path = argv[arg];
-        }
-        else if (!strcmp(argv[arg], "--max-count-of-items-in-queue"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--max-count-of-items-in-queue came without an argument.\n");
-                exit(-1);
-            }
-            max_count_of_items_in_queue = atol(argv[arg]);
         }
         else if (!strcmp(argv[arg], "--iters-delta-limit"))
         {
@@ -1115,8 +1091,8 @@ int main(int argc, char * argv[])
         fcs_encoded_state_buffer_t parent_state_enc;
 
         instance_init(&instance, pre_cache_max_count, caches_delta,
-                      dbm_store_path, max_count_of_items_in_queue,
-                      iters_delta_limit, offload_dir_path, out_fh);
+                      dbm_store_path, iters_delta_limit, offload_dir_path,
+                      out_fh);
 
         key_ptr = &(instance.first_key);
         fcs_init_and_encode_state(delta, &(init_state), KEY_PTR());
