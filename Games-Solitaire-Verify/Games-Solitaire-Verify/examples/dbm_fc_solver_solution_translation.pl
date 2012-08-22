@@ -66,21 +66,21 @@ sub _init
         'sequences-are-built-by=s' => sub {
             my (undef, $val) = @_;
 
-            my %seqs_build_by = 
+            my %seqs_build_by =
             (
-                (map { $_ => $_ } 
+                (map { $_ => $_ }
                     (qw(alt_color suit rank))
                 ),
                 "alternate_color" => "alt_color",
             );
-            
+
             my $proc_val = $seqs_build_by{$val};
 
             if (! defined($proc_val))
             {
                 die "Unknown sequences-are-built-by '$val'!";
             }
-            
+
             $variant_params->seqs_build_by($proc_val);
         },
         'empty-stacks-filled-by=s' => sub {
@@ -93,7 +93,7 @@ sub _init
             {
                 die "Unknown empty stacks filled by '$val'!";
             }
-            
+
             $variant_params->empty_stacks_filled_by($val);
         },
         'sequence-move=s' => sub {
@@ -209,7 +209,7 @@ sub run
     print "-=-=-=-=-=-=-=-=-=-=-=-\n\n";
 
     my $out_running_state = sub {
-        print $running_state->as_string();
+        print $running_state->to_string();
         print "\n\n====================\n\n";
     };
 
@@ -287,7 +287,7 @@ sub run
             Games::Solitaire::Verify::Move->new(
                 {
                     fcs_string => $dest_move,
-                    game => $self->_variant(),
+                    game => $running_state->_variant(),
                 },
             )
         );
@@ -305,7 +305,7 @@ sub run
                 Games::Solitaire::Verify::Move->new(
                     {
                         fcs_string => $prune_move,
-                        game => $self->_variant(),
+                        game => $running_state->_variant(),
                     }
                 )
             );
@@ -364,7 +364,7 @@ sub run
         foreach my $idx (0 .. ($running_state->num_columns() - 1))
         {
             my $col = $running_state->get_column($idx);
-            my $card = $col->len ? $col->pos(0)->as_string() : '';
+            my $card = $col->len ? $col->pos(0)->to_string() : '';
 
             push @{$old_cols_map{$card}}, $idx;
         }
@@ -372,7 +372,7 @@ sub run
         foreach my $idx (0 .. ($running_state->num_columns() - 1))
         {
             my $col = $new_state->get_column($idx);
-            my $card = $col->len ? $col->pos(0)->as_string() : '';
+            my $card = $col->len ? $col->pos(0)->to_string() : '';
             # TODO: Fix edge cases.
             $new_cols_indexes[$idx] = $cols_indexes[shift(
                 @{
@@ -385,24 +385,25 @@ sub run
 
         foreach my $idx (0 .. ($running_state->num_freecells() - 1))
         {
-            my $card_obj = $running_state->get_freecell();
-            my $card = defined($card_obj) ? $card_obj->as_string() : '';
+            my $card_obj = $running_state->get_freecell($idx);
+            my $card = defined($card_obj) ? $card_obj->to_string() : '';
 
             push @{$old_fc_map{$card}}, $idx;
         }
 
         foreach my $idx (0 .. ($running_state->num_freecells() - 1))
         {
-            my $card_obj = $running_state->get_freecell();
-            my $card = defined($card_obj) ? $card_obj->as_string() : '';
+            my $card_obj = $running_state->get_freecell($idx);
+            my $card = defined($card_obj) ? $card_obj->to_string() : '';
             # TODO : Fix edge cases.
-            $new_fc_indexes[$idx] = $fc_indexes[shift(
-                @{
-                    $old_cols_map{
-                        $card
-                    }
-                }
-            )];
+
+            my $aref = $old_fc_map{$card};
+
+            if (! @$aref)
+            {
+                $aref = $old_fc_map{''};
+            }
+            $new_fc_indexes[$idx] = $fc_indexes[shift(@$aref)];
         }
 
         my $verify_state =
@@ -419,6 +420,13 @@ sub run
                 $running_state->get_column($new_cols_indexes[$idx])->clone()
             );
         }
+        $verify_state->set_freecells(
+            Games::Solitaire::Verify::Freecells->new(
+                {
+                    count => $running_state->num_freecells(),
+                }
+            )
+        );
 
         foreach my $idx (0 .. ($running_state->num_freecells() - 1))
         {
@@ -433,8 +441,8 @@ sub run
         $verify_state->set_foundations($running_state->_foundations->clone());
 
         {
-            my $v_s = $verify_state->as_string();
-            my $n_s = $new_state->as_string();
+            my $v_s = $verify_state->to_string();
+            my $n_s = $new_state->to_string();
             if ($v_s ne $n_s)
             {
                 die "States mismatch <<$v_s>> vs. <<$n_s>>";
