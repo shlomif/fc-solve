@@ -445,7 +445,7 @@ sub run
             my $n_s = $new_state->to_string();
             if ($v_s ne $n_s)
             {
-                die "States mismatch <<$v_s>> vs. <<$n_s>>";
+                die "States mismatch:\n<<\n$v_s\n>>\n vs:\n<<\n$n_s\n>>\n.";
             }
         }
 
