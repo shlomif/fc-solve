@@ -497,6 +497,8 @@ sub run
         @fc_indexes = @new_fc_indexes;
     }
 
+    print "This game is solveable.\n";
+
     close($fh);
 }
 
