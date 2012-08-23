@@ -211,8 +211,11 @@ sub run
     my $initial_state = $read_next_state->();
 
     my $running_state = $initial_state->clone();
-    my @cols_indexes = (0 .. ($running_state->num_columns() - 1));
-    my @fc_indexes = (0 .. ($running_state->num_freecells() - 1));
+
+    my @cols_iter = (0 .. ($running_state->num_columns() - 1));
+    my @fc_iter = (0 .. ($running_state->num_freecells() - 1));
+    my @cols_indexes = @cols_iter;
+    my @fc_indexes = @fc_iter;
 
     print "-=-=-=-=-=-=-=-=-=-=-=-\n\n";
 
@@ -351,7 +354,7 @@ sub run
         while ($num_moved)
         {
             $num_moved = 0;
-            foreach my $idx (0 .. ($running_state->num_columns()-1) )
+            foreach my $idx (@cols_iter)
             {
                 my $col = $running_state->get_column($idx);
 
@@ -361,7 +364,7 @@ sub run
                 );
             }
 
-            foreach my $idx (0 .. ($running_state->num_freecells() - 1))
+            foreach my $idx (@fc_iter)
             {
                 $check_for_prune_move->(
                     $running_state->get_freecell($idx),
@@ -379,12 +382,12 @@ sub run
         my %old_cols_map;
         my %old_fc_map;
         my %non_assigned_cols =
-            (map { $_ => 1 } (0 .. $running_state->num_columns() - 1));
+            (map { $_ => 1 } @cols_iter);
 
         my %non_assigned_fcs =
-            (map { $_ => 1 } (0 .. $running_state->num_freecells() - 1));
+            (map { $_ => 1 } @fc_iter);
 
-        foreach my $idx (0 .. ($running_state->num_columns() - 1))
+        foreach my $idx (@cols_iter)
         {
             my $col = $running_state->get_column($idx);
             my $card = $col->len ? $col->pos(0)->to_string() : '';
@@ -392,7 +395,7 @@ sub run
             push @{$old_cols_map{$card}}, $idx;
         }
 
-        foreach my $idx (0 .. ($running_state->num_columns() - 1))
+        foreach my $idx (@cols_iter)
         {
             my $col = $new_state->get_column($idx);
             my $card = $col->len ? $col->pos(0)->to_string() : '';
@@ -421,7 +424,7 @@ sub run
             }
         }
 
-        foreach my $idx (0 .. ($running_state->num_freecells() - 1))
+        foreach my $idx (@fc_iter)
         {
             my $card_obj = $running_state->get_freecell($idx);
             my $card = defined($card_obj) ? $card_obj->to_string() : '';
@@ -429,7 +432,7 @@ sub run
             push @{$old_fc_map{$card}}, $idx;
         }
 
-        foreach my $idx (0 .. ($running_state->num_freecells() - 1))
+        foreach my $idx (@fc_iter)
         {
             my $card_obj = $new_state->get_freecell($idx);
             my $card = defined($card_obj) ? $card_obj->to_string() : '';
@@ -468,7 +471,7 @@ sub run
                 }
             );
 
-        foreach my $idx (0 .. ($running_state->num_columns() - 1))
+        foreach my $idx (@cols_iter)
         {
             $verify_state->add_column(
                 $running_state->get_column($new_cols_indexes[$idx])->clone()
@@ -483,7 +486,7 @@ sub run
             )
         );
 
-        foreach my $idx (0 .. ($running_state->num_freecells() - 1))
+        foreach my $idx (@fc_iter)
         {
             my $card_obj = $running_state->get_freecell($new_fc_indexes[$idx]);
 
