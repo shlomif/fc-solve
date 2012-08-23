@@ -318,6 +318,10 @@ sub run
         {
             $dest_move = "Move a card from freecell $tentative_fc_indexes[$src] to the foundations";
         }
+        else
+        {
+            die "Unrecognized Move line '$move_line'.";
+        }
 
         $perform_and_output_move->($dest_move);
 
