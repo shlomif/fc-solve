@@ -422,27 +422,23 @@ sub run
             return \@new_resources_indexes;
         };
 
-        my @new_cols_indexes = @{
-            $populate_new_resource_indexes->(
-                \@cols_iter,
-                sub {
-                    my ($state, $idx) = @_;
-                    my $col = $state->get_column($idx);
-                    return ($col->len ? $col->pos(0)->to_string() : '');
-                },
-            )
-        };
+        my $new_cols_indexes = $populate_new_resource_indexes->(
+            \@cols_iter,
+            sub {
+                my ($state, $idx) = @_;
+                my $col = $state->get_column($idx);
+                return ($col->len ? $col->pos(0)->to_string() : '');
+            },
+        );
 
-        my @new_fc_indexes = @{
-            $populate_new_resource_indexes->(
-                \@fc_iter,
-                sub {
-                    my ($state, $idx) = @_;
-                    my $card_obj = $state->get_freecell($idx);
-                    return (defined($card_obj) ? $card_obj->to_string() : '');
-                },
-            )
-        };
+        my $new_fc_indexes = $populate_new_resource_indexes->(
+            \@fc_iter,
+            sub {
+                my ($state, $idx) = @_;
+                my $card_obj = $state->get_freecell($idx);
+                return (defined($card_obj) ? $card_obj->to_string() : '');
+            },
+        );
 
         my $verify_state =
             Games::Solitaire::Verify::State->new(
@@ -455,7 +451,7 @@ sub run
         foreach my $idx (@cols_iter)
         {
             $verify_state->add_column(
-                $running_state->get_column($new_cols_indexes[$idx])->clone()
+                $running_state->get_column($new_cols_indexes->[$idx])->clone()
             );
         }
 
@@ -469,7 +465,8 @@ sub run
 
         foreach my $idx (@fc_iter)
         {
-            my $card_obj = $running_state->get_freecell($new_fc_indexes[$idx]);
+            my $card_obj =
+                $running_state->get_freecell($new_fc_indexes->[$idx]);
 
             if (defined($card_obj))
             {
@@ -488,8 +485,8 @@ sub run
             }
         }
 
-        @cols_indexes = @new_cols_indexes;
-        @fc_indexes = @new_fc_indexes;
+        @cols_indexes = @$new_cols_indexes;
+        @fc_indexes = @$new_fc_indexes;
     }
 
     print "This game is solveable.\n";
