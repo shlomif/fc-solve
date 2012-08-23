@@ -375,93 +375,74 @@ sub run
 
         my $new_state = $read_next_state->();
 
-        # Calculate the new indexes.
-        my @new_cols_indexes;
-        my @new_fc_indexes;
+        my $populate_new_resource_indexes = sub {
+            my ($iter, $get_pivot_cb) = @_;
 
-        my %old_cols_map;
-        my %old_fc_map;
-        my %non_assigned_cols =
-            (map { $_ => 1 } @cols_iter);
+            my @new_resources_indexes;
 
-        my %non_assigned_fcs =
-            (map { $_ => 1 } @fc_iter);
+            my %non_assigned_resources = (map { $_ => 1 } @$iter);
+            my %old_resources_map;
 
-        foreach my $idx (@cols_iter)
-        {
-            my $col = $running_state->get_column($idx);
-            my $card = $col->len ? $col->pos(0)->to_string() : '';
-
-            push @{$old_cols_map{$card}}, $idx;
-        }
-
-        foreach my $idx (@cols_iter)
-        {
-            my $col = $new_state->get_column($idx);
-            my $card = $col->len ? $col->pos(0)->to_string() : '';
-            # TODO: Fix edge cases.
-            my $aref = $old_cols_map{$card};
-
-            if ((!defined($aref)) or (! @$aref))
+            foreach my $idx (@$iter)
             {
-                $aref = $old_cols_map{''};
-            }
-            my $i = shift(@$aref);
+                my $card = $get_pivot_cb->($running_state, $idx);
 
-            $new_cols_indexes[$idx] = $i;
-            if (defined($i))
-            {
-                delete($non_assigned_cols{$i});
-            }
-        }
-
-        my @non_assigned_cols_list = sort { $a <=> $b } keys(%non_assigned_cols);
-        foreach my $col_idx (@new_cols_indexes)
-        {
-            if (!defined($col_idx))
-            {
-                $col_idx = shift(@non_assigned_cols_list);
-            }
-        }
-
-        foreach my $idx (@fc_iter)
-        {
-            my $card_obj = $running_state->get_freecell($idx);
-            my $card = defined($card_obj) ? $card_obj->to_string() : '';
-
-            push @{$old_fc_map{$card}}, $idx;
-        }
-
-        foreach my $idx (@fc_iter)
-        {
-            my $card_obj = $new_state->get_freecell($idx);
-            my $card = defined($card_obj) ? $card_obj->to_string() : '';
-            # TODO : Fix edge cases.
-
-            my $aref = $old_fc_map{$card};
-
-            if ((!defined($aref)) or (! @$aref))
-            {
-                $aref = $old_fc_map{''};
+                push @{$old_resources_map{$card}}, $idx;
             }
 
-            my $i = shift(@$aref);
-            $new_fc_indexes[$idx] = $i;
-            if (defined($i))
+            foreach my $idx (@$iter)
             {
-                delete($non_assigned_fcs{$i});
+                my $card = $get_pivot_cb->($new_state, $idx);
+                my $aref = $old_resources_map{$card};
+
+                if ((!defined($aref)) or (! @$aref))
+                {
+                    $aref = $old_resources_map{''};
+                }
+                my $i = shift(@$aref);
+
+                $new_resources_indexes[$idx] = $i;
+                if (defined($i))
+                {
+                    delete($non_assigned_resources{$i});
+                }
             }
-        }
 
-        my @non_assigned_fcs_list = sort { $a <=> $b } keys(%non_assigned_fcs);
+            my @non_assigned_resources_list =
+                sort { $a <=> $b } keys(%non_assigned_resources);
 
-        foreach my $fc_idx (@new_fc_indexes)
-        {
-            if (!defined ($fc_idx))
+            foreach my $resource_idx (@new_resources_indexes)
             {
-                $fc_idx = shift(@non_assigned_fcs_list);
+                if (!defined($resource_idx))
+                {
+                    $resource_idx = shift(@non_assigned_resources_list);
+                }
             }
-        }
+
+            return \@new_resources_indexes;
+        };
+
+        my @new_cols_indexes = @{
+            $populate_new_resource_indexes->(
+                \@cols_iter,
+                sub {
+                    my ($state, $idx) = @_;
+                    my $col = $state->get_column($idx);
+                    return ($col->len ? $col->pos(0)->to_string() : '');
+                },
+            )
+        };
+
+        my @new_fc_indexes = @{
+            $populate_new_resource_indexes->(
+                \@fc_iter,
+                sub {
+                    my ($state, $idx) = @_;
+                    my $card_obj = $state->get_freecell($idx);
+                    return (defined($card_obj) ? $card_obj->to_string() : '');
+                },
+            )
+        };
 
         my $verify_state =
             Games::Solitaire::Verify::State->new(
