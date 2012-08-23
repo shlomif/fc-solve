@@ -1,5 +1,6 @@
 Revision history for Games-Solitaire-Verify
 
+0.1001  Thu 23 Aug 11:12:25 IDT 2012
         - Add the color_for_suit method to ::Card .
         - Remove trailing space with t/style-trailing-space.t as a test.
 
