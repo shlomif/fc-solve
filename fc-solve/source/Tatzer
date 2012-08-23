@@ -110,6 +110,9 @@ foreach my $rec (
     $themes{$id.'mm'} = [qw(-l reduce_mem -l), $id];
     # Testing theme - aims to run the tests quickly
     $themes{$id.'t'} = ['-l', $id.'bb', '--rwd', '--dbm=kaztree', '--test-suite',];
+
+    # For use by PySolFC
+    $themes{$id . "_pysol"} = ['-l', $id.'bb', '--num-stacks=14', "--prefix=$ENV{HOME}/apps/fcs-for-pysol",];
 }
 
 my @new_argv = @ARGV;
