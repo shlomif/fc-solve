@@ -328,6 +328,24 @@ sub run
             );
             print "$prune_move\n\n";
             $out_running_state->();
+
+            return;
+        };
+
+        my $check_for_prune_move = sub {
+            my ($card, $prune_move) = @_;
+
+            if (defined($card))
+            {
+                my $f = $calc_foundation_to_put_card_on->($card);
+
+                if (defined($f))
+                {
+                    $perform_prune_move->($prune_move);
+                }
+            }
+
+            return;
         };
 
         while ($num_moved)
@@ -337,35 +355,18 @@ sub run
             {
                 my $col = $running_state->get_column($idx);
 
-                if ($col->len())
-                {
-                    my $card = $col->top();
-                    my $f = $calc_foundation_to_put_card_on->($card);
-
-                    if (defined($f))
-                    {
-                        $perform_prune_move->(
-                            "Move a card from stack $idx to the foundations"
-                        );
-                    }
-                }
+                $check_for_prune_move->(
+                    scalar($col->len() ? $col->top() : undef()),
+                    "Move a card from stack $idx to the foundations",
+                );
             }
 
             foreach my $idx (0 .. ($running_state->num_freecells() - 1))
             {
-                my $card = $running_state->get_freecell($idx);
-
-                if (defined($card))
-                {
-                    my $f = $calc_foundation_to_put_card_on->($card);
-
-                    if (defined($f))
-                    {
-                        $perform_prune_move->(
-                            "Move a card from freecell $idx to the foundations"
-                        );
-                    }
-                }
+                $check_for_prune_move->(
+                    $running_state->get_freecell($idx),
+                    "Move a card from freecell $idx to the foundations",
+                );
             }
         }
 
