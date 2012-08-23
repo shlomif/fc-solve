@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 use File::Spec;
 use lib './t/lib';
 use File::Basename qw( dirname );
@@ -33,7 +33,16 @@ sub verify_solution_test
 # TEST
 verify_solution_test({id => "freecell24", deal => 24}, "Verifying the solution of deal #24");
 
-
+# TEST
+verify_solution_test(
+    {
+        id => "375783-dbm-sol",
+        deal => 375_783,
+        complete_command =>
+        "$^X $ENV{FCS_SRC_PATH}/scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl --freecells-num=2 $ENV{FCS_SRC_PATH}/t/t/data/sample-solutions/375783.dbm-sol"
+    },
+    "Verifying the output of scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl",
+);
 
 # TEST
 verify_solution_test({id => "freecell1941", deal => 1941}, "Verifying 1941 (The Hardest Deal)");

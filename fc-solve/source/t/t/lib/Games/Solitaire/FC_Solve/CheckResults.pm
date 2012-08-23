@@ -88,6 +88,7 @@ sub verify_solution_test
     my $deal = $args->{deal};
     my $msdeals = $args->{msdeals};
     my $output_file = $args->{output_file};
+    my $complete_command = $args->{complete_command};
 
     if ($deal !~ m{\A[1-9][0-9]*\z})
     {
@@ -116,7 +117,12 @@ sub verify_solution_test
         $cl_suffix .= " " . shell_quote($board);
     }
 
-    if (! $output_file)
+    if ($complete_command)
+    {
+        open $fc_solve_output, "$complete_command |"
+            or Carp::confess "Error! Could not open the complete command pipeline";
+    }
+    elsif (! $output_file)
     {
         open $fc_solve_output, "$cl_prefix $cl_suffix |"
             or Carp::confess "Error! Could not open the fc-solve pipeline";

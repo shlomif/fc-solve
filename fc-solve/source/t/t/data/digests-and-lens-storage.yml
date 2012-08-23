@@ -1,5 +1,8 @@
 ---
 digests:
+  375783-dbm-sol:
+    hexdigest: 496a6ea4527205acab7ae791daeccc0fef6a6a499582c13c3d90dcc280509b7a
+    len: 31517
   bakers_game24default:
     hexdigest: c9e51e5daf2d9f4e3cbb8bc8ee8029694c896c65ea6eb9a7725f54d5acbd288e
     len: 23938
