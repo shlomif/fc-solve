@@ -73,7 +73,7 @@ use Games::Solitaire::Verify::Move;
 
 {
     my $move;
-    eval { 
+    eval {
         $move = Games::Solitaire::Verify::Move->new(
             {
                 fcs_string => "This is not a legal move. QRXTOK0JH=%OVK",
@@ -81,7 +81,7 @@ use Games::Solitaire::Verify::Move;
             }
         );
     };
-    
+
     my $e = Exception::Class->caught();
 
     # TEST

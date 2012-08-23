@@ -107,7 +107,7 @@ use Games::Solitaire::Verify::Card;
 }
 
 {
-    my $card; 
+    my $card;
     eval {
         $card = Games::Solitaire::Verify::Card->new(
             {
@@ -125,7 +125,7 @@ use Games::Solitaire::Verify::Card;
 }
 
 {
-    my $card; 
+    my $card;
     eval {
         $card = Games::Solitaire::Verify::Card->new(
             {
@@ -143,7 +143,7 @@ use Games::Solitaire::Verify::Card;
 }
 
 {
-    my $card; 
+    my $card;
     eval {
         $card = Games::Solitaire::Verify::Card->new(
             {
@@ -177,7 +177,7 @@ use Games::Solitaire::Verify::Card;
         QH
         KS
         ));
-    
+
     foreach my $string (@cards)
     {
         my $card = Games::Solitaire::Verify::Card->new(

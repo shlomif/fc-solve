@@ -72,7 +72,7 @@ Gotta love dynamic languages like Perl 5.
 sub mk_accessors
 {
     my $package = shift;
-    return $package->mk_acc_ref([@_]); 
+    return $package->mk_acc_ref([@_]);
 }
 
 =head2 __PACKAGE__->mk_acc_ref([qw(method1 method2 method3)])
@@ -92,7 +92,7 @@ sub mk_acc_ref
 package $package;
 
 Class::XSAccessor->import(
-    accessors => \$mapping,            
+    accessors => \$mapping,
 );
 EOF
 

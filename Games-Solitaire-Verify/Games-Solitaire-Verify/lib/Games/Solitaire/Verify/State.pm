@@ -74,7 +74,7 @@ __PACKAGE__->mk_acc_ref([qw(
 
 =head2 $self->set_freecells($freecells)
 
-Sets the freecells' object, which should be a 
+Sets the freecells' object, which should be a
 L<Games::Solitaire::Verify::Freecells> object.
 
 =cut
@@ -283,7 +283,7 @@ sub set_freecell
 
 =head2 $state->get_foundation_value($suit, $index)
 
-Returns the foundation value for the suit $suit of the foundations 
+Returns the foundation value for the suit $suit of the foundations
 No. $index .
 
 =cut
@@ -414,7 +414,7 @@ sub clone
         {
             variant => $variant,
             (($variant eq "custom")
-                ? (variant_params => $self->_variant_params()) 
+                ? (variant_params => $self->_variant_params())
                 : ()
             ),
         }
@@ -470,7 +470,7 @@ sub _is_matching_color
     my $rules = $self->_variant_params()->rules();
     my $sbb = $self->_variant_params()->seq_build_by();
 
-    my $verdict = 
+    my $verdict =
     (
           ($rules eq "simple_simon")
         ? 0
@@ -488,7 +488,7 @@ sub _is_matching_color
             move => $self->_temp_move(),
         );
     }
-    
+
     return 0;
 }
 
@@ -503,12 +503,12 @@ sub _can_put_on_top
             move => $self->_temp_move(),
         );
     }
-    
+
     if (my $ret = $self->_is_matching_color($parent, $child) )
     {
         return $ret;
     }
-    
+
     return 0;
 }
 
@@ -580,7 +580,7 @@ sub _is_sequence_in_column
                 )
                 ;
         }
-        
+
         $num_comps +=
         (
               ($rules eq "simple_simon")
@@ -632,8 +632,8 @@ sub _perform_move__stack_to_foundation
     my $rank = $card->rank();
     my $suit = $card->suit();
 
-    my $f_idx = 
-        first 
+    my $f_idx =
+        first
         { $self->get_foundation_value($suit, $_) == $rank-1 }
         (0 .. ($self->num_decks()-1))
         ;
@@ -690,7 +690,7 @@ sub _perform_move__stack_seq_to_foundation
             move => $move
         );
     }
-    
+
     my $card = $self->get_column($col_idx)->top();
 
     my $suit = $card->suit();
@@ -726,7 +726,7 @@ sub _perform_move__stack_to_freecell
 
     my $col_idx = $move->source();
     my $fc_idx = $move->dest();
-    
+
     if (! $self->get_column($col_idx)->len())
     {
         return
@@ -778,7 +778,7 @@ sub _perform_move__stack_to_stack
     }
 
     if (my $verdict = $self->_can_put_on_column(
-            $dest, 
+            $dest,
             $self->get_column($source)->pos($source_len-$num_cards)
         ))
     {
@@ -881,7 +881,7 @@ sub _perform_move__freecell_to_stack
 
     $self->get_column($col_idx)->push($card);
     $self->clear_freecell($fc_idx);
-    
+
     return 0;
 }
 
@@ -931,13 +931,13 @@ sub to_string
 {
     my $self = shift;
 
-    return join("", 
+    return join("",
         map { "$_\n" }
         (
             $self->_stringify_foundations(),
             $self->_stringify_freecells(),
             (
-                map { $self->get_column($_)->to_string() } 
+                map { $self->get_column($_)->to_string() }
                 (0 .. ($self->num_columns()-1))
             )
         )

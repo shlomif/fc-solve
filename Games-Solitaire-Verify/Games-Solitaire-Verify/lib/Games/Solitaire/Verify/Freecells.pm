@@ -158,7 +158,7 @@ sub to_string
     return "Freecells:" . (($self->count() == 0) ? " " :
     join("",
         map { "  " . (defined($_) ? $_->to_string() : "  ") }
-        map { $self->cell($_) } 
+        map { $self->cell($_) }
         (0 .. ($self->count()-1))
     ));
 }
@@ -204,7 +204,7 @@ sub clone
 {
     my $self = shift;
 
-    my $copy = 
+    my $copy =
         __PACKAGE__->new(
             {
                 count => $self->count(),

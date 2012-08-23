@@ -27,7 +27,7 @@ our $VERSION = '0.1000';
 
 This is a CPAN Perl module that verifies the solutions of various variants
 of card Solitaire. It does not aim to try to be a solver for them, because
-this is too CPU intensive to be adequately done using perl5 (as of 
+this is too CPU intensive to be adequately done using perl5 (as of
 perl-5.10.0). If you're interested in the latter, look at:
 
 =over 4

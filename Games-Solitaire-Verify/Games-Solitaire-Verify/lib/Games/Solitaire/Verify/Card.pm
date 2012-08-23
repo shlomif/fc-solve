@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-Games::Solitaire::Verify::Card - a class wrapper for an individual 
+Games::Solitaire::Verify::Card - a class wrapper for an individual
 Solitaire card.
 
 =head1 VERSION
@@ -59,8 +59,8 @@ sub _card_num_normalize
     }
 }
 
-my @card_nums =  (map { _card_num_normalize($_) } 
-    ("A", (2 .. 9), 
+my @card_nums =  (map { _card_num_normalize($_) }
+    ("A", (2 .. 9),
     {
         't' => "T",
         'non_t' => "10",

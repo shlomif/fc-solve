@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-Games::Solitaire::Verify::VariantParams - a class for holding 
+Games::Solitaire::Verify::VariantParams - a class for holding
 the parameters of the variant.
 
 =head1 VERSION
@@ -34,13 +34,13 @@ __PACKAGE__->mk_acc_ref([qw(
 
     use Games::Solitaire::Verify::VariantParams;
 
-    my $freecell_params = 
+    my $freecell_params =
         Games::Solitaire::Verify::VariantParams->new(
             {
                 seq_build_by => "alt_color",
             },
         );
- 
+
 
 =head1 FUNCTIONS
 

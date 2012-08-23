@@ -11,7 +11,7 @@ use Games::Solitaire::Verify::Solution;
 use File::Spec;
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-freecell-24.txt)
     );
 
@@ -35,7 +35,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-freecell-24-wrong-1.txt)
     );
 
@@ -59,7 +59,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-freecell-24-wrong-2.txt)
     );
 
@@ -83,7 +83,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-bakers-game-24.txt)
     );
 
@@ -107,7 +107,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-freecell-24.txt)
     );
 
@@ -131,7 +131,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-forecell-24.txt)
     );
 
@@ -155,7 +155,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-freecell-24.txt)
     );
 
@@ -179,7 +179,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-seahaven-towers-1977.txt)
     );
 
@@ -203,7 +203,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-relaxed-freecell-11982.txt)
     );
 
@@ -227,7 +227,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-relaxed-freecell-11982.txt)
     );
 
@@ -251,7 +251,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-eight-off-200.txt)
     );
 
@@ -275,7 +275,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-eight-off-200-l-gi.txt)
     );
 
@@ -306,7 +306,7 @@ use File::Spec;
     open (my $input_fh, "<", $input_filename)
         or die "Cannot open file $!";
 
-    my $relaxed_fc_variant_params = 
+    my $relaxed_fc_variant_params =
            Games::Solitaire::Verify::VariantParams->new(
             {
                 'num_decks' => 1,
@@ -375,7 +375,7 @@ use File::Spec;
 {
     my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(
-        t data sample-solutions 
+        t data sample-solutions
         fcs-larrysan-kings-only-0-freecells-unlimited-move.txt
         )
     );
@@ -413,7 +413,7 @@ use File::Spec;
 }
 
 {
-    my $input_filename = File::Spec->catfile(File::Spec->curdir(), 
+    my $input_filename = File::Spec->catfile(File::Spec->curdir(),
         qw(t data sample-solutions fcs-simple-simon-24.txt)
     );
 

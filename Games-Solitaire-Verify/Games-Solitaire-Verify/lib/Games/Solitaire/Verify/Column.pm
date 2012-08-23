@@ -76,9 +76,9 @@ sub _from_string
     $self->_cards(
         [
             map
-            { 
+            {
                 Games::Solitaire::Verify::Card->new(
-                    {string => $_ } 
+                    {string => $_ }
                 )
             }
             @cards

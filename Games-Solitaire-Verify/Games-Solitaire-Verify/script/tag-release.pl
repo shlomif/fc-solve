@@ -5,8 +5,8 @@ use warnings;
 
 use IO::All;
 
-my ($version) = 
-    (map { m{\$VERSION *= *'([^']+)'} ? ($1) : () } 
+my ($version) =
+    (map { m{\$VERSION *= *'([^']+)'} ? ($1) : () }
     io->file('lib/Games/Solitaire/Verify.pm')->getlines()
     )
     ;

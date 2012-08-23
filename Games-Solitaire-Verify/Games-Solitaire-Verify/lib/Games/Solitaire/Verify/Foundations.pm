@@ -53,10 +53,10 @@ sub _input_from_string
     }
     {
         my @founds_strings = ($1, $2, $3, $4);
-    
+
         foreach my $suit (@{$self->_get_suits_seq()})
         {
-            $self->assign($suit, 0, 
+            $self->assign($suit, 0,
                 Games::Solitaire::Verify::Card->calc_rank_with_0(
                         shift(@founds_strings)
                     )
@@ -114,7 +114,7 @@ sub value
 
 =head2 $self->assign($suit, $index, $rank)
 
-Sets the value of the foundation with the suit $suit and the 
+Sets the value of the foundation with the suit $suit and the
 index $index to $rank .
 
 =cut
@@ -130,7 +130,7 @@ sub assign
 
 =head2 $self->increment($suit, $index)
 
-Increments the value of the foundation with the suit $suit and the 
+Increments the value of the foundation with the suit $suit and the
 index $index to $rank .
 
 =cut
@@ -189,7 +189,7 @@ sub clone
 {
     my $self = shift;
 
-    my $copy = 
+    my $copy =
         __PACKAGE__->new(
             {
                 num_decks => $self->_num_decks(),
@@ -201,7 +201,7 @@ sub clone
         foreach my $deck_idx (0 .. ($self->_num_decks()-1))
         {
             $copy->assign(
-                $suit, $deck_idx, 
+                $suit, $deck_idx,
                 $self->value($suit, $deck_idx),
             );
         }

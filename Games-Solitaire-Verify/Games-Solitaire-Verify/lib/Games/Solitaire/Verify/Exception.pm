@@ -5,7 +5,7 @@ use warnings;
 
 =head1 NAME
 
-Games::Solitaire::Verify::Exception - provides various exception 
+Games::Solitaire::Verify::Exception - provides various exception
 classes for G::S::Verify.
 
 =cut
@@ -37,10 +37,10 @@ use Exception::Class (
     "Games::Solitaire::Verify::Exception::Parse::State::Freecells" =>
     { isa => "Games::Solitaire::Verify::Exception::Parse::State", },
     "Games::Solitaire::Verify::Exception::Parse::State::Column" =>
-    { isa => "Games::Solitaire::Verify::Exception::Parse::State", 
+    { isa => "Games::Solitaire::Verify::Exception::Parse::State",
       fields => ["index"],
     },
-   
+
     "Games::Solitaire::Verify::Exception::VariantParams::Param" =>
     {
         isa => "Games::Solitaire::Verify::Exception",
@@ -74,19 +74,19 @@ use Exception::Class (
     {
         isa => "Games::Solitaire::Verify::Exception::VariantParams::Param",
     },
-    
+
     'Games::Solitaire::Verify::Exception::Variant' =>
-    { isa => "Games::Solitaire::Verify::Exception", 
+    { isa => "Games::Solitaire::Verify::Exception",
       fields => ["variant"],
     },
     'Games::Solitaire::Verify::Exception::Variant::Unknown' =>
     { isa => "Games::Solitaire::Verify::Exception::Variant", },
     'Games::Solitaire::Verify::Exception::VerifyMove' =>
-    { isa => "Games::Solitaire::Verify::Exception", 
+    { isa => "Games::Solitaire::Verify::Exception",
         fields => ["problem"],
     },
     'Games::Solitaire::Verify::Exception::Move' =>
-    { isa => "Games::Solitaire::Verify::Exception", 
+    { isa => "Games::Solitaire::Verify::Exception",
         fields => ["move"],
     },
    'Games::Solitaire::Verify::Exception::Move::Variant::Unsupported' =>
@@ -100,7 +100,7 @@ use Exception::Class (
     'Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Src::Col", },
     'Games::Solitaire::Verify::Exception::Move::Src::Col::NonSequence' =>
-    { isa => "Games::Solitaire::Verify::Exception::Move::Src::Col", 
+    { isa => "Games::Solitaire::Verify::Exception::Move::Src::Col",
       fields => [qw(pos)],
     },
     'Games::Solitaire::Verify::Exception::Move::Src::Col::NotEnoughCards' =>
@@ -112,22 +112,22 @@ use Exception::Class (
     'Games::Solitaire::Verify::Exception::Move::Dest' =>
     { isa => "Games::Solitaire::Verify::Exception::Move", },
     'Games::Solitaire::Verify::Exception::Move::Dest::Foundation' =>
-    { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },   
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },
     'Games::Solitaire::Verify::Exception::Move::Dest::Freecell' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },
     'Games::Solitaire::Verify::Exception::Move::Dest::Col' =>
     { isa => "Games::Solitaire::Verify::Exception::Move::Dest", },
     'Games::Solitaire::Verify::Exception::Move::Dest::Col::NonMatchSuits' =>
-    { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col", 
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col",
       fields => [qw(seq_build_by)],
       },
     'Games::Solitaire::Verify::Exception::Move::Dest::Col::OnlyKingsCanFillEmpty' =>
-    { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col", 
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col",
       },
     'Games::Solitaire::Verify::Exception::Move::Dest::Col::RankMismatch' =>
-    { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col", 
+    { isa => "Games::Solitaire::Verify::Exception::Move::Dest::Col",
       },
-      
+
       );
 
 =head1 SYNOPSIS

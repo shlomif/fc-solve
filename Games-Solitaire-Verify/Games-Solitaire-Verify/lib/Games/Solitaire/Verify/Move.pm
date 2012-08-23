@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-Games::Solitaire::Verify::Move - a class wrapper for an individual 
+Games::Solitaire::Verify::Move - a class wrapper for an individual
 Solitaire move.
 
 =head1 VERSION
@@ -51,7 +51,7 @@ sub _from_fcs_string
     if ($str =~ m{\AMove a card from stack (\d+) to the foundations\z})
     {
         my $source = $1;
-        
+
         $self->source_type("stack");
         $self->dest_type("foundation");
 
@@ -60,7 +60,7 @@ sub _from_fcs_string
     elsif ($str =~ m{\AMove a card from freecell (\d+) to the foundations\z})
     {
         my $source = $1;
-        
+
         $self->source_type("freecell");
         $self->dest_type("foundation");
 
@@ -69,7 +69,7 @@ sub _from_fcs_string
     elsif ($str =~ m{\AMove a card from freecell (\d+) to stack (\d+)\z})
     {
         my ($source, $dest) = ($1, $2);
-        
+
         $self->source_type("freecell");
         $self->dest_type("stack");
 
@@ -79,7 +79,7 @@ sub _from_fcs_string
     elsif ($str =~ m{\AMove a card from stack (\d+) to freecell (\d+)\z})
     {
         my ($source, $dest) = ($1, $2);
-        
+
         $self->source_type("stack");
         $self->dest_type("freecell");
 
@@ -100,12 +100,12 @@ sub _from_fcs_string
     elsif ($str =~ m{\AMove the sequence on top of Stack (\d+) to the foundations\z})
     {
         my $source = $1;
-        
+
         $self->source_type("stack_seq");
         $self->dest_type("foundation");
 
         $self->source($source);
-    }    
+    }
     else
     {
         Games::Solitaire::Verify::Exception::Parse::FCS->throw(
@@ -130,12 +130,12 @@ sub _init
 
 =head2 $move->source_type()
 
-Accessor for the solitaire card game's board layout's type - 
+Accessor for the solitaire card game's board layout's type -
 C<"stack">, C<"freecell">, etc. used in the layout.
 
 =head2 $move->dest_type()
 
-Accessor for the destination type - C<"stack">, C<"freecell">, 
+Accessor for the destination type - C<"stack">, C<"freecell">,
 C<"destination">.
 
 =head2 $move->source()

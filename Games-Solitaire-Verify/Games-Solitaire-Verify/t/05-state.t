@@ -6,6 +6,8 @@ use warnings;
 use Test::More tests => 31;
 use Games::Solitaire::Verify::State;
 
+my $WS = ' ';
+
 {
     my $string = <<"EOF";
 Foundations: H-6 C-A D-A S-4
@@ -46,7 +48,7 @@ EOF
 
     # TEST
     is ($board->get_freecell(2)->to_string(), "JH", "Freecell 2");
-    
+
     # TEST
     is ($board->get_freecell(3)->to_string(), "9H", "Freecell 9");
 
@@ -60,7 +62,7 @@ EOF
     is ($board->num_columns(), 8, "Num columns");
 
     # TEST
-    is ($board->get_column(0)->to_string(), ": 4C 2C 9C 8C QS JD", 
+    is ($board->get_column(0)->to_string(), ": 4C 2C 9C 8C QS JD",
         "Column 0"
     );
 
@@ -72,15 +74,15 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-T C-7 D-6 S-J 
-Freecells:  KH      KD    
+Foundations: H-T C-7 D-6 S-J$WS
+Freecells:  KH      KD$WS$WS$WS$WS
 : 9C 8D
 : KS QH JC TD
 : QC JH TC 9D 8C 7D
-: 
-: 
+:$WS
+:$WS
 : KC QD
-: 
+:$WS
 : QS JD
 EOF
 
@@ -97,15 +99,15 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-T C-7 D-6 S-J 
-Freecells:  KH      KD    
+Foundations: H-T C-7 D-6 S-J$WS
+Freecells:  KH      KD$WS$WS$WS$WS
 : 9C 8D
 : KS QH JC TD
 : QC JH TC 9D 8C 7D
-: 
-: 
+:$WS
+:$WS
 : KC QD
-: 
+:$WS
 : QS JD
 EOF
 
@@ -122,7 +124,7 @@ EOF
     ok ($copy, "Copied");
 
     # TEST
-    is ($copy->get_column(1)->to_string(), ": KS QH JC TD", 
+    is ($copy->get_column(1)->to_string(), ": KS QH JC TD",
         "Column 1 of Copy",
     );
 
@@ -159,7 +161,7 @@ EOF
     $board->set_freecell(1, $board->get_column(3)->pop());
 
     my $new_board = <<"EOF";
-Foundations: H-6 C-A D-A S-4 
+Foundations: H-6 C-A D-A S-4$WS
 Freecells:  3D  3C  JH  9H
 : 4C 2C 9C 8C QS JD
 : KS QH
@@ -177,8 +179,8 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0 
-Freecells:                
+Foundations: H-0 C-0 D-0 S-0$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -202,8 +204,8 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0 
-Freecells:                
+Foundations: H-0 C-0 D-0 S-0$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -237,8 +239,8 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0 
-Freecells:                
+Foundations: H-0 C-0 D-0 S-0$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
 ==<foo>== 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -350,7 +352,7 @@ EOF
     # TEST
     is_deeply (
         $copy->get_column(0)->pos(0)->data(),
-        { key => 'Foo' }, 
+        { key => 'Foo' },
         "First card in copy has right data."
     );
 }
@@ -457,8 +459,8 @@ EOF
 {
     my $num_freecells = 2;
 
-    my $string = <<'EOF';
-Foundations: H-6 C-A D-A S-4 
+    my $string = <<"EOF";
+Foundations: H-6 C-A D-A S-4$WS
 Freecells:  3D  JH
 : 4C 2C 9C 8C QS JD
 : KS QH 9H

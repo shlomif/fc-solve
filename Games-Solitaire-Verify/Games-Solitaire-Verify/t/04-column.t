@@ -135,7 +135,7 @@ use Games::Solitaire::Verify::Column;
 
 {
     my $column;
-    
+
     eval
     {
         $column= Games::Solitaire::Verify::Column->new(
@@ -157,7 +157,7 @@ use Games::Solitaire::Verify::Column;
 
 {
     my $column;
-    
+
     eval
     {
         $column= Games::Solitaire::Verify::Column->new(
