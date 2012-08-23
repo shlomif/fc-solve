@@ -224,6 +224,24 @@ sub run
         print "\n\n====================\n\n";
     };
 
+    my $perform_and_output_move = sub {
+        my ($move_s) = @_;
+
+        print "$move_s\n\n";
+
+        $running_state->verify_and_perform_move(
+            Games::Solitaire::Verify::Move->new(
+                {
+                    fcs_string => $move_s,
+                    game => $running_state->_variant(),
+                },
+            )
+        );
+        $out_running_state->();
+
+        return;
+    };
+
     my $calc_foundation_to_put_card_on = sub {
         my $card = shift;
 
@@ -300,18 +318,8 @@ sub run
         {
             $dest_move = "Move a card from freecell $tentative_fc_indexes[$src] to the foundations";
         }
-        print "$dest_move\n\n";
 
-
-        $running_state->verify_and_perform_move(
-            Games::Solitaire::Verify::Move->new(
-                {
-                    fcs_string => $dest_move,
-                    game => $running_state->_variant(),
-                },
-            )
-        );
-        $out_running_state->();
+        $perform_and_output_move->($dest_move);
 
         # Now do the horne's prune.
         my $num_moved = 1; # Always iterate at least once.
@@ -320,17 +328,7 @@ sub run
             my $prune_move = shift;
 
             $num_moved++;
-
-            $running_state->verify_and_perform_move(
-                Games::Solitaire::Verify::Move->new(
-                    {
-                        fcs_string => $prune_move,
-                        game => $running_state->_variant(),
-                    }
-                )
-            );
-            print "$prune_move\n\n";
-            $out_running_state->();
+            $perform_and_output_move->($prune_move);
 
             return;
         };
