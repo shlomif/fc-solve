@@ -59,8 +59,8 @@ foreach my $scan (@{$input_obj->selected_scans()})
 
     my $vec = $data->slice(":,$scan_index,0");
     $vec = $vec->where($vec > 0);
-    
-    my $sorted = $vec->flat()->qsort(); 
+
+    my $sorted = $vec->flat()->qsort();
 
     # The step should be the 90% percentile, but not higher than
     # 10,000 iterations.
@@ -76,9 +76,9 @@ continue
 
 # Flair is our temporary name for these independently evaluated instances
 # print join(" \\\n--next-flair ", map { "--flair-id $_->{id} --flair-quota $_->{quota} $_->{cmd_line}" } @results);
-if (0) 
+if (0)
 {
-print 
+print
 (
     join(" \\\n-nf ", map { "--flare-name $_->{id} $_->{cmd_line} -opt" } @results),
     " \\\n --flares-plan '",
@@ -93,7 +93,7 @@ print
     $x = ($x >= 0) * $x + ($x < 0) * PDL->ones($x->dims()) * 100_000;
 
     my $z = $x->xchg(0,1);
-    
+
     my $s = $z->qsort();
 
     #my $histograms =
@@ -124,7 +124,7 @@ print
         $tb->load([map { " $_ " } ($idx+1,
                 (($idx == 0)
                     ? $get_place->($idx)
-                    : ( $get_place->($idx) & (~ $get_place->($idx-1)) ) 
+                    : ( $get_place->($idx) & (~ $get_place->($idx-1)) )
                 )->xchg(0,1)->sumover()->list()
             )
             ]
@@ -148,7 +148,7 @@ print
             sub {
                 my ($index, $len) = @_;
 
-                my $char = 
+                my $char =
                 (     ($index == 0) ? $left
                     : ($index == 1) ? $main_left
                     : ($index == $num_scans+1) ? $right
@@ -189,7 +189,7 @@ print
     );
 
 
-    print $start_rule, $tb->title,  
+    print $start_rule, $tb->title,
         (map { $mid_rule, $_, } $tb->body()), $end_rule;
 
 =begin Foo
