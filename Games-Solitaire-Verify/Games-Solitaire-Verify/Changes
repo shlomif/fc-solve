@@ -1,9 +1,11 @@
 Revision history for Games-Solitaire-Verify
 
+0.1100  Fri 31 Aug 22:35:18 IDT 2012
         - Add lib/Games/Solitaire/Verify/Solution/ExpandMultiCardMoves.pm
         for processing a solution and expanding multi-card (= column) moves
         into single-card moves, which are easier to validate by human players.
-            - Now tested using t/08-expand-solution.t .
+            - Now tested using t/08-expand-solution.t
+            - Added script/expand-solitaire-multi-card-moves .
 
 0.1001  Thu 23 Aug 11:12:25 IDT 2012
         - Add the color_for_suit method to ::Card .

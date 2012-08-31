@@ -24,6 +24,7 @@ README
 script/bump-version-number.pl
 script/tag-release.pl
 script/verify-solitaire-solution
+script/expand-solitaire-multi-card-moves
 t/00-load.t
 t/01-base.t
 t/02-move.t

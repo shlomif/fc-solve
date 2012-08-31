@@ -1,0 +1,105 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Games::Solitaire::Verify::App::CmdLine::Expand;
+
+my $app = Games::Solitaire::Verify::App::CmdLine::Expand->new({argv => \@ARGV});
+
+$app->run();
+
+=head1 NAME
+
+expand-solitaire-multi-cards-moves -- a command-line tool for
+expanding multi-card moves.
+
+=head1 SYNOPSIS
+
+    $ fc-solve -p -t -sam 24.board | expand-solitaire-multi-cards-moves -
+    $ fc-solve -g seahaven_towers -p -t -sam 24.seahaven.board \
+        | expand-solitaire-multi-cards-moves -g seahaven_towers
+
+=head1 OVERVIEW
+
+F<expand-solitaire-multi-cards-moves> is a command-line interface to
+L<Games::Solitaire::Verify::Solution::ExpandMultiCardsMoves>.
+
+=head1 COMMAND LINE OPTIONS
+
+=head2 -g [variant]
+
+Picks up a variant.
+
+=head2 --decks-num [1|2]
+
+Number of decks - 1 or 2.
+
+=head2 --freecells-num [n]
+
+Number of freecells.
+
+=head2 --stacks-num [n]
+
+Number of columns.
+
+=head2 --sequences-are-built-by [alternate_color|alt_color|suit|rank]
+
+How the sequences are built by.
+
+=head2 --empty-stacks-filled-by [any|kings|none]
+
+What empty stacks can be filled by.
+
+=head2 --sequence-move [limited|unlimited]
+
+Whether the sequence move is limited or unlimited.
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-games-solitaire-verifysolution at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-Verify>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Games::Solitaire::Verify
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-Verify>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Games-Solitaire-Verify>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Games-Solitaire-Verify>
+
+=back
+
+=head1 AUTHORS
+
+Shlomi Fish, L<http://www.shlomifish.org/> .
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2010 Shlomi Fish.
+
+This program is released under the following license: MIT/X11
+( L<http://www.opensource.org/licenses/mit-license.php> ).
+
+=cut
+
+

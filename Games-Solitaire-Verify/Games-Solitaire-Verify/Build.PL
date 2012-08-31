@@ -25,7 +25,8 @@ my $builder = Test::Run::Builder->new(
     add_to_cleanup      => [ 'Games-Solitaire-Verify-*' ],
     create_makefile_pl => 'traditional',
     script_files => [
-        "script/verify-solitaire-solution"
+        "script/verify-solitaire-solution",
+        "script/expand-solitaire-multi-card-moves",
     ],
     meta_merge =>
     {
