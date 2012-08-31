@@ -336,7 +336,9 @@ sub _apply_move
 
         my $add_move = sub {
             my ($move_line) = @_;
-            $self->_out_line("");
+
+            $output_state_promise->();
+
 
             $self->_out_line($move_line);
 
@@ -356,14 +358,13 @@ sub _apply_move
                 );
             }
 
-            $output_state_promise->();
-
             $output_state_promise = sub {
                 $self->_out_line("");
                 $self->_out($self->_state->to_string);
                 $self->_out_line("");
                 $self->_out_line("");
                 $self->_out_line("====================");
+                $self->_out_line("");
 
                 return;
             };

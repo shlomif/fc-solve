@@ -27,8 +27,3 @@ if ($ret)
 {
     die $ret;
 }
-else
-{
-    print "Solution is OK";
-}
-
