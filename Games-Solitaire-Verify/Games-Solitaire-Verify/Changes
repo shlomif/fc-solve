@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+        - Add lib/Games/Solitaire/Verify/Solution/ExpandMultiCardMoves.pm
+        for processing a solution and expanding multi-card (= column) moves
+        into single-card moves, which are easier to validate by human players.
+
 0.1001  Thu 23 Aug 11:12:25 IDT 2012
         - Add the color_for_suit method to ::Card .
         - Remove trailing space with t/style-trailing-space.t as a test.

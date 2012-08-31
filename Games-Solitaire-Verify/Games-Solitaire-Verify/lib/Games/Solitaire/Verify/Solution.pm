@@ -55,7 +55,7 @@ __PACKAGE__->mk_acc_ref([qw(
 
     close($input_fh);
 
-    if (!$ret)
+    if ($ret)
     {
         die $ret;
     }

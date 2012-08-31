@@ -1,6 +1,7 @@
 Build.PL
 Changes
 COPYING
+examples/expand-moves-driver.pl
 inc/Test/Run/Builder.pm
 lib/Games/Solitaire/Verify/App/CmdLine.pm
 lib/Games/Solitaire/Verify/Base.pm
@@ -12,6 +13,7 @@ lib/Games/Solitaire/Verify/Freecells.pm
 lib/Games/Solitaire/Verify/Move.pm
 lib/Games/Solitaire/Verify.pm
 lib/Games/Solitaire/Verify/Solution.pm
+lib/Games/Solitaire/Verify/Solution/ExpandMultiCardMoves.pm
 lib/Games/Solitaire/Verify/State.pm
 lib/Games/Solitaire/Verify/VariantParams.pm
 lib/Games/Solitaire/Verify/VariantsMap.pm
