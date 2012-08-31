@@ -6,6 +6,8 @@ use warnings;
 use File::Find::Object;
 use IO::All;
 
+my $new_ver = shift(@ARGV);
+
 my $tree = File::Find::Object->new({}, 'lib/Games/Solitaire/');
 
 while (my $r = $tree->next()) {
@@ -19,7 +21,7 @@ while (my $r = $tree->next()) {
         LINES_LOOP:
         foreach (@lines)
         {
-            if (s#(\$VERSION = ')\d+\.\d+(')#$1 . "0.1001" . $2#e)
+            if (s#(\$VERSION = ')\d+\.\d+(')#$1 . $new_ver . $2#e)
             {
                 last LINES_LOOP;
             }
