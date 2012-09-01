@@ -1,0 +1,7 @@
+Instructions for running the range-solving scheme:
+
+# At first, edit 2_freecells_run_and_verify.mak and change the appropriate
+parameters, especially MIN_DEAL and MAX_DEAL .
+
+# Run make -f 2_freecells_run_and_verify.mak -j4 (where 4 is your number
+of processors/cores).
