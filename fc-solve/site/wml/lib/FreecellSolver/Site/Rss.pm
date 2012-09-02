@@ -13,7 +13,7 @@ use Encode;
 __PACKAGE__->mk_accessors(qw(
     feed
 ));
-    
+
 sub _init
 {
     my $self = shift;
@@ -35,6 +35,7 @@ sub _calc_entry_body
     my $title = decode('UTF-8', $entry->title());
 
     $body =~ s{<a name="cut[^"]*"></a>}{}g;
+    $body =~ s{<table border="1">}{<table class="downloads">}g;
 
     return "<!-- TITLE=" . CGI::escapeHTML($title) . "-->\n" . $body;
 }
