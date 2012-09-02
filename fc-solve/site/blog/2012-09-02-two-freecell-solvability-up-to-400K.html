@@ -1,0 +1,112 @@
+<h1>Freecell Solver 3.12.0</h1>
+
+<!-- Tags: freecell, solver, solving, two, deals, layouts, solvability, statistics
+-->
+
+<p>
+With some help from some people on <a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/">the fc-solve-discuss list</a> and off the list (namely
+Amadiro from http://www.uio.no/english/  and someone else that I met on IRC
+, I ran my solvers on the first 400,000 Windows Freecell deals
+with only two available freecells to see how many of them can be solved.
+</p>
+
+<p>
+Here is the report:
+</p>
+
+<table border="1">
+<tr>
+<th>Start Index</th>
+<th>End Index</th>
+<th>Solved</th>
+<th>Impossible</th>
+<th>Intractable</th>
+</tr>
+
+<tr>
+<td>1</td>
+<td>32,000</td>
+<td>25,381</td>
+<td>6,619</td>
+<td>0</td>
+</tr>
+
+<tr>
+<td>32,001</td>
+<td>50,000</td>
+<td>14,302</td>
+<td>3,698</td>
+<td>0</td>
+</tr>
+
+<tr>
+<td>50,001</td>
+<td>100,000</td>
+<td>39,775</td>
+<td>10,225</td>
+<td>0</td>
+</tr>
+
+<tr>
+<td>100,001</td>
+<td>400,000</td>
+<td>238,415</td>
+<td>61,584</td>
+<td>1 (No. 384243)</td>
+</tr>
+
+<tr>
+<td colspan="2">Total</td>
+<td>317,873</td>
+<td>82,126</td>
+<td>1</td>
+</tr>
+</table>
+
+<p>
+So about 79.47% of the deals can be solved and the rest are impossible. The
+only intractable deal that none of my solvers could yield a verdict for is
+No. 384,243, and it spans a very large number of states:
+</p>
+
+<ul>
+<li>
+<p>
+The dbm_fc_solver got into <q>Reached 12,821,000,000 ;
+States-in-collection: 13,620,999,440</q>
+before it failed to produce more results due to a limitation of the
+hardware where it was deployed on.
+</p>
+</li>
+
+<li>
+<p>
+The depth_dbm_fc_solver yielded this:
+</p>
+
+<blockquote>
+<p>
+Reached 13,763,700,000 ; States-in-collection: 16,226,294,490 ; Time: 1345126456.520408
+Queue Stats: inserted=16,226,294,490 items_in_queue=2,462,594,490 extracted=13,763,700,000
+</p>
+</blockquote>
+
+<p>
+with a curr_depth of 38. However, that solver may have some yet undiscovered
+bugs.
+</p>
+</li>
+
+</ul>
+
+<p>
+So what's next? I’d like to investigate some ways to scale to a larger
+number of states, perhaps by creating a distributed solver. A <a href="https://www.google.com/search?q=distributed%20breadth%20first%20search
+">google search for distributed breadth
+first search</a> yields some results:
+</p>
+
+<p>
+I hope you enjoy the statistics for the time being.
+</p>
+
