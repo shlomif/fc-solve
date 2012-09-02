@@ -1,0 +1,19 @@
+1 - 32,000:
+-----------
+
+Solved: 25,381 ; Impossible: 6,619 ; Intractable: 0 .
+
+32,001 - 50,000:
+----------------
+
+Solved: 14,302 ; Impossible: 3,698 ; Intractable: 0 .
+
+50,001 - 100,000:
+-----------------
+
+Solved: 39,775 ; Impossible: 10,225 ; Intractable: 0 .
+
+100,001 - 400,000:
+------------------
+
+Solved: 238,415 ; Impossible: 61,584 ; Intractable: 1 (No. 384243) .
