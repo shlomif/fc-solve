@@ -529,5 +529,8 @@ int main(int argc, char * argv[])
         fclose(binary_output.file);
     }
 
+    free (solution_filename);
+    solution_filename = NULL;
+
     return 0;
 }
