@@ -1,5 +1,8 @@
 Revision history for Games-Solitaire-Verify
 
+        - Add strict, warnings and autodie to requires/build_requires.
+            - See for example: http://www.cpantesters.org/cpan/report/52b7a6ba-f548-11e1-bdcc-373e3b6b8117
+
 0.1100  Fri 31 Aug 22:35:18 IDT 2012
         - Add lib/Games/Solitaire/Verify/Solution/ExpandMultiCardMoves.pm
         for processing a solution and expanding multi-card (= column) moves

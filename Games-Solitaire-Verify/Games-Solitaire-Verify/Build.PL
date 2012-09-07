@@ -12,6 +12,7 @@ my $builder = Test::Run::Builder->new(
     dist_author         => 'Shlomi Fish <shlomif@iglu.org.il>',
     dist_version_from   => 'lib/Games/Solitaire/Verify.pm',
     build_requires => {
+        'autodie' => 0,
         'Test::More' => 0,
     },
     requires => {
@@ -21,6 +22,8 @@ my $builder = Test::Run::Builder->new(
         'Exception::Class' => 0,
         'List::Util' => 0,
         'Getopt::Long' => '2.36',
+        'strict' => 0,
+        'warnings' => 0,
     },
     add_to_cleanup      => [ 'Games-Solitaire-Verify-*' ],
     create_makefile_pl => 'traditional',
