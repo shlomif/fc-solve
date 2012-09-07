@@ -1,5 +1,6 @@
 Revision history for Games-Solitaire-Verify
 
+0.1101  Fri  7 Sep 07:28:06 IDT 2012
         - Add strict, warnings and autodie to requires/build_requires.
             - See for example: http://www.cpantesters.org/cpan/report/52b7a6ba-f548-11e1-bdcc-373e3b6b8117
 
