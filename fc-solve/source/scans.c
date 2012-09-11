@@ -222,7 +222,7 @@ static void verify_soft_dfs_stack(
 
 #endif
 
-static void free_states(fc_solve_instance_t * instance)
+static GCC_INLINE void free_states(fc_solve_instance_t * instance)
 {
 #ifdef DEBUG
     printf("%s\n", "FREE_STATES HIT");
