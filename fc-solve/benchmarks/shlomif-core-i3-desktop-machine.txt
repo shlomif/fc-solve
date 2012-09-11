@@ -248,3 +248,18 @@ lib64google-perftools0-1.9.1-1.mga2
 
 Highlight: the refactoring on the trunk may have slowed it down. On the bright
 side, the 380-step preset improved performance a little.
+
+---------------------------------------------------------
+
+ARGS="--worker-step 16 -l te" bash scripts/time-threads-num.bash 4 4 (x4)
+commit 648c9dd25e1a7d17af65cb780cab81a9f6a3f96c
+With Profile Guided Optimisation (PGO).
+./Tatzer -l ci7b --prefix=/home/shlomif/apps/fcs
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+3.5.3-desktop-2.mga3
+gcc-4.7.1-7.mga3
+lib64google-perftools0-2.0-1.mga3
+
+11.5025880336761s
