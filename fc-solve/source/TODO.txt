@@ -10,11 +10,11 @@ Pressing
 Non-pressing
 ------------
 
+* Refer to +expand-solitaire-multi-card-moves+ from the fc-solve process.
+
 * Create a displayer for fc-solve's solutions which will allow seeing where a
 card was moved from (using a colored →) and where it was placed.
-** Adapt it to dbm_fc_solve's solutions.
 ** Create a GUI version.
-** Add the ability to expand moves to atomic, single-card, moves.
 
 * [dbm_fc_solver]: create a different positions collection and queue for
 every depth of non-reversible moves, and recycle the depths that were fully

@@ -335,4 +335,5 @@ the code more 64-bit-enabled.
 fc-solve for validation.
 ** Done: see +scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl+ .
 
-
+* Added +expand-solitaire-multi-card-moves+ for expanding multi-card moves to
+atomic, single-card, moves.
