@@ -1704,7 +1704,7 @@ int fc_solve_befs_or_bfs_do_solve(
     fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
     fcs_states_linked_list_item_t * save_item;
     fcs_derived_states_list_t derived;
-    int derived_index;
+    fcs_derived_states_list_item_t * derived_iter, * derived_end;
     fcs_bool_t enable_pruning;
 
     int method;
@@ -1924,16 +1924,21 @@ int fc_solve_befs_or_bfs_do_solve(
 
         TRACE0("Insert all states");
         /* Insert all the derived states into the PQ or Queue */
-
-        for(derived_index = 0 ; derived_index < derived.num_states ; derived_index++)
+        for (
+            derived_end = (derived_iter = derived.states) + derived.num_states
+                ;
+            derived_iter < derived_end
+                ;
+            derived_iter++
+        )
         {
 #ifdef FCS_RCS_STATES
             new_pass.key =
                 fc_solve_lookup_state_key_from_val(instance,
-                        new_pass.val = derived.states[derived_index].state_ptr
+                        new_pass.val = derived_iter->state_ptr
                 );
 #else
-            ptr_new_state = derived.states[derived_index].state_ptr;
+            ptr_new_state = derived_iter->state_ptr;
             new_pass.key = &(ptr_new_state->s);
             new_pass.val = &(ptr_new_state->info);
 #endif
