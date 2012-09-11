@@ -1171,7 +1171,10 @@ int fc_solve_soft_dfs_do_solve(
             int num_states = derived_states_list->num_states;
             fcs_derived_states_list_item_t * derived_states =
                 derived_states_list->states;
-            int * rand_array = the_soft_dfs_info->derived_states_random_indexes;
+            int * rand_int_ptr =
+                the_soft_dfs_info->derived_states_random_indexes +
+                the_soft_dfs_info->current_state_index
+                ;
             fcs_collectible_state_t * single_derived_state;
 
             VERIFY_PTR_STATE_TRACE0("Verify Klondike");
@@ -1180,11 +1183,10 @@ int fc_solve_soft_dfs_do_solve(
                    num_states)
             {
                 single_derived_state = derived_states[
-                        rand_array[
-                            the_soft_dfs_info->current_state_index++
-                        ]
-                    ].state_ptr;
+                    *(rand_int_ptr++)
+                ].state_ptr;
 
+                the_soft_dfs_info->current_state_index++;
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Seahaven");
 
                 if (
