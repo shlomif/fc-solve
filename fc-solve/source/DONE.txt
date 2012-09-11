@@ -337,3 +337,22 @@ fc-solve for validation.
 
 * Added +expand-solitaire-multi-card-moves+ for expanding multi-card moves to
 atomic, single-card, moves.
+
+* [dbm_fc_solver]: create a different positions collection and queue for
+every depth of non-reversible moves, and recycle the depths that were fully
+traversed. This is similar to the FCC-fc-solver (FCC == fully connected
+components), but without the costly FCC analysis.
+** A bug:
+----------------------
+./depth_dbm_fc_solver --num-threads 1 \
+    --offload-dir-path ~/tmp/queue-offload/ 12064.board :
+
+Reached 25004188 ; States-in-collection: 25004188 ; Time: 1343325174.469632
+>>>Queue Stats: inserted=25004188 items_in_queue=0 extracted=25004188
+
+./dbm_fc_solver --num-threads 1 \
+    --offload-dir-path ~/tmp/queue-offload/ 12064.board :
+
+Reached 11629132 ; States-in-collection: 11629132 ; Time: 1343325500.110992
+>>>Queue Stats: inserted=11629132 items_in_queue=0 extracted=11629132
+----------------------
