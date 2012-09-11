@@ -10,6 +10,7 @@ OPT_AND_DEBUG = 0
 NATIVE_ARCH = 1
 
 COMPILER = gcc
+# COMPILER = clang
 # COMPILER = icc
 # COMPILER = lcc
 # COMPILER = pcc
@@ -33,11 +34,17 @@ else
 	MACHINE_OPT := -O3
 endif
 
+LTO_FLAGS := -flto
 
 ifeq ($(COMPILER),gcc)
 	CC = gcc
 	GCC_COMPAT := 1
 	CFLAGS += -Werror=implicit-function-declaration
+else ifeq ($(COMPILER),clang)
+	CC = clang
+	GCC_COMPAT := 1
+	CFLAGS += -Werror=implicit-function-declaration
+	LTO_FLAGS :=
 else ifeq ($(COMPILER),icc)
 	CC = icc
 	GCC_COMPAT := 1
@@ -87,9 +94,9 @@ ifeq ($(GCC_COMPAT),1)
 	else ifeq ($(OPT_FOR_SIZE),1)
 		CFLAGS += -Os -fvisibility=hidden
 	else ifeq ($(OPT_AND_DEBUG),1)
-		CFLAGS += -g -O2 $(MARCH_FLAG) -flto
+		CFLAGS += -g -O2 $(MARCH_FLAG) $(LTO_FLAGS)
 	else
-		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -fomit-frame-pointer -flto
+		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -fomit-frame-pointer $(LTO_FLAGS)
 	endif
 	CFLAGS += -fPIC
 endif
