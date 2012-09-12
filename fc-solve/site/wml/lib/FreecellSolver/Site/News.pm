@@ -3,6 +3,8 @@ package FreecellSolver::Site::News;
 use strict;
 use warnings;
 
+use autodie;
+
 use utf8;
 
 use base 'HTML::Widgets::NavMenu::Object';
@@ -38,9 +40,9 @@ sub file_to_news_item
     my $filename = shift;
     my $text = do {
         local $/;
-        open my $file, "<", $self->dir()."/".$filename;
-        binmode $file, ":utf8";
-        <$file>;
+        open my $fh, "<", $self->dir()."/".$filename;
+        binmode $fh, ":utf8";
+        <$fh>;
     };
     my $title;
     if ($text =~ s{\A<!-- TITLE=(.*?)-->\n}{})

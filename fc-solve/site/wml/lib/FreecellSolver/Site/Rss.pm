@@ -3,6 +3,8 @@ package FreecellSolver::Site::Rss;
 use strict;
 use warnings;
 
+use autodie;
+
 use base 'HTML::Widgets::NavMenu::Object';
 use base 'Class::Accessor';
 
@@ -48,10 +50,10 @@ sub run
         my $text = $self->_calc_entry_body($entry) . "\n\n" . "<p><a href=\"" . CGI::escapeHTML($entry->link()) . "\">See comments and comment on this.</a></p>\n";
         my $issued = $entry->issued();
         my $filename = "lib/feeds/fc-solve.blogspot/" . $issued->ymd() . ".html";
-        open O, ">", $filename;
-        binmode O, ":utf8";
-        print O $text;
-        close(O);
+        open my $out_fh, ">", $filename;
+        binmode $out_fh, ":utf8";
+        print {$out_fh} $text;
+        close ($out_fh);
     }
 }
 
