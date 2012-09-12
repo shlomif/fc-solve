@@ -16,7 +16,7 @@
 </define-tag>
 
 <define-tag news_sites_buttons>
-<div class="news_buttons"> 
+<div class="news_buttons">
 <script type="text/javascript" src="http://reddit.com/button.js?t=2"></script>
 </div>
 </define-tag>

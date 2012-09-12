@@ -18,23 +18,23 @@ offer such as poker and blackjack.
 </define-tag>
 
 <p>
-This is Freecell Solver - a program that automatically solves layouts of 
-<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar 
-variants of <a href="http://en.wikipedia.org/wiki/Solitaire">Card 
+This is Freecell Solver - a program that automatically solves layouts of
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
+variants of <a href="http://en.wikipedia.org/wiki/Solitaire">Card
 Solitaire</a> such as Eight Off, Forecell and
-Seahaven Towers, as well as 
-<a href="http://en.wikipedia.org/wiki/Simple_Simon_%28solitaire%29">Simple 
-Simon</a> boards. Freecell Solver is 
-<a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">free 
-and open source software</a> freely available under the 
-<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 License</a>. 
-It is written in ANSI C and requires a C compiler to be built.  Nevertheless, 
+Seahaven Towers, as well as
+<a href="http://en.wikipedia.org/wiki/Simple_Simon_%28solitaire%29">Simple
+Simon</a> boards. Freecell Solver is
+<a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">free
+and open source software</a> freely available under the
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 License</a>.
+It is written in ANSI C and requires a C compiler to be built.  Nevertheless,
 binaries for Microsoft Windows 32-bit are available.
 <web_advertisers_net_fc_solve_homepage_link />
 </p>
 
 <p>
-Included with the archive is source code for programs that can automatically 
+Included with the archive is source code for programs that can automatically
 feed it with the boards of several popular Solitaire Implementations.
 </p>
 
@@ -67,7 +67,7 @@ to the game.
 <li>
 <a href="http://www.solitairelaboratory.com/freecell.html">Michael
 Keller's Freecell site</a> -
-contains the 
+contains the
 <a href="http://www.solitairelaboratory.com/fcfaq.html">Freecell FAQ
 (Frequently Asked Questions)</a> and other stuff.
 </li>
@@ -78,7 +78,7 @@ very good embedding of Freecell Solver.
 </li>
 <li>
 <a href="http://people.cs.uu.nl/hansb/d.freecell/freecellhtml.html">
-An unsolvable instance of Freecell</a> - why not all possible initial Freecell 
+An unsolvable instance of Freecell</a> - why not all possible initial Freecell
 boards can be solved.
 </li>
 <li>

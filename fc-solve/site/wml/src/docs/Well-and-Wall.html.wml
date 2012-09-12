@@ -12,11 +12,11 @@ abuse of the code.<a href="#footnote-humanity"><sup>[Humanity]</sup></a>
 </p>
 
 <p>
-Many people would automatically assume that the license should be GPL or 
+Many people would automatically assume that the license should be GPL or
 LGPL. However, Freecell Solver was released under the Public Domain. And I
-think releasing it under the Public Domain was the best thing I've done. (to 
+think releasing it under the Public Domain was the best thing I've done. (to
 <a href="http://www.tlug.jp/docs/linus.html">semi-quote Linus Torvalds</a>
-who said that "Making Linux GPL'd was definitely the best thing I ever did."). 
+who said that "Making Linux GPL'd was definitely the best thing I ever did.").
 And here's the funny part: I think Linus would agree with me.
 </p>
 
@@ -30,40 +30,40 @@ albeit may have done better the next time.
 <h2 id="how-it-started">How it all started</h2>
 
 <p>
-I must have told the story a lot of different times in different contexts. 
-Once, on a short break between two semesters, I went out running and while I 
-did I wondered how I can solve Freecell programmatically. I reached two 
+I must have told the story a lot of different times in different contexts.
+Once, on a short break between two semesters, I went out running and while I
+did I wondered how I can solve Freecell programmatically. I reached two
 conclusions:
 </p>
 
 <ol>
 
 <li>
-A depth-first scan would probably be better than a breadth-first scan. 
+A depth-first scan would probably be better than a breadth-first scan.
 (I figured the number of states as the function of the depth N grows very
 largely).
 </li>
 
 <li>
-Using atomic moves (moving one card or one sequence at a time) would be 
+Using atomic moves (moving one card or one sequence at a time) would be
 silly, and I have to make meta-moves (= compound moves of doing more than
 one move at a time) to achieve good results.
 </li>
 </ol>
 
 <p>
-The first conclusion turned out to be relatively true. The second conclusion 
-turned out to be false, but as you will see later, it had a very pleasant 
+The first conclusion turned out to be relatively true. The second conclusion
+turned out to be false, but as you will see later, it had a very pleasant
 side-effect.
 </p>
 
 <p>
-I decided that I just want to write it down to see if it works. So I coded 
-a Perl version that used a list as an excuse for a states collection. It 
-was too slow for its own good. I decided to convert it to C, this time using 
+I decided that I just want to write it down to see if it works. So I coded
+a Perl version that used a list as an excuse for a states collection. It
+was too slow for its own good. I decided to convert it to C, this time using
 a sorted array with a sort margin. It worked nicely even when I implemented only
 some of the "tests": the types of meta-moves I had in mind. When I implemented
-all of them it worked well for most boards I've tried. (I generated 1000 sample boards using a Perl script), and it took a lot of time for many of them, but 
+all of them it worked well for most boards I've tried. (I generated 1000 sample boards using a Perl script), and it took a lot of time for many of them, but
 I was glad it was usable.
 </p>
 
@@ -75,37 +75,37 @@ announced it on Freshmeat under the name "Freecell Solver" with version 0.2.
 </p>
 
 <p>
-One thing you can notice is that I actually threw one version away. I'm still 
+One thing you can notice is that I actually threw one version away. I'm still
 not sure the program would have been too slow in Perl, if I did it right. But
-I still think the C version is much faster than the equivalent Perl or Lisp 
-one. Can't tell about C++ or Java. 
+I still think the C version is much faster than the equivalent Perl or Lisp
+one. Can't tell about C++ or Java.
 </p>
 
 <p>
-Since then I'm happy to say, that the code was never entirely re-written 
+Since then I'm happy to say, that the code was never entirely re-written
 from scratch. Nor do I intend or think it is the right thing to do. Open
 Source Projects were known to survive a re-write. (that's one of the advantages
 of Open-Source) Nevertheless, I'm too attached to the code to throw it all
 away so fast. I can much more easily refactor or rewrite the parts I need to
 while still conver the code back to a working condition after a while. There'
-s a lot of logic  in the code that has nothing to do with anything else. Many 
-people think <a href="http://www.joelonsofsoftware.com/">Joel Spolsky</a> does 
-not know what he's talking about, when he 
-<a href="http://www.joelonsoftware.com/articles/fog0000000069.html">advises 
-against rewriting a large codebase from scratch</a>  or that it 
-does not apply to Open-Source. But rewriting is costly. 
-<a href="http://www.joelonsoftware.com/articles/fog0000000348.html">Refactoring 
-is much quicker</a> (again, a link to Joel-on-Software), even if you are left 
+s a lot of logic  in the code that has nothing to do with anything else. Many
+people think <a href="http://www.joelonsofsoftware.com/">Joel Spolsky</a> does
+not know what he's talking about, when he
+<a href="http://www.joelonsoftware.com/articles/fog0000000069.html">advises
+against rewriting a large codebase from scratch</a>  or that it
+does not apply to Open-Source. But rewriting is costly.
+<a href="http://www.joelonsoftware.com/articles/fog0000000348.html">Refactoring
+is much quicker</a> (again, a link to Joel-on-Software), even if you are left
 with practically nothing of the same code after a while.
 </p>
 
 <p>
-What I did not do according to "the Cathedral and the Bazaar" was look for 
-similar effort. As I discovered, most of the Freecell Solvers out there did 
-not use Meta-Moves, so it turned out that my thought experiment that was 
-realised into working code was a good thing. Now, I always look for similar 
-effort. But I still make thought experiments (seeing if this thing would work 
-in Haskell, etc.). I like to code, and I like the look of a blank 
+What I did not do according to "the Cathedral and the Bazaar" was look for
+similar effort. As I discovered, most of the Freecell Solvers out there did
+not use Meta-Moves, so it turned out that my thought experiment that was
+realised into working code was a good thing. Now, I always look for similar
+effort. But I still make thought experiments (seeing if this thing would work
+in Haskell, etc.). I like to code, and I like the look of a blank
 <a href="http://www.vim.org/">gvim</a> window eager to accept my input.
 </p>
 
@@ -114,7 +114,7 @@ in Haskell, etc.). I like to code, and I like the look of a blank
 <p>
 Eric Warmenhoven sent me a program to generate the boards of GNOME Freecell.
 I thanked him for it, and set out to write the same for other solitaire
-implementations I knew. I had to clean up Eric's program a bit, but it was 
+implementations I knew. I had to clean up Eric's program a bit, but it was
 still nicer than digging the source trying to extract the program.
 </p>
 
@@ -130,14 +130,14 @@ A thank you goes along way. E-mail a developer today.
 Naming the program "Freecell Solver" made it the first hit for the query
 "freecell solver" on Google immediately. As I released more versions,
 placed them online and announced them on Freshmeat, the situation got steadily
-worse. I found all kind of junk of it there, like obscure packages of 
+worse. I found all kind of junk of it there, like obscure packages of
 various distributions of Linux and FreeBSD, and rarely something of any
 good. What I did find from time to time were reviews of it or mentioning.
 </p>
 
 <p>
 I link to all the reviews I can find online on my site. And if you know of
-more, feel free to send them to me. A good review goes along way for a 
+more, feel free to send them to me. A good review goes along way for a
 developer.
 </p>
 
@@ -151,20 +151,20 @@ hated to see Google and other search engines clogged like this.
 <p>
 On my TODO list I had an item of "Integrate with PySol and/or GNOME Freecell
 and/or GNOME AisleRiot and/or kpat". I actually tried to push it so the
-GNOME guys would accept it. (At that point GNOME Freecell was my favorite 
-solitaire implementation. My favourite is PySol, now). Eventually, I contacted 
+GNOME guys would accept it. (At that point GNOME Freecell was my favorite
+solitaire implementation. My favourite is PySol, now). Eventually, I contacted
 a developer directly, and he referred me to the maintainer. The latter was to
 o busy to do anything with it.
 </p>
 
 <p>
-However, later on, after version 1.0.0 that included a user API was released, 
-Stephan Kulow informed me that he integrated Freecell Solver into the 
+However, later on, after version 1.0.0 that included a user API was released,
+Stephan Kulow informed me that he integrated Freecell Solver into the
 <a href="http://cards.wikia.com/wiki/KPatience">KPatience (a.k.a kpat)</a>
 of KDE 2.1. I was a bit disappointed that he did not use the API I created and
-instead asked him to convert it to the user API while adding functions as he 
-see fit. (I told him "I'll sleep better at nights" if that was so and it was 
-true because the internals of the program were subject to change, and 
+instead asked him to convert it to the user API while adding functions as he
+see fit. (I told him "I'll sleep better at nights" if that was so and it was
+true because the internals of the program were subject to change, and
 very un-user-friendly) As a result he did just that, and sent me a patch
 to the program.
 </p>
@@ -184,7 +184,7 @@ up to the solution.
 <p>
 I lost contact with Markus, and he did not answer any of my E-mails for a long
 time. PySol 4.80 included a Python class to integrate with a Freecell Solver
-bindings, but I could not find the C back-end anywhere. I'm toying with the 
+bindings, but I could not find the C back-end anywhere. I'm toying with the
 idea of integrating it myself, but so far did not have the time to. (I also
 don't like Python too much)
 </p>
@@ -209,7 +209,7 @@ the quality of his code leaves a lot to be desired.
 <p>
 Working with Adrian proved to be an enlightening experience anyhow. It took
 me a lot of time to get Freecell Solver to work flawlessly with Freecell Pro,
-including writing some routines to convert it to Microsoft-Freecell-compatible 
+including writing some routines to convert it to Microsoft-Freecell-compatible
 moves. Now it works perfectly, but it took more than a year. Note that I
 still don't regret putting the effort into this.
 </p>
@@ -229,7 +229,7 @@ several modes, some of them customizable.
 
 <p>
 Note that I am toying with the idea of coding a cross-platform Freecell
-implementation myself written in C++ using wxWindows, Qt or something 
+implementation myself written in C++ using wxWindows, Qt or something
 similar. Nevertheless, I did not have the time yet to do it, and the internals
 of Freecell Solver and other projects are much more exciting at the moment.
 </p>
@@ -263,25 +263,25 @@ advertising clause problem</a>)
 
 <p>
 I initially chose the Public Domain simply because it has no restrictions
-, and at the time I did not like the GPL very much. (I still like to 
-ridicule it on every possible occasion<a href="#footnote-gpl"><sup>[GPL]</sup></a>) I don't regret choosing the PD. 
-As David J Goehrig. noted to me once, if a commercial entity wants to take an 
+, and at the time I did not like the GPL very much. (I still like to
+ridicule it on every possible occasion<a href="#footnote-gpl"><sup>[GPL]</sup></a>) I don't regret choosing the PD.
+As David J Goehrig. noted to me once, if a commercial entity wants to take an
 open-source code and release an enhanced version, then "all the power to
-them". 
+them".
 </p>
 
 <p>
-I personally don't see much business opportunity in creating an enhanced 
+I personally don't see much business opportunity in creating an enhanced
 version of Freecell Solver. However, putting it under the Public Domain,
 is one thing that can kill any other GPL competition, making Freecell Solver
 the cutting edge technology, not only now but for a long time into the
 future.
-</p> 
+</p>
 
 <p>
-I really don't have a policy against people forking a GPL-ed copy. 
+I really don't have a policy against people forking a GPL-ed copy.
 However, I do ask them that unless they intend to make it proprietary,
-to keep it under the Public Domain. So far, all contributors respected 
+to keep it under the Public Domain. So far, all contributors respected
 that.
 </p>
 
@@ -301,13 +301,13 @@ usually is a bad idea)
 </li>
 
 <li>
-I like working on Freecell Solver, and albeit am not overposessive 
+I like working on Freecell Solver, and albeit am not overposessive
 about the code, I do like to do things on my own.
 </li>
 
 <li>
-Freecell Solver's source code contains some very advanced (IMHO) 
-techniques, and some relatively optimised for speed code. I do announce 
+Freecell Solver's source code contains some very advanced (IMHO)
+techniques, and some relatively optimised for speed code. I do announce
 what I intend to do next and what I did to the mailing list. However,
 I do not know how many of its members understand it enough to contribute.
 </li>
@@ -323,7 +323,7 @@ so I don't try to avoid posting such stuff there..
 <h2 id="usability">Usability and Social Engineering</h2>
 
 <p>
-As I noted in <a href="http://www.advogato.org/article/458.html">an Advogato 
+As I noted in <a href="http://www.advogato.org/article/458.html">an Advogato
 Editorial</a>, "Human Engineering" is not just
 about answering users politely and actually transcends to the design
 of the product and to its homepage. If you spot a pattern in users'
@@ -345,7 +345,7 @@ different screen by using an environment variable.
 
 <p>
 Finally, I added presets, which were files that could be used to configure
-the program (whose configuration lines became quit insane) in one way or 
+the program (whose configuration lines became quit insane) in one way or
 another.
 </p>
 
@@ -360,21 +360,21 @@ of them left.
 
 <p>
 The mailing list did not completely eliminate discussions that took place
-off-line, but it was probably for the best because that way it would have 
-had a lower Signal-to-noise ratio. 
+off-line, but it was probably for the best because that way it would have
+had a lower Signal-to-noise ratio.
 </p>
 
 <p>
-One thing that happened on the mailing list was that GeYong posted there an 
-announcement about Freecell Tool, a solver for Freecell that he wrote. I tried 
-it out and noticed it had a randomized scan. I thought it was a good idea and 
-implemented it in Freecell Solver, too. Like ESR said, recognizing good ideas 
-from your users is equally as important if not more than having them yourself, 
+One thing that happened on the mailing list was that GeYong posted there an
+announcement about Freecell Tool, a solver for Freecell that he wrote. I tried
+it out and noticed it had a randomized scan. I thought it was a good idea and
+implemented it in Freecell Solver, too. Like ESR said, recognizing good ideas
+from your users is equally as important if not more than having them yourself,
 and I cannot not agree more retrospectively.
 </p>
 
 <p>
-Like I said earlier, the mailing list hosts some high-level posts of 
+Like I said earlier, the mailing list hosts some high-level posts of
 algorithms and techniques, which are not for the ordinary mundane programmer.
 The mailing list has a steady subscribers' list and from my impression most
 of them actually enjoy these posts.
@@ -389,7 +389,7 @@ The mailing list has some colour besides myself. Most notable are:
 <li>
 Bill Raymond - a Freecell solver guru who claims to have written the
 best solver that ever was, yet is reluctant to release it to the public
-in one form or another. Bill tends to be a little flamatory, but since 
+in one form or another. Bill tends to be a little flamatory, but since
 he knows what he is saying (and naturally adds spice to the list) I am
 still keeping him.
 </li>
@@ -401,8 +401,8 @@ He tends to be very kind and restrained.
 </li>
 
 <li>
-Tom Holroyd - the author of patsolve, another solve rfor Freecell and 
-Freecell-like games, he makes very few posts, usually related to patsolve, 
+Tom Holroyd - the author of patsolve, another solve rfor Freecell and
+Freecell-like games, he makes very few posts, usually related to patsolve,
 somehow. He is a formidable computer scientist and also a good Freecell and
 Seahaven Towers enthusiast.
 </li>
@@ -421,8 +421,8 @@ Solver codebase are welcome, but are not absolutely necessary.
 Freecell Solver had a dedicated site all along. The site took several
 transformations. First, it was split into several pages, and then I applied
 a common look and feel with a navigation bar, CSS stylesheets and :hover links
-to it. I think it also makes the site more usable, especially for people 
-with disabilities. Website Meta Language had been a great help in doing the 
+to it. I think it also makes the site more usable, especially for people
+with disabilities. Website Meta Language had been a great help in doing the
 latter.
 </p>
 
@@ -435,7 +435,7 @@ a milestone as far as new features and stability was concerned.
 
 <p>
 As far as I know, Freecell Solver is the only solver that has such a dedicated
-homepage and is so actively maintained. This gives is a lot of edge in 
+homepage and is so actively maintained. This gives is a lot of edge in
 making it the category killer. It also makes perfect sense that it would
 be considering those circumstances.
 </p>
@@ -448,14 +448,14 @@ be considering those circumstances.
 <p>
 <sup>[Humanity]</sup> - the Well and the Wall
 are a reference to my open-content (CC-by-sa-licensed) screenplay
-<a href="http://www.shlomifish.org/humour/humanity/">"Humanity - 
+<a href="http://www.shlomifish.org/humour/humanity/">"Humanity -
 The Movie"</a>, which you are encouraged to read. I drew inspiration for
-it from the title of Eric Raymond's "The Cathedral and the Bazaar" essay, 
-before I started reading it. 
+it from the title of Eric Raymond's "The Cathedral and the Bazaar" essay,
+before I started reading it.
 </p>
 <p>
 I should note that I originally had delusions that this movie was already made
-by someone else as part of a 
+by someone else as part of a
 <a href="http://en.wikipedia.org/wiki/Mania">Clinical Mania</a> I have
 experienced, and later was fond of the idea enough to write it as an actual
 screenplay.

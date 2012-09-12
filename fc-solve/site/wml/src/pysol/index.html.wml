@@ -17,7 +17,7 @@ Solver works beautifully there.
 <h2>Introduction</h2>
 
 <p>
-This is code that enables Freecell Solver integration with 
+This is code that enables Freecell Solver integration with
 <a href="http://pysolfc.sourceforge.net/">PySol</a>,
 an excellent cross-platform Solitaire Suite written in Python.
 </p>
@@ -31,7 +31,7 @@ the right">
 <linktofile "FreecellSolver-0.2.0.tar.gz" />
 </td>
 <td>
-Python bindings for Freecell Solver. Can be built as an RPM. Requires 
+Python bindings for Freecell Solver. Can be built as an RPM. Requires
 Freecell Solver.
 </td>
 </tr>
@@ -61,7 +61,7 @@ apply the patch, and invoke pysol from that directory.
 <p>
 The current integration still leaves a lot to be desired. I haven't yet
 enabled the use of Freecell Solver for Der Katzenschwanz and Die Schlange
-, as well as all the pseudo-Freecell games like Cruel, Good Measure, 
+, as well as all the pseudo-Freecell games like Cruel, Good Measure,
 or Streets and Alleys. The latter may require translating moves
 to single-card moves, as Freecell Solver may move the cards one sequence at
 a time. Plus, Simple Simon cannot work because Freecell Solver

@@ -28,13 +28,13 @@ http://fc-solve.blogspot.com/feeds/posts/default?alt=rss
 <latemp_affiliations_buttons>
 <affil_collection_berlios />
 ;;; The PayPal button
-<a 
-href="https://developer.berlios.de/project/make_donation.php?group_id=66" 
+<a
+href="https://developer.berlios.de/project/make_donation.php?group_id=66"
 rel="donate" title="Please donate to show your appreciation for the hard
 work conducted on Freecell Solver"><img src="$(ROOT)/images/paypal.gif"
 alt="PayPal Donate" class="paypal"/></a>
 <br />
-<a href="<rss_feed />" rel="rss feed" title="Subscribe to Our News"><img 
+<a href="<rss_feed />" rel="rss feed" title="Subscribe to Our News"><img
     src="$(ROOT)/images/rss.png"
     alt="RSS Feed"
     class="bless"
@@ -47,7 +47,7 @@ alt="PayPal Donate" class="paypal"/></a>
 
 <latemp_webmaster>
 <p>
-<b>Webmaster:</b> <a href="http://www.shlomifish.org/">Shlomi Fish</a> (Email: 
+<b>Webmaster:</b> <a href="http://www.shlomifish.org/">Shlomi Fish</a> (Email:
 <a href="mailto:shlomif@shlomifish.org">shlomif@shlomifish.org</a>).
 </p>
 <script type="text/javascript">
@@ -85,7 +85,7 @@ td { vertical-align : top; }
 </define-tag>
 
 <latemp_extra_head_elements>
-<if "$(PRINTABLE)" 
+<if "$(PRINTABLE)"
     "<my_printable_head_elements />"
     "<my_extra_head_elements />"
     />

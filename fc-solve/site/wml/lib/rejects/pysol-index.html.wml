@@ -10,7 +10,7 @@ anything of similar description.
 <p>
 The current integration still leaves a lot to be desired. I haven't yet
 enabled the use of Freecell Solver for Der Katzenschwanz and Die Schlange
-, as well as all the pseudo-Freecell games like Cruel, Good Measure, 
+, as well as all the pseudo-Freecell games like Cruel, Good Measure,
 or Streets and Alleys. The latter may require translating moves
 to single-card moves, as Freecell Solver may move the cards one sequence at
 a time. <linkstar_ad /> Plus, Simple Simon cannot work because Freecell Solver

@@ -19,10 +19,10 @@ __PACKAGE__->mk_accessors(qw(
     num_on_front
     ));
 
-my @old_news_items = 
+my @old_news_items =
 (
-    map 
-    { 
+    map
+    {
         +{
             body => $_->{'html'},
             date => DateTime->new(
@@ -104,7 +104,7 @@ sub get_item_html
     my $title = $item->{title};
     my $date = $item->{date};
 
-    return "<h3 class=\"newsitem\" id=\"" 
+    return "<h3 class=\"newsitem\" id=\""
         . $date->strftime("news-%Y-%m-%d")
         . "\">" . $date->strftime("%d-%b-%Y")
         . (defined($title) ? ": $title" : "")

@@ -21,7 +21,7 @@ sub _render_news_item
     my $title = $item->{'title'} || "";
 
     $title = $issued->strftime("%d-%b-%Y")
-        . (length($title) ? ": " : "") 
+        . (length($title) ? ": " : "")
         . $title;
 
     my $id = $issued->strftime("news-%Y-%m-%d");
@@ -53,7 +53,7 @@ sub _convert_from_old_news_item
         hour => 12, minute => 0, second => 47,
     );
 
-    return 
+    return
         {
             issued => $issued,
             html => $html,
@@ -75,7 +75,7 @@ sub _calc_blog_news
 
     my @results;
     for my $entry ($feed->entries) {
-        push @results, 
+        push @results,
             {
                 issued => $entry->issued->clone(),
                 html => _filter_out_br_tags($entry->content->body()),
@@ -85,8 +85,8 @@ sub _calc_blog_news
             ;
     }
 
-    return [ sort 
-        { DateTime->compare($a->{'issued'}, $b->{'issued'}) } 
+    return [ sort
+        { DateTime->compare($a->{'issued'}, $b->{'issued'}) }
         @results
     ];
 }
@@ -94,8 +94,8 @@ sub _calc_blog_news
 my $num_new_items = 6;
 
 my $results =
-    [ 
-        (map { _convert_from_old_news_item($_) } @{MyOldNews::get_old_news()}), 
+    [
+        (map { _convert_from_old_news_item($_) } @{MyOldNews::get_old_news()}),
         @{_calc_blog_news()}
     ];
 
@@ -106,7 +106,7 @@ sub _print_results
 
     binmode STDOUT, ":utf8";
 
-    print map { _render_news_item($_) } 
+    print map { _render_news_item($_) }
         reverse(@{$results}[$start_idx .. $end_idx])
         ;
 

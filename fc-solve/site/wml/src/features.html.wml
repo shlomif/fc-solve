@@ -5,17 +5,17 @@
 
 <ul>
 <li>
-The stacks and freecells retain their position throughout the 
+The stacks and freecells retain their position throughout the
 presented solution.
 </li>
 
 <li>
 Can present either the intermediate states (stepping at one move or sequence
-move) or the moves that are required for the solution, or both. 
+move) or the moves that are required for the solution, or both.
 </li>
 
 <li>
-On UNIX: accepts some user signal combinations that turn some run-time 
+On UNIX: accepts some user signal combinations that turn some run-time
 debugging information on and off.
 </li>
 
@@ -26,7 +26,7 @@ per second).
 </li>
 
 <li>
-Option to use atomic moves which guarantee an accurate verdict. 
+Option to use atomic moves which guarantee an accurate verdict.
 (non-atomic scans may report a false negative)
 </li>
 
@@ -52,7 +52,7 @@ The core library and program is written entirely in a portable ANSI C code.
 </li>
 
 <li>
-Full compatiblity between dynamically-linked third-party applications to the 
+Full compatiblity between dynamically-linked third-party applications to the
 version of the library that is used.
 </li>
 
@@ -79,7 +79,7 @@ the available tests.
 </li>
 
 <li>
-With the A* scan, one can specify the weights of the different state 
+With the A* scan, one can specify the weights of the different state
 evalutaion parameters.
 </li>
 
@@ -92,12 +92,12 @@ It is possible to resume a scan from a pre-empted position.
 </li>
 
 <li>
-After a solution path was found it can be optimized using a BrFS 
+After a solution path was found it can be optimized using a BrFS
 (= Breadth-First Search) scan on the intermediate states.
 </li>
 
 <li>
-There is an option to reparent states during a scan if their depth in 
+There is an option to reparent states during a scan if their depth in
 the solution tree is higher than the one with which they were reached. This
 also tends to shorten the solution length.
 </li>
@@ -112,7 +112,7 @@ from scan to scan) giving on average a faster solving time.
 </li>
 
 <li>
-It is possible to specify a static prelude of quotas to be played before the 
+It is possible to specify a static prelude of quotas to be played before the
 perpetual loop.
 </li>
 
@@ -136,7 +136,7 @@ only, or by no card whatsoever.
 </li>
 
 <li>
-Run-time choice of the number of Freecells and Stacks. 
+Run-time choice of the number of Freecells and Stacks.
 (limited by a compile-time directive)
 </li>
 
@@ -146,7 +146,7 @@ Supports games of one and two decks.
 
 <li>
 <p>
-List of <a href="http://pysolfc.sourceforge.net/">PySol (PySolFC 
+List of <a href="http://pysolfc.sourceforge.net/">PySol (PySolFC
 version)</a> variants that can be solved:
 </p>
 <ul>

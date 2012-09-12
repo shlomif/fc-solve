@@ -2,10 +2,10 @@ body
 {
     background-color: white;
 }
-a:visited 
-{ 
-    /* Konqi 3.4.x on Mandriva 2006 sets its to magenta, which doesn't 
-       look very well. 
+a:visited
+{
+    /* Konqi 3.4.x on Mandriva 2006 sets its to magenta, which doesn't
+       look very well.
     */
     color: purple;
 }
@@ -16,12 +16,12 @@ a:hover { color : red }
 {
     background-color: #C5CAE2;
 }
-.main 
-{ 
-    padding-left : 1em; 
+.main
+{
+    padding-left : 1em;
 }
 
-.main 
+.main
 {
     margin-left : 23%;
 }
@@ -40,9 +40,9 @@ h3
     background-color: transparent;
 }
 h2, h3, h4
-{ 
+{
     padding-left: 4pt;
-    padding-right: 4pt;    
+    padding-right: 4pt;
     padding-top: 1pt;
     padding-bottom: 1pt;
 }
@@ -53,7 +53,7 @@ h2, h3, h4
 }
 [% PROCESS "shlomif/common_defs.ttml" %]
 p.desc
-{ 
+{
     font-weight: bold;
 }
 .main ol, .main ul, .main dl

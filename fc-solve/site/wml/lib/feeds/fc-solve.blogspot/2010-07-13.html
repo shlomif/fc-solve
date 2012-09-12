@@ -3,8 +3,8 @@
 -->
 
 <p>
-While the default 
-<a href="http://en.wikipedia.org/wiki/FreeCell_%28Windows%29">Windows 
+While the default
+<a href="http://en.wikipedia.org/wiki/FreeCell_%28Windows%29">Windows
 implementation of Freecell</a> only supports playing Freecell with four initial
 freecells, it can be played with any number of them. In order to make the
 game more challenging, some people are playing it with a fewer number of
@@ -16,13 +16,13 @@ As of today,
 <a href="http://www.solitairelaboratory.com/fcfaq.html">the Freecell FAQ</a>
 says that "With two freecells, there are at least 24,161 solvable deals [in
 the Microsoft 32,000 deals].". However, at the course of researching those
-layouts using <a href="http://fc-solve.berlios.de/">Freecell Solver</a> 
-(after constructing a solver configuration optimised for solving two-freecell 
+layouts using <a href="http://fc-solve.berlios.de/">Freecell Solver</a>
+(after constructing a solver configuration optimised for solving two-freecell
 deals), we have found out that more deals can be provably solved.
 </p>
 
 <p>
-Below one can find the report about the solvability of 2-freecell deals. The 
+Below one can find the report about the solvability of 2-freecell deals. The
 executive summary is that:
 </p>
 
@@ -36,9 +36,9 @@ executive summary is that:
 </li>
 
 <li>
-The other 33 deals are "intractable" - meaning my computer ran out of 
-resources trying to solve them (I limited the range of iterations to 
-8,200,000, but some of them were killed by the "out-of-memory" daemon 
+The other 33 deals are "intractable" - meaning my computer ran out of
+resources trying to solve them (I limited the range of iterations to
+8,200,000, but some of them were killed by the "out-of-memory" daemon
 earlier).
 </li>
 
@@ -85,7 +85,7 @@ Fully traversed in the atomic moves preset: 6,513.
 </li>
 <li>
 <p>
-Found using <tt>grep -l '^I could not solve' *.sol | xargs grep -h 
+Found using <tt>grep -l '^I could not solve' *.sol | xargs grep -h
 '^Total number of states checked' | grep 1200000 | wc -l</tt>.
 </p>
 </li>
@@ -166,15 +166,15 @@ machine with more memory available than what I have.
 </p>
 
 <p>
-In the future, we'd like to work on the 
+In the future, we'd like to work on the
 <a href="http://fc-solve.berlios.de/to-do.html#orig_calc_states">"States
-calculated from the original"</a> feature which should reduce 
+calculated from the original"</a> feature which should reduce
 memory consumption considerably, especially on 64-bit architectures. After
 reading the report of <a href="http://kevin.atkinson.dhs.org/freecell/">Kevin
 Atkinson's and Shari Holstege's solver</a> it seems that we can also
 save space by re-using old positions that have been determined
 to be dead-ends, so we'd like to explore that. We'd also
-like to explore using an on-disk storage to store the states / positions 
+like to explore using an on-disk storage to store the states / positions
 such as <a href="http://1978th.net/tokyocabinet/">Tokyo Cabinet</a>. That or we
 can try adding a bigger swap partition.
 </p><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/96099636168698788-8613246077246361132?l=fc-solve.blogspot.com' alt='' /></div>

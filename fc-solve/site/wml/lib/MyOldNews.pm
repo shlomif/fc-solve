@@ -3,7 +3,7 @@ package MyOldNews;
 use strict;
 use warnings;
 
-my @old_news = 
+my @old_news =
 (
           {
             'html' => '
@@ -21,20 +21,20 @@ solving from a non-initial board.
           {
             'html' => '
 <p>
-Freecell Solver version 0.6 was released. This version features a more 
+Freecell Solver version 0.6 was released. This version features a more
 modular code as well as the following usability features:
 </p>
 
 <ol>
-<li>An extra movement that allows Freecell Solver to solve 
+<li>An extra movement that allows Freecell Solver to solve
 some boards which it could not solve previously.
 </li>
-<li>The order of the stacks and freecells is preserved 
+<li>The order of the stacks and freecells is preserved
 throughout the solutions.
 </li>
-<li>Limit to a certain number of iterations (so it will stop before it consumes 
+<li>Limit to a certain number of iterations (so it will stop before it consumes
 too much memory)</li>
-<li>Specify the order of the movements that will be tested. Usually, a test 
+<li>Specify the order of the movements that will be tested. Usually, a test
 order can be found that will solve a given board really fast.</li>
 </ol>
 
@@ -59,12 +59,12 @@ include:
 <li>Board generators for Microsoft Freecell, Freecell Pro and PySol.
 </li>
 
-<li>An option to use the balanced binary tree implementations of 
+<li>An option to use the balanced binary tree implementations of
 <a href="http://www.msu.edu/user/pfaffben/avl/">libavl</a>
 ,
 <a href="http://www.gtk.org/">glib</a>
-, 
-or 
+,
+or
 <a href="http://libredblack.sourceforge.net/">libredblack</a>
 . Using them makes Freecell Solver about 33% faster.
 </li>
@@ -85,7 +85,7 @@ or
           {
             'html' => '
 <p>
-Freecell Solver version 0.10.0 was released. This version features support 
+Freecell Solver version 0.10.0 was released. This version features support
 for several Solitaire variants besides Freecell, such as Forecell, Seahaven
 Towers and Eight Off. Aside from that, it offers a more verbose solution, as
 well as several bug-fixes.
@@ -122,7 +122,7 @@ rather version 1.x.y. Hoorah for the new initial digit!</p>
 <p>
 Version 1.2.0 of Freecell Solver is now available for download. This version
 has several improved moves so it can solve more boards. It also sports a
-more robust command-line argument handling so you can expect much less 
+more robust command-line argument handling so you can expect much less
 segfaults if you use it improperly.
 </p>
 
@@ -158,7 +158,7 @@ connectivity at the Technion was not failsafe, and I want a backup site.
           {
             'html' => '
 <p>
-The long-awaited Freecell Solver 1.4.0 is now available. Changes from the 
+The long-awaited Freecell Solver 1.4.0 is now available. Changes from the
 previous version include some fixes for bugs and memory leaks (mostly
 library-related), as well as an improved Soft-DFS scan, plus A* and BFS
 scans. (which are experimental and do not always work properly).
@@ -177,7 +177,7 @@ A choice between all of those scans is available at run-time.
           {
             'html' => '
 <p>
-I have set up a mailing-list for Freecell Solver. For the mailing-list 
+I have set up a mailing-list for Freecell Solver. For the mailing-list
 homepage and for subscription information consult the following page:
 </p>
 
@@ -203,13 +203,13 @@ you can still E-mail me (Shlomi Fish).
             'html' => '
 <p>
 Freecell Solver version 1.6.0 has been released. It supports a solution path
-optimization routine which enables it to generate solutions that contain a 
-smaller number of moves. Furthermore, there are some optimizations, so it 
+optimization routine which enables it to generate solutions that contain a
+smaller number of moves. Furthermore, there are some optimizations, so it
 should be at least a little faster.
 </p>
 
 <p>
-Otherwise, a lot of comments were added to the code, to make it easier 
+Otherwise, a lot of comments were added to the code, to make it easier
 for interested developers to understand it.
 </p>
 
@@ -229,7 +229,7 @@ many UNIX variants out of the box.
 
 <p>
 I also adapted the GNOME AisleRiot board generation program to generate
-the boards of the new Solitaire variants that were added to it and are 
+the boards of the new Solitaire variants that were added to it and are
 supported by Freecell Solver.
 </p>
 
@@ -254,7 +254,7 @@ that it could before.
           {
             'html' => '
 <p>
-Freecell Solver 2.0.0 was released. This version features a lot of new 
+Freecell Solver 2.0.0 was released. This version features a lot of new
 enhancements and additions:
 </p>
 
@@ -280,8 +280,8 @@ linked against.</li>
 <p>
 Freecell Solver 2.2.0 came into the world today. This release features
 several improvements and fixes to the library\'s internals - it now resides
-solely in the "freecell_solver_" namespace, has a more robust state output, 
-and has a simplified and more modular scans\' code. Aside from that, the 
+solely in the "freecell_solver_" namespace, has a more robust state output,
+and has a simplified and more modular scans\' code. Aside from that, the
 maintainance of the package became more integrated and now it is
 possible to build an RPM by typing executing rpm -ta on the archive.
 </p>
@@ -294,9 +294,9 @@ possible to build an RPM by typing executing rpm -ta on the archive.
           {
             'html' => '
 <p>
-Freecell Solver 2.4.0 was released. The highlight of this release is the 
+Freecell Solver 2.4.0 was released. The highlight of this release is the
 ability for several scans to operate on the same state collection. This is
-done using a mechanism called "soft threads", which is switched in user-land 
+done using a mechanism called "soft threads", which is switched in user-land
 and does not require system multi-threading.
 </p>
 
@@ -309,15 +309,15 @@ and does not require system multi-threading.
           {
             'html' => '
 <p>
-Freecell Solver 2.6.0 has been spotted in the wild. This version features 
-atomic moves, which are slower than the traditional ones, but guarantee 
+Freecell Solver 2.6.0 has been spotted in the wild. This version features
+atomic moves, which are slower than the traditional ones, but guarantee
 a true verdict. It also has a <tt>--prelude</tt> switch that allows running
 a static order of quotas at start for the participating soft threads, and
 makes constructing faster solving presets easier.
 </p>
 
 <p>
-Several other flags were added, and the code has also been greatly optimized 
+Several other flags were added, and the code has also been greatly optimized
 and cleaned up, which makes Freecell Solver much faster than it was before.
 </p>
 
@@ -330,9 +330,9 @@ and cleaned up, which makes Freecell Solver much faster than it was before.
             'html' => '
 <p>
 Freecell Solver 2.8.0 has been released. This version features a better
-documentation and help screens, a preset system, and an option to read 
-paramters from files. Plus, it is possible to run one instance of the 
-solver after the other in case the other one has returned a negative 
+documentation and help screens, a preset system, and an option to read
+paramters from files. Plus, it is possible to run one instance of the
+solver after the other in case the other one has returned a negative
 verdict.
 </p>
 <p>
@@ -374,7 +374,7 @@ Several new items were added to <a href="./to-do.html">the "To
 Do List" page</a>. It now also features a table of contents.
 </li>
 <li>
-There is now <a href="./getting-credit.html">a page 
+There is now <a href="./getting-credit.html">a page
 about Giving or Getting Academic Credit for working on Freecell
 Solver</a>.
 </li>
@@ -391,8 +391,8 @@ Solver</a>.
 <a href="http://en.wikipedia.org/wiki/Perl_6">Perl 6</a> will be ready by
 Christmas, but of an unknown year. On the other hand, Freecell Solver 2.12.0,
 is already ready for Christmas 2008, and was released today. The highlights
-are a new configuration and build system based on <a 
-href="http://www.cmake.org/">CMake</a>, which results in faster configurations 
+are a new configuration and build system based on <a
+href="http://www.cmake.org/">CMake</a>, which results in faster configurations
 and builds, and a much reduced archive size; a new suite of automated tests;
 an optimisation to the command line processing and a new <tt>--version</tt>
 flag.
@@ -444,7 +444,7 @@ behaviour or API in any way.
 </p>
 
 <p>
-This release (like previous ones) is available from 
+This release (like previous ones) is available from
 <a href="download.html">the download page</a>. Next on our agenda is getting
 a binary package for Microsoft Windows out-of-the-door, and more code cleanups,
 optimisations and enhancements.

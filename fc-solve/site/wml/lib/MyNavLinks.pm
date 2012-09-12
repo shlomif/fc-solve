@@ -41,13 +41,13 @@ sub get_nav_buttons_html
     my $self = shift;
 
     my (%args) = (@_);
-    
+
     my $with_accesskey = $args{'with_accesskey'};
 
     my $nav_links = $self->nav_links();
-    my $root = $self->root();    
+    my $root = $self->root();
 
-    my $template = 
+    my $template =
         Template->new(
         {
             'POST_CHOMP' => 1,
@@ -56,19 +56,19 @@ sub get_nav_buttons_html
 
     my @buttons =
     (
-        { 
-            'dir' => "prev", 
-            'button' => "left", 
+        {
+            'dir' => "prev",
+            'button' => "left",
             'title' => "Previous Page",
         },
-        { 
-            'dir' => "up", 
-            'button' => "up", 
+        {
+            'dir' => "up",
+            'button' => "up",
             'title' => "Up in the Site",
         },
         {
-            'dir' => "next", 
-            'button' => "right", 
+            'dir' => "next",
+            'button' => "right",
             'title' => "Next Page",
         },
     );
@@ -81,14 +81,14 @@ sub get_nav_buttons_html
             $button->{'link'} = $nav_links->{$dir};
         }
     }
-    
-    my $vars = 
+
+    my $vars =
     {
         'buttons' => \@buttons,
         'root' => $root,
         'with_accesskey' => $with_accesskey,
     };
-    
+
     my $nav_links_template = <<'EOF';
 [% USE HTML %]
 [% FOREACH b = buttons %]
@@ -105,9 +105,9 @@ alt="[% b.title %]" class="bless" />[% IF b.exists %]</a>
 </li>
 [% END %]
 EOF
-    
+
     my $nav_buttons_html = "";
-    
+
     $template->process(\$nav_links_template, $vars, \$nav_buttons_html);
     return $nav_buttons_html;
 }

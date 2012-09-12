@@ -19,7 +19,7 @@ HTMLS = $(D)/code-of-conduct/index.html $(D)/index.html $(D)/links.html $(D)/dow
 
 TTMLS = $(D)/style.css
 
-DOCS_PROTO = AUTHORS INSTALL NEWS README TODO USAGE   
+DOCS_PROTO = AUTHORS INSTALL NEWS README TODO USAGE
 ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
 DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
@@ -37,7 +37,7 @@ INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 all: dummy
 
 COMMON_PREPROC_FLAGS = -I $$HOME/conf/wml/Latemp/lib -I../lib
-LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags) 
+LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags)
 
 TTML_FLAGS += $(COMMON_PREPROC_FLAGS)
 WML_FLAGS += $(COMMON_PREPROC_FLAGS)
@@ -49,7 +49,7 @@ WML_FLAGS += --passoption=2,-X3074 \
 
 dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS)
 
-$(SUBDIRS) :: % : 
+$(SUBDIRS) :: % :
 	@if [ ! -e $@ ] ; then \
 		mkdir $@ ; \
 	fi
@@ -74,9 +74,9 @@ $(RAW_SUBDIRS) :: $(D)/% : src/%
 	cp -r $< $@
 
 $(TTMLS) :: $(D)/% : src/%.ttml
-	ttml -o $@ $(TTML_FLAGS) -DLATEMP_FILENAME=$(patsubst $(D)/%.ttml,%,$@) $<	
+	ttml -o $@ $(TTML_FLAGS) -DLATEMP_FILENAME=$(patsubst $(D)/%.ttml,%,$@) $<
 
-.PHONY: 
+.PHONY:
 
 # Build index.html pages for the appropriate sub-directories.
 $(INDEXES) :: $(D)/%/index.html : src/% gen_index.pl
@@ -87,3 +87,10 @@ upload: all
 
 upload_temp: all
 	$(RSYNC) $(D)/ $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
+
+test: all
+	prove Tests/*.t
+
+runtest: all
+	runprove Tests/*.t
+

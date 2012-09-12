@@ -7,7 +7,7 @@ BERLIOS=BERLIOS make
 stable_ver="`./get-recent-stable-version.sh`"
 pushd .
 cd ./dest
-ls freecell-solver-*.tar.gz | 
+ls freecell-solver-*.tar.gz |
     grep -vF 'freecell-solver-'"${stable_ver}" |
     grep -vP 'freecell-solver-[0-9]+\.[0-9]*[13579]\.' |
     xargs rm -f

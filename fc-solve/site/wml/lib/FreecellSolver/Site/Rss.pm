@@ -38,6 +38,8 @@ sub _calc_entry_body
 
     $body =~ s{<a name="cut[^"]*"></a>}{}g;
     $body =~ s{<table border="1">}{<table class="downloads">}g;
+    # Remove trailing space.
+    $body =~ s{[ \t]+$}{}gms;
 
     return "<!-- TITLE=" . CGI::escapeHTML($title) . "-->\n" . $body;
 }
