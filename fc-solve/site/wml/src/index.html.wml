@@ -46,11 +46,13 @@ in the <a href="features.html"><b>Features List</b></a>.
 
 <h2>News</h2>
 <:{
-use FreecellSolver::Site::News;
 
-binmode STDOUT, ":utf8";
-my $news = FreecellSolver::Site::News->new();
-print $news->render_front_page();
+_wrap_as_utf8( sub {
+    require FreecellSolver::Site::News;
+
+    my $news = FreecellSolver::Site::News->new();
+    print $news->render_front_page();
+});
 }:>
 
 <h3 class="plain"><a href="old-news.html">Previous News Items</a></h3>

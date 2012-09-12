@@ -3,6 +3,18 @@
 #include "shlomif/affiliations.wml"
 #include "share-this.wml"
 
+<:{
+    sub _wrap_as_utf8 {
+        my ($cb) = @_;
+
+        binmode STDOUT, ":utf8";
+
+        $cb->();
+
+        binmode STDOUT, ":raw";
+    }
+
+}:>
 <define-tag rss_feed whitespace="delete">
 http://fc-solve.blogspot.com/feeds/posts/default?alt=rss
 </define-tag>
