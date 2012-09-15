@@ -137,11 +137,18 @@ my %suit_to_idx = do {
     (map { $s->[$_] => $_ } (0 .. $#$s)) ;
 };
 
+sub _get_suit_idx
+{
+    my ($self, $card) = @_;
+
+    return $suit_to_idx{$card->suit()};
+}
+
 sub _get_card_bitmask
 {
     my ($self, $card) = @_;
 
-    return ($suit_to_idx{$card->suit()} | ($card->rank() << 2));
+    return ($self->_get_suit_idx($card) | ($card->rank() << 2));
 }
 
 my $COL_TYPE_EMPTY = 0;
