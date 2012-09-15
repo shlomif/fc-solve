@@ -72,14 +72,7 @@ my $NUM_OPTS = 5;
 my $OPT_IN_FOUNDATION = 5;
 my $NUM_OPTS_FOR_READ = 6;
 
-my (@suits, %suit_to_idx);
-
-{
-    my $s = Games::Solitaire::Verify::Card->get_suits_seq();
-    @suits = @{$s};
-
-    %suit_to_idx = (map { $s->[$_] => $_ } (0 .. $#$s));
-}
+my @suits = @{Games::Solitaire::Verify::Card->get_suits_seq()};
 
 sub _initialize_card_states
 {
@@ -138,7 +131,7 @@ sub _opt_by_card
     my ($self, $card) = @_;
 
     return $self->_opt_by_suit_rank(
-        $suit_to_idx{$card->suit()},
+        $self->_get_suit_idx($card),
         $card->rank(),
     );
 }
