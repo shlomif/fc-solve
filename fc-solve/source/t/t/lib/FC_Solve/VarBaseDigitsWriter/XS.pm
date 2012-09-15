@@ -53,7 +53,7 @@ void DESTROY(SV* obj) {
 EOF
     NAME => "FC_Solve::VarBaseDigitsWriter::XS",
     CLEAN_AFTER_BUILD => 0,
-    INC => "-I" . $ENV{FCS_PATH},
+    INC => ["-I" . $ENV{FCS_PATH}, "-I" . $ENV{FCS_SRC_PATH}],
     LIBS => "-L" . $ENV{FCS_PATH} . ' -lgmp',
     OPTIMIZE => '-g',
 );

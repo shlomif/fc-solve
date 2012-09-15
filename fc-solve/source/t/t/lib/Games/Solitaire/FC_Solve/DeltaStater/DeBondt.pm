@@ -56,7 +56,7 @@ case) from each of the bases and get:
 
 =cut
 
-__PACKAGE__->mk_acc_ref([qw(_card_states)]);
+__PACKAGE__->mk_acc_ref([qw(_card_states _bakers_dozen_topmost_cards_lookup)]);
 
 my $RANK_KING = 13;
 my $FOUNDATION_BASE = $RANK_KING+1;
@@ -72,7 +72,39 @@ my $NUM_OPTS = 5;
 my $OPT_IN_FOUNDATION = 5;
 my $NUM_OPTS_FOR_READ = 6;
 
+my $OPT__BAKERS_DOZEN__ORIG_POS = 0;
+my $OPT__BAKERS_DOZEN__FIRST_PARENT = 1;
+my $NUM__BAKERS_DOZEN__OPTS = $OPT__BAKERS_DOZEN__FIRST_PARENT + 4;
+my $OPT__BAKERS_DOZEN__IN_FOUNDATION = $NUM__BAKERS_DOZEN__OPTS;
+my $NUM__BAKERS_DOZEN__OPTS_FOR_READ = $OPT__BAKERS_DOZEN__IN_FOUNDATION + 1;
+
 my @suits = @{Games::Solitaire::Verify::Card->get_suits_seq()};
+
+sub _init
+{
+    my ($self, $args) = @_;
+
+    $self->SUPER::_init($args);
+
+    if ($self->_is_bakers_dozen())
+    {
+        my $_bakers_dozen_topmost_cards_lookup = '';
+        foreach my $col_idx (0 .. $self->_init_state->num_columns - 1)
+        {
+            my $col = $self->_init_state->get_column($col_idx);
+            my $col_len = $col->len();
+
+            if ($col_len > 0)
+            {
+                my $top_card = $col->pos(0);
+                vec($_bakers_dozen_topmost_cards_lookup, $self->_get_card_bitmask($top_card), 1) = 1;
+            }
+            $self->_bakers_dozen_topmost_cards_lookup($_bakers_dozen_topmost_cards_lookup);
+        }
+    }
+
+    return;
+}
 
 sub _initialize_card_states
 {
@@ -157,15 +189,39 @@ sub _wanted_suit_bit_opt
     my ($self, $parent_card) = @_;
 
     return
-        $self->_get_suit_bit($parent_card)
-        ? $OPT_PARENT_SUIT_MOD_IS_1
-        : $OPT_PARENT_SUIT_MOD_IS_0
+    $self->_get_suit_bit($parent_card)
+    ? $OPT_PARENT_SUIT_MOD_IS_1
+    : $OPT_PARENT_SUIT_MOD_IS_0
+    ;
+}
+
+sub _wanted_suit_idx_opt
+{
+    my ($self, $parent_card) = @_;
+    return $OPT__BAKERS_DOZEN__FIRST_PARENT
+    + $self->_get_suit_idx($parent_card)
     ;
 }
 
 sub _calc_child_card_option
 {
     my ($self, $parent_card, $child_card) = @_;
+
+    if ($self->_is_bakers_dozen())
+    {
+        if (
+            ($child_card->rank() != 1)
+                and
+            ($child_card->rank()+1 == $parent_card->rank())
+        )
+        {
+            return $self->_wanted_suit_idx_opt($parent_card);
+        }
+        else
+        {
+            return $OPT__BAKERS_DOZEN__ORIG_POS;
+        }
+    }
 
     if (
         ($child_card->rank() != 1)
@@ -182,17 +238,25 @@ sub _calc_child_card_option
     }
 }
 
+sub _get_top_rank_for_iter
+{
+    my ($self) = @_;
+
+    return ($self->_is_bakers_dozen() ? ($RANK_KING-1) : $RANK_KING);
+}
+
 sub encode_composite
 {
     my ($self) = @_;
 
     my $derived = $self->_derived_state;
 
-    $self->_initialize_card_states($NUM_OPTS);
+    $self->_initialize_card_states(
+        $self->_is_bakers_dozen()
+        ? $NUM__BAKERS_DOZEN__OPTS
+        : $NUM_OPTS);
 
-    my $writer =
-        FC_Solve::VarBaseDigitsWriter
-        ->new;
+    my $writer = FC_Solve::VarBaseDigitsWriter->new;
 
     # We encode the foundations separately so set the card value as don't care.
     foreach my $suit_idx (0 .. $#suits)
@@ -242,38 +306,76 @@ sub encode_composite
     }
 
     my @cols_indexes = (0 .. $derived->num_columns - 1);
-    foreach my $col_idx (@cols_indexes)
+
+    if ($self->_is_bakers_dozen())
     {
-        my $col = $derived->get_column($col_idx);
-
-        my $col_len = $col->len();
-
-        if ($col_len > 0)
+        foreach my $col_idx (@cols_indexes)
         {
-            my $top_card = $col->pos(0);
+            my $col = $derived->get_column($col_idx);
+            my $col_len = $col->len();
 
-            if ($top_card->rank() != 1)
+            if ($col_len > 0)
             {
-                $self->_mark_opt_as_true($top_card, $OPT_TOPMOST);
-            }
-
-            my $parent_card = $top_card;
-
-            foreach my $child_idx (1 .. $col_len-1)
-            {
-                my $child_card = $col->pos($child_idx);
-
-                if ($child_card->rank() != 1)
+                my $top_card = $col->pos(0);
+                $self->_mark_opt_as_true($top_card, $OPT__BAKERS_DOZEN__ORIG_POS);
+                foreach my $pos (1 .. $col_len - 1)
                 {
-                    $self->_mark_opt_as_true(
-                        $child_card,
-                        $self->_calc_child_card_option(
-                            $parent_card, $child_card
-                        )
-                    );
+                    my $parent_card = $col->pos($pos-1);
+                    my $this_card = $col->pos($pos);
+
+                    if ($this_card->rank()+1 == $parent_card->rank())
+                    {
+                        $self->_mark_opt_as_true(
+                            $this_card,
+                            $self->_wanted_suit_idx_opt($parent_card),
+                        );
+                    }
+                    else
+                    {
+                        $self->_mark_opt_as_true(
+                            $this_card,
+                            $OPT__BAKERS_DOZEN__ORIG_POS
+                        );
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        foreach my $col_idx (@cols_indexes)
+        {
+            my $col = $derived->get_column($col_idx);
+
+            my $col_len = $col->len();
+
+            if ($col_len > 0)
+            {
+                my $top_card = $col->pos(0);
+
+                if ($top_card->rank() != 1)
+                {
+                    $self->_mark_opt_as_true($top_card, $OPT_TOPMOST);
                 }
 
-                $parent_card = $child_card;
+                my $parent_card = $top_card;
+
+                foreach my $child_idx (1 .. $col_len-1)
+                {
+                    my $child_card = $col->pos($child_idx);
+
+                    if ($child_card->rank() != 1)
+                    {
+                        $self->_mark_opt_as_true(
+                            $child_card,
+                            $self->_calc_child_card_option(
+                                $parent_card, $child_card
+                            )
+                        );
+                    }
+
+                    $parent_card = $child_card;
+                }
             }
         }
     }
@@ -284,13 +386,29 @@ sub encode_composite
     #
     # Skip encoding the aces, and the kings are encoded with less bits.
 
-    foreach my $rank (2 .. $RANK_KING)
+    foreach my $rank (2 .. $self->_get_top_rank_for_iter())
     {
+        SUIT_IDX:
         foreach my $suit_idx (0 .. $#suits)
         {
             my $opt = $self->_get_suit_rank_verdict($suit_idx, $rank);
+            my $base;
+            if ($self->_is_bakers_dozen())
+            {
+                my $card = Games::Solitaire::Verify::Card->new;
+                $card->rank($rank);
+                $card->suit($suits[$suit_idx]);
+                if (vec($self->_bakers_dozen_topmost_cards_lookup(), $self->_get_card_bitmask($card), 1))
+                {
+                    next SUIT_IDX;
+                }
+                $base = $NUM__BAKERS_DOZEN__OPTS;
+            }
+            else
+            {
+                $base = (($rank == $RANK_KING) ? $NUM_KING_OPTS : $NUM_OPTS);
+            }
 
-            my $base = (($rank == $RANK_KING) ? $NUM_KING_OPTS : $NUM_OPTS);
             if ($opt < 0)
             {
                 Carp::confess ( "Opt is not set." );
@@ -325,11 +443,16 @@ sub _fill_column_with_descendant_cards
     {
         my $child_card;
 
-        my $wanted_opt = $self->_wanted_suit_bit_opt($parent_card);
+        my $wanted_opt = $self->_is_bakers_dozen
+            ? $self->_wanted_suit_idx_opt($parent_card)
+            : $self->_wanted_suit_bit_opt($parent_card);
 
         SEEK_CHILD_CARD:
         foreach my $suit (
-            $parent_card->color() eq "red" ? (qw(C S))
+            $self->_is_bakers_dozen()
+            ? qw(H C D S)
+            : $parent_card->color() eq "red"
+            ? (qw(C S))
             : qw(H D)
         )
         {
@@ -362,7 +485,11 @@ sub decode
 
     my $reader = FC_Solve::VarBaseDigitsReader->new({data => $bits});
 
-    $self->_initialize_card_states($NUM_OPTS_FOR_READ);
+    $self->_initialize_card_states(
+        $self->_is_bakers_dozen
+        ? $NUM__BAKERS_DOZEN__OPTS_FOR_READ
+        : $NUM_OPTS_FOR_READ
+    );
 
     my $foundations_obj = Games::Solitaire::Verify::Foundations->new(
         {
@@ -377,7 +504,11 @@ sub decode
         foreach my $rank (1 .. $foundation_rank)
         {
             $self->_mark_suit_rank_as_true(
-                $suit_idx, $rank, $OPT_IN_FOUNDATION
+                $suit_idx, $rank,
+                ($self->_is_bakers_dozen
+                    ? $OPT__BAKERS_DOZEN__IN_FOUNDATION
+                    : $OPT_IN_FOUNDATION
+                )
             );
         }
 
@@ -405,11 +536,39 @@ sub decode
        } (0 .. $init_state->num_columns() - 1)
     );
 
-    foreach my $rank (1 .. $RANK_KING)
+    # Process the kings:
+    if ($self->_is_bakers_dozen())
+    {
+        foreach my $suit_idx (0 .. $#suits)
+        {
+            my $card = Games::Solitaire::Verify::Card->new;
+            $card->rank($RANK_KING);
+            $card->suit($suits[$suit_idx]);
+
+            if (! $is_in_foundations->($card))
+            {
+                $self->_mark_opt_as_true($card, $OPT__BAKERS_DOZEN__ORIG_POS);
+            }
+        }
+    }
+
+    foreach my $rank (1 .. $self->_get_top_rank_for_iter())
     {
         READ_SUITS:
         foreach my $suit_idx (0 .. $#suits)
         {
+            if ($self->_is_bakers_dozen())
+            {
+                my $card = Games::Solitaire::Verify::Card->new;
+                $card->rank($rank);
+                $card->suit($suits[$suit_idx]);
+                if (vec($self->_bakers_dozen_topmost_cards_lookup(), $self->_get_card_bitmask($card), 1))
+                {
+
+                    $self->_mark_opt_as_true($card, $OPT__BAKERS_DOZEN__ORIG_POS);
+                    next READ_SUITS;
+                }
+            }
             my $existing_opt = $self->_get_suit_rank_verdict($suit_idx, $rank);
 
             if ($rank == 1)
@@ -423,7 +582,8 @@ sub decode
                 next READ_SUITS;
             }
 
-            my $base = (($rank == $RANK_KING) ? $NUM_KING_OPTS : $NUM_OPTS);
+            my $base = ($self->_is_bakers_dozen ? $NUM__BAKERS_DOZEN__OPTS :
+                ($rank == $RANK_KING) ? $NUM_KING_OPTS : $NUM_OPTS);
             my $item_opt = $reader->read($base);
 
             if ($existing_opt < 0)
@@ -435,15 +595,19 @@ sub decode
                 my $card = Games::Solitaire::Verify::Card->new;
                 $card->rank($rank);
                 $card->suit($suits[$suit_idx]);
-                if ($item_opt == $OPT_FREECELL)
+
+                if (not $self->_is_bakers_dozen())
                 {
-                    push @freecell_cards, $card;
-                }
-                elsif ($item_opt == $OPT_TOPMOST)
-                {
-                    if (!exists($orig_top_most_cards{$card->to_string}))
+                    if ($item_opt == $OPT_FREECELL)
                     {
-                        push @new_top_most_cards, $card;
+                        push @freecell_cards, $card;
+                    }
+                    elsif ($item_opt == $OPT_TOPMOST)
+                    {
+                        if (!exists($orig_top_most_cards{$card->to_string}))
+                        {
+                            push @new_top_most_cards, $card;
+                        }
                     }
                 }
             }
@@ -545,13 +709,7 @@ sub decode
         push @columns, $col;
     }
 
-    my $state =
-        Games::Solitaire::Verify::State->new(
-            {
-                variant => 'custom',
-                variant_params => $self->_get_two_fc_variant(),
-            }
-        );
+    my $state = $self->_calc_new_empty_state_obj;
 
     foreach my $col (@columns)
     {

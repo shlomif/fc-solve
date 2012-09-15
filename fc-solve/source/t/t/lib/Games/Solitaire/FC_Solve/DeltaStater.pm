@@ -65,6 +65,41 @@ sub _is_bakers_dozen
     return ($self->_variant() eq "bakers_dozen");
 }
 
+sub _calc_state_obj_generic
+{
+    my ($self, $args) = @_;
+    return
+        $self->_is_bakers_dozen()
+        ? Games::Solitaire::Verify::State->new(
+            {
+                %{$args},
+                variant => $self->_variant(),
+            }
+        )
+        : Games::Solitaire::Verify::State->new(
+            {
+                %{$args},
+                variant => 'custom',
+                variant_params => $two_fc_variant,
+            },
+        )
+        ;
+}
+
+sub _calc_state_obj_from_string
+{
+    my ($self, $str) = @_;
+
+    return $self->_calc_state_obj_generic({ string => $str });
+}
+
+sub _calc_new_empty_state_obj
+{
+    my ($self) = @_;
+
+    return $self->_calc_state_obj_generic({});
+}
+
 sub _init
 {
     my ($self, $args) = @_;
@@ -72,22 +107,7 @@ sub _init
     $self->_variant($args->{variant} || "two_fc_freecell");
 
     $self->_init_state(
-        (
-        $self->_is_bakers_dozen()
-        ? Games::Solitaire::Verify::State->new(
-            {
-                string => $args->{state_str},
-                variant => $self->_variant(),
-            }
-        )
-        : Games::Solitaire::Verify::State->new(
-            {
-                string => $args->{init_state_str},
-                variant => 'custom',
-                variant_params => $two_fc_variant,
-            },
-        )
-    )
+        $self->_calc_state_obj_from_string($args->{init_state_str})
     );
 
     my $init_state = $self->_init_state;
@@ -122,13 +142,7 @@ sub set_derived
     my ($self, $args) = @_;
 
     $self->_derived_state(
-        Games::Solitaire::Verify::State->new(
-            {
-                string => $args->{state_str},
-                variant => 'custom',
-                variant_params => $two_fc_variant,
-            }
-        )
+        $self->_calc_state_obj_from_string($args->{state_str})
     );
 
     return;
@@ -471,13 +485,7 @@ sub decode
         $foundations_obj->assign($found, 0, $foundations{$found}-1);
     }
 
-    my $state =
-        Games::Solitaire::Verify::State->new(
-            {
-                variant => 'custom',
-                variant_params => $two_fc_variant,
-            }
-        );
+    my $state = $self->_calc_new_empty_state_obj();
 
     foreach my $col (@columns)
     {
