@@ -20,7 +20,11 @@ sub _get_two_fc_variant
     return $two_fc_variant;
 }
 
-__PACKAGE__->mk_acc_ref([qw(_derived_state _init_state _columns_initial_lens)]);
+my $bakers_dozen_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('bakers_dozen');
+
+__PACKAGE__->mk_acc_ref([qw(
+        _derived_state _init_state _columns_initial_lens _variant
+        )]);
 
 sub _get_column_orig_num_cards
 {
@@ -54,18 +58,36 @@ sub _get_column_orig_num_cards
     return $num_cards;
 }
 
+sub _is_bakers_dozen
+{
+    my ($self) = @_;
+
+    return ($self->_variant() eq "bakers_dozen");
+}
+
 sub _init
 {
     my ($self, $args) = @_;
 
+    $self->_variant($args->{variant} || "two_fc_freecell");
+
     $self->_init_state(
-        Games::Solitaire::Verify::State->new(
+        (
+        $self->_is_bakers_dozen()
+        ? Games::Solitaire::Verify::State->new(
+            {
+                string => $args->{state_str},
+                variant => $self->_variant(),
+            }
+        )
+        : Games::Solitaire::Verify::State->new(
             {
                 string => $args->{init_state_str},
                 variant => 'custom',
                 variant_params => $two_fc_variant,
             },
         )
+    )
     );
 
     my $init_state = $self->_init_state;
