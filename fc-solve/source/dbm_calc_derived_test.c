@@ -45,6 +45,7 @@
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
+        enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         int * num_out_derived_states,
         fcs_derived_state_debug_t * * out_derived_states,
@@ -86,6 +87,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     fcs_init_and_encode_state(
         delta,
+        local_variant,
         &(init_state),
         &enc_state
         );
@@ -94,6 +96,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fc_solve_compact_allocator_init( &allocator, &meta_alloc);
 
     instance_solver_thread_calc_derived_states(
+        local_variant,
         &init_state,
         &enc_state,
         NULL,
@@ -159,6 +162,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
+        enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         char * * ret_state_s
         )
@@ -180,7 +184,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
             indirect_stacks_buffer
             );
 
-    prune_ret = horne_prune(&init_state, NULL, NULL);
+    prune_ret = horne_prune(local_variant, &init_state, NULL, NULL);
     *ret_state_s =
         fc_solve_state_as_string(
             &(init_state.s),

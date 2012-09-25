@@ -36,6 +36,7 @@ extern "C" {
 #endif
 
 extern char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
+        enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         const char * derived_state_str_proto
         );

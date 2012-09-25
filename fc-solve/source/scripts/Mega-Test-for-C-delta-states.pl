@@ -63,6 +63,8 @@ my $which_encoding = ($ENV{FCS_ENC} || '');
 my $is_c_debondt = ($which_encoding eq 'Cd');
 my $is_debondt = ($is_c_debondt or $which_encoding eq 'd');
 
+my $variant = ($ENV{FCS_VARIANT} || 'freecell');
+my $is_bakers_dozen = ($variant eq 'bakers_dozen');
 
 sub _debondt_normalize
 {
@@ -77,13 +79,18 @@ sub test_freecell_deal
 {
     my ($deal_idx) = @_;
 
+    my $open_cmd =
+        $is_bakers_dozen
+        ? "./board_gen/make_pysol_freecell_board.py -t $deal_idx bakers_dozen | ./fc-solve -g bakers_dozen -p -t -sam -l three-eighty -mi $MAX_ITERS |"
+        : "./board_gen/pi-make-microsoft-freecell-board -t $deal_idx | ./fc-solve --freecells-num 2 -p -t -sam -l three-eighty -mi $MAX_ITERS |"
+        ;
+
     # We cannot use the "-s" and "-i" flags here any longer, because the state
     # canonization (which is now compulsory after the locations functionality
     # was removed) re-orders the positions of the stacks in the boards in the
     # run-time display, which causes the encoding and decoding to not operate
     # properly.
-    open my $dump_fh,
-    "./board_gen/pi-make-microsoft-freecell-board -t $deal_idx | ./fc-solve --freecells-num 2 -p -t -sam -l three-eighty -mi $MAX_ITERS |"
+    open my $dump_fh, $open_cmd
         or die "Cannot open $deal_idx for reading - $!";
 
     my $line_idx = 0;
@@ -131,6 +138,7 @@ sub test_freecell_deal
     my $delta = $delta_class->new(
         {
             init_state_str => $init_state_str,
+            ($is_bakers_dozen ? (variant => 'bakers_dozen') : ()),
         }
     );
 
@@ -211,6 +219,12 @@ sub test_freecell_deal
     close($dump_fh);
 
     return;
+}
+
+for my $deal_idx (1 .. 32_000)
+{
+    print "Testing $deal_idx\n";
+    test_freecell_deal($deal_idx);
 }
 
 my $pm = Parallel::ForkManager->new(4);

@@ -199,6 +199,7 @@ static GCC_INLINE fcs_fcc_moves_list_item_t * fc_solve_fcc_alloc_moves_list_item
 
 /* Returns the number of amortized irreversible moves performed. */
 static GCC_INLINE int horne_prune(
+    enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * init_state_kv_ptr,
     fcs_fcc_moves_seq_t * moves_seq,
     fcs_fcc_moves_seq_allocator_t * allocator
@@ -333,6 +334,7 @@ static GCC_INLINE int horne_prune(
 }
 
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
+    enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * init_state_kv_ptr,
     fcs_encoded_state_buffer_t * key,
     fcs_dbm_record_t * parent_ptr,
@@ -648,7 +650,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                 +
                 (
                     perform_horne_prune
-                    ? horne_prune(&(derived_iter->state), NULL, NULL)
+                    ? horne_prune(local_variant, &(derived_iter->state), NULL, NULL)
                     : 0
                 )
             );

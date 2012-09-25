@@ -50,16 +50,21 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
     char * as_str;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
+    enum fcs_dbm_variant_type_t local_variant;
+
+    local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     fc_solve_init_locs(&locs);
 
     fcs_debondt_init_and_encode_state(
         delta,
+        local_variant,
         state,
         &enc_state
     );
 
     fc_solve_debondt_delta_stater_decode_into_state(
+        local_variant,
         delta,
         (unsigned char *)&enc_state,
         &(new_derived_state),
@@ -94,6 +99,10 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
 
 static int main_tests(void)
 {
+    enum fcs_dbm_variant_type_t local_variant;
+
+    local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+
     {
         fc_solve_debondt_delta_stater_t * db_delta;
         fcs_state_keyval_pair_t init_state, derived_state;
@@ -120,6 +129,7 @@ static int main_tests(void)
         );
 
         db_delta = fc_solve_debondt_delta_stater_alloc(
+                local_variant,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -211,6 +221,7 @@ static int main_tests(void)
         );
 
         db_delta = fc_solve_debondt_delta_stater_alloc(
+                local_variant,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM

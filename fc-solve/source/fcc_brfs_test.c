@@ -34,12 +34,14 @@
 #include "config.h"
 #undef FCS_RCS_STATES
 
+#include "dbm_common.h"
 #include "fcs_dllexport.h"
 #include "delta_states_any.h"
 #include "fcc_brfs.h"
 #include "fcc_brfs_test.h"
 
 static void fc_solve_state_string_to_enc(
+    enum fcs_dbm_variant_type_t local_variant,
     fc_solve_delta_stater_t * delta,
     const char * state_s_proto,
     fcs_encoded_state_buffer_t * enc_state
@@ -59,6 +61,7 @@ static void fc_solve_state_string_to_enc(
 
     fcs_init_and_encode_state(
         delta,
+        local_variant,
         &(state),
         enc_state
     );
@@ -68,6 +71,7 @@ static void fc_solve_state_string_to_enc(
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
+        enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         const int start_state_moves_count,
         const fcs_fcc_move_t * const start_state_moves,
@@ -120,6 +124,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     fcs_init_and_encode_state(
         delta,
+        local_variant,
         &(init_state),
         &enc_state
     );
@@ -165,6 +170,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     add_start_point_context.moves_list_allocator = &moves_list_allocator;
 
     perform_FCC_brfs(
+        local_variant,
         &(init_state),
         enc_state,
         &start_state_moves_seq,
@@ -243,6 +249,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 }
 
 DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
+        enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         const char * start_state_str_proto,
         /* NULL-terminated */
@@ -292,11 +299,13 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
     fcs_init_and_encode_state(
         delta,
+        local_variant,
         &(init_state),
         &enc_state
     );
 
     fc_solve_state_string_to_enc(
+        local_variant,
         delta,
         start_state_str_proto,
         &(start_enc_state)
@@ -334,6 +343,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
                     );
 
             fc_solve_state_string_to_enc(
+                local_variant,
                 delta,
                 *(min_states_iter),
                 min_enc_state
@@ -362,6 +372,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
                     );
 
             fc_solve_state_string_to_enc(
+                local_variant,
                 delta,
                 *(min_states_iter),
                 min_enc_state
@@ -378,6 +389,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     add_start_point_context.next_start_points_list = &start_points_list;
     add_start_point_context.moves_list_allocator = &moves_list_allocator;
     perform_FCC_brfs(
+        local_variant,
         &(init_state),
         start_enc_state,
         &init_moves_seq,

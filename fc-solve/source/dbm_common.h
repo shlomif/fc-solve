@@ -38,13 +38,29 @@ extern "C"
 #include "inline.h"
 #include "state.h"
 
+enum fcs_dbm_variant_type_t
+{
+    FCS_DBM_VARIANT_2FC_FREECELL,
+    FCS_DBM_VARIANT_BAKERS_DOZEN,
+};
+
+#ifdef FCS_FREECELL_ONLY
+
 #define STACKS_NUM 8
+#define LOCAL_FREECELLS_NUM 2
+
+#else
+
+#define LOCAL_VARIANT local_variant
+#define STACKS_NUM ((LOCAL_VARIANT == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 13 : 8)
+#define LOCAL_FREECELLS_NUM ((LOCAL_VARIANT == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 0 : 2)
+#endif
+
 #define LOCAL_STACKS_NUM STACKS_NUM
 #define INSTANCE_DECKS_NUM 1
-#define LOCAL_FREECELLS_NUM 2
-#define FREECELLS_NUM LOCAL_FREECELLS_NUM
 #define DECKS_NUM INSTANCE_DECKS_NUM
 #define RANK_KING 13
+#define FREECELLS_NUM LOCAL_FREECELLS_NUM
 
 #ifdef __cplusplus
 }

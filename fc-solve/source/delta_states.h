@@ -37,6 +37,8 @@ extern "C" {
 #include "config.h"
 #include "state.h"
 
+#include "dbm_common.h"
+
 #ifdef FCS_DEBONDT_DELTA_STATES
 #define FCS_ENCODED_STATE_COUNT_CHARS 16
 #else
@@ -147,6 +149,7 @@ static GCC_INLINE void fcs_init_encoded_state(fcs_encoded_state_buffer_t * enc_s
 }
 
 extern char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+        enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         const char * derived_state_str_proto
         );

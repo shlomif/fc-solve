@@ -115,6 +115,7 @@ static GCC_INLINE void fc_solve_fcc_release_moves_seq(
 }
 
 static void perform_FCC_brfs(
+    enum fcs_dbm_variant_type_t local_variant,
     /* The first state in the game, from which all states are encoded. */
     fcs_state_keyval_pair_t * init_state,
     /* The start state. */
@@ -304,6 +305,7 @@ static void perform_FCC_brfs(
 #endif
 
         instance_solver_thread_calc_derived_states(
+            local_variant,
             &state,
             &(extracted_item->key),
             NULL,
@@ -344,6 +346,7 @@ static void perform_FCC_brfs(
 
             fcs_init_and_encode_state(
                 delta_stater,
+                local_variant,
                 &(derived_iter->state),
                 &(new_item->key)
             );

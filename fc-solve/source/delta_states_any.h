@@ -42,12 +42,12 @@ extern "C" {
 
 #ifdef FCS_DEBONDT_DELTA_STATES
 #define fc_solve_delta_stater_t fc_solve_debondt_delta_stater_t
-#define fc_solve_delta_stater_decode_into_state(a,b,c,d) fc_solve_debondt_delta_stater_decode_into_state(a,b,c,d)
-#define fcs_init_and_encode_state(a,b,c) fcs_debondt_init_and_encode_state(a,b,c)
+#define fc_solve_delta_stater_decode_into_state(a,b,c,d) fc_solve_debondt_delta_stater_decode_into_state(local_variant,a,b,c,d)
+#define fcs_init_and_encode_state(a,b,c,d) fcs_debondt_init_and_encode_state(a,b,c,d)
 #ifdef FCS_FREECELL_ONLY
-#define fc_solve_delta_stater_alloc(a,b,c) fc_solve_debondt_delta_stater_alloc(a,b,c)
+#define fc_solve_delta_stater_alloc(a,b,c) fc_solve_debondt_delta_stater_alloc(FCS_DBM_VARIANT_2FC_FREECELL,a,b,c)
 #else
-#define fc_solve_delta_stater_alloc(a,b,c,d) fc_solve_debondt_delta_stater_alloc(a,b,c,d)
+#define fc_solve_delta_stater_alloc(a,b,c,d) fc_solve_debondt_delta_stater_alloc(FCS_DBM_VARIANT_2FC_FREECELL, a,b,c,d)
 #endif
 #define fc_solve_delta_stater_free(a) fc_solve_debondt_delta_stater_free(a)
 #endif

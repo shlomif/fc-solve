@@ -514,6 +514,7 @@ static void fc_solve_delta_stater_decode(
 
 static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
         fc_solve_delta_stater_t * delta_stater,
+        enum fcs_dbm_variant_type_t local_variant,
         const fcs_uchar_t * const enc_state,
         fcs_state_keyval_pair_t * ret
         IND_BUF_T_PARAM(indirect_stacks_buffer)
@@ -604,6 +605,7 @@ static char * prepare_state_str(const char * proto)
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+        enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         const char * derived_state_str_proto
         )

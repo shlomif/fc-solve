@@ -43,7 +43,7 @@ SV * perl_perform_horne_prune(char * init_state_s) {
 
     results = (AV *)sv_2mortal((SV *)newAV());
 
-    ret_count = fc_solve_user_INTERNAL_perform_horne_prune(init_state_s, &ret_state_s);
+    ret_count = fc_solve_user_INTERNAL_perform_horne_prune(FCS_DBM_VARIANT_2FC_FREECELL, init_state_s, &ret_state_s);
 
     av_push(results, newSViv(ret_count));
     av_push(results, newSVpv(ret_state_s, 0));
@@ -60,6 +60,7 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
         fcs_derived_state_debug_t * derived_states, * iter;
 
         fc_solve_user_INTERNAL_calc_derived_states_wrapper(
+            FCS_DBM_VARIANT_2FC_FREECELL,
             init_state_s,
             &count,
             &derived_states,

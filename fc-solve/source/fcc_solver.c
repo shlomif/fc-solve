@@ -108,16 +108,19 @@ typedef struct {
     FILE * out_fh;
     long num_FCCs_processed_for_depth;
     long num_unique_FCCs_for_depth;
+    enum fcs_dbm_variant_type_t variant;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * instance,
+    enum fcs_dbm_variant_type_t local_variant,
     long max_processed_positions_count,
     long positions_milestone_step,
     long FCCs_per_depth_milestone_step,
     FILE * out_fh
 )
 {
+    instance->variant = local_variant;
     instance->count_num_processed = 0;
     instance->max_processed_positions_count = max_processed_positions_count;
     instance->positions_milestone_step = positions_milestone_step;
@@ -290,6 +293,7 @@ static int instance_run_solver(
     fcs_meta_compact_allocator_t * meta_alloc
 )
 {
+    enum fcs_dbm_variant_type_t local_variant;
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t init_state_enc;
     fcs_fcc_solver_state * solver_state;
@@ -302,6 +306,7 @@ static int instance_run_solver(
     long FCCs_per_depth_milestone_step;
     fcs_fcc_moves_seq_t ret_moves_seq;
 
+    local_variant = instance->variant;
     /* Initialize the state. */
     solver_state = &(instance->solver_state);
     init_solver_state(solver_state, max_num_elements_in_cache, meta_alloc);
@@ -321,7 +326,7 @@ static int instance_run_solver(
     );
 
     fcs_init_and_encode_state(
-        delta, init_state, &init_state_enc
+        delta, local_variant, init_state, &init_state_enc
     );
 
     ret = FCC_IMPOSSIBLE;
@@ -404,6 +409,7 @@ static int instance_run_solver(
 
             /* Now scan the new fcc */
             perform_FCC_brfs(
+                local_variant,
                 init_state,
                 fcc->min_by_absolute_depth,
                 &(fcc->moves_seq_to_min_by_absolute_depth),
@@ -506,6 +512,7 @@ static int instance_run_solver(
                 /*  TODO : convert horne_prune to fcs_fcc_moves_seq_t . */
                 num_additional_moves =
                     horne_prune(
+                        local_variant,
                         &state,
                         &(start_point_iter->moves_seq),
                         moves_list_allocator
@@ -542,6 +549,7 @@ static int instance_run_solver(
 
                 fcs_init_and_encode_state(
                     delta,
+                    local_variant,
                     &(state),
                     &enc_state
                     );
@@ -719,6 +727,7 @@ int main(int argc, char * argv[])
 {
     /* Temporarily #if'ed away until we finish working on instance_run_solver
      * */
+    enum fcs_dbm_variant_type_t local_variant;
     fcs_dbm_solver_instance_t instance;
     long caches_delta;
     long max_processed_positions_count = LONG_MAX;
@@ -738,6 +747,7 @@ int main(int argc, char * argv[])
     fcs_meta_compact_allocator_t meta_alloc;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
 
+    local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     caches_delta = 1000000;
     num_threads = 2;
     FCCs_per_depth_milestone_step = 10000;
@@ -849,6 +859,7 @@ int main(int argc, char * argv[])
 
     instance_init(
         &instance,
+        local_variant,
         max_processed_positions_count,
         positions_milestone_step,
         FCCs_per_depth_milestone_step,
@@ -879,7 +890,7 @@ int main(int argc, char * argv[])
     moves_list_allocator.allocator = &(moves_list_compact_alloc);
     init_moves_seq.moves_list = NULL;
     init_moves_seq.count = 0;
-    horne_prune(&init_state, &init_moves_seq, &moves_list_allocator);
+    horne_prune(local_variant, &init_state, &init_moves_seq, &moves_list_allocator);
 
 #ifndef WIN32
     signal(SIGUSR1, command_signal_handler);

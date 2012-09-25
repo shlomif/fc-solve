@@ -45,6 +45,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
     STRLEN count_start_moves = SvLEN(moves_prefix);
 
     fc_solve_user_INTERNAL_find_fcc_start_points(
+        FCS_DBM_VARIANT_2FC_FREECELL,
         init_state_s,
         (int)count_start_moves,
         SvPVbyte(moves_prefix, count_start_moves),
@@ -149,6 +150,7 @@ int is_fcc_new(char * init_state_s, char * start_state_s, AV * min_states_av, AV
     string_list_t states_in_cache = av_to_char_p_p(states_in_cache_av);
 
     fc_solve_user_INTERNAL_is_fcc_new(
+        FCS_DBM_VARIANT_2FC_FREECELL,
         init_state_s,
         start_state_s,
         min_states,

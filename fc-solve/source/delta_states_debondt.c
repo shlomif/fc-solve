@@ -69,6 +69,7 @@ enum
 };
 
 static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
+        enum fcs_dbm_variant_type_t local_variant,
         fcs_state_t * init_state,
         int num_columns,
         int num_freecells
@@ -517,6 +518,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
         fc_solve_debondt_delta_stater_t * delta_stater,
+        enum fcs_dbm_variant_type_t local_variant,
         const fcs_uchar_t * const enc_state,
         fcs_state_keyval_pair_t * ret
         IND_BUF_T_PARAM(indirect_stacks_buffer)
@@ -538,9 +540,9 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
 }
 
 #ifdef INDIRECT_STACK_STATES
-#define fc_solve_debondt_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr, indirect_stacks_buffer)
+#define fc_solve_debondt_delta_stater_decode_into_state(local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(delta_stater, local_variant, enc_state, state_ptr, indirect_stacks_buffer)
 #else
-#define fc_solve_debondt_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr)
+#define fc_solve_debondt_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(delta_stater, local_variant, enc_state, state_ptr)
 #endif
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
@@ -557,6 +559,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
 
 static GCC_INLINE void fcs_debondt_init_and_encode_state(
     fc_solve_debondt_delta_stater_t * delta_stater,
+    enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * state,
     fcs_encoded_state_buffer_t * enc_state
 )
@@ -603,9 +606,10 @@ static char * debondt_prepare_state_str(const char * proto)
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
+        enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         const char * derived_state_str_proto
-        )
+)
 {
     char * init_state_s, * derived_state_s;
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
@@ -640,6 +644,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
             );
 
     delta = fc_solve_debondt_delta_stater_alloc(
+            local_variant,
             &(init_state.s),
             STACKS_NUM,
             FREECELLS_NUM

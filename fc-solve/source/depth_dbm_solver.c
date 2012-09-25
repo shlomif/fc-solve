@@ -74,10 +74,12 @@ typedef struct
     long num_states_in_collection;
     FILE * out_fh;
     fcs_encoded_state_buffer_t first_key;
+    enum fcs_dbm_variant_type_t variant;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * instance,
+    enum fcs_dbm_variant_type_t local_variant,
     long pre_cache_max_count,
     long caches_delta,
     const char * dbm_store_path,
@@ -89,6 +91,7 @@ static GCC_INLINE void instance_init(
     int depth;
     fcs_dbm_collection_by_depth_t * coll;
 
+    instance->variant = local_variant;
     instance->curr_depth = 0;
     FCS_INIT_LOCK(instance->global_lock);
     instance->offload_dir_path = offload_dir_path;
@@ -310,6 +313,7 @@ static void * instance_run_solver_thread(void * void_arg)
     fcs_dbm_collection_by_depth_t * coll;
 
     enum TERMINATE_REASON should_terminate;
+    enum fcs_dbm_variant_type_t local_variant;
     fcs_dbm_solver_thread_t * thread;
     fcs_dbm_solver_instance_t * instance;
     fcs_dbm_queue_item_t physical_item;
@@ -331,6 +335,7 @@ static void * instance_run_solver_thread(void * void_arg)
     thread = arg->thread;
     instance = thread->instance;
     delta_stater = thread->delta_stater;
+    local_variant = instance->variant;
 
     prev_item = item = NULL;
     queue_num_extracted_and_processed = 0;
@@ -434,6 +439,7 @@ static void * instance_run_solver_thread(void * void_arg)
 #endif
 
         if (instance_solver_thread_calc_derived_states(
+            local_variant,
             &state,
             &(item->key),
             token,
@@ -463,6 +469,7 @@ static void * instance_run_solver_thread(void * void_arg)
         {
             fcs_init_and_encode_state(
                 delta_stater,
+                local_variant,
                 &(derived_iter->state),
                 &(derived_iter->key)
             );
@@ -550,10 +557,12 @@ static void instance_run_all_threads(
 {
     int i, check;
     main_thread_item_t * threads;
+    enum fcs_dbm_variant_type_t local_variant;
 
 #ifdef T
     FILE * out_fh = instance->out_fh;
 #endif
+    local_variant = instance->variant;
 
     threads = malloc(sizeof(threads[0]) * num_threads);
 
@@ -743,7 +752,10 @@ static unsigned char get_move_from_parent_to_child(
                         * derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
     fcs_meta_compact_allocator_t meta_alloc;
+    enum fcs_dbm_variant_type_t local_variant;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
+
+    local_variant = instance->variant;
 
     fc_solve_meta_compact_allocator_init(&meta_alloc);
     fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
@@ -752,12 +764,13 @@ static unsigned char get_move_from_parent_to_child(
         parent.s,
         &parent_state,
         indirect_stacks_buffer
-        );
+    );
 
     derived_list = NULL;
     derived_list_recycle_bin = NULL;
 
     instance_solver_thread_calc_derived_states(
+        local_variant,
         &parent_state,
         &parent,
         NULL,
@@ -774,6 +787,7 @@ static unsigned char get_move_from_parent_to_child(
     {
         fcs_init_and_encode_state(
             delta,
+            local_variant,
             &(derived_iter->state),
             &got_child
         );
@@ -803,6 +817,7 @@ static void trace_solution(
     fc_solve_delta_stater_t * delta
 )
 {
+    enum fcs_dbm_variant_type_t local_variant;
     fcs_encoded_state_buffer_t * trace;
     int trace_num;
     int i;
@@ -812,6 +827,8 @@ static void trace_solution(
     char move_buffer[500];
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
+
+    local_variant = instance->variant;
 
     fprintf (out_fh, "%s\n", "Success!");
     fflush (out_fh);
@@ -920,12 +937,15 @@ int main(int argc, char * argv[])
     char user_state[USER_STATE_SIZE];
     fc_solve_delta_stater_t * delta;
     fcs_dbm_record_t * token;
+    enum fcs_dbm_variant_type_t local_variant;
 
     fcs_state_keyval_pair_t init_state;
 #if 0
     fcs_bool_t skip_queue_output = FALSE;
 #endif
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
+
+    local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
@@ -1072,7 +1092,7 @@ int main(int argc, char * argv[])
         init_indirect_stacks_buffer
     );
 
-    horne_prune(&init_state, NULL, NULL);
+    horne_prune(local_variant, &init_state, NULL, NULL);
 
     delta = fc_solve_delta_stater_alloc(
             &init_state.s,
@@ -1090,12 +1110,12 @@ int main(int argc, char * argv[])
 
         fcs_encoded_state_buffer_t parent_state_enc;
 
-        instance_init(&instance, pre_cache_max_count, caches_delta,
+        instance_init(&instance, local_variant, pre_cache_max_count, caches_delta,
                       dbm_store_path, iters_delta_limit, offload_dir_path,
                       out_fh);
 
         key_ptr = &(instance.first_key);
-        fcs_init_and_encode_state(delta, &(init_state), KEY_PTR());
+        fcs_init_and_encode_state(delta, local_variant, &(init_state), KEY_PTR());
 
         /* The NULL parent_state_enc and move for indicating this is the
          * initial state. */
