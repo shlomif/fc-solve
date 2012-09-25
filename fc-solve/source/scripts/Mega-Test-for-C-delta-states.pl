@@ -85,6 +85,8 @@ sub test_freecell_deal
         : "./board_gen/pi-make-microsoft-freecell-board -t $deal_idx | ./fc-solve --freecells-num 2 -p -t -sam -l three-eighty -mi $MAX_ITERS |"
         ;
 
+    my $variant_s = ($is_bakers_dozen ? "bakers_dozen" : "freecell");
+
     # We cannot use the "-s" and "-i" flags here any longer, because the state
     # canonization (which is now compulsory after the locations functionality
     # was removed) re-orders the positions of the stacks in the boards in the
@@ -167,14 +169,14 @@ sub test_freecell_deal
 
         if ($is_debondt)
         {
-            $state = horne_prune($state);
+            $state = horne_prune($variant_s, $state);
             $got_state = $is_c_debondt
-                ? debondt_enc_and_dec($init_state_str, $state)
+                ? debondt_enc_and_dec($variant_s, $init_state_str, $state)
                 : perl_debondt_enc_and_dec($init_state_str, $state);
         }
         else
         {
-            $got_state = enc_and_dec($init_state_str, $state);
+            $got_state = enc_and_dec($variant_s, $init_state_str, $state);
         }
 
         $delta->set_derived({ state_str => $state, });
@@ -246,32 +248,42 @@ __C__
 
 #include "delta_states_iface.h"
 #include "debondt_delta_states_iface.h"
+#include <string.h>
 
-SV* enc_and_dec(char * init_state_s, char * derived_state_s) {
+static enum fcs_dbm_variant_type_t variant_from_string(const char * variant_s)
+{
+    return (
+        (!strcmp(variant_s, "bakers_dozen"))
+        ? FCS_DBM_VARIANT_BAKERS_DOZEN
+        : FCS_DBM_VARIANT_2FC_FREECELL
+    );
+}
+
+SV* enc_and_dec(const char * variant_s, char * init_state_s, char * derived_state_s) {
     SV * ret;
     char * s;
-    s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(init_state_s, derived_state_s);
+    s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
 
     ret = newSVpv(s, 0);
     free(s);
     return ret;
 }
 
-SV* debondt_enc_and_dec(char * init_state_s, char * derived_state_s) {
+SV* debondt_enc_and_dec(const char * variant_s, char * init_state_s, char * derived_state_s) {
     SV * ret;
     char * s;
-    s = fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(init_state_s, derived_state_s);
+    s = fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
 
     ret = newSVpv(s, 0);
     free(s);
     return ret;
 }
 
-SV* horne_prune(char * init_state_s) {
+SV* horne_prune(const char * variant_s, char * init_state_s) {
     SV * ret;
     char * s;
     int count_moves;
-    count_moves = fc_solve_user_INTERNAL_perform_horne_prune(init_state_s, &s);
+    count_moves = fc_solve_user_INTERNAL_perform_horne_prune(variant_from_string(variant_s), init_state_s, &s);
 
     ret = newSVpv(s, 0);
     free(s);
