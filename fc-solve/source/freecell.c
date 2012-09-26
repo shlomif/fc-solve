@@ -2173,33 +2173,44 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 
 #define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() pass_new_state.key, card
 
-#ifdef HARD_CODED_NUM_DECKS
-#define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS())
-#else
-#define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(instance, CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS())
-#endif
+#define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(soft_thread, CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS())
 
 static GCC_INLINE int calc_foundation_to_put_card_on(
-#ifndef HARD_CODED_NUM_DECKS
-    fc_solve_instance_t * instance,
-#endif
+    fc_solve_soft_thread_t * soft_thread,
     fcs_state_t * my_ptr_state,
     fcs_card_t card
 )
 {
+    fc_solve_instance_t * instance;
+    tests_declare_seqs_built_by()
     int deck;
+
+    instance = soft_thread->hard_thread->instance;
+
+    tests_define_seqs_built_by();
 
     for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
     {
         if (fcs_foundation_value(*my_ptr_state, (deck<<2)+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
         {
             int other_deck_idx;
+            int ret_val;
+
+            ret_val = (deck<<2)+fcs_card_suit(card);
+            if (sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
+            {
+                return ret_val;
+            }
 
             for (other_deck_idx = 0 ; other_deck_idx < (INSTANCE_DECKS_NUM << 2) ; other_deck_idx++)
             {
                 if (fcs_foundation_value(*my_ptr_state, other_deck_idx)
                         < fcs_card_rank(card) - 2 -
-                        ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
+                        (
+                            (sequences_are_built_by == FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
+                            ? ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
+                            : 0
+                        )
                    )
                 {
                     break;
@@ -2207,7 +2218,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
             }
             if (other_deck_idx == (INSTANCE_DECKS_NUM << 2))
             {
-                return (deck<<2)+fcs_card_suit(card);
+                return ret_val;
             }
         }
     }
