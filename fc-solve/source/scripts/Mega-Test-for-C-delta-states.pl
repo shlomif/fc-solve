@@ -205,7 +205,7 @@ sub test_freecell_deal
 
         if (my $Err = $@)
         {
-            print "\n\nFailed at INIT_STATE_STR=<<<\n$init_state_str\n>>>\n\nSTATE=<<<<$state\n>>>\n\n";
+            print "\n\nFailed at INIT_STATE_STR=<<<\n$init_state_str\n>>>\n\nSTATE=<<<\n$state\n>>>\n\n";
             die $Err;
         }
 
@@ -253,7 +253,7 @@ sub test_freecell_deal
     return;
 }
 
-for my $deal_idx (86 .. 32_000)
+for my $deal_idx (280 .. 32_000)
 {
     print "Testing $deal_idx\n";
     test_freecell_deal($deal_idx);

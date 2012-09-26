@@ -317,7 +317,13 @@ sub encode_composite
             if ($col_len > 0)
             {
                 my $top_card = $col->pos(0);
-                $self->_mark_opt_as_true($top_card, $OPT__BAKERS_DOZEN__ORIG_POS);
+
+                # Skip Aces which were already set.
+                if ($top_card->rank() != 1)
+                {
+                    $self->_mark_opt_as_true($top_card, $OPT__BAKERS_DOZEN__ORIG_POS);
+                }
+
                 foreach my $pos (1 .. $col_len - 1)
                 {
                     my $parent_card = $col->pos($pos-1);

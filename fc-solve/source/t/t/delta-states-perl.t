@@ -5,7 +5,7 @@ use warnings;
 
 use lib './t/lib';
 
-use Test::More tests => 50;
+use Test::More tests => 53;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -860,6 +860,70 @@ EOF
         scalar($delta->decode($delta->encode_composite())->to_string()),
         $derived_str,
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 3.",
+    );
+}
+
+{
+    # PySol Baker's Dozen deal No. 281
+    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+        {
+            variant => "bakers_dozen",
+            init_state_str => <<"EOF",
+Foundations: H-2 C-0 D-0 S-2$WS
+Freecells:$WS
+: JC 3S 9D 4H
+: KC QC 6D QS
+: QH JH TS
+: 4C 2D 3H 5H
+: KS 5D TC JS
+: AC 4D 8D 8S
+: KH 3D 9C TH
+: 3C 9S AD 4S
+: 8C QD 2C
+: 9H 6H TD
+: KD 7C 6S 5C
+: JD 8H 7D
+: 7S 5S 7H 6C
+EOF
+        }
+    );
+
+    # TEST
+    ok ($delta, 'Baker Dozen Object was initialized correctly.');
+
+    my $derived_str = <<"EOF";
+Foundations: H-2 C-0 D-0 S-2$WS
+Freecells:$WS
+: JC 3S 9D 4H
+: KC QC 6D QS
+: QH JH TS
+: 4C 2D 3H 5H
+: KS 5D TC JS
+: AC 4D 8D 8S
+: KH 3D 9C TH
+: 3C 9S AD 4S
+: 8C QD 2C
+: 9H 6H TD
+: KD 7C 6S 5C
+: JD 8H 7D
+: 7S 5S 7H 6C
+EOF
+
+    $delta->set_derived(
+        {
+            state_str => $derived_str,
+        }
+    );
+
+    # TEST
+    ok ($delta->encode_composite(),
+        "Baker's Dozen ->encode_composite (No. 4) runs fine.");
+
+    # TEST
+    eq_or_diff(
+        scalar($delta->decode($delta->encode_composite())->to_string()),
+        $derived_str,
+        "Baker's Dozen DeBondt encode_composite()+decode() test No. 4.",
     );
 }
 
