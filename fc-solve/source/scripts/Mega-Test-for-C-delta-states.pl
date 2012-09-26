@@ -172,8 +172,24 @@ sub test_freecell_deal
 
     my $got_initial_state = 0;
 
+    my $state;
+
+    my $perform_get_state_op = sub {
+        if ($is_debondt)
+        {
+            $state = horne_prune($variant_s, $state);
+            return $is_c_debondt
+                ? debondt_enc_and_dec($variant_s, $init_state_str, $state)
+                : perl_debondt_enc_and_dec($init_state_str, $state);
+        }
+        else
+        {
+            return enc_and_dec($variant_s, $init_state_str, $state);
+        }
+    };
+
     READ_STATE:
-    while (my $state = $read_state->())
+    while ($state = $read_state->())
     {
         if (! $got_initial_state && ($state ne $init_state_str))
         {
@@ -183,16 +199,14 @@ sub test_freecell_deal
 
         my $got_state;
 
-        if ($is_debondt)
+        eval {
+            $got_state = $perform_get_state_op->();
+        };
+
+        if (my $Err = $@)
         {
-            $state = horne_prune($variant_s, $state);
-            $got_state = $is_c_debondt
-                ? debondt_enc_and_dec($variant_s, $init_state_str, $state)
-                : perl_debondt_enc_and_dec($init_state_str, $state);
-        }
-        else
-        {
-            $got_state = enc_and_dec($variant_s, $init_state_str, $state);
+            print "\n\nFailed at INIT_STATE_STR=<<<\n$init_state_str\n>>>\n\nSTATE=<<<<$state\n>>>\n\n";
+            die $Err;
         }
 
         $delta->set_derived({ state_str => $state, });
