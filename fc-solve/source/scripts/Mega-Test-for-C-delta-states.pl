@@ -132,6 +132,8 @@ sub test_freecell_deal
         return;
     }
 
+    $init_state_str = horne_prune($variant_s, $init_state_str);
+
     my %encoded_counts;
 
     my $num_freecells = 2;
@@ -168,8 +170,17 @@ sub test_freecell_deal
 
     my $count = 0;
 
+    my $got_initial_state = 0;
+
+    READ_STATE:
     while (my $state = $read_state->())
     {
+        if (! $got_initial_state && ($state ne $init_state_str))
+        {
+            next READ_STATE;
+        }
+        $got_initial_state = 1;
+
         my $got_state;
 
         if ($is_debondt)

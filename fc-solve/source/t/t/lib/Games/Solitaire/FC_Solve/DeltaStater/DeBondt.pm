@@ -323,19 +323,23 @@ sub encode_composite
                     my $parent_card = $col->pos($pos-1);
                     my $this_card = $col->pos($pos);
 
-                    if ($this_card->rank()+1 == $parent_card->rank())
+                    # Skip Aces which were already set.
+                    if ($this_card->rank() != 1)
                     {
-                        $self->_mark_opt_as_true(
-                            $this_card,
-                            $self->_wanted_suit_idx_opt($parent_card),
-                        );
-                    }
-                    else
-                    {
-                        $self->_mark_opt_as_true(
-                            $this_card,
-                            $OPT__BAKERS_DOZEN__ORIG_POS
-                        );
+                        if ($this_card->rank()+1 == $parent_card->rank())
+                        {
+                            $self->_mark_opt_as_true(
+                                $this_card,
+                                $self->_wanted_suit_idx_opt($parent_card),
+                            );
+                        }
+                        else
+                        {
+                            $self->_mark_opt_as_true(
+                                $this_card,
+                                $OPT__BAKERS_DOZEN__ORIG_POS
+                            );
+                        }
                     }
                 }
             }
@@ -523,6 +527,12 @@ sub decode
 
     my $init_state = $self->_init_state;
 
+    my $orig_pos_opt =
+    ($self->_is_bakers_dozen
+        ? $OPT__BAKERS_DOZEN__ORIG_POS
+        : $OPT_ORIG_POS
+    );
+
     my $num_freecells = $init_state->num_freecells();
     my @freecell_cards;
 
@@ -576,7 +586,7 @@ sub decode
                 if ($existing_opt < 0)
                 {
                     $self->_mark_suit_rank_as_true(
-                        $suit_idx, $rank, $OPT_ORIG_POS
+                        $suit_idx, $rank, $orig_pos_opt
                     );
                 }
                 next READ_SUITS;
@@ -659,7 +669,7 @@ sub decode
         my $top_opt = $self->_get_card_verdict($top_card);
 
         if (!defined($top_card) or
-            (! (($top_opt == $OPT_TOPMOST) || ($top_opt == $OPT_ORIG_POS)))
+            (! (($top_opt == $OPT_TOPMOST) || ($top_opt == $orig_pos_opt)))
         )
         {
             if (@new_top_most_cards)
