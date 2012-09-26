@@ -677,7 +677,11 @@ sub decode
 
         my $top_card = $orig_col->pos(0);
 
-        my $top_opt = $self->_get_card_verdict($top_card);
+        my $top_opt =
+            defined($top_card)
+            ? $self->_get_card_verdict($top_card)
+            # Don't care.
+            : (-1);
 
         if (!defined($top_card) or
             (! (($top_opt == $OPT_TOPMOST) || ($top_opt == $orig_pos_opt)))
