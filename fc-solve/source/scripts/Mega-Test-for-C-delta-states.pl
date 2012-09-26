@@ -28,6 +28,14 @@ STDOUT->autoflush(1);
 my $MAX_ITERS = 1000;
 my $max_num_bits = 0;
 
+my $which_encoding = ($ENV{FCS_ENC} || '');
+
+my $is_c_debondt = ($which_encoding eq 'Cd');
+my $is_debondt = ($is_c_debondt or $which_encoding eq 'd');
+
+my $variant = ($ENV{FCS_VARIANT} || 'freecell');
+my $is_bakers_dozen = ($variant eq 'bakers_dozen');
+
 sub perl_debondt_enc_and_dec
 {
     my ($init_state_str, $state) = @_;
@@ -35,6 +43,11 @@ sub perl_debondt_enc_and_dec
     my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
         {
             init_state_str => $init_state_str,
+            (
+                $is_bakers_dozen
+                ? (variant => 'bakers_dozen')
+                : ()
+            ),
         }
     );
 
@@ -57,14 +70,6 @@ sub perl_debondt_enc_and_dec
 
     return $delta->decode($token)->to_string();
 }
-
-my $which_encoding = ($ENV{FCS_ENC} || '');
-
-my $is_c_debondt = ($which_encoding eq 'Cd');
-my $is_debondt = ($is_c_debondt or $which_encoding eq 'd');
-
-my $variant = ($ENV{FCS_VARIANT} || 'freecell');
-my $is_bakers_dozen = ($variant eq 'bakers_dozen');
 
 sub _debondt_normalize
 {
@@ -223,7 +228,7 @@ sub test_freecell_deal
     return;
 }
 
-for my $deal_idx (1 .. 32_000)
+for my $deal_idx (86 .. 32_000)
 {
     print "Testing $deal_idx\n";
     test_freecell_deal($deal_idx);

@@ -7,6 +7,10 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
+* Fix fc_solve_sfs_raymond_prune() (in libfrecell-solver) and horne_prune()
+for non-Freecell variants.
+** The prune should operate differently based on the how sequences are built.
+
 Non-pressing
 ------------
 
