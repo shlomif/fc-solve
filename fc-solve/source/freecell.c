@@ -2176,7 +2176,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 #define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(soft_thread, CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS())
 
 #ifdef FCS_FREECELL_ONLY
-#define SEQS_ARE_BUILT_BY_RANK() 0
+#define SEQS_ARE_BUILT_BY_RANK() FALSE
 #else
 #define SEQS_ARE_BUILT_BY_RANK() (sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
 #endif

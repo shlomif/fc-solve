@@ -130,12 +130,31 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
 #define COMMIT_NEW_STATE(src, dest, is_reversible) \
     COMMIT_NEW_STATE_WITH_COUNT(src, dest, ((is_reversible) ? 0 : 1))
 
+#ifdef FCS_FREECELL_ONLY
+#define SEQS_ARE_BUILT_BY_RANK() FALSE
+#else
+#define SEQS_ARE_BUILT_BY_RANK() (sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
+#endif
+
 static GCC_INLINE int calc_foundation_to_put_card_on(
+        enum fcs_dbm_variant_type_t local_variant,
         fcs_state_t * my_ptr_state,
         fcs_card_t card
         )
 {
+#ifndef FCS_FREECELL_ONLY
+    /* needed by the macros. */
+    int sequences_are_built_by;
+#endif
     int deck;
+
+#ifndef FCS_FREECELL_ONLY
+    sequences_are_built_by =
+        (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
+        ? FCS_SEQ_BUILT_BY_RANK
+        : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+        ;
+#endif
 
     for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
     {
@@ -147,7 +166,11 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
             {
                 if (fcs_foundation_value(*my_ptr_state, other_deck_idx)
                         < fcs_card_rank(card) - 2 -
-                        ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
+                        (
+                            SEQS_ARE_BUILT_BY_RANK()
+                            ? 0
+                            : ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
+                        )
                    )
                 {
                     break;
@@ -221,7 +244,11 @@ static GCC_INLINE int horne_prune(
     int count_additional_irrev_moves = 0;
 
 #ifndef FCS_FREECELL_ONLY
-    sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
+    sequences_are_built_by =
+        (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
+        ? FCS_SEQ_BUILT_BY_RANK
+        : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+        ;
 #endif
 
 #define the_state (init_state_kv_ptr->s)
@@ -237,7 +264,7 @@ static GCC_INLINE int horne_prune(
                 card = fcs_col_get_card(col, cards_num-1);
 
                 if ((dest_foundation =
-                    calc_foundation_to_put_card_on(&the_state, card)) >= 0)
+                    calc_foundation_to_put_card_on(local_variant, &the_state, card)) >= 0)
                 {
                     if (! FROM_COL_IS_REVERSIBLE_MOVE())
                     {
@@ -263,7 +290,7 @@ static GCC_INLINE int horne_prune(
             if (fcs_card_is_valid(card))
             {
                 if ((dest_foundation =
-                    calc_foundation_to_put_card_on(&the_state, card)) >= 0)
+                    calc_foundation_to_put_card_on(local_variant, &the_state, card)) >= 0)
                 {
                     num_cards_moved++;
 
