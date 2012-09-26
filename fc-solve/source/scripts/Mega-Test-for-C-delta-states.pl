@@ -25,7 +25,7 @@ use Parallel::ForkManager;
 
 STDOUT->autoflush(1);
 
-my $MAX_ITERS = 1000;
+my $MAX_ITERS = 100_000;
 my $max_num_bits = 0;
 
 my $which_encoding = ($ENV{FCS_ENC} || '');
@@ -55,7 +55,7 @@ sub perl_debondt_enc_and_dec
 
     my $token = $delta->encode_composite();
 
-    if ($token->as_bin() =~ /\A0b0*(1[01]+)\z/)
+    if ($token->as_bin() =~ /\A0b0*(1[01]*)\z/)
     {
         my $num_bits = length($1);
         if ($num_bits > $max_num_bits)
@@ -253,25 +253,31 @@ sub test_freecell_deal
     return;
 }
 
-for my $deal_idx (280 .. 32_000)
+if (0)
 {
-    print "Testing $deal_idx\n";
-    test_freecell_deal($deal_idx);
-}
-
-my $pm = Parallel::ForkManager->new(4);
-DEALS:
-for my $deal_idx (1 .. 32_000)
-{
-    if ($pm->start())
+    # For testing.
+    for my $deal_idx (26_698 .. 32_000)
     {
-        next DEALS;
+        print "Testing $deal_idx\n";
+        test_freecell_deal($deal_idx);
     }
-    test_freecell_deal($deal_idx);
-
-    $pm->finish;
 }
-$pm->wait_all_children;
+else
+{
+    my $pm = Parallel::ForkManager->new(4);
+    DEALS:
+    for my $deal_idx (1 .. 32_000)
+    {
+        if ($pm->start())
+        {
+            next DEALS;
+        }
+        test_freecell_deal($deal_idx);
+
+        $pm->finish;
+    }
+    $pm->wait_all_children;
+}
 
 __DATA__
 __C__
