@@ -108,3 +108,11 @@ Games-Solitaire-Verify/Games-Solitaire-Verify/MYMETA.json
 Games-Solitaire-Verify/Games-Solitaire-Verify/MYMETA.yml
 Games-Solitaire-Verify/Games-Solitaire-Verify/_build
 Games-Solitaire-Verify/Games-Solitaire-Verify/blib
+Task-FreecellSolver-Testing/Build
+Task-FreecellSolver-Testing/META.json
+Task-FreecellSolver-Testing/META.yml
+Task-FreecellSolver-Testing/MYMETA.json
+Task-FreecellSolver-Testing/MYMETA.yml
+Task-FreecellSolver-Testing/Makefile.PL
+Task-FreecellSolver-Testing/_build/
+Task-FreecellSolver-Testing/blib/
