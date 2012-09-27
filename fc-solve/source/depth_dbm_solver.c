@@ -557,12 +557,10 @@ static void instance_run_all_threads(
 {
     int i, check;
     main_thread_item_t * threads;
-    enum fcs_dbm_variant_type_t local_variant;
 
 #ifdef T
     FILE * out_fh = instance->out_fh;
 #endif
-    local_variant = instance->variant;
 
     threads = malloc(sizeof(threads[0]) * num_threads);
 

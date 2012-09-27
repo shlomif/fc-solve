@@ -542,7 +542,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
 #ifdef INDIRECT_STACK_STATES
 #define fc_solve_debondt_delta_stater_decode_into_state(local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(delta_stater, local_variant, enc_state, state_ptr, indirect_stacks_buffer)
 #else
-#define fc_solve_debondt_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(delta_stater, local_variant, enc_state, state_ptr)
+#define fc_solve_debondt_delta_stater_decode_into_state(local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(delta_stater, local_variant, enc_state, state_ptr)
 #endif
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
