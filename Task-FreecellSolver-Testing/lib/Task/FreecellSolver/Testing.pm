@@ -10,11 +10,11 @@ Freecell Solver test suite.
 
 =head1 VERSION
 
-Version 0.0.2
+Version 0.0.3
 
 =cut
 
-our $VERSION = '0.0.2';
+our $VERSION = '0.0.3';
 
 # Load the dependencies so we'll be sure they are installed.
 use Carp;
@@ -30,8 +30,8 @@ use String::ShellQuote;
 use Task::Test::Run::AllPlugins;
 use Template;
 use Test::Differences;
-use Test::Differences;
 use Test::More;
+use Test::Run::CmdLine::Plugin::TrimDisplayedFilenames;
 use YAML::XS;
 
 =head1 SYNOPSIS

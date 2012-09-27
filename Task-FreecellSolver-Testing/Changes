@@ -1,5 +1,9 @@
 Revision history for Task-FreecellSolver-Testing
 
+0.0.3   Thu 27 Sep 14:40:08 IST 2012
+        - Add Inline, Inline::C and
+        Test::Run::CmdLine::Plugin::TrimDisplayedFilenames .
+
 0.0.2   Thu Jun 30 16:52:19 IDT 2011
         - Add Env::Path , List::MoreUtils, Test::More, Storable, Digest::SHA
         and some core modules.
