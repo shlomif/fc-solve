@@ -20,6 +20,8 @@ my $num_cpus = 4;
 my $num_threads = $num_cpus;
 my $num_hours = 120;
 
+my $num_freecells = $ENV{NUM_FC} || 2;
+
 GetOptions(
     'flto!' => \$flto,
     'who=s' => \$who,
@@ -32,8 +34,15 @@ if (!defined($who))
 }
 
 my $sub = 1;
+my $is_am = 0;
 
 my $depth_dbm = 0;
+
+if ($who eq 'am')
+{
+    $is_am = 1;
+    $sub = 0;
+}
 
 if ($sub)
 {
@@ -41,6 +50,13 @@ if ($sub)
     # $num_cpus = 12;
     $num_cpus = $num_threads = 24;
     $mem = 500;
+    $num_hours = 700;
+}
+elsif ($is_am)
+{
+    $flto = 0;
+    $num_cpus = $num_threads = 12;
+    $mem = 127;
     $num_hours = 700;
 }
 
@@ -58,7 +74,7 @@ mkpath($build_dir);
 
 chdir ($build_dir);
 system(File::Spec->catdir($src_path, "Tatzer"),
-    qw{-l x64b --nfc=2 --states-type=COMPACT_STATES --dbm=kaztree},
+    qw{-l x64b}, "--nfc=$num_freecells", qw{--states-type=COMPACT_STATES --dbm=kaztree},
     $src_path
 );
 
@@ -74,7 +90,7 @@ foreach my $fn ('app_str.c', 'card.c', "$main_base.c", 'state.c',
     'delta_states.c', 'delta_states.h', 'fcs_dllexport.h', 'bit_rw.h',
     'fcs_enums.h', 'unused.h', 'fcs_limit.h',
     'portable_time.h', 'dbm_calc_derived.h', 'dbm_calc_derived_iface.h',
-    'dbm_common.h', 'libavl/avl.c', 'libavl/avl.h', 'offloading_queue.h',
+    'libavl/avl.c', 'libavl/avl.h', 'offloading_queue.h',
     'indirect_buffer.h', 'generic_tree.h', 'meta_alloc.h', 'meta_alloc.c',
     'fcc_brfs_test.h','dbm_kaztree_compare.h', 'delta_states_iface.h',
     'dbm_cache.h', 'dbm_lru_cache.h', 'dbm_trace.h', 'dbm_procs.h',
@@ -84,6 +100,11 @@ foreach my $fn ('app_str.c', 'card.c', "$main_base.c", 'state.c',
 )
 {
     io("$src_path/$fn") > io("$dest_dir/$fn");
+}
+
+foreach my $fn ('dbm_common.h')
+{
+    io("$dest_dir/$fn")->print(io("$src_path/$fn")->slurp() =~ s{^(#define FCS_DBM_FREECELLS_NUM\s*)\d+(\s*)$}{$1$num_freecells$2}mrs);
 }
 
 foreach my $fn ('config.h')
@@ -206,15 +227,16 @@ my @deals = (
     397251,
 );
 
-=end old
-
-=cut
-
 my @deals = (
     384243,
 );
 
-# my $deal_idx = 982;
+=end old
+
+=cut
+
+my @deals = (53687601);
+
 foreach my $deal_idx (@deals)
 {
     system(qq{python $src_path/board_gen/make_pysol_freecell_board.py -t --ms $deal_idx > $dest_dir/$deal_idx.board});
