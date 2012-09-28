@@ -389,7 +389,7 @@ static void * instance_run_solver_thread(void * void_arg)
                 &(state.s),
                 &(state.info),
                 &locs,
-                2,
+                FREECELLS_NUM,
                 8,
                 1,
                 1,
@@ -703,13 +703,11 @@ static void instance_run_all_threads(
     int num_threads)
 {
     int i, check;
-    enum fcs_dbm_variant_type_t local_variant;
     main_thread_item_t * threads;
 
 #ifdef T
     FILE * out_fh = instance->out_fh;
 #endif
-    local_variant = instance->variant;
 
     threads = malloc(sizeof(threads[0]) * num_threads);
 

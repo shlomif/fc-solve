@@ -424,7 +424,7 @@ static void * instance_run_solver_thread(void * void_arg)
                 &(state.s),
                 &(state.info),
                 &locs,
-                2,
+                FREECELLS_NUM,
                 8,
                 1,
                 1,
