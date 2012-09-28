@@ -705,8 +705,16 @@ static void instance_run_all_threads(
     int i, check;
     main_thread_item_t * threads;
 
+#ifndef FCS_FREECELL_ONLY
+    int local_variant;
+#endif
+
 #ifdef T
     FILE * out_fh = instance->out_fh;
+#endif
+
+#ifndef FCS_FREECELL_ONLY
+    local_variant = instance->variant;
 #endif
 
     threads = malloc(sizeof(threads[0]) * num_threads);
