@@ -365,6 +365,10 @@ INCLUDE(FindThreads)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
+IF (MSVC)
+    MESSAGE(FATAL_ERROR "Error! You are using Microsoft Visual C++ and Freecell Solver Requires a compiler that supports C99 and some GCC extensions. Possible alternatives are GCC, clang and Intel C++ Compiler")
+ENDIF (MSVC)
+
 SET(COMPILER_FLAGS_TO_CHECK
     "-Wall" "-Werror=implicit-function-declaration" "-fvisibility=hidden"
 )
