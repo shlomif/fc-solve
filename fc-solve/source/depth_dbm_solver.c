@@ -425,7 +425,7 @@ static void * instance_run_solver_thread(void * void_arg)
                 &(state.info),
                 &locs,
                 FREECELLS_NUM,
-                8,
+                STACKS_NUM,
                 1,
                 1,
                 0,
@@ -974,6 +974,28 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
         }
+        else if (!strcmp(argv[arg], "--game"))
+        {
+            arg++;
+            if (arg == argc)
+            {
+                fprintf(stderr, "--game came without an argument!\n");
+                exit(-1);
+            }
+            if (!strcmp(argv[arg], "bakers_dozen"))
+            {
+                local_variant = FCS_DBM_VARIANT_BAKERS_DOZEN;
+            }
+            else if (!strcmp(argv[arg], "freecell"))
+            {
+                local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+            }
+            else
+            {
+                fprintf(stderr, "Unknown game '%s'. Aborting\n", argv[arg]);
+                exit(-1);
+            }
+        }
         else if (!strcmp(argv[arg], "--caches-delta"))
         {
             arg++;
@@ -1104,7 +1126,9 @@ int main(int argc, char * argv[])
             STACKS_NUM,
             FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+            , ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
+               ? FCS_SEQ_BUILT_BY_RANK
+               : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
 #endif
     );
 
