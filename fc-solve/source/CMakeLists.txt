@@ -408,11 +408,13 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
             "-Wunused"
             "-Wfloat-equal"
             "-Wold-style-definition"
-            "-Wdeclaration-after-statement"
-            "-std=gnu99"
         )
     ENDIF (${CMAKE_COMPILER_IS_GNUCC})
 ENDIF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
+
+IF (${CMAKE_COMPILER_IS_GNUCC})
+    ADD_DEFINITIONS("-std=gnu99")
+ENDIF (${CMAKE_COMPILER_IS_GNUCC})
 
 IF (CMAKE_BUILD_TYPE STREQUAL release)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-flto")

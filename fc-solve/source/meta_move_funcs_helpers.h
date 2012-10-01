@@ -179,12 +179,9 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #define tests_declare_seqs_built_by()
 #define tests_declare_empty_stacks_fill()
 #else
-#define tests_declare_accessors_freecell_only() \
-    fc_solve_instance_t * instance;
-#define tests_declare_seqs_built_by() \
-    int sequences_are_built_by;
-#define tests_declare_empty_stacks_fill() \
-    int empty_stacks_fill;
+#define tests_declare_accessors_freecell_only()
+#define tests_declare_seqs_built_by()
+#define tests_declare_empty_stacks_fill()
 #endif
 
 /*
@@ -237,9 +234,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #else
 
 #define tests_define_accessors_freecell_only() \
-{ \
-    instance = hard_thread->instance;                     \
-}
+    fc_solve_instance_t * instance = hard_thread->instance;
 
 #define tests__is_filled_by_any_card() \
     (empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
@@ -280,14 +275,10 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #else
 
 #define tests_define_seqs_built_by()   \
-{ \
-    sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance); \
-}
+    int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 
 #define tests_define_empty_stacks_fill() \
-{ \
-    empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL; \
-}
+    int empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL;
 
 #endif
 
