@@ -65,8 +65,15 @@ enum
     OPT_PARENT_SUIT_MOD_IS_1 = 4,
     NUM_OPTS = 5,
     OPT_IN_FOUNDATION = 5,
-    NUM_OPTS_FOR_READ = 6
+    NUM_OPTS_FOR_READ = 6,
+    OPT__BAKERS_DOZEN__ORIG_POS = 0,
+    OPT__BAKERS_DOZEN__FIRST_PARENT = 1,
+    NUM__BAKERS_DOZEN__OPTS = OPT__BAKERS_DOZEN__FIRST_PARENT + 4,
+    OPT__BAKERS_DOZEN__IN_FOUNDATION = NUM__BAKERS_DOZEN__OPTS,
+    NUM__BAKERS_DOZEN__OPTS_FOR_READ = OPT__BAKERS_DOZEN__IN_FOUNDATION + 1
 };
+
+#define IS_BAKERS_DOZEN() (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
 
 static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
         enum fcs_dbm_variant_type_t local_variant,
@@ -91,8 +98,26 @@ static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
 
     self->_init_state = init_state;
 
+    memset (self->bakers_dozen_topmost_cards_lookup, '\0', sizeof(self->bakers_dozen_topmost_cards_lookup));
+
     fc_solve_var_base_writer_init(&self->w);
     fc_solve_var_base_reader_init(&self->r);
+
+    if (IS_BAKERS_DOZEN())
+    {
+        for (int col_idx = 0; col_idx < self->num_columns; col_idx++)
+        {
+            fcs_cards_column_t col = fcs_state_get_col(*init_state, col_idx);
+            int col_len = fcs_col_len(col);
+
+            if (col_len > 0)
+            {
+                fcs_card_t top_card = fcs_col_get_card(col, 0);
+                self->bakers_dozen_topmost_cards_lookup[top_card >> 3]
+                    |= (1 << top_card & (8-1));
+            }
+        }
+    }
 
     return self;
 }
@@ -133,7 +158,13 @@ static GCC_INLINE int wanted_suit_bit_opt(fcs_card_t parent_card)
     ;
 }
 
+static GCC_INLINE int wanted_suit_idx_opt(fcs_card_t parent_card)
+{
+    return OPT__BAKERS_DOZEN__FIRST_PARENT + fcs_card_suit(parent_card);
+}
+
 static GCC_INLINE int calc_child_card_option(
+    enum fcs_dbm_variant_type_t local_variant,
     fcs_card_t parent_card,
     fcs_card_t child_card
 #ifndef FCS_FREECELL_ONLY
@@ -141,6 +172,22 @@ static GCC_INLINE int calc_child_card_option(
 #endif
     )
 {
+    if (IS_BAKERS_DOZEN())
+    {
+        if (
+            (fcs_card_rank(child_card) != 1)
+                &&
+            (fcs_card_rank(child_card) + 1 == fcs_card_rank(parent_card))
+        )
+        {
+            return wanted_suit_idx_opt(parent_card);
+        }
+        else
+        {
+            return OPT__BAKERS_DOZEN__ORIG_POS;
+        }
+    }
+
     if (
         (fcs_card_rank(child_card) != 1)
             &&
@@ -158,6 +205,7 @@ static GCC_INLINE int calc_child_card_option(
 #define NUM_SUITS 4
 static void fc_solve_debondt_delta_stater_encode_composite(
     fc_solve_debondt_delta_stater_t * self,
+    enum fcs_dbm_variant_type_t local_variant,
     fcs_var_base_writer_t * writer
 )
 {
@@ -234,7 +282,8 @@ static void fc_solve_debondt_delta_stater_encode_composite(
                     if (fcs_card_rank(child_card) != 1)
                     {
                         self->card_states[CARD_POS(child_card)] =
-                            calc_child_card_option(parent_card, child_card
+                            calc_child_card_option(local_variant,
+                                                   parent_card, child_card
 #ifndef FCS_FREECELL_ONLY
                                                    , self->sequences_are_built_by
 #endif
@@ -321,6 +370,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
 
 static void fc_solve_debondt_delta_stater_decode(
         fc_solve_debondt_delta_stater_t * self,
+        enum fcs_dbm_variant_type_t local_variant,
         fcs_var_base_reader_t * reader,
         fcs_state_t * ret
         )
@@ -491,6 +541,7 @@ static void fc_solve_debondt_delta_stater_decode(
                             self->card_states[CARD_POS(child_card)]
                                 ==
                             calc_child_card_option(
+                                local_variant,
                                 parent_card, child_card
 #ifndef FCS_FREECELL_ONLY
                                , self->sequences_are_built_by
@@ -534,6 +585,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
 
     fc_solve_debondt_delta_stater_decode(
         delta_stater,
+        local_variant,
         &(delta_stater->r),
         &(ret->s)
     );
@@ -547,13 +599,14 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
     fc_solve_debondt_delta_stater_t * delta_stater,
+    enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * state,
     unsigned char * out_enc_state
 )
 {
     fc_solve_var_base_writer_start(&(delta_stater->w));
     fc_solve_debondt_delta_stater_set_derived(delta_stater, &(state->s));
-    fc_solve_debondt_delta_stater_encode_composite(delta_stater, &(delta_stater->w));
+    fc_solve_debondt_delta_stater_encode_composite(delta_stater, local_variant, &(delta_stater->w));
     fc_solve_var_base_writer_get_data(&(delta_stater->w), out_enc_state);
 }
 
@@ -568,10 +621,13 @@ static GCC_INLINE void fcs_debondt_init_and_encode_state(
 
     fc_solve_debondt_delta_stater_encode_into_buffer(
         delta_stater,
+        local_variant,
         state,
         enc_state->s
     );
 }
+
+#undef IS_BAKERS_DOZEN
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
@@ -662,12 +718,12 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     );
 
     fc_solve_var_base_writer_start(&(delta->w));
-    fc_solve_debondt_delta_stater_encode_composite(delta, &(delta->w));
+    fc_solve_debondt_delta_stater_encode_composite(delta, local_variant, &(delta->w));
     memset(enc_state, '\0', sizeof(enc_state));
     fc_solve_var_base_writer_get_data(&(delta->w), enc_state);
 
     fc_solve_var_base_reader_start(&(delta->r), enc_state, sizeof(enc_state));
-    fc_solve_debondt_delta_stater_decode(delta, &(delta->r),
+    fc_solve_debondt_delta_stater_decode(delta, local_variant, &(delta->r),
                                          &(new_derived_state.s));
 
     fc_solve_init_locs(&locs);
@@ -692,5 +748,6 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
 
     return new_derived_as_str;
 }
+
 
 #endif
