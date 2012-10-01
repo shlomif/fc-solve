@@ -70,6 +70,12 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
 #define FREECELL2MOVE(idx) (idx+8)
 #define FOUND2MOVE(idx) ((idx)+8+4)
 
+#define CALC_SEQUENCES_ARE_BUILT_BY() ( \
+    (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) \
+    ? FCS_SEQ_BUILT_BY_RANK \
+    : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR \
+    )
+
 #ifdef INDIRECT_STACK_STATES
 
 #define COPY_INDIRECT_COLS() \
@@ -149,11 +155,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
     int deck;
 
 #ifndef FCS_FREECELL_ONLY
-    sequences_are_built_by =
-        (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
-        ? FCS_SEQ_BUILT_BY_RANK
-        : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-        ;
+    sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
 
     for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
@@ -220,6 +222,7 @@ static GCC_INLINE fcs_fcc_moves_list_item_t * fc_solve_fcc_alloc_moves_list_item
                                ) \
                         )
 
+
 /* Returns the number of amortized irreversible moves performed. */
 static GCC_INLINE int horne_prune(
     enum fcs_dbm_variant_type_t local_variant,
@@ -244,11 +247,7 @@ static GCC_INLINE int horne_prune(
     int count_additional_irrev_moves = 0;
 
 #ifndef FCS_FREECELL_ONLY
-    sequences_are_built_by =
-        (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
-        ? FCS_SEQ_BUILT_BY_RANK
-        : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-        ;
+    sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
 
 #define the_state (init_state_kv_ptr->s)
@@ -388,7 +387,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     int empty_stack_idx = -1;
 
 #ifndef FCS_FREECELL_ONLY
-    sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
+    sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
 
 #define the_state (init_state_kv_ptr->s)
@@ -447,7 +446,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     }
 
 #define fc_idx stack_idx
-    /* Move freecell stack cards to foundations. */
+    /* Move freecell cards to foundations. */
     for (fc_idx=0 ; fc_idx < LOCAL_FREECELLS_NUM ; fc_idx++)
     {
         card = fcs_freecell_card(the_state, fc_idx);
@@ -477,12 +476,15 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         }
     }
 
+    int cards_num_min_limit =
+        ( (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 1 : 0 );
+
     /* Move stack card on top of a parent */
     for (stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
         col = fcs_state_get_col(the_state, stack_idx);
         cards_num = fcs_col_len(col);
-        if (cards_num > 0)
+        if (cards_num > cards_num_min_limit)
         {
             card = fcs_col_get_card(col, cards_num-1);
 
@@ -564,7 +566,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         }
     }
 
-    if (empty_stack_idx >= 0)
+    if ((local_variant != FCS_DBM_VARIANT_BAKERS_DOZEN)
+        && (empty_stack_idx >= 0))
     {
         /* Stack Card to Empty Stack */
         for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
@@ -634,7 +637,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         {
             col = fcs_state_get_col(the_state, stack_idx);
             cards_num = fcs_col_len(col);
-            if (cards_num > 0)
+            if (cards_num > cards_num_min_limit)
             {
                 card = fcs_col_get_card(col, cards_num-1);
                 /* Let's move it */
