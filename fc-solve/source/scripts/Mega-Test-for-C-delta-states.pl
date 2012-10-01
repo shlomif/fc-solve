@@ -256,7 +256,7 @@ sub test_freecell_deal
 if (0)
 {
     # For testing.
-    for my $deal_idx (26_698 .. 32_000)
+    for my $deal_idx (1 .. 32_000)
     {
         print "Testing $deal_idx\n";
         test_freecell_deal($deal_idx);
