@@ -202,6 +202,13 @@ static GCC_INLINE int calc_child_card_option(
     }
 }
 
+static GCC_INLINE int get_top_rank_for_iter(
+    enum fcs_dbm_variant_type_t local_variant
+    )
+{
+    return (IS_BAKERS_DOZEN() ? (RANK_KING-1) : RANK_KING);
+}
+
 #define NUM_SUITS 4
 static void fc_solve_debondt_delta_stater_encode_composite(
     fc_solve_debondt_delta_stater_t * self,
@@ -216,16 +223,15 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     fc_solve_debondt_delta_stater__init_card_states(self);
 
     {
-        int suit_idx, rank, max_rank, r;
-        for (suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
+        for (int suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
         {
-            rank = fcs_foundation_value(*derived, suit_idx);
+            int rank = fcs_foundation_value(*derived, suit_idx);
 
             fc_solve_var_base_writer_write(writer, FOUNDATION_BASE, rank);
 
-            max_rank = ((rank < 1) ? 1 : rank);
+            int max_rank = ((rank < 1) ? 1 : rank);
 
-            for (r = 1 ; r <= max_rank ; r++)
+            for (int r = 1 ; r <= max_rank ; r++)
             {
 #define STATE_POS(suit_idx, rank) (rank - 1 + suit_idx * RANK_KING)
 #define CARD_POS(card) (STATE_POS((fcs_card_suit(card)), (fcs_card_rank(card))))
@@ -233,6 +239,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
             }
         }
     }
+
     {
         int fc_idx;
 
@@ -248,10 +255,50 @@ static void fc_solve_debondt_delta_stater_encode_composite(
             }
         }
     }
-    {
-        int col_idx;
 
-        for (col_idx = 0; col_idx < self->num_columns; col_idx++)
+    if (IS_BAKERS_DOZEN())
+    {
+        for (int col_idx = 0; col_idx < self->num_columns; col_idx++)
+        {
+            fcs_cards_column_t col = fcs_state_get_col(*derived, col_idx);
+            int col_len = fcs_col_len(col);
+
+            if (col_len > 0)
+            {
+                fcs_card_t top_card = fcs_col_get_card(col, 0);
+
+                /* Skip Aces which were already set. */
+                if (fcs_card_rank(top_card) != 1)
+                {
+                    self->card_states[CARD_POS(top_card)] = OPT__BAKERS_DOZEN__ORIG_POS;
+                }
+
+                for (int pos = 1; pos < col_len ; pos++)
+                {
+                    fcs_card_t parent_card = fcs_col_get_card(col, pos-1);
+                    fcs_card_t this_card = fcs_col_get_card(col, pos);
+
+                    /* Skip Aces which were already set. */
+                    if (fcs_card_rank(this_card) != 1)
+                    {
+                        if (fcs_card_rank(this_card)+1
+                            == fcs_card_rank(parent_card))
+                        {
+                            self->card_states[CARD_POS(this_card)] = wanted_suit_idx_opt(parent_card);
+                        }
+                        else
+                        {
+                            self->card_states[CARD_POS(this_card)] = OPT__BAKERS_DOZEN__ORIG_POS;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    else
+    {
+        for (int col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
             fcs_cards_column_t col;
             int col_len;
@@ -305,16 +352,30 @@ static void fc_solve_debondt_delta_stater_encode_composite(
      * Skip encoding the aces, and the kings are encoded with less bits.
      */
     {
-        int rank, suit_idx;
-
-        for (rank = 2 ; rank <= RANK_KING ; rank++)
+        int top_rank_for_iter = get_top_rank_for_iter(local_variant);
+        for (int rank = 2 ; rank <= top_rank_for_iter ; rank++)
         {
-            for (suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
+            for (int suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
             {
-                int opt, base;
-                opt = self->card_states[STATE_POS(suit_idx, rank)];
+                int opt = self->card_states[STATE_POS(suit_idx, rank)];
+                int base;
 
-                base = ((rank == RANK_KING) ? NUM_KING_OPTS : NUM_OPTS);
+                if (IS_BAKERS_DOZEN())
+                {
+                    fcs_card_t card = fc_solve_empty_card;
+                    fcs_card_set_rank(card, rank);
+                    fcs_card_set_suit(card, suit_idx);
+
+                    if (self->bakers_dozen_topmost_cards_lookup[card >> 3] & (1 << (card & (8-1))))
+                    {
+                        continue;
+                    }
+                    base = NUM__BAKERS_DOZEN__OPTS;
+                }
+                else
+                {
+                    base = ((rank == RANK_KING) ? NUM_KING_OPTS : NUM_OPTS);
+                }
 
                 assert (opt >= 0);
                 assert (opt < base);
