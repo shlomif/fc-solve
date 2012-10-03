@@ -58,6 +58,7 @@ elsif ($is_am)
     $num_cpus = $num_threads = 12;
     $mem = 127;
     $num_hours = 700;
+    $depth_dbm = 1;
 }
 
 my $temp_dir = tempdir( CLEANUP => 1 );
@@ -235,7 +236,7 @@ my @deals = (
 
 =cut
 
-my @deals = (53687601);
+my @deals = (9189909);
 
 foreach my $deal_idx (@deals)
 {
@@ -263,7 +264,7 @@ MEM = $mem
 CPUS = $num_cpus
 HOURS = $num_hours
 
-CFLAGS = -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I. -I./libavl
+CFLAGS = -std=gnu99 -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I. -I./libavl
 MODULES = @modules
 
 JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))
