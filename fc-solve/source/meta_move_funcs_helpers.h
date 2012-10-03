@@ -174,23 +174,12 @@ static GCC_INLINE void fc_solve_move_sequence_function(
         fc_solve_move_sequence_function(&pass_new_state, moves, dest_idx, source_idx, start_idx, end_idx); \
     }
 
-#ifdef FCS_FREECELL_ONLY
-#define tests_declare_accessors_freecell_only()
-#define tests_declare_seqs_built_by()
-#define tests_declare_empty_stacks_fill()
-#else
-#define tests_declare_accessors_freecell_only()
-#define tests_declare_seqs_built_by()
-#define tests_declare_empty_stacks_fill()
-#endif
-
 /*
  * This macro declares a few access variables that are used in all
  * the tests.
  * */
 #define tests_declare_accessors_no_stacks()             \
     tests_declare_accessors_rcs_states()                \
-    tests_declare_accessors_freecell_only()             \
     fc_solve_hard_thread_t * hard_thread;               \
     fcs_move_stack_t * moves;                                  \
     int state_context_value;                                  \

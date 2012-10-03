@@ -393,8 +393,6 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 {
     tests_declare_accessors()
-    tests_declare_seqs_built_by()
-    tests_declare_empty_stacks_fill()
 
     int dest_cards_num;
     int ds, fc, dc;
@@ -597,7 +595,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
     tests_declare_accessors()
-    tests_declare_empty_stacks_fill()
 
 
     int stack_idx;
@@ -703,8 +700,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack)
 {
     tests_declare_accessors()
-    tests_declare_seqs_built_by()
-    tests_declare_empty_stacks_fill()
 
 
     int stack_idx, c, cards_num, a, dc;
@@ -887,8 +882,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 {
     tests_declare_accessors()
-    tests_declare_seqs_built_by()
-    tests_declare_empty_stacks_fill()
 
 
     int stack_idx, c, initial_derived_states_num_states;
@@ -1045,8 +1038,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 {
     tests_declare_accessors()
-    tests_declare_empty_stacks_fill()
-    tests_declare_seqs_built_by()
 
     int stack_idx, cards_num, c, ds, b, seq_end;
     fcs_card_t this_card, prev_card;
@@ -1248,7 +1239,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 {
     tests_declare_accessors()
-    tests_declare_empty_stacks_fill()
 
     int fc, stack_idx;
     fcs_card_t card;
@@ -1324,8 +1314,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 {
     tests_declare_accessors()
-    tests_declare_seqs_built_by()
-    tests_declare_empty_stacks_fill()
 
 
     int stack_idx, cards_num, c, min_card_height, ds, dc;
@@ -1530,7 +1518,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 {
     tests_declare_accessors()
-    tests_declare_empty_stacks_fill()
 
 
     int stack_idx, cards_num, c, b;
@@ -1773,7 +1760,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 {
     tests_declare_accessors()
-    tests_declare_empty_stacks_fill()
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();
 #endif
@@ -1865,8 +1851,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 {
     int num_cards_in_col_threshold;
     tests_declare_accessors()
-    tests_declare_seqs_built_by()
-    tests_declare_empty_stacks_fill()
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();
 #endif
@@ -1945,7 +1929,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 {
     int num_cards_in_col_threshold;
-    tests_declare_empty_stacks_fill()
     tests_declare_accessors()
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
@@ -2023,7 +2006,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
 {
     tests_declare_accessors()
-    tests_declare_seqs_built_by()
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
@@ -2090,7 +2072,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 {
     tests_declare_accessors()
-    tests_declare_empty_stacks_fill()
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
@@ -2190,7 +2171,6 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 #ifndef FCS_FREECELL_ONLY
     fc_solve_instance_t * instance;
 #endif
-    tests_declare_seqs_built_by()
     int deck;
 
 #ifndef FCS_FREECELL_ONLY
