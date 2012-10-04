@@ -1893,23 +1893,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 {
     tests_declare_accessors()
-    int fc, ds;
-    fcs_card_t card;
-    fcs_internal_move_t temp_move;
-    fcs_game_limit_t num_vacant_stacks;
-
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
+
     if (tests__is_filled_by_none())
     {
         return;
     }
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     if (num_vacant_stacks == 0)
     {
@@ -1917,7 +1913,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     }
 
     /* Find a vacant stack */
-    for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
+    int ds;
+    for (ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
     {
         if (fcs_col_len(
             fcs_state_get_col(state, ds)
@@ -1927,33 +1924,29 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         }
     }
 
-    for(fc=0;fc<LOCAL_FREECELLS_NUM;fc++)
+    for (int fc = 0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
     {
-        card = fcs_freecell_card(state, fc);
-        if (fcs_card_is_empty(card))
+        fcs_card_t card = fcs_freecell_card(state, fc);
+        if (fcs_card_is_empty(card) ||
+            (tests__is_filled_by_kings_only() &&
+             (fcs_card_rank(card) != 13))
+           )
         {
             continue;
         }
 
-        if (tests__is_filled_by_kings_only() &&
-            (fcs_card_rank(card) != 13))
         {
-            continue;
-        }
-
-        {
-            fcs_cards_column_t new_dest_col;
-
             sfs_check_state_begin();
 
             my_copy_stack(ds);
 
-            new_dest_col = fcs_state_get_col(new_state, ds);
+            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
 
             fcs_empty_freecell(new_state, fc);
 
             fcs_col_push_card(new_dest_col, card);
 
+            fcs_internal_move_t temp_move;
             fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
             fcs_int_move_set_src_freecell(temp_move, fc);
             fcs_int_move_set_dest_stack(temp_move, ds);
@@ -1985,24 +1978,16 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 )
 {
 #ifndef FCS_FREECELL_ONLY
-    fc_solve_instance_t * instance;
-#endif
-    int deck;
-
-#ifndef FCS_FREECELL_ONLY
-    instance = soft_thread->hard_thread->instance;
+    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
 #endif
 
     tests_define_seqs_built_by();
 
-    for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
+    for (int deck = 0 ; deck < INSTANCE_DECKS_NUM ; deck++)
     {
         if (fcs_foundation_value(*my_ptr_state, (deck<<2)+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
         {
-            int other_deck_idx;
-            int ret_val;
-
-            ret_val = (deck<<2)+fcs_card_suit(card);
+            int ret_val = (deck<<2)+fcs_card_suit(card);
             /* Always put on the foundation if it is built-by-suit */
 #ifndef FCS_FREECELL_ONLY
             if (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)
@@ -2011,6 +1996,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
             }
 #endif
 
+            int other_deck_idx;
             for (other_deck_idx = 0 ; other_deck_idx < (INSTANCE_DECKS_NUM << 2) ; other_deck_idx++)
             {
                 if (fcs_foundation_value(*my_ptr_state, other_deck_idx)
@@ -2031,6 +2017,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
             }
         }
     }
+
     return -1;
 }
 
@@ -2041,42 +2028,33 @@ extern int fc_solve_sfs_raymond_prune(
 )
 {
     tests_declare_accessors()
-    int stack_idx, fc;
-    fcs_cards_column_t col;
-    int cards_num;
-    int dest_foundation;
-    int num_cards_moved, num_total_cards_moved;
-    fcs_derived_states_list_t derived_states_list_struct;
-    fcs_card_t card;
-    fcs_internal_move_t temp_move;
-
     tests_define_accessors();
-
-
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
 
+    fcs_derived_states_list_t derived_states_list_struct;
     derived_states_list_struct.states = NULL;
     derived_states_list_struct.num_states = 0;
 
-    temp_move = fc_solve_empty_move;
-
     sfs_check_state_begin();
 
-    num_total_cards_moved = 0;
+    int num_total_cards_moved = 0;
+    int num_cards_moved = 0;
     do {
         num_cards_moved = 0;
-        for( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+        for ( int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
         {
-            col = fcs_state_get_col(new_state, stack_idx);
-            cards_num = fcs_col_len(col);
+            fcs_cards_column_t col = fcs_state_get_col(new_state, stack_idx);
+            const int cards_num = fcs_col_len(col);
+
             if (cards_num)
             {
                 /* Get the top card in the stack */
-                card = fcs_col_get_card(col, cards_num-1);
+                const fcs_card_t card = fcs_col_get_card(col, cards_num-1);
 
-                if ((dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON()) >= 0)
+                const int dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON();
+                if (dest_foundation >= 0)
                 {
                     /* We can safely move it. */
                     num_cards_moved++;
@@ -2090,6 +2068,7 @@ extern int fc_solve_sfs_raymond_prune(
 
                     fcs_increment_foundation(new_state, dest_foundation);
 
+                    fcs_internal_move_t temp_move;
                     fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
                     fcs_int_move_set_src_stack(temp_move,stack_idx);
                     fcs_int_move_set_foundation(temp_move,dest_foundation);
@@ -2102,12 +2081,13 @@ extern int fc_solve_sfs_raymond_prune(
         }
 
         /* Now check the same for the free cells */
-        for( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
+        for ( int fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
         {
-            card = fcs_freecell_card(new_state, fc);
+            const fcs_card_t card = fcs_freecell_card(new_state, fc);
             if (fcs_card_is_valid(card))
             {
-                if ((dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON()) >= 0)
+                const int dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON();
+                if (dest_foundation >= 0)
                 {
                     num_cards_moved++;
 
@@ -2115,6 +2095,7 @@ extern int fc_solve_sfs_raymond_prune(
 
                     fcs_empty_freecell(new_state, fc);
 
+                    fcs_internal_move_t temp_move;
                     fcs_increment_foundation(new_state, dest_foundation);
 
                     fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
