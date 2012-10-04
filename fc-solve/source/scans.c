@@ -504,10 +504,6 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
     int parents_stack_len, parents_stack_max_len;
     fcs_cache_key_info_t * new_cache_state;
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    DECLARE_GAME_PARAMS();
-#endif
-
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
 
@@ -814,9 +810,6 @@ int fc_solve_soft_dfs_do_solve(
     DECLARE_STATE();
 
     fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    DECLARE_GAME_PARAMS();
-#endif
     int dfs_max_depth, by_depth_max_depth, by_depth_min_depth;
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
@@ -1377,9 +1370,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     double seqs_over_renegade_cards;
     fcs_cards_column_t col;
 
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
-    DECLARE_GAME_PARAMS();
-#endif
 #define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
     double * befs_weights = my_befs_weights;
 #ifndef FCS_FREECELL_ONLY
@@ -1708,13 +1698,7 @@ int fc_solve_befs_or_bfs_do_solve(
     fcs_derived_states_list_t derived;
     fcs_derived_states_list_item_t * derived_iter, * derived_end;
     fcs_bool_t enable_pruning;
-
     int method;
-
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    DECLARE_GAME_PARAMS();
-#endif
-
     fc_solve_solve_for_state_test_t * tests_list, * tests_list_end;
     fc_solve_solve_for_state_test_t * next_test;
 
@@ -2113,17 +2097,13 @@ extern char * fc_solve_get_the_positions_by_rank_data(
     if (unlikely(! *positions_by_rank_location))
     {
         char * positions_by_rank;
-#if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-        fc_solve_instance_t * instance;
-        DECLARE_GAME_PARAMS();
-#endif
 
 #ifndef FCS_FREECELL_ONLY
         int sequences_are_built_by;
 #endif
 
 #if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-        instance = soft_thread->hard_thread->instance;
+        fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
         SET_GAME_PARAMS();
 #endif
 

@@ -220,17 +220,13 @@ typedef struct {
      * decks_num can be 1 or 2 .
      * */
 
-#define DECLARE_GAME_PARAMS() \
-    fcs_game_type_params_t game_params
-
 #define SET_INSTANCE_GAME_PARAMS(inst) \
-    game_params = (inst)->game_params
+    fcs_game_type_params_t game_params = (inst)->game_params
 
 #define SET_GAME_PARAMS() \
     SET_INSTANCE_GAME_PARAMS(instance)
 
-#define DECLARE_AND_SET_GAME_PARAMS() \
-    fcs_game_type_params_t game_params = instance->game_params
+#define DECLARE_AND_SET_GAME_PARAMS() SET_GAME_PARAMS()
 
 #ifndef HARD_CODED_NUM_FREECELLS
     fcs_game_limit_t freecells_num;
