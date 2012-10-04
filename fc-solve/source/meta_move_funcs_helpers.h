@@ -196,7 +196,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #else
 
 #define tests_define_accessors_freecell_only() \
-    fc_solve_instance_t * instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = hard_thread->instance;
 
 #define tests__is_filled_by_any_card() \
     (empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
@@ -213,8 +213,8 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  * This macro defines these accessors to have some value.
  * */
 #define tests_define_accessors_no_stacks()                                  \
-    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;        \
-    fcs_move_stack_t * moves = &(hard_thread->reusable_move_stack);         \
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;        \
+    fcs_move_stack_t * const moves = &(hard_thread->reusable_move_stack);         \
     int state_context_value = 0;                                            \
     fcs_kv_state_t pass_new_state;                                          \
     tests_define_accessors_freecell_only();   \
@@ -238,10 +238,10 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #else
 
 #define tests_define_seqs_built_by()   \
-    int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
+    const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 
 #define tests_define_empty_stacks_fill() \
-    int empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL;
+    const int empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL;
 
 #endif
 
