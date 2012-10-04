@@ -563,47 +563,33 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
     tests_declare_accessors()
 
-
-    int stack_idx;
-    int cards_num;
-    int c;
-    fcs_card_t top_card, card;
-    fcs_cards_column_t col;
-    int deck;
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    fcs_game_limit_t num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks;
-
-    fcs_internal_move_t temp_move;
-
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
-    num_vacant_freecells = soft_thread->num_vacant_freecells;
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
-
-    temp_move = fc_solve_empty_move;
+    fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     /* Now let's check if a card that is under some other cards can be placed
      * in the foundations. */
 
-    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
+        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        int cards_num = fcs_col_len(col);
         /*
          * We starts from cards_num-2 because the top card is already covered
          * by move_top_stack_cards_to_founds.
          * */
-        for(c=cards_num-2 ; c >= 0 ; c--)
+        for (int c = cards_num-2 ; c >= 0 ; c--)
         {
-            card = fcs_col_get_card(col, c);
-            for(deck=0;deck<INSTANCE_DECKS_NUM;deck++)
+            fcs_card_t card = fcs_col_get_card(col, c);
+            for (int deck = 0 ; deck < INSTANCE_DECKS_NUM ; deck++)
             {
                 if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_rank(card)-1)
                 {
@@ -641,9 +627,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 
                         new_src_col = fcs_state_get_col(new_state, stack_idx);
 
+                        fcs_card_t top_card;
                         fcs_col_pop_card(new_src_col, top_card);
                         fcs_increment_foundation(new_state, deck*4+fcs_card_suit(top_card));
 
+                        fcs_internal_move_t temp_move;
                         fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
                         fcs_int_move_set_src_stack(temp_move,stack_idx);
                         fcs_int_move_set_foundation(temp_move,deck*4+fcs_card_suit(top_card));
