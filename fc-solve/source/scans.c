@@ -802,7 +802,7 @@ int fc_solve_soft_dfs_do_solve(
 
     const fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const int soft_thread_id = soft_thread->id;
-    fcs_tests_list_of_lists * the_tests_list_ptr;
+    const fcs_tests_list_of_lists * the_tests_list_ptr;
     fcs_bool_t local_to_randomize = FALSE;
     fcs_int_limit_t hard_thread_max_num_times;
 
@@ -1483,7 +1483,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
 static GCC_INLINE void fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * soft_thread)
 {
-    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
 
     /* Initialize the BFS queue. We have one dummy element at the beginning
        in order to make operations simpler. */
@@ -1503,28 +1503,32 @@ static GCC_INLINE void fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * so
 
 
 static GCC_INLINE void normalize_befs_weights(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
     )
 {
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
-    double sum;
-    int a;
-    sum = 0;
-    for(a=0;a<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));a++)
+    double sum = 0;
+    for(
+        int i = 0 ;
+        i < (sizeof(my_befs_weights)/sizeof(my_befs_weights[0])) ;
+        i++
+        )
     {
-        if (my_befs_weights[a] < 0)
+        if (my_befs_weights[i] < 0)
         {
-            my_befs_weights[a] = fc_solve_default_befs_weights[a];
+            my_befs_weights[i] = fc_solve_default_befs_weights[i];
         }
-        sum += my_befs_weights[a];
+        sum += my_befs_weights[i];
     }
     if (sum < 1e-6)
     {
         sum = 1;
     }
-    for(a=0;a<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));a++)
+    for (int i=0 ;
+         i < (sizeof(my_befs_weights)/sizeof(my_befs_weights[0])) ;
+         i++)
     {
-        my_befs_weights[a] /= sum;
+        my_befs_weights[i] /= sum;
     }
 }
 
@@ -1532,7 +1536,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
+    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
     fcs_kv_state_t pass;
 
     pass.key = &(instance->state_copy_ptr->s);
@@ -1560,23 +1564,22 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
     if (! soft_thread->method_specific.befs.tests_list)
     {
-        fc_solve_solve_for_state_test_t * tests_list, * next_test;
-        int tests_order_num;
-        int * tests_order_tests;
+        int * const tests_order_tests = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests;
+
+        const int tests_order_num = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num;
+
+        fc_solve_solve_for_state_test_t * const tests_list = malloc(sizeof(tests_list[0]) * tests_order_num);
+
+        fc_solve_solve_for_state_test_t * next_test;
+        {
         int i;
-
-        tests_order_tests = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests;
-
-        tests_order_num = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num;
-
-        tests_list = malloc(sizeof(tests_list[0]) * tests_order_num);
-
         for (i = 0, next_test = tests_list ; i < tests_order_num ; i++)
         {
             *(next_test++) =
                     fc_solve_sfs_tests[
                         tests_order_tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK
                     ];
+        }
         }
         soft_thread->method_specific.befs.tests_list = tests_list;
         soft_thread->method_specific.befs.tests_list_end = next_test;
@@ -1645,27 +1648,18 @@ int fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * const instance = hard_thread->instance;
 
     DECLARE_NEW_STATE();
     DECLARE_STATE();
 
-    fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
-    fcs_states_linked_list_item_t * save_item;
-    fcs_derived_states_list_t derived;
-    fcs_derived_states_list_item_t * derived_iter, * derived_end;
-    fcs_bool_t enable_pruning;
-    int method;
-    fc_solve_solve_for_state_test_t * tests_list, * tests_list_end;
-    fc_solve_solve_for_state_test_t * next_test;
-
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-    fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    const fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 #endif
-    fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
-    int soft_thread_id = soft_thread->id;
-    fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
+    const fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+    const int soft_thread_id = soft_thread->id;
+    const fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
 
     fcs_states_linked_list_item_t * queue = NULL;
     fcs_states_linked_list_item_t * queue_last_item = NULL;
@@ -1673,26 +1667,23 @@ int fc_solve_befs_or_bfs_do_solve(
 
     int error_code;
 
-    fcs_int_limit_t * instance_num_times_ptr, * hard_thread_num_times_ptr;
-
     fcs_int_limit_t hard_thread_max_num_times;
 
-
-    fcs_instance_debug_iter_output_func_t debug_iter_output_func;
-    fcs_instance_debug_iter_output_context_t debug_iter_output_context;
-
+    fcs_derived_states_list_t derived;
     derived.num_states = 0;
     derived.states = NULL;
 
-    tests_list = soft_thread->method_specific.befs.tests_list;
-    tests_list_end = soft_thread->method_specific.befs.tests_list_end;
+    const fc_solve_solve_for_state_test_t * const tests_list
+        = soft_thread->method_specific.befs.tests_list;
+    const fc_solve_solve_for_state_test_t * const tests_list_end
+        = soft_thread->method_specific.befs.tests_list_end;
 
     ASSIGN_ptr_state(soft_thread->first_state_to_check);
-    enable_pruning = soft_thread->enable_pruning;
+    const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
-    method = soft_thread->method;
-    instance_num_times_ptr = &(instance->num_times);
-    hard_thread_num_times_ptr = &(hard_thread->num_times);
+    const int method = soft_thread->method;
+    fcs_int_limit_t * const instance_num_times_ptr = &(instance->num_times);
+    fcs_int_limit_t * const hard_thread_num_times_ptr = &(hard_thread->num_times);
 
     INITIALIZE_STATE();
 
@@ -1712,11 +1703,12 @@ int fc_solve_befs_or_bfs_do_solve(
 
     CALC_HARD_THREAD_MAX_NUM_TIMES();
 
-    debug_iter_output_func = instance->debug_iter_output_func;
-    debug_iter_output_context = instance->debug_iter_output_context;
+    const fcs_instance_debug_iter_output_func_t debug_iter_output_func = instance->debug_iter_output_func;
+    const fcs_instance_debug_iter_output_context_t debug_iter_output_context = instance->debug_iter_output_context;
 
     /* Continue as long as there are states in the queue or
        priority queue. */
+    fcs_states_linked_list_item_t * save_item;
     while ( PTR_STATE != NULL)
     {
         TRACE0("Start of loop");
@@ -1780,10 +1772,10 @@ int fc_solve_befs_or_bfs_do_solve(
 
         TRACE0("Counting cells");
 
-        num_vacant_freecells =
+        const fcs_game_limit_t num_vacant_freecells =
             count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &the_state);
 
-        num_vacant_stacks =
+        const fcs_game_limit_t num_vacant_stacks =
             count_num_vacant_stacks(LOCAL_STACKS_NUM, &the_state);
 
         if (check_if_limits_exceeded())
@@ -1844,7 +1836,7 @@ int fc_solve_befs_or_bfs_do_solve(
          * done for BFS and BeFS.
         */
         derived.num_states = 0;
-        for(next_test = tests_list;
+        for(const fc_solve_solve_for_state_test_t * next_test = tests_list;
             next_test < tests_list_end;
             next_test++
            )
@@ -1868,6 +1860,8 @@ int fc_solve_befs_or_bfs_do_solve(
 
         TRACE0("Insert all states");
         /* Insert all the derived states into the PQ or Queue */
+        fcs_derived_states_list_item_t * derived_iter;
+        fcs_derived_states_list_item_t * derived_end;
         for (
             derived_end = (derived_iter = derived.states) + derived.num_states
                 ;
