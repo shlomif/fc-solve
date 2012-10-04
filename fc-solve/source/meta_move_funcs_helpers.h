@@ -174,33 +174,17 @@ static GCC_INLINE void fc_solve_move_sequence_function(
         fc_solve_move_sequence_function(&pass_new_state, moves, dest_idx, source_idx, start_idx, end_idx); \
     }
 
-/*
- * This macro declares a few access variables that are used in all
- * the tests.
- * */
-#define tests_declare_accessors_no_stacks()             \
-    tests_declare_accessors_rcs_states()                \
-    fc_solve_hard_thread_t * hard_thread;               \
-    fcs_move_stack_t * moves;                                  \
-    int state_context_value;                                  \
-    fcs_kv_state_t pass_new_state
-
 #ifdef FCS_RCS_STATES
-#define tests_declare_accessors_rcs_states() \
-    fcs_state_t my_new_out_state_key;
 
-#define tests_define_accessors_rcs_states() \
-{ \
+#define tests_define_accessors_rcs_states()     \
+    fcs_state_t my_new_out_state_key;           \
+{                                               \
     pass_new_state.key = &my_new_out_state_key; \
 }
 
 #else
-#define tests_declare_accessors_rcs_states()
 #define tests_define_accessors_rcs_states() {}
 #endif
-
-#define tests_declare_accessors() \
-    tests_declare_accessors_no_stacks();
 
 #ifdef FCS_FREECELL_ONLY
 
@@ -232,9 +216,10 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  * This macro defines these accessors to have some value.
  * */
 #define tests_define_accessors_no_stacks()                                  \
-    hard_thread = soft_thread->hard_thread;                       \
-    moves = &(hard_thread->reusable_move_stack);                     \
-    state_context_value = 0;                                      \
+    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;        \
+    fcs_move_stack_t * moves = &(hard_thread->reusable_move_stack);         \
+    int state_context_value = 0;                                            \
+    fcs_kv_state_t pass_new_state;                                          \
     tests_define_accessors_freecell_only();   \
     tests_define_accessors_rcs_states();
 

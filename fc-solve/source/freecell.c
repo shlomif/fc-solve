@@ -69,8 +69,6 @@
  * */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 {
-    tests_declare_accessors()
-
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
@@ -149,8 +147,6 @@ static GCC_INLINE void sort_derived_states(
  * */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
 {
-    tests_declare_accessors_no_stacks();
-
     tests_define_accessors_no_stacks();
 
 #ifndef HARD_CODED_NUM_FREECELLS
@@ -363,8 +359,6 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 {
-    tests_declare_accessors()
-
     tests_define_accessors();
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
@@ -548,8 +542,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
-    tests_declare_accessors()
-
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
@@ -639,7 +631,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack)
 {
-    tests_declare_accessors()
     tests_define_accessors();
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
@@ -804,13 +795,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 {
-    tests_declare_accessors()
-
-    const fcs_game_limit_t num_vacant_freecells
-        = soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_vacant_stacks
-         = soft_thread->num_vacant_stacks;
-
     tests_define_accessors();
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
@@ -818,6 +802,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
 #endif
+
+    const fcs_game_limit_t num_vacant_freecells
+        = soft_thread->num_vacant_freecells;
+    const fcs_game_limit_t num_vacant_stacks
+         = soft_thread->num_vacant_stacks;
 
     const int initial_derived_states_num_states =
         derived_states_list->num_states;
@@ -952,7 +941,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 {
-    tests_declare_accessors()
     tests_define_accessors();
     tests_define_empty_stacks_fill();
     tests_define_seqs_built_by();
@@ -1147,12 +1135,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     return;
 }
 
+/* Let's try to put cards that occupy freecells on an empty stack */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 {
-    tests_declare_accessors()
-
-    /* Let's try to put cards that occupy freecells on an empty stack */
-
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
@@ -1216,7 +1201,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 {
-    tests_declare_accessors()
     tests_define_accessors();
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
@@ -1400,7 +1384,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 {
-    tests_declare_accessors()
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
@@ -1476,9 +1459,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_do_nothing)
 #if 0
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
 {
-    tests_declare_accessors()
-
-
     int stack_idx, cards_num, c, ds;
     int dest_cards_num;
     fcs_card_t card;
@@ -1555,9 +1535,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
 {
-    tests_declare_accessors()
-
-
     int stack_idx, cards_num, c, ds;
     fcs_card_t card;
     fcs_cards_column_t col;
@@ -1628,7 +1605,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 {
-    tests_declare_accessors()
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
@@ -1709,7 +1685,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 {
-    tests_declare_accessors()
     tests_define_accessors();
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
@@ -1779,7 +1754,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 {
-    tests_declare_accessors()
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
@@ -1842,7 +1816,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
 {
-    tests_declare_accessors()
     tests_define_accessors();
     tests_define_seqs_built_by();
 
@@ -1897,7 +1870,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 {
-    tests_declare_accessors()
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
@@ -2033,7 +2005,6 @@ extern int fc_solve_sfs_raymond_prune(
     fcs_collectible_state_t * * ptr_next_state_val
 )
 {
-    tests_declare_accessors()
     tests_define_accessors();
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();

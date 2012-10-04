@@ -63,11 +63,7 @@ char fc_solve_simple_simon_nothing;
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
-    tests_declare_accessors()
-
-
     fcs_internal_move_t temp_move;
-
 
     /*
      * stack - the stack index from which to move cards to the founds.
@@ -148,10 +144,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 {
-    tests_declare_accessors()
-
-
-
     fcs_game_limit_t num_vacant_stacks;
 
     /*
@@ -269,11 +261,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent)
 {
-    tests_declare_accessors()
-
-
-
-
     /*
      * stack - the source stack index
      * cards_num - number of cards in "stack"
@@ -374,9 +361,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above)
 {
-    tests_declare_accessors()
-
-
     fcs_cards_column_t col;
     fcs_cards_column_t clear_junk_dest_col;
     fcs_cards_column_t dest_col;
@@ -651,8 +635,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent)
 {
-    tests_declare_accessors()
-
     int stack_idx, cards_num, suit, a;
     fcs_card_t card, dest_card;
     int rank, num_true_seqs, ds, dest_cards_num ;
@@ -888,9 +870,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above)
 {
-    tests_declare_accessors()
-
-
     /*
      * stack - the source stack index
      * cards_num - the number of cards in "stack"
@@ -1208,9 +1187,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above)
 {
-    tests_declare_accessors()
-
-
     /*
      * stack - the source stack index
      * cards_num - the number of cards in "stack"
@@ -1448,9 +1424,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack)
 {
-    tests_declare_accessors()
-
-
     int stack_idx, cards_num, parent_card_height, child_card_height;
     fcs_card_t parent_card;
     int a;
@@ -1726,8 +1699,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 {
-    tests_declare_accessors()
-
     /*
      * stack - the source stack index
      * cards_num - number of cards in "stack"
