@@ -42,8 +42,7 @@
 
 args_man_t * fc_solve_args_man_alloc(void)
 {
-    args_man_t * ret;
-    ret = malloc(sizeof(args_man_t));
+    args_man_t * ret = malloc(sizeof(*ret));
     ret->argc = 0;
     ret->argv = malloc(sizeof(ret->argv[0]) * ARGS_MAN_GROW_BY);
     return ret;
@@ -51,12 +50,14 @@ args_man_t * fc_solve_args_man_alloc(void)
 
 void fc_solve_args_man_free(args_man_t * manager)
 {
-    int a;
-    for(a=0;a<manager->argc;a++)
+    const typeof(manager->argc) argc = manager->argc;
+    const typeof(manager->argv) argv = manager->argv;
+
+    for (int i = 0 ; i < argc ; i++)
     {
-        free(manager->argv[a]);
+        free(argv[i]);
     }
-    free(manager->argv);
+    free(argv);
     free(manager);
 }
 
@@ -66,9 +67,7 @@ static GCC_INLINE void add_to_last_arg(args_man_t * manager, char c)
 
     if (manager->last_arg_ptr == manager->last_arg_end)
     {
-        char * new_last_arg;
-
-        new_last_arg = realloc(manager->last_arg,
+        char * new_last_arg = realloc(manager->last_arg,
             manager->last_arg_end-manager->last_arg+1024
         );
         manager->last_arg_ptr += new_last_arg - manager->last_arg;
@@ -81,12 +80,9 @@ static GCC_INLINE void add_to_last_arg(args_man_t * manager, char c)
 
 static GCC_INLINE void push_args_last_arg(args_man_t * manager)
 {
-    char * new_arg;
-    int length;
+    int length = manager->last_arg_ptr - manager->last_arg;
 
-    length = manager->last_arg_ptr - manager->last_arg;
-
-    new_arg = malloc(length+1);
+    char * const new_arg = malloc(length+1);
 
     strncpy(
         new_arg, manager->last_arg,
