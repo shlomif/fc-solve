@@ -168,18 +168,15 @@ static GCC_INLINE void fc_solve_hash_foreach(
     void * context
     )
 {
-    int i;
-    fc_solve_hash_symlink_item_t * * item;
-    fc_solve_hash_symlink_item_t * next_item;
-
-    for(i=0;i<hash->size;i++)
+    const typeof(hash->size) size = hash->size;
+    for (int i = 0 ; i < size ; i++)
     {
-        item = &(hash->entries[i].first_item);
+        fc_solve_hash_symlink_item_t * * item = &(hash->entries[i].first_item);
         while ((*item) != NULL)
         {
             if (should_delete_ptr((*item)->key, context))
             {
-                next_item = (*item)->next;
+                fc_solve_hash_symlink_item_t * next_item = (*item)->next;
                 /* Garbage collect (*item). TODO : actually make use of the
                  * items. */
                 (*item)->next = hash->list_of_vacant_items;
