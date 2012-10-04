@@ -364,7 +364,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 }
 
 #define CALC_POSITIONS_BY_RANK() \
-    positions_by_rank = \
+    char * positions_by_rank = \
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
             raw_ptr_state_raw \
@@ -374,24 +374,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 {
     tests_declare_accessors()
 
-    int dest_cards_num;
-    int ds, fc, dc;
-    fcs_cards_column_t dest_col;
-    fcs_card_t dest_card, src_card, dest_below_card;
-    int initial_derived_states_num_states;
-
-    fcs_internal_move_t temp_move;
-    int is_seq_in_dest;
-    int num_cards_to_relocate;
-    int freecells_to_fill, freestacks_to_fill;
-
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    fcs_game_limit_t num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks;
-    char * positions_by_rank;
-    char * pos_idx_to_check, * last_pos_idx;
 
     tests_define_accessors();
     tests_define_seqs_built_by();
@@ -401,21 +386,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     SET_GAME_PARAMS();
 #endif
 
-    temp_move = fc_solve_empty_move;
+    fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    num_vacant_freecells = soft_thread->num_vacant_freecells;
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
-
-    initial_derived_states_num_states = derived_states_list->num_states;
+    int initial_derived_states_num_states = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
 
     /* Let's try to put cards in the freecells on top of stacks */
 
     /* Scan the freecells */
-    for(fc=0;fc<LOCAL_FREECELLS_NUM;fc++)
+    for (int fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
     {
-        src_card = fcs_freecell_card(state, fc);
+        fcs_card_t src_card = fcs_freecell_card(state, fc);
 
         /* If the freecell is not empty and dest_card is its parent
          * */
@@ -456,9 +439,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 #define FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP() FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card) \
-            pos_idx_to_check = &positions_by_rank[ \
+            char * pos_idx_to_check = &positions_by_rank[ \
                 (FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card))) \
             ]; \
+            char * last_pos_idx; \
                  \
             for (last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH, \
                  pos_idx_to_check += FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card) \
@@ -470,39 +454,41 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
             FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)
             {
+                int ds;
                 if ((ds = pos_idx_to_check[0]) == -1)
                 {
                     continue;
                 }
-                dc = pos_idx_to_check[1];
+                int dc = pos_idx_to_check[1];
 
-                dest_col = fcs_state_get_col(state, ds);
-                dest_card = fcs_col_get_card(dest_col, dc);
+                fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
 
-                dest_cards_num = fcs_col_len(dest_col);
+                int dest_cards_num = fcs_col_len(dest_col);
                 /* Let's check if we can put it there */
 
                 /* Check if the destination card is already below a
                  * suitable card */
-                is_seq_in_dest = 0;
+                fcs_bool_t is_seq_in_dest = FALSE;
                 if (dest_cards_num - 1 > dc)
                 {
-                    dest_below_card =
+                    fcs_card_t dest_below_card =
                         fcs_col_get_card(dest_col, dc+1);
                     if (fcs_is_parent_card(dest_below_card, dest_card))
                     {
-                        is_seq_in_dest = 1;
+                        is_seq_in_dest = TRUE;
                     }
                 }
 
                 if (! is_seq_in_dest)
                 {
-                    num_cards_to_relocate = dest_cards_num - dc - 1;
+                    int num_cards_to_relocate = dest_cards_num - dc - 1;
 
-                    freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
+                    int freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
 
                     num_cards_to_relocate -= freecells_to_fill;
 
+                    int freestacks_to_fill;
                     if (tests__is_filled_by_any_card())
                     {
                         freestacks_to_fill = min(num_cards_to_relocate, num_vacant_stacks);
@@ -545,6 +531,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                         fcs_col_push_card(new_dest_col, src_card);
                         fcs_empty_freecell(new_state, fc);
 
+                        fcs_internal_move_t temp_move;
                         fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_STACK);
                         fcs_int_move_set_src_freecell(temp_move,fc);
                         fcs_int_move_set_dest_stack(temp_move,ds);
@@ -872,8 +859,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    char * positions_by_rank;
-    char * pos_idx_to_check, * last_pos_idx;
     const fcs_game_limit_t num_vacant_freecells
         = soft_thread->num_vacant_freecells;
     const fcs_game_limit_t num_vacant_stacks
@@ -1310,8 +1295,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 #endif
     fcs_game_limit_t num_vacant_freecells;
     fcs_game_limit_t num_vacant_stacks;
-    char * positions_by_rank;
-    char * pos_idx_to_check, * last_pos_idx;
 
     tests_define_accessors();
     tests_define_seqs_built_by();
