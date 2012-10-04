@@ -1997,6 +1997,32 @@ my_return_label:
 
 #undef myreturn
 
+static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    switch(soft_thread->method)
+    {
+        case FCS_METHOD_SOFT_DFS:
+        case FCS_METHOD_RANDOM_DFS:
+            {
+                return &(
+                    soft_thread->method_specific.soft_dfs.soft_dfs_info[
+                    soft_thread->method_specific.soft_dfs.depth
+                    ].positions_by_rank
+                    );
+            }
+            break;
+        default:
+            {
+                return &(
+                    soft_thread->method_specific.befs.befs_positions_by_rank
+                    );
+            }
+            break;
+    }
+}
+
 /*
  * fc_solve_get_the_positions_by_rank_data() :
  *
@@ -2014,7 +2040,8 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 #undef the_state
 #define the_state state_key
 
-    char * * positions_by_rank_location;
+    char * * const positions_by_rank_location =
+        fc_solve_calc_positions_by_rank_location(soft_thread);
 
 #ifdef DEBUG
     if (getenv("FCS_TRACE"))
@@ -2025,42 +2052,15 @@ extern char * fc_solve_get_the_positions_by_rank_data(
     VERIFY_STATE_SANITY();
 #endif
 
-    switch(soft_thread->method)
-    {
-        case FCS_METHOD_SOFT_DFS:
-        case FCS_METHOD_RANDOM_DFS:
-            {
-                positions_by_rank_location = &(
-                    soft_thread->method_specific.soft_dfs.soft_dfs_info[
-                        soft_thread->method_specific.soft_dfs.depth
-                    ].positions_by_rank
-                    );
-            }
-            break;
-        default:
-            {
-                positions_by_rank_location = &(
-                        soft_thread->method_specific.befs.befs_positions_by_rank
-                        );
-            }
-            break;
-    }
-
     if (unlikely(! *positions_by_rank_location))
     {
-        char * positions_by_rank;
-
-#ifndef FCS_FREECELL_ONLY
-        int sequences_are_built_by;
-#endif
-
 #if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-        fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
+        fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
         SET_GAME_PARAMS();
 #endif
 
 #ifndef FCS_FREECELL_ONLY
-        sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
+        const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
 
         /* We don't keep track of kings (rank == 13). */
@@ -2074,7 +2074,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
          * (-1,-1) (= end) padding.             * */
 #define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH)
 
-        positions_by_rank = malloc(FCS_POS_BY_RANK_SIZE);
+        char * const positions_by_rank = malloc(FCS_POS_BY_RANK_SIZE);
 
         memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
 
@@ -2083,23 +2083,19 @@ extern char * fc_solve_get_the_positions_by_rank_data(
              * indices looking for the cards and filling them. */
 
             {
-                int ds;
                 char * ptr;
 
-                for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
+                for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
                 {
-                    fcs_cards_column_t dest_col;
-                    int top_card_idx;
-                    fcs_card_t dest_card;
-
-                    dest_col = fcs_state_get_col(the_state, ds);
-                    top_card_idx = fcs_col_len(dest_col);
+                    const fcs_cards_column_t dest_col = fcs_state_get_col(the_state, ds);
+                    int top_card_idx = fcs_col_len(dest_col);
 
                     if (unlikely((top_card_idx--) == 0))
                     {
                         continue;
                     }
 
+                    fcs_card_t dest_card;
                     {
                         fcs_card_t dest_below_card;
                         int dc;
