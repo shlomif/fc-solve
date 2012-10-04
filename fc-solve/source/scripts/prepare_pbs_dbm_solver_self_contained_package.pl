@@ -20,6 +20,7 @@ my $num_cpus = 4;
 my $num_threads = $num_cpus;
 my $num_hours = 120;
 
+my $march_flag = "-march=native";
 my $num_freecells = $ENV{NUM_FC} || 2;
 
 GetOptions(
@@ -59,6 +60,7 @@ elsif ($is_am)
     $mem = 127;
     $num_hours = 700;
     $depth_dbm = 1;
+    $march_flag = '';
 }
 
 my $temp_dir = tempdir( CLEANUP => 1 );
@@ -264,7 +266,7 @@ MEM = $mem
 CPUS = $num_cpus
 HOURS = $num_hours
 
-CFLAGS = -std=gnu99 -O3 -march=native -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I. -I./libavl
+CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I. -I./libavl
 MODULES = @modules
 
 JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))
