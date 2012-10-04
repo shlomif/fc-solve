@@ -1626,13 +1626,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 {
     tests_declare_accessors()
-    int stack_idx, cards_num;
-    fcs_card_t card;
-    fcs_internal_move_t temp_move;
-    int empty_stack_idx;
-    fcs_game_limit_t num_vacant_stacks;
-    fcs_cards_column_t col;
-
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
@@ -1641,7 +1634,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         return;
     }
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     if (num_vacant_stacks == 0)
     {
@@ -1652,7 +1645,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     SET_GAME_PARAMS();
 #endif
 
-    for(empty_stack_idx=0;empty_stack_idx<LOCAL_STACKS_NUM;empty_stack_idx++)
+    int empty_stack_idx;
+    for (empty_stack_idx = 0 ; empty_stack_idx < LOCAL_STACKS_NUM ; empty_stack_idx++)
     {
         if (fcs_col_len(
             fcs_state_get_col(state, empty_stack_idx)
@@ -1662,17 +1656,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         }
     }
 
-
-    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
+        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        int cards_num = fcs_col_len(col);
+
         /* Bug fix: if there's only one card in a column, there's no
          * point moving it to a new empty column.
          * */
         if (cards_num > 1)
         {
-            card = fcs_col_get_card(col, cards_num-1);
+            fcs_card_t card = fcs_col_get_card(col, cards_num-1);
             if (tests__is_filled_by_kings_only() &&
                 (fcs_card_rank(card) != 13))
             {
@@ -1680,21 +1674,20 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
             }
             /* Let's move it */
             {
-                fcs_cards_column_t new_src_col;
-                fcs_cards_column_t empty_stack_col;
                 sfs_check_state_begin();
 
                 my_copy_stack(stack_idx);
 
-                new_src_col = fcs_state_get_col(new_state, stack_idx);
+                fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
 
                 fcs_col_pop_top(new_src_col);
 
                 my_copy_stack(empty_stack_idx);
 
-                empty_stack_col = fcs_state_get_col(new_state, empty_stack_idx);
+                fcs_cards_column_t empty_stack_col = fcs_state_get_col(new_state, empty_stack_idx);
                 fcs_col_push_card(empty_stack_col, card);
 
+                fcs_internal_move_t temp_move;
                 fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);
                 fcs_int_move_set_src_stack(temp_move, stack_idx);
                 fcs_int_move_set_dest_stack(temp_move, empty_stack_idx);
@@ -1712,13 +1705,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 {
-    int num_cards_in_col_threshold;
     tests_declare_accessors()
-    int stack_idx, cards_num, ds;
-    fcs_card_t card, dest_card;
-    fcs_internal_move_t temp_move;
-    fcs_cards_column_t col, dest_col;
-
     tests_define_accessors();
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
@@ -1727,47 +1714,47 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
     SET_GAME_PARAMS();
 #endif
 
-    num_cards_in_col_threshold = tests__should_not_empty_columns() ? 1 : 0;
+    const int num_cards_in_col_threshold = tests__should_not_empty_columns() ? 1 : 0;
 
-    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
+        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        int cards_num = fcs_col_len(col);
+
         if (cards_num > num_cards_in_col_threshold)
         {
-            card = fcs_col_get_card(col, cards_num-1);
+            fcs_card_t card = fcs_col_get_card(col, cards_num-1);
 
-            for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
+            for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
             {
                 if (ds == stack_idx)
                 {
                     continue;
                 }
 
-                dest_col = fcs_state_get_col(state, ds);
+                fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
 
                 if (fcs_col_len(dest_col) > 0)
                 {
-                    dest_card = fcs_col_get_card(dest_col,
+                    fcs_card_t dest_card = fcs_col_get_card(dest_col,
                             fcs_col_len(dest_col)-1);
                     if (fcs_is_parent_card(card, dest_card))
                     {
                         /* Let's move it */
                         {
-                            fcs_cards_column_t new_src_col;
-                            fcs_cards_column_t new_dest_col;
                             sfs_check_state_begin();
 
                             my_copy_stack(stack_idx);
                             my_copy_stack(ds);
 
-                            new_src_col = fcs_state_get_col(new_state, stack_idx);
-                            new_dest_col = fcs_state_get_col(new_state, ds);
+                            fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
+                            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
 
                             fcs_col_pop_top(new_src_col);
 
                             fcs_col_push_card(new_dest_col, card);
 
+                            fcs_internal_move_t temp_move;
                             fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);
                             fcs_int_move_set_src_stack(temp_move, stack_idx);
                             fcs_int_move_set_dest_stack(temp_move, ds);
