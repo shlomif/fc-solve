@@ -1251,24 +1251,21 @@ int fc_solve_soft_dfs_do_solve(
 #define FCS_SEQS_OVER_RENEGADE_POWER(n) pow(n, FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
 
 static GCC_INLINE int update_col_cards_under_sequences(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_cards_column_t col,
-        double * cards_under_sequences_ptr
+        fc_solve_soft_thread_t * const soft_thread,
+        const fcs_cards_column_t col,
+        double * const cards_under_sequences_ptr
         )
 {
-    int cards_num;
-    int c;
-    fcs_card_t this_card, prev_card;
 #ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by =
+    const int sequences_are_built_by =
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(soft_thread->hard_thread->instance)
         ;
 #endif
 
-    cards_num = fcs_col_len(col);
-    c = cards_num - 2;
-    this_card = fcs_col_get_card(col, c+1);
-    prev_card = fcs_col_get_card(col, c);
+    int cards_num = fcs_col_len(col);
+    int c = cards_num - 2;
+    fcs_card_t this_card = fcs_col_get_card(col, c+1);
+    fcs_card_t prev_card = fcs_col_get_card(col, c);
     while ((c >= 0) && fcs_is_parent_card(this_card,prev_card))
     {
         this_card = prev_card;
@@ -1282,8 +1279,8 @@ static GCC_INLINE int update_col_cards_under_sequences(
 }
 
 static GCC_INLINE void initialize_befs_rater(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_kv_state_t * raw_pass_raw
+    fc_solve_soft_thread_t * const soft_thread,
+    fcs_kv_state_t * const raw_pass_raw
 )
 {
 
@@ -1291,15 +1288,12 @@ static GCC_INLINE void initialize_befs_rater(
 #define ptr_state_key (raw_pass_raw->key)
 
 #ifndef HARD_CODED_NUM_STACKS
-    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * const instance = hard_thread->instance;
 #endif
 
-    int a;
-    double cards_under_sequences;
-
-    cards_under_sequences = 0;
-    for(a=0;a<INSTANCE_STACKS_NUM;a++)
+    double cards_under_sequences = 0;
+    for (int a=0 ; a < INSTANCE_STACKS_NUM ; a++)
     {
         update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*ptr_state_key, a), &cards_under_sequences);
     }
@@ -1335,17 +1329,12 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     )
 {
 #ifndef FCS_FREECELL_ONLY
-    fc_solve_hard_thread_t * hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * instance = hard_thread->instance;
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * const instance = hard_thread->instance;
 #endif
-    fcs_state_t * state = raw_pass_raw->key;
+    fcs_state_t * const state = raw_pass_raw->key;
 
     double ret=0;
-    int a, c, cards_num, num_cards_in_founds;
-    fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
-    double cards_under_sequences, temp;
-    double seqs_over_renegade_cards;
-    fcs_cards_column_t col;
 
 #define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
     double * befs_weights = my_befs_weights;
@@ -1359,13 +1348,13 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     SET_GAME_PARAMS();
 #endif
 
-    cards_under_sequences = 0;
-    num_vacant_stacks = 0;
-    seqs_over_renegade_cards = 0;
-    for(a=0;a<LOCAL_STACKS_NUM;a++)
+    double cards_under_sequences = 0;
+    fcs_game_limit_t num_vacant_stacks = 0;
+    double seqs_over_renegade_cards = 0;
+    for (int a = 0 ; a < LOCAL_STACKS_NUM ; a++)
     {
-        col = fcs_state_get_col(*state, a);
-        cards_num = fcs_col_len(col);
+        const fcs_cards_column_t col = fcs_state_get_col(*state, a);
+        const int cards_num = fcs_col_len(col);
 
         if (cards_num == 0)
         {
@@ -1377,7 +1366,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
             continue;
         }
 
-        c = update_col_cards_under_sequences(soft_thread, col, &cards_under_sequences);
+        const int c = update_col_cards_under_sequences(soft_thread, col, &cards_under_sequences);
         if (c >= 0)
         {
             seqs_over_renegade_cards +=
@@ -1396,18 +1385,18 @@ static GCC_INLINE pq_rating_t befs_rate_state(
             )
            * befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS];
 
-    num_cards_in_founds = 0;
-    for(a=0;a<(LOCAL_DECKS_NUM<<2);a++)
+    int num_cards_in_founds = 0;
+    for (int found_idx=0 ; found_idx < (LOCAL_DECKS_NUM<<2) ; found_idx++)
     {
-        num_cards_in_founds += fcs_foundation_value((*state), a);
+        num_cards_in_founds += fcs_foundation_value((*state), found_idx);
     }
 
     ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT];
 
-    num_vacant_freecells = 0;
-    for(a=0;a<LOCAL_FREECELLS_NUM;a++)
+    fcs_game_limit_t num_vacant_freecells = 0;
+    for (int freecell_idx = 0 ; freecell_idx < LOCAL_FREECELLS_NUM ; freecell_idx++)
     {
-        if (fcs_freecell_is_empty((*state),a))
+        if (fcs_freecell_is_empty((*state),freecell_idx))
         {
             num_vacant_freecells++;
         }
@@ -1418,35 +1407,26 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #else
 #define is_filled_by_any_card() (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
 #endif
-    if (is_filled_by_any_card())
-    {
-        if (unlimited_sequence_move)
-        {
-            temp = (((double)num_vacant_freecells+num_vacant_stacks)/(LOCAL_FREECELLS_NUM+INSTANCE_STACKS_NUM));
-        }
-        else
-        {
-            temp = (((double)((num_vacant_freecells+1)<<num_vacant_stacks)) / ((LOCAL_FREECELLS_NUM+1)<<(INSTANCE_STACKS_NUM)));
-        }
-    }
-    else
-    {
-        if (unlimited_sequence_move)
-        {
-            temp = (((double)num_vacant_freecells)/LOCAL_FREECELLS_NUM);
-        }
-        else
-        {
-            temp = 0;
-        }
-    }
 
-    ret += (temp * befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE]);
+#define CALC_VACANCY_VAL() \
+    ( \
+        is_filled_by_any_card() \
+      ? \
+        (unlimited_sequence_move \
+         ? (((double)num_vacant_freecells+num_vacant_stacks)/(LOCAL_FREECELLS_NUM+INSTANCE_STACKS_NUM))  \
+         : (((double)((num_vacant_freecells+1)<<num_vacant_stacks)) / ((LOCAL_FREECELLS_NUM+1)<<(INSTANCE_STACKS_NUM))) \
+        ) \
+      : (unlimited_sequence_move \
+         ? (((double)num_vacant_freecells)/LOCAL_FREECELLS_NUM) \
+         : 0 \
+        ) \
+    )
+
+    ret += (CALC_VACANCY_VAL() * befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE]);
+#undef CALC_VACANCY_VAL
 
     {
-        int depth;
-
-        depth = kv_calc_depth(raw_pass_raw);
+        int depth = kv_calc_depth(raw_pass_raw);
 
         if (depth <= 20000)
         {
@@ -1458,6 +1438,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     return (int)(ret*INT_MAX);
 }
+
 #undef pass
 #undef ptr_state_key
 
