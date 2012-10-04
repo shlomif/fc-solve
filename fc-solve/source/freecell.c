@@ -1178,11 +1178,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 {
     tests_declare_accessors()
 
-    int fc, stack_idx;
-    fcs_card_t card;
-
-    fcs_internal_move_t temp_move;
-
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
 #endif
@@ -1201,11 +1196,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     SET_GAME_PARAMS();
 #endif
 
-    temp_move = fc_solve_empty_move;
-
     if (soft_thread->num_vacant_stacks)
     {
-        for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+        int stack_idx;
+        for (stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
         {
             if (fcs_col_len(
                 fcs_state_get_col(state, stack_idx)
@@ -1215,9 +1209,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
             }
         }
 
-        for(fc=0;fc<LOCAL_FREECELLS_NUM;fc++)
+        for (int fc = 0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
         {
-            card = fcs_freecell_card(state, fc);
+            fcs_card_t card = fcs_freecell_card(state, fc);
             if (
                 (tests__is_filled_by_kings_only())
                 ? (fcs_card_rank(card) == 13)
@@ -1236,6 +1230,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
                 fcs_col_push_card(new_src_col, card);
                 fcs_empty_freecell(new_state, fc);
 
+                fcs_internal_move_t temp_move;
                 fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_STACK);
                 fcs_int_move_set_src_freecell(temp_move,fc);
                 fcs_int_move_set_dest_stack(temp_move,stack_idx);
