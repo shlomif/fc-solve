@@ -742,24 +742,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
                             if (num_cards_to_relocate == 0)
                             {
-                                int cols_indexes[3];
-                                int last_dest;
-                                int source_index;
-                                fcs_cards_column_t new_dest_col;
-                                fcs_card_t moved_card;
                                 /* We can move it */
-
                                 sfs_check_state_begin()
 
                                 my_copy_stack(ds);
 
-                                new_dest_col = fcs_state_get_col(new_state, ds);
+                                fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
 
+                                int cols_indexes[3];
                                 cols_indexes[0] = ds;
                                 cols_indexes[1] = -1;
                                 cols_indexes[2] = -1;
 
-                                last_dest = empty_two_cols_from_new_state(
+                                int last_dest = empty_two_cols_from_new_state(
                                     soft_thread,
                                     NEW_STATE_BY_REF(),
                                     moves,
@@ -769,7 +764,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
                                     0
                                 );
 
-                                source_index = last_dest & 0xFF;
+                                int source_index = last_dest & 0xFF;
 
                                 empty_two_cols_from_new_state(
                                     soft_thread,
@@ -780,6 +775,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
                                     0
                                 );
 
+                                fcs_card_t moved_card;
                                 if (!( (last_dest >> 8)&0x1))
                                 {
                                     moved_card = fcs_freecell_card(new_state, source_index);
