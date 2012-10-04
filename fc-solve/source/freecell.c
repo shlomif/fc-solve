@@ -80,7 +80,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
     for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        int cards_num = fcs_col_len(col);
+        const int cards_num = fcs_col_len(col);
         if (cards_num)
         {
             /* Get the top card in the stack */
@@ -565,7 +565,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
     for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        int cards_num = fcs_col_len(col);
+        const int cards_num = fcs_col_len(col);
         /*
          * We starts from cards_num-2 because the top card is already covered
          * by move_top_stack_cards_to_founds.
@@ -658,7 +658,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
     for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        int cards_num = fcs_col_len(col);
+        const int cards_num = fcs_col_len(col);
 
         for (int c=0 ; c<cards_num ; c++)
         {
@@ -978,7 +978,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
         for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
         {
             fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-            int cards_num = fcs_col_len(col);
+            const int cards_num = fcs_col_len(col);
 
             int seq_end;
             for (int c=0; c < cards_num; c = seq_end+1)
@@ -1236,7 +1236,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        int cards_num = fcs_col_len(col);
+        const int cards_num = fcs_col_len(col);
 
         /*
          * If there's only one card in the column, then it won't be above a
@@ -1424,7 +1424,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
         for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
         {
             fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-            int cards_num = fcs_col_len(col);
+            const int cards_num = fcs_col_len(col);
 
             if (cards_num <= num_vacant_freecells)
             {
@@ -1662,7 +1662,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        int cards_num = fcs_col_len(col);
+        const int cards_num = fcs_col_len(col);
 
         /* Bug fix: if there's only one card in a column, there's no
          * point moving it to a new empty column.
@@ -1723,7 +1723,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
     for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        int cards_num = fcs_col_len(col);
+        const int cards_num = fcs_col_len(col);
 
         if (cards_num > num_cards_in_col_threshold)
         {
@@ -1808,7 +1808,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
     for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        int cards_num = fcs_col_len(col);
+        const int cards_num = fcs_col_len(col);
         if (cards_num > num_cards_in_col_threshold)
         {
             const fcs_card_t card = fcs_col_get_card(col, cards_num-1);
