@@ -39,7 +39,7 @@ LTO_FLAGS := -flto
 ifeq ($(COMPILER),gcc)
 	CC = gcc
 	GCC_COMPAT := 1
-	CFLAGS += -Werror=implicit-function-declaration
+	CFLAGS += -Werror=implicit-function-declaration -std=gnu99
 else ifeq ($(COMPILER),clang)
 	CC = clang
 	GCC_COMPAT := 1
