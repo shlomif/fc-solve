@@ -1398,16 +1398,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 {
     tests_declare_accessors()
-
-
-    int stack_idx, cards_num, c, b;
-    fcs_card_t top_card;
-    fcs_game_limit_t num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks;
-    fcs_cards_column_t col;
-
-    fcs_internal_move_t temp_move;
-
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
@@ -1416,49 +1406,49 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
         return;
     }
 
-    temp_move = fc_solve_empty_move;
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
-    num_vacant_freecells = soft_thread->num_vacant_freecells;
-
+    const fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
+    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     /* Now, let's try to empty an entire stack into the freecells, so other cards can
      * inhabit it */
 
     if (num_vacant_stacks == 0)
     {
-        for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+        for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
         {
-            col = fcs_state_get_col(state, stack_idx);
-            cards_num = fcs_col_len(col);
+            fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+            int cards_num = fcs_col_len(col);
+
             if (cards_num <= num_vacant_freecells)
             {
                 /* We can empty it */
-                fcs_cards_column_t new_src_col;
-
                 sfs_check_state_begin()
 
                 my_copy_stack(stack_idx);
 
-                new_src_col = fcs_state_get_col(new_state, stack_idx);
+                fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
 
-                for(c=0;c<cards_num;c++)
+                int b = 0;
+                for (int c = 0 ; c < cards_num ; c++, b++)
                 {
                     /* Find a vacant freecell */
-                    for(b=0; b<LOCAL_FREECELLS_NUM; b++)
+                    for ( ; b < LOCAL_FREECELLS_NUM ; b++)
                     {
                         if (fcs_freecell_is_empty(new_state, b))
                         {
                             break;
                         }
                     }
+                    fcs_card_t top_card;
                     fcs_col_pop_card(new_src_col, top_card);
 
                     fcs_put_card_in_freecell(new_state, b, top_card);
 
+                    fcs_internal_move_t temp_move;
                     fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
                     fcs_int_move_set_src_stack(temp_move,stack_idx);
                     fcs_int_move_set_dest_freecell(temp_move,b);
