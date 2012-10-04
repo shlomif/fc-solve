@@ -1248,22 +1248,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 {
     tests_declare_accessors()
 
-
-    int stack_idx, cards_num, c, min_card_height, ds, dc;
-    int num_cards_to_relocate;
-    int dest_cards_num;
-    fcs_card_t card, upper_card, lower_card;
-    fcs_card_t dest_card;
-    int freecells_to_fill, freestacks_to_fill;
-    fcs_cards_column_t col, dest_col;
-    int initial_derived_states_num_states;
-
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     DECLARE_GAME_PARAMS();
 #endif
-    fcs_game_limit_t num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks;
-
     tests_define_accessors();
     tests_define_seqs_built_by();
     tests_define_empty_stacks_fill();
@@ -1271,19 +1258,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
 #endif
-    num_vacant_freecells = soft_thread->num_vacant_freecells;
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    const fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
+    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    initial_derived_states_num_states = derived_states_list->num_states;
+    const int initial_derived_states_num_states = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
 
     /* This time try to move cards that are already on top of a parent to a different parent */
 
-    for (stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
+        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        int cards_num = fcs_col_len(col);
 
         /*
          * If there's only one card in the column, then it won't be above a
@@ -1297,7 +1284,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
             continue;
         }
 
-        upper_card = fcs_col_get_card(col, cards_num-1);
+        fcs_card_t upper_card = fcs_col_get_card(col, cards_num-1);
 
         /*
          * min_card_height is the minimal height of the card that is above
@@ -1309,6 +1296,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
          *
          * 2. <= cards_num-1 - because the height 0
          */
+        int min_card_height;
+        fcs_card_t lower_card;
         for (min_card_height = cards_num-2
             ; min_card_height >= 0
             ; upper_card = lower_card, min_card_height--
@@ -1323,11 +1312,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
         min_card_height += 2;
 
-        for(c=min_card_height ; c < cards_num ; c++)
+        for(int c=min_card_height ; c < cards_num ; c++)
         {
             /* Find a card which this card can be put on; */
 
-            card = fcs_col_get_card(col, c);
+            fcs_card_t card = fcs_col_get_card(col, c);
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
             /*
@@ -1341,20 +1330,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
             FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
-                if ((ds = pos_idx_to_check[0]) == -1)
+                const int ds = pos_idx_to_check[0];
+                if ((ds == -1) || (ds == stack_idx))
                 {
                     continue;
                 }
-                if (ds == stack_idx)
-                {
-                    continue;
-                }
-                dc = pos_idx_to_check[1];
+                const int dc = pos_idx_to_check[1];
 
-
-                dest_col = fcs_state_get_col(state, ds);
-                dest_cards_num = fcs_col_len(dest_col);
-                dest_card = fcs_col_get_card(dest_col, dc);
+                fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                int dest_cards_num = fcs_col_len(dest_col);
+                fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
 
                 /* Corresponding cards - see if it is feasible to move
                    the source to the destination. */
@@ -1373,12 +1358,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                     continue;
                 }
 
-                num_cards_to_relocate = dest_cards_num - dc - 1;
+                int num_cards_to_relocate = dest_cards_num - dc - 1;
 
-                freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
+                const int freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
 
                 num_cards_to_relocate -= freecells_to_fill;
 
+                int freestacks_to_fill;
                 if (tests__is_filled_by_any_card())
                 {
                     freestacks_to_fill = min(num_cards_to_relocate, num_vacant_stacks);
