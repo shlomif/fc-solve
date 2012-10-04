@@ -79,18 +79,17 @@ void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    int new_dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth + SOFT_DFS_DEPTH_GROW_BY;
-    fcs_soft_dfs_stack_item_t * soft_dfs_info, * end_soft_dfs_info;
+    const int new_dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth + SOFT_DFS_DEPTH_GROW_BY;
 
     soft_thread->method_specific.soft_dfs.soft_dfs_info = realloc(
         soft_thread->method_specific.soft_dfs.soft_dfs_info,
         sizeof(soft_thread->method_specific.soft_dfs.soft_dfs_info[0])*new_dfs_max_depth
         );
 
-    soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info +
+    fcs_soft_dfs_stack_item_t * soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info +
         soft_thread->method_specific.soft_dfs.dfs_max_depth;
 
-    end_soft_dfs_info = soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY;
+    fcs_soft_dfs_stack_item_t * const end_soft_dfs_info = soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY;
     for(; soft_dfs_info < end_soft_dfs_info ; soft_dfs_info++)
     {
         soft_dfs_info->state = NULL;
@@ -143,7 +142,7 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 
     for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
-        int * rand_index_ptr, * dest_rand_index_ptr, * end_rand_index_ptr;
+        int * rand_index_ptr, * dest_rand_index_ptr;
         fcs_derived_states_list_item_t * const states =
             soft_dfs_info->derived_states_list.states;
         /*
@@ -155,7 +154,7 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
             soft_dfs_info->derived_states_random_indexes
             + soft_dfs_info->current_state_index
             ;
-        end_rand_index_ptr =
+        int * const end_rand_index_ptr =
             soft_dfs_info->derived_states_random_indexes
             + soft_dfs_info->derived_states_list.num_states
             ;
@@ -180,11 +179,9 @@ static void verify_state_sanity(
         fcs_state_t * ptr_state
         )
 {
-    int i;
-
-    for (i=0; i < 8 ; i++)
+    for (int i=0; i < 8 ; i++)
     {
-        int l = fcs_col_len(fcs_state_get_col(*(ptr_state), i));
+        const int l = fcs_col_len(fcs_state_get_col(*(ptr_state), i));
         assert ((l >= 0) && (l <= 7+12));
     }
 
@@ -196,18 +193,15 @@ static void verify_soft_dfs_stack(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    int depth = 0, i, num_states;
-    for (depth = 0 ; depth < soft_thread->method_specific.soft_dfs.depth ; depth++)
+    for (int depth = 0 ; depth < soft_thread->method_specific.soft_dfs.depth ; depth++)
     {
         fcs_soft_dfs_stack_item_t * soft_dfs_info;
-        int * rand_indexes;
-
         soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[depth]);
-        rand_indexes = soft_dfs_info->derived_states_random_indexes;
+        int * const rand_indexes = soft_dfs_info->derived_states_random_indexes;
 
-        num_states = soft_dfs_info->derived_states_list.num_states;
+        const int num_states = soft_dfs_info->derived_states_list.num_states;
 
-        for ( i=soft_dfs_info->current_state_index ; i < num_states ; i++)
+        for ( int i=soft_dfs_info->current_state_index ; i < num_states ; i++)
         {
             verify_state_sanity(soft_dfs_info->derived_states_list.states[rand_indexes[i]].state_ptr);
         }
@@ -251,25 +245,22 @@ static GCC_INLINE void free_states(fc_solve_instance_t * instance)
             else if (soft_thread->method == FCS_METHOD_A_STAR)
             {
                 PQUEUE new_pq;
-                int i, CurrentSize;
-                pq_element_t * Elements;
-
                 fc_solve_PQueueInitialise(
                     &(new_pq),
                     1024
                 );
 
-                CurrentSize = soft_thread->method_specific.befs.meth.befs.pqueue.CurrentSize;
-                Elements = soft_thread->method_specific.befs.meth.befs.pqueue.Elements;
+                const int CurrentSize = soft_thread->method_specific.befs.meth.befs.pqueue.CurrentSize;
+                pq_element_t * next_element = soft_thread->method_specific.befs.meth.befs.pqueue.Elements + PQ_FIRST_ENTRY;
 
-                for (i = PQ_FIRST_ENTRY ; i <= CurrentSize ; i++)
+                for (int i = PQ_FIRST_ENTRY ; i <= CurrentSize ; i++, next_element++)
                 {
-                    if (! FCS_IS_STATE_DEAD_END(Elements[i].val))
+                    if (! FCS_IS_STATE_DEAD_END((*next_element).val))
                     {
                         fc_solve_PQueuePush(
                             &new_pq,
-                            Elements[i].val,
-                            Elements[i].rating
+                            (*next_element).val,
+                            (*next_element).rating
                         );
                     }
                 }
@@ -383,7 +374,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t * instance)
  *
  * */
 
-static GCC_INLINE void calculate_real_depth(fcs_bool_t calc_real_depth, fcs_collectible_state_t * ptr_state_orig)
+static GCC_INLINE void calculate_real_depth(const fcs_bool_t calc_real_depth, fcs_collectible_state_t * const ptr_state_orig)
 {
     if (calc_real_depth)
     {
@@ -418,7 +409,7 @@ static GCC_INLINE void calculate_real_depth(fcs_bool_t calc_real_depth, fcs_coll
  *
  * */
 
-static GCC_INLINE void mark_as_dead_end(fcs_bool_t scans_synergy, fcs_collectible_state_t * ptr_state_input)
+static GCC_INLINE void mark_as_dead_end(const fcs_bool_t scans_synergy, fcs_collectible_state_t * const ptr_state_input)
 {
     if (scans_synergy)
     {
@@ -481,10 +472,8 @@ extern int fc_solve_compare_lru_cache_keys(
 )
 {
 #define GET_PARAM(p) ((fcs_lru_side_t)(((const fcs_cache_key_info_t *)(p))->val_ptr))
-    fcs_lru_side_t a, b;
-
-    a = GET_PARAM(void_a);
-    b = GET_PARAM(void_b);
+    fcs_lru_side_t a = GET_PARAM(void_a);
+    fcs_lru_side_t b = GET_PARAM(void_b);
 
     return ((a > b) ? 1 : (a < b) ? (-1) : 0);
 #undef GET_PARAM
@@ -492,30 +481,28 @@ extern int fc_solve_compare_lru_cache_keys(
 
 #define NEXT_CACHE_STATE(s) ((s)->lower_pri)
 fcs_state_t * fc_solve_lookup_state_key_from_val(
-    fc_solve_instance_t * instance,
-    fcs_collectible_state_t * orig_ptr_state_val
+    fc_solve_instance_t * const instance,
+    fcs_collectible_state_t * const orig_ptr_state_val
 )
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     PWord_t PValue;
 #endif
-    fcs_lru_cache_t * cache;
-    cache_parents_stack_item_t * parents_stack;
-    int parents_stack_len, parents_stack_max_len;
-    fcs_cache_key_info_t * new_cache_state;
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
 
-    cache = &(instance->rcs_states_cache);
+    fcs_lru_cache_t * cache = &(instance->rcs_states_cache);
 
-    parents_stack_len = 1;
-    parents_stack_max_len = 16;
+    int parents_stack_len = 1;
+    int parents_stack_max_len = 16;
 
-    parents_stack = malloc(sizeof(parents_stack[0]) * parents_stack_max_len);
+    cache_parents_stack_item_t * parents_stack
+        = malloc(sizeof(parents_stack[0]) * parents_stack_max_len);
 
     parents_stack[0].state_val = orig_ptr_state_val;
 
+    fcs_cache_key_info_t * new_cache_state;
     while (1)
     {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
@@ -756,14 +743,12 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
 
 static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
-        fcs_game_limit_t freecells_num,
-        fcs_state_t * state_ptr
+        const fcs_game_limit_t freecells_num,
+        const fcs_state_t * const state_ptr
         )
 {
     fcs_game_limit_t num_vacant_freecells = 0;
-    int i;
-
-    for(i=0;i<freecells_num;i++)
+    for(int i=0;i<freecells_num;i++)
     {
         if (fcs_freecell_is_empty(*state_ptr, i))
         {
@@ -775,14 +760,13 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
 }
 
 static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
-        fcs_game_limit_t stacks_num,
-        fcs_state_t * state_ptr
+        const fcs_game_limit_t stacks_num,
+        const fcs_state_t * const state_ptr
         )
 {
     fcs_game_limit_t num_vacant_stacks = 0;
-    int i;
 
-    for ( i=0 ; i < stacks_num ; i++ )
+    for (int  i=0 ; i < stacks_num ; i++ )
     {
         if (fcs_col_len(fcs_state_get_col(*state_ptr, i)) == 0)
         {
@@ -809,48 +793,39 @@ int fc_solve_soft_dfs_do_solve(
 
     DECLARE_STATE();
 
-    fcs_soft_dfs_stack_item_t * the_soft_dfs_info;
-    int dfs_max_depth, by_depth_max_depth, by_depth_min_depth;
+    int by_depth_max_depth, by_depth_min_depth;
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-    fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    const fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 #endif
-    fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+    const fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
-    fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
-    int soft_thread_id = soft_thread->id;
-    fcs_derived_states_list_t * derived_states_list;
-    fcs_tests_by_depth_unit_t * by_depth_units, * curr_by_depth_unit;
+    const fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
+    const int soft_thread_id = soft_thread->id;
     fcs_tests_list_of_lists * the_tests_list_ptr;
-    fcs_rand_t * rand_gen;
     fcs_bool_t local_to_randomize = FALSE;
-    int * depth_ptr;
-    fcs_bool_t enable_pruning;
-    fcs_int_limit_t * instance_num_times_ptr, * hard_thread_num_times_ptr;
     fcs_int_limit_t hard_thread_max_num_times;
-    fcs_instance_debug_iter_output_func_t debug_iter_output_func;
-    fcs_instance_debug_iter_output_context_t debug_iter_output_context;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
 
 #define DEPTH() (*depth_ptr)
-    depth_ptr = &(soft_thread->method_specific.soft_dfs.depth);
+    int * const depth_ptr = &(soft_thread->method_specific.soft_dfs.depth);
 
-    the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[DEPTH()]);
+    fcs_soft_dfs_stack_item_t * the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[DEPTH()]);
 
-    dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
-    enable_pruning = soft_thread->enable_pruning;
+    int dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
+    fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
     ASSIGN_ptr_state (the_soft_dfs_info->state);
-    derived_states_list = &(the_soft_dfs_info->derived_states_list);
+    fcs_derived_states_list_t * derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
-    rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
+    fcs_rand_t * const rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
 
     calculate_real_depth(calc_real_depth, PTR_STATE);
 
-    by_depth_units = soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units;
+    fcs_tests_by_depth_unit_t * by_depth_units = soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units;
 
 #define THE_TESTS_LIST (*the_tests_list_ptr)
     TRACE0("Before depth loop");
@@ -865,8 +840,9 @@ int fc_solve_soft_dfs_do_solve(
     }
 
 
-    instance_num_times_ptr = &(instance->num_times);
-    hard_thread_num_times_ptr = &(hard_thread->num_times);
+    fcs_int_limit_t * const instance_num_times_ptr = &(instance->num_times);
+    fcs_int_limit_t * const hard_thread_num_times_ptr
+        = &(hard_thread->num_times);
 
 #define CALC_HARD_THREAD_MAX_NUM_TIMES() \
     hard_thread_max_num_times = hard_thread->max_num_times; \
@@ -881,11 +857,12 @@ int fc_solve_soft_dfs_do_solve(
 
     CALC_HARD_THREAD_MAX_NUM_TIMES();
 
-    debug_iter_output_func = instance->debug_iter_output_func;
-    debug_iter_output_context = instance->debug_iter_output_context;
+    const fcs_instance_debug_iter_output_func_t debug_iter_output_func = instance->debug_iter_output_func;
+    const fcs_instance_debug_iter_output_context_t debug_iter_output_context = instance->debug_iter_output_context;
 
     INITIALIZE_STATE();
 
+    fcs_tests_by_depth_unit_t * curr_by_depth_unit;
     {
         for (
             curr_by_depth_unit = by_depth_units
