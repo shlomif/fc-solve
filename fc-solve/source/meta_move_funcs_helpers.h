@@ -128,31 +128,28 @@ extern "C" {
 
 static GCC_INLINE void fc_solve_move_sequence_function(
 #define STATE_KEY() (*(new_state_kv_ptr->key))
-        fcs_kv_state_t * new_state_kv_ptr,
-        fcs_move_stack_t * moves,
-        int dest_idx,
-        int source_idx,
-        int start,
-        int end
+        fcs_kv_state_t * const new_state_kv_ptr,
+        fcs_move_stack_t * const moves,
+        const int dest_idx,
+        const int source_idx,
+        const int start,
+        const int end
         )
 {
-    int i;
-    fcs_cards_column_t new_src_col, new_dest_col;
-    fcs_internal_move_t temp_move;
+    fcs_cards_column_t new_src_col = fcs_state_get_col(STATE_KEY(), source_idx);
+    fcs_cards_column_t new_dest_col = fcs_state_get_col(STATE_KEY(), dest_idx);
 
-    new_src_col = fcs_state_get_col(STATE_KEY(), source_idx);
-    new_dest_col = fcs_state_get_col(STATE_KEY(), dest_idx);
-
-    for ( i = start ; i <= end ; i++)
+    for ( int i = start ; i <= end ; i++)
     {
         fcs_col_push_col_card(new_dest_col, new_src_col, i);
     }
 
-    for ( i = start ; i <= end ; i++)
+    for ( int i = start ; i <= end ; i++)
     {
         fcs_col_pop_top(new_src_col);
     }
 
+    fcs_internal_move_t temp_move;
     fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);
     fcs_int_move_set_src_stack(temp_move, source_idx);
     fcs_int_move_set_dest_stack(temp_move, dest_idx);
