@@ -70,16 +70,9 @@
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 {
     tests_declare_accessors()
-    int stack_idx;
-    fcs_cards_column_t col;
-    int cards_num;
-    int deck;
-    fcs_card_t card;
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_GAME_PARAMS();
 #endif
-
-    fcs_internal_move_t temp_move;
 
     tests_define_accessors();
 
@@ -87,17 +80,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
     SET_GAME_PARAMS();
 #endif
 
-    temp_move = fc_solve_empty_move;
-
-    for( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+    for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
+        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        int cards_num = fcs_col_len(col);
         if (cards_num)
         {
             /* Get the top card in the stack */
-            card = fcs_col_get_card(col, cards_num-1);
-            for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
+            fcs_card_t card = fcs_col_get_card(col, cards_num-1);
+            for (int deck=0;deck < INSTANCE_DECKS_NUM;deck++)
             {
                 if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
                 {
@@ -114,7 +105,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 
                     fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
 
-
+                    fcs_internal_move_t temp_move;
 
                     fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
                     fcs_int_move_set_src_stack(temp_move,stack_idx);
