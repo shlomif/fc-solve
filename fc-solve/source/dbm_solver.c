@@ -889,7 +889,6 @@ static void trace_solution(
     int trace_num;
     int i;
     fcs_state_keyval_pair_t state;
-    unsigned char move;
     char * state_as_str;
     char move_buffer[500];
     fcs_state_locs_struct_t locs;
@@ -907,6 +906,7 @@ static void trace_solution(
 
     for (i = trace_num-1 ; i >= 0 ; i--)
     {
+        unsigned char move = 0;
         fc_solve_delta_stater_decode_into_state(
             delta,
             trace[i].s,

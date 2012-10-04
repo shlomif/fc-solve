@@ -84,17 +84,10 @@ extern void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocato
 
 static GCC_INLINE fcs_collectible_state_t * fcs_state_ia_alloc_into_var(fcs_compact_allocator_t * allocator)
 {
-    {
-        register fcs_collectible_state_t * ret_helper;
-
-        ret_helper =
-            (fcs_collectible_state_t *)
-            fcs_compact_alloc_ptr(allocator,
-                sizeof(*ret_helper)
-            );
-
-        return ret_helper;
-    }
+    return (fcs_collectible_state_t *)
+        fcs_compact_alloc_ptr(
+            allocator, sizeof(fcs_collectible_state_t)
+        );
 }
 
 static GCC_INLINE void fc_solve_compact_allocator_recycle(fcs_compact_allocator_t * allocator)
