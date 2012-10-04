@@ -56,7 +56,7 @@ static GCC_INLINE ub4 perl_hash_function(
     )
 {
     register ub4  hash_value_int = 0;
-    register ub1 * s_end = s_ptr+length;
+    register ub1 * const s_end = s_ptr+length;
 
     while (s_ptr < s_end)
     {
@@ -84,7 +84,6 @@ static GCC_INLINE void fc_solve_cache_stacks(
         fcs_kv_state_t * new_state
         )
 {
-    int i;
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     SFO_hash_value_t hash_value_int;
@@ -92,21 +91,17 @@ static GCC_INLINE void fc_solve_cache_stacks(
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     PWord_t * PValue;
 #endif
-    void * cached_stack;
-    char * new_ptr;
-    fc_solve_instance_t * instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = hard_thread->instance;
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_AND_SET_GAME_PARAMS();
 #endif
-    fcs_cards_column_t column;
-    register int col_len;
-    fcs_compact_allocator_t * stacks_allocator;
-    register fcs_state_t * new_state_key = new_state->key;
-    register fcs_state_extra_info_t * new_state_info = new_state->val;
+    register fcs_state_t * const new_state_key = new_state->key;
+    register fcs_state_extra_info_t * const new_state_info = new_state->val;
+
+    fcs_compact_allocator_t * stacks_allocator = &(hard_thread->allocator);
+
+    int i;
     register fcs_cards_column_t * current_stack;
-
-    stacks_allocator = &(hard_thread->allocator);
-
     for (i=0, current_stack = new_state_key->stacks ; i < LOCAL_STACKS_NUM ; i++, current_stack++)
     {
         /*
@@ -118,13 +113,14 @@ static GCC_INLINE void fc_solve_cache_stacks(
             continue;
         }
 
-        column = fcs_state_get_col(*(new_state_key), i);
-        col_len = (fcs_col_len(column)+1);
+        fcs_cards_column_t column = fcs_state_get_col(*(new_state_key), i);
+        register int col_len = (fcs_col_len(column)+1);
 
-        new_ptr = (char*)fcs_compact_alloc_ptr(stacks_allocator, col_len);
+        char * const new_ptr = (char*)fcs_compact_alloc_ptr(stacks_allocator, col_len);
         memcpy(new_ptr, column, col_len);
         *(current_stack) = new_ptr;
 
+        void * cached_stack;
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         /* Calculate the hash value for the stack */
