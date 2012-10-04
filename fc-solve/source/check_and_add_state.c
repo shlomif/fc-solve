@@ -321,9 +321,9 @@ static GCC_INLINE void on_state_new(
 }
 
 fcs_bool_t fc_solve_check_and_add_state(
-    fc_solve_hard_thread_t * hard_thread,
-    fcs_kv_state_t * new_state,
-    fcs_kv_state_t * existing_state_raw
+    fc_solve_hard_thread_t * const hard_thread,
+    fcs_kv_state_t * const new_state,
+    fcs_kv_state_t * const existing_state_raw
     )
 {
 /*
