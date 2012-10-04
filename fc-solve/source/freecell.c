@@ -130,17 +130,16 @@ static GCC_INLINE void sort_derived_states(
         int initial_derived_states_num_states
         )
 {
-    fcs_derived_states_list_item_t * b, * c, * limit, * start;
-    fcs_derived_states_list_item_t temp;
+    fcs_derived_states_list_item_t * start =
+        derived_states_list->states + initial_derived_states_num_states;
+    fcs_derived_states_list_item_t * limit =
+        derived_states_list->states + derived_states_list->num_states;
 
-    start = derived_states_list->states + initial_derived_states_num_states;
-    limit = derived_states_list->states + derived_states_list->num_states;
-
-    for (b = start+1 ; b < limit ; b++)
+    for (fcs_derived_states_list_item_t * b = start+1 ; b < limit ; b++)
     {
-        for (c = b ; (c > start) && (c[0].context.i < c[-1].context.i); c--)
+        for (fcs_derived_states_list_item_t * c = b ; (c > start) && (c[0].context.i < c[-1].context.i); c--)
         {
-            temp = c[-1];
+            fcs_derived_states_list_item_t temp = c[-1];
             c[-1] = c[0];
             c[0] = temp;
         }
@@ -154,10 +153,6 @@ static GCC_INLINE void sort_derived_states(
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
 {
     tests_declare_accessors_no_stacks();
-    int fc;
-    int deck;
-    fcs_card_t card;
-    fcs_internal_move_t temp_move;
 #ifndef HARD_CODED_NUM_FREECELLS
     DECLARE_GAME_PARAMS();
 #endif
@@ -168,15 +163,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
     SET_GAME_PARAMS();
 #endif
 
-    temp_move = fc_solve_empty_move;
-
     /* Now check the same for the free cells */
-    for( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
+    for (int fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
     {
-        card = fcs_freecell_card(state, fc);
+        fcs_card_t card = fcs_freecell_card(state, fc);
         if (fcs_card_is_valid(card))
         {
-            for(deck=0;deck<INSTANCE_DECKS_NUM;deck++)
+            for (int deck=0 ; deck < INSTANCE_DECKS_NUM ; deck++)
             {
                 if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
                 {
@@ -186,6 +179,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
                     fcs_empty_freecell(new_state, fc);
 
                     fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
+
+                    fcs_internal_move_t temp_move;
 
                     fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
                     fcs_int_move_set_src_freecell(temp_move,fc);
@@ -217,7 +212,6 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 #define key_ptr_new_state_key (kv_ptr_new_state->key)
 #define my_new_out_state_key (*key_ptr_new_state_key)
 #define temp_new_state_key (*key_ptr_new_state_key)
-    int num_cards_to_move_from_columns[3];
     const int * col_idx;
     int * col_num_cards;
     fcs_cards_column_t new_from_which_col;
@@ -232,6 +226,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
     char * indirect_stacks_buffer;
 #endif
 
+    int num_cards_to_move_from_columns[3];
     num_cards_to_move_from_columns[0] = nc1;
     num_cards_to_move_from_columns[1] = nc2;
     num_cards_to_move_from_columns[2] = -1;
