@@ -212,18 +212,10 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 #define key_ptr_new_state_key (kv_ptr_new_state->key)
 #define my_new_out_state_key (*key_ptr_new_state_key)
 #define temp_new_state_key (*key_ptr_new_state_key)
-    const int * col_idx;
-    int * col_num_cards;
-    fcs_cards_column_t new_from_which_col;
-    fcs_card_t top_card;
-    fcs_internal_move_t temp_move;
     int ret = -1;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     DECLARE_GAME_PARAMS();
-#endif
-#ifdef INDIRECT_STACK_STATES
-    char * indirect_stacks_buffer;
 #endif
 
     int num_cards_to_move_from_columns[3];
@@ -231,17 +223,15 @@ static GCC_INLINE int empty_two_cols_from_new_state(
     num_cards_to_move_from_columns[1] = nc2;
     num_cards_to_move_from_columns[2] = -1;
 
-    col_idx = cols_indexes;
-    col_num_cards = num_cards_to_move_from_columns;
-
-    temp_move = fc_solve_empty_move;
+    const int * col_idx = cols_indexes;
+    int * col_num_cards = num_cards_to_move_from_columns;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_INSTANCE_GAME_PARAMS(soft_thread->hard_thread->instance);
 #endif
 
 #ifdef INDIRECT_STACK_STATES
-    indirect_stacks_buffer = soft_thread->hard_thread->indirect_stacks_buffer;
+    char * indirect_stacks_buffer = soft_thread->hard_thread->indirect_stacks_buffer;
 #endif
 
 
@@ -277,8 +267,9 @@ static GCC_INLINE int empty_two_cols_from_new_state(
                 break;
             }
 
-            new_from_which_col = fcs_state_get_col(temp_new_state_key, *col_idx);
+            fcs_cards_column_t new_from_which_col = fcs_state_get_col(temp_new_state_key, *col_idx);
 
+            fcs_card_t top_card;
             fcs_col_pop_card(new_from_which_col, top_card);
 
             fcs_put_card_in_freecell(
@@ -287,6 +278,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
                 top_card
             );
 
+            fcs_internal_move_t temp_move;
             fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
             fcs_int_move_set_src_stack(temp_move,*col_idx);
             fcs_int_move_set_dest_freecell(temp_move,dest_fc_idx);
@@ -345,11 +337,13 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 
             new_b_col = fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx);
 
-            new_from_which_col = fcs_state_get_col(temp_new_state_key, *col_idx);
+            fcs_cards_column_t new_from_which_col = fcs_state_get_col(temp_new_state_key, *col_idx);
 
+            fcs_card_t top_card;
             fcs_col_pop_card(new_from_which_col, top_card);
             fcs_col_push_card(new_b_col, top_card);
 
+            fcs_internal_move_t temp_move;
             fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
             fcs_int_move_set_src_stack(temp_move,*col_idx);
             fcs_int_move_set_dest_stack(temp_move,put_cards_in_col_idx);
