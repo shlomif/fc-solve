@@ -14,6 +14,10 @@ for non-Freecell variants.
 Non-pressing
 ------------
 
+* Cache the list of the empty stacks and empty freecells inside the
+soft_thread for easy reference.
+** Convert the freecell.c routines to use it.
+
 * Refer to +expand-solitaire-multi-card-moves+ from the fc-solve process.
 
 * Create a displayer for fc-solve's solutions which will allow seeing where a
