@@ -742,39 +742,40 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 #endif
 
 
-static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
+static GCC_INLINE void calc_num_vacanct_resources(
         const fcs_game_limit_t freecells_num,
-        const fcs_state_t * const state_ptr
-        )
-{
-    fcs_game_limit_t num_vacant_freecells = 0;
-    for(int i=0;i<freecells_num;i++)
-    {
-        if (fcs_freecell_is_empty(*state_ptr, i))
-        {
-            num_vacant_freecells++;
-        }
-    }
-
-    return num_vacant_freecells;
-}
-
-static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
         const fcs_game_limit_t stacks_num,
-        const fcs_state_t * const state_ptr
+        const fcs_state_t * const state_ptr,
+        fcs_vacant_state_resources_info_t * const out_resources
         )
 {
-    fcs_game_limit_t num_vacant_stacks = 0;
-
-    for (int  i=0 ; i < stacks_num ; i++ )
     {
-        if (fcs_col_len(fcs_state_get_col(*state_ptr, i)) == 0)
+        fcs_game_limit_t num_vacant_freecells = 0;
+        for (int i = 0 ; i < freecells_num ; i++)
         {
-            num_vacant_stacks++;
+            if (fcs_freecell_is_empty(*state_ptr, i))
+            {
+                out_resources->vacant_freecell_idxs[num_vacant_freecells++] = i;
+            }
         }
+
+        out_resources->num_vacant_freecells = num_vacant_freecells;
+    }
+    {
+        fcs_game_limit_t num_vacant_stacks = 0;
+
+        for (int i=0 ; i < stacks_num ; i++ )
+        {
+            if (fcs_col_len(fcs_state_get_col(*state_ptr, i)) == 0)
+            {
+                out_resources->vacant_stack_idxs[num_vacant_stacks++] = i;
+            }
+        }
+
+        out_resources->num_vacant_stacks = num_vacant_stacks;
     }
 
-    return num_vacant_stacks;
+    return;
 }
 
 
@@ -899,6 +900,7 @@ int fc_solve_soft_dfs_do_solve(
             dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
             /* This too has to be re-synced */
             derived_states_list = &(the_soft_dfs_info->derived_states_list);
+            soft_thread->vacant_state_resources_ptr = &(the_soft_dfs_info->vacant_state_resources);
         }
 
         TRACE0("Before current_state_index check");
@@ -932,8 +934,7 @@ int fc_solve_soft_dfs_do_solve(
 
                     VERIFY_PTR_STATE_TRACE0("Verify Foo");
 
-                    soft_thread->num_vacant_freecells = the_soft_dfs_info->num_vacant_freecells;
-                    soft_thread->num_vacant_stacks = the_soft_dfs_info->num_vacant_stacks;
+                    soft_thread->vacant_state_resources_ptr = &(the_soft_dfs_info->vacant_state_resources);
 
                     if (unlikely(DEPTH() < by_depth_min_depth))
                     {
@@ -954,8 +955,6 @@ int fc_solve_soft_dfs_do_solve(
                 && (the_soft_dfs_info->tests_list_index == 0)
                )
             {
-                fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
-
                 TRACE0("In iter_handler");
 
                 if (debug_iter_output_func)
@@ -977,15 +976,16 @@ int fc_solve_soft_dfs_do_solve(
                         );
                 }
 
-                num_vacant_freecells =
-                    count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &the_state);
-
-                num_vacant_stacks =
-                    count_num_vacant_stacks(LOCAL_STACKS_NUM, &the_state);
+                calc_num_vacanct_resources(
+                    LOCAL_FREECELLS_NUM,
+                    LOCAL_STACKS_NUM,
+                    &the_state,
+                    &(the_soft_dfs_info->vacant_state_resources)
+                );
 
                 /* Check if we have reached the empty state */
-                if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
-                    (num_vacant_freecells  == LOCAL_FREECELLS_NUM)))
+                if (unlikely((the_soft_dfs_info->vacant_state_resources.num_vacant_stacks == LOCAL_STACKS_NUM) &&
+                    (the_soft_dfs_info->vacant_state_resources.num_vacant_freecells  == LOCAL_FREECELLS_NUM)))
                 {
                     instance->final_state = PTR_STATE;
 
@@ -999,12 +999,8 @@ int fc_solve_soft_dfs_do_solve(
                     appropriate stacks, so they won't be calculated over and over
                     again.
                   */
-                soft_thread->num_vacant_freecells =
-                    the_soft_dfs_info->num_vacant_freecells =
-                    num_vacant_freecells;
-                soft_thread->num_vacant_stacks =
-                    the_soft_dfs_info->num_vacant_stacks =
-                    num_vacant_stacks;
+                soft_thread->vacant_state_resources_ptr =
+                    &(the_soft_dfs_info->vacant_state_resources);
 
                 /* Perform the pruning. */
                 if (SHOULD_STATE_BE_PRUNED(enable_pruning, PTR_STATE))
@@ -1542,6 +1538,9 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     pass.key = &(instance->state_copy_ptr->s);
     pass.val = &(instance->state_copy_ptr->info);
 
+    soft_thread->vacant_state_resources_ptr =
+        &(soft_thread->method_specific.befs.vacant_state_resources);
+
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
         /* Initialize the priotity queue of the BeFS scan */
@@ -1772,11 +1771,12 @@ int fc_solve_befs_or_bfs_do_solve(
 
         TRACE0("Counting cells");
 
-        const fcs_game_limit_t num_vacant_freecells =
-            count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &the_state);
-
-        const fcs_game_limit_t num_vacant_stacks =
-            count_num_vacant_stacks(LOCAL_STACKS_NUM, &the_state);
+        calc_num_vacanct_resources(
+            LOCAL_FREECELLS_NUM,
+            LOCAL_STACKS_NUM,
+            &the_state,
+            &(soft_thread->method_specific.befs.vacant_state_resources)
+        );
 
         if (check_if_limits_exceeded())
         {
@@ -1808,7 +1808,8 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
 
-        if ((num_vacant_stacks == LOCAL_STACKS_NUM) && (num_vacant_freecells == LOCAL_FREECELLS_NUM))
+        if ((soft_thread->method_specific.befs.vacant_state_resources.num_vacant_stacks == LOCAL_STACKS_NUM)
+            && (soft_thread->method_specific.befs.vacant_state_resources.num_vacant_freecells == LOCAL_FREECELLS_NUM))
         {
             instance->final_state = PTR_STATE;
 
@@ -1819,9 +1820,6 @@ int fc_solve_befs_or_bfs_do_solve(
         }
 
         calculate_real_depth (calc_real_depth, PTR_STATE);
-
-        soft_thread->num_vacant_freecells = num_vacant_freecells;
-        soft_thread->num_vacant_stacks = num_vacant_stacks;
 
         if (soft_thread->method_specific.befs.befs_positions_by_rank)
         {
