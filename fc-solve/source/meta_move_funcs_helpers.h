@@ -262,18 +262,6 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  * */
 #define tests__should_not_empty_columns() tests__is_filled_by_none()
 
-#define SET_VACANT_FREECELLS() \
-    const fcs_game_limit_t num_vacant_freecells = \
-        soft_thread->vacant_state_resources_ptr->num_vacant_freecells;
-
-#define SET_VACANT_STACKS() \
-    const fcs_game_limit_t num_vacant_stacks = \
-        soft_thread->vacant_state_resources_ptr->num_vacant_stacks;
-
-#define SET_VACANT_FREECELLS_AND_STACKS() \
-    SET_VACANT_FREECELLS(); \
-    SET_VACANT_STACKS();
-
 #ifdef __cplusplus
 }
 #endif
