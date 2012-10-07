@@ -178,7 +178,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     SET_GAME_PARAMS();
 #endif
 
-    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
@@ -284,7 +283,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     SET_GAME_PARAMS();
 #endif
 
-    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
@@ -408,7 +406,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
@@ -653,7 +650,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
     SET_GAME_PARAMS();
 #endif
 
-    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
@@ -917,7 +913,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
@@ -1231,7 +1226,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
@@ -1437,7 +1431,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     for(stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
@@ -1719,7 +1712,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     for(stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
