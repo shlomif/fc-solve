@@ -144,8 +144,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 {
-    fcs_game_limit_t num_vacant_stacks;
-
     /*
      * stack - the source stack index on which the sequence currently resides.
      * cards_num - the number of cards in "stack".
@@ -180,7 +178,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     SET_GAME_PARAMS();
 #endif
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
@@ -278,7 +276,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     fcs_card_t card, dest_card;
     int rank, num_true_seqs, h, ds, dest_cards_num ;
     fcs_cards_column_t col, dest_col;
-    fcs_game_limit_t num_vacant_stacks;
 
     tests_define_accessors();
 
@@ -286,7 +283,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     SET_GAME_PARAMS();
 #endif
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
@@ -403,14 +400,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
     int stacks_map[MAX_NUM_STACKS];
     int after_junk_num_freestacks;
     int junk_move_to_stacks[MAX_NUM_STACKS];
-    fcs_game_limit_t num_vacant_stacks;
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
@@ -644,7 +640,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
     int after_junk_num_freestacks;
     int false_seq_index;
     int junk_move_to_stacks[MAX_NUM_CARDS_IN_A_STACK];
-    fcs_game_limit_t num_vacant_stacks;
 
     fcs_cards_column_t col;
     fcs_cards_column_t dest_col;
@@ -655,7 +650,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
     SET_GAME_PARAMS();
 #endif
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
@@ -909,7 +904,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
     int num_src_junk_true_seqs;
     int end_of_junk;
     int num_true_seqs;
-    fcs_game_limit_t num_vacant_stacks;
 
     fcs_cards_column_t col;
     fcs_cards_column_t dest_col;
@@ -919,7 +913,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
@@ -1223,7 +1217,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     int after_junk_num_freestacks;
     int false_seq_index;
     int junk_move_to_stacks[MAX_NUM_STACKS];
-    fcs_game_limit_t num_vacant_stacks;
 
     fcs_cards_column_t col;
     fcs_cards_column_t dest_col;
@@ -1233,7 +1226,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
@@ -1431,8 +1424,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
     int false_seq_index;
     int child_seq_index;
 
-    fcs_game_limit_t num_vacant_stacks;
-
     fcs_cards_column_t col;
     fcs_cards_column_t clear_junk_dest_col;
     tests_define_accessors();
@@ -1440,7 +1431,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     for(stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
@@ -1715,14 +1706,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     int num_true_seqs, seq_size, h, ds, dest_cards_num;
     fcs_cards_column_t col, dest_col;
     int cards_num;
-    fcs_game_limit_t num_vacant_stacks;
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     for(stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {

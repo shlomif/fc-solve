@@ -209,6 +209,13 @@ typedef struct
     fcs_by_depth_tests_order_t * by_depth_tests;
 } fcs_by_depth_tests_order_array_t;
 
+typedef struct
+{
+    fcs_game_limit_t num_vacant_freecells, num_vacant_stacks;
+    fcs_game_limit_t vacant_freecell_idxs[MAX_NUM_FREECELLS],
+                     vacant_stack_idxs[MAX_NUM_STACKS];
+} fcs_vacant_state_resources_info_t;
+
 typedef struct {
     /*
      * The number of Freecells, Stacks and Foundations present in the game.
@@ -696,8 +703,7 @@ typedef struct
     int derived_states_random_indexes_max_size;
     int * derived_states_random_indexes;
     char * positions_by_rank;
-    fcs_game_limit_t num_vacant_stacks;
-    fcs_game_limit_t num_vacant_freecells;
+    fcs_vacant_state_resources_info_t vacant_state_resources;
 } fcs_soft_dfs_stack_item_t;
 
 enum
@@ -811,11 +817,9 @@ struct fc_solve_soft_thread_struct
              * performed. FCS performs each test separately, so
              * states_to_check and friends will not be overpopulated.
              *
-             * num_vacant_stacks - the number of unoccpied stacks that
-             * correspond
-             * to solution_states.
-             *
-             * num_vacant_freecells - ditto for the freecells.
+             * vacant_state_resources_ptr - the number and indexes of
+             * unoccupied stacks and freecells that correspond to
+             * solution_states.
              *
              * */
 
@@ -878,6 +882,7 @@ struct fc_solve_soft_thread_struct
                     double befs_weights[5];
                 } befs;
             } meth;
+            fcs_vacant_state_resources_info_t vacant_state_resources;
         } befs;
     } method_specific;
 
@@ -892,16 +897,11 @@ struct fc_solve_soft_thread_struct
     fcs_runtime_flags_t runtime_flags;
 
     /*
-     * The number of vacant stacks in the current state - is read from
-     * the test functions in freecell.c .
+     * The number and indexes of vacant stacks and freecells
+     * in the current state - is read from the test functions in
+     * freecell.c .
      * */
-     fcs_game_limit_t num_vacant_stacks;
-
-    /*
-     * The number of vacant freecells in the current state - is read
-     * from the test functions in freecell.c .
-     * */
-    fcs_game_limit_t num_vacant_freecells;
+    fcs_vacant_state_resources_info_t * vacant_state_resources_ptr;
 
     /*
      * The number of iterations with which to process this scan

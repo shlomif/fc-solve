@@ -367,8 +367,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     SET_GAME_PARAMS();
 #endif
 
-    fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_FREECELLS_AND_STACKS();
 
     int initial_derived_states_num_states = derived_states_list->num_states;
 
@@ -548,8 +547,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
-    fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_FREECELLS_AND_STACKS();
 
     /* Now let's check if a card that is under some other cards can be placed
      * in the foundations. */
@@ -639,8 +637,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
     SET_GAME_PARAMS();
 #endif
 
-    fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_FREECELLS_AND_STACKS();
 
     /*
      * Now let's try to move a stack card to a parent card which is found
@@ -803,10 +800,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     SET_GAME_PARAMS();
 #endif
 
-    const fcs_game_limit_t num_vacant_freecells
-        = soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_vacant_stacks
-         = soft_thread->num_vacant_stacks;
+    SET_VACANT_FREECELLS_AND_STACKS();
 
     const int initial_derived_states_num_states =
         derived_states_list->num_states;
@@ -953,8 +947,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
-    const fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_FREECELLS_AND_STACKS();
 
     const int max_sequence_len = calc_max_sequence_move(num_vacant_freecells, num_vacant_stacks-1);
 
@@ -1150,7 +1143,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     SET_GAME_PARAMS();
 #endif
 
-    if (soft_thread->num_vacant_stacks)
+    SET_VACANT_STACKS();
+
+    if (num_vacant_stacks)
     {
         int stack_idx;
         for (stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
@@ -1208,8 +1203,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
 #endif
-    const fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_FREECELLS_AND_STACKS();
 
     const int initial_derived_states_num_states = derived_states_list->num_states;
 
@@ -1396,8 +1390,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
     SET_GAME_PARAMS();
 #endif
 
-    const fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_FREECELLS_AND_STACKS();
 
     /* Now, let's try to empty an entire stack into the freecells, so other cards can
      * inhabit it */
@@ -1542,13 +1535,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
 #ifndef HARD_CODED_NUM_STACKS
     int stacks_num;
 #endif
-    fcs_game_limit_t num_vacant_stacks;
-
     fcs_internal_move_t temp_move;
 
     tests_define_accessors();
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
     temp_move = fc_solve_empty_move;
 
     if (num_vacant_stacks == 0)
@@ -1613,7 +1604,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         return;
     }
 
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     if (num_vacant_stacks == 0)
     {
@@ -1761,7 +1752,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
     SET_GAME_PARAMS();
 #endif
 
-    const fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
+    SET_VACANT_FREECELLS();
 
     if (num_vacant_freecells == 0)
     {
@@ -1882,7 +1873,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         return;
     }
 
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    SET_VACANT_STACKS();
 
     if (num_vacant_stacks == 0)
     {
