@@ -367,6 +367,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     SET_GAME_PARAMS();
 #endif
 
+    SET_VACANT_PTR();
     SET_VACANT_FREECELLS_AND_STACKS();
 
     int initial_derived_states_num_states = derived_states_list->num_states;
@@ -547,6 +548,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
+    SET_VACANT_PTR();
     SET_VACANT_FREECELLS_AND_STACKS();
 
     /* Now let's check if a card that is under some other cards can be placed
@@ -637,6 +639,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
     SET_GAME_PARAMS();
 #endif
 
+    SET_VACANT_PTR();
     SET_VACANT_FREECELLS_AND_STACKS();
 
     /*
@@ -800,6 +803,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     SET_GAME_PARAMS();
 #endif
 
+    SET_VACANT_PTR();
     SET_VACANT_FREECELLS_AND_STACKS();
 
     const int initial_derived_states_num_states =
@@ -947,6 +951,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
 #endif
+    SET_VACANT_PTR();
     SET_VACANT_FREECELLS_AND_STACKS();
 
     const int max_sequence_len = calc_max_sequence_move(num_vacant_freecells, num_vacant_stacks-1);
@@ -1143,6 +1148,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     SET_GAME_PARAMS();
 #endif
 
+    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     if (num_vacant_stacks)
@@ -1203,6 +1209,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
 #endif
+    SET_VACANT_PTR();
     SET_VACANT_FREECELLS_AND_STACKS();
 
     const int initial_derived_states_num_states = derived_states_list->num_states;
@@ -1390,6 +1397,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
     SET_GAME_PARAMS();
 #endif
 
+    SET_VACANT_PTR();
     SET_VACANT_FREECELLS_AND_STACKS();
 
     /* Now, let's try to empty an entire stack into the freecells, so other cards can
@@ -1604,6 +1612,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         return;
     }
 
+    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     if (num_vacant_stacks == 0)
@@ -1752,6 +1761,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
     SET_GAME_PARAMS();
 #endif
 
+    SET_VACANT_PTR();
     SET_VACANT_FREECELLS();
 
     if (num_vacant_freecells == 0)
@@ -1873,6 +1883,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         return;
     }
 
+    SET_VACANT_PTR();
     SET_VACANT_STACKS();
 
     if (num_vacant_stacks == 0)
