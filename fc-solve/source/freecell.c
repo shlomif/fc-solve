@@ -980,7 +980,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 
     if (num_vacant_stacks > 0)
     {
-        int dest_stack_idx = -1;
+        int dest_stack_idx = vacant_state_resources_ptr->vacant_stack_idxs[0];
         for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
         {
             fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
@@ -1025,21 +1025,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                        )
                     {
                         sfs_check_state_begin();
-
-                        if (dest_stack_idx < 0)
-                        {
-                            for (dest_stack_idx = 0 ;
-                                 dest_stack_idx < LOCAL_STACKS_NUM;
-                                 dest_stack_idx++)
-                            {
-                                if (fcs_col_len(
-                                    fcs_state_get_col(new_state, dest_stack_idx)
-                                    ) == 0)
-                                {
-                                    break;
-                                }
-                            }
-                        }
 
                         my_copy_stack(dest_stack_idx);
                         my_copy_stack(stack_idx);
@@ -1659,16 +1644,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     SET_GAME_PARAMS();
 #endif
 
-    int empty_stack_idx;
-    for (empty_stack_idx = 0 ; empty_stack_idx < LOCAL_STACKS_NUM ; empty_stack_idx++)
-    {
-        if (fcs_col_len(
-            fcs_state_get_col(state, empty_stack_idx)
-            ) == 0)
-        {
-            break;
-        }
-    }
+    int empty_stack_idx = vacant_state_resources_ptr->vacant_stack_idxs[0];
 
     for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
@@ -1806,14 +1782,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 
     const int num_cards_in_col_threshold = tests__should_not_empty_columns() ? 1 : 0;
 
-    int ds;
-    for (ds = 0 ; ds < LOCAL_FREECELLS_NUM ; ds++)
-    {
-        if (fcs_freecell_is_empty(state, ds))
-        {
-            break;
-        }
-    }
+    int ds = vacant_state_resources_ptr->vacant_freecell_idxs[0];
 
     for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
@@ -1927,16 +1896,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     }
 
     /* Find a vacant stack */
-    int ds;
-    for (ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
-    {
-        if (fcs_col_len(
-            fcs_state_get_col(state, ds)
-            ) == 0)
-        {
-            break;
-        }
-    }
+    int ds = vacant_state_resources_ptr->vacant_stack_idxs[0];
 
     for (int fc = 0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
     {
