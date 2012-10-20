@@ -1,0 +1,8 @@
+1	--method soft-dfs -to 0123456789
+2	--method soft-dfs -to 0123467
+3	--method random-dfs -seed 2 -to 0[01][23456789]
+4	--method random-dfs -seed 1 -to 0[0123456789]
+5	--method random-dfs -seed 3 -to 0[01][23467]
+6	--method a-star
+7	--method a-star -to 0123467
+8	--method random-dfs -seed 4 -to 0[0123467]
