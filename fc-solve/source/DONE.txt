@@ -356,3 +356,8 @@ Reached 25004188 ; States-in-collection: 25004188 ; Time: 1343325174.469632
 Reached 11629132 ; States-in-collection: 11629132 ; Time: 1343325500.110992
 >>>Queue Stats: inserted=11629132 items_in_queue=0 extracted=11629132
 ----------------------
+
+* Fix fc_solve_sfs_raymond_prune() (in libfrecell-solver) and horne_prune()
+for non-Freecell variants.
+** The prune should operate differently based on the how sequences are built.
+
