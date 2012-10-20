@@ -827,7 +827,7 @@ static void trace_solution(
     int trace_num;
     int i;
     fcs_state_keyval_pair_t state;
-    unsigned char move;
+    unsigned char move = '\0';
     char * state_as_str;
     char move_buffer[500];
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
