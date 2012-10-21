@@ -133,7 +133,7 @@ GetOptions(
     local $ENV{HARNESS_TRIM_FNS} = 'keep:1';
 
     local $ENV{HARNESS_PLUGINS} = join(' ', qw(
-        ColorSummary ColorFileVerdicts AlternateInterpreters
+        BreakOnFailure ColorSummary ColorFileVerdicts AlternateInterpreters
         TrimDisplayedFilenames
         )
     );
