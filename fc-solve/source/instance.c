@@ -79,9 +79,7 @@
     a guideline for the user.
 */
 
-const double fc_solve_default_befs_weights[5] = {0.5,0,0.3,0,0.2};
-
-
+const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS] = {0.5, 0, 0.3, 0, 0.2, 0};
 
 static GCC_INLINE void normalize_befs_weights(
     fc_solve_soft_thread_t * soft_thread

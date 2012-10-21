@@ -259,6 +259,7 @@ help_screen_t help_screens[] = {
 "     3. The number of cards under sequences.\n"
 "     4. The length of the sequences which are found over renegade cards.\n"
 "     5. The depth of the board in the solution.\n"
+"     6. The depth of irreversible moves conducted in the board.\n"
 "\n"
 "-seed [seed_number]\n"
 "     Set the seed for the random number generator used by the\n"

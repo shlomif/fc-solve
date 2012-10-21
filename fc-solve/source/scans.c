@@ -1331,6 +1331,9 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #ifndef FCS_FREECELL_ONLY
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * const instance = hard_thread->instance;
+    const int sequences_are_built_by =
+        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance)
+        ;
 #endif
     fcs_state_t * const state = raw_pass_raw->key;
 
@@ -1392,6 +1395,37 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     }
 
     ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT];
+
+    {
+        int num_cards_not_on_parents = 0;
+
+        for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+        {
+            const fcs_cards_column_t col =
+                fcs_state_get_col(*state, stack_idx);
+
+            int col_len_minus_1 = fcs_col_len(col) - 1;
+            fcs_card_t parent_card = fcs_col_get_card(col, 0);
+            fcs_card_t child_card;
+            for (int h = 0 ; h < col_len_minus_1 ; h++)
+            {
+                child_card = fcs_col_get_card(col, h+1);
+
+                if (! fcs_is_parent_card(parent_card, child_card))
+                {
+                    num_cards_not_on_parents++;
+                }
+                parent_card = child_card;
+            }
+        }
+
+        /* 0 < num_cards_not_on_parents < 52
+         * 0 < num_cards_in_founds < 52
+         * -52 < -num_cards_not_on_parents < 0
+         * -52 < num_cards_in_founds - num_cards_not_on_parents < 52
+         *   */
+        ret += ( ((double)(num_cards_in_founds - num_cards_not_on_parents + (LOCAL_DECKS_NUM*52)))/(LOCAL_DECKS_NUM * (52 * 2))) * befs_weights[FCS_BEFS_WEIGHT_IRREVERSIBLILITY_DEPTH];
+    }
 
     fcs_game_limit_t num_vacant_freecells = 0;
     for (int freecell_idx = 0 ; freecell_idx < LOCAL_FREECELLS_NUM ; freecell_idx++)

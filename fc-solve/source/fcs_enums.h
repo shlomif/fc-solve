@@ -90,7 +90,7 @@ enum
 #define FCS_METHOD_OPTIMIZE 4
 #define FCS_METHOD_RANDOM_DFS 5
 
-#define FCS_NUM_BEFS_WEIGHTS 5
+#define FCS_NUM_BEFS_WEIGHTS 6
 
 #ifdef __cplusplus
 }

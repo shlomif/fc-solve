@@ -371,8 +371,8 @@ by rank, and unlimited sequence move, do:
 $ fc-solve -g freecell --sequences-are-built-by rank --sequence-move unlimited
 ------------------------------------------
 
-5. Solving Algorithm Options
-----------------------------
+Solving Algorithm Options
+-------------------------
 
 -mi [Iterations num] , --max-iters [Iterations num]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -536,8 +536,11 @@ The numbers are, in order:
 3. The number of cards under sequences.
 4. The length of the sequences which are found over renegade cards.
 5. The depth of the board in the solution.
+6. The irreversibility-depth-cardinality of the layout, as a function of the
+number of cards not above their parents, and the number of cards in the
+foundations.
 
-The default weights are respectively: 0.5,0,0.3,0,0.2
+The default weights are respectively: {0.5, 0, 0.3, 0, 0.2, 0}
 
 
 -seed [Seed Number]
