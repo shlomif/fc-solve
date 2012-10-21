@@ -82,6 +82,7 @@ sub test_using_valgrind
         },
     );
 }
+
 # TEST
 test_using_valgrind(
     {prog => "fc-solve",
