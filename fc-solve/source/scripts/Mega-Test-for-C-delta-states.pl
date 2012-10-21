@@ -9,7 +9,7 @@ use Cwd;
 use Inline (
     C => 'DATA',
     CLEAN_AFTER_BUILD => 0,
-    INC => ["-I$ENV{FCS_PATH}", "-I$ENV{FCS_SRC_PATH}",],
+    INC => "-I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH}",
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_delta_states_test -lfcs_debondt_delta_states_test -lfcs_dbm_calc_derived_test -lgmp",
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
