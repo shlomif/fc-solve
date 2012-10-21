@@ -27,3 +27,4 @@
 30	--method a-star -to 0123467589 -asw 300,1500,0,2,60000
 31	--method a-star -to 0123467589 -asw 300,1500,99,2,65000
 32	--method soft-dfs -to 01234567 -dto 13,0187465 -dto 26,0134587
+33	--method a-star -to 0123467589 -asw 0,0,0,0,0,100 -sp r:tf
