@@ -10,6 +10,15 @@ Pressing
 Non-pressing
 ------------
 
+* Implement the measurement of "non-reversibility" of the state inside
+the befs_rater.
+** This is a measurement of how many cards were moved to the foundations
+and how many are not on top of designated parents. See the depth_dbm_solver.c
+for more information.
+
+* Implement the parser for the state ordering based on arbitrary sortings.
+** Like +--tests-order '[0123456789]=asw(depth=1)'+ .
+
 * Cache the list of the empty stacks and empty freecells inside the
 soft_thread for easy reference.
 ** Convert the freecell.c routines to use it.
