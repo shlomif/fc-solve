@@ -1365,7 +1365,7 @@ break;
                  * to 0 so
                  * we won't have partial initialization.
                  * */
-                for (a=0 ; a<5 ; a++)
+                for (a=0 ; a<FCS_NUM_BEFS_WEIGHTS ; a++)
                 {
                     freecell_solver_user_set_a_star_weight(
                         instance,
@@ -1374,7 +1374,7 @@ break;
                         );
                 }
 
-                for (a=0 ; a<5 ; a++)
+                for (a=0 ; a<FCS_NUM_BEFS_WEIGHTS ; a++)
                 {
                     while ((*start_num > '9') && (*start_num < '0') && (*start_num != '\0'))
                     {
