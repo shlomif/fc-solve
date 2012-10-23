@@ -1,0 +1,8 @@
+#!/bin/bash
+# for I in `seq 1 32000` ; do
+for I in `seq 8389 32000` ; do
+    printf "%-6s| %-30s | %-30s\n" \
+        "$I" \
+        "$(pi-make-microsoft-freecell-board -t "$I" | ./scripts/summarize-fc-solve -l mo)" \
+        "$(pi-make-microsoft-freecell-board -t "$I" | ./scripts/summarize-fc-solve --read-from-file 4,'/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source/Presets/presets/further-split.sh')"
+done

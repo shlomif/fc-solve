@@ -59,6 +59,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "ids-whitelist\\\\.txt"
     "/_Inline/"
     "/(build|BUILD)/"
+    "/Presets/testing-presets"
 )
 
 IF(WIN32 AND NOT UNIX)
