@@ -96,7 +96,7 @@ sub _calc_get_iter_state_param_method
 
     my $optimize_for = $self->_optimize_for();
 
-    my %resolve = 
+    my %resolve =
     (
         len => "_get_iter_state_params_len",
         minmax_len => "_get_iter_state_params_minmax_len",
