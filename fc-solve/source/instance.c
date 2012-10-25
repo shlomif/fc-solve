@@ -348,13 +348,13 @@ static GCC_INLINE void init_soft_thread(
     DFS_VAR(soft_thread, tests_by_depth_array).num_units = 0;
     DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units = NULL;
 
-    soft_thread->method_specific.befs.tests_list = NULL;
+    BEFS_M_VAR(soft_thread, tests_list) = NULL;
 
     /* The default solving method */
     soft_thread->method = FCS_METHOD_SOFT_DFS;
     soft_thread->super_method_type = FCS_SUPER_METHOD_DFS;
 
-    soft_thread->method_specific.befs.befs_positions_by_rank = NULL;
+    BEFS_M_VAR(soft_thread, befs_positions_by_rank) = NULL;
 
     DFS_VAR(soft_thread, rand_seed) = 24;
 

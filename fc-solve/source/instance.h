@@ -928,6 +928,8 @@ struct fc_solve_soft_thread_struct
 
 #define DFS_VAR(soft_thread,var) (soft_thread)->method_specific.soft_dfs.var
 #define BEFS_VAR(soft_thread,var) (soft_thread)->method_specific.befs.meth.befs.var
+/* M is Methods-common. */
+#define BEFS_M_VAR(soft_thread,var) (soft_thread)->method_specific.befs.var
 #define BRFS_VAR(soft_thread,var) (soft_thread)->method_specific.befs.meth.brfs.var
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
@@ -1623,8 +1625,8 @@ static GCC_INLINE void fc_solve_release_tests_list(
 {
     if (is_scan_befs_or_bfs)
     {
-        free (soft_thread->method_specific.befs.tests_list);
-        soft_thread->method_specific.befs.tests_list = NULL;
+        free (BEFS_M_VAR(soft_thread, tests_list));
+        BEFS_M_VAR(soft_thread, tests_list) = NULL;
     }
     else
     {

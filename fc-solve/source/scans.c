@@ -1619,7 +1619,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         fc_solve_initialize_bfs_queue(soft_thread);
     }
 
-    if (! soft_thread->method_specific.befs.tests_list)
+    if (! BEFS_M_VAR(soft_thread, tests_list))
     {
         int * const tests_order_tests = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests;
 
@@ -1638,8 +1638,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(
                     ];
         }
         }
-        soft_thread->method_specific.befs.tests_list = tests_list;
-        soft_thread->method_specific.befs.tests_list_end = next_test;
+        BEFS_M_VAR(soft_thread, tests_list) = tests_list;
+        BEFS_M_VAR(soft_thread, tests_list_end) = next_test;
     }
 
     soft_thread->first_state_to_check =
@@ -1731,9 +1731,9 @@ int fc_solve_befs_or_bfs_do_solve(
     derived.states = NULL;
 
     const fc_solve_solve_for_state_test_t * const tests_list
-        = soft_thread->method_specific.befs.tests_list;
+        = BEFS_M_VAR(soft_thread, tests_list);
     const fc_solve_solve_for_state_test_t * const tests_list_end
-        = soft_thread->method_specific.befs.tests_list_end;
+        = BEFS_M_VAR(soft_thread, tests_list_end);
 
     ASSIGN_ptr_state(soft_thread->first_state_to_check);
     const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
@@ -1880,10 +1880,10 @@ int fc_solve_befs_or_bfs_do_solve(
         soft_thread->num_vacant_freecells = num_vacant_freecells;
         soft_thread->num_vacant_stacks = num_vacant_stacks;
 
-        if (soft_thread->method_specific.befs.befs_positions_by_rank)
+        if (BEFS_M_VAR(soft_thread, befs_positions_by_rank))
         {
-            free(soft_thread->method_specific.befs.befs_positions_by_rank);
-            soft_thread->method_specific.befs.befs_positions_by_rank = NULL;
+            free(BEFS_M_VAR(soft_thread, befs_positions_by_rank));
+            BEFS_M_VAR(soft_thread, befs_positions_by_rank) = NULL;
         }
 
         TRACE0("perform_tests");
@@ -2043,10 +2043,10 @@ my_return_label:
         my_brfs_queue_last_item = queue_last_item;
     }
 
-    if (soft_thread->method_specific.befs.befs_positions_by_rank)
+    if (BEFS_M_VAR(soft_thread, befs_positions_by_rank))
     {
-        free(soft_thread->method_specific.befs.befs_positions_by_rank);
-        soft_thread->method_specific.befs.befs_positions_by_rank = NULL;
+        free(BEFS_M_VAR(soft_thread, befs_positions_by_rank));
+        BEFS_M_VAR(soft_thread, befs_positions_by_rank) = NULL;
     }
 
     return error_code;
@@ -2073,7 +2073,7 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
         default:
             {
                 return &(
-                    soft_thread->method_specific.befs.befs_positions_by_rank
+                    BEFS_M_VAR(soft_thread, befs_positions_by_rank)
                     );
             }
             break;
