@@ -80,15 +80,15 @@ void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    const int new_dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth + SOFT_DFS_DEPTH_GROW_BY;
+    const int new_dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY;
 
-    soft_thread->method_specific.soft_dfs.soft_dfs_info = realloc(
-        soft_thread->method_specific.soft_dfs.soft_dfs_info,
-        sizeof(soft_thread->method_specific.soft_dfs.soft_dfs_info[0])*new_dfs_max_depth
+    DFS_VAR(soft_thread, soft_dfs_info) = realloc(
+        DFS_VAR(soft_thread, soft_dfs_info),
+        sizeof(DFS_VAR(soft_thread, soft_dfs_info)[0])*new_dfs_max_depth
         );
 
-    fcs_soft_dfs_stack_item_t * soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info +
-        soft_thread->method_specific.soft_dfs.dfs_max_depth;
+    fcs_soft_dfs_stack_item_t * soft_dfs_info = DFS_VAR(soft_thread, soft_dfs_info) +
+        DFS_VAR(soft_thread, dfs_max_depth);
 
     fcs_soft_dfs_stack_item_t * const end_soft_dfs_info = soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY;
     for(; soft_dfs_info < end_soft_dfs_info ; soft_dfs_info++)
@@ -104,7 +104,7 @@ void fc_solve_increase_dfs_max_depth(
         soft_dfs_info->positions_by_rank = NULL;
     }
 
-    soft_thread->method_specific.soft_dfs.dfs_max_depth = new_dfs_max_depth;
+    DFS_VAR(soft_thread, dfs_max_depth) = new_dfs_max_depth;
 }
 
 #define FCS_IS_STATE_DEAD_END(ptr_state) \
@@ -137,9 +137,9 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
         )
 {
     fcs_soft_dfs_stack_item_t * soft_dfs_info =
-        soft_thread->method_specific.soft_dfs.soft_dfs_info;
+        DFS_VAR(soft_thread, soft_dfs_info);
     fcs_soft_dfs_stack_item_t * const end_soft_dfs_info =
-        soft_dfs_info + soft_thread->method_specific.soft_dfs.depth;
+        soft_dfs_info + DFS_VAR(soft_thread, depth);
 
     for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
@@ -194,10 +194,10 @@ static void verify_soft_dfs_stack(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    for (int depth = 0 ; depth < soft_thread->method_specific.soft_dfs.depth ; depth++)
+    for (int depth = 0 ; depth < DFS_VAR(soft_thread, depth) ; depth++)
     {
         fcs_soft_dfs_stack_item_t * soft_dfs_info;
-        soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[depth]);
+        soft_dfs_info = &(DFS_VAR(soft_thread, soft_dfs_info)[depth]);
         int * const rand_indexes = soft_dfs_info->derived_states_random_indexes;
 
         const int num_states = soft_dfs_info->derived_states_list.num_states;
@@ -329,8 +329,8 @@ static GCC_INLINE void free_states(fc_solve_instance_t * instance)
             { \
             printf("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
                     message, \
-                    (long int)soft_thread->method_specific.soft_dfs.depth, \
-                    (long int)(the_soft_dfs_info-soft_thread->method_specific.soft_dfs.soft_dfs_info), \
+                    (long int)DFS_VAR(soft_thread, depth), \
+                    (long int)(the_soft_dfs_info-DFS_VAR(soft_thread, soft_dfs_info)), \
                     (long int)(instance->num_times), \
                     the_soft_dfs_info->test_index, \
                     the_soft_dfs_info->current_state_index, \
@@ -812,21 +812,21 @@ int fc_solve_soft_dfs_do_solve(
 #endif
 
 #define DEPTH() (*depth_ptr)
-    int * const depth_ptr = &(soft_thread->method_specific.soft_dfs.depth);
+    int * const depth_ptr = &(DFS_VAR(soft_thread, depth));
 
-    fcs_soft_dfs_stack_item_t * the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[DEPTH()]);
+    fcs_soft_dfs_stack_item_t * the_soft_dfs_info = &(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]);
 
-    int dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
+    int dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
     fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
     ASSIGN_ptr_state (the_soft_dfs_info->state);
     fcs_derived_states_list_t * derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
-    fcs_rand_t * const rand_gen = &(soft_thread->method_specific.soft_dfs.rand_gen);
+    fcs_rand_t * const rand_gen = &(DFS_VAR(soft_thread, rand_gen));
 
     calculate_real_depth(calc_real_depth, PTR_STATE);
 
-    fcs_tests_by_depth_unit_t * by_depth_units = soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units;
+    fcs_tests_by_depth_unit_t * by_depth_units = DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units;
 
 #define THE_TESTS_LIST (*the_tests_list_ptr)
     TRACE0("Before depth loop");
@@ -893,11 +893,11 @@ int fc_solve_soft_dfs_do_solve(
         {
             fc_solve_increase_dfs_max_depth(soft_thread);
 
-            /* Because the address of soft_thread->method_specific.soft_dfs.soft_dfs_info may
+            /* Because the address of DFS_VAR(soft_thread, soft_dfs_info) may
              * be changed
              * */
-            the_soft_dfs_info = &(soft_thread->method_specific.soft_dfs.soft_dfs_info[DEPTH()]);
-            dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
+            the_soft_dfs_info = &(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]);
+            dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
             /* This too has to be re-synced */
             derived_states_list = &(the_soft_dfs_info->derived_states_list);
         }
@@ -972,7 +972,7 @@ int fc_solve_soft_dfs_do_solve(
 #else
                         ((DEPTH() == 0) ?
                             0 :
-                            FCS_S_VISITED_ITER(soft_thread->method_specific.soft_dfs.soft_dfs_info[DEPTH()-1].state)
+                            FCS_S_VISITED_ITER(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()-1].state)
                         )
 #endif
                         );
@@ -2064,8 +2064,8 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
         case FCS_METHOD_RANDOM_DFS:
             {
                 return &(
-                    soft_thread->method_specific.soft_dfs.soft_dfs_info[
-                    soft_thread->method_specific.soft_dfs.depth
+                    DFS_VAR(soft_thread, soft_dfs_info)[
+                    DFS_VAR(soft_thread, depth)
                     ].positions_by_rank
                     );
             }

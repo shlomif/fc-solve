@@ -926,6 +926,8 @@ struct fc_solve_soft_thread_struct
     fcs_bool_t enable_pruning;
 };
 
+#define DFS_VAR(soft_thread,var) (soft_thread)->method_specific.soft_dfs.var
+
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
 #define FC_SOLVE_IS_DFS(soft_thread) \
@@ -990,19 +992,19 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     /*
         Allocate some space for the states at depth 0.
     */
-    soft_thread->method_specific.soft_dfs.depth = 0;
+    DFS_VAR(soft_thread, depth) = 0;
 
     fc_solve_increase_dfs_max_depth(soft_thread);
 
-    soft_thread->method_specific.soft_dfs.soft_dfs_info[0].state
+    DFS_VAR(soft_thread, soft_dfs_info)[0].state
         = FCS_STATE_keyval_pair_to_collectible(ptr_orig_state);
 
     fc_solve_rand_init(
-            &(soft_thread->method_specific.soft_dfs.rand_gen),
-            soft_thread->method_specific.soft_dfs.rand_seed
+            &(DFS_VAR(soft_thread, rand_gen)),
+            DFS_VAR(soft_thread, rand_seed)
     );
 
-    if (! soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units)
+    if (! DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units)
     {
         fcs_tests_list_of_lists * tests_list_of_lists;
         fc_solve_solve_for_state_test_t * tests_list, * next_test;
@@ -1019,7 +1021,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
         int depth_idx;
         fcs_by_depth_tests_order_t * by_depth_tests_order;
 
-        arr_ptr = &(soft_thread->method_specific.soft_dfs.tests_by_depth_array);
+        arr_ptr = &(DFS_VAR(soft_thread, tests_by_depth_array));
         arr_ptr->by_depth_units =
             malloc(
                 sizeof(arr_ptr->by_depth_units[0])
@@ -1628,7 +1630,7 @@ static GCC_INLINE void fc_solve_release_tests_list(
         int unit_idx;
         fcs_tests_by_depth_array_t * arr;
 
-        arr = &(soft_thread->method_specific.soft_dfs.tests_by_depth_array);
+        arr = &(DFS_VAR(soft_thread, tests_by_depth_array));
         for (unit_idx = 0 ; unit_idx < arr->num_units ; unit_idx++)
         {
             if (arr->by_depth_units[unit_idx].tests.lists)

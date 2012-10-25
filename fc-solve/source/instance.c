@@ -127,16 +127,16 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
     /* Check if a Soft-DFS-type scan was called in the first place */
     if (!(
             FC_SOLVE_IS_DFS(soft_thread)
-        && soft_thread->method_specific.soft_dfs.soft_dfs_info
+        && DFS_VAR(soft_thread, soft_dfs_info)
        ))
     {
         /* If not - do nothing */
         return;
     }
 
-    soft_dfs_info = soft_thread->method_specific.soft_dfs.soft_dfs_info;
-    max_depth = soft_thread->method_specific.soft_dfs.depth;
-    dfs_max_depth = soft_thread->method_specific.soft_dfs.dfs_max_depth;
+    soft_dfs_info = DFS_VAR(soft_thread, soft_dfs_info);
+    max_depth = DFS_VAR(soft_thread, depth);
+    dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
     /* De-allocate the Soft-DFS specific stacks */
     {
         int depth;
@@ -160,9 +160,9 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
 
         free(soft_dfs_info);
 
-        soft_thread->method_specific.soft_dfs.soft_dfs_info = NULL;
+        DFS_VAR(soft_thread, soft_dfs_info) = NULL;
 
-        soft_thread->method_specific.soft_dfs.dfs_max_depth = 0;
+        DFS_VAR(soft_thread, dfs_max_depth) = 0;
 
     }
 }
@@ -331,7 +331,7 @@ static GCC_INLINE void init_soft_thread(
 
     soft_thread->id = (hard_thread->instance->next_soft_thread_id)++;
 
-    soft_thread->method_specific.soft_dfs.dfs_max_depth = 0;
+    DFS_VAR(soft_thread, dfs_max_depth) = 0;
 
     soft_thread->by_depth_tests_order.num = 1;
     soft_thread->by_depth_tests_order.by_depth_tests =
@@ -343,10 +343,10 @@ static GCC_INLINE void init_soft_thread(
         .tests_order.tests = NULL;
 
     /* Initialize all the Soft-DFS stacks to NULL */
-    soft_thread->method_specific.soft_dfs.soft_dfs_info = NULL;
+    DFS_VAR(soft_thread, soft_dfs_info) = NULL;
 
-    soft_thread->method_specific.soft_dfs.tests_by_depth_array.num_units = 0;
-    soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units = NULL;
+    DFS_VAR(soft_thread, tests_by_depth_array).num_units = 0;
+    DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units = NULL;
 
     soft_thread->method_specific.befs.tests_list = NULL;
 
@@ -356,7 +356,7 @@ static GCC_INLINE void init_soft_thread(
 
     soft_thread->method_specific.befs.befs_positions_by_rank = NULL;
 
-    soft_thread->method_specific.soft_dfs.rand_seed = 24;
+    DFS_VAR(soft_thread, rand_seed) = 24;
 
     soft_thread->num_times_step = NUM_TIMES_STEP;
 

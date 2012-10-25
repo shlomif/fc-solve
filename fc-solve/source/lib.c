@@ -1292,7 +1292,7 @@ int DLLEXPORT freecell_solver_user_get_current_depth(
 
     user = (fcs_user_t *)api_instance;
 
-    return (user->soft_thread->method_specific.soft_dfs.depth);
+    return (DFS_VAR(user->soft_thread, depth));
 }
 
 void DLLEXPORT freecell_solver_user_set_solving_method(
@@ -1317,13 +1317,13 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         case FCS_METHOD_SOFT_DFS:
         {
             user->soft_thread->super_method_type = FCS_SUPER_METHOD_DFS;
-            user->soft_thread->method_specific.soft_dfs.dfs_max_depth
-                = user->soft_thread->method_specific.soft_dfs.depth
-                = user->soft_thread->method_specific.soft_dfs.tests_by_depth_array.num_units
+            DFS_VAR(user->soft_thread, dfs_max_depth)
+                = DFS_VAR(user->soft_thread, depth)
+                = DFS_VAR(user->soft_thread, tests_by_depth_array).num_units
                 = 0;
-            user->soft_thread->method_specific.soft_dfs.rand_seed = 24;
-            user->soft_thread->method_specific.soft_dfs.soft_dfs_info = NULL;
-            user->soft_thread->method_specific.soft_dfs.tests_by_depth_array.by_depth_units = NULL;
+            DFS_VAR(user->soft_thread, rand_seed) = 24;
+            DFS_VAR(user->soft_thread, soft_dfs_info) = NULL;
+            DFS_VAR(user->soft_thread, tests_by_depth_array).by_depth_units = NULL;
         }
         break;
         case FCS_METHOD_A_STAR:
@@ -1915,8 +1915,8 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
     user = (fcs_user_t *)api_instance;
 
     fc_solve_rand_init(
-            &(user->soft_thread->method_specific.soft_dfs.rand_gen),
-            (user->soft_thread->method_specific.soft_dfs.rand_seed = seed)
+            &(DFS_VAR(user->soft_thread, rand_gen)),
+            (DFS_VAR(user->soft_thread, rand_seed) = seed)
             );
 }
 
