@@ -1331,7 +1331,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
             double * my_befs_weights;
             int a;
 
-            my_befs_weights = user->soft_thread->method_specific.befs.meth.befs.befs_weights;
+            my_befs_weights = BEFS_VAR(user->soft_thread, befs_weights);
             for(a = 0;
                 a<(sizeof(fc_solve_default_befs_weights)/
                     sizeof(fc_solve_default_befs_weights[0]));
@@ -1340,7 +1340,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
                 my_befs_weights[a] = fc_solve_default_befs_weights[a];
             }
 
-            user->soft_thread->method_specific.befs.meth.befs.pqueue.Elements = NULL;
+            BEFS_VAR(user->soft_thread, pqueue).Elements = NULL;
         }
         break;
         case FCS_METHOD_OPTIMIZE:
@@ -1736,8 +1736,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 
     user = (fcs_user_t *)api_instance;
 
-#define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
-    if ((my_index < 0) || (my_index >= (sizeof(user->my_befs_weights)/sizeof(user->my_befs_weights[0]))))
+    if ((my_index < 0) || (my_index >= (sizeof(BEFS_VAR(user->soft_thread, befs_weights))/sizeof(BEFS_VAR(user->soft_thread, befs_weights)[0]))))
     {
         return 1;
     }
@@ -1746,7 +1745,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
         return 2;
     }
 
-    user->my_befs_weights[my_index] = weight;
+    BEFS_VAR(user->soft_thread, befs_weights)[my_index] = weight;
 
     return 0;
 
@@ -1763,9 +1762,7 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 
     user = (fcs_user_t *)api_instance;
 
-#define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
-
-    return user->my_befs_weights[my_index];
+    return BEFS_VAR(user->soft_thread, befs_weights)[my_index];
 }
 
 #endif

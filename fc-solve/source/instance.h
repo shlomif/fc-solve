@@ -927,6 +927,7 @@ struct fc_solve_soft_thread_struct
 };
 
 #define DFS_VAR(soft_thread,var) (soft_thread)->method_specific.soft_dfs.var
+#define BEFS_VAR(soft_thread,var) (soft_thread)->method_specific.befs.meth.befs.var
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
@@ -1667,7 +1668,7 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
         if (soft_thread->method == FCS_METHOD_A_STAR)
         {
             fc_solve_PQueueFree(
-                &(soft_thread->method_specific.befs.meth.befs.pqueue)
+                &(BEFS_VAR(soft_thread, pqueue))
             );
         }
 

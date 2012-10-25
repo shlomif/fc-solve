@@ -92,7 +92,7 @@ static GCC_INLINE void normalize_befs_weights(
     int weight_idx;
 
     sum = 0;
-#define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
+#define my_befs_weights BEFS_VAR(soft_thread, befs_weights)
     for (
         weight_idx = 0
             ;
@@ -195,7 +195,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     {
         case FCS_METHOD_A_STAR:
             fc_solve_PQueueFree(
-                    &(soft_thread->method_specific.befs.meth.befs.pqueue)
+                    &(BEFS_VAR(soft_thread, pqueue))
             );
             /* Fall-through. */
         case FCS_METHOD_BFS:
