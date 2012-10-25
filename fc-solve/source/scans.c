@@ -1396,8 +1396,13 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT];
 
+    /* 0 < num_cards_not_on_parents < 52
+     * 0 < num_cards_in_founds < 52
+     * -52 < -num_cards_not_on_parents < 0
+     * -52 < num_cards_in_founds - num_cards_not_on_parents < 52
+     *   */
     {
-        int num_cards_not_on_parents = 0;
+        int num_cards_not_on_parents = (LOCAL_DECKS_NUM*52);
 
         for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
         {
@@ -1412,18 +1417,13 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
                 if (! fcs_is_parent_card(parent_card, child_card))
                 {
-                    num_cards_not_on_parents++;
+                    num_cards_not_on_parents--;
                 }
                 parent_card = child_card;
             }
         }
 
-        /* 0 < num_cards_not_on_parents < 52
-         * 0 < num_cards_in_founds < 52
-         * -52 < -num_cards_not_on_parents < 0
-         * -52 < num_cards_in_founds - num_cards_not_on_parents < 52
-         *   */
-        ret += ( ((double)(num_cards_in_founds - num_cards_not_on_parents + (LOCAL_DECKS_NUM*52)))/(LOCAL_DECKS_NUM * (52 * 2))) * befs_weights[FCS_BEFS_WEIGHT_IRREVERSIBLILITY_DEPTH];
+        ret += ( ((double)num_cards_not_on_parents)/(LOCAL_DECKS_NUM * 52)) * befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS];
     }
 
     fcs_game_limit_t num_vacant_freecells = 0;

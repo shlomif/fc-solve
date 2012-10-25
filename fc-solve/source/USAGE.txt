@@ -536,9 +536,9 @@ The numbers are, in order:
 3. The number of cards under sequences.
 4. The length of the sequences which are found over renegade cards.
 5. The depth of the board in the solution.
-6. The irreversibility-depth-cardinality of the layout, as a function of the
-number of cards not above their parents, and the number of cards in the
-foundations.
+6. The negative of the number of cards that are not placed above their
+parents. To get the irreversibility depth, give equal weight to this weight
+and to the number of cards out.
 
 The default weights are respectively: {0.5, 0, 0.3, 0, 0.2, 0}
 

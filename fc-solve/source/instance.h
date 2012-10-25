@@ -934,7 +934,7 @@ typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 #define FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES 2
 #define FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS 3
 #define FCS_BEFS_WEIGHT_DEPTH 4
-#define FCS_BEFS_WEIGHT_IRREVERSIBLILITY_DEPTH 5
+#define FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS 5
 
 fc_solve_instance_t * fc_solve_alloc_instance(void);
 

@@ -25,6 +25,6 @@ freecell-solver-range-parallel-solve 1 32000 1 \
 -nf --flare-name 29 --method a-star -to 01234675 -asw 300,1500,0,2,50000 -opt \
 -nf --flare-name 30 --method a-star -to 0123467589 -asw 300,1500,0,2,60000 -opt \
 -nf --flare-name 31 --method a-star -to 0123467589 -asw 300,1500,99,2,65000 -opt \
--nf --flare-name 35 --method a-star -to 0123467589 -asw 0,0,0,0,75,25 -sp r:tf -opt \
+-nf --flare-name 35 --method a-star -to 0123467589 -asw 12.5,0,0,0,75,12.5 -sp r:tf -opt \
 -nf --flare-name foo --method a-star -to 0123467589 -asw 370,0,0,2,90000 -opt \
  --flares-plan "Run:6246@1,Run:2663@2,Run:6799@3,Run:7161@4,Run:3466@5,Run:3594@9,Run:6896@10,Run:7269@11,Run:7194@12,Run:6462@15,Run:7742@16,Run:7029@17,Run:3769@18,Run:5244@19,Run:7149@20,Run:8848@21,Run:6282@22,Run:5020@23,Run:2128@24,Run:6833@25,Run:7290@26,Run:6619@27,Run:3797@28,Run:10000@29,Run:10000@30,Run:3184@31,Run:3000@foo,Run:10000@35"
