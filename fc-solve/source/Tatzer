@@ -87,6 +87,7 @@ my %themes =
     )],
     reduce_mem => [ qw(-l bench -l mem_reduction_settings) ],
     fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=1) ],
+    testing => [qw(--rwd --dbm=kaztree --test-suite --num-stacks=13),],
 );
 
 foreach my $rec (
@@ -109,7 +110,7 @@ foreach my $rec (
     # Generalised Memory conserving theme - not only for freecell
     $themes{$id.'mm'} = [qw(-l reduce_mem -l), $id];
     # Testing theme - aims to run the tests quickly
-    $themes{$id.'t'} = ['-l', $id.'bb', '--rwd', '--dbm=kaztree', '--test-suite',];
+    $themes{$id.'t'} = ['-l', $id.'bb', qw(-l testing),];
 
     # For use by PySolFC
     $themes{$id . "_pysol"} = ['-l', $id.'bb', '--num-stacks=14', "--prefix=$ENV{HOME}/apps/fcs-for-pysol",];
