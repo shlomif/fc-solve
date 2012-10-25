@@ -1404,8 +1404,17 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #endif
 
     double cards_under_sequences = 0;
-    fcs_game_limit_t num_vacant_stacks = 0;
     double seqs_over_renegade_cards = 0;
+
+    int num_cards_in_founds = 0;
+    for (int found_idx=0 ; found_idx < (LOCAL_DECKS_NUM<<2) ; found_idx++)
+    {
+        num_cards_in_founds += fcs_foundation_value((*state), found_idx);
+    }
+
+    ret += num_cards_in_founds * BEFS_VAR(soft_thread, num_cards_out_factor);
+
+    fcs_game_limit_t num_vacant_stacks = 0;
     for (int a = 0 ; a < LOCAL_STACKS_NUM ; a++)
     {
         const fcs_cards_column_t col = fcs_state_get_col(*state, a);
@@ -1432,55 +1441,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         }
     }
 
-    ret += (
-        (BEFS_VAR(soft_thread, initial_cards_under_sequences_value) - cards_under_sequences)
-            * BEFS_VAR(soft_thread, cards_under_sequences_factor)
-    );
-
-    ret += seqs_over_renegade_cards *
-            BEFS_VAR(soft_thread, seqs_over_renegade_cards_factor);
-
-    int num_cards_in_founds = 0;
-    for (int found_idx=0 ; found_idx < (LOCAL_DECKS_NUM<<2) ; found_idx++)
-    {
-        num_cards_in_founds += fcs_foundation_value((*state), found_idx);
-    }
-
-    ret += num_cards_in_founds *
-        BEFS_VAR(soft_thread, num_cards_out_factor);
-
-    /* 0 < num_cards_not_on_parents < 52
-     * 0 < num_cards_in_founds < 52
-     * -52 < -num_cards_not_on_parents < 0
-     * -52 < num_cards_in_founds - num_cards_not_on_parents < 52
-     *   */
-    {
-        int num_cards_not_on_parents = (LOCAL_DECKS_NUM*52);
-
-        for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
-        {
-            const fcs_cards_column_t col =
-                fcs_state_get_col(*state, stack_idx);
-
-            const int col_len = fcs_col_len(col);
-            fcs_card_t parent_card = fcs_col_get_card(col, 0);
-            for (int h = 1 ; h < col_len ; h++)
-            {
-                const fcs_card_t child_card = fcs_col_get_card(col, h);
-
-                if (! fcs_is_parent_card(parent_card, child_card))
-                {
-                    num_cards_not_on_parents--;
-                }
-                parent_card = child_card;
-            }
-        }
-
-        ret += num_cards_not_on_parents *
-            BEFS_VAR(soft_thread, num_cards_not_on_parents_factor)
-        ;
-    }
-
     fcs_game_limit_t num_vacant_freecells = 0;
     for (int freecell_idx = 0 ; freecell_idx < LOCAL_FREECELLS_NUM ; freecell_idx++)
     {
@@ -1490,6 +1450,27 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         }
     }
 
+    int num_cards_not_on_parents = (LOCAL_DECKS_NUM*52);
+
+    for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+    {
+        const fcs_cards_column_t col =
+            fcs_state_get_col(*state, stack_idx);
+
+        const int col_len = fcs_col_len(col);
+        fcs_card_t parent_card = fcs_col_get_card(col, 0);
+        for (int h = 1 ; h < col_len ; h++)
+        {
+            const fcs_card_t child_card = fcs_col_get_card(col, h);
+
+            if (! fcs_is_parent_card(parent_card, child_card))
+            {
+                num_cards_not_on_parents--;
+            }
+            parent_card = child_card;
+        }
+    }
+    int depth = kv_calc_depth(raw_pass_raw);
 
 #define CALC_VACANCY_VAL() \
     ( \
@@ -1511,14 +1492,21 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
 #undef CALC_VACANCY_VAL
 
-    {
-        int depth = kv_calc_depth(raw_pass_raw);
+    ret += (
+        (BEFS_VAR(soft_thread, initial_cards_under_sequences_value) - cards_under_sequences)
+            * BEFS_VAR(soft_thread, cards_under_sequences_factor)
+    );
 
-        if (depth <= BEFS_MAX_DEPTH)
-        {
-            ret += ((BEFS_MAX_DEPTH - depth) * BEFS_VAR(soft_thread, depth_factor));
-        }
+    ret += seqs_over_renegade_cards *
+        BEFS_VAR(soft_thread, seqs_over_renegade_cards_factor);
+
+    if (depth <= BEFS_MAX_DEPTH)
+    {
+        ret += ((BEFS_MAX_DEPTH - depth) * BEFS_VAR(soft_thread, depth_factor));
     }
+
+    ret += num_cards_not_on_parents *
+        BEFS_VAR(soft_thread, num_cards_not_on_parents_factor);
 
     TRACE0("Before return");
 
