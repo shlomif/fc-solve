@@ -874,6 +874,7 @@ struct fc_solve_soft_thread_struct
                            seqs_over_renegade_cards_factor,
                            num_cards_out_factor,
                            num_cards_not_on_parents_factor,
+                           max_sequence_move_factor,
                            depth_factor;
 
                     /*

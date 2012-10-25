@@ -1279,12 +1279,18 @@ static GCC_INLINE int update_col_cards_under_sequences(
     return c;
 }
 
+#ifdef FCS_FREECELL_ONLY
+#define is_filled_by_any_card() 1
+#else
+#define is_filled_by_any_card() (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
+#endif
 static GCC_INLINE void initialize_befs_rater(
     fc_solve_soft_thread_t * const soft_thread,
     fcs_kv_state_t * const raw_pass_raw
 )
 {
     double * const befs_weights = BEFS_VAR(soft_thread, befs_weights);
+
 
 #define pass (*raw_pass_raw)
 #define ptr_state_key (raw_pass_raw->key)
@@ -1297,6 +1303,14 @@ static GCC_INLINE void initialize_befs_rater(
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
 #endif
+
+#ifndef FCS_FREECELL_ONLY
+    int int_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+#define unlimited_sequence_move int_unlimited_sequence_move
+#else
+    #define unlimited_sequence_move 0
+#endif
+
     double cards_under_sequences = 0;
     for (int a=0 ; a < INSTANCE_STACKS_NUM ; a++)
     {
@@ -1316,10 +1330,26 @@ static GCC_INLINE void initialize_befs_rater(
     BEFS_VAR(soft_thread, num_cards_not_on_parents_factor) =
         befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] / (LOCAL_DECKS_NUM * 52);
 
+    BEFS_VAR(soft_thread, max_sequence_move_factor) =
+        befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] /
+        (is_filled_by_any_card()
+         ? (unlimited_sequence_move
+            ? (LOCAL_FREECELLS_NUM+INSTANCE_STACKS_NUM)
+            : ((LOCAL_FREECELLS_NUM+1)<<(INSTANCE_STACKS_NUM))
+           )
+         :
+           (unlimited_sequence_move
+            ? LOCAL_FREECELLS_NUM
+            : 1
+           )
+        );
+
     BEFS_VAR(soft_thread, depth_factor) =
         befs_weights[FCS_BEFS_WEIGHT_DEPTH] / BEFS_MAX_DEPTH;
 
 }
+
+#undef unlimited_sequence_move
 
 #undef TRACE0
 
@@ -1360,15 +1390,16 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     double ret=0;
 
-    double * const befs_weights = BEFS_VAR(soft_thread, befs_weights);
-#ifndef FCS_FREECELL_ONLY
-    int unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
-#else
-    #define unlimited_sequence_move 0
-#endif
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
+#endif
+
+#ifndef FCS_FREECELL_ONLY
+    int int_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+#define unlimited_sequence_move int_unlimited_sequence_move
+#else
+    #define unlimited_sequence_move 0
 #endif
 
     double cards_under_sequences = 0;
@@ -1458,27 +1489,25 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         }
     }
 
-#ifdef FCS_FREECELL_ONLY
-#define is_filled_by_any_card() 1
-#else
-#define is_filled_by_any_card() (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
-#endif
 
 #define CALC_VACANCY_VAL() \
     ( \
         is_filled_by_any_card() \
       ? \
         (unlimited_sequence_move \
-         ? (((double)num_vacant_freecells+num_vacant_stacks)/(LOCAL_FREECELLS_NUM+INSTANCE_STACKS_NUM))  \
-         : (((double)((num_vacant_freecells+1)<<num_vacant_stacks)) / ((LOCAL_FREECELLS_NUM+1)<<(INSTANCE_STACKS_NUM))) \
+         ? (num_vacant_freecells+num_vacant_stacks)  \
+         : ((num_vacant_freecells+1)<<num_vacant_stacks) \
         ) \
       : (unlimited_sequence_move \
-         ? (((double)num_vacant_freecells)/LOCAL_FREECELLS_NUM) \
+         ? (num_vacant_freecells) \
          : 0 \
         ) \
     )
 
-    ret += (CALC_VACANCY_VAL() * befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE]);
+    ret +=
+        (CALC_VACANCY_VAL() * BEFS_VAR(soft_thread, max_sequence_move_factor))
+        ;
+
 #undef CALC_VACANCY_VAL
 
     {
