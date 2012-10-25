@@ -16,11 +16,10 @@ triggered by executing +pkill -ABRT fc-solve+.
 a leading colon (":"). As a result, one can input the states as output from
 the solver with the +-p+ and +-t+ flags directly there.
 
-4. Added a 6th BeFS weight (see the +-asw+ flag) of the count of irreversible
-moves done. Using
-+./freecell-solver-range-parallel-solve 1 32000 1 -p -t -sam --method a-star -to 0123467589 -asw 0,0,0,0,0,1 -sp r:tf -mi 100000+
+4. Added a 6th BeFS weight (see the +-asw+ flag) of the inverse of the number
+of cards not above parents. Using
++./freecell-solver-range-parallel-solve 1 32000 1 -p -t -sam --method a-star -to 0123467589 -asw 1,0,0,0,0,1 -sp r:tf -mi 100000+
 appears to be interesting.
-
 
 Version 3.12.0: (12-Jun-2012)
 -----------------------------
