@@ -1284,8 +1284,7 @@ static GCC_INLINE void initialize_befs_rater(
     fcs_kv_state_t * const raw_pass_raw
 )
 {
-#define my_befs_weights BEFS_VAR(soft_thread, befs_weights)
-    double * befs_weights = my_befs_weights;
+    double * const befs_weights = BEFS_VAR(soft_thread, befs_weights);
 
 #define pass (*raw_pass_raw)
 #define ptr_state_key (raw_pass_raw->key)
@@ -1361,7 +1360,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     double ret=0;
 
-    double * befs_weights = my_befs_weights;
+    double * const befs_weights = BEFS_VAR(soft_thread, befs_weights);
 #ifndef FCS_FREECELL_ONLY
     int unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #else
@@ -1563,30 +1562,28 @@ static GCC_INLINE void normalize_befs_weights(
     fc_solve_soft_thread_t * const soft_thread
     )
 {
+    double * const befs_weights = BEFS_VAR(soft_thread, befs_weights);
+
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
     double sum = 0;
-    for(
-        int i = 0 ;
-        i < (sizeof(my_befs_weights)/sizeof(my_befs_weights[0])) ;
-        i++
-        )
+    for (int i = 0 ; i < FCS_NUM_BEFS_WEIGHTS; i++)
     {
-        if (my_befs_weights[i] < 0)
+        if (befs_weights[i] < 0)
         {
-            my_befs_weights[i] = fc_solve_default_befs_weights[i];
+            befs_weights[i] = fc_solve_default_befs_weights[i];
         }
-        sum += my_befs_weights[i];
+        sum += befs_weights[i];
     }
     if (sum < 1e-6)
     {
         sum = 1;
     }
-    for (int i=0 ;
-         i < (sizeof(my_befs_weights)/sizeof(my_befs_weights[0])) ;
-         i++)
+    for (int i=0 ; i < FCS_NUM_BEFS_WEIGHTS ; i++)
     {
-        my_befs_weights[i] /= sum;
+        befs_weights[i] /= sum;
     }
+
+    return;
 }
 
 void fc_solve_soft_thread_init_befs_or_bfs(
