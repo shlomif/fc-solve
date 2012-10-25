@@ -1526,10 +1526,10 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
 #endif
 
-#define my_brfs_queue (soft_thread->method_specific.befs.meth.brfs.bfs_queue)
+#define my_brfs_queue (BRFS_VAR(soft_thread, bfs_queue))
 #define my_brfs_queue_last_item \
-    (soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item)
-#define my_brfs_recycle_bin (soft_thread->method_specific.befs.meth.brfs.recycle_bin)
+    (BRFS_VAR(soft_thread, bfs_queue_last_item))
+#define my_brfs_recycle_bin (BRFS_VAR(soft_thread, recycle_bin))
 
 #define NEW_BRFS_QUEUE_ITEM() \
     ((fcs_states_linked_list_item_t *) \

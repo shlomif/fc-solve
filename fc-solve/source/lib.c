@@ -1346,8 +1346,8 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         case FCS_METHOD_OPTIMIZE:
         case FCS_METHOD_BFS:
         {
-            user->soft_thread->method_specific.befs.meth.brfs.bfs_queue =
-            user->soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item =
+            BRFS_VAR(user->soft_thread, bfs_queue) =
+            BRFS_VAR(user->soft_thread, bfs_queue_last_item) =
             NULL;
         }
         break;

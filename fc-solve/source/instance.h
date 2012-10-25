@@ -928,6 +928,7 @@ struct fc_solve_soft_thread_struct
 
 #define DFS_VAR(soft_thread,var) (soft_thread)->method_specific.soft_dfs.var
 #define BEFS_VAR(soft_thread,var) (soft_thread)->method_specific.befs.meth.befs.var
+#define BRFS_VAR(soft_thread,var) (soft_thread)->method_specific.befs.meth.brfs.var
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
