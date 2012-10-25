@@ -1404,12 +1404,11 @@ static GCC_INLINE pq_rating_t befs_rate_state(
             const fcs_cards_column_t col =
                 fcs_state_get_col(*state, stack_idx);
 
-            int col_len_minus_1 = fcs_col_len(col) - 1;
+            const int col_len = fcs_col_len(col);
             fcs_card_t parent_card = fcs_col_get_card(col, 0);
-            fcs_card_t child_card;
-            for (int h = 0 ; h < col_len_minus_1 ; h++)
+            for (int h = 1 ; h < col_len ; h++)
             {
-                child_card = fcs_col_get_card(col, h+1);
+                const fcs_card_t child_card = fcs_col_get_card(col, h);
 
                 if (! fcs_is_parent_card(parent_card, child_card))
                 {
