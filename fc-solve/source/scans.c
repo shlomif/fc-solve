@@ -1362,7 +1362,7 @@ static GCC_INLINE void initialize_befs_rater(
             { \
             printf("BestFS(rate_state) - %s ; rating=%.40f .\n", \
                     message, \
-                    ret \
+                   0.1  \
                     );  \
             fflush(stdout); \
             } \
@@ -1389,9 +1389,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #endif
     fcs_state_t * const state = raw_pass_raw->key;
 
-    double ret=0;
-
-
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
 #endif
@@ -1411,8 +1408,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     {
         num_cards_in_founds += fcs_foundation_value((*state), found_idx);
     }
-
-    ret += num_cards_in_founds * BEFS_VAR(soft_thread, num_cards_out_factor);
 
     fcs_game_limit_t num_vacant_stacks = 0;
     for (int a = 0 ; a < LOCAL_STACKS_NUM ; a++)
@@ -1472,6 +1467,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     }
     int depth = kv_calc_depth(raw_pass_raw);
 
+
 #define CALC_VACANCY_VAL() \
     ( \
         is_filled_by_any_card() \
@@ -1486,31 +1482,30 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         ) \
     )
 
-    ret +=
-        (CALC_VACANCY_VAL() * BEFS_VAR(soft_thread, max_sequence_move_factor))
-        ;
-
-#undef CALC_VACANCY_VAL
-
-    ret += (
-        (BEFS_VAR(soft_thread, initial_cards_under_sequences_value) - cards_under_sequences)
-            * BEFS_VAR(soft_thread, cards_under_sequences_factor)
-    );
-
-    ret += seqs_over_renegade_cards *
-        BEFS_VAR(soft_thread, seqs_over_renegade_cards_factor);
-
-    if (depth <= BEFS_MAX_DEPTH)
-    {
-        ret += ((BEFS_MAX_DEPTH - depth) * BEFS_VAR(soft_thread, depth_factor));
-    }
-
-    ret += num_cards_not_on_parents *
-        BEFS_VAR(soft_thread, num_cards_not_on_parents_factor);
-
     TRACE0("Before return");
 
-    return (int)(ret*INT_MAX);
+    return
+    (
+    (int)
+    ((
+        num_cards_in_founds * BEFS_VAR(soft_thread, num_cards_out_factor)
+            +
+        (CALC_VACANCY_VAL() * BEFS_VAR(soft_thread, max_sequence_move_factor))
+            +
+        (
+            (BEFS_VAR(soft_thread, initial_cards_under_sequences_value) - cards_under_sequences)
+            * BEFS_VAR(soft_thread, cards_under_sequences_factor)
+        )
+            +
+        (seqs_over_renegade_cards * BEFS_VAR(soft_thread, seqs_over_renegade_cards_factor))
+            +
+        ((BEFS_MAX_DEPTH - min(depth, BEFS_MAX_DEPTH)) * BEFS_VAR(soft_thread, depth_factor))
+            +
+        (num_cards_not_on_parents *
+                    BEFS_VAR(soft_thread, num_cards_not_on_parents_factor))
+    )*INT_MAX)
+    );
+#undef CALC_VACANCY_VAL
 }
 
 #undef pass
