@@ -73,6 +73,7 @@ static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
 
 #define kv_calc_depth(ptr_state) (calc_depth(FCS_STATE_kv_to_collectible(ptr_state)))
 
+#define BEFS_MAX_DEPTH 20000
 
 #define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(
@@ -1283,6 +1284,8 @@ static GCC_INLINE void initialize_befs_rater(
     fcs_kv_state_t * const raw_pass_raw
 )
 {
+#define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
+    double * befs_weights = my_befs_weights;
 
 #define pass (*raw_pass_raw)
 #define ptr_state_key (raw_pass_raw->key)
@@ -1292,12 +1295,31 @@ static GCC_INLINE void initialize_befs_rater(
     fc_solve_instance_t * const instance = hard_thread->instance;
 #endif
 
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    SET_GAME_PARAMS();
+#endif
     double cards_under_sequences = 0;
     for (int a=0 ; a < INSTANCE_STACKS_NUM ; a++)
     {
         update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*ptr_state_key, a), &cards_under_sequences);
     }
     soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value = cards_under_sequences;
+
+    soft_thread->method_specific.befs.meth.befs.cards_under_sequences_factor =
+        befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] / cards_under_sequences;
+
+    soft_thread->method_specific.befs.meth.befs.seqs_over_renegade_cards_factor =
+        befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] / FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4));
+
+    soft_thread->method_specific.befs.meth.befs.num_cards_out_factor =
+        befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
+
+    soft_thread->method_specific.befs.meth.befs.num_cards_not_on_parents_factor =
+        befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] / (LOCAL_DECKS_NUM * 52);
+
+    soft_thread->method_specific.befs.meth.befs.depth_factor =
+        befs_weights[FCS_BEFS_WEIGHT_DEPTH] / BEFS_MAX_DEPTH;
+
 }
 
 #undef TRACE0
@@ -1339,7 +1361,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     double ret=0;
 
-#define my_befs_weights soft_thread->method_specific.befs.meth.befs.befs_weights
     double * befs_weights = my_befs_weights;
 #ifndef FCS_FREECELL_ONLY
     int unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
@@ -1380,13 +1401,13 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         }
     }
 
-    ret += ((soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value - cards_under_sequences)
-            / soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value) * befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES];
+    ret += (
+        (soft_thread->method_specific.befs.meth.befs.initial_cards_under_sequences_value - cards_under_sequences)
+            * soft_thread->method_specific.befs.meth.befs.cards_under_sequences_factor
+    );
 
-    ret += (seqs_over_renegade_cards /
-               FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4))
-            )
-           * befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS];
+    ret += seqs_over_renegade_cards *
+            soft_thread->method_specific.befs.meth.befs.seqs_over_renegade_cards_factor;
 
     int num_cards_in_founds = 0;
     for (int found_idx=0 ; found_idx < (LOCAL_DECKS_NUM<<2) ; found_idx++)
@@ -1394,7 +1415,8 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         num_cards_in_founds += fcs_foundation_value((*state), found_idx);
     }
 
-    ret += ((double)num_cards_in_founds/(LOCAL_DECKS_NUM*52)) * befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT];
+    ret += num_cards_in_founds *
+        soft_thread->method_specific.befs.meth.befs.num_cards_out_factor;
 
     /* 0 < num_cards_not_on_parents < 52
      * 0 < num_cards_in_founds < 52
@@ -1423,7 +1445,9 @@ static GCC_INLINE pq_rating_t befs_rate_state(
             }
         }
 
-        ret += ( ((double)num_cards_not_on_parents)/(LOCAL_DECKS_NUM * 52)) * befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS];
+        ret += num_cards_not_on_parents *
+            soft_thread->method_specific.befs.meth.befs.num_cards_not_on_parents_factor
+        ;
     }
 
     fcs_game_limit_t num_vacant_freecells = 0;
@@ -1461,9 +1485,9 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     {
         int depth = kv_calc_depth(raw_pass_raw);
 
-        if (depth <= 20000)
+        if (depth <= BEFS_MAX_DEPTH)
         {
-            ret += ((20000 - depth)/20000.0) * befs_weights[FCS_BEFS_WEIGHT_DEPTH];
+            ret += ((BEFS_MAX_DEPTH - depth) * soft_thread->method_specific.befs.meth.befs.depth_factor);
         }
     }
 

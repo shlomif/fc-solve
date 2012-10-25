@@ -870,6 +870,11 @@ struct fc_solve_soft_thread_struct
                      * */
                     PQUEUE pqueue;
                     double initial_cards_under_sequences_value;
+                    double cards_under_sequences_factor,
+                           seqs_over_renegade_cards_factor,
+                           num_cards_out_factor,
+                           num_cards_not_on_parents_factor,
+                           depth_factor;
 
                     /*
                      * The BeFS weights of the different BeFS tests. Those
