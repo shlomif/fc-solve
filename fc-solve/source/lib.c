@@ -43,6 +43,7 @@
 #include "unused.h"
 #include "bool.h"
 #include "indirect_buffer.h"
+#include "count.h"
 
 typedef struct {
     fcs_int_limit_t num_times;
@@ -1736,7 +1737,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 
     user = (fcs_user_t *)api_instance;
 
-    if ((my_index < 0) || (my_index >= (sizeof(BEFS_VAR(user->soft_thread, befs_weights))/sizeof(BEFS_VAR(user->soft_thread, befs_weights)[0]))))
+    if ((my_index < 0) || (my_index >= COUNT(BEFS_VAR(user->soft_thread, befs_weights))))
     {
         return 1;
     }

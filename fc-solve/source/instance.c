@@ -56,6 +56,7 @@
 
 #include "inline.h"
 #include "likely.h"
+#include "count.h"
 
 /*
     General use of this interface:
@@ -96,7 +97,7 @@ static GCC_INLINE void normalize_befs_weights(
     for (
         weight_idx = 0
             ;
-        weight_idx < (sizeof(my_befs_weights)/sizeof(my_befs_weights[0]))
+        weight_idx < COUNT(my_befs_weights)
             ;
         weight_idx++
     )
@@ -111,7 +112,7 @@ static GCC_INLINE void normalize_befs_weights(
     {
         sum = 1;
     }
-    for(weight_idx=0;weight_idx<(sizeof(my_befs_weights)/sizeof(my_befs_weights[0]));weight_idx++)
+    for (weight_idx=0 ; weight_idx < COUNT(my_befs_weights) ; weight_idx++)
     {
         my_befs_weights[weight_idx] /= sum;
     }

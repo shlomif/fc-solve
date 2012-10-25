@@ -36,6 +36,7 @@
 #include "move_funcs_order.h"
 
 #include "inline.h"
+#include "count.h"
 
 enum
 {
@@ -406,16 +407,16 @@ static const fcs_preset_name_t fcs_preset_names[23] =
     },
 };
 
+#define NUM_PRESETS ( (int) COUNT(fcs_preset_names) )
+
 static GCC_INLINE int fcs_get_preset_id_by_name(
     const char * name
 )
 {
     int a;
     int ret = -1;
-    int num_elems;
 
-    num_elems = ( (int) (sizeof(fcs_preset_names)/sizeof(fcs_preset_names[0])));
-    for(a=0;a<num_elems;a++)
+    for (a=0 ; a < NUM_PRESETS ; a++)
     {
         if (!strcmp(name, fcs_preset_names[a].name))
         {
@@ -534,11 +535,8 @@ static GCC_INLINE int fcs_get_preset_by_id(
     )
 {
     int preset_index;
-    int num_elems;
 
-    num_elems = ( (int) (sizeof(fcs_presets)/sizeof(fcs_presets[0])));
-
-    for(preset_index=0 ; preset_index < num_elems ; preset_index++)
+    for (preset_index=0 ; preset_index < NUM_PRESETS ; preset_index++)
     {
         if (fcs_presets[preset_index].preset_id == preset_id)
         {
