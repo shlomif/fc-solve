@@ -1318,17 +1318,8 @@ static GCC_INLINE void initialize_befs_rater(
     }
     BEFS_VAR(soft_thread, initial_cards_under_sequences_value) = cards_under_sequences;
 
-    BEFS_VAR(soft_thread, cards_under_sequences_factor) =
-        befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] / cards_under_sequences;
-
-    BEFS_VAR(soft_thread, seqs_over_renegade_cards_factor) =
-        befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] / FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4));
-
     BEFS_VAR(soft_thread, num_cards_out_factor) =
         befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
-
-    BEFS_VAR(soft_thread, num_cards_not_on_parents_factor) =
-        befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] / (LOCAL_DECKS_NUM * 52);
 
     BEFS_VAR(soft_thread, max_sequence_move_factor) =
         befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] /
@@ -1344,8 +1335,18 @@ static GCC_INLINE void initialize_befs_rater(
            )
         );
 
+
+    BEFS_VAR(soft_thread, cards_under_sequences_factor) =
+        befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] / cards_under_sequences;
+
+    BEFS_VAR(soft_thread, seqs_over_renegade_cards_factor) =
+        befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] / FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4));
+
     BEFS_VAR(soft_thread, depth_factor) =
         befs_weights[FCS_BEFS_WEIGHT_DEPTH] / BEFS_MAX_DEPTH;
+
+    BEFS_VAR(soft_thread, num_cards_not_on_parents_factor) =
+        befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] / (LOCAL_DECKS_NUM * 52);
 
 }
 
