@@ -239,6 +239,8 @@ typedef struct fcs_struct_state_t fcs_state_t;
 
 typedef char fcs_locs_t;
 
+#else
+#error DEBUG_STATES , COMPACT_STATES or INDIRECT_STACK_STATES are not defined.
 #endif /* #ifdef DEBUG_STATES -
           #elif defined COMPACT_STATES -
           #elif defined INDIRECT_STACK_STATES
