@@ -370,13 +370,11 @@ IF (MSVC)
     MESSAGE(FATAL_ERROR "Error! You are using Microsoft Visual C++ and Freecell Solver Requires a compiler that supports C99 and some GCC extensions. Possible alternatives are GCC, clang and Intel C++ Compiler")
 ENDIF (MSVC)
 
-SET(COMPILER_FLAGS_TO_CHECK
-    "-Wall" "-Werror=implicit-function-declaration" "-fvisibility=hidden"
-)
+SET (COMPILER_FLAGS_TO_CHECK "-fvisibility=hidden")
 
 IF (CPU_ARCH)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-march=${CPU_ARCH}")
-ENDIF(CPU_ARCH)
+ENDIF (CPU_ARCH)
 
 IF (OPTIMIZATION_OMIT_FRAME_POINTER)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-fomit-frame-pointer")
@@ -393,6 +391,8 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     # "-Winline"
     IF (${CMAKE_COMPILER_IS_GNUCC})
         ADD_DEFINITIONS(
+            "-Wall"
+            "-Werror=implicit-function-declaration"
             "-Wold-style-declaration"
             "-Wmissing-prototypes"
             "-Wformat-nonliteral"
