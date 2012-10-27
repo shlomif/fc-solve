@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#include "set_weights.h"
 #include "fcs_user.h"
 #include "fcs_cl.h"
 #include "split_cmd_line.h"
@@ -1353,52 +1354,13 @@ break;
 
             {
                 int i;
-                freecell_solver_str_t start_num;
-                freecell_solver_str_t end_num;
-                char * substring_copy;
                 /* Initialize all the Best Frist Search weights at first
                  * to 0 so
                  * we won't have partial initialization.
                  * */
                 double befs_weights[FCS_NUM_BEFS_WEIGHTS];
-                for (i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
-                {
-                    befs_weights[i] = 0.0;
-                }
 
-                start_num = (*arg);
-
-                substring_copy = malloc(strlen(start_num) + 1);
-
-
-                for (i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
-                {
-                    while ((*start_num > '9') && (*start_num < '0') && (*start_num != '\0'))
-                    {
-                        start_num++;
-                    }
-                    if (*start_num == '\0')
-                    {
-                        break;
-                    }
-                    end_num = start_num+1;
-                    while ((((*end_num >= '0') && (*end_num <= '9')) || (*end_num == '.')) && (*end_num != '\0'))
-                    {
-                        end_num++;
-                    }
-
-                    strncpy(substring_copy, start_num, end_num-start_num);
-                    substring_copy[end_num-start_num] = '\0';
-                    befs_weights[i] = atof(substring_copy);
-                    /* Make sure that if the string terminated here -
-                     * we stop.
-                     * */
-                    if (*end_num == '\0')
-                    {
-                        break;
-                    }
-                    start_num=end_num+1;
-                }
+                fc_solve_set_weights(*arg, befs_weights);
 
                 for (i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
                 {
@@ -1408,8 +1370,6 @@ break;
                         befs_weights[i]
                     );
                 }
-
-                free(substring_copy);
             }
         }
         break;
