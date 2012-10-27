@@ -1352,29 +1352,26 @@ break;
             PROCESS_OPT_ARG() ;
 
             {
-                int a;
+                int i;
                 freecell_solver_str_t start_num;
                 freecell_solver_str_t end_num;
                 char * substring_copy;
+                /* Initialize all the Best Frist Search weights at first
+                 * to 0 so
+                 * we won't have partial initialization.
+                 * */
+                double befs_weights[FCS_NUM_BEFS_WEIGHTS];
+                for (i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
+                {
+                    befs_weights[i] = 0.0;
+                }
 
                 start_num = (*arg);
 
                 substring_copy = malloc(strlen(start_num) + 1);
 
-                /* Initialize all the Best Frist Search weights at first
-                 * to 0 so
-                 * we won't have partial initialization.
-                 * */
-                for (a=0 ; a<FCS_NUM_BEFS_WEIGHTS ; a++)
-                {
-                    freecell_solver_user_set_a_star_weight(
-                        instance,
-                        a,
-                        0
-                        );
-                }
 
-                for (a=0 ; a<FCS_NUM_BEFS_WEIGHTS ; a++)
+                for (i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
                 {
                     while ((*start_num > '9') && (*start_num < '0') && (*start_num != '\0'))
                     {
@@ -1392,11 +1389,7 @@ break;
 
                     strncpy(substring_copy, start_num, end_num-start_num);
                     substring_copy[end_num-start_num] = '\0';
-                    freecell_solver_user_set_a_star_weight(
-                        instance,
-                        a,
-                        atof(substring_copy)
-                        );
+                    befs_weights[i] = atof(substring_copy);
                     /* Make sure that if the string terminated here -
                      * we stop.
                      * */
@@ -1405,6 +1398,15 @@ break;
                         break;
                     }
                     start_num=end_num+1;
+                }
+
+                for (i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
+                {
+                    freecell_solver_user_set_a_star_weight(
+                        instance,
+                        i,
+                        befs_weights[i]
+                    );
                 }
 
                 free(substring_copy);
