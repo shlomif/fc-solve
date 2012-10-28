@@ -1294,7 +1294,24 @@ static GCC_INLINE void initialize_befs_rater(
 {
     double * const befs_weights = weighting->befs_weights;
 
-
+    /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
+    double sum = 0;
+    for (int i = 0 ; i < FCS_NUM_BEFS_WEIGHTS; i++)
+    {
+        if (befs_weights[i] < 0)
+        {
+            befs_weights[i] = fc_solve_default_befs_weights[i];
+        }
+        sum += befs_weights[i];
+    }
+    if (sum < 1e-6)
+    {
+        sum = 1;
+    }
+    for (int i=0 ; i < FCS_NUM_BEFS_WEIGHTS ; i++)
+    {
+        befs_weights[i] /= sum;
+    }
 #define pass (*raw_pass_raw)
 #define ptr_state_key (raw_pass_raw->key)
 
@@ -1575,33 +1592,6 @@ static GCC_INLINE void fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * so
 }
 
 
-static GCC_INLINE void normalize_befs_weights(
-    fc_solve_state_weighting_t * weighting
-    )
-{
-    double * const befs_weights = weighting->befs_weights;
-
-    /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
-    double sum = 0;
-    for (int i = 0 ; i < FCS_NUM_BEFS_WEIGHTS; i++)
-    {
-        if (befs_weights[i] < 0)
-        {
-            befs_weights[i] = fc_solve_default_befs_weights[i];
-        }
-        sum += befs_weights[i];
-    }
-    if (sum < 1e-6)
-    {
-        sum = 1;
-    }
-    for (int i=0 ; i < FCS_NUM_BEFS_WEIGHTS ; i++)
-    {
-        befs_weights[i] /= sum;
-    }
-
-    return;
-}
 
 void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * soft_thread
@@ -1622,7 +1612,6 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         );
 
 #define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
-        normalize_befs_weights(WEIGHTING(soft_thread));
 
         initialize_befs_rater(
             soft_thread,
