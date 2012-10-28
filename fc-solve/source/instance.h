@@ -194,9 +194,34 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 
 typedef struct
 {
+    double initial_cards_under_sequences_value;
+    double num_cards_out_factor,
+           max_sequence_move_factor,
+           cards_under_sequences_factor,
+           seqs_over_renegade_cards_factor,
+           depth_factor,
+           num_cards_not_on_parents_factor;
+
+    /*
+     * The BeFS weights of the different BeFS tests. Those
+     * weights determine the commulative priority of the state.
+     * */
+    double befs_weights[FCS_NUM_BEFS_WEIGHTS];
+} fc_solve_state_weighting_t;
+
+typedef enum
+{
+    FCS_NO_SHUFFLING,
+    FCS_RAND,
+    FCS_WEIGHTING,
+} fcs_tests_group_type_t;
+
+typedef struct
+{
     int num;
     int * tests;
-    fcs_bool_t is_rand;
+    fcs_tests_group_type_t type;
+    fc_solve_state_weighting_t weighting;
 } fcs_tests_order_group_t;
 
 typedef struct
@@ -734,7 +759,8 @@ enum
 typedef struct {
     fc_solve_solve_for_state_test_t * tests;
     int num_tests;
-    int to_randomize;
+    int type;
+    fc_solve_state_weighting_t weighting;
 } fcs_tests_list_t;
 
 typedef struct {
@@ -760,22 +786,6 @@ enum FCS_SUPER_METHOD_TYPE
 
 typedef enum FCS_SUPER_METHOD_TYPE fcs_super_method_type_t;
 
-typedef struct
-{
-    double initial_cards_under_sequences_value;
-    double num_cards_out_factor,
-           max_sequence_move_factor,
-           cards_under_sequences_factor,
-           seqs_over_renegade_cards_factor,
-           depth_factor,
-           num_cards_not_on_parents_factor;
-
-    /*
-     * The BeFS weights of the different BeFS tests. Those
-     * weights determine the commulative priority of the state.
-     * */
-    double befs_weights[FCS_NUM_BEFS_WEIGHTS];
-} fc_solve_state_weighting_t;
 
 struct fc_solve_soft_thread_struct
 {
@@ -1082,8 +1092,12 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                 tests_list_struct_ptr->tests = tests_list;
                 tests_list_struct_ptr->num_tests = num;
 
-                tests_list_struct_ptr->to_randomize =
-                    master_to_randomize && tests_order_groups[group_idx].is_rand;
+                tests_list_struct_ptr->type =
+                    master_to_randomize
+                    ? tests_order_groups[group_idx].type
+                    : FCS_NO_SHUFFLING;
+                tests_list_struct_ptr->weighting =
+                    tests_order_groups[group_idx].weighting;
             }
 
             tests_list_of_lists->lists =

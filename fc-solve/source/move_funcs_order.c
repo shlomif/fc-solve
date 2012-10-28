@@ -52,7 +52,7 @@ int fc_solve_apply_tests_order(
             tests_order->groups[tests_order->num_groups].tests,
             TESTS_ORDER_GROW_BY
         );
-    tests_order->groups[tests_order->num_groups].is_rand = FALSE;
+    tests_order->groups[tests_order->num_groups].type = FCS_NO_SHUFFLING;
 
     tests_order->num_groups++;
 
@@ -91,7 +91,7 @@ int fc_solve_apply_tests_order(
 
                 tests_order->num_groups++;
             }
-            tests_order->groups[tests_order->num_groups-1].is_rand = TRUE;
+            tests_order->groups[tests_order->num_groups-1].type = FCS_RAND;
             continue;
         }
 
@@ -129,7 +129,7 @@ int fc_solve_apply_tests_order(
 
                 tests_order->num_groups++;
             }
-            tests_order->groups[tests_order->num_groups-1].is_rand = FALSE;
+            tests_order->groups[tests_order->num_groups-1].type = FCS_NO_SHUFFLING;
             continue;
         }
 

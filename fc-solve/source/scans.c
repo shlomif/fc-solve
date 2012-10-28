@@ -806,7 +806,7 @@ int fc_solve_soft_dfs_do_solve(
     const fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const int soft_thread_id = soft_thread->id;
     const fcs_tests_list_of_lists * the_tests_list_ptr;
-    fcs_bool_t local_to_randomize = FALSE;
+    fcs_tests_group_type_t local_shuffling_type = FCS_NO_SHUFFLING;
     fcs_int_limit_t hard_thread_max_num_times;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
@@ -1048,9 +1048,9 @@ int fc_solve_soft_dfs_do_solve(
             if (the_soft_dfs_info->tests_list_index < THE_TESTS_LIST.num_lists)
             {
                 /* Always do the first test */
-                local_to_randomize = THE_TESTS_LIST.lists[
+                local_shuffling_type = THE_TESTS_LIST.lists[
                     the_soft_dfs_info->tests_list_index
-                    ].to_randomize;
+                    ].type;
 
             do
             {
@@ -1078,7 +1078,7 @@ int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info->test_index = 0;
                     break;
                 }
-            } while (local_to_randomize);
+            } while (local_shuffling_type != FCS_NO_SHUFFLING);
             }
 
             {
@@ -1111,7 +1111,7 @@ int fc_solve_soft_dfs_do_solve(
                  *
                  * Also, do not randomize if this is a pure soft-DFS scan.
                  * */
-                if (local_to_randomize)
+                if (local_shuffling_type != FCS_NO_SHUFFLING)
                 {
                     a = num_states-1;
                     while (a > 0)
