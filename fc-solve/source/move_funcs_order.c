@@ -40,19 +40,21 @@ int fc_solve_apply_tests_order(
 {
     int a;
     int len;
-    int test_index;
     fcs_bool_t is_group, is_start_group;
     char test_name[2] = {0};
 
-    if (tests_order->tests)
-    {
-        free(tests_order->tests);
-        tests_order->num = 0;
-        tests_order->tests = malloc(sizeof(tests_order->tests[0])*TESTS_ORDER_GROW_BY);
-    }
+    fc_solve_free_tests_order(tests_order);
+
+    tests_order->groups = malloc(sizeof(tests_order->groups[0])*TESTS_ORDER_GROW_BY);
+    tests_order->groups[tests_order->num_groups].num = 0;
+    tests_order->groups[tests_order->num_groups].tests =
+        malloc(sizeof(tests_order->groups[tests_order->num_groups].tests[0])
+               * TESTS_ORDER_GROW_BY);
+    tests_order->groups[tests_order->num_groups].is_rand = FALSE;
+
+    tests_order->num_groups++;
 
     len = strlen(string);
-    test_index = 0;
     is_group = FALSE;
     is_start_group = FALSE;
 
@@ -67,6 +69,26 @@ int fc_solve_apply_tests_order(
             }
             is_group = TRUE;
             is_start_group = TRUE;
+            if (tests_order->groups[tests_order->num_groups - 1].num)
+            {
+                if (! (tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
+                {
+                    tests_order->groups =
+                        realloc(
+                            tests_order->groups,
+                            sizeof(tests_order->groups[0])
+                            * TESTS_ORDER_GROW_BY
+                            );
+                }
+
+                tests_order->groups[tests_order->num_groups].num = 0;
+                tests_order->groups[tests_order->num_groups].tests =
+                    malloc(sizeof(tests_order->groups[tests_order->num_groups].tests[0])
+                           * TESTS_ORDER_GROW_BY);
+
+                tests_order->num_groups++;
+            }
+            tests_order->groups[tests_order->num_groups-1].is_rand = TRUE;
             continue;
         }
 
@@ -84,25 +106,45 @@ int fc_solve_apply_tests_order(
             }
             is_group = FALSE;
             is_start_group = FALSE;
+
+            if (tests_order->groups[tests_order->num_groups - 1].num)
+            {
+                if (! (tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
+                {
+                    tests_order->groups =
+                        realloc(
+                            tests_order->groups,
+                            sizeof(tests_order->groups[0])
+                            * TESTS_ORDER_GROW_BY
+                            );
+                }
+                tests_order->groups[tests_order->num_groups].num = 0;
+                tests_order->groups[tests_order->num_groups].tests =
+                    malloc(sizeof(tests_order->groups[tests_order->num_groups].tests[0])
+                           * TESTS_ORDER_GROW_BY);
+
+                tests_order->num_groups++;
+            }
+            tests_order->groups[tests_order->num_groups-1].is_rand = FALSE;
             continue;
         }
 
-        if (! ((test_index) & (TESTS_ORDER_GROW_BY - 1)))
+        if (! (tests_order->groups[tests_order->num_groups-1].num & (TESTS_ORDER_GROW_BY - 1)))
         {
-            tests_order->tests =
+            tests_order->groups[tests_order->num_groups-1].tests =
                 realloc(
-                    tests_order->tests,
-                    sizeof(tests_order->tests[0]) * (test_index+TESTS_ORDER_GROW_BY)
+                    tests_order->groups[tests_order->num_groups-1].tests,
+                    sizeof(tests_order->groups[
+                        tests_order->num_groups-1
+                    ].tests[0])
+                    * TESTS_ORDER_GROW_BY
                 );
         }
 
         test_name[0] = string[a];
-        tests_order->tests[test_index++] =
-        (
-            (fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM)
-            | (is_group ? FCS_TEST_ORDER_FLAG_RANDOM : 0)
-            | (is_start_group ? FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP : 0)
-        );
+        tests_order->groups[tests_order->num_groups-1].tests[
+            tests_order->groups[tests_order->num_groups-1].num++
+            ] = (fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM);
 
         is_start_group = FALSE;
     }
@@ -112,7 +154,13 @@ int fc_solve_apply_tests_order(
         return 4;
     }
 
-    tests_order->num = test_index;
+    if (! tests_order->groups[tests_order->num_groups - 1].num)
+    {
+        tests_order->num_groups--;
+        free(tests_order->groups[tests_order->num_groups].tests);
+        tests_order->groups[tests_order->num_groups].tests = NULL;
+    }
+
     *error_string = NULL;
 
     return 0;

@@ -483,8 +483,10 @@ int fc_solve_apply_preset_by_ptr(
                     depth_idx < soft_thread->by_depth_tests_order.num ;
                     depth_idx++)
                 {
-                    tests_order_tests = by_depth_tests_order[depth_idx].tests_order.tests;
-                    tests_order_num = by_depth_tests_order[depth_idx].tests_order.num;
+                    for (int group_idx = 0 ; group_idx < by_depth_tests_order[depth_idx].tests_order.num_groups ; group_idx++)
+                    {
+                    tests_order_tests = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].tests;
+                    tests_order_num = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].num;
 
                 for(num_valid_tests=0;num_valid_tests < tests_order_num; num_valid_tests++)
                 {
@@ -512,6 +514,7 @@ int fc_solve_apply_preset_by_ptr(
                         &no_use
                     );
                 }
+                    }
                 }
             }
         }

@@ -191,10 +191,18 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 #define ST_LOOP_INDEX() (soft_thread - hard_thread->soft_threads)
 
 #define TESTS_ORDER_GROW_BY 16
+
 typedef struct
 {
     int num;
     int * tests;
+    fcs_bool_t is_rand;
+} fcs_tests_order_group_t;
+
+typedef struct
+{
+    int num_groups;
+    fcs_tests_order_group_t * groups;
 } fcs_tests_order_t;
 
 typedef struct
@@ -1022,12 +1030,10 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
         fcs_tests_by_depth_array_t * arr_ptr;
 
         int tests_order_num;
-        int * tests_order_tests;
-        int start_i;
+        fcs_tests_order_group_t * tests_order_groups;
         fcs_bool_t master_to_randomize =
             (soft_thread->method == FCS_METHOD_RANDOM_DFS)
             ;
-        fcs_bool_t do_first_iteration;
         int depth_idx;
         fcs_by_depth_tests_order_t * by_depth_tests_order;
 
@@ -1048,9 +1054,9 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             arr_ptr->by_depth_units[depth_idx].max_depth =
                 by_depth_tests_order[depth_idx].max_depth;
 
-            tests_order_tests = by_depth_tests_order[depth_idx].tests_order.tests;
+            tests_order_groups = by_depth_tests_order[depth_idx].tests_order.groups;
 
-            tests_order_num = by_depth_tests_order[depth_idx].tests_order.num;
+            tests_order_num = by_depth_tests_order[depth_idx].tests_order.num_groups;
 
             tests_list_of_lists =
                 &(arr_ptr->by_depth_units[depth_idx].tests);
@@ -1061,56 +1067,25 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                         sizeof(tests_list_of_lists->lists[0]) * tests_order_num
                       );
 
-            tests_list = malloc(sizeof(tests_list[0]) * tests_order_num);
-
-            start_i = 0;
-            while (start_i < tests_order_num)
+            for (int group_idx = 0 ; group_idx < tests_order_num ; group_idx++)
             {
-                int i;
-
-                do_first_iteration = TRUE;
-
-                for (i = start_i, next_test = tests_list ;
-                        (i < tests_order_num) &&
-                        (do_first_iteration ||
-                         ((!master_to_randomize) ||
-                          (
-                           /* We are still on a random group */
-                           (tests_order_tests[ i ] & FCS_TEST_ORDER_FLAG_RANDOM) &&
-                           /* A new random group did not start */
-                           (! (tests_order_tests[ i ] & FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP))
-
-                          )
-                         )
-                        )
-                        ;
-                        i++)
+                int num = tests_order_groups[group_idx].num;
+                int * tests_order_tests = tests_order_groups[group_idx].tests;
+                tests_list = malloc(sizeof(tests_list[0]) * num);
+                next_test = tests_list;
+                for (int i = 0; i < num ; i++)
                 {
-                    do_first_iteration = FALSE;
-                    *(next_test++) =
-                        fc_solve_sfs_tests[
-                        tests_order_tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK
-                        ];
+                    *(next_test++) = fc_solve_sfs_tests[ tests_order_tests[i] ];
                 }
+                tests_list_struct_ptr =
+                    &(tests_list_of_lists->lists[tests_list_of_lists->num_lists++])
+                    ;
 
-                        tests_list_struct_ptr =
-                            &(tests_list_of_lists->lists[tests_list_of_lists->num_lists++])
-                            ;
+                tests_list_struct_ptr->tests = tests_list;
+                tests_list_struct_ptr->num_tests = num;
 
-                        ;
-                        tests_list_struct_ptr->tests =
-                            memdup(tests_list,
-                                    sizeof(tests_list[0])
-                                    * (tests_list_struct_ptr->num_tests = i-start_i)
-                                  );
-
-                        tests_list_struct_ptr->to_randomize =
-                            master_to_randomize &&
-                            (i > start_i) &&
-                            (tests_order_tests[ i-1 ] & FCS_TEST_ORDER_FLAG_RANDOM)
-                            ;
-
-                        start_i = i;
+                tests_list_struct_ptr->to_randomize =
+                    master_to_randomize && tests_order_groups[group_idx].is_rand;
             }
 
             tests_list_of_lists->lists =
@@ -1120,7 +1095,6 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                         tests_list_of_lists->num_lists
                        );
 
-            free(tests_list);
         }
     }
 
@@ -1336,16 +1310,24 @@ static GCC_INLINE fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
 {
     fcs_tests_order_t ret;
 
-    ret.num = orig->num;
+    ret.num_groups = orig->num_groups;
 
-    ret.tests =
-        malloc(sizeof(ret.tests[0]) *
-            ((ret.num & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
+    ret.groups = memdup(orig->groups, sizeof(orig->groups[0]) *
+                        ((ret.num_groups & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
+                       );
+
+    for (int i = 0 ; i < ret.num_groups ; i++)
+    {
+        ret.groups[i].tests = memdup(
+            ret.groups[i].tests,
+            sizeof(ret.groups[i].tests[0]) *
+            ((ret.groups[i].num & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
         );
-    memcpy(ret.tests, orig->tests, sizeof(ret.tests[0]) * ret.num);
+    }
 
     return ret;
 }
+
 /*
     This function optimizes the solution path using a BFS scan on the
     states in the solution path.
@@ -1763,6 +1745,18 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
     sequence of operations on instance, and it is meant for de-allocating
     whatever memory was allocated by alloc_instance().
   */
+
+static GCC_INLINE void fc_solve_free_tests_order(fcs_tests_order_t * tests_order)
+{
+    for (int group_idx = 0 ; group_idx < tests_order->num_groups ; group_idx++)
+    {
+        free (tests_order->groups[group_idx].tests);
+    }
+    free (tests_order->groups);
+    tests_order->groups = NULL;
+    tests_order->num_groups = 0;
+}
+
 static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * instance)
 {
     HT_LOOP_DECLARE_VARS();
@@ -1775,17 +1769,16 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * instance)
     }
 
     free(instance->hard_threads);
+
     if (instance->optimization_thread)
     {
         free_instance_hard_thread_callback(instance->optimization_thread);
         free(instance->optimization_thread);
     }
-
-    free(instance->instance_tests_order.tests);
-
+    fc_solve_free_tests_order( &(instance->instance_tests_order) );
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
-        free(instance->opt_tests_order.tests);
+        fc_solve_free_tests_order( &(instance->opt_tests_order) );
     }
 
     free(instance);

@@ -373,8 +373,8 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
                 sizeof(user->soft_thread->by_depth_tests_order.by_depth_tests[0])
                 );
 
-        user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order.num = 0;
-        user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order.tests = NULL;
+        user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order.num_groups = 0;
+        user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order.groups = NULL;
     }
 
     if (depth_idx > 0)
@@ -397,8 +397,10 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
         int further_depth_idx;
         for (further_depth_idx = depth_idx+1; further_depth_idx < user->soft_thread->by_depth_tests_order.num ; further_depth_idx++)
         {
-            free(user->soft_thread->by_depth_tests_order.by_depth_tests[further_depth_idx].tests_order.tests);
-            user->soft_thread->by_depth_tests_order.by_depth_tests[further_depth_idx].tests_order.tests = NULL;
+            fc_solve_free_tests_order(&(
+                user->soft_thread->by_depth_tests_order
+                .by_depth_tests[further_depth_idx].tests_order
+            ));
         }
     }
 
@@ -2193,11 +2195,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 
     user = (fcs_user_t *)api_instance;
 
-    if (user->fc_solve_obj->opt_tests_order.tests)
-    {
-        free(user->fc_solve_obj->opt_tests_order.tests);
-        user->fc_solve_obj->opt_tests_order.tests = NULL;
-    }
+    fc_solve_free_tests_order(&(user->fc_solve_obj->opt_tests_order));
 
     STRUCT_CLEAR_FLAG(user->fc_solve_obj, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 

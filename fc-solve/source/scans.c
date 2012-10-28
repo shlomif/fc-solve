@@ -1626,25 +1626,29 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
     if (! BEFS_M_VAR(soft_thread, tests_list))
     {
-        int * const tests_order_tests = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests;
+        int num = 0;
+        fc_solve_solve_for_state_test_t * tests_list = malloc(sizeof(tests_list[0]) * 1);
 
-        const int tests_order_num = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num;
-
-        fc_solve_solve_for_state_test_t * const tests_list = malloc(sizeof(tests_list[0]) * tests_order_num);
-
-        fc_solve_solve_for_state_test_t * next_test;
+        for (int group_idx = 0 ; group_idx < soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num_groups ; group_idx++)
         {
-        int i;
-        for (i = 0, next_test = tests_list ; i < tests_order_num ; i++)
-        {
-            *(next_test++) =
-                    fc_solve_sfs_tests[
-                        tests_order_tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK
-                    ];
-        }
+            int * const tests_order_tests = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.groups[group_idx].tests;
+
+            const int tests_order_num = soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.groups[group_idx].num;
+
+
+            {
+                for (int i = 0 ; i < tests_order_num ; i++)
+                {
+                    tests_list = realloc(tests_list, sizeof(tests_list[0]) * ++num);
+                    tests_list[num-1] =
+                        fc_solve_sfs_tests[
+                            tests_order_tests[i]
+                        ];
+                }
+            }
         }
         BEFS_M_VAR(soft_thread, tests_list) = tests_list;
-        BEFS_M_VAR(soft_thread, tests_list_end) = next_test;
+        BEFS_M_VAR(soft_thread, tests_list_end) = tests_list+num;
     }
 
     soft_thread->first_state_to_check =

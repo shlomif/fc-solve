@@ -176,7 +176,7 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t
          depth_idx < soft_thread->by_depth_tests_order.num ;
          depth_idx++)
     {
-        free (soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order.tests);
+        fc_solve_free_tests_order(&(soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order));
     }
 
     soft_thread->by_depth_tests_order.num = 0;
@@ -215,23 +215,27 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     }
 }
 
+static GCC_INLINE void accumulate_tests_by_ptr(
+    int * tests_order,
+    fcs_tests_order_t * st_tests_order
+    )
+{
+
+    for ( int i=0 ; i < st_tests_order->num_groups ; i++)
+    {
+        for (int j=0; j < st_tests_order->groups[i].num ; j++)
+        {
+            *tests_order |= (1 << (st_tests_order->groups[i].tests[j]));
+        }
+    }
+}
+
 static GCC_INLINE void accumulate_tests_order(
     fc_solve_soft_thread_t * soft_thread,
     void * context
     )
 {
-    int * tests_order = (int *)context;
-    int i;
-    fcs_tests_order_t * st_tests_order;
-
-    st_tests_order = &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order);
-
-    for ( i=0 ; i < st_tests_order->num ; i++)
-    {
-        *tests_order |= (1 << (st_tests_order->tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK));
-    }
-
-    return;
+    accumulate_tests_by_ptr((int *)context, &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order));
 }
 
 static GCC_INLINE void determine_scan_completeness(
@@ -240,15 +244,9 @@ static GCC_INLINE void determine_scan_completeness(
     )
 {
     int tests_order = 0;
-    int i;
-    fcs_tests_order_t * st_tests_order;
 
-    st_tests_order = &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order);
+    accumulate_tests_by_ptr(&tests_order, &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order));
 
-    for ( i=0 ; i < st_tests_order->num ; i++ )
-    {
-        tests_order |= (1 << (st_tests_order->tests[i] & FCS_TEST_ORDER_NO_FLAGS_MASK));
-    }
     STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
         (tests_order == *(int *)global_tests_order)
     );
@@ -339,9 +337,9 @@ static GCC_INLINE void init_soft_thread(
         malloc(sizeof(soft_thread->by_depth_tests_order.by_depth_tests[0]));
 
     soft_thread->by_depth_tests_order.by_depth_tests[0].max_depth = INT_MAX;
-    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num = 0;
+    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num_groups = 0;
     soft_thread->by_depth_tests_order.by_depth_tests[0]
-        .tests_order.tests = NULL;
+        .tests_order.groups = NULL;
 
     /* Initialize all the Soft-DFS stacks to NULL */
     DFS_VAR(soft_thread, soft_dfs_info) = NULL;
@@ -361,26 +359,7 @@ static GCC_INLINE void init_soft_thread(
 
     soft_thread->num_times_step = NUM_TIMES_STEP;
 
-#if 0
-    {
-        char * no_use;
-        fc_solve_apply_tests_order(soft_thread, "[01][23456789]", &no_use);
-    }
-#else
-    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num =
-        soft_thread->hard_thread->instance->instance_tests_order.num;
-    /* Bound the maximal number up to the next product of
-     * TESTS_ORDER_GROW_BY .
-     * */
-    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests =
-        malloc(sizeof(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests[0]) *
-            ((soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
-        );
-    memcpy(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests,
-        soft_thread->hard_thread->instance->instance_tests_order.tests,
-        sizeof(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.tests[0]) * soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num
-        );
-#endif
+    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order = tests_order_dup(&(soft_thread->hard_thread->instance->instance_tests_order));
 
     fc_solve_reset_soft_thread(soft_thread);
 
@@ -449,16 +428,16 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
     instance->trim_states_in_collection_from = -1;
     instance->effective_trim_states_in_collection_from = LONG_MAX;
 
-    instance->instance_tests_order.num = 0;
-    instance->instance_tests_order.tests = NULL;
+    instance->instance_tests_order.num_groups = 0;
+    instance->instance_tests_order.groups = NULL;
 
     instance->list_of_vacant_states = NULL;
 
 
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 
-    instance->opt_tests_order.num = 0;
-    instance->opt_tests_order.tests = NULL;
+    instance->opt_tests_order.num_groups = 0;
+    instance->opt_tests_order.groups = NULL;
 
     instance->num_hard_threads = 0;
     instance->hard_threads = NULL;
@@ -643,10 +622,18 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
                     tests[num_tests++] = bit_idx;
                 }
             }
-            tests = realloc(tests, num_tests*sizeof(tests[0]));
-            instance->opt_tests_order.tests = tests;
-            instance->opt_tests_order.num =
+            tests = realloc(tests, sizeof(tests[0]) *
+                ((num_tests & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
+            );
+            instance->opt_tests_order.num_groups = 1;
+            instance->opt_tests_order.groups =
+                malloc(sizeof(instance->opt_tests_order.groups[0]) *
+                       TESTS_ORDER_GROW_BY);
+            instance->opt_tests_order.groups[0].tests = tests;
+            instance->opt_tests_order.groups[0].num =
                 num_tests;
+            instance->opt_tests_order.groups[0].is_rand = FALSE;
+
             STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
         }
     }
