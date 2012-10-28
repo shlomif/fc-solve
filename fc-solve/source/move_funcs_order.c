@@ -42,7 +42,7 @@ int fc_solve_apply_tests_order(
     char * * error_string
     )
 {
-    int a;
+    int i;
     int len;
     fcs_bool_t is_group, is_start_group;
     char test_name[2] = {0};
@@ -64,9 +64,9 @@ int fc_solve_apply_tests_order(
     is_group = FALSE;
     is_start_group = FALSE;
 
-    for (a = 0 ; a < len ; a++)
+    for (i = 0 ; i < len ; i++)
     {
-        if ((string[a] == '(') || (string[a] == '['))
+        if ((string[i] == '(') || (string[i] == '['))
         {
             if (is_group)
             {
@@ -100,7 +100,7 @@ int fc_solve_apply_tests_order(
             continue;
         }
 
-        if ((string[a] == ')') || (string[a] == ']'))
+        if ((string[i] == ')') || (string[i] == ']'))
         {
             if (is_start_group)
             {
@@ -113,21 +113,21 @@ int fc_solve_apply_tests_order(
                 return 3;
             }
             /* Try to parse the ordering function. */
-            if (string[a+1] == '=')
+            if (string[i+1] == '=')
             {
-                a+=2;
-                const char * open_paren = strchr(string+a, '(');
+                i+=2;
+                const char * open_paren = strchr(string+i, '(');
                 if (! open_paren)
                 {
                     *error_string = strdup("A = ordering function is missing its open parenthesis - (");
                     return 5;
                 }
-                if (string_starts_with(string+a, "rand", open_paren))
+                if (string_starts_with(string+i, "rand", open_paren))
                 {
                     tests_order->groups[tests_order->num_groups-1].shuffling_type
                         = FCS_RAND;
                 }
-                else if (string_starts_with(string+a, "asw", open_paren))
+                else if (string_starts_with(string+i, "asw", open_paren))
                 {
                     tests_order->groups[tests_order->num_groups-1].shuffling_type
                         = FCS_WEIGHTING;
@@ -166,7 +166,7 @@ int fc_solve_apply_tests_order(
                  * at the end of the token/expression.
                  *
                  * */
-                a = close_paren - string;
+                i = close_paren - string;
             }
             is_group = FALSE;
             is_start_group = FALSE;
@@ -205,14 +205,14 @@ int fc_solve_apply_tests_order(
                 );
         }
 
-        test_name[0] = string[a];
+        test_name[0] = string[i];
         tests_order->groups[tests_order->num_groups-1].tests[
             tests_order->groups[tests_order->num_groups-1].num++
             ] = (fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM);
 
         is_start_group = FALSE;
     }
-    if (a != len)
+    if (i != len)
     {
         *error_string = strdup("The Input string is too long.");
         return 4;
