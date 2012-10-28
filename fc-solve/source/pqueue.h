@@ -124,7 +124,7 @@ static GCC_INLINE void fc_solve_PQueuePush(
 
     if (CurrentSize == pq->max_size )
     {
-        pq->Elements = Elements = (pq_element_t *)realloc( Elements, sizeof(pq_element_t) * ((pq->max_size += 256)+1));
+        pq->Elements = Elements = (pq_element_t *)SREALLOC( Elements, (pq->max_size += 256)+1);
     }
 
     {

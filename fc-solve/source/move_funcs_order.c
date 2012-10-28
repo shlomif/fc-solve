@@ -74,11 +74,10 @@ int fc_solve_apply_tests_order(
                 if (! (tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
                 {
                     tests_order->groups =
-                        realloc(
+                        SREALLOC(
                             tests_order->groups,
-                            sizeof(tests_order->groups[0])
-                            * TESTS_ORDER_GROW_BY
-                            );
+                            TESTS_ORDER_GROW_BY
+                        );
                 }
 
                 tests_order->groups[tests_order->num_groups].num = 0;
@@ -112,11 +111,10 @@ int fc_solve_apply_tests_order(
                 if (! (tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
                 {
                     tests_order->groups =
-                        realloc(
+                        SREALLOC(
                             tests_order->groups,
-                            sizeof(tests_order->groups[0])
-                            * TESTS_ORDER_GROW_BY
-                            );
+                            tests_order->num_groups + TESTS_ORDER_GROW_BY
+                        );
                 }
                 tests_order->groups[tests_order->num_groups].num = 0;
                 tests_order->groups[tests_order->num_groups].tests =
@@ -132,12 +130,9 @@ int fc_solve_apply_tests_order(
         if (! (tests_order->groups[tests_order->num_groups-1].num & (TESTS_ORDER_GROW_BY - 1)))
         {
             tests_order->groups[tests_order->num_groups-1].tests =
-                realloc(
+                SREALLOC(
                     tests_order->groups[tests_order->num_groups-1].tests,
-                    sizeof(tests_order->groups[
-                        tests_order->num_groups-1
-                    ].tests[0])
-                    * TESTS_ORDER_GROW_BY
+                    TESTS_ORDER_GROW_BY
                 );
         }
 

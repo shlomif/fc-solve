@@ -6,6 +6,7 @@
 #include "fc_pro_iface_pos.h"
 
 #include "inline.h"
+#include "alloc_wrap.h"
 
 static const char * ranks_map = "0A23456789TJQK";
 
@@ -179,13 +180,7 @@ static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended
     if (! ((++moves->num_moves) & (MOVES_PROCESSED_GROW_BY - 1)))
     {
         moves->moves =
-            realloc(
-                moves->moves,
-                (
-                    sizeof(moves->moves[0])
-                    * (moves->num_moves + MOVES_PROCESSED_GROW_BY)
-                )
-            );
+            SREALLOC (moves->moves, moves->num_moves + MOVES_PROCESSED_GROW_BY);
     }
     moves->moves[moves->num_moves-1] = new_move;
 }

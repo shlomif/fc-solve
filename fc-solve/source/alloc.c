@@ -34,6 +34,8 @@
 
 #include "config.h"
 
+#include "alloc_wrap.h"
+
 #include "alloc.h"
 
 #define ALLOCED_SIZE (FCS_IA_PACK_SIZE*1024-(256+128))
@@ -59,10 +61,9 @@ void fc_solve_compact_allocator_extend(
     {
         int i;
 
-        allocator->packs = (char * *)realloc(
+        allocator->packs = (char * *)SREALLOC(
             allocator->packs,
-            sizeof(allocator->packs[0]) *
-                (allocator->max_num_packs += IA_STATE_PACKS_GROW_BY)
+            allocator->max_num_packs += IA_STATE_PACKS_GROW_BY
         );
         allocator->packs[allocator->num_packs-1] =
             malloc(ALLOCED_SIZE);

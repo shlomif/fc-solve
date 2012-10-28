@@ -46,6 +46,7 @@ extern "C" {
 
 #include "inline.h"
 #include "bool.h"
+#include "alloc_wrap.h"
 
 extern const fcs_internal_move_t fc_solve_empty_move;
 
@@ -56,10 +57,9 @@ extern const fcs_internal_move_t fc_solve_empty_move;
               \
     if (! ((stack->num_moves+1) & (FCS_MOVE_STACK_GROW_BY-1))) \
     {      \
-        stack->moves = realloc(     \
+        stack->moves = SREALLOC(     \
             stack->moves,     \
-            (stack->num_moves+1 + FCS_MOVE_STACK_GROW_BY) * \
-                sizeof(stack->moves[0])   \
+            stack->num_moves+1 + FCS_MOVE_STACK_GROW_BY \
             );     \
     }       \
     stack->moves[stack->num_moves++] = move;    \

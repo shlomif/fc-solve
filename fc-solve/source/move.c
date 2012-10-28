@@ -52,10 +52,9 @@ int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
 
     if (! ((stack->num_moves+1) & (FCS_MOVE_STACK_GROW_BY-1)))
     {
-        stack->moves = realloc(
+        stack->moves = SREALLOC(
             stack->moves,
-            (stack->num_moves+1 + FCS_MOVE_STACK_GROW_BY) *
-                sizeof(stack->moves[0])
+            stack->num_moves+1 + FCS_MOVE_STACK_GROW_BY
             );
     }
     stack->moves[stack->num_moves++] = move;
@@ -369,15 +368,11 @@ void fc_solve_derived_states_list_add_state(
         )
        )
     {
-        (list)->states = realloc(
+        (list)->states = SREALLOC(
             (list)->states,
-            (
-                sizeof((list)->states[0])
-                * (list->num_states
-                    + (list->states!=NULL)
-                    + DERIVED_STATES_LIST_GROW_BY
-                  )
-            )
+            list->num_states
+            + (list->states!=NULL)
+            + DERIVED_STATES_LIST_GROW_BY
         );
     }
     (list)->states[(list)->num_states].state_ptr = state;

@@ -340,7 +340,7 @@ static void calc_trace(
         *(key_ptr) = record->key;
         if ((++trace_num) == trace_max_num)
         {
-            trace = realloc(trace, sizeof(trace[0]) * (trace_max_num += GROW_BY));
+            trace = SREALLOC(trace, trace_max_num += GROW_BY);
             key_ptr = &(trace[trace_num-1]);
         }
         record = fcs_dbm_record_get_parent_ptr(record);

@@ -82,9 +82,9 @@ void fc_solve_increase_dfs_max_depth(
 {
     const int new_dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY;
 
-    DFS_VAR(soft_thread, soft_dfs_info) = realloc(
+    DFS_VAR(soft_thread, soft_dfs_info) = SREALLOC(
         DFS_VAR(soft_thread, soft_dfs_info),
-        sizeof(DFS_VAR(soft_thread, soft_dfs_info)[0])*new_dfs_max_depth
+        new_dfs_max_depth
         );
 
     fcs_soft_dfs_stack_item_t * soft_dfs_info = DFS_VAR(soft_thread, soft_dfs_info) +
@@ -601,9 +601,9 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
                 {
                     parents_stack_max_len += 16;
                     parents_stack =
-                        realloc(
+                        SREALLOC(
                             parents_stack,
-                            sizeof(parents_stack[0]) * parents_stack_max_len
+                            parents_stack_max_len
                         );
                 }
             }
@@ -1032,9 +1032,9 @@ int fc_solve_soft_dfs_do_solve(
                         {
                             the_soft_dfs_info->derived_states_random_indexes_max_size = 1;
                     the_soft_dfs_info->derived_states_random_indexes =
-                        realloc(
+                        SREALLOC(
                             the_soft_dfs_info->derived_states_random_indexes,
-                            sizeof(the_soft_dfs_info->derived_states_random_indexes[0]) * the_soft_dfs_info->derived_states_random_indexes_max_size
+                            the_soft_dfs_info->derived_states_random_indexes_max_size
                             );
                         }
 
@@ -1093,9 +1093,9 @@ int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info->derived_states_random_indexes_max_size =
                         num_states;
                     the_soft_dfs_info->derived_states_random_indexes =
-                        realloc(
+                        SREALLOC(
                             the_soft_dfs_info->derived_states_random_indexes,
-                            sizeof(the_soft_dfs_info->derived_states_random_indexes[0]) * the_soft_dfs_info->derived_states_random_indexes_max_size
+                            the_soft_dfs_info->derived_states_random_indexes_max_size
                             );
                 }
                 rand_array = the_soft_dfs_info->derived_states_random_indexes;
@@ -1639,7 +1639,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
             {
                 for (int i = 0 ; i < tests_order_num ; i++)
                 {
-                    tests_list = realloc(tests_list, sizeof(tests_list[0]) * ++num);
+                    tests_list = SREALLOC(tests_list, ++num);
                     tests_list[num-1] =
                         fc_solve_sfs_tests[
                             tests_order_tests[i]

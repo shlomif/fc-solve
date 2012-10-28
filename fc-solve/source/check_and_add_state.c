@@ -489,12 +489,10 @@ fcs_bool_t fc_solve_check_and_add_state(
                 /* The sort margin is full, let's combine it with the main array */
 
                 instance->indirect_prev_states =
-                    realloc(
+                    SREALLOC(
                         instance->indirect_prev_states,
-                        sizeof(instance->indirect_prev_states[0])
-                        * (instance->num_indirect_prev_states
+                        instance->num_indirect_prev_states
                             + instance->num_prev_states_margin
-                        )
                     );
 
                 fc_solve_merge_large_and_small_sorted_arrays(

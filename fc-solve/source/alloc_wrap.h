@@ -1,4 +1,4 @@
-/* Copyright (c) 2000 Shlomi Fish
+/* Copyright (c) 2012 Shlomi Fish
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -22,44 +22,23 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * app_str.c - implements an append-to-dynamically-growing string printf
- * functionality.
+ * alloc_wrap.h - convenient wrappers for malloc(), realloc(), etc.
  */
-#define BUILDING_DLL 1
+#ifndef FC_SOLVE__ALLOC_WRAP_H
+#define FC_SOLVE__ALLOC_WRAP_H
 
-#include <string.h>
-#include <stdio.h>
-#include <stdarg.h>
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stdlib.h>
 
-#include "alloc_wrap.h"
-#include "app_str.h"
+/* Short for size-realloc. */
+#define SREALLOC(arr, count) (realloc(arr, sizeof(arr[0]) * (count)))
 
-void fc_solve_append_string_sprintf(
-    fc_solve_append_string_t * app_str,
-    const char * format,
-    ...
-    )
-{
-    va_list my_va_list;
+#ifdef __cplusplus
+};
+#endif
 
-    va_start(my_va_list, format);
-    app_str->end_of_buffer += vsprintf(app_str->end_of_buffer, format, my_va_list);
-    /*
-     * Check to see if we don't have enough space in which case we should
-     * resize
-     * */
-    if (app_str->buffer + app_str->max_size - app_str->end_of_buffer < FC_SOLVE_APPEND_STRING_MARGIN_SIZE)
-    {
-        char * old_buffer = app_str->buffer;
-        app_str->max_size += FC_SOLVE_APPEND_STRING_GROW_BY;
-        app_str->buffer = SREALLOC(app_str->buffer, app_str->max_size);
-        /*
-         * Adjust end_of_buffer to the new buffer start
-         * */
-        app_str->end_of_buffer += app_str->buffer - old_buffer;
-    }
-
-    return;
-}
-
+#endif

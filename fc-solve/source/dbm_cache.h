@@ -37,6 +37,8 @@ extern "C"
 
 #include "bool.h"
 #include "inline.h"
+#include "alloc_wrap.h"
+
 #include "state.h"
 #include "meta_alloc.h"
 #include "fcs_enums.h"
@@ -184,14 +186,15 @@ static GCC_INLINE fcs_cache_key_info_t * cache_insert(fcs_lru_cache_t * cache, c
         size_t len;
         fcs_fcc_move_t * moves;
         len = strlen((const char *)moves_to_parent);
-        cache_key->moves_to_key = moves = realloc(cache_key->moves_to_key, len+1+1);
+        cache_key->moves_to_key = moves =
+            SREALLOC(cache_key->moves_to_key, len+1+1);
         memcpy(moves, moves_to_parent, len);
         moves[len] = final_move;
         moves[len+1] = '\0';
     }
     else if (final_move)
     {
-        cache_key->moves_to_key = realloc(cache_key->moves_to_key, 2);
+        cache_key->moves_to_key = SREALLOC(cache_key->moves_to_key, 2);
         cache_key->moves_to_key[0] = final_move;
         cache_key->moves_to_key[1] = '\0';
     }

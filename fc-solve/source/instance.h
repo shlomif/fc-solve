@@ -1089,9 +1089,8 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             }
 
             tests_list_of_lists->lists =
-                realloc(
+                SREALLOC(
                         tests_list_of_lists->lists,
-                        sizeof(tests_list_of_lists->lists[0]) *
                         tests_list_of_lists->num_lists
                        );
 
@@ -1560,12 +1559,9 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     }
 
     instance->hard_threads =
-        realloc(
-            instance->hard_threads,
-            (sizeof(instance->hard_threads[0]) * (instance->num_hard_threads+1))
-            );
+        SREALLOC( instance->hard_threads, instance->num_hard_threads+1 );
 
-    /* Since we realloc()ed the hard_threads, their addresses changed,
+    /* Since we SREALLOC()ed the hard_threads, their addresses changed,
      * so we need to update it.
      * */
     HT_LOOP_START()

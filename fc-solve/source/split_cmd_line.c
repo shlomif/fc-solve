@@ -37,6 +37,7 @@
 
 #include "inline.h"
 #include "bool.h"
+#include "alloc_wrap.h"
 
 #define ARGS_MAN_GROW_BY 32
 
@@ -67,7 +68,7 @@ static GCC_INLINE void add_to_last_arg(args_man_t * manager, char c)
 
     if (manager->last_arg_ptr == manager->last_arg_end)
     {
-        char * new_last_arg = realloc(manager->last_arg,
+        char * new_last_arg = SREALLOC(manager->last_arg,
             manager->last_arg_end-manager->last_arg+1024
         );
         manager->last_arg_ptr += new_last_arg - manager->last_arg;
@@ -94,9 +95,9 @@ static GCC_INLINE void push_args_last_arg(args_man_t * manager)
 
     if (! (manager->argc & (ARGS_MAN_GROW_BY-1)))
     {
-        manager->argv = realloc(
+        manager->argv = SREALLOC(
             manager->argv,
-            sizeof(manager->argv[0]) * (manager->argc + ARGS_MAN_GROW_BY)
+            manager->argc + ARGS_MAN_GROW_BY
         );
     }
 

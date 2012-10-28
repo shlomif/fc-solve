@@ -57,6 +57,7 @@
 #include "inline.h"
 #include "likely.h"
 #include "count.h"
+#include "alloc_wrap.h"
 
 /*
     General use of this interface:
@@ -559,14 +560,14 @@ static GCC_INLINE int compile_prelude(
 #define PRELUDE_GROW_BY 16
         if (! (num_items & (PRELUDE_GROW_BY-1)))
         {
-            prelude = realloc(prelude, sizeof(prelude[0]) * (num_items+PRELUDE_GROW_BY));
+            prelude = SREALLOC(prelude, num_items+PRELUDE_GROW_BY);
         }
         prelude[num_items].scan_idx = ST_LOOP_INDEX();
         prelude[num_items].quota = atoi(p_quota);
         num_items++;
     }
 
-    hard_thread->prelude = realloc(prelude, sizeof(prelude[0]) * num_items);
+    hard_thread->prelude = SREALLOC(prelude, num_items);
     hard_thread->prelude_num_items = num_items;
     hard_thread->prelude_idx = 0;
 
@@ -622,7 +623,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
                     tests[num_tests++] = bit_idx;
                 }
             }
-            tests = realloc(tests, sizeof(tests[0]) *
+            tests = SREALLOC(tests,
                 ((num_tests & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
             );
             instance->opt_tests_order.num_groups = 1;
@@ -1160,8 +1161,8 @@ fc_solve_soft_thread_t * fc_solve_new_soft_thread(
         return NULL;
     }
 
-    hard_thread->soft_threads = realloc(hard_thread->soft_threads, sizeof(hard_thread->soft_threads[0])*(hard_thread->num_soft_threads+1));
-
+    hard_thread->soft_threads =
+        SREALLOC(hard_thread->soft_threads, hard_thread->num_soft_threads+1);
     init_soft_thread(
             hard_thread,
             (ret = &(hard_thread->soft_threads[hard_thread->num_soft_threads]))

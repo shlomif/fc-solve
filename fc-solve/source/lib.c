@@ -44,6 +44,7 @@
 #include "bool.h"
 #include "indirect_buffer.h"
 #include "count.h"
+#include "alloc_wrap.h"
 
 typedef struct {
     fcs_int_limit_t num_times;
@@ -367,10 +368,9 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     if (depth_idx == user->soft_thread->by_depth_tests_order.num)
     {
         user->soft_thread->by_depth_tests_order.by_depth_tests =
-            realloc(
+            SREALLOC(
                 user->soft_thread->by_depth_tests_order.by_depth_tests,
-                (++user->soft_thread->by_depth_tests_order.num) *
-                sizeof(user->soft_thread->by_depth_tests_order.by_depth_tests[0])
+                ++user->soft_thread->by_depth_tests_order.num
                 );
 
         user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order.num_groups = 0;
@@ -405,10 +405,9 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     }
 
     user->soft_thread->by_depth_tests_order.by_depth_tests =
-        realloc(
+        SREALLOC(
             user->soft_thread->by_depth_tests_order.by_depth_tests,
-            (user->soft_thread->by_depth_tests_order.num = depth_idx+1) *
-            sizeof(user->soft_thread->by_depth_tests_order.by_depth_tests[0])
+            user->soft_thread->by_depth_tests_order.num = depth_idx+1
         );
 
     return ret_code;
@@ -464,10 +463,7 @@ static GCC_INLINE int add_to_plan(
     next_item = instance_item->num_plan_items;
 
     instance_item->plan =
-        realloc(
-            instance_item->plan,
-            sizeof(instance_item->plan[0]) * ++(instance_item->num_plan_items)
-            );
+        SREALLOC( instance_item->plan, ++(instance_item->num_plan_items));
 
     instance_item->plan[next_item].type = mytype;
     instance_item->plan[next_item].flare_idx = flare_idx;
@@ -2283,10 +2279,7 @@ static int user_next_flare(fcs_user_t * user)
     instance_item = &(user->instances_list[user->current_instance_idx]);
 
     instance_item->flares =
-        realloc(
-            instance_item->flares,
-            sizeof(instance_item->flares[0]) * (++(instance_item->num_flares))
-        );
+        SREALLOC( instance_item->flares, ++(instance_item->num_flares) );
 
     flare = &(instance_item->flares[instance_item->num_flares-1]);
     instance_item->limit = flare->limit = -1;
@@ -2325,12 +2318,9 @@ static int user_next_instance(
 {
     fcs_instance_item_t * instance_item;
 
-    user->instances_list =
-        realloc(
-            user->instances_list,
-            sizeof(user->instances_list[0])
-            * (++user->num_instances)
-            );
+    user->instances_list = SREALLOC(
+        user->instances_list, ++user->num_instances
+    );
 
     user->current_instance_idx = user->num_instances-1;
 
