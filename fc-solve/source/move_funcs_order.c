@@ -64,7 +64,7 @@ int fc_solve_apply_tests_order(
     is_group = FALSE;
     is_start_group = FALSE;
 
-    for(a=0;(a<len) ;a++)
+    for (a = 0 ; a < len ; a++)
     {
         if ((string[a] == '(') || (string[a] == '['))
         {
