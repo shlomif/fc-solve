@@ -15,14 +15,15 @@ move) or the moves that are required for the solution, or both.
 </li>
 
 <li>
-On UNIX: accepts some user signal combinations that turn some run-time
-debugging information on and off.
+On UNIX-like operating systems: accepts some user signal combinations that
+turn some run-time debugging information on and off.
 </li>
 
 <li>
 Some configurations are very fast: can solve the first Microsoft Freecell
 32,000 deals in 74 seconds on a Pentium 4-2.4 GHz computer. (432 layouts
-per second).
+per second). On a Core i3 computer, these deals are solved in 11.5
+seconds ( 2,781 layouts per second).
 </li>
 
 <li>
@@ -48,7 +49,8 @@ MIT/X11 License</a>, which means it can be used without any restrictions.
 </li>
 
 <li>
-The core library and program is written entirely in a portable ANSI C code.
+The core library and program is written in C code supported by modern C
+compilers such as GCC and LLVM/clang.
 </li>
 
 <li>
@@ -59,6 +61,10 @@ version of the library that is used.
 <li>
 Compile-time options for hard-coding several game-types parameters, that
 can make the solver faster. There's a combined FCS_FREECELL_ONLY mode.
+</li>
+
+<li>
+A test suite is included as part of the distribution.
 </li>
 
 </ul>
@@ -116,9 +122,15 @@ It is possible to specify a static prelude of quotas to be played before the
 perpetual loop.
 </li>
 
+<li>
+With the random-DFS scan, it is possible to specify a different moves selection
+for each depth in the DFS-stack.
+</li>
+
 </ul>
 
 <h2>Game Types</h2>
+
 <ul>
 <li>
 Can solve games whose sequences are built by suit, by alternate colour or
@@ -126,17 +138,17 @@ by rank regardless of colour.
 </li>
 
 <li>
-Can solve games whose sequence move is limited by the number of Freecells,
-or unlimited.
+Can solve games whose sequence move is limited by the number of Freecells
+and empty columns, or unlimited.
 </li>
 
 <li>
-Can solve games whose vacant stacks can be filled by any card, by kings
+Can solve games whose vacant columns can be filled by any card, by kings
 only, or by no card whatsoever.
 </li>
 
 <li>
-Run-time choice of the number of Freecells and Stacks.
+Run-time choice of the number of freecells and columns.
 (limited by a compile-time directive)
 </li>
 
@@ -151,8 +163,8 @@ version)</a> variants that can be solved:
 </p>
 <ul>
 <li>American Canister</li>
-<li>Baker's Dozen</li>
-<li>Baker's Game</li>
+<li>Baker’s Dozen</li>
+<li>Baker’s Game</li>
 <li>Bath</li>
 <li>Beleaguered Castle</li>
 <li>Box Fan</li>
@@ -173,7 +185,7 @@ version)</a> variants that can be solved:
 <li>Freecell</li>
 <li>Good Measure</li>
 <li>Kentish</li>
-<li>King Only Baker's Game</li>
+<li>King Only Baker’s Game</li>
 <li>KingCell</li>
 <li>Kings</li>
 <li>Lightweight</li>
