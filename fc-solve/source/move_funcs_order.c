@@ -112,7 +112,7 @@ int fc_solve_apply_tests_order(
                 *error_string = strdup("There's a renegade right parenthesis or bracket.");
                 return 3;
             }
-            /* Try to parse the*/
+            /* Try to parse the ordering function. */
             if (string[a+1] == '=')
             {
                 a+=2;
