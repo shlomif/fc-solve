@@ -1050,7 +1050,7 @@ int fc_solve_soft_dfs_do_solve(
                 /* Always do the first test */
                 local_shuffling_type = THE_TESTS_LIST.lists[
                     the_soft_dfs_info->tests_list_index
-                    ].type;
+                    ].shuffling_type;
 
             do
             {

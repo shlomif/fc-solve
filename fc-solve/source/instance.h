@@ -220,7 +220,7 @@ typedef struct
 {
     int num;
     int * tests;
-    fcs_tests_group_type_t type;
+    fcs_tests_group_type_t shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_tests_order_group_t;
 
@@ -759,7 +759,7 @@ enum
 typedef struct {
     fc_solve_solve_for_state_test_t * tests;
     int num_tests;
-    int type;
+    int shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_tests_list_t;
 
@@ -1092,9 +1092,9 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                 tests_list_struct_ptr->tests = tests_list;
                 tests_list_struct_ptr->num_tests = num;
 
-                tests_list_struct_ptr->type =
+                tests_list_struct_ptr->shuffling_type =
                     master_to_randomize
-                    ? tests_order_groups[group_idx].type
+                    ? tests_order_groups[group_idx].shuffling_type
                     : FCS_NO_SHUFFLING;
                 tests_list_struct_ptr->weighting =
                     tests_order_groups[group_idx].weighting;

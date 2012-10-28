@@ -632,7 +632,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             instance->opt_tests_order.groups[0].tests = tests;
             instance->opt_tests_order.groups[0].num =
                 num_tests;
-            instance->opt_tests_order.groups[0].type = FCS_NO_SHUFFLING;
+            instance->opt_tests_order.groups[0].shuffling_type = FCS_NO_SHUFFLING;
 
             STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
         }
