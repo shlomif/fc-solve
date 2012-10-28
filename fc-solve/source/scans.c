@@ -180,11 +180,13 @@ static void verify_state_sanity(
         fcs_state_t * ptr_state
         )
 {
+#ifndef NDEBUG
     for (int i=0; i < 8 ; i++)
     {
         const int l = fcs_col_len(fcs_state_get_col(*(ptr_state), i));
         assert ((l >= 0) && (l <= 7+12));
     }
+#endif
 
     return;
 }
@@ -1286,10 +1288,11 @@ static GCC_INLINE int update_col_cards_under_sequences(
 #endif
 static GCC_INLINE void initialize_befs_rater(
     fc_solve_soft_thread_t * const soft_thread,
+    fc_solve_state_weighting_t * weighting,
     fcs_kv_state_t * const raw_pass_raw
 )
 {
-    double * const befs_weights = BEFS_VAR(soft_thread, befs_weights);
+    double * const befs_weights = weighting->befs_weights;
 
 
 #define pass (*raw_pass_raw)
@@ -1316,12 +1319,12 @@ static GCC_INLINE void initialize_befs_rater(
     {
         update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*ptr_state_key, a), &cards_under_sequences);
     }
-    BEFS_VAR(soft_thread, initial_cards_under_sequences_value) = cards_under_sequences;
+    weighting->initial_cards_under_sequences_value = cards_under_sequences;
 
-    BEFS_VAR(soft_thread, num_cards_out_factor) =
+    weighting->num_cards_out_factor =
         befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
 
-    BEFS_VAR(soft_thread, max_sequence_move_factor) =
+    weighting->max_sequence_move_factor =
         befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] /
         (is_filled_by_any_card()
          ? (unlimited_sequence_move
@@ -1336,16 +1339,16 @@ static GCC_INLINE void initialize_befs_rater(
         );
 
 
-    BEFS_VAR(soft_thread, cards_under_sequences_factor) =
+    weighting->cards_under_sequences_factor =
         befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] / cards_under_sequences;
 
-    BEFS_VAR(soft_thread, seqs_over_renegade_cards_factor) =
+    weighting->seqs_over_renegade_cards_factor =
         befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] / FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4));
 
-    BEFS_VAR(soft_thread, depth_factor) =
+    weighting->depth_factor =
         befs_weights[FCS_BEFS_WEIGHT_DEPTH] / BEFS_MAX_DEPTH;
 
-    BEFS_VAR(soft_thread, num_cards_not_on_parents_factor) =
+    weighting->num_cards_not_on_parents_factor =
         befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] / (LOCAL_DECKS_NUM * 52);
 
 }
@@ -1377,6 +1380,7 @@ static GCC_INLINE void initialize_befs_rater(
 
 static GCC_INLINE pq_rating_t befs_rate_state(
     fc_solve_soft_thread_t * soft_thread,
+    fc_solve_state_weighting_t * weighting,
     fcs_kv_state_t * raw_pass_raw
     )
 {
@@ -1488,21 +1492,21 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     (
     (int)
     ((
-        num_cards_in_founds * BEFS_VAR(soft_thread, num_cards_out_factor)
+        num_cards_in_founds * weighting->num_cards_out_factor
             +
-        (CALC_VACANCY_VAL() * BEFS_VAR(soft_thread, max_sequence_move_factor))
+        (CALC_VACANCY_VAL() * weighting->max_sequence_move_factor)
             +
         (
-            (BEFS_VAR(soft_thread, initial_cards_under_sequences_value) - cards_under_sequences)
-            * BEFS_VAR(soft_thread, cards_under_sequences_factor)
+            (weighting->initial_cards_under_sequences_value - cards_under_sequences)
+            * weighting->cards_under_sequences_factor
         )
             +
-        (seqs_over_renegade_cards * BEFS_VAR(soft_thread, seqs_over_renegade_cards_factor))
+        (seqs_over_renegade_cards * weighting->seqs_over_renegade_cards_factor)
             +
-        ((BEFS_MAX_DEPTH - min(depth, BEFS_MAX_DEPTH)) * BEFS_VAR(soft_thread, depth_factor))
+        ((BEFS_MAX_DEPTH - min(depth, BEFS_MAX_DEPTH)) * weighting->depth_factor)
             +
         (num_cards_not_on_parents *
-                    BEFS_VAR(soft_thread, num_cards_not_on_parents_factor))
+                    weighting->num_cards_not_on_parents_factor)
     )*INT_MAX)
     );
 #undef CALC_VACANCY_VAL
@@ -1572,10 +1576,10 @@ static GCC_INLINE void fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * so
 
 
 static GCC_INLINE void normalize_befs_weights(
-    fc_solve_soft_thread_t * const soft_thread
+    fc_solve_state_weighting_t * weighting
     )
 {
-    double * const befs_weights = BEFS_VAR(soft_thread, befs_weights);
+    double * const befs_weights = weighting->befs_weights;
 
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
     double sum = 0;
@@ -1617,10 +1621,12 @@ void fc_solve_soft_thread_init_befs_or_bfs(
             1024
         );
 
-        normalize_befs_weights(soft_thread);
+#define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
+        normalize_befs_weights(WEIGHTING(soft_thread));
 
         initialize_befs_rater(
             soft_thread,
+            WEIGHTING(soft_thread),
             STATE_TO_PASS()
             );
     }
@@ -1953,7 +1959,10 @@ int fc_solve_befs_or_bfs_do_solve(
                 fc_solve_PQueuePush(
                     pqueue,
                     ptr_new_state,
-                    befs_rate_state( soft_thread, NEW_STATE_TO_PASS())
+                    befs_rate_state(
+                        soft_thread,
+                        WEIGHTING(soft_thread),
+                        NEW_STATE_TO_PASS())
                     );
             }
             else

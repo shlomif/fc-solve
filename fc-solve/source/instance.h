@@ -752,6 +752,23 @@ enum FCS_SUPER_METHOD_TYPE
 
 typedef enum FCS_SUPER_METHOD_TYPE fcs_super_method_type_t;
 
+typedef struct
+{
+    double initial_cards_under_sequences_value;
+    double num_cards_out_factor,
+           max_sequence_move_factor,
+           cards_under_sequences_factor,
+           seqs_over_renegade_cards_factor,
+           depth_factor,
+           num_cards_not_on_parents_factor;
+
+    /*
+     * The BeFS weights of the different BeFS tests. Those
+     * weights determine the commulative priority of the state.
+     * */
+    double befs_weights[FCS_NUM_BEFS_WEIGHTS];
+} fc_solve_state_weighting_t;
+
 struct fc_solve_soft_thread_struct
 {
     fc_solve_hard_thread_t * hard_thread;
@@ -869,19 +886,7 @@ struct fc_solve_soft_thread_struct
                      * The priority queue of the BeFS scan
                      * */
                     PQUEUE pqueue;
-                    double initial_cards_under_sequences_value;
-                    double num_cards_out_factor,
-                           max_sequence_move_factor,
-                           cards_under_sequences_factor,
-                           seqs_over_renegade_cards_factor,
-                           depth_factor,
-                           num_cards_not_on_parents_factor;
-
-                    /*
-                     * The BeFS weights of the different BeFS tests. Those
-                     * weights determine the commulative priority of the state.
-                     * */
-                    double befs_weights[FCS_NUM_BEFS_WEIGHTS];
+                    fc_solve_state_weighting_t weighting;
                 } befs;
             } meth;
         } befs;

@@ -83,7 +83,7 @@
 const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS] = {0.5, 0, 0.3, 0, 0.2, 0};
 
 static GCC_INLINE void normalize_befs_weights(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_state_weighting_t * weighting
     )
 {
     /* Normalize the Best-First-Search Weights, so the sum of all of them would be 1. */
@@ -93,7 +93,7 @@ static GCC_INLINE void normalize_befs_weights(
     int weight_idx;
 
     sum = 0;
-#define my_befs_weights BEFS_VAR(soft_thread, befs_weights)
+#define my_befs_weights weighting->befs_weights
     for (
         weight_idx = 0
             ;
