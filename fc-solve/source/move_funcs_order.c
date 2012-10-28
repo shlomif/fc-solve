@@ -28,9 +28,13 @@
 
 #define BUILDING_DLL 1
 
+#include <string.h>
+
 #include "move_funcs_order.h"
+#include "set_weights.h"
 
 #include "bool.h"
+#include "str_utils.h"
 
 int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
@@ -108,8 +112,65 @@ int fc_solve_apply_tests_order(
                 *error_string = strdup("There's a renegade right parenthesis or bracket.");
                 return 3;
             }
+            /* Try to parse the*/
+            if (string[a+1] == '=')
+            {
+                a+=2;
+                const char * open_paren = strchr(string+a, '(');
+                if (! open_paren)
+                {
+                    *error_string = strdup("A = ordering function is missing its open parenthesis - (");
+                    return 5;
+                }
+                if (string_starts_with(string+a, "rand", open_paren))
+                {
+                    tests_order->groups[tests_order->num_groups-1].shuffling_type
+                        = FCS_RAND;
+                }
+                else if (string_starts_with(string+a, "asw", open_paren))
+                {
+                    tests_order->groups[tests_order->num_groups-1].shuffling_type
+                        = FCS_WEIGHTING;
+                }
+                else
+                {
+                    *error_string = strdup("Unknown = ordering function");
+                    return 6;
+                }
+                const char * const aft_open_paren = open_paren + 1;
+                const char * const close_paren = strchr(aft_open_paren, ')');
+                if (!close_paren)
+                {
+                    *error_string = strdup("= ordering function not terminated with a ')'");
+                    return 7;
+                }
+                if (tests_order->groups[tests_order->num_groups-1].shuffling_type == FCS_WEIGHTING)
+                {
+                    char * copy = strndup(aft_open_paren, close_paren-aft_open_paren);
+                    fc_solve_set_weights(
+                        copy,
+                        tests_order->groups[tests_order->num_groups-1].weighting.befs_weights
+                    );
+                    free (copy);
+                }
+                else
+                {
+                    if (close_paren != aft_open_paren)
+                    {
+                        *error_string = strdup("=rand() arguments are not empty.");
+                        return 8;
+                    }
+                }
+                /*
+                 * a will be incremented so it should be -1 here -
+                 * at the end of the token/expression.
+                 *
+                 * */
+                a = close_paren - string;
+            }
             is_group = FALSE;
             is_start_group = FALSE;
+
 
             if (tests_order->groups[tests_order->num_groups - 1].num)
             {

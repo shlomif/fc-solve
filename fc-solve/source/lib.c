@@ -46,6 +46,8 @@
 #include "count.h"
 #include "alloc_wrap.h"
 
+#include "str_utils.h"
+
 typedef struct {
     fcs_int_limit_t num_times;
     fcs_int_limit_t num_states_in_collection;
@@ -434,22 +436,6 @@ enum FCS_COMPILE_FLARES_RET
     FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND,
     FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF
 };
-
-static fcs_bool_t string_starts_with(
-    const char * str,
-    const char * prefix,
-    const char * end
-    )
-{
-    register int check_len = end-str;
-
-    return
-        (
-         (check_len == strlen(prefix))
-            && (!strncmp(str, prefix, check_len))
-        )
-        ;
-}
 
 static GCC_INLINE int add_to_plan(
         fcs_instance_item_t * instance_item,

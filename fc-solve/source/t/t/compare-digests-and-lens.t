@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 23;
 use File::Spec;
 use lib './t/lib';
 use File::Basename qw( dirname );
@@ -32,6 +32,13 @@ sub verify_solution_test
 # 24 is my lucky number. (Shlomif)
 # TEST
 verify_solution_test({id => "freecell24", deal => 24}, "Verifying the solution of deal #24");
+
+# TEST
+verify_solution_test({id => "random_dfs_with_rand_parens", deal => 24,
+        # theme => ["--method", "random-dfs", "-seed", "1", "-to", "[01][23456789]=rand()"],
+        theme => ["--method", "random-dfs", "-seed", "1", "-to", "[01]=rand()[23456789]=rand()"],
+    },
+    "Verifying the solution of a deal with random-dfs specified using '=rand()'");
 
 # TEST
 verify_solution_test(
