@@ -118,7 +118,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     *(num_out_derived_states) = states_count;
 
 
-    debug_ret = malloc(sizeof(debug_ret[0]) * states_count);
+    debug_ret = SMALLOC(debug_ret, states_count);
 
     *(out_derived_states) = debug_ret;
 

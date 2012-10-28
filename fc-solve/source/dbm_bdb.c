@@ -13,10 +13,9 @@ typedef struct
 
 void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 {
-    dbm_t * db;
-    int t_ret, ret;
+    dbm_t * db = SMALLOC1(db);
 
-    db = malloc(sizeof(*db));
+    int t_ret, ret;
 
     if ((ret = db_create(&(db->dbp), NULL, 0)) != 0)
     {

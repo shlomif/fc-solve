@@ -193,7 +193,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         iter = iter->next;
     }
 
-    *out_fcc_start_points = ret = malloc(sizeof(ret[0]) * (states_count+1));
+    *out_fcc_start_points = ret = SMALLOC(ret, states_count+1);
 
     ret[states_count].count = 0;
 
@@ -206,7 +206,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
 
         ret[i].count = iter->moves_seq.count;
-        ret[i].moves = malloc(sizeof(ret[i].moves[0]) * ret[i].count);
+        ret[i].moves = SMALLOC(ret[i].moves, ret[i].count);
         {
             int moves_idx;
             fcs_fcc_moves_list_item_t * moves_iter = iter->moves_seq.moves_list;

@@ -200,9 +200,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
 
     num_back_end_moves = freecell_solver_user_get_moves_left(instance);
 
-    ret = malloc(sizeof(*ret));
+    ret = SMALLOC1(ret);
     ret->num_moves = 0;
-    ret->moves = malloc(sizeof(ret->moves[0]) * MOVES_PROCESSED_GROW_BY);
+    ret->moves = SMALLOC(ret->moves, MOVES_PROCESSED_GROW_BY);
     ret->next_move_idx = 0;
 
     for(i=0;i<8;i++)

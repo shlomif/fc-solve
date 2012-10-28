@@ -43,6 +43,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "alloc_wrap.h"
 struct microsoft_rand_struct
 {
     long seed;
@@ -54,7 +55,7 @@ static microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
 {
     microsoft_rand_t * ret;
 
-    ret = malloc(sizeof(microsoft_rand_t));
+    ret = SMALLOC1(ret);
     ret->seed = (long)seed;
 
     return ret;

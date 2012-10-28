@@ -279,7 +279,7 @@ dict_t *dict_create(dictcount_t maxcount, dict_comp_t comp, void * context)
 dict_t *fc_solve_kaz_tree_create(dict_comp_t comp, void * context)
 #endif
 {
-    dict_t *dict = (dict_t *) malloc(sizeof *dict);
+    dict_t *dict = (dict_t *) SMALLOC1(dict);
 
     if (dict)
         dict_init(dict, comp);
@@ -1256,7 +1256,7 @@ static void dnode_free(dnode_t *node, void *context)
 
 dnode_t *dnode_create(void *data)
 {
-    dnode_t *dnode = (dnode_t *) malloc(sizeof *dnode);
+    dnode_t *dnode = (dnode_t *) SMALLOC1(dnode)
     if (dnode) {
         dnode->data = data;
         dnode->parent = NULL;
@@ -1527,15 +1527,6 @@ static int comparef(const void *key1, const void *key2)
     return strcmp((const char *) key1, (const char *) key2);
 }
 
-static char *dupstring(char *str)
-{
-    int sz = strlen(str) + 1;
-    char *dup = (char *) malloc(sz);
-    if (dup)
-        memcpy(dup, str, sz);
-    return dup;
-}
-
 static dnode_t *new_node(void *c)
 {
     static dnode_t few[5];
@@ -1594,8 +1585,8 @@ static void construct(dict_t *d)
                     puts("what?");
                     break;
                 }
-                key = dupstring(tok1);
-                val = dupstring(tok2);
+                key = strdup(tok1);
+                val = strdup(tok2);
                 dn = dnode_create(val);
 
                 if (!key || !val || !dn) {
@@ -1667,8 +1658,8 @@ int main(void)
                     puts("what?");
                     break;
                 }
-                key = dupstring(tok1);
-                val = dupstring(tok2);
+                key = strdup(tok1);
+                val = strdup(tok2);
 
                 if (!key || !val) {
                     puts("out of memory");

@@ -330,7 +330,7 @@ static void calc_trace(
 
 #define GROW_BY 100
     trace_num = 0;
-    trace = malloc(sizeof(trace[0]) * (trace_max_num = GROW_BY));
+    trace = SMALLOC(trace, (trace_max_num = GROW_BY));
     key_ptr = trace;
     record = ptr_initial_record;
 

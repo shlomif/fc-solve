@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "alloc_wrap.h"
 #include "portable_time.h"
 #include "portable_int64.h"
 
@@ -324,7 +325,10 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
             solutions_directory = argv[arg];
-            solution_filename = malloc(strlen(solutions_directory) + 1024);
+            solution_filename = SMALLOC(
+                solution_filename,
+                strlen(solutions_directory) + 1024
+            );
         }
         else
         {

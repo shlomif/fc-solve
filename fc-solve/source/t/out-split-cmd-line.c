@@ -58,7 +58,7 @@ int main(int argc, char * argv[])
 
         s = args->argv[i];
         /* Handle terminal case of delimiting an argument */
-        terminator = malloc(strlen(s)+50);
+        terminator = SMALLOC(terminator, strlen(s)+50);
         strcpy(terminator, "FCS_END_OF_STRING");
         while(strstr(s, terminator))
         {

@@ -28,6 +28,7 @@
 #include "avl.h"
 
 #include "inline.h"
+#include "alloc_wrap.h"
 
 static GCC_INLINE signed char avl_get_balance(struct avl_node * node)
 {
@@ -82,7 +83,7 @@ avl_create (avl_comparison_func *compare, void *param, fcs_meta_compact_allocato
 
   assert (compare != NULL);
 
-  tree = malloc (sizeof *tree);
+  tree = SMALLOC1 (tree);
   if (tree == NULL)
     return NULL;
 

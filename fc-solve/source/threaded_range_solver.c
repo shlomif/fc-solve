@@ -37,6 +37,7 @@
 #include <unistd.h>
 #endif
 
+#include "alloc_wrap.h"
 #include "portable_int64.h"
 #include "portable_time.h"
 
@@ -466,7 +467,7 @@ int main(int argc, char * argv[])
     context.arg = start_from_arg;
     context.stop_at = stop_at;
 
-    workers = malloc(sizeof(workers[0])*num_workers);
+    workers = SMALLOC(workers, num_workers);
 
     for ( idx = 0 ; idx < num_workers ; idx++)
     {

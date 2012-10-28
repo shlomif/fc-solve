@@ -1039,9 +1039,9 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
         arr_ptr = &(DFS_VAR(soft_thread, tests_by_depth_array));
         arr_ptr->by_depth_units =
-            malloc(
-                sizeof(arr_ptr->by_depth_units[0])
-                * (arr_ptr->num_units = soft_thread->by_depth_tests_order.num)
+            SMALLOC(
+                arr_ptr->by_depth_units,
+                (arr_ptr->num_units = soft_thread->by_depth_tests_order.num)
             );
 
         by_depth_tests_order =
@@ -1063,15 +1063,13 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
             tests_list_of_lists->num_lists = 0;
             tests_list_of_lists->lists =
-                malloc(
-                        sizeof(tests_list_of_lists->lists[0]) * tests_order_num
-                      );
+                SMALLOC( tests_list_of_lists->lists, tests_order_num );
 
             for (int group_idx = 0 ; group_idx < tests_order_num ; group_idx++)
             {
                 int num = tests_order_groups[group_idx].num;
                 int * tests_order_tests = tests_order_groups[group_idx].tests;
-                tests_list = malloc(sizeof(tests_list[0]) * num);
+                tests_list = SMALLOC(tests_list, num);
                 next_test = tests_list;
                 for (int i = 0; i < num ; i++)
                 {
@@ -1344,7 +1342,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     {
         instance->optimization_thread =
             optimization_thread =
-            malloc(sizeof(*optimization_thread));
+            SMALLOC1(optimization_thread);
 
         fc_solve_instance__init_hard_thread(instance, optimization_thread);
 
@@ -1372,7 +1370,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
         soft_thread->by_depth_tests_order.num = 1;
         soft_thread->by_depth_tests_order.by_depth_tests =
-            malloc(sizeof(soft_thread->by_depth_tests_order.by_depth_tests[0]));
+            SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests);
 
         soft_thread->by_depth_tests_order.by_depth_tests[0].max_depth = INT_MAX;
         soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order =

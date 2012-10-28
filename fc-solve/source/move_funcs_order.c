@@ -45,11 +45,13 @@ int fc_solve_apply_tests_order(
 
     fc_solve_free_tests_order(tests_order);
 
-    tests_order->groups = malloc(sizeof(tests_order->groups[0])*TESTS_ORDER_GROW_BY);
+    tests_order->groups = SMALLOC(tests_order->groups, TESTS_ORDER_GROW_BY);
     tests_order->groups[tests_order->num_groups].num = 0;
     tests_order->groups[tests_order->num_groups].tests =
-        malloc(sizeof(tests_order->groups[tests_order->num_groups].tests[0])
-               * TESTS_ORDER_GROW_BY);
+        SMALLOC(
+            tests_order->groups[tests_order->num_groups].tests,
+            TESTS_ORDER_GROW_BY
+        );
     tests_order->groups[tests_order->num_groups].is_rand = FALSE;
 
     tests_order->num_groups++;
@@ -82,8 +84,10 @@ int fc_solve_apply_tests_order(
 
                 tests_order->groups[tests_order->num_groups].num = 0;
                 tests_order->groups[tests_order->num_groups].tests =
-                    malloc(sizeof(tests_order->groups[tests_order->num_groups].tests[0])
-                           * TESTS_ORDER_GROW_BY);
+                    SMALLOC(
+                        tests_order->groups[tests_order->num_groups].tests,
+                        TESTS_ORDER_GROW_BY
+                    );
 
                 tests_order->num_groups++;
             }
@@ -118,8 +122,10 @@ int fc_solve_apply_tests_order(
                 }
                 tests_order->groups[tests_order->num_groups].num = 0;
                 tests_order->groups[tests_order->num_groups].tests =
-                    malloc(sizeof(tests_order->groups[tests_order->num_groups].tests[0])
-                           * TESTS_ORDER_GROW_BY);
+                    SMALLOC(
+                        tests_order->groups[tests_order->num_groups].tests,
+                        TESTS_ORDER_GROW_BY
+                    );
 
                 tests_order->num_groups++;
             }

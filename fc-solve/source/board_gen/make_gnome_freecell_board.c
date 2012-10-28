@@ -29,8 +29,8 @@ static int *deck_shuffle(void) {
     int  i;
     int  j;
 
-    deck      = malloc(sizeof *deck * 52);
-    deck_temp = malloc(sizeof *deck * 52);
+    deck      = malloc(sizeof(*deck) * 52);
+    deck_temp = malloc(sizeof(*deck) * 52);
 
     for (i = 0; i < 52; i++) {
         idx = (rand ()) % (i + 1);

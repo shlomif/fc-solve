@@ -30,6 +30,7 @@
 #include <string.h>
 #include "portable_time.h"
 #include "portable_int64.h"
+#include "alloc_wrap.h"
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
@@ -218,7 +219,7 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    results = malloc(sizeof(results[0]) * (end_board - start_board + 1));
+    results = SMALLOC(results, end_board - start_board + 1);
 
     output_fh = fopen(output_filename, "wt");
 

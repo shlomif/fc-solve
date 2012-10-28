@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "alloc_wrap.h"
 #include "dbm_solver.h"
 #include "generic_tree.h"
 
@@ -18,8 +19,7 @@ typedef struct
 
 void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path, void * * recycle_bin_ptr)
 {
-    dbm_t * db;
-    db = malloc(sizeof(*db));
+    dbm_t * db = SMALLOC1(db);
 
     fc_solve_meta_compact_allocator_init(
         &(db->meta_alloc)

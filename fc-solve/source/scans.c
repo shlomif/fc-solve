@@ -501,7 +501,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
     int parents_stack_max_len = 16;
 
     cache_parents_stack_item_t * parents_stack
-        = malloc(sizeof(parents_stack[0]) * parents_stack_max_len);
+        = SMALLOC(parents_stack, parents_stack_max_len);
 
     parents_stack[0].state_val = orig_ptr_state_val;
 
@@ -1627,7 +1627,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     if (! BEFS_M_VAR(soft_thread, tests_list))
     {
         int num = 0;
-        fc_solve_solve_for_state_test_t * tests_list = malloc(sizeof(tests_list[0]) * 1);
+        fc_solve_solve_for_state_test_t * tests_list =
+            SMALLOC(tests_list, 1);
 
         for (int group_idx = 0 ; group_idx < soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num_groups ; group_idx++)
         {
@@ -2143,7 +2144,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
          * (-1,-1) (= end) padding.             * */
 #define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH)
 
-        char * const positions_by_rank = malloc(FCS_POS_BY_RANK_SIZE);
+        char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_SIZE);
 
         memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
 

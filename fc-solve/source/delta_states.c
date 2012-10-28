@@ -83,11 +83,10 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
 #endif
         )
 {
-    fc_solve_delta_stater_t * self;
     int col_idx;
     int max_num_cards;
 
-    self = malloc(sizeof(*self));
+    fc_solve_delta_stater_t * self = SMALLOC1(self);
 
 #ifndef FCS_FREECELL_ONLY
     self->sequences_are_built_by = sequences_are_built_by;

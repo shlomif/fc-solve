@@ -85,9 +85,7 @@ static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
 #endif
         )
 {
-    fc_solve_debondt_delta_stater_t * self;
-
-    self = malloc(sizeof(*self));
+    fc_solve_debondt_delta_stater_t * self = SMALLOC1(self);
 
 #ifndef FCS_FREECELL_ONLY
     self->sequences_are_built_by = sequences_are_built_by;

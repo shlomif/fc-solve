@@ -71,7 +71,10 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
         home_dir = getenv("HOME");
         if (home_dir)
         {
-            home_dir_presetrc = malloc(strlen(home_dir) + 50);
+            home_dir_presetrc = SMALLOC(
+                home_dir_presetrc,
+                strlen(home_dir) + 50
+            );
             sprintf(home_dir_presetrc,
                 "%s/.freecell-solver/presetrc", home_dir
                 );
@@ -1095,7 +1098,7 @@ break;
             ret = freecell_solver_user_set_tests_order(instance, (*arg), &fcs_user_errstr);
             if (ret != 0)
             {
-                char * errstr = malloc(strlen(fcs_user_errstr)+500);
+                char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
                 sprintf(
                     errstr,
                     "Error in tests' order!\n%s\n",
@@ -1117,7 +1120,7 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(500);
+                errstr = SMALLOC(errstr, 500);
                 sprintf(errstr,
                     "Error! The freecells\' number "
                     "exceeds the maximum of %i.\n"
@@ -1139,7 +1142,7 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(500);
+                errstr = SMALLOC(errstr, 500);
                 sprintf(errstr,
                     "Error! The stacks\' number "
                     "exceeds the maximum of %i.\n"
@@ -1161,7 +1164,7 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(500);
+                errstr = SMALLOC(errstr, 500);
                 sprintf(errstr,
                     "Error! The decks\' number "
                     "exceeds the maximum of %i.\n"
@@ -1245,7 +1248,7 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(strlen((*arg))+500);
+                errstr = SMALLOC(errstr, strlen((*arg))+500);
 
                 sprintf(errstr, "Unknown game \"%s\"!\n\n", (*arg));
                 *error_string = errstr;
@@ -1256,7 +1259,7 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(strlen((*arg))+500);
+                errstr = SMALLOC(errstr, strlen((*arg))+500);
                 sprintf(errstr, "The game \"%s\" exceeds the maximal number "
                         "of freecells in the program.\n"
                         "Modify the file \"config.h\" and recompile, "
@@ -1272,7 +1275,7 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(strlen((*arg))+500);
+                errstr = SMALLOC(errstr, strlen((*arg))+500);
 
                 sprintf(errstr, "The game \"%s\" exceeds the maximal number "
                         "of stacks in the program.\n"
@@ -1289,7 +1292,7 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(strlen((*arg))+500);
+                errstr = SMALLOC(errstr, strlen((*arg))+500);
 
                 sprintf(errstr,
                     "The game \"%s\" exceeds the limits of the program.\n"
@@ -1331,7 +1334,7 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(strlen((*arg))+500);
+                errstr = SMALLOC(errstr, strlen((*arg))+500);
 
                 sprintf(
                     errstr,
@@ -1521,7 +1524,7 @@ break;
 
             if (ret != 0)
             {
-                char * errstr = malloc(strlen(fcs_user_errstr)+500);
+                char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
                 sprintf(
                     errstr,
                     "Error in the optimization scan's tests' order!\n%s\n",
@@ -1554,7 +1557,7 @@ break;
             {
                 char * errstr;
 
-                errstr = malloc(strlen((*arg))+500);
+                errstr = SMALLOC(errstr, strlen((*arg))+500);
 
                 sprintf(errstr, "Unknown scans' synergy type \"%s\"!\n", (*arg));
                 *error_string = errstr;
@@ -1616,7 +1619,7 @@ break;
                     len += strlen(s);
                     len++;
 
-                    complete_path = malloc(len);
+                    complete_path = SMALLOC(complete_path, len);
                     sprintf(complete_path, "%s%s", opened_files_dir, s);
                     f = fopen(complete_path, "rt");
                     free(complete_path);
@@ -1638,9 +1641,7 @@ break;
                 /* If we still could not open it return an error */
                 if (f == NULL)
                 {
-                    char * err_str;
-
-                    err_str = malloc(strlen(s)+100);
+                    char * err_str = SMALLOC(err_str, strlen(s)+100);
                     sprintf(err_str,
                             "Could not open file \"%s\"!\nQuitting.\n",
                             s);
@@ -1651,7 +1652,7 @@ break;
                 }
                 fseek(f, 0, SEEK_END);
                 file_len = ftell(f);
-                buffer=malloc(file_len+1);
+                buffer= SMALLOC(buffer, file_len+1);
                 if (buffer == NULL)
                 {
                     *error_string = strdup("Could not allocate enough memory to parse the file. Quitting.\n");
@@ -1723,8 +1724,7 @@ break;
                 status = read_preset((*arg), &preset_args, &dir, NULL);
                 if (status != 0)
                 {
-                    char * err_str;
-                    err_str = malloc(strlen((*arg)) + 100);
+                    char * err_str = SMALLOC(err_str, strlen((*arg)) + 100);
                     sprintf(err_str, "Unable to load the \"%s\" configuration!\n", (*arg));
                     *error_string = err_str;
 
@@ -1799,7 +1799,7 @@ break;
 
                 if (ret != 0)
                 {
-                    char * errstr = malloc(strlen(fcs_user_errstr)+500);
+                    char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
                     sprintf(
                             errstr,
                             "Error in depth tests' order!\n%s\n",
@@ -1830,7 +1830,7 @@ break;
 
             if (ret != 0)
             {
-                char * errstr = malloc(strlen(fcs_user_errstr)+500);
+                char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
                 sprintf(
                     errstr,
                     "Error in the optimization scan's pruning!\n%s\n",

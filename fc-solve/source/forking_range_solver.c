@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "alloc_wrap.h"
 #include "portable_int64.h"
 #include "portable_time.h"
 
@@ -443,7 +444,7 @@ int main(int argc, char * argv[])
         return -1;
     }
 
-    workers = malloc(sizeof(workers[0])*num_workers);
+    workers = SMALLOC(workers, num_workers);
 
     for ( idx = 0 ; idx < num_workers ; idx++)
     {

@@ -31,6 +31,7 @@
 #include <stdlib.h>
 
 #include "inline.h"
+#include "alloc_wrap.h"
 
 #ifndef FC_SOLVE__APP_STR_H
 #define FC_SOLVE__APP_STR_H
@@ -52,7 +53,8 @@ typedef struct
 static GCC_INLINE void fc_solve_append_string_init(fc_solve_append_string_t * app_str)
 {
     app_str->max_size = FC_SOLVE_APPEND_STRING_GROW_BY;
-    app_str->end_of_buffer = app_str->buffer = malloc(app_str->max_size);
+    app_str->end_of_buffer = app_str->buffer =
+        SMALLOC(app_str->buffer, app_str->max_size);
 
     return;
 }

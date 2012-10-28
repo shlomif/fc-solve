@@ -43,9 +43,9 @@
 
 args_man_t * fc_solve_args_man_alloc(void)
 {
-    args_man_t * ret = malloc(sizeof(*ret));
+    args_man_t * ret = SMALLOC1(ret);
     ret->argc = 0;
-    ret->argv = malloc(sizeof(ret->argv[0]) * ARGS_MAN_GROW_BY);
+    ret->argv = SMALLOC(ret->argv, ARGS_MAN_GROW_BY);
     return ret;
 }
 
@@ -83,7 +83,7 @@ static GCC_INLINE void push_args_last_arg(args_man_t * manager)
 {
     const int length = manager->last_arg_ptr - manager->last_arg;
 
-    char * const new_arg = malloc(length+1);
+    char * const new_arg = SMALLOC(new_arg, length+1);
 
     strncpy(
         new_arg, manager->last_arg,
@@ -117,7 +117,8 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
     char * s = string;
     fcs_bool_t in_arg;
 
-    manager->last_arg_ptr = manager->last_arg = malloc(1024);
+    manager->last_arg_ptr = manager->last_arg =
+        SMALLOC(manager->last_arg, 1024);
     manager->last_arg_end = manager->last_arg + 1023;
 
     while (*s != '\0')

@@ -35,6 +35,7 @@ extern "C" {
 #include <stdlib.h>
 
 #include "inline.h"
+#include "alloc_wrap.h"
 #include "fcs_user.h"
 
 static GCC_INLINE void fc_solve_set_weights(
@@ -47,7 +48,8 @@ static GCC_INLINE void fc_solve_set_weights(
     freecell_solver_str_t end_num;
     start_num = s;
 
-    char * const substring_copy = malloc(strlen(start_num) + 1);
+    char * const substring_copy =
+        SMALLOC(substring_copy, strlen(start_num) + 1);
 
     for (i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
     {

@@ -717,7 +717,7 @@ static void instance_run_all_threads(
     local_variant = instance->variant;
 #endif
 
-    threads = malloc(sizeof(threads[0]) * num_threads);
+    threads = SMALLOC(threads, num_threads);
 
     TRACE0("instance_run_all_threads start");
 

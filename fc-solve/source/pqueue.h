@@ -94,7 +94,7 @@ static GCC_INLINE void fc_solve_PQueueInitialise(
 
     pq->CurrentSize = 0;
 
-    pq->Elements = (pq_element_t*) malloc( sizeof( pq_element_t ) * (MaxElements + 1) );
+    pq->Elements = SMALLOC(pq->Elements, MaxElements + 1 );
 }
 
 static GCC_INLINE void fc_solve_PQueueFree( PQUEUE *pq )

@@ -111,7 +111,7 @@ void fc_solve_apply_move(
 {       \
     ret.num_moves = 0;        \
     /* Allocate some space for the moves */     \
-    ret.moves = (fcs_internal_move_t *)malloc(sizeof(ret.moves[0])*FCS_MOVE_STACK_GROW_BY);  \
+    ret.moves = (fcs_internal_move_t *)SMALLOC(ret.moves, FCS_MOVE_STACK_GROW_BY);  \
 }
 
 static GCC_INLINE void fc_solve_move_stack_swallow_stack(

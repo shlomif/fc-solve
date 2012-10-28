@@ -66,7 +66,7 @@ void fc_solve_compact_allocator_extend(
             allocator->max_num_packs += IA_STATE_PACKS_GROW_BY
         );
         allocator->packs[allocator->num_packs-1] =
-            malloc(ALLOCED_SIZE);
+           SMALLOC(allocator->packs[allocator->num_packs-1], ALLOCED_SIZE);
 
         for ( i = allocator->num_packs ; i < allocator->max_num_packs ; i++)
         {
@@ -77,7 +77,9 @@ void fc_solve_compact_allocator_extend(
     {
         if (! allocator->packs[allocator->num_packs - 1])
         {
-            allocator->packs[allocator->num_packs - 1] = malloc(ALLOCED_SIZE);
+            allocator->packs[allocator->num_packs - 1] = SMALLOC(
+                allocator->packs[allocator->num_packs - 1], ALLOCED_SIZE
+            );
         }
     }
 

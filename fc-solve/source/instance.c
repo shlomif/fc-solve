@@ -335,7 +335,7 @@ static GCC_INLINE void init_soft_thread(
 
     soft_thread->by_depth_tests_order.num = 1;
     soft_thread->by_depth_tests_order.by_depth_tests =
-        malloc(sizeof(soft_thread->by_depth_tests_order.by_depth_tests[0]));
+        SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests);
 
     soft_thread->by_depth_tests_order.by_depth_tests[0].max_depth = INT_MAX;
     soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num_groups = 0;
@@ -410,7 +410,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(void)
 {
     fc_solve_instance_t * instance;
 
-    instance = malloc(sizeof(fc_solve_instance_t));
+    instance = SMALLOC1(instance);
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     instance->num_indirect_prev_states = 0;
@@ -614,7 +614,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
              *
              * */
             int bit_idx, num_tests = 0;
-            int * tests = malloc(sizeof(total_tests)*8*sizeof(tests[0]));
+            int * tests = SMALLOC(tests, sizeof(total_tests)*8);
 
             for(bit_idx=0; total_tests != 0; bit_idx++, total_tests >>= 1)
             {
@@ -628,8 +628,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             );
             instance->opt_tests_order.num_groups = 1;
             instance->opt_tests_order.groups =
-                malloc(sizeof(instance->opt_tests_order.groups[0]) *
-                       TESTS_ORDER_GROW_BY);
+                SMALLOC( instance->opt_tests_order.groups, TESTS_ORDER_GROW_BY);
             instance->opt_tests_order.groups[0].tests = tests;
             instance->opt_tests_order.groups[0].num =
                 num_tests;

@@ -231,7 +231,7 @@ void DLLEXPORT * freecell_solver_user_alloc(void)
 {
     fcs_user_t * ret;
 
-    ret = (fcs_user_t *)malloc(sizeof(fcs_user_t));
+    ret = (fcs_user_t *)SMALLOC1(ret);
 
     user_initialize(ret);
 
@@ -535,9 +535,9 @@ static int user_compile_all_flares_plans(
                 free(instance_item->plan);
             }
             instance_item->num_plan_items = 2;
-            instance_item->plan = malloc(
-                      sizeof(instance_item->plan[0])
-                    * instance_item->num_plan_items
+            instance_item->plan = SMALLOC(
+                instance_item->plan,
+                instance_item->num_plan_items
             );
             /* Set to the first flare. */
             instance_item->plan[0].type = FLARES_PLAN_RUN_INDEFINITELY;
