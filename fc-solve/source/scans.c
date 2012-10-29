@@ -429,7 +429,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     return
     (
     (int)
-    ((
+    (
         num_cards_in_founds * weighting->num_cards_out_factor
             +
         (CALC_VACANCY_VAL() * weighting->max_sequence_move_factor)
@@ -445,7 +445,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
             +
         (num_cards_not_on_parents *
                     weighting->num_cards_not_on_parents_factor)
-    )*INT_MAX)
+    )
     );
 #undef CALC_VACANCY_VAL
 }
