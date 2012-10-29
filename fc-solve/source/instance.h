@@ -41,6 +41,7 @@ extern "C" {
 #include "move.h"
 #include "fcs_enums.h"
 
+#include "rate_state.h"
 #include "inline.h"
 #include "unused.h"
 #include "fcs_limit.h"
@@ -1016,11 +1017,6 @@ static GCC_INLINE void * memdup(void * src, size_t mysize)
     return dest;
 }
 
-#define FCS_BEFS_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
-#define FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
-
-#define FCS_SEQS_OVER_RENEGADE_POWER(n) pow(n, FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
-
 static GCC_INLINE int update_col_cards_under_sequences(
         fc_solve_soft_thread_t * const soft_thread,
         const fcs_cards_column_t col,
@@ -1045,7 +1041,7 @@ static GCC_INLINE int update_col_cards_under_sequences(
             prev_card = fcs_col_get_card(col, c);
         }
     }
-    *cards_under_sequences_ptr += pow(c+1, FCS_BEFS_CARDS_UNDER_SEQUENCES_EXPONENT);
+    *cards_under_sequences_ptr += FCS_SEQS_OVER_RENEGADE_POWER(c+1);
     return c;
 }
 

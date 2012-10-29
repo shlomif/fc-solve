@@ -57,6 +57,10 @@
 #define DEBUG 1
 #endif
 
+#if 1
+#undef DEBUG
+#endif
+
 #ifdef FCS_WITHOUT_DEPTH_FIELD
 static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
 {
@@ -1290,65 +1294,71 @@ int fc_solve_soft_dfs_do_solve(
                  * randomize. Else - keep those indexes as the unity vector.
                  *
                  * Also, do not randomize if this is a pure soft-DFS scan.
+                 *
+                 * Also, do not randomize/sort if there's only one derived
+                 * state or less, because in that case, there is nothing
+                 * to reorder.
                  * */
-                if (local_shuffling_type != FCS_NO_SHUFFLING)
-                switch (local_shuffling_type)
+                if (num_states > 1)
                 {
-                    case FCS_RAND:
+                    switch (local_shuffling_type)
                     {
-                        a = num_states-1;
-                        while (a > 0)
-                        {
-                            j =
-                                (
-                                    fc_solve_rand_get_random_number(
-                                        rand_gen
-                                        )
-                                    % (a+1)
-                                );
-
-                            swap_save = rand_array[a];
-                            rand_array[a] = rand_array[j];
-                            rand_array[j] = swap_save;
-                            a--;
-                        }
-                    }
-                    break;
-
-                    case FCS_WEIGHTING:
-                    {
-                        if (orig_tests_list_index < THE_TESTS_LIST.num_lists)
-                        {
-                            fcs_derived_states_list_item_t * derived_states =
-                                derived_states_list->states;
-                            /* TODO : avoid excessive mallocing. */
-                            for (a = 0 ; a < num_states ; a++)
+                        case FCS_RAND:
                             {
-                                fcs_kv_state_t derived_pass;
-                                FCS_STATE_collectible_to_kv(
-                                    &derived_pass,
-                                    derived_states[rand_array[a].idx].state_ptr
-                                    );
+                                a = num_states-1;
+                                while (a > 0)
+                                {
+                                    j =
+                                        (
+                                            fc_solve_rand_get_random_number(
+                                                rand_gen
+                                                )
+                                            % (a+1)
+                                        );
 
-                                rand_array[a].rating = befs_rate_state(
-                                    soft_thread,
-                                    weighting,
-                                    &derived_pass
-                                    );
+                                    swap_save = rand_array[a];
+                                    rand_array[a] = rand_array[j];
+                                    rand_array[j] = swap_save;
+                                    a--;
+                                }
                             }
+                            break;
 
-                            qsort(
-                                rand_array,
-                                num_states,
-                                sizeof(rand_array[0]),
-                                compare_rating_with_index
-                                );
-                        }
+                        case FCS_WEIGHTING:
+                            {
+                                if (orig_tests_list_index < THE_TESTS_LIST.num_lists)
+                                {
+                                    fcs_derived_states_list_item_t * derived_states =
+                                        derived_states_list->states;
+                                    /* TODO : avoid excessive mallocing. */
+                                    for (a = 0 ; a < num_states ; a++)
+                                    {
+                                        fcs_kv_state_t derived_pass;
+                                        FCS_STATE_collectible_to_kv(
+                                            &derived_pass,
+                                            derived_states[rand_array[a].idx].state_ptr
+                                            );
+
+                                        rand_array[a].rating = befs_rate_state(
+                                            soft_thread,
+                                            weighting,
+                                            &derived_pass
+                                            );
+                                    }
+
+                                    qsort(
+                                        rand_array,
+                                        num_states,
+                                        sizeof(rand_array[0]),
+                                        compare_rating_with_index
+                                        );
+                                }
+                            }
+                            break;
+
+                        case FCS_NO_SHUFFLING:
+                            break;
                     }
-                    break;
-
-                    case FCS_NO_SHUFFLING:
-                    break;
                 }
             }
 

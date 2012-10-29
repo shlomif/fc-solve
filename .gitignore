@@ -68,6 +68,7 @@ fc-solve/source/man/Makefile
 fc-solve/source/man/freecell-solver-range-parallel-solve.6
 fc-solve/source/measure-depth-dep-tests-order-perf
 fc-solve/source/prefix.h
+fc-solve/source/rate_state.c
 fc-solve/source/t/Makefile
 fc-solve/source/t/Presets/presetrc
 fc-solve/source/t/Presets/presets/abra-kadabra.sh

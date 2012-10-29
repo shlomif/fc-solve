@@ -187,7 +187,15 @@ IF (FCS_ENABLE_RCS_STATES)
     SET (FCS_RCS_STATES 1)
 ENDIF (FCS_ENABLE_RCS_STATES)
 
-SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c card.c check_and_add_state.c cmd_line.c freecell.c instance.c lib.c move.c move_funcs_maps.c move_funcs_order.c preset.c scans.c simpsim.c split_cmd_line.c state.c)
+SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/gen_rate_state_c.pl")
+ADD_CUSTOM_COMMAND(
+    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.c"
+    COMMAND "perl"
+    ARGS "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}"
+    DEPENDS "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.h"
+)
+
+SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c card.c check_and_add_state.c cmd_line.c freecell.c instance.c lib.c move.c move_funcs_maps.c move_funcs_order.c preset.c rate_state.c scans.c simpsim.c split_cmd_line.c state.c)
 
 IF (FCS_FREECELL_ONLY)
     LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES preset.c)
@@ -384,7 +392,10 @@ SET (IS_DEBUG)
 IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
     SET (IS_DEBUG 1)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
-    LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DDEBUG=1")
+    # This slows down the program considerably.
+    IF (CMAKE_BUILD_TYPE STREQUAL debug)
+        LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DDEBUG=1")
+    ENDIF (CMAKE_BUILD_TYPE STREQUAL debug)
 
     # Removed these flags because they emitted spurious warnings, which were of
     # no use to us:
