@@ -33,7 +33,7 @@ my $type_name = 'fc_solve_seq_cards_power_type_t';
 my $array_name = 'fc_solve_seqs_over_cards_lookup';
 my $power_name = 'FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT';
 my ($power) = $text =~ m/^#define \Q$power_name\E (\d+\.\d+)\s*$/ms;
-my ($decl, $limit) = $text =~ m/^(extern \Q$type_name\E \Q$array_name\E\[([^\]]+)\]);\s*$/ms;
+my ($decl, $limit) = $text =~ m/^extern (\Q$type_name\E \Q$array_name\E\[([^\]]+)\]);\s*$/ms;
 
 if (!defined($power) or !defined($limit))
 {
@@ -42,7 +42,8 @@ if (!defined($power) or !defined($limit))
 
 my $top = eval($limit);
 
-my @data = (map { int( ($_ ** $power) * 128 * 1024 ) } (0 .. $top-1));
+# my @data = (map { int( ($_ ** $power) * 128 * 1024 ) } (0 .. $top-1));
+my @data = (map { $_ ** $power } (0 .. $top-1));
 
 open my $out_fh, '>', fn("rate_state.c");
 print {$out_fh} <<"EOF";

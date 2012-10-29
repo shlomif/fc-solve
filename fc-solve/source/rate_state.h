@@ -38,7 +38,7 @@ extern "C"
 
 #define FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
 
-typedef int fc_solve_seq_cards_power_type_t;
+typedef double fc_solve_seq_cards_power_type_t;
 extern fc_solve_seq_cards_power_type_t fc_solve_seqs_over_cards_lookup[2 * 13 * 4 + 1];
 
 #if 0
