@@ -1021,18 +1021,16 @@ static GCC_INLINE void * memdup(void * src, size_t mysize)
 static GCC_INLINE int update_col_cards_under_sequences(
     const int sequences_are_built_by,
     const fcs_cards_column_t col,
-    const int cards_num,
-    fc_solve_seq_cards_power_type_t * const cards_under_sequences_ptr
+    const int cards_num
 )
 {
-    int c = cards_num - 2;
-    fcs_card_t this_card = fcs_col_get_card(col, c+1);
-    fcs_card_t prev_card = fcs_col_get_card(col, c);
-    for (; (c >= 0) && ({ prev_card=fcs_col_get_card(col, c); fcs_is_parent_card(this_card, prev_card); }) ; c--, this_card = prev_card)
+    int d = cards_num - 1;
+    fcs_card_t this_card = fcs_col_get_card(col, d);
+    fcs_card_t prev_card = fcs_col_get_card(col, d-1);
+    for (; (d > 0) && ({ prev_card=fcs_col_get_card(col, d-1); fcs_is_parent_card(this_card, prev_card); }) ; d--, this_card = prev_card)
     {
     }
-    *cards_under_sequences_ptr += FCS_SEQS_OVER_RENEGADE_POWER(c+1);
-    return c;
+    return d;
 }
 
 static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
@@ -1052,7 +1050,7 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
     for (int a = 0 ; a < INSTANCE_STACKS_NUM ; a++)
     {
         const fcs_cards_column_t col = fcs_state_get_col(*pass.key, a);
-        update_col_cards_under_sequences(sequences_are_built_by, col, fcs_col_len(col), &cards_under_sequences);
+        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER(update_col_cards_under_sequences(sequences_are_built_by, col, fcs_col_len(col)));
     }
     soft_thread->initial_cards_under_sequences_value = cards_under_sequences;
 

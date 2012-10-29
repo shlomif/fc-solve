@@ -351,7 +351,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     const int num_founds = (LOCAL_DECKS_NUM<<2);
     for (int found_idx = 0 ; found_idx < num_founds ; found_idx++)
     {
-        num_cards_in_founds += weighting->num_cards_out_lookup_table[fcs_foundation_value((*state), found_idx)];
+        num_cards_in_founds += weighting->num_cards_out_lookup_table[(int)(fcs_foundation_value((*state), found_idx))];
     }
 
     fcs_game_limit_t num_vacant_stacks = 0;
@@ -370,13 +370,14 @@ static GCC_INLINE pq_rating_t befs_rate_state(
             continue;
         }
 
-        const int c = update_col_cards_under_sequences(sequences_are_built_by, col, cards_num, &cards_under_sequences);
-        if (c >= 0)
+        int c;
+        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER((c = update_col_cards_under_sequences(sequences_are_built_by, col, cards_num)));
+        if (c > 0)
         {
             seqs_over_renegade_cards +=
                 ((unlimited_sequence_move) ?
                     1 :
-                    FCS_SEQS_OVER_RENEGADE_POWER(cards_num-c-1)
+                    FCS_SEQS_OVER_RENEGADE_POWER(cards_num-c)
                     );
         }
     }
