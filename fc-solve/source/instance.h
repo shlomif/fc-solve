@@ -1119,7 +1119,7 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
     int int_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move int_unlimited_sequence_move
 #else
-    #define unlimited_sequence_move 0
+#define unlimited_sequence_move FALSE
 #endif
 
 
@@ -1157,6 +1157,7 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
 
 #undef ptr_state_key
 #undef pass
+#undef unlimited_sequence_move
 
 static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_soft_thread_t * soft_thread
