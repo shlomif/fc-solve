@@ -324,7 +324,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     const fc_solve_soft_thread_t * const soft_thread,
     const fc_solve_state_weighting_t * const weighting,
     const fcs_state_t * const state,
-    const int depth
+    const int neg_depth
     )
 {
 #ifndef FCS_FREECELL_ONLY
@@ -347,70 +347,56 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
     fc_solve_seq_cards_power_type_t seqs_over_renegade_cards = 0;
 
-    double num_cards_in_founds = 0.0;
-    const int num_founds = (LOCAL_DECKS_NUM<<2);
-    for (int found_idx = 0 ; found_idx < num_founds ; found_idx++)
+    double sum = 0.0;
+    if (weighting->num_cards_out_lookup_table[1])
     {
-        num_cards_in_founds += weighting->num_cards_out_lookup_table[(int)(fcs_foundation_value((*state), found_idx))];
+        const int num_founds = (LOCAL_DECKS_NUM<<2);
+        for (int found_idx = 0 ; found_idx < num_founds ; found_idx++)
+        {
+            sum += weighting->num_cards_out_lookup_table[(int)(fcs_foundation_value((*state), found_idx))];
+        }
     }
 
     fcs_game_limit_t num_vacant_stacks = 0;
-    for (int a = 0 ; a < LOCAL_STACKS_NUM ; a++)
-    {
-        const fcs_cards_column_t col = fcs_state_get_col(*state, a);
-        const int cards_num = fcs_col_len(col);
-
-        if (cards_num <= 1)
-        {
-            if (cards_num == 0)
-            {
-                num_vacant_stacks++;
-            }
-            continue;
-        }
-
-        int c;
-        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER((c = update_col_cards_under_sequences(sequences_are_built_by, col, cards_num-1)));
-        if (c > 0)
-        {
-            seqs_over_renegade_cards +=
-                ((unlimited_sequence_move) ?
-                    1 :
-                    FCS_SEQS_OVER_RENEGADE_POWER(cards_num-c)
-                    );
-        }
-    }
-
     fcs_game_limit_t num_vacant_freecells = 0;
-    for (int freecell_idx = 0 ; freecell_idx < LOCAL_FREECELLS_NUM ; freecell_idx++)
+    if (weighting->max_sequence_move_factor
+        || weighting->cards_under_sequences_factor
+        || weighting->seqs_over_renegade_cards_factor
+        )
     {
-        if (fcs_freecell_is_empty((*state),freecell_idx))
+        for (int a = 0 ; a < LOCAL_STACKS_NUM ; a++)
         {
-            num_vacant_freecells++;
-        }
-    }
+            const fcs_cards_column_t col = fcs_state_get_col(*state, a);
+            const int cards_num = fcs_col_len(col);
 
-    int num_cards_not_on_parents = (LOCAL_DECKS_NUM*52);
-
-    for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        const fcs_cards_column_t col =
-            fcs_state_get_col(*state, stack_idx);
-
-        const int col_len = fcs_col_len(col);
-        fcs_card_t parent_card = fcs_col_get_card(col, 0);
-        for (int h = 1 ; h < col_len ; h++)
-        {
-            const fcs_card_t child_card = fcs_col_get_card(col, h);
-
-            if (! fcs_is_parent_card(parent_card, child_card))
+            if (cards_num <= 1)
             {
-                num_cards_not_on_parents--;
+                if (cards_num == 0)
+                {
+                    num_vacant_stacks++;
+                }
+                continue;
             }
-            parent_card = child_card;
-        }
-    }
 
+            int c;
+            cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER((c = update_col_cards_under_sequences(sequences_are_built_by, col, cards_num-1)));
+            if (c > 0)
+            {
+                seqs_over_renegade_cards +=
+                    ((unlimited_sequence_move) ?
+                     1 :
+                     FCS_SEQS_OVER_RENEGADE_POWER(cards_num-c)
+                    );
+            }
+        }
+
+        for (int freecell_idx = 0 ; freecell_idx < LOCAL_FREECELLS_NUM ; freecell_idx++)
+        {
+            if (fcs_freecell_is_empty((*state),freecell_idx))
+            {
+                num_vacant_freecells++;
+            }
+        }
 #define CALC_VACANCY_VAL() \
     ( \
         is_filled_by_any_card() \
@@ -424,6 +410,44 @@ static GCC_INLINE pq_rating_t befs_rate_state(
          : 0 \
         ) \
     )
+        sum +=
+        (
+            (CALC_VACANCY_VAL() * weighting->max_sequence_move_factor)
+            +
+            (
+                (soft_thread->initial_cards_under_sequences_value - cards_under_sequences)
+                * weighting->cards_under_sequences_factor
+            )
+            +
+            (seqs_over_renegade_cards * weighting->seqs_over_renegade_cards_factor)
+        );
+    }
+
+    double num_cards_not_on_parents_weight = weighting->num_cards_not_on_parents_factor;
+    if (num_cards_not_on_parents_weight)
+    {
+        int num_cards_not_on_parents = (LOCAL_DECKS_NUM*52);
+        for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+        {
+            const fcs_cards_column_t col =
+                fcs_state_get_col(*state, stack_idx);
+
+            const int col_len = fcs_col_len(col);
+            fcs_card_t parent_card = fcs_col_get_card(col, 0);
+            for (int h = 1 ; h < col_len ; h++)
+            {
+                const fcs_card_t child_card = fcs_col_get_card(col, h);
+
+                if (! fcs_is_parent_card(parent_card, child_card))
+                {
+                    num_cards_not_on_parents--;
+                }
+                parent_card = child_card;
+            }
+        }
+        sum += num_cards_not_on_parents * num_cards_not_on_parents_weight;
+    }
+
 
     TRACE0("Before return");
 
@@ -431,21 +455,9 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     (
     (int)
     (
-        num_cards_in_founds /* Already multiplied by the factor. */
+        sum /* Already multiplied by the factor. */
             +
-        (CALC_VACANCY_VAL() * weighting->max_sequence_move_factor)
-            +
-        (
-            (soft_thread->initial_cards_under_sequences_value - cards_under_sequences)
-            * weighting->cards_under_sequences_factor
-        )
-            +
-        (seqs_over_renegade_cards * weighting->seqs_over_renegade_cards_factor)
-            +
-        ((BEFS_MAX_DEPTH - min(depth, BEFS_MAX_DEPTH)) * weighting->depth_factor)
-            +
-        (num_cards_not_on_parents *
-                    weighting->num_cards_not_on_parents_factor)
+        (max(0, neg_depth) * weighting->depth_factor)
     )
     );
 #undef CALC_VACANCY_VAL
@@ -1330,7 +1342,7 @@ int fc_solve_soft_dfs_do_solve(
                                             soft_thread,
                                             weighting,
                                             &(derived_states[rand_array[a].idx].state_ptr->s),
-                                            calc_depth(derived_states[rand_array[a].idx].state_ptr)
+                                            BEFS_MAX_DEPTH - calc_depth(derived_states[rand_array[a].idx].state_ptr)
                                             );
                                     }
 
@@ -1892,7 +1904,7 @@ int fc_solve_befs_or_bfs_do_solve(
                         soft_thread,
                         WEIGHTING(soft_thread),
                         new_pass.key,
-                        kv_calc_depth(&(new_pass))
+                        BEFS_MAX_DEPTH - kv_calc_depth(&(new_pass))
                     )
                 );
             }

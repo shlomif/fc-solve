@@ -1099,6 +1099,10 @@ enum
 #define min(a,b) ((a)<(b)?(a):(b))
 #endif
 
+#ifndef max
+#define max(a,b) ((a)>(b)?(a):(b))
+#endif
+
 #define FCS_WITH_CARD_COMPARE_LOOKUP
 
 static GCC_INLINE int fc_solve_card_compare(
