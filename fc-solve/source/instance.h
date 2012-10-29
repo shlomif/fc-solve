@@ -1065,6 +1065,95 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
     return;
 }
 
+#define BEFS_MAX_DEPTH 20000
+
+extern const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS];
+
+#ifdef FCS_FREECELL_ONLY
+#define is_filled_by_any_card() 1
+#else
+#define is_filled_by_any_card() (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
+#endif
+static GCC_INLINE void fc_solve_initialize_befs_rater(
+    fc_solve_soft_thread_t * const soft_thread,
+    fc_solve_state_weighting_t * weighting
+)
+{
+    double * const befs_weights = weighting->befs_weights;
+
+    /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
+    double sum = 0;
+    for (int i = 0 ; i < FCS_NUM_BEFS_WEIGHTS; i++)
+    {
+        if (befs_weights[i] < 0)
+        {
+            befs_weights[i] = fc_solve_default_befs_weights[i];
+        }
+        sum += befs_weights[i];
+    }
+    if (sum < 1e-6)
+    {
+        sum = 1;
+    }
+    for (int i=0 ; i < FCS_NUM_BEFS_WEIGHTS ; i++)
+    {
+        befs_weights[i] /= sum;
+    }
+#define pass (*raw_pass_raw)
+#define ptr_state_key (raw_pass_raw->key)
+
+#ifndef HARD_CODED_NUM_STACKS
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * const instance = hard_thread->instance;
+#endif
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    SET_GAME_PARAMS();
+#endif
+
+#ifndef FCS_FREECELL_ONLY
+    int int_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+#define unlimited_sequence_move int_unlimited_sequence_move
+#else
+    #define unlimited_sequence_move 0
+#endif
+
+
+    weighting->num_cards_out_factor =
+        befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
+
+    weighting->max_sequence_move_factor =
+        befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] /
+        (is_filled_by_any_card()
+         ? (unlimited_sequence_move
+            ? (LOCAL_FREECELLS_NUM+INSTANCE_STACKS_NUM)
+            : ((LOCAL_FREECELLS_NUM+1)<<(INSTANCE_STACKS_NUM))
+           )
+         :
+           (unlimited_sequence_move
+            ? LOCAL_FREECELLS_NUM
+            : 1
+           )
+        );
+
+
+    weighting->cards_under_sequences_factor =
+        befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] / soft_thread->initial_cards_under_sequences_value;
+
+    weighting->seqs_over_renegade_cards_factor =
+        befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] / FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4));
+
+    weighting->depth_factor =
+        befs_weights[FCS_BEFS_WEIGHT_DEPTH] / BEFS_MAX_DEPTH;
+
+    weighting->num_cards_not_on_parents_factor =
+        befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] / (LOCAL_DECKS_NUM * 52);
+
+}
+
+#undef ptr_state_key
+#undef pass
+
 static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_soft_thread_t * soft_thread
     )
@@ -1152,8 +1241,17 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                     master_to_randomize
                     ? tests_order_groups[group_idx].shuffling_type
                     : FCS_NO_SHUFFLING;
-                tests_list_struct_ptr->weighting =
-                    tests_order_groups[group_idx].weighting;
+
+                if (tests_list_struct_ptr->shuffling_type == FCS_WEIGHTING)
+                {
+                    tests_list_struct_ptr->weighting =
+                        tests_order_groups[group_idx].weighting;
+
+                    fc_solve_initialize_befs_rater(
+                        soft_thread,
+                        &(tests_list_struct_ptr->weighting)
+                    );
+                }
             }
 
             tests_list_of_lists->lists =
@@ -1757,7 +1855,6 @@ static GCC_INLINE void fc_solve_recycle_instance(
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 }
 
-extern const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS];
 
 #ifdef FCS_RCS_STATES
 fcs_state_t * fc_solve_lookup_state_key_from_val(

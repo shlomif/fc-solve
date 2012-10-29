@@ -73,8 +73,6 @@ static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
 
 #define kv_calc_depth(ptr_state) (calc_depth(FCS_STATE_kv_to_collectible(ptr_state)))
 
-#define BEFS_MAX_DEPTH 20000
-
 #define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * soft_thread
@@ -1248,90 +1246,6 @@ int fc_solve_soft_dfs_do_solve(
 #undef state
 #undef myreturn
 
-
-#ifdef FCS_FREECELL_ONLY
-#define is_filled_by_any_card() 1
-#else
-#define is_filled_by_any_card() (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
-#endif
-static GCC_INLINE void initialize_befs_rater(
-    fc_solve_soft_thread_t * const soft_thread,
-    fc_solve_state_weighting_t * weighting,
-    fcs_kv_state_t * const raw_pass_raw
-)
-{
-    double * const befs_weights = weighting->befs_weights;
-
-    /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
-    double sum = 0;
-    for (int i = 0 ; i < FCS_NUM_BEFS_WEIGHTS; i++)
-    {
-        if (befs_weights[i] < 0)
-        {
-            befs_weights[i] = fc_solve_default_befs_weights[i];
-        }
-        sum += befs_weights[i];
-    }
-    if (sum < 1e-6)
-    {
-        sum = 1;
-    }
-    for (int i=0 ; i < FCS_NUM_BEFS_WEIGHTS ; i++)
-    {
-        befs_weights[i] /= sum;
-    }
-#define pass (*raw_pass_raw)
-#define ptr_state_key (raw_pass_raw->key)
-
-#ifndef HARD_CODED_NUM_STACKS
-    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * const instance = hard_thread->instance;
-#endif
-
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
-    SET_GAME_PARAMS();
-#endif
-
-#ifndef FCS_FREECELL_ONLY
-    int int_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
-#define unlimited_sequence_move int_unlimited_sequence_move
-#else
-    #define unlimited_sequence_move 0
-#endif
-
-
-    weighting->num_cards_out_factor =
-        befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
-
-    weighting->max_sequence_move_factor =
-        befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] /
-        (is_filled_by_any_card()
-         ? (unlimited_sequence_move
-            ? (LOCAL_FREECELLS_NUM+INSTANCE_STACKS_NUM)
-            : ((LOCAL_FREECELLS_NUM+1)<<(INSTANCE_STACKS_NUM))
-           )
-         :
-           (unlimited_sequence_move
-            ? LOCAL_FREECELLS_NUM
-            : 1
-           )
-        );
-
-
-    weighting->cards_under_sequences_factor =
-        befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] / soft_thread->initial_cards_under_sequences_value;
-
-    weighting->seqs_over_renegade_cards_factor =
-        befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] / FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4));
-
-    weighting->depth_factor =
-        befs_weights[FCS_BEFS_WEIGHT_DEPTH] / BEFS_MAX_DEPTH;
-
-    weighting->num_cards_not_on_parents_factor =
-        befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] / (LOCAL_DECKS_NUM * 52);
-
-}
-
 #undef unlimited_sequence_move
 
 #undef TRACE0
@@ -1562,10 +1476,6 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_update_initial_cards_val(soft_thread);
 
     fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
-    fcs_kv_state_t pass;
-
-    pass.key = &(instance->state_copy_ptr->s);
-    pass.val = &(instance->state_copy_ptr->info);
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
@@ -1577,10 +1487,9 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
 #define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
 
-        initialize_befs_rater(
+        fc_solve_initialize_befs_rater(
             soft_thread,
-            WEIGHTING(soft_thread),
-            STATE_TO_PASS()
+            WEIGHTING(soft_thread)
             );
     }
     else
