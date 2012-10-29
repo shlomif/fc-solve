@@ -1028,13 +1028,8 @@ static GCC_INLINE int update_col_cards_under_sequences(
     int c = cards_num - 2;
     fcs_card_t this_card = fcs_col_get_card(col, c+1);
     fcs_card_t prev_card = fcs_col_get_card(col, c);
-    while ((c >= 0) && fcs_is_parent_card(this_card,prev_card))
+    for (; (c >= 0) && ({ prev_card=fcs_col_get_card(col, c); fcs_is_parent_card(this_card, prev_card); }) ; c--, this_card = prev_card)
     {
-        this_card = prev_card;
-        if (--c>=0)
-        {
-            prev_card = fcs_col_get_card(col, c);
-        }
     }
     *cards_under_sequences_ptr += FCS_SEQS_OVER_RENEGADE_POWER(c+1);
     return c;
