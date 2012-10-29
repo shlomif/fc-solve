@@ -110,3 +110,8 @@ search tree is included in the Freecell Solver distribution.
 solver ( http://fc-solve.shlomifish.org/don_woods.html ), whose source code
 inspired the early “delta states” algorithm, which is currently used by the
 dbm_fc_solver.
+
+* *Michiel de Bondt* ( http://www.math.ru.nl/~debondt/ ) - suggested a
+way to improve the delta states algorithm, so states will be stored more
+compactly. Currently implemented in the dbm_fc_solver. See
+http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1115 .
