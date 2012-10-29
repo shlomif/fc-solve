@@ -370,7 +370,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
             continue;
         }
 
-        const int c = update_col_cards_under_sequences(soft_thread, col, &cards_under_sequences);
+        const int c = update_col_cards_under_sequences(sequences_are_built_by, col, cards_num, &cards_under_sequences);
         if (c >= 0)
         {
             seqs_over_renegade_cards +=

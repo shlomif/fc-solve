@@ -1019,18 +1019,12 @@ static GCC_INLINE void * memdup(void * src, size_t mysize)
 }
 
 static GCC_INLINE int update_col_cards_under_sequences(
-        const fc_solve_soft_thread_t * const soft_thread,
-        const fcs_cards_column_t col,
-        fc_solve_seq_cards_power_type_t * const cards_under_sequences_ptr
-        )
+    const int sequences_are_built_by,
+    const fcs_cards_column_t col,
+    const int cards_num,
+    fc_solve_seq_cards_power_type_t * const cards_under_sequences_ptr
+)
 {
-#ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by =
-        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(soft_thread->hard_thread->instance)
-        ;
-#endif
-
-    int cards_num = fcs_col_len(col);
     int c = cards_num - 2;
     fcs_card_t this_card = fcs_col_get_card(col, c+1);
     fcs_card_t prev_card = fcs_col_get_card(col, c);
@@ -1051,15 +1045,19 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
     )
 {
     fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+#ifndef FCS_FREECELL_ONLY
+    const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
+#endif
     fcs_kv_state_t pass;
 
     pass.key = &(instance->state_copy_ptr->s);
     pass.val = &(instance->state_copy_ptr->info);
 
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
-    for (int a=0 ; a < INSTANCE_STACKS_NUM ; a++)
+    for (int a = 0 ; a < INSTANCE_STACKS_NUM ; a++)
     {
-        update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*pass.key, a), &cards_under_sequences);
+        const fcs_cards_column_t col = fcs_state_get_col(*pass.key, a);
+        update_col_cards_under_sequences(sequences_are_built_by, col, fcs_col_len(col), &cards_under_sequences);
     }
     soft_thread->initial_cards_under_sequences_value = cards_under_sequences;
 
