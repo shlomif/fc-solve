@@ -1018,7 +1018,7 @@ static GCC_INLINE void * memdup(void * src, size_t mysize)
 }
 
 static GCC_INLINE int update_col_cards_under_sequences(
-        fc_solve_soft_thread_t * const soft_thread,
+        const fc_solve_soft_thread_t * const soft_thread,
         const fcs_cards_column_t col,
         fc_solve_seq_cards_power_type_t * const cards_under_sequences_ptr
         )
