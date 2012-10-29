@@ -360,18 +360,17 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         const fcs_cards_column_t col = fcs_state_get_col(*state, a);
         const int cards_num = fcs_col_len(col);
 
-        if (cards_num == 0)
-        {
-            num_vacant_stacks++;
-        }
-
         if (cards_num <= 1)
         {
+            if (cards_num == 0)
+            {
+                num_vacant_stacks++;
+            }
             continue;
         }
 
         int c;
-        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER((c = update_col_cards_under_sequences(sequences_are_built_by, col, cards_num)));
+        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER((c = update_col_cards_under_sequences(sequences_are_built_by, col, cards_num-1)));
         if (c > 0)
         {
             seqs_over_renegade_cards +=

@@ -1021,10 +1021,9 @@ static GCC_INLINE void * memdup(void * src, size_t mysize)
 static GCC_INLINE int update_col_cards_under_sequences(
     const int sequences_are_built_by,
     const fcs_cards_column_t col,
-    const int cards_num
+    int d /* One less than cards_num of col. */
 )
 {
-    int d = cards_num - 1;
     fcs_card_t this_card = fcs_col_get_card(col, d);
     fcs_card_t prev_card = fcs_col_get_card(col, d-1);
     for (; (d > 0) && ({ prev_card=fcs_col_get_card(col, d-1); fcs_is_parent_card(this_card, prev_card); }) ; d--, this_card = prev_card)
@@ -1050,7 +1049,7 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
     for (int a = 0 ; a < INSTANCE_STACKS_NUM ; a++)
     {
         const fcs_cards_column_t col = fcs_state_get_col(*pass.key, a);
-        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER(update_col_cards_under_sequences(sequences_are_built_by, col, fcs_col_len(col)));
+        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER(update_col_cards_under_sequences(sequences_are_built_by, col, fcs_col_len(col)-1));
     }
     soft_thread->initial_cards_under_sequences_value = cards_under_sequences;
 
