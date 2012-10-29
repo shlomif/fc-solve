@@ -331,8 +331,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     )
 {
 #ifndef FCS_FREECELL_ONLY
-    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * const instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
     const int sequences_are_built_by =
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance)
         ;
