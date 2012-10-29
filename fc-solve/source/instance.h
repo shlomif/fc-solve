@@ -719,6 +719,10 @@ struct fc_solve_hard_thread_struct
 
 /********************************************/
 
+typedef struct {
+    int idx;
+    pq_rating_t rating;
+} fcs_rating_with_index_t;
 
 typedef struct
 {
@@ -728,7 +732,7 @@ typedef struct
     int tests_list_index;
     int test_index;
     int derived_states_random_indexes_max_size;
-    int * derived_states_random_indexes;
+    fcs_rating_with_index_t * derived_states_random_indexes;
     char * positions_by_rank;
     fcs_game_limit_t num_vacant_stacks;
     fcs_game_limit_t num_vacant_freecells;
