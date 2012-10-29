@@ -198,13 +198,13 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 
 typedef struct
 {
-    double num_cards_out_factor,
-           max_sequence_move_factor,
+    double max_sequence_move_factor,
            cards_under_sequences_factor,
            seqs_over_renegade_cards_factor,
            depth_factor,
            num_cards_not_on_parents_factor;
 
+    double num_cards_out_lookup_table[14];
     /*
      * The BeFS weights of the different BeFS tests. Those
      * weights determine the commulative priority of the state.
@@ -1120,8 +1120,14 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
 #define unlimited_sequence_move FALSE
 #endif
 
-    weighting->num_cards_out_factor =
+    double num_cards_out_factor =
         normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
+
+    double out_sum = 0.0;
+    for (int i=0 ; i <= 13 ; i++, out_sum += num_cards_out_factor)
+    {
+        weighting->num_cards_out_lookup_table[i] = out_sum;
+    }
 
     weighting->max_sequence_move_factor =
         normalized_befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] /
