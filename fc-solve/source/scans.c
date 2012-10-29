@@ -321,9 +321,9 @@ static GCC_INLINE void free_states(fc_solve_instance_t * instance)
 
 
 static GCC_INLINE pq_rating_t befs_rate_state(
-    fc_solve_soft_thread_t * soft_thread,
-    fc_solve_state_weighting_t * weighting,
-    fcs_kv_state_t * raw_pass_raw
+    fc_solve_soft_thread_t * const soft_thread,
+    const fc_solve_state_weighting_t * const weighting,
+    fcs_kv_state_t * const raw_pass_raw
     )
 {
 #ifndef FCS_FREECELL_ONLY
@@ -488,11 +488,12 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         { \
             if (getenv("FCS_TRACE")) \
             { \
-            printf("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
+            printf("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; tests_list_index=%d ; test_index=%d ; current_state_index=%d ; num_states=%d\n", \
                     message, \
                     (long int)DFS_VAR(soft_thread, depth), \
                     (long int)(the_soft_dfs_info-DFS_VAR(soft_thread, soft_dfs_info)), \
                     (long int)(instance->num_times), \
+                    the_soft_dfs_info->tests_list_index, \
                     the_soft_dfs_info->test_index, \
                     the_soft_dfs_info->current_state_index, \
                     (derived_states_list ? derived_states_list->num_states : -1) \
@@ -1216,6 +1217,14 @@ int fc_solve_soft_dfs_do_solve(
 
             TRACE0("After iter_handler");
 
+            const int orig_tests_list_index =
+                the_soft_dfs_info->tests_list_index;
+
+            const fc_solve_state_weighting_t * const weighting =
+                &(THE_TESTS_LIST.lists[
+                  orig_tests_list_index
+                  ].weighting);
+
             if (the_soft_dfs_info->tests_list_index < THE_TESTS_LIST.num_lists)
             {
                 /* Always do the first test */
@@ -1308,32 +1317,33 @@ int fc_solve_soft_dfs_do_solve(
 
                     case FCS_WEIGHTING:
                     {
-                        fcs_derived_states_list_item_t * derived_states =
-                            derived_states_list->states;
-                        /* TODO : avoid excessive mallocing. */
-                        for (a = 0 ; a < num_states ; a++)
+                        if (orig_tests_list_index < THE_TESTS_LIST.num_lists)
                         {
-                            fcs_kv_state_t derived_pass;
-                            FCS_STATE_collectible_to_kv(
-                                &derived_pass,
-                                derived_states[rand_array[a].idx].state_ptr
-                            );
+                            fcs_derived_states_list_item_t * derived_states =
+                                derived_states_list->states;
+                            /* TODO : avoid excessive mallocing. */
+                            for (a = 0 ; a < num_states ; a++)
+                            {
+                                fcs_kv_state_t derived_pass;
+                                FCS_STATE_collectible_to_kv(
+                                    &derived_pass,
+                                    derived_states[rand_array[a].idx].state_ptr
+                                    );
 
-                            rand_array[a].rating = befs_rate_state(
-                                soft_thread,
-                                &(THE_TESTS_LIST.lists[
-                                  the_soft_dfs_info->tests_list_index
-                                ].weighting),
-                                &derived_pass
-                            );
+                                rand_array[a].rating = befs_rate_state(
+                                    soft_thread,
+                                    weighting,
+                                    &derived_pass
+                                    );
+                            }
+
+                            qsort(
+                                rand_array,
+                                num_states,
+                                sizeof(rand_array[0]),
+                                compare_rating_with_index
+                                );
                         }
-
-                        qsort(
-                            rand_array,
-                            num_states,
-                            sizeof(rand_array[0]),
-                            compare_rating_with_index
-                        );
                     }
                     break;
 
