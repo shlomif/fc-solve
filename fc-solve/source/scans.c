@@ -350,8 +350,8 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #define unlimited_sequence_move FALSE
 #endif
 
-    double cards_under_sequences = 0;
-    double seqs_over_renegade_cards = 0;
+    fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
+    fc_solve_seq_cards_power_type_t seqs_over_renegade_cards = 0;
 
     int num_cards_in_founds = 0;
     for (int found_idx=0 ; found_idx < (LOCAL_DECKS_NUM<<2) ; found_idx++)

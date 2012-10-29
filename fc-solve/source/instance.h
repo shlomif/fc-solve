@@ -824,7 +824,7 @@ struct fc_solve_soft_thread_struct
     /* The super-method type - can be  */
     fcs_super_method_type_t super_method_type;
 
-    double initial_cards_under_sequences_value;
+    fc_solve_seq_cards_power_type_t initial_cards_under_sequences_value;
 
     union
     {
@@ -1020,7 +1020,7 @@ static GCC_INLINE void * memdup(void * src, size_t mysize)
 static GCC_INLINE int update_col_cards_under_sequences(
         fc_solve_soft_thread_t * const soft_thread,
         const fcs_cards_column_t col,
-        double * const cards_under_sequences_ptr
+        fc_solve_seq_cards_power_type_t * const cards_under_sequences_ptr
         )
 {
 #ifndef FCS_FREECELL_ONLY
@@ -1055,7 +1055,7 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
     pass.key = &(instance->state_copy_ptr->s);
     pass.val = &(instance->state_copy_ptr->info);
 
-    double cards_under_sequences = 0;
+    fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
     for (int a=0 ; a < INSTANCE_STACKS_NUM ; a++)
     {
         update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*pass.key, a), &cards_under_sequences);
