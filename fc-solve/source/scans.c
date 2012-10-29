@@ -1248,38 +1248,6 @@ int fc_solve_soft_dfs_do_solve(
 #undef state
 #undef myreturn
 
-#define FCS_BEFS_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
-#define FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
-
-#define FCS_SEQS_OVER_RENEGADE_POWER(n) pow(n, FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
-
-static GCC_INLINE int update_col_cards_under_sequences(
-        fc_solve_soft_thread_t * const soft_thread,
-        const fcs_cards_column_t col,
-        double * const cards_under_sequences_ptr
-        )
-{
-#ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by =
-        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(soft_thread->hard_thread->instance)
-        ;
-#endif
-
-    int cards_num = fcs_col_len(col);
-    int c = cards_num - 2;
-    fcs_card_t this_card = fcs_col_get_card(col, c+1);
-    fcs_card_t prev_card = fcs_col_get_card(col, c);
-    while ((c >= 0) && fcs_is_parent_card(this_card,prev_card))
-    {
-        this_card = prev_card;
-        if (--c>=0)
-        {
-            prev_card = fcs_col_get_card(col, c);
-        }
-    }
-    *cards_under_sequences_ptr += pow(c+1, FCS_BEFS_CARDS_UNDER_SEQUENCES_EXPONENT);
-    return c;
-}
 
 #ifdef FCS_FREECELL_ONLY
 #define is_filled_by_any_card() 1
@@ -1331,12 +1299,6 @@ static GCC_INLINE void initialize_befs_rater(
     #define unlimited_sequence_move 0
 #endif
 
-    double cards_under_sequences = 0;
-    for (int a=0 ; a < INSTANCE_STACKS_NUM ; a++)
-    {
-        update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*ptr_state_key, a), &cards_under_sequences);
-    }
-    weighting->initial_cards_under_sequences_value = cards_under_sequences;
 
     weighting->num_cards_out_factor =
         befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
@@ -1357,7 +1319,7 @@ static GCC_INLINE void initialize_befs_rater(
 
 
     weighting->cards_under_sequences_factor =
-        befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] / cards_under_sequences;
+        befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] / soft_thread->initial_cards_under_sequences_value;
 
     weighting->seqs_over_renegade_cards_factor =
         befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] / FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4));
@@ -1514,7 +1476,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         (CALC_VACANCY_VAL() * weighting->max_sequence_move_factor)
             +
         (
-            (weighting->initial_cards_under_sequences_value - cards_under_sequences)
+            (soft_thread->initial_cards_under_sequences_value - cards_under_sequences)
             * weighting->cards_under_sequences_factor
         )
             +
@@ -1597,6 +1559,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * soft_thread
     )
 {
+    fc_solve_soft_thread_update_initial_cards_val(soft_thread);
+
     fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
     fcs_kv_state_t pass;
 

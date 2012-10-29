@@ -34,6 +34,8 @@
 extern "C" {
 #endif
 
+#include <math.h>
+
 #include "config.h"
 #include "state.h"
 #include "move.h"
@@ -194,7 +196,6 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 
 typedef struct
 {
-    double initial_cards_under_sequences_value;
     double num_cards_out_factor,
            max_sequence_move_factor,
            cards_under_sequences_factor,
@@ -818,6 +819,8 @@ struct fc_solve_soft_thread_struct
     /* The super-method type - can be  */
     fcs_super_method_type_t super_method_type;
 
+    double initial_cards_under_sequences_value;
+
     union
     {
         struct
@@ -1009,11 +1012,64 @@ static GCC_INLINE void * memdup(void * src, size_t mysize)
     return dest;
 }
 
+#define FCS_BEFS_CARDS_UNDER_SEQUENCES_EXPONENT 1.3
+#define FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
+
+#define FCS_SEQS_OVER_RENEGADE_POWER(n) pow(n, FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
+
+static GCC_INLINE int update_col_cards_under_sequences(
+        fc_solve_soft_thread_t * const soft_thread,
+        const fcs_cards_column_t col,
+        double * const cards_under_sequences_ptr
+        )
+{
+#ifndef FCS_FREECELL_ONLY
+    const int sequences_are_built_by =
+        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(soft_thread->hard_thread->instance)
+        ;
+#endif
+
+    int cards_num = fcs_col_len(col);
+    int c = cards_num - 2;
+    fcs_card_t this_card = fcs_col_get_card(col, c+1);
+    fcs_card_t prev_card = fcs_col_get_card(col, c);
+    while ((c >= 0) && fcs_is_parent_card(this_card,prev_card))
+    {
+        this_card = prev_card;
+        if (--c>=0)
+        {
+            prev_card = fcs_col_get_card(col, c);
+        }
+    }
+    *cards_under_sequences_ptr += pow(c+1, FCS_BEFS_CARDS_UNDER_SEQUENCES_EXPONENT);
+    return c;
+}
+
+static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+    fcs_kv_state_t pass;
+
+    pass.key = &(instance->state_copy_ptr->s);
+    pass.val = &(instance->state_copy_ptr->info);
+
+    double cards_under_sequences = 0;
+    for (int a=0 ; a < INSTANCE_STACKS_NUM ; a++)
+    {
+        update_col_cards_under_sequences(soft_thread, fcs_state_get_col(*pass.key, a), &cards_under_sequences);
+    }
+    soft_thread->initial_cards_under_sequences_value = cards_under_sequences;
+
+    return;
+}
 
 static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_soft_thread_t * soft_thread
     )
 {
+    fc_solve_soft_thread_update_initial_cards_val(soft_thread);
     fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
 
     fcs_state_keyval_pair_t * ptr_orig_state = instance->state_copy_ptr;
