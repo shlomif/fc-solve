@@ -327,7 +327,8 @@ static GCC_INLINE void free_states(fc_solve_instance_t * instance)
 static GCC_INLINE pq_rating_t befs_rate_state(
     fc_solve_soft_thread_t * const soft_thread,
     const fc_solve_state_weighting_t * const weighting,
-    fcs_kv_state_t * const raw_pass_raw
+    const fcs_state_t * const state,
+    const int depth
     )
 {
 #ifndef FCS_FREECELL_ONLY
@@ -336,8 +337,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance)
         ;
 #endif
-    fcs_state_t * const state = raw_pass_raw->key;
-
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
 #endif
@@ -414,8 +413,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
             parent_card = child_card;
         }
     }
-    int depth = kv_calc_depth(raw_pass_raw);
-
 
 #define CALC_VACANCY_VAL() \
     ( \
@@ -1332,16 +1329,11 @@ int fc_solve_soft_dfs_do_solve(
                                     /* TODO : avoid excessive mallocing. */
                                     for (a = 0 ; a < num_states ; a++)
                                     {
-                                        fcs_kv_state_t derived_pass;
-                                        FCS_STATE_collectible_to_kv(
-                                            &derived_pass,
-                                            derived_states[rand_array[a].idx].state_ptr
-                                            );
-
                                         rand_array[a].rating = befs_rate_state(
                                             soft_thread,
                                             weighting,
-                                            &derived_pass
+                                            &(derived_states[rand_array[a].idx].state_ptr->s),
+                                            calc_depth(derived_states[rand_array[a].idx].state_ptr)
                                             );
                                     }
 
@@ -1902,8 +1894,10 @@ int fc_solve_befs_or_bfs_do_solve(
                     befs_rate_state(
                         soft_thread,
                         WEIGHTING(soft_thread),
-                        NEW_STATE_TO_PASS())
-                    );
+                        new_pass.key,
+                        kv_calc_depth(&(new_pass))
+                    )
+                );
             }
             else
             {
