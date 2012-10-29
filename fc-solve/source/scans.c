@@ -299,10 +299,6 @@ static GCC_INLINE void free_states(fc_solve_instance_t * instance)
 #endif
 }
 
-#undef unlimited_sequence_move
-
-#undef TRACE0
-
 #ifdef DEBUG
 
 #define TRACE0(message) \
