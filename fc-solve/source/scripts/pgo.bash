@@ -11,7 +11,8 @@ pgo_flags=""
 make_vars=()
 
 # theme="-l te"
-theme="--read-from-file 4,$(pwd)/Presets/testing-presets/all-star-4.sh"
+# theme="--read-from-file 4,$(pwd)/Presets/testing-presets/all-star-4.sh"
+theme="-l as"
 
 if test "$mode" = "total" ; then
     make -r -f Makefile.gnu clean && \
