@@ -347,7 +347,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
     fc_solve_seq_cards_power_type_t seqs_over_renegade_cards = 0;
 
-    double sum = 0.0;
+    double sum = (max(0, neg_depth) * weighting->depth_factor);
     if (weighting->num_cards_out_lookup_table[1])
     {
         const int num_founds = (LOCAL_DECKS_NUM<<2);
@@ -451,15 +451,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     TRACE0("Before return");
 
-    return
-    (
-    (int)
-    (
-        sum /* Already multiplied by the factor. */
-            +
-        (max(0, neg_depth) * weighting->depth_factor)
-    )
-    );
+    return ( (int)sum );
 #undef CALC_VACANCY_VAL
 }
 
