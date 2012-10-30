@@ -187,6 +187,7 @@ OBJECTS :=                     \
           move.o              \
           move_funcs_maps.o   \
           move_funcs_order.o  \
+          rate_state.o        \
           scans.o             \
           split_cmd_line.o    \
           state.o             \

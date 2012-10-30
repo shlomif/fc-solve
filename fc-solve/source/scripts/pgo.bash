@@ -10,11 +10,14 @@ shift
 pgo_flags=""
 make_vars=()
 
+# theme="-l te"
+theme="--read-from-file 4,$(pwd)/Presets/testing-presets/all-star-4.sh"
+
 if test "$mode" = "total" ; then
     make -r -f Makefile.gnu clean && \
     bash scripts/pgo.bash "$compiler" "gen" &&\
     rm -f *.gcda && \
-    sudo_renice ./freecell-solver-range-parallel-solve 1 32000 4000 -l te && \
+    sudo_renice ./freecell-solver-range-parallel-solve 1 32000 4000 $theme && \
     make -r -f Makefile.gnu clean && \
     bash scripts/pgo.bash "$compiler" "use"
     exit 0
@@ -42,7 +45,7 @@ else
     exit -1
 fi
 
-make -r -f Makefile.gnu FREECELL_ONLY=1 \
+make -r -j4 -f Makefile.gnu FREECELL_ONLY=1 \
     EXTRA_CFLAGS="$pgo_flags" \
     COMPILER="$compiler" \
     $make_vars
