@@ -962,9 +962,32 @@ IF (FCS_WITH_TEST_SUITE)
 ENDIF(FCS_WITH_TEST_SUITE)
 
 ADD_CUSTOM_TARGET(
+    "pgo_proto"
+    COMMAND "bash" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/pgo.bash" "gcc" "total"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.c"
+            "${CMAKE_CURRENT_BINARY_DIR}/config.h"
+            "${CMAKE_CURRENT_BINARY_DIR}/prefix.h"
+)
+
+# This does not work properly because the silencing happens earlier in the
+# line, but I'm still keeping it.
+
+ADD_CUSTOM_TARGET(
+    "pgo"
+    COMMAND "env" "VERBOSE=1" "make" "VERBOSE=1" "pgo_proto"
+)
+
+FILE (COPY "${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake_pgo_wrapper/pgo.sh"
+    DESTINATION "${CMAKE_CURRENT_BINARY_DIR}"
+    FILE_PERMISSIONS OWNER_READ OWNER_WRITE WORLD_READ GROUP_READ
+                    OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
+)
+
+ADD_CUSTOM_TARGET(
     "bench" bash scripts/time-threads-num.bash -s 2 "${MAX_NUM_BENCHMARK_THREADS}"
     COMMAND perl scripts/time-fcs.pl "DUMPS-*/*"
 )
+
 
 IF (IS_DEBUG)
     IF (NOT FCS_ENABLE_RCS_STATES)
