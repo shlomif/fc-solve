@@ -17,12 +17,17 @@ src="$(perl -e 'use File::Basename qw(dirname); use File::Spec; print File::Spec
 # theme="--read-from-file 4,$(pwd)/Presets/testing-presets/all-star-4.sh"
 theme="-l as"
 
+run_make()
+{
+    make -r -j4 -f "$src"/Makefile.gnu SRC_DIR="$src" "$@"
+}
+
 if test "$mode" = "total" ; then
-    make -r -f "$src"/Makefile.gnu SRC_DIR="$src" clean && \
+    run_make clean && \
     bash "$src"/scripts/pgo.bash "$compiler" "gen" &&\
     rm -f *.gcda && \
     sudo_renice ./freecell-solver-range-parallel-solve 1 32000 4000 $theme && \
-    make -r -f "$src"/Makefile.gnu SRC_DIR="$src" clean && \
+    run_make clean && \
     bash "$src"/scripts/pgo.bash "$compiler" "use"
     exit 0
 elif test "$mode" = "use" ; then
@@ -49,7 +54,7 @@ else
     exit -1
 fi
 
-make -r -j4 -f "$src"/Makefile.gnu SRC_DIR="$src" FREECELL_ONLY=1 \
+run_make FREECELL_ONLY=1 \
     EXTRA_CFLAGS="$pgo_flags" \
     COMPILER="$compiler" \
     $make_vars
