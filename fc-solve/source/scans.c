@@ -2013,6 +2013,31 @@ my_return_label:
 
 #undef myreturn
 
+static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    switch(soft_thread->method)
+    {
+        case FCS_METHOD_SOFT_DFS:
+        case FCS_METHOD_RANDOM_DFS:
+            {
+                return &(
+                    DFS_VAR(soft_thread, soft_dfs_info)[
+                    DFS_VAR(soft_thread, depth)
+                    ].positions_by_rank
+                    );
+            }
+            break;
+        default:
+            {
+                return &(
+                    BEFS_M_VAR(soft_thread, befs_positions_by_rank)
+                    );
+            }
+            break;
+    }
+}
 
 /*
  * fc_solve_get_the_positions_by_rank_data() :
@@ -2021,7 +2046,7 @@ my_return_label:
  * about the currently-evaluated state.
  *
  */
-char * fc_solve_get_the_positions_by_rank_data_helper(
+extern char * fc_solve_get_the_positions_by_rank_data(
     fc_solve_soft_thread_t * soft_thread,
     fcs_kv_state_t * ptr_state_raw
 )
@@ -2030,98 +2055,115 @@ char * fc_solve_get_the_positions_by_rank_data_helper(
 #define state_key (*ptr_state_key)
 #undef the_state
 #define the_state state_key
+
+    char * * const positions_by_rank_location =
+        fc_solve_calc_positions_by_rank_location(soft_thread);
+
+#ifdef DEBUG
+    if (getenv("FCS_TRACE"))
+    {
+        printf("%s\n", "Verify Quux");
+        fflush(stdout);
+    }
+    VERIFY_STATE_SANITY();
+#endif
+
+    if (unlikely(! *positions_by_rank_location))
+    {
 #if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
-    SET_GAME_PARAMS();
+        fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+        SET_GAME_PARAMS();
 #endif
 
 #ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
+        const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
 
-    /* We don't keep track of kings (rank == 13). */
+        /* We don't keep track of kings (rank == 13). */
 #define NUM_POS_BY_RANK_SLOTS 13
-    /* We need 2 chars per card - one for the column_idx and one
-     * for the card_idx.
-     *
-     * We also need it times 13 for each of the ranks.
-     *
-     * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
-     * (-1,-1) (= end) padding.             * */
+        /* We need 2 chars per card - one for the column_idx and one
+         * for the card_idx.
+         *
+         * We also need it times 13 for each of the ranks.
+         *
+         * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+         * (-1,-1) (= end) padding.             * */
 #define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH)
 
-    char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_SIZE);
+        char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_SIZE);
 
-    memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
-
-    {
-        /* Populate positions_by_rank by looping over the stacks and
-         * indices looking for the cards and filling them. */
+        memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
 
         {
-            char * ptr;
+            /* Populate positions_by_rank by looping over the stacks and
+             * indices looking for the cards and filling them. */
 
-            for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
             {
-                const fcs_cards_column_t dest_col = fcs_state_get_col(the_state, ds);
-                int top_card_idx = fcs_col_len(dest_col);
+                char * ptr;
 
-                if (unlikely((top_card_idx--) == 0))
+                for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
                 {
-                    continue;
-                }
+                    const fcs_cards_column_t dest_col = fcs_state_get_col(the_state, ds);
+                    int top_card_idx = fcs_col_len(dest_col);
 
-                fcs_card_t dest_card;
-                {
-                    fcs_card_t dest_below_card;
-                    int dc;
-                    for (
-                        dc=0,
-                        dest_card = fcs_col_get_card(dest_col, 0)
-                        ;
-                        dc < top_card_idx
-                        ;
-                        dc++,
-                        dest_card = dest_below_card
-                        )
+                    if (unlikely((top_card_idx--) == 0))
                     {
-                        dest_below_card = fcs_col_get_card(dest_col, dc+1);
-                        if (!fcs_is_parent_card(dest_below_card, dest_card))
+                        continue;
+                    }
+
+                    fcs_card_t dest_card;
+                    {
+                        fcs_card_t dest_below_card;
+                        int dc;
+                        for (
+                              dc=0,
+                              dest_card = fcs_col_get_card(dest_col, 0)
+                                ;
+                              dc < top_card_idx
+                                ;
+                              dc++,
+                              dest_card = dest_below_card
+                            )
                         {
+                            dest_below_card = fcs_col_get_card(dest_col, dc+1);
+                            if (!fcs_is_parent_card(dest_below_card, dest_card))
+                            {
 #if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
 #define INCREMENT_PTR_BY_NUM_DECKS() \
-                            for(;(*ptr) != -1;ptr += (4 << 1)) \
-                            { \
-                            }
+                                for(;(*ptr) != -1;ptr += (4 << 1)) \
+                                { \
+                                }
 #else
 #define INCREMENT_PTR_BY_NUM_DECKS() \ {}
 #endif
 
 #define ASSIGN_PTR(dest_stack, dest_col) \
-                            ptr = &positions_by_rank[ \
-                            (FCS_POS_BY_RANK_WIDTH * \
-                             (fcs_card_rank(dest_card)-1) \
-                            ) \
-                            + \
-                            (fcs_card_suit(dest_card)<<1) \
-                            ]; \
-                            INCREMENT_PTR_BY_NUM_DECKS() \
-                            *(ptr++) = (char)(dest_stack); \
-                            *(ptr) = (char)(dest_col)
+                                ptr = &positions_by_rank[ \
+                                    (FCS_POS_BY_RANK_WIDTH * \
+                                     (fcs_card_rank(dest_card)-1) \
+                                    ) \
+                                    + \
+                                    (fcs_card_suit(dest_card)<<1) \
+                                ]; \
+                                INCREMENT_PTR_BY_NUM_DECKS() \
+                                *(ptr++) = (char)(dest_stack); \
+                                *(ptr) = (char)(dest_col)
 
 
-                            ASSIGN_PTR(ds, dc);
+                                ASSIGN_PTR(ds, dc);
+                            }
                         }
                     }
+                    ASSIGN_PTR(ds, top_card_idx);
                 }
-                ASSIGN_PTR(ds, top_card_idx);
             }
         }
+
+        *positions_by_rank_location = positions_by_rank;
     }
 
-    return positions_by_rank;
+    return *positions_by_rank_location;
 }
-
 #undef state_key
 #undef ptr_state_key
 
