@@ -281,3 +281,17 @@ lib64google-perftools0-2.0-1.mga3
 
     Highlight: the new --method random-dfs -to '[@MOVE_FUNCTIONS]=asw(1)' setup
     with the all-star-4.sh preset.
+
+<DUMP>
+Started at 1351560184.502185
+Reached Board No. 4000 at 1351560185.708088 (total_num_iters=359319)
+Reached Board No. 8000 at 1351560186.975778 (total_num_iters=731842)
+Reached Board No. 12000 at 1351560188.154655 (total_num_iters=1775871)
+Unsolved Board No. 11982 at 1351560188.365830
+Reached Board No. 16000 at 1351560189.424697 (total_num_iters=3219127)
+Reached Board No. 20000 at 1351560190.608006 (total_num_iters=3570178)
+Reached Board No. 24000 at 1351560191.759679 (total_num_iters=4972959)
+Reached Board No. 28000 at 1351560192.887649 (total_num_iters=6372242)
+Reached Board No. 32000 at 1351560194.224980 (total_num_iters=9897651)
+Finished at 1351560194.233225 (total_num_iters=11372658)
+</DUMP>
