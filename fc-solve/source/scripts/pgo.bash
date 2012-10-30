@@ -22,13 +22,26 @@ run_make()
     make -r -j4 -f "$src"/Makefile.gnu SRC_DIR="$src" "$@"
 }
 
+m_clean()
+{
+    run_make clean
+}
+
+run_self()
+{
+    local cmd="$1"
+    shift
+
+    bash "$src"/scripts/pgo.bash "$compiler" "$cmd"
+}
+
 if test "$mode" = "total" ; then
-    run_make clean && \
-    bash "$src"/scripts/pgo.bash "$compiler" "gen" &&\
+    m_clean && \
+    run_self "gen" && \
     rm -f *.gcda && \
     sudo_renice ./freecell-solver-range-parallel-solve 1 32000 4000 $theme && \
-    run_make clean && \
-    bash "$src"/scripts/pgo.bash "$compiler" "use"
+    m_clean && \
+    run_self "use"
     exit 0
 elif test "$mode" = "use" ; then
     if test "$compiler" = "gcc" ; then
