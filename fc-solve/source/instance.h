@@ -1964,20 +1964,26 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t * soft_thread
     )
 {
-    return
-    (
-        (FC_SOLVE_IS_DFS(soft_thread))
-        ?
-        (&(
-            DFS_VAR(soft_thread, soft_dfs_info)[
-            DFS_VAR(soft_thread, depth)
-            ].positions_by_rank
-        ))
-        :
-        (&(
-            BEFS_M_VAR(soft_thread, befs_positions_by_rank)
-        ))
-    );
+    switch(soft_thread->method)
+    {
+        case FCS_METHOD_SOFT_DFS:
+        case FCS_METHOD_RANDOM_DFS:
+            {
+                return &(
+                    DFS_VAR(soft_thread, soft_dfs_info)[
+                    DFS_VAR(soft_thread, depth)
+                    ].positions_by_rank
+                    );
+            }
+            break;
+        default:
+            {
+                return &(
+                    BEFS_M_VAR(soft_thread, befs_positions_by_rank)
+                    );
+            }
+            break;
+    }
 }
 
 /*
