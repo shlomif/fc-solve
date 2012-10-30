@@ -461,9 +461,15 @@ Also note that Freecell tests are not suitable for solving Simple Simon games
 and Simple Simon tests are not suitable for solving anything except Simple
 Simon.
 
-Tests can be grouped together into random groups using parenthesis
+Tests can be grouped together into groups using parenthesis
 (e.g: "(0123)") or square brackets ("[012][3456789]"). Such grouping is
-only relevant to the Random DFS scan (see below).
+only relevant to the Random DFS scan (see below). A group may optionally
+be followed by the equal sign "=" and by an ordering specifier. If one
+specifies "=rand()", then the derived states will be randomised based on the
+seed (which is what happens if no equal sign is specified). On the other
+hand, if one specifies something like "=asw(5,0,5,0,0,5)", then the numbers
+inside the parentheses will be treated as weights for the same ordering
+function used by the +-asw+ flag (see below).
 
 -dto [Min Depth],[Tests' Order] , --depth-tests-order [Min Depth],[Tests' Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -496,6 +502,24 @@ This sets the tests' order to +0123456789+ for all depths below 30 and to
 This sets the tests' order to +0123457+ for depths -9 (those below 10),
 to +750123+ for depths 10-24, and to +710235+ for the depths 25 onwards.
 
+---------------------
+-to 0123457 -dto "10,[012357]=asw(1)"
+---------------------
+
+This sorts the tests starting from 10 onward based on the asw() function.
+
+---------------------
+-to 0123457 -dto "10,[012357]=rand()"
+---------------------
+
+This randomises the tests from 10 onward.
+
+---------------------
+-to 0123457 -dto "10,[012357]"
+---------------------
+
+This does the same thing as the previous example.
+
 -me [Solving Method] , --method [Solving Method]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -518,9 +542,8 @@ BFS does not yield good results, and +a-star+ has a mixed behaviour, so for
 the time being I recommend using Soft-DFS or Andom-DFS.
 
 The Random-DFS scan processes every tests' random group, randomizes the
-states that it found and recurses into them one by one. Renegade tests
+states that it found and recurses into them one by one. Standalone tests
 that do not belong to any group, are processed in a non-random manner.
-
 
 -asw [BeFS Weights] , --a-star-weight [BeFS Weights]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
