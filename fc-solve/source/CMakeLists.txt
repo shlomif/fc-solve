@@ -961,6 +961,9 @@ IF (FCS_WITH_TEST_SUITE)
 
 ENDIF(FCS_WITH_TEST_SUITE)
 
+# For Makefile.gnu in pgo.bash (see below)
+FILE (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/.deps")
+
 ADD_CUSTOM_TARGET(
     "pgo_proto"
     COMMAND "bash" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/pgo.bash" "gcc" "total"
