@@ -85,7 +85,7 @@ const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS] = {0.5, 0, 0.3,
 
 static GCC_INLINE void normalize_befs_weights(
     fc_solve_state_weighting_t * weighting
-    )
+)
 {
     /* Normalize the Best-First-Search Weights, so the sum of all of them would be 1. */
 
@@ -121,7 +121,7 @@ static GCC_INLINE void normalize_befs_weights(
 
 static GCC_INLINE void soft_thread_clean_soft_dfs(
     fc_solve_soft_thread_t * soft_thread
-    )
+)
 {
     int max_depth;
     int dfs_max_depth;
@@ -130,7 +130,7 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
     if (!(
             FC_SOLVE_IS_DFS(soft_thread)
         && DFS_VAR(soft_thread, soft_dfs_info)
-       ))
+    ))
     {
         /* If not - do nothing */
         return;
@@ -189,8 +189,8 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t
 }
 
 static GCC_INLINE void free_instance_soft_thread_callback(
-        fc_solve_soft_thread_t * soft_thread
-        )
+    fc_solve_soft_thread_t * soft_thread
+)
 {
     fcs_bool_t is_scan_befs_or_bfs = FALSE;
     switch (soft_thread->method)
@@ -219,7 +219,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
 static GCC_INLINE void accumulate_tests_by_ptr(
     int * tests_order,
     fcs_tests_order_t * st_tests_order
-    )
+)
 {
 
     for ( int i=0 ; i < st_tests_order->num_groups ; i++)
@@ -234,7 +234,7 @@ static GCC_INLINE void accumulate_tests_by_ptr(
 static GCC_INLINE void accumulate_tests_order(
     fc_solve_soft_thread_t * soft_thread,
     void * context
-    )
+)
 {
     accumulate_tests_by_ptr((int *)context, &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order));
 }
@@ -242,7 +242,7 @@ static GCC_INLINE void accumulate_tests_order(
 static GCC_INLINE void determine_scan_completeness(
     fc_solve_soft_thread_t * soft_thread,
     void * global_tests_order
-    )
+)
 {
     int tests_order = 0;
 
@@ -285,47 +285,35 @@ void fc_solve_foreach_soft_thread(
             switch (callback_choice)
             {
                 case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
-                    soft_thread_clean_soft_dfs(
-                        soft_thread
-                    );
-                    break;
+                    soft_thread_clean_soft_dfs( soft_thread );
+                break;
 
                 case FOREACH_SOFT_THREAD_FREE_INSTANCE:
-                    free_instance_soft_thread_callback(
-                        soft_thread
-                    );
-                    break;
+                    free_instance_soft_thread_callback( soft_thread );
+                break;
 
                 case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
-                    accumulate_tests_order(
-                        soft_thread,
-                        context
-                    );
-                    break;
+                    accumulate_tests_order( soft_thread, context );
+                break;
 
                 case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
-                    determine_scan_completeness(
-                        soft_thread,
-                        context
-                    );
-                    break;
+                    determine_scan_completeness( soft_thread, context );
+                break;
             }
         }
     }
 }
 
-static GCC_INLINE void clean_soft_dfs(
-        fc_solve_instance_t * instance
-        )
+static GCC_INLINE void clean_soft_dfs( fc_solve_instance_t * instance )
 {
     fc_solve_foreach_soft_thread(instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
 }
 
 
 static GCC_INLINE void init_soft_thread(
-        fc_solve_hard_thread_t * hard_thread,
-        fc_solve_soft_thread_t * soft_thread
-        )
+    fc_solve_hard_thread_t * hard_thread,
+    fc_solve_soft_thread_t * soft_thread
+)
 {
     soft_thread->hard_thread = hard_thread;
 
@@ -370,9 +358,9 @@ static GCC_INLINE void init_soft_thread(
 }
 
 void fc_solve_instance__init_hard_thread(
-        fc_solve_instance_t * instance,
-        fc_solve_hard_thread_t * hard_thread
-        )
+    fc_solve_instance_t * instance,
+    fc_solve_hard_thread_t * hard_thread
+)
 {
     hard_thread->instance = instance;
 
@@ -505,7 +493,7 @@ enum
 
 static GCC_INLINE int compile_prelude(
     fc_solve_hard_thread_t * hard_thread
-    )
+)
 {
     char * p_quota, * p_scan, * p;
     char * string;
@@ -604,8 +592,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
         );
         if (!STRUCT_QUERY_FLAG(
                 instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET
-            )
-        )
+        ))
         {
             /*
              *
@@ -677,6 +664,7 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             || \
        (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE) \
     )
+
 static int fcs_stack_compare_for_comparison_with_context(
     const void * v_s1,
     const void * v_s2,
@@ -684,8 +672,7 @@ static int fcs_stack_compare_for_comparison_with_context(
     const
 #endif
     void * context GCC_UNUSED
-
-    )
+)
 {
     return fc_solve_stack_compare_for_comparison(v_s1, v_s2);
 }
@@ -697,7 +684,7 @@ static int fcs_stack_compare_for_comparison_with_context(
 /* A hash calculation function for use in glib's hash */
 static guint fc_solve_glib_hash_stack_hash_function (
     gconstpointer key
-    )
+)
 {
     guint hash_value_int;
     /* Calculate the hash value for the stack */
@@ -734,7 +721,7 @@ static gint fc_solve_glib_hash_stack_compare (
  * */
 extern void fc_solve_trace_solution(
     fc_solve_instance_t * instance
-    )
+)
 {
     /*
         Trace the solution.
@@ -794,18 +781,17 @@ extern void fc_solve_trace_solution(
 
 static GCC_INLINE fcs_state_t * rcs_states_get_state(
     fc_solve_instance_t * instance,
-    fcs_collectible_state_t * state)
+    fcs_collectible_state_t * state
+)
 {
-    return
-        (
-         (state == instance->tree_new_state)
-         ? instance->tree_new_state_key
-         : fc_solve_lookup_state_key_from_val(
-             instance,
-             state
-             )
-        );
-
+    return (
+            (state == instance->tree_new_state)
+            ? instance->tree_new_state_key
+            : fc_solve_lookup_state_key_from_val(
+                instance,
+                state
+            )
+    );
 }
 
 static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b, void * param)
@@ -838,7 +824,7 @@ static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b,
 void fc_solve_start_instance_process_with_board(
     fc_solve_instance_t * instance,
     fcs_state_keyval_pair_t * init_state
-    )
+)
 {
     fcs_state_keyval_pair_t * state_copy_ptr;
 
@@ -889,21 +875,21 @@ void fc_solve_start_instance_process_with_board(
     /* Initialize the data structure that will manage the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     instance->tree = rbinit(
-            fc_solve_state_extra_info_compare_with_context,
-            NULL
-            );
+        fc_solve_state_extra_info_compare_with_context,
+        NULL
+    );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
 
     instance->tree = fcs_libavl2_states_tree_create(
-            STATE_STORAGE_TREE_COMPARE(),
-            STATE_STORAGE_TREE_CONTEXT(),
-            NULL
-            );
+        STATE_STORAGE_TREE_COMPARE(),
+        STATE_STORAGE_TREE_CONTEXT(),
+        NULL
+    );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
 
     instance->tree = fc_solve_kaz_tree_create(
-            STATE_STORAGE_TREE_COMPARE(), STATE_STORAGE_TREE_CONTEXT()
-            );
+        STATE_STORAGE_TREE_COMPARE(), STATE_STORAGE_TREE_CONTEXT()
+    );
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     instance->tree = g_tree_new(fc_solve_state_compare);
@@ -913,22 +899,22 @@ void fc_solve_start_instance_process_with_board(
     instance->hash = g_hash_table_new(
         fc_solve_hash_function,
         fc_solve_state_compare_equal
-        );
+    );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-     fc_solve_hash_init(
-            &(instance->hash),
+    fc_solve_hash_init(
+        &(instance->hash),
 #ifdef FCS_INLINED_HASH_COMPARISON
-            FCS_INLINED_HASH__STATES
+        FCS_INLINED_HASH__STATES
 #else
 #ifdef FCS_WITH_CONTEXT_VARIABLE
-            fc_solve_state_compare_with_context,
+        fc_solve_state_compare_with_context,
 
-            NULL
+        NULL
 #else
-            fc_solve_state_compare
+        fc_solve_state_compare
 #endif
 #endif
-       );
+    );
 #ifdef FCS_RCS_STATES
      instance->hash.instance = instance;
 #endif
@@ -951,36 +937,36 @@ void fc_solve_start_instance_process_with_board(
        collection */
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
     fc_solve_hash_init(
-            &(instance->stacks_hash ),
+        &(instance->stacks_hash ),
 #ifdef FCS_INLINED_HASH_COMPARISON
-            FCS_INLINED_HASH__COLUMNS
+        FCS_INLINED_HASH__COLUMNS
 #else
 #ifdef FCS_WITH_CONTEXT_VARIABLE
-            fcs_stack_compare_for_comparison_with_context,
-            NULL
+        fcs_stack_compare_for_comparison_with_context,
+        NULL
 #else
-            fc_solve_stack_compare_for_comparison
+        fc_solve_stack_compare_for_comparison
 #endif
 #endif
-        );
+    );
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     instance->stacks_tree = fcs_libavl2_stacks_tree_create(
-            fcs_stack_compare_for_comparison_with_context,
-            NULL,
-            NULL
-            );
+        fcs_stack_compare_for_comparison_with_context,
+        NULL,
+        NULL
+    );
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     instance->stacks_tree = rbinit(
         fcs_stack_compare_for_comparison_with_context,
         NULL
-        );
+    );
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
     instance->stacks_tree = g_tree_new(fc_solve_stack_compare_for_comparison);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
     instance->stacks_hash = g_hash_table_new(
         fc_solve_glib_hash_stack_hash_function,
         fc_solve_glib_hash_stack_compare
-        );
+    );
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
     instance->stacks_hash = fc_solve_columns_google_hash_new();
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
@@ -1002,7 +988,7 @@ void fc_solve_start_instance_process_with_board(
         NULL,
         NULL,
         &(instance->db)
-        );
+    );
 #endif
 
     {
@@ -1016,7 +1002,7 @@ void fc_solve_start_instance_process_with_board(
             instance->hard_threads,
             &pass,
             &no_use
-            );
+        );
 
     }
 
@@ -1055,9 +1041,7 @@ void fc_solve_start_instance_process_with_board(
     This function should be called after the user has retrieved the
     results generated by the scan as it will destroy them.
   */
-void fc_solve_finish_instance(
-    fc_solve_instance_t * instance
-    )
+void fc_solve_finish_instance( fc_solve_instance_t * instance )
 {
     /* De-allocate the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
@@ -1149,7 +1133,7 @@ void fc_solve_finish_instance(
 
 fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     fc_solve_hard_thread_t * hard_thread
-    )
+)
 {
     fc_solve_soft_thread_t * ret;
 
@@ -1163,9 +1147,9 @@ fc_solve_soft_thread_t * fc_solve_new_soft_thread(
     hard_thread->soft_threads =
         SREALLOC(hard_thread->soft_threads, hard_thread->num_soft_threads+1);
     init_soft_thread(
-            hard_thread,
-            (ret = &(hard_thread->soft_threads[hard_thread->num_soft_threads]))
-            );
+        hard_thread,
+        (ret = &(hard_thread->soft_threads[hard_thread->num_soft_threads]))
+    );
 
     hard_thread->num_soft_threads++;
 
