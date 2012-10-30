@@ -35,11 +35,20 @@ run_self()
     bash "$src"/scripts/pgo.bash "$compiler" "$cmd"
 }
 
+run_timing()
+{
+    if [ -x ~/bin/sudo_time_fcs ] ; then
+        sudo ~/bin/sudo_time_fcs "$@"
+    else
+        sudo_renice ./freecell-solver-range-parallel-solve "$@"
+    fi
+}
+
 if test "$mode" = "total" ; then
     m_clean && \
     run_self "gen" && \
     rm -f *.gcda && \
-    sudo_renice ./freecell-solver-range-parallel-solve 1 32000 4000 $theme && \
+    run_timing 1 32000 4000 $theme && \
     m_clean && \
     run_self "use"
     exit 0
