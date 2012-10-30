@@ -10,17 +10,20 @@ shift
 pgo_flags=""
 make_vars=()
 
+src="$(perl -e 'use File::Basename qw(dirname); use File::Spec; print File::Spec->rel2abs(dirname(shift(@ARGV))."/..");' "$0")"
+# echo "src_dir=$src"
+
 # theme="-l te"
 # theme="--read-from-file 4,$(pwd)/Presets/testing-presets/all-star-4.sh"
 theme="-l as"
 
 if test "$mode" = "total" ; then
-    make -r -f Makefile.gnu clean && \
-    bash scripts/pgo.bash "$compiler" "gen" &&\
+    make -r -f "$src"/Makefile.gnu SRC_DIR="$src" clean && \
+    bash "$src"/scripts/pgo.bash "$compiler" "gen" &&\
     rm -f *.gcda && \
     sudo_renice ./freecell-solver-range-parallel-solve 1 32000 4000 $theme && \
-    make -r -f Makefile.gnu clean && \
-    bash scripts/pgo.bash "$compiler" "use"
+    make -r -f "$src"/Makefile.gnu SRC_DIR="$src" clean && \
+    bash "$src"/scripts/pgo.bash "$compiler" "use"
     exit 0
 elif test "$mode" = "use" ; then
     if test "$compiler" = "gcc" ; then
@@ -46,7 +49,7 @@ else
     exit -1
 fi
 
-make -r -j4 -f Makefile.gnu FREECELL_ONLY=1 \
+make -r -j4 -f "$src"/Makefile.gnu SRC_DIR="$src" FREECELL_ONLY=1 \
     EXTRA_CFLAGS="$pgo_flags" \
     COMPILER="$compiler" \
     $make_vars

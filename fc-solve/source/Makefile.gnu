@@ -17,12 +17,15 @@ COMPILER = gcc
 # COMPILER = tcc
 # COMPILER = tendra
 
+ifeq ($(SRC_DIR),)
+	SRC_DIR := .
+endif
 
 ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -Wall -DFCS_DBM_USE_LIBAVL=1 -I./libavl/ -I.
+CFLAGS := -Wall -DFCS_DBM_USE_LIBAVL=1 -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR)
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
@@ -208,7 +211,7 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 
 -include $(DEP_FILES)
 
-%.o: %.c
+%.o: $(SRC_DIR)/%.c
 	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
 
 STATIC_LIB_BASE = fcs
