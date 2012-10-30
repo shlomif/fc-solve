@@ -295,3 +295,35 @@ Reached Board No. 28000 at 1351560192.887649 (total_num_iters=6372242)
 Reached Board No. 32000 at 1351560194.224980 (total_num_iters=9897651)
 Finished at 1351560194.233225 (total_num_iters=11372658)
 </DUMP>
+
+---------------------------------------------------------
+
+ARGS="--worker-step 16 -l as" bash scripts/time-threads-num.bash 4 4 x 4
+commit e81404211257dafc17e58b2bb0d345c525ec0d2a
+With Profile Guided Optimisation (PGO).
+./Tatzer -l ci7b --prefix=/home/shlomif/apps/fcs
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+3.6.4-desktop-1.mga3
+gcc-4.7.2-4.mga3
+lib64google-perftools0-2.0-1.mga3
+
+9.67101216316223s
+
+    Highlight: a small optimisation in the latest commit of extracting a bool
+    expression into a variable.
+
+<DUMP>
+Started at 1351597285.903638
+Reached Board No. 4000 at 1351597287.101913 (total_num_iters=359588)
+Reached Board No. 8000 at 1351597288.363319 (total_num_iters=1083730)
+Reached Board No. 12000 at 1351597289.532696 (total_num_iters=2164031)
+Unsolved Board No. 11982 at 1351597289.742488
+Reached Board No. 16000 at 1351597290.793886 (total_num_iters=3265892)
+Reached Board No. 20000 at 1351597291.969189 (total_num_iters=5008608)
+Reached Board No. 24000 at 1351597293.113810 (total_num_iters=6083026)
+Reached Board No. 28000 at 1351597294.235821 (total_num_iters=7104298)
+Reached Board No. 32000 at 1351597295.565480 (total_num_iters=9944385)
+Finished at 1351597295.571042 (total_num_iters=11372658)
+</DUMP>
