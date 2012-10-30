@@ -45,14 +45,19 @@ run_timing()
 }
 
 if test "$mode" = "total" ; then
+
     m_clean && \
     run_self "gen" && \
     rm -f *.gcda && \
     run_timing 1 32000 4000 $theme && \
     m_clean && \
-    run_self "use"
+    run_self "use" && \
+    rm -f *.gcda *.o
+
     exit 0
+
 elif test "$mode" = "use" ; then
+
     if test "$compiler" = "gcc" ; then
         pgo_flags="-fprofile-use"
     elif test "$compiler" = "icc" ; then
@@ -61,8 +66,11 @@ elif test "$mode" = "use" ; then
         echo "Unknown compiler '$compiler'!" 1>&2
         exit -1
     fi
+
     make_vars=(OPT_AND_DEBUG=0 DEBUG=0)
+
 elif test "$mode" = "gen" ; then
+
     if test "$compiler" = "gcc" ; then
         pgo_flags="-fprofile-generate"
     elif test "$compiler" = "icc" ; then
@@ -71,6 +79,7 @@ elif test "$mode" = "gen" ; then
         echo "Unknown compiler '$compiler'!" 1>&2
         exit -1
     fi
+
 else
     echo "Unknown mode '$mode'!" 1>&2
     exit -1
