@@ -1960,6 +1960,78 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * instance)
     free(instance);
 }
 
+static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
+    fc_solve_soft_thread_t * soft_thread
+    )
+{
+    switch(soft_thread->method)
+    {
+        case FCS_METHOD_SOFT_DFS:
+        case FCS_METHOD_RANDOM_DFS:
+            {
+                return &(
+                    DFS_VAR(soft_thread, soft_dfs_info)[
+                    DFS_VAR(soft_thread, depth)
+                    ].positions_by_rank
+                    );
+            }
+            break;
+        default:
+            {
+                return &(
+                    BEFS_M_VAR(soft_thread, befs_positions_by_rank)
+                    );
+            }
+            break;
+    }
+}
+
+/*
+ * fc_solve_get_the_positions_by_rank_data() :
+ *
+ * calculate, cache and return the positions_by_rank meta-data
+ * about the currently-evaluated state.
+ *
+ */
+extern char * fc_solve_get_the_positions_by_rank_data_helper(
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_kv_state_t * ptr_state_raw
+);
+
+static GCC_INLINE char * fc_solve_get_the_positions_by_rank_data(
+    fc_solve_soft_thread_t * soft_thread,
+    fcs_kv_state_t * ptr_state_raw
+)
+{
+    char * * const positions_by_rank_location =
+        fc_solve_calc_positions_by_rank_location(soft_thread);
+
+#ifdef DEBUG
+    if (getenv("FCS_TRACE"))
+    {
+        printf("%s\n", "Verify Quux");
+        fflush(stdout);
+    }
+#if 0
+    VERIFY_STATE_SANITY();
+#endif
+#endif
+
+    if (unlikely(! *positions_by_rank_location))
+    {
+        return ((*(positions_by_rank_location)) =
+            fc_solve_get_the_positions_by_rank_data_helper(
+            soft_thread,
+            ptr_state_raw
+        ));
+    }
+    else
+    {
+        return *positions_by_rank_location;
+    }
+}
+
+
 #define DECLARE_MOVE_FUNCTION(name) \
 extern void name( \
         fc_solve_soft_thread_t * const soft_thread, \
