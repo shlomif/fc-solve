@@ -2,8 +2,8 @@
 Note:
 -----
 
-Unless noted otherwise all of these tests were conducted on Shlomi Fish's
-home desktop machine. Its specs are:
+Unless noted otherwise all of these bechmarks were conducted on Shlomi Fish's
+old home desktop machine. Its specs are:
 
 1. Pentium 4-2.4 GHz, with 512 KB cache.
 
