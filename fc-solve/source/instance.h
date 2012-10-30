@@ -198,6 +198,7 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 
 typedef struct
 {
+    fcs_bool_t should_go_over_stacks;
     double max_sequence_move_factor,
            cards_under_sequences_factor,
            seqs_over_renegade_cards_factor,
@@ -1155,6 +1156,13 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
     weighting->num_cards_not_on_parents_factor =
         normalized_befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] / (LOCAL_DECKS_NUM * 52);
 
+
+    weighting->should_go_over_stacks =
+    (
+        weighting->max_sequence_move_factor
+        || weighting->cards_under_sequences_factor
+        || weighting->seqs_over_renegade_cards_factor
+    );
 }
 
 #undef ptr_state_key

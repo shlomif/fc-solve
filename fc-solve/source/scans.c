@@ -359,10 +359,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
     fcs_game_limit_t num_vacant_stacks = 0;
     fcs_game_limit_t num_vacant_freecells = 0;
-    if (weighting->max_sequence_move_factor
-        || weighting->cards_under_sequences_factor
-        || weighting->seqs_over_renegade_cards_factor
-        )
+    if (weighting->should_go_over_stacks)
     {
         for (int a = 0 ; a < LOCAL_STACKS_NUM ; a++)
         {
