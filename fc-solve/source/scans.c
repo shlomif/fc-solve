@@ -325,7 +325,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     const fc_solve_state_weighting_t * const weighting,
     const fcs_state_t * const state,
     const int neg_depth
-    )
+)
 {
 #ifndef FCS_FREECELL_ONLY
     const fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
@@ -543,7 +543,10 @@ static GCC_INLINE pq_rating_t befs_rate_state(
  *
  * */
 
-static GCC_INLINE void calculate_real_depth(const fcs_bool_t calc_real_depth, fcs_collectible_state_t * const ptr_state_orig)
+static GCC_INLINE void calculate_real_depth(
+    const fcs_bool_t calc_real_depth,
+    fcs_collectible_state_t * const ptr_state_orig
+)
 {
     if (calc_real_depth)
     {
@@ -578,7 +581,10 @@ static GCC_INLINE void calculate_real_depth(const fcs_bool_t calc_real_depth, fc
  *
  * */
 
-static GCC_INLINE void mark_as_dead_end(const fcs_bool_t scans_synergy, fcs_collectible_state_t * const ptr_state_input)
+static GCC_INLINE void mark_as_dead_end(
+    const fcs_bool_t scans_synergy,
+    fcs_collectible_state_t * const ptr_state_input
+)
 {
     if (scans_synergy)
     {
@@ -626,7 +632,8 @@ static GCC_INLINE void mark_as_dead_end(const fcs_bool_t scans_synergy, fcs_coll
 
 #ifdef FCS_RCS_STATES
 
-typedef struct {
+typedef struct
+{
     fcs_cache_key_info_t * new_cache_state;
     fcs_collectible_state_t * state_val;
 } cache_parents_stack_item_t;
@@ -912,9 +919,9 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
 
 static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
-        const fcs_game_limit_t freecells_num,
-        const fcs_state_t * const state_ptr
-        )
+    const fcs_game_limit_t freecells_num,
+    const fcs_state_t * const state_ptr
+)
 {
     fcs_game_limit_t num_vacant_freecells = 0;
     for(int i=0;i<freecells_num;i++)
@@ -929,9 +936,9 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
 }
 
 static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
-        const fcs_game_limit_t stacks_num,
-        const fcs_state_t * const state_ptr
-        )
+    const fcs_game_limit_t stacks_num,
+    const fcs_state_t * const state_ptr
+)
 {
     fcs_game_limit_t num_vacant_stacks = 0;
 
@@ -1655,9 +1662,7 @@ static void dump_pqueue (
  *  It goes on in this fashion until the final state was reached or
  *  there are no more states in the queue.
 */
-int fc_solve_befs_or_bfs_do_solve(
-    fc_solve_soft_thread_t * soft_thread
-    )
+int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * soft_thread )
 {
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * const instance = hard_thread->instance;
@@ -2015,7 +2020,7 @@ my_return_label:
 
 static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t * soft_thread
-    )
+)
 {
     switch(soft_thread->method)
     {
@@ -2046,7 +2051,7 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
  * about the currently-evaluated state.
  *
  */
-extern char * fc_solve_get_the_positions_by_rank_data(
+char * fc_solve_get_the_positions_by_rank_data(
     fc_solve_soft_thread_t * soft_thread,
     fcs_kv_state_t * ptr_state_raw
 )
