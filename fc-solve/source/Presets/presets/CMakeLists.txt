@@ -1,6 +1,7 @@
 INSTALL(
     FILES
         "abra-kadabra.sh"
+        "amateur-star.sh"
         "blue-yonder.sh"
         "children-playing-ball.sh"
         "cool-jives.sh"

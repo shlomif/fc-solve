@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 29;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -95,6 +95,11 @@ verify_solution_test({deal => 617, theme => ["-l", "john-galt-line"],},
 # TEST
 verify_solution_test({deal => 24, variant => "bakers_game", theme => [],},
     "Baker's Game Deal #24"
+);
+
+# TEST
+verify_solution_test({deal => 1941, theme => ["-l", "amateur-star", ],},
+    "Freecell Dal No. 1941 with the amateur-star preset"
 );
 
 # TEST

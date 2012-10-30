@@ -25,6 +25,9 @@ appears to be interesting.
 the +=asw(…)+ function and its parameters, based on the BeFS (Best-first
 search) weights calculation.
 
+6. Added the +-l amateur-star+ (or +-l as+ for short) preset, based on the
++=asw(…)+ ordering that is the fastest preset yet.
+
 Version 3.12.0: (12-Jun-2012)
 -----------------------------
 
