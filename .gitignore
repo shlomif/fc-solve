@@ -40,7 +40,6 @@ fc-solve/source/board_gen/make-aisleriot-freecell-board
 fc-solve/source/board_gen/make-gnome-freecell-board
 fc-solve/source/board_gen/make-microsoft-freecell-board
 fc-solve/source/board_gen/pi-make-microsoft-freecell-board
-fc-solve/source/config.h
 fc-solve/source/dbm_fc_solver
 fc-solve/source/fc-solve
 fc-solve/source/fc-solve-pruner
@@ -67,7 +66,6 @@ fc-solve/source/libfreecell-solver.so.0.5.0
 fc-solve/source/man/Makefile
 fc-solve/source/man/freecell-solver-range-parallel-solve.6
 fc-solve/source/measure-depth-dep-tests-order-perf
-fc-solve/source/prefix.h
 fc-solve/source/rate_state.c
 fc-solve/source/t/Makefile
 fc-solve/source/t/Presets/presetrc
