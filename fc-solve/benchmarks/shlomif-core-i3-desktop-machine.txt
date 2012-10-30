@@ -263,3 +263,21 @@ gcc-4.7.1-7.mga3
 lib64google-perftools0-2.0-1.mga3
 
 11.5025880336761s
+
+---------------------------------------------------------
+
+ARGS="--worker-step 16 --read-from-file 4,Presets/testing-presets/all-star-4.sh" bash scripts/time-threads-num.bash 4 4 x 4
+commit 9b7575489166272fa5ef315ee30bd1d9491d2faa
+With Profile Guided Optimisation (PGO).
+./Tatzer -l ci7b --prefix=/home/shlomif/apps/fcs
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+3.6.4-desktop-1.mga3
+gcc-4.7.2-4.mga3
+lib64google-perftools0-2.0-1.mga3
+
+9.73104000091553s
+
+    Highlight: the new --method random-dfs -to '[@MOVE_FUNCTIONS]=asw(1)' setup
+    with the all-star-4.sh preset.
