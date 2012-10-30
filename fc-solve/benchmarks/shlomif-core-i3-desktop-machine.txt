@@ -310,6 +310,7 @@ gcc-4.7.2-4.mga3
 lib64google-perftools0-2.0-1.mga3
 
 9.67101216316223s
+9.66428112983704s
 
     Highlight: a small optimisation in the latest commit of extracting a bool
     expression into a variable.
@@ -327,3 +328,17 @@ Reached Board No. 28000 at 1351597294.235821 (total_num_iters=7104298)
 Reached Board No. 32000 at 1351597295.565480 (total_num_iters=9944385)
 Finished at 1351597295.571042 (total_num_iters=11372658)
 </DUMP>
+<DUMP>
+Started at 1351606553.630426
+Reached Board No. 4000 at 1351606554.829545 (total_num_iters=360874)
+Reached Board No. 8000 at 1351606556.090961 (total_num_iters=1070619)
+Reached Board No. 12000 at 1351606557.259518 (total_num_iters=1794103)
+Unsolved Board No. 11982 at 1351606557.467294
+Reached Board No. 16000 at 1351606558.519380 (total_num_iters=2161101)
+Reached Board No. 20000 at 1351606559.693548 (total_num_iters=3964257)
+Reached Board No. 24000 at 1351606560.836723 (total_num_iters=4658935)
+Reached Board No. 28000 at 1351606561.956957 (total_num_iters=5332105)
+Reached Board No. 32000 at 1351606563.287320 (total_num_iters=10979447)
+Finished at 1351606563.294707 (total_num_iters=11372658)
+</DUMP>
+
