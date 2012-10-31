@@ -361,3 +361,19 @@ Reached 11629132 ; States-in-collection: 11629132 ; Time: 1343325500.110992
 for non-Freecell variants.
 ** The prune should operate differently based on the how sequences are built.
 
+* Implement the measurement of "non-reversibility" of the state inside
+the befs_rater.
+** This is a measurement of how many cards were moved to the foundations
+and how many are not on top of designated parents. See the depth_dbm_solver.c
+for more information.
+**Done - to do so assign identical weights to the first and sixth BeFS
+weights - +1,0,0,0,0,1+.
+
+* Implement the parser for the state ordering based on arbitrary sortings.
+** Like +--tests-order '[0123456789]=asw(depth=1)'+ .
+** Done - with a different syntax +--tests-order '[0123456789]=asw(1,0,1,0)'+
+
+* Cache the list of the empty stacks and empty freecells inside the
+soft_thread for easy reference.
+** Convert the freecell.c routines to use it.
+** Tried it - it made the performance worse.
