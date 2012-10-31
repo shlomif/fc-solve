@@ -400,6 +400,8 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     # Removed these flags because they emitted spurious warnings, which were of
     # no use to us:
     # "-Winline"
+    # "-Wfloat-equal"
+
     IF (${CMAKE_COMPILER_IS_GNUCC})
         ADD_DEFINITIONS(
             "-Wall"
@@ -418,7 +420,6 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
             "-Wshadow"
             "-Wwrite-strings"
             "-Wunused"
-            "-Wfloat-equal"
             "-Wold-style-definition"
         )
     ENDIF (${CMAKE_COMPILER_IS_GNUCC})
