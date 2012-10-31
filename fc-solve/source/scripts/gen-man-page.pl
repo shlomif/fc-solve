@@ -11,7 +11,7 @@ gen-man-page.pl
 
 =head1 DESCRIPTION
 
-This script generates man pages ready AsciiDoc document from the more
+This script generates a man page-ready AsciiDoc document from the more
 generic documents such as C<README.txt> or C<USAGE.txt>.
 
 =cut
@@ -87,8 +87,6 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-
-
 
 =cut
 
