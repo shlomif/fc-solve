@@ -12,7 +12,7 @@ the library behave the same as without it. This also affected the behaviour of
 “Iterations count exceeded.”, upon receiving a SIGABRT signal. Can be
 triggered by executing +pkill -ABRT fc-solve+.
 
-3. The game states’ input routines now accepts regular columns that start with
+3. The game states’ input routines now accept regular columns that start with
 a leading colon (":"). As a result, one can input the states as output from
 the solver with the +-p+ and +-t+ flags directly there.
 
@@ -30,6 +30,25 @@ search) weights calculation.
 
 7. Added the +-l micro-finance+ (or +-l mf+ for short) preset, based on the
 6th BeFS weight.
+
+8. Implement a Prune for games whose columns cannot be filled by any card
+(such as Baker’s Dozen), where moving the last card on a column to a
+different column is pointless. For more information, see
+http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1121 .
+
+9. In +dbm_fc_solver+ and +depth_dbm_fc_solver+, implement the “DeBondt”
+encoding method for Freecell and Baker’s Dozen, which allows for an even more
+compact representation of the encoded states.
+
+10. The libfreecell-solver code is now 64-bit-enabled and many of the limits
+were converted to allow for 64-bit systems.
+
+11. Dropped support for Microsoft Visual C++ (+CL.EXE+) and other compilers
+that don't support C99/gnu99.
+
+12. Add +scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl+
+to convert a solution output of the dbm_fc_solver to one compatible with
+fc-solve.
 
 Version 3.12.0: (12-Jun-2012)
 -----------------------------
