@@ -57,7 +57,10 @@ sub get_dir_entries
     return \@ret;
 }
 
-my @tarballs = grep { /\A\Q$package_base\E-\Q$version\E\.tar\.\w+\z/ }
+# Avoid tar.Z archives because they are old and deprecated.
+my @tarballs = grep {
+    /\A\Q$package_base\E-\Q$version\E\.tar\.(\w+)\z/ && ($1 ne 'Z')
+    }
     @{get_dir_entries($binary_dir)};
 
 if (! @tarballs)
