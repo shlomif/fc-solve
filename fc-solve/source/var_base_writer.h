@@ -57,7 +57,8 @@ static GCC_INLINE void fc_solve_var_base_writer_start(fcs_var_base_writer_t * s)
 
 static GCC_INLINE void fc_solve_var_base_writer_write(
     fcs_var_base_writer_t * w,
-    int base, int item
+    int base,
+    int item
 )
 {
     assert(item >= 0);

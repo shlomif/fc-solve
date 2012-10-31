@@ -43,7 +43,8 @@ typedef struct
 } fcs_var_base_reader_t;
 
 static GCC_INLINE void fc_solve_var_base_reader_init(
-    fcs_var_base_reader_t * s)
+    fcs_var_base_reader_t * s
+)
 {
     mpz_init(s->data);
     mpz_init(s->data_byte_offset);
@@ -54,7 +55,7 @@ static GCC_INLINE void fc_solve_var_base_reader_start(
     fcs_var_base_reader_t * s,
     const unsigned char * data,
     size_t data_len
-    )
+)
 {
     size_t count;
     unsigned long shift_count = 0;
@@ -70,7 +71,8 @@ static GCC_INLINE void fc_solve_var_base_reader_start(
 }
 
 static GCC_INLINE int fc_solve_var_base_reader_read(
-    fcs_var_base_reader_t * reader, int base
+    fcs_var_base_reader_t * reader,
+    int base
 )
 {
     mpz_fdiv_qr_ui(reader->data, reader->r, reader->data, (unsigned long)base);
