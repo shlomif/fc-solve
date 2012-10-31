@@ -4,6 +4,9 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.14.0: (31-Oct-2012)
+-----------------------------
+
 1. Got the tests to pass with +cmake -DFCS_WITHOUT_DEPTH_FIELD=1+ by making
 the library behave the same as without it. This also affected the behaviour of
 +./fc-solve -l mo+ with attempting to solve Baker’s Dozen deals.
