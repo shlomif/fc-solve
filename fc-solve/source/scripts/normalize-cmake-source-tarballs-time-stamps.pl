@@ -111,8 +111,15 @@ if (!defined($arc_dir))
 print "Repackaging.\n";
 foreach my $tarball (@tarballs)
 {
-    system("tar", "-caf", File::Spec->catfile($binary_dir_abs, $tarball),
-        $arc_dir);
+    my @cmd =
+    (
+        "tar", "-caf", File::Spec->catfile($binary_dir_abs, $tarball),
+                $arc_dir
+    );
+    if (system(@cmd))
+    {
+        die "System <@cmd> Returned an error code. Aborting.";
+    }
 }
 print "Finished!\n";
 
