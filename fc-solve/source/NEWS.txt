@@ -28,6 +28,9 @@ search) weights calculation.
 6. Added the +-l amateur-star+ (or +-l as+ for short) preset, based on the
 +=asw(…)+ ordering that is the fastest preset yet.
 
+7. Added the +-l micro-finance+ (or +-l mf+ for short) preset, based on the
+6th BeFS weight.
+
 Version 3.12.0: (12-Jun-2012)
 -----------------------------
 
