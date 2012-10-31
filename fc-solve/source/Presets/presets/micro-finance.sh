@@ -30,4 +30,4 @@ freecell-solver-range-parallel-solve 1 32000 1 \
 -nf --flare-name irrev_half --method a-star -to 0123467589 -asw 25,0,0,0,50,25 -sp r:tf -opt \
 -nf --flare-name on_parents --method a-star -to 0123467589 -asw 0,0,0,0,0,100 -sp r:tf -opt \
 -nf --flare-name on_parents_half --method a-star -to 0123467589 -asw 0,0,0,0,50,50 -sp r:tf -opt \
- --flares-plan "Run:6246@1,Run:2663@2,Run:6799@3,Run:7161@4,Run:3466@5,Run:3594@9,Run:6896@10,Run:7269@11,Run:7194@12,Run:6462@15,Run:7742@16,Run:7029@17,Run:3769@18,Run:5244@19,Run:7149@20,Run:8848@21,Run:6282@22,Run:5020@23,Run:2128@24,Run:6833@25,Run:7290@26,Run:6619@27,Run:3797@28,Run:10000@29,Run:10000@30,Run:3184@31,Run:3000@foo,10000@irrev1,10000@irrev_half,10000@on_parents,10000@on_parents_half"
+ --flares-plan "Run:6246@1,Run:2663@2,Run:6799@3,Run:7161@4,Run:3466@5,Run:3594@9,Run:6896@10,Run:7269@11,Run:7194@12,Run:6462@15,Run:7742@16,Run:7029@17,Run:3769@18,Run:5244@19,Run:7149@20,Run:8848@21,Run:6282@22,Run:5020@23,Run:2128@24,Run:6833@25,Run:7290@26,Run:6619@27,Run:3797@28,Run:10000@29,Run:10000@30,Run:3184@31,Run:3000@foo,Run:10000@irrev1,Run:10000@irrev_half,Run:10000@on_parents,Run:10000@on_parents_half"
