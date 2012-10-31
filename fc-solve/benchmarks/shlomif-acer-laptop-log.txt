@@ -238,3 +238,20 @@ lib64google-perftools0-1.9.1-1.mga2
     Highlight: gcc-4.6.2, and optimisations on the trunk.
 
 23.9574329853058s
+
+------------------------------
+
+ARGS="--worker-step 16 -l as" bash scripts/time-threads-num.bash 2 2 (x4)
+commit 0643a8cc3a1519f4a2f593b8dd202c2662a8a21b
+With Profile Guided Optimisation (PGO).
+./Tatzer -l c2b --prefix=/home/shlomif/apps/fc-solve/
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+kernel 3.4.15-desktop-1.mga2
+gcc-4.6.3-2.mga2
+lib64google-perftools0-1.9.1-1.mga2
+
+    Highlight: the amateur-star preset, and many other improvements.
+
+20.2895250320435s
