@@ -10,6 +10,9 @@ Pressing
 Non-pressing
 ------------
 
+* Investigate the scan of:
++--method random-dfs -to '[01]=rand()[23456789]=rand()' -dto '13,[0123456]=asw(1)' -sp r:tf+. It seems to yield good results.
+
 * Implement the measurement of "non-reversibility" of the state inside
 the befs_rater.
 ** This is a measurement of how many cards were moved to the foundations
