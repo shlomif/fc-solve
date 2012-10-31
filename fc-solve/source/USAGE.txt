@@ -825,6 +825,9 @@ Solver 3.2.0 and above) that yields solutions faster on average than
 |+maliciously-obscure+         |a meta-moves and flare-based preset that tends
 to yield very short solutions (even in comparison to +children-playing-ball+
 ) but is slow.
+|+micro-finance+               |a meta-moves and flare-based preset that tends
+to yield very short solutions (even in comparison to +maliciously-obscure+
+) but is even slower.
 |+rin-tin-tin+                 |a meta-moves preset
 |+sand-stone+                  |an atomic-moves preset that aims to
             minimise the outcome solution's length.
