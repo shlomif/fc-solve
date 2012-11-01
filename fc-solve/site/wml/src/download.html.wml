@@ -43,7 +43,7 @@ large number of Solitaire variants.
 <tr>
 <td>
 # <a href="http://www.shlomifish.org/Files/files/code/fcs/freecell-solver-2.32.1.tar.bz2">freecell-solver-2.32.1.tar.bz2</a>
-<link_to_download_file "freecell-solver-3.14.0.tar.bz2" />
+<link_to_download_file "freecell-solver-3.14.1.tar.bz2" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
