@@ -202,6 +202,8 @@ extern "C" {
 /* Define to 1 if you have the `m' library (-lm). */
 #cmakedefine HAVE_LIBM
 
+#cmakedefine HAVE_STRNDUP
+
 /* Name of package */
 #define PACKAGE "${PACKAGE}"
 
