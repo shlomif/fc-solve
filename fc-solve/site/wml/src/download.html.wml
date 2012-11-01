@@ -52,7 +52,7 @@ Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
 
 <tr>
 <td>
-<link_to_download_file "freecell-solver-3.10.0-win32.exe" />
+<link_to_download_file "freecell-solver-3.14.1-win32.exe" />
 </td>
 <td>
 Win32 Binaries. Download the .exe, double-click it, and an
