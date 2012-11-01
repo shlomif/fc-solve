@@ -23,18 +23,12 @@ run(
 	]
 );
 
-run(
-	[
-	"C:\\strawberry\\c\\bin\\mingw32-make",
-	]
-);
+#my $make_path = "C:/strawberry/c/bin/mingw32-make";
+my $make_path = "C:/Dwimperl/c/bin/mingw32-make";
 
-run(
-	[
-	"C:\\strawberry\\c\\bin\\mingw32-make",
-	"package",
-	]
-);
+run( [ $make_path, ] );
+
+run( [ $make_path, "package", ] );
 
 
 
