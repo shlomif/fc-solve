@@ -1,0 +1,60 @@
+<!-- TITLE=Freecell Solver 3.14.1 was Released-->
+
+<p>
+<a href="http://fc-solve.shlomifish.org/">Freecell Solver</a> version 3.14.0,
+shortly followed by Freecell Solver 3.14.1, which fixed a build problem on
+Microsoft Windows, have been released. Freecell Solver 3.14.1 is available in
+the form of a source archive, and a Win32 self-installing executable, from
+<a href="http://fc-solve.shlomifish.org/download.html">the
+    download page</a>. Freecell Solver is an open source framework (library
+and some command line applications), for automatically solving several
+variants of card Solitaire / Patience games, including Freecell.
+</p>
+
+<p>
+This release features several new features: we added a 6th Best-First-Search
+weight of the inverse of the number of cards not above parents, which has
+proven useful. We now also allow test groups inside the <tt>--tests-order</tt>
+and <tt>--depth-tests-order</tt> with the <tt>random-dfs</tt> scan to be
+ordered using the function <tt>=asw(…)</tt> based on those BeFS weights.
+</p>
+
+<p>
+As a result, the preset <tt>-l amateur-star</tt> or <tt>-l as</tt> for short
+has been added, that uses that and is our fastest preset yet. Another new
+preset is <tt>-l micro-finance</tt> (or <tt>-l mf</tt> for short), which
+yields especially short solutions.
+</p>
+
+<p>
+There are also some not-as-major features: input boards can now contain a
+leading
+colon (":") at the beginning of the line of columns, so they can be
+copy-and-pasted directly from the output of fc-solve with the <tt>-p</tt>
+flag. The <tt>dbm_fc_solver</tt> and <tt>depth_dbm_fc_solver</tt> now store
+the positions more compactly (which aided in researching two-freecell deals),
+and the core libfreecell-solver code was made more 64-bit enabled and many
+of the limits were converted to 64-bit friendly ones.
+</p>
+
+<p>
+A final note: we have dropped support for building Freecell Solver with
+<a href="http://en.wikipedia.org/wiki/Visual_C%2B%2B">Microsoft Visual C++</a>
+and other non-GCC compatible compilers, which do not support the newer
+C standards, and other useful features of GCC. Building Freecell Solver with
+GCC, clang and other compatible compilers will be continued to be supported
+on Microsoft Windows as well as on Linux and other UNIX-like systems.
+</p>
+
+<p>
+More information about all these can be found in the
+<a href="http://fc-solve.shlomifish.org/docs/#distributed-docs">distributed
+    documents</a> of Freecell Solver.
+</p>
+
+<p>
+Enjoy!
+</p>
+<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/96099636168698788-2612128708037220774?l=fc-solve.blogspot.com' alt='' /></div>
+
+<p><a href="http://fc-solve.blogspot.com/2012/11/freecell-solver-3141-was-released.html">See comments and comment on this.</a></p>
