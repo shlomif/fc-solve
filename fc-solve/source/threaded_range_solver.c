@@ -305,7 +305,8 @@ static void * worker_thread(void * void_context)
         {
             quota_end = end_board+1;
         }
-        for(;board_num<quota_end;board_num++)
+
+        for ( ; board_num < quota_end ; board_num++ )
         {
             get_board(board_num, state_string);
 
