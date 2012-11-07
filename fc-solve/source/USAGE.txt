@@ -828,6 +828,9 @@ to yield very short solutions (even in comparison to +children-playing-ball+
 |+micro-finance+               |a meta-moves and flare-based preset that tends
 to yield very short solutions (even in comparison to +maliciously-obscure+
 ) but is even slower.
+|+micro-finance-improved+      |a meta-moves and flare-based preset, based
+on +micro-finance+ that yields somewhat shorter solutions on average, and
+should not be slower.
 |+rin-tin-tin+                 |a meta-moves preset
 |+sand-stone+                  |an atomic-moves preset that aims to
             minimise the outcome solution's length.
