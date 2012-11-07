@@ -4,6 +4,13 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+1. Add the +-l micro-finance-improved+ preset (or +-l mfi+ for short),
+which somewhat improves the length of the solutions of the +micro-finance+
+preset.
+
+Version 3.14.1: (01-Nov-2012)
+-----------------------------
+
 1. Fix the build on Windows with Dwimperl and its Mingw32 (+strndup()+
 was missing).
 

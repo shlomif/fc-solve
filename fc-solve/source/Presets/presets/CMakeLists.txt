@@ -14,6 +14,7 @@ INSTALL(
         "john_galt_line-500.sh"
         "maliciously-obscure.sh"
         "micro-finance.sh"
+        "micro-finance-improved.sh"
         "rin-tin-tin.sh"
         "sand-stone.sh"
         "sentient-pearls.sh"
