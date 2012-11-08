@@ -29,7 +29,7 @@ static char * suit_to_string(int suit, char * buf)
     return buf;
 }
 
-static char * card_to_string(Card card, char * buf)
+static char * card_to_string(fcs_card_t card, char * buf)
 {
     rank_to_string(card&0x0F,buf);
     suit_to_string(card>>4,buf+1);
@@ -246,7 +246,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                 char exists[4*13];
                 int rank, suit;
                 int fc, col, count, i;
-                Card card;
+                fcs_card_t card;
 
                 memset(exists, '\0', sizeof(exists));
                 for (suit=0;suit<4;suit++)
@@ -287,7 +287,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
             for (i = 0 ; i < 8 ; i++)
             {
                 int rank, suit;
-                Card card;
+                fcs_card_t card;
 
                 fcs_cards_column_t col = fcs_state_get_col(pos, i);
                 if (fcs_col_len(col) > 0)
@@ -316,7 +316,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
             for(j=0;j<num_freecells;j++)
             {
                 int rank, suit;
-                Card card;
+                fcs_card_t card;
 
                 if (! fcs_freecell_is_empty(pos, j))
                 {
@@ -347,7 +347,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
 
         {
             int src, dest;
-            Card card;
+            fcs_card_t card;
             switch(fcs_move_get_type(move))
             {
                 case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:

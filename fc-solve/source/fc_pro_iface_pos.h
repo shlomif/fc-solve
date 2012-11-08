@@ -40,8 +40,6 @@ extern "C" {
 #include "card.h"
 #include "state.h"
 
-typedef fcs_card_t Card;
-
 typedef fcs_cards_column_t Column;
 
 typedef fcs_state_keyval_pair_t Position;
