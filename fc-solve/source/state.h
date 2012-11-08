@@ -1181,4 +1181,15 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * const v
 
 #endif
 
+#ifdef DEBUG_STATES
+
+#define DEFINE_fc_solve_empty_card() \
+    fcs_card_t fc_solve_empty_card = {0,0};
+
+#elif defined(COMPACT_STATES) || defined (INDIRECT_STACK_STATES)
+
+#define DEFINE_fc_solve_empty_card() \
+    fcs_card_t fc_solve_empty_card = (fcs_card_t)0;
+
+#endif
 #endif /* FC_SOLVE__STATE_H */

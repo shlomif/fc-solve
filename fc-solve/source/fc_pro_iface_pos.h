@@ -1,3 +1,30 @@
+/* Copyright (c) 2000 Shlomi Fish
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+/*
+ * fc_pro_iface_pos.h - generate solutions in standard notation, with
+ * implicit (and not included) Horne/Raymond prune moves.
+ */
 #ifndef FC_SOLVE__FC_PRO_IFACE_POS_H
 #define FC_SOLVE__FC_PRO_IFACE_POS_H
 
@@ -5,27 +32,19 @@
 extern "C" {
 #endif
 
-/* 1997 wilson callan */
-/* 1994 don woods */
-
 #include "fcs_user.h"
 #include "fcs_cl.h"
 
 #include "bool.h"
 
-typedef unsigned char	uchar;
-typedef uchar		Card;/* 00ssrrrr: s=suit, r=rank(1-13) */
+#include "card.h"
+#include "state.h"
 
-typedef struct {
-	uchar	count;		/* number rdof cards in column */
-    Card	cards[19];
-} Column;
+typedef fcs_card_t Card;
 
-typedef struct {
-	uchar	foundations[4];
-	Card	hold[8];
-	Column	tableau[8];
-} Position;
+typedef fcs_cards_column_t Column;
+
+typedef fcs_state_keyval_pair_t Position;
 
 extern char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells);
 

@@ -37,43 +37,21 @@
 #include "fcs_cl.h"
 
 #include "fc_pro_iface_pos.h"
-#define FCS_WITHOUT_GET_BOARD
 #include "range_solvers_gen_ms_boards.h"
 #include "unused.h"
 #include "bool.h"
+#include "indirect_buffer.h"
+
 
 #define     SUIT(card)      ((card) % 4)
 #define     VALUE(card)     ((card) / 4)
 
-static GCC_INLINE void fc_pro_get_board(long gamenumber, Position * pos)
+static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, Position * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
-    int  i, j;                /*  generic counters */
-    int  wLeft = 52;          /*  cards left to be chosen in shuffle */
-    CARD deck[52];            /* deck of 52 unique cards */
-    int col;
-    CARD card, suit;
-
-    memset(pos, '\0', sizeof(*pos));
-
-    /* shuffle cards */
-
-    for (i = 0; i < 52; i++)      /* put unique card in each deck loc. */
-    {
-        deck[i] = i;
-    }
-
-    for (i = 0; i < 52; i++)
-    {
-        j = microsoft_rand_rand(&gamenumber) % wLeft;
-        col = (i%8);
-        card = deck[j];
-        suit = SUIT(card);
-        pos->tableau[col].cards[pos->tableau[col].count++]
-            = (Card)((VALUE(card)+1)
-            + (((suit == 3) ? suit : ((suit+1)%3))<<4))
-            ;
-        deck[j] = deck[--wLeft];
-    }
+    get_board(gamenumber, state_string);
+    fc_solve_initial_user_state_to_c(
+        state_string, pos, 4, 8, 1, indirect_stacks_buffer
+    );
 }
 
 struct fc_solve_display_information_context_struct
@@ -292,15 +270,14 @@ static int read_int(FILE * f, int * dest)
 int main(int argc, char * argv[])
 {
     pack_item_t user;
-    /* char buffer[2048]; */
     int ret;
     int len;
     int board_num;
     int start_board, end_board, stop_at;
-    char * buffer;
     const char * variant = "freecell";
     char temp_str[10];
     fcs_portable_time_t mytime;
+    char * buffer;
 
     fcs_int64_t total_num_iters = 0;
 
@@ -317,6 +294,7 @@ int main(int argc, char * argv[])
     int arg = 1, start_from_arg;
 
     Position pos;
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     if (argc < 4)
     {
@@ -503,17 +481,20 @@ int main(int argc, char * argv[])
 
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
+#define BUF_SIZE 2000
         if (variant_is_freecell)
         {
-            fc_pro_get_board(board_num, &pos);
-
-            buffer = fc_solve_fc_pro_position_to_string(&pos, 4);
+            buffer = calloc(BUF_SIZE, sizeof(buffer[0]));
+            fc_pro_get_board(board_num, buffer, &(pos)
+#ifdef INDIRECT_STACK_STATES
+                , indirect_stacks_buffer
+#endif
+                );
         }
         else
         {
             FILE * from_make_pysol;
             char command[1000];
-#define BUF_SIZE 2000
             buffer = calloc(BUF_SIZE, sizeof(buffer[0]));
 
             sprintf(command, "make_pysol_freecell_board.py -F -t %d %s",
@@ -575,7 +556,7 @@ int main(int argc, char * argv[])
         print_int_wrapper(num_iters);
         printf("[[Num Iters]]=%d\n[[Num FCS Moves]]=%d\n[[Num FCPro Moves]]=%d\n", num_iters, num_moves, num_fcpro_moves);
 
-        printf("\n%s\n", "[[Start]]");
+        printf("%s\n", "[[Start]]");
         if (fc_pro_moves)
         {
             fcs_extended_move_t move;

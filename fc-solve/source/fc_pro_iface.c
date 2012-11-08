@@ -8,6 +8,9 @@
 #include "inline.h"
 #include "alloc_wrap.h"
 
+#include "card.c"
+
+#if 0
 static const char * ranks_map = "0A23456789TJQK";
 
 static char * rank_to_string(int rank, char * buf)
@@ -102,6 +105,7 @@ char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
 
     return strdup(buffer);
 }
+#endif
 
 static GCC_INLINE int Cvtf89(int fcn)
 {
@@ -187,7 +191,8 @@ static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended
 
 moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void * instance)
 {
-    Position pos;
+    Position pos_proto;
+#define pos (pos_proto.s)
     moves_processed_t * ret;
     int virtual_stack_len[8];
 #ifndef NDEBUG
@@ -196,7 +201,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
     int i, j, move_idx, num_back_end_moves;
     fcs_move_t move, out_move;
 
-    pos = *orig;
+    pos_proto = *orig;
 
     num_back_end_moves = freecell_solver_user_get_moves_left(instance);
 
@@ -207,12 +212,13 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
 
     for(i=0;i<8;i++)
     {
-        virtual_stack_len[i] = orig->tableau[i].count;
+        fcs_cards_column_t col = fcs_state_get_col(orig->s, i);
+        virtual_stack_len[i] = fcs_col_len(col);
     }
 #ifndef NDEBUG
     for(i=0;i<num_freecells;i++)
     {
-        virtual_freecell_len[i] = (orig->hold[i] != 0) ? 1 : 0;
+        virtual_freecell_len[i] = (! fcs_freecell_is_empty(pos, i)) ? 1 : 0;
     }
 #endif
 
@@ -245,7 +251,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                 memset(exists, '\0', sizeof(exists));
                 for (suit=0;suit<4;suit++)
                 {
-                    for(rank=1;rank<=pos.foundations[suit];rank++)
+                    for(rank=1;rank<=fcs_foundation_value(pos, suit);rank++)
                     {
                         exists[rank-1+suit*13] = 1;
                     }
@@ -278,25 +284,25 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
             }
 #endif
 
-            for(i=0;i<8;i++)
+            for (i = 0 ; i < 8 ; i++)
             {
                 int rank, suit;
                 Card card;
 
-                if (pos.tableau[i].count > 0)
+                fcs_cards_column_t col = fcs_state_get_col(pos, i);
+                if (fcs_col_len(col) > 0)
                 {
-                    card = pos.tableau[i].cards[pos.tableau[i].count-1];
-                    rank = card & 0x0F;
-                    suit = card >> 4;
+                    card = fcs_col_get_card(col, fcs_col_len(col) - 1);
+                    rank = fcs_card_rank(card);
+                    suit = fcs_card_suit(card);
                     /* Check if we can safely move it */
-                    if ((pos.foundations[suit^0x1] >= rank-2) &&
-                        (pos.foundations[suit^0x1^0x2] >= rank-2) &&
-                        (pos.foundations[suit^0x2] >= rank-3) &&
-                        (pos.foundations[suit] == rank-1))
+                    if ((fcs_foundation_value(pos, suit^0x1) >= rank-2) &&
+                        (fcs_foundation_value(pos, suit^0x1^0x2) >= rank-2) &&
+                        (fcs_foundation_value(pos, suit^0x2) >= rank-3) &&
+                        (fcs_foundation_value(pos, suit) == rank-1))
                     {
-                        pos.foundations[suit]++;
-                        pos.tableau[i].count--;
-
+                        fcs_increment_foundation(pos, suit);
+                        fcs_col_pop_top(col);
                         /* An Automove. */
 
                         break;
@@ -312,19 +318,19 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                 int rank, suit;
                 Card card;
 
-                if (pos.hold[j] != 0)
+                if (! fcs_freecell_is_empty(pos, j))
                 {
-                    card = pos.hold[j];
-                    rank = card & 0x0F;
-                    suit = card >> 4;
+                    card = fcs_freecell_card(pos, j);
+                    rank = fcs_card_rank(card);
+                    suit = fcs_card_suit(card);
                     /* Check if we can safely move it */
-                    if ((pos.foundations[suit^0x1] >= rank-2) &&
-                        (pos.foundations[suit^0x1^0x2] >= rank-2) &&
-                        (pos.foundations[suit^0x2] >= rank-3) &&
-                        (pos.foundations[suit] == rank-1))
+                    if ((fcs_foundation_value(pos, suit^0x1) >= rank-2) &&
+                        (fcs_foundation_value(pos, suit^0x1^0x2) >= rank-2) &&
+                        (fcs_foundation_value(pos, suit^0x2) >= rank-3) &&
+                        (fcs_foundation_value(pos, suit) == rank-1))
                     {
-                        pos.foundations[suit]++;
-                        pos.hold[j] = 0;
+                        fcs_increment_foundation(pos, suit);
+                        fcs_empty_freecell(pos, j);
 
                         /* We've just done an auto-move */
                         break;
@@ -340,21 +346,20 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
         freecell_solver_user_get_next_move(instance, &move);
 
         {
-            int src, dest, len;
+            int src, dest;
             Card card;
             switch(fcs_move_get_type(move))
             {
                 case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
                     {
                         src = fcs_move_get_src_stack(move);
-                        assert(virtual_stack_len[src] >= pos.tableau[src].count);
-                        if (virtual_stack_len[src] == pos.tableau[src].count)
+                        fcs_cards_column_t col = fcs_state_get_col(pos, src);
+                        assert(virtual_stack_len[src] >= fcs_col_len(col));
+                        if (virtual_stack_len[src] == fcs_col_len(col))
                         {
-                            len = virtual_stack_len[src];
-                            card = pos.tableau[src].cards[len-1];
-                            pos.foundations[card >> 4]++;
+                            fcs_col_pop_card(col, card);
+                            fcs_increment_foundation(pos, fcs_card_suit(card));
                             virtual_stack_len[src]--;
-                            pos.tableau[src].count--;
                             {
                                 fcs_extended_move_t ext_move;
                                 ext_move.move = move;
@@ -375,7 +380,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                     {
                         src = fcs_move_get_src_freecell(move);
                         assert((virtual_freecell_len[src] == 1));
-                        if (pos.hold[src] == 0)
+                        if (fcs_freecell_is_empty(pos, src))
                         {
                             /* Do nothing */
                         }
@@ -389,8 +394,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
 
                                 moves_processed_add_new_move(ret, ext_move);
                             }
-                            pos.foundations[pos.hold[src] >> 4]++;
-                            pos.hold[src] = 0;
+                            fcs_increment_foundation(pos, fcs_freecell_card_suit(pos, src));
+                            fcs_empty_freecell(pos, src);
                         }
 #ifndef NDEBUG
                         virtual_freecell_len[src] = 0;
@@ -403,7 +408,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                         src = fcs_move_get_src_freecell(move);
                         dest = fcs_move_get_dest_stack(move);
                         assert(virtual_freecell_len[src] == 1);
-                        if (pos.hold[src] == 0)
+                        if (fcs_freecell_is_empty(pos, src))
                         {
                             /* Do nothing */
                         }
@@ -417,8 +422,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
 
                                 moves_processed_add_new_move(ret, ext_move);
                             }
-                            pos.tableau[dest].cards[pos.tableau[dest].count++] = pos.hold[src];
-                            pos.hold[src] = 0;
+                            fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
+                            fcs_col_push_card(dest_col, fcs_freecell_card(pos, src));
+                            fcs_empty_freecell(pos, src);
                         }
 #ifndef NDEBUG
                         virtual_freecell_len[src] = 0;
@@ -432,8 +438,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                         src = fcs_move_get_src_stack(move);
                         dest = fcs_move_get_dest_freecell(move);
                         assert(virtual_stack_len[src] > 0);
-                        assert(pos.tableau[src].count <= virtual_stack_len[src]);
-                        if (pos.tableau[src].count < virtual_stack_len[src])
+                        fcs_cards_column_t col = fcs_state_get_col(pos, src);
+                        assert(fcs_col_len(col) <= virtual_stack_len[src]);
+                        if (fcs_col_len(col) < virtual_stack_len[src])
                         {
                             /* Do nothing */
                         }
@@ -448,7 +455,9 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
 
                                 moves_processed_add_new_move(ret, ext_move);
                             }
-                            pos.hold[dest] = pos.tableau[src].cards[--pos.tableau[src].count];
+                            fcs_card_t temp_card;
+                            fcs_col_pop_card(col, temp_card);
+                            fcs_put_card_in_freecell(pos, dest, temp_card);
                         }
                         virtual_stack_len[src]--;
 #ifndef NDEBUG
@@ -464,13 +473,16 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                         src = fcs_move_get_src_stack(move);
                         dest = fcs_move_get_dest_stack(move);
                         num_cards = fcs_move_get_num_cards_in_seq(move);
-                        assert(virtual_stack_len[src] >= pos.tableau[src].count);
-                        if (virtual_stack_len[src] > pos.tableau[src].count)
+                        fcs_cards_column_t src_col = fcs_state_get_col(pos, src);
+                        fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
+                        int src_len = fcs_col_len(src_col);
+                        assert(virtual_stack_len[src] >= src_len);
+                        if (virtual_stack_len[src] > src_len)
                         {
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
 #endif
-                            virt_num_cards = min((virtual_stack_len[src]-pos.tableau[src].count), num_cards);
+                            virt_num_cards = min((virtual_stack_len[src]-src_len), num_cards);
 #undef min
                             virtual_stack_len[src] -= virt_num_cards;
                             virtual_stack_len[dest] += virt_num_cards;
@@ -485,17 +497,17 @@ moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void
                             {
                                 fcs_extended_move_t ext_move;
                                 ext_move.move = out_move;
-                                ext_move.to_empty_stack = (pos.tableau[dest].count == 0);
+                                ext_move.to_empty_stack = (fcs_col_len(dest_col) == 0);
                                 moves_processed_add_new_move(ret, ext_move);
                             }
                             for(i=0;i<num_cards;i++)
                             {
-                                pos.tableau[dest].cards[pos.tableau[dest].count+i] = pos.tableau[src].cards[pos.tableau[src].count-num_cards+i];
+                                fcs_col_push_col_card(dest_col, src_col, fcs_col_len(src_col)-num_cards+i);
                             }
-                            pos.tableau[dest].count =
-                                (uchar)(pos.tableau[dest].count+num_cards);
-                            pos.tableau[src].count =
-                                (uchar)(pos.tableau[src].count - num_cards);
+                            for(i=0;i<num_cards;i++)
+                            {
+                                fcs_col_pop_top(src_col);
+                            }
                             virtual_stack_len[dest] += num_cards;
                             virtual_stack_len[src] -= num_cards;
                         }
