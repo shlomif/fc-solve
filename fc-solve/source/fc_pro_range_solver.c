@@ -46,7 +46,7 @@
 #define     SUIT(card)      ((card) % 4)
 #define     VALUE(card)     ((card) / 4)
 
-static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, Position * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
+static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, fcs_state_keyval_pair_t * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     get_board(gamenumber, state_string);
     fc_solve_initial_user_state_to_c(
@@ -293,7 +293,7 @@ int main(int argc, char * argv[])
 
     int arg = 1, start_from_arg;
 
-    Position pos;
+    fcs_state_keyval_pair_t pos;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     if (argc < 4)

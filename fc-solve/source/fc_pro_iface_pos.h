@@ -40,9 +40,7 @@ extern "C" {
 #include "card.h"
 #include "state.h"
 
-typedef fcs_state_keyval_pair_t Position;
-
-extern char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells);
+extern char * fc_solve_fc_pro_position_to_string(fcs_state_keyval_pair_t * pos, int num_freecells);
 
 typedef struct
 {
@@ -58,7 +56,7 @@ typedef struct
 } moves_processed_t;
 
 moves_processed_t * moves_processed_gen(
-        Position * orig,
+        fcs_state_keyval_pair_t * orig,
         int freecells_num,
         void * instance
         );

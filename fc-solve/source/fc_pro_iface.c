@@ -189,9 +189,9 @@ static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended
     moves->moves[moves->num_moves-1] = new_move;
 }
 
-moves_processed_t * moves_processed_gen(Position * orig, int num_freecells, void * instance)
+moves_processed_t * moves_processed_gen(fcs_state_keyval_pair_t * orig, int num_freecells, void * instance)
 {
-    Position pos_proto;
+    fcs_state_keyval_pair_t pos_proto;
 #define pos (pos_proto.s)
     moves_processed_t * ret;
     int virtual_stack_len[8];
