@@ -540,58 +540,57 @@ int main(int argc, char * argv[])
 
         free(buffer);
 
+        int num_iters;
+        int num_moves;
+        int num_fcpro_moves;
+        moves_processed_t * fc_pro_moves = NULL;
+
         if (ret == FCS_STATE_SUSPEND_PROCESS)
         {
             FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
-            fflush(stdout);
 
-            print_int_wrapper(-1);
-            printf("%s", "[[Num FCS Moves]]=-1\n[[Num FCPro Moves]]=-1\n");
+            num_iters = num_moves = num_fcpro_moves = -1;
         }
         else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
             FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
-            print_int_wrapper(-2);
-            printf("%s", "[[Num FCS Moves]]=-2\n[[Num FCPro Moves]]=-2\n");
+            num_iters = num_moves = num_fcpro_moves = -1;
         }
         else
         {
-            moves_processed_t * fc_pro_moves;
-            fcs_extended_move_t move;
-            int num_moves;
-
-            print_int_wrapper((int)freecell_solver_user_get_num_times_long(user.instance));
-            printf("[[Num FCS Moves]]=%d\n",
-                    (num_moves =
-                     freecell_solver_user_get_moves_left(user.instance)
-                    )
-                  );
+            num_iters = (int)freecell_solver_user_get_num_times_long(user.instance);
+            num_moves = freecell_solver_user_get_moves_left(user.instance);
 
             if (variant_is_freecell)
             {
                 fc_pro_moves = moves_processed_gen(&pos, 4, user.instance);
 
-                printf("[[Num FCPro Moves]]=%d\n[[Start]]\n",
-                       moves_processed_get_moves_left(fc_pro_moves)
-                      );
-
-                len = 0;
-                while (! moves_processed_get_next_move(fc_pro_moves, &move))
-                {
-                    moves_processed_render_move(move, temp_str);
-                    printf("%s%c", temp_str,
-                           ((((++len) % 10) == 0) ? '\n' : ' ')
-                          );
-                }
-                moves_processed_free(fc_pro_moves);
+                num_fcpro_moves = moves_processed_get_moves_left(fc_pro_moves);
             }
             else
             {
-                printf("[[Num FCPro Moves]]=%d\n[[Start]]\n", num_moves);
+                num_fcpro_moves = num_moves;
             }
-            printf("\n%s\n", "[[End]]");
         }
+        print_int_wrapper(num_iters);
+        printf("[[Num Iters]]=%d\n[[Num FCS Moves]]=%d\n[[Num FCPro Moves]]=%d\n", num_iters, num_moves, num_fcpro_moves);
 
+        printf("\n%s\n", "[[Start]]");
+        if (fc_pro_moves)
+        {
+            fcs_extended_move_t move;
+            len = 0;
+            while (! moves_processed_get_next_move(fc_pro_moves, &move))
+            {
+                moves_processed_render_move(move, temp_str);
+                printf("%s%c", temp_str,
+                    ((((++len) % 10) == 0) ? '\n' : ' ')
+                );
+            }
+            moves_processed_free(fc_pro_moves);
+        }
+        printf("\n%s\n", "[[End]]");
+        fflush(stdout);
         total_num_iters += freecell_solver_user_get_num_times_long(user.instance);
 
         if (board_num % stop_at == 0)
