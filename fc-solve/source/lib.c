@@ -1095,6 +1095,23 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     );
 }
 
+#ifdef FCS_USE_COMPACT_MOVE_TOKENS
+#define internal_move_to_user_move(x) (x)
+#else
+static GCC_INLINE fcs_move_t internal_move_to_user_move(fcs_internal_move_t internal_move)
+{
+    fcs_move_t user_move;
+
+    /* Convert the internal_move to a user move. */
+    fcs_move_set_src_stack(user_move, fcs_int_move_get_src_stack(internal_move));
+    fcs_move_set_dest_stack(user_move, fcs_int_move_get_dest_stack(internal_move));
+    fcs_move_set_type(user_move, fcs_int_move_get_type(internal_move));
+    fcs_move_set_num_cards_in_seq(user_move, fcs_int_move_get_num_cards_in_seq(internal_move));
+
+    return user_move;
+}
+#endif
+
 int DLLEXPORT freecell_solver_user_get_next_move(
     void * api_instance,
     fcs_move_t * user_move
@@ -1126,11 +1143,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
                 );
 
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
-            /* Convert the internal_move to a user move. */
-            fcs_move_set_src_stack(*user_move, fcs_int_move_get_src_stack(internal_move));
-            fcs_move_set_dest_stack(*user_move, fcs_int_move_get_dest_stack(internal_move));
-            fcs_move_set_type(*user_move, fcs_int_move_get_type(internal_move));
-            fcs_move_set_num_cards_in_seq(*user_move, fcs_int_move_get_num_cards_in_seq(internal_move));
+            *user_move = internal_move_to_user_move(internal_move);
 #endif
 
             if (ret == 0)
@@ -2410,6 +2423,46 @@ int DLLEXPORT freecell_solver_user_set_cache_limit(
 
     return 0;
 #endif
+}
+
+int DLLEXPORT freecell_solver_user_get_moves_sequence(
+    void * api_instance,
+    fcs_moves_sequence_t * const moves_seq
+)
+{
+    fcs_user_t * user;
+
+    user = (fcs_user_t*)api_instance;
+
+    moves_seq->num_moves = 0;
+    moves_seq->moves = NULL;
+
+    if (user->ret_code != FCS_STATE_WAS_SOLVED)
+    {
+        return -2;
+    }
+
+    fcs_move_stack_t * solution_moves = &(user->fc_solve_obj->solution_moves);
+
+    int num_moves = (int)solution_moves->num_moves;
+    fcs_internal_move_t * next_move_ptr = solution_moves->moves + num_moves - 1;
+
+    fcs_move_t * ret_moves = SMALLOC(ret_moves, num_moves);
+
+    if (!ret_moves)
+    {
+        return -1;
+    }
+
+    for (int i = 0 ; i < num_moves ; i++)
+    {
+        ret_moves[i] = internal_move_to_user_move(*(next_move_ptr--));
+    }
+
+    moves_seq->num_moves = num_moves;
+    moves_seq->moves = ret_moves;
+
+    return 0;
 }
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS

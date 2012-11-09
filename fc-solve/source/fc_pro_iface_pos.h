@@ -55,11 +55,11 @@ typedef struct
     fcs_extended_move_t * moves;
 } moves_processed_t;
 
-moves_processed_t * moves_processed_gen(
-        fcs_state_keyval_pair_t * orig,
-        int freecells_num,
-        void * instance
-        );
+extern moves_processed_t * moves_processed_gen(
+    const fcs_state_keyval_pair_t * const orig,
+    const int num_freecells,
+    const fcs_moves_sequence_t * const moves_seq
+);
 
 char * moves_processed_render_move(fcs_extended_move_t move, char * string);
 

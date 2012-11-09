@@ -544,9 +544,18 @@ int main(int argc, char * argv[])
 
             if (variant_is_freecell)
             {
-                fc_pro_moves = moves_processed_gen(&pos, 4, user.instance);
+                fcs_moves_sequence_t moves_seq;
+
+                freecell_solver_user_get_moves_sequence(user.instance, &moves_seq);
+                fc_pro_moves = moves_processed_gen(&pos, 4, &moves_seq);
 
                 num_fcpro_moves = moves_processed_get_moves_left(fc_pro_moves);
+
+                if (moves_seq.moves)
+                {
+                    free (moves_seq.moves);
+                    moves_seq.moves = NULL;
+                }
             }
             else
             {

@@ -189,7 +189,11 @@ static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended
     moves->moves[moves->num_moves-1] = new_move;
 }
 
-moves_processed_t * moves_processed_gen(fcs_state_keyval_pair_t * orig, int num_freecells, void * instance)
+moves_processed_t * moves_processed_gen(
+    const fcs_state_keyval_pair_t * const orig,
+    const int num_freecells,
+    const fcs_moves_sequence_t * const moves_seq
+)
 {
     fcs_state_keyval_pair_t pos_proto;
 #define pos (pos_proto.s)
@@ -199,11 +203,12 @@ moves_processed_t * moves_processed_gen(fcs_state_keyval_pair_t * orig, int num_
     int virtual_freecell_len[12];
 #endif
     int i, j, move_idx, num_back_end_moves;
-    fcs_move_t move, out_move;
+    fcs_move_t move, out_move, * next_move_ptr;
 
     pos_proto = *orig;
 
-    num_back_end_moves = freecell_solver_user_get_moves_left(instance);
+    num_back_end_moves = moves_seq->num_moves;
+    next_move_ptr = moves_seq->moves;
 
     ret = SMALLOC1(ret);
     ret->num_moves = 0;
@@ -343,7 +348,7 @@ moves_processed_t * moves_processed_gen(fcs_state_keyval_pair_t * orig, int num_
                 break;
             }
         }
-        freecell_solver_user_get_next_move(instance, &move);
+        move = *(next_move_ptr++);
 
         {
             int src, dest;

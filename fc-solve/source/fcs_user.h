@@ -388,6 +388,11 @@ DLLEXPORT extern int freecell_solver_user_set_cache_limit(
     long limit
     );
 
+DLLEXPORT extern int freecell_solver_user_get_moves_sequence(
+    void * user_instance,
+    fcs_moves_sequence_t * const moves_seq
+);
+
 #ifdef __cplusplus
 }
 #endif
