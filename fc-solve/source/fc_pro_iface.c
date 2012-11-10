@@ -8,8 +8,6 @@
 #include "inline.h"
 #include "alloc_wrap.h"
 
-#include "card.c"
-
 #if 0
 static const char * ranks_map = "0A23456789TJQK";
 
