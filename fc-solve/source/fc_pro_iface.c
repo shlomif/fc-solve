@@ -44,7 +44,7 @@ static GCC_INLINE int Cvtf89(int fcn)
     return (fcn >= 7) ? (fcn+3) : fcn;
 }
 
-char * moves_processed_render_move(fcs_extended_move_t move, char * string)
+char * fc_solve_moves_processed_render_move(fcs_extended_move_t move, char * string)
 {
     switch(fcs_move_get_type(move.move))
     {
@@ -111,7 +111,7 @@ char * moves_processed_render_move(fcs_extended_move_t move, char * string)
 }
 
 #define MOVES_PROCESSED_GROW_BY 32
-static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended_move_t new_move)
+static void moves_processed_add_new_move(fcs_moves_processed_t * moves, fcs_extended_move_t new_move)
 {
     if (! ((++moves->num_moves) & (MOVES_PROCESSED_GROW_BY - 1)))
     {
@@ -121,7 +121,7 @@ static void moves_processed_add_new_move(moves_processed_t * moves, fcs_extended
     moves->moves[moves->num_moves-1] = new_move;
 }
 
-moves_processed_t * moves_processed_gen(
+fcs_moves_processed_t * fc_solve_moves_processed_gen(
     const fcs_state_keyval_pair_t * const orig,
     const int num_freecells,
     const fcs_moves_sequence_t * const moves_seq
@@ -129,7 +129,7 @@ moves_processed_t * moves_processed_gen(
 {
     fcs_state_keyval_pair_t pos_proto;
 #define pos (pos_proto.s)
-    moves_processed_t * ret;
+    fcs_moves_processed_t * ret;
     int virtual_stack_len[8];
 #ifndef NDEBUG
     int virtual_freecell_len[12];
@@ -447,12 +447,12 @@ moves_processed_t * moves_processed_gen(
     return ret;
 }
 
-int moves_processed_get_moves_left(moves_processed_t * moves)
+int fc_solve_moves_processed_get_moves_left(fcs_moves_processed_t * moves)
 {
     return moves->num_moves- moves->next_move_idx;
 }
 
-int moves_processed_get_next_move(moves_processed_t * moves, fcs_extended_move_t * move)
+int fc_solve_moves_processed_get_next_move(fcs_moves_processed_t * moves, fcs_extended_move_t * move)
 {
     if (moves->next_move_idx == moves->num_moves)
     {
@@ -462,7 +462,7 @@ int moves_processed_get_next_move(moves_processed_t * moves, fcs_extended_move_t
     return 0;
 }
 
-void moves_processed_free(moves_processed_t * moves)
+void fc_solve_moves_processed_free(fcs_moves_processed_t * moves)
 {
     free(moves->moves);
     free(moves);

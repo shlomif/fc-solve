@@ -51,19 +51,19 @@ typedef struct
     int next_move_idx;
     int num_moves;
     fcs_extended_move_t * moves;
-} moves_processed_t;
+} fcs_moves_processed_t;
 
-extern moves_processed_t * moves_processed_gen(
+extern fcs_moves_processed_t * fc_solve_moves_processed_gen(
     const fcs_state_keyval_pair_t * const orig,
     const int num_freecells,
     const fcs_moves_sequence_t * const moves_seq
 );
 
-char * moves_processed_render_move(fcs_extended_move_t move, char * string);
+char * fc_solve_moves_processed_render_move(fcs_extended_move_t move, char * string);
 
-extern int moves_processed_get_moves_left(moves_processed_t * moves);
-extern int moves_processed_get_next_move(moves_processed_t * moves, fcs_extended_move_t * move);
-extern void moves_processed_free(moves_processed_t * moves);
+extern int fc_solve_moves_processed_get_moves_left(fcs_moves_processed_t * moves);
+extern int fc_solve_moves_processed_get_next_move(fcs_moves_processed_t * moves, fcs_extended_move_t * move);
+extern void fc_solve_moves_processed_free(fcs_moves_processed_t * moves);
 
 #ifdef __cplusplus
 }
