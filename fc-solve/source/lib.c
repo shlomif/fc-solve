@@ -73,6 +73,12 @@ enum
     FLARES_PLAN_CHECKPOINT,
 } FLARES_PLAN_TYPE;
 
+enum FLARES_CHOICE_TYPE
+{
+    FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN,
+    FLARES_CHOICE_FCPRO_SOLUTION_LEN
+};
+
 typedef struct
 {
     int type;
@@ -144,6 +150,7 @@ typedef struct
     freecell_solver_user_iter_handler_t iter_handler;
     freecell_solver_user_long_iter_handler_t long_iter_handler;
     void * iter_handler_context;
+    enum FLARES_CHOICE_TYPE flares_choice;
 
     fc_solve_soft_thread_t * soft_thread;
 
@@ -221,6 +228,7 @@ static void user_initialize(
     user->iterations_board_started_at.num_times = 0;
     user->iterations_board_started_at.num_states_in_collection = 0;
     user->all_instances_were_suspended = TRUE;
+    user->flares_choice = FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN;
 
     user->error_string = NULL;
 
@@ -2461,6 +2469,29 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
 
     moves_seq->num_moves = num_moves;
     moves_seq->moves = ret_moves;
+
+    return 0;
+}
+
+DLLEXPORT extern int freecell_solver_user_set_flares_choice(
+    void * api_instance,
+    const char * const new_flares_choice_string
+)
+{
+    fcs_user_t * user = (fcs_user_t *)api_instance;
+
+    if (!strcmp(new_flares_choice_string, "fc_solve"))
+    {
+        user->flares_choice = FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN;
+    }
+    else if (!strcmp(new_flares_choice_string, "fcpro"))
+    {
+        user->flares_choice = FLARES_CHOICE_FCPRO_SOLUTION_LEN;
+    }
+    else
+    {
+        return -1;
+    }
 
     return 0;
 }

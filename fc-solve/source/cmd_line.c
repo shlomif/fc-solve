@@ -349,12 +349,38 @@ opt = FCS_OPT_FLARE_NAME;
 break;
 
 case 's':
+
 {
-if (!strncmp(p, "-plan", 5)) {
+if (*(p++) == '-')
+{
+{ switch(*(p++)) {
+case 'c':
+{
+if (!strncmp(p, "hoice", 5)) {
 p += 5;
+opt = FCS_OPT_FLARES_CHOICE;
+
+}
+}
+
+break;
+
+case 'p':
+{
+if (!strncmp(p, "lan", 3)) {
+p += 3;
 opt = FCS_OPT_FLARES_PLAN;
 
 }
+}
+
+break;
+
+}
+}
+
+}
+
 }
 
 break;
@@ -1856,6 +1882,27 @@ break;
         }
         break;
 
+        case FCS_OPT_FLARES_CHOICE: /* STRINGS=--flares-choice; */
+        {
+            PROCESS_OPT_ARG() ;
+
+            if (freecell_solver_user_set_flares_choice(
+                instance,
+                (*arg)
+            ) != 0)
+            {
+                char * errstr = SMALLOC(errstr, strlen(*arg)+500);
+                sprintf(
+                    errstr,
+                    "Unknown flares choice argument '%s'.\n",
+                    (*arg)
+                );
+                *error_string = errstr;
+
+                RET_ERROR_IN_ARG() ;
+            }
+        }
+        break;
 
         }
         /* OPT-PARSE-END */

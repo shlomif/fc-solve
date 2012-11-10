@@ -393,6 +393,11 @@ DLLEXPORT extern int freecell_solver_user_get_moves_sequence(
     fcs_moves_sequence_t * const moves_seq
 );
 
+DLLEXPORT extern int freecell_solver_user_set_flares_choice(
+    void * user_instance,
+    const char * const new_flares_choice_string
+);
+
 #ifdef __cplusplus
 }
 #endif

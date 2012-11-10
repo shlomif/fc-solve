@@ -750,6 +750,19 @@ Using checkpoints one can yield a possibly sub-optimal (as far as solution
 length is concerned) solution that will still solve faster than letting all
 the flares run.
 
+--flares-choice [choice]
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+This dictates how to choose the winning flare based if more than one yielded
+a solution. Possible options are:
+
+1. +--flares-choice fc_solve+ - the default, which picks up the solutions based
+on the length of the solution in Freecell Solver's moves.
+
+2. +--flares-choice fcpro+ - picks up the shortest solution based on the
+number of Freecell Pro moves, while not considering implicit moves to the
+foundations using Horne's Prune / Raymond Prune.
+
 --cache-limit [cache limit]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
