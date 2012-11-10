@@ -12,11 +12,13 @@ my $cache_dir = "./cache";
 my $from_path;
 my $to_path;
 my $iters_threshold;
+my $should_histogram;
 
 GetOptions(
     'f|from=s' => \$from_path,
     't|to=s' => \$to_path,
-    'iters=i' => $iters_threshold,
+    'iters=i' => \$iters_threshold,
+    'histogram!' => \$should_histogram,
 ) or die "Cannot read get opts.";
 
 if (!defined $from_path)
@@ -72,7 +74,7 @@ sub get_iters
         @{shift()}]
 }
 
-#my $mfi = l("./micro-finance-improved.fc-pro-dump.txt");
+# my $mfi = l("./micro-finance-improved.fc-pro-dump.txt");
 # my $mfi = l("./micro-finance-improved--flares-choice-fcpro.fc-pro-dump.txt");
 my $mfi = l($from_path);
 my $mfi_fcs = get_fcs($mfi);
@@ -93,17 +95,35 @@ foreach my $aref ($mfi_fcs, $mfi_fcpro, $new_fcs, $new_fcpro, $new_iters)
     }
 }
 
+my %histogram;
+
 for my $i (keys @$new_iters)
 {
     if ($new_iters->[$i] >= 0 and $new_iters->[$i] < $iters_threshold)
     {
-        if ($new_fcpro->[$i] < $mfi_fcpro->[$i])
+        my $bef = $mfi_fcpro->[$i];
+        my $aft = $new_fcpro->[$i];
+        if ($aft < $bef)
         {
-            my $bef = $mfi_fcpro->[$i];
-            my $aft = $new_fcpro->[$i];
-            printf("I=%d %d -> %d Delta=%d%s\n", $i+1, $bef, $aft, $bef-$aft,
-                ($aft > $bef ? " (Worse)" : ""),
-            );
+            my $delta = $bef - $aft;
+            if ($should_histogram)
+            {
+                $histogram{$delta}++;
+            }
+            else
+            {
+                printf("I=%d %d -> %d Delta=%d%s\n", $i+1, $bef, $aft, $delta,
+                    ($aft > $bef ? " (Worse)" : ""),
+                );
+            }
         }
+    }
+}
+
+if ($should_histogram)
+{
+    foreach my $delta (sort { $a <=> $b } keys %histogram)
+    {
+        print "$histogram{$delta}\t$delta\n";
     }
 }
