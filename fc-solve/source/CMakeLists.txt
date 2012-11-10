@@ -195,7 +195,26 @@ ADD_CUSTOM_COMMAND(
     DEPENDS "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.h"
 )
 
-SET (FREECELL_SOLVER_LIB_MODULES alloc.c app_str.c card.c check_and_add_state.c cmd_line.c fc_pro_iface.c freecell.c instance.c lib.c move.c move_funcs_maps.c move_funcs_order.c preset.c rate_state.c scans.c simpsim.c split_cmd_line.c state.c)
+SET (FREECELL_SOLVER_LIB_MODULES
+    alloc.c
+    app_str.c
+    card.c
+    check_and_add_state.c
+    cmd_line.c
+    fc_pro_iface.c
+    freecell.c
+    instance.c
+    lib.c
+    move.c
+    move_funcs_maps.c
+    move_funcs_order.c
+    preset.c
+    rate_state.c
+    scans.c
+    simpsim.c
+    split_cmd_line.c
+    state.c
+)
 
 IF (FCS_FREECELL_ONLY)
     LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES preset.c)
