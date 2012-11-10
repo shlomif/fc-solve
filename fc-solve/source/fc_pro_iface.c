@@ -37,74 +37,6 @@ static char * card_to_string(fcs_card_t card, char * buf)
     return buf;
 }
 
-char * fc_solve_fc_pro_position_to_string(Position * pos, int num_freecells)
-{
-    int a, stack;
-    char buffer[4000], temp[4][20];
-    char * s_end;
-
-    buffer[0] = '\0';
-    s_end = buffer;
-
-    for(a=0;a<4;a++)
-    {
-        if (pos->foundations[a] != 0)
-        {
-            break;
-        }
-    }
-    if (a < 4)
-    {
-        s_end += sprintf(s_end, "Foundations:");
-        for(a=0;a<4;a++)
-        {
-            if (pos->foundations[a] != 0)
-            {
-                suit_to_string(a, temp[0]);
-                rank_to_string(pos->foundations[a], temp[1]);
-                s_end += sprintf(
-                    s_end,
-                    " %s-%s", temp[0], temp[1]
-                    );
-            }
-        }
-        *s_end = '\n';
-        s_end++;
-    }
-    s_end += sprintf(s_end, "Freecells:");
-    for(a=0;a<num_freecells;a++)
-    {
-        if (pos->hold[a] == 0)
-        {
-            s_end += sprintf(s_end, " -");
-        }
-        else
-        {
-            s_end += sprintf(s_end, " %s", card_to_string(pos->hold[a], temp[0]));
-        }
-    }
-    *s_end = '\n';
-    s_end++;
-
-    for(stack=0;stack<8;stack++)
-    {
-        for(a=0;a<pos->tableau[stack].count;a++)
-        {
-            s_end +=
-                sprintf(
-                    s_end,
-                    "%s%s",
-                    ((a == 0)? "" : " "),
-                    card_to_string(pos->tableau[stack].cards[a], temp[0])
-                );
-        }
-        *s_end = '\n';
-        s_end++;
-    }
-    *s_end = '\0';
-
-    return strdup(buffer);
-}
 #endif
 
 static GCC_INLINE int Cvtf89(int fcn)
@@ -229,17 +161,6 @@ moves_processed_t * moves_processed_gen(
 
     for(move_idx=0; move_idx < num_back_end_moves ; move_idx ++)
     {
-#if 0
-        if (getenv("FCS_OUTPUT_INTERMEDIATE_POS"))
-        {
-            char * as_str;
-            as_str = fc_solve_fc_pro_position_to_string(&pos, num_freecells);
-            printf("state =\n<<<\n%s\n>>>\n\n", as_str);
-            free(as_str);
-        }
-#endif
-
-
         /*
          * Move safe cards to the foundations
          * */

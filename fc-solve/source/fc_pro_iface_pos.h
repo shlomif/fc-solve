@@ -40,8 +40,6 @@ extern "C" {
 #include "card.h"
 #include "state.h"
 
-extern char * fc_solve_fc_pro_position_to_string(fcs_state_keyval_pair_t * pos, int num_freecells);
-
 typedef struct
 {
     fcs_move_t move;
