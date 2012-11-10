@@ -106,7 +106,7 @@ typedef struct
      * and if so, compiles the flares plan, and sets the flares_plan_compiled
      * string to true.
      */
-    int flares_plan_compiled;
+    fcs_bool_t flares_plan_compiled;
     int limit;
 }  fcs_instance_item_t;
 
@@ -541,7 +541,7 @@ static int user_compile_all_flares_plans(
             instance_item->plan[1].flare_idx = -1;
             instance_item->plan[1].count_iters = -1;
 
-            instance_item->flares_plan_compiled = 1;
+            instance_item->flares_plan_compiled = TRUE;
             continue;
         }
 
@@ -708,7 +708,7 @@ static int user_compile_all_flares_plans(
                 last_item_type = add_checkpoint_to_plan(instance_item);
             }
 
-            instance_item->flares_plan_compiled = 1;
+            instance_item->flares_plan_compiled = TRUE;
             continue;
         }
     }
@@ -2153,7 +2153,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
     {
         instance_item->flares_plan_string = NULL;
     }
-    instance_item->flares_plan_compiled = 0;
+    instance_item->flares_plan_compiled = FALSE;
 
     return 0;
 }
@@ -2338,7 +2338,7 @@ static int user_next_instance(
     instance_item->plan = NULL;
     instance_item->num_plan_items = 0;
     instance_item->flares_plan_string = NULL;
-    instance_item->flares_plan_compiled = 0;
+    instance_item->flares_plan_compiled = FALSE;
 
     instance_item->current_plan_item_idx = 0;
     instance_item->minimal_solution_flare_idx = -1;
