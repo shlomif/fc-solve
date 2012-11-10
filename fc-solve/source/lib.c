@@ -142,6 +142,7 @@ typedef struct
     fc_solve_instance_t * fc_solve_obj;
     fcs_state_keyval_pair_t state;
     fcs_state_keyval_pair_t running_state;
+    fcs_state_keyval_pair_t initial_non_canonized_state;
     fcs_state_locs_struct_t state_locs;
     fcs_state_locs_struct_t trace_solution_state_locs;
     fcs_state_locs_struct_t initial_state_locs;
@@ -822,7 +823,7 @@ static GCC_INLINE fcs_move_t internal_move_to_user_move(fcs_internal_move_t inte
 #endif
 
 static int calc_moves_seq(
-    fcs_move_stack_t * solution_moves,
+    const fcs_move_stack_t * const solution_moves,
     fcs_moves_sequence_t * const moves_seq
 )
 {
@@ -868,7 +869,7 @@ static int get_flare_move_count(
             calc_moves_seq(&(flare->obj->solution_moves), &moves_seq);
 
             flare->fc_pro_moves = fc_solve_moves_processed_gen(
-                &(user->state),
+                &(user->initial_non_canonized_state),
                 user->common_preset.game_params.freecells_num,
                 &(moves_seq)
             );
@@ -1015,8 +1016,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             state_pass.key = &(user->state.s);
             state_pass.val = &(user->state.info);
-            /* running_state is a normalized state. So We're duplicating
-             * state to it before state state_pass is canonized
+            /* running_state and initial_non_canonized_state are
+             * normalized state. So We're duplicating
+             * state to it before state state_pass is canonized.
              * */
             {
                 fcs_kv_state_t pass;
@@ -1024,6 +1026,14 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 pass.val = &(user->running_state.info);
 
                 fcs_duplicate_kv_state(&pass, &state_pass);
+            }
+
+            {
+                fcs_kv_state_t initial_pass;
+                initial_pass.key = &(user->initial_non_canonized_state.s);
+                initial_pass.val = &(user->initial_non_canonized_state.info);
+
+                fcs_duplicate_kv_state(&initial_pass, &state_pass);
             }
 
             fc_solve_canonize_state_with_locs

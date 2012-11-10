@@ -126,6 +126,22 @@ fcs_moves_processed_t * fc_solve_moves_processed_gen(
 )
 {
     fcs_state_keyval_pair_t pos_proto;
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+
+    fcs_kv_state_t orig_pass;
+    orig_pass.key = &(orig->s);
+    orig_pass.val = &(orig->info);
+
+    fcs_kv_state_t pos_pass;
+    pos_pass.key = &(pos_proto.s);
+    pos_pass.val = &(pos_proto.info);
+
+    fcs_duplicate_kv_state(&pos_pass, &orig_pass);
+    for (int i = 0 ; i < 8 ; i++)
+    {
+        fcs_copy_stack(pos_proto.s, pos_proto.info, i, indirect_stacks_buffer);
+    }
+
 #define pos (pos_proto.s)
     fcs_moves_processed_t * ret;
     int virtual_stack_len[8];
@@ -134,8 +150,6 @@ fcs_moves_processed_t * fc_solve_moves_processed_gen(
 #endif
     int i, j, move_idx, num_back_end_moves;
     fcs_move_t move, out_move, * next_move_ptr;
-
-    pos_proto = *orig;
 
     num_back_end_moves = moves_seq->num_moves;
     next_move_ptr = moves_seq->moves;
@@ -147,7 +161,7 @@ fcs_moves_processed_t * fc_solve_moves_processed_gen(
 
     for(i=0;i<8;i++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(orig->s, i);
+        fcs_cards_column_t col = fcs_state_get_col(pos, i);
         virtual_stack_len[i] = fcs_col_len(col);
     }
 #ifndef NDEBUG
@@ -169,7 +183,7 @@ fcs_moves_processed_t * fc_solve_moves_processed_gen(
                 /* Check the intermediate position validity */
                 char exists[4*13];
                 int rank, suit;
-                int fc, col, count, i;
+                int fc, col, count;
                 fcs_card_t card;
 
                 memset(exists, '\0', sizeof(exists));
@@ -182,19 +196,20 @@ fcs_moves_processed_t * fc_solve_moves_processed_gen(
                 }
                 for (col=0;col<8;col++)
                 {
-                    count = pos.tableau[col].count;
+                    fcs_cards_column_t col_col = fcs_state_get_col(pos, col);
+                    count = fcs_col_len(col_col);
                     for (i=0;i<count;i++)
                     {
-                        card = pos.tableau[col].cards[i];
-                        exists[(card & 0x0F)-1+(card >> 4)*13] = 1;
+                        card = fcs_col_get_card(col_col, i);
+                        exists[fcs_card_rank(card)-1+fcs_card_suit(card)*13] = 1;
                     }
                 }
                 for (fc=0;fc<num_freecells;fc++)
                 {
-                    card = pos.hold[fc];
-                    if (card != 0)
+                    card = fcs_freecell_card(pos, fc);
+                    if (! fcs_card_is_empty(card))
                     {
-                        exists[(card & 0x0F)-1+(card >> 4)*13] = 1;
+                        exists[fcs_card_rank(card)-1+fcs_card_suit(card)*13] = 1;
                     }
                 }
                 for (i=0;i<52;i++)
@@ -206,6 +221,24 @@ fcs_moves_processed_t * fc_solve_moves_processed_gen(
                     }
                 }
             }
+#endif
+
+#if 0
+    fcs_state_locs_struct_t locs;
+    fc_solve_init_locs(&locs);
+            printf("STATE=<<<\n%s\n>>>\n",
+                fc_solve_state_as_string(
+                    &pos,
+                    &pos_proto.info,
+                    &locs,
+                    4,
+                    8,
+                    1,
+                    TRUE,
+                    FALSE,
+                    TRUE
+                )
+            );
 #endif
 
             for (i = 0 ; i < 8 ; i++)
