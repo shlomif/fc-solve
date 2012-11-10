@@ -870,7 +870,11 @@ static int get_flare_move_count(
 
             flare->fc_pro_moves = fc_solve_moves_processed_gen(
                 &(user->initial_non_canonized_state),
+#ifdef FCS_FREECELL_ONLY
+                4,
+#else
                 user->common_preset.game_params.freecells_num,
+#endif
                 &(moves_seq)
             );
 
