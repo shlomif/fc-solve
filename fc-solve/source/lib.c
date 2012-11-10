@@ -39,6 +39,7 @@
 #include "fcs_user.h"
 #include "move_funcs_order.h"
 #include "fcs_user_internal.h"
+#include "fc_pro_iface_pos.h"
 
 #include "unused.h"
 #include "bool.h"
@@ -64,6 +65,7 @@ typedef struct
     int ret_code;
     int limit;
     char * name;
+    fcs_moves_processed_t * fc_pro_moves;
 } fcs_flare_item_t;
 
 enum
@@ -768,6 +770,12 @@ static void recycle_instance(
 
         flare = &(instance_item->flares[flare_idx]);
 
+        if (flare->fc_pro_moves)
+        {
+            fc_solve_moves_processed_free(flare->fc_pro_moves);
+            flare->fc_pro_moves = NULL;
+        }
+
         if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
             fc_solve_recycle_instance(flare->obj);
@@ -794,6 +802,86 @@ static void recycle_instance(
     instance_item->minimal_solution_flare_idx = -1;
 
     return;
+}
+
+#ifdef FCS_USE_COMPACT_MOVE_TOKENS
+#define internal_move_to_user_move(x) (x)
+#else
+static GCC_INLINE fcs_move_t internal_move_to_user_move(fcs_internal_move_t internal_move)
+{
+    fcs_move_t user_move;
+
+    /* Convert the internal_move to a user move. */
+    fcs_move_set_src_stack(user_move, fcs_int_move_get_src_stack(internal_move));
+    fcs_move_set_dest_stack(user_move, fcs_int_move_get_dest_stack(internal_move));
+    fcs_move_set_type(user_move, fcs_int_move_get_type(internal_move));
+    fcs_move_set_num_cards_in_seq(user_move, fcs_int_move_get_num_cards_in_seq(internal_move));
+
+    return user_move;
+}
+#endif
+
+static int calc_moves_seq(
+    fcs_move_stack_t * solution_moves,
+    fcs_moves_sequence_t * const moves_seq
+)
+{
+    moves_seq->num_moves = 0;
+    moves_seq->moves = NULL;
+
+    int num_moves = (int)solution_moves->num_moves;
+    fcs_internal_move_t * next_move_ptr = solution_moves->moves + num_moves - 1;
+
+    fcs_move_t * ret_moves = SMALLOC(ret_moves, num_moves);
+
+    if (!ret_moves)
+    {
+        return -1;
+    }
+
+    for (int i = 0 ; i < num_moves ; i++)
+    {
+        ret_moves[i] = internal_move_to_user_move(*(next_move_ptr--));
+    }
+
+    moves_seq->num_moves = num_moves;
+    moves_seq->moves = ret_moves;
+
+    return 0;
+}
+
+static int get_flare_move_count(
+    fcs_user_t * user,
+    fcs_flare_item_t * flare
+)
+{
+    if (user->flares_choice == FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN)
+    {
+        return flare->obj->solution_moves.num_moves;
+    }
+    else
+    {
+        if (! flare->fc_pro_moves)
+        {
+            fcs_moves_sequence_t moves_seq;
+
+            calc_moves_seq(&(flare->obj->solution_moves), &moves_seq);
+
+            flare->fc_pro_moves = fc_solve_moves_processed_gen(
+                &(user->state),
+                user->common_preset.game_params.freecells_num,
+                &(moves_seq)
+            );
+
+            if (moves_seq.moves)
+            {
+                free (moves_seq.moves);
+                moves_seq.moves = NULL;
+            }
+        }
+
+        return fc_solve_moves_processed_get_moves_left(flare->fc_pro_moves);
+    }
 }
 
 int DLLEXPORT freecell_solver_user_resume_solution(
@@ -1050,8 +1138,18 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             }
             else
             {
-                if (instance_item->flares[instance_item->minimal_solution_flare_idx].obj->solution_moves.num_moves >
-                    user->fc_solve_obj->solution_moves.num_moves)
+                if (
+                    get_flare_move_count(
+                        user,
+                        &(instance_item->flares[
+                            instance_item->minimal_solution_flare_idx
+                            ]
+                        )
+                    ) >
+                    get_flare_move_count(
+                        user, &(instance_item->flares[flare_idx])
+                    )
+                )
                 {
                     instance_item->minimal_solution_flare_idx = flare_idx;
                 }
@@ -1103,22 +1201,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     );
 }
 
-#ifdef FCS_USE_COMPACT_MOVE_TOKENS
-#define internal_move_to_user_move(x) (x)
-#else
-static GCC_INLINE fcs_move_t internal_move_to_user_move(fcs_internal_move_t internal_move)
-{
-    fcs_move_t user_move;
-
-    /* Convert the internal_move to a user move. */
-    fcs_move_set_src_stack(user_move, fcs_int_move_get_src_stack(internal_move));
-    fcs_move_set_dest_stack(user_move, fcs_int_move_get_dest_stack(internal_move));
-    fcs_move_set_type(user_move, fcs_int_move_get_type(internal_move));
-    fcs_move_set_num_cards_in_seq(user_move, fcs_int_move_get_num_cards_in_seq(internal_move));
-
-    return user_move;
-}
-#endif
 
 int DLLEXPORT freecell_solver_user_get_next_move(
     void * api_instance,
@@ -1248,6 +1330,12 @@ static void user_free_resources(
         {
             free(flare->name);
             flare->name = NULL;
+        }
+
+        if (flare->fc_pro_moves)
+        {
+            fc_solve_moves_processed_free(flare->fc_pro_moves);
+            flare->fc_pro_moves = NULL;
         }
     }
     FLARES_LOOP_END_FLARES()
@@ -2315,6 +2403,7 @@ static int user_next_flare(fcs_user_t * user)
     flare->obj->debug_iter_output_context = user;
 
     flare->name = NULL;
+    flare->fc_pro_moves = NULL;
 
     return 0;
 }
@@ -2433,6 +2522,7 @@ int DLLEXPORT freecell_solver_user_set_cache_limit(
 #endif
 }
 
+
 int DLLEXPORT freecell_solver_user_get_moves_sequence(
     void * api_instance,
     fcs_moves_sequence_t * const moves_seq
@@ -2442,35 +2532,12 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
 
     user = (fcs_user_t*)api_instance;
 
-    moves_seq->num_moves = 0;
-    moves_seq->moves = NULL;
-
     if (user->ret_code != FCS_STATE_WAS_SOLVED)
     {
         return -2;
     }
 
-    fcs_move_stack_t * solution_moves = &(user->fc_solve_obj->solution_moves);
-
-    int num_moves = (int)solution_moves->num_moves;
-    fcs_internal_move_t * next_move_ptr = solution_moves->moves + num_moves - 1;
-
-    fcs_move_t * ret_moves = SMALLOC(ret_moves, num_moves);
-
-    if (!ret_moves)
-    {
-        return -1;
-    }
-
-    for (int i = 0 ; i < num_moves ; i++)
-    {
-        ret_moves[i] = internal_move_to_user_move(*(next_move_ptr--));
-    }
-
-    moves_seq->num_moves = num_moves;
-    moves_seq->moves = ret_moves;
-
-    return 0;
+    return calc_moves_seq(&(user->fc_solve_obj->solution_moves), moves_seq);
 }
 
 DLLEXPORT extern int freecell_solver_user_set_flares_choice(
