@@ -6,6 +6,7 @@ use warnings;
 use IO::All;
 use Getopt::Long;
 use File::Basename qw(basename);
+use List::Util qw(min);
 
 my $cache_dir = "./cache";
 
@@ -13,12 +14,14 @@ my $from_path;
 my $to_path;
 my $iters_threshold;
 my $should_histogram;
+my $should_output_nums;
 
 GetOptions(
     'f|from=s' => \$from_path,
     't|to=s' => \$to_path,
     'iters=i' => \$iters_threshold,
     'histogram!' => \$should_histogram,
+    'output-nums!' => \$should_output_nums,
 ) or die "Cannot read get opts.";
 
 if (!defined $from_path)
@@ -99,11 +102,16 @@ my %histogram;
 
 for my $i (keys @$new_iters)
 {
+    my $bef = $mfi_fcpro->[$i];
+    my $aft = $new_fcpro->[$i];
+
     if ($new_iters->[$i] >= 0 and $new_iters->[$i] < $iters_threshold)
     {
-        my $bef = $mfi_fcpro->[$i];
-        my $aft = $new_fcpro->[$i];
-        if ($aft < $bef)
+        if ($should_output_nums)
+        {
+            print min($aft, $bef), "\n";
+        }
+        elsif ($aft < $bef)
         {
             my $delta = $bef - $aft;
             if ($should_histogram)
@@ -116,6 +124,13 @@ for my $i (keys @$new_iters)
                     ($aft > $bef ? " (Worse)" : ""),
                 );
             }
+        }
+    }
+    elsif ($should_output_nums)
+    {
+        if ($bef >= 0)
+        {
+            print $bef, "\n";
         }
     }
 }
