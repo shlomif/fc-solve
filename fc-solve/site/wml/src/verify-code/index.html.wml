@@ -14,12 +14,12 @@ Freecell Solver, but may prove useful in other contexts.
 <ul>
 
 <li>
-<a href="http://search.cpan.org/dist/Games-Solitaire-Verify/"><b>Latest
+<a href="https://metacpan.org/release/Games-Solitaire-Verify"><b>Latest
 Stable Version on CPAN</b></a> - includes online documentation.
 </li>
 
 <li>
-<a href="http://cpan.uwinnipeg.ca/dist/Games-Solitaire-Verify">Games-Solitaire-Verify on Kobesearch</a> (an alternative CPAN interface).
+<a href="http://search.cpan.org/dist/Games-Solitaire-Verify/">Games-Solitaire-Verify on search.cpan.org</a> (an alternative CPAN interface).
 </li>
 
 <li>
