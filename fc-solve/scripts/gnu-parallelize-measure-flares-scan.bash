@@ -10,7 +10,7 @@
 # ../Tatzer -l ci7b --prefix="$HOME/apps/fcs" ; make ; make install on sh.
 # ../Tatzer -l c2b --prefix="$HOME/apps/fcs" ; make ; make install on lap.
 
-seq 0 319 | parallel --sshlogin 4/sh --sshlogin 2/lap \
+seq 0 319 | parallel --ungroup --sshlogin 4/sh --sshlogin 2/lap \
     "$HOME"/apps/fcs/bin/freecell-solver-fc-pro-range-solve \
         "\$(({}*100+1))" "\$((({}+1)*100))" 1 \
         -l mfi --flares-choice fcpro \> \
