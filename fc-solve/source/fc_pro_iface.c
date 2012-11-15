@@ -478,10 +478,6 @@ fcs_moves_processed_t * fc_solve_moves_processed_gen(
     return ret;
 }
 
-int fc_solve_moves_processed_get_moves_left(fcs_moves_processed_t * moves)
-{
-    return moves->num_moves- moves->next_move_idx;
-}
 
 int fc_solve_moves_processed_get_next_move(fcs_moves_processed_t * moves, fcs_extended_move_t * move)
 {

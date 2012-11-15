@@ -36,6 +36,7 @@ extern "C" {
 #include "fcs_cl.h"
 
 #include "bool.h"
+#include "inline.h"
 
 #include "card.h"
 #include "state.h"
@@ -61,7 +62,11 @@ extern fcs_moves_processed_t * fc_solve_moves_processed_gen(
 
 char * fc_solve_moves_processed_render_move(fcs_extended_move_t move, char * string);
 
-extern int fc_solve_moves_processed_get_moves_left(fcs_moves_processed_t * moves);
+static GCC_INLINE int fc_solve_moves_processed_get_moves_left(fcs_moves_processed_t * moves)
+{
+    return moves->num_moves - moves->next_move_idx;
+}
+
 extern int fc_solve_moves_processed_get_next_move(fcs_moves_processed_t * moves, fcs_extended_move_t * move);
 extern void fc_solve_moves_processed_free(fcs_moves_processed_t * moves);
 
