@@ -1146,27 +1146,22 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             user->trace_solution_state_locs = user->state_locs;
 
+#define FLARE_MOVE_COUNT(idx) \
+           (get_flare_move_count( \
+               user, \
+               &(instance_item->flares[idx]) \
+           ))
             if (instance_item->minimal_solution_flare_idx < 0)
             {
                 instance_item->minimal_solution_flare_idx = flare_idx;
             }
-            else
+            else if (
+                FLARE_MOVE_COUNT(instance_item->minimal_solution_flare_idx)
+                 >
+                FLARE_MOVE_COUNT(flare_idx)
+            )
             {
-                if (
-                    get_flare_move_count(
-                        user,
-                        &(instance_item->flares[
-                            instance_item->minimal_solution_flare_idx
-                            ]
-                        )
-                    ) >
-                    get_flare_move_count(
-                        user, &(instance_item->flares[flare_idx])
-                    )
-                )
-                {
-                    instance_item->minimal_solution_flare_idx = flare_idx;
-                }
+                instance_item->minimal_solution_flare_idx = flare_idx;
             }
             ret = user->ret_code = FCS_STATE_IS_NOT_SOLVEABLE;
         }
