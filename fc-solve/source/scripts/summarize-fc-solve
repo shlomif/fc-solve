@@ -73,5 +73,5 @@ print "Verdict: " .
     ($is_solvable ? "Solved"
         : $intractable ? "Intractable"
         : "Unsolved"
-    ) .
-    " ; Iters: $num_iters ; Length: $sol_len\n";
+    )
+    . " ; Iters: $num_iters ; Length: $sol_len\n";
