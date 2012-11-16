@@ -13,6 +13,7 @@ Non-pressing
 * Implement a --flares-iters-factor option for multiplying the iters count
 allocated to each flare by a constant factor (so one can say make them times
 10, or times 100 or times 0.5, etc.).
+    - Test more thoroughly.
 
 * Convert the functions in lib.c to do
 +fcs_user_t * user = (fcs_user_t *)api_instance;+ .

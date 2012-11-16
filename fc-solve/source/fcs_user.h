@@ -398,6 +398,11 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
     const char * const new_flares_choice_string
 );
 
+DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
+    void * user_instance,
+    double new_factor
+);
+
 #ifdef __cplusplus
 }
 #endif

@@ -763,6 +763,38 @@ on the length of the solution in Freecell Solver's moves.
 number of Freecell Pro moves, while not considering implicit moves to the
 foundations using Horne's Prune / Raymond Prune.
 
+-fif [factor] , --flares-iters-factor [factor]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sets a global, floating-point number, factor to multiply all the iterations
+counts in the flares plans. The higher it is, the longer the scans will take,
+but there is a greater chance more of them will succeed, and, as a result,
+the solution may be shorter.
+
+As an example, the following:
+
+------------
+--flares-plan "Run:500@MyFlare,Run:2000@FooFlare" --flares-iters-factor 2
+------------
+
+Is equivalent to:
+
+------------
+--flares-plan "Run:1000@MyFlare,Run:4000@FooFlare"
+------------
+
+while:
+
+------------
+--flares-plan "Run:500@MyFlare,Run:2000@FooFlare" --flares-iters-factor 0.5
+------------
+
+Is equivalent to:
+
+------------
+--flares-plan "Run:250@MyFlare,Run:1000@FooFlare"
+------------
+
 --cache-limit [cache limit]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

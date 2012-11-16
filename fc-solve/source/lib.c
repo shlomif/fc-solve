@@ -154,6 +154,7 @@ typedef struct
     freecell_solver_user_long_iter_handler_t long_iter_handler;
     void * iter_handler_context;
     enum FLARES_CHOICE_TYPE flares_choice;
+    double flares_iters_factor;
 
     fc_solve_soft_thread_t * soft_thread;
 
@@ -232,6 +233,7 @@ static void user_initialize(
     user->iterations_board_started_at.num_states_in_collection = 0;
     user->all_instances_were_suspended = TRUE;
     user->flares_choice = FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN;
+    user->flares_iters_factor = 1.0;
 
     user->error_string = NULL;
 
@@ -967,7 +969,14 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         }
         else /* (current_plan_item->type == FLARES_PLAN_RUN_COUNT_ITERS)  */
         {
-            flare_iters_quota = current_plan_item->count_iters;
+            flare_iters_quota =
+                (typeof(flare_iters_quota))
+                (user->flares_iters_factor * current_plan_item->count_iters)
+                ;
+            if (flare_iters_quota < 0)
+            {
+                flare_iters_quota = 0;
+            }
         }
 
         flare_idx = current_plan_item->flare_idx;
@@ -2571,6 +2580,16 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
     }
 
     return 0;
+}
+
+DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
+    void * api_instance,
+    double new_factor
+)
+{
+    fcs_user_t * user = (fcs_user_t *)api_instance;
+
+    user->flares_iters_factor = new_factor;
 }
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS

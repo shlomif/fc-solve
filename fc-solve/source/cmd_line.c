@@ -365,6 +365,17 @@ opt = FCS_OPT_FLARES_CHOICE;
 
 break;
 
+case 'i':
+{
+if (!strncmp(p, "ters-factor", 11)) {
+p += 11;
+opt = FCS_OPT_FLARES_ITERS_FACTOR;
+
+}
+}
+
+break;
+
 case 'p':
 {
 if (!strncmp(p, "lan", 3)) {
@@ -831,6 +842,17 @@ case 'd':
 if (!strncmp(p, "to", 2)) {
 p += 2;
 opt = FCS_OPT_DEPTH_TESTS_ORDER;
+
+}
+}
+
+break;
+
+case 'f':
+{
+if (!strncmp(p, "if", 2)) {
+p += 2;
+opt = FCS_OPT_FLARES_ITERS_FACTOR;
 
 }
 }
@@ -1532,6 +1554,14 @@ break;
             PROCESS_OPT_ARG() ;
 
             freecell_solver_user_set_flares_plan(instance, (*arg));
+        }
+        break;
+
+        case FCS_OPT_FLARES_ITERS_FACTOR: /* STRINGS=-fif|--flares-iters-factor; */
+        {
+            PROCESS_OPT_ARG() ;
+
+            freecell_solver_user_set_flares_iters_factor(instance, atof(*arg));
         }
         break;
 
