@@ -8,6 +8,12 @@ Shlomi Fish <shlomif@cpan.org>
 which somewhat improves the length of the solutions of the +micro-finance+
 preset.
 
+2. Add the +--flares-choice+ option, which determines how the winning flare
+is chosen.
+
+3. Add the +--flares-iters-factor+ option (or +-fif+ for short), which
+specifies a factor to multiply the flares quotas.
+
 Version 3.14.1: (01-Nov-2012)
 -----------------------------
 
