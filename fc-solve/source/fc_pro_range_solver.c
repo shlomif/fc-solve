@@ -524,7 +524,8 @@ int main(int argc, char * argv[])
         int num_iters;
         int num_moves;
         int num_fcpro_moves;
-        fcs_moves_processed_t * fc_pro_moves = NULL;
+        fcs_moves_processed_t fc_pro_moves;
+        fc_pro_moves.moves = NULL;
 
         if (ret == FCS_STATE_SUSPEND_PROCESS)
         {
@@ -547,9 +548,9 @@ int main(int argc, char * argv[])
                 fcs_moves_sequence_t moves_seq;
 
                 freecell_solver_user_get_moves_sequence(user.instance, &moves_seq);
-                fc_pro_moves = fc_solve_moves_processed_gen(&pos, 4, &moves_seq);
+                fc_solve_moves_processed_gen(&fc_pro_moves, &pos, 4, &moves_seq);
 
-                num_fcpro_moves = fc_solve_moves_processed_get_moves_left(fc_pro_moves);
+                num_fcpro_moves = fc_solve_moves_processed_get_moves_left(&fc_pro_moves);
 
                 if (moves_seq.moves)
                 {
@@ -566,18 +567,18 @@ int main(int argc, char * argv[])
         printf("[[Num Iters]]=%d\n[[Num FCS Moves]]=%d\n[[Num FCPro Moves]]=%d\n", num_iters, num_moves, num_fcpro_moves);
 
         printf("%s\n", "[[Start]]");
-        if (fc_pro_moves)
+        if (fc_pro_moves.moves)
         {
             fcs_extended_move_t move;
             len = 0;
-            while (! fc_solve_moves_processed_get_next_move(fc_pro_moves, &move))
+            while (! fc_solve_moves_processed_get_next_move(&fc_pro_moves, &move))
             {
                 fc_solve_moves_processed_render_move(move, temp_str);
                 printf("%s%c", temp_str,
                     ((((++len) % 10) == 0) ? '\n' : ' ')
                 );
             }
-            fc_solve_moves_processed_free(fc_pro_moves);
+            fc_solve_moves_processed_free(&fc_pro_moves);
         }
         printf("\n%s\n", "[[End]]");
         fflush(stdout);

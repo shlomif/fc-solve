@@ -65,7 +65,7 @@ typedef struct
     int ret_code;
     int limit;
     char * name;
-    fcs_moves_processed_t * fc_pro_moves;
+    fcs_moves_processed_t fc_pro_moves;
 } fcs_flare_item_t;
 
 enum
@@ -764,10 +764,9 @@ static void recycle_instance(
 
         flare = &(instance_item->flares[flare_idx]);
 
-        if (flare->fc_pro_moves)
+        if (flare->fc_pro_moves.moves)
         {
-            fc_solve_moves_processed_free(flare->fc_pro_moves);
-            flare->fc_pro_moves = NULL;
+            fc_solve_moves_processed_free(&(flare->fc_pro_moves));
         }
 
         if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
@@ -855,13 +854,14 @@ static int get_flare_move_count(
     }
     else
     {
-        if (! flare->fc_pro_moves)
+        if (! flare->fc_pro_moves.moves)
         {
             fcs_moves_sequence_t moves_seq;
 
             calc_moves_seq(&(flare->obj->solution_moves), &moves_seq);
 
-            flare->fc_pro_moves = fc_solve_moves_processed_gen(
+            fc_solve_moves_processed_gen(
+                &(flare->fc_pro_moves),
                 &(user->initial_non_canonized_state),
 #ifdef FCS_FREECELL_ONLY
                 4,
@@ -878,7 +878,7 @@ static int get_flare_move_count(
             }
         }
 
-        return fc_solve_moves_processed_get_moves_left(flare->fc_pro_moves);
+        return fc_solve_moves_processed_get_moves_left(&(flare->fc_pro_moves));
     }
 }
 
@@ -1336,10 +1336,9 @@ static void user_free_resources(
             flare->name = NULL;
         }
 
-        if (flare->fc_pro_moves)
+        if (flare->fc_pro_moves.moves)
         {
-            fc_solve_moves_processed_free(flare->fc_pro_moves);
-            flare->fc_pro_moves = NULL;
+            fc_solve_moves_processed_free(&(flare->fc_pro_moves));
         }
     }
     FLARES_LOOP_END_FLARES()
@@ -2322,7 +2321,7 @@ static int user_next_flare(fcs_user_t * user)
     flare->obj->debug_iter_output_context = user;
 
     flare->name = NULL;
-    flare->fc_pro_moves = NULL;
+    flare->fc_pro_moves.moves = NULL;
 
     return 0;
 }

@@ -54,7 +54,8 @@ typedef struct
     fcs_extended_move_t * moves;
 } fcs_moves_processed_t;
 
-extern fcs_moves_processed_t * fc_solve_moves_processed_gen(
+extern void fc_solve_moves_processed_gen(
+    fcs_moves_processed_t * const moves_gen,
     const fcs_state_keyval_pair_t * const orig,
     const int num_freecells,
     const fcs_moves_sequence_t * const moves_seq
@@ -68,7 +69,12 @@ static GCC_INLINE int fc_solve_moves_processed_get_moves_left(fcs_moves_processe
 }
 
 extern int fc_solve_moves_processed_get_next_move(fcs_moves_processed_t * moves, fcs_extended_move_t * move);
-extern void fc_solve_moves_processed_free(fcs_moves_processed_t * moves);
+
+static GCC_INLINE void fc_solve_moves_processed_free(fcs_moves_processed_t * moves)
+{
+    free(moves->moves);
+    moves->moves = NULL;
+}
 
 #ifdef __cplusplus
 }
