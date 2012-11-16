@@ -14,6 +14,9 @@ Non-pressing
 allocated to each flare by a constant factor (so one can say make them times
 10, or times 100 or times 0.5, etc.).
 
+* Convert the functions in lib.c to do
++fcs_user_t * user = (fcs_user_t *)api_instance;+ .
+
 * Investigate the scan of:
 +--method random-dfs -to '[01]=rand()[23456789]=rand()' -dto '13,[0123456]=asw(1)' -sp r:tf+.
 * It seems to yield good results.
