@@ -172,6 +172,8 @@ typedef struct
 #endif
 
     char * error_string;
+
+    fcs_meta_compact_allocator_t meta_alloc;
 } fcs_user_t;
 
 
@@ -227,6 +229,8 @@ static void user_initialize(
 
     fcs_duplicate_preset(user->common_preset, *freecell_preset);
 #endif
+
+    fc_solve_meta_compact_allocator_init(&(user->meta_alloc));
 
     user->instances_list = NULL;
     user->num_instances = 0;
@@ -1422,6 +1426,8 @@ static void user_free_resources(
         free(user->error_string);
         user->error_string = NULL;
     }
+
+    fc_solve_meta_compact_allocator_finish(&(user->meta_alloc));
 }
 
 void DLLEXPORT freecell_solver_user_free(
@@ -2354,7 +2360,7 @@ static int user_next_flare(fcs_user_t * user)
     instance_item->limit = flare->limit = -1;
 
     user->active_flare = flare;
-    flare->obj = fc_solve_alloc_instance();
+    flare->obj = fc_solve_alloc_instance(&(user->meta_alloc));
 
     /*
      * Switch the soft_thread variable so it won't refer to the old

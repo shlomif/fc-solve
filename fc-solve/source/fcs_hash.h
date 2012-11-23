@@ -35,7 +35,7 @@ extern "C" {
 
 #include "config.h"
 
-#include "alloc.h"
+#include "meta_alloc.h"
 
 #include "inline.h"
 #include "bool.h"
@@ -118,6 +118,7 @@ typedef struct
 
 extern void
 fc_solve_hash_init(
+    fcs_meta_compact_allocator_t * meta_alloc,
     fc_solve_hash_t * hash,
 #ifdef FCS_INLINED_HASH_COMPARISON
     enum FCS_INLINED_HASH_DATA_TYPE hash_type

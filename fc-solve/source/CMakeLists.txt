@@ -196,7 +196,6 @@ ADD_CUSTOM_COMMAND(
 )
 
 SET (FREECELL_SOLVER_LIB_MODULES
-    alloc.c
     app_str.c
     card.c
     check_and_add_state.c
@@ -205,6 +204,7 @@ SET (FREECELL_SOLVER_LIB_MODULES
     freecell.c
     instance.c
     lib.c
+    meta_alloc.c
     move.c
     move_funcs_maps.c
     move_funcs_order.c

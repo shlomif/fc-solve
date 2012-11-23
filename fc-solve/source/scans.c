@@ -41,7 +41,7 @@
 #include "state.h"
 #include "card.h"
 #include "scans.h"
-#include "alloc.h"
+#include "meta_alloc.h"
 #include "check_and_add_state.h"
 #include "move_stack_compact_alloc.h"
 #include "freecell.h"

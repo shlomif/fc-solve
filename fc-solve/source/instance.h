@@ -114,7 +114,7 @@ extern "C" {
 
 #include "pqueue.h"
 
-#include "alloc.h"
+#include "meta_alloc.h"
 
 /*
  * This is a linked list item that is used to implement a queue for the BFS
@@ -623,6 +623,10 @@ struct fc_solve_instance_struct
      * */
     fcs_move_stack_t solution_moves;
 
+    /*
+     * The meta allocator - see meta_alloc.h.
+     * */
+    fcs_meta_compact_allocator_t * meta_alloc;
 };
 
 typedef struct fc_solve_instance_struct fc_solve_instance_t;
@@ -981,7 +985,7 @@ typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 #define FCS_BEFS_WEIGHT_DEPTH 4
 #define FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS 5
 
-fc_solve_instance_t * fc_solve_alloc_instance(void);
+fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * meta_alloc);
 
 extern void fc_solve_init_instance(
     fc_solve_instance_t * instance
@@ -1906,11 +1910,7 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
 
     free(hard_thread->soft_threads);
 
-    if (likely(hard_thread->allocator.packs))
-    {
-        fc_solve_compact_allocator_finish(&(hard_thread->allocator));
-        hard_thread->allocator.packs = NULL;
-    }
+    fc_solve_compact_allocator_finish(&(hard_thread->allocator));
 }
 /*
     This function is the last function that should be called in the

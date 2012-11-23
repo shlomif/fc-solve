@@ -39,7 +39,7 @@
 
 #include "fcs_hash.h"
 
-#include "alloc.h"
+#include "meta_alloc.h"
 
 #include "inline.h"
 
@@ -53,6 +53,7 @@ static GCC_INLINE void fc_solve_hash_rehash(fc_solve_hash_t * hash);
 
 
 void fc_solve_hash_init(
+    fcs_meta_compact_allocator_t * meta_alloc,
     fc_solve_hash_t * hash,
 #ifdef FCS_INLINED_HASH_COMPARISON
     enum FCS_INLINED_HASH_DATA_TYPE hash_type
@@ -92,7 +93,7 @@ void fc_solve_hash_init(
 #endif
 #endif
 
-    fc_solve_compact_allocator_init(&(hash->allocator));
+    fc_solve_compact_allocator_init(&(hash->allocator), meta_alloc);
 
     return;
 }

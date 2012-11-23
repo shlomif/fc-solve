@@ -37,7 +37,7 @@
 #include "sfx.h"
 #endif
 
-#include "alloc.h"
+#include "meta_alloc.h"
 /*
  * Blurb for inclusion into C++ translation units
  */

@@ -380,7 +380,7 @@ void fc_solve_instance__init_hard_thread(
     hard_thread->prelude_idx = 0;
 
     fc_solve_reset_hard_thread(hard_thread);
-    fc_solve_compact_allocator_init(&(hard_thread->allocator));
+    fc_solve_compact_allocator_init(&(hard_thread->allocator), instance->meta_alloc);
 
     fcs_move_stack_init(hard_thread->reusable_move_stack);
 }
@@ -394,11 +394,13 @@ void fc_solve_instance__init_hard_thread(
     Afterwards fc_solve_init_instance() should be called in order
     to really prepare it for solving.
   */
-fc_solve_instance_t * fc_solve_alloc_instance(void)
+fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * meta_alloc)
 {
     fc_solve_instance_t * instance;
 
     instance = SMALLOC1(instance);
+
+    instance->meta_alloc = meta_alloc;
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     instance->num_indirect_prev_states = 0;
@@ -902,6 +904,7 @@ void fc_solve_start_instance_process_with_board(
     );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     fc_solve_hash_init(
+        instance->meta_alloc,
         &(instance->hash),
 #ifdef FCS_INLINED_HASH_COMPARISON
         FCS_INLINED_HASH__STATES
@@ -937,6 +940,7 @@ void fc_solve_start_instance_process_with_board(
        collection */
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
     fc_solve_hash_init(
+        instance->meta_alloc,
         &(instance->stacks_hash ),
 #ifdef FCS_INLINED_HASH_COMPARISON
         FCS_INLINED_HASH__COLUMNS
