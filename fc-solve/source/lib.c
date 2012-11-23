@@ -65,6 +65,8 @@ typedef struct
     int ret_code;
     int limit;
     char * name;
+    int next_move;
+    fcs_moves_sequence_t moves_seq;
     fcs_moves_processed_t fc_pro_moves;
 } fcs_flare_item_t;
 
@@ -783,10 +785,12 @@ static void recycle_instance(
             flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
         }
 
-        if (flare->obj->solution_moves.moves)
+        if (flare->moves_seq.moves)
         {
-            fcs_move_stack_static_destroy(flare->obj->solution_moves);
-            flare->obj->solution_moves.moves = NULL;
+            free (flare->moves_seq.moves);
+            flare->moves_seq.moves = NULL;
+            flare->moves_seq.num_moves = 0;
+            flare->next_move = 0;
         }
 
     }
@@ -797,7 +801,7 @@ static void recycle_instance(
     return;
 }
 
-#ifdef FCS_USE_COMPACT_MOVE_TOKENS
+#ifndef FCS_USE_COMPACT_MOVE_TOKENS
 #define internal_move_to_user_move(x) (x)
 #else
 static GCC_INLINE fcs_move_t internal_move_to_user_move(fcs_internal_move_t internal_move)
@@ -811,6 +815,23 @@ static GCC_INLINE fcs_move_t internal_move_to_user_move(fcs_internal_move_t inte
     fcs_move_set_num_cards_in_seq(user_move, fcs_int_move_get_num_cards_in_seq(internal_move));
 
     return user_move;
+}
+#endif
+
+#ifndef FCS_USE_COMPACT_MOVE_TOKENS
+#define user_move_to_internal_move(x) (x)
+#else
+static GCC_INLINE fcs_internal_move_t user_move_to_internal_move(fcs_move_t user_move)
+{
+    fcs_internal_move_t internal_move;
+
+    /* Convert the internal_move to a user move. */
+    fcs_int_move_set_src_stack(internal_move, fcs_move_get_src_stack(user_move));
+    fcs_int_move_set_dest_stack(internal_move, fcs_move_get_dest_stack(user_move));
+    fcs_int_move_set_type(internal_move, fcs_move_get_type(user_move));
+    fcs_int_move_set_num_cards_in_seq(internal_move, fcs_move_get_num_cards_in_seq(user_move));
+
+    return internal_move;
 }
 #endif
 
@@ -850,16 +871,12 @@ static int get_flare_move_count(
 {
     if (user->flares_choice == FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN)
     {
-        return flare->obj->solution_moves.num_moves;
+        return flare->moves_seq.num_moves;
     }
     else
     {
         if (! flare->fc_pro_moves.moves)
         {
-            fcs_moves_sequence_t moves_seq;
-
-            calc_moves_seq(&(flare->obj->solution_moves), &moves_seq);
-
             fc_solve_moves_processed_gen(
                 &(flare->fc_pro_moves),
                 &(user->initial_non_canonized_state),
@@ -868,14 +885,8 @@ static int get_flare_move_count(
 #else
                 user->common_preset.game_params.freecells_num,
 #endif
-                &(moves_seq)
+                &(flare->moves_seq)
             );
-
-            if (moves_seq.moves)
-            {
-                free (moves_seq.moves);
-                moves_seq.moves = NULL;
-            }
         }
 
         return fc_solve_moves_processed_get_moves_left(&(flare->fc_pro_moves));
@@ -1142,6 +1153,17 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 INSTANCE_DECKS_NUM
                 );
 
+            calc_moves_seq(
+                &(user->fc_solve_obj->solution_moves),
+                &(flare->moves_seq)
+            );
+            flare->next_move = 0;
+            if (flare->obj->solution_moves.moves)
+            {
+                fcs_move_stack_static_destroy(flare->obj->solution_moves);
+                flare->obj->solution_moves.moves = NULL;
+            }
+
             user->trace_solution_state_locs = user->state_locs;
 
 #define FLARE_MOVE_COUNT(idx) \
@@ -1225,22 +1247,19 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
             int ret;
-#ifdef FCS_USE_COMPACT_MOVE_TOKENS
-            fcs_internal_move_t internal_move = fc_solve_empty_move;
-#endif
 
-            ret = fc_solve_move_stack_pop(
-                &(user->fc_solve_obj->solution_moves),
-#ifdef FCS_USE_COMPACT_MOVE_TOKENS
-                &internal_move
-#else
-                user_move
-#endif
-                );
-
-#ifdef FCS_USE_COMPACT_MOVE_TOKENS
-            *user_move = internal_move_to_user_move(internal_move);
-#endif
+            fcs_instance_item_t * instance_item = \
+                &(user->instances_list[user->current_instance_idx]);
+            fcs_flare_item_t * flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+            if (flare->next_move == flare->moves_seq.num_moves)
+            {
+                ret = 1;
+            }
+            else
+            {
+                ret = 0;
+                *user_move = flare->moves_seq.moves[flare->next_move++];
+            }
 
             if (ret == 0)
             {
@@ -1251,11 +1270,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
                 fc_solve_apply_move(
                     &(pass),
                     NULL,
-#ifdef FCS_USE_COMPACT_MOVE_TOKENS
-                    internal_move,
-#else
-                    *user_move,
-#endif
+                    user_move_to_internal_move(*user_move),
                     INSTANCE_FREECELLS_NUM,
                     INSTANCE_STACKS_NUM,
                     INSTANCE_DECKS_NUM
@@ -1314,12 +1329,6 @@ static void user_free_resources(
         /*  TODO : for later It's possible two flares in a single-instance
          *  will be solved. Make sure the check is instance-wide.
          *  */
-        if (ret_code == FCS_STATE_WAS_SOLVED)
-        {
-            fcs_move_stack_static_destroy(flare->obj->solution_moves);
-            flare->obj->solution_moves.moves = NULL;
-        }
-
         if (ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
             if (ret_code != FCS_STATE_INVALID_STATE)
@@ -1339,6 +1348,13 @@ static void user_free_resources(
         if (flare->fc_pro_moves.moves)
         {
             fc_solve_moves_processed_free(&(flare->fc_pro_moves));
+        }
+
+        if (flare->moves_seq.moves)
+        {
+            free (flare->moves_seq.moves);
+            flare->moves_seq.moves = NULL;
+            flare->moves_seq.num_moves = 0;
         }
     }
     FLARES_LOOP_END_FLARES()
@@ -2319,6 +2335,8 @@ static int user_next_flare(fcs_user_t * user)
          : NULL
         );
     flare->obj->debug_iter_output_context = user;
+    flare->moves_seq.num_moves = 0;
+    flare->moves_seq.moves = NULL;
 
     flare->name = NULL;
     flare->fc_pro_moves.moves = NULL;
@@ -2440,6 +2458,13 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
     {
         return -2;
     }
+
+    fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
+    fcs_flare_item_t * flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+
+    moves_seq->num_moves = flare->moves_seq.num_moves;
+    moves_seq->moves = memdup(flare->moves_seq.moves,
+        sizeof(flare->moves_seq.moves[0]) * flare->moves_seq.num_moves);
 
     return calc_moves_seq(&(user->fc_solve_obj->solution_moves), moves_seq);
 }
