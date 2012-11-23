@@ -160,6 +160,7 @@ static GCC_INLINE void fc_solve_hash_free(
     fc_solve_compact_allocator_finish(&(hash->allocator));
 
     free(hash->entries);
+    hash->entries = NULL;
 }
 
 static GCC_INLINE void fc_solve_hash_foreach(
