@@ -45,10 +45,10 @@ void fc_solve_compact_allocator_init(
     fcs_meta_compact_allocator_t * meta_allocator
     )
 {
-    allocator->old_list = NULL;
     allocator->meta = meta_allocator;
 
-    fc_solve_compact_allocator_extend(allocator);
+    fc_solve_compact_allocator_init_helper(allocator);
+
     return;
 }
 
@@ -130,5 +130,6 @@ void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator)
     OLD_LIST_NEXT(iter) = meta->recycle_bin;
     meta->recycle_bin = iter;
 }
+
 #undef OLD_LIST_NEXT
 #undef OLD_LIST_DATA

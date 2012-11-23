@@ -54,6 +54,19 @@ typedef struct
     fcs_meta_compact_allocator_t * meta;
 } fcs_compact_allocator_t;
 
+extern void fc_solve_compact_allocator_extend(
+    fcs_compact_allocator_t * allocator
+        );
+
+/* To be called after the meta_alloc was set. */
+static GCC_INLINE void fc_solve_compact_allocator_init_helper(
+    fcs_compact_allocator_t * allocator
+)
+{
+    allocator->old_list = NULL;
+    fc_solve_compact_allocator_extend(allocator);
+}
+
 static GCC_INLINE void fc_solve_meta_compact_allocator_init(
     fcs_meta_compact_allocator_t * meta
     )
@@ -70,9 +83,6 @@ extern void fc_solve_compact_allocator_init(
     fcs_meta_compact_allocator_t * meta_allocator
     );
 
-extern void fc_solve_compact_allocator_extend(
-    fcs_compact_allocator_t * allocator
-        );
 
 static GCC_INLINE void * fcs_compact_alloc_ptr(fcs_compact_allocator_t * allocator, int how_much)
 {
@@ -115,6 +125,12 @@ static GCC_INLINE fcs_collectible_state_t * fcs_state_ia_alloc_into_var(fcs_comp
 
         return ret_helper;
     }
+}
+
+static GCC_INLINE void fc_solve_compact_allocator_recycle(fcs_compact_allocator_t * allocator)
+{
+    fc_solve_compact_allocator_finish(allocator);
+    fc_solve_compact_allocator_init_helper(allocator);
 }
 
 #ifdef __cplusplus
