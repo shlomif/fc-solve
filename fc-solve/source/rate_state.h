@@ -22,9 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * alloc.h - the Freecell Solver compact allocator. Used to allocate
- * columns and other small allocations of a short size. Is able to revert the
- * last allocation.
+ * rate_state.h - for rating states.
  */
 #ifndef FC_SOLVE__RATE_STATE_H
 #define FC_SOLVE__RATE_STATE_H
