@@ -1345,7 +1345,14 @@ int fc_solve_soft_dfs_do_solve(
                                         rand_array[a].rating = befs_rate_state(
                                             soft_thread,
                                             weighting,
+#ifdef FCS_RCS_STATES
+                                            fc_solve_lookup_state_key_from_val(
+                                                instance,
+                                                derived_states[rand_array[a].idx].state_ptr
+                                            ),
+#else
                                             &(derived_states[rand_array[a].idx].state_ptr->s),
+#endif
                                             BEFS_MAX_DEPTH - calc_depth(derived_states[rand_array[a].idx].state_ptr)
                                             );
                                     }

@@ -42,6 +42,7 @@
 #include <stddef.h>
 #include <assert.h>
 
+#include "alloc_wrap.h"
 #include "inline.h"
 
 #define DICT_IMPLEMENTATION
@@ -276,13 +277,13 @@ static int verify_dict_has_node(dnode_t *nil, dnode_t *root, dnode_t *node)
 #ifdef NO_FC_SOLVE
 dict_t *dict_create(dictcount_t maxcount, dict_comp_t comp, void * context)
 #else
-dict_t *fc_solve_kaz_tree_create(dict_comp_t comp, void * context)
+dict_t *fc_solve_kaz_tree_create(dict_comp_t comp, void * context, fcs_meta_compact_allocator_t * meta_allocator)
 #endif
 {
     dict_t *dict = (dict_t *) SMALLOC1(dict);
 
     if (dict)
-        dict_init(dict, comp);
+        dict_init(dict, comp, meta_allocator);
 
     dict->context = context;
 
@@ -393,7 +394,9 @@ void dict_free(dict_t *dict)
 #ifdef NO_FC_SOLVE
 dict_t *dict_init(dict_t *dict, dictcount_t maxcount, dict_comp_t comp)
 #else
-dict_t *dict_init(dict_t *dict, dict_comp_t comp)
+dict_t *dict_init(dict_t *dict, dict_comp_t comp,
+    fcs_meta_compact_allocator_t * meta_allocator
+    )
 #endif
 {
     dict->compare = comp;
@@ -402,7 +405,7 @@ dict_t *dict_init(dict_t *dict, dict_comp_t comp)
     dict->allocnode = dnode_alloc;
     dict->freenode = dnode_free;
 #else
-    fc_solve_compact_allocator_init(&(dict->dict_allocator));
+    fc_solve_compact_allocator_init(&(dict->dict_allocator), meta_allocator);
     dict->dict_recycle_bin = NULL;
 #endif
 

@@ -634,13 +634,14 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
         cache->states_values_to_keys_map = ((Pvoid_t) NULL);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
-        cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys, NULL);
+        cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys, NULL, instance->meta_alloc);
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
 
         fc_solve_compact_allocator_init(
-            &(cache->states_values_to_keys_allocator)
+            &(cache->states_values_to_keys_allocator),
+            instance->meta_alloc
         );
         cache->lowest_pri = NULL;
         cache->highest_pri = NULL;
