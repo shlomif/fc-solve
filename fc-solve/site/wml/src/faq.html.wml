@@ -1,0 +1,25 @@
+#include '../template.wml'
+
+<latemp_subject "The Freecell Solver Frequently Asked Questions (F.A.Q.) List" />
+
+<h3 id="a_move_seems_wrong">I think I found a wrong move in the solution? What can I do?</h3>
+
+<p>
+While it is not unthinkable that Freecell Solver will have a bug and will
+make a wrong move, it is extremely unlikely that that is the case. Some people
+have reported that several multi-sequence moves are impossible, but as I
+demonstrated to them, they were in fact possible.
+</p>
+
+<p>
+One can find the maximal number of cards that can be moved as a sequence
+in Freecell using the formula
+<tt>max_cards = (1 + num_vacanat_freecells) * (2 ^ num_vacant_columns)</tt>
+(where “*” is multiplication and “^” is exponentiation.). One can also try using
+<a href="https://metacpan.org/module/expand-solitaire-multi-cards-moves">expand-solitaire-multi-cards-moves</a>
+from the <a href="https://metacpan.org/release/Games-Solitaire-Verify">Games-Solitaire-Verify CPAN distribution</a> (by the same author of Freecell Solver),
+in order to filter solutions and produce ones with multi-card moves
+expanded into many single-card moves. If you are on Microsoft Windows, you can
+install <a href="http://dwimperl.com/">DWIM Perl</a> and run it.
+</p>
+

@@ -44,6 +44,11 @@ my $tree_contents =
             ],
         },
         {
+            'text' => "FAQ",
+            'url' => "faq.html",
+            'title' => "Frequently Asked Questions List",
+        },
+        {
             'text' => "Documents",
             'url' => "docs/",
             'subs' =>
