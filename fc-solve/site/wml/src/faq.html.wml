@@ -23,3 +23,15 @@ expanded into many single-card moves. If you are on Microsoft Windows, you can
 install <a href="http://dwimperl.com/">DWIM Perl</a> and run it.
 </p>
 
+<!--
+
+TODO:
+
+* I think I found an abuse of Freecell Solver. What should I do?
+* I started to write a solver for Freecell, but it is too slow? What can I do?
+* May I integrate Freecell Solver into my program? And how?
+* The solutions are too long. What can I do?
+
+-->
+
+
