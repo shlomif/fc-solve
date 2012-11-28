@@ -58,6 +58,7 @@ from pysollib.settings import PACKAGE, TITLE, TOOLKIT, TOP_TITLE
 from pysollib.settings import VERSION, VERSION_TUPLE
 from pysollib.settings import DEBUG
 from pysollib.gamedb import GI, GAME_DB, loadGame
+import pysollib.games
 from pysollib.pysolrandom import PysolRandom, LCRandom31
 from pysollib.pysoltk import EVENT_HANDLED, EVENT_PROPAGATE
 from pysollib.pysoltk import CURSOR_WATCH
