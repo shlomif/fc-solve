@@ -21,11 +21,32 @@ If command line arguments have parameters, they are followed in separate
 parameters - Freecell Solver won't recognise a parameter preceded by an equal
 sign. +--st-name=myname+ is invalid, while +--st-name myname+ is OK.
 
+The Scope of the Options
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The scope of the options is mentioned along with them. Options can be:
+
+1. Global - affects all the soft-threads.
+
+2. Instance-specific - affects an instance (separated by the +--next-instance+
+option below). Each instance consists of several flares.
+
+3. Flare-specific - affects the current flare (separated by the +--next-flare+
+option below. Each flare consists of several hard threads.
+
+4. Hard-thread-specific - affects the current hard thread (separated by
+the +--next-hard-thread+ option below. Each hard thread consists of several
+soft threads.
+
+5. Soft-thread-specific - affects only the curent soft thread.
+
 Getting Help
 ------------
 
 -h , --help
 ~~~~~~~~~~~~~~~
+
+*Global*
 
 This option displays a help text on the screen. This help gives a help
 display summarizing some ways to use the program and get more help.
@@ -33,31 +54,43 @@ display summarizing some ways to use the program and get more help.
 --version
 ~~~~~~~~~
 
+*Global*
+
 This option displays the version number of the components that make
 the executable (and then exits).
 
 --help-configs
 ~~~~~~~~~~~~~~
 
+*Global*
+
 Some help on the various configurations of Freecell Solver.
 
 --help-options
 ~~~~~~~~~~~~~~
+
+*Global*
 
 A help screen giving an overview of all available options.
 
 --help-real-help
 ~~~~~~~~~~~~~~~~
 
+*Global*
+
 Explains how to change the default help screen to a different one.
 
 --help-short-sol
 ~~~~~~~~~~~~~~~~
 
+*Global*
+
 How to generate shorter solutions.
 
 --help-summary
 ~~~~~~~~~~~~~~
+
+*Global*
 
 The default help screen.
 
@@ -66,6 +99,8 @@ Output Options
 
 -p , --parseable-output
 ~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global*
 
 This option will display the columns in a format that can be more easily
 manipulated by text-processing programs such as grep or perl. Namely,
@@ -76,6 +111,8 @@ own line, while beginning with a +:+.
 
 -t , --display-10-as-t
 ~~~~~~~~~~~~~~~~~~~~~~
+
+*Global*
 
 This option will display the 10 cards as a capital +T +instead of a +10+.
 Thus, the cards will be more properly aligned.
@@ -115,6 +152,8 @@ Freecells:
 -c , --canonized-order-output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 Freecell Solver re-arranges the stacks and freecells in a given state
 according to their first card. It keeps their actual position in a
 separate place, but internally it uses their canonized place. Use
@@ -125,6 +164,8 @@ board will not be preserved throughout the solution.
 
 -m , --display-moves
 ~~~~~~~~~~~~~~~~~~~~
+
+*Global*
 
 This option will display the moves instead of the intermediate states.
 Each move will be displayed in a separate line, in a format that is
@@ -151,6 +192,8 @@ Move a card from stack 6 to freecell 1
 -sn , --standard-notation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This option will display the moves in standard notation in which every
 move consists of two characters and there are ten moves in a line. Naturally,
 this option will only become apparent if the display moves is specified.
@@ -164,6 +207,8 @@ http://home.earthlink.net/~fomalhaut/freecell.html
 -snx , --standard-notation-extended
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This option is similar to the previous one, except that when a sequence
 move is made to an empty stack with more than one card in the sequence,
 the move will be followed with "v" and the number of cards moved in
@@ -171,6 +216,8 @@ hexadecimal.
 
 -sam , --display-states-and-moves
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global*
 
 This option will display both the intermediate states and the moves that
 are needed to move from one to another. The standard notation
@@ -232,6 +279,8 @@ Move a card from stack 6 to freecell 1
 -pi , --display-parent-iter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This option (assuming the -s and -i options are specified) will also
 display the iteration index of the state from which the current state
 was derived. This is especially useful for BeFS (so-called +a-star+) or
@@ -239,6 +288,8 @@ BFS scans.
 
 -o [filename] , --output [filename]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global*
 
 Outputs to a file instead of standard output. So for example:
 
@@ -256,6 +307,8 @@ $ fc-solve --output 2405.solution.txt 2405.board
 -sel , --show-exceeded-limits
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This option will display a different status message ("Iterations count
 exceeded.") instead of "I could not solve this game." in case the iterations
 count was exceeded. This is recommended because the "I could not solve this
@@ -272,6 +325,8 @@ Game Variants Options
 --freecells-num [Number of Freecells]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This option specifies the number of freecells which are available to
 the program. Freecell Solver can use any number of freecells as long as
 it does not exceed its maximal number.
@@ -283,6 +338,8 @@ compile-time by modifying the file +config.h+. See the file +INSTALL+
 --stacks-num [Number of Stacks]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This option specifies the number of stacks present in the board. Again,
 this number cannot exceed the maximal number of stacks, which can be
 specified in the file +config.h+ during compile-time of Freecell
@@ -291,6 +348,8 @@ Solver.
 --decks-num [Number of Decks]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This options specifies how many decks are found in the board. This number
 cannot exceed the maximal number of decks, which can be specified by the
 Freecell Solver build system.
@@ -298,11 +357,15 @@ Freecell Solver build system.
 --sequences-are-built-by {suit|alternate_color|rank}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This option specifies whether a card sequence is built by suit or by
 alternate colour or by rank regardless of suit.
 
 --sequence-move {limited|unlimited}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global*
 
 This option specifies whether the sequence move is limited by the
 number of freecells or vacant stacks or not.
@@ -311,11 +374,15 @@ number of freecells or vacant stacks or not.
 --empty-stacks-filled-by {kings|none|all}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 Specifies which cards can fill an empty stack.
 
 
 --game [game] , --preset [game] , -g [game]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global*
 
 Specifies the type of game. Each preset implies several of the
 settings options above and sometimes even the tests order below. The
@@ -377,12 +444,16 @@ Solving Algorithm Options
 -mi [Iterations num] , --max-iters [Iterations num]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This parameter limits the maximal number of states to check. This will
 give a rough limit on the time spent to solve a given board.
 
 
 -md [Maximal depth] , --max-depth [Maximal depth]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Not currently implemented*
 
 Freecell Solver recurses into the solution. This parameter specifies a
 maximal recursion depth. Generally speaking, it's not a good idea to
@@ -392,6 +463,8 @@ inaccessible.
 -mss [num] , --max-stored-states [num]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 Limits the number of the states stored by the program in the computer's
 memory. This differs from the maximal number of iterations in the sense, that
 it is possible that a stored state was not checked yet.
@@ -399,12 +472,16 @@ it is possible that a stored state was not checked yet.
 -tmss [num] , --trim-max-stored-states [num]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Instance-wide*
+
 This also limits the number of trimmed stored states, but this time will
 try to trim them once the limit has been reached (which is time consuming
 and may cause states to be traversed again in the future).
 
 -to [Test's Order] , --tests-order [Test's Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Soft-thread-specific*
 
 This option specifies the order in which Freecell Solver will try the
 different types of moves that it can perform. Each move is specified by
@@ -474,6 +551,8 @@ function used by the +-asw+ flag (see below).
 -dto [Min Depth],[Tests' Order] , --depth-tests-order [Min Depth],[Tests' Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Soft-thread-specific*
+
 Sets the Tests' order starting from the minimal depth onwards. This way, if
 a Soft-DFS scan recurses deeply into the game, it will use a different tests'
 order.
@@ -523,6 +602,8 @@ This does the same thing as the previous example.
 -me [Solving Method] , --method [Solving Method]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Soft-thread-specific*
+
 This option specifies the solving method that will be used to solve the
 board. Currently, the following methods are available:
 
@@ -548,6 +629,8 @@ that do not belong to any group, are processed in a non-random manner.
 -asw [BeFS Weights] , --a-star-weight [BeFS Weights]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Soft-thread-specific*
+
 Specify weights for the +a-star+ (= "Best-First Search") scan, assuming it is
 used. The parameter should be a comma-separated list of numbers, each one is
 proportional to the weight of its corresponding test.
@@ -569,12 +652,16 @@ The default weights are respectively: {0.5, 0, 0.3, 0, 0.2, 0}
 -seed [Seed Number]
 ~~~~~~~~~~~~~~~~~~~
 
+*Soft-thread-specific*
+
 Specifies a seed to be used by Freecell Solver's internal random number
 generator. This seed may alter the behaviour and speed of the +random-dfs+
 scan.
 
 --set-pruning [Pruning] , -sp [Pruning]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Soft-thread-specific*
 
 This option sets the pruning algorithm for the soft thread. Current valid
 values are only the empty string (+""+) for no pruning and +r:tf+ (short
@@ -585,12 +672,16 @@ http://tech.groups.yahoo.com/group/fc-solve-discuss/message/214
 -opt , --optimize-solution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Flare-wide*
+
 This option instructs Freecell Solver to try and optimize the solution
 path so it will have a smaller number of moves.
 
 
 -opt-to [tests order] , --optimization-tests-order [tests order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Flare-wide*
 
 This argument specifies the test order for the optimization scan, in case
 it should be different than an order that contains all the tests that were
@@ -600,13 +691,16 @@ used in all the normal scans.
 --reparent-states
 ~~~~~~~~~~~~~~~~~
 
+*Flare-wide*
+
 This option specifies that states that were encountered whose depth in the
 states graph can be improved should be reparented to the new parent. This
 option can possibly make solutions shorter.
 
-
 --calc-real-depth
 ~~~~~~~~~~~~~~~~~
+
+*Flare-wide*
 
 This option becomes effective only if +--reparent-states+ is specified. What
 it does, is explicitly calculate the depth of the state by tracing its path
@@ -625,6 +719,8 @@ reaches a solution, the solution will be displayed.
 -nst , --next-soft-thread
 ~~~~~~~~~~~~~~~~~~~~~~~
 
+*Hard-thread-specific*
+
 This option creates a new soft-thread and makes the following scan-specific
 options initialize it. For example:
 
@@ -638,12 +734,19 @@ myboard.txt.
 -step [Step] , --soft-thread-step [Step]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Soft-thread-specific*
+
 This option will set the number of iterations with which to run the
 soft thread before switching to the next one. By specifying a larger
 step, one can give a certain scan a longer run-time and a higher priority.
 
+*Note:* after some experimentation, we have concluded that the +--prelude+
+option normally yields better results, but +-step+ can be used as a fallback.
+
 -nht , --next-hard-thread
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Flare-wide*
 
 This argument lets one initialize the next hard thread. If Freecell Solver was
 compiled with such support, then it is possible to run each hard thread in its
@@ -653,12 +756,16 @@ own system thread. Each hard-thread contains one or more soft threads.
 --st-name [soft thread name]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Soft-thread-specific*
+
 This argument sets the name used to identify the current soft thread. This name
 can later be used to construct the prelude (see below).
 
 
 --prelude [\i1@st1{,\i2@st2{,\i3@st3...}}]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Hard-thread-specific*
 
 Sets the prelude for the hard thread. At the beginning of the search, the
 hard thread plays a static sequence of iterations at each of the soft threads
@@ -680,6 +787,8 @@ step number.
 --scans-synergy {none|dead-end-marks}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Flare-wide*
+
 Specifies the synergy between the various scans, or how much they cooperate
 between themselves. +none+ means they do not cooperate and only share
 the same memory resources. +dead-end-marks+ means they try to mark states
@@ -690,6 +799,8 @@ such, as "dead ends". This may or may not improve the speed of the solution.
 -ni , --next-instance
 ~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This option allows to run two or more separate solvers one after the
 other. If the first one returned an unsolvable verdict, then the second
 one would run and so on. One use of it is to run an atomic moves scan
@@ -698,6 +809,8 @@ still enjoy some of the speed of the meta-moves scan.
 
 -nf , --next-flare
 ~~~~~~~~~~~~~~~~~~
+
+*Instance-wide*
 
 Each instance contains several flares. Flares are various alternative scans,
 that are ran one after another, as specified in the +--flares-plan+ below
@@ -708,10 +821,14 @@ picks the one with the shortest solution.
 --flare-name [flare name]
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Flare-wide*
+
 This is a name that identifies the flare for use in the flares' plan.
 
 --flares-plan [flare plan]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Instance-wide*
 
 This instance-wide parameter gives a plan for the flares as a big string. Here
 are some examples:
@@ -753,7 +870,9 @@ the flares run.
 --flares-choice [choice]
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-This dictates how to choose the winning flare based if more than one yielded
+*Global*
+
+This dictates how to choose the winning flare based on if more than one yielded
 a solution. Possible options are:
 
 1. +--flares-choice fc_solve+ - the default, which picks up the solutions based
@@ -765,6 +884,8 @@ foundations using Horne's Prune / Raymond Prune.
 
 -fif [factor] , --flares-iters-factor [factor]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global*
 
 Sets a global, floating-point number, factor to multiply all the iterations
 counts in the flares plans. The higher it is, the longer the scans will take,
@@ -798,6 +919,8 @@ Is equivalent to:
 --cache-limit [cache limit]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This is a numeric limit to the LRU cache which only matters if Freecell
 Solver was compiled with +FCS_RCS_STATES+ enabled. This value should be
 a positive integer and the higher it is, the more quickly it is likely
@@ -807,9 +930,10 @@ entire point of +FCS_RCS_STATES+ is to conserve memory).
 Meta-Options
 ------------
 
-
 --reset
 ~~~~~~~
+
+*Global*
 
 This option resets the program to its initial state, losing all the
 configuration logic that was inputted to it up to that state. Afterwards,
@@ -818,6 +942,8 @@ it can be set to a different configuration, again.
 
 --read-from-file [num_skip,]filename
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global* (but context-specific).
 
 This option will read the configuration options from a file. The format
 of the file is similar to that used by the UNIX Bourne Shell. (i.e:
@@ -830,6 +956,8 @@ skip followed by a comma. (the default is 0)
 
 -l [preset] , --load-config [preset]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global* (but context-specific).
 
 Reads the configuration specified by [preset] and configures the solver
 accordingly. A preset is a set of command line arguments to be analyzed
@@ -909,6 +1037,8 @@ Run-time Display Options
 -i , --iter-output
 ~~~~~~~~~~~~~~~~~~
 
+*Global*
+
 This option tells fc-solve to print the iteration number and the
 recursion depth of every state which is checked, to the standard
 output. It's a good way to keep track of how it's doing, but the output
@@ -917,6 +1047,8 @@ slows it down a bit.
 
 -s , --state-output
 ~~~~~~~~~~~~~~~~~~~
+
+*Global*
 
 This option implies -i. If specified, this option outputs the cards and
 formation of the board itself, for every state that is checked.
