@@ -45,34 +45,35 @@ import traceback
 import gettext
 from cStringIO import StringIO
 import argparse
+from pysollib.mygettext import _, n_
 
 from pysollib.init import init
 # PySol imports
-from mfxutil import Pickler, Unpickler, UnpicklingError
-from mfxutil import Image, ImageTk
-from mfxutil import destruct, Struct, SubclassResponsibility
-from mfxutil import uclock, usleep
-from mfxutil import format_time, print_err
-from settings import PACKAGE, TITLE, TOOLKIT, TOP_TITLE
-from settings import VERSION, VERSION_TUPLE
-from settings import DEBUG
-from gamedb import GI
-from pysolrandom import PysolRandom, LCRandom31
-from pysoltk import EVENT_HANDLED, EVENT_PROPAGATE
-from pysoltk import CURSOR_WATCH
-from pysoltk import bind, wm_map
-from pysoltk import after, after_idle, after_cancel
-from pysoltk import MfxMessageDialog, MfxExceptionDialog
-from pysoltk import MfxCanvasText, MfxCanvasLine, MfxCanvasRectangle
-from pysoltk import Card
-from pysoltk import reset_solver_dialog
-from move import AMoveMove, AFlipMove, AFlipAndMoveMove
-from move import ASingleFlipMove, ATurnStackMove
-from move import ANextRoundMove, ASaveSeedMove, AShuffleStackMove
-from move import AUpdateStackMove, AFlipAllMove, ASaveStateMove
-from move import ASingleCardMove
-from hint import DefaultHint
-from help import help_about
+from pysollib.mfxutil import Pickler, Unpickler, UnpicklingError
+from pysollib.mfxutil import Image, ImageTk
+from pysollib.mfxutil import destruct, Struct, SubclassResponsibility
+from pysollib.mfxutil import uclock, usleep
+from pysollib.mfxutil import format_time, print_err
+from pysollib.settings import PACKAGE, TITLE, TOOLKIT, TOP_TITLE
+from pysollib.settings import VERSION, VERSION_TUPLE
+from pysollib.settings import DEBUG
+from pysollib.gamedb import GI, GAME_DB, loadGame
+from pysollib.pysolrandom import PysolRandom, LCRandom31
+from pysollib.pysoltk import EVENT_HANDLED, EVENT_PROPAGATE
+from pysollib.pysoltk import CURSOR_WATCH
+from pysollib.pysoltk import bind, wm_map
+from pysollib.pysoltk import after, after_idle, after_cancel
+from pysollib.pysoltk import MfxMessageDialog, MfxExceptionDialog
+from pysollib.pysoltk import MfxCanvasText, MfxCanvasLine, MfxCanvasRectangle
+from pysollib.pysoltk import Card
+from pysollib.pysoltk import reset_solver_dialog
+from pysollib.move import AMoveMove, AFlipMove, AFlipAndMoveMove
+from pysollib.move import ASingleFlipMove, ATurnStackMove
+from pysollib.move import ANextRoundMove, ASaveSeedMove, AShuffleStackMove
+from pysollib.move import AUpdateStackMove, AFlipAllMove, ASaveStateMove
+from pysollib.move import ASingleCardMove
+from pysollib.hint import DefaultHint
+from pysollib.help import help_about
 
 PLAY_TIME_TIMEOUT = 200
 
@@ -120,8 +121,13 @@ class Game:
             if f: f.close()
         return game
 
+    def constructGame(self, id):
+        gi = GAME_DB.get(id)
+        if gi is None:
+            raise Exception("Unknown game (id %d)" % id)
+        return gi.gameclass(gi)
+
     def _undumpGame(self, p):
-        self.updateTime()
         #
         err_txt = _("Invalid or damaged %s save file") % PACKAGE
         #
@@ -150,12 +156,12 @@ Cannot load games saved with
         #
         id = pload(int)
         validate(id > 0, err_txt)
-        # if id not in GI.PROTECTED_GAMES:
-        #    game = app.constructGame(id)
-        #    if game:
-        #        if not game.canLoadGame(version_tuple, game_version):
-        #            destruct(game)
-        #            game = None
+        if id not in GI.PROTECTED_GAMES:
+           game = self.constructGame(id)
+           if game:
+               if not game.canLoadGame(version_tuple, game_version):
+                   destruct(game)
+                   game = None
         validate(game is not None, _('''\
 Cannot load this game from version %s
 as the game rules have changed
