@@ -69,6 +69,7 @@ Move = Struct {
     int num_cards; # Where appropriate;
     Card source_card; # Optional
     Card dest_card; # Optional
+    bool implicit; # Whether this move is done implicitly by an automove.
 }
 
 Move_With_Position = Struct {
