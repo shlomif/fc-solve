@@ -7,14 +7,14 @@ some people's frustration with the so-called “standard notation” for
 notating Freecell.
 
 This standard is written in a pseudo-BNF / pseudo-C-struct format, which
-will be format agnostic and can later be encoded in XML, JSON or a more
+will be encoding agnostic and can later be encoded in XML, JSON or a more
 human-readable format (though conversions to this format will be explicitly
 specified.).
 
 Format:
 -------
 
-Rank = {Integer: from 1 to MAX_RANK } (MAX_RANK is normally 13 for French
+Rank = {Integer: from 0 to MAX_RANK } (MAX_RANK is normally 13 for French
 playing card, but is specified at the header).
 
 Suit = One Of{'H','C','D','S' }
@@ -22,8 +22,78 @@ Suit = One Of{'H','C','D','S' }
 Deck = {Integer: from 0 to NUM_DECKS - 1 }
 
 Card = {
+    bool is_empty;
+    bool is_hidden;
     Rank rank;
     Suit suit;
     Deck deck; # Optional
 }
 
+Column = {
+    int len;
+    Card cards[0 .. len-1];
+}
+
+Foundation_Id = { Deck deck, Suit suit }
+
+Foundations = {
+    Map : from Foundation_Id to Rank.
+    # For all decks and suits
+}
+
+Freecells = {
+    Array of NUM_FREECELLS cards that can be empty.
+}
+
+GamePosition = {
+    Foundations foundations;
+    Freecells freecells;
+
+    Column x NUM_COLUMNS;
+}
+
+Column_Idx = {Integer: from 0 to NUM_COLUMNS-1 }
+Freecell_Idx = {Integer: from 0 to NUM_FREECELLS-1 }
+
+Source_Or_Dest_Id = union {
+    Column_Idx col;
+        OR
+    Freecell_Idx freecell;
+        OR
+    Foundation_Id foundation;
+}
+
+Move = Struct {
+    Source_Or_Dest_Id source;
+    Source_Or_Dest_Id dest;
+    int num_cards; # Where appropriate;
+    Card source_card; # Optional
+    Card dest_card; # Optional
+}
+
+Move_With_Positions = Struct {
+    GamePosition pos_before_move;
+    Move move;
+    GamePosition pos_after_move;
+}
+
+Solution = {
+    Move_With_Position moves[0 .. NUM_MOVES - 1];
+}
+
+Header = {
+    int NUM_DECKS;
+    int NUM_MOVES;
+    int NUM_COLUMNS;
+    int MAX_RANK;
+    String variant; # such as "freecell", "bakers_dozen", "bakers_game", etc.
+    enum sequences_are_built_by {
+        RANK, SUIT, ALTERNATE_COLOR
+    }
+    enum empty_stacks_filled_by {
+        KINGS_ONLY, NONE, ANY_CARD,
+    }
+    enum sequence_move {
+        LIMITED, UNLIMITED
+    }
+}
