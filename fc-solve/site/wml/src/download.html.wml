@@ -92,8 +92,7 @@ None yet.
 <h3 id="distros_mandriva_mageia">Mandriva / Mageia</h3>
 
 <img src="$(ROOT)/images/100px-Mageia_logo.svg.png" alt="Mageia Logo"
-    class="dist_logo"
-/>
+    class="dist_logo" />
 
 <p>
 Type <tt>urpmi freecell-solver</tt>. You may need to configure the right
@@ -101,6 +100,9 @@ appropriate networked repositories in the Mageia Control Centre.
 </p>
 
 <h3 id="distros_freebsd">FreeBSD</h3>
+
+<img src="$(ROOT)/images/Freebsd_logo.svg.png" alt="FreeBSD Logo"
+    class="dist_logo" />
 
 <p>
 See <a href="http://www.freshports.org/games/freecell-solver">the FreeBSD
