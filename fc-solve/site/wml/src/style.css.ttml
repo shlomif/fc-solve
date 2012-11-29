@@ -26,6 +26,12 @@ a:hover { color : red }
     margin-left : 23%;
 }
 
+[% BLOCK rounded %]
+[% SET r = '5px' %]
+[% FOREACH prop = ['-moz-border-radius', '-webkit-border-radius', '-khtml-border-radius', 'border-radius'] %]
+[% prop %]: 0 [% r %] [% r %] [% r %];
+[% END %]
+[% END %]
 
 h2
 {
@@ -33,8 +39,14 @@ h2
 }
 h3
 {
-    background-color: #00D000;
+    background-color: #77D077;
 }
+
+h2, h3
+{
+    [% INCLUDE rounded %]
+}
+
 .plain
 {
     background-color: transparent;
