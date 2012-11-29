@@ -46,6 +46,7 @@ import gettext
 from cStringIO import StringIO
 import argparse
 from pysollib.mygettext import _, n_
+import yaml
 
 from pysollib.init import init
 # PySol imports
@@ -234,7 +235,8 @@ def main():
     results = parser.parse_args()
 
     g = Game()
-    g._loadGame(results.input_filename)
+    loaded_game = g._loadGame(results.input_filename)
+    print yaml.dump(loaded_game)
 
 if __name__ == "__main__":
     main()
