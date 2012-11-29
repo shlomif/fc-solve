@@ -45,6 +45,14 @@ h3
 h2, h3
 {
     [% INCLUDE rounded %]
+    clear: right;
+}
+
+.dist_logo
+{
+    float: right;
+    margin-left: 1em;
+    margin-bottom: 1em;
 }
 
 .plain

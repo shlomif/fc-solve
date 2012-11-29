@@ -66,6 +66,13 @@ interactive installer will start.
 
 <h3 id="distros_deb_ubuntu">Debian/Ubuntu/Linux Mint</h3>
 
+<img src="$(ROOT)/images/50px-Debian-OpenLogo.svg.png" alt="Debian Logo"
+    class="dist_logo"
+/>
+<img src="$(ROOT)/images/ubuntu-logo.png" alt="Ubuntu Logo"
+    class="dist_logo"
+/>
+
 <p>
 Type <tt>apt-get install freecell-solver</tt> as root. The version may be
 somewhat old, but hopefully mostly bug-free. Alse see the
@@ -74,11 +81,19 @@ somewhat old, but hopefully mostly bug-free. Alse see the
 
 <h3 id="distros_fedora">Fedora</h3>
 
+<img src="$(ROOT)/images/fedora-logo.png" alt="Fedora Logo"
+class="dist_logo"
+/>
+
 <p>
 None yet.
 </p>
 
 <h3 id="distros_mandriva_mageia">Mandriva / Mageia</h3>
+
+<img src="$(ROOT)/images/100px-Mageia_logo.svg.png" alt="Mageia Logo"
+    class="dist_logo"
+/>
 
 <p>
 Type <tt>urpmi freecell-solver</tt>. You may need to configure the right
