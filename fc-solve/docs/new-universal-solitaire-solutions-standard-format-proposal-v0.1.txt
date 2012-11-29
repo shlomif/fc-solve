@@ -1,0 +1,29 @@
+Abstract
+--------
+
+This is a proposal for a universal format for encoding solitaire solutions.
+It grew out of a discussion on the fc-solve-discuss mailing list based on
+some people's frustration with the so-called “standard notation” for
+notating Freecell.
+
+This standard is written in a pseudo-BNF / pseudo-C-struct format, which
+will be format agnostic and can later be encoded in XML, JSON or a more
+human-readable format (though conversions to this format will be explicitly
+specified.).
+
+Format:
+-------
+
+Rank = {Integer: from 1 to MAX_RANK } (MAX_RANK is normally 13 for French
+playing card, but is specified at the header).
+
+Suit = One Of{'H','C','D','S' }
+
+Deck = {Integer: from 0 to NUM_DECKS - 1 }
+
+Card = {
+    Rank rank;
+    Suit suit;
+    Deck deck; # Optional
+}
+
