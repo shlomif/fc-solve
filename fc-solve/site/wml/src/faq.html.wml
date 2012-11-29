@@ -14,7 +14,7 @@ demonstrated to them, they were in fact possible.
 <p>
 One can find the maximal number of cards that can be moved as a sequence
 in Freecell using the formula
-<tt>max_cards = (1 + num_vacanat_freecells) * (2 ^ num_vacant_columns)</tt>
+<tt>max_cards = (1 + num_vacant_freecells) * (2 ^ num_vacant_columns)</tt>
 (where “*” is multiplication and “^” is exponentiation.). One can also try using
 <a href="https://metacpan.org/module/expand-solitaire-multi-cards-moves">expand-solitaire-multi-cards-moves</a>
 from the <a href="https://metacpan.org/release/Games-Solitaire-Verify">Games-Solitaire-Verify CPAN distribution</a> (by the same author of Freecell Solver),
@@ -23,11 +23,41 @@ expanded into many single-card moves. If you are on Microsoft Windows, you can
 install <a href="http://dwimperl.com/">DWIM Perl</a> and run it.
 </p>
 
+<h3 id="abuse_of_fc_solve">I think I found an abuse of Freecell Solver. What should I do?</h3>
+
+<p>
+We received a report or two about various people or companies distributing
+Freecell Solver along with their products, and the answer is that it is:
+1. Likely legal, 2. We don't mind, and 3. We encourage commercial and/or
+proprietary use of the code or binaries.
+</p>
+
+<p>
+Freecell Solver used to be distributed under the Public Domain, but was
+relicensed to the permissive
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 licence</a> due
+to the problematic and not globally accepted nature of the Public Domain,
+especially in software. (See
+<a href="http://linuxmafia.com/faq/Licensing_and_Law/public-domain.html">the
+page maintained by Rick Moen about it</a>.) As far as we know (and this is
+not legal advice), the main legal and practical
+difference between the public domain and the X11 licence, is that one should
+keep attributing the original copyright holders as rightful holders (while
+the licence of derivative works may be changed into any other). As far as
+we are concerned, this is not something we want to enforce, but we still
+recommend to follow this, to stay on the safe side of the law.
+</p>
+
+<p>
+So unless someone sues us for damages for a problem caused by the program
+or library (which violates the no warrany paragraph of the licence) everything
+should be fine and the “abuse” of the program is acceptable.
+</p>
+
 <!--
 
 TODO:
 
-* I think I found an abuse of Freecell Solver. What should I do?
 * I started to write a solver for Freecell, but it is too slow? What can I do?
 * May I integrate Freecell Solver into my program? And how?
 * The solutions are too long. What can I do?
