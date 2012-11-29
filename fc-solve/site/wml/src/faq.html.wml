@@ -31,6 +31,7 @@ TODO:
 * I started to write a solver for Freecell, but it is too slow? What can I do?
 * May I integrate Freecell Solver into my program? And how?
 * The solutions are too long. What can I do?
+* Why is Freecell Solver written in C? Why not in another language?
 
 -->
 
