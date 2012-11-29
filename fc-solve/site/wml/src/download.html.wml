@@ -60,16 +60,37 @@ interactive installer will start.
 </td>
 </tr>
 
-<tr>
-<td>
-<a href="http://packages.debian.org/source/squeeze/freecell-solver">Debian Package</a>
-</td>
-<td>
-A link to an "apt"-able Debian Package in the Debian pool of packages.
-</td>
-</tr>
-
 </table>
+
+<h2 id="distributions">How to install in various Linux/etc. distributions</h2>
+
+<h3 id="distros_deb_ubuntu">Debian/Ubuntu/Linux Mint</h3>
+
+<p>
+Type <tt>apt-get install freecell-solver</tt> as root. The version may be
+somewhat old, but hopefully mostly bug-free. Alse see the
+<a href="http://packages.debian.org/source/squeeze/freecell-solver">Debian Package page</a>.
+</p>
+
+<h3 id="distros_fedora">Fedora</h3>
+
+<p>
+None yet.
+</p>
+
+<h3 id="distros_mandriva_mageia">Mandriva / Mageia</h3>
+
+<p>
+Type <tt>urpmi freecell-solver</tt>. You may need to configure the right
+appropriate networked repositories in the Mageia Control Centre.
+</p>
+
+<h3 id="distros_freebsd">FreeBSD</h3>
+
+<p>
+See <a href="http://www.freshports.org/games/freecell-solver">the FreeBSD
+Freshports page</a>.
+</p>
 
 <define-tag develversion>
 
