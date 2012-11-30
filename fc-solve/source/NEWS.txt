@@ -18,6 +18,10 @@ specifies a factor to multiply the flares quotas.
 which somewhat improves the length of the solutions of the
 +-l micro-finance-improved+ preset.
 
+5. The individual flares are now recycled and their memory is reused when
+they are no longer needed. This is a RAM optimisation, which is applicable
+only for flares-based presets.
+
 Version 3.14.1: (01-Nov-2012)
 -----------------------------
 
