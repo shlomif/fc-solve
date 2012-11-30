@@ -62,6 +62,8 @@ TODO:
 * May I integrate Freecell Solver into my program? And how?
 * The solutions are too long. What can I do?
 * Why is Freecell Solver written in C? Why not in another language?
+* What are the uses of such a solver?
+* I found a solution that Freecell Solver erroneously reports as unsolveable - should I report it to you?
 
 -->
 
