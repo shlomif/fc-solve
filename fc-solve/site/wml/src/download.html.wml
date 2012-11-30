@@ -3,6 +3,11 @@
 
 <latemp_subject "Download Freecell Solver" />
 
+;;; The assets (downloads/tarballs/etc.) for this site are kept in a
+;;; separate repository at:
+;;;
+;;; http://github.com/shlomif/fc-solve-site-assets
+
 <define-tag linktofile>
 <a href="%0">%0</a>
 </define-tag>
@@ -43,7 +48,7 @@ large number of Solitaire variants.
 <tr>
 <td>
 # <a href="http://www.shlomifish.org/Files/files/code/fcs/freecell-solver-2.32.1.tar.bz2">freecell-solver-2.32.1.tar.bz2</a>
-<link_to_download_file "freecell-solver-3.14.1.tar.bz2" />
+<link_to_download_file "freecell-solver-3.16.0.tar.bz2" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
@@ -210,6 +215,7 @@ Freecell Solver”</a>.
 
 <table class="downloads" summary="Older versions of Freecell Solver. In decreasing version number.">
 <set-var download_suffix="bz2" />
+<ver "3.14" "1" />
 <ver "3.12" "0" />
 <ver "3.10" "0" />
 <ver "3.8" "0" />
