@@ -54,6 +54,39 @@ or library (which violates the no warrany paragraph of the licence) everything
 should be fine and the “abuse” of the program is acceptable.
 </p>
 
+<h3 id="what_are_the_uses_of_a_solver">What are the uses of a solver for Patience, such as Freecell Solver?</h3>
+
+<p>
+Freecell Solver is unlikely to help in curing cancer, or solve world hunger,
+but it still has some uses. One use is determining whether an initial layout
+of a game, or a layout in mid-play is solvable or not so a human player can
+know whether he needs to return to an earlier position. The default
+configuration of Freecell solver may still report a small number of solvable
+positions as unsolved, but that can be mitigated by passing some command-line
+flags.
+</p>
+
+<p>
+Another use of a Solitaire solver is to find solutions for difficult deals,
+or attempt to find shorter solutions. Yet another use is to collect statistics
+from a large number of random deals (say, the Microsoft Windows Freecell deals
+or PySolFC’s deals), which is part of what Freecell researchers do.
+</p>
+
+<p>
+The Freecell implementation for Windows, Freecell 3D has also introduced a
+“Race against the computer” mode of Freecell, which is an interesting challenge.
+</p>
+
+<p>
+Finally, we have more recently started to investigate some “human/computer
+collaborated” Freecell solving, where a human aided by a Solitaire suite with
+good solver integration can attempt to solve some difficult deals (for both a
+human and a computerised solver), by pruning dead ends, and by finding whether
+reached states are solvable. This provides a combined solving power, that is
+greater than the sum of both parts.
+</p>
+
 <!--
 
 TODO:
@@ -62,7 +95,6 @@ TODO:
 * May I integrate Freecell Solver into my program? And how?
 * The solutions are too long. What can I do?
 * Why is Freecell Solver written in C? Why not in another language?
-* What are the uses of such a solver?
 * I found a solution that Freecell Solver erroneously reports as unsolveable - should I report it to you?
 
 -->
