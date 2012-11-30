@@ -1004,6 +1004,9 @@ to yield very short solutions (even in comparison to +maliciously-obscure+
 |+micro-finance-improved+      |a meta-moves and flare-based preset, based
 on +micro-finance+ that yields somewhat shorter solutions on average, and
 should not be slower.
+|+qualified-seed+              |a meta-moves and flare-based preset, based
+on +micro-finance-improved+ that yields somewhat shorter solutions on average,
+and should not be slower.
 |+rin-tin-tin+                 |a meta-moves preset
 |+sand-stone+                  |an atomic-moves preset that aims to
             minimise the outcome solution's length.

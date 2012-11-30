@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 24;
 use File::Spec;
 use lib './t/lib';
 use File::Basename qw( dirname );
@@ -200,6 +200,16 @@ verify_solution_test({id => "freecell24_board_with_founds_0", deal => 24,
             'ms24-with-founds-0.txt'
         )
     }, "Properly handle foundations like H-0 S-0 etc.");
+
+# TEST
+verify_solution_test({
+    id => "qualified_seed_for_6240",
+    deal => 6240,
+    theme => ["-l", "qs", "-fif", "5", "--flares-choice", "fcpro",],
+    },
+    "Qualified seed test with -fif and --flares-choice fcpro",
+);
+
 # Store the changes at the end so they won't get lost.
 $verifier->end();
 

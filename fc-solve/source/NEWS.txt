@@ -14,6 +14,10 @@ is chosen.
 3. Add the +--flares-iters-factor+ option (or +-fif+ for short), which
 specifies a factor to multiply the flares quotas.
 
+4. Add the +-l qualified-seed+ preset (or +-l qs+ for short),
+which somewhat improves the length of the solutions of the
++-l micro-finance-improved+ preset.
+
 Version 3.14.1: (01-Nov-2012)
 -----------------------------
 

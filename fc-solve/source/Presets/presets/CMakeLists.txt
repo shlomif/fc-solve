@@ -15,6 +15,7 @@ INSTALL(
         "maliciously-obscure.sh"
         "micro-finance.sh"
         "micro-finance-improved.sh"
+        "qualified-seed.sh"
         "rin-tin-tin.sh"
         "sand-stone.sh"
         "sentient-pearls.sh"
