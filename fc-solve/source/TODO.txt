@@ -10,21 +10,6 @@ Pressing
 Non-pressing
 ------------
 
-* Implement a --flares-iters-factor option for multiplying the iters count
-allocated to each flare by a constant factor (so one can say make them times
-10, or times 100 or times 0.5, etc.).
-    - Test more thoroughly.
-
-* Convert the functions in lib.c to do
-+fcs_user_t * user = (fcs_user_t *)api_instance;+ .
-
-* Investigate the scan of:
-+--method random-dfs -to '[01]=rand()[23456789]=rand()' -dto '13,[0123456]=asw(1)' -sp r:tf+.
-* It seems to yield good results.
-** It generates a relatively short and a fast solution for MS #6240 , for
-which "-l micro-finance" generates the longest solution out of the Microsoft
-32K
-
 * Refer to +expand-solitaire-multi-card-moves+ from the fc-solve process.
 
 * Create a displayer for fc-solve's solutions which will allow seeing where a
@@ -46,13 +31,11 @@ suit.
 * In the states handling, there's still some room for pointer arithmetics.
 
 * Implement more of Kevin Atkinson's Common Lisp solver's atomic move types,
-and try to contruct good heuristics out of them.
+and try to construct good heuristics out of them.
 
 * Play with writing a memory-re-cycling Soft-DFS scan: if a sub-tree was
 marked as a dead-end, then its states might be able to be placed on a linked
 list of states that can be reused.
-
-* Add a FCS_2FC_FREECELL_ONLY macro for quickly solving 2 freecell games.
 
 * PySolFC Deal No. 48007594292403677907 :
 
@@ -112,14 +95,13 @@ Verdict: Solved ; Iters: 615 ; Length: 77
 Long-term
 ---------
 
-* Code a generic tests grouping.
-
 * Integrate the patsolve's prioritization and mixed BFS/DFS scan.
 
 * Update the architecture document.
 
 * Make a super-strict parsable-output without all the quirks of
 -p -t (see Games-Solitaire-Verify for why).
+** Perhaps see: http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1264 .
 
 * Write a multi-threaded version.
 

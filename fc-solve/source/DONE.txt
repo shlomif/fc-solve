@@ -377,3 +377,24 @@ weights - +1,0,0,0,0,1+.
 soft_thread for easy reference.
 ** Convert the freecell.c routines to use it.
 ** Tried it - it made the performance worse.
+
+* Implement a --flares-iters-factor option for multiplying the iters count
+allocated to each flare by a constant factor (so one can say make them times
+10, or times 100 or times 0.5, etc.).
+    - Test more thoroughly.
+
+* Convert the functions in lib.c to do
++fcs_user_t * user = (fcs_user_t *)api_instance;+ .
+
+* Investigate the scan of:
++--method random-dfs -to '[01]=rand()[23456789]=rand()' -dto '13,[0123456]=asw(1)' -sp r:tf+.
+* It seems to yield good results.
+** It generates a relatively short and a fast solution for MS #6240 , for
+which "-l micro-finance" generates the longest solution out of the Microsoft
+32K
+
+* Add a FCS_2FC_FREECELL_ONLY macro for quickly solving 2 freecell games.
+** Implements as -l ci7b -nfc=2
+
+* Code a generic tests grouping.
+
