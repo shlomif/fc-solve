@@ -91,7 +91,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
     register fcs_state_t * const new_state_key = new_state->key;
     register fcs_state_extra_info_t * const new_state_info = new_state->val;
 
-    fcs_compact_allocator_t * stacks_allocator = &(hard_thread->allocator);
+    fcs_compact_allocator_t * const stacks_allocator = &(hard_thread->allocator);
 
     fcs_cards_column_t * current_stack = new_state_key->stacks;
 
@@ -329,11 +329,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 
 #define ON_STATE_NEW() on_state_new(instance, hard_thread, new_state->val);
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
-    fcs_standalone_state_ptrs_t * pos_ptr;
-    fcs_bool_t found;
-#endif
-    fc_solve_instance_t * instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = hard_thread->instance;
 
     /* #if'ing out because it doesn't belong here. */
 #if 0
@@ -435,6 +431,7 @@ fcs_bool_t fc_solve_check_and_add_state(
         }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
+    fcs_standalone_state_ptrs_t * pos_ptr;
     /* Try to see if the state is found in indirect_prev_states */
     if ((pos_ptr = (fcs_standalone_state_ptrs_t *)bsearch(&new_state_key,
                 instance->indirect_prev_states,
@@ -442,6 +439,7 @@ fcs_bool_t fc_solve_check_and_add_state(
                 sizeof(instance->indirect_prev_states[0]),
                 fc_solve_state_compare_indirect)) == NULL)
     {
+        fcs_bool_t found;
         /* It isn't in prev_states, but maybe it's in the sort margin */
         pos_ptr = (fcs_standalone_state_ptrs_t *)fc_solve_bsearch(
             &new_state_key,

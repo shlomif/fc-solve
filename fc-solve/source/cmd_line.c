@@ -40,6 +40,7 @@
 
 #include "prefix.h"
 #include "inline.h"
+#include "bool.h"
 
 #include "cmd_line_enum.h"
 
@@ -48,13 +49,9 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * env_var_presetrc = NULL;
     const char * global_presetrc = NULL;
-    const char * path;
     const char * * presetrc_pathes[5];
-    int path_idx;
-    char line[8192];
     FILE * f = NULL;
     char * opened_files_dir = NULL;
-    int read_next_preset = 0;
 
 
     {
@@ -84,7 +81,9 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
 
     global_presetrc = (FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
 
-    for(path_idx=0;(presetrc_pathes[path_idx] != NULL) ; path_idx++)
+    const char * path;
+    fcs_bool_t read_next_preset = FALSE;
+    for (int path_idx=0;(presetrc_pathes[path_idx] != NULL) ; path_idx++)
     {
         path = (*presetrc_pathes[path_idx]);
         if (path == NULL)
@@ -98,6 +97,7 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
         }
         while(1)
         {
+            char line[8192];
             if (fgets(line, sizeof(line), f) == NULL)
             {
                 break;
@@ -127,7 +127,7 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
                 nullify_newline();
                 if (!strcmp(line+5, preset_name))
                 {
-                    read_next_preset = 1;
+                    read_next_preset = TRUE;
                 }
             }
             else if (!strncmp(line, "command=", 8))
@@ -187,19 +187,16 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     freecell_solver_str_t opened_files_dir
     )
 {
-    freecell_solver_str_t * arg;
-    freecell_solver_str_t * arg_argc;
-    freecell_solver_str_t * known_param;
     int num_to_skip;
-    int callback_ret;
-    int opt;
     const char * p;
 
     *error_string = NULL;
 
-    arg_argc = &(argv[argc]);
+    freecell_solver_str_t * arg_argc = &(argv[argc]);
 
-    for(arg=&(argv[start_arg]);arg<arg_argc;arg++)
+    freecell_solver_str_t * arg;
+    freecell_solver_str_t * known_param;
+    for (arg = &(argv[start_arg]) ; arg < arg_argc ; arg++)
     {
         /* First check for the parameters that the user recognizes */
         known_param = known_parameters;
@@ -211,7 +208,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             int ret;
 
-            callback_ret = callback(instance, argc, argv, arg-&(argv[0]), &num_to_skip, &ret, callback_context);
+            const int callback_ret = callback(instance, argc, argv, arg-&(argv[0]), &num_to_skip, &ret, callback_context);
             if (callback_ret == FCS_CMD_LINE_SKIP)
             {
                 arg += num_to_skip-1;
@@ -224,6 +221,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
         }
 
+        int opt;
         /* OPT-PARSE-START */
 p = (*arg);
 opt = FCS_OPT_UNRECOGNIZED;
