@@ -119,7 +119,7 @@ sub trap_dbm
 {
 
     my $WS = ' ';
-    my $debondt_needle = <<"EOF";
+    my $needle = <<"EOF";
 Success!
 --------
 Foundations: H-T C-8 D-A S-J$WS
@@ -221,109 +221,6 @@ Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
 END
 EOF
 
-    my $non_debondt_needle = <<"EOF";
-Success!
---------
-Foundations: H-T C-8 D-A S-J$WS
-Freecells:      7D
-: 3D
-: 4D
-: 5D
-: 6D
-: 2D KD QS JH TC 9D
-: KH QC JD
-: KC QH
-: KS QD JC TD 9C 8D
-
-==
-Column 4 -> Freecell 0
---------
-Foundations: H-T C-8 D-A S-J$WS
-Freecells:  7D  9D
-: 3D
-: 4D
-: 5D
-: 6D
-: 2D KD QS JH TC
-: KH QC JD
-: KC QH
-: KS QD JC TD 9C 8D
-
-==
-Column 4 -> Column 5
---------
-Foundations: H-T C-8 D-A S-J$WS
-Freecells:  7D  9D
-: 3D
-: 4D
-: 5D
-: 6D
-: 2D KD QS JH
-: KH QC JD TC
-: KC QH
-: KS QD JC TD 9C 8D
-
-==
-Freecell 1 -> Column 5
---------
-Foundations: H-T C-8 D-A S-J$WS
-Freecells:      7D
-: 3D
-: 4D
-: 5D
-: 6D
-: 2D KD QS JH
-: KH QC JD TC 9D
-: KC QH
-: KS QD JC TD 9C 8D
-
-==
-Column 4 -> Foundation 0
---------
-Foundations: H-J C-8 D-A S-J$WS
-Freecells:      7D
-: 3D
-: 4D
-: 5D
-: 6D
-: 2D KD QS
-: KH QC JD TC 9D
-: KC QH
-: KS QD JC TD 9C 8D
-
-==
-Column 4 -> Foundation 3
---------
-Foundations: H-J C-8 D-A S-Q$WS
-Freecells:      7D
-: 3D
-: 4D
-: 5D
-: 6D
-: 2D KD
-: KH QC JD TC 9D
-: KC QH
-: KS QD JC TD 9C 8D
-
-==
-Column 4 -> Freecell 0
---------
-Foundations: H-K C-K D-K S-K$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-
-==
-END
-EOF
-
-    my $needle = $ENV{FCS_DEBONDT} ? $debondt_needle : $non_debondt_needle;
     my $dbm_output = trap_dbm(
         {
             board_fn =>

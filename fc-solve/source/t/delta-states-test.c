@@ -30,10 +30,7 @@
 
 #include <tap.h>
 
-#ifndef FCS_COMPILE_DEBUG_FUNCTIONS
 #define FCS_COMPILE_DEBUG_FUNCTIONS
-#endif
-
 #include "../card.c"
 #include "../card_compare_lookups.c"
 #include "../app_str.c"
@@ -62,7 +59,6 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_key
     char * as_str;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
-    enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     fc_solve_init_locs(&locs);
 
@@ -105,9 +101,8 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_key
     return verdict;
 }
 
-static int main_tests(void)
+int main_tests()
 {
-    enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     {
         fcs_state_keyval_pair_t s;
         fc_solve_delta_stater_t delta;
@@ -480,7 +475,6 @@ static int main_tests(void)
         char * s;
 
         s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-            local_variant,
                 (
                  "Foundations: H-0 C-0 D-0 S-0 \n"
                  "Freecells:        \n"
@@ -590,7 +584,6 @@ static int main_tests(void)
 
         fcs_init_and_encode_state(
             delta,
-            local_variant,
             &derived_state,
             &first_enc_state
             );
@@ -618,7 +611,6 @@ static int main_tests(void)
 
         fcs_init_and_encode_state(
             delta,
-            local_variant,
             &derived_state,
             &second_enc_state
             );
@@ -693,7 +685,6 @@ static int main_tests(void)
         fcs_encoded_state_buffer_t first_enc_state;
         fcs_init_and_encode_state(
             delta,
-            local_variant,
             &derived_state,
             &first_enc_state
             );
@@ -720,7 +711,6 @@ static int main_tests(void)
         fcs_encoded_state_buffer_t second_enc_state;
         fcs_init_and_encode_state(
             delta,
-            local_variant,
             &derived_state,
             &second_enc_state
             );
@@ -739,7 +729,7 @@ static int main_tests(void)
 
 int main(int argc, char * argv[])
 {
-    plan_tests(25);
+    plan_tests(28);
     main_tests();
     return exit_status();
 }

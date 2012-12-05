@@ -45,7 +45,6 @@ my $scan_buckets_num;
 my $build_docs = 1;
 my $with_dbm_solver;
 my $max_num_stacks;
-my $disable_debondt;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -240,7 +239,6 @@ GetOptions(
     'scan-buckets-num=i' => \$scan_buckets_num,
     'build-docs!' => \$build_docs,
     'num-stacks=i' => \$max_num_stacks,
-    'disable-debondt!' => \$disable_debondt,
 ) or
     die "Wrong options";
 
@@ -343,7 +341,6 @@ my @cmd= ("cmake",
         ? ("-DFCS_ENABLE_DBM_SOLVER=1", "-DFCS_DBM_BACKEND=$with_dbm_solver",)
         : ()
     ),
-    ($disable_debondt ? ("-DFCS_DISABLE_DEBONDT_DELTA_STATES=1") : ()),
 );
 
 
