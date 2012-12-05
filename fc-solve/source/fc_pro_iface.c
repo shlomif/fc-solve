@@ -121,7 +121,7 @@ static void moves_processed_add_new_move(fcs_moves_processed_t * moves, fcs_exte
 
 void fc_solve_moves_processed_gen(
     fcs_moves_processed_t * const ret,
-    const fcs_state_keyval_pair_t * const orig,
+    fcs_state_keyval_pair_t * const orig,
     const int num_freecells,
     const fcs_moves_sequence_t * const moves_seq
 )
