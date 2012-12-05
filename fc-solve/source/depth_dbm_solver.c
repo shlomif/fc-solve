@@ -512,44 +512,6 @@ typedef struct {
 
 #define USER_STATE_SIZE 2000
 
-static const char * move_to_string(unsigned char move, char * move_buffer)
-{
-    int iter, inspect;
-    char * s;
-
-    s = move_buffer;
-
-    for (iter=0 ; iter < 2 ; iter++)
-    {
-        inspect = (move & 0xF);
-        move >>= 4;
-
-        if (inspect < 8)
-        {
-            s += sprintf(s, "Column %d", inspect);
-        }
-        else
-        {
-            inspect -= 8;
-            if (inspect < 4)
-            {
-                s += sprintf(s, "Freecell %d", inspect);
-            }
-            else
-            {
-                inspect -= 4;
-                s += sprintf(s, "Foundation %d", inspect);
-            }
-        }
-        if (iter == 0)
-        {
-            s += sprintf(s, "%s", " -> ");
-        }
-    }
-
-    return move_buffer;
-}
-
 static void instance_run_all_threads(
     fcs_dbm_solver_instance_t * instance,
     fcs_state_keyval_pair_t * init_state,

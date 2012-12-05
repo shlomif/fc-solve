@@ -51,6 +51,7 @@
 
 #include "dbm_common.h"
 #include "dbm_solver.h"
+#include "dbm_move_to_string.h"
 
 #include "dbm_lru_cache.h"
 #include "fcc_brfs.h"
@@ -676,44 +677,6 @@ typedef struct {
 } main_thread_item_t;
 
 #define USER_STATE_SIZE 2000
-
-static const char * move_to_string(unsigned char move, char * move_buffer)
-{
-    int iter, inspect;
-    char * s;
-
-    s = move_buffer;
-
-    for (iter=0 ; iter < 2 ; iter++)
-    {
-        inspect = (move & 0xF);
-        move >>= 4;
-
-        if (inspect < 8)
-        {
-            s += sprintf(s, "Column %d", inspect);
-        }
-        else
-        {
-            inspect -= 8;
-            if (inspect < 4)
-            {
-                s += sprintf(s, "Freecell %d", inspect);
-            }
-            else
-            {
-                inspect -= 4;
-                s += sprintf(s, "Foundation %d", inspect);
-            }
-        }
-        if (iter == 0)
-        {
-            s += sprintf(s, "%s", " -> ");
-        }
-    }
-
-    return move_buffer;
-}
 
 static fcs_dbm_solver_instance_t * global_instance_ptr;
 

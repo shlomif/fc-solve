@@ -15,7 +15,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 {
     dbm_t * db = SMALLOC1(db);
 
-    int t_ret, ret;
+    int ret;
 
     if ((ret = db_create(&(db->dbp), NULL, 0)) != 0)
     {
@@ -36,6 +36,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
     return;
 
     err:
+    int t_ret;
     if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
     {
         ret = t_ret;
@@ -48,16 +49,15 @@ fcs_bool_t fc_solve_dbm_store_does_key_exist(
     const unsigned char * key_raw
 )
 {
-    dbm_t * db;
-    int ret, t_ret;
     unsigned char dummy[100];
 
-    db = (dbm_t *)store;
+    dbm_t * db = (dbm_t *)store;
     db->key.data = (unsigned char *)key_raw+1;
     db->key.size = key_raw[0];
     db->data.data = dummy;
     db->data.size = sizeof(dummy);
 
+    int ret;
     if ((ret = db->dbp->get(db->dbp, NULL, &(db->key), &(db->data), 0)) == 0)
     {
         return TRUE;
@@ -68,6 +68,7 @@ fcs_bool_t fc_solve_dbm_store_does_key_exist(
     }
     else
     {
+        int t_ret;
         db->dbp->err(db->dbp, ret, "DB->get");
         if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
         {
@@ -83,15 +84,13 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
     unsigned char * parent
 )
 {
-    dbm_t * db;
-    int ret, t_ret;
-
-    db = (dbm_t *)store;
+    dbm_t * db = (dbm_t *)store;
     db->key.data = (unsigned char *)key_raw+1;
     db->key.size = key_raw[0];
     db->data.data = parent+1;
     db->data.size = sizeof(fcs_encoded_state_buffer_t)-1;
 
+    int ret;
     if ((ret = db->dbp->get(db->dbp, NULL, &(db->key), &(db->data), 0)) == 0)
     {
         parent[0] = db->data.size-1;
@@ -104,7 +103,7 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
     else
     {
         db->dbp->err(db->dbp, ret, "DB->get");
-        if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
+        if ((int t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
         {
             ret = t_ret;
         }
@@ -118,47 +117,38 @@ extern void fc_solve_dbm_store_offload_pre_cache(
     fcs_pre_cache_t * pre_cache
 )
 {
-    dbm_t * db;
-    dnode_t * node;
-    dict_t * kaz_tree;
-    fcs_pre_cache_key_val_pair_t * kv;
-    DB * dbp;
-    int ret, t_ret;
+    dbm_t * const db = (dbm_t *)store;
+    dict_t * const kaz_tree = pre_cache->kaz_tree;
+    DB * const dbp = db->dbp;
 
-    db = (dbm_t *)store;
-    kaz_tree = pre_cache->kaz_tree;
-    dbp = db->dbp;
-
-    for (node = fc_solve_kaz_tree_first(kaz_tree);
+    for (dnode_t * node = fc_solve_kaz_tree_first(kaz_tree);
             node ;
             node = fc_solve_kaz_tree_next(kaz_tree, node)
             )
     {
-        kv = (fcs_pre_cache_key_val_pair_t *)(node->dict_key);
+        fcs_pre_cache_key_val_pair_t * const kv =
+            (fcs_pre_cache_key_val_pair_t *)(node->dict_key);
 
         db->key.data = kv->key.s+1;
         db->key.size = kv->key.s[0];
         db->data.data = kv->parent.s+1;
         db->data.size = kv->parent.s[0];
-        if ((ret = dbp->put(dbp, NULL, &(db->key), &(db->data), 0)) != 0)
+        if ((int ret = dbp->put(dbp, NULL, &(db->key), &(db->data), 0)) != 0)
         {
             dbp->err(dbp, ret, "DB->put");
-            if ((t_ret = dbp->close(dbp, 0)) != 0 && ret == 0)
+            if ((int t_ret = dbp->close(dbp, 0)) != 0 && ret == 0)
             {
                 ret = t_ret;
             }
-            exit(ret);
+            exit (ret);
         }
     }
 }
 
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
 {
-    dbm_t * db;
-    db = (dbm_t *)store;
-    int ret;
-
-    if ((ret = db->dbp->close(db->dbp, 0)) != 0)
+    dbm_t * const db = (dbm_t *)store;
+    if ((int ret = db->dbp->close(db->dbp, 0)) != 0)
     {
         fprintf(stderr, "DB close failed with ret=%d\n", ret);
         exit(-1);

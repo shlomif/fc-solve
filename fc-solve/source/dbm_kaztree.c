@@ -19,7 +19,7 @@ typedef struct
 
 void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path, void * * recycle_bin_ptr)
 {
-    dbm_t * db = SMALLOC1(db);
+    dbm_t * const db = SMALLOC1(db);
 
     fc_solve_meta_compact_allocator_init(
         &(db->meta_alloc)
@@ -54,15 +54,13 @@ fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
     fcs_dbm_record_t * parent
 )
 {
-    dbm_t * db;
-    fcs_dbm_record_t * to_check;
-    fcs_bool_t ret;
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
     fcs_dbm_record_t record_on_stack;
 #endif
 
-    db = (dbm_t *)store;
+    dbm_t * const db = (dbm_t *)store;
 
+    fcs_dbm_record_t * to_check;
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
     to_check = &record_on_stack;
 #else
@@ -76,7 +74,8 @@ fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
     to_check->key = *key;
     to_check->parent = *parent;
 #endif
-    ret = (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
+    fcs_bool_t ret =
+        (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
 
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     if (! ret)
@@ -105,12 +104,10 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
     unsigned char * parent
     )
 {
-    dict_key_t existing;
-
     fcs_dbm_record_t to_check;
     to_check.key = *(const fcs_encoded_state_buffer_t *)key;
 
-    existing = fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &to_check);
+    dict_key_t existing = fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &to_check);
 
     if (! existing)
     {
@@ -119,7 +116,7 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
     else
     {
 #ifdef FCS_DBM_RECORD_POINTER_REPR
-        fcs_dbm_record_t * p = fcs_dbm_record_get_parent_ptr((fcs_dbm_record_t *)existing);
+        fcs_dbm_record_t * const p = fcs_dbm_record_get_parent_ptr((fcs_dbm_record_t *)existing);
 
         if (p)
         {
@@ -140,8 +137,7 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
 
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
 {
-    dbm_t * db;
-    db = (dbm_t *)store;
+    dbm_t * const db = (dbm_t *)store;
 
     fc_solve_kaz_tree_destroy( db->kaz_tree );
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS

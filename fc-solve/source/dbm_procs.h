@@ -29,6 +29,7 @@
 
 #include "inline.h"
 #include "portable_time.h"
+#include "dbm_move_to_string.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -353,6 +354,7 @@ static void calc_trace(
 
     return;
 }
+
 
 #ifdef FCS_DBM_SINGLE_THREAD
 #define NUM_THREADS() 1

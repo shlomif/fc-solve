@@ -272,45 +272,35 @@ typedef struct {
 
 static void * instance_run_solver_thread(void * void_arg)
 {
-    thread_arg_t * arg;
-    enum TERMINATE_REASON should_terminate;
-    fcs_dbm_solver_thread_t * thread;
-    fcs_dbm_solver_instance_t * instance;
     fcs_dbm_queue_item_t physical_item;
-    fcs_dbm_queue_item_t * item, * prev_item;
-    int queue_num_extracted_and_processed;
-    fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
-                        * derived_iter;
-    fcs_compact_allocator_t derived_list_allocator;
-    fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
-    FILE * out_fh;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
 #endif
     fcs_dbm_record_t * token;
-    enum fcs_dbm_variant_type_t local_variant;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    arg = (thread_arg_t *)void_arg;
-    thread = arg->thread;
-    instance = thread->instance;
-    delta_stater = thread->delta_stater;
+    thread_arg_t * const arg = (thread_arg_t *)void_arg;
+    fcs_dbm_solver_thread_t * const thread = arg->thread;
+    fcs_dbm_solver_instance_t * const instance = thread->instance;
+    fc_solve_delta_stater_t * const delta_stater = thread->delta_stater;
 
-    prev_item = item = NULL;
-    queue_num_extracted_and_processed = 0;
+    fcs_dbm_queue_item_t * item = NULL, * prev_item = NULL;
+    int queue_num_extracted_and_processed = 0;
 
+    fcs_compact_allocator_t derived_list_allocator;
     fc_solve_compact_allocator_init(&(derived_list_allocator), &(instance->meta_alloc));
-    derived_list_recycle_bin = NULL;
-    derived_list = NULL;
-    out_fh = instance->out_fh;
+    fcs_derived_state_t * derived_list_recycle_bin = NULL;
+    fcs_derived_state_t * derived_list = NULL;
+    FILE * const out_fh = instance->out_fh;
 
-    local_variant = instance->variant;
+    enum fcs_dbm_variant_type_t local_variant = instance->variant;
 
     TRACE0("instance_run_solver_thread start");
 #ifdef DEBUG_OUT
     fc_solve_init_locs(&locs);
 #endif
+    enum TERMINATE_REASON should_terminate;
     while (1)
     {
         /* First of all extract an item. */
@@ -427,7 +417,7 @@ static void * instance_run_solver_thread(void * void_arg)
         }
 
         /* Encode all the states. */
-        for (derived_iter = derived_list;
+        for (fcs_derived_state_t * derived_iter = derived_list;
                 derived_iter ;
                 derived_iter = derived_iter->next
         )
@@ -449,12 +439,10 @@ static void * instance_run_solver_thread(void * void_arg)
         /* Now recycle the derived_list */
         while (derived_list)
         {
-#define derived_list_next derived_iter
-            derived_list_next = derived_list->next;
+            fcs_derived_state_t * const derived_list_next = derived_list->next;
             derived_list->next = derived_list_recycle_bin;
             derived_list_recycle_bin = derived_list;
             derived_list = derived_list_next;
-#undef derived_list_next
         }
         /* End handle item. */
         }
@@ -476,44 +464,6 @@ typedef struct {
 } main_thread_item_t;
 
 #define USER_STATE_SIZE 2000
-
-static const char * move_to_string(unsigned char move, char * move_buffer)
-{
-    int iter, inspect;
-    char * s;
-
-    s = move_buffer;
-
-    for (iter=0 ; iter < 2 ; iter++)
-    {
-        inspect = (move & 0xF);
-        move >>= 4;
-
-        if (inspect < 8)
-        {
-            s += sprintf(s, "Column %d", inspect);
-        }
-        else
-        {
-            inspect -= 8;
-            if (inspect < 4)
-            {
-                s += sprintf(s, "Freecell %d", inspect);
-            }
-            else
-            {
-                inspect -= 4;
-                s += sprintf(s, "Foundation %d", inspect);
-            }
-        }
-        if (iter == 0)
-        {
-            s += sprintf(s, "%s", " -> ");
-        }
-    }
-
-    return move_buffer;
-}
 
 static void populate_instance_with_intermediate_input_line(
     fcs_dbm_solver_instance_t * instance,
