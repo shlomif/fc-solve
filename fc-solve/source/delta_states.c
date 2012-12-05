@@ -51,15 +51,11 @@ static int fc_solve_get_column_orig_num_cards(
         fcs_cards_column_t col
         )
 {
+#ifndef FCS_FREECELL_ONLY
+    int sequences_are_built_by = self->sequences_are_built_by;
+#endif
+
     int num_cards;
-#ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by;
-#endif
-
-
-#ifndef FCS_FREECELL_ONLY
-    sequences_are_built_by = self->sequences_are_built_by;
-#endif
     for (num_cards = fcs_col_len(col); num_cards >= 2; num_cards--)
     {
         fcs_card_t child_card = fcs_col_get_card(col, num_cards-1);
@@ -83,9 +79,6 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
 #endif
         )
 {
-    int col_idx;
-    int max_num_cards;
-
     fc_solve_delta_stater_t * self = SMALLOC1(self);
 
 #ifndef FCS_FREECELL_ONLY
@@ -97,12 +90,10 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
 
     self->_init_state = init_state;
 
-    max_num_cards = 0;
-    for (col_idx = 0 ; col_idx < num_columns; col_idx++)
+    int max_num_cards = 0;
+    for (int col_idx = 0 ; col_idx < num_columns; col_idx++)
     {
-        int num_cards;
-
-        num_cards = fc_solve_get_column_orig_num_cards(self, fcs_state_get_col(*init_state, col_idx));
+        const int num_cards = fc_solve_get_column_orig_num_cards(self, fcs_state_get_col(*init_state, col_idx));
 
         if (num_cards > max_num_cards)
         {
@@ -155,30 +146,20 @@ typedef struct
 } fc_solve_column_encoding_composite_t;
 
 static void fc_solve_get_column_encoding_composite(
-        fc_solve_delta_stater_t * self,
-        int col_idx,
-        fc_solve_column_encoding_composite_t * ret
+        fc_solve_delta_stater_t * const self,
+        const int col_idx,
+        fc_solve_column_encoding_composite_t * const ret
         )
 {
-    fcs_state_t * derived;
-    fcs_cards_column_t col;
-    int num_orig_cards;
-    int col_len;
-    int num_derived_cards;
-    int num_cards_in_seq;
-    fcs_card_t init_card;
-    fc_solve_bit_writer_t bit_w;
-    int i;
+    fcs_state_t * const derived = self->_derived_state;
+    fcs_cards_column_t col = fcs_state_get_col(*derived, col_idx);
 
-    derived = self->_derived_state;
-    col = fcs_state_get_col(*derived, col_idx);
+    const int num_orig_cards = fc_solve_get_column_orig_num_cards(self, col);
+    const int col_len = fcs_col_len(col);
+    const int num_derived_cards = col_len - num_orig_cards;
 
-    num_orig_cards = fc_solve_get_column_orig_num_cards(self, col);
-    col_len = fcs_col_len(col);
-    num_derived_cards = col_len - num_orig_cards;
-
-    num_cards_in_seq = num_derived_cards;
-    init_card = fc_solve_empty_card;
+    int num_cards_in_seq = num_derived_cards;
+    fcs_card_t init_card = fc_solve_empty_card;
 
     if ((num_orig_cards == 0) && num_derived_cards)
     {
@@ -186,6 +167,7 @@ static void fc_solve_get_column_encoding_composite(
         num_cards_in_seq--;
     }
 
+    fc_solve_bit_writer_t bit_w;
     /* Prepare the encoding. */
     fc_solve_bit_writer_init(&bit_w, ret->enc);
 
@@ -200,7 +182,7 @@ static void fc_solve_get_column_encoding_composite(
         fc_solve_bit_writer_write(&bit_w, 6, init_card);
     }
 
-    for (i=col_len-num_cards_in_seq ; i<col_len; i++)
+    for (int i=col_len-num_cards_in_seq ; i<col_len; i++)
     {
 #define GET_SUIT_BIT(card) (( (fcs_card_suit(card)) & 0x2 ) >> 1 )
 
@@ -229,24 +211,22 @@ static void fc_solve_get_freecells_encoding(
         )
 {
     fcs_card_t freecells[MAX_NUM_FREECELLS];
-    int i, j, min_idx;
-    fcs_state_t * derived;
-    int num_freecells;
-    fcs_card_t min_card;
 
-    derived = self->_derived_state;
-    num_freecells = self->num_freecells;
+    fcs_state_t * const derived = self->_derived_state;
+    const int num_freecells = self->num_freecells;
 
-    for (i=0 ; i < num_freecells ; i++)
+    for (int i=0 ; i < num_freecells ; i++)
     {
         freecells[i] = fcs_freecell_card(*derived, i);
     }
 
+
     /* Sort the freecells using selection-sort. */
-    for (i=0 ; i < num_freecells ; i++)
+    for (int i=0 ; i < num_freecells ; i++)
     {
-        min_idx = i;
-        for (j=i+1 ; j < num_freecells ; j++)
+        int min_idx = i;
+        fcs_card_t min_card;
+        for (int j=i+1 ; j < num_freecells ; j++)
         {
             if (freecells[j] < freecells[min_idx])
             {
@@ -267,20 +247,20 @@ static void fc_solve_get_freecells_encoding(
 }
 
 static void fc_solve_delta_stater_encode_composite(
-        fc_solve_delta_stater_t * self,
-        fc_solve_bit_writer_t * bit_w
+        fc_solve_delta_stater_t * const self,
+        fc_solve_bit_writer_t * const bit_w
         )
 {
     int cols_indexes[MAX_NUM_STACKS];
     fc_solve_column_encoding_composite_t cols[MAX_NUM_STACKS];
     fcs_state_t * derived;
-    int i, swap_int;
+    int swap_int;
     int num_columns;
 
     derived = self->_derived_state;
 
     num_columns = self->num_columns;
-    for ( i=0 ; i < num_columns ; i++)
+    for (int  i=0 ; i < num_columns ; i++)
     {
         cols_indexes[i] = i;
         fc_solve_get_column_encoding_composite(self, i, &(cols[i]));
@@ -338,7 +318,8 @@ static void fc_solve_delta_stater_encode_composite(
         int new_non_orig_cols_indexes_count;
 
         /* Filter the new_non_orig_cols_indexes */
-        for (new_non_orig_cols_indexes_count = 0, i=0; i < num_columns ; i++)
+        new_non_orig_cols_indexes_count = 0;
+        for (int i = 0 ; i < num_columns ; i++)
         {
             if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
             {
@@ -351,12 +332,11 @@ static void fc_solve_delta_stater_encode_composite(
         {
             int c;
 
-#define b i
 #define COMP_BY(idx) (fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0))
 #define ITEM_IDX(idx) (new_non_orig_cols_indexes[idx])
 #define COMP_BY_IDX(idx) (COMP_BY(ITEM_IDX(idx)))
 
-            for (b=1 ; b < new_non_orig_cols_indexes_count ; b++)
+            for (int b=1 ; b < new_non_orig_cols_indexes_count ; b++)
             {
                 for (c = b; (c>0) && (COMP_BY_IDX(c-1) > COMP_BY_IDX(c)) ; c--)
                 {
@@ -372,8 +352,7 @@ static void fc_solve_delta_stater_encode_composite(
         }
 
         {
-            int sorted_idx;
-            for ( i=0 , sorted_idx = 0; i < num_columns ; i++)
+            for (int i=0 , sorted_idx = 0; i < num_columns ; i++)
             {
                 if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
                 {
@@ -384,7 +363,7 @@ static void fc_solve_delta_stater_encode_composite(
     }
 
     fc_solve_get_freecells_encoding(self, bit_w);
-    for ( i=0 ; i < num_columns ; i++)
+    for ( int i=0 ; i < num_columns ; i++)
     {
         fc_solve_column_encoding_composite_t * col_enc;
         fcs_uchar_t * enc;
@@ -512,8 +491,8 @@ static void fc_solve_delta_stater_decode(
 }
 
 static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
-        fc_solve_delta_stater_t * delta_stater,
         enum fcs_dbm_variant_type_t local_variant,
+        fc_solve_delta_stater_t * delta_stater,
         const fcs_uchar_t * const enc_state,
         fcs_state_keyval_pair_t * ret
         IND_BUF_T_PARAM(indirect_stacks_buffer)
@@ -536,9 +515,9 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
 }
 
 #ifdef INDIRECT_STACK_STATES
-#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr, indirect_stacks_buffer)
+#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer)
 #else
-#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(delta_stater, enc_state, state_ptr)
+#define fc_solve_delta_stater_decode_into_state(delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_delta_stater_decode_into_state_proto(local_variant, delta_stater, enc_state, state_ptr)
 #endif
 
 static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
@@ -558,6 +537,7 @@ static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
 
 static GCC_INLINE void fcs_init_and_encode_state(
     fc_solve_delta_stater_t * delta_stater,
+    enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * state,
     fcs_encoded_state_buffer_t * enc_state
 )
