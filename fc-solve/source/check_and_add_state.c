@@ -84,13 +84,6 @@ static GCC_INLINE void fc_solve_cache_stacks(
         fcs_kv_state_t * new_state
         )
 {
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    SFO_hash_value_t hash_value_int;
-#endif
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
-    PWord_t * PValue;
-#endif
     fc_solve_instance_t * const instance = hard_thread->instance;
 #ifndef HARD_CODED_NUM_STACKS
     DECLARE_AND_SET_GAME_PARAMS();
@@ -100,9 +93,9 @@ static GCC_INLINE void fc_solve_cache_stacks(
 
     fcs_compact_allocator_t * stacks_allocator = &(hard_thread->allocator);
 
-    int i;
-    register fcs_cards_column_t * current_stack;
-    for (i=0, current_stack = new_state_key->stacks ; i < LOCAL_STACKS_NUM ; i++, current_stack++)
+    fcs_cards_column_t * current_stack = new_state_key->stacks;
+
+    for (int i=0 ; i < LOCAL_STACKS_NUM ; i++, current_stack++)
     {
         /*
          * If the stack is not a copy - it is already cached so skip
@@ -114,7 +107,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
         }
 
         fcs_cards_column_t column = fcs_state_get_col(*(new_state_key), i);
-        register int col_len = (fcs_col_len(column)+1);
+        const int col_len = (fcs_col_len(column)+1);
 
         char * const new_ptr = (char*)fcs_compact_alloc_ptr(stacks_allocator, col_len);
         memcpy(new_ptr, column, col_len);
@@ -126,10 +119,10 @@ static GCC_INLINE void fc_solve_cache_stacks(
         /* Calculate the hash value for the stack */
         /* This hash function was ripped from the Perl source code.
          * (It is not derived work however). */
+        SFO_hash_value_t hash_value_int = 0;
         {
             const char * s_ptr = (char*)(*(current_stack));
             const char * s_end = s_ptr+fcs_col_len(s_ptr)+1;
-            hash_value_int = 0;
             while (s_ptr < s_end)
             {
                 hash_value_int += (hash_value_int << 5) + *(s_ptr++);
@@ -225,6 +218,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
                 );
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
+        PWord_t * PValue;
         column = fcs_state_get_col(*new_state_key, i);
 
         JHSI(
@@ -260,10 +254,9 @@ static GCC_INLINE void fc_solve_cache_stacks(
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 guint fc_solve_hash_function(gconstpointer key)
 {
-    guint hash_value;
     const char * s_ptr = (char*)key;
-    const char * s_end = s_ptr+sizeof(fcs_state_t);
-    hash_value = 0;
+    const char * const s_end = s_ptr+sizeof(fcs_state_t);
+    guint hash_value = 0;
     while (s_ptr < s_end)
     {
         hash_value += (hash_value << 5) + *(s_ptr++);
@@ -296,14 +289,14 @@ guint fc_solve_hash_function(gconstpointer key)
  * */
 
 static GCC_INLINE void on_state_new(
-    fc_solve_instance_t * instance,
-    fc_solve_hard_thread_t * hard_thread,
-    fcs_state_extra_info_t * new_state_info
+    fc_solve_instance_t * const instance,
+    fc_solve_hard_thread_t * const hard_thread,
+    fcs_state_extra_info_t * const new_state_info
 )
 {
-    register fcs_collectible_state_t * parent_state;
+    fcs_collectible_state_t * const parent_state = new_state_info->parent;
     /* The new state was not found in the cache, and it was already inserted */
-    if (likely(parent_state = new_state_info->parent))
+    if (likely(parent_state))
     {
         (FCS_S_NUM_ACTIVE_CHILDREN(parent_state))++;
         /* If parent_val is defined, so is moves_to_parent */
@@ -336,11 +329,6 @@ fcs_bool_t fc_solve_check_and_add_state(
 
 #define ON_STATE_NEW() on_state_new(instance, hard_thread, new_state->val);
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    SFO_hash_value_t hash_value_int;
-#endif
-#endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
     fcs_standalone_state_ptrs_t * pos_ptr;
     fcs_bool_t found;
@@ -377,10 +365,10 @@ fcs_bool_t fc_solve_check_and_add_state(
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
+    SFO_hash_value_t hash_value_int = 0;
     {
         const char * s_ptr = (char*)new_state_key;
         const char * s_end = s_ptr+sizeof(*new_state_key);
-        hash_value_int = 0;
         while (s_ptr < s_end)
         {
             hash_value_int += (hash_value_int << 5) + *(s_ptr++);

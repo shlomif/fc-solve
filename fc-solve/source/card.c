@@ -139,9 +139,7 @@ static GCC_INLINE int fcs_u2p_flipped_status(const char * str)
  * */
 fcs_card_t fc_solve_card_user2perl(const char * str)
 {
-    fcs_card_t card;
-
-    card = fc_solve_empty_card;
+    fcs_card_t card = fc_solve_empty_card;
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
@@ -270,7 +268,6 @@ static GCC_INLINE char * fc_solve_p2u_suit(
  * */
 char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
 {
-    fcs_bool_t rank_is_null;
 #ifdef CARD_DEBUG_PRES
     if (fcs_card_get_flipped(card))
     {
@@ -278,6 +275,7 @@ char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
         str++;
     }
 #endif
+    fcs_bool_t rank_is_null;
 
     fc_solve_p2u_rank(
         fcs_card_rank(card),

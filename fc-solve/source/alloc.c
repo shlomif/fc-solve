@@ -59,8 +59,6 @@ void fc_solve_compact_allocator_extend(
     /* Allocate a new pack */
     if ((++allocator->num_packs) == allocator->max_num_packs)
     {
-        int i;
-
         allocator->packs = (char * *)SREALLOC(
             allocator->packs,
             allocator->max_num_packs += IA_STATE_PACKS_GROW_BY
@@ -68,7 +66,7 @@ void fc_solve_compact_allocator_extend(
         allocator->packs[allocator->num_packs-1] =
            SMALLOC(allocator->packs[allocator->num_packs-1], ALLOCED_SIZE);
 
-        for ( i = allocator->num_packs ; i < allocator->max_num_packs ; i++)
+        for (int i = allocator->num_packs ; i < allocator->max_num_packs ; i++)
         {
             allocator->packs[i] = NULL;
         }
@@ -93,9 +91,7 @@ void fc_solve_compact_allocator_extend(
 
 void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator)
 {
-    char * * curr_pack, * * packs_end;
-
-    packs_end = (curr_pack = allocator->packs) + allocator->max_num_packs;
+    char * * packs_end = (char * * curr_pack = allocator->packs) + allocator->max_num_packs;
 
     for ( ; curr_pack < packs_end ; curr_pack++)
     {
