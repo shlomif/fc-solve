@@ -87,6 +87,82 @@ reached states are solvable. This provides a combined solving power, that is
 greater than the sum of both parts.
 </p>
 
+<h3 id="new_solver_is_too_slow">I Started Writing a Freecell Solver (of my own) but it is too slow. What can I do?</h3>
+
+<p>
+The problem with many naïve Freecell solving solutions is that, while they
+can succeed in solving many Freecell deals, they may fail spectacularly in
+the general case. Furthermore, Generalised Freecell (where there is an
+arbitrary number of ranks) was shown to be
+an <a href="http://en.wikipedia.org/wiki/NP-complete">NP-complete problem</a>
+and as a result, it is unlikely that no efficient solution for solving that
+can be found.
+</p>
+
+<p>
+You can try inspecting the code of Freecell Solver or one of the
+<a href="$(ROOT)/links.html#other_solvers">other solvers</a> for insights, but
+note that their code (and especially Freecell Solver's) may be somewhat
+complex, and hard to understand for people with relatively little experience.
+You can also pursue some of the
+<a href="$(ROOT)/docs/">Freecell Solver documentation</a> as well as the
+<a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/">archives of
+the fc-solve-discuss mailing list</a> for some insights and ideas.
+</p>
+
+<p>
+Here is some general tips:
+</p>
+
+<ul>
+
+<li>
+<p>
+Make sure that the positions in the graph of the game are represented as a
+single segment of memory (normally a C struct) and can be compared for
+equivalence easily (using memcmp() or a similar function).
+</p>
+</li>
+
+<li>
+<p>
+Use an efficient data structure to hold the states in the collection such as
+a hash table or a self-balancing binary tree.
+</p>
+</li>
+
+<li>
+<p>
+Often randomising the solution (see Freecell Solver's Random-DFS scan
+which was inspired by a different solver called Freecell Tool can help
+a lot).
+</p>
+</li>
+
+<li>
+<p>
+Freecell Solver makes heavy use of switch tasking: having several different
+searches operate on the same board, until the first search yields a solution.
+This normally yields a solution quicker than a singular scan.
+</p>
+</li>
+
+<li>
+<p>
+Consider implementing moves as meta-moves: sequences of several single-card
+and/or sequence moves that implement a certain ends. This can yield a solution
+faster than using single-card moves (also known as atomic moves).
+</p>
+</li>
+
+</ul>
+
+<p>
+Finally, note that we could use a helping hand with Freecell Solver, and the
+authors of other open-source solvers may be happy for help as well, so if
+you want to improve something more mature, then contact us.
+</p>
+
 <!--
 
 TODO:
