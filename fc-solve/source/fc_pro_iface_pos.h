@@ -68,7 +68,15 @@ static GCC_INLINE int fc_solve_moves_processed_get_moves_left(fcs_moves_processe
     return moves->num_moves - moves->next_move_idx;
 }
 
-extern int fc_solve_moves_processed_get_next_move(fcs_moves_processed_t * moves, fcs_extended_move_t * move);
+static GCC_INLINE int fc_solve_moves_processed_get_next_move(fcs_moves_processed_t * const moves, fcs_extended_move_t * const move)
+{
+    if (moves->next_move_idx == moves->num_moves)
+    {
+        return 1;
+    }
+    *move = moves->moves[moves->next_move_idx++];
+    return 0;
+}
 
 static GCC_INLINE void fc_solve_moves_processed_free(fcs_moves_processed_t * moves)
 {

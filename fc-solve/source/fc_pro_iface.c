@@ -109,7 +109,7 @@ char * fc_solve_moves_processed_render_move(fcs_extended_move_t move, char * str
 }
 
 #define MOVES_PROCESSED_GROW_BY 32
-static void moves_processed_add_new_move(fcs_moves_processed_t * moves, fcs_extended_move_t new_move)
+static GCC_INLINE void moves_processed_add_new_move(fcs_moves_processed_t * const moves, const fcs_extended_move_t new_move)
 {
     if (! ((++moves->num_moves) & (MOVES_PROCESSED_GROW_BY - 1)))
     {
@@ -424,11 +424,9 @@ void fc_solve_moves_processed_gen(
 
                case FCS_MOVE_TYPE_STACK_TO_STACK:
                     {
-                        int num_cards, virt_num_cards;
-
                         src = fcs_move_get_src_stack(move);
                         dest = fcs_move_get_dest_stack(move);
-                        num_cards = fcs_move_get_num_cards_in_seq(move);
+                        int num_cards = fcs_move_get_num_cards_in_seq(move);
                         fcs_cards_column_t src_col = fcs_state_get_col(pos, src);
                         fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
                         int src_len = fcs_col_len(src_col);
@@ -438,7 +436,7 @@ void fc_solve_moves_processed_gen(
 #ifndef min
 #define min(a,b) (((a)<(b))?(a):(b))
 #endif
-                            virt_num_cards = min((virtual_stack_len[src]-src_len), num_cards);
+                            int virt_num_cards = min((virtual_stack_len[src]-src_len), num_cards);
 #undef min
                             virtual_stack_len[src] -= virt_num_cards;
                             virtual_stack_len[dest] += virt_num_cards;
@@ -476,12 +474,3 @@ void fc_solve_moves_processed_gen(
 }
 
 
-int fc_solve_moves_processed_get_next_move(fcs_moves_processed_t * moves, fcs_extended_move_t * move)
-{
-    if (moves->next_move_idx == moves->num_moves)
-    {
-        return 1;
-    }
-    *move = moves->moves[moves->next_move_idx++];
-    return 0;
-}

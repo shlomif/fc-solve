@@ -115,23 +115,51 @@ typedef struct
 #endif
 } fc_solve_hash_t;
 
-
-extern void
-fc_solve_hash_init(
-    fcs_meta_compact_allocator_t * meta_alloc,
-    fc_solve_hash_t * hash,
+static GCC_INLINE void fc_solve_hash_init(
+    fcs_meta_compact_allocator_t * const meta_alloc,
+    fc_solve_hash_t * const hash,
 #ifdef FCS_INLINED_HASH_COMPARISON
-    enum FCS_INLINED_HASH_DATA_TYPE hash_type
+    const enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
 #ifdef FCS_WITH_CONTEXT_VARIABLE
-    int (*compare_function)(const void * key1, const void * key2, void * context),
-    void * context
+    const int (*compare_function)(const void * key1, const void * key2, void * context),
+    void * const context
 #else
-    int (*compare_function)(const void * key1, const void * key2)
+    const int (*compare_function)(const void * key1, const void * key2)
 #endif
 #endif
-    );
+    )
+{
+#define HASH_WANTED_SIZE 2048
 
+    hash->size = HASH_WANTED_SIZE;
+    hash->size_bitmask = HASH_WANTED_SIZE-1;
+    hash->max_num_elems_before_resize = (HASH_WANTED_SIZE << 1);
+
+    hash->num_elems = 0;
+
+    /* Allocate a table of size entries */
+    /* Initialize all the cells of the hash table to NULL, which indicate
+       that the end of each chain is right at the start. */
+    hash->entries = (fc_solve_hash_symlink_t *)calloc(
+        HASH_WANTED_SIZE, sizeof(hash->entries[0])
+        );
+
+    hash->list_of_vacant_items = NULL;
+
+#ifdef FCS_INLINED_HASH_COMPARISON
+    hash->hash_type = hash_type;
+#else
+    hash->compare_function = compare_function;
+#ifdef FCS_WITH_CONTEXT_VARIABLE
+    hash->context = context;
+#endif
+#endif
+
+    fc_solve_compact_allocator_init(&(hash->allocator), meta_alloc);
+
+    return;
+}
 /*
  * Returns FALSE if the key is new and the key/val pair was inserted.
  *      - in that case *existing_key / *existing_val will be set to key
