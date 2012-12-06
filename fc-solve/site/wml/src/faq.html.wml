@@ -163,11 +163,43 @@ authors of other open-source solvers may be happy for help as well, so if
 you want to improve something more mature, then contact us.
 </p>
 
+<h2 id="integrate_fcs_into_program">May I integrate Freecell Solver into my
+program? If so - how?</h2>
+
+<p>
+Yes, you can, as long as you accept the
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 licence</a> . We
+also would appreciate an acknowledgement and a link to the Freecell Solver
+home page, in the About Dialogue, and in other places.
+</p>
+
+<p>
+Now regarding how to integrate: please either use the
+<tt>freecell_solver_user_*</tt>
+API, or alternatively parse the output of <tt>fc-solve</tt>
+with the <tt>-p -t -sam -sel</tt> flags. The <tt>freecell_solver_user_*</tt>
+API is not documented at the moment, but should be self-explanatory, and there
+are some examples of using it in the various solvers in the distribution.
+One useful way to configure a solver handle is to use <tt>fcs_cl.h</tt>
+which provides an API based on the Freecell Solver command-line and is more
+convenient than issuing multiple lower-level API calls.
+</p>
+
+<p>
+You can opt to put the solver on a separate thread, on a separate process,
+or alternatively limit the iterations and increase it constantly, in a
+pre-emptive multi-tasking fashion.
+</p>
+
+<p>
+Good luck and let us know if you run into any trouble, or, alternatively,
+if you are successful.
+</p>
+
 <!--
 
 TODO:
 
-* May I integrate Freecell Solver into my program? And how?
 * The solutions are too long. What can I do?
 * Why is Freecell Solver written in C? Why not in another language?
 * I found a solution that Freecell Solver erroneously reports as unsolveable - should I report it to you?
