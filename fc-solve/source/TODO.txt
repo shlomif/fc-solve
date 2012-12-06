@@ -10,6 +10,12 @@ Pressing
 Non-pressing
 ------------
 
+* Convert the card initializers to an fcs_make_card constructor instead
+of two separate set_rank and set_suit calls.
+
+* See if GCC_INLINE-ing the functions inside fcs_hash.c will yield
+any benefit.
+
 * Refer to +expand-solitaire-multi-card-moves+ from the fc-solve process.
 
 * Create a displayer for fc-solve's solutions which will allow seeing where a
