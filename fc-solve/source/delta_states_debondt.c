@@ -518,9 +518,7 @@ static void fc_solve_debondt_delta_stater_decode(
                     }
                 }
 
-                int existing_opt;
-
-                existing_opt = self->card_states[STATE_POS(suit_idx, rank)];
+                const int existing_opt = self->card_states[STATE_POS(suit_idx, rank)];
 
                 if (rank == 1)
                 {
@@ -531,12 +529,12 @@ static void fc_solve_debondt_delta_stater_decode(
                 }
                 else
                 {
-                    int base =
+                    const int base =
                     (IS_BAKERS_DOZEN()
                         ? NUM__BAKERS_DOZEN__OPTS
                         : ((rank == RANK_KING) ? NUM_KING_OPTS : NUM_OPTS)
                     );
-                    int item_opt = fc_solve_var_base_reader_read(reader, base);
+                    const int item_opt = fc_solve_var_base_reader_read(reader, base);
 
                     if (existing_opt < 0)
                     {
@@ -569,15 +567,13 @@ static void fc_solve_debondt_delta_stater_decode(
     }
 
     {
-        int col_idx;
-
-        for (col_idx = 0; col_idx < self->num_columns; col_idx++)
+        for (int col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
             fcs_card_t top_card;
             int top_opt;
 
             fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
-            fcs_cards_column_t orig_col = fcs_state_get_col(*init_state, col_idx);
+            const fcs_cards_column_t orig_col = fcs_state_get_col(*init_state, col_idx);
 
             if (fcs_col_len(orig_col))
             {
@@ -652,10 +648,10 @@ static void fc_solve_debondt_delta_stater_decode(
 }
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
-        fc_solve_debondt_delta_stater_t * delta_stater,
-        enum fcs_dbm_variant_type_t local_variant,
+        fc_solve_debondt_delta_stater_t * const delta_stater,
+        const enum fcs_dbm_variant_type_t local_variant,
         const fcs_uchar_t * const enc_state,
-        fcs_state_keyval_pair_t * ret
+        fcs_state_keyval_pair_t * const ret
         IND_BUF_T_PARAM(indirect_stacks_buffer)
         )
 {
@@ -682,10 +678,10 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
 #endif
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
-    fc_solve_debondt_delta_stater_t * delta_stater,
-    enum fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t * state,
-    unsigned char * out_enc_state
+    fc_solve_debondt_delta_stater_t * const delta_stater,
+    const enum fcs_dbm_variant_type_t local_variant,
+    fcs_state_keyval_pair_t * const state,
+    unsigned char * const out_enc_state
 )
 {
     fc_solve_var_base_writer_start(&(delta_stater->w));
@@ -695,10 +691,10 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
 }
 
 static GCC_INLINE void fcs_debondt_init_and_encode_state(
-    fc_solve_debondt_delta_stater_t * delta_stater,
-    enum fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t * state,
-    fcs_encoded_state_buffer_t * enc_state
+    fc_solve_debondt_delta_stater_t * const  delta_stater,
+    const enum fcs_dbm_variant_type_t local_variant,
+    fcs_state_keyval_pair_t * const state,
+    fcs_encoded_state_buffer_t * const enc_state
 )
 {
     fcs_init_encoded_state(enc_state);
@@ -715,11 +711,9 @@ static GCC_INLINE void fcs_debondt_init_and_encode_state(
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
-static char * debondt_prepare_state_str(const char * proto)
+static char * debondt_prepare_state_str(const char * const proto)
 {
-    char * ret;
-
-    ret = strdup(proto);
+    char * ret = strdup(proto);
 
     /* Process the string in-place to make it available as input
      * to fc-solve again.
@@ -746,9 +740,9 @@ static char * debondt_prepare_state_str(const char * proto)
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
-        enum fcs_dbm_variant_type_t local_variant,
-        const char * init_state_str_proto,
-        const char * derived_state_str_proto
+        const enum fcs_dbm_variant_type_t local_variant,
+        const char * const init_state_str_proto,
+        const char * const derived_state_str_proto
 )
 {
     char * init_state_s, * derived_state_s;
