@@ -84,7 +84,7 @@
 const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS] = {0.5, 0, 0.3, 0, 0.2, 0};
 
 static GCC_INLINE void normalize_befs_weights(
-    fc_solve_state_weighting_t * weighting
+    fc_solve_state_weighting_t * const weighting
 )
 {
     /* Normalize the Best-First-Search Weights, so the sum of all of them would be 1. */

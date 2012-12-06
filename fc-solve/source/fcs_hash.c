@@ -194,18 +194,12 @@ fcs_bool_t fc_solve_hash_insert(
 
   */
 static GCC_INLINE void fc_solve_hash_rehash(
-    fc_solve_hash_t * hash
+    fc_solve_hash_t * const hash
     )
 {
-    int old_size, new_size, new_size_bitmask;
-    int i;
-    fc_solve_hash_symlink_item_t * item, * next_item;
-    int place;
-    fc_solve_hash_symlink_t * new_entries;
+    const int old_size = hash->size;
 
-    old_size = hash->size;
-
-    new_size = old_size << 1;
+    const int new_size = old_size << 1;
 
     /* Check for overflow. */
     if (new_size < old_size)
@@ -214,23 +208,23 @@ static GCC_INLINE void fc_solve_hash_rehash(
         return;
     }
 
-    new_size_bitmask = new_size - 1;
+    const int new_size_bitmask = new_size - 1;
 
-    new_entries = calloc(new_size, sizeof(new_entries[0]));
+    fc_solve_hash_symlink_t * const new_entries = calloc(new_size, sizeof(new_entries[0]));
 
     /* Copy the items to the new hash while not allocating them again */
-    for(i=0;i<old_size;i++)
+    for (int i=0 ; i < old_size ; i++)
     {
-        item = hash->entries[i].first_item;
+        fc_solve_hash_symlink_item_t * item = hash->entries[i].first_item;
         /* traverse the chain item by item */
         while(item != NULL)
         {
             /* The place in the new hash table */
-            place = item->hash_value & new_size_bitmask;
+            const int place = item->hash_value & new_size_bitmask;
 
             /* Store the next item in the linked list in a safe place,
                so we can retrieve it after the assignment */
-            next_item = item->next;
+            fc_solve_hash_symlink_item_t * const next_item = item->next;
             /* It is placed in front of the first element in the chain,
                so it should link to it */
             item->next = new_entries[place].first_item;
