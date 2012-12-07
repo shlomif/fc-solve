@@ -63,6 +63,18 @@ Source_Or_Dest_Id = union {
     Foundation_Id foundation;
 }
 
+# This comment is used by human players to annotate their solutions.
+# Alternatively, it can be used by automated solvers.
+# See http://tech.groups.yahoo.com/group/fc-solve-discuss/message/173
+Comment = Struct {
+    union {
+        Plain_Text_Comment; # Plain Text
+        XHTML_Subset_Comment; # A comment as HTML Subset.
+    }
+    String originator;
+    String ID;
+}
+
 Move = Struct {
     Source_Or_Dest_Id source;
     Source_Or_Dest_Id dest;
@@ -70,6 +82,7 @@ Move = Struct {
     Card source_card; # Optional
     Card dest_card; # Optional
     bool implicit; # Whether this move is done implicitly by an automove.
+    Comment comment; # Optional
 }
 
 Move_With_Position = Struct {
