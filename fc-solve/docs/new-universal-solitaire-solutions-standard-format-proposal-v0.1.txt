@@ -8,8 +8,8 @@ notating Freecell.
 
 This standard is written in a pseudo-BNF / pseudo-C-struct format, which
 will be encoding agnostic and can later be encoded in XML, JSON or a more
-human-readable format (though conversions to this format will be explicitly
-specified.).
+human-readable format (though conversions to these format will be explicitly
+specified later.).
 
 Format:
 -------
