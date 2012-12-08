@@ -398,3 +398,6 @@ which "-l micro-finance" generates the longest solution out of the Microsoft
 
 * Code a generic tests grouping.
 
+* Convert the card initializers to an fcs_make_card constructor instead
+of two separate set_rank and set_suit calls.
+

@@ -41,14 +41,7 @@
 
 static fcs_card_t make_card(int rank, int suit)
 {
-    fcs_card_t card;
-
-    card = fc_solve_empty_card;
-
-    fcs_card_set_rank(card, rank);
-    fcs_card_set_suit(card, suit);
-
-    return card;
+    return fcs_make_card(rank, suit);
 }
 
 static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)

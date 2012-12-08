@@ -482,16 +482,11 @@ static void fc_solve_delta_stater_decode(
 
             for ( i = 0 ; i < num_cards_in_seq ; i++)
             {
-                fcs_card_t new_card;
-                int suit_bit;
-
-                new_card = fc_solve_empty_card;
-                suit_bit = fc_solve_bit_reader_read(bit_r, 1);
-
-                fcs_card_set_rank(new_card, fcs_card_rank(last_card)-1);
-                fcs_card_set_suit(new_card,
+                int suit_bit = fc_solve_bit_reader_read(bit_r, 1);
+                fcs_card_t new_card = fcs_make_card(
+                    fcs_card_rank(last_card)-1,
                     ((suit_bit << 1) |
-                        ((fcs_card_suit(last_card) & 0x1) ^ 0x1)
+                     ((fcs_card_suit(last_card) & 0x1) ^ 0x1)
                     )
                 );
 

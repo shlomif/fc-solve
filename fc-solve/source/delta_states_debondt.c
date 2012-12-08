@@ -349,9 +349,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
                 if (IS_BAKERS_DOZEN())
                 {
-                    fcs_card_t card = fc_solve_empty_card;
-                    fcs_card_set_rank(card, rank);
-                    fcs_card_set_suit(card, suit_idx);
+                    fcs_card_t card = fcs_make_card(rank, suit_idx);
 
                     if (self->bakers_dozen_topmost_cards_lookup[card >> 3] & (1 << (card & (8-1))))
                     {
@@ -478,10 +476,7 @@ static void fc_solve_debondt_delta_stater_decode(
     {
         for (int suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
         {
-            fcs_card_t card = fc_solve_empty_card;
-
-            fcs_card_set_rank(card, RANK_KING);
-            fcs_card_set_suit(card, suit_idx);
+            fcs_card_t card = fcs_make_card(RANK_KING, suit_idx);
 
             if (! IS_IN_FOUNDATIONS(card))
             {
@@ -500,9 +495,7 @@ static void fc_solve_debondt_delta_stater_decode(
         {
             for (int suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
             {
-                fcs_card_t card = fc_solve_empty_card;
-                fcs_card_set_rank(card, rank);
-                fcs_card_set_suit(card, suit_idx);
+                fcs_card_t card = fcs_make_card(rank, suit_idx);
 
                 if (IS_BAKERS_DOZEN())
                 {

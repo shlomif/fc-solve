@@ -57,6 +57,9 @@ extern "C" {
 #define FCS_MAX_NUM_SCANS_BUCKETS 4
 #endif
 
+/* How many ranks there are - Ace to King == 13. */
+#define FCS_MAX_RANK 13
+
 #define FCS_CHAR_BIT_SIZE_LOG2 3
 #define MAX_NUM_SCANS (FCS_MAX_NUM_SCANS_BUCKETS * (sizeof(unsigned char) * 8))
 
@@ -92,6 +95,13 @@ struct fcs_struct_state_t
 typedef struct fcs_struct_state_t fcs_state_t;
 
 typedef int fcs_locs_t;
+
+static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
+{
+    fcs_card_t ret = { .rank = rank, .suit = suit, .flags = 0 };
+
+    return ret;
+}
 
 #define fcs_state_get_col(state, col_idx) \
     (&((state).stacks[(col_idx)]))
@@ -341,6 +351,11 @@ typedef char fcs_locs_t;
 /* These are macros that are common to COMPACT_STATES and
  * INDIRECT_STACK_STATES */
 #if defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
+
+static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
+{
+    return ( (((fcs_card_t)rank) << 2) | ((fcs_card_t)suit) );
+}
 
 #define fcs_col_len(col) \
     ( ((col)[0]) )
@@ -1059,16 +1074,14 @@ static GCC_INLINE int fc_solve_check_state_validity(
 
     /* Now check if there are extra or missing cards */
 
-    for(d=0;d<4;d++)
+    for(int suit_idx = 0; suit_idx < 4; suit_idx ++)
     {
-        for(c=1;c<=13;c++)
+        for (int rank = 1; rank <= FCS_MAX_RANK ; rank++)
         {
-            if (cards[d][c] != decks_num)
+            if (cards[suit_idx][rank] != decks_num)
             {
-                *misplaced_card = fc_solve_empty_card;
-                fcs_card_set_suit(*misplaced_card, d);
-                fcs_card_set_rank(*misplaced_card, c);
-                return ((cards[d][c] < decks_num)
+                *misplaced_card = fcs_make_card(rank, suit_idx);
+                return ((cards[suit_idx][rank] < decks_num)
                     ? FCS_STATE_VALIDITY__MISSING_CARD
                     : FCS_STATE_VALIDITY__EXTRA_CARD
                     )
