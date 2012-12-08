@@ -358,8 +358,8 @@ static GCC_INLINE void init_soft_thread(
 }
 
 void fc_solve_instance__init_hard_thread(
-    fc_solve_instance_t * instance,
-    fc_solve_hard_thread_t * hard_thread
+    fc_solve_instance_t * const instance,
+    fc_solve_hard_thread_t * const hard_thread
 )
 {
     hard_thread->instance = instance;
@@ -394,11 +394,9 @@ void fc_solve_instance__init_hard_thread(
     Afterwards fc_solve_init_instance() should be called in order
     to really prepare it for solving.
   */
-fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * meta_alloc)
+fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * const meta_alloc)
 {
-    fc_solve_instance_t * instance;
-
-    instance = SMALLOC1(instance);
+    fc_solve_instance_t * instance = SMALLOC1(instance);
 
     instance->meta_alloc = meta_alloc;
 
@@ -494,24 +492,21 @@ enum
 };
 
 static GCC_INLINE int compile_prelude(
-    fc_solve_hard_thread_t * hard_thread
+    fc_solve_hard_thread_t * const hard_thread
 )
 {
-    char * p_quota, * p_scan, * p;
-    char * string;
-    int last_one = 0;
+    fcs_bool_t last_one = FALSE;
     int num_items = 0;
-    fcs_prelude_item_t * prelude;
     ST_LOOP_DECLARE_VARS();
 
-    prelude = NULL;
-    string = hard_thread->prelude_as_string;
+    fcs_prelude_item_t * prelude = NULL;
+    char * const string = hard_thread->prelude_as_string;
 
-    p = string;
+    char * p = string;
 
     while (! last_one)
     {
-        p_quota = p;
+        const char * const p_quota = p;
         while((*p) && isdigit(*p))
         {
             p++;
@@ -523,14 +518,14 @@ static GCC_INLINE int compile_prelude(
         }
         *p = '\0';
         p++;
-        p_scan = p;
+        const char * const p_scan = p;
         while((*p) && ((*p) != ','))
         {
             p++;
         }
         if ((*p) == '\0')
         {
-            last_one = 1;
+            last_one = TRUE;
         }
         *p = '\0';
         p++;
@@ -602,10 +597,12 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
              * to a valid tests order.
              *
              * */
-            int bit_idx, num_tests = 0;
+            int num_tests = 0;
             int * tests = SMALLOC(tests, sizeof(total_tests)*8);
 
-            for(bit_idx=0; total_tests != 0; bit_idx++, total_tests >>= 1)
+            for (int bit_idx=0 ;
+                total_tests != 0 ;
+                bit_idx++, total_tests >>= 1)
             {
                 if ((total_tests & 0x1) != 0)
                 {
@@ -622,7 +619,6 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
             instance->opt_tests_order.groups[0].num =
                 num_tests;
             instance->opt_tests_order.groups[0].shuffling_type = FCS_NO_SHUFFLING;
-
             STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
         }
     }
