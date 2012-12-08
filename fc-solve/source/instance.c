@@ -694,7 +694,7 @@ static guint fc_solve_glib_hash_stack_hash_function (
     /* This hash function was ripped from the Perl source code.
      * (It is not derived work however). */
     const char * s_ptr = (char*)key;
-    const char * s_end = s_ptr+fcs_col_len((fcs_card_t *)key)+1;
+    const char * const s_end = s_ptr+fcs_col_len((fcs_card_t *)key)+1;
     hash_value_int = 0;
     while (s_ptr < s_end)
     {
