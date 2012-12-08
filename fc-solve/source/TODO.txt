@@ -95,6 +95,9 @@ Verdict: Solved ; Iters: 615 ; Length: 77
 
 * Add the new Freecell Solver-compatible game variants of PySolFC.
 
+* Convert magic rank constants such as 1 or 13 to FCS_MAX_RANK and
+FCS_RANK_ACE/etc.
+
 Long-term
 ---------
 
