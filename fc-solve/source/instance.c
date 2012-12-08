@@ -726,15 +726,6 @@ extern void fc_solve_trace_solution(
     fc_solve_instance_t * instance
 )
 {
-    /*
-        Trace the solution.
-    */
-    fcs_collectible_state_t * s1;
-    int move_idx;
-    fcs_move_stack_t * stack;
-    fcs_internal_move_t * moves;
-    fcs_move_stack_t * solution_moves_ptr;
-
     fcs_internal_move_t canonize_move = fc_solve_empty_move;
     fcs_int_move_set_type(canonize_move, FCS_MOVE_TYPE_CANONIZE);
 
@@ -746,9 +737,9 @@ extern void fc_solve_trace_solution(
 
     fcs_move_stack_init(instance->solution_moves);
 
-    s1 = instance->final_state;
+    fcs_collectible_state_t * s1 = instance->final_state;
 
-    solution_moves_ptr = &(instance->solution_moves);
+    fcs_move_stack_t * const solution_moves_ptr = &(instance->solution_moves);
     /* Retrace the step from the current state to its parents */
     while (FCS_S_PARENT(s1) != NULL)
     {
@@ -761,10 +752,9 @@ extern void fc_solve_trace_solution(
 
         /* Merge the move stack */
         {
-
-            stack = FCS_S_MOVES_TO_PARENT(s1);
-            moves = stack->moves;
-            for(move_idx=stack->num_moves-1;move_idx>=0;move_idx--)
+            const fcs_move_stack_t * const stack = FCS_S_MOVES_TO_PARENT(s1);
+            const fcs_internal_move_t * const moves = stack->moves;
+            for (int move_idx=stack->num_moves-1 ; move_idx >= 0 ; move_idx--)
             {
                 fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
             }
