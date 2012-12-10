@@ -217,11 +217,51 @@ that will yield something. There are some examples for those in the individual
 flares and soft threads under the <tt>Presets/presets</tt> directory.
 </p>
 
+<h2 id="solutions_are_too_long">Why is Freecell Solver written in C? Why not in another language?</h2>
+
+<p>
+Part of the reason why Freecell Solver is written in C, is because the first
+released version (version 0.2) was written in C, and it continued to be
+maintained in this language. Other reasons are:
+</p>
+
+<ul>
+
+<li>
+<p>
+C is fast and memory efficient.
+</p>
+</li>
+
+<li>
+<p>
+C is portable.
+</p>
+</li>
+
+<li>
+<p>
+The bit-handling operators of C are utilised extensively in the Freecell
+Solver source.
+</p>
+</li>
+
+<li>
+<p>
+As opposed to C++, C is easier to get right, is more of a “no-nonsense
+language”, is less hyped, and does not encourage crazy or pointless
+practices. Also see
+<a href="http://www.shlomifish.org/lecture/Freecell-Solver/slides/why_not_cpp.html">what
+I’ve written about it previously</a>.
+</p>
+</li>
+
+</ul>
+
 <!--
 
 TODO:
 
-* Why is Freecell Solver written in C? Why not in another language?
 * I found a solution that Freecell Solver erroneously reports as unsolveable - should I report it to you?
 
 -->
