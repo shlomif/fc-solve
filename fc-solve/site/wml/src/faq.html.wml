@@ -7,7 +7,7 @@
 <p>
 While it is not unthinkable that Freecell Solver will have a bug and will
 make a wrong move, it is extremely unlikely that that is the case. Some people
-have reported that several multi-sequence moves are impossible, but as I
+have reported that several multi-card moves are impossible, but as I
 demonstrated to them, they were in fact possible.
 </p>
 
