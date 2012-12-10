@@ -196,6 +196,27 @@ Good luck and let us know if you run into any trouble, or, alternatively,
 if you are successful.
 </p>
 
+<h2 id="solutions_are_too_long">The Solutions I Got are Too Long. What can I do?</h2>
+
+<p>
+You can try using a flares-based preset such as <tt>qualified-seed</tt> and
+optionally add <tt>--flares-choice fcpro</tt> and <tt>-fif 10</tt>, where 10
+can be replaced by a larger (or smaller) number. So the complete command would
+be:
+</p>
+
+<pre>
+pi-make-microsoft-freecell-board -t 24 | \
+    fc-solve -l qs --flares-choice fcpro -fif 10 -
+</pre>
+
+<p>
+If this still does not work to your satisfaction, you can try constructing
+a specialised heuristic from the many command line options of Freecell Solver
+that will yield something. There are some examples for those in the individual
+flares and soft threads under the <tt>Presets/presets</tt> directory.
+</p>
+
 <!--
 
 TODO:
