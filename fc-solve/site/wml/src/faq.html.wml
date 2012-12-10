@@ -3,6 +3,12 @@
 
 <latemp_subject "The Freecell Solver Frequently Asked Questions (F.A.Q.) List" />
 
+<h2* id="toc">Table of contents</h2*>
+
+<toc />
+
+<h2 id="questions">The Questions</h2>
+
 <h3 id="a_move_seems_wrong">I think I found a wrong move in the solution? What can I do?</h3>
 
 <p>
@@ -164,8 +170,8 @@ authors of other open-source solvers may be happy for help as well, so if
 you want to improve something more mature, then contact us.
 </p>
 
-<h2 id="integrate_fcs_into_program">May I integrate Freecell Solver into my
-program? If so - how?</h2>
+<h3 id="integrate_fcs_into_program">May I integrate Freecell Solver into my
+program? If so - how?</h3>
 
 <p>
 Yes, you can, as long as you accept the
@@ -197,7 +203,7 @@ Good luck and let us know if you run into any trouble, or, alternatively,
 if you are successful.
 </p>
 
-<h2 id="solutions_are_too_long">The Solutions I Got are Too Long. What can I do?</h2>
+<h3 id="solutions_are_too_long">The Solutions I Got are Too Long. What can I do?</h3>
 
 <p>
 You can try using a flares-based preset such as <tt>qualified-seed</tt> and
@@ -218,7 +224,7 @@ that will yield something. There are some examples for those in the individual
 flares and soft threads under the <tt>Presets/presets</tt> directory.
 </p>
 
-<h2 id="why_in_c">Why is Freecell Solver written in C? Why not in another language?</h2>
+<h3 id="why_in_c">Why is Freecell Solver written in C? Why not in another language?</h3>
 
 <p>
 Part of the reason why Freecell Solver is written in C, is because the first
@@ -259,7 +265,7 @@ I’ve written about it previously</a>.
 
 </ul>
 
-<h2 id="unsolvable_solution">I found a solvable deal that Freecell Solver reports as Unsolvable - should I report it to you?</h2>
+<h3 id="unsolvable_solution">I found a solvable deal that Freecell Solver reports as Unsolvable - should I report it to you?</h3>
 
 <p>
 The default Freecell Solver heuristic may have a small number of deals that
