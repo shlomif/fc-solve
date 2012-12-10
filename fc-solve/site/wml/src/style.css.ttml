@@ -35,7 +35,7 @@ a:hover { color : red }
 
 h2
 {
-    background-color: #FFEE00;
+    background-color: #FFEE77;
 }
 h3
 {
