@@ -258,12 +258,12 @@ I’ve written about it previously</a>.
 
 </ul>
 
-<!--
+<h2 id="unsolvable_solution">I found a solvable deal that Freecell Solver reports as Unsolvable - should I report it to you?</h2>
 
-TODO:
-
-* I found a solution that Freecell Solver erroneously reports as unsolveable - should I report it to you?
-
--->
-
-
+<p>
+The default Freecell Solver heuristic may have a small number of deals that
+are reported as unsolvable despite being solvable. However, you can use scans
+based on atomic moves to rectify that. See <tt>fc-solve --help-configs<tt>
+and the <a href="$(ROOT)/docs/distro/USAGE.html">USAGE.html</a> file for
+more information.
+</p>
