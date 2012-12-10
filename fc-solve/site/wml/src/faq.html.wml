@@ -217,7 +217,7 @@ that will yield something. There are some examples for those in the individual
 flares and soft threads under the <tt>Presets/presets</tt> directory.
 </p>
 
-<h2 id="solutions_are_too_long">Why is Freecell Solver written in C? Why not in another language?</h2>
+<h2 id="why_in_c">Why is Freecell Solver written in C? Why not in another language?</h2>
 
 <p>
 Part of the reason why Freecell Solver is written in C, is because the first
