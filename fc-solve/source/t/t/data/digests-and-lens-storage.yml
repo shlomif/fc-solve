@@ -43,8 +43,8 @@ digests:
     hexdigest: 34bc7c9fe871e50275975323be93c133e73f135db751a985a32f92323f1d6377
     len: 27193
   qualified_seed_for_6240:
-    hexdigest: 745b535c4bb1d28a0a437efda1a31091aaa1f2fbe1dc2fa6cbe19b8f9936c1b1
-    len: 22417
+    hexdigest: 93015fd6bb54e16f69a130ba27a675a1b794551f54c6f1d6750f336314cb0ddc
+    len: 26315
   random_dfs_with_rand_parens:
     hexdigest: ea188af2dbc420480508f0a51e4ffb97ab736cc01a24d9117a578fc0caf6b4f4
     len: 44129

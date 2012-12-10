@@ -1974,22 +1974,41 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
             }
 #endif
 
-            int other_deck_idx;
-            for (other_deck_idx = 0 ; other_deck_idx < (INSTANCE_DECKS_NUM << 2) ; other_deck_idx++)
+            int other_suit_idx;
+            int min_other_color_val = FCS_MAX_RANK+1, min_same_color_val = FCS_MAX_RANK+1;
+            for (other_suit_idx = 0 ; other_suit_idx < (INSTANCE_DECKS_NUM << 2) ; other_suit_idx++)
             {
-                if (fcs_foundation_value(*my_ptr_state, other_deck_idx)
-                        < fcs_card_rank(card) - 2 -
-                        (
-                            SEQS_ARE_BUILT_BY_RANK()
-                            ? 0
-                            : ((other_deck_idx&0x1) == (fcs_card_suit(card)&0x1))
-                        )
-                   )
+                if (( other_suit_idx & (4-1)) != fcs_card_suit(card))
                 {
-                    break;
+                    if (SEQS_ARE_BUILT_BY_RANK())
+                    {
+                        min_other_color_val = min(min_other_color_val, fcs_foundation_value(*my_ptr_state, other_suit_idx));
+                    }
+                    else if (
+                        ((other_suit_idx&0x1) == (fcs_card_suit(card)&0x1))
+                    )
+                    {
+                        min_same_color_val = min(min_same_color_val, fcs_foundation_value(*my_ptr_state, other_suit_idx));
+                    }
+                    else
+                        min_other_color_val = min(min_other_color_val, fcs_foundation_value(*my_ptr_state, other_suit_idx));
+                    {
+                    }
                 }
             }
-            if (other_deck_idx == (INSTANCE_DECKS_NUM << 2))
+            if (
+                (min_other_color_val+1 < fcs_card_rank(card))
+                &&
+                (SEQS_ARE_BUILT_BY_RANK()
+                    ? TRUE
+                    :
+                    (
+                        (min_other_color_val+1 == fcs_card_rank(card))
+                            &&
+                        (fcs_card_rank(card) <= min_same_color_val+(2+1))
+                    )
+                )
+            )
             {
                 return ret_val;
             }
