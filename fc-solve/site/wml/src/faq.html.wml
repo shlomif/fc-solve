@@ -221,7 +221,6 @@ flares and soft threads under the <tt>Presets/presets</tt> directory.
 
 TODO:
 
-* The solutions are too long. What can I do?
 * Why is Freecell Solver written in C? Why not in another language?
 * I found a solution that Freecell Solver erroneously reports as unsolveable - should I report it to you?
 
