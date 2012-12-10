@@ -5,8 +5,9 @@
 
 <p>
 One can report bugs on
-<a href="http://code.google.com/p/fc-solve/issues/list">Freecell Solver's
-Google Code Bug-tracker</a> (which requires a Google account),
+<a href="https://bitbucket.org/shlomif/fc-solve/issues">Freecell Solver's
+Bug-tracker</a> (which requires an OpenID account, such as those provided
+by a Google ID, a Yahoo ID, LiveJournal or many other providers).
 on <a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/">the
 fc-solve-discuss mailing list</a> (at YahooGroups - may require registration),
 or <a href="http://www.shlomifish.org/me/contact-me/">directly
