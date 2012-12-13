@@ -24,6 +24,8 @@ use Cwd;
 
 package DerivedState;
 
+use Config;
+
 use Inline (
     C => <<"EOF",
 #include "dbm_calc_derived_iface.h"
@@ -115,6 +117,7 @@ EOF
     CLEAN_AFTER_BUILD => 0,
     INC => "-I" . $ENV{FCS_PATH} . " -I" . $ENV{FCS_SRC_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_dbm_calc_derived_test",
+    CCFLAGS => "$Config{ccflags} -std=gnu99",
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",

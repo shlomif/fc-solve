@@ -507,8 +507,8 @@ static void fc_solve_delta_stater_decode(
 }
 
 static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
-        fc_solve_delta_stater_t * delta_stater,
         enum fcs_dbm_variant_type_t local_variant,
+        fc_solve_delta_stater_t * delta_stater,
         const fcs_uchar_t * const enc_state,
         fcs_state_keyval_pair_t * ret
         IND_BUF_T_PARAM(indirect_stacks_buffer)

@@ -23,6 +23,8 @@ use Cwd;
 
 package FccStartPoint;
 
+use Config;
+
 use Inline (
     C => <<"EOF",
 #include "fcc_brfs_test.h"
@@ -102,9 +104,12 @@ EOF
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
+    CCFLAGS => "$Config{ccflags} -std=gnu99",
 );
 
 package FccIsNew;
+
+use Config;
 
 use Inline (
     C => <<"EOF",
@@ -171,6 +176,7 @@ EOF
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
+    CCFLAGS => "$Config{ccflags} -std=gnu99",
 );
 
 sub is_fcc_new_named_args

@@ -3,6 +3,8 @@ package Games::Solitaire::FC_Solve::QueueInC;
 use strict;
 use warnings;
 
+use Config;
+
 use Inline (
     C => <<'EOF',
 #define FCS_DBM_USE_OFFLOADING_QUEUE
@@ -81,6 +83,7 @@ EOF
     CLEAN_AFTER_BUILD => 0,
     INC => "-I" . $ENV{FCS_PATH},
     LIBS => "-L" . $ENV{FCS_PATH},
+    CCFLAGS => "$Config{ccflags} -std=gnu99"
 );
 
 sub new
