@@ -10,3 +10,7 @@
 
 since +--trim-max-stored-states+ is a rarely used feature we decided to
 release Freecell Solver 3.4.0 with this bug present.
+
+* The dbm_fc_solver and depth_dbm_fc_solver currently crash on some
+32-bit machines (such as i386/i586/i686) due to trying to use the lower bits
+of the pointers as flags for the AVL tree.
