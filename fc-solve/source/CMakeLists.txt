@@ -113,7 +113,7 @@ SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
     "States Type ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES'). No need to usually change.")
 SET (FCS_ENABLE_RCS_STATES CACHE BOOL "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
 SET (FCS_ENABLE_DBM_SOLVER CACHE BOOL "Whether to build the DBM solver")
-SET (FCS_DBM_BACKEND "bdb" CACHE STRING "Type of DBM backend.")
+SET (FCS_DBM_BACKEND "kaztree" CACHE STRING "Type of DBM backend.")
 SET (FCS_DBM_TREE_BACKEND "libavl2" CACHE STRING "Type of DBM tree backend.")
 SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
 SET (FCS_IA_PACK_SIZE 64 CACHE STRING "Size of a single pack in kilo-bytes.")
@@ -134,7 +134,7 @@ SET (FCS_WHICH_STATES_GOOGLE_HASH "FCS_WHICH_STATES_GOOGLE_HASH__SPARSE" CACHE S
 SET (FCS_FREECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell (not recommended)")
 SET (FCS_DISABLE_SIMPLE_SIMON "" CACHE BOOL "Exclude being able to solve Simple Simon from the Binary (not recommended)")
 SET (FCS_WITHOUT_CARD_FLIPPING "1" CACHE BOOL "Exclude the flipping of cards from the binary.")
-SET (FCS_WITH_TEST_SUITE "" CACHE BOOL "Also build and run the test suite.")
+SET (FCS_WITH_TEST_SUITE "1" CACHE BOOL "Also build and run the test suite.")
 SET (FCS_LINK_TO_STATIC "" CACHE BOOL "Link to the static library.")
 SET (FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY "4" CACHE STRING "The hard-coded number of freecells (4, 2, etc.). Usually ignored")
 
@@ -182,6 +182,10 @@ IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATE
 ENDIF(NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
 
 SET (${STATES_TYPE} 1)
+
+IF (FCS_WITH_TEST_SUITE)
+    SET (FCS_ENABLE_DBM_SOLVER 1)
+ENDIF (FCS_WITH_TEST_SUITE)
 
 IF (FCS_ENABLE_RCS_STATES)
     SET (FCS_RCS_STATES 1)

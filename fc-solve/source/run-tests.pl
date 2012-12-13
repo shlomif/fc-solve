@@ -106,6 +106,9 @@ GetOptions(
         $abs_bindir,
     );
 
+    Env::Path->LD_LIBRARY_PATH->Prepend(
+        $fcs_path
+    );
 
     foreach my $add_lib (Env::Path->PERL5LIB() , Env::Path->PYTHONPATH())
     {

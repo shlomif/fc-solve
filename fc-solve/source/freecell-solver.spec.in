@@ -69,6 +69,10 @@ cp ../../README .
 %cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12
 %make
 
+%check
+cd build
+%make test
+
 %install
 rm -rf %buildroot
 cd build
