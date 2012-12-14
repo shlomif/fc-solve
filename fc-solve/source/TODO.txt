@@ -10,6 +10,8 @@ Pressing
 Non-pressing
 ------------
 
+* Make sure the depth_dbm_fc_solver is working on 32-bit architectures.
+
 * See if GCC_INLINE-ing the functions inside fcs_hash.c will yield
 any benefit.
 

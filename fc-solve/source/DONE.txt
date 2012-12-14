@@ -401,3 +401,10 @@ which "-l micro-finance" generates the longest solution out of the Microsoft
 * Convert the card initializers to an fcs_make_card constructor instead
 of two separate set_rank and set_suit calls.
 
+* Made sure the dbm_fc_solver and depth_dbm_fc_solver won't crash on 32-bit
+machines (such as i386/i586/i686) due to trying to use the lower bits
+of the pointers as flags for the AVL tree, and other fitting stuff into
+pointers games.
+** Test suite now passes on 32-bit architectures.
+
+
