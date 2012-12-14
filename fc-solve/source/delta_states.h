@@ -57,11 +57,6 @@ typedef struct { unsigned char s[FCS_ENCODED_STATE_COUNT_CHARS]; } fcs_encoded_s
 #define FCS_EXPLICIT_REFCOUNT 1
 #endif
 
-/*  TODO : MUST REMOVE LATER. */
-#ifndef FCS_EXPLICIT_REFCOUNT
-#define FCS_EXPLICIT_REFCOUNT 1
-#endif
-
 #ifdef FCS_DBM_RECORD_POINTER_REPR
 
 typedef struct
