@@ -56,6 +56,13 @@ fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
 {
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
     fcs_dbm_record_t record_on_stack;
+
+    /* This memset() call is done to please valgrind and for general
+     * good measure. It is not absolutely necessary (but should not
+     * hurt much). It is needed due to struct padding and alignment
+     * issues.
+     * */
+    memset (&record_on_stack, '\0', sizeof(record_on_stack));
 #endif
 
     dbm_t * const db = (dbm_t *)store;

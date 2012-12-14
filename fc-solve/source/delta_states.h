@@ -53,15 +53,36 @@ typedef struct { unsigned char s[FCS_ENCODED_STATE_COUNT_CHARS]; } fcs_encoded_s
         ] \
     )
 
+#if SIZEOF_VOID_P == 4
+#define FCS_EXPLICIT_REFCOUNT 1
+#endif
+
+/*  TODO : MUST REMOVE LATER. */
+#ifndef FCS_EXPLICIT_REFCOUNT
+#define FCS_EXPLICIT_REFCOUNT 1
+#endif
+
 #ifdef FCS_DBM_RECORD_POINTER_REPR
 
 typedef struct
 {
     fcs_encoded_state_buffer_t key;
     uintptr_t parent_and_refcount;
+#ifdef FCS_EXPLICIT_REFCOUNT
+    unsigned char refcount;
+#endif
 } fcs_dbm_record_t;
 
 #define FCS_DBM_RECORD_SHIFT ((sizeof(rec->parent_and_refcount) - 1)*8)
+
+#ifdef FCS_EXPLICIT_REFCOUNT
+static GCC_INLINE fcs_dbm_record_t * fcs_dbm_record_get_parent_ptr(
+    fcs_dbm_record_t * rec
+    )
+{
+    return (fcs_dbm_record_t *)(rec->parent_and_refcount);
+}
+#else
 static GCC_INLINE fcs_dbm_record_t * fcs_dbm_record_get_parent_ptr(
     fcs_dbm_record_t * rec
     )
@@ -70,6 +91,7 @@ static GCC_INLINE fcs_dbm_record_t * fcs_dbm_record_get_parent_ptr(
         (~(((uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT))
     );
 }
+#endif
 
 static GCC_INLINE void fcs_dbm_record_set_parent_ptr(
     fcs_dbm_record_t * rec,
@@ -77,15 +99,36 @@ static GCC_INLINE void fcs_dbm_record_set_parent_ptr(
     )
 {
     rec->parent_and_refcount = ((uintptr_t)parent_ptr);
+#ifdef FCS_EXPLICIT_REFCOUNT
+    rec->refcount = 0;
+#endif
 }
 
+#ifdef FCS_EXPLICIT_REFCOUNT
+static GCC_INLINE unsigned char fcs_dbm_record_get_refcount(
+    fcs_dbm_record_t * rec
+    )
+{
+    return rec->refcount;
+}
+#else
 static GCC_INLINE unsigned char fcs_dbm_record_get_refcount(
     fcs_dbm_record_t * rec
     )
 {
     return (unsigned char)(rec->parent_and_refcount >> FCS_DBM_RECORD_SHIFT);
 }
+#endif
 
+#ifdef FCS_EXPLICIT_REFCOUNT
+static GCC_INLINE void fcs_dbm_record_set_refcount(
+    fcs_dbm_record_t * rec,
+    unsigned char new_val
+    )
+{
+    rec->refcount = new_val;
+}
+#else
 static GCC_INLINE void fcs_dbm_record_set_refcount(
     fcs_dbm_record_t * rec,
     unsigned char new_val
@@ -94,6 +137,7 @@ static GCC_INLINE void fcs_dbm_record_set_refcount(
     rec->parent_and_refcount &= (~(((uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT));
     rec->parent_and_refcount |= (((uintptr_t)new_val) << FCS_DBM_RECORD_SHIFT);
 }
+#endif
 
 static GCC_INLINE void fcs_dbm_record_increment_refcount(
     fcs_dbm_record_t * rec
