@@ -111,6 +111,11 @@ extern "C" {
 #cmakedefine FCS_WITH_CONTEXT_VARIABLE
 
 /*
+ * The size of void*.
+ */
+@SIZEOF_VOID_P_CODE@
+
+/*
  * This flag determines whether we are using the more compact but slower,
  * internal move tokens.
  *  */

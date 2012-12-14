@@ -30,6 +30,34 @@
 #include "inline.h"
 #include "alloc_wrap.h"
 
+#ifdef WITH_AVL_BALANCE_FIELD
+static GCC_INLINE signed char avl_get_balance(struct avl_node * node)
+{
+    return node->avl_balance;
+}
+
+static GCC_INLINE struct avl_node * avl_process_link(uintptr_t mylink)
+{
+    return (struct avl_node *)(mylink);
+}
+
+static GCC_INLINE void avl_set_link(struct avl_node * node, int myindex, struct avl_node * val)
+{
+    node->avl_mylink[myindex] = ((uintptr_t)val);
+}
+
+/*
+ * "Be conservative in what you do, be liberal in what you accept from others."
+ * -- http://www.joelonsoftware.com/items/2008/03/17.htm
+ *
+ * Without bounding this, the program fails.
+ * */
+#define AVL_BOUND(x) (((x) >= 3) ? 3 : ((x) <= (-3)) ? -3 : x)
+static GCC_INLINE void avl_set_balance(struct avl_node * node, signed char balance)
+{
+    node->avl_balance = AVL_BOUND(balance);
+}
+#else
 static GCC_INLINE signed char avl_get_balance(struct avl_node * node)
 {
     return (((signed char)(node->avl_mylink[0] & 0x7))-3);
@@ -57,6 +85,7 @@ static GCC_INLINE void avl_set_balance(struct avl_node * node, signed char balan
     node->avl_mylink[0] &= (~0x7);
     node->avl_mylink[0] |= (((uintptr_t)(AVL_BOUND(balance)+3))&0x7);
 }
+#endif
 
 static GCC_INLINE void avl_increment_balance(struct avl_node * node)
 {

@@ -25,7 +25,13 @@
 
 #include <stddef.h>
 #include <stdint.h>
+
+#include "config.h"
 #include "meta_alloc.h"
+
+#if SIZEOF_VOID_P == 4
+#define WITH_AVL_BALANCE_FIELD 1
+#endif
 
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
 #include "delta_states.h"
@@ -81,12 +87,13 @@ typedef void * avl_key_t;
 #define avl_root avl_proto_root.avl_mylink[0]
 #define TREE_AVL_ROOT(tree) ((struct avl_node *)((tree)->avl_root))
 #define SET_TREE_AVL_ROOT(tree, val) ((tree)->avl_root = (uintptr_t)val)
+
 /* An AVL tree node. */
 struct avl_node
   {
     avl_key_t avl_data;                /* Pointer to data. */
     uintptr_t avl_mylink[2];  /* Subtrees. */
-#if 0
+#ifdef WITH_AVL_BALANCE_FIELD
     signed char avl_balance;       /* Balance factor. */
 #endif
   };
@@ -105,7 +112,6 @@ struct avl_table
 #define L(node, i) (avl_process_link(node->avl_mylink[i]))
 #define SET_L(node, i, val) (avl_set_link(node, i, val))
 #define NODEPTR_GET_BALANCE(p) avl_get_balance(p)
-#define NODE_GET_BALANCE(node) NODEPTR_GET_BALANCE(*(p))
 #define NODEPTR_SET_BALANCE(p, b) avl_set_balance((p), (b))
 /* AVL traverser structure. */
 struct avl_traverser
