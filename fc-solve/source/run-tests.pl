@@ -20,7 +20,7 @@ my $bindir = dirname( __FILE__ );
 my $abs_bindir = File::Spec->rel2abs($bindir);
 
 # Whether to use prove instead of runprove.
-my $use_prove = 0;
+my $use_prove = $ENV{FCS_USE_TEST_RUN} ? 0 : 1;
 my $num_jobs = $ENV{TEST_JOBS};
 
 sub _is_parallized
