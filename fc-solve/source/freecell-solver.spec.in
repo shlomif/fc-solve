@@ -8,7 +8,33 @@ Buildroot: %{_tmppath}/freecell-solver-root
 URL: http://fc-solve.shlomifish.org/
 Requires: libfreecell-solver0 = %{version}
 Summary: The Freecell Solver Executable
+BuildRequires: ack
 BuildRequires: cmake
+BuildRequires: perl(base)
+BuildRequires: perl(Carp)
+BuildRequires: perl(Cwd)
+BuildRequires: perl(Data::Dumper)
+BuildRequires: perl(Digest::SHA)
+BuildRequires: perl(Env::Path)
+BuildRequires: perl(File::Path)
+BuildRequires: perl(File::Spec)
+BuildRequires: perl(Games::Solitaire::Verify)
+BuildRequires: perl(Games::Solitaire::Verify::Solution)
+BuildRequires: perl(Inline)
+BuildRequires: perl(Inline::C)
+BuildRequires: perl(IPC::Open2)
+BuildRequires: perl(lib)
+BuildRequires: perl(List::MoreUtils)
+BuildRequires: perl(Storable)
+BuildRequires: perl(strict)
+BuildRequires: perl(String::ShellQuote)
+BuildRequires: perl(Template)
+BuildRequires: perl(Test::Differences)
+BuildRequires: perl(Test::More)
+BuildRequires: perl(warnings)
+BuildRequires: perl(YAML::XS)
+BuildRequires: perl-devel
+BuildRequires: valgrind
 
 %description
 The Freecell Solver package contains the fc-solve executable which is
