@@ -41,12 +41,6 @@ sub is_used
     return $self->used();
 }
 
-=head2 $scan->data_file_path()
-
-Returns the path to the data file of the scan, where the numbers of iterations
-per board are stored.
-
-=cut
 
 sub data_file_path
 {
@@ -54,6 +48,26 @@ sub data_file_path
 
     return "./data/" . $self->id() .  ".data.bin";
 }
+
+
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::Structs::Scan
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::Structs::Scan
+
+=head2 $scan->data_file_path()
+
+Returns the path to the data file of the scan, where the numbers of iterations
+per board are stored.
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -81,6 +95,3 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 =cut
-
-1;
-

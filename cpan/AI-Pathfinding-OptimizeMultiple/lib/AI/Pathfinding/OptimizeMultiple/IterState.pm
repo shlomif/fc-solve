@@ -9,15 +9,6 @@ use parent 'AI::Pathfinding::OptimizeMultiple::Base';
 
 our $VERSION = '0.0.1';
 
-=head1 NAME
-
-AI::Pathfinding::OptimizeMultiple::IterState - iteration state object.
-
-=head1 VERSION
-
-Version 0.0.1
-
-=cut
 
 use vars (qw(@fields %fields_map));
 
@@ -50,13 +41,6 @@ sub _init
     return 0;
 }
 
-=head1 SUBROUTINES/METHODS
-
-=head2 $self->attach_to()
-
-Internal use.
-
-=cut
 
 sub attach_to
 {
@@ -68,11 +52,6 @@ sub attach_to
     return;
 }
 
-=head2 $self->get_chosen_struct()
-
-Internal use.
-
-=cut
 
 sub get_chosen_struct
 {
@@ -86,11 +65,6 @@ sub get_chosen_struct
         );
 }
 
-=head2 $self->detach()
-
-Internal use.
-
-=cut
 
 sub detach
 {
@@ -98,11 +72,6 @@ sub detach
     $self->_main(undef);
 }
 
-=head2 $self->idx_slice()
-
-Internal use.
-
-=cut
 
 sub idx_slice
 {
@@ -119,11 +88,6 @@ sub idx_slice
     );
 }
 
-=head2 $self->update_total_iters()
-
-Internal use.
-
-=cut
 
 sub update_total_iters
 {
@@ -151,11 +115,6 @@ sub update_total_iters
     );
 }
 
-=head2 $self->update_idx_slice()
-
-Internal use.
-
-=cut
 
 
 sub update_idx_slice
@@ -212,11 +171,6 @@ sub _trace_wrapper
     return;
 }
 
-=head2 $self->register_params()
-
-Internal use.
-
-=cut
 
 sub register_params
 {
@@ -229,6 +183,67 @@ sub register_params
 
     return;
 }
+
+
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::IterState
+
+=head1 VERSION
+
+version 0.0.1
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::IterState
+
+=head1 VERSION
+
+version 0.0.1
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::IterState - iteration state object.
+
+=head1 VERSION
+
+Version 0.0.1
+
+=head1 SUBROUTINES/METHODS
+
+=head2 $self->attach_to()
+
+Internal use.
+
+=head2 $self->get_chosen_struct()
+
+Internal use.
+
+=head2 $self->detach()
+
+Internal use.
+
+=head2 $self->idx_slice()
+
+Internal use.
+
+=head2 $self->update_total_iters()
+
+Internal use.
+
+=head2 $self->update_idx_slice()
+
+Internal use.
+
+=head2 $self->register_params()
+
+Internal use.
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -256,5 +271,3 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 =cut
-
-1;

@@ -16,15 +16,6 @@ use AI::Pathfinding::OptimizeMultiple::PostProcessor;
 
 use Carp;
 
-=head1 NAME
-
-AI::Pathfinding::OptimizeMultiple::CmdLine - the command line application class.
-
-=head1 VERSION
-
-Version 0.0.1
-
-=cut
 
 __PACKAGE__->mk_acc_ref(
     [qw(
@@ -93,20 +84,6 @@ sub _init
 
     # TODO : Restore later.
 
-=begin foo
-
-    $self->_input_obj(
-        MyInput->new(
-            {
-                start_board => $self->_start_board(),
-                num_boards => $self->_num_boards(),
-            }
-        )
-    );
-
-=end foo
-
-=cut
 
     $self->_post_processor(
         AI::Pathfinding::OptimizeMultiple::PostProcessor->new(
@@ -496,11 +473,6 @@ sub _do_simulation
     return;
 }
 
-=head2 $self->run()
-
-For internal use.
-
-=cut
 
 sub run
 {
@@ -516,11 +488,6 @@ sub run
     return 0;
 }
 
-=head2 $self->run_flares()
-
-For internal use.
-
-=cut
 
 sub run_flares
 {
@@ -545,6 +512,46 @@ sub run_flares
 
     return 0;
 }
+
+
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::CmdLine
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::CmdLine
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::CmdLine - the command line application class.
+
+=head1 VERSION
+
+Version 0.0.1
+
+=for foo $self->_input_obj(
+        MyInput->new(
+            {
+                start_board => $self->_start_board(),
+                num_boards => $self->_num_boards(),
+            }
+        )
+    );
+
+=head2 $self->run()
+
+For internal use.
+
+=head2 $self->run_flares()
+
+For internal use.
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -572,6 +579,3 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 =cut
-
-1;
-

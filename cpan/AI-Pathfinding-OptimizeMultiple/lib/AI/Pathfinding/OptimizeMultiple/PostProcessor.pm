@@ -21,23 +21,7 @@ sub _init
     return $self;
 }
 
-=head1 NAME
 
-AI::Pathfinding::OptimizeMultiple::PostProcessor - post-processor.
-
-=head1 VERSION
-
-Version 0.0.1
-
-=cut
-
-=head1 SUBROUTINES/METHODS
-
-=head2 $self->scans_rle()
-
-For internal use.
-
-=cut
 
 
 sub scans_rle
@@ -65,11 +49,6 @@ sub scans_rle
     return \@a;
 }
 
-=head2 $self->process($scans_orig)
-
-For internal use.
-
-=cut
 
 sub process
 {
@@ -97,6 +76,39 @@ sub process
     return $scans;
 }
 
+
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::PostProcessor
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::PostProcessor
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::PostProcessor - post-processor.
+
+=head1 VERSION
+
+Version 0.0.1
+
+=head1 SUBROUTINES/METHODS
+
+=head2 $self->scans_rle()
+
+For internal use.
+
+=head2 $self->process($scans_orig)
+
+For internal use.
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2010 Shlomi Fish
@@ -123,6 +135,3 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 =cut
-
-1;
-

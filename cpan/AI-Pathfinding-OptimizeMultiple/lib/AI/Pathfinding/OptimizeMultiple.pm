@@ -14,61 +14,6 @@ use PDL ();
 
 our $VERSION = '0.0.1';
 
-=head1 NAME
-
-AI::Pathfinding::OptimizeMultiple - optimize path finding searches for a large
-set of initial conditions (for better average performance).
-
-=head1 VERSION
-
-Version 0.0.1
-
-=head1 SYNOPSIS
-
-    use AI::Pathfinding::OptimizeMultiple
-
-    my $obj = AI::Pathfinding::OptimizeMultiple->new(
-        {
-            scans =>
-            [
-                {
-                    name => "first_search"
-                },
-                {
-                    name => "second_search",
-                },
-                {
-                    name => "third_search",
-                },
-            ],
-            scans_iters_pdls =>
-            {
-                first_search => $first_search_pdl,
-                second_search => $second_search_pdl,
-            },
-        }
-    );
-
-    my $results = $obj->calc_results();
-
-=head1 DESCRIPTION
-
-This CPAN distribution implements the algorithm described here:
-
-=over 4
-
-=item * L<https://groups.google.com/group/comp.ai.games/msg/41e899e9beea5583?dmode=source&output=gplain&noredirect>
-
-=item * L<http://www.shlomifish.org/lecture/Perl/Lightning/Opt-Multi-Task-in-PDL/>
-
-=back
-
-Given statistics on the performance of several game AI searches (or scans)
-across a representative number of initial cases, find a scan
-that solves most deals with close-to-optimal performance, by using switch
-tasking.
-
-=cut
 
 __PACKAGE__->mk_acc_ref([qw(
     chosen_scans
@@ -350,19 +295,6 @@ sub _inspect_quota
     $state->detach();
 }
 
-=head2 my $chosen_scans_array_ref = $self->chosen_scans()
-
-Returns the scans that have been chosen to perform the iteration. Each one is
-a AI::Pathfinding::OptimizeMultiple::ScanRun object.
-
-=head2 $calc_meta_scan->calc_meta_scan()
-
-Calculates the meta-scan after initialisation. See here for the details
-of the algorithm:
-
-L<http://www.shlomifish.org/lecture/Freecell-Solver/The-Next-Pres/slides/multi-tasking/best-meta-scan/>
-
-=cut
 
 sub calc_meta_scan
 {
@@ -401,13 +333,6 @@ sub calc_meta_scan
     }
 }
 
-=head2 $self->calc_flares_meta_scan()
-
-This function calculates the flares meta-scan: i.e: assuming that all atomic
-scans are run one after the other and the shortest solutions of all
-successful scans are being picked.
-
-=cut
 
 sub _get_num_scans
 {
@@ -552,15 +477,6 @@ sub calc_flares_meta_scan
     }
 }
 
-=head2 $calc_meta_scan->calc_board_iters($board_idx)
-
-Calculates the iterations of the board $board_idx in all the scans.
-
-Returns a hash_ref containing the key 'per_scan_iters' for the iterations
-per scan, and 'board_iters' for the total board iterations when ran in the
-scans.
-
-=cut
 
 sub calc_board_iters
 {
@@ -596,21 +512,6 @@ sub calc_board_iters
         };
 }
 
-=head2 my $status = $calc_meta_scan->get_final_status()
-
-Returns the status as string:
-
-=over 4
-
-=item * "solved_all"
-
-=item * "iterating"
-
-=item * "out_of_quotas"
-
-=back
-
-=cut
 
 sub get_final_status
 {
@@ -619,12 +520,6 @@ sub get_final_status
     return $self->_status();
 }
 
-=head2 my $sim_results_obj = $calc_meta_scan->simulate_board($board_idx)
-
-Simulates the board No $board_idx through the scan. Returns a
-L<AI::Pathfinding::OptimizeMultiple::SimulationResults> object.
-
-=cut
 
 sub simulate_board
 {
@@ -703,11 +598,6 @@ sub _trace
     return;
 }
 
-=head2 my $n = $calc_meta_scan->get_total_iters()
-
-Returns the total iterations count so far.
-
-=cut
 
 sub get_total_iters
 {
@@ -788,6 +678,132 @@ sub get_status
     return shift->status();
 }
 
+
+1; # End of AI::Pathfinding::OptimizeMultiple
+
+__END__
+
+=pod
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple
+
+=head1 VERSION
+
+version 0.0.1
+
+=head1 SYNOPSIS
+
+    use AI::Pathfinding::OptimizeMultiple
+
+    my $obj = AI::Pathfinding::OptimizeMultiple->new(
+        {
+            scans =>
+            [
+                {
+                    name => "first_search"
+                },
+                {
+                    name => "second_search",
+                },
+                {
+                    name => "third_search",
+                },
+            ],
+            scans_iters_pdls =>
+            {
+                first_search => $first_search_pdl,
+                second_search => $second_search_pdl,
+            },
+        }
+    );
+
+    my $results = $obj->calc_results();
+
+=head1 DESCRIPTION
+
+This CPAN distribution implements the algorithm described here:
+
+=over 4
+
+=item * L<https://groups.google.com/group/comp.ai.games/msg/41e899e9beea5583?dmode=source&output=gplain&noredirect>
+
+=item * L<http://www.shlomifish.org/lecture/Perl/Lightning/Opt-Multi-Task-in-PDL/>
+
+=back
+
+Given statistics on the performance of several game AI searches (or scans)
+across a representative number of initial cases, find a scan
+that solves most deals with close-to-optimal performance, by using switch
+tasking.
+
+=head2 my $chosen_scans_array_ref = $self->chosen_scans()
+
+Returns the scans that have been chosen to perform the iteration. Each one is
+a AI::Pathfinding::OptimizeMultiple::ScanRun object.
+
+=head2 $calc_meta_scan->calc_meta_scan()
+
+Calculates the meta-scan after initialisation. See here for the details
+of the algorithm:
+
+L<http://www.shlomifish.org/lecture/Freecell-Solver/The-Next-Pres/slides/multi-tasking/best-meta-scan/>
+
+=head2 $self->calc_flares_meta_scan()
+
+This function calculates the flares meta-scan: i.e: assuming that all atomic
+scans are run one after the other and the shortest solutions of all
+successful scans are being picked.
+
+=head2 $calc_meta_scan->calc_board_iters($board_idx)
+
+Calculates the iterations of the board $board_idx in all the scans.
+
+Returns a hash_ref containing the key 'per_scan_iters' for the iterations
+per scan, and 'board_iters' for the total board iterations when ran in the
+scans.
+
+=head2 my $status = $calc_meta_scan->get_final_status()
+
+Returns the status as string:
+
+=over 4
+
+=item * "solved_all"
+
+=item * "iterating"
+
+=item * "out_of_quotas"
+
+=back
+
+=head2 my $sim_results_obj = $calc_meta_scan->simulate_board($board_idx)
+
+Simulates the board No $board_idx through the scan. Returns a
+L<AI::Pathfinding::OptimizeMultiple::SimulationResults> object.
+
+=head2 my $n = $calc_meta_scan->get_total_iters()
+
+Returns the total iterations count so far.
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple
+
+=head1 VERSION
+
+version 0.0.1
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple - optimize path finding searches for a large
+set of initial conditions (for better average performance).
+
+=head1 VERSION
+
+Version 0.0.1
+
 =head1 SEE ALSO
 
 =over 4
@@ -817,5 +833,3 @@ B<popl> from Freenode's #perl for trying to dig some references to an existing
 algorithm in the scientific literature.
 
 =cut
-
-1; # End of AI::Pathfinding::OptimizeMultiple

@@ -3,17 +3,66 @@ package AI::Pathfinding::OptimizeMultiple::Base;
 use strict;
 use warnings;
 
-=head1 NAME
-
-AI::Pathfinding::OptimizeMultiple::Base - a base class.
-
-=cut
 
 use vars qw($VERSION);
 
 $VERSION = '0.0.1';
 
 use Class::XSAccessor;
+
+
+
+sub new
+{
+    my $class = shift;
+    my $self = {};
+    bless $self, $class;
+
+    # May throw an exception.
+    $self->_init(@_);
+
+    return $self;
+}
+
+
+sub mk_accessors
+{
+    my $package = shift;
+    return $package->mk_acc_ref([@_]);
+}
+
+
+sub mk_acc_ref
+{
+    my $package = shift;
+    my $names = shift;
+
+    my $mapping = +{ map { $_ => $_ } @$names };
+
+    eval <<"EOF";
+package $package;
+
+Class::XSAccessor->import(
+    accessors => \$mapping,
+);
+EOF
+
+}
+
+
+1; # End of AI::Pathfinding::OptimizeMultiple::Move
+
+__END__
+
+=pod
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::Base
+
+=head1 VERSION
+
+version 0.0.1
 
 =head1 SYNOPSIS
 
@@ -38,27 +87,23 @@ use Class::XSAccessor;
 This is the base class for L<AI::Pathfinding::OptimizeMultiple> classes.
 Everything is subject to change.
 
-=cut
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::Base
+
+=head1 VERSION
+
+version 0.0.1
+
+=head1 NAME
+
+AI::Pathfinding::OptimizeMultiple::Base - a base class.
 
 =head1 FUNCTIONS
 
 =head2 new($args)
 
 The constructor. Blesses and calls _init() .
-
-=cut
-
-sub new
-{
-    my $class = shift;
-    my $self = {};
-    bless $self, $class;
-
-    # May throw an exception.
-    $self->_init(@_);
-
-    return $self;
-}
 
 =head2 __PACKAGE__->mk_accessors(qw(method1 method2 method3))
 
@@ -67,36 +112,9 @@ It beats running an ugly script on my code, and can be done at run-time.
 
 Gotta love dynamic languages like Perl 5.
 
-=cut
-
-sub mk_accessors
-{
-    my $package = shift;
-    return $package->mk_acc_ref([@_]);
-}
-
 =head2 __PACKAGE__->mk_acc_ref([qw(method1 method2 method3)])
 
 Creates the accessors in the array-ref of names at run-time.
-
-=cut
-
-sub mk_acc_ref
-{
-    my $package = shift;
-    my $names = shift;
-
-    my $mapping = +{ map { $_ => $_ } @$names };
-
-    eval <<"EOF";
-package $package;
-
-Class::XSAccessor->import(
-    accessors => \$mapping,
-);
-EOF
-
-}
 
 =head1 AUTHOR
 
@@ -107,7 +125,6 @@ Shlomi Fish, C<< <shlomif at iglu.org.il> >>
 You can find documentation for this module with the perldoc command.
 
     perldoc AI::Pathfinding::OptimizeMultiple
-
 
 You can also look for information at:
 
@@ -130,7 +147,6 @@ L<http://cpanratings.perl.org/d/Shlomif-FCS-CalcMetaScan>
 L<http://search.cpan.org/dist/Shlomif-FCS-CalcMetaScan>
 
 =back
-
 
 =head1 ACKNOWLEDGEMENTS
 
@@ -160,6 +176,3 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 =cut
-
-1; # End of AI::Pathfinding::OptimizeMultiple::Move
-
