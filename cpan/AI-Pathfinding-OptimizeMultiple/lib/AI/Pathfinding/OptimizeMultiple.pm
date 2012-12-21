@@ -816,4 +816,6 @@ Shlomi Fish, L<http://www.shlomifish.org/> .
 B<popl> from Freenode's #perl for trying to dig some references to an existing
 algorithm in the scientific literature.
 
+=cut
+
 1; # End of AI::Pathfinding::OptimizeMultiple
