@@ -811,48 +811,9 @@ Used here.
 
 Shlomi Fish, L<http://www.shlomifish.org/> .
 
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-ai-pathfinding-optimizemultiple at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=AI-Pathfinding-OptimizeMultiple>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc AI::Pathfinding::OptimizeMultiple
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-AI-Pathfinding-OptimizeMultiple>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Games-AI-Pathfinding-OptimizeMultiple>
-
-=item * MetaCPAN
-
-L<http://search.cpan.org/dist/Games-AI-Pathfinding-OptimizeMultiple>
-
-=back
-
 =head1 ACKNOWLEDGEMENTS
 
 B<popl> from Freenode's #perl for trying to dig some references to an existing
 algorithm in the scientific literature.
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2008 Shlomi Fish.
-
-This program is released under the following license: MIT/X11
-( L<http://www.opensource.org/licenses/mit-license.php> ).
-
-=cut
 
 1; # End of AI::Pathfinding::OptimizeMultiple
