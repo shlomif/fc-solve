@@ -3,21 +3,16 @@
 use strict;
 use warnings;
 
-use Getopt::Long;
-
-use String::ShellQuote;
-use IO::All;
-use Term::ANSIColor;
+use IPC::System::Simple qw(capturex);
 use Games::Solitaire::Verify::Solution;
-use Data::Dumper;
 
-my @fcs_args = @ARGV;
+my @fc_solve_args = @ARGV;
 
 my $variant = "freecell";
 my $candidate;
 
 FIND_VARIANT:
-foreach my $arg (reverse(@fcs_args))
+foreach my $arg (reverse(@fc_solve_args))
 {
     if ($arg eq "-g")
     {
@@ -30,12 +25,18 @@ foreach my $arg (reverse(@fcs_args))
     }
 }
 
-my $args_quoted = shell_quote(@fcs_args);
-my $fcs_output = `fc-solve -p -t -sam -sel $args_quoted`;
+my $fc_solve_output = capturex(qw(fc-solve -p -t -sam -sel), @fc_solve_args);
 
-my $is_solvable = (($fcs_output =~ m{^This game is solveable}ms) ? 1 : 0);
-my $unsolved = (($fcs_output =~ m{^I could not solve}ms) ? 1 : 0);
-my $intractable = (($fcs_output =~ m{^Iterations count exceeded}ms) ? 1 : 0);
+sub _line_found
+{
+    my ($s) = @_;
+
+    return (($fc_solve_output =~ m{^\Q$s\E}ms) ? 1 : 0);
+}
+
+my $is_solvable = _line_found('This game is solveable');
+my $unsolved = _line_found('I could not solve');
+my $intractable = _line_found('Iterations count exceeded');
 
 my @true = (grep { $_ } ($is_solvable, $unsolved, $intractable));
 
@@ -46,8 +47,8 @@ if (! (@true == 1))
 
 if ($is_solvable)
 {
-    open my $input_fh, "<", (\$fcs_output)
-        or die "Cannnot open fcs_output.";
+    open my $input_fh, "<", (\$fc_solve_output)
+        or die "Cannnot open fc_solve_output.";
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => $input_fh,
@@ -61,13 +62,14 @@ if ($is_solvable)
 
     if ($verdict)
     {
-        # "Verdict == " . Dumper($verdict);
+        # require Data::Dumper;
+        # die "Verdict == " . Dumper($verdict);
         die "Invalid solution!";
     }
 }
 
-my ($num_iters) = ($fcs_output =~ m{^Total number of states checked is (\d+)\.$}ms);
-my $sol_len = () = ($fcs_output =~ m{^Move}msg);
+my ($num_iters) = ($fc_solve_output =~ m{^Total number of states checked is (\d+)\.$}ms);
+my $sol_len = () = ($fc_solve_output =~ m{^Move}msg);
 
 print "Verdict: " .
     ($is_solvable ? "Solved"
