@@ -19,7 +19,7 @@ playing card, but is specified at the header).
 
 Suit = One Of{'H','C','D','S' }
 
-Deck = {Integer: from 0 to NUM_DECKS - 1 }
+Deck = {Integer: from 1 to NUM_DECKS }
 
 Card = {
     bool is_empty;
@@ -52,8 +52,8 @@ GamePosition = {
     Column x NUM_COLUMNS;
 }
 
-Column_Idx = {Integer: from 0 to NUM_COLUMNS-1 }
-Freecell_Idx = {Integer: from 0 to NUM_FREECELLS-1 }
+Column_Idx = {Integer: from 1 to NUM_COLUMNS }
+Freecell_Idx = {Integer: from 1 to NUM_FREECELLS }
 
 Source_Or_Dest_Id = union {
     Column_Idx col;
@@ -81,18 +81,27 @@ Move = Struct {
     int num_cards; # Where appropriate;
     Card source_card; # Optional
     Card dest_card; # Optional
-    bool implicit; # Whether this move is done implicitly by an automove.
+    # Whether this move is done implicitly by an automove and in case - which
+    one.
+    enum {
+        NONE,
+        Horne,
+        WKR,
+        ... # More.
+    } automove;
+    bool implicit;
     Comment comment; # Optional
 }
 
 Move_With_Position = Struct {
-    GamePosition pos_before_move;
+    GamePosition pos_before_move; # Optional
     Move move;
 }
 
 Solution = {
-    Move_With_Position moves[0 .. NUM_MOVES - 1];
-    GamePosition final_position;
+    GamePosition start_pos; # Required.
+    Move_With_Position moves[1 .. NUM_MOVES];
+    GamePosition final_position; # Optional
 }
 
 
