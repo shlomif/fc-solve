@@ -1,7 +1,12 @@
 #!/bin/bash
+
+# This script aims to be a template for further scripts for summarizing a
+# range of deals in a table.
+
 for I in `seq 1 8` ; do
-    printf "%-6s| %-25s | %-30s\n" \
+    # printf "%-6s| %-25s | %-30s\n" \
+    printf "%s\t%s\t%s\n" \
         "$I" \
-        "$(./board_gen/pi-make-microsoft-freecell-board -t "$I" | ./scripts/summarize-fc-solve)" \
-        "$(./board_gen/pi-make-microsoft-freecell-board -t "$I" | ./scripts/summarize-fc-solve -- --method a-star)"
+        "$(pi-make-microsoft-freecell-board -t "$I" | summarize-fc-solve)" \
+        "$(pi-make-microsoft-freecell-board -t "$I" | summarize-fc-solve --method a-star)"
 done
