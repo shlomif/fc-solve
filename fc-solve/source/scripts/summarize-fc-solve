@@ -6,6 +6,21 @@ use warnings;
 use IPC::System::Simple qw(capturex);
 use Games::Solitaire::Verify::Solution;
 
+if ($ARGV[0] =~ m{\A-h|--help\z})
+{
+    print <<'EOF';
+summarize-fc-solve [Freecell Solver Args]
+
+Display the solution status, the iterations count and the solution length
+of the Freecell Solver invocation specified by the arguments. Also verifies
+that the solution is true.
+
+The "-g" flag to fc-solve is also used to determine the variant used by the
+solution verifier.
+EOF
+    exit (0);
+}
+
 my @fc_solve_args = @ARGV;
 
 my $variant = "freecell";
