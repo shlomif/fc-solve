@@ -43,7 +43,7 @@ recommended),
 apt-get install subversion cmake make gcc g++ valgrind perl
 --------------------
 +
-* On Mandriva:
+* On Mandriva/Mageia:
 +
 -------------------
 urpmi subversion cmake make gcc g++ valgrind perl perl-devel
@@ -86,14 +86,18 @@ echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bas
 4. Check out the latest Freecell Solver sources:
 +
 -------------------
-svn co https://code.google.com/p/fc-solve/ trunk
+git clone https://bitbucket.org/shlomif/fc-solve
 -------------------
++
+(You can also use http://bundler.caurea.org/ ).
 
-5. +$ cd trunk/fc-solve/source/+
+5. +$ cd fc-solve/fc-solve/source/+
 
-6. Configure the Freecell Solver build
+6. +$ mkdir build ; cd build$
 
-	$ ./Tatzer
+7. Configure the Freecell Solver build
+
+	$ ../Tatzer
 
 7. Build Freecell Solver:
 
@@ -106,8 +110,10 @@ svn co https://code.google.com/p/fc-solve/ trunk
 Style Guidelines
 ----------------
 
-Freecell Solver uses its own style based on the preferences of its primary
-author (Shlomi Fish). Some guidelines for the style will be given here.
+Freecell Solver uses its own style (largely based on the Allman style:
+http://en.wikipedia.org/wiki/Indent_style#Allman_style ),
+based on the preferences of its primary author (Shlomi Fish). Some guidelines
+for the style will be given here.
 
 4 Spaces for Indentation
 ~~~~~~~~~~~~~~~~~~~~~~~~
