@@ -115,3 +115,9 @@ dbm_fc_solver.
 way to improve the delta states algorithm, so states will be stored more
 compactly. Currently implemented in the dbm_fc_solver. See
 http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1115 .
+
+* *Alon Zakai* ( http://github.com/kripken ) - maintainer of
+https://github.com/kripken/emscripten[emscripten], which allows to convert
+LLVM bitcode (and ergo code in C, C++ and other languages) into JavaScript.
+Inspired some changes to make Freecell Solver’s build-process more
+user-friendly and idiot-proof.
