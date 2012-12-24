@@ -571,17 +571,21 @@ FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 
 SET (DBM_FCC_COMMON app_str.c card.c meta_alloc.c state.c)
 
-SET (DEBONDT_DELTA_STATES )
-IF (FCS_ENABLE_DBM_SOLVER)
+MACRO (MY_FIND_GMP reason_why my_option)
     FIND_LIBRARY(LIBGMP_LIB gmp)
 
     IF (NOT LIBGMP_LIB)
         MESSAGE (FATAL_ERROR
-"You must install libgmp ( http://gmplib.org/ ) and its development package to build the DBM solver.
-If you're not interested in building it, run cmake with the -DFCS_ENABLE_DBM_SOLVER= flag."
+"You must install libgmp ( http://gmplib.org/ ) and its development package ${reason_why}.
+If you're not interested in building it, run cmake with the -D${my_option}= flag."
         )
     ENDIF (NOT LIBGMP_LIB)
+ENDMACRO (MY_FIND_GMP reason_why my_option)
 
+SET (DEBONDT_DELTA_STATES )
+IF (FCS_ENABLE_DBM_SOLVER)
+
+    MY_FIND_GMP ("to build the DBM solver." "FCS_ENABLE_DBM_SOLVER")
     ADD_DEFINITIONS("-DFCS_DEBONDT_DELTA_STATES=1")
     SET (DEBONDT_DELTA_STATES 1)
 

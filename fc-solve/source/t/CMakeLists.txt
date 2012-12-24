@@ -30,7 +30,13 @@ ENDMACRO(MY_ADD_EXE EXE_FILE C_FILE)
 IF (FCS_WITH_TEST_SUITE)
 
     FIND_LIBRARY(LIBTAP_LIB tap)
-    FIND_LIBRARY(LIBGMP_LIB gmp)
+    IF (NOT LIBTAP_LIB)
+        MESSAGE (FATAL_ERROR
+"You must install libtap ( http://www.shlomifish.org/open-source/projects/libtap/ ) and its development package or headers to run the test suite.
+If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUITE= flag."
+    )
+    ENDIF (NOT LIBTAP_LIB)
+    MY_FIND_GMP ("to run the test suite." "FCS_WITH_TEST_SUITE")
 
     INCLUDE_DIRECTORIES (BEFORE "${CMAKE_BINARY_DIR}")
 
