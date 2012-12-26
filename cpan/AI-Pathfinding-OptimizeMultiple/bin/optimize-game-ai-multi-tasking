@@ -1,0 +1,39 @@
+#!/usr/bin/perl
+
+# This is for Pod::Weaver:
+# PODNAME: optimize-game-ai-multi-tasking
+
+use strict;
+use warnings;
+
+use Carp;
+
+$SIG{__WARN__} = sub {
+    confess($_[0]);
+};
+
+$SIG{__DIE__} = sub {
+    confess($_[0]);
+};
+
+use AI::Pathfinding::OptimizeMultiple;
+
+my $iface = AI::Pathfinding::OptimizeMultiple->new();
+$iface->run();
+
+1;
+
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+optimize-game-ai-multi-tasking - command line driver for L<AI::Pathfinding::OptimizeMultiple>
+
+=head1 DESCRIPTION
+
+To be written.
+
+=cut
+

@@ -522,14 +522,6 @@ __END__
 
 =head1 NAME
 
-AI::Pathfinding::OptimizeMultiple::CmdLine
-
-=head1 NAME
-
-AI::Pathfinding::OptimizeMultiple::CmdLine
-
-=head1 NAME
-
 AI::Pathfinding::OptimizeMultiple::CmdLine - the command line application class.
 
 =head1 VERSION
