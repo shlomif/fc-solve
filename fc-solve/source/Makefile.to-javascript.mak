@@ -4,7 +4,7 @@ endif
 
 TEST_HTML = my-modified-fc-solve-test.html
 RESULT_NODE_JS_EXE = fc-solve.js
-RESULT_JS_LIB = libfreecell-solver.js
+RESULT_JS_LIB = libfreecell-solver.html
 RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 
@@ -19,7 +19,7 @@ LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.bc,$(LIB_C_FILES))
 all: $(TEST_HTML) $(RESULT_NODE_JS_EXE) $(RESULT_JS_LIB)
 
 CFLAGS = -g -I ./build -I . -m32 -std=gnu99
-EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" $(CFLAGS)
+EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" -s LINKABLE=1 $(CFLAGS)
 
 EMCC_POST_FLAGS := --embed-file 24.board $(patsubst %,--embed-file %,$(shell ack -af ~/apps/fcs-for-pysol/share/freecell-solver/))
 
