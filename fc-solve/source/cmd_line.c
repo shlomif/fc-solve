@@ -136,6 +136,10 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
                 {
                     *args_man = fc_solve_args_man_alloc();
                     fc_solve_args_man_chop(*args_man, line+8);
+#if 0
+                    fprintf(stderr, "man_chop for <<<%s>>>\n", line);
+                    fflush(stderr);
+#endif
                     ret_code = 0;
                     goto have_preset;
                 }
@@ -172,6 +176,53 @@ have_preset:
     return ret_code;
 }
 
+DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
+    void * instance,
+    const char * const preset_name,
+    freecell_solver_str_t * known_parameters,
+    char * * error_string,
+    int file_nesting_count,
+    freecell_solver_str_t opened_files_dir
+)
+{
+    int status;
+    args_man_t * preset_args;
+    char * dir = NULL;
+
+    status = read_preset(preset_name, &preset_args, &dir, NULL);
+    if (status != 0)
+    {
+        return FCS_CMD_LINE_ERROR_IN_ARG;
+    }
+    else
+    {
+        int ret;
+        int last_arg = 0;
+
+        ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+            instance,
+            preset_args->argc,
+            (freecell_solver_str_t *)(void *)(preset_args->argv),
+            0,
+            known_parameters,
+            NULL,
+            NULL,
+            error_string,
+            &(last_arg),
+            ((file_nesting_count < 0) ? file_nesting_count : (file_nesting_count-1)),
+            dir ? dir : opened_files_dir
+        );
+
+        if (dir)
+        {
+            free(dir);
+        }
+        fc_solve_args_man_free(preset_args);
+
+        return ret;
+
+    }
+}
 
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
@@ -199,25 +250,28 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     for (arg = &(argv[start_arg]) ; arg < arg_argc ; arg++)
     {
         /* First check for the parameters that the user recognizes */
-        known_param = known_parameters;
-        while((*known_param) && strcmp(*known_param, (*arg)))
+        if (known_parameters)
         {
-            known_param++;
-        }
-        if ((*known_param) != NULL )
-        {
-            int ret;
-
-            const int callback_ret = callback(instance, argc, argv, arg-&(argv[0]), &num_to_skip, &ret, callback_context);
-            if (callback_ret == FCS_CMD_LINE_SKIP)
+            known_param = known_parameters;
+            while((*known_param) && strcmp(*known_param, (*arg)))
             {
-                arg += num_to_skip-1;
-                continue;
+                known_param++;
             }
-            else if (callback_ret == FCS_CMD_LINE_STOP)
+            if ((*known_param) != NULL )
             {
-                *last_arg = arg-&(argv[0]);
-                return ret;
+                int ret;
+
+                const int callback_ret = callback(instance, argc, argv, arg-&(argv[0]), &num_to_skip, &ret, callback_context);
+                if (callback_ret == FCS_CMD_LINE_SKIP)
+                {
+                    arg += num_to_skip-1;
+                    continue;
+                }
+                else if (callback_ret == FCS_CMD_LINE_STOP)
+                {
+                    *last_arg = arg-&(argv[0]);
+                    return ret;
+                }
             }
         }
 
@@ -1770,53 +1824,30 @@ break;
         {
             PROCESS_OPT_ARG() ;
 
+            int ret = freecell_solver_user_cmd_line_read_cmd_line_preset(
+                instance,
+                (*arg),
+                known_parameters,
+                error_string,
+                file_nesting_count,
+                opened_files_dir
+            );
+
+            if (ret == FCS_CMD_LINE_ERROR_IN_ARG)
             {
-                int status;
-                args_man_t * preset_args;
-                char * dir = NULL;
+                char * err_str = SMALLOC(err_str, strlen((*arg)) + 100);
+                sprintf(err_str, "Unable to load the \"%s\" configuration!\n", (*arg));
+                *error_string = err_str;
 
-                status = read_preset((*arg), &preset_args, &dir, NULL);
-                if (status != 0)
-                {
-                    char * err_str = SMALLOC(err_str, strlen((*arg)) + 100);
-                    sprintf(err_str, "Unable to load the \"%s\" configuration!\n", (*arg));
-                    *error_string = err_str;
-
-                    RET_ERROR_IN_ARG() ;
-                }
-                else
-                {
-                    int ret;
-
-                    ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-                        instance,
-                        preset_args->argc,
-                        (freecell_solver_str_t *)(void *)(preset_args->argv),
-                        0,
-                        known_parameters,
-                        callback,
-                        callback_context,
-                        error_string,
-                        last_arg,
-                        ((file_nesting_count < 0) ? file_nesting_count : (file_nesting_count-1)),
-                        dir ? dir : opened_files_dir
-                        );
-
-                    if (dir)
-                    {
-                        free(dir);
-                    }
-                    fc_solve_args_man_free(preset_args);
-
-                    if (ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
-                    {
-                        /* Do nothing - continue */
-                    }
-                    else if (ret != FCS_CMD_LINE_OK)
-                    {
-                        return ret;
-                    }
-                }
+                RET_ERROR_IN_ARG() ;
+            }
+            else if (ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
+            {
+                /* Do nothing - continue */
+            }
+            else if (ret != FCS_CMD_LINE_OK)
+            {
+                return ret;
             }
         }
         break;
