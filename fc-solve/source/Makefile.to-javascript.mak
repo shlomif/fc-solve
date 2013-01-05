@@ -18,8 +18,21 @@ LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.bc,$(LIB_C_FILES))
 
 all: $(TEST_HTML) $(RESULT_NODE_JS_EXE) $(RESULT_JS_LIB)
 
+NEEDED_FUNCTIONS = \
+	freecell_solver_user_alloc \
+	freecell_solver_user_cmd_line_read_cmd_line_preset \
+	freecell_solver_user_current_state_as_string \
+	freecell_solver_user_current_state_as_string \
+	freecell_solver_user_get_next_move \
+	freecell_solver_user_move_ptr_to_string_w_state \
+	freecell_solver_user_solve_board \
+	malloc \
+
+NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV)' $(NEEDED_FUNCTIONS))
+
 CFLAGS = -g -I ./build -I . -m32 -std=gnu99
-EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" -s LINKABLE=1 $(CFLAGS)
+# EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" -s LINKABLE=1 $(CFLAGS)
+EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 
 EMCC_POST_FLAGS := --embed-file 24.board $(patsubst %,--embed-file %,$(shell ack -af ~/apps/fcs-for-pysol/share/freecell-solver/))
 
@@ -40,3 +53,6 @@ $(TEST_HTML): $(RESULT_HTML) $(PROCESS_PL)
 
 clean:
 	rm -f $(LLVM_BITCODE_FILES) $(RESULT_HTML) $(RESULT_NODE_JS_EXE)
+
+%.show:
+	@echo "$* = $($*)"
