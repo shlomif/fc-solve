@@ -66,6 +66,15 @@ Makefile.to-javascript.mak to this directory.
     });
   }
 
+var freecell_solver_user_alloc = Module.cwrap('freecell_solver_user_alloc', 'number', []);
+var freecell_solver_user_solve_board = Module.cwrap('freecell_solver_user_solve_board', 'number', ['number', 'string']);
+var freecell_solver_user_cmd_line_read_cmd_line_preset = Module.cwrap('freecell_solver_user_cmd_line_read_cmd_line_preset', 'number', ['number', 'string', 'number', 'number', 'number', 'string']);
+var malloc = Module.cwrap('malloc', 'number', ['number']);
+var freecell_solver_user_current_state_as_string = Module.cwrap('freecell_solver_user_current_state_as_string', 'string', ['number', 'number', 'number', 'number']);
+var freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_next_move', 'number', ['number', 'number']);
+var freecell_solver_user_current_state_as_string = Module.cwrap('freecell_solver_user_current_state_as_string', 'string', ['number', 'number', 'number', 'number']);
+var freecell_solver_user_move_ptr_to_string_w_state = Module.cwrap('freecell_solver_user_move_ptr_to_string_w_state', 'string', ['number', 'number', 'number']);
+
 function do_solve() {
     var out = $("#fc_solve_output");
 
@@ -74,19 +83,24 @@ function do_solve() {
     out.text("");
 
     // TODO : prevent memory leaks.
-    // TODO : add support for presets.
-    // TODO : more robust error-handling.
-    var obj = Module.ccall('freecell_solver_user_alloc', 'number', [], []);
-    var solve_err_code = Module.ccall(
-        'freecell_solver_user_solve_board',
-        'number',
-        ['number', 'string'],
-        [obj, $("#stdin").val()]
+    // TODO : add support for (more) presets.
+    // TODO : more robust error-handling / check for errors.
+    var obj = freecell_solver_user_alloc();
+
+    var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(obj, 'as', 0, 0, 0, null);
+
+    // Removed for debugging purposes.
+    // alert("preset_ret = " + preset_ret);
+
+    var solve_err_code = freecell_solver_user_solve_board(
+        obj, $("#stdin").val()
     );
-    var move_buffer = Module.ccall('malloc', 'number', ['number'], [128]);
+
+    // 128 bytes are enough to hold a move.
+    var move_buffer = malloc(128);
 
     var get_state_str = function () {
-        return Module.ccall('freecell_solver_user_current_state_as_string', 'string', ['number', 'number', 'number', 'number'], [obj, 1, 0, 1]);
+        return freecell_solver_user_current_state_as_string(obj, 1, 0, 1);
     };
 
     var my_append = function (str) {
@@ -98,9 +112,9 @@ function do_solve() {
         my_append ( state_as_string + "\n\n");
     })();
 
-    while ((move_ret_code = Module.ccall('freecell_solver_user_get_next_move', 'number', ['number', 'number'], [obj, move_buffer])) == 0) {
-        var state_as_string = Module.ccall('freecell_solver_user_current_state_as_string', 'string', ['number', 'number', 'number', 'number'], [obj, 1, 0, 1]);
-        var move_as_string = Module.ccall('freecell_solver_user_move_ptr_to_string_w_state', 'string', ['number', 'number', 'number'], [obj, move_buffer, 0]);
+    while ((move_ret_code = freecell_solver_user_get_next_move(obj, move_buffer)) == 0) {
+        var state_as_string = freecell_solver_user_current_state_as_string(obj, 1, 0, 1);
+        var move_as_string = freecell_solver_user_move_ptr_to_string_w_state(obj, move_buffer, 0);
 
         my_append(move_as_string + "\n\n" + state_as_string + "\n\n");
     }
