@@ -30,9 +30,13 @@ NEEDED_FUNCTIONS = \
 
 NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV)' $(NEEDED_FUNCTIONS))
 
-CFLAGS = -g -I ./build -I . -m32 -std=gnu99
+# OPT_FLAGS = -g
+OPT_FLAGS = -O2
+
+CFLAGS = $(OPT_FLAGS) -I ./build -I . -m32 -std=gnu99
 # EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" -s LINKABLE=1 $(CFLAGS)
-EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
+# EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
+EMCC_CFLAGS = -s total_memory="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 
 EMCC_POST_FLAGS := --embed-file 24.board $(patsubst %,--embed-file %,$(shell ack -af ~/apps/fcs-for-pysol/share/freecell-solver/))
 
