@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Emscripten-Generated Code</title>
+    <style>
+      .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+      canvas.emscripten { border: 1px solid black; }
+      textarea.emscripten { font-family: monospace; width: 80%; }
+      div.emscripten { text-align: center; }
+  </style>
+<!--
+Please symlink or copy the libfreecell-solver.js as generated from
+Makefile.to-javascript.mak to this directory.
+-->
+
+<script type="text/javascript" src="libfreecell-solver.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+</head>
+  <body>
+    <hr/>
+    <div class="emscripten" id="status">Downloading...</div>
+    <div class="emscripten">
+      <progress value="0" max="100" id="progress" hidden=1></progress>
+    </div>
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+<strong>Input:</strong>
+<textarea class="emscripten" id="stdin" rows="10"></textarea>
+<button id="run_do_solve" onclick="javascript:do_solve()">Solve!</button>
+
+    <hr/>
+    <div class="emscripten"><input type="button" value="fullscreen" onclick="Module.requestFullScreen()"></div>
+    <hr/>
+    <textarea class="emscripten" id="output" rows="8"></textarea>
+    <hr>
+<script type="text/javascript">
+function do_solve() {
+    var out = $("#output");
+
+    // Clear to get a fresh solution.
+    out.val("");
+
+    // TODO : prevent memory leaks.
+    // TODO : add support for presets.
+    // TODO : more robust error-handling.
+    var obj = Module.ccall('freecell_solver_user_alloc', 'number', [], []);
+    var solve_err_code = Module.ccall(
+        'freecell_solver_user_solve_board',
+        'number',
+        ['number', 'string'],
+        [obj, $("#stdin").val()]
+    );
+    var move_buffer = Module.ccall('malloc', 'number', ['number'], [128]);
+
+    var get_state_str = function () {
+        return Module.ccall('freecell_solver_user_current_state_as_string', 'string', ['number', 'number', 'number', 'number'], [obj, 1, 0, 1]);
+    };
+
+    var my_append = function (str) {
+        out.val(out.val() + str);
+    };
+
+    (function () {
+        var state_as_string = get_state_str();
+        my_append ( state_as_string + "\n\n");
+    })();
+
+    while ((move_ret_code = Module.ccall('freecell_solver_user_get_next_move', 'number', ['number', 'number'], [obj, move_buffer])) == 0) {
+        var state_as_string = Module.ccall('freecell_solver_user_current_state_as_string', 'string', ['number', 'number', 'number', 'number'], [obj, 1, 0, 1]);
+        var move_as_string = Module.ccall('freecell_solver_user_move_ptr_to_string_w_state', 'string', ['number', 'number', 'number'], [obj, move_buffer, 0]);
+
+        my_append(move_as_string + "\n\n" + state_as_string + "\n\n");
+    }
+
+    return;
+}
+
+</script>
+  </body>
+</html>

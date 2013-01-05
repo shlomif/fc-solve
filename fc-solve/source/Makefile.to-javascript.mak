@@ -4,7 +4,7 @@ endif
 
 TEST_HTML = my-modified-fc-solve-test.html
 RESULT_NODE_JS_EXE = fc-solve.js
-RESULT_JS_LIB = libfreecell-solver.html
+RESULT_JS_LIB = libfreecell-solver.js
 RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 
