@@ -50,6 +50,24 @@ Makefile.to-javascript.mak to this directory.
 </div>
 <pre class="output" id="fc_solve_output">
 </pre>
+<h2 id="credits">Credits</h2>
+<ul>
+<li>
+<p>
+<a href="https://github.com/kripken">Alon Zakai</a> - writing
+<a href="https://github.com/kripken/emscripten">emscripten</a>, the
+LLVM-to-JavaScript compiler that was used to prepare this page, based
+on the original C (gnu99) source, and answering some bug reports and questions
+I filed about it.
+</p>
+</li>
+<li>
+<p>
+<a href="http://garage-coding.com/">Stefan Petrea</a> - inspired the
+implementation of the populate-with-sample-board button.
+</p>
+</li>
+</ul>
     <hr>
 <script type="text/javascript">
  var entityMap = {
@@ -123,6 +141,8 @@ function do_solve() {
     return;
 }
 
+// Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
+// feature.
 function populate_input_with_sample_board() {
     $("#stdin").val("9D 6S 4D AH 5C 4H KH\nJH JC JS 7S 6D AC 4S\nAD 8D AS 2H KC KD 7H\nKS 10S 9S 8H JD QD 3H\n10C 4C 2S 5D 3S 6H\n3C QC 5S QS QH 7D\n9H 5H 7C 6C 3D 10D\n2C 8C 8S 10H 2D 9C\n");
 }
