@@ -16,7 +16,7 @@ all: $(TEST_HTML) $(RESULT_NODE_JS_EXE)
 
 CFLAGS = -g -I ./build -I . -m32 -std=gnu99
 
-EMCC_POST_FLAGS = --embed-file 24.board
+EMCC_POST_FLAGS := --embed-file 24.board $(patsubst %,--embed-file %,$(shell ack -af ~/apps/fcs-for-pysol/share/freecell-solver/))
 
 $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 	clang $(CFLAGS) -emit-llvm $< -c -o $@
