@@ -17,7 +17,8 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
 
-HTMLS = $(D)/code-of-conduct/index.html $(D)/faq.html $(D)/index.html $(D)/links.html $(D)/download.html $(D)/support.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/docs/Well-and-Wall.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html $(D)/current-status.html $(D)/getting-credit.html $(D)/verify-code/index.html $(D)/js-fc-solve/text/index.html
+HTMLS = $(D)/code-of-conduct/index.html $(D)/faq.html $(D)/index.html $(D)/links.html $(D)/download.html $(D)/support.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/docs/Well-and-Wall.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html $(D)/current-status.html $(D)/getting-credit.html $(D)/verify-code/index.html $(D)/js-fc-solve/index.html $(D)/js-fc-solve/text/index.html
+
 
 TTMLS = $(D)/style.css
 

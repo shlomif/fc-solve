@@ -1,0 +1,12 @@
+#include '../template.wml'
+
+<latemp_subject "Online Demos of Freecell Solver" />
+
+<h2 id="text-based"><a href="text/">Text-based version</a></h2>
+
+<h2 id="rich-webui-based">Rich Web-UI</h2>
+
+<p>
+We are working on a Rich Web User-interface version based on
+<a href="http://www.solitairey.com/">Solitairey</a> but it will take a while.
+</p>
