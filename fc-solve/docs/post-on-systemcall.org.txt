@@ -1,0 +1,18 @@
+Posted to:
+
+http://www.systemcall.org/blog/2011/09/freecell-puzzles-solver-api/#comment-889
+
+Hi,
+
+thanks for sharing this post - I added it and a link to your solver to the bottom of the <a href="http://fc-solve.shlomifish.org/links.html#other_solvers">other Solitaire solvers list</a> on <a href="http://fc-solve.shlomifish.org/">Freecell Solver's homepage</a>, where Freecell Solver is the (unfortunately) not too original name of some libraries and some command line programs, that attempt to solve Freecell and similar Solitaire games, all available as free and open source software (FOSS), under the MIT/X11 licence.
+
+I haven't taken a closer look at the code, but judging by the license.txt in <a href="https://github.com/rengolin/code">the master repository</a> it should be GPLv3, which is something that while I can read to get some ideas from, I cannot incorporate directly into my solver.
+
+Anyway, if you're interested in discussing automated and non-automated solving and research of Freecell and some other card games, you are welcome to join <a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/">the fc-solve-discuss Yahoo Group</a> (usable as a mailing list, but also possibly as a web forum) and introduce yourself. There are plenty of interesting discussions there, and it became more active recently. I administer the group but everyone is welcome to subscribe, read the pas messages, and post new ones, as long as they are not spam (which I assume is not the case for you).
+
+The parallels you make at the bottom of the post between Freecell are interesting, but maybe I'm too tired now to understand them. I often find that I have a hard time for me to understand people, who try to explain their solvers techniques, and it seems that while writing a rudimentary Freecell solver can be done pretty quickly, that's just the tip of the iceberg, and there are many interesting and non-trivial techniques available.
+
+Regards,
+
+Shlomi Fish 
+
