@@ -18,6 +18,9 @@
             height: 50em;
             width: 70em;
       }
+      #populate_input {
+            float: right;
+      }
   </style>
 <!--
 Please symlink or copy the libfreecell-solver.js as generated from
@@ -33,23 +36,26 @@ Makefile.to-javascript.mak to this directory.
     <div class="disabled">
     <div class="emscripten" id="status">Downloading...</div>
     <div class="emscripten">
-      <progress value="0" max="100" id="progress" hidden=1></progress>
+      <progress value="0" max="100" id="progress"></progress>
     </div>
     <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
     </div>
-<button id="run_do_solve" onclick="javascript:populate_input_with_sample_board()">Populate with Sample Board (MS #1941)</button>
 <strong>Input:</strong>
 <textarea class="emscripten" id="stdin" rows="10"></textarea>
+<hr />
 <button id="run_do_solve" onclick="javascript:do_solve()">Solve!</button>
+<button id="populate_input" onclick="javascript:populate_input_with_sample_board()" title="Populate Input with the layout of the Microsoft Windows Freecell #1941 board">Populate with Sample Board</button>
 
     <hr/>
 <div class="disabled">
     <div class="emscripten"><input type="button" value="fullscreen" onclick="Module.requestFullScreen()"></div>
     <hr/>
-    <textarea class="emscripten" id="output" rows="8"></textarea>
 </div>
+    <textarea class="emscripten" id="output" rows="8"></textarea>
+    <div class="disabled">
 <pre class="output" id="fc_solve_output">
 </pre>
+</div>
 <h2 id="credits">Credits</h2>
 <ul>
 <li>
@@ -94,12 +100,14 @@ var freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_
 var freecell_solver_user_current_state_as_string = Module.cwrap('freecell_solver_user_current_state_as_string', 'string', ['number', 'number', 'number', 'number']);
 var freecell_solver_user_move_ptr_to_string_w_state = Module.cwrap('freecell_solver_user_move_ptr_to_string_w_state', 'string', ['number', 'number', 'number']);
 
+var remove_trailing_space_re = /[ \t]+$/gm;
+
 function do_solve() {
-    var out = $("#fc_solve_output");
+    var out = $("#output");
 
     // Clear to get a fresh solution.
     // out.val("");
-    out.text("");
+    // out.text("");
 
     // TODO : prevent memory leaks.
     // TODO : add support for (more) presets.
@@ -122,8 +130,11 @@ function do_solve() {
         return freecell_solver_user_current_state_as_string(obj, 1, 0, 1);
     };
 
+    var out_buffer = '';
+
     var my_append = function (str) {
-        out.append(escapeHtml(str));
+        out_buffer = out_buffer + str;
+        // out.append(escapeHtml(str));
     };
 
     (function () {
@@ -138,13 +149,15 @@ function do_solve() {
         my_append(move_as_string + "\n\n" + state_as_string + "\n\n");
     }
 
+    out.val(out_buffer.replace(remove_trailing_space_re, ''));
+
     return;
 }
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
 // feature.
 function populate_input_with_sample_board() {
-    $("#stdin").val("9D 6S 4D AH 5C 4H KH\nJH JC JS 7S 6D AC 4S\nAD 8D AS 2H KC KD 7H\nKS 10S 9S 8H JD QD 3H\n10C 4C 2S 5D 3S 6H\n3C QC 5S QS QH 7D\n9H 5H 7C 6C 3D 10D\n2C 8C 8S 10H 2D 9C\n");
+    $("#stdin").val(": 9D 6S 4D AH 5C 4H KH\n: JH JC JS 7S 6D AC 4S\n: AD 8D AS 2H KC KD 7H\n: KS 10S 9S 8H JD QD 3H\n: 10C 4C 2S 5D 3S 6H\n: 3C QC 5S QS QH 7D\n: 9H 5H 7C 6C 3D 10D\n: 2C 8C 8S 10H 2D 9C\n");
 }
 </script>
   </body>
