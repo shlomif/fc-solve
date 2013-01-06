@@ -26,6 +26,7 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_current_state_as_string \
 	freecell_solver_user_free \
 	freecell_solver_user_get_next_move \
+	freecell_solver_user_limit_iterations \
 	freecell_solver_user_move_ptr_to_string_w_state \
 	freecell_solver_user_solve_board \
 	malloc \
@@ -38,9 +39,9 @@ NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" 
 OPT_FLAGS =
 
 CFLAGS = $(OPT_FLAGS) -I ./build -I . -m32 -std=gnu99
-# EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" -s LINKABLE=1 $(CFLAGS)
-# EMCC_CFLAGS = --jcache -s total_memory="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
-EMCC_CFLAGS = -s total_memory="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
+# EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s LINKABLE=1 $(CFLAGS)
+# EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
+EMCC_CFLAGS = -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 
 EMCC_POST_FLAGS := --embed-file 24.board $(patsubst %,--embed-file %,$(shell ack -af ~/apps/fcs-for-pysol/share/freecell-solver/))
 

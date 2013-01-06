@@ -22,6 +22,7 @@ var freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_
 var freecell_solver_user_current_state_as_string = Module.cwrap('freecell_solver_user_current_state_as_string', 'number', ['number', 'number', 'number', 'number']);
 var freecell_solver_user_move_ptr_to_string_w_state = Module.cwrap('freecell_solver_user_move_ptr_to_string_w_state', 'number', ['number', 'number', 'number']);
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
+var freecell_solver_user_limit_iterations = Module.cwrap('freecell_solver_user_limit_iterations', 'number', ['number', 'number']);
 
 var remove_trailing_space_re = /[ \t]+$/gm;
 
@@ -50,6 +51,8 @@ function do_solve() {
             return;
         }
     }
+
+    freecell_solver_user_limit_iterations(obj, 128*1024);
 
     // Removed for debugging purposes.
     // alert("preset_ret = " + preset_ret);
