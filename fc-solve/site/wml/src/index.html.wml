@@ -7,16 +7,6 @@
 <li><a href="links.html#other_solvers">Other Solvers</a></li>
 </ul>
 
-<define-tag web_advertisers_net_fc_solve_homepage_link>
-;;; Sponsored by David Wise &lt;david@web-advertisers.net&gt;
-;;; Remove or renew at 7-February-2012
-You won't find a
-<a href="http://www.kingsolomons.com/uk/">casino</a> that offers Freecell
-but you
-can apply the skills here to card games they do
-offer such as poker and blackjack.
-</define-tag>
-
 <p>
 This is Freecell Solver - a program that automatically solves layouts of
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
@@ -30,7 +20,6 @@ and open source software</a> freely available under the
 <a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 License</a>.
 It is written in ANSI C and requires a C compiler to be built.  Nevertheless,
 binaries for Microsoft Windows 32-bit are available.
-<web_advertisers_net_fc_solve_homepage_link />
 </p>
 
 <p>
