@@ -10,6 +10,8 @@ WML_FLAGS = -DBERLIOS=BERLIOS
 
 #D = /home/httpd/html/ip-noise
 
+JSMIN = scripts/jsmin
+
 IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js downloads/*/*.xz))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
@@ -48,9 +50,10 @@ WML_FLAGS += --passoption=2,-X3074 \
 	-I $${HOME}/apps/wml
 
 LIBFREECELL_SOLVER_JS_DIR = lib/fc-solve-for-javascript
-LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfrecell-solver.js
+LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfreecell-solver.js
+DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
 
-dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(LIBFREECELL_SOLVER_JS)
+dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS)
 
 $(SUBDIRS) :: % :
 	@if [ ! -e $@ ] ; then \
@@ -83,6 +86,13 @@ FC_SOLVE_SOURCE_DIR := $(PWD)/../../source
 
 $(LIBFREECELL_SOLVER_JS):
 	( cd $(LIBFREECELL_SOLVER_JS_DIR) && make -j4 -f $(FC_SOLVE_SOURCE_DIR)/Makefile.to-javascript.mak SRC_DIR=$(FC_SOLVE_SOURCE_DIR) )
+
+$(JSMIN): lib/jsmin/jsmin.c
+	gcc -o $@ -O2 -Wall $<
+
+
+$(DEST_LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS) $(JSMIN)
+	$(JSMIN) < $(LIBFREECELL_SOLVER_JS) > $(DEST_LIBFREECELL_SOLVER_JS)
 
 .PHONY:
 
