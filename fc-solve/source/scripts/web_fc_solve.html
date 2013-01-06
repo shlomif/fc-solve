@@ -54,7 +54,21 @@ Makefile.to-javascript.mak to this directory.
 <script type="text/javascript" src="web-fc-solve.js"></script>
 </head>
   <body>
-  <h1>Use Freecell Solver On the Web</h1>
+  <h1>Web-Interface to Freecell Solver (text based)</h1>
+
+<h2 id="about">About</h2>
+
+<p>
+This is a web-based interface to
+<a href="http://fc-solve.shlomifish.org/">Freecell Solver</a>, that was
+translated from the C source code to JavaScript, by using
+<a href="https://github.com/kripken/emscripten">emscripten</a>. It requires
+<strong>JavaScript</strong> to be <strong>enabled</strong> for this domain,
+and like Freecell Solver, is open-source software under the permissive
+MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
+</p>
+
+
     <hr/>
     <div class="disabled">
     <div class="emscripten" id="status">Downloading...</div>
@@ -90,6 +104,24 @@ Makefile.to-javascript.mak to this directory.
 <pre class="output" id="fc_solve_output">
 </pre>
 </div>
+
+<h2 id="how_to_use">How to Use</h2>
+
+<p>
+Enter a board in <a href="#stdin">input</a> in
+<a href="http://fc-solve.shlomifish.org/docs/distro/README.html">Freecell
+Solver’s input format</a> with each line of input representing a column (or
+stack) of cards. Freecells and foundations can also be specified. A sample
+layout can be input using the <a href="#populate_input">populate with sample
+board button</a>. Press the <a href="#run_do_solve">“Solve” button</a> to
+run the solver, and assuming it was successful, you will be able to read
+or copy the output from <a href="#output">the output box</a>.
+</p>
+
+<p>
+Enjoy!
+</p>
+
 <h2 id="credits">Credits</h2>
 <ul>
 <li>
