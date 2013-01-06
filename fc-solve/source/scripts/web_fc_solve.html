@@ -111,12 +111,22 @@ function do_solve() {
     // out.val("");
     // out.text("");
 
-    // TODO : prevent memory leaks.
     // TODO : add support for (more) presets.
-    // TODO : more robust error-handling / check for errors.
     var obj = freecell_solver_user_alloc();
 
-    var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(obj, 'as', 0, 0, 0, null);
+    if (obj == 0) {
+        alert ("Could not allocate solver instance (out of memory?)");
+        return;
+    }
+
+    var cmd_line_preset = 'as';
+
+    var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(obj, cmd_line_preset, 0, 0, 0, null);
+
+    if (preset_ret != 0) {
+        alert ("Failed to load command line preset '" + cmd_line_preset + "'. Should not happen.");
+        return;
+    }
 
     // Removed for debugging purposes.
     // alert("preset_ret = " + preset_ret);
@@ -125,11 +135,26 @@ function do_solve() {
         obj, $("#stdin").val()
     );
 
+    if (solve_err_code != 0) {
+        alert ("Failed to solve board (invalid layout?)");
+        return;
+    }
+
     // 128 bytes are enough to hold a move.
     var move_buffer = malloc(128);
 
+    if (move_buffer == 0) {
+        alert ("Failed to allocate a buffer for the move (out of memory?)");
+        return;
+    }
+
     var get_state_str = function () {
         var ptr = freecell_solver_user_current_state_as_string(obj, 1, 0, 1);
+
+        if (ptr == 0) {
+            alert ("Failed to retrieve the current state (out of memory?)");
+            throw "Foo";
+        }
         var ret_string = Pointer_stringify(ptr);
         c_free(ptr);
         return ret_string;
@@ -147,9 +172,16 @@ function do_solve() {
         my_append ( state_as_string + "\n\n");
     })();
 
+    var move_ret_code;
     while ((move_ret_code = freecell_solver_user_get_next_move(obj, move_buffer)) == 0) {
         var state_as_string = get_state_str();
         var move_as_string_ptr = freecell_solver_user_move_ptr_to_string_w_state(obj, move_buffer, 0);
+
+        if (move_as_string_ptr == 0) {
+            alert ("Failed to retrieve the current move as string (out of memory?)");
+            throw "Foo";
+        }
+
         var move_as_string = Pointer_stringify(move_as_string_ptr);
         c_free (move_as_string_ptr);
 
