@@ -42,6 +42,51 @@ alt="PayPal Donate" class="paypal"/></a>
 
 </latemp_affiliations_buttons>
 
+<latemp_license>
+
+<!-- Creative Commons License -->
+<p>
+Unless noted otherwise, the text and other creative media of the pages of this
+site is <b>licensed</b> under the
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
+Commons Attribution 3.0 Unported License</a> (or at your option any later
+version). The markup and code of this site are, unless noted otherwise, licensed
+under the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11
+licence</a>.
+</p>
+<!-- /Creative Commons License -->
+
+<!--
+
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+   <dc:title>Freecell Solver Site</dc:title>
+   <dc:date>2004</dc:date>
+   <dc:description>A website for the the open-source Freecell Solver Project</dc:description>
+   <dc:creator><Agent>
+      <dc:title>Shlomi Fish</dc:title>
+   </Agent></dc:creator>
+   <dc:rights><Agent>
+      <dc:title>Shlomi Fish</dc:title>
+   </Agent></dc:rights>
+   <dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />
+   <license rdf:resource="http://creativecommons.org/licenses/by/3.0/" />
+</Work>
+
+<License rdf:about="http://creativecommons.org/licenses/by/3.0/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+   <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+</License>
+
+</rdf:RDF>
+
+-->
+</latemp_license>
 
 
 
