@@ -3,7 +3,10 @@
 <latemp_subject "Freecell Solver" />
 
 <ul class="emphasis">
+<li><a href="js-fc-solve/text/">Try Freecell Solver Online!</a></li>
+<!--
 <li><a href="download.html">Download Freecell Solver!</a></li>
+-->
 <li><a href="links.html#other_solvers">Other Solvers</a></li>
 </ul>
 
