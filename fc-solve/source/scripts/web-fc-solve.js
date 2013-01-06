@@ -32,7 +32,7 @@ function do_solve() {
     // out.val("");
     // out.text("");
 
-    // TODO : add support for (more) presets.
+    // TODO : add an option to limit the iterations count.
     var obj = freecell_solver_user_alloc();
 
     if (obj == 0) {
@@ -40,13 +40,15 @@ function do_solve() {
         return;
     }
 
-    var cmd_line_preset = 'as';
+    var cmd_line_preset = $("#preset").val();
 
-    var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(obj, cmd_line_preset, 0, 0, 0, null);
+    if (cmd_line_preset != "default") {
+        var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(obj, cmd_line_preset, 0, 0, 0, null);
 
-    if (preset_ret != 0) {
-        alert ("Failed to load command line preset '" + cmd_line_preset + "'. Should not happen.");
-        return;
+        if (preset_ret != 0) {
+            alert ("Failed to load command line preset '" + cmd_line_preset + "'. Should not happen.");
+            return;
+        }
     }
 
     // Removed for debugging purposes.

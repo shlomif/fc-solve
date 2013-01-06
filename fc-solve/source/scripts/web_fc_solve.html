@@ -21,6 +21,9 @@
       #populate_input {
             float: right;
       }
+      #preset {
+            margin-right: 2em;
+      }
   </style>
 <!--
 Please symlink or copy the libfreecell-solver.js as generated from
@@ -44,6 +47,12 @@ Makefile.to-javascript.mak to this directory.
 <strong>Input:</strong>
 <textarea class="emscripten" id="stdin" rows="10"></textarea>
 <hr />
+<strong>Solving method:</strong>
+<select id="preset">
+<option value="as" selected="selected">Amateur Star (fast on average)</option>
+<option value="qs">Qualified Seed (short solutions)</option>
+<option value="default">Default</option>
+</select>
 <button id="run_do_solve" onclick="javascript:do_solve()">Solve!</button>
 <button id="populate_input" onclick="javascript:populate_input_with_sample_board()" title="Populate Input with the layout of the Microsoft Windows Freecell #1941 board">Populate with Sample Board</button>
 
