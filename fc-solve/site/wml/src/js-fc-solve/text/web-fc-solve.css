@@ -1,0 +1,38 @@
+.emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+canvas.emscripten { border: 1px solid black; }
+textarea.emscripten { font-family: monospace; width: 80%; }
+div.emscripten { text-align: center; }
+.disabled { display: none; }
+#fc_solve_output {
+    border: green 3pt solid;
+    padding: 0.5em;
+    background-color: #B0CFE1;
+    overflow: scroll;
+    height: 50em;
+    width: 70em;
+}
+#populate_input {
+    float: right;
+}
+#preset {
+    margin-right: 2em;
+}
+#fc_solve_status {
+    font-weight: bold;
+}
+#fc_solve_status.not_started {
+    color: black;
+}
+#fc_solve_status.running {
+    color: blue;
+}
+#fc_solve_status.solved {
+    color: green;
+}
+#fc_solve_status.error {
+    color: red;
+}
+#status_wrap {
+    border: orange 1pt solid;
+    padding: 0.5em;
+}
