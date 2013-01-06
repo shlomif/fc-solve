@@ -99,7 +99,7 @@ var malloc = Module.cwrap('malloc', 'number', ['number']);
 var c_free = Module.cwrap('free', 'number', ['number']);
 var freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_next_move', 'number', ['number', 'number']);
 var freecell_solver_user_current_state_as_string = Module.cwrap('freecell_solver_user_current_state_as_string', 'number', ['number', 'number', 'number', 'number']);
-var freecell_solver_user_move_ptr_to_string_w_state = Module.cwrap('freecell_solver_user_move_ptr_to_string_w_state', 'string', ['number', 'number', 'number']);
+var freecell_solver_user_move_ptr_to_string_w_state = Module.cwrap('freecell_solver_user_move_ptr_to_string_w_state', 'number', ['number', 'number', 'number']);
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
 
 var remove_trailing_space_re = /[ \t]+$/gm;
@@ -149,7 +149,9 @@ function do_solve() {
 
     while ((move_ret_code = freecell_solver_user_get_next_move(obj, move_buffer)) == 0) {
         var state_as_string = get_state_str();
-        var move_as_string = freecell_solver_user_move_ptr_to_string_w_state(obj, move_buffer, 0);
+        var move_as_string_ptr = freecell_solver_user_move_ptr_to_string_w_state(obj, move_buffer, 0);
+        var move_as_string = Pointer_stringify(move_as_string_ptr);
+        c_free (move_as_string_ptr);
 
         my_append(move_as_string + "\n\n" + state_as_string + "\n\n");
     }
