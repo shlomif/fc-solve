@@ -1,17 +1,17 @@
- var entityMap = {
+var entityMap = {
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': '&quot;',
     "'": '&#39;',
     "/": '&#x2F;'
-  };
+};
 
-  function escapeHtml(string) {
+function escapeHtml(string) {
     return String(string).replace(/[&<>"'\/]/g, function (s) {
-      return entityMap[s];
+        return entityMap[s];
     });
-  }
+}
 
 var freecell_solver_user_alloc = Module.cwrap('freecell_solver_user_alloc', 'number', []);
 var freecell_solver_user_solve_board = Module.cwrap('freecell_solver_user_solve_board', 'number', ['number', 'string']);
