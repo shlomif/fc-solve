@@ -44,7 +44,8 @@ CFLAGS = $(OPT_FLAGS) -I . -m32 -std=gnu99
 # EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 
-EMCC_POST_FLAGS := --embed-file 24.board $(patsubst %,--embed-file %,$(shell ack -af ~/apps/fcs-for-pysol/share/freecell-solver/))
+# --embed-file 24.board
+EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(shell ack -af ~/apps/fcs-for-pysol/share/freecell-solver/))
 
 $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 	clang $(CFLAGS) -emit-llvm $< -c -o $@
