@@ -52,7 +52,7 @@ function do_solve() {
         // out.val("");
         // out.text("");
 
-        // TODO : add an option to limit the iterations count.
+        // TODO : add an option to customise the limit of the iterations count.
         var obj = freecell_solver_user_alloc();
 
         if (obj == 0) {
