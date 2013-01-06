@@ -38,7 +38,7 @@ NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" 
 # OPT_FLAGS = -O1
 OPT_FLAGS =
 
-CFLAGS = $(OPT_FLAGS) -I ./build -I . -m32 -std=gnu99
+CFLAGS = $(OPT_FLAGS) -I . -m32 -std=gnu99
 
 # EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s LINKABLE=1 $(CFLAGS)
 # EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)

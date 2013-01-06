@@ -47,7 +47,10 @@ WML_FLAGS += --passoption=2,-X3074 \
 	$(LATEMP_WML_FLAGS) --passoption=3,-I../lib/ \
 	-I $${HOME}/apps/wml
 
-dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS)
+LIBFREECELL_SOLVER_JS_DIR = lib/fc-solve-for-javascript
+LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfrecell-solver.js
+
+dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(LIBFREECELL_SOLVER_JS)
 
 $(SUBDIRS) :: % :
 	@if [ ! -e $@ ] ; then \
@@ -75,6 +78,11 @@ $(RAW_SUBDIRS) :: $(D)/% : src/%
 
 $(TTMLS) :: $(D)/% : src/%.ttml
 	ttml -o $@ $(TTML_FLAGS) -DLATEMP_FILENAME=$(patsubst $(D)/%.ttml,%,$@) $<
+
+FC_SOLVE_SOURCE_DIR := $(PWD)/../../source
+
+$(LIBFREECELL_SOLVER_JS):
+	( cd $(LIBFREECELL_SOLVER_JS_DIR) && make -j4 -f $(FC_SOLVE_SOURCE_DIR)/Makefile.to-javascript.mak SRC_DIR=$(FC_SOLVE_SOURCE_DIR) )
 
 .PHONY:
 

@@ -15,7 +15,10 @@ use Test::More tests => 1;
     {
         chomp($l);
 
-        if ($l =~ m{\A(?:dest/t2-homepage|t2)/(?:lecture/CMake|(?:humour/fortunes/fortunes-shlomif-ids-data\.yaml\z))})
+        if ($l =~ m{\A(?:dest/t2-homepage|t2)/(?:lecture/CMake|(?:humour/fortunes/fortunes-shlomif-ids-data\.yaml\z))}
+                or
+            $l =~ m{\Alib/fc-solve-for-javascript}
+        )
         {
             next ACK_OUTPUT;
         }
