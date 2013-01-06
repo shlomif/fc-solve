@@ -44,7 +44,7 @@ my $tree_contents =
             ],
         },
         {
-            'text' => "Online Demos",
+            'text' => "Online (WWW) Demos",
             'title' => "Try Freecell Solver in your browser!",
             'url' => "js-fc-solve/",
             'subs' =>
