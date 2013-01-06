@@ -4,7 +4,7 @@
 
 <page_extra_head_elements>
 <link rel="stylesheet" href="web-fc-solve.css" />
-<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
 </page_extra_head_elements>
 
