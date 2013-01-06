@@ -24,6 +24,25 @@
       #preset {
             margin-right: 2em;
       }
+      #fc_solve_status {
+            font-weight: bold;
+      }
+      #fc_solve_status.not_started {
+            color: black;
+      }
+      #fc_solve_status.running {
+            color: blue;
+      }
+      #fc_solve_status.solved {
+            color: green;
+      }
+      #fc_solve_status.error {
+            color: red;
+      }
+      #status_wrap {
+            border: orange 1pt solid;
+            padding: 0.5em;
+      }
   </style>
 <!--
 Please symlink or copy the libfreecell-solver.js as generated from
@@ -61,8 +80,12 @@ Makefile.to-javascript.mak to this directory.
     <div class="emscripten"><input type="button" value="fullscreen" onclick="Module.requestFullScreen()"></div>
     <hr/>
 </div>
+    <p id="status_wrap">
+    <strong>Status:</strong> <span id="fc_solve_status" class="not_started">Not started</span> <br />
+    </p>
     <strong>Output:</strong>
-    <textarea class="emscripten" id="output" rows="8"></textarea>
+    <textarea class="emscripten" id="output" rows="8" readonly="readonly"></textarea> <br />
+    <button id="clear_output" onclick="javascript:clear_output()" title="Clear the Output Box">Clear Output</button>
     <div class="disabled">
 <pre class="output" id="fc_solve_output">
 </pre>

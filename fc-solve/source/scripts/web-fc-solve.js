@@ -26,99 +26,124 @@ var freecell_solver_user_limit_iterations = Module.cwrap('freecell_solver_user_l
 
 var remove_trailing_space_re = /[ \t]+$/gm;
 
+function set_status(myclass, mylabel) {
+    var ctl = $("#fc_solve_status");
+    ctl.removeClass();
+    ctl.addClass(myclass);
+    ctl.html(escapeHtml(mylabel));
+
+    return;
+}
+
+function clear_output() {
+    $("#output").val('');
+
+    return;
+}
+
 function do_solve() {
-    var out = $("#output");
 
-    // Clear to get a fresh solution.
-    // out.val("");
-    // out.text("");
+    set_status("running", "Running");
 
-    // TODO : add an option to limit the iterations count.
-    var obj = freecell_solver_user_alloc();
+    try {
+        var out = $("#output");
 
-    if (obj == 0) {
-        alert ("Could not allocate solver instance (out of memory?)");
-        return;
-    }
+        // Clear to get a fresh solution.
+        // out.val("");
+        // out.text("");
 
-    var cmd_line_preset = $("#preset").val();
+        // TODO : add an option to limit the iterations count.
+        var obj = freecell_solver_user_alloc();
 
-    if (cmd_line_preset != "default") {
-        var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(obj, cmd_line_preset, 0, 0, 0, null);
-
-        if (preset_ret != 0) {
-            alert ("Failed to load command line preset '" + cmd_line_preset + "'. Should not happen.");
-            return;
-        }
-    }
-
-    freecell_solver_user_limit_iterations(obj, 128*1024);
-
-    // Removed for debugging purposes.
-    // alert("preset_ret = " + preset_ret);
-
-    var solve_err_code = freecell_solver_user_solve_board(
-        obj, $("#stdin").val()
-    );
-
-    if (solve_err_code != 0) {
-        alert ("Failed to solve board (invalid layout?)");
-        return;
-    }
-
-    // 128 bytes are enough to hold a move.
-    var move_buffer = malloc(128);
-
-    if (move_buffer == 0) {
-        alert ("Failed to allocate a buffer for the move (out of memory?)");
-        return;
-    }
-
-    var get_state_str = function () {
-        var ptr = freecell_solver_user_current_state_as_string(obj, 1, 0, 1);
-
-        if (ptr == 0) {
-            alert ("Failed to retrieve the current state (out of memory?)");
-            throw "Foo";
-        }
-        var ret_string = Pointer_stringify(ptr);
-        c_free(ptr);
-        return ret_string;
-    };
-
-    var out_buffer = '';
-
-    var my_append = function (str) {
-        out_buffer = out_buffer + str;
-        // out.append(escapeHtml(str));
-    };
-
-    (function () {
-        var state_as_string = get_state_str();
-        my_append ( state_as_string + "\n\n");
-    })();
-
-    var move_ret_code;
-    while ((move_ret_code = freecell_solver_user_get_next_move(obj, move_buffer)) == 0) {
-        var state_as_string = get_state_str();
-        var move_as_string_ptr = freecell_solver_user_move_ptr_to_string_w_state(obj, move_buffer, 0);
-
-        if (move_as_string_ptr == 0) {
-            alert ("Failed to retrieve the current move as string (out of memory?)");
+        if (obj == 0) {
+            alert ("Could not allocate solver instance (out of memory?)");
             throw "Foo";
         }
 
-        var move_as_string = Pointer_stringify(move_as_string_ptr);
-        c_free (move_as_string_ptr);
+        var cmd_line_preset = $("#preset").val();
 
-        my_append(move_as_string + "\n\n" + state_as_string + "\n\n");
+        if (cmd_line_preset != "default") {
+            var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(obj, cmd_line_preset, 0, 0, 0, null);
+
+            if (preset_ret != 0) {
+                alert ("Failed to load command line preset '" + cmd_line_preset + "'. Should not happen.");
+                throw "Foo";
+            }
+        }
+
+        freecell_solver_user_limit_iterations(obj, 128*1024);
+
+        // Removed for debugging purposes.
+        // alert("preset_ret = " + preset_ret);
+
+        var solve_err_code = freecell_solver_user_solve_board(
+            obj, $("#stdin").val()
+        );
+
+        if (solve_err_code != 0) {
+            alert ("Failed to solve board (invalid layout?)");
+            throw "Foo";
+        }
+
+        // 128 bytes are enough to hold a move.
+        var move_buffer = malloc(128);
+
+        if (move_buffer == 0) {
+            alert ("Failed to allocate a buffer for the move (out of memory?)");
+            throw "Foo";
+        }
+
+        var get_state_str = function () {
+            var ptr = freecell_solver_user_current_state_as_string(obj, 1, 0, 1);
+
+            if (ptr == 0) {
+                alert ("Failed to retrieve the current state (out of memory?)");
+                throw "Foo";
+            }
+            var ret_string = Pointer_stringify(ptr);
+            c_free(ptr);
+            return ret_string;
+        };
+
+        var out_buffer = '';
+
+        var my_append = function (str) {
+            out_buffer = out_buffer + str;
+            // out.append(escapeHtml(str));
+        };
+
+        (function () {
+            var state_as_string = get_state_str();
+            my_append ( state_as_string + "\n\n");
+        })();
+
+        var move_ret_code;
+        while ((move_ret_code = freecell_solver_user_get_next_move(obj, move_buffer)) == 0) {
+            var state_as_string = get_state_str();
+            var move_as_string_ptr = freecell_solver_user_move_ptr_to_string_w_state(obj, move_buffer, 0);
+
+            if (move_as_string_ptr == 0) {
+                alert ("Failed to retrieve the current move as string (out of memory?)");
+                throw "Foo";
+            }
+
+            var move_as_string = Pointer_stringify(move_as_string_ptr);
+            c_free (move_as_string_ptr);
+
+            my_append(move_as_string + "\n\n" + state_as_string + "\n\n");
+        }
+
+        // Cleanup C resources
+        c_free(move_buffer);
+        freecell_solver_user_free(obj);
+
+        set_status("solved", "Solved");
+        out.val(out_buffer.replace(remove_trailing_space_re, ''));
+
     }
-
-    // Cleanup C resources
-    c_free(move_buffer);
-    freecell_solver_user_free(obj);
-
-    out.val(out_buffer.replace(remove_trailing_space_re, ''));
+    catch (e) {
+        set_status("error", "Error");
+    }
 
     return;
 }
