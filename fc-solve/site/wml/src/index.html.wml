@@ -2,12 +2,16 @@
 
 <latemp_subject "Freecell Solver" />
 
+<p class="solve_online_button">
+<a href="$(ROOT)/js-fc-solve/text/">Use Me Online!</a>
+</p>
+
 <ul class="emphasis">
-<li><a href="js-fc-solve/text/">Try Freecell Solver Online!</a></li>
+<li><a href="$(ROOT)/js-fc-solve/text/">Try Freecell Solver Online!</a></li>
 <!--
-<li><a href="download.html">Download Freecell Solver!</a></li>
+<li><a href="$(ROOT)/download.html">Download Freecell Solver!</a></li>
 -->
-<li><a href="links.html#other_solvers">Other Solvers</a></li>
+<li><a href="$(ROOT)/links.html#other_solvers">Other Solvers</a></li>
 </ul>
 
 <p>
