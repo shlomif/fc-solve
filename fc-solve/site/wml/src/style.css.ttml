@@ -135,6 +135,8 @@ table.downloads
 [%- SET b = '.solve_online_button' -%]
 
 [% b %] a {
+    font-family: arial, sans-serif;
+    text-decoration: none;
     background-color: #5DEA17;
     padding: 1em;
     border: green 2pt solid;
