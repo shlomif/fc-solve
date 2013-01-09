@@ -35,7 +35,7 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
 -->
 </div>
-<strong>Input:</strong>
+<strong>Input:</strong><br />
 <textarea class="emscripten" id="stdin" cols="50" rows="10"></textarea>
 <hr />
 <strong>Solving method:</strong>
@@ -55,7 +55,7 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 <p id="status_wrap">
 <strong>Status:</strong> <span id="fc_solve_status" class="not_started">Not started</span> <br />
 </p>
-<strong>Output:</strong>
+<strong>Output:</strong><br />
 <textarea class="emscripten" id="output" cols="50" rows="8" readonly="readonly"></textarea> <br />
 <button id="clear_output" onclick="javascript:clear_output()" title="Clear the Output Box">Clear Output</button>
 <div class="disabled">
