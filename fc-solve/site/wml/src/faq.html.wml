@@ -61,7 +61,7 @@ or library (which violates the no warrany paragraph of the licence) everything
 should be fine and the “abuse” of the program is acceptable.
 </p>
 
-<h3 id="what_are_the_uses_of_a_solver">What are the uses of a solver for Patience, such as Freecell Solver?</h3>
+<h3 id="what_are_the_uses_of_a_solver">What are the uses of a solver for Patience/Solitaire card games, such as Freecell Solver?</h3>
 
 <p>
 Freecell Solver is unlikely to help in curing cancer, or solve world hunger,
@@ -94,7 +94,7 @@ reached states are solvable. This provides a combined solving power, that is
 greater than the sum of both parts.
 </p>
 
-<h3 id="new_solver_is_too_slow">I Started Writing a Freecell Solver (of my own) but it is too slow. What can I do?</h3>
+<h3 id="new_solver_is_too_slow">I started writing a solver for Freecell (of my own) but it is too slow. What can I do?</h3>
 
 <p>
 The problem with many naïve Freecell solving solutions is that, while they
@@ -102,8 +102,9 @@ can succeed in solving many Freecell deals, they may fail spectacularly in
 the general case. Furthermore, Generalised Freecell (where there is an
 arbitrary number of ranks) was shown to be
 an <a href="http://en.wikipedia.org/wiki/NP-complete">NP-complete problem</a>
-and as a result, it is unlikely that no efficient solution for solving that
-can be found.
+and as a result, it is likely that no efficient solution for solving that
+in the general case can be found (but it is possible that some good heuristics
+can be devised).
 </p>
 
 <p>
@@ -167,7 +168,7 @@ faster than using single-card moves (also known as atomic moves).
 <p>
 Finally, note that we could use a helping hand with Freecell Solver, and the
 authors of other open-source solvers may be happy for help as well, so if
-you want to improve something more mature, then contact us.
+you want to help to improve something more mature, then contact us.
 </p>
 
 <h3 id="integrate_fcs_into_program">May I integrate Freecell Solver into my
@@ -203,7 +204,7 @@ Good luck and let us know if you run into any trouble, or, alternatively,
 if you are successful.
 </p>
 
-<h3 id="solutions_are_too_long">The Solutions I Got are Too Long. What can I do?</h3>
+<h3 id="solutions_are_too_long">The Solutions I got are too long. What can I do?</h3>
 
 <p>
 You can try using a flares-based preset such as <tt>qualified-seed</tt> and
@@ -265,7 +266,7 @@ I’ve written about it previously</a>.
 
 </ul>
 
-<h3 id="unsolvable_solution">I found a solvable deal that Freecell Solver reports as Unsolvable - should I report it to you?</h3>
+<h3 id="unsolvable_solution">I found a solvable deal that Freecell Solver reports as unsolvable - should I report it to you?</h3>
 
 <p>
 The default Freecell Solver heuristic may have a small number of deals that
