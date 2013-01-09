@@ -45,7 +45,7 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 <option value="default">Default</option>
 </select>
 <button id="run_do_solve" onclick="javascript:do_solve()">Solve!</button>
-<button id="populate_input" onclick="javascript:populate_input_with_sample_board()" title="Populate Input with the layout of the Microsoft Windows Freecell #1941 board">Populate with Sample Board</button>
+<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with the layout of the Microsoft Windows Freecell #1941 board">Populate with a Windows Freecell Numbered Deal</button>
 
 <hr/>
 <div class="disabled">

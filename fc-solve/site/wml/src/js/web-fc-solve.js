@@ -150,6 +150,22 @@ function do_solve() {
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
 // feature.
-function populate_input_with_sample_board() {
-    $("#stdin").val(": 9D 6S 4D AH 5C 4H KH\n: JH JC JS 7S 6D AC 4S\n: AD 8D AS 2H KC KD 7H\n: KS 10S 9S 8H JD QD 3H\n: 10C 4C 2S 5D 3S 6H\n: 3C QC 5S QS QH 7D\n: 9H 5H 7C 6C 3D 10D\n: 2C 8C 8S 10H 2D 9C\n");
+var previous_deal_idx = 1;
+
+function populate_input_with_numbered_deal() {
+
+    var new_idx = prompt("Enter deal Index:");
+
+    // Prompt returned null (user cancelled).
+    if (! new_idx) {
+        return;
+    }
+
+    previous_deal_idx = parseInt(new_idx);
+
+    $("#stdin").val(
+        deal_ms_fc_board(previous_deal_idx)
+    );
+
+    return;
 }
