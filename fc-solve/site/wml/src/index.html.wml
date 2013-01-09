@@ -18,7 +18,7 @@
 This is Freecell Solver - a program that automatically solves layouts of
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
 variants of <a href="http://en.wikipedia.org/wiki/Solitaire">Card
-Solitaire</a> such as Eight Off, Forecell and
+Solitaire</a> such as Eight Off, Forecell, and
 Seahaven Towers, as well as
 <a href="http://en.wikipedia.org/wiki/Simple_Simon_%28solitaire%29">Simple
 Simon</a> boards. Freecell Solver is
