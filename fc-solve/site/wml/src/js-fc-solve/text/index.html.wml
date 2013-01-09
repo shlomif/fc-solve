@@ -45,7 +45,7 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 <option value="default">Default</option>
 </select>
 <button id="run_do_solve" onclick="javascript:do_solve()">Solve!</button>
-<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with the layout of the Microsoft Windows Freecell #1941 board">Populate with a Windows Freecell Numbered Deal</button>
+<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate with Numbered Deal</button>
 
 <hr/>
 <div class="disabled">
@@ -69,11 +69,15 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 Enter a board in <a href="#stdin">input</a> in
 <a href="http://fc-solve.shlomifish.org/docs/distro/README.html">Freecell
 Solver’s input format</a> with each line of input representing a column (or
-    stack) of cards. Freecells and foundations can also be specified. A sample
-layout can be input using the <a href="#populate_input">populate with sample
+    stack) of cards. Freecells and foundations can also be specified. Numbered
+layouts (compatible with
+<a href="http://en.wikipedia.org/wiki/FreeCell_%28Windows%29">Microsoft
+Windows FreeCell</a>, FreeCell Pro and compatible
+Freecell implementations) can be input using the
+<a href="#populate_input">populate with
 board button</a>. Press the <a href="#run_do_solve">“Solve” button</a> to
 run the solver, and assuming it was successful, you will be able to read
-or copy the output from <a href="#output">the output box</a>.
+and/or copy the output from <a href="#output">the output box</a>.
 </p>
 
 <p>
