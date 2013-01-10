@@ -132,33 +132,35 @@ table.downloads
     overflow: hidden;
     background-color: transparent;
 }
+[% INCLUDE "shlomif/note.ttml" %]
+[% PROCESS "shlomif/common_defs.ttml" %]
 
 [%- SET b = '.solve_online_button' -%]
 
-[% b %] a {
+p[% b %] {
+    margin-bottom: 1em;
+    margin-left: 1em;
     text-align: center;
     font-family: 'Audiowide', arial, sans-serif;
-    text-decoration: none;
     background-color: #5DEA17;
-    padding: 1em;
     border: green 2pt solid;
-    float: right;
-    color: black;
-    font-size: 150%;
-    margin-bottom: 1em;
     border-radius: 20px;
+    float: right;
+    padding: 1em;
+    font-size: 150%;
+}
+
+[% b %] a {
+    text-decoration: none;
+    color: black;
+}
+
+[% b %]:hover {
+    background-color: #A1EB7C;
 }
 
 [% b %] a:hover {
-        background-color: #A1EB7C;
-        color: #444;
-        text-decoration: none;
+    color: #444;
+    text-decoration: none;
 }
 
-[% b %] a img {
-    width: 80px;
-    margin-left: 1em;
-}
-
-[% INCLUDE "shlomif/note.ttml" %]
-[% PROCESS "shlomif/common_defs.ttml" %]
