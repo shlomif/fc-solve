@@ -120,6 +120,7 @@ table.downloads
     border: solid medium #880000;
     padding: 0.5em;
     background-color: #FFD2D2;
+    clear: right;
 }
 .stop img.sign
 {
@@ -135,6 +136,7 @@ table.downloads
 [%- SET b = '.solve_online_button' -%]
 
 [% b %] a {
+    text-align: center;
     font-family: arial, sans-serif;
     text-decoration: none;
     background-color: #5DEA17;
@@ -142,7 +144,7 @@ table.downloads
     border: green 2pt solid;
     float: right;
     color: black;
-    font-size: 130%;
+    font-size: 150%;
     margin-bottom: 1em;
     border-radius: 20px;
 }

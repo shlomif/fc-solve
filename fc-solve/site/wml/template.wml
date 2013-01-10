@@ -146,3 +146,9 @@ td { vertical-align : top; }
 <br />
 <share_this_button />
 </latemp_after_body>
+
+<latemp_after_main_title>
+<p class="solve_online_button">
+<a href="$(ROOT)/js-fc-solve/text/">Try<br />Online</a>
+</p>
+</latemp_after_main_title>
