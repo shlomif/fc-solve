@@ -3,7 +3,7 @@
 <latemp_subject "Freecell Solver" />
 
 <p class="solve_online_button">
-<a href="$(ROOT)/js-fc-solve/text/">Use Me Online!</a>
+<a href="$(ROOT)/js-fc-solve/text/">Try Me Online!</a>
 </p>
 
 <ul class="emphasis">
