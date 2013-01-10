@@ -161,3 +161,6 @@ a[% b %]:hover {
     text-decoration: none;
 }
 
+.link_to_online_solver strong {
+    font-size: 120%;
+}

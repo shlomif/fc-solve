@@ -2,11 +2,33 @@
 
 <latemp_subject "Online Demos of Freecell Solver" />
 
-<h2 id="text-based"><a href="text/">Text-based version</a></h2>
+<p>
+These are online demos of Freecell Solver that you can run in the convenience
+of your own browser. They require JavaScript to be available, enabled
+and whitelisted.
+</p>
+
+<h2 id="text-based">Text-based version</h2>
+
+<p>
+A rudimentary and functional version of the text-based solver allowing to
+solve any arbitrary Freecell deal online.
+</p>
+
+<ul class="link_to_online_solver">
+
+<li>
+<p>
+<a href="text/"><strong>Text-based solver</strong></a>
+</p>
+</li>
+
+</ul>
 
 <h2 id="rich-webui-based">Rich Web-UI</h2>
 
 <p>
 We are working on a Rich Web User-interface version based on
-<a href="http://www.solitairey.com/">Solitairey</a> but it will take a while.
+<a href="http://www.solitairey.com/">Solitairey</a>. However, it will take a
+while.
 </p>
