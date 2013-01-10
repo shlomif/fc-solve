@@ -19,7 +19,7 @@ This is a web-based interface to
 translated from the C source code to JavaScript, by using
 <a href="https://github.com/kripken/emscripten">emscripten</a>. It requires
 <strong>JavaScript</strong> to be <strong>enabled</strong> for this domain,
-and like Freecell Solver, is open-source software under the permissive
+and like Freecell Solver, it is open-source software under the permissive
 MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 </p>
 
