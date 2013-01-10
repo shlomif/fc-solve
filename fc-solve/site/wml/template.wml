@@ -149,9 +149,9 @@ td { vertical-align : top; }
 </latemp_after_body>
 
 <define-tag try_online>
-<p class="solve_online_button">
-<a href="$(ROOT)/js-fc-solve/text/">Try<br />Online</a>
-</p>
+<div class="try_online_wrapper">
+<a class="solve_online_button" id="try_online_link" href="$(ROOT)/js-fc-solve/text/">Try<br />Online</a>
+</div>
 </define-tag>
 
 <latemp_after_main_title>

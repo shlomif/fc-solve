@@ -137,7 +137,7 @@ table.downloads
 
 [%- SET b = '.solve_online_button' -%]
 
-p[% b %] {
+a[% b %] {
     margin-bottom: 1em;
     margin-left: 1em;
     text-align: center;
@@ -148,9 +148,6 @@ p[% b %] {
     float: right;
     padding: 1em;
     font-size: 150%;
-}
-
-[% b %] a {
     text-decoration: none;
     color: black;
 }
@@ -159,7 +156,7 @@ p[% b %] {
     background-color: #A1EB7C;
 }
 
-[% b %] a:hover {
+a[% b %]:hover {
     color: #444;
     text-decoration: none;
 }
