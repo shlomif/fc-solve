@@ -88,18 +88,19 @@ licence</a>.
 -->
 </latemp_license>
 
-
+<define-tag old_removed_self_links>
+<script type="text/javascript">
+<!--
+$("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]").each(function(i){ \$(this).append( ' <span class="selfl">[<a href="#' + this.id + '">link</a>]</span>' ) })
+-->
+</script>
+</define-tag>
 
 <latemp_webmaster>
 <p>
 <b>Webmaster:</b> <a href="http://www.shlomifish.org/">Shlomi Fish</a> (Email:
 <a href="mailto:shlomif@shlomifish.org">shlomif@shlomifish.org</a>).
 </p>
-<script type="text/javascript">
-<!--
-$("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]").each(function(i){ \$(this).append( ' <span class="selfl">[<a href="#' + this.id + '">link</a>]</span>' ) })
--->
-</script>
 </latemp_webmaster>
 
 
