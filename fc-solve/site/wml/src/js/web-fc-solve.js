@@ -1,3 +1,4 @@
+"use strict";
 var entityMap = {
     "&": "&amp;",
     "<": "&lt;",
@@ -15,6 +16,7 @@ function escapeHtml(string) {
 
 var freecell_solver_user_alloc = Module.cwrap('freecell_solver_user_alloc', 'number', []);
 var freecell_solver_user_solve_board = Module.cwrap('freecell_solver_user_solve_board', 'number', ['number', 'string']);
+var freecell_solver_user_resume_solution = Module.cwrap('freecell_solver_user_resume_solution', 'number', ['number']);
 var freecell_solver_user_cmd_line_read_cmd_line_preset = Module.cwrap('freecell_solver_user_cmd_line_read_cmd_line_preset', 'number', ['number', 'string', 'number', 'number', 'number', 'string']);
 var malloc = Module.cwrap('malloc', 'number', ['number']);
 var c_free = Module.cwrap('free', 'number', ['number']);
@@ -41,19 +43,79 @@ function clear_output() {
     return;
 }
 
+var iters_step = 128;
+var upper_iters_limit = 128 * 1024;
+var current_iters_limit;
+
+function reset_iterations()
+{
+    current_iters_limit = 0;
+}
+
+reset_iterations();
+
+var    FCS_STATE_WAS_SOLVED = 0;
+var    FCS_STATE_IS_NOT_SOLVEABLE = 1;
+var    FCS_STATE_ALREADY_EXISTS = 2;
+var    FCS_STATE_EXCEEDS_MAX_NUM_TIMES = 3;
+var    FCS_STATE_BEGIN_SUSPEND_PROCESS = 4;
+var    FCS_STATE_SUSPEND_PROCESS = 5;
+var    FCS_STATE_EXCEEDS_MAX_DEPTH = 6;
+var    FCS_STATE_ORIGINAL_STATE_IS_NOT_SOLVEABLE = 7;
+var    FCS_STATE_INVALID_STATE = 8;
+var    FCS_STATE_NOT_BEGAN_YET = 9;
+var    FCS_STATE_DOES_NOT_EXIST = 10;
+var    FCS_STATE_OPTIMIZED = 11;
+var    FCS_STATE_FLARES_PLAN_ERROR = 12;
+
+var obj;
+
+function handle_err_code(solve_err_code) {
+    if (solve_err_code == FCS_STATE_INVALID_STATE) {
+        alert ("Failed to solve board (invalid layout?)");
+        throw "Foo";
+    }
+    else if (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
+        // 50 milliseconds.
+        set_status("running", "Running (" + current_iters_limit + " iterations)");
+        setTimeout(resume_solution, 50);
+        return;
+    }
+    else if (solve_err_code == FCS_STATE_WAS_SOLVED) {
+
+        set_status("solved", "Solved");
+
+        display_solution();
+
+        return;
+    }
+    else {
+        alert ("Unknown Error code " + solve_err_code + "!");
+        throw "Foo";
+    }
+}
+
+function resume_solution() {
+    current_iters_limit += iters_step;
+
+    freecell_solver_user_limit_iterations(obj, current_iters_limit);
+
+    var solve_err_code = freecell_solver_user_resume_solution( obj );
+
+    return handle_err_code(solve_err_code);
+}
+
 function do_solve() {
 
     set_status("running", "Running");
 
     try {
-        var out = $("#output");
-
         // Clear to get a fresh solution.
         // out.val("");
         // out.text("");
+        obj = freecell_solver_user_alloc();
 
         // TODO : add an option to customise the limit of the iterations count.
-        var obj = freecell_solver_user_alloc();
 
         if (obj == 0) {
             alert ("Could not allocate solver instance (out of memory?)");
@@ -71,7 +133,9 @@ function do_solve() {
             }
         }
 
-        freecell_solver_user_limit_iterations(obj, 128*1024);
+        current_iters_limit += iters_step;
+
+        freecell_solver_user_limit_iterations(obj, current_iters_limit);
 
         // Removed for debugging purposes.
         // alert("preset_ret = " + preset_ret);
@@ -80,10 +144,18 @@ function do_solve() {
             obj, $("#stdin").val()
         );
 
-        if (solve_err_code != 0) {
-            alert ("Failed to solve board (invalid layout?)");
-            throw "Foo";
-        }
+        return handle_err_code(solve_err_code);
+    }
+    catch (e) {
+        set_status("error", "Error");
+    }
+}
+
+function display_solution() {
+    try {
+        reset_iterations();
+
+        var out = $("#output");
 
         // 128 bytes are enough to hold a move.
         var move_buffer = malloc(128);
@@ -142,10 +214,8 @@ function do_solve() {
 
     }
     catch (e) {
-        set_status("error", "Error");
+        return;
     }
-
-    return;
 }
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this

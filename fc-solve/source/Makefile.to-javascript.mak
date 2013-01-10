@@ -28,6 +28,7 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_get_next_move \
 	freecell_solver_user_limit_iterations \
 	freecell_solver_user_move_ptr_to_string_w_state \
+	freecell_solver_user_resume_solution \
 	freecell_solver_user_solve_board \
 	malloc \
 
