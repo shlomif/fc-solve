@@ -21,7 +21,7 @@ demonstrated to them, they were in fact possible.
 <p>
 One can find the maximal number of cards that can be moved as a sequence
 in Freecell using the formula
-<tt>max_cards = (1 + num_vacant_freecells) * (2 ^ num_vacant_columns)</tt>
+<code>max_cards = (1 + num_vacant_freecells) * (2 ^ num_vacant_columns)</code>
 (where “*” is multiplication and “^” is exponentiation.). One can also try using
 <a href="https://metacpan.org/module/expand-solitaire-multi-cards-moves">expand-solitaire-multi-cards-moves</a>
 from the <a href="https://metacpan.org/release/Games-Solitaire-Verify">Games-Solitaire-Verify CPAN distribution</a> (by the same author of Freecell Solver),
@@ -183,12 +183,12 @@ home page, in the About Dialogue, and in other places.
 
 <p>
 Now regarding how to integrate: please either use the
-<tt>freecell_solver_user_*</tt>
-API, or alternatively parse the output of <tt>fc-solve</tt>
-with the <tt>-p -t -sam -sel</tt> flags. The <tt>freecell_solver_user_*</tt>
+<code>freecell_solver_user_*</code>
+API, or alternatively parse the output of <kbd>fc-solve</kbd>
+with the <kbd>-p -t -sam -sel</kbd> flags. The <code>freecell_solver_user_*</code>
 API is not documented at the moment, but should be self-explanatory, and there
 are some examples of using it in the various solvers in the distribution.
-One useful way to configure a solver handle is to use <tt>fcs_cl.h</tt>
+One useful way to configure a solver handle is to use “fcs_cl.h”
 which provides an API based on the Freecell Solver command-line and is more
 convenient than issuing multiple lower-level API calls.
 </p>
@@ -207,8 +207,8 @@ if you are successful.
 <h3 id="solutions_are_too_long">The Solutions I got are too long. What can I do?</h3>
 
 <p>
-You can try using a flares-based preset such as <tt>qualified-seed</tt> and
-optionally add <tt>--flares-choice fcpro</tt> and <tt>-fif 10</tt>, where 10
+You can try using a flares-based preset such as “qualified-seed” and
+optionally add <kbd>--flares-choice fcpro</kbd> and <kbd>-fif 10</kbd>, where 10
 can be replaced by a larger (or smaller) number. So the complete command would
 be:
 </p>
@@ -222,7 +222,7 @@ pi-make-microsoft-freecell-board -t 24 | \
 If this still does not work to your satisfaction, you can try constructing
 a specialised heuristic from the many command line options of Freecell Solver
 that will yield something. There are some examples for those in the individual
-flares and soft threads under the <tt>Presets/presets</tt> directory.
+flares and soft threads under the “Presets/presets” directory.
 </p>
 
 <h3 id="why_in_c">Why is Freecell Solver written in C? Why not in another language?</h3>
@@ -271,7 +271,7 @@ I’ve written about it previously</a>.
 <p>
 The default Freecell Solver heuristic may have a small number of deals that
 are reported as unsolvable despite being solvable. However, you can use scans
-based on atomic moves to rectify that. See <tt>fc-solve --help-configs<tt>
+based on atomic moves to rectify that. See <kbd>fc-solve --help-configs</kbd>
 and the <a href="$(ROOT)/docs/distro/USAGE.html">USAGE.html</a> file for
 more information.
 </p>
