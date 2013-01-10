@@ -12,15 +12,12 @@ WML_FLAGS = -DBERLIOS=BERLIOS
 
 JSMIN = scripts/jsmin
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch *.css pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js js-fc-solve/text/*.css downloads/*/*.xz))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js js-fc-solve/text/*.css downloads/*/*.xz))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
 
 HTMLS = $(D)/code-of-conduct/index.html $(D)/faq.html $(D)/index.html $(D)/links.html $(D)/download.html $(D)/support.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/docs/Well-and-Wall.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html $(D)/current-status.html $(D)/getting-credit.html $(D)/verify-code/index.html $(D)/js-fc-solve/index.html $(D)/js-fc-solve/text/index.html
-
-
-TTMLS = $(D)/style.css
 
 DOCS_PROTO = AUTHORS INSTALL NEWS README TODO USAGE
 ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
@@ -55,7 +52,16 @@ LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfreecell-solver.js
 DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
 DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(D)/js/libfreecell-solver.js
 
-dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(TTMLS) $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN)
+CSS_TARGETS = $(D)/style.css $(D)/print.css
+
+dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(CSS_TARGETS)
+
+SASS_STYLE = compressed
+# SASS_STYLE = expanded
+SASS_CMD = sass --style $(SASS_STYLE)
+
+$(CSS_TARGETS): $(D)/%.css: lib/sass/%.sass
+	$(SASS_CMD) $< $@
 
 $(SUBDIRS) :: % :
 	@if [ ! -e $@ ] ; then \
@@ -80,9 +86,6 @@ $(IMAGES) :: $(D)/% : src/%
 $(RAW_SUBDIRS) :: $(D)/% : src/%
 	rm -fr $@
 	cp -r $< $@
-
-$(TTMLS) :: $(D)/% : src/%.ttml
-	ttml -o $@ $(TTML_FLAGS) -DLATEMP_FILENAME=$(patsubst $(D)/%.ttml,%,$@) $<
 
 FC_SOLVE_SOURCE_DIR := $(PWD)/../../source
 
