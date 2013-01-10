@@ -148,8 +148,15 @@ td { vertical-align : top; }
 <share_this_button />
 </latemp_after_body>
 
-<latemp_after_main_title>
+<define-tag try_online>
 <p class="solve_online_button">
 <a href="$(ROOT)/js-fc-solve/text/">Try<br />Online</a>
 </p>
+</define-tag>
+
+<latemp_after_main_title>
+<if "<match "$(LATEMP_FILENAME)" "^js-fc-solve/" action="report" />"
+    ""
+    "<try_online />"
+    />
 </latemp_after_main_title>
