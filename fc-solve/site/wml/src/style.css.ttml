@@ -137,7 +137,7 @@ table.downloads
 
 [% b %] a {
     text-align: center;
-    font-family: arial, sans-serif;
+    font-family: 'Audiowide', arial, sans-serif;
     text-decoration: none;
     background-color: #5DEA17;
     padding: 1em;
