@@ -15,6 +15,7 @@ textarea.emscripten {
 #populate_input {
     float: right;
     font-size: 130%;
+    margin-right: 200px;
 }
 #preset {
     margin-right: 2em;
