@@ -1,0 +1,21 @@
+* "Input Freecell layout" should be "Input a Freecell layout".
+
+* The "Populate with Numbered Deal" should be changed into an <input />-box
+where one can type a number with a nice label.
+
+* Change the font inside the tabs from the really bold thing into something
+more aesthetic.
+
+* write a better documentation of the format with examples.
+
+* To be considered:
+    - some sample layouts / example layouts example.
+
+* Revamp the paragraph after the "About" - larger fonts and less technicalities,
+and briefer text.
+
+* Write a header for the UI before the tabs.
+
+* Make the input textarea less wide.
+
+* Handle invalid boards by telling which card is missing/extra.
