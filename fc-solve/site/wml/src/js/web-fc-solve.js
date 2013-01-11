@@ -145,7 +145,7 @@ Class('FC_Solve', {
                 // alert("preset_ret = " + preset_ret);
 
                 var solve_err_code = freecell_solver_user_solve_board(
-                    that.obj, $("#stdin").val()
+                    that.obj, $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '')
                 );
 
                 return that.handle_err_code(solve_err_code);
@@ -246,6 +246,8 @@ function populate_input_with_numbered_deal() {
     previous_deal_idx = parseInt(new_idx);
 
     $("#stdin").val(
+        "# Microsoft Windows Freecell Deal No. " + previous_deal_idx +
+        "\n#\n" +
         deal_ms_fc_board(previous_deal_idx)
     );
 
