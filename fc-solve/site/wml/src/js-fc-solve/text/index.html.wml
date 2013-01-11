@@ -46,12 +46,16 @@ $(function() { $( "#fc_solve_tabs" ).tabs({
         var old = ui.oldPanel;
 
         var common_old = old.find('.fcs_common');
+        var old_text = common_old.find('textarea').val();
 
         var common_html = common_old.html();
 
         common_old.html('');
 
-        mynew.find('.fcs_common').html(common_html);
+        var common_new = mynew.find('.fcs_common');
+
+        common_new.html(common_html);
+        common_new.find('textarea').val(old_text);
 
         return;
     },
