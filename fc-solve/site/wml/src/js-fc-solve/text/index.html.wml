@@ -75,13 +75,13 @@ $(function() { $( "#fc_solve_tabs" ).tabs({
 <div class="fcs_common">
 
 <textarea class="emscripten" id="stdin" cols="50" rows="10"></textarea><br />
+<button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
 <strong>Solving method:</strong>
 <select id="preset">
 <option value="as" selected="selected">Amateur Star (fast on average)</option>
 <option value="qs">Qualified Seed (short solutions)</option>
 <option value="default">Default</option>
 </select>
-<button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
 
 </div> ;;; end of fcs_common
 

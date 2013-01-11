@@ -2,6 +2,8 @@ textarea.emscripten {
     font-family: monospace;
     width: 80%;
     margin-top: 1.0em;
+    border: #686 2pt solid;
+    border-radius: 5pt;
 }
 .disabled { display: none; }
 #fc_solve_output {
@@ -14,10 +16,18 @@ textarea.emscripten {
 }
 #populate_input {
     /* float: right; */
-    font-size: 130%;
     margin-right: 200px;
     clear: left;
 }
+
+#populate_input, #run_do_solve {
+    font-size: 130%;
+}
+
+#run_do_solve {
+    margin-top: 0.5em;
+}
+
 #preset {
     margin-right: 2em;
 }
