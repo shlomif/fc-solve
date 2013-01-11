@@ -13,9 +13,10 @@ textarea.emscripten {
     width: 70em;
 }
 #populate_input {
-    float: right;
+    /* float: right; */
     font-size: 130%;
     margin-right: 200px;
+    clear: left;
 }
 #preset {
     margin-right: 2em;
@@ -41,4 +42,8 @@ textarea.emscripten {
 #status_wrap {
     border: orange 1pt solid;
     padding: 0.5em;
+}
+.fc_solve_tabs .tab {
+    width: 100%;
+    overflow: hidden;
 }

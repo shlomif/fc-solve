@@ -52,7 +52,7 @@ LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfreecell-solver.js
 DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
 DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(D)/js/libfreecell-solver.js
 
-CSS_TARGETS = $(D)/style.css $(D)/print.css
+CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css
 
 dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(CSS_TARGETS)
 

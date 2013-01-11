@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="web-fc-solve.css" />
 <script type="text/javascript" src="$(ROOT)/js/jquery-ui-1.9.2.custom.min.js"></script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/smoothness/jquery-ui-1.9.2.custom.min.css" media="screen, projection" />
+<link rel="stylesheet" type="text/css" href="$(ROOT)/jqui-override.css" media="screen, projection" />
 <script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
@@ -37,11 +38,43 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
 -->
 </div>
-<strong>Input Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:</strong>
-<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate with Numbered Deal</button>
-<br />
-<textarea class="emscripten" id="stdin" cols="50" rows="10"></textarea>
-<hr />
+
+<script type="text/javascript">
+$(function() { $( "#fc_solve_tabs" ).tabs({
+    beforeActivate: function( event, ui) {
+        var mynew = ui.newPanel;
+        var old = ui.oldPanel;
+
+        var common_old = old.find('.fcs_common');
+
+        var common_html = common_old.html();
+
+        common_old.html('');
+
+        mynew.find('.fcs_common').html(common_html);
+
+        return;
+    },
+    }
+); });
+</script>
+
+<div id="fc_solve_tabs" class="fc_solve_tabs">
+
+<ul>
+<li><a href="#fc_solve_tabs__numbered_deal">Solve a Numbered Deal</a></li>
+<li><a href="#fc_solve_tabs__any_board">Solve any Board</a></li>
+</ul>
+
+<div id="fc_solve_tabs__numbered_deal" class="tab">
+
+<p class="first">
+<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate with Numbered Deal</button><br />
+</p>
+
+<div class="fcs_common">
+
+<textarea class="emscripten" id="stdin" cols="50" rows="10"></textarea><br />
 <strong>Solving method:</strong>
 <select id="preset">
 <option value="as" selected="selected">Amateur Star (fast on average)</option>
@@ -50,20 +83,53 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 </select>
 <button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
 
+</div> ;;; end of fcs_common
+
+</div> ;;; end of fc_solve_tabs__numbered_deal
+
+<div id="fc_solve_tabs__any_board" class="tab">
+
+<p class="first">
+<strong>Input Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:</strong><br />
+</p>
+
+<div class="fcs_common">
+</div>
+
+</div> ;;; end of fc_solve_tabs__any_board
+
+</div>
+
+<hr />
+
 <hr/>
+
+
 <div class="disabled">
+
 <div class="emscripten"><input type="button" value="fullscreen" onclick="Module.requestFullScreen()" /></div>
 <hr/>
-</div>
+
+</div> ;;; end of .disabled
+
+
 <p id="status_wrap">
+
 <strong>Status:</strong> <span id="fc_solve_status" class="not_started">Not started</span> <br />
+
 </p>
+
 <strong>Output:</strong><br />
+
 <textarea class="emscripten" id="output" cols="50" rows="8" readonly="readonly"></textarea> <br />
+
 <button id="clear_output" onclick="javascript:clear_output()" title="Clear the Output Box">Clear Output</button>
+
 <div class="disabled">
+
 <pre class="output" id="fc_solve_output">
 </pre>
+
 </div>
 
 <h2 id="how_to_use">How to Use</h2>
