@@ -30,6 +30,9 @@ textarea.emscripten {
 #fc_solve_status.solved {
     color: green;
 }
+#fc_solve_status.exceeded {
+    color: purple;
+}
 #fc_solve_status.error {
     color: red;
 }

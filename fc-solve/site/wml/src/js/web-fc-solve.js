@@ -88,13 +88,20 @@ Class('FC_Solve', {
                  throw "Foo";
              }
              else if (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
-                 // 50 milliseconds.
-                 that.set_status("running", "Running (" + that.current_iters_limit + " iterations)");
-                 setTimeout(
-                     function () { return that.resume_solution() },
-                     50
-                 );
-                 return;
+                 if (that.current_iters_limit >= upper_iters_limit) {
+                     that.set_status("exceeded",
+                         "Iterations count exceeded at " + that.current_iters_limit
+                         );
+                     return;
+                 } else {
+                     // 50 milliseconds.
+                     that.set_status("running", "Running (" + that.current_iters_limit + " iterations)");
+                     setTimeout(
+                         function () { return that.resume_solution() },
+                         50
+                     );
+                     return;
+                 }
              }
              else if (solve_err_code == FCS_STATE_WAS_SOLVED) {
 
