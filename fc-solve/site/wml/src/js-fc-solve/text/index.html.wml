@@ -4,11 +4,11 @@
 
 <page_extra_head_elements>
 <link rel="stylesheet" href="web-fc-solve.css" />
-<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
 </page_extra_head_elements>
 
 <h2 id="about">About</h2>
@@ -44,7 +44,7 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 <option value="qs">Qualified Seed (short solutions)</option>
 <option value="default">Default</option>
 </select>
-<button id="run_do_solve" onclick="javascript:do_solve()">Solve!</button>
+<button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
 <button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate with Numbered Deal</button>
 
 <hr/>
