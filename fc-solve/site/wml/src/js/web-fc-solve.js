@@ -55,6 +55,7 @@ var upper_iters_limit = 128 * 1024;
 
 Class('FC_Solve', {
     has: {
+        cmd_line_preset: { is: ro },
         current_iters_limit: { is: rw, init: 0 },
         obj: {
             is: rw,
@@ -130,11 +131,11 @@ Class('FC_Solve', {
         do_solve: function () {
             var that = this;
 
+            var cmd_line_preset = that.cmd_line_preset;
+
             that.set_status("running", "Running");
 
             try {
-                var cmd_line_preset = $("#preset").val();
-
                 if (cmd_line_preset != "default") {
                     var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(that.obj, cmd_line_preset, 0, 0, 0, null);
 
@@ -233,7 +234,9 @@ Class('FC_Solve', {
 });
 
 function fc_solve_do_solve() {
-    var instance = new FC_Solve();
+    var cmd_line_preset = $("#preset").val();
+    var instance = new FC_Solve({ cmd_line_preset: cmd_line_preset, });
+
     return instance.do_solve();
 }
 
