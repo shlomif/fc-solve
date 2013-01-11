@@ -35,7 +35,9 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
 -->
 </div>
-<strong>Input:</strong><br />
+<strong>Input Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:</strong>
+<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate with Numbered Deal</button>
+<br />
 <textarea class="emscripten" id="stdin" cols="50" rows="10"></textarea>
 <hr />
 <strong>Solving method:</strong>
@@ -45,7 +47,6 @@ MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
 <option value="default">Default</option>
 </select>
 <button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
-<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate with Numbered Deal</button>
 
 <hr/>
 <div class="disabled">
