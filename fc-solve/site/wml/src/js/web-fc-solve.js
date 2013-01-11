@@ -264,7 +264,7 @@ var previous_deal_idx = 1;
 
 function populate_input_with_numbered_deal() {
 
-    var new_idx = prompt("Enter deal Index:");
+    var new_idx = prompt("Enter MS Freecell deal number:");
 
     // Prompt returned null (user cancelled).
     if (! new_idx) {
