@@ -126,7 +126,7 @@ Class('FC_Solve', {
 
             return that.handle_err_code(solve_err_code);
         },
-        do_solve: function () {
+        do_solve: function (board_string) {
             var that = this;
 
             var cmd_line_preset = that.cmd_line_preset;
@@ -151,7 +151,7 @@ Class('FC_Solve', {
                 // alert("preset_ret = " + preset_ret);
 
                 var solve_err_code = freecell_solver_user_solve_board(
-                    that.obj, $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '')
+                    that.obj, board_string
                 );
 
                 return that.handle_err_code(solve_err_code);
@@ -243,12 +243,14 @@ function _webui_set_status_callback(myclass, mylabel)
 
 function fc_solve_do_solve() {
     var cmd_line_preset = $("#preset").val();
+    var board_string = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '');
+
     var instance = new FC_Solve({
         cmd_line_preset: cmd_line_preset,
         set_status_callback: _webui_set_status_callback,
     });
 
-    return instance.do_solve();
+    return instance.do_solve(board_string);
 }
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
