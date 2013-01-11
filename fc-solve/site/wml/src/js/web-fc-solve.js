@@ -55,6 +55,7 @@ var upper_iters_limit = 128 * 1024;
 
 Class('FC_Solve', {
     has: {
+        set_status_callback: { is: ro },
         cmd_line_preset: { is: ro },
         current_iters_limit: { is: rw, init: 0 },
         obj: {
@@ -75,12 +76,9 @@ Class('FC_Solve', {
     },
     methods: {
         set_status: function (myclass, mylabel) {
-            var ctl = $("#fc_solve_status");
-            ctl.removeClass();
-            ctl.addClass(myclass);
-            ctl.html(escapeHtml(mylabel));
+            var that = this;
 
-            return;
+            return that.set_status_callback(myclass, mylabel);
         },
         handle_err_code: function(solve_err_code) {
              var that = this;
@@ -233,9 +231,22 @@ Class('FC_Solve', {
     },
 });
 
+function _webui_set_status_callback(myclass, mylabel)
+{
+    var ctl = $("#fc_solve_status");
+    ctl.removeClass();
+    ctl.addClass(myclass);
+    ctl.html(escapeHtml(mylabel));
+
+    return;
+}
+
 function fc_solve_do_solve() {
     var cmd_line_preset = $("#preset").val();
-    var instance = new FC_Solve({ cmd_line_preset: cmd_line_preset, });
+    var instance = new FC_Solve({
+        cmd_line_preset: cmd_line_preset,
+        set_status_callback: _webui_set_status_callback,
+    });
 
     return instance.do_solve();
 }
