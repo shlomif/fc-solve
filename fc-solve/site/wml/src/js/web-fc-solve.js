@@ -28,11 +28,14 @@ var freecell_solver_user_limit_iterations = Module.cwrap('freecell_solver_user_l
 
 var remove_trailing_space_re = /[ \t]+$/gm;
 
-
-function clear_output() {
-    $("#output").val('');
+function _webui_set_output(buffer) {
+    $("#output").val(buffer);
 
     return;
+}
+
+function clear_output() {
+    return _webui_set_output('');
 }
 
 var    FCS_STATE_WAS_SOLVED = 0;
@@ -58,6 +61,7 @@ Class('FC_Solve', {
         set_status_callback: { is: ro },
         cmd_line_preset: { is: ro },
         current_iters_limit: { is: rw, init: 0 },
+        set_output: { is: ro },
         obj: {
             is: rw,
             init: function() {
@@ -165,8 +169,6 @@ Class('FC_Solve', {
             var that = this;
 
             try {
-                var out = $("#output");
-
                 // 128 bytes are enough to hold a move.
                 var move_buffer = malloc(128);
 
@@ -191,7 +193,6 @@ Class('FC_Solve', {
 
                 var my_append = function (str) {
                     out_buffer = out_buffer + str;
-                    // out.append(escapeHtml(str));
                 };
 
                 (function () {
@@ -221,8 +222,11 @@ Class('FC_Solve', {
                 that.obj = 0;
 
                 that.set_status("solved", "Solved");
-                out.val(out_buffer.replace(remove_trailing_space_re, ''));
 
+                that.set_output(
+                    out_buffer.replace(remove_trailing_space_re, '')
+                );
+                return;
             }
             catch (e) {
                 return;
@@ -248,6 +252,7 @@ function fc_solve_do_solve() {
     var instance = new FC_Solve({
         cmd_line_preset: cmd_line_preset,
         set_status_callback: _webui_set_status_callback,
+        set_output: _webui_set_output,
     });
 
     return instance.do_solve(board_string);
