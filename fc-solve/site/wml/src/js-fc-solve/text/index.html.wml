@@ -3,7 +3,6 @@
 <latemp_subject "Web-Interface to Freecell Solver (text based)" />
 
 <page_extra_head_elements>
-<link rel="stylesheet" href="web-fc-solve.css" />
 <script type="text/javascript" src="$(ROOT)/js/jquery-ui-1.9.2.custom.min.js"></script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/smoothness/jquery-ui-1.9.2.custom.min.css" media="screen, projection" />
 <link rel="stylesheet" type="text/css" href="$(ROOT)/jqui-override.css" media="screen, projection" />
@@ -12,6 +11,7 @@
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
+<link rel="stylesheet" type="text/css" href="web-fc-solve.css" />
 </page_extra_head_elements>
 
 <h2 id="about">About</h2>
