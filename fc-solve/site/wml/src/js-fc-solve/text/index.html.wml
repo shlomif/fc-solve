@@ -117,15 +117,11 @@ Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve fo
 
 </div>
 
-<hr />
-
-<hr/>
-
-
 <div class="disabled">
 
-<div class="emscripten"><input type="button" value="fullscreen" onclick="Module.requestFullScreen()" /></div>
-<hr/>
+<div class="emscripten">
+<input type="button" value="fullscreen" onclick="Module.requestFullScreen()" />
+</div>
 
 </div> ;;; end of .disabled
 
