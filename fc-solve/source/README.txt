@@ -83,7 +83,7 @@ colon (":"). This is to allow input from states as output by Freecell Solver
 using the -p option.
 
 You can specify the contents of the freecells by prefixing the line with
-"FC:". For example:
+"FC:" or with "Freecells:". For example:
 
 -----------------------
 FC: 3H QC
@@ -95,16 +95,16 @@ the freecells. To specify an empty freecell use a "-" as its designator.
 If there's another "FC:" line, the previous line will be overriden.
 
 You can specify the contents of the foundations by prefixing the line with
-"Founds:" and then using a format as follows:
+"Founds:" or with "Foundations:" and then using a format as follows:
 
 -----------------------
 Founds: H-5 C-A S-0 D-K
 -----------------------
 
-Hence, the deck ID followed by a dash followed by the card number in the
+Hence, the suit ID followed by a dash followed by the card number in the
 foundation. A suit that is not present will be assumed to be 0. Again, if
-there's more than one then the previous lines will be overriden.
-
+there's more than one line like that, then the previous lines will be
+ignored and overridden.
 
 The program will stop processing the input as soon as it read 8 lines of
 standard stacks. Therefore, it is recommended that the foundations and
@@ -128,3 +128,52 @@ implementations can be found in the "board_gen/" sub-directory. Read the
 +README.txt+ file there for details on how they can be compiled and used.
 
 In any case, they can save you the time of inputting the board yourself.
+
+Some complete examples for layouts
+----------------------------------
+
+A layout in the middle of the MS Freecell deal No. 109 solution:
+
+-----------------------
+Foundations: H-6 C-9 D-2 S-0
+Freecells:  QS  3S  2S  KD
+: 8H 3D
+: KS QD JC
+: AS 8D TD 7D JH TS 9D
+: 7S 6D
+: 5S
+: KH QC JD TC 9H 8S 7H 6S 5D 4S
+: KC QH JS TH 9S
+: 4D
+-----------------------
+
+Similar, but with an empty Freecell:
+
+-----------------------
+Foundations: H-6 C-9 D-2 S-0
+Freecells:  QS  3S  -  KD
+: 8H 3D 2S
+: KS QD JC
+: AS 8D TD 7D JH TS 9D
+: 7S 6D
+: 5S
+: KH QC JD TC 9H 8S 7H 6S 5D 4S
+: KC QH JS TH 9S
+: 4D
+-----------------------
+
+Likewise, only without leading colons where unnecessary:
+
+-----------------------
+Foundations: H-6 C-9 D-2 S-0
+Freecells:  QS  3S  -  KD
+8H 3D 2S
+KS QD JC
+AS 8D TD 7D JH TS 9D
+7S 6D
+5S
+KH QC JD TC 9H 8S 7H 6S 5D 4S
+KC QH JS TH 9S
+4D
+-----------------------
+
