@@ -9,3 +9,5 @@ more aesthetic.
 * Revamp the paragraph after the "About" - larger fonts and less technicalities,
 and briefer text.
 
+* Write a header for the UI before the tabs.
+
