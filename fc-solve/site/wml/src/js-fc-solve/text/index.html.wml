@@ -96,7 +96,7 @@ Enter an MS Freecell Deal:
 <div id="fc_solve_tabs__any_board" class="tab">
 
 <p class="first">
-<strong>Input Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:</strong><br />
+<strong>Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:</strong><br />
 </p>
 
 <div class="fcs_common">
