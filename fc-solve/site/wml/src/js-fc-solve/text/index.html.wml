@@ -138,13 +138,6 @@ Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve fo
 
 <button id="clear_output" onclick="javascript:clear_output()" title="Clear the Output Box">Clear Output</button>
 
-<div class="disabled">
-
-<pre class="output" id="fc_solve_output">
-</pre>
-
-</div>
-
 <h2 id="how_to_use">How to Use</h2>
 
 <p>
