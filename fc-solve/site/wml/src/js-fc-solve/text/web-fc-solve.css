@@ -74,3 +74,22 @@ textarea.emscripten:hover {
 .instructions_link {
     font-size: 120%;
 }
+#fc_solve_bookmark {
+    margin-top: 1em;
+    border: black 1pt solid;
+    padding-left: 1em;
+    padding-bottom: 1em;
+    padding-right: 1em;
+}
+#fc_solve_bookmark .controls_wrapper {
+    margin-left: 1em;
+}
+#fc_solve_bookmark_button {
+    font-size: 120%;
+}
+#fcs_bookmark_wrapper {
+    margin-left: 0;
+}
+#fcs_bookmark_wrapper > li {
+    margin-bottom: 0.5em;
+}
