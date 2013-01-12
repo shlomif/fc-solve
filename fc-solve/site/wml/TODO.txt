@@ -7,6 +7,9 @@ examples.
 
 * Use localStorage for remembering the state of the form.
 
+* Add support for more solitaire games (bakers_game, bakers_dozen,
+seahaven, simple_simon, etc.).
+
 * Mention jQuery , jQuery UI ,
 https://github.com/kylefox/jquery-querystring , Joose , etc. on the
 src/js-fc-solve/text/index.html.wml technologies list.
