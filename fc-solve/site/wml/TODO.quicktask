@@ -1,6 +1,9 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+    - Play with using http://twitter.github.com/bootstrap/ for the site.
+        * in a separate git branch
+        * Added [Sat 2013-01-12]
     - Use localStorage for remembering the state of the form.
         * Added [Sat 2013-01-12]
     - Add support for more solitaire games
