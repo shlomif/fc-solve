@@ -12,7 +12,7 @@ WML_FLAGS = -DBERLIOS=BERLIOS
 
 JSMIN = scripts/jsmin
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js js-fc-solve/text/*.css css/smoothness/*.css css/smoothness/images/*.png downloads/*/*.xz))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js css/smoothness/*.css css/smoothness/images/*.png downloads/*/*.xz))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
@@ -53,7 +53,7 @@ DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
 DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(D)/js/libfreecell-solver.js
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
 
-CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css
+CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
 
 dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_QSTRING_JS) $(CSS_TARGETS)
 

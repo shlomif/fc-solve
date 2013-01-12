@@ -12,7 +12,7 @@
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
-<link rel="stylesheet" type="text/css" href="web-fc-solve.css" />
+<link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
 </page_extra_head_elements>
 
 <h2 id="about">About</h2>
