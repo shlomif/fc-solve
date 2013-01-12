@@ -5,6 +5,11 @@ textarea.emscripten {
     border: #686 2pt solid;
     border-radius: 5pt;
 }
+
+textarea.emscripten:hover {
+    border-color: #8A8;
+}
+
 .disabled { display: none; }
 #fc_solve_output {
     border: green 3pt solid;
