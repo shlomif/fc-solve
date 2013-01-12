@@ -25,7 +25,8 @@ An online Freecell solver. Please enable
 <a href="#how_to_use"><strong class="instructions_link">Instructions</strong></a>
 </p>
 
-<hr/>
+<h2 id="ui">Solver</h2>
+
 <div class="disabled">
 <div class="emscripten" id="status">Downloading...</div>
 <div class="emscripten">
