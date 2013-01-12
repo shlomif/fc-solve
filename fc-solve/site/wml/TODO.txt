@@ -5,5 +5,3 @@ examples.
 * To be considered:
     - some sample layouts / example layouts example.
 
-* Handle invalid boards by telling which card is missing/extra.
-
