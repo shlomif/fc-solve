@@ -26,6 +26,7 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_current_state_as_string \
 	freecell_solver_user_free \
 	freecell_solver_user_get_next_move \
+	freecell_solver_user_get_invalid_state_error_string \
 	freecell_solver_user_limit_iterations \
 	freecell_solver_user_move_ptr_to_string_w_state \
 	freecell_solver_user_resume_solution \

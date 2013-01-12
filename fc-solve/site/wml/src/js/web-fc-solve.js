@@ -25,6 +25,7 @@ var freecell_solver_user_current_state_as_string = Module.cwrap('freecell_solver
 var freecell_solver_user_move_ptr_to_string_w_state = Module.cwrap('freecell_solver_user_move_ptr_to_string_w_state', 'number', ['number', 'number', 'number']);
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
 var freecell_solver_user_limit_iterations = Module.cwrap('freecell_solver_user_limit_iterations', 'number', ['number', 'number']);
+var freecell_solver_user_get_invalid_state_error_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_string', 'number', ['number', 'number']);
 
 var remove_trailing_space_re = /[ \t]+$/gm;
 
@@ -87,7 +88,15 @@ Class('FC_Solve', {
         handle_err_code: function(solve_err_code) {
              var that = this;
              if (solve_err_code == FCS_STATE_INVALID_STATE) {
-                 alert ("Failed to solve board (invalid layout?)");
+                 var error_string_ptr = freecell_solver_user_get_invalid_state_error_string(
+                     that.obj, 1
+                 );
+
+                 var error_string = Pointer_stringify( error_string_ptr );
+                 c_free ( error_string_ptr );
+
+                 alert (error_string + "\n");
+
                  throw "Foo";
              }
              else if (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
