@@ -17,9 +17,15 @@
 <h2 id="about">About</h2>
 
 <p>
-An online Freecell solver. Please enable
-<strong class="color">JavaScript</strong>.
+An online solver for
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
+solitaire game. <span class="enable_js">Please enable
+<strong>JavaScript</strong>.</span>
 </p>
+
+<script type="text/javascript">
+$(function() { $('.enable_js').addClass('ok'); })
+</script>
 
 <p>
 <a href="#how_to_use"><strong class="instructions_link">Instructions</strong></a>
@@ -80,6 +86,7 @@ $(function() { $( "#fc_solve_tabs" ).tabs({
 
 <div class="fcs_common">
 
+<label for="stdin">Input:</label><br />
 <textarea class="emscripten" id="stdin" cols="50" rows="10"></textarea><br />
 <button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
 <label for="preset">Solving method:</label>
@@ -125,7 +132,7 @@ Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve fo
 
 </p>
 
-<strong>Output:</strong><br />
+<label for="output">Output:</label><br />
 
 <textarea class="emscripten" id="output" cols="50" rows="8" readonly="readonly"></textarea> <br />
 
@@ -167,7 +174,8 @@ This is a web-based interface to
 translated from the C source code to JavaScript, by using the
 <a href="https://github.com/kripken/emscripten">emscripten</a> LLVM bit-code
 to JavaScript compiler. Like Freecell Solver itself, this JavaScript port
-is open-source software under the permissive MIT/X11 licence.
+is open-source software under the permissive
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 licence</a>.
 </p>
 
 <h2 id="credits">Credits</h2>

@@ -62,7 +62,10 @@ textarea.emscripten:hover {
     width: 100%;
     overflow: hidden;
 }
-strong.color {
+.enable_js.ok {
+    display: none;
+}
+.enable_js strong {
     color: red;
 }
 .instructions_link {
