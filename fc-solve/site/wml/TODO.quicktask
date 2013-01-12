@@ -1,0 +1,47 @@
+# Quicktask v1.2
+
+CURRENT TASKS:
+    - Use localStorage for remembering the state of the form.
+        * Added [Sat 2013-01-12]
+    - Add support for more solitaire games
+        * Added [Sat 2013-01-12]
+        * (bakers_game, bakers_dozen, seahaven, simple simon, etc.)
+    - Mention the JS/jQuery/CSS libraries that we are using
+        * On src/js-fc-solve/text/index.html.wml
+        * Added [Sat 2013-01-12]
+
+        - jQuery
+          * Added [Sat 2013-01-12]
+        - jQuery UI
+          * Added [Sat 2013-01-12]
+        - https://github.com/kylefox/jquery-querystring
+          * Added [Sat 2013-01-12]
+
+        - Joose
+          * Added [Sat 2013-01-12]
+
+        - Etc.
+
+LONG TERM:
+    - Prepare the solver with the GUI.
+      * Added [Sat 2013-01-12]
+
+COMPLETED TASKS:
+    - Write better documentation of the format of the boards/layouts with
+      examples.
+        * Done partially in the README.
+    - The "Populate with Numbered Deal" should be changed into an <input />-box
+    where one can type a number with a nice label.
+    - "Input Freecell layout" should be "Input a Freecell layout".
+    - Change the font inside the tabs from the really bold thing into something
+    more aesthetic.
+    - Revamp the paragraph after the "About" - larger fonts and less
+      technicalities,
+    and briefer text.
+    - Write a header for the UI before the tabs.
+    - Make the input textarea less wide.
+    - Handle invalid boards by telling which card is missing/extra.
+    - “Bookmark” a deal using GET parameters in the URL, in order to facilitate
+    debugging and sharing.
+
+# vim:ft=quicktask:sw=4:ts=4
