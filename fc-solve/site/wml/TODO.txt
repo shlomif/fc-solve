@@ -1,3 +1,6 @@
+src/js-fc-solve/ :
+==================
+
 * Write better documentation of the format of the boards/layouts with
 examples.
     - Done partially in the README.
@@ -13,3 +16,5 @@ seahaven, simple_simon, etc.).
 * Mention jQuery , jQuery UI ,
 https://github.com/kylefox/jquery-querystring , Joose , etc. on the
 src/js-fc-solve/text/index.html.wml technologies list.
+
+* Prepare the solver with the GUI.
