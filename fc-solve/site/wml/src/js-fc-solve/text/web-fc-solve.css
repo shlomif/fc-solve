@@ -62,3 +62,9 @@ textarea.emscripten:hover {
     width: 100%;
     overflow: hidden;
 }
+strong.color {
+    color: red;
+}
+.instructions_link {
+    font-size: 120%;
+}

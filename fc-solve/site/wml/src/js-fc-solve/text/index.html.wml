@@ -17,13 +17,12 @@
 <h2 id="about">About</h2>
 
 <p>
-This is a web-based interface to
-<a href="http://fc-solve.shlomifish.org/">Freecell Solver</a>, that was
-translated from the C source code to JavaScript, by using
-<a href="https://github.com/kripken/emscripten">emscripten</a>. It requires
-<strong>JavaScript</strong> to be <strong>enabled</strong> for this domain,
-and like Freecell Solver, it is open-source software under the permissive
-MIT/X11 licence. <a href="#how_to_use"><strong>How to use</strong></a>.
+An online Freecell solver. Please enable
+<strong class="color">JavaScript</strong>.
+</p>
+
+<p>
+<a href="#how_to_use"><strong class="instructions_link">Instructions</strong></a>
 </p>
 
 <hr/>
@@ -157,6 +156,17 @@ and/or copy the output from <a href="#output">the output box</a>.
 
 <p>
 Enjoy!
+</p>
+
+<h2 id="technology">Technology</h2>
+
+<p>
+This is a web-based interface to
+<a href="http://fc-solve.shlomifish.org/">Freecell Solver</a>, that was
+translated from the C source code to JavaScript, by using the
+<a href="https://github.com/kripken/emscripten">emscripten</a> LLVM bit-code
+to JavaScript compiler. Like Freecell Solver itself, this JavaScript port
+is open-source software under the permissive MIT/X11 licence.
 </p>
 
 <h2 id="credits">Credits</h2>
