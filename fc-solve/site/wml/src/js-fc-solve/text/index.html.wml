@@ -16,6 +16,8 @@
 
 <h2 id="about">About</h2>
 
+<div id="about_sect">
+
 <p>
 An online solver for
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
@@ -30,6 +32,8 @@ $(function() { $('.enable_js').addClass('ok'); })
 <p>
 <a href="#how_to_use"><strong class="instructions_link">Instructions</strong></a>
 </p>
+
+</div>
 
 <h2 id="ui">Solver</h2>
 

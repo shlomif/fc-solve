@@ -6,3 +6,6 @@ where one can type a number with a nice label.
 * Change the font inside the tabs from the really bold thing into something
 more aesthetic.
 
+* Revamp the paragraph after the "About" - larger fonts and less technicalities,
+and briefer text.
+

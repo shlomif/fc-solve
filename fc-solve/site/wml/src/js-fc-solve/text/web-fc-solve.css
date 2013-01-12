@@ -68,6 +68,9 @@ textarea.emscripten:hover {
 .enable_js strong {
     color: red;
 }
+#about_sect {
+    font-size: 120%;
+}
 .instructions_link {
     font-size: 120%;
 }

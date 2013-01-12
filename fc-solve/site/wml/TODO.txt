@@ -1,5 +1,6 @@
 * Write better documentation of the format of the boards/layouts with
 examples.
+    - Done partially in the README.
 
 * To be considered:
     - some sample layouts / example layouts example.
