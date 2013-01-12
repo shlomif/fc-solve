@@ -148,16 +148,15 @@ Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve fo
 <h2 id="how_to_use">How to Use</h2>
 
 <p>
-Enter a board in <a href="#stdin">input</a> in
+Enter a board in <a href="#stdin">the input text area</a> in
 <a href="http://fc-solve.shlomifish.org/docs/distro/README.html">Freecell
 Solver’s input format</a> with each line of input representing a column (or
-    stack) of cards. Freecells and foundations can also be specified. Numbered
+stack) of cards. Freecells and foundations can also be specified. Numbered
 layouts (compatible with
 <a href="http://en.wikipedia.org/wiki/FreeCell_%28Windows%29">Microsoft
 Windows FreeCell</a>, FreeCell Pro and compatible
 Freecell implementations) can be input using the
-<a href="#populate_input">populate with
-board button</a>. Press the <a href="#run_do_solve">“Solve” button</a> to
+<a href="#deal_number">deal number feature</a>. Press the <a href="#run_do_solve">“Solve” button</a> to
 run the solver, and assuming it was successful, you will be able to read
 and/or copy the output from <a href="#output">the output box</a>.
 </p>
