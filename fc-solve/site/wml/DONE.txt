@@ -15,3 +15,6 @@ and briefer text.
 
 * Handle invalid boards by telling which card is missing/extra.
 
+* “Bookmark” a deal using GET parameters in the URL, in order to facilitate
+debugging and sharing.
+
