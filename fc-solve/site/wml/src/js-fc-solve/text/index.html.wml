@@ -91,7 +91,7 @@ $(function() { $( "#fc_solve_tabs" ).tabs({
 <div class="fcs_common">
 
 <label for="stdin">Input:</label><br />
-<textarea class="emscripten" id="stdin" cols="50" rows="10"></textarea><br />
+<textarea class="emscripten" id="stdin" cols="30" rows="10"></textarea><br />
 <button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
 <label for="preset">Solving method:</label>
 <select id="preset">

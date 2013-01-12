@@ -278,7 +278,7 @@ function populate_input_with_numbered_deal() {
     previous_deal_idx = parseInt($('#deal_number').val());
 
     $("#stdin").val(
-        "# Microsoft Windows Freecell Deal No. " + previous_deal_idx +
+        "# MS Freecell Deal #" + previous_deal_idx +
         "\n#\n" +
         deal_ms_fc_board(previous_deal_idx)
     );

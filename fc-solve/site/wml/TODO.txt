@@ -5,7 +5,5 @@ examples.
 * To be considered:
     - some sample layouts / example layouts example.
 
-* Make the input textarea less wide.
-
 * Handle invalid boards by telling which card is missing/extra.
 

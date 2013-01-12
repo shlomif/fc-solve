@@ -11,3 +11,5 @@ and briefer text.
 
 * Write a header for the UI before the tabs.
 
+* Make the input textarea less wide.
+
