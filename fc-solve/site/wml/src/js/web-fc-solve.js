@@ -295,18 +295,20 @@ function populate_input_with_numbered_deal() {
     return;
 }
 
+function _get_loc() {
+    return window.location;
+}
+
 function _get_base_url() {
-    return location.protocol + '//' + location.host + location.pathname;
+    var loc = _get_loc();
+    return loc.protocol + '//' + loc.host + loc.pathname;
 }
 
 function on_bookmarking() {
-    var get_comp = function(myid) {
-        return myid + '=' + encodeURIComponent($('#' + myid).val());
-    };
+    var get_v = function(myid) { return $('#' + myid).val() };
 
     var bookmark_string = _get_base_url() + '?' +
-        get_comp('stdin') + ';' + get_comp('preset') + ';' +
-        get_comp('deal_number');
+        $.querystring({stdin: get_v('stdin'), preset: get_v('preset'), deal_number: get_v('deal_number')});
 
     $("#fcs_bm_results_input").val(bookmark_string);
 
@@ -316,6 +318,23 @@ function on_bookmarking() {
     a_elem.attr('href', bookmark_string);
 
     $("#fcs_bookmark_wrapper").removeClass("disabled");
+
+    return;
+}
+
+function restore_bookmark() {
+    var qs = _get_loc().search;
+
+    if (! qs.length) {
+        return;
+    }
+
+    // Remove trailing 1.
+    var params = $.querystring(qs.substr(1));
+
+    ['stdin', 'preset', 'deal_number'].forEach(function (myid) {
+        $('#' + myid).val(params[myid]);
+    });
 
     return;
 }
