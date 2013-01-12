@@ -1,0 +1,3 @@
+* The "Populate with Numbered Deal" should be changed into an <input />-box
+where one can type a number with a nice label.
+

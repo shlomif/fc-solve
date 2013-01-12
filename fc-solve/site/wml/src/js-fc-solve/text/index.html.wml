@@ -73,7 +73,9 @@ $(function() { $( "#fc_solve_tabs" ).tabs({
 <div id="fc_solve_tabs__numbered_deal" class="tab">
 
 <p class="first">
-<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate with Numbered Deal</button><br />
+Enter an MS Freecell Deal:
+<input type="text" id="deal_number" size="12" />
+<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate</button><br />
 </p>
 
 <div class="fcs_common">

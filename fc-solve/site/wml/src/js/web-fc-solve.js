@@ -264,6 +264,7 @@ var previous_deal_idx = 1;
 
 function populate_input_with_numbered_deal() {
 
+    /*
     var new_idx = prompt("Enter MS Freecell deal number:");
 
     // Prompt returned null (user cancelled).
@@ -272,6 +273,9 @@ function populate_input_with_numbered_deal() {
     }
 
     previous_deal_idx = parseInt(new_idx);
+    */
+
+    previous_deal_idx = parseInt($('#deal_number').val());
 
     $("#stdin").val(
         "# Microsoft Windows Freecell Deal No. " + previous_deal_idx +
