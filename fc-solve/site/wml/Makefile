@@ -60,7 +60,9 @@ SASS_STYLE = compressed
 # SASS_STYLE = expanded
 SASS_CMD = sass --style $(SASS_STYLE)
 
-$(CSS_TARGETS): $(D)/%.css: lib/sass/%.sass
+SASS_HEADERS = lib/sass/common-style.sass
+
+$(CSS_TARGETS): $(D)/%.css: lib/sass/%.sass $(SASS_HEADERS)
 	$(SASS_CMD) $< $@
 
 $(SUBDIRS) :: % :

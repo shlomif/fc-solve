@@ -1,7 +1,5 @@
-* Change the font inside the tabs from the really bold thing into something
-more aesthetic.
-
-* write a better documentation of the format with examples.
+* Write better documentation of the format of the boards/layouts with
+examples.
 
 * To be considered:
     - some sample layouts / example layouts example.

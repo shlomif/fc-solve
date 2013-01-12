@@ -3,3 +3,6 @@ where one can type a number with a nice label.
 
 * "Input Freecell layout" should be "Input a Freecell layout".
 
+* Change the font inside the tabs from the really bold thing into something
+more aesthetic.
+

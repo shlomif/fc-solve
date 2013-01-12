@@ -73,7 +73,7 @@ $(function() { $( "#fc_solve_tabs" ).tabs({
 <div id="fc_solve_tabs__numbered_deal" class="tab">
 
 <p class="first">
-Enter an MS Freecell Deal:
+<label for="deal_number">Enter an MS Freecell Deal:</label>
 <input type="text" id="deal_number" size="12" />
 <button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate</button><br />
 </p>
@@ -82,7 +82,7 @@ Enter an MS Freecell Deal:
 
 <textarea class="emscripten" id="stdin" cols="50" rows="10"></textarea><br />
 <button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
-<strong>Solving method:</strong>
+<label for="preset">Solving method:</label>
 <select id="preset">
 <option value="as" selected="selected">Amateur Star (fast on average)</option>
 <option value="qs">Qualified Seed (short solutions)</option>
@@ -96,7 +96,7 @@ Enter an MS Freecell Deal:
 <div id="fc_solve_tabs__any_board" class="tab">
 
 <p class="first">
-<strong>Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:</strong><br />
+Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:<br />
 </p>
 
 <div class="fcs_common">
