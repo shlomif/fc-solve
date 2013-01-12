@@ -294,3 +294,28 @@ function populate_input_with_numbered_deal() {
 
     return;
 }
+
+function _get_base_url() {
+    return location.protocol + '//' + location.host + location.pathname;
+}
+
+function on_bookmarking() {
+    var get_comp = function(myid) {
+        return myid + '=' + encodeURIComponent($('#' + myid).val());
+    };
+
+    var bookmark_string = _get_base_url() + '?' +
+        get_comp('stdin') + ';' + get_comp('preset') + ';' +
+        get_comp('deal_number');
+
+    $("#fcs_bm_results_input").val(bookmark_string);
+
+    var a_elem = $("#fcs_bm_results_a");
+    // Too long to be effective.
+    // a_elem.text(bookmark_string);
+    a_elem.attr('href', bookmark_string);
+
+    $("#fcs_bookmark_wrapper").removeClass("disabled");
+
+    return;
+}

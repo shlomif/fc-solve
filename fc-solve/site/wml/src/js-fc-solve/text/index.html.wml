@@ -138,6 +138,14 @@ Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve fo
 
 <button id="clear_output" onclick="javascript:clear_output()" title="Clear the Output Box">Clear Output</button>
 
+<div id="fc_solve_bookmark">
+<button id="fc_solve_bookmark_button" onclick="javascript:on_bookmarking()">Bookmark</button>
+<p id="fcs_bookmark_wrapper" class="disabled">
+<input type="text" id="fcs_bm_results_input" size="40" /><br />
+<a id="fcs_bm_results_a" href="">Bookmark Link</a>
+</p>
+</div>
+
 <h2 id="how_to_use">How to Use</h2>
 
 <p>
