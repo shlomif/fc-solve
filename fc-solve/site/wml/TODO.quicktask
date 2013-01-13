@@ -25,6 +25,9 @@ CURRENT TASKS:
 
         - Etc.
 
+    - Make the output more compatible with fc-solve -sam -p -t.
+        * Added [Sun 2013-01-13]
+
 LONG TERM:
     - Prepare the solver with the GUI.
       * Added [Sat 2013-01-12]
