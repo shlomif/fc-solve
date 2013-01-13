@@ -29,6 +29,11 @@ LONG TERM:
     - Prepare the solver with the GUI.
       * Added [Sat 2013-01-12]
 
+    - Make sure the libfreecell-solver.min.js is built with optimizations.
+      * -O2 or maybe even -O3.
+      * Will also reduce the size.
+      * Added [Sun 2013-01-13]
+
 COMPLETED TASKS:
     - Write better documentation of the format of the boards/layouts with
       examples.
