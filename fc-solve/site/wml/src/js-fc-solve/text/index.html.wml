@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<latemp_subject "Web-Interface to Freecell Solver (text based)" />
+<latemp_subject "Online Freecell solver (text based)" />
 
 <page_extra_head_elements>
 <script type="text/javascript" src="$(ROOT)/js/jquery-ui-1.9.2.custom.min.js"></script>
