@@ -145,6 +145,9 @@ p.desc
     padding: 0
     margin: 0
 
+$horiz_padding: 3em
+$vert_padding: 1em
+
 a.solve_online_button
     margin-bottom: 1em
     margin-left: 1em
@@ -154,7 +157,10 @@ a.solve_online_button
     border: green 2pt solid
     border-radius: 20px
     float: right
-    padding: 1em
+    padding-left: $horiz_padding
+    padding-right: $horiz_padding
+    padding-top: $vert_padding
+    padding-bottom: $vert_padding
     font-size: 150%
     text-decoration: none
     color: black
