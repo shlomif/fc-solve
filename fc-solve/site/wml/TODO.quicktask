@@ -9,21 +9,6 @@ CURRENT TASKS:
     - Add support for more solitaire games
         * Added [Sat 2013-01-12]
         * (bakers_game, bakers_dozen, seahaven, simple simon, etc.)
-    - Mention the JS/jQuery/CSS libraries that we are using
-        * On src/js-fc-solve/text/index.html.wml
-        * Added [Sat 2013-01-12]
-
-        - jQuery
-          * Added [Sat 2013-01-12]
-        - jQuery UI
-          * Added [Sat 2013-01-12]
-        - https://github.com/kylefox/jquery-querystring
-          * Added [Sat 2013-01-12]
-
-        - Joose
-          * Added [Sat 2013-01-12]
-
-        - Etc.
 
     - Make the output more compatible with fc-solve -sam -p -t.
         * Added [Sun 2013-01-13]
@@ -54,5 +39,20 @@ COMPLETED TASKS:
     - Handle invalid boards by telling which card is missing/extra.
     - “Bookmark” a deal using GET parameters in the URL, in order to facilitate
     debugging and sharing.
+    - Mention the JS/jQuery/CSS libraries that we are using
+        * On src/js-fc-solve/text/index.html.wml
+        * Added [Sat 2013-01-12]
+
+        - jQuery
+          * Added [Sat 2013-01-12]
+        - jQuery UI
+          * Added [Sat 2013-01-12]
+        - https://github.com/kylefox/jquery-querystring
+          * Added [Sat 2013-01-12]
+
+        - Joose
+          * Added [Sat 2013-01-12]
+
+        - Etc.
 
 # vim:ft=quicktask:sw=4:ts=4
