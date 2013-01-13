@@ -206,6 +206,58 @@ is open-source software under the permissive
 <a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 licence</a>.
 </p>
 
+<p>
+Other technologies used for writing this page are:
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="http://jquery.com/">jQuery</a> - the “write less, do more”
+JavaScript library. A convenient JavaScript browser-side library for
+DOM manipulations, UI and much more.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://jqueryui.com/">jQuery UI</a> - a library for user-interface
+controls based on jQuery.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://code.google.com/p/joose-js/">Joose</a> - an object oriented
+programming system for JavaScript (inspired by
+<a href="http://moose.iinteractive.com/">Perl's Moose</a>).
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/kylefox/jquery-querystring">jquery-quertstring</a> -a plugin for jQuery for manipulating query strings.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://getfirebug.com/">Firebug</a> - a web development tool for
+Firefox, that provides a JavaScript debugger, a CSS manipulation tool, DOM
+introspection and more. (The Opera web browser's Opera Dragonfly does something
+similar for Opera, and is also useful.)
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://www.google.com/webfonts">Google Web Fonts</a> - provides an
+attractive font for the button leading to this page.
+</p>
+</li>
+</ul>
+
 <h2 id="credits">Credits</h2>
 <ul>
 <li>
