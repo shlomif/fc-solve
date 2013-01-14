@@ -260,6 +260,7 @@ attractive font for the button leading to this page.
 
 <h2 id="credits">Credits</h2>
 <ul>
+
 <li>
 <p>
 <a href="https://github.com/kripken">Alon Zakai</a> - writing
@@ -269,10 +270,19 @@ on the original C (gnu99) source, and answering some bug reports and questions
 I filed about it.
 </p>
 </li>
+
 <li>
 <p>
 <a href="http://garage-coding.com/">Stefan Petrea</a> - inspired the
 implementation of the populate-with-sample-board button.
 </p>
 </li>
+
+<li>
+<p>
+<a href="http://en.wikipedia.org/wiki/User:Amire80">Amir Aharoni</a> - tipped
+me regarding integrating <tt>@font-face</tt> into my CSS.
+</p>
+</li>
+
 </ul>

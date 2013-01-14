@@ -13,10 +13,6 @@ CURRENT TASKS:
     - Make the output more compatible with fc-solve -sam -p -t.
         * Added [Sun 2013-01-13]
 
-    - Use font-face CSS instead of the Google web fonts external CSS.
-        * See the chat with “aharoni”.
-        * Added [Mon 2013-01-14]
-
     - Investigate .getScript to load libfreecell-solver.min.js by AJAX.
       * See how they do it on the other emscripten demos.
       * http://www.mkyong.com/jquery/how-to-load-javascript-at-runtime-with-jquery/
@@ -67,5 +63,8 @@ COMPLETED TASKS:
           * Added [Sat 2013-01-12]
 
         - Etc.
+    - Use @font-face CSS instead of the Google web fonts external CSS.
+        * See the chat with “aharoni”.
+        * Added [Mon 2013-01-14]
 
 # vim:ft=quicktask:sw=4:ts=4

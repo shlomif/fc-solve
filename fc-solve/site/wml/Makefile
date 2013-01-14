@@ -12,7 +12,7 @@ WML_FLAGS = -DBERLIOS=BERLIOS
 
 JSMIN = scripts/jsmin
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js css/smoothness/*.css css/smoothness/images/*.png downloads/*/*.xz))
+IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js css/smoothness/*.css css/smoothness/images/*.png downloads/*/*.xz css/fonts/*.woff))
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
@@ -30,7 +30,7 @@ INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
 # the web-server now supports indexes.
 # SUBDIRS_WITH_INDEXES = $(WIN32_BUILD_SUBDIRS)
 #
-SUBDIRS = $(D) $(D)/code-of-conduct $(D)/docs $(D)/docs/distro $(D)/downloads $(D)/downloads/dbm-fc-solver $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/ $(D)/js-fc-solve $(D)/js-fc-solve/text $(D)/css $(D)/css/smoothness $(D)/css/smoothness/images
+SUBDIRS = $(D) $(D)/code-of-conduct $(D)/docs $(D)/docs/distro $(D)/downloads $(D)/downloads/dbm-fc-solver $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/ $(D)/js-fc-solve $(D)/js-fc-solve/text $(D)/css $(D)/css/smoothness $(D)/css/smoothness/images $(D)/css/fonts
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
