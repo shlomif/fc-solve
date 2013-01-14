@@ -22,6 +22,10 @@ CURRENT TASKS:
       * http://www.mkyong.com/jquery/how-to-load-javascript-at-runtime-with-jquery/
       * Added [Mon 2013-01-14]
 
+    - Try to find a better jQuery UI theme/skin/CSS file.
+      * With better colour scheme for the links, font sizes, etc.
+      * Added [Mon 2013-01-14]
+
 LONG TERM:
     - Prepare the solver with the GUI.
       * Added [Sat 2013-01-12]
