@@ -92,7 +92,7 @@ Class('FC_Solve', {
                      that.obj, 1
                  );
 
-                 var error_string = Pointer_stringify( error_string_ptr );
+                 var error_string = Module.Pointer_stringify( error_string_ptr );
                  c_free ( error_string_ptr );
 
                  alert (error_string + "\n");
@@ -193,7 +193,7 @@ Class('FC_Solve', {
                         alert ("Failed to retrieve the current state (out of memory?)");
                         throw "Foo";
                     }
-                    var ret_string = Pointer_stringify(ptr);
+                    var ret_string = Module.Pointer_stringify(ptr);
                     c_free(ptr);
                     return ret_string;
                 };
@@ -219,7 +219,7 @@ Class('FC_Solve', {
                         throw "Foo";
                     }
 
-                    var move_as_string = Pointer_stringify(move_as_string_ptr);
+                    var move_as_string = Module.Pointer_stringify(move_as_string_ptr);
                     c_free (move_as_string_ptr);
 
                     my_append(move_as_string + "\n\n" + state_as_string + "\n\n");
