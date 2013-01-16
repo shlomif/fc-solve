@@ -18,53 +18,73 @@ CURRENT TASKS:
       * http://www.mkyong.com/jquery/how-to-load-javascript-at-runtime-with-jquery/
       * Added [Mon 2013-01-14]
 
-    - Try to find a better jQuery UI theme/skin/CSS file.
-      * With better colour scheme for the links, font sizes, etc.
-      * Added [Mon 2013-01-14]
-
 LONG TERM:
     - Prepare the solver with the GUI.
       * Added [Sat 2013-01-12]
 
     - Make sure the libfreecell-solver.min.js is built with optimizations.
-      * -O2 or maybe even -O3.
-      * Will also reduce the size.
-      * Added [Sun 2013-01-13]
+        * -O2 or maybe even -O3.
+        * Will also reduce the size.
+        * Added [Sun 2013-01-13]
+
+        - -O2
+            * DONE [Wed 2013-01-16]
+            * Added [Wed 2013-01-16]
+        - -O3
+            * Needs to be investigated
+            * Added [Wed 2013-01-16]
 
 COMPLETED TASKS:
-    - Write better documentation of the format of the boards/layouts with
-      examples.
-        * Done partially in the README.
-    - The "Populate with Numbered Deal" should be changed into an <input />-box
-    where one can type a number with a nice label.
+    - Write better documentation of the boards/layouts format with examples.
+        * DONE, in part, in the README.
+    - Change "Populate with Numbered Deal" into an <input />-box .
+        * Where one can type a number with a nice label.
+        * DONE [Wed 2013-01-16]
     - "Input Freecell layout" should be "Input a Freecell layout".
-    - Change the font inside the tabs from the really bold thing into something
-    more aesthetic.
-    - Revamp the paragraph after the "About" - larger fonts and less
-      technicalities,
-    and briefer text.
+        * DONE [Wed 2013-01-16]
+    - Change the font inside the tabs
+        * From the really bold thing into something more aesthetic.
+        * DONE [Wed 2013-01-16]
+    - Revamp the paragraph after the "About"
+        * larger fonts and less technicalities, and briefer text.
+        * DONE [Wed 2013-01-16]
     - Write a header for the UI before the tabs.
+        * DONE [Wed 2013-01-16]
     - Make the input textarea less wide.
+        * DONE [Wed 2013-01-16]
     - Handle invalid boards by telling which card is missing/extra.
-    - “Bookmark” a deal using GET parameters in the URL, in order to facilitate
-    debugging and sharing.
+        * DONE [Wed 2013-01-16]
+    - “Bookmark” a deal using GET parameters in the URL
+        * In order to facilitate debugging and sharing.
+        * DONE [Wed 2013-01-16]
     - Mention the JS/jQuery/CSS libraries that we are using
         * On src/js-fc-solve/text/index.html.wml
         * Added [Sat 2013-01-12]
+        * DONE [Wed 2013-01-16]
 
         - jQuery
-          * Added [Sat 2013-01-12]
+            * DONE [Wed 2013-01-16]
+            * Added [Sat 2013-01-12]
         - jQuery UI
-          * Added [Sat 2013-01-12]
+            * Added [Sat 2013-01-12]
+            * DONE [Wed 2013-01-16]
         - https://github.com/kylefox/jquery-querystring
-          * Added [Sat 2013-01-12]
+            * Added [Sat 2013-01-12]
+            * DONE [Wed 2013-01-16]
 
         - Joose
-          * Added [Sat 2013-01-12]
+            * Added [Sat 2013-01-12]
+            * DONE [Wed 2013-01-16]
 
         - Etc.
     - Use @font-face CSS instead of the Google web fonts external CSS.
         * See the chat with “aharoni”.
         * Added [Mon 2013-01-14]
+        * DONE [Wed 2013-01-16]
+    - Try to find a better jQuery UI theme/skin/CSS file.
+        * DONE [Wed 2013-01-16]
+        * With better colour scheme for the links, font sizes, etc.
+        * Added [Mon 2013-01-14]
+
 
 # vim:ft=quicktask:sw=4:ts=4
