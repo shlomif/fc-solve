@@ -83,10 +83,6 @@ Class('FC_Solve', {
                  } else {
                      // 50 milliseconds.
                      that.set_status("running", "Running (" + that.current_iters_limit + " iterations)");
-                     setTimeout(
-                         function () { return that.resume_solution() },
-                         50
-                     );
                      return;
                  }
              }
@@ -112,7 +108,9 @@ Class('FC_Solve', {
 
             var solve_err_code = freecell_solver_user_resume_solution( that.obj );
 
-            return that.handle_err_code(solve_err_code);
+            that.handle_err_code(solve_err_code);
+
+            return solve_err_code;
         },
         do_solve: function (board_string) {
             var that = this;
@@ -142,7 +140,9 @@ Class('FC_Solve', {
                     that.obj, board_string
                 );
 
-                return that.handle_err_code(solve_err_code);
+                that.handle_err_code(solve_err_code);
+
+                return solve_err_code;
             }
             catch (e) {
                 that.set_status("error", "Error");
@@ -179,10 +179,16 @@ Class('FC_Solve', {
                     out_buffer = out_buffer + str;
                 };
 
-                (function () {
-                    var state_as_string = get_state_str();
-                    my_append ( state_as_string + "\n\n");
-                })();
+                my_append("-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+
+                var _out_state = function (state_as_string) {
+                    my_append ( state_as_string +
+                        "\n\n====================\n\n"
+                    );
+                };
+
+                _out_state (get_state_str() );
+
 
                 var move_ret_code;
                 while ((move_ret_code = freecell_solver_user_get_next_move(that.obj, move_buffer)) == 0) {
@@ -197,7 +203,8 @@ Class('FC_Solve', {
                     var move_as_string = Module.Pointer_stringify(move_as_string_ptr);
                     c_free (move_as_string_ptr);
 
-                    my_append(move_as_string + "\n\n" + state_as_string + "\n\n");
+                    my_append(move_as_string + "\n\n");
+                    _out_state(state_as_string);
                 }
 
                 // Cleanup C resources

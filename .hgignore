@@ -1,4 +1,6 @@
 fc-solve/site/wml/dest
+fc-solve/site/wml/include.mak
+fc-solve/site/wml/rules.mak
 fc-solve/source/1941.board
 fc-solve/source/24.board
 fc-solve/source/AUTHORS

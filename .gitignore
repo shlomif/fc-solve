@@ -4,11 +4,13 @@ fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-len-proc
 fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-proc
 fc-solve/site/wml/.sass-cache
 fc-solve/site/wml/dest
+fc-solve/site/wml/include.mak
 fc-solve/site/wml/lib/fc-solve-for-javascript/*.bc
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.html
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.js
 fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
 fc-solve/site/wml/lib/fc-solve-for-javascript/my-modified-fc-solve-test.html
+fc-solve/site/wml/rules.mak
 fc-solve/site/wml/scripts/jsmin
 fc-solve/source/B
 fc-solve/source/1941.board

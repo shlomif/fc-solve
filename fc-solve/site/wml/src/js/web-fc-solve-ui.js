@@ -44,7 +44,37 @@ function fc_solve_do_solve() {
         set_output: _webui_set_output,
     });
 
-    return instance.do_solve(board_string);
+    var solve_err_code = instance.do_solve(board_string);
+
+    var _handle_err_code;
+    var _do_resume;
+
+    var _enqueue_resume = function () {
+        setTimeout(
+            _do_resume,
+            50
+        );
+    };
+
+    _handle_err_code = function() {
+        if (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
+            _enqueue_resume();
+        }
+
+        return;
+    };
+
+    _do_resume = function() {
+        solve_err_code = instance.resume_solution();
+
+        _handle_err_code();
+
+        return;
+    };
+
+    _handle_err_code();
+
+    return
 }
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
