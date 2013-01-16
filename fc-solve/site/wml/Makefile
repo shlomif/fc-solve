@@ -1,4 +1,9 @@
 
+all: dummy
+
+include rules.mak
+include include.mak
+
 WITH_DEVEL_VERSION = 1
 
 DEVEL_VER_USE_CACHE = 1
@@ -12,29 +17,28 @@ WML_FLAGS = -DBERLIOS=BERLIOS
 
 JSMIN = scripts/jsmin
 
-IMAGES_PRE1 = $(shell cd src && (ls *.tar.gz *.zip *.patch pysol/*.tar.gz pysol/*.diff docs/*.txt images/*.png images/*.gif js/*.js css/*.css css/{smoothness,redmond}/{*.css,images/*.png} downloads/*/*.xz css/fonts/*.woff))
+IMAGES_PRE1 = $(SRC_IMAGES)
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 # WML_FLAGS = -DBERLIOS=BERLIOS
 
-HTMLS = $(D)/code-of-conduct/index.html $(D)/faq.html $(D)/index.html $(D)/links.html $(D)/download.html $(D)/support.html $(D)/don_woods.html $(D)/features.html $(D)/old-news.html $(D)/book.html $(D)/docs/index.html $(D)/docs/Well-and-Wall.html $(D)/arch_doc/index.html $(D)/to-do.html $(D)/pysol/index.html $(D)/current-status.html $(D)/getting-credit.html $(D)/verify-code/index.html $(D)/js-fc-solve/index.html $(D)/js-fc-solve/text/index.html $(D)/js-fc-solve/automated-tests/index.html
+HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
 DOCS_PROTO = AUTHORS INSTALL NEWS README TODO USAGE
 ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
 DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
 INCLUDES_PROTO = std/logo.wml
-INCLUDES = $(addprefix src/,$(INCLUDES_PROTO))
+INCLUDES = $(addprefix lib/,$(INCLUDES_PROTO))
 
 # Remming out because it confuses the validator and no longer needed because
 # the web-server now supports indexes.
 # SUBDIRS_WITH_INDEXES = $(WIN32_BUILD_SUBDIRS)
 #
-SUBDIRS = $(D) $(D)/code-of-conduct $(D)/docs $(D)/docs/distro $(D)/downloads $(D)/downloads/dbm-fc-solver $(D)/arch_doc $(D)/js $(D)/images $(D)/pysol $(D)/verify-code/ $(D)/js-fc-solve $(D)/js-fc-solve/text $(D)/css $(D)/css/smoothness $(D)/css/smoothness/images $(D)/css/fonts $(D)/css/redmond $(D)/css/redmond/images $(D)/js-fc-solve/automated-tests
+SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
 
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
-all: dummy
 
 COMMON_PREPROC_FLAGS = -I $$HOME/conf/wml/Latemp/lib -I../lib
 LATEMP_WML_FLAGS =$(shell latemp-config --wml-flags)
