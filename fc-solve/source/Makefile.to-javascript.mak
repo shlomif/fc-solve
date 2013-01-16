@@ -36,9 +36,10 @@ NEEDED_FUNCTIONS = \
 NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV)' $(NEEDED_FUNCTIONS))
 
 # OPT_FLAGS = -g
-# OPT_FLAGS = -O2
+OPT_FLAGS = -O2
+# OPT_FLAGS = -O3
 # OPT_FLAGS = -O1
-OPT_FLAGS =
+# OPT_FLAGS =
 
 CFLAGS = $(OPT_FLAGS) -I . -m32 -std=gnu99
 
@@ -50,7 +51,7 @@ EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUN
 EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(shell ack -af ~/apps/fcs-for-pysol/share/freecell-solver/))
 
 $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
-	clang $(CFLAGS) -emit-llvm $< -c -o $@
+	emcc $(EMCC_CFLAGS) $< -c -o $@
 
 $(RESULT_HTML): $(LLVM_BITCODE_FILES)
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(EMCC_POST_FLAGS)

@@ -22,18 +22,6 @@ LONG TERM:
     - Prepare the solver with the GUI.
       * Added [Sat 2013-01-12]
 
-    - Make sure the libfreecell-solver.min.js is built with optimizations.
-        * -O2 or maybe even -O3.
-        * Will also reduce the size.
-        * Added [Sun 2013-01-13]
-
-        - -O2
-            * DONE [Wed 2013-01-16]
-            * Added [Wed 2013-01-16]
-        - -O3
-            * Needs to be investigated
-            * Added [Wed 2013-01-16]
-
 COMPLETED TASKS:
     - Write better documentation of the boards/layouts format with examples.
         * DONE, in part, in the README.
@@ -85,6 +73,20 @@ COMPLETED TASKS:
         * DONE [Wed 2013-01-16]
         * With better colour scheme for the links, font sizes, etc.
         * Added [Mon 2013-01-14]
+    - Make sure the libfreecell-solver.min.js is built with optimizations.
+        * -O2 or maybe even -O3.
+        * Will also reduce the size.
+        * Added [Sun 2013-01-13]
+
+        - -O2
+            * DONE [Wed 2013-01-16]
+            * Added [Wed 2013-01-16]
+        - -O3
+            * Does not work properly.
+                * Fails to find the amateur-star text file.
+            * Added [Wed 2013-01-16]
+            * DONE [Wed 2013-01-16]
+
 
 
 # vim:ft=quicktask:sw=4:ts=4
