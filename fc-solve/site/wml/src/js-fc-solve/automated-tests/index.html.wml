@@ -1,0 +1,36 @@
+#include '../template.wml'
+
+<latemp_subject "Online Freecell solver (Automated tests)" />
+
+<page_extra_head_elements>
+<link rel="stylesheet" type="text/css" href="$(ROOT)/css/qunit.css" />
+<script type="text/javascript" src="$(ROOT)/js/qunit.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
+<link rel="stylesheet" type="text/css" href="$(ROOT)/css/redmond/jquery-ui-1.9.2.custom.min.css" media="screen, projection" />
+<link rel="stylesheet" type="text/css" href="$(ROOT)/jqui-override.css" media="screen, projection" />
+<script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
+<link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
+</page_extra_head_elements>
+
+<h2 id="about">About</h2>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+      try {
+          test_nav_menu_generation();
+      }
+      catch (err) {
+        module("Meta");
+        test("global_failure", function() {
+            ok (false, 'test_abc_path() has thrown an exception or is invalid.');
+        });
+      }
+      // Hide passed tests by default.
+      $('#qunit-tests').addClass('hidepass');
+  });
+</script>
