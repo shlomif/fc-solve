@@ -1,4 +1,6 @@
 cpan/AI-Pathfinding-OptimizeMultiple/.build
+cpan/temp-AI-Pathfinding-OptimizeMultiple-system-tests/.data-len-proc
+cpan/temp-AI-Pathfinding-OptimizeMultiple-system-tests/.data-proc
 fc-solve/B
 fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-len-proc
 fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-proc

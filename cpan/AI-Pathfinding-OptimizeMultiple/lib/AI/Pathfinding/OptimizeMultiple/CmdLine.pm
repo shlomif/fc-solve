@@ -101,7 +101,7 @@ sub _init
         eval "require $class;";
         if ($@)
         {
-            die "Could not load '$class'";
+            die "Could not load '$class' - <<$@>>";
         }
 
         # TODO : Restore later.

@@ -3,7 +3,7 @@ package AI::Pathfinding::OptimizeMultiple::DataInputObj;
 use strict;
 use warnings;
 
-use File::Path;
+use File::Path qw(mkpath);
 
 use parent 'AI::Pathfinding::OptimizeMultiple::Base';
 
@@ -107,37 +107,39 @@ sub _get_scans_data_helper
     my $data_dir = ".data-proc";
     my $lens_dir = ".data-len-proc";
 
-    mkpath($data_dir, $lens_dir);
+    mkpath([$data_dir, $lens_dir]);
 
     foreach my $scan (@$selected_scans)
     {
         {
             my $dest_path = $data_dir . "/" . $scan->id();
-            if ($self->_should_update($scan->data_file_path(), $dest_path))
             {
-                my $data_s = _slurp($scan->data_file_path());
-                my @array = unpack("l*", $data_s);
-                if (($array[$HEADER_START_BOARD_IDX] != 1) ||
-                    ($array[$HEADER_NUM_BOARDS] < $self->num_boards) ||
-                    ($array[$HEADER_ITERATIONS_LIMIT] != 100000)
-                   )
+                if ($self->_should_update($scan->data_file_path(), $dest_path))
                 {
-                    die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
+                    my $data_s = _slurp($scan->data_file_path());
+                    my @array = unpack("l*", $data_s);
+                    if (($array[$HEADER_START_BOARD_IDX] != 1) ||
+                        ($array[$HEADER_NUM_BOARDS] < $self->num_boards) ||
+                        ($array[$HEADER_ITERATIONS_LIMIT] != 100000)
+                    )
+                    {
+                        die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
+                    }
+
+                    my $c = pdl(\@array);
+
+                    writefraw($c, $dest_path);
                 }
-
-                my $c = pdl(\@array);
-
-                writefraw($c, $dest_path);
             }
-        }
-        {
-            my $scan_vec = readfraw("./.data-proc/" . $scan->id());
-            my $scans_data_slice = $scans_data->slice(":,$scan_idx");
-            # Board No. 1 starts at index 0.
-            my $start_idx = $NUM_NUMBERS_IN_HEADER + ($start_board - 1);
-            $scans_data_slice += $scan_vec->slice(
-                $start_idx.":".($start_idx + $self->num_boards()-1)
-            );
+            {
+                my $scan_vec = readfraw($dest_path);
+                my $scans_data_slice = $scans_data->slice(":,$scan_idx");
+                # Board No. 1 starts at index 0.
+                my $start_idx = $NUM_NUMBERS_IN_HEADER + ($start_board - 1);
+                $scans_data_slice += $scan_vec->slice(
+                    $start_idx.":".($start_idx + $self->num_boards()-1)
+                );
+            }
         }
         {
             my $src = $scan->data_file_path();
@@ -171,17 +173,17 @@ sub _get_scans_data_helper
 
                 writefraw($c, $dest);
             }
-        }
-        {
-            my $scan_vec = readfraw("$lens_dir/" . $scan->id());
-            my $scans_data_slice = $scans_lens_data->slice(":,$scan_idx,:");
-            $scans_data_slice += $scan_vec->slice(
-                sprintf(
-                    "%d:%d,:,*",
-                    ($start_board-1),
-                    (($self->num_boards()-1)+($start_board-1))
-                )
-            )->xchg(1,2);
+            {
+                my $scan_vec = readfraw($dest);
+                my $scans_data_slice = $scans_lens_data->slice(":,$scan_idx,:");
+                $scans_data_slice += $scan_vec->slice(
+                    sprintf(
+                        "%d:%d,:,*",
+                        ($start_board-1),
+                        (($self->num_boards()-1)+($start_board-1))
+                    )
+                )->xchg(1,2);
+            }
         }
     }
     continue
