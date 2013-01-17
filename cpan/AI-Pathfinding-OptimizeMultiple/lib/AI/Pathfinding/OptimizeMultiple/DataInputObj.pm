@@ -254,7 +254,7 @@ sub _get_all_scans_list_from_file
         chomp($line);
         my ($id, $cmd_line) = split(/\t/, $line);
         push @scans,
-            Shlomif::FCS::CalcMetaScan::Structs::Scan->new(
+            AI::Pathfinding::OptimizeMultiple::Structs::Scan->new(
                 id => $id,
                 cmd_line => $cmd_line
             );
