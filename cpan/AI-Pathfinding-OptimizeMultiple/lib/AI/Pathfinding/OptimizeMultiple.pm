@@ -640,20 +640,11 @@ sub clone
 
 package AI::Pathfinding::OptimizeMultiple::SimulationResults;
 
-use parent 'AI::Pathfinding::OptimizeMultiple::Base';
+use MooX qw/late/;
 
-__PACKAGE__->mk_acc_ref([qw(status scan_runs total_iters)]);
-
-sub _init
-{
-    my ($self, $args) = @_;
-
-    $self->status($args->{status});
-    $self->scan_runs($args->{scan_runs});
-    $self->total_iters($args->{total_iters});
-
-    return;
-}
+has status => (isa => 'Str', is => 'ro', required => 1,);
+has total_iters => (isa => 'Int', is => 'ro', required => 1,);
+has scan_runs => (isa => 'ArrayRef', is => 'ro', required => 1,);
 
 sub get_total_iters
 {
