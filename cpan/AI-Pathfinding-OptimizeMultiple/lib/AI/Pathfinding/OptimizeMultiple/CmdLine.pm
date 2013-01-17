@@ -22,6 +22,7 @@ __PACKAGE__->mk_acc_ref(
     _add_horne_prune
     _arbitrator
     _chosen_scans
+    input_obj_class
     _input_obj
     _is_flares
     _num_boards
@@ -37,6 +38,9 @@ __PACKAGE__->mk_acc_ref(
     _start_board
     )]
 );
+
+my $_component_re = qr/[A-Za-z][A-Za-z0-9_]*/;
+my $_module_re = qr/$_component_re(?:::$_component_re)*/;
 
 sub _init
 {
@@ -54,6 +58,7 @@ sub _init
     my $offset_quotas = 0;
     my $simulate_to = undef;
     my $_add_horne_prune = 0;
+    my $input_obj_class = 'AI::Pathfinding::OptimizeMultiple::DataInputObj';
 
     GetOptions(
         "o|output=s" => \$output_filename,
@@ -67,6 +72,7 @@ sub _init
         "opt-for=s" => \$optimize_for,
         "simulate-to=s" => \$simulate_to,
         "sprtf" => \$_add_horne_prune,
+        "input-class=s" => \$input_obj_class,
     ) or exit(1);
 
     $self->_start_board($_start_board);
@@ -81,9 +87,33 @@ sub _init
     $self->_simulate_to($simulate_to);
     $self->_is_flares(0);
     $self->_add_horne_prune($_add_horne_prune);
+    $self->input_obj_class($input_obj_class);
 
-    # TODO : Restore later.
+    {
+        my $class = $self->input_obj_class();
+        if ($class !~ m{\A$_module_re\z})
+        {
+            Carp::confess(
+                "Input object class does not seem like a good class:"
+                . $self->input_obj_class()
+            );
+        }
+        eval "require $class;";
+        if ($@)
+        {
+            die "Could not load '$class'";
+        }
 
+        # TODO : Restore later.
+        $self->_input_obj(
+            $class->new(
+                {
+                    start_board => $self->_start_board(),
+                    num_boards => $self->_num_boards(),
+                }
+            )
+        );
+    }
 
     $self->_post_processor(
         AI::Pathfinding::OptimizeMultiple::PostProcessor->new(
@@ -544,6 +574,11 @@ For internal use.
 =head2 $self->run_flares()
 
 For internal use.
+
+=head2 $self->input_obj_class()
+
+The class to handle the input data - by default -
+L<AI::Pathfinding::OptimizeMultiple::DataInputObj>.
 
 =head1 COPYRIGHT AND LICENSE
 
