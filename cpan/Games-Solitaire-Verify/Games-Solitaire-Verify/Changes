@@ -1,5 +1,8 @@
 Revision history for Games-Solitaire-Verify
 
+0.1103  Thu 17 Jan 11:35:12 IST 2013
+        - Update Build.PL (configure_requires + repository link).
+
 0.1102  Mon 10 Sep 22:04:28 IDT 2012
         - Add lib/Games/Solitaire/Verify/App/CmdLine/Expand.pm to the
         distribution.

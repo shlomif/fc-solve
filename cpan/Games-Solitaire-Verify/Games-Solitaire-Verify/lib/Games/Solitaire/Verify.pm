@@ -13,7 +13,7 @@ Version 0.02
 
 =cut
 
-our $VERSION = '0.1102';
+our $VERSION = '0.1103';
 
 =head1 SYNOPSIS
 
@@ -32,9 +32,9 @@ perl-5.10.0). If you're interested in the latter, look at:
 
 =over 4
 
-=item * http://fc-solve.berlios.de/
+=item * http://fc-solve.shlomifish.org/
 
-=item * http://fc-solve.berlios.de/links.html#other_solvers
+=item * http://fc-solve.shlomifish.org/links.html#other_solvers
 
 =back
 
