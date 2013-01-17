@@ -8,6 +8,7 @@ use IO::Handle;
 use AI::Pathfinding::OptimizeMultiple::IterState;
 use AI::Pathfinding::OptimizeMultiple::Structs;
 use AI::Pathfinding::OptimizeMultiple::ScanRun;
+use AI::Pathfinding::OptimizeMultiple::SimulationResults;
 
 use MooX qw/late/;
 
@@ -615,25 +616,6 @@ sub _add_to_total_boards_solved
 
     return;
 }
-
-package AI::Pathfinding::OptimizeMultiple::SimulationResults;
-
-use MooX qw/late/;
-
-has status => (isa => 'Str', is => 'ro', required => 1,);
-has total_iters => (isa => 'Int', is => 'ro', required => 1,);
-has scan_runs => (isa => 'ArrayRef', is => 'ro', required => 1,);
-
-sub get_total_iters
-{
-    return shift->total_iters();
-}
-
-sub get_status
-{
-    return shift->status();
-}
-
 
 1; # End of AI::Pathfinding::OptimizeMultiple
 
