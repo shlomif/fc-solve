@@ -11,6 +11,9 @@ my $builder = Test::Run::Builder->new(
     license             => 'mit',
     dist_author         => 'Shlomi Fish <shlomif@iglu.org.il>',
     dist_version_from   => 'lib/Games/Solitaire/Verify.pm',
+    configure_requires => {
+        'Module::Build' => '0.36',
+    },
     build_requires => {
         'autodie' => 0,
         'Test::More' => 0,
@@ -35,7 +38,7 @@ my $builder = Test::Run::Builder->new(
     {
         resources =>
         {
-            repository => "http://fc-solve.googlecode.com/svn/fc-solve/trunk/Games-Solitaire-Verify/Games-Solitaire-Verify",
+            repository => "http://bitbucket.org/shlomif/fc-solve",
             homepage => "http://fc-solve.shlomifish.org/verify-code/",
             MailingList => "http://tech.groups.yahoo.com/group/fc-solve-discuss/",
         },
