@@ -9,7 +9,7 @@ use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn )
 use Carp;
 
 {
-    trap {    
+    trap {
         # TEST
         ok (!system("perl process.pl > output.got"));
     };
