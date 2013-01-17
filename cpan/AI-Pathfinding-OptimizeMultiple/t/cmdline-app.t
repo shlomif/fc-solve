@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use AI::Pathfinding::OptimizeMultiple::CmdLine;
+use AI::Pathfinding::OptimizeMultiple::App::CmdLine;
 
 use vars qw($trap);
 
@@ -22,7 +22,7 @@ my @running_modes =
         blurb_base => 'modulino',
         sub_ref => sub {
             my ($flags) = @_;
-            AI::Pathfinding::OptimizeMultiple::CmdLine->new(
+            AI::Pathfinding::OptimizeMultiple::App::CmdLine->new(
                 {
                     argv => [@$flags],
                 },

@@ -1,4 +1,4 @@
-package AI::Pathfinding::OptimizeMultiple::CmdLine;
+package AI::Pathfinding::OptimizeMultiple::App::CmdLine;
 
 use strict;
 use warnings;
@@ -576,7 +576,7 @@ __END__
 
 =head1 NAME
 
-AI::Pathfinding::OptimizeMultiple::CmdLine - the command line application class.
+AI::Pathfinding::OptimizeMultiple::App::CmdLine - the command line application class.
 
 =head1 VERSION
 
