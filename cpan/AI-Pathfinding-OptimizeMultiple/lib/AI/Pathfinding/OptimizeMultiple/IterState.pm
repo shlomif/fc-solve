@@ -60,7 +60,7 @@ sub get_chosen_struct
         AI::Pathfinding::OptimizeMultiple::ScanRun->new(
             {
                 iters => $self->_quota(),
-                scan => $self->_scan_idx()
+                scan_idx => $self->_scan_idx()
             }
         );
 }

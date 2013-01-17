@@ -295,7 +295,7 @@ sub _format_prelude_iter
     my $iter = shift;
 
     return ($self->_is_flares() ? "Run:" : "") . $iter->iters() . '@'
-        . $self->_map_scan_idx_to_id($iter->scan())
+        . $self->_map_scan_idx_to_id($iter->scan_idx())
         ;
 }
 
@@ -449,7 +449,7 @@ sub _get_run_string
         {
             sprintf('%i@%i,',
                 $_->iters(),
-                $self->_map_scan_idx_to_id($_->scan())
+                $self->_map_scan_idx_to_id($_->scan_idx())
             )
         }
         @{$self->_post_processor->process($results->scan_runs())},

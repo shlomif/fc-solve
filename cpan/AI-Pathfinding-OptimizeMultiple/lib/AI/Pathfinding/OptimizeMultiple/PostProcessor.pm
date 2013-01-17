@@ -35,7 +35,7 @@ sub scans_rle
     my (@a);
     while (my $next_scan = shift(@scans_list))
     {
-        if ($next_scan->scan() == $scan->scan())
+        if ($next_scan->scan_idx() == $scan->scan_idx())
         {
             $scan->iters( $scan->iters() + $next_scan->iters() );
         }

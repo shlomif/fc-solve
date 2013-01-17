@@ -57,7 +57,7 @@ sub test_based_on_data
     (map
         {
             +{
-                name => $scans_aref->[$_->scan]->{name},
+                name => $scans_aref->[$_->scan_idx]->{name},
                 iters => $_->iters,
             }
         }

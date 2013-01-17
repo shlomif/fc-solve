@@ -430,7 +430,7 @@ sub calc_flares_meta_scan
             AI::Pathfinding::OptimizeMultiple::ScanRun->new(
                 {
                     iters => $iters_quota,
-                    scan => $selected_scan_idx,
+                    scan_idx => $selected_scan_idx,
                 }
             );
 
@@ -477,16 +477,16 @@ sub calc_board_iters
 
     foreach my $s (@{$self->chosen_scans()})
     {
-        if (($info[$s->scan()] > 0) && ($info[$s->scan()] <= $s->iters()))
+        if (($info[$s->scan_idx()] > 0) && ($info[$s->scan_idx()] <= $s->iters()))
         {
             $board_iters += $info[$s->iters()];
             last;
         }
         else
         {
-            if ($info[$s->scan()] > 0)
+            if ($info[$s->scan_idx()] > 0)
             {
-                $info[$s->scan()] -= $s->iters();
+                $info[$s->scan_idx()] -= $s->iters();
             }
             $board_iters += $s->iters();
         }
@@ -531,13 +531,13 @@ sub simulate_board
     SCANS_LOOP:
     foreach my $s (@{$self->chosen_scans()})
     {
-        if (($info[$s->scan()] > 0) && ($info[$s->scan()] <= $s->iters()))
+        if (($info[$s->scan_idx()] > 0) && ($info[$s->scan_idx()] <= $s->iters()))
         {
             $add_new_scan_run->(
                 AI::Pathfinding::OptimizeMultiple::ScanRun->new(
                     {
-                        iters => $info[$s->scan()],
-                        scan => $s->scan(),
+                        iters => $info[$s->scan_idx()],
+                        scan_idx => $s->scan_idx(),
                     },
                 )
             );
@@ -547,16 +547,16 @@ sub simulate_board
         }
         else
         {
-            if ($info[$s->scan()] > 0)
+            if ($info[$s->scan_idx()] > 0)
             {
-                $info[$s->scan()] -= $s->iters();
+                $info[$s->scan_idx()] -= $s->iters();
             }
 
             $add_new_scan_run->(
                 AI::Pathfinding::OptimizeMultiple::ScanRun->new(
                     {
                         iters => $s->iters(),
-                        scan => $s->scan(),
+                        scan_idx => $s->scan_idx(),
                     },
                 )
             );
@@ -617,25 +617,21 @@ sub _add_to_total_boards_solved
 
 package AI::Pathfinding::OptimizeMultiple::ScanRun;
 
-use base 'AI::Pathfinding::OptimizeMultiple::Base';
+use MooX qw/late/;
 
-__PACKAGE__->mk_acc_ref([qw(iters scan)]);
-
-sub _init
-{
-    my ($self, $args) = @_;
-
-    $self->iters($args->{iters});
-    $self->scan($args->{scan});
-
-    return;
-}
+has iters => (isa => 'Int', is => 'rw', required => 1);
+has scan_idx => (isa => 'Int', is => 'ro', required => 1);
 
 sub clone
 {
     my $self = shift;
 
-    return ref($self)->new({iters => $self->iters(), scan => $self->scan()});
+    return ref($self)->new(
+        {
+            iters => $self->iters(),
+            scan_idx => $self->scan_idx(),
+        }
+    );
 }
 
 package AI::Pathfinding::OptimizeMultiple::SimulationResults;
@@ -722,7 +718,7 @@ version 0.0.1
     foreach my $scan_alloc (@{$self->chosen_scans()})
     {
         printf "Run %s for %d iterations.\n",
-            $scans[$scan_alloc->scan], $scan_alloc->iters;
+            $scans[$scan_alloc->scan_idx], $scan_alloc->iters;
     }
 
 =head1 DESCRIPTION
