@@ -6,7 +6,7 @@ use warnings;
 use IO::Handle;
 
 use AI::Pathfinding::OptimizeMultiple::IterState;
-use AI::Pathfinding::OptimizeMultiple::Structs;
+use AI::Pathfinding::OptimizeMultiple::Scan;
 use AI::Pathfinding::OptimizeMultiple::ScanRun;
 use AI::Pathfinding::OptimizeMultiple::SimulationResults;
 
@@ -661,15 +661,15 @@ version 0.0.1
             quotas => [400, 300, 200],
             selected_scans =>
             [
-                AI::Pathfinding::OptimizeMultiple::Structs::Scan->new(
+                AI::Pathfinding::OptimizeMultiple::Scan->new(
                     id => 'first_search',
                     cmd_line => "--preset first_search",
                 ),
-                AI::Pathfinding::OptimizeMultiple::Structs::Scan->new(
+                AI::Pathfinding::OptimizeMultiple::Scan->new(
                     id => 'second_search',
                     cmd_line => "--preset second_search",
                 ),
-                AI::Pathfinding::OptimizeMultiple::Structs::Scan->new(
+                AI::Pathfinding::OptimizeMultiple::Scan->new(
                     id => 'third_search',
                     cmd_line => "--preset third_search",
                 ),

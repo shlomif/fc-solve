@@ -26,7 +26,7 @@ sub test_based_on_data
         {
             my $id = $_->{name};
 
-            AI::Pathfinding::OptimizeMultiple::Structs::Scan->new(
+            AI::Pathfinding::OptimizeMultiple::Scan->new(
                 id => $id,
                 cmd_line => "-l $id",
             )

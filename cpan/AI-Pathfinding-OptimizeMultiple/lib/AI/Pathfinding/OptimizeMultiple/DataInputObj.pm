@@ -7,7 +7,7 @@ use MooX qw/late/;
 
 use File::Path qw(mkpath);
 
-use AI::Pathfinding::OptimizeMultiple::Structs;
+use AI::Pathfinding::OptimizeMultiple::Scan;
 
 use PDL;
 use PDL::IO::FastRaw;
@@ -243,7 +243,7 @@ sub _get_all_scans_list_from_file
         chomp($line);
         my ($id, $cmd_line) = split(/\t/, $line);
         push @scans,
-            AI::Pathfinding::OptimizeMultiple::Structs::Scan->new(
+            AI::Pathfinding::OptimizeMultiple::Scan->new(
                 id => $id,
                 cmd_line => $cmd_line
             );

@@ -1,4 +1,4 @@
-package AI::Pathfinding::OptimizeMultiple::Structs::Scan;
+package AI::Pathfinding::OptimizeMultiple::Scan;
 
 use strict;
 use warnings;
@@ -38,11 +38,32 @@ __END__
 
 =head1 NAME
 
-AI::Pathfinding::OptimizeMultiple::Structs::Scan
+AI::Pathfinding::OptimizeMultiple::Scan
 
-=head1 NAME
+=head1 SLOTS
 
-AI::Pathfinding::OptimizeMultiple::Structs::Scan
+=head2 $scan->cmd_line()
+
+The command line string, which defines the scan's behaviour - required upon
+initialization.
+
+=head2 $scan->id()
+
+The scan ID - a string.
+
+=head2 $scan->used()
+
+A boolean - whether the scan was used.
+
+=head1 METHODS
+
+=head2 $self->mark_as_used()
+
+Mark the scan as used.
+
+=head2 $self->is_used()
+
+Returns whether the scan was used.
 
 =head2 $scan->data_file_path()
 
