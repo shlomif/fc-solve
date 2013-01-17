@@ -16,7 +16,7 @@ use Carp;
     .
     11982:Unsolved:300@2,300@1,300@5.....,:300000
 
-I.e: 
+I.e:
 
 =over 4
 
@@ -30,7 +30,7 @@ With a trailing comma.
 
 =item * Total number of iterations.
 
-=back 
+=back
 
 =cut
 
@@ -56,7 +56,7 @@ sub _init
     trap {
         Test::More::ok (!system(
                 join(
-                    " ", $^X, "process.pl", @$cmd_line, 
+                    " ", $^X, "process.pl", @$cmd_line,
                     "--simulate-to=".$self->_simulate_to(),
                     ">",
                     $self->_output_got()
@@ -68,7 +68,7 @@ sub _init
 
     my $stderr = $trap->stderr();
 
-    Test::More::is ($stderr, "", 
+    Test::More::is ($stderr, "",
         "process.pl of " . $self->_simulate_to()
         . " did not return any errors on stderr");
 
@@ -127,7 +127,7 @@ package main;
 
     # TEST
     $simu->is_board_line(
-        1, 
+        1,
         q{1:Solved:300@2,245@9,:545},
         "1 was simulated correctly."
     );
@@ -146,8 +146,8 @@ package main;
 
     # TEST
     $simu->is_board_line(
-        1000, 
-        q{1000:Solved:126@2,:126}, 
+        1000,
+        q{1000:Solved:126@2,:126},
         "1,000 was simulated correctly."
     );
 
