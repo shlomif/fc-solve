@@ -14,7 +14,7 @@ if ($@)
     plan skip_all => "Test::Trap not found.";
 }
 
-plan tests => 2;
+plan tests => 3;
 
 {
     trap(sub {
@@ -29,6 +29,13 @@ plan tests => 2;
     like (
         $trap->stdout(),
         qr/--output/,
+        "stdout matches --output flag.",
+    );
+
+    # TEST
+    like (
+        $trap->stdout(),
+        qr/--help[^\n]*-h[^\n]*displays this help screen/ms,
         "stdout matches --output flag.",
     );
 

@@ -84,8 +84,8 @@ sub BUILD
         print <<"EOF";
 $0 - optimize a game AI multi-tasking configuration
 
---output=[filename] | -o [filename]
-    Output to this file instead of STDOUT.
+--help | -h - displays this help screen
+--output=[filename] | -o [filename] - output to this file instead of STDOUT.
 EOF
         return;
     }

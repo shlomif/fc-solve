@@ -15,6 +15,6 @@ $SIG{__DIE__} = sub {
 
 use AI::Pathfinding::OptimizeMultiple::CmdLine;
 
-my $iface = AI::Pathfinding::OptimizeMultiple::CmdLine->new();
+my $iface = AI::Pathfinding::OptimizeMultiple::CmdLine->new({ argv => [@ARGV], }, );
 $iface->run();
 
