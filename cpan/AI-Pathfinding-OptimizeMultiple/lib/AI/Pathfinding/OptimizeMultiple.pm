@@ -10,7 +10,7 @@ use AI::Pathfinding::OptimizeMultiple::Structs;
 
 use parent 'AI::Pathfinding::OptimizeMultiple::Base';
 
-use PDL ();
+use PDL;
 
 our $VERSION = '0.0.1';
 
@@ -28,6 +28,7 @@ __PACKAGE__->mk_acc_ref([qw(
     _total_boards_solved
     _total_iters
     _trace_cb
+    _scans_meta_data
 )]);
 
 sub _init
@@ -39,12 +40,22 @@ sub _init
     $self->_quotas($args->{'quotas'}) or
         die "Quotas not specified!";
 
-    if (!exists($args->{'scans_data'}))
+    if (!exists($args->{'scans'}))
     {
-        die "scans_data not specified!";
+        die "scans array ref not specified!";
     }
 
-    $self->_orig_scans_data($args->{'scans_data'}->copy());
+    $self->_scans_meta_data($args->{'scans'});
+    if (!exists($args->{'scans_iters_pdls'}))
+    {
+        die "scans_iters_pdls not specified!";
+    }
+
+    my $scans_iters_pdls = $args->{'scans_iters_pdls'};
+
+    my $scans_data = PDL::cat(@$scans_iters_pdls{map { $_->{name} } @{$self->_scans_meta_data}});
+
+    $self->_orig_scans_data($scans_data);
     $self->_scans_data($self->_orig_scans_data()->copy());
 
     $self->_selected_scans($args->{'selected_scans'}) or
@@ -57,7 +68,8 @@ sub _init
 
     $self->_iter_idx(0);
 
-    $self->_optimize_for($args->{'optimize_for'});
+    $self->_optimize_for($args->{'optimize_for'}) or
+        die "optimize_for not speciifed!";
 
     return 0;
 }
@@ -326,11 +338,13 @@ sub calc_meta_scan
         {
             $err->rethrow;
         }
-        else
+        elsif ($err)
         {
             die $err;
         }
     }
+
+    return;
 }
 
 
@@ -697,29 +711,55 @@ version 0.0.1
 
     use AI::Pathfinding::OptimizeMultiple
 
+    my @scans =
+    (
+        {
+            name => "first_search"
+        },
+        {
+            name => "second_search",
+        },
+        {
+            name => "third_search",
+        },
+    );
+
     my $obj = AI::Pathfinding::OptimizeMultiple->new(
         {
-            scans =>
-            [
-                {
-                    name => "first_search"
-                },
-                {
-                    name => "second_search",
-                },
-                {
-                    name => "third_search",
-                },
-            ],
+            scans => \@scans,
+            num_boards => 32_000,
+            optimize_for => 'speed',
             scans_iters_pdls =>
             {
                 first_search => $first_search_pdl,
                 second_search => $second_search_pdl,
             },
+            quotas => [400, 300, 200],
+            selected_scans =>
+            [
+                AI::Pathfinding::OptimizeMultiple::Structs::Scan->new(
+                    id => 'first_search',
+                    cmd_line => "--preset first_search",
+                ),
+                AI::Pathfinding::OptimizeMultiple::Structs::Scan->new(
+                    id => 'second_search',
+                    cmd_line => "--preset second_search",
+                ),
+                AI::Pathfinding::OptimizeMultiple::Structs::Scan->new(
+                    id => 'third_search',
+                    cmd_line => "--preset third_search",
+                ),
+            ],
         }
     );
 
-    my $results = $obj->calc_results();
+    $obj->calc_meta_scan();
+
+    foreach my $scan_alloc (@{$self->chosen_scans()})
+    {
+        printf "Run %s for %d iterations.\n",
+            $scans[$scan_alloc->scan], $scan_alloc->iters;
+    }
 
 =head1 DESCRIPTION
 
