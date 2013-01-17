@@ -342,14 +342,14 @@ sub _write_script
     );
 }
 
-sub _calc_scans_data
+sub _calc_scans_iters_pdls
 {
     my $self = shift;
 
     my $method =
         (($self->_optimize_for() =~ m{len})
-            ? "get_scans_lens_data"
-            : "get_scans_data"
+            ? "get_scans_lens_iters_pdls"
+            : "get_scans_iters_pdls"
         );
 
     return $self->_input_obj->$method();
@@ -370,10 +370,15 @@ sub _init_arbitrator
     return $self->_arbitrator(
         AI::Pathfinding::OptimizeMultiple->new(
             {
+                'scans' =>
+                [
+                    map { +{ name => $_->id() } }
+                    @{$self->_input_obj->_suitable_scans_list()},
+                ],
                 'quotas' => $self->_get_quotas(),
                 'selected_scans' => $self->_selected_scans(),
                 'num_boards' => $self->_num_boards(),
-                'scans_data' => $self->_calc_scans_data(),
+                'scans_iters_pdls' => $self->_calc_scans_iters_pdls(),
                 'trace_cb' => \&_arbitrator_trace_cb,
                 'optimize_for' => $self->_optimize_for(),
             }

@@ -99,8 +99,8 @@ sub _get_scans_data_helper
 
     my $start_board = $self->start_board();
 
-    my $scans_data = $self->_gen_initial_scans_tensor();
-    my $scans_lens_data = $self->_gen_initial_scans_tensor([3]);
+    my $scans_data = {};
+    my $scans_lens_data = {};
 
     my $scan_idx = 0;
 
@@ -132,11 +132,9 @@ sub _get_scans_data_helper
                 }
             }
             {
-                my $scan_vec = readfraw($dest_path);
-                my $scans_data_slice = $scans_data->slice(":,$scan_idx");
-                # Board No. 1 starts at index 0.
                 my $start_idx = $NUM_NUMBERS_IN_HEADER + ($start_board - 1);
-                $scans_data_slice += $scan_vec->slice(
+                my $scan_vec = readfraw($dest_path);
+                $scans_data->{$scan->id()} = $scan_vec->slice(
                     $start_idx.":".($start_idx + $self->num_boards()-1)
                 );
             }
@@ -175,8 +173,7 @@ sub _get_scans_data_helper
             }
             {
                 my $scan_vec = readfraw($dest);
-                my $scans_data_slice = $scans_lens_data->slice(":,$scan_idx,:");
-                $scans_data_slice += $scan_vec->slice(
+                $scans_lens_data->{$scan->id()} = $scan_vec->slice(
                     sprintf(
                         "%d:%d,:,*",
                         ($start_board-1),
@@ -201,14 +198,14 @@ sub _get_scans_data_generic
     return $self->_get_scans_data_helper()->{$id};
 }
 
-sub get_scans_data
+sub get_scans_iters_pdls
 {
     my $self = shift;
 
     return $self->_get_scans_data_generic('scans');
 }
 
-sub get_scans_lens_data
+sub get_scans_lens_iters_pdls
 {
     my $self = shift;
 
@@ -412,13 +409,13 @@ Retrieves the next scan ID and increment it.
 
 Returns an array reference of previous scan hash-refs.
 
-=head2 $self->get_scans_data()
+=head2 my $hash_ref = $self->get_scans_iters_pdls()
 
-Returns the PDL of the scans data.
+Returns the hash ref mapping scan IDs/names to iteration PDLs.
 
-=head2 $self->get_scans_lens_data()
+=head2 my $hash_ref = $self->get_scans_lens_iters_pdls()
 
-The PDL of the data with the solutions' lengths.
+Returns the hash ref mapping scan IDs/names to iteration+lengths PDLs.
 
 =head2 $self->num_boards()
 

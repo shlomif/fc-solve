@@ -51,25 +51,31 @@ sub _init
         die "scans_iters_pdls not specified!";
     }
 
-    my $scans_iters_pdls = $args->{'scans_iters_pdls'};
-
-    my $scans_data = PDL::cat(@$scans_iters_pdls{map { $_->{name} } @{$self->_scans_meta_data}});
-
-    $self->_orig_scans_data($scans_data);
-    $self->_scans_data($self->_orig_scans_data()->copy());
-
     $self->_selected_scans($args->{'selected_scans'}) or
         die "selected_scans not specified!";
 
     $self->_num_boards($args->{'num_boards'}) or
         die "num_boards not specified!";
 
+    $self->_optimize_for($args->{'optimize_for'}) or
+        die "optimize_for not speciifed!";
+
+    my $scans_iters_pdls = $args->{'scans_iters_pdls'};
+
+    my $scans_data = PDL::cat(
+        @{ $scans_iters_pdls }{
+            map { $_->id() } @{$self->_selected_scans()}
+        }
+    );
+
+    $self->_orig_scans_data($scans_data);
+    $self->_scans_data($self->_orig_scans_data()->copy());
+
+
     $self->_trace_cb($args->{'trace_cb'});
 
     $self->_iter_idx(0);
 
-    $self->_optimize_for($args->{'optimize_for'}) or
-        die "optimize_for not speciifed!";
 
     return 0;
 }
