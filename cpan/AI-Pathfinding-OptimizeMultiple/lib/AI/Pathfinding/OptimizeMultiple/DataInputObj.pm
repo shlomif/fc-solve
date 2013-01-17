@@ -3,35 +3,25 @@ package AI::Pathfinding::OptimizeMultiple::DataInputObj;
 use strict;
 use warnings;
 
-use File::Path qw(mkpath);
+use MooX qw/late/;
 
-use parent 'AI::Pathfinding::OptimizeMultiple::Base';
+use File::Path qw(mkpath);
 
 use AI::Pathfinding::OptimizeMultiple::Structs;
 
 use PDL;
 use PDL::IO::FastRaw;
 
-__PACKAGE__->mk_acc_ref(
-    [qw(
-        start_board
-        num_boards
-        selected_scans
-    )],
+has start_board => (isa => 'Int', is => 'ro', required => 1);
+has num_boards => (isa => 'Int', is => 'ro', required => 1);
+has selected_scans => (isa => 'ArrayRef', is => 'ro', required => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->_calc_selected_scan_list();
+    },
+    lazy => 1,
 );
-
-sub _init
-{
-    my $self = shift;
-    my $args = shift;
-
-    $self->start_board($args->{'start_board'});
-    $self->num_boards($args->{'num_boards'});
-
-    $self->_calc_selected_scan_list();
-
-    return;
-}
 
 sub _slurp
 {
@@ -294,14 +284,11 @@ sub _calc_selected_scan_list
 {
     my $self = shift;
 
-    $self->selected_scans(
+    return
         _filter_scans_based_on_black_list_ids(
             $self->_suitable_scans_list(),
             $self->_black_list_ids_list(),
         )
-    );
-
-    return;
 }
 
 sub get_next_id
