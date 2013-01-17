@@ -384,9 +384,7 @@ sub time_scan
 
 AI::Pathfinding::OptimizeMultiple::DataInputObj - handle the data input.
 
-=head1 VERSION
-
-Version 0.0.1
+=head1 SUBROUTINES/METHODS
 
 =head2 $self->get_next_id()
 

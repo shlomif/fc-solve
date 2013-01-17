@@ -24,17 +24,13 @@ sub get_status
 
 AI::Pathfinding::OptimizeMultiple::SimulationResults - the simulation results.
 
-=head1 VERSION
-
-version 0.0.1
-
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
 A class for simulation results.
 
-=head1 SLOTS
+=head1 SUBROUTINES/METHODS
 
 =head2 $scan_run->status()
 
@@ -48,8 +44,6 @@ The total iterations count so far.
 
 An array reference of L<AI::Pathfinding::OptimizeMultiple::ScanRun> .
 
-=head1 METHODS
-
 =head2 $self->get_total_iters()
 
 Returns the total iterations.
@@ -57,10 +51,6 @@ Returns the total iterations.
 =head2 $self->get_status()
 
 Returns the status.
-
-=head1 VERSION
-
-version 0.0.1
 
 =head1 SEE ALSO
 

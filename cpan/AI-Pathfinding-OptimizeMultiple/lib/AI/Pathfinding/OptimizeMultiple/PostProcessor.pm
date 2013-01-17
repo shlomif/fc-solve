@@ -69,19 +69,7 @@ __END__
 
 =head1 NAME
 
-AI::Pathfinding::OptimizeMultiple::PostProcessor
-
-=head1 NAME
-
-AI::Pathfinding::OptimizeMultiple::PostProcessor
-
-=head1 NAME
-
 AI::Pathfinding::OptimizeMultiple::PostProcessor - post-processor.
-
-=head1 VERSION
-
-Version 0.0.1
 
 =head1 SUBROUTINES/METHODS
 

@@ -625,11 +625,8 @@ __END__
 
 =head1 NAME
 
-AI::Pathfinding::OptimizeMultiple
-
-=head1 VERSION
-
-version 0.0.1
+AI::Pathfinding::OptimizeMultiple - optimize path finding searches for a large
+set of initial conditions (for better average performance).
 
 =head1 SYNOPSIS
 
@@ -702,6 +699,8 @@ across a representative number of initial cases, find a scan
 that solves most deals with close-to-optimal performance, by using switch
 tasking.
 
+=head1 METHODS
+
 =head2 my $chosen_scans_array_ref = $self->chosen_scans()
 
 Returns the scans that have been chosen to perform the iteration. Each one is
@@ -754,19 +753,6 @@ Returns the total iterations count so far.
 =head2 BUILD()
 
 Moo leftover. B<INTERNAL USE>.
-
-=head1 VERSION
-
-version 0.0.1
-
-=head1 NAME
-
-AI::Pathfinding::OptimizeMultiple - optimize path finding searches for a large
-set of initial conditions (for better average performance).
-
-=head1 VERSION
-
-Version 0.0.1
 
 =head1 SEE ALSO
 

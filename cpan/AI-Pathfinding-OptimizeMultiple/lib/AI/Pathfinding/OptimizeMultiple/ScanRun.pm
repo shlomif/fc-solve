@@ -28,10 +28,6 @@ __END__
 AI::Pathfinding::OptimizeMultiple::ScanRun - running scan_idx for certain
 iterations.
 
-=head1 VERSION
-
-version 0.0.1
-
 =head1 SYNOPSIS
 
     printf "Run %s for %d iterations.\n",
@@ -56,12 +52,6 @@ Number of iterations it ran.
 =head2 my $copy = $scan_run->clone()
 
 Clones the scan.
-
-=cut
-
-=head1 VERSION
-
-version 0.0.1
 
 =head1 SEE ALSO
 

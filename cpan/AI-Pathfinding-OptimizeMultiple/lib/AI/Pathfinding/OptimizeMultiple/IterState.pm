@@ -172,27 +172,7 @@ __END__
 
 =head1 NAME
 
-AI::Pathfinding::OptimizeMultiple::IterState
-
-=head1 VERSION
-
-version 0.0.1
-
-=head1 NAME
-
-AI::Pathfinding::OptimizeMultiple::IterState
-
-=head1 VERSION
-
-version 0.0.1
-
-=head1 NAME
-
 AI::Pathfinding::OptimizeMultiple::IterState - iteration state object.
-
-=head1 VERSION
-
-Version 0.0.1
 
 =head1 SUBROUTINES/METHODS
 
