@@ -13,8 +13,8 @@ $SIG{__DIE__} = sub {
     confess($_[0]);
 };
 
-use AI::Pathfinding::OptimizeMultiple::CmdLine;
+use AI::Pathfinding::OptimizeMultiple::App::CmdLine;
 
-my $iface = AI::Pathfinding::OptimizeMultiple::CmdLine->new({ argv => [@ARGV], }, );
+my $iface = AI::Pathfinding::OptimizeMultiple::App::CmdLine->new({ argv => [@ARGV], }, );
 $iface->run();
 
