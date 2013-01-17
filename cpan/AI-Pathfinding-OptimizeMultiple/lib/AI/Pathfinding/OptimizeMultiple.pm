@@ -8,74 +8,41 @@ use IO::Handle;
 use AI::Pathfinding::OptimizeMultiple::IterState;
 use AI::Pathfinding::OptimizeMultiple::Structs;
 
-use parent 'AI::Pathfinding::OptimizeMultiple::Base';
+use MooX qw/late/;
 
 use PDL;
 
 our $VERSION = '0.0.1';
 
+has chosen_scans => (isa => 'ArrayRef', is => 'rw');
+has _iter_idx => (isa => 'Int', is => 'rw', default => sub { 0; },);
+has _num_boards => (isa => 'Int', is => 'ro', init_arg => 'num_boards',);
+has _orig_scans_data => (isa => 'PDL', is => 'rw');
+has _optimize_for => (isa => 'Str', is => 'ro', init_arg => 'optimize_for',);
+has _scans_data   => (isa => 'PDL', is => 'rw');
+has _selected_scans => (isa => 'ArrayRef', is => 'ro', init_arg => 'selected_scans',);
+has _status => (isa => 'Str', is => 'rw');
+has _quotas => (isa => 'ArrayRef[Int]', is => 'ro', init_arg => 'quotas');
+has _total_boards_solved => (isa => 'Int', is => 'rw');
+has _total_iters => (isa => 'Int', is => 'rw');
+has _trace_cb => (isa => 'Maybe[CodeRef]', is => 'ro', init_arg => 'trace_cb');
+has _scans_meta_data => (isa => 'ArrayRef', is => 'ro', init_arg => 'scans');
+has _scans_iters_pdls => (isa => 'HashRef', is => 'rw', init_arg => 'scans_iters_pdls');
 
-__PACKAGE__->mk_acc_ref([qw(
-    chosen_scans
-    _iter_idx
-    _num_boards
-    _orig_scans_data
-    _optimize_for
-    _scans_data
-    _selected_scans
-    _status
-    _quotas
-    _total_boards_solved
-    _total_iters
-    _trace_cb
-    _scans_meta_data
-)]);
-
-sub _init
+sub BUILD
 {
     my $self = shift;
 
     my $args = shift;
 
-    $self->_quotas($args->{'quotas'}) or
-        die "Quotas not specified!";
-
-    if (!exists($args->{'scans'}))
-    {
-        die "scans array ref not specified!";
-    }
-
-    $self->_scans_meta_data($args->{'scans'});
-    if (!exists($args->{'scans_iters_pdls'}))
-    {
-        die "scans_iters_pdls not specified!";
-    }
-
-    $self->_selected_scans($args->{'selected_scans'}) or
-        die "selected_scans not specified!";
-
-    $self->_num_boards($args->{'num_boards'}) or
-        die "num_boards not specified!";
-
-    $self->_optimize_for($args->{'optimize_for'}) or
-        die "optimize_for not speciifed!";
-
-    my $scans_iters_pdls = $args->{'scans_iters_pdls'};
-
     my $scans_data = PDL::cat(
-        @{ $scans_iters_pdls }{
+        @{ $self->_scans_iters_pdls() }{
             map { $_->id() } @{$self->_selected_scans()}
         }
     );
 
     $self->_orig_scans_data($scans_data);
     $self->_scans_data($self->_orig_scans_data()->copy());
-
-
-    $self->_trace_cb($args->{'trace_cb'});
-
-    $self->_iter_idx(0);
-
 
     return 0;
 }
@@ -833,9 +800,9 @@ L<AI::Pathfinding::OptimizeMultiple::SimulationResults> object.
 
 Returns the total iterations count so far.
 
-=head1 NAME
+=head2 BUILD()
 
-AI::Pathfinding::OptimizeMultiple
+Moo leftover. B<INTERNAL USE>.
 
 =head1 VERSION
 
