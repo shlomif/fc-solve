@@ -619,8 +619,6 @@ sub _add_to_total_boards_solved
 
 1; # End of AI::Pathfinding::OptimizeMultiple
 
-__END__
-
 =pod
 
 =head1 NAME
@@ -699,7 +697,7 @@ across a representative number of initial cases, find a scan
 that solves most deals with close-to-optimal performance, by using switch
 tasking.
 
-=head1 METHODS
+=head1 SUBROUTINES/METHODS
 
 =head2 my $chosen_scans_array_ref = $self->chosen_scans()
 
