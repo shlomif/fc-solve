@@ -3,44 +3,23 @@ package AI::Pathfinding::OptimizeMultiple::IterState;
 use strict;
 use warnings;
 
-use PDL ();
+use MooX qw/late/;
 
-use parent 'AI::Pathfinding::OptimizeMultiple::Base';
+use PDL ();
 
 our $VERSION = '0.0.1';
 
+use vars (qw(@fields));
 
-use vars (qw(@fields %fields_map));
-
-@fields = (qw(
-    _main
-    _num_solved
-    _quota
-    _scan_idx
-));
+has _main => (is => 'rw');
+has _num_solved => (isa => 'Int', is => 'ro', init_arg => 'num_solved', required => 1);
+has _quota => (isa => 'Int', is => 'ro', init_arg => 'quota', required => 1);
+has _scan_idx => (isa => 'Int', is => 'ro', init_arg => 'scan_idx', required => 1);
 
 use Exception::Class
 (
     'AI::Pathfinding::OptimizeMultiple::Error::OutOfQuotas'
 );
-
-%fields_map = (map { $_ => 1 } @fields);
-
-__PACKAGE__->mk_acc_ref(\@fields);
-
-sub _init
-{
-    my $self = shift;
-
-    my $args = shift;
-
-    $self->_quota( $args->{'quota'} );
-    $self->_num_solved( $args->{'num_solved'} );
-    $self->_scan_idx( $args->{'scan_idx'} );
-
-    return 0;
-}
-
 
 sub attach_to
 {
