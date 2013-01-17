@@ -14,32 +14,39 @@ if ($@)
     plan skip_all => "Test::Trap not found.";
 }
 
-plan tests => 3;
+plan tests => 6;
 
-{
-    trap(sub {
+# TEST:$num_subs=2;
+foreach my $sub_ref (
+    sub {
         AI::Pathfinding::OptimizeMultiple::CmdLine->new(
             {
                 argv => [qw/--help/],
             },
         )->run();
-    });
+    },
+    sub {
+        system($^X, "bin/optimize-game-ai-multi-tasking", "--help");
+    },
+)
+{
+    trap($sub_ref);
 
-    # TEST
+    # TEST*$num_subs
     like (
         $trap->stdout(),
         qr/--output/,
         "stdout matches --output flag.",
     );
 
-    # TEST
+    # TEST*$num_subs
     like (
         $trap->stdout(),
         qr/--help[^\n]*-h[^\n]*displays this help screen/ms,
         "stdout matches --output flag.",
     );
 
-    # TEST
+    # TEST*$num_subs
     ok (
         scalar (!$trap->die),
         "No exception was thrown.",
