@@ -5,7 +5,7 @@ use warnings;
 
 use MooX qw/late/;
 
-use Getopt::Long;
+use Getopt::Long qw(GetOptionsFromArray);
 use IO::File;
 
 use AI::Pathfinding::OptimizeMultiple;
@@ -16,9 +16,11 @@ use AI::Pathfinding::OptimizeMultiple::PostProcessor;
 
 use Carp;
 
+has argv => (isa => 'ArrayRef[Str]', is => 'ro', required => 1,);
 has _arbitrator => (is => 'rw');
 has _add_horne_prune => (isa => 'Bool', is => 'rw');
 has _chosen_scans => (isa => 'ArrayRef', is => 'rw');
+has _exit_immediately => (isa => 'Bool', is => 'rw', default => sub { 0; },);
 has input_obj_class => (isa => 'Str', is => 'rw');
 has _input_obj => (is => 'rw');
 has _is_flares => (is => 'rw', isa => 'Bool', default => sub { 0; },);
@@ -55,7 +57,12 @@ sub BUILD
     my $_add_horne_prune = 0;
     my $input_obj_class = 'AI::Pathfinding::OptimizeMultiple::DataInputObj';
 
-    GetOptions(
+    my $help = 0;
+    my $man = 0;
+    GetOptionsFromArray(
+        $self->argv(),
+        'help|h' => \$help,
+        man => \$man,
         "o|output=s" => \$output_filename,
         "num-boards=i" => \$num_boards,
         "trace" => \$should_trace_be_done,
@@ -68,7 +75,20 @@ sub BUILD
         "simulate-to=s" => \$simulate_to,
         "sprtf" => \$_add_horne_prune,
         "input-class=s" => \$input_obj_class,
-    ) or exit(1);
+    ) or die "Extracting options from ARGV array failed - $!";
+
+
+    if ($help)
+    {
+        $self->_exit_immediately(1);
+        print <<"EOF";
+$0 - optimize a game AI multi-tasking configuration
+
+--output=[filename] | -o [filename]
+    Output to this file instead of STDOUT.
+EOF
+        return;
+    }
 
     $self->_start_board($_start_board);
     $self->_num_boards($num_boards);
@@ -507,6 +527,11 @@ sub run
 {
     my $self = shift;
 
+    if ($self->_exit_immediately())
+    {
+        return 0;
+    }
+
     $self->_init_arbitrator();
     $self->_arbitrator_process();
     $self->_report_total_iters();
@@ -573,6 +598,10 @@ For internal use.
 =head2 $self->run_flares()
 
 For internal use.
+
+=head2 $self->argv()
+
+An array ref of command line arguments.
 
 =head2 $self->input_obj_class()
 

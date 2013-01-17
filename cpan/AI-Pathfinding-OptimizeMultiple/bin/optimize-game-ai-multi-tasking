@@ -18,7 +18,7 @@ $SIG{__DIE__} = sub {
 
 use AI::Pathfinding::OptimizeMultiple;
 
-my $iface = AI::Pathfinding::OptimizeMultiple->new();
+my $iface = AI::Pathfinding::OptimizeMultiple->new({ argv => [@ARGV], });
 $iface->run();
 
 1;
