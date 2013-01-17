@@ -12,6 +12,8 @@ use AI::Pathfinding::OptimizeMultiple::Scan;
 use PDL;
 use PDL::IO::FastRaw;
 
+our $VERSION = '0.0.2';
+
 has start_board => (isa => 'Int', is => 'ro', required => 1);
 has num_boards => (isa => 'Int', is => 'ro', required => 1);
 has selected_scans => (isa => 'ArrayRef', is => 'ro', required => 1,
