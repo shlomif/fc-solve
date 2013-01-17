@@ -7,6 +7,7 @@ use IO::Handle;
 
 use AI::Pathfinding::OptimizeMultiple::IterState;
 use AI::Pathfinding::OptimizeMultiple::Structs;
+use AI::Pathfinding::OptimizeMultiple::ScanRun;
 
 use MooX qw/late/;
 
@@ -613,25 +614,6 @@ sub _add_to_total_boards_solved
     $self->_total_boards_solved($self->_total_boards_solved() + $how_much);
 
     return;
-}
-
-package AI::Pathfinding::OptimizeMultiple::ScanRun;
-
-use MooX qw/late/;
-
-has iters => (isa => 'Int', is => 'rw', required => 1);
-has scan_idx => (isa => 'Int', is => 'ro', required => 1);
-
-sub clone
-{
-    my $self = shift;
-
-    return ref($self)->new(
-        {
-            iters => $self->iters(),
-            scan_idx => $self->scan_idx(),
-        }
-    );
 }
 
 package AI::Pathfinding::OptimizeMultiple::SimulationResults;
