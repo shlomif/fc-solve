@@ -3,31 +3,11 @@ package AI::Pathfinding::OptimizeMultiple::Structs::Scan;
 use strict;
 use warnings;
 
-use parent 'AI::Pathfinding::OptimizeMultiple::Base';
+use MooX qw/late/;
 
-use vars (qw(@fields %fields_map));
-@fields = (qw(
-    cmd_line
-    id
-    used
-));
-
-%fields_map = (map { $_ => 1 } @fields);
-
-__PACKAGE__->mk_acc_ref(\@fields);
-
-sub _init
-{
-    my $self = shift;
-    my (%args) = @_;
-    $self->used(0);
-    foreach my $field (grep {exists($fields_map{$_})} keys(%args))
-    {
-        $self->$field($args{$field});
-    }
-
-    return 0;
-}
+has cmd_line => (isa => 'Str', is => 'ro', required => 1,);
+has id => (isa => 'Str', is => 'ro', required => 1,);
+has used => (isa => 'Bool', is => 'rw', default => sub { 0; });
 
 sub mark_as_used
 {
