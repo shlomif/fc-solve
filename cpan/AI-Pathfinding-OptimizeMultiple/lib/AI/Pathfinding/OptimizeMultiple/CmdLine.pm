@@ -3,7 +3,7 @@ package AI::Pathfinding::OptimizeMultiple::CmdLine;
 use strict;
 use warnings;
 
-use parent 'AI::Pathfinding::OptimizeMultiple::Base';
+use MooX qw/late/;
 
 use Getopt::Long;
 use IO::File;
@@ -16,33 +16,28 @@ use AI::Pathfinding::OptimizeMultiple::PostProcessor;
 
 use Carp;
 
-
-__PACKAGE__->mk_acc_ref(
-    [qw(
-    _add_horne_prune
-    _arbitrator
-    _chosen_scans
-    input_obj_class
-    _input_obj
-    _is_flares
-    _num_boards
-    _offset_quotas
-    _optimize_for
-    _output_filename
-    _post_processor
-    _quotas_are_cb
-    _quotas_expr
-    _should_rle_be_done
-    _should_trace_be_done
-    _simulate_to
-    _start_board
-    )]
-);
+has _arbitrator => (is => 'rw');
+has _add_horne_prune => (isa => 'Bool', is => 'rw');
+has _chosen_scans => (isa => 'ArrayRef', is => 'rw');
+has input_obj_class => (isa => 'Str', is => 'rw');
+has _input_obj => (is => 'rw');
+has _is_flares => (is => 'rw', isa => 'Bool', default => sub { 0; },);
+has _num_boards => (isa => 'Int', is => 'rw');
+has _offset_quotas => (isa => 'Int', is => 'rw');
+has _optimize_for => (isa => 'Str', is => 'rw');
+has _output_filename => (isa => 'Str', is => 'rw');
+has _post_processor => (isa => 'Maybe[AI::Pathfinding::OptimizeMultiple::PostProcessor]', is => 'rw');
+has _quotas_are_cb => (isa => 'Bool', is => 'rw');
+has _quotas_expr => (isa => 'Maybe[Str]', is => 'rw');
+has _should_rle_be_done => (isa => 'Bool', is => 'rw');
+has _should_trace_be_done => (isa => 'Bool', is => 'rw');
+has _simulate_to => (isa => 'Maybe[Str]', is => 'rw');
+has _start_board => (isa => 'Int', is => 'rw');
 
 my $_component_re = qr/[A-Za-z][A-Za-z0-9_]*/;
 my $_module_re = qr/$_component_re(?:::$_component_re)*/;
 
-sub _init
+sub BUILD
 {
     my $self = shift;
 
@@ -85,7 +80,6 @@ sub _init
     $self->_optimize_for($optimize_for);
     $self->_offset_quotas($offset_quotas);
     $self->_simulate_to($simulate_to);
-    $self->_is_flares(0);
     $self->_add_horne_prune($_add_horne_prune);
     $self->input_obj_class($input_obj_class);
 
@@ -584,6 +578,10 @@ For internal use.
 
 The class to handle the input data - by default -
 L<AI::Pathfinding::OptimizeMultiple::DataInputObj>.
+
+=head2 BUILD()
+
+Moo leftover. B<INTERNAL USE>.
 
 =head1 COPYRIGHT AND LICENSE
 
