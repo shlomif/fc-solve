@@ -3,26 +3,10 @@ package AI::Pathfinding::OptimizeMultiple::PostProcessor;
 use strict;
 use warnings;
 
-use parent 'AI::Pathfinding::OptimizeMultiple::Base';
+use MooX qw/late/;
 
-__PACKAGE__->mk_acc_ref([qw(
-    _should_do_rle
-    _offset_quotas
-)]);
-
-sub _init
-{
-    my $self = shift;
-    my $args = shift;
-
-    $self->_should_do_rle($args->{do_rle});
-    $self->_offset_quotas($args->{offset_quotas});
-
-    return $self;
-}
-
-
-
+has _should_do_rle => (isa => 'Bool', is => 'ro', init_arg => 'do_rle', required => 1);
+has _offset_quotas => (isa => 'Bool', is => 'ro', init_arg => 'offset_quotas', required => 1);
 
 sub scans_rle
 {
