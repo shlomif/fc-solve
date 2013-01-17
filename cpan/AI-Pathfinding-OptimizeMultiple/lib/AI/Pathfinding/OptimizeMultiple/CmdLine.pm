@@ -20,7 +20,7 @@ has argv => (isa => 'ArrayRef[Str]', is => 'ro', required => 1,);
 has _arbitrator => (is => 'rw');
 has _add_horne_prune => (isa => 'Bool', is => 'rw');
 has _chosen_scans => (isa => 'ArrayRef', is => 'rw');
-has _exit_immediately => (isa => 'Bool', is => 'rw', default => sub { 0; },);
+has _should_exit_immediately => (isa => 'Bool', is => 'rw', default => sub { 0; },);
 has input_obj_class => (isa => 'Str', is => 'rw');
 has _input_obj => (is => 'rw');
 has _is_flares => (is => 'rw', isa => 'Bool', default => sub { 0; },);
@@ -80,7 +80,7 @@ sub BUILD
 
     if ($help)
     {
-        $self->_exit_immediately(1);
+        $self->_should_exit_immediately(1);
         print <<"EOF";
 $0 - optimize a game AI multi-tasking configuration
 
@@ -527,7 +527,7 @@ sub run
 {
     my $self = shift;
 
-    if ($self->_exit_immediately())
+    if ($self->_should_exit_immediately())
     {
         return 0;
     }
