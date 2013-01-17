@@ -1,4 +1,12 @@
 cpan/AI-Pathfinding-OptimizeMultiple/.build
+cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/Build
+cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/META.json
+cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/META.yml
+cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/MYMETA.json
+cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/MYMETA.yml
+cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/Makefile.PL
+cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/_build
+cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/blib
 cpan/temp-AI-Pathfinding-OptimizeMultiple-system-tests/.data-len-proc
 cpan/temp-AI-Pathfinding-OptimizeMultiple-system-tests/.data-proc
 fc-solve/B
@@ -114,14 +122,6 @@ fc-solve/source/t/t/dbm-kaztree-compare-records-test.exe
 fc-solve/source/t/t/delta-states-test.exe
 fc-solve/source/tags
 fc-solve/scripts/cache
-Games-Solitaire-Verify/Games-Solitaire-Verify/Build
-Games-Solitaire-Verify/Games-Solitaire-Verify/Makefile.PL
-Games-Solitaire-Verify/Games-Solitaire-Verify/META.json
-Games-Solitaire-Verify/Games-Solitaire-Verify/META.yml
-Games-Solitaire-Verify/Games-Solitaire-Verify/MYMETA.json
-Games-Solitaire-Verify/Games-Solitaire-Verify/MYMETA.yml
-Games-Solitaire-Verify/Games-Solitaire-Verify/_build
-Games-Solitaire-Verify/Games-Solitaire-Verify/blib
 Task-FreecellSolver-Testing/Build
 Task-FreecellSolver-Testing/META.json
 Task-FreecellSolver-Testing/META.yml
