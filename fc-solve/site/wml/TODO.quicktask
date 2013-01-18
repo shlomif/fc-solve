@@ -1,8 +1,6 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-    - Make the output box taller.
-        * Added [Fri 2013-01-18]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
         * in a separate git branch
         * Added [Sat 2013-01-12]
@@ -90,7 +88,8 @@ COMPLETED TASKS:
                 * Fails to find the amateur-star text file.
             * Added [Wed 2013-01-16]
             * DONE [Wed 2013-01-16]
-
-
+    - Make the output box taller.
+        * Added [Fri 2013-01-18]
+        * DONE [Fri 2013-01-18]
 
 # vim:ft=quicktask:sw=4:ts=4

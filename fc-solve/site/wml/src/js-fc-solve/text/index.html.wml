@@ -140,7 +140,7 @@ Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve fo
 
 <label for="output">Output:</label><br />
 
-<textarea class="emscripten" id="output" cols="50" rows="8" readonly="readonly"></textarea> <br />
+<textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea> <br />
 
 <button id="clear_output" onclick="javascript:clear_output()" title="Clear the Output Box">Clear Output</button>
 
