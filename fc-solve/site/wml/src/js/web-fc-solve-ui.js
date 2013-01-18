@@ -194,14 +194,6 @@ function populate_input_with_numbered_deal() {
     return;
 }
 
-function _get_loc() {
-    return window.location;
-}
-
-function _get_base_url() {
-    var loc = _get_loc();
-    return loc.protocol + '//' + loc.host + loc.pathname;
-}
 
 Class('FC_Solve_Bookmarking', {
         has: {
@@ -210,6 +202,15 @@ Class('FC_Solve_Bookmarking', {
             },
         },
         methods: {
+            _get_loc: function() {
+                return window.location;
+            },
+            _get_base_url: function () {
+                var that = this;
+
+                var loc = that._get_loc();
+                return loc.protocol + '//' + loc.host + loc.pathname;
+            },
             _each_control: function(cb) {
                 var that = this;
 
@@ -229,7 +230,7 @@ Class('FC_Solve_Bookmarking', {
                     control_values[myid] = get_v(myid);
                 });
 
-                var bookmark_string = _get_base_url() + '?' + $.querystring(control_values);
+                var bookmark_string = that._get_base_url() + '?' + $.querystring(control_values);
 
                 $("#fcs_bm_results_input").val(bookmark_string);
 
@@ -245,7 +246,7 @@ Class('FC_Solve_Bookmarking', {
             restore_bookmark: function () {
                 var that = this;
 
-                var qs = _get_loc().search;
+                var qs = that._get_loc().search;
 
                 if (! qs.length) {
                     return;
