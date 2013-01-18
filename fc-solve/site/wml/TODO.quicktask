@@ -1,6 +1,8 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+    - Convert src/js/web-fc-solve-ui.js to a Joose class.
+        * Added [Fri 2013-01-18]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
         * in a separate git branch
         * Added [Sat 2013-01-12]
