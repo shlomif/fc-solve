@@ -540,6 +540,18 @@ C++ code on GitHub</a> for solving Freecell. (Under the
 version 3</a> open source (but restrictive) licence.
 </p>
 </li>
+
+<li>
+<p>
+<a href="http://metacpan.org/release/Freecell-App">The Freecell-App CPAN
+Package</a> - a “simple Freecell Solver” written in Perl and distributed as
+a CPAN (= Comprehensive Perl Archive Network) package. By
+<a href="http://metacpan.org/author/SHIRHA">Shirl Hart</a>. Open source
+under the permissive (and GPLv2/GPLv3 compatible)
+<a href="http://en.wikipedia.org/wiki/Artistic_License#Artistic_License_2.0">Artistic
+License 2.0</a>.
+</p>
+</li>
 </ul>
 
 <h2 id="reviews">Reviews of Freecell Solver</h2>
