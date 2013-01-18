@@ -14,7 +14,7 @@ use MooX qw/late/;
 
 use PDL;
 
-our $VERSION = '0.0.2';
+our $VERSION = '0.0.3';
 
 has chosen_scans => (isa => 'ArrayRef', is => 'rw');
 has _iter_idx => (isa => 'Int', is => 'rw', default => sub { 0; },);

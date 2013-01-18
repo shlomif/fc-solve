@@ -2,7 +2,7 @@ package AI::Pathfinding::OptimizeMultiple::SimulationResults;
 
 use MooX qw/late/;
 
-our $VERSION = '0.0.2';
+our $VERSION = '0.0.3';
 
 has status => (isa => 'Str', is => 'ro', required => 1,);
 has total_iters => (isa => 'Int', is => 'ro', required => 1,);
