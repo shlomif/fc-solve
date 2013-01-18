@@ -39,23 +39,6 @@ function _process_pristine_output(text) {
 }
 
 var _pristine_output;
-
-function _update_output () {
-    _webui_output_set_text(_process_pristine_output(_pristine_output));
-
-    return;
-}
-
-function on_toggle_one_based() {
-
-    if ($("#output").val()) {
-        _update_output();
-    }
-
-    return;
-}
-
-
 function clear_output() {
     return _webui_output_set_text('');
 }
@@ -67,6 +50,12 @@ Class('FC_Solve_UI',
             _solve_err_code: { is: rw },
         },
         methods: {
+            _update_output: function () {
+                _webui_output_set_text(_process_pristine_output(_pristine_output));
+
+                return;
+            },
+
             _re_enable_output: function() {
                 $("#output").removeAttr("disabled");
 
@@ -93,7 +82,7 @@ Class('FC_Solve_UI',
 
                 that._re_enable_output();
 
-                _update_output();
+                that._update_output();
 
                 return;
             },
@@ -261,3 +250,13 @@ function restore_bookmark() {
 
     return;
 }
+
+function on_toggle_one_based() {
+
+    if ($("#output").val()) {
+        fcs_ui._update_output();
+    }
+
+    return;
+}
+
