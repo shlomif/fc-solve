@@ -208,55 +208,78 @@ function _get_base_url() {
     return loc.protocol + '//' + loc.host + loc.pathname;
 }
 
-var _bookmark_controls = ['stdin', 'preset', 'deal_number', 'one_based'];
+Class('FC_Solve_Bookmarking', {
+        has: {
+            bookmark_controls: {
+                is: ro,
+            },
+        },
+        methods: {
+            on_bookmarking: function() {
+                var that = this;
+
+                var get_v = function(myid) {
+                    var ctl = $('#' + myid);
+                    return ctl.is(':checkbox') ?  (ctl.is(':checked') ? '1' : '0') : ctl.val();
+                };
+
+                var control_values = {};
+
+                that.bookmark_controls.forEach(function (myid) {
+                    control_values[myid] = get_v(myid);
+                });
+
+                var bookmark_string = _get_base_url() + '?' + $.querystring(control_values);
+
+                $("#fcs_bm_results_input").val(bookmark_string);
+
+                var a_elem = $("#fcs_bm_results_a");
+                // Too long to be effective.
+                // a_elem.text(bookmark_string);
+                a_elem.attr('href', bookmark_string);
+
+                $("#fcs_bookmark_wrapper").removeClass("disabled");
+
+                return;
+            },
+            restore_bookmark: function () {
+                var that = this;
+
+                var qs = _get_loc().search;
+
+                if (! qs.length) {
+                    return;
+                }
+
+                // Remove trailing 1.
+                var params = $.querystring(qs.substr(1));
+
+                that.bookmark_controls.forEach(function (myid) {
+                    var ctl = $('#' + myid);
+                    if (ctl.is(':checkbox')) {
+                        ctl.prop('checked', ((params[myid] == "1") ? true : false));
+                    }
+                    else {
+                        ctl.val(params[myid]);
+                    }
+                });
+
+                return;
+            },
+        },
+    }
+);
+
+function _create_bmark_obj() {
+    return new FC_Solve_Bookmarking({ bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based'] });
+}
 
 function on_bookmarking() {
-    var get_v = function(myid) {
-        var ctl = $('#' + myid);
-        return ctl.is(':checkbox') ?  (ctl.is(':checked') ? '1' : '0') : ctl.val();
-    };
-
-    var control_values = {};
-
-    _bookmark_controls.forEach(function (myid) {
-        control_values[myid] = get_v(myid);
-    });
-
-    var bookmark_string = _get_base_url() + '?' + $.querystring(control_values);
-
-    $("#fcs_bm_results_input").val(bookmark_string);
-
-    var a_elem = $("#fcs_bm_results_a");
-    // Too long to be effective.
-    // a_elem.text(bookmark_string);
-    a_elem.attr('href', bookmark_string);
-
-    $("#fcs_bookmark_wrapper").removeClass("disabled");
-
-    return;
+    return _create_bmark_obj().on_bookmarking();
 }
 
 function restore_bookmark() {
-    var qs = _get_loc().search;
-
-    if (! qs.length) {
-        return;
-    }
-
-    // Remove trailing 1.
-    var params = $.querystring(qs.substr(1));
-
-    _bookmark_controls.forEach(function (myid) {
-        var ctl = $('#' + myid);
-        if (ctl.is(':checkbox')) {
-            ctl.prop('checked', ((params[myid] == "1") ? true : false));
-        }
-        else {
-            ctl.val(params[myid]);
-        }
-    });
-
-    return;
+    return _create_bmark_obj().restore_bookmark();
 }
 
 function on_toggle_one_based() {
