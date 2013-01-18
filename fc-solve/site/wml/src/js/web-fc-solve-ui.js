@@ -24,14 +24,13 @@ function _increment_move_indices(move_s) {
     );
 }
 
-var _pristine_output;
-
 Class('FC_Solve_UI',
     {
         has: {
             _instance: { is: rw },
             _solve_err_code: { is: rw },
             _was_iterations_count_exceeded: { is: rw, init: false },
+            _pristine_output: { is: rw },
         },
         methods: {
             _is_one_based_checked: function() {
@@ -57,7 +56,7 @@ Class('FC_Solve_UI',
                 var that = this;
 
                 that._webui_output_set_text(
-                    that._process_pristine_output(_pristine_output)
+                    that._process_pristine_output(that._pristine_output)
                 );
                 return;
             },
@@ -85,7 +84,7 @@ Class('FC_Solve_UI',
             _webui_set_output: function(buffer) {
                 var that = this;
 
-                _pristine_output = buffer;
+                that._pristine_output = buffer;
 
                 that._re_enable_output();
 
