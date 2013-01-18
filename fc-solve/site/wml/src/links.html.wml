@@ -535,7 +535,7 @@ MIT/X11 Licence.
 <a href="http://www.systemcall.org/blog/2011/09/freecell-puzzles-solver-api/">“FreeCell
 puzzles solver API”</a> by rengolin - a blog post about
 <a href="https://github.com/rengolin/code/tree/master/Projects/freecell">some
-C++ code on GitHub</a> for solving Freecell. (Under the
+C++ code on GitHub</a> for solving Freecell. Under the
 <a href="https://github.com/rengolin/code/blob/master/license.txt">GPL
 version 3</a> open source (but restrictive) licence.
 </p>
