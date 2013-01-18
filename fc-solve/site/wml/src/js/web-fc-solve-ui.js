@@ -186,7 +186,7 @@ function populate_input_with_numbered_deal() {
     previous_deal_idx = parseInt(new_idx);
     */
 
-    if (! input_s.match(/^[1-9][0-9]+$/)) {
+    if (! input_s.match(/^[1-9][0-9]*$/)) {
         alert("Wrong input - please enter a positive integer.");
         return;
     }
