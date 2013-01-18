@@ -55,10 +55,6 @@ function on_toggle_one_based() {
     return;
 }
 
-function _re_enable_output() {
-    $("#output").removeAttr("disabled");
-}
-
 
 function clear_output() {
     return _webui_output_set_text('');
@@ -71,22 +67,31 @@ Class('FC_Solve_UI',
             _solve_err_code: { is: rw },
         },
         methods: {
+            _re_enable_output: function() {
+                $("#output").removeAttr("disabled");
+
+                return;
+            },
             _webui_set_status_callback: function(myclass, mylabel) {
+                var that = this;
+
                 var ctl = $("#fc_solve_status");
                 ctl.removeClass();
                 ctl.addClass(myclass);
                 ctl.html(escapeHtml(mylabel));
 
                 if (myclass == "exceeded") {
-                    _re_enable_output();
+                    that._re_enable_output();
                 }
 
                 return;
             },
             _webui_set_output: function(buffer) {
+                var that = this;
+
                 _pristine_output = buffer;
 
-                _re_enable_output();
+                that._re_enable_output();
 
                 _update_output();
 
