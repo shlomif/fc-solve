@@ -59,15 +59,6 @@ function _re_enable_output() {
     $("#output").removeAttr("disabled");
 }
 
-function _webui_set_output(buffer) {
-    _pristine_output = buffer;
-
-    _re_enable_output();
-
-    _update_output();
-
-    return;
-}
 
 function clear_output() {
     return _webui_output_set_text('');
@@ -89,6 +80,15 @@ Class('FC_Solve_UI',
                 if (myclass == "exceeded") {
                     _re_enable_output();
                 }
+
+                return;
+            },
+            _webui_set_output: function(buffer) {
+                _pristine_output = buffer;
+
+                _re_enable_output();
+
+                _update_output();
 
                 return;
             },
@@ -137,10 +137,12 @@ Class('FC_Solve_UI',
 
                 that._instance = new FC_Solve({
                     cmd_line_preset: that._get_cmd_line_preset(),
-                    set_status_callback: function() {
-                        return that._webui_set_status_callback();
+                    set_status_callback: function(myclass, mylabel) {
+                        return that._webui_set_status_callback(myclass, mylabel);
                     },
-                    set_output: _webui_set_output,
+                    set_output: function(buffer) {
+                        return that._webui_set_output(buffer);
+                    },
                 });
 
                 that._solve_err_code = that._instance.do_solve(
