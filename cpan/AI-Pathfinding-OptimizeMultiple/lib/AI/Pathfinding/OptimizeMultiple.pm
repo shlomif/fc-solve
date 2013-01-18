@@ -756,11 +756,11 @@ Moo leftover. B<INTERNAL USE>.
 
 =over 4
 
-=item * L<http://fc-solve.shlomifish.org/,Freecell Solver>
+=item * L<Freecell Solver|http://fc-solve.shlomifish.org/>
 
 For which this code was first written and used.
 
-=item * L<https://bitbucket.org/shlomif/fc-solve/src/cc5b428ed9bad0132d7a7bc1a14fc6d3650edf45/fc-solve/presets/soft-threads/meta-moves/auto-gen/optimize-seq?at=master,Alternative Implementation in C#/.NET>
+=item * L<Alternative Implementation in C#/.NET|https://bitbucket.org/shlomif/fc-solve/src/cc5b428ed9bad0132d7a7bc1a14fc6d3650edf45/fc-solve/presets/soft-threads/meta-moves/auto-gen/optimize-seq?at=master>
 
 An Alternative implementation in C#/.NET, which was written because the
 performance of the Perl/PDL code was too slow.
