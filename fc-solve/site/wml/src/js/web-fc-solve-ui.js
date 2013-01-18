@@ -45,6 +45,7 @@ Class('FC_Solve_UI',
         has: {
             _instance: { is: rw },
             _solve_err_code: { is: rw },
+            _was_iterations_count_exceeded: { is: rw, init: false },
         },
         methods: {
             _process_pristine_output: function(text) {
@@ -76,6 +77,7 @@ Class('FC_Solve_UI',
                 ctl.html(escapeHtml(mylabel));
 
                 if (myclass == "exceeded") {
+                    that._was_iterations_count_exceeded = true;
                     that._re_enable_output();
                 }
 
@@ -104,7 +106,8 @@ Class('FC_Solve_UI',
             },
             _handle_err_code: function() {
                 var that = this;
-                if (that._solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
+                if (that._solve_err_code == FCS_STATE_SUSPEND_PROCESS
+                    && !that._was_iterations_count_exceeded) {
                     that._enqueue_resume();
                 }
 
@@ -134,6 +137,7 @@ Class('FC_Solve_UI',
                 var that = this;
 
                 that._disable_output_display();
+                that._was_iterations_count_exceeded = false;
 
                 that._instance = new FC_Solve({
                     cmd_line_preset: that._get_cmd_line_preset(),
