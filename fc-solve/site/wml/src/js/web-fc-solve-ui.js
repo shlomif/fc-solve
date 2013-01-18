@@ -87,49 +87,68 @@ function _webui_set_status_callback(myclass, mylabel)
     return;
 }
 
+Class('FC_Solve_UI',
+    {
+        has: {
+            _instance: { is: rw },
+            _solve_err_code: { is: rw},
+        },
+        methods: {
+            _enqueue_resume: function () {
+                var that = this;
+
+                setTimeout(
+                    function() { return that.do_resume(); },
+                    50
+                );
+
+                return;
+            },
+            _handle_err_code: function() {
+                var that = this;
+                if (that._solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
+                    that._enqueue_resume();
+                }
+
+                return;
+            },
+            do_resume: function() {
+                var that = this;
+
+                that._solve_err_code = that._instance.resume_solution();
+
+                that._handle_err_code();
+
+                return;
+            },
+            do_solve: function() {
+                var that = this;
+
+                var cmd_line_preset = $("#preset").val();
+                var board_string = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '');
+
+                $("#output").attr("disabled", true);
+
+                that._instance = new FC_Solve({
+                    cmd_line_preset: cmd_line_preset,
+                    set_status_callback: _webui_set_status_callback,
+                    set_output: _webui_set_output,
+                });
+
+                that._solve_err_code = that._instance.do_solve(board_string);
+
+                that._handle_err_code();
+
+                return;
+            },
+        },
+    }
+);
+
+var fcs_ui = new FC_Solve_UI();
+
 function fc_solve_do_solve() {
-    var cmd_line_preset = $("#preset").val();
-    var board_string = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '');
-
-    $("#output").attr("disabled", true);
-
-    var instance = new FC_Solve({
-        cmd_line_preset: cmd_line_preset,
-        set_status_callback: _webui_set_status_callback,
-        set_output: _webui_set_output,
-    });
-
-    var solve_err_code = instance.do_solve(board_string);
-
-    var _handle_err_code;
-    var _do_resume;
-
-    var _enqueue_resume = function () {
-        setTimeout(
-            _do_resume,
-            50
-        );
-    };
-
-    _handle_err_code = function() {
-        if (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
-            _enqueue_resume();
-        }
-
-        return;
-    };
-
-    _do_resume = function() {
-        solve_err_code = instance.resume_solution();
-
-        _handle_err_code();
-
-        return;
-    };
-
-    _handle_err_code();
-
-    return
+    return fcs_ui.do_solve();
 }
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
