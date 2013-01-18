@@ -215,6 +215,11 @@ Class('FC_Solve_Bookmarking', {
             },
         },
         methods: {
+            _each_control: function(cb) {
+                var that = this;
+
+                that.bookmark_controls.forEach(cb);
+            },
             on_bookmarking: function() {
                 var that = this;
 
@@ -225,7 +230,7 @@ Class('FC_Solve_Bookmarking', {
 
                 var control_values = {};
 
-                that.bookmark_controls.forEach(function (myid) {
+                that._each_control(function (myid) {
                     control_values[myid] = get_v(myid);
                 });
 
@@ -254,7 +259,7 @@ Class('FC_Solve_Bookmarking', {
                 // Remove trailing 1.
                 var params = $.querystring(qs.substr(1));
 
-                that.bookmark_controls.forEach(function (myid) {
+                that._each_control(function (myid) {
                     var ctl = $('#' + myid);
                     if (ctl.is(':checkbox')) {
                         ctl.prop('checked', ((params[myid] == "1") ? true : false));
