@@ -18,9 +18,6 @@ CURRENT TASKS:
         * http://www.mkyong.com/jquery/how-to-load-javascript-at-runtime-with-jquery/
         * Added [Mon 2013-01-14]
 
-    - Add an option for 1-based indexes instead of 0-based ones.
-        * Added [Fri 2013-01-18]
-
 LONG TERM:
     - Prepare the solver with the GUI.
         * Added [Sat 2013-01-12]
@@ -91,5 +88,9 @@ COMPLETED TASKS:
     - Make the output box taller.
         * Added [Fri 2013-01-18]
         * DONE [Fri 2013-01-18]
+    - Add an option for 1-based indexes instead of 0-based ones.
+        * Added [Fri 2013-01-18]
+        * DONE [Fri 2013-01-18]
+
 
 # vim:ft=quicktask:sw=4:ts=4
