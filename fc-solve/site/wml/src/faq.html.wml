@@ -87,11 +87,11 @@ The Freecell implementation for Windows, Freecell 3D has also introduced a
 
 <p>
 Finally, we have more recently started to investigate some “human/computer
-collaborated” Freecell solving, where a human aided by a Solitaire suite with
-good solver integration can attempt to solve some difficult deals (for both a
-human and a computerised solver), by pruning dead ends, and by finding whether
-reached states are solvable. This provides a combined solving power, that is
-greater than the sum of both parts.
+collaboration”-based Freecell solving, where a human aided by a Solitaire
+suite with a good solver integration can attempt to solve some difficult
+deals (for both a human and a computerised solver), by pruning dead ends, and
+by finding whether reached states are solvable. This provides a combined
+solving technique, that is greater than the sum of both parts.
 </p>
 
 <h3 id="new_solver_is_too_slow">I started writing a solver for Freecell (of my own) but it is too slow. What can I do?</h3>
