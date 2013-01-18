@@ -73,20 +73,6 @@ function clear_output() {
     return _webui_output_set_text('');
 }
 
-function _webui_set_status_callback(myclass, mylabel)
-{
-    var ctl = $("#fc_solve_status");
-    ctl.removeClass();
-    ctl.addClass(myclass);
-    ctl.html(escapeHtml(mylabel));
-
-    if (myclass == "exceeded") {
-        _re_enable_output();
-    }
-
-    return;
-}
-
 Class('FC_Solve_UI',
     {
         has: {
@@ -94,6 +80,18 @@ Class('FC_Solve_UI',
             _solve_err_code: { is: rw },
         },
         methods: {
+            _webui_set_status_callback: function(myclass, mylabel) {
+                var ctl = $("#fc_solve_status");
+                ctl.removeClass();
+                ctl.addClass(myclass);
+                ctl.html(escapeHtml(mylabel));
+
+                if (myclass == "exceeded") {
+                    _re_enable_output();
+                }
+
+                return;
+            },
             _enqueue_resume: function () {
                 var that = this;
 
@@ -127,14 +125,21 @@ Class('FC_Solve_UI',
             _calc_initial_board_string: function() {
                 return $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '');
             },
+            _disable_output_display: function() {
+                $("#output").attr("disabled", true);
+
+                return;
+            },
             do_solve: function() {
                 var that = this;
 
-                $("#output").attr("disabled", true);
+                that._disable_output_display();
 
                 that._instance = new FC_Solve({
                     cmd_line_preset: that._get_cmd_line_preset(),
-                    set_status_callback: _webui_set_status_callback,
+                    set_status_callback: function() {
+                        return that._webui_set_status_callback();
+                    },
                     set_output: _webui_set_output,
                 });
 
