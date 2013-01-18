@@ -14,31 +14,17 @@ function escapeHtml(string) {
     });
 }
 
-function _webui_output_set_text(text) {
-    $("#output").val(text);
-
-    return;
+function _increment_move_indices(move_s) {
+    return move_s.replace(/(stack|freecell)( )(\d+)/g,
+        function (match, resource_s, sep_s, digit_s) {
+            return (resource_s + sep_s +
+                (1 + parseInt(digit_s))
+            );
+        }
+    );
 }
-
-function _is_one_based_checked() {
-    return $("#one_based").is(':checked');
-}
-
-function _one_based_process(text) {
-    return text.replace(/^Move[^\n]+$/mg, function (move_s) {
-        return move_s.replace(/(stack|freecell)( )(\d+)/g,
-            function (match, resource_s, sep_s, digit_s) {
-                return (resource_s + sep_s + (1 + parseInt(digit_s)));
-            }
-        );
-    });
-}
-
 
 var _pristine_output;
-function clear_output() {
-    return _webui_output_set_text('');
-}
 
 Class('FC_Solve_UI',
     {
@@ -48,16 +34,29 @@ Class('FC_Solve_UI',
             _was_iterations_count_exceeded: { is: rw, init: false },
         },
         methods: {
+            _is_one_based_checked: function() {
+                return $("#one_based").is(':checked');
+            },
+            _webui_output_set_text: function(text) {
+                $("#output").val(text);
+
+                return;
+            },
+            _one_based_process: function (text) {
+                return text.replace(/^Move[^\n]+$/mg, _increment_move_indices);
+            },
             _process_pristine_output: function(text) {
-                return (_is_one_based_checked()
-                    ? _one_based_process(text)
+                var that = this;
+
+                return (that._is_one_based_checked()
+                    ? that._one_based_process(text)
                     : text
                 );
             },
             _update_output: function () {
                 var that = this;
 
-                _webui_output_set_text(
+                that._webui_output_set_text(
                     that._process_pristine_output(_pristine_output)
                 );
                 return;
@@ -268,5 +267,9 @@ function on_toggle_one_based() {
     }
 
     return;
+}
+
+function clear_output() {
+    return fcs_ui._webui_output_set_text('');
 }
 
