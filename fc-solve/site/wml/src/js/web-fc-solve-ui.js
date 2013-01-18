@@ -34,9 +34,6 @@ function _one_based_process(text) {
     });
 }
 
-function _process_pristine_output(text) {
-    return _is_one_based_checked() ? _one_based_process(text) : text;
-}
 
 var _pristine_output;
 function clear_output() {
@@ -50,9 +47,18 @@ Class('FC_Solve_UI',
             _solve_err_code: { is: rw },
         },
         methods: {
+            _process_pristine_output: function(text) {
+                return (_is_one_based_checked()
+                    ? _one_based_process(text)
+                    : text
+                );
+            },
             _update_output: function () {
-                _webui_output_set_text(_process_pristine_output(_pristine_output));
+                var that = this;
 
+                _webui_output_set_text(
+                    that._process_pristine_output(_pristine_output)
+                );
                 return;
             },
 
