@@ -159,11 +159,6 @@ Class('FC_Solve_UI',
     }
 );
 
-var fcs_ui = new FC_Solve_UI();
-
-function fc_solve_do_solve() {
-    return fcs_ui.do_solve();
-}
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
 // feature.
@@ -285,6 +280,12 @@ function on_bookmarking() {
 
 function restore_bookmark() {
     return _create_bmark_obj().restore_bookmark();
+}
+
+var fcs_ui = new FC_Solve_UI();
+
+function fc_solve_do_solve() {
+    return fcs_ui.do_solve();
 }
 
 function on_toggle_one_based() {
