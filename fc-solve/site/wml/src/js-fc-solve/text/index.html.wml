@@ -140,9 +140,16 @@ Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve fo
 
 <label for="output">Output:</label><br />
 
-<textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea> <br />
+<div class="output_form">
+<textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
 
+<div class="controls">
+<input id="one_based" type="checkbox" title="1-based offset" checked="checked" onclick="javascript:on_toggle_one_based()">1-based</button><br />
 <button id="clear_output" onclick="javascript:clear_output()" title="Clear the Output Box">Clear Output</button>
+</div>
+</div>
+<br />
+
 
 <div id="fc_solve_bookmark">
 

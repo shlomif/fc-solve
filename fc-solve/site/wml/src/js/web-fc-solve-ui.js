@@ -14,14 +14,57 @@ function escapeHtml(string) {
     });
 }
 
+function _webui_output_set_text(text) {
+    $("#output").val(text);
+
+    return;
+}
+
+function _is_one_based_checked() {
+    return $("#one_based").is(':checked');
+}
+
+function _one_based_process(text) {
+    return text.replace(/^Move[^\n]+$/mg, function (move_s) {
+        return move_s.replace(/(stack|freecell)( )(\d+)/g,
+            function (match, resource_s, sep_s, digit_s) {
+                return (resource_s + sep_s + (1 + parseInt(digit_s)));
+            }
+        );
+    });
+}
+
+function _process_pristine_output(text) {
+    return _is_one_based_checked() ? _one_based_process(text) : text;
+}
+
+var _pristine_output;
+
+function _update_output () {
+    _webui_output_set_text(_process_pristine_output(_pristine_output));
+
+    return;
+}
+
+function on_toggle_one_based() {
+
+    if ($("#output").val()) {
+        _update_output();
+    }
+
+    return;
+}
+
 function _webui_set_output(buffer) {
-    $("#output").val(buffer);
+    _pristine_output = buffer;
+
+    _update_output();
 
     return;
 }
 
 function clear_output() {
-    return _webui_set_output('');
+    return _webui_output_set_text('');
 }
 
 function _webui_set_status_callback(myclass, mylabel)
@@ -114,11 +157,21 @@ function _get_base_url() {
     return loc.protocol + '//' + loc.host + loc.pathname;
 }
 
-function on_bookmarking() {
-    var get_v = function(myid) { return $('#' + myid).val() };
+var _bookmark_controls = ['stdin', 'preset', 'deal_number', 'one_based'];
 
-    var bookmark_string = _get_base_url() + '?' +
-        $.querystring({stdin: get_v('stdin'), preset: get_v('preset'), deal_number: get_v('deal_number')});
+function on_bookmarking() {
+    var get_v = function(myid) {
+        var ctl = $('#' + myid);
+        return ctl.is(':checkbox') ?  (ctl.is(':checked') ? '1' : '0') : ctl.val();
+    };
+
+    var control_values = {};
+
+    _bookmark_controls.forEach(function (myid) {
+        control_values[myid] = get_v(myid);
+    });
+
+    var bookmark_string = _get_base_url() + '?' + $.querystring(control_values);
 
     $("#fcs_bm_results_input").val(bookmark_string);
 
@@ -142,8 +195,14 @@ function restore_bookmark() {
     // Remove trailing 1.
     var params = $.querystring(qs.substr(1));
 
-    ['stdin', 'preset', 'deal_number'].forEach(function (myid) {
-        $('#' + myid).val(params[myid]);
+    _bookmark_controls.forEach(function (myid) {
+        var ctl = $('#' + myid);
+        if (ctl.is(':checkbox')) {
+            ctl.prop('checked', ((params[myid] == "1") ? true : false));
+        }
+        else {
+            ctl.val(params[myid]);
+        }
     });
 
     return;
