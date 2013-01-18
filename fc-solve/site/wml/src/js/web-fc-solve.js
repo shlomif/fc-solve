@@ -29,7 +29,7 @@ var    FCS_STATE_DOES_NOT_EXIST = 10;
 var    FCS_STATE_OPTIMIZED = 11;
 var    FCS_STATE_FLARES_PLAN_ERROR = 12;
 
-var iters_step = 128;
+var iters_step = 1000;
 var upper_iters_limit = 128 * 1024;
 
 Class('FC_Solve', {
