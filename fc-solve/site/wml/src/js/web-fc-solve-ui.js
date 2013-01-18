@@ -91,7 +91,7 @@ Class('FC_Solve_UI',
     {
         has: {
             _instance: { is: rw },
-            _solve_err_code: { is: rw},
+            _solve_err_code: { is: rw },
         },
         methods: {
             _enqueue_resume: function () {
@@ -121,21 +121,26 @@ Class('FC_Solve_UI',
 
                 return;
             },
+            _get_cmd_line_preset: function() {
+                return $("#preset").val();
+            },
+            _calc_initial_board_string: function() {
+                return $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '');
+            },
             do_solve: function() {
                 var that = this;
-
-                var cmd_line_preset = $("#preset").val();
-                var board_string = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '');
 
                 $("#output").attr("disabled", true);
 
                 that._instance = new FC_Solve({
-                    cmd_line_preset: cmd_line_preset,
+                    cmd_line_preset: that._get_cmd_line_preset(),
                     set_status_callback: _webui_set_status_callback,
                     set_output: _webui_set_output,
                 });
 
-                that._solve_err_code = that._instance.do_solve(board_string);
+                that._solve_err_code = that._instance.do_solve(
+                    that._calc_initial_board_string()
+                );
 
                 that._handle_err_code();
 
@@ -174,7 +179,7 @@ function populate_input_with_numbered_deal() {
         return;
     }
 
-    previous_deal_idx = parseInt();
+    previous_deal_idx = parseInt(input_s);
 
     $("#stdin").val(
         "# MS Freecell Deal #" + previous_deal_idx +
