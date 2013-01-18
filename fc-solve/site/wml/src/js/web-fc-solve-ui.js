@@ -138,6 +138,7 @@ var previous_deal_idx = 1;
 
 function populate_input_with_numbered_deal() {
 
+    var input_s = $('#deal_number').val();
     /*
     var new_idx = prompt("Enter MS Freecell deal number:");
 
@@ -149,7 +150,12 @@ function populate_input_with_numbered_deal() {
     previous_deal_idx = parseInt(new_idx);
     */
 
-    previous_deal_idx = parseInt($('#deal_number').val());
+    if (! input_s.match(/^[1-9][0-9]+$/)) {
+        alert("Wrong input - please enter a positive integer.");
+        return;
+    }
+
+    previous_deal_idx = parseInt();
 
     $("#stdin").val(
         "# MS Freecell Deal #" + previous_deal_idx +
