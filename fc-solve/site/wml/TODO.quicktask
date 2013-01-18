@@ -1,8 +1,6 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-    - “Disable” the output field temporary while calculating.
-        * Added [Fri 2013-01-18]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
         * in a separate git branch
         * Added [Sat 2013-01-12]
@@ -91,6 +89,9 @@ COMPLETED TASKS:
         * Added [Fri 2013-01-18]
         * DONE [Fri 2013-01-18]
     - Add an option for 1-based indexes instead of 0-based ones.
+        * Added [Fri 2013-01-18]
+        * DONE [Fri 2013-01-18]
+    - “Disable” the output field temporary while calculating.
         * Added [Fri 2013-01-18]
         * DONE [Fri 2013-01-18]
 

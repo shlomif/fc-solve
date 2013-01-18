@@ -55,8 +55,14 @@ function on_toggle_one_based() {
     return;
 }
 
+function _re_enable_output() {
+    $("#output").removeAttr("disabled");
+}
+
 function _webui_set_output(buffer) {
     _pristine_output = buffer;
+
+    _re_enable_output();
 
     _update_output();
 
@@ -74,12 +80,18 @@ function _webui_set_status_callback(myclass, mylabel)
     ctl.addClass(myclass);
     ctl.html(escapeHtml(mylabel));
 
+    if (myclass == "exceeded") {
+        _re_enable_output();
+    }
+
     return;
 }
 
 function fc_solve_do_solve() {
     var cmd_line_preset = $("#preset").val();
     var board_string = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '');
+
+    $("#output").attr("disabled", true);
 
     var instance = new FC_Solve({
         cmd_line_preset: cmd_line_preset,
