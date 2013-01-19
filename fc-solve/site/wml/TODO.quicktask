@@ -1,6 +1,9 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+    - Fix "Unknown error code 1" in deal #11982 - http://xrl.us/bobiap
+        * Thanks to Ari for noting that.
+        * Added [Sat 2013-01-19]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
         * in a separate git branch
         * Added [Sat 2013-01-12]
