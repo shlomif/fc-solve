@@ -94,6 +94,12 @@ Class('FC_Solve', {
 
                  return;
              }
+             else if (solve_err_code == FCS_STATE_IS_NOT_SOLVEABLE) {
+
+                 that.set_status("impossible", "Could not solve.");
+
+                 return;
+             }
              else {
                  alert ("Unknown Error code " + solve_err_code + "!");
                  throw "Foo";

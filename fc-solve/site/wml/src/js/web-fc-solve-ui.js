@@ -74,8 +74,13 @@ Class('FC_Solve_UI',
                 ctl.addClass(myclass);
                 ctl.html(escapeHtml(mylabel));
 
-                if (myclass == "exceeded") {
+                var is_exceed = (myclass == "exceeded");
+
+                if (is_exceed) {
                     that._was_iterations_count_exceeded = true;
+                }
+
+                if (is_exceed || (myclass == "impossible")) {
                     that._re_enable_output();
                 }
 
