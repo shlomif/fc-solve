@@ -151,7 +151,7 @@ td { vertical-align : top; }
 
 <define-tag try_online>
 <div class="try_online_wrapper">
-<a class="solve_online_button" id="try_online_link" href="$(ROOT)/js-fc-solve/text/">Try<br />Online</a>
+<a class="solve_online_button" id="try_online_link" href="$(ROOT)/js-fc-solve/text/"><span class="try_main">Try</span><br /><span class="try_main">Online</span><br /><br /><span class="try_note">Firefox, Chrome, Opera, or IE10+</span></a>
 </div>
 </define-tag>
 

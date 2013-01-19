@@ -145,7 +145,7 @@ p.desc
     padding: 0
     margin: 0
 
-$horiz_padding: 3em
+$horiz_padding: 30px
 $vert_padding: 0.7em
 
 a.solve_online_button
@@ -161,14 +161,23 @@ a.solve_online_button
     padding-right: $horiz_padding
     padding-top: $vert_padding
     padding-bottom: $vert_padding
-    font-size: 150%
     text-decoration: none
     color: black
+    width: 20%
+
+    .try_main
+        font-size: 150%
+
+    .try_note
+        font-family: arial, sans-serif
+        font-size: 85%
 
     &:hover
         background-color: #A1EB7C
         color: #444
         text-decoration: none
+
+
 
 .link_to_online_solver strong
     font-size: 120%
