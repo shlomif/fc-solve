@@ -1,6 +1,6 @@
 v0.0.4      2013-01-20
 
-    - Add missing Prereqs
+    - Add missing Prerequisites
         - MooX::late
         - MooX::Types::MooseLike::Base
 
