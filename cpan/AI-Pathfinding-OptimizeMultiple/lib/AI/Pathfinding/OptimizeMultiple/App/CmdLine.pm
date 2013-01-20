@@ -11,7 +11,7 @@ use IO::File;
 use AI::Pathfinding::OptimizeMultiple;
 use AI::Pathfinding::OptimizeMultiple::PostProcessor;
 
-our $VERSION = '0.0.3';
+our $VERSION = '0.0.4';
 
 # TODO : restore later.
 # use MyInput;
