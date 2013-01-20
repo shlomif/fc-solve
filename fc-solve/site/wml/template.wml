@@ -123,6 +123,7 @@ $("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]").each(function(i){ \$(this).append
 
 <define-tag my_extra_head_elements>
 <script type="text/javascript" src="$(ROOT)/js/common-methods.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/common-hacks.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/jq.js"></script>
 <link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="<rss_feed />" />
 <link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default" />
