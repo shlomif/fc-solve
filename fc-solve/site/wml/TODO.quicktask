@@ -1,11 +1,6 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-    - Make sure to detect MSIE 10/etc. incompatible features in
-    libfreecell-solver.js and redirect to a different page.
-      * Page should be src/js-fc-solve/incompatible-browser.html
-      * Added [Mon 2013-01-21]
-
     - Play with using http://twitter.github.com/bootstrap/ for the site.
         * in a separate git branch
         * Added [Sat 2013-01-12]
@@ -105,6 +100,13 @@ COMPLETED TASKS:
     - Fix "Unknown error code 1" in deal #11982 - http://xrl.us/bobiap
         * Thanks to Ari for noting that.
         * Added [Sat 2013-01-19]
+        * DONE [Mon 2013-01-21]
+    - Redirect MSIE 10/etc. from incompatible features
+        * In libfreecell-solver.js and redirect to a different page.
+        * Page should be src/js-fc-solve/incompatible-browser.html
+        * Added [Mon 2013-01-21]
+        * DONE [Mon 2013-01-21]
+
 
 
 # vim:ft=quicktask:sw=4:ts=4

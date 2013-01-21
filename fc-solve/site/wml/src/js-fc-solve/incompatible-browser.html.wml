@@ -1,0 +1,46 @@
+#include '../template.wml'
+
+<latemp_subject "Your browser is incompatible with the online demo of Freecell Solver" />
+
+<p>
+We have detected that your browser does not support the necessary
+HTML 5/JavaScript extensions required by the WWW-based Freecell Solver. Please
+use one of the following browsers instead, or instead
+<a href="$(ROOT)/download.html">download and install</a> the standalone
+native executable, or a graphical interface for it.
+</p>
+
+<h2 id="recommended-browsers">Recommended Browsers</h2>
+
+<h3 id="firefox"><a href="http://www.getfirefox.com/">Mozilla Firefox</a></h3>
+
+<p>
+Mozilla Firefox 17.x ESR and above (and possibly some versions below) support
+the online Freecell Solver well, and is open source, cross-platform and
+otherwise a superb browser. Also see <a
+href="http://portableapps.com/apps/internet/firefox_portable">the portable
+edition which is easy to install and run</a>.
+</p>
+
+<h3 id="chromium"><a href="http://dev.chromium.org/getting-involved/download-chromium">Google Chromium</a></h3>
+
+<p>
+A fast and open source browser from Google.
+</p>
+
+<h3 id="opera"><a href="http://www.opera.com/">Opera</a></h3>
+
+<p>
+A cross-platform and free-of-charge, (but not open source browser) that is
+also available and supported.
+</p>
+
+<h3 id="msie10">Microsoft Internet Explorer 10 and Above</h3>
+
+<p>
+We do <b>not</b> recommend using this proprietary and Windows-only
+browser from Microsoft for
+<a href="http://www.shlomifish.org/no-ie/">several important reasons</a>
+and it will only run on Windows 7 and above, but it appears to work well
+enough. Older versions of Internet Explorer are unfortunately not supported.
+</p>

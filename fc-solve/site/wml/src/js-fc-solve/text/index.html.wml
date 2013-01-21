@@ -3,6 +3,14 @@
 <latemp_subject "Online Freecell solver (text based)" />
 
 <page_extra_head_elements>
+<script type="text/javascript">
+(function() {
+    try {
+        var a = new Float64Array(1);
+        return; //no need
+    } catch(e) { window.location.replace("$(ROOT)/js-fc-solve/incompatible-browser.html"); }
+})();
+</script>
 <script type="text/javascript" src="$(ROOT)/js/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/redmond/jquery-ui-1.9.2.custom.min.css" media="screen, projection" />
@@ -15,6 +23,7 @@
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve-ui.js"></script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
 </page_extra_head_elements>
+
 
 <h2 id="about">About</h2>
 
