@@ -7,7 +7,7 @@ use MooX qw/late/;
 
 use PDL ();
 
-our $VERSION = '0.0.4';
+our $VERSION = '0.0.5';
 
 use vars (qw(@fields));
 

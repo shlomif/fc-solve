@@ -1,3 +1,8 @@
+v0.0.5      2013-01-22
+    - skipping compile test for scripts/bump-version-number.pl .
+        - it is for use by the module's maintainer and has
+        non-essential prereqs.
+
 v0.0.4      2013-01-20
 
     - Add missing Prerequisites
