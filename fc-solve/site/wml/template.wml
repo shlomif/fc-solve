@@ -47,7 +47,8 @@ alt="PayPal Donate" class="paypal"/></a>
 <a href="$(ROOT)"
     title="Shlomi Fish’s Homepage"><img
     src="$(ROOT)/images/fc-solve-icon.png"
-    alt="EvilPHish by Illiad"
+    alt="fc-solve icon: H C D S"
+    class="icon"
     style="border:0;margin-bottom:0.5em;"
     /></a>
 </div>
