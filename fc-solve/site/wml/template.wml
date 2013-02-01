@@ -44,10 +44,10 @@ alt="PayPal Donate" class="paypal"/></a>
 
 <latemp_top_left_corner_logo>
 <div class="center">
-<a href="<rellink url="" host="t2" />"
+<a href="$(ROOT)"
     title="Shlomi Fish’s Homepage"><img
     src="$(ROOT)/images/fc-solve-icon.png"
-    alt="EvilPHish by Illiad" class="highlight"
+    alt="EvilPHish by Illiad"
     style="border:0;margin-bottom:0.5em;"
     /></a>
 </div>
