@@ -1,8 +1,6 @@
 #include '../template.wml'
 
 <latemp_subject "Freecell Solver" />
-<define-tag old_download_tag>
-</define-tag>
 
 <ul class="emphasis">
 <li><a href="$(ROOT)/js-fc-solve/text/">Try Freecell Solver Online!</a></li>
