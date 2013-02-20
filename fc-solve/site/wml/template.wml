@@ -45,7 +45,7 @@ alt="PayPal Donate" class="paypal"/></a>
 <latemp_top_left_corner_logo>
 <div class="center">
 <a href="$(ROOT)"
-    title="Shlomi Fish’s Homepage"><img
+    title="Freecell Solver’s Homepage"><img
     src="$(ROOT)/images/fc-solve-icon.png"
     alt="fc-solve icon: H C D S"
     class="icon"
