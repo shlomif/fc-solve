@@ -122,7 +122,7 @@ restore_bookmark();
 <div id="fc_solve_tabs__any_board" class="tab">
 
 <p class="first">
-Input a Freecell layout in <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:<br />
+Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:<br />
 </p>
 
 <div class="fcs_common">
