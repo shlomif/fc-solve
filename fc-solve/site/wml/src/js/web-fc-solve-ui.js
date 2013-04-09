@@ -36,6 +36,9 @@ Class('FC_Solve_UI',
             _is_one_based_checked: function() {
                 return $("#one_based").is(':checked');
             },
+            _is_unicode_suits_checked: function() {
+                return $("#unicode_suits").is(':checked');
+            },
             _webui_output_set_text: function(text) {
                 $("#output").val(text);
 
@@ -147,6 +150,7 @@ Class('FC_Solve_UI',
                     set_status_callback: function(myclass, mylabel) {
                         return that._webui_set_status_callback(myclass, mylabel);
                     },
+                    is_unicode_cards: that._is_unicode_suits_checked(),
                     set_output: function(buffer) {
                         return that._webui_set_output(buffer);
                     },
@@ -277,7 +281,7 @@ Class('FC_Solve_Bookmarking', {
 );
 
 function _create_bmark_obj() {
-    return new FC_Solve_Bookmarking({ bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based'] });
+    return new FC_Solve_Bookmarking({ bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based', 'unicode_suits'] });
 }
 
 function on_bookmarking() {
