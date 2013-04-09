@@ -2233,6 +2233,2240 @@ var solution_for_deal_24__default = "-=-=-=-=-=-=-=-=-=-=-=-\n" +
 "\n" +
 "====================\n\n";
 
+var solution_for_deal_24__default__with_unicoded_suits =
+"-=-=-=-=-=-=-=-=-=-=-=-\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-0 ♠-0\n" +
+"Freecells:\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ 4♠ 2♥\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ A♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥ 5♠ 6♠ A♦ 8♥ J♦\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 3 to the foundations\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-0 ♠-A\n" +
+"Freecells:\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ 4♠ 2♥\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥ 5♠ 6♠ A♦ 8♥ J♦\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to freecell 0\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-0 ♠-A\n" +
+"Freecells:  J♦\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ 4♠ 2♥\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥ 5♠ 6♠ A♦ 8♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to freecell 1\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-0 ♠-A\n" +
+"Freecells:  J♦  8♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ 4♠ 2♥\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥ 5♠ 6♠ A♦\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to the foundations\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  J♦  8♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ 4♠ 2♥\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥ 5♠ 6♠\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to freecell 2\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  J♦  8♥  2♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ 4♠\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥ 5♠ 6♠\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to freecell 3\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  J♦  8♥  2♥  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥ 5♠ 6♠\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 0 to stack 0\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-A ♠-A\n" +
+"Freecells:      8♥  2♥  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥ 5♠ 6♠\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to freecell 0\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  2♥  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥ 5♠\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 6 to stack 3\n" +
+"\n" +
+"Foundations: ♥-0 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  2♥  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": A♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to the foundations\n" +
+"\n" +
+"Foundations: ♥-A ♣-0 ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  2♥  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+":\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-2 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥      4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥ Q♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+":\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to freecell 2\n" +
+"\n" +
+"Foundations: ♥-2 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  Q♦  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥ 4♥\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+":\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 1 to stack 6\n" +
+"\n" +
+"Foundations: ♥-2 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  Q♦  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣ A♣ 3♥\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": 4♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to the foundations\n" +
+"\n" +
+"Foundations: ♥-3 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  Q♦  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣ A♣\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+": 4♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to the foundations\n" +
+"\n" +
+"Foundations: ♥-4 ♣-0 ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  Q♦  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣ A♣\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+":\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to the foundations\n" +
+"\n" +
+"Foundations: ♥-4 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  Q♦  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ 7♣\n" +
+":\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 5 to stack 6\n" +
+"\n" +
+"Foundations: ♥-4 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  Q♦  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣\n" +
+": 7♣\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 2 to stack 5\n" +
+"\n" +
+"Foundations: ♥-4 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥      4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": 7♣\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 6 to stack 4\n" +
+"\n" +
+"Foundations: ♥-4 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥      4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥ 3♣\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+":\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to freecell 2\n" +
+"\n" +
+"Foundations: ♥-4 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ Q♥\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+":\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 1 to stack 6\n" +
+"\n" +
+"Foundations: ♥-4 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": Q♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 3 to stack 1\n" +
+"\n" +
+"Foundations: ♥-4 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥ 4♠\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": Q♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to freecell 3\n" +
+"\n" +
+"Foundations: ♥-4 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 5♥\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": Q♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to the foundations\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+":\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥ 6♦ 5♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": Q♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 3 to stack 4\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+":\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ 3♦\n" +
+": 5♦ 2♠ J♣ 5♣ J♥\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": Q♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 2 to stack 1\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠\n" +
+": 5♦ 2♠ J♣ 5♣ J♥\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": Q♥\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 6 to stack 2\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 2♠ J♣ 5♣ J♥\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+":\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠ 9♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 7 to stack 6\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 2♠ J♣ 5♣ J♥\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": 9♦\n" +
+": 7♠ 6♣ 7♦ 4♦ 8♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 7 to stack 6\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥  3♣  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 2♠ J♣ 5♣ J♥\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 4♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 2 to stack 7\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥      4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 2♠ J♣ 5♣ J♥\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 4♦ 3♣\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 7 to stack 4\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  6♠  8♥      4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 2♠ J♣ 5♣ J♥\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 0 to stack 7\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:      8♥      4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 2♠ J♣ 5♣ J♥\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 3 to freecell 2\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:      8♥  J♥  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 2♠ J♣ 5♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 3 to freecell 0\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  5♣  8♥  J♥  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 2♠ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 3 to stack 5\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-A\n" +
+"Freecells:  5♣  8♥  J♥  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 2♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 3 to the foundations\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-2\n" +
+"Freecells:  5♣  8♥  J♥  4♠\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 3 to stack 3\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-2\n" +
+"Freecells:  5♣  8♥  J♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": 3♦\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 4♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 1 to stack 3\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-2\n" +
+"Freecells:  5♣  8♥  J♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+":\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠ Q♥\n" +
+": 5♦ 4♠ 3♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to freecell 3\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-2\n" +
+"Freecells:  5♣  8♥  J♥  Q♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+":\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠ K♠\n" +
+": 5♦ 4♠ 3♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 2 to stack 1\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-2\n" +
+"Freecells:  5♣  8♥  J♥  Q♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠\n" +
+": Q♣ 9♠ 6♥ 9♥ 3♠\n" +
+": 5♦ 4♠ 3♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-3\n" +
+"Freecells:  5♣  8♥  J♥  Q♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠\n" +
+": Q♣ 9♠ 6♥ 9♥\n" +
+": 5♦ 4♠ 3♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 3 to stack 1\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-3\n" +
+"Freecells:  5♣  8♥  J♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 6♥ 9♥\n" +
+": 5♦ 4♠ 3♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to freecell 3\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-3\n" +
+"Freecells:  5♣  8♥  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 6♥\n" +
+": 5♦ 4♠ 3♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 0 to stack 2\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-3\n" +
+"Freecells:      8♥  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 6♥ 5♣\n" +
+": 5♦ 4♠ 3♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 3 to freecell 0\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-3\n" +
+"Freecells:  3♦  8♥  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 6♥ 5♣\n" +
+": 5♦ 4♠\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 3 to the foundations\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-4\n" +
+"Freecells:  3♦  8♥  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 6♥ 5♣\n" +
+": 5♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 3 to stack 7\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-4\n" +
+"Freecells:  3♦  8♥  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 6♥ 5♣\n" +
+":\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠ 5♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 2 to stack 3\n" +
+"\n" +
+"Foundations: ♥-5 ♣-A ♦-A ♠-4\n" +
+"Freecells:  3♦  8♥  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 6♥\n" +
+": 5♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠ 5♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-4\n" +
+"Freecells:  3♦  8♥  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠\n" +
+": 5♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠ 5♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 1 to stack 2\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-4\n" +
+"Freecells:  3♦      J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 8♥\n" +
+": 5♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠ 5♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 4 to stack 3\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-4\n" +
+"Freecells:  3♦      J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 8♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♠\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠ 5♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 4 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-5\n" +
+"Freecells:  3♦      J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 8♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠ 5♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 7 to freecell 1\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-5\n" +
+"Freecells:  3♦  5♦  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 8♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦ 6♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 7 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-6\n" +
+"Freecells:  3♦  5♦  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 8♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠\n" +
+": 7♠ 6♣ 7♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 7 to stack 6\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-6\n" +
+"Freecells:  3♦  5♦  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 8♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠ 7♦\n" +
+": 7♠ 6♣\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 1 to stack 7\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-6\n" +
+"Freecells:  3♦      J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 8♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠ 7♦\n" +
+": 7♠ 6♣ 5♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 7 to stack 6\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-6\n" +
+"Freecells:  3♦      J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 8♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 7♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 7 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦      J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠ 8♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to freecell 1\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦  8♥  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ 9♠\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 2 to stack 7\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦  8♥  J♥  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 2 to stack 2\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦  8♥      9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 1 to stack 7\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦          9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": 5♣ 4♦ 3♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 3 to stack 4\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦          9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+":\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦ J♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 5 to freecell 2\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦      J♣  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+":\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣ Q♦\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 5 to freecell 1\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♦  J♣  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+":\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ K♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 5 to stack 3\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♦  J♣  9♥\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 3 to stack 5\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♦  J♣\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 1 to stack 3\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦      J♣\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 2 to stack 3\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠ J♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to freecell 3\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦          J♦\n" +
+": 4♣ 2♣ 9♣ 8♣ Q♠\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to freecell 1\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠      J♦\n" +
+": 4♣ 2♣ 9♣ 8♣\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 0 to stack 5\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠      J♦\n" +
+": 4♣ 2♣ 9♣\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to freecell 2\n" +
+"\n" +
+"Foundations: ♥-6 ♣-A ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠  9♣  J♦\n" +
+": 4♣ 2♣\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-2 ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠  9♣  J♦\n" +
+": 4♣\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦ 3♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 4 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-3 ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠  9♣  J♦\n" +
+": 4♣\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠  9♣  J♦\n" +
+":\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 0 to stack 0\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:      Q♠  9♣  J♦\n" +
+": 3♦\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 3 to stack 1\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:      Q♠  9♣  J♦\n" +
+": 3♦\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to freecell 0\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠  9♣  J♦\n" +
+":\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 2 to stack 0\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠      J♦\n" +
+": 9♣\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠ 8♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 7 to stack 0\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠      J♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 1 to stack 3\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠      J♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 9♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 7 to freecell 2\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠  9♠  J♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 0 to stack 7\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:      Q♠  9♠  J♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦ J♣\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 3♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 3 to stack 1\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:      Q♠  9♠  J♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": 3♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 7 to freecell 0\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦  Q♠  9♠  J♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 1 to stack 7\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦      9♠  J♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": Q♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 3 to stack 7\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦      9♠\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣ 4♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 4 to freecell 1\n" +
+"\n" +
+"Foundations: ♥-6 ♣-4 ♦-A ♠-7\n" +
+"Freecells:  3♦  4♦  9♠\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦ 5♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 4 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-5 ♦-A ♠-7\n" +
+"Freecells:  3♦  4♦  9♠\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣ 5♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to freecell 3\n" +
+"\n" +
+"Foundations: ♥-6 ♣-5 ♦-A ♠-7\n" +
+"Freecells:  3♦  4♦  9♠  5♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦ 6♣\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-7\n" +
+"Freecells:  3♦  4♦  9♠  5♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣\n" +
+": 9♦ 8♠ 7♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 6 to stack 5\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-7\n" +
+"Freecells:  3♦  4♦  9♠  5♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣ 7♦\n" +
+": 9♦ 8♠\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-8\n" +
+"Freecells:  3♦  4♦  9♠  5♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣ 7♦\n" +
+": 9♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  3♦  4♦      5♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦ 7♣ 6♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣ 7♦\n" +
+": 9♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 4 to stack 0\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  3♦  4♦      5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦ 8♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣ 7♦\n" +
+": 9♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 4 to freecell 2\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  3♦  4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣ T♦\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣ 7♦\n" +
+": 9♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 4 to stack 1\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  3♦  4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥ T♣\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣ 7♦\n" +
+": 9♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 4 to stack 2\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  3♦  4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣ 7♦\n" +
+": 9♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 6 to stack 2\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  3♦  4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣ 7♦\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 0 to stack 6\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:      4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥\n" +
+": 7♥ J♠ K♥ T♠ 9♥ 8♣ 7♦\n" +
+": 3♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 5 to stack 2\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:      4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥\n" +
+": 7♥ J♠ K♥ T♠ 9♥\n" +
+": 3♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 5 to stack 7\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:      4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥\n" +
+": 7♥ J♠ K♥\n" +
+": 3♦\n" +
+": Q♠ J♦ T♠ 9♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 5 to freecell 0\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦ T♥\n" +
+": 7♥ J♠\n" +
+": 3♦\n" +
+": Q♠ J♦ T♠ 9♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 5 to stack 3\n" +
+"\n" +
+"Foundations: ♥-6 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦ J♠\n" +
+": 2♦ K♦ T♥\n" +
+": 7♥\n" +
+": 3♦\n" +
+": Q♠ J♦ T♠ 9♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 5 to the foundations\n" +
+"\n" +
+"Foundations: ♥-7 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣ 6♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦ J♠\n" +
+": 2♦ K♦ T♥\n" +
+":\n" +
+": 3♦\n" +
+": Q♠ J♦ T♠ 9♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 0 to stack 5\n" +
+"\n" +
+"Foundations: ♥-7 ♣-6 ♦-A ♠-9\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣ 8♥ 7♣\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦ J♠\n" +
+": 2♦ K♦ T♥\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦ T♠ 9♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to the foundations\n" +
+"\n" +
+"Foundations: ♥-7 ♣-7 ♦-A ♠-9\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣ 8♥\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦ J♠\n" +
+": 2♦ K♦ T♥\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦ T♠ 9♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to the foundations\n" +
+"\n" +
+"Foundations: ♥-8 ♣-7 ♦-A ♠-9\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦ J♠\n" +
+": 2♦ K♦ T♥\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦ T♠ 9♥\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 7 to the foundations\n" +
+"\n" +
+"Foundations: ♥-9 ♣-7 ♦-A ♠-9\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦ J♠\n" +
+": 2♦ K♦ T♥\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦ T♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 4 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-A ♠-9\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦ J♠\n" +
+": 2♦ K♦\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦ T♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 7 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-A ♠-T\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦ J♠\n" +
+": 2♦ K♦\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 3 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-A ♠-J\n" +
+"Freecells:  K♥  4♦  8♦  5♦\n" +
+": 9♣\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 2 to stack 0\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-A ♠-J\n" +
+"Freecells:  K♥  4♦      5♦\n" +
+": 9♣ 8♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+": 2♦ K♦\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 4 to freecell 2\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-A ♠-J\n" +
+"Freecells:  K♥  4♦  K♦  5♦\n" +
+": 9♣ 8♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+": 2♦\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 4 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-2 ♠-J\n" +
+"Freecells:  K♥  4♦  K♦  5♦\n" +
+": 9♣ 8♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+":\n" +
+": 6♦\n" +
+": 3♦\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 6 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-3 ♠-J\n" +
+"Freecells:  K♥  4♦  K♦  5♦\n" +
+": 9♣ 8♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+":\n" +
+": 6♦\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 1 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-4 ♠-J\n" +
+"Freecells:  K♥      K♦  5♦\n" +
+": 9♣ 8♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+":\n" +
+": 6♦\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 3 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-5 ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+": 9♣ 8♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+":\n" +
+": 6♦\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 5 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-6 ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+": 9♣ 8♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣ 7♦\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-7 ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+": 9♣ 8♦\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-7 ♦-8 ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+": 9♣\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦ 8♣\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-8 ♦-8 ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+": 9♣\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 0 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-9 ♦-8 ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣ 9♦\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-9 ♦-9 ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥ T♣\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-T ♣-T ♦-9 ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣ J♥\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-J ♣-T ♦-9 ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥ J♣ T♦\n" +
+": Q♣\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to the foundations\n" +
+"\n" +
+"Foundations: ♥-J ♣-T ♦-T ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠ J♦\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 7 to the foundations\n" +
+"\n" +
+"Foundations: ♥-J ♣-T ♦-J ♠-J\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+": Q♠\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 7 to the foundations\n" +
+"\n" +
+"Foundations: ♥-J ♣-T ♦-J ♠-Q\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣\n" +
+": K♣ Q♦\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 3 to the foundations\n" +
+"\n" +
+"Foundations: ♥-J ♣-T ♦-Q ♠-Q\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥ J♣\n" +
+": Q♣\n" +
+": K♣\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to the foundations\n" +
+"\n" +
+"Foundations: ♥-J ♣-J ♦-Q ♠-Q\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥\n" +
+": Q♣\n" +
+": K♣\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-J ♣-Q ♦-Q ♠-Q\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥\n" +
+":\n" +
+": K♣\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 3 to the foundations\n" +
+"\n" +
+"Foundations: ♥-J ♣-K ♦-Q ♠-Q\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠ Q♥\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to the foundations\n" +
+"\n" +
+"Foundations: ♥-Q ♣-K ♦-Q ♠-Q\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+": K♠\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from stack 1 to the foundations\n" +
+"\n" +
+"Foundations: ♥-Q ♣-K ♦-Q ♠-K\n" +
+"Freecells:  K♥      K♦\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 0 to the foundations\n" +
+"\n" +
+"Foundations: ♥-K ♣-K ♦-Q ♠-K\n" +
+"Freecells:          K♦\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move a card from freecell 2 to the foundations\n" +
+"\n" +
+"Foundations: ♥-K ♣-K ♦-K ♠-K\n" +
+"Freecells:\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n\n";
+
+var fc_solve_2uni_suit_map = { 'H': '♥', 'C': '♣', 'D': '♦', 'S': '♠' };
+
+function fc_solve_2uni_card(match, p1, p2, offset, mystring) {
+    return p1 + fc_solve_2uni_suit_map[p2];
+}
+
+function fc_solve_2uni_found(match, p1, p2, offset, mystring) {
+    return fc_solve_2uni_suit_map[p1] + p2;
+}
 
 function test_js_fc_solve_class()
 {
@@ -2253,6 +4487,40 @@ function test_js_fc_solve_class()
                 success = true;
                 // TEST
                 equal (buffer, solution_for_deal_24__default,
+                    "Solution is right"
+                );
+            },
+        });
+
+        var solve_err_code = instance.do_solve(ms_deal_24);
+
+        while (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
+            solve_err_code = instance.resume_solution();
+        }
+
+        // TEST
+        ok (success, "do_solve was successful.");
+
+    });
+
+    test("FC_Solve unicoded solution", function() {
+        expect(3);
+
+        // TEST
+        ok (true, "True is, well, true.");
+
+        var success = false;
+
+        var instance = new FC_Solve({
+            cmd_line_preset: 'default',
+            set_status_callback: function () { return; },
+            set_output: function (buffer) {
+                success = true;
+
+                var modified_string = buffer.replace(/\b([A2-9TJQK])([HCDS])\b/g, fc_solve_2uni_card).replace(/\b([HCDS])(-[0A2-9TJQK])\b/g, fc_solve_2uni_found);
+                // TEST
+                equal (modified_string,
+                    solution_for_deal_24__default__with_unicoded_suits,
                     "Solution is right"
                 );
             },
