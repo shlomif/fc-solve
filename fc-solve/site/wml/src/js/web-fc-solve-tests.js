@@ -4458,16 +4458,6 @@ var solution_for_deal_24__default__with_unicoded_suits =
 "\n" +
 "====================\n\n";
 
-var fc_solve_2uni_suit_map = { 'H': '♥', 'C': '♣', 'D': '♦', 'S': '♠' };
-
-function fc_solve_2uni_card(match, p1, p2, offset, mystring) {
-    return p1 + fc_solve_2uni_suit_map[p2];
-}
-
-function fc_solve_2uni_found(match, p1, p2, offset, mystring) {
-    return fc_solve_2uni_suit_map[p1] + p2;
-}
-
 function test_js_fc_solve_class()
 {
     module("FC_Solve.Algorithmic");
@@ -4512,16 +4502,16 @@ function test_js_fc_solve_class()
         var success = false;
 
         var instance = new FC_Solve({
+            is_unicode_cards: true,
             cmd_line_preset: 'default',
             set_status_callback: function () { return; },
             set_output: function (buffer) {
                 success = true;
 
-                var modified_string = buffer.replace(/\b([A2-9TJQK])([HCDS])\b/g, fc_solve_2uni_card).replace(/\b([HCDS])(-[0A2-9TJQK])\b/g, fc_solve_2uni_found);
                 // TEST
-                equal (modified_string,
+                equal (buffer,
                     solution_for_deal_24__default__with_unicoded_suits,
-                    "Solution is right"
+                    "Unicode Solution is right"
                 );
             },
         });

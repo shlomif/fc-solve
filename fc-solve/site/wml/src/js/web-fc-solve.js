@@ -32,9 +32,20 @@ var    FCS_STATE_FLARES_PLAN_ERROR = 12;
 var iters_step = 1000;
 var upper_iters_limit = 128 * 1024;
 
+var fc_solve_2uni_suit_map = { 'H': '♥', 'C': '♣', 'D': '♦', 'S': '♠' };
+
+function fc_solve_2uni_card(match, p1, p2, offset, mystring) {
+    return p1 + fc_solve_2uni_suit_map[p2];
+}
+
+function fc_solve_2uni_found(match, p1, p2, offset, mystring) {
+    return fc_solve_2uni_suit_map[p1] + p2;
+}
+
 Class('FC_Solve', {
     has: {
         set_status_callback: { is: ro },
+        is_unicode_cards: { is: ro, init: false, },
         cmd_line_preset: { is: ro },
         current_iters_limit: { is: rw, init: 0 },
         set_output: { is: ro },
@@ -155,6 +166,25 @@ Class('FC_Solve', {
                 return;
             }
         },
+        _replace_card: function(s) {
+            return s.replace(/\b([A2-9TJQK])([HCDS])\b/g,
+                fc_solve_2uni_card
+            );
+        },
+        _replace_found: function (s) {
+            return s.replace(/\b([HCDS])(-[0A2-9TJQK])\b/g,
+                fc_solve_2uni_found
+            );
+        },
+        unicode_preprocess: function(out_buffer) {
+            var that = this;
+
+            if (! that.is_unicode_cards) {
+                return out_buffer;
+            }
+
+            return that._replace_found(that._replace_card(out_buffer));
+        },
         display_solution: function() {
             var that = this;
 
@@ -221,7 +251,9 @@ Class('FC_Solve', {
                 that.set_status("solved", "Solved");
 
                 that.set_output(
-                    out_buffer.replace(remove_trailing_space_re, '')
+                    that.unicode_preprocess(
+                        out_buffer.replace(remove_trailing_space_re, '')
+                    )
                 );
                 return;
             }
