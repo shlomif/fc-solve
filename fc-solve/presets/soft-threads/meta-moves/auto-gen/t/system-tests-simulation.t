@@ -36,27 +36,23 @@ With a trailing comma.
 
 package FCS::SimuTest;
 
-use base 'Shlomif::FCS::CalcMetaScan::Base';
+use MooX qw/late/;
 
 use IO::All;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
-__PACKAGE__->mk_acc_ref([qw(text_ref fn_base)]);
+has cmd_line => (is => 'ro', isa => 'ArrayRef[Str]', required => 1);
+has text_ref => (is => 'rw', isa => 'ScalarRef[Str]',);
+has fn_base => (is => 'ro', isa => 'Str', required => 1,);
 
-sub _init
+sub run
 {
     my $self = shift;
 
-    my ($fn_base, $cmd_line) = @_;
-
-    local $Test::Builder::Level = $Test::Builder::Level + 1;
-
-    $self->fn_base($fn_base);
-
     trap {
         Test::More::ok (!system(
-                join(
-                    " ", $^X, "process.pl", @$cmd_line,
+                join( " ",
+                    $^X, "process.pl", @{$self->cmd_line()},
                     "--simulate-to=".$self->_simulate_to(),
                     ">",
                     $self->_output_got()
@@ -123,7 +119,14 @@ package main;
 
 {
     # TEST*2
-    my $simu = FCS::SimuTest->new("300-quota", ["--quotas-expr='((300)x100)'"]);
+    my $simu = FCS::SimuTest->new(
+        {
+            fn_base => "300-quota",
+            cmd_line => ["--quotas-expr='((300)x100)'",],
+        }
+    );
+
+    $simu->run();
 
     # TEST
     $simu->is_board_line(
@@ -142,7 +145,14 @@ package main;
 
 {
     # TEST*2
-    my $simu = FCS::SimuTest->new("100-200-quota", ["--quotas-expr='((100,200)x100)'"]);
+    my $simu = FCS::SimuTest->new(
+        {
+            fn_base =>"100-200-quota",
+            cmd_line => ["--quotas-expr='((100,200)x100)'"]
+        },
+    );
+
+    $simu->run();
 
     # TEST
     $simu->is_board_line(
