@@ -6,29 +6,23 @@ use warnings;
 use File::Path;
 use List::Util ();
 
-use base 'Shlomif::FCS::CalcMetaScan::Base';
+use MooX qw(late);
 
 use AI::Pathfinding::OptimizeMultiple::Scan;
 
 use PDL;
 use PDL::IO::FastRaw;
 
-__PACKAGE__->mk_acc_ref(
-    [qw(
-        start_board
-        num_boards
-        selected_scans
-        _scans_ids_to_indexes_map
-    )],
+has start_board => (is => 'ro', isa => 'Int', required => 1);
+has num_boards => (is => 'ro', isa => 'Int', required => 1);
+has selected_scans => (is => 'rw', isa => 'ArrayRef', default => sub { []; },);
+has _scans_ids_to_indexes_map => (is => 'rw', isa => 'HashRef',
+    default => sub { +{}; },
 );
 
-sub _init
+sub BUILD
 {
-    my $self = shift;
-    my $args = shift;
-
-    $self->start_board($args->{'start_board'});
-    $self->num_boards($args->{'num_boards'});
+    my ($self) = @_;
 
     $self->_calc_selected_scan_list();
 
