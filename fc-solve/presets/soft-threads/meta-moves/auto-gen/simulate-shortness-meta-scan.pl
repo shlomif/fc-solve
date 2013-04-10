@@ -7,8 +7,6 @@ use Getopt::Long;
 
 use List::Util qw(min first);
 
-use Shlomif::FCS::CalcMetaScan;
-
 use MyInput;
 
 use IO::Handle;
