@@ -8,8 +8,6 @@ use IO::All;
 
 use List::Util qw(first);
 
-use Shlomif::FCS::CalcMetaScan;
-
 use MyInput;
 
 my $with_len = 0;
