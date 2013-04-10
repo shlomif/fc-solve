@@ -50,8 +50,8 @@ foreach my $scan (@{$input_obj->selected_scans()})
 
     my $vec = $data->slice(":,$scan_index,0");
     $vec = $vec->where($vec > 0);
-    
-    my $sorted = $vec->flat()->qsort(); 
+
+    my $sorted = $vec->flat()->qsort();
 
     # The step should be the 90% percentile, but not higher than
     # 10,000 iterations.
@@ -89,14 +89,14 @@ continue
         if ($preset =~ s{\ARun:(\d+)\@(\d+)}{})
         {
             my ($iters_quota, $scan_id) = ($1, $2);
-            
+
             my $scan_index = $input_obj->get_scan_index_by_id($scan_id);
 
             if (!defined ($scan_index))
             {
                 die "Unknown Scan ID: '$scan_id'";
             }
-            
+
             my $iters_vec = $data->slice(":,($scan_index),(0)");
             my $sol_len_vec = $data->slice(":,($scan_index),(1)");
 
@@ -108,11 +108,11 @@ continue
             my $solved_lens = $sol_len_vec->index($which_solved);
 
             print "Num solved = $num_solved\n";
-            print "Average solved solution length = ", 
+            print "Average solved solution length = ",
                 $solved_lens->avg(), "\n";
-            
-            print "Minimal solutions = ", 
-                ($solved_lens == $min->index($which_solved))->sum(), 
+
+            print "Minimal solutions = ",
+                ($solved_lens == $min->index($which_solved))->sum(),
                 "\n";
         }
     }
