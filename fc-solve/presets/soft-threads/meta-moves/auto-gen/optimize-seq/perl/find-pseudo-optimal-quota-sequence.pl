@@ -9,7 +9,7 @@ use warnings;
 use Getopt::Long;
 use IO::All;
 
-use Shlomif::FCS::CalcMetaScan;
+use AI::Pathfinding::OptimizeMultiple;
 
 use MyInput;
 
@@ -43,8 +43,8 @@ while (@final_quotas < @guessed_quotas)
             warn "Quota == $quota\n";
         }
         my $arbitrator =
-            Shlomif::FCS::CalcMetaScan->new(
-                    'quotas' => 
+            AI::Pathfinding::OptimizeMultiple->new(
+                    'quotas' =>
                     [
                         @final_quotas,
                         $quota,
@@ -61,7 +61,7 @@ while (@final_quotas < @guessed_quotas)
         my $iters = $arbitrator->total_iters();
 
         if ($min_quota_iters < 0 || $iters < $min_quota_iters)
-        {   
+        {
             $min_quota = $quota;
             $min_quota_iters = $iters;
         }
