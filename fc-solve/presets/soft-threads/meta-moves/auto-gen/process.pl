@@ -13,8 +13,12 @@ $SIG{__DIE__} = sub {
     confess($_[0]);
 };
 
-use Shlomif::FCS::CalcMetaScan::CmdLine;
+use AI::Pathfinding::OptimizeMultiple::App::CmdLine;
 
-my $iface = Shlomif::FCS::CalcMetaScan::CmdLine->new();
+my $iface = AI::Pathfinding::OptimizeMultiple::App::CmdLine->new(
+    {
+        argv => [@ARGV, ],
+    }
+);
 $iface->run();
 
