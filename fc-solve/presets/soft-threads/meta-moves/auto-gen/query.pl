@@ -18,7 +18,11 @@ GetOptions(
     "l!" => \$with_len,
 );
 
-my ($scan_id, $board_idx) = @ARGV;
+my $scan_id = shift(@ARGV)
+    or die "scan_id not specified on command line.";
+
+my $board_idx = shift(@ARGV)
+    or die "board_idx not specified on command line.";
 
 my @guessed_quotas = ((350) x 300);
 
