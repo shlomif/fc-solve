@@ -9,8 +9,6 @@ use Getopt::Long;
 
 use List::Util qw(min);
 
-use Shlomif::FCS::CalcMetaScan;
-
 use Text::Table;
 
 use MyInput;
@@ -19,8 +17,11 @@ my $with_len = 0;
 
 binmode STDOUT, ':utf8';
 
+my $num_scans_limit = -1;
+
 GetOptions(
     "l!" => \$with_len,
+    'max-scans=i' => \$num_scans_limit,
 );
 
 my ($scan_id, $board_idx) = @ARGV;
@@ -48,8 +49,7 @@ my @results;
 SELECTED_SCANS:
 foreach my $scan (@{$input_obj->selected_scans()})
 {
-    # TODO : Remove and refactor later.
-    if ($scan_index == 5)
+    if ($scan_index == $num_scans_limit)
     {
         last SELECTED_SCANS;
     }

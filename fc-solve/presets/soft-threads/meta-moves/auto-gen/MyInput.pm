@@ -8,7 +8,7 @@ use List::Util ();
 
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
-use Shlomif::FCS::CalcMetaScan::Structs;
+use AI::Pathfinding::OptimizeMultiple::Scan;
 
 use PDL;
 use PDL::IO::FastRaw;
@@ -259,7 +259,7 @@ sub _get_all_scans_list_from_file
         chomp($line);
         my ($id, $cmd_line) = split(/\t/, $line);
         push @scans,
-            Shlomif::FCS::CalcMetaScan::Structs::Scan->new(
+            AI::Pathfinding::OptimizeMultiple::Scan->new(
                 id => $id,
                 cmd_line => $cmd_line
             );
