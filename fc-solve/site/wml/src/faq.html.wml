@@ -9,6 +9,24 @@
 
 <h2 id="questions">The Questions</h2>
 
+<h3 id="solve_all_games">Can Freecell Solver solve all the Freecell layouts?</h3>
+
+<p>
+First of all, a small percentage of the standard 8 columns+4 freecells
+Freecell layouts are
+<a href="http://www.staff.science.uu.nl/~bodla101/d.freecell/freecellhtml.html"><b>impossible</b>
+to solve</a>, and this is even more true with less than 4 freecells. What
+Freecell Solver will do in this case is traverse the entire game graph (given
+enough time and computer memory) and then report
+“I could not solve this game.”
+</p>
+
+<p>
+That put aside, some deals may be
+<a href="#unsolvable_solution">inacurately reported as unsolvable</a> with
+the default heuristic. See the link for more information and for a solution.
+</p>
+
 <h3 id="a_move_seems_wrong">I think I found a wrong move in the solution? What can I do?</h3>
 
 <p>
@@ -97,7 +115,7 @@ solving technique, that is greater than the sum of both parts.
 <h3 id="new_solver_is_too_slow">I started writing a solver for Freecell (of my own) but it is too slow. What can I do?</h3>
 
 <p>
-The problem with many naïve Freecell solving solutions is that, while they
+The problem with many naïve Freecell solving programs is that, while they
 can succeed in solving many Freecell deals, they may fail spectacularly in
 the general case. Furthermore, Generalised Freecell (where there is an
 arbitrary number of ranks) was shown to be
