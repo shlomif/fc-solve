@@ -424,25 +424,7 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     # "-Wfloat-equal"
 
     IF (${CMAKE_COMPILER_IS_GNUCC})
-        ADD_DEFINITIONS(
-            "-Wall"
-            "-Werror=implicit-function-declaration"
-            "-Wold-style-declaration"
-            "-Wmissing-prototypes"
-            "-Wformat-nonliteral"
-            "-Wcast-align"
-            "-Wpointer-arith"
-            "-Wbad-function-cast"
-            "-Wstrict-prototypes"
-            "-Wmissing-declarations"
-            "-Wundef"
-            "-Wnested-externs"
-            "-Wcast-qual"
-            "-Wshadow"
-            "-Wwrite-strings"
-            "-Wunused"
-            "-Wold-style-definition"
-        )
+        ADD_GCC_DEBUG_WARNING_FLAGS()
     ENDIF (${CMAKE_COMPILER_IS_GNUCC})
 ENDIF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
 

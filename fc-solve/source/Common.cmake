@@ -103,6 +103,27 @@ MACRO(INSTALL_MAN SOURCE SECTION)
    )
 ENDMACRO(INSTALL_MAN)
 
+MACRO(ADD_GCC_DEBUG_WARNING_FLAGS)
+    ADD_DEFINITIONS(
+        "-Wall"
+        "-Werror=implicit-function-declaration"
+        "-Wold-style-declaration"
+        "-Wmissing-prototypes"
+        "-Wformat-nonliteral"
+        "-Wcast-align"
+        "-Wpointer-arith"
+        "-Wbad-function-cast"
+        "-Wstrict-prototypes"
+        "-Wmissing-declarations"
+        "-Wundef"
+        "-Wnested-externs"
+        "-Wcast-qual"
+        "-Wshadow"
+        "-Wwrite-strings"
+        "-Wunused"
+        "-Wold-style-definition"
+        )
+ENDMACRO(ADD_GCC_DEBUG_WARNING_FLAGS)
 
 # Configure paths.
 SET (DATADIR "${CMAKE_INSTALL_PREFIX}/share"
