@@ -37,12 +37,16 @@ ADD_CUSTOM_TARGET(
 
 SET (_make_py_dest "${_dest}")
 
+# Empty list
+SET (_pod_targets )
+
 RUN_POD2MAN(
-    "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve-board_gen.pod"
-    "fc-solve-board_gen.6"
+    "_pod_targets"
+    "fc-solve-board_gen"
+    "fc-solve-board_gen"
     "6"
-    "board_gen"
-    "board_gen ${VERSION}"
+    "Freecell Solver"
+    "Freecell Solver ${VERSION}"
 )
 
 INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/fc-solve-board_gen.6" 6)
