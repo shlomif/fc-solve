@@ -14,6 +14,10 @@ distribution. *NOTE*: CMake 2.6.2 (that ships with some releases of Ubuntu)
 won't work due to a regression bug so please don't report any errors with
 it.
 
+If you are building from the repository you also need to put the
+module +Shlomif_Common.cmake+ from
+https://bitbucket.org/shlomif/shlomif-cmake-modules in the CMake path.
+
 Next, run:
 
     cmake-gui .         # For the GUI configuration applet
