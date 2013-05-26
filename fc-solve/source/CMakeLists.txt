@@ -1,12 +1,14 @@
+SET (private_mod_path "${CMAKE_SOURCE_DIR}/cmake")
+LIST (APPEND CMAKE_MODULE_PATH "${private_mod_path}")
 INCLUDE(Shlomif_Common)
+
+SHLOMIF_COMMON_SETUP("${private_mod_path}")
 
 SET (PKGDATADIR "${DATADIR}/freecell-solver")
 
 # Introduces VERSION , CPACK_PACKAGE_VERSION_MAJOR,
 # CPACK_PACKAGE_VERSION_MAJOR, and CPACK_PACKAGE_VERSION_PATCH
 READ_VERSION_FROM_VER_TXT()
-
-LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # This is the equivalent to perform a "make dist"/"make distdir" etc.
 SET(CPACK_PACKAGE_NAME "freecell-solver")
