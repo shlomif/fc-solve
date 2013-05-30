@@ -42,14 +42,15 @@ SET (_pod_targets )
 
 RUN_POD2MAN(
     "_pod_targets"
-    "fc-solve-board_gen"
-    "fc-solve-board_gen"
+    "fc-solve-board_gen.pod"
+    "fc-solve-board_gen.6"
     "6"
     "Freecell Solver"
     "Freecell Solver ${VERSION}"
 )
 
 INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/fc-solve-board_gen.6" 6)
+# INSTALL_MAN("fc-solve-board_gen.6" 6)
 
 # Install the nroff symbolic links.
 INSTALL_MAN ("make-aisleriot-freecell-board.6" 6)
@@ -74,3 +75,7 @@ INSTALL(
         "bin"
 )
 
+ADD_CUSTOM_TARGET(
+    "docs_pods" ALL
+    DEPENDS ${_pod_targets}
+)
