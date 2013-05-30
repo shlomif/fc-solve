@@ -14,7 +14,8 @@ use File::Path;
 use Env::Path;
 use File::Temp qw/ tempdir /;
 
-if (! $ENV{'FCS_TEST_BUILD'} )
+# Remove FCS_TEST_BUILD so we won't run the tests with inifinite recursion.
+if (! delete( $ENV{'FCS_TEST_BUILD'} ) )
 {
     plan skip_all => "Skipping because FCS_TEST_BUILD is not set";
 }
