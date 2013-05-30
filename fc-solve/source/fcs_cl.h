@@ -85,6 +85,14 @@ DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args_with_file_nesting_
     freecell_solver_str_t opened_files_dir
     );
 
+DLLEXPORT extern int freecell_solver_user_cmd_line_read_cmd_line_preset(
+    void * instance,
+    const char * const preset_name,
+    freecell_solver_str_t * known_parameters,
+    char * * error_string,
+    int file_nesting_count,
+    freecell_solver_str_t opened_files_dir
+);
 
 #ifdef __cplusplus
 };
