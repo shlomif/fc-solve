@@ -132,3 +132,5 @@ test: all
 runtest: all
 	runprove Tests/*.t
 
+clean:
+	rm -f lib/fc-solve-for-javascript/*.bc lib/fc-solve-for-javascript/*.js
