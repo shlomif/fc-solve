@@ -23,6 +23,7 @@ fc-solve/site/wml/lib/fc-solve-for-javascript/my-modified-fc-solve-test.html
 fc-solve/site/wml/rules.mak
 fc-solve/site/wml/scripts/jsmin
 fc-solve/source/B
+fc-solve/source/cmake/Shlomif_Common.cmake
 fc-solve/source/1941.board
 fc-solve/source/libavl2
 fc-solve/source/install_manifest.txt
