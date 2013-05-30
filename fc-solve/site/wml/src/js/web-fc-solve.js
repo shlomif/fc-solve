@@ -138,10 +138,25 @@ Class('FC_Solve', {
 
             try {
                 if (cmd_line_preset != "default") {
-                    var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(that.obj, cmd_line_preset, 0, 0, 0, null);
+
+                    var error_string_ptr_buf = malloc(128);
+
+                    if (error_string_ptr_buf == 0) {
+                        alert ("Failed to allocate (out of memory?).");
+                        throw "Foo";
+                    }
+
+                    var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(that.obj, cmd_line_preset, 0, error_string_ptr_buf, 0, null);
+
+                    var error_string_ptr = getValue(error_string_ptr_buf, '*');
+
+                    var error_string = Module.Pointer_stringify( error_string_ptr );
+
+                    c_free(error_string_ptr);
+                    c_free(error_string_ptr_buf);
 
                     if (preset_ret != 0) {
-                        alert ("Failed to load command line preset '" + cmd_line_preset + "'. Should not happen.");
+                        alert ("Failed to load command line preset '" + cmd_line_preset + "'. Problem is: «" + error_string + "». Should not happen.");
                         throw "Foo";
                     }
                 }
