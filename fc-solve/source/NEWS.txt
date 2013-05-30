@@ -4,6 +4,14 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.18.1: (30-May-2013)
+-----------------------------
+
+1. Fix "make install" - there were some problems with the generation of
+the man pages.
+
+2. Fix the RPM .spec building.
+
 Version 3.18.0: (30-May-2013)
 -----------------------------
 
