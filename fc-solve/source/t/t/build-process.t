@@ -32,7 +32,14 @@ sub test_cmd
 
     my @cmd = (ref($cmd) eq "ARRAY") ? @$cmd : $cmd;
 
-    my $sys_ret = system(@cmd);
+    # These environment variables confuse the input for the harness.
+    my $sys_ret =
+    do {
+        local %ENV = %ENV;
+        delete($ENV{HARNESS_VERBOSE});
+
+        system(@cmd);
+    };
 
     if (!ok (!$sys_ret, $blurb))
     {
