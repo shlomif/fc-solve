@@ -97,7 +97,7 @@ $(RAW_SUBDIRS) :: $(D)/% : src/%
 FC_SOLVE_SOURCE_DIR := $(PWD)/../../source
 
 $(LIBFREECELL_SOLVER_JS):
-	( cd $(LIBFREECELL_SOLVER_JS_DIR) && make -j4 -f $(FC_SOLVE_SOURCE_DIR)/Makefile.to-javascript.mak SRC_DIR=$(FC_SOLVE_SOURCE_DIR) )
+	( cd $(LIBFREECELL_SOLVER_JS_DIR) && make -f $(FC_SOLVE_SOURCE_DIR)/Makefile.to-javascript.mak SRC_DIR=$(FC_SOLVE_SOURCE_DIR) )
 
 $(JSMIN): lib/jsmin/jsmin.c
 	gcc -o $@ -O2 -Wall $<
