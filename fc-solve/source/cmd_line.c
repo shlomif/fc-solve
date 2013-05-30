@@ -192,6 +192,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     status = read_preset(preset_name, &preset_args, &dir, NULL);
     if (status != 0)
     {
+        *error_string = strdup("Could not read preset.");
         return FCS_CMD_LINE_ERROR_IN_ARG;
     }
     else
