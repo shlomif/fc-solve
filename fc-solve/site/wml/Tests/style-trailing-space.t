@@ -18,6 +18,10 @@ use Test::More tests => 1;
         if ($l =~ m{\A(?:dest/t2-homepage|t2)/(?:lecture/CMake|(?:humour/fortunes/fortunes-shlomif-ids-data\.yaml\z))}
                 or
             $l =~ m{\Alib/fc-solve-for-javascript}
+                or
+            $l =~ m{\.(?:patch|diff)\z}
+                or
+            $l eq 'dest/js/libfreecell-solver.js'
         )
         {
             next ACK_OUTPUT;
