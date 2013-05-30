@@ -5,7 +5,7 @@ use warnings;
 
 use Getopt::Long;
 use File::Temp qw/tempdir/;
-use File::Copy; 
+use File::Copy;
 
 my ($src, $dest, $sect, $center, $release);
 
