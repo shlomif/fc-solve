@@ -95,7 +95,7 @@ sub emit_all
     print ($self->all_info());
 
     Carp::cluck("Error.");
-    print colored("Error!", ($ENV{'HARNESS_SUMMARY_COL_FAIL'} || 'bold red')),
+    print colored("Error!", ($ENV{'HARNESS_SUMMARY_COLOR_FAIL'} || 'bold red')),
         "\n";
     exit(-1);
 }
@@ -216,7 +216,7 @@ run_tests("without-depth-field and rcs",
 );
 
 print colored("All tests successful.",
-        ($ENV{'HARNESS_SUMMARY_COL_SUC'} || 'bold green')
+        ($ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'} || 'bold green')
     ), "\n";
 
 exit(0);
