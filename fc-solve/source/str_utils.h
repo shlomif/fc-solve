@@ -37,9 +37,9 @@ extern "C"
 #include <string.h>
 
 static GCC_INLINE fcs_bool_t string_starts_with(
-    const char * str,
-    const char * prefix,
-    const char * end
+    const char * const str,
+    const char * const prefix,
+    const char * const end
     )
 {
     register int check_len = end-str;
