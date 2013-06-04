@@ -42,7 +42,7 @@ static GCC_INLINE fcs_bool_t string_starts_with(
     const char * const end
     )
 {
-    register int check_len = end-str;
+    register const int check_len = end-str;
 
     return
         (
