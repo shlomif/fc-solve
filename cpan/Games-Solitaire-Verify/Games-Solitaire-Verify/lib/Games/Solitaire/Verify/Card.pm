@@ -3,6 +3,8 @@ package Games::Solitaire::Verify::Card;
 use warnings;
 use strict;
 
+=encoding utf8
+
 =head1 NAME
 
 Games::Solitaire::Verify::Card - a class wrapper for an individual
@@ -21,6 +23,7 @@ use base 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception;
 
 __PACKAGE__->mk_acc_ref([qw(
+    _flipped
     data
     id
     rank
@@ -135,6 +138,13 @@ sub _from_string
 {
     my ($self, $str) = @_;
 
+    my $is_flipped = 0;
+
+    if ($str =~ s{\A<(.*)>\z}{$1}ms)
+    {
+        $is_flipped = 1;
+    }
+
     if (length($str) != 2)
     {
         Games::Solitaire::Verify::Exception::Parse::Card->throw(
@@ -161,6 +171,8 @@ sub _from_string
             error => "unknown suit",
         );
     }
+
+    $self->set_flipped($is_flipped);
 
     return;
 }
@@ -256,11 +268,20 @@ Converts the card to a string representation.
 
 =cut
 
-sub to_string
+sub _to_string_without_flipped
 {
     my $self = shift;
 
     return $self->rank_to_string($self->rank()) . $self->suit();
+}
+
+sub to_string
+{
+    my $self = shift;
+
+    my $s = $self->_to_string_without_flipped();
+
+    return ($self->is_flipped ? "<$s>" : $s);
 }
 
 =head2 $class->rank_to_string($rank_idx)
@@ -281,6 +302,32 @@ sub rank_to_string
     {
         return $card_nums[$rank-1]->{t};
     }
+}
+
+=head2 $card->is_flipped()
+
+Determines if the card is flipped.
+
+=cut
+
+sub is_flipped
+{
+    return shift->_flipped();
+}
+
+=head2 $card->set_flipped($flipped_bool)
+
+Sets the card’s flipped status.
+
+=cut
+
+sub set_flipped
+{
+    my ($self, $v) = @_;
+
+    $self->_flipped($v);
+
+    return;
 }
 
 =head1 AUTHOR

@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 42;
+use Test::More tests => 48;
+
 use Games::Solitaire::Verify::Card;
 
 {
@@ -72,6 +73,36 @@ use Games::Solitaire::Verify::Card;
 
     # TEST
     is ($card->color(), "red", "Color of 5H is red");
+}
+
+{
+    my $card = Games::Solitaire::Verify::Card->new(
+        {
+            string => "<5H>",
+        },
+    );
+
+    # TEST
+    is ($card->rank(), 5, "Rank of 5H is 5");
+
+    # TEST
+    is ($card->suit(), "H", "Suit of 5H is Hearts");
+
+    # TEST
+    is ($card->color(), "red", "Color of 5H is red");
+
+    # TEST
+    ok ($card->is_flipped(), "Card is flipped.");
+
+    # TEST
+    is ($card->to_string(), '<5H>', "Stringification of a flipped card.");
+
+    $card->set_flipped(0);
+
+    # TEST
+    is ($card->to_string(), '5H',
+        "Stringification of a no longer flipped card."
+    );
 }
 
 {
