@@ -1656,7 +1656,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
 {
     fcs_user_t * user = (fcs_user_t *)user_instance;
 
-    return user->iterations_board_started_at.num_times + user->active_flare->obj_num_times - user->init_num_times.num_times;
+    return user->iterations_board_started_at.num_times + max(user->active_flare->obj_num_times, user->active_flare->obj->num_times) - user->init_num_times.num_times;
 }
 
 int DLLEXPORT freecell_solver_user_get_num_times(void * api_instance)
