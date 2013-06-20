@@ -308,7 +308,7 @@ void DLLEXPORT freecell_solver_user_limit_iterations_long(
     fcs_int_limit_t max_iters
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->current_iterations_limit = max_iters;
 }
@@ -326,7 +326,7 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
     int max_iters
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->instances_list[user->current_instance_idx].limit = max_iters;
 }
@@ -345,7 +345,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     int depth_idx;
     int ret_code;
 
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     *error_string = NULL;
 
@@ -735,7 +735,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
     char * error_string;
     int instance_list_index;
 
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->state_string_copy = strdup(state_as_string);
 
@@ -1337,7 +1337,7 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
     int display_10_as_t
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
@@ -1434,7 +1434,7 @@ void DLLEXPORT freecell_solver_user_free(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user_free_resources(user);
 
@@ -1445,7 +1445,7 @@ int DLLEXPORT freecell_solver_user_get_current_depth(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return (DFS_VAR(user->soft_thread, depth));
 }
@@ -1455,7 +1455,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     int method
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
 
@@ -1525,7 +1525,7 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
     int freecells_num
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if ((freecells_num < 0) || (freecells_num > MAX_NUM_FREECELLS))
     {
@@ -1557,7 +1557,7 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
     int stacks_num
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if ((stacks_num < 0) || (stacks_num > MAX_NUM_STACKS))
     {
@@ -1587,7 +1587,7 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
     int decks_num
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if ((decks_num < 0) || (decks_num > MAX_NUM_DECKS))
     {
@@ -1666,14 +1666,14 @@ int DLLEXPORT freecell_solver_user_get_num_times(void * api_instance)
 
 int DLLEXPORT freecell_solver_user_get_limit_iterations(void * api_instance)
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return user->active_flare->obj->max_num_times;
 }
 
 int DLLEXPORT freecell_solver_user_get_moves_left(void * api_instance)
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
         return user->active_flare->moves_seq.num_moves - user->active_flare->next_move;
@@ -1686,7 +1686,7 @@ void DLLEXPORT freecell_solver_user_set_solution_optimization(
     int optimize
 )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(user->active_flare->obj, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
 }
@@ -1709,7 +1709,7 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
     fc_solve_instance_t * instance;
 #endif
 
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     instance =
         user->active_flare->obj;
@@ -1731,7 +1731,7 @@ void DLLEXPORT freecell_solver_user_limit_depth(
     int max_depth
 )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->active_flare->obj->max_depth = max_depth;
 }
@@ -1759,7 +1759,7 @@ char * freecell_solver_user_get_invalid_state_error_string(
 {
     char string[80], card_str[10];
 
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (user->state_validity_ret == FCS_STATE_VALIDITY__OK)
     {
@@ -1795,7 +1795,7 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
     )
 {
 #ifndef FCS_FREECELL_ONLY
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if ((sequences_are_built_by < 0) || (sequences_are_built_by > 2))
     {
@@ -1817,7 +1817,7 @@ int DLLEXPORT freecell_solver_user_set_sequence_move(
     )
 {
 #ifndef FCS_FREECELL_ONLY
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->common_preset.game_params.game_flags &= (~(1 << 4));
     user->common_preset.game_params.game_flags |=
@@ -1834,7 +1834,7 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
     )
 {
 #ifndef FCS_FREECELL_ONLY
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if ((empty_stacks_fill < 0) || (empty_stacks_fill > 2))
     {
@@ -1856,7 +1856,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
     double weight
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if ((my_index < 0) || (my_index >= COUNT(BEFS_VAR(user->soft_thread, weighting.befs_weights))))
     {
@@ -1880,7 +1880,7 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
     int my_index
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return BEFS_VAR(user->soft_thread, weighting.befs_weights)[my_index];
 }
@@ -1898,7 +1898,7 @@ static void iter_handler_wrapper(
 {
     fcs_standalone_state_ptrs_t state_raw;
 
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     state_raw.key = ptr_state->key;
     state_raw.val = ptr_state->val;
@@ -1944,7 +1944,7 @@ static void set_any_iter_handler(
     void * iter_handler_context
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->long_iter_handler = long_iter_handler;
     user->iter_handler = iter_handler;
@@ -1995,7 +1995,7 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
 )
 {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
     fc_solve_instance_t * instance =
         user->active_flare->obj;
 #endif
@@ -2019,7 +2019,7 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
     int seed
 )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_rand_init(
             &(DFS_VAR(user->soft_thread, rand_gen)),
@@ -2029,7 +2029,7 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
 
 fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_states_in_collection_long(void * api_instance)
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return user->iterations_board_started_at.num_states_in_collection + user->active_flare->obj_num_states_in_collection - user->init_num_times.num_states_in_collection;
 }
@@ -2097,7 +2097,7 @@ int DLLEXPORT freecell_solver_user_next_soft_thread(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * soft_thread = fc_solve_new_soft_thread(user->soft_thread->hard_thread);
 
@@ -2116,7 +2116,7 @@ extern void DLLEXPORT freecell_solver_user_set_soft_thread_step(
     int num_times_step
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->soft_thread->num_times_step = num_times_step;
 }
@@ -2125,7 +2125,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * soft_thread = fc_solve_new_hard_thread(user->active_flare->obj);
 
@@ -2143,7 +2143,7 @@ int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return user->active_flare->obj->next_soft_thread_id;
 }
@@ -2153,7 +2153,7 @@ void DLLEXPORT freecell_solver_user_set_calc_real_depth(
     int calc_real_depth
 )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(user->active_flare->obj, FCS_RUNTIME_CALC_REAL_DEPTH, calc_real_depth);
 }
@@ -2163,7 +2163,7 @@ void DLLEXPORT freecell_solver_user_set_soft_thread_name(
     freecell_solver_str_t name
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (user->soft_thread->name != NULL)
     {
@@ -2177,7 +2177,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
     freecell_solver_str_t name
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
 
@@ -2198,7 +2198,7 @@ int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
     const char * prelude
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_hard_thread_t * hard_thread = user->soft_thread->hard_thread;
 
@@ -2217,7 +2217,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
     const char * flares_plan_string
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
 
@@ -2242,7 +2242,7 @@ void DLLEXPORT freecell_solver_user_recycle(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     for (int i = 0 ; i < user->num_instances ; i++)
     {
@@ -2270,7 +2270,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     char * * error_string
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_free_tests_order(&(user->active_flare->obj->opt_tests_order));
 
@@ -2298,7 +2298,7 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(
     char * * error_string
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (!strcmp(pruning, "r:tf"))
     {
@@ -2323,7 +2323,7 @@ void DLLEXPORT freecell_solver_user_set_reparent_states(
     int to_reparent_states
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(user->active_flare->obj,
             FCS_RUNTIME_TO_REPARENT_STATES_PROTO, to_reparent_states);
@@ -2334,7 +2334,7 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
     int synergy
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(user->active_flare->obj, FCS_RUNTIME_SCANS_SYNERGY, synergy);
 }
@@ -2434,7 +2434,7 @@ int DLLEXPORT freecell_solver_user_next_flare(
 
 int DLLEXPORT freecell_solver_user_reset(void * api_instance)
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user_free_resources(user);
 
@@ -2454,7 +2454,7 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_hard_thread_t * hard_thread = user->active_flare->obj->current_hard_thread;
 
@@ -2465,7 +2465,7 @@ DLLEXPORT const char * freecell_solver_user_get_last_error_string(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return user->error_string;
 }
@@ -2524,7 +2524,7 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
     const char * const new_flares_choice_string
 )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (!strcmp(new_flares_choice_string, "fc_solve"))
     {
@@ -2547,7 +2547,7 @@ DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
     double new_factor
 )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->flares_iters_factor = new_factor;
 }
@@ -2560,7 +2560,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
     char * * error_string
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return user_compile_all_flares_plans(user, instance_list_index, error_string);
 }
@@ -2569,7 +2569,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fcs_instance_item_t * instance_item =
         &(user->instances_list[user->current_instance_idx]);
@@ -2582,7 +2582,7 @@ const DLLEXPORT char * fc_solve_user_INTERNAL_get_flares_plan_item_type(
     int item_idx
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fcs_instance_item_t *instance_item = &(user->instances_list[user->current_instance_idx]);
 
@@ -2610,7 +2610,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     int item_idx
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
 
@@ -2622,7 +2622,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     int item_idx
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
 
@@ -2633,7 +2633,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
     void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return user->soft_thread->by_depth_tests_order.num;
 }
@@ -2643,7 +2643,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
     int depth_idx
     )
 {
-    fcs_user_t * user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].max_depth;
 }
