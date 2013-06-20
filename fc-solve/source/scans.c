@@ -1665,7 +1665,7 @@ static void dump_pqueue (
  *  It goes on in this fashion until the final state was reached or
  *  there are no more states in the queue.
 */
-int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * soft_thread )
+int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 {
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * const instance = hard_thread->instance;
@@ -2095,9 +2095,10 @@ char * fc_solve_get_the_positions_by_rank_data(
          *
          * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
          * (-1,-1) (= end) padding.             * */
-#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH)
+#define FCS_POS_BY_RANK_LEN ( NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH )
+#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
 
-        char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_SIZE);
+        char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
 
         memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
 
