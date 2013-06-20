@@ -80,8 +80,8 @@ static GCC_INLINE ub4 perl_hash_function(
  * replaced_with_cached macro above.
  * */
 static GCC_INLINE void fc_solve_cache_stacks(
-        fc_solve_hard_thread_t * hard_thread,
-        fcs_kv_state_t * new_state
+        fc_solve_hard_thread_t * const hard_thread,
+        fcs_kv_state_t * const new_state
         )
 {
     fc_solve_instance_t * const instance = hard_thread->instance;
@@ -160,7 +160,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
         {
-            column = fcs_state_get_col(new_state->s, i);
+            column = fcs_state_get_col(*new_state_key, i);
 
             replace_with_cached(
                 fc_solve_columns_google_hash_insert(
@@ -175,7 +175,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
         cached_stack =
             fcs_libavl2_stacks_tree_insert(
                 instance->stacks_tree,
-                new_state->s.stacks[i]
+                new_state_key->stacks[i]
             );
 
         replace_with_cached(cached_stack != NULL);
