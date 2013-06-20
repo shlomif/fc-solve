@@ -39,6 +39,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/\\\\.svn/"
     "\\\\.(pdf|fo)$"
     "/t/t/.*\\\\.exe$"
+    "\\\\.pyc$"
     "/t/Presets"
     "/CMakeCache\\\\.txt$"
     "/Makefile$"
