@@ -1006,23 +1006,20 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         if (is_start_of_flare_solving)
         {
-            int status;
-            fcs_kv_state_t state_pass;
-
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
             fc_solve_instance_t * instance = user->active_flare->obj;
 #endif
 
-            status = fc_solve_initial_user_state_to_c(
-                user->state_string_copy,
-                &(user->state),
-                INSTANCE_FREECELLS_NUM,
-                INSTANCE_STACKS_NUM,
-                INSTANCE_DECKS_NUM,
-                user->indirect_stacks_buffer
-                );
-
-            if (status != FCS_USER_STATE_TO_C__SUCCESS)
+            if (FCS_USER_STATE_TO_C__SUCCESS !=
+                fc_solve_initial_user_state_to_c(
+                    user->state_string_copy,
+                    &(user->state),
+                    INSTANCE_FREECELLS_NUM,
+                    INSTANCE_STACKS_NUM,
+                    INSTANCE_DECKS_NUM,
+                    user->indirect_stacks_buffer
+                )
+            )
             {
                 user->ret_code = FCS_STATE_INVALID_STATE;
                 user->state_validity_ret = FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
@@ -1045,6 +1042,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             fc_solve_init_locs(&(user->initial_state_locs));
             user->state_locs = user->initial_state_locs;
 
+            fcs_kv_state_t state_pass;
             state_pass.key = &(user->state.s);
             state_pass.val = &(user->state.info);
             /* running_state and initial_non_canonized_state are
