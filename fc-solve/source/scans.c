@@ -230,8 +230,6 @@ static GCC_INLINE void free_states(fc_solve_instance_t * instance)
     return;
 #else
     {
-    HT_LOOP_DECLARE_VARS();
-
     /* First of all, let's make sure the soft_threads will no longer
      * traverse to the freed states that are currently dead end.
      * */

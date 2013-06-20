@@ -459,8 +459,6 @@ int fc_solve_apply_preset_by_ptr(
     {
         char test_name[2] = {0};
 
-        HT_LOOP_DECLARE_VARS();
-
         HT_LOOP_START()
         {
             ST_LOOP_DECLARE_VARS();

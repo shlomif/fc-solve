@@ -562,8 +562,6 @@ static GCC_INLINE int compile_prelude(
 
 void fc_solve_init_instance(fc_solve_instance_t * instance)
 {
-    HT_LOOP_DECLARE_VARS();
-
     /* Initialize the state packs */
     HT_LOOP_START()
     {
@@ -999,8 +997,6 @@ void fc_solve_start_instance_process_with_board(
 
     instance->current_hard_thread = instance->hard_threads;
     {
-        HT_LOOP_DECLARE_VARS();
-
         HT_LOOP_START()
         {
             if (hard_thread->prelude != NULL)

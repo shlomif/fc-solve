@@ -165,14 +165,10 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 #include "move_funcs_maps.h"
 
 /* HT_LOOP == hard threads' loop - macros to abstract it. */
-#define HT_LOOP_DECLARE_VARS() \
-    fc_solve_hard_thread_t * hard_thread, * end_hard_thread
-
 #define HT_LOOP_START() \
-    for ( end_hard_thread = ( \
-              (hard_thread = instance->hard_threads) \
-              + instance->num_hard_threads \
-          ) ; \
+    fc_solve_hard_thread_t * hard_thread = instance->hard_threads; \
+    fc_solve_hard_thread_t * const end_hard_thread = hard_thread+instance->num_hard_threads; \
+    for ( ; \
          hard_thread < end_hard_thread ;  \
          hard_thread++ \
     )
@@ -1732,8 +1728,6 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
 )
 {
     fc_solve_hard_thread_t * ret;
-    HT_LOOP_DECLARE_VARS();
-
     /* Make sure we are not exceeding the maximal number of soft threads
      * for an instance. */
     if (instance->next_soft_thread_id == MAX_NUM_SCANS)
@@ -1931,8 +1925,6 @@ static GCC_INLINE void fc_solve_free_tests_order(fcs_tests_order_t * tests_order
 
 static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * instance)
 {
-    HT_LOOP_DECLARE_VARS();
-
     fc_solve_foreach_soft_thread(instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
 
     HT_LOOP_START()
