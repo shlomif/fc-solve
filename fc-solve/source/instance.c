@@ -265,8 +265,6 @@ void fc_solve_foreach_soft_thread(
 
     for(ht_idx = 0 ; ht_idx<=instance->num_hard_threads; ht_idx++)
     {
-        ST_LOOP_DECLARE_VARS();
-
         if (ht_idx < instance->num_hard_threads)
         {
             hard_thread = &(instance->hard_threads[ht_idx]);
@@ -497,8 +495,6 @@ static GCC_INLINE int compile_prelude(
 {
     fcs_bool_t last_one = FALSE;
     int num_items = 0;
-    ST_LOOP_DECLARE_VARS();
-
     fcs_prelude_item_t * prelude = NULL;
     char * const string = hard_thread->prelude_as_string;
 

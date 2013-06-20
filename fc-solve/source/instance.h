@@ -174,14 +174,10 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
     )
 
 /* ST_LOOP == soft threads' loop - macros to abstract it. */
-#define ST_LOOP_DECLARE_VARS() \
-    fc_solve_soft_thread_t * soft_thread, * end_soft_thread
-
 #define ST_LOOP_START() \
-    for ( end_soft_thread = ( \
-              (soft_thread = hard_thread->soft_threads) \
-              + hard_thread->num_soft_threads \
-          ) ; \
+    fc_solve_soft_thread_t * soft_thread = hard_thread->soft_threads; \
+    fc_solve_soft_thread_t * const end_soft_thread = soft_thread + hard_thread->num_soft_threads; \
+    for ( ; \
          soft_thread < end_soft_thread ;  \
          soft_thread++ \
     )
@@ -1743,7 +1739,6 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
      * */
     HT_LOOP_START()
     {
-        ST_LOOP_DECLARE_VARS();
         ST_LOOP_START()
         {
             soft_thread->hard_thread = hard_thread;
@@ -1822,8 +1817,6 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
     fc_solve_hard_thread_t * const hard_thread
 )
 {
-    ST_LOOP_DECLARE_VARS();
-
     fc_solve_reset_hard_thread(hard_thread);
     fc_solve_compact_allocator_recycle(&(hard_thread->allocator));
 

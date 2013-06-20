@@ -461,8 +461,6 @@ int fc_solve_apply_preset_by_ptr(
 
         HT_LOOP_START()
         {
-            ST_LOOP_DECLARE_VARS();
-
             ST_LOOP_START()
             {
                 int num_valid_tests;

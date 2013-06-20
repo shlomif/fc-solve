@@ -237,8 +237,6 @@ static GCC_INLINE void free_states(fc_solve_instance_t * instance)
 
     HT_LOOP_START()
     {
-        ST_LOOP_DECLARE_VARS();
-
         ST_LOOP_START()
         {
             if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
