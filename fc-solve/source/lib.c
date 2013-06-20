@@ -931,9 +931,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
     fcs_stats_t init_num_times;
     fcs_bool_t run_for_first_iteration = TRUE;
-    int ret;
 
-    ret = FCS_STATE_IS_NOT_SOLVEABLE;
+    int ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
     /*
      * I expect user->current_instance_idx to be initialized with some value.
