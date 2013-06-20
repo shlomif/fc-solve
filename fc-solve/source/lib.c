@@ -933,11 +933,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
        )
     {
         /* TODO : move closer to definition. */
-        fcs_flare_item_t * flare;
-        int flare_idx;
         int solve_start = 0;
 
-        flares_plan_item * current_plan_item;
         int flare_iters_quota;
 
         run_for_first_iteration = 0;
@@ -967,8 +964,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             }
         }
 
-        current_plan_item = &(instance_item->plan[instance_item->current_plan_item_idx++]);
-
+        const flares_plan_item * const current_plan_item =
+            &(instance_item->plan[instance_item->current_plan_item_idx++]);
 
         if (current_plan_item->type == FLARES_PLAN_CHECKPOINT)
         {
@@ -1000,9 +997,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             }
         }
 
-        flare_idx = current_plan_item->flare_idx;
-
-        flare = &(instance_item->flares[flare_idx]);
+        const int flare_idx = current_plan_item->flare_idx;
+        fcs_flare_item_t * const flare =
+            &(instance_item->flares[flare_idx]);
 
         /* TODO : For later - loop over the flares based on the flares plan. */
         user->active_flare = flare;
