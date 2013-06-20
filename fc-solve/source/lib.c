@@ -2225,14 +2225,10 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
     {
         free(instance_item->flares_plan_string);
     }
-    if (flares_plan_string)
-    {
-        instance_item->flares_plan_string = strdup(flares_plan_string);
-    }
-    else
-    {
-        instance_item->flares_plan_string = NULL;
-    }
+
+    instance_item->flares_plan_string =
+        (flares_plan_string ? strdup(flares_plan_string) : NULL);
+
     instance_item->flares_plan_compiled = FALSE;
 
     return 0;
