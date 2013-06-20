@@ -135,9 +135,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     int decks_num
     )
 {
-    fcs_move_stack_t temp_moves;
-    fcs_internal_move_t in_move, out_move;
-    fcs_kv_state_t dynamic_state;
+    fcs_internal_move_t in_move;
 
     fcs_state_keyval_pair_t s_and_info;
 
@@ -149,12 +147,11 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #define FCS_S_FC_LOCS(s) (locs->fc_locs)
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
 
-    dynamic_state.key = &(s_and_info.s);
-    dynamic_state.val = &(s_and_info.info);
+    fcs_kv_state_t dynamic_state;
+    FCS_STATE_collectible_to_kv(&(dynamic_state), &(s_and_info));
 
-    out_move = fc_solve_empty_move;
+    fcs_internal_move_t out_move = fc_solve_empty_move;
 
-    fcs_move_stack_init(temp_moves);
 
     fcs_duplicate_kv_state( &(dynamic_state), init_state );
 
@@ -164,6 +161,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
         fcs_copy_stack(*(dynamic_state.key), *(dynamic_state.val), i, indirect_stacks_buffer);
     }
 #endif
+
+    fcs_move_stack_t temp_moves;
+    fcs_move_stack_init(temp_moves);
 
     while (
         fc_solve_move_stack_pop(
