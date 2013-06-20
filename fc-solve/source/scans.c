@@ -2055,11 +2055,10 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
  *
  */
 char * fc_solve_get_the_positions_by_rank_data(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_kv_state_t * ptr_state_raw
+    fc_solve_soft_thread_t * const soft_thread,
+    const fcs_state_t * const ptr_state_key
 )
 {
-#define ptr_state_key (ptr_state_raw->key)
 #define state_key (*ptr_state_key)
 #undef the_state
 #define the_state state_key

@@ -354,7 +354,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
     char * positions_by_rank = \
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
-            raw_ptr_state_raw \
+            ptr_state_key \
         )
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)

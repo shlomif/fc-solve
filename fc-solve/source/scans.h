@@ -47,8 +47,8 @@ extern "C" {
 #define FCS_POS_BY_RANK_WIDTH (LOCAL_DECKS_NUM << 3)
 
 extern char * fc_solve_get_the_positions_by_rank_data(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_kv_state_t * ptr_state
+        fc_solve_soft_thread_t * const soft_thread,
+        const fcs_state_t * const ptr_state
         );
 
 extern int fc_solve_sfs_check_state_begin(
