@@ -514,6 +514,13 @@ typedef struct {
     fcs_state_extra_info_t * val;
 } fcs_kv_state_t;
 
+static GCC_INLINE void
+FCS_STATE_keyval_pair_to_kv(fcs_kv_state_t * ret, fcs_state_keyval_pair_t * s)
+{
+    ret->key = &(s->s);
+    ret->val = &(s->info);
+}
+
 /*
  * This type is the struct that is collectible inside the hash.
  *
@@ -570,12 +577,7 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 #define FCS_STATE_kv_to_collectible(s) ((fcs_collectible_state_t *)((s)->key))
 #define FCS_STATE_kv_to_pass(s) FCS_STATE_kv_to_collectible(s)
 
-static GCC_INLINE void
-FCS_STATE_collectible_to_kv(fcs_kv_state_t * ret, fcs_collectible_state_t * s)
-{
-    ret->key = &(s->s);
-    ret->val = &(s->info);
-}
+#define FCS_STATE_collectible_to_kv(ret,s) FCS_STATE_keyval_pair_to_kv((ret),(s))
 
 #endif
 

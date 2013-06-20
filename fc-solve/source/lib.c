@@ -1043,21 +1043,21 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->state_locs = user->initial_state_locs;
 
             fcs_kv_state_t state_pass;
-            FCS_STATE_collectible_to_kv(&(state_pass), &(user->state));
+            FCS_STATE_keyval_pair_to_kv(&(state_pass), &(user->state));
             /* running_state and initial_non_canonized_state are
              * normalized state. So We're duplicating
              * state to it before state state_pass is canonized.
              * */
             {
                 fcs_kv_state_t pass;
-                FCS_STATE_collectible_to_kv(&(pass), &(user->running_state));
+                FCS_STATE_keyval_pair_to_kv(&(pass), &(user->running_state));
 
                 fcs_duplicate_kv_state(&pass, &state_pass);
             }
 
             {
                 fcs_kv_state_t initial_pass;
-                FCS_STATE_collectible_to_kv(&(initial_pass), &(user->initial_non_canonized_state));
+                FCS_STATE_keyval_pair_to_kv(&(initial_pass), &(user->initial_non_canonized_state));
 
                 fcs_duplicate_kv_state(&initial_pass, &state_pass);
             }
@@ -1161,7 +1161,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 #endif
 
             fcs_kv_state_t pass;
-            FCS_STATE_collectible_to_kv(&(pass), &(user->state));
+            FCS_STATE_keyval_pair_to_kv(&(pass), &(user->state));
             /*
              * TODO : maybe only normalize the final moves' stack in
              * order to speed things up.
@@ -1310,7 +1310,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
             if (ret == 0)
             {
                 fcs_kv_state_t pass;
-                FCS_STATE_collectible_to_kv(&(pass), &(user->running_state));
+                FCS_STATE_keyval_pair_to_kv(&(pass), &(user->running_state));
 
                 fc_solve_apply_move(
                     &(pass),

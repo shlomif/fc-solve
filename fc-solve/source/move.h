@@ -148,7 +148,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
 
     fcs_kv_state_t dynamic_state;
-    FCS_STATE_collectible_to_kv(&(dynamic_state), &(s_and_info));
+    FCS_STATE_keyval_pair_to_kv(&(dynamic_state), &(s_and_info));
 
     fcs_internal_move_t out_move = fc_solve_empty_move;
 
