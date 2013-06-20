@@ -33,7 +33,7 @@ my $type_name = 'fc_solve_seq_cards_power_type_t';
 my $array_name = 'fc_solve_seqs_over_cards_lookup';
 my $power_name = 'FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT';
 my ($power) = $text =~ m/^#define \Q$power_name\E (\d+\.\d+)\s*$/ms;
-my ($decl, $limit) = $text =~ m/^extern (\Q$type_name\E \Q$array_name\E\[([^\]]+)\]);\s*$/ms;
+my ($decl, $limit) = $text =~ m/^extern (const \Q$type_name\E \Q$array_name\E\[([^\]]+)\]);\s*$/ms;
 
 if (!defined($power) or !defined($limit))
 {
