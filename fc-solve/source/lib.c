@@ -209,7 +209,7 @@ static void iter_handler_wrapper(
 static int user_next_instance(fcs_user_t * user);
 
 static void user_initialize(
-        fcs_user_t * user
+        fcs_user_t * const user
         )
 {
 #ifndef FCS_FREECELL_ONLY
@@ -247,7 +247,7 @@ static void user_initialize(
 
 void DLLEXPORT * freecell_solver_user_alloc(void)
 {
-    fcs_user_t * ret = (fcs_user_t *)SMALLOC1(ret);
+    fcs_user_t * const ret = (fcs_user_t *)SMALLOC1(ret);
 
     user_initialize(ret);
 
@@ -263,7 +263,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 #else
     const fcs_preset_t * new_preset_ptr;
     int status;
-    fcs_user_t * user = (fcs_user_t*)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     status =
         fc_solve_get_preset_by_name(
@@ -496,9 +496,9 @@ static GCC_INLINE int add_run_indef_to_plan(
 }
 
 static int user_compile_all_flares_plans(
-    fcs_user_t * user,
-    int * instance_list_index,
-    char * * error_string
+    fcs_user_t * const user,
+    int * const instance_list_index,
+    char * * const error_string
     )
 {
     int user_inst_idx;
@@ -750,16 +750,13 @@ int DLLEXPORT freecell_solver_user_solve_board(
 }
 
 static void recycle_instance(
-    fcs_user_t * user,
-    int i
+    fcs_user_t * const user,
+    const int i
     )
 {
-    int flare_idx;
-    fcs_instance_item_t * instance_item;
+    fcs_instance_item_t * const instance_item = &(user->instances_list[i]);
 
-    instance_item = &(user->instances_list[i]);
-
-    for(flare_idx = 0; flare_idx < instance_item->num_flares ; flare_idx++)
+    for(int flare_idx = 0; flare_idx < instance_item->num_flares ; flare_idx++)
     {
         fcs_flare_item_t * flare;
 
@@ -870,8 +867,8 @@ static int calc_moves_seq(
 }
 
 static int get_flare_move_count(
-    fcs_user_t * user,
-    fcs_flare_item_t * flare
+    fcs_user_t * const user,
+    fcs_flare_item_t * const flare
 )
 {
     if (user->flares_choice == FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN)
@@ -1273,7 +1270,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
     fcs_move_t * user_move
     )
 {
-    fcs_user_t * user = (fcs_user_t*)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
@@ -1351,14 +1348,12 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
 }
 
 static void user_free_resources(
-    fcs_user_t * user
+    fcs_user_t * const user
     )
 {
     FLARES_LOOP_START()
     {
-        int ret_code;
-
-        ret_code = flare->ret_code;
+        const int ret_code = flare->ret_code;
 
         /*  TODO : for later It's possible two flares in a single-instance
          *  will be solved. Make sure the check is instance-wide.
@@ -1493,7 +1488,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 #ifndef FCS_FREECELL_ONLY
 
 static void apply_game_params_for_all_instances(
-        fcs_user_t * user
+        fcs_user_t * const user
         )
 {
     FLARES_LOOP_START()
@@ -1638,10 +1633,10 @@ int DLLEXPORT freecell_solver_user_set_game(
 }
 
 fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
-    void * user_instance
+    void * api_instance
     )
 {
-    fcs_user_t * user = (fcs_user_t *)user_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return user->iterations_board_started_at.num_times + max(user->active_flare->obj_num_times, user->active_flare->obj->num_times) - user->init_num_times.num_times;
 }
@@ -1913,8 +1908,8 @@ static void iter_handler_wrapper(
 }
 
 static void set_debug_iter_output_func_to_val(
-    fcs_user_t * user,
-    fcs_instance_debug_iter_output_func_t value
+    fcs_user_t * const user,
+    const fcs_instance_debug_iter_output_func_t value
 )
 {
     FLARES_LOOP_START()
@@ -1982,7 +1977,7 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
 {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     fcs_user_t * const user = (fcs_user_t *)api_instance;
-    fc_solve_instance_t * instance =
+    fc_solve_instance_t * const instance =
         user->active_flare->obj;
 #endif
 
@@ -2061,7 +2056,7 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     long max_num_states
     )
 {
-    fcs_user_t * user = (fcs_user_t*)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (max_num_states < 0)
     {
@@ -2374,7 +2369,7 @@ static int user_next_flare(fcs_user_t * user)
 }
 
 static int user_next_instance(
-    fcs_user_t * user
+    fcs_user_t * const user
     )
 {
     user->instances_list = SREALLOC(
@@ -2476,7 +2471,7 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
     fcs_moves_sequence_t * const moves_seq
 )
 {
-    fcs_user_t * user = (fcs_user_t*)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (user->ret_code != FCS_STATE_WAS_SOLVED)
     {
