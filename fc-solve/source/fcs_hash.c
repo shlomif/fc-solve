@@ -54,35 +54,29 @@ static GCC_INLINE void fc_solve_hash_rehash(fc_solve_hash_t * hash);
 
 
 fcs_bool_t fc_solve_hash_insert(
-    fc_solve_hash_t * hash,
-    void * key,
+    fc_solve_hash_t * const hash,
+    void * const key,
 #ifdef FCS_RCS_STATES
-    void * key_id,
+    void * const key_id,
 #endif
-    void * * existing_key,
-    fc_solve_hash_value_t hash_value
+    void * * const existing_key,
+    const fc_solve_hash_value_t hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    , fc_solve_hash_value_t secondary_hash_value
+    , const fc_solve_hash_value_t secondary_hash_value
 #endif
     )
 {
-    fc_solve_hash_symlink_t * list;
-    fc_solve_hash_symlink_item_t * item, * last_item;
-    fc_solve_hash_symlink_item_t * * item_placeholder;
 #if defined(FCS_INLINED_HASH_COMPARISON) && defined(INDIRECT_STACK_STATES)
-    enum FCS_INLINED_HASH_DATA_TYPE hash_type;
-#endif
-
-#if defined(FCS_INLINED_HASH_COMPARISON) && defined(INDIRECT_STACK_STATES)
-    hash_type = hash->hash_type;
+    const typeof(hash->hash_type) hash_type = hash->hash_type;
 #endif
     /* Get the index of the appropriate chain in the hash table */
 #define PLACE() (hash_value & (hash->size_bitmask))
 
-    list = (hash->entries + PLACE());
+    typeof(hash->entries[0]) * const list = (hash->entries + PLACE());
 
 #undef PLACE
 
+    fc_solve_hash_symlink_item_t * * item_placeholder;
     /* If first_item is non-existent */
     if (list->first_item == NULL)
     {
@@ -92,8 +86,8 @@ fcs_bool_t fc_solve_hash_insert(
     else
     {
         /* Initialize item to the chain's first_item */
-        item = list->first_item;
-        last_item = NULL;
+        fc_solve_hash_symlink_item_t * item = list->first_item;
+        fc_solve_hash_symlink_item_t * last_item = NULL;
 
 #ifdef FCS_WITH_CONTEXT_VARIABLE
 #define MY_HASH_CONTEXT_VAR    , hash->context
@@ -157,6 +151,8 @@ fcs_bool_t fc_solve_hash_insert(
 
         item_placeholder = &(last_item->next);
     }
+
+    fc_solve_hash_symlink_item_t * item;
 
     if (hash->list_of_vacant_items)
     {

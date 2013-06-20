@@ -168,22 +168,22 @@ static GCC_INLINE void fc_solve_hash_init(
  * was set to it.
  */
 extern fcs_bool_t fc_solve_hash_insert(
-    fc_solve_hash_t * hash,
-    void * key,
+    fc_solve_hash_t * const hash,
+    void * const key,
 #ifdef FCS_RCS_STATES
-    void * key_id,
+    void * const key_id,
 #endif
-    void * * existing_key,
-    fc_solve_hash_value_t hash_value
+    void * * const existing_key,
+    const fc_solve_hash_value_t hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    , fc_solve_hash_value_t secondary_hash_value
+    , const fc_solve_hash_value_t secondary_hash_value
 #endif
     );
 
 
 
 static GCC_INLINE void fc_solve_hash_free(
-    fc_solve_hash_t * hash
+    fc_solve_hash_t * const hash
     )
 {
     fc_solve_compact_allocator_finish(&(hash->allocator));
@@ -193,9 +193,9 @@ static GCC_INLINE void fc_solve_hash_free(
 }
 
 static GCC_INLINE void fc_solve_hash_foreach(
-    fc_solve_hash_t * hash,
+    fc_solve_hash_t * const hash,
     fcs_bool_t (*should_delete_ptr)(void * key, void * context),
-    void * context
+    void * const context
     )
 {
     const typeof(hash->size) size = hash->size;
