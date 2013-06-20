@@ -919,7 +919,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     )
 {
     fcs_stats_t init_num_times;
-    int run_for_first_iteration = 1;
+    fcs_bool_t run_for_first_iteration = TRUE;
     int ret;
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
@@ -937,7 +937,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         int flare_iters_quota;
 
-        run_for_first_iteration = 0;
+        run_for_first_iteration = FALSE;
 
         fcs_instance_item_t * instance_item = get_current_instance_item(user);
 
