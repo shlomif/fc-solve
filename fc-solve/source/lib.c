@@ -930,19 +930,14 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fcs_stats_t init_num_times;
-    fcs_bool_t run_for_first_iteration = TRUE;
 
     int ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
     /*
      * I expect user->current_instance_idx to be initialized with some value.
      * */
-    for( ;
-        run_for_first_iteration || ((user->current_instance_idx < user->num_instances) && (ret == FCS_STATE_IS_NOT_SOLVEABLE)) ;
-       )
+    do
     {
-        run_for_first_iteration = FALSE;
-
         fcs_instance_item_t * const instance_item =
             get_current_instance_item(user);
 
@@ -1276,7 +1271,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             }
             instance_item->all_plan_items_finished_so_far = 0;
         }
-    }
+    } while (
+        (user->current_instance_idx < user->num_instances) &&
+        (ret == FCS_STATE_IS_NOT_SOLVEABLE)
+    );
 
     return
     (
