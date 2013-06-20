@@ -907,6 +907,13 @@ static int get_flare_move_count(
     }
 }
 
+static GCC_INLINE fcs_instance_item_t * get_current_instance_item(
+    fcs_user_t const * user
+)
+{
+    return &(user->instances_list[user->current_instance_idx]);
+}
+
 int DLLEXPORT freecell_solver_user_resume_solution(
     void * api_instance
     )
@@ -914,7 +921,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     fcs_stats_t init_num_times;
     int run_for_first_iteration = 1;
     int ret;
-    fcs_user_t * user = (fcs_user_t*)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
@@ -925,7 +932,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         run_for_first_iteration || ((user->current_instance_idx < user->num_instances) && (ret == FCS_STATE_IS_NOT_SOLVEABLE)) ;
        )
     {
-        fcs_instance_item_t * instance_item;
+        /* TODO : move closer to definition. */
         fcs_flare_item_t * flare;
         int flare_idx;
         int solve_start = 0;
@@ -935,7 +942,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         run_for_first_iteration = 0;
 
-        instance_item = &(user->instances_list[user->current_instance_idx]);
+        fcs_instance_item_t * instance_item = get_current_instance_item(user);
 
         if (instance_item->current_plan_item_idx ==
                 instance_item->num_plan_items
@@ -1293,9 +1300,10 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         {
             int ret;
 
-            fcs_instance_item_t * instance_item = \
-                &(user->instances_list[user->current_instance_idx]);
+            fcs_instance_item_t const * instance_item =
+                get_current_instance_item(user);
             fcs_flare_item_t * flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+
             if (flare->next_move == flare->moves_seq.num_moves)
             {
                 ret = 1;
@@ -2179,7 +2187,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
+    fcs_instance_item_t * const instance_item = get_current_instance_item(user);
 
     fcs_flare_item_t * flare = &(instance_item->flares[instance_item->num_flares-1]);
 
@@ -2219,7 +2227,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
+    fcs_instance_item_t * const instance_item = get_current_instance_item(user);
 
     if (instance_item->flares_plan_string)
     {
@@ -2344,15 +2352,12 @@ int DLLEXPORT freecell_solver_user_next_instance(
 
 static int user_next_flare(fcs_user_t * user)
 {
-    fcs_instance_item_t * instance_item;
-    fcs_flare_item_t * flare;
-
-    instance_item = &(user->instances_list[user->current_instance_idx]);
+    fcs_instance_item_t * const instance_item = get_current_instance_item(user);
 
     instance_item->flares =
         SREALLOC( instance_item->flares, ++(instance_item->num_flares) );
 
-    flare = &(instance_item->flares[instance_item->num_flares-1]);
+    fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->num_flares-1]);
     instance_item->limit = flare->limit = -1;
 
     user->active_flare = flare;
@@ -2394,16 +2399,13 @@ static int user_next_instance(
     fcs_user_t * user
     )
 {
-    fcs_instance_item_t * instance_item;
-
     user->instances_list = SREALLOC(
         user->instances_list, ++user->num_instances
     );
 
     user->current_instance_idx = user->num_instances-1;
 
-
-    instance_item = &(user->instances_list[user->current_instance_idx]);
+    fcs_instance_item_t * const instance_item = get_current_instance_item(user);
     instance_item->num_flares = 0;
     instance_item->flares = NULL;
     instance_item->plan = NULL;
@@ -2505,8 +2507,8 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
         return -2;
     }
 
-    fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
-    fcs_flare_item_t * flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+    fcs_instance_item_t * const instance_item = get_current_instance_item(user);
+    fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
 
     moves_seq->num_moves = flare->moves_seq.num_moves;
     moves_seq->moves = memdup(flare->moves_seq.moves,
@@ -2567,10 +2569,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fcs_instance_item_t * instance_item =
-        &(user->instances_list[user->current_instance_idx]);
-
-    return instance_item->num_plan_items;
+    return get_current_instance_item(user)->num_plan_items;
 }
 
 const DLLEXPORT char * fc_solve_user_INTERNAL_get_flares_plan_item_type(
@@ -2580,9 +2579,7 @@ const DLLEXPORT char * fc_solve_user_INTERNAL_get_flares_plan_item_type(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fcs_instance_item_t *instance_item = &(user->instances_list[user->current_instance_idx]);
-
-    switch(instance_item->plan[item_idx].type)
+    switch (get_current_instance_item(user)->plan[item_idx].type)
     {
         case FLARES_PLAN_RUN_INDEFINITELY:
             return "RunIndef";
@@ -2608,9 +2605,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
-
-    return instance_item->plan[item_idx].flare_idx;
+    return get_current_instance_item(user)->plan[item_idx].flare_idx;
 }
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
@@ -2620,9 +2615,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fcs_instance_item_t * instance_item = &(user->instances_list[user->current_instance_idx]);
-
-    return instance_item->plan[item_idx].count_iters;
+    return get_current_instance_item(user)->plan[item_idx].count_iters;
 }
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
