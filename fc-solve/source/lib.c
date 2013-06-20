@@ -942,9 +942,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         run_for_first_iteration || ((user->current_instance_idx < user->num_instances) && (ret == FCS_STATE_IS_NOT_SOLVEABLE)) ;
        )
     {
-        /* TODO : move closer to definition. */
-        int solve_start = 0;
-
         run_for_first_iteration = FALSE;
 
         fcs_instance_item_t * const instance_item =
@@ -1012,7 +1009,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         fcs_bool_t was_run_now = FALSE;
 
-        if (flare->ret_code == FCS_STATE_NOT_BEGAN_YET)
+        const fcs_bool_t is_start_of_flare_solving =
+            (flare->ret_code == FCS_STATE_NOT_BEGAN_YET);
+
+        if (is_start_of_flare_solving)
         {
             int status;
             fcs_kv_state_t state_pass;
@@ -1086,8 +1086,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->trace_solution_state_locs = user->state_locs;
 
             fc_solve_init_instance(user->active_flare->obj);
-
-            solve_start = 1;
         }
 
 #define parameterized_fixed_limit(increment) \
@@ -1135,7 +1133,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         user->init_num_times.num_times = init_num_times.num_times = user->active_flare->obj->num_times;
         user->init_num_times.num_states_in_collection = init_num_times.num_states_in_collection = user->active_flare->obj->num_states_in_collection;
 
-        if (solve_start)
+        if (is_start_of_flare_solving)
         {
             fc_solve_start_instance_process_with_board(
                 user->active_flare->obj, &(user->state)
