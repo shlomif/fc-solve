@@ -1043,24 +1043,21 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->state_locs = user->initial_state_locs;
 
             fcs_kv_state_t state_pass;
-            state_pass.key = &(user->state.s);
-            state_pass.val = &(user->state.info);
+            FCS_STATE_collectible_to_kv(&(state_pass), &(user->state));
             /* running_state and initial_non_canonized_state are
              * normalized state. So We're duplicating
              * state to it before state state_pass is canonized.
              * */
             {
                 fcs_kv_state_t pass;
-                pass.key = &(user->running_state.s);
-                pass.val = &(user->running_state.info);
+                FCS_STATE_collectible_to_kv(&(pass), &(user->running_state));
 
                 fcs_duplicate_kv_state(&pass, &state_pass);
             }
 
             {
                 fcs_kv_state_t initial_pass;
-                initial_pass.key = &(user->initial_non_canonized_state.s);
-                initial_pass.val = &(user->initial_non_canonized_state.info);
+                FCS_STATE_collectible_to_kv(&(initial_pass), &(user->initial_non_canonized_state));
 
                 fcs_duplicate_kv_state(&initial_pass, &state_pass);
             }
@@ -1157,15 +1154,14 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
-            fcs_kv_state_t pass;
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
             fc_solve_instance_t * instance =
                 user->active_flare->obj;
 #endif
 
-            pass.key = &(user->state.s);
-            pass.val = &(user->state.info);
+            fcs_kv_state_t pass;
+            FCS_STATE_collectible_to_kv(&(pass), &(user->state));
             /*
              * TODO : maybe only normalize the final moves' stack in
              * order to speed things up.
@@ -1314,8 +1310,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
             if (ret == 0)
             {
                 fcs_kv_state_t pass;
-                pass.key = &(user->running_state.s);
-                pass.val = &(user->running_state.info);
+                FCS_STATE_collectible_to_kv(&(pass), &(user->running_state));
 
                 fc_solve_apply_move(
                     &(pass),
