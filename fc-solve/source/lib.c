@@ -186,22 +186,15 @@ static void iter_handler_wrapper(
     fcs_int_limit_t parent_iter_num
     );
 
-#define FLARES_LOOP_DECLARE_VARS() \
-    int user_inst_idx
-
 #define FLARES_LOOP_START() \
-    for(user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++) \
+    for(int user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++) \
     { \
-        fcs_instance_item_t * instance_item; \
-        int flare_idx; \
-           \
-        instance_item = &(user->instances_list[user_inst_idx]); \
+        fcs_instance_item_t * const instance_item = &(user->instances_list[user_inst_idx]); \
                   \
-        for(flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++) \
+        for(int flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++) \
         {      \
-            fcs_flare_item_t * flare; \
-                       \
-            flare = &(instance_item->flares[flare_idx]);
+            fcs_flare_item_t * const flare = &(instance_item->flares[flare_idx]); \
+
 
 #define FLARES_LOOP_END_FLARES() \
         }
@@ -270,8 +263,6 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 #else
     const fcs_preset_t * new_preset_ptr;
     int status;
-    FLARES_LOOP_DECLARE_VARS();
-
     fcs_user_t * user = (fcs_user_t*)api_instance;
 
     status =
@@ -1363,8 +1354,6 @@ static void user_free_resources(
     fcs_user_t * user
     )
 {
-    FLARES_LOOP_DECLARE_VARS();
-
     FLARES_LOOP_START()
     {
         int ret_code;
@@ -1507,8 +1496,6 @@ static void apply_game_params_for_all_instances(
         fcs_user_t * user
         )
 {
-    FLARES_LOOP_DECLARE_VARS();
-
     FLARES_LOOP_START()
         flare->obj->game_params = user->common_preset.game_params;
     FLARES_LOOP_END()
@@ -1930,7 +1917,6 @@ static void set_debug_iter_output_func_to_val(
     fcs_instance_debug_iter_output_func_t value
 )
 {
-    FLARES_LOOP_DECLARE_VARS();
     FLARES_LOOP_START()
        flare->obj->debug_iter_output_func = value;
     FLARES_LOOP_END()
@@ -2469,9 +2455,7 @@ int DLLEXPORT freecell_solver_user_set_cache_limit(
 #ifndef FCS_RCS_STATES
     return 0;
 #else
-    FLARES_LOOP_DECLARE_VARS();
-
-    fcs_user_t * user = (fcs_user_t*)api_instance;
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (limit <= 0)
     {
