@@ -1007,8 +1007,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         /* TODO : For later - loop over the flares based on the flares plan. */
         user->active_flare = flare;
 
-        fcs_bool_t was_run_now = FALSE;
-
         const fcs_bool_t is_start_of_flare_solving =
             (flare->ret_code == FCS_STATE_NOT_BEGAN_YET);
 
@@ -1140,13 +1138,16 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             );
         }
 
-        if ((flare->ret_code == FCS_STATE_SUSPEND_PROCESS)
-            || (flare->ret_code == FCS_STATE_NOT_BEGAN_YET))
+        const fcs_bool_t was_run_now = (
+            (flare->ret_code == FCS_STATE_SUSPEND_PROCESS)
+            || (flare->ret_code == FCS_STATE_NOT_BEGAN_YET)
+        );
+
+        if (was_run_now)
         {
             ret = user->ret_code =
                 flare->ret_code =
                     fc_solve_resume_instance(user->active_flare->obj);
-            was_run_now = TRUE;
             flare->instance_is_ready = FALSE;
         }
 
