@@ -255,8 +255,6 @@ typedef struct {
 #define SET_GAME_PARAMS() \
     SET_INSTANCE_GAME_PARAMS(instance)
 
-#define DECLARE_AND_SET_GAME_PARAMS() SET_GAME_PARAMS()
-
 #ifndef HARD_CODED_NUM_FREECELLS
     fcs_game_limit_t freecells_num;
 #define INSTANCE_FREECELLS_NUM (instance->game_params.freecells_num)

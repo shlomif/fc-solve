@@ -86,7 +86,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
 {
     fc_solve_instance_t * const instance = hard_thread->instance;
 #ifndef HARD_CODED_NUM_STACKS
-    DECLARE_AND_SET_GAME_PARAMS();
+    SET_GAME_PARAMS();
 #endif
     register fcs_state_t * const new_state_key = new_state->key;
     register fcs_state_extra_info_t * const new_state_info = new_state->val;
