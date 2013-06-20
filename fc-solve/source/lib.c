@@ -914,19 +914,29 @@ static GCC_INLINE fcs_instance_item_t * get_current_instance_item(
     return &(user->instances_list[user->current_instance_idx]);
 }
 
+typedef int flare_iters_quota_t;
+
+static GCC_INLINE flare_iters_quota_t normalize_iters_quota(
+    flare_iters_quota_t i
+)
+{
+    return max(i, 0);
+}
+
 int DLLEXPORT freecell_solver_user_resume_solution(
     void * api_instance
     )
 {
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
+
     fcs_stats_t init_num_times;
     fcs_bool_t run_for_first_iteration = TRUE;
     int ret;
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
     /*
-     * I expect user->current_instance_idx to be initialized at some value.
+     * I expect user->current_instance_idx to be initialized with some value.
      * */
     for( ;
         run_for_first_iteration || ((user->current_instance_idx < user->num_instances) && (ret == FCS_STATE_IS_NOT_SOLVEABLE)) ;
@@ -935,11 +945,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         /* TODO : move closer to definition. */
         int solve_start = 0;
 
-        int flare_iters_quota;
-
         run_for_first_iteration = FALSE;
 
-        fcs_instance_item_t * instance_item = get_current_instance_item(user);
+        fcs_instance_item_t * const instance_item =
+            get_current_instance_item(user);
 
         if (instance_item->current_plan_item_idx ==
                 instance_item->num_plan_items
@@ -967,6 +976,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         const flares_plan_item * const current_plan_item =
             &(instance_item->plan[instance_item->current_plan_item_idx++]);
 
+
         if (current_plan_item->type == FLARES_PLAN_CHECKPOINT)
         {
             if (instance_item->minimal_solution_flare_idx >= 0)
@@ -981,21 +991,17 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 continue;
             }
         }
-        else if (current_plan_item->type == FLARES_PLAN_RUN_INDEFINITELY)
-        {
-            flare_iters_quota = -1;
-        }
-        else /* (current_plan_item->type == FLARES_PLAN_RUN_COUNT_ITERS)  */
-        {
-            flare_iters_quota =
+
+        const flare_iters_quota_t flare_iters_quota =
+        (
+            (current_plan_item->type == FLARES_PLAN_RUN_INDEFINITELY)
+            ? -1
+            /* (current_plan_item->type == FLARES_PLAN_RUN_COUNT_ITERS)  */
+            : normalize_iters_quota(
                 (typeof(flare_iters_quota))
                 (user->flares_iters_factor * current_plan_item->count_iters)
-                ;
-            if (flare_iters_quota < 0)
-            {
-                flare_iters_quota = 0;
-            }
-        }
+            )
+        );
 
         const int flare_idx = current_plan_item->flare_idx;
         fcs_flare_item_t * const flare =
