@@ -496,13 +496,12 @@ static GCC_INLINE int compile_prelude(
     fcs_bool_t last_one = FALSE;
     int num_items = 0;
     fcs_prelude_item_t * prelude = NULL;
-    char * const string = hard_thread->prelude_as_string;
 
-    char * p = string;
+    const char * p  = hard_thread->prelude_as_string;
 
     while (! last_one)
     {
-        const char * const p_quota = p;
+        const int p_quota = atoi(p);
         while((*p) && isdigit(*p))
         {
             p++;
@@ -512,7 +511,6 @@ static GCC_INLINE int compile_prelude(
             free(prelude);
             return FCS_COMPILE_PRELUDE_NO_AT_SIGN;
         }
-        *p = '\0';
         p++;
         const char * const p_scan = p;
         while((*p) && ((*p) != ','))
@@ -523,16 +521,17 @@ static GCC_INLINE int compile_prelude(
         {
             last_one = TRUE;
         }
-        *p = '\0';
+        char * const p_scan_copy = strndup(p_scan, p-p_scan);
         p++;
 
         ST_LOOP_START()
         {
-            if (soft_thread->name && (!strcmp(soft_thread->name, p_scan)))
+            if (soft_thread->name && (!strcmp(soft_thread->name, p_scan_copy)))
             {
                 break;
             }
         }
+        free (p_scan_copy);
         if (ST_LOOP_FINISHED())
         {
             free(prelude);
@@ -544,7 +543,7 @@ static GCC_INLINE int compile_prelude(
             prelude = SREALLOC(prelude, num_items+PRELUDE_GROW_BY);
         }
         prelude[num_items].scan_idx = ST_LOOP_INDEX();
-        prelude[num_items].quota = atoi(p_quota);
+        prelude[num_items].quota = p_quota;
         num_items++;
     }
 
@@ -563,7 +562,10 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
     {
         if (hard_thread->prelude_as_string)
         {
-            compile_prelude(hard_thread);
+            if (!hard_thread->prelude)
+            {
+                compile_prelude(hard_thread);
+            }
         }
         hard_thread->num_times_left_for_soft_thread =
             hard_thread->soft_threads[0].num_times_step;
