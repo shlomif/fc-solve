@@ -55,12 +55,19 @@ char fc_solve_simple_simon_nothing;
 #define fcs_suit_is_ss_true_parent(parent_suit, child_suit) \
     ((parent_suit) == (child_suit))
 
+static GCC_INLINE const fcs_bool_t fcs_is_ss_suit_true(const fcs_card_t parent, const fcs_card_t child)
+{
+    return fcs_suit_is_ss_true_parent(
+        fcs_card_suit(parent),fcs_card_suit(child)
+    );
+}
+
 static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent, const fcs_card_t child)
 {
     return
     (
-        fcs_is_ss_false_parent(parent,child) &&
-        fcs_suit_is_ss_true_parent(fcs_card_suit(parent),fcs_card_suit(child))
+        fcs_is_ss_false_parent(parent, child) &&
+        fcs_is_ss_suit_true(parent, child)
     );
 }
 
@@ -282,7 +289,7 @@ static GCC_INLINE int get_seq_h(const fcs_cards_column_t col, int * num_true_seq
             break;
         }
 
-        if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
+        if (!fcs_is_ss_suit_true(next_card, card))
         {
             num_true_seqs++;
         }
@@ -414,7 +421,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                 {
                     should_break = TRUE;
                 }
-                else if ((should_search = (! fcs_suit_is_ss_true_parent(fcs_card_suit(h_above_card), fcs_card_suit(card)))))
+                else if ((should_search = (!fcs_is_ss_suit_true(h_above_card, card))))
                 {
                     should_increment_num_true_seqs = TRUE;
                 }
@@ -853,7 +860,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 card = next_card;
                 break;
             }
-            if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
+            if (!fcs_is_ss_suit_true(next_card, card))
             {
                 num_src_junk_true_seqs++;
             }
@@ -876,7 +883,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 card = next_card;
                 break;
             }
-            if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
+            if (!fcs_is_ss_suit_true(next_card, card))
             {
                 num_true_seqs++;
             }
@@ -915,7 +922,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                         seq_points[num_separate_false_seqs++] = above_c+1;
                         above_num_true_seqs[num_separate_false_seqs] = 1;
                     }
-                    above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
+                    above_num_true_seqs[num_separate_false_seqs] +=
+                        ! fcs_is_ss_suit_true(up_above_card, above_card);
                     above_card = up_above_card;
                 }
 
@@ -1121,7 +1129,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 card = next_card;
                 break;
             }
-            if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
+            if (!fcs_is_ss_suit_true(next_card, card))
             {
                 num_true_seqs++;
             }
@@ -1159,7 +1167,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                         seq_points[num_separate_false_seqs++] = above_c+1;
                         above_num_true_seqs[num_separate_false_seqs] = 1;
                     }
-                    above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
+                    above_num_true_seqs[num_separate_false_seqs] +=
+                        ! fcs_is_ss_suit_true(up_above_card, above_card);
                     above_card = up_above_card;
                 }
 
