@@ -839,36 +839,28 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
      * num_true_seqs - the number of true sequences in the false seq which we
      *      wish to move.
      * */
-    int suit;
     fcs_card_t card, dest_card;
-    int rank;
 
     SIMPS_define_vacant_stacks_accessors();
 
     STACK_SOURCE_LOOP_START(1)
         card = fcs_col_get_card(col, cards_num-1);
-        rank = fcs_card_rank(card);
-        suit = fcs_card_suit(card);
         int num_src_junk_true_seqs = 1;
 
         int h;
-        for(h=cards_num-2;h>=-1;h--)
+        for(h=cards_num-2;h>-1;h--)
         {
-            if (h == -1)
+            const fcs_card_t next_card = fcs_col_get_card(col, h);
+            if (!fcs_is_ss_false_parent(next_card, card))
             {
+                card = next_card;
                 break;
             }
-            card = fcs_col_get_card(col, h);
-            if (fcs_card_rank(card) != rank+1)
-            {
-                break;
-            }
-            if (fcs_card_suit(card) != suit)
+            if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
             {
                 num_src_junk_true_seqs++;
             }
-            rank = fcs_card_rank(card);
-            suit = fcs_card_suit(card);
+            card = next_card;
         }
 
         if (h == -1)
@@ -879,27 +871,20 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
         const int end_of_junk = h;
         int num_true_seqs = 1;
 
-        for(;h>=-1;h--)
+        for(;h>-1;h--)
         {
-            if (h == -1)
+            const fcs_card_t next_card = fcs_col_get_card(col, h);
+            if (!fcs_is_ss_false_parent(next_card, card))
             {
+                card = next_card;
                 break;
             }
-            card = fcs_col_get_card(col, h);
-            if (fcs_card_rank(card) != rank+1)
-            {
-                break;
-            }
-            if (fcs_card_suit(card) != suit)
+            if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
             {
                 num_true_seqs++;
             }
-            rank = fcs_card_rank(card);
-            suit = fcs_card_suit(card);
+            card = next_card;
         }
-
-        rank = fcs_card_rank(card);
-        suit = fcs_card_suit(card);
 
         STACK_DEST_LOOP_START(2)
             /* Start at the card below the top one, so we will
@@ -908,10 +893,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
             for (int dc = dest_cards_num-2 ; dc >= 0 ; dc--)
             {
                 dest_card = fcs_col_get_card(dest_col, dc);
-                if (!((fcs_card_suit(dest_card) == suit) &&
-                    (fcs_card_rank(dest_card) == (rank+1))
-                   )
-                )
+                if (!fcs_is_ss_true_parent(dest_card, card))
                 {
                     continue;
                 }
