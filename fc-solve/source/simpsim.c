@@ -614,19 +614,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent)
 {
-    int suit;
-    int rank;
-
     SIMPS_define_vacant_stacks_accessors();
 
     STACK_SOURCE_LOOP_START(1)
-        for( int src_card_height = cards_num-1 ; src_card_height >= 0 ; src_card_height-- )
+        for (int src_card_height = cards_num-1 ; src_card_height >= 0 ; src_card_height--)
         {
             int end_of_src_seq;
 
-            fcs_card_t card = fcs_col_get_card(col, src_card_height);
-            suit = fcs_card_suit(card);
-            rank = fcs_card_rank(card);
+            const fcs_card_t h_card = fcs_col_get_card(col, src_card_height);
+            fcs_card_t card = h_card;
 
             int num_true_seqs = 1;
 
@@ -683,10 +679,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
             STACK_DEST_LOOP_START(1)
                 {
                     const fcs_card_t dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
-                    if (!((fcs_card_suit(dest_card) == suit) &&
-                        (fcs_card_rank(dest_card) == (rank+1))
-                       )
-                    )
+                    if (!fcs_is_ss_true_parent(dest_card, h_card))
                     {
                         continue;
                     }
