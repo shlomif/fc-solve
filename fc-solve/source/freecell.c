@@ -100,13 +100,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 
                     fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
 
-                    fcs_internal_move_t temp_move;
-
-                    fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
-                    fcs_int_move_set_src_stack(temp_move,stack_idx);
-                    fcs_int_move_set_foundation(temp_move,deck*4+fcs_card_suit(card));
-
-                    fcs_move_stack_push(moves, temp_move);
+                    fcs_move_stack_non_seq_push(
+                        moves, FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
+                        deck*4+fcs_card_suit(card)
+                    );
 
                     fcs_flip_top_card(stack_idx);
 
@@ -171,13 +168,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
 
                     fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
 
-                    fcs_internal_move_t temp_move;
-
-                    fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
-                    fcs_int_move_set_src_freecell(temp_move,fc);
-                    fcs_int_move_set_foundation(temp_move,deck*4+fcs_card_suit(card));
-
-                    fcs_move_stack_push(moves, temp_move);
+                    fcs_move_stack_non_seq_push(
+                        moves,
+                        FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION,
+                        fc,
+                        deck*4+fcs_card_suit(card)
+                    );
 
                     sfs_check_state_end();
                 }
@@ -265,11 +261,12 @@ static GCC_INLINE int empty_two_cols_from_new_state(
                 top_card
             );
 
-            fcs_internal_move_t temp_move;
-            fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_FREECELL);
-            fcs_int_move_set_src_stack(temp_move,*col_idx);
-            fcs_int_move_set_dest_freecell(temp_move,dest_fc_idx);
-            fcs_move_stack_push(moves, temp_move);
+            fcs_move_stack_non_seq_push(
+                moves,
+                FCS_MOVE_TYPE_STACK_TO_FREECELL,
+                *col_idx,
+                dest_fc_idx
+            );
 
             ret = dest_fc_idx;
 
@@ -330,12 +327,13 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             fcs_col_pop_card(new_from_which_col, top_card);
             fcs_col_push_card(new_b_col, top_card);
 
-            fcs_internal_move_t temp_move;
-            fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_STACK_TO_STACK);
-            fcs_int_move_set_src_stack(temp_move,*col_idx);
-            fcs_int_move_set_dest_stack(temp_move,put_cards_in_col_idx);
-            fcs_int_move_set_num_cards_in_seq(temp_move,1);
-            fcs_move_stack_push(moves, temp_move);
+            fcs_move_stack_params_push(
+                moves,
+                FCS_MOVE_TYPE_STACK_TO_STACK,
+                *col_idx,
+                put_cards_in_col_idx,
+                1
+            );
 
             ret = (put_cards_in_col_idx | (1 << 8));
 
@@ -512,11 +510,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                         fcs_col_push_card(new_dest_col, src_card);
                         fcs_empty_freecell(new_state, fc);
 
-                        fcs_internal_move_t temp_move;
-                        fcs_int_move_set_type(temp_move,FCS_MOVE_TYPE_FREECELL_TO_STACK);
-                        fcs_int_move_set_src_freecell(temp_move,fc);
-                        fcs_int_move_set_dest_stack(temp_move,ds);
-                        fcs_move_stack_push(moves, temp_move);
+                        fcs_move_stack_non_seq_push(
+                            moves,
+                            FCS_MOVE_TYPE_FREECELL_TO_STACK,
+                            fc,
+                            ds
+                        );
 
                         /*
                          * This is to preserve the order that the
