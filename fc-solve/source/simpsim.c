@@ -493,24 +493,21 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                             clear_junk_dest_stack++
                            )
                         {
-                            int clear_junk_stack_len;
                             const fcs_cards_column_t clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                            clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
+                            const int clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
 
                             if (! ((clear_junk_stack_len > 0) && (! stacks_map[clear_junk_dest_stack])))
                             {
                                 continue;
                             }
 
-                            fcs_card_t clear_junk_dest_card;
-
-                            clear_junk_dest_card = fcs_col_get_card(clear_junk_dest_col, clear_junk_stack_len-1);
-                            if (fcs_is_ss_false_parent(
-                                    clear_junk_dest_card,
-                                    fcs_col_get_card(dest_col,
-                                        seq_points[false_seq_index]
-                                        )
-                                    )
+                            const fcs_card_t clear_junk_dest_card = fcs_col_get_card(clear_junk_dest_col, clear_junk_stack_len-1);
+                            const fcs_card_t dest_col_card = fcs_col_get_card(
+                                dest_col,
+                                seq_points[false_seq_index]
+                            );
+                            if (fcs_is_ss_false_parent( clear_junk_dest_card,
+                                    dest_col_card)
                                 &&
                                 (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= above_num_true_seqs[false_seq_index])
                             )
