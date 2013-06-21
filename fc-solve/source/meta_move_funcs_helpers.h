@@ -149,13 +149,8 @@ static GCC_INLINE void fc_solve_move_sequence_function(
         fcs_col_pop_top(new_src_col);
     }
 
-    fcs_internal_move_t temp_move;
-    fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_STACK_TO_STACK);
-    fcs_int_move_set_src_stack(temp_move, source_idx);
-    fcs_int_move_set_dest_stack(temp_move, dest_idx);
-    fcs_int_move_set_num_cards_in_seq(temp_move, end-start+1);
-
-    fcs_move_stack_push(moves, temp_move);
+    fcs_move_stack_params_push(moves, FCS_MOVE_TYPE_STACK_TO_STACK,
+        source_idx, dest_idx, end-start+1);
 }
 #undef STATE_KEY
 
