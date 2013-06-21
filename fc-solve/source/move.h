@@ -203,77 +203,75 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 
         if (move_type == FCS_MOVE_TYPE_CANONIZE)
         {
-            /* Do Nothing */
+            continue;
         }
-        else
+
+        fcs_int_move_set_type(out_move, move_type);
+
+        if ((move_type == FCS_MOVE_TYPE_STACK_TO_STACK) ||
+            (move_type == FCS_MOVE_TYPE_STACK_TO_FREECELL) ||
+            (move_type == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
+            (move_type == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
+            )
         {
-            fcs_int_move_set_type(out_move, move_type);
-
-            if ((move_type == FCS_MOVE_TYPE_STACK_TO_STACK) ||
-                (move_type == FCS_MOVE_TYPE_STACK_TO_FREECELL) ||
-                (move_type == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
-                (move_type == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
-                )
-            {
-                fcs_int_move_set_src_stack(out_move,
-                    (FCS_S_STACK_LOCS(&dynamic_state))[
-                        (int)fcs_int_move_get_src_stack(in_move)
-                    ]
-                );
-            }
-            else if (
-                (move_type == FCS_MOVE_TYPE_FREECELL_TO_STACK) ||
-                (move_type == FCS_MOVE_TYPE_FREECELL_TO_FREECELL) ||
-                (move_type == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION))
-            {
-                fcs_int_move_set_src_freecell(out_move,
-                    (FCS_S_FC_LOCS(&dynamic_state))[
-                        (int)fcs_int_move_get_src_freecell(in_move)
-                    ]
-                );
-            }
-
-            if (
-                (move_type == FCS_MOVE_TYPE_STACK_TO_STACK) ||
-                (move_type == FCS_MOVE_TYPE_FREECELL_TO_STACK)
-                )
-            {
-                fcs_int_move_set_dest_stack(out_move,
-                    (FCS_S_STACK_LOCS(&dynamic_state))[
-                        (int)fcs_int_move_get_dest_stack(in_move)
-                    ]
-                );
-            }
-            else if (
-                (move_type == FCS_MOVE_TYPE_STACK_TO_FREECELL) ||
-                (move_type == FCS_MOVE_TYPE_FREECELL_TO_FREECELL)
-                )
-            {
-                fcs_int_move_set_dest_freecell(out_move,
-                    FCS_S_FC_LOCS(&dynamic_state)[
-                        (int)fcs_int_move_get_dest_freecell(in_move)
-                    ]
-                );
-            }
-            else if ((move_type == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
-                (move_type == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION) ||
-                (move_type == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
-
-               )
-            {
-                fcs_int_move_set_foundation(out_move,
-                    fcs_int_move_get_foundation(in_move)
-                );
-            }
-
-            if (move_type == FCS_MOVE_TYPE_STACK_TO_STACK)
-            {
-                fcs_int_move_set_num_cards_in_seq(out_move,
-                    fcs_int_move_get_num_cards_in_seq(in_move));
-            }
-
-            fcs_move_stack_push((&temp_moves), out_move);
+            fcs_int_move_set_src_stack(out_move,
+                (FCS_S_STACK_LOCS(&dynamic_state))[
+                    (int)fcs_int_move_get_src_stack(in_move)
+                ]
+            );
         }
+        else if (
+            (move_type == FCS_MOVE_TYPE_FREECELL_TO_STACK) ||
+            (move_type == FCS_MOVE_TYPE_FREECELL_TO_FREECELL) ||
+            (move_type == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION))
+        {
+            fcs_int_move_set_src_freecell(out_move,
+                (FCS_S_FC_LOCS(&dynamic_state))[
+                    (int)fcs_int_move_get_src_freecell(in_move)
+                ]
+            );
+        }
+
+        if (
+            (move_type == FCS_MOVE_TYPE_STACK_TO_STACK) ||
+            (move_type == FCS_MOVE_TYPE_FREECELL_TO_STACK)
+            )
+        {
+            fcs_int_move_set_dest_stack(out_move,
+                (FCS_S_STACK_LOCS(&dynamic_state))[
+                    (int)fcs_int_move_get_dest_stack(in_move)
+                ]
+            );
+        }
+        else if (
+            (move_type == FCS_MOVE_TYPE_STACK_TO_FREECELL) ||
+            (move_type == FCS_MOVE_TYPE_FREECELL_TO_FREECELL)
+            )
+        {
+            fcs_int_move_set_dest_freecell(out_move,
+                FCS_S_FC_LOCS(&dynamic_state)[
+                    (int)fcs_int_move_get_dest_freecell(in_move)
+                ]
+            );
+        }
+        else if ((move_type == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
+            (move_type == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION) ||
+            (move_type == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION)
+
+           )
+        {
+            fcs_int_move_set_foundation(out_move,
+                fcs_int_move_get_foundation(in_move)
+            );
+        }
+
+        if (move_type == FCS_MOVE_TYPE_STACK_TO_STACK)
+        {
+            fcs_int_move_set_num_cards_in_seq(out_move,
+                fcs_int_move_get_num_cards_in_seq(in_move));
+        }
+
+        fcs_move_stack_push((&temp_moves), out_move);
     }
 
     /*
