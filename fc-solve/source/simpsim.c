@@ -63,8 +63,6 @@ char fc_solve_simple_simon_nothing;
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
-    fcs_internal_move_t temp_move;
-
     /*
      * stack - the stack index from which to move cards to the founds.
      * cards_num - the number of cards in "stack"
@@ -83,8 +81,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-
-    temp_move = fc_solve_empty_move;
 
     for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
     {
@@ -128,10 +124,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
                 }
 
 
-                fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_SEQ_TO_FOUNDATION);
-                fcs_int_move_set_src_stack(temp_move, stack_idx);
-                fcs_int_move_set_foundation(temp_move,suit);
-                fcs_move_stack_push(moves,temp_move);
+                fcs_move_stack_non_seq_push(moves,
+                    FCS_MOVE_TYPE_SEQ_TO_FOUNDATION,
+                    stack_idx, suit);
 
                 sfs_check_state_end();
             }
