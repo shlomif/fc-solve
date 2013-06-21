@@ -37,6 +37,19 @@ static int main_tests(void)
         ok (!strcmp(buffer, [% card_string %]),
             "Trying to render " [% card_string %] " into a string");
     }
+    {
+        fcs_card_t mycard = fcs_make_card([% rank.idx %], [% suit.idx %]);
+
+        char * ret = fc_solve_card_perl2user(mycard, buffer, [% t %]);
+        /* TEST */
+        [%- SET num_tests = num_tests + 1 -%]
+        ok (ret == buffer,
+           "fcs_make_card() - Return value is the beginning of the buffer.");
+        /* TEST */
+        [%- SET num_tests = num_tests + 1 -%]
+        ok (!strcmp(buffer, [% card_string %]),
+            "fcs_make_card() - Trying to render " [% card_string %] " into a string");
+    }
 [% END %]
 [% END %]
 [% END %]
