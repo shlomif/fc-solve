@@ -841,13 +841,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
      * */
     int suit;
     fcs_card_t card, dest_card;
-    int rank, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK], h;
+    int rank, h;
 
-    int dc;
-    int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-    int num_separate_false_seqs;
-    int false_seq_index;
-    fcs_bool_t stacks_map[MAX_NUM_STACKS];
     int after_junk_num_freestacks;
     int junk_move_to_stacks[MAX_NUM_STACKS];
     int num_src_junk_true_seqs;
@@ -916,7 +911,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
             /* Start at the card below the top one, so we will
              * make sure there's at least some junk above it
              * */
-            for(dc=dest_cards_num-2;dc>=0;dc--)
+            for (int dc = dest_cards_num-2 ; dc >= 0 ; dc--)
             {
                 dest_card = fcs_col_get_card(dest_col, dc);
                 if (!((fcs_card_suit(dest_card) == suit) &&
@@ -930,8 +925,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 int above_c;
                 fcs_card_t above_card, up_above_card;
 
-                num_separate_false_seqs = 0;
+                int num_separate_false_seqs = 0;
                 above_card = fcs_col_get_card(dest_col, dest_cards_num-1);
+                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
+                int seq_points[MAX_NUM_CARDS_IN_A_STACK];
                 above_num_true_seqs[num_separate_false_seqs] = 1;
                 for(above_c = dest_cards_num-2 ;
                     above_c > dc ;
@@ -953,6 +950,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                     seq_points[num_separate_false_seqs++] = above_c+1;
                 }
 
+                fcs_bool_t stacks_map[MAX_NUM_STACKS];
                 for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
                 {
                     stacks_map[a] = FALSE;
@@ -962,7 +960,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 
                 after_junk_num_freestacks = num_vacant_stacks;
 
-                for(false_seq_index=0;false_seq_index<num_separate_false_seqs+1;false_seq_index++)
+                int false_seq_index;
+                for (false_seq_index = 0 ;
+                    false_seq_index < num_separate_false_seqs+1 ;
+                    false_seq_index++)
                 {
                     /* Find a suitable place to put it */
 
@@ -1070,7 +1071,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 {
                     int start;
                     int end;
-
                     int src_stack;
 
                     if (false_seq_index == num_separate_false_seqs)
@@ -1088,9 +1088,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 
                     my_copy_stack(src_stack);
 
-                    my_copy_stack(junk_move_to_stacks[false_seq_index]);
+                    const int dest_index = junk_move_to_stacks[false_seq_index];
+                    my_copy_stack(dest_index);
 
-                    fcs_move_sequence(junk_move_to_stacks[false_seq_index], src_stack, start, end);
+                    fcs_move_sequence(dest_index, src_stack, start, end);
                 }
 
                 /* Move the source seq on top of the dest seq */
