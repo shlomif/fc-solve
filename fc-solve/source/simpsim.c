@@ -1346,7 +1346,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack)
 {
     int parent_card_height, child_card_height;
-    fcs_card_t parent_card;
     int after_junk_num_freestacks;
     int false_seq_index;
     int child_seq_index;
@@ -1364,7 +1363,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
         /* Search for a parent card */
         for(parent_card_height=0; parent_card_height < cards_num-1 ; parent_card_height++)
         {
-            parent_card = fcs_col_get_card(col, parent_card_height);
+            const fcs_card_t parent_card
+                = fcs_col_get_card(col, parent_card_height);
             if (
                 fcs_is_ss_true_parent(
                     parent_card,
