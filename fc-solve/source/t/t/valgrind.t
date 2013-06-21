@@ -88,7 +88,6 @@ sub test_using_valgrind
 }
 
 {
-    my $temp_dir = tempdir (CLEANUP => 1);
     # TEST
     test_using_valgrind(
         {
@@ -96,7 +95,7 @@ sub test_using_valgrind
             prog => "dbm_fc_solver",
             argv =>
             [
-                '--offload-dir-path', $temp_dir,
+                '--offload-dir-path', tempdir(CLEANUP => 1),
                 File::Spec->catfile(
                     $ENV{FCS_SRC_PATH}, 't', 't', 'data',
                     'sample-boards', '2freecells-24-mid-with-colons.board'
