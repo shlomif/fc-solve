@@ -1701,8 +1701,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
      * */
     int stack_idx;
     fcs_card_t card, next_card;
-    int num_true_seqs, h, ds, dest_cards_num;
-    fcs_cards_column_t col, dest_col;
+    int num_true_seqs, h;
+    fcs_cards_column_t col;
     int cards_num;
     fcs_game_limit_t num_vacant_stacks;
 
@@ -1743,29 +1743,30 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             card = next_card;
         }
 
-        /* take the sequence and try and put it on another stack */
-        for(ds=0 ; ds < LOCAL_STACKS_NUM ; ds++)
+        if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
         {
-            dest_col = fcs_state_get_col(state, ds);
-            dest_cards_num = fcs_col_len(dest_col);
-            if (dest_cards_num <= 0)
-            {
-                continue;
-            }
+            continue;
+        }
 
-            if (!fcs_is_ss_false_parent(fcs_col_get_card(dest_col, dest_cards_num-1), card))
-            {
-                continue;
-            }
-
-            /* This is a suitable parent - let's check if we
+        /* take the sequence and try and put it on another stack */
+        for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
+        {
+            const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+            const int dest_cards_num = fcs_col_len(dest_col);
+            /* If this is a suitable parent - let's check if we
              * have enough empty stacks to make the move feasible */
-            if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
+            if ((! dest_cards_num)
+                || (!fcs_is_ss_false_parent(
+                        fcs_col_get_card( dest_col, dest_cards_num-1),
+                        card
+                   )
+                )
+            )
             {
                 continue;
             }
 
-            /* We can do it - so let's move */
+            /* We can do it - so let's perform the move */
             sfs_check_state_begin();
 
             my_copy_stack(stack_idx);
