@@ -318,7 +318,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         {
             continue;
         }
-        const fcs_card_t card = fcs_col_get_card(col, h);
 
         /* This means that the loop exited prematurely and the stack does
          * not contain a sequence. */
@@ -328,6 +327,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         {
             continue;
         }
+
+        const fcs_card_t card = fcs_col_get_card(col, h);
 
         STACK_DEST_LOOP_START(1)
             const fcs_card_t dest_card =
@@ -387,7 +388,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
      *      the junk sequences to different stacks.
      *
      * */
-    int suit, a;
+    int suit;
     fcs_card_t card, dest_card;
     int rank, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK], h;
     int dc;
@@ -459,7 +460,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                         seq_points[num_separate_false_seqs++] = above_c+1;
                     }
 
-                    for(a=0;a<LOCAL_STACKS_NUM;a++)
+                    for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
                     {
                         stacks_map[a] = 0;
                     }
@@ -619,7 +620,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent)
 {
-    int suit, a;
+    int suit;
     fcs_card_t card, dest_card;
     int rank, num_true_seqs;
     int src_card_height, num_separate_false_seqs, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
@@ -708,7 +709,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 /* This is a suitable parent - let's check if we
                  * have enough empty stacks to make the move feasible */
 
-                for(a=0;a<LOCAL_STACKS_NUM;a++)
+                for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
                 {
                     stacks_map[a] = 0;
                 }
@@ -974,7 +975,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                     seq_points[num_separate_false_seqs++] = above_c+1;
                 }
 
-                for (int a=0;a<LOCAL_STACKS_NUM;a++)
+                for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
                 {
                     stacks_map[a] = 0;
                 }
@@ -1153,7 +1154,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
      *      that are left unoccupied as part of the junk disposal process.
      *
      * */
-    int suit, a;
+    int suit;
     fcs_card_t card, dest_card;
     int rank, num_true_seqs, h;
 
@@ -1234,7 +1235,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                     seq_points[num_separate_false_seqs++] = above_c+1;
                 }
 
-                for(a=0;a<LOCAL_STACKS_NUM;a++)
+                for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
                 {
                     stacks_map[a] = 0;
                 }
@@ -1345,7 +1346,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 {
     int parent_card_height, child_card_height;
     fcs_card_t parent_card;
-    int a;
     int after_junk_num_freestacks;
     int false_seq_index;
     int child_seq_index;
@@ -1480,7 +1480,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
 
 
-                for(a = 0 ; a < LOCAL_STACKS_NUM ; a++)
+                for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
                 {
                     stacks_map[a] = 0;
                 }
