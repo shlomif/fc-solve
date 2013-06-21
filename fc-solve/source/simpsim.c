@@ -60,6 +60,20 @@ char fc_solve_simple_simon_nothing;
         (fcs_suit_is_ss_true_parent(fcs_card_suit(parent),fcs_card_suit(child))) \
     )
 
+#define STACK_SOURCE_LOOP_START(min_num_cards) \
+    for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++) \
+    { \
+        const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx); \
+        const int cards_num = fcs_col_len(col); \
+        if (cards_num < min_num_cards) \
+        { \
+            continue; \
+        } \
+
+
+#define STACK_SOURCE_LOOP_END() \
+    } \
+
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
@@ -79,16 +93,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     SET_GAME_PARAMS();
 #endif
 
-    for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        const int cards_num = fcs_col_len(col);
-
-        if (cards_num < 13)
-        {
-            continue;
-        }
-
+    STACK_SOURCE_LOOP_START(13)
         fcs_card_t card = fcs_col_get_card(col, cards_num-1);
 
         /* Check if the top 13 cards are a sequence */
@@ -127,7 +132,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 
             sfs_check_state_end();
         }
-    }
+    STACK_SOURCE_LOOP_END()
 
     return;
 }
@@ -166,15 +171,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 
     fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        const int cards_num = fcs_col_len(col);
-        if (! cards_num)
-        {
-            continue;
-        }
-
+    STACK_SOURCE_LOOP_START(1)
         /* Loop on the cards in the stack and try to look for a true
          * parent on top one of the stacks */
         fcs_card_t card = fcs_col_get_card(col, cards_num-1);
@@ -184,7 +181,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 
         for (int h=cards_num-2 ; h>=-1 ; h--)
         {
-            for ( int ds = 0 ; ds<LOCAL_STACKS_NUM ; ds++)
+            for (int ds = 0 ; ds<LOCAL_STACKS_NUM ; ds++)
             {
                 if (ds == stack_idx)
                 {
@@ -251,9 +248,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
         }
 NEXT_STACK:
         ;
-    }
-
-    return;
+    STACK_SOURCE_LOOP_END()
 }
 
 static GCC_INLINE int get_seq_h(const fcs_cards_column_t col, int * num_true_seqs_out_ptr)
@@ -310,15 +305,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
     fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        const int cards_num = fcs_col_len(col);
-        if (! cards_num)
-        {
-            continue;
-        }
-
+    STACK_SOURCE_LOOP_START(1)
         int num_true_seqs;
         int h = get_seq_h(col, &num_true_seqs);
         if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
@@ -366,14 +353,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
             sfs_check_state_end();
         }
-    }
+    STACK_SOURCE_LOOP_END()
 
     return;
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above)
 {
-    fcs_cards_column_t col;
     fcs_cards_column_t clear_junk_dest_col;
     fcs_cards_column_t dest_col;
 
@@ -404,7 +390,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
      *      the junk sequences to different stacks.
      *
      * */
-    int cards_num, suit, a;
+    int suit, a;
     fcs_card_t card, dest_card;
     int rank, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK], h, dest_cards_num ;
     int dc;
@@ -415,24 +401,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
     int stacks_map[MAX_NUM_STACKS];
     int after_junk_num_freestacks;
     int junk_move_to_stacks[MAX_NUM_STACKS];
-    fcs_game_limit_t num_vacant_stacks;
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (! cards_num)
-        {
-            continue;
-        }
-
+    STACK_SOURCE_LOOP_START(1)
         card = fcs_col_get_card(col, cards_num-1);
         rank = fcs_card_rank(card);
         suit = fcs_card_suit(card);
@@ -651,14 +628,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
             rank = fcs_card_rank(card);
             suit = fcs_card_suit(card);
         }
-    }
+    STACK_SOURCE_LOOP_END()
 
     return;
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent)
 {
-    int cards_num, suit, a;
+    int suit, a;
     fcs_card_t card, dest_card;
     int rank, num_true_seqs, dest_cards_num ;
     int src_card_height, num_separate_false_seqs, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
@@ -667,9 +644,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
     int after_junk_num_freestacks;
     int false_seq_index;
     int junk_move_to_stacks[MAX_NUM_CARDS_IN_A_STACK];
-    fcs_game_limit_t num_vacant_stacks;
 
-    fcs_cards_column_t col;
     fcs_cards_column_t dest_col;
     fcs_cards_column_t clear_junk_dest_col;
     tests_define_accessors();
@@ -678,17 +653,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
     SET_GAME_PARAMS();
 #endif
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (! cards_num)
-        {
-            continue;
-        }
-
+    STACK_SOURCE_LOOP_START(1)
         for( src_card_height = cards_num-1 ; src_card_height >= 0 ; src_card_height-- )
         {
             int above_c;
@@ -886,7 +853,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 }
             }
         }
-    }
+    STACK_SOURCE_LOOP_END()
 
     return;
 }
@@ -894,7 +861,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above)
 {
     /*
-     * stack - the source stack index
+     * stack_idx - the source stack index
      * cards_num - the number of cards in "stack"
      * h - the height of the current card in "stack".
      * card - the current card in "stack"
@@ -918,7 +885,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
      * num_true_seqs - the number of true sequences in the false seq which we
      *      wish to move.
      * */
-    int cards_num, suit;
+    int suit;
     fcs_card_t card, dest_card;
     int rank, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK], h, dest_cards_num ;
 
@@ -932,9 +899,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
     int num_src_junk_true_seqs;
     int end_of_junk;
     int num_true_seqs;
-    fcs_game_limit_t num_vacant_stacks;
 
-    fcs_cards_column_t col;
     fcs_cards_column_t dest_col;
     fcs_cards_column_t clear_junk_dest_col;
     tests_define_accessors();
@@ -942,16 +907,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (! cards_num)
-        {
-            continue;
-        }
+    STACK_SOURCE_LOOP_START(1)
         card = fcs_col_get_card(col, cards_num-1);
         rank = fcs_card_rank(card);
         suit = fcs_card_suit(card);
@@ -1206,7 +1164,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 sfs_check_state_end();
             }
         }
-    }
+    STACK_SOURCE_LOOP_END()
 
     return;
 }
@@ -1214,7 +1172,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above)
 {
     /*
-     * stack - the source stack index
+     * stack_idx - the source stack index
      * cards_num - the number of cards in "stack"
      * h - the height of the current card in stack
      * card - the current card
@@ -1239,7 +1197,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
      *      that are left unoccupied as part of the junk disposal process.
      *
      * */
-    int cards_num, suit, a;
+    int suit, a;
     fcs_card_t card, dest_card;
     int rank, num_true_seqs, h, dest_cards_num ;
 
@@ -1249,9 +1207,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     int after_junk_num_freestacks;
     int false_seq_index;
     int junk_move_to_stacks[MAX_NUM_STACKS];
-    fcs_game_limit_t num_vacant_stacks;
 
-    fcs_cards_column_t col;
     fcs_cards_column_t dest_col;
     fcs_cards_column_t clear_junk_dest_col;
     tests_define_accessors();
@@ -1259,16 +1215,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (! cards_num)
-        {
-            continue;
-        }
+    STACK_SOURCE_LOOP_START(1)
         card = fcs_col_get_card(col, cards_num-1);
         rank = fcs_card_rank(card);
         suit = fcs_card_suit(card);
@@ -1440,40 +1389,30 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 sfs_check_state_end();
             }
         }
-    }
+    STACK_SOURCE_LOOP_END()
 
     return;
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack)
 {
-    int cards_num, parent_card_height, child_card_height;
+    int parent_card_height, child_card_height;
     fcs_card_t parent_card;
     int a;
     int after_junk_num_freestacks;
     int false_seq_index;
     int child_seq_index;
 
-    fcs_game_limit_t num_vacant_stacks;
 
-    fcs_cards_column_t col;
     fcs_cards_column_t clear_junk_dest_col;
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (cards_num <= 2)
-        {
-            continue;
-        }
-
+    STACK_SOURCE_LOOP_START(3)
         /* Search for a parent card */
         for(parent_card_height=0; parent_card_height < cards_num-1 ; parent_card_height++)
         {
@@ -1721,7 +1660,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                 sfs_check_state_end();
             }
         }
-    }
+    STACK_SOURCE_LOOP_END()
 
     return;
 }
@@ -1747,15 +1686,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 #endif
     fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
-    {
-        const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        const int cards_num = fcs_col_len(col);
-        if (! cards_num)
-        {
-            continue;
-        }
-
+    STACK_SOURCE_LOOP_START(1)
         int num_true_seqs;
         int h = get_seq_h(col, &num_true_seqs);
         if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
@@ -1796,7 +1727,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             fcs_move_sequence(ds, stack_idx, h, cards_num-1);
             sfs_check_state_end();
         }
-    }
+    STACK_SOURCE_LOOP_END()
 
     return;
 }
