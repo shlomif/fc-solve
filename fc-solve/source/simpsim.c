@@ -839,12 +839,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
      * num_true_seqs - the number of true sequences in the false seq which we
      *      wish to move.
      * */
-    fcs_card_t card, dest_card;
-
     SIMPS_define_vacant_stacks_accessors();
 
     STACK_SOURCE_LOOP_START(1)
-        card = fcs_col_get_card(col, cards_num-1);
+        fcs_card_t card = fcs_col_get_card(col, cards_num-1);
         int num_src_junk_true_seqs = 1;
 
         int h;
@@ -892,10 +890,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
              * */
             for (int dc = dest_cards_num-2 ; dc >= 0 ; dc--)
             {
-                dest_card = fcs_col_get_card(dest_col, dc);
-                if (!fcs_is_ss_true_parent(dest_card, card))
                 {
-                    continue;
+                    const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
+                    if (!fcs_is_ss_true_parent(dest_card, card))
+                    {
+                        continue;
+                    }
                 }
                 /* This is a suitable parent - let's check if there's a sequence above it. */
                 int above_c;
