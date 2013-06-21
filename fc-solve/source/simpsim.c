@@ -404,6 +404,30 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
         for (int h=cards_num-2 ; h>=-1 ; h--)
         {
+            fcs_card_t h_above_card;
+            fcs_bool_t should_search = TRUE;
+            fcs_bool_t should_increment_num_true_seqs = FALSE;
+            fcs_bool_t should_break = FALSE;
+            /* Stop if we reached the bottom of the stack */
+            if (h == -1)
+            {
+                should_break = TRUE;
+            }
+            else
+            {
+                h_above_card = fcs_col_get_card(col, h);
+                /* If this is no longer a sequence - move to the next stack */
+                if (! fcs_is_ss_false_parent(h_above_card, card))
+                {
+                    should_break = TRUE;
+                }
+                else if ((should_search = (! fcs_suit_is_ss_true_parent(fcs_card_suit(h_above_card), fcs_card_suit(card)))))
+                {
+                    should_increment_num_true_seqs = TRUE;
+                }
+            }
+            if (should_search)
+            {
             STACK_DEST_LOOP_START(1)
                 for (int dc = dest_cards_num-1 ; dc >= 0 ; dc--)
                 {
@@ -579,24 +603,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
                     sfs_check_state_end();
                 }
-            STACK_SOURCE_LOOP_END()
+            STACK_DEST_LOOP_END()
+            }
 
-            /* Stop if we reached the bottom of the stack */
-            if (h == -1)
+            if (should_break)
             {
                 break;
             }
-            const fcs_card_t above_card = fcs_col_get_card(col, h);
-            /* If this is no longer a sequence - move to the next stack */
-            if (! fcs_is_ss_false_parent(above_card, card))
-            {
-                break;
-            }
-            if (! fcs_suit_is_ss_true_parent(fcs_card_suit(above_card), fcs_card_suit(card)))
+            if (should_increment_num_true_seqs)
             {
                 num_true_seqs++;
             }
-            card = above_card;
+            card = h_above_card;
         }
     STACK_SOURCE_LOOP_END()
 
