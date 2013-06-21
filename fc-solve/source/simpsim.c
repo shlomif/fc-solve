@@ -64,72 +64,68 @@ char fc_solve_simple_simon_nothing;
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
     /*
-     * stack - the stack index from which to move cards to the founds.
+     * stack_idx - the stack index from which to move cards to the founds.
      * cards_num - the number of cards in "stack"
      * suit - the suit of the complete sequence
      * a - the height of the card
      * */
-    int stack_idx, cards_num, suit, a;
-    fcs_cards_column_t col;
     /*
      * card - the current card (at height a)
      * above_card - the card above it.
      * */
-    fcs_card_t card, above_card;
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
 
-    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
+        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        const int cards_num = fcs_col_len(col);
 
-        if (cards_num >= 13)
+        if (cards_num < 13)
         {
-            card = fcs_col_get_card(col, cards_num-1);
+            continue;
+        }
 
-            /* Check if the top 13 cards are a sequence */
+        fcs_card_t card = fcs_col_get_card(col, cards_num-1);
 
-            for(a=2;a<=13;a++)
+        /* Check if the top 13 cards are a sequence */
+        int a;
+        for (a=2 ; a<=13 ; a++)
+        {
+            const fcs_card_t above_card = fcs_col_get_card(col, cards_num-a);
+            if (! fcs_is_ss_true_parent(above_card, card))
             {
-                above_card = fcs_col_get_card(col, cards_num-a);
-                if (fcs_is_ss_true_parent(above_card, card))
-                {
-                    /* Do nothing - the card is OK for a propert sequence*/
-                }
-                else
-                {
-                    break;
-                }
-                card = above_card;
+                break;
             }
-            if (a == 14)
+            card = above_card;
+        }
+        if (a == 14)
+        {
+            /* We can move this sequence up there */
+
+            sfs_check_state_begin();
+
+            my_copy_stack(stack_idx);
+
+            fcs_cards_column_t new_src_col = fcs_state_get_col(
+                new_state, stack_idx
+            );
+            for (a=0 ; a<13 ; a++)
             {
-                fcs_cards_column_t new_src_col;
-                /* We can move this sequence up there */
-
-                sfs_check_state_begin();
-
-                my_copy_stack(stack_idx);
-
-                new_src_col = fcs_state_get_col(new_state, stack_idx);
-                suit = fcs_card_suit(card);
-                for(a=0;a<13;a++)
-                {
-                    fcs_col_pop_top(new_src_col);
-                    fcs_increment_foundation(new_state, suit);
-                }
-
-
-                fcs_move_stack_non_seq_push(moves,
-                    FCS_MOVE_TYPE_SEQ_TO_FOUNDATION,
-                    stack_idx, suit);
-
-                sfs_check_state_end();
+                fcs_col_pop_top(new_src_col);
             }
+
+            const int suit = fcs_card_suit(card);
+            fcs_set_foundation(new_state, suit, a);
+
+            fcs_move_stack_non_seq_push(moves,
+                FCS_MOVE_TYPE_SEQ_TO_FOUNDATION,
+                stack_idx, suit);
+
+            sfs_check_state_end();
         }
     }
 
