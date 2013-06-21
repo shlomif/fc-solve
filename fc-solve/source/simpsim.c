@@ -55,11 +55,14 @@ char fc_solve_simple_simon_nothing;
 #define fcs_suit_is_ss_true_parent(parent_suit, child_suit) \
     ((parent_suit) == (child_suit))
 
-#define fcs_is_ss_true_parent(parent, child)            \
-    (                                                   \
-        fcs_is_ss_false_parent(parent,child) &&         \
-        (fcs_suit_is_ss_true_parent(fcs_card_suit(parent),fcs_card_suit(child))) \
-    )
+static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent, const fcs_card_t child)
+{
+    return
+    (
+        fcs_is_ss_false_parent(parent,child) &&
+        fcs_suit_is_ss_true_parent(fcs_card_suit(parent),fcs_card_suit(child))
+    );
+}
 
 #define STACK_SOURCE_LOOP_START(min_num_cards) \
     for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++) \
@@ -421,8 +424,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
             STACK_DEST_LOOP_START(1)
                 for (int dc = dest_cards_num-1 ; dc >= 0 ; dc--)
                 {
-                    const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
-                    if (! fcs_is_ss_true_parent(dest_card, card))
+                    if (! fcs_is_ss_true_parent(fcs_col_get_card(dest_col, dc), card))
                     {
                         continue;
                     }
@@ -679,12 +681,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
             }
 
             STACK_DEST_LOOP_START(1)
+                if (!fcs_is_ss_true_parent(fcs_col_get_card(dest_col, dest_cards_num-1), h_card))
                 {
-                    const fcs_card_t dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
-                    if (!fcs_is_ss_true_parent(dest_card, h_card))
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
                 /* This is a suitable parent - let's check if we
@@ -890,12 +889,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
              * */
             for (int dc = dest_cards_num-2 ; dc >= 0 ; dc--)
             {
+                if (!fcs_is_ss_true_parent(
+                        fcs_col_get_card(dest_col, dc), card)
+                    )
                 {
-                    const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
-                    if (!fcs_is_ss_true_parent(dest_card, card))
-                    {
-                        continue;
-                    }
+                    continue;
                 }
                 /* This is a suitable parent - let's check if there's a sequence above it. */
                 int above_c;
@@ -1314,12 +1312,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
             for(int child_card_height = parent_card_height + 2 ; child_card_height < cards_num ; child_card_height++)
             {
-                register fcs_card_t child_card;
-
-                child_card = fcs_col_get_card(col, child_card_height);
                 if (! fcs_is_ss_true_parent(
                         parent_card,
-                        child_card
+                        fcs_col_get_card(col, child_card_height)
                         )
                    )
                 {
