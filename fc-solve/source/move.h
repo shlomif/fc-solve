@@ -86,6 +86,14 @@ static GCC_INLINE void fcs_move_stack_non_seq_push(fcs_move_stack_t * const stac
     fcs_move_stack_params_push(stack, type, src, dest, 1);
 }
 
+static GCC_INLINE void fcs_push_1card_seq(fcs_move_stack_t * const stack,
+    const int src, const int dest)
+{
+    fcs_move_stack_params_push(stack, FCS_MOVE_TYPE_STACK_TO_STACK, src, dest,
+        1
+    );
+}
+
 static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_internal_move_t * move)
 {
     if (stack->num_moves > 0)

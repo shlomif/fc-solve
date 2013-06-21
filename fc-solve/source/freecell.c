@@ -327,12 +327,10 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             fcs_col_pop_card(new_from_which_col, top_card);
             fcs_col_push_card(new_b_col, top_card);
 
-            fcs_move_stack_params_push(
+            fcs_push_1card_seq(
                 moves,
-                FCS_MOVE_TYPE_STACK_TO_STACK,
                 *col_idx,
-                put_cards_in_col_idx,
-                1
+                put_cards_in_col_idx
             );
 
             ret = (put_cards_in_col_idx | (1 << 8));
@@ -764,11 +762,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
                                     fcs_col_pop_card(new_source_col, moved_card);
 
-                                    fcs_move_stack_params_push(
-                                        moves,
-                                        FCS_MOVE_TYPE_STACK_TO_STACK,
-                                        source_index, ds, 1
-                                    );
+                                    fcs_push_1card_seq(moves, source_index, ds);
                                 }
 
                                 fcs_col_push_card(new_dest_col, moved_card);
@@ -1660,8 +1654,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
                 fcs_cards_column_t empty_stack_col = fcs_state_get_col(new_state, empty_stack_idx);
                 fcs_col_push_card(empty_stack_col, card);
 
-                fcs_move_stack_params_push(moves, FCS_MOVE_TYPE_STACK_TO_STACK,
-                    stack_idx, empty_stack_idx, 1);
+                fcs_push_1card_seq(moves, stack_idx, empty_stack_idx);
 
                 sfs_check_state_end()
             }
@@ -1721,9 +1714,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 
                             fcs_col_push_card(new_dest_col, card);
 
-                            fcs_move_stack_params_push(moves,
-                                FCS_MOVE_TYPE_STACK_TO_STACK, stack_idx, ds, 1
-                            );
+                            fcs_push_1card_seq(moves, stack_idx, ds);
 
                             sfs_check_state_end()
                         }
