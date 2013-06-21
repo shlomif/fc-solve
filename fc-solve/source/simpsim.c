@@ -386,10 +386,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
      *      the junk sequences to different stacks.
      *
      * */
-    int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-    int num_separate_false_seqs;
-    int false_seq_index;
     int num_true_seqs;
     fcs_bool_t stacks_map[MAX_NUM_STACKS];
     int after_junk_num_freestacks;
@@ -445,17 +442,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                      *
                      * */
                     int above_c;
-                    fcs_card_t above_card, up_above_card;
 
-                    num_separate_false_seqs = 0;
-                    above_card = fcs_col_get_card(dest_col, dest_cards_num-1);
+                    int num_separate_false_seqs = 0;
+                    fcs_card_t above_card = fcs_col_get_card(dest_col, dest_cards_num-1);
+                    int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
                     above_num_true_seqs[num_separate_false_seqs] = 1;
                     for(above_c = dest_cards_num-2 ;
                         above_c > dc ;
                         above_c--
                         )
                     {
-                        up_above_card = fcs_col_get_card(dest_col, above_c);
+                        const fcs_card_t up_above_card = fcs_col_get_card(dest_col, above_c);
                         if (! fcs_is_ss_false_parent(up_above_card, above_card))
                         {
                             seq_points[num_separate_false_seqs++] = above_c+1;
@@ -479,7 +476,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
                     after_junk_num_freestacks = num_vacant_stacks;
 
-                    for (false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
+                    int false_seq_index;
+                    for (false_seq_index = 0 ;
+                        false_seq_index < num_separate_false_seqs ;
+                        false_seq_index++)
                     {
                         /* Find a suitable place to put it */
 
@@ -581,20 +581,20 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
                     /* Move the junk cards to their place */
 
-                    for(false_seq_index=0;
-                        false_seq_index<num_separate_false_seqs;
-                        false_seq_index++
-                        )
+                    for (int seq_index = 0;
+                        seq_index < num_separate_false_seqs;
+                        seq_index++
+                    )
                     {
                         /*
                          * start and end are the start and end heights of the sequence that is to be moved.
                          * */
-                        int start = seq_points[false_seq_index];
-                        int end = ((false_seq_index == 0) ? (dest_cards_num-1) : (seq_points[false_seq_index-1]-1));
+                        int start = seq_points[seq_index];
+                        int end = ((seq_index == 0) ? (dest_cards_num-1) : (seq_points[seq_index-1]-1));
 
-                        my_copy_stack(junk_move_to_stacks[false_seq_index]);
+                        my_copy_stack(junk_move_to_stacks[seq_index]);
 
-                        fcs_move_sequence(junk_move_to_stacks[false_seq_index], ds, start, end);
+                        fcs_move_sequence(junk_move_to_stacks[seq_index], ds, start, end);
 
                     }
 
