@@ -404,7 +404,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
      *      the junk sequences to different stacks.
      *
      * */
-    int stack_idx, cards_num, suit, a;
+    int cards_num, suit, a;
     fcs_card_t card, dest_card;
     int rank, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK], h, ds, dest_cards_num ;
     int dc;
@@ -424,7 +424,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
     {
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
@@ -650,7 +650,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent)
 {
-    int stack_idx, cards_num, suit, a;
+    int cards_num, suit, a;
     fcs_card_t card, dest_card;
     int rank, num_true_seqs, ds, dest_cards_num ;
     int src_card_height, num_separate_false_seqs, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
@@ -672,7 +672,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
     {
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
@@ -910,7 +910,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
      * num_true_seqs - the number of true sequences in the false seq which we
      *      wish to move.
      * */
-    int stack_idx, cards_num, suit, a;
+    int cards_num, suit, a;
     fcs_card_t card, dest_card;
     int rank, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK], h, ds, dest_cards_num ;
 
@@ -936,7 +936,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
     {
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
@@ -1228,7 +1228,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
      *      that are left unoccupied as part of the junk disposal process.
      *
      * */
-    int stack_idx, cards_num, suit, a;
+    int cards_num, suit, a;
     fcs_card_t card, dest_card;
     int rank, num_true_seqs, h, ds, dest_cards_num ;
 
@@ -1250,7 +1250,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
     {
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
@@ -1439,7 +1439,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack)
 {
-    int stack_idx, cards_num, parent_card_height, child_card_height;
+    int cards_num, parent_card_height, child_card_height;
     fcs_card_t parent_card;
     int a;
     int after_junk_num_freestacks;
@@ -1457,7 +1457,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 #endif
     num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for(stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+    for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
@@ -1725,7 +1725,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
      * num_true_seqs - the number of true sequences on the current
      *                 false sequence
      * */
-    int stack_idx;
 
     tests_define_accessors();
 
@@ -1734,7 +1733,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 #endif
     fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for(stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+    for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
         const int cards_num = fcs_col_len(col);
