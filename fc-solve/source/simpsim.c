@@ -617,8 +617,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
     int suit;
     int rank;
 
-    fcs_cards_column_t clear_junk_dest_col;
-
     SIMPS_define_vacant_stacks_accessors();
 
     STACK_SOURCE_LOOP_START(1)
@@ -721,9 +719,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                         clear_junk_dest_stack++
                        )
                     {
-                        int clear_junk_stack_len;
-                        clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                        clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
+                        const fcs_cards_column_t clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
+                        const int clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
 
                         if ((clear_junk_stack_len > 0) && (! stacks_map[clear_junk_dest_stack]))
                         {
@@ -761,8 +758,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                             clear_junk_dest_stack++
                            )
                         {
-                            clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                            if ((fcs_col_len(clear_junk_dest_col) == 0) && (! stacks_map[clear_junk_dest_stack]))
+                            if ((fcs_col_len(fcs_state_get_col(state, clear_junk_dest_stack)) == 0) && (! stacks_map[clear_junk_dest_stack]))
                             {
                                 stacks_map[clear_junk_dest_stack] = TRUE;
                                 break;
