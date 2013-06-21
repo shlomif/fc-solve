@@ -44,23 +44,6 @@ const fcs_internal_move_t fc_solve_empty_move = {0,0,0,0};
 const fcs_internal_move_t fc_solve_empty_move = {"\0\0\0\0"};
 #endif
 
-#if 0
-int fcs_move_stack_push(fcs_move_stack_t * stack, fcs_move_t move)
-{
-    /* If all the moves inside the stack are taken then
-       resize the move vector */
-
-    if (! ((stack->num_moves+1) & (FCS_MOVE_STACK_GROW_BY-1)))
-    {
-        stack->moves = SREALLOC(
-            stack->moves,
-            stack->num_moves+1 + FCS_MOVE_STACK_GROW_BY
-            );
-    }
-    stack->moves[stack->num_moves++] = move;
-}
-#endif
-
 /*
  * This function performs a given move on a state
  */

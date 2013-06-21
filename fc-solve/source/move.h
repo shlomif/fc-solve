@@ -50,20 +50,23 @@ extern "C" {
 
 extern const fcs_internal_move_t fc_solve_empty_move;
 
-#define fcs_move_stack_push(stack, move) \
-{           \
-    /* If all the moves inside the stack are taken then    \
-       resize the move vector */       \
-              \
-    if (! ((stack->num_moves+1) & (FCS_MOVE_STACK_GROW_BY-1))) \
-    {      \
-        stack->moves = SREALLOC(     \
-            stack->moves,     \
-            stack->num_moves+1 + FCS_MOVE_STACK_GROW_BY \
-            );     \
-    }       \
-    stack->moves[stack->num_moves++] = move;    \
-            \
+#define FCS_MOVE_STACK_GROW_BY 16
+
+static GCC_INLINE void fcs_move_stack_push(fcs_move_stack_t * const stack, const fcs_internal_move_t move)
+{
+    /* If all the moves inside the stack are taken then
+       resize the move vector */
+    const int pos = ++stack->num_moves;
+
+    if (! (pos & (FCS_MOVE_STACK_GROW_BY-1)))
+    {
+        stack->moves = SREALLOC(
+            stack->moves,
+            pos + FCS_MOVE_STACK_GROW_BY
+            );
+    }
+
+    stack->moves[ pos-1 ] = move;
 }
 
 static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_internal_move_t * move)
@@ -105,7 +108,6 @@ void fc_solve_apply_move(
     user positions.
 */
 
-#define FCS_MOVE_STACK_GROW_BY 16
 /* This macro initialises an empty move stack */
 #define fcs_move_stack_init(ret) \
 {       \
