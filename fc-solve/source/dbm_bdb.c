@@ -20,8 +20,8 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
     if ((ret = db_create(&(db->dbp), NULL, 0)) != 0)
     {
         fprintf(stderr, "db_create: %s\n", db_strerror(ret));
-		exit (1);
-	}
+        exit (1);
+    }
 
     if ((ret = db->dbp->open(db->dbp,
         NULL, path, NULL, DB_BTREE, DB_CREATE, 0664))
@@ -31,7 +31,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
         goto err;
     }
     memset(&(db->key), 0, sizeof(db->key));
-	memset(&(db->data), 0, sizeof(db->data));
+    memset(&(db->data), 0, sizeof(db->data));
     *store = (fcs_dbm_store_t)db;
     return;
 
