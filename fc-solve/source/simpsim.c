@@ -1320,8 +1320,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                 fcs_bool_t stacks_map[MAX_NUM_STACKS];
                 int junk_move_to_stacks[MAX_NUM_STACKS];
 
-                int above_c;
-
                 int child_num_true_seqs;
 
                 int end_of_child_seq = child_card_height;
@@ -1347,24 +1345,27 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
                 fcs_card_t above_card = fcs_col_get_card(col, cards_num-1);
 
-                for(above_c = cards_num-2;
-                    above_c > end_of_child_seq ;
-                    above_c--
-                    )
                 {
-                    const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
-                    if (! fcs_is_ss_false_parent(up_above_card, above_card))
+                    int above_c;
+                    for(above_c = cards_num-2;
+                        above_c > end_of_child_seq ;
+                        above_c--
+                    )
+                    {
+                        const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
+                        if (! fcs_is_ss_false_parent(up_above_card, above_card))
+                        {
+                            seq_points[num_separate_false_seqs++] = above_c+1;
+                            above_num_true_seqs[num_separate_false_seqs] = 1;
+                        }
+                        above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
+                        above_card = up_above_card;
+                    }
+
+                    if (end_of_child_seq < cards_num - 1)
                     {
                         seq_points[num_separate_false_seqs++] = above_c+1;
-                        above_num_true_seqs[num_separate_false_seqs] = 1;
                     }
-                    above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
-                    above_card = up_above_card;
-                }
-
-                if (end_of_child_seq < cards_num - 1)
-                {
-                    seq_points[num_separate_false_seqs++] = above_c+1;
                 }
 
                 /* Add the child to the seq_points */
@@ -1376,24 +1377,29 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
                 above_card = fcs_col_get_card(col, child_card_height-1);
                 above_num_true_seqs[num_separate_false_seqs] = 1;
-                for(above_c = child_card_height-2;
-                    above_c > parent_card_height ;
-                    above_c--
-                    )
+
                 {
-                    const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
-                    if (! fcs_is_ss_false_parent(up_above_card, above_card))
+                    int above_c;
+
+                    for(above_c = child_card_height-2;
+                        above_c > parent_card_height ;
+                        above_c--
+                    )
+                    {
+                        const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
+                        if (! fcs_is_ss_false_parent(up_above_card, above_card))
+                        {
+                            seq_points[num_separate_false_seqs++] = above_c+1;
+                            above_num_true_seqs[num_separate_false_seqs] = 1;
+                        }
+                        above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
+                        above_card = up_above_card;
+                    }
+
+                    if (parent_card_height < child_card_height - 1)
                     {
                         seq_points[num_separate_false_seqs++] = above_c+1;
-                        above_num_true_seqs[num_separate_false_seqs] = 1;
                     }
-                    above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
-                    above_card = up_above_card;
-                }
-
-                if (parent_card_height < child_card_height - 1)
-                {
-                    seq_points[num_separate_false_seqs++] = above_c+1;
                 }
 
 
