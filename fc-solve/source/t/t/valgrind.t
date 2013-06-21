@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use v5.016;
+
 use Test::More tests => 11;
 use Carp;
 use Data::Dumper;
@@ -22,7 +24,22 @@ sub test_using_valgrind
 
     if (ref($args) eq "ARRAY")
     {
-        $args = { argv => $args, prog => "freecell-solver-range-parallel-solve", };
+        die "ArrayRef is no longer supported.";
+    }
+
+    # $args = { argv => $args, prog => "freecell-solver-range-parallel-solve", };
+
+    my $id = $args->{id};
+
+    if (!defined($id))
+    {
+        Carp::confess("Missing id");
+    }
+    state %ids;
+
+    if ($ids{$id}++)
+    {
+        die "Duplicate ID '$id'";
     }
 
     my $cmd_line_args = $args->{argv};
@@ -70,6 +87,7 @@ sub test_using_valgrind
     # TEST
     test_using_valgrind(
         {
+            id => "dbm_fc_solver_1",
             prog => "dbm_fc_solver",
             argv =>
             [
@@ -85,7 +103,9 @@ sub test_using_valgrind
 
 # TEST
 test_using_valgrind(
-    {prog => "fc-solve",
+    {
+        id => "fc-solve-crashy-preset-1",
+        prog => "fc-solve",
         argv => [
             '--read-from-file', "4,$ENV{FCS_SRC_PATH}/t/t/data/presets/crashy-preset-1.preset",
             qw(-s -i -p -t -sam),
@@ -97,7 +117,9 @@ test_using_valgrind(
 
 # TEST
 test_using_valgrind(
-    {prog=>"fc-solve",
+    {
+        id => "fc-solve-trim-max-stored-states",
+        prog=>"fc-solve",
         argv => [
             qw(--method soft-dfs --st-name dfs -nst --method a-star --st-name befs --trim-max-stored-states 100 --prelude) ,
             '200@befs,100@dfs,1000@befs,500000@dfs',
@@ -109,51 +131,83 @@ test_using_valgrind(
 
 # TEST
 test_using_valgrind(
-    [qw(1 2 1 --method a-star)],
+    {
+        id => "range_parallel_solve_befs",
+        prog => "freecell-solver-range-parallel-solve",
+        argv => [qw(1 2 1 --method a-star)],
+    },
     qq{range-parallel-solve for board #2 using the BeFS method valgrind}
 );
 
 # TEST
 test_using_valgrind(
-    ["1", "2", "1", "-l", "gi"],
+    {
+        id => "range_parallel_solve_l_gi",
+        prog => "freecell-solver-range-parallel-solve",
+        argv => ["1", "2", "1", "-l", "gi"],
+    },
     qq{"range-parallel-solve 1 2 1 -l gi" returned no errors}
 );
 
 # TEST
 test_using_valgrind(
-    ["1", "2", "1", "-opt"],
+    {
+        id => "range_parallel_solve__dash_opt",
+        prog => "freecell-solver-range-parallel-solve",
+        argv => ["1", "2", "1", "-opt"],
+    },
     qq{"range-parallel-solve 1 2 1 -opt" returned no errors}
 );
 
 # TEST
 test_using_valgrind(
-    ["1", "2", "1", "--next-flare"],
+    {
+        id => "range_parallel_solve__next-flare",
+        prog => "freecell-solver-range-parallel-solve",
+        argv => ["1", "2", "1", "--next-flare"],
+    },
     qq{"range-parallel-solve 1 2 1 --next-flare" returned no errors}
 );
 
 # TEST
 test_using_valgrind(
-    [qw(11981 11983 1 -opt)],
+    {
+        id => "range_parallel_solve__11982_opt",
+        prog => "freecell-solver-range-parallel-solve",
+        argv => [qw(11981 11983 1 -opt)],
+    },
     qq{"range-parallel-solve 11981 11983 1 -opt" returned no errors}
 );
 
 # TEST
 test_using_valgrind(
-    [qw(1 3 1 --flare-name dfs --next-flare --method a-star --flare-name befs --flares-plan), q(Run:300@dfs,Run:500@befs,CP:,Run:200@dfs),],
-    qq{"range-parallel-solve 11981 11983 1 -opt" returned no errors}
+    {
+        id => "range_parallel_solve__1_3_1_flares",
+        prog => "freecell-solver-range-parallel-solve",
+        argv => [qw(1 3 1 --flare-name dfs --next-flare --method a-star --flare-name befs --flares-plan), q(Run:300@dfs,Run:500@befs,CP:,Run:200@dfs),],
+    },
+    qq{"range-parallel-solve 1 3 1 flares" returned no errors}
 );
 
 # TEST
 test_using_valgrind(
-    [qw(1 2 1 --flares-plan), q(Run:500@foo)],
+    {
+        id => "range_parallel_solve__1__2__invalid_flares_plan_1",
+        prog => "freecell-solver-range-parallel-solve",
+        argv => [qw(1 2 1 --flares-plan), q(Run:500@foo)],
+    },
     qq{"range-parallel-solve --flares-plan Run:500\@foo" does not crash.}
 );
 
 # TEST
 test_using_valgrind(
-    [qw(1 2 1 --total-iterations-limit 1000 --method soft-dfs
-        -to 0123456789 -sp r:tf)
-    ],
+    {
+        id => "range_parallel_solve__sp_r_tf__not_leak",
+        prog => "freecell-solver-range-parallel-solve",
+        argv => [qw(1 2 1 --total-iterations-limit 1000 --method soft-dfs
+            -to 0123456789 -sp r:tf)
+        ],
+    },
     qq{"range-parallel-solve -sp r:tf" does not leak.}
 );
 
