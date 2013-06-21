@@ -1244,6 +1244,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
         for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
         {
+            if (ds == stack_idx)
+            {
+                continue;
+            }
             dest_col = fcs_state_get_col(state, ds);
             dest_cards_num = fcs_col_len(dest_col);
             if (! dest_cards_num)
