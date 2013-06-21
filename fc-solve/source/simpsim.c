@@ -1110,10 +1110,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     fcs_card_t card, dest_card;
     int rank, num_true_seqs;
 
-    int dc, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-    int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-    fcs_bool_t stacks_map[MAX_NUM_STACKS];
-    int false_seq_index;
     int junk_move_to_stacks[MAX_NUM_STACKS];
 
     SIMPS_define_vacant_stacks_accessors();
@@ -1145,7 +1141,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         }
 
         STACK_DEST_LOOP_START(1)
-            for(dc=dest_cards_num-1;dc>=0;dc--)
+            for (int dc = dest_cards_num-1 ; dc >= 0 ; dc--)
             {
                 dest_card = fcs_col_get_card(dest_col, dc);
                 if (
@@ -1156,17 +1152,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 }
                 /* This is a suitable parent - let's check if there's a sequence above it. */
                 int above_c;
-                fcs_card_t above_card, up_above_card;
 
+                fcs_card_t above_card
+                    = fcs_col_get_card(dest_col, dest_cards_num-1);
+                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
+                int seq_points[MAX_NUM_CARDS_IN_A_STACK];
                 int num_separate_false_seqs = 0;
-                above_card = fcs_col_get_card(dest_col, dest_cards_num-1);
                 above_num_true_seqs[num_separate_false_seqs] = 1;
                 for(above_c = dest_cards_num-2 ;
                     above_c > dc ;
                     above_c--
                     )
                 {
-                    up_above_card = fcs_col_get_card(dest_col, above_c);
+                    const fcs_card_t up_above_card = fcs_col_get_card(dest_col, above_c);
                     if (! fcs_is_ss_false_parent(up_above_card, above_card))
                     {
                         seq_points[num_separate_false_seqs++] = above_c+1;
@@ -1181,6 +1179,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                     seq_points[num_separate_false_seqs++] = above_c+1;
                 }
 
+                fcs_bool_t stacks_map[MAX_NUM_STACKS];
                 for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
                 {
                     stacks_map[a] = FALSE;
@@ -1188,7 +1187,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 stacks_map[stack_idx] = TRUE;
                 stacks_map[ds] = TRUE;
 
-                for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
+                int false_seq_index;
+                for (false_seq_index = 0 ;
+                    false_seq_index < num_separate_false_seqs ;
+                    false_seq_index++)
                 {
                     /* Find a suitable place to put it */
                     int clear_junk_dest_stack;
@@ -1253,15 +1255,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
                 /* Move the junk cards to their place */
 
-                for(false_seq_index=0;
-                    false_seq_index<num_separate_false_seqs;
-                    false_seq_index++
-                    )
+                for (int seq_index = 0;
+                    seq_index < num_separate_false_seqs;
+                    seq_index++
+                )
                 {
                     const int src_stack_idx = ds;
                     const int dest_stack_idx
                         = junk_move_to_stacks[
-                            false_seq_index
+                            seq_index
                         ];
 
                     my_copy_stack(src_stack_idx);
@@ -1270,8 +1272,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                     fcs_move_sequence(
                         dest_stack_idx,
                         src_stack_idx,
-                        seq_points[false_seq_index],
-                        ((false_seq_index == 0) ? (dest_cards_num-1) : (seq_points[false_seq_index-1]-1))
+                        seq_points[seq_index],
+                        ((seq_index == 0) ? (dest_cards_num-1) : (seq_points[seq_index-1]-1))
                     );
                 }
 
