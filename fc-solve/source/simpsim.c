@@ -287,6 +287,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         {
             continue;
         }
+
         fcs_card_t card = fcs_col_get_card(col, cards_num-1);
         int num_true_seqs = 1;
 
@@ -308,6 +309,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
             card = next_card;
         }
+
         /* This means that the loop exited prematurely and the stack does
          * not contain a sequence. */
         if ((h != -1)
@@ -1704,8 +1706,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
      *                 false sequence
      * */
     int stack_idx;
-    fcs_card_t card, next_card;
-    int num_true_seqs, h;
 
     tests_define_accessors();
 
@@ -1723,13 +1723,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             continue;
         }
 
-        card = fcs_col_get_card(col,cards_num-1);
-        num_true_seqs = 1;
+        fcs_card_t card = fcs_col_get_card(col,cards_num-1);
+        int num_true_seqs = 1;
 
+        int h;
         /* Stop if we reached the bottom of the stack */
-        for(h=cards_num-2;h>-1;h--)
+        for ( h=cards_num-2 ; h>-1 ; h--)
         {
-            next_card = fcs_col_get_card(col, h);
+            const fcs_card_t next_card = fcs_col_get_card(col, h);
             /* If this is no longer a sequence - move to the next stack */
             if (!fcs_is_ss_false_parent(next_card, card))
             {
