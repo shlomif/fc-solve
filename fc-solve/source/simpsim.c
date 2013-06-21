@@ -1418,21 +1418,21 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                                             false_seq_index++
                                             )
                                         {
-                                            int start;
-                                            int end;
+                                            const int src_stack_idx = ds;
+                                            const int dest_stack_idx
+                                                = junk_move_to_stacks[
+                                                    false_seq_index
+                                                ];
 
-                                            int src_stack;
+                                            my_copy_stack(src_stack_idx);
+                                            my_copy_stack(dest_stack_idx);
 
-                                            {
-                                                start = seq_points[false_seq_index];
-                                                end = ((false_seq_index == 0) ? (dest_cards_num-1) : (seq_points[false_seq_index-1]-1));
-                                                src_stack = ds;
-                                            }
-
-                                            my_copy_stack(src_stack);
-                                            my_copy_stack(junk_move_to_stacks[false_seq_index]);
-
-                                            fcs_move_sequence( junk_move_to_stacks[false_seq_index], src_stack, start, end);
+                                            fcs_move_sequence(
+                                                dest_stack_idx,
+                                                src_stack_idx,
+                                                seq_points[false_seq_index],
+                                                ((false_seq_index == 0) ? (dest_cards_num-1) : (seq_points[false_seq_index-1]-1))
+                                            );
                                         }
 
                                         fcs_move_sequence( ds, stack_idx, h+1, cards_num-1);
