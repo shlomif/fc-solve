@@ -33,63 +33,39 @@ extern "C" {
 #endif
 
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "inline.h"
 #include "alloc_wrap.h"
 #include "fcs_user.h"
 
 static GCC_INLINE void fc_solve_set_weights(
-    const char * const s,
+    freecell_solver_str_t start_num,
     double * const befs_weights
 )
 {
-    int i;
-    freecell_solver_str_t start_num;
-    freecell_solver_str_t end_num;
-    start_num = s;
-
-    char * const substring_copy =
-        SMALLOC(substring_copy, strlen(start_num) + 1);
-
-    for (i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
+    for (int i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
     {
-        while ((*start_num > '9') && (*start_num < '0') && (*start_num != '\0'))
+        while (*start_num == ',')
         {
             start_num++;
         }
-        if (*start_num == '\0')
+        if (! *start_num)
         {
-            break;
-        }
-        end_num = start_num+1;
-        while ((((*end_num >= '0') && (*end_num <= '9')) || (*end_num == '.')) && (*end_num != '\0'))
-        {
-            end_num++;
-        }
+            /* Initialize all the Best First Search weights at first
+             * to 0 so
+             * we won't have partial initialization.
+             * */
+            do
+            {
+                befs_weights[i++] = 0.0;
+            } while (i < FCS_NUM_BEFS_WEIGHTS);
 
-        strncpy(substring_copy, start_num, end_num-start_num);
-        substring_copy[end_num-start_num] = '\0';
-        befs_weights[i] = atof(substring_copy);
-        /* Make sure that if the string terminated here -
-         * we stop.
-         * */
-        if (*end_num == '\0')
-        {
-            i++;
-            break;
+            return;
         }
-        start_num=end_num+1;
-    }
-
-    free(substring_copy);
-
-    /* Initialize all the Best Frist Search weights at first
-     * to 0 so
-     * we won't have partial initialization.
-     * */
-    for (; i<FCS_NUM_BEFS_WEIGHTS ; i++)
-    {
-        befs_weights[i] = 0.0;
+        char * end_num;
+        befs_weights[i] = strtod(start_num, &end_num);
+        start_num = end_num;
     }
 }
 
