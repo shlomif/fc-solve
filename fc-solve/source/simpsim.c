@@ -1740,15 +1740,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             if (!fcs_suit_is_ss_true_parent(next_card, card))
             {
                 num_true_seqs++;
-                if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
-                {
-                    goto NEXT_STACK;
-                }
             }
 
             card = next_card;
         }
 
+        if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
+        {
+            continue;
+        }
 
         /* take the sequence and try and put it on another stack */
         for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
@@ -1782,8 +1782,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
             sfs_check_state_end();
         }
-NEXT_STACK:
-        ;
     }
 
     return;
