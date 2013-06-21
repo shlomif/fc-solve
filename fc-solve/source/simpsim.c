@@ -586,16 +586,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                         seq_index++
                     )
                     {
-                        /*
-                         * start and end are the start and end heights of the sequence that is to be moved.
-                         * */
-                        int start = seq_points[seq_index];
-                        int end = ((seq_index == 0) ? (dest_cards_num-1) : (seq_points[seq_index-1]-1));
+                        const int dest_index = junk_move_to_stacks[seq_index];
+                        my_copy_stack(dest_index);
 
-                        my_copy_stack(junk_move_to_stacks[seq_index]);
-
-                        fcs_move_sequence(junk_move_to_stacks[seq_index], ds, start, end);
-
+                        fcs_move_sequence(
+                            dest_index,
+                            ds,
+                            seq_points[seq_index],
+                            ((seq_index == 0) ? (dest_cards_num-1) : (seq_points[seq_index-1]-1))
+                        );
                     }
 
                     /* Move the source seq on top of the dest seq */
