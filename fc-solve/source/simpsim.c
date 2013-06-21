@@ -271,85 +271,82 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
      * num_true_seqs - the number of true sequences on the current
      *                 false sequence
      * */
-    int cards_num, suit;
-    fcs_card_t card, dest_card;
-    int rank, num_true_seqs, h, ds, dest_cards_num ;
-    fcs_cards_column_t col, dest_col;
-    fcs_game_limit_t num_vacant_stacks;
-
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (cards_num > 0)
+        const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        const int cards_num = fcs_col_len(col);
+        if (! cards_num)
         {
-            card = fcs_col_get_card(col, cards_num-1);
+            continue;
+        }
+        fcs_card_t card = fcs_col_get_card(col, cards_num-1);
+        int rank = fcs_card_rank(card);
+        int suit = fcs_card_suit(card);
+        int num_true_seqs = 1;
+
+        int h;
+        /* Stop if we reached the bottom of the stack */
+        for(h=cards_num-2;h>-1;h--)
+        {
+            card = fcs_col_get_card(col, h);
+            /* If this is no longer a sequence - move to the next stack */
+            if (fcs_card_rank(card) != rank+1)
+            {
+                break;
+            }
+            if (fcs_card_suit(card) != suit)
+            {
+                num_true_seqs++;
+            }
             rank = fcs_card_rank(card);
             suit = fcs_card_suit(card);
-            num_true_seqs = 1;
+        }
+        /* This means that the loop exited prematurely and the stack does
+         * not contain a sequence. */
+        if ((h != -1)
+            || (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
+        )
+        {
+            continue;
+        }
 
-            /* Stop if we reached the bottom of the stack */
-            for(h=cards_num-2;h>-1;h--)
-            {
-                card = fcs_col_get_card(col, h);
-                /* If this is no longer a sequence - move to the next stack */
-                if (fcs_card_rank(card) != rank+1)
-                {
-                    break;
-                }
-                if (fcs_card_suit(card) != suit)
-                {
-                    num_true_seqs++;
-                }
-                rank = fcs_card_rank(card);
-                suit = fcs_card_suit(card);
-            }
-            /* This means that the loop exited prematurely and the stack does
-             * not contain a sequence. */
-            if (h != -1)
+        for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
+        {
+            const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+            const int dest_cards_num = fcs_col_len(dest_col);
+            if (! dest_cards_num)
             {
                 continue;
             }
 
-            for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
+            const fcs_card_t dest_card =
+                fcs_col_get_card(dest_col, dest_cards_num-1);
+            if (!
+                (fcs_is_ss_false_parent(dest_card, card))
+               )
             {
-                dest_col = fcs_state_get_col(state, ds);
-                dest_cards_num = fcs_col_len(dest_col);
-                if (dest_cards_num > 0)
-                {
-                    dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
-                    if (
-                        (fcs_is_ss_false_parent(dest_card, card))
-                       )
-                    {
-                        /* This is a suitable parent - let's check if we
-                         * have enough empty stacks to make the move feasible */
-                        if (calc_max_simple_simon_seq_move(num_vacant_stacks) >= num_true_seqs)
-                        {
-                            /* We can do it - so let's move */
-
-                            sfs_check_state_begin();
-
-                            my_copy_stack(stack_idx);
-                            my_copy_stack(ds);
-
-                            fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
-
-                            sfs_check_state_end();
-
-                        }
-                    }
-                }
+                continue;
             }
+            /* This is a suitable parent - let's check if we
+             * have enough empty stacks to make the move feasible */
+            /* We can do it - so let's move */
 
+            sfs_check_state_begin();
+
+            my_copy_stack(stack_idx);
+            my_copy_stack(ds);
+
+            fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+
+            sfs_check_state_end();
         }
     }
 
