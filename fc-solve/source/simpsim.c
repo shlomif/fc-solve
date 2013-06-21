@@ -1701,27 +1701,35 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                         false_seq_index++
                         )
                     {
-                        int start = seq_points[false_seq_index];
-                        int end = ((false_seq_index == 0) ? (cards_num-1) : (seq_points[false_seq_index-1]-1));
+                        const int dest_idx
+                            = junk_move_to_stacks[false_seq_index];
+                        my_copy_stack(dest_idx);
 
-                        my_copy_stack(junk_move_to_stacks[false_seq_index]);
-
-                        fcs_move_sequence ( junk_move_to_stacks[false_seq_index], stack_idx, start, end);
+                        fcs_move_sequence (
+                            dest_idx,
+                            stack_idx,
+                            seq_points[false_seq_index],
+                            ((false_seq_index == 0) ? (cards_num-1) : (seq_points[false_seq_index-1]-1))
+                        );
                     }
 
                     {
-                        fcs_cards_column_t move_junk_to_col;
-                        int end, start;
+                        const int source_idx
+                            = junk_move_to_stacks[child_seq_index];
 
-                        move_junk_to_col = fcs_state_get_col(new_state, junk_move_to_stacks[child_seq_index]);
+                        const fcs_cards_column_t move_junk_to_col
+                            = fcs_state_get_col(new_state, source_idx);
 
-                        end = fcs_col_len(move_junk_to_col)-1;
-                        start = end-(end_of_child_seq-child_card_height);
+                        const int end = fcs_col_len(move_junk_to_col)-1;
 
-                        my_copy_stack(junk_move_to_stacks[child_seq_index]);
+                        my_copy_stack(source_idx);
 
-
-                        fcs_move_sequence( stack_idx, junk_move_to_stacks[child_seq_index], start, end);
+                        fcs_move_sequence(
+                            stack_idx,
+                            source_idx,
+                            end-(end_of_child_seq-child_card_height),
+                            end
+                        );
                     }
 
                     sfs_check_state_end();
