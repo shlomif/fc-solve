@@ -133,28 +133,23 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 }
 
 
+/*
+ * TODO:
+ *
+ * Convert to fc_solve_get_the_positions_by_rank_data.
+ * */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 {
-    fcs_game_limit_t num_vacant_stacks;
-
     /*
-     * stack - the source stack index on which the sequence currently resides.
+     * stack_idx - the source stack index on which the sequence currently
+     * resides.
      * cards_num - the number of cards in "stack".
      * suit - the suit of the current card
      * a - a temporary variable that designates a card height
-     * */
-    int stack_idx, cards_num, suit;
-    /*
      * h - the current height in stack
-     * */
-    int h;
-    /*
      * card - the current card (at height h)
      * above_card - the card above it.
      * dest_card - the destination card on which to put the sequence
-     * */
-    fcs_card_t card, dest_card;
-    /*
      * rank - the rank (i.e: A, 2 ,3 ... K) of the card, or
      * its previous one.
      * num_true_seqs - the number of true sequences (i.e: sequences of a
@@ -162,8 +157,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
      * ds - the destination stack index.
      * dest_cards_num - the number of cards in "ds".
      * */
-    int rank, num_true_seqs, ds, dest_cards_num ;
-    fcs_cards_column_t col, dest_col;
 
     tests_define_accessors();
 
@@ -171,79 +164,84 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     SET_GAME_PARAMS();
 #endif
 
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
-    for(stack_idx=0;stack_idx<LOCAL_STACKS_NUM;stack_idx++)
+    for (int stack_idx=0 ; stack_idx<LOCAL_STACKS_NUM ; stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (cards_num > 0)
+        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        const int cards_num = fcs_col_len(col);
+        if (! cards_num)
         {
-            /* Loop on the cards in the stack and try to look for a true
-             * parent on top one of the stacks */
-            card = fcs_col_get_card(col, cards_num-1);
+            continue;
+        }
+
+        /* Loop on the cards in the stack and try to look for a true
+         * parent on top one of the stacks */
+        fcs_card_t card = fcs_col_get_card(col, cards_num-1);
+        int rank = fcs_card_rank(card);
+        int suit = fcs_card_suit(card);
+        int num_true_seqs = 1;
+
+        for (int h=cards_num-2 ; h>=-1 ; h--)
+        {
+            for ( int ds = 0 ; ds<LOCAL_STACKS_NUM ; ds++)
+            {
+                if (ds == stack_idx)
+                {
+                    continue;
+                }
+
+                fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                const int dest_cards_num = fcs_col_len(dest_col);
+
+                if (! dest_cards_num)
+                {
+                    continue;
+                }
+
+                const fcs_card_t dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
+                if ((fcs_card_suit(dest_card) == suit) &&
+                    (fcs_card_rank(dest_card) == (rank+1))
+                   )
+                {
+                    /* This is a suitable parent - let's check if we
+                     * have enough empty stacks to make the move feasible */
+                    if (calc_max_simple_simon_seq_move(num_vacant_stacks)
+                        >= num_true_seqs)
+                    {
+                        /* We can do it - so let's move */
+
+                        sfs_check_state_begin();
+
+                        my_copy_stack(stack_idx);
+                        my_copy_stack(ds);
+
+
+                        fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+                        sfs_check_state_end();
+
+                    }
+                }
+            }
+
+            /* Stop if we reached the bottom of the stack */
+            if (h == -1)
+            {
+                break;
+            }
+
+            card = fcs_col_get_card(col, h);
+            /* If this is no longer a sequence - move to the next stack */
+            if (fcs_card_rank(card) != rank+1)
+            {
+                break;
+            }
+            if (! fcs_suit_is_ss_true_parent(suit, fcs_card_suit(card)))
+            {
+                num_true_seqs++;
+            }
             rank = fcs_card_rank(card);
             suit = fcs_card_suit(card);
-            num_true_seqs = 1;
-
-            for(h=cards_num-2;h>=-1;h--)
-            {
-                for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
-                {
-                    if (ds == stack_idx)
-                    {
-                        continue;
-                    }
-
-                    dest_col = fcs_state_get_col(state, ds);
-                    dest_cards_num = fcs_col_len(dest_col);
-
-                    if (dest_cards_num > 0)
-                    {
-                        dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
-                        if ((fcs_card_suit(dest_card) == suit) &&
-                            (fcs_card_rank(dest_card) == (rank+1))
-                           )
-                        {
-                            /* This is a suitable parent - let's check if we
-                             * have enough empty stacks to make the move feasible */
-                            if (calc_max_simple_simon_seq_move(num_vacant_stacks) >= num_true_seqs)
-                            {
-                                /* We can do it - so let's move */
-
-                                sfs_check_state_begin();
-
-                                my_copy_stack(stack_idx);
-                                my_copy_stack(ds);
-
-
-                                fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
-                                sfs_check_state_end();
-
-                            }
-                        }
-                    }
-                }
-
-                /* Stop if we reached the bottom of the stack */
-                if (h == -1)
-                {
-                    break;
-                }
-
-                card = fcs_col_get_card(col, h);
-                /* If this is no longer a sequence - move to the next stack */
-                if (fcs_card_rank(card) != rank+1)
-                {
-                    break;
-                }
-                if (! fcs_suit_is_ss_true_parent(suit, fcs_card_suit(card)))
-                {
-                    num_true_seqs++;
-                }
-                rank = fcs_card_rank(card);
-                suit = fcs_card_suit(card);
-            }
         }
     }
 
