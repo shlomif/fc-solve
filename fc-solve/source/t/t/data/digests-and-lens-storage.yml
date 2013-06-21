@@ -58,11 +58,11 @@ digests:
     hexdigest: f0668f5e156ee0d9e6ff835b9c48aedc2bb475e52263b0f532044d05c240175a
     len: 20447
   simple_simon1with_i:
-    hexdigest: eaa7d14865eb3fb6ace4e2ee5ded8d1a0697c3182e01dae7f5d6df20829cf5a5
-    len: 22634
+    hexdigest: e75886f7ecac88512ff29251760d2ac5f5313a5c8840187b0ae3855918b5f83b
+    len: 21659
   simple_simon1with_next_instance:
-    hexdigest: 3f59f79ff85a1172bc4ccdbee9f2eef4d78304c9bd8337b11beda6c1ae6b7d89
-    len: 22636
+    hexdigest: fa6d7114b05d8b5b06961b966242646cc18e8fe5add383445fd914bb4f414943
+    len: 21661
   simple_simon24default:
     hexdigest: 6ebea55ab4149055b7c9d0b3e46a29092d45a1baa04da02565ff3dcde47a1d50
     len: 22216

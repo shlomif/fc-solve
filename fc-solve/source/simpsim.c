@@ -288,26 +288,25 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
             continue;
         }
         fcs_card_t card = fcs_col_get_card(col, cards_num-1);
-        int rank = fcs_card_rank(card);
-        int suit = fcs_card_suit(card);
         int num_true_seqs = 1;
 
         int h;
         /* Stop if we reached the bottom of the stack */
-        for(h=cards_num-2;h>-1;h--)
+        for ( h=cards_num-2 ; h>-1 ; h--)
         {
-            card = fcs_col_get_card(col, h);
+            const fcs_card_t next_card = fcs_col_get_card(col, h);
             /* If this is no longer a sequence - move to the next stack */
-            if (fcs_card_rank(card) != rank+1)
+            if (!fcs_is_ss_false_parent(next_card, card))
             {
                 break;
             }
-            if (fcs_card_suit(card) != suit)
+
+            if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
             {
                 num_true_seqs++;
             }
-            rank = fcs_card_rank(card);
-            suit = fcs_card_suit(card);
+
+            card = next_card;
         }
         /* This means that the loop exited prematurely and the stack does
          * not contain a sequence. */
@@ -1737,7 +1736,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
                 break;
             }
 
-            if (!fcs_suit_is_ss_true_parent(next_card, card))
+            if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
             {
                 num_true_seqs++;
             }
