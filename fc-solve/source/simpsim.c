@@ -1317,19 +1317,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                  * the child card.
                  * */
 
-                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-                int seq_points[MAX_NUM_CARDS_IN_A_STACK];
                 fcs_bool_t stacks_map[MAX_NUM_STACKS];
                 int junk_move_to_stacks[MAX_NUM_STACKS];
-                int num_separate_false_seqs;
 
-                fcs_card_t above_card, up_above_card;
                 int above_c;
 
-                int end_of_child_seq;
                 int child_num_true_seqs;
 
-                end_of_child_seq = child_card_height;
+                int end_of_child_seq = child_card_height;
                 child_num_true_seqs = 1;
                 while ((end_of_child_seq+1 < cards_num) &&
                       fcs_is_ss_false_parent(
@@ -1345,15 +1340,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                     end_of_child_seq++;
                 }
 
-                num_separate_false_seqs = 0;
-                above_card = fcs_col_get_card(col, cards_num-1);
+                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
+                int num_separate_false_seqs = 0;
                 above_num_true_seqs[num_separate_false_seqs] = 1;
+                int seq_points[MAX_NUM_CARDS_IN_A_STACK];
+
+                fcs_card_t above_card = fcs_col_get_card(col, cards_num-1);
+
                 for(above_c = cards_num-2;
                     above_c > end_of_child_seq ;
                     above_c--
                     )
                 {
-                    up_above_card = fcs_col_get_card(col, above_c);
+                    const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
                     if (! fcs_is_ss_false_parent(up_above_card, above_card))
                     {
                         seq_points[num_separate_false_seqs++] = above_c+1;
@@ -1382,7 +1381,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                     above_c--
                     )
                 {
-                    up_above_card = fcs_col_get_card(col, above_c);
+                    const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
                     if (! fcs_is_ss_false_parent(up_above_card, above_card))
                     {
                         seq_points[num_separate_false_seqs++] = above_c+1;
