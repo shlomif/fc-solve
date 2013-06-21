@@ -209,19 +209,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
         /* Loop on the cards in the stack and try to look for a true
          * parent on top one of the stacks */
         fcs_card_t card = fcs_col_get_card(col, cards_num-1);
-        int rank = fcs_card_rank(card);
-        int suit = fcs_card_suit(card);
         int num_true_seqs = 1;
 
         for (int h=cards_num-2 ; h>=-1 ; h--)
         {
             STACK_DEST_LOOP_START(1)
-                const fcs_card_t dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
-                if (!
-                    ((fcs_card_suit(dest_card) == suit) &&
-                    (fcs_card_rank(dest_card) == (rank+1))
-                   )
-                )
+                if (! fcs_is_ss_true_parent(fcs_col_get_card(dest_col, dest_cards_num-1), card))
                 {
                     continue;
                 }
@@ -246,13 +239,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
                 break;
             }
 
+            const fcs_card_t prev_card = card;
             card = fcs_col_get_card(col, h);
             /* If this is no longer a sequence - move to the next stack */
-            if (fcs_card_rank(card) != rank+1)
+            if (!fcs_is_ss_false_parent(card, prev_card))
             {
                 break;
             }
-            if (! fcs_suit_is_ss_true_parent(suit, fcs_card_suit(card)))
+            if (!fcs_is_ss_suit_true(card, prev_card))
             {
                 num_true_seqs++;
                 /* We can no longer perform the move so go to the next
@@ -260,14 +254,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
                 if (calc_max_simple_simon_seq_move(num_vacant_stacks)
                     < num_true_seqs)
                 {
-                    goto NEXT_STACK;
+                    break;
                 }
             }
-            rank = fcs_card_rank(card);
-            suit = fcs_card_suit(card);
         }
-NEXT_STACK:
-        ;
     STACK_SOURCE_LOOP_END()
 }
 
