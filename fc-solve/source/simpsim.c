@@ -783,9 +783,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
                 {
                     /* Find a suitable place to put it */
-                    int clear_junk_dest_stack = -1;
-
-
+                    int clear_junk_dest_stack;
                     /* Let's try to find a suitable parent on top one of the stacks */
                     for(clear_junk_dest_stack=0;
                         clear_junk_dest_stack < LOCAL_STACKS_NUM;
@@ -815,38 +813,34 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                     if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
                     {
                         clear_junk_dest_stack = -1;
-                    }
-
-                    if (clear_junk_dest_stack == -1)
-                    {
                         /* Check if there is a vacant stack */
-                        if (num_vacant_stacks > 0)
+                        if (!
+                            (
+                            (num_vacant_stacks > 0)
+                            &&
+                            (calc_max_simple_simon_seq_move(after_junk_num_freestacks-1) >= above_num_true_seqs[false_seq_index])
+                            )
+                        )
                         {
-                            if (calc_max_simple_simon_seq_move(after_junk_num_freestacks-1) >= above_num_true_seqs[false_seq_index])
-                            {
-                                /* Find an empty stack and designate it as the destination for the junk */
-                                for(
-                                    clear_junk_dest_stack = 0;
-                                    clear_junk_dest_stack < LOCAL_STACKS_NUM;
-                                    clear_junk_dest_stack++
-                                   )
-                                {
-                                    clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                                    if ((fcs_col_len(clear_junk_dest_col) == 0) && (stacks_map[clear_junk_dest_stack] == 0))
-                                    {
-                                        stacks_map[clear_junk_dest_stack] = 1;
-                                        break;
-                                    }
-                                }
-                            }
-                            after_junk_num_freestacks--;
+                            break;
                         }
+                        /* Find an empty stack and designate it as the destination for the junk */
+                        for(
+                            clear_junk_dest_stack = 0;
+                            clear_junk_dest_stack < LOCAL_STACKS_NUM;
+                            clear_junk_dest_stack++
+                           )
+                        {
+                            clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
+                            if ((fcs_col_len(clear_junk_dest_col) == 0) && (stacks_map[clear_junk_dest_stack] == 0))
+                            {
+                                stacks_map[clear_junk_dest_stack] = 1;
+                                break;
+                            }
+                        }
+                        after_junk_num_freestacks--;
                     }
 
-                    if (clear_junk_dest_stack == -1)
-                    {
-                        break;
-                    }
                     junk_move_to_stacks[false_seq_index] = clear_junk_dest_stack;
                 }
 
