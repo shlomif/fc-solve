@@ -191,7 +191,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
                     continue;
                 }
 
-                fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
                 const int dest_cards_num = fcs_col_len(dest_col);
 
                 if (! dest_cards_num)
@@ -200,28 +200,27 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
                 }
 
                 const fcs_card_t dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
-                if ((fcs_card_suit(dest_card) == suit) &&
+                if (!
+                    ((fcs_card_suit(dest_card) == suit) &&
                     (fcs_card_rank(dest_card) == (rank+1))
                    )
+                )
                 {
-                    /* This is a suitable parent - let's check if we
-                     * have enough empty stacks to make the move feasible */
-                    if (calc_max_simple_simon_seq_move(num_vacant_stacks)
-                        >= num_true_seqs)
-                    {
-                        /* We can do it - so let's move */
-
-                        sfs_check_state_begin();
-
-                        my_copy_stack(stack_idx);
-                        my_copy_stack(ds);
-
-
-                        fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
-                        sfs_check_state_end();
-
-                    }
+                    continue;
                 }
+
+                /* This is a suitable parent - let's check if we
+                 * have enough empty stacks to make the move feasible */
+                /* We can do it - so let's move */
+
+                sfs_check_state_begin();
+
+                my_copy_stack(stack_idx);
+                my_copy_stack(ds);
+
+
+                fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+                sfs_check_state_end();
             }
 
             /* Stop if we reached the bottom of the stack */
@@ -239,10 +238,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
             if (! fcs_suit_is_ss_true_parent(suit, fcs_card_suit(card)))
             {
                 num_true_seqs++;
+                /* We can no longer perform the move so go to the next
+                 * stack. */
+                if (calc_max_simple_simon_seq_move(num_vacant_stacks)
+                    < num_true_seqs)
+                {
+                    goto NEXT_STACK;
+                }
             }
             rank = fcs_card_rank(card);
             suit = fcs_card_suit(card);
         }
+NEXT_STACK:
+        ;
     }
 
     return;
@@ -1702,22 +1710,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     int stack_idx;
     fcs_card_t card, next_card;
     int num_true_seqs, h;
-    fcs_cards_column_t col;
-    int cards_num;
-    fcs_game_limit_t num_vacant_stacks;
 
     tests_define_accessors();
 
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
-    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     for(stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
-        col = fcs_state_get_col(state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (cards_num <= 0)
+        const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        const int cards_num = fcs_col_len(col);
+        if (! cards_num)
         {
             continue;
         }
@@ -1738,19 +1743,24 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             if (!fcs_suit_is_ss_true_parent(next_card, card))
             {
                 num_true_seqs++;
+                if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
+                {
+                    goto NEXT_STACK;
+                }
             }
 
             card = next_card;
         }
 
-        if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
-        {
-            continue;
-        }
 
         /* take the sequence and try and put it on another stack */
         for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
         {
+            if (ds == stack_idx)
+            {
+                continue;
+            }
+
             const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
             const int dest_cards_num = fcs_col_len(dest_col);
             /* If this is a suitable parent - let's check if we
@@ -1775,6 +1785,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
             sfs_check_state_end();
         }
+NEXT_STACK:
+        ;
     }
 
     return;
