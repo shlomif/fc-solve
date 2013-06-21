@@ -616,12 +616,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 {
     int suit;
     int rank;
-    int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-    int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-    fcs_bool_t stacks_map[MAX_NUM_STACKS];
-    int after_junk_num_freestacks;
-    int false_seq_index;
-    int junk_move_to_stacks[MAX_NUM_CARDS_IN_A_STACK];
 
     fcs_cards_column_t clear_junk_dest_col;
 
@@ -630,8 +624,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
     STACK_SOURCE_LOOP_START(1)
         for( int src_card_height = cards_num-1 ; src_card_height >= 0 ; src_card_height-- )
         {
-            int above_c;
-            fcs_card_t above_card, up_above_card;
             int end_of_src_seq;
 
             fcs_card_t card = fcs_col_get_card(col, src_card_height);
@@ -642,7 +634,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
             for (end_of_src_seq = src_card_height+1; end_of_src_seq < cards_num ; end_of_src_seq++)
             {
-                above_card = fcs_col_get_card(col, end_of_src_seq);
+                const fcs_card_t above_card
+                    = fcs_col_get_card(col, end_of_src_seq);
                 if (!fcs_is_ss_false_parent(card, above_card))
                 {
                     break;
@@ -662,14 +655,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
             /* Split the cards above it into false sequences */
 
             int num_separate_false_seqs = 0;
-            above_card = fcs_col_get_card(col, cards_num-1);
+            int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
             above_num_true_seqs[num_separate_false_seqs] = 1;
+
+            fcs_card_t above_card = fcs_col_get_card(col, cards_num-1);
+
+            int above_c;
+            int seq_points[MAX_NUM_CARDS_IN_A_STACK];
             for(above_c = cards_num-2 ;
                 above_c > end_of_src_seq-1 ;
                 above_c--
                 )
             {
-                up_above_card = fcs_col_get_card(col, above_c);
+                const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
                 if (! fcs_is_ss_false_parent(up_above_card, above_card))
                 {
                     seq_points[num_separate_false_seqs++] = above_c+1;
@@ -699,6 +697,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 /* This is a suitable parent - let's check if we
                  * have enough empty stacks to make the move feasible */
 
+                fcs_bool_t stacks_map[MAX_NUM_STACKS];
                 for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
                 {
                     stacks_map[a] = FALSE;
@@ -706,9 +705,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 stacks_map[stack_idx] = TRUE;
                 stacks_map[ds] = TRUE;
 
-                after_junk_num_freestacks = num_vacant_stacks;
+                int after_junk_num_freestacks = num_vacant_stacks;
+                int junk_move_to_stacks[MAX_NUM_CARDS_IN_A_STACK];
+                int false_seq_index;
 
-                for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
+                for (false_seq_index = 0 ;
+                    false_seq_index < num_separate_false_seqs ;
+                    false_seq_index++)
                 {
                     /* Find a suitable place to put it */
                     int clear_junk_dest_stack;
