@@ -386,10 +386,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
      *      the junk sequences to different stacks.
      *
      * */
-    int suit;
-    fcs_card_t card, dest_card;
-    int rank, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK], h;
-    int dc;
+    int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
     int num_separate_false_seqs;
     int false_seq_index;
@@ -401,21 +398,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
     SIMPS_define_vacant_stacks_accessors();
 
     STACK_SOURCE_LOOP_START(1)
-        card = fcs_col_get_card(col, cards_num-1);
-        rank = fcs_card_rank(card);
-        suit = fcs_card_suit(card);
+        fcs_card_t card = fcs_col_get_card(col, cards_num-1);
 
         num_true_seqs = 1;
 
-        for(h=cards_num-2;h>=-1;h--)
+        for (int h=cards_num-2 ; h>=-1 ; h--)
         {
             STACK_DEST_LOOP_START(1)
-                for(dc=dest_cards_num-1;dc>=0;dc--)
+                for (int dc = dest_cards_num-1 ; dc >= 0 ; dc--)
                 {
-                    dest_card = fcs_col_get_card(dest_col, dc);
-                    if (! ((fcs_card_suit(dest_card) == suit) &&
-                        (fcs_card_rank(dest_card) == (rank+1))
-                       ))
+                    const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
+                    if (! fcs_is_ss_true_parent(dest_card, card))
                     {
                         continue;
                     }
@@ -593,18 +586,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
             {
                 break;
             }
+            const fcs_card_t above_card = fcs_col_get_card(col, h);
             /* If this is no longer a sequence - move to the next stack */
-            if (fcs_col_get_rank(col, h) != rank+1)
+            if (! fcs_is_ss_false_parent(above_card, card))
             {
                 break;
             }
-            card = fcs_col_get_card(col, h);
-            if (! fcs_suit_is_ss_true_parent(suit, fcs_card_suit(card)))
+            if (! fcs_suit_is_ss_true_parent(fcs_card_suit(above_card), fcs_card_suit(card)))
             {
                 num_true_seqs++;
             }
-            rank = fcs_card_rank(card);
-            suit = fcs_card_suit(card);
+            card = above_card;
         }
     STACK_SOURCE_LOOP_END()
 
