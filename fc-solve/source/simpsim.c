@@ -1473,264 +1473,266 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
     {
         col = fcs_state_get_col(state, stack_idx);
         cards_num = fcs_col_len(col);
-        if (cards_num > 2)
+        if (cards_num <= 2)
         {
-            /* Search for a parent card */
-            for(parent_card_height=0; parent_card_height < cards_num-1 ; parent_card_height++)
+            continue;
+        }
+
+        /* Search for a parent card */
+        for(parent_card_height=0; parent_card_height < cards_num-1 ; parent_card_height++)
+        {
+            parent_card = fcs_col_get_card(col, parent_card_height);
+            if (
+                fcs_is_ss_true_parent(
+                    parent_card,
+                    fcs_col_get_card(col, parent_card_height+1)
+                    )
+               )
             {
-                parent_card = fcs_col_get_card(col, parent_card_height);
-                if (
-                    fcs_is_ss_true_parent(
+                continue;
+            }
+
+            for(child_card_height = parent_card_height + 2 ; child_card_height < cards_num ; child_card_height++)
+            {
+                register fcs_card_t child_card;
+
+                child_card = fcs_col_get_card(col, child_card_height);
+                if (! fcs_is_ss_true_parent(
                         parent_card,
-                        fcs_col_get_card(col, parent_card_height+1)
+                        child_card
                         )
                    )
                 {
                     continue;
                 }
-
-                for(child_card_height = parent_card_height + 2 ; child_card_height < cards_num ; child_card_height++)
-                {
-                    register fcs_card_t child_card;
-
-                    child_card = fcs_col_get_card(col, child_card_height);
-                    if (! fcs_is_ss_true_parent(
-                            parent_card,
-                            child_card
-                            )
-                       )
-                    {
-                        continue;
-                    }
-                    /* We have a matching parent and child cards */
+                /* We have a matching parent and child cards */
 #if 0
-                    printf("Stack %i, Parent %i, Child %i\n", stack_idx, parent_card_height, child_card_height);
-                    fflush(stdout);
+                printf("Stack %i, Parent %i, Child %i\n", stack_idx, parent_card_height, child_card_height);
+                fflush(stdout);
 #endif
 
-                    /*
-                     * Now let's try to find stacks to place the cards above
-                     * the child card.
-                     * */
+                /*
+                 * Now let's try to find stacks to place the cards above
+                 * the child card.
+                 * */
 
-                    int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-                    int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-                    int stacks_map[MAX_NUM_STACKS];
-                    int junk_move_to_stacks[MAX_NUM_STACKS];
-                    int num_separate_false_seqs;
+                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
+                int seq_points[MAX_NUM_CARDS_IN_A_STACK];
+                int stacks_map[MAX_NUM_STACKS];
+                int junk_move_to_stacks[MAX_NUM_STACKS];
+                int num_separate_false_seqs;
 
-                    fcs_card_t above_card, up_above_card;
-                    int above_c;
+                fcs_card_t above_card, up_above_card;
+                int above_c;
 
-                    int end_of_child_seq;
-                    int child_num_true_seqs;
+                int end_of_child_seq;
+                int child_num_true_seqs;
 
-                    end_of_child_seq = child_card_height;
-                    child_num_true_seqs = 1;
-                    while ((end_of_child_seq+1 < cards_num) &&
-                          fcs_is_ss_false_parent(
-                                fcs_col_get_card(col, end_of_child_seq),
-                                fcs_col_get_card(col, end_of_child_seq+1)
-                           )
-                          )
-                    {
-                        child_num_true_seqs += (!fcs_is_ss_true_parent(
-                                fcs_col_get_card(col, end_of_child_seq),
-                                fcs_col_get_card(col, end_of_child_seq+1)
-                           ));
-                        end_of_child_seq++;
-                    }
+                end_of_child_seq = child_card_height;
+                child_num_true_seqs = 1;
+                while ((end_of_child_seq+1 < cards_num) &&
+                      fcs_is_ss_false_parent(
+                            fcs_col_get_card(col, end_of_child_seq),
+                            fcs_col_get_card(col, end_of_child_seq+1)
+                       )
+                      )
+                {
+                    child_num_true_seqs += (!fcs_is_ss_true_parent(
+                            fcs_col_get_card(col, end_of_child_seq),
+                            fcs_col_get_card(col, end_of_child_seq+1)
+                       ));
+                    end_of_child_seq++;
+                }
 
-                    num_separate_false_seqs = 0;
-                    above_card = fcs_col_get_card(col, cards_num-1);
-                    above_num_true_seqs[num_separate_false_seqs] = 1;
-                    for(above_c = cards_num-2;
-                        above_c > end_of_child_seq ;
-                        above_c--
-                        )
-                    {
-                        up_above_card = fcs_col_get_card(col, above_c);
-                        if (! fcs_is_ss_false_parent(up_above_card, above_card))
-                        {
-                            seq_points[num_separate_false_seqs++] = above_c+1;
-                            above_num_true_seqs[num_separate_false_seqs] = 1;
-                        }
-                        above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
-                        above_card = up_above_card;
-                    }
-
-                    if (end_of_child_seq < cards_num - 1)
+                num_separate_false_seqs = 0;
+                above_card = fcs_col_get_card(col, cards_num-1);
+                above_num_true_seqs[num_separate_false_seqs] = 1;
+                for(above_c = cards_num-2;
+                    above_c > end_of_child_seq ;
+                    above_c--
+                    )
+                {
+                    up_above_card = fcs_col_get_card(col, above_c);
+                    if (! fcs_is_ss_false_parent(up_above_card, above_card))
                     {
                         seq_points[num_separate_false_seqs++] = above_c+1;
+                        above_num_true_seqs[num_separate_false_seqs] = 1;
                     }
+                    above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
+                    above_card = up_above_card;
+                }
 
-                    /* Add the child to the seq_points */
-                    child_seq_index = num_separate_false_seqs;
-                    above_num_true_seqs[num_separate_false_seqs] = child_num_true_seqs;
-                    seq_points[num_separate_false_seqs++] = child_card_height;
+                if (end_of_child_seq < cards_num - 1)
+                {
+                    seq_points[num_separate_false_seqs++] = above_c+1;
+                }
 
-                    /* Add the cards between the parent and the child to the seq_points */
+                /* Add the child to the seq_points */
+                child_seq_index = num_separate_false_seqs;
+                above_num_true_seqs[num_separate_false_seqs] = child_num_true_seqs;
+                seq_points[num_separate_false_seqs++] = child_card_height;
 
-                    above_card = fcs_col_get_card(col, child_card_height-1);
-                    above_num_true_seqs[num_separate_false_seqs] = 1;
-                    for(above_c = child_card_height-2;
-                        above_c > parent_card_height ;
-                        above_c--
-                        )
-                    {
-                        up_above_card = fcs_col_get_card(col, above_c);
-                        if (! fcs_is_ss_false_parent(up_above_card, above_card))
-                        {
-                            seq_points[num_separate_false_seqs++] = above_c+1;
-                            above_num_true_seqs[num_separate_false_seqs] = 1;
-                        }
-                        above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
-                        above_card = up_above_card;
-                    }
+                /* Add the cards between the parent and the child to the seq_points */
 
-                    if (parent_card_height < child_card_height - 1)
+                above_card = fcs_col_get_card(col, child_card_height-1);
+                above_num_true_seqs[num_separate_false_seqs] = 1;
+                for(above_c = child_card_height-2;
+                    above_c > parent_card_height ;
+                    above_c--
+                    )
+                {
+                    up_above_card = fcs_col_get_card(col, above_c);
+                    if (! fcs_is_ss_false_parent(up_above_card, above_card))
                     {
                         seq_points[num_separate_false_seqs++] = above_c+1;
+                        above_num_true_seqs[num_separate_false_seqs] = 1;
                     }
+                    above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
+                    above_card = up_above_card;
+                }
+
+                if (parent_card_height < child_card_height - 1)
+                {
+                    seq_points[num_separate_false_seqs++] = above_c+1;
+                }
 
 
 
-                    for(a = 0 ; a < LOCAL_STACKS_NUM ; a++)
+                for(a = 0 ; a < LOCAL_STACKS_NUM ; a++)
+                {
+                    stacks_map[a] = 0;
+                }
+                stacks_map[stack_idx] = 1;
+
+                after_junk_num_freestacks = num_vacant_stacks;
+
+                for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
+                {
+                    /* Find a suitable place to put it */
+                    int clear_junk_dest_stack = -1;
+
+
+                    /* Let's try to find a suitable parent on top one of the stacks */
+                    for(clear_junk_dest_stack=0;
+                        clear_junk_dest_stack < LOCAL_STACKS_NUM;
+                        clear_junk_dest_stack++
+                       )
                     {
-                        stacks_map[a] = 0;
-                    }
-                    stacks_map[stack_idx] = 1;
+                        int clear_junk_stack_len;
+                        clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
+                        clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
 
-                    after_junk_num_freestacks = num_vacant_stacks;
-
-                    for(false_seq_index=0;false_seq_index<num_separate_false_seqs;false_seq_index++)
-                    {
-                        /* Find a suitable place to put it */
-                        int clear_junk_dest_stack = -1;
-
-
-                        /* Let's try to find a suitable parent on top one of the stacks */
-                        for(clear_junk_dest_stack=0;
-                            clear_junk_dest_stack < LOCAL_STACKS_NUM;
-                            clear_junk_dest_stack++
-                           )
+                        if ((clear_junk_stack_len > 0) && (stacks_map[clear_junk_dest_stack] == 0))
                         {
-                            int clear_junk_stack_len;
-                            clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                            clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
+                            fcs_card_t clear_junk_dest_card;
 
-                            if ((clear_junk_stack_len > 0) && (stacks_map[clear_junk_dest_stack] == 0))
+                            clear_junk_dest_card = fcs_col_get_card(clear_junk_dest_col, clear_junk_stack_len-1);
+                            if (fcs_is_ss_false_parent(clear_junk_dest_card, fcs_col_get_card(col, seq_points[false_seq_index])))
                             {
-                                fcs_card_t clear_junk_dest_card;
-
-                                clear_junk_dest_card = fcs_col_get_card(clear_junk_dest_col, clear_junk_stack_len-1);
-                                if (fcs_is_ss_false_parent(clear_junk_dest_card, fcs_col_get_card(col, seq_points[false_seq_index])))
+                                if (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= above_num_true_seqs[false_seq_index])
                                 {
-                                    if (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= above_num_true_seqs[false_seq_index])
+                                    stacks_map[clear_junk_dest_stack] = 1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
+                    {
+                        clear_junk_dest_stack = -1;
+                    }
+
+                    if (clear_junk_dest_stack == -1)
+                    {
+                        /* Check if there is a vacant stack */
+                        if (num_vacant_stacks > 0)
+                        {
+                            if (calc_max_simple_simon_seq_move(after_junk_num_freestacks-1) >= above_num_true_seqs[false_seq_index])
+                            {
+                                /* Find an empty stack and designate it as the destination for the junk */
+                                for(
+                                    clear_junk_dest_stack = 0;
+                                    clear_junk_dest_stack < LOCAL_STACKS_NUM;
+                                    clear_junk_dest_stack++
+                                   )
+                                {
+                                    clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
+                                    if ((fcs_col_len(clear_junk_dest_col) == 0) && (stacks_map[clear_junk_dest_stack] == 0))
                                     {
                                         stacks_map[clear_junk_dest_stack] = 1;
                                         break;
                                     }
                                 }
                             }
+                            after_junk_num_freestacks--;
                         }
-
-                        if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
-                        {
-                            clear_junk_dest_stack = -1;
-                        }
-
-                        if (clear_junk_dest_stack == -1)
-                        {
-                            /* Check if there is a vacant stack */
-                            if (num_vacant_stacks > 0)
-                            {
-                                if (calc_max_simple_simon_seq_move(after_junk_num_freestacks-1) >= above_num_true_seqs[false_seq_index])
-                                {
-                                    /* Find an empty stack and designate it as the destination for the junk */
-                                    for(
-                                        clear_junk_dest_stack = 0;
-                                        clear_junk_dest_stack < LOCAL_STACKS_NUM;
-                                        clear_junk_dest_stack++
-                                       )
-                                    {
-                                        clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                                        if ((fcs_col_len(clear_junk_dest_col) == 0) && (stacks_map[clear_junk_dest_stack] == 0))
-                                        {
-                                            stacks_map[clear_junk_dest_stack] = 1;
-                                            break;
-                                        }
-                                    }
-                                }
-                                after_junk_num_freestacks--;
-                            }
-                        }
-
-                        if (clear_junk_dest_stack == -1)
-                        {
-                            break;
-                        }
-                        junk_move_to_stacks[false_seq_index] = clear_junk_dest_stack;
                     }
 
-                    /* Let's check if we can move the child after we are done
-                     * moving all the junk cards */
-                    if (!
-                        (
-                            (false_seq_index == num_separate_false_seqs)
-                            &&
-                            (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= child_num_true_seqs)
-                        )
-                    )
+                    if (clear_junk_dest_stack == -1)
                     {
-                        continue;
+                        break;
                     }
-                    /* We can do it - so let's move everything */
-
-                    sfs_check_state_begin();
-
-                    /* Move the junk cards to their place */
-
-                    my_copy_stack(stack_idx);
-
-                    for(false_seq_index=0;
-                        false_seq_index<num_separate_false_seqs;
-                        false_seq_index++
-                        )
-                    {
-                        const int dest_idx
-                            = junk_move_to_stacks[false_seq_index];
-                        my_copy_stack(dest_idx);
-
-                        fcs_move_sequence (
-                            dest_idx,
-                            stack_idx,
-                            seq_points[false_seq_index],
-                            ((false_seq_index == 0) ? (cards_num-1) : (seq_points[false_seq_index-1]-1))
-                        );
-                    }
-
-                    {
-                        const int source_idx
-                            = junk_move_to_stacks[child_seq_index];
-
-                        const fcs_cards_column_t move_junk_to_col
-                            = fcs_state_get_col(new_state, source_idx);
-
-                        const int end = fcs_col_len(move_junk_to_col)-1;
-
-                        my_copy_stack(source_idx);
-
-                        fcs_move_sequence(
-                            stack_idx,
-                            source_idx,
-                            end-(end_of_child_seq-child_card_height),
-                            end
-                        );
-                    }
-
-                    sfs_check_state_end();
+                    junk_move_to_stacks[false_seq_index] = clear_junk_dest_stack;
                 }
+
+                /* Let's check if we can move the child after we are done
+                 * moving all the junk cards */
+                if (!
+                    (
+                        (false_seq_index == num_separate_false_seqs)
+                        &&
+                        (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= child_num_true_seqs)
+                    )
+                )
+                {
+                    continue;
+                }
+                /* We can do it - so let's move everything */
+
+                sfs_check_state_begin();
+
+                /* Move the junk cards to their place */
+
+                my_copy_stack(stack_idx);
+
+                for(false_seq_index=0;
+                    false_seq_index<num_separate_false_seqs;
+                    false_seq_index++
+                    )
+                {
+                    const int dest_idx
+                        = junk_move_to_stacks[false_seq_index];
+                    my_copy_stack(dest_idx);
+
+                    fcs_move_sequence (
+                        dest_idx,
+                        stack_idx,
+                        seq_points[false_seq_index],
+                        ((false_seq_index == 0) ? (cards_num-1) : (seq_points[false_seq_index-1]-1))
+                    );
+                }
+
+                {
+                    const int source_idx
+                        = junk_move_to_stacks[child_seq_index];
+
+                    const fcs_cards_column_t move_junk_to_col
+                        = fcs_state_get_col(new_state, source_idx);
+
+                    const int end = fcs_col_len(move_junk_to_col)-1;
+
+                    my_copy_stack(source_idx);
+
+                    fcs_move_sequence(
+                        stack_idx,
+                        source_idx,
+                        end-(end_of_child_seq-child_card_height),
+                        end
+                    );
+                }
+
+                sfs_check_state_end();
             }
         }
     }
