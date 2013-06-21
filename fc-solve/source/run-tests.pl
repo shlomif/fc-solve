@@ -164,7 +164,12 @@ GetOptions(
         }
     }
 
-    # Put the valgrind test last because it takes a long time.
+    # if (! glob('t/valgrind--*.t'))
+    {
+        system($^X, "$abs_bindir/scripts/generate-individual-valgrind-test-scripts.pl");
+    }
+
+    # Put the valgrind tests last, because they take a long time.
     my @tests =
         sort
         {

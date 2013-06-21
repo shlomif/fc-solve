@@ -3,8 +3,6 @@ package FC_Solve::Test::Valgrind;
 use strict;
 use warnings;
 
-use lib './t/lib';
-
 use Test::More;
 use List::Util qw(first);
 use Carp;
@@ -107,16 +105,16 @@ sub _test_using_valgrind
 {
     my $args = shift;
 
-    my $log_fn = "valgrind.log";
-
-    if (ref($args) eq "ARRAY")
+    if (ref($args) ne "HASH")
     {
-        die "ArrayRef is no longer supported.";
+        Carp::confess("args must be a HASH (wrong ID)?.");
     }
 
     # $args = { argv => $args, prog => "freecell-solver-range-parallel-solve", };
 
     my $id = $args->{id};
+
+    my $log_fn = "valgrind--$id.log";
 
     if (!defined($id))
     {
