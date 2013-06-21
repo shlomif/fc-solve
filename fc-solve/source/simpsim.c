@@ -841,23 +841,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
      * */
     int suit;
     fcs_card_t card, dest_card;
-    int rank, h;
+    int rank;
 
-    int after_junk_num_freestacks;
-    int junk_move_to_stacks[MAX_NUM_STACKS];
-    int num_src_junk_true_seqs;
-    int end_of_junk;
-    int num_true_seqs;
-
-    fcs_cards_column_t clear_junk_dest_col;
     SIMPS_define_vacant_stacks_accessors();
 
     STACK_SOURCE_LOOP_START(1)
         card = fcs_col_get_card(col, cards_num-1);
         rank = fcs_card_rank(card);
         suit = fcs_card_suit(card);
-        num_src_junk_true_seqs = 1;
+        int num_src_junk_true_seqs = 1;
 
+        int h;
         for(h=cards_num-2;h>=-1;h--)
         {
             if (h == -1)
@@ -882,8 +876,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
             continue;
         }
 
-        end_of_junk = h;
-        num_true_seqs = 1;
+        const int end_of_junk = h;
+        int num_true_seqs = 1;
 
         for(;h>=-1;h--)
         {
@@ -958,8 +952,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 stacks_map[stack_idx] = TRUE;
                 stacks_map[ds] = TRUE;
 
-                after_junk_num_freestacks = num_vacant_stacks;
+                int after_junk_num_freestacks = num_vacant_stacks;
 
+                int junk_move_to_stacks[MAX_NUM_STACKS];
                 int false_seq_index;
                 for (false_seq_index = 0 ;
                     false_seq_index < num_separate_false_seqs+1 ;
@@ -992,9 +987,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                         clear_junk_dest_stack++
                        )
                     {
-                        int clear_junk_stack_len;
-                        clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                        clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
+                        const fcs_cards_column_t clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
+                        const int clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
 
                         if ((clear_junk_stack_len > 0) && (! stacks_map[clear_junk_dest_stack]))
                         {
@@ -1032,8 +1026,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                             clear_junk_dest_stack++
                            )
                         {
-                            clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                            if ((fcs_col_len(clear_junk_dest_col) == 0) && (! stacks_map[clear_junk_dest_stack]))
+                            if ((fcs_col_len(fcs_state_get_col(state, clear_junk_dest_stack)) == 0) && (! stacks_map[clear_junk_dest_stack]))
                             {
                                 stacks_map[clear_junk_dest_stack] = TRUE;
                                 break;
