@@ -256,6 +256,37 @@ NEXT_STACK:
     return;
 }
 
+static GCC_INLINE int get_seq_h(const fcs_cards_column_t col, int * num_true_seqs_out_ptr)
+{
+    const int cards_num = fcs_col_len(col);
+
+    fcs_card_t card = fcs_col_get_card(col,cards_num-1);
+    int num_true_seqs = 1;
+
+    int h;
+    /* Stop if we reached the bottom of the stack */
+    for ( h=cards_num-2 ; h>-1 ; h--)
+    {
+        const fcs_card_t next_card = fcs_col_get_card(col, h);
+        /* If this is no longer a sequence - move to the next stack */
+        if (!fcs_is_ss_false_parent(next_card, card))
+        {
+            break;
+        }
+
+        if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
+        {
+            num_true_seqs++;
+        }
+
+        card = next_card;
+    }
+
+    *num_true_seqs_out_ptr = num_true_seqs;
+
+    return h+1;
+}
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent)
 {
     /*
@@ -288,31 +319,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
             continue;
         }
 
-        fcs_card_t card = fcs_col_get_card(col, cards_num-1);
-        int num_true_seqs = 1;
-
-        int h;
-        /* Stop if we reached the bottom of the stack */
-        for ( h=cards_num-2 ; h>-1 ; h--)
+        int num_true_seqs;
+        int h = get_seq_h(col, &num_true_seqs);
+        if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
         {
-            const fcs_card_t next_card = fcs_col_get_card(col, h);
-            /* If this is no longer a sequence - move to the next stack */
-            if (!fcs_is_ss_false_parent(next_card, card))
-            {
-                break;
-            }
-
-            if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
-            {
-                num_true_seqs++;
-            }
-
-            card = next_card;
+            continue;
         }
+        const fcs_card_t card = fcs_col_get_card(col, h);
 
         /* This means that the loop exited prematurely and the stack does
          * not contain a sequence. */
-        if ((h != -1)
+        if ((h > 0)
             || (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
         )
         {
@@ -345,7 +362,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
             my_copy_stack(stack_idx);
             my_copy_stack(ds);
 
-            fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+            fcs_move_sequence(ds, stack_idx, h, cards_num-1);
 
             sfs_check_state_end();
         }
@@ -1723,32 +1740,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             continue;
         }
 
-        fcs_card_t card = fcs_col_get_card(col,cards_num-1);
-        int num_true_seqs = 1;
-
-        int h;
-        /* Stop if we reached the bottom of the stack */
-        for ( h=cards_num-2 ; h>-1 ; h--)
-        {
-            const fcs_card_t next_card = fcs_col_get_card(col, h);
-            /* If this is no longer a sequence - move to the next stack */
-            if (!fcs_is_ss_false_parent(next_card, card))
-            {
-                break;
-            }
-
-            if (!fcs_suit_is_ss_true_parent(fcs_card_suit(next_card), fcs_card_suit(card)))
-            {
-                num_true_seqs++;
-            }
-
-            card = next_card;
-        }
-
+        int num_true_seqs;
+        int h = get_seq_h(col, &num_true_seqs);
         if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
         {
             continue;
         }
+        const fcs_card_t card = fcs_col_get_card(col, h);
 
         /* take the sequence and try and put it on another stack */
         for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
@@ -1779,7 +1777,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             my_copy_stack(stack_idx);
             my_copy_stack(ds);
 
-            fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+            fcs_move_sequence(ds, stack_idx, h, cards_num-1);
             sfs_check_state_end();
         }
     }
