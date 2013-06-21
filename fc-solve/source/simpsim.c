@@ -406,7 +406,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
      * */
     int cards_num, suit, a;
     fcs_card_t card, dest_card;
-    int rank, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK], h, ds, dest_cards_num ;
+    int rank, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK], h, dest_cards_num ;
     int dc;
     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
     int num_separate_false_seqs;
@@ -441,7 +441,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
         for(h=cards_num-2;h>=-1;h--)
         {
-            for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
+            for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
             {
                 if (ds == stack_idx)
                 {
@@ -660,7 +660,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 {
     int cards_num, suit, a;
     fcs_card_t card, dest_card;
-    int rank, num_true_seqs, ds, dest_cards_num ;
+    int rank, num_true_seqs, dest_cards_num ;
     int src_card_height, num_separate_false_seqs, above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
     int stacks_map[MAX_NUM_STACKS];
@@ -745,7 +745,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 seq_points[num_separate_false_seqs++] = above_c+1;
             }
 
-            for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
+            for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
             {
                 if (ds == stack_idx)
                 {
