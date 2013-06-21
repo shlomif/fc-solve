@@ -387,17 +387,17 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
             : wanted_suit_bit_opt(parent_card)
             );
 
-        fcs_card_t candidate_card = fc_solve_empty_card;
         fcs_card_t child_card = fc_solve_empty_card;
-        fcs_card_set_rank(candidate_card, fcs_card_rank(parent_card) - 1);
+        const int candidate_rank = fcs_card_rank(parent_card) - 1;
         for (int suit = (IS_BAKERS_DOZEN() ? 0 : ((fcs_card_suit(parent_card)&(0x1))^0x1) );
              suit < NUM_SUITS ;
              suit += (IS_BAKERS_DOZEN() ? 1 : 2)
             )
         {
-            fcs_card_set_suit(candidate_card, suit);
+            const fcs_card_t candidate_card =
+                fcs_make_card(candidate_rank, suit);
 
-            int opt = self->card_states[CARD_POS(candidate_card)];
+            const int opt = self->card_states[CARD_POS(candidate_card)];
 
             if (opt == wanted_opt)
             {
