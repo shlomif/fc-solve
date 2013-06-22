@@ -477,9 +477,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                      * up_above_card - the card at height above_c
                      *
                      * */
+                    int num_separate_false_seqs;
                     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
                     int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-                    int num_separate_false_seqs;
+
                     populate_seq_points(dest_col, dc, seq_points,
                         above_num_true_seqs, &num_separate_false_seqs);
 
@@ -666,8 +667,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
             /* Split the cards above it into false sequences */
 
             int num_separate_false_seqs;
-            int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
             int seq_points[MAX_NUM_CARDS_IN_A_STACK];
+            int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
 
             populate_seq_points(col, end_of_src_seq-1, seq_points,
                 above_num_true_seqs, &num_separate_false_seqs);
@@ -869,9 +870,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                     continue;
                 }
                 /* This is a suitable parent - let's check if there's a sequence above it. */
-                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-                int seq_points[MAX_NUM_CARDS_IN_A_STACK];
                 int num_separate_false_seqs;
+                int seq_points[MAX_NUM_CARDS_IN_A_STACK];
+                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
+
                 populate_seq_points(dest_col, dc, seq_points,
                     above_num_true_seqs, &num_separate_false_seqs);
 
@@ -1072,8 +1074,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 }
                 /* This is a suitable parent - let's check if there's a sequence above it. */
                 int num_separate_false_seqs;
-                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
                 int seq_points[MAX_NUM_CARDS_IN_A_STACK];
+                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
 
                 populate_seq_points(dest_col, dc, seq_points,
                     above_num_true_seqs, &num_separate_false_seqs);
@@ -1240,9 +1242,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                     end_of_child_seq++;
                 }
 
-                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
                 int num_separate_false_seqs;
                 int seq_points[MAX_NUM_CARDS_IN_A_STACK];
+                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
 
                 populate_seq_points(col, end_of_child_seq, seq_points,
                     above_num_true_seqs, &num_separate_false_seqs);
