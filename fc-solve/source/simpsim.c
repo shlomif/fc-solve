@@ -105,6 +105,18 @@ static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent
 #define STACK_DEST_LOOP_END() \
     } \
 
+#define DC_LOOP_START(offset, filter) \
+    for (int dc = dest_cards_num-offset ; dc >= 0 ; dc--) \
+    {   \
+        if (!filter(fcs_col_get_card(dest_col, dc), card)) \
+        { \
+            continue; \
+        } \
+
+
+#define DC_LOOP_END() \
+    }
+
 #ifndef HARD_CODED_NUM_STACKS
 #define SIMPS_SET_GAME_PARAMS() SET_GAME_PARAMS()
 #else
@@ -463,12 +475,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
             if (should_search)
             {
             STACK_DEST_LOOP_START(1)
-                for (int dc = dest_cards_num-1 ; dc >= 0 ; dc--)
-                {
-                    if (! fcs_is_ss_true_parent(fcs_col_get_card(dest_col, dc), card))
-                    {
-                        continue;
-                    }
+                DC_LOOP_START(1, fcs_is_ss_true_parent)
                     /* This is a suitable parent - let's check if there's a sequence above it. */
 
                     /*
@@ -611,7 +618,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                     fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
 
                     sfs_check_state_end();
-                }
+                DC_LOOP_END()
             STACK_DEST_LOOP_END()
             }
 
@@ -861,14 +868,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
             /* Start at the card below the top one, so we will
              * make sure there's at least some junk above it
              * */
-            for (int dc = dest_cards_num-2 ; dc >= 0 ; dc--)
-            {
-                if (!fcs_is_ss_true_parent(
-                        fcs_col_get_card(dest_col, dc), card)
-                    )
-                {
-                    continue;
-                }
+            DC_LOOP_START(2, fcs_is_ss_true_parent)
                 /* This is a suitable parent - let's check if there's a sequence above it. */
                 int num_separate_false_seqs;
                 int seq_points[MAX_NUM_CARDS_IN_A_STACK];
@@ -1019,7 +1019,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 fcs_move_sequence(ds, stack_idx, h, end_of_junk);
 
                 sfs_check_state_end();
-            }
+            DC_LOOP_END()
         STACK_DEST_LOOP_END()
     STACK_SOURCE_LOOP_END()
 
@@ -1066,12 +1066,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         fcs_card_t card = fcs_col_get_card(col, h);
 
         STACK_DEST_LOOP_START(1)
-            for (int dc = dest_cards_num-1 ; dc >= 0 ; dc--)
-            {
-                if (!fcs_is_ss_false_parent(fcs_col_get_card(dest_col, dc) ,card))
-                {
-                    continue;
-                }
+            DC_LOOP_START(1, fcs_is_ss_false_parent)
                 /* This is a suitable parent - let's check if there's a sequence above it. */
                 int num_separate_false_seqs;
                 int seq_points[MAX_NUM_CARDS_IN_A_STACK];
@@ -1177,7 +1172,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 fcs_move_sequence( ds, stack_idx, h, cards_num-1);
 
                 sfs_check_state_end();
-            }
+            DC_LOOP_END()
 #undef h
         STACK_DEST_LOOP_END()
     STACK_SOURCE_LOOP_END()
