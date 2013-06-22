@@ -869,6 +869,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
      *      wish to move.
      * */
     SIMPS_define_vacant_stacks_accessors();
+    CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
         int num_src_junk_true_seqs = 1;
@@ -902,7 +903,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
         /* Start at the card below the top one, so we will
          * make sure there's at least some junk above it
          * */
-        DS_DC_LOOP_START(2,2, fcs_is_ss_true_parent)
+        if (fcs_card_rank(card) < 13)
+        {
+            const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+            if (ds != stack_idx)
+            {
+                const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+                const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                const int dest_cards_num = fcs_col_len(dest_col);
+                if (dc <= dest_cards_num - 2)
+                {
             /* This is a suitable parent - let's check if there's a sequence above it. */
             int num_separate_false_seqs;
             int seq_points[MAX_NUM_CARDS_IN_A_STACK];
@@ -1000,15 +1010,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 junk_move_to_stacks[false_seq_index] = clear_junk_dest_stack;
             }
 
-            if (!(
+            if ((
                     (false_seq_index == num_separate_false_seqs+1)
                         &&
                 (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= num_true_seqs)
                 )
             )
             {
-                continue;
-            }
             /* We can do it - so let's move everything */
 
             sfs_check_state_begin();
@@ -1053,7 +1061,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
             fcs_move_sequence(ds, stack_idx, h, end_of_junk);
 
             sfs_check_state_end();
-        DS_DC_LOOP_END()
+                    }
+                }
+            }
+        }
     STACK_SOURCE_LOOP_END()
 
     return;
