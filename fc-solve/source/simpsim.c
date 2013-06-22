@@ -745,6 +745,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent)
 {
     SIMPS_define_vacant_stacks_accessors();
+    CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
         for (int src_card_height = cards_num-1 ; src_card_height >= 0 ; src_card_height--)
@@ -779,12 +780,22 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
             /* Split the cards above it into false sequences */
 
 
-            STACK_DEST_LOOP_START(1)
-                if (!fcs_is_ss_true_parent(fcs_col_get_card(dest_col, dest_cards_num-1), h_card))
-                {
-                    continue;
-                }
+            if (fcs_card_rank(h_card) == 13)
+            {
+                continue;
+            }
 
+            const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(h_card)+1, fcs_card_suit(h_card));
+            if (ds == stack_idx)
+            {
+                continue;
+            }
+            const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+            const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+            const int dest_cards_num = fcs_col_len(dest_col);
+
+            if (dc == dest_cards_num - 1)
+            {
                 /* This is a suitable parent - let's check if we
                  * have enough empty stacks to make the move feasible */
                 int num_separate_false_seqs;
@@ -794,7 +805,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 int junk_move_to_stacks[MAX_NUM_STACKS];
                 int after_junk_num_freestacks;
 
-                if (!
+                if (
                     (
                         POPULATE_AND_CHECK_IF_FALSE_SEQ(col, end_of_src_seq-1, stack_idx, ds, FALSE)
                         &&
@@ -802,8 +813,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                     )
                 )
                 {
-                    continue;
-                }
 
                 sfs_check_state_begin();
 
@@ -834,7 +843,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 fcs_move_sequence(ds, stack_idx, src_card_height, end_of_src_seq-1);
 
                 sfs_check_state_end();
-            STACK_DEST_LOOP_END()
+                }
+            }
         }
     STACK_SOURCE_LOOP_END()
 
