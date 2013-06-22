@@ -119,6 +119,17 @@ static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent
     SIMPS_define_accessors(); \
     fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks
 
+#define STACKS_MAP_LEN MAX_NUM_STACKS
+
+static GCC_INLINE void init_stacks_map(fcs_bool_t * const stacks_map, const int stack_idx, const int ds)
+{
+    for (int i=0 ; i < STACKS_MAP_LEN ; i++)
+    {
+        stacks_map[i] = FALSE;
+    }
+    stacks_map[stack_idx] = stacks_map[ds] = TRUE;
+}
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
     /*
@@ -460,13 +471,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                         seq_points[num_separate_false_seqs++] = above_c+1;
                     }
 
-                    fcs_bool_t stacks_map[MAX_NUM_STACKS];
-                    for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
-                    {
-                        stacks_map[a] = FALSE;
-                    }
-                    stacks_map[stack_idx] = TRUE;
-                    stacks_map[ds] = TRUE;
+                    fcs_bool_t stacks_map[STACKS_MAP_LEN];
+                    init_stacks_map(stacks_map, stack_idx, ds);
 
                     int after_junk_num_freestacks = num_vacant_stacks;
 
@@ -686,13 +692,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 /* This is a suitable parent - let's check if we
                  * have enough empty stacks to make the move feasible */
 
-                fcs_bool_t stacks_map[MAX_NUM_STACKS];
-                for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
-                {
-                    stacks_map[a] = FALSE;
-                }
-                stacks_map[stack_idx] = TRUE;
-                stacks_map[ds] = TRUE;
+                fcs_bool_t stacks_map[STACKS_MAP_LEN];
+                init_stacks_map(stacks_map, stack_idx, ds);
 
                 int after_junk_num_freestacks = num_vacant_stacks;
                 int junk_move_to_stacks[MAX_NUM_STACKS];
@@ -922,13 +923,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                     seq_points[num_separate_false_seqs++] = above_c+1;
                 }
 
-                fcs_bool_t stacks_map[MAX_NUM_STACKS];
-                for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
-                {
-                    stacks_map[a] = FALSE;
-                }
-                stacks_map[stack_idx] = TRUE;
-                stacks_map[ds] = TRUE;
+                fcs_bool_t stacks_map[STACKS_MAP_LEN];
+                init_stacks_map(stacks_map, stack_idx, ds);
 
                 int after_junk_num_freestacks = num_vacant_stacks;
 
@@ -1167,13 +1163,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                     seq_points[num_separate_false_seqs++] = above_c+1;
                 }
 
-                fcs_bool_t stacks_map[MAX_NUM_STACKS];
-                for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
-                {
-                    stacks_map[a] = FALSE;
-                }
-                stacks_map[stack_idx] = TRUE;
-                stacks_map[ds] = TRUE;
+                fcs_bool_t stacks_map[STACKS_MAP_LEN];
+                init_stacks_map(stacks_map, stack_idx, ds);
 
                 int junk_move_to_stacks[MAX_NUM_STACKS];
                 int false_seq_index;
@@ -1397,12 +1388,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                     }
                 }
 
-                fcs_bool_t stacks_map[MAX_NUM_STACKS];
-                for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
-                {
-                    stacks_map[a] = FALSE;
-                }
-                stacks_map[stack_idx] = TRUE;
+                fcs_bool_t stacks_map[STACKS_MAP_LEN];
+                init_stacks_map(stacks_map, stack_idx, stack_idx);
 
                 int after_junk_num_freestacks = num_vacant_stacks;
 
