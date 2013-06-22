@@ -666,7 +666,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 {
                     break;
                 }
-                if (fcs_card_suit(above_card) != fcs_card_suit(card))
+                if (!fcs_is_ss_suit_true(card, above_card))
                 {
                     num_true_seqs++;
                 }
@@ -1271,7 +1271,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                             seq_points[num_separate_false_seqs++] = above_c+1;
                             above_num_true_seqs[num_separate_false_seqs] = 1;
                         }
-                        above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
+                        above_num_true_seqs[num_separate_false_seqs] +=
+                            ! fcs_is_ss_suit_true(up_above_card, above_card);
                         above_card = up_above_card;
                     }
 
