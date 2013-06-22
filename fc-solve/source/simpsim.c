@@ -1239,69 +1239,20 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
                 int junk_move_to_stacks[MAX_NUM_STACKS];
 
-                int false_seq_index;
-                for (false_seq_index = 0 ;
-                    false_seq_index < num_separate_false_seqs ;
-                    false_seq_index++
-                    )
-                {
-                    /* Find a suitable place to put it */
-                    int clear_junk_dest_stack;
-
-                    /* Let's try to find a suitable parent on top one of the stacks */
-                    for(clear_junk_dest_stack=0;
-                        clear_junk_dest_stack < LOCAL_STACKS_NUM;
-                        clear_junk_dest_stack++
-                       )
-                    {
-                        int clear_junk_stack_len;
-                        const fcs_cards_column_t clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                        clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
-
-                        if ((clear_junk_stack_len > 0) && (! stacks_map[clear_junk_dest_stack]))
-                        {
-                            fcs_card_t clear_junk_dest_card;
-
-                            clear_junk_dest_card = fcs_col_get_card(clear_junk_dest_col, clear_junk_stack_len-1);
-                            if (fcs_is_ss_false_parent(clear_junk_dest_card, fcs_col_get_card(col, seq_points[false_seq_index])))
-                            {
-                                if (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= above_num_true_seqs[false_seq_index])
-                                {
-                                    stacks_map[clear_junk_dest_stack] = TRUE;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
-                    {
-                        /* Check if there is a vacant stack */
-                        if (!((num_vacant_stacks > 0)
-                            &&
-                            (calc_max_simple_simon_seq_move(after_junk_num_freestacks-1) >= above_num_true_seqs[false_seq_index]))
-                        )
-                        {
-                            break;
-                        }
-                        /* Find an empty stack and designate it as the destination for the junk */
-                        for(
-                            clear_junk_dest_stack = 0;
-                            clear_junk_dest_stack < LOCAL_STACKS_NUM;
-                            clear_junk_dest_stack++
-                           )
-                        {
-                            const fcs_cards_column_t clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                            if ((fcs_col_len(clear_junk_dest_col) == 0) && (! stacks_map[clear_junk_dest_stack]))
-                            {
-                                stacks_map[clear_junk_dest_stack] = TRUE;
-                                break;
-                            }
-                        }
-                        after_junk_num_freestacks--;
-                    }
-                    junk_move_to_stacks[false_seq_index] = clear_junk_dest_stack;
-                }
+                const int false_seq_index = false_seq_index_loop(
+                    soft_thread,
+                    instance,
+                    raw_ptr_state_raw,
+                    num_vacant_stacks,
+                    col,
+                    num_separate_false_seqs,
+                    seq_points,
+                    stacks_map,
+                    above_num_true_seqs,
+                    junk_move_to_stacks,
+                    &after_junk_num_freestacks,
+                    FALSE
+                );
 
                 /* Let's check if we can move the child after we are done
                  * moving all the junk cards */
