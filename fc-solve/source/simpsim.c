@@ -151,6 +151,50 @@ static GCC_INLINE void init_stacks_map(fcs_bool_t * const stacks_map, const int 
     stacks_map[stack_idx] = stacks_map[ds] = TRUE;
 }
 
+static char * get_the_positions_by_rank_data__ss_generator(
+    fc_solve_soft_thread_t * const soft_thread,
+    const fcs_state_t * const the_state
+)
+{
+    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+    SET_GAME_PARAMS();
+
+#define FCS_SS_POS_BY_RANK_WIDTH (13+1)
+#define FCS_SS_CELL_WIDTH 2
+#define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * FCS_SS_CELL_WIDTH * 4 )
+#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
+#define FCS_POS_COL(positions_by_rank, rank, suit) positions_by_rank[((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank)) * FCS_SS_CELL_WIDTH]
+#define FCS_POS_HEIGHT(positions_by_rank, rank, suit) positions_by_rank[((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank)) * FCS_SS_CELL_WIDTH + 1]
+
+    char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
+
+    memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
+    for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
+    {
+        const fcs_cards_column_t dest_col = fcs_state_get_col(*the_state, ds);
+        const int dest_cards_num = fcs_col_len(dest_col);
+
+        for (int dc = 0 ; dc < dest_cards_num ; dc++)
+        {
+            const fcs_card_t card = fcs_col_get_card(dest_col, dc);
+            const int suit = fcs_card_suit(card);
+            const int rank = fcs_card_rank(card);
+            FCS_POS_COL(positions_by_rank, rank, suit) = ds;
+            FCS_POS_HEIGHT(positions_by_rank, rank, suit) = dc;
+        }
+    }
+
+    return positions_by_rank;
+}
+
+#define CALC_POSITIONS_BY_RANK() \
+    char * positions_by_rank = \
+        fc_solve_get_the_positions_by_rank_data( \
+            soft_thread, \
+            ptr_state_key, \
+            get_the_positions_by_rank_data__ss_generator \
+        )
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
     /*
@@ -237,6 +281,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 
     SIMPS_define_vacant_stacks_accessors();
 
+    CALC_POSITIONS_BY_RANK();
+
     STACK_SOURCE_LOOP_START(1)
         /* Loop on the cards in the stack and try to look for a true
          * parent on top one of the stacks */
@@ -245,25 +291,34 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 
         for (int h=cards_num-2 ; h>=-1 ; h--)
         {
-            STACK_DEST_LOOP_START(1)
-                if (! fcs_is_ss_true_parent(fcs_col_get_card(dest_col, dest_cards_num-1), card))
+            if (fcs_card_rank(card) < 13)
+            {
+                const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+                /* ds cannot be -1 because the whole sequence did not move. */
+                if (ds != stack_idx)
                 {
-                    continue;
+                    const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+
+                    const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                    const int dest_cards_num = fcs_col_len(dest_col);
+
+                    if (dc == dest_cards_num - 1)
+                    {
+                        /* This is a suitable parent - let's check if we
+                         * have enough empty stacks to make the move feasible */
+                        /* We can do it - so let's move */
+
+                        sfs_check_state_begin();
+
+                        my_copy_stack(stack_idx);
+                        my_copy_stack(ds);
+
+
+                        fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+                        sfs_check_state_end();
+                    }
                 }
-
-                /* This is a suitable parent - let's check if we
-                 * have enough empty stacks to make the move feasible */
-                /* We can do it - so let's move */
-
-                sfs_check_state_begin();
-
-                my_copy_stack(stack_idx);
-                my_copy_stack(ds);
-
-
-                fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
-                sfs_check_state_end();
-            STACK_DEST_LOOP_END()
+            }
 
             /* Stop if we reached the bottom of the stack */
             if (h == -1)
