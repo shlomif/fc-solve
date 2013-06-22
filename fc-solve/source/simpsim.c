@@ -1080,6 +1080,30 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
     return;
 }
 
+typedef struct {
+    int ds;
+    int dc;
+} ds_dc_t;
+
+static GCC_INLINE void sort_ds_dcs(
+    ds_dc_t * ds_dcs,
+    const int len
+)
+{
+    ds_dc_t * start = ds_dcs;
+    ds_dc_t * limit = start + len;
+
+    for (ds_dc_t * b = start+1 ; b < limit ; b++)
+    {
+        for (ds_dc_t * c = b ; (c > start) && (c[0].ds < c[-1].ds || (c[0].ds == c[-1].ds && c[0].dc > c[-1].dc)); c--)
+        {
+            ds_dc_t temp = c[-1];
+            c[-1] = c[0];
+            c[0] = temp;
+        }
+    }
+}
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above)
 {
     /*
@@ -1109,6 +1133,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
      *
      * */
     SIMPS_define_vacant_stacks_accessors();
+    CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
         int num_true_seqs;
@@ -1119,7 +1144,36 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 #define h 0
         fcs_card_t card = fcs_col_get_card(col, h);
 
-        DS_DC_LOOP_START(1,1, fcs_is_ss_false_parent)
+        if (fcs_card_rank(card) == 13)
+        {
+            continue;
+        }
+        ds_dc_t ds_dcs[4];
+        int len = 0;
+        for (int parent_suit = 0; parent_suit < 4 ; parent_suit++)
+        {
+            const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(card)+1, parent_suit);
+            if ((ds < 0) || (ds == stack_idx))
+            {
+                continue;
+            }
+            const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, parent_suit);
+
+            ds_dcs[len].ds = ds;
+            ds_dcs[len].dc = dc;
+            len++;
+        }
+
+        /* This is done to preserve the original order in the solutions. */
+        sort_ds_dcs(ds_dcs, len);
+
+        for (int i=0 ; i < len ; i++)
+        {
+            const int ds = ds_dcs[i].ds;
+            const int dc = ds_dcs[i].dc;
+            const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+            const int dest_cards_num = fcs_col_len(dest_col);
+
             /* This is a suitable parent - let's check if there's a sequence above it. */
             int num_separate_false_seqs;
             int seq_points[MAX_NUM_CARDS_IN_A_STACK];
@@ -1173,7 +1227,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
             sfs_check_state_end();
 #undef h
-        DS_DC_LOOP_END()
+        }
     STACK_SOURCE_LOOP_END()
 
     return;
@@ -1367,6 +1421,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     STACK_SOURCE_LOOP_START(1)
         int num_true_seqs;
         int h = get_seq_h(col, &num_true_seqs);
+        /* Let's check if we have enough empty stacks to make the move
+         * feasible.
+         * */
         if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
         {
             continue;
@@ -1375,8 +1432,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 
         /* take the sequence and try and put it on another stack */
         STACK_DEST_LOOP_START(1)
-            /* If this is a suitable parent - let's check if we
-             * have enough empty stacks to make the move feasible */
             if (!fcs_is_ss_false_parent(
                         fcs_col_get_card( dest_col, dest_cards_num-1),
                         card
