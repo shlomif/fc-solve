@@ -445,6 +445,12 @@ static GCC_INLINE const int false_seq_index_loop(
     {
         /* Find a suitable place to put it */
         int clear_junk_dest_stack;
+        const fcs_card_t the_card =
+            (fcs_col_get_card(col, seq_points[false_seq_index]))
+            ;
+        const int the_num_true_seqs =
+            above_num_true_seqs[false_seq_index];
+
         /* Let's try to find a suitable parent on top one of the stacks */
         for(clear_junk_dest_stack=0;
             clear_junk_dest_stack < LOCAL_STACKS_NUM;
@@ -460,9 +466,9 @@ static GCC_INLINE const int false_seq_index_loop(
             }
 
             const fcs_card_t clear_junk_dest_card = fcs_col_get_card(clear_junk_dest_col, clear_junk_stack_len-1);
-            if (fcs_is_ss_false_parent(clear_junk_dest_card, fcs_col_get_card(col, seq_points[false_seq_index])))
+            if (fcs_is_ss_false_parent(clear_junk_dest_card, the_card))
             {
-                if (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= above_num_true_seqs[false_seq_index])
+                if (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= the_num_true_seqs)
                 {
                     stacks_map[clear_junk_dest_stack] = TRUE;
                     break;
@@ -477,7 +483,7 @@ static GCC_INLINE const int false_seq_index_loop(
                 (
                     (num_vacant_stacks > 0)
                     &&
-                    (calc_max_simple_simon_seq_move(after_junk_num_freestacks-1) >= above_num_true_seqs[false_seq_index])
+                    (calc_max_simple_simon_seq_move(after_junk_num_freestacks-1) >= the_num_true_seqs)
                 )
             )
             {
@@ -1065,12 +1071,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 /* Find a suitable place to put it */
                 int clear_junk_dest_stack;
 
-                fcs_card_t the_card =
+                const fcs_card_t the_card =
                     (fcs_col_get_card(dest_col, seq_points[false_seq_index]))
                     ;
 
-
-                int the_num_true_seqs =
+                const int the_num_true_seqs =
                     above_num_true_seqs[false_seq_index];
 
 
