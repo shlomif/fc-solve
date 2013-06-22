@@ -611,9 +611,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                     fcs_bool_t stacks_map[STACKS_MAP_LEN];
                     init_stacks_map(stacks_map, stack_idx, ds);
 
+                    int junk_move_to_stacks[MAX_NUM_STACKS];
                     int after_junk_num_freestacks;
 
-                    int junk_move_to_stacks[MAX_NUM_STACKS];
                     if (!
                         (
                             IS_false_seq_index_loop(dest_col, FALSE)
@@ -713,12 +713,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
             /* Split the cards above it into false sequences */
 
-            int num_separate_false_seqs;
-            int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-            int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-
-            populate_seq_points(col, end_of_src_seq-1, seq_points,
-                above_num_true_seqs, &num_separate_false_seqs);
 
             STACK_DEST_LOOP_START(1)
                 if (!fcs_is_ss_true_parent(fcs_col_get_card(dest_col, dest_cards_num-1), h_card))
@@ -728,12 +722,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
                 /* This is a suitable parent - let's check if we
                  * have enough empty stacks to make the move feasible */
+                int num_separate_false_seqs;
+                int seq_points[MAX_NUM_CARDS_IN_A_STACK];
+                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
+
+                populate_seq_points(col, end_of_src_seq-1, seq_points,
+                    above_num_true_seqs, &num_separate_false_seqs);
 
                 fcs_bool_t stacks_map[STACKS_MAP_LEN];
                 init_stacks_map(stacks_map, stack_idx, ds);
 
-                int after_junk_num_freestacks;
                 int junk_move_to_stacks[MAX_NUM_STACKS];
+                int after_junk_num_freestacks;
 
                 if (!
                     (
@@ -1207,9 +1207,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                 fcs_bool_t stacks_map[STACKS_MAP_LEN];
                 init_stacks_map(stacks_map, stack_idx, stack_idx);
 
-                int after_junk_num_freestacks = num_vacant_stacks;
-
                 int junk_move_to_stacks[MAX_NUM_STACKS];
+                int after_junk_num_freestacks;
 
                 /* Let's check if we can move the child after we are done
                  * moving all the junk cards */
