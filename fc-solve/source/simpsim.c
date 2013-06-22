@@ -1263,34 +1263,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                 }
 
                 int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-                int num_separate_false_seqs = 0;
-                above_num_true_seqs[num_separate_false_seqs] = 1;
+                int num_separate_false_seqs;
                 int seq_points[MAX_NUM_CARDS_IN_A_STACK];
 
-                fcs_card_t above_card = fcs_col_get_card(col, cards_num-1);
-
-                {
-                    int above_c;
-                    for(above_c = cards_num-2;
-                        above_c > end_of_child_seq ;
-                        above_c--
-                    )
-                    {
-                        const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
-                        if (! fcs_is_ss_false_parent(up_above_card, above_card))
-                        {
-                            seq_points[num_separate_false_seqs++] = above_c+1;
-                            above_num_true_seqs[num_separate_false_seqs] = 1;
-                        }
-                        above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
-                        above_card = up_above_card;
-                    }
-
-                    if (end_of_child_seq < cards_num - 1)
-                    {
-                        seq_points[num_separate_false_seqs++] = above_c+1;
-                    }
-                }
+                populate_seq_points(col, end_of_child_seq, seq_points,
+                    above_num_true_seqs, &num_separate_false_seqs);
 
                 /* Add the child to the seq_points */
                 int child_seq_index = num_separate_false_seqs;
@@ -1299,7 +1276,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
                 /* Add the cards between the parent and the child to the seq_points */
 
-                above_card = fcs_col_get_card(col, child_card_height-1);
+                fcs_card_t above_card = fcs_col_get_card(col, child_card_height-1);
                 above_num_true_seqs[num_separate_false_seqs] = 1;
 
                 {
