@@ -623,6 +623,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
      * */
 
     SIMPS_define_vacant_stacks_accessors();
+    CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
         fcs_card_t card = fcs_col_get_card(col, cards_num-1);
@@ -655,7 +656,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
             }
             if (should_search)
             {
-                DS_DC_LOOP_START(1,1, fcs_is_ss_true_parent)
+                if (fcs_card_rank(card) < 13)
+                {
+                    const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+                    if (ds != stack_idx)
+                    {
+                    const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+                    const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                    const int dest_cards_num = fcs_col_len(dest_col);
                     /* This is a suitable parent - let's check if there's a sequence above it. */
 
                     /*
@@ -671,7 +679,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                     int junk_move_to_stacks[MAX_NUM_STACKS];
                     int after_junk_num_freestacks;
 
-                    if (!
+                    if (
                         (
                             POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, dc, stack_idx, ds, FALSE)
                                 &&
@@ -679,8 +687,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                         )
                     )
                     {
-                        continue;
-                    }
                     /*
                      * We can do it - so let's move everything.
                      * Notice that we only put the child in a different stack
@@ -716,7 +722,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                     fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
 
                     sfs_check_state_end();
-                DS_DC_LOOP_END()
+                    }
+                    }
+                }
             }
 
             if (should_break)
