@@ -22,6 +22,8 @@ fi
 
 max_iters="${MAX_ITERS:-1500000}"
 
+export FREECELL_SOLVER_QUIET=1
+
 seq "$start" "$end" |  \
 (while read deal ; do
     echo "${deal}:"
