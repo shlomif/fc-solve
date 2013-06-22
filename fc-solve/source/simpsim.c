@@ -965,16 +965,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 
             /* Move the junk cards to their place */
 
-            for(false_seq_index=0;
-                false_seq_index<num_separate_false_seqs+1;
-                false_seq_index++
-                )
+            for (int seq_index = 0;
+                seq_index < num_separate_false_seqs+1;
+                seq_index++
+            )
             {
                 int start;
                 int end;
                 int src_stack;
 
-                if (false_seq_index == num_separate_false_seqs)
+                if (seq_index == num_separate_false_seqs)
                 {
                     start = end_of_junk+1;
                     end = cards_num-1;
@@ -982,14 +982,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 }
                 else
                 {
-                    start = seq_points[false_seq_index];
-                    end = ((false_seq_index == 0) ? (dest_cards_num-1) : (seq_points[false_seq_index-1]-1));
+                    start = seq_points[seq_index];
+                    end = ((seq_index == 0) ? (dest_cards_num-1) : (seq_points[seq_index-1]-1));
                     src_stack = ds;
                 }
 
                 my_copy_stack(src_stack);
 
-                const int dest_index = junk_move_to_stacks[false_seq_index];
+                const int dest_index = junk_move_to_stacks[seq_index];
                 my_copy_stack(dest_index);
 
                 fcs_move_sequence(dest_index, src_stack, start, end);
