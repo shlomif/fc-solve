@@ -1101,7 +1101,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
     STACK_SOURCE_LOOP_START(3)
         /* Search for a parent card */
-        for(int parent_card_height = 0 ; parent_card_height < cards_num-1 ; parent_card_height++)
+        for(int parent_card_height = 0 ; parent_card_height < cards_num-2 ; parent_card_height++)
         {
             const fcs_card_t parent_card
                 = fcs_col_get_card(col, parent_card_height);
