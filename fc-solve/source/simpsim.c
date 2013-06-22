@@ -880,20 +880,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                     continue;
                 }
                 /* This is a suitable parent - let's check if there's a sequence above it. */
-                int above_c;
-                fcs_card_t above_card, up_above_card;
-
                 int num_separate_false_seqs = 0;
-                above_card = fcs_col_get_card(dest_col, dest_cards_num-1);
+                fcs_card_t above_card = fcs_col_get_card(dest_col, dest_cards_num-1);
                 int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
                 int seq_points[MAX_NUM_CARDS_IN_A_STACK];
                 above_num_true_seqs[num_separate_false_seqs] = 1;
-                for(above_c = dest_cards_num-2 ;
-                    above_c > dc ;
-                    above_c--
-                    )
+                for (int above_c = dest_cards_num-2 ; above_c > dc ; above_c--)
                 {
-                    up_above_card = fcs_col_get_card(dest_col, above_c);
+                    const fcs_card_t up_above_card
+                        = fcs_col_get_card(dest_col, above_c);
                     if (! fcs_is_ss_false_parent(up_above_card, above_card))
                     {
                         seq_points[num_separate_false_seqs++] = above_c+1;
@@ -904,10 +899,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                     above_card = up_above_card;
                 }
 
-                if (dc < dest_cards_num - 1)
-                {
-                    seq_points[num_separate_false_seqs++] = above_c+1;
-                }
+                seq_points[num_separate_false_seqs++] = dc+1;
 
                 fcs_bool_t stacks_map[STACKS_MAP_LEN];
                 init_stacks_map(stacks_map, stack_idx, ds);
