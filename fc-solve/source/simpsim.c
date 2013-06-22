@@ -513,6 +513,22 @@ static GCC_INLINE const int false_seq_index_loop(
     return false_seq_index;
 }
 
+#define IS_false_seq_index_loop(col, behavior_flag) \
+    (false_seq_index_loop( \
+        soft_thread, \
+        instance, \
+        raw_ptr_state_raw, \
+        num_vacant_stacks, \
+        col, \
+        num_separate_false_seqs, \
+        seq_points, \
+        stacks_map, \
+        above_num_true_seqs, \
+        junk_move_to_stacks, \
+        &after_junk_num_freestacks, \
+        behavior_flag \
+    ) == num_separate_false_seqs) \
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above)
 {
     /*
@@ -598,24 +614,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                     int after_junk_num_freestacks;
 
                     int junk_move_to_stacks[MAX_NUM_STACKS];
-                    const int false_seq_index = false_seq_index_loop(
-                        soft_thread,
-                        instance,
-                        raw_ptr_state_raw,
-                        num_vacant_stacks,
-                        dest_col,
-                        num_separate_false_seqs,
-                        seq_points,
-                        stacks_map,
-                        above_num_true_seqs,
-                        junk_move_to_stacks,
-                        &after_junk_num_freestacks,
-                        FALSE
-                    );
-
                     if (!
                         (
-                            (false_seq_index == num_separate_false_seqs)
+                            IS_false_seq_index_loop(dest_col, FALSE)
                                 &&
                                 (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= num_true_seqs)
                         )
@@ -734,24 +735,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 int after_junk_num_freestacks;
                 int junk_move_to_stacks[MAX_NUM_STACKS];
 
-                const int false_seq_index = false_seq_index_loop(
-                    soft_thread,
-                    instance,
-                    raw_ptr_state_raw,
-                    num_vacant_stacks,
-                    col,
-                    num_separate_false_seqs,
-                    seq_points,
-                    stacks_map,
-                    above_num_true_seqs,
-                    junk_move_to_stacks,
-                    &after_junk_num_freestacks,
-                    FALSE
-                );
-
                 if (!
                     (
-                        (false_seq_index == num_separate_false_seqs)
+                        IS_false_seq_index_loop(col, FALSE)
                         &&
                         (calc_max_simple_simon_seq_move(after_junk_num_freestacks) > num_true_seqs)
                     )
@@ -1067,22 +1053,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
             int junk_move_to_stacks[MAX_NUM_STACKS];
             int after_junk_num_freestacks;
-            const int false_seq_index = false_seq_index_loop(
-                soft_thread,
-                instance,
-                raw_ptr_state_raw,
-                num_vacant_stacks,
-                dest_col,
-                num_separate_false_seqs,
-                seq_points,
-                stacks_map,
-                above_num_true_seqs,
-                junk_move_to_stacks,
-                &after_junk_num_freestacks,
-                TRUE
-            );
 
-            if (false_seq_index != num_separate_false_seqs)
+            if (! IS_false_seq_index_loop(dest_col, TRUE))
             {
                 continue;
             }
@@ -1239,26 +1211,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
 
                 int junk_move_to_stacks[MAX_NUM_STACKS];
 
-                const int false_seq_index = false_seq_index_loop(
-                    soft_thread,
-                    instance,
-                    raw_ptr_state_raw,
-                    num_vacant_stacks,
-                    col,
-                    num_separate_false_seqs,
-                    seq_points,
-                    stacks_map,
-                    above_num_true_seqs,
-                    junk_move_to_stacks,
-                    &after_junk_num_freestacks,
-                    FALSE
-                );
-
                 /* Let's check if we can move the child after we are done
                  * moving all the junk cards */
                 if (!
                     (
-                        (false_seq_index == num_separate_false_seqs)
+                        IS_false_seq_index_loop(col, FALSE)
                         &&
                         (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= child_num_true_seqs)
                     )
