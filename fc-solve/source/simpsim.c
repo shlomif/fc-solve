@@ -1222,7 +1222,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                     above_num_true_seqs, &num_separate_false_seqs);
 
                 /* Add the child to the seq_points */
-                int child_seq_index = num_separate_false_seqs;
+                const int child_seq_index = num_separate_false_seqs;
                 above_num_true_seqs[num_separate_false_seqs] = child_num_true_seqs;
                 seq_points[num_separate_false_seqs++] = child_card_height;
 
