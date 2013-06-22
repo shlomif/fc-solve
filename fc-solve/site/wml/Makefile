@@ -59,7 +59,7 @@ DEST_QSTRING_JS = dest/js/jquery.querystring.js
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
 
-dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_QSTRING_JS) $(CSS_TARGETS)
+dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_QSTRING_JS) $(CSS_TARGETS) htaccesses_target
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
@@ -119,6 +119,13 @@ $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN): $(LIBFREECELL_SOLVER_JS)
 # Build index.html pages for the appropriate sub-directories.
 $(INDEXES) :: $(D)/%/index.html : src/% gen_index.pl
 	perl gen_index.pl $< $@
+
+ALL_HTACCESSES = $(D)/.htaccess
+
+htaccesses_target: $(ALL_HTACCESSES)
+
+$(ALL_HTACCESSES): $(D)/%.htaccess: src/%my_htaccess.conf
+	cp -f $< $@
 
 upload: all
 	$(RSYNC) $(D)/ hostgator:domains/fc-solve/public_html
