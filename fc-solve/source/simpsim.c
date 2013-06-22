@@ -839,31 +839,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
     SIMPS_define_vacant_stacks_accessors();
 
     STACK_SOURCE_LOOP_START(1)
-        fcs_card_t card = fcs_col_get_card(col, cards_num-1);
         int num_src_junk_true_seqs = 1;
 
-        int h;
-        for(h=cards_num-2;h>-1;h--)
-        {
-            const fcs_card_t next_card = fcs_col_get_card(col, h);
-            if (!fcs_is_ss_false_parent(next_card, card))
-            {
-                card = next_card;
-                break;
-            }
-            if (!fcs_is_ss_suit_true(next_card, card))
-            {
-                num_src_junk_true_seqs++;
-            }
-            card = next_card;
-        }
-
-        if (h == -1)
+        int h = get_seq_h(col, &num_src_junk_true_seqs);
+        if (! h)
         {
             continue;
         }
 
-        const int end_of_junk = h;
+        fcs_card_t card = fcs_col_get_card(col, h);
+
+        const int end_of_junk = (--h);
         int num_true_seqs = 1;
 
         for(;h>-1;h--)
@@ -1103,28 +1089,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     SIMPS_define_vacant_stacks_accessors();
 
     STACK_SOURCE_LOOP_START(1)
-        fcs_card_t card = fcs_col_get_card(col, cards_num-1);
-        int num_true_seqs = 1;
-
-        int h;
-        for ( h=cards_num-2 ; h>-1 ; h--)
-        {
-            const fcs_card_t next_card = fcs_col_get_card(col, h);
-            if (!fcs_is_ss_false_parent(next_card, card))
-            {
-                card = next_card;
-                break;
-            }
-            if (!fcs_is_ss_suit_true(next_card, card))
-            {
-                num_true_seqs++;
-            }
-            card = next_card;
-        }
-        if (h != -1)
+        int num_true_seqs;
+        if (get_seq_h(col, &num_true_seqs))
         {
             continue;
         }
+#define h 0
+        fcs_card_t card = fcs_col_get_card(col, h);
 
         STACK_DEST_LOOP_START(1)
             for (int dc = dest_cards_num-1 ; dc >= 0 ; dc--)
@@ -1257,10 +1228,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                     );
                 }
 
-                fcs_move_sequence( ds, stack_idx, h+1, cards_num-1);
+                fcs_move_sequence( ds, stack_idx, h, cards_num-1);
 
                 sfs_check_state_end();
             }
+#undef h
         STACK_DEST_LOOP_END()
     STACK_SOURCE_LOOP_END()
 
