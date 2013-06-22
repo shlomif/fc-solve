@@ -665,35 +665,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
             /* Split the cards above it into false sequences */
 
-            int num_separate_false_seqs = 0;
+            int num_separate_false_seqs;
             int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-            above_num_true_seqs[num_separate_false_seqs] = 1;
-
-            fcs_card_t above_card = fcs_col_get_card(col, cards_num-1);
-
             int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-            {
-                int above_c;
-                for(above_c = cards_num-2 ;
-                    above_c > end_of_src_seq-1 ;
-                    above_c--
-                )
-                {
-                    const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
-                    if (! fcs_is_ss_false_parent(up_above_card, above_card))
-                    {
-                        seq_points[num_separate_false_seqs++] = above_c+1;
-                        above_num_true_seqs[num_separate_false_seqs] = 1;
-                    }
-                    above_num_true_seqs[num_separate_false_seqs] += ! (fcs_card_suit(up_above_card) == fcs_card_suit(above_card));
-                    above_card = up_above_card;
-                }
 
-                if (end_of_src_seq-1 < cards_num-1)
-                {
-                    seq_points[num_separate_false_seqs++] = above_c+1;
-                }
-            }
+            populate_seq_points(col, end_of_src_seq-1, seq_points,
+                above_num_true_seqs, &num_separate_false_seqs);
 
             STACK_DEST_LOOP_START(1)
                 if (!fcs_is_ss_true_parent(fcs_col_get_card(dest_col, dest_cards_num-1), h_card))
