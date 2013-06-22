@@ -1317,13 +1317,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                  * the child card.
                  * */
 
-                fcs_bool_t stacks_map[MAX_NUM_STACKS];
-                int junk_move_to_stacks[MAX_NUM_STACKS];
-
-                int child_num_true_seqs;
-
                 int end_of_child_seq = child_card_height;
-                child_num_true_seqs = 1;
+                int child_num_true_seqs = 1;
                 while ((end_of_child_seq+1 < cards_num) &&
                       fcs_is_ss_false_parent(
                             fcs_col_get_card(col, end_of_child_seq),
@@ -1402,8 +1397,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                     }
                 }
 
-
-
+                fcs_bool_t stacks_map[MAX_NUM_STACKS];
                 for (int a=0 ; a < LOCAL_STACKS_NUM ; a++)
                 {
                     stacks_map[a] = FALSE;
@@ -1411,6 +1405,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                 stacks_map[stack_idx] = TRUE;
 
                 int after_junk_num_freestacks = num_vacant_stacks;
+
+                int junk_move_to_stacks[MAX_NUM_STACKS];
 
                 int false_seq_index;
                 for (false_seq_index = 0 ;
