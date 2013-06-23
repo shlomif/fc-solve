@@ -498,7 +498,7 @@ static GCC_INLINE void populate_seq_points(
     generic_populate_seq_points(dest_col, dc, seq_points, above_num_true_seqs, num_separate_false_seqs_out_ptr, fcs_col_len(dest_col));
 }
 
-static GCC_INLINE const fcs_bool_t false_seq_index_loop(
+static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
     fc_solve_soft_thread_t * const soft_thread,
     fc_solve_instance_t * const instance,
     fcs_kv_state_t * const raw_ptr_state_raw,
@@ -511,7 +511,10 @@ static GCC_INLINE const fcs_bool_t false_seq_index_loop(
     int * const above_num_true_seqs,
     int * const junk_move_to_stacks,
     int * const after_junk_num_freestacks_ptr,
-    const fcs_bool_t behaviour_flag
+    const fcs_bool_t behaviour_flag,
+    const fcs_bool_t should_src_col,
+    const fcs_card_t src_card,
+    const int num_src_junk_true_seqs
     )
 {
     SIMPS_SET_GAME_PARAMS();
@@ -521,20 +524,30 @@ static GCC_INLINE const fcs_bool_t false_seq_index_loop(
 
     int false_seq_index;
     int after_junk_num_freestacks = num_vacant_stacks;
+    const int false_seq_index_limit
+        = num_separate_false_seqs + (should_src_col ? 1 : 0);
 
     for (false_seq_index = 0 ;
-        false_seq_index < num_separate_false_seqs ;
+        false_seq_index < false_seq_index_limit ;
         false_seq_index++)
     {
         /* Find a suitable place to put it */
-        int clear_junk_dest_stack;
         const fcs_card_t the_card =
+        (
+            (false_seq_index == num_separate_false_seqs) ?
+            src_card :
             (fcs_col_get_card(col, seq_points[false_seq_index]))
-            ;
+        );
+
         const int the_num_true_seqs =
-            above_num_true_seqs[false_seq_index];
+        (
+            (false_seq_index == num_separate_false_seqs) ?
+            num_src_junk_true_seqs :
+            above_num_true_seqs[false_seq_index]
+        );
 
         /* Let's try to find a suitable parent on top one of the stacks */
+        int clear_junk_dest_stack;
         for(clear_junk_dest_stack=0;
             clear_junk_dest_stack < LOCAL_STACKS_NUM;
             clear_junk_dest_stack++
@@ -592,7 +605,34 @@ static GCC_INLINE const fcs_bool_t false_seq_index_loop(
     }
 
     *after_junk_num_freestacks_ptr = after_junk_num_freestacks;
-    return (false_seq_index == num_separate_false_seqs);
+    return (false_seq_index == false_seq_index_limit);
+}
+
+static GCC_INLINE const fcs_bool_t false_seq_index_loop(
+    fc_solve_soft_thread_t * const soft_thread,
+    fc_solve_instance_t * const instance,
+    fcs_kv_state_t * const raw_ptr_state_raw,
+    int num_vacant_stacks,
+    const fcs_cards_column_t col,
+    const int num_separate_false_seqs,
+    int * const seq_points,
+    const int stack_idx,
+    const int ds,
+    int * const above_num_true_seqs,
+    int * const junk_move_to_stacks,
+    int * const after_junk_num_freestacks_ptr,
+    const fcs_bool_t behaviour_flag
+    )
+{
+    return generic_false_seq_index_loop(
+        soft_thread, instance, raw_ptr_state_raw, num_vacant_stacks,
+        col, num_separate_false_seqs, seq_points, stack_idx, ds,
+        above_num_true_seqs, junk_move_to_stacks,
+        after_junk_num_freestacks_ptr,
+        behaviour_flag,
+        /* Params that should be ignored in this case. */
+        FALSE, fc_solve_empty_card, 0
+    );
 }
 
 #define IS_false_seq_index_loop(col, behavior_flag, stack_idx, ds) \
@@ -924,100 +964,23 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
             populate_seq_points(dest_col, dc, seq_points,
                 above_num_true_seqs, &num_separate_false_seqs);
 
-            fcs_bool_t stacks_map[STACKS_MAP_LEN];
-            init_stacks_map(stacks_map, stack_idx, ds);
-
-            int after_junk_num_freestacks = num_vacant_stacks;
+            int after_junk_num_freestacks;
 
             int junk_move_to_stacks[MAX_NUM_STACKS];
-            int false_seq_index;
-            for (false_seq_index = 0 ;
-                false_seq_index < num_separate_false_seqs+1 ;
-                false_seq_index++)
-            {
-                /* Find a suitable place to put it */
 
-                fcs_card_t the_card =
-                (
-                    (fcs_card_t)
-                    (
-                        (false_seq_index == num_separate_false_seqs) ?
-                            (fcs_col_get_card(col, end_of_junk+1)) :
-                            (fcs_col_get_card(dest_col, seq_points[false_seq_index]))
-                    )
-                )
-                ;
+            const fcs_bool_t verdict = generic_false_seq_index_loop(
+                soft_thread, instance, raw_ptr_state_raw, num_vacant_stacks,
+                dest_col, num_separate_false_seqs, seq_points, stack_idx,
+                ds, above_num_true_seqs, junk_move_to_stacks,
+                &after_junk_num_freestacks, FALSE,
+                TRUE, fcs_col_get_card(col, end_of_junk+1),
+                num_src_junk_true_seqs
+            );
 
-                int the_num_true_seqs =
-                    (
-                        (false_seq_index == num_separate_false_seqs) ?
-                            num_src_junk_true_seqs :
-                            above_num_true_seqs[false_seq_index]
-                    );
-
-                /* Let's try to find a suitable parent on top one of the stacks */
-                int clear_junk_dest_stack;
-                for(clear_junk_dest_stack=0;
-                    clear_junk_dest_stack < LOCAL_STACKS_NUM;
-                    clear_junk_dest_stack++
-                   )
-                {
-                    const fcs_cards_column_t clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
-                    const int clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
-
-                    if ((clear_junk_stack_len > 0) && (! stacks_map[clear_junk_dest_stack]))
-                    {
-                        fcs_card_t clear_junk_dest_card;
-
-                        clear_junk_dest_card = fcs_col_get_card(clear_junk_dest_col, clear_junk_stack_len-1);
-                        if (fcs_is_ss_false_parent(clear_junk_dest_card, the_card))
-                        {
-                            if (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= the_num_true_seqs)
-                            {
-                                stacks_map[clear_junk_dest_stack] = TRUE;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
-                {
-                    /* Check if there is a vacant stack */
-                    if (!
-                        (
-                            (num_vacant_stacks > 0)
-                                &&
-                            (calc_max_simple_simon_seq_move(after_junk_num_freestacks-1) >= the_num_true_seqs)
-                        )
-                    )
-                    {
-                        break;
-                    }
-                    /* Find an empty stack and designate it as the destination for the junk */
-                    for(
-                        clear_junk_dest_stack = 0;
-                        clear_junk_dest_stack < LOCAL_STACKS_NUM;
-                        clear_junk_dest_stack++
-                       )
-                    {
-                        if ((fcs_col_len(fcs_state_get_col(state, clear_junk_dest_stack)) == 0) && (! stacks_map[clear_junk_dest_stack]))
-                        {
-                            stacks_map[clear_junk_dest_stack] = TRUE;
-                            break;
-                        }
-                    }
-                    after_junk_num_freestacks--;
-                }
-
-                junk_move_to_stacks[false_seq_index] = clear_junk_dest_stack;
-            }
-
-            if ((
-                    (false_seq_index == num_separate_false_seqs+1)
-                        &&
+            if (
+                verdict
+                &&
                 (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= num_true_seqs)
-                )
             )
             {
             /* We can do it - so let's move everything */
