@@ -478,7 +478,7 @@ static GCC_INLINE void populate_seq_points(
         above_card = up_above_card;
     }
 
-    if (dc < dest_cards_num - 1)
+    if (dc <= dest_cards_num - 2)
     {
         seq_points[num_separate_false_seqs++] = dc+1;
     }
@@ -1286,9 +1286,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                 above_num_true_seqs[num_separate_false_seqs] = 1;
 
                 {
-                    int above_c;
-
-                    for(above_c = child_card_height-2;
+                    for(int above_c = child_card_height-2;
                         above_c > parent_card_height ;
                         above_c--
                     )
@@ -1304,9 +1302,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                         above_card = up_above_card;
                     }
 
-                    if (parent_card_height < child_card_height - 1)
+                    if (parent_card_height <= child_card_height - 2)
                     {
-                        seq_points[num_separate_false_seqs++] = above_c+1;
+                        seq_points[num_separate_false_seqs++] = parent_card_height+1;
                     }
                 }
 
