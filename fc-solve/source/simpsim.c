@@ -253,6 +253,22 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     return;
 }
 
+#define LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card) \
+    if (fcs_card_rank(card) < 13) \
+    { \
+        const int ds = FCS_POS_COL(fcs_card_rank(card)+1, fcs_card_suit(card)); \
+        \
+        if (ds != stack_idx) \
+        { \
+            const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, fcs_card_suit(card)); \
+            const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds); \
+            const int dest_cards_num = fcs_col_len(dest_col); \
+
+
+#define LOOK_FOR_TRUE_PARENT_with_ds_dc__END() \
+        } \
+    } \
+
 
 /*
  * TODO:
@@ -291,35 +307,23 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 
         for (int h=cards_num-2 ; h>=-1 ; h--)
         {
-            if (fcs_card_rank(card) < 13)
-            {
-                const int ds = FCS_POS_COL(fcs_card_rank(card)+1, fcs_card_suit(card));
-                /* ds cannot be -1 because the whole sequence did not move. */
-                if (ds != stack_idx)
+            LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card)
+                if (dc == dest_cards_num - 1)
                 {
-                    const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, fcs_card_suit(card));
+                    /* This is a suitable parent - let's check if we
+                     * have enough empty stacks to make the move feasible */
+                    /* We can do it - so let's move */
 
-                    const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
-                    const int dest_cards_num = fcs_col_len(dest_col);
+                    sfs_check_state_begin();
 
-                    if (dc == dest_cards_num - 1)
-                    {
-                        /* This is a suitable parent - let's check if we
-                         * have enough empty stacks to make the move feasible */
-                        /* We can do it - so let's move */
-
-                        sfs_check_state_begin();
-
-                        my_copy_stack(stack_idx);
-                        my_copy_stack(ds);
+                    my_copy_stack(stack_idx);
+                    my_copy_stack(ds);
 
 
-                        fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
-                        sfs_check_state_end();
-                    }
+                    fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+                    sfs_check_state_end();
                 }
-            }
-
+            LOOK_FOR_TRUE_PARENT_with_ds_dc__END()
             /* Stop if we reached the bottom of the stack */
             if (h == -1)
             {
@@ -656,14 +660,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
             }
             if (should_search)
             {
-                if (fcs_card_rank(card) < 13)
-                {
-                    const int ds = FCS_POS_COL(fcs_card_rank(card)+1, fcs_card_suit(card));
-                    if (ds != stack_idx)
-                    {
-                    const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, fcs_card_suit(card));
-                    const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
-                    const int dest_cards_num = fcs_col_len(dest_col);
+                LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card)
                     /* This is a suitable parent - let's check if there's a sequence above it. */
 
                     /*
@@ -723,8 +720,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
                     sfs_check_state_end();
                     }
-                    }
-                }
+                LOOK_FOR_TRUE_PARENT_with_ds_dc__END()
             }
 
             if (should_break)
@@ -779,21 +775,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
             /* Split the cards above it into false sequences */
 
-
-            if (fcs_card_rank(h_card) == 13)
-            {
-                continue;
-            }
-
-            const int ds = FCS_POS_COL(fcs_card_rank(h_card)+1, fcs_card_suit(h_card));
-            if (ds == stack_idx)
-            {
-                continue;
-            }
-            const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, fcs_card_suit(card));
-            const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
-            const int dest_cards_num = fcs_col_len(dest_col);
-
+            LOOK_FOR_TRUE_PARENT_with_ds_dc__START(h_card)
             if (dc == dest_cards_num - 1)
             {
                 /* This is a suitable parent - let's check if we
@@ -845,6 +827,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 sfs_check_state_end();
                 }
             }
+            LOOK_FOR_TRUE_PARENT_with_ds_dc__END()
         }
     STACK_SOURCE_LOOP_END()
 
@@ -913,16 +896,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
         /* Start at the card below the top one, so we will
          * make sure there's at least some junk above it
          * */
-        if (fcs_card_rank(card) < 13)
-        {
-            const int ds = FCS_POS_COL(fcs_card_rank(card)+1, fcs_card_suit(card));
-            if (ds != stack_idx)
+        LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card)
+            if (dc <= dest_cards_num - 2)
             {
-                const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, fcs_card_suit(card));
-                const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
-                const int dest_cards_num = fcs_col_len(dest_col);
-                if (dc <= dest_cards_num - 2)
-                {
             /* This is a suitable parent - let's check if there's a sequence above it. */
             int num_separate_false_seqs;
             int seq_points[MAX_NUM_CARDS_IN_A_STACK];
@@ -1071,10 +1047,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
             fcs_move_sequence(ds, stack_idx, h, end_of_junk);
 
             sfs_check_state_end();
-                    }
-                }
             }
-        }
+            }
+        LOOK_FOR_TRUE_PARENT_with_ds_dc__END()
     STACK_SOURCE_LOOP_END()
 
     return;
