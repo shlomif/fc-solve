@@ -163,8 +163,8 @@ static char * get_the_positions_by_rank_data__ss_generator(
 #define FCS_SS_CELL_WIDTH 2
 #define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * FCS_SS_CELL_WIDTH * 4 )
 #define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
-#define FCS_POS_COL(positions_by_rank, rank, suit) positions_by_rank[((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank)) * FCS_SS_CELL_WIDTH]
-#define FCS_POS_HEIGHT(positions_by_rank, rank, suit) positions_by_rank[((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank)) * FCS_SS_CELL_WIDTH + 1]
+#define FCS_POS_COL(rank, suit) positions_by_rank[((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank)) * FCS_SS_CELL_WIDTH]
+#define FCS_POS_HEIGHT(rank, suit) positions_by_rank[((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank)) * FCS_SS_CELL_WIDTH + 1]
 
     char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
 
@@ -179,8 +179,8 @@ static char * get_the_positions_by_rank_data__ss_generator(
             const fcs_card_t card = fcs_col_get_card(dest_col, dc);
             const int suit = fcs_card_suit(card);
             const int rank = fcs_card_rank(card);
-            FCS_POS_COL(positions_by_rank, rank, suit) = ds;
-            FCS_POS_HEIGHT(positions_by_rank, rank, suit) = dc;
+            FCS_POS_COL(rank, suit) = ds;
+            FCS_POS_HEIGHT(rank, suit) = dc;
         }
     }
 
@@ -293,11 +293,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
         {
             if (fcs_card_rank(card) < 13)
             {
-                const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+                const int ds = FCS_POS_COL(fcs_card_rank(card)+1, fcs_card_suit(card));
                 /* ds cannot be -1 because the whole sequence did not move. */
                 if (ds != stack_idx)
                 {
-                    const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+                    const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, fcs_card_suit(card));
 
                     const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
                     const int dest_cards_num = fcs_col_len(dest_col);
@@ -658,10 +658,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
             {
                 if (fcs_card_rank(card) < 13)
                 {
-                    const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+                    const int ds = FCS_POS_COL(fcs_card_rank(card)+1, fcs_card_suit(card));
                     if (ds != stack_idx)
                     {
-                    const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+                    const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, fcs_card_suit(card));
                     const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
                     const int dest_cards_num = fcs_col_len(dest_col);
                     /* This is a suitable parent - let's check if there's a sequence above it. */
@@ -785,12 +785,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                 continue;
             }
 
-            const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(h_card)+1, fcs_card_suit(h_card));
+            const int ds = FCS_POS_COL(fcs_card_rank(h_card)+1, fcs_card_suit(h_card));
             if (ds == stack_idx)
             {
                 continue;
             }
-            const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+            const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, fcs_card_suit(card));
             const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
             const int dest_cards_num = fcs_col_len(dest_col);
 
@@ -915,10 +915,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
          * */
         if (fcs_card_rank(card) < 13)
         {
-            const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+            const int ds = FCS_POS_COL(fcs_card_rank(card)+1, fcs_card_suit(card));
             if (ds != stack_idx)
             {
-                const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, fcs_card_suit(card));
+                const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, fcs_card_suit(card));
                 const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
                 const int dest_cards_num = fcs_col_len(dest_col);
                 if (dc <= dest_cards_num - 2)
@@ -1152,12 +1152,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         int len = 0;
         for (int parent_suit = 0; parent_suit < 4 ; parent_suit++)
         {
-            const int ds = FCS_POS_COL(positions_by_rank, fcs_card_rank(card)+1, parent_suit);
+            const int ds = FCS_POS_COL(fcs_card_rank(card)+1, parent_suit);
             if ((ds < 0) || (ds == stack_idx))
             {
                 continue;
             }
-            const int dc = FCS_POS_HEIGHT(positions_by_rank, fcs_card_rank(card)+1, parent_suit);
+            const int dc = FCS_POS_HEIGHT(fcs_card_rank(card)+1, parent_suit);
 
             ds_dcs[len].ds = ds;
             ds_dcs[len].dc = dc;
