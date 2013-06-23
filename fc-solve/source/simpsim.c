@@ -601,6 +601,7 @@ static GCC_INLINE const int false_seq_index_loop(
 
 #define POPULATE_AND_CHECK_IF_FALSE_SEQ(col, height, stack_idx, ds, behavior_flag) \
     ({ \
+     int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK]; \
      populate_seq_points(col, height, seq_points, \
                         above_num_true_seqs, &num_separate_false_seqs); \
      IS_false_seq_index_loop(col, behavior_flag, stack_idx, ds); \
@@ -681,7 +682,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                      * */
                     int num_separate_false_seqs;
                     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-                    int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
                     int junk_move_to_stacks[MAX_NUM_STACKS];
                     int after_junk_num_freestacks;
 
@@ -789,7 +789,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                  * have enough empty stacks to make the move feasible */
                 int num_separate_false_seqs;
                 int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-                int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
                 int junk_move_to_stacks[MAX_NUM_STACKS];
                 int after_junk_num_freestacks;
 
@@ -1157,7 +1156,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
             /* This is a suitable parent - let's check if there's a sequence above it. */
             int num_separate_false_seqs;
             int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-            int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
             int junk_move_to_stacks[MAX_NUM_STACKS];
             int after_junk_num_freestacks;
 
