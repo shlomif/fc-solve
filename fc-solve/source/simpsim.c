@@ -486,7 +486,7 @@ static GCC_INLINE void populate_seq_points(
     *num_separate_false_seqs_out_ptr = num_separate_false_seqs;
 }
 
-static GCC_INLINE const int false_seq_index_loop(
+static GCC_INLINE const fcs_bool_t false_seq_index_loop(
     fc_solve_soft_thread_t * const soft_thread,
     fc_solve_instance_t * const instance,
     fcs_kv_state_t * const raw_ptr_state_raw,
@@ -580,11 +580,11 @@ static GCC_INLINE const int false_seq_index_loop(
     }
 
     *after_junk_num_freestacks_ptr = after_junk_num_freestacks;
-    return false_seq_index;
+    return (false_seq_index == num_separate_false_seqs);
 }
 
 #define IS_false_seq_index_loop(col, behavior_flag, stack_idx, ds) \
-    (false_seq_index_loop( \
+    false_seq_index_loop( \
         soft_thread, \
         instance, \
         raw_ptr_state_raw, \
@@ -597,7 +597,8 @@ static GCC_INLINE const int false_seq_index_loop(
         junk_move_to_stacks, \
         &after_junk_num_freestacks, \
         behavior_flag \
-    ) == num_separate_false_seqs) \
+    )
+
 
 #define POPULATE_AND_CHECK_IF_FALSE_SEQ(col, height, stack_idx, ds, behavior_flag) \
     ({ \
