@@ -453,16 +453,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     return;
 }
 
-static GCC_INLINE void populate_seq_points(
+static GCC_INLINE void generic_populate_seq_points(
     const fcs_cards_column_t dest_col,
     const int dc,
     int * const seq_points,
     int * const above_num_true_seqs,
-    int * const num_separate_false_seqs_out_ptr
+    int * const num_separate_false_seqs_out_ptr,
+    const int dest_cards_num
 )
 {
-    const int dest_cards_num = fcs_col_len(dest_col);
-    int num_separate_false_seqs = 0;
+    int num_separate_false_seqs = *num_separate_false_seqs_out_ptr;
     above_num_true_seqs[num_separate_false_seqs] = 1;
     fcs_card_t above_card = fcs_col_get_card(dest_col, dest_cards_num-1);
     for (int above_c = dest_cards_num-2 ; above_c > dc ; above_c--)
@@ -484,6 +484,18 @@ static GCC_INLINE void populate_seq_points(
     }
 
     *num_separate_false_seqs_out_ptr = num_separate_false_seqs;
+}
+
+static GCC_INLINE void populate_seq_points(
+    const fcs_cards_column_t dest_col,
+    const int dc,
+    int * const seq_points,
+    int * const above_num_true_seqs,
+    int * const num_separate_false_seqs_out_ptr
+)
+{
+    *num_separate_false_seqs_out_ptr = 0;
+    generic_populate_seq_points(dest_col, dc, seq_points, above_num_true_seqs, num_separate_false_seqs_out_ptr, fcs_col_len(dest_col));
 }
 
 static GCC_INLINE const fcs_bool_t false_seq_index_loop(
@@ -1281,32 +1293,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                 seq_points[num_separate_false_seqs++] = child_card_height;
 
                 /* Add the cards between the parent and the child to the seq_points */
-
-                fcs_card_t above_card = fcs_col_get_card(col, child_card_height-1);
-                above_num_true_seqs[num_separate_false_seqs] = 1;
-
-                {
-                    for(int above_c = child_card_height-2;
-                        above_c > parent_card_height ;
-                        above_c--
-                    )
-                    {
-                        const fcs_card_t up_above_card = fcs_col_get_card(col, above_c);
-                        if (! fcs_is_ss_false_parent(up_above_card, above_card))
-                        {
-                            seq_points[num_separate_false_seqs++] = above_c+1;
-                            above_num_true_seqs[num_separate_false_seqs] = 1;
-                        }
-                        above_num_true_seqs[num_separate_false_seqs] +=
-                            ! fcs_is_ss_suit_true(up_above_card, above_card);
-                        above_card = up_above_card;
-                    }
-
-                    if (parent_card_height <= child_card_height - 2)
-                    {
-                        seq_points[num_separate_false_seqs++] = parent_card_height+1;
-                    }
-                }
+                generic_populate_seq_points(
+                    col, parent_card_height, seq_points, above_num_true_seqs,
+                    &num_separate_false_seqs, child_card_height
+                );
 
                 int junk_move_to_stacks[MAX_NUM_STACKS];
                 int after_junk_num_freestacks;
