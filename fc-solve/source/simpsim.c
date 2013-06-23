@@ -522,29 +522,30 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
     fcs_bool_t stacks_map[STACKS_MAP_LEN];
     init_stacks_map(stacks_map, stack_idx, ds);
 
-    int false_seq_index;
     int after_junk_num_freestacks = num_vacant_stacks;
+
     const int false_seq_index_limit
         = num_separate_false_seqs + (should_src_col ? 1 : 0);
+
+    int false_seq_index;
 
     for (false_seq_index = 0 ;
         false_seq_index < false_seq_index_limit ;
         false_seq_index++)
     {
+        const fcs_bool_t is_ultimate_iter =
+            (false_seq_index == num_separate_false_seqs);
+
         /* Find a suitable place to put it */
         const fcs_card_t the_card =
-        (
-            (false_seq_index == num_separate_false_seqs) ?
-            src_card :
-            (fcs_col_get_card(col, seq_points[false_seq_index]))
-        );
+            is_ultimate_iter
+            ? src_card
+            : fcs_col_get_card(col, seq_points[false_seq_index]);
 
         const int the_num_true_seqs =
-        (
-            (false_seq_index == num_separate_false_seqs) ?
-            num_src_junk_true_seqs :
-            above_num_true_seqs[false_seq_index]
-        );
+            is_ultimate_iter
+            ? num_src_junk_true_seqs
+            : above_num_true_seqs[false_seq_index];
 
         /* Let's try to find a suitable parent on top one of the stacks */
         int clear_junk_dest_stack;
