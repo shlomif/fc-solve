@@ -269,6 +269,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
         } \
     } \
 
+#define LOOK_FOR_TRUE_PARENT_AT_TOP__START(card) \
+    LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card) \
+        if (dc == dest_cards_num - 1) \
+        { \
+
+
+#define LOOK_FOR_TRUE_PARENT_AT_TOP__END() \
+        } \
+    LOOK_FOR_TRUE_PARENT_with_ds_dc__END()
+
 
 /*
  * TODO:
@@ -307,23 +317,20 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 
         for (int h=cards_num-2 ; h>=-1 ; h--)
         {
-            LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card)
-                if (dc == dest_cards_num - 1)
-                {
-                    /* This is a suitable parent - let's check if we
-                     * have enough empty stacks to make the move feasible */
-                    /* We can do it - so let's move */
+            LOOK_FOR_TRUE_PARENT_AT_TOP__START(card)
+                /* This is a suitable parent - let's check if we
+                 * have enough empty stacks to make the move feasible */
+                /* We can do it - so let's move */
 
-                    sfs_check_state_begin();
+                sfs_check_state_begin();
 
-                    my_copy_stack(stack_idx);
-                    my_copy_stack(ds);
+                my_copy_stack(stack_idx);
+                my_copy_stack(ds);
 
 
-                    fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
-                    sfs_check_state_end();
-                }
-            LOOK_FOR_TRUE_PARENT_with_ds_dc__END()
+                fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+                sfs_check_state_end();
+            LOOK_FOR_TRUE_PARENT_AT_TOP__END()
             /* Stop if we reached the bottom of the stack */
             if (h == -1)
             {
@@ -775,9 +782,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
             /* Split the cards above it into false sequences */
 
-            LOOK_FOR_TRUE_PARENT_with_ds_dc__START(h_card)
-            if (dc == dest_cards_num - 1)
-            {
+            LOOK_FOR_TRUE_PARENT_AT_TOP__START(h_card)
                 /* This is a suitable parent - let's check if we
                  * have enough empty stacks to make the move feasible */
                 int num_separate_false_seqs;
@@ -826,8 +831,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
 
                 sfs_check_state_end();
                 }
-            }
-            LOOK_FOR_TRUE_PARENT_with_ds_dc__END()
+            LOOK_FOR_TRUE_PARENT_AT_TOP__END()
         }
     STACK_SOURCE_LOOP_END()
 
