@@ -499,8 +499,7 @@ static GCC_INLINE void populate_seq_points(
 }
 
 static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
-    fc_solve_soft_thread_t * const soft_thread,
-    fc_solve_instance_t * const instance,
+    const int stacks_num,
     fcs_kv_state_t * const raw_ptr_state_raw,
     int num_vacant_stacks,
     const fcs_cards_column_t col,
@@ -517,8 +516,6 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
     const int num_src_junk_true_seqs
     )
 {
-    SIMPS_SET_GAME_PARAMS();
-
     fcs_bool_t stacks_map[STACKS_MAP_LEN];
     init_stacks_map(stacks_map, stack_idx, ds);
 
@@ -550,7 +547,7 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
         /* Let's try to find a suitable parent on top one of the stacks */
         int clear_junk_dest_stack;
         for(clear_junk_dest_stack=0;
-            clear_junk_dest_stack < LOCAL_STACKS_NUM;
+            clear_junk_dest_stack < stacks_num;
             clear_junk_dest_stack++
         )
         {
@@ -573,7 +570,7 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
             }
         }
 
-        if (clear_junk_dest_stack == LOCAL_STACKS_NUM)
+        if (clear_junk_dest_stack == stacks_num)
         {
             /* Check if there is a vacant stack */
             if (behaviour_flag || (!
@@ -589,7 +586,7 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
             /* Find an empty stack and designate it as the destination for the junk */
             for(
                 clear_junk_dest_stack = 0;
-                clear_junk_dest_stack < LOCAL_STACKS_NUM;
+                clear_junk_dest_stack < stacks_num;
                 clear_junk_dest_stack++
             )
             {
@@ -610,8 +607,7 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
 }
 
 static GCC_INLINE const fcs_bool_t false_seq_index_loop(
-    fc_solve_soft_thread_t * const soft_thread,
-    fc_solve_instance_t * const instance,
+    const int stacks_num,
     fcs_kv_state_t * const raw_ptr_state_raw,
     int num_vacant_stacks,
     const fcs_cards_column_t col,
@@ -626,7 +622,7 @@ static GCC_INLINE const fcs_bool_t false_seq_index_loop(
     )
 {
     return generic_false_seq_index_loop(
-        soft_thread, instance, raw_ptr_state_raw, num_vacant_stacks,
+        stacks_num, raw_ptr_state_raw, num_vacant_stacks,
         col, num_separate_false_seqs, seq_points, stack_idx, ds,
         above_num_true_seqs, junk_move_to_stacks,
         after_junk_num_freestacks_ptr,
@@ -638,8 +634,7 @@ static GCC_INLINE const fcs_bool_t false_seq_index_loop(
 
 #define IS_false_seq_index_loop(col, behavior_flag, stack_idx, ds) \
     false_seq_index_loop( \
-        soft_thread, \
-        instance, \
+        LOCAL_STACKS_NUM, \
         raw_ptr_state_raw, \
         num_vacant_stacks, \
         col, \
@@ -970,7 +965,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
             int junk_move_to_stacks[MAX_NUM_STACKS];
 
             const fcs_bool_t verdict = generic_false_seq_index_loop(
-                soft_thread, instance, raw_ptr_state_raw, num_vacant_stacks,
+                LOCAL_STACKS_NUM, raw_ptr_state_raw, num_vacant_stacks,
                 dest_col, num_separate_false_seqs, seq_points, stack_idx,
                 ds, above_num_true_seqs, junk_move_to_stacks,
                 &after_junk_num_freestacks, FALSE,
