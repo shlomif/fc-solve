@@ -22,8 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * bool.h - the purpose of this file is to define the fcs_bool_t type
- * and the related constants of TRUE and FALSE.
+ * fcs_limit.h - the purpose of this file is to define the fcs_int_limit_t
+ * type, and the FCS_INT_LIMIT_MAX constant.
  *
  */
 
