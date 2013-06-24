@@ -27,6 +27,7 @@ sub fn
 {
     return File::Spec->catfile($src_dir, shift());
 }
+
 my $text = _slurp(fn("rate_state.h"));
 
 my $type_name = 'fc_solve_seq_cards_power_type_t';
