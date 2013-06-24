@@ -35,7 +35,6 @@
 #endif
 
 #include "../card.c"
-#include "../card_compare_lookups.c"
 #include "../app_str.c"
 #include "../state.c"
 #include "../delta_states_debondt.c"

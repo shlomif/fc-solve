@@ -32,7 +32,6 @@
 
 #define FCS_COMPILE_DEBUG_FUNCTIONS
 #include "../card.c"
-#include "../card_compare_lookups.c"
 #include "../app_str.c"
 #include "../state.c"
 #include "../delta_states.c"
