@@ -418,10 +418,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     STACK_SOURCE_LOOP_START(1)
         int num_true_seqs;
         int h = get_seq_h(col, &num_true_seqs);
-        if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
-        {
-            continue;
-        }
 
         /* This means that the loop exited prematurely and the stack does
          * not contain a sequence. */
