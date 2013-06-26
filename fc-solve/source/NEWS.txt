@@ -4,6 +4,25 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.20.0: (26-Jun-2013)
+-----------------------------
+
+1. Major speedups to the Simple Simon code - including order of complexity
+ones where a lookup is now O(1) instead of O(num_cards). The Simple Simon
+code was in general heavily refactored and cleaned up.
+
+2. Some bugs in the Simple Simon alogrithms were fixed, slightly modifying
+the outputted solutions.
+
+3. Add missing BuildRequires to the RPM .spec .
+
+4. Add the +qualified-seed-improved+ preset.
+
+5. Fix the run-time display of the iteration count during
++pkill -USR1 fc-solve+.
+
+6. Some minor refactorings and optimisations.
+
 Version 3.18.1: (30-May-2013)
 -----------------------------
 
