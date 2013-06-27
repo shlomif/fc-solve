@@ -14,6 +14,7 @@ use File::Path;
 use Getopt::Long;
 use Env::Path;
 use File::Basename qw( basename dirname );
+# use Time::HiRes qw(time);
 
 
 my $bindir = dirname( __FILE__ );
@@ -166,7 +167,10 @@ GetOptions(
 
     # if (! glob('t/valgrind--*.t'))
     {
+        # my $start = time();
         system($^X, "$abs_bindir/scripts/generate-individual-valgrind-test-scripts.pl");
+        # my $end = time();
+        # print "StartGen=$start\nEndGen=$end\n";
     }
 
     # Put the valgrind tests last, because they take a long time.
