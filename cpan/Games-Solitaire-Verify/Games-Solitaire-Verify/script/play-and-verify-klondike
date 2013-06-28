@@ -132,7 +132,7 @@ my $out_fh;
 open $out_fh, '>&STDOUT';
 
 my $out_board = sub {
-    print {$out_fh} $board->talon->to_string(), "\n", map { $_->to_string(), "\n", } @{$board->columns()};
+    print {$out_fh} $board->foundations->to_string(), "\n", $board->talon->to_string(), "\n", map { $_->to_string(), "\n", } @{$board->columns()};
     print {$out_fh} "\n\n";
 };
 
