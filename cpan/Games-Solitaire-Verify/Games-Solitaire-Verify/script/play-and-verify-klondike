@@ -187,14 +187,15 @@ while ($moves_line =~ m/\G\[([^\]]+)\]/gms)
         my $col = $board->columns->[$col_idx];
         my $parent_card = $col->top();
 
-        if ($parent_card->is_flipped())
+        if ($col->len() && $parent_card->is_flipped())
         {
             die "Cannot perform '$move' because parent card is flipped.";
         }
-        if (!$board->can_put({parent => $parent_card , child => $card, }))
+        if ($col->len() && (!$board->can_put({parent => $parent_card , child => $card, })))
         {
             die "Cannot perform '$move' due to parent/child mismatch.";
         }
+        $col->push($card);
         printf {$out_fh} "Move %s from Waste to Column %d\n\n", $card->to_string(), $col_idx;
     }
     elsif ($move eq 'NewRound')
@@ -226,7 +227,7 @@ while ($moves_line =~ m/\G\[([^\]]+)\]/gms)
         my $dest_col = $board->columns->[$dest_col_idx];
         my $parent_card = $dest_col->top();
 
-        if ($parent_card->is_flipped())
+        if ($dest_col->len() && $parent_card->is_flipped())
         {
             die "Cannot perform '$move' because parent card is flipped.";
         }
@@ -243,7 +244,7 @@ while ($moves_line =~ m/\G\[([^\]]+)\]/gms)
 
         my $src_card = $src_col->pos(-$num_cards);
 
-        if (!$board->can_put({parent => $parent_card , child => $src_card, }))
+        if ($dest_col->len() && (!$board->can_put({parent => $parent_card , child => $src_card, })))
         {
             die "Cannot perform '$move' due to parent/child mismatch.";
         }
