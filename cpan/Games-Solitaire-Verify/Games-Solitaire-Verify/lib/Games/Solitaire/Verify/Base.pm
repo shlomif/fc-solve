@@ -17,7 +17,7 @@ use Class::XSAccessor;
 
 =head1 SYNOPSIS
 
-    use base 'Games::Solitaire::Verify::Base';
+    use parent 'Games::Solitaire::Verify::Base';
 
     sub _init
     {

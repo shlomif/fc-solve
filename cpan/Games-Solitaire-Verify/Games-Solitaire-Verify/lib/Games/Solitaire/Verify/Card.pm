@@ -18,7 +18,7 @@ Version 0.0101
 
 our $VERSION = '0.1200';
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 use Games::Solitaire::Verify::Exception;
 

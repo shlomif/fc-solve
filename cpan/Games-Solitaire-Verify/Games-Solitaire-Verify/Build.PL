@@ -25,6 +25,7 @@ my $builder = Test::Run::Builder->new(
         'Exception::Class' => 0,
         'List::Util' => 0,
         'Getopt::Long' => '2.36',
+        'parent' => 0,
         'strict' => 0,
         'warnings' => 0,
     },

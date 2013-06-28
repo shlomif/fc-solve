@@ -17,7 +17,7 @@ Version 0.1001
 
 our $VERSION = '0.1200';
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 # TODO : Merge with lib/Games/Solitaire/Verify/Solution.pm
 

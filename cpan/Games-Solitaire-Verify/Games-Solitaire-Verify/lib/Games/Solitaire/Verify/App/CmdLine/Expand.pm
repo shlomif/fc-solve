@@ -3,7 +3,7 @@ package Games::Solitaire::Verify::App::CmdLine::Expand;
 use strict;
 use warnings;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 our $VERSION = '0.1200';
 
