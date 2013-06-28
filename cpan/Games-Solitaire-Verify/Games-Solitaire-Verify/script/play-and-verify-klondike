@@ -1,0 +1,78 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Games::Solitaire::Verify::KlondikeTalon;
+use Games::Solitaire::Verify::Column;
+
+package KlondikeBoard;
+
+use MooX qw/late/;
+
+has 'orig_talon_string' => (isa => 'Str', required => 1, is => 'ro',);
+has 'talon' => (isa => 'Games::Solitaire::Verify::KlondikeTalon',
+    lazy => 1,
+    is => 'ro',
+    default => sub {
+        my $self = shift;
+        return Games::Solitaire::Verify::KlondikeTalon->new({
+                string => $self->orig_talon_string(),
+                max_num_redeals => 3,
+            });
+        }
+);
+
+has 'orig_columns_strings' => (isa => 'ArrayRef[Str]', required => 1, is => 'ro',);
+
+has 'columns' => (isa => 'ArrayRef[Games::Solitaire::Verify::Column]', lazy => 1, is => 'ro',
+    default => sub {
+        my $self = shift;
+        return [
+            map
+            {
+                Games::Solitaire::Verify::Column->new(
+                   { string => $_ }
+                )
+            }
+            @{$self->orig_columns_strings()}
+        ];
+    }
+);
+
+package main;
+
+use IO::All;
+use Getopt::Long qw(GetOptions);
+
+my ($board_fn, $solution_fn);
+
+GetOptions(
+    'board=s' => \$board_fn,
+    'solution=s' => \$solution_fn,
+) or die "Wrong arguments - $!";
+
+if (!defined($board_fn))
+{
+    die "--board not specified.";
+}
+
+if (!defined($solution_fn))
+{
+    die "--solution not specified.";
+}
+
+my $board_str = io->file($board_fn)->all();
+
+my @board_lines = split(/\n/, $board_str);
+
+my $talon_line = shift(@board_lines);
+
+my $board = KlondikeBoard->new(
+    {
+        orig_columns_strings => [@board_lines],
+        orig_talon_string => $talon_line,
+    }
+);
+
+
