@@ -92,21 +92,44 @@ package main;
 use IO::All;
 use Getopt::Long qw(GetOptions);
 
-my ($board_fn, $solution_fn);
+my ($board_fn, $solution_fn, $help);
 
 GetOptions(
+    'h|help' => \$help,
     'board=s' => \$board_fn,
     'solution=s' => \$solution_fn,
-) or die "Wrong arguments - $!";
+) or die "Wrong arguments - $! - type --help for more info.";
 
+if ($help)
+{
+    print <<'EOF';
+This program verifies the Klondike solutions of KlondikeSolver (
+https://github.com/shlomif/KlondikeSolver ) and displays them in a more
+user-friendly manner.
+
+It requires:
+
+1. An initial board as given by «make_pysol_freecell_board.py -t 24 klondike»
+(note the "-t").
+
+2. A solution as given by:
+
+make_pysol_freecell_board.py -t 24 klondike | perl from-fc-solve-board-gen > deck.txt
+./KlondikeSolver deck.txt | tee solution.txt
+
+After that run it with --board and --solution and capture its output to
+standard output.
+EOF
+    exit(0);
+}
 if (!defined($board_fn))
 {
-    die "--board not specified.";
+    die "--board or --help not specified.";
 }
 
 if (!defined($solution_fn))
 {
-    die "--solution not specified.";
+    die "--solution or --help not specified.";
 }
 
 my $board_str = io->file($board_fn)->all();

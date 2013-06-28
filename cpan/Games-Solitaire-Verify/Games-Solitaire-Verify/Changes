@@ -1,7 +1,13 @@
 Revision history for Games-Solitaire-Verify
 
+0.1200  Fri 28 Jun 18:22:53 IDT 2013
         - Add support for flipped cards to ::Card .
         - Add lib/Games/Solitaire/Verify/KlondikeTalon.pm .
+        - Add script/play-and-verify-klondike - it is a work-in-progress
+        script used to play the solutions provided by
+        https://github.com/ShootMe/KlondikeSolver (also see my fork of it
+        at https://github.com/shlomif/KlondikeSolver ), verify them and
+        display them in a more user-friendly manner.
 
 0.1103  Thu 17 Jan 11:35:12 IST 2013
         - Update Build.PL (configure_requires + repository link).
