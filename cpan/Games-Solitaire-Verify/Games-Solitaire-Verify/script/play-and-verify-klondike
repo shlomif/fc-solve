@@ -5,10 +5,22 @@ use warnings;
 
 use Games::Solitaire::Verify::KlondikeTalon;
 use Games::Solitaire::Verify::Column;
+use Games::Solitaire::Verify::Foundations;
 
 package KlondikeBoard;
 
 use MooX qw/late/;
+
+has 'foundations' => (isa => 'Games::Solitaire::Verify::Foundations',
+    is => 'ro',
+    default => sub {
+        return Games::Solitaire::Verify::Foundations->new(
+            {
+                num_decks => 1,
+            }
+        );
+    },
+);
 
 has 'orig_talon_string' => (isa => 'Str', required => 1, is => 'ro',);
 has 'talon' => (isa => 'Games::Solitaire::Verify::KlondikeTalon',
@@ -39,6 +51,39 @@ has 'columns' => (isa => 'ArrayRef[Games::Solitaire::Verify::Column]', lazy => 1
         ];
     }
 );
+
+sub try_to_put_in_foundations
+{
+    my ($self, $card) = @_;
+
+    my $idx = 0;
+
+    my $suit = $card->suit;
+
+    if ($self->foundations->value($suit, $idx) == $card->rank()-1)
+    {
+        $board->foundations->increment($card->suit(), $idx);
+    }
+    else
+    {
+        die "Cannot increment from card " . $card->to_string() . "\n";
+    }
+}
+
+sub can_put
+{
+    my ($self, $args) = @_;
+
+    my $parent = $args->{parent};
+    my $child = $args->{child};
+
+    return
+    (
+        ($parent->color() ne $child->color())
+            and
+        ($parent->rank() == $child->rank()+1)
+    );
+}
 
 package main;
 
@@ -75,4 +120,72 @@ my $board = KlondikeBoard->new(
     }
 );
 
+use List::Util qw(first);
 
+my $moves_line = first { /\A(?:\[[^\]]+\])+\s*\z/ } io->file($solution_fn)->chomp->getlines();
+
+pos($moves_line) = 0;
+
+my $out_fh;
+open $out_fh, '>&STDOUT';
+
+while ($moves_line =~ m/\G\[([^\]]+)\]/gms)
+{
+    my $move = $1;
+
+    if ($move eq 'Draw')
+    {
+        $board->talon->draw();
+        $out_fh->print("Move Draw\n\n");
+    }
+    elsif ($move eq 'Waste ToFnd')
+    {
+        my $card = $board->talon->extract_top();
+        $board->try_to_put_in_foundations($card);
+        printf {$out_fh} "Move %s from Waste to Foundations\n\n", $card->to_string();
+    }
+    elsif (my ($col_idx) = $move =~ /\ATab(\d+) ToFnd\z/)
+    {
+        # 1-based instead of 0-based.
+        $col_idx--;
+
+        my $col = $board->columns->[$col_idx];
+
+        my $card = $col->pop();
+
+        if (!defined($card))
+        {
+            die "No card at column $col_idx.";
+        }
+
+        if ($card->is_flipped())
+        {
+            die "Card " . $card->to_string() . " is flipped.";
+        }
+
+        $board->try_to_put_in_foundations($card);
+
+        printf {$out_fh} "Move %s from Column %d to Foundations\n\n", $card->to_string(), $col_idx;
+    }
+    elsif (($col_idx) = $move =~ /\AWaste To Tab(\d+)\z/)
+    {
+        $col_idx--;
+
+        my $card = $board->talon->extract_top();
+
+        my $col = $board->columns->[$col_idx];
+        my $parent_card = $col->top();
+
+        if ($parent_card->is_flipped())
+        {
+            die "Cannot perform '$move' because parent card is flipped.";
+        }
+        if (!$board->can_put({parent => $parent_card , child => $card, }))
+        {
+            die "Cannot perform '$move' due to parent/child mismatch.";
+        }
+        printf {$out_fh} "Move %s from Waste to Foundations\n\n", $card->to_string();
+    }
+    print {$out_fh} $board->talon->to_string(), "\n", map { $_->to_string(), "\n", } @{$board->columns()};
+
+}
