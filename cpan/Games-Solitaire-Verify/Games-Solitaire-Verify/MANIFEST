@@ -37,6 +37,7 @@ t/05-state.t
 t/06-verify-moves.t
 t/07-solution.t
 t/08-expand-solution.t
+t/cpan-changes.t
 t/data/sample-solutions/fcs-bakers-game-24.txt
 t/data/sample-solutions/fcs-eight-off-200-l-gi.txt
 t/data/sample-solutions/fcs-eight-off-200.txt
