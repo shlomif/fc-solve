@@ -1,6 +1,7 @@
 Revision history for Games-Solitaire-Verify
 
         - Add support for flipped cards to ::Card .
+        - Add lib/Games/Solitaire/Verify/KlondikeTalon.pm .
 
 0.1103  Thu 17 Jan 11:35:12 IST 2013
         - Update Build.PL (configure_requires + repository link).
