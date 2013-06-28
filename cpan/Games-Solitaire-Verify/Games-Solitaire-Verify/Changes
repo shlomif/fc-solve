@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+0.1201  2013-06-28
+        - Add $VERSION to some .pm files that missed it.
+            - The PAUSE indexer warned about that.
+
 0.1200  2013-06-28
         - Add support for flipped cards to ::Card .
         - Add lib/Games/Solitaire/Verify/KlondikeTalon.pm .

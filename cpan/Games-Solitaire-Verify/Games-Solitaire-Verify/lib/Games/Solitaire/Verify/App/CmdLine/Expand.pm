@@ -5,6 +5,8 @@ use warnings;
 
 use base 'Games::Solitaire::Verify::Base';
 
+our $VERSION = '0.1200';
+
 use Data::Dumper qw(Dumper);
 
 use Getopt::Long qw(GetOptionsFromArray);
