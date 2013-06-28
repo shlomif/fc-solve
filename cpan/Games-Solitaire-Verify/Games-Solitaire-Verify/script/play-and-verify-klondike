@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use Carp ();
+
 use Games::Solitaire::Verify::KlondikeTalon;
 use Games::Solitaire::Verify::Column;
 use Games::Solitaire::Verify::Foundations;
@@ -62,11 +64,11 @@ sub try_to_put_in_foundations
 
     if ($self->foundations->value($suit, $idx) == $card->rank()-1)
     {
-        $board->foundations->increment($card->suit(), $idx);
+        $self->foundations->increment($card->suit(), $idx);
     }
     else
     {
-        die "Cannot increment from card " . $card->to_string() . "\n";
+        Carp::confess("Cannot increment from card " . $card->to_string());
     }
 }
 
@@ -115,7 +117,7 @@ my $talon_line = shift(@board_lines);
 
 my $board = KlondikeBoard->new(
     {
-        orig_columns_strings => [@board_lines],
+        orig_columns_strings => [map { ": $_" } @board_lines],
         orig_talon_string => $talon_line,
     }
 );
@@ -128,6 +130,15 @@ pos($moves_line) = 0;
 
 my $out_fh;
 open $out_fh, '>&STDOUT';
+
+my $out_board = sub {
+    print {$out_fh} $board->talon->to_string(), "\n", map { $_->to_string(), "\n", } @{$board->columns()};
+    print {$out_fh} "\n\n";
+};
+
+# $board->talon->draw();
+
+$out_board->();
 
 while ($moves_line =~ m/\G\[([^\]]+)\]/gms)
 {
@@ -201,19 +212,19 @@ while ($moves_line =~ m/\G\[([^\]]+)\]/gms)
         {
             die "Cannot perform '$move' because parent card is not flipped.";
         }
-        $parent_card->flip();
+        $parent_card->set_flipped(0);
 
-        print {$out_fh} "Move: flip %s on Column %d\n\n", $parent_card, $col_idx;
+        printf {$out_fh} "Move: flip %s on Column %d\n\n", $parent_card->to_string(), $col_idx;
     }
-    elsif (my ($src_col_idx, $dest_col_idx, $with_cards) = /\ATab(\d+) to Tab(\d+) ((?:With \d+)?)\z/)
+    elsif (my ($src_col_idx, $dest_col_idx, $with_cards) = $move =~ /\ATab(\d+) To Tab(\d+)((?: With \d+)?)\z/)
     {
         $src_col_idx--;
         $dest_col_idx--;
 
-        my $num_cards = ($with_cards ? ($with_cards =~ s/\AWith //r) : 1);
+        my $num_cards = ($with_cards ? ($with_cards =~ s/\A With //r) : 1);
 
         my $dest_col = $board->columns->[$dest_col_idx];
-        my $parent_card = $dest_col_top();
+        my $parent_card = $dest_col->top();
 
         if ($parent_card->is_flipped())
         {
@@ -226,7 +237,7 @@ while ($moves_line =~ m/\G\[([^\]]+)\]/gms)
             my $card = $src_col->pos(-$i);
             if ($card->is_flipped())
             {
-                die "Cannot perform '$move' because source card '" . $card->to_string()  "' is flipped.";
+                die "Cannot perform '$move' because source card '" . $card->to_string() . "' is flipped.";
             }
         }
 
@@ -236,7 +247,28 @@ while ($moves_line =~ m/\G\[([^\]]+)\]/gms)
         {
             die "Cannot perform '$move' due to parent/child mismatch.";
         }
+
+        my @cards;
+
+        foreach my $i (1 .. $num_cards)
+        {
+            push @cards, $src_col->pop();
+        }
+        foreach my $i (1 .. $num_cards)
+        {
+            $dest_col->push( pop(@cards) );
+        }
+        printf {$out_fh} "Move %d cards from Column %d to Column %d\n\n",
+            $num_cards, $src_col_idx, $dest_col_idx;
     }
-    print {$out_fh} $board->talon->to_string(), "\n", map { $_->to_string(), "\n", } @{$board->columns()};
+    else
+    {
+        die "Unknown move '$move';"
+    }
+    print {$out_fh} "--------------\n\n";
+
+    $out_board->();
+
+    print {$out_fh} "\n\n==============\n\n";
 
 }
