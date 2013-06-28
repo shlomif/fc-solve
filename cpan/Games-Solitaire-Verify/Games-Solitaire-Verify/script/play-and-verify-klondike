@@ -184,7 +184,58 @@ while ($moves_line =~ m/\G\[([^\]]+)\]/gms)
         {
             die "Cannot perform '$move' due to parent/child mismatch.";
         }
-        printf {$out_fh} "Move %s from Waste to Foundations\n\n", $card->to_string();
+        printf {$out_fh} "Move %s from Waste to Column %d\n\n", $card->to_string(), $col_idx;
+    }
+    elsif ($move eq 'NewRound')
+    {
+        $board->talon->redeal();
+        print {$out_fh} "Move: Redeal talon.\n\n";
+    }
+    elsif (($col_idx) = $move =~ /\AFlip Tab(\d+)\z/)
+    {
+        $col_idx--;
+        my $col = $board->columns->[$col_idx];
+        my $parent_card = $col->top();
+
+        if (! $parent_card->is_flipped())
+        {
+            die "Cannot perform '$move' because parent card is not flipped.";
+        }
+        $parent_card->flip();
+
+        print {$out_fh} "Move: flip %s on Column %d\n\n", $parent_card, $col_idx;
+    }
+    elsif (my ($src_col_idx, $dest_col_idx, $with_cards) = /\ATab(\d+) to Tab(\d+) ((?:With \d+)?)\z/)
+    {
+        $src_col_idx--;
+        $dest_col_idx--;
+
+        my $num_cards = ($with_cards ? ($with_cards =~ s/\AWith //r) : 1);
+
+        my $dest_col = $board->columns->[$dest_col_idx];
+        my $parent_card = $dest_col_top();
+
+        if ($parent_card->is_flipped())
+        {
+            die "Cannot perform '$move' because parent card is flipped.";
+        }
+
+        my $src_col = $board->columns->[$src_col_idx];
+        foreach my $i (1 .. $num_cards)
+        {
+            my $card = $src_col->pos(-$i);
+            if ($card->is_flipped())
+            {
+                die "Cannot perform '$move' because source card '" . $card->to_string()  "' is flipped.";
+            }
+        }
+
+        my $src_card = $src_col->pos(-$num_cards);
+
+        if (!$board->can_put({parent => $parent_card , child => $src_card, }))
+        {
+            die "Cannot perform '$move' due to parent/child mismatch.";
+        }
     }
     print {$out_fh} $board->talon->to_string(), "\n", map { $_->to_string(), "\n", } @{$board->columns()};
 
