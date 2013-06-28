@@ -17,7 +17,7 @@ if (!defined ($version))
 }
 
 my @cmd = (
-    "hg", "tag", "-m",
+    "git", "tag", "-m",
     "Tagging Games-Solitaire-Verify as $version",
     "Games-Solitaire-Verify-$version",
 );
