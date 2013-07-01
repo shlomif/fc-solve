@@ -39,19 +39,7 @@
 #include "str_utils.h"
 #include "inline.h"
 
-#ifndef HAVE_STRNDUP
-static GCC_INLINE char * strndup(const char * s, size_t n)
-{
-    char * ret = strdup(s);
-
-    if (n < strlen(ret))
-    {
-        ret[n] = '\0';
-    }
-
-    return ret;
-}
-#endif
+#include "fcs_strndup.h"
 
 int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
