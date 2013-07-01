@@ -14,17 +14,22 @@ sub run
 	}
 }
 
+mkdir("B");
+chdir("B");
+
 run(
 	[
 	qq{C:\\Program Files\\CMake 2.8\\bin\\CMake},
 	"-G", "MinGW Makefiles",
+    # These variables require libgmp which isn't provided by default.
+    "-DFCS_WITH_TEST_SUITE=", "-DFCS_ENABLE_DBM_SOLVER=",
 	@ARGV,
-	"."
+	".."
 	]
 );
 
-#my $make_path = "C:/strawberry/c/bin/mingw32-make";
-my $make_path = "C:/Dwimperl/c/bin/mingw32-make";
+my $make_path = "C:/strawberry/c/bin/mingw32-make";
+# my $make_path = "C:/Dwimperl/c/bin/mingw32-make";
 
 run( [ $make_path, ] );
 
