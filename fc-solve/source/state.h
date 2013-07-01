@@ -751,8 +751,10 @@ static GCC_INLINE void fc_solve_state_init_proto(
 static const char * const fc_solve_freecells_prefixes[] = { "FC:", "Freecells:", "Freecell:", NULL};
 
 static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:", "Founds:", "Foundations:", "Foundation:", "Found:", NULL};
-#ifdef WIN32
+#if defined(WIN32) && (!defined(HAVE_STRNCASECMP))
+#ifndef strncasecmp
 #define strncasecmp(a,b,c) (strnicmp((a),(b),(c)))
+#endif
 #endif
 
 #ifdef INDIRECT_STACK_STATES
