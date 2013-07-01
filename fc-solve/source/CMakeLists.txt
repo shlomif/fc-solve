@@ -789,7 +789,10 @@ RUN_POD2MAN(
 ENDIF ()
 
 SET (fc_solve_manpage "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.6")
-INSTALL_MAN ("${fc_solve_manpage}" 6)
+
+IF (UNIX)
+    INSTALL_MAN ("${fc_solve_manpage}" 6)
+ENDIF (UNIX)
 
 INSTALL(
     FILES
