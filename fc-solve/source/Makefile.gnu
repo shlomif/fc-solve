@@ -178,15 +178,16 @@ dummy:
 
 #<<<OBJECTS.START
 OBJECTS :=                     \
-          alloc.o             \
           app_str.o           \
-          check_and_add_state.o \
           card.o              \
+          check_and_add_state.o \
           cmd_line.o          \
+          fc_pro_iface.o      \
           fcs_hash.o          \
           freecell.o          \
           instance.o          \
           lib.o               \
+          meta_alloc.o        \
           move.o              \
           move_funcs_maps.o   \
           move_funcs_order.o  \
