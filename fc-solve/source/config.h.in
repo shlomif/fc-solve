@@ -209,6 +209,8 @@ extern "C" {
 
 #cmakedefine HAVE_STRNDUP
 
+#cmakedefine HAVE_STRNCASECMP
+
 /* Name of package */
 #define PACKAGE "${PACKAGE}"
 

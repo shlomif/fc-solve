@@ -58,6 +58,7 @@
 #include "likely.h"
 #include "count.h"
 #include "alloc_wrap.h"
+#include "fcs_strndup.h"
 
 /*
     General use of this interface:

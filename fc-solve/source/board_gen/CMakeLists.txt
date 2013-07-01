@@ -49,14 +49,16 @@ RUN_POD2MAN(
     "Freecell Solver ${VERSION}"
 )
 
-INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/fc-solve-board_gen.6" 6)
-# INSTALL_MAN("fc-solve-board_gen.6" 6)
+IF (UNIX)
+    INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/fc-solve-board_gen.6" 6)
+    # INSTALL_MAN("fc-solve-board_gen.6" 6)
 
-# Install the nroff symbolic links.
-INSTALL_MAN ("make-aisleriot-freecell-board.6" 6)
-INSTALL_MAN ("make-gnome-freecell-board.6" 6)
-INSTALL_MAN ("make_pysol_freecell_board.py.6" 6)
-INSTALL_MAN ("pi-make-microsoft-freecell-board.6" 6)
+    # Install the nroff symbolic links.
+    INSTALL_MAN ("make-aisleriot-freecell-board.6" 6)
+    INSTALL_MAN ("make-gnome-freecell-board.6" 6)
+    INSTALL_MAN ("make_pysol_freecell_board.py.6" 6)
+    INSTALL_MAN ("pi-make-microsoft-freecell-board.6" 6)
+ENDIF (UNIX)
 
 INSTALL(
     TARGETS
