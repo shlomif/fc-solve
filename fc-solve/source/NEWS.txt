@@ -4,6 +4,11 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.20.1: (01-Jul-2013)
+-----------------------------
+
+1. Fix the build and silenced some warnings on MinGW/GCC/Win32.
+
 Version 3.20.0: (26-Jun-2013)
 -----------------------------
 
