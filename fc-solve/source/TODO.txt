@@ -7,6 +7,19 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
+* Investigate the valgrind errors on processing layouts with 7 stacks
+instead of 8 such as:
+
+--------------------------------------------------------
+5H QH 3C AC 3H 4H QD 4C
+QC 9S 6H 9H 3S KS 3D 2C
+5D 2S JC 5C JH 6D AS 9C
+2D KD TH TC TD 8D 8C
+7H JS KH TS KC 7C QS
+AH 5S 6S AD 8H JD 4S
+7S 6C 7D 4D 8S 9D 2H
+--------------------------------------------------------
+
 Non-pressing
 ------------
 

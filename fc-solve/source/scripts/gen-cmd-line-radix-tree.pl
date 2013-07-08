@@ -129,16 +129,18 @@ EOF
         if (@k == 1)
         {
             my $key = $k[0];
-            if ((length($key) == 1) && (ref($node->{$key}) eq "HASH"))
+            my $has_kids = (ref($node->{$key}) eq "HASH");
+            if ((length($key) == 1) && $has_kids)
             {
                 return "\n{\nif (*(p++) == '$key')\n{\n" . $render->($node->{$key}) . "\n}\n\n}\n";
             }
             else
             {
-                return "{\nif (!strncmp(p, \"$key\", " . length($key) . ")) {\n"
-                    . "p += " . length($key) . ";\n"
-                    . ((ref($node->{$key}) eq "HASH")
-                        ? $render->($node->{$key})
+                my $func = $has_kids ? 'strncmp' : 'strcmp';
+                my $func_len = $has_kids ? ', '.length($key) : '';
+                return "{\nif (!$func(p, \"$key\"$func_len)) {\n"
+                    . ($has_kids
+                        ? ("p += " . length($key) . ";\n" . $render->($node->{$key}))
                         : "opt = $node->{$key};\n"
                     )
                     . "\n}\n}\n"
