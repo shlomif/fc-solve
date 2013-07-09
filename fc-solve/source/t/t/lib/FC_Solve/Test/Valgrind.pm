@@ -37,7 +37,17 @@ my @valgrind_tests =
             "$ENV{FCS_PATH}/24.board",
         ],
         blurb => "Check the sanity of crashy-preset-1 which over-rides the soft-thread several times.",
-
+    },
+    {
+        id => "fc-solve-not-enough-input",
+        prog => "fc-solve",
+        argv => [
+            File::Spec->catfile(
+                $ENV{FCS_SRC_PATH},
+                qw(t t data sample-boards 24-with-7-cols.board),
+            ),
+        ],
+        blurb => "Check the sanity of not enough input.",
     },
     {
         id => "fc-solve-trim-max-stored-states",

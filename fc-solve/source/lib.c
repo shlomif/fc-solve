@@ -1739,7 +1739,7 @@ char * freecell_solver_user_get_invalid_state_error_string(
     int print_ts
     )
 {
-    char string[80], card_str[10];
+    char string[80];
 
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
@@ -1747,7 +1747,6 @@ char * freecell_solver_user_get_invalid_state_error_string(
     {
         return strdup("");
     }
-    fc_solve_card_perl2user(user->state_validity_card, card_str, print_ts);
 
     if (user->state_validity_ret == FCS_STATE_VALIDITY__EMPTY_SLOT)
     {
@@ -1759,6 +1758,13 @@ char * freecell_solver_user_get_invalid_state_error_string(
            (user->state_validity_ret == FCS_STATE_VALIDITY__MISSING_CARD)
           )
     {
+        /*
+         * user->state_validity_card is only valid for these states,
+         * so we should call fc_solve_card_perl2user on there only.
+         * */
+        char card_str[10];
+        fc_solve_card_perl2user(user->state_validity_card, card_str, print_ts);
+
         sprintf(string, "%s%s.",
             ((user->state_validity_ret == FCS_STATE_VALIDITY__EXTRA_CARD)? "There's an extra card: " : "There's a missing card: "),
             card_str
