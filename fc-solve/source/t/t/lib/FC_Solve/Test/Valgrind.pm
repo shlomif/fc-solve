@@ -20,11 +20,13 @@ my @valgrind_tests =
         prog => "dbm_fc_solver",
         argv =>
         [
-            '--offload-dir-path', tempdir(CLEANUP => 1),
-            File::Spec->catfile(
-                $ENV{FCS_SRC_PATH}, 't', 't', 'data',
-                'sample-boards', '2freecells-24-mid-with-colons.board'
-            ),
+            '--offload-dir-path', {type => 'tempdir', },
+            { type => 'catfile',
+                args => [{ type => 'ENV', arg => 'FCS_SRC_PATH'},
+                    't', 't', 'data',
+                    'sample-boards', '2freecells-24-mid-with-colons.board'
+                ],
+            }
         ],
         blurb => qq{dbm_fc_solver from 24-mid-with-colons.},
     },
@@ -32,9 +34,19 @@ my @valgrind_tests =
         id => "fc-solve-crashy-preset-1",
         prog => "fc-solve",
         argv => [
-            '--read-from-file', "4,$ENV{FCS_SRC_PATH}/t/t/data/presets/crashy-preset-1.preset",
+            '--read-from-file',
+            {
+                type => 'catfile',
+                prefix => "4,",
+                args => [{ type => 'ENV', arg => 'FCS_SRC_PATH',},
+                    qw(t t data presets crashy-preset-1.preset)
+                ],
+            },
             qw(-s -i -p -t -sam),
-            "$ENV{FCS_PATH}/24.board",
+            {
+                type => 'catfile',
+                args => [{ type => 'ENV', arg => 'FCS_PATH'}, '24.board'],
+            },
         ],
         blurb => "Check the sanity of crashy-preset-1 which over-rides the soft-thread several times.",
     },
@@ -42,10 +54,12 @@ my @valgrind_tests =
         id => "fc-solve-not-enough-input",
         prog => "fc-solve",
         argv => [
-            File::Spec->catfile(
-                $ENV{FCS_SRC_PATH},
-                qw(t t data sample-boards 24-with-7-cols.board),
-            ),
+            {
+                type => 'catfile',
+                args => [{type => 'ENV', arg => 'FCS_SRC_PATH'},
+                    qw(t t data sample-boards 24-with-7-cols.board),
+                ],
+            },
         ],
         blurb => "Check the sanity of not enough input.",
     },
@@ -55,7 +69,11 @@ my @valgrind_tests =
         argv => [
             qw(--method soft-dfs --st-name dfs -nst --method a-star --st-name befs --trim-max-stored-states 100 --prelude) ,
             '200@befs,100@dfs,1000@befs,500000@dfs',
-            qw(-s -i -p -t -sam -mi 3000), "$ENV{FCS_PATH}/1941.board",
+            qw(-s -i -p -t -sam -mi 3000),
+            {
+                type => 'catfile',
+                args => [{type => 'ENV', arg => 'FCS_PATH'}, '1941.board',]
+            },
         ],
         blurb => "Check the sanity of --trim-max-stored-states.",
     },
@@ -111,6 +129,46 @@ my @valgrind_tests =
     },
 );
 
+sub _expand_catfile_arg
+{
+    my $hash_ref = shift;
+
+    my $type = $hash_ref->{type};
+
+    if ($type eq 'ENV')
+    {
+        return $ENV{ $hash_ref->{arg} };
+    }
+    else
+    {
+        Carp::confess("Unknown catfile arg type '$type'!");
+    }
+}
+
+sub _expand_arg
+{
+    my $hash_ref = shift;
+
+    my $type = $hash_ref->{type};
+
+    if ($type eq 'tempdir')
+    {
+        return tempdir(CLEANUP => 1),
+    }
+    elsif ($type eq 'catfile')
+    {
+        my $prefix = exists($hash_ref->{prefix}) ? $hash_ref->{prefix} : '';
+        return $prefix . File::Spec->catfile(
+            map { (ref($_) eq 'HASH') ? _expand_catfile_arg($_) : $_ }
+            @{$hash_ref->{args}}
+        );
+    }
+    else
+    {
+        Carp::confess("Unknown arg type '$type'!");
+    }
+}
+
 sub _test_using_valgrind
 {
     my $args = shift;
@@ -131,7 +189,10 @@ sub _test_using_valgrind
         Carp::confess("Missing id");
     }
 
-    my $cmd_line_args = $args->{argv};
+    my $cmd_line_args = [
+        map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}
+    ];
+
     my $prog = $args->{prog};
 
     my $blurb = $args->{blurb};

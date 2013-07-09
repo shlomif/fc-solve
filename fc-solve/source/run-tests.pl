@@ -165,13 +165,14 @@ GetOptions(
         }
     }
 
+    # Cancelled because it is done by the build system.
     # if (! glob('t/valgrind--*.t'))
-    {
+    # {
         # my $start = time();
-        system($^X, "$abs_bindir/scripts/generate-individual-valgrind-test-scripts.pl");
+        # system($^X, "$abs_bindir/scripts/generate-individual-valgrind-test-scripts.pl");
         # my $end = time();
         # print "StartGen=$start\nEndGen=$end\n";
-    }
+    # }
 
     # Put the valgrind tests last, because they take a long time.
     my @tests =
