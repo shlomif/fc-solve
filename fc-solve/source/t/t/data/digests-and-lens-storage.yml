@@ -25,7 +25,7 @@ digests:
     hexdigest: 1ba0c0ce085e72be7f608ffb8fe44367382eb0bbbf06da6ab136473af5d8353a
     len: 32193
   freecell24_children_playing_ball:
-    hexdigest: 62576e3e9990f255c97a5e167c1052c768bb57218810869193ba34bae2af8b81
+    hexdigest: 3f90b460eb665e6583a91edc845eb433ed5e04168b03cd05e6a51b3b3294397c
     len: 26821
   freecell24_sentient_pearls:
     hexdigest: b6ef4a6b354373fd432fc8d161c1156d02c76f68fb5b6435c0d6a6603d4df658
@@ -43,7 +43,7 @@ digests:
     hexdigest: 34bc7c9fe871e50275975323be93c133e73f135db751a985a32f92323f1d6377
     len: 27193
   qualified_seed_for_6240:
-    hexdigest: 745b535c4bb1d28a0a437efda1a31091aaa1f2fbe1dc2fa6cbe19b8f9936c1b1
+    hexdigest: af7677ddc9f63a07073c6fc1053554937724544b06d6492cbcbc771996eff9d6
     len: 22417
   random_dfs_with_rand_parens:
     hexdigest: ea188af2dbc420480508f0a51e4ffb97ab736cc01a24d9117a578fc0caf6b4f4

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 7;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -12,13 +12,12 @@ use File::Temp qw( tempdir );
 
 sub trap_board
 {
-    local $Test::Builder::Level = $Test::Builder::Level + 1;
-
     my $args = shift;
 
     my $board = $args->{board};
     my $deal = $args->{deal};
     my $msdeals = $args->{msdeals};
+    my $pysolfc_deals = $args->{pysolfc_deals};
 
     if (! defined($board))
     {
@@ -43,7 +42,11 @@ sub trap_board
     open my $fc_solve_output,
         ($msdeals ?
             "pi-make-microsoft-freecell-board $deal | " :
-            ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ")
+            ($board ? "" :
+                ("make_pysol_freecell_board.py" .
+                    ($pysolfc_deals ? " -F " : "") .
+                    " $deal $variant | ")
+            )
         ) .
         "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
         ($board ? shell_quote($board) : "") .
@@ -114,6 +117,34 @@ sub trap_dbm
         /msx,
         "Checking that '-sel' (shortened option) is working properly.",
     );
+}
+
+{
+    my $GOOD_ITERS_COUNT = 60817;
+
+    # TEST:$num_choices=2;
+    foreach my $choice (qw(fc_solve fcpro))
+    {
+        my $fc_solve_output = trap_board({ deal => '22215757927177568630',
+                pysolfc_deals => 1,
+                theme => [qw(-s -i -p -t -sam -sel -l qsi -fif 1 --flares-choice), $choice], });
+
+        my $output_text = join('', @{$fc_solve_output->{out_lines}});
+
+        # TEST*$num_choices
+        is(
+            scalar(() = $output_text =~ /^Iteration: /gms),
+            $GOOD_ITERS_COUNT,
+            "Verifying existing iterations count for qsi --flares-choice $choice",
+        );
+
+        # TEST*$num_choices
+        like(
+            $output_text,
+            qr/^Total number of states checked is \Q$GOOD_ITERS_COUNT\E\.$/ms,
+            "Total number of states checked is reported as the same as the actual one for --flares-choice $choice.",
+        );
+    }
 }
 
 {

@@ -961,6 +961,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             if (instance_item->minimal_solution_flare_idx >= 0)
             {
                 user->active_flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+                user->init_num_times.num_times = user->active_flare->obj_num_times;
+                user->init_num_times.num_states_in_collection = init_num_times.num_states_in_collection = user->active_flare->obj_num_states_in_collection;
+
                 ret = user->ret_code = FCS_STATE_WAS_SOLVED;
 
                 break;
