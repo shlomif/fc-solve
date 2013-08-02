@@ -71,7 +71,7 @@ typedef struct
     int next_move;
     fcs_moves_sequence_t moves_seq;
     fcs_moves_processed_t fc_pro_moves;
-    fcs_int_limit_t obj_num_times, obj_num_states_in_collection;
+    fcs_stats_t obj_stats;
 } fcs_flare_item_t;
 
 enum
@@ -749,6 +749,13 @@ int DLLEXPORT freecell_solver_user_solve_board(
     return freecell_solver_user_resume_solution(api_instance);
 }
 
+static GCC_INLINE void init_stats(
+    fcs_stats_t * const s
+)
+{
+    s->num_times = s->num_states_in_collection = 0;
+}
+
 static void recycle_instance(
     fcs_user_t * const user,
     const int i
@@ -793,8 +800,7 @@ static void recycle_instance(
             flare->next_move = 0;
         }
 
-        flare->obj_num_times = 0;
-        flare->obj_num_states_in_collection = 0;
+        init_stats(&flare->obj_stats);
     }
 
     instance_item->current_plan_item_idx = 0;
@@ -961,8 +967,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             if (instance_item->minimal_solution_flare_idx >= 0)
             {
                 user->active_flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
-                user->init_num_times.num_times = user->active_flare->obj_num_times;
-                user->init_num_times.num_states_in_collection = init_num_times.num_states_in_collection = user->active_flare->obj_num_states_in_collection;
+                user->init_num_times = user->active_flare->obj_stats;
 
                 ret = user->ret_code = FCS_STATE_WAS_SOLVED;
 
@@ -1136,12 +1141,11 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->all_instances_were_suspended = FALSE;
         }
 
-        user->active_flare->obj_num_times = user->active_flare->obj->num_times;
-        user->active_flare->obj_num_states_in_collection = user->active_flare->obj->num_states_in_collection;
-        user->iterations_board_started_at.num_times += user->active_flare->obj_num_times - init_num_times.num_times;
-        user->iterations_board_started_at.num_states_in_collection += user->active_flare->obj_num_states_in_collection - init_num_times.num_states_in_collection;
-        user->init_num_times.num_times = user->active_flare->obj_num_times;
-        user->init_num_times.num_states_in_collection = user->active_flare->obj_num_states_in_collection;
+        user->active_flare->obj_stats.num_times = user->active_flare->obj->num_times;
+        user->active_flare->obj_stats.num_states_in_collection = user->active_flare->obj->num_states_in_collection;
+        user->iterations_board_started_at.num_times += user->active_flare->obj_stats.num_times - init_num_times.num_times;
+        user->iterations_board_started_at.num_states_in_collection += user->active_flare->obj_stats.num_states_in_collection - init_num_times.num_states_in_collection;
+        user->init_num_times = user->active_flare->obj_stats;
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
@@ -1177,8 +1181,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 flare->obj->solution_moves.moves = NULL;
             }
 
-            user->active_flare->obj_num_times = user->active_flare->obj->num_times;
-            user->active_flare->obj_num_states_in_collection = user->active_flare->obj->num_states_in_collection;
+            user->active_flare->obj_stats.num_times = user->active_flare->obj->num_times;
+            user->active_flare->obj_stats.num_states_in_collection = user->active_flare->obj->num_states_in_collection;
             fc_solve_recycle_instance(flare->obj);
             flare->instance_is_ready = TRUE;
 
@@ -1208,8 +1212,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         {
             if (was_run_now)
             {
-                user->active_flare->obj_num_times = user->active_flare->obj->num_times;
-                user->active_flare->obj_num_states_in_collection = user->active_flare->obj->num_states_in_collection;
                 fc_solve_recycle_instance(user->active_flare->obj);
                 user->active_flare->instance_is_ready = TRUE;
             }
@@ -1246,9 +1248,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 (user->active_flare->obj->num_times >= local_limit())
                )
             {
-                user->active_flare->obj_num_times =
+                user->active_flare->obj_stats.num_times =
                     user->active_flare->obj->num_times;
-                user->active_flare->obj_num_states_in_collection =
+                user->active_flare->obj_stats.num_states_in_collection =
                     user->active_flare->obj->num_states_in_collection;
                 recycle_instance(user, user->current_instance_idx);
                 user->current_instance_idx++;
@@ -1641,7 +1643,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    return user->iterations_board_started_at.num_times + max(user->active_flare->obj_num_times, user->active_flare->obj->num_times) - user->init_num_times.num_times;
+    return user->iterations_board_started_at.num_times + max(user->active_flare->obj_stats.num_times, user->active_flare->obj->num_times) - user->init_num_times.num_times;
 }
 
 int DLLEXPORT freecell_solver_user_get_num_times(void * api_instance)
@@ -2021,7 +2023,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_states_in_collection_long
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    return user->iterations_board_started_at.num_states_in_collection + user->active_flare->obj_num_states_in_collection - user->init_num_times.num_states_in_collection;
+    return user->iterations_board_started_at.num_states_in_collection + user->active_flare->obj_stats.num_states_in_collection - user->init_num_times.num_states_in_collection;
 }
 
 int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * api_instance)
@@ -2371,8 +2373,7 @@ static int user_next_flare(fcs_user_t * user)
     flare->name = NULL;
     flare->fc_pro_moves.moves = NULL;
     flare->instance_is_ready = TRUE;
-    flare->obj_num_times = 0;
-    flare->obj_num_states_in_collection = 0;
+    init_stats(&flare->obj_stats);
 
     return 0;
 }
