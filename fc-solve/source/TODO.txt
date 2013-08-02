@@ -7,6 +7,29 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
+* Fix the missing files (the presets one) on Windows due to the NullSoft
+installer not packaging them.
+** Make sure they are referenced correctly from the prefix.
+*** ( Possibly using the Win32/Win64 registry.)
+
+* Fix the STDERR message on fc-solve.exe startup on Windows to not suggest
+that they should type fc-solve --help in that window.
+
+* Investigate why:
+
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 22215757927177568630 | ./scripts/summarize-fc-solve -l qsi -fif 10 --flares-choice fc_solve
+Verdict: Solved ; Iters: 238995 ; Length: 86
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 22215757927177568630 | ./scripts/summarize-fc-solve -l qsi -fif 10 --flares-choice fcpro
+Verdict: Solved ; Iters: 203952 ; Length: 87
+shlomif[fcs]:$trunk/fc-solve/source$
+--------------------------------------------------------
+
+They shouldn't result in a differet number of iterations.
+
+* Add a textarea to specify arbitrary +fc-solve+ flags to the JS solver so
+people can use it to solve other variants aside from Freecell and other uses.
+
 Non-pressing
 ------------
 
