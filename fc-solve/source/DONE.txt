@@ -420,3 +420,14 @@ AH 5S 6S AD 8H JD 4S
 7S 6C 7D 4D 8S 9D 2H
 --------------------------------------------------------
 
+* Investigate why:
+
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 22215757927177568630 | ./scripts/summarize-fc-solve -l qsi -fif 10 --flares-choice fc_solve
+Verdict: Solved ; Iters: 238995 ; Length: 86
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 22215757927177568630 | ./scripts/summarize-fc-solve -l qsi -fif 10 --flares-choice fcpro
+Verdict: Solved ; Iters: 203952 ; Length: 87
+shlomif[fcs]:$trunk/fc-solve/source$
+--------------------------------------------------------
+
+They shouldn't result in a different number of iterations.
