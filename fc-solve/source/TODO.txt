@@ -16,7 +16,8 @@ installer not packaging them.
 that they should type fc-solve --help in that window.
 
 * Add a textarea to specify arbitrary +fc-solve+ flags to the JS solver so
-people can use it to solve other variants aside from Freecell and other uses.
+people can use it to solve other variants aside from Freecell, and for
+other uses.
 
 Non-pressing
 ------------
