@@ -12,6 +12,7 @@ var freecell_solver_user_move_ptr_to_string_w_state = Module.cwrap('freecell_sol
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
 var freecell_solver_user_limit_iterations = Module.cwrap('freecell_solver_user_limit_iterations', 'number', ['number', 'number']);
 var freecell_solver_user_get_invalid_state_error_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_string', 'number', ['number', 'number']);
+var freecell_solver_user_cmd_line_parse_args = Module.cwrap('freecell_solver_user_cmd_line_parse_args', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
 var remove_trailing_space_re = /[ \t]+$/gm;
 
@@ -44,6 +45,8 @@ function fc_solve_2uni_found(match, p1, p2, offset, mystring) {
 
 Class('FC_Solve', {
     has: {
+        dir_base: { is: ro },
+        string_params: { is: ro, init: null, },
         set_status_callback: { is: ro },
         is_unicode_cards: { is: ro, init: false, },
         cmd_line_preset: { is: ro },
@@ -157,6 +160,64 @@ Class('FC_Solve', {
 
                     if (preset_ret != 0) {
                         alert ("Failed to load command line preset '" + cmd_line_preset + "'. Problem is: «" + error_string + "». Should not happen.");
+                        throw "Foo";
+                    }
+                }
+
+                if (that.string_params) {
+
+                    var error_string_ptr_buf = malloc(128);
+
+                    if (error_string_ptr_buf == 0) {
+                        alert ("Failed to allocate (out of memory?).");
+                        throw "Foo";
+                    }
+
+                    // Create a file with the contents of string_params.
+                    var base_path = '/' + that.dir_base;
+                    var base_dh = FS.createFolder('/', that.dir_base, true, true);
+                    var file_basename = 'string-params.fc-solve.txt';
+                    var string_params_file_path = base_path + '/' + file_basename;
+                    FS.createDataFile(base_dh, file_basename, that.string_params,
+                        true, true);
+
+
+                    var args_buf = malloc(4*2);
+                    if (args_buf == 0) {
+                        alert ("Failed to allocate (out of memory?).");
+                        throw "Foo";
+                    }
+
+                    // TODO : Is there a memory leak here?
+                    var read_from_file_str_ptr = allocate(intArrayFromString("--read-from-file"), 'i8', ALLOC_STACK);
+                    var arg_str_ptr = allocate(intArrayFromString("0," + string_params_file_path), 'i8', ALLOC_STACK);
+
+                    setValue(args_buf, read_from_file_str_ptr, '*');
+                    setValue(args_buf+4, arg_str_ptr, '*');
+
+                    // Input the file to the solver.
+                    var args_ret_code = freecell_solver_user_cmd_line_parse_args(
+                        that.obj,
+                        2,
+                        args_buf,
+                        0,
+                        0,
+                        0,
+                        0,
+                        error_string_ptr_buf,
+                        0
+                    );
+
+                    c_free(args_buf);
+
+                    var error_string_ptr = getValue(error_string_ptr_buf, '*');
+
+                    var error_string = Module.Pointer_stringify( error_string_ptr );
+                    c_free(error_string_ptr);
+                    c_free(error_string_ptr_buf);
+
+                    if (args_ret_code != 0) {
+                        alert ("Failed to process user-specified command line arguments. Problem is: «" + error_string + "».");
                         throw "Foo";
                     }
                 }

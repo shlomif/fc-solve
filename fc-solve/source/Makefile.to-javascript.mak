@@ -22,6 +22,7 @@ NEEDED_FUNCTIONS = \
 	free \
 	freecell_solver_user_alloc \
 	freecell_solver_user_cmd_line_read_cmd_line_preset \
+	freecell_solver_user_cmd_line_parse_args \
 	freecell_solver_user_current_state_as_string \
 	freecell_solver_user_current_state_as_string \
 	freecell_solver_user_free \

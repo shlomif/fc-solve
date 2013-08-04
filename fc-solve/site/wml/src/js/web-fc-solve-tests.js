@@ -4458,6 +4458,1495 @@ var solution_for_deal_24__default__with_unicoded_suits =
 "\n" +
 "====================\n\n";
 
+var pysol_simple_simon_deal_24 = "4C QH 3C 8C AD JH 8S KS\n" +
+"5H 9S 6H AC 4D TD 4S 6D\n" +
+"QC 2S JC 9H QS KC 4H 8D\n" +
+"5D KD TH 5C 3H 8H 7C\n" +
+"2D JS KH TC 3S JD\n" +
+"7H 5S 6S TS 9D\n" +
+"AH 6C 7D 2H\n" +
+"7S 9C QD\n" +
+"2C 3D\n" +
+"AS\n" +
+"";
+
+var solution_for_pysol_simple_simon_deal_24__default = "-=-=-=-=-=-=-=-=-=-=-=-\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 4S 6D\n" +
+": QC 2S JC 9H QS KC 4H 8D\n" +
+": 5D KD TH 5C 3H 8H 7C\n" +
+": 2D JS KH TC 3S JD\n" +
+": 7H 5S 6S TS 9D\n" +
+": AH 6C 7D 2H\n" +
+": 7S 9C QD\n" +
+": 2C 3D\n" +
+": AS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 4 to stack 7\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 4S 6D\n" +
+": QC 2S JC 9H QS KC 4H 8D\n" +
+": 5D KD TH 5C 3H 8H 7C\n" +
+": 2D JS KH TC 3S\n" +
+": 7H 5S 6S TS 9D\n" +
+": AH 6C 7D 2H\n" +
+": 7S 9C QD JD\n" +
+": 2C 3D\n" +
+": AS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 2 to stack 5\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 4S 6D\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C\n" +
+": 2D JS KH TC 3S\n" +
+": 7H 5S 6S TS 9D 8D\n" +
+": AH 6C 7D 2H\n" +
+": 7S 9C QD JD\n" +
+": 2C 3D\n" +
+": AS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 9 to stack 6\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 4S 6D\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C\n" +
+": 2D JS KH TC 3S\n" +
+": 7H 5S 6S TS 9D 8D\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 1 to stack 3\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 4S\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC 3S\n" +
+": 7H 5S 6S TS 9D 8D\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 4 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 4S 3S\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC\n" +
+": 7H 5S 6S TS 9D 8D\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 5 to stack 7\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 4S 3S\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC\n" +
+": 7H 5S 6S\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD TS 9D 8D\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 5 to stack 9\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 4S 3S\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC\n" +
+": 7H 5S\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD TS 9D 8D\n" +
+": 2C 3D\n" +
+": 6S\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 1 to stack 5\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC\n" +
+": 7H 5S 4S 3S\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD TS 9D 8D\n" +
+": 2C 3D\n" +
+": 6S\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 5 to stack 9\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC\n" +
+": 7H\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD TS 9D 8D\n" +
+": 2C 3D\n" +
+": 6S 5S 4S 3S\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 7 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC\n" +
+": 7H\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD TS\n" +
+": 2C 3D\n" +
+": 6S 5S 4S 3S\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 4 cards from stack 9 to stack 5\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC\n" +
+": 7H 6S 5S 4S 3S\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD TS\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 5 cards from stack 5 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7H 6S 5S 4S 3S\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC\n" +
+":\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C QD JD TS\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 7 to stack 0\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7H 6S 5S 4S 3S\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC\n" +
+":\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 9C\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 7 to stack 4\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7H 6S 5S 4S 3S\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC 9C\n" +
+":\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 4 cards from stack 1 to stack 7\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7H\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 8H 7C 6D\n" +
+": 2D JS KH TC 9C\n" +
+":\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 3 to stack 4\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7H\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H\n" +
+": 2D JS KH TC 9C 8H 7C 6D\n" +
+":\n" +
+": AH 6C 7D 2H AS\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 6 to stack 3\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7H\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 2H AS\n" +
+": 2D JS KH TC 9C 8H 7C 6D\n" +
+":\n" +
+": AH 6C 7D\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 4 to stack 6\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7H\n" +
+": QC 2S JC 9H QS KC 4H\n" +
+": 5D KD TH 5C 3H 2H AS\n" +
+": 2D JS KH TC 9C 8H 7C\n" +
+":\n" +
+": AH 6C 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 3 to stack 2\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7H\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AS\n" +
+": 5D KD TH 5C\n" +
+": 2D JS KH TC 9C 8H 7C\n" +
+":\n" +
+": AH 6C 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 1 to stack 9\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AS\n" +
+": 5D KD TH 5C\n" +
+": 2D JS KH TC 9C 8H 7C\n" +
+":\n" +
+": AH 6C 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 6 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7D 6D\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AS\n" +
+": 5D KD TH 5C\n" +
+": 2D JS KH TC 9C 8H 7C\n" +
+":\n" +
+": AH 6C\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 6 to stack 4\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7D 6D\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AS\n" +
+": 5D KD TH 5C\n" +
+": 2D JS KH TC 9C 8H 7C 6C\n" +
+":\n" +
+": AH\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 3 to stack 4\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7D 6D\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AS\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7C 6C 5C\n" +
+":\n" +
+": AH\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 2 to stack 5\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7D 6D\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7C 6C 5C\n" +
+": AS\n" +
+": AH\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 6 to stack 2\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D TD 9D 8D 7D 6D\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7C 6C 5C\n" +
+": AS\n" +
+":\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 5 cards from stack 1 to stack 6\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7C 6C 5C\n" +
+": AS\n" +
+": TD 9D 8D 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C 3D\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 8 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D 3D\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7C 6C 5C\n" +
+": AS\n" +
+": TD 9D 8D 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 5 to stack 8\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D 3D\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7C 6C 5C\n" +
+":\n" +
+": TD 9D 8D 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+": 2C AS\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 8 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D 3D 2C AS\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7C 6C 5C\n" +
+":\n" +
+": TD 9D 8D 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+":\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 4 to stack 5\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D 3D 2C AS\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H\n" +
+": 7C 6C 5C\n" +
+": TD 9D 8D 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+":\n" +
+": 7H\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 9 to stack 4\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TS\n" +
+": 5H 9S 6H AC 4D 3D 2C AS\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H\n" +
+": 7C 6C 5C\n" +
+": TD 9D 8D 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 0 to stack 8\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD\n" +
+": 5H 9S 6H AC 4D 3D 2C AS\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H\n" +
+": 7C 6C 5C\n" +
+": TD 9D 8D 7D 6D\n" +
+": 7S 6S 5S 4S 3S\n" +
+": TS\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 5 cards from stack 6 to stack 0\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S KS QD JD TD 9D 8D 7D 6D\n" +
+": 5H 9S 6H AC 4D 3D 2C AS\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H\n" +
+": 7C 6C 5C\n" +
+":\n" +
+": 7S 6S 5S 4S 3S\n" +
+": TS\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 8 cards from stack 0 to stack 9\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S\n" +
+": 5H 9S 6H AC 4D 3D 2C AS\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H\n" +
+": 7C 6C 5C\n" +
+":\n" +
+": 7S 6S 5S 4S 3S\n" +
+": TS\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 5 cards from stack 7 to stack 0\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S 7S 6S 5S 4S 3S\n" +
+": 5H 9S 6H AC 4D 3D 2C AS\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H\n" +
+": 7C 6C 5C\n" +
+":\n" +
+":\n" +
+": TS\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 4 cards from stack 1 to stack 5\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S 7S 6S 5S 4S 3S\n" +
+": 5H 9S 6H AC\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H\n" +
+": 7C 6C 5C 4D 3D 2C AS\n" +
+":\n" +
+":\n" +
+": TS\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 1 to stack 6\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S 7S 6S 5S 4S 3S\n" +
+": 5H 9S 6H\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H\n" +
+": 7C 6C 5C 4D 3D 2C AS\n" +
+": AC\n" +
+":\n" +
+": TS\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 1 to stack 4\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH 8S 7S 6S 5S 4S 3S\n" +
+": 5H 9S\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H 6H\n" +
+": 7C 6C 5C 4D 3D 2C AS\n" +
+": AC\n" +
+":\n" +
+": TS\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 6 cards from stack 0 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH\n" +
+": 5H 9S 8S 7S 6S 5S 4S 3S\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H 6H\n" +
+": 7C 6C 5C 4D 3D 2C AS\n" +
+": AC\n" +
+":\n" +
+": TS\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 7 cards from stack 1 to stack 8\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH\n" +
+": 5H\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H 6H\n" +
+": 7C 6C 5C 4D 3D 2C AS\n" +
+": AC\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 1 to stack 4\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH\n" +
+":\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD TH\n" +
+": 2D JS KH TC 9C 8H 7H 6H 5H\n" +
+": 7C 6C 5C 4D 3D 2C AS\n" +
+": AC\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 3 to stack 0\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH\n" +
+":\n" +
+": QC 2S JC 9H QS KC 4H 3H 2H AH\n" +
+": 5D KD\n" +
+": 2D JS KH TC 9C 8H 7H 6H 5H\n" +
+": 7C 6C 5C 4D 3D 2C AS\n" +
+": AC\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 4 cards from stack 2 to stack 4\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH\n" +
+":\n" +
+": QC 2S JC 9H QS KC\n" +
+": 5D KD\n" +
+": 2D JS KH TC 9C 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": 7C 6C 5C 4D 3D 2C AS\n" +
+": AC\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QD JD TD 9D 8D 7D 6D\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 7 cards from stack 9 to stack 3\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH\n" +
+":\n" +
+": QC 2S JC 9H QS KC\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH TC 9C 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": 7C 6C 5C 4D 3D 2C AS\n" +
+": AC\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 5 to stack 7\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH\n" +
+":\n" +
+": QC 2S JC 9H QS KC\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH TC 9C 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": 7C 6C 5C 4D 3D 2C\n" +
+": AC\n" +
+": AS\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 6 to stack 5\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH\n" +
+":\n" +
+": QC 2S JC 9H QS KC\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH TC 9C 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+": AS\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 2 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH\n" +
+": KC\n" +
+": QC 2S JC 9H QS\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH TC 9C 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+": AS\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 2 to stack 9\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH\n" +
+": KC\n" +
+": QC 2S JC 9H\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH TC 9C 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+": AS\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 8 cards from stack 4 to stack 2\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH\n" +
+": KC\n" +
+": QC 2S JC 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH TC 9C\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+": AS\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 9 cards from stack 2 to stack 0\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": KC\n" +
+": QC 2S JC\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH TC 9C\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+": AS\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 4 to stack 2\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": KC\n" +
+": QC 2S JC TC 9C\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+": AS\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 2 to stack 9\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": KC\n" +
+": QC 2S\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+": AS\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QS JC TC 9C\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 7 to stack 2\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": KC\n" +
+": QC 2S AS\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S\n" +
+": KS QS JC TC 9C\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 2 to stack 8\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": KC\n" +
+": QC\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JC TC 9C\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 2 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": KC QC\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JC TC 9C\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 9 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": KC QC JC TC 9C\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 11 cards from stack 0 to stack 9\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C AD\n" +
+": KC QC JC TC 9C\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+":\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 0 to stack 6\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 8C\n" +
+": KC QC JC TC 9C\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+": AD\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 0 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C\n" +
+": KC QC JC TC 9C 8C\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D 2C AC\n" +
+": AD\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 5 to stack 0\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+": 7C 6C 5C 4D 3D\n" +
+": AD\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 5 cards from stack 5 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS KH\n" +
+":\n" +
+": AD\n" +
+":\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 4 to stack 7\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D JS\n" +
+":\n" +
+": AD\n" +
+": KH\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 4 to stack 2\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D\n" +
+": JS\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D\n" +
+":\n" +
+": AD\n" +
+": KH\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 1 cards from stack 6 to stack 4\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D\n" +
+": JS\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 2D AD\n" +
+":\n" +
+":\n" +
+": KH\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 2 cards from stack 4 to stack 1\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+": JS\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+":\n" +
+":\n" +
+": KH\n" +
+": TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 10 cards from stack 8 to stack 2\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+": JS TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+":\n" +
+":\n" +
+": KH\n" +
+":\n" +
+": KS QS JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 11 cards from stack 9 to stack 5\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+": JS TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+": JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+":\n" +
+": KH\n" +
+":\n" +
+": KS QS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 11 cards from stack 2 to stack 9\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-0\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+": JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+":\n" +
+": KH\n" +
+":\n" +
+": KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S AS\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move the sequence on top of Stack 9 to the foundations\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-K\n" +
+"Freecells:\n" +
+": 4C QH 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+": JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+":\n" +
+": KH\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 0 to stack 6\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-K\n" +
+"Freecells:\n" +
+": 4C QH\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+": JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": 3C 2C AC\n" +
+": KH\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 11 cards from stack 5 to stack 0\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-K\n" +
+"Freecells:\n" +
+": 4C QH JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+":\n" +
+": 3C 2C AC\n" +
+": KH\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 12 cards from stack 0 to stack 7\n" +
+"\n" +
+"Foundations: H-0 C-0 D-0 S-K\n" +
+"Freecells:\n" +
+": 4C\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+":\n" +
+": 3C 2C AC\n" +
+": KH QH JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move the sequence on top of Stack 7 to the foundations\n" +
+"\n" +
+"Foundations: H-K C-0 D-0 S-K\n" +
+"Freecells:\n" +
+": 4C\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+":\n" +
+": 3C 2C AC\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 3 cards from stack 6 to stack 0\n" +
+"\n" +
+"Foundations: H-K C-0 D-0 S-K\n" +
+"Freecells:\n" +
+": 4C 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 4 cards from stack 1 to stack 4\n" +
+"\n" +
+"Foundations: H-K C-0 D-0 S-K\n" +
+"Freecells:\n" +
+": 4C 3C 2C AC\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 4D 3D 2D AD\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 4 cards from stack 0 to stack 1\n" +
+"\n" +
+"Foundations: H-K C-0 D-0 S-K\n" +
+"Freecells:\n" +
+":\n" +
+": KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C AC\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 4D 3D 2D AD\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move the sequence on top of Stack 1 to the foundations\n" +
+"\n" +
+"Foundations: H-K C-K D-0 S-K\n" +
+"Freecells:\n" +
+":\n" +
+":\n" +
+":\n" +
+": 5D KD QD JD TD 9D 8D 7D 6D\n" +
+": 4D 3D 2D AD\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 8 cards from stack 3 to stack 8\n" +
+"\n" +
+"Foundations: H-K C-K D-0 S-K\n" +
+"Freecells:\n" +
+":\n" +
+":\n" +
+":\n" +
+": 5D\n" +
+": 4D 3D 2D AD\n" +
+":\n" +
+":\n" +
+":\n" +
+": KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 4 cards from stack 4 to stack 3\n" +
+"\n" +
+"Foundations: H-K C-K D-0 S-K\n" +
+"Freecells:\n" +
+":\n" +
+":\n" +
+":\n" +
+": 5D 4D 3D 2D AD\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+": KD QD JD TD 9D 8D 7D 6D\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move 5 cards from stack 3 to stack 8\n" +
+"\n" +
+"Foundations: H-K C-K D-0 S-K\n" +
+"Freecells:\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+": KD QD JD TD 9D 8D 7D 6D 5D 4D 3D 2D AD\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n" +
+"\n" +
+"Move the sequence on top of Stack 8 to the foundations\n" +
+"\n" +
+"Foundations: H-K C-K D-K S-K\n" +
+"Freecells:\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+":\n" +
+"\n" +
+"\n" +
+"====================\n\n" +
+"";
+
 function test_js_fc_solve_class()
 {
     module("FC_Solve.Algorithmic");
@@ -4517,6 +6006,36 @@ function test_js_fc_solve_class()
         });
 
         var solve_err_code = instance.do_solve(ms_deal_24);
+
+        while (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
+            solve_err_code = instance.resume_solution();
+        }
+
+        // TEST
+        ok (success, "do_solve was successful.");
+
+    });
+
+    test("FC_Solve arbitrary parameters - Solve Simple Simon.", function() {
+        expect(2);
+
+        var success = false;
+
+        var instance = new FC_Solve({
+            cmd_line_preset: 'default',
+            string_params: '-g simple_simon',
+            dir_base: 'fcs1',
+            set_status_callback: function () { return; },
+            set_output: function (buffer) {
+                success = true;
+                // TEST
+                equal (buffer, solution_for_pysol_simple_simon_deal_24__default,
+                    "Simple Simon Solution is right"
+                );
+            },
+        });
+
+        var solve_err_code = instance.do_solve(pysol_simple_simon_deal_24);
 
         while (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
             solve_err_code = instance.resume_solution();
