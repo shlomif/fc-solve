@@ -140,6 +140,18 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 
 </div> ;;; end of .disabled
 
+<p>
+<button id="fcs_advanced_toggle" onclick="javascript:toggle_advanced()">Advanced</button>
+</p>
+
+<div id="fcs_advanced" class="disabled">
+<label for="string_params">String Parameters:</label><br />
+<textarea class="emscripten" id="string_params" cols="50" rows="30"></textarea>
+<p>
+(Format as a preset file, with backslashes at the end of lines. See the
+<a href="$(ROOT)/docs/">online documentation for information regarding syntax.</a>
+</p>
+</div>
 
 <p id="status_wrap">
 

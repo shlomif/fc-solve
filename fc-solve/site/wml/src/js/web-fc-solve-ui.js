@@ -128,6 +128,10 @@ Class('FC_Solve_UI',
 
                 return;
             },
+            _get_string_params: function() {
+                var text = $("#string_params").val();
+                return text.match(/\S/) ? text : null;
+            },
             _get_cmd_line_preset: function() {
                 return $("#preset").val();
             },
@@ -154,6 +158,8 @@ Class('FC_Solve_UI',
                     set_output: function(buffer) {
                         return that._webui_set_output(buffer);
                     },
+                    dir_base: 'fcs_ui',
+                    string_params: that._get_string_params(),
                 });
 
                 that._solve_err_code = that._instance.do_solve(
@@ -311,3 +317,8 @@ function clear_output() {
     return fcs_ui._webui_output_set_text('');
 }
 
+function toggle_advanced() {
+    $("#fcs_advanced").toggleClass("disabled");
+
+    return;
+}
