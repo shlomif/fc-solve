@@ -141,7 +141,7 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 </div> ;;; end of .disabled
 
 <p>
-<button id="fcs_advanced_toggle" onclick="javascript:toggle_advanced()">Advanced</button>
+<button id="fcs_advanced_toggle" onclick="javascript:toggle_advanced()">Advanced ▼</button>
 </p>
 
 <div id="fcs_advanced" class="disabled">

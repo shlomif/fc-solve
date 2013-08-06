@@ -295,7 +295,9 @@ Class('FC_Solve_Bookmarking', {
                     });
 
                     if (should_toggle) {
-                        $("#" + id).removeClass("disabled");
+                        if ($("#" + id).hasClass("disabled")) {
+                            rec.callback();
+                        }
                     }
                 });
 
@@ -305,8 +307,23 @@ Class('FC_Solve_Bookmarking', {
     }
 );
 
+function toggle_advanced() {
+    var ctl = $("#fcs_advanced");
+    ctl.toggleClass("disabled");
+
+    var set_text = function (my_text) {
+        $("#fcs_advanced_toggle").text(my_text);
+    }
+
+    set_text(
+        ctl.hasClass("disabled") ? "Advanced ▼" : "Advanced ▲"
+    );
+
+    return;
+}
+
 function _create_bmark_obj() {
-    return new FC_Solve_Bookmarking({ bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based', 'unicode_suits', 'string_params', ], show: [{ id: 'fcs_advanced', deps: ['string_params',],}, ],});
+    return new FC_Solve_Bookmarking({ bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based', 'unicode_suits', 'string_params', ], show: [{ id: 'fcs_advanced', deps: ['string_params',], callback: toggle_advanced,}, ],});
 }
 
 function on_bookmarking() {
@@ -334,10 +351,4 @@ function on_toggle_one_based() {
 
 function clear_output() {
     return fcs_ui._webui_output_set_text('');
-}
-
-function toggle_advanced() {
-    $("#fcs_advanced").toggleClass("disabled");
-
-    return;
 }
