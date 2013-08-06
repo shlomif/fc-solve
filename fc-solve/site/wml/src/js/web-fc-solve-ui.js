@@ -215,6 +215,9 @@ Class('FC_Solve_Bookmarking', {
             bookmark_controls: {
                 is: ro,
             },
+            show: {
+                is: ro,
+            },
         },
         methods: {
             _get_loc: function() {
@@ -280,6 +283,22 @@ Class('FC_Solve_Bookmarking', {
                     }
                 });
 
+                that.show.forEach(function (rec) {
+                    var id = rec.id;
+                    var deps = rec.deps;
+
+                    var should_toggle = false;
+                    deps.forEach(function (d) {
+                        if ($("#" + d).val().length > 0) {
+                            should_toggle = true;
+                        }
+                    });
+
+                    if (should_toggle) {
+                        $("#" + id).removeClass("disabled");
+                    }
+                });
+
                 return;
             },
         },
@@ -287,7 +306,7 @@ Class('FC_Solve_Bookmarking', {
 );
 
 function _create_bmark_obj() {
-    return new FC_Solve_Bookmarking({ bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based', 'unicode_suits'] });
+    return new FC_Solve_Bookmarking({ bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based', 'unicode_suits', 'string_params', ], show: [{ id: 'fcs_advanced', deps: ['string_params',],}, ],});
 }
 
 function on_bookmarking() {
