@@ -431,3 +431,8 @@ shlomif[fcs]:$trunk/fc-solve/source$
 --------------------------------------------------------
 
 They shouldn't result in a different number of iterations.
+
+* Add a textarea to specify arbitrary +fc-solve+ flags to the JS solver so
+people can use it to solve other variants aside from Freecell, and for
+other uses.
+
