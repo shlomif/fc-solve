@@ -160,7 +160,7 @@ static char * get_the_positions_by_rank_data__ss_generator(
     memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
     for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
     {
-        const fcs_cards_column_t dest_col = fcs_state_get_col(*the_state, ds);
+        const fcs_const_cards_column_t dest_col = fcs_state_get_col(*the_state, ds);
         const int dest_cards_num = fcs_col_len(dest_col);
 
         for (int dc = 0 ; dc < dest_cards_num ; dc++)

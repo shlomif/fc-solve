@@ -487,6 +487,10 @@ static void populate_instance_with_intermediate_input_line(
 #endif
     fcs_fcc_move_t move;
     enum fcs_dbm_variant_type_t local_variant;
+#ifdef DEBUG_OUT
+    fcs_state_locs_struct_t locs;
+    fc_solve_init_locs(&locs);
+#endif
 
     DECLARE_IND_BUF_T(running_indirect_stacks_buffer)
 
@@ -510,9 +514,15 @@ static void populate_instance_with_intermediate_input_line(
                 );
             exit(-1);
         }
+#ifdef FCS_DEBONDT_DELTA_STATES
+        final_stack_encoded_state.s[
+            (s_ptr - line) >> 1
+            ] = (unsigned char)hex_digits;
+#else
         final_stack_encoded_state.s[
             ++final_stack_encoded_state.s[0]
             ] = (unsigned char)hex_digits;
+#endif
         s_ptr += 2;
     }
 
@@ -546,6 +556,26 @@ static void populate_instance_with_intermediate_input_line(
 
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
     {
+#ifdef DEBUG_OUT
+        {
+            char * state_str;
+            state_str = fc_solve_state_as_string(
+                &(running_state.s),
+                &(running_state.info),
+                &locs,
+                FREECELLS_NUM,
+                8,
+                1,
+                1,
+                0,
+                1
+            );
+
+            fprintf(stdout, "BEFORE_RUNNING_STATE == <<<\n%s>>>\n\n", state_str);
+            fflush(stdout);
+            free(state_str);
+        }
+#endif
         int src, dest;
         fcs_card_t src_card;
 
@@ -630,6 +660,26 @@ static void populate_instance_with_intermediate_input_line(
             &running_state,
             running_indirect_stacks_buffer
             );
+#ifdef DEBUG_OUT
+        {
+            char * state_str;
+            state_str = fc_solve_state_as_string(
+                &(running_state.s),
+                &(running_state.info),
+                &locs,
+                FREECELLS_NUM,
+                8,
+                1,
+                1,
+                0,
+                1
+            );
+
+            fprintf(stdout, "RUNNING_STATE == <<<\n%s>>>\n\n", state_str);
+            fflush(stdout);
+            free(state_str);
+        }
+#endif
     }
 
     if (memcmp(&running_key, &final_stack_encoded_state,
@@ -908,6 +958,9 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 {
     fcs_bool_t ret = FALSE;
     fcs_dbm_record_t * token;
+#ifdef DEBUG_OUT
+    enum fcs_dbm_variant_type_t local_variant = instance->variant;
+#endif
 
     TRACE0("handle_and_destroy_instance_solution start");
     instance_print_stats(instance, out_fh);
@@ -933,10 +986,17 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 int i;
                 physical_item.key = token->key;
 
+#ifdef FCS_DEBONDT_DELTA_STATES
+                for (i=0; i < sizeof(item->key) ; i++)
+                {
+                    fprintf(out_fh, "%.2X", (int)item->key.s[i]);
+                }
+#else
                 for (i=0; i < item->key.s[0] ; i++)
                 {
                     fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
                 }
+#endif
 
                 fprintf (out_fh, "%s", "|");
                 fflush(out_fh);

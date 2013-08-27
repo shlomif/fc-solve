@@ -83,6 +83,7 @@ typedef struct
 } fc_stack_t;
 
 typedef fc_stack_t * fcs_cards_column_t;
+typedef const fc_stack_t * fcs_const_cards_column_t;
 typedef int fcs_state_foundation_t;
 
 struct fcs_struct_state_t
@@ -145,6 +146,7 @@ static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
 
 typedef char fcs_card_t;
 typedef fcs_card_t * fcs_cards_column_t;
+typedef const fcs_card_t * fcs_const_cards_column_t;
 typedef fcs_card_t fcs_state_foundation_t;
 /*
  * Card:
@@ -202,6 +204,7 @@ typedef char fcs_locs_t;
 
 typedef char fcs_card_t;
 typedef fcs_card_t * fcs_cards_column_t;
+typedef const fcs_card_t * fcs_const_cards_column_t;
 typedef char fcs_state_foundation_t;
 
 struct fcs_struct_state_t

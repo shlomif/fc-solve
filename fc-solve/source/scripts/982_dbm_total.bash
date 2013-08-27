@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Parameters for the deal:
-deal_idx=982
+# deal_idx=982
+deal_idx=384243
 
 # Some preferences
 delta_limit="40,000,000"
@@ -9,6 +10,11 @@ count_items_in_queue="5,000"
 cache_size="40,000,000"
 
 board="$deal_idx.board"
+
+offload_dir="FCS-DBM-QUEUE-DIR"
+if ! test -e "$offload_dir" ; then
+    mkdir "$offload_dir"
+fi
 
 if ! test -e "$board" ; then
     pi-make-microsoft-freecell-board -t "$deal_idx" > "$board"
@@ -33,16 +39,17 @@ while true; do
         fi
         if ! ./dbm_fc_solver -o "$intermediate_output" \
             $get_proc \
+            --offload-dir-path "$offload_dir/" \
             --iters-delta-limit "${delta_limit//,/}" \
             --max-count-of-items-in-queue "${count_items_in_queue//,/}" \
             --pre-cache-max-count "$pre_cache_dummy_size" \
             --caches-delta "$caches_delta" \
             --num-threads 1 \
-            982.board ; then
+            "$board" ; then
             echo "Error in iter $iter!" 1>2
             exit 1
         fi
-        perl scripts/dbm-process.pl "$intermediate_output" \
+        perl "$(dirname "$0")"/dbm-process.pl "$intermediate_output" \
             > "$intermediate_output_processed"
         if ! test -s "$intermediate_output_processed" ; then
             echo "No solution was found at iter ${iter}"
