@@ -465,7 +465,7 @@ typedef struct {
 
 #define USER_STATE_SIZE 2000
 
-static void populate_instance_with_intermediate_input_line(
+static fcs_bool_t populate_instance_with_intermediate_input_line(
     fcs_dbm_solver_instance_t * instance,
     fc_solve_delta_stater_t * delta,
     fcs_state_keyval_pair_t * init_state_ptr,
@@ -647,6 +647,10 @@ static void populate_instance_with_intermediate_input_line(
 #endif
 #else
         token = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), running_parent);
+        if (!token)
+        {
+            return FALSE;
+        }
 #endif
         instance->num_states_in_collection++;
 
@@ -694,7 +698,7 @@ static void populate_instance_with_intermediate_input_line(
     fcs_offloading_queue__insert(&(instance->queue), (const fcs_offloading_queue_item_t *)(&token));
     instance->count_of_items_in_queue++;
 
-    return;
+    return TRUE;
 }
 
 static void instance_run_all_threads(
@@ -1352,14 +1356,17 @@ int main(int argc, char * argv[])
                 skip_queue_output = FALSE;
                 {
                     fcs_encoded_state_buffer_t parent_state_enc;
-                    populate_instance_with_intermediate_input_line(
+                    if (!populate_instance_with_intermediate_input_line(
                         &limit_instance,
                         delta,
                         &init_state,
                         line,
                         line_num,
                         &parent_state_enc
-                        );
+                        ))
+                    {
+                        continue;
+                    }
 
                     instance_run_all_threads(
                         &limit_instance, &init_state, NUM_THREADS()
@@ -1394,14 +1401,17 @@ int main(int argc, char * argv[])
                 if (!skip_queue_output)
                 {
                     fcs_encoded_state_buffer_t parent_state_enc;
-                    populate_instance_with_intermediate_input_line(
+                    if (!populate_instance_with_intermediate_input_line(
                         &queue_instance,
                         delta,
                         &init_state,
                         line,
                         line_num,
                         &parent_state_enc
-                        );
+                        ))
+                    {
+                        continue;
+                    }
 
                     instance_run_all_threads(
                         &queue_instance, &init_state, NUM_THREADS()
