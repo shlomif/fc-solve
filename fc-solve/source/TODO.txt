@@ -103,6 +103,16 @@ Verdict: Solved ; Iters: 615 ; Length: 77
 
 ** Shlomi Fish solved it in 77 moves.
 
+* PySolFC deal 26892246862786948900:
+
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 26892246862786948900 | perl scripts/summarize-fc-solve -l qsi --flares-choice fc_solveVerdict: Solved ; Iters: 195331 ; Length: 98
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 26892246862786948900 | perl scripts/summarize-fc-solve --method a-star -asw '1,0,4,0,4'   --flares-choice fc_solve
+Verdict: Solved ; Iters: 111 ; Length: 92
+--------------------------------------------------------
+
+** Shlomi Fish solved it in 92 moves.
+
 * Add the new Freecell Solver-compatible game variants of PySolFC.
 
 * Convert magic rank constants such as 1 or 13 to FCS_MAX_RANK and
