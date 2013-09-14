@@ -226,7 +226,7 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue_page__can_insert(
 
 static GCC_INLINE void fcs_offloading_queue_page__insert(
     fcs_offloading_queue_page_t * page,
-    const fcs_offloading_queue_item_t const * in_item
+    const fcs_offloading_queue_item_t * const in_item
     )
 {
     int write_to_idx = ((page->write_to_idx)++);
