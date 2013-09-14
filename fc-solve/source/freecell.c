@@ -1963,9 +1963,9 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 }
 
 extern int fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_kv_state_t * raw_ptr_state_raw,
-    fcs_collectible_state_t * * ptr_next_state_val
+    fc_solve_soft_thread_t * const soft_thread,
+    fcs_kv_state_t * const raw_ptr_state_raw,
+    fcs_collectible_state_t * * const ptr_next_state_val
 )
 {
     tests_define_accessors();
@@ -1973,19 +1973,19 @@ extern int fc_solve_sfs_raymond_prune(
     SET_GAME_PARAMS();
 #endif
 
-    fcs_derived_states_list_t derived_states_list_struct;
-    derived_states_list_struct.states = NULL;
-    derived_states_list_struct.num_states = 0;
+    fcs_derived_states_list_t derived_states_list_struct
+        = {.states = NULL, .num_states = 0};
 
     sfs_check_state_begin();
 
     int num_total_cards_moved = 0;
-    int num_cards_moved = 0;
+    int num_cards_moved;
     do {
         num_cards_moved = 0;
         for ( int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
         {
-            fcs_cards_column_t col = fcs_state_get_col(new_state, stack_idx);
+            const fcs_cards_column_t col
+                = fcs_state_get_col(new_state, stack_idx);
             const int cards_num = fcs_col_len(col);
 
             if (cards_num)
@@ -2045,35 +2045,32 @@ extern int fc_solve_sfs_raymond_prune(
     sfs_check_state_end();
 #undef derived_states_list
 
+    register int ret_code;
+
+    if (num_total_cards_moved)
     {
-        register int ret_code;
+        register fcs_collectible_state_t * const ptr_next_state
+            = derived_states_list_struct.states[0].state_ptr;
 
-        if (num_total_cards_moved)
-        {
-            register fcs_collectible_state_t * ptr_next_state;
+        *ptr_next_state_val = ptr_next_state;
 
-            *ptr_next_state_val
-                = ptr_next_state
-                = derived_states_list_struct.states[0].state_ptr;
+        /*
+         * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
+         * hurt if it's already there, and if it's a state that was
+         * found by other means, we still shouldn't prune it, because
+         * it is already "prune-perfect".
+         * */
+        FCS_S_VISITED(ptr_next_state) |= FCS_VISITED_GENERATED_BY_PRUNING;
 
-            /*
-             * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
-             * hurt if it's already there, and if it's a state that was
-             * found by other means, we still shouldn't prune it, because
-             * it is already "prune-perfect".
-             * */
-            FCS_S_VISITED(ptr_next_state) |= FCS_VISITED_GENERATED_BY_PRUNING;
-
-            ret_code = PRUNE_RET_FOLLOW_STATE;
-        }
-        else
-        {
-            *ptr_next_state_val = NULL;
-            ret_code = PRUNE_RET_NOT_FOUND;
-        }
-
-        free(derived_states_list_struct.states);
-
-        return ret_code;
+        ret_code = PRUNE_RET_FOLLOW_STATE;
     }
+    else
+    {
+        *ptr_next_state_val = NULL;
+        ret_code = PRUNE_RET_NOT_FOUND;
+    }
+
+    free(derived_states_list_struct.states);
+
+    return ret_code;
 }

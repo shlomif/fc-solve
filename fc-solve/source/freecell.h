@@ -78,9 +78,9 @@ enum PRUNE_RET
 };
 
 extern int fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_kv_state_t * raw_ptr_state_raw,
-    fcs_collectible_state_t * * ptr_ptr_next_state
+    fc_solve_soft_thread_t * const soft_thread,
+    fcs_kv_state_t * const raw_ptr_state_raw,
+    fcs_collectible_state_t * * const ptr_ptr_next_state
 );
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_do_nothing);
