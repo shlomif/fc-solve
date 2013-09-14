@@ -1396,7 +1396,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 
                 my_copy_stack(stack_idx);
 
-                fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
+                const fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
 
                 int b = 0;
                 for (int c = 0 ; c < cards_num ; c++, b++)
