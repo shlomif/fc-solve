@@ -121,7 +121,7 @@ static GCC_INLINE void normalize_befs_weights(
 }
 
 static GCC_INLINE void soft_thread_clean_soft_dfs(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
 )
 {
     fcs_soft_dfs_stack_item_t * const soft_dfs_info = DFS_VAR(soft_thread, soft_dfs_info);
@@ -161,7 +161,9 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
     DFS_VAR(soft_thread, dfs_max_depth) = 0;
 }
 
-extern void fc_solve_free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t * soft_thread)
+extern void fc_solve_free_soft_thread_by_depth_test_array(
+    fc_solve_soft_thread_t * const soft_thread
+)
 {
     int depth_idx;
 
@@ -181,7 +183,7 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t
 }
 
 static GCC_INLINE void free_instance_soft_thread_callback(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
 )
 {
     fcs_bool_t is_scan_befs_or_bfs = FALSE;
@@ -209,16 +211,19 @@ static GCC_INLINE void free_instance_soft_thread_callback(
 }
 
 static GCC_INLINE void accumulate_tests_by_ptr(
-    int * tests_order,
-    fcs_tests_order_t * st_tests_order
+    int * const tests_order,
+    fcs_tests_order_t * const st_tests_order
 )
 {
-
-    for ( int i=0 ; i < st_tests_order->num_groups ; i++)
+    const fcs_tests_order_group_t * group_ptr = st_tests_order->groups;
+    const fcs_tests_order_group_t * const groups_end = group_ptr + st_tests_order->num_groups;
+    for ( ; group_ptr < groups_end ; group_ptr++)
     {
-        for (int j=0; j < st_tests_order->groups[i].num ; j++)
+        const int * test_ptr = group_ptr->tests;
+        const int * const tests_end = test_ptr + group_ptr->num;
+        for (; test_ptr < tests_end; test_ptr++)
         {
-            *tests_order |= (1 << (st_tests_order->groups[i].tests[j]));
+            *tests_order |= (1 << (*test_ptr));
         }
     }
 }
