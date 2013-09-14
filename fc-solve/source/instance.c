@@ -134,8 +134,10 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
 
     /* De-allocate the Soft-DFS specific stacks */
     const fcs_soft_dfs_stack_item_t * info_ptr = soft_dfs_info;
-    const fcs_soft_dfs_stack_item_t * const max_info_ptr = info_ptr+DFS_VAR(soft_thread, depth);
-    const fcs_soft_dfs_stack_item_t * const dfs_max_info_ptr = info_ptr+DFS_VAR(soft_thread, dfs_max_depth);
+    const fcs_soft_dfs_stack_item_t * const max_info_ptr
+        = info_ptr + DFS_VAR(soft_thread, depth);
+    const fcs_soft_dfs_stack_item_t * const dfs_max_info_ptr
+        = info_ptr + DFS_VAR(soft_thread, dfs_max_depth);
 
     for (; info_ptr < max_info_ptr ; info_ptr++)
     {
