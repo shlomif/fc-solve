@@ -124,50 +124,39 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
     fc_solve_soft_thread_t * soft_thread
 )
 {
-    int max_depth;
-    int dfs_max_depth;
-    fcs_soft_dfs_stack_item_t * soft_dfs_info, * info_ptr;
+    fcs_soft_dfs_stack_item_t * const soft_dfs_info = DFS_VAR(soft_thread, soft_dfs_info);
     /* Check if a Soft-DFS-type scan was called in the first place */
-    if (!(
-            FC_SOLVE_IS_DFS(soft_thread)
-        && DFS_VAR(soft_thread, soft_dfs_info)
-    ))
+    if (!( FC_SOLVE_IS_DFS(soft_thread) && soft_dfs_info))
     {
         /* If not - do nothing */
         return;
     }
 
-    soft_dfs_info = DFS_VAR(soft_thread, soft_dfs_info);
-    max_depth = DFS_VAR(soft_thread, depth);
-    dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
     /* De-allocate the Soft-DFS specific stacks */
+    const fcs_soft_dfs_stack_item_t * info_ptr = soft_dfs_info;
+    const fcs_soft_dfs_stack_item_t * const max_info_ptr = info_ptr+DFS_VAR(soft_thread, depth);
+    const fcs_soft_dfs_stack_item_t * const dfs_max_info_ptr = info_ptr+DFS_VAR(soft_thread, dfs_max_depth);
+
+    for (; info_ptr < max_info_ptr ; info_ptr++)
     {
-        int depth;
-        info_ptr = soft_dfs_info;
-        for(depth=0;depth<max_depth;depth++)
+        free (info_ptr->derived_states_list.states);
+        free (info_ptr->derived_states_random_indexes);
+        free (info_ptr->positions_by_rank);
+    }
+    for ( ; info_ptr < dfs_max_info_ptr ; info_ptr++)
+    {
+        if (likely(info_ptr->derived_states_list.states))
         {
             free(info_ptr->derived_states_list.states);
             free(info_ptr->derived_states_random_indexes);
-            free(info_ptr->positions_by_rank);
-            info_ptr++;
         }
-        for(;depth<dfs_max_depth;depth++)
-        {
-            if (likely(info_ptr->derived_states_list.states))
-            {
-                free(info_ptr->derived_states_list.states);
-                free(info_ptr->derived_states_random_indexes);
-            }
-            info_ptr++;
-        }
-
-        free(soft_dfs_info);
-
-        DFS_VAR(soft_thread, soft_dfs_info) = NULL;
-
-        DFS_VAR(soft_thread, dfs_max_depth) = 0;
-
     }
+
+    free(soft_dfs_info);
+
+    DFS_VAR(soft_thread, soft_dfs_info) = NULL;
+
+    DFS_VAR(soft_thread, dfs_max_depth) = 0;
 }
 
 extern void fc_solve_free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t * soft_thread)
