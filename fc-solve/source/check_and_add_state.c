@@ -51,12 +51,12 @@ typedef  unsigned long  int  ub4;   /* unsigned 4-byte quantities */
 typedef  unsigned       char ub1;
 
 static GCC_INLINE ub4 perl_hash_function(
-    register ub1 *s_ptr,        /* the key */
+    register const ub1 *s_ptr,        /* the key */
     register ub4  length        /* the length of the key */
     )
 {
     register ub4  hash_value_int = 0;
-    register ub1 * const s_end = s_ptr+length;
+    register const ub1 * const s_end = s_ptr+length;
 
     while (s_ptr < s_end)
     {
