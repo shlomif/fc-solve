@@ -311,8 +311,9 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             const fcs_cards_column_t new_b_col
                 = fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx);
 
+            const register int col_idx_val = *col_idx;
             const fcs_cards_column_t new_from_which_col
-                = fcs_state_get_col(temp_new_state_key, *col_idx);
+                = fcs_state_get_col(temp_new_state_key, col_idx_val);
 
             fcs_card_t top_card;
             fcs_col_pop_card(new_from_which_col, top_card);
@@ -320,13 +321,13 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 
             fcs_push_1card_seq(
                 moves,
-                *col_idx,
+                col_idx_val,
                 put_cards_in_col_idx
             );
 
             ret = (put_cards_in_col_idx | (1 << 8));
 
-            fcs_flip_top_card(*col_idx);
+            fcs_flip_top_card(col_idx_val);
 
             (*col_num_cards)--;
             put_cards_in_col_idx++;
