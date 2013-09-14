@@ -43,18 +43,16 @@
 #ifdef DEBUG_STATES
 static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 {
-    fcs_card_t card1 = ((const fc_stack_t *)s1)->cards[0];
-    fcs_card_t card2 = ((const fc_stack_t *)s2)->cards[0];
-
-    return fc_solve_card_compare(&card1, &card2);
+#define GET_CARD(s) (((const fc_stack_t *)(s))->cards[0])
+    return fc_solve_card_compare(GET_CARD(s1), GET_CARD(s2));
+#undef GET_CARD
 }
 #elif defined(COMPACT_STATES)
 static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 {
-    fcs_card_t card1 = ((const fcs_card_t*)s1)[1];
-    fcs_card_t card2 = ((const fcs_card_t*)s2)[1];
-
-    return fc_solve_card_compare(&card1, &card2);
+#define GET_CARD(s) (((const fcs_card_t *)(s))[1])
+    return fc_solve_card_compare(GET_CARD(s1), GET_CARD(s2));
+#undef GET_CARD
 }
 #endif
 
@@ -102,8 +100,8 @@ void fc_solve_canonize_state(
         while(
             (c>0)     &&
             (fc_solve_card_compare(
-                &(state_key->freecells[c]),
-                &(state_key->freecells[c-1])
+                (state_key->freecells[c]),
+                (state_key->freecells[c-1])
                 ) < 0)
             )
         {
@@ -179,8 +177,8 @@ void fc_solve_canonize_state(
         while(
             (c>0)    &&
             ((fc_solve_card_compare(
-                &(GET_FREECELL(c)),
-                &(GET_FREECELL(c-1))
+                (GET_FREECELL(c)),
+                (GET_FREECELL(c-1))
             )
             ) < 0)
         )
@@ -246,8 +244,8 @@ void fc_solve_canonize_state_with_locs(
         while(
             (c>0)    &&
             ((fc_solve_card_compare(
-                &(GET_FREECELL(c)),
-                &(GET_FREECELL(c-1))
+                (GET_FREECELL(c)),
+                (GET_FREECELL(c-1))
             )
             ) < 0)
         )

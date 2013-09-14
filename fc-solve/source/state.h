@@ -1126,35 +1126,32 @@ enum
 #define FCS_WITH_CARD_COMPARE_LOOKUP
 
 static GCC_INLINE int fc_solve_card_compare(
-        const fcs_card_t * const c1,
-        const fcs_card_t * const c2
+        const fcs_card_t c1,
+        const fcs_card_t c2
         )
 {
 #ifdef FCS_WITH_CARD_COMPARE_LOOKUP
-    return (*c1)-(*c2);
+    return (c1)-(c2);
 #else
-    if (fcs_card_rank(*c1) > fcs_card_rank(*c2))
+    if (fcs_card_rank(c1) > fcs_card_rank(c2))
     {
         return 1;
     }
-    else if (fcs_card_rank(*c1) < fcs_card_rank(*c2))
+    else if (fcs_card_rank(c1) < fcs_card_rank(c2))
+    {
+        return -1;
+    }
+    else if (fcs_card_suit(c1) > fcs_card_suit(c2))
+    {
+        return 1;
+    }
+    else if (fcs_card_suit(c1) < fcs_card_suit(c2))
     {
         return -1;
     }
     else
     {
-        if (fcs_card_suit(*c1) > fcs_card_suit(*c2))
-        {
-            return 1;
-        }
-        else if (fcs_card_suit(*c1) < fcs_card_suit(*c2))
-        {
-            return -1;
-        }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
 #endif
 }
@@ -1167,11 +1164,9 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * const v
 
     const int min_len = min(s1[0], s2[0]);
     {
-        int a, ret;
-
-        for(a=0;a<min_len;a++)
+        for(int a=1 ; a <= min_len ; a++)
         {
-            ret = fc_solve_card_compare(s1+a+1,s2+a+1);
+            int ret = fc_solve_card_compare(s1[a],s2[a]);
             if (ret != 0)
             {
                 return ret;
