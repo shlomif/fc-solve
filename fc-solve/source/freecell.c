@@ -1913,13 +1913,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 #endif
 
 static GCC_INLINE int calc_foundation_to_put_card_on(
-    fc_solve_soft_thread_t * soft_thread,
-    fcs_state_t * my_ptr_state,
+    const fc_solve_soft_thread_t * const soft_thread,
+    const fcs_state_t * const my_ptr_state,
     const fcs_card_t card
 )
 {
 #ifndef FCS_FREECELL_ONLY
-    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
+    const fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
 #endif
 
     tests_define_seqs_built_by();
