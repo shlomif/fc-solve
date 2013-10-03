@@ -1,4 +1,4 @@
-dir=@PKGDATADIR@/presets/
+dir=@PRESETS_DATA_DIR@
 name=abra-kadabra
 name=ak
 command=--read-from-file 4,abra-kadabra.sh

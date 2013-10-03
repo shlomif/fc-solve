@@ -32,6 +32,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #include "set_weights.h"
 #include "fcs_user.h"
@@ -79,8 +82,44 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
     }
     env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
 
-    global_presetrc = (FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
+#ifdef _WIN32
+    char windows_exe_dir[MAX_PATH] = "";
+    char windows_global_presetc[MAX_PATH + 100] = "";
 
+    /* Will contain exe path */
+    const HMODULE hModule = GetModuleHandle(NULL);
+    if (hModule != NULL)
+    {
+
+        /* When passing NULL to GetModuleHandle, it returns handle of exe itself */
+        GetModuleFileName(hModule, windows_exe_dir, (sizeof(windows_exe_dir)));
+        {
+            /* Remove the basename and keep only the dirname. */
+            char * s = windows_exe_dir + strlen(windows_exe_dir) - 1;
+            while ((s > windows_exe_dir) && (!(*s == '/') || (*s == '\\')))
+            {
+                s--;
+            }
+            if (s > windows_exe_dir)
+            {
+                *s = '\0';
+            }
+         }
+         sprintf(
+             windows_global_presetc,
+             "%s/../share/freecell-solver/presetrc",
+             windows_exe_dir
+         );
+         global_presetrc = windows_global_presetc;
+    }
+    else
+    {
+        global_presetrc = NULL;
+    }
+
+#else
+    global_presetrc = (FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
+#endif
     const char * path;
     fcs_bool_t read_next_preset = FALSE;
     for (int path_idx=0;(presetrc_pathes[path_idx] != NULL) ; path_idx++)
@@ -120,7 +159,27 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
                 {
                     free(opened_files_dir);
                 }
+#ifdef _WIN32
+                {
+                    char * s = line+4;
+                    const char * const var_prefix = "${EXE_DIRNAME}";
+                    const int var_prefix_len = strlen(var_prefix);
+                    if (! strncmp(s, var_prefix, var_prefix_len))
+                    {
+                        opened_files_dir = malloc(strlen(s) + strlen(windows_exe_dir) + 100);
+                        sprintf(
+                            opened_files_dir, "%s%s",
+                            windows_exe_dir, s+var_prefix_len
+                        );
+                    }
+                    else
+                    {
+                        opened_files_dir = strdup(s);
+                    }
+                }
+#else
                 opened_files_dir = strdup(line+4);
+#endif
             }
             else if (!strncmp(line, "name=", 5))
             {
