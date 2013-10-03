@@ -83,6 +83,11 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
     env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
 
 #ifdef _WIN32
+
+#if 0
+#define MYDEBUG
+#endif
+
     char windows_exe_dir[MAX_PATH] = "";
     char windows_global_presetc[MAX_PATH + 100] = "";
 
@@ -91,12 +96,18 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
     if (hModule != NULL)
     {
 
+#ifdef MYDEBUG
+        fprintf(stderr, "Yomza\n");
+#endif
         /* When passing NULL to GetModuleHandle, it returns handle of exe itself */
         GetModuleFileName(hModule, windows_exe_dir, (sizeof(windows_exe_dir)));
+#ifdef MYDEBUG
+        fprintf(stderr, "bef--klok windows_exe_dir=<<%s>>\n", windows_exe_dir);
+#endif
         {
             /* Remove the basename and keep only the dirname. */
             char * s = windows_exe_dir + strlen(windows_exe_dir) - 1;
-            while ((s > windows_exe_dir) && (!(*s == '/') || (*s == '\\')))
+            while ((s > windows_exe_dir) && (!((*s == '/') || (*s == '\\'))))
             {
                 s--;
             }
@@ -105,12 +116,18 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
                 *s = '\0';
             }
          }
+#ifdef MYDEBUG
+        fprintf(stderr, "after--klok windows_exe_dir=<<%s>>\n", windows_exe_dir);
+#endif
          sprintf(
              windows_global_presetc,
              "%s/../share/freecell-solver/presetrc",
              windows_exe_dir
          );
          global_presetrc = windows_global_presetc;
+#ifdef MYDEBUG
+         fprintf(stderr, "Absonom windows_global_presetc=<<%s>>\n", windows_global_presetc);
+#endif
     }
     else
     {
@@ -164,8 +181,12 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
                     char * s = line+4;
                     const char * const var_prefix = "${EXE_DIRNAME}";
                     const int var_prefix_len = strlen(var_prefix);
+#define MYDEBUG
                     if (! strncmp(s, var_prefix, var_prefix_len))
                     {
+#ifdef MYDEBUG
+                        fprintf(stderr, "Qlokoknh windows_exe_dir=<<%s>>\n", windows_exe_dir);
+#endif
                         opened_files_dir = malloc(strlen(s) + strlen(windows_exe_dir) + 100);
                         sprintf(
                             opened_files_dir, "%s%s",
