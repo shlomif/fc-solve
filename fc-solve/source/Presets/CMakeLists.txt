@@ -9,5 +9,5 @@ INSTALL(
     FILES
         "${CMAKE_CURRENT_BINARY_DIR}/presetrc"
     DESTINATION
-        "${PKGDATADIR}"
+        "${RELATIVE_PKGDATADIR}"
 )

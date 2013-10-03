@@ -25,5 +25,5 @@ INSTALL(
         "toons-for-twenty-somethings.sh"
         "yellow-brick-road.sh"
     DESTINATION
-        "${PKGDATADIR}/presets"
+        "${RELATIVE_PKGDATADIR}/presets"
 )
