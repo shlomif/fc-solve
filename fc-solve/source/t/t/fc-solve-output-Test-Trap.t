@@ -11,11 +11,13 @@ use File::Spec;
 use File::Temp qw( tempdir );
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
+my $fc_solve_exe = File::Spec->catfile($ENV{FCS_PATH}, 'fc-solve');
+
 {
     trap
     {
         system(
-            "fc-solve", "--reset_junk_at_end",
+            $fc_solve_exe, "--reset_junk_at_end",
             File::Spec->catfile(
                 $ENV{FCS_SRC_PATH}, 't', 't', 'data',
                 'sample-boards', '24-mid.board'
@@ -23,7 +25,7 @@ use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn )
         );
     };
 
-    my $needle = q#Unknown option "--reset_junk_at_end". Type "fc-solve --help" for usage information.#;
+    my $needle = qq#Unknown option "--reset_junk_at_end". Type "$fc_solve_exe --help" for usage information.#;
 
     # TEST
     like (
@@ -44,7 +46,7 @@ use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn )
     trap
     {
         system(
-            "fc-solve", '--read-from-file4,amateur-star.sh',
+            $fc_solve_exe, '--read-from-file4,amateur-star.sh',
             '--stacks-num', '7',
             File::Spec->catfile(
                 $ENV{FCS_SRC_PATH}, 't', 't', 'data',
@@ -53,7 +55,7 @@ use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn )
         );
     };
 
-    my $needle = q#Unknown option "--read-from-file4,amateur-star.sh". Type "fc-solve --help" for usage information.#;
+    my $needle = qq#Unknown option "--read-from-file4,amateur-star.sh". Type "$fc_solve_exe --help" for usage information.#;
 
     # TEST
     like (
