@@ -15,8 +15,19 @@ installer not packaging them.
 * Fix the STDERR message on fc-solve.exe startup on Windows to not suggest
 that they should type fc-solve --help in that window.
 
+* Add an explanation for the format of the solutions with some
+demonstration. So people will understand what "AS", "AH", "QH", etc. mean
+** To the README.
+
 Non-pressing
 ------------
+
+* Write a "simulator" for new flare-based runs to see how they improve on
+the existing runs. It will process the scans' command line based on their
+end results and performance and will generate the new estimated performance.
+
+* Write the split-dbm-solver which stores the results on the disk for every
+non-reversible-moves offset, and fully-connected-components.
 
 * Make sure the depth_dbm_fc_solver is working on 32-bit architectures.
 
