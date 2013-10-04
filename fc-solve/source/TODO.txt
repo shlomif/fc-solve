@@ -7,10 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* Add an explanation for the format of the solutions with some
-demonstration. So people will understand what "AS", "AH", "QH", etc. mean
-** To the README.
-
 Non-pressing
 ------------
 
