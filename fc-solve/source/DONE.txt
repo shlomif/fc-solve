@@ -441,3 +441,6 @@ installer not packaging them.
 ** Make sure they are referenced correctly from the prefix.
 *** ( Possibly using the Win32/Win64 registry.)
 
+* Fix the STDERR message on fc-solve.exe startup on Windows to not suggest
+that they should type fc-solve --help in that window.
+

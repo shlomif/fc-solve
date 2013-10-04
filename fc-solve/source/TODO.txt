@@ -7,9 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* Fix the STDERR message on fc-solve.exe startup on Windows to not suggest
-that they should type fc-solve --help in that window.
-
 * Add an explanation for the format of the solutions with some
 demonstration. So people will understand what "AS", "AH", "QH", etc. mean
 ** To the README.
