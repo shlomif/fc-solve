@@ -47,9 +47,9 @@ and terminated with a newline character( it's important that the last stack
 will also be terminated with a newline !). The cards in the line are ordered
 from the bottom-most card in the left to the topmost card in the right.
 
-A card string contains the card number (or rank) followed by the card deck.
-The card number is one of: +A,1,2,3,4,5,6,7,8,9,10,J,Q,K+. Alterantively
-+T+ can be used instead of +10+. The card deck is one of:  +H,S,D,C+ (standing
+A card string contains the rank of the card followed by its suit.
+The card number is one of: +A,1,2,3,4,5,6,7,8,9,10,J,Q,K+. Alternatively,
++T+ can be used instead of +10+. The card suit is one of:  +H,S,D,C+ (standing
 for Hearts, Spades, Diamonds and Clubs respectively).
 
 Here is an example board: (PySol/Microsoft board No. 24)
