@@ -680,7 +680,8 @@ int main(int argc, char * argv[])
         {
             fprintf(stderr, "%s",
                     "Reading the board from the standard input.\n"
-                    "Type \"fc-solve --help\" for more usage information.\n"
+                    "Please refer to the documentation for more usage information:\n"
+                    "    http://fc-solve.shlomifish.org/docs/"
                     "To cancel this message set the FREECELL_SOLVER_QUIET environment variable.\n"
                    );
         }
