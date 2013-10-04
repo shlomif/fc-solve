@@ -436,3 +436,8 @@ They shouldn't result in a different number of iterations.
 people can use it to solve other variants aside from Freecell, and for
 other uses.
 
+* Fix the missing files (the presets one) on Windows due to the NullSoft
+installer not packaging them.
+** Make sure they are referenced correctly from the prefix.
+*** ( Possibly using the Win32/Win64 registry.)
+
