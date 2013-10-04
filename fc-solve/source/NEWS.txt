@@ -11,6 +11,11 @@ Next Version: (Unknown)
 (e.g: +--resetjunk+ vs. +--reset+), will be reported as such instead of
 processed as the prefix automagically.
 
+2. Fix the Win32 NSIS package, so it will build, run and process the presets.
+
+3. The JavaScript-based solver now accepts arbitrary fc-solve command line
+parameters, so it can solve any of the supported variants of Solitaire.
+
 Version 3.20.1: (01-Jul-2013)
 -----------------------------
 
