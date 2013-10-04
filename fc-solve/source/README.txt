@@ -177,3 +177,14 @@ KC QH JS TH 9S
 4D
 -----------------------
 
+How to read the solutions
+-------------------------
+
+The file +USAGE.txt+ covers all of Freecell Solver’s command line options,
+but it may be too exhaustive for casual users. As a result, here is a shorter
+tutorial. First of all whenever invoking +fc-solve+ one should add the
+flags +-p -t -sam -sel+ which will make the solution easier to grok. Then,
+assuming the board could be successfully solved, one will be given the layouts
+in the solution (in the format given above) vis-a-vis with the moves as the
+string. Note that the indexes of the resources given in the moves are
+0-based rather than the more natural 1-based notation.
