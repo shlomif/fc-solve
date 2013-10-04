@@ -73,7 +73,7 @@ shlomif:~$ make_pysol_freecell_board.py -t -F 48007594292403677907 | fc-solve --
 --------------------------------------------------------
 shlomif:~$ make_pysol_freecell_board.py -F -t 91151234961275807905 | ~/apps/test/fcs/bin/fc-solve  -p -t -sam --method a-star -to 0123467589 -asw 300,1000,0,2,90000 | grep ^Move | wc -l
 84
--------------------------------------------------------
+--------------------------------------------------------
 
 However this scan generates takes too much time for most boards (over 100K
 iterations).
@@ -120,6 +120,15 @@ Verdict: Solved ; Iters: 111 ; Length: 92
 
 * Convert magic rank constants such as 1 or 13 to FCS_MAX_RANK and
 FCS_RANK_ACE/etc.
+
+* Investigate:
+
+--------------------------------------------------------
+$ make_pysol_freecell_board.py -F -t 00682189035907813607 | perl ../scripts/summarize-fc-solve -l qsi
+Verdict: Solved ; Iters: 157905 ; Length: 109
+$ make_pysol_freecell_board.py -F -t 00682189035907813607 | perl ../scripts/summarize-fc-solve --method a-star -to '01234567' -asw 1 -opt
+Verdict: Solved ; Iters: 433 ; Length: 89
+--------------------------------------------------------
 
 Long-term
 ---------
