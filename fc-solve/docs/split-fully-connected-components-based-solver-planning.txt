@@ -23,6 +23,56 @@ In any case, the fingerprint will be identified by a binary vector of those
 52 ternary digits, and the next fingerprints of a derived state will be
 calculated from the original based on non-reversable move.
 
+The process of the solver:
+--------------------------
 
+For each game layout (sorted by their moves depth) in the finalised FCC (after
+the previous depth finished) with its solution, the solver moves by reversible
+moves, until it reaches a new irreversible move. If it reaches a different
+game layout then:
 
+    1. If the reachable layout has the same depth of solution or lower
+    than the initially recorded one, then the initially recorded state will
+    be ignored. (From here called a "consumed state").
 
+    2. If the reachable layout has a greater depth of solution, then
+    the initially recorded one will still be traversed (in order to find
+    potentially shorter paths to the FCC's exit points) but the traversed
+    states of the two boards will only be counted once.
+
+So the solver will keep all the initial states of the FCC-fingerprint's group
+in memory.
+
+Once an irreversible move is reached the solver will record the exit point
+as an output and proceed to find others.
+
+A process' output:
+------------------
+
+The process will output a file with the following:
+
+    [% initial state %]
+
+    [% Count of states in FCC. %]
+
+    Consumed States:
+
+    [% FOREACH consumed_state in consumed_states %]
+        consumed_state
+    [% END FOREACH %]
+
+    Reachable (but non-consumed) Initial States:
+
+    [% FOREACH state in reachable_states %]
+        state
+    [% END FOREACH %]
+
+    Derived States:
+
+    [% FOREACH d in derived_states %]
+        [% d.fingerprint_of_dest_fcc %] [% d.state %] [% d.moves_to_state (with the count) %]
+    [% END FOREACH %]
+
+After the process ends all the outputs will be merged and the new derived
+states will be calculated for the new fingerprints and the statistics will
+be added to the total.
