@@ -311,7 +311,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             const fcs_cards_column_t new_b_col
                 = fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx);
 
-            const register int col_idx_val = *col_idx;
+            const int col_idx_val = *col_idx;
             const fcs_cards_column_t new_from_which_col
                 = fcs_state_get_col(temp_new_state_key, col_idx_val);
 
