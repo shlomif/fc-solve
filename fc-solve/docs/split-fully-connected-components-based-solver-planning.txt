@@ -1,0 +1,28 @@
+Specification for a split solver basd on FCCs (= Fully connected components):
+===========================================================================
+
+First of all see the file fully-connected-components-based-solver-planning.txt
+in this directory, for more information about the fully connected components
+analysis based on non-reversible moves.
+
+The purpose of this solver is to run several processes and be able to process
+individual FCCs, output the results to an intermediate file, which will then
+be integrated into the starting points for the next depth of FCCs.
+
+Representation of an FCC fingerprint:
+-------------------------------------
+
+An FCC Fingerprint consists of roughly 52 (for each of the cards), states
+of { ORIG_POS = 0, ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1, IN_FOUNDATIONS = 2 }
+which together shows which non-reversible moves led to the FCC. The
+fingerprint aims to segment several distinct FCCs into FCC-groups so they
+can be processed separately. It is possible that several different FCCs will
+belong to the same fingerprint, but this will be handled.
+
+In any case, the fingerprint will be identified by a binary vector of those
+52 ternary digits, and the next fingerprints of a derived state will be
+calculated from the original based on non-reversable move.
+
+
+
+
