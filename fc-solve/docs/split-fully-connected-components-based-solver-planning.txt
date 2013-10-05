@@ -1,5 +1,5 @@
-Specification for a split solver basd on FCCs (= Fully connected components):
-===========================================================================
+Specification for a split solver based on FCCs (= Fully connected components):
+==============================================================================
 
 First of all see the file fully-connected-components-based-solver-planning.txt
 in this directory, for more information about the fully connected components
