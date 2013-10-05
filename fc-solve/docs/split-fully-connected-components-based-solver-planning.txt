@@ -76,3 +76,24 @@ The process will output a file with the following:
 After the process ends all the outputs will be merged and the new derived
 states will be calculated for the new fingerprints and the statistics will
 be added to the total.
+
+How a process gets invoked:
+---------------------------
+
+One specifies:
+
+    ./split_fcc_fc_solver [board.txt] [Modified_Base64 FCC Fingerprint]
+
+( The depth can be calculated from the FCC Fingerprint by adding the values. )
+
+At the [Modified_Base64 FCC Fingerprint] location there is a flat file
+containing:
+
+    [% d.state %] [% d.moves_to_state (with the count) %]
+
+This is sorted by the count of the moves (and then by an arbitrary order of
+possibly the lexical order of the states within.).
+
+Technical note: split_fcc_fc_solver reads the file line by line, puts all
+the states in memory, and records the number of moves, and the offset to the
+line in the file (as a 64-bit integer using ftell() or whatever.).
