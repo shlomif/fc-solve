@@ -44,7 +44,7 @@ large number of Solitaire variants.
 
 <h2 id="latest-stable">Latest Stable Versions</h2>
 
-<table class="downloads" summary="Upper Row - The Freecell Solver Source Code. Middle rRow - Windows 32-bit Binaries. Lower Row - Link to the Debian Package. Links are at the left; Descriptions are at the Right.">
+<table class="downloads" summary="Upper Row - The Freecell Solver Source Code. Lower Row - Windows 32-bit Binaries. Links are at the left; Descriptions are at the Right.">
 <tr>
 <td>
 # <a href="http://www.shlomifish.org/Files/files/code/fcs/freecell-solver-2.32.1.tar.bz2">freecell-solver-2.32.1.tar.bz2</a>
