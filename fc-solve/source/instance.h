@@ -951,7 +951,7 @@ struct fc_solve_soft_thread_struct
      * This variable is temporary - there should be a better pruning
      * abstraction with several optional prunes.
      * */
-    fcs_bool_t enable_pruning;
+    fcs_bool_t enable_pruning, enable_freecells_to_empty_columns_pruning;
 };
 
 #define DFS_VAR(soft_thread,var) (soft_thread)->method_specific.soft_dfs.var

@@ -2288,20 +2288,39 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    if (!strcmp(pruning, "r:tf"))
-    {
-        user->soft_thread->enable_pruning = TRUE;
-    }
-    else if (pruning[0] == '\0')
-    {
-        user->soft_thread->enable_pruning = FALSE;
-    }
-    else
-    {
-        *error_string = strdup("Unknown pruning value - must be \"r:tf\" or empty.");
+    typeof(user->soft_thread->enable_pruning) enable_pruning = FALSE;
+    typeof(user->soft_thread->enable_freecells_to_empty_columns_pruning) enable_freecells_to_empty_columns_pruning = FALSE;
 
-        return 1;
+    const char * item_start = pruning;
+    while (*item_start)
+    {
+        const char * item_end  = strchr(item_start, ',');
+        if (! item_end)
+        {
+            item_end = item_start + strlen(item_start);
+        }
+
+        /* Short for Run:to_foundations */
+        if (string_starts_with(item_start, "r:tf", item_end))
+        {
+            enable_pruning = TRUE;
+        }
+        /* Short for Run:not_empty_freecells */
+        else if (string_starts_with(item_start, "r:nef", item_end))
+        {
+            enable_freecells_to_empty_columns_pruning = TRUE;
+        }
+        else
+        {
+            *error_string = strdup("Unknown pruning value - must be \"r:tf\" or \"r:nef\" or empty.");
+            return 1;
+        }
+
+        item_start = item_end + ((*item_end) ? 1 : 0);
     }
+
+    user->soft_thread->enable_pruning = enable_pruning;
+    user->soft_thread->enable_freecells_to_empty_columns_pruning = enable_freecells_to_empty_columns_pruning;
 
     return 0;
 }

@@ -349,7 +349,9 @@ static GCC_INLINE void init_soft_thread(
 
     soft_thread->name = NULL;
 
-    soft_thread->enable_pruning = FALSE;
+    soft_thread->enable_pruning
+        = soft_thread->enable_freecells_to_empty_columns_pruning
+        = FALSE;
 }
 
 void fc_solve_instance__init_hard_thread(
