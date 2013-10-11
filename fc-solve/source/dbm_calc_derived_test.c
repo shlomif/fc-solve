@@ -189,7 +189,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
             indirect_stacks_buffer
             );
 
-    prune_ret = horne_prune(local_variant, &init_state, NULL, NULL);
+    {
+        unsigned char which_no_use[13] = {'\0'};
+        prune_ret = horne_prune(local_variant, &init_state, which_no_use, NULL, NULL);
+    }
     *ret_state_s =
         fc_solve_state_as_string(
             &(init_state.s),

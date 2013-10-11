@@ -306,6 +306,7 @@ static int instance_run_solver(
     long next_count_num_processed_landmark = STEP;
     long FCCs_per_depth_milestone_step;
     fcs_fcc_moves_seq_t ret_moves_seq;
+    unsigned char which_no_use[13] = {'\0'};
 
     local_variant = instance->variant;
     /* Initialize the state. */
@@ -515,6 +516,7 @@ static int instance_run_solver(
                     horne_prune(
                         local_variant,
                         &state,
+                        which_no_use,
                         &(start_point_iter->moves_seq),
                         moves_list_allocator
                         );
@@ -853,7 +855,10 @@ int main(int argc, char * argv[])
     moves_list_allocator.allocator = &(moves_list_compact_alloc);
     init_moves_seq.moves_list = NULL;
     init_moves_seq.count = 0;
-    horne_prune(local_variant, &init_state, &init_moves_seq, &moves_list_allocator);
+    {
+        unsigned char which_no_use[13] = {'\0'};
+        horne_prune(local_variant, &init_state, which_no_use, &init_moves_seq, &moves_list_allocator);
+    }
 
 #ifndef WIN32
     signal(SIGUSR1, command_signal_handler);

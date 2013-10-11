@@ -634,7 +634,10 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
             }
         }
 #undef the_state
-        horne_prune(local_variant, &running_state, NULL, NULL);
+        {
+            unsigned char which_no_use[13] = {'\0'};
+            horne_prune(local_variant, &running_state, which_no_use, NULL, NULL);
+        }
 
         fcs_init_and_encode_state(delta, local_variant, &(running_state),
                                   &(running_key));
@@ -1290,7 +1293,10 @@ int main(int argc, char * argv[])
         init_indirect_stacks_buffer
     );
 
-    horne_prune(local_variant, &init_state, NULL, NULL);
+    {
+        unsigned char which_no_use[13] = {'\0'};
+        horne_prune(local_variant, &init_state, which_no_use, NULL, NULL);
+    }
 
     delta = fc_solve_delta_stater_alloc(
             &init_state.s,

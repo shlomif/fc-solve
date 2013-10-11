@@ -248,6 +248,7 @@ static GCC_INLINE fcs_fcc_moves_list_item_t * fc_solve_fcc_alloc_moves_list_item
 static GCC_INLINE int horne_prune(
     enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * init_state_kv_ptr,
+    unsigned char * const which_irreversible_moves_bitmask,
     fcs_fcc_moves_seq_t * moves_seq,
     fcs_fcc_moves_seq_allocator_t * allocator
 )
@@ -292,6 +293,10 @@ static GCC_INLINE int horne_prune(
                     }
                     /* We can safely move it. */
                     num_cards_moved++;
+                    fc_solve_add_to_irrev_moves_bitmask(
+                        which_irreversible_moves_bitmask, card,
+                        ((! FROM_COL_IS_REVERSIBLE_MOVE()) ? 2 : 1)
+                    );
 
                     fcs_col_pop_top(col);
 
@@ -313,6 +318,9 @@ static GCC_INLINE int horne_prune(
                     calc_foundation_to_put_card_on(local_variant, &the_state, card)) >= 0)
                 {
                     num_cards_moved++;
+                    fc_solve_add_to_irrev_moves_bitmask(
+                        which_irreversible_moves_bitmask, card, 1
+                    );
 
                     /* We can put it there */
 
@@ -705,7 +713,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                 +
                 (
                     perform_horne_prune
-                    ? horne_prune(local_variant, &(derived_iter->state), NULL, NULL)
+                    ? horne_prune(local_variant, &(derived_iter->state), derived_iter->which_irreversible_moves_bitmask, NULL, NULL)
                     : 0
                 )
             );

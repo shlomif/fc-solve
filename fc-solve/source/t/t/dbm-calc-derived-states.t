@@ -9,7 +9,7 @@ BEGIN
 {
     if (-f "$ENV{FCS_PATH}/libfcs_dbm_calc_derived_test.so")
     {
-        plan tests => 35;
+        plan tests => 40;
     }
     else
     {
@@ -238,6 +238,19 @@ sub count_irreversible_moves_is
     );
 }
 
+sub count_irreversible_moves_including_prune_is
+{
+    my ($self, $exp_count, $blurb) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    return is(
+        ($self->states->[0]->get_num_non_reversible_moves_including_prune()),
+        ($exp_count),
+        $blurb
+    );
+}
+
 sub is_reversible
 {
     my ($self, $is_reversible, $blurb) = @_;
@@ -332,6 +345,13 @@ EOF
         }
     );
 
+    my $fc_24_init_with_prune = DerivedStatesList->new(
+        {
+            start => $freecell_24_initial_layout_s,
+            perform_horne_prune => 1,
+        }
+    );
+
     {
         my $results = $fc_24_init->find_by_string(<<"EOF"
 Foundations: H-0 C-0 D-0 S-0$WS
@@ -405,6 +425,45 @@ EOF
                 'AS' => 2,
             },
             'Two irreversible moves of AS',
+        );
+    }
+
+    {
+        my $results = $fc_24_init_with_prune->find_by_string(<<"EOF"
+Foundations: H-0 C-0 D-0 S-A$WS
+Freecells:      9D
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S
+EOF
+        );
+
+        # TEST
+        $results->has_one('9D to freecell has one result.');
+
+        # TEST
+        $results->count_irreversible_moves_including_prune_is(3,
+            '9D to Freecell Count irreversible is 3.',
+        );
+
+        # TEST
+        $results->is_src({ type => 'stack', idx => 7, }, '9D to freecell is from stack No. 7');
+
+        # TEST
+        $results->is_dest({ type => 'freecell', idx => 1, }, '9D to freecell is to freecell No. 1');
+
+        # TEST
+        $results->is_which_irrev_moves_equal_to(
+            {
+                'AS' => 2,
+                '9D' => 1,
+            },
+            'which_irrev of 9D->Freecell',
         );
     }
 }
