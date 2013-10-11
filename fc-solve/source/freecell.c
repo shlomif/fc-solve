@@ -1849,6 +1849,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         return;
     }
 
+    const typeof(soft_thread->enable_freecells_to_empty_columns_pruning) enable_freecells_to_empty_columns_pruning = FALSE;
+    tests_define_seqs_built_by();
+
     /* Find a vacant stack */
     int ds;
     for (ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
@@ -1871,6 +1874,28 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
            )
         {
             continue;
+        }
+        if (enable_freecells_to_empty_columns_pruning)
+        {
+            const int step = FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP();
+            const int limit = (LOCAL_DECKS_NUM << 2);
+            int suit = FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card);
+            for (
+                ;
+                suit < (LOCAL_DECKS_NUM << 2)
+                ;
+                suit += step
+            )
+            {
+                if (fcs_foundation_value(state, suit) < fcs_card_rank(card)-1)
+                {
+                    break;
+                }
+            }
+            if (suit >= limit)
+            {
+                continue;
+            }
         }
 
         {
