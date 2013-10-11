@@ -58,6 +58,7 @@ struct fcs_derived_state_struct
     fcs_dbm_record_t * parent;
     struct fcs_derived_state_struct * next;
     int core_irreversible_moves_count;
+    unsigned char which_irreversible_moves_bitmask[RANK_KING];
     fcs_fcc_move_t move;
     int num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -80,7 +81,7 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
 
 #define COPY_INDIRECT_COLS() \
 { \
-    for (copy_col_idx=0;copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++) \
+    for (copy_col_idx=0 ; copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++) \
     { \
         copy_stack_col = fcs_state_get_col((ptr_new_state->state.s), copy_col_idx); \
         memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]), copy_stack_col, fcs_col_len(copy_stack_col)+1); \
@@ -112,6 +113,11 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
                 sizeof(*ptr_new_state) \
                 ); \
     } \
+    memset( \
+        ptr_new_state->which_irreversible_moves_bitmask, \
+        '\0', \
+        sizeof(ptr_new_state->which_irreversible_moves_bitmask) \
+        ); \
     fcs_duplicate_state(  \
         &(ptr_new_state->state), \
         init_state_kv_ptr \
@@ -120,9 +126,24 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
     COPY_INDIRECT_COLS() \
 }
 
-#define COMMIT_NEW_STATE_WITH_COUNT(src, dest, count) \
+static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(unsigned char * const which_irreversible_moves_bitmask, const fcs_card_t moved_card, const int count)
+{
+    unsigned char * const by_rank_ptr = which_irreversible_moves_bitmask + fcs_card_rank(moved_card) - 1;
+    const int suit_double = (fcs_card_suit(moved_card) << 1);
+    const int new_count = ( (((*by_rank_ptr)>>(suit_double))&((1 << 2)-1)) + count );
+    *by_rank_ptr &= (~((((unsigned char)0x3) << (suit_double))));
+    *by_rank_ptr |= (new_count << (suit_double));
+
+    return;
+}
+
+#define COMMIT_NEW_STATE_WITH_COUNT(src, dest, count, moved_card) \
 { \
  \
+    if (count) \
+    { \
+        fc_solve_add_to_irrev_moves_bitmask(ptr_new_state->which_irreversible_moves_bitmask, moved_card, count); \
+    } \
     ptr_new_state->parent = parent_ptr; \
     ptr_new_state->move = MAKE_MOVE((src), (dest)); \
  \
@@ -133,8 +154,8 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
  \
 }
 
-#define COMMIT_NEW_STATE(src, dest, is_reversible) \
-    COMMIT_NEW_STATE_WITH_COUNT(src, dest, ((is_reversible) ? 0 : 1))
+#define COMMIT_NEW_STATE(src, dest, is_reversible, moved_card) \
+    COMMIT_NEW_STATE_WITH_COUNT(src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
 #ifdef FCS_FREECELL_ONLY
 #define SEQS_ARE_BUILT_BY_RANK() FALSE
@@ -435,7 +456,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                     fcs_increment_foundation(new_state, deck*4+suit);
 
 
-                    COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx), FOUND2MOVE(suit), (FROM_COL_IS_REVERSIBLE_MOVE() ? 1 : 2))
+                    COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx), FOUND2MOVE(suit), (FROM_COL_IS_REVERSIBLE_MOVE() ? 1 : 2), card)
                 }
             }
         }
@@ -465,7 +486,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                     fcs_increment_foundation(new_state, deck*4+suit);
 
                     COMMIT_NEW_STATE(
-                        FREECELL2MOVE(fc_idx), FOUND2MOVE(suit), FALSE
+                        FREECELL2MOVE(fc_idx), FOUND2MOVE(suit), FALSE, card
                     )
                 }
             }
@@ -519,7 +540,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                         COMMIT_NEW_STATE(
                             COL2MOVE(stack_idx), COL2MOVE(ds),
-                            FROM_COL_IS_REVERSIBLE_MOVE()
+                            FROM_COL_IS_REVERSIBLE_MOVE(),
+                            card
                         )
                     }
                 }
@@ -558,7 +580,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                         COMMIT_NEW_STATE(
                             FREECELL2MOVE(fc_idx), COL2MOVE(ds),
-                            TRUE
+                            TRUE,
+                            card
                         )
                     }
                 }
@@ -597,7 +620,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                     }
                     COMMIT_NEW_STATE(
                         COL2MOVE(stack_idx), COL2MOVE(empty_stack_idx),
-                        FROM_COL_IS_REVERSIBLE_MOVE()
+                        FROM_COL_IS_REVERSIBLE_MOVE(),
+                        card
                     )
                 }
             }
@@ -624,7 +648,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                 COMMIT_NEW_STATE(
                     FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx),
-                    TRUE
+                    TRUE, card
                 );
             }
         }
@@ -655,7 +679,8 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                     }
                     COMMIT_NEW_STATE(
                         COL2MOVE(stack_idx), FREECELL2MOVE(empty_fc_idx),
-                        FROM_COL_IS_REVERSIBLE_MOVE()
+                        FROM_COL_IS_REVERSIBLE_MOVE(),
+                        card
                     )
                 }
             }
