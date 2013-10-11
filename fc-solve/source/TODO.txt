@@ -10,6 +10,11 @@ Pressing
 Non-pressing
 ------------
 
+* Implement the modified prune at
+http://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1358
+(If a card's children are already in the foundations, then it must not moved
+from Freecell to an empty stack.)
+
 * Write a "simulator" for new flare-based runs to see how they improve on
 the existing runs. It will process the scans' command line based on their
 end results and performance and will generate the new estimated performance.
