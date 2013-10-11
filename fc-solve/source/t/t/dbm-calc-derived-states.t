@@ -9,7 +9,7 @@ BEGIN
 {
     if (-f "$ENV{FCS_PATH}/libfcs_dbm_calc_derived_test.so")
     {
-        plan tests => 32;
+        plan tests => 35;
     }
     else
     {
@@ -458,6 +458,13 @@ EOF
         # TEST
         $results->is_dest({ type => 'stack', idx => 7, },
             'to stack No. 7');
+
+        # TEST
+        $results->is_which_irrev_moves_equal_to(
+            {
+            },
+            'One irreversible move of 9D',
+        );
     }
 }
 
@@ -513,6 +520,13 @@ EOF
         # TEST
         $results->is_dest({ type => 'stack', idx => 3, },
             "$blurb_base - to stack No. 3");
+
+        # TEST
+        $results->is_which_irrev_moves_equal_to(
+            {
+            },
+            "$blurb_base - no irreversible moves.",
+        );
     }
 
     {
@@ -640,7 +654,7 @@ EOF
 
         # TEST
         $results->count_irreversible_moves_is(2,
-            '2H to foundation is two irreversible moves because' .
+            '3H to foundation is two irreversible moves because' .
             ' it was not lying on a parent.'
         );
 
@@ -649,7 +663,15 @@ EOF
             'From stack #1');
 
         # TEST
-        $results->is_dest({ type => 'found', idx => 0, }, "Foundation.")
+        $results->is_dest({ type => 'found', idx => 0, }, "Foundation.");
+
+        # TEST
+        $results->is_which_irrev_moves_equal_to(
+            {
+                '3H' => 2,
+            },
+            '3H which_bitmask',
+        );
     }
 }
 
