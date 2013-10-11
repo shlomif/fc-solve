@@ -36,6 +36,7 @@ typedef struct
     unsigned char move;
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
+    unsigned char which_irreversible_moves_bitmask[RANK_KING];
 } DerivedState;
 
 SV * perl_perform_horne_prune(char * init_state_s) {
@@ -83,6 +84,10 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
             s->move = iter->move;
             s->core_irreversible_moves_count = iter->core_irreversible_moves_count;
             s->num_non_reversible_moves_including_prune = iter->num_non_reversible_moves_including_prune;
+            memcpy(s->which_irreversible_moves_bitmask,
+                iter->which_irreversible_moves_bitmask,
+                sizeof(s->which_irreversible_moves_bitmask)
+            );
 
             sv_setiv(obj, (IV)s);
             SvREADONLY_on(obj);

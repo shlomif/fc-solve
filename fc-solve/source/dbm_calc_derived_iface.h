@@ -44,6 +44,7 @@ typedef struct
     unsigned char move;
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
+    unsigned char which_irreversible_moves_bitmask[RANK_KING];
 } fcs_derived_state_debug_t;
 
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
