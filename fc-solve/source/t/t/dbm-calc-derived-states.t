@@ -133,6 +133,33 @@ EOF
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
+use Games::Solitaire::Verify::Card;
+
+sub which_irrev_moves_as_hashref
+{
+    my ($self) = @_;
+    my $bitmask = $self->get_which_irreversible_moves_bitmask;
+
+    return
+    +{
+        map
+        {
+            my $rank_int = $_;
+            return map
+            {
+                my $suit_int = $_;
+                my $card = Games::Solitaire::Verify::Card->rank_to_string(
+                    1+$rank_int
+                ) . Games::Solitaire::Verify::Card->get_suits_seq->[$suit_int];
+                my $v = vec($bitmask, ($rank_int << 2)+$suit_int, 2);
+                $v ? ($card => $v) : ();
+            }
+            (0 .. (4-1))
+        }
+        (0 .. (13-1))
+    };
+}
+
 package DerivedStatesList;
 
 use base 'Games::Solitaire::Verify::Base';
