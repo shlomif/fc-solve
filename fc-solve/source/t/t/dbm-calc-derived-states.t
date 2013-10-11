@@ -113,6 +113,11 @@ int get_num_non_reversible_moves_including_prune(SV* obj) {
   return ((DerivedState*)SvIV(SvRV(obj)))->num_non_reversible_moves_including_prune;
 }
 
+SV * get_which_irreversible_moves_bitmask(SV* obj) {
+  DerivedState* s = ((DerivedState*)SvIV(SvRV(obj)));
+  return newSVpvn(s->which_irreversible_moves_bitmask, sizeof(s->which_irreversible_moves_bitmask));
+}
+
 void DESTROY(SV* obj) {
   DerivedState* soldier = (DerivedState*)SvIV(SvRV(obj));
   Safefree(soldier->state_string);
