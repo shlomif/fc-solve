@@ -9,7 +9,7 @@ BEGIN
 {
     if (-f "$ENV{FCS_PATH}/libfcs_dbm_calc_derived_test.so")
     {
-        plan tests => 31;
+        plan tests => 32;
     }
     else
     {
@@ -398,6 +398,14 @@ EOF
         # TEST
         $results->is_dest({ type => 'found', idx => 3, },
                 "$blurb_base dest");
+
+        # TEST
+        $results->is_which_irrev_moves_equal_to(
+            {
+                'AS' => 2,
+            },
+            'Two irreversible moves of AS',
+        );
     }
 }
 
