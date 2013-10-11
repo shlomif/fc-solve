@@ -9,7 +9,7 @@ BEGIN
 {
     if (-f "$ENV{FCS_PATH}/libfcs_dbm_calc_derived_test.so")
     {
-        plan tests => 30;
+        plan tests => 31;
     }
     else
     {
@@ -145,7 +145,7 @@ sub which_irrev_moves_as_hashref
         map
         {
             my $rank_int = $_;
-            return map
+            map
             {
                 my $suit_int = $_;
                 my $card = Games::Solitaire::Verify::Card->rank_to_string(
@@ -290,6 +290,20 @@ sub is_dest
     );
 }
 
+use Test::Differences qw(eq_or_diff);
+
+sub is_which_irrev_moves_equal_to
+{
+    my ($self, $which_irrev_moves__spec, $blurb) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    return eq_or_diff(
+        scalar($self->states->[0]->which_irrev_moves_as_hashref()),
+        $which_irrev_moves__spec,
+        $blurb,
+    );
+}
 package main;
 
 my $WS = ' ';
@@ -344,6 +358,14 @@ EOF
 
         # TEST
         $results->is_dest({ type => 'freecell', idx => 1, }, '9D to freecell is to freecell No. 1');
+
+        # TEST
+        $results->is_which_irrev_moves_equal_to(
+            {
+                '9D' => 1,
+            },
+            'One irreversible move of 9D',
+        );
     }
 
     # Check move from stack to foundations

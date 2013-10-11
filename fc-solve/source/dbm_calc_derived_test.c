@@ -145,8 +145,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         debug_ret[idx].num_non_reversible_moves_including_prune
             = iter->num_non_reversible_moves_including_prune;
         /* TODO : Put something meaningful there by passing it to the function. */
-        memset(debug_ret[idx].which_irreversible_moves_bitmask,
-            '\0',
+        memcpy(debug_ret[idx].which_irreversible_moves_bitmask,
+            iter->which_irreversible_moves_bitmask,
             sizeof(debug_ret[idx].which_irreversible_moves_bitmask)
         );
         idx++;
