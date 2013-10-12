@@ -104,3 +104,22 @@ top of [path to output dir]/$INT for each of the states.
 Technical note: split_fcc_fc_solver reads the file line by line, puts all
 the states in memory, and records the number of moves, and the offset to the
 line in the file (as a 64-bit integer using ftell() or whatever.).
+
+The process’ internal data structures:
+--------------------------------------
+
+We need:
+
+1. A queue for the to-be-traversed states inside the FCC.
+
+2. A map for the states in the FCC to their parent, move-to-parent, and depth.
+
+3. A map for the FCC entry points with this as value:
+
+    {
+        fcs_bool_t was_consumed;
+        fcs_bool_t was_consumed_recently;
+        fcs_bool_t is_reachable;
+        int depth;
+        int64_t location_in_file;
+    }
