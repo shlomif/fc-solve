@@ -17,7 +17,8 @@ of { ORIG_POS = 0, ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1, IN_FOUNDATIONS = 2 }
 which together shows which non-reversible moves led to the FCC. The
 fingerprint aims to segment several distinct FCCs into FCC-groups so they
 can be processed separately. It is possible that several different FCCs will
-belong to the same fingerprint, but this will be handled.
+belong to the same fingerprint, but this will be dealt with by the solving
+process.
 
 In any case, the fingerprint will be identified by a binary vector of those
 52 ternary digits, and the next fingerprints of a derived state will be
@@ -67,7 +68,7 @@ The process will output a file with the following:
         state
     [% END FOREACH %]
 
-    Derived States:
+    Derived States: [Separate file - written as we go.]
 
     [% FOREACH d in derived_states %]
         [% d.fingerprint_of_dest_fcc %] [% d.state %] [% count_of_moves %] [% d.moves_to_states %]
