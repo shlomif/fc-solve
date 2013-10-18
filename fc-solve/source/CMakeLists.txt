@@ -636,15 +636,21 @@ IF (FCS_ENABLE_DBM_SOLVER)
         ${BIN_TREE_MODULE}
     )
 
+    ADD_EXECUTABLE(split_fcc_fc_solver
+        split_fcc_solver.c
+        ${DBM_FCC_COMMON}
+        ${DBM_BACKEND_MODULES}
+    )
+
     INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/libavl")
 
-    FOREACH (TGT "dbm_fc_solver" "fcc_fc_solver" "depth_dbm_fc_solver")
+    FOREACH (TGT "dbm_fc_solver" "fcc_fc_solver" "depth_dbm_fc_solver" "split_fcc_fc_solver")
         TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB})
     ENDFOREACH (TGT)
 
     # We cannot set it on fcc_fc_solver because it relies on cache_insert
     # which uses a tree with a different item type.
-    FOREACH (TGT "dbm_fc_solver" "depth_dbm_fc_solver")
+    FOREACH (TGT "dbm_fc_solver" "depth_dbm_fc_solver" "split_fcc_fc_solver")
         SET_TARGET_PROPERTIES("${TGT}"
             PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
         )
