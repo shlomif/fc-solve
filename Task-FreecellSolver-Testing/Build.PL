@@ -5,7 +5,7 @@ use Module::Build;
 my $builder = Module::Build->new(
     module_name         => 'Task::FreecellSolver::Testing',
     license             => 'mit',
-    dist_author         => q{Shlomi Fish <shlomif@iglu.org.il>},
+    dist_author         => q{Shlomi Fish <shlomif@shlomifish.org>},
     dist_version_from   => 'lib/Task/FreecellSolver/Testing.pm',
     requires => {
         "base" => 0,
