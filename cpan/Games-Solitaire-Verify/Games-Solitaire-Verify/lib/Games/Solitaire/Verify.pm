@@ -50,7 +50,6 @@ L<Games::Solitaire::Verify::Solution> , L<Games::Solitaire::Verify::State>
 =head1 AUTHOR
 
 Shlomi Fish, L<http://www.shlomifish.org/>.
-L<http://www.shlomifish.org>.
 
 =head1 BUGS
 
