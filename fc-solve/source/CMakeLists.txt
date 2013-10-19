@@ -71,7 +71,7 @@ IF(WIN32 AND NOT UNIX)
     SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\fc-solve.shlomifish.org")
     SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\fc-solve.shlomifish.org")
     SET(CPACK_NSIS_DISPLAY_NAME "Freecell Solver")
-    SET(CPACK_NSIS_CONTACT "shlomif@iglu.org.il")
+    SET(CPACK_NSIS_CONTACT "shlomif@shlomifish.org")
     SET(CPACK_NSIS_MODIFY_PATH ON)
     # Setting for NSIS :
     SET(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}\\\\fc-solve.ico")
