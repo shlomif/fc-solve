@@ -208,6 +208,7 @@ static GCC_INLINE void instance_destroy(
     ( instance->curr_depth + list->num_non_reversible_moves_including_prune)
 
 #include "dbm_procs.h"
+#include "fcs_base64.h"
 
 static GCC_INLINE void instance_check_key(
     fcs_dbm_solver_instance_t * instance,
@@ -1103,10 +1104,19 @@ int main(int argc, char * argv[])
         init_indirect_stacks_buffer
     );
 
-    {
-        unsigned char which_no_use[13] = {'\0'};
-        horne_prune(local_variant, &init_state, which_no_use, NULL, NULL);
-    }
+    unsigned char initial_which_irreversible_moves_bitmask[13] = {'\0'};
+    int initial_irrev_moves_depth =
+        horne_prune(local_variant, &init_state,
+            initial_which_irreversible_moves_bitmask, NULL, NULL
+        );
+
+    unsigned char fingerprint_which_irreversible_moves_bitmask[13] = {'\0'};
+    size_t fingerprint_data_len = 0;
+    base64_decode(
+        mod_base64_fcc_fingerprint, strlen(mod_base64_fcc_fingerprint),
+        fingerprint_which_irreversible_moves_bitmask, &fingerprint_data_len);
+
+    assert(fingerprint_data_len == sizeof(fingerprint_which_irreversible_moves_bitmask));
 
     delta = fc_solve_delta_stater_alloc(
             &init_state.s,
@@ -1158,6 +1168,7 @@ int main(int argc, char * argv[])
 
     fc_solve_delta_stater_free(delta);
     delta = NULL;
+    base64_cleanup();
 
     return 0;
 }
