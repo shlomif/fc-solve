@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"[
 
 <!ENTITY fcs "Freecell Solver">
@@ -16,7 +16,7 @@
                 <surname>Fish</surname>
                 <affiliation>
                     <address>
-                        <email>shlomif@iglu.org.il</email>
+                        <email>shlomif@shlomifish.org</email>
                     </address>
                 </affiliation>
             </author>
@@ -30,16 +30,16 @@
 
         <legalnotice>
             <!-- Ci vis pacem -->
-            <para>              
+            <para>
                 <!-- belum. ;-) -->
-                This work is licensed under the 
-                <ulink url="http://creativecommons.org/licenses/by/3.0/">Creative 
-                    Commons Attribution 3.0 Unported License</ulink> (or at 
+                This work is licensed under the
+                <ulink url="http://creativecommons.org/licenses/by/3.0/">Creative
+                    Commons Attribution 3.0 Unported License</ulink> (or at
                 your option a greater version of it).
             </para>
             <para>
                 It was written by
-                <ulink url="http://www.shlomifish.org/">Shlomi Fish</ulink>, 
+                <ulink url="http://www.shlomifish.org/">Shlomi Fish</ulink>,
                 and one should attribute a derived work to him, while linking
                 to his homepage.
             </para>
@@ -50,7 +50,7 @@
                 <date>2 December 2002</date>
                 <authorinitials>shlomif</authorinitials>
                 <revremark>
-                    First "stable" version covering the &fcs; 2.8.x 
+                    First "stable" version covering the &fcs; 2.8.x
                     architecture. Spell checked and revised during its
                     CVS history.
                 </revremark>
@@ -83,13 +83,13 @@
         <title>Introduction</title>
         <para>
             This is the architecture document of &fcs;. Its purpose is to
-            serve as an introduction to the code, so future contributors can 
+            serve as an introduction to the code, so future contributors can
             understand it and work on it.
         </para>
         <para>
-            This document does not aim to cover every detail of the 
+            This document does not aim to cover every detail of the
             application. Such details are supposed to be documented within
-            the comments of the code. (let me know if there is something 
+            the comments of the code. (let me know if there is something
             there you don't understand, and I'll add a comment) Instead,
             it should provide an overview of the code and cover the main
             caveats one would encounter when trying to understand it.
@@ -114,14 +114,14 @@
 
             </para>
             <para>
-                &fcs; has many utility classes, and has also been coded 
+                &fcs; has many utility classes, and has also been coded
                 incrementally. I also find bottom-up design more natural.
             </para>
         </section>
         <section id="strict_adherence_to_the_ansi_c_lang">
             <title>Strict Adherence to the ANSI C Language</title>
             <para>
-                &fcs; is written in pure ANSI C and uses no gcc extensions, no 
+                &fcs; is written in pure ANSI C and uses no gcc extensions, no
                 C99 or C++ extensions. I did allow myself to make use of
                 <emphasis>inline</emphasis> in some places, but they are
                 abstraced so they'll be used only with gcc or other supporting
@@ -130,9 +130,9 @@
             <para>
                 &fcs; is actively compiled with gcc and with the Visual C++
                 ANSI C compiler. I expect that it should be compilable with
-                other open-source and proprietary compilers on various 
-                systems. As this variety of compilers only support the bare 
-                ANSI C standard, I have to stick to it. This is despite the 
+                other open-source and proprietary compilers on various
+                systems. As this variety of compilers only support the bare
+                ANSI C standard, I have to stick to it. This is despite the
                 fact that such extensions may have made the code more
                 optimised and my life as a programmer much easier.
             </para>
@@ -142,18 +142,18 @@
             <para>
                 &fcs; is dependant on the ANSI C Standard Library as defined
                 by the standard and on that library alone. The core FCS code is
-                not dependant on glib, apr or any other abstraction or 
+                not dependant on glib, apr or any other abstraction or
                 encapsulation libraries of this kind.
             </para>
             <para>
                 &fcs; can optionally be compiled to make use of some binary
                 trees and hash implementations found in external libraries.
-                This serves as a drop-in replacement for its internal hash 
-                implementation, which was shown to usually give a better 
+                This serves as a drop-in replacement for its internal hash
+                implementation, which was shown to usually give a better
                 performance.
             </para>
             <para>
-                Note that a lot of the logic provided by such libraries is 
+                Note that a lot of the logic provided by such libraries is
                 implemented internally in &fcs;.
             </para>
         </section>
@@ -162,12 +162,12 @@
             <para>
                 All the global symbols of the &fcs; modules are prefixed with
                 <symbol>fc_solve_</symbol> prefix. (See
-                <ulink url="http://tech.groups.yahoo.com/group/fc-solve-discuss/message/842">this 
+                <ulink url="http://tech.groups.yahoo.com/group/fc-solve-discuss/message/842">this
                     post to the fc-solve-discuss mailing list</ulink> about why
                 we converted away from <symbol>freecell_solver_</symbol>.
-                Some macros supplied to the user are prefixed with the 
-                <symbol>fcs_</symbol> prefix for convenience. The API 
-                functions in turn are prefixed with 
+                Some macros supplied to the user are prefixed with the
+                <symbol>fcs_</symbol> prefix for convenience. The API
+                functions in turn are prefixed with
                 <symbol>freecell_solver_user_</symbol>, in order to not
                 break compatibility with older versions of the library.
             </para>
@@ -202,7 +202,7 @@
                     </listitem>
                     <listitem>
                         <para>
-                        
+
                             Memory Consumption - should be reduced as much as
                             possible. A reduced memory consumption usually
                             leads to better speed, because there are less cache
@@ -220,7 +220,7 @@
 
                         </para>
 
-                    </listitem>                
+                    </listitem>
                 </orderedlist>
             </para>
 
@@ -241,13 +241,13 @@
 
             </para>
             <para>
-                One should note that several distinct instances of the solving 
-                algorithm can be instantiated and made to run side by side or 
+                One should note that several distinct instances of the solving
+                algorithm can be instantiated and made to run side by side or
                 alternately.
             </para>
         </section>
         <section id="cc_separation_of_internals_from_user_interface">
-            <title>Separation of Internals from User and Application 
+            <title>Separation of Internals from User and Application
                 Programmer Interfaces</title>
             <para>
 
@@ -258,7 +258,7 @@
                 <filename>instance.c</filename> and below are the internals of
                 the program.
 
-            </para>        
+            </para>
             <para>
 
                 <filename>lib.c</filename> contain the API functions used by
@@ -270,12 +270,12 @@
 
             </para>
             <para>
-                <filename>main.c</filename> , 
+                <filename>main.c</filename> ,
                 <filename>test_multi_parallel.c</filename> ,
                 <filename>threaded_range_solver.c</filename> ,
                 and <filename>fc_pro_range_solver.c </filename>
                 are command line programs that use the command line interface
-                and programmers interface. Others can be written (and have 
+                and programmers interface. Others can be written (and have
                 been written).
             </para>
         </section>
@@ -286,9 +286,9 @@
             <title>Overview of the Program</title>
 
             <para>
-                &fcs; solves boards by using Depth-First Search or 
-                Best-First-Search scans starting from the initial board. It 
-                has a collection of the states, and constructs a tree of the 
+                &fcs; solves boards by using Depth-First Search or
+                Best-First-Search scans starting from the initial board. It
+                has a collection of the states, and constructs a tree of the
                 states descending from each state to its "parent". A parent
                 state means the state in which from which it was discovered.
             </para>
@@ -320,8 +320,8 @@
             </para>
             <para>
 
-                A soft thread is a singular scan. It performs a scan for a 
-                certain number of iterations, at which point the hard thread 
+                A soft thread is a singular scan. It performs a scan for a
+                certain number of iterations, at which point the hard thread
                 switches to a different soft thread.
 
             </para>
@@ -331,8 +331,8 @@
             <section id="app_str.c">
                 <title>app_str.c</title>
                 <para>
-                    This file contains a utility class that appends sprintf'ed 
-                    output to a dynamically allocated buffer while growing the 
+                    This file contains a utility class that appends sprintf'ed
+                    output to a dynamically allocated buffer while growing the
                     buffer if necessary.
                 </para>
                 <para>
@@ -348,7 +348,7 @@
             <section id="rand.c">
                 <title>rand.h</title>
                 <para>
-                    Implements a random number generating class. The algorithm 
+                    Implements a random number generating class. The algorithm
                     is identical to that of the Microsoft C Run-Time Library
                     (RTL), but the generator can be instantiated.
                 </para>
@@ -357,19 +357,19 @@
                 <title>fcs_hash.c</title>
                 <para>
                     An optimised hash implementations. This hash maps keys to
-                    values. It stores the hash function values next to the 
-                    keys, so two keys can be first compared with their hash 
+                    values. It stores the hash function values next to the
+                    keys, so two keys can be first compared with their hash
                     values, before the costly full comparison is done. It also
                     uses a secondary hash to speed up the detection of two
                     keys with identical primary hash values.
                 </para>
                 <para>
                     Not all the functions of the hash Abstract Data Type (ADT)
-                    are implemented here. Only these that need to be used by 
+                    are implemented here. Only these that need to be used by
                     Freecell Solver.
                 </para>
             </section>
-            
+
             <section id="fcs_dm.c">
                 <title>fcs_dm.c</title>
                 <para>
@@ -384,8 +384,8 @@
                         <para>
                             It is no longer recommended to use a sorted array as
                             a state or stack storage, as they are much slower than
-                            using a hash or a balanced binary tree, both in 
-                            asymptotic complexity (O(n<superscript>2</superscript>))) 
+                            using a hash or a balanced binary tree, both in
+                            asymptotic complexity (O(n<superscript>2</superscript>)))
                             and in average performance.
                         </para>
                     </footnote>
@@ -396,27 +396,27 @@
             <section id="alloc.c">
                 <title>alloc.c</title>
                 <para>
-                    This module compactly allocates blocks of arbitrary length, 
+                    This module compactly allocates blocks of arbitrary length,
                     usually used for dynamically allocated Freecell columns.
                     The blocks are allocated one after the other inside
                     malloc()'ed memory segments that are thus guaranteed
                     to retain their position.
                 </para>
             </section>
-            
+
 
             <section id="cl_chop.c">
                 <title>cl_chop.c</title>
                 <para>
-                    This module contains a class that implements a chopping of 
-                    a string into arguments. This is done using a subset of 
+                    This module contains a class that implements a chopping of
+                    a string into arguments. This is done using a subset of
                     the UNIX Bourne shell functionality. Namely:
                 </para>
                 <para>
                     <orderedlist>
                         <listitem>
                             <para>
-                                A backslash (\) makes the next character an 
+                                A backslash (\) makes the next character an
                                 actual such character.
                             </para>
                         </listitem>
@@ -442,7 +442,7 @@
                                 A pound sign (#) makes a comment that extends
                                 to the end of the line.
                             </para>
-                        </listitem>                    
+                        </listitem>
                     </orderedlist>
                 </para>
                 <para>
@@ -453,10 +453,10 @@
                 <title>pqueue.c</title>
                 <para>
                     This module implements a priority queue as a binary heap.
-                    It is derived from <ulink 
-                        url="http://www.heyes-jones.com/astar.html">Justin 
-                        Heyes-Jones</ulink> C++ code which he has kindly 
-                    donated to &fcs; (while re-licensing it under the public 
+                    It is derived from <ulink
+                        url="http://www.heyes-jones.com/astar.html">Justin
+                        Heyes-Jones</ulink> C++ code which he has kindly
+                    donated to &fcs; (while re-licensing it under the public
                     domain). Since then, the code has been converted to ANSI C
                     , modified and optimised.
                 </para>
@@ -473,15 +473,15 @@
             <section id="card.c">
                 <title>card.c</title>
                 <para>
-                    Elementary functions to convert cards to and from their 
+                    Elementary functions to convert cards to and from their
                     string representations. The <symbol>u</symbol> and
                     <symbol>p</symbol> within the code stand for "user" and
-                    "perl" respectively, and mean user representation and 
+                    "perl" respectively, and mean user representation and
                     internal C representation.
                 </para>
                 <para>
                     The first experimental version of &fcs; was written in
-                    Perl, and since then the naming convention for this case 
+                    Perl, and since then the naming convention for this case
                     persisted.
                 </para>
             </section>
@@ -491,18 +491,18 @@
                 <para>
                     This is a header file, but it can be considered a module
                     due to the large amount of logic that it implements. It
-                    defines <type>fcs_state_t</type> (which represents a 
-                    complete layout of 
-                    the Freecell board) and of 
+                    defines <type>fcs_state_t</type> (which represents a
+                    complete layout of
+                    the Freecell board) and of
                     <type>fcs_state_extra_info_t</type>. It contains
-                    many macros for manipulating states and cards. (all of them 
+                    many macros for manipulating states and cards. (all of them
                     should behave like function calls)
                 </para>
                 <para>
                     The <type>fcs_state_extra_info_t</type> contains the real
-                    positions of the stacks and freecells (refer to 
-                    (SECTION_REF Canonisation and Normalisation)) and other 
-                    things that the system uses but don't uniquely identify 
+                    positions of the stacks and freecells (refer to
+                    (SECTION_REF Canonisation and Normalisation)) and other
+                    things that the system uses but don't uniquely identify
                     the state in the state collection.
                 </para>
             </section>
@@ -512,7 +512,7 @@
                 <para>
                     This file contains various functions for manipulating
                     states. Among the many things implemented in it are state
-                    canonisation, state duplicating, state comparison and 
+                    canonisation, state duplicating, state comparison and
                     converting to and from string format.
                 </para>
             </section>
@@ -522,29 +522,29 @@
                 <para>
                     This module contains routines for handling individual moves
                     (freecell &rarr; stack, stack &rarr; freecell, stack &rarr;
-                    stack) and various special moves as well as entire move 
-                    stacks, which contain a sequence of moves to be played 
+                    stack) and various special moves as well as entire move
+                    stacks, which contain a sequence of moves to be played
                     between two intermediate states.
                 </para>
             </section>
-            
+
             <section id="preset.c">
                 <title>preset.c</title>
                 <para>
                     This file manages the presets: configurations of stacks
-                    number, freecells number, decks number, and the other 
-                    parameters that define how a game is played. A preset is a 
-                    variant of Solitaire such as Freecell, Baker's Game, Simple 
-                    Simon, Good Measure, etc. Many of them are categorised in 
-                    PySol under different categories than the Freecell category. 
+                    number, freecells number, decks number, and the other
+                    parameters that define how a game is played. A preset is a
+                    variant of Solitaire such as Freecell, Baker's Game, Simple
+                    Simon, Good Measure, etc. Many of them are categorised in
+                    PySol under different categories than the Freecell category.
                     Moreover, some "Freecell-like" games such as Penguin are
                     not supported by Freecell Solver yet.
                 </para>
                 <para>
-                    The routines in the file enable applying a preset to an 
+                    The routines in the file enable applying a preset to an
                     instance (by its name), applying a preset to an instance
                     by a pointer to it, etc. It is also directly used by lib.c
-                    to maintain consistency across a sequence of consecutive 
+                    to maintain consistency across a sequence of consecutive
                     instances.
                 </para>
             </section>
@@ -560,7 +560,7 @@
 
                 </para>
                 <para>
-                    This code uses some macros defined in 
+                    This code uses some macros defined in
                     <filename>meta_move_funcs_helpers.h</filename>. It contains
                     both meta-move tests and atomic moves ones.
                 </para>
@@ -569,9 +569,9 @@
             <section id="simpsim.c">
                 <title>simpsim.c</title>
                 <para>
-                    This file is similar in spirit to 
+                    This file is similar in spirit to
                     <filename>freecell.c</filename> only it contains
-                    <ulink url="http://en.wikipedia.org/wiki/Simple_Simon_(solitaire)">Simple 
+                    <ulink url="http://en.wikipedia.org/wiki/Simple_Simon_(solitaire)">Simple
                         Simon</ulink> move functions.
                 </para>
             </section>
@@ -579,21 +579,21 @@
             <section id="caas.c">
                 <title>caas.c</title>
                 <para>
-                    This file contains the 
-                    <function>check_and_add_state</function> 
-                    function - a function that is used to determine if a 
+                    This file contains the
+                    <function>check_and_add_state</function>
+                    function - a function that is used to determine if a
                     reached state is found in the states collection and if so,
                     to insert it there. (an operation that can be considered
-                    atomic). 
+                    atomic).
                 </para>
                 <para>
-                    It has several #ifdef'ed portions used to do it for the 
-                    various types of states collections supported at compile 
-                    time. It also has a function to collect the new stacks 
+                    It has several #ifdef'ed portions used to do it for the
+                    various types of states collections supported at compile
+                    time. It also has a function to collect the new stacks
                     that were present in a similar fashion.
                 </para>
                 <para>
-                    It is being used by the tests functions to put a state in 
+                    It is being used by the tests functions to put a state in
                     the state collection.
                 </para>
             </section>
@@ -613,14 +613,14 @@
                 </para>
             </section>
 
-           
+
             <section id="instance.c">
                 <title>instance.c</title>
                 <para>
                     This module contains the logic that manages a solver
-                    instance, configures it and runs it. It used the scans 
-                    module to perform the scan and other modules to configure 
-                    it. Note that the interface presented here is very raw, 
+                    instance, configures it and runs it. It used the scans
+                    module to perform the scan and other modules to configure
+                    it. Note that the interface presented here is very raw,
                     and not meant to be used as an API.
                 </para>
             </section>
@@ -629,13 +629,13 @@
             <section id="lib.c">
                 <title>lib.c</title>
                 <para>
-                    This module contains the user API. It manages a sequence 
+                    This module contains the user API. It manages a sequence
                     of instances that can be used to solve a board, and then
                     recycled to solve another. It uses instance.c to perform
                     its operations, and do the actual configuring and solving.
-                    It supplies the API header file 
+                    It supplies the API header file
                     <filename>fcs_user.h</filename> which contains one
-                    function for doing any given operation, and these 
+                    function for doing any given operation, and these
                     functions are implemented in lib.c.
                 </para>
             </section>
@@ -643,10 +643,10 @@
             <section id="cmd_line.c">
                 <title>cmd_line.c</title>
                 <para>
-                    This module can be used to analyse an array of strings 
-                    (similar to that given to the <function>main()</function> 
-                    function) and configure a user instance accordingly. It 
-                    also implements reading such arguments from files and a 
+                    This module can be used to analyse an array of strings
+                    (similar to that given to the <function>main()</function>
+                    function) and configure a user instance accordingly. It
+                    also implements reading such arguments from files and a
                     presets mechanism that can be used to assign names to
                     common configuration and load them.
                 </para>
@@ -671,11 +671,11 @@
                 <title>lookup2.c</title>
                 <para>
 
-                    This module implements a 
-                    <ulink url="http://burtleburtle.net/bob/hash/">hash 
-                        function</ulink> 
-                    that was developed by <ulink 
-                        url="http://burtleburtle.net/bob/">Bob Jenkins</ulink>. 
+                    This module implements a
+                    <ulink url="http://burtleburtle.net/bob/hash/">hash
+                        function</ulink>
+                    that was developed by <ulink
+                        url="http://burtleburtle.net/bob/">Bob Jenkins</ulink>.
                     It is essentially his code, that was just integrated into
                     &fcs; for convenience (note that it is also Public Domain).
 
@@ -689,7 +689,7 @@
 
                     This module implemented indirect state allocation for
                     states. It allocates states in memory pools (called packs)
-                    which have a fixed location in memory and allocates as 
+                    which have a fixed location in memory and allocates as
                     many such pools as it can.
 
                 </para>
@@ -701,14 +701,14 @@
                     is conserved as an individually malloced state may have a
                     lot of overhead. (a malloced block+a fixed amount of data
                     is rounded to the nearest power of 2)
-                    
+
                 </para>
                 <para>
-                    fcs_isa allows releasing the last allocated state in case 
+                    fcs_isa allows releasing the last allocated state in case
                     it will not be used.
                 </para>
             </section>
-            
+
         </section>
     </chapter>
     <chapter id="techniques">
@@ -716,57 +716,57 @@
         <section id="technique_state_representation">
             <title>State Representation</title>
             <para>
-                As can be seen in <filename>state.h</filename>, &fcs; 
+                As can be seen in <filename>state.h</filename>, &fcs;
                 supports three ways to represent a state:
             </para>
             <para>
                 <orderedlist>
                     <listitem>
                         <para>
-                            <emphasis>Debug States</emphasis> - 
-                            in this configuration, stack counters, 
-                            and cards are represented as 32-bit quantities. 
-                            This configuration consumes a lot of memory, and is 
-                            the slowest of the three. It is however useful for 
-                            debugging, as the debugger will display the state 
+                            <emphasis>Debug States</emphasis> -
+                            in this configuration, stack counters,
+                            and cards are represented as 32-bit quantities.
+                            This configuration consumes a lot of memory, and is
+                            the slowest of the three. It is however useful for
+                            debugging, as the debugger will display the state
                             data-structure very nicely.
                         </para>
                     </listitem>
                     <listitem>
                         <para>
-                            <emphasis>Compact States</emphasis> - in this 
+                            <emphasis>Compact States</emphasis> - in this
                             configuration the data is one buffer of chars,
-                            where each card and each stack counter are 
-                            represented as one character, and each freecell and 
+                            where each card and each stack counter are
+                            represented as one character, and each freecell and
                             foundation is one char too.
                         </para>
                         <para>
-                            Determining the locations of every card is done 
+                            Determining the locations of every card is done
                             using offset calculation.
                         </para>
                         <para>
-                            This configuration consumes much less memory than 
-                            Debug States, but it doesn't scale well to games 
+                            This configuration consumes much less memory than
+                            Debug States, but it doesn't scale well to games
                             where the stacks can contain a lot of cards.
                             The reason is that every stack be of a fixed size
-                            (so offset would be determined by means of 
+                            (so offset would be determined by means of
                             multiplication).
                         </para>
                         <para>
-                            This configuration used to be the fastest for 
-                            limited stack games such as Freecell. After 
-                            &fcs; 2.6.x, it seems that Indirect Stack States 
+                            This configuration used to be the fastest for
+                            limited stack games such as Freecell. After
+                            &fcs; 2.6.x, it seems that Indirect Stack States
                             has become slightly faster than it.
                         </para>
                     </listitem>
                     <listitem>
                         <para>
-                            <emphasis>Indirect Stack States</emphasis> - 
-                            in this configuration 
-                            each stack is a pointer to a stack in memory. 
+                            <emphasis>Indirect Stack States</emphasis> -
+                            in this configuration
+                            each stack is a pointer to a stack in memory.
                             The stacks are also collected and there is one copy
-                            of each stack organisation (say [KS QH 6H]) in 
-                            memory. Since a pointer to a stack uniquely 
+                            of each stack organisation (say [KS QH 6H]) in
+                            memory. Since a pointer to a stack uniquely
                             identifies a stack, the states can be compared by
                             comparing their memory contents.
                         </para>
@@ -787,27 +787,27 @@
         <section id="technique_indirect_stack_states_algorithms">
             <title>Indirect Stack States Algorithms</title>
             <para>
-                The stacks are kept in their own stack collection in the 
-                freecell_solver_instance struct. When a test wishes to 
-                create a derived states, it first copies the state, and then 
-                marks the flags of all the stacks as cleared. (check 
+                The stacks are kept in their own stack collection in the
+                freecell_solver_instance struct. When a test wishes to
+                create a derived states, it first copies the state, and then
+                marks the flags of all the stacks as cleared. (check
                 <symbol>(*Mark STACKS_COW_CLEAR *)</symbol> in the code).
             </para>
             <para>
-                Later on when a stack is changed, its flag is set, and a 
+                Later on when a stack is changed, its flag is set, and a
                 stack is copied to a indirect stacks buffer of the
                 hard thread.
                 and modified there. (check (*Mark STACKS_COW_COPY_STACK*) ).
             </para>
             <para>
-                The check_and_add_state function then, when checking a 
-                new state, ignores those stacks whose flag was not set, 
+                The check_and_add_state function then, when checking a
+                new state, ignores those stacks whose flag was not set,
                 and collects the stacks whose flag was set.
-                ( <symbol>(*Mark STACKS_COW_CACHING*)</symbol> ). The 
-                memory for the collected stacks is allocated compactly in 
+                ( <symbol>(*Mark STACKS_COW_CACHING*)</symbol> ). The
+                memory for the collected stacks is allocated compactly in
                 a segment, where one stack starts after the other
-                (check <filename>alloc.c</filename> and <filename>alloc.h</filename>). 
-                If the stack was found in the collection the memory that was 
+                (check <filename>alloc.c</filename> and <filename>alloc.h</filename>).
+                If the stack was found in the collection the memory that was
                 allocated is freed for use by future stacks).
             </para>
         </section>
@@ -827,28 +827,28 @@
             </para>
             <para>
                 <type>fcs_state_extra_info_t</type> contains a pointer to the
-                <type>fcs_state_t</type> which it is associated with, 
+                <type>fcs_state_t</type> which it is associated with,
                 and defines some other data. The real locations of the stacks
-                and freecells are stored there for instance, as well as some 
-                graph information. See 
-                <link linkend="term_canonisation">Canonisation</link> and 
-                <link linkend="term_normalisation">Normalisation</link> in the 
+                and freecells are stored there for instance, as well as some
+                graph information. See
+                <link linkend="term_canonisation">Canonisation</link> and
+                <link linkend="term_normalisation">Normalisation</link> in the
                 <link linkend="terms">terminology</link>.
             </para>
         </section>
         <section id="technique_the_states_graph_and_its_use">
             <title>The States Graph and its Use</title>
             <para>
-                When a brand new state is discovered its parent is assigned to 
+                When a brand new state is discovered its parent is assigned to
                 be the state from which it is derived. (check <symbol>(*Mark
-                    STATE_PARENT*)</symbol>). Its depth is assigned to be the 
+                    STATE_PARENT*)</symbol>). Its depth is assigned to be the
                 depth of the parent + 1. There is a command line option
                 (--reparent-states) that specifies that if an existing state
-                whose depth is higher than the depth of state it was derived 
+                whose depth is higher than the depth of state it was derived
                 from + 1 is reached, then its parent would be re-assigned.
             </para>
             <para>
-                An extended state has a num_active_children counter that 
+                An extended state has a num_active_children counter that
                 specifies how many of those states that consider it their
                 parent were still not marked as dead ends. If this counter
                 reaches 0, this state also becomes inactive.
@@ -869,15 +869,15 @@
                     </listitem>
                     <listitem>
                         <para>
-                            Find that it has no derived states if it is a 
+                            Find that it has no derived states if it is a
                             Best-First Search scan.
                         </para>
                     </listitem>
                 </orderedlist>
             </para>
             <para>
-                If it is marked as dead end, then its parent's counter would be 
-                incremented. If the latter is zero, the process may continue to 
+                If it is marked as dead end, then its parent's counter would be
+                incremented. If the latter is zero, the process may continue to
                 the grand parent and so forth.
             </para>
         </section>
@@ -885,33 +885,33 @@
         <section id="technique_life_cycle_of_a_f_s_instance_t">
             <title>The Life-Cycle of a freecell_solver_instance_t</title>
             <para>
-                A <type>freecell_solver_instance_t</type> is allocated by 
+                A <type>freecell_solver_instance_t</type> is allocated by
                 <filename>lib.c</filename> to start solving a board. The logic
-                of solving a board is present in <filename>intrface.c</filename> 
-                while the external API functions to use it are implemented in 
+                of solving a board is present in <filename>intrface.c</filename>
+                while the external API functions to use it are implemented in
                 <filename>lib.c</filename>.
             </para>
             <para>
                 After an instance is allocated, it should be parametrised to
-                specify how it will solve the board. Afterwards, 
+                specify how it will solve the board. Afterwards,
                 <function>freecell_solver_init_instance()</function> should
-                be called. After that, 
+                be called. After that,
                 <function>freecell_solver_solve_instance()</function> should
-                be called for the first time, and 
+                be called for the first time, and
                 <function>freecell_solver_resume_instance()</function> afterwards.
-                (these functions solve until they reach a limit of iterations 
+                (these functions solve until they reach a limit of iterations
                 number.)
             </para>
             <para>
-                If one would like to use the instance to solve another board, 
+                If one would like to use the instance to solve another board,
                 it is possible to recycle it by calling
                 <function>freecell_solver_recycle_instance()</function>.  This will
                 keep its configuration but free all its associated resources, and
                 thus will not require parsing the command line again.
             </para>
             <para>
-                The function that calls the actual scans is 
-                <function>run_hard_thread()</function>, which is called from 
+                The function that calls the actual scans is
+                <function>run_hard_thread()</function>, which is called from
                 within <function>freecell_solver_resume_instance()</function>.
             </para>
         </section>
@@ -945,7 +945,7 @@
             <para>
                 It supports releasing the last allocated block
                 and the last one alone.
-            </para>        
+            </para>
             <para>
                 Compact allocation is used for the following resources.
             </para>
@@ -977,8 +977,8 @@
                     </listitem>
                     <listitem>
                         <para>
-                            <emphasis>Move stacks</emphasis> - 
-                            the move stacks leading to the parent are compactly 
+                            <emphasis>Move stacks</emphasis> -
+                            the move stacks leading to the parent are compactly
                             allocated (see (*Mark COMPACT_ALLOC_MOVE_STACKS*)).
                         </para>
                     </listitem>
@@ -998,12 +998,12 @@
         <section id="scm_game_presets_configuration">
             <title>Game Presets Configuration</title>
             <para>
-                The info for generating the game presets is present in the 
+                The info for generating the game presets is present in the
                 file <filename>gen_presets.pl</filename>. It
-                uses <ulink 
-                    url="http://groups.yahoo.com/group/fc-solve-discuss/message/51">data 
-                    structure inheritance</ulink> to determine the exact 
-                parameters to be included in each preset. Its output should 
+                uses <ulink
+                    url="http://groups.yahoo.com/group/fc-solve-discuss/message/51">data
+                    structure inheritance</ulink> to determine the exact
+                parameters to be included in each preset. Its output should
                 later be incorporated into <filename>presets.c</filename>.
             </para>
         </section>
@@ -1011,17 +1011,17 @@
         <section id="scm_generating_the_site">
             <title>Generating the Site</title>
             <para>
-                The site lies in the <ulink url="http://svn.berlios.de/viewcvs/fc-solve/trunk/fc-solve/site/wml/">sub-directory of 
-                    fc-solve/site/wml in the Subversion's trunk</ulink> and 
+                The site lies in the <ulink url="http://svn.berlios.de/viewcvs/fc-solve/trunk/fc-solve/site/wml/">sub-directory of
+                    fc-solve/site/wml in the Subversion's trunk</ulink> and
                 is generated using GNU Make, and
-                <ulink url="http://thewml.org/">Website 
-                    Meta Language</ulink> . 
+                <ulink url="http://thewml.org/">Website
+                    Meta Language</ulink> .
             </para>
 
             <para>
                 The <ulink url="http://fc-solve.berlios.de/">main site
-                    at BerliOS</ulink> 
-                is generated from a makefile and uploaded to 
+                    at BerliOS</ulink>
+                is generated from a makefile and uploaded to
                 its place using rsync.
             </para>
 
@@ -1033,9 +1033,9 @@
                 The CMake process generates a
                 <filename>libfreecell-solver.pc</filename> file that
                 can be used as an aid in programs wishing to compile and link
-                against &fcs;. It is generated from 
+                against &fcs;. It is generated from
                 <filename>libfreecell-solver.pc.in </filename> by
-                CMake and installed system-wide.            
+                CMake and installed system-wide.
             </para>
         </section>
 
@@ -1047,7 +1047,7 @@
                 The Windows 32-bit binary can be generated by running CMake
                 on Windows on the Freecell Solver distribution, generating a
                 MinGW makefile and type "make package". There's a script
-                to automate it: 
+                to automate it:
                 <filename>scripts/build-on-win32.pl</filename> .
 
             </para>
@@ -1079,8 +1079,8 @@
                         <orderedlist>
                             <listitem>
                                 <para>
-                                    The number of successive state 
-                                    → state.parent operations it take to 
+                                    The number of successive state
+                                    → state.parent operations it take to
                                     reach the initial state which is the base
                                     of the states graph.
                                 </para>
@@ -1099,14 +1099,14 @@
                     <listitem>
                         <para>
                             A false impossible is an initial board position
-                            for which the solver reports as impossible to 
-                            solve, yet can be solved in some way. A false 
+                            for which the solver reports as impossible to
+                            solve, yet can be solved in some way. A false
                             impossible may be considered a bug depending on
-                            the context. 
+                            the context.
                         </para>
                         <para>
-                            A meta-moves-based scan can potentially have false 
-                            impossibles, while an atomic moves one (which does 
+                            A meta-moves-based scan can potentially have false
+                            impossibles, while an atomic moves one (which does
                             not prune in any way) cannot.
                         </para>
                     </listitem>
@@ -1115,13 +1115,13 @@
                     <term>False Negative</term>
                     <listitem>
                         <para>
-                            See <link linked="term_false_impossible">False 
+                            See <link linked="term_false_impossible">False
                                 Impossible</link>.
                         </para>
                     </listitem>
                 </varlistentry>
-                
-                
+
+
                 <varlistentry>
                     <term>f_s_</term>
                     <listitem>
@@ -1146,7 +1146,7 @@
                     <listitem>
                         <para>
                             The states in the state collection form a directed
-                            graph. Each link is a state &rarr; derived state 
+                            graph. Each link is a state &rarr; derived state
                             relationship.
                         </para>
                     </listitem>
@@ -1155,17 +1155,17 @@
                     <term>Hard DFS</term>
                     <listitem>
                         <para>
-                            A Depth-First Search scan that uses procedural 
+                            A Depth-First Search scan that uses procedural
                             recursion. Since suspending a scan and resuming
                             it are O(d) operations (where d is the depth)
-                            instead of O(1) for Soft-DFS its use is 
+                            instead of O(1) for Soft-DFS its use is
                             deprecated. As a result of this, Hard-DFS was
                             removed from the code, and when being specified,
                             it is implemented by Soft-DFS.
                         </para>
 
                         <para>
-                            Hard-DFS was the original scan supported by 
+                            Hard-DFS was the original scan supported by
                             &fcs; 0.2.0.
                         </para>
                     </listitem>
@@ -1174,11 +1174,11 @@
                     <term>Hard Thread</term>
                     <listitem>
                         <para>
-                            A collection of soft threads, that should 
-                            generally be placed in one system thread. Hard 
-                            thread contains resources that soft threads from 
+                            A collection of soft threads, that should
+                            generally be placed in one system thread. Hard
+                            thread contains resources that soft threads from
                             different hard threads would interfere with each
-                            other in allocating. Hard threads contain a 
+                            other in allocating. Hard threads contain a
                             collection of state packs, and various counters
                             and other variables.
                         </para>
@@ -1215,7 +1215,7 @@
 
                         </para>
                     </listitem>
-                </varlistentry>            
+                </varlistentry>
                 <varlistentry>
                     <term>Iterations</term>
                     <listitem>
@@ -1243,7 +1243,7 @@
 
                         </para>
                     </listitem>
-                </varlistentry>            
+                </varlistentry>
                 <varlistentry>
                     <term>Move</term>
                     <listitem>
@@ -1264,7 +1264,7 @@
                         <para>
 
                             A sequence of moves implemented in its own object
-                            (check <filename>move.c</filename> and 
+                            (check <filename>move.c</filename> and
                             <filename>move.h</filename>).
 
                         </para>
@@ -1372,9 +1372,9 @@
                     <listitem>
                         <para>
 
-                            A singular continuous scan operating on a states 
-                            collection. It can be Soft-DFS, Hard-DFS or Best 
-                            First Search. There could be any number of soft 
+                            A singular continuous scan operating on a states
+                            collection. It can be Soft-DFS, Hard-DFS or Best
+                            First Search. There could be any number of soft
                             threads in a hard thread.
 
                         </para>
@@ -1387,7 +1387,7 @@
                             <orderedlist>
                                 <listitem>
                                     <para>
-                                        <link linkend="term_move_stacks">Move 
+                                        <link linkend="term_move_stacks">Move
                                             Stacks</link> (refer to them)
                                     </para>
                                 </listitem>
@@ -1398,9 +1398,9 @@
                                 </listitem>
                                 <listitem>
                                     <para>
-                                        The stack used for maintaining the 
-                                        <link 
-                                            linkend="term_soft_dfs">Soft-DFS</link> 
+                                        The stack used for maintaining the
+                                        <link
+                                            linkend="term_soft_dfs">Soft-DFS</link>
                                         recursion.
                                     </para>
                                 </listitem>
@@ -1432,12 +1432,12 @@
                     <listitem>
                         <para>
 
-                            A collection that collects every state once and 
+                            A collection that collects every state once and
                             only
-                            once.  It can be sought of as an associative 
-                            array (or a map) of keys (the 
+                            once.  It can be sought of as an associative
+                            array (or a map) of keys (the
                             <type>fcs_state_t</type>)
-                            to values (<type>fcs_state_extra_info_t</type>) 
+                            to values (<type>fcs_state_extra_info_t</type>)
                         </para>
                     </listitem>
                 </varlistentry>
@@ -1445,9 +1445,9 @@
                     <term>Test Groups</term>
                     <listitem>
                         <para>
-                            A grouping of tests that dictate which one should 
-                            be performed one after the and placed into the same 
-                            derived states list. Afterwards, this list can be 
+                            A grouping of tests that dictate which one should
+                            be performed one after the and placed into the same
+                            derived states list. Afterwards, this list can be
                             randomised, or prioritised.
                         </para>
                     </listitem>
@@ -1456,15 +1456,15 @@
                     <term>Tests</term>
                     <listitem>
                         <para>
-                            A function that accepts a source state as input 
-                            and fills a list of derived states according to 
-                            the moves it can perform. Each game type has 
-                            several type of tests, which can be ordered and 
+                            A function that accepts a source state as input
+                            and fills a list of derived states according to
+                            the moves it can perform. Each game type has
+                            several type of tests, which can be ordered and
                             grouped according to input from the user
                         </para>
                     </listitem>
                 </varlistentry>
-                
+
                 <!--
                 I keep the following code around to be used as a template for
                 new entries:
