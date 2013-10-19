@@ -152,7 +152,7 @@ Number of cards affects - only relevant for a stack-to-stack move usually.
 
 =head1 AUTHOR
 
-Shlomi Fish, C<< <shlomif at iglu.org.il> >>
+Shlomi Fish, L<http://www.shlomifish.org/>.
 
 =head1 BUGS
 
