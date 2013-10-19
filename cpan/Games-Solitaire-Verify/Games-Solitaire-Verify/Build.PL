@@ -9,7 +9,7 @@ use Test::Run::Builder;
 my $builder = Test::Run::Builder->new(
     module_name         => 'Games::Solitaire::Verify',
     license             => 'mit',
-    dist_author         => 'Shlomi Fish <shlomif@iglu.org.il>',
+    dist_author         => 'Shlomi Fish <shlomif@cpan.org>',
     dist_version_from   => 'lib/Games/Solitaire/Verify.pm',
     configure_requires => {
         'Module::Build' => '0.36',
