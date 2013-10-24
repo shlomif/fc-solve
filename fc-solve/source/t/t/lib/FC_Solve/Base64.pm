@@ -26,7 +26,7 @@ EOF
     CLEAN_AFTER_BUILD => 0,
     INC => "-I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH}",
     LIBS => "-L" . $ENV{FCS_PATH} . ' -lgmp',
-    OPTIMIZE => '-g',
+    OPTIMIZE => '-g -std=gnu99',
 );
 
 sub base64_encode
