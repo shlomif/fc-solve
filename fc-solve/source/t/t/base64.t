@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 10;
 
 use FC_Solve::Base64;
 
@@ -39,5 +39,14 @@ sub test_base64
 
     # TEST*$test_base64
     test_base64("\0", 'Single NUL');
+
+    # TEST*$test_base64
+    test_base64("\0\0", 'Double NUL');
+
+    # TEST*$test_base64
+    test_base64("\0\0\0", 'Triple NUL');
+
+    # TEST*$test_base64
+    test_base64("\0\0\0\0", 'Quadruple NUL');
 }
 
