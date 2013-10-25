@@ -23,21 +23,13 @@ static char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
                                 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
                                 'w', 'x', 'y', 'z', '0', '1', '2', '3',
                                 '4', '5', '6', '7', '8', '9', '+', '_'};
-static char *decoding_table = NULL;
+static char decoding_table[256];
 static int mod_table[] = {0, 2, 1};
 
 static void build_decoding_table(void)
 {
-    decoding_table = malloc(256);
-
     for (int i = 0; i < 64; i++)
         decoding_table[(unsigned char) encoding_table[i]] = i;
-}
-
-
-static void base64_cleanup(void)
-{
-    free(decoding_table);
 }
 
 static void base64_encode(
@@ -79,8 +71,6 @@ static int base64_decode(
     size_t *output_length
 )
 {
-
-    if (decoding_table == NULL) build_decoding_table();
 
     if (input_length % 4 != 0) return -1;
 

@@ -33,6 +33,10 @@ SV * _fcs_base64_decode(SV * enc_sv) {
     return ret;
 }
 
+void _fcs_base64_build_decoding_table() {
+    build_decoding_table();
+}
+
 EOF
     NAME => "FC_Solve::Base64",
     CLEAN_AFTER_BUILD => 0,
@@ -40,6 +44,7 @@ EOF
     LIBS => "-L" . $ENV{FCS_PATH} . ' -lgmp',
     OPTIMIZE => '-g -std=gnu99',
 );
+
 
 sub base64_encode
 {
@@ -50,6 +55,11 @@ sub base64_decode
 {
     return _fcs_base64_decode(shift);
 }
+
+BEGIN
+{
+    _fcs_base64_build_decoding_table();
+};
 
 1;
 
