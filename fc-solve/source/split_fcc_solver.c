@@ -888,6 +888,8 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 
 int main(int argc, char * argv[])
 {
+    build_decoding_table();
+
     long pre_cache_max_count;
     long caches_delta;
     long iters_delta_limit = -1;
@@ -1168,7 +1170,6 @@ int main(int argc, char * argv[])
 
     fc_solve_delta_stater_free(delta);
     delta = NULL;
-    base64_cleanup();
 
     return 0;
 }
