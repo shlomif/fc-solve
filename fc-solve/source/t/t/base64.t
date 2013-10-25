@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 use FC_Solve::Base64;
 
@@ -36,5 +36,8 @@ sub test_base64
 {
     # TEST*$test_base64
     test_base64('FooBar24', 'String FooBar24');
+
+    # TEST*$test_base64
+    test_base64("\0", 'Single NUL');
 }
 
