@@ -21,6 +21,18 @@ SV * _fcs_base64_encode(SV * data_sv) {
     return ret;
 }
 
+SV * _fcs_base64_decode(SV * enc_sv) {
+    STRLEN len;
+    char * enc = SvPVbyte(enc_sv, len);
+    unsigned char result[MAX_SIZE];
+    size_t out_len = 0;
+    base64_decode((unsigned char *)enc, len, result, &out_len);
+
+    SV * ret = newSVpvn(result, out_len);
+
+    return ret;
+}
+
 EOF
     NAME => "FC_Solve::Base64",
     CLEAN_AFTER_BUILD => 0,
@@ -32,6 +44,11 @@ EOF
 sub base64_encode
 {
     return _fcs_base64_encode(shift);
+}
+
+sub base64_decode
+{
+    return _fcs_base64_decode(shift);
 }
 
 1;

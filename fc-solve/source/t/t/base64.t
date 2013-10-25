@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use FC_Solve::Base64;
 
@@ -22,6 +22,13 @@ sub test_base64
         "$blurb_base - encoded string matches Base64 regexp."
     );
 
+    my $roundtrip = FC_Solve::Base64::base64_decode($encoded);
+    # TEST:$c++;
+    is ($roundtrip, $init_buffer,
+        "Got the same data after a encode+decode roundtrip."
+    );
+
+    return;
 }
 
 # TEST:$test_base64=$c;
