@@ -181,7 +181,9 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
                     char * s = line+4;
                     const char * const var_prefix = "${EXE_DIRNAME}";
                     const int var_prefix_len = strlen(var_prefix);
+#if 0
 #define MYDEBUG
+#endif
                     if (! strncmp(s, var_prefix, var_prefix_len))
                     {
 #ifdef MYDEBUG
