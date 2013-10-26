@@ -226,7 +226,7 @@ static GCC_INLINE void instance_check_key(
 #endif
     else
 #else
-    if ((token = fc_solve_dbm_store_insert_key_value(instance->store, key, parent)))
+    if ((token = fc_solve_dbm_store_insert_key_value(instance->store, key, parent, TRUE)))
 #endif
     {
 #ifdef FCS_DBM_CACHE_ONLY
@@ -550,7 +550,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     cache_insert(&(instance->cache), &(running_key), running_moves, '\0');
 #endif
 #else
-    running_parent = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), running_parent);
+    running_parent = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), running_parent, TRUE);
 #endif
     instance->num_states_in_collection++;
 
@@ -649,7 +649,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
         running_moves = (cache_insert(&(instance->cache), &(running_key), running_moves, move))->moves_to_key;
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), running_parent);
+        token = fc_solve_dbm_store_insert_key_value(instance->store, &(running_key), running_parent, TRUE);
         if (!token)
         {
             return FALSE;
@@ -1480,7 +1480,7 @@ int main(int argc, char * argv[])
         cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance.store, KEY_PTR(), NULL);
+        token = fc_solve_dbm_store_insert_key_value(instance.store, KEY_PTR(), NULL, TRUE);
 #endif
 
         fcs_offloading_queue__insert(&(instance.queue), (fcs_offloading_queue_item_t *)&token);

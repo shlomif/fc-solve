@@ -73,6 +73,9 @@ typedef struct
     FILE * out_fh;
     fcs_encoded_state_buffer_t first_key;
     enum fcs_dbm_variant_type_t variant;
+    fcs_meta_compact_allocator_t fcc_meta_alloc;
+    fcs_dbm_store_t fcc_entry_points;
+    fcs_compact_allocator_t fcc_entry_points_allocator;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(
@@ -81,6 +84,7 @@ static GCC_INLINE void instance_init(
     long pre_cache_max_count,
     long caches_delta,
     const char * dbm_store_path,
+    const char * dbm_fcc_entry_points_path,
     long iters_delta_limit,
     const char * offload_dir_path,
     FILE * out_fh
@@ -88,6 +92,7 @@ static GCC_INLINE void instance_init(
 {
     int depth;
     fcs_dbm_collection_by_depth_t * coll;
+
 
     instance->variant = local_variant;
     instance->curr_depth = 0;
@@ -140,6 +145,15 @@ static GCC_INLINE void instance_init(
 #endif
     }
 
+    fc_solve_meta_compact_allocator_init(
+        &(instance->fcc_meta_alloc)
+    );
+    fc_solve_dbm_store_init(&(instance->fcc_entry_points),
+        dbm_fcc_entry_points_path,
+        &(instance->tree_recycle_bin)
+        );
+
+    fc_solve_compact_allocator_init(&(instance->fcc_entry_points_allocator), &(instance->fcc_meta_alloc));
 }
 
 static GCC_INLINE void instance_recycle(
@@ -257,7 +271,7 @@ static GCC_INLINE void instance_check_key(
 #endif
         else
 #else
-            if ((token = fc_solve_dbm_store_insert_key_value(coll->store, key, parent)))
+            if ((token = fc_solve_dbm_store_insert_key_value(coll->store, key, parent, TRUE)))
 #endif
             {
 #ifdef FCS_DBM_CACHE_ONLY
@@ -886,6 +900,25 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     return ret;
 }
 
+typedef union
+{
+    fcs_dbm_record_t reserve_space;
+    struct
+    {
+        long location_in_file;
+        int depth;
+        int was_consumed: 1;
+        int was_consumed_recently: 1;
+        int is_reachable: 1;
+    };
+} fcc_entry_point_value_t;
+
+typedef struct
+{
+    fcs_encoded_state_buffer_t key;
+    fcc_entry_point_value_t val;
+} fcc_entry_point_t;
+
 int main(int argc, char * argv[])
 {
     build_decoding_table();
@@ -918,6 +951,8 @@ int main(int argc, char * argv[])
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
     dbm_store_path = "./fc_solve_dbm_store";
+    const char * dbm_fcc_entry_points_path = "./fc_solve_fcc_entry_points_dbm_store";
+
     num_threads = 1;
 
     for (arg=1;arg < argc; arg++)
@@ -1118,7 +1153,11 @@ int main(int argc, char * argv[])
         mod_base64_fcc_fingerprint, strlen(mod_base64_fcc_fingerprint),
         fingerprint_which_irreversible_moves_bitmask, &fingerprint_data_len);
 
-    assert(fingerprint_data_len == sizeof(fingerprint_which_irreversible_moves_bitmask));
+    if (fingerprint_data_len != sizeof(fingerprint_which_irreversible_moves_bitmask))
+    {
+        fprintf(stderr, "%s\n", "--fingerprint is invalid length.");
+        exit(-1);
+    }
 
     delta = fc_solve_delta_stater_alloc(
             &init_state.s,
@@ -1134,13 +1173,62 @@ int main(int argc, char * argv[])
     {
         fcs_dbm_solver_instance_t instance;
         fcs_encoded_state_buffer_t * key_ptr;
+
 #define KEY_PTR() (key_ptr)
 
         fcs_encoded_state_buffer_t parent_state_enc;
 
         instance_init(&instance, local_variant, pre_cache_max_count, caches_delta,
-                      dbm_store_path, iters_delta_limit, offload_dir_path,
+                      dbm_store_path, dbm_fcc_entry_points_path, iters_delta_limit, offload_dir_path,
                       out_fh);
+
+        FILE * fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
+
+        if (! fingerprint_fh)
+        {
+            fprintf(stderr, "Cannot open '%s' for reading. Exiting.",
+                fingerprint_input_location_path
+            );
+            exit(-1);
+        }
+
+        char * fingerprint_line = NULL;
+        size_t fingerprint_line_size = 0;
+        ssize_t read;
+
+        long location_in_file = 0;
+        while ((read = getline(&fingerprint_line, &fingerprint_line_size, fingerprint_fh)) != -1)
+        {
+            char state_base64[100];
+            fcc_entry_point_t * entry_point =
+                fcs_compact_alloc_ptr(
+                    &(instance.fcc_entry_points_allocator),
+                    sizeof(*entry_point)
+                );
+            sscanf(fingerprint_line, "%99s %d",
+                state_base64,
+                &(entry_point->val.depth)
+            );
+            size_t unused_size;
+            base64_decode(state_base64, strlen(state_base64),
+                ((unsigned char *)&(entry_point->key)), &(unused_size));
+
+            entry_point->val.location_in_file = location_in_file;
+            entry_point->val.was_consumed =
+                entry_point->val.was_consumed_recently =
+                entry_point->val.is_reachable =
+                FALSE;
+
+            fc_solve_dbm_store_insert_key_value(
+                instance.fcc_entry_points,
+                &(entry_point->key), &(entry_point->val.reserve_space),
+                FALSE);
+
+            /* Valid for the next iteration: */
+            location_in_file = ftell(fingerprint_fh);
+        }
+
+        fclose(fingerprint_fh);
 
         key_ptr = &(instance.first_key);
         fcs_init_and_encode_state(delta, local_variant, &(init_state), KEY_PTR());
@@ -1156,7 +1244,7 @@ int main(int argc, char * argv[])
         cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance.colls_by_depth[0].store, KEY_PTR(), NULL);
+        token = fc_solve_dbm_store_insert_key_value(instance.colls_by_depth[0].store, KEY_PTR(), NULL, TRUE);
 #endif
 
         fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),

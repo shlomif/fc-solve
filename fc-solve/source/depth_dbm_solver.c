@@ -258,7 +258,7 @@ static GCC_INLINE void instance_check_key(
 #endif
         else
 #else
-            if ((token = fc_solve_dbm_store_insert_key_value(coll->store, key, parent)))
+            if ((token = fc_solve_dbm_store_insert_key_value(coll->store, key, parent, TRUE)))
 #endif
             {
 #ifdef FCS_DBM_CACHE_ONLY
@@ -1122,7 +1122,7 @@ int main(int argc, char * argv[])
         cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance.colls_by_depth[0].store, KEY_PTR(), NULL);
+        token = fc_solve_dbm_store_insert_key_value(instance.colls_by_depth[0].store, KEY_PTR(), NULL, TRUE);
 #endif
 
         fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
