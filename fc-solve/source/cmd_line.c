@@ -47,6 +47,16 @@
 
 #include "cmd_line_enum.h"
 
+static GCC_INLINE void nullify_newline(char * const line)
+{
+    char * const s = strchr(line, '\n');
+
+    if (s)
+    {
+        (*s) = '\0';
+    }
+}
+
 static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_man, char * * opened_files_dir_to_assign, const char * user_preset_dir)
 {
     int ret_code = 1;
@@ -160,17 +170,7 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
             }
             if (!strncmp(line, "dir=", 4))
             {
-#define nullify_newline() \
-                {     \
-                char * s;   \
-   \
-                s = strchr(line, '\n');      \
-                if (s != NULL)     \
-                {       \
-                    *s = '\0';      \
-                }        \
-                }
-                nullify_newline();
+                nullify_newline(line);
 
                 if (opened_files_dir != NULL)
                 {
@@ -206,7 +206,7 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
             }
             else if (!strncmp(line, "name=", 5))
             {
-                nullify_newline();
+                nullify_newline(line);
                 if (!strcmp(line+5, preset_name))
                 {
                     read_next_preset = TRUE;
@@ -229,7 +229,6 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_
         }
         fclose(f);
         f = NULL;
-#undef nullify_newline
     }
 have_preset:
 
