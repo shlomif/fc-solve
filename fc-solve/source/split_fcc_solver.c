@@ -1171,6 +1171,8 @@ int main(int argc, char * argv[])
     );
 
     {
+        out_fh = stdout;
+
         fcs_dbm_solver_instance_t instance;
         fcs_encoded_state_buffer_t * key_ptr;
 
