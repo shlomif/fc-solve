@@ -56,6 +56,11 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
     unsigned char * parent
     );
 
+fcs_dbm_record_t * fc_solve_dbm_store_lookup_val(
+    fcs_dbm_store_t store,
+    const unsigned char * key
+    );
+
 fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
     fcs_dbm_store_t store,
     const fcs_encoded_state_buffer_t * key,

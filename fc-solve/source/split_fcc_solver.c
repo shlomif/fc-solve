@@ -1230,8 +1230,29 @@ int main(int argc, char * argv[])
             location_in_file = ftell(fingerprint_fh);
         }
 
-        fclose(fingerprint_fh);
+        fseek (fingerprint_fh, 0, SEEK_SET);
 
+        while ((read = getline(&fingerprint_line, &fingerprint_line_size, fingerprint_fh)) != -1)
+        {
+            char state_base64[100];
+            fcs_encoded_state_buffer_t key;
+            sscanf(fingerprint_line, "%99s", state_base64);
+            size_t unused_size;
+            base64_decode(state_base64, strlen(state_base64),
+                ((unsigned char *)&(key)), &(unused_size));
+
+            fcs_dbm_record_t * val_proto = fc_solve_dbm_store_lookup_val(
+                instance.fcc_entry_points,
+                ((unsigned char *)&(key))
+            );
+
+            fcc_entry_point_value_t * val = (fcc_entry_point_value_t *)val_proto;
+            if (! val->was_consumed)
+            {
+                /* TODO : Should traverse starting from key. */
+            }
+        }
+        fclose(fingerprint_fh);
         key_ptr = &(instance.first_key);
         fcs_init_and_encode_state(delta, local_variant, &(init_state), KEY_PTR());
 
