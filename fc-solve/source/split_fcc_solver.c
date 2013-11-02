@@ -31,6 +31,38 @@
  */
 
 #include "dbm_solver_head.h"
+#include <sys/tree.h>
+
+#ifdef FCS_DEBONDT_DELTA_STATES
+
+static GCC_INLINE int compare_enc_states(
+    const fcs_encoded_state_buffer_t * a, const fcs_encoded_state_buffer_t * b
+)
+{
+    return memcmp(a,b, sizeof(*a));
+}
+
+#else
+
+static GCC_INLINE int compare_enc_states(
+    const fcs_encoded_state_buffer_t * a, const fcs_encoded_state_buffer_t * b
+)
+{
+    if (a->s[0] < b->s[0])
+    {
+        return -1;
+    }
+    else if (a->s[0] > b->s[0])
+    {
+        return 1;
+    }
+    else
+    {
+        return memcmp(a->s, b->s, a->s[0]+1);
+    }
+}
+
+#endif
 
 typedef struct
 {
@@ -47,6 +79,41 @@ typedef struct
     fcs_meta_compact_allocator_t queue_meta_alloc;
     fcs_offloading_queue_t queue;
 } fcs_dbm_collection_by_depth_t;
+
+typedef struct FccEntryPointList FccEntryPointList;
+typedef struct FccEntryPointNode FccEntryPointNode;
+
+typedef union
+{
+    fcs_dbm_record_t reserve_space;
+    struct
+    {
+        long location_in_file;
+        int depth;
+        int was_consumed: 1;
+        int was_consumed_recently: 1;
+        int is_reachable: 1;
+    };
+} fcc_entry_point_value_t;
+
+typedef struct
+{
+    fcs_encoded_state_buffer_t key;
+    fcc_entry_point_value_t val;
+} fcc_entry_point_t;
+
+struct FccEntryPointNode
+{
+    RB_ENTRY(FccEntryPointNode) entry_;
+    fcc_entry_point_t kv;
+};
+
+static int FccEntryPointNode_compare(FccEntryPointNode * a, FccEntryPointNode * b)
+{
+    return compare_enc_states(&(a->kv.key), &(b->kv.key));
+}
+RB_HEAD(FccEntryPointList, FccEntryPointNode);
+const FccEntryPointList FccEntryPointList_init = RB_INITIALIZER(&(instance->fcc_entry_points));
 
 typedef struct
 {
@@ -74,10 +141,13 @@ typedef struct
     fcs_encoded_state_buffer_t first_key;
     enum fcs_dbm_variant_type_t variant;
     fcs_meta_compact_allocator_t fcc_meta_alloc;
-    fcs_dbm_store_t fcc_entry_points;
+    FccEntryPointList fcc_entry_points;
     fcs_compact_allocator_t fcc_entry_points_allocator;
-    fcs_encoded_state_buffer_t * start_key_ptr;
+    FccEntryPointNode * start_key_ptr;
 } fcs_dbm_solver_instance_t;
+
+#define __unused GCC_UNUSED
+RB_GENERATE_STATIC(FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
 
 static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * instance,
@@ -149,10 +219,7 @@ static GCC_INLINE void instance_init(
     fc_solve_meta_compact_allocator_init(
         &(instance->fcc_meta_alloc)
     );
-    fc_solve_dbm_store_init(&(instance->fcc_entry_points),
-        dbm_fcc_entry_points_path,
-        &(instance->tree_recycle_bin)
-        );
+    instance->fcc_entry_points = FccEntryPointList_init;
 
     fc_solve_compact_allocator_init(&(instance->fcc_entry_points_allocator), &(instance->fcc_meta_alloc));
 
@@ -525,7 +592,7 @@ typedef struct {
 static void instance_run_all_threads(
     fcs_dbm_solver_instance_t * instance,
     fcs_state_keyval_pair_t * init_state,
-    fcs_encoded_state_buffer_t * key_ptr,
+    FccEntryPointNode * key_ptr,
     int num_threads)
 {
     int i, check;
@@ -683,36 +750,6 @@ static void instance_run_all_threads(
     return;
 }
 
-#ifdef FCS_DEBONDT_DELTA_STATES
-
-static int compare_enc_states(
-    const fcs_encoded_state_buffer_t * a, const fcs_encoded_state_buffer_t * b
-)
-{
-    return memcmp(a,b, sizeof(*a));
-}
-
-#else
-
-static int compare_enc_states(
-    const fcs_encoded_state_buffer_t * a, const fcs_encoded_state_buffer_t * b
-)
-{
-    if (a->s[0] < b->s[0])
-    {
-        return -1;
-    }
-    else if (a->s[0] > b->s[0])
-    {
-        return 1;
-    }
-    else
-    {
-        return memcmp(a->s, b->s, a->s[0]+1);
-    }
-}
-
-#endif
 
 
 static unsigned char get_move_from_parent_to_child(
@@ -896,24 +933,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     return ret;
 }
 
-typedef union
-{
-    fcs_dbm_record_t reserve_space;
-    struct
-    {
-        long location_in_file;
-        int depth;
-        int was_consumed: 1;
-        int was_consumed_recently: 1;
-        int is_reachable: 1;
-    };
-} fcc_entry_point_value_t;
-
-typedef struct
-{
-    fcs_encoded_state_buffer_t key;
-    fcc_entry_point_value_t val;
-} fcc_entry_point_t;
 
 static GCC_INLINE void release_starting_state_specific_instance_resources(
     fcs_dbm_solver_instance_t * instance
@@ -1179,7 +1198,7 @@ int main(int argc, char * argv[])
         out_fh = stdout;
 
         fcs_dbm_solver_instance_t instance;
-        fcs_encoded_state_buffer_t * key_ptr;
+        FccEntryPointNode * key_ptr;
 
 #define KEY_PTR() (key_ptr)
 
@@ -1207,29 +1226,30 @@ int main(int argc, char * argv[])
         while ((read = getline(&fingerprint_line, &fingerprint_line_size, fingerprint_fh)) != -1)
         {
             char state_base64[100];
-            fcc_entry_point_t * entry_point =
+            FccEntryPointNode * entry_point =
                 fcs_compact_alloc_ptr(
                     &(instance.fcc_entry_points_allocator),
                     sizeof(*entry_point)
                 );
             sscanf(fingerprint_line, "%99s %d",
                 state_base64,
-                &(entry_point->val.depth)
+                &(entry_point->kv.val.depth)
             );
             size_t unused_size;
             base64_decode(state_base64, strlen(state_base64),
-                ((unsigned char *)&(entry_point->key)), &(unused_size));
+                ((unsigned char *)&(entry_point->kv.key)), &(unused_size));
 
-            entry_point->val.location_in_file = location_in_file;
-            entry_point->val.was_consumed =
-                entry_point->val.was_consumed_recently =
-                entry_point->val.is_reachable =
+            entry_point->kv.val.location_in_file = location_in_file;
+            entry_point->kv.val.was_consumed =
+                entry_point->kv.val.was_consumed_recently =
+                entry_point->kv.val.is_reachable =
                 FALSE;
 
-            fc_solve_dbm_store_insert_key_value(
-                instance.fcc_entry_points,
-                &(entry_point->key), &(entry_point->val.reserve_space),
-                FALSE);
+            RB_INSERT(
+                FccEntryPointList,
+                &(instance.fcc_entry_points),
+                entry_point
+            );
 
             /* Valid for the next iteration: */
             location_in_file = ftell(fingerprint_fh);
@@ -1240,34 +1260,35 @@ int main(int argc, char * argv[])
         while ((read = getline(&fingerprint_line, &fingerprint_line_size, fingerprint_fh)) != -1)
         {
             char state_base64[100];
-            fcs_encoded_state_buffer_t key;
+            FccEntryPointNode key;
             sscanf(fingerprint_line, "%99s", state_base64);
             size_t unused_size;
             base64_decode(state_base64, strlen(state_base64),
-                ((unsigned char *)&(key)), &(unused_size));
+                ((unsigned char *)&(key.kv.key)), &(unused_size));
 
-            fcs_dbm_record_t * val_proto = fc_solve_dbm_store_lookup_val(
-                instance.fcc_entry_points,
-                ((unsigned char *)&(key))
+            FccEntryPointNode * val_proto = RB_FIND(
+                FccEntryPointList,
+                &(instance.fcc_entry_points),
+                &(key)
             );
 
             fcc_entry_point_value_t * val = (fcc_entry_point_value_t *)val_proto;
             if (! val->was_consumed)
             {
                 /* TODO : Should traverse starting from key. */
-                key_ptr = &(key);
+                key_ptr = val_proto;
                 /* The NULL parent_state_enc and move for indicating this is the
                  * initial state. */
                 fcs_init_encoded_state(&(parent_state_enc));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-                pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_state_enc);
+                pre_cache_insert(&(instance.pre_cache), &(key_ptr->kv.key), &parent_state_enc);
 #else
-                cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
+                cache_insert(&(instance.cache), &(key_ptr->kv.key), NULL, '\0');
 #endif
 #else
-                token = fc_solve_dbm_store_insert_key_value(instance.coll.store, KEY_PTR(), NULL, TRUE);
+                token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key), NULL, TRUE);
 #endif
 
                 fcs_offloading_queue__insert(&(instance.coll.queue),
@@ -1287,3 +1308,6 @@ int main(int argc, char * argv[])
 
     return 0;
 }
+#ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
+#error DEFINED
+#endif
