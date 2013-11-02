@@ -55,7 +55,7 @@ typedef struct
     fcs_lock_t storage_lock;
     const char * offload_dir_path;
     int curr_depth;
-    fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
+    fcs_dbm_collection_by_depth_t coll;
     long pre_cache_max_count;
     /* The queue */
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
@@ -76,6 +76,7 @@ typedef struct
     fcs_meta_compact_allocator_t fcc_meta_alloc;
     fcs_dbm_store_t fcc_entry_points;
     fcs_compact_allocator_t fcc_entry_points_allocator;
+    fcs_encoded_state_buffer_t * start_key_ptr;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(
@@ -119,9 +120,9 @@ static GCC_INLINE void instance_init(
     instance->tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
-    for (depth = 0 ; depth < MAX_FCC_DEPTH ; depth++)
     {
-        coll = &(instance->colls_by_depth[depth]);
+        depth = 0;
+        coll = &(instance->coll);
         FCS_INIT_LOCK(coll->queue_lock);
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
 #define NUM_ITEMS_PER_PAGE (128 * 1024)
@@ -154,6 +155,8 @@ static GCC_INLINE void instance_init(
         );
 
     fc_solve_compact_allocator_init(&(instance->fcc_entry_points_allocator), &(instance->fcc_meta_alloc));
+
+    instance->start_key_ptr = NULL;
 }
 
 static GCC_INLINE void instance_recycle(
@@ -162,11 +165,9 @@ static GCC_INLINE void instance_recycle(
 {
      int depth;
 
-     for (depth = instance->curr_depth ; depth < MAX_FCC_DEPTH ; depth++)
      {
-         fcs_dbm_collection_by_depth_t * coll;
+         fcs_dbm_collection_by_depth_t * coll = &(instance->coll);
 
-         coll = &(instance->colls_by_depth[depth]);
          fcs_offloading_queue__destroy(&(coll->queue));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
          fcs_offloading_queue__init(&(coll->queue), NUM_ITEMS_PER_PAGE, instance->offload_dir_path, depth);
@@ -186,12 +187,10 @@ static GCC_INLINE void instance_destroy(
     fcs_dbm_solver_instance_t * instance
     )
 {
-    int depth;
     fcs_dbm_collection_by_depth_t * coll;
 
-    for (depth = 0 ; depth < MAX_FCC_DEPTH ; depth++)
     {
-        coll = &(instance->colls_by_depth[depth]);
+        coll = &(instance->coll);
         fcs_offloading_queue__destroy(&(coll->queue));
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
         fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
@@ -236,7 +235,7 @@ static GCC_INLINE void instance_check_key(
 )
 {
     fcs_dbm_collection_by_depth_t * coll;
-    coll = &(instance->colls_by_depth[key_depth]);
+    coll = &(instance->coll);
     {
 #ifdef FCS_DBM_WITHOUT_CACHES
         fcs_dbm_record_t * token;
@@ -322,7 +321,6 @@ typedef struct {
 static void * instance_run_solver_thread(void * void_arg)
 {
     thread_arg_t * arg;
-    int curr_depth;
     fcs_dbm_collection_by_depth_t * coll;
 
     enum TERMINATE_REASON should_terminate;
@@ -363,8 +361,7 @@ static void * instance_run_solver_thread(void * void_arg)
     fc_solve_init_locs(&locs);
 #endif
 
-    curr_depth = instance->curr_depth;
-    coll = &(instance->colls_by_depth[curr_depth]);
+    coll = &(instance->coll);
 
     while (1)
     {
@@ -528,6 +525,7 @@ typedef struct {
 static void instance_run_all_threads(
     fcs_dbm_solver_instance_t * instance,
     fcs_state_keyval_pair_t * init_state,
+    fcs_encoded_state_buffer_t * key_ptr,
     int num_threads)
 {
     int i, check;
@@ -578,9 +576,11 @@ static void instance_run_all_threads(
         threads[i].arg.thread = &(threads[i].thread);
     }
 
-    while (instance->curr_depth < MAX_FCC_DEPTH)
+    /* TODO : do something meaningful with start_key_ptr . */
+    instance->start_key_ptr = key_ptr;
+
     {
-        TRACE1("Running threads for curr_depth=%d\n", instance->curr_depth);
+        TRACE1("Running threads for curr_depth=%d\n", 0);
         for (i=0; i < num_threads ; i++)
         {
             check = pthread_create(
@@ -605,14 +605,11 @@ static void instance_run_all_threads(
             pthread_join(threads[i].id, NULL);
         }
         TRACE1("Finished running threads for curr_depth=%d\n", instance->curr_depth);
-        if (instance->queue_solution_was_found)
+        if (! instance->queue_solution_was_found)
         {
-            break;
-        }
-        /* Now that we are about to ascend to a new depth, let's mark-and-sweep
-         * the old states, some of which are no longer of interest.
-         * */
-        {
+            /* Now that we are about to ascend to a new depth, let's mark-and-sweep
+             * the old states, some of which are no longer of interest.
+             * */
             dict_t * kaz_tree;
             struct avl_traverser trav;
             dict_key_t item;
@@ -622,12 +619,12 @@ static void instance_run_all_threads(
 
             TRACE1("Start mark-and-sweep cleanup for curr_depth=%d\n", instance->curr_depth);
             tree_recycle_bin =
-            (
-                (struct avl_node * *)(&(instance->tree_recycle_bin))
-            );
+                (
+                    (struct avl_node * *)(&(instance->tree_recycle_bin))
+                );
 
             kaz_tree = fc_solve_dbm_store_get_dict(
-                instance->colls_by_depth[instance->curr_depth].store
+                instance->coll.store
             );
             avl_t_init(&trav, kaz_tree);
 
@@ -661,12 +658,11 @@ static void instance_run_all_threads(
                 if (((++idx) % 100000) == 0)
                 {
                     fprintf(out_fh, "Mark+Sweep Progress - %ld/%ld\n",
-                            ((long)idx), ((long)items_count));
+                        ((long)idx), ((long)items_count));
                 }
             }
             TRACE1("Finish mark-and-sweep cleanup for curr_depth=%d\n", instance->curr_depth);
         }
-        instance->curr_depth++;
     }
 
     for (i=0; i < num_threads ; i++)
@@ -919,6 +915,13 @@ typedef struct
     fcc_entry_point_value_t val;
 } fcc_entry_point_t;
 
+static GCC_INLINE void release_starting_state_specific_instance_resources(
+    fcs_dbm_solver_instance_t * instance
+)
+{
+    /* TODO : Implement. */
+}
+
 int main(int argc, char * argv[])
 {
     build_decoding_table();
@@ -1142,7 +1145,9 @@ int main(int argc, char * argv[])
     );
 
     unsigned char initial_which_irreversible_moves_bitmask[13] = {'\0'};
+#if 0
     int initial_irrev_moves_depth =
+#endif
         horne_prune(local_variant, &init_state,
             initial_which_irreversible_moves_bitmask, NULL, NULL
         );
@@ -1250,32 +1255,30 @@ int main(int argc, char * argv[])
             if (! val->was_consumed)
             {
                 /* TODO : Should traverse starting from key. */
-            }
-        }
-        fclose(fingerprint_fh);
-        key_ptr = &(instance.first_key);
-        fcs_init_and_encode_state(delta, local_variant, &(init_state), KEY_PTR());
-
-        /* The NULL parent_state_enc and move for indicating this is the
-         * initial state. */
-        fcs_init_encoded_state(&(parent_state_enc));
+                key_ptr = &(key);
+                /* The NULL parent_state_enc and move for indicating this is the
+                 * initial state. */
+                fcs_init_encoded_state(&(parent_state_enc));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_state_enc);
+                pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_state_enc);
 #else
-        cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
+                cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance.colls_by_depth[0].store, KEY_PTR(), NULL, TRUE);
+                token = fc_solve_dbm_store_insert_key_value(instance.coll.store, KEY_PTR(), NULL, TRUE);
 #endif
 
-        fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
-            (const fcs_offloading_queue_item_t *)(&token));
-        instance.num_states_in_collection++;
-        instance.count_of_items_in_queue++;
-
-        instance_run_all_threads(&instance, &init_state, NUM_THREADS());
+                fcs_offloading_queue__insert(&(instance.coll.queue),
+                    (const fcs_offloading_queue_item_t *)(&token));
+                instance.num_states_in_collection++;
+                instance.count_of_items_in_queue++;
+                instance_run_all_threads(&instance, &init_state, key_ptr, NUM_THREADS());
+                release_starting_state_specific_instance_resources(&instance);
+            }
+        }
+        fclose(fingerprint_fh);
         handle_and_destroy_instance_solution(&instance, out_fh, delta);
     }
 
