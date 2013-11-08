@@ -91,7 +91,6 @@ typedef union
         long location_in_file;
         int depth;
         int was_consumed: 1;
-        int was_consumed_recently: 1;
         int is_reachable: 1;
     };
 } fcc_entry_point_value_t;
@@ -112,6 +111,7 @@ static int FccEntryPointNode_compare(FccEntryPointNode * a, FccEntryPointNode * 
 {
     return compare_enc_states(&(a->kv.key), &(b->kv.key));
 }
+
 RB_HEAD(FccEntryPointList, FccEntryPointNode);
 const FccEntryPointList FccEntryPointList_init = RB_INITIALIZER(&(instance->fcc_entry_points));
 
@@ -143,7 +143,10 @@ typedef struct
     fcs_meta_compact_allocator_t fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
     fcs_compact_allocator_t fcc_entry_points_allocator;
+    fcs_lock_t fcc_entry_points_lock;
     FccEntryPointNode * start_key_ptr;
+    fcs_bool_t was_start_key_reachable;
+    int start_key_moves_count;
 } fcs_dbm_solver_instance_t;
 
 #define __unused GCC_UNUSED
@@ -190,6 +193,7 @@ static GCC_INLINE void instance_init(
     instance->tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
+    FCS_INIT_LOCK(instance->fcc_entry_points_lock);
     {
         depth = 0;
         coll = &(instance->coll);
@@ -430,6 +434,8 @@ static void * instance_run_solver_thread(void * void_arg)
 
     coll = &(instance->coll);
 
+    fcs_bool_t was_start_key_reachable = instance->was_start_key_reachable;
+
     while (1)
     {
         /* First of all extract an item. */
@@ -514,6 +520,57 @@ static void * instance_run_solver_thread(void * void_arg)
             free(state_str);
         }
 #endif
+
+        {
+            FccEntryPointNode key;
+            key.kv.key = item->key;
+            FCS_LOCK(instance->fcc_entry_points_lock);
+            FccEntryPointNode * val_proto = RB_FIND(
+                FccEntryPointList,
+                &(instance->fcc_entry_points),
+                &(key)
+            );
+
+            fcs_bool_t to_prune = FALSE;
+            if (val_proto)
+            {
+                val_proto->kv.val.is_reachable = TRUE;
+                const int moves_count = instance->start_key_moves_count
+                    + item->moves_seq.count;
+
+                if (was_start_key_reachable)
+                {
+                    if (val_proto->kv.val.depth <= moves_count)
+                    {
+                        /* We can prune based on here. */
+                        to_prune = TRUE;
+                    }
+                    else
+                    {
+                        /* We can set it to the more pessimstic move count
+                         * for future trimming. */
+                        val_proto->kv.val.depth = moves_count;
+                        val_proto->kv.val.was_consumed = TRUE;
+                    }
+                }
+                else
+                {
+                    if (! val_proto->kv.val.was_consumed)
+                    {
+                        if (val_proto->kv.val.depth >= moves_count)
+                        {
+                            val_proto->kv.val.depth = moves_count;
+                            val_proto->kv.val.was_consumed = TRUE;
+                        }
+                    }
+                }
+            }
+            FCS_UNLOCK(instance->fcc_entry_points_lock);
+            if (to_prune)
+            {
+                continue;
+            }
+        }
 
         if (instance_solver_thread_calc_derived_states(
             local_variant,
@@ -624,6 +681,7 @@ static void instance_run_all_threads(
 #endif
             );
 #endif
+
     for (i=0; i < num_threads ; i++)
     {
         threads[i].thread.instance = instance;
@@ -645,6 +703,9 @@ static void instance_run_all_threads(
 
     /* TODO : do something meaningful with start_key_ptr . */
     instance->start_key_ptr = key_ptr;
+
+    instance->was_start_key_reachable = (key_ptr->kv.val.is_reachable);
+    instance->start_key_moves_count = (key_ptr->kv.val.depth);
 
     {
         TRACE1("Running threads for curr_depth=%d\n", 0);
@@ -1241,7 +1302,6 @@ int main(int argc, char * argv[])
 
             entry_point->kv.val.location_in_file = location_in_file;
             entry_point->kv.val.was_consumed =
-                entry_point->kv.val.was_consumed_recently =
                 entry_point->kv.val.is_reachable =
                 FALSE;
 
@@ -1272,8 +1332,7 @@ int main(int argc, char * argv[])
                 &(key)
             );
 
-            fcc_entry_point_value_t * val = (fcc_entry_point_value_t *)val_proto;
-            if (! val->was_consumed)
+            if (! val_proto->kv.val.was_consumed)
             {
                 /* TODO : Should traverse starting from key. */
                 key_ptr = val_proto;
