@@ -147,6 +147,8 @@ typedef struct
     FccEntryPointNode * start_key_ptr;
     fcs_bool_t was_start_key_reachable;
     int start_key_moves_count;
+    fcs_lock_t output_lock;
+    FILE * consumed_states_fh;
 } fcs_dbm_solver_instance_t;
 
 #define __unused GCC_UNUSED
@@ -193,6 +195,7 @@ static GCC_INLINE void instance_init(
     instance->tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
+    FCS_INIT_LOCK(instance->output_lock);
     FCS_INIT_LOCK(instance->fcc_entry_points_lock);
     {
         depth = 0;
@@ -408,6 +411,9 @@ static void * instance_run_solver_thread(void * void_arg)
     fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
     FILE * out_fh;
+    char * base64_encoding_buffer = NULL;
+    size_t base64_encoding_buffer_max_len = 0;
+
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
 #endif
@@ -532,6 +538,7 @@ static void * instance_run_solver_thread(void * void_arg)
             );
 
             fcs_bool_t to_prune = FALSE;
+            fcs_bool_t to_output = FALSE;
             if (val_proto)
             {
                 val_proto->kv.val.is_reachable = TRUE;
@@ -549,6 +556,7 @@ static void * instance_run_solver_thread(void * void_arg)
                     {
                         /* We can set it to the more pessimstic move count
                          * for future trimming. */
+                        to_output = !(val_proto->kv.val.was_consumed);
                         val_proto->kv.val.depth = moves_count;
                         val_proto->kv.val.was_consumed = TRUE;
                     }
@@ -557,6 +565,7 @@ static void * instance_run_solver_thread(void * void_arg)
                 {
                     if (! val_proto->kv.val.was_consumed)
                     {
+                        to_output = TRUE;
                         if (val_proto->kv.val.depth >= moves_count)
                         {
                             val_proto->kv.val.depth = moves_count;
@@ -566,6 +575,34 @@ static void * instance_run_solver_thread(void * void_arg)
                 }
             }
             FCS_UNLOCK(instance->fcc_entry_points_lock);
+
+            if (to_output)
+            {
+                const size_t needed_len = ( (sizeof(key.kv.key)+2) << 2 ) / 3 + 20;
+                if (base64_encoding_buffer_max_len < needed_len)
+                {
+                    base64_encoding_buffer = realloc(base64_encoding_buffer, needed_len);
+                    base64_encoding_buffer_max_len = needed_len;
+                }
+
+                size_t unused_output_len;
+
+                base64_encode(
+                    (unsigned char *)&(key.kv.key),
+                    sizeof(key.kv.key),
+                    base64_encoding_buffer,
+                    &unused_output_len
+                );
+
+                FCS_LOCK(instance->output_lock);
+                fprintf(
+                    instance->consumed_states_fh,
+                    "%s\n", base64_encoding_buffer
+                );
+                fflush(instance->consumed_states_fh);
+                FCS_UNLOCK(instance->output_lock);
+            }
+
             if (to_prune)
             {
                 continue;
@@ -630,6 +667,8 @@ static void * instance_run_solver_thread(void * void_arg)
         /* End of main thread loop */
         prev_item = item;
     }
+
+    free (base64_encoding_buffer);
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
 
@@ -1317,6 +1356,7 @@ int main(int argc, char * argv[])
 
         fseek (fingerprint_fh, 0, SEEK_SET);
 
+        long count_of_instance_runs = 0;
         while ((read = getline(&fingerprint_line, &fingerprint_line_size, fingerprint_fh)) != -1)
         {
             char state_base64[100];
@@ -1354,8 +1394,18 @@ int main(int argc, char * argv[])
                     (const fcs_offloading_queue_item_t *)(&token));
                 instance.num_states_in_collection++;
                 instance.count_of_items_in_queue++;
+                count_of_instance_runs++;
+
+                char consumed_states_fn[PATH_MAX], consumed_states_fn_temp[PATH_MAX];
+                sprintf(consumed_states_fn, "%s/consumed.%ld", path_to_output_dir, count_of_instance_runs);
+                sprintf(consumed_states_fn_temp, "%s.temp", consumed_states_fn);
+                instance.consumed_states_fh
+                    = fopen(consumed_states_fn_temp, "wt");
                 instance_run_all_threads(&instance, &init_state, key_ptr, NUM_THREADS());
+                fclose (instance.consumed_states_fh);
+                rename(consumed_states_fn_temp, consumed_states_fn);
                 release_starting_state_specific_instance_resources(&instance);
+
             }
         }
         fclose(fingerprint_fh);
