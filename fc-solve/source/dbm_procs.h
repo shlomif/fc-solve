@@ -205,7 +205,8 @@ static GCC_INLINE void instance_check_key(
     int key_depth,
     fcs_encoded_state_buffer_t * key,
     fcs_dbm_record_t * parent,
-    unsigned char move
+    unsigned char move,
+    unsigned char * which_irreversible_moves_bitmask
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
 #endif
@@ -230,7 +231,8 @@ static GCC_INLINE void instance_check_multiple_keys(
         instance_check_key(
             instance,
             CHECK_KEY_CALC_DEPTH(),
-            &(list->key), list->parent, list->move
+            &(list->key), list->parent, list->move,
+            list->which_irreversible_moves_bitmask
 #ifdef FCS_DBM_CACHE_ONLY
             , moves_to_parent
 #endif
