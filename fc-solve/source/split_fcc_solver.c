@@ -32,6 +32,7 @@
 
 #include "dbm_solver_head.h"
 #include <sys/tree.h>
+#include "count.h"
 
 #ifdef FCS_DEBONDT_DELTA_STATES
 
@@ -163,6 +164,7 @@ static GCC_INLINE void instance_init(
     const char * dbm_fcc_entry_points_path,
     long iters_delta_limit,
     const char * offload_dir_path,
+    int curr_depth,
     FILE * out_fh
 )
 {
@@ -171,7 +173,7 @@ static GCC_INLINE void instance_init(
 
 
     instance->variant = local_variant;
-    instance->curr_depth = 0;
+    instance->curr_depth = curr_depth;
     FCS_INIT_LOCK(instance->global_lock);
     instance->offload_dir_path = offload_dir_path;
 
@@ -1284,6 +1286,23 @@ int main(int argc, char * argv[])
         exit(-1);
     }
 
+    /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth. */
+    int curr_depth = 0;
+    {
+        unsigned char c;
+        for (int i = 0 ;
+            i < COUNT(fingerprint_which_irreversible_moves_bitmask) ;
+            i++)
+        {
+            c = fingerprint_which_irreversible_moves_bitmask[i];
+            while (c != 0)
+            {
+                curr_depth += (c & 0x3);
+                c >>= 2;
+            }
+        }
+    }
+
     delta = fc_solve_delta_stater_alloc(
             &init_state.s,
             STACKS_NUM,
@@ -1306,7 +1325,7 @@ int main(int argc, char * argv[])
         fcs_encoded_state_buffer_t parent_state_enc;
 
         instance_init(&instance, local_variant, pre_cache_max_count, caches_delta,
-                      dbm_store_path, dbm_fcc_entry_points_path, iters_delta_limit, offload_dir_path,
+                      dbm_store_path, dbm_fcc_entry_points_path, iters_delta_limit, offload_dir_path, curr_depth,
                       out_fh);
 
         FILE * fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
