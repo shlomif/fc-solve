@@ -40,11 +40,16 @@ extern "C"
 
 typedef struct
 {
+    unsigned char s[RANK_KING];
+} fcs_which_moves_bitmask_t;
+
+typedef struct
+{
     char * state_string;
     unsigned char move;
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
-    unsigned char which_irreversible_moves_bitmask[RANK_KING];
+    fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
 } fcs_derived_state_debug_t;
 
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(

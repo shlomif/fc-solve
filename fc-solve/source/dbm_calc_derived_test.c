@@ -145,10 +145,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         debug_ret[idx].num_non_reversible_moves_including_prune
             = iter->num_non_reversible_moves_including_prune;
         /* TODO : Put something meaningful there by passing it to the function. */
-        memcpy(debug_ret[idx].which_irreversible_moves_bitmask,
-            iter->which_irreversible_moves_bitmask,
-            sizeof(debug_ret[idx].which_irreversible_moves_bitmask)
-        );
+        debug_ret[idx].which_irreversible_moves_bitmask =
+            iter->which_irreversible_moves_bitmask;
         idx++;
         iter = iter->next;
     }
@@ -190,8 +188,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
             );
 
     {
-        unsigned char which_no_use[13] = {'\0'};
-        prune_ret = horne_prune(local_variant, &init_state, which_no_use, NULL, NULL);
+        fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
+        prune_ret = horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
     }
     *ret_state_s =
         fc_solve_state_as_string(

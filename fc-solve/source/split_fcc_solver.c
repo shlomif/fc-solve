@@ -150,7 +150,7 @@ typedef struct
     int start_key_moves_count;
     fcs_lock_t output_lock;
     FILE * consumed_states_fh;
-    unsigned char fingerprint_which_irreversible_moves_bitmask[13];
+    fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask;
 } fcs_dbm_solver_instance_t;
 
 #define __unused GCC_UNUSED
@@ -165,7 +165,7 @@ static GCC_INLINE void instance_init(
     const char * dbm_fcc_entry_points_path,
     long iters_delta_limit,
     const char * offload_dir_path,
-    unsigned char * fingerprint_which_irreversible_moves_bitmask,
+    fcs_which_moves_bitmask_t * fingerprint_which_irreversible_moves_bitmask,
     FILE * out_fh
 )
 {
@@ -175,21 +175,18 @@ static GCC_INLINE void instance_init(
 
     instance->variant = local_variant;
 
-    memcpy(
-        instance->fingerprint_which_irreversible_moves_bitmask,
-        fingerprint_which_irreversible_moves_bitmask,
-        RANK_KING * sizeof(fingerprint_which_irreversible_moves_bitmask[0])
-    );
+    instance->fingerprint_which_irreversible_moves_bitmask =
+        (*fingerprint_which_irreversible_moves_bitmask);
 
     {
         int curr_depth = 0;
         {
             unsigned char c;
             for (int i = 0 ;
-                i < COUNT(fingerprint_which_irreversible_moves_bitmask) ;
+                i < COUNT(fingerprint_which_irreversible_moves_bitmask->s) ;
                 i++)
             {
-                c = fingerprint_which_irreversible_moves_bitmask[i];
+                c = fingerprint_which_irreversible_moves_bitmask->s[i];
                 while (c != 0)
                 {
                     curr_depth += (c & 0x3);
@@ -331,7 +328,7 @@ static GCC_INLINE void instance_check_key(
     fcs_encoded_state_buffer_t * key,
     fcs_dbm_record_t * parent,
     unsigned char move,
-    unsigned char * which_irreversible_moves_bitmask
+    fcs_which_moves_bitmask_t * which_irreversible_moves_bitmask
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
 #endif
@@ -1292,19 +1289,22 @@ int main(int argc, char * argv[])
         init_indirect_stacks_buffer
     );
 
-    unsigned char initial_which_irreversible_moves_bitmask[13] = {'\0'};
+    fcs_which_moves_bitmask_t initial_which_irreversible_moves_bitmask
+        = {{'\0'}};
 #if 0
     int initial_irrev_moves_depth =
 #endif
-        horne_prune(local_variant, &init_state,
-            initial_which_irreversible_moves_bitmask, NULL, NULL
-        );
+    horne_prune(local_variant, &init_state,
+        &initial_which_irreversible_moves_bitmask, NULL, NULL
+    );
 
-    unsigned char fingerprint_which_irreversible_moves_bitmask[13] = {'\0'};
+    fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask
+        = {{'\0'}};
+
     size_t fingerprint_data_len = 0;
     base64_decode(
         mod_base64_fcc_fingerprint, strlen(mod_base64_fcc_fingerprint),
-        fingerprint_which_irreversible_moves_bitmask, &fingerprint_data_len);
+        fingerprint_which_irreversible_moves_bitmask.s, &fingerprint_data_len);
 
     if (fingerprint_data_len != sizeof(fingerprint_which_irreversible_moves_bitmask))
     {
@@ -1339,7 +1339,7 @@ int main(int argc, char * argv[])
             &instance, local_variant, pre_cache_max_count,
             caches_delta, dbm_store_path, dbm_fcc_entry_points_path,
             iters_delta_limit, offload_dir_path,
-            fingerprint_which_irreversible_moves_bitmask,
+            &fingerprint_which_irreversible_moves_bitmask,
             out_fh
         );
 

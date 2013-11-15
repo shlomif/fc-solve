@@ -58,7 +58,7 @@ struct fcs_derived_state_struct
     fcs_dbm_record_t * parent;
     struct fcs_derived_state_struct * next;
     int core_irreversible_moves_count;
-    unsigned char which_irreversible_moves_bitmask[RANK_KING];
+    fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
     fcs_fcc_move_t move;
     int num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -114,7 +114,7 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
                 ); \
     } \
     memset( \
-        ptr_new_state->which_irreversible_moves_bitmask, \
+        &(ptr_new_state->which_irreversible_moves_bitmask), \
         '\0', \
         sizeof(ptr_new_state->which_irreversible_moves_bitmask) \
         ); \
@@ -126,9 +126,13 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
     COPY_INDIRECT_COLS() \
 }
 
-static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(unsigned char * const which_irreversible_moves_bitmask, const fcs_card_t moved_card, const int count)
+static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(
+    fcs_which_moves_bitmask_t * const which_irreversible_moves_bitmask,
+    const fcs_card_t moved_card,
+    const int count
+)
 {
-    unsigned char * const by_rank_ptr = which_irreversible_moves_bitmask + fcs_card_rank(moved_card) - 1;
+    unsigned char * const by_rank_ptr = which_irreversible_moves_bitmask->s + fcs_card_rank(moved_card) - 1;
     const int suit_double = (fcs_card_suit(moved_card) << 1);
     const int new_count = ( (((*by_rank_ptr)>>(suit_double))&((1 << 2)-1)) + count );
     *by_rank_ptr &= (~((((unsigned char)0x3) << (suit_double))));
@@ -142,7 +146,7 @@ static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(unsigned char * const
  \
     if (count) \
     { \
-        fc_solve_add_to_irrev_moves_bitmask(ptr_new_state->which_irreversible_moves_bitmask, moved_card, count); \
+        fc_solve_add_to_irrev_moves_bitmask(&(ptr_new_state->which_irreversible_moves_bitmask), moved_card, count); \
     } \
     ptr_new_state->parent = parent_ptr; \
     ptr_new_state->move = MAKE_MOVE((src), (dest)); \
@@ -248,7 +252,7 @@ static GCC_INLINE fcs_fcc_moves_list_item_t * fc_solve_fcc_alloc_moves_list_item
 static GCC_INLINE int horne_prune(
     enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * init_state_kv_ptr,
-    unsigned char * const which_irreversible_moves_bitmask,
+    fcs_which_moves_bitmask_t * const which_irreversible_moves_bitmask,
     fcs_fcc_moves_seq_t * moves_seq,
     fcs_fcc_moves_seq_allocator_t * allocator
 )
@@ -713,7 +717,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                 +
                 (
                     perform_horne_prune
-                    ? horne_prune(local_variant, &(derived_iter->state), derived_iter->which_irreversible_moves_bitmask, NULL, NULL)
+                    ? horne_prune(local_variant, &(derived_iter->state), &(derived_iter->which_irreversible_moves_bitmask), NULL, NULL)
                     : 0
                 )
             );

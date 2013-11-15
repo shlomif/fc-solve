@@ -217,7 +217,7 @@ static GCC_INLINE void instance_check_key(
     fcs_encoded_state_buffer_t * key,
     fcs_dbm_record_t * parent,
     unsigned char move,
-    unsigned char * which_irreversible_moves_bitmask
+    fcs_which_moves_bitmask_t * which_irreversible_moves_bitmask
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
 #endif
@@ -1083,8 +1083,8 @@ int main(int argc, char * argv[])
     );
 
     {
-        unsigned char which_no_use[13] = {'\0'};
-        horne_prune(local_variant, &init_state, which_no_use, NULL, NULL);
+        fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
+        horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
     }
 
     delta = fc_solve_delta_stater_alloc(
