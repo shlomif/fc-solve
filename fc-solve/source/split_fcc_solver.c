@@ -150,6 +150,7 @@ typedef struct
     int start_key_moves_count;
     fcs_lock_t output_lock;
     FILE * consumed_states_fh;
+    unsigned char fingerprint_which_irreversible_moves_bitmask[13];
 } fcs_dbm_solver_instance_t;
 
 #define __unused GCC_UNUSED
@@ -164,7 +165,7 @@ static GCC_INLINE void instance_init(
     const char * dbm_fcc_entry_points_path,
     long iters_delta_limit,
     const char * offload_dir_path,
-    int curr_depth,
+    unsigned char * fingerprint_which_irreversible_moves_bitmask,
     FILE * out_fh
 )
 {
@@ -173,7 +174,32 @@ static GCC_INLINE void instance_init(
 
 
     instance->variant = local_variant;
-    instance->curr_depth = curr_depth;
+
+    memcpy(
+        instance->fingerprint_which_irreversible_moves_bitmask,
+        fingerprint_which_irreversible_moves_bitmask,
+        RANK_KING * sizeof(fingerprint_which_irreversible_moves_bitmask[0])
+    );
+
+    {
+        int curr_depth = 0;
+        {
+            unsigned char c;
+            for (int i = 0 ;
+                i < COUNT(fingerprint_which_irreversible_moves_bitmask) ;
+                i++)
+            {
+                c = fingerprint_which_irreversible_moves_bitmask[i];
+                while (c != 0)
+                {
+                    curr_depth += (c & 0x3);
+                    c >>= 2;
+                }
+            }
+        }
+        instance->curr_depth = curr_depth;
+    }
+
     FCS_INIT_LOCK(instance->global_lock);
     instance->offload_dir_path = offload_dir_path;
 
@@ -1287,21 +1313,6 @@ int main(int argc, char * argv[])
     }
 
     /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth. */
-    int curr_depth = 0;
-    {
-        unsigned char c;
-        for (int i = 0 ;
-            i < COUNT(fingerprint_which_irreversible_moves_bitmask) ;
-            i++)
-        {
-            c = fingerprint_which_irreversible_moves_bitmask[i];
-            while (c != 0)
-            {
-                curr_depth += (c & 0x3);
-                c >>= 2;
-            }
-        }
-    }
 
     delta = fc_solve_delta_stater_alloc(
             &init_state.s,
@@ -1324,9 +1335,13 @@ int main(int argc, char * argv[])
 
         fcs_encoded_state_buffer_t parent_state_enc;
 
-        instance_init(&instance, local_variant, pre_cache_max_count, caches_delta,
-                      dbm_store_path, dbm_fcc_entry_points_path, iters_delta_limit, offload_dir_path, curr_depth,
-                      out_fh);
+        instance_init(
+            &instance, local_variant, pre_cache_max_count,
+            caches_delta, dbm_store_path, dbm_fcc_entry_points_path,
+            iters_delta_limit, offload_dir_path,
+            fingerprint_which_irreversible_moves_bitmask,
+            out_fh
+        );
 
         FILE * fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
 
