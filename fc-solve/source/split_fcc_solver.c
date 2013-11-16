@@ -509,12 +509,12 @@ static GCC_INLINE void instance_check_key(
                     {
                         new_fingerprint.s[i] = which_irreversible_moves_bitmask->s[i] + instance->fingerprint_which_irreversible_moves_bitmask.s[i];
                     }
-                    /* TODO : base64_encode the fingerprint. */
-                    /* TODO : Trace the solution. */
                     int trace_num;
                     fcs_encoded_state_buffer_t * trace;
                     FCS_LOCK(instance->fcc_exit_points_output_lock);
-                    FCS_LOCK(instance->storage_lock);
+                    /* instance->storage_lock is already locked
+                     * in instance_check_multiple_keys and we should not
+                     * lock it here. */
                     calc_trace(instance, token, &trace, &trace_num);
 
                     const size_t added_moves_to_output = instance->moves_to_state_len + trace_num-1;
@@ -584,7 +584,6 @@ static GCC_INLINE void instance_check_key(
                         instance->moves_base64_encoding_buffer
                     );
                     fflush(instance->fcc_exit_points_out_fh);
-                    FCS_UNLOCK(instance->storage_lock);
 
                     FCS_UNLOCK(instance->fcc_exit_points_output_lock);
 
