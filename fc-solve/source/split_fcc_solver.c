@@ -520,7 +520,8 @@ static GCC_INLINE void instance_check_key(
                      * lock it here. */
                     calc_trace(instance, token, &trace, &trace_num);
 
-                    const size_t added_moves_to_output = instance->moves_to_state_len + trace_num-1;
+                    const size_t moves_to_state_len = instance->moves_to_state_len;
+                    const size_t added_moves_to_output = moves_to_state_len + trace_num-1;
                     if (added_moves_to_output > instance->max_moves_to_state_len)
                     {
                         instance->moves_to_state = SREALLOC(
@@ -533,7 +534,7 @@ static GCC_INLINE void instance_check_key(
                         = instance->moves_to_state;
                     for (int i = trace_num-1 ; i > 0 ; i--)
                     {
-                        moves_to_state[trace_num-1-i] =
+                        moves_to_state[moves_to_state_len+trace_num-1-i] =
                             get_move_from_parent_to_child(
                                 instance,
                                 thread->delta_stater,
@@ -554,9 +555,12 @@ static GCC_INLINE void instance_check_key(
                             );
                         instance->moves_base64_encoding_buffer_max_len
                             = new_max_enc_len;
+                    }
+
+                    {
                         size_t unused_output_len;
                         base64_encode(
-                            instance->moves_to_state,
+                            moves_to_state,
                             added_moves_to_output,
                             instance->moves_base64_encoding_buffer,
                             &unused_output_len
