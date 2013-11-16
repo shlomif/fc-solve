@@ -27,7 +27,7 @@ input="${idx}.input.txtish"
 if true ; then
     (
         export I="${init_board}"
-        perl -I ../t/t/lib -E 'use strict; use warnings; use FC_Solve::Base64; use Games::Solitaire::FC_Solve::DeltaStater::DeBondt; use IO::All; my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new({init_state_str => io->file($ENV{I})->all(), }); $delta->set_derived({state_str => io->file($ENV{I})->all(), }); print (FC_Solve::Base64::base64_encode($delta->encode_composite()), " 0 ", FC_Solve::Base64::base64_encode(q{}), "\n");'
+        perl -I ../t/t/lib ../../scripts/sample-split_fcc_fc_solver-invocation-1.helper.pl
     ) > "$input"
 fi
 ./split_fcc_fc_solver \

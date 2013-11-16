@@ -30,8 +30,11 @@
  *
  */
 
+#define DEBUG_OUT 1
+
 #include "dbm_solver_head.h"
 #include <sys/tree.h>
+#include <assert.h>
 #include "count.h"
 
 #ifdef FCS_DEBONDT_DELTA_STATES
@@ -622,6 +625,7 @@ static void * instance_run_solver_thread(void * void_arg)
 
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
+    fc_solve_init_locs(&locs);
 #endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -640,9 +644,6 @@ static void * instance_run_solver_thread(void * void_arg)
     out_fh = instance->out_fh;
 
     TRACE0("instance_run_solver_thread start");
-#ifdef DEBUG_OUT
-    fc_solve_init_locs(&locs);
-#endif
 
     coll = &(instance->coll);
 
@@ -1180,6 +1181,11 @@ int main(int argc, char * argv[])
 {
     build_decoding_table();
 
+#ifdef DEBUG_OUT
+    fcs_state_locs_struct_t locs;
+    fc_solve_init_locs(&locs);
+#endif
+
     long pre_cache_max_count;
     long caches_delta;
     long iters_delta_limit = -1;
@@ -1482,6 +1488,8 @@ int main(int argc, char * argv[])
             size_t unused_size;
             base64_decode(state_base64, strlen(state_base64),
                 ((unsigned char *)&(entry_point->kv.key)), &(unused_size));
+
+            assert (unused_size == sizeof(entry_point->kv.key));
 
             entry_point->kv.val.location_in_file = location_in_file;
             entry_point->kv.val.was_consumed =
