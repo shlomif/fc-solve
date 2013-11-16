@@ -151,6 +151,8 @@ typedef struct
     fcs_lock_t output_lock;
     FILE * consumed_states_fh;
     fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask;
+    fcs_lock_t fcc_exit_points_output_lock;
+    FILE * fcc_exit_points_out_fh;
 } fcs_dbm_solver_instance_t;
 
 #define __unused GCC_UNUSED
@@ -222,6 +224,7 @@ static GCC_INLINE void instance_init(
     FCS_INIT_LOCK(instance->storage_lock);
     FCS_INIT_LOCK(instance->output_lock);
     FCS_INIT_LOCK(instance->fcc_entry_points_lock);
+    FCS_INIT_LOCK(instance->fcc_exit_points_output_lock);
     {
         depth = 0;
         coll = &(instance->coll);
@@ -385,23 +388,44 @@ static GCC_INLINE void instance_check_key(
 #endif
 #endif
 
-                /* Now insert it into the queue. */
+                if (key_depth == instance->curr_depth)
+                {
+                    /* Now insert it into the queue. */
 
-                FCS_LOCK(coll->queue_lock);
-                fcs_offloading_queue__insert(
-                    &(coll->queue),
-                    (const fcs_offloading_queue_item_t *)(&token)
+                    FCS_LOCK(coll->queue_lock);
+                    fcs_offloading_queue__insert(
+                        &(coll->queue),
+                        (const fcs_offloading_queue_item_t *)(&token)
                     );
-                FCS_UNLOCK(coll->queue_lock);
+                    FCS_UNLOCK(coll->queue_lock);
 
-                FCS_LOCK(instance->global_lock);
+                    FCS_LOCK(instance->global_lock);
 
-                instance->count_of_items_in_queue++;
-                instance->num_states_in_collection++;
+                    instance->count_of_items_in_queue++;
+                    instance->num_states_in_collection++;
 
-                instance_debug_out_state(instance, &(token->key));
+                    instance_debug_out_state(instance, &(token->key));
 
-                FCS_UNLOCK(instance->global_lock);
+                    FCS_UNLOCK(instance->global_lock);
+                }
+                else
+                {
+                    /* Handle an irreversible move */
+
+                    /* Calculate the new fingerprint to which the exit
+                     * point belongs. */
+                    fcs_which_moves_bitmask_t new_fingerprint = {{'\0'}};
+                    for (int i=0 ; i < COUNT(new_fingerprint.s) ; i++)
+                    {
+                        new_fingerprint.s[i] = which_irreversible_moves_bitmask->s[i] + instance->fingerprint_which_irreversible_moves_bitmask.s[i];
+                    }
+                    /* TODO : base64_encode the fingerprint. */
+                    /* TODO : Trace the solution. */
+                    /* TODO : Output the exit point. */
+
+                    FCS_LOCK(instance->fcc_exit_points_output_lock);
+                    FCS_UNLOCK(instance->fcc_exit_points_output_lock);
+                }
             }
     }
 }
@@ -1436,9 +1460,21 @@ int main(int argc, char * argv[])
                 sprintf(consumed_states_fn_temp, "%s.temp", consumed_states_fn);
                 instance.consumed_states_fh
                     = fopen(consumed_states_fn_temp, "wt");
+
+                char fcc_exit_points_out_fn[PATH_MAX], fcc_exit_points_out_fn_temp[PATH_MAX];
+                sprintf(fcc_exit_points_out_fn, "%s/exits.%ld", path_to_output_dir, count_of_instance_runs);
+                sprintf(fcc_exit_points_out_fn_temp, "%s.temp", fcc_exit_points_out_fn);
+                instance.fcc_exit_points_out_fh
+                    = fopen(fcc_exit_points_out_fn_temp, "wt");
+
                 instance_run_all_threads(&instance, &init_state, key_ptr, NUM_THREADS());
+
                 fclose (instance.consumed_states_fh);
                 rename(consumed_states_fn_temp, consumed_states_fn);
+
+                fclose (instance.fcc_exit_points_out_fh);
+                rename(fcc_exit_points_out_fn_temp, fcc_exit_points_out_fn);
+
                 release_starting_state_specific_instance_resources(&instance);
 
             }
