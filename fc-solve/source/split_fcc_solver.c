@@ -304,6 +304,8 @@ static GCC_INLINE void instance_destroy(
 {
     fcs_dbm_collection_by_depth_t * coll;
 
+    fc_solve_compact_allocator_finish(&(instance->fcc_entry_points_allocator));
+    fc_solve_meta_compact_allocator_finish(&(instance->fcc_meta_alloc));
     {
         coll = &(instance->coll);
         fcs_offloading_queue__destroy(&(coll->queue));
@@ -330,6 +332,10 @@ static GCC_INLINE void instance_destroy(
         FCS_DESTROY_LOCK(coll->queue_lock);
     }
     FCS_DESTROY_LOCK(instance->storage_lock);
+    FCS_DESTROY_LOCK(instance->global_lock);
+    FCS_DESTROY_LOCK(instance->fcc_entry_points_lock);
+    FCS_DESTROY_LOCK(instance->fcc_exit_points_output_lock);
+    FCS_DESTROY_LOCK(instance->output_lock);
 }
 
 #define CHECK_KEY_CALC_DEPTH() \
@@ -1608,10 +1614,15 @@ int main(int argc, char * argv[])
                 release_starting_state_specific_instance_resources(&instance);
 
             }
+
         }
+        free (fingerprint_line);
         fclose(fingerprint_fh);
         handle_and_destroy_instance_solution(&instance, out_fh, delta);
+        free (instance.moves_to_state);
+        free (instance.moves_base64_encoding_buffer);
     }
+
 
     fc_solve_delta_stater_free(delta);
     delta = NULL;
