@@ -92,7 +92,10 @@ typedef union
     fcs_dbm_record_t reserve_space;
     struct
     {
+        /* We don't really need it. */
+#ifdef WITH_LOCATION_IN_FILE
         long location_in_file;
+#endif
         int depth;
         int was_consumed: 1;
         int is_reachable: 1;
@@ -1471,7 +1474,9 @@ int main(int argc, char * argv[])
         size_t fingerprint_line_size = 0;
         ssize_t read;
 
+#ifdef WITH_LOCATION_IN_FILE
         long location_in_file = 0;
+#endif
         while ((read = getline(&fingerprint_line, &fingerprint_line_size, fingerprint_fh)) != -1)
         {
             char state_base64[100];
@@ -1490,7 +1495,9 @@ int main(int argc, char * argv[])
 
             assert (unused_size == sizeof(entry_point->kv.key));
 
+#ifdef WITH_LOCATION_IN_FILE
             entry_point->kv.val.location_in_file = location_in_file;
+#endif
             entry_point->kv.val.was_consumed =
                 entry_point->kv.val.is_reachable =
                 FALSE;
@@ -1501,8 +1508,10 @@ int main(int argc, char * argv[])
                 entry_point
             );
 
+#ifdef WITH_LOCATION_IN_FILE
             /* Valid for the next iteration: */
             location_in_file = ftell(fingerprint_fh);
+#endif
         }
 
         fseek (fingerprint_fh, 0, SEEK_SET);
