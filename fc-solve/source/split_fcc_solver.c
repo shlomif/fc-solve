@@ -153,6 +153,11 @@ typedef struct
     fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask;
     fcs_lock_t fcc_exit_points_output_lock;
     FILE * fcc_exit_points_out_fh;
+    unsigned char * moves_to_state;
+    size_t max_moves_to_state_len;
+    size_t moves_to_state_len;
+    char * moves_base64_encoding_buffer;
+    size_t moves_base64_encoding_buffer_max_len;
 } fcs_dbm_solver_instance_t;
 
 #define __unused GCC_UNUSED
@@ -180,6 +185,8 @@ static GCC_INLINE void instance_init(
     instance->fingerprint_which_irreversible_moves_bitmask =
         (*fingerprint_which_irreversible_moves_bitmask);
 
+    instance->moves_base64_encoding_buffer = NULL;
+    instance->moves_base64_encoding_buffer_max_len = 0;
     {
         int curr_depth = 0;
         {
@@ -325,7 +332,87 @@ static GCC_INLINE void instance_destroy(
 #include "dbm_procs.h"
 #include "fcs_base64.h"
 
+static unsigned char get_move_from_parent_to_child(
+    fcs_dbm_solver_instance_t * instance,
+    fc_solve_delta_stater_t * delta,
+    fcs_encoded_state_buffer_t parent,
+    fcs_encoded_state_buffer_t child)
+{
+    unsigned char move_to_return;
+    fcs_encoded_state_buffer_t got_child;
+    fcs_state_keyval_pair_t parent_state;
+    fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
+                        * derived_iter;
+    fcs_compact_allocator_t derived_list_allocator;
+    fcs_meta_compact_allocator_t meta_alloc;
+    enum fcs_dbm_variant_type_t local_variant;
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+
+    local_variant = instance->variant;
+
+    fc_solve_meta_compact_allocator_init(&meta_alloc);
+    fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
+    fc_solve_delta_stater_decode_into_state(
+        delta,
+        parent.s,
+        &parent_state,
+        indirect_stacks_buffer
+    );
+
+    derived_list = NULL;
+    derived_list_recycle_bin = NULL;
+
+    instance_solver_thread_calc_derived_states(
+        local_variant,
+        &parent_state,
+        &parent,
+        NULL,
+        &derived_list,
+        &derived_list_recycle_bin,
+        &derived_list_allocator,
+        TRUE
+    );
+
+    for (derived_iter = derived_list;
+            derived_iter ;
+            derived_iter = derived_iter->next
+    )
+    {
+        fcs_init_and_encode_state(
+            delta,
+            local_variant,
+            &(derived_iter->state),
+            &got_child
+        );
+
+        if (compare_enc_states(&got_child, &child) == 0)
+        {
+            break;
+        }
+    }
+
+    if (! derived_iter)
+    {
+        fprintf(stderr, "%s\n", "Failed to find move. Terminating.");
+        exit(-1);
+    }
+    move_to_return = derived_iter->move;
+
+    fc_solve_compact_allocator_finish(&(derived_list_allocator));
+    fc_solve_meta_compact_allocator_finish(&meta_alloc);
+
+    return move_to_return;
+}
+
+struct fcs_dbm_solver_thread_struct
+{
+    fcs_dbm_solver_instance_t * instance;
+    fc_solve_delta_stater_t * delta_stater;
+    fcs_meta_compact_allocator_t thread_meta_alloc;
+};
+
 static GCC_INLINE void instance_check_key(
+    fcs_dbm_solver_thread_t * thread,
     fcs_dbm_solver_instance_t * instance,
     int key_depth,
     fcs_encoded_state_buffer_t * key,
@@ -421,21 +508,90 @@ static GCC_INLINE void instance_check_key(
                     }
                     /* TODO : base64_encode the fingerprint. */
                     /* TODO : Trace the solution. */
-                    /* TODO : Output the exit point. */
-
+                    int trace_num;
+                    fcs_encoded_state_buffer_t * trace;
                     FCS_LOCK(instance->fcc_exit_points_output_lock);
+                    FCS_LOCK(instance->storage_lock);
+                    calc_trace(instance, token, &trace, &trace_num);
+
+                    const size_t added_moves_to_output = instance->moves_to_state_len + trace_num-1;
+                    if (added_moves_to_output > instance->max_moves_to_state_len)
+                    {
+                        instance->moves_to_state = SREALLOC(
+                            instance->moves_to_state,
+                            added_moves_to_output
+                        );
+                        instance->max_moves_to_state_len = added_moves_to_output;
+                    }
+                    unsigned char * const moves_to_state
+                        = instance->moves_to_state;
+                    for (int i = trace_num-1 ; i > 0 ; i--)
+                    {
+                        moves_to_state[trace_num-1-i] =
+                            get_move_from_parent_to_child(
+                                instance,
+                                thread->delta_stater,
+                                trace[i],
+                                trace[i-1]
+                            );
+                    }
+
+                    const size_t new_max_enc_len =
+                        ((added_moves_to_output * 4) / 3) + 20;
+
+                    if (new_max_enc_len > instance->moves_base64_encoding_buffer_max_len)
+                    {
+                        instance->moves_base64_encoding_buffer =
+                            SREALLOC(
+                                instance->moves_base64_encoding_buffer,
+                                new_max_enc_len
+                            );
+                        instance->moves_base64_encoding_buffer_max_len
+                            = new_max_enc_len;
+                        size_t unused_output_len;
+                        base64_encode(
+                            instance->moves_to_state,
+                            added_moves_to_output,
+                            instance->moves_base64_encoding_buffer,
+                            &unused_output_len
+                        );
+                    }
+                    char fingerprint_base64[100];
+                    char state_base64[100];
+                    size_t unused_output_len;
+                    base64_encode(
+                        new_fingerprint.s,
+                        sizeof(new_fingerprint),
+                        fingerprint_base64,
+                        &unused_output_len
+                    );
+                    base64_encode(
+                        (unsigned char *)&(*key),
+                        sizeof(*key),
+                        state_base64,
+                        &unused_output_len
+                    );
+                    /* Output the exit point. */
+                    fprintf(
+                        instance->fcc_exit_points_out_fh,
+                        "%s %s %ld %s\n",
+                        fingerprint_base64,
+                        state_base64,
+                        added_moves_to_output,
+                        instance->moves_base64_encoding_buffer
+                    );
+                    fflush(instance->fcc_exit_points_out_fh);
+                    FCS_UNLOCK(instance->storage_lock);
+
                     FCS_UNLOCK(instance->fcc_exit_points_output_lock);
+
+                    free(trace);
                 }
             }
     }
 }
 
 
-typedef struct {
-    fcs_dbm_solver_instance_t * instance;
-    fc_solve_delta_stater_t * delta_stater;
-    fcs_meta_compact_allocator_t thread_meta_alloc;
-} fcs_dbm_solver_thread_t;
 
 typedef struct {
     fcs_dbm_solver_thread_t * thread;
@@ -631,7 +787,7 @@ static void * instance_run_solver_thread(void * void_arg)
                 const size_t needed_len = ( (sizeof(key.kv.key)+2) << 2 ) / 3 + 20;
                 if (base64_encoding_buffer_max_len < needed_len)
                 {
-                    base64_encoding_buffer = realloc(base64_encoding_buffer, needed_len);
+                    base64_encoding_buffer = SREALLOC(base64_encoding_buffer, needed_len);
                     base64_encoding_buffer_max_len = needed_len;
                 }
 
@@ -696,7 +852,7 @@ static void * instance_run_solver_thread(void * void_arg)
             );
         }
 
-        instance_check_multiple_keys(instance, derived_list
+        instance_check_multiple_keys(thread, instance, derived_list
 #ifdef FCS_DBM_CACHE_ONLY
             , item->moves_to_key
 #endif
@@ -902,77 +1058,6 @@ static void instance_run_all_threads(
 
 
 
-static unsigned char get_move_from_parent_to_child(
-    fcs_dbm_solver_instance_t * instance,
-    fc_solve_delta_stater_t * delta,
-    fcs_encoded_state_buffer_t parent,
-    fcs_encoded_state_buffer_t child)
-{
-    unsigned char move_to_return;
-    fcs_encoded_state_buffer_t got_child;
-    fcs_state_keyval_pair_t parent_state;
-    fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
-                        * derived_iter;
-    fcs_compact_allocator_t derived_list_allocator;
-    fcs_meta_compact_allocator_t meta_alloc;
-    enum fcs_dbm_variant_type_t local_variant;
-    DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
-    local_variant = instance->variant;
-
-    fc_solve_meta_compact_allocator_init(&meta_alloc);
-    fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
-    fc_solve_delta_stater_decode_into_state(
-        delta,
-        parent.s,
-        &parent_state,
-        indirect_stacks_buffer
-    );
-
-    derived_list = NULL;
-    derived_list_recycle_bin = NULL;
-
-    instance_solver_thread_calc_derived_states(
-        local_variant,
-        &parent_state,
-        &parent,
-        NULL,
-        &derived_list,
-        &derived_list_recycle_bin,
-        &derived_list_allocator,
-        TRUE
-    );
-
-    for (derived_iter = derived_list;
-            derived_iter ;
-            derived_iter = derived_iter->next
-    )
-    {
-        fcs_init_and_encode_state(
-            delta,
-            local_variant,
-            &(derived_iter->state),
-            &got_child
-        );
-
-        if (compare_enc_states(&got_child, &child) == 0)
-        {
-            break;
-        }
-    }
-
-    if (! derived_iter)
-    {
-        fprintf(stderr, "%s\n", "Failed to find move. Terminating.");
-        exit(-1);
-    }
-    move_to_return = derived_iter->move;
-
-    fc_solve_compact_allocator_finish(&(derived_list_allocator));
-    fc_solve_meta_compact_allocator_finish(&meta_alloc);
-
-    return move_to_return;
-}
 
 static void trace_solution(
     fcs_dbm_solver_instance_t * instance,
@@ -1416,6 +1501,8 @@ int main(int argc, char * argv[])
         fseek (fingerprint_fh, 0, SEEK_SET);
 
         long count_of_instance_runs = 0;
+        instance.moves_to_state  = NULL;
+        instance.max_moves_to_state_len = instance.moves_to_state_len = 0;
         while ((read = getline(&fingerprint_line, &fingerprint_line_size, fingerprint_fh)) != -1)
         {
             char state_base64[100];
@@ -1425,6 +1512,7 @@ int main(int argc, char * argv[])
             base64_decode(state_base64, strlen(state_base64),
                 ((unsigned char *)&(key.kv.key)), &(unused_size));
 
+
             FccEntryPointNode * val_proto = RB_FIND(
                 FccEntryPointList,
                 &(instance.fcc_entry_points),
@@ -1433,6 +1521,28 @@ int main(int argc, char * argv[])
 
             if (! val_proto->kv.val.was_consumed)
             {
+                char * moves_to_state_enc = strchr(fingerprint_line, ' ');
+                moves_to_state_enc = strchr(moves_to_state_enc+1, ' ');
+                moves_to_state_enc++;
+                char * trailing_newline = strchr(moves_to_state_enc, '\n');
+                if (trailing_newline)
+                {
+                    *trailing_newline = '\0';
+                }
+                const size_t string_len = strlen(moves_to_state_enc);
+                const size_t buffer_size = (((string_len * 3) >> 2) + 20);
+                if (buffer_size > instance.max_moves_to_state_len)
+                {
+                    instance.moves_to_state = SREALLOC(
+                        instance.moves_to_state,
+                        buffer_size
+                    );
+                    instance.max_moves_to_state_len = buffer_size;
+                }
+                base64_decode (moves_to_state_enc, string_len,
+                    ((unsigned char *)instance.moves_to_state),
+                    &(instance.moves_to_state_len));
+
                 /* TODO : Should traverse starting from key. */
                 key_ptr = val_proto;
                 /* The NULL parent_state_enc and move for indicating this is the

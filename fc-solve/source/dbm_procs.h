@@ -200,7 +200,10 @@ static GCC_INLINE void pre_cache_offload_and_reset(
 
 #endif /* FCS_DBM_WITHOUT_CACHES */
 
+typedef struct fcs_dbm_solver_thread_struct fcs_dbm_solver_thread_t;
+
 static GCC_INLINE void instance_check_key(
+    fcs_dbm_solver_thread_t * thread,
     fcs_dbm_solver_instance_t * instance,
     int key_depth,
     fcs_encoded_state_buffer_t * key,
@@ -213,6 +216,7 @@ static GCC_INLINE void instance_check_key(
 );
 
 static GCC_INLINE void instance_check_multiple_keys(
+    fcs_dbm_solver_thread_t * thread,
     fcs_dbm_solver_instance_t * instance,
     fcs_derived_state_t * list
 #ifdef FCS_DBM_CACHE_ONLY
@@ -229,6 +233,7 @@ static GCC_INLINE void instance_check_multiple_keys(
     for (; list ; list = list->next)
     {
         instance_check_key(
+            thread,
             instance,
             CHECK_KEY_CALC_DEPTH(),
             &(list->key), list->parent, list->move,

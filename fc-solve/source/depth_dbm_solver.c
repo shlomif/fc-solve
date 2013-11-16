@@ -212,6 +212,7 @@ static GCC_INLINE void instance_destroy(
 #include "dbm_procs.h"
 
 static GCC_INLINE void instance_check_key(
+    fcs_dbm_solver_thread_t * thread,
     fcs_dbm_solver_instance_t * instance,
     int key_depth,
     fcs_encoded_state_buffer_t * key,
@@ -296,11 +297,12 @@ static GCC_INLINE void instance_check_key(
 }
 
 
-typedef struct {
+struct fcs_dbm_solver_thread_struct
+{
     fcs_dbm_solver_instance_t * instance;
     fc_solve_delta_stater_t * delta_stater;
     fcs_meta_compact_allocator_t thread_meta_alloc;
-} fcs_dbm_solver_thread_t;
+};
 
 typedef struct {
     fcs_dbm_solver_thread_t * thread;
@@ -476,7 +478,7 @@ static void * instance_run_solver_thread(void * void_arg)
             );
         }
 
-        instance_check_multiple_keys(instance, derived_list
+        instance_check_multiple_keys(thread, instance, derived_list
 #ifdef FCS_DBM_CACHE_ONLY
             , item->moves_to_key
 #endif
