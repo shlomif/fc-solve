@@ -3,6 +3,8 @@ package SplitFcc;
 use strict;
 use warnings;
 
+use autodie;
+
 use MooX qw/late/;
 use Getopt::Long qw/GetOptions/;
 use FC_Solve::Base64;
@@ -33,21 +35,59 @@ sub driver
     my $output_dir = "$fingerprint_dir/out");
     my $queue_dir = "$fingerprint_dir/queue");
     my $debug_output_fn = "$fingerprint_dir/debug.out.txt";
+    my $status_output_fn = "$fingerprint_dir/status_output.stamp";
     mkpath( [$output_dir, $queue_dir] );
 
     my $script_fn = "$fingerprint_dir/driver.bash";
     io->file($script_fn)->print(<<"EOF");
 #!/bin/bash
-split_fcc_fc_solver \
+s="$status_output_fn"
+rm -f "\$s"
+(split_fcc_fc_solver \
     --offload-dir-path "$queue_dir" \
     --output "$output_dir" \
     --board "$board_fn" \
     --fingerprint "$fingerprint_encoded" \
-    --input "$input_fn" \
+    --input "$input_fn" && touch "\$s") \
     | tee "$debug_output_fn"
+if test -e "\$s" ; then
+    rm -f "\$s"
+    exit 0;
+else
+    exit 1;
+fi
 EOF
 
     print "Run (in tmux):\nbash $script_fn\n";
+
+    if (system("bash", $script_fn))
+    {
+        die "Did not finish correctly.";
+    }
+
+    my $by_fingerprint_dir = "$output_dir/by-fingerprint";
+    mkpath([$by_fingerprint_dir]);
+    my $idx = 1;
+    my $exits_fn = sub {
+        return "$output_dir/exits.$idx";
+    };
+    while (-f $exits_fn->())
+    {
+        open my $fh, '<', $exits_fn->();
+        while (my $line = <$fh>)
+        {
+            chomp ($line);
+            if (my ($exit_fingerprint_encoded) = $line =~ m{\A(\S+)})
+            {
+                io("$by_fingerprint_dir/$exit_fingerprint_encoded")->append("$line\n");
+            }
+            else
+            {
+                die "Does not match.";
+            }
+        }
+        close ($fh);
+    }
 
     return;
 }
