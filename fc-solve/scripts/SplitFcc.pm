@@ -9,8 +9,38 @@ use MooX qw/late/;
 use Getopt::Long qw/GetOptions/;
 use FC_Solve::Base64;
 use File::Path qw/mkpath/;
+use List::UtilsBy qw(max_by);
 
 use IO::All;
+
+sub _calc_fingerprint_depth
+{
+    my ($self, $fingerprint_encoded) = @_;
+
+    my $fingerprint = FC_Solve::Base64::base64_decode($fingerprint_encoded);
+
+    my $depth = 0;
+    for my $i (0 .. (4*13-1))
+    {
+        $depth += vec($fingerprint, $i, 2);
+    }
+
+    return $depth;
+}
+
+sub _calc_depth_dir
+{
+    my ($self, $depth) = @_;
+
+    return "by-depth/$depth";
+}
+
+sub _calc_fingerprint_dir
+{
+    my ($self, $depth, $fingerprint_encoded) = @_;
+
+    return $self->_calc_depth_dir($depth) . "/active/$fingerprint_encoded";
+}
 
 sub driver
 {
@@ -19,21 +49,14 @@ sub driver
     my $board_fn = $args->{board_fn};
     my $fingerprint_encoded = $args->{fingerprint_encoded};
 
-    # my $offload_dir_path = tempdir( CLEANUP => 1 );
-    my $fingerprint = FC_Solve::Base64::base64_decode($fingerprint);
+    my $depth = $self->_calc_fingerprint_depth($fingerprint_encoded);
 
-    my $depth = 0;
-    for my $i (0 .. (4*13-1))
-    {
-        $depth += vec($fingerprint, $i, 2);
-    }
-
-    my $depth_dir = "by-depth/$depth";
-    my $fingerprint_dir = "$depth_dir/active/$fingerprint_encoded";
+    my $depth_dir = $self->_calc_depth_dir($depth);
+    my $fingerprint_dir = $self->_calc_fingerprint_dir($depth, $fingerprint_encoded);
 
     my $input_fn = "$fingerprint_dir/input.txtish";
-    my $output_dir = "$fingerprint_dir/out");
-    my $queue_dir = "$fingerprint_dir/queue");
+    my $output_dir = "$fingerprint_dir/out";
+    my $queue_dir = "$fingerprint_dir/queue";
     my $debug_output_fn = "$fingerprint_dir/debug.out.txt";
     my $status_output_fn = "$fingerprint_dir/status_output.stamp";
     mkpath( [$output_dir, $queue_dir] );
@@ -91,6 +114,76 @@ EOF
     continue
     {
         $idx++;
+    }
+
+    my $proc_line = sub
+    {
+        my ($l) = @_;
+
+        if (my ($state, $depth, $moves) = $l =~ /\A\S+ (\S+) (\d+) (\S+)\z/)
+        {
+            return ($state => [$depth, $moves]);
+        }
+        else
+        {
+            Carp::confess ("<<$l>> does not match.");
+        }
+    };
+
+    while (defined(my $by_fingerprint_fh = (io->dir($by_fingerprint_dir)->all_files)[0]))
+    {
+        my $fingerprint_encoded = $by_fingerprint_fh->filename();
+        my $depth = $self->_calc_fingerprint_depth(
+            $fingerprint_encoded
+        );
+
+        my %l = (map
+            {
+            $proc_line->($_)
+            }
+            $by_fingerprint_fh->chomp->getlines()
+        );
+
+        my $target_dir = $self->_calc_fingerprint_dir($depth, $fingerprint_encoded);
+        io->dir($target_dir)->mkpath();
+        my $existing = max_by { ($_->filename() =~ /\Ainput.txtish\.(\d+)\z/) ? $1 : (-1) } (io->dir($target_dir)->all_files());
+
+        if (!defined($existing) or ($existing < 0))
+        {
+            $existing = 0;
+        }
+
+        my $new_digit = $existing+1;
+
+        my $fh = io->file("$target_dir/input.txtish.$existing");
+        while (my $line = $fh->chomp->getline())
+        {
+            my ($state, $depth, $moves) = split(/\s+/, $line, -1);
+            $moves //= '';
+
+            if ((!exists($l{$state})) or ($depth < $l{$state}->[0]))
+            {
+                $l{$state} = [$depth, $moves];
+            }
+        }
+        my $new_fn = "$target_dir/input.txtish.$new_digit";
+        my $temp_fn = "$new_fn.temp";
+        io->file($temp_fn)->print(
+            map
+            {
+                join(' ', $_, @{$l{$_}}) . "\n";
+            }
+            sort
+            {
+                ($l{$a}->[0] <=> $l{$b}->[0])
+                    or
+                ($a cmp $b)
+            }
+            keys(%l)
+        );
+
+        rename($temp_fn, $new_fn);
+        $by_fingerprint_fh->unlink();
     }
 
     return;
