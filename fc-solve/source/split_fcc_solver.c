@@ -436,6 +436,12 @@ static GCC_INLINE void instance_check_key(
 #endif
 )
 {
+#ifdef DEBUG_OUT
+    fcs_state_locs_struct_t locs;
+    fc_solve_init_locs(&locs);
+    enum fcs_dbm_variant_type_t local_variant = instance->variant;;
+#endif
+
     fcs_dbm_collection_by_depth_t * coll;
     coll = &(instance->coll);
     {
@@ -596,6 +602,40 @@ static GCC_INLINE void instance_check_key(
                         added_moves_to_output,
                         instance->moves_base64_encoding_buffer
                     );
+#ifdef DEBUG_OUT
+                    {
+                        fcs_state_keyval_pair_t state;
+                        DECLARE_IND_BUF_T(indirect_stacks_buffer)
+                        fc_solve_delta_stater_decode_into_state(
+                            thread->delta_stater,
+                            key->s,
+                            &state,
+                            indirect_stacks_buffer
+                            );
+                        char * state_as_str =
+                            fc_solve_state_as_string(
+                                &(state.s),
+                                &(state.info),
+                                &locs,
+                                FREECELLS_NUM,
+                                STACKS_NUM,
+                                DECKS_NUM,
+                                1,
+                                0,
+                                1
+                            );
+                    fprintf(
+                        stderr,
+                        "Check Key: <<<\n%s\n>>>\n\n[%s %s %ld %s]\n\n",
+                        state_as_str,
+                        fingerprint_base64,
+                        state_base64,
+                        added_moves_to_output,
+                        instance->moves_base64_encoding_buffer
+                    );
+                    free(state_as_str);
+                    }
+#endif
                     fflush(instance->fcc_exit_points_out_fh);
 
                     FCS_UNLOCK(instance->fcc_exit_points_output_lock);

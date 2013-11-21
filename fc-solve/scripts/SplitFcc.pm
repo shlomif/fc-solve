@@ -88,6 +88,10 @@ EOF
         }
         close ($fh);
     }
+    continue
+    {
+        $idx++;
+    }
 
     return;
 }
