@@ -9,7 +9,7 @@ use MooX qw/late/;
 use Getopt::Long qw/GetOptions/;
 use FC_Solve::Base64;
 use File::Path qw/mkpath/;
-use List::UtilsBy qw(max_by);
+use List::Util qw(max);
 
 use IO::All;
 
@@ -42,6 +42,23 @@ sub _calc_fingerprint_dir
     return $self->_calc_depth_dir($depth) . "/active/$fingerprint_encoded";
 }
 
+sub _calc_existing_input
+{
+    my ($self, $target_dir) = @_;
+
+    return max( map {
+        ($_->filename() =~ /\Ainput.txtish\.(\d+)\z/) ? $1 : (-1)
+        }
+        (io->dir($target_dir)->all_files())
+    );
+}
+
+sub _map_existing_input
+{
+    my ($self, $target_dir, $existing) = @_;
+
+    return "$target_dir/input.txtish.$existing";
+}
 sub driver
 {
     my ($self, $args) = @_;
@@ -62,7 +79,14 @@ sub driver
         return;
     }
 
-    my $input_fn = "$fingerprint_dir/input.txtish";
+    my $input_existing = $self->_calc_existing_input($fingerprint_dir);
+    if (!defined($input_existing) or ($input_existing < 0))
+    {
+        print "Cannot find input.txtish. Perhaps no such one was created.\n";
+        return;
+    }
+
+    my $input_fn = $self->_map_existing_input($fingerprint_dir, $input_existing);
     my $output_dir = "$fingerprint_dir/out";
     my $queue_dir = "$fingerprint_dir/queue";
     my $debug_output_fn = "$fingerprint_dir/debug.out.txt";
@@ -154,8 +178,7 @@ EOF
 
         my $target_dir = $self->_calc_fingerprint_dir($depth, $fingerprint_encoded);
         io->dir($target_dir)->mkpath();
-        my $existing = max_by { ($_->filename() =~ /\Ainput.txtish\.(\d+)\z/) ? $1 : (-1) } (io->dir($target_dir)->all_files());
-
+        my $existing = $self->_calc_existing_input($target_dir);
         if (!defined($existing) or ($existing < 0))
         {
             $existing = 0;
@@ -163,7 +186,7 @@ EOF
 
         my $new_digit = $existing+1;
 
-        my $fh = io->file("$target_dir/input.txtish.$existing");
+        my $fh = io->file($self->_map_existing_input($target_dir, $existing));
         while (my $line = $fh->chomp->getline())
         {
             my ($state, $depth, $moves) = split(/\s+/, $line, -1);
