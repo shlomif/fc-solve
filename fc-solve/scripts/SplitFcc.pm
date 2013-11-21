@@ -98,12 +98,12 @@ sub driver
 #!/bin/bash
 s="$status_output_fn"
 rm -f "\$s"
-(split_fcc_fc_solver \
-    --offload-dir-path "$queue_dir" \
-    --output "$output_dir" \
-    --board "$board_fn" \
-    --fingerprint "$fingerprint_encoded" \
-    --input "$input_fn" && touch "\$s") \
+(split_fcc_fc_solver \\
+    --offload-dir-path "$queue_dir" \\
+    --output "$output_dir" \\
+    --board "$board_fn" \\
+    --fingerprint "$fingerprint_encoded" \\
+    --input "$input_fn" && touch "\$s") \\
     | tee "$debug_output_fn"
 if test -e "\$s" ; then
     rm -f "\$s"
@@ -186,15 +186,19 @@ EOF
 
         my $new_digit = $existing+1;
 
-        my $fh = io->file($self->_map_existing_input($target_dir, $existing));
-        while (my $line = $fh->chomp->getline())
+        my $exist_fn = $self->_map_existing_input($target_dir, $existing);
+        if (-e $exist_fn)
         {
-            my ($state, $depth, $moves) = split(/\s+/, $line, -1);
-            $moves //= '';
-
-            if ((!exists($l{$state})) or ($depth < $l{$state}->[0]))
+            my $fh = io->file($exist_fn);
+            while (my $line = $fh->chomp->getline())
             {
-                $l{$state} = [$depth, $moves];
+                my ($state, $depth, $moves) = split(/\s+/, $line, -1);
+                $moves //= '';
+
+                if ((!exists($l{$state})) or ($depth < $l{$state}->[0]))
+                {
+                    $l{$state} = [$depth, $moves];
+                }
             }
         }
         my $new_fn = "$target_dir/input.txtish.$new_digit";
