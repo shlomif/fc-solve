@@ -54,6 +54,14 @@ sub driver
     my $depth_dir = $self->_calc_depth_dir($depth);
     my $fingerprint_dir = $self->_calc_fingerprint_dir($depth, $fingerprint_encoded);
 
+    my $finished_stamp_fn = "$fingerprint_dir/FINISHED.stamp";
+
+    if (-e $finished_stamp_fn)
+    {
+        print "Already processed and finished.\n";
+        return;
+    }
+
     my $input_fn = "$fingerprint_dir/input.txtish";
     my $output_dir = "$fingerprint_dir/out";
     my $queue_dir = "$fingerprint_dir/queue";
@@ -185,6 +193,8 @@ EOF
         rename($temp_fn, $new_fn);
         $by_fingerprint_fh->unlink();
     }
+
+    io->file($finished_stamp_fn)->print("\n");
 
     return;
 }
