@@ -148,20 +148,6 @@ EOF
         $idx++;
     }
 
-    my $proc_line = sub
-    {
-        my ($l) = @_;
-
-        if (my ($state, $depth, $moves) = $l =~ /\A\S+ (\S+) (\d+) (\S+)\z/)
-        {
-            return ($state => [$depth, $moves]);
-        }
-        else
-        {
-            Carp::confess ("<<$l>> does not match.");
-        }
-    };
-
     while (defined(my $by_fingerprint_fh = (io->dir($by_fingerprint_dir)->all_files)[0]))
     {
         my $fingerprint_encoded = $by_fingerprint_fh->filename();
@@ -169,12 +155,28 @@ EOF
             $fingerprint_encoded
         );
 
-        my %l = (map
+        my %l;
+
+        my $proc_state = sub {
+            my ($state, $depth, $moves) = @_;
+
+            $moves //= '';
+
+            if ((!exists($l{$state})) or ($depth < $l{$state}->[0]))
             {
-            $proc_line->($_)
+                $l{$state} = [$depth, $moves];
             }
-            $by_fingerprint_fh->chomp->getlines()
-        );
+
+            return;
+        };
+
+        while (defined(my $line = $by_fingerprint_fh->chomp->getline()))
+        {
+            if (my ($state, $depth, $moves) = $line =~ /\A\S+ (\S+) (\d+) (\S+)\z/)
+            {
+                $proc_state->($state, $depth, $moves);
+            }
+        }
 
         my $target_dir = $self->_calc_fingerprint_dir($depth, $fingerprint_encoded);
         io->dir($target_dir)->mkpath();
@@ -193,12 +195,7 @@ EOF
             while (my $line = $fh->chomp->getline())
             {
                 my ($state, $depth, $moves) = split(/\s+/, $line, -1);
-                $moves //= '';
-
-                if ((!exists($l{$state})) or ($depth < $l{$state}->[0]))
-                {
-                    $l{$state} = [$depth, $moves];
-                }
+                $proc_state->($state, $depth, $moves);
             }
         }
         my $new_fn = "$target_dir/input.txtish.$new_digit";
