@@ -30,7 +30,9 @@
  *
  */
 
+#if 0
 #define DEBUG_OUT 1
+#endif
 
 #include "dbm_solver_head.h"
 #include <sys/tree.h>
