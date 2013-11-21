@@ -164,6 +164,7 @@ typedef struct
     size_t moves_to_state_len;
     char * moves_base64_encoding_buffer;
     size_t moves_base64_encoding_buffer_max_len;
+    const char * dbm_store_path;
 } fcs_dbm_solver_instance_t;
 
 #define __unused GCC_UNUSED
@@ -186,6 +187,7 @@ static GCC_INLINE void instance_init(
     fcs_dbm_collection_by_depth_t * coll;
 
 
+    instance->dbm_store_path = dbm_store_path;
     instance->variant = local_variant;
 
     instance->fingerprint_which_irreversible_moves_bitmask =
@@ -1226,7 +1228,36 @@ static GCC_INLINE void release_starting_state_specific_instance_resources(
     fcs_dbm_solver_instance_t * instance
 )
 {
+    fcs_dbm_collection_by_depth_t * coll = &(instance->coll);
+
     /* TODO : Implement. */
+#ifndef FCS_DBM_WITHOUT_CACHES
+
+#ifndef FCS_DBM_CACHE_ONLY
+        pre_cache_offload_and_destroy(
+            &(coll->pre_cache),
+            coll->store,
+            &(coll->cache)
+            );
+#endif
+
+        cache_destroy(&(coll->cache));
+#endif
+
+#ifndef FCS_DBM_CACHE_ONLY
+        fc_solve_dbm_store_destroy(coll->store);
+#endif
+
+#ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
+        pre_cache_init (&(coll->pre_cache), &(coll->meta_alloc));
+#endif
+        coll->pre_cache_max_count = pre_cache_max_count;
+        cache_init (&(coll->cache), pre_cache_max_count+caches_delta, &(coll->meta_alloc));
+#endif
+#ifndef FCS_DBM_CACHE_ONLY
+        fc_solve_dbm_store_init(&(coll->store), instance->dbm_store_path, &(instance->tree_recycle_bin));
+#endif
 }
 
 int main(int argc, char * argv[])
