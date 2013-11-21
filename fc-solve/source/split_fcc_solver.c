@@ -1249,6 +1249,8 @@ static GCC_INLINE void release_starting_state_specific_instance_resources(
 #ifndef FCS_DBM_CACHE_ONLY
         fc_solve_dbm_store_destroy(coll->store);
 #endif
+        /* That is important to avoid stale nodes. */
+        instance->tree_recycle_bin = NULL;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
