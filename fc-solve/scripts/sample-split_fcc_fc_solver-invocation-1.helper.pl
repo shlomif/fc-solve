@@ -28,10 +28,9 @@ while ($count < 16)
     $buffer .= '\0';
 }
 
-print (
+print
     FC_Solve::Base64::base64_encode($buffer),
     " 0 ",
     FC_Solve::Base64::base64_encode(q{}),
     "\n"
-);
-
+    ;
