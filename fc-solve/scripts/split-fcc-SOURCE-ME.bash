@@ -20,7 +20,14 @@ run()
     perl -MSplitFcc -e 'SplitFcc->new->driver_run()' -- --fingerprint="$id"
 }
 
-debug_run()
+depth_run()
+{
+    depth="$1"
+    shift
+    (for i in by-depth/"$depth"/active/* ; do echo "===[[[ Running $i ]]]===" ; echo ; run "$i" || exit -1 ; done)
+}
+
+____debug_run()
 {
     local id
     id="$1"
@@ -30,4 +37,6 @@ debug_run()
 
     perl -d -MSplitFcc -e 'SplitFcc->new->driver_run()' -- --fingerprint="$id"
 }
+
+
 
