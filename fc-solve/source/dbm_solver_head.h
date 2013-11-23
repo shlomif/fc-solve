@@ -49,7 +49,7 @@ extern "C"
 /*
  * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
  */
-#if 0
+#if 1
 #define FCS_DBM_SINGLE_THREAD 1
 #endif
 
