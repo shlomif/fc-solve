@@ -665,7 +665,7 @@ extern fcs_card_t fc_solve_card_user2perl(const char * str);
 extern char * fc_solve_card_perl2user(
     fcs_card_t card,
     char * str,
-    int t
+    fcs_bool_t t
     );
 
 /*
@@ -681,9 +681,9 @@ extern char * fc_solve_p2u_rank(
     int rank_idx,
     char * str,
     fcs_bool_t * rank_is_null,
-    int t
+    fcs_bool_t t
 #ifndef FCS_WITHOUT_CARD_FLIPPING
-    , int flipped
+    , fcs_bool_t flipped
 #endif
     );
 
