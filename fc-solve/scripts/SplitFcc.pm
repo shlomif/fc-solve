@@ -9,7 +9,7 @@ use MooX qw/late/;
 use Getopt::Long qw/GetOptions/;
 use FC_Solve::Base64;
 use File::Path qw/mkpath/;
-use List::Util qw(max);
+use List::Util qw(max min);
 
 use IO::All;
 
@@ -157,6 +157,9 @@ EOF
 
         my %l;
 
+        my $min_depth = 1e9;
+        my $max_depth = -1;
+
         my $proc_state = sub {
             my ($state, $depth, $moves) = @_;
 
@@ -165,6 +168,9 @@ EOF
             if ((!exists($l{$state})) or ($depth < $l{$state}->[0]))
             {
                 $l{$state} = [$depth, $moves];
+
+                $min_depth = min($min_depth, $depth);
+                $max_depth = max($max_depth, $depth);
             }
 
             return;
@@ -189,30 +195,117 @@ EOF
         my $new_digit = $existing+1;
 
         my $exist_fn = $self->_map_existing_input($target_dir, $existing);
-        if (-e $exist_fn)
-        {
-            my $fh = io->file($exist_fn);
-            while (my $line = $fh->chomp->getline())
-            {
-                my ($state, $depth, $moves) = split(/\s+/, $line, -1);
-                $proc_state->($state, $depth, $moves);
-            }
-        }
         my $new_fn = "$target_dir/input.txtish.$new_digit";
         my $temp_fn = "$new_fn.temp";
-        io->file($temp_fn)->print(
-            map
+
+        if (-e $exist_fn)
+        {
+            my $by_dirname = "./by";
+            io->dir($by_dirname)->mkpath();
+
+            my $last_depth = $min_depth;
             {
-                join(' ', $_, @{$l{$_}}) . "\n";
+                my $fh = io->file($exist_fn);
+                my @depth_fhs;
+                my $write_to_depth = sub {
+                    my ($depth, $line) = @_;
+
+                    if (!defined($depth_fhs[$depth]))
+                    {
+                        open $depth_fhs[$depth], '>>', "$by_dirname/$depth";
+                    }
+                    $depth_fhs[$depth]->print($line);
+
+                    return;
+                };
+
+                EXISTING:
+                while (defined(my $line = $fh->chomp->getline()))
+                {
+                    my ($state, $depth, $moves) = split(/\s+/, $line, -1);
+                    if ($depth > $last_depth)
+                    {
+                        foreach my $d ($last_depth .. $depth-1)
+                        {
+                            while (my ($key, $val) = each(%l))
+                            {
+                                if ($val->[0] == $d)
+                                {
+                                    $write_to_depth->(
+                                        $d,
+                                        "$key $d $val->[1]\n",
+                                    );
+                                }
+                            }
+                        }
+                    }
+                    $last_depth = $depth;
+                    if (exists($l{$state}))
+                    {
+                        my $check_depth = $l{$state}->[0];
+                        if ($check_depth >= $depth)
+                        {
+                            delete($l{$state});
+                        }
+                        else
+                        {
+                            next EXISTING;
+                        }
+                    }
+                    $write_to_depth->(
+                        $depth,
+                        "$line\n",
+                    );
+                    # $proc_state->($state, $depth, $moves);
+                }
+                if ($last_depth < $max_depth)
+                {
+                    while (my ($key, $val) = each(%l))
+                    {
+                        my $d = $val->[0];
+                        if ($d >= $last_depth)
+                        {
+                            $write_to_depth->(
+                                $d,
+                                "$key $d $val->[1]\n",
+                            );
+                        }
+                    }
+                    $last_depth = $max_depth;
+                }
+                foreach my $fh (@depth_fhs)
+                {
+                    if (defined($fh))
+                    {
+                        close($fh);
+                        undef($fh);
+                    }
+                }
             }
-            sort
+            my @depth_fns = (sort { $a <=> $b } map { $_->filename() } io->dir($by_dirname)->all_files());
+
+            system("cat " . join(' ', map { "$by_dirname/$_" } @depth_fns) . ' > ' . $temp_fn);
+            io->dir($by_dirname)->rmtree();
+        }
+        else
+        {
+            my $temp_fh = io->file($temp_fn);
+            foreach my $key (
+                sort
+                {
+                    ($l{$a}->[0] <=> $l{$b}->[0])
+                        or
+                    ($a cmp $b)
+                }
+                keys(%l)
+            )
             {
-                ($l{$a}->[0] <=> $l{$b}->[0])
-                    or
-                ($a cmp $b)
+                $temp_fh->print(
+                    join(' ', $key, @{$l{$key}}) . "\n"
+                );
             }
-            keys(%l)
-        );
+            $temp_fh->close();
+        }
 
         rename($temp_fn, $new_fn);
         $by_fingerprint_fh->unlink();
