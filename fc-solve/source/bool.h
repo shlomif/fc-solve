@@ -31,15 +31,16 @@
 #define FC_SOLVE__BOOL_H
 
 #include "config.h"
+#include <stdbool.h>
 
-typedef int fcs_bool_t;
+typedef bool fcs_bool_t;
 
 #ifndef FALSE
-#define FALSE 0
+#define FALSE false
 #endif
 
 #ifndef TRUE
-#define TRUE 1
+#define TRUE true
 #endif
 
 #endif
