@@ -16,14 +16,14 @@ typedef struct
     fcs_offloading_queue_t q;
 } QueueInC;
 
-SV* _proto_new(int num_items_per_page, const char * offload_dir_path) {
+SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue_id) {
         QueueInC * s;
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "Games::Solitaire::FC_Solve::QueueInC");
 
         New(42, s, 1, QueueInC);
 
-        fcs_offloading_queue__init(&(s->q), num_items_per_page, strdup(offload_dir_path), 0);
+        fcs_offloading_queue__init(&(s->q), num_items_per_page, strdup(offload_dir_path), queue_id);
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
         return obj_ref;
@@ -90,7 +90,7 @@ sub new
 {
     my ($class, $args) = @_;
 
-    return Games::Solitaire::FC_Solve::QueueInC::_proto_new($args->{num_items_per_page}, $args->{offload_dir_path});
+    return Games::Solitaire::FC_Solve::QueueInC::_proto_new($args->{num_items_per_page}, $args->{offload_dir_path}, ($args->{queue_id} || 0));
 }
 
 1;
