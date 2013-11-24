@@ -30,7 +30,7 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path) {
 }
 
 #define QUEUE_PTR() (&(((QueueInC*)SvIV(SvRV(obj)))->q))
-#
+
 void insert(SV* obj, int item_i) {
     fcs_offloading_queue_item_t item;
 
