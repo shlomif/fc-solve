@@ -126,5 +126,28 @@ sub get_num_extracted
     return $self->_num_extracted();
 }
 
+sub extract
+{
+    my $self = shift;
+
+    if ($self->_num_items_in_queue() == 0)
+    {
+        return;
+    }
+
+    while ($self->_queues_by_depth->[0]->get_num_items_in_queue() == 0)
+    {
+        my $save_queue = shift(@{ $self->_queues_by_depth });
+        push @{$self->_queues_by_depth()}, $save_queue;
+        $self->_min_depth($self->_min_depth + 1);
+        $self->_max_depth($self->_max_depth + 1);
+    }
+
+    $self->_num_items_in_queue($self->_num_items_in_queue() - 1);
+    $self->_num_extracted($self->_num_extracted() + 1);
+
+    return ($self->_min_depth, $self->_queues_by_depth->[0]->extract());
+}
+
 1;
 

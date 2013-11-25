@@ -3,7 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 22;
+
+use Test::Differences qw(eq_or_diff);
 
 use File::Spec;
 
@@ -64,6 +66,50 @@ sub run_queue_tests
         # TEST:$c++
         is ($queue->get_num_extracted(), 0, "$blurb_base - no items extracted.");
 
+        # TEST:$c++
+        eq_or_diff(
+            [$queue->extract()],
+            [100, 1],
+            "First item extracted.",
+        );
+
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 3, "$blurb_base - 3 items inserted.");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 2, "$blurb_base - 2 items in queue.");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 1, "$blurb_base - 1 items extracted.");
+
+        # TEST:$c++
+        eq_or_diff(
+            [$queue->extract()],
+            [100, 22],
+            "Second item extracted.",
+        );
+
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 3, "$blurb_base - 3 items inserted.");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 1, "$blurb_base - 1 items in queue.");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 2, "$blurb_base - 2 items extracted.");
+
+        # TEST:$c++
+        eq_or_diff(
+            [$queue->extract()],
+            [101, 303],
+            "Second item extracted.",
+        );
+
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 3, "$blurb_base - 3 items inserted.");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 0, "$blurb_base - 0 items in queue.");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 3, "$blurb_base - 3 items extracted.");
     }
 
     return;
