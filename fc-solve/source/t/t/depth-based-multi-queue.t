@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 2156;
 
 use Test::Differences qw(eq_or_diff);
 
@@ -148,6 +148,75 @@ sub run_queue_tests
 
         # TEST:$c++
         is ($queue->get_num_extracted(), 2, "$blurb_base - Nonconsecutive extracted.");
+    }
+
+    {
+        my @depths;
+
+        my $calc_item = sub {
+            my ($depth, $pos) = @_;
+
+            return $depth * 10_000 + $pos;
+        };
+
+        my $queue = $class_name->new(
+            {
+                num_items_per_page => 10,
+                offload_dir_path => $queue_offload_dir_path,
+                first_depth => 100,
+                first_item => $calc_item->(100, 0),
+            }
+        );
+
+        # TEST:$c++;
+        ok ($queue, "$blurb_base - Queue was initialized.");
+
+        foreach my $depth (100 .. 120)
+        {
+            foreach my $pos ((($depth == 100) ? 1 : 0) .. 50)
+            {
+                $queue->insert($depth, $calc_item->($depth, $pos));
+            }
+        }
+
+        foreach my $depth (100 .. 120)
+        {
+            foreach my $pos (51 .. 100)
+            {
+                $queue->insert($depth, $calc_item->($depth, $pos));
+            }
+        }
+
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 21*101, "$blurb_base - Grand test inserted");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 21*101, "$blurb_base - Grand test items in queue.");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 0, "$blurb_base - Grand test extracted.");
+
+        # TEST:$num_depth=21
+        foreach my $depth (100 .. 120)
+        {
+            # TEST:$num_pos_per_depth=101
+            foreach my $pos (0 .. 100)
+            {
+                # TEST:$c=$c+$num_depth*$num_pos_per_depth
+                eq_or_diff(
+                    [$queue->extract()],
+                    [$depth, $calc_item->($depth, $pos),],
+                    "$blurb_base - Grand test extracted [$depth/$pos]",
+                );
+            }
+        }
+
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 21*101, "$blurb_base - Grand test [after] inserted");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 0, "$blurb_base - Grand test  [after] items in queue.");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 21*101, "$blurb_base - Grand test [after] extracted.");
     }
 
     return;
