@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More tests => 28;
 
 use Test::Differences qw(eq_or_diff);
 
@@ -140,6 +140,14 @@ sub run_queue_tests
             [100, 2209],
             "Non consecutive depths.",
         );
+
+        # TEST:$c++
+        is ($queue->get_num_inserted(), 2, "$blurb_base - Nonconsecutive inserted");
+        # TEST:$c++
+        is ($queue->get_num_items_in_queue(), 0, "$blurb_base - Nonconsecutive items in queue.");
+
+        # TEST:$c++
+        is ($queue->get_num_extracted(), 2, "$blurb_base - Nonconsecutive extracted.");
     }
 
     return;
