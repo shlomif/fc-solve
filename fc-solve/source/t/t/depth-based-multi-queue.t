@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 25;
 
 use Test::Differences qw(eq_or_diff);
 
@@ -110,6 +110,36 @@ sub run_queue_tests
 
         # TEST:$c++
         is ($queue->get_num_extracted(), 3, "$blurb_base - 3 items extracted.");
+    }
+
+    {
+        my $queue = $class_name->new(
+            {
+                num_items_per_page => 10,
+                offload_dir_path => $queue_offload_dir_path,
+                first_depth => 50,
+                first_item => 1,
+            }
+        );
+
+        # TEST:$c++;
+        ok ($queue, "$blurb_base - Queue was initialized.");
+
+        $queue->insert(100, 2209);
+
+        # TEST:$c++
+        eq_or_diff(
+            [$queue->extract()],
+            [50, 1],
+            "First item extracted.",
+        );
+
+        # TEST:$c++
+        eq_or_diff(
+            [$queue->extract()],
+            [100, 2209],
+            "Non consecutive depths.",
+        );
     }
 
     return;
