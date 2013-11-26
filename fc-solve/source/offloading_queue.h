@@ -315,12 +315,11 @@ typedef struct
     long num_inserted, num_items_in_queue, num_extracted;
     long id;
     /*
-     * page_to_write_to, page_for_backup and page_to_read_from always
-     * point to the two "pages" below, but they can be swapped and
-     * page_for_backup may be NULL.
+     * page_idx_to_write_to, page_idx_for_backup and page_idx_to_read_from
+     * always point to the two "pages" below, but they can be swapped and
+     * page_idx_for_backup may be NULL.
      */
-    fcs_offloading_queue_page_t * page_to_write_to, * page_for_backup,
-                                * page_to_read_from;
+    int page_idx_to_write_to, page_idx_for_backup, page_idx_to_read_from;
     fcs_offloading_queue_page_t pages[2];
 } fcs_offloading_queue_t;
 
@@ -339,8 +338,8 @@ static GCC_INLINE void fcs_offloading_queue__init(
     fcs_offloading_queue_page__init(&(queue->pages[0]), num_items_per_page, 0, queue->id);
     fcs_offloading_queue_page__init(&(queue->pages[1]), num_items_per_page, 0, queue->id);
 
-    queue->page_to_read_from = queue->page_to_write_to = &(queue->pages[0]);
-    queue->page_for_backup = &(queue->pages[1]);
+    queue->page_idx_to_read_from = queue->page_idx_to_write_to = 0;
+    queue->page_idx_for_backup = 1;
 }
 
 static GCC_INLINE void fcs_offloading_queue__destroy(
@@ -356,29 +355,29 @@ static GCC_INLINE void fcs_offloading_queue__insert(
     const fcs_offloading_queue_item_t * item
 )
 {
-    if (! fcs_offloading_queue_page__can_insert(queue->page_to_write_to))
+    if (! fcs_offloading_queue_page__can_insert(queue->pages + queue->page_idx_to_write_to))
     {
-        if (queue->page_to_read_from->page_index != queue->page_to_write_to->page_index)
+        if (queue->pages[queue->page_idx_to_read_from].page_index != queue->pages[queue->page_idx_to_write_to].page_index)
         {
             fcs_offloading_queue_page__offload(
-                queue->page_to_write_to,
+                queue->pages + queue->page_idx_to_write_to,
                 queue->offload_dir_path
             );
-            fcs_offloading_queue_page__bump(queue->page_to_write_to);
+            fcs_offloading_queue_page__bump(queue->pages + queue->page_idx_to_write_to);
         }
         else
         {
-            queue->page_to_write_to = queue->page_for_backup;
+            queue->page_idx_to_write_to = queue->page_idx_for_backup;
             fcs_offloading_queue_page__start_after(
-                queue->page_to_write_to,
-                queue->page_to_read_from
+                queue->pages + queue->page_idx_to_write_to,
+                queue->pages + queue->page_idx_to_read_from
             );
-            queue->page_for_backup = NULL;
+            queue->page_idx_for_backup = -1;
         }
     }
 
     fcs_offloading_queue_page__insert(
-        queue->page_to_write_to,
+        queue->pages + queue->page_idx_to_write_to,
         item
     );
 
@@ -396,22 +395,22 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
         return FALSE;
     }
 
-    if (! fcs_offloading_queue_page__can_extract(queue->page_to_read_from))
+    if (! fcs_offloading_queue_page__can_extract(queue->pages + queue->page_idx_to_read_from))
     {
         /* Cannot really happen due to the num_items_in_queue check.
          *
-         * if (queue->_page_to_read_from->page_index ==
-         *     queue->_page_to_write_to->page_index)
+         * if (queue->_page_idx_to_read_from->page_index ==
+         *     queue->_page_idx_to_write_to->page_index)
         */
-        if (queue->page_to_read_from->page_index + 1 == queue->page_to_write_to->page_index)
+        if (queue->pages[queue->page_idx_to_read_from].page_index + 1 == queue->pages[queue->page_idx_to_write_to].page_index)
         {
-            queue->page_for_backup = queue->page_to_read_from;
-            queue->page_to_read_from = queue->page_to_write_to;
+            queue->page_idx_for_backup = queue->page_idx_to_read_from;
+            queue->page_idx_to_read_from = queue->page_idx_to_write_to;
         }
         else
         {
             fcs_offloading_queue_page__read_next_from_disk(
-                queue->page_to_read_from,
+                queue->pages + queue->page_idx_to_read_from,
                 queue->offload_dir_path
             );
         }
@@ -421,7 +420,7 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
     queue->num_extracted++;
 
     fcs_offloading_queue_page__extract(
-        queue->page_to_read_from,
+        queue->pages + queue->page_idx_to_read_from,
         return_item
     );
 

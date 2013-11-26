@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2156;
+use Test::More tests => 4312;
 
 use Test::Differences qw(eq_or_diff);
 
@@ -12,8 +12,9 @@ use File::Spec;
 use File::Path qw(mkpath);
 
 use lib './t/lib';
+
 use FC_Solve::DepthMultiQueuePrototype;
-# use Games::Solitaire::FC_Solve::QueueInC;
+use FC_Solve::DepthMultiQueueInC;
 
 my $queue_offload_dir_path = File::Spec->catdir(
     File::Spec->curdir(), "depth-multi-queue-offload-dir"
@@ -225,5 +226,5 @@ sub run_queue_tests
 
 # TEST*$run_queue_tests
 run_queue_tests('Perl queue', 'FC_Solve::DepthMultiQueuePrototype');
-#====TEST*$run_queue_tests
-# run_queue_tests('C queue', 'Games::Solitaire::FC_Solve::QueueInC');
+# TEST*$run_queue_tests
+run_queue_tests('C queue', 'FC_Solve::DepthMultiQueueInC');
