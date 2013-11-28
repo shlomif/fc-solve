@@ -39,6 +39,8 @@
 #include <assert.h>
 #include "count.h"
 
+#include "depth_multi_queue.h"
+
 #ifdef FCS_DEBONDT_DELTA_STATES
 
 static GCC_INLINE int compare_enc_states(
@@ -83,7 +85,7 @@ typedef struct
 #endif
     fcs_lock_t queue_lock;
     fcs_meta_compact_allocator_t queue_meta_alloc;
-    fcs_offloading_queue_t queue;
+    fcs_depth_multi_queue_t depth_queue;
 } fcs_dbm_collection_by_depth_t;
 
 typedef struct FccEntryPointList FccEntryPointList;
@@ -185,7 +187,6 @@ static GCC_INLINE void instance_init(
     FILE * out_fh
 )
 {
-    int depth;
     fcs_dbm_collection_by_depth_t * coll;
 
 
@@ -243,18 +244,8 @@ static GCC_INLINE void instance_init(
     FCS_INIT_LOCK(instance->fcc_entry_points_lock);
     FCS_INIT_LOCK(instance->fcc_exit_points_output_lock);
     {
-        depth = 0;
         coll = &(instance->coll);
         FCS_INIT_LOCK(coll->queue_lock);
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-#define NUM_ITEMS_PER_PAGE (128 * 1024)
-        fcs_offloading_queue__init(&(coll->queue), NUM_ITEMS_PER_PAGE, offload_dir_path, depth);
-#else
-        fc_solve_meta_compact_allocator_init(
-            &(coll->queue_meta_alloc)
-        );
-        fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
-#endif
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
@@ -282,17 +273,21 @@ static GCC_INLINE void instance_recycle(
     fcs_dbm_solver_instance_t * instance
     )
 {
-     int depth;
-
      {
          fcs_dbm_collection_by_depth_t * coll = &(instance->coll);
 
-         fcs_offloading_queue__destroy(&(coll->queue));
+         fcs_depth_multi_queue__destroy(&(coll->depth_queue));
+/*  DONE at the loop level. */
+#if 0
+
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
          fcs_offloading_queue__init(&(coll->queue), NUM_ITEMS_PER_PAGE, instance->offload_dir_path, depth);
 #else
          fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
 #endif
+
+#endif
+
      }
 
     instance->should_terminate = DONT_TERMINATE;
@@ -312,7 +307,7 @@ static GCC_INLINE void instance_destroy(
     fc_solve_meta_compact_allocator_finish(&(instance->fcc_meta_alloc));
     {
         coll = &(instance->coll);
-        fcs_offloading_queue__destroy(&(coll->queue));
+        fcs_depth_multi_queue__destroy(&(coll->depth_queue));
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
         fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
 #endif
@@ -425,6 +420,7 @@ struct fcs_dbm_solver_thread_struct
     fcs_dbm_solver_instance_t * instance;
     fc_solve_delta_stater_t * delta_stater;
     fcs_meta_compact_allocator_t thread_meta_alloc;
+    int state_depth;
 };
 
 static GCC_INLINE void instance_check_key(
@@ -502,8 +498,9 @@ static GCC_INLINE void instance_check_key(
                     /* Now insert it into the queue. */
 
                     FCS_LOCK(coll->queue_lock);
-                    fcs_offloading_queue__insert(
-                        &(coll->queue),
+                    fcs_depth_multi_queue__insert(
+                        &(coll->depth_queue),
+                        thread->state_depth+1,
                         (const fcs_offloading_queue_item_t *)(&token)
                     );
                     FCS_UNLOCK(coll->queue_lock);
@@ -719,7 +716,7 @@ static void * instance_run_solver_thread(void * void_arg)
 
         if ((should_terminate = instance->should_terminate) == DONT_TERMINATE)
         {
-            if (fcs_offloading_queue__extract(&(coll->queue), (fcs_offloading_queue_item_t *)(&token)))
+            if (fcs_depth_multi_queue__extract(&(coll->depth_queue), &(thread->state_depth), (fcs_offloading_queue_item_t *)(&token)))
             {
                 physical_item.key = token->key;
                 item = &physical_item;
@@ -1608,7 +1605,8 @@ int main(int argc, char * argv[])
         {
             char state_base64[100];
             FccEntryPointNode key;
-            sscanf(fingerprint_line, "%99s", state_base64);
+            int state_depth;
+            sscanf( fingerprint_line, "%99s %d", state_base64, &state_depth );
             size_t unused_size;
             base64_decode(state_base64, strlen(state_base64),
                 ((unsigned char *)&(key.kv.key)), &(unused_size));
@@ -1660,8 +1658,21 @@ int main(int argc, char * argv[])
                 token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key), NULL, TRUE);
 #endif
 
-                fcs_offloading_queue__insert(&(instance.coll.queue),
-                    (const fcs_offloading_queue_item_t *)(&token));
+#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
+#define NUM_ITEMS_PER_PAGE (128 * 1024)
+                fcs_depth_multi_queue__init(
+                    &(instance.coll.depth_queue),
+                    NUM_ITEMS_PER_PAGE,
+                    instance.offload_dir_path,
+                    state_depth,
+                    (const fcs_offloading_queue_item_t *)(&token)
+                );
+#else
+                fc_solve_meta_compact_allocator_init(
+                    &(coll->queue_meta_alloc)
+                );
+                fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
+#endif
                 instance.num_states_in_collection++;
                 instance.count_of_items_in_queue++;
                 count_of_instance_runs++;

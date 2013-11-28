@@ -146,11 +146,16 @@ static GCC_INLINE void fcs_depth_multi_queue__destroy(
     )
 {
     int limit = queue->max_depth - queue->min_depth;
+    if (queue->queues_by_depth == NULL)
+    {
+        return;
+    }
     for (int i=0 ; i <= limit ; i++)
     {
         fcs_offloading_queue__destroy(&(queue->queues_by_depth[i]));
     }
     free ( queue->queues_by_depth );
+    queue->queues_by_depth = NULL;
 }
 
 
