@@ -278,34 +278,6 @@ static GCC_INLINE void instance_init(
     instance->start_key_ptr = NULL;
 }
 
-static GCC_INLINE void instance_recycle(
-    fcs_dbm_solver_instance_t * instance
-    )
-{
-     {
-         fcs_dbm_collection_by_depth_t * coll = &(instance->coll);
-
-         fcs_depth_multi_queue__destroy(&(coll->depth_queue));
-/*  DONE at the loop level. */
-#if 0
-
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-         fcs_offloading_queue__init(&(coll->queue), NUM_ITEMS_PER_PAGE, instance->offload_dir_path, depth);
-#else
-         fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
-#endif
-
-#endif
-
-     }
-
-    instance->should_terminate = DONT_TERMINATE;
-    instance->queue_num_extracted_and_processed = 0;
-    instance->num_states_in_collection = 0;
-    instance->count_num_processed = 0;
-    instance->count_of_items_in_queue = 0;
-}
-
 static GCC_INLINE void instance_destroy(
     fcs_dbm_solver_instance_t * instance
     )
@@ -1704,6 +1676,8 @@ int main(int argc, char * argv[])
                         &(token)
                     );
 #endif
+
+                    was_init = TRUE;
                 }
             }
             instance.num_states_in_collection++;
@@ -1820,6 +1794,7 @@ int main(int argc, char * argv[])
         handle_and_destroy_instance_solution(&instance, out_fh, delta);
         free (instance.moves_to_state);
         free (instance.moves_base64_encoding_buffer);
+        free (instance.fingerprint_line);
     }
 
 
