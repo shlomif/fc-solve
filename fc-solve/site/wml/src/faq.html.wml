@@ -293,3 +293,38 @@ based on atomic moves to rectify that. See <kbd>fc-solve --help-configs</kbd>
 and the <a href="$(ROOT)/docs/distro/USAGE.html">USAGE.html</a> file for
 more information.
 </p>
+
+<h3 id="is_fc_solve_completed">Have you completed/finished the work on
+Freecell Solver? Is it done yet?</h3>
+
+<p>
+I am getting asked that a lot and find it a strange notion. It is similar
+to asking if the <a href="http://www.kde.org/">KDE</a> developers are done
+working on KDE, or if the developers of the
+<a href="https://en.wikipedia.org/wiki/Linux_kernel">Linux kernel</a>
+have completed the Linux kernel, or if the
+<a href="https://www.mozilla.org/en-US/firefox/new/">Firefox browser</a>
+is done. Freecell Solver is a fairly large and complex project and there is
+still a lot of room for improvement, and while I sometimes take a break
+from working on it, it does not mean I plan to have permanently stopped.
+</p>
+
+<p>
+Sometimes, I complete one task and call it a day, but it does not mean that
+I do not plan to ever stop working on it. Perhaps when I tell people that
+“I’m working on Freecell Solver” they assume that this work is temporary,
+but it has been developed since the year 2000, while taking some breaks.
+</p>
+
+<p>
+All that put aside, one should not conclude that Freecell Solver is an immature
+project or is unusable, just like KDE, the Linux kernel and Firefox are not
+immature or unusable. Freecell Solver is not perfect (and will probably
+never be) but it is still usable in its current state.
+</p>
+
+<p>
+Also see <a href="http://shlomif-tech.livejournal.com/2011/03/12/">an
+earlier blog post</a> about “Finished Projects, Maintained Projects and Those
+that are Up For Adoption”.
+</p>
