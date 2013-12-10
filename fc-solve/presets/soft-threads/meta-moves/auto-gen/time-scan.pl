@@ -3,38 +3,53 @@
 use strict;
 use warnings;
 
-use MyInput;
+use List::MoreUtils qw(firstidx);
+use AI::Pathfinding::OptimizeMultiple::DataInputObj;
 
 my $opt = (($ARGV[0] eq "--gen-bat") ? shift : "");
 
-my $scan = join(" ", @ARGV);
+my @scan_args = @ARGV;
+my $scan = join(" ", @scan_args);
 
 my $start_board = 1;
 my $num_boards = 32_000;
 
-my $prev_scans = MyInput->new(
+sub get_scan_index_by_its_cmd_line
+{
+    my ($prev_scans, $cmd_line) = @_;
+
+    my $sel_scans = $prev_scans->selected_scans;
+
+    return
+        (firstidx { $_->cmd_line() eq $cmd_line } @$sel_scans);
+}
+
+my $prev_scans = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
     {
         start_board => $start_board,
         num_boards => $num_boards,
     }
 );
 
-if (my $index = $prev_scans->get_scan_index_by_its_cmd_line($scan))
+
+if ((my $index = get_scan_index_by_its_cmd_line($prev_scans, $scan)) >= 0)
 {
     die "The scan already exists with the ID "
         . $prev_scans->scan_id_by_index($index)
         . "\n";
 }
 
-my $id = MyInput::get_next_id();
-open O, ">>", "scans.txt";
-print O "$id\t$scan\n";
-close(O);
+my $id = $prev_scans->get_next_id();
+{
+    open my $out_fh, ">>", "scans.txt";
+    print {$out_fh} "$id\t$scan\n";
+    close ($out_fh);
+}
 
 my %params =
 (
     id => $id,
-    argv => \@ARGV,
+    argv => [@scan_args],
 );
 
 if (exists($ENV{FC_NUM}))
