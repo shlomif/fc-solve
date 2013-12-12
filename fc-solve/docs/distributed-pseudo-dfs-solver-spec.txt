@@ -1,0 +1,16 @@
+Distributed Pseudo-DFS Solver SPEC:
+===================================
+
+Description:
+------------
+
+The pseduo-DFS solver will traverse a board using a stack of states and their
+derived states (while making sure derived states do not repeat after first
+encountered.). The primary item of communication will be a
+Coordinates-Sequence (CoordSeq) that is:
+
+struct CoordSeq
+{
+    int64_t depth;
+    int32_t coords[0 .. depth-1];
+}
