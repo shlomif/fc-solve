@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
+use FC_Solve::SplitCmdLine;
 use Test::More tests => 20;
-use Carp;
-use IPC::Open2;
 
 sub check_split
 {
@@ -15,46 +14,12 @@ sub check_split
     my $want_argv = shift;
     my $msg = shift;
 
-    my $split_exe = $ENV{'FCS_PATH'}."/t/out-split-cmd-line.exe";
-
-    my ($child_out, $child_in);
-
-    my $pid = open2($child_out , $child_in, $split_exe);
-
-    print {$child_in} $input_string;
-    close($child_in);
-
-    my @have;
-    while (my $line = <$child_out>)
-    {
-        chomp($line);
-        if ($line !~ m{\A<<(.*)\z})
-        {
-            die "Invalid output from program.";
-        }
-        my $terminator = $1;
-
-        my $item = "";
-        my $found_terminator = 0;
-        while ($line = <$child_out>)
-        {
-            if ($line eq "$terminator\n")
-            {
-                $found_terminator = 1;
-                last;
-            }
-            $item .= $line;
-        }
-        if (!$found_terminator)
-        {
-            die "Could not find terminator '$terminator' in output.";
-        }
-        chomp($item);
-        push @have, $item;
-    }
+    my $have_argv = FC_Solve::SplitCmdLine->split_cmd_line_string(
+        $input_string
+    );
 
     is_deeply(
-        \@have,
+        $have_argv,
         $want_argv,
         $msg,
     );
