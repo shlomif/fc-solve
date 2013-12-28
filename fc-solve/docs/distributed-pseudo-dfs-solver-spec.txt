@@ -14,3 +14,15 @@ struct CoordSeq
     int64_t depth;
     int32_t coords[0 .. depth-1];
 }
+
+This is generated when traversing the board using a predefined preset (say
+"-to 01ABCDE -sp r:tf") using pseudo-DFS with the assumption that the states
+collection/lookup only holds the states that were discovered earlier in the
+stack. (There's also a local (per-client) cache of previous dead-end states,
+but they still do not prevent these states from appearing in the DFS-stack,
+just immediately marked as a dead end.).
+
+The Server:
+-----------
+
+The server will be
