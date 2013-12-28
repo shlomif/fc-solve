@@ -55,6 +55,8 @@ This is a list of messages from server->client or from client->server. Every
 message has a message ID (which can be implemented as a string or as a
 fixed-size integer) and possibly some parameters.
 
+---
+
 CLIENT_INIT [client->server]
 No parameters.
 
@@ -62,13 +64,78 @@ A client connects to the server and requests the initialisation.
 
 ---
 
-GIVE_ID_TO_CLIENT
+GIVE_ID_TO_CLIENT [server->client]
 Parameters: id [64-bit int].
 
 The server gives an ID to the client.
 
 ---
 
+GIVE_SCAN_TO_CLIENT [server->client]
+Parameters: 1. Scan [string_len+string (NUL/'\0' Terminated)]
+            2. Board [string_len+string (NUL/'\0' Terminated)]
 
+The client MUST remember these.
 
+---
 
+I_AM [client->server]
+    1. ID.
+    2. Current CoordSeq or an empty one.
+
+The client identifies itself. This MUST be the first message that a client
+sends after he got its ID.
+
+---
+
+SOLVED [client->server]
+Parameters: 1. CoordSeq
+
+Indicating that the board was solved, and all other clients can be instructed
+to quit.
+
+---
+
+NEEDHELP [client->server]
+Parameters: [None]
+
+Indicating the client's scan took longer than $CYCLE_LEN and it could use
+some help. The server will respond with PLEASE_PROVIDE_COORD_SEQS if it has
+more than one element.
+
+---
+
+PLEASE_PROVIDE_COORD_SEQS [server->client]
+Parameters: 1. Count num to help [int64].
+
+The server asks the client to provide CoordSeqs To help with. The client will
+respond with PROVIDING_COORD_SEQS.
+
+---
+
+PROVIDING_COORD_SEQS [client->server]
+Parameters: CoordSeqs coord_seqs[0 .. ]
+            Ending with a CoordSeqs whose depth is < 0.
+
+A client provides coord seqs to help with to the server.
+
+---
+
+WANT_TO_HELP [client->server]
+
+The client asks the server to help. The server will respond with 
+
+---
+---
+
+SET_CYCLE_LEN [server->client]
+Parameters: 1. int64 for cycle len.
+
+Sets $CYCLE_LEN .
+
+---
+
+SET_DEPTH_ALLOC_DELTA [server->client]
+Parameters: 1. int32 for depth_alloc_delta.
+
+Sets $DEPTH_ALLOC_DELTA.
