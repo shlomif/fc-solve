@@ -25,4 +25,27 @@ just immediately marked as a dead end.).
 The Server:
 -----------
 
-The server will be
+There will be one single server, which will be the first process to run,
+and the clients (which will be based on libfreecell-solver.so) will all
+connect for it and ask it for more to do, and more to delegate to clients
+which are currently looking for something to help them with.
+
+After setting up, the server accepts the connection from teh first client
+to which it assigns the empty CoordSeq { depth == 0 }, then before
+$CYCLE_LEN iterations, more clients ask to help other clients and the server
+keeps their connection open. Then, the server asks the master client to
+provide coordseqs to allocate for other clients, and they are allocated.
+Occassionally, other clients will also ask for help and the server will help
+them with.
+
+Each client also reports on the currently reached CoordSeq and the server
+keeps tracks (and logs) the initial CoordSeq allocated to each client and
+its currently-reached CoordSeq.
+
+The client allocates a CoordSeq by looking at the next states that need
+to be traversed somewhere up the CoordSeq stack (a delta of
+$DEPTH_ALLOC_DELTA from CoordSeq.depth or less), allocating the last (in the
+following-chain of the current depth) non-allocated state as delegated,
+marking it as delegated and delegating it.
+
+
