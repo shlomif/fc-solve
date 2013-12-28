@@ -48,4 +48,27 @@ $DEPTH_ALLOC_DELTA from CoordSeq.depth or less), allocating the last (in the
 following-chain of the current depth) non-allocated state as delegated,
 marking it as delegated and delegating it.
 
+Messages:
+=========
+
+This is a list of messages from server->client or from client->server. Every
+message has a message ID (which can be implemented as a string or as a
+fixed-size integer) and possibly some parameters.
+
+CLIENT_INIT [client->server]
+No parameters.
+
+A client connects to the server and requests the initialisation.
+
+---
+
+GIVE_ID_TO_CLIENT
+Parameters: id [64-bit int].
+
+The server gives an ID to the client.
+
+---
+
+
+
 
