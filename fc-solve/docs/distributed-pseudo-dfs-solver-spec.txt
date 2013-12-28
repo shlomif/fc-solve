@@ -57,6 +57,13 @@ fixed-size integer) and possibly some parameters.
 
 ---
 
+END_CONN [client->server or server->client]
+No parameters.
+
+The end of the connection.
+
+---
+
 CLIENT_INIT [client->server]
 No parameters.
 
@@ -122,10 +129,18 @@ A client provides coord seqs to help with to the server.
 ---
 
 WANT_TO_HELP [client->server]
+No parameters.
 
-The client asks the server to help. The server will respond with 
+The client asks the server to help. The server will respond with
+PLEASE_WORK_ON .
 
 ---
+
+PLEASE_WORK_ON [server->client]
+Parameters: 1. CoordsSeq.
+
+Instructing a client that first said WANT_TO_HELP with what to work on.
+
 ---
 
 SET_CYCLE_LEN [server->client]
@@ -139,3 +154,12 @@ SET_DEPTH_ALLOC_DELTA [server->client]
 Parameters: 1. int32 for depth_alloc_delta.
 
 Sets $DEPTH_ALLOC_DELTA.
+
+---
+
+QUIT [server->client]
+No parameters.
+
+A server tells a client that there's nothing more to do and that it should
+quit.
+
