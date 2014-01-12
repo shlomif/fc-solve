@@ -243,6 +243,47 @@ that will yield something. There are some examples for those in the individual
 flares and soft threads under the “Presets/presets” directory.
 </p>
 
+<h3 id="which_prog_lang">Which programming language (or programming languages) is Freecell Solver written in?</h3>
+
+<p>
+The core Freecell Solver source is written in the GNU99 version of
+the C99 standard of the <a href="https://en.wikipedia.org/wiki/C_%28programming_language%29">C programming language</a>
+(<code>-std=gnu99</code>), which is supported by the
+<a href="https://en.wikipedia.org/wiki/GNU_Compiler_Collection">GCC</a> and
+<a href="https://en.wikipedia.org/wiki/Clang">clang</a> compilers
+and compatible compilers. This
+includes
+the libfreecell-solver library, most of the user-facing executables
+using it, and some other related code. Aside from that, there's quite a lot
+of support code for testing (a.k.a: “quality-assurance”), automation, building
+, results analysis, and other tasks, written in
+<a href="https://en.wikipedia.org/wiki/Perl">Perl 5</a>,
+<a href="https://en.wikipedia.org/wiki/CMake">CMake</a>,
+<a href="https://en.wikipedia.org/wiki/Python_%28programming_language%29">Python 2.x</a>,
+<a href="https://en.wikipedia.org/wiki/Bash_%28Unix_shell%29">the GNU Bash
+shell</a>,
+<a href="https://en.wikipedia.org/wiki/Ruby_%28programming_language%29">Ruby</a>,
+and possibly some other languages. The git repository also contains code and
+markup in other languages such as JavaScript.
+</p>
+
+<p>
+Here are the estimated lines-of-codes-per-language statistics of running
+<a href="http://www.dwheeler.com/sloccount/">SLOCCount by David Wheeler</a> on
+the “fc-solve/source” sub-directory of the git repository (as of
+13 January 2014)
+</p>
+
+<pre>
+Totals grouped by language (dominant language first):
+ansic:        34392 (69.41%)
+perl:         12118 (24.46%)
+sh:            1254 (2.53%)
+python:        1137 (2.29%)
+ruby:           347 (0.70%)
+cpp:            304 (0.61%)
+</pre>
+
 <h3 id="why_in_c">Why is Freecell Solver written in C? Why not in another language?</h3>
 
 <p>
