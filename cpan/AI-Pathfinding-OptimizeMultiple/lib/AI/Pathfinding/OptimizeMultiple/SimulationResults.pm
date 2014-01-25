@@ -5,7 +5,7 @@ use warnings;
 
 use MooX qw/late/;
 
-our $VERSION = '0.0.5';
+our $VERSION = '0.0.6';
 
 has status => (isa => 'Str', is => 'ro', required => 1,);
 has total_iters => (isa => 'Int', is => 'ro', required => 1,);

@@ -5,7 +5,7 @@ use warnings;
 
 use MooX qw/late/;
 
-our $VERSION = '0.0.5';
+our $VERSION = '0.0.6';
 
 has iters => (isa => 'Int', is => 'rw', required => 1);
 has scan_idx => (isa => 'Int', is => 'ro', required => 1);
