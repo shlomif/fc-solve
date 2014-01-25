@@ -1,6 +1,8 @@
 v0.0.6      2014-01-25
     - Add "use strict;" and "use warnings;" to MooX::late modules.
         - Kwalitee
+    - Remove the ^Rejects and ^scripts sub-directories.
+        - They were confusing CPANTS and reduced our Kwalitee.
 
 v0.0.5      2013-01-22
     - skipping compile test for scripts/bump-version-number.pl .
