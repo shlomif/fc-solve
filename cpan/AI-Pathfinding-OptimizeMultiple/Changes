@@ -1,3 +1,7 @@
+v0.0.6      2014-01-25
+    - Add "use strict;" and "use warnings;" to MooX::late modules.
+        - Kwalitee
+
 v0.0.5      2013-01-22
     - skipping compile test for scripts/bump-version-number.pl .
         - it is for use by the module's maintainer and has

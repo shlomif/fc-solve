@@ -1,5 +1,8 @@
 package AI::Pathfinding::OptimizeMultiple::ScanRun;
 
+use strict;
+use warnings;
+
 use MooX qw/late/;
 
 our $VERSION = '0.0.5';
