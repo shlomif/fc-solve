@@ -59,7 +59,7 @@ DEST_QSTRING_JS = dest/js/jquery.querystring.js
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
 
-dummy : $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_QSTRING_JS) $(CSS_TARGETS) htaccesses_target
+dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_QSTRING_JS) $(CSS_TARGETS) htaccesses_target
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
@@ -70,7 +70,7 @@ SASS_HEADERS = lib/sass/common-style.sass
 $(CSS_TARGETS): $(D)/%.css: lib/sass/%.sass $(SASS_HEADERS)
 	$(SASS_CMD) $< $@
 
-$(SUBDIRS) :: % :
+$(D) $(SUBDIRS) :: % :
 	@if [ ! -e $@ ] ; then \
 		mkdir $@ ; \
 	fi
