@@ -3,6 +3,8 @@ package AI::Pathfinding::OptimizeMultiple::PostProcessor;
 use strict;
 use warnings;
 
+use 5.012;
+
 use MooX qw/late/;
 
 our $VERSION = '0.0.6';

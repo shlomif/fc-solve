@@ -3,6 +3,8 @@ package AI::Pathfinding::OptimizeMultiple::DataInputObj;
 use strict;
 use warnings;
 
+use 5.012;
+
 use MooX qw/late/;
 
 use File::Path qw(mkpath);

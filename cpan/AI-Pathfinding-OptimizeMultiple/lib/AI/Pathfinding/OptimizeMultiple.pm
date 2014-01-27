@@ -3,6 +3,8 @@ package AI::Pathfinding::OptimizeMultiple;
 use strict;
 use warnings;
 
+use 5.012;
+
 use IO::Handle;
 
 use AI::Pathfinding::OptimizeMultiple::IterState;

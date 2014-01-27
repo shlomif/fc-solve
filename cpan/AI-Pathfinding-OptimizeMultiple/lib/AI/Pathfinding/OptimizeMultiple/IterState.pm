@@ -3,6 +3,8 @@ package AI::Pathfinding::OptimizeMultiple::IterState;
 use strict;
 use warnings;
 
+use 5.012;
+
 use MooX qw/late/;
 
 use PDL ();

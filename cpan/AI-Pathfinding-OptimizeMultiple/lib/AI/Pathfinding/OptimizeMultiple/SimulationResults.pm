@@ -3,6 +3,8 @@ package AI::Pathfinding::OptimizeMultiple::SimulationResults;
 use strict;
 use warnings;
 
+use 5.012;
+
 use MooX qw/late/;
 
 our $VERSION = '0.0.6';
