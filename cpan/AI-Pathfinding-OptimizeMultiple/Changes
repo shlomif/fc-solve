@@ -1,6 +1,9 @@
 v0.0.7      2014-01-26
     - Minimal version of perl - 5.012 in the prereqs (could be lower, possibly).
         - For Kwalitee.
+    - Remove the Makefile.PL so we will have "metayml has provides".
+        - Now it's Build.PL-only.
+    - Add provides to the META.yml.
 
 v0.0.6      2014-01-25
     - Add "use strict;" and "use warnings;" to MooX::late modules.
