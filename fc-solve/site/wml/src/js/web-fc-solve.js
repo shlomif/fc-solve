@@ -132,9 +132,22 @@ Class('FC_Solve', {
 
             return solve_err_code;
         },
-        do_solve: function (board_string) {
+        // Ascertain that the string contains a trailing newline.
+        // Without the trailing newline, the parser is sometimes confused.
+        _process_board_string: function (proto_board_string) {
             var that = this;
 
+            if (proto_board_string.match(/\n$/)) {
+                return proto_board_string + "";
+            }
+            else {
+                return proto_board_string + "\n";
+            }
+        },
+        do_solve: function (proto_board_string) {
+            var that = this;
+
+            var board_string = that._process_board_string(proto_board_string);
             var cmd_line_preset = that.cmd_line_preset;
 
             that.set_status("running", "Running");
