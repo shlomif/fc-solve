@@ -19,7 +19,9 @@ fc-solve/site/wml/dest
 fc-solve/site/wml/include.mak
 fc-solve/site/wml/lib/fc-solve-for-javascript/*.bc
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.html
+fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.js
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.js
+fc-solve/site/wml/lib/fc-solve-for-javascript/home
 fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
 fc-solve/site/wml/lib/fc-solve-for-javascript/my-modified-fc-solve-test.html
 fc-solve/site/wml/rules.mak
