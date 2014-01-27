@@ -805,7 +805,20 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
         } \
     }
 
-    for(s=0;s<stacks_num;s++)
+#define handle_stack_eos() \
+    if ((*str) == '\0') \
+    { \
+        if (s == stacks_num - 1) \
+        { \
+            return FCS_USER_STATE_TO_C__SUCCESS; \
+        } \
+        else \
+        { \
+            return FCS_USER_STATE_TO_C__PREMATURE_END_OF_INPUT; \
+        } \
+    }
+
+    for (s = 0 ; s < stacks_num ; s++)
     {
         /* Move to the next stack */
         if (!first_line)
@@ -831,11 +844,11 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
 
         if (*prefix)
         {
-            for(c=0;c<freecells_num;c++)
+            for (c = 0 ; c < freecells_num ; c++)
             {
                 fcs_empty_freecell(ret, c);
             }
-            for(c=0;c<freecells_num;c++)
+            for (c = 0 ; c < freecells_num ; c++)
             {
                 if (c!=0)
                 {
@@ -961,7 +974,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
                     ((*str) != '\r')
                 )
                 {
-                    handle_eos();
+                    handle_stack_eos();
                     str++;
                 }
                 if ((*str == '\n') || (*str == '\r'))
@@ -974,7 +987,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
             {
                 str++;
             }
-            handle_eos();
+            handle_stack_eos();
             if ((*str == '\n') || (*str == '\r'))
             {
                 break;
@@ -990,6 +1003,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
 
 #undef ret
 #undef handle_eos
+#undef handle_stack_eos
 
 extern char * fc_solve_state_as_string(
     fcs_state_t * key,

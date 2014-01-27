@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 25;
 use File::Spec;
 use lib './t/lib';
 use File::Basename qw( dirname );
@@ -209,6 +209,14 @@ verify_solution_test({
     },
     "Qualified seed test with -fif and --flares-choice fcpro",
 );
+
+# TEST
+verify_solution_test({id => "freecell24", deal => 24,
+        board => File::Spec->catfile(
+            $data_dir, 'sample-boards',
+            '24-with-no-trailing-newline.board',
+        )
+    }, "Handle initial layouts without a trailing newline.");
 
 # Store the changes at the end so they won't get lost.
 $verifier->end();

@@ -4,6 +4,13 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.24.0: (Unknown)
+-------------------------
+
+1. Handle board/layout inputs without a trailing newline character on the last
+line properly (thanks to someone who reported it via E-mail with respect to
+the JavaScript-based solver).
+
 Version 3.22.0: (05-Oct-2013)
 -----------------------------
 
