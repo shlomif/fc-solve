@@ -48,20 +48,34 @@ CFLAGS = $(OPT_FLAGS) -I . -m32 -std=gnu99
 # EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 
-PRESET_FILES_TO_EMBED := $(shell find ~/apps/fcs-for-pysol/share/freecell-solver/ -type f | (LC_ALL=C sort))
+PRESET_DIR = $(HOME)/apps/fcs-for-pysol/share/freecell-solver/
+PRESET_FILES_TO_EMBED := $(shell find $(PRESET_DIR) -type f | (LC_ALL=C sort))
 
-EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(PRESET_FILES_TO_EMBED))
+LOCAL_PRESET_DIR = $(patsubst /%,%,$(PRESET_DIR))
+
+PRESET_FILES_LOCAL := $(patsubst /%,%,$(PRESET_FILES_TO_EMBED))
+EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
 
 $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 	emcc $(EMCC_CFLAGS) $< -c -o $@
 
-$(RESULT_HTML): $(LLVM_BITCODE_FILES)
+.PHONY: llvm_and_files files_foo
+
+files_foo:
+	mkdir -p $(shell dirname $(LOCAL_PRESET_DIR))
+	cp -a $(PRESET_DIR) $(LOCAL_PRESET_DIR)
+
+$(PRESET_FILES_LOCAL): files_foo
+
+llvm_and_files: files_foo $(LLVM_BITCODE_FILES) $(PRESET_FILES_LOCAL)
+
+$(RESULT_HTML): llvm_and_files
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(EMCC_POST_FLAGS)
 
-$(RESULT_NODE_JS_EXE): $(LLVM_BITCODE_FILES)
+$(RESULT_NODE_JS_EXE): llvm_and_files
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(EMCC_POST_FLAGS)
 
-$(RESULT_JS_LIB): $(LLVM_BITCODE_LIB_FILES)
+$(RESULT_JS_LIB): llvm_and_files
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(EMCC_POST_FLAGS)
 
 $(TEST_HTML): $(RESULT_HTML) $(PROCESS_PL)
