@@ -121,3 +121,7 @@ https://github.com/kripken/emscripten[emscripten], which allows to convert
 LLVM bitcode (and ergo code in C, C++ and other languages) into JavaScript.
 Inspired some changes to make Freecell Solver’s build-process more
 user-friendly and idiot-proof.
+
+* *Olaf van der Kruk* - reported an issue with using the online
+JavaScript-based solver (which is mostly translated from the C source using
+emscripten), which uncovered several bugs.
