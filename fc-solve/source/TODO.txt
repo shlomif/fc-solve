@@ -7,12 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* Write the email to fc-solve-discuss about the bug with the lack
-of trailing newlines in layout input in the last specified column.
-
-* Investigate the fact that we get different solutions in the
-emscripten/JS translation for the boards with the +-l as+ preset.
-
 Non-pressing
 ------------
 

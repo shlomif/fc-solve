@@ -448,3 +448,13 @@ that they should type fc-solve --help in that window.
 demonstration. So people will understand what "AS", "AH", "QH", etc. mean
 ** To the README.
 
+* Write the email to fc-solve-discuss about the bug with the lack
+of trailing newlines in layout input in the last specified column.
+
+* Investigate the fact that we get different solutions in the
+emscripten/JS translation for the boards with the +-l as+ preset.
+** False alarm - after turning off the Unicode suits, getting rid of
+the “1-based” offsets in the moves, and eliminating trailing space,
+the results for +-l as+ for both the initial MS Freecell #24 board, and
+the board given by Olaf were identical.
+
