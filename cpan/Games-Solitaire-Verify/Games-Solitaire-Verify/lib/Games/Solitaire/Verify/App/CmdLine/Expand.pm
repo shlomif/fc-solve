@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-our $VERSION = '0.1202';
+our $VERSION = '0.1203';
 
 use Data::Dumper qw(Dumper);
 
