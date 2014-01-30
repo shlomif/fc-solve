@@ -3,6 +3,8 @@ package Games::Solitaire::Verify;
 use warnings;
 use strict;
 
+use 5.008;
+
 =head1 NAME
 
 Games::Solitaire::Verify - verify solutions for solitaire games.

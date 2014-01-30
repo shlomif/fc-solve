@@ -26,6 +26,7 @@ my $builder = Test::Run::Builder->new(
         'List::Util' => 0,
         'Getopt::Long' => '2.36',
         'parent' => 0,
+        'perl' => '5.008',
         'strict' => 0,
         'warnings' => 0,
     },
