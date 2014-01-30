@@ -1,5 +1,8 @@
 Revision history for Games-Solitaire-Verify
 
+0.1203  2014-01-30
+        - Add LICENSE (as well as COPYING) for CPANTS Kwalitee.
+
 0.1202  2013-10-19
         - Update the contact information (it contains an old E-mail.).
 
