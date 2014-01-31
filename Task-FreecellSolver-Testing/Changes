@@ -1,5 +1,7 @@
 Revision history for Task-FreecellSolver-Testing
 
+        - Add configure_requires to Build.PL.
+
 0.0.3   Thu 27 Sep 14:40:08 IST 2012
         - Add Inline, Inline::C and
         Test::Run::CmdLine::Plugin::TrimDisplayedFilenames .

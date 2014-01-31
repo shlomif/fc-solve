@@ -7,6 +7,9 @@ my $builder = Module::Build->new(
     license             => 'mit',
     dist_author         => q{Shlomi Fish <shlomif@shlomifish.org>},
     dist_version_from   => 'lib/Task/FreecellSolver/Testing.pm',
+    configure_requires => {
+        'Module::Build' => '0.36',
+    },
     requires => {
         "base" => 0,
         "Carp" => 0,
