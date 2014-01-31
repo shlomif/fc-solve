@@ -1,6 +1,8 @@
 Revision history for Task-FreecellSolver-Testing
 
         - Add configure_requires to Build.PL.
+        - Add a LICENSE file (CPANTS).
+        - Minimal version of perl (CPANTS).
 
 0.0.3   Thu 27 Sep 14:40:08 IST 2012
         - Add Inline, Inline::C and

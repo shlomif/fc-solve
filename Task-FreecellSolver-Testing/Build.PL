@@ -34,6 +34,7 @@ my $builder = Module::Build->new(
         "Test::Differences" => 0,
         "Test::More" => 0,
         "Test::Run::CmdLine::Plugin::TrimDisplayedFilenames" => 0,
+        "perl" => '5.008',
         "warnings" => 0,
         "YAML::XS" => 0,
     },
