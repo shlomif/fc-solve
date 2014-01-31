@@ -1,17 +1,18 @@
 Revision history for Task-FreecellSolver-Testing
 
+0.0.4   2014-01-31
         - Add configure_requires to Build.PL.
         - Add a LICENSE file (CPANTS).
         - Minimal version of perl (CPANTS).
 
-0.0.3   Thu 27 Sep 14:40:08 IST 2012
+0.0.3   2012-09-27
         - Add Inline, Inline::C and
         Test::Run::CmdLine::Plugin::TrimDisplayedFilenames .
 
-0.0.2   Thu Jun 30 16:52:19 IDT 2011
+0.0.2   2011-06-30
         - Add Env::Path , List::MoreUtils, Test::More, Storable, Digest::SHA
         and some core modules.
 
-0.0.1   Mon Jul 27 15:27:06 IDT 2009
+0.0.1   2009-07-27
         First version, released on an unsuspecting world.
         Corresponds to Freecell Solver 2.34.0.
