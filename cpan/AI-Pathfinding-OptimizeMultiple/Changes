@@ -1,3 +1,7 @@
+v0.0.8      2014-02-02
+    - Made sure the =encoding directive is on top of the file in
+    bin/optimize-game-ai-multi-tasking .
+
 v0.0.7      2014-01-26
     - Minimal version of perl - 5.012 in the prereqs (could be lower, possibly).
         - For Kwalitee.
