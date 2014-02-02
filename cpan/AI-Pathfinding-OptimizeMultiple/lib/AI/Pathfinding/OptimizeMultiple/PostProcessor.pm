@@ -7,7 +7,7 @@ use 5.012;
 
 use MooX qw/late/;
 
-our $VERSION = '0.0.7';
+our $VERSION = '0.0.8';
 
 has _should_do_rle => (isa => 'Bool', is => 'ro', init_arg => 'do_rle', required => 1);
 has _offset_quotas => (isa => 'Bool', is => 'ro', init_arg => 'offset_quotas', required => 1);
