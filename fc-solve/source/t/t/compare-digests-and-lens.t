@@ -211,12 +211,16 @@ verify_solution_test({
 );
 
 # TEST
-verify_solution_test({id => "freecell24", deal => 24,
+verify_solution_test(
+    {
+        id => "freecell24",
+        deal => 24,
         board => File::Spec->catfile(
-            $data_dir, 'sample-boards',
-            '24-with-no-trailing-newline.board',
-        )
-    }, "Handle initial layouts without a trailing newline.");
+            $ENV{FCS_PATH}, '24.no-newline.board',
+        ),
+    },
+    "Handle initial layouts without a trailing newline."
+);
 
 # Store the changes at the end so they won't get lost.
 $verifier->end();
