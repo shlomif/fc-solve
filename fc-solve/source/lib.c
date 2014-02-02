@@ -728,7 +728,22 @@ int DLLEXPORT freecell_solver_user_solve_board(
 
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    user->state_string_copy = strdup(state_as_string);
+    {
+        int len = strlen(state_as_string);
+#define MYMARGIN 2
+        char * s = malloc(len + MYMARGIN);
+        strcpy (s, state_as_string);
+        {
+            char * s_end = s + len - 1;
+            if ((*s_end) != '\n')
+            {
+                *(++s_end) = '\n';
+                *(++s_end) = '\0';
+            }
+        }
+        user->state_string_copy = s;
+#undef MYMARGIN
+    }
 
     user->current_instance_idx = 0;
 
