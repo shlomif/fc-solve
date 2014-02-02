@@ -717,6 +717,31 @@ static int user_compile_all_flares_plans(
     return FCS_COMPILE_FLARES_RET_OK;
 }
 
+/*
+ * Add a trailing newline to the string if it does not exist.
+ */
+#define MYMARGIN 2
+#define TRAILING_CHAR '\n'
+static GCC_INLINE char * duplicate_string_while_adding_a_trailing_newline(
+    const char * orig_str
+)
+{
+    int len = strlen(orig_str);
+    char * s = malloc(len + MYMARGIN);
+    strcpy (s, orig_str);
+    {
+        char * s_end = s + len - 1;
+        if ((*s_end) != TRAILING_CHAR)
+        {
+            *(++s_end) = TRAILING_CHAR;
+            *(++s_end) = '\0';
+        }
+    }
+    return s;
+}
+#undef TRAILING_CHAR
+#undef MYMARGIN
+
 int DLLEXPORT freecell_solver_user_solve_board(
     void * api_instance,
     const char * state_as_string
@@ -728,22 +753,8 @@ int DLLEXPORT freecell_solver_user_solve_board(
 
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    {
-        int len = strlen(state_as_string);
-#define MYMARGIN 2
-        char * s = malloc(len + MYMARGIN);
-        strcpy (s, state_as_string);
-        {
-            char * s_end = s + len - 1;
-            if ((*s_end) != '\n')
-            {
-                *(++s_end) = '\n';
-                *(++s_end) = '\0';
-            }
-        }
-        user->state_string_copy = s;
-#undef MYMARGIN
-    }
+    user->state_string_copy =
+        duplicate_string_while_adding_a_trailing_newline(state_as_string);
 
     user->current_instance_idx = 0;
 
