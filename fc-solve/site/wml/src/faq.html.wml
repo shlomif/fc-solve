@@ -325,6 +325,56 @@ I’ve written about it previously</a>.
 
 </ul>
 
+<p>
+Here are a few other links I collected which speak against C++:
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="http://lbrandy.com/blog/2010/03/never-trust-a-programmer-who-says-he-knows-c/">“Never trust a programmer who says he knows C++”</a> - by Louis Brandy.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://shlomif-tech.livejournal.com/63781.html">“C++ Joke”</a> - on
+my technical blog.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://idkn.wordpress.com/2008/11/21/%D7%A6%D7%99%D7%98%D7%95%D7%98%D7%99-%D7%AA%D7%95%D7%9B%D7%A0%D7%94/">“Software-related Quotes”
+on Ido Kanner’s blog</a>. His blog contains many
+<a href="https://idkn.wordpress.com/?s=C%2B%2B">other entries</a> criticising
+C++.
+</p>
+</li>
+</ul>
+
+<p>
+Nevertheless, I cannot guarantee that Freecell Solver’s code will remain
+written in C forever, and that I won’t gradually convert it to C++ or a
+different language. My main issue with using C++ right now is that I
+(rationally) fear it will give me too much rope to hang myself, and
+be too tempting to go wild with advanced features, as well as potentially
+bring too many unexpected and hard-to-debug problems.
+</p>
+
+<p>
+One final note is that the Freecell Solver C source has been compiled to
+browser-side-compatible JavaScript using
+<a href="https://github.com/kripken/emscripten">Emscripten</a>, so it can
+be used inside a JavaScript-compatible browser. This was done for making
+it easy to be tested and used, at the (usually not show-stopping) tradeoff
+of being slower than compiled-to-native-binary-code. Nevertheless, the C code
+is still maintained directly, and the generated JavaScript code is not
+idiomatic JavaScript.
+</p>
+
+
 <h3 id="unsolvable_solution">I found a solvable deal that Freecell Solver reports as unsolvable - should I report it to you?</h3>
 
 <p>
