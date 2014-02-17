@@ -19,13 +19,15 @@ Simon</a> boards. Freecell Solver is
 <a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">free
 and open source software</a> freely available under the
 <a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 License</a>.
-It is written in ANSI C and requires a C compiler to be built.  Nevertheless,
-binaries for Microsoft Windows 32-bit are available.
+It can be <a href="$(ROOT)/js-fc-solve/text/">used online</a> (which
+requires a modern enough web browser with JavaScript support),
+or <a href="$(ROOT)/download.html">downloaded</a> either as
+Microsoft Windows 32-bit binaries, or as the C source distribution.
 </p>
 
 <p>
-Included with the archive is source code for programs that can automatically
-feed it with the boards of several popular Solitaire Implementations.
+Included with the archive are programs that can automatically
+provide the starting layouts of several popular Solitaire Implementations.
 </p>
 
 <p>
