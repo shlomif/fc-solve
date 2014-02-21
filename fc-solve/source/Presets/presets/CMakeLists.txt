@@ -23,6 +23,7 @@ INSTALL(
         "the-iglu-cabal.sh"
         "three-eighty.sh"
         "toons-for-twenty-somethings.sh"
+        "video-editing.sh"
         "yellow-brick-road.sh"
     DESTINATION
         "${RELATIVE_PKGDATADIR}/presets"

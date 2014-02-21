@@ -11,6 +11,10 @@ Version 3.24.0: (Unknown)
 line properly (thanks to someone who reported it via E-mail with respect to
 the JavaScript-based solver).
 
+2. Add the +-l video-editing+ or +-l ve+ flare-based preset for shorter
+solutions (on average).
+
+3. 
 Version 3.22.0: (05-Oct-2013)
 -----------------------------
 

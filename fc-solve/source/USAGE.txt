@@ -1028,6 +1028,11 @@ Solver 3.4.0 and above) that yields solutions faster on average than
 +enlightened-ostrich+.
 |+toons-for-twenty-somethings+ |an atomic-moves preset that solves
             more boards efficiently than "fools-gold".
+|+video-editing+               |a meta-moves and flare-based preset, based
+on +qualified-seed+ that yields shorter solutions on average, but may be
+somewhat slower. Named to commemorate the earlier work of
+http://en.wikipedia.org/wiki/Adrian_Ettlinger[Adrian Ettlinger (1925-2013)]
+who later contributed to Freecell Solver and to Freecell research.
 |+yellow-brick-road+           |a meta-moves preset
 |====================================================
 
