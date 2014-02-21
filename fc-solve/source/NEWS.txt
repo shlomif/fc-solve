@@ -4,17 +4,34 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
-Version 3.24.0: (Unknown)
--------------------------
+Version 3.24.0: (23-Feb-2014)
+-----------------------------
 
-1. Handle board/layout inputs without a trailing newline character on the last
+1. This release is dedicated to the memory of Adrian Ettlinger (see
+https://en.wikipedia.org/wiki/Adrian_Ettlinger ) who passed away on
+23 October 2013, who was a good Internet friend of the primary maintainer of
+Freecell Solver (= Shlomi Fish), and who contributed a great deal to Freecell
+Solver and to Freecell research and programming in general (among other
+life achievements, and contributions). You can find an obituary of
+Mr. Ettlinger by Shlomi Fish here:
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1379
+and the +video-editing+ preset (see below) was named in honor of his previous
+work in pioneering non-linear video editing.
+
+2. Handle board/layout inputs without a trailing newline character on the last
 line properly (thanks to someone who reported it via E-mail with respect to
 the JavaScript-based solver).
 
-2. Add the +-l video-editing+ or +-l ve+ flare-based preset for shorter
+3. Add the +-l video-editing+ or +-l ve+ flare-based preset for shorter
 solutions (on average).
 
-3. 
+4. The distribution now contains the sources for the so-called
+split-fcc-solver, which was originally conceived as an attempt to
+determine whether the Windows Freecell deal No. 384,243 is solvable with
+two freecells or not. The attempt failed because the split-FCC-solver
+generated large intermediate outputs, but it may prove of some utility
+in the future (while being experimental).
+
 Version 3.22.0: (05-Oct-2013)
 -----------------------------
 
