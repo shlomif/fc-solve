@@ -415,10 +415,8 @@ static void fc_solve_delta_stater_decode(
 
     for ( int i=0 ; i < num_freecells ; i++)
     {
-        fcs_card_t card;
-
-        card = (fcs_card_t)fc_solve_bit_reader_read(bit_r, 6);
-        if (!(card == fc_solve_empty_card))
+        const fcs_card_t card = (fcs_card_t)fc_solve_bit_reader_read(bit_r, 6);
+        if (! (card == fc_solve_empty_card) )
         {
             PROCESS_CARD(card);
         }
