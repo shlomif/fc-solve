@@ -405,26 +405,15 @@ static void fc_solve_delta_stater_decode(
         fcs_state_t * ret
         )
 {
-    int foundations[4];
-    int i, col_idx;
-    int num_freecells;
-    int num_columns;
-    fcs_state_t * _init_state;
-    int bits_per_orig_cards_in_column;
-
-    for (i = 0 ; i < 4; i++)
-    {
-        foundations[i] = 14;
-    }
-
 #define PROCESS_CARD(card) { if (fcs_card_rank(card) < foundations[fcs_card_suit(card)]) { foundations[fcs_card_suit(card)] = fcs_card_rank(card); } }
 
-    num_freecells = self->num_freecells;
-    bits_per_orig_cards_in_column = self->bits_per_orig_cards_in_column;
+    const typeof(self->num_freecells) num_freecells = self->num_freecells;
+    const typeof(self->bits_per_orig_cards_in_column) bits_per_orig_cards_in_column = self->bits_per_orig_cards_in_column;
 
+    int foundations[4] = {14,14,14,14};
     /* Read the Freecells. */
 
-    for ( i=0 ; i < num_freecells ; i++)
+    for ( int i=0 ; i < num_freecells ; i++)
     {
         fcs_card_t card;
 
@@ -436,38 +425,30 @@ static void fc_solve_delta_stater_decode(
         fcs_put_card_in_freecell(*ret, i, card);
     }
 
-    num_columns = self->num_columns;
-    _init_state = self->_init_state;
+    const typeof(self->num_columns) num_columns = self->num_columns;
+    const fcs_state_t * const _init_state = self->_init_state;
 
-    for (col_idx = 0; col_idx < num_columns ; col_idx++)
+    for (int col_idx = 0; col_idx < num_columns ; col_idx++)
     {
-        fcs_cards_column_t col, orig_col;
-        int num_orig_cards;
-        int num_derived_cards;
-        int num_cards_in_seq;
+        const fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
+        const int num_orig_cards = fc_solve_bit_reader_read(bit_r, bits_per_orig_cards_in_column);
 
-        col = fcs_state_get_col(*ret, col_idx);
-        num_orig_cards = fc_solve_bit_reader_read(bit_r, bits_per_orig_cards_in_column);
+        const fcs_cards_column_t orig_col = fcs_state_get_col(*_init_state, col_idx);
 
-        orig_col = fcs_state_get_col(*_init_state, col_idx);
-
-        for (i = 0 ; i < num_orig_cards ; i++)
+        for (int i = 0 ; i < num_orig_cards ; i++)
         {
-            fcs_card_t card;
-
-            card = fcs_col_get_card(orig_col, i);
+            const fcs_card_t card = fcs_col_get_card(orig_col, i);
             PROCESS_CARD(card);
             fcs_col_push_card(col, card);
         }
 
-        num_cards_in_seq = num_derived_cards =
+        const int num_derived_cards =
             fc_solve_bit_reader_read(bit_r, 4);
+        int num_cards_in_seq = num_derived_cards;
 
         if ((num_orig_cards == 0) && num_derived_cards)
         {
-            fcs_card_t card;
-
-            card = (fcs_card_t)fc_solve_bit_reader_read(bit_r, 6);
+            const fcs_card_t card = (fcs_card_t)fc_solve_bit_reader_read(bit_r, 6);
             PROCESS_CARD(card);
             fcs_col_push_card(col, card);
 
@@ -476,14 +457,12 @@ static void fc_solve_delta_stater_decode(
 
         if (num_cards_in_seq)
         {
-            fcs_card_t last_card;
+            fcs_card_t last_card = fcs_col_get_card(col, fcs_col_len(col)-1);
 
-            last_card = fcs_col_get_card(col, fcs_col_len(col)-1);
-
-            for ( i = 0 ; i < num_cards_in_seq ; i++)
+            for ( int i = 0 ; i < num_cards_in_seq ; i++)
             {
-                int suit_bit = fc_solve_bit_reader_read(bit_r, 1);
-                fcs_card_t new_card = fcs_make_card(
+                const int suit_bit = fc_solve_bit_reader_read(bit_r, 1);
+                const fcs_card_t new_card = fcs_make_card(
                     fcs_card_rank(last_card)-1,
                     ((suit_bit << 1) |
                      ((fcs_card_suit(last_card) & 0x1) ^ 0x1)
@@ -498,7 +477,7 @@ static void fc_solve_delta_stater_decode(
         }
     }
 
-    for (i = 0 ; i < 4 ; i++)
+    for (int i = 0 ; i < 4 ; i++)
     {
         fcs_set_foundation(*ret, i, foundations[i]-1);
     }
