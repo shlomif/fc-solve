@@ -618,7 +618,6 @@ static freecell_solver_str_t known_parameters[] = {
 int main(int argc, char * argv[])
 {
     int parser_ret;
-    void * instance;
     int arg;
     FILE * file;
     char user_state[USER_STATE_SIZE];
@@ -630,7 +629,7 @@ int main(int argc, char * argv[])
 
     dc = &debug_context;
 
-    instance = freecell_solver_user_alloc();
+    void * const instance = freecell_solver_user_alloc();
 
     current_instance = instance;
 
