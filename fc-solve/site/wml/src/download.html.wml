@@ -33,7 +33,7 @@ Freecell Solver that people have prepared.
 
 <p>
 Of these we can recommend <a href="http://pysolfc.sourceforge.net/">PySolFC</a>
-which is open-source, cross-platform, configurable and supports a very
+which is open-source, cross-platform, configurable, and supports a very
 large number of Solitaire variants.
 </p>
 
