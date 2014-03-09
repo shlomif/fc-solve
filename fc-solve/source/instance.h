@@ -822,7 +822,7 @@ struct fc_solve_soft_thread_struct
 
     fc_solve_seq_cards_power_type_t initial_cards_under_sequences_value;
 
-    union
+    struct
     {
         struct
         {
@@ -882,7 +882,7 @@ struct fc_solve_soft_thread_struct
         {
             char * befs_positions_by_rank;
             fc_solve_solve_for_state_test_t * tests_list, * tests_list_end;
-            union
+            struct
             {
                 struct
                 {
