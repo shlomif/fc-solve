@@ -30,7 +30,7 @@ and the clients (which will be based on libfreecell-solver.so) will all
 connect for it and ask it for more to do, and more to delegate to clients
 which are currently looking for something to help them with.
 
-After setting up, the server accepts the connection from teh first client
+After setting up, the server accepts the connection from the first client
 to which it assigns the empty CoordSeq { depth == 0 }, then before
 $CYCLE_LEN iterations, more clients ask to help other clients and the server
 keeps their connection open. Then, the server asks the master client to
