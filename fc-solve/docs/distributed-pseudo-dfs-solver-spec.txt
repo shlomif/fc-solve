@@ -34,9 +34,9 @@ After setting up, the server accepts the connection from the first client
 to which it assigns the empty CoordSeq { depth == 0 }, then before
 $CYCLE_LEN iterations, more clients ask to help other clients and the server
 keeps their connection open. Then, the server asks the master client to
-provide coordseqs to allocate for other clients, and they are allocated.
-Occassionally, other clients will also ask for help and the server will help
-them with.
+provide CoordSeqs to allocate for other clients, and they are allocated.
+Occasionally, other clients will also ask for help and the server will try
+to provide them help.
 
 Each client also reports on the currently reached CoordSeq and the server
 keeps tracks (and logs) the initial CoordSeq allocated to each client and
