@@ -81,7 +81,7 @@ Class('FC_Solve', {
                      that.obj, 1
                  );
 
-                 var error_string = Module.Pointer_stringify( error_string_ptr );
+                 var error_string = that._stringify_possibly_null_ptr(error_string_ptr);
                  c_free ( error_string_ptr );
 
                  alert (error_string + "\n");
@@ -144,6 +144,17 @@ Class('FC_Solve', {
                 return proto_board_string + "\n";
             }
         },
+        _stringify_possibly_null_ptr: function (s_ptr) {
+            var that = this;
+
+            var ret = '';
+
+            if (s_ptr) {
+                ret = Module.Pointer_stringify(s_ptr);
+            }
+
+            return ret;
+        },
         do_solve: function (proto_board_string) {
             var that = this;
 
@@ -166,7 +177,7 @@ Class('FC_Solve', {
 
                     var error_string_ptr = getValue(error_string_ptr_buf, '*');
 
-                    var error_string = Module.Pointer_stringify( error_string_ptr );
+                    var error_string = that._stringify_possibly_null_ptr(error_string_ptr);
 
                     c_free(error_string_ptr);
                     c_free(error_string_ptr_buf);
@@ -225,7 +236,7 @@ Class('FC_Solve', {
 
                     var error_string_ptr = getValue(error_string_ptr_buf, '*');
 
-                    var error_string = Module.Pointer_stringify( error_string_ptr );
+                    var error_string = that._stringify_possibly_null_ptr(error_string_ptr);
                     c_free(error_string_ptr);
                     c_free(error_string_ptr_buf);
 
