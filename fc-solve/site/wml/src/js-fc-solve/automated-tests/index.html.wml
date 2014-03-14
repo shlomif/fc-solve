@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/redmond/jquery-ui-1.9.2.custom.min.css" media="screen, projection" />
 <link rel="stylesheet" type="text/css" href="$(ROOT)/jqui-override.css" media="screen, projection" />
 <script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
@@ -22,8 +22,9 @@
 
 <script type="text/javascript">
   \$(document).ready(function () {
-      try {
           test_js_fc_solve_class();
+      try {
+          // test_js_fc_solve_class();
       }
       catch (err) {
         module("Meta");

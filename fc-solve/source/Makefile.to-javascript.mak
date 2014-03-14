@@ -36,8 +36,8 @@ NEEDED_FUNCTIONS = \
 
 NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV)' $(NEEDED_FUNCTIONS))
 
-# OPT_FLAGS = -g
-OPT_FLAGS = -O2
+OPT_FLAGS = -g -s SAFE_HEAP=1
+# OPT_FLAGS = -O2
 # OPT_FLAGS = -O3
 # OPT_FLAGS = -O1
 # OPT_FLAGS =

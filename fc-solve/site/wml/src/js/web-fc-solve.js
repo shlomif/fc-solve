@@ -152,7 +152,7 @@ Class('FC_Solve', {
 
             that.set_status("running", "Running");
 
-            try {
+            // try {
                 if (cmd_line_preset != "default") {
 
                     var error_string_ptr_buf = malloc(128);
@@ -249,11 +249,11 @@ Class('FC_Solve', {
                 that.handle_err_code(solve_err_code);
 
                 return solve_err_code;
-            }
-            catch (e) {
-                that.set_status("error", "Error");
-                return;
-            }
+            //}
+            //catch (e) {
+            //    that.set_status("error", "Error");
+            //    return;
+            //}
         },
         _replace_card: function(s) {
             return s.replace(/\b([A2-9TJQK])([HCDS])\b/g,
@@ -277,7 +277,7 @@ Class('FC_Solve', {
         display_solution: function() {
             var that = this;
 
-            try {
+            // try {
                 // 128 bytes are enough to hold a move.
                 var move_buffer = malloc(128);
 
@@ -345,10 +345,10 @@ Class('FC_Solve', {
                     )
                 );
                 return;
-            }
-            catch (e) {
-                return;
-            }
+            //}
+            //catch (e) {
+            //    return;
+            //}
         },
     },
 });
