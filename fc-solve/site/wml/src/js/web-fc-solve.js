@@ -219,6 +219,8 @@ Class('FC_Solve', {
                     setValue(args_buf, read_from_file_str_ptr, '*');
                     setValue(args_buf+4, arg_str_ptr, '*');
 
+                    var last_arg_ptr = malloc(4);
+
                     // Input the file to the solver.
                     var args_ret_code = freecell_solver_user_cmd_line_parse_args(
                         that.obj,
@@ -229,9 +231,10 @@ Class('FC_Solve', {
                         0,
                         0,
                         error_string_ptr_buf,
-                        0
+                        last_arg_ptr
                     );
 
+                    c_free(last_arg_ptr);
                     c_free(args_buf);
 
                     var error_string_ptr = getValue(error_string_ptr_buf, '*');
