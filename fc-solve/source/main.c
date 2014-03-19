@@ -60,7 +60,7 @@ static void my_iter_handler(
     fprintf(stdout, "Iteration: %li\n", (long)iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
     fprintf(stdout, "Stored-States: %li\n",
-        freecell_solver_user_get_num_states_in_collection_long(user_instance)
+        (long)freecell_solver_user_get_num_states_in_collection_long(user_instance)
         );
     fprintf(stdout, "Scan: %s\n",
         freecell_solver_user_get_current_soft_thread_name(user_instance)
@@ -555,7 +555,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
         fprintf(
             stderr,
             "The number of iterations is %li\n",
-            freecell_solver_user_get_num_times_long(current_instance)
+            (long)freecell_solver_user_get_num_times_long(current_instance)
             );
     }
     else if (command_num == 1)
