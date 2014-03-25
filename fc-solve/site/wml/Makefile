@@ -157,3 +157,6 @@ runtest: all
 
 clean:
 	rm -f lib/fc-solve-for-javascript/*.bc lib/fc-solve-for-javascript/*.js
+
+%.show:
+	@echo "$* = $($*)"
