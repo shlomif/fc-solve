@@ -458,3 +458,8 @@ the “1-based” offsets in the moves, and eliminating trailing space,
 the results for +-l as+ for both the initial MS Freecell #24 board, and
 the board given by Olaf were identical.
 
+* Revamp the generation of the emscripten code
+("libfreecell-solver.js") to not require an explicit installation into
+$HOME/apps/fcs-for-pysol / etc. and ../Tatzer call step.
+** Also possibly have a shorter prefix.
+

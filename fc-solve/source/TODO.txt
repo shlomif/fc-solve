@@ -7,11 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* Freecell Solver: revamp the generation of the emscripten code
-("libfreecell-solver.js") to not require an explicit installation into
-$HOME/apps/fcs-for-pysol / etc. and ../Tatzer call step.
-    - Also possibly have a shorter prefix.
-
 Non-pressing
 ------------
 
