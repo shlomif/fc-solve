@@ -18,6 +18,8 @@ fc-solve/site/wml/.sass-cache
 fc-solve/site/wml/dest
 fc-solve/site/wml/include.mak
 fc-solve/site/wml/lib/fc-solve-for-javascript/*.bc
+fc-solve/site/wml/lib/fc-solve-for-javascript/CMAKE-BUILD-dir/
+fc-solve/site/wml/lib/fc-solve-for-javascript/__DESTDIR/
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.html
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.js
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.js

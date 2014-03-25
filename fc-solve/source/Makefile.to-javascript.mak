@@ -2,11 +2,13 @@ ifeq ($(SRC_DIR),)
 	SRC_DIR := .
 endif
 
+DATA_DESTDIR = __DESTDIR
 TEST_HTML = my-modified-fc-solve-test.html
 RESULT_NODE_JS_EXE = fc-solve.js
 RESULT_JS_LIB = libfreecell-solver.js
 RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
+EMBED_FILE_MUNGE_PL = $(SRC_DIR)/scripts/emscripten-embed-munge.pl
 
 LIB_C_FILES = app_str.c scans.c lib.c preset.c instance.c move_funcs_order.c  move_funcs_maps.c meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c fcs_hash.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c rate_state.c hacks_for_hlls.c
 
@@ -48,26 +50,30 @@ CFLAGS = $(OPT_FLAGS) -I . -m32 -std=gnu99
 # EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 
-PRESET_DIR = $(HOME)/apps/fcs-for-pysol/share/freecell-solver/
-PRESET_FILES_TO_EMBED := $(shell find $(PRESET_DIR) -type f | (LC_ALL=C sort))
+PRESET_DIR = /fc-solve/share/freecell-solver/
+PRESET_FILES_TO_EMBED := $(shell find $(DATA_DESTDIR)$(PRESET_DIR) -type f | (LC_ALL=C sort))
 
-LOCAL_PRESET_DIR = $(patsubst /%,%,$(PRESET_DIR))
+# LOCAL_PRESET_DIR = $(patsubst /%,%,$(PRESET_DIR))
 
-PRESET_FILES_LOCAL := $(patsubst /%,%,$(PRESET_FILES_TO_EMBED))
+# PRESET_FILES_LOCAL := $(patsubst $(DATA_DESTDIR)/%,$(DATA_DESTDIR)/%@/%,$(PRESET_FILES_TO_EMBED))
+PRESET_FILES_LOCAL := $(shell perl $(EMBED_FILE_MUNGE_PL) $(DATA_DESTDIR) $(PRESET_FILES_TO_EMBED) )
+
 EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
 
 $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 	emcc $(EMCC_CFLAGS) $< -c -o $@
 
-.PHONY: llvm_and_files files_foo
+# .PHONY: llvm_and_files files_foo
+.PHONY: llvm_and_files
 
-files_foo:
-	mkdir -p $(shell dirname $(LOCAL_PRESET_DIR))
-	cp -a $(PRESET_DIR) $(LOCAL_PRESET_DIR)
+# files_foo:
+# 	mkdir -p $(shell dirname $(LOCAL_PRESET_DIR))
+# 	cp -a $(PRESET_DIR) $(LOCAL_PRESET_DIR)
 
-$(PRESET_FILES_LOCAL): files_foo
+# $(PRESET_FILES_LOCAL): files_foo
 
-llvm_and_files: files_foo $(LLVM_BITCODE_FILES) $(PRESET_FILES_LOCAL)
+# llvm_and_files: files_foo $(LLVM_BITCODE_FILES) $(PRESET_FILES_LOCAL)
+llvm_and_files: $(LLVM_BITCODE_FILES)
 
 $(RESULT_HTML): llvm_and_files
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(EMCC_POST_FLAGS)
