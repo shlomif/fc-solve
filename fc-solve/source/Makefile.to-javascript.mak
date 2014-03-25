@@ -46,16 +46,11 @@ OPT_FLAGS = -O2
 
 CFLAGS = $(OPT_FLAGS) -I . -m32 -std=gnu99
 
-# EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s LINKABLE=1 $(CFLAGS)
-# EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 EMCC_CFLAGS = --jcache -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 
 PRESET_DIR = /fc-solve/share/freecell-solver/
 PRESET_FILES_TO_EMBED := $(shell find $(DATA_DESTDIR)$(PRESET_DIR) -type f | (LC_ALL=C sort))
 
-# LOCAL_PRESET_DIR = $(patsubst /%,%,$(PRESET_DIR))
-
-# PRESET_FILES_LOCAL := $(patsubst $(DATA_DESTDIR)/%,$(DATA_DESTDIR)/%@/%,$(PRESET_FILES_TO_EMBED))
 PRESET_FILES_LOCAL := $(shell perl $(EMBED_FILE_MUNGE_PL) $(DATA_DESTDIR) $(PRESET_FILES_TO_EMBED) )
 
 EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
@@ -63,16 +58,8 @@ EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
 $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 	emcc $(EMCC_CFLAGS) $< -c -o $@
 
-# .PHONY: llvm_and_files files_foo
 .PHONY: llvm_and_files
 
-# files_foo:
-# 	mkdir -p $(shell dirname $(LOCAL_PRESET_DIR))
-# 	cp -a $(PRESET_DIR) $(LOCAL_PRESET_DIR)
-
-# $(PRESET_FILES_LOCAL): files_foo
-
-# llvm_and_files: files_foo $(LLVM_BITCODE_FILES) $(PRESET_FILES_LOCAL)
 llvm_and_files: $(LLVM_BITCODE_FILES)
 
 $(RESULT_HTML): llvm_and_files
