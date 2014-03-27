@@ -5,7 +5,7 @@ use warnings;
 
 use FC_Solve::CmdLine::Expand;
 use FC_Solve::CmdLine::Simulate;
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 use Test::Differences;
 
@@ -76,6 +76,18 @@ EOF
 
     # TEST
     is ($obj->get_flares_num(), 15, "There are 15 flares.");
+
+    # TEST
+    is ($obj->get_flare_by_idx(14)->name,
+        20,
+        "The 14th flare's name is '20'.",
+    );
+
+    # TEST
+    eq_or_diff ($obj->get_flare_by_idx(2)->argv,
+        [qw(--method random-dfs -seed 2 -to 0[01][23456789] -opt),],
+        "The 2nd flare's argv is fine.",
+    );
 }
 
 =head1 COPYRIGHT AND LICENSE

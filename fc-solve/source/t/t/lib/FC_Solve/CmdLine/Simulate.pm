@@ -56,7 +56,7 @@ sub get_flares_num
     return scalar(@{ $self->_flares });
 }
 
-sub get_flare_idx
+sub get_flare_by_idx
 {
     my ($self, $idx) = @_;
 
