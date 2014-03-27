@@ -4,7 +4,8 @@ use strict;
 use warnings;
 
 use FC_Solve::CmdLine::Expand;
-use Test::More tests => 2;
+use FC_Solve::CmdLine::Simulate;
+use Test::More tests => 4;
 
 use Test::Differences;
 
@@ -62,6 +63,20 @@ EOF
     ],
     'With -l',
 );
+
+{
+    my $obj = FC_Solve::CmdLine::Simulate->new(
+        {
+            input_argv => ['-l', 'cpb',],
+        },
+    );
+
+    # TEST
+    ok ($obj, "FC_Solve::CmdLine::Simulate was initialized.");
+
+    # TEST
+    is ($obj->get_flares_num(), 15, "There are 15 flares.");
+}
 
 =head1 COPYRIGHT AND LICENSE
 
