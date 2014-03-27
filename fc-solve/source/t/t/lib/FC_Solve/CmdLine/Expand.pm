@@ -1,4 +1,4 @@
-package FC_Solve::CmdLineSimulation;
+package FC_Solve::CmdLine::Expand;
 
 use strict;
 use warnings;

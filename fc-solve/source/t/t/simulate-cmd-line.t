@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use FC_Solve::CmdLineSimulation;
+use FC_Solve::CmdLine::Expand;
 use Test::More tests => 2;
 
 use Test::Differences;
@@ -16,7 +16,7 @@ sub check
     my $want_argv = shift;
     my $msg = shift;
 
-    my $obj = FC_Solve::CmdLineSimulation->new(
+    my $obj = FC_Solve::CmdLine::Expand->new(
         {
             input_argv => $input_argv,
         }
