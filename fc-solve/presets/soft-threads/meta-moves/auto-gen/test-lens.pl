@@ -3,19 +3,11 @@
 use strict;
 use warnings;
 
-use AI::Pathfinding::OptimizeMultiple::DataInputObj;
+use FC_Solve::TimePresets;
 
 my @params = (1,100);
 
-my $start_board = 1;
-my $num_boards = 32_000;
-
-my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
+my $input_obj = FC_Solve::TimePresets->new;
 
 my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
 

@@ -5,22 +5,15 @@ use warnings;
 use autodie;
 
 use AI::Pathfinding::OptimizeMultiple;
+use AI::Pathfinding::OptimizeMultiple::ScanRun;
 
 use PDL ();
 
-use AI::Pathfinding::OptimizeMultiple::DataInputObj;
+use FC_Solve::TimePresets;
 
 my $input_filename = shift || "script.sh";
 
-my $start_board = 1;
-my $num_boards = 32000;
-
-my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
+my $input_obj = FC_Solve::TimePresets->new;
 
 my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
 my $scan_ids = $input_obj->get_scan_ids_aref;
@@ -79,13 +72,14 @@ my $runner = AI::Pathfinding::OptimizeMultiple->new(
         # Does not matter.
         'quotas' => [500],
         'selected_scans' => $input_obj->selected_scans(),
-        'num_boards' => $num_boards,
+        'num_boards' => $input_obj->num_boards(),
         'scans_iters_pdls' => $input_obj->get_scans_iters_pdls(),
         'optimize_for' => 'speed',
     },
 );
 
-foreach my $board (0 .. $num_boards-1)
+my $start_board = $input_obj->start_board();
+foreach my $board (0 .. $input_obj->num_boards()-1)
 {
     my @info = PDL::list($data->slice(($board).",:"));
     my $results = $runner->simulate_board($board,

@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use List::MoreUtils qw(firstidx);
-use AI::Pathfinding::OptimizeMultiple::DataInputObj;
 use FC_Solve::TimePresets;
 
 my $opt = (($ARGV[0] eq "--gen-bat") ? shift : "");
@@ -12,35 +11,26 @@ my $opt = (($ARGV[0] eq "--gen-bat") ? shift : "");
 my @scan_args = @ARGV;
 my $scan = join(" ", @scan_args);
 
-my $start_board = 1;
-my $num_boards = 32_000;
-
 sub get_scan_index_by_its_cmd_line
 {
-    my ($prev_scans, $cmd_line) = @_;
+    my ($input_obj, $cmd_line) = @_;
 
-    my $sel_scans = $prev_scans->selected_scans;
+    my $sel_scans = $input_obj->selected_scans;
 
     return
         (firstidx { $_->cmd_line() eq $cmd_line } @$sel_scans);
 }
 
-my $prev_scans = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
+my $input_obj = FC_Solve::TimePresets->new;
 
-
-if ((my $index = get_scan_index_by_its_cmd_line($prev_scans, $scan)) >= 0)
+if ((my $index = get_scan_index_by_its_cmd_line($input_obj, $scan)) >= 0)
 {
     die "The scan already exists with the ID "
-        . $prev_scans->scan_id_by_index($index)
+        . $input_obj->selected_scans->[$index]->id()
         . "\n";
 }
 
-my $id = $prev_scans->get_next_id();
+my $id = $input_obj->get_next_id();
 {
     open my $out_fh, ">>", "scans.txt";
     print {$out_fh} "$id\t$scan\n";
@@ -59,10 +49,10 @@ if ($opt eq "--gen-bat")
     open my $out, ">", "run_scan_$id.bat"
         or die "Could not open run_scan_$id.bat for writing";
 
-    print {$out} join(" ", @{$prev_scans->get_scan_cmd_line(\%params)}), "\n\r";
+    print {$out} join(" ", @{$input_obj->_get_scan_cmd_line(\%params)}), "\n\r";
     close($out);
 }
 else
 {
-    $prev_scans->time_scan(\%params);
+    $input_obj->time_scan(\%params);
 }
