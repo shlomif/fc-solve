@@ -5,9 +5,11 @@ use warnings;
 
 use Getopt::Long;
 
+use PDL ();
+
 use List::Util qw(min first);
 
-use MyInput;
+use AI::Pathfinding::OptimizeMultiple::DataInputObj;
 
 use IO::Handle;
 
@@ -29,7 +31,7 @@ my @final_quotas;
 my $start_board = 1;
 my $num_boards = 32_000;
 
-my $input_obj = MyInput->new(
+my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
     {
         start_board => $start_board,
         num_boards => $num_boards,
@@ -38,7 +40,13 @@ my $input_obj = MyInput->new(
 
 my $scan_index = 0;
 
-my $data = $input_obj->get_scans_lens_data();
+my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
+
+my @scan_ids = map { $_->id() } @{$input_obj->selected_scans};
+
+my %scan_ids_to_indexes = (map { $scan_ids[$_] => $_ } keys @scan_ids);
+
+my $data = PDL::cat( @{$data_hash_ref}{@scan_ids} )->xchg(1,3)->clump(2..3);
 
 my @results;
 foreach my $scan (@{$input_obj->selected_scans()})
@@ -88,7 +96,7 @@ continue
         {
             my ($iters_quota, $scan_id) = ($1, $2);
 
-            my $scan_index = $input_obj->get_scan_index_by_id($scan_id);
+            my $scan_index = $scan_ids_to_indexes{$scan_id};
 
             if (!defined ($scan_index))
             {
