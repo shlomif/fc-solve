@@ -1,27 +1,33 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
+use warnings;
 
-use PDL;
+use PDL ();
 
-use MyInput;
+use AI::Pathfinding::OptimizeMultiple::DataInputObj;
 
 my $input_file = shift || "script.sh";
 
 my $start_board = 1;
 my $num_boards = 32000;
 
-my $sel_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
-my @selected_scans = @$sel_scans;
+my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
+    {
+        start_board => $start_board,
+        num_boards => $num_boards,
+    }
+);
 
-#my $scans_data = [];
-#my $scans_data = zeroes($num_boards, scalar(@selected_scans));
+my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
 
-my $scans_data = MyInput::get_scans_data($start_board, $num_boards, \@selected_scans);
+my @scan_ids = map { $_->id() } @{$input_obj->selected_scans};
+
+my %scan_ids_to_indexes = (map { $scan_ids[$_] => $_ } keys @scan_ids);
+
+my $data = PDL::cat( @{$data_hash_ref}{@scan_ids} )->xchg(1,3)->clump(2..3);
 
 my (@chosen_scans);
-
-my %ids_to_inds = (map { $selected_scans[$_]->{'id'} => $_ } (0 .. $#selected_scans));
 
 open I, "<$input_file";
 while (my $line = <I>)
@@ -30,7 +36,7 @@ while (my $line = <I>)
     {
         $line =~ /\"(.*?)\"/;
         my $prelude = $1;
-        @chosen_scans = (map { /^(\d+)\@(.+)$/; { 'ind' => $ids_to_inds{$2}, 'q' => $1 }} split(/,/, $prelude));
+        @chosen_scans = (map { /^(\d+)\@(.+)$/; { 'ind' => $scan_ids_to_indexes{$2}, 'q' => $1 }} split(/,/, $prelude));
         last;
     }
 }
@@ -40,13 +46,13 @@ while (my $line = <I>)
 foreach my $board (1 .. $num_boards)
 {
     my $total_iters = 0;
-    my @info = list($scans_data->slice(($board-1).",:"));
+    my @info = PDL::list($data->slice(($board-1).",:"));
     print ("\@info=". join(",", @info). "\n");
     foreach my $s (@chosen_scans)
     {
         if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
         {
-            print "\t" . $info[$s->{'ind'}] . " \@ " . $selected_scans[$s->{'ind'}]->{'id'} . "\n";
+            print "\t" . $info[$s->{'ind'}] . " \@ " . $scan_ids[$s->{'ind'}] . "\n";
             $total_iters += $info[$s->{'ind'}];
             last;
         }
@@ -56,7 +62,7 @@ foreach my $board (1 .. $num_boards)
             {
                 $info[$s->{'ind'}] -= $s->{'q'};
             }
-            print "\t" . $s->{'q'} . " \@ " . $selected_scans[$s->{'ind'}]->{'id'} . "\n";
+            print "\t" . $s->{'q'} . " \@ " . $scan_ids[$s->{'ind'}] . "\n";
             $total_iters += $s->{'q'};
         }
     }
