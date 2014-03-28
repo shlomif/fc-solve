@@ -1,3 +1,6 @@
+v0.0.10     2014-03-28
+    - Convert to the Test::CPAN::Changes Dist-Zilla plugin.
+
 v0.0.9      2014-03-28
     - Add an explicit symbol import on "use PDL"/etc.
     - Add get_scan_ids_aref() and lookup_scan_idx_based_on_id() to
