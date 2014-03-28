@@ -344,14 +344,26 @@ sub _get_scan_cmd_line
     my $max_board = $args->{'max'} || 32_000;
     my $id = $args->{'id'};
     my $argv = $args->{'argv'};
+    my @fc_num =
+        (exists($args->{'freecells_num'})
+            ?  ("--freecells-num" , $args->{'freecells_num'})
+            : ()
+        );
+    my @variant =
+        (exists($args->{'variant'})
+            ? ("--variant", $args->{'variant'})
+            : ()
+        );
 
     return
     [
         qw(freecell-solver-fc-pro-range-solve),
         $min_board, $max_board, "20",
+        @variant,
         qw(--total-iterations-limit 100000 --binary-output-to),
         "data/$id.data.bin",
         @$argv,
+        @fc_num,
     ];
 }
 
