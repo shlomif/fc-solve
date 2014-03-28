@@ -19,9 +19,9 @@ my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
 
 my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
 
-my @scan_ids = map { $_->id() } @{$input_obj->selected_scans};
-
-my $scans_lens_data = PDL::cat( @{$data_hash_ref}{@scan_ids} )->xchg(1,3)->clump(2..3);
+my $scans_lens_data = PDL::cat( @{$data_hash_ref}{
+        @{ $input_obj->get_scan_ids_aref }
+        })->xchg(1,3)->clump(2..3);
 
 my $iters = $scans_lens_data->slice(":,:,0");
 my $iters_quota = 500;

@@ -20,10 +20,9 @@ my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
 );
 
 my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
+my $scan_ids = $input_obj->get_scan_ids_aref;
 
-my @scan_ids = map { $_->id() } @{$input_obj->selected_scans};
-
-my $data = PDL::cat( @{$data_hash_ref}{@scan_ids} )->xchg(1,3)->clump(2..3);
+my $data = PDL::cat( @{$data_hash_ref}{@$scan_ids} )->xchg(1,3)->clump(2..3);
 
 my (@chosen_scans);
 
@@ -50,7 +49,7 @@ foreach my $board (1 .. $num_boards)
     {
         if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
         {
-            print "\t" . $info[$s->{'ind'}] . " \@ " . $scan_ids[$s->{'ind'}] . "\n";
+            print "\t" . $info[$s->{'ind'}] . " \@ " . $scan_ids->[$s->{'ind'}] . "\n";
             $total_iters += $info[$s->{'ind'}];
             last;
         }
@@ -60,7 +59,7 @@ foreach my $board (1 .. $num_boards)
             {
                 $info[$s->{'ind'}] -= $s->{'q'};
             }
-            print "\t" . $s->{'q'} . " \@ " . $scan_ids[$s->{'ind'}] . "\n";
+            print "\t" . $s->{'q'} . " \@ " . $scan_ids->[$s->{'ind'}] . "\n";
             $total_iters += $s->{'q'};
         }
     }

@@ -42,9 +42,9 @@ my $scan_index = 0;
 
 my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
 
-my @scan_ids = map { $_->id() } @{$input_obj->selected_scans};
-
-my $data = PDL::cat( @{$data_hash_ref}{@scan_ids} )->xchg(1,3)->clump(2..3);
+my $data = PDL::cat( @{$data_hash_ref}{
+        @{ $input_obj->get_scan_ids_aref }
+        } )->xchg(1,3)->clump(2..3);
 
 my @results;
 foreach my $scan (@{$input_obj->selected_scans()})
