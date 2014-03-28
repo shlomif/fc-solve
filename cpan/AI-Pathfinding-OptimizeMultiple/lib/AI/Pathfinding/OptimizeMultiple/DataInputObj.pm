@@ -11,8 +11,8 @@ use File::Path qw(mkpath);
 
 use AI::Pathfinding::OptimizeMultiple::Scan;
 
-use PDL;
-use PDL::IO::FastRaw;
+use PDL (qw( pdl ));
+use PDL::IO::FastRaw (qw( readfraw writefraw ));
 
 our $VERSION = '0.0.8';
 

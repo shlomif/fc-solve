@@ -16,7 +16,7 @@ our $VERSION = '0.0.8';
 # TODO : restore later.
 # use MyInput;
 
-use Carp;
+use Carp ();
 
 has argv => (isa => 'ArrayRef[Str]', is => 'ro', required => 1,);
 has _arbitrator => (is => 'rw');
