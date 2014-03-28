@@ -44,7 +44,7 @@ extern "C" {
  * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
  * (-1,-1) (= end) padding.
  * */
-#define FCS_POS_BY_RANK_WIDTH (LOCAL_DECKS_NUM << 3)
+#define FCS_POS_BY_RANK_WIDTH (MAX_NUM_DECKS << 3)
 
 extern char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
     fc_solve_soft_thread_t * const soft_thread,

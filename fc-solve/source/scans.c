@@ -2056,6 +2056,31 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
     }
 }
 
+static GCC_INLINE void assign_dest_stack_and_col_ptr(
+    char * const positions_by_rank,
+    int dest_stack,
+    int dest_col,
+    fcs_card_t dest_card
+)
+{
+    char * ptr = &positions_by_rank[
+        (FCS_POS_BY_RANK_WIDTH *
+         (fcs_card_rank(dest_card)-1)
+        )
+        +
+        (fcs_card_suit(dest_card)<<1)
+        ];
+
+#if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
+    for(;(*ptr) != -1;ptr += (4 << 1))
+    {
+    }
+#endif
+
+    *(ptr++) = (char)dest_stack;
+    *(ptr) = (char)dest_col;
+}
+
 char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key
@@ -2094,64 +2119,47 @@ char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
         /* Populate positions_by_rank by looping over the stacks and
          * indices looking for the cards and filling them. */
 
+        for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
         {
-            char * ptr;
+            const fcs_const_cards_column_t dest_col = fcs_state_get_col(the_state, ds);
+            int top_card_idx = fcs_col_len(dest_col);
 
-            for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
+            if (unlikely((top_card_idx--) == 0))
             {
-                const fcs_const_cards_column_t dest_col = fcs_state_get_col(the_state, ds);
-                int top_card_idx = fcs_col_len(dest_col);
+                continue;
+            }
 
-                if (unlikely((top_card_idx--) == 0))
+            fcs_card_t dest_card;
+            {
+                fcs_card_t dest_below_card;
+                dest_card = fcs_col_get_card(dest_col, 0);
+                for (
+                    int dc=0
+                    ;
+                    dc < top_card_idx
+                    ;
+                    dc++,
+                    dest_card = dest_below_card
+                )
                 {
-                    continue;
-                }
-
-                fcs_card_t dest_card;
-                {
-                    fcs_card_t dest_below_card;
-                    int dc;
-                    for (
-                        dc=0,
-                        dest_card = fcs_col_get_card(dest_col, 0)
-                        ;
-                        dc < top_card_idx
-                        ;
-                        dc++,
-                        dest_card = dest_below_card
-                    )
+                    dest_below_card = fcs_col_get_card(dest_col, dc+1);
+                    if (!fcs_is_parent_card(dest_below_card, dest_card))
                     {
-                        dest_below_card = fcs_col_get_card(dest_col, dc+1);
-                        if (!fcs_is_parent_card(dest_below_card, dest_card))
-                        {
-#if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
-#define INCREMENT_PTR_BY_NUM_DECKS() \
-                            for(;(*ptr) != -1;ptr += (4 << 1)) \
-                            { \
-                            }
-#else
-#define INCREMENT_PTR_BY_NUM_DECKS() \ {}
-#endif
-
-#define ASSIGN_PTR(dest_stack, dest_col) \
-                            ptr = &positions_by_rank[ \
-                            (FCS_POS_BY_RANK_WIDTH * \
-                             (fcs_card_rank(dest_card)-1) \
-                            ) \
-                            + \
-                            (fcs_card_suit(dest_card)<<1) \
-                            ]; \
-                            INCREMENT_PTR_BY_NUM_DECKS() \
-                            *(ptr++) = (char)(dest_stack); \
-                            *(ptr) = (char)(dest_col)
-
-
-                            ASSIGN_PTR(ds, dc);
-                        }
+                        assign_dest_stack_and_col_ptr(
+                            positions_by_rank,
+                            ds,
+                            dc,
+                            dest_card
+                        );
                     }
                 }
-                ASSIGN_PTR(ds, top_card_idx);
             }
+            assign_dest_stack_and_col_ptr(
+                positions_by_rank,
+                ds,
+                top_card_idx,
+                dest_card
+            );
         }
     }
 
