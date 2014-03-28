@@ -30,6 +30,8 @@ has input_obj   => (
         get_scans_iters_pdls
         get_scan_ids_aref
         lookup_scan_idx_based_on_id
+        selected_scans
+        time_scan
         )
     ]
 );

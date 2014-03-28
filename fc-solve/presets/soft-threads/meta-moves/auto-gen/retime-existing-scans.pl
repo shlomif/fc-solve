@@ -3,20 +3,11 @@
 use strict;
 use warnings;
 
-use AI::Pathfinding::OptimizeMultiple::DataInputObj;
 use FC_Solve::TimePresets;
 
-my $start_board = 1;
-my $num_boards = 32_000;
+my $input_obj = FC_Solve::TimePresets->new;
 
-my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
-
-my $params = FC_Solve::TimePresets->calc_params_from_environment;
+my $params = $input_obj->calc_params_from_environment;
 
 SCANS_LOOP:
 foreach my $scan_rec (@{$input_obj->selected_scans()})
