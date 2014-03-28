@@ -8,7 +8,7 @@ use IO::All;
 
 use List::Util qw(first);
 
-use MyInput;
+use FC_Solve::TimePresets;
 
 my $with_len = 0;
 
@@ -22,40 +22,19 @@ my $scan_id = shift(@ARGV)
 my $board_idx = shift(@ARGV)
     or die "board_idx not specified on command line.";
 
-my @guessed_quotas = ((350) x 300);
+my $input_obj = FC_Solve::TimePresets->new;
 
-my @final_quotas;
-
-my $num_boards = 32_000;
-
-my $optimize_for = "speed";
-my $start_board = 1;
-
-my $start_quota = 100;
-my $end_quota = 1_000;
-
-my $input_obj = MyInput->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
-
-my $scan_idx =
-    first { $input_obj->selected_scans()->[$_]->id() == $scan_id }
-    (0 .. $#{$input_obj->selected_scans()})
-    ;
-
-
+my $start_board = $input_obj->start_board();
 if ($with_len)
 {
     my $at = sub {
-        return $input_obj->get_scans_lens_data()->at($board_idx-$start_board, $scan_idx, shift());
+        my ($field_idx) = @_;
+        return $input_obj->get_scans_lens_iters_pdls()->{$scan_id}->at($board_idx-$start_board, 0, $field_idx);
     };
     print map { $at->($_) , "\n" } (0, 1);
 }
 else
 {
-    print $input_obj->get_scans_data()->at($board_idx-$start_board, $scan_idx), "\n";
+    print $input_obj->get_scans_iters_pdls()->{$scan_id}->at($board_idx-$start_board), "\n";
 }
 
