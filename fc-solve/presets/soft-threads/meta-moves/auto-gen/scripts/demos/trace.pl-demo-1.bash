@@ -1,2 +1,2 @@
 #!/bin/bash
-perl trace.pl /home/shlomif/progs/freecell/git/fc-solve/fc-solve/source/Presets/presets/amateur-star.sh
+perl trace.pl scripts/demos/data/amateur-star.sh
