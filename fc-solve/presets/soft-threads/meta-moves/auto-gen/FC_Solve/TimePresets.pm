@@ -26,6 +26,7 @@ has input_obj   => (
     handles =>
     [
         qw(
+        _get_scan_cmd_line
         get_scans_lens_iters_pdls
         get_scans_iters_pdls
         get_scan_ids_aref

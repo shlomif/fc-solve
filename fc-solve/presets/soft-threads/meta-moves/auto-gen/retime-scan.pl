@@ -4,22 +4,13 @@ use strict;
 use warnings;
 use autodie;
 
-use AI::Pathfinding::OptimizeMultiple::DataInputObj;
 use FC_Solve::TimePresets;
 
 my $opt = (($ARGV[0] eq "--gen-bat") ? shift(@ARGV) : "");
 
 my $id = shift(@ARGV);
 
-my $start_board = 1;
-my $num_boards = 32_000;
-
-my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
+my $input_obj = FC_Solve::TimePresets->new;
 
 my $index;
 
