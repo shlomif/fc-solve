@@ -61,10 +61,12 @@
 #undef DEBUG
 #endif
 
+typedef int fcs_depth_t;
+
 #ifdef FCS_WITHOUT_DEPTH_FIELD
-static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
+static GCC_INLINE fcs_depth_t calc_depth(fcs_collectible_state_t * ptr_state)
 {
-    register int ret = 0;
+    register fcs_depth_t ret = 0;
     while ((ptr_state = FCS_S_PARENT(ptr_state)) != NULL)
     {
         ret++;
@@ -75,7 +77,10 @@ static GCC_INLINE int calc_depth(fcs_collectible_state_t * ptr_state)
 #define calc_depth(ptr_state) (FCS_S_DEPTH(ptr_state))
 #endif
 
-#define kv_calc_depth(ptr_state) (calc_depth(FCS_STATE_kv_to_collectible(ptr_state)))
+static GCC_INLINE fcs_depth_t kv_calc_depth(fcs_kv_state_t * ptr_state)
+{
+    return calc_depth(FCS_STATE_kv_to_collectible(ptr_state));
+}
 
 #define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(
