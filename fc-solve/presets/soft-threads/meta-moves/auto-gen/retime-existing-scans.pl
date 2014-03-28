@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use AI::Pathfinding::OptimizeMultiple::DataInputObj;
+use FC_Solve::TimePresets;
 
 my $start_board = 1;
 my $num_boards = 32_000;
@@ -15,15 +16,7 @@ my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
     }
 );
 
-my %params;
-if (exists($ENV{FC_NUM}))
-{
-    $params{freecells_num} = $ENV{FC_NUM};
-}
-if (exists($ENV{FC_VARIANT}))
-{
-    $params{variant} = $ENV{FC_VARIANT};
-}
+my $params = FC_Solve::TimePresets->calc_params_from_environment;
 
 SCANS_LOOP:
 foreach my $scan_rec (@{$input_obj->selected_scans()})
@@ -36,6 +29,6 @@ foreach my $scan_rec (@{$input_obj->selected_scans()})
     {
         next SCANS_LOOP;
     }
-    $input_obj->time_scan({ %params, id => $id, argv => \@cmd_line, });
+    $input_obj->time_scan({ %$params, id => $id, argv => \@cmd_line, });
 }
 

@@ -5,6 +5,7 @@ use warnings;
 
 use List::MoreUtils qw(firstidx);
 use AI::Pathfinding::OptimizeMultiple::DataInputObj;
+use FC_Solve::TimePresets;
 
 my $opt = (($ARGV[0] eq "--gen-bat") ? shift : "");
 
@@ -48,18 +49,10 @@ my $id = $prev_scans->get_next_id();
 
 my %params =
 (
+    %{FC_Solve::TimePresets->calc_params_from_environment()},
     id => $id,
     argv => [@scan_args],
 );
-
-if (exists($ENV{FC_NUM}))
-{
-    $params{freecells_num} = $ENV{FC_NUM};
-}
-if (exists($ENV{FC_VARIANT}))
-{
-    $params{variant} = $ENV{FC_VARIANT};
-}
 
 if ($opt eq "--gen-bat")
 {
