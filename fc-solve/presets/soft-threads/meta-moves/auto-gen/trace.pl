@@ -2,12 +2,15 @@
 
 use strict;
 use warnings;
+use autodie;
+
+use AI::Pathfinding::OptimizeMultiple;
 
 use PDL ();
 
 use AI::Pathfinding::OptimizeMultiple::DataInputObj;
 
-my $input_file = shift || "script.sh";
+my $input_filename = shift || "script.sh";
 
 my $start_board = 1;
 my $num_boards = 32000;
@@ -24,45 +27,77 @@ my $scan_ids = $input_obj->get_scan_ids_aref;
 
 my $data = PDL::cat( @{$data_hash_ref}{@$scan_ids} )->xchg(1,3)->clump(2..3);
 
-my (@chosen_scans);
-
-open I, "<$input_file";
-while (my $line = <I>)
+sub _read_chosen_scans
 {
-    if ($line =~ /--prelude/)
+    open my $input_fh, '<', $input_filename;
+
+    while (my $line = <$input_fh>)
     {
-        $line =~ /\"(.*?)\"/;
-        my $prelude = $1;
-        @chosen_scans = (map { /^(\d+)\@(.+)$/; { 'ind' => $input_obj->lookup_scan_idx_based_on_id($2), 'q' => $1 }} split(/,/, $prelude));
-        last;
+        if (my ($prelude) = $line =~ /--prelude\s*"([^"]+)"/)
+        {
+            close ($input_fh);
+            return [
+                map { _calc_scan_run($_) } split(/,/, $prelude)
+            ];
+        }
+    }
+
+    close($input_fh);
+
+    die "Could not find --prelude line in file '$input_filename'";
+}
+
+my $chosen_scans = _read_chosen_scans();
+
+sub _calc_scan_run
+{
+    my ($s) = @_;
+
+    if (my ($quota, $scan_id) = ($s =~ /^(\d+)\@(.+)$/))
+    {
+        return AI::Pathfinding::OptimizeMultiple::ScanRun->new(
+            {
+                iters => $quota,
+                scan_idx => $input_obj->lookup_scan_idx_based_on_id($scan_id),
+            },
+        );
+    }
+    else
+    {
+        die "Unknown format '$_'!";
     }
 }
 
 
-
-foreach my $board (1 .. $num_boards)
-{
-    my $total_iters = 0;
-    my @info = PDL::list($data->slice(($board-1).",:"));
-    print ("\@info=". join(",", @info). "\n");
-    foreach my $s (@chosen_scans)
+my $runner = AI::Pathfinding::OptimizeMultiple->new(
     {
-        if (($info[$s->{'ind'}] > 0) && ($info[$s->{'ind'}] <= $s->{'q'}))
+        'scans' =>
+        [
+            map { +{ name => $_->id() } }
+            @{$input_obj->selected_scans},
+        ],
+        # Does not matter.
+        'quotas' => [500],
+        'selected_scans' => $input_obj->selected_scans(),
+        'num_boards' => $num_boards,
+        'scans_iters_pdls' => $input_obj->get_scans_iters_pdls(),
+        'optimize_for' => 'speed',
+    },
+);
+
+foreach my $board (0 .. $num_boards-1)
+{
+    my @info = PDL::list($data->slice(($board).",:"));
+    my $results = $runner->simulate_board($board,
         {
-            print "\t" . $info[$s->{'ind'}] . " \@ " . $scan_ids->[$s->{'ind'}] . "\n";
-            $total_iters += $info[$s->{'ind'}];
-            last;
+            chosen_scans => $chosen_scans,
         }
-        else
-        {
-            if ($info[$s->{'ind'}] > 0)
-            {
-                $info[$s->{'ind'}] -= $s->{'q'};
-            }
-            print "\t" . $s->{'q'} . " \@ " . $scan_ids->[$s->{'ind'}] . "\n";
-            $total_iters += $s->{'q'};
-        }
+    );
+    print ("\@info=". join(",", @info). "\n");
+    foreach my $s (@{ $results->scan_runs })
+    {
+        print "\t" . $s->iters() . " \@ " . $scan_ids->[$s->scan_idx()] . "\n";
     }
-    print (($board+$start_board-1) . ": $total_iters\n");
+    print (($board+$start_board) . ": ", $results->total_iters(), "\n");
 }
 
