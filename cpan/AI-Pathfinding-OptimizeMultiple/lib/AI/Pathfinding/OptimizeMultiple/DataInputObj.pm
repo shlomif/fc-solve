@@ -244,14 +244,21 @@ sub _is_scan_suitable
     );
 }
 
+sub _get_scans_registry_file_path
+{
+    return "scans.txt";
+}
+
 sub _get_all_scans_list_from_file
 {
     my $self = shift;
 
     my @scans;
 
-    open my $scans_fh, "<", "scans.txt"
-        or die "Could not open 'scans.txt' - $!.";
+    my $scans_fn = $self->_get_scans_registry_file_path;
+
+    open my $scans_fh, "<", $scans_fn
+        or die "Could not open '$scans_fn' - $!.";
     while (my $line = <$scans_fh>)
     {
         chomp($line);
@@ -305,16 +312,28 @@ sub _calc_selected_scan_list
         )
 }
 
+sub _get_next_id_file_path
+{
+    return "next-id.txt";
+}
+
 sub get_next_id
 {
+    my ($self) = @_;
+
     my $id;
 
-    open my $in, "<", "next-id.txt";
+    my $fn = $self->_get_next_id_file_path;
+
+    use autodie;
+
+    open my $in, "<", $fn;
     $id = <$in>;
     chomp($id);
     close($in);
-    open my $out, ">", "next-id.txt";
-    print $out ($id+1);
+
+    open my $out, ">", $fn;
+    print {$out} ($id+1);
     close($out);
 
     return $id;
@@ -322,8 +341,14 @@ sub get_next_id
 
 sub get_prev_scans
 {
+    my ($self) = @_;
+
     my @prev_scans;
-    open my $in, "<", "scans.txt";
+
+    my $scans_fn = $self->_get_scans_registry_file_path;
+
+    open my $in, "<", $scans_fn
+        or die "Could not open '$scans_fn' - $!.";;
     while (my $line = <$in>)
     {
         chomp($line);
