@@ -6,11 +6,11 @@ use warnings;
 use Getopt::Long;
 use IO::All;
 
+use AI::Pathfinding::OptimizeMultiple::DataInputObj;
+
 use List::Util qw(first);
 
 use Text::Table;
-
-use MyInput;
 
 my $scan_ids = "1,2,3";
 my $top_board_idx = 10;
@@ -20,28 +20,19 @@ GetOptions(
     "top=i" => \$top_board_idx,
 );
 
-my @scans = ($scan_ids =~ m{(\d+)}g);
-
-my $num_boards = 32_000;
+my @scans = ($scan_ids =~ m{([0-9]+)}g);
 
 my $start_board = 1;
+my $num_boards = 32_000;
 
-my $input_obj = MyInput->new(
+my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
     {
         start_board => $start_board,
         num_boards => $num_boards,
     }
 );
 
-my @scan_indexes =
-(
-    map {
-        my $scan_id = $_;
-        first { $input_obj->selected_scans()->[$_]->id() == $scan_id }
-        (0 .. $#{$input_obj->selected_scans()})
-    } (@scans)
-);
-
+my @scan_indexes = (map { $input_obj->lookup_scan_idx_based_on_id($_) } @scans);
 
 my $tb =
     Text::Table->new(
@@ -50,13 +41,17 @@ my $tb =
             (\" |"),
     );
 
-my $pdl = $input_obj->get_scans_lens_data();
+my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
+my $scans_lens_data = PDL::cat( @{$data_hash_ref}{
+        @{ $input_obj->get_scan_ids_aref }
+        })->xchg(1,3)->clump(2..3);
+
 foreach my $board_idx (1 .. $top_board_idx)
 {
     my $at = sub {
         my ($scan_idx, $stat) = @_;
 
-        return $pdl->at($board_idx-$start_board, $scan_idx, $stat);
+        return $scans_lens_data->at($board_idx-$start_board, $scan_idx, $stat);
     };
 
     $tb->add($board_idx, (map { $at->($_,0), $at->($_,1) } @scan_indexes));
