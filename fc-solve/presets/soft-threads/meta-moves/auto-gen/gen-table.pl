@@ -6,7 +6,7 @@ use warnings;
 use Getopt::Long;
 use IO::All;
 
-use AI::Pathfinding::OptimizeMultiple::DataInputObj;
+use FC_Solve::TimePresets;
 
 use List::Util qw(first);
 
@@ -22,15 +22,7 @@ GetOptions(
 
 my @scans = ($scan_ids =~ m{([0-9]+)}g);
 
-my $start_board = 1;
-my $num_boards = 32_000;
-
-my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
+my $input_obj = FC_Solve::TimePresets->new;
 
 my @scan_indexes = (map { $input_obj->lookup_scan_idx_based_on_id($_) } @scans);
 
@@ -51,7 +43,11 @@ foreach my $board_idx (1 .. $top_board_idx)
     my $at = sub {
         my ($scan_idx, $stat) = @_;
 
-        return $scans_lens_data->at($board_idx-$start_board, $scan_idx, $stat);
+        return $scans_lens_data->at(
+            $board_idx- $input_obj->start_board,
+            $scan_idx,
+            $stat
+        );
     };
 
     $tb->add($board_idx, (map { $at->($_,0), $at->($_,1) } @scan_indexes));

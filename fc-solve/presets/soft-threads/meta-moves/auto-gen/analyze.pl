@@ -5,19 +5,11 @@ use warnings;
 
 use PDL ();
 
-use AI::Pathfinding::OptimizeMultiple::DataInputObj;
+use FC_Solve::TimePresets;
 
 my $above_how_much = shift(@ARGV) || 2000;
 
-my $start_board = 1;
-my $num_boards = 32000;
-
-my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
+my $input_obj = FC_Solve::TimePresets->new;
 
 my $data_hash_ref = $input_obj->get_scans_iters_pdls();
 my $scan_ids = $input_obj->get_scan_ids_aref;

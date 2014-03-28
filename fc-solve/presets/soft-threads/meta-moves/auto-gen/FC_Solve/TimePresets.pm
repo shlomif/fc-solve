@@ -3,6 +3,37 @@ package FC_Solve::TimePresets;
 use strict;
 use warnings;
 
+use MooX qw/ late /;
+
+use AI::Pathfinding::OptimizeMultiple::DataInputObj;
+
+has start_board => (is => 'ro', isa => 'Int', default => 1);
+has num_boards  => (is => 'ro', isa => 'Int', default => 32000);
+has input_obj   => (
+    is => 'ro',
+    isa => 'AI::Pathfinding::OptimizeMultiple::DataInputObj',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
+            {
+                start_board => $self->start_board,
+                num_boards => $self->num_boards,
+            }
+        );
+    },
+    handles =>
+    [
+        qw(
+        get_scans_lens_iters_pdls
+        get_scans_iters_pdls
+        get_scan_ids_aref
+        lookup_scan_idx_based_on_id
+        )
+    ]
+);
+
 sub calc_params_from_environment
 {
     my ($self) = @_;
