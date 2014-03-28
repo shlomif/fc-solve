@@ -14,11 +14,9 @@ use FC_Solve::TimePresets;
 my $input_filename = shift || "script.sh";
 
 my $input_obj = FC_Solve::TimePresets->new;
+my $scans_lens_data = $input_obj->calc_scans_lens_data;
 
-my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
 my $scan_ids = $input_obj->get_scan_ids_aref;
-
-my $data = PDL::cat( @{$data_hash_ref}{@$scan_ids} )->xchg(1,3)->clump(2..3);
 
 sub _read_chosen_scans
 {
@@ -81,7 +79,7 @@ my $runner = AI::Pathfinding::OptimizeMultiple->new(
 my $start_board = $input_obj->start_board();
 foreach my $board (0 .. $input_obj->num_boards()-1)
 {
-    my @info = PDL::list($data->slice(($board).",:"));
+    my @info = PDL::list($scans_lens_data->slice(($board).",:"));
     my $results = $runner->simulate_board($board,
         {
             chosen_scans => $chosen_scans,

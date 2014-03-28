@@ -30,11 +30,7 @@ my $input_obj = FC_Solve::TimePresets->new;
 
 my $scan_index = 0;
 
-my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
-
-my $data = PDL::cat( @{$data_hash_ref}{
-        @{ $input_obj->get_scan_ids_aref }
-        })->xchg(1,3)->clump(2..3);
+my $scans_lens_data = $input_obj->calc_scans_lens_data;
 
 my @results;
 foreach my $scan (@{$input_obj->selected_scans()})
@@ -42,7 +38,7 @@ foreach my $scan (@{$input_obj->selected_scans()})
     my $scan_id = $scan->id();
     my $cmd_line = $scan->cmd_line();
 
-    my $vec = $data->slice(":,$scan_index,0");
+    my $vec = $scans_lens_data->slice(":,$scan_index,0");
     $vec = $vec->where($vec > 0);
 
     my $sorted = $vec->flat()->qsort();
@@ -63,7 +59,7 @@ continue
 # print join(" \\\n--next-flair ", map { "--flair-id $_->{id} --flair-quota $_->{quota} $_->{cmd_line}" } @results);
 
 {
-    my $x = $data->slice(":,:,1")->clump(1..2);
+    my $x = $scans_lens_data->slice(":,:,1")->clump(1..2);
 
     $x = ($x >= 0) * $x + ($x < 0) * PDL->ones($x->dims()) * 100_000;
 
@@ -91,8 +87,8 @@ continue
                 die "Unknown Scan ID: '$scan_id'";
             }
 
-            my $iters_vec = $data->slice(":,($scan_index),(0)");
-            my $sol_len_vec = $data->slice(":,($scan_index),(1)");
+            my $iters_vec = $scans_lens_data->slice(":,($scan_index),(0)");
+            my $sol_len_vec = $scans_lens_data->slice(":,($scan_index),(1)");
 
             my $which_solved =
                 ( ($iters_vec > 0 ) & ($iters_vec < $iters_quota) )->which();

@@ -7,6 +7,8 @@ use MooX qw/ late /;
 
 use AI::Pathfinding::OptimizeMultiple::DataInputObj;
 
+use PDL ();
+
 has start_board => (is => 'ro', isa => 'Int', default => 1);
 has num_boards  => (is => 'ro', isa => 'Int', default => 32000);
 has input_obj   => (
@@ -53,6 +55,19 @@ sub calc_params_from_environment
     }
 
     return \%params;
+}
+
+sub calc_scans_lens_data
+{
+    my $self = shift;
+
+    my $data_hash_ref = $self->get_scans_lens_iters_pdls();
+
+    my $scans_lens_data = PDL::cat( @{$data_hash_ref}{
+            @{ $self->get_scan_ids_aref }
+        })->xchg(1,3)->clump(2..3);
+
+    return $scans_lens_data;
 }
 
 1;

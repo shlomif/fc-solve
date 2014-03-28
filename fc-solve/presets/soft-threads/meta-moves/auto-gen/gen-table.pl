@@ -33,10 +33,7 @@ my $tb =
             (\" |"),
     );
 
-my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
-my $scans_lens_data = PDL::cat( @{$data_hash_ref}{
-        @{ $input_obj->get_scan_ids_aref }
-        })->xchg(1,3)->clump(2..3);
+my $scans_lens_data = $input_obj->calc_scans_lens_data;
 
 foreach my $board_idx (1 .. $top_board_idx)
 {

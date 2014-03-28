@@ -8,12 +8,7 @@ use FC_Solve::TimePresets;
 my @params = (1,100);
 
 my $input_obj = FC_Solve::TimePresets->new;
-
-my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
-
-my $scans_lens_data = PDL::cat( @{$data_hash_ref}{
-        @{ $input_obj->get_scan_ids_aref }
-        })->xchg(1,3)->clump(2..3);
+my $scans_lens_data = $input_obj->calc_scans_lens_data;
 
 my $iters = $scans_lens_data->slice(":,:,0");
 my $iters_quota = 500;
