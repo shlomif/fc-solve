@@ -27,6 +27,16 @@ has selected_scans => (isa => 'ArrayRef', is => 'ro', required => 1,
     lazy => 1,
 );
 
+has _scan_ids_to_indexes => (isa => 'HashRef[Int]', is => 'ro',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $scan_ids = $self->get_scan_ids_aref;
+        return +{ map { $scan_ids->[$_] => $_} 0 .. $#$scan_ids };
+    },
+);
+
 sub _slurp
 {
     my $filename = shift;
@@ -380,6 +390,26 @@ sub time_scan
     close($fc_pro_out);
 }
 
+sub get_scan_ids_aref
+{
+    my $self = shift;
+
+    return [map { $_->id() } @{ $self->selected_scans }];
+}
+
+sub lookup_scan_idx_based_on_id
+{
+    my ($self, $scan_id) = @_;
+
+    my $idx = $self->_scan_ids_to_indexes->{$scan_id};
+    if (!defined($idx))
+    {
+        die "Index '$idx' does not exist!";
+    }
+
+    return $idx;
+}
+
 1;
 
 =pod
@@ -421,6 +451,15 @@ The index of the board to start from.
 =head2 $self->time_scan()
 
 Times a new scan.
+
+=head2 $self->get_scan_ids_aref()
+
+Get an array reference of the scan IDs.
+
+=head2 my $idx = $self->lookup_scan_idx_based_on_id($scan_id)
+
+$scan_id is a string and lookup_scan_idx_based_on_id() looks up its index
+in the scans.
 
 =head1 COPYRIGHT AND LICENSE
 
