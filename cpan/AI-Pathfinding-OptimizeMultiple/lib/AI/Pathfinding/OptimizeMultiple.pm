@@ -514,9 +514,18 @@ sub get_final_status
 
 sub simulate_board
 {
-    my ($self, $board) = @_;
+    my ($self, $board_idx, $args) = @_;
 
-    my @info = PDL::list($self->_orig_scans_data()->slice("$board,:"));
+    if ($board_idx !~ /\A[0-9]+\z/)
+    {
+        die "Board index '$board_idx' is not numeric!";
+    }
+
+    $args ||= {};
+
+    my $chosen_scans = ($args->{chosen_scans} || $self->chosen_scans);
+
+    my @info = PDL::list($self->_orig_scans_data()->slice("$board_idx,:"));
 
     my $board_iters = 0;
 
@@ -530,10 +539,12 @@ sub simulate_board
         push @scan_runs, $scan_run;
 
         $board_iters += $scan_run->iters();
+
+        return;
     };
 
     SCANS_LOOP:
-    foreach my $s (@{$self->chosen_scans()})
+    foreach my $s (@$chosen_scans)
     {
         if (($info[$s->scan_idx()] > 0) && ($info[$s->scan_idx()] <= $s->iters()))
         {
@@ -741,10 +752,13 @@ Returns the status as string:
 
 =back
 
-=head2 my $sim_results_obj = $calc_meta_scan->simulate_board($board_idx)
+=head2 my $sim_results_obj = $calc_meta_scan->simulate_board($board_idx, $args)
 
 Simulates the board No $board_idx through the scan. Returns a
 L<AI::Pathfinding::OptimizeMultiple::SimulationResults> object.
+
+$args is an optional hash reference. It may contain a value with the key of
+C<'chosen_scans'> that may specify an alternative scans to traverse.
 
 =head2 my $n = $calc_meta_scan->get_total_iters()
 
