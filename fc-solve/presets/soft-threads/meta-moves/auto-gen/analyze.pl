@@ -14,7 +14,7 @@ my $above_how_much = shift || 2000;
 
 my $inp = MyInput->new({start_board => $start_board, num_boards => $num_boards});
 
-my $scans_data = 
+my $scans_data =
     $inp->get_scans_data();
 
 my $which_boards = which((($scans_data > $above_how_much) | ($scans_data < 0))->xchg(0,1)->sumover() == scalar(@{$inp->selected_scans()}))+1;
