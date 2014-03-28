@@ -334,7 +334,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #endif
 
 #ifndef FCS_FREECELL_ONLY
-    fcs_bool_t int_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+    const fcs_bool_t int_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move int_unlimited_sequence_move
 #else
 #define unlimited_sequence_move FALSE
