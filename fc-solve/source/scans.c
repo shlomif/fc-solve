@@ -63,19 +63,23 @@
 
 typedef int fcs_depth_t;
 
-#ifdef FCS_WITHOUT_DEPTH_FIELD
 static GCC_INLINE fcs_depth_t calc_depth(fcs_collectible_state_t * ptr_state)
 {
+#ifdef FCS_WITHOUT_DEPTH_FIELD
+
     register fcs_depth_t ret = 0;
     while ((ptr_state = FCS_S_PARENT(ptr_state)) != NULL)
     {
         ret++;
     }
     return ret;
-}
+
 #else
-#define calc_depth(ptr_state) (FCS_S_DEPTH(ptr_state))
+
+    return (FCS_S_DEPTH(ptr_state));
+
 #endif
+}
 
 static GCC_INLINE fcs_depth_t kv_calc_depth(fcs_kv_state_t * ptr_state)
 {
