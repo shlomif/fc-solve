@@ -84,7 +84,7 @@ continue
 
     while (length($preset))
     {
-        if ($preset =~ s{\ARun:(\d+)\@(\d+)}{})
+        if ($preset =~ s{\ARun:([0-9]+)\@([0-9]+),?}{})
         {
             my ($iters_quota, $scan_id) = ($1, $2);
 
