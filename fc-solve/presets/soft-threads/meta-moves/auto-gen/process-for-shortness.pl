@@ -11,7 +11,7 @@ use List::Util qw(min);
 
 use Text::Table;
 
-use MyInput;
+use FC_Solve::TimePresets;
 
 my $with_len = 0;
 
@@ -30,21 +30,13 @@ my @guessed_quotas = ((350) x 300);
 
 my @final_quotas;
 
-my $start_board = 1;
-my $num_boards = 32_000;
-
-my $input_obj = MyInput->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
+my $input_obj = FC_Solve::TimePresets->new;
+my $scans_lens_data = $input_obj->calc_scans_lens_data;
 
 my $scan_index = 0;
 
-my $data = $input_obj->get_scans_lens_data();
-
 my $num_total_scans = @{$input_obj->selected_scans()};
+
 my @results;
 SELECTED_SCANS:
 foreach my $scan (@{$input_obj->selected_scans()})
@@ -57,7 +49,7 @@ foreach my $scan (@{$input_obj->selected_scans()})
     my $scan_id = $scan->id();
     my $cmd_line = $scan->cmd_line();
 
-    my $vec = $data->slice(":,$scan_index,0");
+    my $vec = $scans_lens_data->slice(":,$scan_index,0");
     $vec = $vec->where($vec > 0);
 
     my $sorted = $vec->flat()->qsort();
@@ -88,7 +80,7 @@ print
 }
 
 {
-    my $x = $data->slice(":,:,1")->clump(1..2);
+    my $x = $scans_lens_data->slice(":,:,1")->clump(1..2);
 
     $x = ($x >= 0) * $x + ($x < 0) * PDL->ones($x->dims()) * 100_000;
 
