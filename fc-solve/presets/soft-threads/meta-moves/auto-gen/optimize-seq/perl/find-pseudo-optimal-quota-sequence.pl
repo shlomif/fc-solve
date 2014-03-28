@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # This script is working but is very slow. The C# version (under
-# (Find-Optimized-Sequence/ ) appears to be consdirably faster.
+# (Find-Optimized-Sequence/ ) appears to be considerably faster.
 
 use strict;
 use warnings;
