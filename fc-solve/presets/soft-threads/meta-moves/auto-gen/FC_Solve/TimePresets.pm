@@ -70,6 +70,17 @@ sub calc_scans_lens_data
     return $scans_lens_data;
 }
 
+sub calc_scans_data_wo_lens
+{
+    my $self = shift;
+
+    my $data_hash_ref = $self->get_scans_iters_pdls();
+
+    my $scans_data = PDL::cat( @{$data_hash_ref}{@{ $self->get_scan_ids_aref } } );
+
+    return $scans_data;
+}
+
 1;
 
 =head1 COPYRIGHT & LICENSE

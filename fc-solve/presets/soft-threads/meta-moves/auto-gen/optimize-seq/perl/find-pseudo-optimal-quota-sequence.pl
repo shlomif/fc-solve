@@ -10,27 +10,18 @@ use Getopt::Long;
 use IO::All;
 
 use AI::Pathfinding::OptimizeMultiple;
-
-use MyInput;
+use FC_Solve::TimePresets;
 
 my @guessed_quotas = ((350) x 300);
 
 my @final_quotas;
 
-my $num_boards = 32_000;
-
 my $optimize_for = "speed";
-my $start_board = 1;
 
 my $start_quota = 100;
 my $end_quota = 1_000;
 
-my $input_obj = MyInput->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
+my $input_obj = FC_Solve::TimePresets->new;
 
 while (@final_quotas < @guessed_quotas)
 {
@@ -51,14 +42,14 @@ while (@final_quotas < @guessed_quotas)
                         @guessed_quotas[@final_quotas .. $#guessed_quotas]
                     ],
                     'selected_scans' => $input_obj->selected_scans(),
-                    'num_boards' => $num_boards,
-                    'scans_data' => $input_obj->get_scans_data()->copy(),
+                    'num_boards' => $input_obj->num_boards(),
+                    'scans_iters_pdls' => $input_obj->get_scans_iters_pdls(),
                     'optimize_for' => $optimize_for,
             );
 
         $arbitrator->calc_meta_scan();
 
-        my $iters = $arbitrator->total_iters();
+        my $iters = $arbitrator->get_total_iters();
 
         if ($min_quota_iters < 0 || $iters < $min_quota_iters)
         {

@@ -11,12 +11,9 @@ my $above_how_much = shift(@ARGV) || 2000;
 
 my $input_obj = FC_Solve::TimePresets->new;
 
-my $data_hash_ref = $input_obj->get_scans_iters_pdls();
-my $scan_ids = $input_obj->get_scan_ids_aref;
+my $count_of_scans = @{ $input_obj->get_scan_ids_aref };
 
-my $count_of_scans = @$scan_ids;
-
-my $scans_data = PDL::cat( @{$data_hash_ref}{@$scan_ids} );
+my $scans_data = $input_obj->calc_scans_data_wo_lens;
 
 my $which_boards = PDL::which((($scans_data > $above_how_much) | ($scans_data < 0))->xchg(0,1)->sumover() == $count_of_scans)+1;
 
