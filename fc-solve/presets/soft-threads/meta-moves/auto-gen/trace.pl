@@ -23,8 +23,6 @@ my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
 
 my @scan_ids = map { $_->id() } @{$input_obj->selected_scans};
 
-my %scan_ids_to_indexes = (map { $scan_ids[$_] => $_ } keys @scan_ids);
-
 my $data = PDL::cat( @{$data_hash_ref}{@scan_ids} )->xchg(1,3)->clump(2..3);
 
 my (@chosen_scans);
@@ -36,7 +34,7 @@ while (my $line = <I>)
     {
         $line =~ /\"(.*?)\"/;
         my $prelude = $1;
-        @chosen_scans = (map { /^(\d+)\@(.+)$/; { 'ind' => $scan_ids_to_indexes{$2}, 'q' => $1 }} split(/,/, $prelude));
+        @chosen_scans = (map { /^(\d+)\@(.+)$/; { 'ind' => $input_obj->lookup_scan_idx_based_on_id($2), 'q' => $1 }} split(/,/, $prelude));
         last;
     }
 }

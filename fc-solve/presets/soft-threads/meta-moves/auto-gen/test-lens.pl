@@ -21,8 +21,6 @@ my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
 
 my @scan_ids = map { $_->id() } @{$input_obj->selected_scans};
 
-my %scan_ids_to_indexes = (map { $scan_ids[$_] => $_ } keys @scan_ids);
-
 my $scans_lens_data = PDL::cat( @{$data_hash_ref}{@scan_ids} )->xchg(1,3)->clump(2..3);
 
 my $iters = $scans_lens_data->slice(":,:,0");

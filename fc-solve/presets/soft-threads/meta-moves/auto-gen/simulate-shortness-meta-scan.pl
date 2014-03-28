@@ -44,8 +44,6 @@ my $data_hash_ref = $input_obj->get_scans_lens_iters_pdls();
 
 my @scan_ids = map { $_->id() } @{$input_obj->selected_scans};
 
-my %scan_ids_to_indexes = (map { $scan_ids[$_] => $_ } keys @scan_ids);
-
 my $data = PDL::cat( @{$data_hash_ref}{@scan_ids} )->xchg(1,3)->clump(2..3);
 
 my @results;
@@ -96,7 +94,7 @@ continue
         {
             my ($iters_quota, $scan_id) = ($1, $2);
 
-            my $scan_index = $scan_ids_to_indexes{$scan_id};
+            my $scan_index = $input_obj->lookup_scan_idx_based_on_id($scan_id);
 
             if (!defined ($scan_index))
             {
