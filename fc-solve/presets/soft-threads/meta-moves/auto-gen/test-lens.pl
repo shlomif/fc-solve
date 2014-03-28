@@ -8,7 +8,7 @@ use MyInput;
 use vars qw($scans_lens_data);
 
 my @params = (1,100);
-$scans_lens_data = MyInput::get_scans_lens_data(@params, 
+$scans_lens_data = MyInput::get_scans_lens_data(@params,
     MyInput::get_selected_scan_list(@params));
 
 my $iters = $scans_lens_data->slice(":,:,0");
