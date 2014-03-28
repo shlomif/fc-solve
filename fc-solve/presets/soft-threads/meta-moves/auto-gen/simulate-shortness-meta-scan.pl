@@ -4,14 +4,12 @@ use strict;
 use warnings;
 
 use Getopt::Long;
+use IO::Handle;
+use List::Util qw(min first);
 
 use PDL ();
 
-use List::Util qw(min first);
-
-use AI::Pathfinding::OptimizeMultiple::DataInputObj;
-
-use IO::Handle;
+use FC_Solve::TimePresets;
 
 STDOUT->autoflush(1);
 
@@ -28,15 +26,7 @@ if (!defined($preset))
 
 my @final_quotas;
 
-my $start_board = 1;
-my $num_boards = 32_000;
-
-my $input_obj = AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
-    {
-        start_board => $start_board,
-        num_boards => $num_boards,
-    }
-);
+my $input_obj = FC_Solve::TimePresets->new;
 
 my $scan_index = 0;
 
