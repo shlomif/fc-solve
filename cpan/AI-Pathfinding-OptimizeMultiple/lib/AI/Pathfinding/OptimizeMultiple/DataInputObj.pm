@@ -14,7 +14,7 @@ use AI::Pathfinding::OptimizeMultiple::Scan;
 use PDL (qw( pdl ));
 use PDL::IO::FastRaw (qw( readfraw writefraw ));
 
-our $VERSION = '0.0.10';
+our $VERSION = '0.0.11';
 
 has start_board => (isa => 'Int', is => 'ro', required => 1);
 has num_boards => (isa => 'Int', is => 'ro', required => 1);
