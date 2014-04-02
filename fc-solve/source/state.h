@@ -43,6 +43,7 @@ extern "C" {
 #include "bool.h"
 
 #include "card.h"
+#include "game_type_limit.h"
 
 #include "internal_move_struct.h"
 #include "indirect_buffer.h"
@@ -389,9 +390,6 @@ static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
 #endif
 
 #endif
-
-
-typedef unsigned char fcs_game_limit_t;
 
 struct fcs_state_keyval_pair_struct;
 
