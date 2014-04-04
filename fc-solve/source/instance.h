@@ -1737,10 +1737,7 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
     ST_LOOP_START()
     {
-        if (soft_thread->method == FCS_METHOD_A_STAR)
-        {
-            fc_solve_PQueueFree( &(BEFS_VAR(soft_thread, pqueue)) );
-        }
+        fc_solve_PQueueFree( &(BEFS_VAR(soft_thread, pqueue)) );
 
         fc_solve_reset_soft_thread(soft_thread);
     }
