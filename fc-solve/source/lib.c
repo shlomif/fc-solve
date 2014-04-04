@@ -1485,7 +1485,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         case FCS_METHOD_RANDOM_DFS:
         case FCS_METHOD_SOFT_DFS:
         {
-            user->soft_thread->super_method_type = FCS_SUPER_METHOD_DFS;
+            soft_thread->super_method_type = FCS_SUPER_METHOD_DFS;
         }
         break;
     }
