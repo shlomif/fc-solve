@@ -123,7 +123,7 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
 {
     fcs_soft_dfs_stack_item_t * const soft_dfs_info = DFS_VAR(soft_thread, soft_dfs_info);
     /* Check if a Soft-DFS-type scan was called in the first place */
-    if (!( FC_SOLVE_IS_DFS(soft_thread) && soft_dfs_info))
+    if (! soft_dfs_info )
     {
         /* If not - do nothing */
         return;
@@ -183,21 +183,14 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     fc_solve_soft_thread_t * const soft_thread
 )
 {
-    fcs_bool_t is_scan_befs_or_bfs = FALSE;
-    switch (soft_thread->method)
+    if (soft_thread->method == FCS_METHOD_A_STAR)
     {
-        case FCS_METHOD_A_STAR:
-            fc_solve_PQueueFree(
-                    &(BEFS_VAR(soft_thread, pqueue))
-            );
-            /* Fall-through. */
-        case FCS_METHOD_BFS:
-        case FCS_METHOD_OPTIMIZE:
-            is_scan_befs_or_bfs = TRUE;
-            break;
+        fc_solve_PQueueFree(
+            &(BEFS_VAR(soft_thread, pqueue))
+        );
     }
 
-    fc_solve_release_tests_list(soft_thread, is_scan_befs_or_bfs);
+    fc_solve_release_tests_list(soft_thread);
 
     fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
 
@@ -327,9 +320,11 @@ static GCC_INLINE void init_soft_thread(
 
     /* Initialize all the Soft-DFS stacks to NULL */
     DFS_VAR(soft_thread, soft_dfs_info) = NULL;
+    DFS_VAR(soft_thread, depth) = 0;
 
     DFS_VAR(soft_thread, tests_by_depth_array).num_units = 0;
     DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units = NULL;
+    DFS_VAR(soft_thread, rand_seed) = 24;
 
     BEFS_M_VAR(soft_thread, tests_list) = NULL;
 
@@ -339,7 +334,18 @@ static GCC_INLINE void init_soft_thread(
 
     BEFS_M_VAR(soft_thread, befs_positions_by_rank) = NULL;
 
-    DFS_VAR(soft_thread, rand_seed) = 24;
+
+    memcpy(
+        BEFS_VAR(soft_thread, weighting.befs_weights),
+        fc_solve_default_befs_weights,
+        sizeof(fc_solve_default_befs_weights)
+    );
+
+    BEFS_VAR(soft_thread, pqueue).Elements = NULL;
+
+    BRFS_VAR(soft_thread, bfs_queue) =
+        BRFS_VAR(soft_thread, bfs_queue_last_item) =
+        NULL;
 
     soft_thread->num_times_step = NUM_TIMES_STEP;
 

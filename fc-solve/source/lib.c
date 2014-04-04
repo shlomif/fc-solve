@@ -1472,45 +1472,20 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    user->soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
+    fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
+    soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
 
     if (method == FCS_METHOD_HARD_DFS)
     {
         method = FCS_METHOD_SOFT_DFS;
     }
 
-    switch ((user->soft_thread->method = method))
+    switch ((soft_thread->method = method))
     {
         case FCS_METHOD_RANDOM_DFS:
         case FCS_METHOD_SOFT_DFS:
         {
             user->soft_thread->super_method_type = FCS_SUPER_METHOD_DFS;
-            DFS_VAR(user->soft_thread, dfs_max_depth)
-                = DFS_VAR(user->soft_thread, depth)
-                = DFS_VAR(user->soft_thread, tests_by_depth_array).num_units
-                = 0;
-            DFS_VAR(user->soft_thread, rand_seed) = 24;
-            DFS_VAR(user->soft_thread, soft_dfs_info) = NULL;
-            DFS_VAR(user->soft_thread, tests_by_depth_array).by_depth_units = NULL;
-        }
-        break;
-        case FCS_METHOD_A_STAR:
-        {
-            memcpy(
-                BEFS_VAR(user->soft_thread, weighting.befs_weights),
-                fc_solve_default_befs_weights,
-                sizeof(fc_solve_default_befs_weights)
-            );
-
-            BEFS_VAR(user->soft_thread, pqueue).Elements = NULL;
-        }
-        break;
-        case FCS_METHOD_OPTIMIZE:
-        case FCS_METHOD_BFS:
-        {
-            BRFS_VAR(user->soft_thread, bfs_queue) =
-            BRFS_VAR(user->soft_thread, bfs_queue_last_item) =
-            NULL;
         }
         break;
     }
@@ -2145,7 +2120,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fc_solve_soft_thread_t * soft_thread = fc_solve_new_hard_thread(user->active_flare->obj);
+    fc_solve_soft_thread_t * const soft_thread = fc_solve_new_hard_thread(user->active_flare->obj);
 
     if (soft_thread == NULL)
     {

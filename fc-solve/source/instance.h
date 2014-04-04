@@ -1291,31 +1291,20 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
          * that will abstract a scan. But it's not critical since
          * I don't support user-defined scans.
          * */
+        if (! STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED))
+        {
+            fc_solve_soft_thread_init_soft_dfs(soft_thread);
+            fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
+            STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
+        }
         switch(soft_thread->super_method_type)
         {
             case FCS_SUPER_METHOD_DFS:
-
-            if (! STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED))
-            {
-                fc_solve_soft_thread_init_soft_dfs(soft_thread);
-                STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
-            }
-
             ret = fc_solve_soft_dfs_do_solve(soft_thread);
-
             break;
 
             case FCS_SUPER_METHOD_BEFS_BRFS:
-
-            if (! STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED))
-            {
-                fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
-
-                STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
-            }
-
             ret = fc_solve_befs_or_bfs_do_solve(soft_thread);
-
             break;
 
             default:
@@ -1706,42 +1695,37 @@ static GCC_INLINE void fc_solve_reset_soft_thread(
 }
 
 static GCC_INLINE void fc_solve_release_tests_list(
-    fc_solve_soft_thread_t * const soft_thread,
-    const fcs_bool_t is_scan_befs_or_bfs
+    fc_solve_soft_thread_t * const soft_thread
 )
 {
-    if (is_scan_befs_or_bfs)
-    {
-        free (BEFS_M_VAR(soft_thread, tests_list));
-        BEFS_M_VAR(soft_thread, tests_list) = NULL;
-    }
-    else
-    {
-        /* A DFS Scan. */
-        int unit_idx;
-        fcs_tests_by_depth_array_t * arr;
+    /* Free the BeFS data. */
+    free (BEFS_M_VAR(soft_thread, tests_list));
+    BEFS_M_VAR(soft_thread, tests_list) = NULL;
 
-        arr = &(DFS_VAR(soft_thread, tests_by_depth_array));
-        for (unit_idx = 0 ; unit_idx < arr->num_units ; unit_idx++)
+    /* Free the DFS data. */
+    int unit_idx;
+    fcs_tests_by_depth_array_t * arr;
+
+    arr = &(DFS_VAR(soft_thread, tests_by_depth_array));
+    for (unit_idx = 0 ; unit_idx < arr->num_units ; unit_idx++)
+    {
+        if (arr->by_depth_units[unit_idx].tests.lists)
         {
-            if (arr->by_depth_units[unit_idx].tests.lists)
-            {
-                fcs_tests_list_t * lists = arr->by_depth_units[unit_idx].tests.lists;
-                int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
-                int i;
+            fcs_tests_list_t * lists = arr->by_depth_units[unit_idx].tests.lists;
+            int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
+            int i;
 
-                for (i=0 ;
-                    i < num_lists ;
-                    i++)
-                {
-                    free (lists[i].tests);
-                }
-                free (lists);
+            for (i=0 ;
+                i < num_lists ;
+                i++)
+            {
+                free (lists[i].tests);
             }
+            free (lists);
         }
-        free(arr->by_depth_units);
-        arr->by_depth_units = NULL;
     }
+    free(arr->by_depth_units);
+    arr->by_depth_units = NULL;
 }
 
 static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
