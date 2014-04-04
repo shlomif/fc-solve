@@ -183,12 +183,9 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     fc_solve_soft_thread_t * const soft_thread
 )
 {
-    if (soft_thread->method == FCS_METHOD_A_STAR)
-    {
-        fc_solve_PQueueFree(
-            &(BEFS_VAR(soft_thread, pqueue))
-        );
-    }
+    fc_solve_PQueueFree(
+        &(BEFS_VAR(soft_thread, pqueue))
+    );
 
     fc_solve_release_tests_list(soft_thread);
 
