@@ -1473,7 +1473,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
-    soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
+    fcs_super_method_type_t super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
 
     if (method == FCS_METHOD_HARD_DFS)
     {
@@ -1485,10 +1485,12 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         case FCS_METHOD_RANDOM_DFS:
         case FCS_METHOD_SOFT_DFS:
         {
-            soft_thread->super_method_type = FCS_SUPER_METHOD_DFS;
+            super_method_type = FCS_SUPER_METHOD_DFS;
         }
         break;
     }
+
+    soft_thread->super_method_type = super_method_type;
 }
 
 #ifndef FCS_FREECELL_ONLY
