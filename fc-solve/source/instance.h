@@ -367,17 +367,16 @@ struct fc_solve_instance_struct
      * */
     fcs_game_type_params_t game_params;
 
-    /* The number of states that were checked by the solving algorithm.
-     * Badly named, should be renamed to num_iters or num_checked_states */
-    fcs_int_limit_t num_times;
+    /* The number of states that were checked by the solving algorithm. */
+    fcs_int_limit_t num_checked_states;
 
     /*
-     * Like max_num_times only defaults to MAX_INT if below zero so it will
+     * Like max_num_checked_states only defaults to MAX_INT if below zero so it will
      * work without checking if it's zero.
      *
      * Normally should be used instead.
      * */
-    fcs_int_limit_t effective_max_num_times, effective_max_num_states_in_collection;
+    fcs_int_limit_t effective_max_num_checked_states, effective_max_num_states_in_collection;
     fcs_int_limit_t effective_trim_states_in_collection_from;
     /*
      * tree is the balanced binary tree that is used to store and index
@@ -496,7 +495,7 @@ struct fc_solve_instance_struct
 #endif
     /*
      * Limits for the maximal depth and for the maximal number of checked
-     * states. max_num_times is useful because it enables the process to
+     * states. max_num_checked_states is useful because it enables the process to
      * stop before it consumes too much memory.
      *
      * max_depth is quite dangerous because it blocks some intermediate moves
@@ -504,7 +503,7 @@ struct fc_solve_instance_struct
      *
      * */
     int max_depth;
-    fcs_int_limit_t max_num_times;
+    fcs_int_limit_t max_num_checked_states;
     fcs_int_limit_t trim_states_in_collection_from;
 
     /*
@@ -574,25 +573,25 @@ struct fc_solve_hard_thread_struct
 
     /*
      * The hard thread count of how many states he checked himself. The
-     * instance num_times can be confusing because other threads modify it too.
+     * instance num_checked_states can be confusing because other threads modify it too.
      *
      * Thus, the soft thread switching should be done based on this variable
      * */
-    fcs_int_limit_t num_times;
+    fcs_int_limit_t num_checked_states;
 
     /*
-     * The maximal limit for num_times.
+     * The maximal limit for num_checked_states.
      * */
-    fcs_int_limit_t max_num_times;
+    fcs_int_limit_t max_num_checked_states;
 
-    fcs_int_limit_t num_times_step;
+    fcs_int_limit_t num_checked_states_step;
 
     /*
      * This is the number of iterations that still have to be done for
-     * soft_threads[st_idx]. It is reset to (st_idx+1)->num_times_step
+     * soft_threads[st_idx]. It is reset to (st_idx+1)->num_checked_states_step
      * when st_idx is incremented.
      * */
-    fcs_int_limit_t num_times_left_for_soft_thread;
+    fcs_int_limit_t num_checked_states_left_for_soft_thread;
 
     /*
      * These variables are used to compute the MD5 checksum of a state
@@ -872,7 +871,7 @@ struct fc_solve_soft_thread_struct
     /*
      * The number of iterations with which to process this scan
      * */
-    int num_times_step;
+    int num_checked_states_step;
 
     /*
      * A malloced string that serves as an identification for the user.
@@ -1218,7 +1217,7 @@ extern void fc_solve_soft_thread_init_befs_or_bfs(
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 {
     fc_solve_soft_thread_t * soft_thread;
-    fcs_int_limit_t num_times_started_at;
+    fcs_int_limit_t num_checked_states_started_at;
     int ret;
     fc_solve_instance_t * instance = hard_thread->instance;
     int * st_idx_ptr = &(hard_thread->st_idx);
@@ -1251,7 +1250,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                 (hard_thread->prelude_idx < hard_thread->prelude_num_items))   \
             {      \
                 (*st_idx_ptr) = hard_thread->prelude[hard_thread->prelude_idx].scan_idx; \
-                hard_thread->num_times_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx].quota; \
+                hard_thread->num_checked_states_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx].quota; \
                 hard_thread->prelude_idx++; \
             }    \
             else       \
@@ -1260,7 +1259,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                 {       \
                     *(st_idx_ptr) = 0;  \
                 }      \
-                hard_thread->num_times_left_for_soft_thread = hard_thread->soft_threads[*st_idx_ptr].num_times_step;  \
+                hard_thread->num_checked_states_left_for_soft_thread = hard_thread->soft_threads[*st_idx_ptr].num_checked_states_step;  \
             }
 
 
@@ -1274,12 +1273,12 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
          * Keep record of the number of iterations since this
          * thread started.
          * */
-        num_times_started_at = hard_thread->num_times;
+        num_checked_states_started_at = hard_thread->num_checked_states;
         /*
          * Calculate a soft thread-wise limit for this hard
          * thread to run.
          * */
-        hard_thread->max_num_times = hard_thread->num_times + hard_thread->num_times_left_for_soft_thread;
+        hard_thread->max_num_checked_states = hard_thread->num_checked_states + hard_thread->num_checked_states_left_for_soft_thread;
 
 
 
@@ -1314,7 +1313,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
         /*
          * Determine how much iterations we still have left
          * */
-        hard_thread->num_times_left_for_soft_thread -= (hard_thread->num_times - num_times_started_at);
+        hard_thread->num_checked_states_left_for_soft_thread -= (hard_thread->num_checked_states - num_checked_states_started_at);
 
         /*
          * I use <= instead of == because it is possible that
@@ -1325,11 +1324,11 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
          *
          * It's a kludge, but it works.
          * */
-        if (hard_thread->num_times_left_for_soft_thread <= 0)
+        if (hard_thread->num_checked_states_left_for_soft_thread <= 0)
         {
             switch_to_next_soft_thread();
             /*
-             * Reset num_times_left_for_soft_thread
+             * Reset num_checked_states_left_for_soft_thread
              * */
 
         }
@@ -1372,10 +1371,10 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
             (
                 (ret == FCS_STATE_SUSPEND_PROCESS) &&
                 /* There's a limit to the scan only
-                 * if max_num_times is greater than 0 */
+                 * if max_num_checked_states is greater than 0 */
                 (
                     (
-                        (instance->num_times >= instance->effective_max_num_times)
+                        (instance->num_checked_states >= instance->effective_max_num_checked_states)
                     ) ||
                     (instance->num_states_in_collection >=
                         instance->effective_max_num_states_in_collection
@@ -1482,11 +1481,11 @@ static GCC_INLINE int fc_solve_optimize_solution(
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
 
     /* Initialize the optimization hard-thread and soft-thread */
-    optimization_thread->num_times_left_for_soft_thread = 1000000;
+    optimization_thread->num_checked_states_left_for_soft_thread = 1000000;
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
-    optimization_thread->max_num_times = INT_MAX;
+    optimization_thread->max_num_checked_states = INT_MAX;
 
     fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
@@ -1553,9 +1552,9 @@ static GCC_INLINE int fc_solve_resume_instance(
                     (
                         (ret == FCS_STATE_SUSPEND_PROCESS) &&
                         /* There's a limit to the scan only
-                         * if max_num_times is greater than 0 */
+                         * if max_num_checked_states is greater than 0 */
                         (
-                            (instance->num_times >= instance->effective_max_num_times)
+                            (instance->num_checked_states >= instance->effective_max_num_checked_states)
                             ||
                             (instance->num_states_in_collection >= instance->effective_max_num_states_in_collection)
                         )
@@ -1681,8 +1680,8 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
     fc_solve_hard_thread_t * const hard_thread
 )
 {
-    hard_thread->num_times = 0;
-    hard_thread->max_num_times = INT_MAX;
+    hard_thread->num_checked_states = 0;
+    hard_thread->max_num_checked_states = INT_MAX;
     hard_thread->num_soft_threads_finished = 0;
 }
 
@@ -1753,7 +1752,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
 
     fc_solve_finish_instance(instance);
 
-    instance->num_times = 0;
+    instance->num_checked_states = 0;
 
     instance->num_hard_threads_finished = 0;
 

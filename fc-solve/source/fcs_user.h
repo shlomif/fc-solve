@@ -273,7 +273,7 @@ DLLEXPORT extern int freecell_solver_user_next_soft_thread(
 
 DLLEXPORT extern void freecell_solver_user_set_soft_thread_step(
     void * user_instance,
-    int num_times_step
+    int num_checked_states_step
     );
 
 DLLEXPORT extern int freecell_solver_user_next_hard_thread(

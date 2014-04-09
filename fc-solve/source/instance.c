@@ -40,7 +40,7 @@
 #include <fcntl.h>
 #include <limits.h>
 
-#define NUM_TIMES_STEP 50
+#define NUM_CHECKED_STATES_STEP 50
 
 #include "config.h"
 
@@ -344,7 +344,7 @@ static GCC_INLINE void init_soft_thread(
         BRFS_VAR(soft_thread, bfs_queue_last_item) =
         NULL;
 
-    soft_thread->num_times_step = NUM_TIMES_STEP;
+    soft_thread->num_checked_states_step = NUM_CHECKED_STATES_STEP;
 
     soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order = tests_order_dup(&(soft_thread->hard_thread->instance->instance_tests_order));
 
@@ -369,7 +369,7 @@ void fc_solve_instance__init_hard_thread(
     fc_solve_new_soft_thread(hard_thread);
 
     /* Set a limit on the Hard-Thread's scan. */
-    hard_thread->num_times_step = NUM_TIMES_STEP;
+    hard_thread->num_checked_states_step = NUM_CHECKED_STATES_STEP;
 
 
     hard_thread->prelude_as_string = NULL;
@@ -402,13 +402,13 @@ fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * con
     instance->num_indirect_prev_states = 0;
 #endif
 
-    instance->num_times = 0;
+    instance->num_checked_states = 0;
 
     instance->num_states_in_collection = 0;
     instance->active_num_states_in_collection = 0;
 
-    instance->max_num_times = -1;
-    instance->effective_max_num_times = INT_MAX;
+    instance->max_num_checked_states = -1;
+    instance->effective_max_num_checked_states = INT_MAX;
     instance->max_depth = -1;
     instance->max_num_states_in_collection = -1;
     instance->effective_max_num_states_in_collection = INT_MAX;
@@ -567,8 +567,8 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
                 compile_prelude(hard_thread);
             }
         }
-        hard_thread->num_times_left_for_soft_thread =
-            hard_thread->soft_threads[0].num_times_step;
+        hard_thread->num_checked_states_left_for_soft_thread =
+            hard_thread->soft_threads[0].num_checked_states_step;
     }
 
     {
@@ -1001,7 +1001,7 @@ void fc_solve_start_instance_process_with_board(
             {
                 hard_thread->prelude_idx = 0;
                 hard_thread->st_idx = hard_thread->prelude[hard_thread->prelude_idx].scan_idx;
-                hard_thread->num_times_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx].quota;
+                hard_thread->num_checked_states_left_for_soft_thread = hard_thread->prelude[hard_thread->prelude_idx].quota;
                 hard_thread->prelude_idx++;
             }
             else

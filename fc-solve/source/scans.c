@@ -503,7 +503,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
                     message, \
                     (long int)DFS_VAR(soft_thread, depth), \
                     (long int)(the_soft_dfs_info-DFS_VAR(soft_thread, soft_dfs_info)), \
-                    (long int)(instance->num_times), \
+                    (long int)(instance->num_checked_states), \
                     the_soft_dfs_info->tests_list_index, \
                     the_soft_dfs_info->test_index, \
                     the_soft_dfs_info->current_state_index, \
@@ -620,10 +620,10 @@ static GCC_INLINE void mark_as_dead_end(
     return;
 }
 
-#define BUMP_NUM_TIMES() \
+#define BUMP_NUM_CHECKED_STATES() \
 {       \
-    (*instance_num_times_ptr)++; \
-    (*hard_thread_num_times_ptr)++; \
+    (*instance_num_checked_states_ptr)++; \
+    (*hard_thread_num_checked_states_ptr)++; \
 }
 
 #define SHOULD_STATE_BE_PRUNED(enable_pruning, ptr_state) \
@@ -997,7 +997,7 @@ int fc_solve_soft_dfs_do_solve(
     const int soft_thread_id = soft_thread->id;
     const fcs_tests_list_of_lists * the_tests_list_ptr;
     fcs_tests_group_type_t local_shuffling_type = FCS_NO_SHUFFLING;
-    fcs_int_limit_t hard_thread_max_num_times;
+    fcs_int_limit_t hard_thread_max_num_checked_states;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -1033,22 +1033,22 @@ int fc_solve_soft_dfs_do_solve(
     }
 
 
-    fcs_int_limit_t * const instance_num_times_ptr = &(instance->num_times);
-    fcs_int_limit_t * const hard_thread_num_times_ptr
-        = &(hard_thread->num_times);
+    fcs_int_limit_t * const instance_num_checked_states_ptr = &(instance->num_checked_states);
+    fcs_int_limit_t * const hard_thread_num_checked_states_ptr
+        = &(hard_thread->num_checked_states);
 
-#define CALC_HARD_THREAD_MAX_NUM_TIMES() \
-    hard_thread_max_num_times = hard_thread->max_num_times; \
+#define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES() \
+    hard_thread_max_num_checked_states = hard_thread->max_num_checked_states; \
                 \
     {           \
-        fcs_int_limit_t lim = hard_thread->num_times       \
-            + (instance->effective_max_num_times - *(instance_num_times_ptr)) \
+        fcs_int_limit_t lim = hard_thread->num_checked_states       \
+            + (instance->effective_max_num_checked_states - *(instance_num_checked_states_ptr)) \
             ; \
               \
-        hard_thread_max_num_times = min(hard_thread_max_num_times, lim); \
+        hard_thread_max_num_checked_states = min(hard_thread_max_num_checked_states, lim); \
     }
 
-    CALC_HARD_THREAD_MAX_NUM_TIMES();
+    CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES();
 
     const fcs_instance_debug_iter_output_func_t debug_iter_output_func = instance->debug_iter_output_func;
     const fcs_instance_debug_iter_output_context_t debug_iter_output_context = instance->debug_iter_output_context;
@@ -1155,7 +1155,7 @@ int fc_solve_soft_dfs_do_solve(
                 {
                     debug_iter_output_func(
                         debug_iter_output_context,
-                        *(instance_num_times_ptr),
+                        *(instance_num_checked_states_ptr),
                         DEPTH(),
                         (void*)instance,
                         STATE_TO_PASS(),
@@ -1182,7 +1182,7 @@ int fc_solve_soft_dfs_do_solve(
                 {
                     instance->final_state = PTR_STATE;
 
-                    BUMP_NUM_TIMES();
+                    BUMP_NUM_CHECKED_STATES();
 
                     TRACE0("Returning FCS_STATE_WAS_SOLVED");
                     return FCS_STATE_WAS_SOLVED;
@@ -1418,7 +1418,7 @@ int fc_solve_soft_dfs_do_solve(
                     )
                    )
                 {
-                    BUMP_NUM_TIMES();
+                    BUMP_NUM_CHECKED_STATES();
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Gypsy");
 
@@ -1428,7 +1428,7 @@ int fc_solve_soft_dfs_do_solve(
                     );
 
 #ifndef FCS_WITHOUT_VISITED_ITER
-                    FCS_S_VISITED_ITER(single_derived_state) = instance->num_times;
+                    FCS_S_VISITED_ITER(single_derived_state) = instance->num_checked_states;
 #endif
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Golf");
@@ -1483,7 +1483,7 @@ int fc_solve_soft_dfs_do_solve(
      * We need to bump the number of iterations so it will be ready with
      * a fresh iterations number for the next scan that takes place.
      * */
-    BUMP_NUM_TIMES();
+    BUMP_NUM_CHECKED_STATES();
 
     DEPTH() = -1;
 
@@ -1513,7 +1513,7 @@ int fc_solve_soft_dfs_do_solve(
             { \
             printf("BestFS - %s ; Iters=%ld.\n", \
                     message, \
-                    (long)(instance->num_times) \
+                    (long)(instance->num_checked_states) \
                     );  \
             fflush(stdout); \
             } \
@@ -1695,7 +1695,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 
     int error_code;
 
-    fcs_int_limit_t hard_thread_max_num_times;
+    fcs_int_limit_t hard_thread_max_num_checked_states;
 
     fcs_derived_states_list_t derived;
     derived.num_states = 0;
@@ -1710,8 +1710,8 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
     const int method = soft_thread->method;
-    fcs_int_limit_t * const instance_num_times_ptr = &(instance->num_times);
-    fcs_int_limit_t * const hard_thread_num_times_ptr = &(hard_thread->num_times);
+    fcs_int_limit_t * const instance_num_checked_states_ptr = &(instance->num_checked_states);
+    fcs_int_limit_t * const hard_thread_num_checked_states_ptr = &(hard_thread->num_checked_states);
 
     INITIALIZE_STATE();
 
@@ -1729,7 +1729,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     SET_GAME_PARAMS();
 #endif
 
-    CALC_HARD_THREAD_MAX_NUM_TIMES();
+    CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES();
 
     const fcs_instance_debug_iter_output_func_t debug_iter_output_func = instance->debug_iter_output_func;
     const fcs_instance_debug_iter_output_context_t debug_iter_output_context = instance->debug_iter_output_context;
@@ -1820,7 +1820,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         {
             debug_iter_output_func(
                     debug_iter_output_context,
-                    *(instance_num_times_ptr),
+                    *(instance_num_checked_states_ptr),
                     calc_depth(PTR_STATE),
                     (void*)instance,
                     STATE_TO_PASS(),
@@ -1840,7 +1840,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         {
             instance->final_state = PTR_STATE;
 
-            BUMP_NUM_TIMES();
+            BUMP_NUM_CHECKED_STATES();
 
             error_code = FCS_STATE_WAS_SOLVED;
             goto my_return_label;
@@ -1883,7 +1883,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 
         /* Increase the number of iterations by one .
          * */
-        BUMP_NUM_TIMES();
+        BUMP_NUM_CHECKED_STATES();
 
 
         TRACE0("Insert all states");
@@ -1966,7 +1966,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         }
 
 #ifndef FCS_WITHOUT_VISITED_ITER
-        FCS_S_VISITED_ITER(PTR_STATE) = *(instance_num_times_ptr)-1;
+        FCS_S_VISITED_ITER(PTR_STATE) = *(instance_num_checked_states_ptr)-1;
 #endif
 
 label_next_state:
