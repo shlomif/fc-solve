@@ -41,7 +41,7 @@ sub run_tests
     exec(($use_prove ? @{_calc_prove()} : 'runprove'), @$tests);
 }
 
-my $tests_glob = "*.{exe,py,t}";
+my $tests_glob = "*.{t.exe,py,t}";
 
 GetOptions(
     '--glob=s' => \$tests_glob,
@@ -188,7 +188,7 @@ GetOptions(
                 ||
             ($a cmp $b)
         }
-        (glob("t/$tests_glob"),
+        (glob("t/$tests_glob"),glob("./$tests_glob"),
             (
                 ($fcs_path ne $abs_bindir)
                 ? (glob("$abs_bindir/t/t/$tests_glob"))

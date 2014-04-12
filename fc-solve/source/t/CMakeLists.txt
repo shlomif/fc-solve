@@ -39,12 +39,12 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
     INCLUDE_DIRECTORIES (BEFORE "${CMAKE_BINARY_DIR}")
 
     MY_ADD_EXE (
-        "t/card-test-render.exe"
+        "card-test-render.t.exe"
         "card-test-render.c"
     )
 
     MY_ADD_EXE (
-        "t/card-test-parse.exe"
+        "card-test-parse.t.exe"
         "card-test-parse.c"
     )
 
@@ -62,7 +62,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
 
     FILE (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/t")
 
-    SET (EXE_FILE "t/bit-reader-and-writer-test.exe")
+    SET (EXE_FILE "bit-reader-and-writer-test.t.exe")
 
     ADD_EXECUTABLE(
         "${EXE_FILE}"
@@ -80,7 +80,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
 
     IF (DEBONDT_DELTA_STATES)
 
-        SET (EXE_FILE "t/delta-states-debondt-test.exe")
+        SET (EXE_FILE "delta-states-debondt-test.t.exe")
 
         ADD_EXECUTABLE(
             "${EXE_FILE}"
@@ -99,7 +99,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
 
     ELSE (DEBONDT_DELTA_STATES)
 
-        SET (EXE_FILE "t/delta-states-test.exe")
+        SET (EXE_FILE "delta-states-test.t.exe")
 
         ADD_EXECUTABLE(
             "${EXE_FILE}"
@@ -117,7 +117,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         )
     ENDIF (DEBONDT_DELTA_STATES)
 
-    SET (EXE_FILE "t/dbm-kaztree-compare-records-test.exe")
+    SET (EXE_FILE "dbm-kaztree-compare-records-test.t.exe")
 
     ADD_EXECUTABLE(
         "${EXE_FILE}"
