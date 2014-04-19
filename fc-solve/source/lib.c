@@ -33,7 +33,7 @@
 #include <ctype.h>
 #include <assert.h>
 
-#include "card.h"
+#include "state.h"
 #include "instance.h"
 #include "preset.h"
 #include "fcs_user.h"

@@ -23,7 +23,7 @@
  */
 /*
  * card.c - functions to convert cards and card components to and from
- * its user representation.
+ * their user representation.
  *
  */
 
@@ -32,7 +32,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "card.h"
+#include "state.h"
 #include "inline.h"
 #include "bool.h"
 

@@ -38,7 +38,7 @@ system(qq{./Tatzer -l x64b --nfc=2 --states-type=COMPACT_STATES --dbm=kaztree});
 my @modules = ('app_str.o', 'card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'libavl/avl.o', 'meta_alloc.o',);
 
 foreach my $fn ('app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
-    'dbm_kaztree.c', 'card.h', 'config.h', 'state.h',
+    'dbm_kaztree.c', 'config.h', 'state.h',
     'dbm_solver.h', 'kaz_tree.h', 'dbm_solver_key.h',
     'fcs_move.h', 'inline.h', 'bool.h', 'internal_move_struct.h', 'app_str.h',
     'delta_states.c', 'delta_states.h', 'fcs_dllexport.h', 'bit_rw.h',

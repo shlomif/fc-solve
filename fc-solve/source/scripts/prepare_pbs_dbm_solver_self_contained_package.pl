@@ -87,7 +87,7 @@ my $main_base = $depth_dbm ? "depth_dbm_solver" : "dbm_solver";
 my @modules = ('app_str.o', 'card.o', "$main_base.o", 'state.o', 'dbm_kaztree.o', 'libavl/avl.o', 'meta_alloc.o',);
 
 foreach my $fn ('app_str.c', 'card.c', "$main_base.c", 'state.c',
-    'dbm_kaztree.c', 'card.h', 'state.h', 'lock.h',
+    'dbm_kaztree.c', 'state.h', 'lock.h',
     'dbm_solver.h', 'dbm_solver_head.h', 'kaz_tree.h', 'dbm_solver_key.h',
     'fcs_move.h', 'inline.h', 'bool.h', 'internal_move_struct.h', 'app_str.h',
     'delta_states.c', 'delta_states.h', 'fcs_dllexport.h', 'bit_rw.h',

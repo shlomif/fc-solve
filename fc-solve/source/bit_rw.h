@@ -29,7 +29,6 @@
 #define FC_SOLVE_BIT_RW_H
 #include "config.h"
 #include "state.h"
-#include "card.h"
 #include "fcs_enums.h"
 #include "app_str.h"
 #include "unused.h"

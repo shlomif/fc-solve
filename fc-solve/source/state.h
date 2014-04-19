@@ -42,7 +42,6 @@ extern "C" {
 #include "inline.h"
 #include "bool.h"
 
-#include "card.h"
 #include "game_type_limit.h"
 
 #include "internal_move_struct.h"

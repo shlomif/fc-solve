@@ -38,7 +38,6 @@ extern "C" {
 #include "bool.h"
 #include "inline.h"
 
-#include "card.h"
 #include "state.h"
 
 typedef struct

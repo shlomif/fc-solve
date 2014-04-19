@@ -22,7 +22,7 @@ system(qq{./Tatzer -l x64b --nfc=2 --states-type=COMPACT_STATES --dbm=kaztree});
 my @modules = ('app_str.o', 'card.o', 'fcc_solver.o', 'state.o', 'kaz_tree.o', 'rwlock.o', 'queue.o', 'meta_alloc.o', 'libavl/avl.o', );
 
 foreach my $fn ('alloc.c', 'app_str.c', 'card.c', 'dbm_solver.c', 'state.c',
-    'dbm_kaztree.c', 'alloc.h', 'card.h', 'config.h', 'state.h',
+    'dbm_kaztree.c', 'alloc.h', 'config.h', 'state.h',
     'dbm_solver.h', 'kaz_tree.c', 'kaz_tree.h', 'dbm_solver_key.h',
     'fcs_move.h', 'inline.h', 'bool.h', 'internal_move_struct.h', 'app_str.h',
     'delta_states.c', 'fcs_dllexport.h', 'bit_rw.h', 'fcs_enums.h', 'unused.h',

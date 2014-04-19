@@ -39,7 +39,6 @@
 #include "config.h"
 
 #include "state.h"
-#include "card.h"
 #include "instance.h"
 #include "scans.h"
 

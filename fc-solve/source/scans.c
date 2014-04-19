@@ -39,7 +39,6 @@
 #include "config.h"
 
 #include "state.h"
-#include "card.h"
 #include "scans.h"
 #include "meta_alloc.h"
 #include "check_and_add_state.h"
