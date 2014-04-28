@@ -42,6 +42,14 @@ typedef struct
 
 typedef Pvoid_t store_t;
 
+static GCC_INLINE void delete_state(
+    store_t * store,
+    fcs_cache_key_t * key)
+{
+    int Rc_int;
+    JHSD(Rc_int, *store, &(key->s), sizeof(key->s));
+}
+
 static GCC_INLINE void insert_state(
     store_t * store,
     fcs_cache_key_t * key)
@@ -102,6 +110,9 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
     stack_item->curr_state = state;
 
     fcs_derived_state_t * derived_list = NULL, * derived_iter = NULL;
+
+    instance->count_num_processed++;
+
     if (instance_solver_thread_calc_derived_states(
         instance->local_variant,
         state,
@@ -118,7 +129,7 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
     }
 
     stack_item->count_next_states = 0;
-    stack_item->next_state_idx = -1;
+    stack_item->next_state_idx = 0;
     fcs_kv_state_t kv;
     /* Now recycle the derived_list */
     while (derived_list)
@@ -209,6 +220,41 @@ static GCC_INLINE void instance_free(
     fc_solve_meta_compact_allocator_finish(&(instance->meta_alloc));
 }
 
+static GCC_INLINE void instance_run(
+    fcs_dbm_solver_instance_t * const instance
+)
+{
+    while (instance->count_num_processed < instance->max_count_num_processed
+        && (instance->should_terminate == DONT_TERMINATE))
+    {
+        const int depth = (instance->stack_depth);
+        if (depth < 0)
+        {
+            instance->should_terminate = QUEUE_TERMINATE;
+        }
+        else
+        {
+            pseduo_dfs_stack_item_t * const stack_item = instance->stack + depth;
+            const int idx = (stack_item->next_state_idx)++;
+            if (idx == stack_item->count_next_states)
+            {
+                /* Demote from the current depth. */
+                for (int i = 0; i < stack_item->count_next_states ; i++)
+                {
+                    delete_state(&(instance->store), &(stack_item->next_states[ i ]));
+                }
+                stack_item->count_next_states = 0;
+                stack_item->next_state_idx = 0;
+                (instance->stack_depth)--;
+            }
+            else
+            {
+                instance__inspect_new_state(instance, &(stack_item->next_states[idx]));
+            }
+        }
+    }
+}
+
 #define USER_STATE_SIZE 2000
 
 int main(int argc, char * argv[])
@@ -245,6 +291,12 @@ int main(int argc, char * argv[])
         delta_limit,
         init_state_ptr
     );
+
+    while ( instance.should_terminate == DONT_TERMINATE );
+    {
+        instance_run(&instance);
+        instance.max_count_num_processed += delta_limit;
+    }
 
     instance_free(&instance);
 
