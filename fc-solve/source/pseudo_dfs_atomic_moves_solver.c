@@ -138,6 +138,7 @@ static GCC_INLINE void instance_init(
     pseduo_dfs_stack_item_t * stack_item = &( instance->stack[0] );
     stack_item->count_next_states = 0;
     stack_item->next_state_idx = -1;
+    fcs_kv_state_t kv;
     /* Now recycle the derived_list */
     while (derived_list)
     {
@@ -146,6 +147,9 @@ static GCC_INLINE void instance_init(
         {
             stack_item->next_states = SREALLOC(stack_item->next_states, ++(stack_item->max_count_next_states));
         }
+        kv.key = &(derived_list->state.s);
+        kv.val = &(derived_list->state.info);
+        fc_solve_canonize_state(&kv, 4, 8);
         stack_item->next_states[i] = derived_list->state;
 #define derived_list_next derived_iter
         derived_list_next = derived_list->next;
