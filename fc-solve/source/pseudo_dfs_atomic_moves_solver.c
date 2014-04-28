@@ -70,7 +70,7 @@ typedef struct
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(
-    fcs_dbm_solver_instance_t * instance,
+    fcs_dbm_solver_instance_t * const instance,
     enum fcs_dbm_variant_type_t local_variant,
     long iters_delta_limit,
     fcs_cache_key_t * init_state
@@ -99,7 +99,7 @@ static GCC_INLINE void instance_init(
     instance->max_stack_depth = 0;
     instance->stack_depth = 0;
 
-    instance->stack = SREALLOC(instance->stack, ++instance->max_stack_depth);
+    instance->stack = SREALLOC(instance->stack, ++(instance->max_stack_depth));
     instance->stack[0].curr_state = init_state;
     instance->stack[0].next_states = NULL;
     instance->stack[0].count_next_states = -1;
@@ -109,6 +109,23 @@ static GCC_INLINE void instance_init(
 
 
     return;
+}
+
+static GCC_INLINE void instance_free(
+    fcs_dbm_solver_instance_t * const instance
+)
+{
+
+    for (int d = 0; d < instance->stack_depth ; d++)
+    {
+        free (instance->stack[d].next_states);
+        instance->stack[d].next_states = NULL;
+    }
+    free (instance->stack);
+    instance->stack = NULL;
+
+    Word_t Rc_word;
+    JHSFA(Rc_word, instance->store);
 }
 
 #define USER_STATE_SIZE 2000
@@ -147,4 +164,8 @@ int main(int argc, char * argv[])
         delta_limit,
         init_state_ptr
     );
+
+    instance_free(&instance);
+
+    return 0;
 }
