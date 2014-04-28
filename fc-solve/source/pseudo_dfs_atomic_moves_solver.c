@@ -37,7 +37,7 @@ typedef struct
 {
     fcs_cache_key_t * curr_state;
     fcs_cache_key_t * next_states;
-    int count_next_states, next_state_idx;
+    int count_next_states, max_count_next_states, next_state_idx;
 } pseduo_dfs_stack_item_t;
 
 typedef Pvoid_t store_t;
@@ -67,6 +67,9 @@ typedef struct
     long count_num_processed, max_count_num_processed;
     fcs_bool_t solution_was_found;
     enum TERMINATE_REASON should_terminate;
+    fcs_compact_allocator_t derived_list_allocator;
+    fcs_meta_compact_allocator_t meta_alloc;
+    fcs_derived_state_t * derived_list_recycle_bin;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(
@@ -103,10 +106,54 @@ static GCC_INLINE void instance_init(
     instance->stack[0].curr_state = init_state;
     instance->stack[0].next_states = NULL;
     instance->stack[0].count_next_states = -1;
+    instance->stack[0].max_count_next_states = 0;
     instance->stack[0].next_state_idx = -1;
 
     insert_state(&(instance->store), init_state);
 
+
+    fc_solve_meta_compact_allocator_init(
+        &(instance->meta_alloc)
+    );
+    fc_solve_compact_allocator_init(&(instance->derived_list_allocator), &(instance->meta_alloc));
+
+    instance->derived_list_recycle_bin = NULL;
+
+    fcs_derived_state_t * derived_list = NULL, * derived_iter = NULL;
+    if (instance_solver_thread_calc_derived_states(
+        local_variant,
+        instance->stack[0].curr_state,
+        NULL,
+        &derived_list,
+        &(instance->derived_list_recycle_bin),
+        &(instance->derived_list_allocator),
+        TRUE
+    ))
+    {
+        instance->should_terminate = SOLUTION_FOUND_TERMINATE;
+        instance->solution_was_found = TRUE;
+        return;
+    }
+
+    pseduo_dfs_stack_item_t * stack_item = &( instance->stack[0] );
+    stack_item->count_next_states = 0;
+    stack_item->next_state_idx = -1;
+    /* Now recycle the derived_list */
+    while (derived_list)
+    {
+        int i = (stack_item->count_next_states)++;
+        if (i >= stack_item->max_count_next_states)
+        {
+            stack_item->next_states = SREALLOC(stack_item->next_states, ++(stack_item->max_count_next_states));
+        }
+        stack_item->next_states[i] = derived_list->state;
+#define derived_list_next derived_iter
+        derived_list_next = derived_list->next;
+        derived_list->next = instance->derived_list_recycle_bin;
+        instance->derived_list_recycle_bin = derived_list;
+        derived_list = derived_list_next;
+#undef derived_list_next
+    }
     return;
 }
 
@@ -114,7 +161,6 @@ static GCC_INLINE void instance_free(
     fcs_dbm_solver_instance_t * const instance
 )
 {
-
     for (int d = 0; d < instance->stack_depth ; d++)
     {
         free (instance->stack[d].next_states);
@@ -125,6 +171,9 @@ static GCC_INLINE void instance_free(
 
     Word_t Rc_word;
     JHSFA(Rc_word, instance->store);
+
+    fc_solve_compact_allocator_finish(&(instance->derived_list_allocator));
+    fc_solve_meta_compact_allocator_finish(&(instance->meta_alloc));
 }
 
 #define USER_STATE_SIZE 2000
@@ -153,7 +202,7 @@ int main(int argc, char * argv[])
 
     fc_solve_initial_user_state_to_c(user_state, &init_state_pair, 4, 8, 1, NULL);
 
-    init_state_ptr = &(init_state_pair.s);
+    init_state_ptr = &(init_state_pair);
 
     fcs_dbm_solver_instance_t instance;
 
