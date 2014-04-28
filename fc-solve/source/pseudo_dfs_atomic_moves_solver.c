@@ -79,59 +79,32 @@ typedef struct
     fcs_compact_allocator_t derived_list_allocator;
     fcs_meta_compact_allocator_t meta_alloc;
     fcs_derived_state_t * derived_list_recycle_bin;
+    enum fcs_dbm_variant_type_t local_variant;
 } fcs_dbm_solver_instance_t;
 
-static GCC_INLINE void instance_init(
+
+
+static GCC_INLINE fcs_bool_t instance__inspect_new_state(
     fcs_dbm_solver_instance_t * const instance,
-    enum fcs_dbm_variant_type_t local_variant,
-    long iters_delta_limit,
-    fcs_cache_key_t * init_state
+    fcs_cache_key_t * const state
 )
 {
-    FCS_INIT_LOCK(instance->stack_lock);
-    FCS_INIT_LOCK(instance->storage_lock);
-
-    instance->solution_was_found = FALSE;
-    instance->should_terminate = DONT_TERMINATE;
-
-    instance->count_num_processed = 0;
-    if (iters_delta_limit >= 0)
+    const int depth = ((instance->stack_depth)++);
+    const int max_depth = instance->max_stack_depth;
+    if (depth == max_depth)
     {
-        instance->max_count_num_processed =
-            instance->count_num_processed + iters_delta_limit;
+        instance->stack = SREALLOC(instance->stack, ++(instance->max_stack_depth));
+        pseduo_dfs_stack_item_t * const stack_item = instance->stack + max_depth;
+        stack_item->next_states = NULL;
+        stack_item->max_count_next_states = 0;
     }
-    else
-    {
-        instance->max_count_num_processed = LONG_MAX;
-    }
-
-    instance->store = (Pvoid_t)NULL;
-
-    instance->stack = NULL;
-    instance->max_stack_depth = 0;
-    instance->stack_depth = 0;
-
-    instance->stack = SREALLOC(instance->stack, ++(instance->max_stack_depth));
-    instance->stack[0].curr_state = init_state;
-    instance->stack[0].next_states = NULL;
-    instance->stack[0].count_next_states = -1;
-    instance->stack[0].max_count_next_states = 0;
-    instance->stack[0].next_state_idx = -1;
-
-    insert_state(&(instance->store), init_state);
-
-
-    fc_solve_meta_compact_allocator_init(
-        &(instance->meta_alloc)
-    );
-    fc_solve_compact_allocator_init(&(instance->derived_list_allocator), &(instance->meta_alloc));
-
-    instance->derived_list_recycle_bin = NULL;
+    pseduo_dfs_stack_item_t * const stack_item = instance->stack + depth;
+    stack_item->curr_state = state;
 
     fcs_derived_state_t * derived_list = NULL, * derived_iter = NULL;
     if (instance_solver_thread_calc_derived_states(
-        local_variant,
-        instance->stack[0].curr_state,
+        instance->local_variant,
+        state,
         NULL,
         &derived_list,
         &(instance->derived_list_recycle_bin),
@@ -141,10 +114,9 @@ static GCC_INLINE void instance_init(
     {
         instance->should_terminate = SOLUTION_FOUND_TERMINATE;
         instance->solution_was_found = TRUE;
-        return;
+        return TRUE;
     }
 
-    pseduo_dfs_stack_item_t * stack_item = &( instance->stack[0] );
     stack_item->count_next_states = 0;
     stack_item->next_state_idx = -1;
     fcs_kv_state_t kv;
@@ -172,7 +144,50 @@ static GCC_INLINE void instance_init(
         derived_list = derived_list_next;
 #undef derived_list_next
     }
-    return;
+
+    return FALSE;
+}
+
+static GCC_INLINE void instance_init(
+    fcs_dbm_solver_instance_t * const instance,
+    enum fcs_dbm_variant_type_t local_variant,
+    long iters_delta_limit,
+    fcs_cache_key_t * init_state
+)
+{
+    instance->local_variant = local_variant;
+    FCS_INIT_LOCK(instance->stack_lock);
+    FCS_INIT_LOCK(instance->storage_lock);
+
+    instance->solution_was_found = FALSE;
+    instance->should_terminate = DONT_TERMINATE;
+
+    instance->count_num_processed = 0;
+    if (iters_delta_limit >= 0)
+    {
+        instance->max_count_num_processed =
+            instance->count_num_processed + iters_delta_limit;
+    }
+    else
+    {
+        instance->max_count_num_processed = LONG_MAX;
+    }
+
+    instance->store = (Pvoid_t)NULL;
+
+    instance->stack = NULL;
+    instance->max_stack_depth = 0;
+    instance->stack_depth = 0;
+
+    fc_solve_meta_compact_allocator_init(
+        &(instance->meta_alloc)
+    );
+    fc_solve_compact_allocator_init(&(instance->derived_list_allocator), &(instance->meta_alloc));
+    instance->derived_list_recycle_bin = NULL;
+
+    insert_state(&(instance->store), init_state);
+
+    instance__inspect_new_state(instance, init_state);
 }
 
 static GCC_INLINE void instance_free(
