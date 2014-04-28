@@ -47,7 +47,7 @@ static GCC_INLINE void insert_state(
     fcs_cache_key_t * key)
 {
     Word_t * PValue;
-    JHSI(PValue, *store, key, sizeof(*key));
+    JHSI(PValue, *store, &(key->s), sizeof(key->s));
     *PValue = 1;
 }
 
