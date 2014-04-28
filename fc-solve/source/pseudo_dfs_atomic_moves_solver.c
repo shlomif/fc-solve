@@ -51,6 +51,15 @@ static GCC_INLINE void insert_state(
     *PValue = 1;
 }
 
+static GCC_INLINE fcs_bool_t lookup_state(
+    store_t * store,
+    fcs_cache_key_t * key)
+{
+    Word_t * PValue;
+    JHSG(PValue, *store, &(key->s), sizeof(key->s));
+    return (PValue != NULL);
+}
+
 typedef struct
 {
     fcs_lock_t storage_lock;
@@ -142,15 +151,20 @@ static GCC_INLINE void instance_init(
     /* Now recycle the derived_list */
     while (derived_list)
     {
-        int i = (stack_item->count_next_states)++;
-        if (i >= stack_item->max_count_next_states)
-        {
-            stack_item->next_states = SREALLOC(stack_item->next_states, ++(stack_item->max_count_next_states));
-        }
         kv.key = &(derived_list->state.s);
         kv.val = &(derived_list->state.info);
         fc_solve_canonize_state(&kv, 4, 8);
-        stack_item->next_states[i] = derived_list->state;
+
+        if (lookup_state(&(instance->store), &(derived_list->state)))
+        {
+            int i = (stack_item->count_next_states)++;
+            if (i >= stack_item->max_count_next_states)
+            {
+                stack_item->next_states = SREALLOC(stack_item->next_states, ++(stack_item->max_count_next_states));
+            }
+            stack_item->next_states[i] = derived_list->state;
+            insert_state(&(instance->store), &(stack_item->next_states[i]));
+        }
 #define derived_list_next derived_iter
         derived_list_next = derived_list->next;
         derived_list->next = instance->derived_list_recycle_bin;
