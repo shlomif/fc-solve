@@ -97,7 +97,7 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
     fcs_cache_key_t * const state
 )
 {
-    const int depth = ((instance->stack_depth)++);
+    const int depth = (instance->stack_depth);
     const int max_depth = instance->max_stack_depth;
     if (depth == max_depth)
     {
@@ -138,7 +138,7 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
         kv.val = &(derived_list->state.info);
         fc_solve_canonize_state(&kv, 4, 8);
 
-        if (lookup_state(&(instance->store), &(derived_list->state)))
+        if (! lookup_state(&(instance->store), &(derived_list->state)))
         {
             int i = (stack_item->count_next_states)++;
             if (i >= stack_item->max_count_next_states)
@@ -249,18 +249,39 @@ static GCC_INLINE void instance_run(
             }
             else
             {
+                instance->stack_depth++;
                 instance__inspect_new_state(instance, &(stack_item->next_states[idx]));
             }
         }
     }
 }
 
+static GCC_INLINE void instance__print_coords_to_log(
+    fcs_dbm_solver_instance_t * const instance,
+    FILE * log_fh
+)
+{
+    fprintf (log_fh, "At %ld iterations Coords=[", instance->count_num_processed);
+
+    const pseduo_dfs_stack_item_t * stack_item = instance->stack;
+    const pseduo_dfs_stack_item_t * const end_stack_item = stack_item + instance->stack_depth;
+    for (; stack_item <= end_stack_item ; stack_item++)
+    {
+        fprintf(log_fh, "%d,", stack_item->next_state_idx);
+    }
+
+    fprintf (log_fh, "]\n");
+}
 #define USER_STATE_SIZE 2000
 
 int main(int argc, char * argv[])
 {
     enum fcs_dbm_variant_type_t local_variant;
+#if 1
     const int delta_limit = 100000;
+#else
+    const int delta_limit = 2;
+#endif
     const char * filename = argv[1];
 
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
@@ -292,10 +313,24 @@ int main(int argc, char * argv[])
         init_state_ptr
     );
 
-    while ( instance.should_terminate == DONT_TERMINATE );
+    while ( instance.should_terminate == DONT_TERMINATE )
     {
         instance_run(&instance);
+
+        FILE * log_fh = fopen("fc-solve-pseudo-dfs.log.txt", "at");
+        instance__print_coords_to_log(&instance, log_fh);
+        fclose(log_fh);
+
         instance.max_count_num_processed += delta_limit;
+    }
+
+    if (instance.should_terminate == SOLUTION_FOUND_TERMINATE)
+    {
+        printf("%s\n", "Solution was found.");
+    }
+    else
+    {
+        printf("%s\n", "I could not solve it.");
     }
 
     instance_free(&instance);
