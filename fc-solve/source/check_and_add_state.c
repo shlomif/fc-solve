@@ -625,15 +625,18 @@ fcs_bool_t fc_solve_check_and_add_state(
         JHSI(PValue, instance->judy_array, new_state_key, sizeof(*new_state_key));
 
         /* later_todo : Handle out-of-memory. */
-        if ((is_state_new = (*PValue == 0)))
+        if (*PValue == 0)
         {
             /* A new state. */
-            *PValue = (PWord_t)(existing_state_val = new_state_val);
+            *PValue = (PWord_t)(FCS_STATE_kv_to_collectible(new_state));
+            ON_STATE_NEW();
+            return TRUE;
         }
         else
         {
             /* Already exists. */
-            existing_state_val = (fcs_state_extra_info_t *)(*PValue);
+            FCS_STATE_collectible_to_kv(existing_state_raw, (fcs_collectible_state_t *)(*PValue));
+            return FALSE;
         }
     }
 #else

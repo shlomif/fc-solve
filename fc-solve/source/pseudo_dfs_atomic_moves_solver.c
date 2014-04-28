@@ -31,6 +31,8 @@
 
 #include "dbm_solver_head.h"
 
+#include <Judy.h>
+
 typedef struct
 {
     fcs_cache_key_t * curr_state;
@@ -38,13 +40,24 @@ typedef struct
     int count_next_states, next_state_idx;
 } pseduo_dfs_stack_item_t;
 
+typedef Pvoid_t store_t;
+
+static GCC_INLINE void insert_state(
+    store_t * store,
+    fcs_cache_key_t * key)
+{
+    Word_t * PValue;
+    JHSI(PValue, *store, key, sizeof(*key));
+    *PValue = 1;
+}
+
 typedef struct
 {
     fcs_lock_t storage_lock;
 #if 0
     fcs_lru_cache_t cache;
 #endif
-    fcs_dbm_store_t store;
+    store_t store;
 
     long pre_cache_max_count;
     /* The stack */
@@ -80,6 +93,8 @@ static GCC_INLINE void instance_init(
         instance->max_count_num_processed = LONG_MAX;
     }
 
+    instance->store = (Pvoid_t)NULL;
+
     instance->stack = NULL;
     instance->max_stack_depth = 0;
     instance->stack_depth = 0;
@@ -89,6 +104,9 @@ static GCC_INLINE void instance_init(
     instance->stack[0].next_states = NULL;
     instance->stack[0].count_next_states = -1;
     instance->stack[0].next_state_idx = -1;
+
+    insert_state(instance->store, init_state);
+
 
     return;
 }
