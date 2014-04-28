@@ -642,6 +642,14 @@ IF (FCS_ENABLE_DBM_SOLVER)
         ${DBM_BACKEND_MODULES}
     )
 
+    IF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES"))
+            ADD_EXECUTABLE(pseudo_dfs_fc_solver
+                pseudo_dfs_atomic_moves_solver.c
+                ${DBM_FCC_COMMON}
+                ${DBM_BACKEND_MODULES}
+                )
+    ENDIF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES"))
+
     INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/libavl")
 
     FOREACH (TGT "dbm_fc_solver" "fcc_fc_solver" "depth_dbm_fc_solver" "split_fcc_fc_solver")
