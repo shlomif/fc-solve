@@ -97,6 +97,7 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
     fcs_cache_key_t * const state
 )
 {
+    const enum fcs_dbm_variant_type_t local_variant = instance->local_variant;
     const int depth = (instance->stack_depth);
     const int max_depth = instance->max_stack_depth;
     if (depth == max_depth)
@@ -136,7 +137,7 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
     {
         kv.key = &(derived_list->state.s);
         kv.val = &(derived_list->state.info);
-        fc_solve_canonize_state(&kv, 4, 8);
+        fc_solve_canonize_state(&kv, FREECELLS_NUM, STACKS_NUM);
 
         if (! lookup_state(&(instance->store), &(derived_list->state)))
         {
@@ -261,6 +262,7 @@ static GCC_INLINE void instance__print_coords_to_log(
     FILE * log_fh
 )
 {
+    const enum fcs_dbm_variant_type_t local_variant = instance->local_variant;
     fprintf (log_fh, "At %ld iterations Coords=[", instance->count_num_processed);
 
     const pseduo_dfs_stack_item_t * stack_item = instance->stack;
@@ -269,6 +271,29 @@ static GCC_INLINE void instance__print_coords_to_log(
     {
         fprintf(log_fh, "%d,", stack_item->next_state_idx);
     }
+
+#if 1
+    {
+
+        fcs_state_locs_struct_t locs;
+        fc_solve_init_locs(&locs);
+        char * const state_as_string =
+            fc_solve_state_as_string(
+                &(end_stack_item->curr_state->s),
+                &(end_stack_item->curr_state->info),
+                &locs,
+                FREECELLS_NUM,
+                STACKS_NUM,
+                DECKS_NUM,
+                1,
+                0,
+                1
+            );
+        printf("Found State=<<'STATE'\n%s\nSTATE\n\n", state_as_string);
+        fflush(stdout);
+        free (state_as_string);
+    }
+#endif
 
     fprintf (log_fh, "]\n");
 }
@@ -300,7 +325,7 @@ int main(int argc, char * argv[])
     fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE-1, fh);
     fclose(fh);
 
-    fc_solve_initial_user_state_to_c(user_state, &init_state_pair, 4, 8, 1, NULL);
+    fc_solve_initial_user_state_to_c(user_state, &init_state_pair, FREECELLS_NUM, STACKS_NUM, 1, NULL);
 
     init_state_ptr = &(init_state_pair);
 
