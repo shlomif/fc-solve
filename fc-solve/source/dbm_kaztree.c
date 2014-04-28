@@ -80,7 +80,7 @@ fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
     fcs_dbm_record_set_parent_ptr(to_check, parent);
 #else
     to_check->key = *key;
-    to_check->parent = *parent;
+    to_check->parent = parent->parent;
 #endif
     fcs_bool_t ret =
         (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
@@ -93,10 +93,12 @@ fcs_dbm_record_t * fc_solve_dbm_store_insert_key_value(
 #endif
     if (ret)
     {
+#ifdef FCS_EXPLICIT_REFCOUNT
         if (should_modify_parent && parent)
         {
             fcs_dbm_record_increment_refcount(parent);
         }
+#endif
 
         return ((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(db->kaz_tree, to_check)));
     }

@@ -103,7 +103,7 @@ int main(int argc, char * argv[])
     fcs_state_keyval_pair_t init_state_pair;
     fcs_cache_key_t * init_state_ptr;
 
-    fc_solve_initial_user_state_to_c(argv[1], &init_state_pair, 4, 8, 1);
+    fc_solve_initial_user_state_to_c(argv[1], &init_state_pair, 4, 8, 1, NULL);
 
     init_state_ptr = &(init_state_pair.s);
 
