@@ -93,17 +93,31 @@ static GCC_INLINE void instance_init(
     return;
 }
 
+#define USER_STATE_SIZE 2000
+
 int main(int argc, char * argv[])
 {
     enum fcs_dbm_variant_type_t local_variant;
     const int delta_limit = 100000;
+    const char * filename = argv[1];
 
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     fcs_state_keyval_pair_t init_state_pair;
     fcs_cache_key_t * init_state_ptr;
 
-    fc_solve_initial_user_state_to_c(argv[1], &init_state_pair, 4, 8, 1, NULL);
+    FILE * fh = fopen(filename, "r");
+    if (fh == NULL)
+    {
+        fprintf (stderr, "Could not open file '%s' for input.\n", filename);
+        exit(-1);
+    }
+    char user_state[USER_STATE_SIZE];
+    memset(user_state, '\0', sizeof(user_state));
+    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE-1, fh);
+    fclose(fh);
+
+    fc_solve_initial_user_state_to_c(user_state, &init_state_pair, 4, 8, 1, NULL);
 
     init_state_ptr = &(init_state_pair.s);
 
