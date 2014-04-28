@@ -107,7 +107,6 @@ static GCC_INLINE void instance_init(
 
     insert_state(&(instance->store), init_state);
 
-
     return;
 }
 

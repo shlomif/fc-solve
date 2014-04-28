@@ -98,7 +98,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     instance_solver_thread_calc_derived_states(
         local_variant,
         &init_state,
-        &enc_state,
         NULL,
         &derived_list,
         &derived_list_recycle_bin,

@@ -444,7 +444,6 @@ static void * instance_run_solver_thread(void * void_arg)
         if (instance_solver_thread_calc_derived_states(
             local_variant,
             &state,
-            &(item->key),
             token,
             &derived_list,
             &derived_list_recycle_bin,
@@ -742,7 +741,6 @@ static unsigned char get_move_from_parent_to_child(
     instance_solver_thread_calc_derived_states(
         local_variant,
         &parent_state,
-        &parent,
         NULL,
         &derived_list,
         &derived_list_recycle_bin,

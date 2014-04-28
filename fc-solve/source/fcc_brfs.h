@@ -307,7 +307,6 @@ static void perform_FCC_brfs(
         instance_solver_thread_calc_derived_states(
             local_variant,
             &state,
-            &(extracted_item->key),
             NULL,
             &derived_list,
             &derived_list_recycle_bin,

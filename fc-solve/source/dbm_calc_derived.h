@@ -395,7 +395,6 @@ static GCC_INLINE int horne_prune(
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * init_state_kv_ptr,
-    fcs_encoded_state_buffer_t * key,
     fcs_dbm_record_t * parent_ptr,
     fcs_derived_state_t * * derived_list,
     fcs_derived_state_t * * derived_list_recycle_bin,
