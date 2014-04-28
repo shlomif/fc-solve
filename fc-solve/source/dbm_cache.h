@@ -108,7 +108,7 @@ static GCC_INLINE void cache_init(fcs_lru_cache_t * cache, long max_num_elements
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, fcs_encoded_state_buffer_t * key)
+static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, fcs_cache_key_t * key)
 {
     fcs_cache_key_info_t to_check;
     dict_key_t existing_key;
@@ -154,7 +154,7 @@ static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, fcs_e
     }
 }
 
-static GCC_INLINE fcs_cache_key_info_t * cache_insert(fcs_lru_cache_t * cache, const fcs_encoded_state_buffer_t * key, const fcs_fcc_move_t * moves_to_parent, const fcs_fcc_move_t final_move)
+static GCC_INLINE fcs_cache_key_info_t * cache_insert(fcs_lru_cache_t * cache, const fcs_cache_key_t * key, const fcs_fcc_move_t * moves_to_parent, const fcs_fcc_move_t final_move)
 {
     fcs_cache_key_info_t * cache_key;
     dict_t * kaz_tree;

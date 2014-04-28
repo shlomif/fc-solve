@@ -9,9 +9,15 @@ extern "C"
 #include "generic_tree.h"
 #include "fcc_brfs_test.h"
 
+#ifdef FCS_LRU_KEY_IS_STATE
+typedef fcs_state_t fcs_cache_key_t;
+#else
+typedef fcs_encoded_state_buffer_t fcs_cache_key_t;
+#endif
+
 struct fcs_cache_key_info_struct
 {
-    fcs_encoded_state_buffer_t key;
+    fcs_cache_key_t key;
     fcs_fcc_move_t * moves_to_key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
