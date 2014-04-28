@@ -105,7 +105,7 @@ static GCC_INLINE void instance_init(
     instance->stack[0].count_next_states = -1;
     instance->stack[0].next_state_idx = -1;
 
-    insert_state(instance->store, init_state);
+    insert_state(&(instance->store), init_state);
 
 
     return;
