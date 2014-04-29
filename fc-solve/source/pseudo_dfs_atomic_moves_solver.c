@@ -163,7 +163,6 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
 static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * const instance,
     enum fcs_dbm_variant_type_t local_variant,
-    long iters_delta_limit,
     fcs_cache_key_t * init_state
 )
 {
@@ -175,15 +174,7 @@ static GCC_INLINE void instance_init(
     instance->should_terminate = DONT_TERMINATE;
 
     instance->count_num_processed = 0;
-    if (iters_delta_limit >= 0)
-    {
-        instance->max_count_num_processed =
-            instance->count_num_processed + iters_delta_limit;
-    }
-    else
-    {
-        instance->max_count_num_processed = LONG_MAX;
-    }
+    instance->max_count_num_processed = LONG_MAX;
 
     instance->store = (Pvoid_t)NULL;
 
@@ -297,6 +288,25 @@ static GCC_INLINE void instance__print_coords_to_log(
 
     fprintf (log_fh, "]\n");
 }
+
+static GCC_INLINE void instance__load_coords_from_fh(
+    fcs_dbm_solver_instance_t * const instance,
+    FILE * fh
+)
+{
+    int coord_from_input;
+    while (fscanf(fh, "%d,", &coord_from_input) == 1)
+    {
+        const int coord = coord_from_input - 1;
+        if (coord >= 0)
+        {
+            pseduo_dfs_stack_item_t * const stack_item = &(instance->stack[instance->stack_depth++]);
+            stack_item->next_state_idx = coord+1;
+            instance__inspect_new_state(instance, &(stack_item->next_states[coord]));
+        }
+    }
+}
+
 #define USER_STATE_SIZE 2000
 
 int main(int argc, char * argv[])
@@ -334,19 +344,48 @@ int main(int argc, char * argv[])
     instance_init(
         &instance,
         local_variant,
-        delta_limit,
         init_state_ptr
     );
+
+#define LOG_FILENAME "fc-solve-pseudo-dfs.log.txt"
+
+    {
+        FILE * last_line_fh = popen(("tail -1 " LOG_FILENAME), "r");
+
+        if (last_line_fh)
+        {
+            long count_num_processed;
+            if (fscanf(
+                    last_line_fh,
+                    "At %ld iterations Coords=[",
+                    &count_num_processed
+                    ) == 1
+            )
+            {
+                instance__load_coords_from_fh(&instance, last_line_fh);
+                /*
+                 * instance__inspect_new_state increments count_num_processed
+                 * so let's set it after loading the coordinates.
+                 * */
+                instance.count_num_processed = count_num_processed;
+            }
+        }
+        pclose(last_line_fh);
+    }
+
+    instance.max_count_num_processed
+        = instance.count_num_processed + delta_limit;
 
     while ( instance.should_terminate == DONT_TERMINATE )
     {
         instance_run(&instance);
 
-        FILE * log_fh = fopen("fc-solve-pseudo-dfs.log.txt", "at");
+        FILE * log_fh = fopen(LOG_FILENAME, "at");
         instance__print_coords_to_log(&instance, log_fh);
         fclose(log_fh);
 
-        instance.max_count_num_processed += delta_limit;
+        instance.max_count_num_processed
+            = instance.count_num_processed + delta_limit;
     }
 
     if (instance.should_terminate == SOLUTION_FOUND_TERMINATE)
