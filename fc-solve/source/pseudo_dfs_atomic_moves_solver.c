@@ -30,6 +30,7 @@
 #define FCS_LRU_KEY_IS_STATE
 
 #include "dbm_solver_head.h"
+#include "pseudo_dfs_cache.h"
 
 #include <Judy.h>
 
@@ -44,9 +45,11 @@ typedef Pvoid_t store_t;
 
 static GCC_INLINE void delete_state(
     store_t * store,
+    fcs_pdfs_lru_cache_t * cache,
     fcs_cache_key_t * key)
 {
     int Rc_int;
+    fcs_pdfs_cache_insert(cache, &(key->s));
     JHSD(Rc_int, *store, &(key->s), sizeof(key->s));
 }
 
@@ -61,11 +64,19 @@ static GCC_INLINE void insert_state(
 
 static GCC_INLINE fcs_bool_t lookup_state(
     store_t * store,
+    fcs_pdfs_lru_cache_t * cache,
     fcs_cache_key_t * key)
 {
     Word_t * PValue;
     JHSG(PValue, *store, &(key->s), sizeof(key->s));
-    return (PValue != NULL);
+    if (PValue != NULL)
+    {
+        return TRUE;
+    }
+    else
+    {
+        return fcs_pdfs_cache_does_key_exist(cache, &(key->s));
+    }
 }
 
 typedef struct
@@ -75,6 +86,7 @@ typedef struct
     fcs_lru_cache_t cache;
 #endif
     store_t store;
+    fcs_pdfs_lru_cache_t cache;
 
     long pre_cache_max_count;
     /* The stack */
@@ -139,7 +151,7 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
         kv.val = &(derived_list->state.info);
         fc_solve_canonize_state(&kv, FREECELLS_NUM, STACKS_NUM);
 
-        if (! lookup_state(&(instance->store), &(derived_list->state)))
+        if (! lookup_state(&(instance->store), &(instance->cache), &(derived_list->state)))
         {
             int i = (stack_item->count_next_states)++;
             if (i >= stack_item->max_count_next_states)
@@ -163,7 +175,8 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
 static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * const instance,
     enum fcs_dbm_variant_type_t local_variant,
-    fcs_cache_key_t * init_state
+    fcs_cache_key_t * init_state,
+    long max_num_elements_in_cache
 )
 {
     instance->local_variant = local_variant;
@@ -177,7 +190,6 @@ static GCC_INLINE void instance_init(
     instance->max_count_num_processed = LONG_MAX;
 
     instance->store = (Pvoid_t)NULL;
-
     instance->stack = NULL;
     instance->max_stack_depth = 0;
     instance->stack_depth = 0;
@@ -187,6 +199,8 @@ static GCC_INLINE void instance_init(
     );
     fc_solve_compact_allocator_init(&(instance->derived_list_allocator), &(instance->meta_alloc));
     instance->derived_list_recycle_bin = NULL;
+
+    fcs_pdfs_cache_init(&(instance->cache), max_num_elements_in_cache, &(instance->meta_alloc));
 
     insert_state(&(instance->store), init_state);
 
@@ -207,6 +221,8 @@ static GCC_INLINE void instance_free(
 
     Word_t Rc_word;
     JHSFA(Rc_word, instance->store);
+
+    fcs_pdfs_cache_destroy(&(instance->cache));
 
     fc_solve_compact_allocator_finish(&(instance->derived_list_allocator));
     fc_solve_meta_compact_allocator_finish(&(instance->meta_alloc));
@@ -233,7 +249,7 @@ static GCC_INLINE void instance_run(
                 /* Demote from the current depth. */
                 for (int i = 0; i < stack_item->count_next_states ; i++)
                 {
-                    delete_state(&(instance->store), &(stack_item->next_states[ i ]));
+                    delete_state(&(instance->store), &(instance->cache), &(stack_item->next_states[ i ]));
                 }
                 stack_item->count_next_states = 0;
                 stack_item->next_state_idx = 0;
@@ -317,7 +333,11 @@ int main(int argc, char * argv[])
 #else
     const int delta_limit = 2;
 #endif
+
+    const int max_num_elements_in_cache = 1000000;
+
     const char * filename = argv[1];
+
 
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
@@ -344,7 +364,8 @@ int main(int argc, char * argv[])
     instance_init(
         &instance,
         local_variant,
-        init_state_ptr
+        init_state_ptr,
+        max_num_elements_in_cache
     );
 
 #define LOG_FILENAME "fc-solve-pseudo-dfs.log.txt"
