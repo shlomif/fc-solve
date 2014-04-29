@@ -69,6 +69,9 @@ static GCC_INLINE fcs_bool_t lookup_state(
 {
     Word_t * PValue;
     JHSG(PValue, *store, &(key->s), sizeof(key->s));
+#if 1
+    return (PValue != NULL);
+#else
     if (PValue != NULL)
     {
         return TRUE;
@@ -77,14 +80,12 @@ static GCC_INLINE fcs_bool_t lookup_state(
     {
         return fcs_pdfs_cache_does_key_exist(cache, &(key->s));
     }
+#endif
 }
 
 typedef struct
 {
     fcs_lock_t storage_lock;
-#if 0
-    fcs_lru_cache_t cache;
-#endif
     store_t store;
     fcs_pdfs_lru_cache_t cache;
 
@@ -104,11 +105,18 @@ typedef struct
 
 
 
-static GCC_INLINE fcs_bool_t instance__inspect_new_state(
+static GCC_INLINE void instance__inspect_new_state(
     fcs_dbm_solver_instance_t * const instance,
     fcs_cache_key_t * const state
 )
 {
+    instance->count_num_processed++;
+
+    if (fcs_pdfs_cache_does_key_exist(&(instance->cache), &(state->s)))
+    {
+        instance->stack_depth--;
+        return;
+    }
     const enum fcs_dbm_variant_type_t local_variant = instance->local_variant;
     const int depth = (instance->stack_depth);
     const int max_depth = instance->max_stack_depth;
@@ -124,7 +132,6 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
 
     fcs_derived_state_t * derived_list = NULL, * derived_iter = NULL;
 
-    instance->count_num_processed++;
 
     if (instance_solver_thread_calc_derived_states(
         instance->local_variant,
@@ -138,7 +145,7 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
     {
         instance->should_terminate = SOLUTION_FOUND_TERMINATE;
         instance->solution_was_found = TRUE;
-        return TRUE;
+        return;
     }
 
     stack_item->count_next_states = 0;
@@ -169,7 +176,7 @@ static GCC_INLINE fcs_bool_t instance__inspect_new_state(
 #undef derived_list_next
     }
 
-    return FALSE;
+    return;
 }
 
 static GCC_INLINE void instance_init(
