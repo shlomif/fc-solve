@@ -341,7 +341,7 @@ int main(int argc, char * argv[])
     const int delta_limit = 2;
 #endif
 
-    const int max_num_elements_in_cache = 1000000;
+    const int max_num_elements_in_cache = 8000000;
 
     const char * filename = argv[1];
 
