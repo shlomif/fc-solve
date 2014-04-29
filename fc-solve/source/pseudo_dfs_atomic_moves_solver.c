@@ -404,6 +404,11 @@ int main(int argc, char * argv[])
     instance.max_count_num_processed
         = instance.count_num_processed + delta_limit;
 
+    while (instance.max_count_num_processed % delta_limit != 0)
+    {
+        instance.max_count_num_processed += delta_limit - (instance.max_count_num_processed % delta_limit);
+    }
+
     while ( instance.should_terminate == DONT_TERMINATE )
     {
         instance_run(&instance);
