@@ -30,7 +30,7 @@ def test_board_l(idx, want_string):
         ("board %d was generated fine" % (idx)))
 
 def main():
-    plan(4)
+    plan(5)
 
     # TEST
     test_board(24,
@@ -78,6 +78,18 @@ QC 9S 6H 9H 3S KS 3D
 7H JS KH TS KC 7C
 AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
+""");
+
+    # TEST
+    test_board_l(3000000000L,
+    """8D TS JS TD JH JD JC
+4D QS TH AD 4S TC 3C
+9H KH QH 4C 5C KD AS
+9D 5D 8S 4H KS 6S 9S
+6H 2S 7H 3D KC 2C
+9C 7C QC 7S QD 7D
+6C 3H 8H AC 6D 3S
+8C AH 2H 5H 2D 5S
 """);
 
 if __name__ == "__main__":
