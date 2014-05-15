@@ -55,79 +55,20 @@ static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 }
 #endif
 
-#ifdef DEBUG_STATES
-void fc_solve_canonize_state(
-    fcs_collectible_state_t * state,
-    int freecells_num,
-    int stacks_num)
-{
-    int b,c;
-
-    fc_stack_t temp_stack;
-    fcs_card_t temp_freecell;
-    int temp_loc;
-
-    /* Insertion-sort the stacks */
-    for(b=1;b<stacks_num;b++)
-    {
-        c = b;
-        while(
-            (c>0) &&
-            (fcs_stack_compare(
-                &(state_key->stacks[c]),
-                &(state_key->stacks[c-1])
-                ) < 0)
-            )
-        {
-            temp_stack = state_key->stacks[c];
-            state_key->stacks[c] = state_key->stacks[c-1];
-            state_key->stacks[c-1] = temp_stack;
-
-            temp_loc = state_val->stack_locs[c];
-            state_val->stack_locs[c] = state_val->stack_locs[c-1];
-            state_val->stack_locs[c-1] = temp_loc;
-
-            c--;
-        }
-    }
-
-    /* Insertion sort the freecells */
-
-    for(b=1;b<freecells_num;b++)
-    {
-        c = b;
-        while(
-            (c>0)     &&
-            (fc_solve_card_compare(
-                (state_key->freecells[c]),
-                (state_key->freecells[c-1])
-                ) < 0)
-            )
-        {
-            temp_freecell = state_key->freecells[c];
-            state_key->freecells[c] = state_key->freecells[c-1];
-            state_key->freecells[c-1] = temp_freecell;
-
-            temp_loc = state_val->fc_locs[c];
-            state_val->fc_locs[c] = state_val->fc_locs[c-1];
-            state_val->fc_locs[c-1] = temp_loc;
-
-            c--;
-        }
-    }
-}
-
-#elif defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
-
 #ifdef COMPACT_STATES
 #define DECLARE_TEMP_STACK() char temp_stack[(MAX_NUM_CARDS_IN_A_STACK+1)]
 #define STACK_COMPARE(a,b) (fcs_stack_compare((a),(b)))
 #define GET_STACK(c) (state_key->data+(c)*(MAX_NUM_CARDS_IN_A_STACK+1))
 #define COPY_STACK(d,s) (memcpy(d, s, (MAX_NUM_CARDS_IN_A_STACK+1)))
 #define GET_FREECELL(c) (state_key->data[FCS_FREECELLS_OFFSET+(c)])
-#elif defined(INDIRECT_STACK_STATES)
+#elif defined(DEBUG_STATES) || defined(INDIRECT_STACK_STATES)
+#ifdef DEBUG_STATES
+#define DECLARE_TEMP_STACK() fc_stack_t temp_stack
+#define STACK_COMPARE(a,b) (fcs_stack_compare((&(a)),(&(b))))
+#else
 #define DECLARE_TEMP_STACK() fcs_card_t * temp_stack
-#define STACK_COMPARE(a,b) (fc_solve_stack_compare_for_comparison((a),(b)))
+#define STACK_COMPARE(a,b) (fc_solve_stack_compare_for_comparison(a,b))
+#endif
 #define GET_STACK(c) (state_key->stacks[c])
 #define COPY_STACK(d,s) (d = s)
 #define GET_FREECELL(c) (state_key->freecells[(c)])
@@ -196,7 +137,6 @@ void fc_solve_canonize_state(
 void fc_solve_canonize_state_with_locs(
     fcs_kv_state_t * state,
 #define state_key (state->key)
-#define state_val (state->val)
     fcs_state_locs_struct_t * locs,
     int freecells_num,
     int stacks_num)
@@ -262,11 +202,7 @@ void fc_solve_canonize_state_with_locs(
     }
 }
 #undef state_key
-#undef state_val
 
-#elif 0
-
-#endif
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 

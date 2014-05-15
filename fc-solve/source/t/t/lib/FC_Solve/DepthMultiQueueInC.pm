@@ -11,8 +11,6 @@ use Inline (
 
 #include "depth_multi_queue.h"
 
-fcs_card_t fc_solve_empty_card = 0;
-
 typedef struct
 {
     fcs_depth_multi_queue_t q;

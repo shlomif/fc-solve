@@ -103,6 +103,14 @@ static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
 
     return ret;
 }
+static GCC_INLINE char fcs_card2char(const fcs_card_t card)
+{
+    return (char)(card.suit | (card.rank << 2));
+}
+static GCC_INLINE fcs_card_t fcs_char2card(unsigned char c)
+{
+    return fcs_make_card((c >> 2), (c & 0x3));
+}
 
 #define fcs_state_get_col(state, col_idx) \
     (&((state).stacks[(col_idx)]))
@@ -360,6 +368,9 @@ static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
     return ( (((fcs_card_t)rank) << 2) | ((fcs_card_t)suit) );
 }
 
+#define fcs_card2char(c) (c)
+#define fcs_char2card(c) (c)
+
 #define fcs_col_len(col) \
     ( ((col)[0]) )
 
@@ -604,7 +615,20 @@ typedef struct {
     fcs_state_locs_struct_t locs;
 } fcs_standalone_state_ptrs_t;
 
+#ifdef DEBUG_STATES
+
 extern fcs_card_t fc_solve_empty_card;
+#define DEFINE_fc_solve_empty_card() \
+    fcs_card_t fc_solve_empty_card = {0,0};
+
+#elif defined(COMPACT_STATES) || defined (INDIRECT_STACK_STATES)
+
+#define fc_solve_empty_card ((fcs_card_t)0)
+
+#define DEFINE_fc_solve_empty_card() \
+    ;
+
+#endif
 
 extern void fc_solve_canonize_state(
     fcs_kv_state_t * state_raw,
@@ -1120,7 +1144,9 @@ enum
 #define max(a,b) ((a)>(b)?(a):(b))
 #endif
 
+#ifndef DEBUG_STATES
 #define FCS_WITH_CARD_COMPARE_LOOKUP
+#endif
 
 static GCC_INLINE int fc_solve_card_compare(
         const fcs_card_t c1,
@@ -1193,15 +1219,4 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * const v
 
 #endif
 
-#ifdef DEBUG_STATES
-
-#define DEFINE_fc_solve_empty_card() \
-    fcs_card_t fc_solve_empty_card = {0,0};
-
-#elif defined(COMPACT_STATES) || defined (INDIRECT_STACK_STATES)
-
-#define DEFINE_fc_solve_empty_card() \
-    fcs_card_t fc_solve_empty_card = (fcs_card_t)0;
-
-#endif
 #endif /* FC_SOLVE__STATE_H */

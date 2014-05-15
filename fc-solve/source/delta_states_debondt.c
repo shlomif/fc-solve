@@ -110,7 +110,12 @@ static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
 
             if (col_len > 0)
             {
+#ifndef DEBUG_STATES
                 const fcs_card_t top_card = fcs_col_get_card(col, 0);
+#else
+                const fcs_card_t top_card_proto = fcs_col_get_card(col, 0);
+                const unsigned char top_card = (top_card_proto.suit | (top_card_proto.rank << 2));
+#endif
                 self->bakers_dozen_topmost_cards_lookup[top_card >> 3]
                     |= (1 << top_card & (8-1));
             }
@@ -349,7 +354,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
                 if (IS_BAKERS_DOZEN())
                 {
-                    fcs_card_t card = fcs_make_card(rank, suit_idx);
+                    char card = fcs_card2char(fcs_make_card(rank, suit_idx));
 
                     if (self->bakers_dozen_topmost_cards_lookup[card >> 3] & (1 << (card & (8-1))))
                     {
@@ -495,12 +500,13 @@ static void fc_solve_debondt_delta_stater_decode(
         {
             for (int suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
             {
-                fcs_card_t card = fcs_make_card(rank, suit_idx);
+                const fcs_card_t card = fcs_make_card(rank, suit_idx);
+                const char card_char = fcs_card2char(card);
 
                 if (IS_BAKERS_DOZEN())
                 {
                     if (
-                        (self->bakers_dozen_topmost_cards_lookup[card >> 3] & (1 << (card & (8-1))))
+                        (self->bakers_dozen_topmost_cards_lookup[card_char >> 3] & (1 << (card_char & (8-1))))
                        )
                     {
                         if (! IS_IN_FOUNDATIONS(card))

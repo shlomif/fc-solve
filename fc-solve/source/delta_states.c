@@ -195,9 +195,13 @@ static void fc_solve_get_column_encoding_composite(
 
     fc_solve_bit_writer_write(&bit_w, 4, num_derived_cards);
 
+#ifdef DEBUG_STATES
+    if (fc_solve_card_compare(init_card, fc_solve_empty_card))
+#else
     if (!(init_card == fc_solve_empty_card))
+#endif
     {
-        fc_solve_bit_writer_write(&bit_w, 6, init_card);
+        fc_solve_bit_writer_write(&bit_w, 6, fcs_card2char(init_card));
     }
 
     for (i=col_len-num_cards_in_seq ; i<col_len; i++)
@@ -248,7 +252,7 @@ static void fc_solve_get_freecells_encoding(
         min_idx = i;
         for (j=i+1 ; j < num_freecells ; j++)
         {
-            if (freecells[j] < freecells[min_idx])
+            if (fcs_card2char(freecells[j]) < fcs_card2char(freecells[min_idx]))
             {
                 min_idx = j;
             }
@@ -262,7 +266,7 @@ static void fc_solve_get_freecells_encoding(
         {
             min_card = freecells[i];
         }
-        fc_solve_bit_writer_write(bit_w, 6, min_card);
+        fc_solve_bit_writer_write(bit_w, 6, fcs_card2char(min_card));
     }
 }
 
@@ -352,7 +356,7 @@ static void fc_solve_delta_stater_encode_composite(
             int c;
 
 #define b i
-#define COMP_BY(idx) (fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0))
+#define COMP_BY(idx) (fcs_card2char(fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0)))
 #define ITEM_IDX(idx) (new_non_orig_cols_indexes[idx])
 #define COMP_BY_IDX(idx) (COMP_BY(ITEM_IDX(idx)))
 
@@ -415,8 +419,12 @@ static void fc_solve_delta_stater_decode(
 
     for ( int i=0 ; i < num_freecells ; i++)
     {
-        const fcs_card_t card = (fcs_card_t)fc_solve_bit_reader_read(bit_r, 6);
+        const fcs_card_t card = fcs_char2card(fc_solve_bit_reader_read(bit_r, 6));
+#ifdef DEBUG_STATES
+        if (fc_solve_card_compare(card, fc_solve_empty_card))
+#else
         if (! (card == fc_solve_empty_card) )
+#endif
         {
             PROCESS_CARD(card);
         }
@@ -431,7 +439,7 @@ static void fc_solve_delta_stater_decode(
         const fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
         const int num_orig_cards = fc_solve_bit_reader_read(bit_r, bits_per_orig_cards_in_column);
 
-        const fcs_cards_column_t orig_col = fcs_state_get_col(*_init_state, col_idx);
+        fcs_const_cards_column_t orig_col = fcs_state_get_col(*_init_state, col_idx);
 
         for (int i = 0 ; i < num_orig_cards ; i++)
         {
@@ -446,7 +454,7 @@ static void fc_solve_delta_stater_decode(
 
         if ((num_orig_cards == 0) && num_derived_cards)
         {
-            const fcs_card_t card = (fcs_card_t)fc_solve_bit_reader_read(bit_r, 6);
+            const fcs_card_t card = fcs_char2card(fc_solve_bit_reader_read(bit_r, 6));
             PROCESS_CARD(card);
             fcs_col_push_card(col, card);
 
