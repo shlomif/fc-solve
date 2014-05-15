@@ -37,7 +37,7 @@ else
 	MACHINE_OPT := -O3
 endif
 
-LTO_FLAGS := -flto
+LTO_FLAGS := -flto -ffat-lto-objects
 
 ifeq ($(COMPILER),gcc)
 	CC = gcc
