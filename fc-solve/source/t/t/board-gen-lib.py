@@ -9,6 +9,7 @@ from ctypes import *
 board_gen_lib = CDLL("../libfcs_gen_ms_freecell_boards.so")
 
 fc_solve_get_board = board_gen_lib.fc_solve_get_board
+fc_solve_get_board_l = board_gen_lib.fc_solve_get_board_l
 
 def test_board(idx, want_string):
 
@@ -19,8 +20,17 @@ def test_board(idx, want_string):
     ok (buffer[0:buffer.find("\0")] == want_string,
         ("board %d was generated fine" % (idx)))
 
+def test_board_l(idx, want_string):
+
+    buffer = ("x" * 500)
+
+    fc_solve_get_board_l(c_longlong(idx), c_char_p(buffer))
+
+    ok (buffer[0:buffer.find("\0")] == want_string,
+        ("board %d was generated fine" % (idx)))
+
 def main():
-    plan(3)
+    plan(4)
 
     # TEST
     test_board(24,
@@ -56,6 +66,18 @@ AD 3H 6D JH 3S KC
 QC 9S 8D AS 7C 8S
 AC 3C QH TD 6S 6H
 2C 2D 4C 7H AH QS
+""");
+
+    # TEST
+    test_board_l(24,
+    """4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
 """);
 
 if __name__ == "__main__":
