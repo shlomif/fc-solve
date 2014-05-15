@@ -1553,7 +1553,7 @@ int main(int argc, char * argv[])
         out_fh = stdout;
 
         fcs_dbm_solver_instance_t instance;
-        FccEntryPointNode * key_ptr;
+        FccEntryPointNode * key_ptr = NULL;
 
 #define KEY_PTR() (key_ptr)
 
