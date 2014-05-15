@@ -129,17 +129,17 @@ sub _read_state
         $str .= $line . "\n";
     }
 
-    my $new_state = Games::Solitaire::Verify::State->new(
-            {
-                string => $str,
-                @{$self->_calc_variant_args()},
-            }
-        );
 
     if (!defined($self->_state()))
     {
-        # Do nothing.
+        my $new_state = Games::Solitaire::Verify::State->new(
+                {
+                    string => $str,
+                    @{$self->_calc_variant_args()},
+                }
+            );
 
+        $self->_state($new_state);
     }
     else
     {
@@ -148,7 +148,6 @@ sub _read_state
             die "States don't match";
         }
     }
-    $self->_state($new_state);
 
     while (defined($line = $self->_get_line()) && ($line eq ""))
     {

@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+0.1204  2015-05-16
+        - Some optimizations after noticing that validating the solutions
+        of the whole Microsoft Freecell 32K was time consuming.
+
 0.1203  2014-01-30
         - Add LICENSE (as well as COPYING) for CPANTS Kwalitee.
         - Minimum version of perl is 5.8.0 (CPANTS Kwalitee).
