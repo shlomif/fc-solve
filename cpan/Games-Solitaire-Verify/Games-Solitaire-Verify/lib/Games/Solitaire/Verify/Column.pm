@@ -232,7 +232,7 @@ sub _non_zero_cards_string
 
     return join("",
             (map
-                { " " . $self->pos($_)->to_string() }
+                { " " . $self->pos($_)->fast_s() }
                 (0 .. ($self->len()-1))
             )
         );

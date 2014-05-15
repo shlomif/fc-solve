@@ -157,7 +157,7 @@ sub to_string
 
     return "Freecells:" . (($self->count() == 0) ? " " :
     join("",
-        map { "  " . (defined($_) ? $_->to_string() : "  ") }
+        map { "  " . (defined($_) ? $_->fast_s() : "  ") }
         map { $self->cell($_) }
         (0 .. ($self->count()-1))
     ));
