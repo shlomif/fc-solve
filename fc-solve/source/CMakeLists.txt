@@ -1054,8 +1054,8 @@ FILE (COPY "${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake_pgo_wrapper/pgo.sh"
 )
 
 ADD_CUSTOM_TARGET(
-    "bench" bash scripts/time-threads-num.bash -s 2 "${MAX_NUM_BENCHMARK_THREADS}"
-    COMMAND perl scripts/time-fcs.pl "DUMPS-*/*"
+    "bench" bash "${CMAKE_CURRENT_SOURCE_DIR}/scripts/time-threads-num.bash" -s 2 "${MAX_NUM_BENCHMARK_THREADS}"
+    COMMAND perl "${CMAKE_CURRENT_SOURCE_DIR}/scripts/time-fcs.pl" "DUMPS-*/*"
 )
 
 
