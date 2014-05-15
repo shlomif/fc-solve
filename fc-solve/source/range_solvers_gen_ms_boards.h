@@ -50,11 +50,17 @@ static GCC_INLINE microsoft_rand_uint_t microsoft_rand_rand(microsoft_rand_t * m
     return ((*my_rand) >> 16) & 0x7fff;
 }
 
+static GCC_INLINE microsoft_rand_uint_t microsoft_rand_randp(microsoft_rand_t * my_rand)
+{
+    *my_rand = ((*my_rand) * 214013 + 2531011);
+    return ((*my_rand) >> 16) & 0xffff;
+}
+
 static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(microsoft_rand_t * seedx_ptr, long long gnGameNumber)
 {
-    microsoft_rand_uint_t ret = microsoft_rand_rand(seedx_ptr);
     if (gnGameNumber < 0x100000000LL)
     {
+        microsoft_rand_uint_t ret = microsoft_rand_rand(seedx_ptr);
         if (gnGameNumber < 0x80000000)
         {
             return ret;
@@ -66,7 +72,7 @@ static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(microsoft_
     }
     else
     {
-        return ret + 1;
+        return microsoft_rand_randp(seedx_ptr) + 1;
     }
 }
 
