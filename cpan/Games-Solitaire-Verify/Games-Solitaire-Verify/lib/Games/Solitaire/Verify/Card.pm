@@ -315,18 +315,16 @@ Converts the rank to a string.
 
 =cut
 
+{
+    my @_t_nums = ('0', (map { $_->{t} } @card_nums));
+
 sub rank_to_string
 {
     my ($class, $rank) = @_;
 
-    if ($rank == 0)
-    {
-        return '0';
-    }
-    else
-    {
-        return $card_nums[$rank-1]->{t};
-    }
+    return $_t_nums[$rank];
+}
+
 }
 
 =head2 $card->is_flipped()
