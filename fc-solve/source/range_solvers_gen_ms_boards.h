@@ -31,6 +31,8 @@
 #ifndef FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H
 #define FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H
 
+#include <sys/types.h>
+
 #include "inline.h"
 #include "fcs_dllexport.h"
 
@@ -38,12 +40,34 @@
 extern "C" {
 #endif
 
-typedef long microsoft_rand_t;
+typedef u_int32_t microsoft_rand_uint_t;
 
-static GCC_INLINE int microsoft_rand_rand(microsoft_rand_t * my_rand)
+typedef long long microsoft_rand_t;
+
+static GCC_INLINE microsoft_rand_uint_t microsoft_rand_rand(microsoft_rand_t * my_rand)
 {
-    *my_rand= ((*my_rand) * 214013 + 2531011);
+    *my_rand = ((*my_rand) * 214013 + 2531011);
     return ((*my_rand) >> 16) & 0x7fff;
+}
+
+static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(microsoft_rand_t * seedx_ptr, long long gnGameNumber)
+{
+    microsoft_rand_uint_t ret = microsoft_rand_rand(seedx_ptr);
+    if (gnGameNumber < 0x100000000LL)
+    {
+        if (gnGameNumber < 0x80000000)
+        {
+            return ret;
+        }
+        else
+        {
+            return (ret | 0x8000);
+        }
+    }
+    else
+    {
+        return ret + 1;
+    }
 }
 
 typedef int CARD;
@@ -86,19 +110,19 @@ static GCC_INLINE char * card_to_string(char * s, CARD card, int not_append_ws)
  * we'll devise a header for this routine.
  *
  * */
-void DLLEXPORT fc_solve_get_board(long gamenumber, char * ret);
+void DLLEXPORT fc_solve_get_board_l(long long gamenumber, char * ret);
 
-extern void DLLEXPORT fc_solve_get_board(long gamenumber, char * ret)
+extern void DLLEXPORT fc_solve_get_board_l(long long gamenumber, char * ret)
 #else
-static GCC_INLINE void get_board(long gamenumber, char * ret)
+static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
 #endif
 {
+    long long seedx = (microsoft_rand_uint_t)((gamenumber < 0x100000000LL) ? gamenumber : (gamenumber - 0x100000000LL));
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
 
     int  i, j;                /*  generic counters */
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
-    char * append_to;
 
     /* shuffle cards */
 
@@ -109,12 +133,12 @@ static GCC_INLINE void get_board(long gamenumber, char * ret)
 
     for (i = 0; i < 52; i++)
     {
-        j = microsoft_rand_rand(&gamenumber) % wLeft;
+        j = microsoft_rand__game_num_rand(&seedx, gamenumber) % wLeft;
         card[(i%8)][i/8] = deck[j];
         deck[j] = deck[--wLeft];
     }
 
-    append_to = ret;
+    char * append_to = ret;
 
     {
         int stack;
@@ -137,6 +161,32 @@ static GCC_INLINE void get_board(long gamenumber, char * ret)
     *(append_to) = '\0';
 }
 #endif
+
+#ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
+/* This is to settle gcc's -Wmissing-prototypes which complains about missing
+ * prototypes for "extern" subroutines.
+ *
+ * It is not critical that it would be in the same place because the only thing
+ * that uses this function is Python's ctypes (in the test files under t/t/ )
+ * which does not process the
+ * included C code. In the future, we may have an external API in which case
+ * we'll devise a header for this routine.
+ *
+ * */
+void DLLEXPORT fc_solve_get_board(long gamenumber, char * ret);
+
+extern void DLLEXPORT fc_solve_get_board(long gamenumber, char * ret)
+#else
+static GCC_INLINE void get_board(long gamenumber, char * ret)
+#endif
+{
+#ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
+    return fc_solve_get_board_l((long long)gamenumber, ret);
+#else
+    return get_board_l((long long)gamenumber, ret);
+#endif
+}
+
 
 typedef char fcs_state_string_t[52*3 + 8 + 1];
 
