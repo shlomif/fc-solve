@@ -23,6 +23,7 @@ use Games::Solitaire::Verify::Card;
 
 __PACKAGE__->mk_acc_ref([qw(
     _cards
+    _s
     )]);
 
 =head1 SYNOPSIS
@@ -71,6 +72,8 @@ sub _from_string
         ]
     );
 
+    $self->_recalc;
+
     return;
 }
 
@@ -85,6 +88,8 @@ sub _init
     elsif (exists($args->{cards}))
     {
         $self->_cards($args->{cards});
+
+        $self->_recalc;
         return;
     }
     else
@@ -167,6 +172,8 @@ sub append
 
     push @{$self->_cards()}, @{$more_copy->_cards()};
 
+    $self->_recalc;
+
     return;
 }
 
@@ -182,6 +189,8 @@ sub push
 
     push @{$self->_cards()}, $card;
 
+    $self->_recalc;
+
     return;
 }
 
@@ -195,7 +204,11 @@ sub pop
 {
     my $self = shift;
 
-    return pop(@{$self->_cards()});
+    my $card = pop(@{$self->_cards()});
+
+    $self->_recalc;
+
+    return $card;
 }
 
 =head2 $column->to_string()
@@ -204,16 +217,25 @@ Converts to a string.
 
 =cut
 
-sub to_string
+sub _recalc
 {
     my $self = shift;
 
-    return ":" .
+    $self->_s(
+        ":" .
         ($self->len()
             ? $self->_non_zero_cards_string()
             : " " # We need the single trailing space for
                   # Freecell Solver compatibility
-        );
+        )
+    );
+
+    return;
+}
+
+sub to_string
+{
+    return shift->_s;
 }
 
 sub _non_zero_cards_string
