@@ -1,6 +1,7 @@
 # here are the results of our 8 core opteron server as promised.
-# The machine is a Dell 6850 server with 8GB DDR2 ECC RAM and 4 Dualcore 2,8GHz 
-# Opteron Processors. Attached is a SAS Raid5 as mass storage.
+# The machine is a Dell 6850 server with 8GB DDR2 ECC RAM and 4
+# Dualcore 2,8GHz Opteron Processors. Attached is a SAS Raid5 as
+# mass storage.
 
 DUMPS/dump001:71.5345089435577
 DUMPS/dump002:36.5083549022675

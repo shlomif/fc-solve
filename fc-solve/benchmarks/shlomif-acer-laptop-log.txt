@@ -58,21 +58,21 @@ power management:
 
 ------------------------------
 
-the-iglu-cabal preset ; r2933 ; 
+the-iglu-cabal preset ; r2933 ;
 https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
 
 34.8752400875092s
 
 ------------------------------
 
-stuff.bash (with a -dto scan) ; r2933 
+stuff.bash (with a -dto scan) ; r2933
 https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
 
 33.5600700378418s
 
 ------------------------------
 
-foss-nessy.bash (with two -dto scan) ; r2938 
+foss-nessy.bash (with two -dto scan) ; r2938
 https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
 
 33.366259098053s
@@ -81,7 +81,7 @@ https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves
 
 ARGS="--worker-step 16 -l fn" bash scripts/time-threads-num.bash 2 4
 r3055
-./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/
 -
 (With -flto and -fwhole-program).
 32.8415179252625s
@@ -90,7 +90,7 @@ r3055
 
 ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
 r3154
-./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/
 (With -flto and -fwhole-program).
 sudo_renice.
 
@@ -101,7 +101,7 @@ sudo_renice.
 ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
 r3182
 With Profile Guided Optimisation (PGO).
-./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/
 (With -flto and -fwhole-program).
 sudo_renice.
 
@@ -112,11 +112,11 @@ sudo_renice.
 ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
 r3182
 With Profile Guided Optimisation (PGO).
-./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/ 
+./Tatzer -l x64b  --prefix=/home/shlomif/apps/test/fcs/
 (With -flto and -fwhole-program).
 sudo_renice.
 -O3
-    
+
     Highlight: profile guided-optimisations.
 
 28.4376409053802s
@@ -127,11 +127,11 @@ sudo_renice.
 ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
 r3239
 With Profile Guided Optimisation (PGO).
-./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/ 
+./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/
 (With -flto and -fwhole-program).
 sudo_renice.
 -O3
-    
+
     Highlight: --without-visited-iter and --without-depth-field (while using PGO).
 
 27.4554669857025s
@@ -143,11 +143,11 @@ sudo_renice.
 ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
 r3239
 With Profile Guided Optimisation (PGO).
-./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/ 
+./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/
 (With -flto and -fwhole-program).
 sudo_renice.
 -O3
-    
+
     Highlight: --without-visited-iter and --without-depth-field (while using PGO).
 
 27.4554669857025s
@@ -159,11 +159,11 @@ sudo_renice.
 ARGS="--worker-step 16 -l eo" bash scripts/time-threads-num.bash 2 3
 r3242
 With Profile Guided Optimisation (PGO).
-./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/ 
+./Tatzer -l x64b --without-depth-field --without-visited-iter --prefix=/home/shlomif/apps/test/fcs/
 (With -flto and -fwhole-program).
 sudo_renice.
 -O3
-    
+
     Highlight: the recycling of the allocators.
 
 27.3198730945587s

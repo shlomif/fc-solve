@@ -395,7 +395,7 @@ Reached Board No. 32000 at 1237466721.542229 (total_num_iters=18589554)
 With ./configure -r (internal_hash) and after extracting many functions,
 that were previusly complex macros.
 
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/extract-ansi-c-macros-into-functions/fc-solve/source 
+https://svn.berlios.de/svnroot/repos/fc-solve/branches/extract-ansi-c-macros-into-functions/fc-solve/source
 
 Revision 1419
 
@@ -701,7 +701,7 @@ Reached Board No. 32000 at 1240562572.179158 (total_num_iters=18589554)
 
 ========================================================================
 
-With "./configure --nosecondary -r --fc-only" and making optimizing_for_cache 
+With "./configure --nosecondary -r --fc-only" and making optimizing_for_cache
 false:
 
 174.759868144989s
@@ -764,7 +764,7 @@ https://svn.berlios.de/svnroot/repos/fc-solve/branches/first-class-citizen-card-
 
 ( r1566 )
 
-With "./configure -r --fc-only" after transforming the code to use 
+With "./configure -r --fc-only" after transforming the code to use
 fcs_cards_column_t:
 
 134.631727933884s
@@ -808,7 +808,7 @@ length:
 
 ========================================================================
 
-In the trunk after better localising the 
+In the trunk after better localising the
 fc_solve_get_the_positions_by_rank_data() local variables.
 
 134.500791072845
@@ -841,7 +841,7 @@ With:
 
 ========================================================================
 
-Trunk (r1639) with ./configure -r --fc-only after running strip on the 
+Trunk (r1639) with ./configure -r --fc-only after running strip on the
 binaries:
 
 132.314429998398s
@@ -850,7 +850,7 @@ binaries:
 
 /branches/solving-using-several-instances-in-different-pthreads
 
-With ./configure -r --fc-only using  
+With ./configure -r --fc-only using
 
 {{{{{{{{{{{{
 ./freecell-solver-multi-thread-solve 1 32000 500 -l gi | tee dump
@@ -975,7 +975,7 @@ Trunk r1732 with the non-threaded range-solver and tcc (TinyCC / TurboCC):
 Trunk (r1735) "./Tatzer -l p4b" with:
 
 ./freecell-solver-multi-thread-solve 1 32000 500 --num-workers 2 \
-    --worker-step 1 -l gi 
+    --worker-step 1 -l gi
 
 113.422488927841s
 
@@ -990,14 +990,14 @@ Trunk (r1735) "./Tatzer -l p4b" with:
 
 ========================================================================
 
-Trunk (r1755) with "./Tatzer -l p4b" after running strip on the 
+Trunk (r1755) with "./Tatzer -l p4b" after running strip on the
 binaries and regular (non-threaded) range-solver "-l gi": (gcc-4.4.0)
 
 122.316657066345s
 
 ========================================================================
 
-Trunk (r1755) with "./Tatzer -l p4b" after running strip on the 
+Trunk (r1755) with "./Tatzer -l p4b" after running strip on the
 binaries and threaded range solver "-l gi": (gcc-4.4.0)
 
 ./freecell-solver-multi-thread-solve 1 32000 500 --num-workers 3 \
@@ -1007,7 +1007,7 @@ binaries and threaded range solver "-l gi": (gcc-4.4.0)
 
 ========================================================================
 
-r1768 trunk - before the board-generation related optimisations - 
+r1768 trunk - before the board-generation related optimisations -
 threaded-range-solver "-l gi" (gcc-4.4.0): "./Tatzer -l p4b":
 
 {{{{{{{{{{{{
@@ -1019,7 +1019,7 @@ DUMPS/dump003:111.599701166153
 
 ========================================================================
 
-r1774 trunk - after the board-generation related optimisations - 
+r1774 trunk - after the board-generation related optimisations -
 threaded-range-solver "-l gi" (gcc-4.4.0): "./Tatzer -l p4b":
 
 {{{{{{{{{{{{
@@ -1051,7 +1051,7 @@ cat profile-guided-optimisations.bash |
     bash
 }}}}}}}}}}}}
 
-And running 
+And running
 ./freecell-solver-range-parallel-solve 1 32000 500 -l gi | tee dump
 
 126.168390989304s
@@ -1326,7 +1326,7 @@ Threaded:
 
 ========================================================================
 
-r2522 ; 
+r2522 ;
 ./Tatzer -l p4b ; after strip ; ARGS="-l by" ; \
 2.6.33-desktop-0.rc5.1mnb
 IceWM
@@ -1349,7 +1349,7 @@ Threaded:
 ========================================================================
 
 r2640 ;
-./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l by" 
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l by"
 PROG="./freecell-solver-fork-solve"
 2.6.33-desktop-0.rc8.1mnb
 Virtual Console
@@ -1384,7 +1384,7 @@ Threaded:
 
 ========================================================================
 
-r2895 ; 
+r2895 ;
 https://svn.berlios.de/svnroot/repos/fc-solve/branches/likely-addition/fc-solve/source
 ./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l by" ; \
 2.6.33.5-desktop-1mnb
@@ -1396,7 +1396,7 @@ Threaded:
 
 ========================================================================
 
-r2901 ; 
+r2901 ;
 https://svn.berlios.de/svnroot/repos/fc-solve/branches/likely-addition/fc-solve/source
 ./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l by"
 2.6.33.5-desktop-1mnb
@@ -1507,7 +1507,7 @@ Threaded:
 ========================================================================
 
 r3073 ; trunk
-./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16
 --read-from-file 4,foss-nessy-with-pruning.bash"
 2.6.35-desktop-1mnb
 ssh (while not running X-Windows).
@@ -1521,7 +1521,7 @@ Threaded:
 ========================================================================
 
 r3147 ; trunk
-./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 
+./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16
 --read-from-file 4,foss-nessy-with-pruning.bash"
 2.6.35.4-desktop-1mnb
 ssh (while not running X-Windows).
@@ -1564,7 +1564,7 @@ Using sudo_renice.
 
 
 r3183 ; trunk
-bash scripts/pgo.bash gcc gen ; bash scripts/pgo.bash gcc use ; 
+bash scripts/pgo.bash gcc gen ; bash scripts/pgo.bash gcc use ;
 ARGS="--worker-step 16 -l eo"
 2.6.35.4-desktop-1mnb
 ssh (while not running X-Windows).
