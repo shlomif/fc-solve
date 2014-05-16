@@ -221,12 +221,14 @@ sub _recalc
 {
     my $self = shift;
 
+    # We need the single trailing space in an empty line ': ' for
+    # Freecell Solver compatibility
     $self->_s(
-        ":" .
-        ($self->len()
-            ? $self->_non_zero_cards_string()
-            : " " # We need the single trailing space for
-                  # Freecell Solver compatibility
+        ': ' . join(' ',
+            (map
+                { $_->fast_s() }
+                @{$self->_cards()}
+            )
         )
     );
 
@@ -236,18 +238,6 @@ sub _recalc
 sub to_string
 {
     return shift->_s;
-}
-
-sub _non_zero_cards_string
-{
-    my $self = shift;
-
-    return join("",
-            (map
-                { " " . $_->fast_s() }
-                @{$self->_cards()}
-            )
-        );
 }
 
 =head1 AUTHOR
