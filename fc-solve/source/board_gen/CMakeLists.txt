@@ -9,11 +9,6 @@ ADD_EXECUTABLE(
 )
 
 ADD_EXECUTABLE(
-    make-microsoft-freecell-board
-    make_microsoft_freecell_board.c
-)
-
-ADD_EXECUTABLE(
     pi-make-microsoft-freecell-board
     pi_make_microsoft_freecell_board.c
 )
@@ -65,7 +60,6 @@ INSTALL(
         "make-gnome-freecell-board"
         "pi-make-microsoft-freecell-board"
         "make-aisleriot-freecell-board"
-        "make-microsoft-freecell-board"
     DESTINATION
         "bin"
 )
