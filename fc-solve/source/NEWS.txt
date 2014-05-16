@@ -4,6 +4,13 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version 3.26.0: (Unknown)
+-------------------------
+
+1. Remove the files with duplicates with a .txt extension (e.g:
++README+, +COPYING+, +AUTHORS+) from the source distribution, to save
+space. They are still being copied in the CMake BINARY_DIR directory.
+
 Version 3.24.0: (23-Feb-2014)
 -----------------------------
 

@@ -969,7 +969,7 @@ IF(ASCIIDOC_FOUND)
             COMMENT "docmake to PDF"
         )
 
-        SET (_file_we_full "${CMAKE_CURRENT_SOURCE_DIR}/${_file_we}")
+        SET (_file_we_full "${CMAKE_CURRENT_BINARY_DIR}/${_file_we}")
         ADD_CUSTOM_COMMAND(
             OUTPUT "${_file_we_full}"
             COMMAND cp -f "${_full_file}" "${_file_we_full}"
