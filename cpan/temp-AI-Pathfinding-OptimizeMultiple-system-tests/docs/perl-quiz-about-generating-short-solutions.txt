@@ -10,20 +10,20 @@ Requests for clarifications and other discussion would be OK.
 Today I'm borrowing the collective wisdom of the Perl Quiz-of-the-Whatever
 forum for an algorithmic task I need to accomplish for my own project.
 The project in question is Freecell Solver ( http://fc-solve.berlios.de/ ),
-which is an automated solver for http://en.wikipedia.org/wiki/FreeCell and 
-several other types of card solitaire. 
+which is an automated solver for http://en.wikipedia.org/wiki/FreeCell and
+several other types of card solitaire.
 
 fc-solve starts from the initial layout of the solitaire game and recurses
 into more and more positions, which are counted by the solver's iterations,
-until it reaches the final, solved, state where all cards have been moved to 
+until it reaches the final, solved, state where all cards have been moved to
 the foundations.
 
-After a certain number of iterations (which are roughly indicative of 
-how long it took it to run), it yields a solution of a certain length ,which 
+After a certain number of iterations (which are roughly indicative of
+how long it took it to run), it yields a solution of a certain length ,which
 is desired to be as short as possible. Note that it may also report that it
-is unable to solve the board (after going over all the derived positions) or 
+is unable to solve the board (after going over all the derived positions) or
 that it could not find a solution within the quota of iterations that have
-been allocated for it. 
+been allocated for it.
 
 Now, fc-solve has many different atomic scans, that when run alone, each
 yield different solutions with different iteration counts and lengths.
@@ -37,8 +37,8 @@ http://svn.berlios.de/svnroot/repos/fc-solve/trunk/fc-solve/presets/soft-threads
 (short URL - http://xrl.us/bgwj3o ; there's also an https:// equivalent, which
 may work better, but it's a self-signed certificate).
 
-After installing the dependencies - PDL (= the Perl Data Language) , 
-Class::XSAccessor and Exception::Class (and maybe some others) you can query 
+After installing the dependencies - PDL (= the Perl Data Language) ,
+Class::XSAccessor and Exception::Class (and maybe some others) you can query
 it by using the script query.pl like that:
 
 <<<
@@ -56,9 +56,9 @@ see how you can access the data directly using PDL, and possibly use PDL
 to convert it to a different format.
 
 Now, what I'd like to do is create a meta-scan that runs several of these
-individual scans one after the other, each with a certain quota of iterations, 
+individual scans one after the other, each with a certain quota of iterations,
 and will select the shortest solution of all those that were able to solve
-the board. 
+the board.
 
 Let's look at a numeric example (based on the actual statistics):
 
@@ -84,11 +84,11 @@ none to any other) then for deal #1, scan #1 will yield a solution of
 1,711 iterations) and neither will scan #3 giving us a solution of 127 moves.
 
 For deal #2 all scans will finish well before the iterations limit, and the
-shortest solution chosen will be scan #3 with its 107 steps solution. 
+shortest solution chosen will be scan #3 with its 107 steps solution.
 
 Etc.
 
-Let's suppose I have a total of $tot iterations to split among all the 
+Let's suppose I have a total of $tot iterations to split among all the
 scans in scans.txt in the distribution, into @q[0 .. $last_scan] quotas.
 
 My question is: given $tot, what should @q be so it will, on average,

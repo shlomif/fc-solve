@@ -154,7 +154,7 @@ sub _out_script
     my $cmd_line_string = shift;
 
     $self->_get_script_fh()->print(
-        $cmd_line_string, 
+        $cmd_line_string,
         $self->_get_script_terminator($cmd_line_string)
     );
 }
@@ -162,11 +162,11 @@ sub _out_script
 sub _get_line_of_command
 {
     my $self = shift;
-    
-    my $args_string = 
-        join(" ", 
-            $self->_start_board(), 
-            $self->_start_board() + $self->_num_boards() - 1, 
+
+    my $args_string =
+        join(" ",
+            $self->_start_board(),
+            $self->_start_board() + $self->_num_boards() - 1,
             1
         );
     return "freecell-solver-range-parallel-solve $args_string";
@@ -187,9 +187,9 @@ sub _get_used_scans
 sub _get_lines_of_scan_defs
 {
     my $self = shift;
-    return 
-        [map 
-            { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} } 
+    return
+        [map
+            { $_->{'cmd_line'} . " -step 500 --st-name " . $_->{'id'} }
             @{$self->_get_used_scans()}
         ];
 }
@@ -239,7 +239,7 @@ sub _get_line_of_prelude
     my $self = shift;
     return "--prelude \"" .
         join(",",
-            map { $self->_format_prelude_iter($_) } 
+            map { $self->_format_prelude_iter($_) }
                 @{$self->_chosen_scans()}
         ) . "\"";
 }
@@ -260,7 +260,7 @@ sub _calc_script_lines
 sub _calc_script_text
 {
     my $self = shift;
-    return 
+    return
         join("",
             @{$self->_line_ends_mapping(
                 $self->_calc_script_lines()
@@ -271,7 +271,7 @@ sub _calc_script_text
 sub _write_script
 {
     my $self = shift;
-     
+
     $self->_out_script(
         $self->_calc_script_text()
     );
@@ -281,7 +281,7 @@ sub _calc_scans_data
 {
     my $self = shift;
 
-    my $method = 
+    my $method =
         (($self->_optimize_for() =~ m{len})
             ? "get_scans_lens_data"
             : "get_scans_data"
@@ -375,10 +375,10 @@ sub _get_run_string
     my $results = shift;
 
     return join("",
-        map 
-        { 
-            sprintf('%i@%i,', 
-                $_->iters(), 
+        map
+        {
+            sprintf('%i@%i,',
+                $_->iters(),
                 $self->_map_scan_idx_to_id($_->scan())
             )
         }
@@ -398,7 +398,7 @@ sub _do_simulation_for_board
         return $self->_map_scan_idx_to_id($index);
     };
 
-    return 
+    return
         sprintf("%i:%s:%s:%i",
             $board+1,
             $results->get_status(),

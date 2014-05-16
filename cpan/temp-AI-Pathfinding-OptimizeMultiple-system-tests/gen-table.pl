@@ -44,9 +44,9 @@ my @scan_indexes =
 );
 
 
-my $tb = 
+my $tb =
     Text::Table->new(
-        "Deal No.", 
+        "Deal No.",
             (map { (\" | "), "$_ Iters", (\" | "),  "$_ Len" } @scans),
             (\" |"),
     );
@@ -59,7 +59,7 @@ foreach my $board_idx (1 .. $top_board_idx)
 
         return $pdl->at($board_idx-$start_board, $scan_idx, $stat);
     };
-    
+
     $tb->add($board_idx, (map { $at->($_,0), $at->($_,1) } @scan_indexes));
 }
 

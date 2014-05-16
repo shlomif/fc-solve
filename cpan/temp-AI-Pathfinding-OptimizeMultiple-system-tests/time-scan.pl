@@ -14,7 +14,7 @@ my $scan = join(" ", @ARGV);
 
 if (my @results = (grep { $_->{'cmd_line'} eq $scan } @$prev_scans))
 {
-    die "The scan already exists with the ID " . $results[0]->{'id'} . "\n";    
+    die "The scan already exists with the ID " . $results[0]->{'id'} . "\n";
 }
 
 open O, ">>", "scans.txt";

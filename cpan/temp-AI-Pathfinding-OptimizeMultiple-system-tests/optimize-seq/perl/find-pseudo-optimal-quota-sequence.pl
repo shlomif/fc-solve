@@ -44,7 +44,7 @@ while (@final_quotas < @guessed_quotas)
         }
         my $arbitrator =
             Shlomif::FCS::CalcMetaScan->new(
-                    'quotas' => 
+                    'quotas' =>
                     [
                         @final_quotas,
                         $quota,
@@ -61,7 +61,7 @@ while (@final_quotas < @guessed_quotas)
         my $iters = $arbitrator->total_iters();
 
         if ($min_quota_iters < 0 || $iters < $min_quota_iters)
-        {   
+        {
             $min_quota = $quota;
             $min_quota_iters = $iters;
         }

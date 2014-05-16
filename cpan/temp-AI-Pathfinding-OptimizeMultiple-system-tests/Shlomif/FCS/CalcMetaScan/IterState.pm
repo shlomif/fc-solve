@@ -53,8 +53,8 @@ sub get_chosen_struct
     return
         Shlomif::FCS::CalcMetaScan::ScanRun->new(
             {
-                iters => $self->_quota(), 
-                scan => $self->_scan_idx() 
+                iters => $self->_quota(),
+                scan => $self->_scan_idx()
             }
         );
 }
@@ -86,20 +86,20 @@ sub update_total_iters
 
     # $r is the result of this scan.
     my $r = $state->idx_slice();
-    
+
     # Add the total iterations for all the states that were solved by
     # this scan.
     $state->_main()->_add_to_total_iters(
         PDL::sum((($r <= $state->_quota()) & ($r > 0)) * $r)
     );
-    
+
     # Find all the states that weren't solved.
     my $indexes = PDL::which(($r > $state->_quota()) | ($r < 0));
-    
+
     # Add the iterations for all the states that have not been solved
     # yet.
     $state->_main()->_add_to_total_iters($indexes->nelem() * $state->_quota());
-    
+
     # Keep only the states that have not been solved yet.
     $state->_main()->_scans_data(
         $state->_main()->_scans_data()->dice($indexes, "X")->copy()
@@ -113,8 +113,8 @@ sub update_idx_slice
     # $r cannot be 0, because the ones that were 0, were already solved
     # in $state->update_total_iters().
     my $idx_slice = $state->idx_slice();
-    $idx_slice .= 
-        (($r > 0) * ($r - $state->_quota())) + 
+    $idx_slice .=
+        (($r > 0) * ($r - $state->_quota())) +
         (($r < 0) * ($r                  ));
 }
 

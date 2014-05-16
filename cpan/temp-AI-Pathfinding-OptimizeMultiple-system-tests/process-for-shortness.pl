@@ -46,8 +46,8 @@ foreach my $scan (@{$input_obj->selected_scans()})
 
     my $vec = $data->slice(":,$scan_index,0");
     $vec = $vec->where($vec > 0);
-    
-    my $sorted = $vec->flat()->qsort(); 
+
+    my $sorted = $vec->flat()->qsort();
 
     # The step should be the 90% percentile, but not higher than
     # 10,000 iterations.

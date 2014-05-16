@@ -15,7 +15,7 @@ sub test_find_opt_command_output
 
     my $test_id = "$cmd(" . join(",", @$cmd_args) . ")";
 
-    trap {    
+    trap {
         # TEST:$cnt++;
         ok (!system(
                 "mono", "find_opt.exe", $cmd, @$cmd_args,
@@ -77,7 +77,7 @@ test_scan_cmd_line(1, "--method soft-dfs -to 0123456789",);
 sub test_lookup_iters
 {
     my ($scan_id, $board_idx, $iters_num) = @_;
-    
+
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     return test_find_opt_command_output(

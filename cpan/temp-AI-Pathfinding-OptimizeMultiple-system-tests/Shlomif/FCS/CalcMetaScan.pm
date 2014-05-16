@@ -90,7 +90,7 @@ sub _calc_get_iter_state_param_method
 
     my $optimize_for = $self->_optimize_for();
 
-    my %resolve = 
+    my %resolve =
     (
         len => "_get_iter_state_params_len",
         minmax_len => "_get_iter_state_params_minmax_len",
@@ -141,11 +141,11 @@ sub _get_iter_state_params_len
         my $solved = (($iters <= $iters_quota) & ($iters > 0));
         my $num_moves = $self->_scans_data->slice(":,:,2");
         my $solved_moves = $solved * $num_moves;
-        
+
         my $solved_moves_sums = _my_sum_over($solved_moves);
         my $solved_moves_counts = _my_sum_over($solved);
         my $solved_moves_avgs = $solved_moves_sums / $solved_moves_counts;
-        
+
         (undef, undef, $selected_scan_idx, undef) =
             $solved_moves_avgs->minmaximum()
             ;
@@ -186,10 +186,10 @@ sub _get_iter_state_params_minmax_len
         my $solved = (($iters <= $iters_quota) & ($iters > 0));
         my $num_moves = $self->_scans_data->slice(":,:,2");
         my $solved_moves = $solved * $num_moves;
-        
+
         my $solved_moves_maxima = $solved_moves->maximum()->slice(":,(0),(0)");
         my $solved_moves_counts = _my_sum_over($solved);
-        
+
         (undef, undef, $selected_scan_idx, undef) =
             $solved_moves_maxima->minmaximum()
             ;
@@ -229,7 +229,7 @@ sub _get_iter_state_params_speed
         (undef, $num_solved_in_iter, undef, $selected_scan_idx) =
             PDL::minmaximum(
                 PDL::sumover(
-                    ($self->_scans_data() <= $iters_quota) & 
+                    ($self->_scans_data() <= $iters_quota) &
                     ($self->_scans_data() > 0)
                 )
               );
@@ -247,7 +247,7 @@ sub _get_selected_scan
 {
     my $self = shift;
 
-    my $iter_state = 
+    my $iter_state =
         Shlomif::FCS::CalcMetaScan::IterState->new(
             $self->_get_iter_state_params(),
         );
@@ -266,7 +266,7 @@ sub _inspect_quota
     $state->register_params();
 
     $state->update_total_iters();
-    
+
     if ($self->_total_boards_solved() == $self->_num_boards())
     {
         $self->_status("solved_all");
@@ -399,7 +399,7 @@ sub get_final_status
 
 =head2 my $sim_results_obj = $calc_meta_scan->simulate_board($board_idx)
 
-Simulates the board No $board_idx through the scan. Returns a 
+Simulates the board No $board_idx through the scan. Returns a
 L<Shlomif::FCS::CalcMetaScan::SimulationResults> object.
 
 =cut
@@ -420,7 +420,7 @@ sub simulate_board
         my $scan_run = shift;
 
         push @scan_runs, $scan_run;
-        
+
         $board_iters += $scan_run->iters();
     };
 
@@ -448,7 +448,7 @@ sub simulate_board
                 $info[$s->scan()] -= $s->iters();
             }
 
-            $add_new_scan_run->( 
+            $add_new_scan_run->(
                 Shlomif::FCS::CalcMetaScan::ScanRun->new(
                     {
                         iters => $s->iters(),
@@ -472,7 +472,7 @@ sub simulate_board
 sub _trace
 {
     my ($self, $args) = @_;
-    
+
     if (my $trace_callback = $self->_trace_cb())
     {
         $trace_callback->($args);
@@ -497,7 +497,7 @@ sub get_total_iters
 sub _add_to_total_iters
 {
     my $self = shift;
-    
+
     my $how_much = shift;
 
     $self->_total_iters($self->_total_iters() + $how_much);
@@ -508,7 +508,7 @@ sub _add_to_total_iters
 sub _add_to_total_boards_solved
 {
     my $self = shift;
-    
+
     my $how_much = shift;
 
     $self->_total_boards_solved($self->_total_boards_solved() + $how_much);
