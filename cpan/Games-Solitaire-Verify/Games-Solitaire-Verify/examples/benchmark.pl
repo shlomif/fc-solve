@@ -40,6 +40,7 @@ my $LAST_INDEX = ($ENV{L} || 100);
 
 foreach my $board_idx (1 .. $LAST_INDEX)
 {
+    print "== $board_idx ==\n";
     my $fc_solve_output = `pi-make-microsoft-freecell-board -t $board_idx | fc-solve -p -t -sam -sel @fc_solve_args`;
 
     my $_line_found = sub {
