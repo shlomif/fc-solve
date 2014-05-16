@@ -180,6 +180,8 @@ sub append
     my $more_copy = $more_cards->clone();
 
     push @{$self->_cards()}, @{$more_copy->_cards()};
+
+    return;
 }
 
 =head2 $column->push($card)
@@ -193,6 +195,8 @@ sub push
     my ($self, $card) = @_;
 
     push @{$self->_cards()}, $card;
+
+    return;
 }
 
 =head2 my $card_at_top = $column->pop()
