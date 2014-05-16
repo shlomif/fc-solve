@@ -45,20 +45,6 @@ __PACKAGE__->mk_acc_ref([qw(
 
 =cut
 
-sub _card_num_normalize
-{
-    my $arg = shift;
-
-    if (ref($arg) eq "")
-    {
-        return +{ map { $_ => $arg } (qw(t non_t)) };
-    }
-    else
-    {
-        return $arg
-    }
-}
-
 sub _from_string
 {
     my ($self, $str) = @_;
