@@ -42,16 +42,15 @@ foreach my $board_idx (1 .. $LAST_INDEX)
 {
     my $fc_solve_output = `pi-make-microsoft-freecell-board -t $board_idx | fc-solve -p -t -sam -sel @fc_solve_args`;
 
-    sub _line_found
-    {
+    my $_line_found = sub {
         my ($s) = @_;
 
         return (($fc_solve_output =~ m{^\Q$s\E}ms) ? 1 : 0);
-    }
+    };
 
-    my $is_solvable = _line_found('This game is solveable');
-    my $unsolved = _line_found('I could not solve');
-    my $intractable = _line_found('Iterations count exceeded');
+    my $is_solvable = $_line_found->('This game is solveable');
+    my $unsolved = $_line_found->('I could not solve');
+    my $intractable = $_line_found->('Iterations count exceeded');
 
     my @true = (grep { $_ } ($is_solvable, $unsolved, $intractable));
 
