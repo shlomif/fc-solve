@@ -7,7 +7,6 @@ use autodie;
 
 use List::MoreUtils qw(first_index);
 
-# use IPC::System::Simple qw(capturex);
 use Games::Solitaire::Verify::Solution;
 use Games::Solitaire::Verify::App::CmdLine;
 

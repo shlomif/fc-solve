@@ -1,8 +1,10 @@
 Revision history for Games-Solitaire-Verify
 
-0.1204  2015-05-16
+0.1300  2015-05-16
         - Some optimizations after noticing that validating the solutions
         of the whole Microsoft Freecell 32K was time consuming.
+        - Add examples/benchmark.pl which can be used to benchmark (requires
+        the fc-solve distribution in the path).
 
 0.1203  2014-01-30
         - Add LICENSE (as well as COPYING) for CPANTS Kwalitee.
