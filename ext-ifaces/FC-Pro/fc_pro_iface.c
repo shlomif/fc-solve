@@ -50,7 +50,7 @@ static char * position_to_string(Position * pos, int num_freecells)
 
     buffer[0] = '\0';
     s_end = buffer;
-    
+
     for(a=0;a<4;a++)
     {
         if (pos->foundations[a] != 0)
@@ -66,8 +66,8 @@ static char * position_to_string(Position * pos, int num_freecells)
             if (pos->foundations[a] != 0)
             {
                 s_end += sprintf(
-                    s_end, 
-                    " %s-%s", 
+                    s_end,
+                    " %s-%s",
                     suit_to_string(a, temp[0]),
                     rank_to_string(pos->foundations[a], temp[1])
                     );
@@ -95,13 +95,13 @@ static char * position_to_string(Position * pos, int num_freecells)
     {
         for(a=0;a<pos->tableau[stack].count;a++)
         {
-            s_end += 
+            s_end +=
                 sprintf(
-                    s_end, 
-                    "%s%s", 
+                    s_end,
+                    "%s%s",
                     ((a == 0)? "" : " "),
                     card_to_string(pos->tableau[stack].cards[a], temp[0])
-                );                                
+                );
         }
         *s_end = '\n';
         s_end++;
@@ -149,13 +149,13 @@ static char * render_move(fcs_extended_move_t move, char * string)
 	char b ;  //ABE
     int num_chars = 2;
 #endif
-    
+
     switch(fcs_move_get_type(move.move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
                 if (move.to_empty_stack && (fcs_move_get_num_cards_in_seq(move.move) > 1))
                 {
-                    sprintf(string, "%i%iv%x", 
+                    sprintf(string, "%i%iv%x",
                         1+fcs_move_get_src_stack(move.move),
                         1+fcs_move_get_dest_stack(move.move),
                         fcs_move_get_num_cards_in_seq(move.move)
@@ -163,7 +163,7 @@ static char * render_move(fcs_extended_move_t move, char * string)
                 }
                 else
                 {
-                    sprintf(string, "%i%i", 
+                    sprintf(string, "%i%i",
                         1+fcs_move_get_src_stack(move.move),
                         1+fcs_move_get_dest_stack(move.move)
                         );
@@ -171,7 +171,7 @@ static char * render_move(fcs_extended_move_t move, char * string)
         break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
-				sprintf(string, "%c%i", 
+				sprintf(string, "%c%i",
 #ifndef FC89
                     ('a'+fcs_move_get_src_freecell(move.move)),
 #else
@@ -190,7 +190,7 @@ static char * render_move(fcs_extended_move_t move, char * string)
                     ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
                     ('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)))
 #endif
-					);                        
+					);
         break;
 
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
@@ -209,7 +209,7 @@ static char * render_move(fcs_extended_move_t move, char * string)
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
                 sprintf(string, "%ih", 1+fcs_move_get_src_stack(move.move));
         break;
-        
+
 
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
 #ifndef FC89
@@ -270,7 +270,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
     fcs_move_t move, out_move;
 
     pos = *orig;
-    
+
     ret = malloc(sizeof(*ret));
     ret->num_moves = 0;
     ret->max_num_moves = num_back_end_moves = freecell_solver_user_get_moves_left(instance);
@@ -279,13 +279,13 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
 
     for(i=0;i<8;i++)
     {
-        virtual_stack_len[i] = orig->tableau[i].count;        
+        virtual_stack_len[i] = orig->tableau[i].count;
     }
     for(i=0;i<NoFcs;i++)
     {
         virtual_freecell_len[i] = (orig->hold[i] != 0) ? 1 : 0;
     }
-    
+
     for(move_idx=0; move_idx < num_back_end_moves ; move_idx ++)
     {
         if (getenv("FCS_OUTPUT_INTERMEDIATE_POS"))
@@ -297,8 +297,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
         }
 
 
-        /* 
-         * Move safe cards to the foundations 
+        /*
+         * Move safe cards to the foundations
          * */
         while (1)
         {
@@ -343,12 +343,12 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                     }
                 }
             }
-            
+
             for(i=0;i<8;i++)
             {
                 int rank, suit;
                 Card card;
-                
+
                 if (pos.tableau[i].count > 0)
                 {
                     card = pos.tableau[i].cards[pos.tableau[i].count-1];
@@ -356,12 +356,12 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                     suit = card >> 4;
                     /* Check if we can safely move it */
                     if ((pos.foundations[suit^0x1] > rank-2) &&
-                        (pos.foundations[suit^0x1^0x2] > rank-2) && 
+                        (pos.foundations[suit^0x1^0x2] > rank-2) &&
                         (pos.foundations[suit^0x2] > rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
                         fcs_extended_move_t new_move;
-                        
+
                         pos.foundations[suit]++;
                         pos.tableau[i].count--;
                         fcs_move_set_type(new_move.move, FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
@@ -372,7 +372,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         {
                            moves_processed_add_new_move(ret, new_move);
                         }
-                        
+
                         break;
                     }
                 }
@@ -393,7 +393,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                     suit = card >> 4;
                     /* Check if we can safely move it */
                     if ((pos.foundations[suit^0x1] > rank-2) &&
-                        (pos.foundations[suit^0x1^0x2] > rank-2) && 
+                        (pos.foundations[suit^0x1^0x2] > rank-2) &&
                         (pos.foundations[suit^0x2] > rank-3) &&
                         (pos.foundations[suit] == rank-1))
                     {
@@ -408,8 +408,8 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             moves_processed_add_new_move(ret, new_move);
                         }
                         break;
-                    }                        
-                    
+                    }
+
                 }
             }
             if ((i == 8) && (j == NoFcs))
@@ -438,7 +438,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             {
                                 fcs_extended_move_t ext_move;
                                 ext_move.move = move;
-                                                            
+
                                 moves_processed_add_new_move(ret, ext_move);
                             }
                         }
@@ -462,7 +462,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             {
                                 fcs_extended_move_t ext_move;
                                 ext_move.move = move;
-                                                            
+
                                 moves_processed_add_new_move(ret, ext_move);
                             }
                             pos.foundations[pos.hold[src] >> 4]++;
@@ -490,7 +490,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                             }
                             pos.tableau[dest].cards[pos.tableau[dest].count++] = pos.hold[src];
                             pos.hold[src] = 0;
-                        }                        
+                        }
                         virtual_freecell_len[src] = 0;
                         virtual_stack_len[dest]++;
                     }
@@ -523,7 +523,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                case FCS_MOVE_TYPE_STACK_TO_STACK:
                     {
                         int num_cards, virt_num_cards;
-                        
+
                         src = fcs_move_get_src_stack(move);
                         dest = fcs_move_get_dest_stack(move);
                         num_cards = fcs_move_get_num_cards_in_seq(move);
@@ -562,14 +562,14 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
                         }
                     }
                     break;
-                
+
             }
         }
     }
 
 #if 0
-    /* 
-     * This is a debugging code. It seems that everything works well 
+    /*
+     * This is a debugging code. It seems that everything works well
      * */
     {
         int count=0;
@@ -588,7 +588,7 @@ moves_processed_t * moves_processed_gen(Position * orig, int NoFcs, void * insta
 #endif
 
     return ret;
-    
+
 }
 
 int moves_processed_get_moves_left(moves_processed_t * moves)
@@ -636,7 +636,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 #ifdef SHLOMIF_DEBUG
     printf("%s\n\n", state_string);
 #endif
-    
+
     instance = freecell_solver_user_alloc();
 
 	NumFCs = NoFcs ;
@@ -655,11 +655,11 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 
     if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
     {
-        freecell_solver_user_free(instance);        
+        freecell_solver_user_free(instance);
         return 0;
     }
-    
-            
+
+
     freecell_solver_user_set_game(
         instance,
 
@@ -687,14 +687,14 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         (mode & FCS_IFACE_MODE_OPT) ? 1 : 0
         );
 #endif
-          
+
     verdict = freecell_solver_user_solve_board(instance, state_string);
 
     free(state_string);
 
-    while ((verdict == FCS_STATE_SUSPEND_PROCESS) && 
+    while ((verdict == FCS_STATE_SUSPEND_PROCESS) &&
            (
-                (limit > 0) ? 
+                (limit > 0) ?
                     (current_limit < limit) :
                     1
            )
@@ -724,7 +724,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         moves_processed_t * moves_processed;
 
         ret = num_iters;
-        
+
         moves_processed = moves_processed_gen(orig, NoFcs, instance);
         num_moves = moves_processed_get_moves_left(moves_processed);
 #ifdef SHLOMIF_DEBUG
@@ -732,7 +732,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 #else
         moves_string_proto = (char *)malloc(moves_processed->num_moves*4+1);
 #endif
-        
+
         /* a = num_moves-1; */
         str = moves_string_proto;
 #ifdef SHLOMIF_DEBUG
@@ -742,7 +742,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         {
 
             str = render_move(move, str);
-#ifdef SHLOMIF_DEBUG            
+#ifdef SHLOMIF_DEBUG
             *(str++) = ' ';
             if ((++len % 10) == 0)
             {
@@ -764,7 +764,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 #else
         moves_string = moves_string_proto;
 #endif
-        
+
 #if 0
         moves_string[num_moves*2] = '\0';
 #endif
@@ -781,7 +781,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     {
         ret = 0;
     }
-    
+
     freecell_solver_user_free(instance);
 
     return ret;

@@ -17,7 +17,7 @@ my $i;
 
 for($i=0;$i<scalar(@chars);)
 {
-    while ($chars[$i] =~ /^[ \t\n]$/) 
+    while ($chars[$i] =~ /^[ \t\n]$/)
     {
         $i++;
     }
@@ -31,7 +31,7 @@ for($i=0;$i<scalar(@chars);)
         $last_arg .= $chars[$i];
         $i++;
     }
-    
+
     if ($chars[$i] =~ /^[ \t\n\0]$/)
     {
         NEXT_ARG:

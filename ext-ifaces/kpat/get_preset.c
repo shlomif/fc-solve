@@ -42,6 +42,6 @@ int main()
     }
 
     freecell_solver_args_man_free(args);
-    
+
     return 0;
 }

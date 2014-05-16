@@ -4,7 +4,7 @@ all: $(PROG)
 
 BOARD = 24
 
-fill_pos.cpp: 
+fill_pos.cpp:
 	pi-make-microsoft-freecell-board -t $(BOARD) | perl fill_pos.pl > fill_pos.cpp
 
 $(PROG): fc_pro_iface.c fill_pos.cpp main.c
