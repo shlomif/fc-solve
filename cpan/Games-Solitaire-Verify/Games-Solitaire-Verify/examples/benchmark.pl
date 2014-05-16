@@ -37,7 +37,9 @@ if ($separator < 0)
 my @game_params = @args[0 .. $separator - 1];
 my @fc_solve_args = (@game_params, @args[$separator+1 .. $#args]);
 
-foreach my $board_idx (1 .. 100)
+my $LAST_INDEX = ($ENV{L} || 100);
+
+foreach my $board_idx (1 .. $LAST_INDEX)
 {
     my $board_str = `pi-make-microsoft-freecell-board -t $board_idx`;
     my $board_fn = 'board.txt';
