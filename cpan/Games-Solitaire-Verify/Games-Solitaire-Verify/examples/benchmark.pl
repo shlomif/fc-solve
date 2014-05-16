@@ -40,12 +40,7 @@ my $LAST_INDEX = ($ENV{L} || 100);
 
 foreach my $board_idx (1 .. $LAST_INDEX)
 {
-    my $board_str = `pi-make-microsoft-freecell-board -t $board_idx`;
-    my $board_fn = 'board.txt';
-    open my $out_fh, '>', $board_fn;
-    print {$out_fh} $board_str;
-    close($out_fh);
-    my $fc_solve_output = `fc-solve -p -t -sam -sel @fc_solve_args $board_fn`;
+    my $fc_solve_output = `pi-make-microsoft-freecell-board -t $board_idx | fc-solve -p -t -sam -sel @fc_solve_args`;
 
     sub _line_found
     {
