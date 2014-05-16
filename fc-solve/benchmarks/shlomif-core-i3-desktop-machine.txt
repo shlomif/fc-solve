@@ -342,3 +342,34 @@ Reached Board No. 32000 at 1351606563.287320 (total_num_iters=10979447)
 Finished at 1351606563.294707 (total_num_iters=11372658)
 </DUMP>
 
+---------------------------------------------------------
+
+ARGS="--worker-step 16 -l as" bash scripts/time-threads-num.bash 4 4 x Several Times
+commit 34ba7a0d66f279a62ea7221b898c70d254fe8e4e
+With Profile Guided Optimisation (PGO).
+./Tatzer -l ci7b --prefix=/home/shlomif/apps/fcs
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+3.14.4-desktop-1.mga5
+gcc-4.9.1-0.20140507.2.mga5
+lib64google-perftools0-2.1-2.mga4
+
+9.28399801254272s
+
+    Highlight: new gcc, kernel, glibc, gcc, and a some commits on the trunk.
+
+<DUMP>
+Started at 1400250189.144754
+Reached Board No. 4000 at 1400250190.295332 (total_num_iters=359303)
+Reached Board No. 8000 at 1400250191.504143 (total_num_iters=1079870)
+Reached Board No. 12000 at 1400250192.628388 (total_num_iters=1431077)
+Unsolved Board No. 11982 at 1400250192.828921
+Reached Board No. 16000 at 1400250193.839657 (total_num_iters=2528584)
+Reached Board No. 20000 at 1400250194.970260 (total_num_iters=4289112)
+Reached Board No. 24000 at 1400250196.068511 (total_num_iters=5362958)
+Reached Board No. 28000 at 1400250197.146878 (total_num_iters=6039674)
+Reached Board No. 32000 at 1400250198.421115 (total_num_iters=7847142)
+Finished at 1400250198.428752 (total_num_iters=11372658)
+</DUMP>
+
