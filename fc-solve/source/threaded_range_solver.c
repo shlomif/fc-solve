@@ -244,7 +244,6 @@ static void * worker_thread(void * void_context)
     char * * argv;
     int board_num;
     int quota_end;
-    int stop_at;
     fcs_portable_time_t mytime;
     fcs_int_limit_t total_num_iters_temp = 0;
     /* 52 cards of 3 chars (suit+rank+whitespace) each,
@@ -254,7 +253,7 @@ static void * worker_thread(void * void_context)
     context = (context_t *)void_context;
     arg = context->arg;
     argv = context->argv;
-    stop_at = context->stop_at;
+    const int stop_at = context->stop_at;
 
     user.instance = freecell_solver_user_alloc();
 
@@ -384,7 +383,6 @@ ret_label:
 
 int main(int argc, char * argv[])
 {
-    int stop_at;
     fcs_portable_time_t mytime;
 
     int num_workers = 3;
@@ -404,7 +402,7 @@ int main(int argc, char * argv[])
     }
     next_board_num = atoi(argv[arg++]);
     end_board = atoi(argv[arg++]);
-    stop_at = atoi(argv[arg++]);
+    const int stop_at = atoi(argv[arg++]);
 
     if (stop_at <= 0)
     {
