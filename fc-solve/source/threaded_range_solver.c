@@ -66,21 +66,21 @@ static void my_iter_handler(
     void * lp_context
     )
 {
-    fc_solve_display_information_context_t * context;
-    context = (fc_solve_display_information_context_t*)lp_context;
-
     fprintf(stdout, "Iteration: %li\n", (long)iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
+
+    const fc_solve_display_information_context_t * const context =
+        (const fc_solve_display_information_context_t * const)lp_context;
+
     if (context->display_parent_iter_num)
     {
         fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
     }
     fprintf(stdout, "\n");
 
-
     if (context->debug_iter_state_output)
     {
-        char * state_string =
+        char * const state_string =
             freecell_solver_user_iter_state_as_string(
                 user_instance,
                 ptr_state,
@@ -111,10 +111,7 @@ static int cmd_line_callback(
     void * context
     )
 {
-    pack_item_t * item;
-    fc_solve_display_information_context_t * dc;
-    item = (pack_item_t * )context;
-    dc = &(item->display_context);
+    fc_solve_display_information_context_t * const dc = &(((pack_item_t *)context)->display_context);
 
     *num_to_skip = 0;
 
@@ -217,9 +214,6 @@ static void * worker_thread(void * void_context)
      * plus 8 newlines, plus one '\0' terminator*/
 
     const context_t * const context = (const context_t * const)void_context;
-    int arg = context->arg;
-    char * * argv = (context->argv);
-    const int stop_at = context->stop_at;
 
     pack_item_t user =
     {
@@ -233,7 +227,9 @@ static void * worker_thread(void * void_context)
     };
 
     {
+        int arg = context->arg;
         char * error_string;
+        char * * argv = (context->argv);
         const int parser_ret =
             freecell_solver_user_cmd_line_parse_args(
                 user.instance,
@@ -277,6 +273,7 @@ static void * worker_thread(void * void_context)
     fcs_portable_time_t mytime;
     fcs_int_limit_t total_num_iters_temp = 0;
     const fcs_int_limit_t total_iterations_limit_per_board = context->total_iterations_limit_per_board;
+    const int stop_at = context->stop_at;
     do
     {
         pthread_mutex_lock(&next_board_num_lock);
