@@ -48,23 +48,14 @@
 #include "bool.h"
 #include "range_solvers_gen_ms_boards.h"
 
-struct fc_solve_display_information_context_struct
+typedef struct
 {
     fcs_bool_t debug_iter_state_output;
-    int freecells_num;
-    int stacks_num;
-    int decks_num;
     fcs_bool_t parseable_output;
     fcs_bool_t canonized_order_output;
     fcs_bool_t display_10_as_t;
     fcs_bool_t display_parent_iter_num;
-    fcs_bool_t debug_iter_output_on;
-    fcs_bool_t display_moves;
-    fcs_bool_t display_states;
-    fcs_bool_t standard_notation;
-};
-
-typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
+} fc_solve_display_information_context_t;
 
 static void my_iter_handler(
     void * user_instance,
@@ -103,13 +94,11 @@ static void my_iter_handler(
 
 }
 
-struct pack_item_struct
+typedef struct
 {
     fc_solve_display_information_context_t display_context;
     void * instance;
-};
-
-typedef struct pack_item_struct pack_item_t;
+} pack_item_t;
 
 
 static int cmd_line_callback(
@@ -136,7 +125,6 @@ static int cmd_line_callback(
             my_iter_handler,
             dc
             );
-        dc->debug_iter_output_on = TRUE;
     }
     else if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
     {
@@ -153,20 +141,6 @@ static int cmd_line_callback(
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
     {
         dc->display_10_as_t = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-m")) || (!strcmp(argv[arg], "--display-moves")))
-    {
-        dc->display_moves = TRUE;
-        dc->display_states = FALSE;
-    }
-    else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
-    {
-        dc->standard_notation = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
-    {
-        dc->display_moves = TRUE;
-        dc->display_states = TRUE;
     }
     else if ((!strcmp(argv[arg], "-pi")) || (!strcmp(argv[arg], "--display-parent-iter")))
     {
@@ -235,13 +209,9 @@ static pthread_mutex_t total_num_iters_lock;
 
 static void * worker_thread(void * void_context)
 {
-    context_t * context;
-    pack_item_t user;
     char * error_string;
-    int arg;
     int parser_ret;
     int ret;
-    char * * argv;
     int board_num;
     int quota_end;
     fcs_portable_time_t mytime;
@@ -250,12 +220,21 @@ static void * worker_thread(void * void_context)
      * plus 8 newlines, plus one '\0' terminator*/
     fcs_state_string_t state_string;
 
-    context = (context_t *)void_context;
-    arg = context->arg;
-    argv = context->argv;
+    const context_t * const context = (const context_t * const)void_context;
+    int arg = context->arg;
+    char * * argv = (context->argv);
     const int stop_at = context->stop_at;
 
-    user.instance = freecell_solver_user_alloc();
+    pack_item_t user =
+    {
+        .instance = freecell_solver_user_alloc(),
+        .display_context = {.debug_iter_state_output = FALSE,
+            .parseable_output = FALSE,
+            .canonized_order_output = FALSE,
+            .display_10_as_t = FALSE,
+            .display_parent_iter_num = FALSE
+        }
+    };
 
     parser_ret =
         freecell_solver_user_cmd_line_parse_args(
@@ -386,11 +365,9 @@ int main(int argc, char * argv[])
     fcs_portable_time_t mytime;
 
     int num_workers = 3;
-    pthread_t * workers;
 
     int arg = 1, start_from_arg, idx, check;
 
-    context_t context;
 
     next_board_num_lock = initial_mutex_constant;
     total_num_iters_lock = initial_mutex_constant;
@@ -468,12 +445,10 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    context.argc = argc;
-    context.argv = argv;
-    context.arg = start_from_arg;
-    context.stop_at = stop_at;
+    context_t context = {.argc = argc, .argv = argv,
+        .arg = start_from_arg, .stop_at = stop_at };
 
-    workers = SMALLOC(workers, num_workers);
+    pthread_t * const workers = SMALLOC(workers, num_workers);
 
     for ( idx = 0 ; idx < num_workers ; idx++)
     {
