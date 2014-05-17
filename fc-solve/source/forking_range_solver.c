@@ -353,6 +353,13 @@ int main(int argc, char * argv[])
     next_board_num = atoi(argv[arg++]);
     end_board = atoi(argv[arg++]);
     stop_at = atoi(argv[arg++]);
+    if (stop_at <= 0)
+    {
+        fprintf(stderr, "print_step (the third argument) must be greater than 0.\n");
+        print_help();
+        exit(-1);
+
+    }
 
     for (;arg < argc; arg++)
     {
