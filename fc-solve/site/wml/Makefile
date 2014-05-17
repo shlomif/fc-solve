@@ -77,7 +77,7 @@ $(D) $(SUBDIRS) :: % :
 
 RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 
-$(ARC_DOCS) :: $(D)/% : ../../source/%
+$(ARC_DOCS) :: $(D)/% : ../../source/%.txt
 	cp -f "$<" "$@"
 
 $(DOCS_HTMLS) :: $(D)/docs/distro/% : ../../source/%
@@ -113,7 +113,7 @@ $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA): $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_C
 	find $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR) -type f -print0 | xargs -0 touch
 
 $(LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA)
-	( cd $(LIBFREECELL_SOLVER_JS_DIR) && make -f $(FC_SOLVE_SOURCE_DIR)/Makefile.to-javascript.mak SRC_DIR=$(FC_SOLVE_SOURCE_DIR) )
+	( cd $(LIBFREECELL_SOLVER_JS_DIR) && make -f $(FC_SOLVE_SOURCE_DIR)/Makefile.to-javascript.mak SRC_DIR=$(FC_SOLVE_SOURCE_DIR) && perl -i -lape 's/[ \t]+$$//' *.js *.html)
 
 $(JSMIN): lib/jsmin/jsmin.c
 	gcc -o $@ -O2 -Wall $<
