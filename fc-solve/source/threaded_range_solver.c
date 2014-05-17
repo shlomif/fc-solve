@@ -255,13 +255,6 @@ static void * worker_thread(void * void_context)
     arg = context->arg;
     argv = context->argv;
     stop_at = context->stop_at;
-    if (stop_at <= 0)
-    {
-        fprintf(stderr, "print_step (the third argument) must be greater than 0.\n");
-        print_help();
-        exit(-1);
-
-    }
 
     user.instance = freecell_solver_user_alloc();
 
@@ -413,6 +406,13 @@ int main(int argc, char * argv[])
     end_board = atoi(argv[arg++]);
     stop_at = atoi(argv[arg++]);
 
+    if (stop_at <= 0)
+    {
+        fprintf(stderr, "print_step (the third argument) must be greater than 0.\n");
+        print_help();
+        exit(-1);
+
+    }
     for (;arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--total-iterations-limit"))
