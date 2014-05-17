@@ -190,19 +190,19 @@ static const pthread_mutex_t initial_mutex_constant =
     ;
 
 static int next_board_num;
-static int end_board;
 static pthread_mutex_t next_board_num_lock;
-static int board_num_step = 1;
-static int update_total_num_iters_threshold = 1000000;
 
 typedef struct {
     int argc;
     char * * argv;
     int arg;
     int stop_at;
+    int end_board;
+    int board_num_step;
+    int update_total_num_iters_threshold;
+    fcs_int_limit_t total_iterations_limit_per_board;
 } context_t;
 
-fcs_int_limit_t total_iterations_limit_per_board = -1;
 
 fcs_int64_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
@@ -270,9 +270,13 @@ static void * worker_thread(void * void_context)
     }
 
     int board_num;
+    const int end_board = context->end_board;
+    const int board_num_step = context->board_num_step;
+    const int update_total_num_iters_threshold = context->update_total_num_iters_threshold;
     const int past_end_board = end_board+1;
     fcs_portable_time_t mytime;
     fcs_int_limit_t total_num_iters_temp = 0;
+    const fcs_int_limit_t total_iterations_limit_per_board = context->total_iterations_limit_per_board;
     do
     {
         pthread_mutex_lock(&next_board_num_lock);
@@ -361,11 +365,8 @@ ret_label:
 
 int main(int argc, char * argv[])
 {
-    fcs_portable_time_t mytime;
 
-    int num_workers = 3;
-
-    int arg = 1, check;
+    int arg = 1;
 
     next_board_num_lock = initial_mutex_constant;
     total_num_iters_lock = initial_mutex_constant;
@@ -376,7 +377,7 @@ int main(int argc, char * argv[])
         exit(-1);
     }
     next_board_num = atoi(argv[arg++]);
-    end_board = atoi(argv[arg++]);
+    const int end_board = atoi(argv[arg++]);
     const int stop_at = atoi(argv[arg++]);
 
     if (stop_at <= 0)
@@ -386,6 +387,11 @@ int main(int argc, char * argv[])
         exit(-1);
 
     }
+
+    int num_workers = 3;
+    int board_num_step = 1;
+    int update_total_num_iters_threshold = 1000000;
+    int total_iterations_limit_per_board = -1;
     for (;arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--total-iterations-limit"))
@@ -438,17 +444,22 @@ int main(int argc, char * argv[])
         }
     }
 
+    fcs_portable_time_t mytime;
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
     context_t context = {.argc = argc, .argv = argv,
-        .arg = arg, .stop_at = stop_at };
+        .arg = arg, .stop_at = stop_at, .end_board = end_board,
+        .board_num_step = board_num_step,
+        .update_total_num_iters_threshold = update_total_num_iters_threshold,
+        .total_iterations_limit_per_board = total_iterations_limit_per_board
+    };
 
     pthread_t * const workers = SMALLOC(workers, num_workers);
 
     for ( int idx = 0 ; idx < num_workers ; idx++)
     {
-        check = pthread_create(
+        const int check = pthread_create(
             &workers[idx],
             NULL,
             worker_thread,
@@ -457,8 +468,8 @@ int main(int argc, char * argv[])
         if (check)
         {
             fprintf(stderr,
-                "Worker Thread No. %d Initialization failed!\n",
-                idx
+                "Worker Thread No. %d Initialization failed with error %d!\n",
+                idx, check
             );
             exit(-1);
         }
