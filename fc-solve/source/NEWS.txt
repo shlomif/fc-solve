@@ -11,6 +11,10 @@ Version 3.26.0: (Unknown)
 +README+, +COPYING+, +AUTHORS+) from the source distribution, to save
 space. They are still being copied in the CMake BINARY_DIR directory.
 
+2. Fix a division/modulo by zero problem that yielded a floating-point
+exception as reported by the Mayhem team to the Debian bug tracker:
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=715914 . Thanks!
+
 Version 3.24.0: (23-Feb-2014)
 -----------------------------
 

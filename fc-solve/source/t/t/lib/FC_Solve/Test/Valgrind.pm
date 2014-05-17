@@ -127,6 +127,13 @@ my @valgrind_tests =
         ],
         blurb => qq{"range-parallel-solve -sp r:tf" does not leak.}
     },
+    {
+        id => "range_parallel__invalid_print_step",
+        prog => "freecell-solver-range-parallel-solve",
+        argv => [qw(1 1 0 -l as)
+        ],
+        blurb => qq{Make sure that the program does not crash on a zero print_step},
+    },
 );
 
 sub _expand_catfile_arg
