@@ -46,6 +46,8 @@
 #include "unused.h"
 #include "inline.h"
 #include "bool.h"
+#include "min_and_max.h"
+
 #include "range_solvers_gen_ms_boards.h"
 
 typedef struct
@@ -203,10 +205,6 @@ typedef struct {
 
 fcs_int64_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
-
-#ifndef min
-#define min(a,b) (((a)<(b))?(a):(b))
-#endif
 
 static void * worker_thread(void * void_context)
 {

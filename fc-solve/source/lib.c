@@ -45,6 +45,7 @@
 #include "bool.h"
 #include "indirect_buffer.h"
 #include "count.h"
+#include "min_and_max.h"
 #include "alloc_wrap.h"
 
 #include "str_utils.h"
@@ -321,10 +322,6 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
 
     user->instances_list[user->current_instance_idx].limit = max_iters;
 }
-
-#ifndef min
-#define min(a,b) (((a)<(b))?(a):(b))
-#endif
 
 int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     void * api_instance,

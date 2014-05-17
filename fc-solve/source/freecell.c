@@ -48,10 +48,7 @@
 
 #include "inline.h"
 #include "likely.h"
-
-#ifndef min
-#define min(a,b) (((a)<(b))?(a):(b))
-#endif
+#include "min_and_max.h"
 
 /*
  * Throughout this code the following local variables are used to quickly

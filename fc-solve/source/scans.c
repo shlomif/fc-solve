@@ -51,6 +51,7 @@
 #include "inline.h"
 #include "likely.h"
 #include "bool.h"
+#include "min_and_max.h"
 
 #if 0
 #define DEBUG 1

@@ -6,6 +6,7 @@
 #include "fc_pro_iface_pos.h"
 
 #include "inline.h"
+#include "min_and_max.h"
 #include "alloc_wrap.h"
 
 #if 0
@@ -433,11 +434,7 @@ void fc_solve_moves_processed_gen(
                         assert(virtual_stack_len[src] >= src_len);
                         if (virtual_stack_len[src] > src_len)
                         {
-#ifndef min
-#define min(a,b) (((a)<(b))?(a):(b))
-#endif
                             int virt_num_cards = min((virtual_stack_len[src]-src_len), num_cards);
-#undef min
                             virtual_stack_len[src] -= virt_num_cards;
                             virtual_stack_len[dest] += virt_num_cards;
                             num_cards -= virt_num_cards;

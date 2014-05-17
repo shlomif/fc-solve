@@ -41,6 +41,7 @@ extern "C" {
 
 #include "inline.h"
 #include "bool.h"
+#include "min_and_max.h"
 
 #include "game_type_limit.h"
 
@@ -1134,14 +1135,6 @@ enum
     FCS_VISITED_ALL_TESTS_DONE = 0x8,
     FCS_VISITED_GENERATED_BY_PRUNING = 0x10,
 };
-
-#ifndef min
-#define min(a,b) ((a)<(b)?(a):(b))
-#endif
-
-#ifndef max
-#define max(a,b) ((a)>(b)?(a):(b))
-#endif
 
 #ifndef DEBUG_STATES
 #define FCS_WITH_CARD_COMPARE_LOOKUP
