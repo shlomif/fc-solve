@@ -207,18 +207,14 @@ fcs_int_limit_t total_iterations_limit_per_board = -1;
 fcs_int64_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
+#ifndef min
+#define min(a,b) (((a)<(b))?(a):(b))
+#endif
+
 static void * worker_thread(void * void_context)
 {
-    char * error_string;
-    int parser_ret;
-    int ret;
-    int board_num;
-    int quota_end;
-    fcs_portable_time_t mytime;
-    fcs_int_limit_t total_num_iters_temp = 0;
     /* 52 cards of 3 chars (suit+rank+whitespace) each,
      * plus 8 newlines, plus one '\0' terminator*/
-    fcs_state_string_t state_string;
 
     const context_t * const context = (const context_t * const)void_context;
     int arg = context->arg;
@@ -236,61 +232,64 @@ static void * worker_thread(void * void_context)
         }
     };
 
-    parser_ret =
-        freecell_solver_user_cmd_line_parse_args(
-            user.instance,
-            context->argc,
-            (const char * *)(void *)argv,
-            arg,
-            known_parameters,
-            cmd_line_callback,
-            &user,
-            &error_string,
-            &arg
+    {
+        char * error_string;
+        const int parser_ret =
+            freecell_solver_user_cmd_line_parse_args(
+                user.instance,
+                context->argc,
+                (const char * *)(void *)argv,
+                arg,
+                known_parameters,
+                cmd_line_callback,
+                &user,
+                &error_string,
+                &arg
             );
 
-    if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
-    {
-        fprintf(stderr, "Unknown option: %s", argv[arg]);
-        goto ret_label;
-    }
-    else if (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-    {
-        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                " and was not supplied with one.\n", argv[arg]);
-        goto ret_label;
-    }
-    else if (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-    {
-        if (error_string != NULL)
+        if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
         {
-            fprintf(stderr, "%s", error_string);
-            free(error_string);
+            fprintf(stderr, "Unknown option: %s", argv[arg]);
+            goto ret_label;
         }
-        goto ret_label;
+        else if (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
+        {
+            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+                " and was not supplied with one.\n", argv[arg]);
+            goto ret_label;
+        }
+        else if (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
+        {
+            if (error_string != NULL)
+            {
+                fprintf(stderr, "%s", error_string);
+                free(error_string);
+            }
+            goto ret_label;
+        }
     }
 
-    ret = 0;
-
+    int board_num;
+    const int past_end_board = end_board+1;
+    fcs_portable_time_t mytime;
+    fcs_int_limit_t total_num_iters_temp = 0;
     do
     {
         pthread_mutex_lock(&next_board_num_lock);
         board_num = next_board_num;
-        quota_end = (next_board_num += board_num_step);
+        const int proposed_quota_end = (next_board_num += board_num_step);
         pthread_mutex_unlock(&next_board_num_lock);
 
-        if (quota_end > end_board+1)
-        {
-            quota_end = end_board+1;
-        }
+        const int quota_end = min(proposed_quota_end, past_end_board);
 
         for ( ; board_num < quota_end ; board_num++ )
         {
+            fcs_state_string_t state_string;
             get_board(board_num, state_string);
 
             freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
 
-            ret =
+            const int ret =
                 freecell_solver_user_solve_board(
                     user.instance,
                     state_string
@@ -366,8 +365,7 @@ int main(int argc, char * argv[])
 
     int num_workers = 3;
 
-    int arg = 1, start_from_arg, idx, check;
-
+    int arg = 1, check;
 
     next_board_num_lock = initial_mutex_constant;
     total_num_iters_lock = initial_mutex_constant;
@@ -440,17 +438,15 @@ int main(int argc, char * argv[])
         }
     }
 
-    start_from_arg = arg;
-
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
     context_t context = {.argc = argc, .argv = argv,
-        .arg = start_from_arg, .stop_at = stop_at };
+        .arg = arg, .stop_at = stop_at };
 
     pthread_t * const workers = SMALLOC(workers, num_workers);
 
-    for ( idx = 0 ; idx < num_workers ; idx++)
+    for ( int idx = 0 ; idx < num_workers ; idx++)
     {
         check = pthread_create(
             &workers[idx],
@@ -469,7 +465,7 @@ int main(int argc, char * argv[])
     }
 
     /* Wait for all threads to finish. */
-    for( idx = 0 ; idx < num_workers ; idx++)
+    for( int idx = 0 ; idx < num_workers ; idx++)
     {
         pthread_join(workers[idx], NULL);
     }
