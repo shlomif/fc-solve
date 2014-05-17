@@ -70,7 +70,6 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_key
     as_str =
         fc_solve_state_as_string(
             &(new_derived_state.s),
-            &(new_derived_state.info),
             &locs,
             FREECELLS_NUM,
             STACKS_NUM,

@@ -1014,7 +1014,6 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
 
 extern char * fc_solve_state_as_string(
     fcs_state_t * key,
-    fcs_state_extra_info_t * state_val,
     fcs_state_locs_struct_t * state_locs,
     int freecells_num,
     int stacks_num,

@@ -934,7 +934,6 @@ static void trace_solution(
         state_as_str =
             fc_solve_state_as_string(
                 &(state.s),
-                &(state.info),
                 &locs,
                 FREECELLS_NUM,
                 STACKS_NUM,

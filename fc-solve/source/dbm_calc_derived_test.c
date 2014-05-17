@@ -129,7 +129,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         debug_ret[idx].state_string =
         fc_solve_state_as_string(
             &(iter->state.s),
-            &(iter->state.info),
             &locs,
             FREECELLS_NUM,
             STACKS_NUM,
@@ -193,7 +192,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
     *ret_state_s =
         fc_solve_state_as_string(
             &(init_state.s),
-            &(init_state.info),
             &locs,
             FREECELLS_NUM,
             STACKS_NUM,

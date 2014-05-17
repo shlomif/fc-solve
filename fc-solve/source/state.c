@@ -238,10 +238,9 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 
 char * fc_solve_state_as_string(
     fcs_state_t * state,
-    fcs_state_extra_info_t * state_val,
     fcs_state_locs_struct_t * state_locs,
-#define FCS_S_STACK_LOCS(s) (state_locs->stack_locs)
-#define FCS_S_FC_LOCS(s) (state_locs->fc_locs)
+#define FCS_S_STACK_LOCS() (state_locs->stack_locs)
+#define FCS_S_FC_LOCS() (state_locs->fc_locs)
     int freecells_num,
     int stacks_num,
     int decks_num,
@@ -280,11 +279,11 @@ char * fc_solve_state_as_string(
     {
         for(a=0;a<stacks_num;a++)
         {
-            stack_locs[(int)((FCS_S_STACK_LOCS(state_val))[a])] = a;
+            stack_locs[(int)((FCS_S_STACK_LOCS())[a])] = a;
         }
         for(a=0;a<freecells_num;a++)
         {
-            freecell_locs[(int)((FCS_S_FC_LOCS(state_val))[a])] = a;
+            freecell_locs[(int)((FCS_S_FC_LOCS())[a])] = a;
         }
     }
 

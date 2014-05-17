@@ -425,7 +425,6 @@ static void * instance_run_solver_thread(void * void_arg)
             char * state_str;
             state_str = fc_solve_state_as_string(
                 &(state.s),
-                &(state.info),
                 &locs,
                 FREECELLS_NUM,
                 STACKS_NUM,
@@ -827,7 +826,6 @@ static void trace_solution(
         state_as_str =
             fc_solve_state_as_string(
                 &(state.s),
-                &(state.info),
                 &locs,
                 FREECELLS_NUM,
                 STACKS_NUM,

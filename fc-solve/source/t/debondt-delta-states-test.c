@@ -73,7 +73,6 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
     as_str =
         fc_solve_state_as_string(
             &(new_derived_state.s),
-            &(new_derived_state.info),
             &locs,
             FREECELLS_NUM,
             STACKS_NUM,

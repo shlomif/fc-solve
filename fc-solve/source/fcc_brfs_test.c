@@ -223,7 +223,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         ret[i].state_as_string =
         fc_solve_state_as_string(
             &(state.s),
-            &(state.info),
             &locs,
             FREECELLS_NUM,
             STACKS_NUM,
