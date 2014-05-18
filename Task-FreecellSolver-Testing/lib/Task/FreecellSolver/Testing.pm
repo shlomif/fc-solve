@@ -25,6 +25,7 @@ use File::Path;
 use File::Spec;
 use Games::Solitaire::Verify;
 use IPC::Open2;
+use MooX qw(late);
 use Storable;
 use String::ShellQuote;
 use Task::Test::Run::AllPlugins;
