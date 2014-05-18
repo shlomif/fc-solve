@@ -125,3 +125,10 @@ user-friendly and idiot-proof.
 * *Olaf van der Kruk* - reported an issue with using the online
 JavaScript-based solver (which is mostly translated from the C source using
 emscripten), which uncovered several bugs.
+
+* *The Mayhem Team* - ( Alexandre Rebert, Thanassis Avgerinos, Sang Kil Cha,
+David Brumley, and Manuel Egele from Cylab at Carnegie Mellon University ) for
+reporting some failures of Freecell Solver executables to handle
+malformed input in the Debian Bug Tracker, e.g:
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=715914 with
+steps to reproduce.

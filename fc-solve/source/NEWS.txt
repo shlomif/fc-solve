@@ -21,6 +21,25 @@ https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=715914 . Thanks!
 flag is given. A crash was reported by the Mayhem team to the Debian
 bug tracker: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=716097 . Thanks!
 
+4. Fix the automated tests, so they will support the new versions of
+Games::Solitaire::Verify[http://fc-solve.shlomifish.org/verify-code/] .
+
+5. Remove +make_microsoft_freecell_board.c+ - it is not useful and
++pi-make-microsoft-freecell-board+ or +make_pysol_freecell_board.py+ should
+be used instead.
+
+6. Fix the build process for version 4.9.x of the GCC compiler.
+
+7. Add the pseudo-DFS solver in +pseudo_dfs_atomic_moves_solver.c+ ,
+which is another attempt at solving hard two freecell deals. It runs,
+but generates a very large stack with the deal in question (MS #384243 ).
+
+8. The +summarize-fc-solve+ script now accepts some game parameters followed
+by a double-dash ("--"), followed by preset parameters for the solver.
+
+9. Various fixes for warnings and errors for CMake-3.0.0-rc3 (what will become
+CMake-3.0.0).
+
 Version 3.24.0: (23-Feb-2014)
 -----------------------------
 
